@@ -15,6 +15,8 @@ extends Node
 signal examen_iniciado(nodo: Node3D)
 signal examen_terminado
 signal objeto_revelado(datos: ObjetoDelAlmacen, es_nuevo: bool)
+## La E con las manos vacías sobre algo con texto: el subtítulo de lo que se mira, sin examen.
+signal pensamiento_pedido(texto: String)
 
 ## `Agarre` es de la misma capa, y entra por `@export` en vez de buscarse con `get_node()` hacia
 ## arriba: una escena que se reacomoda rompería la ruta sin que nada avise hasta correrla.
@@ -35,15 +37,18 @@ func esta_examinando() -> bool:
 
 ## Arranca el examen y devuelve si arrancó.
 ##
-## Lo que se lleva le gana a lo enfocado. Con las manos vacías, sólo lo no levantable
-## revela un pensamiento: no hay nada que acercar ni nadie que suspender.
-func iniciar(enfocado: ObjetoDelAlmacen = null) -> bool:
+## Lo que se lleva le gana a lo enfocado. Con las manos vacías no hay examen: sólo lo no
+## levantable revela, y lo que se mira se piensa con el texto que resolvió la cáscara, que es
+## la que sabe qué se mira. Pensarlo no lo registra: el subtítulo no es la revelación.
+func iniciar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "") -> bool:
 	if _examinando != null or agarre == null:
 		return false
 	var datos := agarre.manos().sostenido()
 	if datos == null:
 		if enfocado != null and not enfocado.es_levantable():
 			objeto_revelado.emit(enfocado, _hallazgos.registrar(enfocado))
+		if not texto_del_enfocado.is_empty():
+			pensamiento_pedido.emit(texto_del_enfocado)
 		return false
 	# Un punto sin cablear es un `.tscn` mal armado y no «no hay nada que examinar», y por eso
 	# corta acá en vez de caer al pensamiento: sin el corte, la E con una lata en la mano revelaba
@@ -88,9 +93,9 @@ func atajar_el_clic() -> bool:
 
 ## La misma tecla abre y cierra, y ese `if` sobre el estado del examen vive acá: en la escena
 ## sería una regla del juego sin test, y los dos gates darían verde sobre ella.
-func alternar(enfocado: ObjetoDelAlmacen = null) -> void:
+func alternar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "") -> void:
 	if _examinando == null:
-		iniciar(enfocado)
+		iniciar(enfocado, texto_del_enfocado)
 	else:
 		terminar()
 

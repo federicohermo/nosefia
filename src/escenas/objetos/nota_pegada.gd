@@ -39,3 +39,8 @@ func imagen() -> Texture2D:
 
 func accionar() -> void:
 	apertura_pedida.emit()
+
+
+## Cada hoja con el mismo contenido dice lo mismo, esté pegada donde esté.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.id_de_la_nota(id))

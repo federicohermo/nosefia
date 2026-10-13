@@ -1,4 +1,4 @@
-## La pantalla del turno: cuántas obligatorias van y lo que dice la caja examinada.
+## La pantalla del turno: cuántas obligatorias van y el subtítulo de lo que se mira o examina.
 ##
 ## **Recibe todo ya decidido y lo pinta.** No conoce al nodo que le manda los números: se
 ## conecta por señal desde la escena.
@@ -12,9 +12,10 @@
 ## es de la pantalla de fin de jornada, y tenerlo en los dos lados sería la misma banda traducida
 ## a palabras en dos archivos que no llevan test obligatorio.
 ##
-## **El subtítulo llega escrito.** Lo que dice una caja examinada lo arma `dominio/`, que es donde
-## tiene test; acá se pinta y se vacía. Va con el tema de Manada y sin fuente ni color propios: el
-## contorno que lo deja leer sobre el blanco del estante es de su variación en el tema.
+## **El subtítulo llega escrito.** Qué dice cada cosa lo arma `dominio/`, y cuánto se ve lo
+## decide `Subtitulo`, que es donde tienen test; acá se le pasa el tiempo y se pinta. Va con el
+## tema de Manada y sin fuente ni color propios: el contorno que lo deja leer sobre el blanco del
+## estante es de su variación en el tema.
 class_name Hud
 extends CanvasLayer
 
@@ -31,6 +32,8 @@ var foco_presente: bool = false
 
 var _obligatorias: int = 0
 
+var _linea := Subtitulo.new()
+
 @onready var _mira: ColorRect = $Mira
 
 
@@ -41,6 +44,14 @@ func _ready() -> void:
 	_mira.offset_right = mitad
 	_mira.offset_bottom = mitad
 	ocultar_foco()
+	_pintar_el_subtitulo()
+
+
+## El pensamiento corre con el cuadro. Con la pausa abierta el árbol no procesa, y el tiempo
+## del pensamiento queda donde estaba.
+func _process(delta: float) -> void:
+	_linea.avanzar(delta)
+	_pintar_el_subtitulo()
 
 
 func mostrar_foco(_objetivo: Node3D, _distancia: float) -> void:
@@ -64,11 +75,24 @@ func mostrar_tareas(cumplidas: int) -> void:
 	_tareas.text = TEXTO_DE_LAS_TAREAS % Marcador.tareas(cumplidas, _obligatorias)
 
 
-## Pinta la línea de subtítulo tal como llega. Un texto vacío es no decir nada.
+## Un pensamiento: se ve un rato y se desvanece. Un texto vacío no cambia la línea.
+func pensar(texto: String) -> void:
+	_linea.pensar(texto)
+	_pintar_el_subtitulo()
+
+
+## El texto del examen: queda fijo hasta `vaciar_subtitulo()`.
 func mostrar_subtitulo(texto: String) -> void:
-	_subtitulo.text = texto
+	_linea.fijar(texto)
+	_pintar_el_subtitulo()
 
 
-## Borra la línea de subtítulo. La llama el fin del examen: el subtítulo dura lo que dura él.
+## Borra la línea en el acto. La llaman el fin del examen y la jornada que se abre.
 func vaciar_subtitulo() -> void:
-	_subtitulo.text = ""
+	_linea.soltar()
+	_pintar_el_subtitulo()
+
+
+func _pintar_el_subtitulo() -> void:
+	_subtitulo.text = _linea.texto()
+	_subtitulo.modulate.a = _linea.opacidad()

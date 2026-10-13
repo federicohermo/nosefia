@@ -34,3 +34,8 @@ func _mostrar_modo(manual: bool) -> void:
 	mallas[0].mesh = malla_del_hueco if manual else _malla_del_lector
 	mallas[0].position = posicion_del_hueco if manual else Vector3.ZERO
 	forma.set_deferred("shape", forma_del_hueco if manual else _forma_del_lector)
+
+
+## Lo que dice el lector al examinarlo.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.LECTOR)

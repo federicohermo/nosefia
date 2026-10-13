@@ -44,6 +44,10 @@ enum Traba { NINGUNA, PUERTA, PORTON }
 		traba = valor
 		_puerta = Puerta.new(valor != Traba.NINGUNA)
 
+## Quién es esta puerta para el subtítulo. Las trabadas comparten la traba, así que la escena
+## se la declara por su ruta; una puerta sin identidad no dice nada al examinarla.
+var identidad: StringName = &""
+
 var _puerta := Puerta.new()
 
 ## La hoja cerrada, en coordenadas del padre. Se guarda entera y no sólo el ángulo porque el
@@ -121,3 +125,8 @@ func _physics_process(delta: float) -> void:
 	elif _girando:
 		_girando = false
 		hoja_quieta.emit(self)
+
+
+## Lo que dice la puerta al examinarla. Las interiores y las de las heladeras callan.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(identidad)

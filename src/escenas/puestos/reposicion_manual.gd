@@ -196,7 +196,7 @@ func devolver(id: Producto.Id) -> void:
 ## Lo que dice la caja examinada, o nada si lo examinado no es una caja.
 ##
 ## El texto lo arma la caja en `dominio/`, donde tiene test, y contado sobre el estante de esta
-## noche: se muestra mientras la caja se examina en la mano.
+## noche: sirve al pensamiento de la caja apoyada y al examen en la mano.
 func texto_del_examen(nodo: Node3D) -> String:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:

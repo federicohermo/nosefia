@@ -155,3 +155,8 @@ func tickets_en_el_mundo() -> Array[Node3D]:
 		if is_instance_valid(papel) and not papel.is_queued_for_deletion():
 			activos.append(papel)
 	return activos
+
+
+## Lo que dice la caja registradora al examinarla, sin abrirla.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.CAJA_REGISTRADORA)
