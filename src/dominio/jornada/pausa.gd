@@ -1,6 +1,8 @@
 ## Qué hace el juego ante Esc y ante un cursor que se pierde: pausar, reanudar o nada.
 ##
-## La placa del cierre gana sobre todo: ya ofrece volver al menú, y el turno ya cerró.
+## Esc pausa en cualquier momento del almacén, también con la placa del cierre en pantalla: salir
+## al menú con la partida en curso pasa por la pausa. El cursor que se pierde sobre la placa, en
+## cambio, no pausa: la placa lo suelta a propósito.
 class_name Pausa
 extends RefCounted
 
@@ -9,13 +11,9 @@ enum Accion { NADA, PAUSAR, REANUDAR, CERRAR_CONFIGURACIONES }
 
 ## Con configuraciones abierta desde la pausa, Esc la cierra y deja la pausa: el Esc siguiente
 ## reanuda.
-static func ante_esc(
-	en_pausa: bool, placa_en_pantalla: bool, configuraciones_abierta: bool = false
-) -> Accion:
+static func ante_esc(en_pausa: bool, configuraciones_abierta: bool = false) -> Accion:
 	if configuraciones_abierta:
 		return Accion.CERRAR_CONFIGURACIONES
-	if placa_en_pantalla:
-		return Accion.NADA
 	return Accion.REANUDAR if en_pausa else Accion.PAUSAR
 
 

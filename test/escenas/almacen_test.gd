@@ -514,9 +514,14 @@ func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() ->
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
 	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
+	var menu: MenuDePausa = almacen.get_node("Interfaz/MenuDePausa")
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_bool(ciclo.partida().terminada()).is_false()
-	(pantalla.get_node("Fondo/Panel/VolverAlMenu") as Button).pressed.emit()
+	assert_bool((pantalla.get_node("Fondo/Panel/VolverAlMenu") as Button).visible).is_false()
+	pausa.pausar()
+	assert_bool(menu.visible).is_true()
+	(menu.get_node("Fondo/Panel/Opciones/VolverAlMenu") as Button).pressed.emit()
 	assert_int(menus[0]).is_equal(1)
 	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_bool(reloj.corriendo()).is_false()
@@ -539,7 +544,7 @@ func test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu() -> void:
 	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
-func test_con_la_placa_en_pantalla_esc_no_pausa() -> void:  # AC-SAV-018
+func test_con_la_placa_en_pantalla_esc_pausa_encima() -> void:  # AC-SAV-018
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	await get_tree().process_frame
@@ -549,8 +554,11 @@ func test_con_la_placa_en_pantalla_esc_no_pausa() -> void:  # AC-SAV-018
 	esc.action = &"ui_cancel"
 	esc.pressed = true
 	(almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa)._input(esc)
-	assert_bool(get_tree().paused).is_false()
-	assert_bool((almacen.get_node("Interfaz/MenuDePausa") as MenuDePausa).visible).is_false()
+	assert_bool(get_tree().paused).is_true()
+	assert_bool((almacen.get_node("Interfaz/MenuDePausa") as MenuDePausa).visible).is_true()
+	var placa: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	assert_bool(placa.visible).is_true()
+	get_tree().paused = false
 
 
 func test_volver_al_menu_carga_el_menu_de_inicio() -> void:

@@ -1,11 +1,13 @@
 ## La placa del cierre: copia el parte y lo pone en pantalla.
 ##
-## **No tiene una sola condición adentro, y eso es lo que este spec vino a comprar.** Qué texto
-## va en cada renglón y qué botones se ofrecen son reglas del juego, y una regla escrita acá
-## arriba nace sin test: está medido que ni `gate_de_tests.py` ni `gate_de_capas.py` la ven.
-## Todo lo que se lee en la placa sale ya decidido de `ParteDeCierre`.
+## Qué texto va en cada renglón y qué botones se ofrecen son reglas del juego, y una regla escrita
+## acá arriba nace sin test: está medido que ni `gate_de_tests.py` ni `gate_de_capas.py` la ven.
+## Todo lo que se lee en la placa sale ya decidido de `ParteDeCierre`; acá sólo se decide dónde
+## queda el foco.
 ##
-## **No pausa nada**, y no hace falta: cuando aparece, el reloj del turno ya cerró.
+## **No pausa nada**, y no hace falta: cuando aparece, el reloj del turno ya cerró. Esc abre la
+## pausa por encima; mientras tanto la placa está detenida y no responde, y al reanudar el foco
+## vuelve a su primer botón.
 ##
 ## Las líneas se crean en vez de venir escritas en la escena porque son tantas como obligatorias
 ## pida la jornada, y ese número no está escrito en ninguna parte — sale de recorrer la lista.
@@ -18,7 +20,7 @@ signal cierre_despachado(opcion: ParteDeCierre.Opcion)
 ## `.tscn`, que es lo que pide `.claude/rules/presentacion.md` — un texto en los dos lados se
 ## cambia en uno solo el día que haya que cambiarlo.
 const TEXTOS: Dictionary[ParteDeCierre.Opcion, String] = {
-	ParteDeCierre.Opcion.SEGUIR: "SEGUIR",
+	ParteDeCierre.Opcion.SEGUIR: "CONTINUAR",
 	ParteDeCierre.Opcion.VOLVER_AL_MENU: MenuDePausa.TEXTO_DE_VOLVER_AL_MENU,
 }
 
@@ -31,6 +33,7 @@ const TEXTOS: Dictionary[ParteDeCierre.Opcion, String] = {
 @export var _volver_al_menu: Button
 
 var _botones: Dictionary[ParteDeCierre.Opcion, Button] = {}
+var _primero: Button
 
 
 ## Arranca invisible: la placa es del cierre y no del arranque. Visible desde el primer cuadro
@@ -58,7 +61,14 @@ func mostrar(parte: ParteDeCierre) -> void:
 		_botones[opcion].visible = opciones.has(opcion)
 	visible = true
 	# Con el foco puesto, `ui_accept` despacha el cierre aunque el mouse no llegue al botón.
-	_botones[opciones[0]].grab_focus()
+	_primero = _botones[opciones[0]]
+	_primero.grab_focus()
+
+
+## La pausa se lleva el foco a «reanudar»; al volver, lo recupera el primer botón ofrecido.
+func _notification(aviso: int) -> void:
+	if aviso == NOTIFICATION_UNPAUSED and visible and _primero != null:
+		_primero.grab_focus()
 
 
 ## Reemplaza los renglones de la jornada anterior.
