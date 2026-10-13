@@ -1,0 +1,38 @@
+[
+	{
+		"godot": "4.7.2-stable (official)",
+		"gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+		"renderizador": "gl_compatibility",
+		"resolucion": "(1280.0, 720.0)",
+		"resultados": [
+			{
+				"cuadro_ms_p50": 2.037,
+				"cuadro_ms_p95": 2.803,
+				"dibujos_max": 213.0,
+				"dibujos_p50": 213.0,
+				"muestras": 40,
+				"pose_ok": true,
+				"vista": "cara_de_lado"
+			},
+			{
+				"cuadro_ms_p50": 2.389,
+				"cuadro_ms_p95": 3.208,
+				"dibujos_max": 254.0,
+				"dibujos_p50": 254.0,
+				"muestras": 40,
+				"pose_ok": true,
+				"vista": "cabecera"
+			},
+			{
+				"cuadro_ms_p50": 1.529,
+				"cuadro_ms_p95": 2.104,
+				"dibujos_max": 110.0,
+				"dibujos_p50": 110.0,
+				"muestras": 40,
+				"pose_ok": true,
+				"vista": "bandeja_de_heladera"
+			}
+		],
+		"variante": "base"
+	}
+]

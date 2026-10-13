@@ -1,0 +1,27 @@
+[
+	{
+		"altura_sobre_el_piso": 1.70000003278255,
+		"angulo_de_la_mira_grados": 0.000000880049709696974,
+		"desvio_del_ojo_m": 0.0,
+		"foco": "/root/Almacen/ReposicionManual/ZonaDeMarolini/Casillero1",
+		"foco_en_la_fila_de_adelante_o_nada": true,
+		"mira_a": [
+			5.4562201499939,
+			1.59567999839783,
+			-0.919156014919281
+		],
+		"ojo_pedido": [
+			6.60621976852417,
+			1.81200003623962,
+			-1.23209476470947
+		],
+		"ojo_real": [
+			6.60621976852417,
+			1.81200003623962,
+			-1.23209476470947
+		],
+		"pose_ok": true,
+		"producto": "Marolini",
+		"vista": "cara_de_lado"
+	}
+]

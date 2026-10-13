@@ -1,0 +1,26 @@
+[
+  {
+    "vista": "cara_de_lado",
+    "dibujos_base": 213.0,
+    "dibujos_propuesta": 219.0,
+    "p95_base_ms": 3.4,
+    "p95_propuesta_ms": 2.741,
+    "ruido_ms": 0.8529999999999998
+  },
+  {
+    "vista": "cabecera",
+    "dibujos_base": 254.0,
+    "dibujos_propuesta": 259.0,
+    "p95_base_ms": 3.957,
+    "p95_propuesta_ms": 2.753,
+    "ruido_ms": 0.94
+  },
+  {
+    "vista": "bandeja_de_heladera",
+    "dibujos_base": 110.0,
+    "dibujos_propuesta": 111.0,
+    "p95_base_ms": 2.303,
+    "p95_propuesta_ms": 2.619,
+    "ruido_ms": 0.32399999999999984
+  }
+]
