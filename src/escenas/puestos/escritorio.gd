@@ -99,3 +99,8 @@ func _al_cambiar_el_registro() -> void:
 
 func _al_cerrar_el_turno(_cumplidas: int) -> void:
 	cerrar()
+
+
+## Lo que dice la computadora al examinarla, sin abrirla.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.COMPUTADORA)

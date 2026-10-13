@@ -25,6 +25,9 @@ const HOLGURA_DE_LA_CAIDA := 0.01
 ## Resolución de la búsqueda del volumen libre para un útil largo junto a una pared.
 const PASOS_DEL_UTIL_EN_LA_MANO := 64
 
+## El método con que lo fijo dice su texto al examinarlo: no tiene `datos` que lo digan.
+const METODO_TEXTO_AL_EXAMINAR := &"texto_al_examinar"
+
 ## Para leer qué enfoca la mira: una caja del depósito y un casillero de la góndola. Son cáscara
 ## y no declaran `class_name`.
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
@@ -37,6 +40,11 @@ const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 ## puerta cruzaría capas sin dejar rastro.
 @export var agarre: Agarre
 @export var examen: Examen
+
+## Lo que un puesto cuenta de lo que se mira, antes de lo que el objeto dice de sí: la caja del
+## depósito dice cuántas tiene, y eso lo sabe el puesto de esta noche. Lo cablea la escena; sin
+## él, cada cosa dice sólo su propio texto.
+var texto_contado: Callable
 
 ## Se arma en la declaración y no en `_ready()` a propósito: así un test puede instanciar la
 ## escena sin entrarla al árbol y el control ya existe. Entrar la escena al árbol haría correr
@@ -191,7 +199,7 @@ func _unhandled_input(evento: InputEvent) -> void:
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
 		if examen.esta_examinando() or not _control.esta_suspendido():
-			examen.alternar(_datos_de(_enfocado))
+			examen.alternar(_datos_de(_enfocado), texto_al_examinar_de(_enfocado))
 	# Q se resuelve en la raíz; puede suspender después de este callback.
 	if (
 		evento.is_pressed()
@@ -653,6 +661,21 @@ func _datos_de(cuerpo: Object) -> ObjetoDelAlmacen:
 	if cuerpo != null and ReglasDeLosObjetos.PROPIEDAD_DATOS in cuerpo:
 		return cuerpo.get(ReglasDeLosObjetos.PROPIEDAD_DATOS) as ObjetoDelAlmacen
 	return null
+
+
+## Lo que dice `nodo` al examinarlo, con la mano vacía o en la mano. Es ruteo: el texto lo
+## contesta el puesto que lo cuenta, lo fijo con su método, o lo levantable con sus `datos`.
+func texto_al_examinar_de(nodo: Node3D) -> String:
+	if nodo == null:
+		return ""
+	if texto_contado.is_valid():
+		var contado: String = texto_contado.call(nodo)
+		if not contado.is_empty():
+			return contado
+	if nodo.has_method(METODO_TEXTO_AL_EXAMINAR):
+		return nodo.call(METODO_TEXTO_AL_EXAMINAR)
+	var datos := _datos_de(nodo)
+	return datos.texto_al_examinar() if datos != null else ""
 
 
 ## Traduce «empezó un examen» a «el jugador no controla». El argumento se descarta: quién es el

@@ -193,15 +193,46 @@ func test_el_subtitulo_se_lee_sobre_el_blanco_con_el_contorno_de_su_variacion() 
 	assert_int(base.get_theme_constant("outline_size")).is_zero()
 
 
-func test_el_hud_pinta_el_subtitulo_que_le_llega_y_lo_vacia() -> void:
+func test_el_hud_pinta_el_subtitulo_que_le_llega_y_lo_vacia() -> void:  # AC-SUB-005, AC-SUB-007
+	# El pensamiento se desvanece con el tiempo que el HUD le pasa; el del examen queda fijo
+	# hasta que lo vacían.
 	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
 	add_child(hud)
 	var subtitulo: Label = hud.get_node("Subtitulo")
 	assert_str(subtitulo.text).is_empty()
+	hud.pensar("Una bolsa de basura.")
+	assert_str(subtitulo.text).is_equal("Una bolsa de basura.")
+	assert_float(subtitulo.modulate.a).is_equal(1.0)
+	hud.call("_process", 3.083)
+	assert_float(subtitulo.modulate.a).is_greater(0.0)
+	assert_float(subtitulo.modulate.a).is_less(1.0)
+	hud.call("_process", 0.25)
+	assert_str(subtitulo.text).is_empty()
+	assert_float(subtitulo.modulate.a).is_equal(0.0)
 	hud.mostrar_subtitulo("Una caja con 8 cajitas de Actroncito.")
+	hud.call("_process", 60.0)
 	assert_str(subtitulo.text).is_equal("Una caja con 8 cajitas de Actroncito.")
+	assert_float(subtitulo.modulate.a).is_equal(1.0)
 	hud.vaciar_subtitulo()
 	assert_str(subtitulo.text).is_empty()
+
+
+func test_el_subtitulo_va_abajo_al_centro_y_uno_por_vez() -> void:  # AC-SUB-001
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		var ventana: SubViewport = auto_free(SubViewport.new())
+		ventana.size = tamano
+		add_child(ventana)
+		var hud: Hud = load(ESCENA_DEL_HUD).instantiate()
+		ventana.add_child(hud)
+		hud.pensar("Una bolsa de basura.")
+		await get_tree().process_frame
+		var subtitulo: Label = hud.get_node("Subtitulo")
+		var caja := subtitulo.get_global_rect()
+		assert_float(caja.get_center().x).is_equal_approx(tamano.x / 2.0, 1.0)
+		assert_float(caja.get_center().y).is_greater(tamano.y / 2.0)
+		assert_float(caja.get_center().y).is_less(float(tamano.y))
+		hud.pensar("Un alfajor Jorgillo.")
+		assert_str(subtitulo.text).is_equal("Un alfajor Jorgillo.")
 
 
 func test_el_hud_no_arma_el_texto_de_la_caja() -> void:

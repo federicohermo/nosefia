@@ -190,7 +190,7 @@ func test_sobre_una_caja_nunca_sale_interactuar() -> void:  # AC-PLY-083
 func test_un_par_declarado_cuenta_aunque_el_uso_vaya_a_rechazarse() -> void:  # AC-PLY-084
 	# La mopa mojada con otro jabón sobre una mancha y el balde lleno sobre el lavatorio: el par
 	# existe y eso alcanza. Averiguarlo no toca la mopa ni el balde.
-	var piso := PisoDelLocal.de_la_jornada()
+	var piso := PisoDelLocal.de_la_jornada(1)
 	piso.usar(ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_LAVATORIO)
 	piso.usar(&"jabon_amarillo", ReglasDeLaLimpieza.ID_DEL_BALDE)
 	piso.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE)

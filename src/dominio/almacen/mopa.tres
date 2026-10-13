@@ -13,4 +13,5 @@ id = &"mopa"
 nombre = "Mopa"
 es_largo = true
 sonoridad = 8
+subtitulo = "Una mopa para limpiar las manchas del local."
 revelacion = SubResource("Resource_revelacion")

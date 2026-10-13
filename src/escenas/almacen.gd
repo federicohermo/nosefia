@@ -194,12 +194,22 @@ func _ready() -> void:
 	_recolector.objeto_tirado.connect(_al_tirar_un_objeto)
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
-	# El subtítulo del examen: lo que dice la caja examinada, y nada cuando termina. El texto lo
-	# arma la caja en `dominio/`; lo examinado que no es una caja no dice nada, y el HUD lo pinta.
+	# El subtítulo: con las manos vacías, lo que se mira se piensa; en el examen, lo que se lleva
+	# queda fijo hasta que termina. La caja dice cuántas tiene contada en el depósito de la noche,
+	# y por eso su texto lo pone el puesto; lo demás lo dice cada cosa. El HUD lo pinta.
+	_jugador.texto_contado = _reposicion_manual.texto_del_examen
+	_jugador.examen.pensamiento_pedido.connect(_hud.pensar)
 	_jugador.examen.examen_iniciado.connect(
-		func(nodo: Node3D) -> void:
-			_hud.mostrar_subtitulo(_reposicion_manual.texto_del_examen(nodo))
+		func(nodo: Node3D) -> void: _hud.mostrar_subtitulo(_jugador.texto_al_examinar_de(nodo))
 	)
+	# Las tres puertas trabadas comparten la traba: quién es cada una lo dice su ruta.
+	var trabadas := {
+		^"Estructura/puertaentrada/CuerpoDeLaHoja": SubtitulosAlExaminar.ENTRADA_PRINCIPAL,
+		^"Estructura/puertajefe/CuerpoDeLaHoja": SubtitulosAlExaminar.PUERTA_DEL_JEFE,
+		^"Estructura/porton/CuerpoDeLaHoja": SubtitulosAlExaminar.PORTON,
+	}
+	for ruta: NodePath in trabadas:
+		(get_node(ruta) as PuertaDelLocal).identidad = trabadas[ruta]
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
 	for util: UtilDeLimpieza in _utiles_de_limpieza:
 		util.examen = _jugador.examen
@@ -243,6 +253,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# examinado cuelga de la cara, y vaciar las manos lo dejaría apuntando a un nodo que ya no
 	# está ahí.
 	_jugador.examen.terminar()
+	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
+	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
 	_puesto_de_la_caja.limpiar()
