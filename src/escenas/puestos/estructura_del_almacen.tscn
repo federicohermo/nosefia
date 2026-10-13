@@ -2272,8 +2272,13 @@ script = ExtResource("nota_pegada")
 id = 4
 mallas = [NodePath("..")]
 
+[node name="StaticBody3D" parent="nota baño inodoro 2" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 4
+mallas = [NodePath("..")]
+
 [node name="NotasDelAlmacen" parent="." node_paths=PackedStringArray("notas") instance=ExtResource("notas")]
-notas = [NodePath("../board tareas/board de tareas_002/StaticBody3D"), NodePath("../board tareas/board de tareas_001/StaticBody3D"), NodePath("../nota productos/StaticBody3D"), NodePath("../nota instrucciones/StaticBody3D"), NodePath("../nota baño inodoro/StaticBody3D")]
+notas = [NodePath("../board tareas/board de tareas_002/StaticBody3D"), NodePath("../board tareas/board de tareas_001/StaticBody3D"), NodePath("../nota productos/StaticBody3D"), NodePath("../nota instrucciones/StaticBody3D"), NodePath("../nota baño inodoro/StaticBody3D"), NodePath("../nota baño inodoro 2/StaticBody3D")]
 
 [node name="StaticBody3D" parent="cajaregistradora" node_paths=PackedStringArray("ranura", "destino_de_los_tickets", "mallas") groups=["interactuable"]]
 script = ExtResource("caja_registradora")
