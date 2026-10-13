@@ -156,6 +156,8 @@ func _avance(almacen: Node3D, hoja: String) -> float:
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma
 	consulta.transform = Transform3D(Basis(), tramo[0])
+	# Lo que frena al jugador, y no la mira: una mancha frente a la puerta no tapa el vano.
+	consulta.collision_mask = (almacen.get("_jugador") as CollisionObject3D).collision_mask
 	var espacio := almacen.get_world_3d().direct_space_state
 	var estorbos: Array[String] = []
 	for choque in espacio.intersect_shape(consulta, 8):
