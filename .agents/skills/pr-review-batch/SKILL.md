@@ -191,6 +191,10 @@ insumos, y los cinco van **destilados**, no como rutas a leer:
   lista caliente medida** y **las escenas compartidas**. Las cuatro cosas son del padre y ninguna
   la puede derivar el agente.
 - **Las trampas de `CLAUDE.md`** que aplican al lote.
+- **Los argumentos del verificador.** `--help` muestra la ayuda sin correr nodos.
+  `--solo` acepta un único nodo: `--solo harness`, nunca una lista con comas.
+  Una opción desconocida o un nodo ausente deben fallar antes de arrancar la corrida.
+  Medido el 2026-10-13: dos carriles pidieron `--help` y el parser anterior lanzó Godot.
 - **Las dos trampas del worktree que un lote ya pisó**, medidas el 2026-10-07:
   - `git show <ref>:<ruta>` falla en Git Bash, que reescribe el argumento como una ruta. Va con
     `MSYS_NO_PATHCONV=1` adelante.
