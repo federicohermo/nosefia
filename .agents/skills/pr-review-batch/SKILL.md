@@ -440,6 +440,9 @@ el contrato:
    pero el árbol de trabajo en Windows puede tener CRLF, y `sed -i` en Git Bash convierte el
    archivo entero: el diff pasa de tres líneas al archivo completo. `git diff --stat` después de
    resolver lo atrapa, y `git checkout --merge <archivo>` devuelve el conflicto sin perder nada.
+   Al medir árboles virtuales en Windows, pasá **bytes** a `git hash-object --stdin`:
+   `subprocess` con `text=True` convierte LF a CRLF antes de escribir el blob. Compará los bytes
+   del blob esperado con los del índice; una medición con CRLF no exige reescribir el archivo real.
 5. **`verificar.py` después de cada unión**, con el veredicto del exit code y el Paso 4 adelante.
    **Y con los specs hidratados**: sin eso los gates del registro se saltean declarándolo, y el
    merge se da por verde sin haberlos corrido.
