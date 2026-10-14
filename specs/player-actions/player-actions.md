@@ -87,8 +87,8 @@ examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega 
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
 
-CUANDO se usa una puerta que no está trabada, el sistema DEBE alternar entre abierta
-y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
+CUANDO se acciona —clic izquierdo— una puerta que no está trabada, el sistema DEBE alternar
+entre abierta y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
 Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
 
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
@@ -98,9 +98,9 @@ par, y **ningún efecto** para cualquier otro par o con las manos vacías. El us
 sobre el inodoro DEBE desecharlo según [`counter-service`](../counter-service/counter-service.md);
 las herramientas DEBEN conservar los efectos de [`store-cleanup`](../store-cleanup/store-cleanup.md).
 
-SI la mira enfoca una puerta, la computadora, la ventanilla o la caja registradora, ENTONCES usar DEBE abrir o
-alternar eso antes que usar lo que se lleva: la herramienta NO DEBE tener efecto y lo que se
-lleva DEBE permanecer en la mano (BR-PLY-026).
+SI la mira enfoca una puerta, ENTONCES usar NO DEBE usar lo que se lleva: sobre una trabada
+DEBE avisar que está trabada, y sobre una puerta interior NO DEBE hacer nada. La herramienta NO DEBE
+tener efecto y lo que se lleva DEBE permanecer en la mano (BR-PLY-026).
 
 ### BR-PLY-013 — Lo que se suelta queda quieto
 
@@ -166,8 +166,8 @@ SI una puerta está trabada, ENTONCES usarla NO DEBE abrirla ni girar la hoja, y
 DEBE contestar que está trabada, todas las veces. La entrada al local, el portón del depósito y
 la oficina del jefe están trabadas; las dos puertas interiores no.
 
-CUANDO se usa una puerta, el sistema DEBE avisar una vez qué pasó: se abrió, se cerró
-o está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
+CUANDO se acciona una puerta que abre, el sistema DEBE avisar una vez si se abrió o se cerró.
+CUANDO se usa una trabada, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
 puertas al abrir la jornada NO DEBE avisar: no es un gesto del jugador.
 
 ### BR-PLY-021 — Cada noche arranca en la entrada
@@ -212,16 +212,18 @@ de carga que las cajas, sin rotación adicional hacia la cara. Su eje DEBE perma
 respecto del piso al mirar arriba o abajo, y DEBE acompañar el giro horizontal del jugador.
 CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
 
-### BR-PLY-026 — El clic derecho abre lo fijo y conserva la mano
+### BR-PLY-026 — El clic izquierdo abre lo fijo y conserva la mano
 
-CUANDO se usa —clic derecho— una puerta, la computadora, la ventanilla o la caja registradora, el sistema DEBE
-abrirla o alternarla con las manos vacías y con cualquier cosa en la mano: una unidad, una
-caja, la mopa, el balde, un jabón o una bolsa. Lo que se lleva DEBE seguir en la mano. El uso
-de lo fijo NO DEBE pedir el uso de la herramienta ni la reposición.
+CUANDO se hace el gesto de agarrar —clic izquierdo— sobre una puerta interior, la computadora,
+la ventanilla, la caja registradora o una nota pegada, el sistema DEBE abrirla o alternarla con
+las manos vacías y con cualquier cosa en la mano: una unidad, una caja, la mopa, el balde, un
+jabón o una bolsa. Lo que se lleva DEBE seguir en la mano: ese clic NO DEBE soltarlo.
 
-CUANDO se hace el gesto de agarrar —clic izquierdo— sobre ellas, el sistema NO DEBE abrirlas:
-con las manos vacías no pasa nada; con algo en la mano, DEBE soltarlo como sin mira
-(BR-PLY-018). SI el control está suspendido, ENTONCES usar NO DEBE abrir ni alternar lo fijo.
+CUANDO se usa —clic derecho— la computadora, la ventanilla, la caja registradora o una nota
+cerradas, el sistema NO DEBE abrirlas. Usar una puerta interior tampoco DEBE alternarla: se
+abre y se cierra con el izquierdo, igual que la puerta de una heladera. Usar es el único gesto que hace avisar a una trabada
+(BR-PLY-020): el izquierdo sobre una trabada NO DEBE avisar ni soltar lo que se lleva. El uso de una puerta NO DEBE pedir el uso de la herramienta ni la
+reposición. SI el control está suspendido, ENTONCES ningún gesto DEBE abrir ni alternar lo fijo.
 
 ### BR-PLY-027 — Asomarse encuadra los bordes visibles y devuelve la vista
 
@@ -252,8 +254,8 @@ ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano, salvo una e
 
 ### BR-PLY-029 — Leer una nota pegada
 
-CUANDO el clic derecho apunta a una nota pegada, el sistema DEBE mostrar su lectura y
-suspender el control. Otro clic derecho DEBE cerrar y reanudar. Lo que se lleva DEBE conservar
+CUANDO el clic izquierdo apunta a una nota pegada, el sistema DEBE mostrar su lectura y
+suspender el control. Otro clic, izquierdo o derecho, DEBE cerrar y reanudar. Lo que se lleva DEBE conservar
 su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
 abrir otra hoja. Leer NO DEBE detener el turno.
 
@@ -281,9 +283,10 @@ renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, 
 
 ### BR-PLY-031 — El programa abre sin soltar la mano
 
-CUANDO se usa la caja registradora con clic derecho, el sistema DEBE abrir su programa y
-suspender el control, conservando lo que se lleva y su lugar en la mano. Otro clic derecho
-DEBE cerrar y reanudar. Una pantalla o examen abiertos NO DEBEN permitir abrir el programa.
+CUANDO se hace clic izquierdo sobre la caja registradora, el sistema DEBE abrir su programa y
+suspender el control, conservando lo que se lleva y su lugar en la mano. Un clic derecho, o un
+clic izquierdo por fuera del panel del programa, DEBE cerrar y reanudar. Una pantalla o examen
+abiertos NO DEBEN permitir abrir el programa.
 Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
 continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar la devolución.
 
@@ -346,9 +349,10 @@ combinación intermedia.
 ### BR-PLY-036 — El derecho no adelanta el resultado
 
 El clic derecho DEBE contar con efecto, con cualquier cosa en la mano o con la mano vacía,
-sobre lo fijo que abre o alterna (BR-PLY-026) —incluida la puerta trabada, que avisa
-(BR-PLY-020)—, sobre una nota pegada (BR-PLY-029) y sobre el cuerpo y la tapa del contenedor de
-basura (BR-CLN-025). DEBE contar con efecto el par declarado de lo que se lleva y su objetivo
+sobre una puerta trabada, que avisa (BR-PLY-020), y sobre el cuerpo
+y la tapa del contenedor de basura (BR-CLN-025). Sobre una puerta interior, la computadora, la
+ventanilla, la caja registradora y una nota pegada NO DEBE contar con efecto: las abre el
+izquierdo. DEBE contar con efecto el par declarado de lo que se lleva y su objetivo
 (BR-PLY-012); el lector con una unidad en la mano (BR-PLY-032); el inodoro con un ticket en la
 mano (BR-CTR-025); y un tacho que conserva su bolsa, con la mano vacía (BR-CLN-032).
 
@@ -600,7 +604,7 @@ trabadas y contestan al uso, y las dos puertas interiores no están trabadas.
 
 ### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
 
-DADO una puerta interior cerrada CUANDO se la usa dos veces seguidas, con la hoja todavía
+DADO una puerta interior cerrada CUANDO se la acciona dos veces seguidas, con la hoja todavía
 girando, ENTONCES avisa una vez que se abrió y después una vez que se cerró. DADO una puerta
 trabada CUANDO se la usa diez veces ENTONCES avisa diez veces que está trabada, el portón con su
 propio aviso, y la hoja no gira. DADO la apertura de una jornada ENTONCES ninguna puerta avisa.
@@ -691,29 +695,31 @@ ENTONCES el balde no vuelve a la mano: la mano queda vacía y el balde, derecho.
 ### AC-PLY-054 — La puerta abre con cualquier mano y la conserva *(verifica BR-PLY-026, BR-PLY-011)*
 
 DADO una puerta interior cerrada y, por turno, las manos vacías, una unidad, una caja, la
-mopa, el balde, un jabón y una bolsa en la mano CUANDO se usa ENTONCES queda abierta, avisa
-una vez que se abrió y la mano lleva lo mismo que antes. CUANDO se usa otra vez ENTONCES
+mopa, el balde, un jabón y una bolsa en la mano CUANDO se acciona ENTONCES queda abierta, avisa
+una vez que se abrió y la mano lleva lo mismo que antes. CUANDO se acciona otra vez ENTONCES
 queda cerrada y avisa una vez que se cerró, aunque la hoja todavía esté girando.
 
-### AC-PLY-055 — Agarrar no abre lo fijo *(verifica BR-PLY-026)*
+### AC-PLY-055 — Agarrar abre lo fijo sin soltar *(verifica BR-PLY-026)*
 
 DADO una puerta interior, la computadora o la ventanilla cerradas y las manos vacías CUANDO
-se hace el gesto de agarrar ENTONCES siguen cerradas y no avisan. DADO una unidad en la mano
-CUANDO se hace ese gesto sobre ellas ENTONCES se suelta la unidad y siguen cerradas.
+se hace el gesto de agarrar ENTONCES se abren. DADO una unidad en la mano CUANDO se hace ese
+gesto sobre ellas ENTONCES se abren y la unidad sigue en la mano. DADO la computadora o la
+ventanilla cerradas CUANDO se usan ENTONCES siguen cerradas.
 
 ### AC-PLY-056 — El panel abre y cierra sin cambiar la mano *(verifica BR-PLY-026, BR-PLY-006)*
 
-DADO la computadora o la ventanilla cerradas y cualquier cosa en la mano CUANDO se usan
-ENTONCES se abren, el jugador queda suspendido y la mano lleva lo mismo. CUANDO se usa otra
-vez, sin conversación en curso, ENTONCES se cierran, el jugador se reanuda y la mano sigue igual. DADO el control ya
-suspendido por otra pantalla ENTONCES usar no abre lo fijo.
+DADO la computadora o la ventanilla cerradas y cualquier cosa en la mano CUANDO se hace el
+gesto de agarrar sobre ellas ENTONCES se abren, el jugador queda suspendido y la mano lleva lo
+mismo. CUANDO se usa, sin conversación en curso, ENTONCES se cierran, el jugador se reanuda y
+la mano sigue igual. DADO el control ya suspendido por otra pantalla ENTONCES ningún gesto abre
+lo fijo.
 
 ### AC-PLY-057 — Lo fijo gana a la herramienta y la trabada avisa *(verifica BR-PLY-026, BR-PLY-012, BR-PLY-020)*
 
 DADO una puerta trabada y la mopa en la mano CUANDO se usa diez veces ENTONCES avisa trabada
 diez veces, la hoja no gira, la mopa sigue en la mano y no se pide limpieza ni reposición.
-DADO una puerta interior con la mopa en la mano CUANDO se usa ENTONCES abre y tampoco se pide
-el uso de la mopa.
+DADO una puerta interior con la mopa en la mano CUANDO se usa ENTONCES sigue cerrada, no avisa,
+la mopa sigue en la mano y tampoco se pide el uso de la mopa.
 
 ### AC-PLY-058 — La perspectiva encuadra ambos planos *(verifica BR-PLY-027)*
 
@@ -762,21 +768,21 @@ DADO las manos vacías, un levantable enfocado y el control suspendido por la co
 la ventanilla CUANDO se hace el gesto de agarrar ENTONCES las manos siguen vacías y el objeto
 permanece donde estaba.
 
-### AC-PLY-063 — Cada hoja abre su lectura y cierra con el derecho *(verifica BR-PLY-029, BR-PLY-006)*
+### AC-PLY-063 — Cada hoja abre su lectura y cierra con cualquier clic *(verifica BR-PLY-029, BR-PLY-006)*
 
-DADO cada una de las seis notas pegadas enfocadas, CUANDO se hace clic derecho ENTONCES
-aparece su contenido propio y se suspenden caminata, mirada y foco. CUANDO se hace otro clic
-derecho ENTONCES la lectura se cierra y el control vuelve.
+DADO cada una de las seis notas pegadas enfocadas, CUANDO se hace clic izquierdo ENTONCES
+aparece su contenido propio y se suspenden caminata, mirada y foco. CUANDO se hace otro clic,
+izquierdo o derecho, ENTONCES la lectura se cierra y el control vuelve.
 
 ### AC-PLY-064 — La lectura conserva lo llevado *(verifica BR-PLY-029, BR-PLY-026)*
 
 DADO una unidad, caja, mopa, balde, jabón o bolsa en la mano, CUANDO se abre, lee y cierra una
 nota ENTONCES se conserva el mismo objeto en su lugar en la mano. El clic NO pide usarlo.
 
-### AC-PLY-065 — La nota no toma el izquierdo ni E para abrir *(verifica BR-PLY-029, BR-PLY-028)*
+### AC-PLY-065 — La nota no toma el derecho ni E para abrir *(verifica BR-PLY-029, BR-PLY-028)*
 
-DADO una nota cerrada y la mano vacía, CUANDO se hace clic izquierdo o E ENTONCES la lectura
-permanece cerrada. DADO algo en la mano ENTONCES el izquierdo lo suelta como en otro lugar.
+DADO una nota cerrada y la mano vacía, CUANDO se hace clic derecho o E ENTONCES la lectura
+permanece cerrada. DADO algo en la mano ENTONCES el izquierdo abre la lectura sin soltarlo.
 DADO la lectura abierta ENTONCES el izquierdo no agarra ni suelta y E no examina.
 
 ### AC-PLY-066 — Una pantalla no abre otra nota encima *(verifica BR-PLY-029)*
@@ -822,9 +828,10 @@ al agregar lectura.
 ### AC-PLY-072 — La caja abre con cada mano y la conserva *(verifica BR-PLY-031, BR-PLY-026, BR-PLY-006, BR-PLY-028)*
 
 DADO la caja cerrada y, por turno, manos vacías, unidad, caja, mopa, balde, jabón, bolsa y
-ticket, CUANDO se hace clic derecho ENTONCES abre el programa y suspende el control sin
-cambiar lo sostenido ni su padre o pose. CUANDO se hace otro derecho ENTONCES cierra y la
-mano sigue igual. El izquierdo y E con mano vacía no abren; abierto, no agarran ni examinan.
+ticket, CUANDO se hace clic izquierdo ENTONCES abre el programa y suspende el control sin
+cambiar lo sostenido ni su padre o pose. CUANDO se hace clic derecho, o izquierdo por fuera del
+panel, ENTONCES cierra y la mano sigue igual. El derecho y E con mano vacía no abren; abierto,
+el izquierdo y E no agarran ni examinan.
 DADO otra pantalla o examen abiertos ENTONCES no abre el programa encima.
 
 ### AC-PLY-073 — El lector lee sólo el derecho y conserva la mano *(verifica BR-PLY-032, BR-PLY-012)*
@@ -918,7 +925,8 @@ programa llenos ENTONCES sale «[Click Der] Interactuar», y la herramienta, el 
 renglones no cambian. DADO la mano vacía y la mira sobre el lector, el inodoro, el lavatorio o
 el balde ENTONCES no sale ninguna línea del derecho. DADO un ticket en la mano y la mira sobre un
 inodoro ENTONCES sale. DADO la mano vacía y una puerta trabada ENTONCES la referencia es
-«[E] Examinar» y «[Click Der] Interactuar». DADO el cuerpo o la tapa del contenedor de basura,
+«[E] Examinar» y «[Click Der] Interactuar»; sobre una puerta interior, no sale ninguna línea
+del derecho. DADO el cuerpo o la tapa del contenedor de basura,
 con la mano vacía o cargada ENTONCES sale. DADO el programa manual y la mira sobre el hueco del
 lector, con una unidad en la mano ENTONCES no sale.
 

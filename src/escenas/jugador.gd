@@ -27,6 +27,8 @@ const PASOS_DEL_UTIL_EN_LA_MANO := 64
 
 ## El método con que lo fijo dice su texto al examinarlo: no tiene `datos` que lo digan.
 const METODO_TEXTO_AL_EXAMINAR := &"texto_al_examinar"
+## Lo que se usa directo y no siempre hace algo lo contesta: una puerta que abre no se usa.
+const METODO_USO_CON_EFECTO := &"el_uso_tiene_efecto"
 
 ## Para leer qué enfoca la mira: una caja del depósito y un casillero de la góndola. Son cáscara
 ## y no declaran `class_name`.
@@ -194,8 +196,6 @@ func _unhandled_input(evento: InputEvent) -> void:
 		if not _control.esta_suspendido():
 			if _enfocado == null:
 				_usar_la_superficie_mirada()
-			elif _enfocado.has_method(ReglasDeLosObjetos.METODO_ACCIONAR):
-				_enfocado.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 			elif _enfocado.has_method(ReglasDeLosObjetos.METODO_USAR):
 				_enfocado.call(ReglasDeLosObjetos.METODO_USAR)
 			else:
@@ -243,6 +243,10 @@ func _interactuar() -> void:
 		datos = _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
 		if datos == null:
 			return
+	elif _enfocado != null and _enfocado.has_method(ReglasDeLosObjetos.METODO_ACCIONAR):
+		# Lo fijo se abre con el mismo clic y no suelta lo que se lleva.
+		_enfocado.call(ReglasDeLosObjetos.METODO_ACCIONAR)
+		return
 	agarre.alternar(datos, _enfocado)
 
 
@@ -543,15 +547,14 @@ func _mira_sobre(cuerpo: Node3D) -> ReferenciaDeControles.Mira:
 	return ReferenciaDeControles.Mira.FIJO
 
 
-## Lo fijo que abre o alterna tiene efecto con cualquier mano; lo demás lo contesta quien atiende
-## su pedido, en el mismo orden en que el clic derecho lo resuelve.
+## Lo que se usa directo tiene efecto con cualquier mano; lo demás lo contesta quien atiende su
+## pedido, en el mismo orden en que el clic derecho lo resuelve.
 func _derecho_sobre(cuerpo: Node3D, sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Derecho:
 	if cuerpo == null:
 		return ReferenciaDeControles.Derecho.NINGUNO
-	if (
-		cuerpo.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)
-		or cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR)
-	):
+	if cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR):
+		if cuerpo.has_method(METODO_USO_CON_EFECTO) and not cuerpo.call(METODO_USO_CON_EFECTO):
+			return ReferenciaDeControles.Derecho.NINGUNO
 		return ReferenciaDeControles.Derecho.INTERACTUAR
 	for consulta in _consultas_del_derecho:
 		var derecho: ReferenciaDeControles.Derecho = consulta.call(cuerpo, sostenido)
@@ -681,6 +684,11 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 		candidato.es_producto = "casillero" in cuerpo or _datos_de(cuerpo) is UnidadDeProducto
 		return candidato
 	return CampoDeInteraccion.Candidato.new(cuerpo.get_instance_id(), INF, INF, true, false)
+
+
+## Lo que la mira enfoca ahora, o `null`.
+func enfocado() -> Node3D:
+	return _enfocado
 
 
 ## Los datos de un cuerpo del almacén, o `null` si no es un objeto. Se leen sin llamar a

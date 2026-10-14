@@ -26,7 +26,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó, volvió a su caja ni se tiró: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
 | **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas o en una | bloque, exhibición |
-| **Tanda fija** | una tanda sin casilleros: se ve, y no se agarra, no se repone ni se vacía | guía, decorado |
+| **Tanda fija** | una tanda que repite un producto para completar un estante. Su fila de adelante tiene casilleros, como la de cualquier tanda | guía, decorado |
 | **Cara de lado** | cada uno de los dos lados largos de un mueble de estantes, el que da a un pasillo | frente, lateral |
 | **Cabecera** | cada uno de los dos extremos cortos de un mueble de estantes | punta, testero |
 | **Zócalo** | el estante de más abajo de una cara de lado | base, piso |
@@ -34,7 +34,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone. En una tanda de una sola fila, es esa fila | frente, cara |
 | **Fila de atrás** | la fila de una tanda de dos filas contra el fondo del estante: fija, entera toda la noche | guía, fondo |
 | **Casillero** | cada lugar de la fila de adelante, que el jugador llena colocando una unidad y vacía agarrándola. Cada uno está vacío u ocupado por separado | hueco, slot |
-| **Cupo** | cuántos casilleros tiene la fila de adelante de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
+| **Cupo** | cuántos casilleros suman las filas de adelante de las tandas de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
 | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
@@ -172,27 +172,27 @@ sonoridad no suena al agarrarlo ni al dejarlo, y nada lo avisa.
 
 ### BR-STK-024 — Un producto, un lugar
 
-El sistema DEBE exhibir cada producto del catálogo en una sola tanda con casilleros, al alcance
-de un jugador parado en el pasillo, y DEBE ubicar todos los casilleros de ese producto en esa
-tanda. Con los casilleros de un producto repartidos en dos lugares, el jugador no sabe adónde va
-lo que lleva en la mano.
+El sistema DEBE exhibir cada producto del catálogo en una sola tanda reponible, al alcance de
+un jugador parado en el pasillo. La fila de adelante de cada tanda del local, reponible o fija y
+en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
+casilleros vacíos con que abre una jornada DEBEN quedar en la tanda reponible.
 
-En un mueble de estantes, la tanda con casilleros DEBE ir en un estante de reposición. Un estante
+En un mueble de estantes, la tanda reponible DEBE ir en un estante de reposición. Un estante
 de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la altura de la mano se
 agarra y se repone. Los demás estantes —el de arriba y el zócalo de una cara de lado, y el de
 arriba de una cabecera— DEBEN llevar sólo tandas fijas, que repiten un producto del local. En una
-heladera, cualquier bandeja puede llevar la tanda con casilleros o una tanda fija.
+heladera, cualquier bandeja puede llevar la tanda reponible o una tanda fija.
 
 ### BR-STK-025 — La tanda tiene dos filas, o una según el reparto aprobado
 
-La tanda con casilleros de cada producto DEBE tener dos filas, una detrás de la otra. Cada lugar
+La tanda reponible de cada producto DEBE tener dos filas, una detrás de la otra. Cada lugar
 de la fila de adelante DEBE ser un casillero del producto, y ninguno de la fila de atrás. La fila
 de atrás DEBE verse entera desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la
 que dice qué va ahí.
 
 Las tandas de Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo DEBEN tener una sola fila,
-según el reparto aprobado. Cada lugar de su tanda con casilleros DEBE ser un casillero; sus
-tandas fijas, si las hay, siguen siendo fijas (BR-STK-024). Esas tandas no tienen fila de atrás.
+según el reparto aprobado. Cada lugar de su tanda reponible DEBE ser un casillero, y la fila de
+adelante de sus tandas fijas también (BR-STK-024). Esas tandas no tienen fila de atrás.
 El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mismo.
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
@@ -478,9 +478,9 @@ Prongles suenan a lata.
 
 ### AC-STK-028 — Cada producto se repone en un solo lugar *(verifica BR-STK-024)*
 
-DADO el local armado ENTONCES cada producto del catálogo tiene una sola tanda con casilleros,
-sobre un solo estante y con sus unidades juntas, y cualquier otra unidad de ese producto que se
-vea en el local es fija. DADO una cara de lado ENTONCES sus tandas con casilleros están en los
+DADO el local armado ENTONCES cada producto del catálogo tiene una sola tanda reponible, sobre un
+solo estante y con sus unidades juntas, y la fila de adelante de cada tanda fija suya también es
+de casilleros: el cupo del producto los suma a todos. DADO una cara de lado ENTONCES sus tandas con casilleros están en los
 estantes que no son ni el de arriba ni el zócalo, y esos estantes no llevan ninguna tanda fija; el
 de arriba y el zócalo llevan sólo tandas fijas. DADO una cabecera ENTONCES el estante de arriba
 lleva sólo tandas fijas, y los demás, sólo tandas con casilleros.
@@ -492,7 +492,7 @@ su tanda ENTONCES la mira alcanza su casillero y el producto se coloca.
 
 ### AC-STK-030 — Dos filas, o una, y el cupo adelante *(verifica BR-STK-025)*
 
-DADO la tanda con casilleros de cualquier producto, salvo Actroncito, Cosa de Maní, Prongles,
+DADO la tanda reponible de cualquier producto, salvo Actroncito, Cosa de Maní, Prongles,
 Flin Puf y Burbaloo,
 ENTONCES tiene dos filas, una detrás de la otra; la de adelante es la más cercana al pasillo, y
 cada uno de sus lugares es un casillero: tiene tantos como el cupo del producto. DADO la tanda
@@ -645,7 +645,7 @@ las 3 ENTONCES la caja tiene 3.
 DADO cada producto del catálogo, Arvejas y Coracola incluidas, con una unidad colocada en su
 fila de adelante y las manos vacías CUANDO el jugador se para en el pasillo frente a su tanda
 ENTONCES la mira enfoca esa unidad y el clic se la pone en la mano. DADO cualquier unidad que se
-ve en un estante de reposición ENTONCES es de la fila de adelante de una tanda con casilleros, o
+ve en un estante de reposición ENTONCES es de la fila de adelante de una tanda reponible, o
 de su fila de atrás: ninguna es de una tanda fija.
 
 ### AC-STK-051 — Mitad y mitad, o el estante entero *(verifica BR-STK-035)*

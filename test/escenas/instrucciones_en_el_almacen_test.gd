@@ -128,19 +128,14 @@ func test_fade_y_subida_usan_trescientos_milisegundos_reales() -> void:  # AC-EM
 	var altura := marco.size.y * marco.scale.y
 	var destino := marco.position.y - altura
 	assert_float(negro.modulate.a).is_equal(1.0)
-	ahora[0] = 150000
-	_instrucciones().call("_process", 99.0)
-	_persiana().call("_process", 99.0)
-	assert_float(negro.modulate.a).is_equal(0.5)
+	var animadas: Array[Node] = [_instrucciones(), _persiana()]
+	_cuadros(ahora, 150000, animadas)
+	assert_float(negro.modulate.a).is_equal_approx(0.5, 0.001)
 	assert_float(marco.position.y).is_equal_approx(destino + altura / 2, 0.01)
-	ahora[0] = 299999
-	_instrucciones().call("_process", 99.0)
-	_persiana().call("_process", 99.0)
+	_cuadros(ahora, 299999, animadas)
 	assert_bool(negro.visible).is_true()
 	assert_bool(_instrucciones().is_processing()).is_true()
-	ahora[0] = 300000
-	_instrucciones().call("_process", 0.0)
-	_persiana().call("_process", 0.0)
+	_cuadros(ahora, 300000, animadas)
 	assert_bool(negro.visible).is_false()
 	assert_float(marco.position.y).is_equal_approx(destino, 0.01)
 	assert_bool(_instrucciones().is_processing()).is_false()
@@ -168,6 +163,20 @@ func test_fade_y_subida_usan_trescientos_milisegundos_reales() -> void:  # AC-EM
 	assert_bool(_jugador().suspendido()).is_false()
 
 
+## El cuadro que abre la partida tarda: con el tiempo entero, el fundido se iba de un salto.
+func test_un_cuadro_largo_adelanta_el_fade_un_paso_maximo() -> void:  # AC-EMP-049
+	_abrir()
+	var ahora: Array[int] = [0]
+	_instrucciones().set("_ahora", func() -> int: return ahora[0])
+	_persiana().set("_ahora", func() -> int: return ahora[0])
+	_almacen.call("empezar_partida_nueva")
+	ahora[0] = 150000
+	_persiana().call("_process", 0.0)
+	var negro: ColorRect = _persiana().get("_negro")
+	var avance := CabeceraConSolapa.PASO_MAXIMO / PersianaDeLaNoche.FADE_DE_LA_PERSIANA_BAJA
+	assert_float(negro.modulate.a).is_equal_approx(1.0 - avance, 0.001)
+
+
 func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP-049
 	_abrir()
 	var ahora: Array[int] = [0]
@@ -176,9 +185,8 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	_almacen.call("empezar_partida_nueva")
 	for _paso in 3:
 		_siguiente().pressed.emit()
-	ahora[0] = 150000
-	_instrucciones().call("_process", 0.0)
-	_persiana().call("_process", 0.0)
+	var animadas: Array[Node] = [_instrucciones(), _persiana()]
+	_cuadros(ahora, 150000, animadas)
 	var marco: Control = _instrucciones().get("_marco")
 	var posicion := marco.position
 	var negro: ColorRect = _persiana().get("_negro")
@@ -198,9 +206,7 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	assert_float(_restante()).is_equal(restante)
 	_esc()
 	assert_bool(get_tree().paused).is_false()
-	ahora[0] += 150000
-	_instrucciones().call("_process", 0.0)
-	_persiana().call("_process", 0.0)
+	_cuadros(ahora, ahora[0] + 150000, animadas)
 	assert_bool(negro.visible).is_false()
 	assert_bool(_instrucciones().is_processing()).is_false()
 	(
@@ -312,3 +318,11 @@ func test_capa_sobre_persiana_y_debajo_de_avisos_y_pausa() -> void:  # AC-EMP-04
 	for nombre: String in ["PilaDeNotificaciones", "MenuDePausa"]:
 		var capa: CanvasLayer = _almacen.get_node("Interfaz/" + nombre)
 		assert_int(capa.layer).is_greater(_instrucciones().layer)
+
+
+## Avanza el reloj hasta `hasta` en cuadros de 10 ms, como un juego que corre parejo.
+func _cuadros(ahora: Array[int], hasta: int, nodos: Array[Node]) -> void:
+	while ahora[0] < hasta:
+		ahora[0] = mini(ahora[0] + 10000, hasta)
+		for nodo in nodos:
+			nodo.call("_process", 0.0)

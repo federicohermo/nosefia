@@ -61,7 +61,7 @@ func test_abrir_el_bano_no_barre_los_utiles_de_limpieza() -> void:
 	var origenes: Array[Vector3] = []
 	for util: Node3D in utiles:
 		origenes.append(util.global_position)
-	local.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("usar")
+	local.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("alternar")
 	for cuadro in 90:
 		await get_tree().physics_frame
 	for indice in utiles.size():

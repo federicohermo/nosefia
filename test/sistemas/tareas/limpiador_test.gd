@@ -347,3 +347,23 @@ func test_charco_con_mano_vacia_seca_o_jabon_no_emite_agua() -> void:  # AC-CLN-
 	)
 	assert_float(limpiador.piso().mopa().carga_restante()).is_equal(carga)
 	assert_int(_avisos_de_tarea).is_zero()
+
+
+# AC-SUB-018, AC-SUB-019
+func test_la_mopa_avisa_que_se_seco_y_la_pasada_seca_dice_su_motivo() -> void:
+	var limpiador := _limpiador()
+	var lugar: PisoDelLocal.Lugar = limpiador.piso().lugares()[0]
+	_preparar(limpiador, _jabon_de(limpiador, lugar))
+	var secadas := [0]
+	limpiador.mopa_secada.connect(func() -> void: secadas[0] += 1)
+	var rechazadas: Array[Array] = []
+	limpiador.pasada_rechazada.connect(
+		func(donde: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado) -> void:
+			rechazadas.append([donde, motivo])
+	)
+	limpiador.desgastar_mopa(MOPA, ReglasDeLaLimpieza.DURACION_DE_LA_CARGA * 2.0, 0.0)
+	limpiador.desgastar_mopa(MOPA, ReglasDeLaLimpieza.DURACION_DE_LA_CARGA, 0.0)
+	assert_int(secadas[0]).is_equal(1)
+	assert_int(limpiador.pasar(MOPA, lugar)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_SECA)
+	assert_array(rechazadas).contains_exactly([[lugar, ReglasDeLaLimpieza.Resultado.MOPA_SECA]])
+	assert_bool(limpiador.piso().mopa().se_mojo()).is_true()

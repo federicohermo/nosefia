@@ -115,6 +115,32 @@ func _dibujadas(almacen: Node3D, producto: Producto) -> Array[Vector3]:
 
 
 ## Dónde dibuja la góndola la unidad de un casillero: el lugar de su envase.
+## Las tandas de un producto en el orden de sus casilleros, como `[bloque, fila de adelante]`:
+## cada tanda fija suya y, al final, la reponible.
+func _tandas(almacen: Node3D, producto: Producto) -> Array[Array]:
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var tandas: Array[Array] = []
+	for indice in disposicion.guias.size():
+		if disposicion.productos_de_las_guias[indice] == producto.id:
+			tandas.append(
+				[disposicion.guias[indice], disposicion.filas_de_adelante_de_las_guias[indice]]
+			)
+	tandas.append(
+		[disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]]
+	)
+	return tandas
+
+
+## Hacia qué pasillo mira la tanda de un casillero: cada tanda puede dar a otro.
+func _frente_del_casillero(almacen: Node3D, producto: Producto, casillero: int) -> Vector3:
+	var resto := casillero
+	for tanda: Array in _tandas(almacen, producto):
+		if resto < tanda[1]:
+			return DisposicionDeLaGondola.frente(tanda[0], tanda[1])
+		resto -= tanda[1]
+	return _frente(almacen, producto)
+
+
 func _lugar_de(casillero: Node3D) -> Vector3:
 	var vista: MeshInstance3D = casillero.get("vista")
 	return vista.global_transform.origin
@@ -347,28 +373,26 @@ func test_la_fila_de_atras_no_tiene_casilleros() -> void:  # AC-PLY-049
 	# Cada casillero está donde va una unidad de la fila de adelante, y ninguno donde va una de
 	# la de atrás: lo que la mira no encuentra, no se agarra.
 	var almacen := _almacen()
-	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var puesto_global: Transform3D = _puesto(almacen).global_transform
 	for producto in Catalogo.todos():
-		var bloque := disposicion.principales[producto.id]
-		var fila := disposicion.filas_de_adelante[producto.id]
-		var total := DisposicionDeLaGondola.copias(bloque)
+		var tandas := _tandas(almacen, producto)
+		var adelante: Array[Vector3] = []
+		var atras: Array[Vector3] = []
+		for tanda: Array in tandas:
+			var total := DisposicionDeLaGondola.copias(tanda[0])
+			for indice in total:
+				var lugar := (puesto_global * DisposicionDeLaGondola.copia(tanda[0], indice)).origin
+				(adelante if indice >= total - tanda[1] else atras).append(lugar)
 		var casilleros := _casilleros(almacen, producto)
-		assert_int(casilleros.size()).is_equal(fila)
+		assert_int(casilleros.size()).is_equal(adelante.size())
 		for casillero: Node3D in casilleros:
 			var lugar := _lugar_de(casillero)
-			var puesto_global: Transform3D = _puesto(almacen).global_transform
-			var adelante := (
-				puesto_global
-				* DisposicionDeLaGondola.copia(bloque, total - fila + casillero.get("casillero"))
-			)
 			(
 				assert_vector(lugar)
 				. override_failure_message("%s: %s" % [producto.nombre, casillero.name])
-				. is_equal_approx(adelante.origin, Vector3.ONE * 1e-4)
+				. is_equal_approx(adelante[casillero.get("casillero")], Vector3.ONE * 1e-4)
 			)
-			for atras in total - fila:
-				var copia := puesto_global * DisposicionDeLaGondola.copia(bloque, atras)
-				assert_bool(copia.origin.is_equal_approx(lugar)).is_false()
+			assert_bool(_contiene(atras, lugar)).is_false()
 
 
 func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC-STK-046 AC-STK-047
@@ -435,14 +459,23 @@ func test_cada_casillero_se_enfoca_desde_el_pasillo() -> void:  # AC-STK-029
 	await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var todos: Array[Node3D] = []
+	var reponibles: Array[Node3D] = []
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
 	for producto in Catalogo.todos():
+		var cupo := _casilleros(almacen, producto).size()
 		for casillero: Node3D in _casilleros(almacen, producto):
 			todos.append(casillero)
+			# La tanda reponible va a la altura de la mano; una fija puede estar en la bandeja de
+			# abajo, donde el estante de arriba tapa la vista de quien está parado.
+			if casillero.get("casillero") >= cupo - disposicion.filas_de_adelante[producto.id]:
+				reponibles.append(casillero)
 	var perdidos: Array[String] = []
-	for casillero in todos:
+	for casillero in reponibles:
 		var producto := Catalogo.de(casillero.get("producto"))
 		var pie := _lugar_en_el_pasillo(
-			almacen, casillero.global_position, _frente(almacen, producto)
+			almacen,
+			casillero.global_position,
+			_frente_del_casillero(almacen, producto, casillero.get("casillero"))
 		)
 		if not pie.is_finite():
 			perdidos.append("%s %s: sin lugar en el pasillo" % [producto.nombre, casillero.name])

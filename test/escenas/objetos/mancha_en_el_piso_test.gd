@@ -63,7 +63,7 @@ func _abrir(almacen: Node3D, jornada: int) -> void:
 	if (almacen.get("_partida") as Partida).jornada() != jornada:
 		almacen.call("_al_abrir_la_jornada", jornada)
 	for numero: int in [1, 2]:
-		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("usar")
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 

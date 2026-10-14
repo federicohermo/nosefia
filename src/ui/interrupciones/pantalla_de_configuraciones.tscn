@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://src/ui/interrupciones/pantalla_de_configuraciones.gd" id="1_pantalla"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
-[ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="3_cabecera"]
+[ext_resource type="Script" path="res://src/ui/interrupciones/cabecera_con_solapa.gd" id="4_solapa"]
 
 [node name="PantallaDeConfiguraciones" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_filas", "_volver")]
 process_mode = 3
@@ -28,34 +28,35 @@ offset_bottom = 1080.0
 theme = ExtResource("2_tema")
 mouse_filter = 2
 
-[node name="Cabecera" type="TextureRect" parent="Fondo/Panel"]
+[node name="Cabecera" type="Control" parent="Fondo/Panel" node_paths=PackedStringArray("contenido")]
 layout_mode = 0
 offset_left = 104.0
 offset_top = 46.0
 offset_right = 1816.0
-offset_bottom = 128.3
-texture = ExtResource("3_cabecera")
-expand_mode = 1
+offset_bottom = 116.3
 mouse_filter = 2
+script = ExtResource("4_solapa")
+contenido = NodePath("../Titulo")
 
-[node name="Pie" type="TextureRect" parent="Fondo/Panel"]
+[node name="Pie" type="Control" parent="Fondo/Panel" node_paths=PackedStringArray("contenido")]
 layout_mode = 0
 offset_left = 104.0
-offset_top = 965.0
+offset_top = 963.7
 offset_right = 1816.0
-offset_bottom = 1035.3
-texture = ExtResource("3_cabecera")
-expand_mode = 1
-flip_h = true
-flip_v = true
+offset_bottom = 1034.0
 mouse_filter = 2
+script = ExtResource("4_solapa")
+contenido = NodePath("../Volver")
+volteada = true
 
 [node name="Titulo" type="Label" parent="Fondo/Panel"]
 layout_mode = 0
 offset_left = 155.0
-offset_top = 66.0
+offset_top = 61.0
 offset_right = 700.0
-offset_bottom = 112.0
+offset_bottom = 103.0
+theme_type_variation = &"TextoDelMenu"
+vertical_alignment = 1
 
 [node name="Filas" type="VBoxContainer" parent="Fondo/Panel"]
 layout_mode = 0
@@ -63,12 +64,13 @@ offset_left = 360.0
 offset_top = 180.0
 offset_right = 1560.0
 offset_bottom = 940.0
+theme_type_variation = &"ColumnaDelMenu"
 alignment = 1
 
 [node name="Volver" type="Button" parent="Fondo/Panel"]
 layout_mode = 0
-offset_left = 1320.0
-offset_top = 850.0
-offset_right = 1560.0
-offset_bottom = 922.0
-theme_type_variation = &"BotonContinuar"
+offset_left = 1510.0
+offset_top = 958.0
+offset_right = 1750.0
+offset_bottom = 1018.0
+theme_type_variation = &"BotonDelMenu"

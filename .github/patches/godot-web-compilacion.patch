@@ -217,3 +217,35 @@
  	static void set_shader_cache_dir(const String &p_dir);
  	static void set_shader_cache_save_compressed(bool p_enable);
  	static void set_shader_cache_save_compressed_zstd(bool p_enable);
+--- a/drivers/gles3/storage/render_scene_buffers_gles3.cpp
++++ b/drivers/gles3/storage/render_scene_buffers_gles3.cpp
+@@ -475,6 +475,11 @@
+ 	GLenum texture_target = use_multiview ? GL_TEXTURE_2D_ARRAY : GL_TEXTURE_2D;
+ 	GLenum depth_format = GL_DEPTH24_STENCIL8;
+ 	uint32_t depth_format_size = 4;
++#ifdef WEB_ENABLED
++	// The status query makes the browser wait for the GPU. Every frame that reads the screen
++	// comes here, so only a framebuffer that gets a new attachment is checked.
++	const bool attaching = (backbuffer3d.color == 0 && p_need_color) || (backbuffer3d.depth == 0 && p_need_depth);
++#endif
+ 
+ 	if (backbuffer3d.color == 0 && p_need_color) {
+ 		glGenTextures(1, &backbuffer3d.color);
+@@ -532,11 +537,17 @@
+ 		}
+ 	}
+ 
++#ifdef WEB_ENABLED
++	if (attaching) {
++#endif
+ 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+ 	if (status != GL_FRAMEBUFFER_COMPLETE) {
+ 		_clear_back_buffers();
+ 		WARN_PRINT("Could not create 3D back buffers, status: " + texture_storage->get_framebuffer_error(status));
+ 	}
++#ifdef WEB_ENABLED
++	}
++#endif
+ 
+ 	glBindTexture(texture_target, 0);
+ 	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);

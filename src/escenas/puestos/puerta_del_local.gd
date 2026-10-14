@@ -77,14 +77,25 @@ func _ready() -> void:
 	top_level = true
 
 
-## El clic derecho de lo fijo comparte la operación con las puertas de heladera.
+## El clic izquierdo abre y cierra. La trabada sólo avisa con el derecho.
 func accionar() -> void:
-	usar()
+	if traba == Traba.NINGUNA:
+		alternar()
 
 
-## Abrir, cerrar o intentar una puerta trabada corresponde al clic derecho.
-## El mismo gesto emite el aviso que dispara su sonido.
+## El clic derecho sólo intenta una trabada: la que abre se abre con el izquierdo.
 func usar() -> void:
+	if el_uso_tiene_efecto():
+		alternar()
+
+
+## Si el clic derecho hace algo: avisar que está trabada.
+func el_uso_tiene_efecto() -> bool:
+	return traba != Traba.NINGUNA
+
+
+## Abre, cierra o intenta una trabada, y emite el aviso que dispara su sonido.
+func alternar() -> void:
 	if not _puerta.alternar():
 		(porton_trabado if traba == Traba.PORTON else puerta_trabada).emit(self)
 	elif _puerta.abierta():

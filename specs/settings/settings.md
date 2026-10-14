@@ -33,8 +33,9 @@ impide jugar.
 
 Configuraciones DEBE mostrar seis filas, en este orden: **efectos, música, brillo,
 sensibilidad, textos y lenguaje**. Las cinco primeras DEBEN ser una barra con un botón − a la
-izquierda y un botón + a la derecha. Lenguaje DEBE ser un desplegable con una sola opción,
-«ESPAÑOL».
+izquierda y un botón + a la derecha. Lenguaje DEBE mostrar el idioma elegido entre un botón < a
+la izquierda y un botón > a la derecha, que pasan al idioma anterior y al siguiente. Hoy hay un
+solo idioma, «ESPAÑOL», y por eso los dos botones DEBEN estar deshabilitados.
 
 ### BR-CFG-002 — Rango, paso y defecto de cada preferencia
 
@@ -76,11 +77,11 @@ El sistema DEBE girar la vista y lo que se examina con la sensibilidad de fábri
 por la sensibilidad elegida. Los dos giros DEBEN usar el mismo factor. En 1× DEBEN girar igual
 que hoy.
 
-### BR-CFG-007 — Brillo cambia la interfaz y no el local
+### BR-CFG-007 — Brillo cambia la interfaz y el local
 
 El sistema DEBE multiplicar por el brillo elegido el brillo de todo lo que se dibuja con el tema
-de la interfaz: menús, pausa, avisos, computadora y celular. La vista del local en 3D NO DEBE
-cambiar. En 100 % la interfaz DEBE verse como hoy.
+de la interfaz: menús, pausa, avisos, computadora y celular. También DEBE multiplicar por él el
+brillo de la vista del local en 3D. En 100 % la interfaz y el local DEBEN verse como hoy.
 
 ### BR-CFG-008 — Textos multiplica el tamaño de letra de la interfaz
 
@@ -138,7 +139,7 @@ no hay archivo, ENTONCES DEBE usar todos los defectos.
 
 DADO Configuraciones abierta ENTONCES muestra efectos, música, brillo, sensibilidad, textos y
 lenguaje, en ese orden; cada una de las cinco primeras tiene un − a la izquierda de su barra y un
-+ a la derecha; el desplegable de lenguaje tiene exactamente una opción, «ESPAÑOL».
++ a la derecha; lenguaje muestra «ESPAÑOL» entre un < y un >, y los dos están deshabilitados.
 
 ### AC-CFG-002 — La tabla de valores *(verifica BR-CFG-002)*
 
@@ -179,8 +180,9 @@ arrastre ENTONCES con 2× gira el doble que con 1×, y con 0,25× la cuarta part
 ### AC-CFG-007 — El brillo *(verifica BR-CFG-007)*
 
 DADO brillo en 50 % ENTONCES la interfaz se dibuja con su brillo multiplicado por 0,5; en 150 %,
-por 1,5; en 100 %, sin cambio. DADO brillo en 50 % y en 150 % ENTONCES la vista del local en 3D
-es la misma que con 100 %.
+por 1,5; en 100 %, sin cambio. DADO el local con el brillo de hoy CUANDO brillo pasa a 50 %
+ENTONCES el brillo del local es el de hoy multiplicado por 0,5; en 150 %, por 1,5; en 100 %, el
+de hoy, aunque antes haya pasado por otros valores.
 
 ### AC-CFG-008 — Los textos *(verifica BR-CFG-008)*
 
@@ -238,7 +240,6 @@ defecto.
 
 - Esta capacidad NO ajusta el contraste, ni remapea los controles, ni ofrece otro idioma que el
   español.
-- Esta capacidad NO cambia el brillo del local en 3D: sólo el de la interfaz.
 - Esta capacidad NO guarda ni borra la partida: eso es de
   [`save-and-resume`](../save-and-resume/save-and-resume.md).
 - Esta capacidad NO decide qué suena ni por qué bus: eso es de

@@ -156,7 +156,7 @@ func test_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano()
 		if arriba.angle_to(Vector3.UP) > deg_to_rad(1.0):
 			en_rampa += 1
 		presentacion.call("retirar", producto.id)
-		var en_la_mano := (agarre.punto_de_producto.get_child(0) as Node3D).basis.orthonormalized()
+		var en_la_mano := _sin_la_pose(presentacion, producto.id, agarre)
 		if arriba_de_referencia == Vector3.ZERO:
 			arriba_de_referencia = en_la_mano * arriba
 			frente_de_referencia = en_la_mano * frente
@@ -227,7 +227,7 @@ func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -
 			. override_failure_message("%s no se agarró de su casillero" % producto.nombre)
 			. contains_exactly([indice])
 		)
-		var en_la_mano := (agarre.punto_de_producto.get_child(0) as Node3D).basis.orthonormalized()
+		var en_la_mano := _sin_la_pose(presentacion, producto.id, agarre)
 		var medida := PackedVector3Array([en_la_mano * arriba, en_la_mano * frente])
 		if en_rampa:
 			de_cabecera[producto.nombre] = medida
@@ -251,6 +251,14 @@ func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -
 		)
 
 
+## Lo que hay en la mano, sin la pose que la mano le da según la forma del envase: sin ella, todos
+## van derechos y con el frente hacia la cámara.
+static func _sin_la_pose(presentacion: Node3D, id: Producto.Id, agarre: Agarre) -> Basis:
+	var pose: Basis = presentacion.call("_inclinacion_en_la_mano", id)
+	var en_la_mano := (agarre.punto_de_producto.get_child(0) as Node3D).basis.orthonormalized()
+	return pose.inverse() * en_la_mano
+
+
 ## Si un eje se aparta de la vertical más de un grado.
 static func _inclinado(eje: Vector3) -> bool:
 	return eje.angle_to(Vector3.UP) > deg_to_rad(1.0)
@@ -259,13 +267,14 @@ static func _inclinado(eje: Vector3) -> bool:
 ## Al abrir, de cada producto falta sólo lo que su jornada pide, y los casilleros son las
 ## últimas copias de su tanda: las guías que lo repiten en otros estantes se dibujan enteras y no
 ## se reponen nunca. Reponer lo que falta prende exactamente esas copias, y ninguna otra.
-func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> void:  # AC-STK-028
+func test_la_fila_de_adelante_de_cada_tanda_es_de_casilleros() -> void:  # AC-STK-028
 	var almacen := _almacen()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var disposicion := _disposicion(almacen)
 	for producto in Catalogo.todos():
 		var nombre := producto.nombre
 		var cupo := _cupo(almacen, producto)
+		assert_int(cupo).is_equal(disposicion.casilleros_de(producto.id))
 		(
 			assert_int(presentacion.find_children("ZonaDe" + nombre, "", false, false).size())
 			. override_failure_message("%s no tiene un solo casillero" % nombre)
@@ -278,11 +287,11 @@ func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> v
 			. override_failure_message("%s: al abrir no falta sólo lo de la jornada" % nombre)
 			. is_equal(_faltante(almacen, producto))
 		)
-		var bloque := disposicion.principales[producto.id]
-		var principales := DisposicionDeLaGondola.copias(bloque)
+		var lugares := _casilleros_de_la_disposicion(disposicion, producto)
+		assert_int(lugares.size()).is_equal(cupo)
 		for indice in cupo:
 			var dibujada := _copia_del_dibujo(copias, copias.instance_count - cupo + indice)
-			var de_la_tanda := DisposicionDeLaGondola.copia(bloque, principales - cupo + indice)
+			var de_la_tanda := lugares[indice]
 			(
 				assert_vector(dibujada.origin)
 				. override_failure_message(
@@ -368,7 +377,7 @@ func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 			. override_failure_message(
 				"%s: su fila de adelante no es entera de casilleros" % producto.nombre
 			)
-			. is_equal(fila)
+			. is_equal(disposicion.casilleros_de(producto.id))
 		)
 		for columna in fila:
 			var atras := _caja_de_la_copia(almacen, producto, columna).get_center()
@@ -445,7 +454,7 @@ func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC
 	var faltan: Array[String] = []
 	for producto in Catalogo.todos():
 		var nombre := producto.nombre
-		var fila := disposicion.filas_de_adelante[producto.id]
+		var fila := disposicion.casilleros_de(producto.id)
 		(
 			assert_int(estante.unidades_en_gondola(producto))
 			. override_failure_message("%s no abrió con su fila menos lo que falta" % nombre)
@@ -461,8 +470,35 @@ func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC
 	assert_array(faltan).contains_exactly(
 		["Actroncito", "Laysntt", "Prongles", "Coracola", "Marolini"]
 	)
-	assert_int(estante.unidades_en_gondola(Catalogo.de(Producto.Id.CORACOLA))).is_zero()
+	# A Coracola le falta la tanda reponible entera: lo que queda es la fila de su tanda fija.
+	var coracola := Catalogo.de(Producto.Id.CORACOLA)
+	assert_int(estante.unidades_en_gondola(coracola)).is_equal(
+		estante.cupo(coracola) - disposicion.filas_de_adelante[Producto.Id.CORACOLA]
+	)
 	assert_bool(estante.completada()).is_false()
+
+
+## Dónde va cada casillero de un producto, en orden: la fila de adelante de cada tanda fija suya
+## y, al final, la de su tanda reponible, que es donde quedan los vacíos al abrir.
+func _casilleros_de_la_disposicion(
+	disposicion: DisposicionDeLaGondola, producto: Producto
+) -> Array[Transform3D]:
+	var lugares: Array[Transform3D] = []
+	var bloques: Array[PackedFloat32Array] = []
+	var filas: Array[int] = []
+	for indice in disposicion.guias.size():
+		if disposicion.productos_de_las_guias[indice] == producto.id:
+			bloques.append(disposicion.guias[indice])
+			filas.append(disposicion.filas_de_adelante_de_las_guias[indice])
+	bloques.append(disposicion.principales[producto.id])
+	filas.append(disposicion.filas_de_adelante[producto.id])
+	for orden in bloques.size():
+		var total := DisposicionDeLaGondola.copias(bloques[orden])
+		for columna in filas[orden]:
+			lugares.append(
+				DisposicionDeLaGondola.copia(bloques[orden], total - filas[orden] + columna)
+			)
+	return lugares
 
 
 func _mirar_foco(jugador: Node3D, ojo: Vector3, punto: Vector3) -> void:
@@ -494,8 +530,10 @@ func test_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo() -> v
 	var agarre: Agarre = almacen.get("_agarre")
 	var estante := (almacen.get("_repositor") as Repositor).estante()
 	for producto in Catalogo.todos():
-		var zona: Node3D = presentacion.casillero(producto.id, 0)
-		assert_bool(estante.casilleros_ocupados(producto).has(0)).is_true()
+		# El último casillero es de la tanda reponible, que es la que está a la altura de la mano.
+		var ultimo := _cupo(almacen, producto) - 1
+		var zona: Node3D = presentacion.casillero(producto.id, ultimo)
+		assert_bool(estante.casilleros_ocupados(producto).has(ultimo)).is_true()
 		assert_object(agarre.manos().sostenido()).is_null()
 		var pie := _lugar_en_el_pasillo(almacen, zona.global_position, _frente(almacen, producto))
 		assert_bool(pie.is_finite()).override_failure_message(producto.nombre).is_true()
@@ -513,8 +551,8 @@ func test_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo() -> v
 			. override_failure_message(producto.nombre)
 			. is_not_null()
 		)
-		assert_bool(estante.casilleros_ocupados(producto).has(0)).is_false()
-		presentacion.pedir_colocar(producto.id, 0)
+		assert_bool(estante.casilleros_ocupados(producto).has(ultimo)).is_false()
+		presentacion.pedir_colocar(producto.id, ultimo)
 		assert_object(agarre.manos().sostenido()).is_null()
 
 
@@ -538,12 +576,11 @@ func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  
 			presentacion.agarrar_de_la_gondola(id, indice)
 			agarre.vaciar_las_manos()
 		var dibujo := presentacion.get_node("ProductosDe" + producto.nombre) as MultiMeshInstance3D
-		var principales := DisposicionDeLaGondola.copias(_disposicion(almacen).principales[id])
-		var fijas := dibujo.multimesh.instance_count - principales
+		var copias := dibujo.multimesh
 		(
-			assert_int(dibujo.multimesh.visible_instance_count - fijas)
+			assert_int(copias.visible_instance_count)
 			. override_failure_message(producto.nombre)
-			. is_zero()
+			. is_equal(copias.instance_count - _cupo(almacen, producto))
 		)
 	assert_int(miradas).is_greater(0)
 

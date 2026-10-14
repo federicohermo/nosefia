@@ -1004,7 +1004,7 @@ func _abrir_las_cabinas(almacen: Node3D) -> void:
 		var puerta: Node3D = almacen.get_node("Estructura/" + nombre + "/CuerpoDeLaHoja")
 		puertas.append(puerta)
 		if not (puerta.call("puerta") as Puerta).abierta():
-			puerta.call("usar")
+			puerta.call("alternar")
 	for _cuadro in 120:
 		await get_tree().physics_frame
 		if puertas.all(func(puerta: Node3D) -> bool: return puerta.call("puerta").quieta()):

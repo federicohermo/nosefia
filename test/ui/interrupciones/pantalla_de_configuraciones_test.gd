@@ -65,9 +65,14 @@ func test_muestra_las_seis_filas_en_orden_con_menos_barra_y_mas() -> void:  # AC
 		assert_str((hijos[1] as Button).text).is_equal(PantallaDeConfiguraciones.TEXTO_DE_MENOS)
 		assert_object(hijos[2] as HSlider).is_not_null()
 		assert_str((hijos[3] as Button).text).is_equal(PantallaDeConfiguraciones.TEXTO_DE_MAS)
-	var lenguaje: OptionButton = _fila(pantalla, 5).get_child(1)
-	assert_int(lenguaje.item_count).is_equal(1)
-	assert_str(lenguaje.get_item_text(0)).is_equal("ESPAÑOL")
+	var lenguaje := _fila(pantalla, 5).get_children()
+	assert_int(lenguaje.size()).is_equal(4)
+	assert_str((lenguaje[1] as Button).text).is_equal(PantallaDeConfiguraciones.TEXTO_ANTERIOR)
+	assert_str((lenguaje[2] as Label).text).is_equal("ESPAÑOL")
+	assert_str((lenguaje[3] as Button).text).is_equal(PantallaDeConfiguraciones.TEXTO_SIGUIENTE)
+	# Con un solo idioma no hay a cuál pasar.
+	assert_bool((lenguaje[1] as Button).disabled).is_true()
+	assert_bool((lenguaje[3] as Button).disabled).is_true()
 
 
 func test_mas_en_el_maximo_no_avisa_y_menos_si() -> void:  # AC-CFG-003

@@ -6,6 +6,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 
 const INODORO := (
 	"Un inodoro. Enrique me pidió encarecidamente" + " que no tire papel en él, porque se tapa."
@@ -112,6 +113,19 @@ func test_los_tres_tachos_dicen_su_texto_con_bolsa_o_sin_ella() -> void:  # AC-S
 		assert_bool(recolector.tarea().tiene_bolsa(cual)).is_equal(antes[cual])
 
 
+func test_cada_unidad_puesta_en_la_gondola_dice_su_texto() -> void:  # AC-SUB-002, AC-SUB-011
+	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var puesto: Node = almacen.get("_reposicion_manual")
+	puesto.call("_actualizar_zonas")
+	var probados := {}
+	for zonas: Array in puesto.get("_casilleros"):
+		for zona: ZonaDeReposicion in zonas:
+			if zona.papel == ZonaDeReposicion.Papel.AGARRAR and not probados.has(zona.producto):
+				probados[zona.producto] = true
+				_piensa(almacen, zona, SubtitulosAlExaminar.de_producto(zona.producto))
+	assert_int(probados.size()).is_equal(Producto.Id.size())
+
+
 func test_lo_que_no_tiene_texto_no_cambia_la_linea() -> void:  # AC-SUB-003, AC-SUB-013
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
@@ -180,9 +194,9 @@ func test_con_otra_interfaz_o_la_pausa_la_e_no_piensa() -> void:  # AC-SUB-008
 	assert_bool(pausados).is_true()
 	assert_str(_linea(almacen).text).is_equal(BOLSA)
 	assert_float(_linea(almacen).modulate.a).is_equal(1.0)
-	hud.call("_process", 2.32)
+	hud.call("_process", 1.79)
 	assert_str(_linea(almacen).text).is_equal(BOLSA)
-	hud.call("_process", 7.0 / 3.0 - 2.32)
+	hud.call("_process", 1.8 - 1.79)
 	assert_str(_linea(almacen).text).is_empty()
 
 
@@ -190,7 +204,7 @@ func test_la_jornada_nueva_abre_con_la_linea_vacia() -> void:  # AC-SUB-009
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var hud: Hud = almacen.get("_hud")
 	hud.pensar(BOLSA)
-	hud.call("_process", 3.0)
+	hud.call("_process", 2.55)
 	assert_float(_linea(almacen).modulate.a).is_less(1.0)
 	assert_str(_linea(almacen).text).is_equal(BOLSA)
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)

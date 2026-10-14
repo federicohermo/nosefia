@@ -163,7 +163,8 @@ DEBE emerger desde el borde inferior, encima de la persiana y debajo de avisos y
 DEBE pausarla y reanudarla conservando la pantalla actual. «OK» DEBE retirar las
 instrucciones y dar paso a la placa y subida de persiana; el control y el reloj DEBEN liberarse
 sólo cuando termine esa entrada. El fade in de la persiana baja DEBE durar 0,3 segundos reales
-y la subida de las instrucciones DEBE durar 0,3 segundos reales.
+y la subida de las instrucciones DEBE durar 0,3 segundos reales. Un cuadro largo NO DEBE
+adelantar ninguna de las dos más de 1/30 de segundo: el cuadro que abre la partida tarda.
 
 ### BR-EMP-025 — Lo que la partida cuenta entre noches
 
@@ -459,7 +460,8 @@ DADO las instrucciones en la pantalla 4 CUANDO se pulsa Esc, pasan cuadros y se 
 ENTONCES sigue la pantalla 4 y el mismo presupuesto de turno. DADO las instrucciones
 en pantalla ENTONCES su orden de dibujo está sobre la persiana y debajo de avisos y pausa;
 la interfaz empieza fuera del margen inferior y termina dentro del encuadre en 0,3 segundos
-reales. El fade in de la persiana baja pasa de negro a visible en 0,3 segundos reales.
+reales. El fade in de la persiana baja pasa de negro a visible en 0,3 segundos reales. Un cuadro
+de 150 ms adelanta cada una sólo 1/30 de segundo.
 
 ### AC-EMP-050 — Todas depende de lo declarado *(verifica BR-EMP-001)*
 

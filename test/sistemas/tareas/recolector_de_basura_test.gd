@@ -193,3 +193,32 @@ func test_sacar_entrega_el_mismo_cuerpo_sin_depositar_y_avisa_una_vez() -> void:
 	assert_bool(recolector.sacar_bolsa(TareaDeLaBasura.Tacho.LOCAL)).is_false()
 	assert_array(sacadas).has_size(1)
 	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+
+
+func test_cada_tiro_avisa_lo_que_se_llevaba_y_como_salio() -> void:  # AC-SUB-016
+	var recolector := _recolector()
+	var avisos: Array[Array] = []
+	recolector.tiro_pedido.connect(
+		func(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> void:
+			avisos.append([sostenido, tiro])
+	)
+	recolector.pedir_tirar(true)
+	var caja := ObjetoDelAlmacen.new()
+	caja.entra_en_el_contenedor = false
+	_sostener(recolector, caja)
+	recolector.pedir_tirar(true)
+	recolector.agarre.entregar()
+	var bolsa := ObjetoDelAlmacen.new()
+	bolsa.id = ReglasDeLaBasura.id_de_la_bolsa(1)
+	_sostener(recolector, bolsa)
+	recolector.pedir_tirar(true)
+	(
+		assert_array(avisos)
+		. is_equal(
+			[
+				[null, ReglasDeLaBasura.Tiro.MANO_VACIA],
+				[caja, ReglasDeLaBasura.Tiro.NO_ENTRA],
+				[bolsa, ReglasDeLaBasura.Tiro.TIRADO],
+			]
+		)
+	)

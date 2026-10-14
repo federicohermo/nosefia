@@ -19,7 +19,7 @@ static func abrir_heladeras(almacen: Node3D) -> void:
 	for numero in 2:
 		var mueble: String = ["heladeranueva", "heladeranueva_001"][numero]
 		var ruta := "Estructura/%s/puerta_heladera_%d/CuerpoDeLaHoja" % [mueble, numero]
-		almacen.get_node(ruta).call("usar")
+		almacen.get_node(ruta).call("alternar")
 	for cuadro in 60:
 		await almacen.get_tree().physics_frame
 

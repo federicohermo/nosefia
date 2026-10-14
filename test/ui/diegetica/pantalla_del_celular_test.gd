@@ -214,3 +214,23 @@ func test_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas() -> vo
 	pantalla.mostrar_menu(bandeja)
 	assert_bool(buscar.visible).is_true()
 	assert_str(buscar.text).is_empty()
+
+
+func test_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no() -> void:  # AC-INV-033
+	var pantalla: PantallaDelCelular = auto_free(ESCENA.instantiate())
+	add_child(pantalla)
+	var cierres: Array[int] = []
+	pantalla.cierre_pedido.connect(func() -> void: cierres.append(1))
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.pressed = true
+	clic.position = Vector2(10, 10)
+	pantalla._input(clic)
+	assert_array(cierres).is_empty()
+	pantalla.subir()
+	clic.position = (pantalla.get("_telefono") as Control).get_global_rect().get_center()
+	pantalla._input(clic)
+	assert_array(cierres).is_empty()
+	clic.position = Vector2(10, 10)
+	pantalla._input(clic)
+	assert_int(cierres.size()).is_equal(1)

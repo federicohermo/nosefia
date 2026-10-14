@@ -6,7 +6,9 @@ const PRECISION := 0.00001
 const CARAS_COPLANARES := 0.99999
 ## Seis sectores dejan pocas líneas visibles en un envase redondo.
 const SECTORES := 6
-const CAMBIO_DE_FORMA := 0.85
+## Hasta 45° entre dos caras es curva: el costado de ocho lados de una botella, y su hombro y su
+## cuello. Una curva sólo marca su silueta; una arista más cerrada, como la de una caja, siempre.
+const CAMBIO_DE_FORMA := 0.7
 
 
 static func preparar(original: Mesh) -> ArrayMesh:
@@ -44,13 +46,17 @@ static func preparar(original: Mesh) -> ArrayMesh:
 					vertices[inicio + (esquina + 1) % 3], vertices[inicio + (esquina + 2) % 3]
 				)
 				var vecinas: Array = normales[clave]
+				var aro := absf(clave[0].y - clave[1].y) < PRECISION
 				if _marcar(vecinas, clave):
 					mascara |= 1 << esquina
-				# Una curva no tiene aristas propias: sus dos límites los elige la cámara.
+				# Una curva no tiene aristas propias: sus límites los elige la cámara. De sus aros
+				# se dibuja sólo el tramo que es silueta, y por eso se marcan todos.
 				if vecinas.size() == 2:
 					var acuerdo_curvo: float = vecinas[0].dot(vecinas[1])
 					if acuerdo_curvo >= CAMBIO_DE_FORMA and acuerdo_curvo < CARAS_COPLANARES:
 						mascara |= 1 << (esquina + 3)
+				if aro:
+					mascara |= 1 << (esquina + 6)
 				var vecina := Vector3.ZERO
 				var acuerdo := INF
 				for candidata: Vector3 in vecinas:

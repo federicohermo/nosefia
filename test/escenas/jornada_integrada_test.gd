@@ -278,7 +278,7 @@ func _cumplidas(reloj: RelojDelTurno) -> int:
 func _limpiar(almacen: Node3D) -> void:
 	# Se accede al inodoro y a su mancha abriendo la cabina, como en la partida.
 	for numero: int in [1, 2]:
-		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("usar")
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
@@ -460,7 +460,7 @@ func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
 	var cerradas: Array[Transform3D] = []
 	for puerta: Node3D in puertas:
 		cerradas.append(puerta.get_parent().transform)
-		puerta.call("usar" if puerta.has_method("usar") else "interactuar")
+		puerta.call("alternar" if puerta.has_method("alternar") else "interactuar")
 	for cuadro in cuadros:
 		await get_tree().physics_frame
 	var antes: Array[float] = []

@@ -15,6 +15,8 @@ signal cerrada
 const TEXTO_DEL_TITULO := "/ CONFIGURACIONES:"
 const TEXTO_DE_MENOS := "−"
 const TEXTO_DE_MAS := "+"
+const TEXTO_ANTERIOR := "<"
+const TEXTO_SIGUIENTE := ">"
 const TEXTO_DE_LENGUAJE := "LENGUAJE"
 const TEXTO_DE_VOLVER := "VOLVER"
 const IDIOMAS: Array[String] = ["ESPAÑOL"]
@@ -26,9 +28,10 @@ const TEXTOS: Dictionary[Preferencias.Campo, String] = {
 	Preferencias.Campo.TEXTOS: "TEXTOS",
 }
 
-## Medidas del lienzo de 1920 × 1080: el nombre de cada fila y el lado de cada botón.
+## Medidas del lienzo de 1920 × 1080: el nombre de cada fila y el ancho de cada botón. El alto,
+## la letra y los márgenes son los de los botones del menú de inicio.
 const ANCHO_DEL_NOMBRE := 420.0
-const LADO_DEL_BOTON := 72.0
+const ANCHO_DEL_BOTON := 72.0
 
 @export var _marco: Control
 @export var _titulo: Label
@@ -61,7 +64,7 @@ func preparar(preferencias: Preferencias) -> void:
 func abrir() -> void:
 	_pintar()
 	visible = true
-	_primer_boton.grab_focus()
+	_primer_boton.grab_focus(true)
 
 
 func cerrar() -> void:
@@ -99,6 +102,8 @@ func _fila_de(campo: Preferencias.Campo) -> HBoxContainer:
 	barra.step = Preferencias.paso(campo)
 	barra.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	barra.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	# Las piezas de la barra son de píxeles: filtradas, las puntas se ven borroneadas.
+	barra.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	menos.pressed.connect(_restar.bind(campo))
 	mas.pressed.connect(_sumar.bind(campo))
 	barra.value_changed.connect(_arrastrar.bind(campo))
@@ -111,20 +116,32 @@ func _fila_de(campo: Preferencias.Campo) -> HBoxContainer:
 	return fila
 
 
+## El idioma entre un < y un >, como las barras entre su − y su +. Con un solo idioma no hay a
+## cuál pasar, y las flechas quedan deshabilitadas.
 func _fila_del_lenguaje() -> HBoxContainer:
 	var fila := _fila_con_nombre(TEXTO_DE_LENGUAJE)
-	var desplegable := OptionButton.new()
-	for idioma: String in IDIOMAS:
-		desplegable.add_item(idioma)
-	desplegable.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	fila.add_child(desplegable)
+	var anterior := _boton(TEXTO_ANTERIOR)
+	var idioma := Label.new()
+	idioma.theme_type_variation = &"TextoDelMenu"
+	var siguiente := _boton(TEXTO_SIGUIENTE)
+	idioma.text = IDIOMAS[0]
+	idioma.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	idioma.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	idioma.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	anterior.disabled = IDIOMAS.size() < 2
+	siguiente.disabled = anterior.disabled
+	fila.add_child(anterior)
+	fila.add_child(idioma)
+	fila.add_child(siguiente)
 	return fila
 
 
 func _fila_con_nombre(texto: String) -> HBoxContainer:
 	var fila := HBoxContainer.new()
+	fila.theme_type_variation = &"FilaDeConfiguraciones"
 	var nombre := Label.new()
 	nombre.text = texto
+	nombre.theme_type_variation = &"TextoDelMenu"
 	nombre.custom_minimum_size.x = ANCHO_DEL_NOMBRE
 	nombre.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila.add_child(nombre)
@@ -134,8 +151,8 @@ func _fila_con_nombre(texto: String) -> HBoxContainer:
 func _boton(texto: String) -> Button:
 	var boton := Button.new()
 	boton.text = texto
-	boton.custom_minimum_size = Vector2.ONE * LADO_DEL_BOTON
-	boton.theme_type_variation = &"BotonContinuar"
+	boton.custom_minimum_size.x = ANCHO_DEL_BOTON
+	boton.theme_type_variation = &"BotonDelMenu"
 	return boton
 
 

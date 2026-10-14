@@ -12,6 +12,7 @@ const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const TACHO := "Estructura/tachitobasura/StaticBody3D"
 const PORTON := "Estructura/porton/CuerpoDeLaHoja"
+const PUERTA_INTERIOR := "Estructura/puerta2/CuerpoDeLaHoja"
 const LECTOR := "Estructura/Lector"
 
 
@@ -102,6 +103,10 @@ func test_el_derecho_no_adelanta_el_resultado_en_el_local() -> void:  # AC-PLY-0
 	# La puerta trabada con la mano vacía avisa: tiene efecto.
 	assert_array(_referencia(almacen, almacen.get_node(PORTON))).contains_exactly(
 		["[E] Examinar", "[Click Der] Interactuar"]
+	)
+	# La puerta que abre se abre con el izquierdo: el derecho no hace nada sobre ella.
+	assert_array(_referencia(almacen, almacen.get_node(PUERTA_INTERIOR))).contains_exactly(
+		["[E] Examinar"]
 	)
 	# El lector con la mano vacía no; con una unidad sí, aunque los renglones estén llenos.
 	var lector: Node3D = almacen.get_node(LECTOR)

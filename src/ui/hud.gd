@@ -92,6 +92,12 @@ func pensar(texto: String) -> void:
 	_pintar_el_subtitulo()
 
 
+## Cuánto se alejó el jugador del lugar del pensamiento: lejos, se va antes.
+func alejarse(metros: float) -> void:
+	_linea.alejarse(metros)
+	_pintar_el_subtitulo()
+
+
 ## El texto del examen: queda fijo hasta `vaciar_subtitulo()`.
 func mostrar_subtitulo(texto: String) -> void:
 	_linea.fijar(texto)

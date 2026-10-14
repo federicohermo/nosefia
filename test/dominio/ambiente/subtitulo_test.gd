@@ -25,7 +25,7 @@ func test_un_pensamiento_nuevo_reemplaza_al_visible() -> void:  # AC-SUB-001
 
 
 func test_el_pensamiento_cumple_todo_el_desvanecido() -> void:  # AC-SUB-004
-	var fin := 10.0 / 3.0
+	var fin := 2.8
 	for avance: float in [fin - 0.0005, fin, fin + 0.0005]:
 		var linea := Subtitulo.new()
 		linea.pensar(BOLSA)
@@ -49,19 +49,19 @@ func test_sin_nada_la_linea_esta_vacia_y_un_texto_vacio_no_la_cambia() -> void: 
 	linea.pensar("")
 	assert_str(linea.texto()).is_equal(BOLSA)
 	# Sigue su curso: el gesto sin texto no le devolvió el tiempo.
-	linea.avanzar(7.0 / 3.0)
+	linea.avanzar(1.8)
 	assert_str(linea.texto()).is_empty()
 
 
 func test_la_duracion_crece_con_el_largo_desde_un_piso() -> void:  # AC-SUB-004
 	var casos := {
 		"a": 2.0,
-		"abcdefg": 2.0,
-		"abcdefgh": 2.0333,
-		"abcdefghijklmno": 2.5,
-		BOLSA: 2.8333,
-		MANI: 3.2333,
-		LECTOR: 9.3,
+		"abcdefghijkl": 2.0,
+		"abcdefghijklm": 2.02,
+		"abcdefghijklmno": 2.1,
+		BOLSA: 2.3,
+		MANI: 2.54,
+		LECTOR: 6.18,
 	}
 	for texto: String in casos:
 		(
@@ -75,9 +75,7 @@ func test_la_duracion_crece_con_el_largo_desde_un_piso() -> void:  # AC-SUB-004
 
 
 func test_cada_pensamiento_se_vacia_al_terminar_su_desvanecido() -> void:  # AC-SUB-004
-	var casos := {
-		"a": 2.5, "abcdefgh": 38.0 / 15.0, BOLSA: 10.0 / 3.0, MANI: 56.0 / 15.0, LECTOR: 9.8
-	}
+	var casos := {"a": 2.5, "abcdefghijklm": 2.52, BOLSA: 2.8, MANI: 3.04, LECTOR: 6.68}
 	for texto: String in casos:
 		var linea := Subtitulo.new()
 		linea.pensar(texto)
@@ -92,17 +90,17 @@ func test_cada_pensamiento_se_vacia_al_terminar_su_desvanecido() -> void:  # AC-
 func test_entero_desvanecido_y_vacio() -> void:  # AC-SUB-005
 	var linea := Subtitulo.new()
 	linea.pensar(BOLSA)
-	linea.avanzar(2.82)
+	linea.avanzar(2.29)
 	assert_str(linea.texto()).is_equal(BOLSA)
 	assert_float(linea.opacidad()).is_equal(1.0)
-	linea.avanzar(0.13)
-	var a_los_295 := linea.opacidad()
-	linea.avanzar(3.083 - 2.95)
+	linea.avanzar(0.11)
+	var a_los_240 := linea.opacidad()
+	linea.avanzar(2.55 - 2.4)
 	assert_str(linea.texto()).is_equal(BOLSA)
 	assert_float(linea.opacidad()).is_greater(0.0)
 	assert_float(linea.opacidad()).is_less(1.0)
-	assert_float(linea.opacidad()).is_less_equal(a_los_295)
-	linea.avanzar(10.0 / 3.0 - 3.083)
+	assert_float(linea.opacidad()).is_less_equal(a_los_240)
+	linea.avanzar(2.8 - 2.55)
 	assert_str(linea.texto()).is_empty()
 	assert_float(linea.opacidad()).is_equal(0.0)
 
@@ -112,7 +110,7 @@ func test_un_avance_de_una_vez_vacia_y_cero_o_negativo_no_cambian_nada() -> void
 	linea.pensar(BOLSA)
 	linea.avanzar(0.0)
 	linea.avanzar(-5.0)
-	linea.avanzar(2.82)
+	linea.avanzar(2.29)
 	assert_float(linea.opacidad()).is_equal(1.0)
 	var otra := Subtitulo.new()
 	otra.pensar(BOLSA)
@@ -127,9 +125,9 @@ func test_repetir_empieza_de_nuevo_sin_sumar() -> void:  # AC-SUB-006
 	linea.avanzar(2.0)
 	linea.pensar(BOLSA)
 	assert_float(linea.opacidad()).is_equal(1.0)
-	linea.avanzar(2.82)
+	linea.avanzar(2.29)
 	assert_float(linea.opacidad()).is_equal(1.0)
-	linea.avanzar(10.0 / 3.0 - 2.82)
+	linea.avanzar(2.8 - 2.29)
 	assert_str(linea.texto()).is_empty()
 
 
@@ -155,3 +153,32 @@ func test_soltar_vacia_tambien_un_pensamiento_a_medio_desvanecer() -> void:  # A
 	linea.soltar()
 	assert_str(linea.texto()).is_empty()
 	assert_float(linea.opacidad()).is_equal(0.0)
+
+
+func test_alejarse_lo_desvanece_antes_y_volver_no_lo_recupera() -> void:  # AC-SUB-020
+	var linea := Subtitulo.new()
+	linea.pensar(BOLSA)
+	linea.alejarse(0.7)
+	linea.avanzar(2.29)
+	assert_float(linea.opacidad()).is_equal(1.0)
+	var otra := Subtitulo.new()
+	otra.pensar(BOLSA)
+	otra.avanzar(0.5)
+	otra.alejarse(0.8)
+	otra.avanzar(0.25)
+	var a_mitad := otra.opacidad()
+	assert_float(a_mitad).is_greater(0.0)
+	assert_float(a_mitad).is_less(1.0)
+	otra.alejarse(0.0)
+	assert_float(otra.opacidad()).is_less_equal(a_mitad)
+	otra.avanzar(0.25)
+	assert_str(otra.texto()).is_empty()
+
+
+func test_lo_fijo_no_se_acorta_por_alejarse() -> void:  # AC-SUB-020
+	var linea := Subtitulo.new()
+	linea.fijar(BOLSA)
+	linea.alejarse(10.0)
+	linea.avanzar(60.0)
+	assert_str(linea.texto()).is_equal(BOLSA)
+	assert_float(linea.opacidad()).is_equal(1.0)

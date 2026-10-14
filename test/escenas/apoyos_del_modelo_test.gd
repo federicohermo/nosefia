@@ -141,7 +141,7 @@ func _abrir(jornada: int = 1) -> Node3D:
 	add_child(almacen)
 	await get_tree().physics_frame
 	for numero: int in [1, 2]:
-		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("usar")
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	return almacen

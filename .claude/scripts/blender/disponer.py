@@ -41,6 +41,7 @@ from lib.gondola import (  # noqa: E402
     nombre_en_godot,
     punto_en_godot,
     ruta_de_la_malla,
+    separar_filas,
     separar_reserva,
 )
 from lib.reparto import MUEBLES, PRODUCTOS  # noqa: E402
@@ -148,16 +149,31 @@ def principal():
     guias = []
     nodos_de_guia = []
     nombres = {p.clave: p.nombre for p in PRODUCTOS}
+    productos_de_las_guias = []
+    filas_de_adelante_de_las_guias = []
+    indices = {p.clave: indice for indice, p in enumerate(PRODUCTOS)}
     for numero, (_, producto, copias) in enumerate(fijas):
         base = bases[producto]
-        guias.append(bloque(copias, base))
         _, origen = en_godot(copias[0])
+        orden, adelante = separar_filas([str(c["fila"]) for c in copias])
+        guias.append(bloque([copias[i] for i in orden], base))
+        productos_de_las_guias.append(indices[producto])
+        filas_de_adelante_de_las_guias.append(adelante)
         nodos_de_guia.append(
             NodoDeMalla(f"Guia{numero:02d}", ruta_de_la_malla(nombres[producto]), base, origen)
         )
     propio, script = uids(DISPOSICION.read_text(encoding="utf-8"))
     escribir(
-        DISPOSICION, escribir_disposicion(principales, guias, filas_de_adelante, propio, script)
+        DISPOSICION,
+        escribir_disposicion(
+            principales,
+            guias,
+            filas_de_adelante,
+            propio,
+            script,
+            productos_de_las_guias,
+            filas_de_adelante_de_las_guias,
+        ),
     )
     escribir(CONTENIDO, escribir_escena_de_mallas("Contenido", contenido))
     escribir(GUIA, escribir_escena_de_mallas("Guia", nodos_de_guia))

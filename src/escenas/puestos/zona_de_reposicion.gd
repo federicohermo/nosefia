@@ -50,6 +50,13 @@ func interactuar() -> ObjetoDelAlmacen:
 	return null
 
 
+## Lo que dice la unidad puesta. El hueco calla: no hay nada que nombrar.
+func texto_al_examinar() -> String:
+	if papel != Papel.AGARRAR:
+		return ""
+	return SubtitulosAlExaminar.de_producto(producto)
+
+
 ## Se pinta según su papel y si la mira lo enfoca: sólo el enfocado se dibuja.
 ##
 ## La unidad puesta conserva su aspecto al enfocar. El hueco muestra una vista previa

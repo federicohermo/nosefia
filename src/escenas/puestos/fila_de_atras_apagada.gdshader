@@ -12,7 +12,6 @@ render_mode cull_disabled, diffuse_burley, specular_schlick_ggx;
 
 uniform vec4 color : source_color = vec4(1.0);
 uniform sampler2D textura : source_color, filter_nearest_mipmap, repeat_enable;
-uniform sampler2D textura_desenfocada : source_color, filter_linear_mipmap, repeat_enable;
 uniform float rugosidad : hint_range(0.0, 1.0) = 0.5;
 uniform float metalico : hint_range(0.0, 1.0) = 0.0;
 uniform float especular : hint_range(0.0, 1.0) = 0.5;
@@ -29,19 +28,7 @@ void vertex() {
 void fragment() {
 	vec3 base = color.rgb * texture(textura, UV).rgb;
 	if (apagada == 1) {
-		// El radio se mide en pantalla para que el desenfoque no desaparezca al acercarse.
-		vec2 horizontal = dFdx(UV) * 2.5;
-		vec2 vertical = dFdy(UV) * 2.5;
-		vec3 suave = texture(textura_desenfocada, UV).rgb * 0.25;
-		suave += texture(textura_desenfocada, UV + horizontal).rgb * 0.125;
-		suave += texture(textura_desenfocada, UV - horizontal).rgb * 0.125;
-		suave += texture(textura_desenfocada, UV + vertical).rgb * 0.125;
-		suave += texture(textura_desenfocada, UV - vertical).rgb * 0.125;
-		suave += texture(textura_desenfocada, UV + horizontal + vertical).rgb * 0.0625;
-		suave += texture(textura_desenfocada, UV + horizontal - vertical).rgb * 0.0625;
-		suave += texture(textura_desenfocada, UV - horizontal + vertical).rgb * 0.0625;
-		suave += texture(textura_desenfocada, UV - horizontal - vertical).rgb * 0.0625;
-		base = color.rgb * suave;
+
 		float gris = dot(base, vec3(0.2126, 0.7152, 0.0722));
 		base = mix(vec3(gris), base, saturacion_atras);
 	}

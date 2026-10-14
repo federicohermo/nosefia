@@ -47,12 +47,12 @@ manos vacías NO DEBE cambiar la línea de subtítulo. Un pensamiento que ya se 
 
 ### BR-SUB-004 — Cuánto dura un pensamiento
 
-El sistema DEBE mostrar un pensamiento entero durante `D(n) = máx(2; 1,5 + n / 15)` segundos
+El sistema DEBE mostrar un pensamiento entero durante `D(n) = máx(2; 1,5 + n / 25)` segundos
 reales, con `n` la cantidad de caracteres de su texto. Los espacios y los signos cuentan, y una
 letra con tilde cuenta uno. Después DEBE desvanecerlo en 0,5 segundos reales, sin subir nunca
 la opacidad. Al llegar a `D(n) + 0,5` segundos, o pasarse, la línea DEBE quedar vacía.
 
-Desde 8 caracteres, un texto más largo dura estrictamente más. Hasta 7, el piso de 2 segundos
+Desde 13 caracteres, un texto más largo dura estrictamente más. Hasta 12, el piso de 2 segundos
 iguala a todos.
 
 CUANDO llega otro pensamiento con uno visible, aunque sea el mismo texto, el sistema DEBE
@@ -175,6 +175,47 @@ El texto al examinar de una caja del depósito DEBE ser el de BR-STK-031, con la
 con la caja en la mano. Con la caja apoyada es un pensamiento (BR-SUB-002); en la mano queda
 fijo durante el examen (BR-SUB-005).
 
+### BR-SUB-015 — Alejarse acorta el pensamiento
+
+Un pensamiento DEBE tener un lugar: el de lo examinado, si lo pensó la E con las manos vacías, o
+donde estaba el jugador, si lo pensó un gesto. MIENTRAS el jugador sigue a menos de 0,75 metros
+más lejos de ese lugar que cuando apareció, el pensamiento DEBE durar lo de BR-SUB-004. Un
+pensamiento que no depende de dónde está el jugador no tiene lugar, y DEBE durar siempre lo de
+BR-SUB-004: la mopa que se seca (BR-SUB-014) y lo que queda afuera por la ventana, que se piensa
+recién cuando lo soltado se queda quieto. CUANDO
+se aleja más que eso, DEBE empezar a desvanecerse en ese momento, en los mismos 0,5 segundos,
+salvo que ya se estuviera desvanecido. Volver a acercarse NO DEBE devolverle la opacidad. El
+texto fijo del examen NO DEBE acortarse.
+
+### BR-SUB-013 — Los gestos que salen mal piensan
+
+CUANDO un gesto da uno de estos resultados, el sistema DEBE mostrar su pensamiento (BR-SUB-002),
+letra por letra. Ninguno cambia el resultado del gesto.
+
+| Gesto | Pensamiento |
+|---|---|
+| Tirar al contenedor algo que no es una bolsa de basura ni un ticket | Me parece que eso fue una mala idea… |
+| Tirar al contenedor una caja del depósito, que no entra | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
+| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
+| Pasar por una mancha la mopa mojada con el jabón que no es el suyo, o con agua sola | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
+| Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | Necesitaría mojar la mopa en agua con jabón. |
+| Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | Ya se secó la mopa… |
+| Borrar la caca de la pared del otro inodoro | Se ve que alguien no tuvo tiempo de apuntar bien… |
+
+Tirar una bolsa o un ticket, borrar cualquier otra mancha, o pasar la mopa por una mancha ya
+limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
+el texto del jabón, no el de la caca.
+
+### BR-SUB-014 — La primera vez que se seca la mopa
+
+CUANDO la carga de la mopa pasa de más de cero a cero por primera vez en la partida, el sistema
+DEBE mostrar «Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.». Las veces
+siguientes, en esa jornada o en otra, NO DEBE mostrarlo. Una partida nueva lo vuelve a mostrar
+una vez. SI se seca durante un examen, ENTONCES el texto fijo del examen DEBE seguir, y el
+pensamiento DEBE mostrarse entero al terminar el examen. Recién al mostrarse cuenta como
+mostrado: si la jornada cierra antes, la vez siguiente se muestra. Secarse otra vez con el
+pensamiento pendiente NO DEBE duplicarlo.
+
 ## Criterios de aceptación
 
 ### AC-SUB-001 — Abajo al centro, y uno por vez *(verifica BR-SUB-001)*
@@ -198,7 +239,7 @@ su lugar, las manos siguen vacías, y no se avisa que empezó ni que terminó un
 DADO la línea vacía y las manos vacías CUANDO se pide examinar con la mira sobre una puerta de
 heladera, y por separado sin nada en la mira, ENTONCES la línea sigue vacía. DADO el pensamiento
 «Una bolsa de basura.» con 1 segundo transcurrido CUANDO se pide examinar sobre la ventanilla
-ENTONCES el texto sigue igual y la línea se vacía a los 10/3 segundos del primer gesto.
+ENTONCES el texto sigue igual y la línea se vacía a los 2,8 segundos del primer gesto.
 
 ### AC-SUB-004 — La duración según el largo *(verifica BR-SUB-004)*
 
@@ -208,28 +249,28 @@ tolerancia de 0,001 segundos:
 | `n` | Ejemplo | Entero | Vacía a los |
 |---|---|---|---|
 | 1 | «a» | 2,000 | 2,500 |
-| 7 | 7 caracteres | 2,000 | 2,500 |
-| 8 | 8 caracteres | 2,033 | 2,533 |
-| 15 | 15 caracteres | 2,500 | 3,000 |
-| 20 | «Una bolsa de basura.» | 2,833 | 3,333 |
-| 26 | «Una barra de Cosa de Maní.» | 3,233 | 3,733 |
-| 117 | el texto del lector | 9,300 | 9,800 |
+| 12 | 12 caracteres | 2,000 | 2,500 |
+| 13 | 13 caracteres | 2,020 | 2,520 |
+| 15 | 15 caracteres | 2,100 | 2,600 |
+| 20 | «Una bolsa de basura.» | 2,300 | 2,800 |
+| 26 | «Una barra de Cosa de Maní.» | 2,540 | 3,040 |
+| 117 | el texto del lector | 6,180 | 6,680 |
 
 El texto del lector dura estrictamente más que «Una bolsa de basura.».
 
 ### AC-SUB-005 — Entero, desvanecido y vacío *(verifica BR-SUB-004)*
 
-DADO el pensamiento «Una bolsa de basura.» CUANDO avanzan 2,82 segundos ENTONCES se ve el texto
-con opacidad 1. CUANDO avanzan 3,083 segundos ENTONCES la opacidad está estrictamente entre 0 y
-1, y no es mayor que a los 2,95. CUANDO avanzan exactamente 10/3 ENTONCES la línea está vacía
+DADO el pensamiento «Una bolsa de basura.» CUANDO avanzan 2,29 segundos ENTONCES se ve el texto
+con opacidad 1. CUANDO avanzan 2,55 segundos ENTONCES la opacidad está estrictamente entre 0 y
+1, y no es mayor que a los 2,4. CUANDO avanzan exactamente 2,8 ENTONCES la línea está vacía
 con opacidad 0. DADO el mismo pensamiento CUANDO avanza de una vez 10 segundos ENTONCES la línea
 está vacía. Un avance de cero o negativo no cambia nada.
 
 ### AC-SUB-006 — Repetir empieza de nuevo *(verifica BR-SUB-004)*
 
 DADO el pensamiento «Una bolsa de basura.» con 2 segundos transcurridos CUANDO se pide examinar
-la misma bolsa otra vez ENTONCES la opacidad es 1, a los 2,82 segundos del segundo gesto sigue
-con opacidad 1, y la línea se vacía a los 10/3 segundos del segundo gesto.
+la misma bolsa otra vez ENTONCES la opacidad es 1, a los 2,29 segundos del segundo gesto sigue
+con opacidad 1, y la línea se vacía a los 2,8 segundos del segundo gesto.
 
 ### AC-SUB-007 — El examen lo deja fijo *(verifica BR-SUB-005, BR-SUB-001)*
 
@@ -243,7 +284,7 @@ ENTONCES la línea está vacía en ese mismo cuadro.
 DADO las manos vacías y la mira sobre un inodoro CUANDO se pide examinar con la computadora
 abierta, y por separado con la pausa abierta, ENTONCES la línea no cambia. DADO el pensamiento
 «Una bolsa de basura.» con 1 segundo transcurrido CUANDO se pausa, pasan 10 segundos reales y se
-reanuda ENTONCES se ve con opacidad 1, y la línea se vacía a los 7/3 segundos sin pausa
+reanuda ENTONCES se ve con opacidad 1, y la línea se vacía a los 1,8 segundos sin pausa
 después de reanudar.
 
 ### AC-SUB-009 — La jornada abre vacía *(verifica BR-SUB-007)*
@@ -297,6 +338,42 @@ examinar ENTONCES la línea muestra «Una caja con 0 cajitas de Actroncito. Entr
 pensamiento, sin examen. DADO una caja con 5 de Malbardo en la mano CUANDO se pide examinar
 ENTONCES la línea muestra «Una caja con 5 cajitas de Malbardo. Entran 3 más.» fijo hasta que
 termina el examen.
+
+### AC-SUB-020 — Irse lo desvanece antes *(verifica BR-SUB-015)*
+
+DADO el pensamiento «Una bolsa de basura.» CUANDO el jugador se aleja 0,7 metros y avanzan 2,29
+segundos ENTONCES se ve con opacidad 1. CUANDO se aleja 0,8 metros ENTONCES a los 0,25 segundos
+la opacidad está estrictamente entre 0 y 1, y a los 0,5 la línea está vacía. CUANDO vuelve a
+acercarse durante el desvanecido ENTONCES la opacidad no sube. DADO un texto fijo CUANDO el
+jugador se aleja 10 metros ENTONCES sigue entero.
+
+### AC-SUB-016 — Lo que se tira *(verifica BR-SUB-013)*
+
+DADO una unidad, un jabón o la mopa tirados al contenedor ENTONCES el texto es «Me parece que eso
+fue una mala idea…». DADO una bolsa o un ticket tirados ENTONCES no hay texto. DADO una caja del
+depósito que no entra ENTONCES el texto es el de la caja; DADO la mano vacía o la tapa cerrada
+con algo que entra ENTONCES no hay texto.
+
+### AC-SUB-017 — Lo que queda afuera *(verifica BR-SUB-013)*
+
+DADO una unidad o una bolsa soltadas que quedan quietas fuera de las tres habitaciones ENTONCES
+el texto es el de la ventana. DADO un ticket ENTONCES no hay texto.
+
+### AC-SUB-018 — La mopa sobre una mancha *(verifica BR-SUB-013)*
+
+DADO el resultado del jabón equivocado o de la mopa sin jabón ENTONCES el texto es el del jabón.
+DADO la mopa seca sin haberse mojado en la jornada ENTONCES pide mojarla; DADO la mopa seca
+después de mojarla ENTONCES «Ya se secó la mopa…». DADO una mancha ya limpia o una mancha
+borrada ENTONCES no hay texto, salvo la caca de la pared del otro inodoro, que al borrarse piensa
+el suyo.
+
+### AC-SUB-019 — La mopa berreta, una vez *(verifica BR-SUB-014)*
+
+DADO una partida sin la marca CUANDO la mopa se seca ENTONCES se muestra el texto y la partida
+queda marcada; CUANDO se seca otra vez ENTONCES no. DADO un examen en curso CUANDO la mopa se
+seca ENTONCES no se muestra; CUANDO se seca de nuevo ENTONCES sigue habiendo uno solo pendiente;
+CUANDO termina el examen ENTONCES se muestra y recién ahí la partida queda marcada. DADO el
+pensamiento pendiente CUANDO cierra la jornada ENTONCES se descarta y la partida sigue sin marca.
 
 ## No objetivos
 

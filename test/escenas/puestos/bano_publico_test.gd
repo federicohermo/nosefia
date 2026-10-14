@@ -250,7 +250,7 @@ func test_las_cabinas_tienen_puertas_que_liberan_el_acceso_al_abrirse() -> void:
 		var cerrada := espacio.intersect_ray(consulta)
 		assert_bool(cerrada.is_empty()).is_false()
 		assert_object(cerrada.get("collider")).is_same(puerta)
-		puerta.call("usar")
+		puerta.call("alternar")
 		for cuadro in 60:
 			await get_tree().physics_frame
 		assert_bool(espacio.intersect_ray(consulta).is_empty()).is_true()
@@ -318,7 +318,7 @@ func test_la_puerta_del_bano_abierta_no_corta_el_recorrido_hacia_las_cabinas() -
 	var hoja: MeshInstance3D = almacen.get_node("Estructura/puerta2")
 	var vano := hoja.global_transform * hoja.get_aabb()
 	var cruce := vano.get_center().z + vano.size.z * 0.15
-	almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("usar")
+	almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var jugador := almacen.get("_jugador") as CharacterBody3D
@@ -419,7 +419,7 @@ func test_las_hojas_de_cabina_giran_unidas_a_un_soporte_fijo() -> void:
 				. override_failure_message("Falta soporte fijo junto al eje %s" % pasador)
 				. is_less_equal(0.005)
 			)
-		cuerpo.call("usar")
+		cuerpo.call("alternar")
 		for cuadro in 60:
 			await get_tree().physics_frame
 		var estado := cuerpo.call("puerta") as Puerta

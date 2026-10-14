@@ -41,7 +41,7 @@ func _ready() -> void:
 	pantalla.notas().escritura_pedida.connect(computadora.pedir_escribir)
 
 
-## El clic derecho abre lo fijo sin consumir el gesto de agarrar.
+## El clic izquierdo abre lo fijo sin soltar lo que se lleva.
 func accionar() -> void:
 	abrir()
 

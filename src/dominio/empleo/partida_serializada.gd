@@ -4,7 +4,7 @@
 class_name PartidaSerializada
 extends RefCounted
 
-enum Campo { JORNADA, MEDIOS, FALLAS, LLAMADOS, NOCHES_SIN_SUMAR, DEVOLUCIONES }
+enum Campo { JORNADA, MEDIOS, FALLAS, LLAMADOS, NOCHES_SIN_SUMAR, DEVOLUCIONES, MOPA_SECADA }
 
 const VERSION: int = 1
 const CLAVE_DE_VERSION := "version"
@@ -19,6 +19,7 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.LLAMADOS: {},
 	Campo.NOCHES_SIN_SUMAR: 0,
 	Campo.DEVOLUCIONES: [],
+	Campo.MOPA_SECADA: false,
 }
 
 

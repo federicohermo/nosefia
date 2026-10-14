@@ -43,12 +43,13 @@ _puesto_de_la_caja = NodePath("Estructura/cajaregistradora/StaticBody3D")
 _programa_de_tickets = NodePath("Interfaz/ProgramaDeTickets")
 _habitaciones = NodePath("Estructura/HabitacionesDelAlmacen")
 
-[node name="ReposicionManual" parent="." unique_id=916700246 node_paths=PackedStringArray("repositor", "jugador", "estante", "contenido", "punto_de_la_caja") instance=ExtResource("reposicion_manual")]
+[node name="ReposicionManual" parent="." unique_id=916700246 node_paths=PackedStringArray("repositor", "jugador", "estante", "contenido", "punto_de_la_caja", "suelo") instance=ExtResource("reposicion_manual")]
 repositor = NodePath("../Servicios/Repositor")
 jugador = NodePath("../Jugador")
 estante = NodePath("../Estructura/gondolanueva/StaticBody3D")
 contenido = NodePath("../Estructura/gondolanueva/StaticBody3D/Contenido")
 punto_de_la_caja = NodePath("../Jugador/Giro/PuntoDeCaja")
+suelo = NodePath("../Estructura/SueloSolido")
 
 [node name="Ambiente" parent="." unique_id=1395941829 instance=ExtResource("grupo_Ambiente")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001781702, 0.011070967, 5.054474e-05)

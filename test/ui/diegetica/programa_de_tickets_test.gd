@@ -163,3 +163,21 @@ func _opcion_de(producto: Producto) -> int:
 		if catalogo[indice].id == producto.id:
 			return indice + 1
 	return -1
+
+
+func test_el_izquierdo_fuera_del_panel_pide_salir_y_adentro_no() -> void:  # AC-PLY-072
+	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
+	add_child(vista)
+	vista.mostrar(_automatico([]))
+	var cierres: Array[int] = []
+	vista.cierre_pedido.connect(func() -> void: cierres.append(1))
+	var panel := (vista.borrar.get_parent() as Control).get_global_rect()
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.pressed = true
+	clic.global_position = panel.get_center()
+	vista._al_tocar_el_fondo(clic)
+	assert_array(cierres).is_empty()
+	clic.global_position = panel.position - Vector2(20, 0)
+	vista._al_tocar_el_fondo(clic)
+	assert_int(cierres.size()).is_equal(1)

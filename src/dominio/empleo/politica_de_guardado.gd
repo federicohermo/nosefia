@@ -28,6 +28,8 @@ static func datos(partida: Partida) -> Dictionary:
 				cuentas[Antecedentes.CLAVE_DE_NOCHES_SIN_SUMAR],
 				PartidaSerializada.clave(PartidaSerializada.Campo.DEVOLUCIONES):
 				Array(partida.mensajes_del_jefe()),
+				PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA):
+				partida.mopa_secada(),
 			}
 		)
 	)

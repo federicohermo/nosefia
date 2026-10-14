@@ -95,6 +95,10 @@ var _pallets_de_entrega: Node3D
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
 ## cambiar de escena: se llevaría puesto al runner.
 var _ir_al_menu: Callable = volver_al_menu
+var _gestos := SubtitulosDeLosGestos.new()
+## Dónde nació el pensamiento que se ve, y a qué distancia estaba el jugador entonces.
+var _lugar_del_pensamiento := Vector3.INF
+var _distancia_al_pensar := 0.0
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
@@ -198,7 +202,13 @@ func _ready() -> void:
 	# queda fijo hasta que termina. La caja dice cuántas tiene contada en el depósito de la noche,
 	# y por eso su texto lo pone el puesto; lo demás lo dice cada cosa. El HUD lo pinta.
 	_jugador.texto_contado = _reposicion_manual.texto_del_examen
-	_jugador.examen.pensamiento_pedido.connect(_hud.pensar)
+	_jugador.examen.pensamiento_pedido.connect(
+		func(texto: String) -> void:
+			var mirado := _jugador.enfocado()
+			_pensar_en(
+				texto, mirado.global_position if mirado != null else _jugador.global_position
+			)
+	)
 	_jugador.examen.examen_iniciado.connect(
 		func(nodo: Node3D) -> void: _hud.mostrar_subtitulo(_jugador.texto_al_examinar_de(nodo))
 	)
@@ -211,6 +221,7 @@ func _ready() -> void:
 	for ruta: NodePath in trabadas:
 		(get_node(ruta) as PuertaDelLocal).identidad = trabadas[ruta]
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
+	_cablear_los_gestos()
 	for util: UtilDeLimpieza in _utiles_de_limpieza:
 		util.examen = _jugador.examen
 	_manija_del_balde.observador = _jugador
@@ -322,7 +333,13 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		var pallets: Array[MeshInstance3D] = _pallets_de_entrega.call(
 			"disponer", madera, $Estructura/porton, $Estructura/SueloSolido/Fondo
 		)
-		poses = PilaDelDeposito.poses(_cajas_de_productos, pallets)
+		# Las etiquetas dan la espalda al portón: miran a quien entra al depósito.
+		var centro := Vector3.ZERO
+		for pallet: MeshInstance3D in pallets:
+			centro += pallet.global_position / pallets.size()
+		var frente := centro - ($Estructura/porton as Node3D).global_position
+		frente.y = 0.0
+		poses = PilaDelDeposito.poses(_cajas_de_productos, pallets, frente)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
 		caja.volver_a_su_lugar()
@@ -345,6 +362,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 ## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+	_gestos.descartar()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
 	_celular.cerrar_jornada()
 	_pantalla_del_celular.mostrar_recordatorio(false)
@@ -443,6 +461,74 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 	return estados
 
 
+## Los gestos que salen mal piensan (BR-SUB-013), y la mopa berreta sale una vez por partida y
+## espera al examen (BR-SUB-014). Qué se piensa lo decide el dominio; acá sólo se traduce.
+func _cablear_los_gestos() -> void:
+	_recolector.tiro_pedido.connect(
+		func(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> void:
+			_pensar(SubtitulosDeLosGestos.al_tirar(sostenido, tiro))
+	)
+	_limpiador.pasada_rechazada.connect(
+		func(_lugar: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado) -> void:
+			var se_mojo := _limpiador.piso().mopa().se_mojo()
+			_pensar(SubtitulosDeLosGestos.al_pasar_la_mopa(motivo, se_mojo))
+	)
+	_limpiador.pasada_dada.connect(
+		func(lugar: PisoDelLocal.Lugar) -> void: _pensar(SubtitulosDeLosGestos.al_borrar(lugar))
+	)
+	# La mopa se seca con el tiempo y no en un lugar: su pensamiento no se mide por distancia.
+	_limpiador.mopa_secada.connect(
+		func() -> void:
+			var examinando := _jugador.examen.esta_examinando()
+			_pensar_en(_gestos.al_secarse_la_mopa(_partida, examinando), Vector3.INF)
+	)
+	_jugador.examen.examen_terminado.connect(
+		func() -> void: _pensar_en(_gestos.al_terminar_el_examen(_partida), Vector3.INF)
+	)
+	_agarre.objeto_soltado.connect(_vigilar_si_queda_afuera)
+
+
+## Lo que piensa un gesto nace donde está el jugador.
+func _pensar(texto: String) -> void:
+	_pensar_en(texto, _jugador.global_position)
+
+
+## Un texto vacío no cambia la línea (BR-SUB-003). El lugar es contra el que se mide cuánto se
+## aleja el jugador (BR-SUB-015); `Vector3.INF` es un pensamiento sin lugar, que dura entero.
+func _pensar_en(texto: String, lugar: Vector3) -> void:
+	if texto.is_empty():
+		return
+	_hud.pensar(texto)
+	_lugar_del_pensamiento = lugar
+	if lugar.is_finite():
+		_distancia_al_pensar = _jugador.global_position.distance_to(lugar)
+
+
+func _process(_delta: float) -> void:
+	if _lugar_del_pensamiento.is_finite():
+		var distancia := _jugador.global_position.distance_to(_lugar_del_pensamiento)
+		_hud.alejarse(distancia - _distancia_al_pensar)
+
+
+## Lo soltado que queda quieto afuera de las tres habitaciones piensa en la ventana. Se mira
+## dónde se queda y no dónde se soltó: puede rebotar y volver a entrar. Si lo vuelven a agarrar
+## antes, no piensa nada.
+func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
+	var datos := nodo.get("datos") as ObjetoDelAlmacen
+	var cuerpo := nodo as RigidBody3D
+	var esperado := 0.0
+	while esperado < SubtitulosDeLosGestos.SEGUNDOS_PARA_QUEDAR_QUIETO:
+		await get_tree().physics_frame
+		esperado += get_physics_process_delta_time()
+		if not is_instance_valid(nodo) or _agarre.manos().sostenido() == datos:
+			return
+		if cuerpo == null or cuerpo.sleeping or cuerpo.freeze:
+			break
+	# Se piensa cuando lo soltado se aquieta, y el jugador ya pudo irse: no tiene lugar.
+	if _habitaciones.de(nodo.global_position) == ReglasDelCierre.Habitacion.AFUERA:
+		_pensar_en(SubtitulosDeLosGestos.al_quedar_afuera(datos), Vector3.INF)
+
+
 func _al_agotar_el_turno(_jornada: int) -> void:
 	var estados := _estados_del_cierre()
 	if ReglasDelCierre.hay_desorden(estados):
@@ -464,8 +550,12 @@ func _al_tirar_un_objeto(nodo: Node3D) -> void:
 func _unhandled_input(evento: InputEvent) -> void:
 	if evento.is_action_pressed(Celular.ACCION) and not evento.is_echo():
 		get_viewport().set_input_as_handled()
-		_celular.pedir_alternar(_jugador.suspendido() or _jugador.examen.esta_examinando())
-		_jugador.tomar_el_cursor_desde_entrada()
+		_alternar_el_celular()
+
+
+func _alternar_el_celular() -> void:
+	_celular.pedir_alternar(_jugador.suspendido() or _jugador.examen.esta_examinando())
+	_jugador.tomar_el_cursor_desde_entrada()
 
 
 func _cablear_el_celular() -> void:
@@ -480,6 +570,7 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
+	_pantalla_del_celular.cierre_pedido.connect(_alternar_el_celular)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
 	# Al retomar, las devoluciones de las noches ya cerradas vuelven al chat de Enrique.
 	for texto: String in _partida.mensajes_del_jefe():

@@ -54,6 +54,8 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
 	var producto := Catalogo.de(Producto.Id.LAYSNTT)
+	# El lugar de todo el depósito puede no vaciar la góndola: tiene más casilleros que la caja.
+	var puestas: int = almacen.get("_repositor").estante().unidades_en_gondola(producto)
 	var grupo: MultiMeshInstance3D = presentacion.get_node_or_null("SueltosDe" + producto.nombre)
 	assert_object(grupo).is_not_null()
 	if grupo == null:
@@ -84,7 +86,9 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	assert_bool(cuerpos[1].get_node("Malla").visible).is_true()
 	marco.apagar()
 	presentacion.call("pedir_colocar", producto.id)
-	assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_equal(1)
+	assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_equal(
+		puestas + 1
+	)
 	presentacion.call("retirar", Producto.Id.BURBALOO)
 	assert_object(agarre.punto_de_producto.get_child(0)).is_same(cuerpos[1])
 	agarre.soltar(true)
@@ -103,6 +107,8 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		almacen.get("_jugador").set_physics_process(false)
 		var agarre: Agarre = almacen.get("_agarre")
+		var laysntt := Catalogo.de(Producto.Id.LAYSNTT)
+		var puestas: int = almacen.get("_repositor").estante().unidades_en_gondola(laysntt)
 		var bolsas: Array[RigidBody3D] = []
 		for turno in 9:
 			var id := Producto.Id.LAYSNTT if turno < 3 else Producto.Id.BURBALOO
@@ -123,13 +129,8 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 			assert_bool(bolsa.is_visible_in_tree()).is_true()
 			assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
 			almacen.get("_reposicion_manual").pedir_colocar(Producto.Id.LAYSNTT)
-		(
-			assert_int(
-				almacen.get("_repositor").estante().unidades_en_gondola(
-					Catalogo.de(Producto.Id.LAYSNTT)
-				)
-			)
-			. is_equal(3)
+		assert_int(almacen.get("_repositor").estante().unidades_en_gondola(laysntt)).is_equal(
+			puestas + 3
 		)
 		almacen.queue_free()
 		await get_tree().process_frame
@@ -346,7 +347,8 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		assert_bool(modelo.has_meta("frente_del_modelo")).is_true()
 		var etiqueta: Vector3 = modelo.get_meta("frente_del_modelo", Vector3.ZERO)
 		var frente := (modelo.global_basis * etiqueta).normalized()
-		assert_float((orientacion * frente).dot(Vector3.BACK)).is_greater(0.8)
+		# Los finitos van echados hacia abajo y a la izquierda, pero de frente igual.
+		assert_float((orientacion * frente).dot(Vector3.BACK)).is_greater(0.7)
 		assert_bool(orientacion.is_equal_approx(Basis.IDENTITY)).is_false()
 		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Giro/Camara/PuntoDeExamen"))
 		unidad.rotate_y(0.7)

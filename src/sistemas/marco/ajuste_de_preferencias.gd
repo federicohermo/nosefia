@@ -4,7 +4,8 @@
 ## **El volumen y la letra son de todo el proceso**: los buses del `AudioServer` y el tema de
 ## Manada, que el motor carga una sola vez. El brillo, en cambio, es de cada pantalla: se
 ## multiplica el color de cada raíz que usa el tema, y las que entran al árbol después lo toman
-## al entrar. El local en 3D no usa el tema, y por eso no cambia.
+## al entrar. El local en 3D no usa el tema: su brillo es el ajuste de su entorno, multiplicado
+## sobre el de hoy.
 ##
 ## La letra se escala sobre los tamaños de hoy y no sobre los de la escala anterior: los de hoy
 ## se anotan la primera vez que se toca el tema, y cada escala sale de ellos.
@@ -13,6 +14,7 @@ extends Node
 
 const TEMA := preload("res://assets/ui/manada/tema.tres")
 const TAMANOS_PROPIOS := &"tamanos_antes_de_las_preferencias"
+const BRILLO_PROPIO := &"brillo_antes_de_las_preferencias"
 
 ## Los buses que regula cada barra de volumen.
 const BUSES: Dictionary[Preferencias.Campo, Array] = {
@@ -89,9 +91,14 @@ func _iluminar(raiz: Node) -> void:
 	_iluminar_uno(raiz)
 	for hijo: Node in raiz.find_children("*", "Control", true, false):
 		_iluminar_uno(hijo)
+	for entorno: Node in raiz.find_children("*", "WorldEnvironment", true, false):
+		_iluminar_uno(entorno)
 
 
 func _iluminar_uno(nodo: Node) -> void:
+	if nodo is WorldEnvironment:
+		_iluminar_el_local(nodo as WorldEnvironment)
+		return
 	var control := nodo as Control
 	if control == null:
 		return
@@ -103,6 +110,19 @@ func _iluminar_uno(nodo: Node) -> void:
 		return
 	var brillo := _actuales.valor(Preferencias.Campo.BRILLO) / 100.0
 	control.modulate = Color(brillo, brillo, brillo, control.modulate.a)
+
+
+## El brillo de hoy se anota la primera vez, en el entorno: cada brillo sale de él y no se acumula.
+func _iluminar_el_local(entorno: WorldEnvironment) -> void:
+	var ambiente := entorno.environment
+	if ambiente == null:
+		return
+	if not ambiente.has_meta(BRILLO_PROPIO):
+		var de_hoy := ambiente.adjustment_brightness if ambiente.adjustment_enabled else 1.0
+		ambiente.set_meta(BRILLO_PROPIO, de_hoy)
+	var brillo := _actuales.valor(Preferencias.Campo.BRILLO) / 100.0
+	ambiente.adjustment_enabled = true
+	ambiente.adjustment_brightness = ambiente.get_meta(BRILLO_PROPIO) * brillo
 
 
 ## Los tamaños propios ganan al tema: el celular y la computadora los necesitan también.

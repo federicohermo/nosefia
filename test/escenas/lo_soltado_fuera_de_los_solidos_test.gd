@@ -569,9 +569,14 @@ func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 ## rota detrás de la red.
 func _comprobar_sin_rescates(almacen: Node3D, donde: String) -> void:
 	var red: RedDeSeguridad = almacen.get_node("Servicios/RedDeSeguridad")
+	var avisos: Array[String] = []
+	for rescate: Dictionary in red.rescates:
+		avisos.append(str(rescate["aviso"]))
 	(
 		assert_array(red.rescates)
-		. override_failure_message("%s, la red tuvo que rescatar: la prevención falló" % donde)
+		. override_failure_message(
+			"%s, la red tuvo que rescatar: la prevención falló. %s" % [donde, " | ".join(avisos)]
+		)
 		. is_empty()
 	)
 
@@ -1006,7 +1011,7 @@ func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var heladera: MeshInstance3D = almacen.get_node("Estructura/heladeranueva")
 	var puerta: Node3D = heladera.get_node("puerta_heladera_0/CuerpoDeLaHoja")
-	puerta.call("usar")
+	puerta.call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	assert_bool(puerta.call("puerta").abierta()).is_true()

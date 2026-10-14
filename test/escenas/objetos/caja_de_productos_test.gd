@@ -57,8 +57,8 @@ const ORIGEN_DE_CADA_ETIQUETA := {
 	Producto.Id.ZUCARACHAS: "CAJA ZUCARACHAS.png",
 }
 
-## Los que siguen con la caja genérica: el artista no dibujó la suya.
-const SIN_ETIQUETA := [
+## Los que el artista no dibujó: su caja lleva el logo del envase en tinta.
+const DEL_ENVASE := [
 	Producto.Id.ARVEJAS,
 	Producto.Id.CHISITOS,
 	Producto.Id.CORACOLA,
@@ -236,20 +236,21 @@ func test_cada_caja_con_textura_muestra_la_etiqueta_de_su_producto() -> void:
 		)
 
 
-func test_las_cajas_sin_textura_siguen_con_la_generica() -> void:
-	for id: Producto.Id in SIN_ETIQUETA:
+## Las que el artista no dibujó llevan el logo de su envase en tinta: ninguna queda genérica.
+func test_las_cajas_sin_arte_llevan_su_propia_etiqueta() -> void:
+	for id: Producto.Id in DEL_ENVASE:
 		var caja := _caja_armada(id)
 		(
 			assert_str(_material(caja).albedo_texture.resource_path)
-			. override_failure_message("la caja de %s dejó la genérica" % _nombre(id))
-			. is_equal(GENERICA)
+			. override_failure_message("la caja de %s no lleva su etiqueta" % _nombre(id))
+			. is_equal(_ruta_de_la_etiqueta(id))
 		)
 
 
 ## Las dos listas cubren el catálogo, y ningún producto está en las dos. En el cruce del lote
 ## faltaba Malbardo en las dos: un producto nuevo tiene que decidir qué caja lleva.
 func test_cada_producto_tiene_decidida_su_caja() -> void:
-	var decididos: Array = ORIGEN_DE_CADA_ETIQUETA.keys() + SIN_ETIQUETA
+	var decididos: Array = ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE
 	assert_int(decididos.size()).is_equal(Producto.Id.size())
 	for id: Producto.Id in Producto.Id.values():
 		(
@@ -264,7 +265,7 @@ func test_cada_producto_tiene_decidida_su_caja() -> void:
 func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
-	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
+	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE:
 		var linea := (
 			'Producto.Id.%s: preload("%s"),' % [Producto.Id.keys()[id], _ruta_de_la_etiqueta(id)]
 		)
@@ -274,7 +275,7 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 			. is_equal(1)
 		)
 	var cajas := _nombres_de_las_cajas()
-	assert_int(cajas.size()).is_equal(ORIGEN_DE_CADA_ETIQUETA.size() + SIN_ETIQUETA.size())
+	assert_int(cajas.size()).is_equal(ORIGEN_DE_CADA_ETIQUETA.size() + DEL_ENVASE.size())
 	for ruta: String in ESCENAS_CON_CAJAS + [ESCENA]:
 		var escena := FileAccess.get_file_as_string(ruta)
 		assert_str(escena).is_not_empty()

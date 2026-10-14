@@ -49,4 +49,7 @@ func test_la_fila_apagada_conserva_la_textura_de_cada_parte_del_producto() -> vo
 			)
 			assert_float(material.get_shader_parameter("rugosidad")).is_equal(fuente.roughness)
 			assert_float(material.get_shader_parameter("metalico")).is_equal(fuente.metallic)
-			assert_int(material.get_shader_parameter("hasta_atras")).is_greater(0)
+			# Lo que va antes de los casilleros es fijo, y es lo único apagado.
+			var cupos: Dictionary = puesto.call("casilleros")
+			var fijas: int = grupo.multimesh.instance_count - cupos[producto.id]
+			assert_int(material.get_shader_parameter("hasta_atras")).is_equal(fijas)

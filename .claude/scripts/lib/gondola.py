@@ -379,8 +379,13 @@ def escribir_disposicion(
     filas_de_adelante: Sequence[int],
     uid: str,
     uid_del_script: str,
+    productos_de_las_guias: Sequence[int] = (),
+    filas_de_adelante_de_las_guias: Sequence[int] = (),
 ) -> str:
     """El texto de la disposición, siempre igual para los mismos datos: el diff lo lee alguien."""
+
+    def enteros(numeros: Sequence[int]) -> str:
+        return "PackedInt32Array(" + ", ".join(str(n) for n in numeros) + ")"
 
     def arreglo(bloques: Sequence[Sequence[float]]) -> str:
         cuerpos = [
@@ -398,10 +403,21 @@ def escribir_disposicion(
         'script = ExtResource("script")\n'
         f"principales = {arreglo(principales)}\n"
         f"guias = {arreglo(guias)}\n"
-        "filas_de_adelante = PackedInt32Array("
-        + ", ".join(str(n) for n in filas_de_adelante)
-        + ")\n"
+        f"filas_de_adelante = {enteros(filas_de_adelante)}\n"
+        f"productos_de_las_guias = {enteros(productos_de_las_guias)}\n"
+        f"filas_de_adelante_de_las_guias = {enteros(filas_de_adelante_de_las_guias)}\n"
     )
+
+
+def separar_filas(filas: list[str]) -> tuple[list[int], int]:
+    """El orden de una tanda fija para el juego, y cuántas copias tiene su fila de adelante.
+
+    Va la fila de atrás primero y la de adelante al final, igual que una tanda reponible: el juego
+    corta las copias por el final, y lo que se repone es la fila de adelante.
+    """
+    atras = [i for i, fila in enumerate(filas) if fila != "adelante"]
+    frente = [i for i, fila in enumerate(filas) if fila == "adelante"]
+    return atras + frente, len(frente)
 
 
 @dataclass(frozen=True)

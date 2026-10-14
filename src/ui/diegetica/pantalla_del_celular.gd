@@ -6,6 +6,8 @@ signal chat_pedido(quien: Conversacion.Interlocutor)
 signal volver_pedido
 signal foto_pedida(indice: int)
 signal cierre_de_foto_pedido
+## Un clic izquierdo por fuera del teléfono, con el celular arriba.
+signal cierre_pedido
 ## La opción que se ofrece debajo del último mensaje del chat, como la de la devolución.
 signal opcion_elegida
 signal celular_bajado
@@ -214,15 +216,17 @@ func mostrar_recordatorio(se_ve: bool) -> void:
 
 
 func _input(evento: InputEvent) -> void:
-	if not _foto_ampliada.visible or not _telefono.visible:
+	if not _telefono.visible:
 		return
-	if (
-		evento is InputEventMouseButton
-		and evento.button_index == MOUSE_BUTTON_LEFT
-		and evento.pressed
-	):
+	var clic := evento as InputEventMouseButton
+	if clic == null or not clic.pressed or clic.button_index != MOUSE_BUTTON_LEFT:
+		return
+	if _foto_ampliada.visible:
 		get_viewport().set_input_as_handled()
 		cierre_de_foto_pedido.emit()
+	elif _destino == 1.0 and not _telefono.get_global_rect().has_point(clic.position):
+		get_viewport().set_input_as_handled()
+		cierre_pedido.emit()
 
 
 func _mover_hacia(destino: float) -> void:

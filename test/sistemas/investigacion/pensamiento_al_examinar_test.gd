@@ -93,7 +93,7 @@ func test_sin_texto_o_sin_nada_en_la_mira_no_se_pide_nada() -> void:  # AC-SUB-0
 	linea.pensar(BOLSA)
 	linea.avanzar(1.0)
 	examen.alternar(null, "")
-	linea.avanzar(7.0 / 3.0)
+	linea.avanzar(1.8)
 	assert_str(linea.texto()).is_empty()
 
 
@@ -122,7 +122,7 @@ func test_repetir_el_gesto_pide_el_pensamiento_otra_vez() -> void:  # AC-SUB-006
 	examen.alternar(null, BOLSA)
 	assert_int(avisos.pensamientos.size()).is_equal(2)
 	assert_float(linea.opacidad()).is_equal(1.0)
-	linea.avanzar(10.0 / 3.0)
+	linea.avanzar(2.8)
 	assert_str(linea.texto()).is_empty()
 
 

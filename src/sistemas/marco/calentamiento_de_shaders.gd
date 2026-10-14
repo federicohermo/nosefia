@@ -46,6 +46,10 @@ var _muestras: Array[GeometryInstance3D] = []
 var _escena: Node3D
 var _reflejos: Dictionary[ReflectionProbe, Vector2i] = {}
 var _cuadros_de_asentamiento := 0
+## Cada material 2D de la escena se dibuja en un píxel, debajo de la pantalla de carga. Si no,
+## compilaba la primera vez que aparecía: lo oculto, como el celular o la intro, y lo que va en
+## un `SubViewport`, como el agua del baño, que no se actualiza mientras la escena está detenida.
+var _capa_2d: CanvasLayer
 
 
 func _init() -> void:
@@ -59,6 +63,7 @@ func _ready() -> void:
 
 func calentar(escena: Node3D) -> void:
 	_escena = escena
+	_dibujar_materiales_2d(escena)
 	for reflejo: ReflectionProbe in escena.find_children("*", "ReflectionProbe", true, false):
 		if reflejo.is_visible_in_tree() and reflejo.intensity > 0.0:
 			_reflejos[reflejo] = Vector2i(reflejo.cull_mask, reflejo.update_mode)
@@ -115,6 +120,23 @@ func calentar(escena: Node3D) -> void:
 	# La nuestra entra después: sus contornos deben existir antes del primer dibujo.
 	_preparar_contornos.call_deferred()
 	set_process(true)
+
+
+func _dibujar_materiales_2d(escena: Node3D) -> void:
+	var vistos: Dictionary[Shader, bool] = {}
+	for nodo: CanvasItem in escena.find_children("*", "CanvasItem", true, false):
+		var material := nodo.material as ShaderMaterial
+		if material == null or material.shader == null or vistos.has(material.shader):
+			continue
+		vistos[material.shader] = true
+		if _capa_2d == null:
+			_capa_2d = CanvasLayer.new()
+			_capa_2d.layer = -1
+			add_child(_capa_2d)
+		var muestra := ColorRect.new()
+		muestra.size = Vector2.ONE
+		muestra.material = material
+		_capa_2d.add_child(muestra)
 
 
 ## Un lote oculto conserva una instancia para calentarse en su lugar de origen. Al llevarlo
@@ -413,6 +435,9 @@ func _restaurar_escena() -> void:
 		muestra.hide()
 		muestra.queue_free()
 	_muestras.clear()
+	if is_instance_valid(_capa_2d):
+		_capa_2d.queue_free()
+	_capa_2d = null
 	if is_instance_valid(_camara):
 		_camara.queue_free()
 	_camara = null

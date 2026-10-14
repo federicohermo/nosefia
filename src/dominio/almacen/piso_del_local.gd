@@ -186,9 +186,10 @@ func pasar(en_la_mano: StringName, lugar: Lugar) -> ReglasDeLaLimpieza.Resultado
 
 
 ## El tiempo gasta la mopa esté donde esté; los metros, sólo si es lo que se lleva en la mano.
-func desgastar_mopa(en_la_mano: StringName, segundos: float, metros: float) -> void:
+## Devuelve si la mopa se secó en este paso.
+func desgastar_mopa(en_la_mano: StringName, segundos: float, metros: float) -> bool:
 	var recorrido := metros if en_la_mano == ReglasDeLaLimpieza.ID_DE_LA_MOPA else 0.0
-	_mopa.desgastar(segundos, recorrido)
+	return _mopa.desgastar(segundos, recorrido)
 
 
 ## La escena mide alcance, obstáculos y sectores reservados; el dominio sólo recibe el permiso.

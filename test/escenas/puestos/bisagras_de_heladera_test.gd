@@ -22,7 +22,7 @@ func test_al_abrir_cada_heladera_su_canto_sigue_unido_al_mueble() -> void:
 		antes.append(hoja.to_global(canto))
 		# La tercera heladera está trabada en juego; acá se prueba su montaje móvil.
 		puerta.set("traba", 0)
-		puerta.call("usar")
+		puerta.call("alternar")
 	assert_int(hojas.size()).is_equal(3)
 	for cuadro: int in 120:
 		await get_tree().physics_frame

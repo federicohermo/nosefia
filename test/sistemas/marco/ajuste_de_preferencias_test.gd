@@ -100,6 +100,27 @@ func test_lo_que_aparece_despues_tambien_toma_el_brillo() -> void:  # AC-CFG-007
 	_ajuste.aplicar(_con(C.BRILLO, 50.0))
 	var interfaz := _con_tema()
 	assert_float(interfaz.modulate.r).is_equal_approx(0.5, 1e-5)
+	var local := _entorno(0.92)
+	assert_float(local.environment.adjustment_brightness).is_equal_approx(0.46, 1e-5)
+
+
+func _entorno(brillo_de_hoy: float) -> WorldEnvironment:
+	var entorno: WorldEnvironment = auto_free(WorldEnvironment.new())
+	entorno.environment = Environment.new()
+	entorno.environment.adjustment_enabled = true
+	entorno.environment.adjustment_brightness = brillo_de_hoy
+	add_child(entorno)
+	return entorno
+
+
+func test_el_brillo_multiplica_el_del_local_sin_acumular() -> void:  # AC-CFG-007
+	var local := _entorno(0.92)
+	for brillo: float in [50.0, 150.0, 120.0, 100.0]:
+		_ajuste.aplicar(_con(C.BRILLO, brillo))
+		assert_float(local.environment.adjustment_brightness).is_equal_approx(
+			0.92 * brillo / 100.0, 1e-5
+		)
+	assert_bool(local.environment.adjustment_enabled).is_true()
 
 
 func test_la_letra_propia_de_un_control_tambien_se_escala_sin_acumular() -> void:  # AC-CFG-008

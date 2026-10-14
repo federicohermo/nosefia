@@ -15,6 +15,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from lib.gondola import AIRE
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from encajar_actroncito import encajar
+
 RAIZ = Path(__file__).resolve().parents[3]
 
 
@@ -83,6 +86,7 @@ def principal():
                 copia['orden'] = minimo + indice
             cambios += 1
             print(producto, fila, len(copias))
+    cambios += encajar()
     if cambios:
         bpy.ops.wm.save_mainfile()
     print('Filas ampliadas:', cambios)

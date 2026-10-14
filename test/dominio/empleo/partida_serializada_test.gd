@@ -15,6 +15,7 @@ func _completo() -> Dictionary:
 		"llamados": {"PAPEL_EN_EL_INODORO": 1},
 		"noches_sin_sumar": 1,
 		"devoluciones": ["Buen día!", "Hola"],
+		"mopa_secada": true,
 	}
 
 

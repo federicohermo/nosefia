@@ -15,7 +15,6 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/artefacto_del_bano.gd" id="artefacto"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
-[ext_resource type="Script" path="res://src/escenas/puestos/puerta_de_la_heladera.gd" id="puerta_de_heladera"]
 
 [ext_resource type="Script" path="res://src/escenas/objetos/nota_pegada.gd" id="nota_pegada"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/nota_pegada.tscn" id="texto_nota"]
@@ -2642,7 +2641,7 @@ gi_mode = 2
 position = Vector3(0.442941820, -0.000000050, -0.018000314)
 
 [node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="heladeranueva/puerta_heladera_0" node_paths=PackedStringArray("hoja", "eje_de_la_bisagra", "mallas") groups=["interactuable"]]
-script = ExtResource("puerta_de_heladera")
+script = ExtResource("puerta")
 hoja = NodePath("..")
 eje_de_la_bisagra = NodePath("../Bisagra")
 mallas = [NodePath("..")]
@@ -2658,7 +2657,7 @@ gi_mode = 2
 position = Vector3(0.442941770, -0.000000050, -0.018000126)
 
 [node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="heladeranueva_001/puerta_heladera_1" node_paths=PackedStringArray("hoja", "eje_de_la_bisagra", "mallas") groups=["interactuable"]]
-script = ExtResource("puerta_de_heladera")
+script = ExtResource("puerta")
 hoja = NodePath("..")
 eje_de_la_bisagra = NodePath("../Bisagra")
 mallas = [NodePath("..")]
@@ -2674,7 +2673,7 @@ gi_mode = 2
 position = Vector3(0.442941870, -0.000000050, -0.018000126)
 
 [node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="heladera_fuera_de_servicio/puerta_heladera_2" node_paths=PackedStringArray("hoja", "eje_de_la_bisagra", "mallas") groups=["interactuable"]]
-script = ExtResource("puerta_de_heladera")
+script = ExtResource("puerta")
 hoja = NodePath("..")
 eje_de_la_bisagra = NodePath("../Bisagra")
 mallas = [NodePath("..")]

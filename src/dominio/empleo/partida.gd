@@ -27,6 +27,7 @@ var _final: Final = Final.EN_CURSO
 var _llamados: Array[Llamado] = []
 var _antecedentes := Antecedentes.new()
 var _mensajes_del_jefe := PackedStringArray()
+var _mopa_secada := false
 
 
 func anotar_llamado(llamado: Llamado) -> void:
@@ -61,7 +62,17 @@ static func desde(datos: Dictionary) -> Partida:
 	for texto: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.DEVOLUCIONES)]:
 		if texto is String:
 			partida._mensajes_del_jefe.append(texto)
+	partida._mopa_secada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA)]
 	return partida
+
+
+## Si la mopa ya se secó una vez en la partida y se mostró su pensamiento (BR-SUB-014).
+func mopa_secada() -> bool:
+	return _mopa_secada
+
+
+func anotar_mopa_secada() -> void:
+	_mopa_secada = true
 
 
 func _init(legajo: Legajo) -> void:

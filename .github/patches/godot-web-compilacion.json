@@ -19,12 +19,16 @@
     "drivers/gles3/shader_gles3.h": {
       "original_sha256": "d17a9858ac8f7d55c34bb4d65f6dcd7eac467108b6c09cd12680d42c2d4e6c43",
       "modificado_sha256": "b708a79df32a1162e3b6ec9871f9756ca3408c13ab42eacc0557fb475632c380"
+    },
+    "drivers/gles3/storage/render_scene_buffers_gles3.cpp": {
+      "original_sha256": "eed85d446a818f3ffbdac02b3461f297fb40f58cf938aea88b3a641cb0b47155",
+      "modificado_sha256": "dbb13509d5054acc60c363f7f6f86ffa96a950141f4d69f91e46cd947dc9426a"
     }
   },
   "plantilla_local": {
-    "receta_sha256": "0fca70497a96c462fde801f0eb40b69386b771f01cd0f3e74aa9ded7200fa6e6",
-    "zip_sha256": "1e41efc826979f38b528e759d0e80a1c8247a3e112ed1522daa569e58d2ecc81",
-    "wasm_sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+    "receta_sha256": "d8b6ba2bc89cd8c041831c20bbe3739f3364529431b390698cccfece327a2b56",
+    "zip_sha256": "012d4d1572bc1889071003c3791195656a25897f1a273d264d505f77671f0187",
+    "wasm_sha256": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61"
   },
   "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y las huellas de cada archivo, antes y después. Todo el cambio queda bajo WEB_ENABLED: conserva el camino nativo.",
   "estado": "Plantilla release validada localmente e integrada al preset Web y al flujo de despliegue. El editor y la plantilla debug siguen usando el motor oficial."

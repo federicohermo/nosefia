@@ -38,12 +38,15 @@ func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
 		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
 
 
-func test_usar_abre_la_puerta_y_no_se_la_lleva_en_la_mano() -> void:
+func test_el_izquierdo_abre_la_puerta_y_el_derecho_no() -> void:  # AC-PLY-055
 	# Devolver un `ObjetoDelAlmacen` dejaría al clic de agarrar cargándose la hoja entera.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
 		assert_object(cuerpo.call("usar")).is_null()
+		assert_bool(cuerpo.call("puerta").abierta()).is_false()
+		assert_bool(cuerpo.call("el_uso_tiene_efecto")).is_false()
+		assert_object(cuerpo.call("accionar")).is_null()
 		assert_bool(cuerpo.call("puerta").abierta()).is_true()
 
 
@@ -54,7 +57,7 @@ func test_el_vano_se_cruza_solo_con_la_puerta_abierta() -> void:
 	for hoja: String in VANOS:
 		assert_float(await _avance(almacen, hoja)).is_less(0.7)
 	for hoja: String in VANOS:
-		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("usar")
+		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("alternar")
 	await _esperar_el_giro(almacen)
 	for hoja: String in VANOS:
 		assert_float(await _avance(almacen, hoja)).is_equal(1.0)
@@ -69,7 +72,7 @@ func test_la_hoja_gira_sobre_su_borde_y_no_sobre_su_centro() -> void:
 	var antes := {}
 	for hoja: String in VANOS:
 		antes[hoja] = _bordes(almacen.get_node(hoja))
-		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("usar")
+		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("alternar")
 	await _esperar_el_giro(almacen)
 	for hoja: String in VANOS:
 		var despues := _bordes(almacen.get_node(hoja))
@@ -106,7 +109,7 @@ func test_un_herraje_que_amplia_la_malla_no_cambia_el_eje_indicado() -> void:
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	var ancla := eje.global_position
-	cuerpo.usar()
+	cuerpo.alternar()
 	for cuadro in 60:
 		await get_tree().physics_frame
 	assert_float(cuerpo.puerta().angulo()).is_equal_approx(Puerta.ANGULO_ABIERTA, 0.001)
@@ -123,7 +126,7 @@ func test_la_hoja_abierta_entra_al_cuarto_y_no_al_local() -> void:
 	add_child(almacen)
 	await get_tree().physics_frame
 	for hoja: String in VANOS:
-		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("usar")
+		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("alternar")
 	await _esperar_el_giro(almacen)
 	for hoja: String in VANOS:
 		# El tramo de `VANOS` va del local hacia adentro del cuarto: su dirección es la que la
@@ -192,7 +195,7 @@ func test_cerrar_de_golpe_pone_la_hoja_en_su_lugar_en_el_mismo_paso() -> void:
 		var malla: Node3D = almacen.get_node(hoja)
 		var cerrada := malla.transform
 		var cuerpo: Node = almacen.get_node(hoja + "/CuerpoDeLaHoja")
-		cuerpo.call("usar")
+		cuerpo.call("alternar")
 		for cuadro in 5:
 			await get_tree().physics_frame
 		assert_bool(malla.transform.is_equal_approx(cerrada)).is_false()
@@ -305,10 +308,10 @@ func test_dos_toques_seguidos_avisan_abrir_y_despues_cerrar() -> void:  # AC-PLY
 	var avisos := _escuchar(almacen, VANOS.keys())
 	for ruta: String in VANOS:
 		var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
-		cuerpo.call("usar")
+		cuerpo.call("alternar")
 		await get_tree().physics_frame
 		assert_bool(cuerpo.call("puerta").quieta()).is_false()
-		cuerpo.call("usar")
+		cuerpo.call("alternar")
 	for _cuadro in 60:
 		await get_tree().physics_frame
 	var esperado := []
@@ -322,7 +325,7 @@ func test_cerrar_al_abrir_la_jornada_no_avisa() -> void:  # AC-PLY-041
 	add_child(almacen)
 	await get_tree().physics_frame
 	for ruta: String in VANOS:
-		almacen.get_node(ruta + "/CuerpoDeLaHoja").call("usar")
+		almacen.get_node(ruta + "/CuerpoDeLaHoja").call("alternar")
 	var avisos := _escuchar(almacen, VANOS.keys() + TRABADAS.keys())
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	for ruta: String in VANOS:
@@ -330,7 +333,7 @@ func test_cerrar_al_abrir_la_jornada_no_avisa() -> void:  # AC-PLY-041
 	assert_array(avisos).is_empty()
 
 
-func test_solo_el_clic_derecho_acciona_las_puertas_y_sus_sonidos() -> void:
+func test_cada_clic_acciona_sus_puertas_y_sus_sonidos() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -363,13 +366,26 @@ func test_solo_el_clic_derecho_acciona_las_puertas_y_sus_sonidos() -> void:
 		var puerta: Puerta = cuerpo.call("puerta")
 		jugador.set("_enfocado", cuerpo)
 		var anteriores := pedidos.size()
+		# El izquierdo abre y cierra las que abren, también la heladera; la trabada no le contesta.
+		var con_el_izquierdo := not puerta.trabada()
 		clic.button_index = MOUSE_BUTTON_LEFT
 		jugador.call("_unhandled_input", clic)
+		assert_bool(puerta.abierta()).override_failure_message(ruta).is_equal(con_el_izquierdo)
+		if con_el_izquierdo:
+			jugador.call("_unhandled_input", clic)
+			anteriores += 2
 		assert_bool(puerta.abierta()).override_failure_message(ruta).is_false()
 		assert_int(pedidos.size()).override_failure_message(ruta).is_equal(anteriores)
+		# El derecho sólo hace avisar a las trabadas: las que abren no le contestan.
+		var con_el_derecho := puerta.trabada()
 		clic.button_index = MOUSE_BUTTON_RIGHT
 		jugador.call("_unhandled_input", clic)
-		assert_bool(puerta.abierta()).override_failure_message(ruta).is_equal(not puerta.trabada())
+		assert_bool(puerta.abierta()).override_failure_message(ruta).is_equal(
+			con_el_derecho and not puerta.trabada()
+		)
+		if not con_el_derecho:
+			assert_int(pedidos.size()).override_failure_message(ruta).is_equal(anteriores)
+			continue
 		assert_int(pedidos.size()).override_failure_message(ruta).is_equal(anteriores + 1)
 		var aviso: EntradaSonora.Evento = EntradaSonora.Evento.PUERTA_ABIERTA
 		if puerta.trabada():
@@ -401,8 +417,8 @@ func test_cada_puerta_pide_su_sonido_al_tocarla() -> void:
 	var esperado := []
 	for ruta: String in VANOS:
 		var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
-		cuerpo.call("usar")
-		cuerpo.call("usar")
+		cuerpo.call("alternar")
+		cuerpo.call("alternar")
 		esperado.append_array(
 			[EntradaSonora.Evento.PUERTA_ABIERTA, EntradaSonora.Evento.PUERTA_CERRADA]
 		)

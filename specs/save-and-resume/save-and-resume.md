@@ -139,11 +139,11 @@ final NO DEBE reaparecer.
 ### BR-SAV-019 — Las cuentas y las devoluciones cruzan la sesión
 
 CUANDO se guarda, el sistema DEBE escribir, además de la jornada y el legajo, las fallas de cada
-obligatoria fija, los llamados de cada motivo, R y los textos de las devoluciones recibidas, en
-orden (BR-EMP-025, BR-EMP-031). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
+obligatoria fija, los llamados de cada motivo, R, los textos de las devoluciones recibidas, en
+orden (BR-EMP-025, BR-EMP-031), y si la mopa ya se secó una vez (BR-SUB-014). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
 siguiente cuenta desde ellos, y el chat de Enrique muestra las instrucciones y después esas
 devoluciones. SI falta alguno o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) con cero
-fallas, cero llamados, R = 0 y ninguna devolución. Dentro de las cuentas, una obligatoria o un
+fallas, cero llamados, R = 0, ninguna devolución y la mopa sin secarse. Dentro de las cuentas, una obligatoria o un
 motivo desconocido, o un valor de otro tipo, DEBE ignorarse sin descartar los demás.
 
 ## Criterios de aceptación
@@ -307,6 +307,12 @@ la partida, y el chat de Enrique tiene sólo las 19 entradas de las instruccione
 fallas con un valor que no es un diccionario, o las devoluciones con un número ENTONCES vuelven
 con su defecto. DADO las fallas con una obligatoria desconocida y reponer en 1 ENTONCES reponer
 conserva 1 y la desconocida se ignora.
+
+### AC-SAV-026 — La mopa recuerda que se secó *(verifica BR-SAV-005, BR-SAV-019)*
+
+DADO una partida marcada con la mopa ya secada CUANDO se guarda y se retoma ENTONCES sigue
+marcada, como booleano. DADO un guardado sin el campo, o con un número en él, ENTONCES se retoma
+sin la marca.
 
 ## No objetivos
 

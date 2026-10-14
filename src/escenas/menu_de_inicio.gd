@@ -114,7 +114,7 @@ func _process(delta: float) -> void:
 ## Esc la cierra sola; el foco vuelve al botón que la abrió.
 func _al_cerrar_las_configuraciones() -> void:
 	_marco.show()
-	_botones[MenuDeInicio.Opcion.CONFIGURACIONES].grab_focus()
+	_botones[MenuDeInicio.Opcion.CONFIGURACIONES].grab_focus(true)
 
 
 func _abrir_las_configuraciones() -> void:

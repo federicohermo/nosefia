@@ -13,10 +13,13 @@ extends RefCounted
 ## se corrigen jugando.
 const PISO := 2.0
 const BASE := 1.5
-const CARACTERES_POR_SEGUNDO := 15.0
+const CARACTERES_POR_SEGUNDO := 25.0
 
 ## Cuánto tarda en desvanecerse, en segundos.
 const DESVANECIDO := 0.5
+
+## Cuántos metros más lejos de su lugar que al aparecer aguanta un pensamiento antes de irse.
+const DISTANCIA_PARA_IRSE := 0.75
 
 var _texto: String = ""
 var _fijo: bool = false
@@ -62,6 +65,14 @@ func avanzar(segundos: float) -> void:
 	_transcurrido += segundos
 	if _transcurrido >= _duracion + DESVANECIDO:
 		soltar()
+
+
+## Cuánto se alejó el jugador del lugar del pensamiento desde que apareció. Pasado el límite,
+## empieza a desvanecerse ya; si ya se desvanecía, sigue igual: volver no le devuelve nada.
+func alejarse(metros: float) -> void:
+	if _fijo or _texto.is_empty() or metros <= DISTANCIA_PARA_IRSE:
+		return
+	_transcurrido = maxf(_transcurrido, _duracion)
 
 
 func texto() -> String:
