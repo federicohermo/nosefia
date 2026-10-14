@@ -190,6 +190,7 @@ caja se apoya, no se coloca.
 
 CUANDO la mira enfoca un casillero vacío del producto que se lleva en la mano, el sistema DEBE
 mostrar la textura correspondiente del producto en blanco y negro, con opacidad del 75%.
+La vista previa DEBE ignorar las luces y sombras de la escena para conservar su claridad.
 Los demás casilleros vacíos NO DEBEN dibujar envases ni contornos. Al perder el foco,
 la vista previa DEBE desaparecer.
 CUANDO el jugador hace clic, el sistema DEBE colocar la unidad en ese casillero y en
