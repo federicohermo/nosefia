@@ -1062,6 +1062,8 @@ func _malla_con_la_fila_apagada(
 	original: Mesh, saturacion: float = SATURACION_DE_LA_FILA_DE_ATRAS
 ) -> ArrayMesh:
 	var malla := original.duplicate() as ArrayMesh
+	if malla.surface_get_arrays(0)[Mesh.ARRAY_CUSTOM1] == null:
+		malla = AristasDelProducto.preparar(original)
 	for superficie in malla.get_surface_count():
 		var material := _con_la_fila_de_atras_apagada(original.surface_get_material(superficie))
 		material.set_shader_parameter("saturacion_atras", saturacion)
