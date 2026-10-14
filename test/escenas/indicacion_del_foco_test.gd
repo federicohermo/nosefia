@@ -3,8 +3,6 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Jugador := preload("res://src/escenas/jugador.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
-const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
-const SIN_SUPERFICIE := "res://src/escenas/puestos/casillero_sin_superficie.gdshader"
 
 
 class JugadorDoble:
@@ -52,8 +50,8 @@ func test_el_campo_real_resalta_la_computadora() -> void:
 		assert_bool(malla.material_overlay == previos[malla]).is_true()
 
 
-## La mira suma el contorno sin ocultar ni reordenar las referencias de los huecos.
-func test_el_contorno_se_suma_a_la_referencia_del_hueco() -> void:  # AC-PLY-047
+## La vista previa aparece sólo en el hueco enfocado, sin ocultar ni reordenar sus referencias.
+func test_la_vista_previa_aparece_solo_en_el_hueco_enfocado() -> void:  # AC-PLY-047
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -72,35 +70,29 @@ func test_el_contorno_se_suma_a_la_referencia_del_hueco() -> void:  # AC-PLY-047
 	assert_int(huecos.multimesh.visible_instance_count).is_equal(vacios.size())
 	var uno: Node3D = puesto.call("casillero", actroncito.id, vacios[0])
 	var otro: Node3D = puesto.call("casillero", actroncito.id, vacios[1])
-	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
+	# Las copias del desenfoque siguen a las mallas del mundo en cada cuadro: no son del foco.
+	var desenfoque: Node = puesto.get("_desenfoque")
+	var mallas := almacen.find_children("*", "MeshInstance3D", true, false).filter(
+		func(malla: Node) -> bool: return not desenfoque.is_ancestor_of(malla)
+	)
 	var previos := _overlays(mallas)
 	var materiales := _overrides(mallas)
 	var dibujadas := _dibujadas(mallas)
 	var avisos := _avisos(jugador)
 	for apuntado: Node3D in [uno, otro]:
-		var vista: MeshInstance3D = apuntado.get("vista")
-		assert_bool(dibujadas[vista]).is_false()
+		var previa: MeshInstance3D = apuntado.get("previsualizacion")
+		assert_bool(dibujadas[previa]).is_false()
 		await _mirar(jugador, _ojo_frente_a(puesto, apuntado), apuntado.global_position)
 		assert_object(jugador.get("_enfocado")).is_same(apuntado)
 		assert_array(avisos).contains([apuntado])
 		assert_bool(hud.foco_presente).is_true()
-		assert_bool(vista.visible).is_true()
+		assert_bool(previa.visible).is_true()
 		assert_bool(huecos.multimesh.buffer == referencias).is_true()
 		assert_int(huecos.multimesh.visible_instance_count).is_equal(vacios.size())
-		var contorno := vista.material_overlay as ShaderMaterial
-		assert_object(contorno).is_not_null()
-		assert_object(contorno.shader).is_same(CONTORNO)
-		assert_bool(contorno.get_shader_parameter("color") == IndicacionDelFoco.COLOR).is_true()
-		assert_float(contorno.get_shader_parameter("grosor")).is_equal(
-			IndicacionDelFoco.GROSOR_DE_PRODUCTOS
-		)
-		var superficie := vista.material_override as ShaderMaterial
-		assert_object(superficie).is_not_null()
-		assert_str(superficie.shader.resource_path).is_equal(SIN_SUPERFICIE)
 		for malla: MeshInstance3D in mallas:
 			assert_bool(malla.material_overlay == previos[malla]).is_true()
 			assert_bool(malla.material_override == materiales[malla]).is_true()
-			if malla != vista:
+			if malla != previa:
 				assert_bool(malla.visible).is_equal(dibujadas[malla])
 	await _mirar(jugador, Vector3(0, 10, 0), Vector3(0, 10, -1))
 	assert_object(jugador.get("_enfocado")).is_null()

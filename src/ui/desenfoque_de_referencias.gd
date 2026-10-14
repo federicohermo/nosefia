@@ -49,6 +49,7 @@ func _ready() -> void:
 	_pantalla.extra_cull_margin = 100.0
 	_pantalla.ignore_occlusion_culling = true
 	_pantalla.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_pantalla.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	_pantalla.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	var material := ShaderMaterial.new()
 	material.shader = DESENFOQUE
@@ -69,6 +70,7 @@ func agregar(grupo: MultiMeshInstance3D, bloque: PackedFloat32Array, cantidad: i
 	dibujo.multimesh = copias
 	dibujo.material_override = _material_de_mascara
 	dibujo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	dibujo.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	_ventana.add_child(dibujo)
 	dibujo.transform = grupo.global_transform
 	var oclusor := MultiMeshInstance3D.new()
@@ -77,6 +79,7 @@ func agregar(grupo: MultiMeshInstance3D, bloque: PackedFloat32Array, cantidad: i
 	material.set_shader_parameter("desde", cantidad)
 	oclusor.material_override = material
 	oclusor.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	oclusor.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	_ventana.add_child(oclusor)
 	oclusor.transform = grupo.global_transform
 
@@ -96,6 +99,7 @@ func _agregar_oclusor(nodo: Node) -> void:
 	copia.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	copia.material_override = _material_de_oclusor
 	copia.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	copia.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	_ventana.add_child(copia)
 	_oclusores[fuente] = copia
 	_fuentes.append(fuente)

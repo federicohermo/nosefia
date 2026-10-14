@@ -93,7 +93,8 @@ var _disponible: ObjetoAgarrable = null
 ## Las aristas que dibuja el foco. Piden las mallas que arma `AristasDelProducto`.
 var _aristas := ShaderMaterial.new()
 var _laterales := ShaderMaterial.new()
-var _desenfoque := DesenfoqueDeReferencias.new()
+## Se crea al preparar el puesto: un almacén que se instancia y no se abre no lo deja colgado.
+var _desenfoque: DesenfoqueDeReferencias
 
 
 func unidades_sueltas() -> Array[Node3D]:
@@ -117,6 +118,7 @@ func casilleros() -> Dictionary[Producto.Id, int]:
 
 
 func preparar() -> void:
+	_desenfoque = DesenfoqueDeReferencias.new()
 	add_child(_desenfoque)
 	_aristas.shader = CONTORNO
 	_aristas.set_shader_parameter("color", IndicacionDelFoco.COLOR)

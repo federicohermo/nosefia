@@ -3028,6 +3028,13 @@ collision_mask = 0
 [node name="Volumen" type="CollisionShape3D" parent="local_vidrio_ventanal_3/CuerpoDelVidrio"]
 shape = SubResource("vidrio_solido_local_vidrio_ventanal_3")
 
+[node name="lector de productos" parent="EscritorioComputadora" groups=["geometria_de_referencia"]]
+visible = false
+
+[node name="StaticBody3D" parent="EscritorioComputadora/lector de productos"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="VolumenComputadora0" type="CollisionShape3D" parent="base compu/StaticBody3D"]
 shape = SubResource("modelo_computadora_0")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)

@@ -6,6 +6,7 @@ from pathlib import Path
 import bpy
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from lib.consola import configurar
 from lib.gondola import AIRE
 
 
@@ -53,5 +54,6 @@ def encajar():
 
 
 if __name__ == '__main__':
+    configurar()
     if encajar():
         bpy.ops.wm.save_mainfile()
