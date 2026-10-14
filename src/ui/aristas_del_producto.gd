@@ -46,6 +46,11 @@ static func preparar(original: Mesh) -> ArrayMesh:
 				var vecinas: Array = normales[clave]
 				if _marcar(vecinas, clave):
 					mascara |= 1 << esquina
+				# Una curva no tiene aristas propias: sus dos límites los elige la cámara.
+				if vecinas.size() == 2:
+					var acuerdo_curvo: float = vecinas[0].dot(vecinas[1])
+					if acuerdo_curvo >= CAMBIO_DE_FORMA and acuerdo_curvo < CARAS_COPLANARES:
+						mascara |= 1 << (esquina + 3)
 				var vecina := Vector3.ZERO
 				var acuerdo := INF
 				for candidata: Vector3 in vecinas:
