@@ -30,6 +30,7 @@ hay nada que correr y no hace falta Godot. En cuanto exista el primero, Godot pa
 obligatorio y la falta de `GODOT_BIN` es un rojo — no un salteo.
 """
 
+import argparse
 import os
 import subprocess
 import sys
@@ -211,16 +212,14 @@ def nodo_tests() -> Resultado:
 NODOS = (nodo_lint, nodo_formato, nodo_capas, nodo_tdd, nodo_specs, nodo_harness, nodo_tests)
 
 
-def main() -> None:
-    solo = None
-    if "--solo" in sys.argv:
-        solo = sys.argv[sys.argv.index("--solo") + 1]
-
-    a_correr = [n for n in NODOS if solo is None or n.__name__ == f"nodo_{solo}"]
-    if not a_correr:
-        nombres = ", ".join(n.__name__.removeprefix("nodo_") for n in NODOS)
-        print(f"no hay un nodo «{solo}». Los que hay: {nombres}", file=sys.stderr)
-        sys.exit(1)
+def main(argumentos: list[str] | None = None) -> None:
+    nodos = {n.__name__.removeprefix("nodo_"): n for n in NODOS}
+    parser = argparse.ArgumentParser(
+        description="Verifica todos los nodos o uno solo.", allow_abbrev=False
+    )
+    parser.add_argument("--solo", choices=nodos, help="corre un único nodo, sin comas")
+    opciones = parser.parse_args(argumentos)
+    a_correr = [nodos[opciones.solo]] if opciones.solo is not None else list(NODOS)
 
     arranque = time.monotonic()
     with ThreadPoolExecutor(max_workers=len(a_correr)) as pool:

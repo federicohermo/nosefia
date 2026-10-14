@@ -20,6 +20,7 @@ func _ready() -> void:
 	_forma_del_lector = forma.shape
 	caja.programa_arrancado.connect(_mostrar_modo)
 	jugador.uso_pedido.connect(_al_usar)
+	jugador.consultar_el_derecho_con(_derecho_del_lector)
 
 
 func _al_usar(objetivo: Node3D) -> void:
@@ -30,7 +31,22 @@ func _al_usar(objetivo: Node3D) -> void:
 		caja.pedir_anotar(objeto)
 
 
+## Con el programa manual el lector no está: su hueco no lee nada.
+func _derecho_del_lector(
+	objetivo: Node3D, sostenido: ObjetoDelAlmacen
+) -> ReferenciaDeControles.Derecho:
+	if objetivo != self:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	var presente := caja.generador() != null and not caja.generador().es_manual()
+	return ReferenciaDeControles.derecho_del_lector(sostenido, presente)
+
+
 func _mostrar_modo(manual: bool) -> void:
 	mallas[0].mesh = malla_del_hueco if manual else _malla_del_lector
 	mallas[0].position = posicion_del_hueco if manual else Vector3.ZERO
 	forma.set_deferred("shape", forma_del_hueco if manual else _forma_del_lector)
+
+
+## Lo que dice el lector al examinarlo.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.LECTOR)

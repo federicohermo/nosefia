@@ -29,9 +29,12 @@ func test_ida_y_vuelta_por_disco_con_los_tipos_intactos() -> void:  # AC-SAV-006
 	var guardado := _guardado()
 	assert_bool(guardado.escribir(_partida_en_la_tercera())).is_true()
 	var cargado := guardado.cargar()
-	assert_dict(cargado).is_equal(_partida_en_la_tercera())
-	for clave: String in cargado:
+	# Lo escrito vuelve igual; las cuentas y devoluciones que el sobre completa, con su defecto.
+	for clave: String in _partida_en_la_tercera():
+		assert_int(cargado[clave]).is_equal(_partida_en_la_tercera()[clave])
 		assert_int(typeof(cargado[clave])).is_equal(TYPE_INT)
+	assert_dict(cargado["fallas"]).is_empty()
+	assert_array(cargado["devoluciones"]).is_empty()
 
 
 func test_lo_que_falta_o_esta_mal_tipado_en_disco_vuelve_con_su_defecto() -> void:

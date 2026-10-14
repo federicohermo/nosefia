@@ -163,7 +163,9 @@ func test_las_hojas_del_bano_conservan_las_imagenes_del_artista() -> void:  # AC
 	)
 	add_child(almacen)
 	add_child(original)
-	var rutas: Array[String] = ["nota baño inodoro", "nota instrucciones", "nota productos"]
+	var rutas: Array[String] = [
+		"nota baño inodoro", "nota baño inodoro 2", "nota instrucciones", "nota productos"
+	]
 	for ruta in rutas:
 		var hoja: MeshInstance3D = almacen.get_node("Estructura/" + ruta)
 		var referencia: MeshInstance3D = original.get_node(ruta)

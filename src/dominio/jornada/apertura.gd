@@ -16,8 +16,8 @@ const PARTICULARES := {1: [Tarea.Tipo.ORDENAR_LAS_CAJAS], 2: [Tarea.Tipo.SACAR_L
 const FALTANTES_POR_JORNADA := {
 	ReglasDeLaPartida.PRIMERA_JORNADA:
 	{
-		Producto.Id.ACTRONCITO: 5,
-		Producto.Id.CORACOLA: 6,
+		Producto.Id.ACTRONCITO: 4,
+		Producto.Id.CORACOLA: 5,
 		Producto.Id.MAROLINI: 2,
 		Producto.Id.PRONGLES: 8,
 		Producto.Id.LAYSNTT: 4,

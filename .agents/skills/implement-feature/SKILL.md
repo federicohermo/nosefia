@@ -303,6 +303,13 @@ se corrige el código.
   esas suites sueltas antes de `verificar.py`. En el #176, dos clics seguidos sobre la misma caja
   pasaron de «no hace nada» a «devuelve la unidad», y un caso de `reposicion_manual_test.gd` que
   afirmaba lo viejo costó una corrida entera en 6/7.
+- **Si un flujo pasa a ser asíncrono, seguí todos sus llamadores, fixtures y emisores directos
+  de señales**, incluidos `call()`, `_seguir()` y `devolucion_despachada.emit()`.
+  Ejercé el gesto real y esperá el marcador de fin de animación, sin saltear pasos que dejen una
+  corrutina suspendida. En #420, el focal de ocho casos pasó y cuatro suites conservaron el flujo viejo.
+- **Al escalar textos, seguí el tema compartido, los `theme_override_font_sizes` y los controles
+  creados después.** Probá tamaños propios y controles dinámicos: escalar y restaurar debe partir
+  del tamaño original, sin acumularse. En #416, ajustar sólo el tema dejaba tamaños propios sin escalar.
 - **Si una llegada pasa de abrir una interfaz a depender del reloj, revisá también los
   fixtures de notificaciones, sonido y caja que piden atender.** En #339 seguían esperando
   un comprador inmediato. La primera jornada debe ejercerse avanzando su reloj; las pruebas

@@ -22,8 +22,8 @@
     }
   },
   "plantilla_local": {
-    "receta_sha256": "78f8b5f7e51f6af8f0b76de5a798f5e2f8f796822c3ef9bb756bc9fb76eaf495",
-    "zip_sha256": "257ba2b4340f966141378f65e2595ed786c1ca8f3b113b45ca778e0d9e0bd13b",
+    "receta_sha256": "0fca70497a96c462fde801f0eb40b69386b771f01cd0f3e74aa9ded7200fa6e6",
+    "zip_sha256": "1e41efc826979f38b528e759d0e80a1c8247a3e112ed1522daa569e58d2ecc81",
     "wasm_sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
   },
   "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y las huellas de cada archivo, antes y después. Todo el cambio queda bajo WEB_ENABLED: conserva el camino nativo.",

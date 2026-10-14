@@ -22,7 +22,7 @@ extends RefCounted
 enum Resultado { COBRADA, SIN_STOCK, YA_DESPACHADA }
 
 ## Los textos que se leen en la ventanilla viven acá y no en el panel, por el mismo motivo que
-## los de `ParteDeCierre`: en `ui/` una regla nace sin test y ningún gate lo dice.
+## los de `DevolucionDelJefe`: en `ui/` una regla nace sin test y ningún gate lo dice.
 const TEXTO_DE_LA_LINEA := "%d × %s"
 const TEXTO_DEL_TOTAL := "Total: $%d"
 const TEXTO_DE_LO_QUE_PAGA := "Paga: $%d"

@@ -2,7 +2,9 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
-const NOTAS: Array[String] = ["nota baño inodoro", "nota instrucciones", "nota productos"]
+const NOTAS: Array[String] = [
+	"nota baño inodoro", "nota baño inodoro 2", "nota instrucciones", "nota productos"
+]
 
 
 func test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas() -> void:
@@ -26,7 +28,7 @@ func test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas() -> voi
 		etiquetas.append(texturas)
 
 
-func test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
+func test_las_cuatro_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -36,13 +38,14 @@ func test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
 		if nota == null:
 			continue
 		assert_bool(nota.is_visible_in_tree()).is_true()
-		var alto_minimo := 0.3 if nombre == NOTAS[0] else 1.1
+		var del_inodoro := nombre.begins_with("nota baño inodoro")
+		var alto_minimo := 0.3 if del_inodoro else 1.1
 		assert_float(nota.mesh.get_aabb().size.y).is_greater(alto_minimo)
 		assert_float(nota.global_position.x).is_between(8.0, 13.5)
 		assert_float(nota.global_position.z).is_between(-0.444, 6.27832)
 		assert_float(nota.global_position.y).is_between(1.2, 1.9)
 		var centro := nota.to_global(nota.mesh.get_aabb().get_center())
-		var frente := Vector3.FORWARD if nombre == NOTAS[0] else Vector3.BACK
+		var frente := Vector3.FORWARD if del_inodoro else Vector3.BACK
 		var rayo := PhysicsRayQueryParameters3D.create(centro + frente, centro, 1)
 		var choque := almacen.get_world_3d().direct_space_state.intersect_ray(rayo)
 		assert_bool(choque.is_empty()).is_false()
@@ -55,12 +58,13 @@ func test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
 		assert_int(imagenes.size()).override_failure_message(nombre).is_greater_equal(2)
 
 
-func test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura() -> void:  # AC-PLY-070
+func test_las_cuatro_notas_del_bano_comparten_su_imagen_con_la_lectura() -> void:  # AC-PLY-070
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var vista: NotaEncuadrada = almacen.get_node("Interfaz/NotaEncuadrada")
 	var jugador: Node3D = almacen.get_node("Jugador")
 	jugador.set_physics_process(false)
+	var abiertas: Dictionary[String, Texture2D] = {}
 	for nombre: String in NOTAS:
 		var malla: MeshInstance3D = almacen.get_node("Estructura/" + nombre)
 		var cuerpo: StaticBody3D = malla.get_node("StaticBody3D")
@@ -70,6 +74,10 @@ func test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura() -> void: 
 		cuerpo.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 		assert_bool(vista.visible).is_true()
 		assert_object((vista.get("_imagen") as TextureRect).texture).is_same(original)
+		abiertas[nombre] = (vista.get("_imagen") as TextureRect).texture
 		assert_str((vista.get("_renglones") as Label).text).is_empty()
 		almacen.get_node("Estructura/NotasDelAlmacen").call("cerrar")
 		assert_bool(vista.visible).is_false()
+	# Las dos hojas de no tirar papel, una por inodoro, abren la misma imagen.
+	assert_object(abiertas["nota baño inodoro 2"]).is_not_null()
+	assert_object(abiertas["nota baño inodoro 2"]).is_same(abiertas["nota baño inodoro"])

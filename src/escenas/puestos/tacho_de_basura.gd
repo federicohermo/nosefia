@@ -12,3 +12,8 @@ func interactuar() -> ObjetoDelAlmacen:
 
 func mostrar(bolsa: Node3D, con_bolsa: bool) -> void:
 	bolsa.visible = con_bolsa
+
+
+## Lo que dice el tacho, con bolsa o sin ella: examinarlo no la mira ni la saca.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.id_del_tacho(tacho))

@@ -7,6 +7,7 @@ extends Node
 signal nuevo_juego_pedido
 signal continuar_pedido
 signal salir_pedido
+signal configuraciones_pedida
 
 var _pidio := false
 var _menu: MenuDeInicio
@@ -36,6 +37,9 @@ func elegir(opcion: MenuDeInicio.Opcion) -> void:
 		MenuDeInicio.Opcion.SALIR:
 			_pidio = true
 			salir_pedido.emit()
+		# No traba el menú: configuraciones se cierra y el menú sigue ahí.
+		MenuDeInicio.Opcion.CONFIGURACIONES:
+			configuraciones_pedida.emit()
 
 
 ## Vuelve a aceptar un pedido. Sirve cuando la escena no llegó a cambiar.

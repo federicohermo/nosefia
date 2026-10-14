@@ -1,7 +1,7 @@
 ## La carga en segundo plano, con una escena chica en lugar del almacén.
 extends GdUnitTestSuite
 
-const ESCENA_CHICA := "res://src/ui/interrupciones/pantalla_de_cierre.tscn"
+const ESCENA_CHICA := "res://src/ui/interrupciones/pantalla_de_devolucion.tscn"
 const RUTA_QUE_NO_EXISTE := "res://no_existe.tscn"
 ## Otra escena chica, que ningún otro test pide: una escena ya cargada no vuelve a pedirse.
 const ESCENA_SIN_PEDIR := "res://src/ui/interrupciones/menu_de_pausa.tscn"

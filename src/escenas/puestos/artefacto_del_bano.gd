@@ -25,3 +25,9 @@ func destino_del_uso() -> StringName:
 
 func punto_para_la_mopa() -> Vector3:
 	return to_global(punto_de_enjuague)
+
+
+## Lo que dice al examinarlo. Los dos inodoros y los dos lavatorios dicen lo mismo: sale del
+## `destino`, que ya los distingue.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(destino)

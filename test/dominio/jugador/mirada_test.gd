@@ -67,3 +67,14 @@ func test_orientar_deja_el_yaw_adentro_de_una_vuelta() -> void:  # AC-PLY-044
 	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
 	mirada.orientar(TAU + 0.25)
 	assert_float(mirada.yaw()).is_equal_approx(0.25, 1e-5)
+
+
+func test_cambiar_la_sensibilidad_escala_el_giro_sin_rearmar() -> void:  # AC-CFG-006
+	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
+	mirada.cambiar_sensibilidad(SENSIBILIDAD * 2.0)
+	mirada.girar(Vector2(50.0, 0.0))
+	assert_float(mirada.yaw()).is_equal_approx(-1.0, 1e-5)
+	mirada.orientar(0.0)
+	mirada.cambiar_sensibilidad(SENSIBILIDAD * 0.25)
+	mirada.girar(Vector2(100.0, 0.0))
+	assert_float(mirada.yaw()).is_equal_approx(-0.25, 1e-5)

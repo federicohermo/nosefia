@@ -34,6 +34,38 @@ OPCIONES = [
     "platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin",
 ]
 
+# Emscripten consulta el recorte al copiar el framebuffer en cada cuadro. getParameter
+# sincroniza con la GPU; isEnabled responde el mismo booleano desde el estado de WebGL.
+RECORTE_ORIGINAL = b"var prevScissorTest=gl.getParameter(3089);"
+RECORTE_CORREGIDO = b"var prevScissorTest=gl.isEnabled(3089);"
+
+
+def corregir_recorte_js(codigo: bytes) -> bytes:
+    originales = codigo.count(RECORTE_ORIGINAL)
+    corregidos = codigo.count(RECORTE_CORREGIDO)
+    if originales == 1 and corregidos == 0:
+        return codigo.replace(RECORTE_ORIGINAL, RECORTE_CORREGIDO)
+    if originales == 0 and corregidos == 1:
+        return codigo
+    raise ValueError("La copia del framebuffer no tiene un único recorte reconocido")
+
+
+def corregir_recorte_zip(ruta: Path) -> None:
+    with zipfile.ZipFile(ruta) as archivo:
+        entradas = [(info, archivo.read(info)) for info in archivo.infolist()]
+    js = next(contenido for info, contenido in entradas if info.filename == "godot.js")
+    corregido = corregir_recorte_js(js)
+    if corregido == js:
+        return
+    temporal = ruta.with_name(ruta.name + ".recorte.tmp")
+    try:
+        with zipfile.ZipFile(temporal, "x") as archivo:
+            for info, contenido in entradas:
+                archivo.writestr(info, corregido if info.filename == "godot.js" else contenido)
+        os.replace(temporal, ruta)
+    finally:
+        temporal.unlink(missing_ok=True)
+
 
 def sha256(contenido: bytes) -> str:
     return hashlib.sha256(contenido).hexdigest()
@@ -53,6 +85,8 @@ def validar_zip(ruta: Path) -> dict[str, str]:
             js = archivo.read("godot.js")
             if not js:
                 raise ValueError("ZIP contiene JavaScript vacío")
+            if corregir_recorte_js(js) != js:
+                raise ValueError("La plantilla conserva la consulta síncrona de recorte")
             return {"wasm_sha256": sha256(wasm), "js_sha256": sha256(js)}
     except (OSError, zipfile.BadZipFile, RuntimeError) as error:
         raise ValueError(f"ZIP inválido: {error}") from error
@@ -95,6 +129,7 @@ def _identidad(metadata: Path, raiz: Path) -> tuple[dict, Path, dict]:
         Path(__file__).read_bytes().replace(b"\r\n", b"\n")
     )
     identidad["formato"] = 1
+    identidad["consulta_de_recorte"] = "isEnabled"
     return datos, parche, identidad
 
 
@@ -357,6 +392,7 @@ def construir(datos: dict, parche: Path, trabajo: Path, jobs: int) -> Path:
         candidatos = list((motor / "bin").glob("godot.web.template_release*.zip"))
         if len(candidatos) != 1:
             raise ValueError("La compilación no produjo una única plantilla release")
+        corregir_recorte_zip(candidatos[0])
         validar_zip(candidatos[0])
         resultado = trabajo / "compilada.zip"
         shutil.copyfile(candidatos[0], resultado)

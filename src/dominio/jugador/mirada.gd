@@ -22,6 +22,12 @@ func _init(sensibilidad: float, pitch_minimo: float, pitch_maximo: float) -> voi
 	_pitch_maximo = pitch_maximo
 
 
+## La sensibilidad elegida en configuraciones vale desde el giro siguiente, sin perder hacia
+## dónde se mira.
+func cambiar_sensibilidad(radianes_por_pixel: float) -> void:
+	_sensibilidad = radianes_por_pixel
+
+
 ## Las dos cuentas son asimétricas a propósito.
 func girar(delta_del_mouse: Vector2) -> void:
 	# Los dos signos son negativos: mover el mouse a la derecha tiene que girar la vista a la

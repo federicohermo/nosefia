@@ -62,12 +62,12 @@ el juego no cumple, y un borde que nadie había escrito.
 
 ## Paso 1 — De qué capacidad es
 
-`docs/architecture/capacidades.md` tiene las nueve, con qué decide cada una y qué pasa entre ellas. **Una capacidad es una tajada de lo
+`docs/architecture/capacidades.md` lista las capacidades, con qué decide cada una y qué pasa entre ellas. **Una capacidad es una tajada de lo
 que el juego hace**, no una capa ni una clase.
 
 Si no entra en ninguna, puede ser una capacidad nueva: se abre con su código de tres letras libre
 —`gate_de_specs.py` da rojo si se repite— y su carpeta en inglés. **Antes de abrirla, probá que
-no sea una regla de una de las nueve.** Una capacidad de un solo criterio casi siempre es una
+no sea una regla de una capacidad existente.** Una capacidad de un solo criterio casi siempre es una
 regla de otra.
 
 ## Paso 2 — Medir, no suponer
@@ -112,6 +112,10 @@ Lo que más se rompe:
   hora de cierre se calcula como apertura más duración, nunca se copia de la ficha: «doce horas,
   de las 20:00 a las 06:00» pasó por el spec y el issue con la suma sin hacer, y el primer test
   lo encontró.
+  Recalculá también cada historia DADO y sus contadores derivados: fallas, antecedentes y noches
+  deben poder coexistir. Un ejemplo no es alcanzable sólo porque cada dato sea válido por separado.
+  Los umbrales exactos se escriben como fórmula o fracción; un decimal truncado cambia el borde.
+  Reservá aproximaciones y tolerancias para las mediciones que las declaran.
 - **Retirar es borrar.** Una regla o un criterio que sale del juego se borra entero: el
   encabezado, el texto, la pregunta abierta que lo cerró y el test que sólo lo citaba. No queda
   un «*Retirada*», ni una nota, ni un test que afirme que no está. El número queda como hueco:

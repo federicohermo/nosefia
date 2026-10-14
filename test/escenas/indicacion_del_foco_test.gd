@@ -52,9 +52,8 @@ func test_el_campo_real_resalta_la_computadora() -> void:
 		assert_bool(malla.material_overlay == previos[malla]).is_true()
 
 
-## El casillero vacío que la mira enfoca muestra sólo el contorno del foco, y ninguna otra malla
-## cambia: ni sus materiales ni si se dibuja. Cuando la mira se va, no queda nada dibujado.
-func test_el_casillero_apuntado_lleva_solo_el_contorno() -> void:  # AC-PLY-047
+## La mira suma el contorno sin ocultar ni reordenar las referencias de los huecos.
+func test_el_contorno_se_suma_a_la_referencia_del_hueco() -> void:  # AC-PLY-047
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -68,6 +67,9 @@ func test_el_casillero_apuntado_lleva_solo_el_contorno() -> void:  # AC-PLY-047
 	var estante: Estante = almacen.get("_repositor").estante()
 	var vacios := estante.casilleros_vacios(actroncito)
 	assert_int(vacios.size()).is_equal(2)
+	var huecos: MultiMeshInstance3D = puesto.get_node("HuecosDe" + actroncito.nombre)
+	var referencias := huecos.multimesh.buffer
+	assert_int(huecos.multimesh.visible_instance_count).is_equal(vacios.size())
 	var uno: Node3D = puesto.call("casillero", actroncito.id, vacios[0])
 	var otro: Node3D = puesto.call("casillero", actroncito.id, vacios[1])
 	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
@@ -83,6 +85,8 @@ func test_el_casillero_apuntado_lleva_solo_el_contorno() -> void:  # AC-PLY-047
 		assert_array(avisos).contains([apuntado])
 		assert_bool(hud.foco_presente).is_true()
 		assert_bool(vista.visible).is_true()
+		assert_bool(huecos.multimesh.buffer == referencias).is_true()
+		assert_int(huecos.multimesh.visible_instance_count).is_equal(vacios.size())
 		var contorno := vista.material_overlay as ShaderMaterial
 		assert_object(contorno).is_not_null()
 		assert_object(contorno.shader).is_same(CONTORNO)
@@ -100,6 +104,8 @@ func test_el_casillero_apuntado_lleva_solo_el_contorno() -> void:  # AC-PLY-047
 				assert_bool(malla.visible).is_equal(dibujadas[malla])
 	await _mirar(jugador, Vector3(0, 10, 0), Vector3(0, 10, -1))
 	assert_object(jugador.get("_enfocado")).is_null()
+	assert_bool(huecos.multimesh.buffer == referencias).is_true()
+	assert_int(huecos.multimesh.visible_instance_count).is_equal(vacios.size())
 	for malla: MeshInstance3D in mallas:
 		assert_bool(malla.visible).is_equal(dibujadas[malla])
 

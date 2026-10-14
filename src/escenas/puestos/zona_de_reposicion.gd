@@ -2,10 +2,11 @@
 ## que va ahí, y el envase que se dibuja en él.
 ##
 ## **Hay uno por casillero, y sólo se dibuja el que la mira enfoca.** Vacío, con una unidad de su
-## producto en la mano, es el contorno del foco con la forma del envase, sin su superficie.
+## producto en la mano, muestra una vista previa gris y semitransparente al enfocar.
 ## Ocupado, con la mano vacía, marca la unidad que dibuja la góndola, sin reemplazar su superficie.
 ## Sin papel no está para la mira. Qué papel le toca lo decide el estante,
 ## en `dominio/`: acá sólo se pinta.
+## Los contornos de los huecos se agrupan en el puesto. Sólo el enfocado muestra el envase gris.
 extends StaticBody3D
 
 signal casillero_usado(producto: Producto.Id, casillero: int)
@@ -39,6 +40,7 @@ var radio := 0.0
 var vista: MeshInstance3D
 ## Con qué se dibuja el envase: tapa lo que el contorno tiene detrás, y no se ve.
 var sin_superficie: Material
+var previsualizacion: MeshInstance3D
 
 
 ## El clic lo resuelve el puesto de la góndola, que sabe qué hay en la mano: acá sólo se avisa
@@ -50,18 +52,20 @@ func interactuar() -> ObjetoDelAlmacen:
 
 ## Se pinta según su papel y si la mira lo enfoca: sólo el enfocado se dibuja.
 ##
-## La góndola conserva la superficie y su iluminación durante el hover. El casillero dibuja
-## solamente sus aristas: reemplazar la superficie cambiaba su color al enfocar y al salir.
+## La unidad puesta conserva su aspecto al enfocar. El hueco muestra una vista previa
+## independiente, que se oculta al colocar la unidad o perder el foco.
 ##
 ## **Escribe sólo lo que cambia**: cada escritura de un material o de una capa es un pedido al
 ## motor.
 func pintar(enfocado: bool) -> void:
 	var con_papel := papel != Papel.NINGUNO
 	var capa := CAPA_DE_LA_MIRA if cerca_de_la_mira and con_papel else 0
-	var se_ve := enfocado and con_papel
+	var se_ve := enfocado and papel == Papel.AGARRAR
 	if collision_layer != capa:
 		collision_layer = capa
 	if vista == null:
 		return
 	if vista.visible != se_ve:
 		vista.visible = se_ve
+	if previsualizacion != null:
+		previsualizacion.visible = enfocado and papel == Papel.COLOCAR

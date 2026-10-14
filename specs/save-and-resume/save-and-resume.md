@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; migración de los specs 019, 020, 036
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036
 ---
 
 # Capacidad: guardar y retomar
@@ -22,7 +22,7 @@ guardado hay que jugar las cinco de una sentada.
 | **Campo** | un dato que cruza la sesión, con su tipo y su valor por defecto | clave, columna |
 | **Sanear** | completar un guardado incompleto o mal tipado con sus defectos | migrar, parchear |
 | **Retomar** | seguir la partida guardada desde el menú | cargar, continuar |
-| **Pausa** | la jornada detenida, con su menú en pantalla | freeze, stop |
+| **Pausa** | la jornada detenida, con su menú en pantalla. Incluye la jornada ya cerrada, con la devolución debajo | freeze, stop |
 
 ## Comportamiento normativo
 
@@ -105,24 +105,46 @@ la jornada guardada sobre la persiana baja y comenzar a descontar cuando termine
 
 ### BR-SAV-016 — Esc pausa la jornada
 
-CUANDO el jugador aprieta Esc durante la jornada, el sistema DEBE pausarla y mostrar el menú de
-pausa. Un segundo Esc DEBE reanudarla, igual que «reanudar». SI la placa del cierre está en
-pantalla, ENTONCES Esc NO DEBE hacer nada: la placa ya ofrece volver al menú. SI el cursor pasa
-de tomado a suelto con la ventana activa y sin que el juego lo suelte, ENTONCES el sistema DEBE
-pausar: en la web el navegador consume Esc para soltar el cursor. Soltarlo el propio juego NO
-DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
+CUANDO el jugador aprieta Esc en cualquier momento del juego en el almacén, con la partida en
+curso o terminada, el sistema DEBE pausarlo y mostrar el menú de pausa. Un segundo Esc DEBE
+reanudarlo, igual que «reanudar». La devolución no es una excepción: con la devolución en
+pantalla, Esc DEBE abrir la pausa por encima de ella, y reanudar DEBE dejar la misma devolución,
+con el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa está en pantalla,
+la devolución NO DEBE responder a ningún gesto. SI el cursor pasa de tomado a suelto con la ventana
+activa y sin que el juego lo suelte, ENTONCES el sistema DEBE pausar: en la web el navegador
+consume Esc para soltar el cursor. Soltarlo el propio juego NO DEBE pausar, y con la
+devolución en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
+
+SI Configuraciones está abierta desde la pausa, ENTONCES Esc DEBE cerrarla y dejar el menú de
+pausa en pantalla, **sin reanudar**; el Esc siguiente reanuda, como siempre. SI Configuraciones
+está abierta desde el menú de inicio, ENTONCES Esc DEBE cerrarla y dejar el menú de inicio.
 
 ### BR-SAV-017 — El menú de pausa muestra cuatro opciones
 
 El menú de pausa DEBE mostrar cuatro opciones, en este orden: **reanudar, configuraciones, logros
-y volver al menú**. Configuraciones y logros DEBEN verse deshabilitadas. El menú de pausa no
-ofrece salir: el juego se cierra sólo desde el menú de inicio.
+y volver al menú**. Sólo logros DEBE verse deshabilitada: configuraciones DEBE estar habilitada y
+abrir Configuraciones. El menú de pausa no ofrece salir: el juego se cierra sólo desde el menú de
+inicio.
 
 ### BR-SAV-018 — Volver al menú abandona la jornada
 
 CUANDO el jugador elige «volver al menú» en la pausa, el sistema DEBE sacar el juego de la pausa,
-llevarlo al menú de inicio y NO DEBE guardar nada.
+llevarlo al menú de inicio y NO DEBE escribir ni borrar el guardado. SI la pausa está sobre la
+devolución de una partida en curso, ENTONCES el guardado que dejó el cierre DEBE quedar intacto, con la
+jornada siguiente y la deuda acumulada exacta, y continuar desde el menú DEBE abrir esa jornada
+sin volver a jugar la noche cerrada. SI la partida terminó, ENTONCES el guardado ya borrado por el
+final NO DEBE reaparecer.
+
+### BR-SAV-019 — Las cuentas y las devoluciones cruzan la sesión
+
+CUANDO se guarda, el sistema DEBE escribir, además de la jornada y el legajo, las fallas de cada
+obligatoria fija, los llamados de cada motivo, R y los textos de las devoluciones recibidas, en
+orden (BR-EMP-025, BR-EMP-031). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
+siguiente cuenta desde ellos, y el chat de Enrique muestra las instrucciones y después esas
+devoluciones. SI falta alguno o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) con cero
+fallas, cero llamados, R = 0 y ninguna devolución. Dentro de las cuentas, una obligatoria o un
+motivo desconocido, o un valor de otro tipo, DEBE ignorarse sin descartar los demás.
 
 ## Criterios de aceptación
 
@@ -215,21 +237,34 @@ apercibimientos.
 ### AC-SAV-018 — Esc pausa y reanuda *(verifica BR-SAV-016)*
 
 DADO la jornada en curso CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
-ENTONCES se reanuda. DADO la placa del cierre en pantalla CUANDO llega Esc ENTONCES no pasa nada.
-DADO el cursor tomado y la ventana activa CUANDO queda suelto sin que el juego lo suelte
+ENTONCES se reanuda. DADO la devolución en pantalla, con la partida en curso o terminada,
+CUANDO llega Esc ENTONCES el menú de pausa se abre por encima de la devolución; mientras tanto,
+ni un clic ni Enter despachan la devolución. CUANDO llega otro Esc ENTONCES la pausa se cierra,
+la misma devolución sigue en pantalla con los mismos mensajes y la misma opción, el reloj del
+turno sigue detenido y la noche siguiente no se abre. DADO la devolución en pantalla CUANDO el cursor queda suelto ENTONCES no se
+pausa. DADO el cursor tomado y la ventana activa CUANDO queda suelto sin que el juego lo suelte
 ENTONCES el juego queda en pausa; CUANDO lo suelta el propio juego ENTONCES no. DADO una jornada
 en curso CUANDO se cambia de pestaña o ventana y se vuelve ENTONCES sigue sin pausa; Esc sigue
-abriendo y cerrando la pausa manual.
+abriendo y cerrando la pausa manual. DADO Configuraciones abierta desde la pausa CUANDO llega Esc
+ENTONCES Configuraciones se cierra, el menú de pausa está en pantalla y el juego sigue en pausa;
+CUANDO llega otro Esc ENTONCES se reanuda. DADO Configuraciones abierta desde el menú de inicio
+CUANDO llega Esc ENTONCES Configuraciones se cierra y el menú de inicio está en pantalla.
 
 ### AC-SAV-019 — Los cuatro botones de la pausa *(verifica BR-SAV-017)*
 
 DADO el menú de pausa ENTONCES muestra reanudar, configuraciones, logros y volver al menú, en ese
-orden, y sólo reanudar y volver al menú están habilitados.
+orden; reanudar, configuraciones y volver al menú están habilitados, y sólo logros está
+deshabilitado.
 
 ### AC-SAV-020 — Volver al menú no guarda *(verifica BR-SAV-018)*
 
 DADO el juego en pausa CUANDO se elige volver al menú ENTONCES el juego sale de la pausa, el
-pedido de ir al menú se emite una sola vez y no se escribe ningún guardado.
+pedido de ir al menú se emite una sola vez y no se escribe ningún guardado. DADO la devolución de la
+jornada 2 cerrada con la partida en curso y 7 medios de apercibimiento CUANDO se abre la pausa y
+se elige volver al menú ENTONCES el guardado no se escribe ni se borra y sigue en la jornada 3 con
+7 medios; CUANDO se elige continuar desde el menú ENTONCES se anuncia «NOCHE 3» con 7 medios.
+DADO la devolución de una partida terminada CUANDO se sale al menú desde la pausa ENTONCES no hay
+guardado y continuar sigue deshabilitado.
 
 ### AC-SAV-021 — Continuar evita las instrucciones *(verifica BR-SAV-015)*
 
@@ -252,6 +287,27 @@ se abre la pausa y se elige volver al menú ENTONCES se sale de la pausa y no se
 guardado. En la partida nueva, el guardado anterior ya borrado no reaparece y continuar queda
 deshabilitado; al continuar una partida existente, su checkpoint previo se conserva.
 
+### AC-SAV-024 — La noche 2 cerrada vuelve igual *(verifica BR-SAV-005, BR-SAV-019)*
+
+DADO una partida con la noche 2 cerrada, reponer sin cumplir en las dos noches, un llamado por
+papel en la noche 1 y R = 0 CUANDO se guarda, se lee el archivo y se retoma ENTONCES reponer
+tiene 2 fallas, papel 1 llamado, hubo llamados en la partida, R = 0, y las dos devoluciones están en orden y
+letra por letra en el chat de Enrique, después de las 19 entradas de las instrucciones. CUANDO
+la noche 3 cierra con reponer sin cumplir ENTONCES su devolución trae la fila n = 3 de Tarea 3,
+«De nuevo quedaron algunas góndolas incompletas…».
+
+DADO la noche 1 con reponer pendiente y un llamado por papel, y la 2 impecable sin llamados
+CUANDO se guarda y retoma ENTONCES reponer conserva 1 falla, papel 1 llamado y R = 1.
+
+### AC-SAV-025 — Un guardado sin las cuentas *(verifica BR-SAV-006, BR-SAV-019)*
+
+DADO un guardado de la jornada 3 sin fallas, llamados, R ni devoluciones CUANDO se retoma
+ENTONCES sigue en la jornada 3 con su legajo, cero fallas, cero llamados, R = 0, sin llamados en
+la partida, y el chat de Enrique tiene sólo las 19 entradas de las instrucciones. DADO las
+fallas con un valor que no es un diccionario, o las devoluciones con un número ENTONCES vuelven
+con su defecto. DADO las fallas con una obligatoria desconocida y reponer en 1 ENTONCES reponer
+conserva 1 y la desconocida se ignora.
+
 ## No objetivos
 
 - Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
@@ -259,6 +315,8 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
 - Esta capacidad NO migra guardados entre versiones: eso es del día que exista una segunda.
 - Esta capacidad NO ofrece ranuras, autoguardado ni nube.
 - Esta capacidad NO avisa en pantalla que la escritura falló.
+- Esta capacidad NO guarda las preferencias del jugador: viven aparte, en
+  [`settings`](../settings/settings.md), y borrar el guardado no las toca.
 
 ## Contratos
 
@@ -277,9 +335,12 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
 ## Dependencias
 
 - [`employment-record`](../employment-record/employment-record.md) (consume): la jornada, el
-  legajo y el final; las instrucciones previas a una partida nueva.
+  legajo y el final; las cuentas de la devolución y las devoluciones recibidas; las
+  instrucciones previas a una partida nueva.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): la jornada que anuncia la entrada
   al empezar o continuar, sin repetir las instrucciones al retomar.
+- [`settings`](../settings/settings.md) (alimenta): los dos menús abren Configuraciones, y Esc
+  la cierra.
 
 ## Preguntas abiertas
 

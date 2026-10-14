@@ -13,16 +13,21 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
             continue
         if datos['tipo'] != 'MeshInstance3D':
             continue
-        caja = numeros(datos['aabb'])
-        tamano = [max(c, 0.012) for c in caja[3:]]
         nombre = 'vidrio_solido_' + path
-        recurso(lista, nombre, 'BoxShape3D', {'size': vec(tamano)})
+        lista = [b for b in lista if not (
+            b.startswith('[sub_resource ') and f'id="{nombre}"' in b.split('\n', 1)[0]
+        )]
+        # El artista dibujó planos sin espesor: una caja inventaría una pared invisible.
+        recurso(lista, nombre, 'ConcavePolygonShape3D', {
+            'backface_collision': 'true',
+            'data': 'PackedVector3Array(' + ','.join(map(str, datos['caras'])) + ')',
+        })
         nodo(lista, 'CuerpoDelVidrio', path, 'StaticBody3D', {
             'collision_layer': '8', 'collision_mask': '0',
         })
         nodo(lista, 'Volumen', path + '/CuerpoDelVidrio', 'CollisionShape3D', {
             'shape': f'SubResource("{nombre}")',
-            'position': vec([caja[i] + caja[i + 3] / 2 for i in range(3)]),
+            'position': None,
         })
     partes = {**piezas, **descompuestos}
     techo = 'deposito_techo_industrial/deposito_techo_chapa'
@@ -30,6 +35,7 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
     lista = [b for b in lista if not (ruta(b) or '').startswith(cuerpo_del_techo + '/')]
     nodo(lista, 'StaticBody3D', techo, 'StaticBody3D', {
         'collision_layer': '8', 'collision_mask': '0',
+        'metadata/sin_volumen': '"Chapa delgada y corrugada: ningún agarrable cabe en su espesor."',
     })
     # La chapa está corrugada: una envolvente convexa rellena el aire bajo sus pendientes.
     recurso(lista, 'chapa_actual', 'ConcavePolygonShape3D', {

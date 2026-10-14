@@ -321,6 +321,8 @@ func test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado() -> void:
 
 
 func test_la_e_con_manos_vacias_no_examina_ni_revela_un_levantable() -> void:  # AC-INV-020
+	# Lo que se mira con las manos vacías se piensa: la línea dice su subtítulo y nunca lo que
+	# esconde, y nada se mueve ni se registra.
 	var agarre := _agarre()
 	var examen := _examen(agarre)
 	var cuerpo := _cuerpo()
@@ -331,17 +333,22 @@ func test_la_e_con_manos_vacias_no_examina_ni_revela_un_levantable() -> void:  #
 	cuerpo.freeze = false
 	var padre := cuerpo.get_parent()
 	var lugar := cuerpo.transform
-	var lata := _lata()
+	var mopa: Resource = load("res://src/dominio/almacen/mopa.tres")
+	assert_bool(mopa.tiene_revelacion()).is_true()
 	var iniciados: Array[Node3D] = []
 	var terminados := [0]
 	var revelados: Array[Resource] = []
+	var linea := Subtitulo.new()
 	examen.examen_iniciado.connect(func(nodo: Node3D) -> void: iniciados.append(nodo))
 	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
 	examen.objeto_revelado.connect(
 		func(datos: Resource, _es_nuevo: bool) -> void: revelados.append(datos)
 	)
-	assert_bool(examen.iniciar(lata)).is_false()
-	examen.alternar(lata)
+	examen.pensamiento_pedido.connect(linea.pensar)
+	assert_bool(examen.iniciar(mopa, mopa.texto_al_examinar())).is_false()
+	examen.alternar(mopa, mopa.texto_al_examinar())
+	assert_str(linea.texto()).is_equal("Una mopa para limpiar las manchas del local.")
+	assert_str(linea.texto()).not_contains(mopa.revelacion.texto)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_object(cuerpo.get_parent()).is_same(padre)
 	assert_bool(cuerpo.transform.is_equal_approx(lugar)).is_true()
@@ -353,3 +360,22 @@ func test_la_e_con_manos_vacias_no_examina_ni_revela_un_levantable() -> void:  #
 	assert_int(terminados[0]).is_zero()
 	assert_int(examen.hallazgos().cantidad()).is_zero()
 	assert_object(agarre.manos().sostenido()).is_null()
+
+
+func test_el_arrastre_gira_lo_examinado_con_la_sensibilidad_elegida() -> void:  # AC-CFG-006
+	var giros: Array[float] = []
+	for factor: float in [1.0, 2.0, 0.25]:
+		var agarre := _agarre()
+		var examen := _examen(agarre)
+		var cuerpo := _cuerpo()
+		agarre.pedir_agarrar(_lata(), cuerpo)
+		examen.iniciar()
+		examen.sensibilidad = ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE * factor
+		var antes := cuerpo.basis
+		examen.arrastrar(Vector2(100.0, 0.0), true)
+		giros.append(
+			antes.get_rotation_quaternion().angle_to(cuerpo.basis.get_rotation_quaternion())
+		)
+	assert_float(giros[0]).is_greater(0.0)
+	assert_float(giros[1]).is_equal_approx(giros[0] * 2.0, 1e-4)
+	assert_float(giros[2]).is_equal_approx(giros[0] * 0.25, 1e-4)

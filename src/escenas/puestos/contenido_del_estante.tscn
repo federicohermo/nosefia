@@ -36,7 +36,7 @@
 [node name="Contenido" type="Node3D"]
 
 [node name="Actroncito" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0.145407, 0, 0.123843, 0, 0.043094, 0.025501, 0, -0.209281, 0.74644, 0.962979, -3.858919)
+transform = Transform3D(0, 0.145407, -0.000001, 0.124134, 0, 0.040627, 0.024041, -0.000001, -0.209774, 0.668441, 0.96498, -3.940174)
 visible = false
 mesh = ExtResource("malla0")
 gi_mode = 2

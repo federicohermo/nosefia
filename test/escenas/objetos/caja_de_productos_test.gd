@@ -71,6 +71,7 @@ const SIN_ETIQUETA := [
 	Producto.Id.UAKAS,
 	Producto.Id.MARRANOS,
 	Producto.Id.FEEL_RICKY_FORT,
+	Producto.Id.POETICO,
 ]
 
 ## El script del nodo se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y no

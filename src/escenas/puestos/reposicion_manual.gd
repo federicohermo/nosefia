@@ -8,6 +8,13 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
+const FILA_DE_ATRAS := preload("res://src/escenas/puestos/fila_de_atras_apagada.gdshader")
+const POR_COLOCAR := preload("res://src/escenas/puestos/producto_por_colocar.gdshader")
+
+## Cuánto color le queda a la fila de atrás de la góndola: con 1 se ve como la de adelante, con
+## 0 queda en gris. Las referencias fijas usan el mismo color que la fila de atrás:
+## el jugador distingue los envases de referencia de las unidades que puede agarrar.
+const SATURACION_DE_LA_FILA_DE_ATRAS := 0.75
 
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
@@ -54,7 +61,7 @@ const GUIA := "Guia"
 var _unidades: Array[Node3D] = []
 ## Los casilleros de cada producto, en el orden de `Producto.Id` y, adentro, en el de su fila.
 var _casilleros: Array[Array] = []
-## Lo que la mira enfoca, según el jugador. El casillero enfocado es el único que se dibuja.
+## Lo que la mira enfoca, según el jugador. Sólo el casillero enfocado muestra la vista previa.
 var _enfocado: Node3D = null
 ## Los casilleros con papel que la mira podría elegir ahora: los únicos que se le ofrecen.
 var _cerca_de_la_mira: Dictionary[ZonaDeReposicion, bool] = {}
@@ -65,6 +72,8 @@ var _radios_de_las_filas: Array[float] = []
 var _modelos: Array[Mesh] = []
 var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
+## Un dibujo por producto para todos sus huecos, sin cuerpos ni permisos propios.
+var _huecos: Array[MultiMeshInstance3D] = []
 ## Cuántas copias de otras exhibiciones van al principio del dibujo de cada producto.
 var _guias_sumadas: Array[int] = []
 ## El bloque entero que dibuja cada producto, guías incluidas, en el orden en que lo midió el
@@ -98,12 +107,16 @@ func casilleros() -> Dictionary[Producto.Id, int]:
 
 
 func preparar() -> void:
+	_aristas.shader = CONTORNO
+	_aristas.set_shader_parameter("color", IndicacionDelFoco.COLOR)
+	_aristas.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR_DE_PRODUCTOS)
 	_preparar_modelos()
 	_preparar_grupos()
 	_preparar_la_guia()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	_preparar_los_casilleros()
 	jugador.uso_pedido.connect(usar_la_caja)
+	jugador.consultar_el_derecho_con(_derecho_sobre_la_caja)
 	jugador.objetivo_enfocado.connect(_al_enfocar)
 	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
@@ -186,6 +199,19 @@ func usar_la_caja(objetivo: Node3D) -> void:
 	acciones[gesto].call(caja.producto)
 
 
+## Si el clic derecho sobre la caja sacaría o metería: lo contesta su contenido, sin hacerlo.
+func _derecho_sobre_la_caja(
+	objetivo: Node3D, sostenido: ObjetoDelAlmacen
+) -> ReferenciaDeControles.Derecho:
+	var caja := objetivo as CajaDelDeposito
+	if caja == null:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	var contenido := repositor.caja(caja.producto)
+	if contenido == null:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	return ReferenciaDeControles.derecho_de_la_caja(contenido.derecho_posible(sostenido))
+
+
 ## Mete en su caja la unidad de la mano y guarda su cuerpo, que deja de verse. Si la caja no la
 ## recibe, la unidad sigue en la mano y acá no pasa nada.
 func devolver(id: Producto.Id) -> void:
@@ -199,7 +225,7 @@ func devolver(id: Producto.Id) -> void:
 ## Lo que dice la caja examinada, o nada si lo examinado no es una caja.
 ##
 ## El texto lo arma la caja en `dominio/`, donde tiene test, y contado sobre el estante de esta
-## noche: se muestra mientras la caja se examina en la mano.
+## noche: sirve al pensamiento de la caja apoyada y al examen en la mano.
 func texto_del_examen(nodo: Node3D) -> String:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:
@@ -1003,15 +1029,57 @@ func _preparar_grupos() -> void:
 	for producto in Catalogo.todos():
 		var malla := _modelos[producto.id]
 		var grupo := _dibujar(
-			"ProductosDe" + producto.nombre, malla, disposicion.principales[producto.id]
+			"ProductosDe" + producto.nombre,
+			_malla_con_la_fila_apagada(malla),
+			disposicion.principales[producto.id]
 		)
 		_grupos.append(grupo)
 		_guias_sumadas.append(0)
+		var primera := _primera_reponible(producto.id)
+		var faltantes := _dibujar(
+			"HuecosDe" + producto.nombre,
+			malla,
+			disposicion.principales[producto.id].slice(
+				primera * DisposicionDeLaGondola.FLOTANTES_POR_COPIA
+			)
+		)
+		faltantes.visible = false
+		faltantes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_huecos.append(faltantes)
 		var sueltos := GrupoDelPiso.new()
 		sueltos.name = "SueltosDe" + producto.nombre
 		sueltos.preparar(malla, repositor.estante().cupo(producto))
 		add_child(sueltos)
 		_sueltos.append(sueltos)
+
+
+## El material del grupo de un producto: el del modelo, con la fila de atrás apagada.
+##
+## Cada parte conserva su material sobre el mismo dibujo: el envase y su tapa pueden tener
+## brillos distintos. El modelo original sigue disponible para la mano y los productos sueltos.
+## El rango apagado lo pone `_mostrar_lo_puesto()`, que es quien sabe dónde empieza cada fila.
+func _malla_con_la_fila_apagada(
+	original: Mesh, saturacion: float = SATURACION_DE_LA_FILA_DE_ATRAS
+) -> ArrayMesh:
+	var malla := original.duplicate() as ArrayMesh
+	for superficie in malla.get_surface_count():
+		var material := _con_la_fila_de_atras_apagada(original.surface_get_material(superficie))
+		material.set_shader_parameter("saturacion_atras", saturacion)
+		malla.surface_set_material(superficie, material)
+	return malla
+
+
+func _con_la_fila_de_atras_apagada(original: BaseMaterial3D) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = FILA_DE_ATRAS
+	material.set_shader_parameter("color", original.albedo_color)
+	material.set_shader_parameter("textura", original.albedo_texture)
+	material.set_shader_parameter("textura_desenfocada", original.albedo_texture)
+	material.set_shader_parameter("rugosidad", original.roughness)
+	material.set_shader_parameter("metalico", original.metallic)
+	material.set_shader_parameter("especular", original.metallic_specular)
+	material.set_shader_parameter("saturacion_atras", SATURACION_DE_LA_FILA_DE_ATRAS)
+	return material
 
 
 ## Un casillero por lugar de la fila de adelante de cada producto: el cuerpo que la mira enfoca,
@@ -1021,15 +1089,17 @@ func _preparar_grupos() -> void:
 ## agarrar cambia con cada gesto, y lo decide el estante. Los dos materiales son los mismos para
 ## todos los casilleros: lo que cambia entre dos casilleros es la forma y el lugar.
 func _preparar_los_casilleros() -> void:
-	_aristas.shader = CONTORNO
-	_aristas.set_shader_parameter("color", IndicacionDelFoco.COLOR)
-	_aristas.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR_DE_PRODUCTOS)
 	var sin_superficie := ShaderMaterial.new()
 	sin_superficie.shader = SIN_SUPERFICIE
 	# La superficie invisible fija la profundidad antes de dibujar las aristas.
 	sin_superficie.render_priority = -1
 	for producto in Catalogo.todos():
 		var modelo := _modelos[producto.id]
+		var fantasma := modelo.duplicate() as ArrayMesh
+		for superficie in fantasma.get_surface_count():
+			var material := _con_la_fila_de_atras_apagada(modelo.surface_get_material(superficie))
+			material.shader = POR_COLOCAR
+			fantasma.surface_set_material(superficie, material)
 		var fila := Node3D.new()
 		fila.name = "ZonaDe" + producto.nombre
 		add_child(fila)
@@ -1062,6 +1132,14 @@ func _preparar_los_casilleros() -> void:
 			zona.add_child(vista)
 			zona.vista = vista
 			zona.sin_superficie = sin_superficie
+			var previsualizacion := MeshInstance3D.new()
+			previsualizacion.mesh = fantasma
+			previsualizacion.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+			previsualizacion.position = vista.position
+			previsualizacion.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			previsualizacion.visible = false
+			zona.add_child(previsualizacion)
+			zona.previsualizacion = previsualizacion
 			zona.radio = caja.size.length() / 2.0
 			zona.casillero_usado.connect(_usar_el_casillero)
 			zonas.append(zona)
@@ -1082,8 +1160,7 @@ func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
 	_radios_de_las_filas.append(radio)
 
 
-## Las exhibiciones que no cambian. Se dibujan una vez y quedan enteras: nada las vende ni las
-## repone, y por eso no se guarda el nodo.
+## Las exhibiciones que no cambian. Quedan enteras y en gris: nada las vende ni las repone.
 ##
 ## **Se juntan en la menor cantidad de dibujos posible.** Cada nodo que se dibuja le cuesta al
 ## motor su preparación, y en la web esa preparación es lo que más pesa del cuadro: medido el
@@ -1128,7 +1205,12 @@ func _preparar_la_guia() -> void:
 	var numero := 0
 	for clave: int in sueltas:
 		var modelo: MeshInstance3D = sueltas[clave][0]
-		_dibujar("Guia" + str(numero), _malla_en_mundo(modelo), sueltas[clave][1])
+		var guia := _dibujar(
+			"Guia" + str(numero),
+			_malla_con_la_fila_apagada(_malla_en_mundo(modelo)),
+			sueltas[clave][1]
+		)
+		_apagar_hasta(guia, guia.multimesh.instance_count)
 		numero += 1
 
 
@@ -1209,6 +1291,25 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	if dibujo.size() == bloque.size():
 		copias.buffer = dibujo
 	copias.visible_instance_count = primera + ocupados.size()
+	# Las guías sumadas y la fila de atrás son referencias fijas: todo lo que va antes de la
+	# primera reponible se dibuja atenuado, aunque se llene o se vacíe un casillero.
+	_apagar_hasta(_grupos[id], primera)
+	# Los mismos casilleros, en otro lote: los vacíos primero para cortarlos sin añadir nodos
+	# por envase. El estado vuelve a salir del estante en cada cambio de la góndola.
+	var corte := (primera + ocupados.size()) * flotantes
+	var por_reponer := dibujo.slice(corte)
+	por_reponer.append_array(dibujo.slice(primera * flotantes, corte))
+	var huecos := _huecos[id].multimesh
+	huecos.buffer = por_reponer
+	huecos.visible_instance_count = afuera.size()
+
+
+func _apagar_hasta(grupo: MultiMeshInstance3D, primera: int) -> void:
+	var malla := grupo.multimesh.mesh
+	for superficie in malla.get_surface_count():
+		var material := malla.surface_get_material(superficie) as ShaderMaterial
+		material.set_shader_parameter("desde_atras", 0)
+		material.set_shader_parameter("hasta_atras", primera)
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.

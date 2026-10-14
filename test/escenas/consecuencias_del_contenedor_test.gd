@@ -78,7 +78,10 @@ func _cerrar(impecable: bool) -> void:
 
 
 func _seguir() -> void:
-	_almacen.get("_pantalla").cierre_despachado.emit(ParteDeCierre.Opcion.SEGUIR)
+	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
+	pantalla.call("_process", 60.0)
+	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 	_almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 
 
@@ -100,7 +103,7 @@ func test_tirar_una_unidad_suma_un_medio_y_la_deuda_se_conserva() -> void:  # AC
 	_tirar(unidad)
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(1)
-	_seguir()
+	await _seguir()
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(1)
 
@@ -131,7 +134,7 @@ func test_varios_importantes_cuentan_una_vez_y_otra_noche_pueden_repetir() -> vo
 	_tirar(_almacen.get_node("Objetos/Balde"))
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(1)
-	_seguir()
+	await _seguir()
 	_tirar(_almacen.get_node("Objetos/Mopa"))
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(2)
@@ -146,7 +149,7 @@ func test_tres_motivos_con_grave_guardan_siete_y_permiten_continuar() -> void:  
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(partida.terminada()).is_false()
 	assert_int(Partida.desde(Guardado.new().cargar()).medios()).is_equal(7)
-	_seguir()
+	await _seguir()
 	var mopa: ObjetoAgarrable = _almacen.get_node("Objetos/Mopa")
 	assert_bool((_almacen.get("_agarre") as Agarre).pedir_agarrar(mopa.datos, mopa)).is_true()
 	_cerrar(true)

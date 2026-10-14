@@ -11,7 +11,7 @@ const TEXTOS_FUERA_DE_LA_WEB: Array[String] = [
 	"CONFIGURACIONES",
 	"SALIR",
 ]
-const HABILITADOS_FUERA_DE_LA_WEB: Array[String] = ["NUEVO JUEGO", "SALIR"]
+const HABILITADOS_FUERA_DE_LA_WEB: Array[String] = ["NUEVO JUEGO", "CONFIGURACIONES", "SALIR"]
 
 var _ruta: String
 
@@ -24,6 +24,12 @@ func before_test() -> void:
 
 ## El guardado de la escena apunta a una carpeta temporal antes de entrar al árbol: el menú lo
 ## lee en `_ready()`, y la partida real del usuario no puede decidir un test.
+func after_test() -> void:
+	var ajuste: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
+	add_child(ajuste)
+	ajuste.aplicar(Preferencias.new())
+
+
 func _menu() -> Control:
 	var menu: Control = auto_free(load(ESCENA_DEL_MENU).instantiate())
 	(menu.get("_guardado") as Guardado).ruta = _ruta
@@ -57,7 +63,7 @@ func test_el_juego_abre_en_el_menu() -> void:  # AC-SAV-012
 	assert_object(_menu()).is_not_null()
 
 
-func test_muestra_los_cinco_botones_y_habilita_dos() -> void:
+func test_muestra_los_cinco_botones_y_habilita_tres() -> void:  # AC-CFG-010
 	var textos: Array[String] = []
 	var menu := _menu()
 	for boton: Button in menu.get_node("Marco").find_children("*", "Button", true, false):
@@ -172,3 +178,92 @@ func test_nuevo_funde_directamente_y_continuar_conserva_su_entrada() -> void:  #
 	assert_array(sin_guardado.find_children("*", "ConfirmationDialog", true, false)).is_empty()
 	assert_bool(sin_guardado.get("_fundiendo")).is_true()
 	assert_bool((sin_guardado.get("_fundido") as ColorRect).visible).is_true()
+
+
+func _configuraciones(menu: Control) -> PantallaDeConfiguraciones:
+	return menu.get("_configuraciones")
+
+
+func _esc() -> InputEventAction:
+	var esc := InputEventAction.new()
+	esc.action = &"ui_cancel"
+	esc.pressed = true
+	return esc
+
+
+func test_configuraciones_se_abre_y_esc_la_cierra() -> void:  # AC-CFG-010, AC-SAV-018
+	var menu := _menu()
+	var pantalla := _configuraciones(menu)
+	assert_bool(pantalla.visible).is_false()
+	_boton(menu, "CONFIGURACIONES").pressed.emit()
+	assert_bool(pantalla.visible).is_true()
+	assert_bool((menu.get("_marco") as Control).visible).is_false()
+	assert_bool((menu.get_node("Fondo") as Control).is_visible_in_tree()).is_true()
+	pantalla._unhandled_input(_esc())
+	assert_bool(pantalla.visible).is_false()
+	assert_bool(menu.is_inside_tree() and menu.visible).is_true()
+	assert_bool((menu.get("_marco") as Control).visible).is_true()
+	assert_bool(_boton(menu, "CONFIGURACIONES").has_focus()).is_true()
+	assert_object(menu.get("_espera")).is_null()
+	assert_bool(menu.get("_fundiendo")).is_false()
+
+
+func test_la_letra_cambia_al_volver_de_configuraciones() -> void:  # AC-CFG-008, AC-CFG-010
+	var menu := _menu()
+	_boton(menu, "CONFIGURACIONES").pressed.emit()
+	var pantalla := _configuraciones(menu)
+	var titulo: Label = pantalla.marco().get_node("Titulo")
+	var antes := titulo.get_theme_font_size("font_size")
+	var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.find(Preferencias.Campo.TEXTOS)]
+	(fila.get_child(3) as Button).pressed.emit()
+	await get_tree().process_frame
+	assert_int(titulo.get_theme_font_size("font_size")).is_equal(antes)
+	(
+		assert_float(ArchivoDePreferencias.new().cargar().valor(Preferencias.Campo.TEXTOS))
+		. is_equal_approx(1.1, 1e-6)
+	)
+	var volver: Button = pantalla.marco().get_node_or_null("Volver")
+	assert_object(volver).is_not_null()
+	if volver == null:
+		return
+	assert_bool(volver.is_visible_in_tree()).is_true()
+	volver.pressed.emit()
+	await get_tree().process_frame
+	assert_bool(pantalla.visible).is_false()
+	assert_bool((menu.get("_marco") as Control).is_visible_in_tree()).is_true()
+	assert_int(titulo.get_theme_font_size("font_size")).is_greater(antes)
+
+
+func test_mas_en_el_brillo_llega_al_disco_con_la_pantalla_abierta() -> void:  # AC-CFG-012
+	var menu := _menu()
+	_boton(menu, "CONFIGURACIONES").pressed.emit()
+	var pantalla := _configuraciones(menu)
+	var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.find(Preferencias.Campo.BRILLO)]
+	(fila.get_child(3) as Button).pressed.emit()
+	assert_bool(pantalla.visible).is_true()
+	var leidas := ArchivoDePreferencias.new().cargar()
+	assert_float(leidas.valor(Preferencias.Campo.BRILLO)).is_equal_approx(110.0, 1e-6)
+
+
+func test_al_abrir_el_juego_la_musica_guardada_en_cero_ya_esta_callada() -> void:  # AC-CFG-013
+	var guardadas := Preferencias.new()
+	guardadas.poner(Preferencias.Campo.MUSICA, 0.0)
+	assert_bool(ArchivoDePreferencias.new().escribir(guardadas)).is_true()
+	_menu()
+	var bus := AudioServer.get_bus_index(EntradaSonora.BUS_DE_MUSICA)
+	assert_bool(AudioServer.is_bus_mute(bus)).is_true()
+
+
+func test_un_archivo_de_preferencias_ilegible_no_impide_el_menu() -> void:  # AC-CFG-014
+	var crudo := FileAccess.open(ArchivoDePreferencias.ruta_por_defecto, FileAccess.WRITE)
+	crudo.store_string("{ ilegible")
+	crudo.close()
+	var menu := _menu()
+	assert_bool(_boton(menu, "NUEVO JUEGO").disabled).is_false()
+	var pantalla := _configuraciones(menu)
+	_boton(menu, "CONFIGURACIONES").pressed.emit()
+	for campo: Preferencias.Campo in Preferencias.CAMPOS:
+		var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.find(campo)]
+		assert_float((fila.get_child(2) as HSlider).value).is_equal_approx(
+			Preferencias.new().valor(campo), 1e-6
+		)

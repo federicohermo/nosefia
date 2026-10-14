@@ -225,7 +225,10 @@ func test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche() -> void:  # AC
 	local.get("_reloj").avanzar(
 		Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 	)
-	local.call("_seguir")
+	var pantalla: PantallaDeDevolucion = local.get("_pantalla")
+	pantalla.call("_process", 60.0)
+	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 	for _cuadro in 4:
 		await get_tree().physics_frame
 	for caja: Caja in cajas:
@@ -385,7 +388,10 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		local.get("_reloj").avanzar(
 			Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 		)
-		local.get("_pantalla").cierre_despachado.emit(ParteDeCierre.Opcion.SEGUIR)
+		var pantalla: PantallaDeDevolucion = local.get("_pantalla")
+		pantalla.call("_process", 60.0)
+		pantalla.elegir()
+		await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 		local.get_node("Interfaz/PersianaDeLaNoche").terminar()
 		assert_bool(local.get_node("Interfaz/PersianaDeLaNoche").en_pantalla()).is_false()
 		for _cuadro in 4:

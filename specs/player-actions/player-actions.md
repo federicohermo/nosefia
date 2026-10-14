@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas» e «Interfaces virtuales durante la jornada»; decisiones de #369, #370 y #373; migración de los specs 003, 004, 006, 014, 034, 043
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -25,6 +25,7 @@ una tarea son los metros, no la torpeza del control.
 | **Interactuable** | lo que contesta cuando se lo usa | clickeable, activable |
 | **Nota pegada** | hoja fija del local que se lee, sin levantarse ni entrar al cuaderno | nota de investigación |
 | **Casillero** | cada lugar de la fila de adelante de la góndola, vacío u ocupado: lo define [`store-stock`](../store-stock/store-stock.md) | hueco, slot |
+| **Referencia de controles** | la columna de líneas de arriba a la izquierda que dice qué control sirve ahora para lo que se mira y lo que se lleva | ayuda, tutorial, leyenda |
 
 ## Comportamiento normativo
 
@@ -176,22 +177,22 @@ entrada del local, del lado de adentro y mirando hacia el local. Queda con la vi
 quieto, aunque la noche anterior haya terminado en otro lugar, mirando a otro lado y caminando.
 Vale también para la primera noche.
 
-### BR-PLY-022 — El casillero vacío no se ve
+### BR-PLY-022 — Los casilleros vacíos sólo muestran el envase al enfocarlos
 
-El sistema NO DEBE dibujar un casillero vacío que la mira no enfoca: sobre la góndola sólo se ve
-lo que está colocado. Vale con las manos vacías, con una unidad en la mano y con cualquier otra
-cosa. MIENTRAS el jugador lleva en la mano una unidad de un producto, la mira DEBE poder enfocar
+El sistema NO DEBE dibujar ningún envase ni contorno en los casilleros vacíos sin foco.
+Vale con las manos vacías, con una unidad en la mano y con cualquier otra cosa.
+MIENTRAS el jugador lleva en la mano una unidad de un producto, la mira DEBE poder enfocar
 cada casillero vacío de ese producto, y ninguno ocupado ni de otro producto. SI la mano está
 vacía o lleva cualquier otra cosa, ENTONCES la mira NO DEBE enfocar ningún casillero vacío: una
 caja se apoya, no se coloca.
 
-### BR-PLY-023 — El casillero que apunta la mira se marca con el contorno, y el clic coloca ahí
+### BR-PLY-023 — El casillero apuntado muestra una vista previa y el clic coloca ahí
 
 CUANDO la mira enfoca un casillero vacío del producto que se lleva en la mano, el sistema DEBE
-dibujar sólo el contorno del producto en ese casillero, con el color y el grosor del contorno del
-foco, el mismo que marca cualquier otro objeto enfocado. NO DEBE dibujar la superficie del
-producto: por adentro del contorno se ve lo que hay detrás. Los demás casilleros vacíos siguen sin
-dibujarse. CUANDO el jugador hace clic, el sistema DEBE colocar la unidad en ese casillero y en
+mostrar la textura correspondiente del producto en blanco y negro, con opacidad del 75%.
+Los demás casilleros vacíos NO DEBEN dibujar envases ni contornos. Al perder el foco,
+la vista previa DEBE desaparecer.
+CUANDO el jugador hace clic, el sistema DEBE colocar la unidad en ese casillero y en
 ningún otro (BR-STK-009). La mira elige entre casilleros como entre cualquier otro candidato
 (BR-PLY-004).
 
@@ -235,7 +236,7 @@ efectiva anterior. Con el dibujo ya alcanzado, DEBE recuperar la pose exacta ant
 giro dibujado pendiente, NO DEBE devolver la vista a los ángulos dibujados atrasados. Abrir de
 nuevo sin cerrar DEBE conservar el reposo de la primera apertura. Cerrar sin abrir NO DEBE
 mover la vista ni devolver el control tomado por otra cosa. El cierre del turno DEBE devolver
-la vista antes de mostrar su placa.
+la vista antes de mostrar la devolución.
 
 SI el ancho, alto o aspecto no son positivos, la profundidad es negativa o el campo vertical
 no está entre 0 y 180 grados sin incluir los extremos, ENTONCES el sistema NO DEBE mover la
@@ -255,16 +256,18 @@ suspender el control. Otro clic derecho DEBE cerrar y reanudar. Lo que se lleva 
 su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
 abrir otra hoja. Leer NO DEBE detener el turno.
 
-CUANDO termina el turno, la lectura DEBE cerrarse antes de su placa. La pausa DEBE verse
+CUANDO termina el turno, la lectura DEBE cerrarse antes de la devolución. La pausa DEBE verse
 encima de la nota; al reanudar, la nota DEBE continuar abierta y el control suspendido.
 
 ### BR-PLY-030 — Lo que dice cada hoja
 
 El sistema DEBE permitir leer las notas de tareas a realizar, mantener el local ordenado,
 jabones y manchas, instrucciones de limpieza y no tirar papel. La hoja y la lectura DEBEN
-compartir su contenido: texto para las dos del corcho, imagen original completa para las tres
-del baño. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a A4, con el
-contenido visible en el mundo; NO DEBEN presentarse como post its ni como una hoja por tarea.
+compartir su contenido: texto para las dos del corcho, imagen original completa para las cuatro
+del baño. Hay una hoja de no tirar papel arriba de cada uno de los dos inodoros, y las dos
+comparten la misma imagen. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a
+A4, con el contenido visible en el mundo; NO DEBEN presentarse como post its ni como una hoja
+por tarea.
 Las hojas del baño DEBEN conservar sus imágenes artísticas.
 
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
@@ -281,7 +284,7 @@ CUANDO se usa la caja registradora con clic derecho, el sistema DEBE abrir su pr
 suspender el control, conservando lo que se lleva y su lugar en la mano. Otro clic derecho
 DEBE cerrar y reanudar. Una pantalla o examen abiertos NO DEBEN permitir abrir el programa.
 Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
-continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar su placa.
+continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar la devolución.
 
 ### BR-PLY-032 — El lector usa la unidad sostenida
 
@@ -314,6 +317,64 @@ el cuerpo y la mano DEBEN conservarse. Una aceptación DEBE vaciar la mano y con
 cuerpo en el puesto. Un rechazo DEBE mantenerlo en la mano.
 MIENTRAS el comprador habla, clic derecho NO DEBE abandonar la ventanilla; Esc DEBE abrir pausa.
 El vencimiento DEBE liberar ese bloqueo. Fuera del comprador, el izquierdo NO DEBE soltar ni agarrar.
+
+### BR-PLY-035 — La referencia lista los controles que sirven ahora
+
+MIENTRAS transcurre la jornada, el sistema DEBE mostrar arriba a la izquierda, una por renglón,
+las líneas de la referencia de controles que valen para lo que la mira enfoca y lo que se
+lleva, y ninguna otra. Cada línea DEBE leerse «[<control>] <texto>», con el control de su
+gesto (BR-PLY-037). De arriba abajo, en este orden:
+
+| # | Texto | Gesto | Vale cuando |
+|---|---|---|---|
+| 1 | Examinar (mano) | examinar | hay un levantable en la mano |
+| 2 | Examinar | examinar | la mano está vacía y la mira enfoca un interactuable |
+| 3 | Agarrar | agarrar, clic izquierdo | la mano está vacía y la mira enfoca un levantable |
+| 4 | Dejar | agarrar, clic izquierdo | hay un levantable en la mano |
+| 5 | Interactuar | usar, clic derecho | la mira enfoca un interactuable que no es una caja del depósito, y el derecho sobre él, con lo que hay en la mano, tiene efecto (BR-PLY-036) |
+| 6 | Sacar producto | usar, clic derecho | la mira enfoca una caja del depósito apoyada, la mano está vacía y la caja tiene al menos una unidad |
+| 7 | Meter producto | usar, clic derecho | la mira enfoca una caja del depósito apoyada, la mano lleva una unidad de su producto y la caja tiene menos que las unidades de una caja |
+
+Sobre una caja del depósito NO DEBE salir «Interactuar». Con algo en la mano, la línea del
+izquierdo DEBE ser «Dejar» también cuando el izquierdo lo va a tirar al contenedor de basura
+(BR-CLN-026): la referencia no tiene una línea para tirar. El contador de tareas DEBE conservar
+su lugar, arriba de la primera línea de la referencia. CUANDO el foco y la mano cambian en el
+mismo cuadro, la referencia DEBE armarse con los dos valores nuevos, sin mostrar una
+combinación intermedia.
+
+### BR-PLY-036 — El derecho no adelanta el resultado
+
+El clic derecho DEBE contar con efecto, con cualquier cosa en la mano o con la mano vacía,
+sobre lo fijo que abre o alterna (BR-PLY-026) —incluida la puerta trabada, que avisa
+(BR-PLY-020)—, sobre una nota pegada (BR-PLY-029) y sobre el cuerpo y la tapa del contenedor de
+basura (BR-CLN-025). DEBE contar con efecto el par declarado de lo que se lleva y su objetivo
+(BR-PLY-012); el lector con una unidad en la mano (BR-PLY-032); el inodoro con un ticket en la
+mano (BR-CTR-025); y un tacho que conserva su bolsa, con la mano vacía (BR-CLN-032).
+
+Con la mano vacía, el lector, el inodoro, el lavatorio y el balde NO DEBEN contar con efecto.
+Un tacho sin bolsa, o con la mano ocupada, NO DEBE contar con efecto. MIENTRAS el programa de
+la caja es manual, el hueco del lector NO DEBE contar con efecto (BR-CTR-024).
+
+Un par declarado DEBE contar con efecto aunque el uso vaya a rechazarse por el estado de la
+herramienta o del objetivo: mirar una mancha NO DEBE decir cuál es el jabón correcto sin
+probarlo. Averiguar si hay efecto NO DEBE cambiar el estado de nada: ni la mano, ni la
+herramienta, ni el objetivo, ni la bolsa de un tacho.
+
+### BR-PLY-037 — El control sale de la asignación vigente
+
+El control entre corchetes DEBE ser el que el gesto tiene asignado en el momento de mostrar la
+línea, no uno escrito: si la asignación cambia, la línea la sigue. El botón izquierdo del mouse
+DEBE leerse «Click Izq», el derecho «Click Der», y una tecla con su nombre de teclado. SI el
+gesto tiene asignado un control de teclado o mouse y uno de joystick, ENTONCES DEBE leerse el de
+teclado o mouse. SI el gesto no tiene ningún control con nombre, ENTONCES su línea NO DEBE
+mostrarse.
+
+### BR-PLY-038 — Suspendido, la referencia está vacía
+
+MIENTRAS el control está suspendido —por el examen, una nota pegada, la computadora, la caja
+registradora, la ventanilla o el celular—, la pausa está abierta o la jornada cerró, la
+referencia NO DEBE mostrar ninguna línea. Al reanudar, DEBE volver a armarse con lo que la mira
+enfoca y lo que se lleva.
 
 ## Criterios de aceptación
 
@@ -561,20 +622,20 @@ DADO un jugador en cualquier lugar, mirando a cualquier lado y en movimiento CUA
 jornada ENTONCES queda en el punto de arranque, con el yaw del arranque, la vista horizontal y la
 velocidad en cero.
 
-### AC-PLY-045 — Ningún casillero vacío se dibuja *(verifica BR-PLY-022)*
+### AC-PLY-045 — Los huecos vacíos no muestran envases sin foco *(verifica BR-PLY-022)*
 
 DADO una unidad de Actroncito en la mano, con dos casilleros de Actroncito vacíos y otro producto
-con casilleros vacíos, todos al alcance de la mira y ninguno enfocado, ENTONCES no se dibuja
-ninguno, y la mira puede enfocar los dos de Actroncito y ninguno del otro producto ni ninguno
-ocupado. DADO las manos vacías, una caja o cualquier otro objeto en la mano ENTONCES no se dibuja
-ningún casillero vacío y la mira no enfoca ninguno.
+con casilleros vacíos, todos al alcance de la mira y ninguno enfocado, ENTONCES ninguno dibuja
+un envase ni un contorno. La mira puede enfocar los dos de Actroncito y ninguno del otro producto
+ni ninguno ocupado. DADO las manos vacías, una caja o cualquier otro objeto en la mano ENTONCES
+la mira no enfoca ningún casillero vacío.
 
-### AC-PLY-047 — El casillero apuntado lleva sólo el contorno *(verifica BR-PLY-023)*
+### AC-PLY-047 — La vista previa aparece sólo en el hueco enfocado *(verifica BR-PLY-023)*
 
 DADO una unidad en la mano y dos de sus casilleros vacíos CUANDO la mira enfoca uno ENTONCES ése
-muestra el contorno del producto con el color y el grosor del contorno del foco, sin su
-superficie, y el otro sigue sin dibujarse. CUANDO la mira pasa al otro ENTONCES el contorno queda
-sólo en el otro. CUANDO la mira deja de enfocarlos ENTONCES no se dibuja ninguno.
+muestra la textura del producto en blanco y negro al 75% de opacidad; el otro no dibuja ningún
+envase ni contorno. CUANDO la mira pasa al otro ENTONCES la vista previa aparece sólo en el otro.
+CUANDO la mira deja de enfocarlos ENTONCES ninguno dibuja envases ni contornos.
 
 ### AC-PLY-048 — El clic coloca en el casillero apuntado *(verifica BR-PLY-023)*
 
@@ -702,7 +763,7 @@ permanece donde estaba.
 
 ### AC-PLY-063 — Cada hoja abre su lectura y cierra con el derecho *(verifica BR-PLY-029, BR-PLY-006)*
 
-DADO cada una de las cinco notas pegadas enfocadas, CUANDO se hace clic derecho ENTONCES
+DADO cada una de las seis notas pegadas enfocadas, CUANDO se hace clic derecho ENTONCES
 aparece su contenido propio y se suspenden caminata, mirada y foco. CUANDO se hace otro clic
 derecho ENTONCES la lectura se cierra y el control vuelve.
 
@@ -727,8 +788,8 @@ hasta cerrar la primera.
 
 DADO una nota abierta, CUANDO pasan cuadros ENTONCES el tiempo del turno disminuye. CUANDO se
 pausa ENTONCES la pausa visible se dibuja por encima de la nota; al reanudar, la nota sigue
-abierta y el control suspendido. CUANDO termina el turno ENTONCES queda sólo la placa de
-cierre y el control suspendido.
+abierta y el control suspendido. CUANDO termina el turno ENTONCES queda sólo la
+devolución y el control suspendido.
 
 ### AC-PLY-068 — Ordenado comparte el texto exacto *(verifica BR-PLY-030)*
 
@@ -745,15 +806,17 @@ y los títulos y renglones son iguales en la hoja y su lectura.
 
 ### AC-PLY-070 — El baño comparte la imagen artística completa *(verifica BR-PLY-030)*
 
-DADO cada nota de jabones y manchas, instrucciones de limpieza y no tirar papel, ENTONCES
-su lectura amplía la misma imagen frontal original completa y no agrega renglones.
+DADO cada hoja del baño —jabones y manchas, instrucciones de limpieza y las dos de no tirar
+papel—, ENTONCES su lectura amplía la misma imagen frontal original completa y no agrega
+renglones. Las dos de no tirar papel abren la misma imagen.
 
 ### AC-PLY-071 — Las notas del corcho y del baño se pueden leer *(verifica BR-PLY-030, BR-PLY-004)*
 
-DADO cada una de las cinco notas funcionales, ENTONCES tiene foco y contorno sobre su propia
-hoja desde un lugar transitable al alcance. El corcho presenta dos hojas: tareas a realizar y
-mantener el local ordenado. No aparecen papeles vacíos ni una hoja por tarea. Las imágenes
-originales del baño se conservan al agregar lectura.
+DADO cada una de las seis notas funcionales, ENTONCES tiene foco y contorno sobre su propia
+hoja desde un lugar transitable al alcance. Hay una hoja de no tirar papel arriba de cada
+inodoro. El corcho presenta dos hojas: tareas a realizar y mantener el local ordenado. No
+aparecen papeles vacíos ni una hoja por tarea. Las imágenes originales del baño se conservan
+al agregar lectura.
 
 ### AC-PLY-072 — La caja abre con cada mano y la conserva *(verifica BR-PLY-031, BR-PLY-026, BR-PLY-006, BR-PLY-028)*
 
@@ -774,7 +837,7 @@ pide lectura ni aviso. DADO clic izquierdo o E con mano vacía ENTONCES no se le
 
 DADO el programa abierto, CUANDO pasan cuadros ENTONCES el tiempo disminuye; al pausar,
 la pausa visible tiene una capa superior al programa. Al reanudar sigue abierto y el control
-suspendido. Al terminar el turno queda sólo la placa de cierre y el control suspendido.
+suspendido. Al terminar el turno queda sólo la devolución y el control suspendido.
 
 ### AC-PLY-075 — El papel se lleva y examina *(verifica BR-PLY-033)*
 
@@ -828,45 +891,124 @@ el foco y no se puede caminar, girar la vista, enfocar, agarrar ni soltar; el cu
 CUANDO se lo cierra ENTONCES vuelven esos controles y la misma unidad sigue en la mano. Los clics
 de lectura y de foto mientras está abierto no cambian lo sostenido.
 
+### AC-PLY-082 — Los dos ejemplos de la ficha *(verifica BR-PLY-035, BR-PLY-036)*
+
+DADO la asignación de fábrica —examinar en E, agarrar en el botón izquierdo y usar en el
+derecho—, la mano vacía y la mira sobre un lavatorio ENTONCES la referencia es exactamente
+«[E] Examinar». DADO el balde en la mano y la mira sobre el mismo lavatorio ENTONCES es
+exactamente «[E] Examinar (mano)», «[Click Izq] Dejar» y «[Click Der] Interactuar», en ese
+orden. En los dos casos, el contador de tareas está arriba de la primera línea.
+
+### AC-PLY-083 — La caja del depósito: sacar, meter o nada *(verifica BR-PLY-035)*
+
+DADO la mano vacía y una caja del depósito apoyada con 1 unidad ENTONCES la referencia es
+«[E] Examinar», «[Click Izq] Agarrar» y «[Click Der] Sacar producto»; con 0, sólo las dos
+primeras. DADO una unidad de su producto en la mano y la caja con una unidad menos que las de
+una caja ENTONCES es «[E] Examinar (mano)», «[Click Izq] Dejar» y «[Click Der] Meter
+producto»; con la caja llena, sólo las dos primeras. DADO una unidad de otro producto, u otra
+caja, en la mano ENTONCES es «[E] Examinar (mano)» y «[Click Izq] Dejar». En ningún caso sale
+«Interactuar» sobre una caja.
+
+### AC-PLY-084 — El derecho no adelanta el resultado *(verifica BR-PLY-036, BR-PLY-035)*
+
+DADO la mira sobre una mancha y la mopa mojada con un jabón que no es el suyo, o sobre el
+lavatorio y el balde lleno, o sobre el lector y una unidad en la mano con los tres renglones del
+programa llenos ENTONCES sale «[Click Der] Interactuar», y la herramienta, el objetivo y los
+renglones no cambian. DADO la mano vacía y la mira sobre el lector, el inodoro, el lavatorio o
+el balde ENTONCES no sale ninguna línea del derecho. DADO un ticket en la mano y la mira sobre un
+inodoro ENTONCES sale. DADO la mano vacía y una puerta trabada ENTONCES la referencia es
+«[E] Examinar» y «[Click Der] Interactuar». DADO el cuerpo o la tapa del contenedor de basura,
+con la mano vacía o cargada ENTONCES sale. DADO el programa manual y la mira sobre el hueco del
+lector, con una unidad en la mano ENTONCES no sale.
+
+### AC-PLY-085 — Consultar el tacho no le saca la bolsa *(verifica BR-PLY-036)*
+
+DADO la jornada 2, la mano vacía y la mira sobre un tacho con su bolsa ENTONCES la referencia es
+«[E] Examinar» y «[Click Der] Interactuar», y el tacho sigue con su bolsa y la mano vacía.
+DADO el mismo tacho sin bolsa, o una unidad en la mano ENTONCES no sale ninguna línea del
+derecho.
+
+### AC-PLY-086 — Lo que se tira al contenedor se lee «Dejar» *(verifica BR-PLY-035)*
+
+DADO la tapa del contenedor completamente abierta, una bolsa en la mano y la mira sobre el
+cuerpo o la tapa ENTONCES la línea del izquierdo es «[Click Izq] Dejar», y ninguna línea dice
+tirar.
+
+### AC-PLY-087 — Sin nada que hacer, nada *(verifica BR-PLY-035)*
+
+DADO la mano vacía y la mira sin foco, o sobre un casillero vacío ENTONCES la referencia no
+tiene ninguna línea. DADO la mopa mojada de agua y la mira sobre el piso sin mancha ENTONCES
+es «[E] Examinar (mano)» y «[Click Izq] Dejar», sin línea del derecho. DADO la mano vacía y la
+mira sobre una unidad de la fila de adelante de la góndola ENTONCES sale «[Click Izq] Agarrar»
+y ninguna línea del derecho.
+
+### AC-PLY-088 — El control sale de la asignación *(verifica BR-PLY-037)*
+
+DADO examinar reasignado a la Q y un levantable en la mano ENTONCES la primera línea es
+«[Q] Examinar (mano)». DADO un gesto con un control de joystick y uno de teclado ENTONCES la
+línea muestra el de teclado. DADO un gesto sin ningún control con nombre ENTONCES su línea no
+aparece y las demás conservan su orden.
+
+### AC-PLY-089 — Suspendido, vacía *(verifica BR-PLY-038)*
+
+DADO un levantable en la mano y la mira sobre un lavatorio CUANDO se abre, por turno, el examen,
+una nota pegada, la computadora, la caja registradora, la ventanilla, el celular o la pausa
+ENTONCES la referencia no tiene ninguna línea; CUANDO se cierra ENTONCES vuelve a tener las
+líneas de esa mano y esa mira. CUANDO cierra la jornada ENTONCES queda vacía.
+
+### AC-PLY-090 — El foco y la mano en el mismo cuadro *(verifica BR-PLY-035)*
+
+DADO la mano vacía y la mira sobre un lavatorio CUANDO en el mismo cuadro se pone el balde en
+la mano y la mira pasa a una caja del depósito ENTONCES la referencia siguiente es
+«[E] Examinar (mano)» y «[Click Izq] Dejar», y no se mostró ninguna combinación de la mano
+anterior con la mira nueva ni al revés.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
   [`investigation`](../investigation/investigation.md).
 - Esta capacidad NO cuenta unidades ni repone: eso es de
   [`store-stock`](../store-stock/store-stock.md).
-- Esta capacidad NO lee el teclado ni el mouse. Recibe la entrada ya traducida a números.
+- Esta capacidad NO lee el teclado ni el mouse. Recibe la entrada ya traducida a números, y el
+  nombre del control de cada gesto ya traducido a texto.
+- Esta capacidad NO asigna ni reasigna los controles: la referencia lee la asignación vigente.
 
 ## Contratos
 
 - **Entrada:** el vector de movimiento, el delta del mouse, el yaw del arranque, los candidatos
   que el rayo encontró, el objeto que se quiere agarrar, la superficie que la mira toca, los
-  casilleros vacíos y ocupados de cada producto y los segundos del cuadro.
+  casilleros vacíos y ocupados de cada producto, los segundos del cuadro y el nombre del control
+  asignado a cada gesto.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
-  la hoja, el aviso de cada gesto sobre una puerta y el efecto de un uso.
+  la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
+  referencia de controles.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
   declarado no tiene efecto; con algo que no es una unidad en la mano, ningún casillero vacío se
-  enfoca.
+  enfoca; un gesto sin control con nombre no da línea en la referencia.
 
 ## Señales
 
-- El objetivo enfocado y perdido, el objeto agarrado y soltado, y el agarre rechazado.
+- El objetivo enfocado y perdido, el objeto agarrado y soltado, el agarre rechazado, y la
+  referencia de controles cuando cambia.
 
 ## Dependencias
 
 - [`counter-service`](../counter-service/counter-service.md) (consume y alimenta): el lector
   recibe lo sostenido y contesta lectura o rechazo; imprimir entrega un papel levantable y
-  usarlo sobre el inodoro publica su descarte.
+  usarlo sobre el inodoro publica su descarte; si el programa es manual, el lector no está.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): las obligatorias declaradas que
   enumera la nota de tareas.
 
-- [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta): qué se lleva en la mano
-  decide si se puede limpiar.
+- [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta y consume): qué se lleva en la
+  mano decide si se puede limpiar; si un tacho conserva su bolsa decide si el derecho tiene
+  efecto.
 - [`investigation`](../investigation/investigation.md) (alimenta y consume): qué objeto se
   examina; la apertura del celular suspende el cuerpo conservando lo que se lleva en la mano.
 - [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): qué casilleros de cada
   producto están vacíos y cuáles ocupados; el clic sobre un casillero le pide colocar la unidad
-  de la mano o agarrar la que está puesta.
+  de la mano o agarrar la que está puesta; cuántas unidades tiene una caja del depósito decide
+  si se puede sacar o meter.
 
 ## Preguntas abiertas
 

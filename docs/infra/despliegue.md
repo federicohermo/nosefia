@@ -113,6 +113,13 @@ incluye el parche de compilación de shaders medido en [rendimiento](../guides/r
 El editor usa Godot oficial. El export de debug usa la plantilla oficial. El motor nativo
 conserva su código.
 
+La preparación corrige también la copia del framebuffer de Emscripten: consulta si el recorte
+está habilitado con `isEnabled`, conservando su estado al terminar de copiar. La consulta con
+`getParameter` sincronizaba con la GPU en cada cuadro y produjo bloqueos medidos en la partida.
+Se corrige el JavaScript generado del ZIP, sin modificar el WASM. El preparador rechaza una
+plantilla que conserve esa consulta o cambie el código esperado de la copia. La CI prueba que
+el export conserva tanto el recorte habilitado como el deshabilitado y el framebuffer anterior.
+
 El parche hace dos cosas, las dos bajo `WEB_ENABLED`:
 
 - **No compila las variantes predeterminadas** de un shader. Compila sólo la que pide un dibujo.

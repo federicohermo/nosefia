@@ -39,7 +39,10 @@ func _inventariar() -> void:
 				)
 				fila["pose_ticket"] = var_to_str(objeto.global_transform.affine_inverse() * pose)
 				fila["ancho_ticket"] = ancho
-			if objeto.name == &"deposito_techo_chapa":
+			if (
+				objeto.name == &"deposito_techo_chapa"
+				or str(objeto.name).begins_with("local_vidrio_")
+			):
 				var caras: Array[float] = []
 				for punto: Vector3 in objeto.mesh.get_faces():
 					caras.append_array([punto.x, punto.y, punto.z])

@@ -22,3 +22,9 @@ func test_las_unidades_del_mismo_producto_tienen_la_misma_identidad() -> void:
 func test_la_unidad_suena_como_su_producto() -> void:
 	var unidad := UnidadDeProducto.new(Catalogo.de(Producto.Id.CORACOLA))
 	assert_int(unidad.sonoridad).is_equal(EntradaSonora.Sonoridad.LATA)
+
+
+func test_la_unidad_dice_el_texto_de_su_producto_y_no_su_nombre() -> void:  # AC-SUB-011
+	var unidad := UnidadDeProducto.new(Catalogo.de(Producto.Id.UAKAS))
+	assert_str(unidad.texto_al_examinar()).is_equal("Una caja de fideos Uakalas.")
+	assert_str(UnidadDeProducto.new().texto_al_examinar()).is_empty()

@@ -60,7 +60,7 @@ mesh = ExtResource("malla3")
 gi_mode = 2
 
 [node name="Guia04" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0.145407, 0, 0.123843, 0, 0.043094, 0.025501, 0, -0.209281, 0.668441, 0.456767, -3.940174)
+transform = Transform3D(0, 0.145407, -0.000001, 0.124134, 0, 0.040627, 0.024041, -0.000001, -0.209774, 0.668441, 0.456767, -3.940174)
 visible = false
 mesh = ExtResource("malla4")
 gi_mode = 2

@@ -208,7 +208,7 @@ func test_los_gestos_con_el_balde_suenan_planos_y_un_uso_sin_efecto_no() -> void
 	)
 	var limpiador: Limpiador = auto_free(Limpiador.new())
 	limpiador.reloj = auto_free(RelojDelTurno.new())
-	limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	limpiador.arrancar(PisoDelLocal.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA))
 	enlace.enlazar_todo([limpiador])
 	var balde := ReglasDeLaLimpieza.ID_DEL_BALDE
 	var mopa := ReglasDeLaLimpieza.ID_DE_LA_MOPA

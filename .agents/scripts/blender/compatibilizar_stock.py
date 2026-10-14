@@ -31,11 +31,34 @@ def principal():
     for producto, objetos in grupos.items():
         frente = sorted((o for o in objetos if o['fila'] == 'adelante'), key=lambda o: o['orden'])
         minimo = minimos.get(producto, 1)
-        if len(frente) >= minimo:
+        if len(frente) >= minimo and producto != 'ACTRONCITO':
             continue
+        cantidad_frontal = len(frente)
+        cantidad_atras = sum(o['fila'] == 'atras' for o in objetos)
+        cantidad_reservada = max(0, cantidad_atras - cantidad_frontal)
         for fila in ('atras', 'adelante'):
             copias = sorted((o for o in objetos if o['fila'] == fila), key=lambda o: o['orden'])
+            reservas = copias[cantidad_frontal:] if fila == 'atras' else []
+            if fila == 'atras':
+                copias = copias[:cantidad_frontal]
             if not copias:
+                continue
+            if producto == 'ACTRONCITO':
+                referencias = sorted((o for o in bpy.context.scene.objects
+                                      if o.get('producto') == producto and o.get('fija', False)
+                                      and o['fila'] == fila), key=lambda o: o['orden'])
+                if len(copias) != len(referencias):
+                    raise ValueError('Las dos exhibiciones de Actroncito deben tener cuatro lugares')
+                base = min((o.matrix_world @ Vector(v)).z
+                           for o in copias for v in o.bound_box)
+                apoyo = min((o.matrix_world @ Vector(v)).z
+                            for o in referencias for v in o.bound_box)
+                for copia, referencia in zip(copias, referencias):
+                    pose = referencia.matrix_world.copy()
+                    pose.translation.z += base - apoyo
+                    copia.matrix_world = pose
+                cambios += 1
+                print(producto, fila, len(copias), 'alineados con la fila inferior')
                 continue
             primera, ultima = copias[0].matrix_world.translation, copias[-1].matrix_world.translation
             lateral = (ultima - primera).normalized()
@@ -54,7 +77,10 @@ def principal():
                 pose = copia.matrix_world.copy()
                 pose.translation = centro + lateral * largo * (indice / (minimo - 1) - 0.5)
                 copia.matrix_world = pose
-                copia['orden'] = indice + (minimo if fila == 'adelante' else 0)
+                copia['orden'] = indice + (
+                    minimo + cantidad_reservada if fila == 'adelante' else 0)
+            for indice, copia in enumerate(reservas):
+                copia['orden'] = minimo + indice
             cambios += 1
             print(producto, fila, len(copias))
     if cambios:
