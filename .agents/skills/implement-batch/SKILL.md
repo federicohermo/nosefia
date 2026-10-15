@@ -250,6 +250,11 @@ Cada agente recibe, literal:
   en sus worktrees mientras otro verifica. Ante un fallo, conservá el log, comprobá el caso
   aislado y repetí la convergencia con la carga controlada. No cambies el umbral del test para
   esconder el fallo ni declares verde la primera corrida.
+- **Cerrar las sondas cortas que pueden abrir una decisión antes de encolar completas.**
+  Si el encaje de un modelo o el gesto real puede contradecir el contrato, reservar primero
+  esa medición y revisar su resultado. En #434, un barrido de segundos quedó una hora detrás
+  de completas ya encoladas y demoró la evidencia para decidir las filas. Esta prioridad se
+  prepara al repartir; los turnos ya emitidos conservan su orden.
 - **El turno lo da `scripts/turno.py`, y es una cola.** Todo lo que levanta el motor entero,
   exporta o mide va adentro: `python .claude/skills/implement-batch/scripts/turno.py <cola>
   <etiqueta> <log> -- <comando>`. `<cola>` es una carpeta del scratch del lote, la misma para
