@@ -4,13 +4,13 @@
   "marker": "CAPTURA_366_VALIDA",
   "files": {
     "366-captura-raw.log": {
-      "bytes": 281,
-      "sha256": "07228391ed0ef7247ecf995031496d74d62cbef62285dae3c304fbcbeaf53f5b",
+      "bytes": 277,
+      "sha256": "4c0ee1aba7d22ae334eaf56b4a5c6128292f08648c365ea41029413f6c001f57",
       "git_blob": "0f5526d20e769c573ce943ac3af7709efee3cda0"
     },
     "366-captura-run.py": {
-      "bytes": 1276,
-      "sha256": "5cc36a9228fb0692d8ffe82f5dccd1a0b3cb4a99f93a2bea094cb4022ecb1a2d",
+      "bytes": 1256,
+      "sha256": "e9c4620407c59099f460afb6952c5de9ca394f862b80e79a30d9bd0c75e82e67",
       "git_blob": "0cb8ca53d81ff25afd1225ac4c660dd32250624a"
     },
     "366-capturar.gd": {
