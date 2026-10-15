@@ -37,4 +37,4 @@ static func poses(
 
 static func _lado(caja: Node3D) -> float:
 	var cuerpo: CollisionShape3D = caja.get_node("Cuerpo")
-	return (cuerpo.transform * cuerpo.shape.get_debug_mesh().get_aabb()).size.x
+	return (cuerpo.transform * LimitesDeForma.de(cuerpo.shape)).size.x

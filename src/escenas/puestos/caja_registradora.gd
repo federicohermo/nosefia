@@ -26,7 +26,7 @@ func _ready() -> void:
 	caja.renglones_cambiados.connect(_repintar)
 	caja.ticket_impreso.connect(_al_imprimir)
 	programa.borrado_pedido.connect(caja.pedir_borrar)
-	programa.impresion_pedida.connect(caja.pedir_imprimir)
+	programa.impresion_pedida.connect(_imprimir_desde_entrada)
 	programa.eleccion_pedida.connect(caja.pedir_elegir)
 	programa.cierre_pedido.connect(_cerrar_desde_entrada)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
@@ -62,6 +62,11 @@ func _input(evento: InputEvent) -> void:
 
 func _cerrar_desde_entrada() -> void:
 	cerrar()
+	jugador.tomar_el_cursor_desde_entrada()
+
+
+func _imprimir_desde_entrada() -> void:
+	caja.pedir_imprimir()
 	jugador.tomar_el_cursor_desde_entrada()
 
 

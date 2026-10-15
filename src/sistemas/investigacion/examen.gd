@@ -119,7 +119,7 @@ func arrastrar(relativo: Vector2, con_el_clic: bool) -> void:
 	if not con_el_clic:
 		return
 	var giro := relativo * sensibilidad
-	_rotar(-giro.x, -giro.y)
+	_rotar(giro.x, giro.y)
 
 
 ## Sin nada en examen no hace nada: el mouse y las teclas se usan todo el tiempo, también

@@ -630,7 +630,7 @@ func _revisar_orden_del_deposito() -> void:
 		var estado := OrdenDelDeposito.Estado.new(caja.producto, caja == sostenido)
 		if not estado.en_mano:
 			var cuerpo: CollisionShape3D = caja.get_node("Cuerpo")
-			var limites := cuerpo.global_transform * cuerpo.shape.get_debug_mesh().get_aabb()
+			var limites := cuerpo.global_transform * LimitesDeForma.de(cuerpo.shape)
 			var media := limites.size.y / 2.0
 			var consulta := PhysicsRayQueryParameters3D.create(
 				caja.global_position, caja.global_position + Vector3.DOWN * (media + 0.02)

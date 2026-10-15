@@ -44,7 +44,7 @@ func _ready() -> void:
 
 func mostrar() -> void:
 	visible = true
-	_reanudar.grab_focus()
+	_reanudar.grab_focus(true)
 
 
 ## También baja configuraciones: es otra capa, y no se oculta con la del menú.
@@ -73,7 +73,7 @@ func cerrar_configuraciones() -> void:
 
 func _al_cerrar_configuraciones() -> void:
 	_marco.visible = true
-	_reanudar.grab_focus()
+	_reanudar.grab_focus(true)
 
 
 func _ajustar_al_viewport() -> void:

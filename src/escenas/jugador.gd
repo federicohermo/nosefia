@@ -404,7 +404,7 @@ func _retroceso_libre(cuerpo: RigidBody3D) -> float:
 				excluidos.append(recipiente.get_rid())
 				consulta.exclude = excluidos
 		consultas.append(consulta)
-		var limites := consulta.transform * forma.shape.get_debug_mesh().get_aabb()
+		var limites := consulta.transform * LimitesDeForma.de(forma.shape)
 		largo = maxf(largo, limites.size.length())
 	if _libres(consultas, Vector3.ZERO):
 		return 0.0
@@ -652,7 +652,7 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
 		if forma.disabled or forma.shape == null:
 			continue
-		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		var limites := forma.global_transform * LimitesDeForma.de(forma.shape)
 		var centro := limites.get_center()
 		var eje := ojo + adelante * (centro - ojo).dot(adelante)
 		puntos.append(eje.clamp(limites.position, limites.end))
@@ -890,9 +890,7 @@ func _inicios_del_barrido(
 		var consulta := _consulta_de(forma, cuerpo, -recorrido)
 		toca = toca or not espacio.intersect_shape(consulta, 1).is_empty()
 		var limites := (
-			Transform3D(cuerpo.global_basis)
-			* forma.transform
-			* forma.shape.get_debug_mesh().get_aabb()
+			Transform3D(cuerpo.global_basis) * forma.transform * LimitesDeForma.de(forma.shape)
 		)
 		var punta := limites.position
 		for eje in 3:
@@ -1056,9 +1054,7 @@ static func _limites_de(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) ->
 	for indice in formas.size():
 		var forma := formas[indice]
 		var suyos := (
-			Transform3D(cuerpo.global_basis)
-			* forma.transform
-			* forma.shape.get_debug_mesh().get_aabb()
+			Transform3D(cuerpo.global_basis) * forma.transform * LimitesDeForma.de(forma.shape)
 		)
 		limites = suyos if indice == 0 else limites.merge(suyos)
 	return limites
