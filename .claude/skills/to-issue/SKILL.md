@@ -48,6 +48,12 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Un requisito al cierre se mide contra el orden de sus señales y lectores.** Probar también
+un salto desde apertura hasta cierre en un único avance, y la repetición sin eventos nuevos.
+En #366, registrar pasó a depender de compras cerradas, pero la computadora revisaba antes
+de que la agenda venciera a los compradores. El plan debe incluir al traductor y su espejo
+si ese orden impide el criterio; no alcanza con cambiar el predicado de dominio.
+
 **Una rama con contrato preparado también se mide por su diff.** Cruzar los archivos de sus
 commits contra «Se escribe», incluida la documentación de responsabilidades que el contrato
 actualizó. En #366, el contrato ya traía `docs/architecture/capacidades.md`, pero el plan sólo
