@@ -104,6 +104,15 @@ fixtures pueden esperar sólo la primera jornada aunque el recurso pase a conten
 Declarar la vista que consume cada uno y conservar su inmutabilidad; en #430, dos suites de
 instrucciones necesitaban filtrar J1, mientras otro lector del primer mensaje seguía válido.
 
+**La salida del detector no sustituye la medición de la malla.** Antes de declarar muebles,
+chapas o niveles, contrastar nombres reales, islas, materiales, normales y transformaciones
+del modelo. Separar las chapas físicas de los niveles con exhibición: una chapa vacía no
+autoriza un nivel activo nuevo. En #434, un umbral de distancia clasificaba cabeceras
+superiores como laterales y una tabla conservaba un mural ausente. Corregir el clasificador y
+la tabla conservó la geometría y el reparto de alturas; reconstruir lo que suponían habría
+cambiado el diseño. Guardar la medición independiente y probar el caso que confundía al
+detector antes de regenerar recursos.
+
 **Un producto sin exhibición se sigue hasta los generadores de su fuente.** Buscar también
 extractores de mallas, miniaturas y validadores que localizan la unidad por su tanda, no sólo
 las consultas de cupo del juego. En #434, el dominio aceptaba cupo cero pero el extractor no
