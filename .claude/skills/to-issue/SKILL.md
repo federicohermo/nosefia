@@ -56,6 +56,13 @@ contradiga el agregado. En #367, el cruce con #433 exigía compartir pedidos, pe
 original de apertura todavía los reconstruía por jornada. Una fábrica futura no bloquea la
 recepción de una lista ya representable: el test usa datos propios dentro del alcance vigente.
 
+**Al reemplazar una tabla fija por un sorteo, medir las invariantes que sus valores
+protegían.** Leer reglas y tests anteriores antes de generalizar los límites. Separar el cupo
+total del cupo donde se permite abrir huecos: un inventario puede contar guías y tanda principal
+sin que ambas admitan faltantes iniciales. En #367, usar el total permitía vaciar guías y
+debilitaba el AC que antes acotaba la fila principal. Declarar ambos datos en las firmas y
+probar la apertura sobre la geometría real, conservando las interacciones de cada tanda.
+
 **Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
 reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
 acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
