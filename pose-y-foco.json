@@ -1,0 +1,23 @@
+{
+	"camara": "[X: (-0.0, 0.0, 1.0), Y: (0.833324, 0.552785, 0.0), Z: (-0.552785, 0.833324, -0.0), O: (-1.799987, 1.812237, 4.964)]",
+	"foco": "/root/@SubViewport@2/Almacen/ReposicionManual/ObjetoAgarrable",
+	"jugador": "(-1.799987, 0.112237, 4.964)",
+	"piso": "/root/@SubViewport@2/Almacen/Estructura/SueloSolido",
+	"unidades": [
+		{
+			"identidad": -9223371747263244602,
+			"posicion": "(-0.799987, 0.304734, 4.964)",
+			"producto": "Marolini"
+		},
+		{
+			"identidad": -9223371745954621763,
+			"posicion": "(-0.63272, 0.222476, 5.245707)",
+			"producto": "Coracola"
+		},
+		{
+			"identidad": -9223371744645998921,
+			"posicion": "(-0.799837, 0.202236, 5.266682)",
+			"producto": "Malbardo"
+		}
+	]
+}

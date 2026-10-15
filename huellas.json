@@ -1,0 +1,32 @@
+{
+  "source_head": "6fcd951437bf2e888b534bb6b1b27b4528235e5c",
+  "queue": "nosefia-batch-367-385/cola",
+  "marker": "CAPTURA_366_VALIDA",
+  "files": {
+    "366-captura-raw.log": {
+      "bytes": 281,
+      "sha256": "07228391ed0ef7247ecf995031496d74d62cbef62285dae3c304fbcbeaf53f5b",
+      "git_blob": "0f5526d20e769c573ce943ac3af7709efee3cda0"
+    },
+    "366-captura-run.py": {
+      "bytes": 1276,
+      "sha256": "5cc36a9228fb0692d8ffe82f5dccd1a0b3cb4a99f93a2bea094cb4022ecb1a2d",
+      "git_blob": "0cb8ca53d81ff25afd1225ac4c660dd32250624a"
+    },
+    "366-capturar.gd": {
+      "bytes": 7869,
+      "sha256": "f09054fce34a796073986e4d7e62a62855c08cbacbcbb2b6d75730ecc3c662fa",
+      "git_blob": "215797b253f0e2cf2a76ca37f9454a7feca8a265"
+    },
+    "pose-y-foco.json": {
+      "bytes": 698,
+      "sha256": "57b7fb1fde76f9814c5b2a467fc08fc2c1e868b1cb53385af2e70e2c08f181c7",
+      "git_blob": "611b5d8de7cd169b409dd1ac1ba63c5fb2716877"
+    },
+    "tres-unidades-adentro.png": {
+      "bytes": 1412577,
+      "sha256": "667e941ccbfdba97c19bc311585c19350d43f217ef51aef4db4db1a0bef00fd7",
+      "git_blob": "28d3d3c3dc90fa540ea570d442791826445fc07f"
+    }
+  }
+}
