@@ -41,22 +41,41 @@ func test_vencer_cierra_incluso_la_conversacion_inicial() -> void:  # AC-CTR-040
 	assert_bool(atencion.vendida()).is_false()
 
 
-func test_vencer_retira_la_entrega_parcial_del_inventario() -> void:  # AC-CTR-040, AC-STK-055
-	var inventario := Apertura.inventario_con_faltantes({}, {})
-	var comprador := Compradores.de_la_jornada(1)[0]
-	var atencion := Atencion.new(comprador, inventario)
-	for _entrada in 4:
-		atencion.interactuar(null)
-	var producto := Catalogo.de(Producto.Id.MAROLINI)
-	var unidad := Estante.new(inventario, Catalogo.todos()).retirar(producto)
-	var antes := inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)
-	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
-	atencion.vencer()
-	assert_bool(inventario.esta_afuera(unidad)).is_false()
-	assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(antes - 1)
-	atencion.vencer()
-	assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(antes - 1)
-	assert_bool(atencion.vendida()).is_false()
+func test_vencer_conserva_y_permite_recuperar_la_entrega() -> void:  # AC-CTR-040, AC-STK-055
+	for desde_gondola: bool in [false, true]:
+		var producto := Catalogo.de(Producto.Id.MAROLINI)
+		var inventario := Inventario.new(Catalogo.todos(), {Producto.Id.MAROLINI: 3})
+		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 3)
+		var estante := Estante.new(inventario, Catalogo.todos())
+		var atencion := Atencion.new(Compradores.de_la_jornada(1)[0], inventario)
+		while not atencion.conversacion_iniciada() or not atencion.puede_abandonar():
+			atencion.interactuar(null)
+		var unidad := estante.agarrar(producto, 1) if desde_gondola else estante.retirar(producto)
+		var deposito := inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)
+		var gondola := inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)
+		var caja := ContenidoDeLaCaja.new(producto, estante)
+		var contenido := caja.unidades()
+		assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
+		atencion.vencer()
+		atencion.vencer()
+		assert_bool(inventario.esta_afuera(unidad)).is_true()
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(deposito)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(gondola)
+		assert_int(caja.unidades()).is_equal(contenido)
+		assert_bool(atencion.vendida()).is_false()
+		var recepcion: RecepcionDeCompra = atencion.get("_recepcion")
+		assert_array(recepcion.unidades()).contains_exactly([unidad])
+		if desde_gondola:
+			assert_bool(caja.meter(unidad)).is_false()
+			var de_la_caja := caja.sacar()
+			assert_bool(caja.meter(unidad)).is_true()
+			assert_int(estante.colocar_unidad(de_la_caja, producto, 1)).is_equal(
+				Estante.Rechazo.NINGUNO
+			)
+		else:
+			assert_bool(caja.meter(unidad)).is_true()
+		assert_bool(inventario.esta_afuera(unidad)).is_false()
 
 
 func test_un_clic_termina_el_recordatorio_y_otro_entrega() -> void:  # AC-CTR-036

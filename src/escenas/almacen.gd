@@ -22,6 +22,7 @@ const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_p
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
+const PuestoDeVentanilla := preload("res://src/escenas/puestos/ventanilla.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 const PuestoDeLaCaja := preload("res://src/escenas/puestos/caja_registradora.gd")
 const TachoDelLocal := preload("res://src/escenas/puestos/tacho_de_basura.gd")
@@ -141,6 +142,11 @@ func _ready() -> void:
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
+	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
+	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
+	ventanilla.entregas_abandonadas.connect(
+		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
+	)
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:

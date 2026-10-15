@@ -163,24 +163,50 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
 
-# AC-CTR-040, AC-STK-055, AC-PLY-079
-func test_vencer_retira_productos_y_ticket_sin_registrar_una_venta() -> void:
+func _vender_y_anotar_actual(almacen: Node3D) -> void:
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	var agarre: Agarre = almacen.get("_agarre")
+	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
+	var pedido := atenciones.atencion().comprador().pedido()
+	for producto in pedido.productos():
+		for _unidad in pedido.unidades_de(producto):
+			almacen.get("_reposicion_manual").retirar(producto.id)
+			_pulsar(almacen)
+			assert_object(agarre.manos().sostenido()).is_null()
+			computadora.pedir_sumar(producto)
+	var papel := _ticket(almacen, pedido)
+	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
+	_pulsar(almacen)
+	assert_bool(atenciones.atencion().vendida()).is_true()
+	assert_bool(atenciones.atencion().despachada()).is_false()
+
+
+# AC-CTR-040, AC-STK-055, AC-STK-024, AC-STK-056, AC-PLY-079
+func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	var almacen := await _abrir()
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	var agarre: Agarre = almacen.get("_agarre")
+	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
 	reloj.avanzar(120.0)
 	puesto.abrir()
 	_conversar(almacen)
-	var producto := Catalogo.de(Producto.Id.MAROLINI)
+	_vender_y_anotar_actual(almacen)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	_conversar(almacen)
+	puesto.cerrar()
+	reloj.avanzar(360.0)
+	puesto.abrir()
+	_conversar(almacen)
+	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
 	almacen.get("_reposicion_manual").retirar(producto.id)
 	var cuerpo := agarre.cuerpo_sostenido() as ObjetoAgarrable
 	var identidad := cuerpo.datos as UnidadDeProducto
 	_pulsar(almacen)
 	assert_object(agarre.manos().sostenido()).is_null()
 	var papel := _ticket(almacen, atenciones.atencion().comprador().pedido())
-	agarre.pedir_agarrar(papel.datos, papel)
+	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
 	_pulsar(almacen)
 	assert_object(agarre.manos().sostenido()).is_null()
 	_pulsar(almacen)
@@ -199,17 +225,31 @@ func test_vencer_retira_productos_y_ticket_sin_registrar_una_venta() -> void:
 	derecho.pressed = true
 	puesto._input(derecho)
 	assert_bool(_panel(almacen).visible).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	reloj.avanzar(120.0)
 	assert_bool(atenciones.puede_abandonar()).is_true()
 	assert_object(atenciones.tarea().en_ventanilla()).is_null()
-	for _cuadro in 20:
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	for _cuadro in 30:
 		await get_tree().physics_frame
 	assert_bool(is_instance_valid(papel)).is_false()
-	assert_bool(is_instance_valid(cuerpo)).is_false()
-	var repositor: Repositor = almacen.get("_repositor")
-	assert_bool(repositor.caja(producto.id).meter(identidad)).is_false()
+	assert_bool(is_instance_valid(cuerpo)).is_true()
+	if not is_instance_valid(cuerpo):
+		return
+	assert_object(cuerpo.datos).is_same(identidad)
+	assert_array(almacen.get("_reposicion_manual").unidades_sueltas()).contains_exactly([cuerpo])
+	assert_bool(cuerpo.freeze).is_false()
+	assert_bool(cuerpo.visible).is_true()
+	assert_bool(cuerpo.has_meta(&"recibido_por_comprador")).is_false()
 	assert_int(atenciones.tarea().vendidas_de(producto)).is_zero()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
+	computadora.pedir_sumar(producto)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	computadora.pedir_restar(producto)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	assert_bool(reloj.corriendo()).is_false()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
 
 # AC-CTR-041

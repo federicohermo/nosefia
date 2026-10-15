@@ -1462,3 +1462,84 @@ func limpiar() -> void:
 	for id in _grupos.size():
 		_mostrar_lo_puesto(id)
 	_actualizar_zonas()
+
+
+## Conserva los cuerpos de la recepción y vuelve a agrupar sólo su dibujo.
+func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
+	var ocupados: Array[AABB] = []
+	for suelta in unidades_sueltas():
+		if not is_instance_valid(suelta) or suelta.is_queued_for_deletion():
+			continue
+		var forma: CollisionShape3D = suelta.get_node("Forma")
+		var volumen := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		ocupados.append(volumen.grow(TOLERANCIA_DEL_APOYO))
+	var preparados: Array[ObjetoAgarrable] = []
+	var posiciones: Array[Vector3] = []
+	for nodo in cuerpos:
+		var cuerpo := nodo as ObjetoAgarrable
+		var lugar := _lugar_para_abandonada(cuerpo, punto, ocupados)
+		if not lugar.is_finite():
+			push_error("No hay piso libre para la entrega abandonada frente a la ventanilla.")
+			return
+		preparados.append(cuerpo)
+		posiciones.append(lugar)
+	for indice in preparados.size():
+		var cuerpo := preparados[indice]
+		cuerpo.reparent(self)
+		cuerpo.top_level = false
+		cuerpo.global_basis = Basis.IDENTITY
+		cuerpo.global_position = posiciones[indice]
+		cuerpo.reset_physics_interpolation()
+		_restaurar_tamano_del_producto(cuerpo)
+		cuerpo.show()
+	# Las consultas anteriores ven los sólidos existentes; las huellas reservan este lote
+	# antes de que el servidor sincronice los nuevos cuerpos en el próximo cuadro físico.
+	for cuerpo in preparados:
+		cuerpo.collision_layer = 1
+		cuerpo.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		cuerpo.linear_velocity = Vector3.ZERO
+		cuerpo.angular_velocity = Vector3.ZERO
+		cuerpo.freeze = false
+		cuerpo.sleeping = false
+		_agrupar_suelto(cuerpo)
+
+
+func _lugar_para_abandonada(
+	cuerpo: ObjetoAgarrable, punto: Marker3D, ocupados: Array[AABB]
+) -> Vector3:
+	var forma: CollisionShape3D = cuerpo.get_node("Forma")
+	var limites := forma.transform * forma.shape.get_debug_mesh().get_aabb()
+	var paso := maxf(limites.size.x, limites.size.z) + TOLERANCIA_DEL_APOYO * 2.0
+	var espacio := get_world_3d().direct_space_state
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+	consulta.exclude = [cuerpo.get_rid()]
+	consulta.margin = TOLERANCIA_DEL_APOYO / 4.0
+	for profundidad in ceili(ReglasDelJugador.ALCANCE_DE_LA_MIRA / paso):
+		for lateral in range(-2, 3):
+			var lugar := punto.global_transform * Vector3(lateral * paso, 0.0, -profundidad * paso)
+			var rayo := PhysicsRayQueryParameters3D.create(
+				lugar + Vector3.UP, lugar + Vector3.DOWN, consulta.collision_mask
+			)
+			rayo.exclude = [cuerpo.get_rid()]
+			var piso := espacio.intersect_ray(rayo)
+			if piso.get("collider") != suelo:
+				continue
+			lugar.y = (
+				(piso["position"] as Vector3).y - limites.position.y + TOLERANCIA_DEL_APOYO * 4.0
+			)
+			consulta.transform = Transform3D(Basis.IDENTITY, lugar) * forma.transform
+			if not espacio.intersect_shape(consulta, 1).is_empty():
+				continue
+			var volumen := AABB(lugar + limites.position, limites.size).grow(TOLERANCIA_DEL_APOYO)
+			var reservado := false
+			for ocupado in ocupados:
+				if volumen.intersects(ocupado):
+					reservado = true
+					break
+			if reservado:
+				continue
+			ocupados.append(volumen)
+			return lugar
+	return Vector3.INF

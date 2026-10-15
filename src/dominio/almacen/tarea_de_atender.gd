@@ -125,3 +125,13 @@ func vendidas_de(producto: Producto) -> int:
 		if atendida.vendida():
 			suma += atendida.comprador().pedido().unidades_de(producto)
 	return suma
+
+
+## Vender cierra la compra aunque la despedida continúe; vencer también la cierra.
+func compras_cerradas() -> bool:
+	if _atenciones.size() != _compradores.size():
+		return false
+	for atendida in _atenciones:
+		if not atendida.vendida() and not atendida.despachada():
+			return false
+	return true

@@ -16,6 +16,8 @@
 ## hay—: hay una sola y llega cableada.
 extends StaticBody3D
 
+signal entregas_abandonadas(cuerpos: Array[Node3D])
+
 ## El script del jugador se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y
 ## no declaran `class_name`, así que sin esto el tipo estático sería `CharacterBody3D` y llamarle
 ## `suspender()` no compilaría.
@@ -33,6 +35,7 @@ const ANIMACIONES := {
 @export var borde_superior: Marker3D
 @export var antepecho: MeshInstance3D
 @export var comprador_visible: AnimatedSprite3D
+@export var piso_de_entregas: Marker3D
 
 ## Si el vidrio está abierto ahora mismo. Es estado de cáscara —qué ventana hay arriba— y no una
 ## regla del juego: a quién hay que atender lo sigue contestando el dominio.
@@ -199,7 +202,17 @@ func _descartar_recibidos(comprador: Comprador) -> void:
 
 
 func _al_vencer(comprador: Comprador) -> void:
-	_descartar_recibidos(comprador)
+	var abandonadas: Array[Node3D] = []
+	for nodo: Node3D in _recibidos.get(comprador, []):
+		if not is_instance_valid(nodo) or nodo.is_queued_for_deletion():
+			continue
+		if nodo.get("datos") is UnidadDeProducto:
+			nodo.remove_meta(&"recibido_por_comprador")
+			abandonadas.append(nodo)
+		else:
+			nodo.queue_free()
+	_recibidos[comprador] = []
+	entregas_abandonadas.emit(abandonadas)
 	_repintar()
 
 
