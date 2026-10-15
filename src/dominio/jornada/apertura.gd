@@ -111,3 +111,15 @@ static func inventario_con_faltantes(
 
 static func cajas_apiladas(jornada: int) -> bool:
 	return Tarea.Tipo.ORDENAR_LAS_CAJAS in PARTICULARES.get(jornada, [])
+
+
+static func faltantes_al_azar(
+	pedidos: Dictionary[Producto.Id, int],
+	casilleros: Dictionary[Producto.Id, int],
+	azar: RandomNumberGenerator
+) -> Dictionary[Producto.Id, int]:
+	return {}
+
+
+static func pedidos_de(compradores: Array[Comprador]) -> Dictionary[Producto.Id, int]:
+	return {}
