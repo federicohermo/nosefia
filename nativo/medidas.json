@@ -1,0 +1,242 @@
+[
+	{
+		"captura": "1920x1080-local",
+		"carteles": [
+			{
+				"rect": "[P: (1372.8, 50.0), S: (500.0, 40.0)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 2,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1920x1080-computadora",
+		"carteles": [
+			{
+				"rect": "[P: (1372.8, 50.0), S: (500.0, 40.0)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 2,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1920x1080-celular",
+		"carteles": [
+			{
+				"rect": "[P: (1372.8, 50.0), S: (500.0, 40.0)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 0,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1920x1080-ventanilla",
+		"carteles": [
+			{
+				"rect": "[P: (1552.8, 51.0), S: (320.0, 40.0)]",
+				"texto": "¡HAY UN CLIENTE!"
+			},
+			{
+				"rect": "[P: (1372.8, 160.0), S: (500.0, 40.0)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 0,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"¡HAY UN CLIENTE!",
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1920x1080-pausa",
+		"carteles": [
+			{
+				"rect": "[P: (1552.8, 51.0), S: (320.0, 40.0)]",
+				"texto": "¡HAY UN CLIENTE!"
+			},
+			{
+				"rect": "[P: (1372.8, 160.0), S: (500.0, 40.0)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 0,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": true,
+		"textos": [
+			"¡HAY UN CLIENTE!",
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1920x1080-reanudar",
+		"carteles": [
+			{
+				"rect": "[P: (1552.8, 51.0), S: (320.0, 40.0)]",
+				"texto": "¡HAY UN CLIENTE!"
+			},
+			{
+				"rect": "[P: (1372.8, 160.0), S: (500.0, 40.0)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 2,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"¡HAY UN CLIENTE!",
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1920x1080-vencido",
+		"carteles": [],
+		"cursor": 2,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": []
+	},
+	{
+		"captura": "1280x720-local",
+		"carteles": [
+			{
+				"rect": "[P: (907.2, 41.33334), S: (333.3333, 26.66667)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 2,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1280x720-computadora",
+		"carteles": [
+			{
+				"rect": "[P: (907.2, 41.33334), S: (333.3333, 26.66667)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 2,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1280x720-celular",
+		"carteles": [
+			{
+				"rect": "[P: (907.2, 41.33334), S: (333.3333, 26.66667)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 0,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1280x720-ventanilla",
+		"carteles": [
+			{
+				"rect": "[P: (1027.2, 42.0), S: (213.3333, 26.66667)]",
+				"texto": "¡HAY UN CLIENTE!"
+			},
+			{
+				"rect": "[P: (907.2, 114.6667), S: (333.3333, 26.66667)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 0,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"¡HAY UN CLIENTE!",
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1280x720-pausa",
+		"carteles": [
+			{
+				"rect": "[P: (1027.2, 42.0), S: (213.3333, 26.66667)]",
+				"texto": "¡HAY UN CLIENTE!"
+			},
+			{
+				"rect": "[P: (907.2, 114.6667), S: (333.3333, 26.66667)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 0,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": true,
+		"textos": [
+			"¡HAY UN CLIENTE!",
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1280x720-reanudar",
+		"carteles": [
+			{
+				"rect": "[P: (1027.2, 42.0), S: (213.3333, 26.66667)]",
+				"texto": "¡HAY UN CLIENTE!"
+			},
+			{
+				"rect": "[P: (907.2, 114.6667), S: (333.3333, 26.66667)]",
+				"texto": "QUEDA UNA HORA DE JORNADA"
+			}
+		],
+		"cursor": 2,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": [
+			"¡HAY UN CLIENTE!",
+			"QUEDA UNA HORA DE JORNADA"
+		]
+	},
+	{
+		"captura": "1280x720-vencido",
+		"carteles": [],
+		"cursor": 2,
+		"layer_aviso": 5,
+		"layer_pausa": 6,
+		"pausa": false,
+		"textos": []
+	}
+]

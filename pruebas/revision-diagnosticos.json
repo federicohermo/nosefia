@@ -1,0 +1,344 @@
+{
+  "base": 67,
+  "actual": 67,
+  "normalizacion": "S?lo rescates: IDs ef?meros de nodos y coordenadas a mil?metros; causa por funci?n+archivo sin l?nea variable.",
+  "nuevos": [],
+  "ausentes": [],
+  "detalle": [
+    {
+      "raw": "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+      "normalizado": "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+      "causa": "[1] test_el_rescate_usa_el_origen_de_la_noche (res://test/escenas/deposito_ordenado_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+      "normalizado": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+      "causa": "[1] test_el_rescate_usa_el_origen_de_la_noche (res://test/escenas/deposito_ordenado_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401, 5.554, -15.498); va a ALREDEDOR",
+      "causa": "[1] test_el_rescate_usa_el_origen_de_la_noche (res://test/escenas/deposito_ordenado_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982, 0.202, -9.029); va a ALREDEDOR",
+      "causa": "[4] test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro (res://test/escenas/hoja_que_arrastra_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982, 0.202, -8.029); va a ALREDEDOR",
+      "causa": "[4] test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro (res://test/escenas/hoja_que_arrastra_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000, 0.185, 4.300); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.80507, 0.185369, -1.000021); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.805, 0.185, -1.000); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.760729, 0.186466, -6.003136); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.761, 0.186, -6.003); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.500, 0.186, -9.255); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210046, 0.185659, -9.255016); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210, 0.186, -9.255); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.745, 0.185, 4.005); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22011, 0.185837, 4.844896); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.220, 0.186, 4.845); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307136, 0.144409, 4.392613); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307, 0.144, 4.393); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099979, 0.18537, -4.564533); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.100, 0.185, -4.565); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.400, 0.185, 1.740); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.100, 0.185, 1.740); va a DESHACER",
+      "causa": ""
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.723, 0.186, -8.900); va a DESHACER",
+      "causa": "[1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750046, 0.185659, -14.39602); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750, 0.186, -14.396); va a DESHACER",
+      "causa": "[1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.80004, 0.185369, 0.100021); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.800, 0.185, 0.100); va a DESHACER",
+      "causa": "[1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31514, 0.188104, 3.205934); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.315, 0.188, 3.206); va a DESHACER",
+      "causa": "[1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696749, 0.259515, 2.015986); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.697, 0.260, 2.016); va a DESHACER",
+      "causa": "[1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+      "normalizado": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+      "causa": "[1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "normalizado": "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.000, 5.900, -11.000); va a ORIGEN",
+      "causa": "[1] test_rescate_devuelve_cuerpo_libre_sin_reponer_el_tacho (res://test/escenas/puestos/tachos_de_basura_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.000, 5.900, -11.000); va a DESHACER",
+      "causa": "[1] test_encima_de_la_caja_que_ocupa_el_origen (res://test/escenas/red_de_seguridad_integrada_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.00371, 5.922562, -11.00625); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.004, 5.923, -11.006); va a DESHACER",
+      "causa": "[1] test_encima_de_la_caja_que_ocupa_el_origen (res://test/escenas/red_de_seguridad_integrada_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "normalizado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.000, 5.900, -11.000); va a ENCIMA_DEL_ORIGEN",
+      "causa": "[1] test_encima_de_la_caja_que_ocupa_el_origen (res://test/escenas/red_de_seguridad_integrada_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "normalizado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.000, 5.900, -11.000); va a ORIGEN",
+      "causa": "[1] test_el_origen_es_el_ultimo_recurso (res://test/escenas/red_de_seguridad_integrada_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@649568` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (2.000, 5.900, -11.000); queda donde está: ningún lugar libre",
+      "causa": "[1] test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano (res://test/escenas/red_de_seguridad_integrada_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "normalizado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.000, 5.900, -11.000); va a ENCIMA_DEL_ORIGEN",
+      "causa": "[1] test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia (res://test/escenas/red_de_seguridad_integrada_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.000, 5.900, -11.000); va a ALREDEDOR",
+      "causa": "[1] test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia (res://test/escenas/red_de_seguridad_integrada_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.900, 0.202, 6.330); va a ALREDEDOR",
+      "causa": "[1] test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta (res://test/escenas/red_de_seguridad_integrada_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+      "normalizado": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+      "causa": "[1] <anonymous lambda> (res://test/sistemas/investigacion/examen_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "normalizado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "causa": "[1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "normalizado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "causa": "[1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "normalizado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "causa": "[1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "normalizado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "causa": "[1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "normalizado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "causa": "[1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "normalizado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "causa": "[1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793745` en (4.000026, 1.100338, -0.000002); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.000, 1.100, -0.000); va a DESHACER",
+      "causa": "[1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793755` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.000, 1.000, 0.000); queda donde está: ningún lugar libre",
+      "causa": "[1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793765` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.000, 1.000, 0.000); queda donde está: ningún lugar libre",
+      "causa": "[1] test_el_aviso_nombra_el_objeto_el_solido_y_la_posicion (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@793781` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@ID` en (0.000, 0.080, 3.000); queda donde está: ningún lugar libre",
+      "causa": "[2] test_al_quedar_quieta_la_hoja_rescata_lo_que_quedo_adentro (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793787` en (1.99, 0.08, 0.0); va a DESHACER",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.990, 0.080, 0.000); va a DESHACER",
+      "causa": "[1] test_un_lugar_adentro_de_un_area_nueva_no_es_candidato (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793798` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.990, 0.080, 0.000); queda donde está: ningún lugar libre",
+      "causa": "[1] test_un_lugar_adentro_de_un_area_nueva_no_es_candidato (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793810` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.990, 0.080, 0.000); va a ALREDEDOR",
+      "causa": "[1] test_alrededor_no_deja_nada_metido_en_la_pared (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793820` en (1.946, 0.08, 0.0); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.946, 0.080, 0.000); va a ALREDEDOR",
+      "causa": "[1] test_lo_congelado_apenas_metido_se_rescata (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793820` en (1.96, 0.08, 0.0); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.960, 0.080, 0.000); va a ALREDEDOR",
+      "causa": "[1] test_lo_congelado_apenas_metido_se_rescata (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793830` en (2.06, 0.08, 0.0); va a ALREDEDOR",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (2.060, 0.080, 0.000); va a ALREDEDOR",
+      "causa": "[1] test_lo_vivo_metido_entero_se_detecta (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `@RigidBody3D@793845` estaba adentro de `@StaticBody3D@793840` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "normalizado": "WARNING: Rescate: `@RigidBody3D@ID` estaba adentro de `@StaticBody3D@ID` en (4.000, 1.000, 0.000); queda donde está: ningún lugar libre",
+      "causa": "[2] test_lo_que_nace_despues_se_mira_al_dormirse (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793851` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.000, 1.000, 0.000); va a ENCIMA_DEL_ORIGEN",
+      "causa": "[1] test_va_encima_de_lo_que_ocupa_el_origen_si_admite_otro_encima (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793862` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.000, 1.000, 0.000); queda donde está: ningún lugar libre",
+      "causa": "[1] test_no_va_encima_de_lo_que_ocupa_el_origen_si_no_admite_otro_encima (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@793873` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "normalizado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.000, 1.000, 0.000); va a ENCIMA_DEL_ORIGEN",
+      "causa": "[1] test_va_encima_de_lo_que_ocupa_el_origen_aunque_este_de_costado (res://test/sistemas/marco/red_de_seguridad_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "normalizado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "causa": "[4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "normalizado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "causa": "[4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "normalizado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "causa": "[2] <anonymous lambda> (res://test/sistemas/tareas/caja_registradora_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "normalizado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "causa": "[2] <anonymous lambda> (res://test/sistemas/tareas/caja_registradora_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:LINEA)"
+    },
+    {
+      "raw": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "normalizado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "causa": "[4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:LINEA)"
+    }
+  ]
+}
