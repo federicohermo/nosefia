@@ -212,8 +212,9 @@
       "sha256": "97440b08e2e233a7100d5f7be8ba92b0d2c5603da365325e9cd95178aaa5826d"
     },
     "README.md": {
-      "bytes": 1699,
-      "sha256": "92da5362b90c94f307269eb869aea920066e9739cb712a46eb6dc8f9da6e77a8"
+      "bytes": 1723,
+      "sha256": "80f819e1089bff344a7273ca56d6ef96b92ce09d9fde3dce196c9f394faab2e3"
     }
-  }
+  },
+  "correccion_textos": "Tercera publicacion: tildes y signos UTF-8 de README corregidos; capturas y crudos intactos."
 }
