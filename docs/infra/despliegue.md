@@ -113,12 +113,22 @@ incluye el parche de compilación de shaders medido en [rendimiento](../guides/r
 El editor usa Godot oficial. El export de debug usa la plantilla oficial. El motor nativo
 conserva su código.
 
-El parche hace dos cosas, las dos bajo `WEB_ENABLED`:
+La preparación corrige también la copia del framebuffer de Emscripten: consulta si el recorte
+está habilitado con `isEnabled`, conservando su estado al terminar de copiar. La consulta con
+`getParameter` sincronizaba con la GPU en cada cuadro y produjo bloqueos medidos en la partida.
+Se corrige el JavaScript generado del ZIP, sin modificar el WASM. El preparador rechaza una
+plantilla que conserve esa consulta o cambie el código esperado de la copia. La CI prueba que
+el export conserva tanto el recorte habilitado como el deshabilitado y el framebuffer anterior.
+
+El parche hace tres cosas, todas bajo `WEB_ENABLED`:
 
 - **No compila las variantes predeterminadas** de un shader. Compila sólo la que pide un dibujo.
 - **Enlaza los shaders de escena en paralelo**, con `KHR_parallel_shader_compile`. Publica la
   cola de programas en `window.godot_programas_en_cola`, y el calentamiento la espera. Sin la
   extensión, compila al primer uso.
+- **Consulta el estado de la copia de pantalla sólo al crearla.** El motor lo consultaba en cada
+  cuadro en que un material 3D lee la pantalla o la profundidad. En el navegador, esa consulta
+  espera a la GPU: medido el 2026-10-14, entre 1 y 2,4 ms del hilo principal por cuadro.
 
 `test_plantilla_web.py` falla si el parche agrega una línea fuera de `WEB_ENABLED`.
 

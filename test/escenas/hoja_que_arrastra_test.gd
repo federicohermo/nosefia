@@ -116,7 +116,7 @@ func _adentro_de_la_hoja(cuerpo: PhysicsBody3D, hoja: PhysicsBody3D) -> bool:
 
 
 func _girar(hoja: Node3D) -> void:
-	_cuerpo_de(hoja).call("usar")
+	_cuerpo_de(hoja).call("alternar")
 	for cuadro in CUADROS_DEL_GIRO:
 		await get_tree().physics_frame
 
@@ -181,7 +181,7 @@ func test_al_quedar_quieta_no_queda_nada_adentro_de_la_hoja() -> void:  # AC-PLY
 	var cuerpo := _cuerpo_de(hoja)
 	var quieta := [false]
 	cuerpo.connect("hoja_quieta", func(_hoja: PhysicsBody3D) -> void: quieta[0] = true)
-	cuerpo.call("usar")
+	cuerpo.call("alternar")
 	while not cuerpo.call("puerta").angulo() > Puerta.ANGULO_ABIERTA * 0.9:
 		await get_tree().physics_frame
 	unidad.global_position = punto + Vector3.UP * 0.1

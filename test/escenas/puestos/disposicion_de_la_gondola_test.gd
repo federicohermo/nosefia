@@ -106,20 +106,12 @@ func test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante() -> void: 
 		var bloque := disposicion.principales[producto.id]
 		var adelante := disposicion.filas_de_adelante[producto.id]
 		var nombre := producto.nombre
-		var una_fila := (
-			producto.id
-			in [
-				Producto.Id.ACTRONCITO,
-				Producto.Id.COSA_DE_MANI,
-				Producto.Id.PRONGLES,
-				Producto.Id.FLINPUF,
-				Producto.Id.BURBALOO,
-			]
-		)
+		var total := DisposicionDeLaGondola.copias(bloque)
+		var una_fila := total == adelante
 		(
 			assert_int(DisposicionDeLaGondola.copias(bloque))
 			. override_failure_message("%s no tiene dos filas iguales" % nombre)
-			. is_equal(adelante if una_fila else 2 * adelante)
+			. is_in([adelante, 2 * adelante])
 		)
 		if una_fila:
 			continue
@@ -215,3 +207,27 @@ func test_una_fila_tiene_frente_por_el_orden_de_sus_columnas() -> void:  # AC-ST
 func test_hay_una_malla_por_bloque_de_guia() -> void:
 	var guia: Node = auto_free((load(GUIA) as PackedScene).instantiate())
 	assert_int(guia.get_child_count()).is_equal(_disposicion().guias.size())
+
+
+## Cada tanda fija dice de qué producto es y cuántas de sus últimas copias son su fila de
+## adelante: son casilleros de ese producto, y el cupo los suma a los de su tanda reponible.
+func test_cada_tanda_fija_suma_su_fila_de_adelante_al_cupo_de_su_producto() -> void:  # AC-STK-028
+	var disposicion := _disposicion()
+	var guias := disposicion.guias.size()
+	assert_int(disposicion.productos_de_las_guias.size()).is_equal(guias)
+	assert_int(disposicion.filas_de_adelante_de_las_guias.size()).is_equal(guias)
+	var esperado: Array[int] = []
+	for producto in Catalogo.todos():
+		esperado.append(disposicion.filas_de_adelante[producto.id])
+	for indice in guias:
+		var id := disposicion.productos_de_las_guias[indice]
+		var adelante := disposicion.filas_de_adelante_de_las_guias[indice]
+		assert_int(id).is_between(0, Producto.Id.size() - 1)
+		(
+			assert_int(adelante)
+			. override_failure_message("la tanda fija %d tiene más fila que copias" % indice)
+			. is_between(0, DisposicionDeLaGondola.copias(disposicion.guias[indice]))
+		)
+		esperado[id] += adelante
+	for producto in Catalogo.todos():
+		assert_int(disposicion.casilleros_de(producto.id)).is_equal(esperado[producto.id])

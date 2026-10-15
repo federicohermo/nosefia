@@ -40,6 +40,7 @@ const NOMBRES: Array[String] = [
 	"Terminator",
 	"Marranos",
 	"Feel Ricky Fort",
+	"Poético",
 ]
 
 ## Los precios de los 8 que entran. La ficha no los trae: los decidió el issue que los sumó, en el
@@ -53,6 +54,7 @@ const PRECIOS_NUEVOS := {
 	"Terminator": 2800,
 	"Marranos": 1400,
 	"Feel Ricky Fort": 800,
+	"Poético": 1800,
 }
 
 ## La sonoridad de los 8 que entran, de la columna «Familia sonora» de su ficha. Dos familias de
@@ -67,6 +69,7 @@ const SONORIDADES_NUEVAS := {
 	"Terminator": EntradaSonora.Sonoridad.CAJA,
 	"Marranos": EntradaSonora.Sonoridad.LATA,
 	"Feel Ricky Fort": EntradaSonora.Sonoridad.CAJITA,
+	"Poético": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 }
 
 ## Los productos que el depósito guarda en caja chica, según la columna «Caja» de la ficha. Los
@@ -77,7 +80,7 @@ const EN_CAJA_CHICA: Array[String] = [
 ]
 
 
-func test_el_catalogo_tiene_los_31_productos_en_el_orden_del_enum() -> void:  # AC-STK-002
+func test_el_catalogo_conserva_los_productos_en_el_orden_del_enum() -> void:  # AC-STK-002
 	var nombres: Array[String] = []
 	for producto in Catalogo.todos():
 		nombres.append(producto.nombre)

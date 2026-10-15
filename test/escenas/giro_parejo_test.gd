@@ -95,7 +95,7 @@ class Clic:
 	extends Node
 
 	var jugador: Node3D
-	var producto: Node3D
+	var producto: RigidBody3D
 	var armado := false
 	var visto := Vector3.ZERO
 	var aparecido := Vector3.ZERO
@@ -107,6 +107,7 @@ class Clic:
 	func _process(_delta: float) -> void:
 		if _esperando:
 			aparecido = Medidor.dibujado(producto).origin
+			producto.freeze = false
 			_esperando = false
 		if not armado:
 			return
@@ -117,6 +118,8 @@ class Clic:
 		evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
 		evento.pressed = true
 		jugador.call("_unhandled_input", evento)
+		# La gravedad entre cuadros no es un salto de colocación.
+		producto.freeze = true
 		_esperando = true
 
 
@@ -139,24 +142,24 @@ class MouseDeLadoALado:
 		Input.parse_input_event(evento)
 
 
-## Un mouse que reporta a su ritmo y no al de la pantalla, como el del issue. Mueve lo mismo por
-## segundo que `Mouse`.
+## Mouse y dibujo usan el mismo reloj simulado: los atrasos del SO no cambian los 125/144 Hz.
 class MouseLento:
 	extends Node
 
-	var _proximo := 0
+	var jugador: Node
+	var _proximo := 0.0
+	var _tiempo := 0.0
 
 	func _process(_delta: float) -> void:
-		var ahora := Time.get_ticks_usec()
-		if _proximo == 0:
-			_proximo = ahora
-		while _proximo <= ahora:
+		_tiempo += 1.0 / CUADROS_POR_SEGUNDO
+		while _proximo <= _tiempo:
 			var evento := InputEventMouseMotion.new()
 			evento.relative = Vector2(
 				MOUSE_POR_CUADRO * CUADROS_POR_SEGUNDO / REPORTES_POR_SEGUNDO, 0.0
 			)
 			Input.parse_input_event(evento)
-			_proximo += 1000000 / REPORTES_POR_SEGUNDO
+			_proximo += 1.0 / REPORTES_POR_SEGUNDO
+		jugador.call("_process", 1.0 / CUADROS_POR_SEGUNDO)
 
 
 func after_test() -> void:
@@ -194,7 +197,10 @@ func test_girar_con_el_mouse_dibuja_el_mismo_giro_en_cada_cuadro() -> void:
 func test_un_mouse_mas_lento_que_la_pantalla_se_dibuja_parejo() -> void:
 	var jugador := await _jugador_en_un_piso_libre()
 	var medidor := _medir(jugador, null)
-	jugador.get_parent().add_child(MouseLento.new())
+	jugador.set_process(false)
+	var mouse := MouseLento.new()
+	mouse.jugador = jugador
+	jugador.get_parent().add_child(mouse)
 	await _esperar(4.0)
 	var giros: Array[float] = []
 	for indice in range(CUADROS_DE_ARRANQUE, medidor.dibujadas.size()):

@@ -111,3 +111,15 @@ func test_caminar_agota_antes_sin_acortar_el_tiempo_en_reposo() -> void:  # AC-C
 	assert_bool(quieta.esta_mojada()).is_true()
 	quieta.desgastar(mitad, 0.0)
 	assert_bool(quieta.esta_mojada()).is_false()
+
+
+func test_desgastar_avisa_solo_el_paso_en_que_se_seca() -> void:  # AC-SUB-019
+	var mopa := Mopa.new()
+	assert_bool(mopa.desgastar(1.0, 0.0)).is_false()
+	assert_bool(mopa.se_mojo()).is_false()
+	mopa.mojar_en(_balde(AZUL))
+	assert_bool(mopa.se_mojo()).is_true()
+	assert_bool(mopa.desgastar(0.0, 0.0)).is_false()
+	assert_bool(mopa.desgastar(ReglasDeLaLimpieza.DURACION_DE_LA_CARGA * 2.0, 0.0)).is_true()
+	assert_bool(mopa.desgastar(1.0, 0.0)).is_false()
+	assert_bool(mopa.se_mojo()).is_true()

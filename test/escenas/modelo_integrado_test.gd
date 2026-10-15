@@ -21,6 +21,8 @@ func test_solo_las_mallas_reemplazadas_son_geometria_de_referencia() -> void:
 	var utiles: Array[String] = []
 	for util: Node in almacen.get("_utiles_de_limpieza"):
 		utiles.append(String(util.get("nodo_del_modelo")))
+	var lector: Node = almacen.get_node("Estructura/Lector")
+	utiles.append(String(lector.get_meta("modelo_reemplazado")).trim_prefix("Estructura/"))
 	var esperados: Array[String] = []
 	for malla: MeshInstance3D in estructura.find_children("*", "MeshInstance3D", true, false):
 		var reemplazada := String(estructura.get_path_to(malla)) in utiles
@@ -161,7 +163,9 @@ func test_las_hojas_del_bano_conservan_las_imagenes_del_artista() -> void:  # AC
 	)
 	add_child(almacen)
 	add_child(original)
-	var rutas: Array[String] = ["nota baño inodoro", "nota instrucciones", "nota productos"]
+	var rutas: Array[String] = [
+		"nota baño inodoro", "nota baño inodoro 2", "nota instrucciones", "nota productos"
+	]
 	for ruta in rutas:
 		var hoja: MeshInstance3D = almacen.get_node("Estructura/" + ruta)
 		var referencia: MeshInstance3D = original.get_node(ruta)

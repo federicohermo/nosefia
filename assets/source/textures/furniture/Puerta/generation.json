@@ -1,0 +1,6 @@
+{
+  "tool": "image_gen built-in",
+  "input": "assets/source/third-party/puerta depósito solo jefe/textura.png",
+  "output": "puerta_solo_empleados.png",
+  "prompt": "Use case: text-localization. Edit target: provided existing 1536x1024 game texture atlas. Change ONLY the lettering inside BOTH existing yellow rectangular signs from SOLO JEFE to exact text SOLO EMPLEADOS, two centered lines SOLO then EMPLEADOS. Keep the original sign dimensions, yellow worn background and dark blocky pixel font. EMPLEADOS must fit within sign, smaller font as necessary. Keep absolutely all UV island shapes, positions, dimensions, all black background, door panels, handles, metal edges, dirt and colors unchanged. Flat UV texture atlas, no perspective, no new objects or design, no watermark. Preserve same 3:2 image dimensions."
+}

@@ -115,6 +115,32 @@ func _dibujadas(almacen: Node3D, producto: Producto) -> Array[Vector3]:
 
 
 ## Dónde dibuja la góndola la unidad de un casillero: el lugar de su envase.
+## Las tandas de un producto en el orden de sus casilleros, como `[bloque, fila de adelante]`:
+## cada tanda fija suya y, al final, la reponible.
+func _tandas(almacen: Node3D, producto: Producto) -> Array[Array]:
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var tandas: Array[Array] = []
+	for indice in disposicion.guias.size():
+		if disposicion.productos_de_las_guias[indice] == producto.id:
+			tandas.append(
+				[disposicion.guias[indice], disposicion.filas_de_adelante_de_las_guias[indice]]
+			)
+	tandas.append(
+		[disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]]
+	)
+	return tandas
+
+
+## Hacia qué pasillo mira la tanda de un casillero: cada tanda puede dar a otro.
+func _frente_del_casillero(almacen: Node3D, producto: Producto, casillero: int) -> Vector3:
+	var resto := casillero
+	for tanda: Array in _tandas(almacen, producto):
+		if resto < tanda[1]:
+			return DisposicionDeLaGondola.frente(tanda[0], tanda[1])
+		resto -= tanda[1]
+	return _frente(almacen, producto)
+
+
 func _lugar_de(casillero: Node3D) -> Vector3:
 	var vista: MeshInstance3D = casillero.get("vista")
 	return vista.global_transform.origin
@@ -156,8 +182,12 @@ func _pararse_frente_a(almacen: Node3D, casillero: Node3D) -> void:
 	_puesto(almacen).call("_ofrecer_a_la_mira")
 
 
-func _ninguno_dibujado(almacen: Node3D) -> void:
+func _referencias_sin_contorno(almacen: Node3D) -> void:
 	for producto in Catalogo.todos():
+		var huecos: MultiMeshInstance3D = _puesto(almacen).get_node("HuecosDe" + producto.nombre)
+		assert_int(huecos.multimesh.visible_instance_count).is_equal(
+			_estante(almacen).casilleros_vacios(producto).size()
+		)
 		for casillero: Node3D in _casilleros(almacen, producto):
 			var vista: MeshInstance3D = casillero.get("vista")
 			(
@@ -177,7 +207,7 @@ func _ofrecidos(almacen: Node3D) -> Array[Node3D]:
 	return ofrecidos
 
 
-func test_ningun_casillero_vacio_se_dibuja_sin_la_mira_encima() -> void:  # AC-PLY-045
+func test_los_huecos_se_ven_sin_cambiar_que_enfoca_la_mira() -> void:  # AC-PLY-045
 	var almacen := _almacen()
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var durextra := Catalogo.de(Producto.Id.DUREXTRA)
@@ -192,7 +222,7 @@ func test_ningun_casillero_vacio_se_dibuja_sin_la_mira_encima() -> void:  # AC-P
 		for indice in indices:
 			vacios.append(_puesto(almacen).call("casillero", producto.id, indice))
 	# Con la unidad en la mano, parado frente a cada vacío: la mira puede enfocar los de su
-	# producto y ningún otro, ni vacío ni ocupado, y ninguno se dibuja.
+	# producto y ningún otro. Todas las referencias siguen visibles, sin contorno.
 	for vacio in vacios:
 		_pararse_frente_a(almacen, vacio)
 		var ofrecidos := _ofrecidos(almacen)
@@ -200,15 +230,15 @@ func test_ningun_casillero_vacio_se_dibuja_sin_la_mira_encima() -> void:  # AC-P
 		for ofrecido in ofrecidos:
 			assert_int(ofrecido.get("producto")).is_equal(actroncito.id)
 			assert_array(vacios).contains([ofrecido])
-		_ninguno_dibujado(almacen)
+		_referencias_sin_contorno(almacen)
 	# Con la mano vacía la mira sólo puede enfocar lo ocupado, y con una caja o con una unidad de
-	# una fila completa, nada. Ninguno se dibuja.
+	# una fila completa, nada. Las referencias siguen visibles.
 	_agarre(almacen).vaciar_las_manos()
 	for vacio in vacios:
 		_pararse_frente_a(almacen, vacio)
 		for ofrecido in _ofrecidos(almacen):
 			assert_array(vacios).not_contains([ofrecido])
-		_ninguno_dibujado(almacen)
+		_referencias_sin_contorno(almacen)
 	var caja: Node3D = almacen.get("_cajas_de_productos")[actroncito.id]
 	assert_bool(_agarre(almacen).pedir_agarrar(caja.get("datos"), caja)).is_true()
 	_sin_casilleros_para_la_mira(almacen, vacios)
@@ -225,7 +255,7 @@ func _sin_casilleros_para_la_mira(almacen: Node3D, vacios: Array[Node3D]) -> voi
 	for vacio in vacios:
 		_pararse_frente_a(almacen, vacio)
 		assert_array(_ofrecidos(almacen)).is_empty()
-		_ninguno_dibujado(almacen)
+		_referencias_sin_contorno(almacen)
 
 
 ## Sin la mira encima, cada casillero guarda la superficie que no se ve y el contorno, apagados:
@@ -314,11 +344,12 @@ func test_con_las_manos_vacias_se_agarra_la_del_medio() -> void:  # AC-PLY-049 A
 	for otra in dibujadas_antes:
 		if not otra.is_equal_approx(_lugar_de(elegido)):
 			assert_bool(_contiene(dibujadas, otra)).is_true()
-	# Con la unidad en la mano y la mira todavía encima, el casillero que dejó espera la unidad:
-	# queda sólo el contorno, sin la superficie de la unidad.
-	assert_bool(vista.visible).is_true()
-	assert_bool(_sin_superficie(vista)).is_true()
-	assert_bool(_lleva_el_contorno(vista)).is_true()
+	# Al retirar la unidad, el mismo objetivo pasa a mostrar la vista previa de colocación.
+	assert_bool(vista.visible).is_false()
+	var previsualizacion: MeshInstance3D = elegido.get("previsualizacion")
+	assert_bool(previsualizacion.visible).is_true()
+	almacen.get("_jugador").objetivo_perdido.emit()
+	assert_bool(previsualizacion.visible).is_false()
 
 
 func test_con_algo_en_la_mano_no_se_enfoca_ninguna_unidad_puesta() -> void:  # AC-PLY-049
@@ -342,28 +373,26 @@ func test_la_fila_de_atras_no_tiene_casilleros() -> void:  # AC-PLY-049
 	# Cada casillero está donde va una unidad de la fila de adelante, y ninguno donde va una de
 	# la de atrás: lo que la mira no encuentra, no se agarra.
 	var almacen := _almacen()
-	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var puesto_global: Transform3D = _puesto(almacen).global_transform
 	for producto in Catalogo.todos():
-		var bloque := disposicion.principales[producto.id]
-		var fila := disposicion.filas_de_adelante[producto.id]
-		var total := DisposicionDeLaGondola.copias(bloque)
+		var tandas := _tandas(almacen, producto)
+		var adelante: Array[Vector3] = []
+		var atras: Array[Vector3] = []
+		for tanda: Array in tandas:
+			var total := DisposicionDeLaGondola.copias(tanda[0])
+			for indice in total:
+				var lugar := (puesto_global * DisposicionDeLaGondola.copia(tanda[0], indice)).origin
+				(adelante if indice >= total - tanda[1] else atras).append(lugar)
 		var casilleros := _casilleros(almacen, producto)
-		assert_int(casilleros.size()).is_equal(fila)
+		assert_int(casilleros.size()).is_equal(adelante.size())
 		for casillero: Node3D in casilleros:
 			var lugar := _lugar_de(casillero)
-			var puesto_global: Transform3D = _puesto(almacen).global_transform
-			var adelante := (
-				puesto_global
-				* DisposicionDeLaGondola.copia(bloque, total - fila + casillero.get("casillero"))
-			)
 			(
 				assert_vector(lugar)
 				. override_failure_message("%s: %s" % [producto.nombre, casillero.name])
-				. is_equal_approx(adelante.origin, Vector3.ONE * 1e-4)
+				. is_equal_approx(adelante[casillero.get("casillero")], Vector3.ONE * 1e-4)
 			)
-			for atras in total - fila:
-				var copia := puesto_global * DisposicionDeLaGondola.copia(bloque, atras)
-				assert_bool(copia.origin.is_equal_approx(lugar)).is_false()
+			assert_bool(_contiene(atras, lugar)).is_false()
 
 
 func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC-STK-046 AC-STK-047
@@ -430,14 +459,23 @@ func test_cada_casillero_se_enfoca_desde_el_pasillo() -> void:  # AC-STK-029
 	await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var todos: Array[Node3D] = []
+	var reponibles: Array[Node3D] = []
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
 	for producto in Catalogo.todos():
+		var cupo := _casilleros(almacen, producto).size()
 		for casillero: Node3D in _casilleros(almacen, producto):
 			todos.append(casillero)
+			# La tanda reponible va a la altura de la mano; una fija puede estar en la bandeja de
+			# abajo, donde el estante de arriba tapa la vista de quien está parado.
+			if casillero.get("casillero") >= cupo - disposicion.filas_de_adelante[producto.id]:
+				reponibles.append(casillero)
 	var perdidos: Array[String] = []
-	for casillero in todos:
+	for casillero in reponibles:
 		var producto := Catalogo.de(casillero.get("producto"))
 		var pie := _lugar_en_el_pasillo(
-			almacen, casillero.global_position, _frente(almacen, producto)
+			almacen,
+			casillero.global_position,
+			_frente_del_casillero(almacen, producto, casillero.get("casillero"))
 		)
 		if not pie.is_finite():
 			perdidos.append("%s %s: sin lugar en el pasillo" % [producto.nombre, casillero.name])
@@ -490,6 +528,10 @@ func _lugar_en_el_pasillo(almacen: Node3D, delante: Vector3, frente: Vector3) ->
 				Basis.IDENTITY, pie + cuerpo.position + Vector3.UP * HOLGURA_DEL_PISO
 			)
 			if espacio.intersect_shape(consulta, 1).is_empty():
-				return pie
+				var ojos := pie + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+				var vista := PhysicsRayQueryParameters3D.create(ojos, delante, 1)
+				vista.exclude = [jugador.get_rid()]
+				if espacio.intersect_ray(vista).is_empty():
+					return pie
 		distancia += PASO_HACIA_EL_PASILLO
 	return Vector3.INF

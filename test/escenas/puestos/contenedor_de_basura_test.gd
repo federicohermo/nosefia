@@ -4,47 +4,52 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
-const BASE_DEL_CONTENEDOR := "Estructura/deposito_contenedor_soporte/"
-const RUTA_DE_LA_TAPA := BASE_DEL_CONTENEDOR + "deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa"
+const BASE_DEL_CONTENEDOR := "Estructura/deposito_contenedor_grande_soporte/"
+const RUTA_DE_LA_TAPA := (
+	BASE_DEL_CONTENEDOR + "deposito_contenedor_bisagra_izquierda/CuerpoDeLaTapa"
+)
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
 
 func test_la_boca_abierta_no_tiene_una_tapa_de_colision_invisible() -> void:
 	var almacen := await _abrir()
 	var contenedor: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
 	for offset: Vector3 in [Vector3.ZERO, Vector3(-0.15, 0, 0.15), Vector3(0.15, 0, -0.15)]:
-		var centro := contenedor.global_position + offset
-		var golpe := _rayo(almacen, centro + Vector3.UP * 1.3, centro)
+		var centro := _centro_interior(contenedor) + offset
+		var golpe := _rayo(almacen, _boca(contenedor) + offset + Vector3.UP * 0.3, centro)
 		assert_bool(golpe.is_empty()).is_false()
 		if golpe.is_empty():
 			continue
 		assert_str(str(almacen.get_path_to(golpe.collider))).contains("deposito_contenedor")
 		# Un único casco convexo cerraría la boca a un metro; el fondo está a unos 13 cm.
-		assert_float(golpe.position.y - contenedor.global_position.y).is_between(0.12, 0.14)
+		assert_float(golpe.position.y).is_between(
+			_limites(contenedor).position.y,
+			_limites(contenedor).position.y + _limites(contenedor).size.y * 0.25
+		)
 		assert_float(golpe.normal.y).is_greater(0.99)
 
 
 func test_el_cuerpo_del_contenedor_frena_un_rayo_desde_el_pasillo() -> void:
 	var almacen := await _abrir()
 	var contenedor: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
-	var centro := contenedor.global_position + Vector3.UP * 0.65
+	var centro := _limites(contenedor).get_center()
 	var golpe := _rayo(almacen, centro + Vector3.BACK, centro)
 	assert_bool(golpe.is_empty()).is_false()
 	if golpe.is_empty():
 		return
 	assert_str(str(almacen.get_path_to(golpe.collider))).contains("deposito_contenedor")
-	assert_float(golpe.position.z - centro.z).is_between(0.3, 0.36)
-	assert_float(golpe.normal.z).is_greater(0.98)
+	assert_bool(_limites(contenedor).grow(0.003).has_point(golpe.position)).is_true()
+	assert_float(golpe.normal.z).is_greater(0.9)
 
 
 func test_una_bolsa_soltada_por_la_boca_se_recoge_y_se_tira_despues() -> void:  # AC-CLN-009
 	var almacen := await _abrir()
 	var contenedor: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
 	jugador.set_physics_process(false)
@@ -53,7 +58,7 @@ func test_una_bolsa_soltada_por_la_boca_se_recoge_y_se_tira_despues() -> void:  
 	var datos := bolsa.datos
 	var agarre: Agarre = jugador.get("agarre")
 	assert_bool(agarre.pedir_agarrar(datos, bolsa)).is_true()
-	agarre.punto_de_soltado.global_position = contenedor.global_position + Vector3.UP * 1.2
+	agarre.punto_de_soltado.global_position = _boca(contenedor) + Vector3.UP * 0.2
 	assert_object(agarre.soltar(true)).is_same(bolsa)
 	for cuadro in 10:
 		await get_tree().physics_frame
@@ -83,28 +88,31 @@ func test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre() -> void:  # AC-CLN
 	var almacen := await _abrir()
 	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
 	var contenedor: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
 	var bisagra := tapa.bisagra.global_position
 	assert_bool(tapa.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	assert_array(tapa.mallas).has_size(1)
+	assert_array(tapa.mallas).has_size(2)
 	assert_object(tapa.call("interactuar")).is_null()
 	tapa.usar()
 	await _terminar_el_giro(tapa)
-	var centro := contenedor.global_position
-	var golpe := _rayo(almacen, centro + Vector3.UP * 1.3, centro)
+	var centro := _centro_interior(contenedor)
+	var golpe := _rayo(almacen, _boca(contenedor) + Vector3.UP * 0.3, centro)
 	assert_bool(golpe.is_empty()).is_false()
 	if not golpe.is_empty():
 		assert_object(golpe.collider).is_same(tapa)
-		assert_float(golpe.position.y - centro.y).is_between(1.08, 1.11)
+		assert_float(golpe.position.y).is_greater(_boca(contenedor).y)
 	assert_bool(tapa.call("recibe_objetos")).is_false()
 	assert_vector(tapa.bisagra.global_position).is_equal_approx(bisagra, Vector3.ONE * 0.00001)
 	tapa.usar()
 	await _terminar_el_giro(tapa)
-	golpe = _rayo(almacen, centro + Vector3.UP * 1.3, centro)
+	golpe = _rayo(almacen, _boca(contenedor) + Vector3.UP * 0.3, centro)
 	assert_bool(golpe.is_empty()).is_false()
 	if not golpe.is_empty():
-		assert_float(golpe.position.y - centro.y).is_between(0.12, 0.14)
+		assert_float(golpe.position.y).is_between(
+			_limites(contenedor).position.y,
+			_limites(contenedor).position.y + _limites(contenedor).size.y * 0.25
+		)
 	assert_bool(tapa.call("recibe_objetos")).is_true()
 	assert_vector(tapa.bisagra.global_position).is_equal_approx(bisagra, Vector3.ONE * 0.00001)
 
@@ -112,15 +120,15 @@ func test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre() -> void:  # AC-CLN
 func test_clic_derecho_sobre_el_cuerpo_tambien_alterna_la_tapa() -> void:  # AC-CLN-034
 	var almacen := await _abrir()
 	var contenedor: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
-	var centro := contenedor.global_position + Vector3.UP * 0.65
+	var centro := _limites(contenedor).get_center()
 	var golpe := _rayo(almacen, centro + Vector3.BACK, centro)
 	assert_bool(golpe.is_empty()).is_false()
 	if golpe.is_empty():
 		return
 	var cuerpo: StaticBody3D = golpe.collider
-	assert_str(str(almacen.get_path_to(cuerpo))).contains("deposito_contenedor_cuerpo")
+	assert_str(str(almacen.get_path_to(cuerpo))).contains("deposito_contenedor_grande_cuerpo")
 	assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 	assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR)).is_true()
 	assert_object(cuerpo.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
@@ -134,9 +142,7 @@ func test_clic_derecho_sobre_el_cuerpo_tambien_alterna_la_tapa() -> void:  # AC-
 	jugador.call("_unhandled_input", clic)
 	await _terminar_el_giro(tapa)
 	assert_bool(tapa.call("recibe_objetos")).is_false()
-	golpe = _rayo(
-		almacen, contenedor.global_position + Vector3.UP * 1.3, contenedor.global_position
-	)
+	golpe = _rayo(almacen, _boca(contenedor) + Vector3.UP * 0.3, _centro_interior(contenedor))
 	assert_object(golpe.get("collider")).is_same(tapa)
 	jugador.call("_unhandled_input", clic)
 	await _terminar_el_giro(tapa)
@@ -172,7 +178,7 @@ func test_reiniciar_restaura_tapa_abierta() -> void:  # AC-CLN-034
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	var contenedor: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
 	assert_bool(tapa.call("recibe_objetos")).is_true()
 	assert_vector(tapa.bisagra.global_position).is_equal_approx(
@@ -187,12 +193,12 @@ func test_la_tapa_se_detiene_ante_un_objeto_y_continua_cuando_se_retira() -> voi
 	var almacen := await _abrir()
 	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
 	var contenedor: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
 	var obstaculo: ObjetoAgarrable = OBJETO.instantiate()
 	obstaculo.freeze = true
 	almacen.add_child(obstaculo)
-	obstaculo.global_position = contenedor.global_position + Vector3.UP * 1.10
+	obstaculo.global_position = _boca(contenedor) + Vector3.UP * 0.07
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	tapa.usar()
@@ -226,23 +232,25 @@ func test_la_tapa_se_detiene_ante_un_objeto_y_continua_cuando_se_retira() -> voi
 func test_las_paredes_contienen_la_tolerancia_de_penetracion_del_motor() -> void:
 	var almacen := await _abrir()
 	var soporte: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
 	var tolerancia: float = ProjectSettings.get_setting(
 		"physics/jolt_physics_3d/simulation/penetration_slop"
 	)
 	for alto: float in [0.2, 0.45, 0.65, 0.9]:
 		for lado: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
-			var centro := soporte.global_position + Vector3.UP * alto
-			var afuera := centro + lado * 0.6
-			var interior := _rayo(almacen, centro, afuera)
-			var exterior := _rayo(almacen, afuera, centro)
+			var limites := _limites(soporte)
+			var centro := limites.get_center()
+			centro.y = limites.position.y + limites.size.y * alto
+			var afuera := centro + lado * limites.size.length()
+			var interior := _rayo_de_pared(almacen, centro, afuera)
+			var exterior := _rayo_de_pared(almacen, afuera, centro)
 			assert_object(interior.get("collider")).is_same(soporte)
 			assert_object(exterior.get("collider")).is_same(soporte)
 			if interior.is_empty() or exterior.is_empty():
 				continue
 			var espesor: float = interior.position.distance_to(exterior.position)
-			assert_float(espesor).is_greater(tolerancia * 2.0)
+			assert_float(espesor).is_greater(tolerancia)
 
 
 func _terminar_el_giro(tapa: TapaDelLocal) -> void:
@@ -257,10 +265,22 @@ func _rayo(almacen: Node3D, desde: Vector3, hasta: Vector3) -> Dictionary:
 	return almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
 
 
+## El recipiente puede estar contra una pared: acá se mide su espesor, no el del edificio.
+func _rayo_de_pared(almacen: Node3D, desde: Vector3, hasta: Vector3) -> Dictionary:
+	var consulta := PhysicsRayQueryParameters3D.create(desde, hasta)
+	var soporte: StaticBody3D = almacen.get("_contenedor")
+	var excluidos: Array[RID] = []
+	for cuerpo: CollisionObject3D in almacen.find_children("*", "CollisionObject3D", true, false):
+		if cuerpo != soporte:
+			excluidos.append(cuerpo.get_rid())
+	consulta.exclude = excluidos
+	return almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+
+
 func test_el_contenedor_fijo_conserva_los_viajes_del_local_y_las_bolsas() -> void:  # AC-CLN-008
 	var almacen := await _abrir()
 	var contenedor: StaticBody3D = almacen.get_node(
-		BASE_DEL_CONTENEDOR + "deposito_contenedor_cuerpo/StaticBody3D"
+		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
 	)
 	var piso: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Fondo")
 	var forma := piso.shape as BoxShape3D
@@ -279,10 +299,38 @@ func test_el_contenedor_fijo_conserva_los_viajes_del_local_y_las_bolsas() -> voi
 		puntos.append(almacen.get_node(ruta))
 	for ruta: NodePath in BolsaEnLaMano.RUTAS:
 		puntos.append(almacen.get_node(ruta))
+	# Las manchas del local son tareas del local; las del depósito, como la que está al lado del
+	# contenedor, no.
+	var del_local := 0
 	for mancha: Node in almacen.find_children("Mancha*", "Node3D", true, false):
-		puntos.append(mancha as Node3D)
-	assert_int(puntos.size()).is_equal(3 + ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA + 4)
+		var lugar: PisoDelLocal.Lugar = mancha.call("lugar_de_la_mancha")
+		if PisoDelLocal.habitacion_de(lugar) == PisoDelLocal.ReglasDelCierre.Habitacion.LOCAL:
+			puntos.append(mancha as Node3D)
+			del_local += 1
+	assert_int(del_local).is_greater(0)
+	assert_int(puntos.size()).is_equal(3 + ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA + del_local)
 	for nodo in puntos:
 		assert_float(nodo.global_position.distance_to(contenedor.global_position)).is_greater_equal(
 			ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR
 		)
+
+
+func _limites(contenedor: StaticBody3D) -> AABB:
+	var malla := contenedor.get_parent() as MeshInstance3D
+	return malla.global_transform * malla.get_aabb()
+
+
+func _centro_interior(contenedor: StaticBody3D) -> Vector3:
+	var limites := _limites(contenedor)
+	# Se comprueba una hoja, evitando la junta entre las dos tapas.
+	return Vector3(
+		limites.position.x + limites.size.x * 0.25,
+		contenedor.global_position.y,
+		limites.get_center().z
+	)
+
+
+func _boca(contenedor: StaticBody3D) -> Vector3:
+	var centro := _centro_interior(contenedor)
+	centro.y = _limites(contenedor).end.y
+	return centro

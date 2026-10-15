@@ -1,10 +1,12 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/reloj_de_mesa.gd" id="1_reloj"]
+[ext_resource type="FontFile" path="res://assets/ui/clock/DSEG7Classic-Regular.ttf" id="2_led"]
 
 [node name="RelojDeMesa" type="Label3D"]
 pixel_size = 0.001
 modulate = Color(1, 0.15, 0.1, 1)
-font_size = 48
+font = ExtResource("2_led")
+font_size = 134
 outline_size = 0
 script = ExtResource("1_reloj")

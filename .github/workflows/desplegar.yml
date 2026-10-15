@@ -131,6 +131,9 @@ jobs:
       - name: El export usa la plantilla optimizada
         run: python .github/scripts/preparar_plantilla_web.py --verificar-export export/web
 
+      - name: Copiar el cuadro conserva el recorte sin una consulta síncrona
+        run: node --test .github/scripts/tests/recorte_webgl_test.mjs
+
       # `vercel.json` se copia ADENTRO del directorio que se publica porque es ahí donde la CLI
       # lo lee: en la raíz del repo lo leería un build de Vercel, y acá no hay build de Vercel.
       # Y la URL sale del stdout de la CLI en vez de escribirse a mano: escrita, verificaríamos

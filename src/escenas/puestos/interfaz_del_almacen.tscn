@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
-[ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_cierre.tscn" id="7_cierre"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_devolucion.tscn" id="7_cierre"]
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/panel_de_la_ventanilla.tscn" id="16_panel"]
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/pantalla_de_computadora.tscn" id="19_pantalla"]
 [ext_resource type="PackedScene" path="res://src/ui/interrupciones/menu_de_pausa.tscn" id="20_menu_de_pausa"]
@@ -24,7 +24,7 @@
 
 [node name="PantallaDeComputadora" parent="." instance=ExtResource("19_pantalla")]
 
-[node name="PantallaDeCierre" parent="." instance=ExtResource("7_cierre")]
+[node name="PantallaDeDevolucion" parent="." instance=ExtResource("7_cierre")]
 
 [node name="NotaEncuadrada" parent="." instance=ExtResource("nota")]
 
@@ -46,7 +46,7 @@ layer = 6
 
 [node name="ControlDePausa" type="Node" parent="." node_paths=PackedStringArray("placa")]
 script = ExtResource("21_control_de_pausa")
-placa = NodePath("../PantallaDeCierre")
+placa = NodePath("../PantallaDeDevolucion")
 
 [connection signal="pausado" from="ControlDePausa" to="MenuDePausa" method="mostrar"]
 [connection signal="reanudado" from="ControlDePausa" to="MenuDePausa" method="ocultar"]

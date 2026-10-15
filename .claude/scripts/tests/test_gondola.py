@@ -24,6 +24,7 @@ from lib.gondola import (
     columnas_que_entran,
     copia_relativa,
     escribir_disposicion,
+    separar_filas,
     escribir_escena_de_mallas,
     flotantes_de_la_copia,
     fondo_del_estante,
@@ -320,6 +321,19 @@ class LaEscritura(unittest.TestCase):
         self.assertIn("principales = Array[PackedFloat32Array]([PackedFloat32Array(1, 0.5)])", texto)
         self.assertIn("guias = Array[PackedFloat32Array]([])", texto)
         self.assertIn("filas_de_adelante = PackedInt32Array(4)", texto)
+        self.assertIn("productos_de_las_guias = PackedInt32Array()", texto)
+
+    def test_las_guias_declaran_su_producto_y_su_fila_de_adelante(self):
+        texto = escribir_disposicion(
+            [[1.0]], [[2.0], [3.0]], [1], "uid://x", "uid://y", [5, 0], [3, 0]
+        )
+        self.assertIn("productos_de_las_guias = PackedInt32Array(5, 0)", texto)
+        self.assertIn("filas_de_adelante_de_las_guias = PackedInt32Array(3, 0)", texto)
+
+    def test_una_tanda_fija_va_con_la_fila_de_adelante_al_final(self):
+        filas = ["adelante", "atras", "adelante", "atras"]
+        self.assertEqual(separar_filas(filas), ([1, 3, 0, 2], 2))
+        self.assertEqual(separar_filas(["atras", "atras"]), ([0, 1], 0))
 
     def test_la_escena_comparte_un_recurso_por_malla(self):
         identidad = ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0))
@@ -338,6 +352,13 @@ class LaEscritura(unittest.TestCase):
             escribir_escena_de_mallas("Guia", []),
             '[gd_scene format=3]\n\n[node name="Guia" type="Node3D"]\n',
         )
+
+    def test_conserva_el_eje_de_la_etiqueta_independiente_de_las_filas(self):
+        base = ((0.0, 0.0, -1.0), (0.0, 1.0, 0.0), (1.0, 0.0, 0.0))
+        nodo = NodoDeMalla("Producto", "res://a.res", base, (0.0, 0.0, 0.0),
+                           (1.0, 0.0, 0.0))
+        texto = escribir_escena_de_mallas("Contenido", [nodo])
+        self.assertIn("metadata/frente_del_modelo = Vector3(1, 0, 0)", texto)
 
 
 def _apagada(padre, nombre):

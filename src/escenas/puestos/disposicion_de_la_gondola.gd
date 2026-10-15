@@ -40,6 +40,22 @@ const FLOTANTES_POR_COPIA := 12
 ## de `Producto.Id`. Si tiene fila de atrás, son las primeras del bloque y tienen igual largo.
 @export var filas_de_adelante: PackedInt32Array = PackedInt32Array()
 
+## El producto de cada tanda fija, en el orden de `guias`.
+@export var productos_de_las_guias: PackedInt32Array = PackedInt32Array()
+
+## Cuántas copias del final de cada tanda fija forman su fila de adelante, en el orden de `guias`.
+@export var filas_de_adelante_de_las_guias: PackedInt32Array = PackedInt32Array()
+
+
+## Cuántos casilleros tiene un producto: cada lugar de la fila de adelante de cada tanda suya, la
+## reponible y las fijas.
+func casilleros_de(id: Producto.Id) -> int:
+	var total := filas_de_adelante[id]
+	for indice in productos_de_las_guias.size():
+		if productos_de_las_guias[indice] == id:
+			total += filas_de_adelante_de_las_guias[indice]
+	return total
+
 
 func primera_reponible(id: Producto.Id, cupo: int) -> int:
 	var bloque := principales[id]

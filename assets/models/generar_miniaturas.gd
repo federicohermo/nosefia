@@ -79,7 +79,7 @@ func _generar() -> void:
 		var fila := disposicion.filas_de_adelante[producto.id]
 		var frente := DisposicionDeLaGondola.frente(bloque, fila)
 		vista.mesh = nodo.mesh
-		var derecho := enderezar(normal_del_estante(bloque, fila))
+		var derecho := enderezar_envase(nodo.basis)
 		vista.transform = Transform3D(derecho * nodo.basis, Vector3.ZERO)
 		var caja := vista.transform * nodo.mesh.get_aabb()
 		var centro := caja.get_center()
@@ -136,6 +136,16 @@ static func normal_del_estante(bloque: PackedFloat32Array, fila_de_adelante: int
 ## normal. En un estante plano no gira nada.
 static func enderezar(normal: Vector3) -> Basis:
 	return Basis(Quaternion(Vector3.UP, normal))
+
+
+## Una unidad puede tener una inclinación propia distinta de la chapa que la sostiene.
+static func enderezar_envase(base: Basis) -> Basis:
+	var arriba := Vector3.ZERO
+	for columna in 3:
+		var eje := base[columna].normalized()
+		if absf(eje.y) > absf(arriba.y):
+			arriba = eje
+	return Basis(Quaternion(arriba if arriba.y > 0.0 else -arriba, Vector3.UP))
 
 
 func _entorno() -> WorldEnvironment:

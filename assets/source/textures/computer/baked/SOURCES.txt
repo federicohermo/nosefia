@@ -1,0 +1,10 @@
+Mouse_BaseColor.png, Mouse_Roughness.png, Mouse_Metallic.png and Mouse_Normal.png:
+Rebaked for a 60-triangle mouse from Omie's Assets - Office Set.
+Source: https://omies-assets.itch.io/omies-assets-office-set
+License: CC0. Original maps and license are in ../omie/.
+
+Keyboard_Normal.png:
+Tangent-space normal map baked from the existing project texture ../compu normals.png.
+Preserves the original complete keyboard layout and UV atlas.
+
+Generated in Blender on 2026-10-12.

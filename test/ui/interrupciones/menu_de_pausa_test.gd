@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 const ESCENA := "res://src/ui/interrupciones/menu_de_pausa.tscn"
 const SCRIPT := "res://src/ui/interrupciones/menu_de_pausa.gd"
 const TEXTOS: Array[String] = ["REANUDAR", "CONFIGURACIONES", "LOGROS", "VOLVER AL MENÚ"]
-const HABILITADOS: Array[String] = ["REANUDAR", "VOLVER AL MENÚ"]
+const HABILITADOS: Array[String] = ["REANUDAR", "CONFIGURACIONES", "VOLVER AL MENÚ"]
 
 var _reanudar: int = 0
 var _volver: int = 0
@@ -29,7 +29,9 @@ func _menu() -> MenuDePausa:
 
 func _botones(menu: MenuDePausa) -> Array[Button]:
 	var botones: Array[Button] = []
-	for boton: Button in menu.find_children("*", "Button", true, false):
+	for boton: Button in menu.get_node("Fondo/Panel/Opciones").find_children(
+		"*", "Button", true, false
+	):
 		botones.append(boton)
 	return botones
 
@@ -40,7 +42,7 @@ func test_arranca_oculto_y_corre_solo_en_pausa() -> void:
 	assert_int(menu.process_mode).is_equal(Node.PROCESS_MODE_WHEN_PAUSED)
 
 
-func test_muestra_los_cuatro_botones_en_orden_y_habilita_dos() -> void:  # AC-SAV-019
+func test_muestra_los_cuatro_botones_en_orden_y_solo_logros_deshabilitado() -> void:  # AC-SAV-019
 	var menu := _menu()
 	var textos: Array[String] = []
 	var habilitados: Array[String] = []
@@ -90,6 +92,35 @@ func test_mostrar_deja_el_foco_en_reanudar() -> void:
 	assert_bool((menu.get_node("Fondo/Panel/Opciones/Reanudar") as Button).has_focus()).is_true()
 	menu.ocultar()
 	assert_bool(menu.visible).is_false()
+
+
+func test_configuraciones_abre_la_pantalla_y_al_cerrarla_vuelve_a_reanudar() -> void:  # AC-CFG-010
+	var menu := _menu()
+	get_tree().paused = true
+	menu.mostrar()
+	(menu.get_node("Fondo/Panel/Opciones/Configuraciones") as Button).pressed.emit()
+	var pantalla := menu.configuraciones()
+	assert_bool(pantalla.visible).is_true()
+	assert_bool(menu.configuraciones_abierta()).is_true()
+	assert_bool((menu.get_node("Fondo/Panel") as Control).visible).is_false()
+	assert_bool(get_tree().paused).is_true()
+	assert_int(Input.mouse_mode).is_not_equal(Input.MOUSE_MODE_CAPTURED)
+	menu.cerrar_configuraciones()
+	assert_bool(pantalla.visible).is_false()
+	assert_bool(menu.configuraciones_abierta()).is_false()
+	assert_bool(menu.visible).is_true()
+	assert_bool((menu.get_node("Fondo/Panel") as Control).visible).is_true()
+	assert_bool((menu.get_node("Fondo/Panel/Opciones/Reanudar") as Button).has_focus()).is_true()
+	assert_int(_reanudar).is_zero()
+
+
+func test_ocultar_el_menu_cierra_tambien_configuraciones() -> void:
+	var menu := _menu()
+	menu.mostrar()
+	menu.abrir_configuraciones()
+	menu.ocultar()
+	assert_bool(menu.configuraciones().visible).is_false()
+	assert_bool((menu.get_node("Fondo/Panel") as Control).visible).is_true()
 
 
 func test_el_menu_usa_el_tema_y_no_declara_estilos() -> void:

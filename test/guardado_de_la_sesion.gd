@@ -1,11 +1,13 @@
-## Aparta el guardado de la corrida de tests: ningún caso lee ni escribe la partida del usuario.
+## Aparta el guardado y las preferencias de la corrida de tests: ningún caso lee ni escribe la
+## partida ni las preferencias del usuario.
 ##
 ## Las escenas arman su guardado solas, con la ruta por defecto. Esta ruta se fija una vez,
 ## antes de la primera suite, y la carpeta se borra al terminar. Lo registra `project.godot`,
 ## en `gdunit4/hooks/session_hooks`.
 ##
-## Cada caso arranca también sin guardado: un caso que cierra la noche escribe, y el siguiente
-## que levanta el almacén arrancaría en otra jornada.
+## Cada caso arranca también sin guardado y sin preferencias: un caso que cierra la noche escribe,
+## y el siguiente que levanta el almacén arrancaría en otra jornada; uno que mueve una barra
+## dejaría al siguiente con otro volumen.
 extends GdUnitTestSessionHook
 
 ## Una carpeta por proceso: `user://` es uno solo por proyecto, y lo comparten todas las
@@ -15,13 +17,17 @@ var carpeta := "user://guardado_de_los_tests_%d" % OS.get_process_id()
 
 
 func _init() -> void:
-	super("Guardado de la sesión", "Aparta la partida del usuario de la corrida de tests.")
+	super(
+		"Guardado de la sesión",
+		"Aparta la partida y las preferencias del usuario de la corrida de tests."
+	)
 
 
 func startup(session: GdUnitTestSession) -> GdUnitResult:
 	_borrar_la_carpeta()
 	DirAccess.make_dir_recursive_absolute(carpeta)
 	Guardado.ruta_por_defecto = carpeta.path_join("partida.guardado")
+	ArchivoDePreferencias.ruta_por_defecto = carpeta.path_join("preferencias.datos")
 	session.test_event.connect(_al_llegar_un_evento)
 	return GdUnitResult.success()
 
@@ -34,6 +40,7 @@ func shutdown(_session: GdUnitTestSession) -> GdUnitResult:
 func _al_llegar_un_evento(evento: GdUnitEvent) -> void:
 	if evento.type() == GdUnitEvent.TESTCASE_BEFORE:
 		Guardado.new().borrar()
+		ArchivoDePreferencias.new().borrar()
 
 
 func _borrar_la_carpeta() -> void:

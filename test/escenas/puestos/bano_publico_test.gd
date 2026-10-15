@@ -250,7 +250,7 @@ func test_las_cabinas_tienen_puertas_que_liberan_el_acceso_al_abrirse() -> void:
 		var cerrada := espacio.intersect_ray(consulta)
 		assert_bool(cerrada.is_empty()).is_false()
 		assert_object(cerrada.get("collider")).is_same(puerta)
-		puerta.call("usar")
+		puerta.call("alternar")
 		for cuadro in 60:
 			await get_tree().physics_frame
 		assert_bool(espacio.intersect_ray(consulta).is_empty()).is_true()
@@ -315,16 +315,25 @@ func test_el_sector_antes_cerrado_es_accesible_desde_el_bano() -> void:
 
 func test_la_puerta_del_bano_abierta_no_corta_el_recorrido_hacia_las_cabinas() -> void:
 	var almacen: Node3D = await _almacen()
-	almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("usar")
+	var hoja: MeshInstance3D = almacen.get_node("Estructura/puerta2")
+	var vano := hoja.global_transform * hoja.get_aabb()
+	var cruce := vano.get_center().z + vano.size.z * 0.15
+	almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var jugador := almacen.get("_jugador") as CharacterBody3D
-	jugador.global_position = Vector3(7.3, 0.12, 0.736)
+	jugador.global_position = Vector3(7.3, 0.12, cruce)
 	await get_tree().physics_frame
 	assert_object(jugador.move_and_collide(Vector3(3.6, 0.0, 0.0), true)).is_null()
-	jugador.global_position = Vector3(10.9, 0.12, 0.736)
+	jugador.global_position = Vector3(10.9, 0.12, cruce)
 	await get_tree().physics_frame
-	assert_object(jugador.move_and_collide(Vector3(0.0, 0.0, 2.8), true)).is_null()
+	var cabina: MeshInstance3D = almacen.get_node("Estructura/bano_puerta_1")
+	var borde := (cabina.global_transform * cabina.get_aabb()).position.z
+	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	var radio := (cuerpo.shape as CapsuleShape3D).radius
+	var hasta := borde - radio - 0.1
+	assert_float(hasta).is_greater(cruce)
+	assert_object(jugador.move_and_collide(Vector3(0.0, 0.0, hasta - cruce), true)).is_null()
 
 
 func test_la_entrada_cerrada_no_deja_ver_el_bano_por_los_bordes_de_la_hoja() -> void:
@@ -410,7 +419,7 @@ func test_las_hojas_de_cabina_giran_unidas_a_un_soporte_fijo() -> void:
 				. override_failure_message("Falta soporte fijo junto al eje %s" % pasador)
 				. is_less_equal(0.005)
 			)
-		cuerpo.call("usar")
+		cuerpo.call("alternar")
 		for cuadro in 60:
 			await get_tree().physics_frame
 		var estado := cuerpo.call("puerta") as Puerta

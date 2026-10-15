@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 
 func test_reponer_todos_los_huecos_de_la_apertura_cumple_la_tarea() -> void:
@@ -34,6 +35,7 @@ func test_reponer_todos_los_huecos_de_la_apertura_cumple_la_tarea() -> void:
 func test_despues_de_cada_bolsa_se_puede_agarrar_y_reponer_actroncito() -> void:
 	var almacen := _abrir()
 	BolsaEnLaMano.abrir(almacen)
+	AperturaConLugar.abrir_con_faltantes(almacen, {})
 	var agarre: Agarre = almacen.get("_agarre")
 	var jugador: Node3D = almacen.get("_jugador")
 	var contenedor: Node3D = almacen.get("_contenedor")
@@ -65,6 +67,7 @@ func test_tirar_un_producto_tambien_permite_volver_a_agarrar_de_la_gondola() -> 
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_faltantes(almacen, {})
 	almacen.get("_jugador").set_physics_process(false)
 	almacen.get("_reloj").set_process(false)
 	return almacen

@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ESCENA := preload("res://src/ui/diegetica/pantalla_del_celular.tscn")
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
 
 func after_test() -> void:
@@ -33,19 +34,16 @@ func test_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion() -> void: 
 	var velo: Control = pantalla.get("_velo")
 	pantalla.subir()
 	var abajo := telefono.position
-	ahora[0] = 125000
-	pantalla._process(0.0)
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 125000)
 	var medio := telefono.position
 	assert_float(medio.y).is_less(abajo.y)
 	pantalla.bajar()
 	assert_vector(telefono.position).is_equal(medio)
-	ahora[0] += 125000
-	pantalla._process(0.0)
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 125000)
 	assert_vector(telefono.position).is_equal(abajo)
 	assert_bool(velo.visible).is_false()
 	pantalla.subir()
-	ahora[0] += 249000
-	pantalla._process(0.0)
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 249000)
 	assert_bool(pantalla.is_processing()).is_true()
 	ahora[0] += 1000
 	pantalla._process(0.0)
@@ -53,8 +51,7 @@ func test_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion() -> void: 
 	assert_vector(telefono.position + telefono.size / 2).is_equal(Vector2(960, 540))
 	assert_float(telefono.size.x / telefono.size.y).is_equal(9.0 / 16.0)
 	pantalla.bajar()
-	ahora[0] += 250000
-	pantalla._process(0.0)
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
 	assert_bool(velo.visible).is_false()
 	assert_float(telefono.position.y).is_greater_equal(1080)
 
@@ -95,6 +92,20 @@ func test_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos() -> void:  # AC
 	assert_int(lista.get_child_count()).is_zero()
 
 
+func test_un_cuadro_largo_no_salta_la_animacion_del_celular() -> void:  # AC-INV-033
+	var pantalla := _pantalla()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	var telefono: Control = pantalla.get("_telefono")
+	var abajo := telefono.position.y
+	ahora[0] = 2000000
+	pantalla._process(0.0)
+	assert_float(telefono.position.y).is_less(abajo)
+	assert_float(telefono.position.y + telefono.size.y / 2).is_greater(540.0)
+	assert_bool(pantalla.is_processing()).is_true()
+
+
 func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	var pantalla := _pantalla()
 	var conversacion := _conversacion(24)
@@ -102,8 +113,7 @@ func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
 	pantalla.subir()
-	ahora[0] = 250000
-	pantalla._process(0.0)
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
 	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false)
 	for cuadro in 4:
 		await get_tree().process_frame
@@ -214,3 +224,23 @@ func test_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas() -> vo
 	pantalla.mostrar_menu(bandeja)
 	assert_bool(buscar.visible).is_true()
 	assert_str(buscar.text).is_empty()
+
+
+func test_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no() -> void:  # AC-INV-033
+	var pantalla: PantallaDelCelular = auto_free(ESCENA.instantiate())
+	add_child(pantalla)
+	var cierres: Array[int] = []
+	pantalla.cierre_pedido.connect(func() -> void: cierres.append(1))
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.pressed = true
+	clic.position = Vector2(10, 10)
+	pantalla._input(clic)
+	assert_array(cierres).is_empty()
+	pantalla.subir()
+	clic.position = (pantalla.get("_telefono") as Control).get_global_rect().get_center()
+	pantalla._input(clic)
+	assert_array(cierres).is_empty()
+	clic.position = Vector2(10, 10)
+	pantalla._input(clic)
+	assert_int(cierres.size()).is_equal(1)

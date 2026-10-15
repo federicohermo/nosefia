@@ -67,6 +67,9 @@ var _pasos: Array[InstruccionesDelJefe.Paso] = []
 var _instrucciones: InstruccionesDelJefe
 var _ahora: Callable = Time.get_ticks_usec
 var _ultimo: int = 0
+## En microsegundos. Cada cuadro suma a lo sumo el paso máximo de la cabecera: el cuadro que abre
+## la partida tarda, y con el tiempo entero la subida se iba de un salto.
+var _transcurrido: int = 0
 var _avance: float = 0.0
 
 
@@ -87,8 +90,9 @@ func _notification(que: int) -> void:
 
 func _process(_delta: float) -> void:
 	var ahora: int = _ahora.call()
-	_avance = minf(1.0, _avance + maxf(0.0, (ahora - _ultimo) / 1000000.0) / DURACION_DE_LA_SUBIDA)
+	_transcurrido += clampi(ahora - _ultimo, 0, roundi(CabeceraConSolapa.PASO_MAXIMO * 1000000.0))
 	_ultimo = ahora
+	_avance = minf(1.0, _transcurrido / (DURACION_DE_LA_SUBIDA * 1000000.0))
 	_ajustar()
 	if _avance == 1.0:
 		set_process(false)
@@ -98,6 +102,7 @@ func mostrar(mensajes: Array[Mensaje]) -> void:
 	_pasos = InstruccionesDelJefe.pasos_de(mensajes)
 	_instrucciones = InstruccionesDelJefe.new(_pasos.size())
 	_avance = 0.0
+	_transcurrido = 0
 	_ultimo = _ahora.call()
 	visible = true
 	set_process(true)

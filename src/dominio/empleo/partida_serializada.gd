@@ -4,7 +4,7 @@
 class_name PartidaSerializada
 extends RefCounted
 
-enum Campo { JORNADA, MEDIOS }
+enum Campo { JORNADA, MEDIOS, FALLAS, LLAMADOS, NOCHES_SIN_SUMAR, DEVOLUCIONES, MOPA_SECADA }
 
 const VERSION: int = 1
 const CLAVE_DE_VERSION := "version"
@@ -13,6 +13,13 @@ const CLAVE_DE_VERSION := "version"
 const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.JORNADA: ReglasDeLaPartida.PRIMERA_JORNADA,
 	Campo.MEDIOS: 0,
+	## Las cuentas y las devoluciones de Enrique (BR-SAV-019). Su contenido lo sanea quien lo
+	## lee: acá sólo se mira que sean un diccionario, un entero y una lista.
+	Campo.FALLAS: {},
+	Campo.LLAMADOS: {},
+	Campo.NOCHES_SIN_SUMAR: 0,
+	Campo.DEVOLUCIONES: [],
+	Campo.MOPA_SECADA: false,
 }
 
 
@@ -26,7 +33,11 @@ static func sanear(crudo: Dictionary) -> Dictionary:
 	for campo: Campo in DEFECTOS:
 		var valor: Variant = crudo.get(clave(campo))
 		var defecto: Variant = DEFECTOS[campo]
-		saneado[clave(campo)] = valor if typeof(valor) == typeof(defecto) else defecto
+		var leido: Variant = valor if typeof(valor) == typeof(defecto) else defecto
+		# Una copia: el defecto es una constante y quien lo recibe puede llenarlo.
+		saneado[clave(campo)] = (
+			leido.duplicate(true) if leido is Dictionary or leido is Array else leido
+		)
 	return saneado
 
 

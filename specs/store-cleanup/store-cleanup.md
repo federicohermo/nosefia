@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
 
 # Capacidad: dejar el local en orden
@@ -19,7 +19,7 @@ jabón, el jabón se mezcla en el balde, y cambiar de jabón es vaciar el balde 
 
 | Término | Significado acá | Evitar |
 |---|---|---|
-| **Mancha** | lo que hay que borrar: moho, caca o polvo, en un lugar del local, del depósito o del baño | suciedad |
+| **Mancha** | lo que hay que borrar: moho, caca o polvo, en un lugar del local, del depósito o del baño, sobre el piso, una pared o el techo | suciedad |
 | **Jabón** | uno de los tres bidones del baño: azul, rosa o amarillo | detergente, producto |
 | **Balde** | donde se prepara la mezcla: vacío, con agua, o con agua teñida de un jabón | cubeta |
 | **Mopa** | con lo que se borra una mancha: seca, o mojada de lo que tenía el balde | trapo, escoba |
@@ -68,17 +68,42 @@ declaró y nunca contra un número escrito.
 
 El sistema DEBE tener **tres tipos de mancha**, y a cada uno lo borra **un solo jabón**: al moho,
 el azul; a la caca, el rosa; al polvo, el amarillo. Cada tipo DEBE verse de su color —el moho
-verde, la caca marrón, y el polvo del local como un charco celeste y transparente—, que es lo
-que le dice al jugador qué jabón buscar. El agua del balde también DEBE verse transparente,
+verde, la caca marrón y el polvo negro o gris, con transparencia entre sus trazos que deja ver la
+superficie de abajo—, que es lo que le dice al jugador qué jabón buscar. El agua del balde también DEBE verse transparente,
 conservando el color del jabón cuando está teñida.
 
 ### BR-CLN-013 — Las manchas de la jornada
 
-CUANDO se abre una jornada, el sistema DEBE poner **cuatro manchas**: dos de polvo en el local
-—en el piso frente a la puerta de entrada y en el piso entre dos góndolas—, una de moho en el
-depósito —en una pared, cerca de la puerta al local— y una de caca en el baño —en el piso, al lado
-del inodoro—. Todas las jornadas arrancan con esas cuatro, sucias, aunque la noche anterior se
-hayan borrado.
+CUANDO se abre una jornada, el sistema DEBE poner las manchas que esa jornada declara, cada una
+con su tipo, su habitación y su superficie:
+
+| Jornada | Tipo | Habitación | Superficie | Lugar |
+|---|---|---|---|---|
+| 1 | polvo | local | piso | frente a la puerta de entrada |
+| 1 | polvo | local | piso | entre dos góndolas |
+| 1 | polvo | local | piso | en el rincón opuesto al mostrador |
+| 1 | moho | depósito | pared | cerca de la puerta al local |
+| 1 | moho | depósito | pared | arriba de la caja eléctrica |
+| 1 | caca | baño | piso | al lado de un inodoro |
+| 1 | caca | baño | pared | al lado del otro inodoro |
+| 2 | polvo | local | piso | detrás del mostrador |
+| 2 | polvo | local | piso | cerca de las heladeras |
+| 2 | polvo | local | piso | frente a la puerta del baño |
+| 2 | moho | depósito | pared | en una esquina, cerca del techo |
+| 2 | moho | depósito | pared | al lado del contenedor |
+| 2 | polvo | baño | piso | frente a la puerta del baño |
+| 2 | moho | baño | techo | en una esquina que no es la de la puerta |
+| 2 | caca | baño | piso | bajo la puerta de un cubículo |
+
+La jornada 1 suma 7 —3 de polvo, 2 de moho y 2 de caca— y la 2 suma 8 —4 de polvo, 3 de moho y 1
+de caca—. Las jornadas 3, 4 y 5 DEBEN arrancar con las de la 1 (`OQ-CLN-002`). Cada jornada DEBE
+arrancar con todas sus manchas sucias, aunque la anterior las haya borrado.
+
+Una mancha que la jornada no declara NO DEBE verse, ni detener la mira, ni reservar el sector de
+un charco temporal, ni contar para limpiar. Una mancha de pared o de techo DEBE borrarse con la
+misma pasada y el mismo alcance que una del piso, apuntándola con la mira desde un punto libre del
+piso. El paso del jugador DEBE tocar sólo las manchas del piso: una de pared o de techo NO DEBE
+ondular cuando el jugador camina a su lado o debajo.
 
 ### BR-CLN-014 — Los útiles arrancan en el baño
 
@@ -213,7 +238,7 @@ unidad suelta dentro de cualquier habitación, una caja dentro y fuera del depó
 dentro y fuera del baño. El cuerpo sostenido DEBE excluirse por identidad, salvo mientras se
 examina: entonces cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
-único motivo. La foto DEBE tomarse antes de registrar el legajo, armar el parte y guardar.
+único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
 
 ### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
 
@@ -289,7 +314,7 @@ depositada» y la cantidad sigue igual.
 
 ### AC-CLN-012 — Las dos obligatorias cierran *(verifica BR-CLN-011)*
 
-DADO las cuatro manchas de la jornada borradas ENTONCES limpiar está cumplida; DADO las tres
+DADO las manchas de la jornada borradas ENTONCES limpiar está cumplida; DADO las tres
 bolsas de la jornada 2 depositadas ENTONCES la basura está cumplida; con una sola pendiente en
 cada caso, no. En una jornada sin basura declarada, cero bolsas NO suma una obligatoria.
 
@@ -302,22 +327,24 @@ polvo con amarillo.
 ### AC-CLN-015 — El color de cada mancha *(verifica BR-CLN-012)*
 
 DADO las manchas de la jornada en la escena ENTONCES la de moho se ve verde —el verde es su canal
-más alto—, la de caca marrón —rojo sobre verde sobre azul, y oscura— y las dos del local negras,
+más alto—, la de caca marrón —rojo sobre verde sobre azul, y oscura— y las de polvo negras,
 con el dibujo de polvo de la guía y transparencia entre los trazos que deja ver el piso.
 
-### AC-CLN-016 — Las cuatro de la jornada *(verifica BR-CLN-013)*
+### AC-CLN-016 — Las manchas de cada jornada *(verifica BR-CLN-013)*
 
-DADO una jornada ENTONCES tiene 4 manchas: 2 de polvo, 1 de moho y 1 de caca, ninguna borrada;
-DADO todas borradas CUANDO se abre la jornada siguiente ENTONCES son las mismas cuatro, sucias
-otra vez.
+DADO la jornada 1 ENTONCES tiene 7 manchas: 3 de polvo, 2 de moho y 2 de caca. DADO la 2 ENTONCES
+tiene 8: 4 de polvo, 3 de moho y 1 de caca. DADO la 3, la 4 y la 5 ENTONCES tiene las mismas 7 de
+la 1. En cada una, cada mancha lleva el tipo, la habitación y la superficie que declara su lugar,
+y ninguna arranca borrada. DADO la 1 con sus 7 borradas CUANDO abre la 2 ENTONCES sus 8 están
+sucias; DADO la 2 con sus 8 borradas CUANDO abre la 3 ENTONCES sus 7 están sucias.
 
-### AC-CLN-017 — Cada mancha en su lugar *(verifica BR-CLN-013)*
+### AC-CLN-017 — Cada mancha en su habitación y su superficie *(verifica BR-CLN-013, BR-CLN-027)*
 
-DADO el almacén armado ENTONCES una de polvo está en el piso del local, a menos de 2,5 metros de
-la puerta de entrada y del lado de adentro; la otra de polvo, en el piso, entre las dos góndolas
-del medio del local; la de moho, en una pared del depósito, a menos de 2,5 metros de la puerta al
-local; y la de caca, en el piso del baño, a menos de 1,2 metros del inodoro. Ninguna queda debajo
-de un mueble ni tapada: la mira enfoca cada una.
+DADO la jornada 1 y después la 2 ENTONCES cada mancha de la noche está en la habitación que
+declara su lugar, según la pertenencia de `BR-CLN-027`, y sobre la superficie que declara: mira
+hacia arriba en el piso, en horizontal en la pared y hacia abajo en el techo. Ninguna queda debajo
+de un mueble ni tapada, y la mira enfoca cada una desde un punto libre del piso. Las manchas de
+otra noche no se ven y la mira no las enfoca.
 
 ### AC-CLN-018 — Los útiles vuelven al baño *(verifica BR-CLN-014)*
 
@@ -403,7 +430,7 @@ seca. Dividir el trayecto entre cuadros no modifica el resultado ni permite recu
 
 DADO la mopa con cualquiera de los tres jabones, seca o parcialmente gastada CUANDO se usa sobre
 el inodoro ENTONCES queda húmeda de agua sin jabón, con carga completa y color de agua limpia;
-el balde y las cuatro manchas conservan su estado. DADO un balde con agua sin jabón CUANDO se
+el balde y las manchas conservan su estado. DADO un balde con agua sin jabón CUANDO se
 enjuaga la mopa en él ENTONCES se obtiene lo mismo y el balde conserva su agua.
 
 ### AC-CLN-030 — Charco de agua separado de la suciedad *(verifica BR-CLN-024)*
@@ -424,7 +451,7 @@ mueble, detrás de un obstáculo o fuera de alcance tampoco aparece un charco.
 DADO un charco recién creado ENTONCES sigue visible antes de los cuatro segundos de juego,
 pierde opacidad y desaparece al cumplirlos. La pausa no avanza ese tiempo. Repetir pasadas más
 veces que el límite simultáneo conserva como máximo ese límite. Abrir una jornada elimina
-todos los charcos y conserva únicamente las cuatro manchas propias de la jornada.
+todos los charcos y conserva únicamente las manchas propias de la jornada.
 
 ### AC-CLN-033 — Mezcla visible sin salto ni reinicio *(verifica BR-CLN-016)*
 
@@ -523,7 +550,7 @@ alcance vigente. El espacio numérico entre vidrio y dintel no constituye un pas
 ### AC-CLN-046 — Dos motivos antes del registro *(verifica BR-CLN-028, BR-CLN-029)*
 
 DADO caja desordenada y unidad afuera CUANDO agota la jornada con GRAVE ENTONCES el legajo
-lleva 6 medios desde cero antes de armar el parte y escribir el checkpoint. DADO esos cuerpos
+lleva 6 medios desde cero antes de armar la devolución y escribir el checkpoint. DADO esos cuerpos
 tirados al contenedor ENTONCES no generan motivos; abrir otra noche vacía el registro de tirados
 y restaura los persistentes, sin consultar unidades o tickets ya retirados.
 
@@ -549,9 +576,9 @@ sin anotar papel en el inodoro. Abrir otra noche retira ambos del registro activ
 ### AC-CLN-049 — Tres motivos son siete con GRAVE *(verifica BR-CLN-028, BR-CLN-029, BR-CLN-030)*
 
 DADO deuda cero, un ticket aceptado en el inodoro, una caja desordenada y una unidad afuera
-CUANDO termina la jornada con GRAVE ENTONCES el cierre registra siete medios antes del parte
-y checkpoint y no despide. CUANDO la noche siguiente termina impecable y sin motivos ENTONCES
-conserva siete. Un evento durante la placa no contamina esa noche siguiente y repetir el
+CUANDO termina la jornada con GRAVE ENTONCES el cierre registra siete medios antes de la devolución
+y del checkpoint y no despide. CUANDO la noche siguiente termina impecable y sin motivos ENTONCES
+conserva siete. Un evento durante la devolución no contamina esa noche siguiente y repetir el
 cierre no suma otra vez.
 
 ### AC-CLN-050 — Las excepciones son bolsas y tickets *(verifica BR-CLN-031)*
@@ -612,6 +639,29 @@ DADO la jornada 2 con dos bolsas depositadas y la tercera, por turno, en el tach
 en la mano, CUANDO cierra ENTONCES la basura queda pendiente. CUANDO abre la jornada 3 ENTONCES
 la mano está vacía, los tres tachos están sin bolsa y ninguna bolsa está en el mundo.
 
+### AC-CLN-058 — El paso toca sólo el piso *(verifica BR-CLN-013)*
+
+DADO la jornada 1 y después la 2 CUANDO el jugador da un paso al lado de cada mancha de pared, y
+debajo de la de techo, ENTONCES ninguna recibe el toque del paso ni ondula. DADO una mancha del
+piso de la misma noche CUANDO el jugador da un paso a su lado ENTONCES sí lo recibe.
+
+### AC-CLN-059 — El charco reserva sólo las manchas de la noche *(verifica BR-CLN-024, BR-CLN-013)*
+
+DADO la jornada 1 y la mopa húmeda de agua sin jabón CUANDO se intenta dejar agua sobre el sector
+de un lugar del piso que sólo declara la jornada 2 ENTONCES aparece el charco; CUANDO se intenta
+sobre el sector de una mancha del piso de la jornada 1, ya limpia, ENTONCES se rechaza. DADO la
+jornada 2 ENTONCES vale lo mismo al revés: el sector de un lugar del piso que sólo declara la 1
+recibe el charco, y el de una mancha de la 2 lo rechaza.
+
+### AC-CLN-060 — Limpiar se cumple con la última mancha de la noche *(verifica BR-CLN-011, BR-CLN-013, BR-CLN-019)*
+
+DADO la jornada 1 CUANDO se borran 6 de sus 7 manchas ENTONCES limpiar no está cumplida; CUANDO
+se borra la séptima ENTONCES se cumple, una sola vez. DADO la jornada 2 CUANDO se borran 7 de sus
+8 ENTONCES no está cumplida; CUANDO se borra la octava ENTONCES se cumple, una sola vez. Cada
+mancha, también las de pared y la de techo, se borra pasándole la mopa mojada del jabón que pide,
+apuntándola con la mira desde un punto libre del piso. Las manchas del mismo tipo en la misma
+habitación se borran por separado y cuenta cada una.
+
 ## No objetivos
 
 - Esta capacidad NO dibuja: declara de qué color se ven cada mancha, el agua del balde y la punta
@@ -621,7 +671,7 @@ la mano está vacía, los tres tachos están sin bolsa y ninguna bolsa está en 
 
 ## Contratos
 
-- **Entrada:** qué se lleva en la mano, sobre qué se usa —una mancha, el balde, el lavatorio,
+- **Entrada:** la jornada que abre, qué se lleva en la mano, sobre qué se usa —una mancha, el balde, el lavatorio,
   el inodoro o piso despejado—, tiempo real y recorrido de la mopa, el permiso de la tapa y
   el pedido de tirar lo sostenido y el estado físico de los cuerpos al cerrar.
 - **Salida:** cómo salió cada uso, qué tiene el balde y la carga restante de la mopa, qué manchas
@@ -653,11 +703,12 @@ la mano está vacía, los tres tachos están sin bolsa y ninguna bolsa está en 
 ## Preguntas abiertas
 
 - **OQ-CLN-001 — ¿Las manchas aparecen durante la noche o están todas desde el principio?**
-  - Por qué sigue abierta: hoy están las cuatro desde la apertura. El GDD no lo dice.
+  - Por qué sigue abierta: hoy están todas desde la apertura. El GDD no lo dice.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.
-- **OQ-CLN-002 — ¿Qué manchas hay en las jornadas 2 a 5?**
-  - Por qué sigue abierta: la ficha las deja «A definir». Hasta entonces, las cinco jornadas
-    arrancan con las cuatro de la primera.
+- **OQ-CLN-002 — ¿Qué manchas hay en las jornadas 3 a 5?**
+  - Por qué sigue abierta: sus filas de la ficha dependen en parte de un cuartito de limpieza
+    que el almacén no tiene, y de manchas en el techo del local y del depósito, que hoy quedan
+    fuera del alcance de la mira. Hasta entonces, las jornadas 3, 4 y 5 arrancan con las de la 1.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.

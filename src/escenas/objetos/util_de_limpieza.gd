@@ -35,6 +35,56 @@ var _bajada: Tween
 var _tamanos_originales: Dictionary[Node3D, Transform3D] = {}
 var _gotas: Gotas
 var _pintura_de_gotas: StandardMaterial3D
+var _resguardado := false
+
+
+## Recupera la pose de transporte antes de comprobar si el paso vuelve a estar libre.
+func restaurar_pose_en_mano() -> void:
+	if not _resguardado:
+		return
+	_resguardado = false
+	transform = Transform3D(orientacion_en_mano, Vector3.ZERO)
+	_mantener_vertical()
+
+
+## Recoge el útil conservando la cabeza a la vista: cruzar el ojo deforma su perspectiva.
+func resguardar_en_mano(camara: Camera3D, cabe: Callable) -> bool:
+	if _bajada != null and _bajada.is_running():
+		return false
+	var anterior := global_transform
+	var derecha := camara.global_basis.x
+	derecha.y = 0.0
+	derecha = derecha.normalized()
+	var vertical := Basis(derecha, Vector3.UP, derecha.cross(Vector3.UP))
+	var es_mopa := datos.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA
+	var referencia := carga.position if es_mopa else Vector3.ZERO
+	var orientaciones: Array[Basis] = [vertical]
+	if es_mopa:
+		orientaciones.append(camara.global_basis)
+	for recogida in orientaciones:
+		for giro: float in [0.0, 0.5, 1.0]:
+			var base := anterior.basis.orthonormalized().slerp(recogida, giro)
+			for bajada: float in [0.35, 0.65]:
+				for alcance: float in [0.9, 0.75, 0.55, 0.4, 0.28, 0.2, 1.1]:
+					for costado: float in [0.45, 0.0, -0.45]:
+						# Se recoge desde la cabeza, que debe seguir visible; centrar el mango
+						# dejaba toda la parte útil fuera de pantalla. No cambia la escala.
+						var punto := camara.to_global(Vector3(costado, -bajada, -1.0) * alcance)
+						global_transform = Transform3D(base, punto - base * referencia)
+						if cabe_delante_de_la_camara(camara) and cabe.call(self):
+							_resguardado = true
+							return true
+	global_transform = anterior
+	return false
+
+
+## El origen solo no basta: el borde del balde o el extremo del mango pueden cruzar el ojo.
+func cabe_delante_de_la_camara(camara: Camera3D) -> bool:
+	var limites := malla.get_aabb()
+	for indice in 8:
+		if camara.to_local(malla.to_global(limites.get_endpoint(indice))).z >= -camara.near:
+			return false
+	return true
 
 
 func _ready() -> void:
@@ -92,6 +142,7 @@ func mostrar_la_mojada(
 ) -> void:
 	if not freeze or top_level:
 		return
+	_resguardado = false
 	if _bajada != null:
 		_bajada.kill()
 	contacto_del_movimiento = balde as PhysicsBody3D
@@ -153,6 +204,8 @@ func _mover_la_mopa(
 ## Agarre quita y vuelve a colgar el nodo tanto al soltar como al cambiar de mano.
 ## La orientacion mundial de ese instante la conserva Agarre antes de quitarlo.
 func _notification(que: int) -> void:
+	if que == NOTIFICATION_UNPARENTED:
+		_resguardado = false
 	if que == NOTIFICATION_PARENTED:
 		_actualizar_tamano.call_deferred()
 	if que == NOTIFICATION_TRANSFORM_CHANGED:

@@ -1,0 +1,5 @@
+Omie's Assets - Office Set
+Author: Omie's Assets
+Source: https://omies-assets.itch.io/omies-assets-office-set
+License: CC0, free for personal and commercial use, no attribution required.
+Downloaded 2026-10-12. ComputerSetup BaseColor, Roughness, Normal and Metallic maps included.

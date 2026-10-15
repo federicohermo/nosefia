@@ -15,11 +15,17 @@ extends Node
 signal examen_iniciado(nodo: Node3D)
 signal examen_terminado
 signal objeto_revelado(datos: ObjetoDelAlmacen, es_nuevo: bool)
+## La E con las manos vacías sobre algo con texto: el subtítulo de lo que se mira, sin examen.
+signal pensamiento_pedido(texto: String)
 
 ## `Agarre` es de la misma capa, y entra por `@export` en vez de buscarse con `get_node()` hacia
 ## arriba: una escena que se reacomoda rompería la ruta sin que nada avise hasta correrla.
 @export var agarre: Agarre
 @export var punto_de_examen: Node3D
+
+## Los radianes por píxel del arrastre. Arranca en la de fábrica, y la cambia configuraciones
+## junto con la de la mirada: los dos giros usan el mismo factor.
+var sensibilidad: float = ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
 
 var _hallazgos := Hallazgos.new()
 var _examinando: Node3D = null
@@ -35,15 +41,18 @@ func esta_examinando() -> bool:
 
 ## Arranca el examen y devuelve si arrancó.
 ##
-## Lo que se lleva le gana a lo enfocado. Con las manos vacías, sólo lo no levantable
-## revela un pensamiento: no hay nada que acercar ni nadie que suspender.
-func iniciar(enfocado: ObjetoDelAlmacen = null) -> bool:
+## Lo que se lleva le gana a lo enfocado. Con las manos vacías no hay examen: sólo lo no
+## levantable revela, y lo que se mira se piensa con el texto que resolvió la cáscara, que es
+## la que sabe qué se mira. Pensarlo no lo registra: el subtítulo no es la revelación.
+func iniciar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "") -> bool:
 	if _examinando != null or agarre == null:
 		return false
 	var datos := agarre.manos().sostenido()
 	if datos == null:
 		if enfocado != null and not enfocado.es_levantable():
 			objeto_revelado.emit(enfocado, _hallazgos.registrar(enfocado))
+		if not texto_del_enfocado.is_empty():
+			pensamiento_pedido.emit(texto_del_enfocado)
 		return false
 	# Un punto sin cablear es un `.tscn` mal armado y no «no hay nada que examinar», y por eso
 	# corta acá en vez de caer al pensamiento: sin el corte, la E con una lata en la mano revelaba
@@ -88,9 +97,9 @@ func atajar_el_clic() -> bool:
 
 ## La misma tecla abre y cierra, y ese `if` sobre el estado del examen vive acá: en la escena
 ## sería una regla del juego sin test, y los dos gates darían verde sobre ella.
-func alternar(enfocado: ObjetoDelAlmacen = null) -> void:
+func alternar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "") -> void:
 	if _examinando == null:
-		iniciar(enfocado)
+		iniciar(enfocado, texto_del_enfocado)
 	else:
 		terminar()
 
@@ -109,8 +118,8 @@ func girar(entrada: Vector2, segundos: float) -> void:
 func arrastrar(relativo: Vector2, con_el_clic: bool) -> void:
 	if not con_el_clic:
 		return
-	var giro := relativo * ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
-	_rotar(-giro.x, -giro.y)
+	var giro := relativo * sensibilidad
+	_rotar(giro.x, giro.y)
 
 
 ## Sin nada en examen no hace nada: el mouse y las teclas se usan todo el tiempo, también

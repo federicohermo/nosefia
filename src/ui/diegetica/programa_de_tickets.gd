@@ -37,6 +37,7 @@ func _ready() -> void:
 		selector.hide()
 		selector.item_selected.connect(_al_elegir.bind(indice))
 		selector.get_popup().window_input.connect(_en_el_popup.bind(selector.get_popup()))
+	(marco.get_parent() as Control).gui_input.connect(_al_tocar_el_fondo)
 	borrar.pressed.connect(_al_borrar)
 	imprimir.pressed.connect(_al_imprimir)
 	salida.text = LienzoDeManada.TEXTO_DE_SALIDA
@@ -100,6 +101,15 @@ func _al_borrar() -> void:
 func _al_imprimir() -> void:
 	boton_pulsado.emit()
 	impresion_pedida.emit()
+
+
+## El clic izquierdo fuera del panel sale, igual que el derecho.
+func _al_tocar_el_fondo(evento: InputEvent) -> void:
+	var clic := evento as InputEventMouseButton
+	if clic == null or not clic.pressed or clic.button_index != MOUSE_BUTTON_LEFT:
+		return
+	if not (borrar.get_parent() as Control).get_global_rect().has_point(clic.global_position):
+		cierre_pedido.emit()
 
 
 func cerrar_las_listas() -> void:

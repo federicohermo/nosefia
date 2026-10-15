@@ -34,7 +34,7 @@ class PlantillaWebTest(unittest.TestCase):
         self.archivo = self.raiz / "motor.json"
         self.local = self.raiz / "local.zip"
         self.wasm = b"\0asm\x01\0\0\0"
-        self.js = b"motor de prueba"
+        self.js = b"motor de prueba;var prevScissorTest=gl.isEnabled(3089);"
         self._zip(self.local)
         self.datos = {
             "version_del_motor": "4.7.2-stable",
@@ -186,6 +186,35 @@ class PlantillaWebTest(unittest.TestCase):
         self._zip(self.local, b"no es wasm")
         with self.assertRaisesRegex(ValueError, "WASM|wasm"):
             self._preparar(desde=self.local)
+
+    def test_rechaza_la_consulta_sincrona_de_recorte_en_cada_cuadro(self):
+        self.js = b"var prevScissorTest=gl.getParameter(3089);"
+        self._zip(self.local)
+        with self.assertRaisesRegex(ValueError, "recorte"):
+            plantilla.validar_zip(self.local)
+
+    def test_corregir_el_recorte_conserva_el_motor_y_los_demas_archivos(self):
+        self.js = b"var prevScissorTest=gl.getParameter(3089);"
+        self._zip(self.local)
+        with zipfile.ZipFile(self.local) as archivo:
+            originales = {nombre: archivo.read(nombre) for nombre in archivo.namelist()}
+        plantilla.corregir_recorte_zip(self.local)
+        plantilla.validar_zip(self.local)
+        with zipfile.ZipFile(self.local) as archivo:
+            for nombre, contenido in originales.items():
+                if nombre != "godot.js":
+                    self.assertEqual(archivo.read(nombre), contenido)
+        corregido = self.local.read_bytes()
+        plantilla.corregir_recorte_zip(self.local)
+        self.assertEqual(self.local.read_bytes(), corregido)
+
+    def test_un_recorte_desconocido_no_reescribe_la_plantilla(self):
+        self.js = b"otro SDK"
+        self._zip(self.local)
+        original = self.local.read_bytes()
+        with self.assertRaisesRegex(ValueError, "recorte"):
+            plantilla.corregir_recorte_zip(self.local)
+        self.assertEqual(self.local.read_bytes(), original)
 
     def test_no_etiqueta_un_zip_desconocido_como_motor_parcheado(self):
         del self.datos["plantilla_local"]

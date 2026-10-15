@@ -41,3 +41,21 @@ func test_solo_el_tipo_ticket_se_desecha_en_inodoro() -> void:  # AC-CTR-031, AC
 		assert_bool(Ticket.se_desecha_en(ticket, destino)).is_false()
 	assert_int(ticket.renglones().size()).is_equal(1)
 	assert_int(ticket.renglones()[0].id).is_equal(Producto.Id.MAROLINI)
+
+
+func test_el_ticket_dice_que_productos_tiene_en_el_orden_de_sus_renglones() -> void:  # AC-SUB-014
+	var m := Producto.Id.MAROLINI
+	var c := Producto.Id.CORACOLA
+	var b := Producto.Id.MALBARDO
+	var casos := [
+		[[m], "Un ticket de compra por 1 Marolini"],
+		[[m, m, c], "Un ticket de compra por 2 Marolini y 1 Coracola"],
+		[[m, c, b], "Un ticket de compra por 1 Marolini, 1 Coracola y 1 Malbardo"],
+		[[b, b, b], "Un ticket de compra por 3 Malbardo"],
+		[[c, m, c], "Un ticket de compra por 2 Coracola y 1 Marolini"],
+	]
+	for caso: Array in casos:
+		var productos: Array[Producto] = []
+		for id: Producto.Id in caso[0]:
+			productos.append(Catalogo.de(id))
+		assert_str(Ticket.new(productos).texto_al_examinar()).is_equal(caso[1])

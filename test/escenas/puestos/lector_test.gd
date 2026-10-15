@@ -111,7 +111,7 @@ func test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano()
 	assert_object(unidad.get_parent()).is_same(padre)
 	assert_bool(unidad.freeze).is_true()
 	assert_bool(_vista(almacen).visible).is_false()
-	_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_str(_vista(almacen).filas[0].text).is_equal(
 		(unidad.datos as UnidadDeProducto).producto.nombre
 	)
@@ -261,6 +261,7 @@ func test_escaneo_con_foco_real_carga_la_caja_y_permite_imprimir() -> void:  # A
 	)
 	var puesto := _puesto(almacen)
 	assert_bool(await _enfocar(almacen, puesto, puesto.global_position)).is_true()
+	evento.button_index = MOUSE_BUTTON_LEFT
 	evento.pressed = true
 	get_viewport().push_input(evento)
 	evento = evento.duplicate()

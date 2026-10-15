@@ -120,6 +120,7 @@ func test_el_ambiente_suena_en_sus_emisores_mas_cercanos() -> void:  # AC-AMB-01
 	for indice in range(emisores.size()):
 		assert_object(emisores[indice].stream).is_same(entrada.stream)
 		assert_str(emisores[indice].bus).is_equal(EntradaSonora.BUS_DE_AMBIENTE)
+		assert_int(emisores[indice].playback_type).is_equal(AudioServer.PLAYBACK_TYPE_STREAM)
 	var cercanos: Array[int] = []
 	cercanos.assign(range(EmisoresDelAmbiente.TOPE))
 	var evento := EntradaSonora.Evento.AMBIENTE_DEL_LOCAL

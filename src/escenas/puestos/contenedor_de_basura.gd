@@ -36,3 +36,8 @@ func tirados() -> Array[Node3D]:
 
 func reiniciar() -> void:
 	_tirados.clear()
+
+
+## El cuerpo y la tapa dicen lo mismo: son el mismo contenedor.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.CONTENEDOR)

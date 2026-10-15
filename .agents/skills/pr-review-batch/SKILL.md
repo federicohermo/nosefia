@@ -67,6 +67,16 @@ gh pr list --repo federicohermo/nosefia --state open \
    review va contra esa cabeza. Sin eso el agente de arriba revisa como propio el trabajo del
    de abajo y lo arregla dos veces. Medido el 2026-09-14 en el lote 116/117/118/119: el #119
    declaraba base `staging` y contenía enteros los dos commits del #118.
+   **Una cabeza puede contener varios PR independientes.** Conservá todos los padres inmediatos,
+   no sólo el que tenga más commits. Medido el 2026-10-13: #415 contenía #414 y #419.
+   Elegir sólo #419 volvía a cobrar el código de #414. Medí la unión con `git merge-tree
+   --write-tree <padre-a> <padre-b>`. Si es limpia, creá un commit virtual con `git commit-tree
+   <árbol> -p <padre-a> -p <padre-b>` y pasalo a `diff_pr.py` con `--base-exacta`.
+   No crees ninguna rama ni ref para esa base. Sin el flag, el script busca un ancestro común
+   y vuelve a incluir un padre: el commit virtual tiene el árbol correcto pero no es ancestro.
+   Con más padres, repetí la unión. Si hay conflicto, el padre resuelve primero el contexto
+   textual; si afecta escenas, detiene esa unión según el Paso 6. Recalculá lista caliente y
+   escenas compartidas contra esa base completa.
 3. **Dibujá la cadena** y pasásela a los agentes. Un agente que sabe que su base es otro PR
    abierto sabe además que un hallazgo suyo puede pertenecer al de abajo, y lo dice en vez de
    arreglarlo dos veces.
@@ -181,6 +191,10 @@ insumos, y los cinco van **destilados**, no como rutas a leer:
   lista caliente medida** y **las escenas compartidas**. Las cuatro cosas son del padre y ninguna
   la puede derivar el agente.
 - **Las trampas de `CLAUDE.md`** que aplican al lote.
+- **Los argumentos del verificador.** `--help` muestra la ayuda sin correr nodos.
+  `--solo` acepta un único nodo: `--solo harness`, nunca una lista con comas.
+  Una opción desconocida o un nodo ausente deben fallar antes de arrancar la corrida.
+  Medido el 2026-10-13: dos carriles pidieron `--help` y el parser anterior lanzó Godot.
 - **Las dos trampas del worktree que un lote ya pisó**, medidas el 2026-10-07:
   - `git show <ref>:<ruta>` falla en Git Bash, que reescribe el argumento como una ruta. Va con
     `MSYS_NO_PATHCONV=1` adelante.
@@ -375,8 +389,8 @@ Va **al final, después de todos los fixes**, y no es orden sino calidad: mientr
 algo que hay que evitar, el review negocia con él y deja bugs adentro para no tocar una rama. Con
 el conflicto pagado acá, el Paso 3 arregla como si la pila no existiera.
 
-Si el lote no está apilado —todos los `baseRefName` son `staging`— este paso no tiene nada que
-hacer y se saltea **declarándolo en el reporte**. Con `--dry` tampoco corre.
+Si la ascendencia medida no contiene dependencias entre PR, este paso no tiene nada que
+hacer y se saltea **declarándolo en el reporte**. Las bases declaradas no reemplazan esa medición. Con `--dry` tampoco corre.
 
 ### Primero medir, sin checkout
 
@@ -396,12 +410,12 @@ quedar mal —dos cadenas que mueven el mismo conteo mergean sin chocar y dejan 
 ### La excepción que este repo agrega: la escena
 
 **Si el archivo que choca es un `.tscn` o un `.tres`, este paso NO lo resuelve y no lo intenta.**
-Un merge de tres vías sobre una escena no produce un conflicto que alguien arregla: produce una
-escena corrupta que Godot abre a medias, y `git merge-tree` la va a mergear **sin marcar nada**.
+Un merge textual puede producir una escena que Godot abre a medias. Un automerge limpio
+no certifica que la escena conserve sus enlaces y recursos; no se usa para resolverla.
 
-Y no hay red debajo: `.gitattributes` marca `binary` los `.png` y los `.ogg` **con ese mismo
-argumento escrito**, pero **no marca los `.tscn`** — medido el 2026-08-28. O sea que git los trata
-como texto y los va a mergear alegremente.
+`.gitattributes` fuerza el conflicto en los `.tscn` con `merge=binary`, conservando el diff
+legible. Eso impide el automerge textual, pero no reconstruye la escena. Comprobá los atributos
+vigentes antes de diagnosticar la unión; los `.tres` también requieren el tratamiento de escena.
 
 Lo que se hace en su lugar: **se para la cadena en esa unión**, se reporta con los dos PR y la
 escena, y se dice cuál de las dos versiones sobrevive y qué hay que rehacer a mano en el editor.
@@ -426,6 +440,9 @@ el contrato:
    pero el árbol de trabajo en Windows puede tener CRLF, y `sed -i` en Git Bash convierte el
    archivo entero: el diff pasa de tres líneas al archivo completo. `git diff --stat` después de
    resolver lo atrapa, y `git checkout --merge <archivo>` devuelve el conflicto sin perder nada.
+   Al medir árboles virtuales en Windows, pasá **bytes** a `git hash-object --stdin`:
+   `subprocess` con `text=True` convierte LF a CRLF antes de escribir el blob. Compará los bytes
+   del blob esperado con los del índice; una medición con CRLF no exige reescribir el archivo real.
 5. **`verificar.py` después de cada unión**, con el veredicto del exit code y el Paso 4 adelante.
    **Y con los specs hidratados**: sin eso los gates del registro se saltean declarándolo, y el
    merge se da por verde sin haberlos corrido.
@@ -494,7 +511,7 @@ En este orden y en ~40 líneas más la tabla:
    entregable más caro del lazo, y el único que impide que el hallazgo vuelva.
 5. **Cómo quedó la pila después del Paso 6**: qué cadena está al día contra qué, con qué SHA, y
    cada conflicto resuelto **con el criterio que lo resolvió**. La verificación va escrita al lado:
-   que cada cadena contenga entera a la de abajo —`git log <abajo>..<arriba>` vacío— y que no haya
+   que cada cadena contenga entera a la de abajo —`git log <arriba>..<abajo>` vacío— y que no haya
    aparecido ninguna ref remota nueva.
 6. **Las escenas compartidas que quedaron sin mergear**, con qué hay que rehacer a mano. Es lo que
    este repo agrega y lo que ningún merge va a resolver después.

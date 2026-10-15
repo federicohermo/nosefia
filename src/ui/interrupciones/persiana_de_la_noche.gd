@@ -16,7 +16,9 @@ var _entrada: EntradaALaNoche
 var _jornada: int
 var _ahora: Callable = Time.get_ticks_usec
 var _ultimo: int = 0
-var _avance_del_fade: float = 0.0
+## En microsegundos. Cada cuadro suma a lo sumo el paso máximo de la cabecera: el cuadro que abre
+## la partida tarda, y con el tiempo entero el fundido se iba de un salto.
+var _fade_transcurrido: int = 0
 var _negro: ColorRect
 var _bajando := false
 var _avance_de_la_bajada := 0.0
@@ -42,6 +44,7 @@ func _notification(que: int) -> void:
 func _process(_delta: float) -> void:
 	var ahora: int = _ahora.call()
 	var segundos := maxf(0.0, (ahora - _ultimo) / 1000000.0)
+	var paso := clampi(ahora - _ultimo, 0, roundi(CabeceraConSolapa.PASO_MAXIMO * 1000000.0))
 	_ultimo = ahora
 	if _bajando:
 		_avance_de_la_bajada = minf(
@@ -53,9 +56,10 @@ func _process(_delta: float) -> void:
 			_callar()
 			set_process(false)
 	elif _entrada == null:
-		_avance_del_fade = minf(1.0, _avance_del_fade + segundos / FADE_DE_LA_PERSIANA_BAJA)
-		_negro.modulate.a = 1.0 - _avance_del_fade
-		if _avance_del_fade == 1.0:
+		_fade_transcurrido += paso
+		var avance := minf(1.0, _fade_transcurrido / (FADE_DE_LA_PERSIANA_BAJA * 1000000.0))
+		_negro.modulate.a = 1.0 - avance
+		if avance == 1.0:
 			_negro.hide()
 			set_process(false)
 	else:
@@ -73,7 +77,7 @@ func mostrar_baja() -> void:
 	_bajando = false
 	layer = 4
 	_entrada = null
-	_avance_del_fade = 0.0
+	_fade_transcurrido = 0
 	_ultimo = _ahora.call()
 	_negro.modulate.a = 1.0
 	_negro.show()

@@ -12,4 +12,5 @@ script = ExtResource("1_objeto")
 id = &"bolsa_de_basura_3"
 nombre = "Bolsa de basura"
 sonoridad = 7
+subtitulo = "Una bolsa de basura."
 revelacion = SubResource("Resource_revelacion")

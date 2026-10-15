@@ -44,7 +44,7 @@ func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:
 		(
 			assert_int(casilleros.size())
 			. override_failure_message("%s: casilleros de su fila" % producto.nombre)
-			. is_equal(disposicion.filas_de_adelante[producto.id])
+			. is_equal(disposicion.casilleros_de(producto.id))
 		)
 
 

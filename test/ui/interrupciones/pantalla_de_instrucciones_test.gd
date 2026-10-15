@@ -31,17 +31,27 @@ func test_subida_llega_en_trescientos_milisegundos_reales() -> void:  # AC-EMP-0
 	pantalla.mostrar(GUION.mensajes)
 	var marco: Control = pantalla.get("_marco")
 	assert_float(marco.position.y).is_equal(1080.0)
-	ahora[0] = 150000
-	pantalla._process(10.0)
-	assert_float(marco.position.y).is_equal(540.0)
-	ahora[0] = 299999
-	pantalla._process(10.0)
+	_cuadros(ahora, 150000, [pantalla])
+	assert_float(marco.position.y).is_equal_approx(540.0, 0.01)
+	_cuadros(ahora, 299999, [pantalla])
 	assert_float(marco.position.y).is_greater(0.0)
 	assert_bool(pantalla.is_processing()).is_true()
-	ahora[0] = 300000
-	pantalla._process(0.0)
+	_cuadros(ahora, 300000, [pantalla])
 	assert_float(marco.position.y).is_zero()
 	assert_bool(pantalla.is_processing()).is_false()
+
+
+## El cuadro que abre la pantalla tarda: con el tiempo entero, se comía la subida de un salto.
+func test_un_cuadro_largo_adelanta_la_subida_un_paso_maximo() -> void:  # AC-EMP-049
+	var pantalla := _pantalla()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.mostrar(GUION.mensajes)
+	ahora[0] = 150000
+	pantalla._process(0.0)
+	var marco: Control = pantalla.get("_marco")
+	var avance := CabeceraConSolapa.PASO_MAXIMO / PantallaDeInstrucciones.DURACION_DE_LA_SUBIDA
+	assert_float(marco.position.y).is_equal_approx(1080.0 * (1.0 - avance), 0.01)
 
 
 func _sin_formato(texto: String) -> String:
@@ -121,6 +131,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 		viewport.size = resolucion
 		pantalla.mostrar(GUION.mensajes)
 		pantalla.set("_avance", 1.0)
+		pantalla.set("_transcurrido", roundi(PantallaDeInstrucciones.DURACION_DE_LA_SUBIDA * 1e6))
 		pantalla.call("_ajustar")
 		for numero in range(1, 13):
 			await get_tree().process_frame
@@ -150,8 +161,7 @@ func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
 	pantalla.mostrar(GUION.mensajes)
-	ahora[0] = 150000
-	pantalla._process(0.0)
+	_cuadros(ahora, 150000, [pantalla])
 	var marco: Control = pantalla.get("_marco")
 	var posicion := marco.position
 	get_tree().paused = true
@@ -160,6 +170,13 @@ func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC
 		await get_tree().process_frame
 	assert_vector(marco.position).is_equal(posicion)
 	get_tree().paused = false
-	ahora[0] += 150000
-	pantalla._process(0.0)
+	_cuadros(ahora, ahora[0] + 150000, [pantalla])
 	assert_float(marco.position.y).is_zero()
+
+
+## Avanza el reloj hasta `hasta` en cuadros de 10 ms, como un juego que corre parejo.
+func _cuadros(ahora: Array[int], hasta: int, nodos: Array[Node]) -> void:
+	while ahora[0] < hasta:
+		ahora[0] = mini(ahora[0] + 10000, hasta)
+		for nodo in nodos:
+			nodo.call("_process", 0.0)

@@ -30,6 +30,40 @@ func test_el_cilindro_reduce_las_lineas_verticales_y_conserva_los_aros() -> void
 	assert_int(aros.size()).is_greater_equal(64)
 
 
+## Lo que dibuja el shader: en una curva, sólo un aro marcado; fuera de ella, la arista marcada.
+func _dibujada(mascara: int, esquina: int) -> bool:
+	if mascara & (1 << (esquina + 3)):
+		return mascara & (1 << (esquina + 6)) != 0
+	return mascara & (1 << esquina) != 0
+
+
+func test_la_botella_de_ocho_lados_se_remarca_como_un_cilindro() -> void:
+	var botella := CylinderMesh.new()
+	botella.radial_segments = 8
+	botella.rings = 1
+	var preparada := AristasDelProducto.preparar(botella)
+	var arreglos := preparada.surface_get_arrays(0)
+	var vertices: PackedVector3Array = arreglos[Mesh.ARRAY_VERTEX]
+	var coordenadas: PackedFloat32Array = arreglos[Mesh.ARRAY_CUSTOM0]
+	var verticales := 0
+	var aros := 0
+	for inicio in range(0, vertices.size(), 3):
+		var mascara := int(coordenadas[inicio * 4 + 3])
+		for esquina in 3:
+			if not _dibujada(mascara, esquina):
+				continue
+			var desde := vertices[inicio + (esquina + 1) % 3]
+			var hasta := vertices[inicio + (esquina + 2) % 3]
+			if absf(desde.y - hasta.y) < 0.00001:
+				aros += 1
+			elif is_equal_approx(
+				Vector2(desde.x, desde.z).distance_to(Vector2(hasta.x, hasta.z)), 0
+			):
+				verticales += 1
+	assert_int(verticales).is_zero()
+	assert_int(aros).is_greater_equal(16)
+
+
 func test_la_caja_marca_sus_aristas_y_no_las_diagonales_de_las_caras() -> void:
 	var original := BoxMesh.new()
 	var preparada := AristasDelProducto.preparar(original)

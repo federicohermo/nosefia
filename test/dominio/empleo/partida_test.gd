@@ -242,3 +242,79 @@ func test_jornada_tres_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC
 		otra.cerrar_la_jornada(otro_turno.tareas_cumplidas())
 		assert_int(otra.medios()).is_equal(caso["medios"])
 		assert_int(otra.legajo().medios()).is_equal(caso["medios"])
+
+
+func _cerrar_con(partida: Partida, sin_cumplir: Array[Tarea.Tipo], llamados: Array) -> void:
+	partida.abrir_la_jornada()
+	var cumplidas := 0
+	for tarea: Tarea in partida.obligatorias():
+		if not sin_cumplir.has(tarea.tipo()):
+			tarea.completar()
+			cumplidas += 1
+	for llamado: Partida.Llamado in llamados:
+		partida.anotar_llamado(llamado)
+	partida.cerrar_la_jornada(cumplidas)
+
+
+func test_cerrar_anota_las_cuentas_de_la_noche() -> void:  # AC-EMP-059
+	var partida := Partida.nueva()
+	partida.abrir_la_jornada()
+	for tarea: Tarea in partida.obligatorias():
+		if tarea.tipo() in [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR]:
+			tarea.completar()
+	# Cumplida y descumplida antes del cierre: vale el estado al cerrar.
+	var limpiar: Tarea = null
+	for tarea: Tarea in partida.obligatorias():
+		if tarea.tipo() == Tarea.Tipo.LIMPIAR:
+			limpiar = tarea
+	limpiar.completar()
+	limpiar.descompletar()
+	partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
+	partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
+	partida.cerrar_la_jornada(2)
+	var cuentas := partida.antecedentes()
+	assert_int(cuentas.fallas(Tarea.Tipo.REPONER)).is_equal(1)
+	assert_int(cuentas.fallas(Tarea.Tipo.LIMPIAR)).is_equal(1)
+	assert_int(cuentas.fallas(Tarea.Tipo.CAJA)).is_zero()
+	assert_int(cuentas.fallas(Tarea.Tipo.REGISTRAR)).is_zero()
+	assert_int(cuentas.llamados(Partida.Llamado.PAPEL_EN_EL_INODORO)).is_equal(1)
+	assert_bool(cuentas.hubo_llamados()).is_true()
+	assert_int(cuentas.noches_sin_sumar()).is_zero()
+	partida.cerrar_la_jornada(5)
+	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(1)
+	_cerrar_con(partida, [], [])
+	assert_int(partida.antecedentes().noches_sin_sumar()).is_equal(1)
+	_cerrar_con(partida, [], [])
+	assert_int(partida.antecedentes().noches_sin_sumar()).is_equal(2)
+	_cerrar_con(partida, [], [Partida.Llamado.OBJETO_AFUERA])
+	assert_int(partida.antecedentes().noches_sin_sumar()).is_zero()
+	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(1)
+
+
+func test_las_devoluciones_se_concatenan_y_vuelven_del_guardado() -> void:  # AC-EMP-066, AC-SAV-024
+	var partida := Partida.nueva()
+	assert_array(partida.mensajes_del_jefe()).is_empty()
+	_cerrar_con(partida, [Tarea.Tipo.REPONER], [Partida.Llamado.PAPEL_EN_EL_INODORO])
+	var primera := DevolucionDelJefe.new(1, partida).mensajes()
+	_cerrar_con(partida, [Tarea.Tipo.REPONER], [])
+	var segunda := DevolucionDelJefe.new(2, partida).mensajes()
+	var esperado := PackedStringArray(primera + segunda)
+	assert_array(partida.mensajes_del_jefe()).is_equal(esperado)
+	var retomada := Partida.desde(PoliticaDeGuardado.datos(partida))
+	assert_int(retomada.jornada()).is_equal(3)
+	assert_array(retomada.mensajes_del_jefe()).is_equal(esperado)
+	assert_int(retomada.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(2)
+	assert_int(retomada.antecedentes().llamados(Partida.Llamado.PAPEL_EN_EL_INODORO)).is_equal(1)
+	assert_bool(retomada.antecedentes().hubo_llamados()).is_true()
+	assert_int(retomada.antecedentes().noches_sin_sumar()).is_equal(
+		partida.antecedentes().noches_sin_sumar()
+	)
+	_cerrar_con(retomada, [Tarea.Tipo.REPONER], [])
+	(
+		assert_bool(
+			DevolucionDelJefe.new(3, retomada).mensajes()[1].begins_with(
+				"De nuevo quedaron algunas"
+			)
+		)
+		. is_true()
+	)

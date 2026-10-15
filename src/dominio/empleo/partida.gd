@@ -25,6 +25,9 @@ var _obligatorias: Array[Tarea] = []
 var _jornada_abierta: bool = false
 var _final: Final = Final.EN_CURSO
 var _llamados: Array[Llamado] = []
+var _antecedentes := Antecedentes.new()
+var _mensajes_del_jefe := PackedStringArray()
+var _mopa_secada := false
 
 
 func anotar_llamado(llamado: Llamado) -> void:
@@ -55,7 +58,21 @@ static func desde(datos: Dictionary) -> Partida:
 	var medios: int = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS)]
 	var partida := Partida.new(Legajo.con_medios(medios))
 	partida._jornada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA)]
+	partida._antecedentes = Antecedentes.desde(saneado)
+	for texto: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.DEVOLUCIONES)]:
+		if texto is String:
+			partida._mensajes_del_jefe.append(texto)
+	partida._mopa_secada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA)]
 	return partida
+
+
+## Si la mopa ya se secó una vez en la partida y se mostró su pensamiento (BR-SUB-014).
+func mopa_secada() -> bool:
+	return _mopa_secada
+
+
+func anotar_mopa_secada() -> void:
+	_mopa_secada = true
 
 
 func _init(legajo: Legajo) -> void:
@@ -74,6 +91,16 @@ func legajo() -> Legajo:
 ## quienes lo leen necesitan el número, no la pieza que lo lleva.
 func apercibimientos() -> int:
 	return _legajo.apercibimientos()
+
+
+## Las cuentas que la devolución lee entre noches, con la última noche cerrada ya anotada.
+func antecedentes() -> Antecedentes:
+	return _antecedentes
+
+
+## Los mensajes de las devoluciones recibidas, en el orden en que llegaron.
+func mensajes_del_jefe() -> PackedStringArray:
+	return _mensajes_del_jefe.duplicate()
 
 
 func jornada() -> int:
@@ -134,11 +161,21 @@ func cerrar_la_jornada(cumplidas: int) -> void:
 	if not _jornada_abierta:
 		return
 	_jornada_abierta = false
+	var cerrada := _jornada
+	var medios_antes := _legajo.medios()
 	_legajo.registrar(cumplidas, _obligatorias.size(), _llamados.size())
+	var sin_cumplir: Array[Tarea.Tipo] = []
+	for tarea: Tarea in _obligatorias:
+		if not tarea.completada():
+			sin_cumplir.append(tarea.tipo())
+	_antecedentes.anotar_noche(sin_cumplir, _llamados, _legajo.medios() - medios_antes)
 	if _legajo.despedido():
 		_final = Final.DESPEDIDO
-		return
-	if es_la_ultima_jornada():
+	elif es_la_ultima_jornada():
 		_final = Final.CONTRATO_CUMPLIDO
-		return
-	_jornada += 1
+	else:
+		_jornada += 1
+	# Después de anotar la noche: la devolución lee las cuentas que ya la incluyen.
+	_mensajes_del_jefe.append_array(
+		PackedStringArray(DevolucionDelJefe.new(cerrada, self).mensajes())
+	)
