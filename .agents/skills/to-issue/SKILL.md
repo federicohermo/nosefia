@@ -48,21 +48,6 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
-**Un dato compartido entra por parámetro, también en las firmas del issue.** Si dos
-consumidores deben usar la misma selección aleatoria, declarar quién la construye una vez y
-pasar esa instancia a ambos; ninguna consulta vuelve a invocar la fábrica. Al ampliar un issue,
-actualizar premisa, criterios, firmas y límites juntos, sin conservar un contrato previo que
-contradiga el agregado. En #367, el cruce con #433 exigía compartir pedidos, pero la firma
-original de apertura todavía los reconstruía por jornada. Una fábrica futura no bloquea la
-recepción de una lista ya representable: el test usa datos propios dentro del alcance vigente.
-
-**Al reemplazar una tabla fija por un sorteo, medir las invariantes que sus valores
-protegían.** Leer reglas y tests anteriores antes de generalizar los límites. Separar el cupo
-total del cupo donde se permite abrir huecos: un inventario puede contar guías y tanda principal
-sin que ambas admitan faltantes iniciales. En #367, usar el total permitía vaciar guías y
-debilitaba el AC que antes acotaba la fila principal. Declarar ambos datos en las firmas y
-probar la apertura sobre la geometría real, conservando las interacciones de cada tanda.
-
 **Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
 reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
 acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
@@ -97,6 +82,21 @@ viewport, convierte las coordenadas con `ClientToScreen` y afirma la opción sel
 Sólo opera el HWND de su proceso, validando descendencia, ejecutable y proyecto. En #303,
 el driver sin consciencia DPI medía 1536 píxeles donde Godot dibujaba 1920 y elegía otra fila.
 La selección pasó en ambas resoluciones al corregir el driver, sin tocar producción.
+
+**Un dato compartido entra por parámetro, también en las firmas del issue.** Si dos
+consumidores deben usar la misma selección aleatoria, declarar quién la construye una vez y
+pasar esa instancia a ambos; ninguna consulta vuelve a invocar la fábrica. Al ampliar un issue,
+actualizar premisa, criterios, firmas y límites juntos, sin conservar un contrato previo que
+contradiga el agregado. En #367, el cruce con #433 exigía compartir pedidos, pero la firma
+original de apertura todavía los reconstruía por jornada. Una fábrica futura no bloquea la
+recepción de una lista ya representable: el test usa datos propios dentro del alcance vigente.
+
+**Al reemplazar una tabla fija por un sorteo, medir las invariantes que sus valores
+protegían.** Leer reglas y tests anteriores antes de generalizar los límites. Separar el cupo
+total del cupo donde se permite abrir huecos: un inventario puede contar guías y tanda principal
+sin que ambas admitan faltantes iniciales. En #367, usar el total permitía vaciar guías y
+debilitaba el AC que antes acotaba la fila principal. Declarar ambos datos en las firmas y
+probar la apertura sobre la geometría real, conservando las interacciones de cada tanda.
 
 ```bash
 rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
