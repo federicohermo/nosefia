@@ -61,6 +61,7 @@ flowchart TD
   PLY -.-> AMB
   INV -.-> AMB
   CTR -.-> NTF
+  INV -.-> NTF
   SHF -.-> NTF
   SAV -- "los dos menús abren Configuraciones" --> CFG
   CFG -- "volumen de cada bus" --> AMB
@@ -69,8 +70,9 @@ flowchart TD
 ```
 
 La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
-`notifications` escucha la llegada, el rechazo del lector y el cierre del turno. Ninguna
-contesta a quien publica el suceso. Por eso la tabla de sonidos es un archivo y no un `match`:
+El contrato de `notifications` incluye llegada, vencimiento, rechazo del lector, pista nueva
+anotada y cierre del turno. Ninguna contesta a quien publica el suceso.
+Por eso la tabla de sonidos es un archivo y no un `match`:
 agregar un sonido no toca a quien lo emite.
 
 ## Las dos mitades de la resta
