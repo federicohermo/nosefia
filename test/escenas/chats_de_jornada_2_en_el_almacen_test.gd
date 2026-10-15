@@ -6,11 +6,14 @@ const YASMIN := Conversacion.Interlocutor.YASMIN
 var _almacen: Node3D
 var _ruta_anterior: String
 var _tamano_anterior: Vector2i
+var _modo_anterior: Window.Mode
 
 
 func before_test() -> void:
 	_ruta_anterior = Guardado.ruta_por_defecto
 	_tamano_anterior = get_window().size
+	_modo_anterior = get_window().mode
+	get_window().mode = Window.MODE_WINDOWED
 	get_window().size = Vector2i(1920, 1080)
 	Guardado.ruta_por_defecto = "user://chats_jornada_2_430.guardado"
 	Guardado.new().borrar()
@@ -31,6 +34,7 @@ func after_test() -> void:
 	Guardado.new().borrar()
 	Guardado.ruta_por_defecto = _ruta_anterior
 	get_window().size = _tamano_anterior
+	get_window().mode = _modo_anterior
 
 
 func _cuadros(cuantos: int) -> void:
@@ -87,6 +91,7 @@ func _checkpoint() -> Partida:
 
 # AC-INV-039, AC-INV-056, AC-SAV-027
 func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() -> void:
+	assert_vector(get_viewport().get_visible_rect().size).is_equal(Vector2(1920, 1080))
 	assert_bool(Guardado.new().escribir(PoliticaDeGuardado.datos(_checkpoint()))).is_true()
 	await _abrir()
 	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
