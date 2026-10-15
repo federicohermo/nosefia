@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: draft
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #367, #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
 
 # Capacidad: la mercadería del almacén
@@ -37,6 +37,8 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Cupo** | cuántos casilleros suman las filas de adelante de las tandas de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
+| **Máximo reponible** | el menor entre los casilleros de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
+| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
 | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
@@ -197,16 +199,28 @@ El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mi
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
 
-CUANDO se abre una jornada, el sistema DEBE dejar faltando lo que dice su fila, y ningún otro
-producto:
+CUANDO se abre cualquier jornada, de la 1 a la 5, el sistema DEBE sortear sus faltantes.
+DEBE elegir entre 4 y 7 productos distintos y, de cada uno, entre 1 unidad y su máximo
+reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
+[ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
 
-| Jornada | Faltan en la góndola |
-|---|---|
-| 1 | 4 Actroncito, 5 Coracola, 2 Marolini, 8 Prongles y 4 Laysntt |
-| 2 a 5 | los de la jornada 1, mientras la ficha no decida los suyos (OQ-STK-005) |
+Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades
+de una caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` sus casilleros
+de la fila de adelante (BR-STK-008). Sólo los productos con máximo reponible mayor o igual
+a 1 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa
+apertura, incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE
+volver a sortear compradores ni pedidos.
 
-La distribución del modelo confirmada durante la prueba del 2026-10-13 conserva cuatro lugares
-de Actroncito y cinco de Coracola; sus faltantes respetan esos cupos.
+La cantidad de productos y las unidades de cada elegido DEBEN sortearse con reparto parejo
+entre los enteros de sus intervalos inclusivos. Los productos DEBEN elegirse sin repetición.
+SI hay menos elegibles que la cantidad sorteada, ENTONCES DEBEN faltar todos los elegibles
+y ninguno más. Con cero elegibles NO DEBE faltar nada.
+
+El sistema DEBE recibir la fuente de azar: con la misma semilla inicial, pedidos y casilleros,
+DEBE producir los mismos faltantes. En juego, la fuente DEBE inicializarse al azar.
+CUANDO abre la jornada siguiente o se retoma una jornada desde el menú o en otra sesión,
+el sistema DEBE sortear de nuevo, sin recuperar una semilla guardada. Dos sorteos pueden
+coincidir: sortear de nuevo NO DEBE exigir un resultado distinto del anterior.
 
 ### BR-STK-027 — Lo que se vende no le quita a lo que se repone
 
@@ -516,20 +530,43 @@ faltante.
 
 ### AC-STK-033 — Ningún faltante pasa de una caja ni de su fila *(verifica BR-STK-004)*
 
-DADO los faltantes de cada jornada, de la 1 a la 5, ENTONCES ninguno pasa de 8 ni de los
-casilleros de la fila de adelante de su producto.
+DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 1 a la 5 y los casilleros
+medidos en el local CUANDO se sortean los faltantes ENTONCES ninguno pasa de las unidades
+de una caja —8 en el balance vigente— ni de los casilleros de la fila de adelante de su producto.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
-DADO la jornada 1 que se abre ENTONCES faltan 4 Actroncito, 5 Coracola, 2 Marolini, 8 Prongles y
-4 Laysntt, y todos los demás productos tienen su fila de adelante completa. DADO las jornadas 2,
-3, 4 y 5 ENTONCES faltan los mismos.
+DADO las 200 semillas enteras de 0 a 199, ocho casilleros por producto y los pedidos de cada jornada de
+la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y 7 productos
+distintos. Cada faltante está entre 1 y `mínimo(C − P, F)`, y los productos no elegidos están
+completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y
+dos conjuntos de productos distintos.
+
+DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
+se pueden obtener 4 y 7 productos, y 1 y el máximo reponible de cada elegido. La elección de
+cantidad tiene cuatro alternativas equiprobables; la de unidades tiene tantas alternativas
+equiprobables como su máximo reponible.
+
+DADO una caja de 8 CUANDO un producto tiene 6 casilleros y 3 unidades pedidas ENTONCES su
+máximo es 5. Con 4 casilleros y 1 unidad pedida, el máximo es 4. Con 8 unidades pedidas o
+con cero casilleros, el producto nunca falta. DADO exactamente tres elegibles CUANDO la
+cantidad sorteada es 4 o 7 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
+CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
+
+DADO dos fuentes con la misma semilla inicial, los mismos pedidos y casilleros CUANDO se
+abre la misma jornada ENTONCES los faltantes coinciden. Consultar los pedidos conserva las
+identidades y cantidades recibidas y no consume azar. CUANDO se abre otra jornada, se vuelve
+al menú y se continúa, o se retoma en otra sesión ENTONCES se realiza un nuevo sorteo.
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO cada jornada, de la 1 a la 5, CUANDO se completan todas sus compras por el recorrido de su jornada
-ENTONCES ningún cobro se rechaza, y después se puede reponer todo lo que falta y dar reponer por
-cumplida.
+DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 1 a la 5 CUANDO
+se completan todas las compras de los pedidos usados para acotar los faltantes, por el
+recorrido de esa jornada, ENTONCES ningún cobro se rechaza. CUANDO después se repone todo lo
+que falta ENTONCES la góndola queda completa y reponer queda cumplida.
+En el recorrido físico, el resultado se conserva tanto tomando las unidades vendidas de sus
+cajas como de casilleros ocupados: también se reponen los casilleros vaciados por esas ventas.
 
 ### AC-STK-036 — La caja arranca en 8 y cuenta lo que sale *(verifica BR-STK-028)*
 
@@ -749,13 +786,17 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 ## Contratos
 
 - **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
-  jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
+  jornada que se abre, sus pedidos ya construidos y la fuente de azar, lo vendido de cada producto,
+  lo que el jugador lleva en la mano, la caja
   que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
   a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la planilla.
 - **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
   obligatoria está cumplida, y el motivo de cada rechazo.
+- **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
+  producto y devuelve faltantes dentro de su máximo reponible. Con menos elegibles que la
+  cantidad sorteada devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
 - **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
   una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
   la condición de orden. Ciclos y apoyos ausentes contestan pendiente; el conjunto vacío,
@@ -779,8 +820,9 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
-  compara la planilla, y cada cobro vuelve a compararla; lo que piden los compradores de cada
-  jornada entra en lo que la reposición deja (BR-STK-027).
+  compara la planilla, y cada cobro vuelve a compararla; los mismos pedidos construidos para
+  esa apertura acotan los faltantes, sin otra selección de compradores o productos
+  (BR-STK-026, BR-STK-027).
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja
   en la mano, y lo que la mano lleva decide qué hace el clic sobre la caja y sobre cada casillero;
   qué casilleros están vacíos y cuáles ocupados decide cuáles se muestran y cuáles se agarran.
@@ -799,10 +841,4 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
     —botella de vidrio y caja de cereal— y no hay audio para ellas. Mientras tanto suenan como
     la botella plástica y la cajita, que son las más parecidas.
   - Decide: el equipo de sonido.
-  - Bloquea: nada.
-- **OQ-STK-005 — ¿Qué falta en las jornadas 2 a 5?**
-  - Por qué sigue abierta: la ficha «8. Tarea: Reposición» fija los faltantes de la jornada 1 y
-    dice «A definir» en las otras cuatro. Mientras tanto arrancan con los de la jornada 1
-    (BR-STK-026).
-  - Decide: el diseño, en la ficha.
   - Bloquea: nada.
