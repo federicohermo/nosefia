@@ -48,6 +48,14 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Un dato compartido entra por parámetro, también en las firmas del issue.** Si dos
+consumidores deben usar la misma selección aleatoria, declarar quién la construye una vez y
+pasar esa instancia a ambos; ninguna consulta vuelve a invocar la fábrica. Al ampliar un issue,
+actualizar premisa, criterios, firmas y límites juntos, sin conservar un contrato previo que
+contradiga el agregado. En #367, el cruce con #433 exigía compartir pedidos, pero la firma
+original de apertura todavía los reconstruía por jornada. Una fábrica futura no bloquea la
+recepción de una lista ya representable: el test usa datos propios dentro del alcance vigente.
+
 **Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
 reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
 acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
