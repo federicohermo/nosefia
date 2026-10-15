@@ -48,6 +48,11 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Una rama con contrato preparado también se mide por su diff.** Cruzar los archivos de sus
+commits contra «Se escribe», incluida la documentación de responsabilidades que el contrato
+actualizó. En #366, el contrato ya traía `docs/architecture/capacidades.md`, pero el plan sólo
+nombraba los specs. El issue debe declarar ese delta completo antes de implementar sobre él.
+
 **Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
 reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
 acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
