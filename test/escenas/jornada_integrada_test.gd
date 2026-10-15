@@ -321,7 +321,7 @@ func _limpiar(almacen: Node3D) -> void:
 			_usar_sobre(jugador, balde)
 			await _enfocar_mancha(jugador, mancha)
 			var clic := InputEventMouseButton.new()
-			clic.button_index = MOUSE_BUTTON_RIGHT
+			clic.button_index = MOUSE_BUTTON_LEFT
 			clic.pressed = true
 			get_viewport().push_input(clic)
 			(
@@ -349,12 +349,12 @@ func _agarrar(agarre: Agarre, util: Node3D) -> void:
 	assert_bool(agarre.pedir_agarrar(util.call("interactuar"), util)).is_true()
 
 
-## El clic derecho sobre el objetivo, con la mira apagada: lo que se tiene adelante lo pone el caso.
+## El uso primario sobre el objetivo, con la mira apagada: el caso pone lo que se tiene adelante.
 func _usar_sobre(jugador: Node3D, objetivo: Node3D) -> void:
 	jugador.set_physics_process(false)
 	jugador.set("_enfocado", objetivo)
 	var evento := InputEventAction.new()
-	evento.action = ReglasDelJugador.ACCION_USAR
+	evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
 	evento.pressed = true
 	jugador.call("_unhandled_input", evento)
 

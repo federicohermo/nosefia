@@ -33,7 +33,7 @@ func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
 		assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-		assert_bool(cuerpo.has_method("usar")).is_true()
+		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)).is_true()
 		var mallas: Variant = cuerpo.get("mallas")
 		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
 
@@ -43,7 +43,7 @@ func test_el_izquierdo_abre_la_puerta_y_el_derecho_no() -> void:  # AC-PLY-055
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
-		assert_object(cuerpo.call("accionar")).is_null()
+		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_false()
 		assert_bool(cuerpo.call("puerta").abierta()).is_false()
 		assert_int(cuerpo.call("contexto_de_interaccion", null).ruta_secundaria).is_equal(
 			ReferenciaDeControles.Ruta.IGNORAR
@@ -221,7 +221,7 @@ func test_tres_puertas_estan_trabadas_y_las_dos_interiores_no() -> void:  # AC-P
 	for ruta: String in TRABADAS:
 		var cuerpo: StaticBody3D = almacen.get_node(ruta + "/CuerpoDeLaHoja")
 		assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR)).is_true()
+		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)).is_true()
 		var mallas: Variant = cuerpo.get("mallas")
 		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
 		assert_bool(cuerpo.call("puerta").trabada()).override_failure_message(ruta).is_true()

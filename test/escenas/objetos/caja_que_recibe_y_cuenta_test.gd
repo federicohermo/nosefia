@@ -1,4 +1,4 @@
-## La caja del depósito en el local: el clic derecho le devuelve la unidad de su producto, y la E
+## La caja del depósito en el local: el clic izquierdo devuelve la unidad de su producto, y la E
 ## muestra cuántas tiene.
 ##
 ## Lo que la caja decide tiene sus casos en `dominio/`. Acá se afirma el cableado: que el clic y

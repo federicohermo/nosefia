@@ -36,7 +36,7 @@ func _accion(almacen: Node3D, objetivo: Node3D, primario: bool) -> void:
 func _agarrar(almacen: Node3D, objeto: Node3D) -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	if agarre.manos().sostenido() != null:
-		agarre.entregar()
+		agarre.soltar(false)
 	assert_bool(agarre.pedir_agarrar(objeto.get("datos"), objeto)).is_true()
 
 
@@ -110,6 +110,8 @@ func test_rechazar_conserva_util_agua_y_carga() -> void:  # AC-CLN-068 AC-PLY-09
 	var limpiador: Limpiador = almacen.get("_limpiador")
 	var balde: Node3D = almacen.get_node("Objetos/Balde")
 	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
+	var amarillo: Node3D = almacen.get_node("Objetos/JabonAmarillo")
+	var azul: Node3D = almacen.get_node("Objetos/JabonAzul")
 	var inodoro: Node3D = almacen.get_node("Estructura/inodoro/StaticBody3D")
 	var lavatorio: Node3D = almacen.get_node("Estructura/vanitory/StaticBody3D")
 	var rechazos: Array[ReglasDeLaLimpieza.Resultado] = []
@@ -118,14 +120,14 @@ func test_rechazar_conserva_util_agua_y_carga() -> void:  # AC-CLN-068 AC-PLY-09
 	)
 	_un_uso(almacen, mopa, balde)
 	_un_uso(almacen, balde, inodoro)
-	_un_uso(almacen, almacen.get_node("Objetos/JabonAmarillo"), balde)
+	_un_uso(almacen, amarillo, balde)
 	_un_uso(almacen, mopa, _mancha(almacen))
 	_un_uso(almacen, balde, lavatorio)
 	_un_uso(almacen, mopa, balde)
 	_un_uso(almacen, mopa, _mancha(almacen))
 	_un_uso(almacen, balde, lavatorio)
-	_un_uso(almacen, almacen.get_node("Objetos/JabonAzul"), balde)
-	_un_uso(almacen, almacen.get_node("Objetos/JabonAmarillo"), balde)
+	_un_uso(almacen, azul, balde)
+	_un_uso(almacen, amarillo, balde)
 	_un_uso(almacen, mopa, balde)
 	var carga := limpiador.piso().mopa().carga_restante()
 	_un_uso(almacen, mopa, _mancha(almacen))
@@ -203,6 +205,7 @@ func _clic_real(boton: MouseButton, posicion: Vector2) -> void:
 		evento.button_index = boton
 		evento.pressed = presionado
 		evento.position = posicion
+		evento.global_position = posicion
 		get_viewport().push_input(evento)
 		await get_tree().process_frame
 
@@ -224,18 +227,23 @@ func test_salir_de_computadora_caja_y_nota_consume_el_clic() -> void:  # AC-PLY-
 	var caja: Node3D = almacen.get_node("Estructura/cajaregistradora/StaticBody3D")
 	var nota: Node3D = almacen.get_node("Estructura/NotasDelAlmacen").get("notas")[0]
 	var centro := get_viewport().get_visible_rect().get_center()
+	var fuera := get_viewport().get_visible_rect().position + Vector2.ONE
+	var programa: ProgramaDeTickets = almacen.get_node("Interfaz/ProgramaDeTickets")
+	var margenes := (programa.borrar.get_parent() as Control).get_global_rect()
+	assert_bool(get_viewport().get_visible_rect().has_point(fuera)).is_true()
+	assert_bool(margenes.has_point(fuera)).is_false()
 	for caso: Array in [
 		[computadora, MOUSE_BUTTON_RIGHT, centro],
 		[caja, MOUSE_BUTTON_RIGHT, centro],
 		[nota, MOUSE_BUTTON_RIGHT, centro],
 		[nota, MOUSE_BUTTON_LEFT, centro],
-		[caja, MOUSE_BUTTON_LEFT, Vector2(-10, -10)]
+		[caja, MOUSE_BUTTON_LEFT, fuera]
 	]:
 		_accion(almacen, caso[0], true)
 		assert_bool(jugador.call("suspendido")).is_true()
 		await get_tree().process_frame
 		await _clic_real(caso[1], caso[2])
-		assert_bool(jugador.call("suspendido")).is_false()
+		assert_bool(jugador.call("suspendido")).override_failure_message(str(caso)).is_false()
 		assert_object(agarre.manos().sostenido()).is_same(unidad)
 		assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
 		assert_object(cuerpo.get_parent()).is_same(padre)

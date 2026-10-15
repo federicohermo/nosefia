@@ -93,7 +93,7 @@ func test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre() -> void:  # AC-CLN
 	var bisagra := tapa.bisagra.global_position
 	assert_bool(tapa.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 	assert_array(tapa.mallas).has_size(2)
-	assert_object(tapa.call("interactuar")).is_null()
+	assert_bool(tapa.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_false()
 	tapa.accionar()
 	await _terminar_el_giro(tapa)
 	var centro := _centro_interior(contenedor)
@@ -163,13 +163,19 @@ func test_bolsa_con_tapa_cerrada_se_conserva_hasta_el_clic_abierta() -> void:  #
 	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
-	tapa.interactuar()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	jugador.set("_enfocado", almacen.get("_contenedor"))
+	var clic := InputEventAction.new()
+	clic.action = ReglasDeLosObjetos.ACCION_AGARRAR
+	clic.pressed = true
+	jugador.call("_unhandled_input", clic)
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
 	tapa.accionar()
 	await _terminar_el_giro(tapa)
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
 	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
-	tapa.interactuar()
+	jugador.call("_unhandled_input", clic)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(almacen.get("_recolector").tarea().depositadas()).is_equal(1)
 

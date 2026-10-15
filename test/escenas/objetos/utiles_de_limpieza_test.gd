@@ -1,7 +1,7 @@
 ## Los útiles de limpieza en el almacén: son las mallas del modelo, arrancan cada noche en el baño,
 ## y el balde y la mopa muestran lo que el piso dice que tienen.
 ##
-## Los gestos se dan como en el juego: la mira enfoca algo y llega el clic derecho. La mira se
+## Los gestos se dan como en el juego: la mira enfoca algo y llega el clic izquierdo. La mira se
 ## apaga para que el caso decida qué se enfoca, y el clic entra por la acción, no por el botón.
 extends GdUnitTestSuite
 
@@ -410,8 +410,11 @@ func test_rechazar_el_mojado_no_mueve_la_mopa() -> void:
 	var almacen: Node3D = await _almacen()
 	var mopa := _mopa_en_la_mano(almacen, false)
 	var antes := mopa.transform
-	for destino: Node3D in [_util(almacen, "Balde"), almacen.get_node(LAVATORIO)]:
-		_accion(almacen, destino, ReglasDeLosObjetos.ACCION_AGARRAR)
+	for caso: Array in [
+		[_util(almacen, "Balde"), ReglasDeLosObjetos.ACCION_AGARRAR],
+		[almacen.get_node(LAVATORIO), ReglasDelJugador.ACCION_USAR]
+	]:
+		_accion(almacen, caso[0], caso[1])
 		await get_tree().process_frame
 		assert_bool(mopa.transform.is_equal_approx(antes)).is_true()
 		assert_object(mopa.get("_bajada")).is_null()
