@@ -19,11 +19,11 @@ from lib.reparto import (
     FRIOS,
     HELADERAS,
     MUEBLES,
-    MUEBLES_SIN_EXHIBICION,
     PRODUCTOS,
     SECTORES,
     SOLO_DEPOSITO,
     Tanda,
+    cara_de_isla,
     es_cabecera,
     es_heladera,
     partes,
@@ -35,24 +35,23 @@ from lib.repo import RAIZ
 
 CATALOGO = RAIZ / "src/dominio/almacen/catalogo.gd"
 
-#: Cuántos estantes tiene cada cara de góndola, contando el zócalo. Medido sobre el `.blend` del
-#: 2026-09-29: las caras de lado tienen zócalo y tres chapas, y las cabeceras zócalo y dos.
+#: Las cuatro chapas originales: zócalo y superior fijos, los dos niveles centrales reponibles.
 NIVELES_DE_LADO = 4
-NIVELES_DE_CABECERA = 3
+NIVELES_DE_CABECERA = 4
 
 #: Cuántas bandejas tiene cada heladera. Medido sobre el mismo `.blend`.
 BANDEJAS_DE_HELADERA = 4
 
 #: Las caras de lado del local: las dos de cada góndola del medio y la única de las de pared.
-CARAS_DE_LADO = ("A.oeste", "A.este", "B.oeste", "B.este", "N.sur", "S.sur")
+CARAS_DE_LADO = ("A.oeste", "A.este", "B.oeste", "B.este", "N.sur")
 
 
 def _es_de_reposicion(estante: str) -> bool:
     """Si el estante está a la altura de la mano: en una cara de lado, los que no son ni el de
-    arriba ni el zócalo; en una cabecera, los que no son el de arriba."""
+    arriba ni el zócalo, también en las cuatro chapas de cada cabecera."""
     _, _, nivel = partes(estante)
     if es_cabecera(estante):
-        return nivel < NIVELES_DE_CABECERA - 1
+        return 0 < nivel < NIVELES_DE_CABECERA - 1
     return 0 < nivel < NIVELES_DE_LADO - 1
 
 
@@ -72,31 +71,60 @@ def _filas_del_catalogo() -> list[tuple[str, str]]:
 
 
 class ElReparto(unittest.TestCase):
+    def test_las_chapas_inclinadas_son_cabeceras_aunque_acorten_su_fondo(self):
+        # AC-STK-085: centros/normales medidos en el modelo; la chapa alta queda a 1,883 m.
+        for distancia in (1.883, 1.95, 2.10):
+            self.assertEqual(cara_de_isla((0, -0.247, 0.969), (0, distancia, 1.788)), "norte")
+            self.assertEqual(cara_de_isla((0, 0.247, 0.969), (0, -distancia, 1.788)), "sur")
+        self.assertEqual(cara_de_isla((0, 0, 1), (-0.45, 0, 1.3)), "oeste")
+        self.assertEqual(cara_de_isla((0, 0, 1), (0.45, 0, 1.3)), "este")
+
     def test_los_sectores_siguen_el_esquema_y_no_reparten_por_marca(self):  # AC-STK-086
         esperados = {
             "A.oeste.2": ("MAROLINI", "ARVEJAS"),
             "A.oeste.1": ("UAKAS", "MARRANOS"),
             "A.este.2": ("MACUMBAS", "ZUCARACHAS"),
             "A.este.1": ("PEPITOS", "FROTLUPS"),
-            "A.sur.1": ("MALBARDO",), "A.sur.0": ("AMARGADITO",),
-            "A.norte.1": ("OAAAA",), "A.norte.0": ("TERMINATOR",),
+            "A.sur.2": ("MALBARDO",), "A.sur.1": ("AMARGADITO",),
+            "A.norte.2": ("OAAAA",), "A.norte.1": ("TERMINATOR",),
             "B.este.2": ("OREMOS", "PETISAS"),
             "B.este.1": ("COSA_DE_MANI", "FEEL_RICKY_FORT"),
             "B.oeste.2": ("DONSATURADOS", "PRONGLES"),
             "B.oeste.1": ("CHISITOS", "LAYSNTT"),
-            "B.sur.1": ("JORGILLO",), "B.sur.0": ("SALADIK",),
-            "B.norte.1": ("BURBALOO",), "B.norte.0": ("FLINPUF",),
+            "B.sur.2": ("JORGILLO",), "B.sur.1": ("SALADIK",),
+            "B.norte.2": ("BURBALOO",), "B.norte.1": ("FLINPUF",),
             "N.sur.2": ("ACTRONCITO", "DUREXTRA"),
             "N.sur.1": ("POETICO",),
         }
         for estante, productos in esperados.items():
             self.assertEqual(tuple(t.producto for t in ESTANTES[estante]), productos, estante)
 
-    def test_duronga_no_tiene_tanda_y_el_mural_sobrante_no_inventa_exhibicion(self):
+    def test_duronga_no_tiene_tanda_y_no_se_inventan_muebles_ni_niveles(self):
         # AC-STK-088, AC-STK-085: sigue en el catálogo, sin unidad ni referencia en el local.
         self.assertIn("DURONGA", {p.clave for p in PRODUCTOS})
         self.assertNotIn("DURONGA", {t.producto for ts in ESTANTES.values() for t in ts})
         self.assertFalse(any(e.startswith("S.") for e in ESTANTES))
+        self.assertNotIn("S", MUEBLES)
+        for mueble in ("A", "B"):
+            for cara in CABECERAS:
+                for nivel in range(4):
+                    tandas = ESTANTES[f"{mueble}.{cara}.{nivel}"]
+                    self.assertTrue(all(t.fija == (nivel in (0, 3)) for t in tandas))
+
+    def test_fernet_conserva_dos_filas_reponibles_y_una_sola_fija_inferior(self):
+        # AC-STK-030, AC-STK-087: la referencia inferior evita techo y puerta cerrada.
+        principal, = ESTANTES["H1.sur.1"]
+        referencia, = ESTANTES["H1.sur.0"]
+        self.assertFalse(principal.fija)
+        self.assertEqual(principal.cantidad_de_filas, 2)
+        self.assertTrue(referencia.fija)
+        self.assertEqual(referencia.cantidad_de_filas, 1)
+
+    def test_solo_una_tanda_fija_puede_declarar_su_cantidad_de_filas(self):
+        self.assertEqual(Tanda("FERNET_GOD", fija=True, filas=1).cantidad_de_filas, 1)
+        for fija, filas in ((False, 1), (False, 2), (True, 0), (True, 3)):
+            with self.subTest(fija=fija, filas=filas), self.assertRaises(ValueError):
+                Tanda("FERNET_GOD", fija=fija, filas=filas)
 
     def test_las_heladeras_tienen_mitades_verticales_y_solo_esos_frios(self):  # AC-STK-087
         esperados = {"H1": ("FERNET_GOD", "CORACOLA"), "H2": ("MAYONCHIS", "CINDOLOR")}
@@ -210,10 +238,7 @@ class ElReparto(unittest.TestCase):
         for letra in MUEBLES:
             if letra in HELADERAS:
                 continue
-            if letra in MUEBLES_SIN_EXHIBICION:
-                self.assertFalse(any(e.startswith(letra + ".") for e in ESTANTES))
-                continue
-            caras = ["sur"] if letra in ("N", "S") else ["oeste", "este", *CABECERAS]
+            caras = ["sur"] if letra == "N" else ["oeste", "este", *CABECERAS]
             for cara in caras:
                 niveles = (
                     NIVELES_DE_CABECERA if es_cabecera(f"{letra}.{cara}.0") else NIVELES_DE_LADO

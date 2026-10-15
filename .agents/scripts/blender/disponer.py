@@ -189,7 +189,7 @@ def principal():
     estructura = apagar_las_unidades(ESTRUCTURA.read_text(encoding="utf-8"), apagadas)
     contornos = {
         "A": "contorno_de_gondola", "B": "contorno_de_gondola2",
-        "N": "contorno_de_gondola_del_fondo_norte", "S": "contorno_de_gondola_del_fondo_sur",
+        "N": "contorno_de_gondola_del_fondo_norte",
     }
     for letra, recurso in contornos.items():
         mueble = bpy.context.scene.objects.get(MUEBLES[letra])
@@ -207,7 +207,8 @@ def principal():
     escribir(ESTRUCTURA, estructura)
     unidades = sum(len(c) for c in tandas.values())
     print(
-        f"tandas con casilleros: {len(principales)}, fijas: {len(guias)}, unidades: {unidades}"
+        f"tandas con casilleros: {sum(bool(p) for p in principales)}, "
+        f"fijas: {len(guias)}, unidades: {unidades}"
     )
 
 

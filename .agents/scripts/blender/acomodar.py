@@ -42,17 +42,17 @@ from lib.gondola import (  # noqa: E402
     Envase,
     alto_en_la_rampa,
     centros,
-    fondo_del_estante,
+    desplazamiento_que_entra,
     franja_libre,
     repartir,
     tanda,
 )
 from lib.reparto import (  # noqa: E402
-    DE_UNA_FILA,
     ESTANTES,
     HELADERAS,
     MUEBLES,
     PRODUCTOS,
+    cara_de_isla,
     partes,
     producto,
     validar_reparto,
@@ -188,10 +188,7 @@ def medir(letra):
         if letra in HELADERAS and medio.z > TECHO_DE_LA_HELADERA:
             continue
         if letra in ("A", "B"):
-            if abs(medio.y - centro.y) < 1.9:
-                nombre = "oeste" if medio.x < centro.x else "este"
-            else:
-                nombre = "norte" if medio.y > centro.y else "sur"
+            nombre = cara_de_isla(tuple(cara.normal), tuple(medio - centro))
         else:
             nombre = next(partes(c)[1] for c in ESTANTES if partes(c)[0] == letra)
         por_cara.setdefault(nombre, []).append((medio.z, isla, cara))
@@ -400,6 +397,55 @@ def poner(unidad, mueble, matriz, datos, copia):
         objeto[clave] = valor
 
 
+def obstaculos_del_mueble(objeto):
+    """Las hojas cerradas también cuentan al medir el interior de una heladera."""
+    salida = []
+    for hijo in objeto.children_recursive:
+        if hijo.type != "MESH" or not hijo.name.startswith("puerta_heladera"):
+            continue
+        salida.append(BVHTree.FromPolygons(
+            [hijo.matrix_world @ v.co for v in hijo.data.vertices],
+            [list(p.vertices) for p in hijo.data.polygons],
+        ))
+    return salida
+
+
+def medir_encaje(estante, bm, arbol, hojas, posiciones):
+    """Contrasta los apoyos y las mallas, sin sustituirlas por su envolvente rectangular.
+
+    `posiciones` conserva columnas, filas, inclinación y escala. Sólo se desplaza la tanda
+    hacia dentro o fuera sobre la chapa existente; el tramo común conserva todos sus contactos.
+    """
+    desde, hasta = -math.inf, math.inf
+    for unidad, matriz in posiciones:
+        contactos = [matriz @ v.co - estante.origen for v in unidad.data.vertices
+                     if abs((matriz @ v.co - estante.origen).dot(estante.normal))
+                     <= TOLERANCIA_DEL_PLANO]
+        if not contactos or any(not 0 <= v.dot(estante.u) <= estante.largo for v in contactos):
+            return None
+        desde = max(desde, -min(v.dot(estante.v) for v in contactos))
+        hasta = min(hasta, estante.fondo - max(v.dot(estante.v) for v in contactos))
+    bm.faces.ensure_lookup_table()
+    apoyo = {i for i in estante.caras if all(
+        abs((v.co - estante.origen).dot(estante.normal)) <= TOLERANCIA_DEL_PLANO
+        for v in bm.faces[i].verts
+    )}
+
+    def entra(delta):
+        for unidad, matriz in posiciones:
+            puntos = [matriz @ v.co + estante.v * delta for v in unidad.data.vertices]
+            if min((v - estante.origen).dot(estante.normal) for v in puntos) < -TOLERANCIA_DEL_PLANO:
+                return False
+            propio = BVHTree.FromPolygons(puntos, [list(p.vertices) for p in unidad.data.polygons])
+            if any(i not in apoyo for i, _ in arbol.overlap(propio)):
+                return False
+            if any(hoja.overlap(propio) for hoja in hojas):
+                return False
+        return True
+
+    return desplazamiento_que_entra(desde, hasta, PASO_DEL_TANTEO, entra)
+
+
 def acomodar_mueble(letra, envases, resumen):
     objeto, bm, estantes = medir(letra)
     propios = {c: e for c, e in estantes.items() if c in ESTANTES}
@@ -408,20 +454,14 @@ def acomodar_mueble(letra, envases, resumen):
         raise SystemExit(f"el reparto nombra estantes que el mueble no tiene: {faltan}")
     # El mapa cambia productos, no muebles: se reparte sobre la chapa existente.
     arbol = BVHTree.FromBMesh(bm)
+    hojas = obstaculos_del_mueble(objeto)
     for clave, estante in sorted(propios.items()):
         reparto = ESTANTES[clave]
         de_estas = [envases[t.producto] for t in reparto]
         inclinacion = inclinacion_de(estante)
         alto = max(alto_en_la_rampa(e, inclinacion) for e in de_estas) - ROCE_DE_ARRIBA
         desde_v, hasta_v = franja_del_estante(estante, arbol, alto)
-        filas = [1 if t.producto in DE_UNA_FILA else 2 for t in reparto]
-        hace_falta = fondo_del_estante(de_estas, inclinacion, filas)
-        if hasta_v - desde_v < hace_falta - PASO_DEL_TANTEO:
-            resumen["choques"].append(
-                f"{clave}: hay {hasta_v - desde_v:.3f} m de fondo libre para "
-                f"{alto:.3f} m de alto, y hacen falta {hace_falta:.3f}"
-            )
-            continue
+        filas = [t.cantidad_de_filas for t in reparto]
         izquierda, derecha = tramo_util(estante, arbol, desde_v, hasta_v)
         largo = derecha - izquierda
         pedidos = [1 if t.fija else FILA_DE_ADELANTE_PEDIDA for t in reparto]
@@ -429,8 +469,23 @@ def acomodar_mueble(letra, envases, resumen):
         for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
             if cuenta < pedido:
                 resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
+        centros_por_tanda = centros(largo, de_estas, cuentas)
+        posiciones = []
+        for indice, (t, envase, us) in enumerate(zip(reparto, de_estas, centros_por_tanda)):
+            p = producto(t.producto)
+            unidad = bpy.data.objects[p.objeto]
+            for lugar in tanda(envase, [izquierda + u for u in us], inclinacion, filas[indice]):
+                posiciones.append((unidad, matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v)))
+        desplazamiento = medir_encaje(estante, bm, arbol, hojas, posiciones)
+        if desplazamiento is None:
+            resumen["choques"].append(
+                f"{clave}: ninguna traslación conserva todos los apoyos sin intersecciones "
+                f"con {filas} filas"
+            )
+            continue
+        desde_v += desplazamiento
         for indice, (t, envase, us) in enumerate(
-            zip(reparto, de_estas, centros(largo, de_estas, cuentas))
+            zip(reparto, de_estas, centros_por_tanda)
         ):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]

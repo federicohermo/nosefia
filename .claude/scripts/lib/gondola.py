@@ -2,7 +2,7 @@
 se escribe eso para Godot.
 
 Es la mitad del acomodador que no necesita Blender. La otra mitad —medir los estantes del
-`.blend`, achicarlos y poner las copias— vive en `blender/acomodar.py`, y la que lee el `.blend`
+`.blend`, contrastar sus mallas y poner las copias— vive en `blender/acomodar.py`, y la que lee el `.blend`
 para escribir la disposición en `blender/disponer.py`. Todo lo que decide está acá, donde la
 suite del harness lo puede ejercer: adentro de Blender corre otro Python y nada se puede importar
 desde un test.
@@ -13,15 +13,15 @@ Un estante se describe con tres ejes: `u` a lo largo, de izquierda a derecha par
 desde el pasillo; `v` hacia adentro, desde el frente útil —detrás del labio— hasta el fondo; y la
 normal de la chapa. Acá sólo importan `u` y `v`: dónde queda la chapa en el mundo lo sabe Blender.
 
-## Dos filas, o una, y el estante del tamaño de la tanda más honda
+## Dos filas, o una según el reparto aprobado
 
 En una tanda de dos filas, una queda detrás de la otra. La de adelante toca el frente útil y la de
-atrás va pegada a ella, con el mismo aire que separa dos unidades vecinas. El estante se achica
-hasta la profundidad de la tanda más honda que lleva: más hondo queda un hueco detrás de la fila
-de atrás, que desde el pasillo se lee como mercadería que falta.
+atrás va pegada a ella, con el mismo aire que separa dos unidades vecinas. Las chapas conservan
+su geometría. El acomodador mide el apoyo y las intersecciones de las unidades para ubicar la
+tanda sobre ellas sin cambiar la separación de sus filas.
 
-Un producto demasiado hondo para dos filas va en una sola, que es toda de adelante: el estante
-no crece para él.
+Los productos declarados de una fila llevan sólo la de adelante. Una tanda reponible que no
+entra con las filas declaradas falla; el acomodador no reduce sus filas ni agranda el mueble.
 
 ## Mitad y mitad, o el estante entero
 
@@ -43,7 +43,7 @@ from __future__ import annotations
 import math
 import re
 import unicodedata
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
 #: El aire entre dos unidades vecinas, a lo largo del estante y entre las dos filas, en metros.
@@ -82,6 +82,31 @@ class Lugar:
     columna: int
     u: float
     v: float
+
+
+def desplazamiento_que_entra(
+    desde: float, hasta: float, paso_medido: float, entra: Callable[[float], bool]
+) -> float | None:
+    """La traslación más cercana a la original con apoyo y sin intersecciones medidos.
+
+    El intervalo viene de los contactos de todas las unidades con la chapa física; `entra`
+    contrasta sus mallas con los obstáculos. Se prueban los extremos exactos y el paso vigente,
+    sin convertir el margen entre envases y labio en una exigencia nueva sobre sus apoyos.
+    """
+    if not all(math.isfinite(n) for n in (desde, hasta, paso_medido)) or paso_medido <= 0:
+        raise ValueError("el intervalo de apoyo debe ser finito y el paso positivo")
+    if desde > hasta:
+        return None
+    candidatos = {desde, hasta}
+    if desde <= 0 <= hasta:
+        candidatos.add(0.0)
+    candidatos.update(i * paso_medido for i in range(
+        math.ceil(desde / paso_medido), math.floor(hasta / paso_medido) + 1
+    ))
+    for candidato in sorted(candidatos, key=lambda v: (abs(v), v)):
+        if entra(candidato):
+            return candidato
+    return None
 
 
 def paso(envase: Envase) -> float:

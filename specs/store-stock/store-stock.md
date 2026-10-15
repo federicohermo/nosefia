@@ -30,7 +30,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Cara de lado** | cada uno de los dos lados largos de un mueble de estantes, el que da a un pasillo | frente, lateral |
 | **Cabecera** | cada uno de los dos extremos cortos de un mueble de estantes | punta, testero |
 | **Zócalo** | el estante de más abajo de una cara de lado | base, piso |
-| **Estante de reposición** | un estante a la altura de la mano: en una cara de lado, los que no son ni el de arriba ni el zócalo; en una cabecera, los que no son el de arriba | estante del medio, estante útil |
+| **Estante de reposición** | un estante a la altura de la mano: los niveles 1 y 2 de los cuatro existentes, tanto en laterales como en cabeceras | estante del medio, estante útil |
 | **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone. En una tanda de una sola fila, es esa fila | frente, cara |
 | **Fila de atrás** | la fila de una tanda de dos filas contra el fondo del estante: fija, entera toda la noche | guía, fondo |
 | **Casillero** | cada lugar de la fila de adelante, que el jugador llena colocando una unidad y vacía agarrándola. Cada uno está vacío u ocupado por separado | hueco, slot |
@@ -180,9 +180,9 @@ casilleros vacíos con que abre una jornada DEBEN quedar en la tanda reponible.
 
 En un mueble de estantes, la tanda reponible DEBE ir en un estante de reposición. Un estante
 de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la altura de la mano se
-agarra y se repone. Los demás estantes —el de arriba y el zócalo de una cara de lado, y el de
-arriba de una cabecera— DEBEN llevar sólo tandas fijas, que repiten un producto del local. En una
-heladera, cualquier bandeja puede llevar la tanda reponible o una tanda fija.
+agarra y se repone. Los demás estantes —el de arriba y el zócalo, tanto de una cara de lado
+como de una cabecera— DEBEN llevar sólo tandas fijas, que repiten un producto del local.
+En una heladera, cualquier bandeja puede llevar la tanda reponible o una tanda fija.
 
 ### BR-STK-025 — La tanda tiene dos filas, o una según el reparto aprobado
 
@@ -370,8 +370,8 @@ no implica renombrar productos.
 
 La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
 con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
-snacks salados y golosinas. Los tres no comestibles DEBEN ocupar una estantería; un mueble
-sobrante PUEDE quedar sin exhibición, sin duplicar tandas principales para llenarlo.
+snacks salados y golosinas. Los tres no comestibles DEBEN ocupar la estantería existente N;
+el reparto NO DEBE reconstruir un segundo mural ausente ni duplicar tandas principales.
 Cada heladera funcional DEBE agrupar sus dos productos en mitades verticales según el
 [esquema de diseño](https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676): Coracola
 arriba de Fernet God y Cindolor arriba de Mayonchis. La heladera fuera de servicio DEBE
@@ -382,6 +382,11 @@ El reparto DEBE conservar alturas, tamaño de muebles, niveles reponibles a altu
 separación de filas, orientaciones de envases y alcance vigentes (BR-STK-024, BR-STK-025,
 BR-STK-035). Los cupos DEBEN salir de la geometría de ese reparto, sin copiar los anteriores.
 El mismo reparto DEBE conservarse al abrir otra jornada y en escritorio o web.
+
+La medición del modelo del 2026-10-15 confirma cuatro chapas físicas y cuatro niveles con
+exhibición en cada cabecera: niveles 0 y 3 fijos, niveles 1 y 2 reponibles. El antiguo detector
+por distancia confundía las chapas superiores inclinadas con laterales; corregir su
+clasificación conserva ese patrón original, sin agregar niveles ni modificar alturas.
 
 ### BR-STK-044 — Duronga existe sin exhibición
 
@@ -541,8 +546,8 @@ DADO el local armado ENTONCES cada producto con exhibición declarada tiene una 
 solo estante y con sus unidades juntas, y la fila de adelante de cada tanda fija suya también es
 de casilleros: el cupo del producto los suma a todos. DADO una cara de lado ENTONCES sus tandas con casilleros están en los
 estantes que no son ni el de arriba ni el zócalo, y esos estantes no llevan ninguna tanda fija; el
-de arriba y el zócalo llevan sólo tandas fijas. DADO una cabecera ENTONCES el estante de arriba
-lleva sólo tandas fijas, y los demás, sólo tandas con casilleros.
+de arriba y el zócalo llevan sólo tandas fijas. DADO una cabecera ENTONCES los niveles 0 y 3
+llevan sólo tandas fijas y los niveles 1 y 2 sólo tandas reponibles, como en el modelo original.
 
 ### AC-STK-029 — El casillero está al alcance *(verifica BR-STK-024)*
 
@@ -913,8 +918,9 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
 
 - **OQ-STK-007 — ¿Cómo se concilian los cuatro niveles del mapa con las alturas actuales?**
   - Por qué sigue abierta: el texto del mapa habla de cuatro estantes y del primero como
-    levantable; los muebles vigentes tienen cuatro niveles laterales y tres en cabeceras,
-    con reposición a altura de la mano. El reparto aprobado fija sectores y conserva esas alturas.
+    levantable; los muebles vigentes tienen cuatro chapas laterales y cuatro en cabeceras,
+    con niveles 0 y 3 fijos y 1 y 2 reponibles. El reparto aprobado fija sectores y conserva
+    esas alturas; no define la interacción de levantar un estante.
   - Decide: el dueño del repo con game design y arte.
   - Bloquea: cambiar niveles, alturas o qué estante es reponible a partir de esa frase;
     no bloquea los sectores ni la excepción de Duronga de BR-STK-043 y BR-STK-044.
