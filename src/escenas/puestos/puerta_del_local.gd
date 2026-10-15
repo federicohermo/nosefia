@@ -77,21 +77,12 @@ func _ready() -> void:
 	top_level = true
 
 
-## El clic izquierdo abre y cierra. La trabada sólo avisa con el derecho.
 func accionar() -> void:
-	if traba == Traba.NINGUNA:
-		alternar()
+	alternar()
 
 
-## El clic derecho sólo intenta una trabada: la que abre se abre con el izquierdo.
-func usar() -> void:
-	if el_uso_tiene_efecto():
-		alternar()
-
-
-## Si el clic derecho hace algo: avisar que está trabada.
-func el_uso_tiene_efecto() -> bool:
-	return traba != Traba.NINGUNA
+func contexto_de_interaccion(_sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Contexto:
+	return ReferenciaDeControles.contexto_de_lo_fijo(_puerta.abierta())
 
 
 ## Abre, cierra o intenta una trabada, y emite el aviso que dispara su sonido.
