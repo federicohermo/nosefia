@@ -246,11 +246,19 @@ Cada agente recibe, literal:
   esconder el fallo ni declares verde la primera corrida.
 - **El turno lo da `scripts/turno.py`, y es una cola.** Todo lo que levanta el motor entero,
   exporta o mide va adentro: `python .claude/skills/implement-batch/scripts/turno.py <cola>
-  <etiqueta> <log> -- <comando>`. `<cola>` es una carpeta del scratch del lote, la misma para
-  todos los carriles. Va con `run_in_background`: la espera pasa los 10 minutos. Un servidor
+  <etiqueta> <log> -- <comando>`. `<cola>` es la ruta común de coordinación de la máquina,
+  la misma para todos los carriles y lotes activos. Va con `run_in_background`: la espera pasa
+  los 10 minutos. Un servidor
   levantado no carga la máquina y queda afuera. En el lote del 2026-10-06 el turno era un cerrojo
   que cada carril reintentaba: una prueba de 30 s esperó 55 minutos, y los carriles pasaron a
   encadenar sus pasos adentro de un solo turno.
+- **La cola compartida alcanza a todos los lotes activos de la máquina.** Una cola por lote
+  serializa sus carriles, pero deja correr juntas las completas de lotes distintos. Antes de
+  levantar otro motor, reutilizar la ruta común comunicada por la coordinación; el scratch y
+  los logs conservan nombres propios por lote. En #365–366, una completa coincidió con la del
+  lote #367–385 y quedaron 1,7 GiB físicos libres. Si la coordinación llega con una corrida
+  activa, no interrumpirla sólo para cambiar de cola: conservar carga y contexto, dejarla
+  terminar y usar la cola común en las siguientes importaciones, exports, capturas y suites.
 - **El árbol queda congelado desde que se encola hasta recibir el resultado.** Vale también para
   la espera, la importación y los rojos y verdes cortos: no se edita, formatea ni cambia de rama
   mientras el motor puede leerlo. Los borradores externos pueden avanzar. En #300 se agregó un
