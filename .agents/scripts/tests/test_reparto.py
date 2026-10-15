@@ -19,10 +19,17 @@ from lib.reparto import (
     FRIOS,
     HELADERAS,
     MUEBLES,
+    MUEBLES_SIN_EXHIBICION,
     PRODUCTOS,
+    SECTORES,
+    SOLO_DEPOSITO,
+    Tanda,
     es_cabecera,
     es_heladera,
     partes,
+    sector_de,
+    validar_reparto,
+    validar_tandas,
 )
 from lib.repo import RAIZ
 
@@ -65,6 +72,41 @@ def _filas_del_catalogo() -> list[tuple[str, str]]:
 
 
 class ElReparto(unittest.TestCase):
+    def test_los_sectores_siguen_el_esquema_y_no_reparten_por_marca(self):  # AC-STK-086
+        esperados = {
+            "A.oeste.2": ("MAROLINI", "ARVEJAS"),
+            "A.oeste.1": ("UAKAS", "MARRANOS"),
+            "A.este.2": ("MACUMBAS", "ZUCARACHAS"),
+            "A.este.1": ("PEPITOS", "FROTLUPS"),
+            "A.sur.1": ("MALBARDO",), "A.sur.0": ("AMARGADITO",),
+            "A.norte.1": ("OAAAA",), "A.norte.0": ("TERMINATOR",),
+            "B.este.2": ("OREMOS", "PETISAS"),
+            "B.este.1": ("COSA_DE_MANI", "FEEL_RICKY_FORT"),
+            "B.oeste.2": ("DONSATURADOS", "PRONGLES"),
+            "B.oeste.1": ("CHISITOS", "LAYSNTT"),
+            "B.sur.1": ("JORGILLO",), "B.sur.0": ("SALADIK",),
+            "B.norte.1": ("BURBALOO",), "B.norte.0": ("FLINPUF",),
+            "N.sur.2": ("ACTRONCITO", "DUREXTRA"),
+            "N.sur.1": ("POETICO",),
+        }
+        for estante, productos in esperados.items():
+            self.assertEqual(tuple(t.producto for t in ESTANTES[estante]), productos, estante)
+
+    def test_duronga_no_tiene_tanda_y_el_mural_sobrante_no_inventa_exhibicion(self):
+        # AC-STK-088, AC-STK-085: sigue en el catálogo, sin unidad ni referencia en el local.
+        self.assertIn("DURONGA", {p.clave for p in PRODUCTOS})
+        self.assertNotIn("DURONGA", {t.producto for ts in ESTANTES.values() for t in ts})
+        self.assertFalse(any(e.startswith("S.") for e in ESTANTES))
+
+    def test_las_heladeras_tienen_mitades_verticales_y_solo_esos_frios(self):  # AC-STK-087
+        esperados = {"H1": ("FERNET_GOD", "CORACOLA"), "H2": ("MAYONCHIS", "CINDOLOR")}
+        for mueble, (abajo, arriba) in esperados.items():
+            for nivel in range(BANDEJAS_DE_HELADERA):
+                self.assertEqual(
+                    {t.producto for t in ESTANTES[f"{mueble}.sur.{nivel}"]},
+                    {abajo if nivel < 2 else arriba},
+                )
+
     def test_los_productos_son_los_del_catalogo_y_en_su_orden(self):
         filas = _filas_del_catalogo()
         # Sin esto el test pasaría sobre un catálogo que no se pudo leer.
@@ -76,7 +118,7 @@ class ElReparto(unittest.TestCase):
             t.producto for tandas in ESTANTES.values() for t in tandas if not t.fija
         )
         for p in PRODUCTOS:
-            self.assertEqual(principales[p.clave], 1, p.nombre)
+            self.assertEqual(principales[p.clave], 0 if p.clave in SOLO_DEPOSITO else 1, p.nombre)
 
     def test_lo_que_se_repite_es_un_producto_del_catalogo(self):
         claves = {p.clave for p in PRODUCTOS}
@@ -96,24 +138,32 @@ class ElReparto(unittest.TestCase):
                     not t.fija, _es_de_reposicion(estante), f"{t.producto} en {estante}"
                 )
 
-    def test_un_estante_de_lado_lleva_dos_tandas_o_una_sola_con_casilleros(self):  # AC-STK-051
+    def test_un_estante_de_lado_lleva_dos_tandas_o_una_sola(self):  # AC-STK-051
         for estante, tandas in _de_lado().items():
-            entero = len(tandas) == 1 and not tandas[0].fija
-            self.assertTrue(len(tandas) == 2 or entero, f"{estante}: {len(tandas)}")
+            self.assertIn(len(tandas), (1, 2), f"{estante}: {len(tandas)}")
 
-    def test_cada_cara_de_lado_tiene_un_solo_estante_entero(self):
-        # Los lugares a la altura de la mano son más que los productos: lo que sobra no se llena
-        # con tandas fijas, sino con un estante entero de un solo producto por cara.
-        enteros = [e for e, tandas in _de_lado().items() if len(tandas) == 1]
-        caras = sorted(".".join(e.split(".")[:2]) for e in enteros)
-        self.assertEqual(caras, sorted(CARAS_DE_LADO))
+    def test_las_referencias_conservan_el_sector_de_su_principal(self):  # AC-STK-086
+        validar_reparto(ESTANTES)
+        vistos = set()
+        for estante, tandas in ESTANTES.items():
+            for columna, t in enumerate(tandas):
+                self.assertIn(t.producto, SECTORES[sector_de(estante, columna)])
+                vistos.add(t.producto)
+        self.assertEqual(vistos, {p.clave for p in PRODUCTOS} - set(SOLO_DEPOSITO))
 
-    def test_ningun_producto_va_justo_encima_de_si_mismo(self):
-        for estante, tandas in _de_gondola().items():
-            mueble, cara, nivel = partes(estante)
-            arriba = ESTANTES.get(f"{mueble}.{cara}.{nivel + 1}", ())
-            repetidos = {t.producto for t in tandas} & {t.producto for t in arriba}
-            self.assertEqual(repetidos, set(), f"sobre {estante}")
+    def test_solo_el_producto_de_deposito_admite_cero_tandas(self):  # AC-STK-085
+        cantidades = {p.clave: int(p.clave not in SOLO_DEPOSITO) for p in PRODUCTOS}
+        validar_tandas(cantidades)
+        for clave, cantidad in (("ACTRONCITO", 0), ("ACTRONCITO", 2), ("DURONGA", 1),
+                                ("DESCONOCIDO", 1)):
+            with self.subTest(clave=clave, cantidad=cantidad), self.assertRaises(ValueError):
+                validar_tandas(cantidades | {clave: cantidad})
+
+    def test_un_producto_ajeno_no_recibe_sector_por_defecto(self):  # AC-STK-085
+        with self.assertRaises(ValueError):
+            validar_reparto(ESTANTES | {"A.oeste.2": (Tanda("DESCONOCIDO"),)})
+        with self.assertRaises(KeyError):
+            sector_de("NO_EXISTE.sur.1", 0)
 
     def test_una_cabecera_lleva_al_menos_uno(self):
         for estante, tandas in ESTANTES.items():
@@ -126,7 +176,7 @@ class ElReparto(unittest.TestCase):
                 if t.producto in DE_CABECERA:
                     self.assertTrue(es_cabecera(estante), f"{t.producto} en {estante}")
 
-    def test_lo_de_una_fila_va_una_sola_vez_y_en_una_cara_de_lado(self):  # AC-STK-030
+    def test_lo_de_una_fila_se_conserva_en_el_sector_del_mapa(self):  # AC-STK-030
         self.assertEqual(
             set(DE_UNA_FILA),
             {"ACTRONCITO", "COSA_DE_MANI", "PRONGLES", "FLINPUF", "BURBALOO"},
@@ -134,7 +184,7 @@ class ElReparto(unittest.TestCase):
         for estante, tandas in ESTANTES.items():
             for t in tandas:
                 if t.producto in DE_UNA_FILA and not t.fija:
-                    self.assertTrue(estante in _de_lado(), f"{t.producto} en {estante}")
+                    self.assertIn(t.producto, SECTORES[sector_de(estante, tandas.index(t))])
 
     def test_la_heladera_repone_lo_frio_una_sola_vez_y_repite_solo_lo_frio(self):
         en_heladera = [
@@ -159,6 +209,9 @@ class ElReparto(unittest.TestCase):
     def test_ningun_estante_de_gondola_queda_vacio(self):
         for letra in MUEBLES:
             if letra in HELADERAS:
+                continue
+            if letra in MUEBLES_SIN_EXHIBICION:
+                self.assertFalse(any(e.startswith(letra + ".") for e in ESTANTES))
                 continue
             caras = ["sur"] if letra in ("N", "S") else ["oeste", "este", *CABECERAS]
             for cara in caras:

@@ -21,6 +21,15 @@ func test_una_fila_es_entera_de_casilleros_y_dos_conservan_la_de_atras() -> void
 	assert_int(disposicion.primera_reponible(Producto.Id.ACTRONCITO, 1)).is_equal(1)
 
 
+func test_un_bloque_vacio_con_cupo_cero_no_indexa_antes_del_comienzo() -> void:  # AC-STK-088
+	var disposicion := DisposicionDeLaGondola.new()
+	disposicion.principales = [PackedFloat32Array()]
+	assert_int(disposicion.primera_reponible(Producto.Id.ACTRONCITO, 0)).is_zero()
+	assert_vector(DisposicionDeLaGondola.frente(disposicion.principales[0], 0)).is_equal(
+		Vector3.ZERO
+	)
+
+
 func test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso() -> void:
 	var disposicion := DisposicionDeLaGondola.new()
 	disposicion.resource_name = "disposicion_erronea"
@@ -60,6 +69,10 @@ func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
 	var disposicion := _disposicion()
 	for producto in Catalogo.todos():
 		var copias := DisposicionDeLaGondola.copias(disposicion.principales[producto.id])
+		if producto.id == Producto.Id.DURONGA:
+			assert_int(copias).is_zero()
+			assert_int(disposicion.filas_de_adelante[producto.id]).is_zero()
+			continue
 		(
 			assert_int(disposicion.filas_de_adelante[producto.id])
 			. override_failure_message(producto.nombre)
@@ -144,6 +157,9 @@ func test_la_tanda_de_cada_producto_esta_junta_sobre_un_solo_estante() -> void: 
 	var disposicion := _disposicion()
 	for producto in Catalogo.todos():
 		var bloque := disposicion.principales[producto.id]
+		if bloque.is_empty():
+			assert_int(producto.id).is_equal(Producto.Id.DURONGA)
+			continue
 		var adelante := disposicion.filas_de_adelante[producto.id]
 		var frente := DisposicionDeLaGondola.frente(bloque, adelante)
 		var costado := frente.cross(Vector3.UP)

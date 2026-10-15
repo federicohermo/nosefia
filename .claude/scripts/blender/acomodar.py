@@ -17,16 +17,7 @@ en ese orden.
    —**la chapa también sigue detrás del panel perforado**, hasta el centro de la góndola— y
    contra lo que haya encima: el labio de una cabecera, la tapa del panel sobre el estante de
    arriba, el dintel de la heladera.
-3. **Achica cada estante de góndola** a la profundidad de dos unidades de su producto más
-   profundo, más lo que el mueble le tapa. El mueble se achica por su malla y no por su objeto:
-   lo que cuelga del objeto se escalaría con él. Se corren hacia el fondo los vértices del frente
-   de la chapa, con su labio y su portaprecio; en las cabeceras, además, el frente de los
-   laterales y el de las ménsulas. Las bandejas de la heladera no se achican.
-4. **Angosta cada cara de lado hasta sus estantes**: el lateral, la cabecera y lo demás que asome
-   del panel perforado hacia el pasillo de esa cara entran hasta el frente del estante más hondo
-   de arriba del zócalo. Con sólo los estantes achicados, el mueble conservaba su ancho y los
-   estantes quedaban hundidos entre los laterales. El zócalo puede seguir asomando.
-5. **Pone cada tanda**: la unidad del producto en el primer lugar de su tanda, y una copia
+3. **Pone cada tanda**: la unidad del producto en el primer lugar de su tanda, y una copia
    enlazada de ella en cada uno de los demás, en `guia`. Cada unidad y cada copia llevan escrito
    de qué tanda son, en qué fila y en qué orden: es lo que lee `disponer.py`. En la rampa de una
    cabecera, la unidad va echada hacia atrás, como la ponía el artista (`lib/gondola.py`).
@@ -50,16 +41,13 @@ from lib.blender import COLECCION_DE_GUIA, es_un_array  # noqa: E402
 from lib.gondola import (  # noqa: E402
     Envase,
     alto_en_la_rampa,
-    alinear_frentes,
     centros,
     fondo_del_estante,
-    fondo_nuevo,
     franja_libre,
     repartir,
     tanda,
 )
 from lib.reparto import (  # noqa: E402
-    CABECERAS,
     DE_UNA_FILA,
     ESTANTES,
     HELADERAS,
@@ -67,6 +55,7 @@ from lib.reparto import (  # noqa: E402
     PRODUCTOS,
     partes,
     producto,
+    validar_reparto,
 )
 
 #: Lo que se le pide como mínimo a la fila de adelante de un producto: una caja entera, que es lo
@@ -100,20 +89,6 @@ TECHO_DE_LA_HELADERA = 2.3
 
 #: Cuánto puede separarse un vértice del plano de la chapa y seguir siendo de su cara de arriba.
 TOLERANCIA_DEL_PLANO = 0.002
-
-#: Las caras de cada mueble que se angostan hasta sus estantes: las de lado de las góndolas del
-#: medio y la única de las de pared, cuyo fondo contra la pared no se mueve. La heladera no.
-CARAS_QUE_SE_ANGOSTAN = {
-    "A": ("oeste", "este"),
-    "B": ("oeste", "este"),
-    "N": ("sur",),
-    "S": ("sur",),
-}
-
-#: Lo que tiene que asomar un vértice del panel perforado hacia el pasillo para correrse con el
-#: lateral, en metros: lo que está sobre el panel es el cuerpo del mueble, y no se mueve.
-ASOMA_DEL_PANEL = 0.01
-
 
 class Estante:
     """La chapa de un estante, medida: su marco y su tamaño."""
@@ -197,7 +172,7 @@ def _es_panel(isla, objeto):
 def medir(letra):
     """Los estantes de un mueble, por clave del reparto, con la malla en coordenadas del mundo.
 
-    Devuelve también el `bmesh`: achicar mueve vértices de estas mismas islas.
+    Devuelve también el `bmesh` para consultar los obstáculos sin modificar la malla.
     """
     objeto = bpy.data.objects[MUEBLES[letra]]
     bm = bmesh.new()
@@ -301,159 +276,6 @@ def muestras_de_arriba(estante, arbol):
                 libre = min(libre, golpe[3])
         muestras.append((v, libre))
     return muestras
-
-
-def achicar(estante, nuevo):
-    """Corre el frente de la chapa hacia el fondo hasta que quede `nuevo` de hondo.
-
-    Se mueven los vértices de la mitad de adelante de la isla, en el plano de la chapa: el labio
-    y el portaprecio se van con ella. Lo que queda por debajo de la chapa —el frente del zócalo—
-    se corre sólo en horizontal, o se despegaría del piso.
-    """
-    delta = estante.fondo - nuevo
-    if abs(delta) <= 2 * PASO_DEL_TANTEO:
-        # Ya está a su medida: lo que falta es el error del tanteo, y correrlo cada vez haría
-        # que acomodar dos veces no diera lo mismo.
-        return 0.0
-    horizontal = Vector((estante.v.x, estante.v.y, 0.0))
-    alto_de_la_chapa = min(estante.punto(0, 0).z, estante.punto(0, estante.fondo).z)
-    for vert in {v for cara in estante.isla for v in cara.verts}:
-        mundo = vert.co.copy()
-        if (mundo - estante.origen).dot(estante.v) > estante.fondo / 2:
-            continue
-        if mundo.z < alto_de_la_chapa - 0.05:
-            vert.co = mundo + horizontal * delta
-        else:
-            vert.co = mundo + estante.v * delta
-    return delta
-
-
-def achicar_cabecera(estantes, deltas, islas):
-    """Los laterales y las ménsulas de una cabecera siguen a sus chapas.
-
-    El frente de los laterales baja hasta el zócalo: se corre lo mismo que el frente del zócalo.
-    Una ménsula más larga que su chapa asomaría por delante: se recorta al frente nuevo.
-    """
-    zocalo = min(estantes, key=lambda e: e.origen.z)
-    plano = Vector((zocalo.v.x, zocalo.v.y, 0.0))
-    horizontal = plano.normalized()
-    fondo_del_mueble = zocalo.punto(0, zocalo.fondo)
-    corrimiento = deltas.get(zocalo.clave, 0.0) * plano.length
-    chapas = set().union(*(e.caras for e in estantes))
-    for isla in islas:
-        if isla[0].index in chapas:
-            continue
-        verts = list({v for cara in isla for v in cara.verts})
-        profundidades = [(fondo_del_mueble - v.co).dot(horizontal) for v in verts]
-        if max(profundidades) < 0.05 or min(profundidades) > zocalo.fondo + 0.1:
-            continue
-        a_lo_largo = [(v.co - zocalo.origen).dot(zocalo.u) for v in verts]
-        if min(a_lo_largo) < -0.2 or max(a_lo_largo) > zocalo.largo + 0.2:
-            continue
-        alto = max(v.co.z for v in verts) - min(v.co.z for v in verts)
-        if alto > 1.5:
-            # Un lateral: su frente de abajo sigue al zócalo.
-            for vert, profundidad in zip(verts, profundidades):
-                if profundidad > zocalo.fondo / 2 + 0.05:
-                    vert.co = vert.co + horizontal * corrimiento
-            continue
-        # Una ménsula: no puede asomar por delante de la chapa que sostiene.
-        techo = max(v.co.z for v in verts)
-        dueno = min(
-            (e for e in estantes if e is not zocalo), key=lambda e: abs(e.origen.z - techo)
-        )
-        nuevo = dueno.fondo - deltas.get(dueno.clave, 0.0)
-        tope = nuevo * Vector((dueno.v.x, dueno.v.y, 0.0)).length - 0.02
-        for vert, profundidad in zip(verts, profundidades):
-            if profundidad > tope:
-                vert.co = vert.co + horizontal * (profundidad - tope)
-
-
-def parejos(letra, estantes, nuevos):
-    """Los estantes de una cara de lado llegan todos al frente del más hondo de arriba del zócalo.
-
-    Las filas de cada producto siguen yendo al frente, y lo que sobra queda detrás del producto.
-    El zócalo llega al mismo plano, tanto si estaba hundido como si sobresalía.
-    """
-    for cara in CARAS_QUE_SE_ANGOSTAN.get(letra, ()):
-        de_la_cara = {c: e for c, e in estantes.items() if partes(c)[1] == cara}
-        if not any(partes(c)[2] > 0 for c in de_la_cara):
-            continue
-        # El fondo de cada chapa, medido hacia el pasillo: achicada a `nuevo`, su frente queda ahí
-        # más lo nuevo, porque en un estante plano `v` es lo contrario de hacia dónde mira.
-        fondo = {c: e.punto(0, e.fondo).dot(e.mira) for c, e in de_la_cara.items()}
-        claves = list(de_la_cara)
-        alineados = alinear_frentes(
-            [fondo[c] for c in claves], [nuevos[c] for c in claves],
-        )
-        nuevos.update(zip(claves, alineados))
-
-
-def angostar(letra, estantes, islas, objeto):
-    """Cada cara de lado se angosta hasta el frente de sus estantes; devuelve cuánto entró cada una.
-
-    Lo que asoma del panel perforado hacia el pasillo de la cara —el lateral, las puntas de la
-    cabecera, sus ménsulas y sus laterales— se traslada hacia adentro hasta el frente del estante
-    más hondo de arriba del zócalo. Se traslada entero, sin deformarlo: la cabecera, que va de
-    punta a punta del mueble, se angosta lo que entran las dos caras. Los estantes de la cara ya
-    tienen su medida y no se tocan, y el zócalo puede seguir asomando.
-    """
-    entradas = {}
-    for cara in CARAS_QUE_SE_ANGOSTAN.get(letra, ()):
-        mira = MIRA[cara]
-        de_la_cara = [e for c, e in estantes.items() if partes(c)[1] == cara]
-        de_arriba = [e for e in de_la_cara if partes(e.clave)[2] > 0]
-        if not de_arriba:
-            continue
-        propias = set().union(*(e.caras for e in de_la_cara))
-        frentes = {
-            e.clave: max(v.co.dot(mira) for c in e.isla for v in c.verts) for e in de_arriba
-        }
-        frente = max(frentes.values())
-        panel = _panel_hacia(islas, objeto, mira)
-        asoman = {
-            v
-            for isla in islas
-            if isla[0].index not in propias
-            for c in isla
-            for v in c.verts
-            if v.co.dot(mira) > panel + ASOMA_DEL_PANEL
-        }
-        entra = max(v.co.dot(mira) for v in asoman) - frente
-        if entra > 2 * PASO_DEL_TANTEO:
-            for v in asoman:
-                v.co = v.co - mira * entra
-        else:
-            entra = 0.0
-        entradas[f"{letra}.{cara}"] = entra
-        hundidos = ", ".join(
-            f"{clave} {frente - f:.3f}" for clave, f in sorted(frentes.items()) if frente - f > 0.01
-        )
-        print(
-            f"{letra}.{cara}: el lateral entra {entra:.3f}"
-            + (f"; quedan detrás del lateral: {hundidos}" if hundidos else "")
-        )
-    return entradas
-
-
-def _panel_hacia(islas, objeto, mira):
-    """Dónde está el panel perforado que da a una cara, medido hacia su pasillo.
-
-    **Es la cara de panel más grande que mira hacia ahí**: los laterales de la cabecera también
-    llevan panel, y el de la punta de enfrente mira hacia adentro. Tomarlo a él correría la
-    góndola entera.
-    """
-    mejor = None
-    for isla in islas:
-        for cara in isla:
-            material = objeto.material_slots[cara.material_index].material
-            if material is None or "Panel" not in material.name or cara.normal.dot(mira) < 0.99:
-                continue
-            if mejor is None or cara.calc_area() > mejor.calc_area():
-                mejor = cara
-    if mejor is None:
-        raise SystemExit(f"{objeto.name}: no hay panel perforado que mire hacia {tuple(mira)}")
-    return mejor.calc_center_median().dot(mira)
 
 
 def inclinacion_de(estante):
@@ -569,7 +391,10 @@ def poner(unidad, mueble, matriz, datos, copia):
         bpy.data.collections[COLECCION_DE_GUIA].objects.link(objeto)
     else:
         objeto = unidad
-    objeto.parent = mueble
+    # La fuente conserva su NodePath importado: estructura_del_almacen la oculta allí.
+    # Su matriz global determina el sector nuevo, independientemente de ese padre histórico.
+    if copia:
+        objeto.parent = mueble
     objeto.matrix_world = matriz
     for clave, valor in datos.items():
         objeto[clave] = valor
@@ -581,40 +406,7 @@ def acomodar_mueble(letra, envases, resumen):
     faltan = sorted(c for c in ESTANTES if partes(c)[0] == letra and c not in estantes)
     if faltan:
         raise SystemExit(f"el reparto nombra estantes que el mueble no tiene: {faltan}")
-    if letra not in HELADERAS:
-        arbol = BVHTree.FromBMesh(bm)
-        deltas = {}
-        nuevos = {}
-        for clave, estante in propios.items():
-            de_estas = [envases[t.producto] for t in ESTANTES[clave]]
-            inclinacion = inclinacion_de(estante)
-            alto = max(alto_en_la_rampa(e, inclinacion) for e in de_estas) - ROCE_DE_ARRIBA
-            desde, hasta = franja_del_estante(estante, arbol, alto)
-            atras = estante.fondo - hasta
-            filas = [1 if t.producto in DE_UNA_FILA else 2 for t in ESTANTES[clave]]
-            nuevos[clave] = (
-                fondo_nuevo(desde, de_estas, atras, inclinacion, filas) + PASO_DEL_TANTEO
-            )
-        if letra in ("A", "B"):
-            for clave, estante in propios.items():
-                if partes(clave)[1] not in CABECERAS and partes(clave)[2] > 0:
-                    nuevos[clave] = max(nuevos[clave], estante.fondo)
-        parejos(letra, propios, nuevos)
-        for clave, estante in propios.items():
-            deltas[clave] = achicar(estante, nuevos[clave])
-        islas = _islas(bm)
-        for cara in CABECERAS if letra in ("A", "B") else ():
-            de_la_cara = [e for c, e in propios.items() if partes(c)[1] == cara]
-            if de_la_cara:
-                achicar_cabecera(de_la_cara, deltas, islas)
-        if letra not in ("A", "B"):
-            resumen["entradas"].update(angostar(letra, estantes, islas, objeto))
-        bm.transform(objeto.matrix_world.inverted())
-        bm.to_mesh(objeto.data)
-        objeto.data.update()
-        bm.free()
-        objeto, bm, estantes = medir(letra)
-        propios = {c: e for c, e in estantes.items() if c in ESTANTES}
+    # El mapa cambia productos, no muebles: se reparte sobre la chapa existente.
     arbol = BVHTree.FromBMesh(bm)
     for clave, estante in sorted(propios.items()):
         reparto = ESTANTES[clave]
@@ -665,43 +457,13 @@ def acomodar_mueble(letra, envases, resumen):
     bm.free()
 
 
-def igualar_muebles_del_medio():
-    """Conserva el contorno mayor para que cuatro bolsas entren también en la cabecera de A.
-
-    Cambia sólo la malla del mueble: escalar el objeto deformaría las unidades hijas.
-    """
-    objetos = [bpy.data.objects[MUEBLES[letra]] for letra in ("A", "B")]
-    medidas = []
-    for objeto in objetos:
-        xs = [(objeto.matrix_world @ vert.co).x for vert in objeto.data.vertices]
-        medidas.append((min(xs), max(xs)))
-    ancho = max(hasta - desde for desde, hasta in medidas)
-    for objeto, (desde, hasta) in zip(objetos, medidas):
-        centro = (desde + hasta) / 2
-        factor = ancho / (hasta - desde)
-        inversa = objeto.matrix_world.inverted()
-        for vert in objeto.data.vertices:
-            mundo = objeto.matrix_world @ vert.co
-            mundo.x = centro + (mundo.x - centro) * factor
-            vert.co = inversa @ mundo
-        objeto.data.update()
-    bpy.context.view_layer.update()
-
-
 def principal():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    validar_reparto(ESTANTES)
     limpiar_guia()
     preparar_unidades()
-    igualar_muebles_del_medio()
     envases = {p.clave: envase_de(p, bpy.data.objects[p.objeto]) for p in PRODUCTOS}
-    resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
-    for letra in sorted({partes(clave)[0] for clave in ESTANTES}):
-        acomodar_mueble(letra, envases, resumen)
-    # Sacar el saliente del zócalo cambia el contorno medido de B. Se iguala después de esa
-    # corrección y se vuelven a ubicar las unidades, manteniendo el tamaño de cada envase.
-    igualar_muebles_del_medio()
-    limpiar_guia()
     resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
     for letra in sorted({partes(clave)[0] for clave in ESTANTES}):
         acomodar_mueble(letra, envases, resumen)

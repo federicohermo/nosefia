@@ -60,6 +60,8 @@ func casilleros_de(id: Producto.Id) -> int:
 func primera_reponible(id: Producto.Id, cupo: int) -> int:
 	var bloque := principales[id]
 	var total := copias(bloque)
+	if cupo == 0 and bloque.is_empty():
+		return 0
 	if cupo <= 0 or total not in [cupo, 2 * cupo] or bloque.size() % FLOTANTES_POR_COPIA != 0:
 		push_error(
 			(

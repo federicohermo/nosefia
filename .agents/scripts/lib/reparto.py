@@ -9,20 +9,20 @@ a correr el acomodador. **Qué entra y cómo se ordena no se decide acá**: lo c
 
 Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue al `.blend`:
 
-- cada producto del catálogo tiene **una sola** tanda con casilleros; lo que se repite para
+- cada producto exhibido tiene **una sola** tanda con casilleros; Duronga sólo tiene su fuente
+  exportable y caja en el depósito. Lo que se repite para
   completar un estante es fijo;
 - se repone sólo a la altura de la mano: en una cara de lado, en los estantes que no son ni el
   de arriba ni el zócalo, y en una cabecera, en los que no son el de arriba. Esos estantes no
   llevan ninguna tanda fija, y los demás llevan sólo tandas fijas;
 - un estante de lado lleva dos tandas, mitad y mitad, o una sola con casilleros que lo ocupa
-  entero. Cada cara de lado tiene un solo estante entero;
-- ningún producto va justo encima de sí mismo en la misma cara;
-- Malbardo, Durextra, Laysntt, Chisitos y Duronga van en cabecera;
+  entero;
+- los destinos y sus productos siguen los sectores del mapa aprobado;
 - Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo van en una sola fila: su tanda con
-  casilleros está en una cara de lado y toda es de casilleros;
+  casilleros es toda de casilleros;
 - la heladera lleva lo que se vende frío: cada uno se repone en una sola tanda, y lo que
   repite para llenar una bandeja es fijo;
-- ningún estante de góndola queda vacío.
+- el mural sobrante S queda vacío, sin duplicar productos para llenarlo.
 
 ## Cómo se nombra un estante
 
@@ -115,10 +115,46 @@ HELADERAS = ("H1", "H2")
 CABECERAS = ("norte", "sur")
 
 #: Lo que se vende frío, y por eso va en la heladera y en ningún otro lado.
-FRIOS = ("CORACOLA", "FERNET_GOD", "TERMINATOR", "MAYONCHIS", "OAAAA")
+FRIOS = ("CORACOLA", "FERNET_GOD", "CINDOLOR", "MAYONCHIS")
 
 #: Lo que se exhibe en una cabecera y en ningún otro lado.
-DE_CABECERA = ("MALBARDO", "DUREXTRA", "LAYSNTT", "CHISITOS", "DURONGA")
+DE_CABECERA = ("MALBARDO", "AMARGADITO", "OAAAA", "TERMINATOR", "SALADIK",
+               "JORGILLO", "BURBALOO", "FLINPUF")
+
+#: El mapa tiene una estantería de no comestibles. El segundo mural conserva su geometría.
+MUEBLES_SIN_EXHIBICION = ("S",)
+SOLO_DEPOSITO = ("DURONGA",)
+
+#: Identidades del diseño, sin traducir nombres comerciales ni asignar marcas desconocidas.
+SECTORES = {
+    "heladera_1": ("CORACOLA", "FERNET_GOD"),
+    "heladera_2": ("CINDOLOR", "MAYONCHIS"),
+    "no_comestibles": ("ACTRONCITO", "DUREXTRA", "POETICO"),
+    "cabecera_no_comestibles": ("MALBARDO",),
+    "cabecera_almacen": ("AMARGADITO",),
+    "almacen": ("MAROLINI", "ARVEJAS", "UAKAS", "MARRANOS"),
+    "cereales": ("ZUCARACHAS", "FROTLUPS"),
+    "bebidas_sin_refrigerar": ("OAAAA", "TERMINATOR"),
+    "dulces_primera_isla": ("MACUMBAS", "PEPITOS"),
+    "dulces_segunda_isla": ("OREMOS", "PETISAS", "COSA_DE_MANI", "FEEL_RICKY_FORT"),
+    "salados": ("DONSATURADOS", "PRONGLES", "CHISITOS", "LAYSNTT", "SALADIK"),
+    "golosinas": ("BURBALOO", "FLINPUF", "JORGILLO"),
+}
+
+#: Cada columna conserva su sector también en zócalo y referencias superiores.
+DESTINOS = {
+    "H1.sur": ("heladera_1",), "H2.sur": ("heladera_2",),
+    "N.sur": ("no_comestibles", "no_comestibles"),
+    "A.oeste": ("almacen", "almacen"),
+    "A.este": ("dulces_primera_isla", "cereales"),
+    "A.sur.0": ("cabecera_almacen",), "A.sur.1": ("cabecera_no_comestibles",),
+    "A.sur.2": ("cabecera_no_comestibles",),
+    "A.norte": ("bebidas_sin_refrigerar",),
+    "B.este": ("dulces_segunda_isla", "dulces_segunda_isla"),
+    "B.oeste": ("salados", "salados"),
+    "B.sur.0": ("salados",), "B.sur.1": ("golosinas",), "B.sur.2": ("golosinas",),
+    "B.norte": ("golosinas", "golosinas"),
+}
 
 
 #: Lo que va en una sola fila, toda de casilleros. Dos filas de Actroncito o de Cosa de Maní
@@ -150,62 +186,85 @@ def _f(clave: str) -> Tanda:
 #: Qué lleva cada estante, de izquierda a derecha para quien lo mira desde el pasillo.
 #:
 #: **Se itera.** Los lugares a la altura de la mano son más que los productos, y no se completan
-#: con tandas fijas: en cada cara de lado, un producto ocupa un estante entero. Las tandas fijas
+#: con tandas fijas. Un producto solo ocupa el estante entero. Las tandas fijas
 #: van arriba de todo y en el zócalo, y repiten un producto que se repone en otro lado.
 ESTANTES: dict[str, tuple[Tanda, ...]] = {
     # Góndola del medio, la de la derecha entrando: su cara oeste da al pasillo central.
-    "A.oeste.3": (_f("OREMOS"), _f("PEPITOS")),
-    "A.oeste.2": (_p("PRONGLES"),),
-    "A.oeste.1": (_p("ZUCARACHAS"), _p("POETICO")),
-    "A.oeste.0": (_f("MAROLINI"), _f("UAKAS")),
-    "A.este.3": (_f("SALADIK"), _f("BURBALOO")),
-    "A.este.2": (_p("PEPITOS"),),
-    "A.este.1": (_p("UAKAS"), _p("SALADIK")),
-    "A.este.0": (_f("JORGILLO"), _f("PETISAS")),
-    "A.sur.2": (_f("DUREXTRA"),),
+    "A.oeste.3": (_f("UAKAS"), _f("MARRANOS")),
+    "A.oeste.2": (_p("MAROLINI"), _p("ARVEJAS")),
+    "A.oeste.1": (_p("UAKAS"), _p("MARRANOS")),
+    "A.oeste.0": (_f("MAROLINI"), _f("ARVEJAS")),
+    "A.este.3": (_f("PEPITOS"), _f("FROTLUPS")),
+    "A.este.2": (_p("MACUMBAS"), _p("ZUCARACHAS")),
+    "A.este.1": (_p("PEPITOS"), _p("FROTLUPS")),
+    "A.este.0": (_f("MACUMBAS"), _f("ZUCARACHAS")),
+    "A.sur.2": (_f("MALBARDO"),),
     "A.sur.1": (_p("MALBARDO"),),
-    "A.sur.0": (_p("MACUMBAS"),),
-    "A.norte.2": (_f("CHISITOS"),),
-    "A.norte.1": (_p("LAYSNTT"),),
-    "A.norte.0": (_p("CHISITOS"), _p("FROTLUPS")),
+    "A.sur.0": (_p("AMARGADITO"),),
+    "A.norte.2": (_f("OAAAA"),),
+    "A.norte.1": (_p("OAAAA"),),
+    "A.norte.0": (_p("TERMINATOR"),),
     # Góndola del medio, la de la izquierda: su cara este da al pasillo central.
-    "B.este.3": (_f("FROTLUPS"), _f("SALADIK")),
-    "B.este.2": (_p("MAROLINI"), _p("BURBALOO")),
-    "B.este.1": (_p("FEEL_RICKY_FORT"),),
-    "B.este.0": (_f("DONSATURADOS"), _f("PETISAS")),
-    "B.oeste.3": (_f("ZUCARACHAS"), _f("SALADIK")),
-    "B.oeste.2": (_p("ACTRONCITO"),),
-    "B.oeste.1": (_p("DONSATURADOS"), _p("OREMOS")),
-    "B.oeste.0": (_f("CINDOLOR"), _f("MARRANOS")),
-    "B.sur.2": (_f("DURONGA"),),
-    "B.sur.1": (_p("DUREXTRA"),),
-    "B.sur.0": (_p("CINDOLOR"),),
-    "B.norte.2": (_f("MALBARDO"),),
-    "B.norte.1": (_p("DURONGA"),),
-    "B.norte.0": (_p("JORGILLO"),),
-    # Las dos góndolas contra la pared del oeste.
-    "N.sur.3": (_f("CINDOLOR"), _f("AMARGADITO")),
-    "N.sur.2": (_p("FLINPUF"),),
-    "N.sur.1": (_p("PETISAS"), _p("ARVEJAS")),
-    # Marranos es una lata chata: en el zócalo el portaprecio le tapa la etiqueta —sube 6,5 cm y
-    # la lata mide 8,6, medido el 2026-09-29—. Ahí va sólo su tanda fija.
-    "N.sur.0": (_f("JORGILLO"), _f("MARRANOS")),
-    "S.sur.3": (_f("FLINPUF"), _f("CINDOLOR")),
-    "S.sur.2": (_p("AMARGADITO"), _p("MARRANOS")),
-    "S.sur.1": (_p("COSA_DE_MANI"),),
-    "S.sur.0": (_f("ARVEJAS"), _f("FLINPUF")),
+    "B.este.3": (_f("COSA_DE_MANI"), _f("FEEL_RICKY_FORT")),
+    "B.este.2": (_p("OREMOS"), _p("PETISAS")),
+    "B.este.1": (_p("COSA_DE_MANI"), _p("FEEL_RICKY_FORT")),
+    "B.este.0": (_f("OREMOS"), _f("PETISAS")),
+    "B.oeste.3": (_f("CHISITOS"), _f("LAYSNTT")),
+    "B.oeste.2": (_p("DONSATURADOS"), _p("PRONGLES")),
+    "B.oeste.1": (_p("CHISITOS"), _p("LAYSNTT")),
+    "B.oeste.0": (_f("DONSATURADOS"), _f("PRONGLES")),
+    "B.sur.2": (_f("JORGILLO"),),
+    "B.sur.1": (_p("JORGILLO"),),
+    "B.sur.0": (_p("SALADIK"),),
+    "B.norte.2": (_f("BURBALOO"), _f("FLINPUF")),
+    "B.norte.1": (_p("BURBALOO"),),
+    "B.norte.0": (_p("FLINPUF"),),
+    # La estantería de no comestibles; el otro mural queda sin exhibición.
+    "N.sur.3": (_f("POETICO"),),
+    "N.sur.2": (_p("ACTRONCITO"), _p("DUREXTRA")),
+    "N.sur.1": (_p("POETICO"),),
+    "N.sur.0": (_f("ACTRONCITO"), _f("DUREXTRA")),
     # Las heladeras. Lo frío es menos que las bandejas: cada uno va una vez con casilleros, y las
     # bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el
     # 2026-09-29, igual que los estantes de góndola que no se completan sin repetir.
-    "H1.sur.0": (_f("OAAAA"),),
-    "H1.sur.1": (_p("CORACOLA"),),
-    "H1.sur.2": (_p("TERMINATOR"),),
-    "H1.sur.3": (_p("FERNET_GOD"),),
-    "H2.sur.0": (_f("CORACOLA"),),
+    "H1.sur.0": (_p("FERNET_GOD"),),
+    "H1.sur.1": (_f("FERNET_GOD"),),
+    "H1.sur.2": (_p("CORACOLA"),),
+    "H1.sur.3": (_f("CORACOLA"),),
+    "H2.sur.0": (_f("MAYONCHIS"),),
     "H2.sur.1": (_p("MAYONCHIS"),),
-    "H2.sur.2": (_p("OAAAA"),),
-    "H2.sur.3": (_f("FERNET_GOD"),),
+    "H2.sur.2": (_p("CINDOLOR"),),
+    "H2.sur.3": (_f("CINDOLOR"),),
 }
+
+
+def sector_de(estante: str, columna: int) -> str:
+    destino = estante if estante in DESTINOS else estante.rsplit(".", 1)[0]
+    sectores = DESTINOS[destino]
+    return sectores[columna]
+
+
+def validar_tandas(principales: dict[str, int]) -> None:
+    """Un vacío declarado es distinto de perder una fuente o inventar una identidad."""
+    conocidas = {p.clave for p in PRODUCTOS}
+    if principales.keys() - conocidas:
+        raise ValueError("producto sin sector declarado")
+    for p in PRODUCTOS:
+        esperado = 0 if p.clave in SOLO_DEPOSITO else 1
+        if principales.get(p.clave, 0) != esperado:
+            raise ValueError(f"{p.nombre}: se requieren {esperado} tandas principales")
+
+
+def validar_reparto(estantes: dict[str, tuple[Tanda, ...]]) -> None:
+    principales: dict[str, int] = {}
+    for estante, tandas in estantes.items():
+        for columna, t in enumerate(tandas):
+            sector = sector_de(estante, columna)
+            if t.producto not in SECTORES[sector]:
+                raise ValueError(f"{t.producto} no pertenece a {sector} en {estante}")
+            if not t.fija:
+                principales[t.producto] = principales.get(t.producto, 0) + 1
+    validar_tandas(principales)
 
 
 def producto(clave: str) -> Producto:

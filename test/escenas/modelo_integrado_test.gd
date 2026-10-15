@@ -13,6 +13,9 @@ func test_solo_las_mallas_reemplazadas_son_geometria_de_referencia() -> void:
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	var lugares := PackedVector3Array()
+	var contenido: Node3D = puesto.get("contenido")
+	for fuente: Node3D in contenido.get_children():
+		lugares.append(fuente.global_position)
 	for bloque: PackedFloat32Array in disposicion.principales + disposicion.guias:
 		for indice: int in DisposicionDeLaGondola.copias(bloque):
 			lugares.append(
@@ -121,13 +124,15 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 	var puesto: Node3D = almacen.get_node("ReposicionManual")
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	var lugares := PackedVector3Array()
+	var contenido: Node3D = puesto.get("contenido")
+	for fuente: Node3D in contenido.get_children():
+		lugares.append(fuente.global_position)
 	for bloque in disposicion.principales + disposicion.guias:
 		for indice in DisposicionDeLaGondola.copias(bloque):
 			lugares.append(
 				puesto.global_transform * DisposicionDeLaGondola.copia(bloque, indice).origin
 			)
 	var estructura := almacen.get_node("Estructura")
-	var contenido: Node3D = puesto.get("contenido")
 	# La copia fija de cada útil de limpieza la dibuja el útil que se levanta: está apagada a
 	# propósito, y eso lo cobra `utiles_de_limpieza_test.gd`.
 	var de_los_utiles: Array[String] = []
