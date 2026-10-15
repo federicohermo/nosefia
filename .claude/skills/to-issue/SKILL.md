@@ -205,6 +205,12 @@ Lo que más se rompe:
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
   comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
   mintiendo, y el implementador no lo puede tocar.
+- **Renombrar propiedades de un recurso incluye las sondas externas del paquete.** El barrido
+  de lectores alcanza `.github/scripts/`, además de `src/`, `test/`, `assets/` y el harness;
+  busca también claves leídas con `get()` y textos esperados. En #365, la sonda exportada
+  seguía buscando `martin`, `tiago` y dos paquetes de Zucarachas, aunque el juego ya usaba
+  Tin y Tia. Sus claves, aserciones y mensaje final entran en «Se escribe» antes de implementar,
+  y la verificación exige ejercerla contra el paquete real fuera del proyecto fuente.
 - **Si el issue borra un nombre, «Verificación» lleva el `rg` que lo prueba**: `rg -i <nombre>
   src test specs docs .claude` da cero. El carril lo corre también después de mergear otra
   rama, porque un carril en vuelo puede sumarle un lector. En el #266, un caso de #176, escrito
