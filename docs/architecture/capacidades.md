@@ -104,7 +104,8 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
   En la primera noche, la ventanilla recibe unidades físicas: la mercadería las retira una sola
   vez, al completar la venta o al vencer la compra. El padrón definido de la segunda comparte
-  sus pedidos ya construidos con reposición: nadie vuelve a sortear en una consulta. Sus
+  sus pedidos fijos de Fede y Mía ya construidos con reposición, junto con sus conversaciones
+  propias y figuras en el mundo. Ninguna consulta reconstruye la lista de apertura. Sus
   compras vencidas devuelven las unidades al piso interior, todavía registradas afuera, y
   descartan el ticket. Registrar espera a que ambas compras terminen, vendidas o vencidas, y
   compara sólo las ventas completas; atención exige completar las dos.

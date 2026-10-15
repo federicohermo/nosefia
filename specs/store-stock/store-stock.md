@@ -346,7 +346,7 @@ DEBE cambiar la cuenta que se cerró. Una jornada que no declara ordenar NO DEBE
 
 CUANDO se calculan faltantes de reposición para el padrón definido de jornada 2, el sistema
 DEBE recibir los mismos pedidos ya construidos que recibe atención (BR-CTR-038). Consultar
-faltantes, en cualquier orden con atención, NO DEBE consumir azar ni crear otro pedido. El
+faltantes, en cualquier orden con atención, NO DEBE reconstruir la lista ni crear otro pedido. El
 conjunto DEBE pertenecer a esa apertura y no heredar pedidos mutables de otra jornada.
 
 ### BR-STK-041 — Las compras físicas de la segunda noche conservan identidades
@@ -369,6 +369,16 @@ DEBE cumplir registrar si para cada producto lo anotado coincide exactamente con
 completas. Una compra vencida NO DEBE impedirlo. El vencimiento DEBE revisar registrar, como
 la venta y cada modificación de planilla. Al cierre, dos compras vencidas con planilla en cero
 DEBEN contar registrar cumplida; una unidad de más o de menos DEBE dejarla pendiente.
+
+### BR-STK-043 — El pedido fijo admite mercadería sin góndola y distingue Poético
+
+CUANDO se prepara la compra de Fede, el sistema DEBE permitir obtener y entregar Duronga desde
+el depósito aunque su cupo de góndola sea cero. Progres DEBE usar la identidad del producto
+existente que su subtítulo denomina así, sin crear otra fila de catálogo. Poético DEBE ser la
+unidad vendible del pedido, distinta del bidón azul de limpieza; entregar el bidón NO DEBE
+satisfacerla. Usar previamente esa unidad para teñir el balde durante jornada 2 NO DEBE impedir
+su venta ni descontarla dos veces. Atención y reposición DEBEN consumir los mismos pedidos
+fijos de la única lista construida al abrir jornada 2.
 
 ## Criterios de aceptación
 
@@ -768,11 +778,12 @@ DADO una caja rescatada en la jornada 1 CUANDO vuelve a su origen ENTONCES queda
 pila de esa apertura y no cumple ordenar por aparecer en una estantería. DADO la apertura de una
 jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 
-### AC-STK-081 — Reposición y atención usan el mismo azar ya resuelto *(verifica BR-STK-040)*
+### AC-STK-081 — Reposición y atención comparten los pedidos fijos *(verifica BR-STK-040)*
 
-DADO una apertura de jornada 2 con dos pedidos generados CUANDO se consultan faltantes antes y
-después de construir atención, y se repiten ambas consultas ENTONCES se usan los mismos pedidos
-y no se solicita otra selección al azar. Otra apertura usa estados propios sin heredar entregas.
+DADO una apertura de jornada 2 con los pedidos de Fede y Mía construidos CUANDO se consultan
+faltantes antes y después de construir atención, y se repiten ambas consultas ENTONCES se usan
+las mismas instancias de compradores y pedidos, con los seis productos fijos de BR-CTR-038,
+sin reconstrucción ni azar. Otra apertura crea estados propios sin heredar entregas.
 
 ### AC-STK-082 — Vencer devuelve productos al piso interior sin venta *(verifica BR-STK-041)*
 
@@ -795,12 +806,27 @@ atención no. Si ambas se venden, sólo su suma exacta cumple registrar.
 
 ### AC-STK-084 — La venta de jornada 2 no descuenta dos veces *(verifica BR-STK-041)*
 
-DADO una compra de jornada 2 que pide A/A/B y una caja A con su contenido inicial declarado,
-CUANDO se retiran dos A y una B y se entregan con ticket exacto ENTONCES la caja A conserva su
-contenido inicial menos dos, el depósito A pierde sólo esas dos identidades y lo vendido de A
-suma dos; B pierde sólo su unidad entregada y suma una venta. Repetir la recepción o intentar volver a
-registrarlas afuera no cambia cantidades. Una unidad vendida desde góndola deja su casillero
-vacío y reposición pendiente hasta rellenarlo.
+DADO Fede con su inicial terminada y cajas con el contenido inicial declarado CUANDO se retiran
+una unidad de Poético, una de Progres y una de Duronga y se entregan con ticket exacto ENTONCES
+cada caja conserva su contenido inicial menos una, cada depósito pierde sólo su identidad
+entregada y lo vendido suma una por cada producto. Repetir recepción o volver a registrarlas
+afuera no cambia cantidades. Una unidad vendida desde góndola deja su casillero vacío y
+reposición pendiente hasta rellenarlo.
+
+### AC-STK-085 — Duronga se obtiene sin casilleros *(verifica BR-STK-043, BR-STK-041)*
+
+DADO jornada 2 y Duronga con cupo de góndola cero y contenido inicial en depósito CUANDO se saca
+una unidad de su caja y se entrega a Fede, junto con Poético, Progres y ticket exacto ENTONCES
+la compra se completa, lo vendido de Duronga es una unidad y no se exige colocarla en góndola.
+Progres corresponde al producto ya existente de ese subtítulo, sin una fila adicional de catálogo.
+
+### AC-STK-086 — Poético vendible conserva su identidad después de limpiar *(verifica BR-STK-043, BR-STK-041)*
+
+DADO una unidad vendible de Poético retirada de caja en jornada 2 CUANDO tiñe un balde y después
+se entrega a Fede con los demás productos y ticket ENTONCES se vende esa misma identidad una
+sola vez; el teñido no agrega descuento de inventario y la venta no vuelve a retirar el pedido
+entero. DADO un intento de recepción que identifica el bidón azul en lugar de Poético CUANDO
+se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades de la compra.
 
 ## No objetivos
 

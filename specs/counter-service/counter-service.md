@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: draft
 owner: por definir
-provenance: GDD «Atención por ventanilla»; fichas «Formas de interacción», «Atención al cliente» y «Diálogos de compradores», decisiones de #429 y #433; migración de los specs 013, 035
+provenance: GDD «Atención por ventanilla»; fichas «Formas de interacción», «Atención al cliente» y «Diálogos de compradores», decisiones de #429, #433 y #444; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -218,7 +218,8 @@ el diálogo, también con un objeto rechazado en la mano. Terminada la entrada, 
 DEBE intentar recibirlo sin avanzar diálogo en el mismo clic. Reabrir DEBE conservar el estado.
 Los textos DEBEN corresponder al diseño de Figma, con las cantidades del pedido de la ficha:
 una Marolini para Martín, Coracola en lugar de Pura-Cola y dos Zucarachas para Tiago.
-Los productos pedidos DEBEN distinguirse con negrita y color.
+En la primera jornada, los productos pedidos DEBEN distinguirse con negrita y color.
+La presentación de los productos de jornada 2 DEBE seguir BR-CTR-043.
 
 ### BR-CTR-029 — Productos pendientes y ticket exacto
 
@@ -318,15 +319,24 @@ compras completas. Al vencer, los productos recibidos DEBEN quedar recogibles en
 local frente a la ventanilla, del lado de adentro, sin venta; el ticket aceptado DEBE descartarse.
 Una apertura nueva DEBE crear estados nuevos sin heredar entregas, conversaciones ni ventas.
 
-### BR-CTR-038 — Un pedido al azar por comprador y apertura
+### BR-CTR-038 — Un pedido fijo por comprador y apertura
 
-CUANDO se construye el padrón definido de la segunda jornada, el sistema DEBE generar para cada
-comprador un pedido de tres unidades válidas del catálogo, admitiendo repeticiones y agrupándolas
-por producto. El azar DEBE recibirse como entrada controlable. El pedido DEBE permanecer idéntico
-al consultar, recordar, rechazar, entregar y abrir o cerrar interfaces. Reposición y atención
-DEBEN recibir los mismos pedidos ya construidos de la apertura; ninguna consulta DEBE sortear
-otra vez. Otra apertura DEBE construir sus propios pedidos y estados. Un catálogo vacío o una
-selección inválida DEBEN fallar explícitamente, sin publicar un pedido parcial o inválido.
+CUANDO se construye el padrón de la segunda jornada, el sistema DEBE declarar exactamente estos
+pedidos, en el orden indicado y con una unidad de cada producto, según «Atención al cliente» y
+la decisión de conservar los productos nombrados por «Diálogos de compradores, Jornada 2»:
+
+| Comprador | Primer producto | Segundo producto | Tercer producto |
+|---|---|---|---|
+| Fede | Poético | Progres | Duronga |
+| Mía | Terminator | Fernet God | Actroncito |
+
+El pedido DEBE permanecer idéntico al consultar, recordar, rechazar, entregar y abrir o cerrar
+interfaces. El sistema NO DEBE sortear ni sustituir productos. Progres DEBE identificar el
+producto existente cuyo subtítulo lo denomina así, sin crear otro producto ni renombrar el
+catálogo. Reposición y atención DEBEN recibir los mismos compradores y pedidos ya construidos
+de la apertura. Otra apertura DEBE crear estados propios con los mismos pedidos fijos. Si
+algún producto requerido no existe en el catálogo, el sistema DEBE fallar explícitamente sin
+publicar un pedido parcial ni sustituirlo.
 
 ### BR-CTR-039 — Los textos comunes usan el pedido real
 
@@ -339,13 +349,53 @@ y sin punto final. Para más de una DEBE usar «dos» o «tres» seguido del nom
 Los productos DEBEN llevar el resaltado amarillo común. En jornada 2 NO DEBE inventarse una
 pista dentro de esos textos.
 
-### BR-CTR-040 — La ausencia de contenido específico es explícita
+### BR-CTR-041 — La segunda noche activa a Fede y Mía con su contenido propio
 
-MIENTRAS Fede o Mía carezcan de conversación inicial, despedida o arte propios aprobados, el
-sistema DEBE declarar esa ausencia y mantener el padrón definido disponible por solicitud
-explícita, sin activarlo automáticamente en el mundo. NO DEBE sustituirlos por otro personaje
-ni considerar una conversación vacía contenido aprobado. Los textos comunes y los pedidos
-DEBEN poder consultarse y ejercerse independientemente de esa integración.
+CUANDO se abre jornada 2, por transición o desde una partida retomada, el sistema DEBE activar
+exactamente Fede y Mía con horarios de BR-CTR-037, pedidos de BR-CTR-038, guiones de BR-CTR-042
+y sus figuras propias. NO DEBE activar el padrón genérico ni duplicar compradores. Cada figura
+DEBE conservar presencia animada en el mundo con la interfaz cerrada, orientación fija y
+oclusión por los sólidos, incluido el corte inferior detrás del antepecho desde laterales
+accesibles. La entrada y retirada DEBEN usar el recorrido existente desde la izquierda y
+hacia la derecha, respectivamente, conservando orientación, altura y profundidad.
+La apertura DEBE construir una sola lista compartida por reposición y atención. Reiniciar
+DEBE limpiar conversaciones, entregas, ventas e imágenes anteriores. La primera jornada y
+las jornadas 3 a 5 DEBEN conservar sus recorridos propios.
+
+### BR-CTR-042 — Nueve entradas propias de la segunda jornada
+
+El sistema DEBE entregar los siguientes textos sólo al comprador y etapa indicados, en su
+orden, conservando puntuación y límites de entrada de «Diálogos de compradores, Jornada 2».
+Un espacio final de celda NO DEBE formar parte del texto. Los textos y las figuras propias
+DEBEN estar disponibles también en el paquete distribuido del juego, sin depender de las fuentes.
+
+| Comprador | Etapa | Entrada | Texto |
+|---|---|---|---|
+| Fede | inicial | 1 | Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio. |
+| Fede | inicial | 2 | Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes? |
+| Fede | inicial | 3 | Quiero una botella de jabón Poético, una lata de papitas Progres y unos preservativos Duronga. |
+| Fede | despedida | 1 | ¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips. |
+| Fede | despedida | 2 | Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos. |
+| Mía | inicial | 1 | Hola… ¿me darías un vino Terminator, un Fernet God y una cajita de Actroncito? |
+| Mía | despedida | 1 | Zzzzzz.zzzzz.zzzzz |
+| Mía | despedida | 2 | Perdon, me quedé dormida... ¿En dónde estaba? |
+| Mía | despedida | 3 | Ah sí, gracias… Espero que esto me ayude a dormir mejor… |
+
+### BR-CTR-043 — Cada atención conserva su lectura y sus destacados
+
+CUANDO se inicia la conversación de Fede o Mía, el sistema DEBE mostrar la primera entrada
+propia y avanzar sólo una por clic izquierdo, sin recepción, rechazo ni abandono mientras
+habla. Terminar la inicial DEBE devolver el control según BR-CTR-036; hablar de nuevo DEBE
+mostrar recordatorio sin repetir introducción. Cada atención DEBE tener un progreso de lectura
+independiente, sin modificar el contenido compartido. Un cuadro largo sin nuevos clics NO DEBE
+consumir entradas. Los nombres Poético, Progres y Duronga del pedido de Fede, y Terminator,
+Fernet God y Actroncito del de Mía, DEBEN llevar amarillo, sin negrita añadida ni pistas lilas.
+Los recordatorios y rechazos DEBEN usar los pedidos fijos según BR-CTR-039.
+CUANDO se completa una compra, el sistema DEBE vender una sola vez e iniciar la despedida
+propia desde su primera entrada. NO DEBE despachar ni retirar al comprador mientras quede
+alguna entrada de despedida; tras terminarla DEBE retirarlo una sola vez. Una compra parcial
+o vencida NO DEBE iniciar esa despedida. Vencer o cerrar DEBE conservar BR-CTR-037, incluso
+con diálogo abierto; una compra completada antes del límite conserva su resultado.
 
 ## Criterios de aceptación
 
@@ -413,7 +463,7 @@ precio unitario, y al final están el total, lo que paga y la diferencia.
 
 DADO una conversación de tres entradas CUANDO se avanzó dos veces ENTONCES no se puede abandonar;
 al tercer avance se vuelve automáticamente a la vista normal. Con cero entradas no hay
-bloqueo; la ausencia de contenido propio se distingue según BR-CTR-040.
+bloqueo. Las conversaciones propias de jornada 2 son las de BR-CTR-042.
 
 ### AC-CTR-015 — La venta no toca el estante *(verifica BR-CTR-014)*
 
@@ -661,19 +711,21 @@ ENTONCES Fede está ausente, llega, espera y vence si no completó. En 04:59:59,
 Saltar desde apertura a cierre entrega llegada Fede, vencimiento Fede, llegada Mía y vencimiento
 Mía, en ese orden, cada uno con su comprador original; en pausa no cruza ninguno.
 
-### AC-CTR-051 — Tres unidades admiten uno, dos o tres tipos *(verifica BR-CTR-038)*
+### AC-CTR-051 — Los seis productos son fijos *(verifica BR-CTR-038)*
 
-DADO azar controlado que entrega, por turno, A/A/A, A/A/B y A/B/C de un catálogo válido CUANDO se
-construye cada pedido ENTONCES contiene tres unidades agrupadas en uno, dos y tres tipos,
-respectivamente. Catálogo vacío o selección inexistente falla explícitamente sin pedido válido.
-Una apertura crea dos compradores nuevos con identidad Fede/Mía; otra no hereda su estado.
+DADO la apertura de jornada 2 CUANDO se construyen sus compradores ENTONCES Fede pide una unidad
+de Poético, Progres y Duronga, en ese orden; Mía una de Terminator, Fernet God y Actroncito,
+en ese orden. Cada pedido tiene tres tipos y tres unidades. Progres corresponde al producto
+existente de ese subtítulo. Un producto requerido ausente del catálogo falla explícitamente,
+sin pedido parcial, sustitución ni selección al azar. Otra apertura conserva los productos
+pero crea estados nuevos.
 
-### AC-CTR-052 — Consultar nunca vuelve a sortear *(verifica BR-CTR-038)*
+### AC-CTR-052 — Consultar conserva la lista de apertura *(verifica BR-CTR-038)*
 
-DADO una apertura con los dos pedidos construidos CUANDO se consultan faltantes y atención en
-ambos órdenes, se recuerda, rechaza, entrega y reabre ENTONCES ambos consumidores conservan los
-mismos pedidos y la fuente de azar no recibe nuevas solicitudes. Otra apertura sí construye
-sus propios pedidos, aunque el azar pueda volver a seleccionar los mismos productos.
+DADO una apertura con Fede/Mía y sus pedidos fijos construidos CUANDO se consultan faltantes y
+atención en ambos órdenes, se recuerda, rechaza, entrega y reabre ENTONCES ambos consumidores
+conservan las mismas instancias de compradores y pedidos, sin reconstruir la lista ni sortear.
+Otra apertura crea sus propios estados con los mismos seis productos, sin heredar entregas.
 
 ### AC-CTR-053 — Marcadores, cantidades y rechazo *(verifica BR-CTR-039)*
 
@@ -691,21 +743,76 @@ Mía vence antes de evaluar: atención queda pendiente, sus tres cuerpos vuelven
 recogibles y no cuentan como venta. DADO Mía completa a 07:59:59 ENTONCES ambas compras cuentan
 una vez y atención queda cumplida, aunque la despedida siga. Repetir el cierre no duplica salidas.
 
-### AC-CTR-055 — Recepción física y destinos de jornada 2 *(verifica BR-CTR-037, BR-CTR-029, BR-CTR-030)*
+### AC-CTR-055 — Recepción física y destinos de jornada 2 *(verifica BR-CTR-037, BR-CTR-038, BR-CTR-029, BR-CTR-030)*
 
-DADO un pedido A/A/B en el modelo de jornada 2 y una conversación de prueba explícita CUANDO se
-entrega ticket exacto antes de los productos ENTONCES se acepta y aún no vende. Dos cuerpos A
-distintos y uno B completan una venta; repetir un cuerpo, una tercera A o un ticket inexacto se
-rechaza sin cambiar mano ni cantidades. DADO una compra incompleta con ticket y dos productos
-CUANDO vence ENTONCES el ticket desaparece y ambos productos quedan dentro del local, sin venta.
-Una apertura posterior no hereda esos cuerpos ni entregas.
+DADO Fede con su inicial terminada CUANDO se entrega un ticket exacto antes de los productos
+ENTONCES se acepta y aún no vende. Una unidad de Poético, una de Progres y una de Duronga
+completan una venta; repetir un cuerpo, ofrecer una segunda unidad de un producto o un ticket
+inexacto se rechaza sin cambiar mano ni cantidades. DADO una compra incompleta con ticket y
+dos productos CUANDO vence ENTONCES el ticket desaparece y ambos productos quedan dentro del
+local, sin venta. Una apertura posterior no hereda esos cuerpos ni entregas.
 
-### AC-CTR-056 — Contenido incompleto no suplanta personajes *(verifica BR-CTR-040)*
+### AC-CTR-057 — Dos caminos de apertura activan los mismos compradores *(verifica BR-CTR-041, BR-CTR-038)*
 
-DADO Fede/Mía con pedidos y textos comunes, sin guion específico ni arte propios CUANDO se
-solicita ese contenido ENTONCES se informa su ausencia, sin frases ni imágenes de otro
-comprador. Abrir el juego no activa automáticamente ese padrón ni inicia una conversación
-vacía. Solicitar explícitamente los datos sí entrega agenda, pedidos y textos comunes válidos.
+DADO una transición de jornada 1 a 2 y, por separado, una partida retomada directamente en 2
+CUANDO llega 20:30 ENTONCES hay un único Fede con su figura, pedido fijo e inicial propia.
+A 05:00 hay una única Mía con los suyos. No aparecen compradores genéricos ni copias de Fede/Mía.
+Reposición y atención reciben la misma lista y los mismos pedidos de cada apertura.
+
+### AC-CTR-058 — Nueve textos en cuatro bloques *(verifica BR-CTR-042)*
+
+DADO los diálogos propios de jornada 2 CUANDO se consultan inicial y despedida de cada comprador
+ENTONCES Fede tiene tres entradas iniciales y dos finales; Mía una inicial y tres finales.
+Las nueve coinciden exactamente, en texto y orden, con BR-CTR-042, sin espacios finales, sin
+corregir «entendes», «podes» o «Perdon», y sin entradas de otro comprador.
+
+### AC-CTR-059 — Seis nombres amarillos sin pista *(verifica BR-CTR-043, BR-CTR-039)*
+
+DADO la tercera entrada inicial de Fede y la única inicial de Mía CUANDO se dibujan ENTONCES
+los únicos nombres resaltados como productos son respectivamente Poético/Progres/Duronga y
+Terminator/Fernet God/Actroncito, en amarillo y sin negrita añadida; ninguno es una pista lila.
+Tras la inicial, recordatorio y rechazo nombran los tres productos de ese mismo pedido fijo.
+
+### AC-CTR-060 — Tres avances para Fede y uno para Mía *(verifica BR-CTR-043, BR-CTR-035, BR-CTR-036)*
+
+DADO cada comprador sin atender y un producto sostenido CUANDO se pulsa izquierdo una vez sobre
+su figura ENTONCES se muestra su primera entrada sin recibir ni rechazar. Fede vuelve al mundo
+tras tres avances; Mía tras uno. Cada pulsación avanza sólo una entrada; un cuadro largo sin
+clic no avanza. Derecho durante el diálogo no abandona. La última pulsación conserva mano y no
+entrega además el producto; hablar nuevamente muestra recordatorio sin repetir la introducción.
+
+### AC-CTR-061 — Dos y tres entradas antes de retirarse *(verifica BR-CTR-043, BR-CTR-030)*
+
+DADO cada inicial terminada CUANDO se entregan los tres productos correctos y ticket exacto,
+con ticket primero o último ENTONCES vende una sola vez y muestra la primera despedida propia.
+Fede sigue presente tras el primer avance y se despacha tras el segundo; Mía sigue presente
+tras el primero y el segundo y se despacha tras el tercero. Repetir entrada o recepción no
+vende ni retira otra vez. Al terminar, la vista vuelve y la imagen sale hacia la derecha.
+
+### AC-CTR-062 — Vencimiento y cierre no fabrican despedida *(verifica BR-CTR-043, BR-CTR-037)*
+
+DADO Fede con compra parcial y diálogo abierto CUANDO llega 23:30 ENTONCES vence sin despedida
+de venta y sus productos vuelven al piso interior; el ticket aceptado se descarta. DADO Mía
+incompleta con diálogo abierto CUANDO llega 08:00 ENTONCES vence antes de evaluar el cierre y
+atención queda pendiente. DADO ambas compras completas y Mía completada a 07:59:59 ENTONCES
+atención queda cumplida aunque siga en su despedida. Pausar conserva el estado hasta reanudar.
+
+### AC-CTR-063 — Progreso independiente y figuras propias *(verifica BR-CTR-041, BR-CTR-043)*
+
+DADO dos atenciones independientes del mismo guion de Fede CUANDO sólo una avanza ENTONCES la
+otra conserva su primera entrada y el contenido compartido no cambia. DADO la jornada 2 con
+introducción o despedida en curso CUANDO se reinicia ENTONCES no quedan cursores, entregas,
+ventas ni imágenes heredadas. Con la interfaz cerrada, cada figura durante su presencia conserva animación,
+orientación fija y oclusión; el antepecho oculta el corte inferior desde laterales accesibles.
+La primera jornada y las 3 a 5 mantienen sus compradores y conversaciones anteriores.
+
+### AC-CTR-064 — El paquete conserva conversaciones y figuras *(verifica BR-CTR-042, BR-CTR-041, BR-CTR-043)*
+
+DADO el paquete distribuido del juego ejecutado fuera de las fuentes CUANDO se recorren las
+iniciales y despedidas de Fede/Mía ENTONCES se cargan los nueve textos exactos, en los mismos
+cuatro bloques, con los seis nombres destacados y la figura propia de cada identidad. No hay
+recursos ausentes ni errores de ejecución al recorrerlas. Las figuras se ven con el panel
+cerrado y los textos completos al hablar, conservando los gestos de entrada y retorno.
 
 ## No objetivos
 
@@ -718,16 +825,16 @@ vacía. Solicitar explícitamente los datos sí entrega agenda, pedidos y textos
 
 - **Entrada:** el padrón de la noche, los vendibles de cada producto, el objeto leído y los
   pedidos de borrar o imprimir, el número de jornada, las elecciones por renglón y el objeto
-  sostenido con su destino de uso; catálogo, fuente de azar y solicitud explícita del padrón
-  definido de jornada 2, compartido por atención y reposición.
+  sostenido con su destino de uso; catálogo y apertura del padrón fijo de jornada 2,
+  compartido por atención y reposición, con los guiones y figuras propios de Fede/Mía.
 - **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
   faltantes, cuántos van despachados, el desvío de la noche, lo vendido de cada producto y el
-  papel impreso o desechado; agenda y pedidos estables de jornada 2, textos comunes y ausencia
-  explícita de contenido propio sin aprobar.
+  papel impreso o desechado; agenda, pedidos fijos, textos comunes y conversaciones propias
+  de jornada 2 con progreso independiente por atención.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
   rechaza todo lo demás. Fuera de la entrega al comprador, usar un objeto que no sea ticket,
-  o un destino distinto del inodoro, no produce descarte. Un catálogo vacío o selección
-  inválida no produce un pedido válido; contenido específico ausente no activa al personaje.
+  o un destino distinto del inodoro, no produce descarte. Un producto requerido ausente
+  del catálogo impide construir su pedido; no se sustituye ni se publica un pedido parcial.
 
 ## Señales
 
@@ -761,9 +868,3 @@ vacía. Solicitar explícitamente los datos sí entrega agenda, pedidos y textos
     deja ventas que se rechazan.
   - Decide: game design.
   - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón. La jornada 2 está decidida en BR-CTR-037.
-
-- **OQ-CTR-006 — ¿Cuáles son la inicial, despedida y originales visuales de Fede y Mía?**
-  - Por qué sigue abierta: las fichas de jornada 2 fijan agenda y textos comunes, pero los
-    guiones específicos siguen sin escribir y la ficha de sprites no enlaza los originales.
-  - Decide: game design y arte.
-  - Bloquea: activación automática de Fede/Mía en el mundo; no bloquea sus datos ni agenda.
