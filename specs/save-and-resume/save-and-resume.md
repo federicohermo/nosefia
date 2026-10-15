@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430
 ---
 
 # Capacidad: guardar y retomar
@@ -139,12 +139,27 @@ final NO DEBE reaparecer.
 ### BR-SAV-019 — Las cuentas y las devoluciones cruzan la sesión
 
 CUANDO se guarda, el sistema DEBE escribir, además de la jornada y el legajo, las fallas de cada
-obligatoria fija, los llamados de cada motivo, R, los textos de las devoluciones recibidas, en
-orden (BR-EMP-025, BR-EMP-031), y si la mopa ya se secó una vez (BR-SUB-014). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
-siguiente cuenta desde ellos, y el chat de Enrique muestra las instrucciones y después esas
-devoluciones. SI falta alguno o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) con cero
+obligatoria fija, los llamados de cada motivo, R, los textos de las devoluciones recibidas con identidad, jornada cerrada y orden
+(BR-EMP-025, BR-EMP-031, BR-SAV-020), y si la mopa ya se secó una vez (BR-SUB-014). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
+siguiente cuenta desde ellos, y el chat de Enrique intercala instrucciones, aperturas y
+devoluciones según BR-INV-030. SI falta alguno o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) con cero
 fallas, cero llamados, R = 0, ninguna devolución y la mopa sin secarse. Dentro de las cuentas, una obligatoria o un
 motivo desconocido, o un valor de otro tipo, DEBE ignorarse sin descartar los demás.
+
+### BR-SAV-020 — Los mensajes nuevos conservan fecha y los antiguos no la inventan
+
+CUANDO se guardan devoluciones nuevas, el sistema DEBE conservar por mensaje texto, identidad,
+jornada cerrada y orden dentro de la devolución. CUANDO se retoma, esos datos DEBEN volver
+con sus tipos y valores originales y permitir el historial cronológico de `investigation`.
+Los guiones de apertura DEBEN reconstruirse por jornada; NO DEBEN serializarse como
+devoluciones ni guardar marcas de lectura en sus recursos compartidos.
+
+SI el guardado legado contiene una lista de textos de devoluciones, ENTONCES el sistema DEBE
+aceptarla y conservar todos sus textos en el mismo orden, incluidos textos iguales, sin
+asignarles una jornada u hora que el archivo no contiene. La falta de fecha NO DEBE vaciar
+la lista válida de devoluciones ni borrar el progreso. Su posición entre aperturas
+queda sujeta a OQ-INV-004; conservar orden y texto NO DEBE depender de resolver esa pregunta.
+Los campos ausentes o de tipo incorrecto DEBEN conservar el saneamiento de BR-SAV-006.
 
 ## Criterios de aceptación
 
@@ -292,7 +307,8 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
 DADO una partida con la noche 2 cerrada, reponer sin cumplir en las dos noches, un llamado por
 papel en la noche 1 y R = 0 CUANDO se guarda, se lee el archivo y se retoma ENTONCES reponer
 tiene 2 fallas, papel 1 llamado, hubo llamados en la partida, R = 0, y las dos devoluciones están en orden y
-letra por letra en el chat de Enrique, después de las 19 entradas de las instrucciones. CUANDO
+letra por letra en el chat de Enrique, intercalando foto y texto de apertura 2 entre las
+dos devoluciones y conservando las 19 entradas de instrucciones al principio. CUANDO
 la noche 3 cierra con reponer sin cumplir ENTONCES su devolución trae la fila n = 3 de Tarea 3,
 «De nuevo quedaron algunas góndolas incompletas…».
 
@@ -303,7 +319,8 @@ CUANDO se guarda y retoma ENTONCES reponer conserva 1 falla, papel 1 llamado y R
 
 DADO un guardado de la jornada 3 sin fallas, llamados, R ni devoluciones CUANDO se retoma
 ENTONCES sigue en la jornada 3 con su legajo, cero fallas, cero llamados, R = 0, sin llamados en
-la partida, y el chat de Enrique tiene sólo las 19 entradas de las instrucciones. DADO las
+la partida, y el chat de Enrique tiene las 19 entradas de instrucciones y los mensajes
+de apertura 2 reconstruidos, sin devoluciones inventadas. DADO las
 fallas con un valor que no es un diccionario, o las devoluciones con un número ENTONCES vuelven
 con su defecto. DADO las fallas con una obligatoria desconocida y reponer en 1 ENTONCES reponer
 conserva 1 y la desconocida se ignora.
@@ -314,11 +331,29 @@ DADO una partida marcada con la mopa ya secada CUANDO se guarda y se retoma ENTO
 marcada, como booleano. DADO un guardado sin el campo, o con un número en él, ENTONCES se retoma
 sin la marca.
 
+### AC-SAV-027 — El checkpoint de jornada 2 conserva el historial fechado *(verifica BR-SAV-020, BR-SAV-019, BR-SAV-005, BR-SAV-015)*
+
+DADO cierre 1 con devolución fechada CUANDO se guarda, lee y retoma ENTONCES abre jornada 2,
+conserva identidad, texto, jornada 1 y orden de cada mensaje de esa devolución, y el chat
+ordena instrucciones, devolución 1, foto y texto de apertura 2. El guion de Yasmín vuelve con
+sus quince mensajes sin leer. No se repiten las instrucciones en modo introductorio.
+CUANDO cierra la 2 y se repite guardar y retomar ENTONCES la devolución 2 vuelve detrás de
+la apertura 2, sin duplicar ni serializar de nuevo los mensajes del guion.
+
+### AC-SAV-028 — El legado conserva textos iguales sin fechas inventadas *(verifica BR-SAV-020, BR-SAV-006)*
+
+DADO un guardado legado de jornada 2 con la lista de devoluciones «Buen día!», «Buen día!»
+y «Seguí así» CUANDO se retoma y vuelve a guardar ENTONCES conserva los tres textos en ese
+orden, sin fusionar los dos iguales ni asignarles jornada u hora. El resto del progreso
+válido se conserva. DADO lista ausente o campo de devoluciones numérico ENTONCES se sanea a
+cero devoluciones, sin perder la jornada ni inventar mensajes de cierre.
+
 ## No objetivos
 
 - Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
   como campo cuando su dueño lo declare.
-- Esta capacidad NO migra guardados entre versiones: eso es del día que exista una segunda.
+- Esta capacidad NO reconstruye fechas ausentes del legado ni guarda los guiones o sus
+  marcas de lectura; acepta las listas antiguas según BR-SAV-020.
 - Esta capacidad NO ofrece ranuras, autoguardado ni nube.
 - Esta capacidad NO avisa en pantalla que la escritura falló.
 - Esta capacidad NO guarda las preferencias del jugador: viven aparte, en
@@ -341,10 +376,12 @@ sin la marca.
 ## Dependencias
 
 - [`employment-record`](../employment-record/employment-record.md) (consume): la jornada, el
-  legajo y el final; las cuentas de la devolución y las devoluciones recibidas; las
+  legajo y el final; las cuentas de la devolución y las devoluciones recibidas con identidad, jornada y orden; las
   instrucciones previas a una partida nueva.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): la jornada que anuncia la entrada
   al empezar o continuar, sin repetir las instrucciones al retomar.
+- [`investigation`](../investigation/investigation.md) (alimenta): devoluciones restauradas
+  con identidad, jornada y orden cuando existen, sin inventar metadatos del legado.
 - [`settings`](../settings/settings.md) (alimenta): los dos menús abren Configuraciones, y Esc
   la cierra.
 
