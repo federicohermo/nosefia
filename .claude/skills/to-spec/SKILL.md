@@ -86,6 +86,10 @@ rg --no-ignore -n "AC-XXX" specs/ test/         # si ese ID ya se usó
   jornada. El catálogo de tipos posibles no dice cuáles se exigen en una apertura.
 - **El GDD manda sobre el código.** Si el GDD y el código difieren en un valor, la regla dice
   lo que dice el GDD y el código está en falta. Eso es el hallazgo.
+- **Una tabla de sectores se contrasta con cada región del esquema visual.** No convertir una
+  agrupación informal en exclusividad entre muebles: en #434, snacks dulces compartía media
+  cara de la primera isla con cereales y el contrato los había separado. Recorrer las regiones,
+  contar identidades y conservar las excepciones explícitas antes de escribir DEBE o NO DEBE.
 - **Un hueco es una `OQ-<COD>-###`**, con por qué sigue abierta, quién la decide y qué bloquea.
   Nunca un valor inventado.
 - **Lo que el motor soporta se mide en el juego, no en el editor.** Son dos procesos de Godot y

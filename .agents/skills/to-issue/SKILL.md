@@ -91,6 +91,31 @@ gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otr
 Consultá `nosefia-index` para saber quién usa lo que vas a tocar. Lo que aparece ahí entra en
 «Sólo lectura» o en «No se toca».
 
+**Reasignar un gesto sigue sus estímulos y sus consultas, no sólo su despachador.**
+Buscar acciones en los fixtures compartidos y leer el par mano/objetivo de cada caso antes de
+incluirlo: en #425, los fixtures de basura y devolución debían migrar al primario, pero dos
+fixtures de subtítulos sacaban de cajas con mano vacía y conservaban el secundario. Medir
+además qué dato puro necesita la referencia durante una animación: el permiso de descarte de
+una tapa no distingue su intención abierta/cerrada mientras gira. Las consultas faltantes y
+sus espejos entran en los límites antes de repartir.
+
+**Ampliar un guion revisa también los consumidores de su lista completa.** Una intro y sus
+fixtures pueden esperar sólo la primera jornada aunque el recurso pase a contener varias.
+Declarar la vista que consume cada uno y conservar su inmutabilidad; en #430, dos suites de
+instrucciones necesitaban filtrar J1, mientras otro lector del primer mensaje seguía válido.
+
+**Un producto sin exhibición se sigue hasta los generadores de su fuente.** Buscar también
+extractores de mallas, miniaturas y validadores que localizan la unidad por su tanda, no sólo
+las consultas de cupo del juego. En #434, el dominio aceptaba cupo cero pero el extractor no
+podía encontrar Duronga con su bloque principal vacío. Cada consumidor que deba cambiar entra
+en los límites con su responsabilidad; no se omite la regeneración para evitar una escena
+prohibida.
+
+**Cada comando de verificación se ejecuta literalmente desde la raíz declarada.** Incluir el
+entorno que necesita; en #434, unittest discover no encontraba lib sin PYTHONPATH apuntando a
+.claude/scripts. No entregar un comando que sólo funcionó desde otro directorio o después de
+un ajuste manual que el issue omite.
+
 **Un recorrido web se cruza con el preset versionado antes de cerrar los límites.**
 Revisar los filtros de exportación y las dependencias importadas que usa ese recorrido,
 también las guardadas en recursos binarios. En #373, el criterio pedía mostrar el celular
