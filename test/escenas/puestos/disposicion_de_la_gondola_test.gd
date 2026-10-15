@@ -67,30 +67,20 @@ func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
 		)
 
 
-## Lo que una jornada hace faltar de un producto tiene que entrar en su fila: con más, la góndola
-## arrancaría vacía y faltaría menos de lo que la jornada dice. Coracola tiene seis casilleros a
-## propósito, para los seis que le faltan en la jornada 1.
-func test_ningun_faltante_de_ninguna_jornada_pasa_de_su_fila() -> void:  # AC-STK-033
+## Los cupos suman la tanda principal y las filas fijas del recurso vigente.
+func test_doscientas_semillas_entran_en_fila_y_caja() -> void:  # AC-STK-033
 	var disposicion := _disposicion()
-	for numero in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
-		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + numero
-		var faltantes := Apertura.faltantes_de_la_jornada(jornada)
-		for id: Producto.Id in faltantes:
-			(
-				assert_int(faltantes[id])
-				. override_failure_message(
-					(
-						"jornada %d: faltan %d %s y su fila tiene %d casilleros"
-						% [
-							jornada,
-							faltantes[id],
-							Catalogo.de(id).nombre,
-							disposicion.filas_de_adelante[id],
-						]
-					)
-				)
-				. is_less_equal(disposicion.filas_de_adelante[id])
-			)
+	var casilleros: Dictionary[Producto.Id, int] = {}
+	for producto in Catalogo.todos():
+		casilleros[producto.id] = disposicion.casilleros_de(producto.id)
+	for jornada in range(1, 6):
+		var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(jornada))
+		for semilla in 200:
+			var azar := RandomNumberGenerator.new()
+			azar.seed = semilla
+			var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, azar)
+			for id: Producto.Id in faltantes:
+				assert_int(faltantes[id]).is_between(1, mini(8, casilleros[id]))
 
 
 ## Una fila entera de casilleros, o dos iguales con los casilleros en la de adelante: las

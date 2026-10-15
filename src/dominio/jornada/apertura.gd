@@ -7,23 +7,6 @@ extends RefCounted
 
 const PARTICULARES := {1: [Tarea.Tipo.ORDENAR_LAS_CAJAS], 2: [Tarea.Tipo.SACAR_LA_BASURA]}
 
-## Qué falta en la góndola al abrir cada jornada: `jornada → { Producto.Id: unidades }`, de la
-## tabla de la ficha «8. Tarea: Reposición». Cada faltante es a lo sumo lo que trae una caja, y
-## el test lo afirma sobre las cinco jornadas.
-##
-## Por ahora tiene una sola fila: las otras jornadas dicen «A definir» y arrancan como la primera
-## (ver `faltantes_de_la_jornada()`).
-const FALTANTES_POR_JORNADA := {
-	ReglasDeLaPartida.PRIMERA_JORNADA:
-	{
-		Producto.Id.ACTRONCITO: 4,
-		Producto.Id.CORACOLA: 5,
-		Producto.Id.MAROLINI: 2,
-		Producto.Id.PRONGLES: 8,
-		Producto.Id.LAYSNTT: 4,
-	},
-}
-
 
 ## Las cuatro fijas y la particular declarada, siempre con instancias nuevas.
 static func obligatorias(jornada: int) -> Array[Tarea]:
@@ -49,41 +32,15 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 	return Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 
 
-## La mercadería con la que arranca la noche de esa jornada: cada caja del depósito llena, y la
-## fila de adelante de cada producto completa salvo lo que la jornada hace faltar.
-##
-## **Que falte algo es lo que hace que reponer sea una tarea**, y que sea poco es lo que la ficha
-## pide: la góndola de un almacén abierto no está vacía. Con la góndola entera por reponer, cada
-## noche arrancaría con treinta y un productos que caminar hasta el fondo.
-##
-## Los casilleros de cada fila los recibe: los mide la escena sobre el modelo, y acá no se
-## escribe ninguno. Lo que falta sale de `faltantes_de_la_jornada()`, y la jornada es la que
-## abre el ciclo: una partida continuada arranca su noche desde el dato, como una nueva.
-##
-## **Devuelve un inventario nuevo en cada llamada**, igual que `obligatorias()`: uno compartido
-## entre jornadas dejaría lo repuesto anoche en la góndola de esta noche, o sea que la tarea se
-## cumpliría sola a partir de la segunda.
+## Recibe los mismos compradores de Atención y la fuente de azar de esta sesión.
 static func inventario_de_la_jornada(
-	jornada: int, casilleros: Dictionary[Producto.Id, int]
+	compradores: Array[Comprador],
+	casilleros: Dictionary[Producto.Id, int],
+	azar: RandomNumberGenerator
 ) -> Inventario:
-	return inventario_con_faltantes(faltantes_de_la_jornada(jornada), casilleros)
-
-
-## Lo que falta en la góndola al abrir esa jornada, de cada producto que falta: la ficha
-## «8. Tarea: Reposición». Un producto que no está no falta.
-##
-## **Sólo la primera jornada está decidida.** La ficha dice «A definir» de la 2 a la 5, y
-## mientras tanto arrancan como la primera (OQ-STK-005): una jornada sin fila en
-## `FALTANTES_POR_JORNADA` contesta la de la primera. El día que la ficha decida otra, es una
-## fila más en esa tabla.
-##
-## Devuelve una copia: quien la reciba puede tocarla sin cambiar la jornada de mañana.
-static func faltantes_de_la_jornada(jornada: int) -> Dictionary[Producto.Id, int]:
-	var fila: Dictionary[Producto.Id, int] = {}
-	fila.assign(
-		FALTANTES_POR_JORNADA.get(jornada, FALTANTES_POR_JORNADA[ReglasDeLaPartida.PRIMERA_JORNADA])
+	return inventario_con_faltantes(
+		faltantes_al_azar(pedidos_de(compradores), casilleros, azar), casilleros
 	)
-	return fila
 
 
 ## La mercadería de una noche con esos faltantes: el depósito de cada producto del catálogo con
@@ -113,13 +70,40 @@ static func cajas_apiladas(jornada: int) -> bool:
 	return Tarea.Tipo.ORDENAR_LAS_CAJAS in PARTICULARES.get(jornada, [])
 
 
+## Muestreo sin reemplazo: cada índice restante tiene la misma probabilidad.
 static func faltantes_al_azar(
 	pedidos: Dictionary[Producto.Id, int],
 	casilleros: Dictionary[Producto.Id, int],
 	azar: RandomNumberGenerator
 ) -> Dictionary[Producto.Id, int]:
-	return {}
+	var maximos: Dictionary[Producto.Id, int] = {}
+	var elegibles: Array[Producto.Id] = []
+	for producto in Catalogo.todos():
+		var maximo := mini(
+			ReglasDelEstante.UNIDADES_POR_CAJA - pedidos.get(producto.id, 0),
+			casilleros.get(producto.id, 0)
+		)
+		if maximo >= ReglasDelEstante.MENOS_QUE_FALTA:
+			elegibles.append(producto.id)
+			maximos[producto.id] = maximo
+	var cantidad := azar.randi_range(
+		ReglasDelEstante.TIPOS_QUE_FALTAN.x, ReglasDelEstante.TIPOS_QUE_FALTAN.y
+	)
+	var faltantes: Dictionary[Producto.Id, int] = {}
+	for elegido in mini(cantidad, elegibles.size()):
+		var indice := azar.randi_range(0, elegibles.size() - 1)
+		var id := elegibles[indice]
+		elegibles.remove_at(indice)
+		faltantes[id] = azar.randi_range(ReglasDelEstante.MENOS_QUE_FALTA, maximos[id])
+	return faltantes
 
 
+## Sólo lee los pedidos ya construidos; sus objetos siguen siendo los de Atención.
 static func pedidos_de(compradores: Array[Comprador]) -> Dictionary[Producto.Id, int]:
-	return {}
+	var pedidos: Dictionary[Producto.Id, int] = {}
+	for comprador in compradores:
+		for producto in comprador.pedido().productos():
+			pedidos[producto.id] = (
+				pedidos.get(producto.id, 0) + comprador.pedido().unidades_de(producto)
+			)
+	return pedidos

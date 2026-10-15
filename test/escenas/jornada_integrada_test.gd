@@ -18,6 +18,9 @@ const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
+	var control := RandomNumberGenerator.new()
+	control.seed = 17
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var tiempos: Array[float] = []
 	reloj.tiempo_consumido.connect(func(restante: float) -> void: tiempos.append(restante))
@@ -25,7 +28,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
-	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA))
+	_comprobar_huecos(almacen, _completos_al_abrir(almacen, 1, control))
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
 	await _atender(almacen)
@@ -51,14 +54,16 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
-	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA + 1))
+	_comprobar_huecos(almacen, _completos_al_abrir(almacen, 2, control))
 	_comprobar_planilla_en_cero(almacen)
 
 
 ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
 ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
-func _completos_al_abrir(jornada: int) -> int:
-	return Catalogo.todos().size() - Apertura.faltantes_de_la_jornada(jornada).size()
+func _completos_al_abrir(almacen: Node3D, jornada: int, azar: RandomNumberGenerator) -> int:
+	var casilleros: Dictionary[Producto.Id, int] = almacen.get("_reposicion_manual").casilleros()
+	var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(jornada))
+	return Catalogo.todos().size() - Apertura.faltantes_al_azar(pedidos, casilleros, azar).size()
 
 
 # AC-STK-026
@@ -93,6 +98,7 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
 	# con la última.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
@@ -103,6 +109,7 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
 func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var control: ControlDelJugador = jugador.get("_control")
@@ -142,6 +149,7 @@ func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
 	# de lo que se lleva, y la segunda reanudaba al jugador con la pantalla abierta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var control: ControlDelJugador = jugador.get("_control")
@@ -457,6 +465,7 @@ func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var puertas: Array = almacen.get("_puertas")
 	assert_array(puertas).is_not_empty()
@@ -500,6 +509,7 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  
 	# otra con una unidad devuelta. La noche siguiente no hereda ninguna de las tres.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	almacen.get("_jugador").set_physics_process(false)

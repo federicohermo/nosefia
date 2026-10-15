@@ -81,6 +81,9 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
 
+## Una fuente por sesión; los tests pueden sembrarla antes de cada apertura.
+var azar_de_la_apertura := RandomNumberGenerator.new()
+
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
 var _partida := Partida.desde(Guardado.new().cargar())
@@ -108,6 +111,7 @@ var _distancia_al_pensar := 0.0
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
 ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
+	azar_de_la_apertura.randomize()
 	_instrucciones.comenzar_pedido.connect(anunciar_la_noche)
 	_cablear_el_celular()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
@@ -300,11 +304,14 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
-	var inventario := Apertura.inventario_de_la_jornada(jornada, _reposicion_manual.casilleros())
+	var compradores := Compradores.de_la_jornada(jornada)
+	var inventario := Apertura.inventario_de_la_jornada(
+		compradores, _reposicion_manual.casilleros(), azar_de_la_apertura
+	)
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
 	_contenedor.reiniciar()
-	var atender := TareaDeAtender.new(Compradores.de_la_jornada(jornada), inventario)
+	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una

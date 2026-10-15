@@ -127,8 +127,10 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 func _almacen_con_jugador_quieto() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	return almacen
 
 
@@ -182,6 +184,7 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:
 	# sólo se ejerce con `move_and_slide` corriendo.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
@@ -358,6 +361,7 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	# lo mismo que la caja y las dos cuentas del margen se cruzan.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
@@ -391,6 +395,7 @@ func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
 	# caja al piso de adelante, y apilar pedía subir la mira hasta la tapa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
@@ -749,6 +754,7 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
 	# estante la mira llega a la madera, y un paso atrás ya no, así que el apoyo es el piso.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	almacen.get_node("Estructura/deposito_pallet_piso").position.x += 100
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -878,6 +884,7 @@ func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:
 	# arranca ya tocando algo. De 256 soltadas alrededor de esa góndola, 20 quedaban adentro de ella.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var soltadas := 0
 	for ruta_del_mueble: String in [ESTANTE_DEL_DEPOSITO, GONDOLA_DEL_PASILLO]:
@@ -1022,6 +1029,7 @@ func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
 	# cosa enfocada que contestara `null` —que para una mancha es siempre—.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	almacen.get("_ciclo").abrir_la_jornada()
 	await get_tree().physics_frame
@@ -1074,6 +1082,7 @@ func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:
 	# escena sería peor que una que no se desarma nunca.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var grandes := _las_grandes(almacen.get("_cajas_de_productos"))
@@ -1150,6 +1159,7 @@ func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:
 	# nadie. Antes nacía 0,8 m adelante: agarrando de cerca el jugador se subía al estante.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
@@ -1174,6 +1184,7 @@ func test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso() -> void:
 	# tumbarse ni levantarse del piso: se arrastra.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	# **Se empuja en el piso libre del depósito y no delante de donde el jugador aparece.** Ahí
@@ -1313,6 +1324,7 @@ func test_levantar_la_caja_hace_caer_el_producto_apoyado_encima() -> void:
 	# producto del piso, a un metro, no estaba encima de nada.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -1341,6 +1353,7 @@ func test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto() -> void
 	# doble que el caso del arrastre, porque tiene que salir entera y no sólo moverse.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -1382,6 +1395,7 @@ func test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo() -> voi
 	# sacada la de abajo, la del medio cae, y el producto cae con ella.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
