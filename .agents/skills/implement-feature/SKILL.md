@@ -100,6 +100,13 @@ En #369, un rayo directo encontraba la caja mientras la mira real todavía no la
 Esperá cuadros de física, comprobá el campo actualizado y ejercé la mira real. En una pila,
 probá puntos de las caras visibles: el centro puede estar tapado aunque otra cara sea accesible.
 
+**Una cámara válida también queda fuera del espesor visual del escenario.** La identidad de la
+cámara activa y un foco correcto no prueban esa condición: el rayo físico puede ignorar la cara
+que tapa la imagen. En #426, cinco capturas de Saladik pusieron el ojo entre las dos caras de una
+pared del GLB; otros escenarios usaban otra posición. Antes de atribuir la diferencia al orden
+de instancias o a la iluminación, cruzá la pose real con los triángulos visibles, guardá ese
+control y repetí el mismo escenario desde piso libre, conservando luz, GI y producción.
+
 **Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
 
 - **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan

@@ -75,6 +75,11 @@ foco después del dibujo, y el padre abre el PNG. En #302 la primera foto de la 
 la puerta y cortaba la caja, aunque la prueba física de foco pasara. Se corrigió el montaje
 externo y se repitió la captura, sin mover arte ni cambiar la producción.
 
+La cámara tampoco puede empezar dentro del espesor de una pared: un foco correcto no excluye
+ese montaje inválido. En #426, la proyección sobre los triángulos del GLB ubicó cinco ojos entre
+la cara exterior y la interior, mientras los escenarios visibles usaban otra posición. Separar
+posición y orden de instancia antes de atribuir una diferencia al ciclo de vida o a la luz.
+
 **Una entrada nativa en Windows verifica su escala DPI y el destino real.** El driver declara
 `PER_MONITOR_AWARE_V2` antes de consultar ventanas. Cruza el rectángulo de cliente con el
 viewport, convierte las coordenadas con `ClientToScreen` y afirma la opción seleccionada.
