@@ -74,8 +74,20 @@ func _process(_delta: float) -> void:
 	_camara.near = vista.near
 	_camara.far = vista.far
 	_camara.frustum_offset = vista.frustum_offset
-	# La cámara del jugador gira sin interpolación. Su getter interpolado conserva la
-	# muestra del cuadro anterior, aunque tenga la interpolación apagada.
-	_camara.transform = vista.global_transform
+	# El giro no se interpola, pero la cámara hereda el dibujo de la traslación del jugador.
+	# Copiar la pose física adelanta la máscara y su profundidad al retroceder.
+	_camara.transform = _pose_dibujada(vista)
 	_pantalla.global_transform = _camara.transform
 	_pantalla.position -= _pantalla.basis.z
+
+
+func _pose_dibujada(vista: Node3D) -> Transform3D:
+	var nodo := vista
+	while nodo != null:
+		if nodo.is_physics_interpolated_and_enabled():
+			return vista.get_global_transform_interpolated()
+		if nodo.top_level:
+			break
+		nodo = nodo.get_parent_node_3d()
+	# Sin traslación interpolada, el getter puede conservar una muestra anterior del giro.
+	return vista.global_transform
