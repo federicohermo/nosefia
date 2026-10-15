@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: draft
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
 
 # Capacidad: la mercadería del almacén
@@ -154,14 +154,20 @@ cumplida: dos planillas distintas pueden sumar lo mismo.
 MIENTRAS esa noche haya al menos una venta y, para cada producto, lo anotado sea igual a lo
 vendido, el sistema DEBE dar registrar por cumplida. CUANDO no coincidan, el sistema DEBE
 descumplirla. La jornada DEBE abrir con registrar sin cumplir. El sistema DEBE revisarla con
-cada «+» o «−» que cambia una fila y con cada venta cobrada. El cierre DEBE contar el estado de
-ese instante (BR-SHF-007 de [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
+cada «+» o «−» que cambia una fila, con cada venta cobrada y con cada vencimiento de compra.
+El cierre DEBE contar el estado de ese instante (BR-SHF-007 de
+[`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
 ventas con la planilla en cero cuenta como cumplida recién ahí.
 
-En la primera jornada, registrar DEBE permanecer pendiente hasta completar las compras de
-Tin y Tia, con todos sus productos y sus tickets, y anotar exactamente todas las unidades
-vendidas. Registrar sólo la primera compra o anticipar la segunda NO DEBE cumplir la tarea.
-Si alguna compra vence sin completarse, registrar NO DEBE cumplirse, tampoco al cerrar.
+En la primera jornada, registrar DEBE permanecer pendiente mientras quede alguna compra
+abierta de Tin o Tia, porque el comprador todavía no llegó o sigue esperando completar su
+compra. CUANDO ambas compras terminaron, vendidas o vencidas, el sistema DEBE evaluar registrar
+por la coincidencia exacta con lo vendido en compras completas, sin exigir cumplir atención.
+Una compra vendida DEBE contar como terminada aunque su despedida continúe. Registrar sólo
+la primera compra o anticipar la segunda NO DEBE cumplir la tarea mientras la segunda siga
+abierta. Las unidades de compras vencidas NO DEBEN contarse como vendidas. Con ambas compras
+vencidas y la planilla en cero, registrar DEBE contar como cumplida al cierre; antes del cierre,
+sin ventas, DEBE seguir pendiente como en las demás jornadas.
 
 ### BR-STK-023 — Cada producto declara su sonoridad
 
@@ -312,7 +318,9 @@ inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-S
 CUANDO se completa una compra física, el sistema DEBE retirar definitivamente sus unidades
 registradas afuera, una sola vez por identidad. NO DEBE volver a descontar el pedido completo.
 Una recepción parcial DEBE conservarlas hasta la salida del comprador. SI vence la atención,
-ENTONCES sus unidades recibidas DEBEN retirarse del inventario una vez, sin contar como venta.
+ENTONCES sus unidades recibidas DEBEN seguir registradas afuera, sin contar como venta ni
+modificar el depósito, la caja o la góndola por el vencimiento. DEBEN conservar su identidad
+y permitir agarrar, colocar, devolver a su caja o desechar como cualquier unidad suelta.
 Una unidad vendida NO DEBE poder registrarse afuera otra vez.
 Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir reponer.
 
@@ -458,7 +466,8 @@ total es igual al de lo vendido y registrar no se cumple.
 DADO una jornada que se abre ENTONCES registrar arranca sin cumplir. DADO una noche
 que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
-En la primera jornada se exige además completar ambos pedidos (AC-STK-056).
+En la primera jornada se exige además que ambas compras hayan terminado, vendidas o vencidas
+(AC-STK-056).
 
 ### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
@@ -682,18 +691,32 @@ Repetir la venta o intentar registrar esa identidad afuera no cambia cantidades.
 ### AC-STK-055 — Salida y reposición *(verifica BR-STK-037, BR-STK-033, BR-STK-030)*
 
 DADO una unidad retirada de góndola CUANDO se entrega en una compra parcial y ésta vence
-ENTONCES deja de estar registrada afuera y sale del inventario una sola vez, sin sumar una venta.
+ENTONCES sigue registrada afuera con la misma identidad, sin cambiar el depósito, la caja
+ni la góndola y sin sumar una venta. CUANDO se recupera y coloca en un casillero vacío de su
+producto ENTONCES ocupa ese casillero y deja de estar afuera; devolverla a su caja con espacio
+suma una al contenido y también deja de estar afuera. Una caja llena la rechaza y conserva
+la unidad en la mano y registrada afuera.
 DADO esa unidad en una compra completa ENTONCES el casillero sigue vacío y reponer incompleta
 hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas parciales.
 
-### AC-STK-056 — Registro exige ambas ventas de la primera noche *(verifica BR-STK-022)*
+### AC-STK-056 — Registro espera al cierre de ambas compras *(verifica BR-STK-022)*
 
 DADO la primera jornada CUANDO se registra la venta completa de Tin pero Tia aún no
 compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados anticipadamente
-ENTONCES registrar sigue pendiente hasta que ambas compras estén vendidas con productos y
-ticket. CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES
-registrar se cumple. Una unidad de más o de menos la descumple. Si una compra vence incompleta,
-registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con lo vendido.
+ENTONCES registrar sigue pendiente mientras alguna compra siga abierta.
+CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES registrar
+se cumple. Una unidad de más o de menos la descumple.
+
+DADO Tin vendido y anotado —un Marolini, una Coracola y un Malbardo; los demás productos en cero—
+y Tia con una Zucarachas recibida, pero sin Pepito ni ticket, CUANDO vence Tia ENTONCES registrar
+se cumple en ese vencimiento y cuenta al cierre, aunque atención siga pendiente. La Zucarachas
+no suma una venta ni se anota. CUANDO se suma una Zucarachas en la planilla ENTONCES registrar
+se descumple; restarla vuelve a cumplirla. DADO la segunda compra ya anotada anticipadamente
+CUANDO vence sin venderse ENTONCES registrar sigue pendiente hasta quitar esas unidades.
+
+DADO ambas compras vencidas y todas las filas en cero CUANDO todavía no cerró la jornada
+ENTONCES registrar sigue pendiente. CUANDO cierra ENTONCES cuenta como cumplida, mientras
+atención sigue pendiente. Con una unidad anotada de cualquier producto no cuenta como cumplida.
 
 ### AC-STK-077 — La pila es completa, alcanzable y estable *(verifica BR-STK-038)*
 
@@ -749,8 +772,9 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 ## Contratos
 
 - **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
-  jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
-  que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
+  jornada que se abre, lo vendido de cada producto, qué compras terminaron y cuáles siguen
+  abiertas, lo que el jugador lleva en la mano, la caja que examina, el casillero que elige,
+  y los pedidos de ingresar, mover, cobrar, sacar y devolver
   a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la planilla.
 - **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
@@ -779,8 +803,9 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
-  compara la planilla, y cada cobro vuelve a compararla; lo que piden los compradores de cada
-  jornada entra en lo que la reposición deja (BR-STK-027).
+  compara la planilla, y cada cobro o vencimiento vuelve a compararla; en la primera noche,
+  cerrar todas las compras habilita evaluar registrar, independientemente de atención.
+  Lo que piden los compradores de cada jornada entra en lo que la reposición deja (BR-STK-027).
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja
   en la mano, y lo que la mano lleva decide qué hace el clic sobre la caja y sobre cada casillero;
   qué casilleros están vacíos y cuáles ocupados decide cuáles se muestran y cuáles se agarran.

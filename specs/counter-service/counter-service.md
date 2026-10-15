@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365; migración de los specs 013, 035
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365 y #366; migración de los specs 013, 035
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -202,8 +202,17 @@ Las jornadas siguientes DEBEN conservar el padrón y recorrido anteriores, sin c
 CUANDO se cruza una llegada, el sistema DEBE publicar una sola llegada aunque la ventanilla esté
 cerrada. Repetir un instante o reabrir NO DEBE llamar ni repetir al comprador.
 CUANDO se cruza el límite con una compra incompleta, el sistema DEBE publicar una sola salida,
-cerrar su conversación y retirar con él los productos recibidos y el ticket aceptado.
-Esos productos DEBEN salir del inventario sin contar como venta. El ticket DEBE descartarse.
+cerrar su conversación y dejar todos los productos recibidos apoyados en el piso del local
+frente a la ventanilla, del lado de adentro. DEBEN conservar su identidad y quedar visibles,
+con física y recogibles, sin superponerse entre sí, con el jugador ni con los sólidos del local.
+DEBEN seguir registrados afuera de su caja, sin cambiar depósito, contenido de caja ni góndola
+por el vencimiento y sin contar como venta. DEBEN admitir los mismos gestos y consecuencias
+de cualquier unidad suelta: agarrar, colocar en su casillero vacío, devolver a su caja o tirar
+al contenedor. Dejarlos en el piso interior al cierre DEBE contar como desorden, sin producir
+el motivo de objeto afuera, según [`store-cleanup`](../store-cleanup/store-cleanup.md).
+El ticket aceptado DEBE descartarse y NO DEBE aparecer en el piso. Sin productos recibidos
+NO DEBE aparecer ninguna unidad. Repetir el vencimiento NO DEBE duplicar ni volver a soltar
+las unidades. Una compra completa DEBE retirar sus productos y ticket con el comprador.
 Un salto DEBE procesar todos los cruces en orden. Una compra completa NO DEBE vencer.
 Cerrar la ventanilla NO DEBE detener el horario; la pausa DEBE detenerlo.
 
@@ -555,8 +564,13 @@ y su imagen conserva la salida de BR-CTR-033.
 ### AC-CTR-040 — Perder una compra parcial *(verifica BR-CTR-027, BR-CTR-030, BR-CTR-031)*
 
 DADO una compra parcial, incluso hablando, CUANDO llega el límite ENTONCES sale una vez,
-se cierra el diálogo y sus productos y ticket dejan el mundo con él.
+se cierra el diálogo, sus productos quedan en el piso interior frente a la ventanilla y el
+ticket aceptado deja de existir sin aparecer en el piso.
 Las ventas de esa compra siguen en cero. Completar la otra no cumple atención.
+DADO por separado una compra sin elementos, sólo con ticket, con una unidad o con todos los
+productos pero sin ticket CUANDO vence ENTONCES aparecen respectivamente cero, cero, una
+o todas sus unidades; ningún caso suma una venta. Un salto que cruza los dos vencimientos
+procesa ambas compras una sola vez, y repetir el instante no vuelve a entregar sus unidades.
 
 ### AC-CTR-041 — Ambas compras y reinicio *(verifica BR-CTR-026, BR-CTR-031)*
 
@@ -598,6 +612,23 @@ deslizándose desde la izquierda hasta el sitio de espera, conservando altura, p
 orientación y animación. Después permanece quieto. Abrir, cerrar y repintar no reinician el
 movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el turno lo retira.
 
+### AC-CTR-046 — Lo abandonado queda adentro y se puede recuperar *(verifica BR-CTR-027)*
+
+DADO Tin con sus tres productos recibidos pero sin ticket, y el jugador asomado a la ventanilla,
+CUANDO vence la compra ENTONCES las tres unidades conservan sus identidades y quedan visibles,
+con física y recogibles, apoyadas en el piso del lado interior frente a la ventanilla,
+sin superponerse entre sí, con el jugador ni con un sólido. La pausa detiene su caída y reanudar
+la continúa. Repetir el vencimiento no crea otras unidades ni recoloca las recuperadas.
+
+DADO esas unidades como únicos cuerpos desordenados CUANDO se cierra la noche con las tres
+en el piso ENTONCES hay un único motivo de desorden y ninguno de objeto afuera. DADO el mismo
+caso CUANDO se coloca cada una en un casillero vacío de su producto, se devuelven a sus cajas
+con espacio, o se colocan dos y se sostiene la tercera sin examinarla, y se cierra ENTONCES
+no hay ninguno de esos dos motivos. Agarrarlas conserva su producto e identidad; una unidad
+devuelta a una caja llena permanece en la mano. Tirar una al contenedor conserva el descuento
+y el motivo de objeto importante tirado de las unidades sueltas. Abrir la jornada siguiente
+retira las unidades que hayan quedado en el piso, sin heredarlas como nuevas entregas.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuántas unidades hay ni dónde están: se lo pregunta a
@@ -612,7 +643,8 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
   sostenido con su destino de uso.
 - **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
   faltantes, cuántos van despachados, el desvío de la noche, lo vendido de cada producto y el
-  papel impreso o desechado.
+  papel impreso o desechado; al vencer una compra incompleta, las unidades recibidas que
+  vuelven al piso interior y el descarte del ticket aceptado.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
   rechaza todo lo demás. Fuera de la entrega al comprador, usar un objeto que no sea ticket,
   o un destino distinto del inodoro, no produce descarte.
@@ -623,6 +655,7 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
   los renglones cambiados, el ticket impreso y el descarte de un ticket.
 - El comprador que llega, la entrada de diálogo mostrada, el diálogo cerrado y la atención
   despachada.
+- La compra vencida y sus unidades abandonadas, una sola vez por compra.
 
 ## Dependencias
 
@@ -633,7 +666,8 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume y alimenta): el número de jornada
   decide el modo del programa; se avisa cuándo la obligatoria quedó cumplida.
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): distingue inodoro y lavatorio;
-  desechar papel conserva los efectos de limpieza de las herramientas.
+  desechar papel conserva los efectos de limpieza de las herramientas; las unidades abandonadas
+  adentro participan del desorden al cierre y de las consecuencias de tirar objetos importantes.
 
 ## Preguntas abiertas
 
