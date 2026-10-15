@@ -8,4 +8,4 @@ Las 14 capturas son automatizadas, de dos instancias limpias de la escena real e
 
 El aviso usa layer 5 y pausa layer 6. `nativo/medidas.json` conserva textos, rect?ngulos, cursor y pausa por captura. Los scripts y stdout/stderr se incluyen para reproducir el protocolo. No se presenta este fixture como un recorrido manual del juego.
 
-`huellas.json` registra los bytes locales de todos los otros archivos; la auditor?a posterior los contrasta con los blobs publicados.
+`huellas.json` registra los bytes publicados de todos los otros archivos. La primera publicaci?n normaliz? finales de l?nea; se conserva su commit y sus hashes locales de procedencia. La segunda publicaci?n corrige el manifiesto y se contrasta archivo por archivo con los blobs remotos.
