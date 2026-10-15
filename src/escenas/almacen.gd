@@ -137,6 +137,7 @@ func _ready() -> void:
 	# mesa, y la noche en que falla, ni caminar alcanza. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
+	_reloj.tiempo_consumido.connect(avisos.actualizar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
