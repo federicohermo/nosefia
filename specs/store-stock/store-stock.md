@@ -362,12 +362,16 @@ no implica renombrar productos.
 | Lado de almacén | Marolini, Arvejas (Arvecor), Uakas (Uakalas), Marranos |
 | Lado de cereales, misma isla | Zucarachas, Frotlups (Frot Lups) |
 | Cabecera de bebidas sin refrigerar, misma isla | Oaaaa, Terminator |
-| Lados de snacks dulces | Macumbas, Pepitos (Pepito), Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
+| Mitad de snacks dulces junto a cereales, primera isla | Macumbas, Pepitos (Pepito) |
+| Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
 | Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
 | Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillo |
 | Sin exhibición, sólo depósito | Duronga |
 
-Las dos islas DEBEN separar almacén/cereales/bebidas sin refrigerar de snacks/golosinas.
+La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
+con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
+snacks salados y golosinas. Los tres no comestibles DEBEN ocupar una estantería; un mueble
+sobrante PUEDE quedar sin exhibición, sin duplicar tandas principales para llenarlo.
 Cada heladera funcional DEBE agrupar sus dos productos en mitades verticales según el
 [esquema de diseño](https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676): Coracola
 arriba de Fernet God y Cindolor arriba de Mayonchis. La heladera fuera de servicio DEBE
@@ -800,7 +804,7 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 ### AC-STK-081 — Cada sector contiene exactamente sus productos *(verifica BR-STK-040, BR-STK-041)*
 
 DADO el local armado CUANDO se recorre cada destino de la tabla de BR-STK-040 ENTONCES sus
-productos coinciden con la fila, sin ajenos, y las once filas de exhibición reúnen 31 productos
+productos coinciden con la fila, sin ajenos, y los destinos de exhibición reúnen 31 productos
 distintos. Duronga es la identidad restante y no tiene tanda. Las referencias fijas de cada
 uno de los 31 están en su mismo sector. Abrir jornada 2 en escritorio y web conserva el mapa.
 
