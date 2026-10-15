@@ -28,7 +28,7 @@ reescriben como reglas y criterios de la capacidad, sin nada propio de esa entre
   **IDs emitidos en continuación**, y **los existentes no se renumeran ni se reescriben** salvo
   que la entrevista haya resuelto explícitamente cambiarlos. El ID es la dirección: los issues y
   los tests apuntan ahí. **La continuación sale del más alto que tuvo el spec**, borrados
-  incluidos: si se borró el último, `git log -p -- <spec>` lo muestra.
+  incluidos: si se borró el último, `git log --all -p -- <spec>` lo muestra.
 - **Borrar** (la funcionalidad se quita del juego): el spec se borra **en su propio commit**, y
   en la misma rama se borran el código y los tests que lo citaban. La historia queda en git.
   Si otra capacidad dependía de ésta, su spec se actualiza en la misma corrida.
@@ -46,6 +46,14 @@ recién después del merge, y no ve qué test quedó citando un criterio ajeno. 
 
 Si uno de los dos no emite IDs nuevos, como el que sólo borra, no hace falta repartir. Si no
 comparten ningún spec, escribilos uno detrás del otro.
+
+**El espacio de IDs incluye las ramas publicadas, no sólo la base del checkout.** Traer las
+ramas de contratos abiertas y comparar los BR, AC y OQ nuevos de cada capacidad antes de
+emitir números. El máximo sale de `git log --all -p -- <spec>`, también para IDs retirados;
+comparar además el significado de los IDs coincidentes. En el lote 425–435, tres contratos
+publicados sobre staging asignaron los mismos números a ruteo, apoyos, pistas, limpieza,
+sectores y avisos. Se conservó la asignación publicada primero y se reasignaron sólo las
+familias en colisión, actualizando referencias, issues y citas sin cambiar el comportamiento.
 
 ## Qué NO necesita tocar un spec
 

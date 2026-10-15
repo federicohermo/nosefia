@@ -93,6 +93,15 @@ el cierre de la jornada 3 con cuatro cumplidas, pero `AC-EMP-050` quedó sin cit
 de tres y dos cumplidas; la ratificación posterior de #374 recién mostró el hueco. Se amplió
 su issue entero antes de extender ese único caso, sin cambiar el dominio.
 
+**El checker cruza también las ramas de contratos publicadas que todavía no aterrizaron.**
+Traer sus cabezas y comparar BR, AC y OQ por ID y significado contra el contrato del lote.
+El máximo histórico se calcula con `git log --all -p`, no sólo con staging ni con el índice
+MCP. Una coincidencia de números no prueba una misma regla. En el lote 425–435, contratos
+publicados minutos antes habían reservado esos IDs para otras capacidades del mismo sistema.
+La reserva anterior se conserva; el padre corrige contrato, issue y citas de las familias que
+chocan antes de cerrar ningún carril, y publica la matriz de reasignación. Un árbol ya encolado
+no se edita: se espera su resultado o se cancela sólo su turno propio, conservando el incidente.
+
 ## Paso 3 — Un worktree por carril
 
 Lanzá los carriles en **un solo mensaje**, un `Agent` por carril con `isolation: "worktree"`.
