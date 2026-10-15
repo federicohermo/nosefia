@@ -1516,30 +1516,39 @@ func _lugar_para_abandonada(
 	consulta.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	consulta.exclude = [cuerpo.get_rid()]
 	consulta.margin = TOLERANCIA_DEL_APOYO / 4.0
-	for profundidad in ceili(ReglasDelJugador.ALCANCE_DE_LA_MIRA / paso):
-		for lateral in range(-2, 3):
-			var lugar := punto.global_transform * Vector3(lateral * paso, 0.0, -profundidad * paso)
-			var rayo := PhysicsRayQueryParameters3D.create(
-				lugar + Vector3.UP, lugar + Vector3.DOWN, consulta.collision_mask
-			)
-			rayo.exclude = [cuerpo.get_rid()]
-			var piso := espacio.intersect_ray(rayo)
-			if piso.get("collider") != suelo:
-				continue
-			lugar.y = (
-				(piso["position"] as Vector3).y - limites.position.y + TOLERANCIA_DEL_APOYO * 4.0
-			)
-			consulta.transform = Transform3D(Basis.IDENTITY, lugar) * forma.transform
-			if not espacio.intersect_shape(consulta, 1).is_empty():
-				continue
-			var volumen := AABB(lugar + limites.position, limites.size).grow(TOLERANCIA_DEL_APOYO)
-			var reservado := false
-			for ocupado in ocupados:
-				if volumen.intersects(ocupado):
-					reservado = true
-					break
-			if reservado:
-				continue
-			ocupados.append(volumen)
-			return lugar
+	var pasos := ceili(ReglasDelJugador.ALCANCE_DE_LA_MIRA / paso)
+	var candidatos: Array[Vector3] = []
+	for profundidad in range(pasos + 1):
+		for lateral in range(-pasos, pasos + 1):
+			var desplazamiento := Vector3(lateral * paso, 0.0, -profundidad * paso)
+			if desplazamiento.length() <= ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+				candidatos.append(desplazamiento)
+	candidatos.sort_custom(
+		func(a: Vector3, b: Vector3) -> bool: return a.length_squared() < b.length_squared()
+	)
+	for desplazamiento in candidatos:
+		var lugar := punto.global_transform * desplazamiento
+		var rayo := PhysicsRayQueryParameters3D.create(
+			lugar + Vector3.UP, lugar + Vector3.DOWN, consulta.collision_mask
+		)
+		rayo.exclude = [cuerpo.get_rid()]
+		var piso := espacio.intersect_ray(rayo)
+		if piso.get("collider") != suelo:
+			continue
+		lugar.y = (
+			(piso["position"] as Vector3).y - limites.position.y + TOLERANCIA_DEL_APOYO * 4.0
+		)
+		consulta.transform = Transform3D(Basis.IDENTITY, lugar) * forma.transform
+		if not espacio.intersect_shape(consulta, 1).is_empty():
+			continue
+		var volumen := AABB(lugar + limites.position, limites.size).grow(TOLERANCIA_DEL_APOYO)
+		var reservado := false
+		for ocupado in ocupados:
+			if volumen.intersects(ocupado):
+				reservado = true
+				break
+		if reservado:
+			continue
+		ocupados.append(volumen)
+		return lugar
 	return Vector3.INF

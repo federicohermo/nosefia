@@ -374,3 +374,31 @@ func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:
 
 func _anotar_rechazo(_faltantes: Array[Producto]) -> void:
 	_rechazos += 1
+
+
+func test_el_lector_del_cierre_ve_ambas_compras_vencidas_una_sola_vez() -> void:  # AC-STK-056
+	var ventanilla := _ventanilla(0)
+	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(1), _inventario())
+	ventanilla.arrancar(tarea)
+	# Repreparar no duplica conexiones; el lector se conecta después, como la computadora.
+	ventanilla.arrancar(tarea)
+	var eventos: Array[String] = []
+	ventanilla.comprador_llegado.connect(
+		func(comprador: Comprador) -> void: eventos.append("llega " + comprador.nombre())
+	)
+	ventanilla.comprador_vencido.connect(
+		func(comprador: Comprador) -> void: eventos.append("vence " + comprador.nombre())
+	)
+	var cerradas_al_leer: Array[bool] = []
+	ventanilla.reloj.cierre_iniciado.connect(
+		func() -> void: cerradas_al_leer.append(tarea.compras_cerradas())
+	)
+	assert_bool(tarea.compras_cerradas()).is_false()
+	ventanilla.reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	assert_array(cerradas_al_leer).contains_exactly([true])
+	assert_array(eventos).contains_exactly(["llega Tin", "vence Tin", "llega Tia", "vence Tia"])
+	assert_bool(tarea.compras_cerradas()).is_true()
+	assert_bool(tarea.completada()).is_false()
+	ventanilla.reloj.avanzar(0.0)
+	assert_array(cerradas_al_leer).has_size(1)
+	assert_array(eventos).has_size(4)

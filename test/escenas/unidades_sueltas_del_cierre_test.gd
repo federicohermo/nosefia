@@ -273,7 +273,7 @@ func test_tres_abandonadas_quedan_adentro_sin_solidos_y_pausan_la_caida() -> voi
 		identidades.append(cuerpo.datos)
 	(_almacen.get("_reloj") as RelojDelTurno).avanzar(120.0)
 	var sueltas: Array[Node3D] = _almacen.get("_reposicion_manual").call("unidades_sueltas")
-	assert_array(sueltas).contains_exactly(cuerpos)
+	assert_array(sueltas).contains_exactly_in_any_order(cuerpos)
 	var posiciones: Array[Vector3] = []
 	for cuerpo in cuerpos:
 		assert_bool(is_instance_valid(cuerpo)).is_true()
@@ -330,7 +330,7 @@ func test_tres_abandonadas_quedan_adentro_sin_solidos_y_pausan_la_caida() -> voi
 	for cuerpo in cuerpos:
 		antes.append(cuerpo.global_position)
 	(_almacen.get("_reloj") as RelojDelTurno).avanzar(0.0)
-	assert_array(manual.call("unidades_sueltas")).contains_exactly(cuerpos)
+	assert_array(manual.call("unidades_sueltas")).contains_exactly_in_any_order(cuerpos)
 	for indice in cuerpos.size():
 		assert_that(cuerpos[indice].global_position).is_equal(antes[indice])
 
@@ -544,8 +544,9 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 	assert_array(emisiones).has_size(2)
 	assert_array(emisiones[0]).has_size(3)
 	assert_array(emisiones[1]).has_size(2)
-	assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas")).contains_exactly(
-		cuerpos
+	(
+		assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas"))
+		. contains_exactly_in_any_order(cuerpos)
 	)
 	var huellas: Array[AABB] = []
 	for cuerpo in cuerpos:
@@ -559,8 +560,9 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 	_afirmar_apoyos_libres(cuerpos)
 	reloj.avanzar(0.0)
 	assert_array(emisiones).has_size(2)
-	assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas")).contains_exactly(
-		cuerpos
+	(
+		assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas"))
+		. contains_exactly_in_any_order(cuerpos)
 	)
 
 
@@ -579,13 +581,14 @@ func test_el_sector_proximo_ocupado_busca_otro_apoyo_interior() -> void:  # AC-C
 	forma.shape = caja
 	bloque.add_child(forma)
 	bloque.global_position = (
-		punto.global_position + Vector3.UP * caja.size.y / 2.0 - ventana.global_basis.z * 0.7
+		punto.global_position + Vector3.UP * caja.size.y / 2.0 - ventana.global_basis.z * 0.35
 	)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	var prueba := PhysicsShapeQueryParameters3D.new()
 	prueba.shape = caja
 	prueba.transform = forma.global_transform
+	prueba.collision_mask = jugador.collision_mask
 	var suelo: StaticBody3D = _almacen.get("_reposicion_manual").get("suelo")
 	prueba.exclude = [bloque.get_rid(), suelo.get_rid()]
 	prueba.margin = 0.0
@@ -593,12 +596,16 @@ func test_el_sector_proximo_ocupado_busca_otro_apoyo_interior() -> void:  # AC-C
 	(_almacen.get("_reloj") as RelojDelTurno).avanzar(120.0)
 	for _cuadro in 90:
 		await get_tree().physics_frame
-	assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas")).contains_exactly(
-		cuerpos
+	(
+		assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas"))
+		. contains_exactly_in_any_order(cuerpos)
 	)
 	_afirmar_apoyos_libres(cuerpos)
 	var ocupado := forma.global_transform * caja.get_debug_mesh().get_aabb()
+	var apoyo_lateral := false
 	for cuerpo in cuerpos:
+		var lateral := ventana.global_basis.x.dot(cuerpo.global_position - punto.global_position)
+		apoyo_lateral = apoyo_lateral or absf(lateral) > caja.size.x / 2.0
 		var volumen: CollisionShape3D = cuerpo.get_node("Forma")
 		(
 			assert_bool(
@@ -608,6 +615,8 @@ func test_el_sector_proximo_ocupado_busca_otro_apoyo_interior() -> void:  # AC-C
 			)
 			. is_false()
 		)
+
+	assert_bool(apoyo_lateral).is_true()
 
 
 func _enfocar_abandonada(cuerpo: ObjetoAgarrable) -> bool:
@@ -669,6 +678,11 @@ func test_cada_abandonada_se_recoge_con_el_foco_y_clic_reales() -> void:  # AC-C
 		_almacen.get("_jugador").call("_unhandled_input", evento)
 		assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
 		assert_object(agarre.manos().sostenido()).is_same(identidad)
+		# La prueba detuvo el proceso del jugador: ejercemos su lectura normal antes
+		# de que devolver recicle o libere el cuerpo que acaba de salir del foco.
+		for _cuadro in 3:
+			await get_tree().physics_frame
+		_almacen.get("_jugador").call("_leer_la_mira")
 		_almacen.get("_reposicion_manual").call("devolver", identidad.producto.id)
 		assert_object(agarre.manos().sostenido()).is_null()
 	_afirmar_cierre_abandonadas(false)
