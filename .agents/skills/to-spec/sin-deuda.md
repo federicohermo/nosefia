@@ -222,6 +222,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una entrada nativa **que selecciona otra fila por la escala DPI** | `to-issue` — el driver declara consciencia DPI antes de consultar ventanas, cruza cliente y viewport y afirma la selección real sobre el HWND propio |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
+| un contrato que **exige compartir una selección pero vuelve a fabricarla** | `to-issue` — la ampliación actualiza premisa, criterios, firmas y límites juntos; declara un único dueño y pasa la misma instancia a cada consumidor |
+
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
 
