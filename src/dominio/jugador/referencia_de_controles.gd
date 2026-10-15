@@ -20,7 +20,7 @@ enum Linea {
 	VERTIR,
 	MOJAR,
 	LIMPIAR,
-	INTERACTUAR_SECUNDARIO,
+	INTERACTUAR_PRIMARIO,
 	NINGUNA,
 }
 enum Mira { NADA, LEVANTABLE, FIJO, CAJA }
@@ -54,7 +54,7 @@ const TEXTOS: Dictionary[Linea, String] = {
 	Linea.VERTIR: "Vertir",
 	Linea.MOJAR: "Mojar",
 	Linea.LIMPIAR: "Limpiar",
-	Linea.INTERACTUAR_SECUNDARIO: "Interactuar",
+	Linea.INTERACTUAR_PRIMARIO: "Interactuar",
 }
 
 
@@ -93,7 +93,7 @@ static func texto(linea: Linea, control: String) -> String:
 static func accion(linea: Linea) -> StringName:
 	if linea in [Linea.EXAMINAR_LA_MANO, Linea.EXAMINAR]:
 		return ReglasDeLosObjetos.ACCION_EXAMINAR
-	if linea in [Linea.SACAR_PRODUCTO, Linea.INTERACTUAR_SECUNDARIO]:
+	if linea in [Linea.SACAR_PRODUCTO, Linea.INTERACTUAR]:
 		return ReglasDelJugador.ACCION_USAR
 	return ReglasDeLosObjetos.ACCION_AGARRAR
 
@@ -141,17 +141,21 @@ static func contexto_del_lector(sostenido: ObjetoDelAlmacen, presente: bool) -> 
 		return ausente
 	if sostenido == null:
 		return contexto_primario(Linea.NINGUNA, Ruta.IGNORAR)
-	return contexto_primario(Linea.INTERACTUAR if sostenido is UnidadDeProducto else Linea.NINGUNA)
+	return contexto_primario(
+		Linea.INTERACTUAR_PRIMARIO if sostenido is UnidadDeProducto else Linea.NINGUNA
+	)
 
 
 static func contexto_del_descarte(sostenido: ObjetoDelAlmacen, destino: StringName) -> Contexto:
 	if Ticket.se_desecha_en(sostenido, destino):
-		return contexto_primario(Linea.INTERACTUAR)
+		return contexto_primario(Linea.INTERACTUAR_PRIMARIO)
 	return null
 
 
 static func contexto_del_tacho(con_bolsa: bool, con_la_mano: bool) -> Contexto:
-	return contexto_primario(Linea.INTERACTUAR if con_bolsa and not con_la_mano else Linea.NINGUNA)
+	return contexto_primario(
+		Linea.INTERACTUAR_PRIMARIO if con_bolsa and not con_la_mano else Linea.NINGUNA
+	)
 
 
 static func contexto_de_atencion(habilitada: bool, atendido: bool, con_la_mano: bool) -> Contexto:
@@ -167,4 +171,6 @@ static func contexto_de_lo_fijo(abierta: bool = false, nota: bool = false) -> Co
 
 
 static func contexto_del_contenedor(con_la_mano: bool) -> Contexto:
-	return contexto_primario(Linea.INTERACTUAR if con_la_mano else Linea.NINGUNA, Ruta.INTERACTUAR)
+	return contexto_primario(
+		Linea.INTERACTUAR_PRIMARIO if con_la_mano else Linea.NINGUNA, Ruta.INTERACTUAR
+	)

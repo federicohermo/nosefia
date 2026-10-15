@@ -588,7 +588,7 @@ func _contexto_sobre(cuerpo: Node3D, sostenido: ObjetoDelAlmacen) -> ReferenciaD
 	var contexto := ReferenciaDeControles.Contexto.new()
 	if cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR):
 		contexto.ruta_secundaria = ReferenciaDeControles.Ruta.USAR
-		contexto.secundario = ReferenciaDeControles.Linea.INTERACTUAR_SECUNDARIO
+		contexto.secundario = ReferenciaDeControles.Linea.INTERACTUAR
 	return contexto
 
 

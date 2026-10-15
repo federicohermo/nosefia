@@ -114,7 +114,7 @@ func test_lector_ofrece_uso_con_cero_dos_y_tres_renglones() -> void:  # AC-PLY-0
 			generador.anotar(unidad)
 		var contexto := R.contexto_del_lector(unidad, true)
 		assert_array(_lineas(true, M.FIJO, contexto)).contains_exactly(
-			[L.EXAMINAR_LA_MANO, L.INTERACTUAR]
+			[L.EXAMINAR_LA_MANO, L.INTERACTUAR_PRIMARIO]
 		)
 		assert_int(generador.renglones().size()).is_equal(cantidad)
 		assert_int(R.ruta(false, contexto, false)).is_equal(R.Ruta.IGNORAR)
@@ -137,7 +137,7 @@ func test_ticket_solo_declara_descarte_sobre_inodoro() -> void:  # AC-PLY-084
 	var ticket := Ticket.new()
 	var contexto := R.contexto_del_descarte(ticket, ReglasDeLaLimpieza.ID_DEL_INODORO)
 	assert_array(_lineas(true, M.FIJO, contexto)).contains_exactly(
-		[L.EXAMINAR_LA_MANO, L.INTERACTUAR]
+		[L.EXAMINAR_LA_MANO, L.INTERACTUAR_PRIMARIO]
 	)
 	assert_int(R.ruta(false, contexto, false)).is_equal(R.Ruta.IGNORAR)
 	assert_object(R.contexto_del_descarte(ticket, ReglasDeLaLimpieza.ID_DEL_LAVATORIO)).is_null()
@@ -162,7 +162,7 @@ func test_tacho_solo_ofrece_extraccion_con_bolsa_y_mano_vacia_sin_sacarla() -> v
 	for mano: bool in [false, true]:
 		for bolsa: bool in [false, true]:
 			var contexto := R.contexto_del_tacho(bolsa, mano)
-			assert_bool(_lineas(mano, M.FIJO, contexto).has(L.INTERACTUAR)).is_equal(
+			assert_bool(_lineas(mano, M.FIJO, contexto).has(L.INTERACTUAR_PRIMARIO)).is_equal(
 				bolsa and not mano
 			)
 			assert_bool(_lineas(mano, M.FIJO, contexto).has(L.DEJAR)).is_false()
@@ -197,7 +197,7 @@ func test_cada_verbo_usa_su_asignacion_y_sin_control_no_se_lee() -> void:  # AC-
 	for linea: R.Linea in [
 		L.AGARRAR,
 		L.DEJAR,
-		L.INTERACTUAR,
+		L.INTERACTUAR_PRIMARIO,
 		L.METER_PRODUCTO,
 		L.ABRIR,
 		L.CERRAR,
@@ -212,6 +212,7 @@ func test_cada_verbo_usa_su_asignacion_y_sin_control_no_se_lee() -> void:  # AC-
 	]:
 		assert_str(String(R.accion(linea))).is_equal(ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_str(String(R.accion(L.SACAR_PRODUCTO))).is_equal(ReglasDelJugador.ACCION_USAR)
+	assert_str(String(R.accion(L.INTERACTUAR))).is_equal(ReglasDelJugador.ACCION_USAR)
 	assert_str(R.texto(L.EXAMINAR_LA_MANO, "Q")).is_equal("[Q] Examinar (mano)")
 	assert_str(R.texto(L.LLENAR, "F")).is_equal("[F] Llenar")
 	assert_str(R.texto(L.LLENAR, "")).is_empty()
