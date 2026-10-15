@@ -205,9 +205,7 @@ func _ready() -> void:
 	_jugador.examen.pensamiento_pedido.connect(
 		func(texto: String) -> void:
 			var mirado := _jugador.enfocado()
-			_pensar_en(
-				texto, mirado.global_position if mirado != null else _jugador.global_position
-			)
+			_pensar_en(texto, mirado.global_position if mirado != null else Vector3.INF)
 	)
 	_jugador.examen.examen_iniciado.connect(
 		func(nodo: Node3D) -> void: _hud.mostrar_subtitulo(_jugador.texto_al_examinar_de(nodo))
@@ -476,21 +474,20 @@ func _cablear_los_gestos() -> void:
 	_limpiador.pasada_dada.connect(
 		func(lugar: PisoDelLocal.Lugar) -> void: _pensar(SubtitulosDeLosGestos.al_borrar(lugar))
 	)
-	# La mopa se seca con el tiempo y no en un lugar: su pensamiento no se mide por distancia.
 	_limpiador.mopa_secada.connect(
 		func() -> void:
 			var examinando := _jugador.examen.esta_examinando()
-			_pensar_en(_gestos.al_secarse_la_mopa(_partida, examinando), Vector3.INF)
+			_pensar(_gestos.al_secarse_la_mopa(_partida, examinando))
 	)
 	_jugador.examen.examen_terminado.connect(
-		func() -> void: _pensar_en(_gestos.al_terminar_el_examen(_partida), Vector3.INF)
+		func() -> void: _pensar(_gestos.al_terminar_el_examen(_partida))
 	)
 	_agarre.objeto_soltado.connect(_vigilar_si_queda_afuera)
 
 
-## Lo que piensa un gesto nace donde está el jugador.
+## Los avisos de acciones duran lo mismo aunque el jugador camine.
 func _pensar(texto: String) -> void:
-	_pensar_en(texto, _jugador.global_position)
+	_pensar_en(texto, Vector3.INF)
 
 
 ## Un texto vacío no cambia la línea (BR-SUB-003). El lugar es contra el que se mide cuánto se
@@ -535,7 +532,7 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 			await get_tree().physics_frame
 			if jornada != _partida.jornada() or not _reloj.corriendo():
 				return
-		_pensar_en(SubtitulosDeLosGestos.al_quedar_afuera(datos), Vector3.INF)
+		_pensar(SubtitulosDeLosGestos.al_quedar_afuera(datos))
 
 
 func _al_agotar_el_turno(_jornada: int) -> void:

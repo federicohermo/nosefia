@@ -18,7 +18,7 @@ func _linea(almacen: Node3D) -> String:
 	return (almacen.get("_hud").get("_subtitulo") as Label).text
 
 
-func test_tirar_una_unidad_al_contenedor_piensa_la_mala_idea() -> void:  # AC-SUB-016
+func test_tirar_una_unidad_al_contenedor_piensa_la_mala_idea() -> void:  # AC-SUB-016, AC-SUB-020
 	var almacen := await _almacen()
 	var agarre: Agarre = almacen.get("_agarre")
 	var datos := UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
@@ -27,6 +27,12 @@ func test_tirar_una_unidad_al_contenedor_piensa_la_mala_idea() -> void:  # AC-SU
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	recolector.pedir_tirar(true)
 	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.MALA_IDEA)
+	var jugador: Node3D = almacen.get("_jugador")
+	var hud: Hud = almacen.get("_hud")
+	jugador.global_position += Vector3.RIGHT * 5.0
+	almacen.call("_process", 0.0)
+	hud.call("_process", 1.0)
+	assert_float((hud.get("_subtitulo") as Label).modulate.a).is_equal(1.0)
 
 
 func test_la_mopa_seca_y_la_que_se_seca_piensan() -> void:  # AC-SUB-018, AC-SUB-019
@@ -49,21 +55,47 @@ func test_la_mopa_seca_y_la_que_se_seca_piensan() -> void:  # AC-SUB-018, AC-SUB
 	assert_float((hud.get("_subtitulo") as Label).modulate.a).is_equal(1.0)
 
 
-func test_alejarse_del_pensamiento_lo_desvanece_antes() -> void:  # AC-SUB-020
+func test_alejarse_del_objeto_desvanece_su_subtitulo() -> void:  # AC-SUB-020
 	var almacen := await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
 	var hud: Hud = almacen.get("_hud")
 	var subtitulo: Label = hud.get("_subtitulo")
-	almacen.call("_pensar", SubtitulosDeLosGestos.MALA_IDEA)
+	var objeto: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
+	jugador.global_position = objeto.global_position + Vector3.BACK
+	jugador.set("_enfocado", objeto)
+	(
+		assert_bool(jugador.examen.iniciar(objeto.datos, jugador.texto_al_examinar_de(objeto)))
+		. is_false()
+	)
+	assert_str(subtitulo.text).is_not_empty()
 	almacen.call("_process", 0.0)
 	hud.call("_process", 0.25)
 	assert_float(subtitulo.modulate.a).is_equal(1.0)
-	jugador.global_position += Vector3.RIGHT * 2.0
+	jugador.global_position += Vector3.BACK * 2.0
 	almacen.call("_process", 0.0)
 	hud.call("_process", 0.25)
 	assert_float(subtitulo.modulate.a).is_less(1.0)
 	hud.call("_process", 0.25)
 	assert_str(subtitulo.text).is_empty()
+
+
+func test_la_mopa_ya_seca_no_acorta_el_aviso_al_caminar() -> void:  # AC-SUB-018, AC-SUB-020
+	var almacen := await _almacen()
+	var limpiador: Limpiador = almacen.get("_limpiador")
+	var mopa := limpiador.piso().mopa()
+	mopa.enjuagar()
+	assert_bool(mopa.desgastar(100.0, 0.0)).is_true()
+	var lugar: PisoDelLocal.Lugar = limpiador.piso().lugares()[0]
+	assert_int(limpiador.pasar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, lugar)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	)
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.MOPA_YA_SECA)
+	var jugador: Node3D = almacen.get("_jugador")
+	var hud: Hud = almacen.get("_hud")
+	jugador.global_position += Vector3.RIGHT * 5.0
+	almacen.call("_process", 0.0)
+	hud.call("_process", 1.0)
+	assert_float((hud.get("_subtitulo") as Label).modulate.a).is_equal(1.0)
 
 
 func _examen_con_aviso_esperando() -> Node3D:

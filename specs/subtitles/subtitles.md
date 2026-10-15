@@ -177,12 +177,12 @@ fijo durante el examen (BR-SUB-005).
 
 ### BR-SUB-015 — Alejarse acorta el pensamiento
 
-Un pensamiento DEBE tener un lugar: el de lo examinado, si lo pensó la E con las manos vacías, o
-donde estaba el jugador, si lo pensó un gesto. MIENTRAS el jugador sigue a menos de 0,75 metros
+Sólo un pensamiento asociado a un objeto DEBE tener un lugar: el del objeto examinado con las
+manos vacías. MIENTRAS el jugador sigue a menos de 0,75 metros
 más lejos de ese lugar que cuando apareció, el pensamiento DEBE durar lo de BR-SUB-004. Un
-pensamiento que no depende de dónde está el jugador no tiene lugar, y DEBE durar siempre lo de
-BR-SUB-004: la mopa que se seca (BR-SUB-014) y lo que queda afuera por la ventana, que se piensa
-recién cuando lo soltado se queda quieto. CUANDO
+aviso de una acción o del estado del jugador NO DEBE tener anclaje espacial, y DEBE durar siempre
+lo de BR-SUB-004 aunque el jugador camine. Esto incluye los gestos de BR-SUB-013 y la mopa que se
+seca de BR-SUB-014. CUANDO el pensamiento tiene un objeto y el jugador
 se aleja más que eso, DEBE empezar a desvanecerse en ese momento, en los mismos 0,5 segundos,
 salvo que ya se estuviera desvanecido. Volver a acercarse NO DEBE devolverle la opacidad. El
 texto fijo del examen NO DEBE acortarse.
@@ -350,6 +350,9 @@ segundos ENTONCES se ve con opacidad 1. CUANDO se aleja 0,8 metros ENTONCES a lo
 la opacidad está estrictamente entre 0 y 1, y a los 0,5 la línea está vacía. CUANDO vuelve a
 acercarse durante el desvanecido ENTONCES la opacidad no sube. DADO un texto fijo CUANDO el
 jugador se aleja 10 metros ENTONCES sigue entero.
+
+DADO el aviso «Ya se secó la mopa…» o «Me parece que eso fue una mala idea…» CUANDO el jugador
+camina 5 metros y transcurre 1 segundo desde que apareció ENTONCES sigue con opacidad 1.
 
 ### AC-SUB-016 — Lo que se tira *(verifica BR-SUB-013)*
 
