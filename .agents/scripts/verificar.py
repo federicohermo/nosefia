@@ -59,6 +59,20 @@ from lib.verificacion import resumen  # noqa: E402
 AQUI = Path(__file__).resolve().parent
 
 
+def _preparar_cache_gdtoolkit() -> None:
+    """El creador de gdtoolkit no tolera que otro nodo cree la carpeta entre sus dos pasos."""
+    try:
+        from importlib.metadata import version
+
+        from gdtoolkit.parser.parser import get_cache_directory
+
+        cache = Path(get_cache_directory()) / "gdtoolkit" / version("gdtoolkit")
+    except ImportError:
+        # Sin la herramienta instalada, _correr conserva su diagnóstico habitual.
+        return
+    cache.mkdir(parents=True, exist_ok=True)
+
+
 @dataclass
 class Resultado:
     nodo: str
@@ -77,6 +91,8 @@ def _correr(
 ) -> Resultado:
     arranque = time.monotonic()
     try:
+        if comando[0] in ("gdlint", "gdformat"):
+            _preparar_cache_gdtoolkit()
         proceso = subprocess.run(
             comando,
             cwd=cwd,
