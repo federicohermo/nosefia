@@ -58,6 +58,9 @@ si ese orden impide el criterio; no alcanza con cambiar el predicado de dominio.
 commits contra «Se escribe», incluida la documentación de responsabilidades que el contrato
 actualizó. En #366, el contrato ya traía `docs/architecture/capacidades.md`, pero el plan sólo
 nombraba los specs. El issue debe declarar ese delta completo antes de implementar sobre él.
+Aplicar también las reglas y controles estáticos a ese delta: un commit preparado no equivale
+a un commit validado. En la misma rama, una oración heredada de 28 palabras hizo fallar el
+harness recién en la primera completa; el límite documental ya era de 25.
 
 **Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
 reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
