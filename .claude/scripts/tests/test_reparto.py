@@ -2,7 +2,7 @@
 al `.blend`.
 
 El reparto se itera con el usuario mirando capturas, y cada vuelta es una línea que se mueve de
-un estante a otro. Una regla rota ahí —un producto que se repone en dos lugares, una tanda fija
+un estante a otro. Una regla rota ahí —un producto con dos principales, una tanda fija
 a la altura de la mano— no la ve ningún test del juego hasta después de acomodar, exportar y medir:
 acá se ve antes de correr nada.
 """
@@ -141,7 +141,7 @@ class ElReparto(unittest.TestCase):
         self.assertGreater(len(filas), 0)
         self.assertEqual([(p.clave, p.nombre) for p in PRODUCTOS], filas)
 
-    def test_cada_producto_se_repone_en_una_sola_tanda(self):  # AC-STK-028
+    def test_cada_producto_tiene_una_sola_tanda_principal(self):  # AC-STK-028
         principales = Counter(
             t.producto for tandas in ESTANTES.values() for t in tandas if not t.fija
         )
@@ -159,7 +159,7 @@ class ElReparto(unittest.TestCase):
             productos = [t.producto for t in tandas]
             self.assertEqual(len(productos), len(set(productos)), estante)
 
-    def test_se_repone_solo_a_la_altura_de_la_mano(self):  # AC-STK-028
+    def test_los_faltantes_abren_solo_en_niveles_principales(self):  # AC-STK-028
         for estante, tandas in _de_gondola().items():
             for t in tandas:
                 self.assertEqual(

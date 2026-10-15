@@ -59,8 +59,9 @@ from lib.reparto import (  # noqa: E402
 )
 
 #: Lo que se le pide como mínimo a la fila de adelante de un producto: una caja entera, que es lo
-#: más que una jornada le puede hacer faltar. La fila que sale es su cupo en el juego —cada lugar
-#: es un casillero—. Si el estante no da para tanto, la fila lleva lo que entra y el resumen lo
+#: más que una jornada le puede hacer faltar. La fila principal determina su cupo reponible de
+#: apertura; los casilleros totales suman también las filas delanteras fijas. Si el estante no
+#: da para tanto, la fila lleva lo que entra y el resumen lo
 #: dice.
 FILA_DE_ADELANTE_PEDIDA = 8
 

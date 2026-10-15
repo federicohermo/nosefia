@@ -9,13 +9,13 @@ a correr el acomodador. **Qué entra y cómo se ordena no se decide acá**: lo c
 
 Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue al `.blend`:
 
-- cada producto exhibido tiene **una sola** tanda con casilleros; Duronga sólo tiene su fuente
+- cada producto exhibido tiene **una sola** tanda principal; Duronga sólo tiene su fuente
   exportable y caja en el depósito. Lo que se repite para
   completar un estante es fijo;
-- se repone sólo a la altura de la mano: niveles 1 y 2 de los cuatro existentes, tanto en
-  laterales como en cabeceras; 0 y 3 llevan referencias fijas. Los niveles reponibles no
-  llevan ninguna tanda fija, y los demás llevan sólo tandas fijas;
-- un estante de lado lleva dos tandas, mitad y mitad, o una sola con casilleros que lo ocupa
+- los faltantes de apertura van en las principales a altura de la mano: niveles 1 y 2 de los
+  cuatro existentes, tanto en laterales como en cabeceras; 0 y 3 llevan referencias fijas.
+  Las filas de adelante de ambas tienen casilleros interactuables;
+- un estante de lado lleva dos tandas, mitad y mitad, o una sola principal que lo ocupa
   entero;
 - los destinos y sus productos siguen los sectores del mapa aprobado;
 - Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo van en una sola fila: su tanda con
@@ -165,8 +165,8 @@ DE_UNA_FILA = ("ACTRONCITO", "COSA_DE_MANI", "PRONGLES", "FLINPUF", "BURBALOO")
 
 @dataclass(frozen=True)
 class Tanda:
-    """Una tanda de un estante. `fija` es la que completa el estante repitiendo un producto: no
-    tiene casilleros y nunca se vacía."""
+    """Una tanda de un estante. `fija` repite un producto y abre llena; su fila de adelante
+    conserva casilleros interactuables. La principal recibe los faltantes de apertura."""
 
     producto: str
     fija: bool = False
