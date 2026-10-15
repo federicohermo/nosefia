@@ -1,7 +1,7 @@
 ## El gesto y su referencia comparten contexto puro; consultar no ejecuta el resultado.
 extends GdUnitTestSuite
 
-const R := ReferenciaDeControles
+const R := preload("res://src/dominio/jugador/referencia_de_controles.gd")
 const L := ReferenciaDeControles.Linea
 const M := ReferenciaDeControles.Mira
 
@@ -15,7 +15,7 @@ func _lineas(
 func _textos(lineas: Array[R.Linea]) -> Array[String]:
 	var textos: Array[String] = []
 	for linea in lineas:
-		var accion := R.accion(linea)
+		var accion := String(R.accion(linea))
 		var controles := {
 			ReglasDeLosObjetos.ACCION_EXAMINAR: "E",
 			ReglasDeLosObjetos.ACCION_AGARRAR: "Click Izq",
@@ -210,8 +210,8 @@ func test_cada_verbo_usa_su_asignacion_y_sin_control_no_se_lee() -> void:  # AC-
 		L.MOJAR,
 		L.LIMPIAR
 	]:
-		assert_str(R.accion(linea)).is_equal(ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_str(R.accion(L.SACAR_PRODUCTO)).is_equal(ReglasDelJugador.ACCION_USAR)
+		assert_str(String(R.accion(linea))).is_equal(ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_str(String(R.accion(L.SACAR_PRODUCTO))).is_equal(ReglasDelJugador.ACCION_USAR)
 	assert_str(R.texto(L.EXAMINAR_LA_MANO, "Q")).is_equal("[Q] Examinar (mano)")
 	assert_str(R.texto(L.LLENAR, "F")).is_equal("[F] Llenar")
 	assert_str(R.texto(L.LLENAR, "")).is_empty()

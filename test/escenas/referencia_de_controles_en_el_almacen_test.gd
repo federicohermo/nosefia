@@ -146,7 +146,7 @@ func test_el_ticket_sobre_el_inodoro_cuenta_en_el_local() -> void:  # AC-PLY-084
 	)
 
 
-func test_lo_que_se_tira_al_contenedor_se_lee_dejar_en_el_local() -> void:  # AC-PLY-086
+func test_contenedor_y_tapa_ofrecen_gestos_distintos() -> void:  # AC-PLY-086
 	var almacen := await _abrir()
 	assert_object(BolsaEnLaMano.sacar(almacen)).is_not_null()
 	for parte: Node3D in [almacen.get("_contenedor"), almacen.get("_tapa_del_contenedor")]:
@@ -161,6 +161,15 @@ func test_lo_que_se_tira_al_contenedor_se_lee_dejar_en_el_local() -> void:  # AC
 				)
 			]
 		)
+	var tapa: Node3D = almacen.get("_tapa_del_contenedor")
+	tapa.call("accionar")
+	assert_array(_referencia(almacen, tapa)).contains_exactly(
+		["[E] Examinar (mano)", "[Click Izq] Abrir"]
+	)
+	tapa.call("accionar")
+	assert_array(_referencia(almacen, tapa)).contains_exactly(
+		["[E] Examinar (mano)", "[Click Izq] Cerrar"]
+	)
 
 
 func test_consultar_el_tacho_no_le_saca_la_bolsa() -> void:  # AC-PLY-085

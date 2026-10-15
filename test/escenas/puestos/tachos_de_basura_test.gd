@@ -65,6 +65,7 @@ func test_solo_la_segunda_noche_muestra_bolsas_en_los_tachos() -> void:  # AC-CL
 			assert_str(bolsa.datos.id).is_equal(ReglasDeLaBasura.id_de_la_bolsa(numero + 1))
 			if jornada != 2:
 				_accion(almacen, tacho, ReglasDeLosObjetos.ACCION_AGARRAR)
+				_accion(almacen, tacho, ReglasDelJugador.ACCION_USAR)
 				assert_object((almacen.get("_agarre") as Agarre).manos().sostenido()).is_null()
 		almacen.queue_free()
 		await get_tree().process_frame
@@ -107,7 +108,7 @@ func test_los_tres_tachos_enfocados_entregan_y_la_tercera_cuenta() -> void:  # A
 	assert_str(hud.text).contains(str(previo + 1))
 
 
-func test_secundario_mano_ocupada_repeticion_y_suspension_no_extraen() -> void:  # AC-CLN-055
+func test_tacho_extrae_una_vez_con_primario() -> void:  # AC-CLN-053 AC-CLN-055
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")

@@ -293,7 +293,7 @@ func test_el_izquierdo_abre_y_el_derecho_cierra_paneles_con_cualquier_mano() -> 
 	assert_array(pedidos).is_empty()
 
 
-func test_la_trabada_con_mopa_avisa_sin_pedir_limpieza() -> void:  # AC-PLY-057
+func test_las_trabadas_con_mopa_avisan_sin_usarla() -> void:  # AC-PLY-057
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -302,18 +302,25 @@ func test_la_trabada_con_mopa_avisa_sin_pedir_limpieza() -> void:  # AC-PLY-057
 	assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
 	var pedidos: Array[Node3D] = []
 	jugador.uso_pedido.connect(func(nodo: Node3D) -> void: pedidos.append(nodo))
-	var puerta: Node3D = almacen.get_node("Estructura/porton/CuerpoDeLaHoja")
-	var avisos := [0]
-	puerta.connect("porton_trabado", func(_nodo: Node3D) -> void: avisos[0] += 1)
-	var lugar: Transform3D = puerta.get("hoja").global_transform
-	_accion_en(jugador, puerta, ReglasDelJugador.ACCION_USAR)
-	assert_int(avisos[0]).is_zero()
-	for intento in 10:
-		_accion_en(jugador, puerta, ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_int(avisos[0]).is_equal(10)
-	assert_array(pedidos).is_empty()
-	assert_object(agarre.manos().sostenido()).is_same(mopa.get("datos"))
-	assert_bool(puerta.get("hoja").global_transform.is_equal_approx(lugar)).is_true()
+	for caso: Array in [
+		["Estructura/puertaentrada/CuerpoDeLaHoja", "puerta_trabada"],
+		["Estructura/porton/CuerpoDeLaHoja", "porton_trabado"],
+		["Estructura/puertajefe/CuerpoDeLaHoja", "puerta_trabada"],
+	]:
+		var puerta: Node3D = almacen.get_node(caso[0])
+		var avisos := [0]
+		puerta.connect(caso[1], func(_nodo: Node3D) -> void: avisos[0] += 1)
+		var lugar: Transform3D = puerta.get("hoja").global_transform
+		_accion_en(jugador, puerta, ReglasDelJugador.ACCION_USAR)
+		assert_int(avisos[0]).is_zero()
+		for intento in 10:
+			_accion_en(jugador, puerta, ReglasDeLosObjetos.ACCION_AGARRAR)
+		assert_int(avisos[0]).is_equal(10)
+		_accion_en(jugador, puerta, ReglasDelJugador.ACCION_USAR)
+		assert_int(avisos[0]).is_equal(10)
+		assert_array(pedidos).is_empty()
+		assert_object(agarre.manos().sostenido()).is_same(mopa.get("datos"))
+		assert_bool(puerta.get("hoja").global_transform.is_equal_approx(lugar)).is_true()
 	# La que abre, con el derecho, ni se abre ni avisa: se abre con el izquierdo.
 	var interior: Node3D = almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja")
 	var avisos_de_la_interior := [0]
