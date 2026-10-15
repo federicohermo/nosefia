@@ -257,6 +257,15 @@ Cada agente recibe, literal:
   levantado no carga la máquina y queda afuera. En el lote del 2026-10-06 el turno era un cerrojo
   que cada carril reintentaba: una prueba de 30 s esperó 55 minutos, y los carriles pasaron a
   encadenar sus pasos adentro de un solo turno.
+- **Una captura interactiva libera el turno al terminar de medir.** Cada espera de entrada y
+  cada comando tienen un tiempo límite; al finalizar se cierra el navegador y el proceso del
+  runner sale de verdad. Guardar un marcador final no libera la cola si Node conserva stdin.
+  En #427, el navegador ya estaba cerrado y ese proceso seguía reteniendo el turno. La
+  investigación posterior avanza afuera y el control siguiente vuelve al final de la cola.
+- **El guardado de una sonda Web va a la ruta que mide su paquete.** No suponer que
+  `user://` es `/userfs`: en Godot 4.7.2 incorpora el directorio de la aplicación. Antes del
+  recorrido, medir `OS.get_user_data_dir()` con el mismo paquete y comprobar que Continuar
+  abre la jornada preparada. Un menú sin errores no demuestra que se haya cargado el fixture.
 - **El árbol queda congelado desde que se encola hasta recibir el resultado.** Vale también para
   la espera, la importación y los rojos y verdes cortos: no se edita, formatea ni cambia de rama
   mientras el motor puede leerlo. Los borradores externos pueden avanzar. En #300 se agregó un
