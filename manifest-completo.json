@@ -1,55 +1,63 @@
 {
   "ajustes-fernet-geometricos.json": {
-    "bytes": 64724,
-    "sha256": "09f2847d913da33b1aaa2542528457b22364b831f73c4ccea4d85ef050d4e47a"
+    "bytes": 61927,
+    "sha256": "c162441727ff20d4ab6664010397058b3671b76a54653672a88c1b7fd6bf0323"
   },
   "ajustes-fernet-raw.log": {
-    "bytes": 16465,
-    "sha256": "c97825defa621e82e01e3b5425a1d52fc97ad4fb2bc3dca8e6c5a13e9341aa01"
+    "bytes": 15748,
+    "sha256": "a36ef5ab443dbf14c3c341a4a2ed8a35bb88d4f53c2b74710a21ff2689ffd50b"
   },
   "barrido-7217-poses.json": {
-    "bytes": 7058769,
-    "sha256": "eefd3d3d7d571d08d68f0b77c0a334c713084354b0b18e1e9e2cbfa2025a32f3"
+    "bytes": 6806941,
+    "sha256": "391d4a27e56529d04b8ff64b567bb859c7c0a2b8619b4d3119be8f17baebb1de"
   },
   "barrido-raw.log": {
-    "bytes": 7384,
-    "sha256": "a488247f197b0f5252cc088f6253a111e077279484c0911c1fcab38740c126f6"
+    "bytes": 7073,
+    "sha256": "9463f779b90ec63727d6717847dbf8dc8d6b0b3ed7c230114bf89134f1f7933c"
   },
   "barrido-resumen.json": {
-    "bytes": 13607,
-    "sha256": "4c2d9c8bb089a1ee5c2659a8ec7e0e34318b9def1fa29bfc984df9f85cacbb6b"
+    "bytes": 13149,
+    "sha256": "19f6c1b988a70ed4748ee34fa9f7f792edc27e2504c37c1c692b0af116c4d6e3"
   },
   "chapas-originales.json": {
-    "bytes": 119334,
-    "sha256": "499fef646fe1b0f68d28032aefd03ba4cede96aba7ad1f7948422e1813673885"
+    "bytes": 114281,
+    "sha256": "36c3d26355ef73d5b4e34abbabe03f4ac7ae8efdc3dd2958f111c7e9968c37e4"
   },
   "cierre-geometrico-raw.json": {
-    "bytes": 4845800,
-    "sha256": "e471c8b8d9ff251e6b25b8192224f28178438c7e6159455129242ae277b32a5a"
+    "bytes": 4684249,
+    "sha256": "4a4e994c400fbdc604094f5f11df8bcaaead574d3430691502a2de2aca5b5daa"
   },
   "cierre-geometrico-raw.log": {
-    "bytes": 2930,
-    "sha256": "81ec34421eb9f0b7d6b52f7d688e5c7dff4c0437be87e8872fc59ca89f729728"
+    "bytes": 2806,
+    "sha256": "8751486280ee9aedc549fc45c784081f6525c82c080758a07001ad645f1ffca9"
   },
   "cierre-resumen.json": {
-    "bytes": 28375,
-    "sha256": "fd0c641d2cf15d3eb4157f611f1e4ef1b1615daa0704a7f6a4804717ba6b9344"
+    "bytes": 27264,
+    "sha256": "092cb5e0a06d7fbe2e13be1f7627b79bd67092f7ac4c5eb881283f4db9772ada"
   },
   "fuentes-filas.md": {
     "bytes": 2044,
     "sha256": "e0b4565611c1cf28ffb6d9e147b6b86770589481ee93c094102185da102372e3"
   },
   "guard-anterior-rojo.log": {
-    "bytes": 4647,
-    "sha256": "b1937dd991866b3f72526944770324e84d45ecbd4baafb6c9300aa47297c6a02"
+    "bytes": 4585,
+    "sha256": "4c111d5cf615b22aa5d58a6eba1667dd379189f67eb28918b2faa9a71d1ea5e9"
   },
   "intersecciones-originales.json": {
-    "bytes": 171126,
-    "sha256": "6df16851de6d7baef9a6159d1257d284d8c11c8f4c3ee40ef18f3ec9cc594032"
+    "bytes": 164190,
+    "sha256": "0c2e59f20183f9e9be3acf835044d024ca4c63d414ba759907e87d7fcd1a9a19"
+  },
+  "manifest-local-original.json": {
+    "bytes": 3615,
+    "sha256": "438b2987daeaa85041b191c7743f8a8eb4a6aae50f0cdbba3bf6da5eaeecd731"
   },
   "manifest-originales.json": {
-    "bytes": 2901,
-    "sha256": "fbb9024b03e019f9aa089a33addd6f6bd5c7a0c696a8f7a309ee84f5a298d174"
+    "bytes": 2825,
+    "sha256": "cfab4e14ffa16f1c4467b2999d55991f4e5e17c9c34f3fda3d53a552caaee6b7"
+  },
+  "normalizacion-publicacion.json": {
+    "bytes": 6834,
+    "sha256": "fde529822bb6bba2cacb602d87b3b7db61ad0aa20095e5673f828b498dc89215"
   },
   "original-blender-fernet.png": {
     "bytes": 1722443,
@@ -72,35 +80,35 @@
     "sha256": "3ae63e131e8041396bfadb7631d14e332760bcf1834664dbdf6924ca3631d65e"
   },
   "original-capturas-fixture-usado.gd": {
-    "bytes": 5062,
-    "sha256": "57fa1b06640ecfed99c260ff8dc18be06a2530d8ef05bf1c0d49b83950a35432"
+    "bytes": 4887,
+    "sha256": "20664c4efe778b6042a73ffb60e65966982908d18b30f92bf9984f6a976a101b"
   },
   "original-capturas-raw.log": {
-    "bytes": 2457,
-    "sha256": "dab2818e7a8711ab3360f4bdd5eb9635adc78f78c7678ae4119e51acfe3e0084"
+    "bytes": 2442,
+    "sha256": "f5bbfe12cfade25572914e308c77589d0a4e9ac05d4b1c23eef44b72eac91b50"
   },
   "original-copias-controladas.json": {
-    "bytes": 19196,
-    "sha256": "39b13318ab3911080020077d1a88e54c65a3433ad032b8f1eb99ff632c61e823"
+    "bytes": 18373,
+    "sha256": "86c0f7a68a8dc332601c4ecaaf612968560fa2a433b15dfce9591c436f10f763"
   },
   "original-filas-recurso.json": {
-    "bytes": 5503,
-    "sha256": "9122981bcd754c69ca0ca5abd3143f95898a4f21168c14ed7956ae5157e5a004"
+    "bytes": 5166,
+    "sha256": "ee5034303c87c5168b9190b5af117306b71bcc9735762984f27a43f34d045f8a"
   },
   "original-nativo-amargadito-poetico.png": {
     "bytes": 2017409,
     "sha256": "f2d8847060aa5287de3916e32101f6b8c1c213a16aee8d183a251c5f651a923b"
   },
   "poetico-proyeccion.json": {
-    "bytes": 1877,
-    "sha256": "cb08267e65c0874700102af05c303280f8c66eeb2c8237234a299ef679d36c9a"
+    "bytes": 1817,
+    "sha256": "de5f7c4b74828fcde7ac04d83b0ff1319ba4a3b65c2a3de0c04d57f0752d8707"
   },
   "poetico-proyeccion.py": {
     "bytes": 2512,
     "sha256": "17275994fd463c96c90aec87e033eab9f874744e236565cc3abf921beb84da57"
   },
   "README.md": {
-    "bytes": 6216,
-    "sha256": "ca69b7f9befd5d0a458ac58f7020407f8de6921369d879e19c2871968d33c120"
+    "bytes": 6881,
+    "sha256": "23c0f4b58edc36ee8c0397c31787fa7a6450da39543b5a9b34d7d442526afec3"
   }
 }

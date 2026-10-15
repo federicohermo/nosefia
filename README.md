@@ -93,3 +93,7 @@ principales o fijos. Los cupos reales y el alcance se medirán después de regen
 
 Las cuatro chapas de cabecera ya existían con patrón 0/3 fijas y 1/2 principales; corregir
 la expectativa previa de tres niveles no es una decisión de diseño nueva.
+
+## Bytes de esta publicación
+
+La primera publicación normalizó CRLF al crear los blobs, por lo que no coincidían con el manifiesto local. Se conserva esa historia. Esta publicación usa copias con finales LF y un manifiesto recalculado contra cada blob; las imágenes no cambian. Los originales y crudos del scratch permanecen intactos. `normalizacion-publicacion.json` conserva SHA original y SHA de la copia LF; `manifest-local-original.json` es procedencia local, no un manifiesto de los bytes publicados. Los SHA de fuentes en los JSON originales se refieren a esa procedencia original. `manifest-completo.json` es el manifiesto de los bytes descargables.

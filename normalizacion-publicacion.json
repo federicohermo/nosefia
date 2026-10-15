@@ -1,0 +1,137 @@
+{
+  "ajustes-fernet-geometricos.json": {
+    "sha256_original_local": "09f2847d913da33b1aaa2542528457b22364b831f73c4ccea4d85ef050d4e47a",
+    "sha256_texto_LF": "c162441727ff20d4ab6664010397058b3671b76a54653672a88c1b7fd6bf0323",
+    "normalizo_CRLF": true
+  },
+  "ajustes-fernet-raw.log": {
+    "sha256_original_local": "c97825defa621e82e01e3b5425a1d52fc97ad4fb2bc3dca8e6c5a13e9341aa01",
+    "sha256_texto_LF": "a36ef5ab443dbf14c3c341a4a2ed8a35bb88d4f53c2b74710a21ff2689ffd50b",
+    "normalizo_CRLF": true
+  },
+  "barrido-7217-poses.json": {
+    "sha256_original_local": "eefd3d3d7d571d08d68f0b77c0a334c713084354b0b18e1e9e2cbfa2025a32f3",
+    "sha256_texto_LF": "391d4a27e56529d04b8ff64b567bb859c7c0a2b8619b4d3119be8f17baebb1de",
+    "normalizo_CRLF": true
+  },
+  "barrido-raw.log": {
+    "sha256_original_local": "a488247f197b0f5252cc088f6253a111e077279484c0911c1fcab38740c126f6",
+    "sha256_texto_LF": "9463f779b90ec63727d6717847dbf8dc8d6b0b3ed7c230114bf89134f1f7933c",
+    "normalizo_CRLF": true
+  },
+  "barrido-resumen.json": {
+    "sha256_original_local": "4c2d9c8bb089a1ee5c2659a8ec7e0e34318b9def1fa29bfc984df9f85cacbb6b",
+    "sha256_texto_LF": "19f6c1b988a70ed4748ee34fa9f7f792edc27e2504c37c1c692b0af116c4d6e3",
+    "normalizo_CRLF": true
+  },
+  "chapas-originales.json": {
+    "sha256_original_local": "499fef646fe1b0f68d28032aefd03ba4cede96aba7ad1f7948422e1813673885",
+    "sha256_texto_LF": "36c3d26355ef73d5b4e34abbabe03f4ac7ae8efdc3dd2958f111c7e9968c37e4",
+    "normalizo_CRLF": true
+  },
+  "cierre-geometrico-raw.json": {
+    "sha256_original_local": "e471c8b8d9ff251e6b25b8192224f28178438c7e6159455129242ae277b32a5a",
+    "sha256_texto_LF": "4a4e994c400fbdc604094f5f11df8bcaaead574d3430691502a2de2aca5b5daa",
+    "normalizo_CRLF": true
+  },
+  "cierre-geometrico-raw.log": {
+    "sha256_original_local": "81ec34421eb9f0b7d6b52f7d688e5c7dff4c0437be87e8872fc59ca89f729728",
+    "sha256_texto_LF": "8751486280ee9aedc549fc45c784081f6525c82c080758a07001ad645f1ffca9",
+    "normalizo_CRLF": true
+  },
+  "cierre-resumen.json": {
+    "sha256_original_local": "fd0c641d2cf15d3eb4157f611f1e4ef1b1615daa0704a7f6a4804717ba6b9344",
+    "sha256_texto_LF": "092cb5e0a06d7fbe2e13be1f7627b79bd67092f7ac4c5eb881283f4db9772ada",
+    "normalizo_CRLF": true
+  },
+  "fuentes-filas.md": {
+    "sha256_original_local": "e0b4565611c1cf28ffb6d9e147b6b86770589481ee93c094102185da102372e3",
+    "sha256_texto_LF": "e0b4565611c1cf28ffb6d9e147b6b86770589481ee93c094102185da102372e3",
+    "normalizo_CRLF": false
+  },
+  "guard-anterior-rojo.log": {
+    "sha256_original_local": "b1937dd991866b3f72526944770324e84d45ecbd4baafb6c9300aa47297c6a02",
+    "sha256_texto_LF": "4c111d5cf615b22aa5d58a6eba1667dd379189f67eb28918b2faa9a71d1ea5e9",
+    "normalizo_CRLF": true
+  },
+  "intersecciones-originales.json": {
+    "sha256_original_local": "6df16851de6d7baef9a6159d1257d284d8c11c8f4c3ee40ef18f3ec9cc594032",
+    "sha256_texto_LF": "0c2e59f20183f9e9be3acf835044d024ca4c63d414ba759907e87d7fcd1a9a19",
+    "normalizo_CRLF": true
+  },
+  "manifest-completo.json": {
+    "sha256_original_local": "efa5ee6624d9a81515e1284b800ed31e96527b004333a0ab442b0af0b909c0bf",
+    "sha256_texto_LF": "438b2987daeaa85041b191c7743f8a8eb4a6aae50f0cdbba3bf6da5eaeecd731",
+    "normalizo_CRLF": true
+  },
+  "manifest-originales.json": {
+    "sha256_original_local": "fbb9024b03e019f9aa089a33addd6f6bd5c7a0c696a8f7a309ee84f5a298d174",
+    "sha256_texto_LF": "cfab4e14ffa16f1c4467b2999d55991f4e5e17c9c34f3fda3d53a552caaee6b7",
+    "normalizo_CRLF": true
+  },
+  "original-blender-fernet.png": {
+    "sha256_original_local": "01a08fada128f1950f4f090423107e9203c9e3fb3afc019914417a0c87b3b51d",
+    "sha256_texto_LF": "01a08fada128f1950f4f090423107e9203c9e3fb3afc019914417a0c87b3b51d",
+    "normalizo_CRLF": false
+  },
+  "original-blender-jorgillo.png": {
+    "sha256_original_local": "08452f40ba9e71a68db421843cb79616cb5e51ae48924081f94b69e26c7ee45d",
+    "sha256_texto_LF": "08452f40ba9e71a68db421843cb79616cb5e51ae48924081f94b69e26c7ee45d",
+    "normalizo_CRLF": false
+  },
+  "original-blender-marranos.png": {
+    "sha256_original_local": "da07b8d495135a0511c2e148bd6794fcdb58f751f6f84f0b8065cb3dade451f4",
+    "sha256_texto_LF": "da07b8d495135a0511c2e148bd6794fcdb58f751f6f84f0b8065cb3dade451f4",
+    "normalizo_CRLF": false
+  },
+  "original-blender-poetico.png": {
+    "sha256_original_local": "456cbc150384e9a4bb51995d46e01e28d98fe6533f912a724bf407840cb5ad2f",
+    "sha256_texto_LF": "456cbc150384e9a4bb51995d46e01e28d98fe6533f912a724bf407840cb5ad2f",
+    "normalizo_CRLF": false
+  },
+  "original-capturas-ERRATA.md": {
+    "sha256_original_local": "3ae63e131e8041396bfadb7631d14e332760bcf1834664dbdf6924ca3631d65e",
+    "sha256_texto_LF": "3ae63e131e8041396bfadb7631d14e332760bcf1834664dbdf6924ca3631d65e",
+    "normalizo_CRLF": false
+  },
+  "original-capturas-fixture-usado.gd": {
+    "sha256_original_local": "57fa1b06640ecfed99c260ff8dc18be06a2530d8ef05bf1c0d49b83950a35432",
+    "sha256_texto_LF": "20664c4efe778b6042a73ffb60e65966982908d18b30f92bf9984f6a976a101b",
+    "normalizo_CRLF": true
+  },
+  "original-capturas-raw.log": {
+    "sha256_original_local": "dab2818e7a8711ab3360f4bdd5eb9635adc78f78c7678ae4119e51acfe3e0084",
+    "sha256_texto_LF": "f5bbfe12cfade25572914e308c77589d0a4e9ac05d4b1c23eef44b72eac91b50",
+    "normalizo_CRLF": true
+  },
+  "original-copias-controladas.json": {
+    "sha256_original_local": "39b13318ab3911080020077d1a88e54c65a3433ad032b8f1eb99ff632c61e823",
+    "sha256_texto_LF": "86c0f7a68a8dc332601c4ecaaf612968560fa2a433b15dfce9591c436f10f763",
+    "normalizo_CRLF": true
+  },
+  "original-filas-recurso.json": {
+    "sha256_original_local": "9122981bcd754c69ca0ca5abd3143f95898a4f21168c14ed7956ae5157e5a004",
+    "sha256_texto_LF": "ee5034303c87c5168b9190b5af117306b71bcc9735762984f27a43f34d045f8a",
+    "normalizo_CRLF": true
+  },
+  "original-nativo-amargadito-poetico.png": {
+    "sha256_original_local": "f2d8847060aa5287de3916e32101f6b8c1c213a16aee8d183a251c5f651a923b",
+    "sha256_texto_LF": "f2d8847060aa5287de3916e32101f6b8c1c213a16aee8d183a251c5f651a923b",
+    "normalizo_CRLF": false
+  },
+  "poetico-proyeccion.json": {
+    "sha256_original_local": "cb08267e65c0874700102af05c303280f8c66eeb2c8237234a299ef679d36c9a",
+    "sha256_texto_LF": "de5f7c4b74828fcde7ac04d83b0ff1319ba4a3b65c2a3de0c04d57f0752d8707",
+    "normalizo_CRLF": true
+  },
+  "poetico-proyeccion.py": {
+    "sha256_original_local": "17275994fd463c96c90aec87e033eab9f874744e236565cc3abf921beb84da57",
+    "sha256_texto_LF": "17275994fd463c96c90aec87e033eab9f874744e236565cc3abf921beb84da57",
+    "normalizo_CRLF": false
+  },
+  "README.md": {
+    "sha256_original_local": "ca69b7f9befd5d0a458ac58f7020407f8de6921369d879e19c2871968d33c120",
+    "sha256_texto_LF": "ca69b7f9befd5d0a458ac58f7020407f8de6921369d879e19c2871968d33c120",
+    "normalizo_CRLF": false
+  }
+}
