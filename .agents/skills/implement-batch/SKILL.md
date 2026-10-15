@@ -267,10 +267,13 @@ Cada agente recibe, literal:
   runner sale de verdad. Guardar un marcador final no libera la cola si Node conserva stdin.
   En #427, el navegador ya estaba cerrado y ese proceso seguía reteniendo el turno. La
   investigación posterior avanza afuera y el control siguiente vuelve al final de la cola.
-- **El guardado de una sonda Web va a la ruta que mide su paquete.** No suponer que
-  `user://` es `/userfs`: en Godot 4.7.2 incorpora el directorio de la aplicación. Antes del
-  recorrido, medir `OS.get_user_data_dir()` con el mismo paquete y comprobar que Continuar
-  abre la jornada preparada. Un menú sin errores no demuestra que se haya cargado el fixture.
+- **El guardado de una sonda Web va a la ruta real de su paquete.** No suponer que
+  `user://` es `/userfs`: en Godot 4.7.2 incorpora el directorio de la aplicación. Resolver
+  la ruta con su configuración y la fuente de la versión exacta del motor, o medir
+  `OS.get_user_data_dir()` en el paquete; conservar nombres Unicode sin sustituir caracteres.
+  Comprobar que Continuar abre la jornada preparada. En #427, una sonda externa de arranque
+  no obtuvo la ruta y terminó por timeout; no se presenta como medición cumplida. Un menú
+  sin errores no demuestra que se haya cargado el fixture.
 - **El árbol queda congelado desde que se encola hasta recibir el resultado.** Vale también para
   la espera, la importación y los rojos y verdes cortos: no se edita, formatea ni cambia de rama
   mientras el motor puede leerlo. Los borradores externos pueden avanzar. En #300 se agregó un

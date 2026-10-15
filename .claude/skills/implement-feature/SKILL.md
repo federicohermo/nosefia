@@ -215,6 +215,13 @@ cambio. El archivo `godot.log` no los reemplaza: en el lote del 2026-10-10 omiti
 de recursos al salir que sí estaban en stderr. Sin ambos canales de la base no se puede
 atribuir un diagnóstico al cambio sólo porque su XML siga verde.
 
+**Concatenar stdout y stderr no conserva su cronología.** Un aviso al final de ese
+archivo puede haber ocurrido durante un caso, no al desmontar. Para atribuir fase o fixture,
+conservar además el registro cronológico y su contexto; no reemplaza los canales completos.
+En #425, tres rescates conservaban causa y cantidad pero cambiaban coordenadas: se guardaron
+los deltas y los casos concretos, sin borrarlos con una normalización amplia ni atribuirlos
+al azar o a una fase sin control equivalente.
+
 **La retención se identifica por recursos y por fase, no sólo por el contador.** En #374,
 el `preload` del guion en la suite nueva de dominio hacía que el descubrimiento completo
 retuviera 23 scripts antiguos adicionales; el producto y las otras suites nuevas cerraban
