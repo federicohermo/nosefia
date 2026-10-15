@@ -1,0 +1,338 @@
+{
+  "ACTRONCITO": {
+    "copias_principal": 8,
+    "fila_adelante": 4,
+    "guias": [
+      {
+        "copias": 8,
+        "adelante": 4
+      }
+    ]
+  },
+  "DUREXTRA": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "BURBALOO": {
+    "copias_principal": 4,
+    "fila_adelante": 4,
+    "guias": [
+      {
+        "copias": 4,
+        "adelante": 4
+      }
+    ]
+  },
+  "ZUCARACHAS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "LAYSNTT": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "MALBARDO": {
+    "copias_principal": 14,
+    "fila_adelante": 7,
+    "guias": [
+      {
+        "copias": 14,
+        "adelante": 7
+      }
+    ]
+  },
+  "PRONGLES": {
+    "copias_principal": 20,
+    "fila_adelante": 10,
+    "guias": [
+      {
+        "copias": 20,
+        "adelante": 10
+      }
+    ]
+  },
+  "JORGILLO": {
+    "copias_principal": 6,
+    "fila_adelante": 3,
+    "guias": [
+      {
+        "copias": 6,
+        "adelante": 3
+      }
+    ]
+  },
+  "ARVEJAS": {
+    "copias_principal": 16,
+    "fila_adelante": 8,
+    "guias": [
+      {
+        "copias": 16,
+        "adelante": 8
+      }
+    ]
+  },
+  "CHISITOS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "OREMOS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "PEPITOS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "SALADIK": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "UAKAS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "CORACOLA": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      },
+      {
+        "copias": 5,
+        "adelante": 0
+      }
+    ]
+  },
+  "FROTLUPS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "MAROLINI": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "AMARGADITO": {
+    "copias_principal": 12,
+    "fila_adelante": 6,
+    "guias": [
+      {
+        "copias": 12,
+        "adelante": 6
+      }
+    ]
+  },
+  "CINDOLOR": {
+    "copias_principal": 8,
+    "fila_adelante": 4,
+    "guias": [
+      {
+        "copias": 12,
+        "adelante": 4
+      },
+      {
+        "copias": 4,
+        "adelante": 0
+      }
+    ]
+  },
+  "FLINPUF": {
+    "copias_principal": 4,
+    "fila_adelante": 4,
+    "guias": [
+      {
+        "copias": 4,
+        "adelante": 4
+      }
+    ]
+  },
+  "DONSATURADOS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "PETISAS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "MACUMBAS": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "COSA_DE_MANI": {
+    "copias_principal": 5,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 5,
+        "adelante": 5
+      }
+    ]
+  },
+  "DURONGA": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 10,
+        "adelante": 5
+      }
+    ]
+  },
+  "FERNET_GOD": {
+    "copias_principal": 20,
+    "fila_adelante": 10,
+    "guias": [
+      {
+        "copias": 20,
+        "adelante": 10
+      }
+    ]
+  },
+  "MAYONCHIS": {
+    "copias_principal": 6,
+    "fila_adelante": 3,
+    "guias": [
+      {
+        "copias": 12,
+        "adelante": 3
+      },
+      {
+        "copias": 6,
+        "adelante": 0
+      }
+    ]
+  },
+  "OAAAA": {
+    "copias_principal": 10,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 15,
+        "adelante": 5
+      },
+      {
+        "copias": 5,
+        "adelante": 0
+      }
+    ]
+  },
+  "TERMINATOR": {
+    "copias_principal": 18,
+    "fila_adelante": 9,
+    "guias": [
+      {
+        "copias": 18,
+        "adelante": 9
+      }
+    ]
+  },
+  "MARRANOS": {
+    "copias_principal": 5,
+    "fila_adelante": 5,
+    "guias": [
+      {
+        "copias": 5,
+        "adelante": 5
+      }
+    ]
+  },
+  "FEEL_RICKY_FORT": {
+    "copias_principal": 8,
+    "fila_adelante": 4,
+    "guias": [
+      {
+        "copias": 8,
+        "adelante": 4
+      }
+    ]
+  },
+  "POETICO": {
+    "copias_principal": 6,
+    "fila_adelante": 6,
+    "guias": [
+      {
+        "copias": 6,
+        "adelante": 6
+      }
+    ]
+  }
+}

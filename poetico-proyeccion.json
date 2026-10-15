@@ -1,0 +1,61 @@
+{
+  "fuentes_sha256": {
+    "434-cierre-geometrico.json": "e471c8b8d9ff251e6b25b8192224f28178438c7e6159455129242ae277b32a5a",
+    "434-chapas.json": "499fef646fe1b0f68d28032aefd03ba4cede96aba7ad1f7948422e1813673885",
+    "434-intersecciones.json": "6df16851de6d7baef9a6159d1257d284d8c11c8f4c3ee40ef18f3ec9cc594032"
+  },
+  "casos": {
+    "N.sur.2": {
+      "cara_panel": 42,
+      "material": "GONDOLA | Panel perforado 50 mm",
+      "panel_v": [
+        0.27674007415771484,
+        0.27674055099487305
+      ],
+      "panel_z": [
+        0.28075289726257324,
+        2.145232677459717
+      ],
+      "posteriores": 14,
+      "contactos_fuera": 42,
+      "fila_posterior_detras_panel_en_profundidad": true,
+      "fila_posterior_dentro_altura_panel": true,
+      "cuerpo_posterior_v": [
+        0.28008174896240234,
+        0.46666431427001953
+      ],
+      "cuerpo_posterior_z": [
+        1.2735353708267212,
+        1.6394145488739014
+      ],
+      "maximo_sobresaliente_cuerpo_mm": 67.72994995117188,
+      "maximo_sobresaliente_contactos_mm": 61.52009963989258
+    },
+    "N.sur.3": {
+      "cara_panel": 42,
+      "material": "GONDOLA | Panel perforado 50 mm",
+      "panel_v": [
+        0.27674007415771484,
+        0.27674055099487305
+      ],
+      "panel_z": [
+        0.28075289726257324,
+        2.145232677459717
+      ],
+      "posteriores": 14,
+      "contactos_fuera": 42,
+      "fila_posterior_detras_panel_en_profundidad": true,
+      "fila_posterior_dentro_altura_panel": true,
+      "cuerpo_posterior_v": [
+        0.28008174896240234,
+        0.46666431427001953
+      ],
+      "cuerpo_posterior_z": [
+        1.746531367301941,
+        2.112410545349121
+      ],
+      "maximo_sobresaliente_cuerpo_mm": 67.72994995117188,
+      "maximo_sobresaliente_contactos_mm": 61.52009963989258
+    }
+  }
+}

@@ -1,0 +1,721 @@
+00:02.531  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-base.blend"
+{
+  "cabeceras": {
+    "A.norte.2": [],
+    "B.norte.2": [
+      {
+        "desplazamiento": -0.015,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 4,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.014,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 4,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.013,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 4,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.012,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 4,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.011,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 4,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.01,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 4,
+        "valido": true
+      }
+    ],
+    "A.sur.0": [
+      {
+        "desplazamiento": -0.005,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 8,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.004,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 8,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.003,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 8,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.002,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 8,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.001,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 8,
+        "valido": true
+      },
+      {
+        "desplazamiento": 0.0,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 8,
+        "valido": true
+      }
+    ],
+    "B.sur.2": [
+      {
+        "desplazamiento": -0.008,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.007,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.006,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.005,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.004,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.003,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.002,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      },
+      {
+        "desplazamiento": -0.001,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      },
+      {
+        "desplazamiento": 0.0,
+        "filas": null,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      }
+    ]
+  },
+  "fernet": {
+    "H1.sur.0": {
+      "dos_filas_validas": [],
+      "una_fila_solo_diagnostico": {
+        "desplazamiento": 0,
+        "filas": 1,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      }
+    },
+    "H1.sur.1": {
+      "dos_filas_validas": [
+        {
+          "desplazamiento": 0.0,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.005,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.01,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.015,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.02,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.025,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.03,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.035,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.04,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.045,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.05,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.055,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.06,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.065,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.07,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.075,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.08,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.085,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.09,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.095,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.1,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.105,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.11,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.115,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.12,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.125,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.13,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.135,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.14,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.145,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.15,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.155,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.16,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.165,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.17,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.175,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.18,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.185,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.19,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.195,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.2,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.205,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.21,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.215,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.22,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.225,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.23,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.235,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.24,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.245,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.25,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.255,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.26,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        },
+        {
+          "desplazamiento": 0.265,
+          "filas": 2,
+          "choques": 0,
+          "sin_apoyo": 0,
+          "puerta": 0,
+          "unidades": 12,
+          "valido": true
+        }
+      ],
+      "una_fila_solo_diagnostico": {
+        "desplazamiento": 0,
+        "filas": 1,
+        "choques": 0,
+        "sin_apoyo": 0,
+        "puerta": 0,
+        "unidades": 6,
+        "valido": true
+      }
+    }
+  },
+  "puertas_cerradas": [
+    "puerta_heladera_0"
+  ]
+}
+434_TRASLACIONES_CON_APOYO_MEDIDAS_OK
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

@@ -1,0 +1,459 @@
+{
+  "patron_cabeceras": {
+    "A.sur.0": {
+      "ensayos": 329,
+      "intervalo_contacto": [
+        -0.12946216156706214,
+        0.19543930608779192
+      ],
+      "validos_apoyo_completo": 121,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 8,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 125,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 81
+      }
+    },
+    "A.sur.1": {
+      "ensayos": 251,
+      "intervalo_contacto": [
+        -0.1293310164473951,
+        0.11708271224051714
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 249,
+        "una unidad sin contacto": 2
+      }
+    },
+    "A.sur.2": {
+      "ensayos": 156,
+      "intervalo_contacto": [
+        -0.061740262201055884,
+        0.0904467930085957
+      ],
+      "validos_apoyo_completo": 101,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 16,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 3,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 52
+      }
+    },
+    "A.sur.3": {
+      "ensayos": 104,
+      "intervalo_contacto": [
+        -0.0621355592738837,
+        0.037420665845274925
+      ],
+      "validos_apoyo_completo": 49,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 16,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 3,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 52
+      }
+    },
+    "A.norte.0": {
+      "ensayos": 366,
+      "intervalo_contacto": [
+        -0.09699278115294874,
+        0.2656365926377475
+      ],
+      "validos_apoyo_completo": 273,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 16,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 4,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 89
+      }
+    },
+    "A.norte.1": {
+      "ensayos": 289,
+      "intervalo_contacto": [
+        -0.09717839024960995,
+        0.187334556132555
+      ],
+      "validos_apoyo_completo": 196,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 16,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 91
+      }
+    },
+    "A.norte.2": {
+      "ensayos": 106,
+      "intervalo_contacto": [
+        -0.10626983386464417,
+        -0.005823989864438772
+      ],
+      "validos_apoyo_completo": 1,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": -0.006,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 18,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 3,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 101,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 1
+      }
+    },
+    "A.norte.3": {
+      "ensayos": 50,
+      "intervalo_contacto": [
+        -0.10426067560911179,
+        -0.05939928162842989
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 4,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 45,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 1
+      }
+    },
+    "B.sur.0": {
+      "ensayos": 388,
+      "intervalo_contacto": [
+        -0.07843879773281515,
+        0.3057492095977068
+      ],
+      "validos_apoyo_completo": 315,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 10,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 71
+      }
+    },
+    "B.sur.1": {
+      "ensayos": 310,
+      "intervalo_contacto": [
+        -0.07880536373704672,
+        0.22747890558093786
+      ],
+      "validos_apoyo_completo": 237,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 10,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 71
+      }
+    },
+    "B.sur.2": {
+      "ensayos": 137,
+      "intervalo_contacto": [
+        -0.07843880774453282,
+        0.05434539495036006
+      ],
+      "validos_apoyo_completo": 64,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 6,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 3,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 70
+      }
+    },
+    "B.sur.3": {
+      "ensayos": 83,
+      "intervalo_contacto": [
+        -0.07793247327208519,
+        0.0011134827509522438
+      ],
+      "validos_apoyo_completo": 11,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 6,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 70
+      }
+    },
+    "B.norte.0": {
+      "ensayos": 468,
+      "intervalo_contacto": [
+        -0.2175933625549078,
+        0.24636121466755867
+      ],
+      "validos_apoyo_completo": 320,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 4,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 146
+      }
+    },
+    "B.norte.1": {
+      "ensayos": 391,
+      "intervalo_contacto": [
+        -0.2166027668863535,
+        0.17023451253771782
+      ],
+      "validos_apoyo_completo": 252,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 4,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 137
+      }
+    },
+    "B.norte.2": {
+      "ensayos": 217,
+      "intervalo_contacto": [
+        -0.21759311947971582,
+        -0.005041786003857851
+      ],
+      "validos_apoyo_completo": 67,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": -0.006,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 4,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 3,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 146,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 1
+      }
+    },
+    "B.norte.3": {
+      "ensayos": 168,
+      "intervalo_contacto": [
+        -0.20957328751683235,
+        -0.04620763845741749
+      ],
+      "validos_apoyo_completo": 52,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": {
+        "desplazamiento": -0.047,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 4,
+        "valido": true
+      },
+      "rechazos_medidos": {
+        "una unidad sin contacto": 3,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 112,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 1
+      }
+    }
+  },
+  "dos_filas_marranos_poetico": {
+    "A.oeste.0/MARRANOS": {
+      "ensayos": 368,
+      "intervalo_contacto": [
+        -0.28450003266334534,
+        0.07977938652038574
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 3,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 85,
+        "intersecci\u00f3n GONDOLA | Zocalo grafito": 2,
+        "intersecci\u00f3n GONDOLA | Panel perforado 50 mm": 278
+      }
+    },
+    "A.oeste.1/MARRANOS": {
+      "ensayos": 538,
+      "intervalo_contacto": [
+        -0.28450003266334534,
+        0.24911713600158691
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 367,
+        "intersecci\u00f3n GONDOLA | Panel perforado 50 mm": 169
+      }
+    },
+    "A.oeste.2/MARRANOS": {
+      "ensayos": 538,
+      "intervalo_contacto": [
+        -0.28450003266334534,
+        0.24911713600158691
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 87,
+        "intersecci\u00f3n GONDOLA | Panel perforado 50 mm": 281,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 168
+      }
+    },
+    "A.oeste.3/MARRANOS": {
+      "ensayos": 538,
+      "intervalo_contacto": [
+        -0.28450003266334534,
+        0.24911713600158691
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 87,
+        "intersecci\u00f3n GONDOLA | Panel perforado 50 mm": 281,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 168
+      }
+    },
+    "N.sur.0/POETICO": {
+      "ensayos": 264,
+      "intervalo_contacto": [
+        -0.18487262725830078,
+        0.07524824142456055
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 81,
+        "intersecci\u00f3n GONDOLA | Panel perforado 50 mm": 174,
+        "intersecci\u00f3n GONDOLA | Zocalo grafito": 7
+      }
+    },
+    "N.sur.1/POETICO": {
+      "ensayos": 386,
+      "intervalo_contacto": [
+        -0.18487262725830078,
+        0.19764280319213867
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 0,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 144,
+        "intersecci\u00f3n GONDOLA | Panel perforado 50 mm": 240
+      }
+    },
+    "N.sur.2/POETICO": {
+      "ensayos": 386,
+      "intervalo_contacto": [
+        -0.18487262725830078,
+        0.19764280319213867
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 1,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 81,
+        "intersecci\u00f3n GONDOLA | Panel perforado 50 mm": 233,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 69
+      }
+    },
+    "N.sur.3/POETICO": {
+      "ensayos": 386,
+      "intervalo_contacto": [
+        -0.18487262725830078,
+        0.19764280319213867
+      ],
+      "validos_apoyo_completo": 0,
+      "validos_apoyo_parcial": 1,
+      "mejor_completo": null,
+      "rechazos_medidos": {
+        "una unidad sin contacto": 2,
+        "intersecci\u00f3n GONDOLA | Portaprecio gris sin etiquetas": 81,
+        "intersecci\u00f3n GONDOLA | Panel perforado 50 mm": 237,
+        "intersecci\u00f3n GONDOLA | Chapa pintada blanca": 65
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "original-blender-marranos.png": {
+    "fuente": "434-blender-original/marranos.png",
+    "bytes": 1564543,
+    "sha256": "da07b8d495135a0511c2e148bd6794fcdb58f751f6f84f0b8065cb3dade451f4"
+  },
+  "original-blender-poetico.png": {
+    "fuente": "434-blender-original/poetico.png",
+    "bytes": 1771737,
+    "sha256": "456cbc150384e9a4bb51995d46e01e28d98fe6533f912a724bf407840cb5ad2f"
+  },
+  "original-blender-jorgillo.png": {
+    "fuente": "434-blender-original/jorgillo.png",
+    "bytes": 1479213,
+    "sha256": "08452f40ba9e71a68db421843cb79616cb5e51ae48924081f94b69e26c7ee45d"
+  },
+  "original-blender-fernet.png": {
+    "fuente": "434-blender-original/fernet_god.png",
+    "bytes": 1722443,
+    "sha256": "01a08fada128f1950f4f090423107e9203c9e3fb3afc019914417a0c87b3b51d"
+  },
+  "original-nativo-amargadito-poetico.png": {
+    "fuente": "434-capturas-original/nativo-01-almacen.png",
+    "bytes": 2017409,
+    "sha256": "f2d8847060aa5287de3916e32101f6b8c1c213a16aee8d183a251c5f651a923b"
+  },
+  "original-filas-recurso.json": {
+    "fuente": "434-filas-recurso-original.json",
+    "bytes": 5503,
+    "sha256": "9122981bcd754c69ca0ca5abd3143f95898a4f21168c14ed7956ae5157e5a004"
+  },
+  "original-copias-controladas.json": {
+    "fuente": "434-copias-originales-controladas.json",
+    "bytes": 19196,
+    "sha256": "39b13318ab3911080020077d1a88e54c65a3433ad032b8f1eb99ff632c61e823"
+  },
+  "fuentes-filas.md": {
+    "fuente": "434-fuentes-filas.md",
+    "bytes": 2044,
+    "sha256": "e0b4565611c1cf28ffb6d9e147b6b86770589481ee93c094102185da102372e3"
+  },
+  "barrido-7217-poses.json": {
+    "fuente": "434-patron-actual.json",
+    "bytes": 7058769,
+    "sha256": "eefd3d3d7d571d08d68f0b77c0a334c713084354b0b18e1e9e2cbfa2025a32f3"
+  },
+  "barrido-resumen.json": {
+    "fuente": "434-patron-resumen.json",
+    "bytes": 13607,
+    "sha256": "4c2d9c8bb089a1ee5c2659a8ec7e0e34318b9def1fa29bfc984df9f85cacbb6b"
+  },
+  "original-capturas-ERRATA.md": {
+    "fuente": "434-original-capturas-03-README.md",
+    "bytes": 1630,
+    "sha256": "3ae63e131e8041396bfadb7631d14e332760bcf1834664dbdf6924ca3631d65e"
+  },
+  "original-capturas-raw.log": {
+    "fuente": "434-original-capturas-03.log",
+    "bytes": 2457,
+    "sha256": "dab2818e7a8711ab3360f4bdd5eb9635adc78f78c7678ae4119e51acfe3e0084"
+  },
+  "original-capturas-fixture-usado.gd": {
+    "fuente": "434-capturar_original-03-usado.gd",
+    "bytes": 5062,
+    "sha256": "57fa1b06640ecfed99c260ff8dc18be06a2530d8ef05bf1c0d49b83950a35432"
+  },
+  "barrido-raw.log": {
+    "fuente": "434-patron-actual.log",
+    "bytes": 7384,
+    "sha256": "a488247f197b0f5252cc088f6253a111e077279484c0911c1fcab38740c126f6"
+  },
+  "guard-anterior-rojo.log": {
+    "fuente": "434-acomodar-02.log",
+    "bytes": 4647,
+    "sha256": "b1937dd991866b3f72526944770324e84d45ecbd4baafb6c9300aa47297c6a02"
+  }
+}

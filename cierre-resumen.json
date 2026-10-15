@@ -1,0 +1,1112 @@
+{
+  "casos": {
+    "amargadito_principal_single": {
+      "estante": "A.sur.1",
+      "productos": [
+        "AMARGADITO"
+      ],
+      "poses_comprobadas": 391,
+      "poses_validas_apoyo_completo": 10,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 4,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "amargadito_fija_double": {
+      "estante": "A.sur.0",
+      "productos": [
+        "AMARGADITO"
+      ],
+      "poses_comprobadas": 329,
+      "poses_validas_apoyo_completo": 121,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 8,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "oaaaa_fija_single": {
+      "estante": "A.norte.3",
+      "productos": [
+        "OAAAA"
+      ],
+      "poses_comprobadas": 168,
+      "poses_validas_apoyo_completo": 65,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 9,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "actroncito_doble_principal": {
+      "estante": "N.sur.2",
+      "productos": [
+        "ACTRONCITO",
+        "DUREXTRA"
+      ],
+      "poses_comprobadas": 398,
+      "poses_validas_apoyo_completo": 187,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 28,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "actroncito_doble_fija": {
+      "estante": "N.sur.0",
+      "productos": [
+        "ACTRONCITO",
+        "DUREXTRA"
+      ],
+      "poses_comprobadas": 275,
+      "poses_validas_apoyo_completo": 170,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 28,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "prongles_doble_principal": {
+      "estante": "B.oeste.2",
+      "productos": [
+        "DONSATURADOS",
+        "PRONGLES"
+      ],
+      "poses_comprobadas": 448,
+      "poses_validas_apoyo_completo": 131,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 36,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "prongles_doble_fija": {
+      "estante": "B.oeste.0",
+      "productos": [
+        "DONSATURADOS",
+        "PRONGLES"
+      ],
+      "poses_comprobadas": 279,
+      "poses_validas_apoyo_completo": 125,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 36,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "marranos_single_principal": {
+      "estante": "A.oeste.1",
+      "productos": [
+        "UAKAS",
+        "MARRANOS"
+      ],
+      "poses_comprobadas": 538,
+      "poses_validas_apoyo_completo": 90,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 15,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "marranos_single_fija": {
+      "estante": "A.oeste.3",
+      "productos": [
+        "UAKAS",
+        "MARRANOS"
+      ],
+      "poses_comprobadas": 538,
+      "poses_validas_apoyo_completo": 90,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 15,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "poetico_single_principal": {
+      "estante": "N.sur.1",
+      "productos": [
+        "POETICO"
+      ],
+      "poses_comprobadas": 577,
+      "poses_validas_apoyo_completo": 90,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 14,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    },
+    "poetico_single_fija": {
+      "estante": "N.sur.3",
+      "productos": [
+        "POETICO"
+      ],
+      "poses_comprobadas": 577,
+      "poses_validas_apoyo_completo": 90,
+      "mejor_desplazamiento_mm": 0.0,
+      "unidades_comprobadas_en_mejor": 14,
+      "choques_en_mejor": 0,
+      "contactos_fuera_en_mejor": 0
+    }
+  },
+  "proyeccion_poetico_parcial": {
+    "N.sur.2": {
+      "desplazamiento": 0.085,
+      "fondo_chapa": 0.39893436431884766,
+      "corte_panel": 0.27674026584625244,
+      "filas": [
+        {
+          "fila": "atras",
+          "columna": 0,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 1,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 2,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 3,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 4,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 5,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 6,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 7,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 8,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 9,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 10,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 11,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 12,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 13,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 0,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 1,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 2,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 3,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 4,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 5,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 6,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 7,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 8,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 9,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 10,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 11,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 12,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 13,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.2735353708267212,
+            1.6394145488739014
+          ]
+        }
+      ],
+      "paneles": []
+    },
+    "N.sur.3": {
+      "desplazamiento": 0.085,
+      "fondo_chapa": 0.39893436431884766,
+      "corte_panel": 0.27674029564857483,
+      "filas": [
+        {
+          "fila": "atras",
+          "columna": 0,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 1,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 2,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 3,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 4,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 5,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 6,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 7,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 8,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 9,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 10,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 11,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 12,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "atras",
+          "columna": 13,
+          "cuerpo_v": [
+            0.28008174896240234,
+            0.46666431427001953
+          ],
+          "contactos_v": [
+            0.28629159927368164,
+            0.46045446395874023
+          ],
+          "contactos_fuera": 3,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 0,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 1,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 2,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 3,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 4,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 5,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 6,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 7,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 8,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 9,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 10,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 11,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 12,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        },
+        {
+          "fila": "adelante",
+          "columna": 13,
+          "cuerpo_v": [
+            0.08949995040893555,
+            0.27608251571655273
+          ],
+          "contactos_v": [
+            0.09570980072021484,
+            0.26987266540527344
+          ],
+          "contactos_fuera": 0,
+          "cuerpo_z": [
+            1.746531367301941,
+            2.112410545349121
+          ]
+        }
+      ],
+      "paneles": []
+    }
+  }
+}

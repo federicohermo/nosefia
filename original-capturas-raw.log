@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+434_VISTA:{"camara":"[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (-1.449932, 1.7, -2.086576)]","cupo_duronga":0,"indice":0,"jornada":2,"nombre":"01-almacen"}
+434_VISTA:{"camara":"[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (2.006813, 1.7, -2.086576)]","cupo_duronga":0,"indice":1,"jornada":2,"nombre":"02-cereales-dulces"}
+434_VISTA:{"camara":"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (0.27844, 1.7, 1.288424)]","cupo_duronga":0,"indice":2,"jornada":2,"nombre":"03-malbardo-amargadito"}
+434_VISTA:{"camara":"[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (0.27844, 1.7, -5.461576)]","cupo_duronga":0,"indice":3,"jornada":2,"nombre":"04-bebidas-sin-frio"}
+434_VISTA:{"camara":"[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (5.460157, 1.7, -2.045102)]","cupo_duronga":0,"indice":4,"jornada":2,"nombre":"05-dulces"}
+434_VISTA:{"camara":"[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (2.003413, 1.7, -2.045102)]","cupo_duronga":0,"indice":5,"jornada":2,"nombre":"06-salados"}
+434_VISTA:{"camara":"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (3.731785, 1.7, 1.329898)]","cupo_duronga":0,"indice":6,"jornada":2,"nombre":"07-jorgillo-saladik"}
+434_VISTA:{"camara":"[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (3.731785, 1.7, -5.420102)]","cupo_duronga":0,"indice":7,"jornada":2,"nombre":"08-golosinas"}
+434_VISTA:{"camara":"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.905695, -0.42393), Z: (0.0, 0.42393, 0.905695), O: (2.849859, 1.7, -6.060595)]","cupo_duronga":0,"indice":8,"jornada":2,"nombre":"09-no-comestibles"}
+434_VISTA:{"camara":"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-1.468133, 1.7, -5.828175)]","cupo_duronga":0,"indice":9,"jornada":2,"nombre":"10-heladera-1"}
+434_VISTA:{"camara":"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-0.37921, 1.7, -5.828175)]","cupo_duronga":0,"indice":10,"jornada":2,"nombre":"11-heladera-2"}
+434_MAPA_COMPLETO_OK

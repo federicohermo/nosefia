@@ -1,0 +1,128 @@
+00:04.094  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-base.blend"
+{
+  "amargadito_principal_single": {
+    "completos": 10,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 4,
+      "valido": true
+    }
+  },
+  "amargadito_fija_double": {
+    "completos": 121,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 8,
+      "valido": true
+    }
+  },
+  "oaaaa_fija_single": {
+    "completos": 65,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 9,
+      "valido": true
+    }
+  },
+  "actroncito_doble_principal": {
+    "completos": 187,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 28,
+      "valido": true
+    }
+  },
+  "actroncito_doble_fija": {
+    "completos": 170,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 28,
+      "valido": true
+    }
+  },
+  "prongles_doble_principal": {
+    "completos": 131,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 36,
+      "valido": true
+    }
+  },
+  "prongles_doble_fija": {
+    "completos": 125,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 36,
+      "valido": true
+    }
+  },
+  "marranos_single_principal": {
+    "completos": 90,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 15,
+      "valido": true
+    }
+  },
+  "marranos_single_fija": {
+    "completos": 90,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 15,
+      "valido": true
+    }
+  },
+  "poetico_single_principal": {
+    "completos": 90,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 14,
+      "valido": true
+    }
+  },
+  "poetico_single_fija": {
+    "completos": 90,
+    "mejor": {
+      "desplazamiento": 0.0,
+      "choques": 0,
+      "sin_contacto": 0,
+      "contactos_fuera": 0,
+      "unidades_comprobadas": 14,
+      "valido": true
+    }
+  }
+}
+434_CIERRE_GEOMETRICO_MEDIDO_OK
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

@@ -1,0 +1,824 @@
+{
+  "MARRANOS": [
+    {
+      "objeto": "atun-col",
+      "fila": "adelante",
+      "tanda": "A.este.1/1",
+      "colecciones": [
+        "gondola"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.008",
+      "fila": "adelante",
+      "tanda": "A.este.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.009",
+      "fila": "adelante",
+      "tanda": "A.este.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.010",
+      "fila": "adelante",
+      "tanda": "A.este.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.011",
+      "fila": "adelante",
+      "tanda": "A.este.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.013",
+      "fila": "adelante",
+      "tanda": "A.este.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.014",
+      "fila": "adelante",
+      "tanda": "A.este.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.015",
+      "fila": "adelante",
+      "tanda": "A.este.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.016",
+      "fila": "adelante",
+      "tanda": "A.este.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "atun-col.017",
+      "fila": "adelante",
+      "tanda": "A.este.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    }
+  ],
+  "POETICO": [
+    {
+      "objeto": "poetico-convcol",
+      "fila": "adelante",
+      "tanda": "A.oeste.1/1",
+      "colecciones": [
+        "gondola"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.001",
+      "fila": "adelante",
+      "tanda": "A.oeste.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.002",
+      "fila": "adelante",
+      "tanda": "A.oeste.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.003",
+      "fila": "adelante",
+      "tanda": "A.oeste.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.004",
+      "fila": "adelante",
+      "tanda": "A.oeste.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.005",
+      "fila": "adelante",
+      "tanda": "A.oeste.1/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.006",
+      "fila": "adelante",
+      "tanda": "A.oeste.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.009",
+      "fila": "adelante",
+      "tanda": "A.oeste.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.010",
+      "fila": "adelante",
+      "tanda": "A.oeste.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.011",
+      "fila": "adelante",
+      "tanda": "A.oeste.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.012",
+      "fila": "adelante",
+      "tanda": "A.oeste.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "poetico-convcol.013",
+      "fila": "adelante",
+      "tanda": "A.oeste.0/1",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    }
+  ],
+  "JORGILLO": [
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.001",
+      "fila": "atras",
+      "tanda": "B.sur.2/0",
+      "colecciones": [
+        "gondola"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.002",
+      "fila": "adelante",
+      "tanda": "B.sur.2/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.003",
+      "fila": "adelante",
+      "tanda": "B.sur.2/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.004",
+      "fila": "adelante",
+      "tanda": "B.sur.3/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.005",
+      "fila": "adelante",
+      "tanda": "B.sur.3/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.006",
+      "fila": "adelante",
+      "tanda": "B.sur.3/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.007",
+      "fila": "adelante",
+      "tanda": "B.sur.2/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.008",
+      "fila": "atras",
+      "tanda": "B.sur.2/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.009",
+      "fila": "atras",
+      "tanda": "B.sur.2/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.010",
+      "fila": "atras",
+      "tanda": "B.sur.3/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.011",
+      "fila": "atras",
+      "tanda": "B.sur.3/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "alfajorescaja2-2oeste1-col.012",
+      "fila": "atras",
+      "tanda": "B.sur.3/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    }
+  ],
+  "FERNET_GOD": [
+    {
+      "objeto": "Fernetgod-col",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "gondola"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.001",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.002",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.003",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.004",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.005",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.006",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.007",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.008",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.009",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.011",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.012",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.013",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.016",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.017",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.018",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.019",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.020",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.021",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.022",
+      "fila": "adelante",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.010",
+      "fila": "adelante",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.014",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.015",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.023",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.024",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.025",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.026",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.027",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.028",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.029",
+      "fila": "atras",
+      "tanda": "S.sur.1/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.030",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.031",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.032",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.033",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.034",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.035",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.036",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.037",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.038",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    },
+    {
+      "objeto": "Fernetgod-col.039",
+      "fila": "atras",
+      "tanda": "S.sur.0/0",
+      "colecciones": [
+        "guia"
+      ],
+      "visible_original": true,
+      "hide_render_original": false,
+      "modificadores": []
+    }
+  ]
+}

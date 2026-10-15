@@ -1,0 +1,315 @@
+00:07.656  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-base.blend"
+{
+  "patron_cabeceras": {
+    "A.sur.0": {
+      "validas": 121,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 8,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.12946216156706214,
+        0.19543930608779192
+      ]
+    },
+    "A.sur.1": {
+      "validas": 0,
+      "mejor": null,
+      "intervalo_contacto": [
+        -0.1293310164473951,
+        0.11708271224051714
+      ]
+    },
+    "A.sur.2": {
+      "validas": 101,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 16,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.061740262201055884,
+        0.0904467930085957
+      ]
+    },
+    "A.sur.3": {
+      "validas": 49,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 16,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.0621355592738837,
+        0.037420665845274925
+      ]
+    },
+    "A.norte.0": {
+      "validas": 273,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 16,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.09699278115294874,
+        0.2656365926377475
+      ]
+    },
+    "A.norte.1": {
+      "validas": 196,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 16,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.09717839024960995,
+        0.187334556132555
+      ]
+    },
+    "A.norte.2": {
+      "validas": 1,
+      "mejor": {
+        "desplazamiento": -0.006,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 18,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.10626983386464417,
+        -0.005823989864438772
+      ]
+    },
+    "A.norte.3": {
+      "validas": 0,
+      "mejor": null,
+      "intervalo_contacto": [
+        -0.10426067560911179,
+        -0.05939928162842989
+      ]
+    },
+    "B.sur.0": {
+      "validas": 315,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 10,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.07843879773281515,
+        0.3057492095977068
+      ]
+    },
+    "B.sur.1": {
+      "validas": 237,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 10,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.07880536373704672,
+        0.22747890558093786
+      ]
+    },
+    "B.sur.2": {
+      "validas": 64,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 6,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.07843880774453282,
+        0.05434539495036006
+      ]
+    },
+    "B.sur.3": {
+      "validas": 11,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 6,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.07793247327208519,
+        0.0011134827509522438
+      ]
+    },
+    "B.norte.0": {
+      "validas": 320,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 4,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.2175933625549078,
+        0.24636121466755867
+      ]
+    },
+    "B.norte.1": {
+      "validas": 252,
+      "mejor": {
+        "desplazamiento": 0.0,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 4,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.2166027668863535,
+        0.17023451253771782
+      ]
+    },
+    "B.norte.2": {
+      "validas": 67,
+      "mejor": {
+        "desplazamiento": -0.006,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 4,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.21759311947971582,
+        -0.005041786003857851
+      ]
+    },
+    "B.norte.3": {
+      "validas": 52,
+      "mejor": {
+        "desplazamiento": -0.047,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 0,
+        "unidades_comprobadas": 4,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.20957328751683235,
+        -0.04620763845741749
+      ]
+    }
+  },
+  "dos_filas_marranos_poetico": {
+    "A.oeste.0/MARRANOS": {
+      "validas": 0,
+      "mejor": null,
+      "intervalo_contacto": [
+        -0.28450003266334534,
+        0.07977938652038574
+      ]
+    },
+    "A.oeste.1/MARRANOS": {
+      "validas": 0,
+      "mejor": null,
+      "intervalo_contacto": [
+        -0.28450003266334534,
+        0.24911713600158691
+      ]
+    },
+    "A.oeste.2/MARRANOS": {
+      "validas": 0,
+      "mejor": null,
+      "intervalo_contacto": [
+        -0.28450003266334534,
+        0.24911713600158691
+      ]
+    },
+    "A.oeste.3/MARRANOS": {
+      "validas": 0,
+      "mejor": null,
+      "intervalo_contacto": [
+        -0.28450003266334534,
+        0.24911713600158691
+      ]
+    },
+    "N.sur.0/POETICO": {
+      "validas": 0,
+      "mejor": null,
+      "intervalo_contacto": [
+        -0.18487262725830078,
+        0.07524824142456055
+      ]
+    },
+    "N.sur.1/POETICO": {
+      "validas": 0,
+      "mejor": null,
+      "intervalo_contacto": [
+        -0.18487262725830078,
+        0.19764280319213867
+      ]
+    },
+    "N.sur.2/POETICO": {
+      "validas": 1,
+      "mejor": {
+        "desplazamiento": 0.085,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 42,
+        "unidades_comprobadas": 28,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.18487262725830078,
+        0.19764280319213867
+      ]
+    },
+    "N.sur.3/POETICO": {
+      "validas": 1,
+      "mejor": {
+        "desplazamiento": 0.085,
+        "choques": 0,
+        "sin_contacto": 0,
+        "contactos_fuera": 42,
+        "unidades_comprobadas": 28,
+        "valido": true
+      },
+      "intervalo_contacto": [
+        -0.18487262725830078,
+        0.19764280319213867
+      ]
+    }
+  }
+}
+434_PATRON_ACTUAL_Y_BARRIDO_COMPLETOS_OK
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit
