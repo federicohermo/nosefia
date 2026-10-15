@@ -518,7 +518,10 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 		var le_quedan := estante.disponibles_para_retirar(producto)
 		_sacar_de_la_caja(jugador, caja)
 		assert_int(estante.disponibles_para_retirar(producto)).is_equal(maxi(0, le_quedan - 1))
-		_accion(jugador, caja)
+		if le_quedan > 0:
+			_accion(jugador, caja)
+		else:
+			_sacar_de_la_caja(jugador, caja)
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 		assert_int(estante.disponibles_para_retirar(producto)).is_equal(le_quedan)
 
