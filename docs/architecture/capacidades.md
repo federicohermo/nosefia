@@ -29,6 +29,7 @@ flowchart TD
   CTR["counter-service<br/><i>la ventanilla</i>"]
   STK["store-stock<br/><i>la mercadería</i>"]
   CLN["store-cleanup<br/><i>el local en orden</i>"]
+  ANO["anomalies<br/><i>la excepción de la jornada</i>"]
   AMB["ambience<br/><i>qué suena</i>"]
   NTF["notifications<br/><i>qué se avisa</i>"]
   CFG["settings<br/><i>cómo suena, se ve y responde</i>"]
@@ -53,6 +54,12 @@ flowchart TD
   PLY -- "qué se mira y qué se lleva" --> SUB
   INV -- "el examen empieza y termina" --> SUB
   STK -- "el texto de la caja" --> SUB
+  SHF -- "jornada que abre" --> ANO
+  ANO -- "útiles disponibles y sustituto permitido" --> CLN
+  CLN -- "uso aceptado de Poético" --> EMP
+  EMP -- "expediente y notas de cada partida" --> INV
+  INV -- "pistas y notas que cruzan aperturas" --> EMP
+  INV -- "pista nueva" --> NTF
   SHF -.-> AMB
   EMP -.-> AMB
   CTR -.-> AMB
@@ -91,12 +98,16 @@ no diseño.
 
 ## Las fronteras que más se rompen
 
-Cuatro pares se confunden seguido, y cada uno tiene su regla escrita en los dos specs:
+Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos specs:
 
 - **`counter-service` y `store-stock`.** Cobrar es de la ventanilla; cuántas unidades hay y dónde
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
   En la primera noche, la ventanilla recibe unidades físicas: la mercadería las retira una sola
-  vez, al completar la venta o al vencer la compra.
+  vez, al completar la venta o al vencer la compra. El padrón definido de la segunda comparte
+  sus pedidos ya construidos con reposición: nadie vuelve a sortear en una consulta. Sus
+  compras vencidas devuelven las unidades al piso interior, todavía registradas afuera, y
+  descartan el ticket. Registrar espera a que ambas compras terminen, vendidas o vencidas, y
+  compara sólo las ventas completas; atención exige completar las dos.
 - **`player-actions` e `investigation`.** Agarrar y examinar son del cuerpo; **qué esconde** el
   objeto es de la investigación. La identidad de lo que se agarra es opaca a propósito: lo que se
   investiga no está en el catálogo.
@@ -105,6 +116,14 @@ Cuatro pares se confunden seguido, y cada uno tiene su regla escrita en los dos 
 - **`save-and-resume` y `settings`.** El guardado es la partida y se borra con ella; las
   preferencias son del jugador, viven en su propio archivo y ningún final las toca. Los menús
   son del guardado; lo que se ajusta adentro de Configuraciones, de `settings`.
+
+- **`anomalies` y `store-cleanup`.** La anomalía decide qué útil falta y qué sustituto queda
+  habilitado por jornada; limpieza decide el efecto y sus rechazos. La segunda noche deja
+  ausente el azul y habilita Poético para preparar esa mezcla, conservando la mercadería.
+  Limpieza entrega el teñido aceptado con identidad; el legajo conserva el hecho para el cierre.
+- **`employment-record` e `investigation`.** Cada partida posee un único expediente y sus notas.
+  Investigación recibe ese estado, registra pistas y consulta hipótesis, sin escribir disco.
+  Las revelaciones por examen conservan su cuenta independiente de las pistas por jornada.
 
 ## Dónde va una regla nueva
 

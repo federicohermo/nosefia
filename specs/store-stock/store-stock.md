@@ -309,9 +309,10 @@ inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-S
 
 ### BR-STK-037 — La venta física retira identidades una sola vez
 
-CUANDO se completa una compra física, el sistema DEBE retirar definitivamente sus unidades
-registradas afuera, una sola vez por identidad. NO DEBE volver a descontar el pedido completo.
-Una recepción parcial DEBE conservarlas hasta la salida del comprador. SI vence la atención,
+EN la primera jornada, CUANDO se completa una compra física, el sistema DEBE retirar
+definitivamente sus unidades registradas afuera, una sola vez por identidad. NO DEBE volver a descontar el pedido completo.
+Una recepción parcial de la primera jornada DEBE conservarlas hasta la salida del comprador.
+SI vence la atención,
 ENTONCES sus unidades recibidas DEBEN retirarse del inventario una vez, sin contar como venta.
 Una unidad vendida NO DEBE poder registrarse afuera otra vez.
 Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir reponer.
@@ -340,6 +341,34 @@ en una caja ausente o en un ciclo NO DEBE contar como ordenada. Una lista vacía
 que está ordenada. CUANDO una caja deja de cumplir la condición, el sistema DEBE descumplir
 ordenar; recuperar la condición DEBE volver a cumplirla. Con el turno cerrado, mover cajas NO
 DEBE cambiar la cuenta que se cerró. Una jornada que no declara ordenar NO DEBE sumar esa tarea.
+
+### BR-STK-040 — La segunda apertura comparte los pedidos construidos
+
+CUANDO se calculan faltantes de reposición para el padrón definido de jornada 2, el sistema
+DEBE recibir los mismos pedidos ya construidos que recibe atención (BR-CTR-038). Consultar
+faltantes, en cualquier orden con atención, NO DEBE consumir azar ni crear otro pedido. El
+conjunto DEBE pertenecer a esa apertura y no heredar pedidos mutables de otra jornada.
+
+### BR-STK-041 — Las compras físicas de la segunda noche conservan identidades
+
+CUANDO se completa una compra de jornada 2 con productos y ticket exactos, el sistema DEBE
+retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas,
+sin descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence
+sin completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar
+recogibles en el piso interior del local frente a la ventanilla; depósito, caja y góndola DEBEN
+conservarse como antes del vencimiento. El ticket aceptado DEBE descartarse. Esas unidades
+DEBEN poder colocarse, devolverse o recogerse como cualquier unidad suelta. Vender una unidad
+retirada de góndola NO DEBE rellenar su casillero ni cumplir reposición.
+
+### BR-STK-042 — Registrar la segunda noche espera al cierre de ambas compras
+
+EN jornada 2 con el padrón definido, MIENTRAS quede un comprador sin llegar o una compra en
+curso, el sistema DEBE mantener registrar pendiente aunque la planilla coincida con lo vendido
+o anticipe todos los pedidos. CUANDO ambas compras terminan, vendidas o vencidas, el sistema
+DEBE cumplir registrar si para cada producto lo anotado coincide exactamente con las ventas
+completas. Una compra vencida NO DEBE impedirlo. El vencimiento DEBE revisar registrar, como
+la venta y cada modificación de planilla. Al cierre, dos compras vencidas con planilla en cero
+DEBEN contar registrar cumplida; una unidad de más o de menos DEBE dejarla pendiente.
 
 ## Criterios de aceptación
 
@@ -659,7 +688,7 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 
 ### AC-STK-052 — El cierre cuenta la planilla de ese instante *(verifica BR-STK-022)*
 
-DADO una noche posterior a la primera sin ventas y sin gestos en la planilla CUANDO cierra
+DADO una noche entre la 3 y la 5 sin ventas y sin gestos en la planilla CUANDO cierra
 ENTONCES registrar cuenta como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea ni suma
 una tarea al contador. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
 y la noche cierra sin anotarla ENTONCES registrar no cuenta.
@@ -739,6 +768,40 @@ DADO una caja rescatada en la jornada 1 CUANDO vuelve a su origen ENTONCES queda
 pila de esa apertura y no cumple ordenar por aparecer en una estantería. DADO la apertura de una
 jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 
+### AC-STK-081 — Reposición y atención usan el mismo azar ya resuelto *(verifica BR-STK-040)*
+
+DADO una apertura de jornada 2 con dos pedidos generados CUANDO se consultan faltantes antes y
+después de construir atención, y se repiten ambas consultas ENTONCES se usan los mismos pedidos
+y no se solicita otra selección al azar. Otra apertura usa estados propios sin heredar entregas.
+
+### AC-STK-082 — Vencer devuelve productos al piso interior sin venta *(verifica BR-STK-041)*
+
+DADO jornada 2 y una compra parcial con dos unidades recibidas, una de caja y otra de góndola,
+CUANDO vence ENTONCES ambas identidades siguen afuera, los cuerpos quedan visibles y recogibles
+en el piso interior frente a ventanilla, sin superponerse con sólidos ni entre sí, y no suman
+venta ni descuento. El ticket aceptado desaparece. Repetir vencimiento no duplica cuerpos.
+Colocar o devolver esas unidades conserva los permisos habituales; dejarlas sueltas al cierre
+produce desorden, no objeto afuera; sostenerlas sin examen, colocarlas o devolverlas evita ese
+desorden. Una apertura posterior las retira como unidades sueltas de la noche anterior.
+
+### AC-STK-083 — Una sola venta, anticipación y vencimiento *(verifica BR-STK-042)*
+
+DADO Fede vendido y correctamente anotado, Mía sin llegar o esperando, CUANDO se evalúa durante
+la noche ENTONCES registrar sigue pendiente. Anotar también su pedido por adelantado no la
+cumple. CUANDO Mía vence ENTONCES la planilla exacta de sólo lo vendido a Fede cumple registrar,
+incluso al cierre; sumar una unidad de Mía la descumple y restarla la vuelve a cumplir. DADO
+ambas compras vencidas y planilla cero CUANDO cierra ENTONCES registrar cuenta cumplida aunque
+atención no. Si ambas se venden, sólo su suma exacta cumple registrar.
+
+### AC-STK-084 — La venta de jornada 2 no descuenta dos veces *(verifica BR-STK-041)*
+
+DADO una compra de jornada 2 que pide A/A/B y una caja A con su contenido inicial declarado,
+CUANDO se retiran dos A y una B y se entregan con ticket exacto ENTONCES la caja A conserva su
+contenido inicial menos dos, el depósito A pierde sólo esas dos identidades y lo vendido de A
+suma dos; B pierde sólo su unidad entregada y suma una venta. Repetir la recepción o intentar volver a
+registrarlas afuera no cambia cantidades. Una unidad vendida desde góndola deja su casillero
+vacío y reposición pendiente hasta rellenarlo.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -751,7 +814,8 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 - **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
   jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
   que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
-  a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la planilla.
+  a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la
+  planilla; los pedidos ya construidos y el cierre por venta o vencimiento de compras de jornada 2.
 - **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
@@ -791,6 +855,10 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta y consume): avisa cuándo reponer y
   registrar y ordenar las cajas quedaron cumplidas, y cuándo dejaron de estarlo; y la jornada
   que abre decide lo que falta y la disposición inicial de las cajas.
+
+- [`counter-service`](../counter-service/counter-service.md) (consume y alimenta): el padrón
+  definido de jornada 2 entrega pedidos únicos por apertura; sus ventas completas y vencimientos
+  revisan registro y resuelven el destino de las identidades físicas.
 
 ## Preguntas abiertas
 
