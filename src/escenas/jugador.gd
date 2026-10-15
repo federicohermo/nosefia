@@ -263,7 +263,7 @@ func _usar_la_superficie_mirada() -> void:
 ##
 ## **Lo que está en el grupo pero no tiene el método no se gasta nada**, y ésa es la diferencia
 ## que antes no existía: el corte miraba si había algo enfocado, así que la mancha del piso
-## —que se limpia con el otro botón y no contesta nada acá— se comía el clic. Llevando una caja
+## —que no declara un uso con cualquier objeto ni contesta nada acá— se comía el clic. Llevando una caja
 ## y con la mira sobre un charco, soltar no hacía absolutamente nada, sin un solo aviso.
 func _interactuar() -> void:
 	var datos: ObjetoDelAlmacen = null

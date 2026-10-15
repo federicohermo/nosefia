@@ -661,7 +661,7 @@ func _usar_un_tacho(objetivo: Node3D) -> void:
 		_recolector.sacar_bolsa(objetivo.tacho)
 
 
-## Si sacar la bolsa de ese tacho tendría efecto: lo contesta la tarea, sin sacarla.
+## Declara el gesto del tacho con la bolsa y la mano actuales, sin extraerla.
 func _contexto_sobre_un_tacho(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
 ) -> ReferenciaDeControles.Contexto:
