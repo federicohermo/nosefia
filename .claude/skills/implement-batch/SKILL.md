@@ -227,10 +227,13 @@ Cada agente recibe, literal:
   copia para eludir ese control.
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
-  Antes de explorar opciones, leer su parser: `verificar.py` ignora `--help` y arranca todos
-  los nodos. En #306 del 2026-10-09 se abortó esa invocación accidental fuera de la cola.
-  Su log se conserva como incidente, nunca como prueba; la verificación formal empieza dentro
-  del turno y con el árbol congelado.
+  Antes de explorar opciones, leer su parser y medir la ayuda sin levantar el motor. El parser
+  actual de `verificar.py` usa `argparse`: `--help` muestra las opciones y sale con cero, y
+  `--solo` acepta un único nodo. Medido el 2026-10-15 al preparar #365–366. En #306 del
+  2026-10-09, el parser anterior ignoraba `--help` y se abortó esa invocación accidental fuera
+  de la cola. Su log se conserva como incidente, nunca como prueba; la verificación formal
+  empieza dentro del turno y con el árbol congelado. No se extrapola una limitación histórica
+  a un parser que ya cambió.
 
 - **Coordiná las corridas del motor y las capturas entre carriles.** Una suite que mide tiempos
   por cuadro puede fallar bajo carga aunque el código no cambie. En el lote 282–285 del
