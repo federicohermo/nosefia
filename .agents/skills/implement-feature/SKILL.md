@@ -107,6 +107,12 @@ pared del GLB; otros escenarios usaban otra posición. Antes de atribuir la dife
 de instancias o a la iluminación, cruzá la pose real con los triángulos visibles, guardá ese
 control y repetí el mismo escenario desde piso libre, conservando luz, GI y producción.
 
+**La entrada sintética completa también la liberación de cada botón, incluida la rueda.** En
+#430, un evento de rueda con `pressed=true` sin su pareja `pressed=false` dejaba fallar los
+clics posteriores sobre la pista y Volver. El control que añadió sólo esa liberación pasó
+ambas resoluciones con la misma fuente, coordenadas y ubicación del cursor. Conservá ambos
+resultados: no se atribuye el arreglo del fixture a `warp_mouse` ni a un cambio del producto.
+
 **Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
 
 - **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan
