@@ -37,7 +37,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Cupo** | cuántos casilleros suman las filas de adelante de las tandas de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
-| **Máximo reponible** | el menor entre los casilleros de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
+| **Máximo reponible** | el menor entre los casilleros de la tanda reponible de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
 | **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
 | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
@@ -204,12 +204,14 @@ DEBE elegir entre 4 y 7 productos distintos y, de cada uno, entre 1 unidad y su 
 reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 [ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
 
-Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades
-de una caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` sus casilleros
-de la fila de adelante (BR-STK-008). Sólo los productos con máximo reponible mayor o igual
-a 1 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa
-apertura, incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE
-volver a sortear compradores ni pedidos.
+Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
+caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casilleros de la fila de
+adelante de su tanda reponible (BR-STK-024). El inventario DEBE conservar el cupo total de todas las
+tandas (BR-STK-008), incluidas las guías. Las guías DEBEN abrir completas: los faltantes iniciales
+DEBEN quedar sólo en la tanda reponible. Sólo los productos con máximo reponible mayor o igual a 1
+DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
+incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
+compradores ni pedidos.
 
 La cantidad de productos y las unidades de cada elegido DEBEN sortearse con reparto parejo
 entre los enteros de sus intervalos inclusivos. Los productos DEBEN elegirse sin repetición.
@@ -528,31 +530,34 @@ DADO un producto de 12 casilleros al que la jornada le hace faltar 8 CUANDO se c
 unidades de su caja ENTONCES su fila de adelante queda completa, el depósito en 0 y no es
 faltante.
 
-### AC-STK-033 — Ningún faltante pasa de una caja ni de su fila *(verifica BR-STK-004)*
+### AC-STK-033 — Ningún faltante pasa de una caja ni de su fila *(verifica BR-STK-004, BR-STK-024)*
 
 DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 1 a la 5 y los casilleros
-medidos en el local CUANDO se sortean los faltantes ENTONCES ninguno pasa de las unidades
-de una caja —8 en el balance vigente— ni de los casilleros de la fila de adelante de su producto.
+medidos en el local CUANDO se abren las jornadas ENTONCES ningún faltante pasa de las unidades
+de una caja —8 en el balance vigente— ni de los casilleros de la fila de adelante de la tanda
+reponible de su producto. El inventario conserva el cupo total de todas las tandas y las guías
+abren completas. DADO un producto sin casilleros principales pero con casilleros de guía
+CUANDO abre la jornada ENTONCES ese producto no falta y su guía está completa.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
-DADO las 200 semillas enteras de 0 a 199, ocho casilleros por producto y los pedidos de cada jornada de
-la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y 7 productos
-distintos. Cada faltante está entre 1 y `mínimo(C − P, F)`, y los productos no elegidos están
-completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y
-dos conjuntos de productos distintos.
+DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
+cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y
+7 productos distintos. Cada faltante está entre 1 y `mínimo(C − P, F)`, y los productos no elegidos
+están completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y dos
+conjuntos de productos distintos.
 
 DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
 se pueden obtener 4 y 7 productos, y 1 y el máximo reponible de cada elegido. La elección de
 cantidad tiene cuatro alternativas equiprobables; la de unidades tiene tantas alternativas
 equiprobables como su máximo reponible.
 
-DADO una caja de 8 CUANDO un producto tiene 6 casilleros y 3 unidades pedidas ENTONCES su
-máximo es 5. Con 4 casilleros y 1 unidad pedida, el máximo es 4. Con 8 unidades pedidas o
-con cero casilleros, el producto nunca falta. DADO exactamente tres elegibles CUANDO la
-cantidad sorteada es 4 o 7 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
+su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
+pedidas o con cero casilleros principales, el producto nunca falta. DADO exactamente tres elegibles
+CUANDO la cantidad sorteada es 4 o 7 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
 DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
-CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
+principales CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
 
 DADO dos fuentes con la misma semilla inicial, los mismos pedidos y casilleros CUANDO se
 abre la misma jornada ENTONCES los faltantes coinciden. Consultar los pedidos conserva las
@@ -734,8 +739,8 @@ registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con l
 
 ### AC-STK-077 — La pila es completa, alcanzable y estable *(verifica BR-STK-038)*
 
-DADO la jornada 1 abierta CUANDO se recorre el conjunto de cajas del catálogo —31 en el catálogo
-vigente— ENTONCES todas están dentro del depósito, ninguna se apoya en una estantería y ningún
+DADO la jornada 1 abierta CUANDO se recorre el conjunto de cajas del catálogo
+vigente ENTONCES todas están dentro del depósito, ninguna se apoya en una estantería y ningún
 cuerpo se superpone con otro. Para cada caja existe un punto libre del piso desde el cual la
 mira la enfoca dentro del alcance vigente. CUANDO pasan 120 cuadros de física sin tocar la pila
 ENTONCES ninguna caja se desplazó más de 0,01 m desde su pose inicial. DADO la jornada 2 abierta
@@ -785,7 +790,8 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 
 ## Contratos
 
-- **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
+- **Entrada:** los productos que existen, sus casilleros totales y los de la fila de adelante
+  de su tanda reponible, la
   jornada que se abre, sus pedidos ya construidos y la fuente de azar, lo vendido de cada producto,
   lo que el jugador lleva en la mano, la caja
   que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
@@ -795,7 +801,8 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
   obligatoria está cumplida, y el motivo de cada rechazo.
 - **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
-  producto y devuelve faltantes dentro de su máximo reponible. Con menos elegibles que la
+  producto y devuelve faltantes dentro del máximo de su tanda reponible. El inventario conserva
+  el cupo total y las guías abren completas. Con menos elegibles que la
   cantidad sorteada devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
 - **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
   una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
