@@ -51,7 +51,14 @@ func test_ambas_compras_y_no_los_despachos_cumplen_la_primera_noche() -> void:  
 			RecepcionDeCompra.Resultado.COMPLETA
 		)
 	assert_bool(tarea.completada()).is_true()
-	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.ZUCARACHAS))).is_equal(2)
+	for id: Producto.Id in [
+		Producto.Id.MAROLINI,
+		Producto.Id.CORACOLA,
+		Producto.Id.MALBARDO,
+		Producto.Id.ZUCARACHAS,
+		Producto.Id.PEPITOS
+	]:
+		assert_int(tarea.vendidas_de(Catalogo.de(id))).is_equal(1)
 	assert_array(tarea.avanzar(36000)).is_empty()
 	assert_bool(tarea.completada()).is_true()
 	var reinicio := TareaDeAtender.new(
@@ -59,9 +66,15 @@ func test_ambas_compras_y_no_los_despachos_cumplen_la_primera_noche() -> void:  
 	)
 	assert_bool(reinicio.completada()).is_false()
 	assert_object(reinicio.en_ventanilla()).is_null()
+	for producto in Catalogo.todos():
+		assert_int(reinicio.vendidas_de(producto)).is_zero()
+	reinicio.avanzar(7200)
+	var nueva_recepcion: RecepcionDeCompra = reinicio.atencion().get("_recepcion")
+	assert_array(nueva_recepcion.unidades()).is_empty()
+	assert_bool(reinicio.atencion().conversacion_iniciada()).is_false()
 
 
-func test_perder_a_martin_y_vender_a_tiago_no_cumple_atencion() -> void:  # AC-CTR-040
+func test_perder_a_tin_y_vender_a_tia_no_cumple_atencion() -> void:  # AC-CTR-040
 	var inventario := Apertura.inventario_con_faltantes({}, {})
 	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(1), inventario)
 	tarea.avanzar(14400.0)
@@ -81,7 +94,7 @@ func test_perder_a_martin_y_vender_a_tiago_no_cumple_atencion() -> void:  # AC-C
 	assert_bool(atencion.vendida()).is_true()
 	assert_bool(tarea.completada()).is_false()
 	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.MAROLINI))).is_zero()
-	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.ZUCARACHAS))).is_equal(2)
+	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.ZUCARACHAS))).is_equal(1)
 
 
 func _productos() -> Array[Producto]:

@@ -56,23 +56,21 @@ static func de_la_jornada(jornada: int) -> Array[Comprador]:
 
 
 static func _primera_noche() -> Array[Comprador]:
-	var martin := _comprador_de(
+	var tin := _comprador_de(
 		[
-			"Martín",
+			"Tin",
 			[[Producto.Id.MAROLINI, 1], [Producto.Id.CORACOLA, 1], [Producto.Id.MALBARDO, 1]],
 			0
 		]
 	)
-	var tiago := _comprador_de(
-		["Tiago", [[Producto.Id.ZUCARACHAS, 2], [Producto.Id.PEPITOS, 1]], 0]
-	)
-	martin.personaje = DialogosDeCompradores.Personaje.MARTIN
-	tiago.personaje = DialogosDeCompradores.Personaje.TIAGO
-	martin.horario = Vector2(_desde_apertura(22), _desde_apertura(0))
-	tiago.horario = Vector2(_desde_apertura(4), _desde_apertura(6))
-	martin.dialogos = DIALOGOS
-	tiago.dialogos = DIALOGOS
-	return [martin, tiago]
+	var tia := _comprador_de(["Tia", [[Producto.Id.ZUCARACHAS, 1], [Producto.Id.PEPITOS, 1]], 0])
+	tin.personaje = DialogosDeCompradores.Personaje.TIN
+	tia.personaje = DialogosDeCompradores.Personaje.TIA
+	tin.horario = Vector2(_desde_apertura(22), _desde_apertura(0))
+	tia.horario = Vector2(_desde_apertura(4), _desde_apertura(6))
+	tin.dialogos = DIALOGOS
+	tia.dialogos = DIALOGOS
+	return [tin, tia]
 
 
 static func _desde_apertura(hora: int) -> float:

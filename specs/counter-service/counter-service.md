@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365; migración de los specs 013, 035
 ---

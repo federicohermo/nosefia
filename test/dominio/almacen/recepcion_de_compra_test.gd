@@ -9,17 +9,19 @@ func test_atencion_habla_antes_de_recibir_y_solo_vende_el_pedido_completo() -> v
 	var atencion := Atencion.new(comprador, inventario)
 	var unidad := estante.retirar(Catalogo.de(Producto.Id.ZUCARACHAS))
 	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
-	assert_str(atencion.dialogo().entrada_actual()).contains("zucarachas")
+	assert_str(atencion.dialogo().entrada_actual()).contains("Zucarachas")
 	assert_bool(atencion.puede_abandonar()).is_false()
 	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
 	assert_bool(atencion.puede_abandonar()).is_true()
 	assert_bool(atencion.vendida()).is_false()
 	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
 	assert_bool(atencion.vendida()).is_false()
-	atencion.interactuar(estante.retirar(Catalogo.de(Producto.Id.ZUCARACHAS)))
 	atencion.interactuar(estante.retirar(Catalogo.de(Producto.Id.PEPITOS)))
 	assert_bool(atencion.vendida()).is_false()
-	assert_int(atencion.interactuar(_ticket())).is_equal(RecepcionDeCompra.Resultado.COMPLETA)
+	(
+		assert_int(atencion.interactuar(_ticket([Producto.Id.ZUCARACHAS, Producto.Id.PEPITOS])))
+		. is_equal(RecepcionDeCompra.Resultado.COMPLETA)
+	)
 	assert_bool(atencion.vendida()).is_true()
 	assert_bool(atencion.despachada()).is_false()
 	atencion.vencer()
@@ -127,31 +129,57 @@ func test_recibe_identidades_distintas_y_rechaza_sobrantes() -> void:  # AC-CTR-
 	assert_int(recepcion.unidades().size()).is_equal(2)
 
 
-func test_el_ticket_compara_cantidades_sin_orden() -> void:  # AC-CTR-038
-	for ids: Array in [
-		[Producto.Id.ZUCARACHAS, Producto.Id.ZUCARACHAS, Producto.Id.PEPITOS],
-		[Producto.Id.PEPITOS, Producto.Id.ZUCARACHAS, Producto.Id.ZUCARACHAS],
+func test_tia_rechaza_otra_zucarachas_y_conserva_el_pedido_entero() -> void:  # AC-CTR-037
+	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var atencion := Atencion.new(Compradores.de_la_jornada(1)[1], inventario)
+	atencion.interactuar(null)
+	atencion.interactuar(null)
+	var estante := Estante.new(inventario, Catalogo.todos())
+	var primera := estante.retirar(Catalogo.de(Producto.Id.ZUCARACHAS))
+	assert_int(atencion.interactuar(primera)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
+	var recepcion: RecepcionDeCompra = atencion.get("_recepcion")
+	assert_int(recepcion.pendientes(primera.producto)).is_zero()
+	assert_int(recepcion.pendientes(Catalogo.de(Producto.Id.PEPITOS))).is_equal(1)
+	for objeto: ObjetoDelAlmacen in [
+		primera,
+		estante.retirar(primera.producto),
+		_unidad(Producto.Id.CORACOLA),
+		ObjetoDelAlmacen.new()
 	]:
-		var recepcion := RecepcionDeCompra.new(_pedido())
+		assert_int(atencion.interactuar(objeto)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
+		assert_array(recepcion.unidades()).contains_exactly([primera])
+		assert_bool(atencion.vendida()).is_false()
+		assert_int(atencion.interactuar(objeto)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
+	assert_int(atencion.interactuar(null)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
+	assert_str(atencion.dialogo().entrada_actual()).contains("Pepito")
+	assert_str(atencion.dialogo().entrada_actual()).contains("Zucarachas")
+
+
+func test_el_ticket_compara_cantidades_sin_orden() -> void:  # AC-CTR-038
+	var pedido := Compradores.de_la_jornada(1)[1].pedido()
+	for ids: Array in [
+		[Producto.Id.ZUCARACHAS, Producto.Id.PEPITOS],
+		[Producto.Id.PEPITOS, Producto.Id.ZUCARACHAS],
+	]:
+		var recepcion := RecepcionDeCompra.new(pedido)
 		assert_int(recepcion.recibir(_ticket(ids), true)).is_equal(
 			RecepcionDeCompra.Resultado.ACEPTADA
 		)
 		assert_bool(recepcion.completa()).is_false()
+		assert_array(recepcion.unidades()).is_empty()
 	for ids: Array in [
-		[Producto.Id.ZUCARACHAS, Producto.Id.PEPITOS],
-		[
-			Producto.Id.ZUCARACHAS,
-			Producto.Id.ZUCARACHAS,
-			Producto.Id.ZUCARACHAS,
-			Producto.Id.PEPITOS
-		],
-		[Producto.Id.ZUCARACHAS, Producto.Id.ZUCARACHAS],
-		[Producto.Id.ZUCARACHAS, Producto.Id.ZUCARACHAS, Producto.Id.CORACOLA],
+		[],
+		[Producto.Id.PEPITOS],
+		[Producto.Id.ZUCARACHAS],
+		[Producto.Id.ZUCARACHAS, Producto.Id.ZUCARACHAS, Producto.Id.PEPITOS],
+		[Producto.Id.ZUCARACHAS, Producto.Id.PEPITOS, Producto.Id.CORACOLA],
 	]:
-		var recepcion := RecepcionDeCompra.new(_pedido())
-		assert_int(recepcion.recibir(_ticket(ids), true)).is_equal(
-			RecepcionDeCompra.Resultado.RECHAZADA
-		)
+		var recepcion := RecepcionDeCompra.new(pedido)
+		var papel := _ticket(ids)
+		assert_int(recepcion.recibir(papel, true)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
+		assert_array(recepcion.unidades()).is_empty()
+		assert_bool(recepcion.completa()).is_false()
+		assert_object(recepcion.get("_ticket")).is_null()
 
 
 # AC-CTR-038, AC-CTR-039
