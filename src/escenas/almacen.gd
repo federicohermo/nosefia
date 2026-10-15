@@ -306,7 +306,10 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
 	var compradores := Compradores.de_la_jornada(jornada)
 	var inventario := Apertura.inventario_de_la_jornada(
-		compradores, _reposicion_manual.casilleros(), azar_de_la_apertura
+		compradores,
+		_reposicion_manual.casilleros(),
+		_reposicion_manual.casilleros_reponibles(),
+		azar_de_la_apertura
 	)
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()

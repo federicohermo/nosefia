@@ -83,7 +83,10 @@ func test_cada_caja_del_deposito_arranca_con_ocho_en_todas_las_jornadas() -> voi
 	# reponer ni vender, sin un solo error.
 	for jornada in _jornadas():
 		var inventario := Apertura.inventario_de_la_jornada(
-			Compradores.de_la_jornada(jornada), _casilleros(), RandomNumberGenerator.new()
+			Compradores.de_la_jornada(jornada),
+			_casilleros(),
+			_casilleros(),
+			RandomNumberGenerator.new()
 		)
 		for producto in Catalogo.todos():
 			(
@@ -176,9 +179,9 @@ func test_cada_jornada_recibe_un_inventario_propio() -> void:
 	var azar := RandomNumberGenerator.new()
 	azar.seed = 17
 	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 8}
-	var una := Apertura.inventario_de_la_jornada([], casilleros, azar)
+	var una := Apertura.inventario_de_la_jornada([], casilleros, casilleros, azar)
 	azar.seed = 17
-	var otra := Apertura.inventario_de_la_jornada([], casilleros, azar)
+	var otra := Apertura.inventario_de_la_jornada([], casilleros, casilleros, azar)
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var al_abrir := otra.unidades(actroncito, Inventario.Ubicacion.GONDOLA)
 	una.mover(actroncito, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)

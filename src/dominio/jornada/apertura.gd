@@ -35,11 +35,12 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 ## Recibe los mismos compradores de Atención y la fuente de azar de esta sesión.
 static func inventario_de_la_jornada(
 	compradores: Array[Comprador],
-	casilleros: Dictionary[Producto.Id, int],
+	casilleros_totales: Dictionary[Producto.Id, int],
+	_casilleros_reponibles: Dictionary[Producto.Id, int],
 	azar: RandomNumberGenerator
 ) -> Inventario:
 	return inventario_con_faltantes(
-		faltantes_al_azar(pedidos_de(compradores), casilleros, azar), casilleros
+		faltantes_al_azar(pedidos_de(compradores), casilleros_totales, azar), casilleros_totales
 	)
 
 
@@ -73,7 +74,7 @@ static func cajas_apiladas(jornada: int) -> bool:
 ## Muestreo sin reemplazo: cada índice restante tiene la misma probabilidad.
 static func faltantes_al_azar(
 	pedidos: Dictionary[Producto.Id, int],
-	casilleros: Dictionary[Producto.Id, int],
+	casilleros_reponibles: Dictionary[Producto.Id, int],
 	azar: RandomNumberGenerator
 ) -> Dictionary[Producto.Id, int]:
 	var maximos: Dictionary[Producto.Id, int] = {}
@@ -81,7 +82,7 @@ static func faltantes_al_azar(
 	for producto in Catalogo.todos():
 		var maximo := mini(
 			ReglasDelEstante.UNIDADES_POR_CAJA - pedidos.get(producto.id, 0),
-			casilleros.get(producto.id, 0)
+			casilleros_reponibles.get(producto.id, 0)
 		)
 		if maximo >= ReglasDelEstante.MENOS_QUE_FALTA:
 			elegibles.append(producto.id)

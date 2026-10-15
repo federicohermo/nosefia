@@ -37,7 +37,7 @@ func test_el_inventario_usa_los_mismos_pedidos_y_el_mismo_azar_que_atencion() ->
 	azar.seed = 17
 	control.seed = 17
 	var esperado := Apertura.faltantes_al_azar({producto.id: 5}, casilleros, control)
-	var inventario := Apertura.inventario_de_la_jornada(compradores, casilleros, azar)
+	var inventario := Apertura.inventario_de_la_jornada(compradores, casilleros, casilleros, azar)
 	assert_int(azar.state).is_equal(control.state)
 	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
 		6 - esperado[producto.id]
@@ -49,3 +49,31 @@ func test_el_inventario_usa_los_mismos_pedidos_y_el_mismo_azar_que_atencion() ->
 		assert_object(atenciones.atencion().comprador().pedido()).is_same(comprador.pedido())
 		assert_int(atenciones.atencion().cobrar()).is_equal(Atencion.Resultado.COBRADA)
 	assert_bool(atenciones.completada()).is_true()
+
+
+func test_la_apertura_conserva_guias_y_limita_huecos_a_la_principal() -> void:  # AC-STK-033
+	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
+	var totales: Dictionary[Producto.Id, int] = {producto.id: 8}
+	var principales: Dictionary[Producto.Id, int] = {producto.id: 4}
+	for semilla in 200:
+		var azar := RandomNumberGenerator.new()
+		azar.seed = semilla
+		var inventario := Apertura.inventario_de_la_jornada([], totales, principales, azar)
+		var estante := Estante.new(inventario, Catalogo.todos())
+		assert_int(estante.cupo(producto)).is_equal(8)
+		assert_int(estante.casilleros_vacios(producto).size()).is_between(1, 4)
+		for guia in 4:
+			assert_bool(estante.casilleros_ocupados(producto).has(guia)).is_true()
+
+
+func test_sin_fila_principal_no_falta_aunque_tenga_guias() -> void:  # AC-STK-033
+	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
+	var totales: Dictionary[Producto.Id, int] = {producto.id: 8}
+	var principales: Dictionary[Producto.Id, int] = {producto.id: 0}
+	for semilla in 200:
+		var azar := RandomNumberGenerator.new()
+		azar.seed = semilla
+		var inventario := Apertura.inventario_de_la_jornada([], totales, principales, azar)
+		assert_int(inventario.casilleros(producto)).is_equal(8)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(8)
+		assert_array(inventario.faltantes()).is_empty()

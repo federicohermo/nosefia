@@ -112,6 +112,7 @@ func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:
 		Apertura.inventario_de_la_jornada(
 			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA),
 			{},
+			{},
 			RandomNumberGenerator.new()
 		)
 	)

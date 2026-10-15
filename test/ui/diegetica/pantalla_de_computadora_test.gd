@@ -46,6 +46,7 @@ func test_la_planilla_muestra_cada_producto_y_sigue_a_los_gestos() -> void:
 		Apertura.inventario_de_la_jornada(
 			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA),
 			{},
+			{},
 			RandomNumberGenerator.new()
 		)
 	)
@@ -79,6 +80,7 @@ func test_todas_las_filas_se_alcanzan_con_la_rueda_dentro_de_la_pantalla() -> vo
 		[],
 		Apertura.inventario_de_la_jornada(
 			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA),
+			{},
 			{},
 			RandomNumberGenerator.new()
 		)
@@ -175,6 +177,7 @@ func test_cada_click_en_un_boton_de_cualquier_app_emite_boton_pulsado() -> void:
 		[],
 		Apertura.inventario_de_la_jornada(
 			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA),
+			{},
 			{},
 			RandomNumberGenerator.new()
 		)

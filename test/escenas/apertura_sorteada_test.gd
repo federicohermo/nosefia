@@ -1,14 +1,37 @@
 extends GdUnitTestSuite
 
 
+func _disposicion() -> DisposicionDeLaGondola:
+	return load("res://src/escenas/puestos/disposicion_de_la_gondola.tres")
+
+
 func _casilleros_medidos() -> Dictionary[Producto.Id, int]:
-	var disposicion: DisposicionDeLaGondola = load(
-		"res://src/escenas/puestos/disposicion_de_la_gondola.tres"
-	)
+	var disposicion := _disposicion()
 	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
 		casilleros[producto.id] = disposicion.casilleros_de(producto.id)
 	return casilleros
+
+
+func _casilleros_reponibles() -> Dictionary[Producto.Id, int]:
+	var disposicion := _disposicion()
+	var casilleros: Dictionary[Producto.Id, int] = {}
+	for producto in Catalogo.todos():
+		casilleros[producto.id] = disposicion.filas_de_adelante[producto.id]
+	return casilleros
+
+
+func _comprobar_guias_llenas(
+	estante: Estante,
+	totales: Dictionary[Producto.Id, int],
+	principales: Dictionary[Producto.Id, int]
+) -> void:
+	for producto in Catalogo.todos():
+		assert_int(estante.cupo(producto)).is_equal(totales[producto.id])
+		var guias := totales[producto.id] - principales[producto.id]
+		var ocupados := estante.casilleros_ocupados(producto)
+		for casillero in guias:
+			assert_bool(ocupados.has(casillero)).is_true()
 
 
 func _azar(semilla: int) -> RandomNumberGenerator:
@@ -44,17 +67,19 @@ func _completar_compra_fisica(atencion: Atencion, estante: Estante, desde_gondol
 	return vaciados
 
 
-func test_doscientas_semillas_venden_y_reponen_con_cupos_reales() -> void:  # AC-STK-035
+func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-035
 	var casilleros := _casilleros_medidos()
+	var reponibles := _casilleros_reponibles()
 	for jornada in range(1, 6):
 		for semilla in 200:
 			# La primera noche se recorre dos veces: cajas y casilleros ocupados.
 			for desde_gondola: bool in [false, true] if jornada == 1 else [false]:
 				var compradores := Compradores.de_la_jornada(jornada)
 				var inventario := Apertura.inventario_de_la_jornada(
-					compradores, casilleros, _azar(semilla)
+					compradores, casilleros, reponibles, _azar(semilla)
 				)
 				var estante := Estante.new(inventario, Catalogo.todos())
+				_comprobar_guias_llenas(estante, casilleros, reponibles)
 				assert_bool(estante.completada()).is_false()
 				var tarea := TareaDeAtender.new(compradores, inventario)
 				var huecos_por_ventas := 0
@@ -103,14 +128,22 @@ func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC
 	var almacen: Node3D = auto_free(escena.instantiate())
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	assert_dict(puesto.call("casilleros")).is_equal(_casilleros_medidos())
+	assert_dict(puesto.call("casilleros_reponibles")).is_equal(_casilleros_reponibles())
 	var azar: RandomNumberGenerator = almacen.get("azar_de_la_apertura")
 	var control := _azar(17)
 	azar.seed = 17
 	for jornada: int in [1, 1, 2]:
 		var esperado := Apertura.faltantes_al_azar(
-			Apertura.pedidos_de(Compradores.de_la_jornada(jornada)), _casilleros_medidos(), control
+			Apertura.pedidos_de(Compradores.de_la_jornada(jornada)),
+			_casilleros_reponibles(),
+			control
 		)
 		almacen.call("_al_abrir_la_jornada", jornada)
+		_comprobar_guias_llenas(
+			almacen.get("_repositor").estante(), _casilleros_medidos(), _casilleros_reponibles()
+		)
 		assert_dict(_faltantes_de(almacen)).is_equal(esperado)
 		assert_int(azar.state).is_equal(control.state)
 		assert_object(almacen.get("azar_de_la_apertura")).is_same(azar)

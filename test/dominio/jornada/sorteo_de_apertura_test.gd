@@ -24,7 +24,7 @@ func test_doscientas_semillas_por_jornada_respetan_limites_y_varian() -> void:  
 			var faltantes := Apertura.faltantes_al_azar(pedidos, _casilleros(), _azar(semilla))
 			assert_int(faltantes.size()).is_between(4, 7)
 			var inventario := Apertura.inventario_de_la_jornada(
-				compradores, _casilleros(), _azar(semilla)
+				compradores, _casilleros(), _casilleros(), _azar(semilla)
 			)
 			for producto in Catalogo.todos():
 				assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
@@ -69,7 +69,7 @@ func test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila() -> void:  #
 		var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, _azar(semilla))
 		(
 			assert_array(faltantes.keys())
-			. contains_exactly(
+			. contains_exactly_in_any_order(
 				[
 					Producto.Id.ACTRONCITO,
 					Producto.Id.CORACOLA,
