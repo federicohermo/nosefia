@@ -79,7 +79,7 @@ func test_doscientas_semillas_venden_y_reponen_con_cupos_reales() -> void:  # AC
 					for casillero in estante.casilleros_vacios(producto):
 						var unidad := estante.retirar(producto)
 						assert_object(unidad).is_not_null()
-						assert_int(estante.colocar_unidad(unidad, casillero)).is_equal(
+						assert_int(estante.colocar_unidad(unidad, producto, casillero)).is_equal(
 							Estante.Rechazo.NINGUNO
 						)
 					assert_int(estante.unidades_en_gondola(producto)).is_equal(
