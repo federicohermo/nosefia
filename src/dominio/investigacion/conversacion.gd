@@ -16,7 +16,7 @@ extends Resource
 
 ## Identidades admitidas por la bandeja. Sólo las que tienen guion documentado se registran
 ## en ARCHIVOS: declarar una identidad no autoriza a inventarle mensajes.
-enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO }
+enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO, YASMIN }
 
 const CARPETA := "res://src/dominio/investigacion/"
 
@@ -24,6 +24,7 @@ const CARPETA := "res://src/dominio/investigacion/"
 ## proveedor y desconocido se retiraron porque sus textos no provenían del diseño.
 const ARCHIVOS := {
 	Interlocutor.JEFE: "conversacion_con_el_jefe.tres",
+	Interlocutor.YASMIN: "conversacion_con_yasmin.tres",
 }
 
 @export var imagen: Texture2D = null
@@ -33,6 +34,7 @@ const ARCHIVOS := {
 ## Cómo lo lee el jugador en la lista. Va en el recurso y no en la pantalla: los nombres son
 ## contenido, y escritos en `ui/` se cambiarían en dos lados.
 @export var nombre: String = ""
+@export var rol: String = ""
 
 @export var mensajes: Array[Mensaje] = []
 

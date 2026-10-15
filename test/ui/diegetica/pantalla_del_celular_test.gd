@@ -244,3 +244,59 @@ func test_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no() -> void:  #
 	clic.position = Vector2(10, 10)
 	pantalla._input(clic)
 	assert_int(cierres.size()).is_equal(1)
+
+
+# AC-INV-039, AC-INV-041, AC-INV-042
+func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
+	var pantalla := _pantalla()
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	var pedidos: Array[String] = []
+	sistema.tramo_de_pista_pedido.connect(
+		func(identidad: String) -> void: pedidos.append(identidad)
+	)
+	pantalla.tramo_pedido.connect(sistema.pedir_tramo)
+	sistema.abrir_jornada(2)
+	sistema.pedir_alternar(false)
+	sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
+	var conversacion := sistema.bandeja().conversacion_de(Conversacion.Interlocutor.YASMIN)
+	var mensajes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN)
+	pantalla.mostrar_chat(conversacion, mensajes, false)
+	assert_str((pantalla.get("_subtitulo") as Label).text).is_equal("Compañera de trabajo")
+	assert_bool((pantalla.get("_subtitulo") as Label).visible).is_true()
+	assert_object((pantalla.get("_avatar_del_chat") as TextureRect).texture).is_not_null()
+	var lista: VBoxContainer = pantalla.get("_mensajes")
+	var texto := (
+		lista.get_child(5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
+	)
+	assert_str(texto.get_parsed_text()).is_equal(mensajes[5].texto)
+	assert_int(texto.mouse_filter).is_equal(Control.MOUSE_FILTER_PASS)
+	assert_array(pedidos).is_empty()
+	texto.meta_clicked.emit("fuera")
+	assert_array(pedidos).is_empty()
+	texto.meta_clicked.emit("falta_algo")
+	texto.meta_clicked.emit("falta_algo")
+	assert_array(pedidos).is_equal(["2A", "2A"])
+
+
+func test_llegada_intercalada_conserva_indice_actual_de_la_foto() -> void:  # AC-INV-040, AC-INV-042
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(3)
+	conversacion.mensajes[1].foto = GradientTexture2D.new()
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false)
+	var nuevo := Mensaje.new()
+	nuevo.texto = "Un cierre anterior a la apertura"
+	pantalla.recibir(nuevo, 0)
+	var lista: VBoxContainer = pantalla.get("_mensajes")
+	var texto := (
+		lista.get_child(0).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
+	)
+	assert_str(texto.get_parsed_text()).is_equal(nuevo.texto)
+	var pedidos: Array[int] = []
+	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidos.append(indice))
+	var fotos := lista.get_child(2).find_children("*", "TextureButton", true, false)
+	assert_int(fotos.size()).is_equal(1)
+	if fotos.is_empty():
+		return
+	var foto := fotos[0] as TextureButton
+	foto.pressed.emit()
+	assert_array(pedidos).is_equal([2])
