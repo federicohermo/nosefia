@@ -50,7 +50,7 @@ límite. Un avance de cero o negativo no cambia el estado.
 CUANDO se avisa un tipo ya visible, el sistema DEBE dejarlo una sola vez, primero, con sus tres
 segundos completos, sin renovar los otros tipos. La llegada del mismo comprador sigue la excepción
 de BR-NTF-001 y la persistencia de BR-NTF-009. El cierre próximo sigue la unicidad
-por jornada de BR-NTF-010 y NO DEBE renovarse por entradas sucesivas de tiempo.
+por jornada de BR-NTF-012 y NO DEBE renovarse por entradas sucesivas de tiempo.
 
 ### BR-NTF-005 — Los tipos conviven en orden
 
@@ -94,7 +94,7 @@ Un evento de otra identidad NO DEBE retirar el aviso del comprador que está esp
 Los avisos de lectura y de cansancio DEBEN conservar su duración. Las jornadas posteriores
 conservan el recorrido y duración anteriores hasta que tengan diálogos diseñados.
 
-### BR-NTF-010 — A las 07:00 avisa una sola vez por jornada
+### BR-NTF-012 — A las 07:00 avisa una sola vez por jornada
 
 CUANDO el turno está abierto y el tiempo restante alcanza o atraviesa el umbral de
 las 07:00 de ficción, el sistema DEBE mostrar un aviso de cierre próximo una sola vez en esa
@@ -111,7 +111,7 @@ turno. Abrir la noche siguiente DEBE habilitar un nuevo disparo, en cualquiera d
 jornadas. Retomar desde el inicio de la jornada DEBE habilitarlo sin guardar una bandera propia.
 La falla del reloj de mesa NO DEBE impedir el aviso.
 
-### BR-NTF-011 — El cierre próximo comunica una hora restante
+### BR-NTF-013 — El cierre próximo comunica una hora restante
 
 CUANDO se muestra cierre próximo, el sistema DEBE comunicar que queda una hora de jornada,
 con un símbolo que identifique el tiempo restante, usando el fondo claro, fuente principal,
@@ -209,21 +209,21 @@ ENTONCES cada texto ocupa una sola línea con la letra principal del tema, queda
 junto al símbolo y su cartel ajusta el ancho al contenido. Los tres comparten el borde
 derecho dentro de la pantalla; el mensaje más largo ocupa un cartel más ancho.
 
-### AC-NTF-014 — Antes, exactamente en el umbral y después *(verifica BR-NTF-010)*
+### AC-NTF-020 — Antes, exactamente en el umbral y después *(verifica BR-NTF-012)*
 
 DADO cada jornada de 1 a 5 abierta con el turno de BR-SHF-001 CUANDO el restante es 3601
 segundos de ficción —06:59:59— ENTONCES no hay cierre próximo. CUANDO llega a 3600 —07:00:00—
 ENTONCES hay exactamente uno. CUANDO llegan más entradas de 3600 y 3599 ENTONCES sigue uno
 sin renovar su tiempo. Los valores se derivan de apertura y duración de BR-SHF-001.
 
-### AC-NTF-015 — El salto y la primera entrada dentro de la última hora *(verifica BR-NTF-010)*
+### AC-NTF-021 — El salto y la primera entrada dentro de la última hora *(verifica BR-NTF-012)*
 
 DADO turno abierto sin disparo y restante de 3660 segundos de ficción —06:59— CUANDO un
 avance deja 3540 —07:01— ENTONCES avisa una vez. DADO otra ejecución abierta sin disparo
 CUANDO la primera entrada es 3540 ENTONCES también avisa. DADO restante cero, negativo o
 turno ya cerrado ENTONCES hay cero disparos de cierre próximo.
 
-### AC-NTF-016 — La unicidad sobrevive al vencimiento y se reinicia en otra noche *(verifica BR-NTF-010, BR-NTF-011, BR-NTF-003, BR-NTF-006)*
+### AC-NTF-022 — La unicidad sobrevive al vencimiento y se reinicia en otra noche *(verifica BR-NTF-012, BR-NTF-013, BR-NTF-003, BR-NTF-006)*
 
 DADO cierre próximo recién disparado CUANDO pasan 2,9 segundos de juego en ejecución
 ENTONCES sigue visible; al completar 3,0 desaparece. CUANDO vuelve a entrar tiempo dentro
@@ -231,7 +231,7 @@ de la última hora ENTONCES no reaparece. DADO un avance desde 06:59 hasta el ci
 ENTONCES la pila termina vacía y no aparece sobre la devolución. CUANDO comienza la noche
 siguiente, o se retoma esa jornada desde su inicio, ENTONCES puede avisar al alcanzar su umbral.
 
-### AC-NTF-017 — La pausa y el reloj averiado no cambian el disparador *(verifica BR-NTF-010, BR-NTF-011, BR-NTF-003)*
+### AC-NTF-023 — La pausa y el reloj averiado no cambian el disparador *(verifica BR-NTF-012, BR-NTF-013, BR-NTF-003)*
 
 DADO el turno justo antes del umbral CUANDO se pausa y pasan cuadros ENTONCES no consume
 tiempo ni dispara. DADO aviso con dos segundos consumidos CUANDO se pausa y reanuda
@@ -239,7 +239,7 @@ ENTONCES conserva el segundo restante: 0,9 no lo retiran y completar 0,1 sí.
 DADO la jornada en que falla el reloj de mesa, con el display apagado CUANDO el turno
 alcanza las 07:00 ENTONCES llega exactamente un cierre próximo a la pila de avisos.
 
-### AC-NTF-018 — Una hora legible sin tomar el clic *(verifica BR-NTF-011, BR-NTF-007)*
+### AC-NTF-024 — Una hora legible sin tomar el clic *(verifica BR-NTF-013, BR-NTF-007)*
 
 DADO cierre próximo a 1920×1080 y 1280×720 CUANDO se presenta ENTONCES comunica una hora
 restante, con símbolo de tiempo a la izquierda, texto en mayúsculas completo en una línea,
@@ -248,7 +248,7 @@ de la pila. DADO computadora, celular o ventanilla abiertos ENTONCES el aviso qu
 deja pasar clics hacia ellos; al abrir pausa, ésta queda encima del aviso. El HUD no incorpora
 un reloj permanente y el presupuesto del turno permanece igual.
 
-### AC-NTF-019 — El mismo cuadro conserva los otros tipos *(verifica BR-NTF-010, BR-NTF-011, BR-NTF-004, BR-NTF-005, BR-NTF-009)*
+### AC-NTF-025 — El mismo cuadro conserva los otros tipos *(verifica BR-NTF-012, BR-NTF-013, BR-NTF-004, BR-NTF-005, BR-NTF-009)*
 
 DADO llegada persistente, cansancio y lectura fallida con un segundo consumido CUANDO se
 dispara cierre próximo ENTONCES hay cuatro tipos, cierre próximo primero y los otros en su

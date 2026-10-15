@@ -290,7 +290,7 @@ sólo el tiro aceptado al cuerpo del contenedor lo hace. Una bolsa sacada y resc
 volver libre a su origen, sin reponer el tacho ni crear otra identidad. Sólo la jornada que
 declara basura DEBE permitir extraer; las demás DEBEN conservar los tachos sin bolsa.
 
-### BR-CLN-033 — El primario ejecuta los pares de limpieza y el descarte de papel
+### BR-CLN-036 — El primario ejecuta los pares de limpieza y el descarte de papel
 
 CUANDO el primario encuentra balde/lavatorio, jabón/balde, mopa/balde, mopa/inodoro,
 mopa/mancha o balde/inodoro, el sistema DEBE pedir respectivamente llenar, teñir, mojar,
@@ -682,7 +682,7 @@ mancha, también las de pared y la de techo, se borra pasándole la mopa mojada 
 apuntándola con la mira desde un punto libre del piso. Las manchas del mismo tipo en la misma
 habitación se borran por separado y cuenta cada una.
 
-### AC-CLN-061 — Los seis pares usan el primario y conservan su efecto *(verifica BR-CLN-033, BR-CLN-015, BR-CLN-016, BR-CLN-017, BR-CLN-018, BR-CLN-019, BR-CLN-023)*
+### AC-CLN-067 — Los seis pares usan el primario y conservan su efecto *(verifica BR-CLN-036, BR-CLN-015, BR-CLN-016, BR-CLN-017, BR-CLN-018, BR-CLN-019, BR-CLN-023)*
 
 DADO balde vacío sobre lavatorio, jabón sobre agua sola, mopa sobre balde con agua,
 mopa sobre inodoro, mopa del jabón correcto sobre mancha y balde lleno sobre inodoro,
@@ -690,7 +690,7 @@ por turno CUANDO se hace un primario ENTONCES ocurre exactamente llenar, teñir,
 enjuagar, borrar o vaciar respectivamente, con el útil sostenido, las animaciones vigentes
 y sin efecto secundario adicional. El secundario no ejecuta ninguno de esos seis usos.
 
-### AC-CLN-062 — El uso rechazado no suelta ni recarga *(verifica BR-CLN-033, BR-CLN-020, BR-CLN-024)*
+### AC-CLN-068 — El uso rechazado no suelta ni recarga *(verifica BR-CLN-036, BR-CLN-020, BR-CLN-024)*
 
 DADO balde ya lleno al llenar, balde vacío o teñido al teñir, balde vacío al mojar o vaciar,
 mopa seca, sin jabón o con jabón incorrecto al limpiar CUANDO se hace primario ENTONCES se
@@ -698,7 +698,7 @@ conservan los rechazos vigentes, el útil sigue sostenido y no hay soltado, reca
 cambio de agua o manchas. DADO mopa con agua sola sobre piso despejado CUANDO se hace
 secundario ENTONCES conserva el charco temporal; el primario sin par declarado conserva dejar.
 
-### AC-CLN-063 — El papel se descarta una sola vez por primario *(verifica BR-CLN-033, BR-CLN-030)*
+### AC-CLN-069 — El papel se descarta una sola vez por primario *(verifica BR-CLN-036, BR-CLN-030)*
 
 DADO ticket propio sostenido CUANDO se pulsa primario sobre el inodoro ENTONCES se acepta
 un descarte, desaparece el papel y se anota un motivo único de papel. Repetir con mano vacía,

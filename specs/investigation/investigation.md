@@ -235,7 +235,7 @@ su identidad; dos textos iguales con identidades distintas NO DEBEN fusionarse p
 Cada devolución nueva DEBE aportar explícitamente la jornada que cerró y el orden de sus
 mensajes (BR-EMP-031). Los mensajes legados sin jornada DEBEN conservar texto y orden relativo,
 sin recibir una jornada ni hora inventada. Su intercalado con bloques fechados depende de
-OQ-INV-004. La vista cronológica y sus consultas NO DEBEN mutar el guion compartido ni sus
+OQ-INV-005. La vista cronológica y sus consultas NO DEBEN mutar el guion compartido ni sus
 marcas de lectura. Retomar DEBE reconstruir el guion y conservar las devoluciones guardadas
 con esos metadatos, con los mensajes del guion sin leer según BR-INV-023.
 
@@ -477,7 +477,7 @@ El recorrido de ambos chats, foto y tramo de pista a 1920×1080 y 1280×720, en 
 web, conserva textos completos dentro del celular, sin recortes ni errores.
 DADO Yasmín sin retrato aprobado ENTONCES muestra el círculo liso, conservando nombre y rol.
 
-### AC-INV-043 — El historial fechado vuelve igual y no fusiona textos *(verifica BR-INV-030, BR-INV-023, BR-INV-008)*
+### AC-INV-056 — El historial fechado vuelve igual y no fusiona textos *(verifica BR-INV-030, BR-INV-023, BR-INV-008)*
 
 DADO checkpoint de apertura 2 con devolución 1 fechada CUANDO se retoma ENTONCES muestra
 instrucciones, devolución 1 y apertura 2 en ese orden, y los quince mensajes de Yasmín están
@@ -530,7 +530,7 @@ lista consultada no cambia el historial ni el guion.
 
 ## Preguntas abiertas
 
-- **OQ-INV-004 — ¿Dónde se intercalan las devoluciones legadas sin jornada?**
+- **OQ-INV-005 — ¿Dónde se intercalan las devoluciones legadas sin jornada?**
   - Por qué sigue abierta: los guardados antiguos sólo contienen textos y orden de recepción;
     no permiten reconstruir qué cierre produjo cada bloque ni su relación con una apertura.
     La compatibilidad exige conservarlos sin inventar una fecha, pero no está decidida su

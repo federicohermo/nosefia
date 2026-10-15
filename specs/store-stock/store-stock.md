@@ -172,7 +172,7 @@ sonoridad no suena al agarrarlo ni al dejarlo, y nada lo avisa.
 
 ### BR-STK-024 — Un producto, un lugar
 
-El sistema DEBE exhibir cada producto con exhibición declarada (BR-STK-040, BR-STK-041)
+El sistema DEBE exhibir cada producto con exhibición declarada (BR-STK-043, BR-STK-044)
 en una sola tanda reponible, al alcance de
 un jugador parado en el pasillo. La fila de adelante de cada tanda del local, reponible o fija y
 en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
@@ -346,7 +346,7 @@ que está ordenada. CUANDO una caja deja de cumplir la condición, el sistema DE
 ordenar; recuperar la condición DEBE volver a cumplirla. Con el turno cerrado, mover cajas NO
 DEBE cambiar la cuenta que se cerró. Una jornada que no declara ordenar NO DEBE sumar esa tarea.
 
-### BR-STK-040 — La exhibición se agrupa por sector
+### BR-STK-043 — La exhibición se agrupa por sector
 
 El sistema DEBE organizar la exhibición según estos sectores, conservando las identidades
 del catálogo, precios y gestos. La tabla cruza el nombre del catálogo vigente con el diseño;
@@ -383,7 +383,7 @@ separación de filas, orientaciones de envases y alcance vigentes (BR-STK-024, B
 BR-STK-035). Los cupos DEBEN salir de la geometría de ese reparto, sin copiar los anteriores.
 El mismo reparto DEBE conservarse al abrir otra jornada y en escritorio o web.
 
-### BR-STK-041 — Duronga existe sin exhibición
+### BR-STK-044 — Duronga existe sin exhibición
 
 El sistema DEBE mantener Duronga sólo en su caja del depósito, según su
 [ficha detallada](https://app.notion.com/p/3e586efecd9d804ea459e6283e9c9868), que prevalece
@@ -801,14 +801,14 @@ DADO una caja rescatada en la jornada 1 CUANDO vuelve a su origen ENTONCES queda
 pila de esa apertura y no cumple ordenar por aparecer en una estantería. DADO la apertura de una
 jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 
-### AC-STK-081 — Cada sector contiene exactamente sus productos *(verifica BR-STK-040, BR-STK-041)*
+### AC-STK-086 — Cada sector contiene exactamente sus productos *(verifica BR-STK-043, BR-STK-044)*
 
-DADO el local armado CUANDO se recorre cada destino de la tabla de BR-STK-040 ENTONCES sus
+DADO el local armado CUANDO se recorre cada destino de la tabla de BR-STK-043 ENTONCES sus
 productos coinciden con la fila, sin ajenos, y los destinos de exhibición reúnen 31 productos
 distintos. Duronga es la identidad restante y no tiene tanda. Las referencias fijas de cada
 uno de los 31 están en su mismo sector. Abrir jornada 2 en escritorio y web conserva el mapa.
 
-### AC-STK-082 — Dos heladeras separan los fríos de las bebidas sin refrigerar *(verifica BR-STK-040)*
+### AC-STK-087 — Dos heladeras separan los fríos de las bebidas sin refrigerar *(verifica BR-STK-043)*
 
 DADO ambas heladeras funcionales CUANDO se recorren sus mitades verticales ENTONCES la primera
 exhibe Coracola arriba y Fernet God abajo; la segunda, Cindolor arriba y Mayonchis abajo.
@@ -816,7 +816,7 @@ Oaaaa y Terminator están en su cabecera de bebidas sin refrigerar, y no en ning
 Cindolor no aparece además en un estante exterior. La heladera fuera de servicio tiene cero
 unidades y referencias de productos.
 
-### AC-STK-083 — Cero cupo no impide usar Duronga *(verifica BR-STK-041, BR-STK-018, BR-STK-028, BR-STK-030)*
+### AC-STK-088 — Cero cupo no impide usar Duronga *(verifica BR-STK-044, BR-STK-018, BR-STK-028, BR-STK-030)*
 
 DADO apertura con Duronga sólo en depósito CUANDO se consulta ENTONCES tiene cero casilleros,
 cero unidades en góndola, ningún faltante y las unidades por caja en depósito y vendibles.
@@ -825,7 +825,7 @@ devolver una sola vez; devolverla restaura el contenido. CUANDO se saca y vende 
 ENTONCES se conserva su cuerpo y producto hasta la venta, se retira una vez y no aparece
 un casillero ni faltante. DADO caja vacía ENTONCES no entrega ni vende otra unidad.
 
-### AC-STK-084 — Reponer y cerrar admiten la identidad sin tanda *(verifica BR-STK-041, BR-STK-013, BR-STK-027)*
+### AC-STK-089 — Reponer y cerrar admiten la identidad sin tanda *(verifica BR-STK-044, BR-STK-013, BR-STK-027)*
 
 DADO jornada 2 con pedidos y faltantes que respetan BR-STK-027 CUANDO se consulta el cupo de
 las 32 identidades ENTONCES Duronga devuelve cero sin error ni índice ajeno; sólo los productos
@@ -833,7 +833,7 @@ con cupo positivo pueden aportar faltantes. CUANDO se completan las compras y se
 los casilleros declarados ENTONCES reponer se cumple y el cierre conserva su cumplimiento,
 sin exigir una unidad invisible de Duronga ni rechazar una venta válida de ella.
 
-### AC-STK-085 — El nuevo reparto conserva alcance y unicidad *(verifica BR-STK-040, BR-STK-041, BR-STK-024, BR-STK-025, BR-STK-035)*
+### AC-STK-085 — El nuevo reparto conserva alcance y unicidad *(verifica BR-STK-043, BR-STK-044, BR-STK-024, BR-STK-025, BR-STK-035)*
 
 DADO los 31 productos exhibidos CUANDO se enfoca cada casillero reponible desde piso libre
 del pasillo ENTONCES entra en el alcance vigente y acepta su unidad. Cada producto tiene una
@@ -917,4 +917,4 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
     con reposición a altura de la mano. El reparto aprobado fija sectores y conserva esas alturas.
   - Decide: el dueño del repo con game design y arte.
   - Bloquea: cambiar niveles, alturas o qué estante es reponible a partir de esa frase;
-    no bloquea los sectores ni la excepción de Duronga de BR-STK-040 y BR-STK-041.
+    no bloquea los sectores ni la excepción de Duronga de BR-STK-043 y BR-STK-044.

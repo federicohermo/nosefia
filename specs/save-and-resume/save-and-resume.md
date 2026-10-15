@@ -158,7 +158,7 @@ SI el guardado legado contiene una lista de textos de devoluciones, ENTONCES el 
 aceptarla y conservar todos sus textos en el mismo orden, incluidos textos iguales, sin
 asignarles una jornada u hora que el archivo no contiene. La falta de fecha NO DEBE vaciar
 la lista válida de devoluciones ni borrar el progreso. Su posición entre aperturas
-queda sujeta a OQ-INV-004; conservar orden y texto NO DEBE depender de resolver esa pregunta.
+queda sujeta a OQ-INV-005; conservar orden y texto NO DEBE depender de resolver esa pregunta.
 Los campos ausentes o de tipo incorrecto DEBEN conservar el saneamiento de BR-SAV-006.
 
 ## Criterios de aceptación

@@ -150,7 +150,7 @@ CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DE
 el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
 horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
 que admite otro encima. Sólo las cajas contenedoras admiten otro encima. El borde de apoyo
-insuficiente de BR-PLY-039 es una excepción: la caja cae hasta un soporte real en lugar de
+insuficiente de BR-PLY-040 es una excepción: la caja cae hasta un soporte real en lugar de
 quedar inmovilizada en el punto apuntado.
 
 SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
@@ -404,7 +404,7 @@ registradora, la ventanilla o el celular—, la pausa está abierta o la jornada
 referencia NO DEBE mostrar ninguna línea. Al reanudar, DEBE volver a armarse con lo que la mira
 enfoca y lo que se lleva.
 
-### BR-PLY-039 — Apoyo visible y caída desde un borde insuficiente
+### BR-PLY-040 — Apoyo visible y caída desde un borde insuficiente
 
 CUANDO se suelta una caja sobre el borde superior gris de una división del baño, el sistema
 DEBE apoyar su base sobre ese borde visible, sin hundirla hasta la pared blanca ni atravesarlo.
@@ -1009,7 +1009,7 @@ la mano y la mira pasa a una caja del depósito ENTONCES la referencia siguiente
 «[E] Examinar (mano)» y «[Click Izq] Dejar», y no se mostró ninguna combinación de la mano
 anterior con la mira nueva ni al revés.
 
-### AC-PLY-091 — Un primario produce un solo efecto contextual *(verifica BR-PLY-012, BR-PLY-026, BR-PLY-036)*
+### AC-PLY-097 — Un primario produce un solo efecto contextual *(verifica BR-PLY-012, BR-PLY-026, BR-PLY-036)*
 
 DADO un par declarado y, por separado, su estado aceptable y rechazado CUANDO se hace un
 primario ENTONCES hay una sola solicitud de ese uso y cero solicitudes de soltado o secundario.
@@ -1017,7 +1017,7 @@ El rechazo conserva el objeto sostenido. DADO una unidad ante un objetivo sin in
 declarada CUANDO se hace primario ENTONCES se suelta por el recorrido vigente; con mano vacía
 y levantable enfocado, se agarra una sola vez.
 
-### AC-PLY-092 — Salir consume el clic antes del mundo *(verifica BR-PLY-026, BR-PLY-028, BR-PLY-038)*
+### AC-PLY-098 — Salir consume el clic antes del mundo *(verifica BR-PLY-026, BR-PLY-028, BR-PLY-038)*
 
 DADO una unidad sostenida y computadora, caja o nota abiertas CUANDO se cierran con secundario,
 o nota con primario, o caja con primario fuera de sus márgenes ENTONCES se cierra la interfaz,
@@ -1025,21 +1025,21 @@ se conserva la unidad y hay cero usos, agarres o soltados en el mundo por ese cl
 DADO examen, celular, pausa o cierre CUANDO se pulsan ambos gestos ENTONCES no hay acción del
 mundo y la referencia sigue vacía.
 
-### AC-PLY-093 — La caja descansa sobre el borde gris *(verifica BR-PLY-039, BR-PLY-015, BR-PLY-018)*
+### AC-PLY-099 — La caja descansa sobre el borde gris *(verifica BR-PLY-040, BR-PLY-015, BR-PLY-018)*
 
 DADO una caja chica y otra grande, por separado, y la división del baño del primer encuadre de
 GJ-52 CUANDO se suelta mirando su borde gris superior desde piso transitable ENTONCES la base
 descansa sobre la cara superior visible, no sobre la pared blanca, y no atraviesa el borde.
 La comprobación cruza la base dibujada y la superficie física del mismo contacto.
 
-### AC-PLY-094 — El borde insuficiente deja caer *(verifica BR-PLY-039, BR-PLY-013, BR-PLY-015, BR-PLY-016)*
+### AC-PLY-100 — El borde insuficiente deja caer *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-016)*
 
 DADO la caja en el apoyo parcial del segundo encuadre de GJ-52, con un soporte real libre
 debajo CUANDO se suelta por el gesto real y avanza la física ENTONCES abandona ese apoyo,
 desciende y termina en reposo sobre el soporte inferior, recogible y sin superposición.
 La mano queda vacía; ni inventario ni tareas cambian por la caída o por un rescate.
 
-### AC-PLY-095 — Los apoyos válidos siguen estables *(verifica BR-PLY-039, BR-PLY-013, BR-PLY-018)*
+### AC-PLY-095 — Los apoyos válidos siguen estables *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-018)*
 
 DADO caja chica y grande, por turno, sobre piso, mostrador, pallet del depósito y otra caja
 CUANDO se suelta con apoyo suficiente ENTONCES queda estable y se puede recoger. DADO dos
@@ -1123,4 +1123,4 @@ ni entrega por consultar, ni habilita atención directa si el puesto no la ofrec
   - Decide: el dueño del repo con game design, sobre la reproducción y las medidas de los apoyos.
   - Bloquea: introducir un umbral general de estabilidad no decidido; si corregir el caso de
     góndola requiere ese umbral, bloquea su implementación hasta resolverlo. No cambia los
-    resultados concretos de BR-PLY-039 ni los apoyos válidos existentes.
+    resultados concretos de BR-PLY-040 ni los apoyos válidos existentes.

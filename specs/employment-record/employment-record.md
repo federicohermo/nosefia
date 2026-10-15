@@ -611,7 +611,7 @@ ENTONCES los mensajes de devolución conservan su orden de recepción. CUANDO se
 en noche 3 ENTONCES muestra instrucciones, devolución 1, foto y texto de apertura 2,
 devolución 2, en ese orden; no adelanta la apertura 2 a la devolución 1.
 
-### AC-EMP-067 — La devolución lleva la noche cerrada y el orden *(verifica BR-EMP-031, BR-EMP-007)*
+### AC-EMP-070 — La devolución lleva la noche cerrada y el orden *(verifica BR-EMP-031, BR-EMP-007)*
 
 DADO una devolución de tres mensajes al cerrar noche 2 CUANDO se consultan sus datos
 ENTONCES los tres identifican jornada 2, conservan tres identidades distintas y el orden
