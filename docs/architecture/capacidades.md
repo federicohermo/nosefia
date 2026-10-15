@@ -97,7 +97,7 @@ Cuatro pares se confunden seguido, y cada uno tiene su regla escrita en los dos 
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
   En la primera noche, el contrato establece que la ventanilla recibe unidades físicas y la
   mercadería las retira una sola vez al completar la venta. Si la compra vence, siguen
-  registradas afuera de su caja y quedan como unidades sueltas en el piso interior frente a la
+  registradas afuera de su caja. Quedan como unidades sueltas en el piso interior frente a la
   ventanilla; el ticket aceptado se descarta. Registrar espera a que ambas compras terminen,
   vendidas o vencidas,
   y compara la planilla con las ventas completas, independientemente de cumplir atención.
