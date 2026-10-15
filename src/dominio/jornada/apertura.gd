@@ -36,11 +36,11 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 static func inventario_de_la_jornada(
 	compradores: Array[Comprador],
 	casilleros_totales: Dictionary[Producto.Id, int],
-	_casilleros_reponibles: Dictionary[Producto.Id, int],
+	casilleros_reponibles: Dictionary[Producto.Id, int],
 	azar: RandomNumberGenerator
 ) -> Inventario:
 	return inventario_con_faltantes(
-		faltantes_al_azar(pedidos_de(compradores), casilleros_totales, azar), casilleros_totales
+		faltantes_al_azar(pedidos_de(compradores), casilleros_reponibles, azar), casilleros_totales
 	)
 
 

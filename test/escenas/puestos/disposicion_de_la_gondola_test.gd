@@ -67,7 +67,7 @@ func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
 		)
 
 
-## Los cupos suman la tanda principal y las filas fijas del recurso vigente.
+## Los faltantes caben en la fila principal medida en el recurso vigente.
 func test_doscientas_semillas_entran_en_fila_y_caja() -> void:  # AC-STK-033
 	var disposicion := _disposicion()
 	var casilleros: Dictionary[Producto.Id, int] = {}

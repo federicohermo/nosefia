@@ -35,7 +35,7 @@ static func abrir_con_faltantes(almacen: Node3D, faltantes: Dictionary[Producto.
 
 
 ## La noche con todo el lugar que una caja puede reponer: a cada producto le faltan tantas como
-## su caja trae, o su fila entera si es más corta. Es lo más que el juego deja faltar.
+## su caja trae, o su fila entera si es más corta. Es la capacidad que reserva este fixture.
 static func abrir_con_todo_el_lugar(almacen: Node3D) -> void:
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
