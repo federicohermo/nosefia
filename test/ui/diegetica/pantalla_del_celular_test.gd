@@ -300,3 +300,33 @@ func test_llegada_intercalada_conserva_indice_actual_de_la_foto() -> void:  # AC
 	var foto := fotos[0] as TextureButton
 	foto.pressed.emit()
 	assert_array(pedidos).is_equal([2])
+
+
+# AC-INV-039, AC-INV-042
+func test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema() -> void:
+	var tema := load("res://assets/ui/manada/tema.tres") as Theme
+	var primaria := tema.default_font
+	var respaldos := primaria.fallbacks.duplicate()
+	var caracteres := primaria.get_supported_chars()
+	var pantalla := _pantalla()
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(2)
+	pantalla.mostrar_menu(bandeja)
+	var lista: VBoxContainer = pantalla.get("_mensajes")
+	var resumen := lista.get_child(1).find_child("VistaPrevia", true, false) as Label
+	var fuente := resumen.get_theme_font("font")
+	for codigo: int in [0x2728, 0x1f4aa]:
+		assert_bool(fuente.get_supported_chars().contains(String.chr(codigo))).is_true()
+	var conversacion := bandeja.conversacion_de(Conversacion.Interlocutor.YASMIN)
+	pantalla.mostrar_chat(conversacion, bandeja.mensajes_de(conversacion.interlocutor), false)
+	for caso: Vector2i in [Vector2i(0, 0x2728), Vector2i(14, 0x1f4aa)]:
+		var texto := (
+			lista.get_child(caso.x).find_children("*", "RichTextLabel", true, false)[0]
+			as RichTextLabel
+		)
+		var glifos := texto.get_theme_font("normal_font").get_supported_chars()
+		assert_bool(glifos.contains(String.chr(caso.y))).is_true()
+	assert_object(tema.default_font).is_same(primaria)
+	assert_array(primaria.fallbacks).is_equal(respaldos)
+	assert_str(primaria.get_supported_chars()).is_equal(caracteres)
+	assert_object((fuente as FontVariation).base_font).is_same(primaria)

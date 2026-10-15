@@ -26,6 +26,7 @@ const GRIS := Color("787878")
 const MASCARA_DEL_AVATAR := preload("res://assets/ui/manada/celular/avatar.tres")
 const AVATAR_ENRIQUE := preload("res://assets/ui/manada/celular/enrique.png")
 const AVATAR_ENRIQUE_MENU := preload("res://assets/ui/manada/celular/enrique_menu.png")
+const SIMBOLOS_DE_CHAT := preload("res://assets/ui/manada/celular/simbolos_de_chat.ttf")
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
 const LILA := Color("c99cf4")
@@ -61,9 +62,14 @@ var _bandeja: Bandeja
 var _texto_de_la_opcion: String = ""
 var _opcion: Button
 var _basurero: Control
+var _fuente_del_chat: FontVariation
 
 
 func _ready() -> void:
+	# El respaldo pertenece a este celular; el FontFile del tema compartido no se modifica.
+	_fuente_del_chat = FontVariation.new()
+	_fuente_del_chat.base_font = _adjunto.get_theme_font("normal_font")
+	_fuente_del_chat.fallbacks = [SIMBOLOS_DE_CHAT]
 	_volver.text = ""
 	_volver.tooltip_text = "Volver al menú"
 	var flecha := Line2D.new()
@@ -447,6 +453,7 @@ func _limpiar() -> void:
 
 func _etiqueta(texto: String, color: Color, tamano: int) -> Label:
 	var etiqueta := Label.new()
+	etiqueta.add_theme_font_override("font", _fuente_del_chat)
 	etiqueta.text = texto
 	etiqueta.add_theme_color_override("font_color", color)
 	etiqueta.add_theme_font_size_override("font_size", tamano)
@@ -467,6 +474,7 @@ func _estilo(color: Color, radio: int, margen: int = 0) -> StyleBoxFlat:
 
 func _texto(texto: String, color: Color, tamano: int) -> RichTextLabel:
 	var etiqueta := RichTextLabel.new()
+	etiqueta.add_theme_font_override("normal_font", _fuente_del_chat)
 	etiqueta.bbcode_enabled = true
 	etiqueta.fit_content = true
 	etiqueta.scroll_active = false
