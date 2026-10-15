@@ -6,15 +6,15 @@
 `.blend` commiteado los deja sin un byte de diferencia: es la prueba de que la disposición del
 repo salió de ese `.blend`.
 
-- `disposicion_de_la_gondola.tres`: una tanda por producto, en el orden de `Producto.Id`, con la
-  fila de atrás primero y la de adelante al final; las tandas fijas; y cuántas copias forman la
-  fila de adelante de cada producto.
+- `disposicion_de_la_gondola.tres`: una tanda principal por producto exhibido, en el orden de
+  `Producto.Id`, y un bloque vacío para Duronga; la fila de atrás primero y la de adelante al
+  final; las tandas fijas; y cuántas copias forman sus filas de adelante.
 - `contenido_del_estante.tscn`: la unidad de cada producto, con la vuelta que le da el modelo.
 - `guia_del_estante.tscn`: una malla por tanda fija, con la vuelta de la unidad de su producto.
-- `estructura_del_almacen.tscn`, las unidades apagadas y los cuatro contornos de góndola:
+- `estructura_del_almacen.tscn`, las unidades apagadas y los contornos de los muebles activos:
   las cajas de colisión siguen el tamaño y centro del mueble. El `.glb` trae la unidad de cada
-  producto y la escena la apaga, porque la dibuja su tanda. Cuelga del mueble de su tanda, y si
-  la tanda cambia de mueble cambia su ruta.
+  producto y la escena la apaga, porque la dibuja su tanda. La fuente conserva su padre y su
+  ruta importada; su posición global y los bloques generados llevan el reparto al sector nuevo.
 
 Cada unidad y cada copia llegan rotuladas por `acomodar.py`: de qué tanda son, en qué fila y en
 qué orden. Lo que no tiene rótulo no es de la góndola.
