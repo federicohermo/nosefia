@@ -6,13 +6,16 @@ extends RefCounted
 
 var _agua := ReglasDeLaLimpieza.Agua.NINGUNA
 var _carga := 0.0
+var _se_mojo := false
 
 
 func carga_restante() -> float:
 	return _carga
 
 
-func desgastar(segundos: float, metros: float) -> void:
+## Devuelve si en este paso se secó: la carga pasó de más de cero a cero.
+func desgastar(segundos: float, metros: float) -> bool:
+	var mojada := _carga > 0.0
 	_carga = maxf(
 		0.0,
 		(
@@ -24,6 +27,12 @@ func desgastar(segundos: float, metros: float) -> void:
 	if _carga <= 0.000001:
 		_carga = 0.0
 		_agua = ReglasDeLaLimpieza.Agua.NINGUNA
+	return mojada and _carga == 0.0
+
+
+## Si se mojó alguna vez. La mopa es de una sola jornada: el piso de cada noche trae una nueva.
+func se_mojo() -> bool:
+	return _se_mojo
 
 
 ## De qué está mojada: `NINGUNA` si está seca.
@@ -56,4 +65,5 @@ func enjuagar() -> ReglasDeLaLimpieza.Resultado:
 func _mojar_con(agua: ReglasDeLaLimpieza.Agua) -> ReglasDeLaLimpieza.Resultado:
 	_agua = agua
 	_carga = 1.0
+	_se_mojo = true
 	return ReglasDeLaLimpieza.Resultado.MOPA_MOJADA

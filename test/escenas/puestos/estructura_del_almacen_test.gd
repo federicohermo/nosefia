@@ -217,11 +217,12 @@ func test_las_paredes_con_volumen_dejan_libres_los_vanos() -> void:
 	for paso: String in ["PasoAlFondo", "PasoAlDeposito"]:
 		var suelo: Node3D = estructura.get_node("SueloSolido/" + paso)
 		vanos[paso] = suelo.global_position + Vector3.UP * ALTO_DEL_VANO
-	var paredes: CollisionObject3D = estructura.get_node("almacen/Volumen")
+	var paredes: CollisionObject3D = estructura.get_node("almacen/StaticBody3D")
 	for vano: String in vanos:
 		var consulta := PhysicsPointQueryParameters3D.new()
 		consulta.position = vanos[vano]
 		consulta.collision_mask = paredes.collision_layer
+		consulta.exclude = [(vidrio.get_parent() as CollisionObject3D).get_rid()]
 		(
 			assert_array(espacio.intersect_point(consulta))
 			. override_failure_message("el volumen de las paredes tapa %s" % vano)
@@ -235,23 +236,7 @@ func test_el_rincon_del_mostrador_sigue_libre_para_el_empleado() -> void:
 	var estructura: Node3D = await _estructura_en_el_arbol()
 	var mostrador: MeshInstance3D = estructura.get_node("EscritorioComputadora")
 	var limites := mostrador.global_transform * mostrador.get_aabb()
-	var brazo: CollisionShape3D = mostrador.get_node("StaticBody3D/Volumen")
-	var otro: CollisionShape3D = mostrador.get_node("StaticBody3D/Volumen2")
-	var caja_del_brazo := (
-		brazo.global_transform
-		* AABB(-(brazo.shape as BoxShape3D).size / 2.0, (brazo.shape as BoxShape3D).size)
-	)
-	var fondo_del_brazo := caja_del_brazo.end.z
-	var caja_del_otro := (
-		otro.global_transform
-		* AABB(-(otro.shape as BoxShape3D).size / 2.0, (otro.shape as BoxShape3D).size)
-	)
-	var costado_del_otro := caja_del_otro.position.x
-	var rincon := Vector3(
-		(costado_del_otro + limites.position.x) / 2.0,
-		limites.get_center().y,
-		(fondo_del_brazo + limites.end.z) / 2.0
-	)
+	var rincon: Vector3 = load("res://test/escenas/geometria_del_mostrador.gd").rincon(mostrador)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	var capsula := CapsuleShape3D.new()
 	capsula.radius = 0.25

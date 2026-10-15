@@ -1,10 +1,15 @@
 ## Las consecuencias del descarte se acumulan al cierre, según qué se tiró.
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
-const CUERPO := "Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+const CUERPO := (
+	"Estructura/deposito_contenedor_grande_soporte/"
+	+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
+)
 
 var _almacen: Node3D
 
@@ -75,7 +80,11 @@ func _cerrar(impecable: bool) -> void:
 
 
 func _seguir() -> void:
-	_almacen.get("_pantalla").cierre_despachado.emit(ParteDeCierre.Opcion.SEGUIR)
+	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
+	AvanceDeDevolucion.entregar(pantalla)
+	pantalla.elegir()
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
 	_almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 
 
@@ -97,7 +106,7 @@ func test_tirar_una_unidad_suma_un_medio_y_la_deuda_se_conserva() -> void:  # AC
 	_tirar(unidad)
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(1)
-	_seguir()
+	await _seguir()
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(1)
 
@@ -128,7 +137,7 @@ func test_varios_importantes_cuentan_una_vez_y_otra_noche_pueden_repetir() -> vo
 	_tirar(_almacen.get_node("Objetos/Balde"))
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(1)
-	_seguir()
+	await _seguir()
 	_tirar(_almacen.get_node("Objetos/Mopa"))
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(2)
@@ -143,7 +152,7 @@ func test_tres_motivos_con_grave_guardan_siete_y_permiten_continuar() -> void:  
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(partida.terminada()).is_false()
 	assert_int(Partida.desde(Guardado.new().cargar()).medios()).is_equal(7)
-	_seguir()
+	await _seguir()
 	var mopa: ObjetoAgarrable = _almacen.get_node("Objetos/Mopa")
 	assert_bool((_almacen.get("_agarre") as Agarre).pedir_agarrar(mopa.datos, mopa)).is_true()
 	_cerrar(true)

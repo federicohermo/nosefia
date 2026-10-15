@@ -203,7 +203,7 @@ func _al_vencer(comprador: Comprador) -> void:
 	_repintar()
 
 
-## El clic derecho abre lo fijo.
+## El clic izquierdo abre lo fijo.
 func accionar() -> void:
 	abrir()
 

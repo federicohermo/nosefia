@@ -120,6 +120,8 @@ func test_una_fila_en_bucle_ocupa_la_voz_de_ambiente_y_no_la_ronda() -> void:
 	var voz := reproductor.voz_en_bucle(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
 	assert_object(voz.stream).is_same(entrada.stream)
 	assert_int(_voces_ocupadas(reproductor)).is_equal(0)
+	# En la web, retomar un bucle reproducido como muestra copia su buffer entero.
+	assert_int(voz.playback_type).is_equal(AudioServer.PLAYBACK_TYPE_STREAM)
 
 
 func test_silenciar_deja_todas_las_voces_sin_stream() -> void:
@@ -285,3 +287,11 @@ func _anotar_rechazo(_evento: EntradaSonora.Evento, motivo: ReproductorDeSonidos
 
 func _anotar_pedido(evento: EntradaSonora.Evento) -> void:
 	_pedidos.append(evento)
+
+
+func test_sin_buses_en_juego_el_filtro_no_agrega_buses() -> void:
+	var reproductor := _reproductor([])
+	reproductor.filtra_con_buses = false
+	var antes := AudioServer.bus_count
+	assert_str(reproductor.call("_bus_filtrado", "Efectos", 500.0)).is_equal("Efectos")
+	assert_int(AudioServer.bus_count).is_equal(antes)

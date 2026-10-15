@@ -30,6 +30,11 @@ func agregar(cuerpo: RigidBody3D) -> void:
 	_matrices.append(Transform3D.IDENTITY)
 	_reposos.append(false)
 	vista.hide()
+	if cuerpos.size() > multimesh.instance_count:
+		# Una caja puede traer más unidades que la fila del mueble. Redimensionar borra el buffer.
+		multimesh.instance_count = maxi(cuerpos.size(), multimesh.instance_count * 2)
+		for indice in cuerpos.size() - 1:
+			_actualizar(indice, true)
 	multimesh.visible_instance_count = cuerpos.size()
 	_actualizar(cuerpos.size() - 1, true)
 	_encuadrar()

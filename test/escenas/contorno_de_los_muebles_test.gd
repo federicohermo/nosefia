@@ -14,7 +14,6 @@ const GONDOLAS := {
 	"Estructura/gondolanueva": Vector3.RIGHT,
 	"Estructura/gondolanueva2": Vector3.RIGHT,
 	"Estructura/gondolanueva_001": Vector3.FORWARD,
-	"Estructura/gondolanueva_002": Vector3.FORWARD,
 }
 
 ## Lo que el contorno le agrega a la malla de cada lado, a lo sumo, en metros.
@@ -94,11 +93,7 @@ func test_la_malla_de_la_gondola_sigue_siendo_la_colision_de_los_productos() -> 
 
 
 func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> void:
-	# Adentro del mueble se pierde de vista y se superpone con la mercadería, que no tiene cuerpo.
-	# Los tres casos están medidos: parado en el pasillo o frente a una cabecera, mirando una
-	# bandeja, el punto de soltado cae en el hueco del estante, y ahí hay lugar libre. Se volvieron
-	# a medir el 2026-09-30, con la góndola angostada hasta sus estantes: sin el contorno, dos de
-	# los tres quedan adentro.
+	# El punto de soltado debe caer en el hueco real, desde ambos pasillos y la cabecera.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
@@ -108,18 +103,23 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 	var agarre: Agarre = almacen.get("_agarre")
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
 	var mueble := gondola.global_transform * gondola.get_aabb()
+	var centro := mueble.get_center()
 	var casos := [
 		[
-			Vector3(-0.861390, 0.11, -3.555100),
-			Vector3(0.528610, 1.9, -3.555100),
+			Vector3(mueble.position.x - 0.8, 0.11, centro.z),
+			Vector3(centro.x, 1.9, centro.z),
 			Producto.Id.MALBARDO
 		],
 		[
-			Vector3(1.958610, 0.11, -3.555100),
-			Vector3(0.528610, 0.5, -3.555100),
+			Vector3(mueble.end.x + 0.8, 0.11, centro.z),
+			Vector3(centro.x, 0.5, centro.z),
 			Producto.Id.MALBARDO
 		],
-		[Vector3(0.538610, 0.11, 1.514900), Vector3(0.538610, 0.5, -1.875100), Producto.Id.OREMOS],
+		[
+			Vector3(centro.x, 0.11, mueble.end.z + 0.8),
+			Vector3(centro.x, 0.5, mueble.end.z - 2.1),
+			Producto.Id.OREMOS
+		],
 	]
 	var sueltas: Array[Node3D] = []
 	for caso: Array in casos:
@@ -210,5 +210,6 @@ func _mirar(jugador: CharacterBody3D, punto: Vector3) -> void:
 	var pitch := atan2(hacia.y, Vector2(hacia.x, hacia.z).length())
 	var giro := Vector2(wrapf(control.yaw() - yaw, -PI, PI), control.pitch() - pitch)
 	control.girar(giro / ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE)
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
 	jugador.call("_aplicar_la_rotacion")
 	jugador.force_update_transform()

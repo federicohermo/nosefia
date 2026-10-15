@@ -41,6 +41,8 @@ from lib.gondola import (  # noqa: E402
     nombre_en_godot,
     punto_en_godot,
     ruta_de_la_malla,
+    separar_filas,
+    separar_reserva,
 )
 from lib.reparto import MUEBLES, PRODUCTOS  # noqa: E402
 
@@ -63,12 +65,21 @@ def en_godot(objeto):
 def tandas_del_blend():
     """Las copias rotuladas, por tanda y en su orden."""
     tandas = {}
-    for objeto in bpy.data.objects:
+    catalogo = {producto.clave for producto in PRODUCTOS}
+    # El archivo conserva piezas retiradas sin colección; no pertenecen al almacén actual.
+    for objeto in bpy.context.scene.objects:
         if "tanda" not in objeto:
+            continue
+        if str(objeto.get("producto")) not in catalogo:
+            continue
+        padre = objeto.parent
+        while padre is not None and padre.name in bpy.context.scene.objects:
+            padre = padre.parent
+        if padre is not None:
             continue
         tandas.setdefault(str(objeto["tanda"]), []).append(objeto)
     for copias in tandas.values():
-        copias.sort(key=lambda o: int(o["orden"]))
+        copias.sort(key=lambda o: (int(o["orden"]), o.name))
     return tandas
 
 
@@ -118,31 +129,51 @@ def principal():
     for p in PRODUCTOS:
         if len(por_producto[p.clave]) != 1:
             raise SystemExit(f"{p.nombre} tiene {len(por_producto[p.clave])} tandas con casilleros")
-        _, copias = por_producto[p.clave][0]
+        clave, copias = por_producto[p.clave][0]
         unidad = bpy.data.objects[p.objeto]
         if copias[0] != unidad:
             raise SystemExit(f"la tanda de {p.nombre} no arranca en su unidad")
         if not any(sufijo in unidad.name for sufijo in SUFIJOS_DE_IMPORTACION):
             raise SystemExit(f"{unidad.name} no tiene colisión: la escena no sabe qué apagar")
         apagadas.append(ruta_en_godot(unidad))
+        principales_de_la_tanda, reserva = separar_reserva([str(c["fila"]) for c in copias])
+        if reserva:
+            fijas.append((clave + ".reserva", p.clave, [copias[i] for i in reserva]))
+        copias = [copias[i] for i in principales_de_la_tanda]
         base, origen = en_godot(unidad)
         bases[p.clave] = base
         principales.append(bloque(copias, base))
         filas_de_adelante.append(sum(1 for c in copias if str(c["fila"]) == "adelante"))
-        contenido.append(NodoDeMalla(p.nombre, ruta_de_la_malla(p.nombre), base, origen))
+        contenido.append(NodoDeMalla(p.nombre, ruta_de_la_malla(p.nombre), base, origen,
+                                    punto_en_godot(p.frente)))
     guias = []
     nodos_de_guia = []
     nombres = {p.clave: p.nombre for p in PRODUCTOS}
+    productos_de_las_guias = []
+    filas_de_adelante_de_las_guias = []
+    indices = {p.clave: indice for indice, p in enumerate(PRODUCTOS)}
     for numero, (_, producto, copias) in enumerate(fijas):
         base = bases[producto]
-        guias.append(bloque(copias, base))
         _, origen = en_godot(copias[0])
+        orden, adelante = separar_filas([str(c["fila"]) for c in copias])
+        guias.append(bloque([copias[i] for i in orden], base))
+        productos_de_las_guias.append(indices[producto])
+        filas_de_adelante_de_las_guias.append(adelante)
         nodos_de_guia.append(
             NodoDeMalla(f"Guia{numero:02d}", ruta_de_la_malla(nombres[producto]), base, origen)
         )
     propio, script = uids(DISPOSICION.read_text(encoding="utf-8"))
     escribir(
-        DISPOSICION, escribir_disposicion(principales, guias, filas_de_adelante, propio, script)
+        DISPOSICION,
+        escribir_disposicion(
+            principales,
+            guias,
+            filas_de_adelante,
+            propio,
+            script,
+            productos_de_las_guias,
+            filas_de_adelante_de_las_guias,
+        ),
     )
     escribir(CONTENIDO, escribir_escena_de_mallas("Contenido", contenido))
     escribir(GUIA, escribir_escena_de_mallas("Guia", nodos_de_guia))
@@ -152,7 +183,9 @@ def principal():
         "N": "contorno_de_gondola_del_fondo_norte", "S": "contorno_de_gondola_del_fondo_sur",
     }
     for letra, recurso in contornos.items():
-        mueble = bpy.data.objects[MUEBLES[letra]]
+        mueble = bpy.context.scene.objects.get(MUEBLES[letra])
+        if mueble is None:
+            continue
         puntos = [punto_en_godot(tuple(v.co)) for v in mueble.data.vertices]
         minimo = tuple(min(p[i] for p in puntos) for i in range(3))
         maximo = tuple(max(p[i] for p in puntos) for i in range(3))

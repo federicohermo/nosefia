@@ -258,7 +258,7 @@ func _media_altura(cuerpo: Node3D) -> float:
 	var limites := AABB()
 	var primero := true
 	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
-		var suyos := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		var suyos := forma.global_transform * LimitesDeForma.de(forma.shape)
 		limites = suyos if primero else limites.merge(suyos)
 		primero = false
 	return limites.size.y / 2.0
@@ -268,7 +268,7 @@ func _tamano(cuerpo: Node3D) -> float:
 	var limites := AABB()
 	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
 		limites = limites.merge(
-			Transform3D(forma.global_basis, Vector3.ZERO) * forma.shape.get_debug_mesh().get_aabb()
+			Transform3D(forma.global_basis, Vector3.ZERO) * LimitesDeForma.de(forma.shape)
 		)
 	return maxf(limites.size.x, limites.size.z)
 

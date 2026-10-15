@@ -111,6 +111,38 @@ func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:
 	assert_array(grupo.cuerpos).is_empty()
 
 
+func test_mas_sueltas_que_casilleros_siguen_visibles_y_se_pueden_recoger() -> void:
+	var mundo := _mundo()
+	var grupo := _grupo(mundo, 2)
+	var cuerpos: Array[RigidBody3D] = []
+	for indice in ReglasDelEstante.UNIDADES_POR_CAJA:
+		var cuerpo := _cuerpo(mundo, Vector3(indice, 2, -3), false)
+		grupo.agregar(cuerpo)
+		cuerpos.append(cuerpo)
+	assert_int(grupo.multimesh.instance_count).is_greater_equal(cuerpos.size())
+	assert_int(grupo.multimesh.visible_instance_count).is_equal(cuerpos.size())
+	for indice in cuerpos.size():
+		(
+			assert_bool(
+				grupo.get("_matrices")[indice].is_equal_approx(_dibujo(grupo, cuerpos[indice]))
+			)
+			. is_true()
+		)
+		if DisplayServer.get_name() != "headless":
+			(
+				assert_bool(
+					grupo.multimesh.get_instance_transform(indice).is_equal_approx(
+						_dibujo(grupo, cuerpos[indice])
+					)
+				)
+				. is_true()
+			)
+	for cuerpo in cuerpos:
+		grupo.quitar(cuerpo)
+		assert_bool(cuerpo.get_node("Malla").visible).is_true()
+	assert_int(grupo.multimesh.visible_instance_count).is_zero()
+
+
 func test_en_caida_libre_la_copia_dibuja_donde_el_motor_dibuja_el_cuerpo() -> void:
 	# El atraso viejo era de un paso entero de física, y crecía con la velocidad del cuerpo.
 	var mundo := _mundo()

@@ -12,6 +12,7 @@ const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 @export var ranura: Marker3D
 @export var destino_de_los_tickets: Node3D
 @export var mallas: Array[MeshInstance3D]
+@export var ancho_del_papel: float = 0.074995
 
 var _abierta := false
 var _en_ranura: ObjetoAgarrable
@@ -25,13 +26,14 @@ func _ready() -> void:
 	caja.renglones_cambiados.connect(_repintar)
 	caja.ticket_impreso.connect(_al_imprimir)
 	programa.borrado_pedido.connect(caja.pedir_borrar)
-	programa.impresion_pedida.connect(caja.pedir_imprimir)
+	programa.impresion_pedida.connect(_imprimir_desde_entrada)
 	programa.eleccion_pedida.connect(caja.pedir_elegir)
 	programa.cierre_pedido.connect(_cerrar_desde_entrada)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	agarre.objeto_agarrado.connect(_al_agarrar)
 	agarre.objeto_soltado.connect(_al_soltar)
 	jugador.uso_pedido.connect(_al_usar)
+	jugador.consultar_el_derecho_con(_derecho_del_descarte)
 
 
 func accionar() -> void:
@@ -63,6 +65,11 @@ func _cerrar_desde_entrada() -> void:
 	jugador.tomar_el_cursor_desde_entrada()
 
 
+func _imprimir_desde_entrada() -> void:
+	caja.pedir_imprimir()
+	jugador.tomar_el_cursor_desde_entrada()
+
+
 func _repintar() -> void:
 	if _abierta:
 		programa.mostrar(caja.generador())
@@ -80,6 +87,9 @@ func _al_imprimir(dato: Ticket) -> void:
 		_en_ranura.freeze = false
 		_en_ranura.sleeping = false
 	var papel: ObjetoAgarrable = PAPEL.instantiate()
+	var factor := ancho_del_papel / 0.074995
+	(papel.get_node("Malla") as MeshInstance3D).scale *= factor
+	(papel.get_node("Forma") as CollisionShape3D).scale *= factor
 	papel.datos = dato
 	papel.freeze = true
 	# El modelo tiene escala: no se hereda al papel ni a su colisión. El origen se fija
@@ -92,7 +102,7 @@ func _al_imprimir(dato: Ticket) -> void:
 	_tickets.append(papel)
 	_en_ranura = papel
 	_fin_de_salida = papel.global_position
-	papel.global_position -= ranura.global_basis.orthonormalized().y * 0.11
+	papel.global_position -= ranura.global_basis.orthonormalized().y * 0.121548 * factor
 	_salida = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	_salida.tween_property(papel, "global_position", _fin_de_salida, 0.8)
 
@@ -149,9 +159,24 @@ func _al_usar(objetivo: Node3D) -> void:
 	papel.queue_free()
 
 
+## Si lo que se lleva se desecha en ese objetivo —el ticket en el inodoro—, sin desecharlo.
+func _derecho_del_descarte(
+	objetivo: Node3D, sostenido: ObjetoDelAlmacen
+) -> ReferenciaDeControles.Derecho:
+	if objetivo == null or not objetivo.has_method("destino_del_uso"):
+		return ReferenciaDeControles.Derecho.NINGUNO
+	var destino: StringName = objetivo.call("destino_del_uso")
+	return ReferenciaDeControles.derecho_del_descarte(sostenido, destino)
+
+
 func tickets_en_el_mundo() -> Array[Node3D]:
 	var activos: Array[Node3D] = []
 	for papel: ObjetoAgarrable in _tickets:
 		if is_instance_valid(papel) and not papel.is_queued_for_deletion():
 			activos.append(papel)
 	return activos
+
+
+## Lo que dice la caja registradora al examinarla, sin abrirla.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.CAJA_REGISTRADORA)

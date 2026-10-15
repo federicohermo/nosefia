@@ -231,28 +231,64 @@ func test_la_caja_en_la_mano_muestra_su_cuenta_hasta_terminar_el_examen() -> voi
 	assert_int(contenido.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
 
 
-func test_manos_vacias_no_examinan_ni_muestran_la_caja() -> void:  # AC-STK-042, AC-INV-020
+func test_manos_vacias_piensan_la_caja_apoyada_sin_examinarla() -> void:  # AC-STK-042, AC-SUB-002
+	# Con las manos vacías la caja apoyada dice cuántas tiene, como pensamiento: no hay examen, no
+	# se mueve, no cambia su contenido y no se registra nada.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
-	var caja := _caja(almacen, Producto.Id.ACTRONCITO)
-	_una_colocada(almacen)
+	var caja := _caja(almacen, Producto.Id.MALBARDO)
+	var contenido := _contenido(almacen, Producto.Id.MALBARDO)
+	var estante: Estante = almacen.get("_repositor").estante()
+	for _vez in 3:
+		estante.retirar(contenido.producto)
+	assert_int(contenido.unidades()).is_equal(5)
 	var lugar: Transform3D = caja.global_transform
-	var contenido := _contenido(almacen, Producto.Id.ACTRONCITO)
-	var unidades := contenido.unidades()
 	for intento in 2:
 		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
-		assert_str(_subtitulo(almacen).text).is_empty()
+		assert_str(_subtitulo(almacen).text).is_equal(
+			"Una caja con 5 cajitas de Malbardo. Entran 3 más."
+		)
 		assert_bool(jugador.get("examen").esta_examinando()).is_false()
 		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
 		assert_object(agarre.manos().sostenido()).is_null()
 		assert_bool(caja.global_transform.is_equal_approx(lugar)).is_true()
-		assert_int(contenido.unidades()).is_equal(unidades)
+		assert_int(contenido.unidades()).is_equal(5)
 		assert_bool(jugador.get("examen").hallazgos().ya_visto(caja.get("datos"))).is_false()
 
 
-func test_examinar_lo_que_no_es_una_caja_no_dice_nada() -> void:
-	# El subtítulo es sólo de las cajas: la unidad en la mano se examina en silencio, como antes.
+func test_la_caja_vacia_se_piensa_y_la_de_cinco_queda_fija_en_la_mano() -> void:  # AC-SUB-015
+	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var jugador: Node3D = almacen.get("_jugador")
+	var estante: Estante = almacen.get("_repositor").estante()
+	var vacia := _caja(almacen, Producto.Id.ACTRONCITO)
+	var actroncito := _contenido(almacen, Producto.Id.ACTRONCITO)
+	for _vez in ReglasDelEstante.UNIDADES_POR_CAJA:
+		estante.retirar(actroncito.producto)
+	assert_int(actroncito.unidades()).is_zero()
+	_accion(jugador, vacia, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_str(_subtitulo(almacen).text).is_equal(
+		"Una caja con 0 cajitas de Actroncito. Entran 8 más."
+	)
+	assert_bool(jugador.get("examen").esta_examinando()).is_false()
+	var caja := _caja(almacen, Producto.Id.MALBARDO)
+	var malbardo := _contenido(almacen, Producto.Id.MALBARDO)
+	for _vez in 3:
+		estante.retirar(malbardo.producto)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_bool(jugador.get("examen").esta_examinando()).is_true()
+	var texto := "Una caja con 5 cajitas de Malbardo. Entran 3 más."
+	assert_str(_subtitulo(almacen).text).is_equal(texto)
+	(almacen.get("_hud") as Hud).call("_process", 60.0)
+	assert_str(_subtitulo(almacen).text).is_equal(texto)
+	assert_float(_subtitulo(almacen).modulate.a).is_equal(1.0)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_str(_subtitulo(almacen).text).is_empty()
+
+
+func test_la_unidad_en_la_mano_dice_su_producto() -> void:  # AC-SUB-011
+	# La unidad sacada de la caja dice el texto de su producto, fijo mientras se la examina.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var caja := _caja(almacen, Producto.Id.ACTRONCITO)
@@ -260,7 +296,7 @@ func test_examinar_lo_que_no_es_una_caja_no_dice_nada() -> void:
 	assert_object(almacen.get("_agarre").manos().sostenido() as UnidadDeProducto).is_not_null()
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool(jugador.get("examen").esta_examinando()).is_true()
-	assert_str(_subtitulo(almacen).text).is_empty()
+	assert_str(_subtitulo(almacen).text).is_equal("Una caja de medicamentos Actroncito.")
 
 
 func test_la_noche_nueva_borra_el_subtitulo_del_examen_en_curso() -> void:

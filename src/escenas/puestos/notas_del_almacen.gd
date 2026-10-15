@@ -1,4 +1,4 @@
-## Cablea las cinco hojas existentes a una sola vista y al control del jugador.
+## Cablea las seis hojas existentes a una sola vista y al control del jugador.
 extends Node
 
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
@@ -34,7 +34,12 @@ func cerrar() -> void:
 
 
 func _input(evento: InputEvent) -> void:
-	if _abierta and evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
+	if not _abierta:
+		return
+	if (
+		evento.is_action_pressed(ReglasDelJugador.ACCION_USAR)
+		or evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR)
+	):
 		get_viewport().set_input_as_handled()
 		cerrar()
 		jugador.tomar_el_cursor_desde_entrada()

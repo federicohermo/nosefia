@@ -6,8 +6,14 @@ signal chat_pedido(quien: Conversacion.Interlocutor)
 signal volver_pedido
 signal foto_pedida(indice: int)
 signal cierre_de_foto_pedido
+## Un clic izquierdo por fuera del teléfono, con el celular arriba.
+signal cierre_pedido
+## La opción que se ofrece debajo del último mensaje del chat, como la de la devolución.
+signal opcion_elegida
+signal celular_bajado
 
 const RECORRIDO_COMPLETO := 0.25
+const PASO_MAXIMO := CabeceraConSolapa.PASO_MAXIMO
 const TAMANO := Vector2(522.0, 928.0)
 const CENTRO := Vector2(960.0, 540.0)
 const TEXTO_DEL_MENU := "CHATS"
@@ -51,6 +57,9 @@ var _destino: float = 0.0
 var _ultimo: int = 0
 var _ahora: Callable = Time.get_ticks_usec
 var _bandeja: Bandeja
+var _texto_de_la_opcion: String = ""
+var _opcion: Button
+var _basurero: Control
 
 
 func _ready() -> void:
@@ -89,7 +98,7 @@ func _notification(que: int) -> void:
 
 func _process(_delta: float) -> void:
 	var ahora: int = _ahora.call()
-	var segundos := maxf(0.0, (ahora - _ultimo) / 1000000.0)
+	var segundos := clampf((ahora - _ultimo) / 1000000.0, 0.0, PASO_MAXIMO)
 	_ultimo = ahora
 	_avance = move_toward(_avance, _destino, segundos / RECORRIDO_COMPLETO)
 	_pintar_posicion()
@@ -98,6 +107,7 @@ func _process(_delta: float) -> void:
 		if _destino == 0.0:
 			_telefono.hide()
 			_velo.hide()
+			celular_bajado.emit()
 
 
 func subir() -> void:
@@ -106,6 +116,10 @@ func subir() -> void:
 
 func bajar() -> void:
 	_mover_hacia(0.0)
+
+
+func centrado() -> bool:
+	return _destino == 1.0 and is_equal_approx(_avance, 1.0)
 
 
 func mostrar_menu(bandeja: Bandeja) -> void:
@@ -142,7 +156,53 @@ func mostrar_chat(conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bo
 	_limpiar()
 	for indice in mensajes.size():
 		_mensajes.add_child(_burbuja_de(mensajes[indice], indice))
+	_agregar_la_opcion()
 	_ir_al_ultimo.call_deferred()
+
+
+## Ofrece una opción debajo del último mensaje. Sobrevive a que el chat se vuelva a dibujar.
+func mostrar_opcion(texto: String) -> void:
+	_texto_de_la_opcion = texto
+	_agregar_la_opcion()
+	if not _foto_ampliada.visible:
+		_ir_al_ultimo.call_deferred()
+
+
+## La llegada no reconstruye el historial: conserva la foto ampliada y lo que se estaba leyendo.
+func recibir(mensaje: Mensaje, indice: int) -> void:
+	var barra := _scroll.get_v_scroll_bar()
+	var al_final := _scroll.scroll_vertical >= int(barra.max_value - barra.page) - 1
+	var burbuja := _burbuja_de(mensaje, indice)
+	_mensajes.add_child(burbuja)
+	if opcion() != null:
+		_mensajes.move_child(burbuja, _opcion.get_index())
+	if al_final and not _foto_ampliada.visible:
+		_ir_al_ultimo.call_deferred()
+
+
+func quitar_opcion() -> void:
+	_texto_de_la_opcion = ""
+	if is_instance_valid(_opcion):
+		_opcion.queue_free()
+	_opcion = null
+
+
+## El botón de la opción, si hay una a la vista.
+func opcion() -> Button:
+	return _opcion if is_instance_valid(_opcion) and not _opcion.is_queued_for_deletion() else null
+
+
+func _agregar_la_opcion() -> void:
+	if _texto_de_la_opcion.is_empty() or opcion() != null:
+		return
+	_opcion = Button.new()
+	_opcion.text = _texto_de_la_opcion
+	_opcion.theme_type_variation = &"BotonContinuar"
+	_opcion.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_opcion.pressed.connect(func() -> void: opcion_elegida.emit())
+	_mensajes.add_child(_opcion)
+	if not _foto_ampliada.visible:
+		_opcion.grab_focus()
 
 
 func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:
@@ -161,15 +221,17 @@ func mostrar_recordatorio(se_ve: bool) -> void:
 
 
 func _input(evento: InputEvent) -> void:
-	if not _foto_ampliada.visible or not _telefono.visible:
+	if not _telefono.visible:
 		return
-	if (
-		evento is InputEventMouseButton
-		and evento.button_index == MOUSE_BUTTON_LEFT
-		and evento.pressed
-	):
+	var clic := evento as InputEventMouseButton
+	if clic == null or not clic.pressed or clic.button_index != MOUSE_BUTTON_LEFT:
+		return
+	if _foto_ampliada.visible:
 		get_viewport().set_input_as_handled()
 		cierre_de_foto_pedido.emit()
+	elif _destino == 1.0 and not _telefono.get_global_rect().has_point(clic.position):
+		get_viewport().set_input_as_handled()
+		cierre_pedido.emit()
 
 
 func _mover_hacia(destino: float) -> void:
@@ -344,8 +406,14 @@ func _ir_al_ultimo() -> void:
 
 
 func _limpiar() -> void:
+	# Lo viejo espera su liberación dentro del árbol, en un nodo oculto: sacado del árbol y
+	# liberado al final del cuadro, cada mensaje que llega dejaba huérfano todo el chat anterior.
+	if _basurero == null:
+		_basurero = Control.new()
+		_basurero.visible = false
+		add_child(_basurero)
 	for viejo in _mensajes.get_children():
-		_mensajes.remove_child(viejo)
+		viejo.reparent(_basurero, false)
 		viejo.queue_free()
 
 

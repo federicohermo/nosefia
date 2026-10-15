@@ -1,0 +1,3 @@
+DSEG by keshikan
+https://github.com/keshikan/DSEG
+Release v0.46

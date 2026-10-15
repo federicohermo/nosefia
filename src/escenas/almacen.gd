@@ -46,7 +46,7 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
-@export var _pantalla: PantallaDeCierre
+@export var _pantalla: PantallaDeDevolucion
 @export var _reloj_de_mesa: RelojDeMesaDelLocal
 @export var _repositor: Repositor
 @export var _estante: EstanteDelLocal
@@ -95,6 +95,10 @@ var _pallets_de_entrega: Node3D
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
 ## cambiar de escena: se llevaría puesto al runner.
 var _ir_al_menu: Callable = volver_al_menu
+var _gestos := SubtitulosDeLosGestos.new()
+## Dónde nació el pensamiento que se ve, y a qué distancia estaba el jugador entonces.
+var _lugar_del_pensamiento := Vector3.INF
+var _distancia_al_pensar := 0.0
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
@@ -188,20 +192,40 @@ func _ready() -> void:
 	_recolector.bolsas = _bolsas
 	_recolector.bolsa_sacada.connect(_al_sacar_una_bolsa)
 	_jugador.uso_pedido.connect(_usar_un_tacho)
+	_jugador.consultar_el_derecho_con(_derecho_sobre_un_tacho)
+	_jugador.referencia_cambiada.connect(_hud.pintar_referencia)
 	_recolector.objeto_tirado.connect(_contenedor.recibir)
 	_recolector.objeto_tirado.connect(_al_tirar_un_objeto)
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
-	# El subtítulo del examen: lo que dice la caja examinada, y nada cuando termina. El texto lo
-	# arma la caja en `dominio/`; lo examinado que no es una caja no dice nada, y el HUD lo pinta.
-	_jugador.examen.examen_iniciado.connect(
-		func(nodo: Node3D) -> void:
-			_hud.mostrar_subtitulo(_reposicion_manual.texto_del_examen(nodo))
+	# El subtítulo: con las manos vacías, lo que se mira se piensa; en el examen, lo que se lleva
+	# queda fijo hasta que termina. La caja dice cuántas tiene contada en el depósito de la noche,
+	# y por eso su texto lo pone el puesto; lo demás lo dice cada cosa. El HUD lo pinta.
+	_jugador.texto_contado = _reposicion_manual.texto_del_examen
+	_jugador.examen.pensamiento_pedido.connect(
+		func(texto: String) -> void:
+			var mirado := _jugador.enfocado()
+			_pensar_en(texto, mirado.global_position if mirado != null else Vector3.INF)
 	)
+	_jugador.examen.examen_iniciado.connect(
+		func(nodo: Node3D) -> void: _hud.mostrar_subtitulo(_jugador.texto_al_examinar_de(nodo))
+	)
+	# Las tres puertas trabadas comparten la traba: quién es cada una lo dice su ruta.
+	var trabadas := {
+		^"Estructura/puertaentrada/CuerpoDeLaHoja": SubtitulosAlExaminar.ENTRADA_PRINCIPAL,
+		^"Estructura/puertajefe/CuerpoDeLaHoja": SubtitulosAlExaminar.PUERTA_DEL_JEFE,
+		^"Estructura/porton/CuerpoDeLaHoja": SubtitulosAlExaminar.PORTON,
+	}
+	for ruta: NodePath in trabadas:
+		(get_node(ruta) as PuertaDelLocal).identidad = trabadas[ruta]
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
+	_cablear_los_gestos()
 	for util: UtilDeLimpieza in _utiles_de_limpieza:
 		util.examen = _jugador.examen
 	_manija_del_balde.observador = _jugador
+	for util: UtilDeLimpieza in _utiles_de_limpieza:
+		if "observador" in util.malla:
+			util.malla.set("observador", _jugador)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
@@ -212,11 +236,34 @@ func _ready() -> void:
 	_programa_de_tickets.pausa_pedida.connect(pausa.pausar)
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
+	pausa.pausado.connect(_jugador.declarar_la_pausa.bind(true))
+	pausa.reanudado.connect(_jugador.declarar_la_pausa.bind(false))
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
+	_cablear_las_preferencias(pausa)
 	_arranque = _jugador.global_transform
 	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
+
+
+## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
+## momento salvo la letra, que espera al cierre. Esc la cierra sin reanudar.
+func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
+	var ajuste := AjusteDePreferencias.new()
+	add_child(ajuste)
+	var preferencias := ajuste.cargar_y_aplicar()
+	_jugador.ajustar_sensibilidad(preferencias.sensibilidad_del_giro())
+	var menu: MenuDePausa = get_node("Interfaz/MenuDePausa")
+	var configuraciones := menu.configuraciones()
+	configuraciones.preparar(preferencias)
+	configuraciones.preferencias_cambiadas.connect(ajuste.previsualizar)
+	configuraciones.preferencias_confirmadas.connect(ajuste.cambiar)
+	configuraciones.preferencias_cambiadas.connect(
+		func(nuevas: Preferencias) -> void:
+			_jugador.ajustar_sensibilidad(nuevas.sensibilidad_del_giro())
+	)
+	pausa.configuraciones = configuraciones
+	pausa.cierre_de_configuraciones_pedido.connect(menu.cerrar_configuraciones)
 
 
 ## Cada noche arranca sin tareas cumplidas, cada caja del depósito llena y la góndola
@@ -239,6 +286,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# examinado cuelga de la cara, y vaciar las manos lo dejaría apuntando a un nodo que ya no
 	# está ahí.
 	_jugador.examen.terminar()
+	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
+	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
 	_puesto_de_la_caja.limpiar()
@@ -260,7 +309,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
-	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	_limpiador.arrancar(PisoDelLocal.de_la_jornada(jornada))
 	_recolector.arrancar(TareaDeLaBasura.de_la_jornada(jornada))
 	# La apertura restaura los cuerpos antes de pintar sólo los tachos declarados.
 	for indice in _bolsas.size():
@@ -282,7 +331,13 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		var pallets: Array[MeshInstance3D] = _pallets_de_entrega.call(
 			"disponer", madera, $Estructura/porton, $Estructura/SueloSolido/Fondo
 		)
-		poses = PilaDelDeposito.poses(_cajas_de_productos, pallets)
+		# Las etiquetas dan la espalda al portón: miran a quien entra al depósito.
+		var centro := Vector3.ZERO
+		for pallet: MeshInstance3D in pallets:
+			centro += pallet.global_position / pallets.size()
+		var frente := centro - ($Estructura/porton as Node3D).global_position
+		frente.y = 0.0
+		poses = PilaDelDeposito.poses(_cajas_de_productos, pallets, frente)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
 		caja.volver_a_su_lugar()
@@ -300,43 +355,37 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_estante.mostrar(0)
 
 
-## La jornada cerrada ya quedó anotada en la partida cuando esta señal llega: acá sólo se le
-## pasan a la pantalla los números que la partida contesta.
+## Al cerrar, la persiana baja y la devolución de Enrique llega por el celular.
 ##
-## Las obligatorias salen de la partida y no de una lista propia: son **las mismas instancias**
-## que el turno estuvo contando toda la noche, así que el parte lee el estado de verdad y no una
-## copia que nadie completó.
+## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
+## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+	_gestos.descartar()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
 	_celular.cerrar_jornada()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
-	_pantalla.mostrar(
-		ParteDeCierre.new(
-			jornada,
-			_partida.obligatorias(),
-			_partida.apercibimientos(),
-			_partida.final(),
-			_partida.llamados()
-		)
-	)
-	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada
-	# cuadro y los botones caen más abajo, así que no se pueden clickear nunca. La suspensión
-	# suelta el cursor sola, porque el modo se recalcula a partir del estado del control.
+	_pantalla.mostrar(DevolucionDelJefe.new(jornada, _partida))
+	# Sin esto el celular es inalcanzable jugando: el jugador clava el puntero en el centro cada
+	# cuadro. La suspensión suelta el cursor sola.
 	_jugador.suspender()
-	# Una conexión por placa: un segundo despacho de la misma placa no encuentra a nadie, y no
-	# abre dos noches ni carga el menú dos veces.
-	_pantalla.cierre_despachado.connect(_al_despachar_la_placa, CONNECT_ONE_SHOT)
+	# Una conexión por devolución: un segundo despacho no encuentra a nadie, y no abre dos noches
+	# ni carga el menú dos veces.
+	_pantalla.devolucion_despachada.connect(_al_despachar_la_devolucion, CONNECT_ONE_SHOT)
 
 
-## Qué hace cada opción de la placa. Cuáles se ofrecen lo decidió el parte; acá sólo se busca
+## Qué hace cada opción de la devolución. Cuáles se ofrecen lo decidió ella; acá sólo se busca
 ## la acción de la elegida.
-func _al_despachar_la_placa(opcion: ParteDeCierre.Opcion) -> void:
+func _al_despachar_la_devolucion(opcion: DevolucionDelJefe.Opcion) -> void:
+	if opcion == DevolucionDelJefe.Opcion.CONTINUAR:
+		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
+		_jugador.suspender()
+		await _pantalla_del_celular.celular_bajado
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
-	var acciones: Dictionary[ParteDeCierre.Opcion, Callable] = {
-		ParteDeCierre.Opcion.SEGUIR: _seguir,
-		ParteDeCierre.Opcion.VOLVER_AL_MENU: _ir_al_menu,
+	var acciones: Dictionary[DevolucionDelJefe.Opcion, Callable] = {
+		DevolucionDelJefe.Opcion.CONTINUAR: _seguir,
+		DevolucionDelJefe.Opcion.VOLVER_AL_MENU: _ir_al_menu,
 	}
 	acciones[opcion].call()
 
@@ -410,6 +459,82 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 	return estados
 
 
+## Los gestos que salen mal piensan (BR-SUB-013), y la mopa berreta sale una vez por partida y
+## espera al examen (BR-SUB-014). Qué se piensa lo decide el dominio; acá sólo se traduce.
+func _cablear_los_gestos() -> void:
+	_recolector.tiro_pedido.connect(
+		func(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> void:
+			_pensar(SubtitulosDeLosGestos.al_tirar(sostenido, tiro))
+	)
+	_limpiador.pasada_rechazada.connect(
+		func(_lugar: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado) -> void:
+			var se_mojo := _limpiador.piso().mopa().se_mojo()
+			_pensar(SubtitulosDeLosGestos.al_pasar_la_mopa(motivo, se_mojo))
+	)
+	_limpiador.pasada_dada.connect(
+		func(lugar: PisoDelLocal.Lugar) -> void: _pensar(SubtitulosDeLosGestos.al_borrar(lugar))
+	)
+	_limpiador.mopa_secada.connect(
+		func() -> void:
+			var examinando := _jugador.examen.esta_examinando()
+			_pensar(_gestos.al_secarse_la_mopa(_partida, examinando))
+	)
+	_jugador.examen.examen_terminado.connect(
+		func() -> void: _pensar(_gestos.al_terminar_el_examen(_partida))
+	)
+	_agarre.objeto_soltado.connect(_vigilar_si_queda_afuera)
+
+
+## Los avisos de acciones duran lo mismo aunque el jugador camine.
+func _pensar(texto: String) -> void:
+	_pensar_en(texto, Vector3.INF)
+
+
+## Un texto vacío no cambia la línea (BR-SUB-003). El lugar es contra el que se mide cuánto se
+## aleja el jugador (BR-SUB-015); `Vector3.INF` es un pensamiento sin lugar, que dura entero.
+func _pensar_en(texto: String, lugar: Vector3) -> void:
+	if texto.is_empty():
+		return
+	_hud.pensar(texto)
+	_lugar_del_pensamiento = lugar
+	if lugar.is_finite():
+		_distancia_al_pensar = _jugador.global_position.distance_to(lugar)
+
+
+func _process(_delta: float) -> void:
+	if _lugar_del_pensamiento.is_finite():
+		var distancia := _jugador.global_position.distance_to(_lugar_del_pensamiento)
+		_hud.alejarse(distancia - _distancia_al_pensar)
+
+
+## Lo soltado que queda quieto afuera de las tres habitaciones piensa en la ventana. Se mira
+## dónde se queda y no dónde se soltó: puede rebotar y volver a entrar. Si lo vuelven a agarrar
+## antes, no piensa nada.
+func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
+	var jornada := _partida.jornada()
+	var datos := nodo.get("datos") as ObjetoDelAlmacen
+	var cuerpo := nodo as RigidBody3D
+	var esperado := 0.0
+	while esperado < SubtitulosDeLosGestos.SEGUNDOS_PARA_QUEDAR_QUIETO:
+		await get_tree().physics_frame
+		if jornada != _partida.jornada() or not _reloj.corriendo():
+			return
+		if get_tree().paused:
+			continue
+		esperado += get_physics_process_delta_time()
+		if not is_instance_valid(nodo) or _agarre.manos().sostenido() == datos:
+			return
+		if cuerpo == null or cuerpo.sleeping or cuerpo.freeze:
+			break
+	# Se piensa cuando lo soltado se aquieta, y el jugador ya pudo irse: no tiene lugar.
+	if _habitaciones.de(nodo.global_position) == ReglasDelCierre.Habitacion.AFUERA:
+		while _jugador.examen.esta_examinando() or get_tree().paused:
+			await get_tree().physics_frame
+			if jornada != _partida.jornada() or not _reloj.corriendo():
+				return
+		_pensar(SubtitulosDeLosGestos.al_quedar_afuera(datos))
+
+
 func _al_agotar_el_turno(_jornada: int) -> void:
 	var estados := _estados_del_cierre()
 	if ReglasDelCierre.hay_desorden(estados):
@@ -431,8 +556,12 @@ func _al_tirar_un_objeto(nodo: Node3D) -> void:
 func _unhandled_input(evento: InputEvent) -> void:
 	if evento.is_action_pressed(Celular.ACCION) and not evento.is_echo():
 		get_viewport().set_input_as_handled()
-		_celular.pedir_alternar(_jugador.suspendido() or _jugador.examen.esta_examinando())
-		_jugador.tomar_el_cursor_desde_entrada()
+		_alternar_el_celular()
+
+
+func _alternar_el_celular() -> void:
+	_celular.pedir_alternar(_jugador.suspendido() or _jugador.examen.esta_examinando())
+	_jugador.tomar_el_cursor_desde_entrada()
 
 
 func _cablear_el_celular() -> void:
@@ -447,6 +576,11 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
+	_pantalla_del_celular.cierre_pedido.connect(_alternar_el_celular)
+	_pantalla.preparar(_celular, _pantalla_del_celular)
+	# Al retomar, las devoluciones de las noches ya cerradas vuelven al chat de Enrique.
+	for texto: String in _partida.mensajes_del_jefe():
+		_celular.recibir(Conversacion.Interlocutor.JEFE, DevolucionDelJefe.mensaje(texto))
 
 
 func _al_abrir_el_celular() -> void:
@@ -471,16 +605,13 @@ func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
 	)
 
 
-func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, _mensaje: Mensaje) -> void:
+func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if not _celular.celular().abierto():
 		return
 	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
 		_mostrar_el_menu_del_celular()
-	elif (
-		_celular.celular().pantalla() == Celular.Pantalla.CHAT
-		and _celular.celular().chat() == quien
-	):
-		_mostrar_el_chat_del_celular(quien)
+	elif _celular.celular().chat() == quien:
+		_pantalla_del_celular.recibir(mensaje, _celular.bandeja().mensajes_de(quien).size() - 1)
 
 
 ## Las señales pueden llegar antes de sincronizar los cuerpos con el espacio físico.
@@ -496,7 +627,7 @@ func _revisar_orden_del_deposito() -> void:
 		var estado := OrdenDelDeposito.Estado.new(caja.producto, caja == sostenido)
 		if not estado.en_mano:
 			var cuerpo: CollisionShape3D = caja.get_node("Cuerpo")
-			var limites := cuerpo.global_transform * cuerpo.shape.get_debug_mesh().get_aabb()
+			var limites := cuerpo.global_transform * LimitesDeForma.de(cuerpo.shape)
 			var media := limites.size.y / 2.0
 			var consulta := PhysicsRayQueryParameters3D.create(
 				caja.global_position, caja.global_position + Vector3.DOWN * (media + 0.02)
@@ -528,6 +659,16 @@ func _tachos() -> Array[TachoDelLocal]:
 func _usar_un_tacho(objetivo: Node3D) -> void:
 	if objetivo is TachoDelLocal:
 		_recolector.sacar_bolsa(objetivo.tacho)
+
+
+## Si sacar la bolsa de ese tacho tendría efecto: lo contesta la tarea, sin sacarla.
+func _derecho_sobre_un_tacho(
+	objetivo: Node3D, sostenido: ObjetoDelAlmacen
+) -> ReferenciaDeControles.Derecho:
+	if not objetivo is TachoDelLocal or _recolector.tarea() == null:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	var con_bolsa := _recolector.tarea().tiene_bolsa(objetivo.tacho)
+	return ReferenciaDeControles.derecho_del_tacho(con_bolsa, sostenido != null)
 
 
 func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:

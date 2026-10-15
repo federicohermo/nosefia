@@ -63,11 +63,11 @@ const CUADROS_QUIETOS := 20
 const CUADROS_CAYENDO := 150
 
 ## Los pallets que dan los apoyos del medio y superior del estante del fondo.
-const PALLET_DEL_MEDIO := "Estructura/deposito_pallet_fondo_1_0"
-const PALLET_SUPERIOR := "Estructura/deposito_pallet_fondo_2_1"
+const PALLET_DEL_MEDIO := "Estructura/gondola_deposito03_001/deposito_pallet_fondo_1_0"
+const PALLET_SUPERIOR := "Estructura/gondola_deposito03_001/deposito_pallet_fondo_2_1"
 
 ## Un pallet del rack del medio del depósito, que no tiene pared detrás.
-const PALLET_DEL_RACK_ABIERTO := "Estructura/deposito_pallet_central_derecho_1_1"
+const PALLET_DEL_RACK_ABIERTO := "Estructura/gondola_deposito03/deposito_pallet_central_derecho_1_1"
 
 ## De cuántos pisos es la pila que se arma. Con tres el caso pasa en verde sin cascada: despertar
 ## un solo piso alcanza para dos. Con cinco, sin cascada, la cuarta queda flotando.
@@ -424,6 +424,8 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	# altura, o pegado a la caja vecina. Antes había tres agujeros que la mandaban al piso: la
 	# franja junto a la vecina, la pared a más de una caja de altura, y la punta de la tabla.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	# El pallet suelto del arte nuevo ocupa este paso; el caso necesita todo el frente libre.
+	almacen.get_node("Estructura/deposito_pallet_piso").position.x += 100
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PRONGLES]
@@ -448,7 +450,9 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	var tabla_del_medio := pallet_libre.end.y
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	# Una parada delante del pallet izquierdo; los dos tiros laterales bajos prueban el derecho.
-	var frente := Vector3(5.15, 0.112, -13.3)
+	var frente := Vector3(
+		pallet_libre.position.x + pallet_libre.size.x * 0.357, 0.112, pallet_libre.end.z + 1.24
+	)
 	await _parar_al_jugador_en(jugador, frente)
 	var al_piso: Array[String] = []
 	for alto: float in [33.0, 25.0, 17.0, 5.0, -7.0]:
@@ -457,7 +461,7 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 				_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 			jugador.global_position = frente
 			if giro == -20.0 and alto <= 5.0:
-				jugador.global_position.x = 7.0
+				jugador.global_position.x = frente.x + 1.85
 			_comprobar_parada_en_el_pasillo(almacen, jugador)
 			_mirar_sin_retraso(jugador, deg_to_rad(giro), deg_to_rad(alto))
 			jugador.force_update_transform()
@@ -745,6 +749,7 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
 	# estante la mira llega a la madera, y un paso atrás ya no, así que el apoyo es el piso.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	almacen.get_node("Estructura/deposito_pallet_piso").position.x += 100
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var estante: Node3D = almacen.get_node(ESTANTE_DEL_DEPOSITO)
@@ -755,7 +760,10 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	var pallet: MeshInstance3D = almacen.get_node(PALLET_DEL_MEDIO)
 	await _caminar_hasta(almacen, pallet.global_transform * pallet.get_aabb(), Vector3.FORWARD)
-	await _parar_al_jugador_en(jugador, Vector3(5.15, 0.112, -13.3))
+	var tabla := pallet.global_transform * pallet.get_aabb()
+	await _parar_al_jugador_en(
+		jugador, Vector3(tabla.position.x + tabla.size.x * 0.357, 0.112, tabla.end.z + 1.24)
+	)
 	var contadas := _contrastar_la_mira(almacen, caja, "delante del pallet")
 	# Pegado al estante no hay piso libre donde dejarla: entre el cuerpo y la madera no entra
 	# una caja. Se retrocede un paso, que es lo que haría cualquiera.
@@ -996,7 +1004,7 @@ func _abrir_las_cabinas(almacen: Node3D) -> void:
 		var puerta: Node3D = almacen.get_node("Estructura/" + nombre + "/CuerpoDeLaHoja")
 		puertas.append(puerta)
 		if not (puerta.call("puerta") as Puerta).abierta():
-			puerta.call("usar")
+			puerta.call("alternar")
 	for _cuadro in 120:
 		await get_tree().physics_frame
 		if puertas.all(func(puerta: Node3D) -> bool: return puerta.call("puerta").quieta()):

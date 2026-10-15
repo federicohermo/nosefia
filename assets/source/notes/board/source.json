@@ -1,0 +1,28 @@
+[
+	{
+		"day": 1,
+		"file": "tareas_jornada_1.png",
+		"method": "Godot orthographic render of the existing note scene, original SVG graphics and font",
+		"rows": [
+			"Atención al cliente",
+			"Registro de productos vendidos",
+			"Limpieza",
+			"Reposición",
+			"Ordenar cajas en el depósito"
+		],
+		"scene": "src/escenas/objetos/nota_pegada.tscn",
+		"title": "TAREAS A REALIZAR"
+	},
+	{
+		"day": 0,
+		"file": "mantener_local_ordenado.png",
+		"method": "Godot orthographic render of the existing note scene, original SVG graphics and font",
+		"rows": [
+			"No dejar productos tirados.",
+			"Dejar las cajas en el depósito.",
+			"Dejar los elementos de limpieza en el baño."
+		],
+		"scene": "src/escenas/objetos/nota_pegada.tscn",
+		"title": "MANTENER EL LOCAL ORDENADO"
+	}
+]

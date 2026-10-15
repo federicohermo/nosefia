@@ -127,3 +127,11 @@ func test_solo_la_mopa_es_larga() -> void:
 		assert_bool(objeto.es_largo).override_failure_message("%s: es largo" % objeto.id).is_equal(
 			objeto.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA
 		)
+
+
+func test_el_texto_al_examinar_es_el_subtitulo_escrito_y_vacio_si_no_hay() -> void:  # AC-SUB-012
+	var objeto := ObjetoDelAlmacen.new()
+	assert_str(objeto.texto_al_examinar()).is_empty()
+	objeto.subtitulo = "Una bolsa de basura."
+	objeto.nombre = "Bolsa"
+	assert_str(objeto.texto_al_examinar()).is_equal("Una bolsa de basura.")

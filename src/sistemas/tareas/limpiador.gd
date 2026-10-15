@@ -24,6 +24,11 @@ signal pasada_dada(lugar: PisoDelLocal.Lugar)
 
 ## Un uso que no hizo nada, con el motivo que contestó el dominio.
 signal uso_rechazado(motivo: ReglasDeLaLimpieza.Resultado)
+## Una pasada por una mancha que no la borró, con el motivo: es lo que piensa el protagonista.
+signal pasada_rechazada(lugar: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado)
+
+## La carga de la mopa llegó a cero en este paso.
+signal mopa_secada
 
 ## Entra por `@export` y no como autoload: está medido que `gate_de_capas.py` no ve un autoload
 ## nombrado por su nombre global, así que esa puerta cruzaría capas sin dejar rastro.
@@ -48,7 +53,8 @@ func piso() -> PisoDelLocal:
 func desgastar_mopa(en_la_mano: StringName, segundos: float, metros: float) -> void:
 	if _piso == null or reloj == null or not reloj.corriendo():
 		return
-	_piso.desgastar_mopa(en_la_mano, segundos, metros)
+	if _piso.desgastar_mopa(en_la_mano, segundos, metros):
+		mopa_secada.emit()
 
 
 ## Usa lo que se lleva en la mano sobre el balde, el lavatorio o el inodoro.
@@ -81,6 +87,7 @@ func pasar(en_la_mano: StringName, lugar: PisoDelLocal.Lugar) -> ReglasDeLaLimpi
 	var resultado := _piso.pasar(en_la_mano, lugar)
 	if resultado != ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA:
 		uso_rechazado.emit(resultado)
+		pasada_rechazada.emit(lugar, resultado)
 		return resultado
 	pasada_dada.emit(lugar)
 	if _piso.esta_limpio():

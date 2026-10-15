@@ -5,6 +5,8 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
+const GeometriaDelMostrador := preload("res://test/escenas/geometria_del_mostrador.gd")
+
 const MOSTRADOR := "Estructura/EscritorioComputadora"
 const MOUSE := "Estructura/mouse"
 const TECLADO := "Estructura/teclado"
@@ -218,7 +220,7 @@ func test_el_oraculo_distingue_adentro_de_afuera_de_una_placa() -> void:
 ## frente del mostrador hacia adentro. Devuelve el frente, que es donde empieza el mueble.
 func _caja_contra_el_mostrador(almacen: Node3D, caja: Node3D, metida: float) -> Vector3:
 	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
-	var limites := mostrador.global_transform * mostrador.get_aabb()
+	var limites := GeometriaDelMostrador.brazo(mostrador)
 	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
 	var piso := suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
 	var frente := Vector3(limites.get_center().x - limites.size.x / 4.0, piso, limites.position.z)
@@ -369,15 +371,20 @@ func _frente_a(almacen: Node3D, cara: String, parado: float) -> Array:
 	var jugador: Node3D = almacen.get("_jugador")
 	var alto: float = jugador.global_position.y
 	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
-	var limites := mostrador.global_transform * mostrador.get_aabb()
+	var limites := GeometriaDelMostrador.brazo(mostrador)
 	match cara:
 		CARA_DE_AFUERA_DEL_MOSTRADOR:
 			var x := limites.get_center().x - limites.size.x / 4.0
 			return [Vector3(x, alto, limites.position.z - parado), Vector3.BACK]
 		CARA_DE_ADENTRO_DE_LA_L:
 			var brazo: CollisionShape3D = almacen.get_node(MOSTRADOR + "/StaticBody3D/Volumen")
-			var fondo: float = brazo.global_position.z + (brazo.shape as BoxShape3D).size.z / 2.0
-			return [Vector3(limites.position.x + 0.6, alto, fondo + parado), Vector3.FORWARD]
+			var fondo: float = (
+				(brazo.global_transform * brazo.shape.get_debug_mesh().get_aabb()).end.z
+			)
+			return [
+				Vector3(GeometriaDelMostrador.rincon(mostrador).x, alto, fondo + parado),
+				Vector3.FORWARD
+			]
 		PARED_DE_LA_FACHADA:
 			return [Vector3(PARED_LIBRE.x, alto, PARED_LIBRE.y - parado), Vector3.BACK]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondola_deposito03_001")
@@ -492,7 +499,7 @@ func _caja_contra_el_mouse(almacen: Node3D, caja: Node3D, metida: float) -> void
 	var tapa := (mostrador.global_transform * mostrador.get_aabb()).end.y
 	caja.global_basis = Basis.IDENTITY
 	caja.global_position = Vector3(
-		suyo.position.x - MEDIA_CAJA + metida, tapa + MEDIA_CAJA, suyo.get_center().z
+		suyo.end.x + MEDIA_CAJA - metida, tapa + MEDIA_CAJA, suyo.get_center().z
 	)
 	caja.call("quedarse_quieta")
 	await get_tree().physics_frame
@@ -562,9 +569,14 @@ func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 ## rota detrás de la red.
 func _comprobar_sin_rescates(almacen: Node3D, donde: String) -> void:
 	var red: RedDeSeguridad = almacen.get_node("Servicios/RedDeSeguridad")
+	var avisos: Array[String] = []
+	for rescate: Dictionary in red.rescates:
+		avisos.append(str(rescate["aviso"]))
 	(
 		assert_array(red.rescates)
-		. override_failure_message("%s, la red tuvo que rescatar: la prevención falló" % donde)
+		. override_failure_message(
+			"%s, la red tuvo que rescatar: la prevención falló. %s" % [donde, " | ".join(avisos)]
+		)
 		. is_empty()
 	)
 
@@ -917,6 +929,8 @@ func _apoyo_de(almacen: Node3D, cuerpo: Node3D) -> String:
 func _soltar_la_caja_sobre(almacen: Node3D, caja: Node3D, cara: String, tapa: Vector3) -> void:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	_parar_frente_a(almacen, cara, PARADO_CON_LA_CAJA)
+	if cara == CARA_DE_AFUERA_DEL_MOSTRADOR:
+		jugador.global_position.x = tapa.x
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await get_tree().physics_frame
 	_apuntar(jugador, tapa)
@@ -951,9 +965,9 @@ func test_la_caja_se_sigue_apoyando_arriba_del_mostrador() -> void:  # AC-PLY-02
 	var caja := _caja_grande(almacen)
 	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
 	var limites := mostrador.global_transform * mostrador.get_aabb()
-	var brazo: CollisionShape3D = almacen.get_node(MOSTRADOR + "/StaticBody3D/Volumen")
+	var brazo := GeometriaDelMostrador.brazo(mostrador)
 	var tapa := Vector3(
-		limites.get_center().x - limites.size.x / 4.0, limites.end.y, brazo.global_position.z
+		brazo.get_center().x + brazo.size.x / 4.0, limites.end.y, brazo.get_center().z
 	)
 	await _soltar_la_caja_sobre(almacen, caja, CARA_DE_AFUERA_DEL_MOSTRADOR, tapa)
 	assert_str(_apoyo_de(almacen, caja)).contains("EscritorioComputadora")
@@ -997,7 +1011,7 @@ func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var heladera: MeshInstance3D = almacen.get_node("Estructura/heladeranueva")
 	var puerta: Node3D = heladera.get_node("puerta_heladera_0/CuerpoDeLaHoja")
-	puerta.call("usar")
+	puerta.call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	assert_bool(puerta.call("puerta").abierta()).is_true()
@@ -1011,8 +1025,16 @@ func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY
 	)
 	_mirar(jugador, 0.0, 0.0)
 	await get_tree().physics_frame
-	var estante: CollisionShape3D = heladera.get_node("StaticBody3D/Volumen12")
-	_apuntar(jugador, estante.global_position + Vector3.UP * 0.1)
+	var estante := AABB()
+	for forma: CollisionShape3D in heladera.get_node("StaticBody3D").get_children():
+		if forma.disabled:
+			continue
+		var caja := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		if caja.size.y < 0.1 and caja.size.x > 0.4 and caja.size.z > 0.4 and caja.end.y < 1.5:
+			if caja.end.y > estante.end.y:
+				estante = caja
+	assert_float(estante.size.x).is_greater(0.4)
+	_apuntar(jugador, estante.get_center() + Vector3.UP * (estante.size.y / 2 + 0.02))
 	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
 	for cuadro in CUADROS_DE_REPOSO:
 		await get_tree().physics_frame

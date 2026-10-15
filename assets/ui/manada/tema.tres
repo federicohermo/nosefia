@@ -1,6 +1,9 @@
-[gd_resource type="Theme" load_steps=19 format=3]
+[gd_resource type="Theme" load_steps=24 format=3]
 
 [ext_resource type="FontFile" path="res://assets/ui/manada/unscii-16.ttf" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/barra_marco.png" id="barra_marco"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/barra_relleno.png" id="barra_relleno"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/barra_control.png" id="barra_control"]
 
 [sub_resource type="StyleBoxFlat" id="normal"]
 bg_color = Color(0.02, 0.08, 0.09, 0.55)
@@ -189,6 +192,24 @@ bg_color = Color(0.85098, 0.85098, 0.85098, 1)
 [sub_resource type="StyleBoxFlat" id="barra_relleno"]
 bg_color = Color(0.847059, 0.705882, 0.407843, 1)
 
+[sub_resource type="StyleBoxTexture" id="barra_vacia"]
+content_margin_top = 15.0
+content_margin_bottom = 15.0
+texture = ExtResource("barra_marco")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 7.0
+
+[sub_resource type="StyleBoxTexture" id="barra_llena"]
+content_margin_top = 15.0
+content_margin_bottom = 15.0
+texture = ExtResource("barra_relleno")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 7.0
+
 [resource]
 default_font = ExtResource("1")
 default_font_size = 40
@@ -273,6 +294,16 @@ BotonDelMenu/base_type = &"Button"
 
 BotonDelMenu/font_sizes/font_size = 36
 
+HSlider/icons/grabber = ExtResource("barra_control")
+HSlider/icons/grabber_highlight = ExtResource("barra_control")
+HSlider/styles/slider = SubResource("barra_vacia")
+HSlider/styles/grabber_area = SubResource("barra_llena")
+HSlider/styles/grabber_area_highlight = SubResource("barra_llena")
+
+TextoDelMenu/base_type = &"Label"
+
+TextoDelMenu/font_sizes/font_size = 36
+
 ColumnaDelMenu/base_type = &"VBoxContainer"
 
 ColumnaDelMenu/constants/separation = 14
@@ -280,6 +311,10 @@ ColumnaDelMenu/constants/separation = 14
 FilaDelMenu/base_type = &"HBoxContainer"
 
 FilaDelMenu/constants/separation = 32
+
+FilaDeConfiguraciones/base_type = &"HBoxContainer"
+
+FilaDeConfiguraciones/constants/separation = 16
 
 NotaDeLista/base_type = &"Button"
 

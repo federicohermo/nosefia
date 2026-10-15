@@ -3,9 +3,12 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
-const CUERPO := "Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
-const BASE := "Estructura/deposito_contenedor_soporte/"
-const TAPA := BASE + "deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa"
+const CUERPO := (
+	"Estructura/deposito_contenedor_grande_soporte/"
+	+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
+)
+const BASE := "Estructura/deposito_contenedor_grande_soporte/"
+const TAPA := BASE + "deposito_contenedor_bisagra_izquierda/CuerpoDeLaTapa"
 
 var _almacen: Node3D
 

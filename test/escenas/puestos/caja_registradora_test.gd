@@ -40,10 +40,10 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 	jugador.call("_unhandled_input", evento)
 
 
-func _derecho() -> void:
+func _derecho(boton: MouseButton = MOUSE_BUTTON_RIGHT) -> void:
 	for presionado: bool in [true, false]:
 		var evento := InputEventMouseButton.new()
-		evento.button_index = MOUSE_BUTTON_RIGHT
+		evento.button_index = boton
 		evento.pressed = presionado
 		evento.position = get_viewport().get_visible_rect().get_center()
 		get_viewport().push_input(evento)
@@ -82,7 +82,7 @@ func _emitir_papel(almacen: Node3D) -> void:
 	_caja(almacen).ticket_impreso.emit(Ticket.new([Catalogo.de(Producto.Id.MAROLINI)]))
 
 
-func test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano() -> void:  # AC-PLY-072
+func test_izquierdo_abre_y_derecho_cierra_con_los_ocho_estados_de_la_mano() -> void:  # AC-PLY-072
 	var almacen := await _abrir()
 	assert_object(BolsaEnLaMano.preparar(almacen)).is_not_null()
 	var jugador: Node3D = almacen.get_node("Jugador")
@@ -105,7 +105,7 @@ func test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano() -> void:  #
 		if objeto != null:
 			assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
 		var padre: Node = null if objeto == null else objeto.get_parent()
-		_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
+		_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_bool(_vista(almacen).visible).is_true()
 		assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
 		for accion: StringName in [
@@ -124,30 +124,28 @@ func test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano() -> void:  #
 			agarre.entregar()
 
 
-func test_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean() -> void:  # AC-PLY-072
+func test_derecho_y_examen_vacios_no_abren_y_otras_pantallas_bloquean() -> void:  # AC-PLY-072
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get_node("Jugador")
-	for accion: StringName in [
-		ReglasDeLosObjetos.ACCION_AGARRAR, ReglasDeLosObjetos.ACCION_EXAMINAR
-	]:
+	for accion: StringName in [ReglasDelJugador.ACCION_USAR, ReglasDeLosObjetos.ACCION_EXAMINAR]:
 		_accion(jugador, _puesto(almacen), accion)
 		assert_bool(_vista(almacen).visible).is_false()
 	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var pantalla: Node3D = almacen.get_node(ruta)
 		pantalla.call("abrir")
-		_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
+		_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_bool(_vista(almacen).visible).is_false()
 		pantalla.call("cerrar")
 	var hoja: Node3D = almacen.get_node("Estructura/NotasDelAlmacen").get("notas")[0]
-	_accion(jugador, hoja, ReglasDelJugador.ACCION_USAR)
-	_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, hoja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_bool(_vista(almacen).visible).is_false()
 	await _derecho()
 	var unidad := _unidad(almacen)
 	assert_bool((almacen.get("_agarre") as Agarre).pedir_agarrar(unidad.datos, unidad)).is_true()
 	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_true()
-	_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_bool(_vista(almacen).visible).is_false()
 
 
@@ -157,7 +155,7 @@ func test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra() -> void:  #
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var tiempos: Array[float] = []
 	reloj.tiempo_consumido.connect(func(tiempo: float) -> void: tiempos.append(tiempo))
-	_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 	for _cuadro in 6:
 		await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
@@ -182,7 +180,10 @@ func test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra() -> void:  #
 	assert_bool(_vista(almacen).visible).is_true()
 	reloj.turno_cerrado.emit(0)
 	assert_bool(_vista(almacen).visible).is_false()
-	assert_bool((almacen.get_node("Interfaz/PantallaDeCierre") as CanvasLayer).visible).is_true()
+	(
+		assert_bool((almacen.get_node("Interfaz/PantallaDeDevolucion") as CanvasLayer).visible)
+		. is_true()
+	)
 	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
 
 
@@ -419,7 +420,7 @@ func test_caja_lee_imprime_y_entrega_el_ticket_desde_el_mismo_puesto() -> void:
 		)
 		. is_true()
 	)
-	await _derecho()
+	await _derecho(MOUSE_BUTTON_LEFT)
 	assert_bool(_vista(almacen).visible).is_true()
 	assert_array(_caja(almacen).generador().renglones()).contains_exactly(
 		[(unidad.datos as UnidadDeProducto).producto]
@@ -450,7 +451,7 @@ func test_la_caja_manual_abre_sin_escanear_la_unidad_sostenida() -> void:
 	var unidad := _unidad(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
-	_accion(almacen.get_node("Jugador"), _puesto(almacen), ReglasDelJugador.ACCION_USAR)
+	_accion(almacen.get_node("Jugador"), _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_bool(_vista(almacen).visible).is_true()
 	assert_array(_caja(almacen).generador().renglones()).is_empty()
 	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
@@ -462,7 +463,7 @@ func _abrir_bano(con_bolsa: bool = false) -> Node3D:
 		assert_object(BolsaEnLaMano.preparar(almacen)).is_not_null()
 	for numero: int in [1, 2]:
 		var puerta: Node3D = almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero)
-		puerta.call("usar")
+		puerta.call("alternar")
 	for _cuadro in 60:
 		await get_tree().physics_frame
 	for numero: int in [1, 2]:

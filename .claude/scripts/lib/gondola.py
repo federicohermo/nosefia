@@ -379,8 +379,13 @@ def escribir_disposicion(
     filas_de_adelante: Sequence[int],
     uid: str,
     uid_del_script: str,
+    productos_de_las_guias: Sequence[int] = (),
+    filas_de_adelante_de_las_guias: Sequence[int] = (),
 ) -> str:
     """El texto de la disposición, siempre igual para los mismos datos: el diff lo lee alguien."""
+
+    def enteros(numeros: Sequence[int]) -> str:
+        return "PackedInt32Array(" + ", ".join(str(n) for n in numeros) + ")"
 
     def arreglo(bloques: Sequence[Sequence[float]]) -> str:
         cuerpos = [
@@ -398,10 +403,21 @@ def escribir_disposicion(
         'script = ExtResource("script")\n'
         f"principales = {arreglo(principales)}\n"
         f"guias = {arreglo(guias)}\n"
-        "filas_de_adelante = PackedInt32Array("
-        + ", ".join(str(n) for n in filas_de_adelante)
-        + ")\n"
+        f"filas_de_adelante = {enteros(filas_de_adelante)}\n"
+        f"productos_de_las_guias = {enteros(productos_de_las_guias)}\n"
+        f"filas_de_adelante_de_las_guias = {enteros(filas_de_adelante_de_las_guias)}\n"
     )
+
+
+def separar_filas(filas: list[str]) -> tuple[list[int], int]:
+    """El orden de una tanda fija para el juego, y cuántas copias tiene su fila de adelante.
+
+    Va la fila de atrás primero y la de adelante al final, igual que una tanda reponible: el juego
+    corta las copias por el final, y lo que se repone es la fila de adelante.
+    """
+    atras = [i for i, fila in enumerate(filas) if fila != "adelante"]
+    frente = [i for i, fila in enumerate(filas) if fila == "adelante"]
+    return atras + frente, len(frente)
 
 
 @dataclass(frozen=True)
@@ -412,6 +428,7 @@ class NodoDeMalla:
     malla: str
     base: Matriz
     origen: Vector
+    frente: Vector | None = None
 
 
 def escribir_escena_de_mallas(raiz: str, nodos: Sequence[NodoDeMalla]) -> str:
@@ -439,6 +456,9 @@ def escribir_escena_de_mallas(raiz: str, nodos: Sequence[NodoDeMalla]) -> str:
             f'mesh = ExtResource("malla{rutas.index(nodo.malla)}")',
             "gi_mode = 2",
         ]
+        if nodo.frente is not None:
+            lineas.append("metadata/frente_del_modelo = Vector3("
+                          + ", ".join(numero_de_escena(v) for v in nodo.frente) + ")")
     return "\n".join(lineas) + "\n"
 
 
@@ -496,6 +516,20 @@ def apagar_las_unidades(texto: str, rutas: Sequence[str]) -> str:
         raise ValueError("la escena no tiene unidades apagadas: no se sabe dónde van las nuevas")
     salida.insert(lugar, "".join(_unidad_apagada(r, referencia) for r in sorted(set(rutas))))
     return "".join(salida).rstrip("\n") + "\n"
+
+
+def separar_reserva(filas: list[str]) -> tuple[list[int], list[int]]:
+    """Conserva la fila reponible y una de respaldo; las demás se dibujan como guía fija.
+
+    El artista puede añadir profundidad sin multiplicar los casilleros ni perder las copias.
+    """
+    frente = [i for i, fila in enumerate(filas) if fila == "adelante"]
+    atras = [i for i, fila in enumerate(filas) if fila == "atras"]
+    if not frente or len(frente) + len(atras) != len(filas):
+        raise ValueError("la tanda necesita una fila de adelante y filas reconocibles")
+    if atras and len(atras) < len(frente):
+        raise ValueError("la fila de respaldo no alcanza el largo de la fila reponible")
+    return atras[:len(frente)] + frente, atras[len(frente):]
 
 
 def actualizar_contorno(

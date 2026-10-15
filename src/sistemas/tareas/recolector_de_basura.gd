@@ -6,6 +6,8 @@ signal bolsa_sacada(tacho: TareaDeLaBasura.Tacho)
 
 signal bolsa_depositada(depositadas: int)
 signal objeto_tirado(nodo: Node3D)
+## Cada pedido de tirar, con lo que se llevaba y cómo salió: lo lee el pensamiento del gesto.
+signal tiro_pedido(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro)
 
 @export var reloj: RelojDelTurno
 @export var agarre: Agarre
@@ -47,6 +49,7 @@ func pedir_tirar(recibe: bool) -> ReglasDeLaBasura.Tiro:
 		return ReglasDeLaBasura.Tiro.MANO_VACIA
 	var sostenido := agarre.manos().sostenido()
 	var resultado := ReglasDeLaBasura.tiro(sostenido, recibe)
+	tiro_pedido.emit(sostenido, resultado)
 	if resultado != ReglasDeLaBasura.Tiro.TIRADO:
 		return resultado
 	if sostenido is UnidadDeProducto:

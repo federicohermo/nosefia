@@ -1,13 +1,14 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://src/escenas/menu_de_inicio.gd" id="1"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/fondo_inicio.png" id="3"]
 [ext_resource type="Script" path="res://src/sistemas/marco/pedidos_del_menu.gd" id="4"]
-[ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="5"]
+[ext_resource type="Script" path="res://src/ui/interrupciones/cabecera_con_solapa.gd" id="5"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/titulo_inicio.png" id="6"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_configuraciones.tscn" id="7"]
 
-[node name="MenuDeInicio" type="Control" node_paths=PackedStringArray("_opciones", "_pedidos", "_marco", "_fila")]
+[node name="MenuDeInicio" type="Control" node_paths=PackedStringArray("_opciones", "_pedidos", "_marco", "_fila", "_configuraciones")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,6 +21,7 @@ _opciones = NodePath("Marco/Opciones")
 _pedidos = NodePath("PedidosDelMenu")
 _marco = NodePath("Marco")
 _fila = NodePath("Marco/Fila")
+_configuraciones = NodePath("Configuraciones")
 
 [node name="Fondo" type="TextureRect" parent="."]
 layout_mode = 1
@@ -38,27 +40,24 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
 
-[node name="BarraSuperior" type="TextureRect" parent="Marco"]
+[node name="BarraSuperior" type="Control" parent="Marco"]
 layout_mode = 0
 offset_left = 104.0
 offset_top = 46.0
 offset_right = 1816.0
 offset_bottom = 116.3
 mouse_filter = 2
-texture = ExtResource("5")
-expand_mode = 1
+script = ExtResource("5")
 
-[node name="BarraInferior" type="TextureRect" parent="Marco"]
+[node name="BarraInferior" type="Control" parent="Marco"]
 layout_mode = 0
 offset_left = 104.0
 offset_top = 963.7
 offset_right = 1816.0
 offset_bottom = 1034.0
 mouse_filter = 2
-texture = ExtResource("5")
-expand_mode = 1
-flip_h = true
-flip_v = true
+script = ExtResource("5")
+volteada = true
 
 [node name="Titulo" type="TextureRect" parent="Marco"]
 layout_mode = 0
@@ -89,3 +88,5 @@ alignment = 1
 
 [node name="PedidosDelMenu" type="Node" parent="."]
 script = ExtResource("4")
+
+[node name="Configuraciones" parent="." instance=ExtResource("7")]

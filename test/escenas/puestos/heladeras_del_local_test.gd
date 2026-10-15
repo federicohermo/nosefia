@@ -47,7 +47,7 @@ func test_abrir_cada_heladera_libera_el_rayo_hacia_sus_productos() -> void:
 			centro + Vector3.BACK * 0.6, centro + Vector3.FORWARD * 0.25, 3
 		)
 		assert_object(espacio.intersect_ray(rayo).get("collider")).is_same(puerta)
-		assert_object(puerta.call("usar")).is_null()
+		assert_object(puerta.call("alternar")).is_null()
 		for cuadro in 60:
 			await get_tree().physics_frame
 		assert_bool(puerta.call("puerta").abierta()).is_true()
@@ -82,7 +82,7 @@ func test_la_heladera_fuera_de_servicio_conserva_la_puerta_trabada() -> void:
 func test_el_nuevo_turno_cierra_las_heladeras_activas() -> void:
 	var almacen := await _almacen()
 	for numero in 2:
-		_hoja(almacen, numero).get_node("CuerpoDeLaHoja").call("usar")
+		_hoja(almacen, numero).get_node("CuerpoDeLaHoja").call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	almacen.call("_al_abrir_la_jornada", 2)
@@ -93,7 +93,7 @@ func test_el_nuevo_turno_cierra_las_heladeras_activas() -> void:
 		)
 
 
-func test_los_botones_del_jugador_abren_y_cierran_con_el_derecho() -> void:
+func test_el_izquierdo_abre_y_cierra_y_el_derecho_no() -> void:
 	var almacen := await _almacen()
 	var hoja := _hoja(almacen, 0)
 	var puerta := hoja.get_node("CuerpoDeLaHoja")
@@ -106,10 +106,10 @@ func test_los_botones_del_jugador_abren_y_cierran_con_el_derecho() -> void:
 	assert_object(jugador.get("_enfocado")).is_same(puerta)
 	var clic := InputEventMouseButton.new()
 	clic.pressed = true
-	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.button_index = MOUSE_BUTTON_RIGHT
 	jugador.call("_unhandled_input", clic)
 	assert_bool(puerta.call("puerta").abierta()).is_false()
-	clic.button_index = MOUSE_BUTTON_RIGHT
+	clic.button_index = MOUSE_BUTTON_LEFT
 	jugador.call("_unhandled_input", clic)
 	assert_bool(puerta.call("puerta").abierta()).is_true()
 	for cuadro in 60:

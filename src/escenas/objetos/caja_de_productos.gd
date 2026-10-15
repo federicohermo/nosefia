@@ -19,9 +19,9 @@ signal empujada(caja: Node3D)
 ## Qué tamaño lleva cada producto lo dice el catálogo; cuánto mide cada tamaño es de la escena.
 const MEDIA_CAJA := {Catalogo.TamanoDeCaja.CHICA: 0.2, Catalogo.TamanoDeCaja.GRANDE: 0.3037077}
 
-## La etiqueta de cada producto que el artista dibujó. Los demás siguen con la caja genérica
-## «DEPÓSITO», que es la textura de la malla. Agregar la de un producto es una línea: su copia va a
-## `assets/boxes/`, con el nombre del `Producto.Id` en minúsculas.
+## La etiqueta de cada producto. Las primeras las dibujó el artista; las que siguen a Terminator
+## son su misma caja con el logo del envase en tinta, porque no había arte. Agregar la de un
+## producto es una línea: su copia va a `assets/boxes/`, con el `Producto.Id` en minúsculas.
 ##
 ## **Las copias existen porque `source/` no se importa.** El nombre en ASCII es a propósito: el
 ## del artista lleva acentos, y «Ó» se escribe distinto en cada sistema de archivos.
@@ -45,6 +45,19 @@ const ETIQUETAS := {
 	Producto.Id.MAYONCHIS: preload("res://assets/boxes/mayonchis.png"),
 	Producto.Id.OAAAA: preload("res://assets/boxes/oaaaa.png"),
 	Producto.Id.TERMINATOR: preload("res://assets/boxes/terminator.png"),
+	Producto.Id.MALBARDO: preload("res://assets/boxes/malbardo.png"),
+	Producto.Id.PRONGLES: preload("res://assets/boxes/prongles.png"),
+	Producto.Id.ARVEJAS: preload("res://assets/boxes/arvejas.png"),
+	Producto.Id.CHISITOS: preload("res://assets/boxes/chisitos.png"),
+	Producto.Id.OREMOS: preload("res://assets/boxes/oremos.png"),
+	Producto.Id.PEPITOS: preload("res://assets/boxes/pepitos.png"),
+	Producto.Id.SALADIK: preload("res://assets/boxes/saladik.png"),
+	Producto.Id.UAKAS: preload("res://assets/boxes/uakas.png"),
+	Producto.Id.CORACOLA: preload("res://assets/boxes/coracola.png"),
+	Producto.Id.MAROLINI: preload("res://assets/boxes/marolini.png"),
+	Producto.Id.MARRANOS: preload("res://assets/boxes/marranos.png"),
+	Producto.Id.FEEL_RICKY_FORT: preload("res://assets/boxes/feel_ricky_fort.png"),
+	Producto.Id.POETICO: preload("res://assets/boxes/poetico.png"),
 }
 
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO

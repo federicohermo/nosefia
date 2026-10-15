@@ -36,7 +36,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(computadora)
 	assert_array(avisos).contains([computadora])
-	_clic(MOUSE_BUTTON_RIGHT)
+	_clic()
 	assert_bool(computadora.get("pantalla").visible).is_true()
 	computadora.call("cerrar")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]

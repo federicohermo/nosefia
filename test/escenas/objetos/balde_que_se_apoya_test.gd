@@ -9,7 +9,7 @@ const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 
 const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const MOSTRADOR := "Estructura/EscritorioComputadora"
-const ESTANTE_DEL_DEPOSITO := "Estructura/deposito_pallet_fondo_0_0"
+const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito03_001/deposito_pallet_fondo_0_0"
 
 ## Hacia dónde mira quien suelta, en grados: 40° abajo inclinaba el balde, y se volcaba.
 const MIRANDO_ABAJO := -40.0
@@ -28,7 +28,7 @@ const MISMO_LUGAR := 0.01
 const AL_LADO := 1.0
 
 ## Un tramo libre de la pared de la fachada, lejos de la ventanilla, de las góndolas y de la puerta.
-const PARED_LIBRE := Vector2(2.5, 6.28)
+const PARED_LIBRE := Vector2(-1.9, 6.28)
 
 ## Un tramo de piso libre del local, delante de donde arranca el jugador.
 const PISO_LIBRE := Vector2(2.7, 3.2)
@@ -276,23 +276,19 @@ func _apoyos(almacen: Node3D, balde: UtilDeLimpieza) -> Dictionary[String, Array
 	)
 	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
 	var limites := mostrador.global_transform * mostrador.get_aabb()
-	var brazo: CollisionShape3D = almacen.get_node(MOSTRADOR + "/StaticBody3D/Volumen")
+	var brazo: AABB = load("res://test/escenas/geometria_del_mostrador.gd").brazo(mostrador)
 	var tapa := limites.end.y
 	return {
 		"el piso libre":
 		[Vector3(PISO_LIBRE.x, piso, PISO_LIBRE.y), Vector3.FORWARD, MIRANDO_ABAJO],
 		"la tapa de una caja apilada":
-		[
-			pila + Vector3.UP * 2.0 * (media_de_abajo + media_de_arriba),
-			Vector3.FORWARD,
-			MIRANDO_ABAJO
-		],
-		"un estante del depósito": [libre, Vector3.FORWARD, MIRANDO_ABAJO],
+		[pila + Vector3.UP * 2.0 * (media_de_abajo + media_de_arriba), Vector3.FORWARD, -30.0],
+		"un estante del depósito": [libre, Vector3.FORWARD, -30.0],
 		"el mostrador":
 		[
-			Vector3(limites.get_center().x + limites.size.x / 4.0, tapa, brazo.global_position.z),
+			Vector3(limites.get_center().x + limites.size.x / 4.0, tapa, brazo.get_center().z),
 			Vector3.BACK,
-			MIRANDO_ABAJO
+			-30.0
 		],
 	}
 
@@ -341,7 +337,11 @@ func test_el_balde_se_apoya_derecho_donde_se_mira() -> void:  # AC-PLY-051
 		agarre.soltar(true)
 		_comprobar_la_mano_vacia(almacen, donde)
 		_comprobar_apoyado(balde, toca.y, donde)
-		var corrido := _en_el_piso(balde.global_position - toca).length()
+		var forma: CollisionShape3D = balde.get_node("Forma")
+		var centro := (
+			(forma.global_transform * forma.shape.get_debug_mesh().get_aabb()).get_center()
+		)
+		var corrido := _en_el_piso(centro - toca).length()
 		(
 			assert_float(corrido)
 			. override_failure_message(

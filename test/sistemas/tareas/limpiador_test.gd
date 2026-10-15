@@ -31,13 +31,8 @@ const ARCHIVOS_DEL_SPEC := [
 ## balde y la mopa, y el `Turno` ya sabe que la segunda vez no cuenta.
 const PATRONES_DE_ESTADO_PROPIO := "var\\s+_(manchas|limpias|cumplida|balde|mopa|agua)\\b"
 
-## El jabón de cada lugar de la jornada, para borrarla entera.
-const JABON_DE := {
-	PisoDelLocal.Lugar.ENTRADA: &"jabon_amarillo",
-	PisoDelLocal.Lugar.GONDOLAS: &"jabon_amarillo",
-	PisoDelLocal.Lugar.DEPOSITO: &"jabon_azul",
-	PisoDelLocal.Lugar.BANO: &"jabon_rosa",
-}
+## Las dos noches que la ficha decide: siete manchas la primera y ocho la segunda.
+const JORNADAS: Array[int] = [1, 2]
 
 var _turno: Turno = null
 var _avisos_de_tarea: int = 0
@@ -53,7 +48,9 @@ func before_test() -> void:
 	_emitidas = []
 
 
-func _limpiador(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> Limpiador:
+func _limpiador(
+	presupuesto: float = Reglas.DURACION_DEL_TURNO, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
+) -> Limpiador:
 	var obligatorias := Apertura.obligatorias(1)
 	_turno = Turno.new(presupuesto, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
@@ -78,7 +75,7 @@ func _limpiador(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> Limpiador:
 		func(motivo: ReglasDeLaLimpieza.Resultado) -> void:
 			_emitidas.append(["uso_rechazado", motivo])
 	)
-	limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	limpiador.arrancar(PisoDelLocal.de_la_jornada(jornada))
 	return limpiador
 
 
@@ -90,14 +87,32 @@ func _preparar(limpiador: Limpiador, jabon: StringName) -> void:
 	limpiador.usar(MOPA, BALDE)
 
 
-## Borra todas las manchas menos las que se pidan, y devuelve cuántas borró.
+## El jabón que borra la mancha de ese lugar, sacado de las reglas y no copiado.
+static func _jabon_de(limpiador: Limpiador, lugar: PisoDelLocal.Lugar) -> StringName:
+	var pedida: ReglasDeLaLimpieza.Agua = ReglasDeLaLimpieza.AGUA_QUE_BORRA[
+		limpiador.piso().mancha_de(lugar).tipo()
+	]
+	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
+		if ReglasDeLaLimpieza.JABONES[jabon] == pedida:
+			return jabon
+	return &""
+
+
+## Borra las manchas de la noche hasta que queden las que se pidan, y devuelve cuántas quedaron
+## borradas, contando las que ya lo estaban.
 func _borrar_menos(limpiador: Limpiador, que_falten: int) -> int:
+	var lugares := limpiador.piso().lugares()
 	var borradas := 0
-	for lugar: PisoDelLocal.Lugar in JABON_DE:
-		if JABON_DE.size() - borradas <= que_falten:
+	for lugar: PisoDelLocal.Lugar in lugares:
+		if limpiador.piso().mancha_de(lugar).esta_limpia():
+			borradas += 1
+			continue
+		if lugares.size() - borradas <= que_falten:
 			break
-		_preparar(limpiador, JABON_DE[lugar])
-		limpiador.pasar(MOPA, lugar)
+		_preparar(limpiador, _jabon_de(limpiador, lugar))
+		assert_int(limpiador.pasar(MOPA, lugar)).is_equal(
+			ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
+		)
 		borradas += 1
 	return borradas
 
@@ -161,27 +176,38 @@ func test_cada_rechazo_emite_su_motivo_y_nada_mas() -> void:  # AC-CLN-024
 	)
 
 
-func test_con_una_mancha_de_menos_la_obligatoria_no_se_cuenta() -> void:  # AC-CLN-012
-	var limpiador := _limpiador()
-	assert_int(_borrar_menos(limpiador, 1)).is_equal(JABON_DE.size() - 1)
-	assert_bool(limpiador.piso().esta_limpio()).is_false()
-	assert_int(_avisos_de_tarea).is_equal(0)
-	assert_int(_turno.tareas_cumplidas()).is_equal(0)
+# AC-CLN-012, AC-CLN-060
+func test_con_una_mancha_de_menos_la_obligatoria_no_se_cuenta() -> void:
+	for jornada in JORNADAS:
+		before_test()
+		var limpiador := _limpiador(Reglas.DURACION_DEL_TURNO, jornada)
+		var total := limpiador.piso().lugares().size()
+		assert_int(total).is_equal(7 if jornada == 1 else 8)
+		assert_int(_borrar_menos(limpiador, 1)).is_equal(total - 1)
+		assert_bool(limpiador.piso().esta_limpio()).is_false()
+		assert_int(_avisos_de_tarea).is_equal(0)
+		assert_int(_turno.tareas_cumplidas()).is_equal(0)
 
 
-func test_la_ultima_mancha_cuenta_la_obligatoria_una_sola_vez() -> void:  # AC-CLN-012
-	var limpiador := _limpiador()
-	_borrar_menos(limpiador, 0)
-	assert_bool(limpiador.piso().esta_limpio()).is_true()
-	assert_int(_avisos_de_tarea).is_equal(1)
-	assert_int(_cumplidas_avisadas).is_equal(1)
-	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	# Pasar otra vez no la vuelve a contar: la mancha ya no está y el dominio rechaza.
-	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
-		ReglasDeLaLimpieza.Resultado.YA_ESTABA_LIMPIA
-	)
-	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	assert_int(_avisos_de_tarea).is_equal(1)
+# AC-CLN-012, AC-CLN-060
+func test_la_ultima_mancha_cuenta_la_obligatoria_una_sola_vez() -> void:
+	for jornada in JORNADAS:
+		before_test()
+		var limpiador := _limpiador(Reglas.DURACION_DEL_TURNO, jornada)
+		var ultima: PisoDelLocal.Lugar = limpiador.piso().lugares().back()
+		_borrar_menos(limpiador, 1)
+		assert_int(_avisos_de_tarea).is_equal(0)
+		_borrar_menos(limpiador, 0)
+		assert_bool(limpiador.piso().esta_limpio()).is_true()
+		assert_int(_avisos_de_tarea).is_equal(1)
+		assert_int(_cumplidas_avisadas).is_equal(1)
+		assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+		# Pasar otra vez no la vuelve a contar: la mancha ya no está y el dominio rechaza.
+		assert_int(limpiador.pasar(MOPA, ultima)).is_equal(
+			ReglasDeLaLimpieza.Resultado.YA_ESTABA_LIMPIA
+		)
+		assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+		assert_int(_avisos_de_tarea).is_equal(1)
 
 
 func test_con_el_turno_cerrado_limpiar_no_cuenta() -> void:
@@ -321,3 +347,23 @@ func test_charco_con_mano_vacia_seca_o_jabon_no_emite_agua() -> void:  # AC-CLN-
 	)
 	assert_float(limpiador.piso().mopa().carga_restante()).is_equal(carga)
 	assert_int(_avisos_de_tarea).is_zero()
+
+
+# AC-SUB-018, AC-SUB-019
+func test_la_mopa_avisa_que_se_seco_y_la_pasada_seca_dice_su_motivo() -> void:
+	var limpiador := _limpiador()
+	var lugar: PisoDelLocal.Lugar = limpiador.piso().lugares()[0]
+	_preparar(limpiador, _jabon_de(limpiador, lugar))
+	var secadas := [0]
+	limpiador.mopa_secada.connect(func() -> void: secadas[0] += 1)
+	var rechazadas: Array[Array] = []
+	limpiador.pasada_rechazada.connect(
+		func(donde: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado) -> void:
+			rechazadas.append([donde, motivo])
+	)
+	limpiador.desgastar_mopa(MOPA, ReglasDeLaLimpieza.DURACION_DE_LA_CARGA * 2.0, 0.0)
+	limpiador.desgastar_mopa(MOPA, ReglasDeLaLimpieza.DURACION_DE_LA_CARGA, 0.0)
+	assert_int(secadas[0]).is_equal(1)
+	assert_int(limpiador.pasar(MOPA, lugar)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_SECA)
+	assert_array(rechazadas).contains_exactly([[lugar, ReglasDeLaLimpieza.Resultado.MOPA_SECA]])
+	assert_bool(limpiador.piso().mopa().se_mojo()).is_true()

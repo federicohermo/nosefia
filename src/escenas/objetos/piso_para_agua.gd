@@ -19,7 +19,7 @@ static func admite(
 		return false
 	for sector in sectores:
 		for forma: CollisionShape3D in sector.find_children("*", "CollisionShape3D", false, false):
-			var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+			var limites := forma.global_transform * LimitesDeForma.de(forma.shape)
 			var centro := limites.get_center()
 			var distancia := Vector2(punto.x - centro.x, punto.z - centro.z).length()
 			if distancia <= maxf(limites.size.x, limites.size.z) * 0.5 + radio:

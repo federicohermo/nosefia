@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-INV
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373; migración de los specs 006, 009, 018
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018
 ---
 
 # Capacidad: la investigación
@@ -92,13 +92,11 @@ un pensamiento, no un examen.
 
 ### BR-INV-018 — Se examina sólo lo que se lleva
 
-CUANDO se pide examinar con las manos vacías y la mira sobre un levantable, el sistema NO
-DEBE arrancar un examen, retener al jugador ni mover lo que se mira. Con algo en la mano,
-DEBE examinar lo que se lleva. Sobre algo no levantable, la E sigue siendo el pensamiento
-de BR-INV-017, sin retener al jugador.
-
-Mientras no se resuelva OQ-INV-002, pedir examinar un levantable con las manos vacías NO
-DEBE revelar ni registrar un hallazgo (BR-INV-001).
+CUANDO se pide examinar con las manos vacías y la mira sobre un levantable, el sistema DEBE
+mostrar su subtítulo como pensamiento (BR-SUB-002). NO DEBE arrancar un examen, retener al
+jugador, mover lo que se mira, revelar ni registrar un hallazgo (BR-INV-001): el subtítulo no
+es la revelación. Con algo en la mano, DEBE examinar lo que se lleva. Sobre algo no levantable,
+la E sigue siendo el pensamiento de BR-INV-017, sin retener al jugador.
 
 ### BR-INV-019 — Lo examinado gira a pedido
 
@@ -119,7 +117,7 @@ las manos. Lo que se llevaba queda a los pies y el jugador no queda retenido.
 
 CUANDO se pulsa Q durante una jornada con el celular cerrado, el sistema DEBE abrirlo sólo si
 ninguna otra interfaz tiene el control y no hay examen en curso. Con el celular abierto en
-modo libre, Q DEBE cerrarlo. Con el turno cerrado, otra interfaz al control, un examen o una
+modo libre, Q DEBE cerrarlo, y también un clic izquierdo por fuera del celular. Con el turno cerrado, otra interfaz al control, un examen o una
 pausa, Q NO DEBE abrirlo ni alterar el estado existente. Abrir o cerrar NO DEBE cambiar lo que
 se lleva en la mano. Otro Q durante la subida DEBE iniciar la bajada desde la posición actual,
 sin duplicar el celular ni dejarlo detenido a mitad de camino.
@@ -140,7 +138,9 @@ un botón por conversación con al menos un mensaje visible, en el orden declara
 interlocutores. Cada botón DEBE mostrar nombre, imagen y cantidad de no leídos cuando es mayor
 que cero; sin imagen, DEBE mostrar un círculo liso del tema. La jornada NO DEBE programar nuevas
 llegadas durante su transcurso. Al continuar desde un guardado, los mensajes del guión DEBEN
-reconstruirse según esa jornada, todos sin leer; los recibidos fuera del guión NO DEBEN guardarse.
+reconstruirse según esa jornada, todos sin leer. Las devoluciones de Enrique de las noches ya
+cerradas DEBEN volver a su chat, después de sus instrucciones y en el orden en que llegaron
+(`BR-EMP-031`, `BR-SAV-019`); los demás recibidos fuera del guión NO DEBEN guardarse.
 
 ### BR-INV-024 — Recibir agrega sin alterar el guión
 
@@ -176,6 +176,8 @@ MIENTRAS el turno está abierto, el sistema DEBE mostrar en la esquina inferior 
 ícono de celular con «Q», incluso con el celular arriba; con el turno cerrado NO DEBE mostrarlo.
 El celular DEBE dibujarse sobre HUD, computadora y cierre, y debajo de avisos y pausa. La
 duración completa de subir y de bajar DEBE ser de 0,25 segundos reales por recorrido.
+Un cuadro largo NO DEBE adelantar el movimiento más de 1/30 de segundo. Si el dibujo se
+interrumpe, el recorrido DEBE conservar sus pasos visibles aunque termine más tarde.
 
 ### BR-INV-028 — Pausa y cierre conservan estados distintos
 
@@ -255,11 +257,12 @@ ENTONCES ya se puede abandonar.
 
 ### AC-INV-020 — Las manos vacías no examinan *(verifica BR-INV-018, BR-INV-001)*
 
-DADO las manos vacías y la mira sobre un levantable CUANDO se pide examinar dos veces
-ENTONCES no hay examen, el jugador no queda retenido, el levantable sigue en su lugar, las
-manos siguen vacías y no se registra hallazgo ni se avisa que empezó o terminó un examen.
-DADO algo en la mano y la mira sobre otro levantable ENTONCES se examina lo que se lleva.
-
+DADO las manos vacías y la mira sobre la mopa, con una revelación, CUANDO se pide examinar dos
+veces ENTONCES la línea de subtítulo muestra «Una mopa para limpiar las manchas del local.» y
+ningún texto de la revelación; no hay examen, el jugador no queda retenido, la mopa sigue en su
+lugar, las manos siguen vacías, la cuenta de hallazgos sigue en 0 y no se avisa que empezó o
+terminó un examen. DADO algo en la mano y la mira sobre otro levantable ENTONCES se examina lo
+que se lleva.
 
 ### AC-INV-022 — Las teclas giran lo examinado *(verifica BR-INV-019)*
 
@@ -336,7 +339,10 @@ vez no cambia nada.
 DADO el celular cerrado CUANDO se pulsa Q ENTONCES parte fuera del margen inferior y avanza
 hacia el centro. CUANDO se pulsa Q durante la subida ENTONCES baja desde su posición actual,
 sin salto de posición ni duplicado, y termina fuera del encuadre con el velo retirado. La prueba
-mide cada recorrido completo de 0,25 segundos; una inversión conserva la posición actual.
+mide cada recorrido completo de 0,25 segundos; una inversión conserva la posición actual. DADO el
+celular empezando a subir CUANDO un cuadro llega 2 segundos tarde ENTONCES sigue entre el
+margen inferior y el centro, y continúa moviéndose: no aparece ya centrado. DADO el
+celular arriba CUANDO se hace clic izquierdo por fuera de él ENTONCES pide cerrarse; adentro, no.
 
 ### AC-INV-034 — Proporción, velo y orden de dibujo *(verifica BR-INV-027)*
 
@@ -365,7 +371,8 @@ Q permitido abre el menú.
 
 DADO un guardado en jornada 3, con chats que antes se leyeron y mensajes recibidos fuera del guión,
 CUANDO se retoma ENTONCES se ven los mensajes del guión de jornada menor o igual a 3, todos sin
-leer, y ninguno de los recibidos fuera de él. Abrir y cerrar sin entrar a un chat conserva los
+leer, y ninguno de los recibidos fuera de él salvo las devoluciones de Enrique de las jornadas 1
+y 2, que siguen a sus instrucciones en ese orden. Abrir y cerrar sin entrar a un chat conserva los
 contadores.
 
 ### AC-INV-038 — Un botón por chat y una imagen de reemplazo *(verifica BR-INV-023)*
@@ -407,12 +414,9 @@ segundo con nombre y círculo liso del tema, sin contador cero.
   examinando.
 - [`ambience`](../ambience/ambience.md) (alimenta): cada recepción aceptada dispara el sonido
   de mensaje del celular; escribir una nota en la computadora no es recibir un mensaje.
+- [`subtitles`](../subtitles/subtitles.md) (alimenta): cuándo arranca y termina el examen de lo
+  que se lleva, que deja su texto fijo en la línea de subtítulo.
 
 ## Preguntas abiertas
 
-- **OQ-INV-002 — ¿La E con las manos vacías revela un levantable o sólo lo nombra?**
-  - Por qué sigue abierta: la ficha de interacciones pide un subtítulo, y la ficha
-    «Subtítulos» todavía no decide si cuenta como hallazgo. Mientras tanto no revela ni
-    registra: mirar no revela (BR-INV-001).
-  - Decide: una persona de game design junto con la ficha «Subtítulos».
-  - Bloquea: nada de esta regla; condiciona el futuro subtítulo de manos vacías.
+Ninguna.

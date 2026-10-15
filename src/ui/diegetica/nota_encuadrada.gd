@@ -42,11 +42,6 @@ func _ajustar() -> void:
 	LienzoDeManada.ajustar(_marco, get_viewport().get_visible_rect().size)
 
 
-func _input(evento: InputEvent) -> void:
-	if visible and evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
-		get_viewport().set_input_as_handled()
-
-
 static func texto_de_renglones(nota: NotaPegada) -> String:
 	var filas: Array[String] = []
 	for renglon in nota.renglones():

@@ -1,14 +1,20 @@
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
+
+## Dónde quedan los pies del jugador parado en el piso del almacén.
+const ALTURA_DEL_JUGADOR := 0.112
 
 ## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
 ## origen, adonde la red de seguridad lo puede devolver.
 const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 
 
+# AC-CLN-060
 func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -30,12 +36,14 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 		assert_bool(tarea.completada()).is_true()
 	assert_bool(reloj.corriendo()).is_true()
 	assert_float(tiempos.back()).is_less(tiempos.front())
-	var pantalla: PantallaDeCierre = almacen.get("_pantalla")
+	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_true()
-	var continuar: Button = pantalla.get_node("Fondo/Panel/Continuar")
-	continuar.pressed.emit()
+	AvanceDeDevolucion.entregar(pantalla)
+	pantalla.elegir()
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
 	var ciclo: CicloDeJornadas = almacen.get("_ciclo")
 	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_bool(pantalla.visible).is_false()
@@ -78,6 +86,20 @@ func _comprobar_ninguna_cumplida_al_abrir(almacen: Node3D) -> void:
 	)
 
 
+# AC-CLN-060
+func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
+	# Ocho manchas, con dos de pared en el depósito y una en el techo del baño: cada una se borra
+	# con la mopa mojada de su jabón, enfocada desde el piso, y la obligatoria se cumple recién
+	# con la última.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	assert_int(_piso(almacen).lugares().size()).is_equal(8)
+	await _limpiar(almacen)
+
+
 func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -116,7 +138,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 
 
 func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
-	# Así suspenden la placa del cierre y la computadora. La E abría un examen de lo enfocado o
+	# Así suspenden la devolución y la computadora. La E abría un examen de lo enfocado o
 	# de lo que se lleva, y la segunda reanudaba al jugador con la pantalla abierta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -253,13 +275,13 @@ func _cumplidas(reloj: RelojDelTurno) -> int:
 	return cumplidas
 
 
-## Borra las cuatro manchas como en el juego: por cada jabón, el balde se vacía en el inodoro, se
-## llena en el lavatorio y se tiñe; la mopa se moja en él y pasa por las manchas que ese jabón
-## borra.
+## Borra las manchas de la noche como en el juego: por cada jabón, el balde se vacía en el
+## inodoro, se llena en el lavatorio y se tiñe; la mopa se moja en él y pasa por las manchas que
+## ese jabón borra, también las de pared y la de techo, apuntándolas desde el piso.
 func _limpiar(almacen: Node3D) -> void:
 	# Se accede al inodoro y a su mancha abriendo la cabina, como en la partida.
 	for numero: int in [1, 2]:
-		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("usar")
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
@@ -269,6 +291,7 @@ func _limpiar(almacen: Node3D) -> void:
 	var balde: Node3D = almacen.get_node("Objetos/Balde")
 	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
 	var limpieza: Node3D = almacen.get("_limpieza")
+	var reloj: RelojDelTurno = almacen.get("_reloj")
 	# Se buscan antes de soltar nada: lo soltado cuelga del almacén, y ya no de `Objetos`.
 	var jabones: Array[Node3D] = []
 	for nombre: String in ["JabonAmarillo", "JabonAzul", "JabonRosa"]:
@@ -307,11 +330,14 @@ func _limpiar(almacen: Node3D) -> void:
 				)
 				. is_true()
 			)
+			# Limpiar se cumple recién con la última mancha de la noche, y no antes.
+			assert_bool(reloj.obligatoria(Tarea.Tipo.LIMPIAR).completada()).is_equal(
+				_piso(almacen).esta_limpio()
+			)
 			await get_tree().create_timer(0.5).timeout
 			assert_bool(mancha.visible).override_failure_message(mancha.name).is_false()
 		_soltar_lejos(agarre)
 	await get_tree().process_frame
-	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.LIMPIAR).completada()).is_true()
 
 
@@ -381,19 +407,51 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	assert_int(repositor.estante().productos_completos()).is_equal(esperados)
 
 
+## Para al jugador en un punto libre del piso desde donde la mira enfoca la mancha, mirándola
+## sin pasar el tope del cuello: delante de su cara si es de pared, alrededor si es de piso o techo.
 func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 	jugador.set_physics_process(false)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var cuerpo := jugador.get_node("Cuerpo") as CollisionShape3D
+	var espacio := mancha.get_world_3d().direct_space_state
 	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-	for direccion: Vector3 in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
-		jugador.global_position = mancha.global_position + direccion
-		camara.look_at(mancha.global_position + Vector3.UP * 0.03)
-		for cuadro in 4:
-			await get_tree().physics_frame
-		jugador.call("_leer_la_mira")
-		if jugador.get("_enfocado") == mancha:
-			break
-	assert_object(jugador.get("_enfocado")).is_same(mancha)
+	var cara := mancha.global_basis.y.normalized()
+	var blanco := mancha.global_position + cara * 0.03
+	var direcciones: Array[Vector3] = []
+	if absf(cara.y) < 0.5:
+		var frente := Vector3(cara.x, 0.0, cara.z).normalized()
+		var costado := frente.cross(Vector3.UP)
+		direcciones = [
+			frente, (frente + costado * 0.5).normalized(), (frente - costado * 0.5).normalized()
+		]
+	else:
+		for paso in 8:
+			direcciones.append(Vector3.BACK.rotated(Vector3.UP, TAU * paso / 8.0))
+	for distancia: float in [1.0, 0.7, 1.3, 1.6]:
+		for direccion in direcciones:
+			var punto := mancha.global_position + direccion * distancia
+			punto.y = ALTURA_DEL_JUGADOR
+			jugador.global_position = punto
+			var consulta := PhysicsShapeQueryParameters3D.new()
+			consulta.shape = cuerpo.shape
+			consulta.transform = cuerpo.global_transform
+			consulta.collision_mask = (jugador as CollisionObject3D).collision_mask
+			consulta.exclude = [(jugador as CollisionObject3D).get_rid()]
+			if not espacio.intersect_shape(consulta, 1).is_empty():
+				continue
+			var hacia := blanco - camara.global_position
+			if (
+				atan2(absf(hacia.y), Vector2(hacia.x, hacia.z).length())
+				> ReglasDelJugador.PITCH_MAXIMO
+			):
+				continue
+			camara.look_at(blanco)
+			for cuadro in 4:
+				await get_tree().physics_frame
+			jugador.call("_leer_la_mira")
+			if jugador.get("_enfocado") == mancha:
+				return
+	assert_object(jugador.get("_enfocado")).override_failure_message(mancha.name).is_same(mancha)
 
 
 func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
@@ -405,7 +463,7 @@ func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
 	var cerradas: Array[Transform3D] = []
 	for puerta: Node3D in puertas:
 		cerradas.append(puerta.get_parent().transform)
-		puerta.call("usar" if puerta.has_method("usar") else "interactuar")
+		puerta.call("alternar" if puerta.has_method("alternar") else "interactuar")
 	for cuadro in cuadros:
 		await get_tree().physics_frame
 	var antes: Array[float] = []
@@ -450,6 +508,15 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  
 	var cajas: Array = almacen.get("_cajas_de_productos")
 	# Actroncito tiene lugar para una caja entera: se vacía colocando de a una.
 	var vacia := Producto.Id.ACTRONCITO
+	var cupos: Dictionary = puesto.call("casilleros")
+	for producto in Catalogo.todos():
+		if (
+			producto.id not in [Producto.Id.JORGILLO, Producto.Id.MALBARDO]
+			and cupos[producto.id] >= ReglasDelEstante.UNIDADES_POR_CAJA
+		):
+			vacia = producto.id
+			break
+	assert_int(cupos[vacia]).is_greater_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
 	for unidad in ReglasDelEstante.UNIDADES_POR_CAJA:
 		puesto.call("usar_la_caja", cajas[vacia])
 		puesto.call("pedir_colocar", vacia)

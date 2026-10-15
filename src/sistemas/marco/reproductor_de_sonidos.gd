@@ -16,6 +16,9 @@ signal sonido_rechazado(evento: EntradaSonora.Evento, motivo: Motivo)
 ## aviso mudo justo donde el bug tampoco se ve.
 enum Motivo { SIN_FILA, BUS_NO_DECLARADO, SIN_SONIDO, SIN_VOZ, SIN_POSICION }
 
+## En la web no se crean buses en juego: el navegador inserta el nuevo en otro lugar que el motor,
+## y desde ahí cada barra de volumen regula otro bus. Allá el sonido tapado sólo baja de volumen.
+var filtra_con_buses := not OS.has_feature("web")
 var _tabla: TablaDeSonidos = null
 var _ronda := RondaDeVoces.new(RondaDeVoces.VOCES_DEL_LOCAL)
 var _ronda_del_espacio := RondaDeVoces.new(RondaDeVoces.VOCES_DEL_LOCAL)
@@ -133,10 +136,14 @@ func voces_en_el_espacio() -> Array[AudioStreamPlayer3D]:
 
 
 ## La voz plana de un evento en bucle. Cada bucle tiene la suya: la música no corta al ambiente.
+##
+## Los bucles suenan como stream también en la web. Allá una muestra copia su buffer entero cada
+## vez que se retoma, y salir de la pausa retomaba todos los bucles en el mismo cuadro.
 func voz_en_bucle(evento: EntradaSonora.Evento) -> AudioStreamPlayer:
 	if not _bucles.has(evento):
 		var voz := AudioStreamPlayer.new()
 		voz.name = "Bucle%d" % evento
+		voz.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 		add_child(voz)
 		_bucles[evento] = voz
 	return _bucles[evento]
@@ -336,6 +343,7 @@ func _sonar_en_bucle(entrada: EntradaSonora) -> bool:
 		var emisor := AudioStreamPlayer3D.new()
 		emisor.name = "Emisor%d_%d" % [entrada.evento, emisores.size()]
 		emisor.max_distance = EmisoresDelAmbiente.ALCANCE
+		emisor.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 		add_child(emisor)
 		emisor.global_position = posicion
 		_poner(emisor, entrada, entrada.bus, EmisoresDelAmbiente.VOLUMEN_DB)
@@ -368,7 +376,7 @@ func _aplicar_apagado(voz: AudioStreamPlayer3D) -> void:
 	var volumen: float = _bases[voz] + ApagadoPorObstaculos.volumen_db(nivel)
 	if voz.volume_db != volumen:
 		voz.volume_db = volumen
-	if nivel <= 0.0:
+	if nivel <= 0.0 or not filtra_con_buses:
 		if voz.bus != salida:
 			voz.bus = salida
 		return
@@ -448,7 +456,7 @@ func _datos_de(origen: Object) -> ObjetoDelAlmacen:
 ## Un reproductor del motor no filtra solo: el filtro vive en un bus. Se crea uno por corte, la
 ## primera vez que se pide, y manda al bus de la fila para que su volumen siga mandando.
 func _bus_filtrado(bus: String, corte_hz: float) -> String:
-	if corte_hz <= 0.0:
+	if corte_hz <= 0.0 or not filtra_con_buses:
 		return bus
 	var nombre := "%s · pasa-altos %d Hz" % [bus, int(corte_hz)]
 	if AudioServer.get_bus_index(nombre) < 0:

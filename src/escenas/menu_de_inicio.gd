@@ -27,8 +27,11 @@ const EN_LA_FILA: Array[MenuDeInicio.Opcion] = [
 @export var _pedidos: PedidosDelMenu
 @export var _marco: Control
 @export var _fila: HBoxContainer
+@export var _configuraciones: PantallaDeConfiguraciones
 
 var _guardado := Guardado.new()
+var _ajuste: AjusteDePreferencias
+var _botones: Dictionary[MenuDeInicio.Opcion, Button] = {}
 
 var _carga: CargaEnSegundoPlano
 var _pantalla: PantallaDeCarga
@@ -47,7 +50,14 @@ func _notification(que: int) -> void:
 		LienzoDeManada.ajustar(_marco, size)
 
 
+## Las preferencias se aplican antes que nada: el menú no suena ni se dibuja con las de fábrica.
 func _ready() -> void:
+	_ajuste = AjusteDePreferencias.new()
+	add_child(_ajuste)
+	_configuraciones.preparar(_ajuste.cargar_y_aplicar())
+	_configuraciones.preferencias_cambiadas.connect(_ajuste.previsualizar)
+	_configuraciones.preferencias_confirmadas.connect(_ajuste.cambiar)
+	_configuraciones.cerrada.connect(_al_cerrar_las_configuraciones)
 	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())
 	_pedidos.preparar(menu, _guardado)
 	for opcion: MenuDeInicio.Opcion in menu.opciones():
@@ -56,6 +66,7 @@ func _ready() -> void:
 		boton.disabled = not menu.habilitada(opcion)
 		boton.pressed.connect(_pedidos.elegir.bind(opcion))
 		boton.theme_type_variation = &"BotonDelMenu"
+		_botones[opcion] = boton
 		if opcion in EN_LA_FILA:
 			boton.custom_minimum_size.x = _opciones.size.x
 			_fila.add_child(boton)
@@ -63,6 +74,7 @@ func _ready() -> void:
 			_opciones.add_child(boton)
 	_pedidos.nuevo_juego_pedido.connect(empezar_partida_nueva)
 	_pedidos.continuar_pedido.connect(entrar_al_almacen)
+	_pedidos.configuraciones_pedida.connect(_abrir_las_configuraciones)
 	# Se crean acá y no al declararlos: una instancia que nunca entra al árbol los dejaría
 	# colgados.
 	_carga = CargaEnSegundoPlano.new()
@@ -97,6 +109,17 @@ func _process(delta: float) -> void:
 	if _espera.puede_entrar():
 		_espera = null
 		_calentar_el_almacen()
+
+
+## Esc la cierra sola; el foco vuelve al botón que la abrió.
+func _al_cerrar_las_configuraciones() -> void:
+	_marco.show()
+	_botones[MenuDeInicio.Opcion.CONFIGURACIONES].grab_focus(true)
+
+
+func _abrir_las_configuraciones() -> void:
+	_marco.hide()
+	_configuraciones.abrir()
 
 
 ## Nuevo juego conserva el borrado y la confirmación de PedidosDelMenu antes de llegar acá.

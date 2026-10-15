@@ -1,8 +1,13 @@
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
-const CONTENEDOR := "Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+const CONTENEDOR := (
+	"Estructura/deposito_contenedor_grande_soporte/"
+	+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
+)
 
 
 func _abrir(jornada: int = 2) -> Node3D:
@@ -26,7 +31,10 @@ func _accion(almacen: Node3D, objetivo: Node3D, accion: StringName) -> void:
 
 func _abrir_la_tapa(almacen: Node3D) -> void:
 	var tapa: Node3D = almacen.get_node(
-		"Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa"
+		(
+			"Estructura/deposito_contenedor_grande_soporte/"
+			+ "deposito_contenedor_bisagra_izquierda/CuerpoDeLaTapa"
+		)
 	)
 	if not tapa.call("recibe_objetos"):
 		_accion(almacen, tapa, ReglasDelJugador.ACCION_USAR)
@@ -180,7 +188,11 @@ func test_la_pendiente_en_tacho_piso_o_mano_no_cruza_de_noche() -> void:  # AC-C
 		assert_bool(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA).completada()).is_false()
 		reloj.avanzar(Reglas.DURACION_DEL_TURNO)
 		assert_bool(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA).completada()).is_false()
-		almacen.call("_seguir")
+		var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
+		AvanceDeDevolucion.entregar(pantalla)
+		pantalla.elegir()
+		AvanceDeDevolucion.terminar_movimiento(pantalla)
+		await get_tree().process_frame
 		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
 		assert_object(agarre.manos().sostenido()).is_null()
 		for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):

@@ -40,6 +40,10 @@ const SIN_ID := &""
 
 @export var revelacion: Revelacion = null
 
+## Lo que dice al examinarlo: el subtítulo de la ficha, que no es la revelación. Vacío, no
+## dice nada.
+@export var subtitulo: String = ""
+
 
 func es_levantable() -> bool:
 	return levantable
@@ -59,3 +63,9 @@ func texto_visible(examinado: bool) -> String:
 	if examinado and tiene_revelacion():
 		return "%s\n%s" % [nombre, revelacion.texto]
 	return nombre
+
+
+## Lo que la línea de subtítulo dice de este objeto, con la mano vacía o en la mano. Las
+## subclases que se arman en código —la unidad, el ticket— lo contestan sin `.tres`.
+func texto_al_examinar() -> String:
+	return subtitulo

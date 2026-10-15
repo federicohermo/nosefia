@@ -8,7 +8,7 @@ const TAMANO := Vector2i(960, 540)
 const PLANOS := [
 	[
 		4,
-		Vector3(-1.15, 1.682598, 4.050001),
+		Vector3(-2.05, 1.682598, 4.050001),
 		Vector3(-2.417298, 1.682598, 4.050001),
 		55.0,
 		"board tareas/"
@@ -16,14 +16,14 @@ const PLANOS := [
 	[6, Vector3(-0.80, 1.70, 4.80), Vector3(-0.80, 1.74, 6.38), 60.0, "Estructura/Ventanilla"],
 	[
 		7,
-		Vector3(0.20, 1.55, 5.02),
-		Vector3(1.15, 1.12, 5.02),
-		42.0,
+		Vector3(-0.80, 1.65, 4.35),
+		Vector3(-1.05, 1.28, 3.57),
+		55.0,
 		"cajaregistradora/StaticBody3D"
 	],
-	[8, Vector3(-0.05, 1.65, 4.65), Vector3(-0.05, 1.24, 3.25), 55.0, "base compu/StaticBody3D"],
+	[8, Vector3(0.0, 1.65, 4.60), Vector3(-0.05, 1.50, 3.60), 55.0, "base compu/StaticBody3D"],
 	[9, Vector3(2.70, 1.45, -9.73), Vector3(-0.40, 1.45, -9.73), 72.0, "Caja"],
-	[11, Vector3(11.10, 1.65, 2.65), Vector3(11.03, 0.68, -0.117), 47.0, "JabonAmarillo"],
+	[11, Vector3(11.10, 1.65, 3.05), Vector3(11.10, 0.90, 0.30), 46.0, "JabonAmarillo"],
 	[13, Vector3(-0.20, 1.90, -13.15), Vector3(-2.95, 1.15, -11.50), 62.0, "Caja"],
 ]
 
@@ -80,8 +80,8 @@ func _generar() -> void:
 	for caja: Node3D in cajas:
 		_cajas.append(caja)
 		_poses.append(caja.global_transform)
-	if _cajas.size() != 31:
-		_fallar("no se encontraron las 31 cajas de la noche")
+	if _cajas.size() != Catalogo.todos().size():
+		_fallar("no se encontraron todas las cajas de la noche")
 		return
 	_camara = Camera3D.new()
 	_camara.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF

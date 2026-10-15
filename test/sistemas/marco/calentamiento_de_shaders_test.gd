@@ -4,6 +4,70 @@ extends GdUnitTestSuite
 
 const CUANTOS := 20
 const ESPERA_MS := 5000
+const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+
+
+func test_el_util_se_calienta_con_reflejos_sin_mover_el_objeto_real() -> void:
+	var escena := _escena(1)
+	var reflejos := ReflectionProbe.new()
+	reflejos.position = Vector3(100, 2, 0)
+	reflejos.size = Vector3(2, 2, 2)
+	escena.add_child(reflejos)
+	var foco := SpotLight3D.new()
+	foco.position = Vector3(0, 10, 0)
+	foco.rotation.x = -PI / 2.0
+	foco.spot_range = 4.0
+	escena.add_child(foco)
+	var area := AreaLight3D.new()
+	area.position = foco.position
+	area.area_range = 4.0
+	escena.add_child(area)
+	var util := MeshInstance3D.new()
+	util.mesh = BoxMesh.new()
+	util.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	var pintura := ShaderMaterial.new()
+	pintura.shader = CONTORNO
+	util.set_surface_override_material(0, pintura)
+	escena.add_child(util)
+	var original := util.global_transform
+	var muestras: Array[MeshInstance3D] = []
+	var con_ambas_luces := [false]
+	var calentamiento := _calentamiento()
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			for muestra: MeshInstance3D in calentamiento.find_children(
+				"*", "MeshInstance3D", true, false
+			):
+				if not muestra.visible or muestra.mesh != util.mesh:
+					continue
+				var centro := muestra.global_transform * muestra.get_aabb().get_center()
+				if centro.distance_to(reflejos.global_position) < 0.01:
+					var camara := get_viewport().get_camera_3d()
+					if not camara.is_position_in_frustum(centro):
+						continue
+					var desde_foco := centro - foco.global_position
+					if (
+						foco.visible
+						and desde_foco.length() < foco.spot_range
+						and rad_to_deg(desde_foco.angle_to(-foco.global_basis.z)) < foco.spot_angle
+						and centro.distance_to(area.global_position) < area.area_range
+					):
+						con_ambas_luces[0] = true
+					assert_object(muestra.get_active_material(0)).is_same(pintura)
+					muestras.append(muestra)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_array(muestras).is_not_empty()
+	assert_bool(con_ambas_luces[0]).is_true()
+	assert_float(foco.spot_range).is_equal(4.0)
+	assert_float(foco.spot_angle).is_equal(45.0)
+	assert_int(reflejos.cull_mask).is_equal(1048575)
+	assert_int(reflejos.update_mode).is_equal(ReflectionProbe.UPDATE_ONCE)
+	assert_that(util.global_transform).is_equal(original)
+	await get_tree().process_frame
+	for muestra: MeshInstance3D in muestras:
+		assert_bool(is_instance_valid(muestra)).is_false()
 
 
 class MallaConContorno:
@@ -14,7 +78,7 @@ class MallaConContorno:
 	func _init() -> void:
 		mesh = BoxMesh.new()
 		material_override = StandardMaterial3D.new()
-		borde.shader = preload("res://src/sistemas/marco/contorno.gdshader")
+		borde.shader = CONTORNO
 		borde.set_shader_parameter("grosor", .023)
 		borde.set_shader_parameter("color", Color.CYAN)
 

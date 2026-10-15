@@ -1,8 +1,7 @@
 ## La red de seguridad en el almacén entero: adónde va lo que quedó adentro, y qué no cambia.
 ##
-## **El lugar adentro de un sólido es el entretecho:** el volumen macizo entre el cielorraso del
-## depósito y el techo. Mide casi tres metros de alto, así que ningún anillo alrededor de un objeto
-## sale de él, y ningún piso queda debajo a menos de la caída que se busca.
+## Los rescates parten de la chapa real del depósito. El caso sin candidatos agrega un sólido
+## de prueba: la chapa nueva es hueca y por sí sola permite salir al aire cercano.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -161,6 +160,15 @@ func test_el_origen_es_el_ultimo_recurso() -> void:  # AC-PLY-028
 
 func test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano() -> void:  # AC-PLY-029
 	var almacen: Node3D = await _almacen()
+	var bloque := StaticBody3D.new()
+	var forma := CollisionShape3D.new()
+	var volumen := BoxShape3D.new()
+	volumen.size = Vector3(8, 4, 8)
+	forma.shape = volumen
+	bloque.add_child(forma)
+	almacen.add_child(bloque)
+	bloque.global_position = ENTRETECHO
+	await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	almacen.get("_reposicion_manual").call("retirar", Producto.Id.MALBARDO)
@@ -201,7 +209,10 @@ func test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta() -> void:  # AC-PL
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(contada.datos, contada)).is_true()
 	var contenedor: Node3D = almacen.get_node(
-		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+		(
+			"Estructura/deposito_contenedor_grande_soporte/"
+			+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
+		)
 	)
 	contenedor.call("interactuar")
 	assert_int(recolector.tarea().depositadas()).is_equal(1)

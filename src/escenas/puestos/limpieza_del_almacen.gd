@@ -32,6 +32,9 @@ var _cantidad_mostrada := -1.0
 var _charcos := CharcosTemporales.new()
 var _recipiente_de_la_mojada: Node3D
 
+## Los pares declarados, para contestar si el clic derecho tendría efecto sin usar nada.
+var _pares := Uso.para_el_almacen()
+
 
 func _init() -> void:
 	# La escena también puede descartarse antes de entrar al árbol: el dibujo ya tiene dueño.
@@ -58,6 +61,7 @@ func _physics_process(delta: float) -> void:
 
 func _ready() -> void:
 	jugador.uso_pedido.connect(_al_pedir_uso)
+	jugador.consultar_el_derecho_con(_derecho_de_limpiar)
 	jugador.uso_sobre_superficie_pedido.connect(_al_usar_la_superficie)
 	jugador.paso_dado.connect(_al_dar_un_paso)
 	limpiador.balde_llenado.connect(_al_llenar_el_balde)
@@ -131,8 +135,12 @@ func _al_dar_pasada(lugar: PisoDelLocal.Lugar) -> void:
 			mancha.encoger()
 
 
+## El paso toca sólo las manchas del piso: una de pared o de techo no se pisa, aunque el jugador
+## pase a su lado o debajo.
 func _al_dar_un_paso() -> void:
 	for mancha: ManchaQueSeVe in manchas():
+		if PisoDelLocal.superficie_de(mancha.lugar_de_la_mancha()) != PisoDelLocal.Superficie.PISO:
+			continue
 		var distancia := mancha.global_position - jugador.global_position
 		if Vector2(distancia.x, distancia.z).length() <= 0.75:
 			mancha.tocar_en(jugador.global_position)
@@ -140,10 +148,17 @@ func _al_dar_un_paso() -> void:
 
 ## Deja las manchas, el balde y la mopa como los ve el dominio. Lo llama el cableado al abrir la
 ## jornada, y cada gesto que cambia algo.
+##
+## Una mancha que esta noche no puso queda oculta y con el cuerpo apagado: no se ve ni frena la
+## mira, y como `manchas()` no la devuelve, tampoco reserva el sector de un charco.
 func repintar() -> void:
 	var piso := limpiador.piso()
-	for mancha in manchas():
+	for mancha in _todas_las_manchas():
 		var estado := piso.mancha_de(mancha.lugar_de_la_mancha())
+		if estado == null:
+			mancha.mostrar(false, Color.TRANSPARENT)
+			mancha.hide()
+			continue
 		mancha.mostrar(not estado.esta_limpia(), estado.color(), estado.tipo())
 	balde.mostrar_la_carga(piso.balde().tiene_agua(), piso.balde().color())
 	mopa.mostrar_la_carga(
@@ -151,8 +166,21 @@ func repintar() -> void:
 	)
 
 
-## Las manchas que cuelgan de este puesto, en el orden del `.tscn`.
+## Las manchas de la noche, en el orden del `.tscn`: las que el piso de esta jornada declara.
+## Sin jornada abierta no hay ninguna.
 func manchas() -> Array[ManchaQueSeVe]:
+	var encontradas: Array[ManchaQueSeVe] = []
+	var piso := limpiador.piso()
+	if piso == null:
+		return encontradas
+	for mancha in _todas_las_manchas():
+		if piso.mancha_de(mancha.lugar_de_la_mancha()) != null:
+			encontradas.append(mancha)
+	return encontradas
+
+
+## Todos los discos que cuelgan de este puesto, uno por lugar, sean o no de esta noche.
+func _todas_las_manchas() -> Array[ManchaQueSeVe]:
 	var encontradas: Array[ManchaQueSeVe] = []
 	for hijo in get_children():
 		var mancha := hijo as ManchaQueSeVe
@@ -175,6 +203,18 @@ func _al_pedir_uso(objetivo: Node3D) -> void:
 		_recipiente_de_la_mojada = objetivo
 		limpiador.usar(jugador.id_en_la_mano(), destino)
 		_recipiente_de_la_mojada = null
+
+
+## Si el clic derecho sobre ese objetivo tendría efecto con lo que hay en la mano: el par declarado
+## alcanza, aunque el uso vaya a rechazarse. No toca el piso.
+func _derecho_de_limpiar(
+	objetivo: Node3D, sostenido: ObjetoDelAlmacen
+) -> ReferenciaDeControles.Derecho:
+	var destino := Uso.MANCHA if objetivo is ManchaQueSeVe else _destino_de(objetivo)
+	if destino == &"":
+		return ReferenciaDeControles.Derecho.NINGUNO
+	var en_la_mano := ObjetoDelAlmacen.SIN_ID if sostenido == null else sostenido.id
+	return ReferenciaDeControles.derecho_del_uso(_pares.resolver(en_la_mano, destino))
 
 
 ## Qué es, para limpiar, lo que la mira tiene adelante: un artefacto del baño dice qué es, y un
