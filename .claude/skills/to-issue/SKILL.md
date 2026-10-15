@@ -108,10 +108,17 @@ instrucciones necesitaban filtrar J1, mientras otro lector del primer mensaje se
 chapas o niveles, contrastar nombres reales, islas, materiales, normales y transformaciones
 del modelo. Separar las chapas físicas de los niveles con exhibición: una chapa vacía no
 autoriza un nivel activo nuevo. En #434, un umbral de distancia clasificaba cabeceras
-superiores como laterales y una tabla conservaba un mural ausente. Corregir el clasificador y
-la tabla conservó la geometría y el reparto de alturas; reconstruir lo que suponían habría
-cambiado el diseño. Guardar la medición independiente y probar el caso que confundía al
-detector antes de regenerar recursos.
+superiores como laterales y una tabla conservaba un mural ausente. El modelo original
+usaba cuatro niveles activos en cada cabecera, aunque el generador anterior declaraba tres.
+Guardar la medición independiente y probar el caso que confundía al detector antes de
+regenerar recursos; una tabla vieja no autoriza a reconstruir muebles ni a borrar exhibiciones.
+
+**La diferencia entre arte y contrato no se resuelve copiando el arte al contrato.** Medir
+filas, copias y modificadores de la fuente, y buscar cuándo y quién cerró la regla vigente.
+En #434, dos productos aparecían con una fila en el arte posterior, pero no estaban en la
+lista de excepciones cerrada antes por el diseñador. Medir apoyo e intersecciones de las
+alternativas permitidas y presentar las imágenes y la decisión concreta al dueño; ni la
+lista antigua de un generador ni el arte nuevo sustituyen esa decisión.
 
 **Un producto sin exhibición se sigue hasta los generadores de su fuente.** Buscar también
 extractores de mallas, miniaturas y validadores que localizan la unidad por su tanda, no sólo

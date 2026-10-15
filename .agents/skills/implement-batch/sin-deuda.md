@@ -132,6 +132,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 |---|---|
 | un ID nuevo que otra rama publicada ya asigna a otro comportamiento | `to-spec` e `implement-batch` — traer contratos abiertos, cruzar BR/AC/OQ y reservar contra toda la historia remota |
 | una tabla o detector que se tomó por geometría sin contrastar la malla | `to-issue` — medir nombres, chapas y niveles activos de manera independiente antes de fijar límites o reconstruir recursos |
+| arte posterior que difiere de una regla cerrada por el diseñador | `to-issue` — medir geometría e historia de la decisión, y consultar al dueño con alternativas concretas; no ratificar el contrato copiando la fuente |
 | un esquema visual convertido en exclusividad que el dibujo no pide | `to-issue` y `to-spec` — contrastar cada región antes de agrupar sectores entre muebles |
 | un producto sin exhibición que su extractor todavía busca por la tanda | `to-issue` — seguir también generadores de fuentes, miniaturas y validadores antes de cerrar límites |
 | un comando focal que sólo funciona desde otro directorio o con entorno omitido | `to-issue` — ejecutar literalmente cada verificación desde la raíz declarada |
