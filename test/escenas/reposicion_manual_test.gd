@@ -601,8 +601,8 @@ func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void
 	assert_object(agarre.manos().sostenido()).is_same(unidad)
 	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_equal(1)
 	assert_int(del_dominio.unidades_en_gondola(producto)).is_equal(del_dominio.cupo(producto))
-	# Devuelta a su caja, la caja la vuelve a contar.
-	_sacar_de_la_caja(jugador, caja)
+	# Devuelta por primario, la caja la vuelve a contar.
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(del_dominio.disponibles_para_retirar(producto)).is_equal(en_la_caja)
 

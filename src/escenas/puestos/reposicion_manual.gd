@@ -130,8 +130,10 @@ func preparar() -> void:
 	_preparar_la_guia()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	_preparar_los_casilleros()
-	jugador.uso_pedido.connect(usar_la_caja)
-	jugador.consultar_el_derecho_con(_derecho_sobre_la_caja)
+	jugador.uso_pedido.connect(
+		func(objetivo: Node3D) -> void: usar_la_caja(objetivo, jugador.uso_es_primario())
+	)
+	jugador.consultar_interaccion_con(_contexto_sobre_la_caja)
 	jugador.objetivo_enfocado.connect(_al_enfocar)
 	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
@@ -194,14 +196,8 @@ func _retirar_del_grupo(nodo: Node3D) -> void:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
-## Lo que el clic derecho hace con la caja apuntada: sacarle una unidad, devolverle la de la mano
-## o nada.
-##
-## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
-## que no es una caja. **Cuál de los tres toca lo contesta la caja**, en `dominio/`, según lo que
-## haya en la mano; acá sólo se busca la acción de ese gesto. Llevar una caja es otra cosa en la
-## mano, y por eso a la que se lleva no se le saca nada.
-func usar_la_caja(objetivo: Node3D) -> void:
+## Traduce el gesto recibido al resultado de la caja; no deriva el botón de lo que lleva la mano.
+func usar_la_caja(objetivo: Node3D, primario: bool = false) -> void:
 	var caja := objetivo as CajaDelDeposito
 	if caja == null:
 		return
@@ -210,21 +206,21 @@ func usar_la_caja(objetivo: Node3D) -> void:
 		ContenidoDeLaCaja.Gesto.METER: devolver,
 		ContenidoDeLaCaja.Gesto.NADA: func(_id: Producto.Id) -> void: pass,
 	}
-	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido())
+	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido(), primario)
 	acciones[gesto].call(caja.producto)
 
 
-## Si el clic derecho sobre la caja sacaría o metería: lo contesta su contenido, sin hacerlo.
-func _derecho_sobre_la_caja(
+## El contenido declara ambos gestos y la capacidad sin sacar ni devolver una unidad.
+func _contexto_sobre_la_caja(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
-) -> ReferenciaDeControles.Derecho:
+) -> ReferenciaDeControles.Contexto:
 	var caja := objetivo as CajaDelDeposito
 	if caja == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return null
 	var contenido := repositor.caja(caja.producto)
 	if contenido == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
-	return ReferenciaDeControles.derecho_de_la_caja(contenido.derecho_posible(sostenido))
+		return null
+	return ReferenciaDeControles.contexto_de_la_caja(contenido, sostenido)
 
 
 ## Mete en su caja la unidad de la mano y guarda su cuerpo, que deja de verse. Si la caja no la

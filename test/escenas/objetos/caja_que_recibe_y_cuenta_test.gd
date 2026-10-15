@@ -60,7 +60,7 @@ func test_el_clic_con_su_unidad_en_la_mano_la_devuelve_a_la_caja() -> void:  # A
 	var cuerpo: Node3D = agarre.punto_de_producto.get_child(0)
 	assert_bool(cuerpo.is_visible_in_tree()).is_true()
 	assert_int(contenido.unidades()).is_equal(lleno - 1)
-	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(agarre.punto_de_producto.get_child_count()).is_zero()
 	assert_bool(cuerpo.is_visible_in_tree()).is_false()
@@ -131,7 +131,7 @@ func test_con_la_caja_llena_la_unidad_sigue_en_la_mano() -> void:  # AC-STK-040
 	var unidad := agarre.manos().sostenido() as UnidadDeProducto
 	assert_object(unidad).is_not_null()
 	assert_int(repositor.caja(coracola.id).unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
-	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_same(unidad)
 	assert_int(agarre.punto_de_producto.get_child_count()).is_equal(1)
 	assert_int(repositor.caja(coracola.id).unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
@@ -152,7 +152,7 @@ func test_una_unidad_soltada_y_levantada_se_devuelve() -> void:  # AC-STK-039
 	# En el piso sigue afuera de la caja.
 	assert_int(contenido.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
 	assert_bool(agarre.pedir_agarrar(cuerpo.get("datos"), cuerpo)).is_true()
-	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_bool(cuerpo.is_visible_in_tree()).is_false()
 	assert_int(contenido.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)

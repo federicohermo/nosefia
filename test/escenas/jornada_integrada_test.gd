@@ -523,7 +523,7 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  
 	var repositor: Repositor = almacen.get("_repositor")
 	assert_int(repositor.caja(vacia).unidades()).is_zero()
 	puesto.call("usar_la_caja", cajas[Producto.Id.JORGILLO])
-	puesto.call("usar_la_caja", cajas[Producto.Id.JORGILLO])
+	puesto.call("usar_la_caja", cajas[Producto.Id.JORGILLO], true)
 	assert_object(agarre.manos().sostenido()).is_null()
 	puesto.call("usar_la_caja", cajas[Producto.Id.MALBARDO])
 	assert_object(agarre.manos().sostenido() as UnidadDeProducto).is_not_null()

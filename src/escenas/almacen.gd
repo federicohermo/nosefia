@@ -192,7 +192,7 @@ func _ready() -> void:
 	_recolector.bolsas = _bolsas
 	_recolector.bolsa_sacada.connect(_al_sacar_una_bolsa)
 	_jugador.uso_pedido.connect(_usar_un_tacho)
-	_jugador.consultar_el_derecho_con(_derecho_sobre_un_tacho)
+	_jugador.consultar_interaccion_con(_contexto_sobre_un_tacho)
 	_jugador.referencia_cambiada.connect(_hud.pintar_referencia)
 	_recolector.objeto_tirado.connect(_contenedor.recibir)
 	_recolector.objeto_tirado.connect(_al_tirar_un_objeto)
@@ -662,13 +662,13 @@ func _usar_un_tacho(objetivo: Node3D) -> void:
 
 
 ## Si sacar la bolsa de ese tacho tendría efecto: lo contesta la tarea, sin sacarla.
-func _derecho_sobre_un_tacho(
+func _contexto_sobre_un_tacho(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
-) -> ReferenciaDeControles.Derecho:
+) -> ReferenciaDeControles.Contexto:
 	if not objetivo is TachoDelLocal or _recolector.tarea() == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return null
 	var con_bolsa := _recolector.tarea().tiene_bolsa(objetivo.tacho)
-	return ReferenciaDeControles.derecho_del_tacho(con_bolsa, sostenido != null)
+	return ReferenciaDeControles.contexto_del_tacho(con_bolsa, sostenido != null)
 
 
 func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:

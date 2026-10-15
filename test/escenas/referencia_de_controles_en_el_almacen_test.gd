@@ -64,7 +64,7 @@ func test_los_dos_ejemplos_de_la_ficha_en_el_local() -> void:  # AC-PLY-082
 	assert_array(_referencia(almacen, lavatorio)).contains_exactly(["[E] Examinar"])
 	_agarrar(almacen, almacen.get_node("Objetos/Balde"))
 	assert_array(_referencia(almacen, lavatorio)).contains_exactly(
-		["[E] Examinar (mano)", "[Click Izq] Dejar", "[Click Der] Interactuar"]
+		["[E] Examinar (mano)", "[Click Izq] Llenar"]
 	)
 	# El contador de tareas sigue arriba de la primera línea.
 	var hud: Node = almacen.get("_hud")
@@ -83,14 +83,14 @@ func test_la_caja_del_deposito_saca_y_mete_en_el_local() -> void:  # AC-PLY-083
 		["[E] Examinar", "[Click Izq] Agarrar", "[Click Der] Sacar producto"]
 	)
 	# Sacar una por el camino del clic deja la caja con una menos y la unidad en la mano.
-	almacen.get("_reposicion_manual").call("usar_la_caja", caja)
+	almacen.get("_reposicion_manual").call("usar_la_caja", caja, false)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
 	assert_array(_referencia(almacen, caja)).contains_exactly(
-		["[E] Examinar (mano)", "[Click Izq] Dejar", "[Click Der] Meter producto"]
+		["[E] Examinar (mano)", "[Click Izq] Meter producto"]
 	)
 	# Otra caja en la mano mirando ésta: sin línea del derecho.
-	almacen.get("_reposicion_manual").call("usar_la_caja", caja)
+	almacen.get("_reposicion_manual").call("usar_la_caja", caja, true)
 	assert_object(agarre.manos().sostenido()).is_null()
 	_agarrar(almacen, almacen.get("_cajas_de_productos")[1])
 	assert_array(_referencia(almacen, caja)).contains_exactly(
@@ -102,11 +102,11 @@ func test_el_derecho_no_adelanta_el_resultado_en_el_local() -> void:  # AC-PLY-0
 	var almacen := await _abrir()
 	# La puerta trabada con la mano vacía avisa: tiene efecto.
 	assert_array(_referencia(almacen, almacen.get_node(PORTON))).contains_exactly(
-		["[E] Examinar", "[Click Der] Interactuar"]
+		["[E] Examinar", "[Click Izq] Abrir"]
 	)
 	# La puerta que abre se abre con el izquierdo: el derecho no hace nada sobre ella.
 	assert_array(_referencia(almacen, almacen.get_node(PUERTA_INTERIOR))).contains_exactly(
-		["[E] Examinar"]
+		["[E] Examinar", "[Click Izq] Abrir"]
 	)
 	# El lector con la mano vacía no; con una unidad sí, aunque los renglones estén llenos.
 	var lector: Node3D = almacen.get_node(LECTOR)
@@ -118,7 +118,7 @@ func test_el_derecho_no_adelanta_el_resultado_en_el_local() -> void:  # AC-PLY-0
 	var renglones := caja.generador().renglones().size()
 	_agarrar(almacen, unidad)
 	assert_array(_referencia(almacen, lector)).contains_exactly(
-		["[E] Examinar (mano)", "[Click Izq] Dejar", "[Click Der] Interactuar"]
+		["[E] Examinar (mano)", "[Click Izq] Interactuar"]
 	)
 	assert_int(caja.generador().renglones().size()).is_equal(renglones)
 	# El inodoro con la unidad no; el lavatorio con la unidad tampoco.
@@ -142,7 +142,7 @@ func test_el_ticket_sobre_el_inodoro_cuenta_en_el_local() -> void:  # AC-PLY-084
 	almacen.add_child(papel)
 	_agarrar(almacen, papel)
 	assert_array(_referencia(almacen, inodoro)).contains_exactly(
-		["[E] Examinar (mano)", "[Click Izq] Dejar", "[Click Der] Interactuar"]
+		["[E] Examinar (mano)", "[Click Izq] Interactuar"]
 	)
 
 
@@ -152,7 +152,14 @@ func test_lo_que_se_tira_al_contenedor_se_lee_dejar_en_el_local() -> void:  # AC
 	for parte: Node3D in [almacen.get("_contenedor"), almacen.get("_tapa_del_contenedor")]:
 		var lineas := _referencia(almacen, parte)
 		assert_array(lineas).contains_exactly(
-			["[E] Examinar (mano)", "[Click Izq] Dejar", "[Click Der] Interactuar"]
+			[
+				"[E] Examinar (mano)",
+				(
+					"[Click Izq] Interactuar"
+					if parte == almacen.get("_contenedor")
+					else "[Click Izq] Cerrar"
+				)
+			]
 		)
 
 
@@ -164,15 +171,13 @@ func test_consultar_el_tacho_no_le_saca_la_bolsa() -> void:  # AC-PLY-085
 	var cual: TareaDeLaBasura.Tacho = tacho.get("tacho")
 	assert_bool(recolector.tarea().tiene_bolsa(cual)).is_true()
 	assert_array(_referencia(almacen, tacho)).contains_exactly(
-		["[E] Examinar", "[Click Der] Interactuar"]
+		["[E] Examinar", "[Click Izq] Interactuar"]
 	)
 	assert_bool(recolector.tarea().tiene_bolsa(cual)).is_true()
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_object(agarre.manos().sostenido()).is_null()
 	_agarrar(almacen, _unidad(almacen, Producto.Id.ACTRONCITO))
-	assert_array(_referencia(almacen, tacho)).contains_exactly(
-		["[E] Examinar (mano)", "[Click Izq] Dejar"]
-	)
+	assert_array(_referencia(almacen, tacho)).contains_exactly(["[E] Examinar (mano)"])
 
 
 func test_sin_nada_que_hacer_la_referencia_esta_vacia() -> void:  # AC-PLY-087
@@ -180,14 +185,26 @@ func test_sin_nada_que_hacer_la_referencia_esta_vacia() -> void:  # AC-PLY-087
 	assert_array(_referencia(almacen, null)).is_empty()
 
 
+func test_lo_fijo_nombra_abrir_cerrar_y_mirar() -> void:  # AC-PLY-084
+	var almacen := await _abrir()
+	var puerta: Node3D = almacen.get_node(PUERTA_INTERIOR)
+	assert_array(_referencia(almacen, puerta)).contains_exactly(
+		["[E] Examinar", "[Click Izq] Abrir"]
+	)
+	puerta.call("accionar")
+	assert_array(_referencia(almacen, puerta)).contains_exactly(
+		["[E] Examinar", "[Click Izq] Cerrar"]
+	)
+	var nota: Node3D = almacen.get_node("Estructura/NotasDelAlmacen").get("notas")[0]
+	assert_array(_referencia(almacen, nota)).contains_exactly(["[E] Examinar", "[Click Izq] Mirar"])
+
+
 func test_suspendido_la_referencia_esta_vacia_y_vuelve() -> void:  # AC-PLY-089
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
 	var lavatorio: Node3D = almacen.get_node(LAVATORIO)
 	_agarrar(almacen, almacen.get_node("Objetos/Balde"))
-	var con_el_balde: Array[String] = [
-		"[E] Examinar (mano)", "[Click Izq] Dejar", "[Click Der] Interactuar"
-	]
+	var con_el_balde: Array[String] = ["[E] Examinar (mano)", "[Click Izq] Llenar"]
 	assert_array(_referencia(almacen, lavatorio)).contains_exactly(con_el_balde)
 	# Una nota, la computadora, la caja, la ventanilla y el examen suspenden por la misma puerta.
 	jugador.call("suspender")

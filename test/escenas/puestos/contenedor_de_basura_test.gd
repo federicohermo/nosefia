@@ -94,7 +94,7 @@ func test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre() -> void:  # AC-CLN
 	assert_bool(tapa.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 	assert_array(tapa.mallas).has_size(2)
 	assert_object(tapa.call("interactuar")).is_null()
-	tapa.usar()
+	tapa.accionar()
 	await _terminar_el_giro(tapa)
 	var centro := _centro_interior(contenedor)
 	var golpe := _rayo(almacen, _boca(contenedor) + Vector3.UP * 0.3, centro)
@@ -104,7 +104,7 @@ func test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre() -> void:  # AC-CLN
 		assert_float(golpe.position.y).is_greater(_boca(contenedor).y)
 	assert_bool(tapa.call("recibe_objetos")).is_false()
 	assert_vector(tapa.bisagra.global_position).is_equal_approx(bisagra, Vector3.ONE * 0.00001)
-	tapa.usar()
+	tapa.accionar()
 	await _terminar_el_giro(tapa)
 	golpe = _rayo(almacen, _boca(contenedor) + Vector3.UP * 0.3, centro)
 	assert_bool(golpe.is_empty()).is_false()
@@ -117,7 +117,7 @@ func test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre() -> void:  # AC-CLN
 	assert_vector(tapa.bisagra.global_position).is_equal_approx(bisagra, Vector3.ONE * 0.00001)
 
 
-func test_clic_derecho_sobre_el_cuerpo_tambien_alterna_la_tapa() -> void:  # AC-CLN-034
+func test_el_cuerpo_no_alterna_y_solo_el_primario_sobre_tapa_alterna() -> void:  # AC-CLN-034
 	var almacen := await _abrir()
 	var contenedor: StaticBody3D = almacen.get_node(
 		BASE_DEL_CONTENEDOR + "deposito_contenedor_grande_cuerpo/StaticBody3D"
@@ -130,7 +130,7 @@ func test_clic_derecho_sobre_el_cuerpo_tambien_alterna_la_tapa() -> void:  # AC-
 	var cuerpo: StaticBody3D = golpe.collider
 	assert_str(str(almacen.get_path_to(cuerpo))).contains("deposito_contenedor_grande_cuerpo")
 	assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR)).is_true()
+	assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR)).is_false()
 	assert_object(cuerpo.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
 	jugador.set_physics_process(false)
@@ -139,6 +139,12 @@ func test_clic_derecho_sobre_el_cuerpo_tambien_alterna_la_tapa() -> void:  # AC-
 	clic.button_index = MOUSE_BUTTON_RIGHT
 	clic.pressed = true
 	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
+	jugador.call("_unhandled_input", clic)
+	assert_bool(tapa.call("recibe_objetos")).is_true()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	jugador.call("_unhandled_input", clic)
+	assert_bool(tapa.call("recibe_objetos")).is_true()
+	jugador.set("_enfocado", tapa)
 	jugador.call("_unhandled_input", clic)
 	await _terminar_el_giro(tapa)
 	assert_bool(tapa.call("recibe_objetos")).is_false()
@@ -152,14 +158,14 @@ func test_clic_derecho_sobre_el_cuerpo_tambien_alterna_la_tapa() -> void:  # AC-
 func test_bolsa_con_tapa_cerrada_se_conserva_hasta_el_clic_abierta() -> void:  # AC-CLN-035
 	var almacen := await _abrir()
 	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
-	tapa.usar()
+	tapa.accionar()
 	await _terminar_el_giro(tapa)
 	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
 	tapa.interactuar()
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
-	tapa.usar()
+	tapa.accionar()
 	await _terminar_el_giro(tapa)
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
 	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
@@ -172,7 +178,7 @@ func test_reiniciar_restaura_tapa_abierta() -> void:  # AC-CLN-034
 	var almacen := await _abrir()
 	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
 	var abierta := tapa.bisagra.global_transform
-	tapa.usar()
+	tapa.accionar()
 	await _terminar_el_giro(tapa)
 	almacen.call("_al_abrir_la_jornada", 2)
 	await get_tree().physics_frame
@@ -201,7 +207,7 @@ func test_la_tapa_se_detiene_ante_un_objeto_y_continua_cuando_se_retira() -> voi
 	obstaculo.global_position = _boca(contenedor) + Vector3.UP * 0.07
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	tapa.usar()
+	tapa.accionar()
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var estado: TapaDelContenedor = tapa.get("_tapa")
@@ -222,7 +228,7 @@ func test_la_tapa_se_detiene_ante_un_objeto_y_continua_cuando_se_retira() -> voi
 		await get_tree().physics_frame
 	assert_float(estado.angulo()).is_equal(0.0)
 	assert_bool(tapa.call("recibe_objetos")).is_false()
-	tapa.usar()
+	tapa.accionar()
 	for cuadro in 60:
 		await get_tree().physics_frame
 	assert_float(estado.angulo()).is_equal(TapaDelContenedor.ANGULO_ABIERTA)
