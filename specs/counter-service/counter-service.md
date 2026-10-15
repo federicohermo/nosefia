@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; migración de los specs 013, 035
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365 y #366; migración de los specs 013, 035
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -191,9 +191,9 @@ lavatorio con un ticket NO DEBE desecharlo.
 
 ### BR-CTR-026 — La primera jornada usa horarios propios
 
-EN la primera jornada, el sistema DEBE recibir a Martín desde las 22:00 hasta las 00:00 y a
-Tiago desde las 04:00 hasta las 06:00. La llegada se incluye y el límite se excluye.
-Martín DEBE pedir un Marolini, una Coracola y un Malbardo. Tiago DEBE pedir dos Zucarachas
+EN la primera jornada, el sistema DEBE recibir a Tin desde las 22:00 hasta las 00:00 y a
+Tia desde las 04:00 hasta las 06:00. La llegada se incluye y el límite se excluye.
+Tin DEBE pedir un Marolini, una Coracola y un Malbardo. Tia DEBE pedir una Zucarachas
 y un Pepito. Estos horarios DEBEN derivarse del reloj del turno, cuya apertura es a las 20:00.
 Las jornadas siguientes DEBEN conservar el padrón y recorrido anteriores, sin copiar estos personajes.
 
@@ -202,8 +202,17 @@ Las jornadas siguientes DEBEN conservar el padrón y recorrido anteriores, sin c
 CUANDO se cruza una llegada, el sistema DEBE publicar una sola llegada aunque la ventanilla esté
 cerrada. Repetir un instante o reabrir NO DEBE llamar ni repetir al comprador.
 CUANDO se cruza el límite con una compra incompleta, el sistema DEBE publicar una sola salida,
-cerrar su conversación y retirar con él los productos recibidos y el ticket aceptado.
-Esos productos DEBEN salir del inventario sin contar como venta. El ticket DEBE descartarse.
+cerrar su conversación y dejar todos los productos recibidos apoyados en el piso del local
+frente a la ventanilla, del lado de adentro. DEBEN conservar su identidad y quedar visibles,
+con física y recogibles, sin superponerse entre sí, con el jugador ni con los sólidos del local.
+DEBEN seguir registrados afuera de su caja, sin cambiar depósito, contenido de caja ni góndola
+por el vencimiento y sin contar como venta. DEBEN admitir los mismos gestos y consecuencias
+de cualquier unidad suelta: agarrar, colocar en su casillero vacío, devolver a su caja o tirar
+al contenedor. Dejarlos en el piso interior al cierre DEBE contar como desorden, sin producir
+el motivo de objeto afuera, según [`store-cleanup`](../store-cleanup/store-cleanup.md).
+El ticket aceptado DEBE descartarse y NO DEBE aparecer en el piso. Sin productos recibidos
+NO DEBE aparecer ninguna unidad. Repetir el vencimiento NO DEBE duplicar ni volver a soltar
+las unidades. Una compra completa DEBE retirar sus productos y ticket con el comprador.
 Un salto DEBE procesar todos los cruces en orden. Una compra completa NO DEBE vencer.
 Cerrar la ventanilla NO DEBE detener el horario; la pausa DEBE detenerlo.
 
@@ -215,9 +224,27 @@ NO DEBEN recibirse ni rechazarse. Terminada esa conversación, un clic con manos
 mostrar un recordatorio de una entrada. Mientras una entrada esté activa, el clic DEBE avanzar
 el diálogo, también con un objeto rechazado en la mano. Terminada la entrada, con objeto sostenido
 DEBE intentar recibirlo sin avanzar diálogo en el mismo clic. Reabrir DEBE conservar el estado.
-Los textos DEBEN corresponder al diseño de Figma, con las cantidades del pedido de la ficha:
-una Marolini para Martín, Coracola en lugar de Pura-Cola y dos Zucarachas para Tiago.
-Los productos pedidos DEBEN distinguirse con negrita y color.
+Los textos DEBEN conservar el diseño de Figma y usar las cantidades del pedido de la ficha
+«Atención al cliente»: un Marolini para Tin, Coracola en lugar de Pura-Cola y una Zucarachas
+para Tia. La tabla de pedidos DEBE prevalecer sobre cantidades distintas en los diálogos.
+CUANDO un recordatorio o rechazo nombra una unidad, el sistema DEBE usar el subtítulo al
+examinar de la base «Productos y cajas contenedoras», con primera letra en minúscula y sin
+el punto final, sustituyendo Pura-Cola por Coracola. Para los pedidos de la primera noche:
+
+| Producto | Texto de una unidad |
+|---|---|
+| Marolini | una caja de fideos Marolini |
+| Coracola | una lata de Coracola |
+| Malbardo | un paquete de cigarrillos Malbardo |
+| Zucarachas | una caja de cereal Zucarachas |
+| Pepito | una caja de galletitas Pepito |
+
+El recordatorio DEBE enumerar el pedido entero en el orden de la tabla de compradores,
+incluso después de una entrega parcial: «Quiero [producto1], [producto2] y [producto3].»
+para Tin y «Quiero [producto1] y [producto2].» para Tia. El rechazo DEBE anteponer
+«Yo no pedí esto. » al mismo texto. La entrada inicial de Tia DEBE decir
+«Hola! Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito, por favor.».
+Los nombres de los productos pedidos DEBEN distinguirse con negrita y color.
 
 ### BR-CTR-029 — Productos pendientes y ticket exacto
 
@@ -247,7 +274,7 @@ Una nueva jornada DEBE empezar sin agenda, conversación, entregas, cuerpos ni v
 
 El sistema DEBE mostrar a cada comprador con sus ocho dibujos en orden numérico, en bucle,
 con transparencia y proporción conservadas, con una duración uniforme de 0,5 segundos por dibujo.
-Martín DEBE usar su animación nueva. La pausa DEBE detener la animación.
+Tin DEBE usar su animación nueva. La pausa DEBE detener la animación.
 Al irse el comprador, su imagen DEBE dejar de mostrarse.
 MIENTRAS espera, DEBE verse detrás de la ventanilla dentro del mundo aunque la interfaz esté
 cerrada. Su dibujo DEBE mantener posición y orientación fijas hacia el interior del local,
@@ -476,15 +503,16 @@ desechado.
 
 ### AC-CTR-034 — Las dos ventanas *(verifica BR-CTR-026, BR-CTR-027)*
 
-DADO la primera noche CUANDO pasan 21:59:59, 22:00:00, 23:59:59 y 00:00:00 ENTONCES Martín está
+DADO la primera noche CUANDO pasan 21:59:59, 22:00:00, 23:59:59 y 00:00:00 ENTONCES Tin está
 ausente, llega, espera y vence. DADO 03:59:59, 04:00:00, 05:59:59 y 06:00:00 ENTONCES ocurre
-lo mismo con Tiago. Repetir cada instante no repite eventos. Los pedidos son los de BR-CTR-026.
+lo mismo con Tia. Repetir cada instante no repite eventos. Tin pide un Marolini, una Coracola
+y un Malbardo; Tia pide una Zucarachas y un Pepito, sin una segunda Zucarachas.
 
 ### AC-CTR-035 — Cruces con la ventanilla cerrada *(verifica BR-CTR-027)*
 
 DADO la ventanilla cerrada CUANDO el tiempo cruza toda la noche ENTONCES se publican llegada
-de Martín, salida de Martín, llegada de Tiago y salida de Tiago, en ese orden, sin nadie esperando.
-DADO Martín esperando CUANDO se cierra y reabre ENTONCES no hay nueva llegada; en pausa no vence.
+de Tin, salida de Tin, llegada de Tia y salida de Tia, en ese orden, sin nadie esperando.
+DADO Tin esperando CUANDO se cierra y reabre ENTONCES no hay nueva llegada; en pausa no vence.
 
 ### AC-CTR-036 — Prioridad de la conversación *(verifica BR-CTR-028, BR-CTR-029)*
 
@@ -492,17 +520,38 @@ DADO un objeto en la mano CUANDO se inicia y avanza la conversación inicial ENT
 cambia una entrada por clic, sin recibir ni rechazar el objeto. Al terminar, manos vacías muestran
 un recordatorio; un objeto correcto se recibe y ese clic no avanza una conversación.
 Reabrir conserva el progreso y los nombres pedidos aparecen con negrita y color.
+DADO Tia CUANDO se inicia su conversación ENTONCES tiene una entrada cuyo texto visible es
+«Hola! Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito, por favor.»,
+con «Zucarachas» y «Pepito» en negrita y color. La conversación inicial de Tin conserva sus
+tres entradas y ambos conservan los textos de sus despedidas.
 
-### AC-CTR-037 — Identidad y sobrantes *(verifica BR-CTR-029)*
+### AC-CTR-037 — Identidad y sobrantes *(verifica BR-CTR-028, BR-CTR-029)*
 
-DADO Tiago listo para recibir CUANDO recibe una Zucarachas ENTONCES falta otra.
-Repetir esa identidad, ofrecer una tercera, un producto ajeno u otro objeto se rechaza sin
-alterar entregas ni mano. El rechazo recuerda dos Zucarachas y un Pepito.
+DADO Tia lista para recibir CUANDO recibe una Zucarachas ENTONCES no falta otra Zucarachas
+y sigue pendiente un Pepito. CUANDO se ofrece otra Zucarachas con identidad distinta, la misma
+unidad ya recibida, un producto ajeno u otro objeto ENTONCES se rechaza sin alterar entregas,
+mano ni ventas. DADO un pedido de prueba de dos Zucarachas CUANDO se entrega una unidad y se
+repite su identidad ENTONCES se rechaza la repetición y sigue faltando una; una segunda unidad
+distinta se acepta y una tercera se rechaza como sobrante.
+
+DADO cada comprador de la primera noche, terminada su conversación inicial, CUANDO se ofrece
+un objeto incorrecto ENTONCES el texto visible del rechazo es:
+
+| Comprador | Rechazo |
+|---|---|
+| Tin | Yo no pedí esto. Quiero una caja de fideos Marolini, una lata de Coracola y un paquete de cigarrillos Malbardo. |
+| Tia | Yo no pedí esto. Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito. |
+
+CUANDO se le habla con manos vacías ENTONCES el recordatorio tiene el mismo texto sin
+«Yo no pedí esto. ». Los nombres de los productos llevan negrita y color en ambos textos.
+Para Tia, antes y después de recibir la Zucarachas, rechazo y recordatorio enumeran el mismo
+pedido entero, incluido el Pepito pendiente.
 
 ### AC-CTR-038 — El ticket es un multiconjunto *(verifica BR-CTR-029, BR-CTR-030)*
 
-DADO Tiago CUANDO recibe un ticket con Pepito y dos Zucarachas en cualquier orden ENTONCES se
-acepta. Una o tres Zucarachas, omitir Pepito o agregar otro producto se rechaza.
+DADO Tia CUANDO recibe un ticket con una Zucarachas y un Pepito, o un Pepito y una Zucarachas,
+ENTONCES se acepta. Cero o dos Zucarachas, omitir Pepito o agregar otro producto se rechaza
+sin alterar mano, entregas ni ventas.
 Sólo ticket o sólo productos dejan la compra incompleta y las ventas en cero.
 
 ### AC-CTR-039 — Venta y despedida *(verifica BR-CTR-030)*
@@ -515,14 +564,19 @@ y su imagen conserva la salida de BR-CTR-033.
 ### AC-CTR-040 — Perder una compra parcial *(verifica BR-CTR-027, BR-CTR-030, BR-CTR-031)*
 
 DADO una compra parcial, incluso hablando, CUANDO llega el límite ENTONCES sale una vez,
-se cierra el diálogo y sus productos y ticket dejan el mundo con él.
+se cierra el diálogo, sus productos quedan en el piso interior frente a la ventanilla y el
+ticket aceptado deja de existir sin aparecer en el piso.
 Las ventas de esa compra siguen en cero. Completar la otra no cumple atención.
+DADO por separado una compra sin elementos, sólo con ticket, con una unidad o con todos los
+productos pero sin ticket CUANDO vence ENTONCES aparecen respectivamente cero, cero, una
+o todas sus unidades; ningún caso suma una venta. Un salto que cruza los dos vencimientos
+procesa ambas compras una sola vez, y repetir el instante no vuelve a entregar sus unidades.
 
 ### AC-CTR-041 — Ambas compras y reinicio *(verifica BR-CTR-026, BR-CTR-031)*
 
-DADO la primera noche CUANDO se completa sólo Martín ENTONCES atención sigue sin cumplir.
-Al completar Tiago, cuenta una vez; lo vendido es un Marolini, una Coracola, un Malbardo,
-dos Zucarachas y un Pepito. Reabrir conserva ese resultado. Reiniciar crea estados nuevos
+DADO la primera noche CUANDO se completa sólo Tin ENTONCES atención sigue sin cumplir.
+Al completar Tia, cuenta una vez; lo vendido es un Marolini, una Coracola, un Malbardo,
+una Zucarachas y un Pepito. Reabrir conserva ese resultado. Reiniciar crea estados nuevos
 sin entregas ni ventas. Las jornadas 2–5 conservan el recorrido anterior.
 
 ### AC-CTR-042 — Dos animaciones y pausa *(verifica BR-CTR-032)*
@@ -558,6 +612,23 @@ deslizándose desde la izquierda hasta el sitio de espera, conservando altura, p
 orientación y animación. Después permanece quieto. Abrir, cerrar y repintar no reinician el
 movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el turno lo retira.
 
+### AC-CTR-046 — Lo abandonado queda adentro y se puede recuperar *(verifica BR-CTR-027)*
+
+DADO Tin con sus tres productos recibidos pero sin ticket, y el jugador asomado a la ventanilla,
+CUANDO vence la compra ENTONCES las tres unidades conservan sus identidades y quedan visibles,
+con física y recogibles, apoyadas en el piso del lado interior frente a la ventanilla,
+sin superponerse entre sí, con el jugador ni con un sólido. La pausa detiene su caída y reanudar
+la continúa. Repetir el vencimiento no crea otras unidades ni recoloca las recuperadas.
+
+DADO esas unidades como únicos cuerpos desordenados CUANDO se cierra la noche con las tres
+en el piso ENTONCES hay un único motivo de desorden y ninguno de objeto afuera. DADO el mismo
+caso CUANDO se coloca cada una en un casillero vacío de su producto, se devuelven a sus cajas
+con espacio, o se colocan dos y se sostiene la tercera sin examinarla, y se cierra ENTONCES
+no hay ninguno de esos dos motivos. Agarrarlas conserva su producto e identidad; una unidad
+devuelta a una caja llena permanece en la mano. Tirar una al contenedor conserva el descuento
+y el motivo de objeto importante tirado de las unidades sueltas. Abrir la jornada siguiente
+retira las unidades que hayan quedado en el piso, sin heredarlas como nuevas entregas.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuántas unidades hay ni dónde están: se lo pregunta a
@@ -572,7 +643,8 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
   sostenido con su destino de uso.
 - **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
   faltantes, cuántos van despachados, el desvío de la noche, lo vendido de cada producto y el
-  papel impreso o desechado.
+  papel impreso o desechado; al vencer una compra incompleta, las unidades recibidas que
+  vuelven al piso interior y el descarte del ticket aceptado.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
   rechaza todo lo demás. Fuera de la entrega al comprador, usar un objeto que no sea ticket,
   o un destino distinto del inodoro, no produce descarte.
@@ -583,6 +655,7 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
   los renglones cambiados, el ticket impreso y el descarte de un ticket.
 - El comprador que llega, la entrada de diálogo mostrada, el diálogo cerrado y la atención
   despachada.
+- La compra vencida y sus unidades abandonadas, una sola vez por compra.
 
 ## Dependencias
 
@@ -593,7 +666,8 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume y alimenta): el número de jornada
   decide el modo del programa; se avisa cuándo la obligatoria quedó cumplida.
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): distingue inodoro y lavatorio;
-  desechar papel conserva los efectos de limpieza de las herramientas.
+  desechar papel conserva los efectos de limpieza de las herramientas; las unidades abandonadas
+  adentro participan del desorden al cierre y de las consecuencias de tirar objetos importantes.
 
 ## Preguntas abiertas
 
@@ -609,3 +683,10 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
     deja ventas que se rechazan.
   - Decide: game design.
   - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón.
+- **OQ-CTR-003 — ¿Cuáles son los límites de atención de la primera noche?**
+  - Por qué sigue abierta: la ficha «Atención al cliente» consultada el 2026-10-15 indica
+    01:00 para Tin y 07:00 para Tia, pero la decisión de #365 conserva los límites vigentes
+    de 00:00 y 06:00. No hay una resolución que concilie ambas fuentes.
+  - Decide: game design.
+  - Bloquea: cambiar los límites de BR-CTR-026 y sus bordes en AC-CTR-034; no bloquea los
+    nombres ni los pedidos resueltos.

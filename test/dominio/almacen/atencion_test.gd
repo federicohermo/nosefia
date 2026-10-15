@@ -252,3 +252,45 @@ func test_el_aviso_nombra_lo_que_no_se_puede_vender_y_es_vacio_si_esta_todo() ->
 	var corta := _atencion(0, 1)
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_str(corta.aviso()).is_equal(Atencion.TEXTO_DE_LOS_FALTANTES % actroncito.nombre)
+
+
+func test_vencer_conserva_cero_ticket_parcial_y_todos_sin_vender() -> void:  # AC-CTR-040
+	for modo: int in [0, 1, 2, 3]:
+		var comprador := Compradores.de_la_jornada(1)[0]
+		var inventario := Inventario.new(Catalogo.todos())
+		for producto in Catalogo.todos():
+			inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+		var atencion := Atencion.new(comprador, inventario)
+		while not atencion.conversacion_iniciada() or not atencion.puede_abandonar():
+			atencion.interactuar(null)
+		var unidades: Array[UnidadDeProducto] = []
+		var renglones: Array[Producto] = []
+		for producto in comprador.pedido().productos():
+			renglones.append(producto)
+			if modo == 3 or (modo == 2 and unidades.is_empty()):
+				var unidad := Estante.new(inventario, Catalogo.todos()).retirar(producto)
+				unidades.append(unidad)
+				assert_int(atencion.interactuar(unidad)).is_equal(
+					RecepcionDeCompra.Resultado.ACEPTADA
+				)
+		if modo == 1:
+			assert_int(atencion.interactuar(Ticket.new(renglones))).is_equal(
+				RecepcionDeCompra.Resultado.ACEPTADA
+			)
+		atencion.interactuar(null)
+		assert_bool(atencion.puede_abandonar()).is_false()
+		atencion.vencer()
+		atencion.vencer()
+		assert_bool(atencion.despachada()).is_true()
+		assert_bool(atencion.puede_abandonar()).is_true()
+		assert_object(atencion.dialogo()).is_null()
+		assert_bool(atencion.vendida()).is_false()
+		var recepcion: RecepcionDeCompra = atencion.get("_recepcion")
+		assert_array(recepcion.unidades()).contains_exactly(unidades)
+		for unidad in unidades:
+			assert_bool(inventario.esta_afuera(unidad)).is_true()
+			(
+				assert_int(inventario.unidades(unidad.producto, Inventario.Ubicacion.DEPOSITO))
+				. is_equal(8)
+			)
+			assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.BLOQUEADA)

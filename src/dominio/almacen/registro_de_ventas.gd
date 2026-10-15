@@ -54,7 +54,7 @@ func coincide() -> bool:
 
 ## Sin ventas, el cero se evalúa al cerrar: no es trabajo ya hecho al empezar la noche.
 func completada(al_cerrar: bool = false) -> bool:
-	if _atender.fisica() and not _atender.completada():
+	if _atender.fisica() and not _atender.compras_cerradas():
 		return false
 	if not coincide():
 		return false
