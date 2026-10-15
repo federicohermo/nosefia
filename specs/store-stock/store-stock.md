@@ -159,7 +159,7 @@ ese instante (BR-SHF-007 de [`shift-cycle`](../shift-cycle/shift-cycle.md)): una
 ventas con la planilla en cero cuenta como cumplida recién ahí.
 
 En la primera jornada, registrar DEBE permanecer pendiente hasta completar las compras de
-Martín y Tiago, con todos sus productos y sus tickets, y anotar exactamente todas las unidades
+Tin y Tia, con todos sus productos y sus tickets, y anotar exactamente todas las unidades
 vendidas. Registrar sólo la primera compra o anticipar la segunda NO DEBE cumplir la tarea.
 Si alguna compra vence sin completarse, registrar NO DEBE cumplirse, tampoco al cerrar.
 
@@ -688,7 +688,7 @@ hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas par
 
 ### AC-STK-056 — Registro exige ambas ventas de la primera noche *(verifica BR-STK-022)*
 
-DADO la primera jornada CUANDO se registra la venta completa de Martín pero Tiago aún no
+DADO la primera jornada CUANDO se registra la venta completa de Tin pero Tia aún no
 compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados anticipadamente
 ENTONCES registrar sigue pendiente hasta que ambas compras estén vendidas con productos y
 ticket. CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES
