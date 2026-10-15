@@ -104,6 +104,14 @@ fixtures pueden esperar sólo la primera jornada aunque el recurso pase a conten
 Declarar la vista que consume cada uno y conservar su inmutabilidad; en #430, dos suites de
 instrucciones necesitaban filtrar J1, mientras otro lector del primer mensaje seguía válido.
 
+**Un guion con símbolos nuevos se prueba con la tipografía del paquete real.** Revisar
+los glifos en cada camino que presenta el texto, incluidos vista previa y burbuja, a las
+resoluciones pedidas. En #430, el contenido literal y los tests de texto pasaban, pero el
+paquete Web dibujaba los dos emojis como cuadros hexadecimales. Si falta un fallback portable,
+su recurso, licencia, origen fijado y generador reproducible entran en los límites antes de
+corregirlo. Conservar la fuente principal y el orden del guion; no adelantar un mensaje para
+forzar su símbolo en la vista previa ni mutar el tema compartido.
+
 **La salida del detector no sustituye la medición de la malla.** Antes de declarar muebles,
 chapas o niveles, contrastar nombres reales, islas, materiales, normales y transformaciones
 del modelo. Separar las chapas físicas de los niveles con exhibición: una chapa vacía no
