@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const CONTENEDOR := (
@@ -187,9 +189,10 @@ func test_la_pendiente_en_tacho_piso_o_mano_no_cruza_de_noche() -> void:  # AC-C
 		reloj.avanzar(Reglas.DURACION_DEL_TURNO)
 		assert_bool(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA).completada()).is_false()
 		var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
-		pantalla.call("_process", 60.0)
+		AvanceDeDevolucion.entregar(pantalla)
 		pantalla.elegir()
-		await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+		AvanceDeDevolucion.terminar_movimiento(pantalla)
+		await get_tree().process_frame
 		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
 		assert_object(agarre.manos().sostenido()).is_null()
 		for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):

@@ -130,7 +130,6 @@ func preparar() -> void:
 	_preparar_la_guia()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	_preparar_los_casilleros()
-	_desenfoque.preparar_oclusores(get_parent())
 	jugador.uso_pedido.connect(usar_la_caja)
 	jugador.consultar_el_derecho_con(_derecho_sobre_la_caja)
 	jugador.objetivo_enfocado.connect(_al_enfocar)

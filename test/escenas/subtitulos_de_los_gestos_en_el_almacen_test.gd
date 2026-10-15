@@ -3,6 +3,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 
 func _almacen() -> Node3D:
@@ -63,3 +64,67 @@ func test_alejarse_del_pensamiento_lo_desvanece_antes() -> void:  # AC-SUB-020
 	assert_float(subtitulo.modulate.a).is_less(1.0)
 	hud.call("_process", 0.25)
 	assert_str(subtitulo.text).is_empty()
+
+
+func _examen_con_aviso_esperando() -> Node3D:
+	var almacen := await _almacen()
+	var jugador: Node3D = almacen.get("_jugador")
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
+	var afuera: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.MARRANOS]
+	afuera.global_position = Vector3.ONE * 100.0
+	afuera.freeze = true
+	assert_int(almacen.get("_habitaciones").de(afuera.global_position)).is_equal(
+		ReglasDelCierre.Habitacion.AFUERA
+	)
+	almacen.call("_vigilar_si_queda_afuera", afuera)
+	jugador.set("_enfocado", caja)
+	var usar := InputEventAction.new()
+	usar.action = ReglasDelJugador.ACCION_USAR
+	usar.pressed = true
+	jugador.call("_unhandled_input", usar)
+	var examinar := InputEventAction.new()
+	examinar.action = ReglasDeLosObjetos.ACCION_EXAMINAR
+	examinar.pressed = true
+	jugador.call("_unhandled_input", examinar)
+	assert_bool(jugador.get("examen").esta_examinando()).is_true()
+	assert_str(_linea(almacen)).is_equal("Una caja de medicamentos Actroncito.")
+	return almacen
+
+
+func test_lo_caido_afuera_espera_al_examen_sin_reemplazarlo() -> void:  # AC-SUB-007, AC-SUB-017
+	var almacen := await _examen_con_aviso_esperando()
+	var jugador: Node3D = almacen.get("_jugador")
+	await get_tree().physics_frame
+	await get_tree().process_frame
+	assert_str(_linea(almacen)).is_equal("Una caja de medicamentos Actroncito.")
+	jugador.get("examen").terminar()
+	await get_tree().physics_frame
+	await get_tree().process_frame
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.POR_LA_VENTANA)
+
+
+func test_el_cierre_descarta_el_aviso_que_esperaba_al_examen() -> void:  # AC-SUB-009
+	var almacen := await _examen_con_aviso_esperando()
+	await get_tree().physics_frame
+	await get_tree().process_frame
+	almacen.get("_reloj").avanzar(10000.0)
+	assert_bool(almacen.get("_reloj").corriendo()).is_false()
+	almacen.get("_jugador").get("examen").terminar()
+	await get_tree().physics_frame
+	await get_tree().process_frame
+	assert_str(_linea(almacen)).is_empty()
+
+
+func test_el_aviso_espera_tambien_a_que_termine_la_pausa() -> void:  # AC-SUB-007
+	var almacen := await _examen_con_aviso_esperando()
+	await get_tree().physics_frame
+	get_tree().paused = true
+	almacen.get("_jugador").get("examen").terminar()
+	await get_tree().physics_frame
+	await get_tree().process_frame
+	var linea_pausada := _linea(almacen)
+	get_tree().paused = false
+	assert_str(linea_pausada).is_empty()
+	await get_tree().physics_frame
+	await get_tree().process_frame
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.POR_LA_VENTANA)

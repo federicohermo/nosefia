@@ -13,6 +13,7 @@ signal opcion_elegida
 signal celular_bajado
 
 const RECORRIDO_COMPLETO := 0.25
+const PASO_MAXIMO := CabeceraConSolapa.PASO_MAXIMO
 const TAMANO := Vector2(522.0, 928.0)
 const CENTRO := Vector2(960.0, 540.0)
 const TEXTO_DEL_MENU := "CHATS"
@@ -97,7 +98,7 @@ func _notification(que: int) -> void:
 
 func _process(_delta: float) -> void:
 	var ahora: int = _ahora.call()
-	var segundos := maxf(0.0, (ahora - _ultimo) / 1000000.0)
+	var segundos := clampf((ahora - _ultimo) / 1000000.0, 0.0, PASO_MAXIMO)
 	_ultimo = ahora
 	_avance = move_toward(_avance, _destino, segundos / RECORRIDO_COMPLETO)
 	_pintar_posicion()
@@ -115,6 +116,10 @@ func subir() -> void:
 
 func bajar() -> void:
 	_mover_hacia(0.0)
+
+
+func centrado() -> bool:
+	return _destino == 1.0 and is_equal_approx(_avance, 1.0)
 
 
 func mostrar_menu(bandeja: Bandeja) -> void:

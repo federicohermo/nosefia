@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const MENU := preload("res://src/escenas/menu_de_inicio.tscn")
 const GUION := preload("res://src/dominio/investigacion/conversacion_con_el_jefe.tres")
@@ -248,9 +250,10 @@ func test_seguir_despues_de_la_primera_noche_no_repite_la_intro() -> void:
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
 	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
-	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_instrucciones().visible).is_false()
 	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 2")

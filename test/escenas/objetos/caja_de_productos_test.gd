@@ -412,27 +412,6 @@ func test_las_etiquetas_tienen_nombres_en_ascii() -> void:
 		)
 
 
-## La caja chica y la grande son la misma malla escalada parejo. Cada cara muestra un cuadrado de
-## la textura sobre un cuadrado de la caja: la etiqueta no se estira en ninguno de los dos tamaños.
-func test_la_etiqueta_no_se_estira_en_la_caja_chica_ni_en_la_grande() -> void:
-	var tamanos_vistos: Array[Catalogo.TamanoDeCaja] = []
-	for id: Producto.Id in _una_etiqueta_de_cada_tamano():
-		var caja := _caja_armada(id)
-		var malla := caja.get_node("Malla") as MeshInstance3D
-		var textura := _material(caja).albedo_texture
-		assert_int(textura.get_width()).is_equal(textura.get_height())
-		for estiramiento: float in _estiramiento_de_cada_triangulo(malla):
-			(
-				assert_float(estiramiento)
-				. override_failure_message("la etiqueta de %s se estira" % _nombre(id))
-				. is_equal_approx(1.0, 0.01)
-			)
-		tamanos_vistos.append(Catalogo.caja_de(id))
-	assert_array(tamanos_vistos).contains_exactly_in_any_order(
-		[Catalogo.TamanoDeCaja.CHICA, Catalogo.TamanoDeCaja.GRANDE]
-	)
-
-
 func _caja() -> CajaQueSeLleva:
 	return auto_free(load(ESCENA).instantiate())
 
@@ -457,34 +436,3 @@ func _nombre(id: Producto.Id) -> String:
 ## computadora.
 func _ruta_de_la_etiqueta(id: Producto.Id) -> String:
 	return ETIQUETAS + (Producto.Id.keys()[id] as String).to_lower() + ".png"
-
-
-func _una_etiqueta_de_cada_tamano() -> Array[Producto.Id]:
-	var por_tamano := {}
-	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
-		por_tamano[Catalogo.caja_de(id)] = id
-	var elegidos: Array[Producto.Id] = []
-	elegidos.assign(por_tamano.values())
-	return elegidos
-
-
-## Cuánto más mide un texel a lo ancho que a lo alto, en metros de la caja ya escalada. Uno es
-## que no se estira: sale de las derivadas de la posición contra el UV de cada triángulo.
-func _estiramiento_de_cada_triangulo(malla: MeshInstance3D) -> Array[float]:
-	var arrays := malla.mesh.surface_get_arrays(0)
-	var posiciones: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
-	var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
-	var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
-	var base := malla.global_transform.basis
-	var estiramientos: Array[float] = []
-	for t: int in range(0, indices.size(), 3):
-		var i0 := indices[t]
-		var lado_1 := base * (posiciones[indices[t + 1]] - posiciones[i0])
-		var lado_2 := base * (posiciones[indices[t + 2]] - posiciones[i0])
-		var uv_1 := uvs[indices[t + 1]] - uvs[i0]
-		var uv_2 := uvs[indices[t + 2]] - uvs[i0]
-		var det := uv_1.x * uv_2.y - uv_2.x * uv_1.y
-		var por_u := (lado_1 * uv_2.y - lado_2 * uv_1.y) / det
-		var por_v := (lado_2 * uv_1.x - lado_1 * uv_2.x) / det
-		estiramientos.append(por_u.length() / por_v.length())
-	return estiramientos

@@ -176,6 +176,8 @@ MIENTRAS el turno está abierto, el sistema DEBE mostrar en la esquina inferior 
 ícono de celular con «Q», incluso con el celular arriba; con el turno cerrado NO DEBE mostrarlo.
 El celular DEBE dibujarse sobre HUD, computadora y cierre, y debajo de avisos y pausa. La
 duración completa de subir y de bajar DEBE ser de 0,25 segundos reales por recorrido.
+Un cuadro largo NO DEBE adelantar el movimiento más de 1/30 de segundo. Si el dibujo se
+interrumpe, el recorrido DEBE conservar sus pasos visibles aunque termine más tarde.
 
 ### BR-INV-028 — Pausa y cierre conservan estados distintos
 
@@ -338,6 +340,8 @@ DADO el celular cerrado CUANDO se pulsa Q ENTONCES parte fuera del margen inferi
 hacia el centro. CUANDO se pulsa Q durante la subida ENTONCES baja desde su posición actual,
 sin salto de posición ni duplicado, y termina fuera del encuadre con el velo retirado. La prueba
 mide cada recorrido completo de 0,25 segundos; una inversión conserva la posición actual. DADO el
+celular empezando a subir CUANDO un cuadro llega 2 segundos tarde ENTONCES sigue entre el
+margen inferior y el centro, y continúa moviéndose: no aparece ya centrado. DADO el
 celular arriba CUANDO se hace clic izquierdo por fuera de él ENTONCES pide cerrarse; adentro, no.
 
 ### AC-INV-034 — Proporción, velo y orden de dibujo *(verifica BR-INV-027)*

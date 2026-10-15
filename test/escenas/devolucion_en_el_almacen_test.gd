@@ -3,6 +3,8 @@
 ## encima y congela el tiempo de la devolución.
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 const SEGUNDOS_REALES_DE_UN_TURNO := (
 	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
@@ -28,7 +30,9 @@ func _cerrar(almacen: Node3D) -> PantallaDeDevolucion:
 		SEGUNDOS_REALES_DE_UN_TURNO
 	)
 	await get_tree().process_frame
-	return almacen.get("_pantalla")
+	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
+	AvanceDeDevolucion.centrar_celular(pantalla)
+	return pantalla
 
 
 func _celular(almacen: Node3D) -> CelularDelEmpleado:
@@ -97,6 +101,33 @@ func test_un_mensaje_por_segundo_y_la_opcion_al_final() -> void:  # AC-EMP-062
 	assert_object(lista.get_child(lista.get_child_count() - 1)).is_same(opcion)
 
 
+func test_un_cuadro_largo_no_entrega_la_devolucion_de_golpe() -> void:  # AC-EMP-062
+	var almacen: Node3D = await _almacen()
+	var pantalla := await _cerrar(almacen)
+	assert_int(pantalla.a_la_vista()).is_equal(1)
+	pantalla.call("_process", 5.0)
+	assert_int(pantalla.a_la_vista()).is_equal(2)
+	assert_bool(pantalla.opcion_a_la_vista()).is_false()
+	pantalla.call("_process", 0.99)
+	assert_int(pantalla.a_la_vista()).is_equal(2)
+	pantalla.call("_process", 0.01)
+	assert_int(pantalla.a_la_vista()).is_equal(3)
+
+
+func test_los_intervalos_esperan_al_celular_en_el_centro() -> void:  # AC-EMP-062
+	var almacen: Node3D = await _almacen()
+	(almacen.get("_reloj") as RelojDelTurno).avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
+	assert_bool(_pantalla_del_celular(almacen).centrado()).is_false()
+	pantalla.call("_process", 5.0)
+	assert_int(pantalla.a_la_vista()).is_equal(1)
+	AvanceDeDevolucion.centrar_celular(pantalla)
+	pantalla.call("_process", 0.99)
+	assert_int(pantalla.a_la_vista()).is_equal(1)
+	pantalla.call("_process", 0.01)
+	assert_int(pantalla.a_la_vista()).is_equal(2)
+
+
 func test_q_no_cierra_y_la_pausa_congela_la_devolucion() -> void:  # AC-EMP-063, AC-SAV-018
 	var almacen: Node3D = await _almacen()
 	var pantalla := await _cerrar(almacen)
@@ -119,7 +150,7 @@ func test_q_no_cierra_y_la_pausa_congela_la_devolucion() -> void:  # AC-EMP-063,
 	pantalla.call("_process", 1.0)
 	assert_int(pantalla.a_la_vista()).is_equal(3)
 	var partida: Partida = almacen.get("_partida")
-	pantalla.call("_process", 10.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	assert_array(_ultimos_del_chat(almacen, partida.mensajes_del_jefe().size())).is_equal(
 		partida.mensajes_del_jefe()
 	)
@@ -132,21 +163,23 @@ func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC
 	var ahora := [0]
 	interfaz.set("_ahora", func() -> int: return ahora[0])
 	interfaz.subir()
-	ahora[0] = int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
-	interfaz._process(0.0)
+	AvanceDeDevolucion.animar_celular(
+		interfaz, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
+	)
 	var aperturas := [0]
 	(almacen.get_node("Servicios/CicloDeJornadas") as CicloDeJornadas).jornada_abierta.connect(
 		func(_jornada: int) -> void: aperturas[0] += 1
 	)
 	pantalla.elegir()
 	assert_int(aperturas[0]).is_zero()
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	pantalla.elegir()
 	assert_int(aperturas[0]).is_zero()
 	assert_bool((almacen.get("_jugador") as Node).call("suspendido")).is_true()
-	ahora[0] += int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0) - 1000
-	interfaz._process(0.0)
+	AvanceDeDevolucion.animar_celular(
+		interfaz, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0) - 1000
+	)
 	assert_int(aperturas[0]).is_zero()
 	ahora[0] += 1000
 	interfaz._process(0.0)
@@ -170,7 +203,7 @@ func test_despedido_vuelve_al_menu_una_sola_vez() -> void:  # AC-EMP-064, AC-EMP
 	var menus := [0]
 	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
 	var pantalla := await _cerrar(almacen)
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	assert_str(_pantalla_del_celular(almacen).opcion().text).is_equal("VOLVER AL MENÚ")
 	pantalla.elegir()
 	pantalla.elegir()
@@ -243,7 +276,7 @@ func test_recibir_con_una_foto_abierta_conserva_foto_e_historial() -> void:  # A
 	assert_int(celular.celular().pantalla()).is_equal(Celular.Pantalla.FOTO)
 	var ampliada: Control = interfaz.get("_foto_ampliada")
 	assert_bool(ampliada.visible).is_true()
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	for cuadro: int in 4:
 		await get_tree().process_frame
 	assert_bool(ampliada.visible).is_true()

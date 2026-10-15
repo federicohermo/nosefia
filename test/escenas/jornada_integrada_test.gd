@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
@@ -38,9 +40,10 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_true()
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
-	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
 	var ciclo: CicloDeJornadas = almacen.get("_ciclo")
 	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_bool(pantalla.visible).is_false()

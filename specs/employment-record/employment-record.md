@@ -311,6 +311,11 @@ primero aparece en t = 0. Ese tiempo NO DEBE correr con la pausa en pantalla: re
 desde el mismo mensaje. Desplazar el chat NO DEBE saltear ni repetir un mensaje. La persiana DEBE bajar en 1 segundo,
 lo mismo que tarda en subir al abrir la noche.
 
+Los intervalos DEBEN empezar con el celular centrado. La fórmula describe el dibujo continuo:
+si un cuadro llega tarde, el sistema NO DEBE entregar varios mensajes juntos para recuperar
+el tiempo perdido. DEBE entregar como máximo uno y esperar un segundo desde esa entrega
+para el siguiente.
+
 ### BR-EMP-031 — Las devoluciones quedan en el chat
 
 CUANDO se arma una devolución, el sistema DEBE agregar sus mensajes a los de Enrique en la
@@ -563,6 +568,11 @@ Cierre del despido: diez mensajes, y la única opción es volver al menú.
 
 DADO 4 mensajes CUANDO pasaron 0 s, 0,99 s, 1 s, 3 s y 10 s ENTONCES se ven 1, 1, 2, 4 y 4. Con 3
 a la vista no hay opción; con 4, la opción está debajo del último.
+
+DADO el celular todavía subiendo CUANDO pasan 5 segundos sin llegar al centro ENTONCES sigue
+sólo el primer mensaje. DADO el celular centrado y un mensaje visible CUANDO el cuadro
+siguiente llega 5 segundos tarde ENTONCES se ven sólo 2 mensajes; a los 0,99 segundos de esa
+entrega siguen 2, y al segundo aparece el tercero.
 
 ### AC-EMP-063 — El celular de la devolución no se cierra *(verifica BR-EMP-030)*
 

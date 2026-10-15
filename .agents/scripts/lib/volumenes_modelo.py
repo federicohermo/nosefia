@@ -29,6 +29,7 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
             'shape': f'SubResource("{nombre}")',
             'position': None,
         })
+    hay_suelo = any(ruta(b) == "SueloSolido" for b in lista)
     partes = {**piezas, **descompuestos}
     techo = 'deposito_techo_industrial/deposito_techo_chapa'
     cuerpo_del_techo = techo + '/StaticBody3D'
@@ -83,9 +84,13 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
                     f'{c:.9f}' for p in puntos for c in p) + ')',
             })
             nombre_nodo = 'Volumen' if indice == 0 else f'Volumen{indice + 1}'
-            nodo(lista, nombre_nodo, cuerpo, 'CollisionShape3D', {
-                'shape': f'SubResource("{nombre}")',
-            })
+            props = {'shape': f'SubResource("{nombre}")'}
+            if path == 'almacen' and hay_suelo and es_piso(puntos):
+                props['disabled'] = 'true'
+                props['editor_description'] = (
+                    '"SueloSolido reemplaza este piso; duplicarlo hunde las unidades al asentarse."'
+                )
+            nodo(lista, nombre_nodo, cuerpo, 'CollisionShape3D', props)
     for path, datos in modelo.items():
         if datos['tipo'] != 'MeshInstance3D' or not path.rsplit('/', 1)[-1].startswith('deposito_pallet_'):
             continue
@@ -185,3 +190,8 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
 def esquinas(posicion, tamano):
     return [[posicion[0] + x * tamano[0], posicion[1] + y * tamano[1],
              posicion[2] + z * tamano[2]] for x in (0, 1) for y in (0, 1) for z in (0, 1)]
+
+
+def es_piso(puntos):
+    # El origen del edificio está en la cara superior del piso; sus losas quedan debajo.
+    return max(p[1] for p in puntos) <= 0.00001

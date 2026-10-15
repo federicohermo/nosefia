@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Menu := preload("res://src/escenas/menu_de_inicio.gd")
 
@@ -60,10 +62,11 @@ func _cerrar_y_seguir() -> void:
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	pantalla.elegir()
-	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
 
 
 func test_instanciar_sin_menu_conserva_el_turno_corriendo() -> void:
@@ -178,7 +181,7 @@ func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	assert_int(pedidos[0]).is_equal(1)
 	assert_bool(_persiana().en_pantalla()).is_false()

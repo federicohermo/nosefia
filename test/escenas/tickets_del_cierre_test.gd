@@ -1,6 +1,8 @@
 ## Los tickets conservan su identidad y cada destino anota sólo su consecuencia.
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 
@@ -72,9 +74,10 @@ func _cerrar(impecable: bool) -> void:
 
 func _seguir() -> void:
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
-	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
 	_almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 
 

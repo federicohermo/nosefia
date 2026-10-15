@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Jugador := preload("res://src/escenas/jugador.gd")
 
@@ -167,9 +169,10 @@ func test_cierre_baja_celular_y_otra_jornada_cierra() -> void:  # AC-INV-035, AC
 	assert_bool(_jugador().suspendido()).is_true()
 	var cierre: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(cierre.visible).is_true()
-	cierre.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(cierre)
 	cierre.elegir()
-	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+	AvanceDeDevolucion.terminar_movimiento(cierre)
+	await get_tree().process_frame
 	assert_bool(_celular().celular().abierto()).is_false()
 	assert_bool(recordatorio.visible).is_true()
 	(_almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()

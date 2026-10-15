@@ -22,8 +22,9 @@ var _celular: CelularDelEmpleado
 var _pantalla_del_celular: PantallaDelCelular
 var _mensajes: Array[String] = []
 var _opcion: DevolucionDelJefe.Opcion = DevolucionDelJefe.Opcion.CONTINUAR
-var _transcurrido: float = 0.0
+var _tiempo_de_la_entrega: float = 0.0
 var _entregados: int = 0
+var _esperando_el_centro := false
 
 
 func _ready() -> void:
@@ -42,8 +43,9 @@ func preparar(celular: CelularDelEmpleado, pantalla_del_celular: PantallaDelCelu
 func mostrar(devolucion: DevolucionDelJefe) -> void:
 	_mensajes = devolucion.mensajes()
 	_opcion = devolucion.opciones()[0]
-	_transcurrido = 0.0
+	_tiempo_de_la_entrega = 0.0
 	_entregados = 0
+	_esperando_el_centro = true
 	visible = true
 	_celular.mostrar_fijo(Conversacion.Interlocutor.JEFE)
 	_entregar()
@@ -61,14 +63,19 @@ func opcion_a_la_vista() -> bool:
 
 
 func _process(delta: float) -> void:
-	_transcurrido += delta
+	if _esperando_el_centro:
+		if _pantalla_del_celular.centrado():
+			_esperando_el_centro = false
+		return
+	_tiempo_de_la_entrega += delta
 	_entregar()
 
 
 func _entregar() -> void:
-	var visibles := DevolucionDelJefe.a_la_vista(_transcurrido, _mensajes.size())
-	while _entregados < visibles:
+	var visibles := DevolucionDelJefe.a_la_vista(_tiempo_de_la_entrega, _mensajes.size())
+	if _entregados < visibles:
 		_entregados += 1
+		_tiempo_de_la_entrega = (_entregados - 1) * DevolucionDelJefe.SEGUNDOS_ENTRE_MENSAJES
 		_celular.recibir(
 			Conversacion.Interlocutor.JEFE, DevolucionDelJefe.mensaje(_mensajes[_entregados - 1])
 		)

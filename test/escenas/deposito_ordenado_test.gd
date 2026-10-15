@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
@@ -226,9 +228,10 @@ func test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche() -> void:  # AC
 		Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 	)
 	var pantalla: PantallaDeDevolucion = local.get("_pantalla")
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
-	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
 	for _cuadro in 4:
 		await get_tree().physics_frame
 	for caja: Caja in cajas:
@@ -389,9 +392,10 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 			Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 		)
 		var pantalla: PantallaDeDevolucion = local.get("_pantalla")
-		pantalla.call("_process", 60.0)
+		AvanceDeDevolucion.entregar(pantalla)
 		pantalla.elegir()
-		await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+		AvanceDeDevolucion.terminar_movimiento(pantalla)
+		await get_tree().process_frame
 		local.get_node("Interfaz/PersianaDeLaNoche").terminar()
 		assert_bool(local.get_node("Interfaz/PersianaDeLaNoche").en_pantalla()).is_false()
 		for _cuadro in 4:

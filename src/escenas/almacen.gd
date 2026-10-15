@@ -514,11 +514,16 @@ func _process(_delta: float) -> void:
 ## dónde se queda y no dónde se soltó: puede rebotar y volver a entrar. Si lo vuelven a agarrar
 ## antes, no piensa nada.
 func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
+	var jornada := _partida.jornada()
 	var datos := nodo.get("datos") as ObjetoDelAlmacen
 	var cuerpo := nodo as RigidBody3D
 	var esperado := 0.0
 	while esperado < SubtitulosDeLosGestos.SEGUNDOS_PARA_QUEDAR_QUIETO:
 		await get_tree().physics_frame
+		if jornada != _partida.jornada() or not _reloj.corriendo():
+			return
+		if get_tree().paused:
+			continue
 		esperado += get_physics_process_delta_time()
 		if not is_instance_valid(nodo) or _agarre.manos().sostenido() == datos:
 			return
@@ -526,6 +531,10 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 			break
 	# Se piensa cuando lo soltado se aquieta, y el jugador ya pudo irse: no tiene lugar.
 	if _habitaciones.de(nodo.global_position) == ReglasDelCierre.Habitacion.AFUERA:
+		while _jugador.examen.esta_examinando() or get_tree().paused:
+			await get_tree().physics_frame
+			if jornada != _partida.jornada() or not _reloj.corriendo():
+				return
 		_pensar_en(SubtitulosDeLosGestos.al_quedar_afuera(datos), Vector3.INF)
 
 

@@ -123,6 +123,11 @@ que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas sa
 `--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
 una captura se cuentan los `requestAnimationFrame` de un segundo.
 
+**Un rendimiento web se compara contra un control en la misma carga.** Conservá consola,
+visibilidad, pausa y mano ocupada en cada muestra. Descartá una variante con errores de shader
+antes de interpretar sus tiempos: el material de respaldo puede dibujar menos y parecer más rápido.
+Restaurá los archivos de la copia antes de aplicar otra variante y revisá su imagen además del p95.
+
 **Observar la activación del navegador no debe activarlo.** En Playwright 1.63, `evaluate`
 usa `userGesture: true`: en #373 la lectura conservaba una activación que se quería medir
 vencida. Para medir activación o Pointer Lock, usar lecturas CDP con `userGesture: false` y
@@ -307,6 +312,11 @@ se corrige el código.
   de señales**, incluidos `call()`, `_seguir()` y `devolucion_despachada.emit()`.
   Ejercé el gesto real y esperá el marcador de fin de animación, sin saltear pasos que dejen una
   corrutina suspendida. En #420, el focal de ocho casos pasó y cuatro suites conservaron el flujo viejo.
+  Probá también que una respuesta demorada llegue con un examen, una pausa o una nueva jornada
+  ya abiertos: debe conservar la interfaz que tiene el control y descartar avisos de la noche cerrada.
+- **Las entradas de interfaz se prueban también con un cuadro largo.** Un recorrido de duración
+  correcta puede desaparecer de un salto al abrirse en frío. Separá el avance con cuadros normales
+  del caso interrumpido, y verificá que los mensajes esperen a la pantalla en su posición de lectura.
 - **Al escalar textos, seguí el tema compartido, los `theme_override_font_sizes` y los controles
   creados después.** Probá tamaños propios y controles dinámicos: escalar y restaurar debe partir
   del tamaño original, sin acumularse. En #416, ajustar sólo el tema dejaba tamaños propios sin escalar.

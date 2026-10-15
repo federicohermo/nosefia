@@ -279,6 +279,10 @@ ENTONCES arranca el examen y la línea muestra «Una mopa para limpiar las manch
 opacidad 1. CUANDO pasan 60 segundos de examen ENTONCES sigue igual. CUANDO termina el examen
 ENTONCES la línea está vacía en ese mismo cuadro.
 
+DADO un objeto soltado que queda quieto afuera mientras se examina otro CUANDO corresponde su
+pensamiento de la ventana ENTONCES el texto fijo del examen se conserva. CUANDO termina el
+examen ENTONCES se muestra el pensamiento pendiente; si la jornada cerró antes, se descarta.
+
 ### AC-SUB-008 — Otra interfaz y la pausa *(verifica BR-SUB-006)*
 
 DADO las manos vacías y la mira sobre un inodoro CUANDO se pide examinar con la computadora

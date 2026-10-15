@@ -5,21 +5,10 @@ extends Node3D
 
 const MASCARA := preload("res://src/ui/mascara_de_referencias.gdshader")
 const DESENFOQUE := preload("res://src/ui/desenfoque_de_referencias.gdshader")
-## Cuántas mallas del mundo se vuelven a clasificar por material en cada cuadro. Casi ninguna
-## puede tapar, y revisarlas todas en cada cuadro costaba más que el resto del efecto.
-const REVISION_POR_CUADRO := 64
-
 var _ventana := SubViewport.new()
 var _camara := Camera3D.new()
 var _pantalla := MeshInstance3D.new()
 var _material_de_mascara := ShaderMaterial.new()
-var _material_de_oclusor := ShaderMaterial.new()
-var _oclusores: Dictionary[MeshInstance3D, MeshInstance3D] = {}
-var _fuentes: Array[MeshInstance3D] = []
-## Las mallas con materiales opacos: sólo esas pueden tapar una referencia.
-var _posibles: Dictionary[MeshInstance3D, bool] = {}
-var _revision := 0
-var _mundo: Node
 
 
 func _ready() -> void:
@@ -41,8 +30,6 @@ func _ready() -> void:
 	_camara.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	_camara.current = true
 	_material_de_mascara.shader = MASCARA
-	_material_de_oclusor.shader = MASCARA
-	_material_de_oclusor.set_shader_parameter("es_referencia", false)
 	var malla := QuadMesh.new()
 	malla.size = Vector2(2.0, 2.0)
 	_pantalla.mesh = malla
@@ -73,64 +60,6 @@ func agregar(grupo: MultiMeshInstance3D, bloque: PackedFloat32Array, cantidad: i
 	dibujo.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	_ventana.add_child(dibujo)
 	dibujo.transform = grupo.global_transform
-	var oclusor := MultiMeshInstance3D.new()
-	oclusor.multimesh = grupo.multimesh
-	var material := _material_de_oclusor.duplicate() as ShaderMaterial
-	material.set_shader_parameter("desde", cantidad)
-	oclusor.material_override = material
-	oclusor.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	oclusor.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
-	_ventana.add_child(oclusor)
-	oclusor.transform = grupo.global_transform
-
-
-func preparar_oclusores(mundo: Node) -> void:
-	_mundo = mundo
-	for nodo: Node in mundo.find_children("*", "MeshInstance3D", true, false):
-		_agregar_oclusor(nodo)
-	get_tree().node_added.connect(_agregar_oclusor)
-
-
-func _agregar_oclusor(nodo: Node) -> void:
-	var fuente := nodo as MeshInstance3D
-	if fuente == null or is_ancestor_of(fuente) or not _mundo.is_ancestor_of(fuente):
-		return
-	var copia := MeshInstance3D.new()
-	copia.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
-	copia.material_override = _material_de_oclusor
-	copia.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	copia.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
-	_ventana.add_child(copia)
-	_oclusores[fuente] = copia
-	_fuentes.append(fuente)
-	if _materiales_opacos(fuente):
-		_posibles[fuente] = true
-	fuente.tree_exiting.connect(_quitar_oclusor.bind(fuente), CONNECT_ONE_SHOT)
-
-
-## Sale al dejar el árbol, antes de liberarse: el diccionario tipado no acepta una clave liberada.
-## Si vuelve al árbol, `node_added` la agrega de nuevo.
-func _quitar_oclusor(fuente: MeshInstance3D) -> void:
-	if not _oclusores.has(fuente):
-		return
-	_oclusores[fuente].queue_free()
-	_oclusores.erase(fuente)
-	_posibles.erase(fuente)
-	_fuentes.erase(fuente)
-
-
-func _es_opaca(fuente: MeshInstance3D) -> bool:
-	return fuente.is_visible_in_tree() and _materiales_opacos(fuente)
-
-
-func _materiales_opacos(fuente: MeshInstance3D) -> bool:
-	if fuente.mesh == null:
-		return false
-	for superficie in fuente.mesh.get_surface_count():
-		var material := fuente.get_active_material(superficie) as BaseMaterial3D
-		if material == null or material.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
-			return false
-	return true
 
 
 func _process(_delta: float) -> void:
@@ -150,22 +79,3 @@ func _process(_delta: float) -> void:
 	_camara.transform = vista.global_transform
 	_pantalla.global_transform = _camara.transform
 	_pantalla.position -= _pantalla.basis.z
-	_revisar_materiales()
-	for fuente: MeshInstance3D in _posibles:
-		var copia := _oclusores[fuente]
-		copia.visible = _es_opaca(fuente)
-		if copia.visible:
-			copia.mesh = fuente.mesh
-			copia.transform = fuente.get_global_transform_interpolated()
-
-
-## Un material cambiado entra o sale de las posibles en menos de medio segundo. Una posible que
-## deja de ser opaca se oculta en el mismo cuadro, porque `_es_opaca` mira otra vez sus materiales.
-func _revisar_materiales() -> void:
-	for i in mini(REVISION_POR_CUADRO, _fuentes.size()):
-		_revision = (_revision + 1) % _fuentes.size()
-		var fuente := _fuentes[_revision]
-		if _materiales_opacos(fuente):
-			_posibles[fuente] = true
-		elif _posibles.erase(fuente):
-			_oclusores[fuente].visible = false

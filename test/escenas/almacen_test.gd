@@ -17,6 +17,8 @@
 ## entran el almacén completo al árbol para resolver los enlaces de sus puestos.
 extends GdUnitTestSuite
 
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 
 ## El cableado se lee como texto en un solo caso, el que afirma lo que **ya no** está: una
@@ -419,9 +421,10 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 		. is_true()
 	)
 
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
-	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_false()
 	(
 		assert_int(ciclo.partida().jornada())
@@ -471,12 +474,14 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	jugador.velocity = Vector3(2.0, 0.0, 1.0)
 	control.girar(Vector2(170.0, -90.0))
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	var celular: PantallaDelCelular = almacen.get_node("Interfaz/PantallaDelCelular")
-	var ahora := Time.get_ticks_usec() + int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
-	celular.set("_ahora", func() -> int: return ahora)
-	celular._process(0.0)
+	var ahora := [Time.get_ticks_usec()]
+	celular.set("_ahora", func() -> int: return ahora[0])
+	AvanceDeDevolucion.animar_celular(
+		celular, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
+	)
 	assert_vector(jugador.global_position).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
 	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
 	assert_float(control.yaw()).is_equal_approx(arranque.basis.get_euler().y, 1e-4)
@@ -503,7 +508,7 @@ func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> 
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
 	assert_bool(pantalla.visible).is_true()
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
 	assert_str(opcion.text).is_equal("VOLVER AL MENÚ")
 	pantalla.elegir()
@@ -526,7 +531,7 @@ func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() ->
 	var menu: MenuDePausa = almacen.get_node("Interfaz/MenuDePausa")
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_bool(ciclo.partida().terminada()).is_false()
-	pantalla.call("_process", 60.0)
+	AvanceDeDevolucion.entregar(pantalla)
 	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
 	assert_str(opcion.text).is_equal("CONTINUAR")
 	pausa.pausar()
