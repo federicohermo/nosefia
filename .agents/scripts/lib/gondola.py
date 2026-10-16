@@ -510,7 +510,9 @@ def _unidad_apagada(ruta: str, referencia: bool = False) -> str:
     )
 
 
-def apagar_las_unidades(texto: str, rutas: Sequence[str]) -> str:
+def apagar_las_unidades(
+    texto: str, rutas: Sequence[str], identidades: Sequence[str]
+) -> str:
     """La escena de la estructura con la unidad horneada de cada producto apagada.
 
     El `.glb` trae una unidad de cada producto, y la escena la apaga: la dibuja el `MultiMesh` de
@@ -518,7 +520,11 @@ def apagar_las_unidades(texto: str, rutas: Sequence[str]) -> str:
     capa—, y sólo esos se reemplazan: un nodo apagado con otra propiedad no es una unidad. Las
     nuevas van donde estaba la primera vieja, en orden, y así la segunda corrida no cambia nada.
     Cada ruta es la del nodo adentro del modelo, con `/` entre el mueble y la unidad.
+    Las identidades son nombres de unidades declaradas por el llamador, independientes
+    del padre y de las rutas activas. Incluso sin reemplazos se retiran esas unidades;
+    un lector u otra referencia apagada conserva sus bloques aunque tenga el mismo grupo.
     """
+    propias = set(identidades)
     inicios = [m.start() for m in _CABECERA.finditer(texto)]
     secciones = [texto[a:b] for a, b in zip(inicios, inicios[1:] + [len(texto)])]
     salida = [texto[: inicios[0]]] if inicios else [texto]
@@ -530,7 +536,7 @@ def apagar_las_unidades(texto: str, rutas: Sequence[str]) -> str:
         if apagado is not None and i + 1 < len(secciones):
             nombre, padre, grupo = apagado.groups()
             ruta = nombre if padre == "." else f"{padre}/{nombre}"
-            if secciones[i + 1].rstrip("\n") == _cuerpo_apagado(ruta):
+            if nombre in propias and secciones[i + 1].rstrip("\n") == _cuerpo_apagado(ruta):
                 lugar = len(salida) if lugar is None else lugar
                 referencia = referencia or grupo is not None
                 i += 2

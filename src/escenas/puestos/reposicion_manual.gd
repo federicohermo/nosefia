@@ -65,6 +65,9 @@ const GUIA := "Guia"
 ## **Ningún apoyo está escrito acá.** Los mide el `.blend` y llegan en este recurso.
 @export var disposicion: DisposicionDeLaGondola
 
+## La raíz entrega sólo las góndolas: su hueco comercial no es soporte físico.
+var muebles_con_reserva: Array[PhysicsBody3D] = []
+
 var _unidades: Array[Node3D] = []
 ## Los casilleros de cada producto, en el orden de `Producto.Id` y, adentro, en el de su fila.
 var _casilleros: Array[Array] = []
@@ -130,8 +133,10 @@ func preparar() -> void:
 	_preparar_la_guia()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	_preparar_los_casilleros()
-	jugador.uso_pedido.connect(usar_la_caja)
-	jugador.consultar_el_derecho_con(_derecho_sobre_la_caja)
+	jugador.uso_pedido.connect(
+		func(objetivo: Node3D) -> void: usar_la_caja(objetivo, jugador.uso_es_primario())
+	)
+	jugador.consultar_interaccion_con(_contexto_sobre_la_caja)
 	jugador.objetivo_enfocado.connect(_al_enfocar)
 	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
@@ -165,9 +170,9 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 	var forma: CollisionShape3D = unidad.get_node("Forma")
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
-	# **Con el contorno del mueble además de lo que el producto choca.** El hueco de un estante es
-	# lugar libre, y ahí la mercadería no tiene cuerpo: el producto quedaba adentro de la góndola,
-	# encimado con ella y fuera de la vista. Medido: 10 de 75 soltadas alrededor de una góndola.
+	# El contacto mide el metal. La reserva de mercadería se pregunta aparte: el hueco
+	# comercial no tiene cuerpo y no puede volver a ser una plataforma invisible para cajas.
+	# Antes el contorno cumplía ambas funciones; 10 de 75 soltadas entraban sin esa reserva.
 	consulta.collision_mask = unidad.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	consulta.exclude = [unidad.get_rid(), jugador.get_rid()]
 	var espacio := get_world_3d().direct_space_state
@@ -179,9 +184,23 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 		# derecha ocupa otro volumen que el real: contesta libre donde el producto igual se
 		# mete en el panel, que es el caso que esta función existe para sacar.
 		consulta.transform = forma.global_transform
-		if espacio.intersect_shape(consulta, 1).is_empty():
+		if espacio.intersect_shape(consulta, 1).is_empty() and not _ocupa_una_reserva(forma):
 			return
 		unidad.global_position += atras * paso
+
+
+## Conserva orientación y escala de la unidad, sin añadir formas a la simulación.
+func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
+	var volumen := LimitesDeForma.de(forma.shape)
+	for cuerpo: PhysicsBody3D in muebles_con_reserva:
+		var malla := cuerpo.get_parent() as MeshInstance3D
+		if malla == null or malla.mesh == null:
+			continue
+		if ReservaDeLaGondola.se_superponen(
+			volumen, forma.global_transform, malla.get_aabb(), malla.global_transform
+		):
+			return true
+	return false
 
 
 func _agrupar_suelto(nodo: Node3D) -> void:
@@ -194,14 +213,8 @@ func _retirar_del_grupo(nodo: Node3D) -> void:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
-## Lo que el clic derecho hace con la caja apuntada: sacarle una unidad, devolverle la de la mano
-## o nada.
-##
-## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
-## que no es una caja. **Cuál de los tres toca lo contesta la caja**, en `dominio/`, según lo que
-## haya en la mano; acá sólo se busca la acción de ese gesto. Llevar una caja es otra cosa en la
-## mano, y por eso a la que se lleva no se le saca nada.
-func usar_la_caja(objetivo: Node3D) -> void:
+## Traduce el gesto recibido al resultado de la caja; no deriva el botón de lo que lleva la mano.
+func usar_la_caja(objetivo: Node3D, primario: bool = false) -> void:
 	var caja := objetivo as CajaDelDeposito
 	if caja == null:
 		return
@@ -210,21 +223,21 @@ func usar_la_caja(objetivo: Node3D) -> void:
 		ContenidoDeLaCaja.Gesto.METER: devolver,
 		ContenidoDeLaCaja.Gesto.NADA: func(_id: Producto.Id) -> void: pass,
 	}
-	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido())
+	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido(), primario)
 	acciones[gesto].call(caja.producto)
 
 
-## Si el clic derecho sobre la caja sacaría o metería: lo contesta su contenido, sin hacerlo.
-func _derecho_sobre_la_caja(
+## El contenido declara ambos gestos y la capacidad sin sacar ni devolver una unidad.
+func _contexto_sobre_la_caja(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
-) -> ReferenciaDeControles.Derecho:
+) -> ReferenciaDeControles.Contexto:
 	var caja := objetivo as CajaDelDeposito
 	if caja == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return null
 	var contenido := repositor.caja(caja.producto)
 	if contenido == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
-	return ReferenciaDeControles.derecho_de_la_caja(contenido.derecho_posible(sostenido))
+		return null
+	return ReferenciaDeControles.contexto_de_la_caja(contenido, sostenido)
 
 
 ## Mete en su caja la unidad de la mano y guarda su cuerpo, que deja de verse. Si la caja no la

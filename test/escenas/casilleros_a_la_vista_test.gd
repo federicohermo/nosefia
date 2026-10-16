@@ -416,7 +416,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(
 		ReglasDelEstante.UNIDADES_POR_CAJA
 	)
-	puesto.call("usar_la_caja", caja)
+	puesto.call("usar_la_caja", caja, true)
 	assert_object(_agarre(almacen).manos().sostenido()).is_same(unidad)
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(
 		ReglasDelEstante.UNIDADES_POR_CAJA
@@ -441,7 +441,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 	var en_la_caja := repositor.caja(actroncito.id).unidades()
 	assert_int(en_la_caja).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
 	puesto.call("agarrar_de_la_gondola", actroncito.id, puesta)
-	puesto.call("usar_la_caja", caja)
+	puesto.call("usar_la_caja", caja, true)
 	assert_object(_agarre(almacen).manos().sostenido()).is_null()
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(en_la_caja + 1)
 	assert_bool(estante.casilleros_vacios(actroncito).has(puesta)).is_true()

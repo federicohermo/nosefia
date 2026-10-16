@@ -1,4 +1,4 @@
-## La hoja conserva el derecho y consume el izquierdo, con el permiso del dominio.
+## La hoja alterna con primario; el cuerpo descarta con primario cuando el dominio lo permite.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -21,7 +21,7 @@ func after_test() -> void:
 	_almacen = null
 
 
-func test_el_izquierdo_en_la_hoja_tira_solo_al_terminar_de_abrir() -> void:  # AC-CLN-035 AC-CLN-037
+func test_tapa_alterna_y_cuerpo_tira_solo_al_terminar_de_abrir() -> void:  # AC-CLN-035 AC-CLN-037
 	_almacen = ALMACEN.instantiate()
 	var almacen := _almacen
 	add_child(almacen)
@@ -33,18 +33,37 @@ func test_el_izquierdo_en_la_hoja_tira_solo_al_terminar_de_abrir() -> void:  # A
 	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
-	tapa.call("usar")
-	assert_object(tapa.call("interactuar")).is_null()
+	_accion(tapa, false)
+	assert_bool(tapa.call("recibe_objetos")).is_true()
+	_accion(tapa, true)
+	assert_bool(tapa.call("recibe_objetos")).is_false()
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
+	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
 	tapa.call("_physics_process", 1.0)
-	tapa.call("usar")
+	_accion(almacen.get("_contenedor"), true)
+	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
+	_accion(tapa, true)
 	tapa.call("_physics_process", 0.1)
 	assert_bool(tapa.call("recibe_objetos")).is_false()
-	tapa.call("interactuar")
+	_accion(almacen.get("_contenedor"), true)
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
 	tapa.call("_physics_process", 1.0)
 	assert_bool(tapa.call("recibe_objetos")).is_true()
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
-	tapa.call("interactuar")
+	_accion(tapa, false)
+	_accion(almacen.get("_contenedor"), false)
+	assert_bool(tapa.call("recibe_objetos")).is_true()
+	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
+	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
+	_accion(almacen.get("_contenedor"), true)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(almacen.get("_recolector").tarea().depositadas()).is_equal(1)
+
+
+func _accion(objetivo: Node3D, primario: bool) -> void:
+	var jugador: Node3D = _almacen.get("_jugador")
+	jugador.set("_enfocado", objetivo)
+	var evento := InputEventAction.new()
+	evento.action = ReglasDeLosObjetos.ACCION_AGARRAR if primario else ReglasDelJugador.ACCION_USAR
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)

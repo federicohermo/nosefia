@@ -10,10 +10,6 @@ const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd"
 var _tirados: Array[Node3D] = []
 
 
-func usar() -> void:
-	tapa.usar()
-
-
 func interactuar() -> ObjetoDelAlmacen:
 	recolector.pedir_tirar(tapa.recibe_objetos())
 	return null
@@ -41,3 +37,7 @@ func reiniciar() -> void:
 ## El cuerpo y la tapa dicen lo mismo: son el mismo contenedor.
 func texto_al_examinar() -> String:
 	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.CONTENEDOR)
+
+
+func contexto_de_interaccion(sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Contexto:
+	return ReferenciaDeControles.contexto_del_contenedor(sostenido != null)

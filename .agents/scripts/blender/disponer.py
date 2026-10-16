@@ -12,8 +12,9 @@ repo salió de ese `.blend`.
 - `contenido_del_estante.tscn`: la unidad de cada producto, con la vuelta que le da el modelo.
 - `guia_del_estante.tscn`: una malla por tanda fija, con la vuelta de la unidad de su producto.
 - `estructura_del_almacen.tscn`, las unidades apagadas y los contornos de los muebles activos:
-  las cajas de colisión siguen el tamaño y centro del mueble. El `.glb` trae la unidad de cada
-  producto y la escena la apaga, porque la dibuja su tanda. La fuente conserva su padre y su
+  A/B conservan el soporte visible con compuestos; los demás contornos siguen el tamaño y
+  centro del mueble. El `.glb` trae la unidad de cada producto y la escena la apaga, porque
+  la dibuja su tanda. La fuente conserva su padre y su
   ruta importada; su posición global y los bloques generados llevan el reparto al sector nuevo.
 
 Cada unidad y cada copia llegan rotuladas por `acomodar.py`: de qué tanda son, en qué fila y en
@@ -28,6 +29,7 @@ import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from lib.apoyos_del_modelo import actualizar_contorno_preciso  # noqa: E402
 from lib.gondola import (  # noqa: E402
     SUFIJOS_DE_IMPORTACION,
     NodoDeMalla,
@@ -131,6 +133,7 @@ def principal():
     filas_de_adelante = []
     contenido = []
     apagadas = []
+    identidades = []
     bases = {}
     validar_tandas({clave: len(tandas) for clave, tandas in por_producto.items()})
     for p in PRODUCTOS:
@@ -138,6 +141,7 @@ def principal():
         if not any(sufijo in unidad.name for sufijo in SUFIJOS_DE_IMPORTACION):
             raise SystemExit(f"{unidad.name} no tiene colisión: la escena no sabe qué apagar")
         apagadas.append(ruta_en_godot(unidad))
+        identidades.append(nombre_en_godot(unidad.name))
         base, origen = en_godot(unidad)
         bases[p.clave] = base
         contenido.append(NodoDeMalla(p.nombre, ruta_de_la_malla(p.nombre), base, origen,
@@ -186,7 +190,9 @@ def principal():
     )
     escribir(CONTENIDO, escribir_escena_de_mallas("Contenido", contenido))
     escribir(GUIA, escribir_escena_de_mallas("Guia", nodos_de_guia))
-    estructura = apagar_las_unidades(ESTRUCTURA.read_text(encoding="utf-8"), apagadas)
+    estructura = apagar_las_unidades(
+        ESTRUCTURA.read_text(encoding="utf-8"), apagadas, identidades
+    )
     contornos = {
         "A": "contorno_de_gondola", "B": "contorno_de_gondola2",
         "N": "contorno_de_gondola_del_fondo_norte",
@@ -194,6 +200,19 @@ def principal():
     for letra, recurso in contornos.items():
         mueble = bpy.context.scene.objects.get(MUEBLES[letra])
         if mueble is None:
+            continue
+        if letra in ("A", "B"):
+            evaluado = mueble.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            malla = evaluado.to_mesh()
+            try:
+                malla.calc_loop_triangles()
+                puntos = [punto_en_godot(tuple(v.co)) for v in malla.vertices]
+                caras = [tuple(puntos[i] for i in t.vertices) for t in malla.loop_triangles]
+            finally:
+                evaluado.to_mesh_clear()
+            estructura = actualizar_contorno_preciso(
+                estructura, nombre_en_godot(mueble.name), caras
+            )
             continue
         puntos = [punto_en_godot(tuple(v.co)) for v in mueble.data.vertices]
         minimo = tuple(min(p[i] for p in puntos) for i in range(3))

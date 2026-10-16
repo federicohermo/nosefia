@@ -221,10 +221,16 @@ func test_lo_que_nace_despues_se_mira_al_dormirse() -> void:
 	var nuevo: RigidBody3D = OBJETO.instantiate()
 	red.get_parent().add_child(nuevo)
 	nuevo.global_position = PARED
+	# Mantener la premisa dormida durante la revisión diferida: vivo en una pared,
+	# el motor lo despierta antes, que es el caso separado de cancelación.
+	nuevo.freeze = true
 	nuevo.sleeping = true
 	nuevo.sleeping_state_changed.emit()
+	await get_tree().physics_frame
+	await get_tree().physics_frame
 	assert_int(red.rescates.size()).is_equal(1)
-	assert_object(red.rescates[0]["objeto"]).is_same(nuevo)
+	if not red.rescates.is_empty():
+		assert_object(red.rescates[0]["objeto"]).is_same(nuevo)
 
 
 ## Un segundo objeto quieto en el origen del primero, con sus datos propios.
@@ -274,3 +280,47 @@ func test_va_encima_de_lo_que_ocupa_el_origen_aunque_este_de_costado() -> void: 
 	red.revisar(objeto)
 	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.ENCIMA_DEL_ORIGEN)
 	assert_float(objeto.global_position.y).is_greater(ocupante.global_position.y)
+
+
+func test_el_reposo_revisa_tambien_la_caja_que_ya_se_congelo() -> void:  # BR-PLY-015 AC-PLY-095
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	objeto.freeze = true
+	objeto.global_position = CONTRA_LA_PARED
+	objeto.sleeping = true
+	objeto.sleeping_state_changed.emit()
+	for cuadro in 3:
+		await get_tree().physics_frame
+	assert_int(red.rescates.size()).is_equal(1)
+	if not red.rescates.is_empty():
+		assert_object(red.rescates[0]["objeto"]).is_same(objeto)
+	assert_vector(objeto.global_position).is_not_equal(CONTRA_LA_PARED)
+
+
+func test_despertarse_antes_de_la_revision_de_reposo_no_rescata() -> void:  # BR-PLY-015
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	objeto.freeze = true
+	objeto.global_position = PARED
+	objeto.sleeping = true
+	objeto.sleeping_state_changed.emit()
+	objeto.sleeping = false
+	for cuadro in 3:
+		await get_tree().physics_frame
+	assert_array(red.rescates).is_empty()
+	assert_vector(objeto.global_position).is_equal(PARED)
+
+
+func test_destruir_el_cuerpo_antes_de_revisar_reposo_no_deja_callback_invalido() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	objeto.freeze = true
+	objeto.sleeping = true
+	objeto.sleeping_state_changed.emit()
+	objeto.free()
+	for cuadro in 3:
+		await get_tree().physics_frame
+	assert_array(red.rescates).is_empty()

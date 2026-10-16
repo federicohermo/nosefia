@@ -33,7 +33,7 @@ func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
 		assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-		assert_bool(cuerpo.has_method("usar")).is_true()
+		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)).is_true()
 		var mallas: Variant = cuerpo.get("mallas")
 		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
 
@@ -43,9 +43,11 @@ func test_el_izquierdo_abre_la_puerta_y_el_derecho_no() -> void:  # AC-PLY-055
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
-		assert_object(cuerpo.call("usar")).is_null()
+		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_false()
 		assert_bool(cuerpo.call("puerta").abierta()).is_false()
-		assert_bool(cuerpo.call("el_uso_tiene_efecto")).is_false()
+		assert_int(cuerpo.call("contexto_de_interaccion", null).ruta_secundaria).is_equal(
+			ReferenciaDeControles.Ruta.IGNORAR
+		)
 		assert_object(cuerpo.call("accionar")).is_null()
 		assert_bool(cuerpo.call("puerta").abierta()).is_true()
 
@@ -219,7 +221,7 @@ func test_tres_puertas_estan_trabadas_y_las_dos_interiores_no() -> void:  # AC-P
 	for ruta: String in TRABADAS:
 		var cuerpo: StaticBody3D = almacen.get_node(ruta + "/CuerpoDeLaHoja")
 		assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR)).is_true()
+		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)).is_true()
 		var mallas: Variant = cuerpo.get("mallas")
 		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
 		assert_bool(cuerpo.call("puerta").trabada()).override_failure_message(ruta).is_true()
@@ -287,7 +289,7 @@ func test_tocar_una_trabada_diez_veces_avisa_diez_veces_y_no_gira() -> void:  # 
 	for ruta: String in TRABADAS:
 		quietas[ruta] = (almacen.get_node(ruta) as Node3D).global_transform
 		for _vez in 10:
-			assert_object(almacen.get_node(ruta + "/CuerpoDeLaHoja").call("usar")).is_null()
+			assert_object(almacen.get_node(ruta + "/CuerpoDeLaHoja").call("accionar")).is_null()
 	for _cuadro in 10:
 		await get_tree().physics_frame
 	for ruta: String in TRABADAS:
@@ -366,34 +368,17 @@ func test_cada_clic_acciona_sus_puertas_y_sus_sonidos() -> void:
 		var puerta: Puerta = cuerpo.call("puerta")
 		jugador.set("_enfocado", cuerpo)
 		var anteriores := pedidos.size()
-		# El izquierdo abre y cierra las que abren, también la heladera; la trabada no le contesta.
-		var con_el_izquierdo := not puerta.trabada()
-		clic.button_index = MOUSE_BUTTON_LEFT
-		jugador.call("_unhandled_input", clic)
-		assert_bool(puerta.abierta()).override_failure_message(ruta).is_equal(con_el_izquierdo)
-		if con_el_izquierdo:
-			jugador.call("_unhandled_input", clic)
-			anteriores += 2
-		assert_bool(puerta.abierta()).override_failure_message(ruta).is_false()
-		assert_int(pedidos.size()).override_failure_message(ruta).is_equal(anteriores)
-		# El derecho sólo hace avisar a las trabadas: las que abren no le contestan.
-		var con_el_derecho := puerta.trabada()
-		clic.button_index = MOUSE_BUTTON_RIGHT
-		jugador.call("_unhandled_input", clic)
-		assert_bool(puerta.abierta()).override_failure_message(ruta).is_equal(
-			con_el_derecho and not puerta.trabada()
-		)
-		if not con_el_derecho:
-			assert_int(pedidos.size()).override_failure_message(ruta).is_equal(anteriores)
-			continue
-		assert_int(pedidos.size()).override_failure_message(ruta).is_equal(anteriores + 1)
-		var aviso: EntradaSonora.Evento = EntradaSonora.Evento.PUERTA_ABIERTA
+		var aviso := EntradaSonora.Evento.PUERTA_ABIERTA
 		if puerta.trabada():
 			aviso = (
 				EntradaSonora.Evento.PORTON_TRABADO
 				if cuerpo.get("traba") == PuertaDelLocal.Traba.PORTON
 				else EntradaSonora.Evento.PUERTA_TRABADA
 			)
+		clic.button_index = MOUSE_BUTTON_LEFT
+		jugador.call("_unhandled_input", clic)
+		assert_bool(puerta.abierta()).override_failure_message(ruta).is_equal(not puerta.trabada())
+		assert_int(pedidos.size()).override_failure_message(ruta).is_equal(anteriores + 1)
 		assert_int(pedidos.back()).override_failure_message(ruta).is_equal(aviso)
 		jugador.call("_unhandled_input", clic)
 		assert_bool(puerta.abierta()).override_failure_message(ruta).is_false()
@@ -401,6 +386,11 @@ func test_cada_clic_acciona_sus_puertas_y_sus_sonidos() -> void:
 		assert_int(pedidos.back()).is_equal(
 			aviso if puerta.trabada() else EntradaSonora.Evento.PUERTA_CERRADA
 		)
+		clic.button_index = MOUSE_BUTTON_RIGHT
+		jugador.call("_unhandled_input", clic)
+		jugador.call("_unhandled_input", clic)
+		assert_bool(puerta.abierta()).override_failure_message(ruta).is_false()
+		assert_int(pedidos.size()).override_failure_message(ruta).is_equal(anteriores + 2)
 
 
 func test_cada_puerta_pide_su_sonido_al_tocarla() -> void:
@@ -423,7 +413,7 @@ func test_cada_puerta_pide_su_sonido_al_tocarla() -> void:
 			[EntradaSonora.Evento.PUERTA_ABIERTA, EntradaSonora.Evento.PUERTA_CERRADA]
 		)
 	for ruta: String in TRABADAS:
-		almacen.get_node(ruta + "/CuerpoDeLaHoja").call("usar")
+		almacen.get_node(ruta + "/CuerpoDeLaHoja").call("accionar")
 		esperado.append(
 			(
 				EntradaSonora.Evento.PORTON_TRABADO
