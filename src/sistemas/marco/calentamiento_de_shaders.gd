@@ -14,6 +14,9 @@ signal terminado
 ## Cuánto más arriba del techo va la cámara, para que el techo entre en el cuadro.
 const ALTURA_EXTRA := 10.0
 const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+## Cuántos materiales nuevos destapa un cuadro con cola. Todos juntos compilaban ~125 programas en
+## un solo cuadro: la web quedaba congelada 10 s y la barra no se movía. Medido el 2026-10-16.
+const MATERIALES_NUEVOS_CON_COLA := 4
 
 ## Cuántos programas pidió la plantilla web y todavía no puede dibujar. Devuelve −1 si la
 ## plantilla no enlaza en paralelo: ahí cada programa nuevo frena el cuadro que lo pide.
@@ -34,9 +37,10 @@ var _alcance_ampliado := 0.0
 var _ocultos: Array[GeometryInstance3D] = []
 var _vistos: Dictionary = {}
 var _total := 0
-## Con cola, destapar no alcanza: la barra descuenta la parte de la cola que todavía se enlaza.
+## Con cola, la barra es mitad destapar y mitad enlazar lo que quedó en la cola.
 var _pico_de_la_cola := 0
 var _por_enlazar := 0.0
+var _con_cola := false
 var _camara: Camera3D
 var _anterior: Camera3D
 var _contornos_listos := false
@@ -189,7 +193,10 @@ func _muestras_con_omni(escena: Node3D) -> Array[GeometryInstance3D]:
 
 func progreso() -> float:
 	var faltan := _pendientes.size() + _sin_focos.size() + _con_area.size()
-	return (1.0 - float(faltan) / maxi(_total, 1)) * (1.0 - _por_enlazar)
+	var destapado := 1.0 - float(faltan) / maxi(_total, 1)
+	if not _con_cola:
+		return destapado
+	return (destapado + 1.0 - _por_enlazar) / 2.0
 
 
 static func _cola_de_la_plantilla() -> int:
@@ -202,9 +209,10 @@ static func _cola_de_la_plantilla() -> int:
 ## costo está en el material nuevo, no en la cantidad de objetos. Termina un cuadro después del
 ## último, que es el cuadro en que se dibuja.
 ##
-## Con cola, pedir un programa no frena el cuadro: cada pasada destapa todo junto, y las tres se
-## enlazan a la vez. Entrar con la cola ocupada sí lo frena: lo que todavía compila al usarse
-## espera detrás de ella. Por eso el final espera a que se vacíe.
+## Con cola, el enlace no frena el cuadro pero la compilación sí: cada cuadro destapa hasta
+## `MATERIALES_NUEVOS_CON_COLA` materiales nuevos, y las pasadas no esperan a la cola. Entrar con
+## la cola ocupada sí lo frena: lo que todavía compila al usarse espera detrás de ella. Por eso el
+## final espera a que se vacíe.
 func _process(_delta: float) -> void:
 	if not _contornos_listos:
 		return
@@ -244,13 +252,16 @@ func _process(_delta: float) -> void:
 			_sin_focos.clear()
 		_vistos.clear()
 	if cola >= 0:
+		_con_cola = true
 		_por_enlazar = 1.0
-	var nuevo := false
-	while not _pendientes.is_empty() and (cola >= 0 or not nuevo):
+	var tope := MATERIALES_NUEVOS_CON_COLA if cola >= 0 else 1
+	var nuevos := 0
+	while not _pendientes.is_empty() and nuevos < tope:
 		var objeto: GeometryInstance3D = _pendientes.pop_back()
 		objeto.visible = true
 		for material: Variant in _materiales_de(objeto):
-			nuevo = nuevo or not _vistos.has(material)
+			if not _vistos.has(material):
+				nuevos += 1
 			_vistos[material] = true
 	# La captura de LightmapGI se asigna después de volver visible la instancia. Cambiar
 	# las luces al cuadro siguiente dejaba sin preparar la variante con esa captura.
