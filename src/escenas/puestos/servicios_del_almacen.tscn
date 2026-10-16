@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://src/sistemas/marco/red_de_seguridad.gd" id="30_red"]
 
 [ext_resource type="Script" path="res://src/sistemas/tareas/caja_registradora.gd" id="caja"]
+[ext_resource type="Script" path="res://src/sistemas/investigacion/investigador.gd" id="investigador"]
 [node name="Servicios" type="Node3D"]
 
 [node name="RelojDelTurno" type="Node" parent="."]
@@ -46,3 +47,6 @@ script = ExtResource("30_red")
 
 [node name="CajaRegistradora" type="Node" parent="."]
 script = ExtResource("caja")
+
+[node name="Investigador" type="Node" parent="."]
+script = ExtResource("investigador")

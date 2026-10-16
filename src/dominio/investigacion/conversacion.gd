@@ -16,7 +16,7 @@ extends Resource
 
 ## Identidades admitidas por la bandeja. Sólo las que tienen guion documentado se registran
 ## en ARCHIVOS: declarar una identidad no autoriza a inventarle mensajes.
-enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO, YASMIN }
+enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO, YASMIN, NOTAS }
 
 const CARPETA := "res://src/dominio/investigacion/"
 
@@ -25,6 +25,7 @@ const CARPETA := "res://src/dominio/investigacion/"
 const ARCHIVOS := {
 	Interlocutor.JEFE: "conversacion_con_el_jefe.tres",
 	Interlocutor.YASMIN: "conversacion_con_yasmin.tres",
+	Interlocutor.NOTAS: "conversacion_de_notas.tres",
 }
 
 @export var imagen: Texture2D = null
@@ -37,6 +38,7 @@ const ARCHIVOS := {
 @export var rol: String = ""
 
 @export var mensajes: Array[Mensaje] = []
+@export var jornada_de_menu: int = 1
 
 
 ## La conversación de ese interlocutor, o `null`.
