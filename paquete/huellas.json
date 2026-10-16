@@ -1,0 +1,30 @@
+{
+  "commit": "ff5d8d960fb9d8e4f1a68d1db60e469613bd4c25",
+  "preset_sha256": "5b8b04c24b013973b147955b2b43974d740cdb875db74e9bca0e8eac16742d4d",
+  "proyecto_sha256": "be5aaed1a355a1033036f364b0d09fcd85ceb9c43d1fbd78dfad54d9ffc789cc",
+  "plantilla_sha256": "257ba2b4340f966141378f65e2595ed786c1ca8f3b113b45ca778e0d9e0bd13b",
+  "archivos": {
+    "index.html": {
+      "bytes": 5441,
+      "sha256": "740d4c05beb2e9e852d8d54698ab0739a33efde395d0d75d8616bb75a48aa80d"
+    },
+    "index.js": {
+      "bytes": 320319,
+      "sha256": "0919abc3567464f80131ebf28f4187beebeadb41b56e78f18b58e102bbd88483"
+    },
+    "index.pck": {
+      "bytes": 96453952,
+      "sha256": "ac8e8446e3417827165e75ea5f5c12b272468c9b336f226776e48fe2ad2b79b8"
+    },
+    "index.wasm": {
+      "bytes": 38850612,
+      "sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+    }
+  },
+  "control_exportacion": {
+    "primero": "exportar.log",
+    "segundo": "exportar-control-verbose.log",
+    "artefactos_identicos": true
+  },
+  "configuracion_identica": true
+}

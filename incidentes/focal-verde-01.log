@@ -1,0 +1,528 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (5 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | CelularDelEmpleado[39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | PantallaDelCelular[39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | PantallaDeDevolucion[39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-430-chats/reports/430[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_catalogo_carga_las_conversaciones_documentadas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_catalogo_carga_las_conversaciones_documentadas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 13ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_conversacion_documentada_es_de_su_interlocutor[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_conversacion_documentada_es_de_su_interlocutor[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_interlocutor_sin_guion_documentado_no_carga_textos_inventados[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_interlocutor_sin_guion_documentado_no_carga_textos_inventados[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ninguna_conversacion_llega_vacia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ninguna_conversacion_llega_vacia[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_interlocutor_se_presenta_con_un_nombre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_interlocutor_se_presenta_con_un_nombre[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_leido_no_vuelve_al_disco[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_leido_no_vuelve_al_disco[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_interlocutor_sin_fila_contesta_null_en_vez_de_reventar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/conversacion_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_interlocutor_sin_fila_contesta_null_en_vez_de_reventar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 7 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 136ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_foto_sola_es_contenido_y_el_mensaje_llega_en_la_primera[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_foto_sola_es_contenido_y_el_mensaje_llega_en_la_primera[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_con_texto_dice_algo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_con_texto_dice_algo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_vacio_no_dice_nada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_vacio_no_dice_nada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_de_puros_espacios_tampoco_dice_nada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/mensaje_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_de_puros_espacios_tampoco_dice_nada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 75ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_primera_jornada_solo_ofrece_la_introduccion_documentada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_primera_jornada_solo_ofrece_la_introduccion_documentada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 16ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_corte_de_jornada_filtra_y_ordena_el_menu[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_corte_de_jornada_filtra_y_ordena_el_menu[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_despues_de_leer_suma_sin_mutar_el_guion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_despues_de_leer_suma_sin_mutar_el_guion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recepciones_invalidas_no_cambian_la_bandeja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recepciones_invalidas_no_cambian_la_bandeja[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_adjunto_exige_foto_y_texto_inmediatamente_despues[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_adjunto_exige_foto_y_texto_inmediatamente_despues[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_bandeja_nueva_tiene_todo_sin_leer[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_bandeja_nueva_tiene_todo_sin_leer[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_marcar_leida_deja_esa_conversacion_en_cero[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_marcar_leida_deja_esa_conversacion_en_cero[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_marcar_leida_no_toca_las_otras_dos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_marcar_leida_no_toca_las_otras_dos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_marcar_leida_dos_veces_devuelve_false_la_segunda[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_marcar_leida_dos_veces_devuelve_false_la_segunda[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_marcar_un_interlocutor_que_no_esta_en_la_bandeja_devuelve_false[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_marcar_un_interlocutor_que_no_esta_en_la_bandeja_devuelve_false[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_conversacion_se_pide_por_interlocutor_y_la_que_falta_es_null[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_conversacion_se_pide_por_interlocutor_y_la_que_falta_es_null[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_bandeja_no_se_arma_con_las_conversaciones_del_disco_en_cada_llamada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/bandeja_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_bandeja_no_se_arma_con_las_conversaciones_del_disco_en_cada_llamada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 12 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 205ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_enrique_en_uno_y_dos_contactos_desde_dos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_enrique_en_uno_y_dos_contactos_desde_dos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_apertura_dos_contiene_foto_y_texto_siguiente[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_apertura_dos_contiene_foto_y_texto_siguiente[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_repetir_apertura_no_duplica_guion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_repetir_apertura_no_duplica_guion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibido_de_una_jornada_queda_antes_de_apertura_siguiente[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibido_de_una_jornada_queda_antes_de_apertura_siguiente[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 76ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_noche_1_impecable_es_saludo_y_cierre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_noche_1_impecable_es_saludo_y_cierre[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reponer_dice_la_falla_que_es[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reponer_dice_la_falla_que_es[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reto_2_de_la_jornada_2_cuenta_para_despues[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reto_2_de_la_jornada_2_cuenta_para_despues[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reto_2_de_la_jornada_3_no_trae_tarea_5[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reto_2_de_la_jornada_3_no_trae_tarea_5[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_p_4_en_la_quinta_despide[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_p_4_en_la_quinta_despide[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_p_2_distingue_si_hubo_llamados_en_la_partida[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_p_2_distingue_si_hubo_llamados_en_la_partida[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_mejora_gana_sobre_la_advertencia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_mejora_gana_sobre_la_advertencia[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_cuatro_bordes_de_la_quinta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_cuatro_bordes_de_la_quinta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ningun_numero_y_siempre_saludo_y_cierre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ningun_numero_y_siempre_saludo_y_cierre[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 765ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_despido_en_la_primera_noche[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_despido_en_la_primera_noche[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_en_curso_ofrece_solo_continuar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_en_curso_ofrece_solo_continuar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_mas_por_segundo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_mas_por_segundo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_retos_eligen_la_repeticion_y_el_despido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_retos_eligen_la_repeticion_y_el_despido[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_saludo_cambia_en_cada_umbral[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devolucion_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_saludo_cambia_en_cada_umbral[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 14 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 4ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_partida_nueva_arranca_en_la_primera_jornada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_partida_nueva_arranca_en_la_primera_jornada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_partida_guardada_sigue_en_su_jornada_y_con_su_legajo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_partida_guardada_sigue_en_su_jornada_y_con_su_legajo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_diccionario_vacio_da_una_partida_nueva[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_diccionario_vacio_da_una_partida_nueva[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_cierres_sin_abrir_en_el_medio_no_avanzan_dos_veces[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_cierres_sin_abrir_en_el_medio_no_avanzan_dos_veces[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_sin_haber_abierto_no_hace_nada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_sin_haber_abierto_no_hace_nada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_la_jornada_entrega_el_turno_del_001_con_sus_obligatorias[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_la_jornada_entrega_el_turno_del_001_con_sus_obligatorias[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_partida_que_termino_no_vuelve_a_abrir_una_jornada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_partida_que_termino_no_vuelve_a_abrir_una_jornada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cinco_jornadas_impecables_terminan_la_partida_sin_despido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cinco_jornadas_impecables_terminan_la_partida_sin_despido[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_el_despido_en_la_ultima_jornada_gana_el_despido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_el_despido_en_la_ultima_jornada_gana_el_despido[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_tiene_tres_finales[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_tiene_tres_finales[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_la_ultima_jornada_es_la_ultima[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_la_ultima_jornada_es_la_ultima[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_es_pura_y_no_pide_una_escena[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_es_pura_y_no_pide_una_escena[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_jornada_tres_cierra_con_cuatro_tres_y_dos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_jornada_tres_cierra_con_cuatro_tres_y_dos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_anota_las_cuentas_de_la_noche[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_anota_las_cuentas_de_la_noche[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_devoluciones_se_concatenan_y_vuelven_del_guardado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_devoluciones_se_concatenan_y_vuelven_del_guardado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 20 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 325ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_campo_tiene_su_clave[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_campo_tiene_su_clave[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_guardado_completo_vuelve_igual[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_guardado_completo_vuelve_igual[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_campo_que_falta_vuelve_con_su_defecto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_campo_que_falta_vuelve_con_su_defecto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tipo_equivocado_vuelve_con_su_defecto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tipo_equivocado_vuelve_con_su_defecto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_actual_una_anterior_y_sin_version_son_legibles[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_actual_una_anterior_y_sin_version_son_legibles[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_guardado_sin_cuentas_retoma_limpio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/partida_serializada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_guardado_sin_cuentas_retoma_limpio[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 13ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 6 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 116ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_acciones_son_escribir_y_borrar_y_ninguna_mas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_acciones_son_escribir_y_borrar_y_ninguna_mas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_datos_llevan_la_jornada_y_los_medios_de_la_partida[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_datos_llevan_la_jornada_y_los_medios_de_la_partida[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_datos_llevan_las_cuentas_y_las_devoluciones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_datos_llevan_las_cuentas_y_las_devoluciones[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_politica_es_pura[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/politica_de_guardado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_politica_es_pura[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 78ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_uno_doce_volver_y_ok_son_pantallas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_uno_doce_volver_y_ok_son_pantallas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_paso_termina_al_primer_avance[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_paso_termina_al_primer_avance[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_guion_y_siete_fotos_en_doce_pantallas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_guion_y_siete_fotos_en_doce_pantallas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_mensajes_no_inventa_pantallas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_mensajes_no_inventa_pantallas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 74ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_checkpoint_fechado_con_orden[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_checkpoint_fechado_con_orden[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_legado_conserva_repetidos_sin_fabricar_fecha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_legado_conserva_repetidos_sin_fabricar_fecha[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_cierres_guardan_bloques_en_su_orden[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_cierres_guardan_bloques_en_su_orden[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retoma_intercala_y_no_fusiona[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/devoluciones_fechadas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retoma_intercala_y_no_fusiona[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 13ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 89ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_los_gestos_aceptados_publican_y_leer_no_suena[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_los_gestos_aceptados_publican_y_leer_no_suena[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_cerrado_y_en_chat_avisa_una_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_cerrado_y_en_chat_avisa_una_vez[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_cierra_el_fijo_y_conserva_lecturas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_cierra_el_fijo_y_conserva_lecturas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_interlocutor_sin_conversacion_no_emite_llegada_ni_cuenta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_interlocutor_sin_conversacion_no_emite_llegada_ni_cuenta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tramo_identificado_emite_solo_en_su_chat_visible[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tramo_identificado_emite_solo_en_su_chat_visible[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 13ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 7 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 138ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 18ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 16ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_no_salta_la_animacion_del_celular[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_no_salta_la_animacion_del_celular[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 13ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_scroll_y_foto_conservan_lugar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_scroll_y_foto_conservan_lugar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 90ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recordatorio_no_depende_de_la_pantalla_abierta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recordatorio_no_depende_de_la_pantalla_abierta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 14ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 28ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_yasmin_conserva_rol_avatar_liso_y_tramo_identificado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_yasmin_conserva_rol_avatar_liso_y_tramo_identificado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 43ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_llegada_intercalada_conserva_indice_actual_de_la_foto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_llegada_intercalada_conserva_indice_actual_de_la_foto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 15ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 341ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_subida_llega_en_trescientos_milisegundos_reales[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_subida_llega_en_trescientos_milisegundos_reales[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 14ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_adelanta_la_subida_un_paso_maximo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_adelanta_la_subida_un_paso_maximo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 13ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_doce_pantallas_y_ok_idempotente[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_doce_pantallas_y_ok_idempotente[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 185ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_volver_tres_veces_recupera_solo_la_primera_pantalla[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_volver_tres_veces_recupera_solo_la_primera_pantalla[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 26ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_pantallas_sin_scroll_en_ambos_viewports[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_pantallas_sin_scroll_en_ambos_viewports[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 511ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/interrupciones/pantalla_de_instrucciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 42ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 6 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 842ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_q_fisica_es_unica_y_alterna_menu_y_cierre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_q_fisica_es_unica_y_alterna_menu_y_cierre[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 420ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_q_no_abre_con_otra_interfaz_ni_examen_ni_turno_cerrado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_q_no_abre_con_otra_interfaz_ni_examen_ni_turno_cerrado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 458ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_celular_bloquea_entrada_y_conserva_la_unidad_y_la_pose[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_celular_bloquea_entrada_y_conserva_la_unidad_y_la_pose[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 386ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_esc_cubre_la_foto_q_no_cambia_y_reanudar_conserva_la_pantalla[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_esc_cubre_la_foto_q_no_cambia_y_reanudar_conserva_la_pantalla[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 475ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cierre_baja_celular_y_otra_jornada_cierra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cierre_baja_celular_y_otra_jornada_cierra[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 515ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_celular_no_cobra_acciones_y_el_reloj_sigue_corriendo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_celular_no_cobra_acciones_y_el_reloj_sigue_corriendo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 417ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_botones_guiones_y_llegadas_al_final[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_botones_guiones_y_llegadas_al_final[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 536ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mensaje_recibido_suena_una_vez_y_anotar_ya_no_suena[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mensaje_recibido_suena_una_vez_y_anotar_ya_no_suena[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 303ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 293ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retomar_reconstruye_guion_sin_lecturas_ni_recibidos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retomar_reconstruye_guion_sin_lecturas_ni_recibidos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 813ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cursor_web_espera_gesto_y_no_reintenta_por_cuadro[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cursor_web_espera_gesto_y_no_reintenta_por_cuadro[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 304ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_q_primero_no_captura_y_cierre_y_pausa_recapturan[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_q_primero_no_captura_y_cierre_y_pausa_recapturan[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 338ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_e_primero_abre_examen_sin_capturar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_e_primero_abre_examen_sin_capturar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 313ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cursor_nativo_no_repite_escrituras_del_mismo_modo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/celular_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cursor_nativo_no_repite_escrituras_del_mismo_modo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 282ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 14 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5s 979ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_al_cerrar_baja_la_persiana_y_sube_el_celular_fijo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_al_cerrar_baja_la_persiana_y_sube_el_celular_fijo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 359ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_por_segundo_y_la_opcion_al_final[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mensaje_por_segundo_y_la_opcion_al_final[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 363ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_no_entrega_la_devolucion_de_golpe[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_no_entrega_la_devolucion_de_golpe[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 356ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_intervalos_esperan_al_celular_en_el_centro[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_intervalos_esperan_al_celular_en_el_centro[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 347ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_q_no_cierra_y_la_pausa_congela_la_devolucion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_q_no_cierra_y_la_pausa_congela_la_devolucion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 456ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_continuar_dos_veces_abre_una_sola_noche_2[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_continuar_dos_veces_abre_una_sola_noche_2[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 405ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_despedido_vuelve_al_menu_una_sola_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_despedido_vuelve_al_menu_una_sola_vez[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 413ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_volver_al_menu_desde_la_pausa_conserva_el_guardado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_volver_al_menu_desde_la_pausa_conserva_el_guardado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 384ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retomar_trae_las_devoluciones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retomar_trae_las_devoluciones[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 292ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_con_una_foto_abierta_conserva_foto_e_historial[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/devolucion_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_con_una_foto_abierta_conserva_foto_e_historial[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 422ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 882ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 451ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 653ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m6302[0m
+ but was
+ [38;2;30;144;255m4936[0m[0m[38;2;173;216;230m	at 'test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:166
+	at '_clic' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:75
+	at '_cuadros' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:37[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 2 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 132ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 128 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (16/16)[0m
+[38;2;233;150;122mExecuted test cases : (128/128)[0m
+[38;2;233;150;122mTotal execution time: 14s 492ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-430-chats/reports/430/report_5/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-430-chats/reports/430/report_5/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

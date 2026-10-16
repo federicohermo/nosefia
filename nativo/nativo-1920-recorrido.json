@@ -1,0 +1,51 @@
+{
+	"capturas": [
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-chats",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-yasmin-final",
+			"scroll": 1014,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-yasmin-inicio",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-yasmin-tramo",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-enrique",
+			"scroll": 6302,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-contenedor",
+			"scroll": 6302,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-foto-cerrada",
+			"scroll": 6302,
+			"viewport": "(1920, 1080)"
+		}
+	],
+	"fallos": [],
+	"pedidos": [
+		"2A",
+		"2A"
+	]
+}

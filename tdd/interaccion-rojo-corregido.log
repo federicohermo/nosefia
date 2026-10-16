@@ -1,0 +1,205 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (2 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-430-chats/reports/430[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_los_gestos_aceptados_publican_y_leer_no_suena[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_los_gestos_aceptados_publican_y_leer_no_suena[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 78ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_cerrado_y_en_chat_avisa_una_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_cerrado_y_en_chat_avisa_una_vez[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 87ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 81ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_cierra_el_fijo_y_conserva_lecturas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_cierra_el_fijo_y_conserva_lecturas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 80ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_interlocutor_sin_conversacion_no_emite_llegada_ni_cuenta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_interlocutor_sin_conversacion_no_emite_llegada_ni_cuenta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 74ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tramo_identificado_emite_solo_en_su_chat_visible[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tramo_identificado_emite_solo_en_su_chat_visible[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 75ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_el_tramo_identificado_emite_solo_en_su_chat_visible' in res://test/sistemas/investigacion/celular_del_empleado_test.gd:163[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_el_tramo_identificado_emite_solo_en_su_chat_visible' in res://test/sistemas/investigacion/celular_del_empleado_test.gd:166[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/investigacion/celular_del_empleado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 82ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 7 test cases | 0 errors | 2 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 620ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 17ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 19ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_no_salta_la_animacion_del_celular[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_no_salta_la_animacion_del_celular[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 15ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_scroll_y_foto_conservan_lugar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_scroll_y_foto_conservan_lugar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 94ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recordatorio_no_depende_de_la_pantalla_abierta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recordatorio_no_depende_de_la_pantalla_abierta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 15ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 14ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_yasmin_conserva_rol_avatar_liso_y_tramo_identificado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_yasmin_conserva_rol_avatar_liso_y_tramo_identificado[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 130ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mCompañera de trabajo[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mCompañ[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mJ[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255me[48;2;38;0;0m[38;2;255;255;255mra d[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mf[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255me[48;2;38;0;0m[38;2;255;255;255m trabajo[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:264
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:265
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting: not to be[0m '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:266
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:272
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:278
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_llegada_intercalada_conserva_indice_actual_de_la_foto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/pantalla_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_llegada_intercalada_conserva_indice_actual_de_la_foto[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 20ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mUn cierre anterior a la apertura[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mU[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mMe[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255mn[48;2;0;38;0m[38;2;255;255;255msaje[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m [48;2;38;0;0m[38;2;255;255;255mci[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255m0. T[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255me[48;2;0;38;0m[38;2;255;255;255mxto de p[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255mr[48;2;38;0;0m[38;2;255;255;255mr[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mu[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255me[48;2;0;38;0m[38;2;255;255;255mba[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m [48;2;0;38;0m[38;2;255;255;255mp[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255ma[48;2;38;0;0m[38;2;255;255;255mnt[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mra d[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255me[48;2;0;38;0m[38;2;255;255;255msplaza[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255mr[48;2;0;38;0m[38;2;255;255;255m un h[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255mi[48;2;0;38;0m[38;2;255;255;255mst[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255mor[48;2;38;0;0m[38;2;255;255;255m [0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mi[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255ma[48;2;0;38;0m[38;2;255;255;255ml[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m la[48;2;38;0;0m[38;2;255;255;255m ape[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255mr[48;2;38;0;0m[38;2;255;255;255mtura[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mgo.[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_llegada_intercalada_conserva_indice_actual_de_la_foto' in res://test/ui/diegetica/pantalla_del_celular_test.gd:293
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_llegada_intercalada_conserva_indice_actual_de_la_foto' in res://test/ui/diegetica/pantalla_del_celular_test.gd:297
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 10 test cases | 0 errors | 7 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 442ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 485ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 1s 98ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:139
+	at '_clic' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:73
+	at '_cuadros' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:35[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m2A[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]2A[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:141
+	at '_clic' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:73
+	at '_cuadros' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:35[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m6302[0m
+ but was
+ [38;2;30;144;255m4936[0m[0m[38;2;173;216;230m	at 'test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:164
+	at '_clic' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:73
+	at '_cuadros' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:35[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 2 test cases | 0 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 616ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 19 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (3/3)[0m
+[38;2;233;150;122mExecuted test cases : (19/19)[0m
+[38;2;233;150;122mTotal execution time: 4s 678ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-430-chats/reports/430/report_4/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-430-chats/reports/430/report_4/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

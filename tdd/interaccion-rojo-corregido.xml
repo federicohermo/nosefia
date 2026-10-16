@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-15" name="report_4" tests="19" failures="12" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="celular_del_empleado_test" package="test/sistemas/investigacion" timestamp="2026-10-15T19:50:12" hostname="localhost" tests="7" failures="2" errors="0" skipped="0" flaky="0" time="0.620">
+		<testcase name="test_solo_los_gestos_aceptados_publican_y_leer_no_suena" classname="celular_del_empleado_test" time="0.078">
+		</testcase>
+		<testcase name="test_recibir_cerrado_y_en_chat_avisa_una_vez" classname="celular_del_empleado_test" time="0.087">
+		</testcase>
+		<testcase name="test_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre" classname="celular_del_empleado_test" time="0.081">
+		</testcase>
+		<testcase name="test_otra_jornada_cierra_el_fijo_y_conserva_lecturas" classname="celular_del_empleado_test" time="0.080">
+		</testcase>
+		<testcase name="test_interlocutor_sin_conversacion_no_emite_llegada_ni_cuenta" classname="celular_del_empleado_test" time="0.074">
+		</testcase>
+		<testcase name="test_el_tramo_identificado_emite_solo_en_su_chat_visible" classname="celular_del_empleado_test" time="0.075">
+			<failure message="FAILED: res://test/sistemas/investigacion/celular_del_empleado_test.gd:163" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A, 2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	1	<N/A>	2A	
+	at 'test_el_tramo_identificado_emite_solo_en_su_chat_visible' in res://test/sistemas/investigacion/celular_del_empleado_test.gd:163
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/investigacion/celular_del_empleado_test.gd:166" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A, 2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	1	<N/A>	2A	
+	at 'test_el_tramo_identificado_emite_solo_en_su_chat_visible' in res://test/sistemas/investigacion/celular_del_empleado_test.gd:166
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura" classname="celular_del_empleado_test" time="0.082">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="pantalla_del_celular_test" package="test/ui/diegetica" timestamp="2026-10-15T19:50:12" hostname="localhost" tests="10" failures="7" errors="0" skipped="0" flaky="0" time="0.442">
+		<testcase name="test_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion" classname="pantalla_del_celular_test" time="0.017">
+		</testcase>
+		<testcase name="test_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos" classname="pantalla_del_celular_test" time="0.019">
+		</testcase>
+		<testcase name="test_un_cuadro_largo_no_salta_la_animacion_del_celular" classname="pantalla_del_celular_test" time="0.015">
+		</testcase>
+		<testcase name="test_scroll_y_foto_conservan_lugar" classname="pantalla_del_celular_test" time="0.094">
+		</testcase>
+		<testcase name="test_recordatorio_no_depende_de_la_pantalla_abierta" classname="pantalla_del_celular_test" time="0.012">
+		</testcase>
+		<testcase name="test_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita" classname="pantalla_del_celular_test" time="0.015">
+		</testcase>
+		<testcase name="test_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas" classname="pantalla_del_celular_test" time="0.020">
+		</testcase>
+		<testcase name="test_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no" classname="pantalla_del_celular_test" time="0.014">
+		</testcase>
+		<testcase name="test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado" classname="pantalla_del_celular_test" time="0.130">
+			<failure message="FAILED: res://test/ui/diegetica/pantalla_del_celular_test.gd:264" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'Compañera de trabajo'
+ but was
+ 'CompañJera dfe trabajo'
+	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:264
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/pantalla_del_celular_test.gd:265" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:265
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/pantalla_del_celular_test.gd:266" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:266
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/pantalla_del_celular_test.gd:272" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:272
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/pantalla_del_celular_test.gd:278" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A, 2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	1	<N/A>	2A	
+	at 'test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado' in res://test/ui/diegetica/pantalla_del_celular_test.gd:278
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_llegada_intercalada_conserva_indice_actual_de_la_foto" classname="pantalla_del_celular_test" time="0.020">
+			<failure message="FAILED: res://test/ui/diegetica/pantalla_del_celular_test.gd:293" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'Un cierre anterior a la apertura'
+ but was
+ 'UMensaje ci0. Texto de prrueba pantra desplazar un histor ial la aperturago.'
+	at 'test_llegada_intercalada_conserva_indice_actual_de_la_foto' in res://test/ui/diegetica/pantalla_del_celular_test.gd:293
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/pantalla_del_celular_test.gd:297" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_llegada_intercalada_conserva_indice_actual_de_la_foto' in res://test/ui/diegetica/pantalla_del_celular_test.gd:297
+	at 'after_test' in res://test/ui/diegetica/pantalla_del_celular_test.gd:9
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="chats_de_jornada_2_en_el_almacen_test" package="test/escenas" timestamp="2026-10-15T19:50:13" hostname="localhost" tests="2" failures="3" errors="0" skipped="0" flaky="0" time="3.616">
+		<testcase name="test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada" classname="chats_de_jornada_2_en_el_almacen_test" time="2.485">
+		</testcase>
+		<testcase name="test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll" classname="chats_de_jornada_2_en_el_almacen_test" time="1.098">
+			<failure message="FAILED: res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:139" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	
+	at 'test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:139
+	at '_clic' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:73
+	at '_cuadros' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:35
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:141" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A, 2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	1	<N/A>	2A	
+	at 'test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:141
+	at '_clic' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:73
+	at '_cuadros' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:35
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:164" type="FAILURE">
+<![CDATA[
+Expecting:
+ 6302
+ but was
+ 4936
+	at 'test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:164
+	at '_clic' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:73
+	at '_cuadros' in res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd:35
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

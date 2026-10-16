@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-15" name="report_10" tests="129" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="conversacion_test" package="test/dominio/investigacion" timestamp="2026-10-15T22:33:11" hostname="localhost" tests="7" failures="0" errors="0" skipped="0" flaky="0" time="0.110">
+		<testcase name="test_el_catalogo_carga_las_conversaciones_documentadas" classname="conversacion_test" time="0.010">
+		</testcase>
+		<testcase name="test_cada_conversacion_documentada_es_de_su_interlocutor" classname="conversacion_test" time="0.011">
+		</testcase>
+		<testcase name="test_un_interlocutor_sin_guion_documentado_no_carga_textos_inventados" classname="conversacion_test" time="0.008">
+		</testcase>
+		<testcase name="test_ninguna_conversacion_llega_vacia" classname="conversacion_test" time="0.012">
+		</testcase>
+		<testcase name="test_cada_interlocutor_se_presenta_con_un_nombre" classname="conversacion_test" time="0.008">
+		</testcase>
+		<testcase name="test_lo_leido_no_vuelve_al_disco" classname="conversacion_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_interlocutor_sin_fila_contesta_null_en_vez_de_reventar" classname="conversacion_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="mensaje_test" package="test/dominio/investigacion" timestamp="2026-10-15T22:33:11" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.048">
+		<testcase name="test_la_foto_sola_es_contenido_y_el_mensaje_llega_en_la_primera" classname="mensaje_test" time="0.004">
+		</testcase>
+		<testcase name="test_un_mensaje_con_texto_dice_algo" classname="mensaje_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_mensaje_vacio_no_dice_nada" classname="mensaje_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_mensaje_de_puros_espacios_tampoco_dice_nada" classname="mensaje_test" time="0.006">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="bandeja_test" package="test/dominio/investigacion" timestamp="2026-10-15T22:33:11" hostname="localhost" tests="12" failures="0" errors="0" skipped="0" flaky="0" time="0.178">
+		<testcase name="test_la_primera_jornada_solo_ofrece_la_introduccion_documentada" classname="bandeja_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_corte_de_jornada_filtra_y_ordena_el_menu" classname="bandeja_test" time="0.006">
+		</testcase>
+		<testcase name="test_recibir_despues_de_leer_suma_sin_mutar_el_guion" classname="bandeja_test" time="0.006">
+		</testcase>
+		<testcase name="test_recepciones_invalidas_no_cambian_la_bandeja" classname="bandeja_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_adjunto_exige_foto_y_texto_inmediatamente_despues" classname="bandeja_test" time="0.008">
+		</testcase>
+		<testcase name="test_una_bandeja_nueva_tiene_todo_sin_leer" classname="bandeja_test" time="0.010">
+		</testcase>
+		<testcase name="test_marcar_leida_deja_esa_conversacion_en_cero" classname="bandeja_test" time="0.008">
+		</testcase>
+		<testcase name="test_marcar_leida_no_toca_las_otras_dos" classname="bandeja_test" time="0.010">
+		</testcase>
+		<testcase name="test_marcar_leida_dos_veces_devuelve_false_la_segunda" classname="bandeja_test" time="0.010">
+		</testcase>
+		<testcase name="test_marcar_un_interlocutor_que_no_esta_en_la_bandeja_devuelve_false" classname="bandeja_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_conversacion_se_pide_por_interlocutor_y_la_que_falta_es_null" classname="bandeja_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_bandeja_no_se_arma_con_las_conversaciones_del_disco_en_cada_llamada" classname="bandeja_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="chats_de_la_segunda_jornada_test" package="test/dominio/investigacion" timestamp="2026-10-15T22:33:11" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.064">
+		<testcase name="test_solo_enrique_en_uno_y_dos_contactos_desde_dos" classname="chats_de_la_segunda_jornada_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_apertura_dos_contiene_foto_y_texto_siguiente" classname="chats_de_la_segunda_jornada_test" time="0.011">
+		</testcase>
+		<testcase name="test_repetir_apertura_no_duplica_guion" classname="chats_de_la_segunda_jornada_test" time="0.008">
+		</testcase>
+		<testcase name="test_recibido_de_una_jornada_queda_antes_de_apertura_siguiente" classname="chats_de_la_segunda_jornada_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="devolucion_del_jefe_test" package="test/dominio/empleo" timestamp="2026-10-15T22:33:11" hostname="localhost" tests="14" failures="0" errors="0" skipped="0" flaky="0" time="0.919">
+		<testcase name="test_la_noche_1_impecable_es_saludo_y_cierre" classname="devolucion_del_jefe_test" time="0.008">
+		</testcase>
+		<testcase name="test_reponer_dice_la_falla_que_es" classname="devolucion_del_jefe_test" time="0.010">
+		</testcase>
+		<testcase name="test_el_reto_2_de_la_jornada_2_cuenta_para_despues" classname="devolucion_del_jefe_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_reto_2_de_la_jornada_3_no_trae_tarea_5" classname="devolucion_del_jefe_test" time="0.008">
+		</testcase>
+		<testcase name="test_p_4_en_la_quinta_despide" classname="devolucion_del_jefe_test" time="0.008">
+		</testcase>
+		<testcase name="test_p_2_distingue_si_hubo_llamados_en_la_partida" classname="devolucion_del_jefe_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_mejora_gana_sobre_la_advertencia" classname="devolucion_del_jefe_test" time="0.008">
+		</testcase>
+		<testcase name="test_los_cuatro_bordes_de_la_quinta" classname="devolucion_del_jefe_test" time="0.006">
+		</testcase>
+		<testcase name="test_ningun_numero_y_siempre_saludo_y_cierre" classname="devolucion_del_jefe_test" time="0.726">
+		</testcase>
+		<testcase name="test_el_despido_en_la_primera_noche" classname="devolucion_del_jefe_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_partida_en_curso_ofrece_solo_continuar" classname="devolucion_del_jefe_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_mensaje_mas_por_segundo" classname="devolucion_del_jefe_test" time="0.006">
+		</testcase>
+		<testcase name="test_los_retos_eligen_la_repeticion_y_el_despido" classname="devolucion_del_jefe_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_saludo_cambia_en_cada_umbral" classname="devolucion_del_jefe_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="partida_test" package="test/dominio/empleo" timestamp="2026-10-15T22:33:12" hostname="localhost" tests="20" failures="0" errors="0" skipped="0" flaky="0" time="0.259">
+		<testcase name="test_una_partida_nueva_arranca_en_la_primera_jornada" classname="partida_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia" classname="partida_test" time="0.008">
+		</testcase>
+		<testcase name="test_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_partida_guardada_sigue_en_su_jornada_y_con_su_legajo" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_diccionario_vacio_da_una_partida_nueva" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_dos_cierres_sin_abrir_en_el_medio_no_avanzan_dos_veces" classname="partida_test" time="0.008">
+		</testcase>
+		<testcase name="test_cerrar_sin_haber_abierto_no_hace_nada" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_abrir_la_jornada_entrega_el_turno_del_001_con_sus_obligatorias" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas" classname="partida_test" time="0.004">
+		</testcase>
+		<testcase name="test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_cinco_jornadas_impecables_terminan_la_partida_sin_despido" classname="partida_test" time="0.008">
+		</testcase>
+		<testcase name="test_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_con_el_despido_en_la_ultima_jornada_gana_el_despido" classname="partida_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_partida_tiene_tres_finales" classname="partida_test" time="0.010">
+		</testcase>
+		<testcase name="test_solo_la_ultima_jornada_es_la_ultima" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_partida_es_pura_y_no_pide_una_escena" classname="partida_test" time="0.010">
+		</testcase>
+		<testcase name="test_jornada_tres_cierra_con_cuatro_tres_y_dos" classname="partida_test" time="0.012">
+		</testcase>
+		<testcase name="test_cerrar_anota_las_cuentas_de_la_noche" classname="partida_test" time="0.007">
+		</testcase>
+		<testcase name="test_las_devoluciones_se_concatenan_y_vuelven_del_guardado" classname="partida_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="6" name="partida_serializada_test" package="test/dominio/empleo" timestamp="2026-10-15T22:33:13" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.092">
+		<testcase name="test_cada_campo_tiene_su_clave" classname="partida_serializada_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_guardado_completo_vuelve_igual" classname="partida_serializada_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_campo_que_falta_vuelve_con_su_defecto" classname="partida_serializada_test" time="0.010">
+		</testcase>
+		<testcase name="test_el_tipo_equivocado_vuelve_con_su_defecto" classname="partida_serializada_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_actual_una_anterior_y_sin_version_son_legibles" classname="partida_serializada_test" time="0.011">
+		</testcase>
+		<testcase name="test_un_guardado_sin_cuentas_retoma_limpio" classname="partida_serializada_test" time="0.010">
+		</testcase>
+	</testsuite>
+	<testsuite id="7" name="politica_de_guardado_test" package="test/dominio/empleo" timestamp="2026-10-15T22:33:13" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.078">
+		<testcase name="test_las_acciones_son_escribir_y_borrar_y_ninguna_mas" classname="politica_de_guardado_test" time="0.010">
+		</testcase>
+		<testcase name="test_los_datos_llevan_la_jornada_y_los_medios_de_la_partida" classname="politica_de_guardado_test" time="0.012">
+		</testcase>
+		<testcase name="test_los_datos_llevan_las_cuentas_y_las_devoluciones" classname="politica_de_guardado_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_politica_es_pura" classname="politica_de_guardado_test" time="0.010">
+		</testcase>
+	</testsuite>
+	<testsuite id="8" name="instrucciones_del_jefe_test" package="test/dominio/empleo" timestamp="2026-10-15T22:33:13" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.078">
+		<testcase name="test_uno_doce_volver_y_ok_son_pantallas" classname="instrucciones_del_jefe_test" time="0.010">
+		</testcase>
+		<testcase name="test_un_paso_termina_al_primer_avance" classname="instrucciones_del_jefe_test" time="0.012">
+		</testcase>
+		<testcase name="test_guion_y_siete_fotos_en_doce_pantallas" classname="instrucciones_del_jefe_test" time="0.012">
+		</testcase>
+		<testcase name="test_sin_mensajes_no_inventa_pantallas" classname="instrucciones_del_jefe_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="9" name="devoluciones_fechadas_test" package="test/dominio/empleo" timestamp="2026-10-15T22:33:13" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.065">
+		<testcase name="test_checkpoint_fechado_con_orden" classname="devoluciones_fechadas_test" time="0.007">
+		</testcase>
+		<testcase name="test_legado_conserva_repetidos_sin_fabricar_fecha" classname="devoluciones_fechadas_test" time="0.009">
+		</testcase>
+		<testcase name="test_dos_cierres_guardan_bloques_en_su_orden" classname="devoluciones_fechadas_test" time="0.008">
+		</testcase>
+		<testcase name="test_retoma_intercala_y_no_fusiona" classname="devoluciones_fechadas_test" time="0.010">
+		</testcase>
+	</testsuite>
+	<testsuite id="10" name="celular_del_empleado_test" package="test/sistemas/investigacion" timestamp="2026-10-15T22:33:13" hostname="localhost" tests="7" failures="0" errors="0" skipped="0" flaky="0" time="0.134">
+		<testcase name="test_solo_los_gestos_aceptados_publican_y_leer_no_suena" classname="celular_del_empleado_test" time="0.010">
+		</testcase>
+		<testcase name="test_recibir_cerrado_y_en_chat_avisa_una_vez" classname="celular_del_empleado_test" time="0.010">
+		</testcase>
+		<testcase name="test_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre" classname="celular_del_empleado_test" time="0.010">
+		</testcase>
+		<testcase name="test_otra_jornada_cierra_el_fijo_y_conserva_lecturas" classname="celular_del_empleado_test" time="0.010">
+		</testcase>
+		<testcase name="test_interlocutor_sin_conversacion_no_emite_llegada_ni_cuenta" classname="celular_del_empleado_test" time="0.012">
+		</testcase>
+		<testcase name="test_el_tramo_identificado_emite_solo_en_su_chat_visible" classname="celular_del_empleado_test" time="0.010">
+		</testcase>
+		<testcase name="test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura" classname="celular_del_empleado_test" time="0.012">
+		</testcase>
+	</testsuite>
+	<testsuite id="11" name="pantalla_del_celular_test" package="test/ui/diegetica" timestamp="2026-10-15T22:33:13" hostname="localhost" tests="11" failures="0" errors="0" skipped="0" flaky="0" time="0.386">
+		<testcase name="test_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion" classname="pantalla_del_celular_test" time="0.014">
+		</testcase>
+		<testcase name="test_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos" classname="pantalla_del_celular_test" time="0.017">
+		</testcase>
+		<testcase name="test_un_cuadro_largo_no_salta_la_animacion_del_celular" classname="pantalla_del_celular_test" time="0.010">
+		</testcase>
+		<testcase name="test_scroll_y_foto_conservan_lugar" classname="pantalla_del_celular_test" time="0.098">
+		</testcase>
+		<testcase name="test_recordatorio_no_depende_de_la_pantalla_abierta" classname="pantalla_del_celular_test" time="0.011">
+		</testcase>
+		<testcase name="test_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita" classname="pantalla_del_celular_test" time="0.008">
+		</testcase>
+		<testcase name="test_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas" classname="pantalla_del_celular_test" time="0.018">
+		</testcase>
+		<testcase name="test_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no" classname="pantalla_del_celular_test" time="0.010">
+		</testcase>
+		<testcase name="test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado" classname="pantalla_del_celular_test" time="0.036">
+		</testcase>
+		<testcase name="test_llegada_intercalada_conserva_indice_actual_de_la_foto" classname="pantalla_del_celular_test" time="0.012">
+		</testcase>
+		<testcase name="test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema" classname="pantalla_del_celular_test" time="0.056">
+		</testcase>
+	</testsuite>
+	<testsuite id="12" name="pantalla_de_instrucciones_test" package="test/ui/interrupciones" timestamp="2026-10-15T22:33:13" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.939">
+		<testcase name="test_subida_llega_en_trescientos_milisegundos_reales" classname="pantalla_de_instrucciones_test" time="0.012">
+		</testcase>
+		<testcase name="test_un_cuadro_largo_adelanta_la_subida_un_paso_maximo" classname="pantalla_de_instrucciones_test" time="0.014">
+		</testcase>
+		<testcase name="test_doce_pantallas_y_ok_idempotente" classname="pantalla_de_instrucciones_test" time="0.216">
+		</testcase>
+		<testcase name="test_volver_tres_veces_recupera_solo_la_primera_pantalla" classname="pantalla_de_instrucciones_test" time="0.025">
+		</testcase>
+		<testcase name="test_pantallas_sin_scroll_en_ambos_viewports" classname="pantalla_de_instrucciones_test" time="0.567">
+		</testcase>
+		<testcase name="test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado" classname="pantalla_de_instrucciones_test" time="0.052">
+		</testcase>
+	</testsuite>
+	<testsuite id="13" name="celular_en_el_almacen_test" package="test/escenas" timestamp="2026-10-15T22:33:14" hostname="localhost" tests="14" failures="0" errors="0" skipped="0" flaky="0" time="5.822">
+		<testcase name="test_q_fisica_es_unica_y_alterna_menu_y_cierre" classname="celular_en_el_almacen_test" time="0.685">
+		</testcase>
+		<testcase name="test_q_no_abre_con_otra_interfaz_ni_examen_ni_turno_cerrado" classname="celular_en_el_almacen_test" time="0.402">
+		</testcase>
+		<testcase name="test_celular_bloquea_entrada_y_conserva_la_unidad_y_la_pose" classname="celular_en_el_almacen_test" time="0.296">
+		</testcase>
+		<testcase name="test_esc_cubre_la_foto_q_no_cambia_y_reanudar_conserva_la_pantalla" classname="celular_en_el_almacen_test" time="0.307">
+		</testcase>
+		<testcase name="test_cierre_baja_celular_y_otra_jornada_cierra" classname="celular_en_el_almacen_test" time="0.347">
+		</testcase>
+		<testcase name="test_celular_no_cobra_acciones_y_el_reloj_sigue_corriendo" classname="celular_en_el_almacen_test" time="0.318">
+		</testcase>
+		<testcase name="test_botones_guiones_y_llegadas_al_final" classname="celular_en_el_almacen_test" time="0.939">
+		</testcase>
+		<testcase name="test_mensaje_recibido_suena_una_vez_y_anotar_ya_no_suena" classname="celular_en_el_almacen_test" time="0.265">
+		</testcase>
+		<testcase name="test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos" classname="celular_en_el_almacen_test" time="0.259">
+		</testcase>
+		<testcase name="test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos" classname="celular_en_el_almacen_test" time="0.708">
+		</testcase>
+		<testcase name="test_cursor_web_espera_gesto_y_no_reintenta_por_cuadro" classname="celular_en_el_almacen_test" time="0.270">
+		</testcase>
+		<testcase name="test_q_primero_no_captura_y_cierre_y_pausa_recapturan" classname="celular_en_el_almacen_test" time="0.319">
+		</testcase>
+		<testcase name="test_e_primero_abre_examen_sin_capturar" classname="celular_en_el_almacen_test" time="0.293">
+		</testcase>
+		<testcase name="test_cursor_nativo_no_repite_escrituras_del_mismo_modo" classname="celular_en_el_almacen_test" time="0.302">
+		</testcase>
+	</testsuite>
+	<testsuite id="14" name="devolucion_en_el_almacen_test" package="test/escenas" timestamp="2026-10-15T22:33:20" hostname="localhost" tests="10" failures="0" errors="0" skipped="0" flaky="0" time="3.335">
+		<testcase name="test_al_cerrar_baja_la_persiana_y_sube_el_celular_fijo" classname="devolucion_en_el_almacen_test" time="0.364">
+		</testcase>
+		<testcase name="test_un_mensaje_por_segundo_y_la_opcion_al_final" classname="devolucion_en_el_almacen_test" time="0.352">
+		</testcase>
+		<testcase name="test_un_cuadro_largo_no_entrega_la_devolucion_de_golpe" classname="devolucion_en_el_almacen_test" time="0.316">
+		</testcase>
+		<testcase name="test_los_intervalos_esperan_al_celular_en_el_centro" classname="devolucion_en_el_almacen_test" time="0.342">
+		</testcase>
+		<testcase name="test_q_no_cierra_y_la_pausa_congela_la_devolucion" classname="devolucion_en_el_almacen_test" time="0.330">
+		</testcase>
+		<testcase name="test_continuar_dos_veces_abre_una_sola_noche_2" classname="devolucion_en_el_almacen_test" time="0.335">
+		</testcase>
+		<testcase name="test_despedido_vuelve_al_menu_una_sola_vez" classname="devolucion_en_el_almacen_test" time="0.291">
+		</testcase>
+		<testcase name="test_volver_al_menu_desde_la_pausa_conserva_el_guardado" classname="devolucion_en_el_almacen_test" time="0.300">
+		</testcase>
+		<testcase name="test_retomar_trae_las_devoluciones" classname="devolucion_en_el_almacen_test" time="0.241">
+		</testcase>
+		<testcase name="test_recibir_con_una_foto_abierta_conserva_foto_e_historial" classname="devolucion_en_el_almacen_test" time="0.384">
+		</testcase>
+	</testsuite>
+	<testsuite id="15" name="chats_de_jornada_2_en_el_almacen_test" package="test/escenas" timestamp="2026-10-15T22:33:24" hostname="localhost" tests="2" failures="0" errors="0" skipped="0" flaky="0" time="1.042">
+		<testcase name="test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada" classname="chats_de_jornada_2_en_el_almacen_test" time="0.410">
+		</testcase>
+		<testcase name="test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll" classname="chats_de_jornada_2_en_el_almacen_test" time="0.610">
+		</testcase>
+	</testsuite>
+</testsuites>

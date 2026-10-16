@@ -1,0 +1,17 @@
+{
+  "fonttools": "4.60.0",
+  "comandos": [
+    "python -m pip install fonttools==4.60.0",
+    "python assets/ui/manada/celular/generar_simbolos_de_chat.py"
+  ],
+  "familia": "No se fia Chat Symbols",
+  "glifos": [
+    "0x2728",
+    "0x1f4aa"
+  ],
+  "licencia_completa_embebida": true,
+  "licencia_sha256": "500bb1ccf43df7bbb522112f9133a52b16e1c35e809632f5d8609b179152de5b",
+  "resultado_bytes": 11184,
+  "resultado_sha256": "af469b9aea3c3e278a8def15a63d87f67264254b7c77823b871c5ba74b6fc4ed",
+  "regeneraciones_identicas": 3
+}

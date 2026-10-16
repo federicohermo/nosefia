@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+ERROR: NATIVO430: el tramo no emitió exactamente dos pedidos
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:20)
+       [1] _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:157)
+       [2] _clic (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:41)
+       [3] _cuadros (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:25)
+ERROR: NATIVO430: no abrió Enrique por clic
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:20)
+       [1] _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:163)
+       [2] _clic (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:41)
+       [3] _cuadros (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:25)
+ERROR: Index p_index = 21 is out of bounds ((int)data.children_cache.size() - data.internal_children_front_count_cache - data.internal_children_back_count_cache = 15).
+   at: get_child (scene/main/node.cpp:1861)
+   GDScript backtrace (most recent call first):
+       [0] _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:165)
+       [1] _foto (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:82)
+SCRIPT ERROR: Cannot call method 'find_children' on a null value.
+   at: _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:165)
+   GDScript backtrace (most recent call first):
+       [0] _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:165)
+       [1] _foto (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:82)

@@ -1,0 +1,6 @@
+OK — 12 capacidades, 461 criterios, 8 ratificadas.
+Borradores, y cuánto les falta para ratificar:
+  notifications: 13/19 criterios con test
+  player-actions: 89/95 criterios con test
+  store-cleanup: 52/55 criterios con test
+  store-stock: 54/59 criterios con test

@@ -1,0 +1,48 @@
+{
+  "base_bytes": 1151353,
+  "actual_bytes": 1160340,
+  "suites": 268,
+  "archivos": 268,
+  "casos": 2048,
+  "fallos": 0,
+  "errores_xml": 0,
+  "saltos": 0,
+  "errores_base": {
+    "ERROR: The remote port number must be between 1 and 65535 (inclusive).": 1,
+    "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.": 1,
+    "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros": 1,
+    "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd": 3,
+    "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn": 1,
+    "ERROR: Cannot open file 'res://no_existe.tscn'.": 3,
+    "ERROR: Failed loading resource: res://no_existe.tscn.": 3,
+    "ERROR: Caja registradora sin generador: revisar almacen.gd": 4,
+    "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd": 4,
+    "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd": 4
+  },
+  "errores_actuales": {
+    "ERROR: The remote port number must be between 1 and 65535 (inclusive).": 1,
+    "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.": 1,
+    "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros": 1,
+    "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd": 3,
+    "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn": 1,
+    "ERROR: Cannot open file 'res://no_existe.tscn'.": 3,
+    "ERROR: Failed loading resource: res://no_existe.tscn.": 3,
+    "ERROR: Caja registradora sin generador: revisar almacen.gd": 4,
+    "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd": 4,
+    "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd": 4
+  },
+  "errores_extra": {},
+  "errores_ausentes": {},
+  "advertencias_base": 42,
+  "advertencias_actuales": 42,
+  "advertencias_nuevas": [],
+  "rescates_nuevos": {},
+  "rescates_ausentes": {},
+  "fugas_o_aborto": false,
+  "sumario": [
+    "Overall Summary: 2048 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+    "Executed test suites: (268/268)",
+    "Executed test cases : (2048/2048)",
+    "Total execution time: 14min 43s 940ms"
+  ]
+}

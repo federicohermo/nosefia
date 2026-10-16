@@ -1,0 +1,103 @@
+[
+  {
+    "fixture": "checkpoint de Partida real",
+    "sha256": "2c4a6412ed834470ff52ab69525f02dd7029bb4ef5be4c21d2f0eb7a687c2899",
+    "path": "/userfs/godot/app_userdata/No se fía/partida.guardado"
+  },
+  {
+    "snapshot": "web-1920-inicio",
+    "cuadros": 146,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      956,
+      540
+    ],
+    "wait": 20000,
+    "snapshot": "web-1920-almacen-real"
+  },
+  {
+    "snapshot": "web-1920-almacen-real",
+    "cuadros": 73,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": false
+    }
+  },
+  {
+    "key": "Q",
+    "wait": 1500,
+    "snapshot": "web-1920-chats"
+  },
+  {
+    "snapshot": "web-1920-chats",
+    "cuadros": 104,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      960,
+      450
+    ],
+    "wait": 500,
+    "snapshot": "web-1920-yasmin-final-glifo-ausente"
+  },
+  {
+    "snapshot": "web-1920-yasmin-final-glifo-ausente",
+    "cuadros": 108,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "move": [
+      950,
+      510
+    ],
+    "wheel": [
+      0,
+      -5000
+    ],
+    "wait": 300,
+    "snapshot": "web-1920-yasmin-inicio-glifo-ausente"
+  },
+  {
+    "snapshot": "web-1920-yasmin-inicio-glifo-ausente",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": false
+    }
+  },
+  {
+    "fin": true
+  }
+]

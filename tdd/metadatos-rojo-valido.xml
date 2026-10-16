@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-15" name="report_2" tests="8" failures="7" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="chats_de_la_segunda_jornada_test" package="test/dominio/investigacion" timestamp="2026-10-15T19:40:59" hostname="localhost" tests="4" failures="4" errors="0" skipped="0" flaky="0" time="0.230">
+		<testcase name="test_solo_enrique_en_uno_y_dos_contactos_desde_dos" classname="chats_de_la_segunda_jornada_test" time="0.063">
+			<failure message="FAILED: res://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd:32" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 1
+	at 'test_solo_enrique_en_uno_y_dos_contactos_desde_dos' in res://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd:32
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_la_apertura_dos_contiene_foto_y_texto_siguiente" classname="chats_de_la_segunda_jornada_test" time="0.060">
+			<failure message="FAILED: res://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd:55" type="FAILURE">
+<![CDATA[
+Expecting:
+ 21
+ but was
+ 19
+	at 'test_la_apertura_dos_contiene_foto_y_texto_siguiente' in res://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd:55
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_repetir_apertura_no_duplica_guion" classname="chats_de_la_segunda_jornada_test" time="0.061">
+			<failure message="FAILED: res://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd:69" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 1
+	at 'test_repetir_apertura_no_duplica_guion' in res://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd:69
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_recibido_de_una_jornada_queda_antes_de_apertura_siguiente" classname="chats_de_la_segunda_jornada_test" time="0.007">
+			<failure message="FAILED: res://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd:87" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371857103681612>, ():<Resource#-9223371857070127260>, ():<Resource#-9223371857086904397>]'
+ but was
+ '[():<Resource#-9223371857103681612>, ():<Resource#-9223371857086904397>, ():<Resource#-9223371857070127260>]'
+
+Differences found:
+Index	Current	Expected	1	():<Resource#-9223371857086904397>	():<Resource#-9223371857070127260>	2	():<Resource#-9223371857070127260>	():<Resource#-9223371857086904397>	
+	at 'test_recibido_de_una_jornada_queda_antes_de_apertura_siguiente' in res://test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd:87
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="devoluciones_fechadas_test" package="test/dominio/empleo" timestamp="2026-10-15T19:40:59" hostname="localhost" tests="4" failures="3" errors="0" skipped="0" flaky="0" time="0.063">
+		<testcase name="test_checkpoint_fechado_con_orden" classname="devoluciones_fechadas_test" time="0.005">
+			<failure message="FAILED: res://test/dominio/empleo/devoluciones_fechadas_test.gd:24" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_checkpoint_fechado_con_orden' in res://test/dominio/empleo/devoluciones_fechadas_test.gd:24
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_legado_conserva_repetidos_sin_fabricar_fecha" classname="devoluciones_fechadas_test" time="0.006">
+		</testcase>
+		<testcase name="test_dos_cierres_guardan_bloques_en_su_orden" classname="devoluciones_fechadas_test" time="0.006">
+			<failure message="FAILED: res://test/dominio/empleo/devoluciones_fechadas_test.gd:61" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_dos_cierres_guardan_bloques_en_su_orden' in res://test/dominio/empleo/devoluciones_fechadas_test.gd:61
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_retoma_intercala_y_no_fusiona" classname="devoluciones_fechadas_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/empleo/devoluciones_fechadas_test.gd:83" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_retoma_intercala_y_no_fusiona' in res://test/dominio/empleo/devoluciones_fechadas_test.gd:83
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

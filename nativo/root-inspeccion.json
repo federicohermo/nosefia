@@ -1,0 +1,47 @@
+{
+  "fuente": "ff5d8d96",
+  "abiertos_por_root": [
+    {
+      "archivo": "nativo-1920-chats.png",
+      "sha256": "c8a35cd3363c88d041feb8e44dac8230915c90b0d7dff492f4b242da2eb4bbfe"
+    },
+    {
+      "archivo": "nativo-1920-yasmin-final.png",
+      "sha256": "36b8f256eda0346dd400c3b5966b360a8a59f2896953c3f35a8a37fdd780a6fe"
+    },
+    {
+      "archivo": "nativo-1920-yasmin-inicio.png",
+      "sha256": "b5b73ee09d04ff5b5bba3ac8d8953c594c9570e4e006abf510d46ca7c87a86e3"
+    },
+    {
+      "archivo": "nativo-1920-enrique.png",
+      "sha256": "2fa31d712a0af22ab6b01842bc8ded7289265594673c566acdfd405a089cd466"
+    },
+    {
+      "archivo": "nativo-1920-contenedor.png",
+      "sha256": "358926766bba06c9ae4e71dc442b0760158631c54d1c7214552060c2ad6d1505"
+    },
+    {
+      "archivo": "nativo-1280-chats.png",
+      "sha256": "20c9ae0829b77b3715477b3fdf4a1d59502f5d18a67cb0083cc495d583a12534"
+    },
+    {
+      "archivo": "nativo-1280-yasmin-final.png",
+      "sha256": "fb26dcde6aa7178ca1d5c872f6206a68467d4352c03e7c595c21d7a4b7464a1b"
+    },
+    {
+      "archivo": "nativo-1280-yasmin-inicio.png",
+      "sha256": "d172214aa3ddf9a63ea903be21b71ff548f60c757da1ee1755611fa82d15096a"
+    },
+    {
+      "archivo": "nativo-1280-enrique.png",
+      "sha256": "69aea64428d57929aea4add814e2433199bd1f98f04614d2d4cbafdf27300b9a"
+    },
+    {
+      "archivo": "nativo-1280-contenedor.png",
+      "sha256": "f13cfdf0af3cfcba1e5f90bdbf05dabb500f46456947d418835c1fdbcaccb993"
+    }
+  ],
+  "otros4png": "SHA identicos a inicio/enrique en ambas resoluciones, comprobados por bytes",
+  "resultado": "Aceptados los10PNG: mundo visible; roles/circulo/badges23y15; literalemoji visible; tramo lila; devolucionJ1 antes aperturaJ2; foto ampliada contiene tapa y cuerpo; leyenda entera. Logs ambosFINAL0, sin ERROR/WARNING/fugas. Pendiente Web nuevo y completa."
+}

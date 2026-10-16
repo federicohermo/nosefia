@@ -1,0 +1,24 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+NATIVO430_CLIC punto=(960.0, 455.0) mouse=(960.0, 455.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@Button@1537
+NATIVO430_CLIC punto=(757.0, 716.5) mouse=(757.0, 716.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@PanelContainer@1567/@VBoxContainer@1563/@RichTextLabel@1566
+NATIVO430_CLIC punto=(939.0, 716.5) mouse=(939.0, 716.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@PanelContainer@1567/@VBoxContainer@1563/@RichTextLabel@1566
+NATIVO430_CLIC punto=(939.0, 716.5) mouse=(939.0, 716.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@PanelContainer@1567/@VBoxContainer@1563/@RichTextLabel@1566
+ERROR: NATIVO430: el tramo no emitió exactamente dos pedidos
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:26)
+       [1] _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:178)
+       [2] _clic (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:60)
+       [3] _cuadros (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:31)
+NATIVO430_TRAMO rect=[P: (749.0, 700.0), S: (336.0, 84.0)] fuente_altura=33.0 prefijo=182.0 punto=(939.0, 716.5) pedidos=[]
+NATIVO430_CLIC punto=(751.0, 135.0) mouse=(751.0, 135.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Cabecera/Fila/Volver
+NATIVO430_CLIC punto=(917.0, 247.0) mouse=(917.0, 247.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@PanelContainer@1542/@VBoxContainer@1538
+ERROR: NATIVO430: no abrió Enrique por clic
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:26)
+       [1] _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:190)
+       [2] _clic (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:60)
+       [3] _cuadros (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/430/capturar_nativo430.gd:31)

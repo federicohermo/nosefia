@@ -1,0 +1,54 @@
+{
+  "fuente": "ff5d8d96",
+  "abiertos_por_root": [
+    {
+      "archivo": "web-1920-chats.png",
+      "sha256": "58569623edb07b2c22404f3b4961cc121edba7b18987f9f3579d55457418c4ec"
+    },
+    {
+      "archivo": "web-1920-yasmin-final.png",
+      "sha256": "7a3869b19c4db26c23bd87cb332f9ace2f6e3115f506b165ac4251025dda28ec"
+    },
+    {
+      "archivo": "web-1920-yasmin-inicio.png",
+      "sha256": "b36b584037c6b0e362350d2c9b8b319d5cd5b2771aed5c8ceaef7f3e649b6bc9"
+    },
+    {
+      "archivo": "web-1920-enrique.png",
+      "sha256": "50535831eca747ac07d27480f5468bf7fc49c8bd256d5618eb47b75e6bec9b66"
+    },
+    {
+      "archivo": "web-1920-contenedor.png",
+      "sha256": "af5dea8ee0fd643ebfae44eee751e07a863459b53a726985aefaab8653604e57"
+    },
+    {
+      "archivo": "web-1280-chats.png",
+      "sha256": "ec13de1da123599e763a4ded9f4b3d7dc791df8ee5ab231d595a3d8a58479702"
+    },
+    {
+      "archivo": "web-1280-yasmin-final.png",
+      "sha256": "0388b1c917059a5a847fd5ecf7ce0f876e628729cbbb1660f88d5dc6f4770571"
+    },
+    {
+      "archivo": "web-1280-yasmin-inicio.png",
+      "sha256": "8250d24109ef09bdb0f6de88a0717fe17141e0b37026103775dd21e34c738b5d"
+    },
+    {
+      "archivo": "web-1280-enrique.png",
+      "sha256": "aa373b360f0498027904b374ef9a9849745d30d4d2f6e5ebbeef4298d80b6595"
+    },
+    {
+      "archivo": "web-1280-contenedor.png",
+      "sha256": "44c48e74a9d3bf2fa0f9f28c90afc96900c368967fcf8410c3574fcc21cbae51"
+    }
+  ],
+  "aceptado": true,
+  "notas": "10PNG aceptados: Web representa ambos emoji como outline reconocible sin hex; preview final coherente; roles/circulo/tramo lila/foto completa/caption/scroll visibles.1920abre23/15no-leidos;1280ya-leido0coherente.",
+  "consola": {
+    "errores": 0,
+    "advertencias": 36,
+    "todas_antes_de_carga_almacen": true,
+    "causa_no_atribuida": true
+  },
+  "pck_sha256": "ac8e8446e3417827165e75ea5f5c12b272468c9b336f226776e48fe2ad2b79b8"
+}

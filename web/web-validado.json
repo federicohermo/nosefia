@@ -1,0 +1,23 @@
+{
+  "commit": "ff5d8d960fb9d8e4f1a68d1db60e469613bd4c25",
+  "main_original": true,
+  "checkpoint_real_jornada": 2,
+  "resoluciones": [
+    [
+      1920,
+      1080
+    ],
+    [
+      1280,
+      720
+    ]
+  ],
+  "glifos_preview_burbuja": true,
+  "frase_foto_scroll_correctos": true,
+  "region_scroll_diferencias_pixeles": 0,
+  "cursor_q_cerrado_capturado": true,
+  "errores_engine_pageerror": 0,
+  "warnings_chromium_warmup": 36,
+  "warnings_antes_de_almacen": true,
+  "control_comparativo": "export b764430 y export427, misma observacion sin atribucion causal"
+}

@@ -1,0 +1,20 @@
+{
+"devoluciones": [{
+"identidad": "DEVOLUCION_J1_0",
+"jornada": 1,
+"orden": 0,
+"texto": "Buen día!"
+}, {
+"identidad": "DEVOLUCION_J1_1",
+"jornada": 1,
+"orden": 1,
+"texto": "Seguiste todas mis instrucciones al pie de la letra. Excelente. Seguí así y vas a tener el puesto asegurado."
+}],
+"fallas": {},
+"jornada": 2,
+"llamados": {},
+"medios": 0,
+"mopa_secada": false,
+"noches_sin_sumar": 1,
+"version": 2
+}

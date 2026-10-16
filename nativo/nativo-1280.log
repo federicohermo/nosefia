@@ -1,0 +1,13 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+NATIVO430_CLIC punto=(640.0, 303.3333) mouse=(640.0, 303.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@Button@1537
+NATIVO430_CLIC punto=(504.6667, 477.6667) mouse=(504.0, 477.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@PanelContainer@1567/@VBoxContainer@1563/@RichTextLabel@1566
+NATIVO430_CLIC punto=(626.0, 477.6667) mouse=(626.0, 477.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@PanelContainer@1567/@VBoxContainer@1563/@RichTextLabel@1566
+NATIVO430_CLIC punto=(626.0, 477.6667) mouse=(626.0, 477.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@PanelContainer@1567/@VBoxContainer@1563/@RichTextLabel@1566
+NATIVO430_TRAMO rect=[P: (499.3333, 466.6667), S: (224.0, 56.0)] fuente_altura=33.0 prefijo=182.0 punto=(626.0, 477.6667) pedidos=["2A", "2A"]
+NATIVO430_CLIC punto=(500.6667, 90.0) mouse=(500.0, 90.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Cabecera/Fila/Volver
+NATIVO430_CLIC punto=(640.0, 215.3333) mouse=(640.0, 215.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@Button@1617
+NATIVO430_CLIC punto=(611.3333, 362.6667) mouse=(611.0, 362.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/Contenido/Scroll/Mensajes/@PanelContainer@1714/@VBoxContainer@1712/@TextureButton@1713
+NATIVO430_CLIC punto=(640.0, 360.0) mouse=(640.0, 360.0) hover=/root/Almacen/Interfaz/PantallaDelCelular/Lienzo/Telefono/FotoAmpliada/Contenido/Imagen
+NATIVO430_FINAL resolucion=(1280, 720) fallos=0

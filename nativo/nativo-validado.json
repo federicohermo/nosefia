@@ -1,0 +1,23 @@
+{
+  "commit": "ff5d8d96",
+  "resoluciones": [
+    [
+      1920,
+      1080
+    ],
+    [
+      1280,
+      720
+    ]
+  ],
+  "png_abiertos_unicos": 10,
+  "png_identicos_comprobados": 4,
+  "mundo_visible": true,
+  "glifos_visibles": true,
+  "pedidos_por_resolucion": [
+    "2A",
+    "2A"
+  ],
+  "scroll_foto_conservado": 6302,
+  "errores_warnings_fugas": 0
+}
