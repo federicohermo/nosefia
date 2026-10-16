@@ -86,8 +86,15 @@ func _ticket(pedido: RefCounted) -> Node3D:
 			caja.call("pedir_anotar", unidad_script.new(producto))
 	caja.call("pedir_imprimir")
 	var destino: Node = _local.get("_puesto_de_la_caja").get("destino_de_los_tickets")
+	var clase_ticket: Script = load("res://src/dominio/almacen/ticket.gd")
 	for hijo: Node in destino.get_children():
-		if hijo is Node3D and hijo.visible:
+		var datos: Variant = hijo.get("datos")
+		if (
+			hijo is Node3D
+			and hijo.visible
+			and datos is Resource
+			and datos.get_script() == clase_ticket
+		):
 			return hijo as Node3D
 	_exigir(false, "La impresora del paquete no produjo ticket")
 	return null
