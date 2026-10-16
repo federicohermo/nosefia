@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430
 ---
 
 # Capacidad: el legajo del empleado
@@ -316,13 +316,18 @@ si un cuadro llega tarde, el sistema NO DEBE entregar varios mensajes juntos par
 el tiempo perdido. DEBE entregar como máximo uno y esperar un segundo desde esa entrega
 para el siguiente.
 
-### BR-EMP-031 — Las devoluciones quedan en el chat
+### BR-EMP-031 — Las devoluciones conservan el cierre que las produjo
 
-CUANDO se arma una devolución, el sistema DEBE agregar sus mensajes a los de Enrique en la
-partida, en orden, después de las instrucciones y de las devoluciones anteriores. Desde la noche
-siguiente, el chat de Enrique DEBE mostrar las 19 entradas de las instrucciones (BR-EMP-023) y
-después cada devolución recibida, en el orden en que llegaron. Una partida nueva DEBE empezar sin
-devoluciones.
+CUANDO se arma una devolución, el sistema DEBE agregar sus mensajes a los de Enrique de la
+partida, con identidad estable, la jornada que acaba de cerrar y el orden de cada mensaje
+dentro de esa devolución. NO DEBE asignarles la jornada inicial por defecto ni la siguiente.
+Los textos, su selección y su ritmo DEBEN conservar BR-EMP-025 a BR-EMP-030.
+
+Desde la noche siguiente, el chat DEBE conservar las 19 entradas de instrucciones y cada
+devolución recibida, intercalada con los mensajes de apertura en el orden temporal de
+BR-INV-030. La devolución de la noche 1 DEBE preceder a la apertura 2, y la devolución 2
+DEBE seguirla. Una partida nueva DEBE empezar sin devoluciones; repetir el cierre o elegir
+continuar dos veces NO DEBE duplicar sus mensajes ni alterar jornada u orden.
 
 ## Criterios de aceptación
 
@@ -589,9 +594,9 @@ DADO el almacén en la noche 1 CUANDO cierra el turno ENTONCES la persiana está
 está en el centro con la devolución en el chat de Enrique y el turno sigue cerrado. CUANDO está
 el último mensaje a la vista y se elige «continuar» ENTONCES el celular baja y la persiana
 muestra «NOCHE 2». CUANDO la noche 2 está abierta y se abre el celular con Q ENTONCES el chat de
-Enrique tiene las 19 entradas de las instrucciones y después los mensajes de la devolución de
-la noche 1. DADO una partida despedida CUANDO se elige «volver al menú» ENTONCES se pide el menú
-una vez y no se anuncia otra noche.
+Enrique tiene las 19 entradas de las instrucciones, los mensajes de la devolución 1 y después
+la foto y el texto de apertura 2 definidos por `investigation`. DADO una partida despedida
+CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se anuncia otra noche.
 
 ### AC-EMP-065 — Elegir dos veces *(verifica BR-EMP-011)*
 
@@ -599,11 +604,21 @@ DADO la devolución de la noche 1 con la opción a la vista CUANDO se elige «co
 ENTONCES se anuncia una sola «NOCHE 2» y la jornada es 2. DADO una partida terminada CUANDO se
 elige «volver al menú» dos veces ENTONCES el menú se pide una sola vez.
 
-### AC-EMP-066 — Las devoluciones se concatenan *(verifica BR-EMP-031)*
+### AC-EMP-066 — Las devoluciones conservan su lugar entre aperturas *(verifica BR-EMP-031)*
 
-DADO una partida nueva ENTONCES no tiene devoluciones. CUANDO cierran las noches 1 y 2 ENTONCES
-los mensajes de Enrique son los de la devolución 1 y después los de la 2, en orden, y el chat
-de la noche 3 los muestra después de las 19 entradas de las instrucciones.
+DADO una partida nueva ENTONCES no tiene devoluciones. CUANDO cierran las noches 1 y 2
+ENTONCES los mensajes de devolución conservan su orden de recepción. CUANDO se abre el chat
+en noche 3 ENTONCES muestra instrucciones, devolución 1, foto y texto de apertura 2,
+devolución 2, en ese orden; no adelanta la apertura 2 a la devolución 1.
+
+### AC-EMP-070 — La devolución lleva la noche cerrada y el orden *(verifica BR-EMP-031, BR-EMP-007)*
+
+DADO una devolución de tres mensajes al cerrar noche 2 CUANDO se consultan sus datos
+ENTONCES los tres identifican jornada 2, conservan tres identidades distintas y el orden
+Saludo, cuerpo, Cierre de la selección vigente, aunque la partida ya prepare jornada 3.
+DADO un texto repetido en otra jornada ENTONCES conserva otra identidad y no se fusiona.
+Repetir cierre 2 o elegir continuar dos veces no agrega mensajes ni cambia sus metadatos.
+Una partida nueva sigue sin devoluciones.
 
 ## No objetivos
 
@@ -616,8 +631,8 @@ de la noche 3 los muestra después de las 19 entradas de las instrucciones.
   es de la investigación, y su diseño no está cerrado.
 - Esta capacidad NO trae la Tarea 5 de las jornadas 3 a 5: esas noches no declaran particular
   mientras siga abierta OQ-SHF-006. Los textos esperan en la ficha.
-- Esta capacidad NO escribe los mensajes al iniciar las jornadas 2 a 5: la ficha los deja
-  «A DEFINIR».
+- Esta capacidad NO redacta mensajes de apertura: `investigation` consume el guion de cada
+  contacto, incluida la apertura de la jornada 2. Entrega a ese historial las devoluciones fechadas.
 
 ## Contratos
 
@@ -628,7 +643,7 @@ de la noche 3 los muestra después de las 19 entradas de las instrucciones.
 - **Salida:** la banda, los medios exactos y los apercibimientos enteros, si está despedido, qué jornada va, el final,
   las fallas por obligatoria fija, los llamados por motivo, R, si hubo llamados en la partida,
   la devolución con lo que el jugador puede elegir, cuántos de sus mensajes están a la vista, y
-  las devoluciones recibidas; pantallas introductorias, índice actual,
+  las devoluciones recibidas con identidad, jornada cerrada y orden; pantallas introductorias, índice actual,
   permiso de volver y finalización de las instrucciones.
 - **Falla:** cerrar dos veces o abrir sobre una partida terminada no cambian nada y no avisan.
   Elegir dos veces la opción de la devolución no pide nada otra vez.
@@ -650,7 +665,7 @@ de la noche 3 los muestra después de las 19 entradas de las instrucciones.
 - [`investigation`](../investigation/investigation.md) (alimenta): las 19 entradas de Enrique
   y la correspondencia entre cada foto y el texto siguiente para releerlas en el celular.
 - [`investigation`](../investigation/investigation.md) (alimenta): las devoluciones, que el chat
-  de Enrique muestra después de las instrucciones; el celular en modo fijo durante la devolución.
+  de Enrique intercala con las aperturas por jornada cerrada y orden; el celular en modo fijo durante la devolución.
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): los llamados de la noche.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (alimenta): el legajo, la jornada,
   las cuentas de la devolución y las devoluciones recibidas, que cruzan la sesión.

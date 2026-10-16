@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: draft
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y ficha detallada de Duronga contrastados el 2026-10-15 (#434)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -63,7 +63,7 @@ una tarea.
 ### BR-STK-004 — La noche arranca con cada caja llena y la góndola completa salvo lo que falta
 
 CUANDO se abre una jornada, el sistema DEBE poner **8 unidades de cada producto en el depósito**,
-una caja llena, y DEBE dejar **completa la fila de adelante de cada producto, salvo los faltantes
+una caja llena, y DEBE dejar **completa la fila de adelante de cada producto exhibido, salvo los faltantes
 de esa jornada**. La mercadería expuesta se cuenta: son las unidades en la góndola. Ningún
 faltante DEBE pasar de las unidades de una caja ni de los casilleros de su fila de adelante: con
 más que una caja, reponerlo no se puede terminar, y con más que su fila, faltaría menos de lo que
@@ -89,7 +89,7 @@ lleno no cuenta: ésa es justamente la razón para ir al estante.
 
 ### BR-STK-008 — El cupo es la fila de adelante
 
-El sistema DEBE llenar la góndola de cada producto hasta los casilleros de su fila de adelante,
+El sistema DEBE llenar la góndola de cada producto exhibido hasta los casilleros de su fila de adelante,
 que son distintos para cada producto, y rechazar la unidad que sobra. Cuántos casilleros tiene
 cada fila lo dice el local armado: un número aparte sería el mismo valor en dos lugares.
 
@@ -172,7 +172,8 @@ sonoridad no suena al agarrarlo ni al dejarlo, y nada lo avisa.
 
 ### BR-STK-024 — Un producto, un lugar
 
-El sistema DEBE exhibir cada producto del catálogo en una sola tanda reponible, al alcance de
+El sistema DEBE exhibir cada producto con exhibición declarada (BR-STK-043, BR-STK-044)
+en una sola tanda reponible, al alcance de
 un jugador parado en el pasillo. La fila de adelante de cada tanda del local, reponible o fija y
 en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
 casilleros vacíos con que abre una jornada DEBEN quedar en la tanda reponible.
@@ -185,7 +186,7 @@ heladera, cualquier bandeja puede llevar la tanda reponible o una tanda fija.
 
 ### BR-STK-025 — La tanda tiene dos filas, o una según el reparto aprobado
 
-La tanda reponible de cada producto DEBE tener dos filas, una detrás de la otra. Cada lugar
+La tanda reponible de cada producto exhibido DEBE tener dos filas, una detrás de la otra. Cada lugar
 de la fila de adelante DEBE ser un casillero del producto, y ninguno de la fila de atrás. La fila
 de atrás DEBE verse entera desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la
 que dice qué va ahí.
@@ -222,12 +223,16 @@ distinto: una venta le resta una unidad a la caja, y colocar una unidad no le ca
 ya había salido. CUANDO se abre una jornada, cada caja DEBE arrancar llena, con las unidades de
 una caja (BR-STK-004), sin importar cómo terminó la anterior.
 
-### BR-STK-029 — El clic sobre la caja: sacar, devolver o nada
+### BR-STK-029 — Sacar es secundario y devolver es primario
 
-CUANDO el jugador usa una caja del depósito apoyada, el sistema DEBE elegir el gesto por lo que
-lleva en la mano. Con las manos vacías, DEBE sacarle una unidad (BR-STK-016). Con una unidad del
-producto de la caja, DEBE devolvérsela (BR-STK-030). Con cualquier otra cosa en la mano NO DEBE
-pasar nada: la ficha no le da un efecto, y el sistema no le inventa uno.
+CUANDO el jugador hace el secundario —clic derecho por defecto— sobre una caja del depósito
+apoyada con mano vacía, el sistema DEBE pedir sacar una unidad (BR-STK-016). Con mano ocupada,
+el secundario NO DEBE devolver ni soltar nada. CUANDO hace el primario —clic izquierdo por
+defecto— con una unidad del producto de esa caja, el sistema DEBE pedir devolverla
+(BR-STK-030), antes de soltar. Una devolución coincidente rechazada por caja llena o unidad
+ya devuelta DEBE conservar la mano, sin duplicar ni soltar. Con mano vacía el primario DEBE
+agarrar la caja, sin sacar además una unidad. Sin par de devolución declarado, el primario
+DEBE conservar el gesto genérico de dejar; el secundario con producto ajeno no cambia nada.
 
 ### BR-STK-030 — Devolver a la caja
 
@@ -340,6 +345,60 @@ en una caja ausente o en un ciclo NO DEBE contar como ordenada. Una lista vacía
 que está ordenada. CUANDO una caja deja de cumplir la condición, el sistema DEBE descumplir
 ordenar; recuperar la condición DEBE volver a cumplirla. Con el turno cerrado, mover cajas NO
 DEBE cambiar la cuenta que se cerró. Una jornada que no declara ordenar NO DEBE sumar esa tarea.
+
+### BR-STK-043 — La exhibición se agrupa por sector
+
+El sistema DEBE organizar la exhibición según estos sectores, conservando las identidades
+del catálogo, precios y gestos. La tabla cruza el nombre del catálogo vigente con el diseño;
+no implica renombrar productos.
+
+| Sector y destino | Productos del catálogo vigente |
+|---|---|
+| Heladera 1 | Coracola (Pura-Cola en el diseño), Fernet God |
+| Heladera 2 | Cindolor, Mayonchis |
+| Estantería de no comestibles | Actroncito, Durextra, Poético |
+| Cabecera de no comestibles, isla de almacén | Malbardo |
+| Cabecera de almacén, misma isla | Amargadito |
+| Lado de almacén | Marolini, Arvejas (Arvecor), Uakas (Uakalas), Marranos |
+| Lado de cereales, misma isla | Zucarachas, Frotlups (Frot Lups) |
+| Cabecera de bebidas sin refrigerar, misma isla | Oaaaa, Terminator |
+| Mitad de snacks dulces junto a cereales, primera isla | Macumbas, Pepitos (Pepito) |
+| Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
+| Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
+| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillo |
+| Sin exhibición, sólo depósito | Duronga |
+
+La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
+con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
+snacks salados y golosinas. Los tres no comestibles DEBEN ocupar una estantería; un mueble
+sobrante PUEDE quedar sin exhibición, sin duplicar tandas principales para llenarlo.
+Cada heladera funcional DEBE agrupar sus dos productos en mitades verticales según el
+[esquema de diseño](https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676): Coracola
+arriba de Fernet God y Cindolor arriba de Mayonchis. La heladera fuera de servicio DEBE
+permanecer vacía. Oaaaa y Terminator NO DEBEN exhibirse en heladera.
+
+Cada tanda fija de referencia DEBE conservar el sector de la reponible del mismo producto.
+El reparto DEBE conservar alturas, tamaño de muebles, niveles reponibles a altura de la mano,
+separación de filas, orientaciones de envases y alcance vigentes (BR-STK-024, BR-STK-025,
+BR-STK-035). Los cupos DEBEN salir de la geometría de ese reparto, sin copiar los anteriores.
+El mismo reparto DEBE conservarse al abrir otra jornada y en escritorio o web.
+
+### BR-STK-044 — Duronga existe sin exhibición
+
+El sistema DEBE mantener Duronga sólo en su caja del depósito, según su
+[ficha detallada](https://app.notion.com/p/3e586efecd9d804ea459e6283e9c9868), que prevalece
+sobre su ubicación provisional en el mapa general. NO DEBE tener unidades exhibidas, guías,
+tandas ni casilleros en el local, y su cupo DEBE ser cero. Esta ausencia DEBE ser válida al
+abrir, consultar faltantes, reponer y cerrar: NO DEBE crear faltantes ni impedir cumplir reponer.
+
+Duronga DEBE conservar identidad, fila del catálogo, caja y unidad física utilizable: DEBE
+poder sacarse, devolverse, examinarse y venderse. Su caja DEBE abrir con las unidades por caja
+de BR-STK-004; su cupo cero NO DEBE restarle vendibles por reposición (BR-STK-018).
+Las consultas indexadas por producto DEBEN conservar las 32 identidades vigentes, aunque una
+no tenga exhibición. Los otros 31 productos DEBEN tener su tanda reponible y referencias.
+Un producto exhibible sin tanda o con dos principales, y una marca desconocida sin sector,
+NO DEBEN aceptarse como repartos válidos. Un cupo cero NO DEBE volver elegible a Duronga para
+faltantes sorteados ni cambiar la regla de selección de esos faltantes.
 
 ## Criterios de aceptación
 
@@ -478,7 +537,7 @@ Prongles suenan a lata.
 
 ### AC-STK-028 — Cada producto se repone en un solo lugar *(verifica BR-STK-024)*
 
-DADO el local armado ENTONCES cada producto del catálogo tiene una sola tanda reponible, sobre un
+DADO el local armado ENTONCES cada producto con exhibición declarada tiene una sola tanda reponible, sobre un
 solo estante y con sus unidades juntas, y la fila de adelante de cada tanda fija suya también es
 de casilleros: el cupo del producto los suma a todos. DADO una cara de lado ENTONCES sus tandas con casilleros están en los
 estantes que no son ni el de arriba ni el zócalo, y esos estantes no llevan ninguna tanda fija; el
@@ -487,7 +546,7 @@ lleva sólo tandas fijas, y los demás, sólo tandas con casilleros.
 
 ### AC-STK-029 — El casillero está al alcance *(verifica BR-STK-024)*
 
-DADO cualquier producto del catálogo en la mano CUANDO el jugador se para en el pasillo frente a
+DADO cualquier producto exhibido en la mano CUANDO el jugador se para en el pasillo frente a
 su tanda ENTONCES la mira alcanza su casillero y el producto se coloca.
 
 ### AC-STK-030 — Dos filas, o una, y el cupo adelante *(verifica BR-STK-025)*
@@ -543,12 +602,15 @@ DADO una jornada que termina con una caja en 0, otra con una unidad suya en la m
 una unidad devuelta CUANDO se abre la jornada siguiente ENTONCES todas las cajas tienen 8, y
 ninguna unidad quedó afuera de su caja.
 
-### AC-STK-038 — El clic sobre la caja: sacar, devolver o nada *(verifica BR-STK-029)*
+### AC-STK-038 — Un gesto saca y el otro devuelve *(verifica BR-STK-029, BR-STK-030, BR-STK-016)*
 
-DADO una caja de Actroncito apoyada CUANDO el jugador la usa ENTONCES: con las manos vacías saca
-una unidad; con una unidad de Actroncito, la devuelve; con una unidad de Malbardo, con otra caja o
-con cualquier otro objeto en la mano no pasa nada: lo que lleva sigue en la mano y la caja no
-cambia.
+DADO una caja de Actroncito apoyada con contenido CUANDO se hace secundario con mano vacía
+ENTONCES sale una sola unidad. CUANDO se hace secundario con esa unidad, con Malbardo, otra
+caja o cualquier objeto ENTONCES la mano y la caja no cambian. DADO la unidad de Actroncito
+CUANDO se hace primario sobre su caja ENTONCES se devuelve una vez. Con caja llena o identidad
+ya devuelta, el intento coincidente conserva mano y contenido, sin duplicado ni soltado.
+DADO mano vacía CUANDO se hace primario ENTONCES se agarra la caja sin extraer una unidad;
+con cero contenido, el secundario no extrae.
 
 ### AC-STK-039 — Devolver anula la salida *(verifica BR-STK-030)*
 
@@ -642,7 +704,7 @@ las 3 ENTONCES la caja tiene 3.
 
 ### AC-STK-050 — Lo que está a la altura de la mano se agarra *(verifica BR-STK-024, BR-STK-033)*
 
-DADO cada producto del catálogo, Arvejas y Coracola incluidas, con una unidad colocada en su
+DADO cada producto exhibido, Arvejas y Coracola incluidas, con una unidad colocada en su
 fila de adelante y las manos vacías CUANDO el jugador se para en el pasillo frente a su tanda
 ENTONCES la mira enfoca esa unidad y el clic se la pone en la mano. DADO cualquier unidad que se
 ve en un estante de reposición ENTONCES es de la fila de adelante de una tanda reponible, o
@@ -739,6 +801,47 @@ DADO una caja rescatada en la jornada 1 CUANDO vuelve a su origen ENTONCES queda
 pila de esa apertura y no cumple ordenar por aparecer en una estantería. DADO la apertura de una
 jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 
+### AC-STK-086 — Cada sector contiene exactamente sus productos *(verifica BR-STK-043, BR-STK-044)*
+
+DADO el local armado CUANDO se recorre cada destino de la tabla de BR-STK-043 ENTONCES sus
+productos coinciden con la fila, sin ajenos, y los destinos de exhibición reúnen 31 productos
+distintos. Duronga es la identidad restante y no tiene tanda. Las referencias fijas de cada
+uno de los 31 están en su mismo sector. Abrir jornada 2 en escritorio y web conserva el mapa.
+
+### AC-STK-087 — Dos heladeras separan los fríos de las bebidas sin refrigerar *(verifica BR-STK-043)*
+
+DADO ambas heladeras funcionales CUANDO se recorren sus mitades verticales ENTONCES la primera
+exhibe Coracola arriba y Fernet God abajo; la segunda, Cindolor arriba y Mayonchis abajo.
+Oaaaa y Terminator están en su cabecera de bebidas sin refrigerar, y no en ninguna heladera;
+Cindolor no aparece además en un estante exterior. La heladera fuera de servicio tiene cero
+unidades y referencias de productos.
+
+### AC-STK-088 — Cero cupo no impide usar Duronga *(verifica BR-STK-044, BR-STK-018, BR-STK-028, BR-STK-030)*
+
+DADO apertura con Duronga sólo en depósito CUANDO se consulta ENTONCES tiene cero casilleros,
+cero unidades en góndola, ningún faltante y las unidades por caja en depósito y vendibles.
+CUANDO se saca una unidad ENTONCES la caja tiene una menos, la unidad se puede examinar y
+devolver una sola vez; devolverla restaura el contenido. CUANDO se saca y vende una unidad
+ENTONCES se conserva su cuerpo y producto hasta la venta, se retira una vez y no aparece
+un casillero ni faltante. DADO caja vacía ENTONCES no entrega ni vende otra unidad.
+
+### AC-STK-089 — Reponer y cerrar admiten la identidad sin tanda *(verifica BR-STK-044, BR-STK-013, BR-STK-027)*
+
+DADO jornada 2 con pedidos y faltantes que respetan BR-STK-027 CUANDO se consulta el cupo de
+las 32 identidades ENTONCES Duronga devuelve cero sin error ni índice ajeno; sólo los productos
+con cupo positivo pueden aportar faltantes. CUANDO se completan las compras y se llenan todos
+los casilleros declarados ENTONCES reponer se cumple y el cierre conserva su cumplimiento,
+sin exigir una unidad invisible de Duronga ni rechazar una venta válida de ella.
+
+### AC-STK-085 — El nuevo reparto conserva alcance y unicidad *(verifica BR-STK-043, BR-STK-044, BR-STK-024, BR-STK-025, BR-STK-035)*
+
+DADO los 31 productos exhibidos CUANDO se enfoca cada casillero reponible desde piso libre
+del pasillo ENTONCES entra en el alcance vigente y acepta su unidad. Cada producto tiene una
+sola tanda principal; ninguna referencia queda en el sector anterior. Los muebles conservan
+tamaño y alturas, los estantes útiles sus tandas reponibles y cada envase su orientación y
+separación de filas. Una identidad exhibible sin tanda o con dos principales, y una identidad
+desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino por defecto.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -748,7 +851,8 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 
 ## Contratos
 
-- **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
+- **Entrada:** el sector y destino declarado de cada producto y si admite exhibición;
+  los productos que existen, los casilleros de la fila de adelante de cada uno, la
   jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
   que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
   a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la planilla.
@@ -806,3 +910,11 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
     (BR-STK-026).
   - Decide: el diseño, en la ficha.
   - Bloquea: nada.
+
+- **OQ-STK-007 — ¿Cómo se concilian los cuatro niveles del mapa con las alturas actuales?**
+  - Por qué sigue abierta: el texto del mapa habla de cuatro estantes y del primero como
+    levantable; los muebles vigentes tienen cuatro niveles laterales y tres en cabeceras,
+    con reposición a altura de la mano. El reparto aprobado fija sectores y conserva esas alturas.
+  - Decide: el dueño del repo con game design y arte.
+  - Bloquea: cambiar niveles, alturas o qué estante es reponible a partir de esa frase;
+    no bloquea los sectores ni la excepción de Duronga de BR-STK-043 y BR-STK-044.
