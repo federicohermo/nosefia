@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente
 ---
