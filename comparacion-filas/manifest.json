@@ -25,8 +25,8 @@
       "sha256": "e19b001e5fcd606a107c54690b5e6e91f5dea579d1d37d8b37b24195318002d0"
     },
     "comparacion-filas/controles.json": {
-      "bytes": 793,
-      "sha256": "cef9a609ecc1efd6c52c2aff33bdf82d3a3727370aa53e38cdb046953f432f53"
+      "bytes": 770,
+      "sha256": "dca3aea3edce0762116e5a4c1132b30046741d7ad82519581bd7dd15c0002b4b"
     },
     "comparacion-filas/ejecutar.py": {
       "bytes": 1248,
@@ -169,8 +169,8 @@
       "sha256": "86a36a922879141621cd9331c955d600aedb90ef9b8c58454822c565658bfad1"
     },
     "comparacion-filas/normalizacion.json": {
-      "bytes": 23163,
-      "sha256": "31e1ad97d408dff6024490288f55ab2aa0545f0314bd8c9d0f1d07c4ba4f3951"
+      "bytes": 22777,
+      "sha256": "e03ae9f53639ba46f626879735259b2d592db50dcebcf76ca21136489fb5d846"
     },
     "comparacion-filas/prongles-1-fila-frontal.png": {
       "bytes": 1838237,
@@ -213,16 +213,16 @@
       "sha256": "db38da126587ea3c72358f4bea4dd37a2f0576927b07ed6bb5ca15f43d3870fd"
     },
     "comparacion-filas/protocolo/turno01.log": {
-      "bytes": 1482,
-      "sha256": "e91ec9c3cf905f7ad8eaf2f1c232cd514750d6b04942bbd912e619029b0ac81b"
+      "bytes": 1481,
+      "sha256": "694dec4b5bd6bc05aa53e2e1c7766292a4d7c9a3136d933a26edd412ed65c0e0"
     },
     "comparacion-filas/protocolo/turno02.log": {
-      "bytes": 968,
-      "sha256": "9ad74178368812ff136b31c643f90f7de901d60acdbde51b1d197bb41d05d848"
+      "bytes": 967,
+      "sha256": "0c526a74f85c867310f117c68bcade4b82027e458e4544109566eaf92b5d987c"
     },
     "comparacion-filas/README.md": {
-      "bytes": 3548,
-      "sha256": "784180de89c7da32640287c0566504e463c0eb673be5ac32cabc3cc1f1377f82"
+      "bytes": 3500,
+      "sha256": "2b3cc52cf547f1a223bd8c84b69e3a067a93e4573d74cd107ebc5124359c22fa"
     },
     "comparacion-filas/renderizar.py": {
       "bytes": 6975,
@@ -233,12 +233,12 @@
       "sha256": "7c8a5287a56bc9af0369ba07e44d212c4692a4f3defe2a7b939f8d8b90a7701d"
     },
     "comparacion-filas/sourcepins.json": {
-      "bytes": 3801,
-      "sha256": "fa87ec3116be3790e3afed84183d48ba6796ef20deb929fc7dba7bd48ff7170d"
+      "bytes": 3760,
+      "sha256": "e9cc2f1587807e882d9f155e19105030722fb8e4be9d988eac3d98c599eec585"
     },
     "comparacion-filas/sourcepins02.json": {
-      "bytes": 4123,
-      "sha256": "c7427dfebdaca7188654f54fb43ad6d11345789ac97266e728fac0f132d4f311"
+      "bytes": 4079,
+      "sha256": "65ee1ab3554d4e0205df742648b484adfa0ad0e063db9005ebb6e318fc8e1f9e"
     }
   },
   "manifest_no_se_incluye_a_si_mismo": true
