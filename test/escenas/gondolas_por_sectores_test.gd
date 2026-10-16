@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := "res://src/escenas/almacen.tscn"
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 
 func _almacen() -> Node3D:
@@ -57,7 +58,10 @@ func _destinos() -> Dictionary:
 			Vector3.FORWARD: [Producto.Id.BURBALOO, Producto.Id.FLINPUF],
 		},
 		"gondolanueva_001":
-		{Vector3.BACK: [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO]},
+		{
+			Vector3.BACK:
+			[Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO, Producto.Id.DURONGA]
+		},
 		"heladeranueva": {Vector3.BACK: [Producto.Id.CORACOLA, Producto.Id.FERNET_GOD]},
 		"heladeranueva_001": {Vector3.BACK: [Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]},
 	}
@@ -122,8 +126,8 @@ func test_las_principales_y_referencias_ocupan_los_sectores_de_jornada_dos() -> 
 							disposicion.filas_de_adelante_de_las_guias[indice],
 							frente
 						)
-	assert_int(encontrados.size()).is_equal(Catalogo.todos().size() - 1)
-	assert_array(encontrados).not_contains(Producto.Id.DURONGA)
+	assert_int(encontrados.size()).is_equal(Catalogo.todos().size())
+	assert_array(encontrados).contains(Producto.Id.DURONGA)
 
 
 func _altura(disposicion: DisposicionDeLaGondola, id: Producto.Id) -> float:
@@ -152,24 +156,32 @@ func test_las_mitades_verticales_separan_los_frios() -> void:  # AC-STK-087
 		assert_bool(caja.has_point(punto)).is_false()
 
 
-func test_duronga_tiene_cero_cupo_y_su_fuente_sigue_utilizable() -> void:  # AC-STK-088
+func test_duronga_exhibida_conserva_su_caja_y_fuente_utilizables() -> void:  # AC-STK-088
 	var almacen := _almacen()
 	var puesto := _puesto(almacen)
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	var producto := Catalogo.de(Producto.Id.DURONGA)
+	var sin_faltantes: Dictionary[Producto.Id, int] = {}
+	AperturaConLugar.abrir_con_faltantes(almacen, sin_faltantes)
 	var inventario := _inventario(almacen)
-	assert_int(disposicion.casilleros_de(producto.id)).is_zero()
-	assert_int(disposicion.primera_reponible(producto.id, 0)).is_zero()
-	assert_array(Array(disposicion.principales[producto.id])).is_empty()
-	assert_array(Array(disposicion.productos_de_las_guias)).not_contains(producto.id)
-	assert_object(puesto.get_node_or_null("ZonaDeDuronga")).is_null()
-	assert_object(puesto.call("casillero", producto.id)).is_null()
-	var zona: AABB = puesto.call("zona", producto.id)
-	assert_bool(zona.has_volume()).is_false()
+	var cupo := disposicion.casilleros_de(producto.id)
+	var principal := disposicion.principales[producto.id]
+	var fila := disposicion.filas_de_adelante[producto.id]
+	assert_int(cupo).is_greater(0)
+	assert_int(fila).is_greater(0)
+	assert_int(disposicion.primera_reponible(producto.id, fila)).is_equal(
+		DisposicionDeLaGondola.copias(principal) - fila
+	)
+	assert_array(Array(principal)).is_not_empty()
+	assert_array(Array(disposicion.productos_de_las_guias)).contains(producto.id)
+	assert_object(puesto.get_node_or_null("ZonaDeDuronga")).is_not_null()
+	assert_object(puesto.call("casillero", producto.id, 0)).is_not_null()
+	var zona: AABB = puesto.call("zona", producto.id, 0)
+	assert_bool(zona.has_volume()).is_true()
 	var grupo: MultiMeshInstance3D = puesto.get_node("ProductosDeDuronga")
-	assert_int(grupo.multimesh.instance_count).is_zero()
-	assert_bool(grupo.visible).is_false()
-	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_zero()
+	assert_int(grupo.multimesh.instance_count).is_greater(0)
+	assert_bool(grupo.visible).is_true()
+	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(cupo)
 	assert_int(inventario.vendibles(producto)).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
 	assert_array(inventario.faltantes()).not_contains(producto)
 	var caja: Node3D = almacen.get("_cajas_de_productos")[producto.id]
@@ -210,14 +222,16 @@ func test_duronga_tiene_cero_cupo_y_su_fuente_sigue_utilizable() -> void:  # AC-
 	assert_array(inventario.faltantes()).not_contains(producto)
 
 
-func test_jornada_dos_puede_vender_reponer_y_cerrar_sin_duronga_invisible() -> void:  # AC-STK-089
+func test_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida() -> void:  # AC-STK-089
 	var almacen := _almacen()
 	var puesto := _puesto(almacen)
 	var repositor: Repositor = almacen.get("_repositor")
 	var inventario := _inventario(almacen)
 	var cupos: Dictionary[Producto.Id, int] = puesto.call("casilleros")
 	assert_int(cupos.size()).is_equal(Producto.Id.size())
-	assert_int(cupos[Producto.Id.DURONGA]).is_zero()
+	assert_int(cupos[Producto.Id.DURONGA]).is_greater(0)
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	assert_int(disposicion.filas_de_adelante[Producto.Id.DURONGA]).is_greater(0)
 	var pedidos := Venta.new()
 	for comprador in Compradores.de_la_jornada(2):
 		for producto in comprador.pedido().productos():

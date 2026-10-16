@@ -215,9 +215,7 @@ func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -
 	var planos: Array[PackedVector3Array] = []
 	for producto in Catalogo.todos():
 		var ocupados := estante.casilleros_ocupados(producto)
-		if ocupados.is_empty():
-			assert_int(producto.id).is_equal(Producto.Id.DURONGA)
-			continue
+		assert_array(ocupados).is_not_empty()
 		var indice := ocupados[ocupados.size() - 1]
 		var bloque := _disposicion(almacen).principales[producto.id]
 		var de_la_tanda := DisposicionDeLaGondola.copias(bloque) - _cupo(almacen, producto) + indice
