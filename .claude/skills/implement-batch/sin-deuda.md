@@ -236,7 +236,6 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una entrada nativa **que selecciona otra fila por la escala DPI** | `to-issue` — el driver declara consciencia DPI antes de consultar ventanas, cruza cliente y viewport y afirma la selección real sobre el HWND propio |
 | una rueda sintética **que deja fallar los clics siguientes** | `implement-feature` — el fixture completa pressed/released también para la rueda y compara un control que cambia sólo esa liberación antes de atribuir el fallo al producto o a las coordenadas |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
-
 | un contrato que **exige compartir una selección pero vuelve a fabricarla** | `to-issue` — la ampliación actualiza premisa, criterios, firmas y límites juntos; declara un único dueño y pasa la misma instancia a cada consumidor |
 | un sorteo que **confunde capacidad total con cupo habilitado y debilita un AC** | `to-issue` — medir las invariantes de la tabla fija en reglas y tests; separar los cupos en las firmas y verificar la apertura sobre la geometría real |
 
