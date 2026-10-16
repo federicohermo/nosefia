@@ -27,7 +27,18 @@ func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:
 			return
 		pies.y = (piso.position as Vector3).y + ReglasDeLosObjetos.ROCE
 		jugador.global_position = pies
-		await _mirar(jugador, Vector3(centro.x, 0.5, centro.z))
+		# La góndola norte se aborda por la cabecera; apuntar al piso acorta
+		# la proyección horizontal de la mano y no entra en su reserva.
+		var alto := centro.y if hacia == Vector3.FORWARD else 0.5
+		await _mirar(jugador, Vector3(centro.x, alto, centro.z))
+		var capsula: CollisionShape3D = jugador.get_node("Cuerpo")
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = capsula.shape
+		consulta.transform = capsula.global_transform
+		consulta.collision_mask = jugador.collision_mask
+		consulta.exclude = [jugador.get_rid()]
+		consulta.margin = 0.0
+		assert_array(almacen.get_world_3d().direct_space_state.intersect_shape(consulta)).is_empty()
 		puesto.call("retirar", Producto.Id.MALBARDO)
 		var unidad := agarre.cuerpo_sostenido() as RigidBody3D
 		assert_object(unidad).is_not_null()
@@ -37,6 +48,16 @@ func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:
 		var inventario := _inventario(almacen)
 		var antes := _estado(almacen, datos.producto)
 		assert_bool(inventario.esta_afuera(datos)).is_true()
+		print(
+			"RESERVA_428_PREMISA mueble=",
+			malla.name,
+			" volumen=",
+			mueble,
+			" mano=",
+			agarre.punto_de_soltado.global_position,
+			" mira=",
+			jugador.call("mira")
+		)
 		assert_bool(mueble.has_point(agarre.punto_de_soltado.global_position)).is_true()
 		agarre.soltar(true)
 		for cuadro in 90:

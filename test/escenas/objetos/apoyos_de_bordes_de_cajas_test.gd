@@ -14,13 +14,17 @@ func test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void
 
 func test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
 	var medicion := await _en_la_cabecera(Producto.Id.LAYSNTT)
-	assert_vector(medicion.final).is_equal_approx(medicion.inicial, ReglasDeLosObjetos.ROCE)
+	assert_vector(medicion.final).is_equal_approx(
+		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
 	assert_float(medicion.base).is_equal_approx(medicion.metal, ReglasDeLosObjetos.ROCE)
 
 
 func test_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
 	var medicion := await _en_la_cabecera(Producto.Id.ACTRONCITO)
-	assert_vector(medicion.final).is_equal_approx(medicion.inicial, ReglasDeLosObjetos.ROCE)
+	assert_vector(medicion.final).is_equal_approx(
+		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
 	assert_float(medicion.base).is_equal_approx(medicion.metal, ReglasDeLosObjetos.ROCE)
 
 
@@ -147,13 +151,15 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	)
 	assert_bool(fisico.is_empty()).is_false()
 	if not fisico.is_empty():
-		assert_vector(fisico.position).is_equal_approx(visible.punto, ReglasDeLosObjetos.ROCE)
+		assert_vector(fisico.position).is_equal_approx(
+			visible.punto, Vector3.ONE * ReglasDeLosObjetos.ROCE
+		)
 	await _soltar_con_el_gesto(almacen, caja, 1)
 	var inicial := caja.global_position
 	for cuadro in 180:
 		await get_tree().physics_frame
 	var final := caja.global_position
-	assert_vector(final).is_equal_approx(inicial, ReglasDeLosObjetos.ROCE)
+	assert_vector(final).is_equal_approx(inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE)
 	assert_bool(caja.freeze).is_true()
 	assert_bool(caja.sleeping).is_true()
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
