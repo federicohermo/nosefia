@@ -138,6 +138,14 @@ que pedía el mouse, y el escalón venía de un mouse de 125 Hz contra una panta
 `escenas/`, que son cáscara — y entonces la regla que tenía adentro hay que bajarla al dominio.
 Ésa es la conversación que el gate fuerza, y es la que hace que el juego se pueda probar.
 
+**La plantilla de un export debe cumplir la receta del árbol medido.** Antes de exportar,
+ejecutar `.github/scripts/preparar_plantilla_web.py --comprobar` sobre la pareja ZIP/manifiesto
+de la copia externa; después, `--verificar-export <carpeta>`. Copiar una plantilla compartida
+y comprobar su propio hash sólo demuestra que no cambió: puede ser anterior a la metadata
+actual. En #431, eso dejó una medición Web válida sobre otro motor. Conservarla como tal,
+preparar la receta vigente y repetir export y recorrido; no cambiar el preset ni omitir
+la guardia. El código del juego sin cambios conserva su completa anterior.
+
 **Lo que se mira en la web se mira en un Chrome que dibuja.** Un Chrome manejado por Playwright
 que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas salen iguales. En el
 #181 el agua parecía quieta en la web, y el juego no llegó a 240 cuadros en 20 segundos. Va con
