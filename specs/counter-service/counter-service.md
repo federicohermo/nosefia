@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433 y #444; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035
 ---
