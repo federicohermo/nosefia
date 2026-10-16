@@ -1,7 +1,7 @@
 ## Los útiles de limpieza en el almacén: son las mallas del modelo, arrancan cada noche en el baño,
 ## y el balde y la mopa muestran lo que el piso dice que tienen.
 ##
-## Los gestos se dan como en el juego: la mira enfoca algo y llega el clic derecho. La mira se
+## Los gestos se dan como en el juego: la mira enfoca algo y llega el clic izquierdo. La mira se
 ## apaga para que el caso decida qué se enfoca, y el clic entra por la acción, no por el botón.
 extends GdUnitTestSuite
 
@@ -54,7 +54,7 @@ func _accion(almacen: Node3D, objetivo: Node3D, accion: StringName) -> void:
 func _usar(almacen: Node3D, util: Node3D, objetivo: Node3D) -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(util.get("datos"), util)).is_true()
-	_accion(almacen, objetivo, ReglasDelJugador.ACCION_USAR)
+	_accion(almacen, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
 	agarre.soltar(true)
 
 
@@ -257,7 +257,10 @@ func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void
 	var balde := _util(almacen, "Balde")
 	var mopa := _util(almacen, "Mopa")
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
-	_usar(almacen, _util(almacen, "JabonAzul"), balde)
+	# Preparar la bolsa abre J2: su azul se prepara con la unidad vendible real.
+	almacen.get("_reposicion_manual").call("retirar", Producto.Id.POETICO)
+	_accion(almacen, balde, ReglasDeLosObjetos.ACCION_AGARRAR)
+	almacen.get("_reposicion_manual").call("devolver", Producto.Id.POETICO)
 	_usar(almacen, mopa, balde)
 	balde.global_position = EN_EL_DEPOSITO
 	mopa.global_position = EN_EL_LOCAL
@@ -305,7 +308,7 @@ func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 	var objetivo := _util(almacen, "Balde")
 	camara.look_at(objetivo.carga.global_position)
 	var vista := camara.global_transform
-	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
+	_accion(almacen, _util(almacen, "Balde"), ReglasDeLosObjetos.ACCION_AGARRAR)
 	var bajada: Tween = mopa.get("_bajada")
 	assert_object(bajada).is_not_null()
 	if bajada == null:
@@ -410,8 +413,11 @@ func test_rechazar_el_mojado_no_mueve_la_mopa() -> void:
 	var almacen: Node3D = await _almacen()
 	var mopa := _mopa_en_la_mano(almacen, false)
 	var antes := mopa.transform
-	for destino: Node3D in [_util(almacen, "Balde"), almacen.get_node(LAVATORIO)]:
-		_accion(almacen, destino, ReglasDelJugador.ACCION_USAR)
+	for caso: Array in [
+		[_util(almacen, "Balde"), ReglasDeLosObjetos.ACCION_AGARRAR],
+		[almacen.get_node(LAVATORIO), ReglasDelJugador.ACCION_USAR]
+	]:
+		_accion(almacen, caso[0], caso[1])
 		await get_tree().process_frame
 		assert_bool(mopa.transform.is_equal_approx(antes)).is_true()
 		assert_object(mopa.get("_bajada")).is_null()
@@ -421,7 +427,7 @@ func test_mojar_dos_veces_reinicia_sin_acumular_desplazamiento() -> void:
 	var almacen: Node3D = await _almacen()
 	var mopa := _mopa_en_la_mano(almacen)
 	var antes := mopa.transform
-	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
+	_accion(almacen, _util(almacen, "Balde"), ReglasDeLosObjetos.ACCION_AGARRAR)
 	var primera: Tween = mopa.get("_bajada")
 	assert_object(primera).is_not_null()
 	if primera == null:
@@ -436,7 +442,7 @@ func test_mojar_dos_veces_reinicia_sin_acumular_desplazamiento() -> void:
 func test_soltar_a_mitad_del_mojado_mata_el_tween_y_conserva_la_orientacion() -> void:
 	var almacen: Node3D = await _almacen()
 	var mopa := _mopa_en_la_mano(almacen)
-	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
+	_accion(almacen, _util(almacen, "Balde"), ReglasDeLosObjetos.ACCION_AGARRAR)
 	var bajada: Tween = mopa.get("_bajada")
 	assert_object(bajada).is_not_null()
 	if bajada == null:

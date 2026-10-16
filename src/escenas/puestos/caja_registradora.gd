@@ -33,7 +33,7 @@ func _ready() -> void:
 	agarre.objeto_agarrado.connect(_al_agarrar)
 	agarre.objeto_soltado.connect(_al_soltar)
 	jugador.uso_pedido.connect(_al_usar)
-	jugador.consultar_el_derecho_con(_derecho_del_descarte)
+	jugador.consultar_interaccion_con(_contexto_del_descarte)
 
 
 func accionar() -> void:
@@ -160,13 +160,13 @@ func _al_usar(objetivo: Node3D) -> void:
 
 
 ## Si lo que se lleva se desecha en ese objetivo —el ticket en el inodoro—, sin desecharlo.
-func _derecho_del_descarte(
+func _contexto_del_descarte(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
-) -> ReferenciaDeControles.Derecho:
+) -> ReferenciaDeControles.Contexto:
 	if objetivo == null or not objetivo.has_method("destino_del_uso"):
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return null
 	var destino: StringName = objetivo.call("destino_del_uso")
-	return ReferenciaDeControles.derecho_del_descarte(sostenido, destino)
+	return ReferenciaDeControles.contexto_del_descarte(sostenido, destino)
 
 
 func tickets_en_el_mundo() -> Array[Node3D]:

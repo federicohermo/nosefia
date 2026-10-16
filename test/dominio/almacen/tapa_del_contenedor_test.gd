@@ -78,3 +78,19 @@ func test_un_paso_obstruido_no_mueve_la_tapa_y_se_puede_invertir() -> void:  # A
 	assert_float(tapa.avanzar(0.1)).is_greater(antes)
 	tapa.avanzar(1.0)
 	assert_bool(tapa.recibe_objetos()).is_true()
+
+
+func test_la_intencion_distingue_abrir_de_cerrar_durante_el_giro() -> void:  # AC-PLY-086
+	var tapa := Tapa.new()
+	assert_bool(tapa.abierta()).is_true()
+	tapa.alternar()
+	tapa.avanzar(0.1)
+	assert_bool(tapa.abierta()).is_false()
+	assert_bool(tapa.recibe_objetos()).is_false()
+	var angulo := tapa.angulo()
+	tapa.alternar()
+	assert_bool(tapa.abierta()).is_true()
+	assert_bool(tapa.recibe_objetos()).is_false()
+	assert_float(tapa.angulo()).is_equal(angulo)
+	tapa.reiniciar()
+	assert_bool(tapa.abierta()).is_true()

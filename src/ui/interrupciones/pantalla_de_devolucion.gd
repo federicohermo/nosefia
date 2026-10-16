@@ -20,7 +20,7 @@ const TEXTOS: Dictionary[DevolucionDelJefe.Opcion, String] = {
 
 var _celular: CelularDelEmpleado
 var _pantalla_del_celular: PantallaDelCelular
-var _mensajes: Array[String] = []
+var _mensajes: Array[Mensaje] = []
 var _opcion: DevolucionDelJefe.Opcion = DevolucionDelJefe.Opcion.CONTINUAR
 var _tiempo_de_la_entrega: float = 0.0
 var _entregados: int = 0
@@ -41,7 +41,7 @@ func preparar(celular: CelularDelEmpleado, pantalla_del_celular: PantallaDelCelu
 
 ## Sube el celular fijo en el chat de Enrique y entrega el primer mensaje.
 func mostrar(devolucion: DevolucionDelJefe) -> void:
-	_mensajes = devolucion.mensajes()
+	_mensajes = devolucion.mensajes_fechados()
 	_opcion = devolucion.opciones()[0]
 	_tiempo_de_la_entrega = 0.0
 	_entregados = 0
@@ -76,9 +76,7 @@ func _entregar() -> void:
 	if _entregados < visibles:
 		_entregados += 1
 		_tiempo_de_la_entrega = (_entregados - 1) * DevolucionDelJefe.SEGUNDOS_ENTRE_MENSAJES
-		_celular.recibir(
-			Conversacion.Interlocutor.JEFE, DevolucionDelJefe.mensaje(_mensajes[_entregados - 1])
-		)
+		_celular.recibir(Conversacion.Interlocutor.JEFE, _mensajes[_entregados - 1])
 	if _entregados == _mensajes.size():
 		set_process(false)
 		_pantalla_del_celular.mostrar_opcion(TEXTOS[_opcion])

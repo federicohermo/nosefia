@@ -7,6 +7,7 @@ signal menu_mostrado
 signal chat_abierto(quien: Conversacion.Interlocutor)
 signal foto_ampliada(foto: Mensaje, adjunto: Mensaje)
 signal foto_cerrada
+signal tramo_de_pista_pedido(identidad: String)
 signal no_leidos_cambiados(sin_leer: int)
 signal mensaje_recibido(quien: Conversacion.Interlocutor, mensaje: Mensaje)
 
@@ -89,3 +90,11 @@ func recibir(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if _bandeja.recibir(quien, mensaje):
 		mensaje_recibido.emit(quien, mensaje)
 		no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
+
+
+func pedir_tramo(identidad: String, tramo: String) -> void:
+	if not _celular.abierto() or _celular.pantalla() != Celular.Pantalla.CHAT:
+		return
+	var pista := _bandeja.pista_de(_celular.chat(), identidad, tramo)
+	if not pista.is_empty():
+		tramo_de_pista_pedido.emit(pista)

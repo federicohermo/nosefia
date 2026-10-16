@@ -184,7 +184,7 @@ func _vender_fisicamente(atender: TareaDeAtender) -> void:
 	assert_bool(atencion.vendida()).is_true()
 
 
-func test_registrar_una_venta_no_cumple_antes_de_vender_las_dos() -> void:  # AC-STK-056
+func test_registrar_una_venta_no_cumple_con_la_otra_abierta() -> void:  # AC-STK-024, AC-STK-056
 	var atender := _primera_noche()
 	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
 	atender.avanzar(Compradores.de_la_jornada(1)[0].horario.x)
@@ -207,19 +207,56 @@ func test_registrar_una_venta_no_cumple_antes_de_vender_las_dos() -> void:  # AC
 	assert_bool(registro.completada()).is_true()
 
 
-func test_anticipar_o_perder_una_compra_no_completa_registro_ni_al_cerrar() -> void:  # AC-STK-056
-	var atender := _primera_noche()
-	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
-	assert_bool(registro.completada(true)).is_false()
-	for comprador in Compradores.de_la_jornada(1):
-		for producto in comprador.pedido().productos():
-			for _unidad in comprador.pedido().unidades_de(producto):
+func test_anticipar_no_completa_y_vencer_cierra_el_registro_de_lo_vendido() -> void:  # AC-STK-056
+	for vendido: int in [-1, 0, 1]:
+		var atender := _primera_noche()
+		var compradores := Compradores.de_la_jornada(1)
+		var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
+		assert_bool(registro.completada()).is_false()
+		assert_bool(registro.completada(true)).is_false()
+		for comprador in compradores:
+			for producto in comprador.pedido().productos():
 				registro.sumar(producto)
-	assert_bool(registro.completada()).is_false()
-	atender.avanzar(Compradores.de_la_jornada(1)[1].horario.x)
-	_vender_fisicamente(atender)
-	for producto in Compradores.de_la_jornada(1)[0].pedido().productos():
-		registro.restar(producto)
-	assert_bool(registro.coincide()).is_true()
-	assert_bool(registro.completada()).is_false()
-	assert_bool(registro.completada(true)).is_false()
+		assert_bool(registro.completada()).is_false()
+		assert_bool(registro.completada(true)).is_false()
+		for indice in compradores.size():
+			atender.avanzar(compradores[indice].horario.x)
+			if indice == vendido:
+				_vender_fisicamente(atender)
+			else:
+				var atencion := atender.atencion()
+				while not atencion.conversacion_iniciada() or not atencion.puede_abandonar():
+					atencion.interactuar(null)
+				var producto := compradores[indice].pedido().productos()[0]
+				var unidad := (
+					Estante
+					. new(atender.get("_inventario") as Inventario, Catalogo.todos())
+					. retirar(producto)
+				)
+				assert_int(atencion.interactuar(unidad)).is_equal(
+					RecepcionDeCompra.Resultado.ACEPTADA
+				)
+				atender.avanzar(compradores[indice].horario.y)
+				(
+					assert_bool((atender.get("_inventario") as Inventario).esta_afuera(unidad))
+					. is_true()
+				)
+				assert_bool(registro.completada()).is_false()
+				assert_bool(registro.completada(true)).is_false()
+				for pedido_producto in compradores[indice].pedido().productos():
+					registro.restar(pedido_producto)
+			if indice == 0:
+				assert_bool(registro.completada()).is_false()
+				assert_bool(registro.completada(true)).is_false()
+		assert_bool(registro.coincide()).is_true()
+		assert_bool(registro.completada()).is_equal(vendido >= 0)
+		assert_bool(registro.completada(true)).is_true()
+		assert_bool(atender.completada()).is_false()
+		var vencido := 1 if vendido == 0 else 0
+		var no_vendido := compradores[vencido].pedido().productos()[0]
+		registro.sumar(no_vendido)
+		assert_bool(registro.completada()).is_false()
+		assert_bool(registro.completada(true)).is_false()
+		registro.restar(no_vendido)
+		assert_bool(registro.completada()).is_equal(vendido >= 0)
+		assert_bool(registro.completada(true)).is_true()

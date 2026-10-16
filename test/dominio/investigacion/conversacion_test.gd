@@ -8,9 +8,9 @@ extends GdUnitTestSuite
 const CONVERSACION := "res://src/dominio/investigacion/conversacion.gd"
 
 
-func test_el_catalogo_carga_solo_la_conversacion_documentada_de_enrique() -> void:
+func test_el_catalogo_carga_las_conversaciones_documentadas() -> void:
 	var todas := Conversacion.desde_disco()
-	assert_int(todas.size()).is_equal(1)
+	assert_int(todas.size()).is_equal(3)
 	assert_int(todas[0].interlocutor).is_equal(Conversacion.Interlocutor.JEFE)
 	assert_str(todas[0].nombre).is_equal("Enrique Peldaño")
 
@@ -31,11 +31,14 @@ func test_un_interlocutor_sin_guion_documentado_no_carga_textos_inventados() -> 
 	assert_object(Conversacion.de(Conversacion.Interlocutor.DESCONOCIDO)).is_null()
 
 
-func test_ninguna_conversacion_llega_vacia() -> void:
+func test_guiones_fijos_tienen_texto_y_notas_recibe_su_contenido() -> void:
 	# Al menos un mensaje con texto: una conversación vacía es contenido que el jugador paga en
 	# minutos de turno y no le devuelve nada.
 	for conversacion in Conversacion.desde_disco():
 		assert_object(conversacion).is_not_null()
+		if conversacion.interlocutor == Conversacion.Interlocutor.NOTAS:
+			assert_array(conversacion.mensajes).is_empty()
+			continue
 		(
 			assert_int(conversacion.mensajes.size())
 			. override_failure_message("`%s` no trae mensajes" % conversacion.nombre)
@@ -78,3 +81,18 @@ func test_un_interlocutor_sin_fila_contesta_null_en_vez_de_reventar() -> void:
 	# rojo lo produce una aserción y no un error del motor —que gdUnit4 cuenta como *error* y
 	# deja el archivo diciendo `PASSED`—.
 	assert_object(Conversacion.de(Conversacion.Interlocutor.size() as int)).is_null()
+
+
+func test_notas_tiene_recurso_propio_sin_mover_interlocutores() -> void:  # AC-INV-052
+	var notas := Conversacion.de(Conversacion.Interlocutor.NOTAS)
+	assert_object(notas).is_not_null()
+	if notas == null:
+		return
+	assert_int(Conversacion.Interlocutor.JEFE).is_equal(0)
+	assert_int(Conversacion.Interlocutor.YASMIN).is_equal(3)
+	assert_int(notas.interlocutor).is_equal(Conversacion.Interlocutor.NOTAS)
+	assert_str(notas.nombre).is_equal("Notas")
+	assert_int(notas.jornada_de_menu).is_equal(3)
+	assert_array(notas.mensajes).is_empty()
+	assert_object(notas).is_not_same(Conversacion.de(Conversacion.Interlocutor.JEFE))
+	assert_object(notas).is_not_same(Conversacion.de(Conversacion.Interlocutor.YASMIN))

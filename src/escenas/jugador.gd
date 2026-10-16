@@ -27,13 +27,15 @@ const PASOS_DEL_UTIL_EN_LA_MANO := 64
 
 ## El método con que lo fijo dice su texto al examinarlo: no tiene `datos` que lo digan.
 const METODO_TEXTO_AL_EXAMINAR := &"texto_al_examinar"
-## Lo que se usa directo y no siempre hace algo lo contesta: una puerta que abre no se usa.
-const METODO_USO_CON_EFECTO := &"el_uso_tiene_efecto"
+## Los puestos traducen sus hechos a un contexto de gestos sin ejecutar la interacción.
+const METODO_CONTEXTO := &"contexto_de_interaccion"
 
 ## Para leer qué enfoca la mira: una caja del depósito y un casillero de la góndola. Son cáscara
 ## y no declaran `class_name`.
+const NotaDelLocal := preload("res://src/escenas/objetos/nota_pegada.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
+const ManchaEnElPiso := preload("res://src/escenas/objetos/mancha_en_el_piso.gd")
 
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
@@ -47,6 +49,9 @@ const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 ## depósito dice cuántas tiene, y eso lo sabe el puesto de esta noche. Lo cablea la escena; sin
 ## él, cada cosa dice sólo su propio texto.
 var texto_contado: Callable
+
+## Reserva comercial de las tres góndolas, separada de sus apoyos físicos precisos.
+var muebles_con_reserva: Array[PhysicsBody3D] = []
 
 ## Se arma en la declaración y no en `_ready()` a propósito: así un test puede instanciar la
 ## escena sin entrarla al árbol y el control ya existe. Entrar la escena al árbol haría correr
@@ -65,9 +70,9 @@ var _en_web := OS.has_feature("web")
 var _leer_cursor: Callable = func() -> Input.MouseMode: return Input.mouse_mode
 var _escribir_cursor: Callable = func(modo: Input.MouseMode) -> void: Input.mouse_mode = modo
 
-## Quién contesta si el clic derecho tendría efecto sobre lo enfocado: los mismos que atienden
-## `uso_pedido`, cada uno sobre lo suyo. Contestan sin hacer nada.
-var _consultas_del_derecho: Array[Callable] = []
+## Quienes atienden cada objetivo declaran sus gestos sin ejecutarlos.
+var _consultas_de_interaccion: Array[Callable] = []
+var _uso_primario := false
 
 ## La pausa detiene el árbol, y con él este nodo: la declara el cableado.
 var _en_pausa := false
@@ -191,15 +196,10 @@ func _unhandled_input(evento: InputEvent) -> void:
 		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
 		if not examen.atajar_el_clic() and not _control.esta_suspendido():
-			_interactuar()
+			_despachar_gesto(true)
 	elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		if not _control.esta_suspendido():
-			if _enfocado == null:
-				_usar_la_superficie_mirada()
-			elif _enfocado.has_method(ReglasDeLosObjetos.METODO_USAR):
-				_enfocado.call(ReglasDeLosObjetos.METODO_USAR)
-			else:
-				uso_pedido.emit(_enfocado)
+			_despachar_gesto(false)
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
 		if examen.esta_examinando() or not _control.esta_suspendido():
@@ -211,6 +211,38 @@ func _unhandled_input(evento: InputEvent) -> void:
 		and not evento.is_action_pressed(Celular.ACCION)
 	):
 		tomar_el_cursor_desde_entrada()
+
+
+func _despachar_gesto(primario: bool) -> void:
+	var sostenido: ObjetoDelAlmacen = null if agarre == null else agarre.manos().sostenido()
+	var contexto := _contexto_sobre(_enfocado, sostenido)
+	var ruta := ReferenciaDeControles.ruta(
+		primario, contexto, _control.esta_suspendido() or _en_pausa
+	)
+	var acciones: Dictionary[ReferenciaDeControles.Ruta, Callable] = {
+		ReferenciaDeControles.Ruta.GENERICA: _interactuar,
+		ReferenciaDeControles.Ruta.PEDIR_USO: _pedir_uso,
+		ReferenciaDeControles.Ruta.ACCIONAR:
+		func() -> void: _enfocado.call(ReglasDeLosObjetos.METODO_ACCIONAR),
+		ReferenciaDeControles.Ruta.INTERACTUAR:
+		func() -> void: _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR),
+		ReferenciaDeControles.Ruta.USAR:
+		func() -> void: _enfocado.call(ReglasDeLosObjetos.METODO_USAR),
+		ReferenciaDeControles.Ruta.IGNORAR: func() -> void: pass,
+	}
+	_uso_primario = primario
+	acciones[ruta].call()
+
+
+func uso_es_primario() -> bool:
+	return _uso_primario
+
+
+func _pedir_uso() -> void:
+	if _enfocado == null:
+		_usar_la_superficie_mirada()
+	else:
+		uso_pedido.emit(_enfocado)
 
 
 func _usar_la_superficie_mirada() -> void:
@@ -235,8 +267,8 @@ func _usar_la_superficie_mirada() -> void:
 ##
 ## **Lo que está en el grupo pero no tiene el método no se gasta nada**, y ésa es la diferencia
 ## que antes no existía: el corte miraba si había algo enfocado, así que la mancha del piso
-## —que se limpia con el otro botón y no contesta nada acá— se comía el clic. Llevando una caja
-## y con la mira sobre un charco, soltar no hacía absolutamente nada, sin un solo aviso.
+## —que no declara un uso con cualquier objeto ni contesta nada acá— se comía el clic.
+## Llevando una caja y con la mira sobre un charco, soltar no hacía nada, sin un solo aviso.
 func _interactuar() -> void:
 	var datos: ObjetoDelAlmacen = null
 	if _enfocado != null and _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
@@ -499,11 +531,9 @@ func reanudar() -> void:
 	_control.reanudar()
 
 
-## Suma quien contesta, sin hacer nada, si el clic derecho tendría efecto sobre un objetivo con
-## lo que hay en la mano. Recibe el objetivo y lo sostenido, y devuelve un
-## `ReferenciaDeControles.Derecho`.
-func consultar_el_derecho_con(consulta: Callable) -> void:
-	_consultas_del_derecho.append(consulta)
+## Recibe objetivo y mano, y contesta el contexto puro compartido por despacho y referencia.
+func consultar_interaccion_con(consulta: Callable) -> void:
+	_consultas_de_interaccion.append(consulta)
 
 
 ## La pausa vacía la referencia, y reanudar la vuelve a armar en el acto: el árbol detenido no
@@ -519,13 +549,13 @@ func _publicar_la_referencia() -> void:
 	var suspendido := _control.esta_suspendido() or _en_pausa
 	var sostenido: ObjetoDelAlmacen = null
 	var mira := ReferenciaDeControles.Mira.NADA
-	var derecho := ReferenciaDeControles.Derecho.NINGUNO
+	var contexto := ReferenciaDeControles.Contexto.new()
 	if not suspendido:
 		if agarre != null:
 			sostenido = agarre.manos().sostenido()
 		mira = _mira_sobre(_enfocado)
-		derecho = _derecho_sobre(_enfocado, sostenido)
-	var lineas := ReferenciaDeControles.lineas(sostenido != null, mira, derecho, suspendido)
+		contexto = _contexto_sobre(_enfocado, sostenido)
+	var lineas := ReferenciaDeControles.lineas(sostenido != null, mira, contexto, suspendido)
 	if lineas == _referencia:
 		return
 	_referencia = lineas
@@ -547,20 +577,23 @@ func _mira_sobre(cuerpo: Node3D) -> ReferenciaDeControles.Mira:
 	return ReferenciaDeControles.Mira.FIJO
 
 
-## Lo que se usa directo tiene efecto con cualquier mano; lo demás lo contesta quien atiende su
-## pedido, en el mismo orden en que el clic derecho lo resuelve.
-func _derecho_sobre(cuerpo: Node3D, sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Derecho:
+## Cada puesto traduce sólo sus objetivos; lo fijo conserva su acción directa.
+func _contexto_sobre(cuerpo: Node3D, sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Contexto:
 	if cuerpo == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return ReferenciaDeControles.Contexto.new()
+	if cuerpo.has_method(METODO_CONTEXTO):
+		return cuerpo.call(METODO_CONTEXTO, sostenido)
+	for consulta in _consultas_de_interaccion:
+		var contexto: ReferenciaDeControles.Contexto = consulta.call(cuerpo, sostenido)
+		if contexto != null:
+			return contexto
+	if cuerpo.has_method(ReglasDeLosObjetos.METODO_ACCIONAR):
+		return ReferenciaDeControles.contexto_de_lo_fijo(false, cuerpo is NotaDelLocal)
+	var contexto := ReferenciaDeControles.Contexto.new()
 	if cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR):
-		if cuerpo.has_method(METODO_USO_CON_EFECTO) and not cuerpo.call(METODO_USO_CON_EFECTO):
-			return ReferenciaDeControles.Derecho.NINGUNO
-		return ReferenciaDeControles.Derecho.INTERACTUAR
-	for consulta in _consultas_del_derecho:
-		var derecho: ReferenciaDeControles.Derecho = consulta.call(cuerpo, sostenido)
-		if derecho != ReferenciaDeControles.Derecho.NINGUNO:
-			return derecho
-	return ReferenciaDeControles.Derecho.NINGUNO
+		contexto.ruta_secundaria = ReferenciaDeControles.Ruta.USAR
+		contexto.secundario = ReferenciaDeControles.Linea.INTERACTUAR
+	return contexto
 
 
 ## Pone al jugador en `lugar`, quieto y con la vista horizontal hacia donde mira `lugar`.
@@ -649,7 +682,11 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	var ojo := _camara.global_position
 	var adelante := -_camara.global_basis.z
 	var puntos: Array[Vector3] = [ojo + adelante * ReglasDelJugador.ALCANCE_DE_LA_MIRA]
-	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+	var formas := cuerpo.find_children("*", "CollisionShape3D", false, false)
+	# La persona requiere la mira sobre alfa real: un rayo auxiliar no rescata transparencia.
+	if cuerpo.has_method("admite_foco_en"):
+		formas.clear()
+	for forma: CollisionShape3D in formas:
 		if forma.disabled or forma.shape == null:
 			continue
 		var limites := forma.global_transform * LimitesDeForma.de(forma.shape)
@@ -666,14 +703,22 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 		var consulta := PhysicsRayQueryParameters3D.create(
 			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
 		)
-		consulta.exclude = [get_rid()]
+		var excluidos: Array[RID] = [get_rid()]
 		# Con la máscara del campo y no con todas: el contorno de un mueble lo envuelve, y un
 		# rayo que lo mirara pegaría siempre ahí antes que en el mueble.
 		consulta.collision_mask = _campo.collision_mask
+		consulta.exclude = excluidos
 		var golpe := espacio.intersect_ray(consulta)
+		# Una mancha es una superficie: no tapa lo que quedó tirado encima de ella.
+		while golpe.get("collider") is ManchaEnElPiso and golpe.get("collider") != cuerpo:
+			excluidos.append((golpe["collider"] as CollisionObject3D).get_rid())
+			consulta.exclude = excluidos
+			golpe = espacio.intersect_ray(consulta)
 		if golpe.get("collider") != cuerpo:
 			continue
 		var impacto: Vector3 = golpe.position
+		if cuerpo.has_method("admite_foco_en") and not cuerpo.call("admite_foco_en", impacto, ojo):
+			continue
 		var candidato := CampoDeInteraccion.Candidato.new(
 			cuerpo.get_instance_id(),
 			ojo.distance_to(impacto),
@@ -978,8 +1023,8 @@ func _dejar_al_lado(cuerpo: RigidBody3D) -> bool:
 	return false
 
 
-## Si lo soltado entra entero donde está, cuerpo del jugador incluido. Con el contorno de los
-## muebles: el hueco de un estante es lugar libre y no es un apoyo.
+## Si lo soltado entra entero donde está, cuerpo del jugador incluido. El hueco comercial
+## conserva su reserva lógica aunque los contornos físicos dejen ese aire libre.
 func _entra_entero(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) -> bool:
 	var espacio := get_world_3d().direct_space_state
 	for forma in formas:
@@ -988,9 +1033,23 @@ func _entra_entero(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) -> bool
 		lugar.transform = forma.global_transform
 		lugar.collision_mask = cuerpo.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 		lugar.exclude = [cuerpo.get_rid()]
-		if not espacio.intersect_shape(lugar, 1).is_empty():
+		if not espacio.intersect_shape(lugar, 1).is_empty() or _ocupa_una_reserva(forma):
 			return false
 	return true
+
+
+## La forma completa conserva orientación y escala al consultar la reserva del mueble.
+func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
+	var volumen := LimitesDeForma.de(forma.shape)
+	for cuerpo: PhysicsBody3D in muebles_con_reserva:
+		var malla := cuerpo.get_parent() as MeshInstance3D
+		if malla == null or malla.mesh == null:
+			continue
+		if ReservaDeLaGondola.se_superponen(
+			volumen, forma.global_transform, malla.get_aabb(), malla.global_transform
+		):
+			return true
+	return false
 
 
 ## La misma orientación sin la inclinación: el rumbo en el piso, y arriba para arriba. Si el

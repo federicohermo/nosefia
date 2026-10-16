@@ -42,7 +42,7 @@ func test_la_planilla_muestra_cada_producto_y_sigue_a_los_gestos() -> void:
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
 	var atender := TareaDeAtender.new(
-		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
+		[], Apertura.inventario_de_la_jornada([], {}, {}, RandomNumberGenerator.new())
 	)
 	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
 	var app := pantalla.caja()
@@ -71,7 +71,7 @@ func test_todas_las_filas_se_alcanzan_con_la_rueda_dentro_de_la_pantalla() -> vo
 	add_child(pantalla)
 	pantalla.mostrar(Computadora.App.CAJA)
 	var atender := TareaDeAtender.new(
-		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
+		[], Apertura.inventario_de_la_jornada([], {}, {}, RandomNumberGenerator.new())
 	)
 	var app := pantalla.caja()
 	app.mostrar(RegistroDeVentas.new(Catalogo.todos(), atender))
@@ -162,7 +162,7 @@ func test_cada_click_en_un_boton_de_cualquier_app_emite_boton_pulsado() -> void:
 	assert_int(pulsados[0]).is_equal(1)
 	# Las filas de la planilla se agregan después de `_ready()`, al mostrarla.
 	var atender := TareaDeAtender.new(
-		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
+		[], Apertura.inventario_de_la_jornada([], {}, {}, RandomNumberGenerator.new())
 	)
 	pantalla.caja().mostrar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	var fila := (pantalla.caja().get("_filas") as Container).get_child(0)

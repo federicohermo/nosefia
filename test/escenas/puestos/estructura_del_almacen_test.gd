@@ -39,8 +39,9 @@ func test_las_dos_gondolas_del_medio_tienen_el_mismo_ancho_de_contorno() -> void
 	for nombre: String in ["gondolanueva", "gondolanueva2"]:
 		var mueble := estructura.get_node(nombre) as MeshInstance3D
 		var cuerpo := mueble.get_node("Contorno") as StaticBody3D
-		var forma := cuerpo.get_child(0) as CollisionShape3D
-		anchos.append((forma.shape as BoxShape3D).size.x * absf(mueble.scale.x * forma.scale.x))
+		var ancho := _limites_del_contorno(cuerpo).size.x * absf(mueble.scale.x)
+		assert_float(ancho).is_greater(0.0)
+		anchos.append(ancho)
 	assert_float(anchos[0]).is_equal_approx(anchos[1], 0.01)
 
 
@@ -212,8 +213,11 @@ func _estructura_en_el_arbol() -> Node3D:
 func test_las_paredes_con_volumen_dejan_libres_los_vanos() -> void:
 	var estructura: Node3D = await _estructura_en_el_arbol()
 	var espacio := estructura.get_world_3d().direct_space_state
-	var vidrio: Node3D = estructura.get_node("Ventanilla/Vidrio")
-	var vanos := {"la ventanilla": vidrio.global_position}
+	var ventana: Node3D = estructura.get_node("Ventanilla")
+	var borde: Node3D = ventana.get_node("BordeSuperior")
+	var antepecho: MeshInstance3D = ventana.get_node("Antepecho")
+	var inferior := antepecho.global_transform * antepecho.get_aabb().get_center()
+	var vanos := {"la ventanilla": (borde.global_position + inferior) / 2.0}
 	for paso: String in ["PasoAlFondo", "PasoAlDeposito"]:
 		var suelo: Node3D = estructura.get_node("SueloSolido/" + paso)
 		vanos[paso] = suelo.global_position + Vector3.UP * ALTO_DEL_VANO
@@ -222,7 +226,7 @@ func test_las_paredes_con_volumen_dejan_libres_los_vanos() -> void:
 		var consulta := PhysicsPointQueryParameters3D.new()
 		consulta.position = vanos[vano]
 		consulta.collision_mask = paredes.collision_layer
-		consulta.exclude = [(vidrio.get_parent() as CollisionObject3D).get_rid()]
+		consulta.exclude = [(ventana as CollisionObject3D).get_rid()]
 		(
 			assert_array(espacio.intersect_point(consulta))
 			. override_failure_message("el volumen de las paredes tapa %s" % vano)
@@ -249,3 +253,36 @@ func test_el_rincon_del_mostrador_sigue_libre_para_el_empleado() -> void:
 		. override_failure_message("un volumen rellena el rincón del mostrador en %v" % rincon)
 		. is_empty()
 	)
+
+
+## Unión local de las formas físicas habilitadas; no demuestra contacto ni rellena huecos.
+func _limites_del_contorno(cuerpo: StaticBody3D) -> AABB:
+	var salida := AABB()
+	var primera := true
+	for forma: CollisionShape3D in cuerpo.get_children():
+		if forma.disabled or forma.shape == null:
+			continue
+		var parte := forma.transform * forma.shape.get_debug_mesh().get_aabb()
+		salida = parte if primera else salida.merge(parte)
+		primera = false
+	return cuerpo.transform * salida
+
+
+func test_el_ancho_del_contorno_compuesto_incluye_todas_sus_formas_habilitadas() -> void:
+	var cuerpo: StaticBody3D = auto_free(StaticBody3D.new())
+	for desplazamiento: float in [-1.0, 1.0, 100.0]:
+		var forma := CollisionShape3D.new()
+		var convexa := ConvexPolygonShape3D.new()
+		var puntos := PackedVector3Array()
+		for x: float in [-0.5, 0.5]:
+			for y: float in [-0.5, 0.5]:
+				for z: float in [-0.5, 0.5]:
+					puntos.append(Vector3(x, y, z))
+		convexa.points = puntos
+		forma.shape = convexa
+		forma.position.x = desplazamiento
+		forma.disabled = desplazamiento == 100.0
+		cuerpo.add_child(forma)
+	var limites := _limites_del_contorno(cuerpo)
+	assert_float(limites.position.x).is_equal_approx(-1.5, 0.00001)
+	assert_float(limites.size.x).is_equal_approx(3.0, 0.00001)

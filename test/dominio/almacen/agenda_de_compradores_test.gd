@@ -4,8 +4,16 @@ extends GdUnitTestSuite
 func test_los_bordes_de_ambas_ventanas() -> void:  # AC-CTR-034
 	var compradores := Compradores.de_la_jornada(1)
 	var agenda := AgendaDeCompradores.new(compradores)
-	assert_str(compradores[0].nombre()).is_equal("Martín")
-	assert_str(compradores[1].nombre()).is_equal("Tiago")
+	assert_that(compradores[0].horario).is_equal(Vector2(7200, 14400))
+	assert_that(compradores[1].horario).is_equal(Vector2(28800, 36000))
+	for fila: Array in [
+		[Producto.Id.MAROLINI, 1], [Producto.Id.CORACOLA, 1], [Producto.Id.MALBARDO, 1]
+	]:
+		assert_int(compradores[0].pedido().unidades_de(Catalogo.de(fila[0]))).is_equal(fila[1])
+	assert_int(compradores[1].pedido().unidades_de(Catalogo.de(Producto.Id.ZUCARACHAS))).is_equal(1)
+	assert_int(compradores[1].pedido().unidades_de(Catalogo.de(Producto.Id.PEPITOS))).is_equal(1)
+	assert_str(compradores[0].nombre()).is_equal("Tin")
+	assert_str(compradores[1].nombre()).is_equal("Tia")
 	for i in 2:
 		var ventana := compradores[i].horario
 		assert_int(agenda.avanzar(ventana.x - 1.0).size()).is_zero()
@@ -25,10 +33,10 @@ func test_un_salto_recibe_y_vence_en_orden() -> void:  # AC-CTR-035
 	var agenda := AgendaDeCompradores.new(Compradores.de_la_jornada(1))
 	var eventos := agenda.avanzar(Reglas.DURACION_DEL_TURNO)
 	assert_int(eventos.size()).is_equal(4)
-	assert_str(eventos[0].comprador.nombre()).is_equal("Martín")
+	assert_str(eventos[0].comprador.nombre()).is_equal("Tin")
 	assert_int(eventos[0].tipo).is_equal(AgendaDeCompradores.Tipo.LLEGO)
 	assert_int(eventos[1].tipo).is_equal(AgendaDeCompradores.Tipo.VENCIO)
-	assert_str(eventos[2].comprador.nombre()).is_equal("Tiago")
+	assert_str(eventos[2].comprador.nombre()).is_equal("Tia")
 	assert_int(eventos[2].tipo).is_equal(AgendaDeCompradores.Tipo.LLEGO)
 	assert_int(eventos[3].tipo).is_equal(AgendaDeCompradores.Tipo.VENCIO)
 
@@ -41,7 +49,7 @@ func test_una_compra_completa_no_vence() -> void:  # AC-CTR-039
 
 
 func test_otras_jornadas_conservan_el_padron() -> void:  # AC-CTR-041
-	for jornada in range(2, 6):
+	for jornada in range(3, 6):
 		var compradores := Compradores.de_la_jornada(jornada)
 		assert_str(compradores[0].nombre()).is_equal("Marta")
 		assert_bool(compradores[0].tiene_horario()).is_false()
@@ -51,5 +59,5 @@ func test_otras_jornadas_conservan_el_padron() -> void:  # AC-CTR-041
 				Catalogo.de(Producto.Id.ZUCARACHAS)
 			)
 		)
-		. is_equal(2)
+		. is_equal(1)
 	)

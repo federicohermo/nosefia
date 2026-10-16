@@ -11,13 +11,17 @@ var _combinaciones: Dictionary[Array, Efecto] = {}
 
 
 ## El balde se llena, se tiñe y se vacía; la mopa se moja, borra, se enjuaga y deja agua temporal.
-static func para_el_almacen() -> Uso:
+static func para_el_almacen(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA) -> Uso:
 	var uso := Uso.new()
 	var balde := ReglasDeLaLimpieza.ID_DEL_BALDE
 	var mopa := ReglasDeLaLimpieza.ID_DE_LA_MOPA
 	uso.registrar(balde, ReglasDeLaLimpieza.ID_DEL_LAVATORIO, Efecto.LLENAR)
 	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
-		uso.registrar(jabon, balde, Efecto.TENIR)
+		if AnomaliasDeLaJornada.util_disponible(jabon, jornada):
+			uso.registrar(jabon, balde, Efecto.TENIR)
+	var poetico := AnomaliasDeLaJornada.id_de_poetico()
+	if AnomaliasDeLaJornada.sustituye_azul(poetico, jornada):
+		uso.registrar(poetico, balde, Efecto.TENIR)
 	uso.registrar(mopa, balde, Efecto.MOJAR)
 	uso.registrar(balde, ReglasDeLaLimpieza.ID_DEL_INODORO, Efecto.VACIAR)
 	uso.registrar(mopa, MANCHA, Efecto.LIMPIAR)

@@ -132,7 +132,11 @@ func test_derecho_y_examen_vacios_no_abren_y_otras_pantallas_bloquean() -> void:
 		assert_bool(_vista(almacen).visible).is_false()
 	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var pantalla: Node3D = almacen.get_node(ruta)
-		pantalla.call("abrir")
+		if ruta.ends_with("Ventanilla"):
+			(almacen.get("_reloj") as RelojDelTurno).avanzar(120.0)
+			pantalla.get_node("Comprador/Objetivo").call("accionar")
+		else:
+			pantalla.call("abrir")
 		_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_bool(_vista(almacen).visible).is_false()
 		pantalla.call("cerrar")
@@ -412,7 +416,7 @@ func test_caja_lee_imprime_y_entrega_el_ticket_desde_el_mismo_puesto() -> void:
 		)
 		. is_true()
 	)
-	await _derecho()
+	await _derecho(MOUSE_BUTTON_LEFT)
 	assert_bool(_vista(almacen).visible).is_false()
 	(
 		assert_bool(
@@ -505,7 +509,7 @@ func _derecho_sobre(jugador: Node3D, objetivo: PhysicsBody3D) -> void:
 
 
 # AC-CTR-031, AC-PLY-078, AC-PLY-014
-func test_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real() -> void:
+func test_inodoros_descartan_por_primario() -> void:  # AC-PLY-078 AC-CLN-069
 	var almacen := await _abrir_bano()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -520,9 +524,9 @@ func test_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real() -> void:
 		if objetivo == null:
 			return
 		var antes := avisos.size()
-		_derecho_sobre(jugador, objetivo)
+		_accion(jugador, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_object(agarre.manos().sostenido()).is_null()
-		_derecho_sobre(jugador, objetivo)
+		_accion(jugador, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
 		for _cuadro in 3:
 			await get_tree().process_frame
 		assert_bool(is_instance_valid(papel)).is_false()
@@ -585,6 +589,12 @@ func test_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan() -> void:  # AC
 		if objeto != null:
 			assert_bool(is_instance_valid(objeto)).is_true()
 			agarre.entregar()
+	assert_bool(agarre.pedir_agarrar(ajeno.datos, ajeno)).is_true()
+	var inodoro_ajeno := await _enfocar_artefacto(almacen, "inodoro")
+	assert_object(inodoro_ajeno).is_not_null()
+	_accion(jugador, inodoro_ajeno, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(agarre.cuerpo_sostenido()).is_same(ajeno)
+	assert_bool(is_instance_valid(ajeno)).is_true()
 	assert_array(avisos).is_empty()
 
 
@@ -606,7 +616,7 @@ func test_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte() -> void:
 		var objetivo := await _enfocar_artefacto(almacen, nombre)
 		if objetivo == null:
 			return
-		_derecho_sobre(jugador, objetivo)
+		_accion(jugador, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_bool(piso.balde().tiene_agua()).is_false()
 		assert_object(agarre.manos().sostenido()).is_same(balde.get("datos"))
 		agarre.entregar()
@@ -618,14 +628,14 @@ func test_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte() -> void:
 		objetivo = await _enfocar_artefacto(almacen, nombre)
 		if objetivo == null:
 			return
-		_derecho_sobre(jugador, objetivo)
+		_accion(jugador, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.LIMPIA)
 		assert_object(agarre.manos().sostenido()).is_same(mopa.get("datos"))
 		agarre.entregar()
 	assert_array(avisos).is_empty()
 
 
-func test_izquierdo_suelta_y_examen_suspende_sin_desechar() -> void:  # AC-PLY-078
+func test_secundario_conserva_el_ticket_y_examen_suspende_ambos_gestos() -> void:  # AC-PLY-078
 	var almacen := await _abrir_bano()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -638,17 +648,17 @@ func test_izquierdo_suelta_y_examen_suspende_sin_desechar() -> void:  # AC-PLY-0
 	var objetivo := await _enfocar_artefacto(almacen, "inodoro")
 	if objetivo == null:
 		return
-	_accion(jugador, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
+	_accion(jugador, objetivo, ReglasDelJugador.ACCION_USAR)
 	for _cuadro in 4:
 		await get_tree().physics_frame
-	assert_object(agarre.manos().sostenido()).is_null()
+	assert_object(agarre.manos().sostenido()).is_same(papel.datos)
 	assert_bool(is_instance_valid(papel)).is_true()
 	assert_array(avisos).is_empty()
-	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
 	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	var examen: Examen = jugador.get("examen")
 	assert_bool(examen.esta_examinando()).is_true()
 	_accion(jugador, objetivo, ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_bool(is_instance_valid(papel)).is_true()
 	assert_object(agarre.manos().sostenido()).is_same(papel.datos)
 	assert_array(avisos).is_empty()
@@ -671,7 +681,7 @@ func test_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado() -> voi
 	var objetivo := await _enfocar_artefacto(almacen, "inodoro")
 	if objetivo == null:
 		return
-	_derecho_sobre(jugador, objetivo)
+	_accion(jugador, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
 	for _cuadro in 3:
 		await get_tree().process_frame
 	assert_bool(is_instance_valid(primero)).is_false()

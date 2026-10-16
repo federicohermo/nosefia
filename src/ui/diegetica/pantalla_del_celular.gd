@@ -5,6 +5,7 @@ extends CanvasLayer
 signal chat_pedido(quien: Conversacion.Interlocutor)
 signal volver_pedido
 signal foto_pedida(indice: int)
+signal tramo_pedido(identidad: String, tramo: String)
 signal cierre_de_foto_pedido
 ## Un clic izquierdo por fuera del teléfono, con el celular arriba.
 signal cierre_pedido
@@ -25,12 +26,14 @@ const GRIS := Color("787878")
 const MASCARA_DEL_AVATAR := preload("res://assets/ui/manada/celular/avatar.tres")
 const AVATAR_ENRIQUE := preload("res://assets/ui/manada/celular/enrique.png")
 const AVATAR_ENRIQUE_MENU := preload("res://assets/ui/manada/celular/enrique_menu.png")
+const SIMBOLOS_DE_CHAT := preload("res://assets/ui/manada/celular/simbolos_de_chat.ttf")
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
-const TEXTO_DEL_ROL := "Jefe"
+const LILA := Color("c99cf4")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "RUEDA DEL MOUSE / DESPLAZAR HISTORIAL"
+const DIAS: Array[String] = ["HOY", "AYER", "HACE DOS DÍAS", "HACE TRES DÍAS", "HACE CUATRO DÍAS"]
 
 @export var _velo: Control
 @export var _lienzo: Control
@@ -60,9 +63,17 @@ var _bandeja: Bandeja
 var _texto_de_la_opcion: String = ""
 var _opcion: Button
 var _basurero: Control
+var _fuente_del_chat: FontVariation
+var _jornada_de_referencia: int = 0
+var _historial: Array[Mensaje] = []
+var _burbujas: Array[PanelContainer] = []
 
 
 func _ready() -> void:
+	# El respaldo pertenece a este celular; el FontFile del tema compartido no se modifica.
+	_fuente_del_chat = FontVariation.new()
+	_fuente_del_chat.base_font = _adjunto.get_theme_font("normal_font")
+	_fuente_del_chat.fallbacks = [SIMBOLOS_DE_CHAT]
 	_volver.text = ""
 	_volver.tooltip_text = "Volver al menú"
 	var flecha := Line2D.new()
@@ -77,7 +88,6 @@ func _ready() -> void:
 	_volver.pressed.connect(func() -> void: volver_pedido.emit())
 	_busqueda.placeholder_text = BUSCAR
 	_busqueda.text_changed.connect(_filtrar)
-	_subtitulo.text = TEXTO_DEL_ROL
 	_opciones.text = "..."
 	_entrada.placeholder_text = MENSAJE
 	_ayuda.text = AYUDA
@@ -138,24 +148,38 @@ func mostrar_menu(bandeja: Bandeja) -> void:
 	_filtrar("")
 
 
-func mostrar_chat(conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bool) -> void:
+func mostrar_chat(
+	conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bool, jornada: int
+) -> void:
+	_jornada_de_referencia = jornada
 	_foto_ampliada.hide()
 	_volver.visible = not fijo
 	_titulo.text = conversacion.nombre.to_upper()
 	_titulo.add_theme_font_size_override("font_size", 36)
 	_avatar_del_chat.texture = _imagen_del_contacto(conversacion, false)
 	_avatar_del_chat.show()
-	_subtitulo.visible = (
-		conversacion.imagen != null and conversacion.imagen.resource_path == RETRATO_ENRIQUE
-	)
+	_subtitulo.text = conversacion.rol
+	_subtitulo.visible = not conversacion.rol.is_empty()
+	_avatar_del_chat.material = null
+	if _avatar_del_chat.texture == null:
+		_avatar_del_chat.material = MASCARA_DEL_AVATAR
+		var lisa := GradientTexture2D.new()
+		var gradiente := Gradient.new()
+		gradiente.colors = PackedColorArray([BURBUJA, BURBUJA])
+		lisa.gradient = gradiente
+		_avatar_del_chat.texture = lisa
 	_opciones.hide()
 	_busqueda.hide()
 	_busqueda.release_focus()
 	_pie.show()
 	_componer(false)
 	_limpiar()
+	_historial = mensajes.duplicate()
 	for indice in mensajes.size():
-		_mensajes.add_child(_burbuja_de(mensajes[indice], indice))
+		var burbuja := _burbuja_de(mensajes[indice], indice)
+		_burbujas.append(burbuja)
+		_mensajes.add_child(burbuja)
+	_ordenar_el_historial()
 	_agregar_la_opcion()
 	_ir_al_ultimo.call_deferred()
 
@@ -173,9 +197,13 @@ func recibir(mensaje: Mensaje, indice: int) -> void:
 	var barra := _scroll.get_v_scroll_bar()
 	var al_final := _scroll.scroll_vertical >= int(barra.max_value - barra.page) - 1
 	var burbuja := _burbuja_de(mensaje, indice)
+	var lugar := clampi(indice, 0, _historial.size())
+	_historial.insert(lugar, mensaje)
+	_burbujas.insert(lugar, burbuja)
 	_mensajes.add_child(burbuja)
+	_ordenar_el_historial()
 	if opcion() != null:
-		_mensajes.move_child(burbuja, _opcion.get_index())
+		_mensajes.move_child(_opcion, _mensajes.get_child_count() - 1)
 	if al_final and not _foto_ampliada.visible:
 		_ir_al_ultimo.call_deferred()
 
@@ -207,6 +235,11 @@ func _agregar_la_opcion() -> void:
 
 func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:
 	_imagen.texture = foto.foto
+	# La primera leyenda se mide con su ancho final aun cuando el panel sigue oculto.
+	# Medirla con ancho cero agrandaba el teléfono y recortaba el scroll del chat.
+	var marco := _telefono.get_theme_stylebox("panel").get_minimum_size()
+	var interior := _foto_ampliada.get_theme_stylebox("panel").get_minimum_size()
+	_adjunto.size.x = maxf(1.0, _telefono.size.x - marco.x - interior.x)
 	_adjunto.text = adjunto.texto if adjunto != null else ""
 	_adjunto.visible = adjunto != null
 	_foto_ampliada.show()
@@ -375,6 +408,7 @@ func _avatar(imagen: Texture2D) -> PanelContainer:
 
 func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 	var panel := PanelContainer.new()
+	panel.set_meta("indice_de_mensaje", indice)
 	panel.custom_minimum_size = Vector2(368, 0)
 	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	panel.add_theme_stylebox_override("panel", _estilo(Color("0b363d"), 16, 16))
@@ -389,14 +423,57 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		foto.ignore_texture_size = true
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		foto.custom_minimum_size = Vector2(0, 240)
-		foto.pressed.connect(func() -> void: foto_pedida.emit(indice))
+		foto.pressed.connect(
+			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
+		)
 		contenido.add_child(foto)
 	if not mensaje.texto.is_empty():
 		var texto := _texto(mensaje.texto, PAPEL, 28)
 		texto.custom_minimum_size.x = 336
 		texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if not mensaje.pista_del_tramo(mensaje.tramo_de_pista).is_empty():
+			texto.clear()
+			var inicio := mensaje.texto.find(mensaje.texto_del_tramo)
+			texto.add_text(mensaje.texto.left(inicio))
+			texto.push_meta(mensaje.tramo_de_pista)
+			texto.push_color(LILA)
+			texto.add_text(mensaje.texto_del_tramo)
+			texto.pop()
+			texto.pop()
+			texto.add_text(mensaje.texto.substr(inicio + mensaje.texto_del_tramo.length()))
+			texto.meta_underlined = false
+			texto.mouse_filter = Control.MOUSE_FILTER_PASS
+			texto.meta_clicked.connect(
+				func(tramo: Variant) -> void: tramo_pedido.emit(mensaje.identidad, str(tramo))
+			)
 		contenido.add_child(texto)
 	return panel
+
+
+func _ordenar_el_historial() -> void:
+	# Reordenar sólo la composición conserva las burbujas y la foto que se esté leyendo.
+	for hijo: Node in _mensajes.get_children():
+		if hijo.has_meta("separador_de_jornada"):
+			hijo.reparent(_basurero, false)
+			hijo.queue_free()
+	var posicion := 0
+	var anterior := 0
+	for indice: int in _historial.size():
+		var mensaje := _historial[indice]
+		var jornada := mensaje.jornada if mensaje.momento != Mensaje.Momento.SIN_FECHA else 0
+		var diferencia := _jornada_de_referencia - jornada
+		if jornada > 0 and jornada != anterior and diferencia >= 0 and diferencia < DIAS.size():
+			var separador := _etiqueta(DIAS[diferencia], GRIS, 24)
+			separador.set_meta("separador_de_jornada", jornada)
+			separador.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			_mensajes.add_child(separador)
+			_mensajes.move_child(separador, posicion)
+			posicion += 1
+		var burbuja := _burbujas[indice]
+		burbuja.set_meta("indice_de_mensaje", indice)
+		_mensajes.move_child(burbuja, posicion)
+		posicion += 1
+		anterior = jornada
 
 
 func _ir_al_ultimo() -> void:
@@ -406,6 +483,8 @@ func _ir_al_ultimo() -> void:
 
 
 func _limpiar() -> void:
+	_historial.clear()
+	_burbujas.clear()
 	# Lo viejo espera su liberación dentro del árbol, en un nodo oculto: sacado del árbol y
 	# liberado al final del cuadro, cada mensaje que llega dejaba huérfano todo el chat anterior.
 	if _basurero == null:
@@ -419,6 +498,7 @@ func _limpiar() -> void:
 
 func _etiqueta(texto: String, color: Color, tamano: int) -> Label:
 	var etiqueta := Label.new()
+	etiqueta.add_theme_font_override("font", _fuente_del_chat)
 	etiqueta.text = texto
 	etiqueta.add_theme_color_override("font_color", color)
 	etiqueta.add_theme_font_size_override("font_size", tamano)
@@ -439,6 +519,7 @@ func _estilo(color: Color, radio: int, margen: int = 0) -> StyleBoxFlat:
 
 func _texto(texto: String, color: Color, tamano: int) -> RichTextLabel:
 	var etiqueta := RichTextLabel.new()
+	etiqueta.add_theme_font_override("normal_font", _fuente_del_chat)
 	etiqueta.bbcode_enabled = true
 	etiqueta.fit_content = true
 	etiqueta.scroll_active = false

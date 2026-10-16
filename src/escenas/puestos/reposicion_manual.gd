@@ -65,6 +65,9 @@ const GUIA := "Guia"
 ## **Ningún apoyo está escrito acá.** Los mide el `.blend` y llegan en este recurso.
 @export var disposicion: DisposicionDeLaGondola
 
+## La raíz entrega sólo las góndolas: su hueco comercial no es soporte físico.
+var muebles_con_reserva: Array[PhysicsBody3D] = []
+
 var _unidades: Array[Node3D] = []
 ## Los casilleros de cada producto, en el orden de `Producto.Id` y, adentro, en el de su fila.
 var _casilleros: Array[Array] = []
@@ -117,6 +120,14 @@ func casilleros() -> Dictionary[Producto.Id, int]:
 	return por_producto
 
 
+## Sólo la fila principal: las guías conservan sus casilleros y abren completas.
+func casilleros_reponibles() -> Dictionary[Producto.Id, int]:
+	var por_producto: Dictionary[Producto.Id, int] = {}
+	for producto in Catalogo.todos():
+		por_producto[producto.id] = disposicion.filas_de_adelante[producto.id]
+	return por_producto
+
+
 func preparar() -> void:
 	_desenfoque = DesenfoqueDeReferencias.new()
 	add_child(_desenfoque)
@@ -130,8 +141,10 @@ func preparar() -> void:
 	_preparar_la_guia()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	_preparar_los_casilleros()
-	jugador.uso_pedido.connect(usar_la_caja)
-	jugador.consultar_el_derecho_con(_derecho_sobre_la_caja)
+	jugador.uso_pedido.connect(
+		func(objetivo: Node3D) -> void: usar_la_caja(objetivo, jugador.uso_es_primario())
+	)
+	jugador.consultar_interaccion_con(_contexto_sobre_la_caja)
 	jugador.objetivo_enfocado.connect(_al_enfocar)
 	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
@@ -165,9 +178,9 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 	var forma: CollisionShape3D = unidad.get_node("Forma")
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
-	# **Con el contorno del mueble además de lo que el producto choca.** El hueco de un estante es
-	# lugar libre, y ahí la mercadería no tiene cuerpo: el producto quedaba adentro de la góndola,
-	# encimado con ella y fuera de la vista. Medido: 10 de 75 soltadas alrededor de una góndola.
+	# El contacto mide el metal. La reserva de mercadería se pregunta aparte: el hueco
+	# comercial no tiene cuerpo y no puede volver a ser una plataforma invisible para cajas.
+	# Antes el contorno cumplía ambas funciones; 10 de 75 soltadas entraban sin esa reserva.
 	consulta.collision_mask = unidad.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	consulta.exclude = [unidad.get_rid(), jugador.get_rid()]
 	var espacio := get_world_3d().direct_space_state
@@ -179,9 +192,23 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 		# derecha ocupa otro volumen que el real: contesta libre donde el producto igual se
 		# mete en el panel, que es el caso que esta función existe para sacar.
 		consulta.transform = forma.global_transform
-		if espacio.intersect_shape(consulta, 1).is_empty():
+		if espacio.intersect_shape(consulta, 1).is_empty() and not _ocupa_una_reserva(forma):
 			return
 		unidad.global_position += atras * paso
+
+
+## Conserva orientación y escala de la unidad, sin añadir formas a la simulación.
+func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
+	var volumen := LimitesDeForma.de(forma.shape)
+	for cuerpo: PhysicsBody3D in muebles_con_reserva:
+		var malla := cuerpo.get_parent() as MeshInstance3D
+		if malla == null or malla.mesh == null:
+			continue
+		if ReservaDeLaGondola.se_superponen(
+			volumen, forma.global_transform, malla.get_aabb(), malla.global_transform
+		):
+			return true
+	return false
 
 
 func _agrupar_suelto(nodo: Node3D) -> void:
@@ -194,14 +221,8 @@ func _retirar_del_grupo(nodo: Node3D) -> void:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
-## Lo que el clic derecho hace con la caja apuntada: sacarle una unidad, devolverle la de la mano
-## o nada.
-##
-## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
-## que no es una caja. **Cuál de los tres toca lo contesta la caja**, en `dominio/`, según lo que
-## haya en la mano; acá sólo se busca la acción de ese gesto. Llevar una caja es otra cosa en la
-## mano, y por eso a la que se lleva no se le saca nada.
-func usar_la_caja(objetivo: Node3D) -> void:
+## Traduce el gesto recibido al resultado de la caja; no deriva el botón de lo que lleva la mano.
+func usar_la_caja(objetivo: Node3D, primario: bool = false) -> void:
 	var caja := objetivo as CajaDelDeposito
 	if caja == null:
 		return
@@ -210,21 +231,21 @@ func usar_la_caja(objetivo: Node3D) -> void:
 		ContenidoDeLaCaja.Gesto.METER: devolver,
 		ContenidoDeLaCaja.Gesto.NADA: func(_id: Producto.Id) -> void: pass,
 	}
-	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido())
+	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido(), primario)
 	acciones[gesto].call(caja.producto)
 
 
-## Si el clic derecho sobre la caja sacaría o metería: lo contesta su contenido, sin hacerlo.
-func _derecho_sobre_la_caja(
+## El contenido declara ambos gestos y la capacidad sin sacar ni devolver una unidad.
+func _contexto_sobre_la_caja(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
-) -> ReferenciaDeControles.Derecho:
+) -> ReferenciaDeControles.Contexto:
 	var caja := objetivo as CajaDelDeposito
 	if caja == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return null
 	var contenido := repositor.caja(caja.producto)
 	if contenido == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
-	return ReferenciaDeControles.derecho_de_la_caja(contenido.derecho_posible(sostenido))
+		return null
+	return ReferenciaDeControles.contexto_de_la_caja(contenido, sostenido)
 
 
 ## Mete en su caja la unidad de la mano y guarda su cuerpo, que deja de verse. Si la caja no la
@@ -383,7 +404,8 @@ func despertar_lo_de_arriba(nodo: Node3D) -> void:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:
 		return
-	_despertar_sobre(caja, caja.apoyo_que_dejo())
+	var visitadas: Dictionary[RID, bool] = {}
+	_despertar_sobre(caja, caja.apoyo_que_dejo(), visitadas)
 
 
 ## Despierta lo apoyado sobre un lugar, y sigue hacia arriba desde cada caja que despierta.
@@ -394,9 +416,15 @@ func despertar_lo_de_arriba(nodo: Node3D) -> void:
 ## Lo que no es una caja sólo se despierta.
 ##
 ## Despertar de más no cuesta nada, y por eso no se comprueba si lo de arriba se iba a caer: si
-## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. La `freeze` que se mira
-## es el corte de la recursión: una caja ya despierta no se vuelve a visitar.
-func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
+## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. Una caja despierta puede
+## sostener otra ya congelada: se atraviesan ambas y los RID visitados cortan la recursión.
+func _despertar_sobre(
+	caja: CajaDelDeposito, lugar: Vector3, visitadas: Dictionary[RID, bool]
+) -> void:
+	var id := caja.get_rid()
+	if visitadas.has(id):
+		return
+	visitadas[id] = true
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var media := _media_caja(caja)
 	var consulta := PhysicsShapeQueryParameters3D.new()
@@ -416,9 +444,10 @@ func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
 		var caja_de_arriba := encima as CajaDelDeposito
 		if caja_de_arriba == null:
 			encima.sleeping = false
-		elif caja_de_arriba.freeze:
-			caja_de_arriba.soltarse()
-			_despertar_sobre(caja_de_arriba, caja_de_arriba.global_position)
+		else:
+			if caja_de_arriba.freeze:
+				caja_de_arriba.soltarse()
+			_despertar_sobre(caja_de_arriba, caja_de_arriba.global_position, visitadas)
 
 
 ## Deja la caja en el piso al lado del jugador. Devuelve si encontró dónde.
@@ -987,6 +1016,8 @@ func _repintar(nodo: Node3D) -> void:
 ## vacío, o el último si la fila está llena.
 func casillero(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> ZonaDeReposicion:
 	var zonas: Array = _casilleros[id]
+	if zonas.is_empty():
+		return null
 	if indice == Estante.PRIMERO_VACIO:
 		var vacios := repositor.estante().casilleros_vacios(Catalogo.de(id))
 		indice = zonas.size() - 1 if vacios.is_empty() else vacios[0]
@@ -996,7 +1027,10 @@ func casillero(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> ZonaDeRe
 ## Dónde está la unidad de ese casillero, alineado a los ejes del local: donde la mira la
 ## encuentra. Sin índice, el del primero vacío.
 func zona(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> AABB:
-	var elegido := casillero(id, indice).casillero
+	var encontrado := casillero(id, indice)
+	if encontrado == null:
+		return AABB()
+	var elegido := encontrado.casillero
 	return global_transform * _copia_del_casillero(id, elegido) * _modelos[id].get_aabb()
 
 
@@ -1027,6 +1061,10 @@ func _giro_del_frente(id: Producto.Id) -> float:
 	var frente := DisposicionDeLaGondola.frente(
 		disposicion.principales[id], disposicion.filas_de_adelante[id]
 	)
+	if frente.is_zero_approx():
+		var modelo := contenido.get_child(id) as Node3D
+		var local: Vector3 = modelo.get_meta("frente_del_modelo")
+		frente = (modelo.basis * local).normalized()
 	return giro_hacia_la_camara(global_basis * frente)
 
 
@@ -1137,6 +1175,10 @@ func _preparar_los_casilleros() -> void:
 	# La superficie invisible fija la profundidad antes de dibujar las aristas.
 	sin_superficie.render_priority = -1
 	for producto in Catalogo.todos():
+		if disposicion.casilleros_de(producto.id) == 0:
+			_casilleros.append([])
+			_envolver_la_fila([])
+			continue
 		var modelo := _modelos[producto.id]
 		var fantasma := modelo.duplicate() as ArrayMesh
 		for superficie in fantasma.get_surface_count():
@@ -1224,7 +1266,9 @@ func _armar_los_bloques() -> void:
 		var atras := DisposicionDeLaGondola.copias(principal)
 		atras -= disposicion.filas_de_adelante[producto.id]
 		fijas.append(principal.slice(0, atras * flotantes))
-		casilleros.append(PackedFloat32Array())
+		# La primera de la reponible va antes que las guías: los faltantes salen del final, y
+		# si la vaciaran entera, el último sale de una guía y la reponible no queda pelada.
+		casilleros.append(principal.slice(atras * flotantes, (atras + 1) * flotantes))
 	for indice in disposicion.guias.size():
 		var id := disposicion.productos_de_las_guias[indice]
 		var modelo := get_node(GUIA).get_child(indice) as MeshInstance3D
@@ -1238,7 +1282,7 @@ func _armar_los_bloques() -> void:
 		var principal := disposicion.principales[producto.id]
 		var atras := DisposicionDeLaGondola.copias(principal)
 		atras -= disposicion.filas_de_adelante[producto.id]
-		casilleros[producto.id].append_array(principal.slice(atras * flotantes))
+		casilleros[producto.id].append_array(principal.slice((atras + 1) * flotantes))
 		_fijas.append(DisposicionDeLaGondola.copias(fijas[producto.id]))
 		_bloques.append(fijas[producto.id] + casilleros[producto.id])
 
@@ -1247,6 +1291,8 @@ func _armar_los_bloques() -> void:
 func _preparar_la_guia() -> void:
 	for id in _grupos.size():
 		_mostrar_lo_puesto(id)
+		if _bloques[id].is_empty():
+			continue
 		_desenfoque.agregar(_grupos[id], _bloques[id], _primera_dibujada(id))
 
 
@@ -1293,6 +1339,8 @@ func _primera_dibujada(id: Producto.Id) -> int:
 ## ocupados, y al final los vacíos, que quedan fuera del corte. Cada copia lleva su lugar, así que
 ## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio.
 func _mostrar_lo_puesto(id: Producto.Id) -> void:
+	if _bloques[id].is_empty():
+		return
 	var producto := Catalogo.de(id)
 	var de_la_noche := repositor.estante()
 	var primera := _primera_dibujada(id)
@@ -1346,7 +1394,9 @@ func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiM
 	copias.transform_format = MultiMesh.TRANSFORM_3D
 	copias.mesh = malla
 	copias.instance_count = DisposicionDeLaGondola.copias(bloque)
-	copias.buffer = bloque
+	if not bloque.is_empty():
+		copias.buffer = bloque
+	grupo.visible = not bloque.is_empty()
 	copias.visible_instance_count = copias.instance_count
 	grupo.multimesh = copias
 	add_child(grupo)
@@ -1462,3 +1512,93 @@ func limpiar() -> void:
 	for id in _grupos.size():
 		_mostrar_lo_puesto(id)
 	_actualizar_zonas()
+
+
+## Conserva los cuerpos de la recepción y vuelve a agrupar sólo su dibujo.
+func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
+	var ocupados: Array[AABB] = []
+	for suelta in unidades_sueltas():
+		if not is_instance_valid(suelta) or suelta.is_queued_for_deletion():
+			continue
+		var forma: CollisionShape3D = suelta.get_node("Forma")
+		var volumen := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		ocupados.append(volumen.grow(TOLERANCIA_DEL_APOYO))
+	var preparados: Array[ObjetoAgarrable] = []
+	var posiciones: Array[Vector3] = []
+	for nodo in cuerpos:
+		var cuerpo := nodo as ObjetoAgarrable
+		var lugar := _lugar_para_abandonada(cuerpo, punto, ocupados)
+		if not lugar.is_finite():
+			push_error("No hay piso libre para la entrega abandonada frente a la ventanilla.")
+			return
+		preparados.append(cuerpo)
+		posiciones.append(lugar)
+	for indice in preparados.size():
+		var cuerpo := preparados[indice]
+		cuerpo.reparent(self)
+		cuerpo.top_level = false
+		cuerpo.global_basis = Basis.IDENTITY
+		cuerpo.global_position = posiciones[indice]
+		cuerpo.reset_physics_interpolation()
+		_restaurar_tamano_del_producto(cuerpo)
+		cuerpo.show()
+	# Las consultas anteriores ven los sólidos existentes; las huellas reservan este lote
+	# antes de que el servidor sincronice los nuevos cuerpos en el próximo cuadro físico.
+	for cuerpo in preparados:
+		cuerpo.collision_layer = 1
+		cuerpo.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		cuerpo.linear_velocity = Vector3.ZERO
+		cuerpo.angular_velocity = Vector3.ZERO
+		cuerpo.freeze = false
+		cuerpo.sleeping = false
+		_agrupar_suelto(cuerpo)
+
+
+func _lugar_para_abandonada(
+	cuerpo: ObjetoAgarrable, punto: Marker3D, ocupados: Array[AABB]
+) -> Vector3:
+	var forma: CollisionShape3D = cuerpo.get_node("Forma")
+	var limites := forma.transform * forma.shape.get_debug_mesh().get_aabb()
+	var paso := maxf(limites.size.x, limites.size.z) + TOLERANCIA_DEL_APOYO * 2.0
+	var espacio := get_world_3d().direct_space_state
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+	consulta.exclude = [cuerpo.get_rid()]
+	consulta.margin = TOLERANCIA_DEL_APOYO / 4.0
+	var pasos := ceili(ReglasDelJugador.ALCANCE_DE_LA_MIRA / paso)
+	var candidatos: Array[Vector3] = []
+	for profundidad in range(pasos + 1):
+		for lateral in range(-pasos, pasos + 1):
+			var desplazamiento := Vector3(lateral * paso, 0.0, -profundidad * paso)
+			if desplazamiento.length() <= ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+				candidatos.append(desplazamiento)
+	candidatos.sort_custom(
+		func(a: Vector3, b: Vector3) -> bool: return a.length_squared() < b.length_squared()
+	)
+	for desplazamiento in candidatos:
+		var lugar := punto.global_transform * desplazamiento
+		var rayo := PhysicsRayQueryParameters3D.create(
+			lugar + Vector3.UP, lugar + Vector3.DOWN, consulta.collision_mask
+		)
+		rayo.exclude = [cuerpo.get_rid()]
+		var piso := espacio.intersect_ray(rayo)
+		if piso.get("collider") != suelo:
+			continue
+		lugar.y = (
+			(piso["position"] as Vector3).y - limites.position.y + TOLERANCIA_DEL_APOYO * 4.0
+		)
+		consulta.transform = Transform3D(Basis.IDENTITY, lugar) * forma.transform
+		if not espacio.intersect_shape(consulta, 1).is_empty():
+			continue
+		var volumen := AABB(lugar + limites.position, limites.size).grow(TOLERANCIA_DEL_APOYO)
+		var reservado := false
+		for ocupado in ocupados:
+			if volumen.intersects(ocupado):
+				reservado = true
+				break
+		if reservado:
+			continue
+		ocupados.append(volumen)
+		return lugar
+	return Vector3.INF

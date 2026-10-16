@@ -57,9 +57,8 @@ func test_el_contorno_envuelve_la_malla_sin_que_le_sobre() -> void:
 	for ruta: String in GONDOLAS:
 		var gondola := almacen.get_node(ruta) as MeshInstance3D
 		var malla := gondola.global_transform * gondola.get_aabb()
-		var forma := gondola.get_node("Contorno/Forma") as CollisionShape3D
-		var lados := (forma.shape as BoxShape3D).size
-		var contorno := forma.global_transform * AABB(-lados / 2.0, lados)
+		var cuerpo := gondola.get_node("Contorno") as StaticBody3D
+		var contorno := gondola.global_transform * _limites_del_contorno(cuerpo)
 		for eje in 3:
 			var antes := malla.position[eje] - contorno.position[eje]
 			var despues := contorno.end[eje] - malla.end[eje]
@@ -213,3 +212,36 @@ func _mirar(jugador: CharacterBody3D, punto: Vector3) -> void:
 	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
 	jugador.call("_aplicar_la_rotacion")
 	jugador.force_update_transform()
+
+
+## Unión local de las formas físicas habilitadas; no demuestra contacto ni rellena huecos.
+func _limites_del_contorno(cuerpo: StaticBody3D) -> AABB:
+	var salida := AABB()
+	var primera := true
+	for forma: CollisionShape3D in cuerpo.get_children():
+		if forma.disabled or forma.shape == null:
+			continue
+		var parte := forma.transform * forma.shape.get_debug_mesh().get_aabb()
+		salida = parte if primera else salida.merge(parte)
+		primera = false
+	return cuerpo.transform * salida
+
+
+func test_el_ancho_del_contorno_compuesto_incluye_todas_sus_formas_habilitadas() -> void:
+	var cuerpo: StaticBody3D = auto_free(StaticBody3D.new())
+	for desplazamiento: float in [-1.0, 1.0, 100.0]:
+		var forma := CollisionShape3D.new()
+		var convexa := ConvexPolygonShape3D.new()
+		var puntos := PackedVector3Array()
+		for x: float in [-0.5, 0.5]:
+			for y: float in [-0.5, 0.5]:
+				for z: float in [-0.5, 0.5]:
+					puntos.append(Vector3(x, y, z))
+		convexa.points = puntos
+		forma.shape = convexa
+		forma.position.x = desplazamiento
+		forma.disabled = desplazamiento == 100.0
+		cuerpo.add_child(forma)
+	var limites := _limites_del_contorno(cuerpo)
+	assert_float(limites.position.x).is_equal_approx(-1.5, 0.00001)
+	assert_float(limites.size.x).is_equal_approx(3.0, 0.00001)

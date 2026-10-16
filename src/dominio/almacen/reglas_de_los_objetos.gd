@@ -62,6 +62,9 @@ const METODO_EMPUJAR := "empujar"
 ## motivo: la red de seguridad, en `sistemas/`, no puede nombrar el tipo que lo contesta.
 const METODO_LUGAR_DE_ORIGEN := "lugar_de_origen"
 
+## Capacidad de anotar la pose final de un objeto que ya está en reposo.
+const METODO_QUEDARSE_QUIETA := "quedarse_quieta"
+
 const SENAL_EMPUJADA := &"empujada"
 
 ## La propiedad con la que un cuerpo del mundo contesta su `ObjetoDelAlmacen`.

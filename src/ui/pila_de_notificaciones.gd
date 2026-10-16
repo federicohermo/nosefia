@@ -5,11 +5,13 @@ const TEXTOS := {
 	Notificaciones.Tipo.CLIENTE: "¡HAY UN CLIENTE!",
 	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO LEER",
 	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ DE ESPERAR.",
+	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA UNA HORA DE JORNADA",
 }
 const SIMBOLOS := {
 	Notificaciones.Tipo.CLIENTE: preload("res://assets/ui/manada/notificacion_cliente.svg"),
 	Notificaciones.Tipo.LECTURA_FALLIDA: preload("res://assets/ui/manada/notificacion_lectura.svg"),
 	Notificaciones.Tipo.CLIENTE_CANSADO: preload("res://assets/ui/manada/notificacion_salida.svg"),
+	Notificaciones.Tipo.CIERRE_PROXIMO: preload("res://assets/ui/manada/notificacion_cierre.svg"),
 }
 const ESCALA_DEL_CARTEL := 0.4
 
@@ -48,6 +50,11 @@ func iniciar_conversacion(comprador: Comprador) -> void:
 
 func avisar_lectura_rechazada(motivo: GeneradorDeTickets.Resultado) -> void:
 	_estado.lectura_rechazada(motivo)
+	_pintar()
+
+
+func actualizar_tiempo(restante: float) -> void:
+	_estado.actualizar_tiempo(restante)
 	_pintar()
 
 

@@ -49,31 +49,32 @@ func test_muestra_ambos_compradores_dialogo_y_clic_izquierdo_sin_botones() -> vo
 	if sprite == null:
 		return
 	var clicks: Array[bool] = []
-	panel.comprador_pulsado.connect(func() -> void: clicks.append(true))
+	var atenciones: Ventanilla = _almacenes.back().get("_atenciones")
+	atenciones.presentacion_cambiada.connect(func() -> void: clicks.append(true))
 	for intervalo: float in [120.0, 360.0]:
 		var almacen: Node3D = _almacenes.back()
 		(almacen.get("_reloj") as RelojDelTurno).avanzar(intervalo)
 		var atencion: Atencion = almacen.get("_atenciones").atencion()
 		var comprador := atencion.comprador()
-		atencion.interactuar(null)
-		panel.mostrar(atencion)
+		var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
+		puesto.get_node("Comprador/Objetivo").call("accionar")
+		clicks.clear()
 		assert_bool(sprite.is_visible_in_tree()).is_true()
 		assert_str(sprite.sprite_frames.resource_path).contains(
-			"martin" if comprador.personaje == DialogosDeCompradores.Personaje.MARTIN else "tiago"
+			"martin" if comprador.personaje == DialogosDeCompradores.Personaje.TIN else "tiago"
 		)
 		var texto := panel.get_node("Fisico/Dialogo/Texto") as RichTextLabel
 		assert_str(texto.text).is_equal(atencion.dialogo().entrada_actual())
 		assert_bool(texto.bbcode_enabled).is_true()
 		assert_bool((panel.get("_cobrar") as Button).is_visible_in_tree()).is_false()
 		assert_bool((panel.get("_despachar") as Button).is_visible_in_tree()).is_false()
-		var blanco := panel.get_node("Fisico/Blanco") as Control
 		var clic := InputEventMouseButton.new()
 		clic.pressed = true
 		clic.button_index = MOUSE_BUTTON_RIGHT
-		blanco.gui_input.emit(clic)
+		puesto.call("_input", clic)
 		assert_array(clicks).is_empty()
 		clic.button_index = MOUSE_BUTTON_LEFT
-		blanco.gui_input.emit(clic)
+		puesto.call("_input", clic)
 		assert_array(clicks).has_size(1)
 		clicks.clear()
 		panel.mostrar_sin_nadie()

@@ -32,6 +32,7 @@ func enlazar(fuentes: Array) -> void:
 ## dispara, y por eso sus filas quedan declaradas sin fuente.
 func arrancar_el_ambiente() -> void:
 	reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	reproductor.pedir(EntradaSonora.Evento.AMBIENTE_EXTERIOR)
 	reproductor.pedir(EntradaSonora.Evento.MUSICA_DE_LA_NOCHE)
 
 

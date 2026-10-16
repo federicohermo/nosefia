@@ -19,6 +19,7 @@ extends Node
 
 signal comprador_llegado(comprador: Comprador)
 signal conversacion_iniciada(comprador: Comprador)
+signal conversacion_terminada
 signal atencion_despachada(despachados: int)
 ## Sólo cuando se cobró: despachar sin vender también despacha, y no es una compra.
 signal compra_realizada
@@ -47,6 +48,9 @@ func pedir_interaccion(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 		compra_realizada.emit()
 		_al_despachar()
 	presentacion_cambiada.emit()
+	if resultado in [RecepcionDeCompra.Resultado.DIALOGO, RecepcionDeCompra.Resultado.COMPLETA]:
+		if en_curso.puede_abandonar():
+			conversacion_terminada.emit()
 	return resultado
 
 
@@ -63,7 +67,15 @@ func arrancar(tarea: TareaDeAtender) -> void:
 	_tarea = tarea
 	if reloj != null and not reloj.tiempo_consumido.is_connected(_al_pasar_el_tiempo):
 		reloj.tiempo_consumido.connect(_al_pasar_el_tiempo)
+	if reloj != null and not reloj.cierre_iniciado.is_connected(_al_iniciar_el_cierre):
+		reloj.cierre_iniciado.connect(_al_iniciar_el_cierre)
 	jornada_preparada.emit()
+
+
+## La agenda termina antes de que los lectores de cierre consulten las compras.
+## El posterior tiempo_consumido recorre la misma agenda y no repite sus eventos.
+func _al_iniciar_el_cierre() -> void:
+	_al_pasar_el_tiempo(0.0)
 
 
 func _al_pasar_el_tiempo(restante: float) -> void:

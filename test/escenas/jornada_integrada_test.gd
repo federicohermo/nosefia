@@ -18,6 +18,9 @@ const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
+	var control := RandomNumberGenerator.new()
+	control.seed = 17
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var tiempos: Array[float] = []
 	reloj.tiempo_consumido.connect(func(restante: float) -> void: tiempos.append(restante))
@@ -25,7 +28,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
-	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA))
+	_comprobar_huecos(almacen, _completos_al_abrir(almacen, 1, control))
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
 	await _atender(almacen)
@@ -51,14 +54,18 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
-	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA + 1))
+	_comprobar_huecos(almacen, _completos_al_abrir(almacen, 2, control))
 	_comprobar_planilla_en_cero(almacen)
 
 
 ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
 ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
-func _completos_al_abrir(jornada: int) -> int:
-	return Catalogo.todos().size() - Apertura.faltantes_de_la_jornada(jornada).size()
+func _completos_al_abrir(almacen: Node3D, jornada: int, azar: RandomNumberGenerator) -> int:
+	var casilleros: Dictionary[Producto.Id, int] = (
+		almacen.get("_reposicion_manual").casilleros_reponibles()
+	)
+	var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(jornada))
+	return Catalogo.todos().size() - Apertura.faltantes_al_azar(pedidos, casilleros, azar).size()
 
 
 # AC-STK-026
@@ -93,6 +100,7 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
 	# con la última.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
@@ -103,6 +111,7 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
 func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var control: ControlDelJugador = jugador.get("_control")
@@ -142,6 +151,7 @@ func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
 	# de lo que se lleva, y la segunda reanudaba al jugador con la pantalla abierta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var control: ControlDelJugador = jugador.get("_control")
@@ -223,6 +233,16 @@ func _boton_de_la_fila(filas: Node, indice: int, columna: int) -> Button:
 	return filas.get_child(indice).get_child(columna)
 
 
+func _pulsar_ventanilla(ventanilla: Node3D) -> void:
+	if ventanilla.get("_abierta"):
+		var clic := InputEventMouseButton.new()
+		clic.button_index = MOUSE_BUTTON_LEFT
+		clic.pressed = true
+		ventanilla.call("_input", clic)
+	else:
+		ventanilla.get_node("Comprador/Objetivo").call("accionar")
+
+
 func _atender(almacen: Node3D) -> void:
 	var ventanilla: Node3D = almacen.get_node("Estructura/Ventanilla")
 	var panel: PanelDeLaVentanilla = ventanilla.get("panel")
@@ -233,13 +253,13 @@ func _atender(almacen: Node3D) -> void:
 	var destino: Node3D = almacen.get("_puesto_de_la_caja").get("destino_de_los_tickets")
 	for intervalo: float in [120.0, 360.0]:
 		reloj.avanzar(intervalo)
-		ventanilla.call(ReglasDeLosObjetos.METODO_ACCIONAR)
+		_pulsar_ventanilla(ventanilla)
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)
 		var atendida := atenciones.atencion()
 		assert_object(atendida).is_not_null()
 		for _entrada in 4:
-			panel.comprador_pulsado.emit()
+			_pulsar_ventanilla(ventanilla)
 			if atenciones.puede_abandonar():
 				break
 		caja.pedir_borrar()
@@ -247,16 +267,16 @@ func _atender(almacen: Node3D) -> void:
 			for _unidad in atendida.comprador().pedido().unidades_de(producto):
 				almacen.get("_reposicion_manual").retirar(producto.id)
 				caja.pedir_anotar(agarre.manos().sostenido())
-				panel.comprador_pulsado.emit()
+				_pulsar_ventanilla(ventanilla)
 		caja.pedir_imprimir()
 		for nodo in destino.get_children():
 			var papel := nodo as ObjetoAgarrable
 			if papel != null and papel.datos is Ticket and papel.visible:
 				agarre.pedir_agarrar(papel.datos, papel)
-				panel.comprador_pulsado.emit()
+				_pulsar_ventanilla(ventanilla)
 		assert_bool(atendida.vendida()).is_true()
 		for _entrada in 4:
-			panel.comprador_pulsado.emit()
+			_pulsar_ventanilla(ventanilla)
 			if atenciones.puede_abandonar():
 				break
 		ventanilla.call("cerrar")
@@ -297,14 +317,26 @@ func _limpiar(almacen: Node3D) -> void:
 	for nombre: String in ["JabonAmarillo", "JabonAzul", "JabonRosa"]:
 		jabones.append(almacen.get_node("Objetos/" + nombre))
 	for jabon in jabones:
-		var pedida := ReglasDeLaLimpieza.agua_del_jabon(jabon.get("datos").id)
+		var jornada := _piso(almacen).jornada()
+		var sustituto := not AnomaliasDeLaJornada.util_disponible(jabon.get("datos").id, jornada)
+		var identidad: StringName = (
+			AnomaliasDeLaJornada.id_de_poetico() if sustituto else jabon.get("datos").id
+		)
+		var pedida := ReglasDeLaLimpieza.agua_del_jabon(identidad, jornada)
 		_agarrar(agarre, balde)
 		_usar_sobre(jugador, inodoro)
 		_usar_sobre(jugador, lavatorio)
 		_soltar_lejos(agarre)
-		_agarrar(agarre, jabon)
+		if sustituto:
+			almacen.get("_reposicion_manual").call("retirar", Producto.Id.POETICO)
+			assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
+		else:
+			_agarrar(agarre, jabon)
 		_usar_sobre(jugador, balde)
-		_soltar_lejos(agarre)
+		if sustituto:
+			almacen.get("_reposicion_manual").call("devolver", Producto.Id.POETICO)
+		else:
+			_soltar_lejos(agarre)
 		_agarrar(agarre, mopa)
 		_usar_sobre(jugador, balde)
 		for mancha: Node3D in limpieza.call("manchas"):
@@ -321,7 +353,7 @@ func _limpiar(almacen: Node3D) -> void:
 			_usar_sobre(jugador, balde)
 			await _enfocar_mancha(jugador, mancha)
 			var clic := InputEventMouseButton.new()
-			clic.button_index = MOUSE_BUTTON_RIGHT
+			clic.button_index = MOUSE_BUTTON_LEFT
 			clic.pressed = true
 			get_viewport().push_input(clic)
 			(
@@ -349,12 +381,12 @@ func _agarrar(agarre: Agarre, util: Node3D) -> void:
 	assert_bool(agarre.pedir_agarrar(util.call("interactuar"), util)).is_true()
 
 
-## El clic derecho sobre el objetivo, con la mira apagada: lo que se tiene adelante lo pone el caso.
+## El uso primario sobre el objetivo, con la mira apagada: el caso pone lo que se tiene adelante.
 func _usar_sobre(jugador: Node3D, objetivo: Node3D) -> void:
 	jugador.set_physics_process(false)
 	jugador.set("_enfocado", objetivo)
 	var evento := InputEventAction.new()
-	evento.action = ReglasDelJugador.ACCION_USAR
+	evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
 	evento.pressed = true
 	jugador.call("_unhandled_input", evento)
 
@@ -457,6 +489,7 @@ func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var puertas: Array = almacen.get("_puertas")
 	assert_array(puertas).is_not_empty()
@@ -500,6 +533,7 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  
 	# otra con una unidad devuelta. La noche siguiente no hereda ninguna de las tres.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	almacen.get("_jugador").set_physics_process(false)
@@ -523,7 +557,7 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  
 	var repositor: Repositor = almacen.get("_repositor")
 	assert_int(repositor.caja(vacia).unidades()).is_zero()
 	puesto.call("usar_la_caja", cajas[Producto.Id.JORGILLO])
-	puesto.call("usar_la_caja", cajas[Producto.Id.JORGILLO])
+	puesto.call("usar_la_caja", cajas[Producto.Id.JORGILLO], true)
 	assert_object(agarre.manos().sostenido()).is_null()
 	puesto.call("usar_la_caja", cajas[Producto.Id.MALBARDO])
 	assert_object(agarre.manos().sostenido() as UnidadDeProducto).is_not_null()

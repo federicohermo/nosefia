@@ -11,10 +11,11 @@ import unittest
 
 from lib.gondola import (
     AIRE,
+    AIRE_MAXIMO,
+    HUECO_MINIMO,
     MARGEN,
     Envase,
     NodoDeMalla,
-    alto_en_la_rampa,
     alinear_frentes,
     actualizar_contorno,
     ancho_de_la_tanda,
@@ -23,6 +24,7 @@ from lib.gondola import (
     centros,
     columnas_que_entran,
     copia_relativa,
+    desplazamiento_que_entra,
     escribir_disposicion,
     separar_filas,
     escribir_escena_de_mallas,
@@ -46,9 +48,41 @@ from lib.gondola import (
 CAJA = Envase(ancho=0.30, fondo=0.10, alto=0.40)
 LATA = Envase(ancho=0.18, fondo=0.18, alto=0.23)
 
-#: Lo que se echa hacia atrás una unidad sobre la rampa de una cabecera, contra su chapa: la
-#: chapa baja once grados hacia el pasillo y la unidad sube otro tanto, como la ponía el artista.
-INCLINACION = 2 * math.asin(0.19)
+
+class EncajeMedido(unittest.TestCase):
+    def test_conserva_la_posicion_si_apoya_y_no_intersecta(self):
+        self.assertEqual(desplazamiento_que_entra(-0.1, 0.1, 0.001, lambda _: True), 0)
+
+    def test_elige_la_traslacion_valida_mas_cercana_sin_agregar_margen(self):
+        # AC-STK-085: la malla de Oaaaa cabe a -6 mm; a -7 mm toca el labio.
+        self.assertEqual(
+            desplazamiento_que_entra(-0.006, 0.05, 0.001, lambda v: v <= -0.006), -0.006
+        )
+
+    def test_comprueba_ambos_extremos_fisicos_aunque_no_coincidan_con_el_paso(self):
+        self.assertEqual(
+            desplazamiento_que_entra(0.0024, 0.0037, 0.001, lambda v: v == 0.0037), 0.0037
+        )
+
+    def test_un_obstaculo_no_se_elude_saliendo_del_intervalo_de_apoyo(self):
+        vistos = []
+
+        def no_entra(v):
+            vistos.append(v)
+            return v > 0.002
+
+        self.assertIsNone(desplazamiento_que_entra(0, 0.002, 0.001, no_entra))
+        self.assertEqual(set(vistos), {0, 0.001, 0.002})
+
+    def test_sin_intervalo_comun_de_apoyo_no_hay_posicion_valida(self):
+        self.assertIsNone(desplazamiento_que_entra(0.1, -0.1, 0.001, lambda _: True))
+
+    def test_el_paso_invalido_y_las_medidas_no_finitas_fallan_explicitamente(self):
+        for desde, hasta, paso_medido in ((0, 1, 0), (0, 1, -0.1),
+                                          (math.nan, 1, 0.001), (0, math.inf, 0.001)):
+            with self.subTest(desde=desde, hasta=hasta, paso=paso_medido):
+                with self.assertRaises(ValueError):
+                    desplazamiento_que_entra(desde, hasta, paso_medido, lambda _: True)
 
 
 class Repartir(unittest.TestCase):
@@ -88,7 +122,7 @@ class Repartir(unittest.TestCase):
         for largo in (1.9, 3.5, 3.512):
             for envases in ([CAJA, LATA], [LATA, CAJA], [CAJA, CAJA]):
                 cuentas = repartir(largo, envases)
-                mitad = (largo - AIRE) / 2
+                mitad = (largo - HUECO_MINIMO) / 2
                 for envase, cuenta in zip(envases, cuentas):
                     ocupado = ancho_de_la_tanda(envase, cuenta)
                     self.assertLessEqual(ocupado, mitad + 1e-9)
@@ -115,19 +149,35 @@ class Repartir(unittest.TestCase):
 
 
 class Centros(unittest.TestCase):
-    def test_el_sobrante_se_reparte_entre_los_dos_bordes(self):
-        cuentas = [3, 2]
-        largo = 2.0
-        filas = centros(largo, [CAJA, LATA], cuentas)
-        izquierda = filas[0][0] - CAJA.ancho / 2
-        derecha = largo - (filas[1][-1] + LATA.ancho / 2)
-        self.assertAlmostEqual(izquierda, derecha)
-        self.assertAlmostEqual(izquierda * 2, sobrante(largo, [CAJA, LATA], cuentas))
+    def _huecos(self, largo, envases, cuentas):
+        filas = centros(largo, envases, cuentas)
+        bordes = [
+            (u - e.ancho / 2, u + e.ancho / 2)
+            for e, fila in zip(envases, filas)
+            for u in fila
+        ]
+        return bordes, [b[0] - a[1] for a, b in zip(bordes, bordes[1:])]
 
-    def test_dos_tandas_vecinas_se_separan_con_el_aire_de_siempre(self):
-        filas = centros(2.0, [CAJA, LATA], [3, 2])
-        hueco = (filas[1][0] - LATA.ancho / 2) - (filas[0][-1] + CAJA.ancho / 2)
-        self.assertAlmostEqual(hueco, AIRE)
+    def test_el_estante_se_llena_de_punta_a_punta_sin_bordes_vacios(self):
+        bordes, _ = self._huecos(2.0, [CAJA, LATA], [3, 2])
+        self.assertAlmostEqual(bordes[0][0], 0.0)
+        self.assertAlmostEqual(bordes[-1][1], 2.0)
+
+    def test_todos_los_huecos_miden_lo_mismo_tambien_entre_tandas(self):
+        _, huecos = self._huecos(2.0, [CAJA, LATA], [3, 2])
+        for hueco in huecos:
+            self.assertAlmostEqual(hueco, huecos[0])
+        self.assertGreaterEqual(huecos[0], HUECO_MINIMO)
+
+    def test_con_las_columnas_que_entran_ningun_hueco_baja_del_minimo(self):
+        for largo in (1.083, 1.9, 3.512):
+            for envases in ([CAJA, LATA], [LATA], [CAJA]):
+                cuentas = repartir(largo, envases)
+                _, huecos = self._huecos(largo, envases, cuentas)
+                self.assertGreaterEqual(min(huecos), HUECO_MINIMO - 1e-9)
+
+    def test_una_unidad_sola_va_al_medio(self):
+        self.assertEqual(centros(0.5, [CAJA], [1]), [[0.25]])
 
 
 class LaTanda(unittest.TestCase):
@@ -141,6 +191,17 @@ class LaTanda(unittest.TestCase):
         lugares = tanda(CAJA, [0.2])
         atras, adelante = lugares
         self.assertAlmostEqual(adelante.v - CAJA.fondo / 2, MARGEN)
+        self.assertAlmostEqual(atras.v - adelante.v, CAJA.fondo + AIRE)
+
+    def test_con_fondo_de_sobra_la_fila_de_atras_se_aparta_hasta_el_maximo(self):
+        holgado = 2 * MARGEN + 2 * CAJA.fondo + 0.03
+        atras, adelante = tanda(CAJA, [0.2], fondo=holgado)
+        self.assertAlmostEqual(atras.v - adelante.v, CAJA.fondo + 0.03)
+        atras, adelante = tanda(CAJA, [0.2], fondo=1.0)
+        self.assertAlmostEqual(atras.v - adelante.v, CAJA.fondo + AIRE_MAXIMO)
+
+    def test_sin_fondo_de_sobra_queda_el_aire_minimo(self):
+        atras, adelante = tanda(CAJA, [0.2], fondo=2 * CAJA.fondo)
         self.assertAlmostEqual(atras.v - adelante.v, CAJA.fondo + AIRE)
 
     def test_el_estante_tiene_el_fondo_de_dos_unidades_del_mas_profundo(self):
@@ -172,53 +233,6 @@ class UnaSolaFila(unittest.TestCase):
         self.assertAlmostEqual(
             fondo_nuevo(0.01, [honda, chata], 0.12, filas=[1, 2]),
             0.01 + fondo_del_estante([chata]) + 0.12,
-        )
-
-    def test_en_la_rampa_una_fila_llega_hasta_su_cabeza(self):
-        fondo = fondo_del_estante([CAJA], INCLINACION, filas=[1])
-        (unidad,) = tanda(CAJA, [0.2], INCLINACION, filas=1)
-        cabeza = (
-            unidad.v + CAJA.fondo / 2 * math.cos(INCLINACION) + CAJA.alto * math.sin(INCLINACION)
-        )
-        self.assertAlmostEqual(cabeza + MARGEN, fondo)
-
-
-class EnLaRampa(unittest.TestCase):
-    def test_en_un_estante_plano_nada_cambia(self):
-        self.assertEqual(tanda(CAJA, [0.2, 0.5], 0.0), tanda(CAJA, [0.2, 0.5]))
-        self.assertEqual(fondo_del_estante([CAJA, LATA], 0.0), fondo_del_estante([CAJA, LATA]))
-        self.assertEqual(alto_en_la_rampa(CAJA, 0.0), CAJA.alto)
-
-    def test_las_dos_filas_echadas_no_se_meten_una_en_la_otra(self):
-        atras, adelante = tanda(CAJA, [0.2], INCLINACION)
-        # Medida a lo hondo de la unidad, que está echada, la separación es la unidad y el aire.
-        separacion = (atras.v - adelante.v) * math.cos(INCLINACION)
-        self.assertAlmostEqual(separacion, CAJA.fondo + AIRE)
-
-    def test_echada_lo_mas_adelante_es_su_canto_de_abajo_y_va_detras_del_margen(self):
-        adelante = tanda(CAJA, [0.2], INCLINACION)[1]
-        self.assertAlmostEqual(adelante.v - CAJA.fondo / 2 * math.cos(INCLINACION), MARGEN)
-
-    def test_el_estante_de_una_rampa_alcanza_para_la_cabeza_de_la_fila_de_atras(self):
-        fondo = fondo_del_estante([CAJA], INCLINACION)
-        atras = tanda(CAJA, [0.2], INCLINACION)[0]
-        # Echada hacia atrás, lo más hondo de la unidad es su canto de arriba.
-        cabeza = (
-            atras.v + CAJA.fondo / 2 * math.cos(INCLINACION) + CAJA.alto * math.sin(INCLINACION)
-        )
-        self.assertAlmostEqual(cabeza + MARGEN, fondo)
-        self.assertGreater(fondo, fondo_del_estante([CAJA]))
-
-    def test_echada_pide_mas_alto_libre(self):
-        self.assertAlmostEqual(
-            alto_en_la_rampa(CAJA, INCLINACION),
-            CAJA.alto * math.cos(INCLINACION) + CAJA.fondo * math.sin(INCLINACION),
-        )
-
-    def test_el_estante_se_achica_con_la_rampa(self):
-        self.assertAlmostEqual(
-            fondo_nuevo(0.01, [CAJA], 0.12, INCLINACION),
-            0.01 + fondo_del_estante([CAJA], INCLINACION) + 0.12,
         )
 
 
@@ -380,7 +394,7 @@ class LasUnidadesApagadas(unittest.TestCase):
             'parent="gondolanueva"]',
             'parent="gondolanueva" groups=["geometria_de_referencia"]]',
         )
-        texto = apagar_las_unidades(ANTES + unidad + LUZ, ["gondolanueva/oremos"])
+        texto = apagar_las_unidades(ANTES + unidad + LUZ, ["gondolanueva/oremos"], ["oremos"])
         self.assertIn('name="oremos"', texto)
         self.assertEqual(texto.count('name="oremos"'), 1)
         self.assertIn('groups=["geometria_de_referencia"]', texto)
@@ -390,7 +404,9 @@ class LasUnidadesApagadas(unittest.TestCase):
         escena = ANTES + _apagada("gondolanueva", "wakas_021") + _apagada(".", "petisas") + LUZ
         rutas = ["heladeranueva/terminator", "cindolor", "gondolanueva2/duronga"]
         self.assertEqual(
-            apagar_las_unidades(escena, rutas),
+            apagar_las_unidades(
+                escena, rutas, ["wakas_021", "petisas", "terminator", "cindolor", "duronga"]
+            ),
             ANTES
             + _apagada(".", "cindolor")
             + _apagada("gondolanueva2", "duronga")
@@ -400,19 +416,41 @@ class LasUnidadesApagadas(unittest.TestCase):
 
     def test_volver_a_apagar_las_mismas_no_cambia_un_byte(self):
         escena = ANTES + _apagada("gondolanueva", "oremos") + LUZ
-        texto = apagar_las_unidades(escena, ["gondolanueva/oremos", "gondolanueva/chisitos2"])
-        otra_vez = apagar_las_unidades(texto, ["gondolanueva/chisitos2", "gondolanueva/oremos"])
+        texto = apagar_las_unidades(
+            escena, ["gondolanueva/oremos", "gondolanueva/chisitos2"], ["oremos", "chisitos2"]
+        )
+        otra_vez = apagar_las_unidades(
+            texto, ["gondolanueva/chisitos2", "gondolanueva/oremos"], ["oremos", "chisitos2"]
+        )
         self.assertEqual(otra_vez, texto)
 
     def test_un_nodo_apagado_con_otras_propiedades_no_es_una_unidad_y_se_queda(self):
         otro = '[node name="Cartel" parent="."]\nvisible = false\ncast_shadow = 0\n\n'
         escena = ANTES + otro + _apagada("gondolanueva", "oremos") + LUZ
-        texto = apagar_las_unidades(escena, [])
+        texto = apagar_las_unidades(escena, [], ["oremos"])
         self.assertEqual(texto, ANTES + otro + LUZ)
 
     def test_una_escena_sin_unidades_apagadas_es_un_error(self):
         with self.assertRaises(ValueError):
-            apagar_las_unidades(ANTES + LUZ, ["gondolanueva/oremos"])
+            apagar_las_unidades(ANTES + LUZ, ["gondolanueva/oremos"], ["oremos"])
+
+
+    def test_mover_el_padre_de_una_unidad_conserva_el_lector_ajeno(self):
+        lector = _apagada("EscritorioComputadora", "lector de productos").replace(
+            'parent="EscritorioComputadora"]',
+            'parent="EscritorioComputadora" groups=["geometria_de_referencia"]]',
+        )
+        escena = ANTES + _apagada("gondola_vieja", "oremos") + lector + LUZ
+        rutas = ["gondola_nueva/oremos"]
+        texto = apagar_las_unidades(escena, rutas, ["oremos"])
+        self.assertEqual(texto, ANTES + _apagada("gondola_nueva", "oremos") + lector + LUZ)
+        self.assertEqual(apagar_las_unidades(texto, rutas, ["oremos"]), texto)
+
+    def test_sin_rutas_activas_retira_unidades_y_conserva_el_lector(self):
+        lector = _apagada("EscritorioComputadora", "lector de productos")
+        escena = ANTES + lector + _apagada("gondola_vieja", "oremos") + LUZ
+        texto = apagar_las_unidades(escena, [], ["oremos"])
+        self.assertEqual(texto, ANTES + lector + LUZ)
 
 
 if __name__ == "__main__":
