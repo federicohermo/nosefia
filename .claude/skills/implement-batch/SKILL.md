@@ -46,6 +46,14 @@ sin sus parámetros. Se le pide al usuario dónde está, y va al preámbulo. En 
 2026-10-06 el prototipo apareció con los carriles en vuelo: el de #320 rehízo su escenario,
 dos exports y una ronda de mediciones.
 
+**Una vista resumida de Notion no acredita que no haya respuestas posteriores.** Si el
+contrato depende de una discusión, consultar los comentarios completos, incluidas respuestas,
+resueltos y paginación, y guardar su procedencia. Antes de generar recursos, volver a leer el
+issue entero vigente y contrastarlo con el spec y el reparto: una nota posterior no corrige
+un contrato que todavía afirma lo contrario. En #434, la vista resumida omitía una respuesta
+de Tiago que mantenía Duronga exhibida; el issue ya incorporaba esa decisión pero conservaba
+párrafos de cupo cero. Se corrigieron todos antes de regenerar, sin reabrir las filas decididas.
+
 ## Paso 1 — Repartir en carriles
 
 **Un carril es una cadena de dependencias**, y los carriles corren concurrentes. Tres cosas
