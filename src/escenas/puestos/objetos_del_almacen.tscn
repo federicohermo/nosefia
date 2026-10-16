@@ -7,6 +7,7 @@
 
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/bolsa_de_basura.tscn" id="29_bolsa"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_1.tres" id="26_bolsa1"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_2.tres" id="27_bolsa2"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_3.tres" id="28_bolsa3"]
@@ -99,15 +100,15 @@ mesh = SubResource("punta_de_la_mopa")
 gi_mode = 2
 
 
-[node name="BolsaDeBasura1" parent="." instance=ExtResource("22_agarrable")]
+[node name="BolsaDeBasura1" parent="." instance=ExtResource("29_bolsa")]
 datos = ExtResource("26_bolsa1")
 transform = Transform3D(1,0,0,0,1,0,0,0,1,7.364315300,1.123648460,4.839459635)
 
-[node name="BolsaDeBasura2" parent="." instance=ExtResource("22_agarrable")]
+[node name="BolsaDeBasura2" parent="." instance=ExtResource("29_bolsa")]
 datos = ExtResource("27_bolsa2")
 transform = Transform3D(1,0,0,0,1,0,0,0,1,0.519124090,1.129984060,5.866384300)
 
-[node name="BolsaDeBasura3" parent="." instance=ExtResource("22_agarrable")]
+[node name="BolsaDeBasura3" parent="." instance=ExtResource("29_bolsa")]
 datos = ExtResource("28_bolsa3")
 transform = Transform3D(1,0,0,0,1,0,0,0,1,9.138609635,1.123648440,5.448094900)
 

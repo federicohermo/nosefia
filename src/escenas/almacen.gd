@@ -26,6 +26,7 @@ const PuestoDeVentanilla := preload("res://src/escenas/puestos/ventanilla.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 const PuestoDeLaCaja := preload("res://src/escenas/puestos/caja_registradora.gd")
 const TachoDelLocal := preload("res://src/escenas/puestos/tacho_de_basura.gd")
+const BolsaDeBasura := preload("res://src/escenas/objetos/bolsa_de_basura.gd")
 const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_basura.gd")
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
@@ -347,7 +348,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		for forma: CollisionShape3D in bolsa.find_children("*", "CollisionShape3D", true, false):
 			forma.disabled = true
 		var tacho := _tachos()[indice]
-		tacho.mostrar(bolsa, _recolector.tarea().tiene_bolsa(tacho.tacho))
+		tacho.mostrar(bolsa as BolsaDeBasura, _recolector.tarea().tiene_bolsa(tacho.tacho))
 	var poses: Dictionary[Node3D, Transform3D] = {}
 	if is_instance_valid(_pallets_de_entrega):
 		_pallets_de_entrega.queue_free()
@@ -755,5 +756,7 @@ func _contexto_sobre_un_tacho(
 
 func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:
 	var bolsa := _bolsas[tacho]
+	(bolsa as BolsaDeBasura).en_el_tacho(false)
+	_tachos()[tacho].abrir(false)
 	for forma: CollisionShape3D in bolsa.find_children("*", "CollisionShape3D", true, false):
 		forma.disabled = false
