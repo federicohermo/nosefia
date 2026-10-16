@@ -233,6 +233,16 @@ func _boton_de_la_fila(filas: Node, indice: int, columna: int) -> Button:
 	return filas.get_child(indice).get_child(columna)
 
 
+func _pulsar_ventanilla(ventanilla: Node3D) -> void:
+	if ventanilla.get("_abierta"):
+		var clic := InputEventMouseButton.new()
+		clic.button_index = MOUSE_BUTTON_LEFT
+		clic.pressed = true
+		ventanilla.call("_input", clic)
+	else:
+		ventanilla.get_node("Comprador/Objetivo").call("accionar")
+
+
 func _atender(almacen: Node3D) -> void:
 	var ventanilla: Node3D = almacen.get_node("Estructura/Ventanilla")
 	var panel: PanelDeLaVentanilla = ventanilla.get("panel")
@@ -243,13 +253,13 @@ func _atender(almacen: Node3D) -> void:
 	var destino: Node3D = almacen.get("_puesto_de_la_caja").get("destino_de_los_tickets")
 	for intervalo: float in [120.0, 360.0]:
 		reloj.avanzar(intervalo)
-		ventanilla.call(ReglasDeLosObjetos.METODO_ACCIONAR)
+		_pulsar_ventanilla(ventanilla)
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)
 		var atendida := atenciones.atencion()
 		assert_object(atendida).is_not_null()
 		for _entrada in 4:
-			panel.comprador_pulsado.emit()
+			_pulsar_ventanilla(ventanilla)
 			if atenciones.puede_abandonar():
 				break
 		caja.pedir_borrar()
@@ -257,16 +267,16 @@ func _atender(almacen: Node3D) -> void:
 			for _unidad in atendida.comprador().pedido().unidades_de(producto):
 				almacen.get("_reposicion_manual").retirar(producto.id)
 				caja.pedir_anotar(agarre.manos().sostenido())
-				panel.comprador_pulsado.emit()
+				_pulsar_ventanilla(ventanilla)
 		caja.pedir_imprimir()
 		for nodo in destino.get_children():
 			var papel := nodo as ObjetoAgarrable
 			if papel != null and papel.datos is Ticket and papel.visible:
 				agarre.pedir_agarrar(papel.datos, papel)
-				panel.comprador_pulsado.emit()
+				_pulsar_ventanilla(ventanilla)
 		assert_bool(atendida.vendida()).is_true()
 		for _entrada in 4:
-			panel.comprador_pulsado.emit()
+			_pulsar_ventanilla(ventanilla)
 			if atenciones.puede_abandonar():
 				break
 		ventanilla.call("cerrar")

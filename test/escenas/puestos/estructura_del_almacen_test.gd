@@ -213,8 +213,11 @@ func _estructura_en_el_arbol() -> Node3D:
 func test_las_paredes_con_volumen_dejan_libres_los_vanos() -> void:
 	var estructura: Node3D = await _estructura_en_el_arbol()
 	var espacio := estructura.get_world_3d().direct_space_state
-	var vidrio: Node3D = estructura.get_node("Ventanilla/Vidrio")
-	var vanos := {"la ventanilla": vidrio.global_position}
+	var ventana: Node3D = estructura.get_node("Ventanilla")
+	var borde: Node3D = ventana.get_node("BordeSuperior")
+	var antepecho: MeshInstance3D = ventana.get_node("Antepecho")
+	var inferior := antepecho.global_transform * antepecho.get_aabb().get_center()
+	var vanos := {"la ventanilla": (borde.global_position + inferior) / 2.0}
 	for paso: String in ["PasoAlFondo", "PasoAlDeposito"]:
 		var suelo: Node3D = estructura.get_node("SueloSolido/" + paso)
 		vanos[paso] = suelo.global_position + Vector3.UP * ALTO_DEL_VANO
@@ -223,7 +226,7 @@ func test_las_paredes_con_volumen_dejan_libres_los_vanos() -> void:
 		var consulta := PhysicsPointQueryParameters3D.new()
 		consulta.position = vanos[vano]
 		consulta.collision_mask = paredes.collision_layer
-		consulta.exclude = [(vidrio.get_parent() as CollisionObject3D).get_rid()]
+		consulta.exclude = [(ventana as CollisionObject3D).get_rid()]
 		(
 			assert_array(espacio.intersect_point(consulta))
 			. override_failure_message("el volumen de las paredes tapa %s" % vano)

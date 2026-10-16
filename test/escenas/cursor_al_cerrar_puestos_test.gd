@@ -22,6 +22,9 @@ func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.Mo
 	var puesto: Node = local.get_node(nombre)
 	if nombre.ends_with("NotasDelAlmacen"):
 		puesto.call("_abrir", puesto.get("notas")[0])
+	elif nombre.ends_with("Ventanilla"):
+		(local.get("_reloj") as RelojDelTurno).avanzar(480.0)
+		puesto.get_node("Comprador/Objetivo").call("accionar")
 	else:
 		puesto.call("abrir")
 	assert_bool(jugador.call("suspendido")).is_true()
@@ -29,6 +32,8 @@ func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.Mo
 	var derecho := InputEventMouseButton.new()
 	derecho.button_index = MOUSE_BUTTON_RIGHT
 	derecho.pressed = true
+	if nombre.ends_with("Ventanilla"):
+		derecho.button_index = MOUSE_BUTTON_LEFT
 	if desde_popup:
 		var programa: ProgramaDeTickets = puesto.get("programa")
 		var selector: OptionButton = programa.selectores[0]

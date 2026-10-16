@@ -115,6 +115,12 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   registradas afuera, y descartan el ticket.
 
   Atención exige completar las dos compras.
+- **`player-actions` y `counter-service`.** Atención decide si corresponde hablar, recibir o
+  terminar una conversación. El cuerpo traduce la consulta en referencia y gesto, y consume
+  el clic de salida antes de volver al mundo. En atención física el foco sigue el alfa de la
+  figura vigente; el hueco no es un objetivo. El recorrido genérico sin figura conserva una
+  consulta de acceso al cobro que no bloquea cuerpos. El dibujo del contorno y el encuadre no
+  llevan otra cuenta de pedido, inventario ni diálogo.
 - **`player-actions` e `investigation`.** Agarrar y examinar son del cuerpo; **qué esconde** el
   objeto es de la investigación. La identidad de lo que se agarra es opaca a propósito: lo que se
   investiga no está en el catálogo.

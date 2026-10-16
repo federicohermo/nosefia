@@ -36,7 +36,11 @@ func _pulsar(almacen: Node3D) -> void:
 	var clic := InputEventMouseButton.new()
 	clic.button_index = MOUSE_BUTTON_LEFT
 	clic.pressed = true
-	_panel(almacen).get_node("Fisico/Blanco").gui_input.emit(clic)
+	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
+	if puesto.get("_abierta"):
+		puesto.call("_input", clic)
+	else:
+		puesto.get_node("Comprador/Objetivo").call("accionar")
 
 
 func _conversar(almacen: Node3D) -> void:
