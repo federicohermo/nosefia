@@ -86,25 +86,34 @@ class ElReparto(unittest.TestCase):
             "A.este.2": ("MACUMBAS", "ZUCARACHAS"),
             "A.este.1": ("PEPITOS", "FROTLUPS"),
             "A.sur.2": ("MALBARDO",), "A.sur.1": ("AMARGADITO",),
-            "A.norte.2": ("OAAAA",), "A.norte.1": ("TERMINATOR",),
+            "A.norte.2": ("TERMINATOR",), "A.norte.1": ("FERNET_GOD",),
             "B.este.2": ("OREMOS", "PETISAS"),
             "B.este.1": ("COSA_DE_MANI", "FEEL_RICKY_FORT"),
             "B.oeste.2": ("DONSATURADOS", "PRONGLES"),
             "B.oeste.1": ("CHISITOS", "LAYSNTT"),
-            "B.sur.2": ("JORGILLO",), "B.sur.1": ("SALADIK",),
-            "B.norte.2": ("BURBALOO",), "B.norte.1": ("FLINPUF",),
+            "B.sur.2": ("SALADIK",), "B.sur.1": ("FLINPUF",),
+            "B.norte.2": ("JORGILLO",), "B.norte.1": ("BURBALOO",),
             "N.sur.2": ("ACTRONCITO", "DUREXTRA"),
             "N.sur.1": ("POETICO", "DURONGA"),
         }
         for estante, productos in esperados.items():
             self.assertEqual(tuple(t.producto for t in ESTANTES[estante]), productos, estante)
 
+    def test_dos_estantes_seguidos_llevan_los_mismos_productos(self):  # AC-STK-092
+        for clave in ESTANTES:
+            mueble, cara, nivel = partes(clave)
+            pareja = f"{mueble}.{cara}.{nivel ^ 1}"
+            with self.subTest(estante=clave):
+                self.assertEqual(
+                    [t.producto for t in ESTANTES[clave]], [t.producto for t in ESTANTES[pareja]]
+                )
+
     def test_duronga_comparte_no_comestibles_sin_inventar_muebles_ni_niveles(self):
         # AC-STK-088, AC-STK-085: destino provisional inferior derecho del mapa.
         self.assertIn("DURONGA", {p.clave for p in PRODUCTOS})
         self.assertEqual([t.producto for t in ESTANTES["N.sur.1"]], ["POETICO", "DURONGA"])
-        self.assertEqual([t.producto for t in ESTANTES["N.sur.3"]], ["POETICO", "DURONGA"])
-        for clave in ("N.sur.1", "N.sur.3"):
+        self.assertEqual([t.producto for t in ESTANTES["N.sur.0"]], ["POETICO", "DURONGA"])
+        for clave in ("N.sur.1", "N.sur.0"):
             self.assertEqual(ESTANTES[clave][1].cantidad_de_filas, 2)
         self.assertFalse(any(e.startswith("S.") for e in ESTANTES))
         self.assertNotIn("S", MUEBLES)
@@ -114,14 +123,11 @@ class ElReparto(unittest.TestCase):
                     tandas = ESTANTES[f"{mueble}.{cara}.{nivel}"]
                     self.assertTrue(all(t.fija == (nivel in (0, 3)) for t in tandas))
 
-    def test_fernet_conserva_dos_filas_reponibles_y_una_sola_fija_inferior(self):
-        # AC-STK-030, AC-STK-087: la referencia inferior evita techo y puerta cerrada.
-        principal, = ESTANTES["H1.sur.1"]
-        referencia, = ESTANTES["H1.sur.0"]
-        self.assertFalse(principal.fija)
-        self.assertEqual(principal.cantidad_de_filas, 2)
-        self.assertTrue(referencia.fija)
-        self.assertEqual(referencia.cantidad_de_filas, 1)
+    def test_oaaaa_fernet_y_amargadito_llevan_dos_filas_en_todas_sus_tandas(self):  # AC-STK-030
+        for clave in ("H1.sur.0", "H1.sur.1", "A.norte.0", "A.norte.1", "A.sur.0", "A.sur.1"):
+            with self.subTest(estante=clave):
+                tanda, = ESTANTES[clave]
+                self.assertEqual(tanda.cantidad_de_filas, 2)
 
     def test_solo_una_tanda_fija_puede_declarar_su_cantidad_de_filas(self):
         self.assertEqual(Tanda("FERNET_GOD", fija=True, filas=1).cantidad_de_filas, 1)
@@ -130,7 +136,7 @@ class ElReparto(unittest.TestCase):
                 Tanda("FERNET_GOD", fija=fija, filas=filas)
 
     def test_las_heladeras_tienen_mitades_verticales_y_solo_esos_frios(self):  # AC-STK-087
-        esperados = {"H1": ("FERNET_GOD", "CORACOLA"), "H2": ("MAYONCHIS", "CINDOLOR")}
+        esperados = {"H1": ("OAAAA", "CORACOLA"), "H2": ("MAYONCHIS", "CINDOLOR")}
         for mueble, (abajo, arriba) in esperados.items():
             for nivel in range(BANDEJAS_DE_HELADERA):
                 self.assertEqual(
@@ -275,20 +281,6 @@ class DecisionDeFilas(unittest.TestCase):
             for fija in (False, True):
                 with self.subTest(producto=producto, fija=fija):
                     self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 1)
-
-    def test_amargadito_solo_reduce_la_principal_y_conserva_su_fija_doble(self):  # AC-STK-030
-        principal, = ESTANTES["A.sur.1"]
-        fija, = ESTANTES["A.sur.0"]
-        self.assertEqual(principal.cantidad_de_filas, 1)
-        self.assertEqual(fija.cantidad_de_filas, 2)
-        self.assertEqual(Tanda("AMARGADITO").cantidad_de_filas, 1)
-        self.assertEqual(Tanda("AMARGADITO", fija=True).cantidad_de_filas, 2)
-
-    def test_oaaaa_solo_reduce_la_fija_superior_y_conserva_principal_doble(self):  # AC-STK-030
-        principal, = ESTANTES["A.norte.2"]
-        fija, = ESTANTES["A.norte.3"]
-        self.assertEqual(principal.cantidad_de_filas, 2)
-        self.assertEqual(fija.cantidad_de_filas, 1)
 
     def test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila(self):  # AC-STK-030
         for producto in ("COSA_DE_MANI", "FLINPUF", "BURBALOO", "MARRANOS", "POETICO"):

@@ -36,7 +36,7 @@ func _destinos() -> Dictionary:
 				Producto.Id.FROTLUPS
 			],
 			Vector3.BACK: [Producto.Id.MALBARDO, Producto.Id.AMARGADITO],
-			Vector3.FORWARD: [Producto.Id.OAAAA, Producto.Id.TERMINATOR],
+			Vector3.FORWARD: [Producto.Id.FERNET_GOD, Producto.Id.TERMINATOR],
 		},
 		"gondolanueva2":
 		{
@@ -54,15 +54,15 @@ func _destinos() -> Dictionary:
 				Producto.Id.CHISITOS,
 				Producto.Id.LAYSNTT
 			],
-			Vector3.BACK: [Producto.Id.JORGILLO, Producto.Id.SALADIK],
-			Vector3.FORWARD: [Producto.Id.BURBALOO, Producto.Id.FLINPUF],
+			Vector3.BACK: [Producto.Id.SALADIK, Producto.Id.FLINPUF],
+			Vector3.FORWARD: [Producto.Id.JORGILLO, Producto.Id.BURBALOO],
 		},
 		"gondolanueva_001":
 		{
 			Vector3.BACK:
 			[Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO, Producto.Id.DURONGA]
 		},
-		"heladeranueva": {Vector3.BACK: [Producto.Id.CORACOLA, Producto.Id.FERNET_GOD]},
+		"heladeranueva": {Vector3.BACK: [Producto.Id.CORACOLA, Producto.Id.OAAAA]},
 		"heladeranueva_001": {Vector3.BACK: [Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]},
 	}
 
@@ -138,7 +138,7 @@ func test_las_mitades_verticales_separan_los_frios() -> void:  # AC-STK-087
 	var almacen := _almacen()
 	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
 	assert_float(_altura(disposicion, Producto.Id.CORACOLA)).is_greater(
-		_altura(disposicion, Producto.Id.FERNET_GOD)
+		_altura(disposicion, Producto.Id.OAAAA)
 	)
 	assert_float(_altura(disposicion, Producto.Id.CINDOLOR)).is_greater(
 		_altura(disposicion, Producto.Id.MAYONCHIS)

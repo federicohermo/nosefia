@@ -47,6 +47,8 @@ def _lo_que_lleva(bm, bandeja):
 
 
 def principal():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     objeto, bm, estantes = medir("A")
     bandejas = [
         e for clave, e in estantes.items()

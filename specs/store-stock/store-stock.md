@@ -184,7 +184,10 @@ El sistema DEBE exhibir cada producto con exhibición declarada (BR-STK-043, BR-
 en una sola tanda reponible, al alcance de
 un jugador parado en el pasillo. La fila de adelante de cada tanda del local, reponible o fija y
 en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
-casilleros vacíos con que abre una jornada DEBEN quedar en la tanda reponible.
+casilleros vacíos con que abre una jornada DEBEN quedar en la tanda reponible, pero la apertura
+NO DEBE vaciarla entera: si los faltantes de un producto igualan sus casilleros reponibles, uno
+DEBE quedar ocupado y el último faltante DEBE salir de la fila de adelante de una tanda fija del
+mismo producto.
 
 En un mueble de estantes, la tanda reponible DEBE ir en un estante de reposición. Un estante
 de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la altura de la mano se
@@ -200,10 +203,10 @@ casillero del producto, y ninguno de la fila de atrás. La fila de atrás DEBE v
 desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la que dice qué va ahí.
 
 Todas las tandas de Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético DEBEN tener una sola
-fila. La tanda principal de Amargadito DEBE tener una fila y sus tandas fijas dos. La tanda
-fija inferior de Fernet God y la tanda fija superior de Oaaaa DEBEN tener una fila; sus
-principales DEBEN tener dos. Las demás tandas DEBEN tener dos filas, incluidas las
-principales y fijas de Actroncito y Prongles, que conservan las dos hileras del arte vigente.
+fila. Las demás tandas DEBEN tener dos filas, incluidas las principales y fijas de Actroncito y
+Prongles, que conservan las dos hileras del arte vigente. Las dos filas de una tanda DEBEN
+verse separadas, y las unidades de un estante DEBEN repartirse de punta a punta con el mismo
+hueco entre todas.
 
 Cada lugar de una tanda de una fila DEBE ser un casillero, sea principal o fija; esa tanda
 NO DEBE tener fila posterior. La cantidad de filas se decide por tanda, no sólo por producto.
@@ -383,14 +386,14 @@ no implica renombrar productos.
 
 | Sector y destino | Productos del catálogo vigente |
 |---|---|
-| Heladera 1 | Coracola (Pura-Cola en el diseño), Fernet God |
+| Heladera 1 | Coracola (Pura-Cola en el diseño), Oaaaa |
 | Heladera 2 | Cindolor, Mayonchis |
 | Estantería de no comestibles | Actroncito, Durextra, Poético, Duronga (provisional) |
 | Cabecera de no comestibles, isla de almacén | Malbardo |
 | Cabecera de almacén, misma isla | Amargadito |
 | Lado de almacén | Marolini, Arvejas (Arvecor), Uakas (Uakalas), Marranos |
 | Lado de cereales, misma isla | Zucarachas, Frotlups (Frot Lups) |
-| Cabecera de bebidas sin refrigerar, misma isla | Oaaaa, Terminator |
+| Cabecera de bebidas sin refrigerar, misma isla | Fernet God, Terminator |
 | Mitad de snacks dulces junto a cereales, primera isla | Macumbas, Pepitos (Pepito) |
 | Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
 | Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
@@ -402,11 +405,16 @@ snacks salados y golosinas. Los cuatro no comestibles DEBEN ocupar la estanterí
 el reparto NO DEBE reconstruir un segundo mural ausente ni duplicar tandas principales.
 Cada heladera funcional DEBE agrupar sus dos productos en mitades verticales según el
 [esquema de diseño](https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676): Coracola
-arriba de Fernet God y Cindolor arriba de Mayonchis. La heladera fuera de servicio DEBE
-permanecer vacía. Oaaaa y Terminator NO DEBEN exhibirse en heladera.
+arriba de Oaaaa y Cindolor arriba de Mayonchis. La heladera fuera de servicio DEBE
+permanecer vacía. Fernet God y Terminator NO DEBEN exhibirse en heladera.
+
+Cada cara de un mueble DEBE repetir sus productos en dos estantes seguidos: el de arriba de todo
+con el reponible de abajo, y el otro reponible con el zócalo. En la rampa de una cabecera la
+unidad DEBE apoyarse entera sobre la chapa, sin flotar.
 
 Cada tanda fija de referencia DEBE conservar el sector de la reponible del mismo producto.
-El reparto DEBE conservar alturas, tamaño de muebles, niveles reponibles a altura de la mano,
+El reparto DEBE conservar alturas —salvo la bandeja del medio de cada cabecera, que sube para que
+entren dos filas en la de abajo—, tamaño de muebles, niveles reponibles a altura de la mano,
 separación de filas, orientaciones de envases y alcance vigentes (BR-STK-024, BR-STK-025,
 BR-STK-035). Los cupos DEBEN salir de la geometría de ese reparto, sin copiar los anteriores.
 El mismo reparto DEBE conservarse al abrir otra jornada y en escritorio o web.
@@ -636,9 +644,6 @@ DADO cada tanda principal y fija del local ENTONCES sus filas coinciden con esta
 | Producto | Principal | Fijas |
 |---|---|---|
 | Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético | 1 | 1 |
-| Amargadito | 1 | 2 |
-| Fernet God | 2 | 1 en la inferior; 2 en cualquier otra |
-| Oaaaa | 2 | 1 en la superior; 2 en cualquier otra |
 | Actroncito, Prongles y los demás productos exhibidos | 2 | 2 |
 
 La fila de adelante es la más cercana al pasillo y cada lugar suyo es un casillero del
@@ -656,10 +661,7 @@ una unidad de delante ENTONCES sólo cambia ese casillero y la fila de atrás no
 puede agarrar. DADO una tanda de una fila ENTONCES no tiene unidades detrás de sus
 casilleros; al vaciar todos sus casilleros no queda ninguna unidad de esa tanda.
 
-DADO Amargadito, Fernet God y Oaaaa ENTONCES la comprobación distingue sus tandas principales
-de sus referencias fijas según AC-STK-030: una tanda simple no elimina la fila posterior de
-otra tanda doble del mismo producto. DADO Actroncito y Prongles ENTONCES sus tandas
-principales y fijas conservan ambas filas.
+DADO Actroncito y Prongles ENTONCES sus tandas principales y fijas conservan ambas filas.
 
 ### AC-STK-032 — Una caja entera alcanza para el faltante más grande *(verifica BR-STK-004)*
 
@@ -946,8 +948,8 @@ sector. Abrir jornada 2 en escritorio y web conserva el mapa.
 ### AC-STK-087 — Dos heladeras separan los fríos de las bebidas sin refrigerar *(verifica BR-STK-043)*
 
 DADO ambas heladeras funcionales CUANDO se recorren sus mitades verticales ENTONCES la primera
-exhibe Coracola arriba y Fernet God abajo; la segunda, Cindolor arriba y Mayonchis abajo.
-Oaaaa y Terminator están en su cabecera de bebidas sin refrigerar, y no en ninguna heladera;
+exhibe Coracola arriba y Oaaaa abajo; la segunda, Cindolor arriba y Mayonchis abajo.
+Fernet God y Terminator están en su cabecera de bebidas sin refrigerar, y no en ninguna heladera;
 Cindolor no aparece además en un estante exterior. La heladera fuera de servicio tiene cero
 unidades y referencias de productos.
 
@@ -1032,6 +1034,17 @@ se entrega a Fede con los demás productos y ticket ENTONCES se vende esa misma 
 sola vez; el teñido no agrega descuento de inventario y la venta no vuelve a retirar el pedido
 entero. DADO un intento de recepción que identifica el bidón azul en lugar de Poético CUANDO
 se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades de la compra.
+
+### AC-STK-092 — Dos estantes seguidos repiten sus productos *(verifica BR-STK-043)*
+
+DADO cualquier cara de un mueble ENTONCES el estante de arriba de todo lleva los mismos productos
+que el reponible de abajo, y el otro reponible los mismos que el zócalo, en el mismo orden.
+
+### AC-STK-093 — La apertura no vacía la tanda reponible *(verifica BR-STK-024)*
+
+DADO un producto con tanda fija CUANDO la apertura le hace faltar tantas unidades como casilleros
+reponibles tiene ENTONCES un casillero de la reponible queda ocupado y uno de la fila de adelante
+de una fija queda vacío; los vacíos suman lo que faltó.
 
 ## No objetivos
 

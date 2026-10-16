@@ -107,7 +107,7 @@ func test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante() -> void: 
 		var nombre := producto.nombre
 		var total := DisposicionDeLaGondola.copias(bloque)
 		assert_int(total).override_failure_message(nombre).is_equal(
-			adelante * _filas_esperadas(producto.id, false)
+			adelante * _filas_esperadas(producto.id)
 		)
 		var una_fila := total == adelante
 		(
@@ -231,23 +231,14 @@ func test_las_fijas_conservan_filas_y_casilleros() -> void:  # AC-STK-028 AC-STK
 			. is_between(0, DisposicionDeLaGondola.copias(disposicion.guias[indice]))
 		)
 		var bloque := disposicion.guias[indice]
-		var principal := disposicion.principales[id]
-		var altura_fija := DisposicionDeLaGondola.copia(bloque, 0).origin.y
-		var altura_principal := DisposicionDeLaGondola.copia(principal, 0).origin.y
-		var fija_simple := (
-			(id == Producto.Id.FERNET_GOD and altura_fija < altura_principal)
-			or (id == Producto.Id.OAAAA and altura_fija > altura_principal)
-		)
-		assert_int(DisposicionDeLaGondola.copias(bloque)).is_equal(
-			adelante * _filas_esperadas(id, true, fija_simple)
-		)
+		assert_int(DisposicionDeLaGondola.copias(bloque)).is_equal(adelante * _filas_esperadas(id))
 		esperado[id] += adelante
 	for producto in Catalogo.todos():
 		assert_int(disposicion.casilleros_de(producto.id)).is_equal(esperado[producto.id])
 
 
 ## La decisión conserva dos filas de Actroncito/Prongles y distingue las excepciones por tanda.
-static func _filas_esperadas(id: Producto.Id, fija: bool, fija_simple: bool = false) -> int:
+static func _filas_esperadas(id: Producto.Id) -> int:
 	if (
 		id
 		in [
@@ -258,7 +249,5 @@ static func _filas_esperadas(id: Producto.Id, fija: bool, fija_simple: bool = fa
 			Producto.Id.POETICO
 		]
 	):
-		return 1
-	if (id == Producto.Id.AMARGADITO and not fija) or fija_simple:
 		return 1
 	return 2
