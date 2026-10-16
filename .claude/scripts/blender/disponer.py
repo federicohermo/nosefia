@@ -127,6 +127,7 @@ def principal():
     filas_de_adelante = []
     contenido = []
     apagadas = []
+    identidades = []
     bases = {}
     for p in PRODUCTOS:
         if len(por_producto[p.clave]) != 1:
@@ -138,6 +139,7 @@ def principal():
         if not any(sufijo in unidad.name for sufijo in SUFIJOS_DE_IMPORTACION):
             raise SystemExit(f"{unidad.name} no tiene colisión: la escena no sabe qué apagar")
         apagadas.append(ruta_en_godot(unidad))
+        identidades.append(nombre_en_godot(unidad.name))
         principales_de_la_tanda, reserva = separar_reserva([str(c["fila"]) for c in copias])
         if reserva:
             fijas.append((clave + ".reserva", p.clave, [copias[i] for i in reserva]))
@@ -179,7 +181,9 @@ def principal():
     )
     escribir(CONTENIDO, escribir_escena_de_mallas("Contenido", contenido))
     escribir(GUIA, escribir_escena_de_mallas("Guia", nodos_de_guia))
-    estructura = apagar_las_unidades(ESTRUCTURA.read_text(encoding="utf-8"), apagadas)
+    estructura = apagar_las_unidades(
+        ESTRUCTURA.read_text(encoding="utf-8"), apagadas, identidades
+    )
     contornos = {
         "A": "contorno_de_gondola", "B": "contorno_de_gondola2",
         "N": "contorno_de_gondola_del_fondo_norte", "S": "contorno_de_gondola_del_fondo_sur",

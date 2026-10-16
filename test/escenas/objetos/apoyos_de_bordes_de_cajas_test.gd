@@ -12,14 +12,16 @@ func test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void
 	assert_float(medicion.base).is_equal_approx(medicion.gris, ReglasDeLosObjetos.ROCE)
 
 
-func test_la_caja_grande_pierde_el_apoyo_insuficiente_de_la_cabecera() -> void:  # AC-PLY-100
+func test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
 	var medicion := await _en_la_cabecera(Producto.Id.LAYSNTT)
-	assert_float(medicion.menor).is_less(medicion.inicial - ReglasDeLosObjetos.ROCE)
+	assert_vector(medicion.final).is_equal_approx(medicion.inicial, ReglasDeLosObjetos.ROCE)
+	assert_float(medicion.base).is_equal_approx(medicion.metal, ReglasDeLosObjetos.ROCE)
 
 
-func test_la_caja_chica_pierde_el_apoyo_insuficiente_de_la_cabecera() -> void:  # AC-PLY-100
+func test_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
 	var medicion := await _en_la_cabecera(Producto.Id.ACTRONCITO)
-	assert_float(medicion.menor).is_less(medicion.inicial - ReglasDeLosObjetos.ROCE)
+	assert_vector(medicion.final).is_equal_approx(medicion.inicial, ReglasDeLosObjetos.ROCE)
+	assert_float(medicion.base).is_equal_approx(medicion.metal, ReglasDeLosObjetos.ROCE)
 
 
 func test_cada_cara_superior_del_riel_visible_tiene_apoyo_fisico() -> void:  # AC-PLY-099
@@ -119,6 +121,7 @@ func _sobre_el_riel(producto: Producto.Id) -> Dictionary:
 
 func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	var almacen := await _abrir()
+	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
 	var referencia: MeshInstance3D = gondola.get_node("saladix-2oeste2")
@@ -135,25 +138,83 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 		. is_false()
 	)
 	if visible.is_empty():
-		return {"menor": INF, "inicial": objetivo.y}
+		return {"final": Vector3.INF, "inicial": Vector3.ZERO, "base": -INF, "metal": INF}
+	var fisico := _rayo(
+		almacen,
+		mira.origin,
+		mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		[caja.get_rid(), almacen.get("_jugador").get_rid()]
+	)
+	assert_bool(fisico.is_empty()).is_false()
+	if not fisico.is_empty():
+		assert_vector(fisico.position).is_equal_approx(visible.punto, ReglasDeLosObjetos.ROCE)
 	await _soltar_con_el_gesto(almacen, caja, 1)
 	var inicial := caja.global_position
-	var menor := inicial.y
 	for cuadro in 180:
 		await get_tree().physics_frame
-		menor = minf(menor, caja.global_position.y)
+	var final := caja.global_position
+	assert_vector(final).is_equal_approx(inicial, ReglasDeLosObjetos.ROCE)
+	assert_bool(caja.freeze).is_true()
+	assert_bool(caja.sleeping).is_true()
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+	var metal := _impacto_visible(
+		gondola, final, final + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO
+	)
 	(
-		assert_float(menor)
-		. override_failure_message(
-			"Caja retenida en el borde: inicial %v, final %v" % [inicial, caja.global_position]
-		)
-		. is_less(inicial.y - ReglasDeLosObjetos.ROCE)
+		assert_bool(metal.is_empty())
+		. override_failure_message("Premisa: metal bajo el centro")
+		. is_false()
+	)
+	var contacto := _rayo(
+		almacen,
+		final,
+		final + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO,
+		[caja.get_rid(), almacen.get("_jugador").get_rid()]
+	)
+	assert_bool(contacto.is_empty()).is_false()
+	if metal.is_empty() or contacto.is_empty():
+		return {"final": final, "inicial": inicial, "base": limites.position.y, "metal": INF}
+	assert_float(limites.position.y).is_equal_approx(
+		(metal.punto as Vector3).y, ReglasDeLosObjetos.ROCE
+	)
+	assert_float((contacto.position as Vector3).y).is_equal_approx(
+		(metal.punto as Vector3).y, ReglasDeLosObjetos.ROCE
 	)
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
-	assert_bool(almacen.get("_agarre").pedir_agarrar(caja.get("datos"), caja)).is_true()
+	assert_dict(_estado_del_local(almacen)).is_equal(antes)
+	await _mirar_desde_el_piso(almacen, caja, final, Vector3.FORWARD * 1.2)
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	jugador.call("_leer_la_mira")
+	assert_object(jugador.get("_enfocado")).is_same(caja)
+	var evento := InputEventAction.new()
+	evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)
+	assert_object(almacen.get("_agarre").cuerpo_sostenido()).is_same(caja)
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_same(caja.get("datos"))
-	return {"menor": menor, "inicial": inicial.y}
+	assert_dict(_estado_del_local(almacen)).is_equal(antes)
+	return {
+		"final": final,
+		"inicial": inicial,
+		"base": limites.position.y,
+		"metal": (metal.punto as Vector3).y
+	}
+
+
+func _estado_del_local(almacen: Node3D) -> Dictionary:
+	var estante: Estante = almacen.get("_repositor").estante()
+	var turno: Turno = almacen.get("_reloj").get("_turno")
+	var cantidades: Dictionary = {}
+	for producto: Producto in Catalogo.todos():
+		cantidades[producto.id] = [
+			estante.unidades_en_deposito(producto),
+			estante.unidades_en_gondola(producto),
+			estante.reservadas(producto),
+			estante.casilleros_ocupados(producto).duplicate()
+		]
+	return {"cantidades": cantidades, "tareas": turno.tareas_cumplidas()}
 
 
 func _abrir() -> Node3D:

@@ -380,7 +380,7 @@ class LasUnidadesApagadas(unittest.TestCase):
             'parent="gondolanueva"]',
             'parent="gondolanueva" groups=["geometria_de_referencia"]]',
         )
-        texto = apagar_las_unidades(ANTES + unidad + LUZ, ["gondolanueva/oremos"])
+        texto = apagar_las_unidades(ANTES + unidad + LUZ, ["gondolanueva/oremos"], ["oremos"])
         self.assertIn('name="oremos"', texto)
         self.assertEqual(texto.count('name="oremos"'), 1)
         self.assertIn('groups=["geometria_de_referencia"]', texto)
@@ -390,7 +390,9 @@ class LasUnidadesApagadas(unittest.TestCase):
         escena = ANTES + _apagada("gondolanueva", "wakas_021") + _apagada(".", "petisas") + LUZ
         rutas = ["heladeranueva/terminator", "cindolor", "gondolanueva2/duronga"]
         self.assertEqual(
-            apagar_las_unidades(escena, rutas),
+            apagar_las_unidades(
+                escena, rutas, ["wakas_021", "petisas", "terminator", "cindolor", "duronga"]
+            ),
             ANTES
             + _apagada(".", "cindolor")
             + _apagada("gondolanueva2", "duronga")
@@ -400,19 +402,41 @@ class LasUnidadesApagadas(unittest.TestCase):
 
     def test_volver_a_apagar_las_mismas_no_cambia_un_byte(self):
         escena = ANTES + _apagada("gondolanueva", "oremos") + LUZ
-        texto = apagar_las_unidades(escena, ["gondolanueva/oremos", "gondolanueva/chisitos2"])
-        otra_vez = apagar_las_unidades(texto, ["gondolanueva/chisitos2", "gondolanueva/oremos"])
+        texto = apagar_las_unidades(
+            escena, ["gondolanueva/oremos", "gondolanueva/chisitos2"], ["oremos", "chisitos2"]
+        )
+        otra_vez = apagar_las_unidades(
+            texto, ["gondolanueva/chisitos2", "gondolanueva/oremos"], ["oremos", "chisitos2"]
+        )
         self.assertEqual(otra_vez, texto)
 
     def test_un_nodo_apagado_con_otras_propiedades_no_es_una_unidad_y_se_queda(self):
         otro = '[node name="Cartel" parent="."]\nvisible = false\ncast_shadow = 0\n\n'
         escena = ANTES + otro + _apagada("gondolanueva", "oremos") + LUZ
-        texto = apagar_las_unidades(escena, [])
+        texto = apagar_las_unidades(escena, [], ["oremos"])
         self.assertEqual(texto, ANTES + otro + LUZ)
 
     def test_una_escena_sin_unidades_apagadas_es_un_error(self):
         with self.assertRaises(ValueError):
-            apagar_las_unidades(ANTES + LUZ, ["gondolanueva/oremos"])
+            apagar_las_unidades(ANTES + LUZ, ["gondolanueva/oremos"], ["oremos"])
+
+
+    def test_mover_el_padre_de_una_unidad_conserva_el_lector_ajeno(self):
+        lector = _apagada("EscritorioComputadora", "lector de productos").replace(
+            'parent="EscritorioComputadora"]',
+            'parent="EscritorioComputadora" groups=["geometria_de_referencia"]]',
+        )
+        escena = ANTES + _apagada("gondola_vieja", "oremos") + lector + LUZ
+        rutas = ["gondola_nueva/oremos"]
+        texto = apagar_las_unidades(escena, rutas, ["oremos"])
+        self.assertEqual(texto, ANTES + _apagada("gondola_nueva", "oremos") + lector + LUZ)
+        self.assertEqual(apagar_las_unidades(texto, rutas, ["oremos"]), texto)
+
+    def test_sin_rutas_activas_retira_unidades_y_conserva_el_lector(self):
+        lector = _apagada("EscritorioComputadora", "lector de productos")
+        escena = ANTES + lector + _apagada("gondola_vieja", "oremos") + LUZ
+        texto = apagar_las_unidades(escena, [], ["oremos"])
+        self.assertEqual(texto, ANTES + lector + LUZ)
 
 
 if __name__ == "__main__":
