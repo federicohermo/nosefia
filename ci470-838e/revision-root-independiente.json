@@ -1,0 +1,21 @@
+{
+  "pr": 470,
+  "run": "38957377068",
+  "head": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
+  "metadata": {
+    "conclusion": "success",
+    "headSha": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
+    "status": "completed",
+    "url": "https://github.com/federicohermo/nosefia/actions/runs/38957377068"
+  },
+  "suites": 286,
+  "cases": 2181,
+  "problems": {
+    "failure": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "xml_sha256": "0b2b62fd87a08bce040221723b8af1f63d38bf25b4161e5a64a30856e3f414e5",
+  "workflow_sha256": "ba27111716c7709d9e7c2e4841225cca358edf5775882e544ffd4bfe74e83a36",
+  "limit": "CI no publica los crudos internos de nodos exitosos; ausencia de fugas exige revisión local."
+}

@@ -1,0 +1,78 @@
+0.079912 stdout WorkerThreadPool: 16 threads, 4 max low-priority.
+0.084018 stdout Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+0.085573 stdout TextServer: Added interface "Dummy"
+0.096987 stdout TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+0.104542 stdout Using "default" pen tablet driver...
+0.105403 stdout 
+0.109191 stdout TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+0.176920 stdout Loading resource: res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res remapped: res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res
+0.177656 stdout Completed load for: 'res://default_bus_layout.tres' remapped 'res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res' at thread -1
+0.193242 stdout CORE API HASH: 2004498165
+0.194137 stdout EDITOR API HASH: 1696660745
+0.194901 stdout Loading resource: D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/probar437-pck.gd remapped: D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/probar437-pck.gd
+0.197889 stdout Completed load for: 'D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/probar437-pck.gd' remapped 'D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/probar437-pck.gd' at thread -1
+0.197928 stdout SceneTreeFTI: traversal method DEFAULT
+0.198954 stdout Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gdc remapped: res://addons/godot_mcp/mcp_screenshot_service.gdc
+0.200563 stdout Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gdc' at thread -1
+0.201121 stdout Loading resource: res://addons/godot_mcp/mcp_input_service.gdc remapped: res://addons/godot_mcp/mcp_input_service.gdc
+0.205744 stdout Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gdc' at thread -1
+0.206104 stdout Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gdc remapped: res://addons/godot_mcp/mcp_game_inspector_service.gdc
+0.246280 stdout Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gdc' at thread -1
+0.252642 stdout Loaded system CA certificates
+0.253610 stdout Loading resource: res://.godot/exported/133200997/export-86f7c8048fac98359f9d82393cee4225-idle.res remapped: res://.godot/exported/133200997/export-86f7c8048fac98359f9d82393cee4225-idle.res
+0.253775 stdout Loading resource: res://assets/characters/fede/01.png remapped: res://assets/characters/fede/01.png
+0.253964 stdout Loading resource: res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex remapped: res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex
+0.272052 stdout Completed load for: 'res://assets/characters/fede/01.png' remapped 'res://assets/characters/fede/01.png' at thread -1
+0.272119 stdout Loading resource: res://assets/characters/fede/02.png remapped: res://assets/characters/fede/02.png
+0.272396 stdout Loading resource: res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex remapped: res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex
+0.290104 stdout Completed load for: 'res://assets/characters/fede/02.png' remapped 'res://assets/characters/fede/02.png' at thread -1
+0.290170 stdout Loading resource: res://assets/characters/fede/03.png remapped: res://assets/characters/fede/03.png
+0.290458 stdout Loading resource: res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex remapped: res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex
+0.311114 stdout Completed load for: 'res://assets/characters/fede/03.png' remapped 'res://assets/characters/fede/03.png' at thread -1
+0.311158 stdout Loading resource: res://assets/characters/fede/04.png remapped: res://assets/characters/fede/04.png
+0.311423 stdout Loading resource: res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex remapped: res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex
+0.329457 stdout Completed load for: 'res://assets/characters/fede/04.png' remapped 'res://assets/characters/fede/04.png' at thread -1
+0.329590 stdout Loading resource: res://assets/characters/fede/05.png remapped: res://assets/characters/fede/05.png
+0.330011 stdout Loading resource: res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex remapped: res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex
+0.349143 stdout Completed load for: 'res://assets/characters/fede/05.png' remapped 'res://assets/characters/fede/05.png' at thread -1
+0.349198 stdout Loading resource: res://assets/characters/fede/06.png remapped: res://assets/characters/fede/06.png
+0.349435 stdout Loading resource: res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex remapped: res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex
+0.366472 stdout Completed load for: 'res://assets/characters/fede/06.png' remapped 'res://assets/characters/fede/06.png' at thread -1
+0.366513 stdout Loading resource: res://assets/characters/fede/07.png remapped: res://assets/characters/fede/07.png
+0.366773 stdout Loading resource: res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex remapped: res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex
+0.383265 stdout Completed load for: 'res://assets/characters/fede/07.png' remapped 'res://assets/characters/fede/07.png' at thread -1
+0.383309 stdout Loading resource: res://assets/characters/fede/08.png remapped: res://assets/characters/fede/08.png
+0.383582 stdout Loading resource: res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex remapped: res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex
+0.400130 stdout Completed load for: 'res://assets/characters/fede/08.png' remapped 'res://assets/characters/fede/08.png' at thread -1
+0.400237 stdout Completed load for: 'res://assets/characters/fede/idle.tres' remapped 'res://.godot/exported/133200997/export-86f7c8048fac98359f9d82393cee4225-idle.res' at thread -1
+0.400459 stdout Loading resource: res://.godot/exported/133200997/export-362ecc625f8f9f8785c1307e2781676d-idle.res remapped: res://.godot/exported/133200997/export-362ecc625f8f9f8785c1307e2781676d-idle.res
+0.400619 stdout Loading resource: res://assets/characters/mia/01.png remapped: res://assets/characters/mia/01.png
+0.400757 stdout Loading resource: res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex remapped: res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex
+0.418184 stdout Completed load for: 'res://assets/characters/mia/01.png' remapped 'res://assets/characters/mia/01.png' at thread -1
+0.418227 stdout Loading resource: res://assets/characters/mia/02.png remapped: res://assets/characters/mia/02.png
+0.418483 stdout Loading resource: res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex remapped: res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex
+0.435322 stdout Completed load for: 'res://assets/characters/mia/02.png' remapped 'res://assets/characters/mia/02.png' at thread -1
+0.435369 stdout Loading resource: res://assets/characters/mia/03.png remapped: res://assets/characters/mia/03.png
+0.435615 stdout Loading resource: res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex remapped: res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex
+0.452672 stdout Completed load for: 'res://assets/characters/mia/03.png' remapped 'res://assets/characters/mia/03.png' at thread -1
+0.452710 stdout Loading resource: res://assets/characters/mia/04.png remapped: res://assets/characters/mia/04.png
+0.452945 stdout Loading resource: res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex remapped: res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex
+0.469534 stdout Completed load for: 'res://assets/characters/mia/04.png' remapped 'res://assets/characters/mia/04.png' at thread -1
+0.469586 stdout Loading resource: res://assets/characters/mia/05.png remapped: res://assets/characters/mia/05.png
+0.469762 stdout Loading resource: res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex remapped: res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex
+0.486413 stdout Completed load for: 'res://assets/characters/mia/05.png' remapped 'res://assets/characters/mia/05.png' at thread -1
+0.486748 stdout Loading resource: res://assets/characters/mia/06.png remapped: res://assets/characters/mia/06.png
+0.486987 stdout Loading resource: res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex remapped: res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex
+0.503621 stdout Completed load for: 'res://assets/characters/mia/06.png' remapped 'res://assets/characters/mia/06.png' at thread -1
+0.503693 stdout Loading resource: res://assets/characters/mia/07.png remapped: res://assets/characters/mia/07.png
+0.504042 stdout Loading resource: res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex remapped: res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex
+0.520126 stdout Completed load for: 'res://assets/characters/mia/07.png' remapped 'res://assets/characters/mia/07.png' at thread -1
+0.520230 stdout Loading resource: res://assets/characters/mia/08.png remapped: res://assets/characters/mia/08.png
+0.520431 stdout Loading resource: res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex remapped: res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex
+0.536703 stdout Completed load for: 'res://assets/characters/mia/08.png' remapped 'res://assets/characters/mia/08.png' at thread -1
+0.536812 stdout Completed load for: 'res://assets/characters/mia/idle.tres' remapped 'res://.godot/exported/133200997/export-362ecc625f8f9f8785c1307e2781676d-idle.res' at thread -1
+0.540292 stdout SPRITES437_PCK_FINAL fallos=0
+0.540337 stdout SPRITES437_PCK_OK
+0.592119 stdout XR: Clearing primary interface
+0.592160 stdout XR: Removed interface "Native mobile"
+0.592173 stdout XR: Removed interface "OpenXR"

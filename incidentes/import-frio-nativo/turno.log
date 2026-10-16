@@ -1,0 +1,7 @@
+guardia-pre: exit 0
+import-frio: exit 3221226356
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\437-frio-export-B.py", line 61, in <module>
+    assert run('import-frio', [godot, '--headless', '--verbose', '--path', str(project), '--import', '--quit']) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,13 @@
+diff --git a/src/escenas/puestos/ventanilla.gd b/src/escenas/puestos/ventanilla.gd
+index 504e6b88..89350c21 100644
+--- a/src/escenas/puestos/ventanilla.gd
++++ b/src/escenas/puestos/ventanilla.gd
+@@ -27,6 +27,8 @@ const CompradorInteractuable := preload("res://src/escenas/objetos/comprador_int
+ const ANIMACIONES := {
+ 	DialogosDeCompradores.Personaje.TIN: preload("res://assets/characters/martin/idle.tres"),
+ 	DialogosDeCompradores.Personaje.TIA: preload("res://assets/characters/tiago/idle.tres"),
++	DialogosDeCompradores.Personaje.FEDE: preload("res://assets/characters/fede/idle.tres"),
++	DialogosDeCompradores.Personaje.MIA: preload("res://assets/characters/mia/idle.tres"),
+ }
+ 
+ @export var jugador: JugadorDelLocal

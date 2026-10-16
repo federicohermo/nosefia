@@ -1,0 +1,365 @@
+{
+  "head": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+  "own_437_head": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
+  "40_blobs_437_identical": [
+    {
+      "path": "assets/characters/fede/01.png",
+      "blob": "aa376a28e75570905b8478807dcb30dd235c1f8b"
+    },
+    {
+      "path": "assets/characters/fede/01.png.import",
+      "blob": "5fed5246276ad4b6b489b5929ff2761dce910715"
+    },
+    {
+      "path": "assets/characters/fede/02.png",
+      "blob": "cc6b1d41c0a2e97dde7565bfd8c360a981cc17db"
+    },
+    {
+      "path": "assets/characters/fede/02.png.import",
+      "blob": "67b36d667c4fb9f4730bd00ab6d772631aea0376"
+    },
+    {
+      "path": "assets/characters/fede/03.png",
+      "blob": "54573bc26265a17e3aa00061acee1cc00c49116d"
+    },
+    {
+      "path": "assets/characters/fede/03.png.import",
+      "blob": "a7470954e6970027cecfadcbc22d279daf25fb41"
+    },
+    {
+      "path": "assets/characters/fede/04.png",
+      "blob": "9b68a0757f81820be98892b8ded12afd947f0c78"
+    },
+    {
+      "path": "assets/characters/fede/04.png.import",
+      "blob": "a3846155b6527e07eb5c59f216e440af53de87d3"
+    },
+    {
+      "path": "assets/characters/fede/05.png",
+      "blob": "c9cd80286899c28991a846ed812eeceb969810c5"
+    },
+    {
+      "path": "assets/characters/fede/05.png.import",
+      "blob": "b322692f5f91eb1987de1823e39c3c36b80f37ca"
+    },
+    {
+      "path": "assets/characters/fede/06.png",
+      "blob": "302982a7705dd98d06a516bd3ff2516ba74085ef"
+    },
+    {
+      "path": "assets/characters/fede/06.png.import",
+      "blob": "7b782d7a6a0cdc1551800e315cab6dcf9a95ef41"
+    },
+    {
+      "path": "assets/characters/fede/07.png",
+      "blob": "16b2d5f6d188895e4779fe34db815db2191f7cb2"
+    },
+    {
+      "path": "assets/characters/fede/07.png.import",
+      "blob": "464f1d13d5bbba8c22a4c509c47e8479ab0fd915"
+    },
+    {
+      "path": "assets/characters/fede/08.png",
+      "blob": "ce8632a15cfbdaf51f87aa23f39e23b8a5ed6585"
+    },
+    {
+      "path": "assets/characters/fede/08.png.import",
+      "blob": "ccfb36fece150835df4b9b756f64f24fb78e3522"
+    },
+    {
+      "path": "assets/characters/fede/idle.tres",
+      "blob": "9dea7fa1b19e5eb07632e15c7f0089825b249c15"
+    },
+    {
+      "path": "assets/characters/jornada_2_origen.md",
+      "blob": "1c069cc3fc3223732b4789f5f2cdc86e032314a0"
+    },
+    {
+      "path": "assets/characters/mia/01.png",
+      "blob": "7a829d5423942e617bd6950e4476054745e03e26"
+    },
+    {
+      "path": "assets/characters/mia/01.png.import",
+      "blob": "6bc27702a779acaf2e56d64197a3d4659c65419e"
+    },
+    {
+      "path": "assets/characters/mia/02.png",
+      "blob": "40c17e521b1c3f43b75561d3cfa0a67c58b69166"
+    },
+    {
+      "path": "assets/characters/mia/02.png.import",
+      "blob": "be19bba940000e5940ffa2f662fb048c3c5d7a1c"
+    },
+    {
+      "path": "assets/characters/mia/03.png",
+      "blob": "88e8987a758554d630fb2d78f93227538e14a2f7"
+    },
+    {
+      "path": "assets/characters/mia/03.png.import",
+      "blob": "ac135e073ac2cb70ce3f93d9c73976e97b1e58e3"
+    },
+    {
+      "path": "assets/characters/mia/04.png",
+      "blob": "d1aa1e703f7fbe85360e54a10efa19a663188b59"
+    },
+    {
+      "path": "assets/characters/mia/04.png.import",
+      "blob": "75adfad49ef71a46feac4d9e241e361b149dc426"
+    },
+    {
+      "path": "assets/characters/mia/05.png",
+      "blob": "92ab73b32b8eb8cf6728e3100d69ec6760059479"
+    },
+    {
+      "path": "assets/characters/mia/05.png.import",
+      "blob": "e63421cb857be78b541ded0ad10b44dc7fa0290a"
+    },
+    {
+      "path": "assets/characters/mia/06.png",
+      "blob": "2c6a5c2e6cbaef7cfca01c27ff9201504be536af"
+    },
+    {
+      "path": "assets/characters/mia/06.png.import",
+      "blob": "82e90d42bd91119840979bc75945e4b898501518"
+    },
+    {
+      "path": "assets/characters/mia/07.png",
+      "blob": "e6d14e63cb4704538192ea2c681b99cdf9acaecf"
+    },
+    {
+      "path": "assets/characters/mia/07.png.import",
+      "blob": "35398fb1b12ac9193ed68663c2274a30b68866e1"
+    },
+    {
+      "path": "assets/characters/mia/08.png",
+      "blob": "77d3a20537f8444e83e48e5faa2ab44917a76344"
+    },
+    {
+      "path": "assets/characters/mia/08.png.import",
+      "blob": "45e7072a045bcbb80497268ac8c1c38f702f00df"
+    },
+    {
+      "path": "assets/characters/mia/idle.tres",
+      "blob": "90daa53c8669621b8d71fd5e1e462802110ea359"
+    },
+    {
+      "path": "src/escenas/puestos/ventanilla.gd",
+      "blob": "89350c21902ef5eb58b77da87b85ffe9c578d0c6"
+    },
+    {
+      "path": "test/escenas/captura_de_compradores_jornada_2.gd",
+      "blob": "48d22842233ce12d7d2be6e1aa7f37c4bb243c2c"
+    },
+    {
+      "path": "test/escenas/captura_de_compradores_jornada_2.gd.uid",
+      "blob": "5017018cdd5bc8581888edab61f951d23312f5b7"
+    },
+    {
+      "path": "test/escenas/sprites_de_compradores_jornada_2_test.gd",
+      "blob": "1c70b40f67fe20be4c53c4480052a11534e9cc87"
+    },
+    {
+      "path": "test/escenas/sprites_de_compradores_jornada_2_test.gd.uid",
+      "blob": "9546f9518982a934795ea41790620886719c02d0"
+    }
+  ],
+  "cache": "D:\\nosefia-carril-B-429-444\\export-final-437-444-01\\proyecto\\.godot",
+  "cache_present_16_ctex": [
+    "res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex",
+    "res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex",
+    "res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex",
+    "res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex",
+    "res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex",
+    "res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex",
+    "res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex",
+    "res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex",
+    "res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex",
+    "res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex",
+    "res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex",
+    "res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex",
+    "res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex",
+    "res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex",
+    "res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex",
+    "res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex"
+  ],
+  "windows_full_clone_cold": false,
+  "new_437_textures_cold": false,
+  "cold_continuity_evidence": "D:/nosefia-carril-B-429-444/export-final-437-444-01/protocolo-B.json",
+  "script_sha256": "be5d835f980661ddab66db7305f22cd0355296de89e2398c9ed9763a0d1659f7",
+  "template_sha256": "56ef44d05a4715ed4b86ea612a1c983173e36ee2e032d7037f67a7055e0c35f7",
+  "processes": [
+    {
+      "label": "importar",
+      "command": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\proyecto",
+        "--import",
+        "--quit"
+      ],
+      "pid": 91200,
+      "start_utc": "2026-10-16T20:09:39Z",
+      "exit": 0,
+      "seconds": 32.494171699974686
+    },
+    {
+      "label": "exportar",
+      "command": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\proyecto",
+        "--export-release",
+        "Web",
+        "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web\\index.html"
+      ],
+      "pid": 21644,
+      "start_utc": "2026-10-16T20:10:12Z",
+      "exit": 0,
+      "seconds": 8.390976800117642
+    },
+    {
+      "label": "probe437",
+      "command": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "--main-pack",
+        "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web\\index.pck",
+        "-s",
+        "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\sondas-externas\\probar437-pck.gd"
+      ],
+      "pid": 85032,
+      "start_utc": "2026-10-16T20:10:23Z",
+      "exit": 0,
+      "seconds": 0.6178496000356972
+    },
+    {
+      "label": "probe444",
+      "command": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "--main-pack",
+        "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web\\index.pck",
+        "-s",
+        "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\sondas-externas\\verificar_dialogos_jornada_2_exportados.gd"
+      ],
+      "pid": 145284,
+      "start_utc": "2026-10-16T20:10:23Z",
+      "exit": 0,
+      "seconds": 2.764509800123051
+    }
+  ],
+  "wrapper_sha256": "6c539ee447316e03be4113d898c2fd05529de1509257f41c19a264bf63f91247",
+  "before_import_16_ctex_present_in_external_copy": [
+    "res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex",
+    "res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex",
+    "res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex",
+    "res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex",
+    "res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex",
+    "res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex",
+    "res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex",
+    "res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex",
+    "res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex",
+    "res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex",
+    "res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex",
+    "res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex",
+    "res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex",
+    "res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex",
+    "res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex",
+    "res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex"
+  ],
+  "before_import_time_utc": "2026-10-16T20:09:39Z",
+  "after_export_19_product_files_byte_identical_to_head": [
+    {
+      "path": "assets/characters/fede/01.png",
+      "sha256": "e2f3b77484e9eadf18c208a4280c64388e69a164b5cb856743f773b561524d06"
+    },
+    {
+      "path": "assets/characters/fede/02.png",
+      "sha256": "65edcdc00a3be9e2898957c8a9cf1a32a5e1d4ef253759b82f3d0ee40add16d5"
+    },
+    {
+      "path": "assets/characters/fede/03.png",
+      "sha256": "21f8eb974f8e597fd11ebe8990155318d1438dc150dc7c1d2a13665f1dbc6229"
+    },
+    {
+      "path": "assets/characters/fede/04.png",
+      "sha256": "5d3758d1560b8f97d522f78dbcfd36414fa8871e63a67d31dfb65c2c220fd967"
+    },
+    {
+      "path": "assets/characters/fede/05.png",
+      "sha256": "7d105511e96ce0be061ee2a29ca17508c50617f1fff7af67b1ce64c18a49ede9"
+    },
+    {
+      "path": "assets/characters/fede/06.png",
+      "sha256": "e3e9ce5595acbb80fcde979eac8804b4834da52bcf90770e5c3561c831c4b675"
+    },
+    {
+      "path": "assets/characters/fede/07.png",
+      "sha256": "fba41cdb83d9b4348a7b9167037ce84d766d508717c3156b491997b21c7da86c"
+    },
+    {
+      "path": "assets/characters/fede/08.png",
+      "sha256": "10c98fcd0f51324f2bc4d176df743af5303fd886939a96def1b1c279fcdcba09"
+    },
+    {
+      "path": "assets/characters/fede/idle.tres",
+      "sha256": "38f71c574c51c0e63165a242e4a55ba357e0c27e4e358b223abfb3ce77a933d3"
+    },
+    {
+      "path": "assets/characters/mia/01.png",
+      "sha256": "908de72357f180f3184c0cdcfe0d14f501ccda2ed99b4afa44565c0b51fdd580"
+    },
+    {
+      "path": "assets/characters/mia/02.png",
+      "sha256": "f5114c392b0c2fb4e4f4276614982759e8a46a0add8ad7bcef1b3efed5cab1e4"
+    },
+    {
+      "path": "assets/characters/mia/03.png",
+      "sha256": "bfbaade048cca58903047dcdeba0e5aad4268760efd215c649050b3b2eb584e7"
+    },
+    {
+      "path": "assets/characters/mia/04.png",
+      "sha256": "0302a97b51afb0140080180a31a69ae42eb83d88c11eb6da0c7955270336c509"
+    },
+    {
+      "path": "assets/characters/mia/05.png",
+      "sha256": "bdb1645019c7b390682b527c8cacd8b67aecdf2b7c783cd886fe4c3cd0548485"
+    },
+    {
+      "path": "assets/characters/mia/06.png",
+      "sha256": "92cfbb5eab8025b1c3b7f1a3d7e5c9919d06c2d576e7ab138b9567a439e02238"
+    },
+    {
+      "path": "assets/characters/mia/07.png",
+      "sha256": "f7721f7eb358687edc768afe18c8ef558b8ae58cae90e89b394f464912498096"
+    },
+    {
+      "path": "assets/characters/mia/08.png",
+      "sha256": "83ad7bb3964807c0eaf1607f8602b32c14f93508957cb5868cf9e43fff64d506"
+    },
+    {
+      "path": "assets/characters/mia/idle.tres",
+      "sha256": "94dcd14547ec549d35d61b8d91e3bfad9df689ddb1be4576fb08321696916f4d"
+    },
+    {
+      "path": "src/escenas/puestos/ventanilla.gd",
+      "sha256": "693d97412f5d1791ea5e9f654625aae1249c36ea9d4f1faa8cb20b2ae4aa730a"
+    }
+  ],
+  "probe437_sha256": "39af72389d53f0f435f45864cf628c9483c8e5cfaef62e5204b564cd45c7850e",
+  "probe437": {
+    "exit": 0,
+    "marker": "SPRITES437_PCK_OK",
+    "outside_source": true
+  },
+  "probe444_sha256": "eb34d1f28c6ad495df7aedb1faee5ec8e2f2f324af94e87e977eac909efd6329",
+  "probe444": {
+    "exit": 0,
+    "marker": "PAQUETE444_FINAL fallos=0",
+    "outside_source": true
+  }
+}

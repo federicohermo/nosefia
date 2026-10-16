@@ -1,0 +1,44 @@
+{
+  "head": "d8c0d8cb5a6e3d968d9cd8fd04f4a12c17829875",
+  "godot_origin": "registro",
+  "results": [
+    {
+      "name": "import",
+      "command": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-limpieza",
+        "--import",
+        "--quit"
+      ],
+      "pid": 61960,
+      "exit": 0,
+      "seconds": 6.168807600159198
+    },
+    {
+      "name": "focal-00",
+      "command": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-limpieza",
+        "--headless",
+        "--verbose",
+        "-s",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+        "-a",
+        "res://test/escenas/sprites_de_compradores_jornada_2_test.gd",
+        "--continue",
+        "--ignoreHeadlessMode",
+        "-rd",
+        "res://reports/focal-437"
+      ],
+      "pid": 17132,
+      "exit": 0,
+      "seconds": 11.381617999868467
+    }
+  ]
+}

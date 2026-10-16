@@ -1,0 +1,201 @@
+{
+  "head": "d8c0d8cb5a6e3d968d9cd8fd04f4a12c17829875",
+  "branch": "improvement/437-sprites-compradores-jornada-2",
+  "files": [
+    {
+      "path": "assets/characters/fede/01.png",
+      "bytes": 1096503,
+      "sha256": "e2f3b77484e9eadf18c208a4280c64388e69a164b5cb856743f773b561524d06"
+    },
+    {
+      "path": "assets/characters/fede/01.png.import",
+      "bytes": 932,
+      "sha256": "c175666a72ce707e383c20f6c4fec1bff55063095f21db7e2d3d67d8b0e79ea7"
+    },
+    {
+      "path": "assets/characters/fede/02.png",
+      "bytes": 1082191,
+      "sha256": "65edcdc00a3be9e2898957c8a9cf1a32a5e1d4ef253759b82f3d0ee40add16d5"
+    },
+    {
+      "path": "assets/characters/fede/02.png.import",
+      "bytes": 933,
+      "sha256": "96759a3542d2c0e4a4b6d5ef67068bcde2a08fcaf0a31ceb78213ee494c5abc1"
+    },
+    {
+      "path": "assets/characters/fede/03.png",
+      "bytes": 1117800,
+      "sha256": "21f8eb974f8e597fd11ebe8990155318d1438dc150dc7c1d2a13665f1dbc6229"
+    },
+    {
+      "path": "assets/characters/fede/03.png.import",
+      "bytes": 933,
+      "sha256": "463f3100756a48b9ad3c9063cdcd46d9046e98dd6d7295703ad794939ec7a679"
+    },
+    {
+      "path": "assets/characters/fede/04.png",
+      "bytes": 1104865,
+      "sha256": "5d3758d1560b8f97d522f78dbcfd36414fa8871e63a67d31dfb65c2c220fd967"
+    },
+    {
+      "path": "assets/characters/fede/04.png.import",
+      "bytes": 932,
+      "sha256": "7591bd216bd2de59257a78703c37ade84c26f55f1de995770353acce81ff1dc5"
+    },
+    {
+      "path": "assets/characters/fede/05.png",
+      "bytes": 1135890,
+      "sha256": "7d105511e96ce0be061ee2a29ca17508c50617f1fff7af67b1ce64c18a49ede9"
+    },
+    {
+      "path": "assets/characters/fede/05.png.import",
+      "bytes": 933,
+      "sha256": "fe088f6790498e1070a54dce65b3c11b69da79be1296bc77c47d6ac640a21aa6"
+    },
+    {
+      "path": "assets/characters/fede/06.png",
+      "bytes": 1107233,
+      "sha256": "e3e9ce5595acbb80fcde979eac8804b4834da52bcf90770e5c3561c831c4b675"
+    },
+    {
+      "path": "assets/characters/fede/06.png.import",
+      "bytes": 932,
+      "sha256": "829c4437d6cda1ac81880189de60116b583d95cae3ba0e26514fc38a9f7a96e5"
+    },
+    {
+      "path": "assets/characters/fede/07.png",
+      "bytes": 1094986,
+      "sha256": "fba41cdb83d9b4348a7b9167037ce84d766d508717c3156b491997b21c7da86c"
+    },
+    {
+      "path": "assets/characters/fede/07.png.import",
+      "bytes": 933,
+      "sha256": "b6b8883f4559e5837c1a627b260d92846135bdd3ca32dc177a4c75b277612627"
+    },
+    {
+      "path": "assets/characters/fede/08.png",
+      "bytes": 1093852,
+      "sha256": "10c98fcd0f51324f2bc4d176df743af5303fd886939a96def1b1c279fcdcba09"
+    },
+    {
+      "path": "assets/characters/fede/08.png.import",
+      "bytes": 933,
+      "sha256": "666f24810a7afee794b431c8fb2cc8ab1c32dc43ef5656fd3db5face979e82e5"
+    },
+    {
+      "path": "assets/characters/fede/idle.tres",
+      "bytes": 1201,
+      "sha256": "38f71c574c51c0e63165a242e4a55ba357e0c27e4e358b223abfb3ce77a933d3"
+    },
+    {
+      "path": "assets/characters/jornada_2_origen.md",
+      "bytes": 4995,
+      "sha256": "4bc809db99552ec018d9afc02d2819b68062cbd8a2cbd6b1104454ebf4189e1d"
+    },
+    {
+      "path": "assets/characters/mia/01.png",
+      "bytes": 1326949,
+      "sha256": "908de72357f180f3184c0cdcfe0d14f501ccda2ed99b4afa44565c0b51fdd580"
+    },
+    {
+      "path": "assets/characters/mia/01.png.import",
+      "bytes": 931,
+      "sha256": "9320825b289758e4db195dc4f9f916868f558ab371b983af6eebadfd4b80f50c"
+    },
+    {
+      "path": "assets/characters/mia/02.png",
+      "bytes": 1152233,
+      "sha256": "f5114c392b0c2fb4e4f4276614982759e8a46a0add8ad7bcef1b3efed5cab1e4"
+    },
+    {
+      "path": "assets/characters/mia/02.png.import",
+      "bytes": 931,
+      "sha256": "d9ff98c1a9e33e807b585f9c2cb6533ac2dc49104213407c11f91b5b75c79faa"
+    },
+    {
+      "path": "assets/characters/mia/03.png",
+      "bytes": 1201294,
+      "sha256": "bfbaade048cca58903047dcdeba0e5aad4268760efd215c649050b3b2eb584e7"
+    },
+    {
+      "path": "assets/characters/mia/03.png.import",
+      "bytes": 932,
+      "sha256": "a38e0ea02260f3308a38dbd9da830803c380446d1af97d1837938c61c67f661e"
+    },
+    {
+      "path": "assets/characters/mia/04.png",
+      "bytes": 1179962,
+      "sha256": "0302a97b51afb0140080180a31a69ae42eb83d88c11eb6da0c7955270336c509"
+    },
+    {
+      "path": "assets/characters/mia/04.png.import",
+      "bytes": 932,
+      "sha256": "64bdc7928ea248a1f1b175aff41de6060fb498fec3dc72cd781a0145c00f0405"
+    },
+    {
+      "path": "assets/characters/mia/05.png",
+      "bytes": 1153698,
+      "sha256": "bdb1645019c7b390682b527c8cacd8b67aecdf2b7c783cd886fe4c3cd0548485"
+    },
+    {
+      "path": "assets/characters/mia/05.png.import",
+      "bytes": 932,
+      "sha256": "b7ad1cb400eb068da2d1c2077f3a76b581e82d86615c678c2620f4141f7b68ce"
+    },
+    {
+      "path": "assets/characters/mia/06.png",
+      "bytes": 1162548,
+      "sha256": "92cfbb5eab8025b1c3b7f1a3d7e5c9919d06c2d576e7ab138b9567a439e02238"
+    },
+    {
+      "path": "assets/characters/mia/06.png.import",
+      "bytes": 932,
+      "sha256": "e9c62e05a3c9591aab90a56a8fc360e4d217cd3d62d9f0394fa0028a2fd1c2a8"
+    },
+    {
+      "path": "assets/characters/mia/07.png",
+      "bytes": 1126588,
+      "sha256": "f7721f7eb358687edc768afe18c8ef558b8ae58cae90e89b394f464912498096"
+    },
+    {
+      "path": "assets/characters/mia/07.png.import",
+      "bytes": 932,
+      "sha256": "4fe4c5d2b5ebc203c0698c7f4bea34d7b5b776ba522681ff5fbbb41f394f8acc"
+    },
+    {
+      "path": "assets/characters/mia/08.png",
+      "bytes": 1160130,
+      "sha256": "83ad7bb3964807c0eaf1607f8602b32c14f93508957cb5868cf9e43fff64d506"
+    },
+    {
+      "path": "assets/characters/mia/08.png.import",
+      "bytes": 931,
+      "sha256": "b34922c91f0994153e81dffd4f3b4feeb4068946942097014da3d6252778bdfe"
+    },
+    {
+      "path": "assets/characters/mia/idle.tres",
+      "bytes": 1193,
+      "sha256": "94dcd14547ec549d35d61b8d91e3bfad9df689ddb1be4576fb08321696916f4d"
+    },
+    {
+      "path": "test/escenas/captura_de_compradores_jornada_2.gd",
+      "bytes": 5207,
+      "sha256": "b7d22625e41d8ec857be56a0c1806a8c213e45442be2f00c0c07dc589924577e"
+    },
+    {
+      "path": "test/escenas/captura_de_compradores_jornada_2.gd.uid",
+      "bytes": 19,
+      "sha256": "7d3233df4ebc71b1aedfb1a096160377b855cd454af909860dab23ea2df466d5"
+    },
+    {
+      "path": "test/escenas/sprites_de_compradores_jornada_2_test.gd",
+      "bytes": 8430,
+      "sha256": "475518c05a498dd8261fb8fb0ac8180daf5706e433e472f77eb76447e0149872"
+    },
+    {
+      "path": "test/escenas/sprites_de_compradores_jornada_2_test.gd.uid",
+      "bytes": 20,
+      "sha256": "6029284930e61e8e292e316deb81bc417de4403b8ee5be127a9856113f72bab8"
+    }
+  ]
+}

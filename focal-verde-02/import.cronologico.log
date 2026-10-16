@@ -1,0 +1,33 @@
+0.072867 stdout Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+0.095168 stdout 
+2.450345 stdout [   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+2.450424 stdout [   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+2.496054 stdout [  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+3.015244 stdout [  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+3.015312 stdout [  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+3.089606 stdout [  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+3.985343 stdout [38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+4.518926 stdout [MCP] Connecting to ports 6505-6514
+4.519312 stdout [MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+4.519914 stdout [MCP] Registered 177 commands
+4.519970 stdout [  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+4.520030 stdout [92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+4.520041 stdout [0m
+4.874272 stdout [   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+4.874362 stdout [   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+4.874957 stdout [   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+4.876058 stdout [   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+4.928478 stdout [  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+4.968631 stdout [92m[ DONE ][39m [1mreimport[22m
+4.968669 stdout [0m
+4.968794 stdout [   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+4.968856 stdout [   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+4.968917 stdout [92m[ DONE ][39m [1mreimport[22m
+4.968936 stdout [0m
+5.170261 stdout [   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+5.170292 stdout [   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+5.170631 stdout [  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+5.170664 stdout [92m[ DONE ][39m [1mloading_editor_layout[22m
+5.170677 stdout [0m
+5.357183 stdout [MCP] WebSocket client stopped
+5.359719 stdout [MCP] Godot MCP Pro stopped

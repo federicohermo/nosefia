@@ -1,0 +1,1516 @@
+0.175564 stdout WorkerThreadPool: 16 threads, 12 max low-priority.
+0.178582 stdout Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+0.182450 stdout TextServer: Added interface "Dummy"
+0.194904 stdout TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+0.202867 stdout Using "default" pen tablet driver...
+0.203692 stdout 
+0.207603 stdout TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+0.270459 stdout Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+0.277941 stdout Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+0.294237 stdout CORE API HASH: 2004498165
+0.295295 stdout EDITOR API HASH: 1696660745
+0.295362 stdout SceneTreeFTI: traversal method DEFAULT
+0.391455 stdout EditorTheme: Generating new theme for the config '3810048042'.
+0.391492 stdout EditorTheme: Generating new icons.
+0.396510 stdout EditorTheme: Generating new fonts.
+0.415192 stdout EditorTheme: Generating new styles.
+1.114925 stdout Loading resource: C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res remapped: C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res
+1.121765 stdout Loaded system CA certificates
+1.350959 stdout Completed load for: 'C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res' remapped 'C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res' at thread -1
+2.693501 stdout [   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+2.693538 stdout [   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+2.717379 stdout [  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+11.106455 stdout [  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+11.106506 stdout [  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+18.002143 stdout Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gd remapped: res://addons/godot_mcp/mcp_screenshot_service.gd
+18.005184 stdout Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gd' at thread -1
+18.005634 stdout Loading resource: res://addons/godot_mcp/mcp_input_service.gd remapped: res://addons/godot_mcp/mcp_input_service.gd
+18.016257 stdout Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gd' at thread -1
+18.016721 stdout Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gd remapped: res://addons/godot_mcp/mcp_game_inspector_service.gd
+18.083829 stdout Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gd' at thread -1
+18.083861 stdout [  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+18.090406 stdout Loading resource: res://addons/gdUnit4/plugin.gd remapped: res://addons/gdUnit4/plugin.gd
+18.933269 stdout Completed load for: 'res://addons/gdUnit4/plugin.gd' remapped 'res://addons/gdUnit4/plugin.gd' at thread -1
+18.933512 stdout [38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+18.941311 stdout Loading resource: res://addons/godot_mcp/plugin.gd remapped: res://addons/godot_mcp/plugin.gd
+18.948336 stdout Loading resource: res://addons/godot_mcp/ui/status_panel.tscn remapped: res://addons/godot_mcp/ui/status_panel.tscn
+18.948760 stdout Loading resource: res://addons/godot_mcp/ui/status_panel.gd remapped: res://addons/godot_mcp/ui/status_panel.gd
+18.958696 stdout Completed load for: 'res://addons/godot_mcp/ui/status_panel.gd' remapped 'res://addons/godot_mcp/ui/status_panel.gd' at thread -1
+18.959039 stdout Completed load for: 'res://addons/godot_mcp/ui/status_panel.tscn' remapped 'res://addons/godot_mcp/ui/status_panel.tscn' at thread -1
+19.386200 stdout Completed load for: 'res://addons/godot_mcp/plugin.gd' remapped 'res://addons/godot_mcp/plugin.gd' at thread -1
+19.398003 stdout [MCP] Connecting to ports 6505-6514
+19.398547 stdout [MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+19.399292 stdout [MCP] Registered 177 commands
+19.399383 stdout [  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+19.399434 stdout [92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+19.399449 stdout [0m
+19.456976 stdout [MCP] Connected on port 6505
+19.464439 stdout [MCP] Connected on port 6506
+19.465005 stdout [MCP] Connected on port 6507
+19.465495 stdout [MCP] Connected on port 6508
+19.465970 stdout [MCP] Connected on port 6509
+19.466429 stdout [MCP] Connected on port 6510
+19.466872 stdout [MCP] Connected on port 6511
+19.467282 stdout [MCP] Connected on port 6512
+19.467765 stdout [MCP] Connected on port 6513
+19.468180 stdout [MCP] Connected on port 6514
+22.182769 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (763 steps)[39m[0m
+22.182837 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.182882 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.182927 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | CallBackValueProvider[39m[0m
+22.182967 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | DefaultValueProvider[39m[0m
+22.183008 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | GdAssertMessages[39m[0m
+22.183055 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | GdAssertReports[39m[0m
+22.183070 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | GdUnitArrayAssertImpl[39m[0m
+22.183153 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | GdUnitAssertImpl[39m[0m
+22.183173 stdout [   1% ] [90m[1mupdate_scripts_classes[22m | GdUnitAssertions[39m[0m
+22.183226 stdout [   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183265 stdout [   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183278 stdout [   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183306 stdout [   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183322 stdout [   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183393 stdout [   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183416 stdout [   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183487 stdout [   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183529 stdout [   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183572 stdout [   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183617 stdout [   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183657 stdout [   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183698 stdout [   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.183738 stdout [   2% ] [90m[1mupdate_scripts_classes[22m | ValueProvider[39m[0m
+22.183779 stdout [   3% ] [90m[1mupdate_scripts_classes[22m | CmdArgumentParser[39m[0m
+22.183827 stdout [   3% ] [90m[1mupdate_scripts_classes[22m | CmdCommand[39m[0m
+22.183849 stdout [   3% ] [90m[1mupdate_scripts_classes[22m | CmdCommandHandler[39m[0m
+22.183895 stdout [   3% ] [90m[1mupdate_scripts_classes[22m | CmdOption[39m[0m
+22.183911 stdout [   3% ] [90m[1mupdate_scripts_classes[22m | CmdOptions[39m[0m
+22.183973 stdout [   3% ] [90m[1mupdate_scripts_classes[22m | TestCaseAttribute[39m[0m
+22.184011 stdout [   3% ] [90m[1mupdate_scripts_classes[22m | GdUnitBaseCommand[39m[0m
+22.184035 stdout [   3% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandFileSystem[39m[0m
+22.184065 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandFileSystemDebugTests[39m[0m
+22.184115 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandFileSystemRunTests[39m[0m
+22.184169 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandHandler[39m[0m
+22.184215 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandInspectorDebugTests[39m[0m
+22.184323 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandInspectorRerunTestsUntilFailure[39m[0m
+22.184399 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandInspectorRunTests[39m[0m
+22.184451 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandInspectorTreeCollapse[39m[0m
+22.184487 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandInspectorTreeExpand[39m[0m
+22.184504 stdout [   5% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandRunTestsOverall[39m[0m
+22.184580 stdout [   5% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandScriptEditor[39m[0m
+22.184624 stdout [   5% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandScriptEditorCreateTest[39m[0m
+22.184644 stdout [   5% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandScriptEditorDebugTests[39m[0m
+22.184697 stdout [   5% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandScriptEditorRunTests[39m[0m
+22.184725 stdout [   5% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandStopTestSession[39m[0m
+22.184774 stdout [   5% ] [90m[1mupdate_scripts_classes[22m | GdUnitCommandTestSession[39m[0m
+22.184789 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | GdUnitShortcut[39m[0m
+22.184822 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | GdUnitGUID[39m[0m
+22.184856 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCase[39m[0m
+22.184905 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestDiscoverer[39m[0m
+22.184958 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestDiscoverGuard[39m[0m
+22.184992 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestDiscoverSink[39m[0m
+22.185078 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | GdUnitEvent[39m[0m
+22.185100 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | GdUnitInit[39m[0m
+22.185164 stdout [   7% ] [90m[1mupdate_scripts_classes[22m | GdUnitStop[39m[0m
+22.185205 stdout [   7% ] [90m[1mupdate_scripts_classes[22m | GdUnitEventTestDiscoverEnd[39m[0m
+22.185221 stdout [   7% ] [90m[1mupdate_scripts_classes[22m | GdUnitEventTestDiscoverStart[39m[0m
+22.185263 stdout [   7% ] [90m[1mupdate_scripts_classes[22m | GdUnitSessionClose[39m[0m
+22.185311 stdout [   7% ] [90m[1mupdate_scripts_classes[22m | GdUnitSessionStart[39m[0m
+22.185345 stdout [   7% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCaseFuzzedExecutionStage[39m[0m
+22.185385 stdout [   7% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCaseFuzzedTestStage[39m[0m
+22.185425 stdout [   7% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCaseSingleExecutionStage[39m[0m
+22.185460 stdout [   8% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCaseSingleTestStage[39m[0m
+22.185519 stdout [   8% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCaseAfterStage[39m[0m
+22.185533 stdout [   8% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCaseBeforeStage[39m[0m
+22.185569 stdout [   8% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCaseExecutionStage[39m[0m
+22.185599 stdout [   8% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteAfterStage[39m[0m
+22.185641 stdout [   8% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteBeforeStage[39m[0m
+22.185693 stdout [   8% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteExecutionStage[39m[0m
+22.185731 stdout [   9% ] [90m[1mupdate_scripts_classes[22m | IGdUnitExecutionStage[39m[0m
+22.185769 stdout [   9% ] [90m[1mupdate_scripts_classes[22m | GdUnitExecutionContext[39m[0m
+22.185807 stdout [   9% ] [90m[1mupdate_scripts_classes[22m | GdUnitMemoryObserver[39m[0m
+22.185845 stdout [   9% ] [90m[1mupdate_scripts_classes[22m | GdUnitProjectSettingsSnapshot[39m[0m
+22.185882 stdout [   9% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestReportCollector[39m[0m
+22.185923 stdout [   9% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteExecutor[39m[0m
+22.185963 stdout [   9% ] [90m[1mupdate_scripts_classes[22m | GdUnitBaseReporterTestSessionHook[39m[0m
+22.186007 stdout [   9% ] [90m[1mupdate_scripts_classes[22m | GdUnitHtmlReporterTestSessionHook[39m[0m
+22.186055 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSessionHook[39m[0m
+22.186099 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSessionHookService[39m[0m
+22.186114 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | GdUnitXMLReporterTestSessionHook[39m[0m
+22.186150 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | GdBuiltinConstants[39m[0m
+22.186177 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | GdCallableParameterSetResolver[39m[0m
+22.186219 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | GdInlineParameterSetResolver[39m[0m
+22.186273 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | GdParameterSetResolver[39m[0m
+22.186313 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | GdParameterSetResolverFactory[39m[0m
+22.186352 stdout [  11% ] [90m[1mupdate_scripts_classes[22m | GdPropertyParameterSetResolver[39m[0m
+22.186398 stdout [  11% ] [90m[1mupdate_scripts_classes[22m | GdClassDescriptor[39m[0m
+22.186411 stdout [  11% ] [90m[1mupdate_scripts_classes[22m | GdDefaultValueDecoder[39m[0m
+22.186459 stdout [  11% ] [90m[1mupdate_scripts_classes[22m | GdFunctionArgument[39m[0m
+22.186479 stdout [  11% ] [90m[1mupdate_scripts_classes[22m | GdFunctionDescriptor[39m[0m
+22.186553 stdout [  11% ] [90m[1mupdate_scripts_classes[22m | GdScriptParser[39m[0m
+22.186573 stdout [  11% ] [90m[1mupdate_scripts_classes[22m | GdUnitExpressionRunner[39m[0m
+22.186613 stdout [  12% ] [90m[1mupdate_scripts_classes[22m | GdUnitError[39m[0m
+22.186628 stdout [  12% ] [90m[1mupdate_scripts_classes[22m | GdUnitReport[39m[0m
+22.186703 stdout [  12% ] [90m[1mupdate_scripts_classes[22m | GdUnitScriptErrorCollector[39m[0m
+22.186735 stdout [  12% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCIRunner[39m[0m
+22.186765 stdout [  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.186812 stdout [  12% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSession[39m[0m
+22.186860 stdout [  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.186887 stdout [  12% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteDefaultTemplate[39m[0m
+22.186913 stdout [  13% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteTemplate[39m[0m
+22.186929 stdout [  13% ] [90m[1mupdate_scripts_classes[22m | GdUnitThreadContext[39m[0m
+22.186985 stdout [  13% ] [90m[1mupdate_scripts_classes[22m | GdUnitThreadManager[39m[0m
+22.187013 stdout [  13% ] [90m[1mupdate_scripts_classes[22m | GdUnitCSIMessageWriter[39m[0m
+22.187065 stdout [  13% ] [90m[1mupdate_scripts_classes[22m | GdUnitMessageWriter[39m[0m
+22.187080 stdout [  13% ] [90m[1mupdate_scripts_classes[22m | GdUnitRichTextMessageWriter[39m[0m
+22.187124 stdout [  13% ] [90m[1mupdate_scripts_classes[22m | _TestCase[39m[0m
+22.187164 stdout [  14% ] [90m[1mupdate_scripts_classes[22m | GdArrayTools[39m[0m
+22.187210 stdout [  14% ] [90m[1mupdate_scripts_classes[22m | GdDiffTool[39m[0m
+22.187237 stdout [  14% ] [90m[1mupdate_scripts_classes[22m | GdObjects[39m[0m
+22.187264 stdout [  14% ] [90m[1mupdate_scripts_classes[22m | GdUnit4Version[39m[0m
+22.187293 stdout [  14% ] [90m[1mupdate_scripts_classes[22m | GdUnitFileAccess[39m[0m
+22.187336 stdout [  14% ] [90m[1mupdate_scripts_classes[22m | GdUnitProperty[39m[0m
+22.187347 stdout [  14% ] [90m[1mupdate_scripts_classes[22m | GdUnitResult[39m[0m
+22.187383 stdout [  14% ] [90m[1mupdate_scripts_classes[22m | GdUnitRunnerConfig[39m[0m
+22.187410 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | GdUnitSceneRunnerImpl[39m[0m
+22.187460 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | GdUnitSettings[39m[0m
+22.187502 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | GdUnitSignalAwaiter[39m[0m
+22.187526 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | GdUnitSignalCollector[39m[0m
+22.187582 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | GdUnitSignals[39m[0m
+22.187655 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | GdUnitSingleton[39m[0m
+22.187691 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | GdUnitStackTrace[39m[0m
+22.187728 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | GdUnitStackTraceElement[39m[0m
+22.187754 stdout [  16% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestResourceLoader[39m[0m
+22.187792 stdout [  16% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteBuilder[39m[0m
+22.187830 stdout [  16% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteScanner[39m[0m
+22.187869 stdout [  16% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.187883 stdout [  16% ] [90m[1mupdate_scripts_classes[22m | GodotVersionFixures[39m[0m
+22.187916 stdout [  16% ] [90m[1mupdate_scripts_classes[22m | LocalTime[39m[0m
+22.187931 stdout [  16% ] [90m[1mupdate_scripts_classes[22m | GdUnit4CSharpApiLoader[39m[0m
+22.188008 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | CallableDoubler[39m[0m
+22.188019 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | GdFunctionDoubler[39m[0m
+22.188054 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | GdUnitClassDoubler[39m[0m
+22.188082 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | GdUnitFunctionDoublerBuilder[39m[0m
+22.188130 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | GdUnitMockFunctionDoubler[39m[0m
+22.188174 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | GdUnitObjectInteractions[39m[0m
+22.188191 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | GdUnitObjectInteractionsVerifier[39m[0m
+22.188230 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | GdUnitSpyFunctionDoubler[39m[0m
+22.188242 stdout [  18% ] [90m[1mupdate_scripts_classes[22m | GdUnitFuncValueExtractor[39m[0m
+22.188288 stdout [  18% ] [90m[1mupdate_scripts_classes[22m | BoolFuzzer[39m[0m
+22.188307 stdout [  18% ] [90m[1mupdate_scripts_classes[22m | FloatFuzzer[39m[0m
+22.188363 stdout [  18% ] [90m[1mupdate_scripts_classes[22m | Fuzzer[39m[0m
+22.188375 stdout [  18% ] [90m[1mupdate_scripts_classes[22m | IntFuzzer[39m[0m
+22.188417 stdout [  18% ] [90m[1mupdate_scripts_classes[22m | StringFuzzer[39m[0m
+22.188457 stdout [  18% ] [90m[1mupdate_scripts_classes[22m | Vector2Fuzzer[39m[0m
+22.188493 stdout [  18% ] [90m[1mupdate_scripts_classes[22m | Vector3Fuzzer[39m[0m
+22.188519 stdout [  19% ] [90m[1mupdate_scripts_classes[22m | AnyArgumentMatcher[39m[0m
+22.188534 stdout [  19% ] [90m[1mupdate_scripts_classes[22m | AnyBuildInTypeArgumentMatcher[39m[0m
+22.188575 stdout [  19% ] [90m[1mupdate_scripts_classes[22m | AnyClazzArgumentMatcher[39m[0m
+22.188601 stdout [  19% ] [90m[1mupdate_scripts_classes[22m | ChainedArgumentMatcher[39m[0m
+22.188644 stdout [  19% ] [90m[1mupdate_scripts_classes[22m | EqualsArgumentMatcher[39m[0m
+22.188681 stdout [  19% ] [90m[1mupdate_scripts_classes[22m | GdUnitArgumentMatcher[39m[0m
+22.188709 stdout [  19% ] [90m[1mupdate_scripts_classes[22m | GdUnitArgumentMatchers[39m[0m
+22.188747 stdout [  20% ] [90m[1mupdate_scripts_classes[22m | GdUnitMock[39m[0m
+22.188798 stdout [  20% ] [90m[1mupdate_scripts_classes[22m | GdUnitMockBuilder[39m[0m
+22.188834 stdout [  20% ] [90m[1mupdate_scripts_classes[22m | DoubledMockClassSourceClassName[39m[0m
+22.188900 stdout [  20% ] [90m[1mupdate_scripts_classes[22m | ErrorLogEntry[39m[0m
+22.188931 stdout [  20% ] [90m[1mupdate_scripts_classes[22m | GdUnitMonitor[39m[0m
+22.188972 stdout [  20% ] [90m[1mupdate_scripts_classes[22m | GdUnitOrphanNodeInfo[39m[0m
+22.189000 stdout [  20% ] [90m[1mupdate_scripts_classes[22m | GdUnitOrphanNodesMonitor[39m[0m
+22.189031 stdout [  20% ] [90m[1mupdate_scripts_classes[22m | GodotGdErrorMonitor[39m[0m
+22.189070 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | RPC[39m[0m
+22.189110 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | RPCClientConnect[39m[0m
+22.189122 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | RPCClientDisconnect[39m[0m
+22.189155 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | RPCGdUnitEvent[39m[0m
+22.189170 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | RPCMessage[39m[0m
+22.189221 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.189272 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | GdUnitServerConstants[39m[0m
+22.189292 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | GdUnitTask[39m[0m
+22.189341 stdout [  22% ] [90m[1mupdate_scripts_classes[22m | GdUnitTcpClient[39m[0m
+22.189360 stdout [  22% ] [90m[1mupdate_scripts_classes[22m | GdUnitTcpNode[39m[0m
+22.189448 stdout [  22% ] [90m[1mupdate_scripts_classes[22m | GdUnitTcpServer[39m[0m
+22.189476 stdout [  22% ] [90m[1mupdate_scripts_classes[22m | GdUnitConsoleTestReporter[39m[0m
+22.189504 stdout [  22% ] [90m[1mupdate_scripts_classes[22m | GdUnitByPathReport[39m[0m
+22.189551 stdout [  22% ] [90m[1mupdate_scripts_classes[22m | GdUnitHtmlEncoder[39m[0m
+22.189587 stdout [  22% ] [90m[1mupdate_scripts_classes[22m | GdUnitHtmlPatterns[39m[0m
+22.189602 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | GdUnitHtmlReportWriter[39m[0m
+22.189627 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | JUnitXmlReportWriter[39m[0m
+22.189642 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | XmlElement[39m[0m
+22.189706 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | GdUnitReportSummary[39m[0m
+22.189745 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | GdUnitReportWriter[39m[0m
+22.189793 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestCaseReport[39m[0m
+22.189814 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestReporter[39m[0m
+22.189876 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuiteReport[39m[0m
+22.189888 stdout [  24% ] [90m[1mupdate_scripts_classes[22m | GdUnitSpyBuilder[39m[0m
+22.189925 stdout [  24% ] [90m[1mupdate_scripts_classes[22m | DoubledSpyClassSourceClassName[39m[0m
+22.189951 stdout [  24% ] [90m[1mupdate_scripts_classes[22m | GdUnitContextMenuItem[39m[0m
+22.189997 stdout [  24% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190039 stdout [  24% ] [90m[1mupdate_scripts_classes[22m | GdUnitInspectorContextMenu[39m[0m
+22.190066 stdout [  24% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190079 stdout [  24% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190112 stdout [  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190128 stdout [  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190185 stdout [  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190200 stdout [  25% ] [90m[1mupdate_scripts_classes[22m | GdUnitReportPanel[39m[0m
+22.190250 stdout [  25% ] [90m[1mupdate_scripts_classes[22m | GdUnitInputCapture[39m[0m
+22.190277 stdout [  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190326 stdout [  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190366 stdout [  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190382 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | GdUnitEditorColorTheme[39m[0m
+22.190422 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190438 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | GdUnitFonts[39m[0m
+22.190494 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | GdUnitInspecor[39m[0m
+22.190505 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | GdUnitInspectorTreeConstants[39m[0m
+22.190547 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | GdUnitScriptEditorControls[39m[0m
+22.190575 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | GdUnitUiTools[39m[0m
+22.190609 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190652 stdout [  27% ] [90m[1mupdate_scripts_classes[22m | GdUnitPatch[39m[0m
+22.190694 stdout [  27% ] [90m[1mupdate_scripts_classes[22m | GdUnitPatcher[39m[0m
+22.190711 stdout [  27% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190754 stdout [  27% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190766 stdout [  27% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.190813 stdout [  27% ] [90m[1mupdate_scripts_classes[22m | Comparator[39m[0m
+22.190830 stdout [  27% ] [90m[1mupdate_scripts_classes[22m | Fuzzers[39m[0m
+22.190884 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | GdUnitArrayAssert[39m[0m
+22.190896 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | GdUnitAssert[39m[0m
+22.190950 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | GdUnitAwaiter[39m[0m
+22.190990 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | GdUnitBoolAssert[39m[0m
+22.191015 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | GdUnitConstants[39m[0m
+22.191026 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | GdUnitDictionaryAssert[39m[0m
+22.191059 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | GdUnitFailureAssert[39m[0m
+22.191074 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | GdUnitFileAssert[39m[0m
+22.191135 stdout [  29% ] [90m[1mupdate_scripts_classes[22m | GdUnitFloatAssert[39m[0m
+22.191150 stdout [  29% ] [90m[1mupdate_scripts_classes[22m | GdUnitFuncAssert[39m[0m
+22.191198 stdout [  29% ] [90m[1mupdate_scripts_classes[22m | GdUnitGodotErrorAssert[39m[0m
+22.191227 stdout [  29% ] [90m[1mupdate_scripts_classes[22m | GdUnitIntAssert[39m[0m
+22.191276 stdout [  29% ] [90m[1mupdate_scripts_classes[22m | GdUnitObjectAssert[39m[0m
+22.191315 stdout [  29% ] [90m[1mupdate_scripts_classes[22m | GdUnitResultAssert[39m[0m
+22.191326 stdout [  29% ] [90m[1mupdate_scripts_classes[22m | GdUnitSceneRunner[39m[0m
+22.191360 stdout [  29% ] [90m[1mupdate_scripts_classes[22m | GdUnitSignalAssert[39m[0m
+22.191375 stdout [  30% ] [90m[1mupdate_scripts_classes[22m | GdUnitStringAssert[39m[0m
+22.191429 stdout [  30% ] [90m[1mupdate_scripts_classes[22m | GdUnitTestSuite[39m[0m
+22.191447 stdout [  30% ] [90m[1mupdate_scripts_classes[22m | GdUnitTuple[39m[0m
+22.191504 stdout [  30% ] [90m[1mupdate_scripts_classes[22m | GdUnitValueExtractor[39m[0m
+22.191533 stdout [  30% ] [90m[1mupdate_scripts_classes[22m | GdUnitVectorAssert[39m[0m
+22.191564 stdout [  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191612 stdout [  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191646 stdout [  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191683 stdout [  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191694 stdout [  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191726 stdout [  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191769 stdout [  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191783 stdout [  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191829 stdout [  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191864 stdout [  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191912 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191951 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.191992 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192039 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192058 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192130 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192177 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192196 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192262 stdout [  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192276 stdout [  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192319 stdout [  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192337 stdout [  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192389 stdout [  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192427 stdout [  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192482 stdout [  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192519 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192545 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192571 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192603 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192657 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192702 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192743 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192786 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192826 stdout [  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192865 stdout [  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192915 stdout [  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.192938 stdout [  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193004 stdout [  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193030 stdout [  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193070 stdout [  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193123 stdout [  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193175 stdout [  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193213 stdout [  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193252 stdout [  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193291 stdout [  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193329 stdout [  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193369 stdout [  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193410 stdout [  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193447 stdout [  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.193487 stdout [  37% ] [90m[1mupdate_scripts_classes[22m | AgendaDeCompradores[39m[0m
+22.193536 stdout [  37% ] [90m[1mupdate_scripts_classes[22m | Atencion[39m[0m
+22.193569 stdout [  37% ] [90m[1mupdate_scripts_classes[22m | Balde[39m[0m
+22.193601 stdout [  37% ] [90m[1mupdate_scripts_classes[22m | Catalogo[39m[0m
+22.193647 stdout [  37% ] [90m[1mupdate_scripts_classes[22m | Comprador[39m[0m
+22.193668 stdout [  37% ] [90m[1mupdate_scripts_classes[22m | Compradores[39m[0m
+22.193757 stdout [  37% ] [90m[1mupdate_scripts_classes[22m | ContenidoDeLaCaja[39m[0m
+22.193773 stdout [  38% ] [90m[1mupdate_scripts_classes[22m | DialogosDeCompradores[39m[0m
+22.193849 stdout [  38% ] [90m[1mupdate_scripts_classes[22m | Estante[39m[0m
+22.193870 stdout [  38% ] [90m[1mupdate_scripts_classes[22m | GeneradorDeTickets[39m[0m
+22.193923 stdout [  38% ] [90m[1mupdate_scripts_classes[22m | Inventario[39m[0m
+22.193943 stdout [  38% ] [90m[1mupdate_scripts_classes[22m | Mancha[39m[0m
+22.194012 stdout [  38% ] [90m[1mupdate_scripts_classes[22m | Manos[39m[0m
+22.194055 stdout [  38% ] [90m[1mupdate_scripts_classes[22m | Mopa[39m[0m
+22.194095 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | NotaPegada[39m[0m
+22.194135 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | ObjetoDelAlmacen[39m[0m
+22.194174 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | OrdenDelDeposito[39m[0m
+22.194213 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | PisoDelLocal[39m[0m
+22.194253 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | Producto[39m[0m
+22.194294 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | Puerta[39m[0m
+22.194329 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | RecepcionDeCompra[39m[0m
+22.194365 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | RegistroDeVentas[39m[0m
+22.194404 stdout [  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.194435 stdout [  40% ] [90m[1mupdate_scripts_classes[22m | ReglasDelEstante[39m[0m
+22.194484 stdout [  40% ] [90m[1mupdate_scripts_classes[22m | ReglasDeLaBasura[39m[0m
+22.194552 stdout [  40% ] [90m[1mupdate_scripts_classes[22m | ReglasDeLaLimpieza[39m[0m
+22.194588 stdout [  40% ] [90m[1mupdate_scripts_classes[22m | ReglasDeLaVentanilla[39m[0m
+22.194624 stdout [  40% ] [90m[1mupdate_scripts_classes[22m | ReglasDeLosObjetos[39m[0m
+22.194680 stdout [  40% ] [90m[1mupdate_scripts_classes[22m | Rescate[39m[0m
+22.194718 stdout [  40% ] [90m[1mupdate_scripts_classes[22m | ReservaDeLaGondola[39m[0m
+22.194756 stdout [  41% ] [90m[1mupdate_scripts_classes[22m | SubtitulosAlExaminar[39m[0m
+22.194792 stdout [  41% ] [90m[1mupdate_scripts_classes[22m | TapaDelContenedor[39m[0m
+22.194828 stdout [  41% ] [90m[1mupdate_scripts_classes[22m | TareaDeAtender[39m[0m
+22.194864 stdout [  41% ] [90m[1mupdate_scripts_classes[22m | TareaDeLaBasura[39m[0m
+22.194901 stdout [  41% ] [90m[1mupdate_scripts_classes[22m | Ticket[39m[0m
+22.194938 stdout [  41% ] [90m[1mupdate_scripts_classes[22m | Trayecto[39m[0m
+22.194974 stdout [  41% ] [90m[1mupdate_scripts_classes[22m | UnidadDeProducto[39m[0m
+22.195011 stdout [  42% ] [90m[1mupdate_scripts_classes[22m | Uso[39m[0m
+22.195050 stdout [  42% ] [90m[1mupdate_scripts_classes[22m | Venta[39m[0m
+22.195086 stdout [  42% ] [90m[1mupdate_scripts_classes[22m | ApagadoPorObstaculos[39m[0m
+22.195122 stdout [  42% ] [90m[1mupdate_scripts_classes[22m | ContadorDeGolpes[39m[0m
+22.195150 stdout [  42% ] [90m[1mupdate_scripts_classes[22m | EleccionDeVariante[39m[0m
+22.195208 stdout [  42% ] [90m[1mupdate_scripts_classes[22m | EmisoresDelAmbiente[39m[0m
+22.195248 stdout [  42% ] [90m[1mupdate_scripts_classes[22m | EntradaSonora[39m[0m
+22.195285 stdout [  42% ] [90m[1mupdate_scripts_classes[22m | IndicacionDelFoco[39m[0m
+22.195320 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | Notificaciones[39m[0m
+22.195357 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | RondaDeVoces[39m[0m
+22.195397 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | Subtitulo[39m[0m
+22.195432 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | SubtitulosDeLosGestos[39m[0m
+22.195471 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | TablaDeSonidos[39m[0m
+22.195511 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | Antecedentes[39m[0m
+22.195550 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | Consecuencias[39m[0m
+22.195585 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | DevolucionDelJefe[39m[0m
+22.195621 stdout [  44% ] [90m[1mupdate_scripts_classes[22m | EsperaDeLaCarga[39m[0m
+22.195656 stdout [  44% ] [90m[1mupdate_scripts_classes[22m | InstruccionesDelJefe[39m[0m
+22.195691 stdout [  44% ] [90m[1mupdate_scripts_classes[22m | Legajo[39m[0m
+22.195729 stdout [  44% ] [90m[1mupdate_scripts_classes[22m | MenuDeInicio[39m[0m
+22.195765 stdout [  44% ] [90m[1mupdate_scripts_classes[22m | Partida[39m[0m
+22.195802 stdout [  44% ] [90m[1mupdate_scripts_classes[22m | PartidaSerializada[39m[0m
+22.195838 stdout [  44% ] [90m[1mupdate_scripts_classes[22m | PoliticaDeGuardado[39m[0m
+22.195876 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | ReglasDeLaPartida[39m[0m
+22.195914 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | Bandeja[39m[0m
+22.195953 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | Celular[39m[0m
+22.195988 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | Computadora[39m[0m
+22.196029 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | Conversacion[39m[0m
+22.196064 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | Cuaderno[39m[0m
+22.196098 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | Hallazgos[39m[0m
+22.196137 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | Mensaje[39m[0m
+22.196182 stdout [  46% ] [90m[1mupdate_scripts_classes[22m | Nota[39m[0m
+22.196218 stdout [  46% ] [90m[1mupdate_scripts_classes[22m | Revelacion[39m[0m
+22.196255 stdout [  46% ] [90m[1mupdate_scripts_classes[22m | Apertura[39m[0m
+22.196292 stdout [  46% ] [90m[1mupdate_scripts_classes[22m | EntradaALaNoche[39m[0m
+22.196330 stdout [  46% ] [90m[1mupdate_scripts_classes[22m | Marcador[39m[0m
+22.196365 stdout [  46% ] [90m[1mupdate_scripts_classes[22m | Pausa[39m[0m
+22.196402 stdout [  46% ] [90m[1mupdate_scripts_classes[22m | RelojDeMesa[39m[0m
+22.196441 stdout [  46% ] [90m[1mupdate_scripts_classes[22m | Ritmo[39m[0m
+22.196478 stdout [  47% ] [90m[1mupdate_scripts_classes[22m | Tarea[39m[0m
+22.196512 stdout [  47% ] [90m[1mupdate_scripts_classes[22m | Turno[39m[0m
+22.196549 stdout [  47% ] [90m[1mupdate_scripts_classes[22m | CadenciaDePasos[39m[0m
+22.196585 stdout [  47% ] [90m[1mupdate_scripts_classes[22m | Caminata[39m[0m
+22.196622 stdout [  47% ] [90m[1mupdate_scripts_classes[22m | CampoDeInteraccion[39m[0m
+22.196659 stdout [  47% ] [90m[1mupdate_scripts_classes[22m | ControlDelJugador[39m[0m
+22.196698 stdout [  47% ] [90m[1mupdate_scripts_classes[22m | EncuadreDeLaVentanilla[39m[0m
+22.196734 stdout [  48% ] [90m[1mupdate_scripts_classes[22m | Foco[39m[0m
+22.196770 stdout [  48% ] [90m[1mupdate_scripts_classes[22m | Mirada[39m[0m
+22.196806 stdout [  48% ] [90m[1mupdate_scripts_classes[22m | ReferenciaDeControles[39m[0m
+22.196848 stdout [  48% ] [90m[1mupdate_scripts_classes[22m | ReglasDelJugador[39m[0m
+22.196878 stdout [  48% ] [90m[1mupdate_scripts_classes[22m | RetornoDeLaMano[39m[0m
+22.196918 stdout [  48% ] [90m[1mupdate_scripts_classes[22m | SuavizadoDelGiro[39m[0m
+22.196952 stdout [  48% ] [90m[1mupdate_scripts_classes[22m | Dialogo[39m[0m
+22.196989 stdout [  48% ] [90m[1mupdate_scripts_classes[22m | Preferencias[39m[0m
+22.197024 stdout [  49% ] [90m[1mupdate_scripts_classes[22m | Reglas[39m[0m
+22.197062 stdout [  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197099 stdout [  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197137 stdout [  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197328 stdout [  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197367 stdout [  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197401 stdout [  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197443 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197461 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197537 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197566 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197629 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | ObjetoAgarrable[39m[0m
+22.197664 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197705 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197753 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197799 stdout [  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197825 stdout [  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197892 stdout [  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.197939 stdout [  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198031 stdout [  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198117 stdout [  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198206 stdout [  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198229 stdout [  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198310 stdout [  52% ] [90m[1mupdate_scripts_classes[22m | DisposicionDeLaGondola[39m[0m
+22.198349 stdout [  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198396 stdout [  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198443 stdout [  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198532 stdout [  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198591 stdout [  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198647 stdout [  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198690 stdout [  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198710 stdout [  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198776 stdout [  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198819 stdout [  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198857 stdout [  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198893 stdout [  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198925 stdout [  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198954 stdout [  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.198982 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.199011 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.199039 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.199066 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.199093 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.199126 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | CelularDelEmpleado[39m[0m
+22.199140 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | ComputadoraDeEscritorio[39m[0m
+22.199186 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | Examen[39m[0m
+22.199204 stdout [  55% ] [90m[1mupdate_scripts_classes[22m | Agarre[39m[0m
+22.199277 stdout [  55% ] [90m[1mupdate_scripts_classes[22m | AjusteDePreferencias[39m[0m
+22.199316 stdout [  55% ] [90m[1mupdate_scripts_classes[22m | ArchivoDePreferencias[39m[0m
+22.199360 stdout [  55% ] [90m[1mupdate_scripts_classes[22m | CalentamientoDeShaders[39m[0m
+22.199400 stdout [  55% ] [90m[1mupdate_scripts_classes[22m | CargaEnSegundoPlano[39m[0m
+22.199440 stdout [  55% ] [90m[1mupdate_scripts_classes[22m | CicloDeJornadas[39m[0m
+22.199481 stdout [  55% ] [90m[1mupdate_scripts_classes[22m | ControlDePausa[39m[0m
+22.199519 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | EnlaceDeAudio[39m[0m
+22.199604 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | EnlaceDeGuardado[39m[0m
+22.199617 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | Guardado[39m[0m
+22.199692 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | LimitesDeForma[39m[0m
+22.199728 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | Locutor[39m[0m
+22.199765 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | LugaresDelPiso[39m[0m
+22.199802 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | MarcoDelObjetivo[39m[0m
+22.199840 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | PedidosDelMenu[39m[0m
+22.199874 stdout [  57% ] [90m[1mupdate_scripts_classes[22m | RedDeSeguridad[39m[0m
+22.199913 stdout [  57% ] [90m[1mupdate_scripts_classes[22m | RelojDelTurno[39m[0m
+22.199948 stdout [  57% ] [90m[1mupdate_scripts_classes[22m | ReproductorDeSonidos[39m[0m
+22.199983 stdout [  57% ] [90m[1mupdate_scripts_classes[22m | AcomodadorDelDeposito[39m[0m
+22.200021 stdout [  57% ] [90m[1mupdate_scripts_classes[22m | CajaRegistradora[39m[0m
+22.200058 stdout [  57% ] [90m[1mupdate_scripts_classes[22m | Limpiador[39m[0m
+22.200096 stdout [  57% ] [90m[1mupdate_scripts_classes[22m | RecolectorDeBasura[39m[0m
+22.200132 stdout [  57% ] [90m[1mupdate_scripts_classes[22m | Repositor[39m[0m
+22.200170 stdout [  58% ] [90m[1mupdate_scripts_classes[22m | Ventanilla[39m[0m
+22.200221 stdout [  58% ] [90m[1mupdate_scripts_classes[22m | AppCaja[39m[0m
+22.200257 stdout [  58% ] [90m[1mupdate_scripts_classes[22m | AppNotas[39m[0m
+22.200291 stdout [  58% ] [90m[1mupdate_scripts_classes[22m | CapaDeDialogo[39m[0m
+22.200331 stdout [  58% ] [90m[1mupdate_scripts_classes[22m | LienzoDeManada[39m[0m
+22.200369 stdout [  58% ] [90m[1mupdate_scripts_classes[22m | NotaEncuadrada[39m[0m
+22.200403 stdout [  58% ] [90m[1mupdate_scripts_classes[22m | PanelDeLaVentanilla[39m[0m
+22.200442 stdout [  59% ] [90m[1mupdate_scripts_classes[22m | PantallaDelCelular[39m[0m
+22.200478 stdout [  59% ] [90m[1mupdate_scripts_classes[22m | PantallaDeComputadora[39m[0m
+22.200515 stdout [  59% ] [90m[1mupdate_scripts_classes[22m | ProgramaDeTickets[39m[0m
+22.200552 stdout [  59% ] [90m[1mupdate_scripts_classes[22m | CabeceraConSolapa[39m[0m
+22.200589 stdout [  59% ] [90m[1mupdate_scripts_classes[22m | MenuDePausa[39m[0m
+22.200630 stdout [  59% ] [90m[1mupdate_scripts_classes[22m | PantallaDeCarga[39m[0m
+22.200668 stdout [  59% ] [90m[1mupdate_scripts_classes[22m | PantallaDeConfiguraciones[39m[0m
+22.200703 stdout [  59% ] [90m[1mupdate_scripts_classes[22m | PantallaDeDevolucion[39m[0m
+22.200739 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | PantallaDeInstrucciones[39m[0m
+22.200777 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | PersianaDeLaNoche[39m[0m
+22.200814 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | AristasDelProducto[39m[0m
+22.200852 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | DesenfoqueDeReferencias[39m[0m
+22.200889 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | Hud[39m[0m
+22.200930 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | PilaDeNotificaciones[39m[0m
+22.200968 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201004 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201040 stdout [  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201076 stdout [  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201113 stdout [  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201151 stdout [  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201201 stdout [  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201238 stdout [  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201280 stdout [  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201316 stdout [  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201354 stdout [  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201391 stdout [  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201427 stdout [  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201464 stdout [  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201502 stdout [  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201538 stdout [  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201575 stdout [  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201612 stdout [  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201650 stdout [  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201684 stdout [  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201722 stdout [  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201758 stdout [  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201797 stdout [  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201836 stdout [  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201874 stdout [  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201910 stdout [  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201946 stdout [  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.201983 stdout [  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202018 stdout [  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202055 stdout [  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202091 stdout [  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202127 stdout [  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202164 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202208 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202244 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202280 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202317 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202356 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202394 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202431 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202466 stdout [  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202503 stdout [  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202539 stdout [  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202576 stdout [  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202612 stdout [  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202651 stdout [  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202688 stdout [  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202723 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202765 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202802 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202840 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202876 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202912 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202950 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.202985 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203022 stdout [  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203060 stdout [  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203099 stdout [  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203134 stdout [  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203172 stdout [  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203255 stdout [  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203291 stdout [  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203328 stdout [  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203363 stdout [  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203401 stdout [  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203440 stdout [  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203477 stdout [  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203537 stdout [  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203575 stdout [  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203612 stdout [  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203671 stdout [  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203706 stdout [  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203799 stdout [  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203855 stdout [  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203910 stdout [  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.203969 stdout [  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204022 stdout [  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204076 stdout [  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204130 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204184 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204239 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204293 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204346 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204399 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204452 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204506 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204586 stdout [  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204640 stdout [  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204682 stdout [  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204718 stdout [  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204759 stdout [  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204802 stdout [  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204842 stdout [  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204880 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204919 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204959 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.204998 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205038 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205077 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205116 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205155 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205195 stdout [  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205235 stdout [  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205274 stdout [  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205313 stdout [  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205355 stdout [  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205394 stdout [  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205433 stdout [  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205477 stdout [  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205516 stdout [  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205556 stdout [  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205593 stdout [  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205632 stdout [  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205672 stdout [  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205709 stdout [  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205746 stdout [  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205786 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205834 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205855 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205896 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205928 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.205959 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206002 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206030 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206137 stdout [  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206191 stdout [  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206243 stdout [  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206299 stdout [  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206348 stdout [  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206397 stdout [  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206447 stdout [  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206498 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206547 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206595 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206646 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206713 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206741 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206827 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206872 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206930 stdout [  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.206980 stdout [  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207033 stdout [  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207075 stdout [  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207112 stdout [  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207147 stdout [  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207186 stdout [  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207224 stdout [  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207261 stdout [  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207298 stdout [  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207335 stdout [  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207372 stdout [  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207408 stdout [  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207443 stdout [  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207479 stdout [  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207517 stdout [  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207564 stdout [  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207600 stdout [  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207636 stdout [  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207673 stdout [  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207757 stdout [  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207825 stdout [  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207856 stdout [  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.207957 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208013 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208066 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208119 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208170 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208222 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208273 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208324 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208411 stdout [  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208454 stdout [  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208491 stdout [  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208529 stdout [  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208566 stdout [  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208603 stdout [  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208640 stdout [  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208677 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208721 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208756 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208792 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208828 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208865 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208902 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208935 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.208998 stdout [  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209034 stdout [  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209144 stdout [  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209206 stdout [  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209265 stdout [  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209316 stdout [  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209368 stdout [  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209414 stdout [  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209459 stdout [  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209510 stdout [  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209610 stdout [  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209658 stdout [  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209702 stdout [  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209744 stdout [  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209785 stdout [  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209823 stdout [  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209862 stdout [  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209915 stdout [  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209950 stdout [  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.209985 stdout [  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210024 stdout [  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210062 stdout [  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210098 stdout [  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210138 stdout [  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210176 stdout [  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210213 stdout [  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210250 stdout [  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210290 stdout [  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210327 stdout [  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210364 stdout [  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210401 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210432 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210466 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210506 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210546 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210583 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210621 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210661 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210698 stdout [  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210735 stdout [  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210774 stdout [  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210817 stdout [  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210861 stdout [  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210899 stdout [  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210942 stdout [  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.210981 stdout [  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211021 stdout [  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211052 stdout [  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211089 stdout [  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211127 stdout [  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211166 stdout [  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211209 stdout [  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211239 stdout [  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211272 stdout [  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211306 stdout [  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211362 stdout [  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211396 stdout [  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211429 stdout [  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211472 stdout [  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211499 stdout [  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211531 stdout [  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211563 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211597 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211629 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211662 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211702 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211730 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211795 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211862 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211902 stdout [  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211941 stdout [  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.211980 stdout [  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212019 stdout [  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212059 stdout [  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212094 stdout [  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212132 stdout [  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212167 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212204 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212242 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212280 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212317 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212360 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212401 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212438 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212480 stdout [  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212519 stdout [  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212554 stdout [  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212588 stdout [  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212626 stdout [  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212666 stdout [  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212711 stdout [  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212748 stdout [  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212797 stdout [  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212837 stdout [  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212879 stdout [  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.212910 stdout [  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213020 stdout [  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213043 stdout [  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213137 stdout [  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213168 stdout [  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213249 stdout [  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213272 stdout [  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213362 stdout [  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213393 stdout [  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213501 stdout [  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213548 stdout [  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213598 stdout [  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213615 stdout [  99% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213705 stdout [  99% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213766 stdout [  99% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213825 stdout [  99% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213879 stdout [  99% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213964 stdout [  99% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+22.213993 stdout [92m[ DONE ][39m [1mupdate_scripts_classes[22m
+22.214016 stdout [0m
+22.232886 stdout [   0% ] [90m[1m_update_scan_actions[22m | Started Escaneando acciones... (326 steps)[39m[0m
+22.233958 stdout [   0% ] [90m[1m_update_scan_actions[22m | touch-button.png[39m[0m
+22.234842 stdout [   0% ] [90m[1m_update_scan_actions[22m | logo.png[39m[0m
+22.235880 stdout [   0% ] [90m[1m_update_scan_actions[22m | border_bottom.png[39m[0m
+22.236864 stdout [   0% ] [90m[1m_update_scan_actions[22m | border_top.png[39m[0m
+22.237812 stdout [   1% ] [90m[1m_update_scan_actions[22m | dot1.png[39m[0m
+22.238774 stdout [   1% ] [90m[1m_update_scan_actions[22m | dot2.png[39m[0m
+22.239597 stdout [   1% ] [90m[1m_update_scan_actions[22m | embedded.png[39m[0m
+22.240479 stdout [   2% ] [90m[1m_update_scan_actions[22m | horizontal-line2.png[39m[0m
+22.241367 stdout [   2% ] [90m[1m_update_scan_actions[22m | AMB_PROXIMIDAD_Neon.ogg[39m[0m
+22.241989 stdout [   2% ] [90m[1m_update_scan_actions[22m | MUS_Tema1.ogg[39m[0m
+22.242480 stdout [   3% ] [90m[1m_update_scan_actions[22m | SFX_EVENTO_CompraRealizada.wav[39m[0m
+22.242974 stdout [   3% ] [90m[1m_update_scan_actions[22m | SFX_EVENTO_FinJornada.wav[39m[0m
+22.243591 stdout [   3% ] [90m[1m_update_scan_actions[22m | SFX_EVENTO_Timbre.wav[39m[0m
+22.244177 stdout [   3% ] [90m[1m_update_scan_actions[22m | SFX_INTERFAZ_Celular_Mensaje_A.wav[39m[0m
+22.244717 stdout [   4% ] [90m[1m_update_scan_actions[22m | SFX_INTERFAZ_Celular_Mensaje_B.wav[39m[0m
+22.245541 stdout [   4% ] [90m[1m_update_scan_actions[22m | SFX_INTERFAZ_Computadora_Boton.wav[39m[0m
+22.246126 stdout [   4% ] [90m[1m_update_scan_actions[22m | SFX_INTERFAZ_Computadora_Imprimir.wav[39m[0m
+22.246593 stdout [   5% ] [90m[1m_update_scan_actions[22m | SFX_NOLEV_Basura_SacarBolsa.wav[39m[0m
+22.247166 stdout [   5% ] [90m[1m_update_scan_actions[22m | SFX_NOLEV_Lector_Error.wav[39m[0m
+22.247626 stdout [   5% ] [90m[1m_update_scan_actions[22m | SFX_NOLEV_Lector_Escanear.wav[39m[0m
+22.248293 stdout [   6% ] [90m[1m_update_scan_actions[22m | SFX_NOLEV_Puerta_Abrir.wav[39m[0m
+22.248754 stdout [   6% ] [90m[1m_update_scan_actions[22m | SFX_NOLEV_Puerta_Cerrar.wav[39m[0m
+22.249211 stdout [   6% ] [90m[1m_update_scan_actions[22m | SFX_NOLEV_Puerta_Garage.wav[39m[0m
+22.249726 stdout [   7% ] [90m[1m_update_scan_actions[22m | SFX_NOLEV_Puerta_NoAbre.wav[39m[0m
+22.250266 stdout [   7% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Balde_Alzar.wav[39m[0m
+22.250820 stdout [   7% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Balde_Dejar.wav[39m[0m
+22.251296 stdout [   7% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Balde_Llenar.wav[39m[0m
+22.251745 stdout [   8% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Balde_Vaciar.wav[39m[0m
+22.252305 stdout [   8% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Bolsa_Alzar.wav[39m[0m
+22.252948 stdout [   8% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_BotellaPlastica_Alzar.wav[39m[0m
+22.253451 stdout [   9% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_BotellaPlastica_Dejar.wav[39m[0m
+22.253924 stdout [   9% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Cajita_Alzar.wav[39m[0m
+22.254450 stdout [   9% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Cajita_Dejar.wav[39m[0m
+22.255082 stdout [  10% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_EnvoltorioPlastico_Alzar.wav[39m[0m
+22.255657 stdout [  10% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_EnvoltorioPlastico_Dejar.wav[39m[0m
+22.256320 stdout [  10% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Jabon_VertirEnBalde.wav[39m[0m
+22.256875 stdout [  11% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Lata_Alzar.wav[39m[0m
+22.257415 stdout [  11% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Lata_Dejar.wav[39m[0m
+22.257867 stdout [  11% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Mopa_Alzar.wav[39m[0m
+22.258324 stdout [  11% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Mopa_DejarYLimpiar.wav[39m[0m
+22.258881 stdout [  12% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Mopa_MojarEnBalde.wav[39m[0m
+22.259557 stdout [  12% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Papel_Alzar.wav[39m[0m
+22.260163 stdout [  12% ] [90m[1m_update_scan_actions[22m | SFX_OBJETO_Papel_Dejar.wav[39m[0m
+22.260956 stdout [  13% ] [90m[1m_update_scan_actions[22m | SFX_PERSONAJE_Paso1.wav[39m[0m
+22.261627 stdout [  13% ] [90m[1m_update_scan_actions[22m | SFX_PERSONAJE_Paso2.wav[39m[0m
+22.262276 stdout [  13% ] [90m[1m_update_scan_actions[22m | SFX_PERSONAJE_Paso3.wav[39m[0m
+22.263155 stdout [  14% ] [90m[1m_update_scan_actions[22m | SFX_PERSONAJE_Paso4.wav[39m[0m
+22.263740 stdout [  14% ] [90m[1m_update_scan_actions[22m | SFX_PERSONAJE_Pasos.wav[39m[0m
+22.264227 stdout [  14% ] [90m[1m_update_scan_actions[22m | actroncito.png[39m[0m
+22.264803 stdout [  14% ] [90m[1m_update_scan_actions[22m | amargadito.png[39m[0m
+22.265366 stdout [  15% ] [90m[1m_update_scan_actions[22m | arvejas.png[39m[0m
+22.265838 stdout [  15% ] [90m[1m_update_scan_actions[22m | burbaloo.png[39m[0m
+22.266366 stdout [  15% ] [90m[1m_update_scan_actions[22m | chisitos.png[39m[0m
+22.266931 stdout [  16% ] [90m[1m_update_scan_actions[22m | cindolor.png[39m[0m
+22.267493 stdout [  16% ] [90m[1m_update_scan_actions[22m | coracola.png[39m[0m
+22.268020 stdout [  16% ] [90m[1m_update_scan_actions[22m | cosa_de_mani.png[39m[0m
+22.268642 stdout [  17% ] [90m[1m_update_scan_actions[22m | donsaturados.png[39m[0m
+22.269144 stdout [  17% ] [90m[1m_update_scan_actions[22m | durextra.png[39m[0m
+22.269626 stdout [  17% ] [90m[1m_update_scan_actions[22m | duronga.png[39m[0m
+22.270103 stdout [  18% ] [90m[1m_update_scan_actions[22m | feel_ricky_fort.png[39m[0m
+22.270833 stdout [  18% ] [90m[1m_update_scan_actions[22m | fernet_god.png[39m[0m
+22.271481 stdout [  18% ] [90m[1m_update_scan_actions[22m | flinpuf.png[39m[0m
+22.272171 stdout [  18% ] [90m[1m_update_scan_actions[22m | frotlups.png[39m[0m
+22.272899 stdout [  19% ] [90m[1m_update_scan_actions[22m | jorgillo.png[39m[0m
+22.273593 stdout [  19% ] [90m[1m_update_scan_actions[22m | laysntt.png[39m[0m
+22.274241 stdout [  19% ] [90m[1m_update_scan_actions[22m | macumbas.png[39m[0m
+22.274949 stdout [  20% ] [90m[1m_update_scan_actions[22m | malbardo.png[39m[0m
+22.275616 stdout [  20% ] [90m[1m_update_scan_actions[22m | marolini.png[39m[0m
+22.276381 stdout [  20% ] [90m[1m_update_scan_actions[22m | marranos.png[39m[0m
+22.277074 stdout [  21% ] [90m[1m_update_scan_actions[22m | mayonchis.png[39m[0m
+22.277926 stdout [  21% ] [90m[1m_update_scan_actions[22m | oaaaa.png[39m[0m
+22.278629 stdout [  21% ] [90m[1m_update_scan_actions[22m | oremos.png[39m[0m
+22.279185 stdout [  22% ] [90m[1m_update_scan_actions[22m | pepitos.png[39m[0m
+22.279642 stdout [  22% ] [90m[1m_update_scan_actions[22m | petisas.png[39m[0m
+22.280148 stdout [  22% ] [90m[1m_update_scan_actions[22m | poetico.png[39m[0m
+22.280592 stdout [  22% ] [90m[1m_update_scan_actions[22m | prongles.png[39m[0m
+22.281086 stdout [  23% ] [90m[1m_update_scan_actions[22m | saladik.png[39m[0m
+22.281560 stdout [  23% ] [90m[1m_update_scan_actions[22m | terminator.png[39m[0m
+22.282055 stdout [  23% ] [90m[1m_update_scan_actions[22m | uakas.png[39m[0m
+22.282626 stdout [  24% ] [90m[1m_update_scan_actions[22m | zucarachas.png[39m[0m
+22.283156 stdout [  24% ] [90m[1m_update_scan_actions[22m | 01.png[39m[0m
+22.283687 stdout [  24% ] [90m[1m_update_scan_actions[22m | 02.png[39m[0m
+22.284183 stdout [  25% ] [90m[1m_update_scan_actions[22m | 03.png[39m[0m
+22.284662 stdout [  25% ] [90m[1m_update_scan_actions[22m | 04.png[39m[0m
+22.285163 stdout [  25% ] [90m[1m_update_scan_actions[22m | 05.png[39m[0m
+22.285699 stdout [  25% ] [90m[1m_update_scan_actions[22m | 06.png[39m[0m
+22.286257 stdout [  26% ] [90m[1m_update_scan_actions[22m | 07.png[39m[0m
+22.286756 stdout [  26% ] [90m[1m_update_scan_actions[22m | 08.png[39m[0m
+22.287307 stdout [  26% ] [90m[1m_update_scan_actions[22m | 01.png[39m[0m
+22.287872 stdout [  27% ] [90m[1m_update_scan_actions[22m | 02.png[39m[0m
+22.288383 stdout [  27% ] [90m[1m_update_scan_actions[22m | 03.png[39m[0m
+22.288911 stdout [  27% ] [90m[1m_update_scan_actions[22m | 04.png[39m[0m
+22.289600 stdout [  28% ] [90m[1m_update_scan_actions[22m | 05.png[39m[0m
+22.290152 stdout [  28% ] [90m[1m_update_scan_actions[22m | 06.png[39m[0m
+22.290855 stdout [  28% ] [90m[1m_update_scan_actions[22m | 07.png[39m[0m
+22.291368 stdout [  29% ] [90m[1m_update_scan_actions[22m | 08.png[39m[0m
+22.291938 stdout [  29% ] [90m[1m_update_scan_actions[22m | 01.png[39m[0m
+22.292601 stdout [  29% ] [90m[1m_update_scan_actions[22m | 02.png[39m[0m
+22.293362 stdout [  29% ] [90m[1m_update_scan_actions[22m | 03.png[39m[0m
+22.293892 stdout [  30% ] [90m[1m_update_scan_actions[22m | 04.png[39m[0m
+22.294395 stdout [  30% ] [90m[1m_update_scan_actions[22m | 05.png[39m[0m
+22.294925 stdout [  30% ] [90m[1m_update_scan_actions[22m | 06.png[39m[0m
+22.295391 stdout [  31% ] [90m[1m_update_scan_actions[22m | 07.png[39m[0m
+22.295940 stdout [  31% ] [90m[1m_update_scan_actions[22m | 08.png[39m[0m
+22.296596 stdout [  31% ] [90m[1m_update_scan_actions[22m | 01.png[39m[0m
+22.297120 stdout [  32% ] [90m[1m_update_scan_actions[22m | 02.png[39m[0m
+22.297635 stdout [  32% ] [90m[1m_update_scan_actions[22m | 03.png[39m[0m
+22.298159 stdout [  32% ] [90m[1m_update_scan_actions[22m | 04.png[39m[0m
+22.298666 stdout [  33% ] [90m[1m_update_scan_actions[22m | 05.png[39m[0m
+22.299195 stdout [  33% ] [90m[1m_update_scan_actions[22m | 06.png[39m[0m
+22.299714 stdout [  33% ] [90m[1m_update_scan_actions[22m | 07.png[39m[0m
+22.300233 stdout [  33% ] [90m[1m_update_scan_actions[22m | 08.png[39m[0m
+22.300734 stdout [  34% ] [90m[1m_update_scan_actions[22m | canopy_without_lamp.png[39m[0m
+22.301238 stdout [  34% ] [90m[1m_update_scan_actions[22m | estacion_fondo_sin_objetos.png[39m[0m
+22.301728 stdout [  34% ] [90m[1m_update_scan_actions[22m | estacion_panoramica_gemini.jpg[39m[0m
+22.302192 stdout [  35% ] [90m[1m_update_scan_actions[22m | vidrio_marcas.png[39m[0m
+22.302676 stdout [  35% ] [90m[1m_update_scan_actions[22m | caja_registradora.glb[39m[0m
+22.303248 stdout [  35% ] [90m[1m_update_scan_actions[22m | caja_registradora_textura caja.png[39m[0m
+22.303735 stdout [  36% ] [90m[1m_update_scan_actions[22m | lector_de_productos.glb[39m[0m
+22.304261 stdout [  36% ] [90m[1m_update_scan_actions[22m | lector_de_productos_textura lector.png[39m[0m
+22.304748 stdout [  36% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO.glb[39m[0m
+22.305367 stdout [  37% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png[39m[0m
+22.306078 stdout [  37% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_amargadito completo.png[39m[0m
+22.306722 stdout [  37% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_arvecor.png[39m[0m
+22.307321 stdout [  37% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_atun marranos.png[39m[0m
+22.307971 stdout [  38% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_color.png[39m[0m
+22.308476 stdout [  38% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_normal.png[39m[0m
+22.309147 stdout [  38% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_orm.png[39m[0m
+22.309756 stdout [  39% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_bano_piso_gris.png[39m[0m
+22.310404 stdout [  39% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Color.jpg[39m[0m
+22.311008 stdout [  39% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_NormalGL.jpg[39m[0m
+22.311597 stdout [  40% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Roughness.png[39m[0m
+22.312168 stdout [  40% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png[39m[0m
+22.312811 stdout [  40% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png[39m[0m
+22.313378 stdout [  40% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_caja luz interior.png[39m[0m
+22.313957 stdout [  41% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_caja.png[39m[0m
+22.314523 stdout [  41% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_cereal textura.png[39m[0m
+22.315157 stdout [  41% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_chisito.png[39m[0m
+22.315711 stdout [  42% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_cielorraso_emision.png[39m[0m
+22.316306 stdout [  42% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_cielorraso_placas.png[39m[0m
+22.316917 stdout [  42% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png[39m[0m
+22.317559 stdout [  43% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_cindolor completo.png[39m[0m
+22.318116 stdout [  43% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_compu normals.png[39m[0m
+22.318716 stdout [  43% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_concrete_floor_worn_001_rough_1k.png[39m[0m
+22.319303 stdout [  44% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_concreto2_baseColor.png[39m[0m
+22.319880 stdout [  44% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Contenedor_negro_atlas_v2.png[39m[0m
+22.320511 stdout [  44% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_cora cola.png[39m[0m
+22.321187 stdout [  44% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_diff_1k.jpg[39m[0m
+22.321888 stdout [  45% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_metal_1k-corrugated_iron_02_rough_1k.png[39m[0m
+22.322484 stdout [  45% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_nor_gl_1k.png[39m[0m
+22.323044 stdout [  45% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_cosa de mani interno.png[39m[0m
+22.323504 stdout [  46% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_concreto_color.png[39m[0m
+22.324062 stdout [  46% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_concreto_normal.png[39m[0m
+22.324681 stdout [  46% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_color.png[39m[0m
+22.325280 stdout [  47% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_normal.png[39m[0m
+22.325825 stdout [  47% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_roughness.png[39m[0m
+22.326502 stdout [  47% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_ruedas_normal.png[39m[0m
+22.327033 stdout [  48% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_color.png[39m[0m
+22.327686 stdout [  48% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_normal.png[39m[0m
+22.328325 stdout [  48% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_roughness.png[39m[0m
+22.328924 stdout [  48% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_diffuse.png[39m[0m
+22.329623 stdout [  49% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Don Saturados completo.png[39m[0m
+22.330205 stdout [  49% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png[39m[0m
+22.330781 stdout [  49% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_duronga.png[39m[0m
+22.331466 stdout [  50% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_exterior_nocturno.png[39m[0m
+22.332100 stdout [  50% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_fernetgod textura.png[39m[0m
+22.332704 stdout [  50% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_fideos marolini.png[39m[0m
+22.333310 stdout [  51% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_flim pof completo.png[39m[0m
+22.333909 stdout [  51% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_frot lups.png[39m[0m
+22.334512 stdout [  51% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_fuera_de_servicio_manuscrito_papel.png[39m[0m
+22.335091 stdout [  51% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_gondola_chapa_blanca_512_basecolor.png[39m[0m
+22.335707 stdout [  52% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_gondola_panel_blanca_1024_basecolor.png[39m[0m
+22.336468 stdout [  52% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_gondola_portaprecio_basecolor.png[39m[0m
+22.337258 stdout [  52% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Guia_jabones_actualizados.png[39m[0m
+22.337856 stdout [  53% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png[39m[0m
+22.338553 stdout [  53% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_interior_tiles_diff_1k.jpg[39m[0m
+22.339213 stdout [  53% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_jabon_amarillo_sin_margenes.png[39m[0m
+22.339872 stdout [  54% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_jabon_azul_sin_margenes.png[39m[0m
+22.340477 stdout [  54% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_jabon_rosa_sin_margenes.png[39m[0m
+22.341076 stdout [  54% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_jabón liquido amarillo.png[39m[0m
+22.341686 stdout [  55% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_jabón liquido rosa.png[39m[0m
+22.342268 stdout [  55% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_jabón liquido.png[39m[0m
+22.342831 stdout [  55% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_jorgillata.png[39m[0m
+22.343421 stdout [  55% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Keyboard_BaseColor.png[39m[0m
+22.344026 stdout [  56% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Keyboard_Normal.png[39m[0m
+22.344612 stdout [  56% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Lay´snt´t completo_1.png[39m[0m
+22.345298 stdout [  56% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Lector_Frente.png[39m[0m
+22.345944 stdout [  57% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (1).png[39m[0m
+22.346511 stdout [  57% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (2).png[39m[0m
+22.347162 stdout [  57% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (3).png[39m[0m
+22.347768 stdout [  58% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_macumbas completo.png[39m[0m
+22.348397 stdout [  58% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_mantener_local_ordenado.png[39m[0m
+22.348981 stdout [  58% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Material.png[39m[0m
+22.349550 stdout [  59% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Material_6.png[39m[0m
+22.350056 stdout [  59% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Material_54.png[39m[0m
+22.350596 stdout [  59% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Material_55.png[39m[0m
+22.351130 stdout [  59% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Material_56.png[39m[0m
+22.351693 stdout [  60% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Material_57.png[39m[0m
+22.352307 stdout [  60% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Material_58.png[39m[0m
+22.353035 stdout [  60% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Material_59.png[39m[0m
+22.353629 stdout [  61% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Mat_ComputerSetup_BaseColor.png[39m[0m
+22.354347 stdout [  61% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Mat_ComputerSetup_Metallic-mat_computersetup_roughness.png[39m[0m
+22.354971 stdout [  61% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Mat_ComputerSetup_Normal.png[39m[0m
+22.355576 stdout [  62% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_mayonchis@300x.png[39m[0m
+22.356064 stdout [  62% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Mouse_BaseColor.png[39m[0m
+22.356657 stdout [  62% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Mouse_Metallic-Mouse_Roughness.png[39m[0m
+22.357223 stdout [  62% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Mouse_Normal.png[39m[0m
+22.357811 stdout [  63% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_normal nuevo.png[39m[0m
+22.358299 stdout [  63% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_nota baja resolución.png[39m[0m
+22.358802 stdout [  63% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_nota sin texto.png[39m[0m
+22.359383 stdout [  64% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_NRM.png[39m[0m
+22.359893 stdout [  64% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_oaaaa completo.png[39m[0m
+22.360382 stdout [  64% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_oremos.png[39m[0m
+22.360906 stdout [  65% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg[39m[0m
+22.361405 stdout [  65% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_pepito.png[39m[0m
+22.361908 stdout [  65% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_petisas completo.png[39m[0m
+22.362397 stdout [  66% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png[39m[0m
+22.362912 stdout [  66% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_placa_acustica_basecolor.png[39m[0m
+22.363413 stdout [  66% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Plastic012A_1K-JPG_Color.jpg[39m[0m
+22.364085 stdout [  66% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Plastic012A_1K-JPG_Displacement.jpg[39m[0m
+22.364615 stdout [  67% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_porcelana_atlas.png[39m[0m
+22.365135 stdout [  67% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_progres.png[39m[0m
+22.365688 stdout [  67% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_puchos.png[39m[0m
+22.366263 stdout [  68% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_puerta textura.png[39m[0m
+22.366794 stdout [  68% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_puerta_solo_empleados.png[39m[0m
+22.367522 stdout [  68% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_rejilla_bano.png[39m[0m
+22.368232 stdout [  69% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_reloj.png[39m[0m
+22.368807 stdout [  69% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_saladick.png[39m[0m
+22.369559 stdout [  69% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_SPEC.png[39m[0m
+22.370336 stdout [  70% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_tareas_jornada_1.png[39m[0m
+22.370918 stdout [  70% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg[39m[0m
+22.371456 stdout [  70% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Terminator completo.png[39m[0m
+22.372069 stdout [  70% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_texto instrucciones limpieza.png[39m[0m
+22.372670 stdout [  71% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_textura balde.png[39m[0m
+22.373227 stdout [  71% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_textura caja.png[39m[0m
+22.373712 stdout [  71% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_textura mopa.png[39m[0m
+22.374198 stdout [  72% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_textura portón.png[39m[0m
+22.374698 stdout [  72% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_textura poético.png[39m[0m
+22.375143 stdout [  72% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_textura.png[39m[0m
+22.375578 stdout [  73% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_wakasfideos.png[39m[0m
+22.376057 stdout [  73% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Wood_02-128x128.png[39m[0m
+22.376638 stdout [  73% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Wood_09-128x128.png[39m[0m
+22.377207 stdout [  74% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Wood_10-128x128.png[39m[0m
+22.377728 stdout [  74% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO_Zucarachas completo_1.png[39m[0m
+22.378167 stdout [  74% ] [90m[1m_update_scan_actions[22m | ticket_impreso.glb[39m[0m
+22.378726 stdout [  74% ] [90m[1m_update_scan_actions[22m | ticket_impreso_TICKET1.png[39m[0m
+22.379297 stdout [  75% ] [90m[1m_update_scan_actions[22m | DSEG7Classic-Regular.ttf[39m[0m
+22.380107 stdout [  75% ] [90m[1m_update_scan_actions[22m | enrique.png[39m[0m
+22.380850 stdout [  75% ] [90m[1m_update_scan_actions[22m | enrique_menu.png[39m[0m
+22.381549 stdout [  76% ] [90m[1m_update_scan_actions[22m | mascara.svg[39m[0m
+22.382117 stdout [  76% ] [90m[1m_update_scan_actions[22m | simbolos_de_chat.ttf[39m[0m
+22.383015 stdout [  76% ] [90m[1m_update_scan_actions[22m | intro-04.png[39m[0m
+22.383614 stdout [  77% ] [90m[1m_update_scan_actions[22m | intro-06.png[39m[0m
+22.384205 stdout [  77% ] [90m[1m_update_scan_actions[22m | intro-07.png[39m[0m
+22.384761 stdout [  77% ] [90m[1m_update_scan_actions[22m | intro-08.png[39m[0m
+22.385342 stdout [  77% ] [90m[1m_update_scan_actions[22m | intro-09.png[39m[0m
+22.385948 stdout [  78% ] [90m[1m_update_scan_actions[22m | intro-11.png[39m[0m
+22.386507 stdout [  78% ] [90m[1m_update_scan_actions[22m | intro-13.png[39m[0m
+22.387133 stdout [  78% ] [90m[1m_update_scan_actions[22m | jornada-2-contenedor.png[39m[0m
+22.387674 stdout [  79% ] [90m[1m_update_scan_actions[22m | bocadillo.svg[39m[0m
+22.388220 stdout [  79% ] [90m[1m_update_scan_actions[22m | caja.png[39m[0m
+22.388756 stdout [  79% ] [90m[1m_update_scan_actions[22m | enrique.png[39m[0m
+22.389350 stdout [  80% ] [90m[1m_update_scan_actions[22m | separador.svg[39m[0m
+22.389923 stdout [  80% ] [90m[1m_update_scan_actions[22m | ticket.png[39m[0m
+22.390507 stdout [  80% ] [90m[1m_update_scan_actions[22m | orange_lovely.otf[39m[0m
+22.391088 stdout [  81% ] [90m[1m_update_scan_actions[22m | papel_orden.svg[39m[0m
+22.391648 stdout [  81% ] [90m[1m_update_scan_actions[22m | papel_tareas.svg[39m[0m
+22.392222 stdout [  81% ] [90m[1m_update_scan_actions[22m | subrayado_mantener.svg[39m[0m
+22.392769 stdout [  81% ] [90m[1m_update_scan_actions[22m | subrayado_ordenado.svg[39m[0m
+22.393342 stdout [  82% ] [90m[1m_update_scan_actions[22m | subrayado_tareas.svg[39m[0m
+22.394058 stdout [  82% ] [90m[1m_update_scan_actions[22m | titulo_mantener.svg[39m[0m
+22.394682 stdout [  82% ] [90m[1m_update_scan_actions[22m | titulo_ordenado.svg[39m[0m
+22.395250 stdout [  83% ] [90m[1m_update_scan_actions[22m | titulo_tareas.svg[39m[0m
+22.395791 stdout [  83% ] [90m[1m_update_scan_actions[22m | actroncito.png[39m[0m
+22.396300 stdout [  83% ] [90m[1m_update_scan_actions[22m | amargadito.png[39m[0m
+22.396825 stdout [  84% ] [90m[1m_update_scan_actions[22m | arvejas.png[39m[0m
+22.397330 stdout [  84% ] [90m[1m_update_scan_actions[22m | barra_control.png[39m[0m
+22.397879 stdout [  84% ] [90m[1m_update_scan_actions[22m | barra_marco.png[39m[0m
+22.398597 stdout [  85% ] [90m[1m_update_scan_actions[22m | barra_relleno.png[39m[0m
+22.399337 stdout [  85% ] [90m[1m_update_scan_actions[22m | burbaloo.png[39m[0m
+22.399954 stdout [  85% ] [90m[1m_update_scan_actions[22m | cabecera.svg[39m[0m
+22.400458 stdout [  85% ] [90m[1m_update_scan_actions[22m | celular.svg[39m[0m
+22.400951 stdout [  86% ] [90m[1m_update_scan_actions[22m | chisitos.png[39m[0m
+22.401416 stdout [  86% ] [90m[1m_update_scan_actions[22m | cindolor.png[39m[0m
+22.401869 stdout [  86% ] [90m[1m_update_scan_actions[22m | computadora.svg[39m[0m
+22.402313 stdout [  87% ] [90m[1m_update_scan_actions[22m | coracola.png[39m[0m
+22.402865 stdout [  87% ] [90m[1m_update_scan_actions[22m | cosa_de_mani.png[39m[0m
+22.403343 stdout [  87% ] [90m[1m_update_scan_actions[22m | donsaturados.png[39m[0m
+22.403803 stdout [  88% ] [90m[1m_update_scan_actions[22m | durextra.png[39m[0m
+22.404305 stdout [  88% ] [90m[1m_update_scan_actions[22m | duronga.png[39m[0m
+22.404808 stdout [  88% ] [90m[1m_update_scan_actions[22m | enrique.png[39m[0m
+22.405348 stdout [  88% ] [90m[1m_update_scan_actions[22m | feel_ricky_fort.png[39m[0m
+22.405836 stdout [  89% ] [90m[1m_update_scan_actions[22m | fernet_god.png[39m[0m
+22.406348 stdout [  89% ] [90m[1m_update_scan_actions[22m | flinpuf.png[39m[0m
+22.406853 stdout [  89% ] [90m[1m_update_scan_actions[22m | fondo.png[39m[0m
+22.407484 stdout [  90% ] [90m[1m_update_scan_actions[22m | fondo_inicio.png[39m[0m
+22.407980 stdout [  90% ] [90m[1m_update_scan_actions[22m | frotlups.png[39m[0m
+22.408451 stdout [  90% ] [90m[1m_update_scan_actions[22m | jorgillo.png[39m[0m
+22.408932 stdout [  91% ] [90m[1m_update_scan_actions[22m | laysntt.png[39m[0m
+22.409531 stdout [  91% ] [90m[1m_update_scan_actions[22m | linea_detalle.svg[39m[0m
+22.410061 stdout [  91% ] [90m[1m_update_scan_actions[22m | macumbas.png[39m[0m
+22.410578 stdout [  92% ] [90m[1m_update_scan_actions[22m | malbardo.png[39m[0m
+22.411100 stdout [  92% ] [90m[1m_update_scan_actions[22m | marolini.png[39m[0m
+22.411574 stdout [  92% ] [90m[1m_update_scan_actions[22m | marranos.png[39m[0m
+22.412074 stdout [  92% ] [90m[1m_update_scan_actions[22m | mayonchis.png[39m[0m
+22.412593 stdout [  93% ] [90m[1m_update_scan_actions[22m | notificacion_cierre.svg[39m[0m
+22.413132 stdout [  93% ] [90m[1m_update_scan_actions[22m | notificacion_cliente.svg[39m[0m
+22.413651 stdout [  93% ] [90m[1m_update_scan_actions[22m | notificacion_lectura.svg[39m[0m
+22.414636 stdout [  94% ] [90m[1m_update_scan_actions[22m | notificacion_salida.svg[39m[0m
+22.415320 stdout [  94% ] [90m[1m_update_scan_actions[22m | oaaaa.png[39m[0m
+22.415946 stdout [  94% ] [90m[1m_update_scan_actions[22m | oremos.png[39m[0m
+22.416662 stdout [  95% ] [90m[1m_update_scan_actions[22m | pepitos.png[39m[0m
+22.417240 stdout [  95% ] [90m[1m_update_scan_actions[22m | petisas.png[39m[0m
+22.417741 stdout [  95% ] [90m[1m_update_scan_actions[22m | poetico.png[39m[0m
+22.418391 stdout [  96% ] [90m[1m_update_scan_actions[22m | prongles.png[39m[0m
+22.418914 stdout [  96% ] [90m[1m_update_scan_actions[22m | puntos_de_carga.svg[39m[0m
+22.419437 stdout [  96% ] [90m[1m_update_scan_actions[22m | registro.svg[39m[0m
+22.420053 stdout [  96% ] [90m[1m_update_scan_actions[22m | saladik.png[39m[0m
+22.420646 stdout [  97% ] [90m[1m_update_scan_actions[22m | solapa.svg[39m[0m
+22.421172 stdout [  97% ] [90m[1m_update_scan_actions[22m | terminator.png[39m[0m
+22.421749 stdout [  97% ] [90m[1m_update_scan_actions[22m | titulo_inicio.png[39m[0m
+22.422317 stdout [  98% ] [90m[1m_update_scan_actions[22m | uakas.png[39m[0m
+22.422877 stdout [  98% ] [90m[1m_update_scan_actions[22m | unscii-16.ttf[39m[0m
+22.423471 stdout [  98% ] [90m[1m_update_scan_actions[22m | zucarachas.png[39m[0m
+22.424111 stdout [  99% ] [90m[1m_update_scan_actions[22m | almacen.exr[39m[0m
+22.424548 stdout [  99% ] [90m[1m_update_scan_actions[22m | icon.svg[39m[0m
+22.424570 stdout [92m[ DONE ][39m [1m_update_scan_actions[22m
+22.424585 stdout [0m
+22.424779 stdout [   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (326 steps)[39m[0m
+22.424815 stdout [   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.425359 stdout [   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.425837 stdout [   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.426340 stdout [   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.426925 stdout [   1% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.427469 stdout [   1% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.427913 stdout [   1% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.428381 stdout [   2% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.428847 stdout [   2% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.429238 stdout [   2% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.429797 stdout [   3% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.430196 stdout [   3% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.430772 stdout [   3% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.431379 stdout [   3% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.431887 stdout [   4% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.432297 stdout [   4% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.432734 stdout [   4% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.433167 stdout [   5% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.433592 stdout [   5% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.434018 stdout [   5% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.434421 stdout [   6% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.434922 stdout [   6% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.435651 stdout [   6% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.436230 stdout [   7% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.436609 stdout [   7% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.436995 stdout [   7% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.437354 stdout [   7% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.437731 stdout [   8% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.438109 stdout [   8% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.438481 stdout [   8% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.438896 stdout [   9% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.439270 stdout [   9% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.439678 stdout [   9% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.440052 stdout [  10% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.440418 stdout [  10% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.440789 stdout [  10% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.441164 stdout [  11% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.441529 stdout [  11% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.441905 stdout [  11% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.442340 stdout [  11% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.442731 stdout [  12% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.443107 stdout [  12% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.443480 stdout [  12% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.443860 stdout [  13% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.444228 stdout [  13% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.444637 stdout [  13% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.445004 stdout [  14% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.445581 stdout [  14% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.445974 stdout [  14% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.446363 stdout [  14% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.446844 stdout [  15% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.447316 stdout [  15% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.447699 stdout [  15% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.448067 stdout [  16% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.448445 stdout [  16% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.448827 stdout [  16% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.449263 stdout [  17% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.449675 stdout [  17% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.450062 stdout [  17% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.450889 stdout [  18% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.451278 stdout [  18% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.451641 stdout [  18% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.452014 stdout [  18% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.452387 stdout [  19% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.452763 stdout [  19% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.453139 stdout [  19% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.453508 stdout [  20% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.453874 stdout [  20% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.454243 stdout [  20% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.454618 stdout [  21% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.454979 stdout [  21% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.455349 stdout [  21% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.455769 stdout [  22% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.456238 stdout [  22% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.456618 stdout [  22% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.457047 stdout [  22% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.457436 stdout [  23% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.457809 stdout [  23% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.458214 stdout [  23% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.458597 stdout [  24% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.459009 stdout [  24% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.459422 stdout [  24% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.459809 stdout [  25% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.460194 stdout [  25% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.460581 stdout [  25% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.461188 stdout [  25% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.461711 stdout [  26% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.462196 stdout [  26% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.462652 stdout [  26% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.463158 stdout [  27% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.463604 stdout [  27% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.464069 stdout [  27% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.464535 stdout [  28% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.465014 stdout [  28% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.465478 stdout [  28% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.465951 stdout [  29% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.466418 stdout [  29% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.466896 stdout [  29% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.467344 stdout [  29% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.467780 stdout [  30% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.468225 stdout [  30% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.468743 stdout [  30% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.469210 stdout [  31% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.469747 stdout [  31% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.470132 stdout [  31% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.470565 stdout [  32% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.470983 stdout [  32% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.471420 stdout [  32% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.471846 stdout [  33% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.472294 stdout [  33% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.472761 stdout [  33% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.473182 stdout [  33% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.473681 stdout [  34% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.474134 stdout [  34% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.474585 stdout [  34% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.474999 stdout [  35% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.475412 stdout [  35% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.475956 stdout [  35% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.476543 stdout [  36% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.477039 stdout [  36% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.477425 stdout [  36% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.477855 stdout [  37% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.478277 stdout [  37% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.478693 stdout [  37% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.479171 stdout [  37% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.479667 stdout [  38% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.480142 stdout [  38% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.480558 stdout [  38% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.480966 stdout [  39% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.481368 stdout [  39% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.481771 stdout [  39% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.482179 stdout [  40% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.482590 stdout [  40% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.482999 stdout [  40% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.483408 stdout [  40% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.483899 stdout [  41% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.484317 stdout [  41% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.484721 stdout [  41% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.485129 stdout [  42% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.485545 stdout [  42% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.485946 stdout [  42% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.486359 stdout [  43% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.486851 stdout [  43% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.487266 stdout [  43% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.487704 stdout [  44% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.488158 stdout [  44% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.488572 stdout [  44% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.488985 stdout [  44% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.489439 stdout [  45% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.489882 stdout [  45% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.490298 stdout [  45% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.490756 stdout [  46% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.491338 stdout [  46% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.491814 stdout [  46% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.492324 stdout [  47% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.492812 stdout [  47% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.493271 stdout [  47% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.493718 stdout [  48% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.494151 stdout [  48% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.494583 stdout [  48% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.495029 stdout [  48% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.495464 stdout [  49% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.495911 stdout [  49% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.496364 stdout [  49% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.496825 stdout [  50% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.497250 stdout [  50% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.497738 stdout [  50% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.498209 stdout [  51% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.498636 stdout [  51% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.499064 stdout [  51% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.499504 stdout [  51% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.499937 stdout [  52% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.500365 stdout [  52% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.500800 stdout [  52% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.501266 stdout [  53% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.501709 stdout [  53% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.502141 stdout [  53% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.502568 stdout [  54% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.502992 stdout [  54% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.503447 stdout [  54% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.503889 stdout [  55% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.504317 stdout [  55% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.504839 stdout [  55% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.505277 stdout [  55% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.505715 stdout [  56% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.506139 stdout [  56% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.506568 stdout [  56% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.507005 stdout [  57% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.507766 stdout [  57% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.508285 stdout [  57% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.508844 stdout [  58% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.509331 stdout [  58% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.509819 stdout [  58% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.510260 stdout [  59% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.510749 stdout [  59% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.511195 stdout [  59% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.511718 stdout [  59% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.512176 stdout [  60% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.512621 stdout [  60% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.513066 stdout [  60% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.513508 stdout [  61% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.513958 stdout [  61% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.514427 stdout [  61% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.514878 stdout [  62% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.515320 stdout [  62% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.515784 stdout [  62% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.516317 stdout [  62% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.516768 stdout [  63% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.517216 stdout [  63% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.517664 stdout [  63% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.518114 stdout [  64% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.518675 stdout [  64% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.519115 stdout [  64% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.519568 stdout [  65% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.520026 stdout [  65% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.520469 stdout [  65% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.520936 stdout [  66% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.521384 stdout [  66% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.521844 stdout [  66% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.522406 stdout [  66% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.522879 stdout [  67% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.523329 stdout [  67% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.523809 stdout [  67% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.524322 stdout [  68% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.524775 stdout [  68% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.525199 stdout [  68% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.525741 stdout [  69% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.526167 stdout [  69% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.526635 stdout [  69% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.527129 stdout [  70% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.527553 stdout [  70% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.528019 stdout [  70% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.528458 stdout [  70% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.528903 stdout [  71% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.529331 stdout [  71% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.529771 stdout [  71% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.530213 stdout [  72% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.530700 stdout [  72% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.531126 stdout [  72% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.531645 stdout [  73% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.532090 stdout [  73% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.532742 stdout [  73% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.533293 stdout [  74% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.533855 stdout [  74% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.534462 stdout [  74% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.534966 stdout [  74% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.535551 stdout [  75% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.536048 stdout [  75% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.536577 stdout [  75% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.536991 stdout [  76% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.537422 stdout [  76% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.537920 stdout [  76% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.538901 stdout [  77% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.539766 stdout [  77% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.540531 stdout [  77% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.541162 stdout [  77% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.541730 stdout [  78% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.542626 stdout [  78% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.543226 stdout [  78% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.543878 stdout [  79% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.544422 stdout [  79% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.544980 stdout [  79% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.545551 stdout [  80% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.546256 stdout [  80% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.546927 stdout [  80% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.547718 stdout [  81% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.548228 stdout [  81% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.548753 stdout [  81% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.549249 stdout [  81% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.549690 stdout [  82% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.550168 stdout [  82% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.550580 stdout [  82% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.551014 stdout [  83% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.551563 stdout [  83% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.551983 stdout [  83% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.552359 stdout [  84% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.552843 stdout [  84% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.553518 stdout [  84% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.554135 stdout [  85% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.554953 stdout [  85% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.555674 stdout [  85% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.556436 stdout [  85% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.557037 stdout [  86% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.557657 stdout [  86% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.558364 stdout [  86% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.558842 stdout [  87% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.559343 stdout [  87% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.559841 stdout [  87% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.560307 stdout [  88% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.560710 stdout [  88% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.561211 stdout [  88% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.561783 stdout [  88% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.562343 stdout [  89% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.562895 stdout [  89% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.563681 stdout [  89% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.564420 stdout [  90% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.564975 stdout [  90% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.565539 stdout [  90% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.566065 stdout [  91% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.566593 stdout [  91% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.567316 stdout [  91% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.567902 stdout [  92% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.568481 stdout [  92% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.569147 stdout [  92% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.569820 stdout [  92% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.570387 stdout [  93% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.570929 stdout [  93% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.571398 stdout [  93% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.571844 stdout [  94% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.572316 stdout [  94% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.572890 stdout [  94% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.573332 stdout [  95% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.573830 stdout [  95% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.574390 stdout [  95% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.574972 stdout [  96% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.575386 stdout [  96% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.575854 stdout [  96% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.576487 stdout [  96% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.577058 stdout [  97% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.577652 stdout [  97% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.578151 stdout [  97% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.578598 stdout [  98% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.579010 stdout [  98% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.579461 stdout [  98% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.579911 stdout [  99% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.580306 stdout [  99% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+22.580659 stdout [   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+22.601965 stdout [   0% ] [90m[1mpreload_reimporting_scene[22m | Started Preparando escenas para recargar (1 steps)[39m[0m
+22.601997 stdout [   0% ] [90m[1mpreload_reimporting_scene[22m | Analizando escena [vacío][39m[0m
+22.602085 stdout [  50% ] [90m[1mpreload_reimporting_scene[22m | Preparación terminada.[39m[0m
+22.602137 stdout [92m[ DONE ][39m [1mpreload_reimporting_scene[22m
+22.602149 stdout [0m
+22.602166 stdout [   0% ] [90m[1mreimport[22m | almacen.exr[39m[0m
+22.602240 stdout EditorFileSystem: Importing file: res://src/escenas/almacen.exr
+30.776300 stdout CVTT: Encoding took 7966 ms.
+38.989437 stdout CVTT: Encoding took 8210 ms.
+47.137678 stdout CVTT: Encoding took 8146 ms.
+55.381440 stdout CVTT: Encoding took 8241 ms.
+55.459874 stdout EditorFileSystem: "res://src/escenas/almacen.exr" import took 32857 ms.
+55.459976 stdout [   0% ] [90m[1mreimport[22m | almacen.exr[39m[0m
+55.460006 stdout EditorFileSystem: Importing file: res://assets/ui/manada/unscii-16.ttf
+55.460052 stdout EditorFileSystem: Importing file: res://assets/ui/manada/notas/orange_lovely.otf
+55.460072 stdout EditorFileSystem: Importing file: res://assets/ui/clock/DSEG7Classic-Regular.ttf
+55.460114 stdout EditorFileSystem: Importing file: res://assets/ui/manada/celular/simbolos_de_chat.ttf
+55.461418 stdout Importing dynamic font from: res://assets/ui/manada/notas/orange_lovely.otf
+55.461448 stdout Importing dynamic font from: res://assets/ui/clock/DSEG7Classic-Regular.ttf
+55.461459 stdout Importing dynamic font from: res://assets/ui/manada/celular/simbolos_de_chat.ttf
+55.461477 stdout Importing dynamic font from: res://assets/ui/manada/unscii-16.ttf
+55.470923 stdout Saving to: res://.godot/imported/orange_lovely.otf-6462406294c482c02fe3ca92e5bb77e0.fontdata
+55.470975 stdout Saving to: res://.godot/imported/simbolos_de_chat.ttf-6008d38bc90966bae2a0e2716a2a87be.fontdata
+55.471012 stdout Saving to: res://.godot/imported/DSEG7Classic-Regular.ttf-74bfece49972e9f55d67ab3d5ffe6edd.fontdata
+55.477850 stdout Done saving to: res://.godot/imported/orange_lovely.otf-6462406294c482c02fe3ca92e5bb77e0.fontdata
+55.477890 stdout Done saving to: res://.godot/imported/DSEG7Classic-Regular.ttf-74bfece49972e9f55d67ab3d5ffe6edd.fontdata
+55.493630 stdout EditorFileSystem: "res://assets/ui/clock/DSEG7Classic-Regular.ttf" import took 33 ms.
+55.493681 stdout EditorFileSystem: "res://assets/ui/manada/notas/orange_lovely.otf" import took 33 ms.
+55.493780 stdout [   0% ] [90m[1mreimport[22m | orange_lovely.otf[39m[0m
+55.493883 stdout [   0% ] [90m[1mreimport[22m | unscii-16.ttf[39m[0m
+55.499050 stdout res://assets/ui/manada/unscii-16.ttf: Pixel font detected, disabling subpixel positioning.
+55.499094 stdout res://assets/ui/manada/unscii-16.ttf: Pixel font detected, disabling hinting.
+55.499154 stdout Saving to: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata
+55.503602 stdout Done saving to: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata
+55.518819 stdout EditorFileSystem: "res://assets/ui/manada/unscii-16.ttf" import took 58 ms.
+55.518861 stdout [   1% ] [90m[1mreimport[22m | DSEG7Classic-Regular.ttf[39m[0m
+60.353495 stdout [   1% ] [90m[1mreimport[22m | DSEG7Classic-Regular.ttf[39m[0m

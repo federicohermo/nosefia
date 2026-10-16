@@ -1,0 +1,35 @@
+{
+  "godot": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "origin": "registro",
+  "history": [
+    {
+      "label": "guardia-pre",
+      "command": [
+        "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-B",
+        ".github/scripts/preparar_plantilla_web.py",
+        "--comprobar"
+      ],
+      "cwd": "D:\\nosefia-carril-B-429-444\\437-frio-export-01\\proyecto",
+      "pid": 6916,
+      "exit": 0,
+      "seconds": 0.9389003000687808
+    },
+    {
+      "label": "import-frio",
+      "command": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "--path",
+        "D:\\nosefia-carril-B-429-444\\437-frio-export-01\\proyecto",
+        "--import",
+        "--quit"
+      ],
+      "cwd": "D:\\nosefia-carril-B-429-444\\437-frio-export-01\\proyecto",
+      "pid": 68876,
+      "exit": 3221226356,
+      "seconds": 60.681720700114965
+    }
+  ]
+}

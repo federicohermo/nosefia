@@ -1,0 +1,11 @@
+{
+  "nodo": "specs",
+  "codigo": 0,
+  "segundos": 0.39157909993082285,
+  "salteado": false,
+  "aviso": null,
+  "comando": [
+    "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\filefish\\.claude\\scripts\\gate_de_specs.py"
+  ]
+}

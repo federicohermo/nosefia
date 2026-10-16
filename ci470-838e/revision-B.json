@@ -1,0 +1,93 @@
+{
+  "run": "38957377068",
+  "head": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
+  "conclusion": "success",
+  "reports": [
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\ci470-838e\\reports-gdunit4\\report_1\\results.xml",
+      "suites": 286,
+      "tests": 2181,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "flaky": 0
+    }
+  ],
+  "own": [
+    {
+      "suite": {
+        "id": "119",
+        "name": "sprites_de_compradores_jornada_2_test",
+        "package": "test/escenas",
+        "timestamp": "2026-10-16T20:05:27",
+        "hostname": "localhost",
+        "tests": "9",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "flaky": "0",
+        "time": "5.868"
+      },
+      "cases": [
+        {
+          "name": "test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "0.464"
+        },
+        {
+          "name": "test_los_recursos_conservan_orden_duracion_y_ritmo_idle",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "0.013"
+        },
+        {
+          "name": "test_la_tabla_resuelve_cuatro_identidades_con_recursos_propios",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "0.011"
+        },
+        {
+          "name": "test_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "0.914"
+        },
+        {
+          "name": "test_el_foco_y_contorno_usan_alfa_y_frame_actual_de_ambos",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "1.151"
+        },
+        {
+          "name": "test_cambiar_comprador_cambia_recurso_y_reinicia_sin_contorno_anterior",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "0.572"
+        },
+        {
+          "name": "test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "0.728"
+        },
+        {
+          "name": "test_el_fixture_no_modifica_las_selecciones_productivas",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "0.377"
+        },
+        {
+          "name": "test_el_antepecho_ocluye_el_corte_desde_frente_lados_y_encuadre",
+          "classname": "sprites_de_compradores_jornada_2_test",
+          "time": "1.578"
+        }
+      ]
+    }
+  ],
+  "raw_sha256": "ba27111716c7709d9e7c2e4841225cca358edf5775882e544ffd4bfe74e83a36",
+  "tokens": {
+    "SCRIPT ERROR": 0,
+    "Parse Error": 0,
+    "ObjectDB instances leaked": 0,
+    "resources still in use": 0,
+    "Pages in use": 0,
+    "Orphan StringName:": 0,
+    "Remote Debugger: Unable to connect": 0
+  },
+  "node_lines": [
+    "verify\tverificar\t2026-10-16T20:06:11.4761191Z 7/7 nodos en verde, en 1008.9s."
+  ]
+}

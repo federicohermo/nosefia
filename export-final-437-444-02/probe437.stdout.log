@@ -1,0 +1,78 @@
+WorkerThreadPool: 16 threads, 4 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res remapped: res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: D:/nosefia-carril-B-429-444/export-final-437-444-02/sondas-externas/probar437-pck.gd remapped: D:/nosefia-carril-B-429-444/export-final-437-444-02/sondas-externas/probar437-pck.gd
+Completed load for: 'D:/nosefia-carril-B-429-444/export-final-437-444-02/sondas-externas/probar437-pck.gd' remapped 'D:/nosefia-carril-B-429-444/export-final-437-444-02/sondas-externas/probar437-pck.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gdc remapped: res://addons/godot_mcp/mcp_screenshot_service.gdc
+Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gdc' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_input_service.gdc remapped: res://addons/godot_mcp/mcp_input_service.gdc
+Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gdc' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gdc remapped: res://addons/godot_mcp/mcp_game_inspector_service.gdc
+Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gdc' at thread -1
+Loaded system CA certificates
+Loading resource: res://.godot/exported/133200997/export-86f7c8048fac98359f9d82393cee4225-idle.res remapped: res://.godot/exported/133200997/export-86f7c8048fac98359f9d82393cee4225-idle.res
+Loading resource: res://assets/characters/fede/01.png remapped: res://assets/characters/fede/01.png
+Loading resource: res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex remapped: res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex
+Completed load for: 'res://assets/characters/fede/01.png' remapped 'res://assets/characters/fede/01.png' at thread -1
+Loading resource: res://assets/characters/fede/02.png remapped: res://assets/characters/fede/02.png
+Loading resource: res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex remapped: res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex
+Completed load for: 'res://assets/characters/fede/02.png' remapped 'res://assets/characters/fede/02.png' at thread -1
+Loading resource: res://assets/characters/fede/03.png remapped: res://assets/characters/fede/03.png
+Loading resource: res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex remapped: res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex
+Completed load for: 'res://assets/characters/fede/03.png' remapped 'res://assets/characters/fede/03.png' at thread -1
+Loading resource: res://assets/characters/fede/04.png remapped: res://assets/characters/fede/04.png
+Loading resource: res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex remapped: res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex
+Completed load for: 'res://assets/characters/fede/04.png' remapped 'res://assets/characters/fede/04.png' at thread -1
+Loading resource: res://assets/characters/fede/05.png remapped: res://assets/characters/fede/05.png
+Loading resource: res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex remapped: res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex
+Completed load for: 'res://assets/characters/fede/05.png' remapped 'res://assets/characters/fede/05.png' at thread -1
+Loading resource: res://assets/characters/fede/06.png remapped: res://assets/characters/fede/06.png
+Loading resource: res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex remapped: res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex
+Completed load for: 'res://assets/characters/fede/06.png' remapped 'res://assets/characters/fede/06.png' at thread -1
+Loading resource: res://assets/characters/fede/07.png remapped: res://assets/characters/fede/07.png
+Loading resource: res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex remapped: res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex
+Completed load for: 'res://assets/characters/fede/07.png' remapped 'res://assets/characters/fede/07.png' at thread -1
+Loading resource: res://assets/characters/fede/08.png remapped: res://assets/characters/fede/08.png
+Loading resource: res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex remapped: res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex
+Completed load for: 'res://assets/characters/fede/08.png' remapped 'res://assets/characters/fede/08.png' at thread -1
+Completed load for: 'res://assets/characters/fede/idle.tres' remapped 'res://.godot/exported/133200997/export-86f7c8048fac98359f9d82393cee4225-idle.res' at thread -1
+Loading resource: res://.godot/exported/133200997/export-362ecc625f8f9f8785c1307e2781676d-idle.res remapped: res://.godot/exported/133200997/export-362ecc625f8f9f8785c1307e2781676d-idle.res
+Loading resource: res://assets/characters/mia/01.png remapped: res://assets/characters/mia/01.png
+Loading resource: res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex remapped: res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex
+Completed load for: 'res://assets/characters/mia/01.png' remapped 'res://assets/characters/mia/01.png' at thread -1
+Loading resource: res://assets/characters/mia/02.png remapped: res://assets/characters/mia/02.png
+Loading resource: res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex remapped: res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex
+Completed load for: 'res://assets/characters/mia/02.png' remapped 'res://assets/characters/mia/02.png' at thread -1
+Loading resource: res://assets/characters/mia/03.png remapped: res://assets/characters/mia/03.png
+Loading resource: res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex remapped: res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex
+Completed load for: 'res://assets/characters/mia/03.png' remapped 'res://assets/characters/mia/03.png' at thread -1
+Loading resource: res://assets/characters/mia/04.png remapped: res://assets/characters/mia/04.png
+Loading resource: res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex remapped: res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex
+Completed load for: 'res://assets/characters/mia/04.png' remapped 'res://assets/characters/mia/04.png' at thread -1
+Loading resource: res://assets/characters/mia/05.png remapped: res://assets/characters/mia/05.png
+Loading resource: res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex remapped: res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex
+Completed load for: 'res://assets/characters/mia/05.png' remapped 'res://assets/characters/mia/05.png' at thread -1
+Loading resource: res://assets/characters/mia/06.png remapped: res://assets/characters/mia/06.png
+Loading resource: res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex remapped: res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex
+Completed load for: 'res://assets/characters/mia/06.png' remapped 'res://assets/characters/mia/06.png' at thread -1
+Loading resource: res://assets/characters/mia/07.png remapped: res://assets/characters/mia/07.png
+Loading resource: res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex remapped: res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex
+Completed load for: 'res://assets/characters/mia/07.png' remapped 'res://assets/characters/mia/07.png' at thread -1
+Loading resource: res://assets/characters/mia/08.png remapped: res://assets/characters/mia/08.png
+Loading resource: res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex remapped: res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex
+Completed load for: 'res://assets/characters/mia/08.png' remapped 'res://assets/characters/mia/08.png' at thread -1
+Completed load for: 'res://assets/characters/mia/idle.tres' remapped 'res://.godot/exported/133200997/export-362ecc625f8f9f8785c1307e2781676d-idle.res' at thread -1
+SPRITES437_PCK_FINAL fallos=0
+SPRITES437_PCK_OK
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"

@@ -1,0 +1,122 @@
+{
+  "head": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+  "own_437_head": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
+  "40_source_blobs_437_identical": true,
+  "19_product_files_437_unchanged_after_export": true,
+  "four_web_artifacts_byte_identical_01_02": true,
+  "ctex_16_byte_identical_01_02": [
+    {
+      "path": "res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex",
+      "sha256": "bc6576aa0e41322866773afdfa0ac2af24cb0669566484b6ec982aa4a2ce0944"
+    },
+    {
+      "path": "res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex",
+      "sha256": "5b0f1bfbc89316e48432ad6a1bf8f1f52dcf4d9b8ac0a3773f703f177e16d755"
+    },
+    {
+      "path": "res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex",
+      "sha256": "a751cb93c0f9861dcc86af0aa9466d09561285dbd872ff4e9c574ce5264a9379"
+    },
+    {
+      "path": "res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex",
+      "sha256": "f8332b2776183f837ac42bb380d7c44fa4c0afa68a18f0b225547b31a7c574fb"
+    },
+    {
+      "path": "res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex",
+      "sha256": "aec731fce12101fcfb3aa4477df9c038c35e36fa7576b026140026a4cd87f196"
+    },
+    {
+      "path": "res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex",
+      "sha256": "74d9ef2e32a9e3342cb69ae10e4ef2cac236401b53e1cf717b8e5655edb36c16"
+    },
+    {
+      "path": "res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex",
+      "sha256": "bc2052195221a2b1bfc02bc9175bc1d7410a2ad297ba0314d8c58483b9fef620"
+    },
+    {
+      "path": "res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex",
+      "sha256": "c2c7d440a579d82fea842ce387747169ada3cee3c7f6f66ac798213502a54717"
+    },
+    {
+      "path": "res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex",
+      "sha256": "58f95d7332268ce15357c922fcbca29ce19d7c8bac9f534c0c703fe3708f03af"
+    },
+    {
+      "path": "res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex",
+      "sha256": "b7d2c2c97036049ec90797c72be1acb6047173547017dcbae1df46d15c8ef101"
+    },
+    {
+      "path": "res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex",
+      "sha256": "f96f92bb6128c346078cca0d3f443bf47e4dd2992c0b0eea88fd5e25cdb2679c"
+    },
+    {
+      "path": "res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex",
+      "sha256": "dcc5650dfd234ed70d95b521f9747704cedbcfadfed68e9789885d62b7b578a2"
+    },
+    {
+      "path": "res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex",
+      "sha256": "4bb13b24856b802953aea0c8b835b6cea5cce4ec63e72930d7ea7115445d221b"
+    },
+    {
+      "path": "res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex",
+      "sha256": "98ed5ae235afcbfe375336ed1df324ea814c35e8312c3f4dfa4b805ea113e2b5"
+    },
+    {
+      "path": "res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex",
+      "sha256": "b45e57dbb0cfcf51931839e238ea16abe3079d2e63e307f859c1b00323deefc2"
+    },
+    {
+      "path": "res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex",
+      "sha256": "4d299f98f81bac3d9831f82c38554f114faaaaf78f4ce2f84d5c6fc1a5ca8d1d"
+    }
+  ],
+  "cold_claim": "01:16newtextures absent before import;02:cached continuity, no second cold claim",
+  "files": {
+    "index.html": {
+      "bytes": 5442,
+      "sha256": "57a3ed5dbf4244736108f8320b8b1299876f50e0a3df8b148d2e3c8143e528e5"
+    },
+    "index.js": {
+      "bytes": 320316,
+      "sha256": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b"
+    },
+    "index.pck": {
+      "bytes": 109308012,
+      "sha256": "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5"
+    },
+    "index.wasm": {
+      "bytes": 38850640,
+      "sha256": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61"
+    }
+  },
+  "logs": {
+    "importar": {
+      "errors": [],
+      "orphan_string_names": 0,
+      "sha256": "402269f82a11e1d73847ab45b8842fac57d7002ebacd224019b88e16d9467ba4"
+    },
+    "exportar": {
+      "errors": [],
+      "orphan_string_names": 0,
+      "sha256": "452821278e0e8b1df36adbd9546e84964a0ef44c96fa5190f120e7484546b508"
+    },
+    "probe437": {
+      "errors": [],
+      "orphan_string_names": 0,
+      "sha256": "bb0517594afdb1d66677a3745e39f93d81bf71699f27448d3fdb01bb95c77536"
+    },
+    "probe444": {
+      "errors": [],
+      "orphan_string_names": 0,
+      "sha256": "56fbdf9948297309aa2716cfead9a9bc804f521a6250ad223b00feb466eab951"
+    }
+  },
+  "final_markers": [
+    "SPRITES437_PCK_OK",
+    "PAQUETE444_FINAL fallos=0"
+  ],
+  "pending": [
+    "root shared full all7 nodes",
+    "root real native/Web captures afterdraw"
+  ]
+}

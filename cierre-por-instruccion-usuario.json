@@ -1,0 +1,13 @@
+{
+  "source": "explicit instruction relayed by root: finish before17:30ART, no more local verification, validation in PR",
+  "own_head": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
+  "integrated_head": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+  "own_CI": "SUCCESS7/7,286suites2181cases",
+  "own_focal": "9/9green",
+  "export_02": "green, both external probes markers exit0",
+  "shared_local_full": "canceled by user instruction; partial raw/pins retained, not accepted as convergence",
+  "shared_captures": "canceled by user instruction before real Fede/Mia captures",
+  "all_8_criteria_complete": false,
+  "criterion7_real_captures_complete": false,
+  "publication_and_PR_ready": "authorized with explicit limits; no new motor runs"
+}

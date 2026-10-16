@@ -1,0 +1,400 @@
+WorkerThreadPool: 16 threads, 4 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: res://addons/gdUnit4/bin/GdUnitCmdTool.gd remapped: res://addons/gdUnit4/bin/GdUnitCmdTool.gd
+Completed load for: 'res://addons/gdUnit4/bin/GdUnitCmdTool.gd' remapped 'res://addons/gdUnit4/bin/GdUnitCmdTool.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gd remapped: res://addons/godot_mcp/mcp_screenshot_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_input_service.gd remapped: res://addons/godot_mcp/mcp_input_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gd remapped: res://addons/godot_mcp/mcp_game_inspector_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gd' at thread -1
+Loaded system CA certificates
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd' at thread -1
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-limpieza/reports/focal-437[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+Loading resource: res://test/escenas/sprites_de_compradores_jornada_2_test.gd remapped: res://test/escenas/sprites_de_compradores_jornada_2_test.gd
+Loading resource: res://assets/dialogos/compradores_jornada_1.tres remapped: res://assets/dialogos/compradores_jornada_1.tres
+Completed load for: 'res://assets/dialogos/compradores_jornada_1.tres' remapped 'res://assets/dialogos/compradores_jornada_1.tres' at thread -1
+Completed load for: 'res://test/escenas/sprites_de_compradores_jornada_2_test.gd' remapped 'res://test/escenas/sprites_de_compradores_jornada_2_test.gd' at thread -1
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+Loading resource: res://test/guardado_de_la_sesion.gd remapped: res://test/guardado_de_la_sesion.gd
+Completed load for: 'res://test/guardado_de_la_sesion.gd' remapped 'res://test/guardado_de_la_sesion.gd' at thread -1
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+Register singleton 'GdUnitTestSessionHookService:<Object#135996114622>'
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' > startup()[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' > startup()[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' > startup()[0m
+Register singleton 'GdUnitThreadManager:<Object#139552884479>'
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_dieciseis_png_conservan_los_blobs_y_rgba_originales[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://test/escenas/captura_de_compradores_jornada_2.gd remapped: res://test/escenas/captura_de_compradores_jornada_2.gd
+Completed load for: 'res://test/escenas/captura_de_compradores_jornada_2.gd' remapped 'res://test/escenas/captura_de_compradores_jornada_2.gd' at thread -1
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_dieciseis_png_conservan_los_blobs_y_rgba_originales[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 496ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_recursos_conservan_orden_duracion_y_ritmo_idle[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://assets/characters/fede/idle.tres remapped: res://assets/characters/fede/idle.tres
+Loading resource: res://assets/characters/fede/01.png remapped: res://assets/characters/fede/01.png
+Loading resource: res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex remapped: res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex
+Completed load for: 'res://assets/characters/fede/01.png' remapped 'res://assets/characters/fede/01.png' at thread -1
+Loading resource: res://assets/characters/fede/02.png remapped: res://assets/characters/fede/02.png
+Loading resource: res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex remapped: res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex
+Completed load for: 'res://assets/characters/fede/02.png' remapped 'res://assets/characters/fede/02.png' at thread -1
+Loading resource: res://assets/characters/fede/03.png remapped: res://assets/characters/fede/03.png
+Loading resource: res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex remapped: res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex
+Completed load for: 'res://assets/characters/fede/03.png' remapped 'res://assets/characters/fede/03.png' at thread -1
+Loading resource: res://assets/characters/fede/04.png remapped: res://assets/characters/fede/04.png
+Loading resource: res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex remapped: res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex
+Completed load for: 'res://assets/characters/fede/04.png' remapped 'res://assets/characters/fede/04.png' at thread -1
+Loading resource: res://assets/characters/fede/05.png remapped: res://assets/characters/fede/05.png
+Loading resource: res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex remapped: res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex
+Completed load for: 'res://assets/characters/fede/05.png' remapped 'res://assets/characters/fede/05.png' at thread -1
+Loading resource: res://assets/characters/fede/06.png remapped: res://assets/characters/fede/06.png
+Loading resource: res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex remapped: res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex
+Completed load for: 'res://assets/characters/fede/06.png' remapped 'res://assets/characters/fede/06.png' at thread -1
+Loading resource: res://assets/characters/fede/07.png remapped: res://assets/characters/fede/07.png
+Loading resource: res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex remapped: res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex
+Completed load for: 'res://assets/characters/fede/07.png' remapped 'res://assets/characters/fede/07.png' at thread -1
+Loading resource: res://assets/characters/fede/08.png remapped: res://assets/characters/fede/08.png
+Loading resource: res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex remapped: res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex
+Completed load for: 'res://assets/characters/fede/08.png' remapped 'res://assets/characters/fede/08.png' at thread -1
+Completed load for: 'res://assets/characters/fede/idle.tres' remapped 'res://assets/characters/fede/idle.tres' at thread -1
+Loading resource: res://assets/characters/mia/idle.tres remapped: res://assets/characters/mia/idle.tres
+Loading resource: res://assets/characters/mia/01.png remapped: res://assets/characters/mia/01.png
+Loading resource: res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex remapped: res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex
+Completed load for: 'res://assets/characters/mia/01.png' remapped 'res://assets/characters/mia/01.png' at thread -1
+Loading resource: res://assets/characters/mia/02.png remapped: res://assets/characters/mia/02.png
+Loading resource: res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex remapped: res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex
+Completed load for: 'res://assets/characters/mia/02.png' remapped 'res://assets/characters/mia/02.png' at thread -1
+Loading resource: res://assets/characters/mia/03.png remapped: res://assets/characters/mia/03.png
+Loading resource: res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex remapped: res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex
+Completed load for: 'res://assets/characters/mia/03.png' remapped 'res://assets/characters/mia/03.png' at thread -1
+Loading resource: res://assets/characters/mia/04.png remapped: res://assets/characters/mia/04.png
+Loading resource: res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex remapped: res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex
+Completed load for: 'res://assets/characters/mia/04.png' remapped 'res://assets/characters/mia/04.png' at thread -1
+Loading resource: res://assets/characters/mia/05.png remapped: res://assets/characters/mia/05.png
+Loading resource: res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex remapped: res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex
+Completed load for: 'res://assets/characters/mia/05.png' remapped 'res://assets/characters/mia/05.png' at thread -1
+Loading resource: res://assets/characters/mia/06.png remapped: res://assets/characters/mia/06.png
+Loading resource: res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex remapped: res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex
+Completed load for: 'res://assets/characters/mia/06.png' remapped 'res://assets/characters/mia/06.png' at thread -1
+Loading resource: res://assets/characters/mia/07.png remapped: res://assets/characters/mia/07.png
+Loading resource: res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex remapped: res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex
+Completed load for: 'res://assets/characters/mia/07.png' remapped 'res://assets/characters/mia/07.png' at thread -1
+Loading resource: res://assets/characters/mia/08.png remapped: res://assets/characters/mia/08.png
+Loading resource: res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex remapped: res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex
+Completed load for: 'res://assets/characters/mia/08.png' remapped 'res://assets/characters/mia/08.png' at thread -1
+Completed load for: 'res://assets/characters/mia/idle.tres' remapped 'res://assets/characters/mia/idle.tres' at thread -1
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_recursos_conservan_orden_duracion_y_ritmo_idle[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 280ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_resuelve_cuatro_identidades_con_recursos_propios[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/puestos/ventanilla.gd remapped: res://src/escenas/puestos/ventanilla.gd
+Loading resource: res://assets/characters/martin/idle.tres remapped: res://assets/characters/martin/idle.tres
+Loading resource: res://assets/characters/martin/01.png remapped: res://assets/characters/martin/01.png
+Loading resource: res://.godot/imported/01.png-3a086970c4dd02c8e4cd8da812c104dd.ctex remapped: res://.godot/imported/01.png-3a086970c4dd02c8e4cd8da812c104dd.ctex
+Completed load for: 'res://assets/characters/martin/01.png' remapped 'res://assets/characters/martin/01.png' at thread -1
+Loading resource: res://assets/characters/martin/02.png remapped: res://assets/characters/martin/02.png
+Loading resource: res://.godot/imported/02.png-fdce8c73e98afe3f6d1396e152e42bfb.ctex remapped: res://.godot/imported/02.png-fdce8c73e98afe3f6d1396e152e42bfb.ctex
+Completed load for: 'res://assets/characters/martin/02.png' remapped 'res://assets/characters/martin/02.png' at thread -1
+Loading resource: res://assets/characters/martin/03.png remapped: res://assets/characters/martin/03.png
+Loading resource: res://.godot/imported/03.png-2409c346f99a47464452ed1a4d065a09.ctex remapped: res://.godot/imported/03.png-2409c346f99a47464452ed1a4d065a09.ctex
+Completed load for: 'res://assets/characters/martin/03.png' remapped 'res://assets/characters/martin/03.png' at thread -1
+Loading resource: res://assets/characters/martin/04.png remapped: res://assets/characters/martin/04.png
+Loading resource: res://.godot/imported/04.png-075cafff9c9453f715f55c63d417fd8d.ctex remapped: res://.godot/imported/04.png-075cafff9c9453f715f55c63d417fd8d.ctex
+Completed load for: 'res://assets/characters/martin/04.png' remapped 'res://assets/characters/martin/04.png' at thread -1
+Loading resource: res://assets/characters/martin/05.png remapped: res://assets/characters/martin/05.png
+Loading resource: res://.godot/imported/05.png-bc2c308d42b35c936f799e24b90af07f.ctex remapped: res://.godot/imported/05.png-bc2c308d42b35c936f799e24b90af07f.ctex
+Completed load for: 'res://assets/characters/martin/05.png' remapped 'res://assets/characters/martin/05.png' at thread -1
+Loading resource: res://assets/characters/martin/06.png remapped: res://assets/characters/martin/06.png
+Loading resource: res://.godot/imported/06.png-9b0e7aafb7a4f2fbc1b059d3d15ab7ed.ctex remapped: res://.godot/imported/06.png-9b0e7aafb7a4f2fbc1b059d3d15ab7ed.ctex
+Completed load for: 'res://assets/characters/martin/06.png' remapped 'res://assets/characters/martin/06.png' at thread -1
+Loading resource: res://assets/characters/martin/07.png remapped: res://assets/characters/martin/07.png
+Loading resource: res://.godot/imported/07.png-9fef62cb25d754ccd536627be4666a0c.ctex remapped: res://.godot/imported/07.png-9fef62cb25d754ccd536627be4666a0c.ctex
+Completed load for: 'res://assets/characters/martin/07.png' remapped 'res://assets/characters/martin/07.png' at thread -1
+Loading resource: res://assets/characters/martin/08.png remapped: res://assets/characters/martin/08.png
+Loading resource: res://.godot/imported/08.png-b0ad87ea5c0e4a921db207ddb7b247a8.ctex remapped: res://.godot/imported/08.png-b0ad87ea5c0e4a921db207ddb7b247a8.ctex
+Completed load for: 'res://assets/characters/martin/08.png' remapped 'res://assets/characters/martin/08.png' at thread -1
+Completed load for: 'res://assets/characters/martin/idle.tres' remapped 'res://assets/characters/martin/idle.tres' at thread -1
+Loading resource: res://assets/characters/tiago/idle.tres remapped: res://assets/characters/tiago/idle.tres
+Loading resource: res://assets/characters/tiago/01.png remapped: res://assets/characters/tiago/01.png
+Loading resource: res://.godot/imported/01.png-d4e75731b44367919ca962f2011cab3c.ctex remapped: res://.godot/imported/01.png-d4e75731b44367919ca962f2011cab3c.ctex
+Completed load for: 'res://assets/characters/tiago/01.png' remapped 'res://assets/characters/tiago/01.png' at thread -1
+Loading resource: res://assets/characters/tiago/02.png remapped: res://assets/characters/tiago/02.png
+Loading resource: res://.godot/imported/02.png-dddcabf8a3b42cac90c410c41a1d1fce.ctex remapped: res://.godot/imported/02.png-dddcabf8a3b42cac90c410c41a1d1fce.ctex
+Completed load for: 'res://assets/characters/tiago/02.png' remapped 'res://assets/characters/tiago/02.png' at thread -1
+Loading resource: res://assets/characters/tiago/03.png remapped: res://assets/characters/tiago/03.png
+Loading resource: res://.godot/imported/03.png-594c46fcc33e068cb50021280af056ec.ctex remapped: res://.godot/imported/03.png-594c46fcc33e068cb50021280af056ec.ctex
+Completed load for: 'res://assets/characters/tiago/03.png' remapped 'res://assets/characters/tiago/03.png' at thread -1
+Loading resource: res://assets/characters/tiago/04.png remapped: res://assets/characters/tiago/04.png
+Loading resource: res://.godot/imported/04.png-7c2aceeede8fc0d46e22fe926d110e0f.ctex remapped: res://.godot/imported/04.png-7c2aceeede8fc0d46e22fe926d110e0f.ctex
+Completed load for: 'res://assets/characters/tiago/04.png' remapped 'res://assets/characters/tiago/04.png' at thread -1
+Loading resource: res://assets/characters/tiago/05.png remapped: res://assets/characters/tiago/05.png
+Loading resource: res://.godot/imported/05.png-6f78a6d994514a000c6e9dc8cd366cda.ctex remapped: res://.godot/imported/05.png-6f78a6d994514a000c6e9dc8cd366cda.ctex
+Completed load for: 'res://assets/characters/tiago/05.png' remapped 'res://assets/characters/tiago/05.png' at thread -1
+Loading resource: res://assets/characters/tiago/06.png remapped: res://assets/characters/tiago/06.png
+Loading resource: res://.godot/imported/06.png-59fad00f110b4ea215464cb430fb75ab.ctex remapped: res://.godot/imported/06.png-59fad00f110b4ea215464cb430fb75ab.ctex
+Completed load for: 'res://assets/characters/tiago/06.png' remapped 'res://assets/characters/tiago/06.png' at thread -1
+Loading resource: res://assets/characters/tiago/07.png remapped: res://assets/characters/tiago/07.png
+Loading resource: res://.godot/imported/07.png-0cb94de55da664c3f3274d7b8087fbd1.ctex remapped: res://.godot/imported/07.png-0cb94de55da664c3f3274d7b8087fbd1.ctex
+Completed load for: 'res://assets/characters/tiago/07.png' remapped 'res://assets/characters/tiago/07.png' at thread -1
+Loading resource: res://assets/characters/tiago/08.png remapped: res://assets/characters/tiago/08.png
+Loading resource: res://.godot/imported/08.png-d222b5dbfb11dd73603df5fa3f58423b.ctex remapped: res://.godot/imported/08.png-d222b5dbfb11dd73603df5fa3f58423b.ctex
+Completed load for: 'res://assets/characters/tiago/08.png' remapped 'res://assets/characters/tiago/08.png' at thread -1
+Completed load for: 'res://assets/characters/tiago/idle.tres' remapped 'res://assets/characters/tiago/idle.tres' at thread -1
+Loading resource: res://assets/boxes/actroncito.png remapped: res://assets/boxes/actroncito.png
+Loading resource: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex remapped: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex
+Completed load for: 'res://assets/boxes/actroncito.png' remapped 'res://assets/boxes/actroncito.png' at thread -1
+Loading resource: res://assets/boxes/durextra.png remapped: res://assets/boxes/durextra.png
+Loading resource: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex remapped: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex
+Completed load for: 'res://assets/boxes/durextra.png' remapped 'res://assets/boxes/durextra.png' at thread -1
+Loading resource: res://assets/boxes/burbaloo.png remapped: res://assets/boxes/burbaloo.png
+Loading resource: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex remapped: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex
+Completed load for: 'res://assets/boxes/burbaloo.png' remapped 'res://assets/boxes/burbaloo.png' at thread -1
+Loading resource: res://assets/boxes/zucarachas.png remapped: res://assets/boxes/zucarachas.png
+Loading resource: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex remapped: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex
+Completed load for: 'res://assets/boxes/zucarachas.png' remapped 'res://assets/boxes/zucarachas.png' at thread -1
+Loading resource: res://assets/boxes/laysntt.png remapped: res://assets/boxes/laysntt.png
+Loading resource: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex remapped: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex
+Completed load for: 'res://assets/boxes/laysntt.png' remapped 'res://assets/boxes/laysntt.png' at thread -1
+Loading resource: res://assets/boxes/jorgillo.png remapped: res://assets/boxes/jorgillo.png
+Loading resource: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex remapped: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex
+Completed load for: 'res://assets/boxes/jorgillo.png' remapped 'res://assets/boxes/jorgillo.png' at thread -1
+Loading resource: res://assets/boxes/frotlups.png remapped: res://assets/boxes/frotlups.png
+Loading resource: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex remapped: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex
+Completed load for: 'res://assets/boxes/frotlups.png' remapped 'res://assets/boxes/frotlups.png' at thread -1
+Loading resource: res://assets/boxes/amargadito.png remapped: res://assets/boxes/amargadito.png
+Loading resource: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex remapped: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex
+Completed load for: 'res://assets/boxes/amargadito.png' remapped 'res://assets/boxes/amargadito.png' at thread -1
+Loading resource: res://assets/boxes/cindolor.png remapped: res://assets/boxes/cindolor.png
+Loading resource: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex remapped: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex
+Completed load for: 'res://assets/boxes/cindolor.png' remapped 'res://assets/boxes/cindolor.png' at thread -1
+Loading resource: res://assets/boxes/flinpuf.png remapped: res://assets/boxes/flinpuf.png
+Loading resource: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex remapped: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex
+Completed load for: 'res://assets/boxes/flinpuf.png' remapped 'res://assets/boxes/flinpuf.png' at thread -1
+Loading resource: res://assets/boxes/donsaturados.png remapped: res://assets/boxes/donsaturados.png
+Loading resource: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex remapped: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex
+Completed load for: 'res://assets/boxes/donsaturados.png' remapped 'res://assets/boxes/donsaturados.png' at thread -1
+Loading resource: res://assets/boxes/petisas.png remapped: res://assets/boxes/petisas.png
+Loading resource: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex remapped: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex
+Completed load for: 'res://assets/boxes/petisas.png' remapped 'res://assets/boxes/petisas.png' at thread -1
+Loading resource: res://assets/boxes/macumbas.png remapped: res://assets/boxes/macumbas.png
+Loading resource: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex remapped: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex
+Completed load for: 'res://assets/boxes/macumbas.png' remapped 'res://assets/boxes/macumbas.png' at thread -1
+Loading resource: res://assets/boxes/cosa_de_mani.png remapped: res://assets/boxes/cosa_de_mani.png
+Loading resource: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex remapped: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex
+Completed load for: 'res://assets/boxes/cosa_de_mani.png' remapped 'res://assets/boxes/cosa_de_mani.png' at thread -1
+Loading resource: res://assets/boxes/duronga.png remapped: res://assets/boxes/duronga.png
+Loading resource: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex remapped: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex
+Completed load for: 'res://assets/boxes/duronga.png' remapped 'res://assets/boxes/duronga.png' at thread -1
+Loading resource: res://assets/boxes/fernet_god.png remapped: res://assets/boxes/fernet_god.png
+Loading resource: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex remapped: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex
+Completed load for: 'res://assets/boxes/fernet_god.png' remapped 'res://assets/boxes/fernet_god.png' at thread -1
+Loading resource: res://assets/boxes/mayonchis.png remapped: res://assets/boxes/mayonchis.png
+Loading resource: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex remapped: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex
+Completed load for: 'res://assets/boxes/mayonchis.png' remapped 'res://assets/boxes/mayonchis.png' at thread -1
+Loading resource: res://assets/boxes/oaaaa.png remapped: res://assets/boxes/oaaaa.png
+Loading resource: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex remapped: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex
+Completed load for: 'res://assets/boxes/oaaaa.png' remapped 'res://assets/boxes/oaaaa.png' at thread -1
+Loading resource: res://assets/boxes/terminator.png remapped: res://assets/boxes/terminator.png
+Loading resource: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex remapped: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex
+Completed load for: 'res://assets/boxes/terminator.png' remapped 'res://assets/boxes/terminator.png' at thread -1
+Loading resource: res://assets/boxes/malbardo.png remapped: res://assets/boxes/malbardo.png
+Loading resource: res://.godot/imported/malbardo.png-dfdf466fba4153c771430ab9ced163d8.s3tc.ctex remapped: res://.godot/imported/malbardo.png-dfdf466fba4153c771430ab9ced163d8.s3tc.ctex
+Completed load for: 'res://assets/boxes/malbardo.png' remapped 'res://assets/boxes/malbardo.png' at thread -1
+Loading resource: res://assets/boxes/prongles.png remapped: res://assets/boxes/prongles.png
+Loading resource: res://.godot/imported/prongles.png-f40bf8c0041eb342b48550fa7c8de3bb.s3tc.ctex remapped: res://.godot/imported/prongles.png-f40bf8c0041eb342b48550fa7c8de3bb.s3tc.ctex
+Completed load for: 'res://assets/boxes/prongles.png' remapped 'res://assets/boxes/prongles.png' at thread -1
+Loading resource: res://assets/boxes/arvejas.png remapped: res://assets/boxes/arvejas.png
+Loading resource: res://.godot/imported/arvejas.png-e8efeeb40459d33e24ba90fb1d61c31e.s3tc.ctex remapped: res://.godot/imported/arvejas.png-e8efeeb40459d33e24ba90fb1d61c31e.s3tc.ctex
+Completed load for: 'res://assets/boxes/arvejas.png' remapped 'res://assets/boxes/arvejas.png' at thread -1
+Loading resource: res://assets/boxes/chisitos.png remapped: res://assets/boxes/chisitos.png
+Loading resource: res://.godot/imported/chisitos.png-d3501ed53daf50ab0820c46f22c8ca7f.s3tc.ctex remapped: res://.godot/imported/chisitos.png-d3501ed53daf50ab0820c46f22c8ca7f.s3tc.ctex
+Completed load for: 'res://assets/boxes/chisitos.png' remapped 'res://assets/boxes/chisitos.png' at thread -1
+Loading resource: res://assets/boxes/oremos.png remapped: res://assets/boxes/oremos.png
+Loading resource: res://.godot/imported/oremos.png-ed97d97349c4b023411be1027a9c87f3.s3tc.ctex remapped: res://.godot/imported/oremos.png-ed97d97349c4b023411be1027a9c87f3.s3tc.ctex
+Completed load for: 'res://assets/boxes/oremos.png' remapped 'res://assets/boxes/oremos.png' at thread -1
+Loading resource: res://assets/boxes/pepitos.png remapped: res://assets/boxes/pepitos.png
+Loading resource: res://.godot/imported/pepitos.png-2ad4a71cb72d08c3b8888c456bd4caf3.s3tc.ctex remapped: res://.godot/imported/pepitos.png-2ad4a71cb72d08c3b8888c456bd4caf3.s3tc.ctex
+Completed load for: 'res://assets/boxes/pepitos.png' remapped 'res://assets/boxes/pepitos.png' at thread -1
+Loading resource: res://assets/boxes/saladik.png remapped: res://assets/boxes/saladik.png
+Loading resource: res://.godot/imported/saladik.png-20ce9af153773c88144a1e7461791d49.s3tc.ctex remapped: res://.godot/imported/saladik.png-20ce9af153773c88144a1e7461791d49.s3tc.ctex
+Completed load for: 'res://assets/boxes/saladik.png' remapped 'res://assets/boxes/saladik.png' at thread -1
+Loading resource: res://assets/boxes/uakas.png remapped: res://assets/boxes/uakas.png
+Loading resource: res://.godot/imported/uakas.png-cf4a8403a04fa4c75158ff4ec7ff6bc4.s3tc.ctex remapped: res://.godot/imported/uakas.png-cf4a8403a04fa4c75158ff4ec7ff6bc4.s3tc.ctex
+Completed load for: 'res://assets/boxes/uakas.png' remapped 'res://assets/boxes/uakas.png' at thread -1
+Loading resource: res://assets/boxes/coracola.png remapped: res://assets/boxes/coracola.png
+Loading resource: res://.godot/imported/coracola.png-0481c5cebf9d33ef37028a78553925a5.s3tc.ctex remapped: res://.godot/imported/coracola.png-0481c5cebf9d33ef37028a78553925a5.s3tc.ctex
+Completed load for: 'res://assets/boxes/coracola.png' remapped 'res://assets/boxes/coracola.png' at thread -1
+Loading resource: res://assets/boxes/marolini.png remapped: res://assets/boxes/marolini.png
+Loading resource: res://.godot/imported/marolini.png-ec94d882c94b94ccb74b5c370b399c04.s3tc.ctex remapped: res://.godot/imported/marolini.png-ec94d882c94b94ccb74b5c370b399c04.s3tc.ctex
+Completed load for: 'res://assets/boxes/marolini.png' remapped 'res://assets/boxes/marolini.png' at thread -1
+Loading resource: res://assets/boxes/marranos.png remapped: res://assets/boxes/marranos.png
+Loading resource: res://.godot/imported/marranos.png-4160bfa1f102b8f5c2d8f6f51c42041f.s3tc.ctex remapped: res://.godot/imported/marranos.png-4160bfa1f102b8f5c2d8f6f51c42041f.s3tc.ctex
+Completed load for: 'res://assets/boxes/marranos.png' remapped 'res://assets/boxes/marranos.png' at thread -1
+Loading resource: res://assets/boxes/feel_ricky_fort.png remapped: res://assets/boxes/feel_ricky_fort.png
+Loading resource: res://.godot/imported/feel_ricky_fort.png-0d6009538c23fc8a9236923a27c6042b.s3tc.ctex remapped: res://.godot/imported/feel_ricky_fort.png-0d6009538c23fc8a9236923a27c6042b.s3tc.ctex
+Completed load for: 'res://assets/boxes/feel_ricky_fort.png' remapped 'res://assets/boxes/feel_ricky_fort.png' at thread -1
+Loading resource: res://assets/boxes/poetico.png remapped: res://assets/boxes/poetico.png
+Loading resource: res://.godot/imported/poetico.png-86fe58b3e336012007f95154123f0d69.s3tc.ctex remapped: res://.godot/imported/poetico.png-86fe58b3e336012007f95154123f0d69.s3tc.ctex
+Completed load for: 'res://assets/boxes/poetico.png' remapped 'res://assets/boxes/poetico.png' at thread -1
+Completed load for: 'res://src/escenas/puestos/ventanilla.gd' remapped 'res://src/escenas/puestos/ventanilla.gd' at thread -1
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_resuelve_cuatro_identidades_con_recursos_propios[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 1s 411ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid call. Nonexistent function 'contains_key' in base 'RefCounted (GdUnitDictionaryAssertImpl.gd)'.[0m'[0m[38;2;173;216;230m	at 'test_la_tabla_resuelve_cuatro_identidades_con_recursos_propios' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:103[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid call. Nonexistent function 'contains_key' in base 'RefCounted (GdUnitDictionaryAssertImpl.gd)'.[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+	at 'test_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:112[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_foco_y_contorno_usan_alfa_y_frame_actual_de_ambos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_foco_y_contorno_usan_alfa_y_frame_actual_de_ambos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid call. Nonexistent function 'contains_key' in base 'RefCounted (GdUnitDictionaryAssertImpl.gd)'.[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+	at 'test_el_foco_y_contorno_usan_alfa_y_frame_actual_de_ambos' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:134[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_comprador_cambia_recurso_y_reinicia_sin_contorno_anterior[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_comprador_cambia_recurso_y_reinicia_sin_contorno_anterior[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid call. Nonexistent function 'contains_key' in base 'RefCounted (GdUnitDictionaryAssertImpl.gd)'.[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+	at 'test_cambiar_comprador_cambia_recurso_y_reinicia_sin_contorno_anterior' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:152[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid call. Nonexistent function 'contains_key' in base 'RefCounted (GdUnitDictionaryAssertImpl.gd)'.[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+	at 'test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:170[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_fixture_no_modifica_las_selecciones_productivas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_fixture_no_modifica_las_selecciones_productivas[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid call. Nonexistent function 'contains_key' in base 'RefCounted (GdUnitDictionaryAssertImpl.gd)'.[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+	at 'test_el_fixture_no_modifica_las_selecciones_productivas' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:211[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 6 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 248ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 8 test cases | 6 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (8/8)[0m
+[38;2;233;150;122mTotal execution time: 2s 248ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mSession hook 'Guardado de la sesión' > shutdown()[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' > shutdown()[0m
+[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-limpieza/reports/focal-437/report_1/results.xml[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' > shutdown()[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-limpieza/reports/focal-437/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
+----------------------------------------------------------------
+Cleanup singletons ["GdUnitTestSessionHookService", "GdUnitThreadManager"]
+
+	Unregister singleton 'GdUnitTestSessionHookService'
+	Free singleton instance 'GdUnitTestSessionHookService:<Object#135996114622>'
+	Successfully freed 'GdUnitTestSessionHookService'
+
+	Unregister singleton 'GdUnitThreadManager'
+	Free singleton instance 'GdUnitThreadManager:<Object#139552884479>'
+	Successfully freed 'GdUnitThreadManager'
+----------------------------------------------------------------
+Finallize ..
+-Orphan nodes report-----------------------
+Finallize .. done
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Orphan StringName: Vector2 (static: 0, total: 1)
+Orphan StringName: Vector3 (static: 0, total: 1)
+Orphan StringName: Vector4 (static: 0, total: 1)
+Orphan StringName: PackedVector4Array (static: 0, total: 1)
+Orphan StringName: RID (static: 0, total: 1)
+Orphan StringName: Color (static: 0, total: 1)
+Orphan StringName: PackedByteArray (static: 0, total: 1)
+Orphan StringName: Vector2i (static: 0, total: 1)
+Orphan StringName: Callable (static: 0, total: 1)
+Orphan StringName: Vector3i (static: 0, total: 1)
+Orphan StringName: Vector4i (static: 0, total: 1)
+Orphan StringName: PackedStringArray (static: 0, total: 1)
+Orphan StringName: Basis (static: 0, total: 1)
+Orphan StringName: int (static: 0, total: 1)
+Orphan StringName: PackedFloat32Array (static: 0, total: 1)
+Orphan StringName: Plane (static: 0, total: 1)
+Orphan StringName: PackedFloat64Array (static: 0, total: 1)
+Orphan StringName: NodePath (static: 0, total: 1)
+Orphan StringName: Signal (static: 0, total: 1)
+Orphan StringName: StringName (static: 0, total: 1)
+Orphan StringName: String (static: 0, total: 1)
+Orphan StringName: Transform2D (static: 0, total: 1)
+Orphan StringName: Transform3D (static: 0, total: 1)
+Orphan StringName: Array (static: 1, total: 2)
+Orphan StringName: Quaternion (static: 0, total: 1)
+Orphan StringName: bool (static: 0, total: 1)
+Orphan StringName: PackedColorArray (static: 0, total: 1)
+Orphan StringName: PackedVector2Array (static: 0, total: 1)
+Orphan StringName: Object (static: 1, total: 2)
+Orphan StringName: AABB (static: 0, total: 1)
+Orphan StringName: float (static: 0, total: 1)
+Orphan StringName: Dictionary (static: 1, total: 2)
+Orphan StringName: Projection (static: 0, total: 1)
+Orphan StringName: Rect2 (static: 0, total: 1)
+Orphan StringName: PackedVector3Array (static: 0, total: 1)
+Orphan StringName: PackedInt32Array (static: 0, total: 1)
+Orphan StringName: Rect2i (static: 0, total: 1)
+Orphan StringName: PackedInt64Array (static: 0, total: 1)
+StringName: 38 unclaimed string names at exit.

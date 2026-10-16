@@ -1,0 +1,618 @@
+0.097323 stdout WorkerThreadPool: 16 threads, 4 max low-priority.
+0.100980 stderr ERROR: The remote port number must be between 1 and 65535 (inclusive).
+0.101061 stderr    at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+0.101179 stderr ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+0.101227 stderr    at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+0.104415 stdout Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+0.105890 stdout TextServer: Added interface "Dummy"
+0.118378 stdout TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+0.127176 stdout Using "default" pen tablet driver...
+0.127988 stdout 
+0.131859 stdout TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+0.211920 stdout Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+0.212594 stdout Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+0.232607 stdout CORE API HASH: 2004498165
+0.233691 stdout EDITOR API HASH: 1696660745
+0.233734 stdout Loading resource: res://addons/gdUnit4/bin/GdUnitCmdTool.gd remapped: res://addons/gdUnit4/bin/GdUnitCmdTool.gd
+1.508215 stdout Completed load for: 'res://addons/gdUnit4/bin/GdUnitCmdTool.gd' remapped 'res://addons/gdUnit4/bin/GdUnitCmdTool.gd' at thread -1
+1.508251 stdout SceneTreeFTI: traversal method DEFAULT
+1.509503 stdout Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gd remapped: res://addons/godot_mcp/mcp_screenshot_service.gd
+1.511202 stdout Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gd' at thread -1
+1.511533 stdout Loading resource: res://addons/godot_mcp/mcp_input_service.gd remapped: res://addons/godot_mcp/mcp_input_service.gd
+1.519009 stdout Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gd' at thread -1
+1.519446 stdout Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gd remapped: res://addons/godot_mcp/mcp_game_inspector_service.gd
+1.589587 stdout Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gd' at thread -1
+1.596327 stdout Loaded system CA certificates
+1.596828 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd
+1.615924 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd' at thread -1
+1.616086 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd
+1.653024 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd' at thread -1
+1.653092 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd
+1.674395 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd' at thread -1
+1.674487 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd
+1.694092 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd' at thread -1
+1.694149 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd
+1.712704 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd' at thread -1
+1.712771 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd
+1.768761 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd' at thread -1
+1.768857 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd
+1.802411 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd' at thread -1
+1.802520 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd
+1.832188 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd' at thread -1
+1.832312 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd
+1.863473 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd' at thread -1
+1.863535 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd
+1.890807 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd' at thread -1
+1.890946 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd
+1.921845 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd' at thread -1
+1.921908 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd
+1.951859 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd' at thread -1
+1.951947 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd
+1.986555 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd' at thread -1
+1.986655 stdout Loading resource: res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd
+2.044962 stdout Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd' at thread -1
+2.046295 stdout [2J[H[38;2;233;150;122m
+2.046325 stdout --------------------------------------------------------------------------------------------------
+2.046337 stdout GdUnit4 Comandline Tool
+2.046362 stdout --------------------------------------------------------------------------------------------------[0m
+2.076811 stdout [38;2;0;191;255mDisabled fail fast![0m
+2.076925 stdout [38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-limpieza/reports/focal-437[0m
+2.076979 stdout [38;2;218;165;32m
+2.076990 stdout Headless mode is ignored by option '--ignoreHeadlessMode'"
+2.076999 stdout 
+2.077009 stdout Please note that tests that use UI interaction do not work correctly in headless mode.
+2.077019 stdout Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+2.077028 stdout have no effect in the test!
+2.077049 stdout [0m
+2.078004 stdout Loading resource: res://test/escenas/sprites_de_compradores_jornada_2_test.gd remapped: res://test/escenas/sprites_de_compradores_jornada_2_test.gd
+2.249826 stdout Loading resource: res://assets/dialogos/compradores_jornada_1.tres remapped: res://assets/dialogos/compradores_jornada_1.tres
+2.250957 stdout Completed load for: 'res://assets/dialogos/compradores_jornada_1.tres' remapped 'res://assets/dialogos/compradores_jornada_1.tres' at thread -1
+2.280417 stdout Completed load for: 'res://test/escenas/sprites_de_compradores_jornada_2_test.gd' remapped 'res://test/escenas/sprites_de_compradores_jornada_2_test.gd' at thread -1
+2.300819 stdout [38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+2.300952 stdout [38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+2.301081 stdout [38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+2.307277 stdout Loading resource: res://test/guardado_de_la_sesion.gd remapped: res://test/guardado_de_la_sesion.gd
+2.337466 stdout Completed load for: 'res://test/guardado_de_la_sesion.gd' remapped 'res://test/guardado_de_la_sesion.gd' at thread -1
+2.337607 stdout [38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+2.337698 stdout [38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+2.337730 stdout Register singleton 'GdUnitTestSessionHookService:<Object#137908717246>'
+2.338187 stdout [38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' > startup()[0m
+2.338626 stdout [38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' > startup()[0m
+2.338714 stdout [38;2;100;149;237mSession hook 'Guardado de la sesión' > startup()[0m
+2.340021 stdout Register singleton 'GdUnitThreadManager:<Object#141465487102>'
+2.361023 stdout [38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m
+2.366752 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_dieciseis_png_conservan_los_blobs_y_rgba_originales[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+2.367167 stdout Loading resource: res://test/escenas/captura_de_compradores_jornada_2.gd remapped: res://test/escenas/captura_de_compradores_jornada_2.gd
+2.515646 stdout Completed load for: 'res://test/escenas/captura_de_compradores_jornada_2.gd' remapped 'res://test/escenas/captura_de_compradores_jornada_2.gd' at thread -1
+2.520262 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/fede/01.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.520309 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.520373 stderr    GDScript backtrace (most recent call first):
+2.520552 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.520570 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.520579 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.520588 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.520600 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.520608 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.520617 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.520626 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.520636 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.520644 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.548681 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/fede/02.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.548734 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.548822 stderr    GDScript backtrace (most recent call first):
+2.548842 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.548854 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.548864 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.548875 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.548888 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.548899 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.548910 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.548926 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.548943 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.548955 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.576031 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/fede/03.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.576077 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.576190 stderr    GDScript backtrace (most recent call first):
+2.576211 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.576223 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.576235 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.576246 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.576256 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.576267 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.576277 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.576288 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.576300 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.576394 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.604416 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/fede/04.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.604466 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.604549 stderr    GDScript backtrace (most recent call first):
+2.604565 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.604578 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.604588 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.604600 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.604611 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.604621 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.604631 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.604723 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.604736 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.604746 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.629504 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/fede/05.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.629548 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.629624 stderr    GDScript backtrace (most recent call first):
+2.629638 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.629648 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.629657 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.629667 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.629677 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.629686 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.629697 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.629707 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.629720 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.629730 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.655467 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/fede/06.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.655526 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.655608 stderr    GDScript backtrace (most recent call first):
+2.655628 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.655641 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.655652 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.655664 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.655676 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.655694 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.655706 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.655713 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.655719 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.655726 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.679972 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/fede/07.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.680031 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.680114 stderr    GDScript backtrace (most recent call first):
+2.680136 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.680150 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.680162 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.680173 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.680189 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.680201 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.680216 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.680227 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.680237 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.680248 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.704890 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/fede/08.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.704967 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.705027 stderr    GDScript backtrace (most recent call first):
+2.705043 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.705052 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.705061 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.705072 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.705082 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.705093 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.705107 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.705118 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.705127 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.705136 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.729699 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/mia/01.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.729751 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.729814 stderr    GDScript backtrace (most recent call first):
+2.729828 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.729838 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.729847 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.729857 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.729867 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.729875 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.729884 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.729893 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.729905 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.729914 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.755786 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/mia/02.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.755842 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.756171 stderr    GDScript backtrace (most recent call first):
+2.756197 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.756209 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.756225 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.756239 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.756251 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.756261 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.756269 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.756280 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.756290 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.756301 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.781400 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/mia/03.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.781461 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.781535 stderr    GDScript backtrace (most recent call first):
+2.781551 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.781558 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.781571 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.781585 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.781595 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.781605 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.781614 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.781623 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.781632 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.781640 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.806577 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/mia/04.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.806616 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.806721 stderr    GDScript backtrace (most recent call first):
+2.806740 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.806754 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.806764 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.806777 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.806788 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.806799 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.806810 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.806820 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.806836 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.806848 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.831594 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/mia/05.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.831630 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.831692 stderr    GDScript backtrace (most recent call first):
+2.831757 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.831769 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.831781 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.831797 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.831811 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.831826 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.831833 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.831844 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.831850 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.831857 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.858121 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/mia/06.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.858164 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.858243 stderr    GDScript backtrace (most recent call first):
+2.858260 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.858270 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.858280 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.858290 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.858305 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.858314 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.858324 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.858333 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.858342 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.858351 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.887178 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/mia/07.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.887230 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.887330 stderr    GDScript backtrace (most recent call first):
+2.887347 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.887360 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.887376 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.887389 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.887401 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.887502 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.887516 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.887526 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.887536 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.887545 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.912442 stderr WARNING: Loaded resource as image file, this will not work on export: 'res://assets/characters/mia/08.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+2.912497 stderr    at: load_from_file (core/io/image.cpp:2780)
+2.912583 stderr    GDScript backtrace (most recent call first):
+2.912599 stderr        [0] test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales (res://test/escenas/sprites_de_compradores_jornada_2_test.gd:74)
+2.912608 stderr        [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+2.912620 stderr        [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+2.912628 stderr        [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+2.912634 stderr        [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.912641 stderr        [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+2.912647 stderr        [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.912654 stderr        [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+2.912660 stderr        [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+2.912670 stderr        [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+2.938825 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_dieciseis_png_conservan_los_blobs_y_rgba_originales[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 577ms[0m
+2.938909 stdout [38;2;128;128;128m[0m
+2.946516 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_recursos_conservan_orden_duracion_y_ritmo_idle[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+2.947280 stdout Loading resource: res://assets/characters/fede/idle.tres remapped: res://assets/characters/fede/idle.tres
+2.948213 stdout Loading resource: res://assets/characters/fede/01.png remapped: res://assets/characters/fede/01.png
+2.948719 stdout Loading resource: res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex remapped: res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex
+2.967301 stdout Completed load for: 'res://assets/characters/fede/01.png' remapped 'res://assets/characters/fede/01.png' at thread -1
+2.967454 stdout Loading resource: res://assets/characters/fede/02.png remapped: res://assets/characters/fede/02.png
+2.968099 stdout Loading resource: res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex remapped: res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex
+2.988226 stdout Completed load for: 'res://assets/characters/fede/02.png' remapped 'res://assets/characters/fede/02.png' at thread -1
+2.988391 stdout Loading resource: res://assets/characters/fede/03.png remapped: res://assets/characters/fede/03.png
+2.989046 stdout Loading resource: res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex remapped: res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex
+3.009014 stdout Completed load for: 'res://assets/characters/fede/03.png' remapped 'res://assets/characters/fede/03.png' at thread -1
+3.009123 stdout Loading resource: res://assets/characters/fede/04.png remapped: res://assets/characters/fede/04.png
+3.009812 stdout Loading resource: res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex remapped: res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex
+3.027108 stdout Completed load for: 'res://assets/characters/fede/04.png' remapped 'res://assets/characters/fede/04.png' at thread -1
+3.027327 stdout Loading resource: res://assets/characters/fede/05.png remapped: res://assets/characters/fede/05.png
+3.028084 stdout Loading resource: res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex remapped: res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex
+3.046609 stdout Completed load for: 'res://assets/characters/fede/05.png' remapped 'res://assets/characters/fede/05.png' at thread -1
+3.046685 stdout Loading resource: res://assets/characters/fede/06.png remapped: res://assets/characters/fede/06.png
+3.047062 stdout Loading resource: res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex remapped: res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex
+3.065522 stdout Completed load for: 'res://assets/characters/fede/06.png' remapped 'res://assets/characters/fede/06.png' at thread -1
+3.065661 stdout Loading resource: res://assets/characters/fede/07.png remapped: res://assets/characters/fede/07.png
+3.066260 stdout Loading resource: res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex remapped: res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex
+3.084858 stdout Completed load for: 'res://assets/characters/fede/07.png' remapped 'res://assets/characters/fede/07.png' at thread -1
+3.084974 stdout Loading resource: res://assets/characters/fede/08.png remapped: res://assets/characters/fede/08.png
+3.085530 stdout Loading resource: res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex remapped: res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex
+3.103363 stdout Completed load for: 'res://assets/characters/fede/08.png' remapped 'res://assets/characters/fede/08.png' at thread -1
+3.103687 stdout Completed load for: 'res://assets/characters/fede/idle.tres' remapped 'res://assets/characters/fede/idle.tres' at thread -1
+3.104673 stdout Loading resource: res://assets/characters/mia/idle.tres remapped: res://assets/characters/mia/idle.tres
+3.105676 stdout Loading resource: res://assets/characters/mia/01.png remapped: res://assets/characters/mia/01.png
+3.106143 stdout Loading resource: res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex remapped: res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex
+3.126508 stdout Completed load for: 'res://assets/characters/mia/01.png' remapped 'res://assets/characters/mia/01.png' at thread -1
+3.126651 stdout Loading resource: res://assets/characters/mia/02.png remapped: res://assets/characters/mia/02.png
+3.127284 stdout Loading resource: res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex remapped: res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex
+3.148802 stdout Completed load for: 'res://assets/characters/mia/02.png' remapped 'res://assets/characters/mia/02.png' at thread -1
+3.148945 stdout Loading resource: res://assets/characters/mia/03.png remapped: res://assets/characters/mia/03.png
+3.149491 stdout Loading resource: res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex remapped: res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex
+3.173358 stdout Completed load for: 'res://assets/characters/mia/03.png' remapped 'res://assets/characters/mia/03.png' at thread -1
+3.173539 stdout Loading resource: res://assets/characters/mia/04.png remapped: res://assets/characters/mia/04.png
+3.174231 stdout Loading resource: res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex remapped: res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex
+3.196415 stdout Completed load for: 'res://assets/characters/mia/04.png' remapped 'res://assets/characters/mia/04.png' at thread -1
+3.196590 stdout Loading resource: res://assets/characters/mia/05.png remapped: res://assets/characters/mia/05.png
+3.197465 stdout Loading resource: res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex remapped: res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex
+3.218311 stdout Completed load for: 'res://assets/characters/mia/05.png' remapped 'res://assets/characters/mia/05.png' at thread -1
+3.218461 stdout Loading resource: res://assets/characters/mia/06.png remapped: res://assets/characters/mia/06.png
+3.219070 stdout Loading resource: res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex remapped: res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex
+3.240224 stdout Completed load for: 'res://assets/characters/mia/06.png' remapped 'res://assets/characters/mia/06.png' at thread -1
+3.240429 stdout Loading resource: res://assets/characters/mia/07.png remapped: res://assets/characters/mia/07.png
+3.241046 stdout Loading resource: res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex remapped: res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex
+3.262389 stdout Completed load for: 'res://assets/characters/mia/07.png' remapped 'res://assets/characters/mia/07.png' at thread -1
+3.262528 stdout Loading resource: res://assets/characters/mia/08.png remapped: res://assets/characters/mia/08.png
+3.263169 stdout Loading resource: res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex remapped: res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex
+3.284557 stdout Completed load for: 'res://assets/characters/mia/08.png' remapped 'res://assets/characters/mia/08.png' at thread -1
+3.284839 stdout Completed load for: 'res://assets/characters/mia/idle.tres' remapped 'res://assets/characters/mia/idle.tres' at thread -1
+3.292013 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_recursos_conservan_orden_duracion_y_ritmo_idle[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 351ms[0m
+3.292105 stdout [38;2;128;128;128m[0m
+3.303840 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_resuelve_cuatro_identidades_con_recursos_propios[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+3.305081 stdout Loading resource: res://src/escenas/puestos/ventanilla.gd remapped: res://src/escenas/puestos/ventanilla.gd
+3.330260 stdout Loading resource: res://assets/characters/martin/idle.tres remapped: res://assets/characters/martin/idle.tres
+3.330990 stdout Loading resource: res://assets/characters/martin/01.png remapped: res://assets/characters/martin/01.png
+3.331841 stdout Loading resource: res://.godot/imported/01.png-3a086970c4dd02c8e4cd8da812c104dd.ctex remapped: res://.godot/imported/01.png-3a086970c4dd02c8e4cd8da812c104dd.ctex
+3.349058 stdout Completed load for: 'res://assets/characters/martin/01.png' remapped 'res://assets/characters/martin/01.png' at thread -1
+3.349168 stdout Loading resource: res://assets/characters/martin/02.png remapped: res://assets/characters/martin/02.png
+3.349693 stdout Loading resource: res://.godot/imported/02.png-fdce8c73e98afe3f6d1396e152e42bfb.ctex remapped: res://.godot/imported/02.png-fdce8c73e98afe3f6d1396e152e42bfb.ctex
+3.367011 stdout Completed load for: 'res://assets/characters/martin/02.png' remapped 'res://assets/characters/martin/02.png' at thread -1
+3.367165 stdout Loading resource: res://assets/characters/martin/03.png remapped: res://assets/characters/martin/03.png
+3.367625 stdout Loading resource: res://.godot/imported/03.png-2409c346f99a47464452ed1a4d065a09.ctex remapped: res://.godot/imported/03.png-2409c346f99a47464452ed1a4d065a09.ctex
+3.382982 stdout Completed load for: 'res://assets/characters/martin/03.png' remapped 'res://assets/characters/martin/03.png' at thread -1
+3.383091 stdout Loading resource: res://assets/characters/martin/04.png remapped: res://assets/characters/martin/04.png
+3.383527 stdout Loading resource: res://.godot/imported/04.png-075cafff9c9453f715f55c63d417fd8d.ctex remapped: res://.godot/imported/04.png-075cafff9c9453f715f55c63d417fd8d.ctex
+3.397770 stdout Completed load for: 'res://assets/characters/martin/04.png' remapped 'res://assets/characters/martin/04.png' at thread -1
+3.397930 stdout Loading resource: res://assets/characters/martin/05.png remapped: res://assets/characters/martin/05.png
+3.398473 stdout Loading resource: res://.godot/imported/05.png-bc2c308d42b35c936f799e24b90af07f.ctex remapped: res://.godot/imported/05.png-bc2c308d42b35c936f799e24b90af07f.ctex
+3.413995 stdout Completed load for: 'res://assets/characters/martin/05.png' remapped 'res://assets/characters/martin/05.png' at thread -1
+3.414156 stdout Loading resource: res://assets/characters/martin/06.png remapped: res://assets/characters/martin/06.png
+3.414762 stdout Loading resource: res://.godot/imported/06.png-9b0e7aafb7a4f2fbc1b059d3d15ab7ed.ctex remapped: res://.godot/imported/06.png-9b0e7aafb7a4f2fbc1b059d3d15ab7ed.ctex
+3.431985 stdout Completed load for: 'res://assets/characters/martin/06.png' remapped 'res://assets/characters/martin/06.png' at thread -1
+3.432159 stdout Loading resource: res://assets/characters/martin/07.png remapped: res://assets/characters/martin/07.png
+3.432910 stdout Loading resource: res://.godot/imported/07.png-9fef62cb25d754ccd536627be4666a0c.ctex remapped: res://.godot/imported/07.png-9fef62cb25d754ccd536627be4666a0c.ctex
+3.450157 stdout Completed load for: 'res://assets/characters/martin/07.png' remapped 'res://assets/characters/martin/07.png' at thread -1
+3.450340 stdout Loading resource: res://assets/characters/martin/08.png remapped: res://assets/characters/martin/08.png
+3.450889 stdout Loading resource: res://.godot/imported/08.png-b0ad87ea5c0e4a921db207ddb7b247a8.ctex remapped: res://.godot/imported/08.png-b0ad87ea5c0e4a921db207ddb7b247a8.ctex
+3.468786 stdout Completed load for: 'res://assets/characters/martin/08.png' remapped 'res://assets/characters/martin/08.png' at thread -1
+3.470135 stdout Completed load for: 'res://assets/characters/martin/idle.tres' remapped 'res://assets/characters/martin/idle.tres' at thread -1
+3.472927 stdout Loading resource: res://assets/characters/tiago/idle.tres remapped: res://assets/characters/tiago/idle.tres
+3.474419 stdout Loading resource: res://assets/characters/tiago/01.png remapped: res://assets/characters/tiago/01.png
+3.475039 stdout Loading resource: res://.godot/imported/01.png-d4e75731b44367919ca962f2011cab3c.ctex remapped: res://.godot/imported/01.png-d4e75731b44367919ca962f2011cab3c.ctex
+3.494144 stdout Completed load for: 'res://assets/characters/tiago/01.png' remapped 'res://assets/characters/tiago/01.png' at thread -1
+3.494274 stdout Loading resource: res://assets/characters/tiago/02.png remapped: res://assets/characters/tiago/02.png
+3.494891 stdout Loading resource: res://.godot/imported/02.png-dddcabf8a3b42cac90c410c41a1d1fce.ctex remapped: res://.godot/imported/02.png-dddcabf8a3b42cac90c410c41a1d1fce.ctex
+3.512659 stdout Completed load for: 'res://assets/characters/tiago/02.png' remapped 'res://assets/characters/tiago/02.png' at thread -1
+3.512837 stdout Loading resource: res://assets/characters/tiago/03.png remapped: res://assets/characters/tiago/03.png
+3.513471 stdout Loading resource: res://.godot/imported/03.png-594c46fcc33e068cb50021280af056ec.ctex remapped: res://.godot/imported/03.png-594c46fcc33e068cb50021280af056ec.ctex
+3.528304 stdout Completed load for: 'res://assets/characters/tiago/03.png' remapped 'res://assets/characters/tiago/03.png' at thread -1
+3.528429 stdout Loading resource: res://assets/characters/tiago/04.png remapped: res://assets/characters/tiago/04.png
+3.528866 stdout Loading resource: res://.godot/imported/04.png-7c2aceeede8fc0d46e22fe926d110e0f.ctex remapped: res://.godot/imported/04.png-7c2aceeede8fc0d46e22fe926d110e0f.ctex
+3.545493 stdout Completed load for: 'res://assets/characters/tiago/04.png' remapped 'res://assets/characters/tiago/04.png' at thread -1
+3.545690 stdout Loading resource: res://assets/characters/tiago/05.png remapped: res://assets/characters/tiago/05.png
+3.546377 stdout Loading resource: res://.godot/imported/05.png-6f78a6d994514a000c6e9dc8cd366cda.ctex remapped: res://.godot/imported/05.png-6f78a6d994514a000c6e9dc8cd366cda.ctex
+3.565783 stdout Completed load for: 'res://assets/characters/tiago/05.png' remapped 'res://assets/characters/tiago/05.png' at thread -1
+3.566066 stdout Loading resource: res://assets/characters/tiago/06.png remapped: res://assets/characters/tiago/06.png
+3.566775 stdout Loading resource: res://.godot/imported/06.png-59fad00f110b4ea215464cb430fb75ab.ctex remapped: res://.godot/imported/06.png-59fad00f110b4ea215464cb430fb75ab.ctex
+3.584560 stdout Completed load for: 'res://assets/characters/tiago/06.png' remapped 'res://assets/characters/tiago/06.png' at thread -1
+3.584654 stdout Loading resource: res://assets/characters/tiago/07.png remapped: res://assets/characters/tiago/07.png
+3.585110 stdout Loading resource: res://.godot/imported/07.png-0cb94de55da664c3f3274d7b8087fbd1.ctex remapped: res://.godot/imported/07.png-0cb94de55da664c3f3274d7b8087fbd1.ctex
+3.603229 stdout Completed load for: 'res://assets/characters/tiago/07.png' remapped 'res://assets/characters/tiago/07.png' at thread -1
+3.603374 stdout Loading resource: res://assets/characters/tiago/08.png remapped: res://assets/characters/tiago/08.png
+3.603938 stdout Loading resource: res://.godot/imported/08.png-d222b5dbfb11dd73603df5fa3f58423b.ctex remapped: res://.godot/imported/08.png-d222b5dbfb11dd73603df5fa3f58423b.ctex
+3.623432 stdout Completed load for: 'res://assets/characters/tiago/08.png' remapped 'res://assets/characters/tiago/08.png' at thread -1
+3.623801 stdout Completed load for: 'res://assets/characters/tiago/idle.tres' remapped 'res://assets/characters/tiago/idle.tres' at thread -1
+3.742500 stdout Loading resource: res://assets/boxes/actroncito.png remapped: res://assets/boxes/actroncito.png
+3.742942 stdout Loading resource: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex remapped: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex
+3.743583 stdout Completed load for: 'res://assets/boxes/actroncito.png' remapped 'res://assets/boxes/actroncito.png' at thread -1
+3.744600 stdout Loading resource: res://assets/boxes/durextra.png remapped: res://assets/boxes/durextra.png
+3.745123 stdout Loading resource: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex remapped: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex
+3.745948 stdout Completed load for: 'res://assets/boxes/durextra.png' remapped 'res://assets/boxes/durextra.png' at thread -1
+3.746943 stdout Loading resource: res://assets/boxes/burbaloo.png remapped: res://assets/boxes/burbaloo.png
+3.747363 stdout Loading resource: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex remapped: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex
+3.748048 stdout Completed load for: 'res://assets/boxes/burbaloo.png' remapped 'res://assets/boxes/burbaloo.png' at thread -1
+3.748781 stdout Loading resource: res://assets/boxes/zucarachas.png remapped: res://assets/boxes/zucarachas.png
+3.749203 stdout Loading resource: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex remapped: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex
+3.750160 stdout Completed load for: 'res://assets/boxes/zucarachas.png' remapped 'res://assets/boxes/zucarachas.png' at thread -1
+3.751089 stdout Loading resource: res://assets/boxes/laysntt.png remapped: res://assets/boxes/laysntt.png
+3.751533 stdout Loading resource: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex remapped: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex
+3.752157 stdout Completed load for: 'res://assets/boxes/laysntt.png' remapped 'res://assets/boxes/laysntt.png' at thread -1
+3.753376 stdout Loading resource: res://assets/boxes/jorgillo.png remapped: res://assets/boxes/jorgillo.png
+3.753804 stdout Loading resource: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex remapped: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex
+3.754427 stdout Completed load for: 'res://assets/boxes/jorgillo.png' remapped 'res://assets/boxes/jorgillo.png' at thread -1
+3.755256 stdout Loading resource: res://assets/boxes/frotlups.png remapped: res://assets/boxes/frotlups.png
+3.755659 stdout Loading resource: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex remapped: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex
+3.756256 stdout Completed load for: 'res://assets/boxes/frotlups.png' remapped 'res://assets/boxes/frotlups.png' at thread -1
+3.757123 stdout Loading resource: res://assets/boxes/amargadito.png remapped: res://assets/boxes/amargadito.png
+3.757476 stdout Loading resource: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex remapped: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex
+3.758376 stdout Completed load for: 'res://assets/boxes/amargadito.png' remapped 'res://assets/boxes/amargadito.png' at thread -1
+3.759169 stdout Loading resource: res://assets/boxes/cindolor.png remapped: res://assets/boxes/cindolor.png
+3.759932 stdout Loading resource: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex remapped: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex
+3.760704 stdout Completed load for: 'res://assets/boxes/cindolor.png' remapped 'res://assets/boxes/cindolor.png' at thread -1
+3.761580 stdout Loading resource: res://assets/boxes/flinpuf.png remapped: res://assets/boxes/flinpuf.png
+3.761937 stdout Loading resource: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex remapped: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex
+3.762474 stdout Completed load for: 'res://assets/boxes/flinpuf.png' remapped 'res://assets/boxes/flinpuf.png' at thread -1
+3.763204 stdout Loading resource: res://assets/boxes/donsaturados.png remapped: res://assets/boxes/donsaturados.png
+3.763515 stdout Loading resource: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex remapped: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex
+3.764037 stdout Completed load for: 'res://assets/boxes/donsaturados.png' remapped 'res://assets/boxes/donsaturados.png' at thread -1
+3.764897 stdout Loading resource: res://assets/boxes/petisas.png remapped: res://assets/boxes/petisas.png
+3.765371 stdout Loading resource: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex remapped: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex
+3.765899 stdout Completed load for: 'res://assets/boxes/petisas.png' remapped 'res://assets/boxes/petisas.png' at thread -1
+3.766809 stdout Loading resource: res://assets/boxes/macumbas.png remapped: res://assets/boxes/macumbas.png
+3.767158 stdout Loading resource: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex remapped: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex
+3.767731 stdout Completed load for: 'res://assets/boxes/macumbas.png' remapped 'res://assets/boxes/macumbas.png' at thread -1
+3.768575 stdout Loading resource: res://assets/boxes/cosa_de_mani.png remapped: res://assets/boxes/cosa_de_mani.png
+3.769003 stdout Loading resource: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex remapped: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex
+3.769621 stdout Completed load for: 'res://assets/boxes/cosa_de_mani.png' remapped 'res://assets/boxes/cosa_de_mani.png' at thread -1
+3.770428 stdout Loading resource: res://assets/boxes/duronga.png remapped: res://assets/boxes/duronga.png
+3.770902 stdout Loading resource: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex remapped: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex
+3.771534 stdout Completed load for: 'res://assets/boxes/duronga.png' remapped 'res://assets/boxes/duronga.png' at thread -1
+3.772343 stdout Loading resource: res://assets/boxes/fernet_god.png remapped: res://assets/boxes/fernet_god.png
+3.772753 stdout Loading resource: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex remapped: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex
+3.773395 stdout Completed load for: 'res://assets/boxes/fernet_god.png' remapped 'res://assets/boxes/fernet_god.png' at thread -1
+3.774203 stdout Loading resource: res://assets/boxes/mayonchis.png remapped: res://assets/boxes/mayonchis.png
+3.774589 stdout Loading resource: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex remapped: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex
+3.775157 stdout Completed load for: 'res://assets/boxes/mayonchis.png' remapped 'res://assets/boxes/mayonchis.png' at thread -1
+3.775960 stdout Loading resource: res://assets/boxes/oaaaa.png remapped: res://assets/boxes/oaaaa.png
+3.776406 stdout Loading resource: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex remapped: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex
+3.777036 stdout Completed load for: 'res://assets/boxes/oaaaa.png' remapped 'res://assets/boxes/oaaaa.png' at thread -1
+3.777759 stdout Loading resource: res://assets/boxes/terminator.png remapped: res://assets/boxes/terminator.png
+3.778122 stdout Loading resource: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex remapped: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex
+3.778596 stdout Completed load for: 'res://assets/boxes/terminator.png' remapped 'res://assets/boxes/terminator.png' at thread -1
+3.779307 stdout Loading resource: res://assets/boxes/malbardo.png remapped: res://assets/boxes/malbardo.png
+3.779667 stdout Loading resource: res://.godot/imported/malbardo.png-dfdf466fba4153c771430ab9ced163d8.s3tc.ctex remapped: res://.godot/imported/malbardo.png-dfdf466fba4153c771430ab9ced163d8.s3tc.ctex
+3.780203 stdout Completed load for: 'res://assets/boxes/malbardo.png' remapped 'res://assets/boxes/malbardo.png' at thread -1
+3.781345 stdout Loading resource: res://assets/boxes/prongles.png remapped: res://assets/boxes/prongles.png
+3.781777 stdout Loading resource: res://.godot/imported/prongles.png-f40bf8c0041eb342b48550fa7c8de3bb.s3tc.ctex remapped: res://.godot/imported/prongles.png-f40bf8c0041eb342b48550fa7c8de3bb.s3tc.ctex
+3.782341 stdout Completed load for: 'res://assets/boxes/prongles.png' remapped 'res://assets/boxes/prongles.png' at thread -1
+3.783194 stdout Loading resource: res://assets/boxes/arvejas.png remapped: res://assets/boxes/arvejas.png
+3.783543 stdout Loading resource: res://.godot/imported/arvejas.png-e8efeeb40459d33e24ba90fb1d61c31e.s3tc.ctex remapped: res://.godot/imported/arvejas.png-e8efeeb40459d33e24ba90fb1d61c31e.s3tc.ctex
+3.784025 stdout Completed load for: 'res://assets/boxes/arvejas.png' remapped 'res://assets/boxes/arvejas.png' at thread -1
+3.784780 stdout Loading resource: res://assets/boxes/chisitos.png remapped: res://assets/boxes/chisitos.png
+3.785107 stdout Loading resource: res://.godot/imported/chisitos.png-d3501ed53daf50ab0820c46f22c8ca7f.s3tc.ctex remapped: res://.godot/imported/chisitos.png-d3501ed53daf50ab0820c46f22c8ca7f.s3tc.ctex
+3.785558 stdout Completed load for: 'res://assets/boxes/chisitos.png' remapped 'res://assets/boxes/chisitos.png' at thread -1
+3.786262 stdout Loading resource: res://assets/boxes/oremos.png remapped: res://assets/boxes/oremos.png
+3.786591 stdout Loading resource: res://.godot/imported/oremos.png-ed97d97349c4b023411be1027a9c87f3.s3tc.ctex remapped: res://.godot/imported/oremos.png-ed97d97349c4b023411be1027a9c87f3.s3tc.ctex
+3.787109 stdout Completed load for: 'res://assets/boxes/oremos.png' remapped 'res://assets/boxes/oremos.png' at thread -1
+3.787758 stdout Loading resource: res://assets/boxes/pepitos.png remapped: res://assets/boxes/pepitos.png
+3.788086 stdout Loading resource: res://.godot/imported/pepitos.png-2ad4a71cb72d08c3b8888c456bd4caf3.s3tc.ctex remapped: res://.godot/imported/pepitos.png-2ad4a71cb72d08c3b8888c456bd4caf3.s3tc.ctex
+3.788567 stdout Completed load for: 'res://assets/boxes/pepitos.png' remapped 'res://assets/boxes/pepitos.png' at thread -1
+3.789377 stdout Loading resource: res://assets/boxes/saladik.png remapped: res://assets/boxes/saladik.png
+3.789751 stdout Loading resource: res://.godot/imported/saladik.png-20ce9af153773c88144a1e7461791d49.s3tc.ctex remapped: res://.godot/imported/saladik.png-20ce9af153773c88144a1e7461791d49.s3tc.ctex
+3.790257 stdout Completed load for: 'res://assets/boxes/saladik.png' remapped 'res://assets/boxes/saladik.png' at thread -1
+3.791069 stdout Loading resource: res://assets/boxes/uakas.png remapped: res://assets/boxes/uakas.png
+3.791443 stdout Loading resource: res://.godot/imported/uakas.png-cf4a8403a04fa4c75158ff4ec7ff6bc4.s3tc.ctex remapped: res://.godot/imported/uakas.png-cf4a8403a04fa4c75158ff4ec7ff6bc4.s3tc.ctex
+3.791965 stdout Completed load for: 'res://assets/boxes/uakas.png' remapped 'res://assets/boxes/uakas.png' at thread -1
+3.792814 stdout Loading resource: res://assets/boxes/coracola.png remapped: res://assets/boxes/coracola.png
+3.793193 stdout Loading resource: res://.godot/imported/coracola.png-0481c5cebf9d33ef37028a78553925a5.s3tc.ctex remapped: res://.godot/imported/coracola.png-0481c5cebf9d33ef37028a78553925a5.s3tc.ctex
+3.793766 stdout Completed load for: 'res://assets/boxes/coracola.png' remapped 'res://assets/boxes/coracola.png' at thread -1
+3.795030 stdout Loading resource: res://assets/boxes/marolini.png remapped: res://assets/boxes/marolini.png
+3.795403 stdout Loading resource: res://.godot/imported/marolini.png-ec94d882c94b94ccb74b5c370b399c04.s3tc.ctex remapped: res://.godot/imported/marolini.png-ec94d882c94b94ccb74b5c370b399c04.s3tc.ctex
+3.796112 stdout Completed load for: 'res://assets/boxes/marolini.png' remapped 'res://assets/boxes/marolini.png' at thread -1
+3.797013 stdout Loading resource: res://assets/boxes/marranos.png remapped: res://assets/boxes/marranos.png
+3.797366 stdout Loading resource: res://.godot/imported/marranos.png-4160bfa1f102b8f5c2d8f6f51c42041f.s3tc.ctex remapped: res://.godot/imported/marranos.png-4160bfa1f102b8f5c2d8f6f51c42041f.s3tc.ctex
+3.798005 stdout Completed load for: 'res://assets/boxes/marranos.png' remapped 'res://assets/boxes/marranos.png' at thread -1
+3.798833 stdout Loading resource: res://assets/boxes/feel_ricky_fort.png remapped: res://assets/boxes/feel_ricky_fort.png
+3.799171 stdout Loading resource: res://.godot/imported/feel_ricky_fort.png-0d6009538c23fc8a9236923a27c6042b.s3tc.ctex remapped: res://.godot/imported/feel_ricky_fort.png-0d6009538c23fc8a9236923a27c6042b.s3tc.ctex
+3.799774 stdout Completed load for: 'res://assets/boxes/feel_ricky_fort.png' remapped 'res://assets/boxes/feel_ricky_fort.png' at thread -1
+3.800749 stdout Loading resource: res://assets/boxes/poetico.png remapped: res://assets/boxes/poetico.png
+3.801109 stdout Loading resource: res://.godot/imported/poetico.png-86fe58b3e336012007f95154123f0d69.s3tc.ctex remapped: res://.godot/imported/poetico.png-86fe58b3e336012007f95154123f0d69.s3tc.ctex
+3.801709 stdout Completed load for: 'res://assets/boxes/poetico.png' remapped 'res://assets/boxes/poetico.png' at thread -1
+3.906465 stdout Completed load for: 'res://src/escenas/puestos/ventanilla.gd' remapped 'res://src/escenas/puestos/ventanilla.gd' at thread -1
+3.907769 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_resuelve_cuatro_identidades_con_recursos_propios[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 613ms[0m
+3.907921 stdout   [38;2;0;206;209m[1m[4mReport:[0m
+3.908204 stdout   [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_tabla_resuelve_cuatro_identidades_con_recursos_propios' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:103[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_tabla_resuelve_cuatro_identidades_con_recursos_propios' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:103[0m[38;2;128;128;128m[0m
+3.908265 stdout [38;2;128;128;128m[0m
+3.915673 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+3.916748 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+3.916812 stdout   [38;2;0;206;209m[1m[4mReport:[0m
+3.916937 stdout   [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+3.917044 stdout 	at 'test_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:112[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:45
+3.917084 stdout 	at 'test_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:112[0m[38;2;128;128;128m[0m
+3.917124 stdout [38;2;128;128;128m[0m
+3.923349 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_foco_y_contorno_usan_alfa_y_frame_actual_de_ambos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+3.924308 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_foco_y_contorno_usan_alfa_y_frame_actual_de_ambos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+3.924376 stdout   [38;2;0;206;209m[1m[4mReport:[0m
+3.924500 stdout   [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+3.924616 stdout 	at 'test_el_foco_y_contorno_usan_alfa_y_frame_actual_de_ambos' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:134[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:45
+3.924656 stdout 	at 'test_el_foco_y_contorno_usan_alfa_y_frame_actual_de_ambos' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:134[0m[38;2;128;128;128m[0m
+3.924696 stdout [38;2;128;128;128m[0m
+3.929171 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_comprador_cambia_recurso_y_reinicia_sin_contorno_anterior[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+3.929981 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_comprador_cambia_recurso_y_reinicia_sin_contorno_anterior[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 4ms[0m
+3.930048 stdout   [38;2;0;206;209m[1m[4mReport:[0m
+3.930161 stdout   [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+3.930268 stdout 	at 'test_cambiar_comprador_cambia_recurso_y_reinicia_sin_contorno_anterior' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:152[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:45
+3.930321 stdout 	at 'test_cambiar_comprador_cambia_recurso_y_reinicia_sin_contorno_anterior' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:152[0m[38;2;128;128;128m[0m
+3.930376 stdout [38;2;128;128;128m[0m
+3.934694 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+3.935795 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 4ms[0m
+3.935856 stdout   [38;2;0;206;209m[1m[4mReport:[0m
+3.935972 stdout   [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+3.936071 stdout 	at 'test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:170[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:45
+3.936111 stdout 	at 'test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:170[0m[38;2;128;128;128m[0m
+3.936162 stdout [38;2;128;128;128m[0m
+3.940724 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_fixture_no_modifica_las_selecciones_productivas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+3.941913 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_fixture_no_modifica_las_selecciones_productivas[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 4ms[0m
+3.941988 stdout   [38;2;0;206;209m[1m[4mReport:[0m
+3.942109 stdout   [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+3.942195 stdout 	at 'test_el_fixture_no_modifica_las_selecciones_productivas' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:211[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:45
+3.942265 stdout 	at 'test_el_fixture_no_modifica_las_selecciones_productivas' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:211[0m[38;2;128;128;128m[0m
+3.942308 stdout [38;2;128;128;128m[0m
+3.946883 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_antepecho_ocluye_el_corte_desde_frente_lados_y_encuadre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+3.947878 stdout   [38;2;250;235;215mres://test/escenas/sprites_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_antepecho_ocluye_el_corte_desde_frente_lados_y_encuadre[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+3.947953 stdout   [38;2;0;206;209m[1m[4mReport:[0m
+3.948060 stdout   [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:44
+3.948173 stdout 	at 'test_el_antepecho_ocluye_el_corte_desde_frente_lados_y_encuadre' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:273[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_crear' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:45
+3.948220 stdout 	at 'test_el_antepecho_ocluye_el_corte_desde_frente_lados_y_encuadre' in res://test/escenas/sprites_de_compradores_jornada_2_test.gd:273[0m[38;2;128;128;128m[0m
+3.948254 stdout [38;2;128;128;128m[0m
+3.949838 stdout [38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 9 test cases | 0 errors | 14 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 610ms[0m
+3.949906 stdout [38;2;128;128;128m[0m
+3.949963 stdout [38;2;128;128;128m[0m
+3.952265 stdout [38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 9 test cases | 0 errors | 14 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+3.952334 stdout [38;2;233;150;122mExecuted test suites: (1/1)[0m
+3.952382 stdout [38;2;233;150;122mExecuted test cases : (9/9)[0m
+3.952445 stdout [38;2;233;150;122mTotal execution time: 1s 610ms[0m
+3.952560 stdout [38;2;255;255;255m [0m[38;2;100;149;237mSession hook 'Guardado de la sesión' > shutdown()[0m
+3.953293 stdout [38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' > shutdown()[0m
+3.955335 stdout [38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-limpieza/reports/focal-437/report_2/results.xml[0m
+3.955406 stdout [38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' > shutdown()[0m
+3.964580 stdout [38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-limpieza/reports/focal-437/report_2/index.html[0m
+3.965722 stdout [38;2;178;34;34mExit code: 100[0m
+3.965756 stdout Run dispose test resources
+3.965859 stdout ----------------------------------------------------------------
+3.965905 stdout Cleanup singletons ["GdUnitTestSessionHookService", "GdUnitThreadManager"]
+3.965930 stdout 
+3.965943 stdout 	Unregister singleton 'GdUnitTestSessionHookService'
+3.965990 stdout 	Free singleton instance 'GdUnitTestSessionHookService:<Object#137908717246>'
+3.966274 stdout 	Successfully freed 'GdUnitTestSessionHookService'
+3.966299 stdout 
+3.966311 stdout 	Unregister singleton 'GdUnitThreadManager'
+3.966369 stdout 	Free singleton instance 'GdUnitThreadManager:<Object#141465487102>'
+3.966427 stdout 	Successfully freed 'GdUnitThreadManager'
+3.966449 stdout ----------------------------------------------------------------
+3.981122 stdout Finallize ..
+3.981161 stdout -Orphan nodes report-----------------------
+3.981306 stdout Finallize .. done
+4.046444 stdout XR: Clearing primary interface
+4.046485 stdout XR: Removed interface "Native mobile"
+4.046497 stdout XR: Removed interface "OpenXR"
+4.046508 stdout Orphan StringName: Vector2 (static: 0, total: 1)
+4.046518 stdout Orphan StringName: Vector3 (static: 0, total: 1)
+4.046527 stdout Orphan StringName: Vector4 (static: 0, total: 1)
+4.046537 stdout Orphan StringName: PackedVector4Array (static: 0, total: 1)
+4.046547 stdout Orphan StringName: RID (static: 0, total: 1)
+4.046557 stdout Orphan StringName: Color (static: 0, total: 1)
+4.046571 stdout Orphan StringName: PackedByteArray (static: 0, total: 1)
+4.046586 stdout Orphan StringName: Vector2i (static: 0, total: 1)
+4.046600 stdout Orphan StringName: Callable (static: 0, total: 1)
+4.046609 stdout Orphan StringName: Vector3i (static: 0, total: 1)
+4.046620 stdout Orphan StringName: Vector4i (static: 0, total: 1)
+4.046629 stdout Orphan StringName: PackedStringArray (static: 0, total: 1)
+4.046639 stdout Orphan StringName: Basis (static: 0, total: 1)
+4.046648 stdout Orphan StringName: int (static: 0, total: 1)
+4.046686 stdout Orphan StringName: PackedFloat32Array (static: 0, total: 1)
+4.046696 stdout Orphan StringName: Plane (static: 0, total: 1)
+4.046705 stdout Orphan StringName: PackedFloat64Array (static: 0, total: 1)
+4.046715 stdout Orphan StringName: NodePath (static: 0, total: 1)
+4.046725 stdout Orphan StringName: Signal (static: 0, total: 1)
+4.046734 stdout Orphan StringName: StringName (static: 0, total: 1)
+4.046744 stdout Orphan StringName: String (static: 0, total: 1)
+4.046754 stdout Orphan StringName: Transform2D (static: 0, total: 1)
+4.046763 stdout Orphan StringName: Transform3D (static: 0, total: 1)
+4.046773 stdout Orphan StringName: Array (static: 1, total: 2)
+4.046782 stdout Orphan StringName: Quaternion (static: 0, total: 1)
+4.046791 stdout Orphan StringName: bool (static: 0, total: 1)
+4.046802 stdout Orphan StringName: PackedColorArray (static: 0, total: 1)
+4.046812 stdout Orphan StringName: PackedVector2Array (static: 0, total: 1)
+4.046821 stdout Orphan StringName: Object (static: 1, total: 2)
+4.046831 stdout Orphan StringName: AABB (static: 0, total: 1)
+4.046841 stdout Orphan StringName: float (static: 0, total: 1)
+4.046851 stdout Orphan StringName: Dictionary (static: 1, total: 2)
+4.046860 stdout Orphan StringName: Projection (static: 0, total: 1)
+4.046869 stdout Orphan StringName: Rect2 (static: 0, total: 1)
+4.046880 stdout Orphan StringName: PackedVector3Array (static: 0, total: 1)
+4.046889 stdout Orphan StringName: PackedInt32Array (static: 0, total: 1)
+4.046900 stdout Orphan StringName: Rect2i (static: 0, total: 1)
+4.046909 stdout Orphan StringName: PackedInt64Array (static: 0, total: 1)
+4.046919 stdout StringName: 38 unclaimed string names at exit.

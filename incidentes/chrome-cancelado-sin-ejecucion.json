@@ -1,0 +1,9 @@
+{
+    "etiqueta":  "carril-B-437-chrome-01",
+    "pid":  72292,
+    "commandline":  "\"C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" .claude/skills/implement-batch/scripts/turno.py C:/Users/fede_/AppData/Local/Temp/nosefia-batch-367-385/cola carril-B-437-chrome-01 C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/437-chrome-01-turno.log -- python C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/437-chrome-B.py",
+    "hijos":  0,
+    "log_existente":  false,
+    "primer_boleto":  "01792178524216116500-12636.json",
+    "razon":  "Raíz asume capturas conjuntas437+444; cancelación sólo de turno propio pendiente, sin motor iniciado"
+}

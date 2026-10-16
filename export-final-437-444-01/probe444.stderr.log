@@ -1,0 +1,116 @@
+ERROR: PAQUETE444: No se pudo agarrar el ticket
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _probar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:152)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: El pedido completo exportado no se vendió
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _probar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:156)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: Una entrada exportada difiere del recurso
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:66)
+       [2] _probar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:157)
+       [3] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [4] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: La conversación terminó antes de su última entrada
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:65)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: Una entrada exportada difiere del recurso
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:66)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: El último avance no devolvió la vista
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:71)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: El último avance no devolvió el control
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:75)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: La despedida exportada no terminó el despacho
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _probar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:158)
+       [2] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:75)
+       [3] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [4] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: No se pudo agarrar el ticket
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _probar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:152)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: El pedido completo exportado no se vendió
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _probar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:156)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: Una entrada exportada difiere del recurso
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:66)
+       [2] _probar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:157)
+       [3] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [4] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: La conversación terminó antes de su última entrada
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:65)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: Una entrada exportada difiere del recurso
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:66)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: La conversación terminó antes de su última entrada
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:65)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: Una entrada exportada difiere del recurso
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:66)
+       [2] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [3] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)
+ERROR: PAQUETE444: La despedida exportada no terminó el despacho
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _exigir (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:39)
+       [1] _probar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:158)
+       [2] _pasar_entradas (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:75)
+       [3] _pulsar (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:57)
+       [4] _cuadros (D:/nosefia-carril-B-429-444/export-final-437-444-01/sondas-externas/verificar_dialogos_jornada_2_exportados.gd:45)

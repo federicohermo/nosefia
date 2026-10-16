@@ -1,0 +1,70 @@
+﻿[
+    {
+        "Relative":  "manifest.json",
+        "SHA256":  "6326657C97027A6622F235FE2583E81F3C951CB6FC22F5B8A6AA270265BBC38E"
+    },
+    {
+        "Relative":  "assets\\characters\\fede\\01.png",
+        "SHA256":  "E2F3B77484E9EADF18C208A4280C64388E69A164B5CB856743F773B561524D06"
+    },
+    {
+        "Relative":  "assets\\characters\\fede\\02.png",
+        "SHA256":  "65EDCDC00A3BE9E2898957C8A9CF1A32A5E1D4EF253759B82F3D0EE40ADD16D5"
+    },
+    {
+        "Relative":  "assets\\characters\\fede\\03.png",
+        "SHA256":  "21F8EB974F8E597FD11EBE8990155318D1438DC150DC7C1D2A13665F1DBC6229"
+    },
+    {
+        "Relative":  "assets\\characters\\fede\\04.png",
+        "SHA256":  "5D3758D1560B8F97D522F78DBCFD36414FA8871E63A67D31DFB65C2C220FD967"
+    },
+    {
+        "Relative":  "assets\\characters\\fede\\05.png",
+        "SHA256":  "7D105511E96CE0BE061EE2A29CA17508C50617F1FFF7AF67B1CE64C18A49EDE9"
+    },
+    {
+        "Relative":  "assets\\characters\\fede\\06.png",
+        "SHA256":  "E3E9CE5595ACBB80FCDE979EAC8804B4834DA52BCF90770E5C3561C831C4B675"
+    },
+    {
+        "Relative":  "assets\\characters\\fede\\07.png",
+        "SHA256":  "FBA41CDB83D9B4348A7B9167037CE84D766D508717C3156B491997B21C7DA86C"
+    },
+    {
+        "Relative":  "assets\\characters\\fede\\08.png",
+        "SHA256":  "10C98FCD0F51324F2BC4D176DF743AF5303FD886939A96DEF1B1C279FCDCBA09"
+    },
+    {
+        "Relative":  "assets\\characters\\mia\\01.png",
+        "SHA256":  "908DE72357F180F3184C0CDCFE0D14F501CCDA2ED99B4AFA44565C0B51FDD580"
+    },
+    {
+        "Relative":  "assets\\characters\\mia\\02.png",
+        "SHA256":  "F5114C392B0C2FB4E4F4276614982759E8A46A0ADD8AD7BCEF1B3EFED5CAB1E4"
+    },
+    {
+        "Relative":  "assets\\characters\\mia\\03.png",
+        "SHA256":  "BFBAADE048CCA58903047DCDEBA0E5AAD4268760EFD215C649050B3B2EB584E7"
+    },
+    {
+        "Relative":  "assets\\characters\\mia\\04.png",
+        "SHA256":  "0302A97B51AFB0140080180A31A69AE42EB83D88C11EB6DA0C7955270336C509"
+    },
+    {
+        "Relative":  "assets\\characters\\mia\\05.png",
+        "SHA256":  "BDB1645019C7B390682B527C8CACD8B67AECDF2B7C783CD886FE4C3CD0548485"
+    },
+    {
+        "Relative":  "assets\\characters\\mia\\06.png",
+        "SHA256":  "92CFBB5EAB8025B1C3B7F1A3D7E5C9919D06C2D576E7AB138B9567A439E02238"
+    },
+    {
+        "Relative":  "assets\\characters\\mia\\07.png",
+        "SHA256":  "F7721F7EB358687EDC768AFE18C8EF558B8AE58CAE90E89B394F464912498096"
+    },
+    {
+        "Relative":  "assets\\characters\\mia\\08.png",
+        "SHA256":  "83AD7BB3964807C0EAF1607F8602B32C14F93508957CB5868CF9E43FFF64D506"
+    }
+]

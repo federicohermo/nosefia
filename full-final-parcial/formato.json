@@ -1,0 +1,13 @@
+{
+  "nodo": "formato",
+  "codigo": 0,
+  "segundos": 25.2776514000725,
+  "salteado": false,
+  "aviso": null,
+  "comando": [
+    "gdformat",
+    "--check",
+    "src",
+    "test"
+  ]
+}

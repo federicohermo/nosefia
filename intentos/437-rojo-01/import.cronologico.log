@@ -1,0 +1,133 @@
+0.100062 stdout Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+0.139435 stdout 
+2.499872 stdout [   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+2.499957 stdout [   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+2.559648 stdout [  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+7.956429 stdout [  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+7.956505 stdout [  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+8.063643 stdout [  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+9.231286 stdout [38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+9.934348 stdout [MCP] Connecting to ports 6505-6514
+9.934829 stdout [MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+9.935517 stdout [MCP] Registered 177 commands
+9.935595 stdout [  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+9.935650 stdout [92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+9.935662 stdout [0m
+10.771865 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (45 steps)[39m[0m
+10.771966 stdout [   0% ] [90m[1mupdate_scripts_classes[22m | Atencion[39m[0m
+10.771998 stdout [   2% ] [90m[1mupdate_scripts_classes[22m | Compradores[39m[0m
+10.772094 stdout [   4% ] [90m[1mupdate_scripts_classes[22m | DialogosDeCompradores[39m[0m
+10.772122 stdout [   6% ] [90m[1mupdate_scripts_classes[22m | PisoDelLocal[39m[0m
+10.772196 stdout [   8% ] [90m[1mupdate_scripts_classes[22m | ReglasDeLaLimpieza[39m[0m
+10.772213 stdout [  10% ] [90m[1mupdate_scripts_classes[22m | Uso[39m[0m
+10.772271 stdout [  13% ] [90m[1mupdate_scripts_classes[22m | Partida[39m[0m
+10.772296 stdout [  15% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772362 stdout [  17% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772384 stdout [  19% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772459 stdout [  21% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772501 stdout [  23% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772553 stdout [  26% ] [90m[1mupdate_scripts_classes[22m | MarcoDelObjetivo[39m[0m
+10.772581 stdout [  28% ] [90m[1mupdate_scripts_classes[22m | Limpiador[39m[0m
+10.772625 stdout [  30% ] [90m[1mupdate_scripts_classes[22m | Ventanilla[39m[0m
+10.772668 stdout [  32% ] [90m[1mupdate_scripts_classes[22m | PanelDeLaVentanilla[39m[0m
+10.772704 stdout [  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772741 stdout [  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772791 stdout [  39% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772813 stdout [  41% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772888 stdout [  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772911 stdout [  45% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772974 stdout [  47% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.772990 stdout [  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773042 stdout [  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773079 stdout [  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773117 stdout [  56% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773161 stdout [  58% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773186 stdout [  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773243 stdout [  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773275 stdout [  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773325 stdout [  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773347 stdout [  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773401 stdout [  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773495 stdout [  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773550 stdout [  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773600 stdout [  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773622 stdout [  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773680 stdout [  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773716 stdout [  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773760 stdout [  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773777 stdout [  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773834 stdout [  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773882 stdout [  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773903 stdout [  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+10.773965 stdout [92m[ DONE ][39m [1mupdate_scripts_classes[22m
+10.773979 stdout [0m
+10.791708 stdout [   0% ] [90m[1m_update_scan_actions[22m | Started Escaneando acciones... (17 steps)[39m[0m
+10.791880 stdout [   0% ] [90m[1m_update_scan_actions[22m | 01.png[39m[0m
+10.792031 stdout [   5% ] [90m[1m_update_scan_actions[22m | 02.png[39m[0m
+10.792172 stdout [  11% ] [90m[1m_update_scan_actions[22m | 03.png[39m[0m
+10.792297 stdout [  16% ] [90m[1m_update_scan_actions[22m | 04.png[39m[0m
+10.792436 stdout [  22% ] [90m[1m_update_scan_actions[22m | 05.png[39m[0m
+10.792536 stdout [  27% ] [90m[1m_update_scan_actions[22m | 06.png[39m[0m
+10.792647 stdout [  33% ] [90m[1m_update_scan_actions[22m | 07.png[39m[0m
+10.792752 stdout [  38% ] [90m[1m_update_scan_actions[22m | 08.png[39m[0m
+10.792885 stdout [  44% ] [90m[1m_update_scan_actions[22m | 01.png[39m[0m
+10.792994 stdout [  50% ] [90m[1m_update_scan_actions[22m | 02.png[39m[0m
+10.793100 stdout [  55% ] [90m[1m_update_scan_actions[22m | 03.png[39m[0m
+10.793241 stdout [  61% ] [90m[1m_update_scan_actions[22m | 04.png[39m[0m
+10.793366 stdout [  66% ] [90m[1m_update_scan_actions[22m | 05.png[39m[0m
+10.793476 stdout [  72% ] [90m[1m_update_scan_actions[22m | 06.png[39m[0m
+10.793590 stdout [  77% ] [90m[1m_update_scan_actions[22m | 07.png[39m[0m
+10.793697 stdout [  83% ] [90m[1m_update_scan_actions[22m | 08.png[39m[0m
+10.793815 stdout [  88% ] [90m[1m_update_scan_actions[22m | logo.png[39m[0m
+10.793850 stdout [92m[ DONE ][39m [1m_update_scan_actions[22m
+10.793858 stdout [0m
+10.794067 stdout [   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (17 steps)[39m[0m
+10.794104 stdout [   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.794624 stdout [   5% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.795033 stdout [  11% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.795463 stdout [  16% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.795799 stdout [  22% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.796100 stdout [  27% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.796412 stdout [  33% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.796762 stdout [  38% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.797113 stdout [  44% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.797480 stdout [  50% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.797814 stdout [  55% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.798173 stdout [  61% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.798515 stdout [  66% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.798841 stdout [  72% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.799154 stdout [  77% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.799467 stdout [  83% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.799823 stdout [  88% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+10.800201 stdout [   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+10.820468 stdout [   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+10.874539 stdout [   5% ] [90m[1mreimport[22m | 08.png[39m[0m
+11.368621 stdout [  11% ] [90m[1mreimport[22m | 07.png[39m[0m
+11.387687 stdout [  16% ] [90m[1mreimport[22m | 06.png[39m[0m
+11.411523 stdout [  22% ] [90m[1mreimport[22m | 05.png[39m[0m
+11.432177 stdout [  27% ] [90m[1mreimport[22m | 04.png[39m[0m
+11.432231 stdout [  33% ] [90m[1mreimport[22m | 03.png[39m[0m
+11.432398 stdout [  38% ] [90m[1mreimport[22m | 02.png[39m[0m
+11.433762 stdout [  44% ] [90m[1mreimport[22m | 01.png[39m[0m
+11.437786 stdout [  50% ] [90m[1mreimport[22m | 08.png[39m[0m
+11.447209 stdout [  55% ] [90m[1mreimport[22m | 07.png[39m[0m
+11.448304 stdout [  61% ] [90m[1mreimport[22m | 06.png[39m[0m
+11.463684 stdout [  66% ] [90m[1mreimport[22m | 05.png[39m[0m
+11.514140 stdout [  72% ] [90m[1mreimport[22m | 04.png[39m[0m
+11.921464 stdout [  77% ] [90m[1mreimport[22m | 03.png[39m[0m
+11.928544 stdout [  83% ] [90m[1mreimport[22m | 02.png[39m[0m
+11.936810 stdout [  88% ] [90m[1mreimport[22m | 01.png[39m[0m
+11.953198 stdout [  94% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+11.980494 stdout [92m[ DONE ][39m [1mreimport[22m
+11.980533 stdout [0m
+11.980607 stdout [   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (17 steps)[39m[0m
+11.980661 stdout [   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+11.980727 stdout [92m[ DONE ][39m [1mreimport[22m
+11.980742 stdout [0m
+12.624212 stdout [   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+12.624341 stdout [   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+12.624601 stdout [  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+12.624632 stdout [92m[ DONE ][39m [1mloading_editor_layout[22m
+12.624644 stdout [0m
+12.852455 stdout [MCP] WebSocket client stopped
+12.855361 stdout [MCP] Godot MCP Pro stopped

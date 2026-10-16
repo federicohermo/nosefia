@@ -1,0 +1,7 @@
+?? assets/characters/fede/
+?? assets/characters/jornada_2_origen.md
+?? assets/characters/mia/
+?? test/escenas/captura_de_compradores_jornada_2.gd
+?? test/escenas/captura_de_compradores_jornada_2.gd.uid
+?? test/escenas/sprites_de_compradores_jornada_2_test.gd
+?? test/escenas/sprites_de_compradores_jornada_2_test.gd.uid

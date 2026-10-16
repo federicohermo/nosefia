@@ -1,0 +1,11 @@
+﻿{
+    "retained":  "Crudos parciales conservados; no se presentan como completa verde.",
+    "checked_own_turn_pid":  29356,
+    "accepted_as_convergence":  false,
+    "head":  "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+    "reason":  "El usuario ordenó finalizar antes de 17:30 ART y dejar las verificaciones al PR, sin corridas locales.",
+    "utc":  "2026-10-16T20:19:56.0044220Z",
+    "status":  {
+
+               }
+}

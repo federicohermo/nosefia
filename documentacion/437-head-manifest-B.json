@@ -1,0 +1,152 @@
+{
+  "head": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
+  "source": "62390898635a04fbb1b6a29558355a5e1984684f",
+  "items": [
+    {
+      "path": "assets/characters/fede/01.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Fede/Fede 01.png",
+      "sha256": "e2f3b77484e9eadf18c208a4280c64388e69a164b5cb856743f773b561524d06",
+      "import_destinations": [
+        "res://.godot/imported/01.png-2ec6c8967790fc5f50107108ebd068ad.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/fede/02.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Fede/Fede 02.png",
+      "sha256": "65edcdc00a3be9e2898957c8a9cf1a32a5e1d4ef253759b82f3d0ee40add16d5",
+      "import_destinations": [
+        "res://.godot/imported/02.png-f3a821d93ea47e9a71947429bc632914.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/fede/03.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Fede/Fede 03.png",
+      "sha256": "21f8eb974f8e597fd11ebe8990155318d1438dc150dc7c1d2a13665f1dbc6229",
+      "import_destinations": [
+        "res://.godot/imported/03.png-d9bda993c59da768eafc58e655702526.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/fede/04.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Fede/Fede 04.png",
+      "sha256": "5d3758d1560b8f97d522f78dbcfd36414fa8871e63a67d31dfb65c2c220fd967",
+      "import_destinations": [
+        "res://.godot/imported/04.png-5669792fc5c192e612d89fa322ac7cbb.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/fede/05.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Fede/Fede 05.png",
+      "sha256": "7d105511e96ce0be061ee2a29ca17508c50617f1fff7af67b1ce64c18a49ede9",
+      "import_destinations": [
+        "res://.godot/imported/05.png-ead7d5045f47cad0a7989a570f11447c.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/fede/06.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Fede/Fede 06.png",
+      "sha256": "e3e9ce5595acbb80fcde979eac8804b4834da52bcf90770e5c3561c831c4b675",
+      "import_destinations": [
+        "res://.godot/imported/06.png-3c23a8df970b4e91ce6923eaa40f105b.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/fede/07.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Fede/Fede 07.png",
+      "sha256": "fba41cdb83d9b4348a7b9167037ce84d766d508717c3156b491997b21c7da86c",
+      "import_destinations": [
+        "res://.godot/imported/07.png-e9cedc1e2dafd47ca6a41cb1ff02c157.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/fede/08.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Fede/Fede 08.png",
+      "sha256": "10c98fcd0f51324f2bc4d176df743af5303fd886939a96def1b1c279fcdcba09",
+      "import_destinations": [
+        "res://.godot/imported/08.png-a49d7440d5dcdd6cb8f1a3b742b32bc5.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/fede/idle.tres",
+      "sha256": "38f71c574c51c0e63165a242e4a55ba357e0c27e4e358b223abfb3ce77a933d3",
+      "git_blob": "9dea7fa1b19e5eb07632e15c7f0089825b249c15"
+    },
+    {
+      "path": "assets/characters/mia/01.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Mia/miaidle_01.png",
+      "sha256": "908de72357f180f3184c0cdcfe0d14f501ccda2ed99b4afa44565c0b51fdd580",
+      "import_destinations": [
+        "res://.godot/imported/01.png-7ed2afb0ddc9728bb9932c3898f07274.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/mia/02.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Mia/miaidle_02.png",
+      "sha256": "f5114c392b0c2fb4e4f4276614982759e8a46a0add8ad7bcef1b3efed5cab1e4",
+      "import_destinations": [
+        "res://.godot/imported/02.png-5c3687b08d4ac14eacf8f56370651baf.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/mia/03.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Mia/miaidle_03.png",
+      "sha256": "bfbaade048cca58903047dcdeba0e5aad4268760efd215c649050b3b2eb584e7",
+      "import_destinations": [
+        "res://.godot/imported/03.png-7ba9b5eaeed37f1896a7178dfcbe3a8b.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/mia/04.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Mia/miaidle_04.png",
+      "sha256": "0302a97b51afb0140080180a31a69ae42eb83d88c11eb6da0c7955270336c509",
+      "import_destinations": [
+        "res://.godot/imported/04.png-e225a670d166c9490885bed6bdeb6103.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/mia/05.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Mia/miaidle_05.png",
+      "sha256": "bdb1645019c7b390682b527c8cacd8b67aecdf2b7c783cd886fe4c3cd0548485",
+      "import_destinations": [
+        "res://.godot/imported/05.png-78ed0a0fc249dc352b02b902ee1dea46.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/mia/06.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Mia/miaidle_06.png",
+      "sha256": "92cfbb5eab8025b1c3b7f1a3d7e5c9919d06c2d576e7ab138b9567a439e02238",
+      "import_destinations": [
+        "res://.godot/imported/06.png-8135d861c48be8b6e6677ff3d1e520b7.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/mia/07.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Mia/miaidle_07.png",
+      "sha256": "f7721f7eb358687edc768afe18c8ef558b8ae58cae90e89b394f464912498096",
+      "import_destinations": [
+        "res://.godot/imported/07.png-e7aa92ceb16edd59eb112e7cb27ab886.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/mia/08.png",
+      "source": "62390898635a04fbb1b6a29558355a5e1984684f:assets/personajes/Mia/miaidle_08.png",
+      "sha256": "83ad7bb3964807c0eaf1607f8602b32c14f93508957cb5868cf9e43fff64d506",
+      "import_destinations": [
+        "res://.godot/imported/08.png-a3cf4edebaac5ac761505277d17cc364.ctex"
+      ]
+    },
+    {
+      "path": "assets/characters/mia/idle.tres",
+      "sha256": "94dcd14547ec549d35d61b8d91e3bfad9df689ddb1be4576fb08321696916f4d",
+      "git_blob": "90daa53c8669621b8d71fd5e1e462802110ea359"
+    }
+  ],
+  "animation_table": "const ANIMACIONES := {\n\tDialogosDeCompradores.Personaje.TIN: preload(\"res://assets/characters/martin/idle.tres\"),\n\tDialogosDeCompradores.Personaje.TIA: preload(\"res://assets/characters/tiago/idle.tres\"),\n\tDialogosDeCompradores.Personaje.FEDE: preload(\"res://assets/characters/fede/idle.tres\"),\n\tDialogosDeCompradores.Personaje.MIA: preload(\"res://assets/characters/mia/idle.tres\"),\n}",
+  "focal": "437-verde-02: 9 tests, 0 failures/errors/skips/flaky",
+  "cold_windows_full_import": "attempt incomplete: native exit 3221226356; no cause attribution",
+  "pending": [
+    "CI exact head with cold checkout",
+    "shared final local full",
+    "shared final export/captures with integrated-head attribution"
+  ]
+}

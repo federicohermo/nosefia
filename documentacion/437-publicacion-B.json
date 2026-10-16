@@ -1,0 +1,8 @@
+{
+  "head": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
+  "base": "d8c0d8cb5a6e3d968d9cd8fd04f4a12c17829875",
+  "base_branch": "feature/433-agenda-compradores-jornada-2",
+  "branch": "improvement/437-sprites-compradores-jornada-2",
+  "pr": "https://github.com/federicohermo/nosefia/pull/470",
+  "draft": true
+}
