@@ -16,6 +16,7 @@ class_name Compradores
 extends RefCounted
 
 const DIALOGOS := preload("res://assets/dialogos/compradores_jornada_1.tres")
+const DIALOGOS_SEGUNDA := preload("res://assets/dialogos/compradores_jornada_2.tres")
 
 ## Cada fila es `[nombre, líneas del pedido, cuánto paga de más]`, y una línea es
 ## `[Producto.Id, unidades]`.
@@ -43,10 +44,15 @@ static func padron() -> Array[Comprador]:
 	return lista
 
 
-## Los compradores de esta noche: los primeros del padrón, tantos como pida el balance.
+## Las dos primeras noches tienen contenido propio; las demás usan el padrón vigente.
 static func de_la_jornada(jornada: int) -> Array[Comprador]:
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
 		return _primera_noche()
+	if jornada == 2:
+		var segunda := segunda_jornada_definida()
+		for comprador: Comprador in segunda:
+			comprador.dialogos = DIALOGOS_SEGUNDA
+		return segunda
 	var lista: Array[Comprador] = []
 	for comprador in padron():
 		if lista.size() >= ReglasDeLaVentanilla.COMPRADORES_POR_JORNADA:
