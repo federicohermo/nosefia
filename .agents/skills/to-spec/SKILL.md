@@ -28,7 +28,7 @@ reescriben como reglas y criterios de la capacidad, sin nada propio de esa entre
   **IDs emitidos en continuación**, y **los existentes no se renumeran ni se reescriben** salvo
   que la entrevista haya resuelto explícitamente cambiarlos. El ID es la dirección: los issues y
   los tests apuntan ahí. **La continuación sale del más alto que tuvo el spec**, borrados
-  incluidos: si se borró el último, `git log -p -- <spec>` lo muestra.
+  incluidos: si se borró el último, `git log --all -p -- <spec>` lo muestra.
 - **Borrar** (la funcionalidad se quita del juego): el spec se borra **en su propio commit**, y
   en la misma rama se borran el código y los tests que lo citaban. La historia queda en git.
   Si otra capacidad dependía de ésta, su spec se actualiza en la misma corrida.
@@ -42,7 +42,15 @@ continuación del último que ve, y las dos emiten el mismo. El gate de specs ve
 recién después del merge, y no ve qué test quedó citando un criterio ajeno. Hay dos salidas:
 
 - **Repartí los IDs nuevos entre los dos antes de abrir las ramas.**
-- **Escribilos en orden:** el segundo, desde `staging` con la rama del primero ya mergeada.
+- **Escribilos en orden:** el segundo, desde una base que ya contenga la rama del primero.
+
+**La reserva incluye las ramas publicadas de otros lotes que modifican la misma capacidad.**
+Antes de emitir IDs, traer las referencias y cruzar los contratos y su historia, incluidos
+los IDs retirados. El máximo del checkout o de staging puede estar atrasado.
+Si dos emisiones existentes significan cosas distintas, conservar la asignación anterior y
+dar al delta posterior un ID libre. Actualizar sus issues, tests y referencias sin reemplazar
+globalmente el identificador. En #429–444, las colisiones STK y CTR aparecieron al reunir
+contratos de sesiones que habían trabajado en paralelo.
 
 Si uno de los dos no emite IDs nuevos, como el que sólo borra, no hace falta repartir. Si no
 comparten ningún spec, escribilos uno detrás del otro.

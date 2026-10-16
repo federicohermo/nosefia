@@ -29,6 +29,12 @@ fila **«Se escribe»**, y a quién declara depender.
   afuera no la ve ningún reparto.
 - El que tiene una `OQ-<COD>-###` sin contestar de por medio.
 
+**Si el usuario autoriza apilar sobre ramas de dependencias, esa base sustituye la espera de
+su merge en staging.** Fijar las cabezas publicadas y verificadas, incorporarlas antes de
+medir y declarar las bases de los PR. Terminar otra sesión no implica integrar su trabajo:
+comprobar qué commits contiene la base y conservar el orden de las escenas. No exigir un
+merge remoto que el usuario ya decidió reemplazar por una pila de ramas.
+
 **Y re-medí lo que el issue declara.** Un número que el issue midió bien puede haber envejecido
 entre que se escribió y hoy. Lo que se mide es el árbol de hoy, no lo que el issue dice del árbol
 de ayer.

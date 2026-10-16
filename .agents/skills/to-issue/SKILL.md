@@ -61,6 +61,11 @@ y reutilizarlo. El tamaño decorativo de un prototipo no se convierte en contrat
 el lote del 2026-10-08, las tres hojas del baño ya tenían imagen y colisión; el trabajo faltante
 era poder leerlas, y recrearlas como A4 habría reemplazado lo que acababa de hacer el artista.
 
+Un requisito que pide un retrato identifica también su recurso de origen. Un círculo de
+contacto no demuestra que exista esa fotografía. Si sólo existe el avatar sin retrato,
+contrastar la ficha y resolver qué imagen se acepta antes de repartir la implementación.
+En #22, la ficha pedía foto de perfil de Yasmín y el usuario decidió usar el círculo de Figma.
+
 **Un encuadre se mide contra las mallas visibles y sus profundidades, además de las colisiones.**
 Un rayo libre no prueba que un punto se vea si la malla que lo tapa no tiene collider. Separar
 los bordes del hueco físico de los que la cámara tiene que encuadrar, y cruzar la proyección con
