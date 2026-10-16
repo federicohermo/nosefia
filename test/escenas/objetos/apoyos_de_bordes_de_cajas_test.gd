@@ -208,13 +208,13 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
-	var referencia: MeshInstance3D = gondola.get_node("saladix-2oeste2")
-	var disposicion: DisposicionDeLaGondola = almacen.get("_reposicion_manual").get("disposicion")
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var bloque := disposicion.principales[Producto.Id.SALADIK]
 	var frente := DisposicionDeLaGondola.frente(
-		disposicion.principales[Producto.Id.SALADIK],
-		disposicion.filas_de_adelante[Producto.Id.SALADIK]
+		bloque, disposicion.filas_de_adelante[Producto.Id.SALADIK]
 	)
-	var objetivo := referencia.global_position
+	var objetivo := (puesto.global_transform * DisposicionDeLaGondola.copia(bloque, 0)).origin
 	objetivo.y = (gondola.global_transform * gondola.get_aabb()).end.y - 0.03
 	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
