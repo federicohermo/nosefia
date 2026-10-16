@@ -1,0 +1,12 @@
+{
+  "status": "fulfilled",
+  "value": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"suggested_edits_status\":\"not_enabled\",\"text\":\"<discussions total-count=\\\"1\\\" shown-count=\\\"1\\\">\\n<discussion id=\\\"discussion://3f186efe-cd9d-8096-bb5b-eb6c93d5a676/3f186efe-cd9d-8096-bb5b-eb6c93d5a676/3fa86efe-cd9d-81de-96d5-001c64307456\\\" comment-count=\\\"2\\\" resolved=\\\"false\\\" type=\\\"comment\\\" context=\\\"page\\\">\\n<comment id=\\\"3fa86efe-cd9d-8129-baac-001d71ba3161\\\" url=\\\"https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676?d=3fa86efecd9d81de96d5001c64307456&amp;pvs=42\\\" user-url=\\\"user://f04239c2-1730-45ca-a494-1c0b3c73991e/federicohermo@gmail.com\\\" datetime=\\\"2026-10-15T16:41:25.870Z\\\" by-you=\\\"true\\\"><mention-user url=\\\"user://5004fd3f-7661-4ee0-bb8c-b9b1c2d77117\\\"/> <mention-user url=\\\"user://b76e5dab-dfcb-45e5-8543-bc7e80dc9518/tiagopicolo10@gmail.com\\\">Tiago</mention-user> El issue #434 incorpora los sectores definidos, conservando las alturas actuales; la ficha detallada de Duronga dice sólo depósito y el dibujo lo sitúa «provisionalmente» en exhibición. El texto también dice cuatro niveles, mientras las cabeceras del modelo tienen tres y la regla vigente mantiene la reposición a altura de la mano. ¿Qué niveles deben ser interactuables y debe cambiar la geometría? Esa decisión puntual no impide aplicar el reparto por sectores.</comment>\\n<comment id=\\\"3fa86efe-cd9d-80a9-b6dc-001d84ccea09\\\" url=\\\"https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676?d=3fa86efecd9d81de96d5001c64307456&amp;pvs=42\\\" user-url=\\\"user://b76e5dab-dfcb-45e5-8543-bc7e80dc9518/tiagopicolo10@gmail.com\\\" datetime=\\\"2026-10-15T18:25:14.413Z\\\">Los duronga quedarán en las góndolas hasta que se los reemplace por otro producto cuando actualicemos el mapa de góndolas. Todas las góndolas tienen 4 estanterías con productos interactuables, según lo que se especifica en el mapa de góndolas.</comment>\\n</discussion>\\n</discussions>\"}"
+      }
+    ],
+    "isError": false
+  }
+}

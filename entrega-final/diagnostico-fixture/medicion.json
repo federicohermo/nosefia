@@ -1,0 +1,119 @@
+[
+	{
+		"camara": "[X: (0.0, 0.0, -1.0), Y: (-0.573462, 0.819232, -0.0), Z: (0.819232, 0.573462, 0.0), O: (1.642197, 2.192617, -2.25258)]",
+		"etiqueta": "legado-exacto",
+		"extra": {
+			"apoyo": "(-0.237803, 0.792617, -2.25258)",
+			"estante": "(-0.357803, 0.792617, -2.25258)"
+		},
+		"giro": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (5.71, 0.112, 5.3)]",
+		"hand_completo": {
+			"formas": [
+				{
+					"aabb_local": "[P: (-0.06, -0.08, -0.06), S: (0.12, 0.16, 0.12)]",
+					"fisicos": [],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (0.659119, 1.504462, -2.25258)]",
+					"reservas_sat": [
+						"/root/Almacen/Estructura/gondolanueva"
+					],
+					"ruta": "/root/Almacen/Jugador/Giro/Camara/PuntoDeCarga/BolsaDeBasura1/Forma",
+					"tipo": "BoxShape3D"
+				}
+			],
+			"libre_fisica_y_sat": false
+		},
+		"jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (5.71, 0.112, 5.3)]",
+		"mano": "[X: (0.0, 0.0, -1.0), Y: (-0.573462, 0.819232, -0.0), Z: (0.819232, 0.573462, 0.0), O: (0.659119, 1.504462, -2.25258)]",
+		"mano_ruta": "/root/Almacen/Jugador/Giro/Camara/PuntoDeSoltado",
+		"rayo": {
+			"collider": "/root/Almacen/Estructura/gondolanueva/StaticBody3D",
+			"face_index": -1,
+			"normal": "(1.0, 0.0, 0.0)",
+			"normal_y": 0.0,
+			"position": "(0.467007, 1.369984, -2.25258)",
+			"shape": 0
+		},
+		"resultado_distancia_hand": 0.450625032186508,
+		"resultado_posicion": "(1.028285, 1.762879, -2.25258)",
+		"volumen_sobre_objetivo": {
+			"formas": [
+				{
+					"aabb_local": "[P: (-0.06, -0.08, -0.06), S: (0.12, 0.16, 0.12)]",
+					"fisicos": [
+						"/root/Almacen/Estructura/gondolanueva/Contorno",
+						"/root/Almacen/Estructura/gondolanueva/StaticBody3D"
+					],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (0.467007, 1.453984, -2.25258)]",
+					"reservas_sat": [
+						"/root/Almacen/Estructura/gondolanueva"
+					],
+					"ruta": "/root/Almacen/Jugador/Giro/Camara/PuntoDeCarga/BolsaDeBasura1/Forma",
+					"tipo": "BoxShape3D"
+				}
+			],
+			"libre_fisica_y_sat": false
+		}
+	},
+	{
+		"camara": "[X: (-0.609711, 0.0, 0.792624), Y: (0.416995, 0.850426, 0.320766), Z: (-0.674068, 0.526095, -0.518514), O: (-1.417803, 1.807237, -3.25258)]",
+		"etiqueta": "candidato-01",
+		"extra": {
+			"apoyo": "(-0.237803, 0.792617, -2.25258)",
+			"distancia": 1.3,
+			"frente": "(-1.0, 0.0, 0.0)",
+			"jugador_entra": true,
+			"lateral": 1.0,
+			"objetivo": "(-0.117803, 0.792617, -2.25258)",
+			"piso": {
+				"collider": "/root/Almacen/Estructura/SueloSolido",
+				"face_index": -1,
+				"normal": "(0.0, 1.0, 0.0)",
+				"normal_y": 1.0,
+				"position": "(-1.417803, 0.102237, -3.25258)",
+				"shape": 0
+			}
+		},
+		"giro": "[X: (-0.609711, 0.0, 0.792624), Y: (0.0, 1.0, 0.0), Z: (-0.792624, 0.0, -0.609711), O: (-1.417803, 0.107237, -3.25258)]",
+		"hand_completo": {
+			"formas": [
+				{
+					"aabb_local": "[P: (-0.06, -0.08, -0.06), S: (0.12, 0.16, 0.12)]",
+					"fisicos": [],
+					"pose": "[X: (-0.609711, 0.0, 0.792624), Y: (0.0, 1.0, 0.0), Z: (-0.792624, 0.0, -0.609711), O: (-0.608921, 1.175923, -2.630363)]",
+					"reservas_sat": [],
+					"ruta": "/root/Almacen/Jugador/Giro/Camara/PuntoDeCarga/BolsaDeBasura1/Forma",
+					"tipo": "BoxShape3D"
+				}
+			],
+			"libre_fisica_y_sat": true
+		},
+		"jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-1.417803, 0.107237, -3.25258)]",
+		"mano": "[X: (-0.609711, 0.0, 0.792624), Y: (0.416995, 0.850426, 0.320766), Z: (-0.674068, 0.526095, -0.518514), O: (-0.608921, 1.175923, -2.630363)]",
+		"mano_ruta": "/root/Almacen/Jugador/Giro/Camara/PuntoDeSoltado",
+		"rayo": {
+			"collider": "/root/Almacen/Estructura/gondolanueva/StaticBody3D",
+			"face_index": -1,
+			"normal": "(0.0, 1.0, 0.0)",
+			"normal_y": 1.0,
+			"position": "(-0.117804, 0.792617, -2.25258)",
+			"shape": 0
+		},
+		"resultado_distancia_hand": 0.0,
+		"resultado_posicion": "(-0.608921, 1.175923, -2.630363)",
+		"volumen_sobre_objetivo": {
+			"formas": [
+				{
+					"aabb_local": "[P: (-0.06, -0.08, -0.06), S: (0.12, 0.16, 0.12)]",
+					"fisicos": [],
+					"pose": "[X: (-0.609711, 0.0, 0.792624), Y: (0.0, 1.0, 0.0), Z: (-0.792624, 0.0, -0.609711), O: (-0.117804, 0.876617, -2.25258)]",
+					"reservas_sat": [
+						"/root/Almacen/Estructura/gondolanueva"
+					],
+					"ruta": "/root/Almacen/Jugador/Giro/Camara/PuntoDeCarga/BolsaDeBasura1/Forma",
+					"tipo": "BoxShape3D"
+				}
+			],
+			"libre_fisica_y_sat": false
+		}
+	}
+]

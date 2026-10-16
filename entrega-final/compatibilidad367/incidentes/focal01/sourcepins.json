@@ -1,0 +1,18 @@
+{
+  "head": "ec99e7d91bb8bcadbc1a28ffa0d6c720016110f7",
+  "godot": "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+  "inputs": {
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\compat434367-focal-final01\\ejecutar.py": "732b9d7d244a0a733801c40405f3709b5980424a7714157e6f37e8b58c200639",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-reutilizar_cache.py": "7b4f11a1ba8fe63d5ecfab0ef448a06b3be09f64ff88f08bfbdf6495f754b2cb"
+  },
+  "suites": [
+    "test/dominio/jornada/pedidos_compartidos_test.gd",
+    "test/dominio/jornada/sorteo_de_apertura_test.gd",
+    "test/escenas/apertura_sorteada_test.gd",
+    "test/escenas/compatibilidad_guia_sin_principal_test.gd",
+    "test/escenas/gondolas_por_sectores_test.gd",
+    "test/escenas/puestos/disposicion_de_la_gondola_test.gd",
+    "test/escenas/un_lugar_por_producto_test.gd",
+    "test/escenas/casilleros_a_la_vista_test.gd"
+  ]
+}

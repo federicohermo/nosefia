@@ -1,0 +1,64 @@
+{
+  "original": {
+    "actual": {
+      "textos6_inestables": [
+        "ARVEJAS",
+        "CORACOLA"
+      ],
+      "rna_inestables": [
+        "ARVEJAS",
+        "CORACOLA",
+        "AMARGADITO"
+      ]
+    },
+    "world_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    },
+    "componentes_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    }
+  },
+  "primera_candidata": {
+    "actual": {
+      "textos6_inestables": [
+        "ARVEJAS",
+        "CORACOLA"
+      ],
+      "rna_inestables": [
+        "ARVEJAS",
+        "CORACOLA",
+        "AMARGADITO"
+      ]
+    },
+    "world_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    },
+    "componentes_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    }
+  },
+  "segunda": {
+    "actual": {
+      "textos6_inestables": [
+        "ARVEJAS",
+        "CORACOLA"
+      ],
+      "rna_inestables": [
+        "ARVEJAS",
+        "CORACOLA"
+      ]
+    },
+    "world_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    },
+    "componentes_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    }
+  }
+}

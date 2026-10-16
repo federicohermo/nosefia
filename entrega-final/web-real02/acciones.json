@@ -1,0 +1,102 @@
+[
+  {
+    "snapshot": "real02-1920-menu",
+    "frames": 21,
+    "state": {
+      "visible": "visible",
+      "focus": true,
+      "width": 1920,
+      "height": 1080,
+      "pointer": false,
+      "canvas": 1,
+      "active": false,
+      "isolated": true
+    }
+  },
+  {
+    "snapshot": "real02-1920-j2-entrada",
+    "frames": 62,
+    "state": {
+      "visible": "visible",
+      "focus": true,
+      "width": 1920,
+      "height": 1080,
+      "pointer": false,
+      "canvas": 1,
+      "active": false,
+      "isolated": true
+    }
+  },
+  {
+    "antes_de_caminar": {
+      "visible": "visible",
+      "focus": true,
+      "width": 1920,
+      "height": 1080,
+      "pointer": true,
+      "canvas": 1,
+      "active": true,
+      "isolated": true
+    }
+  },
+  {
+    "hold": "w",
+    "ms": 1000
+  },
+  {
+    "hold": "w",
+    "ms": 1000
+  },
+  {
+    "hold": "w",
+    "ms": 1000
+  },
+  {
+    "hold": "w",
+    "ms": 650
+  },
+  {
+    "hold": "a",
+    "ms": 900
+  },
+  {
+    "snapshot": "real02-1920-j2-pasillo",
+    "frames": 57,
+    "state": {
+      "visible": "visible",
+      "focus": true,
+      "width": 1920,
+      "height": 1080,
+      "pointer": true,
+      "canvas": 1,
+      "active": true,
+      "isolated": true
+    }
+  },
+  {
+    "snapshot": "real02-1280-j2-pasillo",
+    "frames": 56,
+    "state": {
+      "visible": "visible",
+      "focus": true,
+      "width": 1280,
+      "height": 720,
+      "pointer": true,
+      "canvas": 1,
+      "active": true,
+      "isolated": true
+    }
+  },
+  {
+    "antes_de_cerrar": {
+      "visible": "visible",
+      "focus": true,
+      "width": 1280,
+      "height": 720,
+      "pointer": false,
+      "canvas": 1,
+      "active": true,
+      "isolated": true
+    }
+  }
+]

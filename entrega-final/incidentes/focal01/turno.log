@@ -1,0 +1,387 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (5 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-434-sectores/reports/focal-434-actual01[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_principales_y_referencias_ocupan_los_sectores_de_jornada_dos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_principales_y_referencias_ocupan_los_sectores_de_jornada_dos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 467ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_mitades_verticales_separan_los_frios[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_mitades_verticales_separan_los_frios[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 283ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_duronga_exhibida_conserva_su_caja_y_fuente_utilizables[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_duronga_exhibida_conserva_su_caja_y_fuente_utilizables[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 287ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_duronga_exhibida_conserva_su_caja_y_fuente_utilizables' in res://test/escenas/gondolas_por_sectores_test.gd:210[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m7[0m
+ but was
+ [38;2;30;144;255m8[0m[0m[38;2;173;216;230m	at 'test_duronga_exhibida_conserva_su_caja_y_fuente_utilizables' in res://test/escenas/gondolas_por_sectores_test.gd:212[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255m<null>[0m' but was [38;2;30;144;255m<Resource>[0m[0m[38;2;173;216;230m	at 'test_duronga_exhibida_conserva_su_caja_y_fuente_utilizables' in res://test/escenas/gondolas_por_sectores_test.gd:220[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/gondolas_por_sectores_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 369ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 426ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_fila_es_entera_de_casilleros_y_dos_conservan_la_de_atras[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_fila_es_entera_de_casilleros_y_dos_conservan_la_de_atras[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_bloque_vacio_con_cupo_cero_no_indexa_antes_del_comienzo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_bloque_vacio_con_cupo_cero_no_indexa_antes_del_comienzo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] primera_reponible (res://src/escenas/puestos/disposicion_de_la_gondola.gd:67)
+       [1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:38)
+       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [4] test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:37)
+       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_hay_un_bloque_principal_por_producto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_hay_un_bloque_principal_por_producto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_producto_declara_su_fila_de_adelante[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_producto_declara_su_fila_de_adelante[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_producto_tiene_casilleros_y_entran_en_su_bloque[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_producto_tiene_casilleros_y_entran_en_su_bloque[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ningun_faltante_de_ninguna_jornada_pasa_de_su_fila[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ningun_faltante_de_ninguna_jornada_pasa_de_su_fila[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 14ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tanda_de_cada_producto_esta_junta_sobre_un_solo_estante[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tanda_de_cada_producto_esta_junta_sobre_un_solo_estante[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 26ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_frente_va_de_la_fila_de_atras_a_la_de_adelante[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_frente_va_de_la_fila_de_atras_a_la_de_adelante[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_fila_tiene_frente_por_el_orden_de_sus_columnas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_fila_tiene_frente_por_el_orden_de_sus_columnas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_hay_una_malla_por_bloque_de_guia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_hay_una_malla_por_bloque_de_guia[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_fijas_conservan_filas_y_casilleros[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/disposicion_de_la_gondola_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_fijas_conservan_filas_y_casilleros[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 13 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 150ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_mano_gira_el_frente_de_la_tanda_hacia_la_camara[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_mano_gira_el_frente_de_la_tanda_hacia_la_camara[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 411ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 409ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_fila_de_adelante_de_cada_tanda_es_de_casilleros[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_fila_de_adelante_de_cada_tanda_es_de_casilleros[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 386ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 220ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_dos_filas_dan_al_pasillo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_dos_filas_dan_al_pasillo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 279ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_fila_de_atras_se_ve_entera_desde_que_abre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_fila_de_atras_se_ve_entera_desde_que_abre[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 422ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_jornada_1_abre_con_lo_que_dice_la_ficha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_jornada_1_abre_con_lo_que_dice_la_ficha[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 289ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m6[0m
+ but was
+ [38;2;30;144;255m7[0m[0m[38;2;173;216;230m	at 'test_la_jornada_1_abre_con_lo_que_dice_la_ficha' in res://test/escenas/un_lugar_por_producto_test.gd:489[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 341ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/un_lugar_por_producto_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 499ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 10 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10s 305ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_huecos_se_ven_sin_cambiar_que_enfoca_la_mira[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_huecos_se_ven_sin_cambiar_que_enfoca_la_mira[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 571ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_casillero_apagado_lleva_los_dos_materiales_del_apuntado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_casillero_apagado_lleva_los_dos_materiales_del_apuntado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 286ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_clic_coloca_en_el_casillero_apuntado_y_no_en_otro[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_clic_coloca_en_el_casillero_apuntado_y_no_en_otro[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 268ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_las_manos_vacias_se_agarra_la_del_medio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_las_manos_vacias_se_agarra_la_del_medio[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 285ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_algo_en_la_mano_no_se_enfoca_ninguna_unidad_puesta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_algo_en_la_mano_no_se_enfoca_ninguna_unidad_puesta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 310ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_fila_de_atras_no_tiene_casilleros[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_fila_de_atras_no_tiene_casilleros[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 282ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 286ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_casillero_se_enfoca_desde_el_pasillo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/casilleros_a_la_vista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_casillero_se_enfoca_desde_el_pasillo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 342ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 670ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_las_mallas_reemplazadas_son_geometria_de_referencia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_las_mallas_reemplazadas_son_geometria_de_referencia[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 329ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m38[0m
+ but was
+ [38;2;30;144;255m70[0m[0m[38;2;173;216;230m	at 'test_solo_las_mallas_reemplazadas_son_geometria_de_referencia' in res://test/escenas/modelo_integrado_test.gd:45[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[Estructura/EscritorioComputadora/lector de productos, Estructura/balde, Estructura/bidón jabon01, Estructura/bidón jabon01_001, Estructura/bidón jabon01_002, Estructura/gondolanueva/Actroncito, Estructura/gondolanueva/StaticBody3D/Contenido/Actroncito, Estructura/gondolanueva/StaticBody3D/Contenido/Amargadito, Estructura/gondolanueva/StaticBody3D/Contenido/Arvejas, Estructura/gondolanueva/StaticBody3D/Contenido/Burbaloo, Estructura/gondolanueva/StaticBody3D/Contenido/Chisitos, Estructura/gondolanueva/StaticBody3D/Contenido/Cindolor, Estructura/gondolanueva/StaticBody3D/Contenido/Coracola, Estructura/gondolanueva/StaticBody3D/Contenido/Cosa de Maní, Estructura/gondolanueva/StaticBody3D/Contenido/Donsaturados, Estructura/gondolanueva/StaticBody3D/Contenido/Durextra, Estructura/gondolanueva/StaticBody3D/Contenido/Duronga, Estructura/gondolanueva/StaticBody3D/Contenido/Feel Ricky Fort, Estructura/gondolanueva/StaticBody3D/Contenido/Fernet God, Estructura/gondolanueva/StaticBody3D/Contenido/Flinpuf, Estructura/gondolanueva/StaticBody3D/Contenido/Frotlups, Estructura/gondolanueva/StaticBody3D/Contenido/Jorgillo, Estructura/gondolanueva/StaticBody3D/Contenido/Laysntt, Estructura/gondolanueva/StaticBody3D/Contenido/Macumbas, Estructura/gondolanueva/StaticBody3D/Contenido/Malbardo, Estructura/gondolanueva/StaticBody3D/Contenido/Marolini, Estructura/gondolanueva/StaticBody3D/Contenido/Marranos, Estructura/gondolanueva/StaticBody3D/Contenido/Mayonchis, Estructura/gondolanueva/StaticBody3D/Contenido/Oaaaa, Estructura/gondolanueva/StaticBody3D/Contenido/Oremos, Estructura/gondolanueva/StaticBody3D/Contenido/Pepitos, Estructura/gondolanueva/StaticBody3D/Contenido/Petisas, Estructura/gondolanueva/StaticBody3D/Contenido/Poético, ...][0m'
+ but was
+ '[38;2;30;144;255m[Estructura/EscritorioComputadora/lector de productos, Estructura/balde, Estructura/bidón jabon01, Estructura/bidón jabon01_001, Estructura/bidón jabon01_002, Estructura/gondolanueva/Actroncito, [48;2;38;0;0m[38;2;255;255;255m                       Estructura/gondolanueva/Zucarachas[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                       Estructura/gondolanueva/amargadito[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                          Estructura/gondolanueva/atun[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                 Estructura/gondolanueva/cereal-2norte2[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                   Estructura/gondolanueva/durextra_001[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                    Estructura/gondolanueva/duronga_001[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                        Estructura/gondolanueva/fideos2[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                    Estructura/gondolanueva/lataarvejas_002[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                        Estructura/gondolanueva/malbardocig[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                        Estructura/gondolanueva/poetico[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                     Estructura/gondolanueva/wakas_021[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m           Estructura/gondolanueva2/alfajorescaja2-2oeste1_001[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                        Estructura/gondolanueva2/burgaloo[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                Estructura/gondolanueva2/chisitos2_001[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m              Estructura/gondolanueva2/donsaturados_001[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                       Estructura/gondolanueva2/flimpof[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                     Estructura/gondolanueva2/macumbas[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                        Estructura/gondolanueva2/oremos[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                  Estructura/gondolanueva2/pepitos2_025[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                       Estructura/gondolanueva2/petisas[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                 Estructura/gondolanueva2/pringles3_001[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                Estructura/gondolanueva2/saladix-2oeste2[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m            Estructura/gondolanueva2/snackpapas1_002[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                Estructura/gondolanueva_001/Fernetgod[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                Estructura/gondolanueva_001/cosademani[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m             Estructura/gondolanueva_001/feelrickyfort[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m                Estructura/gondolanueva_001/terminator[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, ...][0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]6[/right]	[/cell][cell][right]Estructura/gondolanueva/Zucarachas[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Actroncito[/right]	[/cell][cell][right]7[/right]	[/cell][cell][right]Estructura/gondolanueva/amargadito[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Amargadito[/right]	[/cell][cell][right]8[/right]	[/cell][cell][right]Estructura/gondolanueva/atun[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Arvejas[/right]	[/cell][cell][right]9[/right]	[/cell][cell][right]Estructura/gondolanueva/cereal-2norte2[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Burbaloo[/right]	[/cell][cell][right]10[/right]	[/cell][cell][right]Estructura/gondolanueva/durextra_001[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Chisitos[/right]	[/cell][cell][right]11[/right]	[/cell][cell][right]Estructura/gondolanueva/duronga_001[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Cindolor[/right]	[/cell][cell][right]12[/right]	[/cell][cell][right]Estructura/gondolanueva/fideos2[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Coracola[/right]	[/cell][cell][right]13[/right]	[/cell][cell][right]Estructura/gondolanueva/lataarvejas_002[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Cosa de Maní[/right]	[/cell][cell][right]14[/right]	[/cell][cell][right]Estructura/gondolanueva/malbardocig[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Donsaturados[/right]	[/cell][cell][right]15[/right]	[/cell][cell][right]Estructura/gondolanueva/poetico[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Durextra[/right]	[/cell][cell][right]16[/right]	[/cell][cell][right]Estructura/gondolanueva/wakas_021[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Duronga[/right]	[/cell][cell][right]17[/right]	[/cell][cell][right]Estructura/gondolanueva2/alfajorescaja2-2oeste1_001[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Feel Ricky Fort[/right]	[/cell][cell][right]18[/right]	[/cell][cell][right]Estructura/gondolanueva2/burgaloo[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Fernet God[/right]	[/cell][cell][right]19[/right]	[/cell][cell][right]Estructura/gondolanueva2/chisitos2_001[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Flinpuf[/right]	[/cell][cell][right]20[/right]	[/cell][cell][right]Estructura/gondolanueva2/donsaturados_001[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Frotlups[/right]	[/cell][cell][right]21[/right]	[/cell][cell][right]Estructura/gondolanueva2/flimpof[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Jorgillo[/right]	[/cell][cell][right]22[/right]	[/cell][cell][right]Estructura/gondolanueva2/macumbas[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Laysntt[/right]	[/cell][cell][right]23[/right]	[/cell][cell][right]Estructura/gondolanueva2/oremos[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Macumbas[/right]	[/cell][cell][right]24[/right]	[/cell][cell][right]Estructura/gondolanueva2/pepitos2_025[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Malbardo[/right]	[/cell][cell][right]25[/right]	[/cell][cell][right]Estructura/gondolanueva2/petisas[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Marolini[/right]	[/cell][cell][right]26[/right]	[/cell][cell][right]Estructura/gondolanueva2/pringles3_001[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Marranos[/right]	[/cell][cell][right]27[/right]	[/cell][cell][right]Estructura/gondolanueva2/saladix-2oeste2[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Mayonchis[/right]	[/cell][cell][right]28[/right]	[/cell][cell][right]Estructura/gondolanueva2/snackpapas1_002[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Oaaaa[/right]	[/cell][cell][right]29[/right]	[/cell][cell][right]Estructura/gondolanueva_001/Fernetgod[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Oremos[/right]	[/cell][cell][right]30[/right]	[/cell][cell][right]Estructura/gondolanueva_001/cosademani[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Pepitos[/right]	[/cell][cell][right]31[/right]	[/cell][cell][right]Estructura/gondolanueva_001/feelrickyfort[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Petisas[/right]	[/cell][cell][right]32[/right]	[/cell][cell][right]Estructura/gondolanueva_001/terminator[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Poético[/right]	[/cell][cell][right]33[/right]	[/cell][cell][right]Estructura/heladeranueva/bebida helada02-este2[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Prongles[/right]	[/cell][cell][right]34[/right]	[/cell][cell][right]Estructura/heladeranueva/oaaa[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Saladik[/right]	[/cell][cell][right]35[/right]	[/cell][cell][right]Estructura/heladeranueva_001/cindolor_001[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Terminator[/right]	[/cell][cell][right]36[/right]	[/cell][cell][right]Estructura/heladeranueva_001/mayonchis[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Uakas[/right]	[/cell][cell][right]37[/right]	[/cell][cell][right]Estructura/mopa[/right]	[/cell][cell][right]Estructura/gondolanueva/StaticBody3D/Contenido/Zucarachas[/right]	[/cell][cell][right]38[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/Zucarachas[/right]	[/cell][cell][right]39[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/amargadito[/right]	[/cell][cell][right]40[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/atun[/right]	[/cell][cell][right]41[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/cereal-2norte2[/right]	[/cell][cell][right]42[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/durextra_001[/right]	[/cell][cell][right]43[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/duronga_001[/right]	[/cell][cell][right]44[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/fideos2[/right]	[/cell][cell][right]45[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/lataarvejas_002[/right]	[/cell][cell][right]46[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/malbardocig[/right]	[/cell][cell][right]47[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/poetico[/right]	[/cell][cell][right]48[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva/wakas_021[/right]	[/cell][cell][right]49[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/alfajorescaja2-2oeste1_001[/right]	[/cell][cell][right]50[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/burgaloo[/right]	[/cell][cell][right]51[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/chisitos2_001[/right]	[/cell][cell][right]52[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/donsaturados_001[/right]	[/cell][cell][right]53[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/flimpof[/right]	[/cell][cell][right]54[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/macumbas[/right]	[/cell][cell][right]55[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/oremos[/right]	[/cell][cell][right]56[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/pepitos2_025[/right]	[/cell][cell][right]57[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/petisas[/right]	[/cell][cell][right]58[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/pringles3_001[/right]	[/cell][cell][right]59[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/saladix-2oeste2[/right]	[/cell][cell][right]60[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva2/snackpapas1_002[/right]	[/cell][cell][right]61[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva_001/Fernetgod[/right]	[/cell][cell][right]62[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva_001/cosademani[/right]	[/cell][cell][right]63[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva_001/feelrickyfort[/right]	[/cell][cell][right]64[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/gondolanueva_001/terminator[/right]	[/cell][cell][right]65[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/heladeranueva/bebida helada02-este2[/right]	[/cell][cell][right]66[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/heladeranueva/oaaa[/right]	[/cell][cell][right]67[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/heladeranueva_001/cindolor_001[/right]	[/cell][cell][right]68[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/heladeranueva_001/mayonchis[/right]	[/cell][cell][right]69[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Estructura/mopa[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_solo_las_mallas_reemplazadas_son_geometria_de_referencia' in res://test/escenas/modelo_integrado_test.gd:54[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 75ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_puestos_reemplazados_usan_mallas_del_modelo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_puestos_reemplazados_usan_mallas_del_modelo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 65ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 273ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 287ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_del_bano_conservan_las_imagenes_del_artista[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_del_bano_conservan_las_imagenes_del_artista[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 317ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 6 test cases | 0 errors | 2 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 383ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_mueble_de_la_escena_es_la_malla_del_modelo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_mueble_de_la_escena_es_la_malla_del_modelo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 15ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_colision_corresponde_al_mueble_completo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_colision_corresponde_al_mueble_completo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 197ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_contenido_conserva_material_y_textura_de_cada_producto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_contenido_conserva_material_y_textura_de_cada_producto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 40ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reponer_recupera_los_productos_independientes_del_modelo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_exportado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reponer_recupera_los_productos_independientes_del_modelo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 42ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 319ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_nombre_de_archivo_va_en_minusculas_sin_acentos_y_con_guion_bajo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_nombre_de_archivo_va_en_minusculas_sin_acentos_y_con_guion_bajo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_escena_del_estante_carga_la_malla_que_escribe_el_extractor[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_escena_del_estante_carga_la_malla_que_escribe_el_extractor[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_planilla_muestra_la_miniatura_que_escribe_el_generador[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_planilla_muestra_la_miniatura_que_escribe_el_generador[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_camara_mira_el_frente_y_ve_el_envase_entero[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_camara_mira_el_frente_y_ve_el_envase_entero[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_fila_lateral_plana_no_se_endereza[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_fila_lateral_plana_no_se_endereza[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/generadores_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 6 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 52ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vender_no_cambia_lo_que_la_gondola_dibuja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vender_no_cambia_lo_que_la_gondola_dibuja[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 535ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 241ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 54s 491ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_burbaloo_del_piso_no_bloquea_al_jugador[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_burbaloo_del_piso_no_bloquea_al_jugador[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 294ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5s 142ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 153ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 295ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 411ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_vacia_grupos_mano_y_productos_sueltos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_vacia_grupos_mano_y_productos_sueltos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 279ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_frente_se_conserva_al_examinar_y_volver_a_agarrar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_frente_se_conserva_al_examinar_y_volver_a_agarrar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 471ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 609ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_no_hay_productos_3d_iniciales_fuera_del_inventario[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_no_hay_productos_3d_iniciales_fuera_del_inventario[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 259ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 869ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 271ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 301ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 280ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 283ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_coloca[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_coloca[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 281ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 309ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_superficie_que_valga_se_suelta_como_siempre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_manual_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_superficie_que_valga_se_suelta_como_siempre[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 327ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than:[0m
+ [38;2;30;144;255m0.700000[0m but was [38;2;30;144;255m0.000000[0m[0m[38;2;173;216;230m	at 'test_sin_superficie_que_valga_se_suelta_como_siempre' in res://test/escenas/reposicion_manual_test.gd:871[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(1.028285, 1.762879, -2.25258)[0m'
+ in range between
+ '[38;2;30;144;255m(0.649119, 1.494462, -2.26258)[0m' <> '[38;2;30;144;255m(0.669119, 1.514462, -2.24258)[0m'[0m[38;2;173;216;230m	at 'test_sin_superficie_que_valga_se_suelta_como_siempre' in res://test/escenas/reposicion_manual_test.gd:874[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 20 test cases | 0 errors | 2 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1min 10s 183ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/apoyos_del_modelo_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/apoyos_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_su_alcance[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/apoyos_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_su_alcance[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 672ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/apoyos_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_objetos_y_manchas_quedan_sobre_el_modelo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/apoyos_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_objetos_y_manchas_quedan_sobre_el_modelo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 156ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/apoyos_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tablero_de_cada_pallet_no_deja_pasar_un_rayo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/apoyos_del_modelo_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tablero_de_cada_pallet_no_deja_pasar_un_rayo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 208ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 56ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/reposicion_completa_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_completa_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reponer_todos_los_huecos_de_la_apertura_cumple_la_tarea[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_completa_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reponer_todos_los_huecos_de_la_apertura_cumple_la_tarea[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 352ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_completa_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_despues_de_cada_bolsa_se_puede_agarrar_y_reponer_actroncito[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_completa_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_despues_de_cada_bolsa_se_puede_agarrar_y_reponer_actroncito[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 548ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_completa_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_tirar_un_producto_tambien_permite_volver_a_agarrar_de_la_gondola[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/reposicion_completa_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_tirar_un_producto_tambien_permite_volver_a_agarrar_de_la_gondola[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 284ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 199ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 77 test cases | 0 errors | 8 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (10/10)[0m
+[38;2;233;150;122mExecuted test cases : (77/77)[0m
+[38;2;233;150;122mTotal execution time: 1min 32s 743ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-434-sectores/reports/focal-434-actual01/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-434-sectores/reports/focal-434-actual01/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
+

@@ -1,0 +1,13 @@
+{
+  "diagnostico-final.json": "393169acd7a3a979bb104e7f0886f0d456b25cd59ad33979287d21465d16791c",
+  "diagnostico.json": "f1da1f3468d4a7c9b58c6b7f120111e977b9256ef35cf6f4a5e38e72071fe8ae",
+  "glb-crosscheck-sufijos.json": "ffa3051ae993104af83ecc7423b85706b2447d5258f17aa53b263337abdf7c1f",
+  "glb-json.json": "b3b9e0934386d52cdc3fa49238f6ff7a21fbf2e5a12fe4a78f4f3f2c229b2da9",
+  "raw-extracto.txt": "5a388436bfa40c6bd162ff7105bc325eabb287411a7bfa840c9437b476f13aa2",
+  "README.md": "f991995425316eb9b7bd994e34d1965df5092e9dc363b4476d70b2209c5a694d",
+  "blobs\\test\\escenas\\modelo_integrado_test.gd": "706fe83e23d417ac5f5a60bf4965834fd792b81ae31673d1ac4969301993834d",
+  "blobs\\src\\escenas\\puestos\\contenido_del_estante.tscn": "19a95cfb856406b7067604700c0cee324d181716757b3b1f4c1d798d5cf2cb25",
+  "blobs\\src\\escenas\\puestos\\estructura_del_almacen.tscn": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e",
+  "blobs\\assets\\models\\extraer_mallas.gd": "4ba891d2719a77be7dff1ff6e66a5d5b8fed99f4994cbcff9e527eb50eb29bee",
+  "blobs\\.claude\\scripts\\blender\\exportar.py": "52c99a0487a624a04ea2ad2d79cebf437d1c4ddbfc5d94ac526cbbf85309d99d"
+}

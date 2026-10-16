@@ -1,0 +1,9 @@
+00:01.968  blend            | Read blend: "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\assets\models\SEPT_JUEGOS_PROTOTIPO.blend"
+00:02.109  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-base.blend"
+C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-escala-local01\434-inspeccionar.py:43: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  "imagenes": sorted({n.image.filepath for m in objeto.data.materials if m and m.use_nodes
+00:02.296  blend            | Read blend: "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\assets\models\SEPT_JUEGOS_PROTOTIPO.blend"
+434_ARTE_Y_MUEBLES_IDENTICOS
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

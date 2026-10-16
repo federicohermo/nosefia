@@ -1,0 +1,63 @@
+[
+  {
+    "nombre": "export-control02",
+    "returncode": 0,
+    "segundos": 9.48465109989047,
+    "limite_s": 240,
+    "comando": [
+      "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--verbose",
+      "--path",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\proyecto",
+      "--export-release",
+      "Web",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\export-control02\\index.html"
+    ]
+  },
+  {
+    "nombre": "sonda-paquete02",
+    "returncode": 0,
+    "segundos": 2.1956607999745756,
+    "limite_s": 120,
+    "comando": [
+      "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\export-real",
+      "--main-pack",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\export-real\\index.pck",
+      "--script",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\sonda.gd"
+    ]
+  },
+  {
+    "nombre": "import-capturas02",
+    "returncode": 0,
+    "segundos": 6.781601299997419,
+    "limite_s": 180,
+    "comando": [
+      "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\proyecto",
+      "--import",
+      "--quit"
+    ]
+  },
+  {
+    "nombre": "export-capturas02",
+    "returncode": 0,
+    "segundos": 10.290567700052634,
+    "limite_s": 240,
+    "comando": [
+      "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\proyecto",
+      "--export-release",
+      "Web",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\export-capturas02\\index.html"
+    ]
+  }
+]

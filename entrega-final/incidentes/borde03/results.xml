@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-16" name="report_1" tests="18" failures="1" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="apoyos_de_bordes_de_cajas_test" package="test/escenas/objetos" timestamp="2026-10-16T13:32:42" hostname="localhost" tests="18" failures="1" errors="0" skipped="0" flaky="0" time="63.598">
+		<testcase name="test_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel" classname="apoyos_de_bordes_de_cajas_test" time="2.847">
+		</testcase>
+		<testcase name="test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel" classname="apoyos_de_bordes_de_cajas_test" time="1.582">
+		</testcase>
+		<testcase name="test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera" classname="apoyos_de_bordes_de_cajas_test" time="4.480">
+			<failure message="FAILED: res://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd:349" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[{ "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(56642028700155), "collider_id": 689224817152, "collider": Contorno:<StaticBody3D#689224817152>, "shape": 19 }, { "rid": RID(56642028700155), "collider_id": 689224817152, "collider": Contorno:<StaticBody3D#689224817152>, "shape": 18 }]'
+	at '_mirar_desde_el_piso' in res://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd:349
+	at '_en_la_cabecera' in res://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd:273
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera" classname="apoyos_de_bordes_de_cajas_test" time="4.457">
+		</testcase>
+		<testcase name="test_cada_cara_superior_del_riel_visible_tiene_apoyo_fisico" classname="apoyos_de_bordes_de_cajas_test" time="1.156">
+		</testcase>
+		<testcase name="test_el_collider_del_riel_conserva_el_aire_entre_sus_brazos" classname="apoyos_de_bordes_de_cajas_test" time="1.148">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_piso" classname="apoyos_de_bordes_de_cajas_test" time="4.514">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_piso" classname="apoyos_de_bordes_de_cajas_test" time="4.506">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_mostrador" classname="apoyos_de_bordes_de_cajas_test" time="4.501">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador" classname="apoyos_de_bordes_de_cajas_test" time="4.509">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_pallet" classname="apoyos_de_bordes_de_cajas_test" time="4.516">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_pallet" classname="apoyos_de_bordes_de_cajas_test" time="4.506">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_caja" classname="apoyos_de_bordes_de_cajas_test" time="4.509">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_caja" classname="apoyos_de_bordes_de_cajas_test" time="4.499">
+		</testcase>
+		<testcase name="test_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra" classname="apoyos_de_bordes_de_cajas_test" time="4.723">
+		</testcase>
+		<testcase name="test_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra" classname="apoyos_de_bordes_de_cajas_test" time="4.714">
+		</testcase>
+		<testcase name="test_la_cascada_grande_atraviesa_una_caja_que_ya_esta_despierta" classname="apoyos_de_bordes_de_cajas_test" time="1.159">
+		</testcase>
+		<testcase name="test_la_cascada_chica_atraviesa_una_caja_que_ya_esta_despierta" classname="apoyos_de_bordes_de_cajas_test" time="1.162">
+		</testcase>
+	</testsuite>
+</testsuites>

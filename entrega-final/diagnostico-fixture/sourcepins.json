@@ -1,0 +1,17 @@
+{
+  "head": "1071342c3893681cb4ebfb861392d7bb97849169",
+  "godot": "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+  "inputs": {
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-observer-superficie01\\ejecutar.py": "819d0e9b6b0a592a21ef60c35660ac5de2c78ad98c494f6f8b72c6ec3da1081d",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-observer-superficie01\\observar.gd": "4647339e4aaa07b0d47eeea0ff533ce58a6bf3cdb7f1bb1d7b7b66106869df38",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\reposicion_manual_test.gd": "b78c6d10e71700301de91344e18b744d261b3d43eeaef1f2114dc3bbad3865c3",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\bolsa_en_la_mano.gd": "f873bcaaf01d7ab50ac2828dd9065be354e38466f160b80d0518fcadb2849f9e",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\jugador.gd": "bd1d52620e8534ab2fa70e8d57d6b088b6354fc59a47f1c2c59e26f5ec23844c",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\jugador.tscn": "26914ee8c4b17526bf7ed72df1b40ebd149d6e61012d5562b1be9b98715620ca",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\reposicion_manual.gd": "9229ecf0443d6729a2088a411f91b9e33bf4286e5dbe7706e3d2b7fbce8b108e",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\disposicion_de_la_gondola.tres": "e28aabba3c638f230de0b6e0bf461e74ac016d2cd13ace49b961f5b154b39369",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\estructura_del_almacen.tscn": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\SEPT_JUEGOS_PROTOTIPO.glb": "aa96b5118a7ee037563b7825dda7a9feedee1dfb978f4ffd21eb2e58d8b59c13"
+  },
+  "limite": "Legado exacto y UN candidato desde frente,piso,wholeplayer; distancia1.3,lateral1.0; ningun cambio de fuente/art; no se presupone encaje del candidato."
+}

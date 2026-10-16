@@ -1,0 +1,257 @@
+{
+  "inputs": {
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-c780\\434-exportacion-primera.glb": {
+      "bytes": 46416484,
+      "sha256": "36a924698a7baabc8d047b7889b9387502e7bce9cd623510d95942caa185b431"
+    },
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-c780\\434-exportacion-repetida.glb": {
+      "bytes": 46416484,
+      "sha256": "015a6c58d03b153e0288a4704157b9373b5a9ecbd7aa693dab428487b26c6092"
+    }
+  },
+  "nodes": 255,
+  "meshes": 222,
+  "nodes_changed": [
+    {
+      "index": 183,
+      "name": "amargadito-convcol",
+      "fields": {
+        "rotation": {
+          "primera": [
+            -0.07167480140924454,
+            0.7034648060798645,
+            -0.07167479395866394,
+            0.7034648060798645
+          ],
+          "repetida": [
+            -0.07167480140924454,
+            0.7034648060798645,
+            -0.07167478650808334,
+            0.7034648060798645
+          ],
+          "delta_max": 7.450580596923828e-09
+        },
+        "scale": {
+          "primera": [
+            0.8960342407226562,
+            0.7570917010307312,
+            0.8799999952316284
+          ],
+          "repetida": [
+            0.8960342407226562,
+            0.7570916414260864,
+            0.8799999952316284
+          ],
+          "delta_max": 5.960464477539063e-08
+        }
+      }
+    },
+    {
+      "index": 188,
+      "name": "fideos2-col",
+      "fields": {
+        "translation": {
+          "primera": [
+            -0.4362429976463318,
+            0.13420557975769043,
+            -1.3140010833740234
+          ],
+          "repetida": [
+            -0.4362429976463318,
+            0.13420557975769043,
+            -1.3140013217926025
+          ],
+          "delta_max": 2.384185791015625e-07
+        }
+      }
+    },
+    {
+      "index": 189,
+      "name": "lataarvejas-convcol.002",
+      "fields": {
+        "rotation": {
+          "primera": [
+            0,
+            -0.7008206248283386,
+            0,
+            0.7133376002311707
+          ],
+          "repetida": [
+            0,
+            -0.7008206844329834,
+            0,
+            0.7133374810218811
+          ],
+          "delta_max": 1.1920928955078125e-07
+        },
+        "scale": {
+          "primera": [
+            1.2533011436462402,
+            1.2755494117736816,
+            1.2582231760025024
+          ],
+          "repetida": [
+            1.2533012628555298,
+            1.2755494117736816,
+            1.2582231760025024
+          ],
+          "delta_max": 1.1920928955078125e-07
+        }
+      }
+    },
+    {
+      "index": 204,
+      "name": "bebida helada02-este2-convcol",
+      "fields": {
+        "scale": {
+          "primera": [
+            1.0653059482574463,
+            1.5337415933609009,
+            1.069489598274231
+          ],
+          "repetida": [
+            1.0653058290481567,
+            1.5337415933609009,
+            1.0694894790649414
+          ],
+          "delta_max": 1.1920928955078125e-07
+        }
+      }
+    }
+  ],
+  "mesh_attributes_changed": [
+    {
+      "index": 154,
+      "name": "Gondola_B_etiquetas_por_grupo",
+      "changes": [
+        {
+          "primitive": 0,
+          "attribute": "TEXCOORD_0",
+          "items": 10132,
+          "changed_items": 67,
+          "delta_max": 1.1920928955078125e-07
+        },
+        {
+          "primitive": 0,
+          "attribute": "TEXCOORD_1",
+          "items": 10132,
+          "changed_items": 22,
+          "delta_max": 2.384185791015625e-07
+        },
+        {
+          "primitive": 2,
+          "attribute": "TEXCOORD_0",
+          "items": 728,
+          "changed_items": 2,
+          "delta_max": 5.960464477539063e-08
+        },
+        {
+          "primitive": 3,
+          "attribute": "TEXCOORD_0",
+          "items": 2478,
+          "changed_items": 6,
+          "delta_max": 5.960464477539063e-08
+        }
+      ]
+    },
+    {
+      "index": 167,
+      "name": "Gondola_B_etiquetas_por_grupo",
+      "changes": [
+        {
+          "primitive": 0,
+          "attribute": "TEXCOORD_0",
+          "items": 10132,
+          "changed_items": 631,
+          "delta_max": 1.1920928955078125e-07
+        },
+        {
+          "primitive": 0,
+          "attribute": "TEXCOORD_1",
+          "items": 10132,
+          "changed_items": 169,
+          "delta_max": 2.384185791015625e-07
+        },
+        {
+          "primitive": 1,
+          "attribute": "TEXCOORD_0",
+          "items": 272,
+          "changed_items": 22,
+          "delta_max": 5.960464477539063e-08
+        },
+        {
+          "primitive": 1,
+          "attribute": "TEXCOORD_1",
+          "items": 272,
+          "changed_items": 2,
+          "delta_max": 2.384185791015625e-07
+        },
+        {
+          "primitive": 2,
+          "attribute": "TEXCOORD_0",
+          "items": 728,
+          "changed_items": 47,
+          "delta_max": 1.1920928955078125e-07
+        },
+        {
+          "primitive": 2,
+          "attribute": "TEXCOORD_1",
+          "items": 728,
+          "changed_items": 16,
+          "delta_max": 2.384185791015625e-07
+        },
+        {
+          "primitive": 3,
+          "attribute": "TEXCOORD_0",
+          "items": 2478,
+          "changed_items": 121,
+          "delta_max": 1.1920928955078125e-07
+        },
+        {
+          "primitive": 3,
+          "attribute": "TEXCOORD_1",
+          "items": 2478,
+          "changed_items": 5,
+          "delta_max": 2.384185791015625e-07
+        }
+      ]
+    },
+    {
+      "index": 172,
+      "name": "Gondola_pared_unica_3m",
+      "changes": [
+        {
+          "primitive": 0,
+          "attribute": "TEXCOORD_0",
+          "items": 1776,
+          "changed_items": 14,
+          "delta_max": 1.1920928955078125e-07
+        },
+        {
+          "primitive": 2,
+          "attribute": "TEXCOORD_0",
+          "items": 162,
+          "changed_items": 3,
+          "delta_max": 1.1920928955078125e-07
+        }
+      ]
+    },
+    {
+      "index": 221,
+      "name": "vanitory-convcol porcelana.001",
+      "changes": [
+        {
+          "primitive": 0,
+          "attribute": "TEXCOORD_0",
+          "items": 671,
+          "changed_items": 65,
+          "delta_max": 1.1920928955078125e-07
+        }
+      ]
+    }
+  ],
+  "materials_identical": true,
+  "images_identical": true,
+  "image_count": 97,
+  "limite": "Comparación directa de GLB conservados. No recupera ni reconstruye los tres textos de primera pasada que no se copiaron."
+}

@@ -1,0 +1,19 @@
+{
+  "final434": "d647a2031f5e6ad3862a286ce042b680eaeb8e18",
+  "integration_HEAD": "6eff3f59cc08a175df0a64d21a6667a789c56ad7",
+  "foreign367": "43e3e0ad79f664665afbe7939c3cfcd8bd093183",
+  "checks_static_only": {
+    "pinned_foreign_in_ancestry_or_pending_merge": true,
+    "signature_4_named_inputs": true,
+    "root_uses_total_and_principal": true,
+    "attention_receives_shared_buyers": true,
+    "getter_projects_principal": true,
+    "no_conflict_markers_in_selected_files": true,
+    "unique_STK_heading_ids": true,
+    "no_calls_to_removed_fixed_shortages_API": true
+  },
+  "duplicate_STK_ids": {},
+  "obsolete_calls": [],
+  "verdict": "STATIC ONLY: not parser, functional, visual or strict-raw validation",
+  "warning": "No Duronga zero-cupo assumption; principal-zero-with-guide is generic."
+}

@@ -1,0 +1,464 @@
+[
+  {
+    "paquete": "real",
+    "type": "log",
+    "text": "Godot Engine v4.7.2.stable.custom_build - https://godotengine.org",
+    "time": 1792154691362
+  },
+  {
+    "paquete": "real",
+    "type": "log",
+    "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "time": 1792154694345
+  },
+  {
+    "paquete": "real",
+    "type": "log",
+    "text": "Build configuration: Emscripten 4.0.11, multi-threaded, no GDExtension support.",
+    "time": 1792154694962
+  },
+  {
+    "paquete": "real",
+    "type": "log",
+    "text": "[carga] menú visible",
+    "time": 1792154695377
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154719658
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154720653
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154720724
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154720725
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154720898
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154721072
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154721972
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722059
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722162
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722188
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722196
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722203
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722252
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722289
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722292
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722295
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722297
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722300
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722301
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722313
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722314
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722341
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722370
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154722389
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740680
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740682
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740699
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740710
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740721
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740731
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740781
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740783
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740793
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740810
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740822
+  },
+  {
+    "paquete": "real",
+    "type": "warning",
+    "text": "[.WebGL-0x27840a8c6e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154740834
+  },
+  {
+    "paquete": "real",
+    "type": "log",
+    "text": "[carga] almacén en pantalla",
+    "time": 1792154740949
+  },
+  {
+    "paquete": "real",
+    "type": "pageerror",
+    "text": "The root document of this element is not valid for pointer lock.",
+    "time": 1792154758987
+  },
+  {
+    "paquete": "real",
+    "type": "pageerror",
+    "text": "The root document of this element is not valid for pointer lock.",
+    "time": 1792154762662
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "Godot Engine v4.7.2.stable.custom_build - https://godotengine.org",
+    "time": 1792154768519
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "time": 1792154770880
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "Build configuration: Emscripten 4.0.11, multi-threaded, no GDExtension support.",
+    "time": 1792154771281
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_DATOS_MAPA:[{\"cupo_total\":12,\"frente_principal\":6,\"id\":0,\"nombre\":\"Actroncito\",\"principal\":12},{\"cupo_total\":16,\"frente_principal\":8,\"id\":1,\"nombre\":\"Durextra\",\"principal\":16},{\"cupo_total\":8,\"frente_principal\":4,\"id\":2,\"nombre\":\"Burbaloo\",\"principal\":4},{\"cupo_total\":10,\"frente_principal\":5,\"id\":3,\"nombre\":\"Zucarachas\",\"principal\":10},{\"cupo_total\":10,\"frente_principal\":5,\"id\":4,\"nombre\":\"Laysntt\",\"principal\":10},{\"cupo_total\":16,\"frente_principal\":8,\"id\":5,\"nombre\":\"Malbardo\",\"principal\":16},{\"cupo_total\":24,\"frente_principal\":12,\"id\":6,\"nombre\":\"Prongles\",\"principal\":24},{\"cupo_total\":6,\"frente_principal\":3,\"id\":7,\"nombre\":\"Jorgillo\",\"principal\":6},{\"cupo_total\":20,\"frente_principal\":10,\"id\":8,\"nombre\":\"Arvejas\",\"principal\":20},{\"cupo_total\":10,\"frente_principal\":5,\"id\":9,\"nombre\":\"Chisitos\",\"principal\":10},{\"cupo_total\":10,\"frente_principal\":5,\"id\":10,\"nombre\":\"Oremos\",\"principal\":10},{\"cupo_total\":10,\"frente_principal\":5,\"id\":11,\"nombre\":\"Pepitos\",\"principal\":10},{\"cupo_total\":10,\"frente_principal\":5,\"id\":12,\"nombre\":\"Saladik\",\"principal\":10},{\"cupo_total\":10,\"frente_principal\":5,\"id\":13,\"nombre\":\"Uakas\",\"principal\":10},{\"cupo_total\":12,\"frente_principal\":6,\"id\":14,\"nombre\":\"Coracola\",\"principal\":12},{\"cupo_total\":10,\"frente_principal\":5,\"id\":15,\"nombre\":\"Frotlups\",\"principal\":10},{\"cupo_total\":10,\"frente_principal\":5,\"id\":16,\"nombre\":\"Marolini\",\"principal\":10},{\"cupo_total\":8,\"frente_principal\":4,\"id\":17,\"nombre\":\"Amargadito\",\"principal\":4},{\"cupo_total\":8,\"frente_principal\":4,\"id\":18,\"nombre\":\"Cindolor\",\"principal\":8},{\"cupo_total\":8,\"frente_principal\":4,\"id\":19,\"nombre\":\"Flinpuf\",\"principal\":4},{\"cupo_total\":12,\"frente_principal\":6,\"id\":20,\"nombre\":\"Donsaturados\",\"principal\":12},{\"cupo_total\":12,\"frente_principal\":6,\"id\":21,\"nombre\":\"Petisas\",\"principal\":12},{\"cupo_total\":12,\"frente_principal\":6,\"id\":22,\"nombre\":\"Macumbas\",\"principal\":12},{\"cupo_total\":12,\"frente_principal\":6,\"id\":23,\"nombre\":\"Cosa de Maní\",\"principal\":6},{\"cupo_total\":16,\"frente_principal\":8,\"id\":24,\"nombre\":\"Duronga\",\"principal\":16},{\"cupo_total\":12,\"frente_principal\":6,\"id\":25,\"nombre\":\"Fernet God\",\"principal\":12},{\"cupo_total\":6,\"frente_principal\":3,\"id\":26,\"nombre\":\"Mayonchis\",\"principal\":6},{\"cupo_total\":18,\"frente_principal\":9,\"id\":27,\"nombre\":\"Oaaaa\",\"principal\":18},{\"cupo_total\":16,\"frente_principal\":8,\"id\":28,\"nombre\":\"Terminator\",\"principal\":16},{\"cupo_total\":10,\"frente_principal\":5,\"id\":29,\"nombre\":\"Marranos\",\"principal\":5},{\"cupo_total\":10,\"frente_principal\":5,\"id\":30,\"nombre\":\"Feel Ricky Fort\",\"principal\":10},{\"cupo_total\":14,\"frente_principal\":7,\"id\":31,\"nombre\":\"Poético\",\"principal\":7}]",
+    "time": 1792154774462
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "warning",
+    "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154775428
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "warning",
+    "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154775430
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "warning",
+    "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154775443
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "warning",
+    "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154775457
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "warning",
+    "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154775468
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "warning",
+    "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792154775482
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (-1.449932, 1.7, -2.086576)]\",\"cupo_duronga\":16,\"indice\":0,\"jornada\":2,\"nombre\":\"01-almacen\"}",
+    "time": 1792154776963
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (2.006813, 1.7, -2.086576)]\",\"cupo_duronga\":16,\"indice\":1,\"jornada\":2,\"nombre\":\"02-cereales-dulces\"}",
+    "time": 1792154779823
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (0.27844, 1.7, 1.288424)]\",\"cupo_duronga\":16,\"indice\":2,\"jornada\":2,\"nombre\":\"03-malbardo-amargadito\"}",
+    "time": 1792154783196
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (0.27844, 1.7, -5.461576)]\",\"cupo_duronga\":16,\"indice\":3,\"jornada\":2,\"nombre\":\"04-bebidas-sin-frio\"}",
+    "time": 1792154785974
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (5.460157, 1.7, -2.045102)]\",\"cupo_duronga\":16,\"indice\":4,\"jornada\":2,\"nombre\":\"05-dulces\"}",
+    "time": 1792154788773
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (2.003413, 1.7, -2.045102)]\",\"cupo_duronga\":16,\"indice\":5,\"jornada\":2,\"nombre\":\"06-salados\"}",
+    "time": 1792154791206
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (3.731785, 1.7, 1.329898)]\",\"cupo_duronga\":16,\"indice\":6,\"jornada\":2,\"nombre\":\"07-jorgillo-saladik\"}",
+    "time": 1792154794118
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (3.731785, 1.7, -5.420102)]\",\"cupo_duronga\":16,\"indice\":7,\"jornada\":2,\"nombre\":\"08-golosinas\"}",
+    "time": 1792154796764
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.905695, -0.42393), Z: (0.0, 0.42393, 0.905695), O: (2.849859, 1.7, -6.060595)]\",\"cupo_duronga\":16,\"indice\":8,\"jornada\":2,\"nombre\":\"09-no-comestibles\"}",
+    "time": 1792154799116
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-1.468133, 1.7, -5.828175)]\",\"cupo_duronga\":16,\"indice\":9,\"jornada\":2,\"nombre\":\"10-heladera-1\"}",
+    "time": 1792154801504
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-0.37921, 1.7, -5.828175)]\",\"cupo_duronga\":16,\"indice\":10,\"jornada\":2,\"nombre\":\"11-heladera-2\"}",
+    "time": 1792154804049
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_MAPA_COMPLETO_OK",
+    "time": 1792154806113
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (-1.449932, 1.7, -2.086576)]\",\"cupo_duronga\":16,\"indice\":0,\"jornada\":2,\"nombre\":\"01-almacen\"}",
+    "time": 1792154807064
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (2.006813, 1.7, -2.086576)]\",\"cupo_duronga\":16,\"indice\":1,\"jornada\":2,\"nombre\":\"02-cereales-dulces\"}",
+    "time": 1792154809140
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (0.27844, 1.7, 1.288424)]\",\"cupo_duronga\":16,\"indice\":2,\"jornada\":2,\"nombre\":\"03-malbardo-amargadito\"}",
+    "time": 1792154811205
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (0.27844, 1.7, -5.461576)]\",\"cupo_duronga\":16,\"indice\":3,\"jornada\":2,\"nombre\":\"04-bebidas-sin-frio\"}",
+    "time": 1792154813180
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (5.460157, 1.7, -2.045102)]\",\"cupo_duronga\":16,\"indice\":4,\"jornada\":2,\"nombre\":\"05-dulces\"}",
+    "time": 1792154815153
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (2.003413, 1.7, -2.045102)]\",\"cupo_duronga\":16,\"indice\":5,\"jornada\":2,\"nombre\":\"06-salados\"}",
+    "time": 1792154817190
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (3.731785, 1.7, 1.329898)]\",\"cupo_duronga\":16,\"indice\":6,\"jornada\":2,\"nombre\":\"07-jorgillo-saladik\"}",
+    "time": 1792154819115
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (3.731785, 1.7, -5.420102)]\",\"cupo_duronga\":16,\"indice\":7,\"jornada\":2,\"nombre\":\"08-golosinas\"}",
+    "time": 1792154820975
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.905695, -0.42393), Z: (0.0, 0.42393, 0.905695), O: (2.849859, 1.7, -6.060595)]\",\"cupo_duronga\":16,\"indice\":8,\"jornada\":2,\"nombre\":\"09-no-comestibles\"}",
+    "time": 1792154822819
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-1.468133, 1.7, -5.828175)]\",\"cupo_duronga\":16,\"indice\":9,\"jornada\":2,\"nombre\":\"10-heladera-1\"}",
+    "time": 1792154824699
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_VISTA:{\"camara\":\"[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-0.37921, 1.7, -5.828175)]\",\"cupo_duronga\":16,\"indice\":10,\"jornada\":2,\"nombre\":\"11-heladera-2\"}",
+    "time": 1792154827087
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "type": "log",
+    "text": "434_MAPA_COMPLETO_OK",
+    "time": 1792154828538
+  }
+]

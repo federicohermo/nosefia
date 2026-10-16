@@ -1,0 +1,33 @@
+{
+  "head": "29fdc763871c5833b9d28b5c6d71d71d3aeac03f",
+  "suites": [
+    "test/escenas/gondolas_por_sectores_test.gd",
+    "test/escenas/puestos/disposicion_de_la_gondola_test.gd",
+    "test/escenas/un_lugar_por_producto_test.gd",
+    "test/escenas/casilleros_a_la_vista_test.gd",
+    "test/escenas/modelo_integrado_test.gd",
+    "test/escenas/modelo_exportado_test.gd",
+    "test/escenas/generadores_del_modelo_test.gd",
+    "test/escenas/reposicion_manual_test.gd",
+    "test/escenas/apoyos_del_modelo_test.gd",
+    "test/escenas/reposicion_completa_test.gd"
+  ],
+  "godot": "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+  "inputs": {
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\gondolas_por_sectores_test.gd": "c81762d58d190b808f951d867f184b63687f87bd359cf756eb98968ef1afe2d5",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\puestos\\disposicion_de_la_gondola_test.gd": "4d5e4826c5df792c42d7bc40b9b2b4e3cc96b7e67027a97f2df510abb7c6cb7a",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\un_lugar_por_producto_test.gd": "0597dc27eaef065a7b3ec83535c26f9a461a74c37491d6e1c3c8c56f9612e073",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\casilleros_a_la_vista_test.gd": "73f1f7dfcada478939a9f54fa43a076e1a89e8af58115f929539bb4bb40bdd0a",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\modelo_integrado_test.gd": "1bd6321182db9f1a73bd16e2d28e8c42d771e02441f7fdd2f2599a2cf1038da7",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\modelo_exportado_test.gd": "4010ae4a0dd52ce0eeaea800f4e0aded2f11aebaa3c30a91255dd43d09786836",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\generadores_del_modelo_test.gd": "46d067d761850e1839ed400d1789bc534878d7420a51ec05adb0a567f7467d16",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\reposicion_manual_test.gd": "e88112a65bc33179bad71c0db828345cc116713fdf779c249357346dc53b9847",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\apoyos_del_modelo_test.gd": "55440c8a048fb348da60602a0f21daed69a36958477b4812c51284849bd23c08",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\test\\escenas\\reposicion_completa_test.gd": "8cf83123378c234fd7a91fc1833136ef9fe8b7de0ab617fdb33e041753160293",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\disposicion_de_la_gondola.tres": "e28aabba3c638f230de0b6e0bf461e74ac016d2cd13ace49b961f5b154b39369",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\contenido_del_estante.tscn": "19a95cfb856406b7067604700c0cee324d181716757b3b1f4c1d798d5cf2cb25",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\guia_del_estante.tscn": "463c846e365dcbdf1c14d00bfd552606d1a452c14e8a958e5aa73da98dc5aa00",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\estructura_del_almacen.tscn": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-focal-actual02\\ejecutar.py": "0e4cc9928b2cb2f0eb365347aa34e002cc816fc97da4d5d38383c2a771bdb5c3"
+  }
+}

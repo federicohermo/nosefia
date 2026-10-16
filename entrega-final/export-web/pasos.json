@@ -1,0 +1,47 @@
+[
+  {
+    "nombre": "cache",
+    "returncode": 0,
+    "limite_s": 180,
+    "segundos": 14.755588999949396,
+    "comando": [
+      "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-reutilizar_cache.py",
+      "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\proyecto",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\cache-verificada.json"
+    ],
+    "sha256_log": "6529704378102aa1d3b257f8330b2c738cdf9689ade8d790836e5ccb9ae8700c"
+  },
+  {
+    "nombre": "import-real",
+    "returncode": 0,
+    "limite_s": 240,
+    "segundos": 36.51961029996164,
+    "comando": [
+      "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\proyecto",
+      "--import",
+      "--quit"
+    ],
+    "sha256_log": "ea137a138b5f6fdd4e32a127c49cf7846c2d655a66e122d764b359af2358e1f0"
+  },
+  {
+    "nombre": "export-real",
+    "returncode": 0,
+    "limite_s": 240,
+    "segundos": 15.52154520014301,
+    "comando": [
+      "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\proyecto",
+      "--export-release",
+      "Web",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-web-final01\\export-real\\index.html"
+    ],
+    "sha256_log": "437d013e7476ae6b31427943878be7713d4a3a99d14e438c1f8bf16bfcc3b30f"
+  }
+]

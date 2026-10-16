@@ -1,0 +1,11 @@
+cache 0 14.8
+import-real 0 36.5
+export-real 0 15.5
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-web-ejecutar01.py", line 62, in <module>
+    run('export-real',[godot,'--headless','--path',str(project),'--export-release','Web',str(real/'index.html')],240)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-web-ejecutar01.py", line 53, in run
+    assert not re.search(rb'SCRIPT ERROR|Parse Error|ERROR:|leaked at exit|resources still in use|Pages in use', raw, re.I), name
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: export-real

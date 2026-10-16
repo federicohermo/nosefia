@@ -1,0 +1,7 @@
+{
+  "head": "29fdc763871c5833b9d28b5c6d71d71d3aeac03f",
+  "suites": 10,
+  "casos": 77,
+  "xml_sha256": "167ef0dce24b151f91bfe16dce529829e4c6f075922388ea81e986e0d9967807",
+  "raw_revisado": "import/tests/turno; sin Script/Parse/leaks; driver exit0"
+}

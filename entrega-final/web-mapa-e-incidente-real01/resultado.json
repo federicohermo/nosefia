@@ -1,0 +1,19 @@
+{
+  "failure": null,
+  "errores": [
+    {
+      "paquete": "real",
+      "type": "pageerror",
+      "text": "The root document of this element is not valid for pointer lock.",
+      "time": 1792154758987
+    },
+    {
+      "paquete": "real",
+      "type": "pageerror",
+      "text": "The root document of this element is not valid for pointer lock.",
+      "time": 1792154762662
+    }
+  ],
+  "capturas": 26,
+  "limite": "4 vistas de paquete real con teclado; 22 vistas de otro PCK con cámara diagnóstica. No prueba paseo a pie por todos los sectores."
+}

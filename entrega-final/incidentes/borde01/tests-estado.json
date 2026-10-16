@@ -1,0 +1,20 @@
+{
+  "returncode": 100,
+  "comando": [
+    "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores",
+    "--headless",
+    "-s",
+    "-d",
+    "--remote-debug",
+    "tcp://127.0.0.1:0",
+    "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+    "--continue",
+    "--ignoreHeadlessMode",
+    "-rd",
+    "res://reports/focal-434-borde01",
+    "-a",
+    "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd"
+  ]
+}

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-16" name="report_1" tests="66" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="pedidos_compartidos_test" package="test/dominio/jornada" timestamp="2026-10-16T13:39:19" hostname="localhost" tests="5" failures="0" errors="0" skipped="0" flaky="0" time="0.198">
+		<testcase name="test_suma_los_pedidos_recibidos_sin_recrear_ni_mutar_compradores" classname="pedidos_compartidos_test" time="0.007">
+		</testcase>
+		<testcase name="test_lista_vacia_no_tiene_pedidos" classname="pedidos_compartidos_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_inventario_usa_los_mismos_pedidos_y_el_mismo_azar_que_atencion" classname="pedidos_compartidos_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_apertura_conserva_guias_y_limita_huecos_a_la_principal" classname="pedidos_compartidos_test" time="0.088">
+		</testcase>
+		<testcase name="test_sin_fila_principal_no_falta_aunque_tenga_guias" classname="pedidos_compartidos_test" time="0.055">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="sorteo_de_apertura_test" package="test/dominio/jornada" timestamp="2026-10-16T13:39:19" hostname="localhost" tests="5" failures="0" errors="0" skipped="0" flaky="0" time="1.818">
+		<testcase name="test_doscientas_semillas_por_jornada_respetan_limites_y_varian" classname="sorteo_de_apertura_test" time="1.720">
+		</testcase>
+		<testcase name="test_misma_semilla_reproduce_y_no_muta_las_entradas" classname="sorteo_de_apertura_test" time="0.008">
+		</testcase>
+		<testcase name="test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila" classname="sorteo_de_apertura_test" time="0.037">
+		</testcase>
+		<testcase name="test_extremos_de_cantidad_con_fuentes_controladas" classname="sorteo_de_apertura_test" time="0.009">
+		</testcase>
+		<testcase name="test_extremos_de_unidades_con_fuentes_controladas" classname="sorteo_de_apertura_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="apertura_sorteada_test" package="test/escenas" timestamp="2026-10-16T13:39:21" hostname="localhost" tests="2" failures="0" errors="0" skipped="0" flaky="0" time="8.589">
+		<testcase name="test_doscientas_semillas_venden_y_reponen" classname="apertura_sorteada_test" time="8.218">
+		</testcase>
+		<testcase name="test_la_escena_reproduce_y_continua_el_azar_de_la_apertura" classname="apertura_sorteada_test" time="0.346">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="compatibilidad_guia_sin_principal_test" package="test/escenas" timestamp="2026-10-16T13:39:29" hostname="localhost" tests="1" failures="0" errors="0" skipped="0" flaky="0" time="0.328">
+		<testcase name="test_guia_sin_principal_es_interactiva" classname="compatibilidad_guia_sin_principal_test" time="0.311">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="gondolas_por_sectores_test" package="test/escenas" timestamp="2026-10-16T13:39:29" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="1.255">
+		<testcase name="test_las_principales_y_referencias_ocupan_los_sectores_de_jornada_dos" classname="gondolas_por_sectores_test" time="0.298">
+		</testcase>
+		<testcase name="test_las_mitades_verticales_separan_los_frios" classname="gondolas_por_sectores_test" time="0.255">
+		</testcase>
+		<testcase name="test_duronga_exhibida_conserva_su_caja_y_fuente_utilizables" classname="gondolas_por_sectores_test" time="0.288">
+		</testcase>
+		<testcase name="test_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida" classname="gondolas_por_sectores_test" time="0.366">
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="disposicion_de_la_gondola_test" package="test/escenas/puestos" timestamp="2026-10-16T13:39:31" hostname="localhost" tests="13" failures="0" errors="0" skipped="0" flaky="0" time="0.483">
+		<testcase name="test_una_fila_es_entera_de_casilleros_y_dos_conservan_la_de_atras" classname="disposicion_de_la_gondola_test" time="0.018">
+		</testcase>
+		<testcase name="test_un_bloque_vacio_con_cupo_cero_no_indexa_antes_del_comienzo" classname="disposicion_de_la_gondola_test" time="0.016">
+		</testcase>
+		<testcase name="test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso" classname="disposicion_de_la_gondola_test" time="0.019">
+		</testcase>
+		<testcase name="test_hay_un_bloque_principal_por_producto" classname="disposicion_de_la_gondola_test" time="0.017">
+		</testcase>
+		<testcase name="test_cada_producto_declara_su_fila_de_adelante" classname="disposicion_de_la_gondola_test" time="0.015">
+		</testcase>
+		<testcase name="test_cada_producto_tiene_casilleros_y_entran_en_su_bloque" classname="disposicion_de_la_gondola_test" time="0.016">
+		</testcase>
+		<testcase name="test_doscientas_semillas_entran_en_fila_y_caja" classname="disposicion_de_la_gondola_test" time="0.160">
+		</testcase>
+		<testcase name="test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante" classname="disposicion_de_la_gondola_test" time="0.024">
+		</testcase>
+		<testcase name="test_la_tanda_de_cada_producto_esta_junta_sobre_un_solo_estante" classname="disposicion_de_la_gondola_test" time="0.033">
+		</testcase>
+		<testcase name="test_el_frente_va_de_la_fila_de_atras_a_la_de_adelante" classname="disposicion_de_la_gondola_test" time="0.015">
+		</testcase>
+		<testcase name="test_una_fila_tiene_frente_por_el_orden_de_sus_columnas" classname="disposicion_de_la_gondola_test" time="0.015">
+		</testcase>
+		<testcase name="test_hay_una_malla_por_bloque_de_guia" classname="disposicion_de_la_gondola_test" time="0.015">
+		</testcase>
+		<testcase name="test_las_fijas_conservan_filas_y_casilleros" classname="disposicion_de_la_gondola_test" time="0.017">
+		</testcase>
+	</testsuite>
+	<testsuite id="6" name="un_lugar_por_producto_test" package="test/escenas" timestamp="2026-10-16T13:39:31" hostname="localhost" tests="10" failures="0" errors="0" skipped="0" flaky="0" time="9.996">
+		<testcase name="test_la_mano_gira_el_frente_de_la_tanda_hacia_la_camara" classname="un_lugar_por_producto_test" time="0.014">
+		</testcase>
+		<testcase name="test_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano" classname="un_lugar_por_producto_test" time="0.377">
+		</testcase>
+		<testcase name="test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano" classname="un_lugar_por_producto_test" time="0.395">
+		</testcase>
+		<testcase name="test_la_fila_de_adelante_de_cada_tanda_es_de_casilleros" classname="un_lugar_por_producto_test" time="0.340">
+		</testcase>
+		<testcase name="test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo" classname="un_lugar_por_producto_test" time="3.200">
+		</testcase>
+		<testcase name="test_las_dos_filas_dan_al_pasillo" classname="un_lugar_por_producto_test" time="1.263">
+		</testcase>
+		<testcase name="test_la_fila_de_atras_se_ve_entera_desde_que_abre" classname="un_lugar_por_producto_test" time="0.325">
+		</testcase>
+		<testcase name="test_la_apertura_fija_dibuja_sus_faltantes" classname="un_lugar_por_producto_test" time="0.255">
+		</testcase>
+		<testcase name="test_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo" classname="un_lugar_por_producto_test" time="3.284">
+		</testcase>
+		<testcase name="test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla" classname="un_lugar_por_producto_test" time="0.455">
+		</testcase>
+	</testsuite>
+	<testsuite id="7" name="casilleros_a_la_vista_test" package="test/escenas" timestamp="2026-10-16T13:39:41" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="3.393">
+		<testcase name="test_los_huecos_se_ven_sin_cambiar_que_enfoca_la_mira" classname="casilleros_a_la_vista_test" time="0.490">
+		</testcase>
+		<testcase name="test_el_casillero_apagado_lleva_los_dos_materiales_del_apuntado" classname="casilleros_a_la_vista_test" time="0.260">
+		</testcase>
+		<testcase name="test_el_clic_coloca_en_el_casillero_apuntado_y_no_en_otro" classname="casilleros_a_la_vista_test" time="0.260">
+		</testcase>
+		<testcase name="test_con_las_manos_vacias_se_agarra_la_del_medio" classname="casilleros_a_la_vista_test" time="0.253">
+		</testcase>
+		<testcase name="test_con_algo_en_la_mano_no_se_enfoca_ninguna_unidad_puesta" classname="casilleros_a_la_vista_test" time="0.253">
+		</testcase>
+		<testcase name="test_la_fila_de_atras_no_tiene_casilleros" classname="casilleros_a_la_vista_test" time="0.256">
+		</testcase>
+		<testcase name="test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez" classname="casilleros_a_la_vista_test" time="0.260">
+		</testcase>
+		<testcase name="test_cada_casillero_se_enfoca_desde_el_pasillo" classname="casilleros_a_la_vista_test" time="1.290">
+		</testcase>
+	</testsuite>
+	<testsuite id="8" name="apoyos_de_bordes_de_cajas_test" package="test/escenas/objetos" timestamp="2026-10-16T13:39:45" hostname="localhost" tests="18" failures="0" errors="0" skipped="0" flaky="0" time="59.344">
+		<testcase name="test_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel" classname="apoyos_de_bordes_de_cajas_test" time="1.406">
+		</testcase>
+		<testcase name="test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel" classname="apoyos_de_bordes_de_cajas_test" time="1.392">
+		</testcase>
+		<testcase name="test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera" classname="apoyos_de_bordes_de_cajas_test" time="4.278">
+		</testcase>
+		<testcase name="test_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera" classname="apoyos_de_bordes_de_cajas_test" time="4.274">
+		</testcase>
+		<testcase name="test_cada_cara_superior_del_riel_visible_tiene_apoyo_fisico" classname="apoyos_de_bordes_de_cajas_test" time="0.999">
+		</testcase>
+		<testcase name="test_el_collider_del_riel_conserva_el_aire_entre_sus_brazos" classname="apoyos_de_bordes_de_cajas_test" time="0.993">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_piso" classname="apoyos_de_bordes_de_cajas_test" time="4.347">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_piso" classname="apoyos_de_bordes_de_cajas_test" time="4.342">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_mostrador" classname="apoyos_de_bordes_de_cajas_test" time="4.324">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador" classname="apoyos_de_bordes_de_cajas_test" time="4.332">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_pallet" classname="apoyos_de_bordes_de_cajas_test" time="4.340">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_pallet" classname="apoyos_de_bordes_de_cajas_test" time="4.346">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_caja" classname="apoyos_de_bordes_de_cajas_test" time="4.347">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_caja" classname="apoyos_de_bordes_de_cajas_test" time="4.347">
+		</testcase>
+		<testcase name="test_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra" classname="apoyos_de_bordes_de_cajas_test" time="4.560">
+		</testcase>
+		<testcase name="test_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra" classname="apoyos_de_bordes_de_cajas_test" time="4.591">
+		</testcase>
+		<testcase name="test_la_cascada_grande_atraviesa_una_caja_que_ya_esta_despierta" classname="apoyos_de_bordes_de_cajas_test" time="1.007">
+		</testcase>
+		<testcase name="test_la_cascada_chica_atraviesa_una_caja_que_ya_esta_despierta" classname="apoyos_de_bordes_de_cajas_test" time="0.996">
+		</testcase>
+	</testsuite>
+</testsuites>

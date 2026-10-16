@@ -1,0 +1,294 @@
+00:02.047  blend            | Read blend: "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\assets\models\SEPT_JUEGOS_PROTOTIPO.blend"
+00:02.359  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-base.blend"
+434_TDD_RNA_VIEJO
+runTest (__main__.ColocacionRepetida.runTest)
+ACTRONCITO ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+DUREXTRA ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+BURBALOO ... FAIL
+runTest (__main__.ColocacionRepetida.runTest)
+ZUCARACHAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+LAYSNTT ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MALBARDO ... FAIL
+runTest (__main__.ColocacionRepetida.runTest)
+PRONGLES ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+JORGILLO ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+ARVEJAS ... FAIL
+runTest (__main__.ColocacionRepetida.runTest)
+CHISITOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+OREMOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+PEPITOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+SALADIK ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+UAKAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+CORACOLA ... FAIL
+runTest (__main__.ColocacionRepetida.runTest)
+FROTLUPS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MAROLINI ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+AMARGADITO ... FAIL
+runTest (__main__.ColocacionRepetida.runTest)
+CINDOLOR ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+FLINPUF ... FAIL
+runTest (__main__.ColocacionRepetida.runTest)
+DONSATURADOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+PETISAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MACUMBAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+COSA_DE_MANI ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+DURONGA ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+FERNET_GOD ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MAYONCHIS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+OAAAA ... FAIL
+runTest (__main__.ColocacionRepetida.runTest)
+TERMINATOR ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MARRANOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+FEEL_RICKY_FORT ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+POETICO ... ok
+
+======================================================================
+FAIL: runTest (__main__.ColocacionRepetida.runTest)
+BURBALOO
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-escala-local01\test_rna_funcional.py", line 56, in runTest
+    self.assertEqual(tuple(clon.scale), escala, "La colocación cambió escala artística")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0.10999997705221176, 0.10999999940395355, 0.07999999821186066) != (0.10999998450279236, 0.10999999940395355, 0.07999999821186066)
+
+First differing element 0:
+0.10999997705221176
+0.10999998450279236
+
+- (0.10999997705221176, 0.10999999940395355, 0.07999999821186066)
+?            ^^^ ^^^^
+
++ (0.10999998450279236, 0.10999999940395355, 0.07999999821186066)
+?           +++++ ^ ^
+ : La colocación cambió escala artística
+
+======================================================================
+FAIL: runTest (__main__.ColocacionRepetida.runTest)
+MALBARDO
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-escala-local01\test_rna_funcional.py", line 56, in runTest
+    self.assertEqual(tuple(clon.scale), escala, "La colocación cambió escala artística")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0.9463148713111877, 0.8261417150497437, 1.1946961879730225) != (0.9463148713111877, 0.8261417746543884, 1.1946961879730225)
+
+First differing element 1:
+0.8261417150497437
+0.8261417746543884
+
+- (0.9463148713111877, 0.8261417150497437, 1.1946961879730225)
+?                               -----   ^
+
++ (0.9463148713111877, 0.8261417746543884, 1.1946961879730225)
+?                                 +++ ^^^
+ : La colocación cambió escala artística
+
+======================================================================
+FAIL: runTest (__main__.ColocacionRepetida.runTest)
+ARVEJAS
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-escala-local01\test_rna_funcional.py", line 56, in runTest
+    self.assertEqual(tuple(clon.scale), escala, "La colocación cambió escala artística")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1.2533011436462402, 1.2582231760025024, 1.2755494117736816) != (1.2533010244369507, 1.2582231760025024, 1.2755494117736816)
+
+First differing element 0:
+1.2533011436462402
+1.2533010244369507
+
+- (1.2533011436462402, 1.2582231760025024, 1.2755494117736816)
+?          ^   ^^^^ ^
+
++ (1.2533010244369507, 1.2582231760025024, 1.2755494117736816)
+?          ^^^   ^^ ^
+ : La colocación cambió escala artística
+
+======================================================================
+FAIL: runTest (__main__.ColocacionRepetida.runTest)
+CORACOLA
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-escala-local01\test_rna_funcional.py", line 56, in runTest
+    self.assertEqual(tuple(clon.scale), escala, "La colocación cambió escala artística")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1.0653059482574463, 1.069489598274231, 1.5337415933609009) != (1.0653059482574463, 1.0694897174835205, 1.5337415933609009)
+
+First differing element 1:
+1.069489598274231
+1.0694897174835205
+
+- (1.0653059482574463, 1.069489598274231, 1.5337415933609009)
+?                              ^^^^   ^^
+
++ (1.0653059482574463, 1.0694897174835205, 1.5337415933609009)
+?                              ^^  +++ ^^
+ : La colocación cambió escala artística
+
+======================================================================
+FAIL: runTest (__main__.ColocacionRepetida.runTest)
+AMARGADITO
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-escala-local01\test_rna_funcional.py", line 56, in runTest
+    self.assertEqual(tuple(clon.scale), escala, "La colocación cambió escala artística")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0.8960342407226562, 0.8799999952316284, 0.757091760635376) != (0.8960342407226562, 0.8799999952316284, 0.7570918202400208)
+
+First differing element 2:
+0.757091760635376
+0.7570918202400208
+
+- (0.8960342407226562, 0.8799999952316284, 0.757091760635376)
+?                                                  ^^ ^^^^^^
+
++ (0.8960342407226562, 0.8799999952316284, 0.7570918202400208)
+?                                                  ^^ ^^^^^^^
+ : La colocación cambió escala artística
+
+======================================================================
+FAIL: runTest (__main__.ColocacionRepetida.runTest)
+FLINPUF
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-escala-local01\test_rna_funcional.py", line 56, in runTest
+    self.assertEqual(tuple(clon.scale), escala, "La colocación cambió escala artística")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0.7068453431129456, 0.7039999961853027, 0.5583866238594055) != (0.7068454027175903, 0.7039999961853027, 0.5583866238594055)
+
+First differing element 0:
+0.7068453431129456
+0.7068454027175903
+
+- (0.7068453431129456, 0.7039999961853027, 0.5583866238594055)
+?           ---------
+
++ (0.7068454027175903, 0.7039999961853027, 0.5583866238594055)
+?          +++++++++
+ : La colocación cambió escala artística
+
+======================================================================
+FAIL: runTest (__main__.ColocacionRepetida.runTest)
+OAAAA
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-escala-local01\test_rna_funcional.py", line 56, in runTest
+    self.assertEqual(tuple(clon.scale), escala, "La colocación cambió escala artística")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0.7692545056343079, 0.46315789222717285, 0.8960139155387878) != (0.7692545056343079, 0.46315789222717285, 0.8960139751434326)
+
+First differing element 2:
+0.8960139155387878
+0.8960139751434326
+
+- (0.7692545056343079, 0.46315789222717285, 0.8960139155387878)
+?                                                     ^^ ^^^^^
+
++ (0.7692545056343079, 0.46315789222717285, 0.8960139751434326)
+?                                                    ++ ^ ^^^^
+ : La colocación cambió escala artística
+
+----------------------------------------------------------------------
+Ran 32 tests in 3.138s
+
+FAILED (failures=7)
+00:05.734  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-base.blend"
+434_TDD_RNA_NUEVO
+runTest (__main__.ColocacionRepetida.runTest)
+ACTRONCITO ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+DUREXTRA ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+BURBALOO ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+ZUCARACHAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+LAYSNTT ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MALBARDO ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+PRONGLES ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+JORGILLO ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+ARVEJAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+CHISITOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+OREMOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+PEPITOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+SALADIK ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+UAKAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+CORACOLA ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+FROTLUPS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MAROLINI ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+AMARGADITO ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+CINDOLOR ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+FLINPUF ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+DONSATURADOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+PETISAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MACUMBAS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+COSA_DE_MANI ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+DURONGA ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+FERNET_GOD ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MAYONCHIS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+OAAAA ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+TERMINATOR ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+MARRANOS ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+FEEL_RICKY_FORT ... ok
+runTest (__main__.ColocacionRepetida.runTest)
+POETICO ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 3.461s
+
+OK
+434_TDD_RNA_ROJO_REAL_Y_VERDE_32_COMPLETOS
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

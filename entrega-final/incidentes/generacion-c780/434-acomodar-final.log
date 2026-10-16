@@ -1,0 +1,75 @@
+00:07.156  blend            | Read blend: "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\assets\models\SEPT_JUEGOS_PROTOTIPO.blend"
+A.este.0: largo 3.086, fondo 0.368, libre desde 0.001: Macumbas (fija) x6, Zucarachas (fija) x5
+A.este.1: largo 3.086, fondo 0.538, libre desde 0.001: Pepitos x5, Frotlups x5
+A.este.2: largo 3.086, fondo 0.538, libre desde 0.001: Macumbas x6, Zucarachas x5
+A.este.3: largo 3.086, fondo 0.538, libre desde 0.001: Pepitos (fija) x5, Frotlups (fija) x5
+A.norte.0: largo 1.091, fondo 0.464, libre desde 0.009: Terminator (fija) x8
+A.norte.1: largo 1.091, fondo 0.387, libre desde 0.011: Terminator x8
+A.norte.2: largo 1.091, fondo 0.213, libre desde 0.003: Oaaaa x9
+A.norte.3: largo 1.091, fondo 0.163, libre desde 0.013: Oaaaa (fija) x9
+A.oeste.0: largo 3.086, fondo 0.368, libre desde 0.001: Marolini (fija) x5, Arvejas (fija) x10
+A.oeste.1: largo 3.086, fondo 0.538, libre desde 0.001: Uakas x5, Marranos x5
+A.oeste.2: largo 3.086, fondo 0.538, libre desde 0.001: Marolini x5, Arvejas x10
+A.oeste.3: largo 3.086, fondo 0.538, libre desde 0.001: Uakas (fija) x5, Marranos (fija) x5
+A.sur.0: largo 1.091, fondo 0.464, libre desde 0.009: Amargadito (fija) x4
+A.sur.1: largo 1.091, fondo 0.387, libre desde 0.011: Amargadito x4
+A.sur.2: largo 1.091, fondo 0.213, libre desde 0.009: Malbardo x8
+A.sur.3: largo 1.091, fondo 0.163, libre desde 0.013: Malbardo (fija) x8
+B.este.0: largo 3.086, fondo 0.368, libre desde 0.001: Oremos (fija) x5, Petisas (fija) x6
+B.este.1: largo 3.086, fondo 0.538, libre desde 0.001: Cosa de Maní x6, Feel Ricky Fort x5
+B.este.2: largo 3.086, fondo 0.538, libre desde 0.001: Oremos x5, Petisas x6
+B.este.3: largo 3.086, fondo 0.538, libre desde 0.001: Cosa de Maní (fija) x6, Feel Ricky Fort (fija) x5
+B.norte.0: largo 1.091, fondo 0.464, libre desde 0.009: Burbaloo (fija) x2, Flinpuf (fija) x2
+B.norte.1: largo 1.091, fondo 0.387, libre desde 0.011: Flinpuf x4
+B.norte.2: largo 1.091, fondo 0.213, libre desde 0.004: Burbaloo x4
+B.norte.3: largo 1.091, fondo 0.163, libre desde -0.035: Burbaloo (fija) x2, Flinpuf (fija) x2
+B.oeste.0: largo 3.086, fondo 0.368, libre desde 0.001: Donsaturados (fija) x6, Prongles (fija) x12
+B.oeste.1: largo 3.086, fondo 0.538, libre desde 0.001: Chisitos x5, Laysntt x5
+B.oeste.2: largo 3.086, fondo 0.538, libre desde 0.001: Donsaturados x6, Prongles x12
+B.oeste.3: largo 3.086, fondo 0.538, libre desde 0.001: Chisitos (fija) x5, Laysntt (fija) x5
+B.sur.0: largo 1.091, fondo 0.464, libre desde 0.009: Saladik (fija) x5
+B.sur.1: largo 1.091, fondo 0.387, libre desde 0.011: Saladik x5
+B.sur.2: largo 1.091, fondo 0.213, libre desde 0.009: Jorgillo x3
+B.sur.3: largo 1.091, fondo 0.163, libre desde 0.013: Jorgillo (fija) x3
+H1.sur.0: largo 0.792, fondo 0.619, libre desde 0.001: Fernet God (fija) x6
+H1.sur.1: largo 0.792, fondo 0.554, libre desde 0.001: Fernet God x6
+H1.sur.2: largo 0.792, fondo 0.554, libre desde 0.001: Coracola x6
+H1.sur.3: largo 0.792, fondo 0.554, libre desde 0.001: Coracola (fija) x6
+H2.sur.0: largo 0.792, fondo 0.619, libre desde 0.001: Mayonchis (fija) x3
+H2.sur.1: largo 0.792, fondo 0.554, libre desde 0.001: Mayonchis x3
+H2.sur.2: largo 0.792, fondo 0.554, libre desde 0.001: Cindolor x4
+H2.sur.3: largo 0.792, fondo 0.554, libre desde 0.001: Cindolor (fija) x4
+N.sur.0: largo 2.838, fondo 0.277, libre desde 0.001: Actroncito (fija) x6, Durextra (fija) x8
+N.sur.1: largo 2.838, fondo 0.399, libre desde 0.001: Poético x14
+N.sur.2: largo 2.838, fondo 0.399, libre desde 0.001: Actroncito x6, Durextra x8
+N.sur.3: largo 2.838, fondo 0.399, libre desde 0.001: Poético (fija) x14
+fila de adelante corta: Pepitos en A.este.1: 5
+fila de adelante corta: Frotlups en A.este.1: 5
+fila de adelante corta: Macumbas en A.este.2: 6
+fila de adelante corta: Zucarachas en A.este.2: 5
+fila de adelante corta: Uakas en A.oeste.1: 5
+fila de adelante corta: Marranos en A.oeste.1: 5
+fila de adelante corta: Marolini en A.oeste.2: 5
+fila de adelante corta: Amargadito en A.sur.1: 4
+fila de adelante corta: Cosa de Maní en B.este.1: 6
+fila de adelante corta: Feel Ricky Fort en B.este.1: 5
+fila de adelante corta: Oremos en B.este.2: 5
+fila de adelante corta: Petisas en B.este.2: 6
+fila de adelante corta: Flinpuf en B.norte.1: 4
+fila de adelante corta: Burbaloo en B.norte.2: 4
+fila de adelante corta: Chisitos en B.oeste.1: 5
+fila de adelante corta: Laysntt en B.oeste.1: 5
+fila de adelante corta: Donsaturados en B.oeste.2: 6
+fila de adelante corta: Saladik en B.sur.1: 5
+fila de adelante corta: Jorgillo en B.sur.2: 3
+fila de adelante corta: Fernet God en H1.sur.1: 6
+fila de adelante corta: Coracola en H1.sur.2: 6
+fila de adelante corta: Mayonchis en H2.sur.1: 3
+fila de adelante corta: Cindolor en H2.sur.2: 4
+fila de adelante corta: Actroncito en N.sur.2: 6
+estantes: 44, tandas: 64, unidades: 667, choques: 0, filas cortas: 24
+Info: Saved "SEPT_JUEGOS_PROTOTIPO.blend"
+guardado: D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\assets\models\SEPT_JUEGOS_PROTOTIPO.blend
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

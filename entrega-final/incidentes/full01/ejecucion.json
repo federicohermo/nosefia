@@ -1,0 +1,59 @@
+{
+  "head": "619e9d6e9a19f75833b4c1bc9a3cd1981de46e5e",
+  "exit_verificar": 1,
+  "exit_conteo": 0,
+  "segundos": 969.937936599832,
+  "limite_s": 2700,
+  "conteo_inmediato": true,
+  "xml_original": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\reports\\report_1\\results.xml",
+  "archivos": {
+    "conteo.log": {
+      "bytes": 65,
+      "sha256": "370f7a60188bdce75a7e036a4058eb61618df4c3fd36129f99e3ccdcc1eebc6d"
+    },
+    "pins.json": {
+      "bytes": 290,
+      "sha256": "570e9f9b062d468870722555132b70be78163a56eede6ee3b75ae9e5c1eac24e"
+    },
+    "results.xml": {
+      "bytes": 354311,
+      "sha256": "11b12d586011d18ecc5ac83d905d0ed624409ceefa42a58a8fbadf4310b64325"
+    },
+    "verificar.log": {
+      "bytes": 1195238,
+      "sha256": "40efc50374bf31bf589f7cc27b39db0bd6940e4152e49936ccd47e4bc4368668"
+    },
+    "crudo\\capas.log": {
+      "bytes": 143,
+      "sha256": "c5678113c68c9037f43e14581fa5bc91a66ccaf92e0dfaef195efad8f82f8352"
+    },
+    "crudo\\formato.log": {
+      "bytes": 35,
+      "sha256": "4c42ae57b368aae561a41fd6091ddb59a7eb4daad4b64c2fcb5c9af2d8b4d194"
+    },
+    "crudo\\harness.log": {
+      "bytes": 3411,
+      "sha256": "99c70888433d89d5389cf5f0b3077e8e15c8b1daaaa2048471211388eb8af0fb"
+    },
+    "crudo\\lint.log": {
+      "bytes": 28,
+      "sha256": "098424cb171ea105b5f32277ddcb3b139ff90d7f943970e0e55a7268d9468b1e"
+    },
+    "crudo\\specs.log": {
+      "bytes": 281,
+      "sha256": "c1d8923aa76cfec38aa97b09415099693d69b053535c13f6bb2c3f77adb713dc"
+    },
+    "crudo\\tdd.log": {
+      "bytes": 140,
+      "sha256": "9fbe786e5884fcce0076e7a63f78761d35b3a813211e25519bb0095ca3296fc7"
+    },
+    "crudo\\tests-import.log": {
+      "bytes": 2091,
+      "sha256": "ebfd8de4439b84f2a4c2fe2fc7cbca9f9f0ee53b3670a1770fdfd4ca2524ad68"
+    },
+    "crudo\\tests.log": {
+      "bytes": 1194951,
+      "sha256": "fb6708621928761144ee10f32582b60abdc80ac1e29ceaa5e493c236c5161fd9"
+    }
+  }
+}

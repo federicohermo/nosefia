@@ -1,0 +1,203 @@
+{
+  "head": "29fdc763871c5833b9d28b5c6d71d71d3aeac03f",
+  "segundos": 43.700137899955735,
+  "resultados": [
+    {
+      "resolucion": [
+        1280,
+        720
+      ],
+      "vistas": [
+        {
+          "camara": "[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (-1.449932, 1.7, -2.086576)]",
+          "cupo_duronga": 16,
+          "indice": 0,
+          "jornada": 2,
+          "nombre": "01-almacen"
+        },
+        {
+          "camara": "[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (2.006813, 1.7, -2.086576)]",
+          "cupo_duronga": 16,
+          "indice": 1,
+          "jornada": 2,
+          "nombre": "02-cereales-dulces"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (0.27844, 1.7, 1.288424)]",
+          "cupo_duronga": 16,
+          "indice": 2,
+          "jornada": 2,
+          "nombre": "03-malbardo-amargadito"
+        },
+        {
+          "camara": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (0.27844, 1.7, -5.461576)]",
+          "cupo_duronga": 16,
+          "indice": 3,
+          "jornada": 2,
+          "nombre": "04-bebidas-sin-frio"
+        },
+        {
+          "camara": "[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (5.460157, 1.7, -2.045102)]",
+          "cupo_duronga": 16,
+          "indice": 4,
+          "jornada": 2,
+          "nombre": "05-dulces"
+        },
+        {
+          "camara": "[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (2.003413, 1.7, -2.045102)]",
+          "cupo_duronga": 16,
+          "indice": 5,
+          "jornada": 2,
+          "nombre": "06-salados"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (3.731785, 1.7, 1.329898)]",
+          "cupo_duronga": 16,
+          "indice": 6,
+          "jornada": 2,
+          "nombre": "07-jorgillo-saladik"
+        },
+        {
+          "camara": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (3.731785, 1.7, -5.420102)]",
+          "cupo_duronga": 16,
+          "indice": 7,
+          "jornada": 2,
+          "nombre": "08-golosinas"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.905695, -0.42393), Z: (0.0, 0.42393, 0.905695), O: (2.849859, 1.7, -6.060595)]",
+          "cupo_duronga": 16,
+          "indice": 8,
+          "jornada": 2,
+          "nombre": "09-no-comestibles"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-1.468133, 1.7, -5.828175)]",
+          "cupo_duronga": 16,
+          "indice": 9,
+          "jornada": 2,
+          "nombre": "10-heladera-1"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-0.37921, 1.7, -5.828175)]",
+          "cupo_duronga": 16,
+          "indice": 10,
+          "jornada": 2,
+          "nombre": "11-heladera-2"
+        }
+      ],
+      "png": {
+        "nativo-01-almacen.png": "333569bb7ee36c39d94f39bbf6bb5b3ef19d27d954d8cd5634aee610399c7779",
+        "nativo-02-cereales-dulces.png": "803c40b265bf177dafb58d28c0a5118983c54821eafffa17b25e1a9602608bb9",
+        "nativo-03-malbardo-amargadito.png": "a85fd3427c30570dc25cc075a5c3ee1d8a3c0684ea8d39ef463bedccdfb882a6",
+        "nativo-04-bebidas-sin-frio.png": "f9b9687c9daebca9145397010220465c00d296f0e4e2b6ee3cd6c17b0fc7d531",
+        "nativo-05-dulces.png": "d3d1da681532884be2e5e79510f0a852f1c2d0fbb863cb8efd8148d63d75caa4",
+        "nativo-06-salados.png": "d5f79d6dc6db300c761d4aec464da37b2a1b036ac335579be5544844687e30c2",
+        "nativo-07-jorgillo-saladik.png": "60f3142004b66b67701a56db61b83de8d242a744bbc5d31db45baf5c08cf939c",
+        "nativo-08-golosinas.png": "80bcb75b1a16e8a653e15a32691892fb042007c68b39071466ad26eaf379aa1e",
+        "nativo-09-no-comestibles.png": "807d4b4e39193e6bf7aaebe02e90db9cfe943d568b3e8cf44e5ca1e6c15cd898",
+        "nativo-10-heladera-1.png": "2d9eb0fa9425b79f96a1b1b5b68b773cd1e856f22c426e9fe791a1dfcc3e7245",
+        "nativo-11-heladera-2.png": "7e47e0c35ee7d6d1ab91fd2af529d7424edd92ada5225f787e479aca69360718"
+      }
+    },
+    {
+      "resolucion": [
+        1920,
+        1080
+      ],
+      "vistas": [
+        {
+          "camara": "[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (-1.449932, 1.7, -2.086576)]",
+          "cupo_duronga": 16,
+          "indice": 0,
+          "jornada": 2,
+          "nombre": "01-almacen"
+        },
+        {
+          "camara": "[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (2.006813, 1.7, -2.086576)]",
+          "cupo_duronga": 16,
+          "indice": 1,
+          "jornada": 2,
+          "nombre": "02-cereales-dulces"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (0.27844, 1.7, 1.288424)]",
+          "cupo_duronga": 16,
+          "indice": 2,
+          "jornada": 2,
+          "nombre": "03-malbardo-amargadito"
+        },
+        {
+          "camara": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (0.27844, 1.7, -5.461576)]",
+          "cupo_duronga": 16,
+          "indice": 3,
+          "jornada": 2,
+          "nombre": "04-bebidas-sin-frio"
+        },
+        {
+          "camara": "[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (5.460157, 1.7, -2.045102)]",
+          "cupo_duronga": 16,
+          "indice": 4,
+          "jornada": 2,
+          "nombre": "05-dulces"
+        },
+        {
+          "camara": "[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (2.003413, 1.7, -2.045102)]",
+          "cupo_duronga": 16,
+          "indice": 5,
+          "jornada": 2,
+          "nombre": "06-salados"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (3.731785, 1.7, 1.329898)]",
+          "cupo_duronga": 16,
+          "indice": 6,
+          "jornada": 2,
+          "nombre": "07-jorgillo-saladik"
+        },
+        {
+          "camara": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (3.731785, 1.7, -5.420102)]",
+          "cupo_duronga": 16,
+          "indice": 7,
+          "jornada": 2,
+          "nombre": "08-golosinas"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.905695, -0.42393), Z: (0.0, 0.42393, 0.905695), O: (2.849859, 1.7, -6.060595)]",
+          "cupo_duronga": 16,
+          "indice": 8,
+          "jornada": 2,
+          "nombre": "09-no-comestibles"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-1.468133, 1.7, -5.828175)]",
+          "cupo_duronga": 16,
+          "indice": 9,
+          "jornada": 2,
+          "nombre": "10-heladera-1"
+        },
+        {
+          "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-0.37921, 1.7, -5.828175)]",
+          "cupo_duronga": 16,
+          "indice": 10,
+          "jornada": 2,
+          "nombre": "11-heladera-2"
+        }
+      ],
+      "png": {
+        "nativo-01-almacen.png": "41d9dcbc360ae88a57931c7317bbbd6e2d495a675efd1bd62a84499a46ec3cda",
+        "nativo-02-cereales-dulces.png": "44f02dbcdeb8772133051a2dad60a1f63bdec5deeca7586cb21001c1677ae4bf",
+        "nativo-03-malbardo-amargadito.png": "5d6af9f29e2c1da10aed1f5c4541c545f28d3f814230d1a08324b259e7031e29",
+        "nativo-04-bebidas-sin-frio.png": "1eefc400942a44fa86665024e9220e1eea3b51f83286df5d210756c0c8bfdedc",
+        "nativo-05-dulces.png": "6afbcc0c337dccb0b1d68b66e1cbac456e035afac686adda00715d816226cd74",
+        "nativo-06-salados.png": "d22551d18692e31d435272f4a45a3688c892471d6a7a7b5d0156993737cf6b89",
+        "nativo-07-jorgillo-saladik.png": "3a40300f151f73a5ea1e61631ccd465674a053d05d1b5a5f121c5dc1c4c01a73",
+        "nativo-08-golosinas.png": "90504d9859db44568d1e6b747d08d0a880f8b033b0adb757c7013d69a6b18da2",
+        "nativo-09-no-comestibles.png": "27de39d5b56882492353a415a37124264fa1ddeddc63cf8730cf13816bde4915",
+        "nativo-10-heladera-1.png": "46610f4ae04a0ce528ae2814e0dd155075fa262a066de865514061e9847c85fc",
+        "nativo-11-heladera-2.png": "5354f50be29204e503daad8ca8a14ec74b137b173f5f411a46a898ee31632047"
+      }
+    }
+  ],
+  "limite": "Cámara de observación del mapa; alcance e interacción se prueban en las suites."
+}

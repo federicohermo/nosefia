@@ -1,0 +1,1683 @@
+{
+  "antes": {
+    "muebles": {
+      "A": {
+        "matriz": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.27844035625457764
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            2.086575508117676
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.3339073657989502
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "78832df38c2644fe2e8e673360dd126361e3b89406696e3499c6cfb8d7f833b5",
+        "poligonos": "21fe44419f7e07618b5795b180b01b1adeb73bd453066ee31f89e61ca10868e8",
+        "dimensiones": [
+          1.256744384765625,
+          4.550000190734863,
+          1.9027392864227295
+        ]
+      },
+      "B": {
+        "matriz": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            3.7317848205566406
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            2.0451016426086426
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.334740400314331
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "78832df38c2644fe2e8e673360dd126361e3b89406696e3499c6cfb8d7f833b5",
+        "poligonos": "21fe44419f7e07618b5795b180b01b1adeb73bd453066ee31f89e61ca10868e8",
+        "dimensiones": [
+          1.256744384765625,
+          4.550000190734863,
+          1.9027392864227295
+        ]
+      },
+      "N": {
+        "matriz": [
+          [
+            3.1391647326017846e-07,
+            1.0,
+            0.0,
+            2.849858522415161
+          ],
+          [
+            -1.0,
+            3.1391647326017846e-07,
+            0.0,
+            7.837060928344727
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.3025407791137695
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "6d399ba496b6034cc341b89e5674cfb1679775304c9ae93ce0991d2564c2f26f",
+        "poligonos": "d378d724f1f866faa8be2ab21d5512fff59ecc2e51093f41dd2234d0ce7d295f",
+        "dimensiones": [
+          0.5773505568504333,
+          3.0,
+          2.047259569168091
+        ]
+      },
+      "H1": {
+        "matriz": [
+          [
+            3.1391647326017846e-07,
+            1.0,
+            0.0,
+            -1.612550973892212
+          ],
+          [
+            -1.0,
+            3.1391647326017846e-07,
+            0.0,
+            7.081191539764404
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.1710206270217896
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "bc1d26148eff5dc2cda88e99b4e25d0c0969ca2e17120e0d1e639347235cb5c9",
+        "poligonos": "2f917c6e53cd0861503eb6fc8a3e12a2bbdb13a494f38db64f141224fd916142",
+        "dimensiones": [
+          0.8000000715255737,
+          1.049999713897705,
+          2.49043607711792
+        ]
+      },
+      "H2": {
+        "matriz": [
+          [
+            3.1391647326017846e-07,
+            1.0,
+            0.0,
+            -0.523627519607544
+          ],
+          [
+            -1.0,
+            3.1391647326017846e-07,
+            0.0,
+            7.081191539764404
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.1710206270217896
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "e34b2f6747e67b5acbe733f671073f45d105a8eaaf5c3605fb1a536a43b8c8e6",
+        "poligonos": "2f917c6e53cd0861503eb6fc8a3e12a2bbdb13a494f38db64f141224fd916142",
+        "dimensiones": [
+          0.8000000715255737,
+          1.049999713897705,
+          2.49043607711792
+        ]
+      },
+      "fuera_de_servicio": {
+        "matriz": [
+          [
+            3.1391647326017846e-07,
+            1.0,
+            0.0,
+            0.5652960538864136
+          ],
+          [
+            -1.0,
+            3.1391647326017846e-07,
+            0.0,
+            7.081191539764404
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.1710206270217896
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "abcde77f3e624f7f16b33356b2f4982c7c0c93930716776e9b4b45a44e29d030",
+        "poligonos": "2f917c6e53cd0861503eb6fc8a3e12a2bbdb13a494f38db64f141224fd916142",
+        "dimensiones": [
+          0.8000001311302185,
+          1.0499998331069946,
+          2.49043607711792
+        ]
+      },
+      "puerta_heladera_0": {
+        "matriz": [
+          [
+            1.0,
+            -1.1920928955078125e-07,
+            0.0,
+            -1.4681329727172852
+          ],
+          [
+            1.1920928955078125e-07,
+            1.0,
+            0.0,
+            6.921172142028809
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.5836149454116821
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "23516a0aa0ff1104a81591e1fd3ad1b70639068f0e1d53fe9a0ecda99249f2ac",
+        "poligonos": "0a992b18082e1749df4bd6039090bd0ae49b67b493ac1ff299e2a84f1f44ed86",
+        "dimensiones": [
+          0.885883629322052,
+          0.11800004541873932,
+          1.8410900831222534
+        ]
+      },
+      "puerta_heladera_1": {
+        "matriz": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.37920942902565
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            6.921172142028809
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.5836149454116821
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "29301e9bce81b442543a333f6ce60c67518a2a995e3871239bfd42d600bff4ef",
+        "poligonos": "8c215d20285e6bef8c7c6ee674412e97193b2684fed7e3465530342d2f206280",
+        "dimensiones": [
+          0.8858835101127625,
+          0.11800003051757812,
+          1.8410900831222534
+        ]
+      },
+      "puerta_heladera_2": {
+        "matriz": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.7097140550613403
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            6.92117166519165
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.5836149454116821
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "0eefbe3051e442f235783f8a2ffab34155f9d424e9de7d87eea4031f45cc2bf5",
+        "poligonos": "e833090c4c745be80aa7715fd5fc0bb3062389ce3e1bb412bcf088af0dce626e",
+        "dimensiones": [
+          0.885883629322052,
+          0.11800003051757812,
+          1.8410900831222534
+        ]
+      }
+    },
+    "productos": {
+      "ACTRONCITO": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.1264408379793167,
+          0.21367216110229492,
+          0.14540694653987885
+        ],
+        "vertices": "3cef7a8660e47db499aa669baccef59a562cfd0b6e4be89aa829008f0c31dbdf",
+        "uv": "e6ec3f58ca5919726d0ac79bf342f042aaeee4cae5867d68bdf8d6489b7c1c4b",
+        "materiales": [
+          "Material.017"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Actroncito\\Actroncito completo.png"
+        ]
+      },
+      "DUREXTRA": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.10000000149011612,
+          0.11244899034500122,
+          0.10000000149011612
+        ],
+        "vertices": "49401ad09f1fb674299691f3dda179b51317d2922608aaa9d0a01e037126d1af",
+        "uv": "4275d89cc63c76af8c40bd1eb48a4a5c1dcb02b9a21e452e77872d177b6e5970",
+        "materiales": [
+          "Material.023"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Durextra\\Durextra completo_1.png"
+        ]
+      },
+      "BURBALOO": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.10999997705221176,
+          0.10999999940395355,
+          0.07999999821186066
+        ],
+        "vertices": "86745be8dff5b5ed42185fde01ec707062229e53e9c851c5c015e0417da3e0f6",
+        "uv": "2388d62973c838f8d94c4e285aba222a536a1eed1d41261ec5e650b53ebe1a1a",
+        "materiales": [
+          "Material.022"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Burbaloo\\Burbaloo completo_1.png"
+        ]
+      },
+      "ZUCARACHAS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.03799999877810478,
+          0.1340000033378601,
+          0.20250000059604645
+        ],
+        "vertices": "d9b86992ccd410cb4dae8fa9c36f435a06c7a7c9c4f0d7d92e99d1acbf56516f",
+        "uv": "9256e253547165777be67d222e9af83145fc893d9d9896a2ab14ab31e4196e2e",
+        "materiales": [
+          "zucarita"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Zucarachas\\Zucarachas completo_1.png"
+        ]
+      },
+      "LAYSNTT": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.2049657255411148,
+          0.09517618268728256,
+          0.19500000774860382
+        ],
+        "vertices": "697ba96cb0d6adc9aad314c6c39eec56f8d2ecb0cc5332dcb62d9182545da265",
+        "uv": "b1a2335b6f5f22a7df47d273d90e3fb8bc9e9c88a60c190d1f215f0c30a55b80",
+        "materiales": [
+          "Material.024"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Lay\u00b4snt\u00b4t\\Lay\u00b4snt\u00b4t completo_1.png"
+        ]
+      },
+      "MALBARDO": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.9463148713111877,
+          0.8261417746543884,
+          1.1946961879730225
+        ],
+        "vertices": "9930a10af464b53987aa9b3e9df0c69e3a9c000946b9dc5731f4b5d1e21103e4",
+        "uv": "254f2858e5f1886337ffabbe797ab5a3812d290954b3cad45fcfa841154e0387",
+        "materiales": [
+          "Material.010"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Puchos\\puchos.png"
+        ]
+      },
+      "PRONGLES": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.5468372106552124,
+          0.5519353747367859,
+          0.7769021987915039
+        ],
+        "vertices": "0cd91d7fed44fac07ca3f06669bac15fd7f905a96dfcffaadbbdb34d10c23e35",
+        "uv": "f7f9f066fc89466b0f80ad31b693b55741bc74f3cde3d71cc1b4ba2f956943a6",
+        "materiales": [
+          "progres nuevo"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\progres.png"
+        ]
+      },
+      "JORGILLO": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.10649999231100082,
+          0.14999999105930328,
+          0.03499998524785042
+        ],
+        "vertices": "b524394e425615bb36fa7950b165addeac1b9c2cf2c75a8354a1002b0c7c6f57",
+        "uv": "34cf5d5c88318cfe53cb3414cb650d0fe39eef47329eda9cb67ce27f8b2d845e",
+        "materiales": [
+          "Material.028"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\jorgillata.png"
+        ]
+      },
+      "ARVEJAS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          1.2533010244369507,
+          1.2582231760025024,
+          1.2755494117736816
+        ],
+        "vertices": "0fb8297ab4c942b9b2a8a1d3bc0042fd8e193efc177416b9dae10d76b97d55b6",
+        "uv": "8a4ccef0463170d929aa8f9c74cecd3874a10a6ce5cab4597db3310b309b52c1",
+        "materiales": [
+          "Material.001"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Arvejas\\arvecor.png"
+        ]
+      },
+      "CHISITOS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.2049657255411148,
+          0.09517618268728256,
+          0.19500000774860382
+        ],
+        "vertices": "ed2689fb144d3738c1fd4f8940a0213b67ba1b63e734bc30da18603a1830f4f5",
+        "uv": "f4d07985525c56c395d1a2e60d2249f8310c87b23307419fd7f0f09e3d4dd6c8",
+        "materiales": [
+          "Material.005"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\chizitos\\chisito.png"
+        ]
+      },
+      "OREMOS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.15211263298988342,
+          0.13500000536441803,
+          0.06731919199228287
+        ],
+        "vertices": "0c3732416ffdc6669b2e26f004dd41d9e8f698ee886c0ba102610ee2f39632c8",
+        "uv": "8fa850b0fa66b8fc1a69a672c669a239d201ca82738606a3432bfe8443ab3b6e",
+        "materiales": [
+          "oremos"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\galletitas\\oremos.png"
+        ]
+      },
+      "PEPITOS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.15211263298988342,
+          0.13500000536441803,
+          0.06731919199228287
+        ],
+        "vertices": "3f698dcf0cea4061dfbe15a2cc916100cda50ce35fb96a980222ed92545076b8",
+        "uv": "f2cc101decf3aa4337bd3f4408b3e860f43741e9ef0491f960d8f96340552bd8",
+        "materiales": [
+          "pepito"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\galletitas\\pepito.png"
+        ]
+      },
+      "SALADIK": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.04769282788038254,
+          0.12263871729373932,
+          0.14989179372787476
+        ],
+        "vertices": "57316da0c38b85b5724e01320e1e8f3878e68dea5f0b5c1003817f1aff62ede2",
+        "uv": "9a9d49090bac4296ab255e84dde02a28b211ea3e95a60af61b17dd329532f335",
+        "materiales": [
+          "saladix"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\galletitas\\saladick.png"
+        ]
+      },
+      "UAKAS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.03799999877810478,
+          0.1340000033378601,
+          0.20250000059604645
+        ],
+        "vertices": "b524394e425615bb36fa7950b165addeac1b9c2cf2c75a8354a1002b0c7c6f57",
+        "uv": "6998fbd808f03e9b8462ce6cb0fee21eaf093af1e9dd4785740b43bf6f7598c7",
+        "materiales": [
+          "wakas"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Wakas\\wakasfideos.png"
+        ]
+      },
+      "CORACOLA": {
+        "padre": "heladeranueva-col",
+        "escala_global": [
+          1.0653060674667358,
+          1.0694897174835205,
+          1.5337415933609009
+        ],
+        "vertices": "a8c12a4903d63068a30be54cf95c17603c2752d36faf245bef4129f730a95e3b",
+        "uv": "61a6090bc7003cb86ebebc22f1e11d10503ebb43e23a383bead8a5bf3458a1fc",
+        "materiales": [
+          "Material.009"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Cora cola\\cora cola.png"
+        ]
+      },
+      "FROTLUPS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.03799999877810478,
+          0.1340000033378601,
+          0.20250000059604645
+        ],
+        "vertices": "d9b86992ccd410cb4dae8fa9c36f435a06c7a7c9c4f0d7d92e99d1acbf56516f",
+        "uv": "ca6a0197eeadcf4b6786421c756de2c4653556db8c2436ca707d946d699552c0",
+        "materiales": [
+          "Material.012"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\cereales\\frot lups.png"
+        ]
+      },
+      "MAROLINI": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.03799999877810478,
+          0.1340000033378601,
+          0.20250000059604645
+        ],
+        "vertices": "b524394e425615bb36fa7950b165addeac1b9c2cf2c75a8354a1002b0c7c6f57",
+        "uv": "ddff2ac245992ee76711c070e868238b4dd5db290283bb84378101b566c10429",
+        "materiales": [
+          "Marolini",
+          "zucaritia"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Marolini\\fideos marolini.png"
+        ]
+      },
+      "AMARGADITO": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.8960342407226562,
+          0.8799999952316284,
+          0.7570918202400208
+        ],
+        "vertices": "175bb1769f7299deac8bed42c11fe188b6c79cdcd40e14d815b610b780c197b0",
+        "uv": "b3e64dc32b84afef181f59169c3db61ad985761d211d0dae9b634c7d9579c14e",
+        "materiales": [
+          "amargadito"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\amargadito\\amargadito completo.png"
+        ]
+      },
+      "CINDOLOR": {
+        "padre": "heladeranueva-col.001",
+        "escala_global": [
+          0.7692544460296631,
+          0.6736841797828674,
+          0.8960139751434326
+        ],
+        "vertices": "aa5417f177835047226eafab49673fe87b2f3cb08dfe139b7d05a4c0c46d2437",
+        "uv": "06dec94b804f088f45fe73140278689735db6ab89373ed9978188c5923988136",
+        "materiales": [
+          "cindolor"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\cindolor\\cindolor completo.png"
+        ]
+      },
+      "FLINPUF": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.7068453431129456,
+          0.7039999961853027,
+          0.5583866238594055
+        ],
+        "vertices": "3386bae8734e0134a10754252c9e850478f277d09df5c1a5b1469abdb4e61592",
+        "uv": "74427bced80379e1549c3deff1b6622c5f80677ed036b38a3f204cb8eeb31528",
+        "materiales": [
+          "flimpof"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\flim pof\\flim pof completo.png"
+        ]
+      },
+      "DONSATURADOS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.6545454263687134,
+          0.8727272748947144,
+          0.7879317402839661
+        ],
+        "vertices": "1ae1d8791b91c03db73227b92ac126cbc86a4821966c3379ecbfaebe12edddee",
+        "uv": "19178ab6f247c0943b8d135d11cf290c29a32a0c7c46d444979665e0fb9cb7e5",
+        "materiales": [
+          "donsaturados"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\don saturados\\Don Saturados completo.png"
+        ]
+      },
+      "PETISAS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.6545454263687134,
+          0.8727272748947144,
+          0.7879317402839661
+        ],
+        "vertices": "1ae1d8791b91c03db73227b92ac126cbc86a4821966c3379ecbfaebe12edddee",
+        "uv": "2dc50e3d666361ff621afa0895d2a2ab46eceb2f9a7f392eb604e6f7d78f25c3",
+        "materiales": [
+          "petisas"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\petisas\\petisas completo.png"
+        ]
+      },
+      "MACUMBAS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.6545454263687134,
+          0.8727272748947144,
+          0.7879317402839661
+        ],
+        "vertices": "1ae1d8791b91c03db73227b92ac126cbc86a4821966c3379ecbfaebe12edddee",
+        "uv": "fee8db28793c2f90ced67dbf226daf69fa725ad8fee598b00d7a41a723a0089b",
+        "materiales": [
+          "macumbas"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\macumbas\\macumbas completo.png"
+        ]
+      },
+      "COSA_DE_MANI": {
+        "padre": "gondolanueva-col.001",
+        "escala_global": [
+          0.6100644469261169,
+          0.8959999084472656,
+          0.5255404710769653
+        ],
+        "vertices": "9e2da49eb64847054d66d5a6e33b7793bb99becd52b6bb4b7b3471ee3db2fce9",
+        "uv": "cdb6e202db4224a01959e2457ef24e81a4b0ca54f03763f9a523b20db23425b0",
+        "materiales": [
+          "cosa de mani"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Cosa de man\u00ed\\cosa de mani interno.png"
+        ]
+      },
+      "DURONGA": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.10000000149011612,
+          0.11244898289442062,
+          0.09999999403953552
+        ],
+        "vertices": "49401ad09f1fb674299691f3dda179b51317d2922608aaa9d0a01e037126d1af",
+        "uv": "78c0d23f19bef7683722e89aef5beded41b6e75679f65e017549e2c2a74c27d5",
+        "materiales": [
+          "duronga"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\preservativos\\duronga.png"
+        ]
+      },
+      "FERNET_GOD": {
+        "padre": "gondolanueva-col.001",
+        "escala_global": [
+          0.0756685733795166,
+          0.0756685733795166,
+          0.10855837911367416
+        ],
+        "vertices": "bea728f06baee748203c837177f6473e14dbec451b39a3ce079bd90f45cd5342",
+        "uv": "5edc155408f2f19d1a56999d94459eefd6b5422b209f4746def955f095c6a17f",
+        "materiales": [
+          "Material.007"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\fernet-god\\fernetgod textura.png"
+        ]
+      },
+      "MAYONCHIS": {
+        "padre": "heladeranueva-col.001",
+        "escala_global": [
+          0.6154035329818726,
+          0.8421052098274231,
+          0.710631787776947
+        ],
+        "vertices": "aa5417f177835047226eafab49673fe87b2f3cb08dfe139b7d05a4c0c46d2437",
+        "uv": "95f70964c71f7a3dff04f618416b7063cd1ddbadb029924a2e3d9c2bb0ada163",
+        "materiales": [
+          "terminator",
+          "mayonchis"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Mayonchis\\mayonchis@300x.png",
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Terminator\\Terminator completo.png"
+        ]
+      },
+      "OAAAA": {
+        "padre": "heladeranueva-col",
+        "escala_global": [
+          0.7692545056343079,
+          0.46315789222717285,
+          0.8960139751434326
+        ],
+        "vertices": "aa5417f177835047226eafab49673fe87b2f3cb08dfe139b7d05a4c0c46d2437",
+        "uv": "badc41407f4fe03bef0e590fd7b05917fbc7a1d4ec085be7a2eff82c4d899ba7",
+        "materiales": [
+          "cindolor",
+          "oaa textura"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Oaaaa\\oaaaa completo.png",
+          "//..\\source\\products-cam\\cindolor\\cindolor completo.png"
+        ]
+      },
+      "TERMINATOR": {
+        "padre": "gondolanueva-col.001",
+        "escala_global": [
+          0.6923289895057678,
+          0.5473683476448059,
+          0.8033228516578674
+        ],
+        "vertices": "aa5417f177835047226eafab49673fe87b2f3cb08dfe139b7d05a4c0c46d2437",
+        "uv": "4efc2410af951bf8d6ad3804d020553f42f08cca27516afc5c549a7d41e052b0",
+        "materiales": [
+          "terminator"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Terminator\\Terminator completo.png"
+        ]
+      },
+      "MARRANOS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.14032304286956787,
+          0.14032304286956787,
+          0.2273903340101242
+        ],
+        "vertices": "17c2cc0c5980b2547fad0763f025adbb7b3224cb9f4b6c4ad2db56dfcef81be6",
+        "uv": "3ff5417eaf06eb4f2ae9f61bada77a1688c4fa84616bf81c63bc427675d88b5a",
+        "materiales": [
+          "Material.018"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\atun marranos.png"
+        ]
+      },
+      "FEEL_RICKY_FORT": {
+        "padre": "gondolanueva-col.001",
+        "escala_global": [
+          0.261721670627594,
+          0.20646938681602478,
+          0.0755026564002037
+        ],
+        "vertices": "732fc9a1c1bb971747063761bb46323b70bcd618ce36f3767e07ffb92754c7a3",
+        "uv": "aea6c96e4534e7f8a0736dae10acacbc9aff4d52a2486cabe13eb7285a2921d0",
+        "materiales": [
+          "ricky"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\cereal textura.png"
+        ]
+      },
+      "POETICO": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.6136363744735718,
+          0.6136363744735718,
+          0.6136363744735718
+        ],
+        "vertices": "7469c8aff99bfc786ea9bc38443fb11bef3d8b2519c4f9c4e74387013aaff646",
+        "uv": "cf0c70f52cf189605514afec5fb64bb18768a840da59d8df6f238758969b9ebf",
+        "materiales": [
+          "pl\u00e1stico liso bid\u00f3n jabon01-col.001",
+          "Po\u00e9tico azul"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\textura po\u00e9tico.png"
+        ]
+      }
+    }
+  },
+  "despues": {
+    "muebles": {
+      "A": {
+        "matriz": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.27844035625457764
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            2.086575508117676
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.3339073657989502
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "78832df38c2644fe2e8e673360dd126361e3b89406696e3499c6cfb8d7f833b5",
+        "poligonos": "21fe44419f7e07618b5795b180b01b1adeb73bd453066ee31f89e61ca10868e8",
+        "dimensiones": [
+          1.256744384765625,
+          4.550000190734863,
+          1.9027392864227295
+        ]
+      },
+      "B": {
+        "matriz": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            3.7317848205566406
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            2.0451016426086426
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.334740400314331
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "78832df38c2644fe2e8e673360dd126361e3b89406696e3499c6cfb8d7f833b5",
+        "poligonos": "21fe44419f7e07618b5795b180b01b1adeb73bd453066ee31f89e61ca10868e8",
+        "dimensiones": [
+          1.256744384765625,
+          4.550000190734863,
+          1.9027392864227295
+        ]
+      },
+      "N": {
+        "matriz": [
+          [
+            3.1391647326017846e-07,
+            1.0,
+            0.0,
+            2.849858522415161
+          ],
+          [
+            -1.0,
+            3.1391647326017846e-07,
+            0.0,
+            7.837060928344727
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.3025407791137695
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "6d399ba496b6034cc341b89e5674cfb1679775304c9ae93ce0991d2564c2f26f",
+        "poligonos": "d378d724f1f866faa8be2ab21d5512fff59ecc2e51093f41dd2234d0ce7d295f",
+        "dimensiones": [
+          0.5773505568504333,
+          3.0,
+          2.047259569168091
+        ]
+      },
+      "H1": {
+        "matriz": [
+          [
+            3.1391647326017846e-07,
+            1.0,
+            0.0,
+            -1.612550973892212
+          ],
+          [
+            -1.0,
+            3.1391647326017846e-07,
+            0.0,
+            7.081191539764404
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.1710206270217896
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "bc1d26148eff5dc2cda88e99b4e25d0c0969ca2e17120e0d1e639347235cb5c9",
+        "poligonos": "2f917c6e53cd0861503eb6fc8a3e12a2bbdb13a494f38db64f141224fd916142",
+        "dimensiones": [
+          0.8000000715255737,
+          1.049999713897705,
+          2.49043607711792
+        ]
+      },
+      "H2": {
+        "matriz": [
+          [
+            3.1391647326017846e-07,
+            1.0,
+            0.0,
+            -0.523627519607544
+          ],
+          [
+            -1.0,
+            3.1391647326017846e-07,
+            0.0,
+            7.081191539764404
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.1710206270217896
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "e34b2f6747e67b5acbe733f671073f45d105a8eaaf5c3605fb1a536a43b8c8e6",
+        "poligonos": "2f917c6e53cd0861503eb6fc8a3e12a2bbdb13a494f38db64f141224fd916142",
+        "dimensiones": [
+          0.8000000715255737,
+          1.049999713897705,
+          2.49043607711792
+        ]
+      },
+      "fuera_de_servicio": {
+        "matriz": [
+          [
+            3.1391647326017846e-07,
+            1.0,
+            0.0,
+            0.5652960538864136
+          ],
+          [
+            -1.0,
+            3.1391647326017846e-07,
+            0.0,
+            7.081191539764404
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.1710206270217896
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "abcde77f3e624f7f16b33356b2f4982c7c0c93930716776e9b4b45a44e29d030",
+        "poligonos": "2f917c6e53cd0861503eb6fc8a3e12a2bbdb13a494f38db64f141224fd916142",
+        "dimensiones": [
+          0.8000001311302185,
+          1.0499998331069946,
+          2.49043607711792
+        ]
+      },
+      "puerta_heladera_0": {
+        "matriz": [
+          [
+            1.0,
+            -1.1920928955078125e-07,
+            0.0,
+            -1.4681329727172852
+          ],
+          [
+            1.1920928955078125e-07,
+            1.0,
+            0.0,
+            6.921172142028809
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.5836149454116821
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "23516a0aa0ff1104a81591e1fd3ad1b70639068f0e1d53fe9a0ecda99249f2ac",
+        "poligonos": "0a992b18082e1749df4bd6039090bd0ae49b67b493ac1ff299e2a84f1f44ed86",
+        "dimensiones": [
+          0.885883629322052,
+          0.11800004541873932,
+          1.8410900831222534
+        ]
+      },
+      "puerta_heladera_1": {
+        "matriz": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.37920942902565
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            6.921172142028809
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.5836149454116821
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "29301e9bce81b442543a333f6ce60c67518a2a995e3871239bfd42d600bff4ef",
+        "poligonos": "8c215d20285e6bef8c7c6ee674412e97193b2684fed7e3465530342d2f206280",
+        "dimensiones": [
+          0.8858835101127625,
+          0.11800003051757812,
+          1.8410900831222534
+        ]
+      },
+      "puerta_heladera_2": {
+        "matriz": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.7097140550613403
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            6.92117166519165
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.5836149454116821
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "vertices": "0eefbe3051e442f235783f8a2ffab34155f9d424e9de7d87eea4031f45cc2bf5",
+        "poligonos": "e833090c4c745be80aa7715fd5fc0bb3062389ce3e1bb412bcf088af0dce626e",
+        "dimensiones": [
+          0.885883629322052,
+          0.11800003051757812,
+          1.8410900831222534
+        ]
+      }
+    },
+    "productos": {
+      "ACTRONCITO": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.1264408379793167,
+          0.21367216110229492,
+          0.14540694653987885
+        ],
+        "vertices": "3cef7a8660e47db499aa669baccef59a562cfd0b6e4be89aa829008f0c31dbdf",
+        "uv": "e6ec3f58ca5919726d0ac79bf342f042aaeee4cae5867d68bdf8d6489b7c1c4b",
+        "materiales": [
+          "Material.017"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Actroncito\\Actroncito completo.png"
+        ]
+      },
+      "DUREXTRA": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.10000000149011612,
+          0.11244899034500122,
+          0.10000000149011612
+        ],
+        "vertices": "49401ad09f1fb674299691f3dda179b51317d2922608aaa9d0a01e037126d1af",
+        "uv": "4275d89cc63c76af8c40bd1eb48a4a5c1dcb02b9a21e452e77872d177b6e5970",
+        "materiales": [
+          "Material.023"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Durextra\\Durextra completo_1.png"
+        ]
+      },
+      "BURBALOO": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.10999997705221176,
+          0.10999999940395355,
+          0.07999999821186066
+        ],
+        "vertices": "86745be8dff5b5ed42185fde01ec707062229e53e9c851c5c015e0417da3e0f6",
+        "uv": "2388d62973c838f8d94c4e285aba222a536a1eed1d41261ec5e650b53ebe1a1a",
+        "materiales": [
+          "Material.022"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Burbaloo\\Burbaloo completo_1.png"
+        ]
+      },
+      "ZUCARACHAS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.03799999877810478,
+          0.1340000033378601,
+          0.20250000059604645
+        ],
+        "vertices": "d9b86992ccd410cb4dae8fa9c36f435a06c7a7c9c4f0d7d92e99d1acbf56516f",
+        "uv": "9256e253547165777be67d222e9af83145fc893d9d9896a2ab14ab31e4196e2e",
+        "materiales": [
+          "zucarita"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Zucarachas\\Zucarachas completo_1.png"
+        ]
+      },
+      "LAYSNTT": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.2049657255411148,
+          0.09517618268728256,
+          0.19500000774860382
+        ],
+        "vertices": "697ba96cb0d6adc9aad314c6c39eec56f8d2ecb0cc5332dcb62d9182545da265",
+        "uv": "b1a2335b6f5f22a7df47d273d90e3fb8bc9e9c88a60c190d1f215f0c30a55b80",
+        "materiales": [
+          "Material.024"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Lay\u00b4snt\u00b4t\\Lay\u00b4snt\u00b4t completo_1.png"
+        ]
+      },
+      "MALBARDO": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.9463148713111877,
+          0.8261417150497437,
+          1.1946961879730225
+        ],
+        "vertices": "9930a10af464b53987aa9b3e9df0c69e3a9c000946b9dc5731f4b5d1e21103e4",
+        "uv": "254f2858e5f1886337ffabbe797ab5a3812d290954b3cad45fcfa841154e0387",
+        "materiales": [
+          "Material.010"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Puchos\\puchos.png"
+        ]
+      },
+      "PRONGLES": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.5468372106552124,
+          0.5519353747367859,
+          0.7769021987915039
+        ],
+        "vertices": "0cd91d7fed44fac07ca3f06669bac15fd7f905a96dfcffaadbbdb34d10c23e35",
+        "uv": "f7f9f066fc89466b0f80ad31b693b55741bc74f3cde3d71cc1b4ba2f956943a6",
+        "materiales": [
+          "progres nuevo"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\progres.png"
+        ]
+      },
+      "JORGILLO": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.10649999231100082,
+          0.14999999105930328,
+          0.03499998524785042
+        ],
+        "vertices": "b524394e425615bb36fa7950b165addeac1b9c2cf2c75a8354a1002b0c7c6f57",
+        "uv": "34cf5d5c88318cfe53cb3414cb650d0fe39eef47329eda9cb67ce27f8b2d845e",
+        "materiales": [
+          "Material.028"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\jorgillata.png"
+        ]
+      },
+      "ARVEJAS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          1.2533012628555298,
+          1.2582231760025024,
+          1.2755494117736816
+        ],
+        "vertices": "0fb8297ab4c942b9b2a8a1d3bc0042fd8e193efc177416b9dae10d76b97d55b6",
+        "uv": "8a4ccef0463170d929aa8f9c74cecd3874a10a6ce5cab4597db3310b309b52c1",
+        "materiales": [
+          "Material.001"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Arvejas\\arvecor.png"
+        ]
+      },
+      "CHISITOS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.2049657255411148,
+          0.09517618268728256,
+          0.19500000774860382
+        ],
+        "vertices": "ed2689fb144d3738c1fd4f8940a0213b67ba1b63e734bc30da18603a1830f4f5",
+        "uv": "f4d07985525c56c395d1a2e60d2249f8310c87b23307419fd7f0f09e3d4dd6c8",
+        "materiales": [
+          "Material.005"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\chizitos\\chisito.png"
+        ]
+      },
+      "OREMOS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.15211263298988342,
+          0.13500000536441803,
+          0.06731919199228287
+        ],
+        "vertices": "0c3732416ffdc6669b2e26f004dd41d9e8f698ee886c0ba102610ee2f39632c8",
+        "uv": "8fa850b0fa66b8fc1a69a672c669a239d201ca82738606a3432bfe8443ab3b6e",
+        "materiales": [
+          "oremos"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\galletitas\\oremos.png"
+        ]
+      },
+      "PEPITOS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.15211263298988342,
+          0.13500000536441803,
+          0.06731919199228287
+        ],
+        "vertices": "3f698dcf0cea4061dfbe15a2cc916100cda50ce35fb96a980222ed92545076b8",
+        "uv": "f2cc101decf3aa4337bd3f4408b3e860f43741e9ef0491f960d8f96340552bd8",
+        "materiales": [
+          "pepito"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\galletitas\\pepito.png"
+        ]
+      },
+      "SALADIK": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.04769282788038254,
+          0.12263871729373932,
+          0.14989179372787476
+        ],
+        "vertices": "57316da0c38b85b5724e01320e1e8f3878e68dea5f0b5c1003817f1aff62ede2",
+        "uv": "9a9d49090bac4296ab255e84dde02a28b211ea3e95a60af61b17dd329532f335",
+        "materiales": [
+          "saladix"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\galletitas\\saladick.png"
+        ]
+      },
+      "UAKAS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.03799999877810478,
+          0.1340000033378601,
+          0.20250000059604645
+        ],
+        "vertices": "b524394e425615bb36fa7950b165addeac1b9c2cf2c75a8354a1002b0c7c6f57",
+        "uv": "6998fbd808f03e9b8462ce6cb0fee21eaf093af1e9dd4785740b43bf6f7598c7",
+        "materiales": [
+          "wakas"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Wakas\\wakasfideos.png"
+        ]
+      },
+      "CORACOLA": {
+        "padre": "heladeranueva-col",
+        "escala_global": [
+          1.0653058290481567,
+          1.0694894790649414,
+          1.5337415933609009
+        ],
+        "vertices": "a8c12a4903d63068a30be54cf95c17603c2752d36faf245bef4129f730a95e3b",
+        "uv": "61a6090bc7003cb86ebebc22f1e11d10503ebb43e23a383bead8a5bf3458a1fc",
+        "materiales": [
+          "Material.009"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Cora cola\\cora cola.png"
+        ]
+      },
+      "FROTLUPS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.03799999877810478,
+          0.1340000033378601,
+          0.20250000059604645
+        ],
+        "vertices": "d9b86992ccd410cb4dae8fa9c36f435a06c7a7c9c4f0d7d92e99d1acbf56516f",
+        "uv": "ca6a0197eeadcf4b6786421c756de2c4653556db8c2436ca707d946d699552c0",
+        "materiales": [
+          "Material.012"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\cereales\\frot lups.png"
+        ]
+      },
+      "MAROLINI": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.03799999877810478,
+          0.1340000033378601,
+          0.20250000059604645
+        ],
+        "vertices": "b524394e425615bb36fa7950b165addeac1b9c2cf2c75a8354a1002b0c7c6f57",
+        "uv": "ddff2ac245992ee76711c070e868238b4dd5db290283bb84378101b566c10429",
+        "materiales": [
+          "Marolini",
+          "zucaritia"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\Marolini\\fideos marolini.png"
+        ]
+      },
+      "AMARGADITO": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.8960342407226562,
+          0.8799999952316284,
+          0.7570916414260864
+        ],
+        "vertices": "175bb1769f7299deac8bed42c11fe188b6c79cdcd40e14d815b610b780c197b0",
+        "uv": "b3e64dc32b84afef181f59169c3db61ad985761d211d0dae9b634c7d9579c14e",
+        "materiales": [
+          "amargadito"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\amargadito\\amargadito completo.png"
+        ]
+      },
+      "CINDOLOR": {
+        "padre": "heladeranueva-col.001",
+        "escala_global": [
+          0.7692544460296631,
+          0.6736841797828674,
+          0.8960139751434326
+        ],
+        "vertices": "aa5417f177835047226eafab49673fe87b2f3cb08dfe139b7d05a4c0c46d2437",
+        "uv": "06dec94b804f088f45fe73140278689735db6ab89373ed9978188c5923988136",
+        "materiales": [
+          "cindolor"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\cindolor\\cindolor completo.png"
+        ]
+      },
+      "FLINPUF": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.7068453431129456,
+          0.7039999961853027,
+          0.5583866238594055
+        ],
+        "vertices": "3386bae8734e0134a10754252c9e850478f277d09df5c1a5b1469abdb4e61592",
+        "uv": "74427bced80379e1549c3deff1b6622c5f80677ed036b38a3f204cb8eeb31528",
+        "materiales": [
+          "flimpof"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\flim pof\\flim pof completo.png"
+        ]
+      },
+      "DONSATURADOS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.6545454263687134,
+          0.8727272748947144,
+          0.7879317402839661
+        ],
+        "vertices": "1ae1d8791b91c03db73227b92ac126cbc86a4821966c3379ecbfaebe12edddee",
+        "uv": "19178ab6f247c0943b8d135d11cf290c29a32a0c7c46d444979665e0fb9cb7e5",
+        "materiales": [
+          "donsaturados"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\don saturados\\Don Saturados completo.png"
+        ]
+      },
+      "PETISAS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.6545454263687134,
+          0.8727272748947144,
+          0.7879317402839661
+        ],
+        "vertices": "1ae1d8791b91c03db73227b92ac126cbc86a4821966c3379ecbfaebe12edddee",
+        "uv": "2dc50e3d666361ff621afa0895d2a2ab46eceb2f9a7f392eb604e6f7d78f25c3",
+        "materiales": [
+          "petisas"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\petisas\\petisas completo.png"
+        ]
+      },
+      "MACUMBAS": {
+        "padre": "gondolanueva2-col",
+        "escala_global": [
+          0.6545454263687134,
+          0.8727272748947144,
+          0.7879317402839661
+        ],
+        "vertices": "1ae1d8791b91c03db73227b92ac126cbc86a4821966c3379ecbfaebe12edddee",
+        "uv": "fee8db28793c2f90ced67dbf226daf69fa725ad8fee598b00d7a41a723a0089b",
+        "materiales": [
+          "macumbas"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\macumbas\\macumbas completo.png"
+        ]
+      },
+      "COSA_DE_MANI": {
+        "padre": "gondolanueva-col.001",
+        "escala_global": [
+          0.6100644469261169,
+          0.8959999084472656,
+          0.5255404710769653
+        ],
+        "vertices": "9e2da49eb64847054d66d5a6e33b7793bb99becd52b6bb4b7b3471ee3db2fce9",
+        "uv": "cdb6e202db4224a01959e2457ef24e81a4b0ca54f03763f9a523b20db23425b0",
+        "materiales": [
+          "cosa de mani"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Cosa de man\u00ed\\cosa de mani interno.png"
+        ]
+      },
+      "DURONGA": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.10000000149011612,
+          0.11244898289442062,
+          0.09999999403953552
+        ],
+        "vertices": "49401ad09f1fb674299691f3dda179b51317d2922608aaa9d0a01e037126d1af",
+        "uv": "78c0d23f19bef7683722e89aef5beded41b6e75679f65e017549e2c2a74c27d5",
+        "materiales": [
+          "duronga"
+        ],
+        "imagenes": [
+          "//..\\source\\products-textured\\preservativos\\duronga.png"
+        ]
+      },
+      "FERNET_GOD": {
+        "padre": "gondolanueva-col.001",
+        "escala_global": [
+          0.0756685733795166,
+          0.0756685733795166,
+          0.10855837911367416
+        ],
+        "vertices": "bea728f06baee748203c837177f6473e14dbec451b39a3ce079bd90f45cd5342",
+        "uv": "5edc155408f2f19d1a56999d94459eefd6b5422b209f4746def955f095c6a17f",
+        "materiales": [
+          "Material.007"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\fernet-god\\fernetgod textura.png"
+        ]
+      },
+      "MAYONCHIS": {
+        "padre": "heladeranueva-col.001",
+        "escala_global": [
+          0.6154035329818726,
+          0.8421052098274231,
+          0.710631787776947
+        ],
+        "vertices": "aa5417f177835047226eafab49673fe87b2f3cb08dfe139b7d05a4c0c46d2437",
+        "uv": "95f70964c71f7a3dff04f618416b7063cd1ddbadb029924a2e3d9c2bb0ada163",
+        "materiales": [
+          "terminator",
+          "mayonchis"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Mayonchis\\mayonchis@300x.png",
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Terminator\\Terminator completo.png"
+        ]
+      },
+      "OAAAA": {
+        "padre": "heladeranueva-col",
+        "escala_global": [
+          0.7692545056343079,
+          0.46315789222717285,
+          0.8960139155387878
+        ],
+        "vertices": "aa5417f177835047226eafab49673fe87b2f3cb08dfe139b7d05a4c0c46d2437",
+        "uv": "badc41407f4fe03bef0e590fd7b05917fbc7a1d4ec085be7a2eff82c4d899ba7",
+        "materiales": [
+          "cindolor",
+          "oaa textura"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Oaaaa\\oaaaa completo.png",
+          "//..\\source\\products-cam\\cindolor\\cindolor completo.png"
+        ]
+      },
+      "TERMINATOR": {
+        "padre": "gondolanueva-col.001",
+        "escala_global": [
+          0.6923289895057678,
+          0.5473683476448059,
+          0.8033228516578674
+        ],
+        "vertices": "aa5417f177835047226eafab49673fe87b2f3cb08dfe139b7d05a4c0c46d2437",
+        "uv": "4efc2410af951bf8d6ad3804d020553f42f08cca27516afc5c549a7d41e052b0",
+        "materiales": [
+          "terminator"
+        ],
+        "imagenes": [
+          "//..\\source\\products-cam\\NUEVOS 22-9\\Terminator\\Terminator completo.png"
+        ]
+      },
+      "MARRANOS": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.14032304286956787,
+          0.14032304286956787,
+          0.2273903340101242
+        ],
+        "vertices": "17c2cc0c5980b2547fad0763f025adbb7b3224cb9f4b6c4ad2db56dfcef81be6",
+        "uv": "3ff5417eaf06eb4f2ae9f61bada77a1688c4fa84616bf81c63bc427675d88b5a",
+        "materiales": [
+          "Material.018"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\atun marranos.png"
+        ]
+      },
+      "FEEL_RICKY_FORT": {
+        "padre": "gondolanueva-col.001",
+        "escala_global": [
+          0.261721670627594,
+          0.20646938681602478,
+          0.0755026564002037
+        ],
+        "vertices": "732fc9a1c1bb971747063761bb46323b70bcd618ce36f3767e07ffb92754c7a3",
+        "uv": "aea6c96e4534e7f8a0736dae10acacbc9aff4d52a2486cabe13eb7285a2921d0",
+        "materiales": [
+          "ricky"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\cereal textura.png"
+        ]
+      },
+      "POETICO": {
+        "padre": "gondolanueva-col",
+        "escala_global": [
+          0.6136363744735718,
+          0.6136363744735718,
+          0.6136363744735718
+        ],
+        "vertices": "7469c8aff99bfc786ea9bc38443fb11bef3d8b2519c4f9c4e74387013aaff646",
+        "uv": "cf0c70f52cf189605514afec5fb64bb18768a840da59d8df6f238758969b9ebf",
+        "materiales": [
+          "pl\u00e1stico liso bid\u00f3n jabon01-col.001",
+          "Po\u00e9tico azul"
+        ],
+        "imagenes": [
+          "//..\\source\\textures\\props\\textura po\u00e9tico.png"
+        ]
+      }
+    }
+  },
+  "escalas_conservadas": true,
+  "tolerancia_escala_float": 1e-06,
+  "identicos": true
+}

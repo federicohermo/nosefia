@@ -1,0 +1,10 @@
+{
+  "files": [
+    {
+      "reference": "notion-file-block://3f186efe-cd9d-8003-9a94-f064f579a91d/49cf2282-3ed4-4b3a-a9d6-04f25a4d622e?space_id=f8086efe-cd9d-813a-b317-0003e381e09c&name=image.png",
+      "url": "https://prod-files-secure.s3.us-west-2.amazonaws.com/f8086efe-cd9d-813a-b317-0003e381e09c/49cf2282-3ed4-4b3a-a9d6-04f25a4d622e/image.png [consulta firmada temporal omitida]",
+      "expiry_time": "2026-10-16T04:21:11.354Z"
+    }
+  ],
+  "unresolved": []
+}

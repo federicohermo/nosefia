@@ -1,0 +1,142 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-434-sectores/reports/focal-434-borde03[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 847ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 582ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 4s 480ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must be empty but was
+ '[38;2;30;144;255m[{ "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(55929064128962), "collider_id": 685399610152, "collider": StaticBody3D:<StaticBody3D#685399610152>, "shape": 0 }, { "rid": RID(56642028700155), "collider_id": 689224817152, "collider": Contorno:<StaticBody3D#689224817152>, "shape": 19 }, { "rid": RID(56642028700155), "collider_id": 689224817152, "collider": Contorno:<StaticBody3D#689224817152>, "shape": 18 }][0m'[0m[38;2;173;216;230m	at '_mirar_desde_el_piso' in res://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd:349
+	at '_en_la_cabecera' in res://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd:273[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 457ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_cara_superior_del_riel_visible_tiene_apoyo_fisico[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_cara_superior_del_riel_visible_tiene_apoyo_fisico[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 156ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_collider_del_riel_conserva_el_aire_entre_sus_brazos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_collider_del_riel_conserva_el_aire_entre_sus_brazos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 148ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_queda_estable_y_recogible_sobre_piso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_queda_estable_y_recogible_sobre_piso[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 514ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_queda_estable_y_recogible_sobre_piso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_queda_estable_y_recogible_sobre_piso[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 506ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_queda_estable_y_recogible_sobre_mostrador[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_queda_estable_y_recogible_sobre_mostrador[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 501ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_queda_estable_y_recogible_sobre_mostrador[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_queda_estable_y_recogible_sobre_mostrador[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 509ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_queda_estable_y_recogible_sobre_pallet[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_queda_estable_y_recogible_sobre_pallet[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 516ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_queda_estable_y_recogible_sobre_pallet[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_queda_estable_y_recogible_sobre_pallet[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 506ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_queda_estable_y_recogible_sobre_caja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_grande_queda_estable_y_recogible_sobre_caja[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 509ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_queda_estable_y_recogible_sobre_caja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_chica_queda_estable_y_recogible_sobre_caja[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 499ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.489997, 0.391959, -9.999991); va a ALREDEDOR
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)
+428_CASCADA_FINAL producto=4 inicial=(4.49, 1.01386, -10.0) final=[X: (1.0, -0.000003, -0.000001), Y: (0.000003, 1.0, -0.000004), Z: (0.000001, 0.000004, 1.0), O: (4.489997, 0.410447, -10.20246)] base=0.10673700273037 piso=(4.49, 0.102737, -10.0) entra=true
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 723ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Rescate: `CajaDeActroncito` estaba adentro de `SueloSolido` en (4.489997, 0.288252, -9.999992); va a ALREDEDOR
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)
+428_CASCADA_FINAL producto=0 inicial=(4.49, 0.910152, -10.0) final=[X: (1.0, -0.000004, -0.000002), Y: (0.000004, 1.0, -0.000006), Z: (0.000002, 0.000006, 1.0), O: (4.489997, 0.306739, -10.13333)] base=0.10673706978559 piso=(4.49, 0.102737, -10.0) entra=true
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 714ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_cascada_grande_atraviesa_una_caja_que_ya_esta_despierta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_cascada_grande_atraviesa_una_caja_que_ya_esta_despierta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 159ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_cascada_chica_atraviesa_una_caja_que_ya_esta_despierta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_cascada_chica_atraviesa_una_caja_que_ya_esta_despierta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 162ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 18 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1min 3s 598ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 18 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (18/18)[0m
+[38;2;233;150;122mTotal execution time: 1min 3s 598ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-434-sectores/reports/focal-434-borde03/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-434-sectores/reports/focal-434-borde03/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
+

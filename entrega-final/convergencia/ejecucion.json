@@ -1,0 +1,59 @@
+{
+  "head": "d647a2031f5e6ad3862a286ce042b680eaeb8e18",
+  "exit_verificar": 0,
+  "exit_conteo": 0,
+  "segundos": 952.4152464999352,
+  "limite_s": 2700,
+  "conteo_inmediato": true,
+  "xml_original": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\reports\\report_2\\results.xml",
+  "archivos": {
+    "conteo.log": {
+      "bytes": 65,
+      "sha256": "bff904656b07c9a1f9f25a677cbf3774c4c1f7fc2ab31cbea45e71c3fd16f4fa"
+    },
+    "pins.json": {
+      "bytes": 290,
+      "sha256": "ec80fd611d48f3b6be2830307908c9c5a40ec0129434359893bf20a3525a8375"
+    },
+    "results.xml": {
+      "bytes": 341083,
+      "sha256": "f4f170e1cbfa87abc54833202b717830bcb7ed5f385b9655d63e1f882de1c03f"
+    },
+    "verificar.log": {
+      "bytes": 244,
+      "sha256": "e05c799eb0e11a8d798eb6db117fb1a5071e850ad11eac124256d8600bc9aa5b"
+    },
+    "crudo\\capas.log": {
+      "bytes": 143,
+      "sha256": "c5678113c68c9037f43e14581fa5bc91a66ccaf92e0dfaef195efad8f82f8352"
+    },
+    "crudo\\formato.log": {
+      "bytes": 35,
+      "sha256": "4c42ae57b368aae561a41fd6091ddb59a7eb4daad4b64c2fcb5c9af2d8b4d194"
+    },
+    "crudo\\harness.log": {
+      "bytes": 3411,
+      "sha256": "ff06a7aa81093d17db0fd21f0b23e8d49b24476b7aef6316af3269be853f39ac"
+    },
+    "crudo\\lint.log": {
+      "bytes": 28,
+      "sha256": "098424cb171ea105b5f32277ddcb3b139ff90d7f943970e0e55a7268d9468b1e"
+    },
+    "crudo\\specs.log": {
+      "bytes": 281,
+      "sha256": "c1d8923aa76cfec38aa97b09415099693d69b053535c13f6bb2c3f77adb713dc"
+    },
+    "crudo\\tdd.log": {
+      "bytes": 140,
+      "sha256": "9fbe786e5884fcce0076e7a63f78761d35b3a813211e25519bb0095ca3296fc7"
+    },
+    "crudo\\tests-import.log": {
+      "bytes": 2091,
+      "sha256": "ebfd8de4439b84f2a4c2fe2fc7cbca9f9f0ee53b3670a1770fdfd4ca2524ad68"
+    },
+    "crudo\\tests.log": {
+      "bytes": 1181524,
+      "sha256": "5a0cafc8defc9407c329300017779f4c7dba82956f8552d09f93890eef4649da"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "head": "29fdc763871c5833b9d28b5c6d71d71d3aeac03f",
+  "returncode": 0,
+  "limite_s": 600,
+  "comando": [
+    "node",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-real02.mjs",
+    "D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia",
+    "http://127.0.0.1:8069/export-real/index.html",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-real-final02",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\427\\checkpoint-j2.guardado"
+  ],
+  "servidor_propio_cerrado": true
+}

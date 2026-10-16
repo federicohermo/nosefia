@@ -1,0 +1,231 @@
+{
+  "matches": {
+    "Actroncito": [
+      {
+        "glb_node_index": 182,
+        "glb_name": "Actroncito-col",
+        "mesh_index": 155
+      }
+    ],
+    "Zucarachas": [
+      {
+        "glb_node_index": 193,
+        "glb_name": "Zucarachas-col",
+        "mesh_index": 166
+      }
+    ],
+    "amargadito": [
+      {
+        "glb_node_index": 183,
+        "glb_name": "amargadito-convcol",
+        "mesh_index": 156
+      }
+    ],
+    "atun": [
+      {
+        "glb_node_index": 184,
+        "glb_name": "atun-col",
+        "mesh_index": 157
+      }
+    ],
+    "cereal-2norte2": [
+      {
+        "glb_node_index": 185,
+        "glb_name": "cereal-2norte2-col",
+        "mesh_index": 158
+      }
+    ],
+    "durextra_001": [
+      {
+        "glb_node_index": 186,
+        "glb_name": "durextra-col.001",
+        "mesh_index": 159
+      }
+    ],
+    "duronga_001": [
+      {
+        "glb_node_index": 187,
+        "glb_name": "duronga-col.001",
+        "mesh_index": 160
+      }
+    ],
+    "fideos2": [
+      {
+        "glb_node_index": 188,
+        "glb_name": "fideos2-col",
+        "mesh_index": 161
+      }
+    ],
+    "lataarvejas_002": [
+      {
+        "glb_node_index": 189,
+        "glb_name": "lataarvejas-convcol.002",
+        "mesh_index": 162
+      }
+    ],
+    "malbardocig": [
+      {
+        "glb_node_index": 190,
+        "glb_name": "malbardocig-convcol",
+        "mesh_index": 163
+      }
+    ],
+    "poetico": [
+      {
+        "glb_node_index": 191,
+        "glb_name": "poetico-convcol",
+        "mesh_index": 164
+      }
+    ],
+    "wakas_021": [
+      {
+        "glb_node_index": 192,
+        "glb_name": "wakas-col.021",
+        "mesh_index": 165
+      }
+    ],
+    "alfajorescaja2-2oeste1_001": [
+      {
+        "glb_node_index": 169,
+        "glb_name": "alfajorescaja2-2oeste1-col.001",
+        "mesh_index": 142
+      }
+    ],
+    "burgaloo": [
+      {
+        "glb_node_index": 170,
+        "glb_name": "burgaloo-convcol",
+        "mesh_index": 143
+      }
+    ],
+    "chisitos2_001": [
+      {
+        "glb_node_index": 171,
+        "glb_name": "chisitos2-convcol.001",
+        "mesh_index": 144
+      }
+    ],
+    "donsaturados_001": [
+      {
+        "glb_node_index": 172,
+        "glb_name": "donsaturados-convcol.001",
+        "mesh_index": 145
+      }
+    ],
+    "flimpof": [
+      {
+        "glb_node_index": 173,
+        "glb_name": "flimpof-convcol",
+        "mesh_index": 146
+      }
+    ],
+    "macumbas": [
+      {
+        "glb_node_index": 174,
+        "glb_name": "macumbas-convcol",
+        "mesh_index": 147
+      }
+    ],
+    "oremos": [
+      {
+        "glb_node_index": 175,
+        "glb_name": "oremos-col",
+        "mesh_index": 148
+      }
+    ],
+    "pepitos2_025": [
+      {
+        "glb_node_index": 176,
+        "glb_name": "pepitos2-col.025",
+        "mesh_index": 149
+      }
+    ],
+    "petisas": [
+      {
+        "glb_node_index": 177,
+        "glb_name": "petisas-convcol",
+        "mesh_index": 150
+      }
+    ],
+    "pringles3_001": [
+      {
+        "glb_node_index": 178,
+        "glb_name": "pringles3-convcol.001",
+        "mesh_index": 151
+      }
+    ],
+    "saladix-2oeste2": [
+      {
+        "glb_node_index": 179,
+        "glb_name": "saladix-2oeste2-col",
+        "mesh_index": 152
+      }
+    ],
+    "snackpapas1_002": [
+      {
+        "glb_node_index": 180,
+        "glb_name": "snackpapas1-convcol.002",
+        "mesh_index": 153
+      }
+    ],
+    "Fernetgod": [
+      {
+        "glb_node_index": 197,
+        "glb_name": "Fernetgod-col",
+        "mesh_index": 170
+      }
+    ],
+    "cosademani": [
+      {
+        "glb_node_index": 195,
+        "glb_name": "cosademani-col",
+        "mesh_index": 168
+      }
+    ],
+    "feelrickyfort": [
+      {
+        "glb_node_index": 196,
+        "glb_name": "feelrickyfort-col",
+        "mesh_index": 169
+      }
+    ],
+    "terminator": [
+      {
+        "glb_node_index": 198,
+        "glb_name": "terminator-col",
+        "mesh_index": 171
+      }
+    ],
+    "bebida helada02-este2": [
+      {
+        "glb_node_index": 204,
+        "glb_name": "bebida helada02-este2-convcol",
+        "mesh_index": 177
+      }
+    ],
+    "oaaa": [
+      {
+        "glb_node_index": 205,
+        "glb_name": "oaaa-col",
+        "mesh_index": 178
+      }
+    ],
+    "cindolor_001": [
+      {
+        "glb_node_index": 209,
+        "glb_name": "cindolor-convcol.001",
+        "mesh_index": 182
+      }
+    ],
+    "mayonchis": [
+      {
+        "glb_node_index": 210,
+        "glb_name": "mayonchis-col",
+        "mesh_index": 183
+      }
+    ]
+  },
+  "every_reference_has_one_candidate": true,
+  "reference_count": 32,
+  "note": "Observed GLB/imported-scene naming crosscheck, no runtime RID claim or general duplicate-geometry verdict."
+}

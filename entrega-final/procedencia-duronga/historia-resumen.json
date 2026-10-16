@@ -1,0 +1,110 @@
+[
+  {
+    "editedAt": "2026-10-15T16:38:30Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": false,
+    "mentions_exhibible": true,
+    "body_sha256": "99ef5dc46cec411ecb91c986321c955383e6090b4015e9f0f9efc6ba1346bcc8"
+  },
+  {
+    "editedAt": "2026-10-15T16:38:31Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": false,
+    "mentions_exhibible": true,
+    "body_sha256": "94ea4087e9cbf4599e7bdb6d761ae582059c94dbc65177258a19941b4a287d2d"
+  },
+  {
+    "editedAt": "2026-10-15T18:33:25Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": false,
+    "mentions_exhibible": true,
+    "body_sha256": "abdf2157939b73989d53a6085214d257177dc4f60e55b86d887f45b98b8ef6f7"
+  },
+  {
+    "editedAt": "2026-10-15T18:41:42Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": false,
+    "mentions_exhibible": true,
+    "body_sha256": "5eecb9feb9787c923147d23095693e5451e834efc16b42bcfaddefa3810ed95d"
+  },
+  {
+    "editedAt": "2026-10-15T18:52:53Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": false,
+    "mentions_exhibible": true,
+    "body_sha256": "fc5958d989325353adfd99a0c46071ac8fbcc04aef71affe392874d65ff588c1"
+  },
+  {
+    "editedAt": "2026-10-15T21:01:45Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": false,
+    "mentions_exhibible": true,
+    "body_sha256": "9cb8fe30277171943f009b4fc2884d5375da87f02889edb2dc91e7190060978c"
+  },
+  {
+    "editedAt": "2026-10-16T00:10:30Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": false,
+    "mentions_exhibible": true,
+    "body_sha256": "dfd17bed6a1bdbf72e1893a1af0b796ae38724e224eec8f4207b8f418f9ada7f"
+  },
+  {
+    "editedAt": "2026-10-16T01:26:13Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": false,
+    "mentions_exhibible": true,
+    "body_sha256": "5d57d9561d1c7b34f944f9bddcce1621b9095781378e76c6e5938be2648c46f7"
+  },
+  {
+    "editedAt": "2026-10-16T02:05:02Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": true,
+    "mentions_exhibible": true,
+    "body_sha256": "0e4d212a745489429749e909f8b74712fda2551a981d0101763d146cb0c3e893"
+  },
+  {
+    "editedAt": "2026-10-16T03:04:48Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": true,
+    "mentions_exhibible": true,
+    "body_sha256": "656a1eac8d26effd2fffd4104baa6645d99f0acb30adb109f62ad306619e7e74"
+  },
+  {
+    "editedAt": "2026-10-16T04:14:29Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": true,
+    "mentions_exhibible": true,
+    "body_sha256": "384e9b8ecac701d79a58298cf8a547b42834fe2acdee2e39aa6d6dd5815c9e1c"
+  },
+  {
+    "editedAt": "2026-10-16T04:20:21Z",
+    "editor": {
+      "login": "federicohermo"
+    },
+    "mentions_Tiago": true,
+    "mentions_exhibible": true,
+    "body_sha256": "c4407a919a355b13457934f1d7c2645b5327eb750c5597869b1be86f0746d055"
+  }
+]

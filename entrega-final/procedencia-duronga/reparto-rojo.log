@@ -1,0 +1,72 @@
+......FF....F.....F..F.....
+======================================================================
+FAIL: test_cada_producto_tiene_una_sola_tanda_principal (test_reparto.ElReparto.test_cada_producto_tiene_una_sola_tanda_principal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\.claude\scripts\tests\test_reparto.py", line 153, in test_cada_producto_tiene_una_sola_tanda_principal
+    self.assertEqual(principales[p.clave], 1, p.nombre)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : Duronga
+
+======================================================================
+FAIL: test_duronga_comparte_no_comestibles_sin_inventar_muebles_ni_niveles (test_reparto.ElReparto.test_duronga_comparte_no_comestibles_sin_inventar_muebles_ni_niveles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\.claude\scripts\tests\test_reparto.py", line 106, in test_duronga_comparte_no_comestibles_sin_inventar_muebles_ni_niveles
+    self.assertEqual([t.producto for t in ESTANTES["N.sur.1"]], ["POETICO", "DURONGA"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['POETICO'] != ['POETICO', 'DURONGA']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'DURONGA'
+
+- ['POETICO']
++ ['POETICO', 'DURONGA']
+
+======================================================================
+FAIL: test_las_referencias_conservan_el_sector_de_su_principal (test_reparto.ElReparto.test_las_referencias_conservan_el_sector_de_su_principal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\.claude\scripts\tests\test_reparto.py", line 184, in test_las_referencias_conservan_el_sector_de_su_principal
+    self.assertEqual(vistos, {p.clave for p in PRODUCTOS})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the second set but not the first:
+'DURONGA'
+
+======================================================================
+FAIL: test_los_sectores_siguen_el_esquema_y_no_reparten_por_marca (test_reparto.ElReparto.test_los_sectores_siguen_el_esquema_y_no_reparten_por_marca)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\.claude\scripts\tests\test_reparto.py", line 101, in test_los_sectores_siguen_el_esquema_y_no_reparten_por_marca
+    self.assertEqual(tuple(t.producto for t in ESTANTES[estante]), productos, estante)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('POETICO',) != ('POETICO', 'DURONGA')
+
+Second tuple contains 1 additional elements.
+First extra element 1:
+'DURONGA'
+
+- ('POETICO',)
++ ('POETICO', 'DURONGA') : N.sur.1
+
+======================================================================
+FAIL: test_solo_una_declaracion_explicita_admite_cero_tandas (test_reparto.ElReparto.test_solo_una_declaracion_explicita_admite_cero_tandas)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\.claude\scripts\tests\test_reparto.py", line 187, in test_solo_una_declaracion_explicita_admite_cero_tandas
+    self.assertEqual(SOLO_DEPOSITO, ())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('DURONGA',) != ()
+
+First tuple contains 1 additional elements.
+First extra element 0:
+'DURONGA'
+
+- ('DURONGA',)
++ ()
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.004s
+
+FAILED (failures=5)

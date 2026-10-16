@@ -1,0 +1,10 @@
+{
+  "head": "d647a2031f5e6ad3862a286ce042b680eaeb8e18",
+  "godot": "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+  "suites": [
+    "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd"
+  ],
+  "inputs": {
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-focal-borde04\\ejecutar.py": "15f5aab881ebaf597505c3cd2140112bd219c9071723cf600f7393e91fb658c1"
+  }
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-16" name="report_1" tests="18" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="apoyos_de_bordes_de_cajas_test" package="test/escenas/objetos" timestamp="2026-10-16T13:37:48" hostname="localhost" tests="18" failures="0" errors="0" skipped="0" flaky="0" time="63.828">
+		<testcase name="test_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel" classname="apoyos_de_bordes_de_cajas_test" time="2.913">
+		</testcase>
+		<testcase name="test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel" classname="apoyos_de_bordes_de_cajas_test" time="1.581">
+		</testcase>
+		<testcase name="test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera" classname="apoyos_de_bordes_de_cajas_test" time="4.482">
+		</testcase>
+		<testcase name="test_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera" classname="apoyos_de_bordes_de_cajas_test" time="4.461">
+		</testcase>
+		<testcase name="test_cada_cara_superior_del_riel_visible_tiene_apoyo_fisico" classname="apoyos_de_bordes_de_cajas_test" time="1.173">
+		</testcase>
+		<testcase name="test_el_collider_del_riel_conserva_el_aire_entre_sus_brazos" classname="apoyos_de_bordes_de_cajas_test" time="1.194">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_piso" classname="apoyos_de_bordes_de_cajas_test" time="4.515">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_piso" classname="apoyos_de_bordes_de_cajas_test" time="4.542">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_mostrador" classname="apoyos_de_bordes_de_cajas_test" time="4.505">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador" classname="apoyos_de_bordes_de_cajas_test" time="4.518">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_pallet" classname="apoyos_de_bordes_de_cajas_test" time="4.504">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_pallet" classname="apoyos_de_bordes_de_cajas_test" time="4.507">
+		</testcase>
+		<testcase name="test_la_caja_grande_queda_estable_y_recogible_sobre_caja" classname="apoyos_de_bordes_de_cajas_test" time="4.511">
+		</testcase>
+		<testcase name="test_la_caja_chica_queda_estable_y_recogible_sobre_caja" classname="apoyos_de_bordes_de_cajas_test" time="4.508">
+		</testcase>
+		<testcase name="test_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra" classname="apoyos_de_bordes_de_cajas_test" time="4.726">
+		</testcase>
+		<testcase name="test_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra" classname="apoyos_de_bordes_de_cajas_test" time="4.732">
+		</testcase>
+		<testcase name="test_la_cascada_grande_atraviesa_una_caja_que_ya_esta_despierta" classname="apoyos_de_bordes_de_cajas_test" time="1.183">
+		</testcase>
+		<testcase name="test_la_cascada_chica_atraviesa_una_caja_que_ya_esta_despierta" classname="apoyos_de_bordes_de_cajas_test" time="1.160">
+		</testcase>
+	</testsuite>
+</testsuites>

@@ -1,0 +1,34 @@
+--- a/.claude/scripts/blender/acomodar.py
++++ b/.claude/scripts/blender/acomodar.py
+@@ -314,7 +314,7 @@
+ 
+ def _puntos(unidad):
+     """Los vértices de la malla con la escala del objeto: el espacio en el que gira."""
+-    escala = unidad.matrix_world.to_scale()
++    escala = unidad.scale.copy()
+     return [
+         Vector((c.co.x * escala.x, c.co.y * escala.y, c.co.z * escala.z))
+         for c in unidad.data.vertices
+@@ -359,7 +359,7 @@
+     if inclinacion_de(estante) != 0.0:
+         bajo = min((ubicacion + giro @ pt - estante.origen).dot(estante.normal) for pt in puntos)
+         ubicacion = ubicacion - estante.normal * bajo
+-    escala = unidad.matrix_world.to_scale()
++    escala = unidad.scale.copy()
+     return Matrix.Translation(ubicacion) @ giro.to_4x4() @ Matrix.Diagonal(escala.to_4d())
+ 
+ 
+@@ -389,11 +389,13 @@
+         bpy.data.collections[COLECCION_DE_GUIA].objects.link(objeto)
+     else:
+         objeto = unidad
++    escala = unidad.scale.copy()
+     # La fuente conserva su NodePath importado: estructura_del_almacen la oculta allí.
+     # Su matriz global determina el sector nuevo, independientemente de ese padre histórico.
+     if copia:
+         objeto.parent = mueble
+     objeto.matrix_world = matriz
++    objeto.scale = escala
+     for clave, valor in datos.items():
+         objeto[clave] = valor
+ 

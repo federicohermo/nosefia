@@ -1,0 +1,1 @@
+tdd: 180 scripts y 281 archivos de test. Todo lo de src/dominio/, src/sistemas/ tiene test, y ningún test está apagado ni sin aserción.

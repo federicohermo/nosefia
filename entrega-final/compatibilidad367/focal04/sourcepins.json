@@ -1,0 +1,18 @@
+{
+  "head": "6eff3f59cc08a175df0a64d21a6667a789c56ad7",
+  "godot": "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+  "suites": [
+    "test/dominio/jornada/pedidos_compartidos_test.gd",
+    "test/dominio/jornada/sorteo_de_apertura_test.gd",
+    "test/escenas/apertura_sorteada_test.gd",
+    "test/escenas/compatibilidad_guia_sin_principal_test.gd",
+    "test/escenas/gondolas_por_sectores_test.gd",
+    "test/escenas/puestos/disposicion_de_la_gondola_test.gd",
+    "test/escenas/un_lugar_por_producto_test.gd",
+    "test/escenas/casilleros_a_la_vista_test.gd",
+    "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd"
+  ],
+  "inputs": {
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\compat434367-focal-final04\\ejecutar.py": "de307faed9ff567bd13ea070b31d8a7b8932bf16cddf994ced8058bae2ec996f"
+  }
+}

@@ -1,0 +1,10 @@
+Blender (BLENDER_BIN): C:\Program Files\Blender Foundation\Blender 5.2\blender.exe
+  modificadores `Array` apagados: 0
+  texturas achicadas: 69
+  exportado: D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\assets\models\SEPT_JUEGOS_PROTOTIPO.glb
+  imágenes recomprimidas: 52,601,248 -> 46,416,484 bytes
+  huella: D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-434-sectores\assets\models\SEPT_JUEGOS_PROTOTIPO.glb.fuente
+caché borrada: 2 archivos
+reimportado
+
+Listo. Ahora: python .claude/scripts/verificar.py

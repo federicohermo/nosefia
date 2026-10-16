@@ -1,0 +1,74 @@
+00:02.093  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-idempotencia\sonda-lectura\fuente-original.blend"
+00:03.218  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-idempotencia\sonda-lectura\fuente-original.blend"
+00:13.093  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-idempotencia\sonda-lectura\fuente-primera_candidata.blend"
+00:22.640  blend            | Read blend: "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-idempotencia\sonda-lectura\fuente-segunda.blend"
+{
+  "original": {
+    "actual": {
+      "textos6_inestables": [
+        "ARVEJAS",
+        "CORACOLA"
+      ],
+      "rna_inestables": [
+        "ARVEJAS",
+        "CORACOLA",
+        "AMARGADITO"
+      ]
+    },
+    "world_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    },
+    "componentes_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    }
+  },
+  "primera_candidata": {
+    "actual": {
+      "textos6_inestables": [
+        "ARVEJAS",
+        "CORACOLA"
+      ],
+      "rna_inestables": [
+        "ARVEJAS",
+        "CORACOLA",
+        "AMARGADITO"
+      ]
+    },
+    "world_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    },
+    "componentes_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    }
+  },
+  "segunda": {
+    "actual": {
+      "textos6_inestables": [
+        "ARVEJAS",
+        "CORACOLA"
+      ],
+      "rna_inestables": [
+        "ARVEJAS",
+        "CORACOLA"
+      ]
+    },
+    "world_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    },
+    "componentes_y_escala_local": {
+      "textos6_inestables": [],
+      "rna_inestables": []
+    }
+  }
+}
+434_SONDA_RNA_READONLY_COMPLETA
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit
+
+434_TRES_FUENTES_Y_CODIGO_BYTEIDENTICOS

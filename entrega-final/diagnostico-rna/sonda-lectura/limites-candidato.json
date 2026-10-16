@@ -1,0 +1,35 @@
+{
+  "original": {
+    "escala_heredada_unitaria_en_32": true,
+    "max_abs_matriz_objetivo_vs_RNA": {
+      "matrix_world_restaurar": 4.76837158203125e-07,
+      "componentes": 4.76837158203125e-07
+    },
+    "max_traslacion_objetivo_vs_RNA_m": {
+      "matrix_world_restaurar": 4.76837158203125e-07,
+      "componentes": 4.76837158203125e-07
+    }
+  },
+  "primera_candidata": {
+    "escala_heredada_unitaria_en_32": true,
+    "max_abs_matriz_objetivo_vs_RNA": {
+      "matrix_world_restaurar": 4.76837158203125e-07,
+      "componentes": 4.76837158203125e-07
+    },
+    "max_traslacion_objetivo_vs_RNA_m": {
+      "matrix_world_restaurar": 4.76837158203125e-07,
+      "componentes": 4.76837158203125e-07
+    }
+  },
+  "segunda": {
+    "escala_heredada_unitaria_en_32": true,
+    "max_abs_matriz_objetivo_vs_RNA": {
+      "matrix_world_restaurar": 4.76837158203125e-07,
+      "componentes": 4.76837158203125e-07
+    },
+    "max_traslacion_objetivo_vs_RNA_m": {
+      "matrix_world_restaurar": 4.76837158203125e-07,
+      "componentes": 4.76837158203125e-07
+    }
+  }
+}

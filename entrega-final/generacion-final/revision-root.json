@@ -1,0 +1,14 @@
+{
+  "fuente_codigo": "8f0927394645882937e5b59cdec16da8f69af629",
+  "capturas_completas": 2,
+  "archivos_por_captura": 40,
+  "blobs_locales_y_hashes_verificados": 80,
+  "textos_y_res_bytes_identicos": 36,
+  "glb_bytes_identicos": false,
+  "clasificacion": "Sólo UV del exportador, variación ya documentada en la base0989; no nueva tolerancia ni redondeo.",
+  "nodos_transformaciones_identicos": 255,
+  "mallas_indices_position_normal_identicos": 222,
+  "materiales_e_imagenes_identicos": true,
+  "limite": "Se conserva exit1 del pipeline. No se afirma igualdad de todos los binarios: blend, huella, GLB y unwrap se preservan por separado. Los cuarenta outputs de ambas pasadas sí existen.",
+  "siguiente": "Pruebas funcionales y recorrido real; esta auditoría no prueba alcance ni interacción."
+}

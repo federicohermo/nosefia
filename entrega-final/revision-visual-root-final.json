@@ -1,0 +1,308 @@
+{
+  "head_final": "d647a2031f5e6ad3862a286ce042b680eaeb8e18",
+  "head_runtime": "29fdc763871c5833b9d28b5c6d71d71d3aeac03f",
+  "revision_humana_root": "Abiertas las22PNG nativas finales y las22PNG web del mapa. Once sectores completos, etiquetas/materiales legibles, cuatro niveles existentes; Cindolor en H2, Oaaaa/Terminator fuera; Duronga exhibida y filas actuales conservadas.",
+  "nativo": {
+    "resoluciones": [
+      [
+        1280,
+        720
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "png": {
+      "nativo-1280x720\\nativo-01-almacen.png": "333569bb7ee36c39d94f39bbf6bb5b3ef19d27d954d8cd5634aee610399c7779",
+      "nativo-1280x720\\nativo-02-cereales-dulces.png": "803c40b265bf177dafb58d28c0a5118983c54821eafffa17b25e1a9602608bb9",
+      "nativo-1280x720\\nativo-03-malbardo-amargadito.png": "a85fd3427c30570dc25cc075a5c3ee1d8a3c0684ea8d39ef463bedccdfb882a6",
+      "nativo-1280x720\\nativo-04-bebidas-sin-frio.png": "f9b9687c9daebca9145397010220465c00d296f0e4e2b6ee3cd6c17b0fc7d531",
+      "nativo-1280x720\\nativo-05-dulces.png": "d3d1da681532884be2e5e79510f0a852f1c2d0fbb863cb8efd8148d63d75caa4",
+      "nativo-1280x720\\nativo-06-salados.png": "d5f79d6dc6db300c761d4aec464da37b2a1b036ac335579be5544844687e30c2",
+      "nativo-1280x720\\nativo-07-jorgillo-saladik.png": "60f3142004b66b67701a56db61b83de8d242a744bbc5d31db45baf5c08cf939c",
+      "nativo-1280x720\\nativo-08-golosinas.png": "80bcb75b1a16e8a653e15a32691892fb042007c68b39071466ad26eaf379aa1e",
+      "nativo-1280x720\\nativo-09-no-comestibles.png": "807d4b4e39193e6bf7aaebe02e90db9cfe943d568b3e8cf44e5ca1e6c15cd898",
+      "nativo-1280x720\\nativo-10-heladera-1.png": "2d9eb0fa9425b79f96a1b1b5b68b773cd1e856f22c426e9fe791a1dfcc3e7245",
+      "nativo-1280x720\\nativo-11-heladera-2.png": "7e47e0c35ee7d6d1ab91fd2af529d7424edd92ada5225f787e479aca69360718",
+      "nativo-1920x1080\\nativo-01-almacen.png": "41d9dcbc360ae88a57931c7317bbbd6e2d495a675efd1bd62a84499a46ec3cda",
+      "nativo-1920x1080\\nativo-02-cereales-dulces.png": "44f02dbcdeb8772133051a2dad60a1f63bdec5deeca7586cb21001c1677ae4bf",
+      "nativo-1920x1080\\nativo-03-malbardo-amargadito.png": "5d6af9f29e2c1da10aed1f5c4541c545f28d3f814230d1a08324b259e7031e29",
+      "nativo-1920x1080\\nativo-04-bebidas-sin-frio.png": "1eefc400942a44fa86665024e9220e1eea3b51f83286df5d210756c0c8bfdedc",
+      "nativo-1920x1080\\nativo-05-dulces.png": "6afbcc0c337dccb0b1d68b66e1cbac456e035afac686adda00715d816226cd74",
+      "nativo-1920x1080\\nativo-06-salados.png": "d22551d18692e31d435272f4a45a3688c892471d6a7a7b5d0156993737cf6b89",
+      "nativo-1920x1080\\nativo-07-jorgillo-saladik.png": "3a40300f151f73a5ea1e61631ccd465674a053d05d1b5a5f121c5dc1c4c01a73",
+      "nativo-1920x1080\\nativo-08-golosinas.png": "90504d9859db44568d1e6b747d08d0a880f8b033b0adb757c7013d69a6b18da2",
+      "nativo-1920x1080\\nativo-09-no-comestibles.png": "27de39d5b56882492353a415a37124264fa1ddeddc63cf8730cf13816bde4915",
+      "nativo-1920x1080\\nativo-10-heladera-1.png": "46610f4ae04a0ce528ae2814e0dd155075fa262a066de865514061e9847c85fc",
+      "nativo-1920x1080\\nativo-11-heladera-2.png": "5354f50be29204e503daad8ca8a14ec74b137b173f5f411a46a898ee31632047"
+    }
+  },
+  "web_mapa": {
+    "contexto": "camara-diagnostica",
+    "errores": [],
+    "avisos": [
+      {
+        "paquete": "camara-diagnostica",
+        "type": "warning",
+        "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792154775428
+      },
+      {
+        "paquete": "camara-diagnostica",
+        "type": "warning",
+        "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792154775430
+      },
+      {
+        "paquete": "camara-diagnostica",
+        "type": "warning",
+        "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792154775443
+      },
+      {
+        "paquete": "camara-diagnostica",
+        "type": "warning",
+        "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792154775457
+      },
+      {
+        "paquete": "camara-diagnostica",
+        "type": "warning",
+        "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792154775468
+      },
+      {
+        "paquete": "camara-diagnostica",
+        "type": "warning",
+        "text": "[.WebGL-0x464403722200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792154775482
+      }
+    ],
+    "png": {
+      "mapa-1280-01-almacen.png": "02b54255ae8007d672f916377de3c2c95d5d996783c89eb42b5762684ee855e9",
+      "mapa-1280-02-cereales-dulces.png": "94d969be9f4e18f4c8628f0812fd45b4367260deead6bb6773ae6bffd42bf777",
+      "mapa-1280-03-malbardo-amargadito.png": "87985d300a535351eac046828bc0c7b4e9940ea9d75d283a9f4696b6eff59417",
+      "mapa-1280-04-bebidas-sin-frio.png": "84db63f692eaa483aa329fe5fc7c158b1806ea508c4d55b5031a73754cf661eb",
+      "mapa-1280-05-dulces.png": "3175de39bceb4a355927aa18cc6aa6ea7ecf57ac7c9d0e7faa8c8698934e87a1",
+      "mapa-1280-06-salados.png": "f25b93ce004c62395481f46626e24e413c8c196c28483e145b0fbfe3a46c576e",
+      "mapa-1280-07-jorgillo-saladik.png": "6d115becdda9182282845cfbd82a396a85213d9ae5335cd9cc962b26fddc56b0",
+      "mapa-1280-08-golosinas.png": "95d9bd0fcec609e50b1c2dd85c7ea02cf2f37e12419966776fd881364c4b560d",
+      "mapa-1280-09-no-comestibles.png": "d6f7b1f3c966f372aac81c105a8bcae234532e5ed1d663ceef73ec402fc5b5e1",
+      "mapa-1280-10-heladera-1.png": "bb355fbad41f70b223b37c05fe4843cccb944e3b5d6f9f7c6bb9e0b9e6ba3c8f",
+      "mapa-1280-11-heladera-2.png": "209730112227e7e85b7c5585c702bd62135140de529ef8ed9fffb09fda5a869a",
+      "mapa-1920-01-almacen.png": "da014b146f6d36f2a5aac2e6986bd705942ca6399e2b65b89be39b097b64bb6d",
+      "mapa-1920-02-cereales-dulces.png": "8cff83c7e6b7d0d8a15438ffc5bcb85d5a1a3dbffe262615ffb88c20934b1f7f",
+      "mapa-1920-03-malbardo-amargadito.png": "58a5b82d9a6453c8614d53565f32e2d20d092a3a31de709ff9416f6b722a19f6",
+      "mapa-1920-04-bebidas-sin-frio.png": "90c5e826d7d9e29dca457c1ba48ac8a6d002cfa8c2f70110b4d9326e9c1db1cb",
+      "mapa-1920-05-dulces.png": "fd658d618a46831aa6af475371b466c45d9285e198917cd0e250cb0d7da38b71",
+      "mapa-1920-06-salados.png": "56bbe4a15596163bd214dc9f1531f38ea0bd619560fc86d8c3e3b1992d20bc3f",
+      "mapa-1920-07-jorgillo-saladik.png": "5ab976e06f4464f08f1742a8986e7f8916b0339582461f725e6b5efb5c7b6e1b",
+      "mapa-1920-08-golosinas.png": "da96a79150ac684a0899a9a6ba2a82827cc9cf6d8659b9bded0e6f45eefc6306",
+      "mapa-1920-09-no-comestibles.png": "09b8b934b328982d3a19c1a47eace59bc35bc7f7006d02ffe6345bfd18da0100",
+      "mapa-1920-10-heladera-1.png": "244163b1d52e10845ff5e251948e854d172f75086d54e3df2ba9b33e7e4f5d06",
+      "mapa-1920-11-heladera-2.png": "ae0b00f8e6758f40463fb5f493e919e4c6aaffefab3d141e57651ca47def8887"
+    }
+  },
+  "web_real02": {
+    "resultado": {
+      "failure": null,
+      "errors": [],
+      "capturas": 4
+    },
+    "entrada_1920_valida": true,
+    "desplazamiento": "Mouse capturado, teclado mueve al jugador hasta el paredón. Últimas2PNG no sirven para mostrar sectores; se conservan como diagnóstico del recorrido.",
+    "advertencias": [
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155089202
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155089204
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155089205
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155089206
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155089207
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091273
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091308
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091310
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091311
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091313
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091314
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091332
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091548
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091550
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091552
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091573
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091583
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155091603
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155096935
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155096938
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155096943
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155096945
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155096946
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155096948
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155106927
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155106929
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155106941
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155106953
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155106955
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155106965
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155106986
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155106997
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155107007
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155107019
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155107030
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+        "time": 1792155107043
+      }
+    ]
+  },
+  "incidentes": {
+    "nativo01": "Tres encuadres cortaban arriba. Conservados; nativo02 abre el FOV sólo de cámara diagnóstica para N/H1/H2. Sin modelo/preset editado.",
+    "chrome01": "Driver conjunto exit1: dos pageerror de pointer lock en contexto real. No se atribuyen al contexto diagnóstico, que tiene cero errores y22vistas; real02 repite con foco/mouse afirmado y termina0.",
+    "export01": "Primer export exit0 retuvo162instancias/111recursos y fue rechazado. Control02 verboso con mismo proyecto/preset/plugins y cuatro archivos byteidénticos salió limpio. Sonda main-pack del PCK real limpia."
+  },
+  "limite": "Las44vistas de sectores usan cámara de observación, no prueban recorrido a pie ni gestos. Las suites prueban alcance/interacción; real02 acredita arranque y entrada de teclado/mouse. Paquetes real y diagnóstico tienen hashes separados. Entre29fdc763 y d647a203 sólo cambian estado del spec y fixture del borde; ningún recurso ni código del juego.",
+  "diferencias_desde_runtime": [
+    "specs/store-stock/store-stock.md",
+    "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd"
+  ]
+}

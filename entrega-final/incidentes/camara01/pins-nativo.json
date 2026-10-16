@@ -1,0 +1,13 @@
+{
+  "head": "29fdc763871c5833b9d28b5c6d71d71d3aeac03f",
+  "godot": "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+  "inputs": {
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-visual-final01\\mapa.gd": "72e706e4f0b35e0c18739bdfa521ca447cd73508245dc3765b135f11e5ca4a12",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-visual-final01\\nativo.gd": "2fe8bb347af4d7e5366d33e94e710bf2c74363d212aff2b2b9eee41ae1f58690",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-visual-final01\\ejecutar_nativo.py": "3ca09c6c37762e15ef02827b74bb343cdbb8db0833d8da8bdc59a7b09aa8ff18",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\disposicion_de_la_gondola.tres": "e28aabba3c638f230de0b6e0bf461e74ac016d2cd13ace49b961f5b154b39369",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\contenido_del_estante.tscn": "19a95cfb856406b7067604700c0cee324d181716757b3b1f4c1d798d5cf2cb25",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\guia_del_estante.tscn": "463c846e365dcbdf1c14d00bfd552606d1a452c14e8a958e5aa73da98dc5aa00",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\estructura_del_almacen.tscn": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e"
+  }
+}

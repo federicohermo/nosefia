@@ -1,0 +1,207 @@
+[
+  {
+    "type": "log",
+    "text": "Godot Engine v4.7.2.stable.custom_build - https://godotengine.org",
+    "time": 1792155050031
+  },
+  {
+    "type": "log",
+    "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "time": 1792155052869
+  },
+  {
+    "type": "log",
+    "text": "Build configuration: Emscripten 4.0.11, multi-threaded, no GDExtension support.",
+    "time": 1792155053519
+  },
+  {
+    "type": "log",
+    "text": "[carga] menú visible",
+    "time": 1792155053979
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155089202
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155089204
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155089205
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155089206
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155089207
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091273
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091308
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091310
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091311
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091313
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091314
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091332
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091548
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091550
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091552
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091573
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091583
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155091603
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155096935
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155096938
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155096943
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155096945
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155096946
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155096948
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155106927
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155106929
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155106941
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155106953
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155106955
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155106965
+  },
+  {
+    "type": "log",
+    "text": "[carga] almacén en pantalla",
+    "time": 1792155106976
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155106986
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155106997
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155107007
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155107019
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155107030
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x69240b382e00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792155107043
+  }
+]

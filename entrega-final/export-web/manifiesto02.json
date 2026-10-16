@@ -1,0 +1,118 @@
+{
+  "head": "29fdc763871c5833b9d28b5c6d71d71d3aeac03f",
+  "config_real_sha256": "be5aaed1a355a1033036f364b0d09fcd85ceb9c43d1fbd78dfad54d9ffc789cc",
+  "preset_sha256": "5b8b04c24b013973b147955b2b43974d740cdb875db74e9bca0e8eac16742d4d",
+  "template_sha256": "257ba2b4340f966141378f65e2595ed786c1ca8f3b113b45ca778e0d9e0bd13b",
+  "archivos": {
+    "export-real\\index.apple-touch-icon.png": {
+      "bytes": 11939,
+      "sha256": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221"
+    },
+    "export-real\\index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "export-real\\index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "export-real\\index.html": {
+      "bytes": 5441,
+      "sha256": "b1f96e52f3b6c9843fe504bd580ec985d3a68084c09d6d91e29a73191e561544"
+    },
+    "export-real\\index.icon.png": {
+      "bytes": 5765,
+      "sha256": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7"
+    },
+    "export-real\\index.js": {
+      "bytes": 320319,
+      "sha256": "0919abc3567464f80131ebf28f4187beebeadb41b56e78f18b58e102bbd88483"
+    },
+    "export-real\\index.pck": {
+      "bytes": 96080568,
+      "sha256": "815e95b5bd0e7e57a5beb84a4aa7e87746f01ac2d0ece177ffb594d4a81d33b4"
+    },
+    "export-real\\index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "export-real\\index.wasm": {
+      "bytes": 38850612,
+      "sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+    },
+    "export-control02\\index.apple-touch-icon.png": {
+      "bytes": 11939,
+      "sha256": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221"
+    },
+    "export-control02\\index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "export-control02\\index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "export-control02\\index.html": {
+      "bytes": 5441,
+      "sha256": "b1f96e52f3b6c9843fe504bd580ec985d3a68084c09d6d91e29a73191e561544"
+    },
+    "export-control02\\index.icon.png": {
+      "bytes": 5765,
+      "sha256": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7"
+    },
+    "export-control02\\index.js": {
+      "bytes": 320319,
+      "sha256": "0919abc3567464f80131ebf28f4187beebeadb41b56e78f18b58e102bbd88483"
+    },
+    "export-control02\\index.pck": {
+      "bytes": 96080568,
+      "sha256": "815e95b5bd0e7e57a5beb84a4aa7e87746f01ac2d0ece177ffb594d4a81d33b4"
+    },
+    "export-control02\\index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "export-control02\\index.wasm": {
+      "bytes": 38850612,
+      "sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+    },
+    "export-capturas02\\index.apple-touch-icon.png": {
+      "bytes": 11939,
+      "sha256": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221"
+    },
+    "export-capturas02\\index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "export-capturas02\\index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "export-capturas02\\index.html": {
+      "bytes": 5441,
+      "sha256": "e82bddd6f83c4a46b9eb5227899cd4b4a3e1808a30314ff7921b46ec20b2cba7"
+    },
+    "export-capturas02\\index.icon.png": {
+      "bytes": 5765,
+      "sha256": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7"
+    },
+    "export-capturas02\\index.js": {
+      "bytes": 320319,
+      "sha256": "0919abc3567464f80131ebf28f4187beebeadb41b56e78f18b58e102bbd88483"
+    },
+    "export-capturas02\\index.pck": {
+      "bytes": 96088460,
+      "sha256": "63fe630ff0ab65a9d93cb1894b10ad133c8ba93fa1aa9cdfa051c07396490a70"
+    },
+    "export-capturas02\\index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "export-capturas02\\index.wasm": {
+      "bytes": 38850612,
+      "sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+    }
+  },
+  "control": "Primero retenía162instancias/111recursos; repetición verbosa sin cambios limpia y cuatro artefactos idénticos. Se preservan ambos crudos.",
+  "limite_fixture": "Paquete de capturas distinto; sólo copia externa con cámara diagnóstica. Paquete real conserva proyecto/preset/plugins."
+}

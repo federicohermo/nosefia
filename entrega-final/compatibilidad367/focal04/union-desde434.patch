@@ -1,0 +1,1686 @@
+diff --git a/specs/store-stock/store-stock.md b/specs/store-stock/store-stock.md
+index cc8e26e3..c436eac5 100644
+--- a/specs/store-stock/store-stock.md
++++ b/specs/store-stock/store-stock.md
+@@ -3,7 +3,7 @@ schema_version: 1
+ capability_id: CAP-STK
+ status: ratified
+ owner: por definir
+-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente
++provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #367, #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente
+ ---
+ 
+ # Capacidad: la mercadería del almacén
+@@ -37,6 +37,8 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
+ | **Cupo** | cuántos casilleros suman las filas de adelante de las tandas de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
+ | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
+ | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
++| **Máximo reponible** | el menor entre los casilleros de la tanda reponible de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
++| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
+ | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
+ | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
+ | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
+@@ -203,16 +205,30 @@ El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mi
+ 
+ ### BR-STK-026 — Lo que falta al abrir cada jornada
+ 
+-CUANDO se abre una jornada, el sistema DEBE dejar faltando lo que dice su fila, y ningún otro
+-producto:
+-
+-| Jornada | Faltan en la góndola |
+-|---|---|
+-| 1 | 4 Actroncito, 5 Coracola, 2 Marolini, 8 Prongles y 4 Laysntt |
+-| 2 a 5 | los de la jornada 1, mientras la ficha no decida los suyos (OQ-STK-005) |
+-
+-La distribución del modelo confirmada durante la prueba del 2026-10-13 conserva cuatro lugares
+-de Actroncito y cinco de Coracola; sus faltantes respetan esos cupos.
++CUANDO se abre cualquier jornada, de la 1 a la 5, el sistema DEBE sortear sus faltantes.
++DEBE elegir entre 4 y 7 productos distintos y, de cada uno, entre 1 unidad y su máximo
++reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
++[ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
++
++Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
++caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casilleros de la fila de
++adelante de su tanda reponible (BR-STK-024). El inventario DEBE conservar el cupo total de todas las
++tandas (BR-STK-008), incluidas las guías. Las guías DEBEN abrir completas: los faltantes iniciales
++DEBEN quedar sólo en la tanda reponible. Sólo los productos con máximo reponible mayor o igual a 1
++DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
++incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
++compradores ni pedidos.
++
++La cantidad de productos y las unidades de cada elegido DEBEN sortearse con reparto parejo
++entre los enteros de sus intervalos inclusivos. Los productos DEBEN elegirse sin repetición.
++SI hay menos elegibles que la cantidad sorteada, ENTONCES DEBEN faltar todos los elegibles
++y ninguno más. Con cero elegibles NO DEBE faltar nada.
++
++El sistema DEBE recibir la fuente de azar: con la misma semilla inicial, pedidos y casilleros,
++DEBE producir los mismos faltantes. En juego, la fuente DEBE inicializarse al azar.
++CUANDO abre la jornada siguiente o se retoma una jornada desde el menú o en otra sesión,
++el sistema DEBE sortear de nuevo, sin recuperar una semilla guardada. Dos sorteos pueden
++coincidir: sortear de nuevo NO DEBE exigir un resultado distinto del anterior.
+ 
+ ### BR-STK-027 — Lo que se vende no le quita a lo que se repone
+ 
+@@ -604,22 +620,48 @@ DADO un producto de 12 casilleros al que la jornada le hace faltar 8 CUANDO se c
+ unidades de su caja ENTONCES su fila de adelante queda completa, el depósito en 0 y no es
+ faltante.
+ 
+-### AC-STK-033 — Ningún faltante pasa de una caja ni de su fila *(verifica BR-STK-004)*
++### AC-STK-033 — Ningún faltante pasa de una caja ni de su fila *(verifica BR-STK-004, BR-STK-024)*
+ 
+-DADO los faltantes de cada jornada, de la 1 a la 5, ENTONCES ninguno pasa de 8 ni de los
+-casilleros de la fila de adelante de su producto.
++DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 1 a la 5 y los casilleros
++medidos en el local CUANDO se abren las jornadas ENTONCES ningún faltante pasa de las unidades
++de una caja —8 en el balance vigente— ni de los casilleros de la fila de adelante de la tanda
++reponible de su producto. El inventario conserva el cupo total de todas las tandas y las guías
++abren completas. DADO un producto sin casilleros principales pero con casilleros de guía
++CUANDO abre la jornada ENTONCES ese producto no falta y su guía está completa.
+ 
+ ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
+ 
+-DADO la jornada 1 que se abre ENTONCES faltan 4 Actroncito, 5 Coracola, 2 Marolini, 8 Prongles y
+-4 Laysntt, y todos los demás productos tienen su fila de adelante completa. DADO las jornadas 2,
+-3, 4 y 5 ENTONCES faltan los mismos.
++DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
++cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y
++7 productos distintos. Cada faltante está entre 1 y `mínimo(C − P, F)`, y los productos no elegidos
++están completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y dos
++conjuntos de productos distintos.
++
++DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
++se pueden obtener 4 y 7 productos, y 1 y el máximo reponible de cada elegido. La elección de
++cantidad tiene cuatro alternativas equiprobables; la de unidades tiene tantas alternativas
++equiprobables como su máximo reponible.
++
++DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
++su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
++pedidas o con cero casilleros principales, el producto nunca falta. DADO exactamente tres elegibles
++CUANDO la cantidad sorteada es 4 o 7 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
++DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
++principales CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
++
++DADO dos fuentes con la misma semilla inicial, los mismos pedidos y casilleros CUANDO se
++abre la misma jornada ENTONCES los faltantes coinciden. Consultar los pedidos conserva las
++identidades y cantidades recibidas y no consume azar. CUANDO se abre otra jornada, se vuelve
++al menú y se continúa, o se retoma en otra sesión ENTONCES se realiza un nuevo sorteo.
+ 
+ ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
+ 
+-DADO cada jornada, de la 1 a la 5, CUANDO se completan todas sus compras por el recorrido de su jornada
+-ENTONCES ningún cobro se rechaza, y después se puede reponer todo lo que falta y dar reponer por
+-cumplida.
++DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 1 a la 5 CUANDO
++se completan todas las compras de los pedidos usados para acotar los faltantes, por el
++recorrido de esa jornada, ENTONCES ningún cobro se rechaza. CUANDO después se repone todo lo
++que falta ENTONCES la góndola queda completa y reponer queda cumplida.
++En el recorrido físico, el resultado se conserva tanto tomando las unidades vendidas de sus
++cajas como de casilleros ocupados: también se reponen los casilleros vaciados por esas ventas.
+ 
+ ### AC-STK-036 — La caja arranca en 8 y cuenta lo que sale *(verifica BR-STK-028)*
+ 
+@@ -790,8 +832,8 @@ registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con l
+ 
+ ### AC-STK-077 — La pila es completa, alcanzable y estable *(verifica BR-STK-038)*
+ 
+-DADO la jornada 1 abierta CUANDO se recorre el conjunto de cajas del catálogo —31 en el catálogo
+-vigente— ENTONCES todas están dentro del depósito, ninguna se apoya en una estantería y ningún
++DADO la jornada 1 abierta CUANDO se recorre el conjunto de cajas del catálogo
++vigente ENTONCES todas están dentro del depósito, ninguna se apoya en una estantería y ningún
+ cuerpo se superpone con otro. Para cada caja existe un punto libre del piso desde el cual la
+ mira la enfoca dentro del alcance vigente. CUANDO pasan 120 cuadros de física sin tocar la pila
+ ENTONCES ninguna caja se desplazó más de 0,01 m desde su pose inicial. DADO la jornada 2 abierta
+@@ -888,14 +930,19 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
+ ## Contratos
+ 
+ - **Entrada:** el sector y destino declarado de cada producto y si admite exhibición;
+-  los productos que existen, los casilleros de la fila de adelante de cada uno, la
+-  jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
++  los productos que existen, sus casilleros totales y los de la fila de adelante
++  de su tanda reponible, la jornada que se abre, sus pedidos ya construidos y la
++  fuente de azar, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
+   que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
+   a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la planilla.
+ - **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
+   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
+   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
+   obligatoria está cumplida, y el motivo de cada rechazo.
++- **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
++  producto y devuelve faltantes dentro del máximo de su tanda reponible. El inventario conserva
++  el cupo total y las guías abren completas. Con menos elegibles que la
++  cantidad sorteada devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
+ - **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
+   una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
+   la condición de orden. Ciclos y apoyos ausentes contestan pendiente; el conjunto vacío,
+@@ -919,8 +966,9 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
+ 
+ - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
+   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
+-  compara la planilla, y cada cobro vuelve a compararla; lo que piden los compradores de cada
+-  jornada entra en lo que la reposición deja (BR-STK-027).
++  compara la planilla, y cada cobro vuelve a compararla; los mismos pedidos construidos para
++  esa apertura acotan los faltantes, sin otra selección de compradores o productos
++  (BR-STK-026, BR-STK-027).
+ - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja
+   en la mano, y lo que la mano lleva decide qué hace el clic sobre la caja y sobre cada casillero;
+   qué casilleros están vacíos y cuáles ocupados decide cuáles se muestran y cuáles se agarran.
+@@ -940,13 +988,6 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
+     la botella plástica y la cajita, que son las más parecidas.
+   - Decide: el equipo de sonido.
+   - Bloquea: nada.
+-- **OQ-STK-005 — ¿Qué falta en las jornadas 2 a 5?**
+-  - Por qué sigue abierta: la ficha «8. Tarea: Reposición» fija los faltantes de la jornada 1 y
+-    dice «A definir» en las otras cuatro. Mientras tanto arrancan con los de la jornada 1
+-    (BR-STK-026).
+-  - Decide: el diseño, en la ficha.
+-  - Bloquea: nada.
+-
+ - **OQ-STK-007 — ¿Cómo se concilian los cuatro niveles del mapa con las alturas actuales?**
+   - Por qué sigue abierta: el texto del mapa habla de cuatro estantes y del primero como
+     levantable; los muebles vigentes tienen cuatro chapas laterales y cuatro en cabeceras,
+diff --git a/src/dominio/almacen/reglas_del_estante.gd b/src/dominio/almacen/reglas_del_estante.gd
+index 798ee9ff..fc7635dd 100644
+--- a/src/dominio/almacen/reglas_del_estante.gd
++++ b/src/dominio/almacen/reglas_del_estante.gd
+@@ -24,3 +24,7 @@ extends RefCounted
+ ## Lo que se vende sale de la misma caja: lo que queda después de reponer es lo que hay para
+ ## atender, así que bajar este número aprieta las dos cosas a la vez.
+ const UNIDADES_POR_CAJA := 8
++
++## Intervalos inclusivos de la ficha de reposición, iguales en las cinco noches.
++const TIPOS_QUE_FALTAN := Vector2i(4, 7)
++const MENOS_QUE_FALTA := 1
+diff --git a/src/dominio/jornada/apertura.gd b/src/dominio/jornada/apertura.gd
+index 82aa487d..c12a7c98 100644
+--- a/src/dominio/jornada/apertura.gd
++++ b/src/dominio/jornada/apertura.gd
+@@ -7,23 +7,6 @@ extends RefCounted
+ 
+ const PARTICULARES := {1: [Tarea.Tipo.ORDENAR_LAS_CAJAS], 2: [Tarea.Tipo.SACAR_LA_BASURA]}
+ 
+-## Qué falta en la góndola al abrir cada jornada: `jornada → { Producto.Id: unidades }`, de la
+-## tabla de la ficha «8. Tarea: Reposición». Cada faltante es a lo sumo lo que trae una caja, y
+-## el test lo afirma sobre las cinco jornadas.
+-##
+-## Por ahora tiene una sola fila: las otras jornadas dicen «A definir» y arrancan como la primera
+-## (ver `faltantes_de_la_jornada()`).
+-const FALTANTES_POR_JORNADA := {
+-	ReglasDeLaPartida.PRIMERA_JORNADA:
+-	{
+-		Producto.Id.ACTRONCITO: 4,
+-		Producto.Id.CORACOLA: 5,
+-		Producto.Id.MAROLINI: 2,
+-		Producto.Id.PRONGLES: 8,
+-		Producto.Id.LAYSNTT: 4,
+-	},
+-}
+-
+ 
+ ## Las cuatro fijas y la particular declarada, siempre con instancias nuevas.
+ static func obligatorias(jornada: int) -> Array[Tarea]:
+@@ -49,41 +32,16 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
+ 	return Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
+ 
+ 
+-## La mercadería con la que arranca la noche de esa jornada: cada caja del depósito llena, y la
+-## fila de adelante de cada producto completa salvo lo que la jornada hace faltar.
+-##
+-## **Que falte algo es lo que hace que reponer sea una tarea**, y que sea poco es lo que la ficha
+-## pide: la góndola de un almacén abierto no está vacía. Con la góndola entera por reponer, cada
+-## noche arrancaría con treinta y un productos que caminar hasta el fondo.
+-##
+-## Los casilleros de cada fila los recibe: los mide la escena sobre el modelo, y acá no se
+-## escribe ninguno. Lo que falta sale de `faltantes_de_la_jornada()`, y la jornada es la que
+-## abre el ciclo: una partida continuada arranca su noche desde el dato, como una nueva.
+-##
+-## **Devuelve un inventario nuevo en cada llamada**, igual que `obligatorias()`: uno compartido
+-## entre jornadas dejaría lo repuesto anoche en la góndola de esta noche, o sea que la tarea se
+-## cumpliría sola a partir de la segunda.
++## Recibe los mismos compradores de Atención y la fuente de azar de esta sesión.
+ static func inventario_de_la_jornada(
+-	jornada: int, casilleros: Dictionary[Producto.Id, int]
++	compradores: Array[Comprador],
++	casilleros_totales: Dictionary[Producto.Id, int],
++	casilleros_reponibles: Dictionary[Producto.Id, int],
++	azar: RandomNumberGenerator
+ ) -> Inventario:
+-	return inventario_con_faltantes(faltantes_de_la_jornada(jornada), casilleros)
+-
+-
+-## Lo que falta en la góndola al abrir esa jornada, de cada producto que falta: la ficha
+-## «8. Tarea: Reposición». Un producto que no está no falta.
+-##
+-## **Sólo la primera jornada está decidida.** La ficha dice «A definir» de la 2 a la 5, y
+-## mientras tanto arrancan como la primera (OQ-STK-005): una jornada sin fila en
+-## `FALTANTES_POR_JORNADA` contesta la de la primera. El día que la ficha decida otra, es una
+-## fila más en esa tabla.
+-##
+-## Devuelve una copia: quien la reciba puede tocarla sin cambiar la jornada de mañana.
+-static func faltantes_de_la_jornada(jornada: int) -> Dictionary[Producto.Id, int]:
+-	var fila: Dictionary[Producto.Id, int] = {}
+-	fila.assign(
+-		FALTANTES_POR_JORNADA.get(jornada, FALTANTES_POR_JORNADA[ReglasDeLaPartida.PRIMERA_JORNADA])
++	return inventario_con_faltantes(
++		faltantes_al_azar(pedidos_de(compradores), casilleros_reponibles, azar), casilleros_totales
+ 	)
+-	return fila
+ 
+ 
+ ## La mercadería de una noche con esos faltantes: el depósito de cada producto del catálogo con
+@@ -111,3 +69,42 @@ static func inventario_con_faltantes(
+ 
+ static func cajas_apiladas(jornada: int) -> bool:
+ 	return Tarea.Tipo.ORDENAR_LAS_CAJAS in PARTICULARES.get(jornada, [])
++
++
++## Muestreo sin reemplazo: cada índice restante tiene la misma probabilidad.
++static func faltantes_al_azar(
++	pedidos: Dictionary[Producto.Id, int],
++	casilleros_reponibles: Dictionary[Producto.Id, int],
++	azar: RandomNumberGenerator
++) -> Dictionary[Producto.Id, int]:
++	var maximos: Dictionary[Producto.Id, int] = {}
++	var elegibles: Array[Producto.Id] = []
++	for producto in Catalogo.todos():
++		var maximo := mini(
++			ReglasDelEstante.UNIDADES_POR_CAJA - pedidos.get(producto.id, 0),
++			casilleros_reponibles.get(producto.id, 0)
++		)
++		if maximo >= ReglasDelEstante.MENOS_QUE_FALTA:
++			elegibles.append(producto.id)
++			maximos[producto.id] = maximo
++	var cantidad := azar.randi_range(
++		ReglasDelEstante.TIPOS_QUE_FALTAN.x, ReglasDelEstante.TIPOS_QUE_FALTAN.y
++	)
++	var faltantes: Dictionary[Producto.Id, int] = {}
++	for elegido in mini(cantidad, elegibles.size()):
++		var indice := azar.randi_range(0, elegibles.size() - 1)
++		var id := elegibles[indice]
++		elegibles.remove_at(indice)
++		faltantes[id] = azar.randi_range(ReglasDelEstante.MENOS_QUE_FALTA, maximos[id])
++	return faltantes
++
++
++## Sólo lee los pedidos ya construidos; sus objetos siguen siendo los de Atención.
++static func pedidos_de(compradores: Array[Comprador]) -> Dictionary[Producto.Id, int]:
++	var pedidos: Dictionary[Producto.Id, int] = {}
++	for comprador in compradores:
++		for producto in comprador.pedido().productos():
++			pedidos[producto.id] = (
++				pedidos.get(producto.id, 0) + comprador.pedido().unidades_de(producto)
++			)
++	return pedidos
+diff --git a/src/escenas/almacen.gd b/src/escenas/almacen.gd
+index 2d1a50c4..fc946b65 100644
+--- a/src/escenas/almacen.gd
++++ b/src/escenas/almacen.gd
+@@ -81,6 +81,9 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
+ ## Los muebles con los que el jugador choca por su contorno y no por su malla.
+ @export var _muebles_con_contorno: Array[PhysicsBody3D]
+ 
++## Una fuente por sesión; los tests pueden sembrarla antes de cada apertura.
++var azar_de_la_apertura := RandomNumberGenerator.new()
++
+ ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
+ ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
+ var _partida := Partida.desde(Guardado.new().cargar())
+@@ -108,6 +111,7 @@ var _distancia_al_pensar := 0.0
+ ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
+ ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
+ func _ready() -> void:
++	azar_de_la_apertura.randomize()
+ 	_instrucciones.comenzar_pedido.connect(anunciar_la_noche)
+ 	_cablear_el_celular()
+ 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
+@@ -302,11 +306,17 @@ func _al_abrir_la_jornada(jornada: int) -> void:
+ 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
+ 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
+ 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
+-	var inventario := Apertura.inventario_de_la_jornada(jornada, _reposicion_manual.casilleros())
++	var compradores := Compradores.de_la_jornada(jornada)
++	var inventario := Apertura.inventario_de_la_jornada(
++		compradores,
++		_reposicion_manual.casilleros(),
++		_reposicion_manual.casilleros_reponibles(),
++		azar_de_la_apertura
++	)
+ 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
+ 	_reposicion_manual.limpiar()
+ 	_contenedor.reiniciar()
+-	var atender := TareaDeAtender.new(Compradores.de_la_jornada(jornada), inventario)
++	var atender := TareaDeAtender.new(compradores, inventario)
+ 	_atenciones.arrancar(atender)
+ 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
+ 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
+diff --git a/src/escenas/puestos/reposicion_manual.gd b/src/escenas/puestos/reposicion_manual.gd
+index 7258f2e5..a3ecbfa7 100644
+--- a/src/escenas/puestos/reposicion_manual.gd
++++ b/src/escenas/puestos/reposicion_manual.gd
+@@ -120,6 +120,14 @@ func casilleros() -> Dictionary[Producto.Id, int]:
+ 	return por_producto
+ 
+ 
++## Sólo la fila principal: las guías conservan sus casilleros y abren completas.
++func casilleros_reponibles() -> Dictionary[Producto.Id, int]:
++	var por_producto: Dictionary[Producto.Id, int] = {}
++	for producto in Catalogo.todos():
++		por_producto[producto.id] = disposicion.filas_de_adelante[producto.id]
++	return por_producto
++
++
+ func preparar() -> void:
+ 	_desenfoque = DesenfoqueDeReferencias.new()
+ 	add_child(_desenfoque)
+diff --git a/test/dominio/almacen/contenido_de_la_caja_test.gd b/test/dominio/almacen/contenido_de_la_caja_test.gd
+index 516090a3..c8991998 100644
+--- a/test/dominio/almacen/contenido_de_la_caja_test.gd
++++ b/test/dominio/almacen/contenido_de_la_caja_test.gd
+@@ -53,7 +53,9 @@ func test_la_jornada_abre_con_cada_caja_llena() -> void:  # AC-STK-036
+ 		casilleros[producto.id] = CASILLEROS
+ 	for vez in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
+ 		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + vez
+-		var inventario := Apertura.inventario_de_la_jornada(jornada, casilleros)
++		var inventario := Apertura.inventario_de_la_jornada(
++			Compradores.de_la_jornada(jornada), casilleros, casilleros, RandomNumberGenerator.new()
++		)
+ 		var estante := Estante.new(inventario, Catalogo.todos())
+ 		for producto in Catalogo.todos():
+ 			(
+diff --git a/test/dominio/almacen/reglas_del_estante_test.gd b/test/dominio/almacen/reglas_del_estante_test.gd
+index 6d5f5c28..f3365e53 100644
+--- a/test/dominio/almacen/reglas_del_estante_test.gd
++++ b/test/dominio/almacen/reglas_del_estante_test.gd
+@@ -7,36 +7,9 @@
+ extends GdUnitTestSuite
+ 
+ 
+-## Las jornadas de la partida, de la primera a la última.
+-func _jornadas() -> Array[int]:
+-	var jornadas: Array[int] = []
+-	for numero in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
+-		jornadas.append(ReglasDeLaPartida.PRIMERA_JORNADA + numero)
+-	return jornadas
+-
+-
+-## Un faltante de 9 es un error de los datos y no un caso que el juego acomoda: la caja trae 8, y
+-## ninguna otra cosa del depósito repone ese producto. Se recorren las cinco jornadas y no sólo
+-## la primera: las que la ficha todavía no decidió también arrancan con algo.
+-func test_ningun_faltante_de_ninguna_jornada_pasa_de_una_caja() -> void:  # AC-STK-033
+-	for jornada in _jornadas():
+-		var faltantes := Apertura.faltantes_de_la_jornada(jornada)
+-		for id: Producto.Id in faltantes:
+-			(
+-				assert_int(faltantes[id])
+-				. override_failure_message(
+-					(
+-						"jornada %d: faltan %d %s y la caja trae %d"
+-						% [
+-							jornada,
+-							faltantes[id],
+-							Catalogo.de(id).nombre,
+-							ReglasDelEstante.UNIDADES_POR_CAJA,
+-						]
+-					)
+-				)
+-				. is_between(1, ReglasDelEstante.UNIDADES_POR_CAJA)
+-			)
++func test_el_intervalo_inclusivo_de_la_ficha_se_conserva() -> void:  # AC-STK-034
++	assert_vector(ReglasDelEstante.TIPOS_QUE_FALTAN).is_equal(Vector2i(4, 7))
++	assert_int(ReglasDelEstante.MENOS_QUE_FALTA).is_equal(1)
+ 
+ 
+ func test_las_unidades_de_una_caja_son_una_cantidad_y_no_un_centinela() -> void:
+diff --git a/test/dominio/jornada/apertura_test.gd b/test/dominio/jornada/apertura_test.gd
+index ddd2aa27..027aebe8 100644
+--- a/test/dominio/jornada/apertura_test.gd
++++ b/test/dominio/jornada/apertura_test.gd
+@@ -82,7 +82,12 @@ func test_cada_caja_del_deposito_arranca_con_ocho_en_todas_las_jornadas() -> voi
+ 	# es una fila en el catálogo, y un producto que no llega al inventario es uno que no se puede
+ 	# reponer ni vender, sin un solo error.
+ 	for jornada in _jornadas():
+-		var inventario := Apertura.inventario_de_la_jornada(jornada, _casilleros())
++		var inventario := Apertura.inventario_de_la_jornada(
++			Compradores.de_la_jornada(jornada),
++			_casilleros(),
++			_casilleros(),
++			RandomNumberGenerator.new()
++		)
+ 		for producto in Catalogo.todos():
+ 			(
+ 				assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO))
+@@ -144,70 +149,6 @@ func test_un_faltante_de_una_caja_entera_se_repone_con_esa_caja() -> void:  # AC
+ 	assert_bool(estante.completada()).is_true()
+ 
+ 
+-## La tabla de la ficha deja cinco productos por reponer, y los demás completos.
+-func test_la_primera_jornada_abre_con_los_cinco_faltantes_de_la_ficha() -> void:  # AC-STK-034
+-	var faltantes := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+-	(
+-		assert_dict(faltantes)
+-		. is_equal(
+-			{
+-				Producto.Id.ACTRONCITO: 4,
+-				Producto.Id.CORACOLA: 5,
+-				Producto.Id.MAROLINI: 2,
+-				Producto.Id.PRONGLES: 8,
+-				Producto.Id.LAYSNTT: 4,
+-			}
+-		)
+-	)
+-	var inventario := Apertura.inventario_de_la_jornada(
+-		ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros()
+-	)
+-	var nombres: Array[String] = []
+-	for producto in inventario.faltantes():
+-		nombres.append(producto.nombre)
+-	assert_array(nombres).contains_exactly(
+-		["Actroncito", "Laysntt", "Prongles", "Coracola", "Marolini"]
+-	)
+-	for producto in Catalogo.todos():
+-		(
+-			assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA))
+-			. override_failure_message("`%s` no arrancó con su fila" % producto.nombre)
+-			. is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - faltantes.get(producto.id, 0))
+-		)
+-
+-
+-## La ficha dice «A definir» de la 2 a la 5: mientras tanto arrancan como la 1 (OQ-STK-005). El
+-## día que la ficha las decida, este caso se pone en rojo y el spec cambia con él.
+-func test_de_la_segunda_a_la_quinta_faltan_los_mismos_que_en_la_primera() -> void:  # AC-STK-034
+-	var primera := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+-	for jornada in _jornadas():
+-		(
+-			assert_dict(Apertura.faltantes_de_la_jornada(jornada))
+-			. override_failure_message("jornada %d" % jornada)
+-			. is_equal(primera)
+-		)
+-
+-
+-## Lo que devuelve es una copia: quien la recibe puede tocarla, y la jornada de mañana sigue
+-## contestando lo de la tabla.
+-func test_los_faltantes_de_una_jornada_se_devuelven_en_una_copia() -> void:
+-	var recibidos := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+-	recibidos[Producto.Id.MALBARDO] = 3
+-	recibidos.erase(Producto.Id.ACTRONCITO)
+-	(
+-		assert_dict(Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA))
+-		. is_equal(
+-			{
+-				Producto.Id.ACTRONCITO: 4,
+-				Producto.Id.CORACOLA: 5,
+-				Producto.Id.MAROLINI: 2,
+-				Producto.Id.PRONGLES: 8,
+-				Producto.Id.LAYSNTT: 4,
+-			}
+-		)
+-	)
+-
+-
+ ## Un faltante más grande que su fila es un error de los datos y no se acomoda: la góndola
+ ## arranca vacía, y no en un número negativo que `faltantes()` leería como cualquier otro.
+ func test_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero() -> void:
+@@ -222,50 +163,25 @@ func test_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero() -> void:
+ 	assert_bool(_falta(inventario, burbaloo)).is_true()
+ 
+ 
+-## La cuenta es contra la fila y no contra el dato de la jornada: Malbardo arranca completo en la
+-## jornada 1, y en cuanto una unidad sale de su góndola vuelve a faltar.
++## En esta apertura fija no falta nada. Vaciar un casillero vuelve a hacer faltar su producto.
+ func test_un_casillero_que_se_vacia_vuelve_a_faltar() -> void:  # AC-STK-007
+ 	var malbardo := Catalogo.de(Producto.Id.MALBARDO)
+-	var inventario := Apertura.inventario_de_la_jornada(
+-		ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros()
+-	)
++	var inventario := Apertura.inventario_con_faltantes({}, _casilleros())
+ 	assert_bool(_falta(inventario, malbardo)).is_false()
+ 	inventario.mover(malbardo, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 1)
+ 	assert_bool(_falta(inventario, malbardo)).is_true()
+ 
+ 
+-## La venta y la reposición salen de la misma caja: los compradores de cada noche se cobran
+-## apenas abre, y todavía se puede reponer todo lo que falta. Es la cuenta que la ficha pide
+-## cuidar en cada jornada —«vender 2 y reponer 7 Malbardo sería imposible»—.
+-func test_los_pedidos_de_cada_jornada_entran_sin_quitarle_a_la_reposicion() -> void:  # AC-STK-035
+-	for jornada in _jornadas():
+-		var inventario := Apertura.inventario_de_la_jornada(jornada, _casilleros())
+-		for comprador in Compradores.de_la_jornada(jornada):
+-			(
+-				assert_bool(inventario.cobrar(comprador.pedido()))
+-				. override_failure_message(
+-					"jornada %d: el pedido de %s no entra" % [jornada, comprador.nombre()]
+-				)
+-				. is_true()
+-			)
+-		var estante := Estante.new(inventario, Catalogo.todos())
+-		for producto in inventario.faltantes():
+-			while estante.unidades_en_gondola(producto) < estante.cupo(producto):
+-				if estante.colocar(producto) != Estante.Rechazo.NINGUNO:
+-					break
+-		(
+-			assert_bool(estante.completada())
+-			. override_failure_message("jornada %d: vender dejó sin reponer" % jornada)
+-			. is_true()
+-		)
+-
+-
+ func test_cada_jornada_recibe_un_inventario_propio() -> void:
+ 	# Instancias distintas y no la misma: con una sola compartida, lo repuesto anoche seguiría
+ 	# en la góndola esta noche y reponer se cumpliría sola. Es también lo que hace que una
+ 	# partida continuada arranque su noche desde el dato, como una nueva.
+-	var una := Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros())
+-	var otra := Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros())
++	var azar := RandomNumberGenerator.new()
++	azar.seed = 17
++	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 8}
++	var una := Apertura.inventario_de_la_jornada([], casilleros, casilleros, azar)
++	azar.seed = 17
++	var otra := Apertura.inventario_de_la_jornada([], casilleros, casilleros, azar)
+ 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+ 	var al_abrir := otra.unidades(actroncito, Inventario.Ubicacion.GONDOLA)
+ 	una.mover(actroncito, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)
+diff --git a/test/dominio/jornada/pedidos_compartidos_test.gd b/test/dominio/jornada/pedidos_compartidos_test.gd
+new file mode 100644
+index 00000000..08822dd5
+--- /dev/null
++++ b/test/dominio/jornada/pedidos_compartidos_test.gd
+@@ -0,0 +1,79 @@
++extends GdUnitTestSuite
++
++
++func test_suma_los_pedidos_recibidos_sin_recrear_ni_mutar_compradores() -> void:  # AC-STK-034
++	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
++	var primero := Venta.new()
++	primero.agregar(producto, 2)
++	var segundo := Venta.new()
++	segundo.agregar(Catalogo.de(producto.id), 3)
++	var compradores: Array[Comprador] = [
++		Comprador.new("Propio A", primero, 0), Comprador.new("Propio B", segundo, 0)
++	]
++	var identidad := compradores.duplicate()
++	for consulta in 2:
++		assert_dict(Apertura.pedidos_de(compradores)).is_equal({producto.id: 5})
++		assert_array(compradores).contains_exactly(identidad)
++		assert_object(compradores[0].pedido()).is_same(primero)
++		assert_object(compradores[1].pedido()).is_same(segundo)
++		assert_int(primero.unidades_de(producto)).is_equal(2)
++		assert_int(segundo.unidades_de(producto)).is_equal(3)
++
++
++func test_lista_vacia_no_tiene_pedidos() -> void:
++	assert_dict(Apertura.pedidos_de([])).is_empty()
++
++
++func test_el_inventario_usa_los_mismos_pedidos_y_el_mismo_azar_que_atencion() -> void:  # AC-STK-034
++	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
++	var compradores: Array[Comprador] = []
++	for cantidad: int in [2, 3]:
++		var pedido := Venta.new()
++		pedido.agregar(producto, cantidad)
++		compradores.append(Comprador.new("Propio", pedido, pedido.total()))
++	var casilleros: Dictionary[Producto.Id, int] = {producto.id: 6}
++	var azar := RandomNumberGenerator.new()
++	var control := RandomNumberGenerator.new()
++	azar.seed = 17
++	control.seed = 17
++	var esperado := Apertura.faltantes_al_azar({producto.id: 5}, casilleros, control)
++	var inventario := Apertura.inventario_de_la_jornada(compradores, casilleros, casilleros, azar)
++	assert_int(azar.state).is_equal(control.state)
++	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
++		6 - esperado[producto.id]
++	)
++	assert_int(esperado[producto.id]).is_between(1, 3)
++	var atenciones := TareaDeAtender.new(compradores, inventario)
++	for comprador in compradores:
++		assert_object(atenciones.atender()).is_same(comprador)
++		assert_object(atenciones.atencion().comprador().pedido()).is_same(comprador.pedido())
++		assert_int(atenciones.atencion().cobrar()).is_equal(Atencion.Resultado.COBRADA)
++	assert_bool(atenciones.completada()).is_true()
++
++
++func test_la_apertura_conserva_guias_y_limita_huecos_a_la_principal() -> void:  # AC-STK-033
++	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
++	var totales: Dictionary[Producto.Id, int] = {producto.id: 8}
++	var principales: Dictionary[Producto.Id, int] = {producto.id: 4}
++	for semilla in 200:
++		var azar := RandomNumberGenerator.new()
++		azar.seed = semilla
++		var inventario := Apertura.inventario_de_la_jornada([], totales, principales, azar)
++		var estante := Estante.new(inventario, Catalogo.todos())
++		assert_int(estante.cupo(producto)).is_equal(8)
++		assert_int(estante.casilleros_vacios(producto).size()).is_between(1, 4)
++		for guia in 4:
++			assert_bool(estante.casilleros_ocupados(producto).has(guia)).is_true()
++
++
++func test_sin_fila_principal_no_falta_aunque_tenga_guias() -> void:  # AC-STK-033
++	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
++	var totales: Dictionary[Producto.Id, int] = {producto.id: 8}
++	var principales: Dictionary[Producto.Id, int] = {producto.id: 0}
++	for semilla in 200:
++		var azar := RandomNumberGenerator.new()
++		azar.seed = semilla
++		var inventario := Apertura.inventario_de_la_jornada([], totales, principales, azar)
++		assert_int(inventario.casilleros(producto)).is_equal(8)
++		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(8)
++		assert_array(inventario.faltantes()).is_empty()
+diff --git a/test/dominio/jornada/pedidos_compartidos_test.gd.uid b/test/dominio/jornada/pedidos_compartidos_test.gd.uid
+new file mode 100644
+index 00000000..5d60023a
+--- /dev/null
++++ b/test/dominio/jornada/pedidos_compartidos_test.gd.uid
+@@ -0,0 +1 @@
++uid://l0bhavnlba33
+diff --git a/test/dominio/jornada/sorteo_de_apertura_test.gd b/test/dominio/jornada/sorteo_de_apertura_test.gd
+new file mode 100644
+index 00000000..e133bfdc
+--- /dev/null
++++ b/test/dominio/jornada/sorteo_de_apertura_test.gd
+@@ -0,0 +1,121 @@
++extends GdUnitTestSuite
++
++
++func _azar(semilla: int) -> RandomNumberGenerator:
++	var azar := RandomNumberGenerator.new()
++	azar.seed = semilla
++	return azar
++
++
++func _casilleros(cantidad: int = 8) -> Dictionary[Producto.Id, int]:
++	var casilleros: Dictionary[Producto.Id, int] = {}
++	for producto in Catalogo.todos():
++		casilleros[producto.id] = cantidad
++	return casilleros
++
++
++func test_doscientas_semillas_por_jornada_respetan_limites_y_varian() -> void:  # AC-STK-034
++	for jornada in range(1, 6):
++		var compradores := Compradores.de_la_jornada(jornada)
++		var pedidos := Apertura.pedidos_de(compradores)
++		var cantidades: Dictionary[int, bool] = {}
++		var conjuntos: Dictionary[String, bool] = {}
++		for semilla in 200:
++			var faltantes := Apertura.faltantes_al_azar(pedidos, _casilleros(), _azar(semilla))
++			assert_int(faltantes.size()).is_between(4, 7)
++			var inventario := Apertura.inventario_de_la_jornada(
++				compradores, _casilleros(), _casilleros(), _azar(semilla)
++			)
++			for producto in Catalogo.todos():
++				assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
++					8 - faltantes.get(producto.id, 0)
++				)
++				assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(8)
++			cantidades[faltantes.size()] = true
++			var ids := faltantes.keys()
++			ids.sort()
++			conjuntos[str(ids)] = true
++			for id: Producto.Id in faltantes:
++				assert_int(faltantes[id]).is_between(1, mini(8 - pedidos.get(id, 0), 8))
++		assert_int(cantidades.size()).is_greater_equal(2)
++		assert_int(conjuntos.size()).is_greater_equal(2)
++
++
++func test_misma_semilla_reproduce_y_no_muta_las_entradas() -> void:  # AC-STK-034
++	var pedidos: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 3}
++	var casilleros := _casilleros()
++	var antes := casilleros.duplicate()
++	var uno := Apertura.faltantes_al_azar(pedidos, casilleros, _azar(17))
++	assert_dict(Apertura.faltantes_al_azar(pedidos, casilleros, _azar(17))).is_equal(uno)
++	assert_dict(casilleros).is_equal(antes)
++	assert_dict(pedidos).is_equal({Producto.Id.ACTRONCITO: 3})
++
++
++func test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila() -> void:  # AC-STK-034
++	assert_dict(Apertura.faltantes_al_azar({}, {}, _azar(0))).is_empty()
++	var casilleros: Dictionary[Producto.Id, int] = {
++		Producto.Id.ACTRONCITO: 6,
++		Producto.Id.CORACOLA: 4,
++		Producto.Id.MAROLINI: 8,
++		Producto.Id.PRONGLES: 8,
++		Producto.Id.LAYSNTT: 0,
++	}
++	var pedidos: Dictionary[Producto.Id, int] = {
++		Producto.Id.ACTRONCITO: 3,
++		Producto.Id.CORACOLA: 1,
++		Producto.Id.PRONGLES: 8,
++	}
++	for semilla in 200:
++		var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, _azar(semilla))
++		(
++			assert_array(faltantes.keys())
++			. contains_exactly_in_any_order(
++				[
++					Producto.Id.ACTRONCITO,
++					Producto.Id.CORACOLA,
++					Producto.Id.MAROLINI,
++				]
++			)
++		)
++		if faltantes.size() != 3:
++			return
++		assert_int(faltantes[Producto.Id.ACTRONCITO]).is_between(1, 5)
++		assert_int(faltantes[Producto.Id.CORACOLA]).is_between(1, 4)
++		assert_int(faltantes[Producto.Id.MAROLINI]).is_between(1, 8)
++	var unico: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 1}
++	assert_dict(Apertura.faltantes_al_azar({}, unico, _azar(0))).is_equal(unico)
++
++
++## Las semillas se midieron una vez sobre los intervalos inclusivos del motor.
++## Los tests no buscan una semilla: afirman el extremo de la fuente y el del sorteo.
++func test_extremos_de_cantidad_con_fuentes_controladas() -> void:  # AC-STK-034
++	for caso: Array in [[4, 3], [7, 0]]:
++		var control := _azar(caso[1])
++		assert_int(control.randi_range(4, 7)).is_equal(caso[0])
++		var faltantes := Apertura.faltantes_al_azar({}, _casilleros(1), _azar(caso[1]))
++		assert_int(faltantes.size()).is_equal(caso[0])
++		for cantidad: int in faltantes.values():
++			assert_int(cantidad).is_equal(1)
++		var tres: Dictionary[Producto.Id, int] = {
++			Producto.Id.ACTRONCITO: 1,
++			Producto.Id.CORACOLA: 1,
++			Producto.Id.MAROLINI: 1,
++		}
++		assert_dict(Apertura.faltantes_al_azar({}, tres, _azar(caso[1]))).is_equal(tres)
++
++
++func test_extremos_de_unidades_con_fuentes_controladas() -> void:  # AC-STK-034
++	# Fila, pedido, máximo, semilla para 1, semilla para el máximo.
++	for caso: Array in [[6, 3, 5, 19, 4], [4, 1, 4, 1, 0], [6, 5, 3, 0, 6], [8, 0, 8, 1, 29]]:
++		var id := Producto.Id.ACTRONCITO
++		var casilleros: Dictionary[Producto.Id, int] = {id: caso[0]}
++		var pedidos: Dictionary[Producto.Id, int] = {id: caso[1]}
++		for extremo: Array in [[1, caso[3]], [caso[2], caso[4]]]:
++			var control := _azar(extremo[1])
++			control.randi_range(4, 7)
++			control.randi_range(0, 0)
++			assert_int(control.randi_range(1, caso[2])).is_equal(extremo[0])
++			(
++				assert_dict(Apertura.faltantes_al_azar(pedidos, casilleros, _azar(extremo[1])))
++				. is_equal({id: extremo[0]})
++			)
+diff --git a/test/dominio/jornada/sorteo_de_apertura_test.gd.uid b/test/dominio/jornada/sorteo_de_apertura_test.gd.uid
+new file mode 100644
+index 00000000..0f0abde4
+--- /dev/null
++++ b/test/dominio/jornada/sorteo_de_apertura_test.gd.uid
+@@ -0,0 +1 @@
++uid://284fy210b7e8
+diff --git a/test/escenas/apertura_con_lugar.gd b/test/escenas/apertura_con_lugar.gd
+index 4df07839..cc19914d 100644
+--- a/test/escenas/apertura_con_lugar.gd
++++ b/test/escenas/apertura_con_lugar.gd
+@@ -35,7 +35,7 @@ static func abrir_con_faltantes(almacen: Node3D, faltantes: Dictionary[Producto.
+ 
+ 
+ ## La noche con todo el lugar que una caja puede reponer: a cada producto le faltan tantas como
+-## su caja trae, o su fila entera si es más corta. Es lo más que el juego deja faltar.
++## su caja trae, o su fila entera si es más corta. Es la capacidad que reserva este fixture.
+ static func abrir_con_todo_el_lugar(almacen: Node3D) -> void:
+ 	var puesto: Node3D = almacen.get("_reposicion_manual")
+ 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
+@@ -43,3 +43,10 @@ static func abrir_con_todo_el_lugar(almacen: Node3D) -> void:
+ 	for id: Producto.Id in casilleros:
+ 		faltantes[id] = mini(casilleros[id], ReglasDelEstante.UNIDADES_POR_CAJA)
+ 	abrir_con_faltantes(almacen, faltantes)
++
++
++## Reabre con una fuente reproducible sin cambiar el cableado compartido de la venta.
++static func abrir_con_semilla(almacen: Node3D, jornada: int = 1, semilla: int = 17) -> void:
++	var azar: RandomNumberGenerator = almacen.get("azar_de_la_apertura")
++	azar.seed = semilla
++	almacen.call("_al_abrir_la_jornada", jornada)
+diff --git a/test/escenas/apertura_sorteada_test.gd b/test/escenas/apertura_sorteada_test.gd
+new file mode 100644
+index 00000000..674fc088
+--- /dev/null
++++ b/test/escenas/apertura_sorteada_test.gd
+@@ -0,0 +1,155 @@
++extends GdUnitTestSuite
++
++
++func _disposicion() -> DisposicionDeLaGondola:
++	return load("res://src/escenas/puestos/disposicion_de_la_gondola.tres")
++
++
++func _casilleros_medidos() -> Dictionary[Producto.Id, int]:
++	var disposicion := _disposicion()
++	var casilleros: Dictionary[Producto.Id, int] = {}
++	for producto in Catalogo.todos():
++		casilleros[producto.id] = disposicion.casilleros_de(producto.id)
++	return casilleros
++
++
++func _casilleros_reponibles() -> Dictionary[Producto.Id, int]:
++	var disposicion := _disposicion()
++	var casilleros: Dictionary[Producto.Id, int] = {}
++	for producto in Catalogo.todos():
++		casilleros[producto.id] = disposicion.filas_de_adelante[producto.id]
++	return casilleros
++
++
++func _comprobar_guias_llenas(
++	estante: Estante,
++	totales: Dictionary[Producto.Id, int],
++	principales: Dictionary[Producto.Id, int]
++) -> void:
++	for producto in Catalogo.todos():
++		assert_int(estante.cupo(producto)).is_equal(totales[producto.id])
++		var guias := totales[producto.id] - principales[producto.id]
++		var ocupados := estante.casilleros_ocupados(producto)
++		for casillero in guias:
++			assert_bool(ocupados.has(casillero)).is_true()
++
++
++func _azar(semilla: int) -> RandomNumberGenerator:
++	var azar := RandomNumberGenerator.new()
++	azar.seed = semilla
++	return azar
++
++
++func _completar_compra_fisica(atencion: Atencion, estante: Estante, desde_gondola: bool) -> int:
++	atencion.interactuar(null)
++	while not atencion.dialogo().terminado():
++		atencion.interactuar(null)
++	var productos_del_ticket: Array[Producto] = []
++	var vaciados := 0
++	for producto in atencion.comprador().pedido().productos():
++		for unidad in atencion.comprador().pedido().unidades_de(producto):
++			var ocupados := estante.casilleros_ocupados(producto)
++			var sacada: UnidadDeProducto
++			if desde_gondola and not ocupados.is_empty():
++				var antes := estante.unidades_en_gondola(producto)
++				sacada = estante.agarrar(producto, ocupados[0])
++				assert_int(estante.unidades_en_gondola(producto)).is_equal(antes - 1)
++				vaciados += 1
++			else:
++				sacada = estante.retirar(producto)
++			assert_object(sacada).is_not_null()
++			assert_int(atencion.interactuar(sacada)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
++			productos_del_ticket.append(producto)
++	assert_int(atencion.interactuar(Ticket.new(productos_del_ticket))).is_equal(
++		RecepcionDeCompra.Resultado.COMPLETA
++	)
++	assert_bool(atencion.vendida()).is_true()
++	return vaciados
++
++
++func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-035
++	var casilleros := _casilleros_medidos()
++	var reponibles := _casilleros_reponibles()
++	for jornada in range(1, 6):
++		for semilla in 200:
++			# La primera noche se recorre dos veces: cajas y casilleros ocupados.
++			for desde_gondola: bool in [false, true] if jornada == 1 else [false]:
++				var compradores := Compradores.de_la_jornada(jornada)
++				var inventario := Apertura.inventario_de_la_jornada(
++					compradores, casilleros, reponibles, _azar(semilla)
++				)
++				var estante := Estante.new(inventario, Catalogo.todos())
++				_comprobar_guias_llenas(estante, casilleros, reponibles)
++				assert_bool(estante.completada()).is_false()
++				var tarea := TareaDeAtender.new(compradores, inventario)
++				var huecos_por_ventas := 0
++				for comprador in compradores:
++					var atencion: Atencion
++					if jornada == 1:
++						tarea.avanzar(comprador.horario.x)
++						atencion = tarea.atencion()
++						assert_object(atencion.comprador()).is_same(comprador)
++						huecos_por_ventas += _completar_compra_fisica(
++							atencion, estante, desde_gondola
++						)
++					else:
++						assert_object(tarea.atender()).is_same(comprador)
++						atencion = tarea.atencion()
++						assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.COBRADA)
++					assert_bool(atencion.vendida()).is_true()
++				assert_bool(tarea.completada()).is_true()
++				if desde_gondola:
++					assert_int(huecos_por_ventas).is_greater(0)
++				for producto in Catalogo.todos():
++					for casillero in estante.casilleros_vacios(producto):
++						var unidad := estante.retirar(producto)
++						assert_object(unidad).is_not_null()
++						assert_int(estante.colocar_unidad(unidad, producto, casillero)).is_equal(
++							Estante.Rechazo.NINGUNO
++						)
++					assert_int(estante.unidades_en_gondola(producto)).is_equal(
++						casilleros[producto.id]
++					)
++				assert_bool(estante.completada()).is_true()
++
++
++func _faltantes_de(almacen: Node3D) -> Dictionary[Producto.Id, int]:
++	var estante: Estante = almacen.get("_repositor").estante()
++	var faltantes: Dictionary[Producto.Id, int] = {}
++	for producto in Catalogo.todos():
++		var falta := estante.cupo(producto) - estante.unidades_en_gondola(producto)
++		if falta > 0:
++			faltantes[producto.id] = falta
++	return faltantes
++
++
++func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC-STK-034
++	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
++	var almacen: Node3D = auto_free(escena.instantiate())
++	add_child(almacen)
++	almacen.get("_jugador").set_physics_process(false)
++	var puesto: Node3D = almacen.get("_reposicion_manual")
++	assert_dict(puesto.call("casilleros")).is_equal(_casilleros_medidos())
++	assert_dict(puesto.call("casilleros_reponibles")).is_equal(_casilleros_reponibles())
++	var azar: RandomNumberGenerator = almacen.get("azar_de_la_apertura")
++	var control := _azar(17)
++	azar.seed = 17
++	for jornada: int in [1, 1, 2]:
++		var esperado := Apertura.faltantes_al_azar(
++			Apertura.pedidos_de(Compradores.de_la_jornada(jornada)),
++			_casilleros_reponibles(),
++			control
++		)
++		almacen.call("_al_abrir_la_jornada", jornada)
++		_comprobar_guias_llenas(
++			almacen.get("_repositor").estante(), _casilleros_medidos(), _casilleros_reponibles()
++		)
++		assert_dict(_faltantes_de(almacen)).is_equal(esperado)
++		assert_int(azar.state).is_equal(control.state)
++		assert_object(almacen.get("azar_de_la_apertura")).is_same(azar)
++	azar.seed = 17
++	almacen.call("_al_abrir_la_jornada", 1)
++	var primera := _faltantes_de(almacen)
++	azar.seed = 17
++	almacen.call("_al_abrir_la_jornada", 1)
++	assert_dict(_faltantes_de(almacen)).is_equal(primera)
+diff --git a/test/escenas/apertura_sorteada_test.gd.uid b/test/escenas/apertura_sorteada_test.gd.uid
+new file mode 100644
+index 00000000..37f0d985
+--- /dev/null
++++ b/test/escenas/apertura_sorteada_test.gd.uid
+@@ -0,0 +1 @@
++uid://byckjmt8jne5d
+diff --git a/test/escenas/compatibilidad_guia_sin_principal_test.gd b/test/escenas/compatibilidad_guia_sin_principal_test.gd
+new file mode 100644
+index 00000000..53a4f320
+--- /dev/null
++++ b/test/escenas/compatibilidad_guia_sin_principal_test.gd
+@@ -0,0 +1,114 @@
++extends GdUnitTestSuite
++
++const HASTA_EL_PASILLO := 1.5
++const PASO_HACIA_EL_PASILLO := 0.05
++const HOLGURA_DEL_PISO := 0.02
++
++
++## Fixture genérico: no redefine la exhibición real de Poético ni la de Duronga.
++func test_guia_sin_principal_es_interactiva() -> void:  # AC-STK-033 AC-STK-028 AC-STK-044
++	var almacen: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
++	var puesto: Node3D = almacen.get_node("ReposicionManual")
++	var original: DisposicionDeLaGondola = puesto.get("disposicion")
++	var disposicion := original.duplicate(true) as DisposicionDeLaGondola
++	var producto := Catalogo.de(Producto.Id.POETICO)
++	assert_int(original.filas_de_adelante[producto.id]).is_greater(0)
++	disposicion.principales[producto.id] = PackedFloat32Array()
++	disposicion.filas_de_adelante[producto.id] = 0
++	assert_int(original.filas_de_adelante[producto.id]).is_greater(0)
++	puesto.set("disposicion", disposicion)
++	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
++	add_child(almacen)
++	almacen.get("_reloj").set_process(false)
++	var jugador: CharacterBody3D = almacen.get("_jugador")
++	jugador.set_physics_process(false)
++	for cuadro in 4:
++		await get_tree().physics_frame
++	var total: int = puesto.call("casilleros")[producto.id]
++	assert_int(total).is_greater(0)
++	assert_int(puesto.call("casilleros_reponibles")[producto.id]).is_zero()
++	var estante: Estante = almacen.get("_repositor").estante()
++	assert_int(estante.cupo(producto)).is_equal(total)
++	assert_int(estante.unidades_en_gondola(producto)).is_equal(total)
++	var frente := Vector3.BACK
++	var elegido: Node3D = null
++	var pie := Vector3.INF
++	for indice in total:
++		var zona: Node3D = puesto.call("casillero", producto.id, indice)
++		var candidato := _lugar_en_el_pasillo(almacen, zona.global_position, frente)
++		if candidato != Vector3.INF:
++			elegido = zona
++			pie = candidato
++			break
++	assert_object(elegido).is_not_null()
++	if elegido == null:
++		return
++	jugador.global_position = pie + Vector3.UP * HOLGURA_DEL_PISO
++	var camara: Camera3D = jugador.get_node("Giro/Camara")
++	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
++	camara.look_at(elegido.global_position)
++	for cuadro in 4:
++		await get_tree().physics_frame
++	jugador.call("_leer_la_mira")
++	assert_object(jugador.get("_enfocado")).is_same(elegido)
++	_clic(jugador)
++	var agarre: Agarre = almacen.get("_agarre")
++	var unidad := agarre.manos().sostenido() as UnidadDeProducto
++	assert_object(unidad).is_not_null()
++	if unidad == null:
++		return
++	assert_int(unidad.producto.id).is_equal(producto.id)
++	assert_int(estante.unidades_en_gondola(producto)).is_equal(total - 1)
++	assert_array(estante.casilleros_vacios(producto)).is_equal([elegido.get("casillero")])
++	for cuadro in 4:
++		await get_tree().physics_frame
++	jugador.call("_leer_la_mira")
++	assert_object(jugador.get("_enfocado")).is_same(elegido)
++	_clic(jugador)
++	assert_object(agarre.manos().sostenido()).is_null()
++	assert_int(estante.unidades_en_gondola(producto)).is_equal(total)
++	assert_array(estante.casilleros_vacios(producto)).is_empty()
++	assert_int(disposicion.filas_de_adelante[Producto.Id.DURONGA]).is_greater(0)
++
++
++func _clic(jugador: Node3D) -> void:
++	var clic := InputEventAction.new()
++	clic.action = ReglasDeLosObjetos.ACCION_AGARRAR
++	clic.pressed = true
++	jugador.call("_unhandled_input", clic)
++	clic.pressed = false
++	jugador.call("_unhandled_input", clic)
++
++
++func _lugar_en_el_pasillo(almacen: Node3D, delante: Vector3, frente: Vector3) -> Vector3:
++	var jugador: CharacterBody3D = almacen.get("_jugador")
++	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
++	var consulta := PhysicsShapeQueryParameters3D.new()
++	consulta.shape = cuerpo.shape
++	consulta.collision_mask = jugador.collision_mask
++	consulta.exclude = [jugador.get_rid()]
++	var espacio := almacen.get_world_3d().direct_space_state
++	var lateral := frente.cross(Vector3.UP).normalized()
++	var distancia := 0.0
++	while distancia <= HASTA_EL_PASILLO:
++		# Una hoja abierta ocupa el borde del pasillo; se puede apuntar desde un costado.
++		for costado: float in [0.0, -0.2, 0.2, -0.4, 0.4]:
++			var punto := Vector3(delante.x, 0.0, delante.z) + frente * distancia
++			punto += lateral * costado
++			var piso := espacio.intersect_ray(
++				PhysicsRayQueryParameters3D.create(punto + Vector3.UP, punto + Vector3.DOWN, 1)
++			)
++			if piso.is_empty():
++				continue
++			var pie: Vector3 = piso["position"]
++			consulta.transform = Transform3D(
++				Basis.IDENTITY, pie + cuerpo.position + Vector3.UP * HOLGURA_DEL_PISO
++			)
++			if espacio.intersect_shape(consulta, 1).is_empty():
++				var ojos := pie + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
++				var vista := PhysicsRayQueryParameters3D.create(ojos, delante, 1)
++				vista.exclude = [jugador.get_rid()]
++				if espacio.intersect_ray(vista).is_empty():
++					return pie
++		distancia += PASO_HACIA_EL_PASILLO
++	return Vector3.INF
+diff --git a/test/escenas/compatibilidad_guia_sin_principal_test.gd.uid b/test/escenas/compatibilidad_guia_sin_principal_test.gd.uid
+new file mode 100644
+index 00000000..ed11cb22
+--- /dev/null
++++ b/test/escenas/compatibilidad_guia_sin_principal_test.gd.uid
+@@ -0,0 +1 @@
++uid://bmbs8fnxxr5d3
+diff --git a/test/escenas/jornada_integrada_test.gd b/test/escenas/jornada_integrada_test.gd
+index 78814ba0..b70ff8f9 100644
+--- a/test/escenas/jornada_integrada_test.gd
++++ b/test/escenas/jornada_integrada_test.gd
+@@ -18,6 +18,9 @@ const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
+ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
++	var control := RandomNumberGenerator.new()
++	control.seed = 17
+ 	var reloj: RelojDelTurno = almacen.get("_reloj")
+ 	var tiempos: Array[float] = []
+ 	reloj.tiempo_consumido.connect(func(restante: float) -> void: tiempos.append(restante))
+@@ -25,7 +28,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
+ 	await get_tree().process_frame
+ 	assert_bool(reloj.corriendo()).is_true()
+ 	_comprobar_ninguna_cumplida_al_abrir(almacen)
+-	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA))
++	_comprobar_huecos(almacen, _completos_al_abrir(almacen, 1, control))
+ 	await _reponer(almacen)
+ 	_comprobar_huecos(almacen, Catalogo.todos().size())
+ 	await _atender(almacen)
+@@ -51,14 +54,18 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
+ 	_comprobar_ninguna_cumplida_al_abrir(almacen)
+ 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
+ 	assert_int(recolector.tarea().depositadas()).is_zero()
+-	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA + 1))
++	_comprobar_huecos(almacen, _completos_al_abrir(almacen, 2, control))
+ 	_comprobar_planilla_en_cero(almacen)
+ 
+ 
+ ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
+ ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
+-func _completos_al_abrir(jornada: int) -> int:
+-	return Catalogo.todos().size() - Apertura.faltantes_de_la_jornada(jornada).size()
++func _completos_al_abrir(almacen: Node3D, jornada: int, azar: RandomNumberGenerator) -> int:
++	var casilleros: Dictionary[Producto.Id, int] = (
++		almacen.get("_reposicion_manual").casilleros_reponibles()
++	)
++	var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(jornada))
++	return Catalogo.todos().size() - Apertura.faltantes_al_azar(pedidos, casilleros, azar).size()
+ 
+ 
+ # AC-STK-026
+@@ -93,6 +100,7 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
+ 	# con la última.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().process_frame
+ 	await get_tree().process_frame
+ 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+@@ -103,6 +111,7 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
+ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().process_frame
+ 	var jugador: Node3D = almacen.get("_jugador")
+ 	var control: ControlDelJugador = jugador.get("_control")
+@@ -142,6 +151,7 @@ func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
+ 	# de lo que se lleva, y la segunda reanudaba al jugador con la pantalla abierta.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().process_frame
+ 	var jugador: Node3D = almacen.get("_jugador")
+ 	var control: ControlDelJugador = jugador.get("_control")
+@@ -457,6 +467,7 @@ func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
+ func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var puertas: Array = almacen.get("_puertas")
+ 	assert_array(puertas).is_not_empty()
+@@ -500,6 +511,7 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:
+ 	# otra con una unidad devuelta. La noche siguiente no hereda ninguna de las tres.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().process_frame
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	almacen.get("_jugador").set_physics_process(false)
+diff --git a/test/escenas/objetos/caja_que_recibe_y_cuenta_test.gd b/test/escenas/objetos/caja_que_recibe_y_cuenta_test.gd
+index ecdcae32..8c940b49 100644
+--- a/test/escenas/objetos/caja_que_recibe_y_cuenta_test.gd
++++ b/test/escenas/objetos/caja_que_recibe_y_cuenta_test.gd
+@@ -22,8 +22,10 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
+ func _almacen_con_jugador_quieto() -> Node3D:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	almacen.get("_jugador").set_physics_process(false)
++	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	return almacen
+ 
+ 
+@@ -116,9 +118,7 @@ func test_con_la_caja_llena_la_unidad_sigue_en_la_mano() -> void:  # AC-STK-040
+ 	var almacen: Node3D = await _almacen_con_jugador_quieto()
+ 	var puesto: Node3D = almacen.get("_reposicion_manual")
+ 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
+-	var inventario := Apertura.inventario_de_la_jornada(
+-		ReglasDeLaPartida.PRIMERA_JORNADA, casilleros
+-	)
++	var inventario := Apertura.inventario_con_faltantes({}, casilleros)
+ 	var coracola := Catalogo.de(Producto.Id.CORACOLA)
+ 	inventario.ingresar(coracola, Inventario.Ubicacion.DEPOSITO, 1)
+ 	var repositor: Repositor = almacen.get("_repositor")
+diff --git a/test/escenas/objetos/caja_que_se_lleva_test.gd b/test/escenas/objetos/caja_que_se_lleva_test.gd
+index 5bb68264..d168d2c3 100644
+--- a/test/escenas/objetos/caja_que_se_lleva_test.gd
++++ b/test/escenas/objetos/caja_que_se_lleva_test.gd
+@@ -127,8 +127,10 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
+ func _almacen_con_jugador_quieto() -> Node3D:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	almacen.get("_jugador").set_physics_process(false)
++	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	return almacen
+ 
+ 
+@@ -182,6 +184,7 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:
+ 	# sólo se ejerce con `move_and_slide` corriendo.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+@@ -358,6 +361,7 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
+ 	# lo mismo que la caja y las dos cuentas del margen se cruzan.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+@@ -391,6 +395,7 @@ func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
+ 	# caja al piso de adelante, y apilar pedía subir la mira hasta la tapa.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+@@ -749,6 +754,7 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
+ 	# estante la mira llega a la madera, y un paso atrás ya no, así que el apoyo es el piso.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	almacen.get_node("Estructura/deposito_pallet_piso").position.x += 100
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+@@ -878,6 +884,7 @@ func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:
+ 	# arranca ya tocando algo. De 256 soltadas alrededor de esa góndola, 20 quedaban adentro de ella.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var soltadas := 0
+ 	for ruta_del_mueble: String in [ESTANTE_DEL_DEPOSITO, GONDOLA_DEL_PASILLO]:
+@@ -1022,6 +1029,7 @@ func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
+ 	# cosa enfocada que contestara `null` —que para una mancha es siempre—.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	almacen.get("_ciclo").abrir_la_jornada()
+ 	await get_tree().physics_frame
+@@ -1074,6 +1082,7 @@ func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:
+ 	# escena sería peor que una que no se desarma nunca.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var grandes := _las_grandes(almacen.get("_cajas_de_productos"))
+@@ -1150,6 +1159,7 @@ func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:
+ 	# nadie. Antes nacía 0,8 m adelante: agarrando de cerca el jugador se subía al estante.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
+@@ -1174,6 +1184,7 @@ func test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso() -> void:
+ 	# tumbarse ni levantarse del piso: se arrastra.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	# **Se empuja en el piso libre del depósito y no delante de donde el jugador aparece.** Ahí
+@@ -1313,6 +1324,7 @@ func test_levantar_la_caja_hace_caer_el_producto_apoyado_encima() -> void:
+ 	# producto del piso, a un metro, no estaba encima de nada.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+@@ -1341,6 +1353,7 @@ func test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto() -> void
+ 	# doble que el caso del arrastre, porque tiene que salir entera y no sólo moverse.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+@@ -1382,6 +1395,7 @@ func test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo() -> voi
+ 	# sacada la de abajo, la del medio cae, y el producto cae con ella.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+diff --git a/test/escenas/puestos/disposicion_de_la_gondola_test.gd b/test/escenas/puestos/disposicion_de_la_gondola_test.gd
+index c344bca6..0d205224 100644
+--- a/test/escenas/puestos/disposicion_de_la_gondola_test.gd
++++ b/test/escenas/puestos/disposicion_de_la_gondola_test.gd
+@@ -76,30 +76,20 @@ func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
+ 		)
+ 
+ 
+-## Lo que una jornada hace faltar de un producto tiene que entrar en su fila: con más, la góndola
+-## arrancaría vacía y faltaría menos de lo que la jornada dice. El cupo nuevo no cambia los
+-## faltantes declarados por una jornada.
+-func test_ningun_faltante_de_ninguna_jornada_pasa_de_su_fila() -> void:  # AC-STK-033
++## Los faltantes caben en la fila principal medida en el recurso vigente.
++func test_doscientas_semillas_entran_en_fila_y_caja() -> void:  # AC-STK-033
+ 	var disposicion := _disposicion()
+-	for numero in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
+-		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + numero
+-		var faltantes := Apertura.faltantes_de_la_jornada(jornada)
+-		for id: Producto.Id in faltantes:
+-			(
+-				assert_int(faltantes[id])
+-				. override_failure_message(
+-					(
+-						"jornada %d: faltan %d %s y su fila tiene %d casilleros"
+-						% [
+-							jornada,
+-							faltantes[id],
+-							Catalogo.de(id).nombre,
+-							disposicion.filas_de_adelante[id],
+-						]
+-					)
+-				)
+-				. is_less_equal(disposicion.filas_de_adelante[id])
+-			)
++	var casilleros: Dictionary[Producto.Id, int] = {}
++	for producto in Catalogo.todos():
++		casilleros[producto.id] = disposicion.filas_de_adelante[producto.id]
++	for jornada in range(1, 6):
++		var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(jornada))
++		for semilla in 200:
++			var azar := RandomNumberGenerator.new()
++			azar.seed = semilla
++			var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, azar)
++			for id: Producto.Id in faltantes:
++				assert_int(faltantes[id]).is_between(1, mini(8, casilleros[id]))
+ 
+ 
+ ## Una fila entera de casilleros, o dos iguales con los casilleros en la de adelante: las
+diff --git a/test/escenas/puestos/escritorio_test.gd b/test/escenas/puestos/escritorio_test.gd
+index bfe2e1a4..6bd10e3d 100644
+--- a/test/escenas/puestos/escritorio_test.gd
++++ b/test/escenas/puestos/escritorio_test.gd
+@@ -107,9 +107,10 @@ func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:
+ 	reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
+ 	var computadora: ComputadoraDeEscritorio = auto_free(ComputadoraDeEscritorio.new())
+ 	computadora.reloj = reloj
++	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+ 	var atender := TareaDeAtender.new(
+-		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA),
+-		Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
++		compradores,
++		Apertura.inventario_de_la_jornada(compradores, {}, {}, RandomNumberGenerator.new())
+ 	)
+ 	computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
+ 	escritorio.jugador = jugador
+diff --git a/test/escenas/reposicion_manual_test.gd b/test/escenas/reposicion_manual_test.gd
+index de311b36..6fa23819 100644
+--- a/test/escenas/reposicion_manual_test.gd
++++ b/test/escenas/reposicion_manual_test.gd
+@@ -10,6 +10,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
+ 	# inventario da por lleno, y el jugador repondría lo que no falta.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	# El cobro automático continúa en las jornadas posteriores a la primera.
+ 	almacen.call("_al_abrir_la_jornada", 2)
+ 	almacen.get("_jugador").set_physics_process(false)
+@@ -49,6 +50,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
+ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	almacen.get("_jugador").set_physics_process(false)
+ 	var presentacion: Node3D = almacen.get("_reposicion_manual")
+@@ -104,6 +106,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
+ 	for giro: float in [0.8, 1.6, 5.6]:
+ 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 		add_child(almacen)
++		AperturaConLugar.abrir_con_semilla(almacen)
+ 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 		almacen.get("_jugador").set_physics_process(false)
+ 		var agarre: Agarre = almacen.get("_agarre")
+@@ -139,6 +142,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
+ func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	jugador.set_physics_process(false)
+@@ -159,6 +163,7 @@ func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
+ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	jugador.set_physics_process(false)
+@@ -199,6 +204,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
+ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	var presentacion: Node3D = almacen.get("_reposicion_manual")
+ 	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", true, false)
+ 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
+@@ -230,6 +236,7 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
+ func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	var presentacion: Node3D = almacen.get("_reposicion_manual")
+ 	var agarre: Agarre = almacen.get("_agarre")
+@@ -252,6 +259,7 @@ func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
+ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	almacen.get("_jugador").set_physics_process(false)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	var presentacion: Node3D = almacen.get("_reposicion_manual")
+@@ -300,6 +308,7 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
+ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	var presentacion: Node3D = almacen.get("_reposicion_manual")
+ 	var agarre: Agarre = almacen.get("_agarre")
+@@ -333,6 +342,7 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
+ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	var jugador: Node3D = almacen.get("_jugador")
+ 	jugador.set_physics_process(false)
+@@ -375,6 +385,7 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
+ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	# La segunda jornada restaura las cajas en sus estantes. La primera ahora entrega sobre
+ 	# pallets, y este caso ejerce el alcance de las dos alturas del rack, no la descarga.
+ 	almacen.call("_al_abrir_la_jornada", 2)
+@@ -429,10 +440,13 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
+ func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	# Lo expuesto al abrir se cuenta: la góndola del inventario es la fila menos lo que la jornada
+ 	# hace faltar, y lo dibujado son esas mismas unidades y ninguna más.
+ 	var estante: Estante = almacen.get("_repositor").estante()
+-	var faltantes := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
++	var faltantes: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 4}
++	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
++	estante = almacen.get("_repositor").estante()
+ 	for producto in Catalogo.todos():
+ 		var puestas := estante.unidades_en_gondola(producto)
+ 		assert_int(puestas).is_equal(estante.cupo(producto) - faltantes.get(producto.id, 0))
+@@ -470,6 +484,7 @@ func _clic_real(jugador: Node3D) -> void:
+ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	var jugador: Node3D = almacen.get("_jugador")
+ 	jugador.set_physics_process(false)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+@@ -529,6 +544,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
+ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	await get_tree().physics_frame
+ 	await get_tree().physics_frame
+@@ -573,6 +589,8 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
+ func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void:  # AC-STK-017
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
++	AperturaConLugar.abrir_con_faltantes(almacen, {Producto.Id.ACTRONCITO: 4})
+ 	await get_tree().physics_frame
+ 	await get_tree().physics_frame
+ 	almacen.get("_jugador").set_physics_process(false)
+@@ -613,6 +631,7 @@ func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void
+ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	await get_tree().physics_frame
+ 	almacen.get("_jugador").set_physics_process(false)
+@@ -645,6 +664,7 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
+ func test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	await get_tree().physics_frame
+ 	var jugador: Node3D = almacen.get("_jugador")
+@@ -760,6 +780,8 @@ func _transformacion_de_copia(copias: MultiMesh, indice: int) -> Transform3D:
+ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_coloca() -> void:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
++	AperturaConLugar.abrir_con_faltantes(almacen, {Producto.Id.ACTRONCITO: 4})
+ 	await get_tree().physics_frame
+ 	var jugador: Node3D = almacen.get("_jugador")
+ 	jugador.set_physics_process(false)
+@@ -795,6 +817,7 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
+ func test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira() -> void:  # AC-PLY-033
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: Node3D = almacen.get("_jugador")
+ 	jugador.set_physics_process(false)
+@@ -823,6 +846,7 @@ func test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira() -> void:  # AC-
+ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-035
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: Node3D = almacen.get("_jugador")
+ 	jugador.set_physics_process(false)
+diff --git a/test/escenas/un_lugar_por_producto_test.gd b/test/escenas/un_lugar_por_producto_test.gd
+index 58e4134e..113bb388 100644
+--- a/test/escenas/un_lugar_por_producto_test.gd
++++ b/test/escenas/un_lugar_por_producto_test.gd
+@@ -13,6 +13,14 @@ const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+ ## Hasta dónde se busca, delante de una unidad, un lugar donde el jugador entre parado, en
+ ## metros. El cuerpo del jugador no pasa del contorno del mueble, y un zócalo hondo asoma por
+ ## delante de lo de arriba: el lugar aparece antes de cruzar el pasillo.
++const FALTANTES_DE_PRUEBA: Dictionary[Producto.Id, int] = {
++	Producto.Id.ACTRONCITO: 4,
++	Producto.Id.CORACOLA: 5,
++	Producto.Id.MAROLINI: 2,
++	Producto.Id.PRONGLES: 8,
++	Producto.Id.LAYSNTT: 4
++}
++
+ const HASTA_EL_PASILLO := 1.5
+ 
+ ## De a cuánto se avanza buscando ese lugar, en metros.
+@@ -26,6 +34,8 @@ const HOLGURA_DEL_PISO := 0.02
+ func _almacen() -> Node3D:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	AperturaConLugar.abrir_con_semilla(almacen)
++	AperturaConLugar.abrir_con_faltantes(almacen, FALTANTES_DE_PRUEBA)
+ 	almacen.get("_jugador").set_physics_process(false)
+ 	return almacen
+ 
+@@ -40,10 +50,7 @@ func _cupo(almacen: Node3D, producto: Producto) -> int:
+ 
+ ## Lo que la jornada 1 hace faltar de ese producto, que es con lo que abre el local armado.
+ func _faltante(almacen: Node3D, producto: Producto) -> int:
+-	var pedido: int = Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA).get(
+-		producto.id, 0
+-	)
+-	return mini(pedido, _cupo(almacen, producto))
++	return mini(FALTANTES_DE_PRUEBA.get(producto.id, 0), _cupo(almacen, producto))
+ 
+ 
+ ## Una copia del bloque principal, en el mundo.
+@@ -461,7 +468,7 @@ func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
+ 
+ 
+ ## La apertura deja los huecos pedidos hasta el cupo real que tiene cada fila del modelo.
+-func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC-STK-004
++func test_la_apertura_fija_dibuja_sus_faltantes() -> void:  # AC-STK-004
+ 	var almacen := _almacen()
+ 	var estante := (almacen.get("_repositor") as Repositor).estante()
+ 	var disposicion := _disposicion(almacen)
+diff --git a/test/escenas/unidades_sueltas_del_cierre_test.gd b/test/escenas/unidades_sueltas_del_cierre_test.gd
+index 37bee303..2b059c43 100644
+--- a/test/escenas/unidades_sueltas_del_cierre_test.gd
++++ b/test/escenas/unidades_sueltas_del_cierre_test.gd
+@@ -2,6 +2,7 @@
+ extends GdUnitTestSuite
+ 
+ const ALMACEN := preload("res://src/escenas/almacen.tscn")
++const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+ const CIERRE := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+ const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
+ var _almacen: Node3D
+@@ -22,6 +23,8 @@ func after_test() -> void:
+ func _abrir() -> void:
+ 	_almacen = ALMACEN.instantiate()
+ 	add_child(_almacen)
++	AperturaConLugar.abrir_con_semilla(_almacen)
++	AperturaConLugar.abrir_con_todo_el_lugar(_almacen)
+ 	_almacen.get("_jugador").set_process(false)
+ 	_almacen.get("_jugador").set_physics_process(false)
+ 
+diff --git a/test/ui/diegetica/pantalla_de_computadora_test.gd b/test/ui/diegetica/pantalla_de_computadora_test.gd
+index 93206900..a7fd63bb 100644
+--- a/test/ui/diegetica/pantalla_de_computadora_test.gd
++++ b/test/ui/diegetica/pantalla_de_computadora_test.gd
+@@ -42,7 +42,7 @@ func test_la_planilla_muestra_cada_producto_y_sigue_a_los_gestos() -> void:
+ 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
+ 	add_child(pantalla)
+ 	var atender := TareaDeAtender.new(
+-		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
++		[], Apertura.inventario_de_la_jornada([], {}, {}, RandomNumberGenerator.new())
+ 	)
+ 	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
+ 	var app := pantalla.caja()
+@@ -71,7 +71,7 @@ func test_todas_las_filas_se_alcanzan_con_la_rueda_dentro_de_la_pantalla() -> vo
+ 	add_child(pantalla)
+ 	pantalla.mostrar(Computadora.App.CAJA)
+ 	var atender := TareaDeAtender.new(
+-		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
++		[], Apertura.inventario_de_la_jornada([], {}, {}, RandomNumberGenerator.new())
+ 	)
+ 	var app := pantalla.caja()
+ 	app.mostrar(RegistroDeVentas.new(Catalogo.todos(), atender))
+@@ -162,7 +162,7 @@ func test_cada_click_en_un_boton_de_cualquier_app_emite_boton_pulsado() -> void:
+ 	assert_int(pulsados[0]).is_equal(1)
+ 	# Las filas de la planilla se agregan después de `_ready()`, al mostrarla.
+ 	var atender := TareaDeAtender.new(
+-		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
++		[], Apertura.inventario_de_la_jornada([], {}, {}, RandomNumberGenerator.new())
+ 	)
+ 	pantalla.caja().mostrar(RegistroDeVentas.new(Catalogo.todos(), atender))
+ 	var fila := (pantalla.caja().get("_filas") as Container).get_child(0)

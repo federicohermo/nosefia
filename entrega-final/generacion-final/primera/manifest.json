@@ -1,0 +1,242 @@
+{
+  "assets/models/SEPT_JUEGOS_PROTOTIPO.blend": {
+    "sha256": "d5120bc6492e9d98873d4b262b8a45854092a2703f515da4d4b8238015efde04",
+    "bytes": 40463728,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\SEPT_JUEGOS_PROTOTIPO.blend",
+    "mtime_original_ns": 1792124951128917000
+  },
+  "assets/models/SEPT_JUEGOS_PROTOTIPO.glb": {
+    "sha256": "556f668ce14fb5c3f3ad1c0da50e9b308e696a1efbd54c05c7f965f1bb96aa55",
+    "bytes": 46416408,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\SEPT_JUEGOS_PROTOTIPO.glb",
+    "mtime_original_ns": 1792125064408083200
+  },
+  "assets/models/SEPT_JUEGOS_PROTOTIPO.glb.fuente": {
+    "sha256": "185058d95d797ffcf4af1a9c682d7880f56f6e3461580ecca9f154fec5e9aae1",
+    "bytes": 94,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\SEPT_JUEGOS_PROTOTIPO.glb.fuente",
+    "mtime_original_ns": 1792125064440783000
+  },
+  "assets/models/SEPT_JUEGOS_PROTOTIPO.glb.unwrap_cache": {
+    "sha256": "e360362c85ae8e73bd3b87d7c99e21a50d2f9b00e6d740259d75a9a5eb736603",
+    "bytes": 209428,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\SEPT_JUEGOS_PROTOTIPO.glb.unwrap_cache",
+    "mtime_original_ns": 1792125079341842700
+  },
+  "src/escenas/puestos/disposicion_de_la_gondola.tres": {
+    "sha256": "e28aabba3c638f230de0b6e0bf461e74ac016d2cd13ace49b961f5b154b39369",
+    "bytes": 42727,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\disposicion_de_la_gondola.tres",
+    "mtime_original_ns": 1792124957226220000
+  },
+  "src/escenas/puestos/contenido_del_estante.tscn": {
+    "sha256": "19a95cfb856406b7067604700c0cee324d181716757b3b1f4c1d798d5cf2cb25",
+    "bytes": 11724,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\contenido_del_estante.tscn",
+    "mtime_original_ns": 1792124957226220000
+  },
+  "src/escenas/puestos/guia_del_estante.tscn": {
+    "sha256": "463c846e365dcbdf1c14d00bfd552606d1a452c14e8a958e5aa73da98dc5aa00",
+    "bytes": 10556,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\guia_del_estante.tscn",
+    "mtime_original_ns": 1792124957226220000
+  },
+  "src/escenas/puestos/estructura_del_almacen.tscn": {
+    "sha256": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e",
+    "bytes": 1150860,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\src\\escenas\\puestos\\estructura_del_almacen.tscn",
+    "mtime_original_ns": 1792124957228388500
+  },
+  "assets/models/producto_actroncito.res": {
+    "sha256": "85e8ab9bff31e966c37254cfbe72ef2fca4f78a6677e858a3369bd1bea509755",
+    "bytes": 5214,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_actroncito.res",
+    "mtime_original_ns": 1792125081003661700
+  },
+  "assets/models/producto_amargadito.res": {
+    "sha256": "6125a1f12d962d6110dafae087416f701a7a45ec675b92f3be3d600a32d95e86",
+    "bytes": 5218,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_amargadito.res",
+    "mtime_original_ns": 1792125081022858900
+  },
+  "assets/models/producto_arvejas.res": {
+    "sha256": "6f6bf8a38cca1786733039316ef5ffd1263ff37350a04d34f29047edc8dada6b",
+    "bytes": 33520,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_arvejas.res",
+    "mtime_original_ns": 1792125081012346300
+  },
+  "assets/models/producto_burbaloo.res": {
+    "sha256": "edd7677c8c65a0cfba91fdded3883080685dc4c1bda43823b5801ed728296253",
+    "bytes": 6366,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_burbaloo.res",
+    "mtime_original_ns": 1792125081005666100
+  },
+  "assets/models/producto_chisitos.res": {
+    "sha256": "7fc4a106d7c4eebe32cf06b68e3d1f95bfe1cdbaf2f9fc7ff4a488e395470378",
+    "bytes": 8948,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_chisitos.res",
+    "mtime_original_ns": 1792125081013346500
+  },
+  "assets/models/producto_cindolor.res": {
+    "sha256": "943017bc53a4fff8fe58f15d28e76d932e63f46c62cc5f444cf3b29be3d0222b",
+    "bytes": 5208,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_cindolor.res",
+    "mtime_original_ns": 1792125081023861400
+  },
+  "assets/models/producto_coracola.res": {
+    "sha256": "ad1430726b179a594787afa2e3da5d357cb0eebd0ec2c55a2ff14e5fda49923a",
+    "bytes": 25614,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_coracola.res",
+    "mtime_original_ns": 1792125081020347200
+  },
+  "assets/models/producto_cosa_de_mani.res": {
+    "sha256": "e291d1299ff43b15800f1c5aebc6042e6ca0f958a717adcd15f5f79b04a36977",
+    "bytes": 6666,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_cosa_de_mani.res",
+    "mtime_original_ns": 1792125081031180600
+  },
+  "assets/models/producto_donsaturados.res": {
+    "sha256": "0c9a63227bb7b21e4a93ded01ad13f14c474e075098d9307b9ca5fd793e1fdbf",
+    "bytes": 6036,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_donsaturados.res",
+    "mtime_original_ns": 1792125081025860800
+  },
+  "assets/models/producto_durextra.res": {
+    "sha256": "187bc9925dde292f30f520539b51ec335a48ecd9192df988220241e6a5b89d67",
+    "bytes": 5214,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_durextra.res",
+    "mtime_original_ns": 1792125081004665000
+  },
+  "assets/models/producto_duronga.res": {
+    "sha256": "27d96d00f084546cd98b9b34834bd60ccf6f7f8703fff57ad22733836ac0a25b",
+    "bytes": 5187,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_duronga.res",
+    "mtime_original_ns": 1792125081032179600
+  },
+  "assets/models/producto_feel_ricky_fort.res": {
+    "sha256": "f606065b4ada39e589952480c1a20d16baf4c477b281cc48e191ba4278213699",
+    "bytes": 5188,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_feel_ricky_fort.res",
+    "mtime_original_ns": 1792125081039180100
+  },
+  "assets/models/producto_fernet_god.res": {
+    "sha256": "0c18aa2a38c0d0a311977b53ce3a3bb6429c21990e7dd2fe3dbdd1371360c0e2",
+    "bytes": 10018,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_fernet_god.res",
+    "mtime_original_ns": 1792125081033181800
+  },
+  "assets/models/producto_flinpuf.res": {
+    "sha256": "929273ef4c2a9a1eb6cba226e01a5f520f3356eac82ad73f81ca702f9e3453a4",
+    "bytes": 6644,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_flinpuf.res",
+    "mtime_original_ns": 1792125081024861600
+  },
+  "assets/models/producto_frotlups.res": {
+    "sha256": "6758ff82444bb5700a1c74a01a2d2c254aa68ecc8753e4b483f5f8aec4177088",
+    "bytes": 5204,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_frotlups.res",
+    "mtime_original_ns": 1792125081021346400
+  },
+  "assets/models/producto_jorgillo.res": {
+    "sha256": "8af581b0483c4943e78c086d78a2e17d0edec080594d6f1bcf48aa7061823785",
+    "bytes": 5205,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_jorgillo.res",
+    "mtime_original_ns": 1792125081010346600
+  },
+  "assets/models/producto_laysntt.res": {
+    "sha256": "378b0a57b2bce5bcfd79372d2e9ddadf926646f56c561b351fb38f6153c5778f",
+    "bytes": 8963,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_laysntt.res",
+    "mtime_original_ns": 1792125081007345100
+  },
+  "assets/models/producto_macumbas.res": {
+    "sha256": "3ea331b3c00cefd595021e95dfbe173a33320be0f06275529b9efd9b8b0e45fd",
+    "bytes": 5940,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_macumbas.res",
+    "mtime_original_ns": 1792125081029859800
+  },
+  "assets/models/producto_malbardo.res": {
+    "sha256": "8e2a437caefe152d5091941d224ebd22a906adba40b9a981d6260a053a6dc724",
+    "bytes": 8059,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_malbardo.res",
+    "mtime_original_ns": 1792125081008345900
+  },
+  "assets/models/producto_marolini.res": {
+    "sha256": "50fa9f8b71e836a2ededd34bee510624c21a6ffbfd016c4c57a5f119cc7224d0",
+    "bytes": 5198,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_marolini.res",
+    "mtime_original_ns": 1792125081021852400
+  },
+  "assets/models/producto_marranos.res": {
+    "sha256": "bc8daad8f41dd6f24889f5e7da1f663748c92e6aee300196f73bb45897058b0b",
+    "bytes": 12118,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_marranos.res",
+    "mtime_original_ns": 1792125081037178400
+  },
+  "assets/models/producto_mayonchis.res": {
+    "sha256": "d1de5e204f2cf3fd4d6684d2737f42e4e3d941a9a9e36c1cdd7e618189f6a83f",
+    "bytes": 5212,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_mayonchis.res",
+    "mtime_original_ns": 1792125081034180100
+  },
+  "assets/models/producto_oaaaa.res": {
+    "sha256": "70867e8872ffc0d1d29af4e357c4208840ac6f70bcc0f6ef502b073b167c0e7f",
+    "bytes": 5218,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_oaaaa.res",
+    "mtime_original_ns": 1792125081035178800
+  },
+  "assets/models/producto_oremos.res": {
+    "sha256": "5929cb2d3ef231c4f190aed84e9f44b1548f086decfa6c8754b5d34da14ba553",
+    "bytes": 5179,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_oremos.res",
+    "mtime_original_ns": 1792125081014347200
+  },
+  "assets/models/producto_pepitos.res": {
+    "sha256": "ec30043eebde8668bc3cdaabfd3775c82249af9286add2a7d213fa76c311b31d",
+    "bytes": 5183,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_pepitos.res",
+    "mtime_original_ns": 1792125081015347200
+  },
+  "assets/models/producto_petisas.res": {
+    "sha256": "378cec94ffcbe49ead4346239a38f85c68b4aed11662610ffc26a781c8650cb7",
+    "bytes": 5997,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_petisas.res",
+    "mtime_original_ns": 1792125081027857700
+  },
+  "assets/models/producto_poetico.res": {
+    "sha256": "97c0a526887e9ae84c83902fc10a1ff4a1d52d47b712df4612e2a1a72bd4994c",
+    "bytes": 17347,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_poetico.res",
+    "mtime_original_ns": 1792125081040179800
+  },
+  "assets/models/producto_prongles.res": {
+    "sha256": "24835181c1705948d60161c812b8c60d4e5961a0d40309070f81b8b1082d3ca5",
+    "bytes": 12955,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_prongles.res",
+    "mtime_original_ns": 1792125081009344600
+  },
+  "assets/models/producto_saladik.res": {
+    "sha256": "83b2dc7f43cfabba98af16c3066a7d3727a9b0366b8bace153bb47a4604f923a",
+    "bytes": 5188,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_saladik.res",
+    "mtime_original_ns": 1792125081016347300
+  },
+  "assets/models/producto_terminator.res": {
+    "sha256": "e2cd6b862699f8ee685c71a57baae7670b3f93d144d5f0902935ab630c9c4f95",
+    "bytes": 5220,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_terminator.res",
+    "mtime_original_ns": 1792125081036181000
+  },
+  "assets/models/producto_uakas.res": {
+    "sha256": "dfe1ec8e01993751188f1f5e680abea78d5ae7a3c4e58d6962f73f455d26154c",
+    "bytes": 5185,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_uakas.res",
+    "mtime_original_ns": 1792125081018346900
+  },
+  "assets/models/producto_zucarachas.res": {
+    "sha256": "ffe05959a10876670cc0d6077c949b4c87e21e8604889be48f5f82bf85b0bc66",
+    "bytes": 5204,
+    "fuente_absoluta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores\\assets\\models\\producto_zucarachas.res",
+    "mtime_original_ns": 1792125081006340500
+  }
+}

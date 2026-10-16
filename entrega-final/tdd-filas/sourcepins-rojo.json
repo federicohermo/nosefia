@@ -1,0 +1,11 @@
+{
+  "head": "4d62b6e765501288b03c21521879e591579807dc",
+  "inputs": {
+    "scripts/lib/__init__.py": "7aa9c630877cb55daf4dac24f5a4c17c06c3f067a041d083f8f62b3c8a939a1b",
+    "scripts/lib/reparto.py": "25ffcfc11447544fbe6aa0ccd1ddaf0afb1566c93beb1a9847fc6dc206672be5",
+    "test_decision_filas.py": "e3893642b36a9776a2544a4c50edc9936cbc03ee419c4fa928411934130be622"
+  },
+  "exit": 1,
+  "rojo": "aserciones sobre API Tanda existente; sin imports inexistentes",
+  "produccion_WT_sin_cambios": true
+}

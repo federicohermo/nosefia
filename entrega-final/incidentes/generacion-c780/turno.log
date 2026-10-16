@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-c780\ejecutar.py", line 16, in <module>
+    assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == sha, path
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-recursos-c780\exportar_con_crudos.py

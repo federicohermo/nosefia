@@ -1,0 +1,11 @@
+{
+  "returncode": 0,
+  "comando": [
+    "D:/Program Files/Godot/Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-434-sectores",
+    "--import",
+    "--quit"
+  ]
+}

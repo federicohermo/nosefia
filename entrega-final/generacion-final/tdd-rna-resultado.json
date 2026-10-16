@@ -1,0 +1,43 @@
+{
+  "viejo": {
+    "tests": 32,
+    "failures": 7,
+    "errors": 0,
+    "detalle_fallos": [
+      [
+        "BURBALOO",
+        "Traceback (most recent call last):\n  File \"C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-escala-local01\\test_rna_funcional.py\", line 56, in runTest\n    self.assertEqual(tuple(clon.scale), escala, \"La colocación cambió escala artística\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (0.10999997705221176, 0.10999999940395355, 0.07999999821186066) != (0.10999998450279236, 0.10999999940395355, 0.07999999821186066)\n\nFirst differing element 0:\n0.10999997705221176\n0.10999998450279236\n\n- (0.10999997705221176, 0.10999999940395355, 0.07999999821186066)\n?            ^^^ ^^^^\n\n+ (0.10999998450279236, 0.10999999940395355, 0.07999999821186066)\n?           +++++ ^ ^\n : La colocación cambió escala artística\n"
+      ],
+      [
+        "MALBARDO",
+        "Traceback (most recent call last):\n  File \"C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-escala-local01\\test_rna_funcional.py\", line 56, in runTest\n    self.assertEqual(tuple(clon.scale), escala, \"La colocación cambió escala artística\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (0.9463148713111877, 0.8261417150497437, 1.1946961879730225) != (0.9463148713111877, 0.8261417746543884, 1.1946961879730225)\n\nFirst differing element 1:\n0.8261417150497437\n0.8261417746543884\n\n- (0.9463148713111877, 0.8261417150497437, 1.1946961879730225)\n?                               -----   ^\n\n+ (0.9463148713111877, 0.8261417746543884, 1.1946961879730225)\n?                                 +++ ^^^\n : La colocación cambió escala artística\n"
+      ],
+      [
+        "ARVEJAS",
+        "Traceback (most recent call last):\n  File \"C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-escala-local01\\test_rna_funcional.py\", line 56, in runTest\n    self.assertEqual(tuple(clon.scale), escala, \"La colocación cambió escala artística\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (1.2533011436462402, 1.2582231760025024, 1.2755494117736816) != (1.2533010244369507, 1.2582231760025024, 1.2755494117736816)\n\nFirst differing element 0:\n1.2533011436462402\n1.2533010244369507\n\n- (1.2533011436462402, 1.2582231760025024, 1.2755494117736816)\n?          ^   ^^^^ ^\n\n+ (1.2533010244369507, 1.2582231760025024, 1.2755494117736816)\n?          ^^^   ^^ ^\n : La colocación cambió escala artística\n"
+      ],
+      [
+        "CORACOLA",
+        "Traceback (most recent call last):\n  File \"C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-escala-local01\\test_rna_funcional.py\", line 56, in runTest\n    self.assertEqual(tuple(clon.scale), escala, \"La colocación cambió escala artística\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (1.0653059482574463, 1.069489598274231, 1.5337415933609009) != (1.0653059482574463, 1.0694897174835205, 1.5337415933609009)\n\nFirst differing element 1:\n1.069489598274231\n1.0694897174835205\n\n- (1.0653059482574463, 1.069489598274231, 1.5337415933609009)\n?                              ^^^^   ^^\n\n+ (1.0653059482574463, 1.0694897174835205, 1.5337415933609009)\n?                              ^^  +++ ^^\n : La colocación cambió escala artística\n"
+      ],
+      [
+        "AMARGADITO",
+        "Traceback (most recent call last):\n  File \"C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-escala-local01\\test_rna_funcional.py\", line 56, in runTest\n    self.assertEqual(tuple(clon.scale), escala, \"La colocación cambió escala artística\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (0.8960342407226562, 0.8799999952316284, 0.757091760635376) != (0.8960342407226562, 0.8799999952316284, 0.7570918202400208)\n\nFirst differing element 2:\n0.757091760635376\n0.7570918202400208\n\n- (0.8960342407226562, 0.8799999952316284, 0.757091760635376)\n?                                                  ^^ ^^^^^^\n\n+ (0.8960342407226562, 0.8799999952316284, 0.7570918202400208)\n?                                                  ^^ ^^^^^^^\n : La colocación cambió escala artística\n"
+      ],
+      [
+        "FLINPUF",
+        "Traceback (most recent call last):\n  File \"C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-escala-local01\\test_rna_funcional.py\", line 56, in runTest\n    self.assertEqual(tuple(clon.scale), escala, \"La colocación cambió escala artística\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (0.7068453431129456, 0.7039999961853027, 0.5583866238594055) != (0.7068454027175903, 0.7039999961853027, 0.5583866238594055)\n\nFirst differing element 0:\n0.7068453431129456\n0.7068454027175903\n\n- (0.7068453431129456, 0.7039999961853027, 0.5583866238594055)\n?           ---------\n\n+ (0.7068454027175903, 0.7039999961853027, 0.5583866238594055)\n?          +++++++++\n : La colocación cambió escala artística\n"
+      ],
+      [
+        "OAAAA",
+        "Traceback (most recent call last):\n  File \"C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\434-recursos-escala-local01\\test_rna_funcional.py\", line 56, in runTest\n    self.assertEqual(tuple(clon.scale), escala, \"La colocación cambió escala artística\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (0.7692545056343079, 0.46315789222717285, 0.8960139155387878) != (0.7692545056343079, 0.46315789222717285, 0.8960139751434326)\n\nFirst differing element 2:\n0.8960139155387878\n0.8960139751434326\n\n- (0.7692545056343079, 0.46315789222717285, 0.8960139155387878)\n?                                                     ^^ ^^^^^\n\n+ (0.7692545056343079, 0.46315789222717285, 0.8960139751434326)\n?                                                    ++ ^ ^^^^\n : La colocación cambió escala artística\n"
+      ]
+    ]
+  },
+  "nuevo": {
+    "tests": 32,
+    "failures": 0,
+    "errors": 0,
+    "detalle_fallos": []
+  }
+}

@@ -1,0 +1,645 @@
+[
+  {
+    "fixture": "Checkpoint J2 de Partida real; preload HTML, PCK/main/config intactos",
+    "sha256": "db340c538fe317af69fbe356a981e44aa13473de4b71e1e3bf95cd83e5897642",
+    "userpath": "/userfs/godot/app_userdata/No se fía/partida.guardado"
+  },
+  {
+    "paquete": "real",
+    "snapshot": "real-1920-menu",
+    "frames": 109,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": false
+    }
+  },
+  {
+    "paquete": "real",
+    "click": [
+      960,
+      537
+    ],
+    "wait_ms": 60000
+  },
+  {
+    "paquete": "real",
+    "snapshot": "real-1920-j2-entrada",
+    "frames": 59,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": false
+    }
+  },
+  {
+    "paquete": "real",
+    "hold": "w",
+    "ms": 3650
+  },
+  {
+    "paquete": "real",
+    "hold": "a",
+    "ms": 900
+  },
+  {
+    "paquete": "real",
+    "snapshot": "real-1920-j2-pasillo",
+    "frames": 73,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": false
+    }
+  },
+  {
+    "paquete": "real",
+    "snapshot": "real-1280-j2-pasillo",
+    "frames": 86,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": false
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (-1.449932, 1.7, -2.086576)]",
+      "cupo_duronga": 16,
+      "indice": 0,
+      "jornada": 2,
+      "nombre": "01-almacen"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-01-almacen",
+    "frames": 43,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": false
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (2.006813, 1.7, -2.086576)]",
+      "cupo_duronga": 16,
+      "indice": 1,
+      "jornada": 2,
+      "nombre": "02-cereales-dulces"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-02-cereales-dulces",
+    "frames": 55,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (0.27844, 1.7, 1.288424)]",
+      "cupo_duronga": 16,
+      "indice": 2,
+      "jornada": 2,
+      "nombre": "03-malbardo-amargadito"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-03-malbardo-amargadito",
+    "frames": 40,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (0.27844, 1.7, -5.461576)]",
+      "cupo_duronga": 16,
+      "indice": 3,
+      "jornada": 2,
+      "nombre": "04-bebidas-sin-frio"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-04-bebidas-sin-frio",
+    "frames": 29,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (5.460157, 1.7, -2.045102)]",
+      "cupo_duronga": 16,
+      "indice": 4,
+      "jornada": 2,
+      "nombre": "05-dulces"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-05-dulces",
+    "frames": 46,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (2.003413, 1.7, -2.045102)]",
+      "cupo_duronga": 16,
+      "indice": 5,
+      "jornada": 2,
+      "nombre": "06-salados"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-06-salados",
+    "frames": 56,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (3.731785, 1.7, 1.329898)]",
+      "cupo_duronga": 16,
+      "indice": 6,
+      "jornada": 2,
+      "nombre": "07-jorgillo-saladik"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-07-jorgillo-saladik",
+    "frames": 50,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (3.731785, 1.7, -5.420102)]",
+      "cupo_duronga": 16,
+      "indice": 7,
+      "jornada": 2,
+      "nombre": "08-golosinas"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-08-golosinas",
+    "frames": 45,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.905695, -0.42393), Z: (0.0, 0.42393, 0.905695), O: (2.849859, 1.7, -6.060595)]",
+      "cupo_duronga": 16,
+      "indice": 8,
+      "jornada": 2,
+      "nombre": "09-no-comestibles"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-09-no-comestibles",
+    "frames": 66,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-1.468133, 1.7, -5.828175)]",
+      "cupo_duronga": 16,
+      "indice": 9,
+      "jornada": 2,
+      "nombre": "10-heladera-1"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-10-heladera-1",
+    "frames": 56,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1920,
+      1080
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-0.37921, 1.7, -5.828175)]",
+      "cupo_duronga": 16,
+      "indice": 10,
+      "jornada": 2,
+      "nombre": "11-heladera-2"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1920-11-heladera-2",
+    "frames": 56,
+    "state": {
+      "visible": "visible",
+      "width": 1920,
+      "height": 1080,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (-1.449932, 1.7, -2.086576)]",
+      "cupo_duronga": 16,
+      "indice": 0,
+      "jornada": 2,
+      "nombre": "01-almacen"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-01-almacen",
+    "frames": 52,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (2.006813, 1.7, -2.086576)]",
+      "cupo_duronga": 16,
+      "indice": 1,
+      "jornada": 2,
+      "nombre": "02-cereales-dulces"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-02-cereales-dulces",
+    "frames": 66,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (0.27844, 1.7, 1.288424)]",
+      "cupo_duronga": 16,
+      "indice": 2,
+      "jornada": 2,
+      "nombre": "03-malbardo-amargadito"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-03-malbardo-amargadito",
+    "frames": 67,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (0.27844, 1.7, -5.461576)]",
+      "cupo_duronga": 16,
+      "indice": 3,
+      "jornada": 2,
+      "nombre": "04-bebidas-sin-frio"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-04-bebidas-sin-frio",
+    "frames": 66,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (-0.0, 0.0, -1.0), Y: (-0.352007, 0.935997, 0.0), Z: (0.935997, 0.352007, -0.0), O: (5.460157, 1.7, -2.045102)]",
+      "cupo_duronga": 16,
+      "indice": 4,
+      "jornada": 2,
+      "nombre": "05-dulces"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-05-dulces",
+    "frames": 70,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (-0.0, 0.0, 1.0), Y: (0.352007, 0.935997, 0.0), Z: (-0.935997, 0.352007, -0.0), O: (2.003413, 1.7, -2.045102)]",
+      "cupo_duronga": 16,
+      "indice": 5,
+      "jornada": 2,
+      "nombre": "06-salados"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-06-salados",
+    "frames": 76,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.981955, -0.189117), Z: (0.0, 0.189117, 0.981955), O: (3.731785, 1.7, 1.329898)]",
+      "cupo_duronga": 16,
+      "indice": 6,
+      "jornada": 2,
+      "nombre": "07-jorgillo-saladik"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-07-jorgillo-saladik",
+    "frames": 71,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.981955, 0.189117), Z: (-0.0, 0.189117, -0.981955), O: (3.731785, 1.7, -5.420102)]",
+      "cupo_duronga": 16,
+      "indice": 7,
+      "jornada": 2,
+      "nombre": "08-golosinas"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-08-golosinas",
+    "frames": 72,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.905695, -0.42393), Z: (0.0, 0.42393, 0.905695), O: (2.849859, 1.7, -6.060595)]",
+      "cupo_duronga": 16,
+      "indice": 8,
+      "jornada": 2,
+      "nombre": "09-no-comestibles"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-09-no-comestibles",
+    "frames": 82,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-1.468133, 1.7, -5.828175)]",
+      "cupo_duronga": 16,
+      "indice": 9,
+      "jornada": 2,
+      "nombre": "10-heladera-1"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-10-heladera-1",
+    "frames": 82,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "resolucion": [
+      1280,
+      720
+    ],
+    "vista": {
+      "camara": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.917556, -0.397607), Z: (0.0, 0.397607, 0.917556), O: (-0.37921, 1.7, -5.828175)]",
+      "cupo_duronga": 16,
+      "indice": 10,
+      "jornada": 2,
+      "nombre": "11-heladera-2"
+    }
+  },
+  {
+    "paquete": "camara-diagnostica",
+    "snapshot": "mapa-1280-11-heladera-2",
+    "frames": 82,
+    "state": {
+      "visible": "visible",
+      "width": 1280,
+      "height": 720,
+      "isolated": true,
+      "pointer": true
+    }
+  }
+]

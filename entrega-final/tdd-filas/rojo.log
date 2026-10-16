@@ -1,0 +1,159 @@
+test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) ... 
+  test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) (producto='ACTRONCITO', fija=False) ... FAIL
+  test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) (producto='ACTRONCITO', fija=True) ... FAIL
+  test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) (producto='PRONGLES', fija=False) ... FAIL
+  test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) (producto='PRONGLES', fija=True) ... FAIL
+test_amargadito_solo_reduce_la_principal_y_conserva_su_fija_doble (test_decision_filas.DecisionDeFilas.test_amargadito_solo_reduce_la_principal_y_conserva_su_fija_doble) ... FAIL
+test_fernet_solo_reduce_la_fija_inferior_y_conserva_principal_doble (test_decision_filas.DecisionDeFilas.test_fernet_solo_reduce_la_fija_inferior_y_conserva_principal_doble) ... ok
+test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) ... 
+  test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) (producto='MARRANOS', fija=False) ... FAIL
+  test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) (producto='MARRANOS', fija=True) ... FAIL
+  test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) (producto='POETICO', fija=False) ... FAIL
+  test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) (producto='POETICO', fija=True) ... FAIL
+test_oaaaa_solo_reduce_la_fija_superior_y_conserva_principal_doble (test_decision_filas.DecisionDeFilas.test_oaaaa_solo_reduce_la_fija_superior_y_conserva_principal_doble) ... FAIL
+test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) ... 
+  test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='COSA_DE_MANI') ... FAIL
+  test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='FLINPUF') ... FAIL
+  test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='BURBALOO') ... FAIL
+  test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='MARRANOS') ... FAIL
+  test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='POETICO') ... FAIL
+
+======================================================================
+FAIL: test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) (producto='ACTRONCITO', fija=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 12, in test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas
+    self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) (producto='ACTRONCITO', fija=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 12, in test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas
+    self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) (producto='PRONGLES', fija=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 12, in test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas
+    self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas (test_decision_filas.DecisionDeFilas.test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas) (producto='PRONGLES', fija=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 12, in test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas
+    self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_amargadito_solo_reduce_la_principal_y_conserva_su_fija_doble (test_decision_filas.DecisionDeFilas.test_amargadito_solo_reduce_la_principal_y_conserva_su_fija_doble)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 23, in test_amargadito_solo_reduce_la_principal_y_conserva_su_fija_doble
+    self.assertEqual(principal.cantidad_de_filas, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) (producto='MARRANOS', fija=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 18, in test_los_cinco_del_arte_tienen_una_fila_principal_y_fija
+    self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) (producto='MARRANOS', fija=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 18, in test_los_cinco_del_arte_tienen_una_fila_principal_y_fija
+    self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) (producto='POETICO', fija=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 18, in test_los_cinco_del_arte_tienen_una_fila_principal_y_fija
+    self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_los_cinco_del_arte_tienen_una_fila_principal_y_fija (test_decision_filas.DecisionDeFilas.test_los_cinco_del_arte_tienen_una_fila_principal_y_fija) (producto='POETICO', fija=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 18, in test_los_cinco_del_arte_tienen_una_fila_principal_y_fija
+    self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_oaaaa_solo_reduce_la_fija_superior_y_conserva_principal_doble (test_decision_filas.DecisionDeFilas.test_oaaaa_solo_reduce_la_fija_superior_y_conserva_principal_doble)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 32, in test_oaaaa_solo_reduce_la_fija_superior_y_conserva_principal_doble
+    self.assertEqual(fija.cantidad_de_filas, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='COSA_DE_MANI')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 42, in test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila
+    with self.subTest(producto=producto), self.assertRaises(ValueError):
+                                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='FLINPUF')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 42, in test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila
+    with self.subTest(producto=producto), self.assertRaises(ValueError):
+                                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='BURBALOO')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 42, in test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila
+    with self.subTest(producto=producto), self.assertRaises(ValueError):
+                                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='MARRANOS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 42, in test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila
+    with self.subTest(producto=producto), self.assertRaises(ValueError):
+                                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila (test_decision_filas.DecisionDeFilas.test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila) (producto='POETICO')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\434-decision-tdd\test_decision_filas.py", line 42, in test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila
+    with self.subTest(producto=producto), self.assertRaises(ValueError):
+                                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.006s
+
+FAILED (failures=15)
