@@ -149,9 +149,13 @@ func _al_quedar_quieta(hoja: PhysicsBody3D) -> void:
 		revisar(cuerpo)
 
 
-## Sólo los rígidos vivos: una caja congelada se mira al soltarla y al terminar el empujón.
+## La caja se congela al dormirse. Esperar lee ese estado final aunque su conexión vaya después:
+## omitir lo congelado dejaba la caída de una pila hundida en el piso sin revisión.
 func _al_cambiar_el_reposo(cuerpo: RigidBody3D) -> void:
-	if cuerpo.sleeping and not cuerpo.freeze:
+	if not cuerpo.sleeping:
+		return
+	await get_tree().physics_frame
+	if is_instance_valid(cuerpo) and cuerpo.sleeping:
 		revisar(cuerpo)
 
 
@@ -373,6 +377,14 @@ func _mover(cuerpo: PhysicsBody3D, lugar: Transform3D) -> void:
 	if rigido != null:
 		rigido.linear_velocity = Vector3.ZERO
 		rigido.angular_velocity = Vector3.ZERO
+		# El aviso previo conserva el apoyo que abandona. Después del rescate,
+		# una caja ya quieta debe anotar el destino para la próxima cascada.
+		if (
+			rigido.freeze
+			and rigido.sleeping
+			and rigido.has_method(ReglasDeLosObjetos.METODO_QUEDARSE_QUIETA)
+		):
+			rigido.call(ReglasDeLosObjetos.METODO_QUEDARSE_QUIETA)
 	cuerpo.reset_physics_interpolation()
 
 
