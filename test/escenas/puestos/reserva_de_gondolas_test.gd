@@ -173,14 +173,14 @@ func _recoger(almacen: Node3D, unidad: RigidBody3D) -> void:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var lugar: Variant = _lugar_para_mirar(almacen, unidad)
 	(
-		assert_bool(lugar is Vector3)
+		assert_bool(lugar is Dictionary)
 		. override_failure_message("Premisa: recogida desde piso libre")
 		. is_true()
 	)
-	if not lugar is Vector3:
+	if not lugar is Dictionary:
 		return
-	jugador.global_position = lugar
-	await _mirar(jugador, unidad.global_position)
+	jugador.global_position = lugar.pies
+	await _mirar(jugador, lugar.objetivo)
 	jugador.call("_leer_la_mira")
 	assert_object(jugador.get("_enfocado")).is_same(unidad)
 	var evento := InputEventAction.new()
@@ -194,6 +194,19 @@ func _lugar_para_mirar(almacen: Node3D, unidad: RigidBody3D) -> Variant:
 	var forma: CollisionShape3D = jugador.get_node("Cuerpo")
 	var espacio := almacen.get_world_3d().direct_space_state
 	var campo: Area3D = jugador.get("_campo")
+	var descartes: Array[Dictionary] = []
+	var forma_unidad: CollisionShape3D = unidad.get_node("Forma")
+	var convexo := forma_unidad.shape as ConvexPolygonShape3D
+	var centro := Vector3.ZERO
+	for vertice: Vector3 in convexo.points:
+		centro += vertice
+	centro = forma_unidad.global_transform * (centro / convexo.points.size())
+	var limites := forma_unidad.global_transform * LimitesDeForma.de(forma_unidad.shape)
+	var objetivos: Array[Vector3] = [centro]
+	for direccion: Vector3 in [
+		Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN, Vector3.FORWARD, Vector3.BACK
+	]:
+		objetivos.append(limites.get_center() + direccion * limites.size / 2.0)
 	for radio: float in [0.6, 0.9, 1.2]:
 		for lado in ReglasDeLosObjetos.LADOS_ALREDEDOR:
 			var direccion := Basis(Vector3.UP, TAU * lado / ReglasDeLosObjetos.LADOS_ALREDEDOR)
@@ -206,6 +219,7 @@ func _lugar_para_mirar(almacen: Node3D, unidad: RigidBody3D) -> Variant:
 			rayo.exclude = [jugador.get_rid()]
 			var piso := espacio.intersect_ray(rayo)
 			if piso.get("collider") != almacen.get_node("Estructura/SueloSolido"):
+				descartes.append({"fase": "piso", "punto": punto})
 				continue
 			var pies: Vector3 = piso.position + Vector3.UP * ReglasDeLosObjetos.ROCE
 			var consulta := PhysicsShapeQueryParameters3D.new()
@@ -213,13 +227,38 @@ func _lugar_para_mirar(almacen: Node3D, unidad: RigidBody3D) -> Variant:
 			consulta.transform = Transform3D(jugador.global_basis, pies) * forma.transform
 			consulta.collision_mask = jugador.collision_mask
 			consulta.exclude = [jugador.get_rid()]
-			if not espacio.intersect_shape(consulta, 1).is_empty():
+			var choques := espacio.intersect_shape(consulta, 1)
+			if not choques.is_empty():
+				descartes.append({"fase": "capsula", "pies": pies})
 				continue
 			rayo.from = pies + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-			rayo.to = unidad.global_position
 			rayo.collision_mask = campo.collision_mask
-			if espacio.intersect_ray(rayo).get("collider") == unidad:
-				return pies
+			for objetivo: Vector3 in objetivos:
+				rayo.to = objetivo
+				var golpe := espacio.intersect_ray(rayo)
+				if golpe.get("collider") == unidad:
+					return {"pies": pies, "objetivo": objetivo}
+				descartes.append(
+					{
+						"fase": "mira",
+						"pies": pies,
+						"objetivo": objetivo,
+						"collider": str(golpe.get("collider")),
+						"position": golpe.get("position")
+					}
+				)
+	print(
+		"RESERVA_428_RECOGIDA_DESCARTES unidad=",
+		unidad.global_transform,
+		" forma=",
+		forma_unidad.global_transform,
+		" centro_convexo=",
+		centro,
+		" limites=",
+		limites,
+		" datos=",
+		descartes
+	)
 	return null
 
 
