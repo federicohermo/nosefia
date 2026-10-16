@@ -76,6 +76,46 @@ func test_el_collider_del_riel_conserva_el_aire_entre_sus_brazos() -> void:
 	)
 
 
+func test_la_caja_grande_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PLY-095
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "piso")).is_true()
+
+
+func test_la_caja_chica_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PLY-095
+	assert_bool(await _apoyo_valido(Producto.Id.ACTRONCITO, "piso")).is_true()
+
+
+func test_la_caja_grande_queda_estable_y_recogible_sobre_mostrador() -> void:  # AC-PLY-095
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "mostrador")).is_true()
+
+
+func test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador() -> void:  # AC-PLY-095
+	assert_bool(await _apoyo_valido(Producto.Id.ACTRONCITO, "mostrador")).is_true()
+
+
+func test_la_caja_grande_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-PLY-095
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "pallet")).is_true()
+
+
+func test_la_caja_chica_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-PLY-095
+	assert_bool(await _apoyo_valido(Producto.Id.ACTRONCITO, "pallet")).is_true()
+
+
+func test_la_caja_grande_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PLY-095
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "caja")).is_true()
+
+
+func test_la_caja_chica_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PLY-095
+	assert_bool(await _apoyo_valido(Producto.Id.ACTRONCITO, "caja")).is_true()
+
+
+func test_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra() -> void:  # AC-PLY-095
+	assert_bool(await _retirar_soporte(Producto.Id.LAYSNTT)).is_true()
+
+
+func test_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra() -> void:  # AC-PLY-095
+	assert_bool(await _retirar_soporte(Producto.Id.ACTRONCITO)).is_true()
+
+
 func _sobre_el_riel(producto: Producto.Id) -> Dictionary:
 	var almacen := await _abrir()
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
@@ -333,3 +373,148 @@ func _superiores(malla: MeshInstance3D) -> Array[PackedVector3Array]:
 		if absf(a.y - tope) < 0.0001 and absf(b.y - tope) < 0.0001 and absf(c.y - tope) < 0.0001:
 			salida.append(PackedVector3Array([a, b, c]))
 	return salida
+
+
+func _limites(caja: RigidBody3D) -> AABB:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	return forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+
+
+func _piso_del_deposito(almacen: Node3D) -> Vector3:
+	var piso := _rayo(almacen, Vector3(4.49, 0.8, -10.0), Vector3(4.49, -1, -10.0))
+	assert_object(piso.get("collider")).is_same(almacen.get_node("Estructura/SueloSolido"))
+	return piso.get("position", Vector3.INF)
+
+
+func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
+	var almacen := await _abrir()
+	var antes := _estado_del_local(almacen)
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
+	var soporte: PhysicsBody3D = almacen.get_node("Estructura/SueloSolido")
+	var objetivo := _piso_del_deposito(almacen)
+	var desde := Vector3.FORWARD * 1.2
+	if tipo == "mostrador":
+		var mesa: MeshInstance3D = almacen.get_node("Estructura/EscritorioComputadora")
+		var limites := mesa.global_transform * mesa.get_aabb()
+		var geometria: Script = load("res://test/escenas/geometria_del_mostrador.gd")
+		var brazo: AABB = geometria.brazo(mesa)
+		objetivo = Vector3(
+			limites.get_center().x + limites.size.x / 4.0, limites.end.y, brazo.get_center().z
+		)
+		soporte = mesa.get_node("StaticBody3D")
+	elif tipo == "pallet":
+		var pallet: MeshInstance3D = almacen.get_node(
+			"Estructura/gondola_deposito03/deposito_pallet_central_derecho_1_1"
+		)
+		var limites := pallet.global_transform * pallet.get_aabb()
+		objetivo = Vector3(limites.get_center().x, limites.end.y, limites.get_center().z)
+		desde = Vector3.RIGHT * (limites.size.x / 2.0 + 0.7)
+		soporte = pallet.get_node("StaticBody3D")
+		# La distribución inicial ocupa este pallet. Conservar los nodos mantiene el catálogo.
+		var encima := limites.grow(0.05)
+		encima.size.y += _limites(caja).size.y
+		for vecina: RigidBody3D in almacen.get("_cajas_de_productos"):
+			if vecina != caja and encima.intersects(_limites(vecina)):
+				vecina.global_position += Vector3.RIGHT * 100.0
+				vecina.call("quedarse_quieta")
+	elif tipo == "caja":
+		var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+		debajo.global_basis = Basis.IDENTITY
+		debajo.global_position = objetivo + Vector3.UP * _limites(debajo).size.y / 2.0
+		debajo.call("quedarse_quieta")
+		objetivo.y = _limites(debajo).end.y
+		soporte = debajo
+	for cuadro in 4:
+		await get_tree().physics_frame
+	await _mirar_desde_el_piso(almacen, caja, objetivo, desde)
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var mira: Transform3D = jugador.call("mira")
+	var premisa := _rayo(
+		almacen,
+		mira.origin,
+		mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		[caja.get_rid(), jugador.get_rid()]
+	)
+	assert_object(premisa.get("collider")).override_failure_message(tipo).is_same(soporte)
+	if premisa.is_empty():
+		return false
+	assert_float((premisa.position as Vector3).distance_to(objetivo)).is_less(
+		ReglasDeLosObjetos.ROCE
+	)
+	assert_float((premisa.normal as Vector3).y).is_greater_equal(
+		ReglasDeLosObjetos.APOYO_HORIZONTAL
+	)
+	await _soltar_con_el_gesto(almacen, caja, 1)
+	var inicial := caja.global_transform
+	for cuadro in 180:
+		await get_tree().physics_frame
+	assert_vector(caja.global_position).is_equal_approx(
+		inicial.origin, Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
+	assert_bool(caja.global_basis.is_equal_approx(inicial.basis)).is_true()
+	assert_bool(caja.freeze).is_true()
+	assert_bool(caja.sleeping).is_true()
+	assert_float(_limites(caja).position.y).override_failure_message(tipo).is_equal_approx(
+		objetivo.y, ReglasDeLosObjetos.ROCE
+	)
+	var contacto := _rayo(
+		almacen,
+		caja.global_position,
+		caja.global_position + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO,
+		[caja.get_rid(), jugador.get_rid()]
+	)
+	assert_object(contacto.get("collider")).is_same(soporte)
+	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
+	assert_dict(_estado_del_local(almacen)).is_equal(antes)
+	await _recoger_caja(almacen, caja, desde)
+	assert_dict(_estado_del_local(almacen)).is_equal(antes)
+	return almacen.get("_agarre").cuerpo_sostenido() == caja
+
+
+func _recoger_caja(almacen: Node3D, caja: RigidBody3D, desde: Vector3) -> void:
+	await _mirar_desde_el_piso(almacen, caja, caja.global_position, desde)
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	jugador.call("_leer_la_mira")
+	assert_object(jugador.get("_enfocado")).is_same(caja)
+	var evento := InputEventAction.new()
+	evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)
+	assert_object(almacen.get("_agarre").cuerpo_sostenido()).is_same(caja)
+	assert_object(almacen.get("_agarre").manos().sostenido()).is_same(caja.get("datos"))
+
+
+func _retirar_soporte(producto: Producto.Id) -> bool:
+	var almacen := await _abrir()
+	var antes := _estado_del_local(almacen)
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
+	var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	var ajena: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.OREMOS]
+	var piso := _piso_del_deposito(almacen)
+	for cuerpo: RigidBody3D in [debajo, caja, ajena]:
+		cuerpo.global_basis = Basis.IDENTITY
+	debajo.global_position = piso + Vector3.UP * _limites(debajo).size.y / 2.0
+	debajo.call("quedarse_quieta")
+	caja.global_position = (
+		piso + Vector3.UP * (_limites(debajo).size.y + _limites(caja).size.y / 2.0)
+	)
+	caja.call("quedarse_quieta")
+	ajena.global_position = piso + Vector3.RIGHT * 2.0 + Vector3.UP * _limites(ajena).size.y / 2.0
+	ajena.call("quedarse_quieta")
+	var inicial := caja.global_position
+	var aparte := ajena.global_transform
+	for cuadro in 30:
+		await get_tree().physics_frame
+	assert_vector(caja.global_position).is_equal_approx(
+		inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
+	await _recoger_caja(almacen, debajo, Vector3.FORWARD * 1.2)
+	for cuadro in 180:
+		await get_tree().physics_frame
+	assert_float(caja.global_position.y).is_less(inicial.y - _limites(debajo).size.y / 2.0)
+	assert_float(_limites(caja).position.y).is_equal_approx(piso.y, ReglasDeLosObjetos.ROCE)
+	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
+	assert_vector(ajena.global_position).is_equal(aparte.origin)
+	assert_bool(ajena.global_basis.is_equal_approx(aparte.basis)).is_true()
+	assert_dict(_estado_del_local(almacen)).is_equal(antes)
+	return caja.global_position.y < inicial.y
