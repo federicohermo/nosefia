@@ -5,7 +5,7 @@
   "base_pr": "improvement/431-separadores-de-jornadas-en-chats",
   "base_head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
   "full_definitiva": null,
-  "full_conjunta": "pendiente",
+  "full_conjunta": "CANCELADA por instrucción explícita del usuario",
   "locales": {
     "full-01": "roja:GI/volumen",
     "full-02": "roja:giro1/107"
@@ -18,9 +18,9 @@
   "alcance": "Motor genérico y memoriaJ2, sin elección/persistencia436 ni notificación385. Fuente y evidencia independiente por intento.",
   "archivos": {
     "README.md": {
-      "bytes": 5749,
-      "sha256": "30b81e4b4ddab01f659ded4128de94a7cedd4d8cf78c5781962144c696c46997",
-      "blob": "747c64ab7e665a0b9c5f2b576a3256e4b05e982d"
+      "bytes": 6062,
+      "sha256": "0bb3014fb4c5b3a5970a5b3e203725cf48bf075e8a28c576079da94e9d408723",
+      "blob": "5aa4b934c4528b4ff7662974b68ba36aee9f84da"
     },
     "brief-publicado.md": {
       "bytes": 17452,
@@ -1611,6 +1611,11 @@
       "bytes": 14803,
       "sha256": "7932043201febe2d60693670da33cb9e13b1a56e605d65a6dcddaa7e4019db57",
       "blob": "4260ea43fe8312851f4f985070f7fb0cda5759bf"
+    },
+    "decision-verificacion-final.json": {
+      "bytes": 843,
+      "sha256": "a69a962604645923b2ef011d56877543cf627b38b500644272eb3c34b630697a",
+      "blob": "1f33ce37f1688be5fc9060e1db538967592856b2"
     },
     "dominio-rojo-01-fuente/src/dominio/investigacion/caso.gd": {
       "bytes": 597,
@@ -3432,6 +3437,11 @@
       "sha256": "0dccaf655540cfa91c65359bf05b4200e619b689cd339061b59903f342bdc229",
       "blob": "0b5edfdeaf2db89d4f5801ef24a2ed839677a445"
     },
+    "fuentes/pr22-final.md": {
+      "bytes": 3107,
+      "sha256": "df22489144d63d6c7c38a17d1858e9f7f7ebe395a964de97eae79bee3b971906",
+      "blob": "2cbe97818b7e9314fb40f798c7cb1020b0cc70ca"
+    },
     "fuentes/preflight-cierre.json": {
       "bytes": 16774,
       "sha256": "a0c8533f188e37946111479f14763e928ff227906bd44ef18b48276f712a0f1c",
@@ -4123,9 +4133,9 @@
       "blob": "6af1a1984513bd0ab1f23a2809130c21879e46b3"
     },
     "manifiesto-local.json": {
-      "bytes": 167060,
-      "sha256": "7661eecce719572aaa9ea416c236845dbee92aa01107f806215507119b10cb24",
-      "blob": "e313adb8fe2d2fd837c5e663216f8d7e469ef0a2"
+      "bytes": 167782,
+      "sha256": "2a7e66968aea013cda870f1132269e3d4c3994f1f40a88bbad51a57f015fdad2",
+      "blob": "b7ffcb3536bc5ecdb46fdb4b483170301e67d461"
     },
     "verde-05-fuente/assets/investigacion/jornada_2/caso.tres": {
       "bytes": 838,
@@ -4488,7 +4498,20 @@
       "blob": "de92bec93d35763eda236afc4cbd4386a4ab8da3"
     }
   },
+  "repeticion_local_final_22": "omitida por instrucción explícita del usuario",
+  "decision_verificacion": "decision-verificacion-final.json",
+  "ci_propia_resultado": {
+    "head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+    "run": 38954361180,
+    "nodos": "7/7",
+    "suites": 288,
+    "casos": 2191,
+    "fallos": 0,
+    "errores": 0,
+    "skips_gdunit": 0,
+    "flaky": 0
+  },
   "procedencia": "Tamaños y SHA256 calculados leyendo git cat-file blob del árbol publicado.",
-  "padre_de_evidencia": "e24a11ffbc7d272546d0320ea37103cb9983a8b3",
+  "padre_de_evidencia": "ae9bea74fc30f8d2dd48d8d587019f0dcd6f94b7",
   "procedencia_local": "manifiesto-local.json"
 }

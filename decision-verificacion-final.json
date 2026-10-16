@@ -1,0 +1,22 @@
+{
+  "instruccion_usuario": "Terminar antes de 17:30 ART; dejar las verificaciones para el PR, sin correrlas localmente.",
+  "full_conjunta": "CANCELADA por instrucción explícita del usuario",
+  "repeticion_local_final_22": "omitida por instrucción explícita del usuario",
+  "ci_propia": {
+    "head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+    "run": 38954361180,
+    "nodos": "7/7",
+    "suites": 288,
+    "casos": 2191,
+    "fallos": 0,
+    "errores": 0,
+    "skips_gdunit": 0,
+    "flaky": 0
+  },
+  "locales_preservadas": {
+    "full-01": "ROJA: GI/volumen",
+    "full-02": "ROJA: giro contra pared 1/107; causa no determinada"
+  },
+  "capturas_22": "Paquete, nativos04 y Chrome04 válidos; aceptados por raíz",
+  "verificacion_integracion": "Se deja al PR; no se declara una completa local integrada verde"
+}

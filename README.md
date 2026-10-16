@@ -4,7 +4,9 @@ Fuente fija: `fb4236e69c752e6879bb338b80e734e16b211b41`, sobre #431 `6d60f82c`.
 PR: [468](https://github.com/federicohermo/nosefia/pull/468).
 
 CI propia sobrefb4236e6:7/7nodos,288suites y2191casos; XML0fallos/errores/skips y crudo sinScript/Parse/retenciones.
-Las dos completas locales permanecen rojas. La verificación definitiva integrada está pendiente; PR468 conserva borrador.
+Las dos completas locales permanecen rojas. La completa conjunta fue CANCELADA por instrucción explícita del usuario.
+Se omite la repetición local final de #22; la verificación integrada queda en el PR.
+PR468 está listo para revisión, con CI propia completa y capturas válidas aceptadas por raíz.
 HarnessPython:640casos, un skip heredado por ausencia de recursosRSCC; motivo y sonda estática conservados.
 Paquete final y nativos: sondas estrictas y guardias0/0. Chrome04:33snapshots/PNG en ambas resoluciones, estados y consola íntegros.
 Las26capturas nativas están en evidencia-04/nativo y Web en evidencia-04/web-04/capturas; los intentos anteriores mantienen sus límites explícitos.
@@ -43,7 +45,8 @@ Verde05 pasó12suites y66casos. Las100rutas retenidas del focal corresponden a G
 Completa01 sobre89310954 ejecutó288suites y2189casos: cuatro errores UV2 y dos fallos reales de iluminación/volumen.
 Completa02 sobrefb4236e6 ejecutó288suites y2191casos: cero errores y un fallo de giro contra pared,1/107.
 No se atribuye causa ni se declara inestabilidad. El focal posterior8/8 y la CI propia pasaron sobre la misma fuente.
-La completa final integrada debe ejercer y aprobar ese caso junto con el lote antes de cerrar la entrega.
+La CI propia ejerció y aprobó ese caso. El usuario canceló la completa conjunta y dejó la verificación integrada al PR.
+No se declara una completa local integrada verde; ambos intentos locales rojos conservan sus crudos intactos.
 Su cuerpo nuevo expuso cinco piezas finas heredadas sin volumen. La ampliación del brief precede sus correcciones.
 La colilla conserva su cuerpo; las cuatro mallas móviles usan GI dinámico.
 Catorce sólidos derivados cubren las cinco piezas. Las dos carcasas huecas conservan fondo, paredes y abertura.

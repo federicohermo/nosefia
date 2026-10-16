@@ -5,7 +5,7 @@
   "base_pr": "improvement/431-separadores-de-jornadas-en-chats",
   "base_head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
   "full_definitiva": null,
-  "full_conjunta": "pendiente",
+  "full_conjunta": "CANCELADA por instrucción explícita del usuario",
   "locales": {
     "full-01": "roja:GI/volumen",
     "full-02": "roja:giro1/107"
@@ -1288,6 +1288,10 @@
     "ci-fb42/run.json": {
       "bytes": 14803,
       "sha256": "7932043201febe2d60693670da33cb9e13b1a56e605d65a6dcddaa7e4019db57"
+    },
+    "decision-verificacion-final.json": {
+      "bytes": 843,
+      "sha256": "a69a962604645923b2ef011d56877543cf627b38b500644272eb3c34b630697a"
     },
     "dominio-rojo-01/auditoria.json": {
       "bytes": 1254,
@@ -2745,6 +2749,10 @@
       "bytes": 11315,
       "sha256": "0dccaf655540cfa91c65359bf05b4200e619b689cd339061b59903f342bdc229"
     },
+    "fuentes/pr22-final.md": {
+      "bytes": 3107,
+      "sha256": "df22489144d63d6c7c38a17d1858e9f7f7ebe395a964de97eae79bee3b971906"
+    },
     "fuentes/preflight-cierre.json": {
       "bytes": 16774,
       "sha256": "a0c8533f188e37946111479f14763e928ff227906bd44ef18b48276f712a0f1c"
@@ -3298,8 +3306,8 @@
       "sha256": "9633c9768ce788926ba7559c888b4a765d5e047505cbc45344b4c4119532fd5f"
     },
     "README.md": {
-      "bytes": 5749,
-      "sha256": "30b81e4b4ddab01f659ded4128de94a7cedd4d8cf78c5781962144c696c46997"
+      "bytes": 6062,
+      "sha256": "0bb3014fb4c5b3a5970a5b3e203725cf48bf075e8a28c576079da94e9d408723"
     },
     "verde-05/auditoria.json": {
       "bytes": 63442,
@@ -3589,6 +3597,19 @@
       "bytes": 176692,
       "sha256": "8994b81d1c6fc2335ca1fcc92f9870be929401c3b8cb7ed3cbaf4d75f9b46425"
     }
+  },
+  "repeticion_local_final_22": "omitida por instrucción explícita del usuario",
+  "decision_verificacion": "decision-verificacion-final.json",
+  "ci_propia_resultado": {
+    "head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+    "run": 38954361180,
+    "nodos": "7/7",
+    "suites": 288,
+    "casos": 2191,
+    "fallos": 0,
+    "errores": 0,
+    "skips_gdunit": 0,
+    "flaky": 0
   },
   "procedencia": "Huellas de archivos locales previas a publicar; no describen blobs Git."
 }
