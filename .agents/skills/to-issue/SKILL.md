@@ -334,6 +334,11 @@ Lo que más se rompe:
   se escribe. En el #314, «el apoyo es siempre una superficie por debajo de la cabeza» chocaba
   con un caso de `enjuague_de_la_mopa_test.gd`, que apoya la mopa vertical en un asiento 0,17 m
   más alto. El criterio valía sólo con la cabeza hacia arriba.
+  Cruzar también todos los modos y jornadas que otro BR/AC obliga a conservar, aunque siga
+  draft. En #429, la figura física sustituía el foco del hueco, pero J3–5 conservaban el cobro
+  genérico sin figura. Declarar esa excepción en premisa, contrato, criterios y límites;
+  clasificar el objetivo físico y la consulta, sus máscaras y lectores. Probar que la consulta
+  no bloquea cuerpos ni objetos y que se desactiva en modo físico: los bits solos no lo acreditan.
 - **Y busca a cada lector del valor que se mueve, en `src/` y en `test/`.** El contrato sigue a
   todos, no al primero. En el #263 el cupo dejaba de ser `.umbral`, pero `faltantes()` y
   `vendibles()` también lo leían. Además, 20 tests armaban con `retirar(` la góndola vacía que el

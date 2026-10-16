@@ -102,6 +102,11 @@ rg --no-ignore -n "AC-XXX" specs/ test/         # si ese ID ya se usó
   jornada. El catálogo de tipos posibles no dice cuáles se exigen en una apertura.
 - **El GDD manda sobre el código.** Si el GDD y el código difieren en un valor, la regla dice
   lo que dice el GDD y el código está en falta. Eso es el hallazgo.
+- **Un gesto universal se cruza con cada modo y jornada que otra regla conserva.** Delimitar
+  su alcance antes de escribir DEBE o NO DEBE, también contra contratos draft. En #429,
+  prohibir cualquier acceso en el hueco contradecía el cobro genérico de J3–5, que no tiene
+  figura. La interacción directa corresponde a atención física; el recorrido anterior
+  conserva una consulta de acceso sin barrera. No inventar arte para resolver esa contradicción.
 - **Una tabla de sectores se contrasta con cada región del esquema visual.** No convertir una
   agrupación informal en exclusividad entre muebles: en #434, snacks dulces compartía media
   cara de la primera isla con cereales y el contrato los había separado. Recorrer las regiones,
