@@ -11,6 +11,7 @@ texto = "El rosa es el que saca la caca."
 script = ExtResource("1_objeto")
 id = &"jabon_rosa"
 nombre = "Jabón rosa"
+se_apoya_derecho = true
 sonoridad = 5
 subtitulo = "Un bidón de jabón rosa, marca “H”. Sirve para manchas de... para manchas marrones."
 revelacion = SubResource("Resource_revelacion")

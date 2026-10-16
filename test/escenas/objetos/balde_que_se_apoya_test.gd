@@ -238,6 +238,24 @@ func test_el_balde_se_mantiene_vertical_al_mirar_en_la_mano() -> void:  # AC-PLY
 	assert_object(agarre.manos().sostenido()).is_same(balde.datos)
 
 
+func test_los_bidones_se_llevan_y_se_apoyan_como_el_balde() -> void:  # AC-PLY-101
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	for nombre: String in ["JabonAzul", "JabonRosa", "JabonAmarillo"]:
+		var bidon: Node3D = almacen.get_node("Objetos/" + nombre)
+		_agarrar(almacen, bidon)
+		for alto: float in [0.0, MIRANDO_ABAJO]:
+			await _parar(jugador, PISO_LIBRE, Vector3.RIGHT, alto)
+			await get_tree().process_frame
+			await get_tree().process_frame
+			_comprobar_derecho(bidon, "%s en la mano, mirando %.0f grados" % [nombre, alto])
+		agarre.soltar(true)
+		await _dos_segundos_de_fisica()
+		_comprobar_derecho(bidon, "%s soltado" % nombre)
+		_comprobar_la_mano_vacia(almacen, nombre)
+
+
 ## Los cuatro apoyos: el punto que se mira, hacia dónde mira el jugador y cuánto baja la vista.
 func _apoyos(almacen: Node3D, balde: UtilDeLimpieza) -> Dictionary[String, Array]:
 	var piso := _piso(almacen)
