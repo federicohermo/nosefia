@@ -68,12 +68,23 @@ capturas del modelo vigente antes de fijar sus criterios. En #297 el antepecho o
 120 píxeles inferiores de 1080 aunque los rayos al hueco pasaran; sus bordes y los del dintel
 estaban a distinta profundidad. El encuadre se define con esos bordes, conservando el modelo.
 
+Si la geometría viene de Blender, cruzar la malla cruda, la evaluada con sus modificadores y el
+GLB que usa el juego antes de definir el generador de colisión. En #428, el bisel multiplicaba
+los triángulos de la góndola y explicaba 233 µm de diferencia de altura: no era un error de
+ejes. La lectura evaluada se libera al terminar y ambos caminos se prueban por idempotencia,
+sin quitar modificadores ni modificar el arte para hacer coincidir los números.
+
 **La captura verifica el foco y la pose dibujada en el cuadro que guarda.** Preparar la cámara
 y comprobar un rayo unos cuadros antes no basta: entradas o interpolación pueden cambiar el
 encuadre. El fixture conserva la pose preparada, comprueba también la pose interpolada y el
 foco después del dibujo, y el padre abre el PNG. En #302 la primera foto de la caja mostraba
 la puerta y cortaba la caja, aunque la prueba física de foco pasara. Se corrigió el montaje
 externo y se repitió la captura, sin mover arte ni cambiar la producción.
+
+La cámara tampoco puede empezar dentro del espesor de una pared: un foco correcto no excluye
+ese montaje inválido. En #426, la proyección sobre los triángulos del GLB ubicó cinco ojos entre
+la cara exterior y la interior, mientras los escenarios visibles usaban otra posición. Separar
+posición y orden de instancia antes de atribuir una diferencia al ciclo de vida o a la luz.
 
 **Una entrada nativa en Windows verifica su escala DPI y el destino real.** El driver declara
 `PER_MONITOR_AWARE_V2` antes de consultar ventanas. Cruza el rectángulo de cliente con el
@@ -90,6 +101,55 @@ gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otr
 
 Consultá `nosefia-index` para saber quién usa lo que vas a tocar. Lo que aparece ahí entra en
 «Sólo lectura» o en «No se toca».
+
+**Reasignar un gesto sigue sus estímulos y sus consultas, no sólo su despachador.**
+Buscar acciones en los fixtures compartidos y leer el par mano/objetivo de cada caso antes de
+incluirlo: en #425, los fixtures de basura y devolución debían migrar al primario, pero dos
+fixtures de subtítulos sacaban de cajas con mano vacía y conservaban el secundario. Medir
+además qué dato puro necesita la referencia durante una animación: el permiso de descarte de
+una tapa no distingue su intención abierta/cerrada mientras gira. Las consultas faltantes y
+sus espejos entran en los límites antes de repartir.
+
+**Ampliar un guion revisa también los consumidores de su lista completa.** Una intro y sus
+fixtures pueden esperar sólo la primera jornada aunque el recurso pase a contener varias.
+Declarar la vista que consume cada uno y conservar su inmutabilidad; en #430, dos suites de
+instrucciones necesitaban filtrar J1, mientras otro lector del primer mensaje seguía válido.
+
+**Un guion con símbolos nuevos se prueba con la tipografía del paquete real.** Revisar
+los glifos en cada camino que presenta el texto, incluidos vista previa y burbuja, a las
+resoluciones pedidas. En #430, el contenido literal y los tests de texto pasaban, pero el
+paquete Web dibujaba los dos emojis como cuadros hexadecimales. Si falta un fallback portable,
+su recurso, licencia, origen fijado y generador reproducible entran en los límites antes de
+corregirlo. Conservar la fuente principal y el orden del guion; no adelantar un mensaje para
+forzar su símbolo en la vista previa ni mutar el tema compartido.
+
+**La salida del detector no sustituye la medición de la malla.** Antes de declarar muebles,
+chapas o niveles, contrastar nombres reales, islas, materiales, normales y transformaciones
+del modelo. Separar las chapas físicas de los niveles con exhibición: una chapa vacía no
+autoriza un nivel activo nuevo. En #434, un umbral de distancia clasificaba cabeceras
+superiores como laterales y una tabla conservaba un mural ausente. El modelo original
+usaba cuatro niveles activos en cada cabecera, aunque el generador anterior declaraba tres.
+Guardar la medición independiente y probar el caso que confundía al detector antes de
+regenerar recursos; una tabla vieja no autoriza a reconstruir muebles ni a borrar exhibiciones.
+
+**La diferencia entre arte y contrato no se resuelve copiando el arte al contrato.** Medir
+filas, copias y modificadores de la fuente, y buscar cuándo y quién cerró la regla vigente.
+En #434, dos productos aparecían con una fila en el arte posterior, pero no estaban en la
+lista de excepciones cerrada antes por el diseñador. Medir apoyo e intersecciones de las
+alternativas permitidas y presentar las imágenes y la decisión concreta al dueño; ni la
+lista antigua de un generador ni el arte nuevo sustituyen esa decisión.
+
+**Un producto sin exhibición se sigue hasta los generadores de su fuente.** Buscar también
+extractores de mallas, miniaturas y validadores que localizan la unidad por su tanda, no sólo
+las consultas de cupo del juego. En #434, el dominio aceptaba cupo cero pero el extractor no
+podía encontrar Duronga con su bloque principal vacío. Cada consumidor que deba cambiar entra
+en los límites con su responsabilidad; no se omite la regeneración para evitar una escena
+prohibida.
+
+**Cada comando de verificación se ejecuta literalmente desde la raíz declarada.** Incluir el
+entorno que necesita; en #434, unittest discover no encontraba lib sin PYTHONPATH apuntando a
+.claude/scripts. No entregar un comando que sólo funcionó desde otro directorio o después de
+un ajuste manual que el issue omite.
 
 **Un recorrido web se cruza con el preset versionado antes de cerrar los límites.**
 Revisar los filtros de exportación y las dependencias importadas que usa ese recorrido,

@@ -93,6 +93,15 @@ el cierre de la jornada 3 con cuatro cumplidas, pero `AC-EMP-050` quedó sin cit
 de tres y dos cumplidas; la ratificación posterior de #374 recién mostró el hueco. Se amplió
 su issue entero antes de extender ese único caso, sin cambiar el dominio.
 
+**El checker cruza también las ramas de contratos publicadas que todavía no aterrizaron.**
+Traer sus cabezas y comparar BR, AC y OQ por ID y significado contra el contrato del lote.
+El máximo histórico se calcula con `git log --all -p`, no sólo con staging ni con el índice
+MCP. Una coincidencia de números no prueba una misma regla. En el lote 425–435, contratos
+publicados minutos antes habían reservado esos IDs para otras capacidades del mismo sistema.
+La reserva anterior se conserva; el padre corrige contrato, issue y citas de las familias que
+chocan antes de cerrar ningún carril, y publica la matriz de reasignación. Un árbol ya encolado
+no se edita: se espera su resultado o se cancela sólo su turno propio, conservando el incidente.
+
 ## Paso 3 — Un worktree por carril
 
 Lanzá los carriles en **un solo mensaje**, un `Agent` por carril con `isolation: "worktree"`.
@@ -241,6 +250,11 @@ Cada agente recibe, literal:
   en sus worktrees mientras otro verifica. Ante un fallo, conservá el log, comprobá el caso
   aislado y repetí la convergencia con la carga controlada. No cambies el umbral del test para
   esconder el fallo ni declares verde la primera corrida.
+- **Cerrar las sondas cortas que pueden abrir una decisión antes de encolar completas.**
+  Si el encaje de un modelo o el gesto real puede contradecir el contrato, reservar primero
+  esa medición y revisar su resultado. En #434, un barrido de segundos quedó una hora detrás
+  de completas ya encoladas y demoró la evidencia para decidir las filas. Esta prioridad se
+  prepara al repartir; los turnos ya emitidos conservan su orden.
 - **El turno lo da `scripts/turno.py`, y es una cola.** Todo lo que levanta el motor entero,
   exporta o mide va adentro: `python .claude/skills/implement-batch/scripts/turno.py <cola>
   <etiqueta> <log> -- <comando>`. `<cola>` es una carpeta del scratch del lote, la misma para
@@ -248,6 +262,18 @@ Cada agente recibe, literal:
   levantado no carga la máquina y queda afuera. En el lote del 2026-10-06 el turno era un cerrojo
   que cada carril reintentaba: una prueba de 30 s esperó 55 minutos, y los carriles pasaron a
   encadenar sus pasos adentro de un solo turno.
+- **Una captura interactiva libera el turno al terminar de medir.** Cada espera de entrada y
+  cada comando tienen un tiempo límite; al finalizar se cierra el navegador y el proceso del
+  runner sale de verdad. Guardar un marcador final no libera la cola si Node conserva stdin.
+  En #427, el navegador ya estaba cerrado y ese proceso seguía reteniendo el turno. La
+  investigación posterior avanza afuera y el control siguiente vuelve al final de la cola.
+- **El guardado de una sonda Web va a la ruta real de su paquete.** No suponer que
+  `user://` es `/userfs`: en Godot 4.7.2 incorpora el directorio de la aplicación. Resolver
+  la ruta con su configuración y la fuente de la versión exacta del motor, o medir
+  `OS.get_user_data_dir()` en el paquete; conservar nombres Unicode sin sustituir caracteres.
+  Comprobar que Continuar abre la jornada preparada. En #427, una sonda externa de arranque
+  no obtuvo la ruta y terminó por timeout; no se presenta como medición cumplida. Un menú
+  sin errores no demuestra que se haya cargado el fixture.
 - **El árbol queda congelado desde que se encola hasta recibir el resultado.** Vale también para
   la espera, la importación y los rojos y verdes cortos: no se edita, formatea ni cambia de rama
   mientras el motor puede leerlo. Los borradores externos pueden avanzar. En #300 se agregó un
