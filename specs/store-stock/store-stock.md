@@ -1042,6 +1042,14 @@ se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades 
 
 ## Contratos
 
+La apertura de escena selecciona compradores una vez mediante
+`compradores_de_la_apertura: Callable`, cuyo valor productivo conserva
+`Compradores.de_la_jornada`. Pasa la misma `Array[Comprador]` a
+`Apertura.inventario_de_la_jornada(compradores, totales, reponibles, azar)` y a
+`TareaDeAtender`; las consultas `Apertura.pedidos_de(compradores)` leen las mismas `Venta`.
+La fuente inyectable no activa por sí sola el padrón J2 ni sustituye el inventario de uno
+solo de sus consumidores.
+
 - **Entrada:** el sector y destino declarado de cada producto y si admite exhibición;
   los productos que existen, sus casilleros totales y los de la fila de adelante
   de su tanda reponible, la jornada que se abre, sus pedidos ya construidos y la fuente de azar,

@@ -904,6 +904,15 @@ izquierdo avanza exactamente una entrada. Repetir con mano vacía conserva la mi
 
 ## Contratos
 
+`Compradores.segunda_jornada_definida() -> Array[Comprador]` declara el padrón fijo J2 sin azar.
+`DialogosDeCompradores.Personaje` conserva NINGUNO/TIN/TIA y añade FEDE/MIA. Sus campos
+`fede`, `mia`, `despedida_fede` y `despedida_mia` son `PackedStringArray`; cada consulta crea
+un cursor propio. `inicial(personaje)` y `despedida(personaje)` conservan sus firmas.
+`recordatorio(personaje: int, rechazo: bool = false, pedido: Venta = null,
+productos_completos: bool = false) -> Dialogo` conserva los lectores J1 y calcula los comunes
+J2 desde el pedido original y la recepción. Un dato requerido sin catálogo devuelve `null`
+en la construcción del comprador y emite el diagnóstico, sin publicar una compra parcial.
+
 - **Entrada:** el padrón de la noche, los vendibles de cada producto, el objeto leído y los
   pedidos de borrar o imprimir, el número de jornada, las elecciones por renglón y el objeto
   sostenido con su destino de uso; catálogo y apertura del padrón fijo de jornada 2,
