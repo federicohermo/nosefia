@@ -147,8 +147,10 @@ func test_las_bolsas_arrancan_en_tachos_lejos_del_contenedor() -> void:  # AC-CL
 		var tacho := almacen.get_node(BolsaEnLaMano.RUTAS[numero]) as StaticBody3D
 		var malla := tacho.get_parent() as MeshInstance3D
 		var boca := malla.global_transform * malla.get_aabb()
+		# La tapa se abre con la bolsa adentro: la boca es la del cuerpo.
 		for parte: MeshInstance3D in malla.find_children("*", "MeshInstance3D", true, false):
-			boca = boca.merge(parte.global_transform * parte.get_aabb())
+			if not "tapa" in String(parte.name):
+				boca = boca.merge(parte.global_transform * parte.get_aabb())
 		var forma: CollisionShape3D = bolsa.get_node("Forma")
 		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
 		assert_float(bolsa.global_position.x).is_between(boca.position.x, boca.end.x)

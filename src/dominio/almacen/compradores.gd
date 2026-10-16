@@ -16,6 +16,7 @@ class_name Compradores
 extends RefCounted
 
 const DIALOGOS := preload("res://assets/dialogos/compradores_jornada_1.tres")
+const DIALOGOS_SEGUNDA := preload("res://assets/dialogos/compradores_jornada_2.tres")
 
 ## Cada fila es `[nombre, líneas del pedido, cuánto paga de más]`, y una línea es
 ## `[Producto.Id, unidades]`.
@@ -43,10 +44,15 @@ static func padron() -> Array[Comprador]:
 	return lista
 
 
-## Los compradores de esta noche: los primeros del padrón, tantos como pida el balance.
+## Las dos primeras noches tienen contenido propio; las demás usan el padrón vigente.
 static func de_la_jornada(jornada: int) -> Array[Comprador]:
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
 		return _primera_noche()
+	if jornada == 2:
+		var segunda := segunda_jornada_definida()
+		for comprador: Comprador in segunda:
+			comprador.dialogos = DIALOGOS_SEGUNDA
+		return segunda
 	var lista: Array[Comprador] = []
 	for comprador in padron():
 		if lista.size() >= ReglasDeLaVentanilla.COMPRADORES_POR_JORNADA:
@@ -56,38 +62,58 @@ static func de_la_jornada(jornada: int) -> Array[Comprador]:
 
 
 static func _primera_noche() -> Array[Comprador]:
-	var martin := _comprador_de(
+	var tin := _comprador_de(
 		[
-			"Martín",
+			"Tin",
 			[[Producto.Id.MAROLINI, 1], [Producto.Id.CORACOLA, 1], [Producto.Id.MALBARDO, 1]],
 			0
 		]
 	)
-	var tiago := _comprador_de(
-		["Tiago", [[Producto.Id.ZUCARACHAS, 2], [Producto.Id.PEPITOS, 1]], 0]
+	var tia := _comprador_de(["Tia", [[Producto.Id.ZUCARACHAS, 1], [Producto.Id.PEPITOS, 1]], 0])
+	tin.personaje = DialogosDeCompradores.Personaje.TIN
+	tia.personaje = DialogosDeCompradores.Personaje.TIA
+	tin.horario = Vector2(_desde_apertura(22), _desde_apertura(0))
+	tia.horario = Vector2(_desde_apertura(4), _desde_apertura(6))
+	tin.dialogos = DIALOGOS
+	tia.dialogos = DIALOGOS
+	return [tin, tia]
+
+
+## Declaración preparada para J2; su entrega de contenido activa la selección productiva.
+static func segunda_jornada_definida() -> Array[Comprador]:
+	var fede := _comprador_de(
+		["Fede", [[Producto.Id.POETICO, 1], [Producto.Id.PRONGLES, 1], [Producto.Id.DURONGA, 1]], 0]
 	)
-	martin.personaje = DialogosDeCompradores.Personaje.MARTIN
-	tiago.personaje = DialogosDeCompradores.Personaje.TIAGO
-	martin.horario = Vector2(_desde_apertura(22), _desde_apertura(0))
-	tiago.horario = Vector2(_desde_apertura(4), _desde_apertura(6))
-	martin.dialogos = DIALOGOS
-	tiago.dialogos = DIALOGOS
-	return [martin, tiago]
+	var mia := _comprador_de(
+		[
+			"Mía",
+			[[Producto.Id.TERMINATOR, 1], [Producto.Id.FERNET_GOD, 1], [Producto.Id.ACTRONCITO, 1]],
+			0
+		]
+	)
+	fede.personaje = DialogosDeCompradores.Personaje.FEDE
+	mia.personaje = DialogosDeCompradores.Personaje.MIA
+	fede.horario = Vector2(_desde_apertura(20, 30), _desde_apertura(23, 30))
+	mia.horario = Vector2(_desde_apertura(5), _desde_apertura(8))
+	return [fede, mia]
 
 
-static func _desde_apertura(hora: int) -> float:
+static func _desde_apertura(hora: int, minuto: int = 0) -> float:
 	return float(
 		(
-			posmod(hora - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
-			* Marcador.MINUTOS_POR_HORA
+			(
+				(
+					posmod(hora - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
+					* Marcador.MINUTOS_POR_HORA
+				)
+				+ minuto
+			)
 			* Marcador.SEGUNDOS_POR_MINUTO
 		)
 	)
 
 
-## Un `Producto.Id` sin fila en el catálogo se saltea en vez de meter un `null` en el pedido: así
-## la falta se lee como un producto que no está y no revienta al desreferenciarlo. Es la misma
-## forma que `Catalogo.todos()`.
+## Un dato inválido rechaza al comprador completo: nunca publica un pedido parcial.
 static func _comprador_de(fila: Array) -> Comprador:
 	var nombre: String = fila[0]
 	var lineas: Array = fila[1]
@@ -96,6 +122,7 @@ static func _comprador_de(fila: Array) -> Comprador:
 	for linea: Array in lineas:
 		var producto := Catalogo.de(linea[0])
 		if producto == null:
-			continue
+			push_error("El pedido requiere un producto sin catálogo: %s" % linea[0])
+			return null
 		pedido.agregar(producto, linea[1])
 	return Comprador.new(nombre, pedido, pedido.total() + desvio)

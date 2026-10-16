@@ -22,9 +22,11 @@ const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_p
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
+const PuestoDeVentanilla := preload("res://src/escenas/puestos/ventanilla.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 const PuestoDeLaCaja := preload("res://src/escenas/puestos/caja_registradora.gd")
 const TachoDelLocal := preload("res://src/escenas/puestos/tacho_de_basura.gd")
+const BolsaDeBasura := preload("res://src/escenas/objetos/bolsa_de_basura.gd")
 const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_basura.gd")
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
@@ -81,6 +83,11 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
 
+## Una fuente por sesión; los tests pueden sembrarla antes de cada apertura.
+var azar_de_la_apertura := RandomNumberGenerator.new()
+## La apertura selecciona una vez; faltantes y atención reciben esa misma lista.
+var compradores_de_la_apertura: Callable = Compradores.de_la_jornada
+
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
 var _partida := Partida.desde(Guardado.new().cargar())
@@ -99,17 +106,22 @@ var _gestos := SubtitulosDeLosGestos.new()
 ## Dónde nació el pensamiento que se ve, y a qué distancia estaba el jugador entonces.
 var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
+var _jornada_del_celular: int = 0
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
 @onready var _pantalla_del_celular: PantallaDelCelular = $Interfaz/PantallaDelCelular
+@onready var _investigador: Investigador = $Servicios/Investigador
+@onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
 
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
 ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
+	azar_de_la_apertura.randomize()
 	_instrucciones.comenzar_pedido.connect(anunciar_la_noche)
 	_cablear_el_celular()
+	_cablear_la_investigacion()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
@@ -137,10 +149,16 @@ func _ready() -> void:
 	# mesa, y la noche en que falla, ni caminar alcanza. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
+	_reloj.tiempo_consumido.connect(avisos.actualizar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
+	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
+	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
+	ventanilla.entregas_abandonadas.connect(
+		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
+	)
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
@@ -192,7 +210,7 @@ func _ready() -> void:
 	_recolector.bolsas = _bolsas
 	_recolector.bolsa_sacada.connect(_al_sacar_una_bolsa)
 	_jugador.uso_pedido.connect(_usar_un_tacho)
-	_jugador.consultar_el_derecho_con(_derecho_sobre_un_tacho)
+	_jugador.consultar_interaccion_con(_contexto_sobre_un_tacho)
 	_jugador.referencia_cambiada.connect(_hud.pintar_referencia)
 	_recolector.objeto_tirado.connect(_contenedor.recibir)
 	_recolector.objeto_tirado.connect(_al_tirar_un_objeto)
@@ -220,6 +238,7 @@ func _ready() -> void:
 		(get_node(ruta) as PuertaDelLocal).identidad = trabadas[ruta]
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
 	_cablear_los_gestos()
+	_limpiador.balde_tenido_con.connect(_al_tenir_con)
 	for util: UtilDeLimpieza in _utiles_de_limpieza:
 		util.examen = _jugador.examen
 	_manija_del_balde.observador = _jugador
@@ -243,6 +262,8 @@ func _ready() -> void:
 	_arranque = _jugador.global_transform
 	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
 	_ciclo.arrancar(_partida, _reloj)
+	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
+	_jugador.muebles_con_reserva = _muebles_con_contorno
 	_reposicion_manual.preparar()
 
 
@@ -278,6 +299,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
+	_jornada_del_celular = jornada
 	_celular.abrir_jornada(jornada)
 	_pantalla_del_celular.mostrar_recordatorio(true)
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
@@ -289,6 +311,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
+	_colilla.volver_a_su_lugar()
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
@@ -300,11 +323,17 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
-	var inventario := Apertura.inventario_de_la_jornada(jornada, _reposicion_manual.casilleros())
+	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
+	var inventario := Apertura.inventario_de_la_jornada(
+		compradores,
+		_reposicion_manual.casilleros(),
+		_reposicion_manual.casilleros_reponibles(),
+		azar_de_la_apertura
+	)
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
 	_contenedor.reiniciar()
-	var atender := TareaDeAtender.new(Compradores.de_la_jornada(jornada), inventario)
+	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
@@ -319,7 +348,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		for forma: CollisionShape3D in bolsa.find_children("*", "CollisionShape3D", true, false):
 			forma.disabled = true
 		var tacho := _tachos()[indice]
-		tacho.mostrar(bolsa, _recolector.tarea().tiene_bolsa(tacho.tacho))
+		tacho.mostrar(bolsa as BolsaDeBasura, _recolector.tarea().tiene_bolsa(tacho.tacho))
 	var poses: Dictionary[Node3D, Transform3D] = {}
 	if is_instance_valid(_pallets_de_entrega):
 		_pallets_de_entrega.queue_free()
@@ -347,6 +376,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# nuevo, que el limpiador recibe arriba y el puesto pinta abajo.
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		util.volver_a_su_lugar()
+		if not AnomaliasDeLaJornada.util_disponible(util.datos.id, jornada):
+			util.hide()
+			util.freeze = true
+			util.collision_layer = 0
+			util.collision_mask = 0
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()
@@ -360,6 +394,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 ## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+	_jornada_del_celular = jornada
 	_gestos.descartar()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
 	_celular.cerrar_jornada()
@@ -402,7 +437,9 @@ func empezar_partida_nueva() -> void:
 	_jugador.suspender()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
-	_instrucciones.mostrar(GUION_DEL_JEFE.mensajes)
+	_instrucciones.mostrar(
+		Bandeja.new([GUION_DEL_JEFE]).mensajes_de(Conversacion.Interlocutor.JEFE)
+	)
 
 
 func anunciar_la_noche() -> void:
@@ -427,7 +464,9 @@ func volver_al_menu() -> void:
 func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 	var candidatos: Array[Node3D] = []
 	candidatos.append_array(_cajas_de_productos)
-	candidatos.append_array(_utiles_de_limpieza)
+	for util: ObjetoAgarrable in _utiles_de_limpieza:
+		if AnomaliasDeLaJornada.util_disponible(util.datos.id, _limpiador.piso().jornada()):
+			candidatos.append(util)
 	candidatos.append_array(_bolsas)
 	candidatos.append_array(_reposicion_manual.unidades_sueltas())
 	candidatos.append_array(_puesto_de_la_caja.tickets_en_el_mundo())
@@ -457,6 +496,16 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 			ReglasDelCierre.Estado.new(clase, _habitaciones.de(nodo.global_position), en_mano)
 		)
 	return estados
+
+
+func _al_tenir_con(identidad: StringName, _agua: ReglasDeLaLimpieza.Agua) -> void:
+	var permitido := (
+		_reloj.corriendo()
+		and not get_tree().paused
+		and not _jugador.suspendido()
+		and not _jugador.examen.esta_examinando()
+	)
+	_partida.anotar_uso_de_poetico(identidad, ReglasDeLaLimpieza.Resultado.BALDE_TENIDO, permitido)
 
 
 ## Los gestos que salen mal piensan (BR-SUB-013), y la mopa berreta sale una vez por partida y
@@ -575,12 +624,13 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.chat_pedido.connect(_celular.pedir_chat)
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
+	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
 	_pantalla_del_celular.cierre_pedido.connect(_alternar_el_celular)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
 	# Al retomar, las devoluciones de las noches ya cerradas vuelven al chat de Enrique.
-	for texto: String in _partida.mensajes_del_jefe():
-		_celular.recibir(Conversacion.Interlocutor.JEFE, DevolucionDelJefe.mensaje(texto))
+	for mensaje: Mensaje in _partida.devoluciones_del_jefe():
+		_celular.recibir(Conversacion.Interlocutor.JEFE, mensaje)
 
 
 func _al_abrir_el_celular() -> void:
@@ -601,17 +651,50 @@ func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
 	_pantalla_del_celular.mostrar_chat(
 		_celular.bandeja().conversacion_de(quien),
 		_celular.bandeja().mensajes_de(quien),
-		_celular.celular().fijo()
+		_celular.celular().fijo(),
+		_jornada_del_celular
 	)
 
 
 func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if not _celular.celular().abierto():
 		return
+	var indice := _celular.bandeja().mensajes_de(quien).find(mensaje)
+	if indice < 0:
+		return
 	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
 		_mostrar_el_menu_del_celular()
 	elif _celular.celular().chat() == quien:
-		_pantalla_del_celular.recibir(mensaje, _celular.bandeja().mensajes_de(quien).size() - 1)
+		_pantalla_del_celular.recibir(mensaje, indice)
+
+
+func _cablear_la_investigacion() -> void:
+	_investigador.nota_agregada.connect(
+		func(mensaje: Mensaje) -> void: _celular.recibir(Conversacion.Interlocutor.NOTAS, mensaje)
+	)
+	_investigador.usar(_partida.expediente)
+	_celular.tramo_de_pista_pedido.connect(_al_pedir_pista_del_chat)
+	_agarre.objeto_agarrado.connect(_al_agarrar_una_pista)
+
+
+func _al_pedir_pista_del_chat(identidad: String) -> void:
+	_investigador.pedir_pista(
+		StringName(identidad), Pista.Canal.CHAT, _partida.jornada(), _se_puede_investigar()
+	)
+
+
+func _al_agarrar_una_pista(nodo: Node3D) -> void:
+	if not nodo.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
+		return
+	var datos: ObjetoDelAlmacen = nodo.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
+	if datos != null:
+		_investigador.pedir_pista(
+			datos.id, Pista.Canal.LEVANTAR, _partida.jornada(), _se_puede_investigar()
+		)
+
+
+func _se_puede_investigar() -> bool:
+	return _reloj.corriendo() and not get_tree().paused and not _jugador.examen.esta_examinando()
 
 
 ## Las señales pueden llegar antes de sincronizar los cuerpos con el espacio físico.
@@ -661,17 +744,19 @@ func _usar_un_tacho(objetivo: Node3D) -> void:
 		_recolector.sacar_bolsa(objetivo.tacho)
 
 
-## Si sacar la bolsa de ese tacho tendría efecto: lo contesta la tarea, sin sacarla.
-func _derecho_sobre_un_tacho(
+## Declara el gesto del tacho con la bolsa y la mano actuales, sin extraerla.
+func _contexto_sobre_un_tacho(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
-) -> ReferenciaDeControles.Derecho:
+) -> ReferenciaDeControles.Contexto:
 	if not objetivo is TachoDelLocal or _recolector.tarea() == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return null
 	var con_bolsa := _recolector.tarea().tiene_bolsa(objetivo.tacho)
-	return ReferenciaDeControles.derecho_del_tacho(con_bolsa, sostenido != null)
+	return ReferenciaDeControles.contexto_del_tacho(con_bolsa, sostenido != null)
 
 
 func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:
 	var bolsa := _bolsas[tacho]
+	(bolsa as BolsaDeBasura).en_el_tacho(false)
+	_tachos()[tacho].abrir(false)
 	for forma: CollisionShape3D in bolsa.find_children("*", "CollisionShape3D", true, false):
 		forma.disabled = false

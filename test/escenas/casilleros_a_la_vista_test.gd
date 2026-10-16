@@ -55,7 +55,8 @@ func _agarre(almacen: Node3D) -> Agarre:
 
 
 func _casilleros(almacen: Node3D, producto: Producto) -> Array[Node]:
-	return _puesto(almacen).get_node("ZonaDe" + producto.nombre).get_children()
+	var zona := _puesto(almacen).get_node_or_null("ZonaDe" + producto.nombre)
+	return zona.get_children() if zona != null else []
 
 
 func _frente(almacen: Node3D, producto: Producto) -> Vector3:
@@ -133,8 +134,15 @@ func _tandas(almacen: Node3D, producto: Producto) -> Array[Array]:
 
 ## Hacia qué pasillo mira la tanda de un casillero: cada tanda puede dar a otro.
 func _frente_del_casillero(almacen: Node3D, producto: Producto, casillero: int) -> Vector3:
+	var tandas := _tandas(almacen, producto)
+	# El casillero 0 es la primera de la reponible, que va antes que las guías.
+	var principal: Array = tandas[-1]
+	if principal[1] > 0:
+		if casillero == 0:
+			return DisposicionDeLaGondola.frente(principal[0], principal[1])
+		casillero -= 1
 	var resto := casillero
-	for tanda: Array in _tandas(almacen, producto):
+	for tanda: Array in tandas:
 		if resto < tanda[1]:
 			return DisposicionDeLaGondola.frente(tanda[0], tanda[1])
 		resto -= tanda[1]
@@ -383,6 +391,9 @@ func test_la_fila_de_atras_no_tiene_casilleros() -> void:  # AC-PLY-049
 			for indice in total:
 				var lugar := (puesto_global * DisposicionDeLaGondola.copia(tanda[0], indice)).origin
 				(adelante if indice >= total - tanda[1] else atras).append(lugar)
+		var reponibles: int = tandas[-1][1]
+		if reponibles > 0:
+			adelante.push_front(adelante.pop_at(adelante.size() - reponibles))
 		var casilleros := _casilleros(almacen, producto)
 		assert_int(casilleros.size()).is_equal(adelante.size())
 		for casillero: Node3D in casilleros:
@@ -393,6 +404,22 @@ func test_la_fila_de_atras_no_tiene_casilleros() -> void:  # AC-PLY-049
 				. is_equal_approx(adelante[casillero.get("casillero")], Vector3.ONE * 1e-4)
 			)
 			assert_bool(_contiene(atras, lugar)).is_false()
+
+
+func test_vaciar_la_reponible_entera_deja_una_puesta_y_saca_una_guia() -> void:  # AC-STK-093
+	var almacen := _almacen()
+	var flinpuf := Catalogo.de(Producto.Id.FLINPUF)
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var reponibles := disposicion.filas_de_adelante[flinpuf.id]
+	var guias := disposicion.casilleros_de(flinpuf.id) - reponibles
+	assert_int(guias).is_greater(0)
+	var faltantes: Dictionary[Producto.Id, int] = {flinpuf.id: reponibles}
+	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
+	var estante := _estante(almacen)
+	var vacios := estante.casilleros_vacios(flinpuf)
+	assert_int(vacios.size()).is_equal(reponibles)
+	assert_array(estante.casilleros_ocupados(flinpuf)).contains([0])
+	assert_int(vacios.filter(func(c: int) -> bool: return c >= 1 and c <= guias).size()).is_equal(1)
 
 
 func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC-STK-046 AC-STK-047
@@ -415,7 +442,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(
 		ReglasDelEstante.UNIDADES_POR_CAJA
 	)
-	puesto.call("usar_la_caja", caja)
+	puesto.call("usar_la_caja", caja, true)
 	assert_object(_agarre(almacen).manos().sostenido()).is_same(unidad)
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(
 		ReglasDelEstante.UNIDADES_POR_CAJA
@@ -440,7 +467,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 	var en_la_caja := repositor.caja(actroncito.id).unidades()
 	assert_int(en_la_caja).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
 	puesto.call("agarrar_de_la_gondola", actroncito.id, puesta)
-	puesto.call("usar_la_caja", caja)
+	puesto.call("usar_la_caja", caja, true)
 	assert_object(_agarre(almacen).manos().sostenido()).is_null()
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(en_la_caja + 1)
 	assert_bool(estante.casilleros_vacios(actroncito).has(puesta)).is_true()
@@ -450,7 +477,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 ## los que tiene al alcance: ninguno queda escondido detrás del mueble ni tapado por el de al
 ## lado. Se mide con los rayos de la mira sobre todos los casilleros, sin pasos de física: el
 ## campo de la mira es la esfera de su alcance.
-func test_cada_casillero_se_enfoca_desde_el_pasillo() -> void:  # AC-STK-029
+func test_cada_casillero_se_enfoca_desde_el_pasillo() -> void:  # AC-STK-029 AC-STK-085
 	var almacen := _almacen()
 	await AperturaConLugar.abrir_heladeras(almacen)
 	var sin_faltantes: Dictionary[Producto.Id, int] = {}

@@ -99,7 +99,7 @@ func test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano()
 	var padre := unidad.get_parent()
 	var lector: Node3D = almacen.get_node("Estructura/Lector")
 	for _renglon in GeneradorDeTickets.RENGLONES:
-		_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+		_accion(jugador, lector, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_array(_caja(almacen).generador().renglones()).contains_exactly(
 		[
 			(unidad.datos as UnidadDeProducto).producto,
@@ -111,6 +111,14 @@ func test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano()
 	assert_object(unidad.get_parent()).is_same(padre)
 	assert_bool(unidad.freeze).is_true()
 	assert_bool(_vista(almacen).visible).is_false()
+	var rechazos: Array[int] = []
+	_caja(almacen).lectura_rechazada.connect(func(motivo: int) -> void: rechazos.append(motivo))
+	_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+	assert_array(rechazos).is_empty()
+	_accion(jugador, lector, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_array(rechazos).has_size(1)
+	assert_int(_caja(almacen).generador().renglones().size()).is_equal(GeneradorDeTickets.RENGLONES)
+	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
 	_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_str(_vista(almacen).filas[0].text).is_equal(
 		(unidad.datos as UnidadDeProducto).producto.nombre
@@ -139,7 +147,7 @@ func test_los_seis_objetos_se_rechazan_y_siguen_en_la_mano() -> void:  # AC-PLY-
 		var dato: ObjetoDelAlmacen = objeto.get("datos")
 		assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
 		var padre := objeto.get_parent()
-		_accion(jugador, almacen.get_node("Estructura/Lector"), ReglasDelJugador.ACCION_USAR)
+		_accion(jugador, almacen.get_node("Estructura/Lector"), ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_object(agarre.manos().sostenido()).is_same(dato)
 		assert_object(objeto.get_parent()).is_same(padre)
 		assert_array(_caja(almacen).generador().renglones()).is_empty()
@@ -249,7 +257,7 @@ func test_escaneo_con_foco_real_carga_la_caja_y_permite_imprimir() -> void:  # A
 	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
 	assert_bool(await _enfocar(almacen, lector, lector.global_position)).is_true()
 	var evento := InputEventMouseButton.new()
-	evento.button_index = MOUSE_BUTTON_RIGHT
+	evento.button_index = MOUSE_BUTTON_LEFT
 	evento.pressed = true
 	get_viewport().push_input(evento)
 	evento = evento.duplicate()
@@ -283,7 +291,7 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 	reproductor.sonido_pedido.connect(func(evento: int) -> void: sonidos.append(evento))
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var lector: Node3D = almacen.get_node("Estructura/Lector")
-	_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, lector, ReglasDeLosObjetos.ACCION_AGARRAR)
 	_caja(almacen).pedir_imprimir()
 	assert_array(sonidos).is_empty()
 	var unidad := _unidad(almacen)
@@ -291,8 +299,8 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
 	sonidos.clear()
 	for _renglon in GeneradorDeTickets.RENGLONES:
-		_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
-	_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+		_accion(jugador, lector, ReglasDeLosObjetos.ACCION_AGARRAR)
+	_accion(jugador, lector, ReglasDeLosObjetos.ACCION_AGARRAR)
 	_caja(almacen).pedir_anotar(ObjetoDelAlmacen.new())
 	_caja(almacen).pedir_imprimir()
 	_vista(almacen).borrar.pressed.emit()
@@ -310,8 +318,8 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 		]
 	)
 	sonidos.clear()
-	# El aviso de cobro pertenece al recorrido anterior, conservado desde la jornada 2.
-	almacen.call("_al_abrir_la_jornada", 2)
+	# El aviso de cobro pertenece al recorrido anterior, conservado desde la jornada 3.
+	almacen.call("_al_abrir_la_jornada", 3)
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	atenciones.pedir_atender()
 	assert_object(atenciones.atencion()).is_not_null()
@@ -360,7 +368,7 @@ func test_la_tres_vacia_y_la_uno_recupera_la_lectura() -> void:  # AC-CTR-026, A
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var unidad := _unidad(almacen)
 	assert_bool((almacen.get("_agarre") as Agarre).pedir_agarrar(unidad.datos, unidad)).is_true()
-	_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+	_accion(jugador, lector, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_int(_caja(almacen).generador().renglones().size()).is_equal(1)
 
 

@@ -9,20 +9,18 @@ a correr el acomodador. **Qué entra y cómo se ordena no se decide acá**: lo c
 
 Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue al `.blend`:
 
-- cada producto del catálogo tiene **una sola** tanda con casilleros; lo que se repite para
-  completar un estante es fijo;
-- se repone sólo a la altura de la mano: en una cara de lado, en los estantes que no son ni el
-  de arriba ni el zócalo, y en una cabecera, en los que no son el de arriba. Esos estantes no
-  llevan ninguna tanda fija, y los demás llevan sólo tandas fijas;
-- un estante de lado lleva dos tandas, mitad y mitad, o una sola con casilleros que lo ocupa
-  entero. Cada cara de lado tiene un solo estante entero;
-- ningún producto va justo encima de sí mismo en la misma cara;
-- Malbardo, Durextra, Laysntt, Chisitos y Duronga van en cabecera;
-- Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo van en una sola fila: su tanda con
-  casilleros está en una cara de lado y toda es de casilleros;
+- cada producto exhibido tiene **una sola** tanda principal; Duronga conserva su destino
+  provisional de no comestibles. Lo que se repite para completar un estante es fijo;
+- los faltantes de apertura van en las principales a altura de la mano: niveles 1 y 2 de los
+  cuatro existentes, tanto en laterales como en cabeceras; 0 y 3 llevan referencias fijas.
+  Las filas de adelante de ambas tienen casilleros interactuables;
+- un estante de lado lleva dos tandas, mitad y mitad, o una sola principal que lo ocupa
+  entero;
+- los destinos y sus productos siguen los sectores del mapa aprobado;
+- Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético llevan una fila en todas sus tandas;
+  Amargadito sólo en la principal. Actroncito y Prongles conservan sus dos hileras;
 - la heladera lleva lo que se vende frío: cada uno se repone en una sola tanda, y lo que
   repite para llenar una bandeja es fijo;
-- ningún estante de góndola queda vacío.
 
 ## Cómo se nombra un estante
 
@@ -102,7 +100,6 @@ MUEBLES: dict[str, str] = {
     "A": "gondolanueva-col",
     "B": "gondolanueva2-col",
     "N": "gondolanueva-col.001",
-    "S": "gondolanueva-col.002",
     "H1": "heladeranueva-col",
     "H2": "heladeranueva-col.001",
 }
@@ -115,97 +112,172 @@ HELADERAS = ("H1", "H2")
 CABECERAS = ("norte", "sur")
 
 #: Lo que se vende frío, y por eso va en la heladera y en ningún otro lado.
-FRIOS = ("CORACOLA", "FERNET_GOD", "TERMINATOR", "MAYONCHIS", "OAAAA")
+FRIOS = ("CORACOLA", "OAAAA", "CINDOLOR", "MAYONCHIS")
 
 #: Lo que se exhibe en una cabecera y en ningún otro lado.
-DE_CABECERA = ("MALBARDO", "DUREXTRA", "LAYSNTT", "CHISITOS", "DURONGA")
+DE_CABECERA = ("MALBARDO", "AMARGADITO", "FERNET_GOD", "TERMINATOR", "SALADIK",
+               "JORGILLO", "BURBALOO", "FLINPUF")
+
+#: Capacidad para futuras declaraciones explícitas; los 32 productos actuales se exhiben.
+SOLO_DEPOSITO: tuple[str, ...] = ()
+
+#: Identidades del diseño, sin traducir nombres comerciales ni asignar marcas desconocidas.
+SECTORES = {
+    "heladera_1": ("CORACOLA", "OAAAA"),
+    "heladera_2": ("CINDOLOR", "MAYONCHIS"),
+    "no_comestibles": ("ACTRONCITO", "DUREXTRA", "POETICO", "DURONGA"),
+    "cabecera_no_comestibles": ("MALBARDO",),
+    "cabecera_almacen": ("AMARGADITO",),
+    "almacen": ("MAROLINI", "ARVEJAS", "UAKAS", "MARRANOS"),
+    "cereales": ("ZUCARACHAS", "FROTLUPS"),
+    "bebidas_sin_refrigerar": ("FERNET_GOD", "TERMINATOR"),
+    "dulces_primera_isla": ("MACUMBAS", "PEPITOS"),
+    "dulces_segunda_isla": ("OREMOS", "PETISAS", "COSA_DE_MANI", "FEEL_RICKY_FORT"),
+    "salados": ("DONSATURADOS", "PRONGLES", "CHISITOS", "LAYSNTT", "SALADIK"),
+    "golosinas": ("BURBALOO", "FLINPUF", "JORGILLO"),
+}
+
+#: Cada columna conserva su sector también en zócalo y referencias superiores.
+DESTINOS = {
+    "H1.sur": ("heladera_1",), "H2.sur": ("heladera_2",),
+    "N.sur": ("no_comestibles", "no_comestibles"),
+    "A.oeste": ("almacen", "almacen"),
+    "A.este": ("dulces_primera_isla", "cereales"),
+    "A.sur.0": ("cabecera_almacen",), "A.sur.1": ("cabecera_almacen",),
+    "A.sur.2": ("cabecera_no_comestibles",), "A.sur.3": ("cabecera_no_comestibles",),
+    "A.norte": ("bebidas_sin_refrigerar",),
+    "B.este": ("dulces_segunda_isla", "dulces_segunda_isla"),
+    "B.oeste": ("salados", "salados"),
+    "B.sur.0": ("golosinas",), "B.sur.1": ("golosinas",),
+    "B.sur.2": ("salados",), "B.sur.3": ("salados",),
+    "B.norte": ("golosinas", "golosinas"),
+}
 
 
-#: Lo que va en una sola fila, toda de casilleros. Dos filas de Actroncito o de Cosa de Maní
-#: piden un estante más hondo que cualquier otro producto, y la góndola crecía para ellos: con
-#: Actroncito en el zócalo, una del medio medía 54 cm más que la otra. Medido el 2026-09-29:
-#: Actroncito mide 0,395 de fondo y Cosa de Maní 0,340. Las Prongles van en una fila para que su
-#: estante dé los casilleros que una jornada les hace faltar. Flin Puf y Burbaloo llevan una
-#: fila por decisión del usuario al revisar el reparto el 2026-10-02; sus tandas fijas se conservan.
-DE_UNA_FILA = ("ACTRONCITO", "COSA_DE_MANI", "PRONGLES", "FLINPUF", "BURBALOO")
+#: Las cinco excepciones globales del arte vigente, confirmadas para #434. Actroncito y
+#: Prongles conservan las dos hileras que ya tenían: se corrige la lista antigua, no su arte.
+DE_UNA_FILA = ("COSA_DE_MANI", "FLINPUF", "BURBALOO", "MARRANOS", "POETICO")
 
 
 @dataclass(frozen=True)
 class Tanda:
-    """Una tanda de un estante. `fija` es la que completa el estante repitiendo un producto: no
-    tiene casilleros y nunca se vacía."""
+    """Una tanda de un estante. `fija` repite un producto y abre llena; su fila de adelante
+    conserva casilleros interactuables. La principal recibe los faltantes de apertura."""
 
     producto: str
     fija: bool = False
+    filas: int | None = None
+
+    def __post_init__(self) -> None:
+        if self.filas is not None and (not self.fija or self.filas not in (1, 2)):
+            raise ValueError("sólo una tanda fija puede declarar una o dos filas")
+        if self.producto in DE_UNA_FILA and self.filas == 2:
+            raise ValueError("la excepción global de una fila también rige las tandas fijas")
+
+    @property
+    def cantidad_de_filas(self) -> int:
+        """Una fija puede declarar su encaje; si no, rige la excepción global de una fila."""
+        if self.filas is not None:
+            return self.filas
+        if self.producto in DE_UNA_FILA:
+            return 1
+        return 2
 
 
 def _p(clave: str) -> Tanda:
     return Tanda(clave)
 
 
-def _f(clave: str) -> Tanda:
-    return Tanda(clave, fija=True)
+def _f(clave: str, filas: int | None = None) -> Tanda:
+    return Tanda(clave, fija=True, filas=filas)
 
 
 #: Qué lleva cada estante, de izquierda a derecha para quien lo mira desde el pasillo.
 #:
 #: **Se itera.** Los lugares a la altura de la mano son más que los productos, y no se completan
-#: con tandas fijas: en cada cara de lado, un producto ocupa un estante entero. Las tandas fijas
+#: con tandas fijas. Un producto solo ocupa el estante entero. Las tandas fijas
 #: van arriba de todo y en el zócalo, y repiten un producto que se repone en otro lado.
 ESTANTES: dict[str, tuple[Tanda, ...]] = {
     # Góndola del medio, la de la derecha entrando: su cara oeste da al pasillo central.
-    "A.oeste.3": (_f("OREMOS"), _f("PEPITOS")),
-    "A.oeste.2": (_p("PRONGLES"),),
-    "A.oeste.1": (_p("ZUCARACHAS"), _p("POETICO")),
-    "A.oeste.0": (_f("MAROLINI"), _f("UAKAS")),
-    "A.este.3": (_f("SALADIK"), _f("BURBALOO")),
-    "A.este.2": (_p("PEPITOS"),),
-    "A.este.1": (_p("UAKAS"), _p("SALADIK")),
-    "A.este.0": (_f("JORGILLO"), _f("PETISAS")),
-    "A.sur.2": (_f("DUREXTRA"),),
-    "A.sur.1": (_p("MALBARDO"),),
-    "A.sur.0": (_p("MACUMBAS"),),
-    "A.norte.2": (_f("CHISITOS"),),
-    "A.norte.1": (_p("LAYSNTT"),),
-    "A.norte.0": (_p("CHISITOS"), _p("FROTLUPS")),
+    "A.oeste.3": (_f("MAROLINI"), _f("ARVEJAS")),
+    "A.oeste.2": (_p("MAROLINI"), _p("ARVEJAS")),
+    "A.oeste.1": (_p("UAKAS"), _p("MARRANOS")),
+    "A.oeste.0": (_f("UAKAS"), _f("MARRANOS")),
+    "A.este.3": (_f("MACUMBAS"), _f("ZUCARACHAS")),
+    "A.este.2": (_p("MACUMBAS"), _p("ZUCARACHAS")),
+    "A.este.1": (_p("PEPITOS"), _p("FROTLUPS")),
+    "A.este.0": (_f("PEPITOS"), _f("FROTLUPS")),
+    "A.sur.3": (_f("MALBARDO"),),
+    "A.sur.2": (_p("MALBARDO"),),
+    "A.sur.1": (_p("AMARGADITO"),),
+    "A.sur.0": (_f("AMARGADITO"),),
+    "A.norte.3": (_f("TERMINATOR"),),
+    "A.norte.2": (_p("TERMINATOR"),),
+    "A.norte.1": (_p("FERNET_GOD"),),
+    "A.norte.0": (_f("FERNET_GOD"),),
     # Góndola del medio, la de la izquierda: su cara este da al pasillo central.
-    "B.este.3": (_f("FROTLUPS"), _f("SALADIK")),
-    "B.este.2": (_p("MAROLINI"), _p("BURBALOO")),
-    "B.este.1": (_p("FEEL_RICKY_FORT"),),
-    "B.este.0": (_f("DONSATURADOS"), _f("PETISAS")),
-    "B.oeste.3": (_f("ZUCARACHAS"), _f("SALADIK")),
-    "B.oeste.2": (_p("ACTRONCITO"),),
-    "B.oeste.1": (_p("DONSATURADOS"), _p("OREMOS")),
-    "B.oeste.0": (_f("CINDOLOR"), _f("MARRANOS")),
-    "B.sur.2": (_f("DURONGA"),),
-    "B.sur.1": (_p("DUREXTRA"),),
-    "B.sur.0": (_p("CINDOLOR"),),
-    "B.norte.2": (_f("MALBARDO"),),
-    "B.norte.1": (_p("DURONGA"),),
-    "B.norte.0": (_p("JORGILLO"),),
-    # Las dos góndolas contra la pared del oeste.
-    "N.sur.3": (_f("CINDOLOR"), _f("AMARGADITO")),
-    "N.sur.2": (_p("FLINPUF"),),
-    "N.sur.1": (_p("PETISAS"), _p("ARVEJAS")),
-    # Marranos es una lata chata: en el zócalo el portaprecio le tapa la etiqueta —sube 6,5 cm y
-    # la lata mide 8,6, medido el 2026-09-29—. Ahí va sólo su tanda fija.
-    "N.sur.0": (_f("JORGILLO"), _f("MARRANOS")),
-    "S.sur.3": (_f("FLINPUF"), _f("CINDOLOR")),
-    "S.sur.2": (_p("AMARGADITO"), _p("MARRANOS")),
-    "S.sur.1": (_p("COSA_DE_MANI"),),
-    "S.sur.0": (_f("ARVEJAS"), _f("FLINPUF")),
+    "B.este.3": (_f("OREMOS"), _f("PETISAS")),
+    "B.este.2": (_p("OREMOS"), _p("PETISAS")),
+    "B.este.1": (_p("COSA_DE_MANI"), _p("FEEL_RICKY_FORT")),
+    "B.este.0": (_f("COSA_DE_MANI"), _f("FEEL_RICKY_FORT")),
+    "B.oeste.3": (_f("DONSATURADOS"), _f("PRONGLES")),
+    "B.oeste.2": (_p("DONSATURADOS"), _p("PRONGLES")),
+    "B.oeste.1": (_p("CHISITOS"), _p("LAYSNTT")),
+    "B.oeste.0": (_f("CHISITOS"), _f("LAYSNTT")),
+    "B.sur.3": (_f("SALADIK"),),
+    "B.sur.2": (_p("SALADIK"),),
+    "B.sur.1": (_p("FLINPUF"),),
+    "B.sur.0": (_f("FLINPUF"),),
+    "B.norte.3": (_f("JORGILLO"),),
+    "B.norte.2": (_p("JORGILLO"),),
+    "B.norte.1": (_p("BURBALOO"),),
+    "B.norte.0": (_f("BURBALOO"),),
+    # La estantería existente de no comestibles.
+    "N.sur.3": (_f("ACTRONCITO"), _f("DUREXTRA")),
+    "N.sur.2": (_p("ACTRONCITO"), _p("DUREXTRA")),
+    "N.sur.1": (_p("POETICO"), _p("DURONGA")),
+    "N.sur.0": (_f("POETICO"), _f("DURONGA")),
     # Las heladeras. Lo frío es menos que las bandejas: cada uno va una vez con casilleros, y las
     # bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el
     # 2026-09-29, igual que los estantes de góndola que no se completan sin repetir.
     "H1.sur.0": (_f("OAAAA"),),
-    "H1.sur.1": (_p("CORACOLA"),),
-    "H1.sur.2": (_p("TERMINATOR"),),
-    "H1.sur.3": (_p("FERNET_GOD"),),
-    "H2.sur.0": (_f("CORACOLA"),),
+    "H1.sur.1": (_p("OAAAA"),),
+    "H1.sur.2": (_p("CORACOLA"),),
+    "H1.sur.3": (_f("CORACOLA"),),
+    "H2.sur.0": (_f("MAYONCHIS"),),
     "H2.sur.1": (_p("MAYONCHIS"),),
-    "H2.sur.2": (_p("OAAAA"),),
-    "H2.sur.3": (_f("FERNET_GOD"),),
+    "H2.sur.2": (_p("CINDOLOR"),),
+    "H2.sur.3": (_f("CINDOLOR"),),
 }
+
+
+def sector_de(estante: str, columna: int) -> str:
+    destino = estante if estante in DESTINOS else estante.rsplit(".", 1)[0]
+    sectores = DESTINOS[destino]
+    return sectores[columna]
+
+
+def validar_tandas(principales: dict[str, int]) -> None:
+    """Un vacío declarado es distinto de perder una fuente o inventar una identidad."""
+    conocidas = {p.clave for p in PRODUCTOS}
+    if principales.keys() - conocidas:
+        raise ValueError("producto sin sector declarado")
+    for p in PRODUCTOS:
+        esperado = 0 if p.clave in SOLO_DEPOSITO else 1
+        if principales.get(p.clave, 0) != esperado:
+            raise ValueError(f"{p.nombre}: se requieren {esperado} tandas principales")
+
+
+def validar_reparto(estantes: dict[str, tuple[Tanda, ...]]) -> None:
+    principales: dict[str, int] = {}
+    for estante, tandas in estantes.items():
+        for columna, t in enumerate(tandas):
+            sector = sector_de(estante, columna)
+            if t.producto not in SECTORES[sector]:
+                raise ValueError(f"{t.producto} no pertenece a {sector} en {estante}")
+            if not t.fija:
+                principales[t.producto] = principales.get(t.producto, 0) + 1
+    validar_tandas(principales)
 
 
 def producto(clave: str) -> Producto:
@@ -219,6 +291,15 @@ def partes(estante: str) -> tuple[str, str, int]:
     """El mueble, la cara y el nivel de un estante."""
     mueble, cara, nivel = estante.split(".")
     return mueble, cara, int(nivel)
+
+
+def cara_de_isla(normal: tuple[float, float, float], medio: tuple[float, float, float]) -> str:
+    """Clasifica una chapa de isla por su normal y centro relativo al mueble."""
+    # Las cabeceras son rampas: las altas acortan su fondo y el centro cruza el antiguo
+    # umbral espacial de 1,9 m. Su inclinación conserva la identidad de la cara.
+    if abs(normal[1]) > 0.01:
+        return "norte" if medio[1] > 0 else "sur"
+    return "oeste" if medio[0] < 0 else "este"
 
 
 def es_heladera(estante: str) -> bool:

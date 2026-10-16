@@ -36,7 +36,11 @@ func _pulsar(almacen: Node3D) -> void:
 	var clic := InputEventMouseButton.new()
 	clic.button_index = MOUSE_BUTTON_LEFT
 	clic.pressed = true
-	_panel(almacen).get_node("Fisico/Blanco").gui_input.emit(clic)
+	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
+	if puesto.get("_abierta"):
+		puesto.call("_input", clic)
+	else:
+		puesto.get_node("Comprador/Objetivo").call("accionar")
 
 
 func _conversar(almacen: Node3D) -> void:
@@ -138,7 +142,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 			assert_str(texto.text).is_equal(despedida.entrada_actual())
 			textos.append(texto.text)
 			_pulsar(almacen)
-		if atendida.comprador().personaje == DialogosDeCompradores.Personaje.TIAGO:
+		if atendida.comprador().personaje == DialogosDeCompradores.Personaje.TIA:
 			assert_array(textos).has_size(4)
 			assert_str(textos[1]).contains("investigador criminal")
 			assert_str(textos[2]).contains("Enrique Peldaño")
@@ -154,7 +158,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		[Producto.Id.MAROLINI, 1],
 		[Producto.Id.CORACOLA, 1],
 		[Producto.Id.MALBARDO, 1],
-		[Producto.Id.ZUCARACHAS, 2],
+		[Producto.Id.ZUCARACHAS, 1],
 		[Producto.Id.PEPITOS, 1]
 	]:
 		var producto := Catalogo.de(fila[0])
@@ -163,24 +167,50 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
 
-# AC-CTR-040, AC-STK-055, AC-PLY-079
-func test_vencer_retira_productos_y_ticket_sin_registrar_una_venta() -> void:
+func _vender_y_anotar_actual(almacen: Node3D) -> void:
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	var agarre: Agarre = almacen.get("_agarre")
+	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
+	var pedido := atenciones.atencion().comprador().pedido()
+	for producto in pedido.productos():
+		for _unidad in pedido.unidades_de(producto):
+			almacen.get("_reposicion_manual").retirar(producto.id)
+			_pulsar(almacen)
+			assert_object(agarre.manos().sostenido()).is_null()
+			computadora.pedir_sumar(producto)
+	var papel := _ticket(almacen, pedido)
+	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
+	_pulsar(almacen)
+	assert_bool(atenciones.atencion().vendida()).is_true()
+	assert_bool(atenciones.atencion().despachada()).is_false()
+
+
+# AC-CTR-040, AC-STK-055, AC-STK-024, AC-STK-056, AC-PLY-079
+func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	var almacen := await _abrir()
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	var agarre: Agarre = almacen.get("_agarre")
+	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
 	reloj.avanzar(120.0)
 	puesto.abrir()
 	_conversar(almacen)
-	var producto := Catalogo.de(Producto.Id.MAROLINI)
+	_vender_y_anotar_actual(almacen)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	_conversar(almacen)
+	puesto.cerrar()
+	reloj.avanzar(360.0)
+	puesto.abrir()
+	_conversar(almacen)
+	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
 	almacen.get("_reposicion_manual").retirar(producto.id)
 	var cuerpo := agarre.cuerpo_sostenido() as ObjetoAgarrable
 	var identidad := cuerpo.datos as UnidadDeProducto
 	_pulsar(almacen)
 	assert_object(agarre.manos().sostenido()).is_null()
 	var papel := _ticket(almacen, atenciones.atencion().comprador().pedido())
-	agarre.pedir_agarrar(papel.datos, papel)
+	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
 	_pulsar(almacen)
 	assert_object(agarre.manos().sostenido()).is_null()
 	_pulsar(almacen)
@@ -199,23 +229,37 @@ func test_vencer_retira_productos_y_ticket_sin_registrar_una_venta() -> void:
 	derecho.pressed = true
 	puesto._input(derecho)
 	assert_bool(_panel(almacen).visible).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	reloj.avanzar(120.0)
 	assert_bool(atenciones.puede_abandonar()).is_true()
 	assert_object(atenciones.tarea().en_ventanilla()).is_null()
-	for _cuadro in 20:
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	for _cuadro in 30:
 		await get_tree().physics_frame
 	assert_bool(is_instance_valid(papel)).is_false()
-	assert_bool(is_instance_valid(cuerpo)).is_false()
-	var repositor: Repositor = almacen.get("_repositor")
-	assert_bool(repositor.caja(producto.id).meter(identidad)).is_false()
+	assert_bool(is_instance_valid(cuerpo)).is_true()
+	if not is_instance_valid(cuerpo):
+		return
+	assert_object(cuerpo.datos).is_same(identidad)
+	assert_array(almacen.get("_reposicion_manual").unidades_sueltas()).contains_exactly([cuerpo])
+	assert_bool(cuerpo.freeze).is_false()
+	assert_bool(cuerpo.visible).is_true()
+	assert_bool(cuerpo.has_meta(&"recibido_por_comprador")).is_false()
 	assert_int(atenciones.tarea().vendidas_de(producto)).is_zero()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
+	computadora.pedir_sumar(producto)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	computadora.pedir_restar(producto)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	assert_bool(reloj.corriendo()).is_false()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
 
 # AC-CTR-041
 func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	almacen.call("_al_abrir_la_jornada", 3)
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
 	var camara := Camera3D.new()
 	puesto.add_child(camara)
@@ -229,3 +273,41 @@ func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -
 	(almacen.get("_reloj") as RelojDelTurno).avanzar(1.0)
 	assert_object(renglones.get_child(0)).is_same(primero)
 	assert_bool((_panel(almacen).get("_cobrar") as Button).visible).is_true()
+
+
+func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_todo() -> void:  # AC-CTR-037
+	var almacen := await _abrir()
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	var agarre: Agarre = almacen.get("_agarre")
+	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
+	reloj.avanzar(480.0)
+	puesto.abrir()
+	_conversar(almacen)
+	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
+	var texto: RichTextLabel = _panel(almacen).get_node("Fisico/Dialogo/Texto")
+	_pulsar(almacen)
+	var recordatorio := texto.text
+	assert_str(texto.get_parsed_text()).is_equal(
+		"Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito."
+	)
+	_pulsar(almacen)
+	almacen.get("_reposicion_manual").retirar(producto.id)
+	var primera := agarre.cuerpo_sostenido()
+	_pulsar(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_null()
+	assert_bool(primera.visible).is_false()
+	_pulsar(almacen)
+	assert_str(texto.text).is_equal(recordatorio)
+	_pulsar(almacen)
+	almacen.get("_reposicion_manual").retirar(producto.id)
+	var sobrante := agarre.cuerpo_sostenido()
+	var identidad := agarre.manos().sostenido()
+	_pulsar(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_same(sobrante)
+	assert_object(agarre.manos().sostenido()).is_same(identidad)
+	assert_str(texto.text).is_equal("Yo no pedí esto. " + recordatorio)
+	assert_int(atenciones.tarea().vendidas_de(producto)).is_zero()
+	assert_bool(atenciones.atencion().vendida()).is_false()
+	_pulsar(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_same(sobrante)

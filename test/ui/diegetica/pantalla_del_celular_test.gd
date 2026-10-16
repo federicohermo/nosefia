@@ -26,6 +26,14 @@ func _conversacion(cantidad: int = 2) -> Conversacion:
 	return conversacion
 
 
+func _burbuja(pantalla: PantallaDelCelular, indice: int) -> PanelContainer:
+	var lista: VBoxContainer = pantalla.get("_mensajes")
+	for hijo: Node in lista.get_children():
+		if hijo.has_meta("indice_de_mensaje") and int(hijo.get_meta("indice_de_mensaje")) == indice:
+			return hijo as PanelContainer
+	return null
+
+
 func test_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion() -> void:  # AC-INV-033
 	var pantalla := _pantalla()
 	var ahora: Array[int] = [0]
@@ -114,7 +122,7 @@ func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	pantalla.set("_ahora", func() -> int: return ahora[0])
 	pantalla.subir()
 	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
-	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
 	for cuadro in 4:
 		await get_tree().process_frame
 	var scroll: ScrollContainer = pantalla.get("_scroll")
@@ -131,9 +139,7 @@ func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	var pedidos: Array[int] = []
 	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidos.append(indice))
 	var foto: TextureButton = (
-		(pantalla.get("_mensajes") as Node)
-		. get_child(2)
-		. find_children("*", "TextureButton", true, false)[0]
+		_burbuja(pantalla, 2).find_children("*", "TextureButton", true, false)[0]
 	)
 	foto.pressed.emit()
 	assert_array(pedidos).is_equal([2])
@@ -152,7 +158,7 @@ func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	assert_int(cerradas.size()).is_equal(1)
 	assert_bool((pantalla.get("_foto_ampliada") as Control).visible).is_false()
 	assert_int(scroll.scroll_vertical).is_equal(antes)
-	pantalla.mostrar_chat(conversacion, [conversacion.mensajes[0]], true)
+	pantalla.mostrar_chat(conversacion, [conversacion.mensajes[0]], true, 1)
 	assert_bool((pantalla.get("_volver") as Control).visible).is_false()
 	for cuadro in 4:
 		await get_tree().process_frame
@@ -178,12 +184,8 @@ func test_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita() -> void:
 	var conversacion := _conversacion(1)
 	var mensaje := conversacion.mensajes[0]
 	mensaje.texto = "Texto [b]importante[/b] íntegro."
-	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false)
-	var cuerpo := (
-		(pantalla.get("_mensajes") as Node)
-		. get_child(0)
-		. find_children("*", "RichTextLabel", true, false)[0]
-	)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	var cuerpo := _burbuja(pantalla, 0).find_children("*", "RichTextLabel", true, false)[0]
 	assert_bool(cuerpo is RichTextLabel).is_true()
 	if cuerpo is RichTextLabel:
 		assert_str(cuerpo.text).is_equal(mensaje.texto)
@@ -218,7 +220,7 @@ func test_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas() -> vo
 	assert_int(lista.get_child_count()).is_equal(1)
 	var vista_previa := lista.find_child("VistaPrevia", true, false) as Label
 	assert_str(vista_previa.text).is_equal(conversacion.mensajes[-1].texto)
-	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
 	assert_bool(buscar.visible).is_false()
 	assert_bool((pantalla.get("_entrada") as LineEdit).editable).is_false()
 	pantalla.mostrar_menu(bandeja)
@@ -244,3 +246,87 @@ func test_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no() -> void:  #
 	clic.position = Vector2(10, 10)
 	pantalla._input(clic)
 	assert_int(cierres.size()).is_equal(1)
+
+
+# AC-INV-039, AC-INV-041, AC-INV-042
+func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
+	var pantalla := _pantalla()
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	var pedidos: Array[String] = []
+	sistema.tramo_de_pista_pedido.connect(
+		func(identidad: String) -> void: pedidos.append(identidad)
+	)
+	pantalla.tramo_pedido.connect(sistema.pedir_tramo)
+	sistema.abrir_jornada(2)
+	sistema.pedir_alternar(false)
+	sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
+	var conversacion := sistema.bandeja().conversacion_de(Conversacion.Interlocutor.YASMIN)
+	var mensajes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN)
+	pantalla.mostrar_chat(conversacion, mensajes, false, 2)
+	assert_str((pantalla.get("_subtitulo") as Label).text).is_equal("Compañera de trabajo")
+	assert_bool((pantalla.get("_subtitulo") as Label).visible).is_true()
+	assert_object((pantalla.get("_avatar_del_chat") as TextureRect).texture).is_not_null()
+	var texto := (
+		_burbuja(pantalla, 5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
+	)
+	assert_str(texto.get_parsed_text()).is_equal(mensajes[5].texto)
+	assert_int(texto.mouse_filter).is_equal(Control.MOUSE_FILTER_PASS)
+	assert_array(pedidos).is_empty()
+	texto.meta_clicked.emit("fuera")
+	assert_array(pedidos).is_empty()
+	texto.meta_clicked.emit("falta_algo")
+	texto.meta_clicked.emit("falta_algo")
+	assert_array(pedidos).is_equal(["2A", "2A"])
+
+
+func test_llegada_intercalada_conserva_indice_actual_de_la_foto() -> void:  # AC-INV-040, AC-INV-042
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(3)
+	conversacion.mensajes[1].foto = GradientTexture2D.new()
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	var nuevo := Mensaje.new()
+	nuevo.texto = "Un cierre anterior a la apertura"
+	pantalla.recibir(nuevo, 0)
+	var texto := (
+		_burbuja(pantalla, 0).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
+	)
+	assert_str(texto.get_parsed_text()).is_equal(nuevo.texto)
+	var pedidos: Array[int] = []
+	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidos.append(indice))
+	var fotos := _burbuja(pantalla, 2).find_children("*", "TextureButton", true, false)
+	assert_int(fotos.size()).is_equal(1)
+	if fotos.is_empty():
+		return
+	var foto := fotos[0] as TextureButton
+	foto.pressed.emit()
+	assert_array(pedidos).is_equal([2])
+
+
+# AC-INV-039, AC-INV-042
+func test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema() -> void:
+	var tema := load("res://assets/ui/manada/tema.tres") as Theme
+	var primaria := tema.default_font
+	var respaldos := primaria.fallbacks.duplicate()
+	var caracteres := primaria.get_supported_chars()
+	var pantalla := _pantalla()
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(2)
+	pantalla.mostrar_menu(bandeja)
+	var lista: VBoxContainer = pantalla.get("_mensajes")
+	var resumen := lista.get_child(1).find_child("VistaPrevia", true, false) as Label
+	var fuente := resumen.get_theme_font("font")
+	for codigo: int in [0x2728, 0x1f4aa]:
+		assert_bool(fuente.get_supported_chars().contains(String.chr(codigo))).is_true()
+	var conversacion := bandeja.conversacion_de(Conversacion.Interlocutor.YASMIN)
+	pantalla.mostrar_chat(conversacion, bandeja.mensajes_de(conversacion.interlocutor), false, 2)
+	for caso: Vector2i in [Vector2i(0, 0x2728), Vector2i(14, 0x1f4aa)]:
+		var texto := (
+			_burbuja(pantalla, caso.x).find_children("*", "RichTextLabel", true, false)[0]
+			as RichTextLabel
+		)
+		var glifos := texto.get_theme_font("normal_font").get_supported_chars()
+		assert_bool(glifos.contains(String.chr(caso.y))).is_true()
+	assert_object(tema.default_font).is_same(primaria)
+	assert_array(primaria.fallbacks).is_equal(respaldos)
+	assert_str(primaria.get_supported_chars()).is_equal(caracteres)
+	assert_object((fuente as FontVariation).base_font).is_same(primaria)

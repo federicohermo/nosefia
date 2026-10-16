@@ -37,7 +37,7 @@ func _abrir_la_tapa(almacen: Node3D) -> void:
 		)
 	)
 	if not tapa.call("recibe_objetos"):
-		_accion(almacen, tapa, ReglasDelJugador.ACCION_USAR)
+		_accion(almacen, tapa, ReglasDeLosObjetos.ACCION_AGARRAR)
 		for _cuadro in 60:
 			await get_tree().physics_frame
 	assert_bool(tapa.call("recibe_objetos")).is_true()
@@ -64,6 +64,7 @@ func test_solo_la_segunda_noche_muestra_bolsas_en_los_tachos() -> void:  # AC-CL
 			assert_int(tacho.get("tacho")).is_equal(numero)
 			assert_str(bolsa.datos.id).is_equal(ReglasDeLaBasura.id_de_la_bolsa(numero + 1))
 			if jornada != 2:
+				_accion(almacen, tacho, ReglasDeLosObjetos.ACCION_AGARRAR)
 				_accion(almacen, tacho, ReglasDelJugador.ACCION_USAR)
 				assert_object((almacen.get("_agarre") as Agarre).manos().sostenido()).is_null()
 		almacen.queue_free()
@@ -91,7 +92,7 @@ func test_los_tres_tachos_enfocados_entregan_y_la_tercera_cuenta() -> void:  # A
 		assert_float(candidato.distancia).is_less_equal(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 		var bolsa: ObjetoAgarrable = almacen.get("_bolsas")[numero]
 		var boca := bolsa.global_position
-		_accion(almacen, tacho, ReglasDelJugador.ACCION_USAR)
+		_accion(almacen, tacho, ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_object(agarre.cuerpo_sostenido()).is_same(bolsa)
 		assert_bool(recolector.tarea().tiene_bolsa(numero)).is_false()
 		assert_bool(bolsa.global_position.is_equal_approx(boca)).is_false()
@@ -107,22 +108,22 @@ func test_los_tres_tachos_enfocados_entregan_y_la_tercera_cuenta() -> void:  # A
 	assert_str(hud.text).contains(str(previo + 1))
 
 
-func test_izquierdo_mano_ocupada_repeticion_y_suspension_no_extraen() -> void:  # AC-CLN-055
+func test_tacho_extrae_una_vez_con_primario() -> void:  # AC-CLN-053 AC-CLN-055
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	var primero := almacen.get_node(BolsaEnLaMano.RUTAS[0])
 	var segundo := almacen.get_node(BolsaEnLaMano.RUTAS[1])
-	_accion(almacen, primero, ReglasDeLosObjetos.ACCION_AGARRAR)
+	_accion(almacen, primero, ReglasDelJugador.ACCION_USAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_bool(recolector.tarea().tiene_bolsa(0)).is_true()
 	jugador.call("suspender")
-	_accion(almacen, primero, ReglasDelJugador.ACCION_USAR)
+	_accion(almacen, primero, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_bool(recolector.tarea().tiene_bolsa(0)).is_true()
 	assert_object(agarre.manos().sostenido()).is_null()
 	jugador.call("reanudar")
-	_accion(almacen, primero, ReglasDelJugador.ACCION_USAR)
+	_accion(almacen, primero, ReglasDeLosObjetos.ACCION_AGARRAR)
 	var sostenido := agarre.cuerpo_sostenido()
 	for objetivo: Node3D in [primero, segundo]:
 		_accion(almacen, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
@@ -131,7 +132,7 @@ func test_izquierdo_mano_ocupada_repeticion_y_suspension_no_extraen() -> void:  
 	assert_bool(recolector.tarea().tiene_bolsa(1)).is_true()
 	assert_int(recolector.tarea().depositadas()).is_zero()
 	agarre.soltar(false)
-	_accion(almacen, primero, ReglasDelJugador.ACCION_USAR)
+	_accion(almacen, primero, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 
 
@@ -167,7 +168,7 @@ func test_rescate_devuelve_cuerpo_libre_sin_reponer_el_tacho() -> void:  # AC-CL
 	assert_object(agarre.cuerpo_sostenido()).is_same(bolsa)
 	_accion(almacen, almacen.get_node(CONTENEDOR), ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_int(almacen.get("_recolector").tarea().depositadas()).is_equal(1)
-	_accion(almacen, almacen.get_node(BolsaEnLaMano.RUTAS[0]), ReglasDelJugador.ACCION_USAR)
+	_accion(almacen, almacen.get_node(BolsaEnLaMano.RUTAS[0]), ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 
 

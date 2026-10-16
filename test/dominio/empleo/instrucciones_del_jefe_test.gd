@@ -110,8 +110,9 @@ func test_un_paso_termina_al_primer_avance() -> void:  # AC-EMP-045
 func test_guion_y_siete_fotos_en_doce_pantallas() -> void:  # AC-EMP-046, AC-EMP-047
 	var guion: Conversacion = load(GUION)
 	var originales: Array[Mensaje] = guion.mensajes.duplicate()
-	var pasos := InstruccionesDelJefe.pasos_de(guion.mensajes)
-	assert_int(guion.mensajes.size()).is_equal(19)
+	var mensajes := Bandeja.new([guion]).mensajes_de(guion.interlocutor)
+	var pasos := InstruccionesDelJefe.pasos_de(mensajes)
+	assert_int(mensajes.size()).is_equal(19)
 	assert_int(pasos.size()).is_equal(12)
 	assert_str(guion.nombre).is_equal("Enrique Peldaño")
 	assert_object(guion.imagen).is_not_null()
@@ -124,7 +125,7 @@ func test_guion_y_siete_fotos_en_doce_pantallas() -> void:  # AC-EMP-046, AC-EMP
 		assert_int(paso.textos.size()).is_equal(1)
 		for texto in paso.textos:
 			if fotos.has(texto_actual + 1):
-				assert_object(paso.foto).is_same(guion.mensajes[entrada])
+				assert_object(paso.foto).is_same(mensajes[entrada])
 				assert_object(paso.foto.foto).is_not_null()
 				assert_str(paso.foto.texto).is_empty()
 				assert_object(bandeja.adjunto_de(guion.interlocutor, entrada)).is_same(texto)
@@ -135,7 +136,7 @@ func test_guion_y_siete_fotos_en_doce_pantallas() -> void:  # AC-EMP-046, AC-EMP
 					)
 				)
 				entrada += 1
-			assert_object(texto).is_same(guion.mensajes[entrada])
+			assert_object(texto).is_same(mensajes[entrada])
 			assert_str(texto.texto).is_equal(TEXTOS[texto_actual])
 			assert_int(texto.jornada).is_equal(1)
 			entrada += 1

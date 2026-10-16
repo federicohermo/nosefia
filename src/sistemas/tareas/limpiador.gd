@@ -15,6 +15,7 @@ extends Node
 ## una fila de la tabla de sonidos las hace sonar sin tocar este archivo.
 signal balde_llenado
 signal balde_tenido(agua: ReglasDeLaLimpieza.Agua)
+signal balde_tenido_con(identidad: StringName, agua: ReglasDeLaLimpieza.Agua)
 signal balde_vaciado
 signal mopa_mojada(agua: ReglasDeLaLimpieza.Agua)
 signal piso_humedecido
@@ -26,6 +27,8 @@ signal pasada_dada(lugar: PisoDelLocal.Lugar)
 signal uso_rechazado(motivo: ReglasDeLaLimpieza.Resultado)
 ## Una pasada por una mancha que no la borró, con el motivo: es lo que piensa el protagonista.
 signal pasada_rechazada(lugar: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado)
+## La pasada que no borró por el jabón. Es la única de los rechazos que suena en la tabla.
+signal pasada_con_jabon_equivocado(lugar: PisoDelLocal.Lugar)
 
 ## La carga de la mopa llegó a cero en este paso.
 signal mopa_secada
@@ -71,6 +74,7 @@ func usar(en_la_mano: StringName, objetivo: StringName) -> ReglasDeLaLimpieza.Re
 			balde_llenado.emit()
 		ReglasDeLaLimpieza.Resultado.BALDE_TENIDO:
 			balde_tenido.emit(_piso.balde().agua())
+			balde_tenido_con.emit(en_la_mano, _piso.balde().agua())
 		ReglasDeLaLimpieza.Resultado.BALDE_VACIADO:
 			balde_vaciado.emit()
 		ReglasDeLaLimpieza.Resultado.MOPA_MOJADA:
@@ -88,6 +92,8 @@ func pasar(en_la_mano: StringName, lugar: PisoDelLocal.Lugar) -> ReglasDeLaLimpi
 	if resultado != ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA:
 		uso_rechazado.emit(resultado)
 		pasada_rechazada.emit(lugar, resultado)
+		if resultado == ReglasDeLaLimpieza.Resultado.JABON_EQUIVOCADO:
+			pasada_con_jabon_equivocado.emit(lugar)
 		return resultado
 	pasada_dada.emit(lugar)
 	if _piso.esta_limpio():

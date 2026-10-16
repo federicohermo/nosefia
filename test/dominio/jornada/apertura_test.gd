@@ -82,7 +82,12 @@ func test_cada_caja_del_deposito_arranca_con_ocho_en_todas_las_jornadas() -> voi
 	# es una fila en el catálogo, y un producto que no llega al inventario es uno que no se puede
 	# reponer ni vender, sin un solo error.
 	for jornada in _jornadas():
-		var inventario := Apertura.inventario_de_la_jornada(jornada, _casilleros())
+		var inventario := Apertura.inventario_de_la_jornada(
+			Compradores.de_la_jornada(jornada),
+			_casilleros(),
+			_casilleros(),
+			RandomNumberGenerator.new()
+		)
 		for producto in Catalogo.todos():
 			(
 				assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO))
@@ -144,70 +149,6 @@ func test_un_faltante_de_una_caja_entera_se_repone_con_esa_caja() -> void:  # AC
 	assert_bool(estante.completada()).is_true()
 
 
-## La tabla de la ficha deja cinco productos por reponer, y los demás completos.
-func test_la_primera_jornada_abre_con_los_cinco_faltantes_de_la_ficha() -> void:  # AC-STK-034
-	var faltantes := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
-	(
-		assert_dict(faltantes)
-		. is_equal(
-			{
-				Producto.Id.ACTRONCITO: 4,
-				Producto.Id.CORACOLA: 5,
-				Producto.Id.MAROLINI: 2,
-				Producto.Id.PRONGLES: 8,
-				Producto.Id.LAYSNTT: 4,
-			}
-		)
-	)
-	var inventario := Apertura.inventario_de_la_jornada(
-		ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros()
-	)
-	var nombres: Array[String] = []
-	for producto in inventario.faltantes():
-		nombres.append(producto.nombre)
-	assert_array(nombres).contains_exactly(
-		["Actroncito", "Laysntt", "Prongles", "Coracola", "Marolini"]
-	)
-	for producto in Catalogo.todos():
-		(
-			assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA))
-			. override_failure_message("`%s` no arrancó con su fila" % producto.nombre)
-			. is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - faltantes.get(producto.id, 0))
-		)
-
-
-## La ficha dice «A definir» de la 2 a la 5: mientras tanto arrancan como la 1 (OQ-STK-005). El
-## día que la ficha las decida, este caso se pone en rojo y el spec cambia con él.
-func test_de_la_segunda_a_la_quinta_faltan_los_mismos_que_en_la_primera() -> void:  # AC-STK-034
-	var primera := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
-	for jornada in _jornadas():
-		(
-			assert_dict(Apertura.faltantes_de_la_jornada(jornada))
-			. override_failure_message("jornada %d" % jornada)
-			. is_equal(primera)
-		)
-
-
-## Lo que devuelve es una copia: quien la recibe puede tocarla, y la jornada de mañana sigue
-## contestando lo de la tabla.
-func test_los_faltantes_de_una_jornada_se_devuelven_en_una_copia() -> void:
-	var recibidos := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
-	recibidos[Producto.Id.MALBARDO] = 3
-	recibidos.erase(Producto.Id.ACTRONCITO)
-	(
-		assert_dict(Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA))
-		. is_equal(
-			{
-				Producto.Id.ACTRONCITO: 4,
-				Producto.Id.CORACOLA: 5,
-				Producto.Id.MAROLINI: 2,
-				Producto.Id.PRONGLES: 8,
-				Producto.Id.LAYSNTT: 4,
-			}
-		)
-	)
-
-
 ## Un faltante más grande que su fila es un error de los datos y no se acomoda: la góndola
 ## arranca vacía, y no en un número negativo que `faltantes()` leería como cualquier otro.
 func test_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero() -> void:
@@ -222,50 +163,25 @@ func test_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero() -> void:
 	assert_bool(_falta(inventario, burbaloo)).is_true()
 
 
-## La cuenta es contra la fila y no contra el dato de la jornada: Malbardo arranca completo en la
-## jornada 1, y en cuanto una unidad sale de su góndola vuelve a faltar.
+## En esta apertura fija no falta nada. Vaciar un casillero vuelve a hacer faltar su producto.
 func test_un_casillero_que_se_vacia_vuelve_a_faltar() -> void:  # AC-STK-007
 	var malbardo := Catalogo.de(Producto.Id.MALBARDO)
-	var inventario := Apertura.inventario_de_la_jornada(
-		ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros()
-	)
+	var inventario := Apertura.inventario_con_faltantes({}, _casilleros())
 	assert_bool(_falta(inventario, malbardo)).is_false()
 	inventario.mover(malbardo, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 1)
 	assert_bool(_falta(inventario, malbardo)).is_true()
-
-
-## La venta y la reposición salen de la misma caja: los compradores de cada noche se cobran
-## apenas abre, y todavía se puede reponer todo lo que falta. Es la cuenta que la ficha pide
-## cuidar en cada jornada —«vender 2 y reponer 7 Malbardo sería imposible»—.
-func test_los_pedidos_de_cada_jornada_entran_sin_quitarle_a_la_reposicion() -> void:  # AC-STK-035
-	for jornada in _jornadas():
-		var inventario := Apertura.inventario_de_la_jornada(jornada, _casilleros())
-		for comprador in Compradores.de_la_jornada(jornada):
-			(
-				assert_bool(inventario.cobrar(comprador.pedido()))
-				. override_failure_message(
-					"jornada %d: el pedido de %s no entra" % [jornada, comprador.nombre()]
-				)
-				. is_true()
-			)
-		var estante := Estante.new(inventario, Catalogo.todos())
-		for producto in inventario.faltantes():
-			while estante.unidades_en_gondola(producto) < estante.cupo(producto):
-				if estante.colocar(producto) != Estante.Rechazo.NINGUNO:
-					break
-		(
-			assert_bool(estante.completada())
-			. override_failure_message("jornada %d: vender dejó sin reponer" % jornada)
-			. is_true()
-		)
 
 
 func test_cada_jornada_recibe_un_inventario_propio() -> void:
 	# Instancias distintas y no la misma: con una sola compartida, lo repuesto anoche seguiría
 	# en la góndola esta noche y reponer se cumpliría sola. Es también lo que hace que una
 	# partida continuada arranque su noche desde el dato, como una nueva.
-	var una := Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros())
-	var otra := Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros())
+	var azar := RandomNumberGenerator.new()
+	azar.seed = 17
+	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 8}
+	var una := Apertura.inventario_de_la_jornada([], casilleros, casilleros, azar)
+	azar.seed = 17
+	var otra := Apertura.inventario_de_la_jornada([], casilleros, casilleros, azar)
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var al_abrir := otra.unidades(actroncito, Inventario.Ubicacion.GONDOLA)
 	una.mover(actroncito, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)

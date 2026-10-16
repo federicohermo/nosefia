@@ -73,7 +73,7 @@ func test_abrir_cada_heladera_libera_el_rayo_hacia_sus_productos() -> void:
 func test_la_heladera_fuera_de_servicio_conserva_la_puerta_trabada() -> void:
 	var almacen := await _almacen()
 	var puerta := _hoja(almacen, 2).get_node("CuerpoDeLaHoja")
-	puerta.call("usar")
+	puerta.call("accionar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	assert_bool(puerta.call("puerta").abierta()).is_false()

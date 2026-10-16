@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Pista" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/pista.gd" id="pista"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/pistas/yasmin-circulo-original.png" id="foto"]
+
+[resource]
+script = ExtResource("pista")
+identidad = "2A"
+jornada = 2
+canal = 2
+origen = &"2A"
+foto = ExtResource("foto")
+texto = "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”."

@@ -6,15 +6,16 @@
 `.blend` commiteado los deja sin un byte de diferencia: es la prueba de que la disposición del
 repo salió de ese `.blend`.
 
-- `disposicion_de_la_gondola.tres`: una tanda por producto, en el orden de `Producto.Id`, con la
-  fila de atrás primero y la de adelante al final; las tandas fijas; y cuántas copias forman la
-  fila de adelante de cada producto.
+- `disposicion_de_la_gondola.tres`: una tanda principal por producto exhibido, en el orden de
+  `Producto.Id`, y un bloque vacío si un producto se declara sin exhibición; la fila de atrás
+  primero y la de adelante al final; las tandas fijas y sus filas de adelante.
 - `contenido_del_estante.tscn`: la unidad de cada producto, con la vuelta que le da el modelo.
 - `guia_del_estante.tscn`: una malla por tanda fija, con la vuelta de la unidad de su producto.
-- `estructura_del_almacen.tscn`, las unidades apagadas y los cuatro contornos de góndola:
-  las cajas de colisión siguen el tamaño y centro del mueble. El `.glb` trae la unidad de cada
-  producto y la escena la apaga, porque la dibuja su tanda. Cuelga del mueble de su tanda, y si
-  la tanda cambia de mueble cambia su ruta.
+- `estructura_del_almacen.tscn`, las unidades apagadas y los contornos de los muebles activos:
+  A/B conservan el soporte visible con compuestos; los demás contornos siguen el tamaño y
+  centro del mueble. El `.glb` trae la unidad de cada producto y la escena la apaga, porque
+  la dibuja su tanda. La fuente conserva su padre y su
+  ruta importada; su posición global y los bloques generados llevan el reparto al sector nuevo.
 
 Cada unidad y cada copia llegan rotuladas por `acomodar.py`: de qué tanda son, en qué fila y en
 qué orden. Lo que no tiene rótulo no es de la góndola.
@@ -28,6 +29,7 @@ import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from lib.apoyos_del_modelo import actualizar_contorno_preciso  # noqa: E402
 from lib.gondola import (  # noqa: E402
     SUFIJOS_DE_IMPORTACION,
     NodoDeMalla,
@@ -44,7 +46,9 @@ from lib.gondola import (  # noqa: E402
     separar_filas,
     separar_reserva,
 )
-from lib.reparto import MUEBLES, PRODUCTOS  # noqa: E402
+from lib.reparto import (  # noqa: E402
+    MUEBLES, PRODUCTOS, SECTORES, SOLO_DEPOSITO, sector_de, validar_tandas,
+)
 
 RAIZ = Path(__file__).resolve().parents[3]
 PUESTOS = RAIZ / "src" / "escenas" / "puestos"
@@ -71,7 +75,7 @@ def tandas_del_blend():
         if "tanda" not in objeto:
             continue
         if str(objeto.get("producto")) not in catalogo:
-            continue
+            raise SystemExit(f"producto sin sector declarado: {objeto.get('producto')}")
         padre = objeto.parent
         while padre is not None and padre.name in bpy.context.scene.objects:
             padre = padre.parent
@@ -117,6 +121,10 @@ def principal():
     fijas = []
     for clave, copias in sorted(tandas.items()):
         producto = str(copias[0]["producto"])
+        estante, columna = clave.split("/")
+        sector = sector_de(estante, int(columna))
+        if producto not in SECTORES[sector]:
+            raise SystemExit(f"{producto} no pertenece a {sector} en {estante}")
         if bool(copias[0]["fija"]):
             fijas.append((clave, producto, copias))
         else:
@@ -125,27 +133,32 @@ def principal():
     filas_de_adelante = []
     contenido = []
     apagadas = []
+    identidades = []
     bases = {}
+    validar_tandas({clave: len(tandas) for clave, tandas in por_producto.items()})
     for p in PRODUCTOS:
-        if len(por_producto[p.clave]) != 1:
-            raise SystemExit(f"{p.nombre} tiene {len(por_producto[p.clave])} tandas con casilleros")
-        clave, copias = por_producto[p.clave][0]
         unidad = bpy.data.objects[p.objeto]
-        if copias[0] != unidad:
-            raise SystemExit(f"la tanda de {p.nombre} no arranca en su unidad")
         if not any(sufijo in unidad.name for sufijo in SUFIJOS_DE_IMPORTACION):
             raise SystemExit(f"{unidad.name} no tiene colisión: la escena no sabe qué apagar")
         apagadas.append(ruta_en_godot(unidad))
+        identidades.append(nombre_en_godot(unidad.name))
+        base, origen = en_godot(unidad)
+        bases[p.clave] = base
+        contenido.append(NodoDeMalla(p.nombre, ruta_de_la_malla(p.nombre), base, origen,
+                                    punto_en_godot(p.frente)))
+        if p.clave in SOLO_DEPOSITO:
+            principales.append([])
+            filas_de_adelante.append(0)
+            continue
+        clave, copias = por_producto[p.clave][0]
+        if copias[0] != unidad:
+            raise SystemExit(f"la tanda de {p.nombre} no arranca en su unidad")
         principales_de_la_tanda, reserva = separar_reserva([str(c["fila"]) for c in copias])
         if reserva:
             fijas.append((clave + ".reserva", p.clave, [copias[i] for i in reserva]))
         copias = [copias[i] for i in principales_de_la_tanda]
-        base, origen = en_godot(unidad)
-        bases[p.clave] = base
         principales.append(bloque(copias, base))
         filas_de_adelante.append(sum(1 for c in copias if str(c["fila"]) == "adelante"))
-        contenido.append(NodoDeMalla(p.nombre, ruta_de_la_malla(p.nombre), base, origen,
-                                    punto_en_godot(p.frente)))
     guias = []
     nodos_de_guia = []
     nombres = {p.clave: p.nombre for p in PRODUCTOS}
@@ -177,14 +190,29 @@ def principal():
     )
     escribir(CONTENIDO, escribir_escena_de_mallas("Contenido", contenido))
     escribir(GUIA, escribir_escena_de_mallas("Guia", nodos_de_guia))
-    estructura = apagar_las_unidades(ESTRUCTURA.read_text(encoding="utf-8"), apagadas)
+    estructura = apagar_las_unidades(
+        ESTRUCTURA.read_text(encoding="utf-8"), apagadas, identidades
+    )
     contornos = {
         "A": "contorno_de_gondola", "B": "contorno_de_gondola2",
-        "N": "contorno_de_gondola_del_fondo_norte", "S": "contorno_de_gondola_del_fondo_sur",
+        "N": "contorno_de_gondola_del_fondo_norte",
     }
     for letra, recurso in contornos.items():
         mueble = bpy.context.scene.objects.get(MUEBLES[letra])
         if mueble is None:
+            continue
+        if letra in ("A", "B"):
+            evaluado = mueble.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            malla = evaluado.to_mesh()
+            try:
+                malla.calc_loop_triangles()
+                puntos = [punto_en_godot(tuple(v.co)) for v in malla.vertices]
+                caras = [tuple(puntos[i] for i in t.vertices) for t in malla.loop_triangles]
+            finally:
+                evaluado.to_mesh_clear()
+            estructura = actualizar_contorno_preciso(
+                estructura, nombre_en_godot(mueble.name), caras
+            )
             continue
         puntos = [punto_en_godot(tuple(v.co)) for v in mueble.data.vertices]
         minimo = tuple(min(p[i] for p in puntos) for i in range(3))
@@ -198,7 +226,8 @@ def principal():
     escribir(ESTRUCTURA, estructura)
     unidades = sum(len(c) for c in tandas.values())
     print(
-        f"tandas con casilleros: {len(principales)}, fijas: {len(guias)}, unidades: {unidades}"
+        f"tandas con casilleros: {sum(bool(p) for p in principales)}, "
+        f"fijas: {len(guias)}, unidades: {unidades}"
     )
 
 

@@ -39,7 +39,7 @@ func test_los_datos_llevan_las_cuentas_y_las_devoluciones() -> void:  # AC-SAV-0
 	assert_dict(datos["fallas"]).contains_key_value("REPONER", 1)
 	assert_dict(datos["llamados"]).contains_key_value("PAPEL_EN_EL_INODORO", 1)
 	assert_int(datos["noches_sin_sumar"]).is_zero()
-	assert_array(datos["devoluciones"]).is_equal(Array(partida.mensajes_del_jefe()))
+	assert_array(Partida.desde(datos).mensajes_del_jefe()).is_equal(partida.mensajes_del_jefe())
 	assert_array(datos["devoluciones"]).is_not_empty()
 
 

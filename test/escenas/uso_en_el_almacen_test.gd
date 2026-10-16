@@ -62,14 +62,14 @@ func test_el_clic_derecho_limpia_una_mancha_de_punta_a_punta() -> void:  # AC-CL
 	var piso: PisoDelLocal = (almacen.get("_limpiador") as Limpiador).piso()
 	var estado := piso.mancha_de(PisoDelLocal.Lugar.ENTRADA)
 	await _enfocar(jugador, mancha)
-	await _clic(true)
-	await _clic(false)
+	await _clic(true, MOUSE_BUTTON_LEFT)
+	await _clic(false, MOUSE_BUTTON_LEFT)
 	assert_bool(estado.esta_limpia()).is_false()
 	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
 	assert_bool(agarre.pedir_agarrar(mopa.call("interactuar"), mopa)).is_true()
 	await _enfocar(jugador, mancha)
-	await _clic(true)
-	await _clic(false)
+	await _clic(true, MOUSE_BUTTON_LEFT)
+	await _clic(false, MOUSE_BUTTON_LEFT)
 	assert_bool(estado.esta_limpia()).is_false()
 	agarre.soltar(true)
 	mopa.global_transform = mopa.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
@@ -78,16 +78,16 @@ func test_el_clic_derecho_limpia_una_mancha_de_punta_a_punta() -> void:  # AC-CL
 	await _usar_con(jugador, agarre, almacen.get_node("Objetos/JabonAmarillo"), balde)
 	assert_bool(agarre.pedir_agarrar(mopa.call("interactuar"), mopa)).is_true()
 	jugador.set("_enfocado", balde)
-	await _clic(true)
-	await _clic(false)
+	await _clic(true, MOUSE_BUTTON_LEFT)
+	await _clic(false, MOUSE_BUTTON_LEFT)
 	assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.AMARILLO)
 	await _enfocar(jugador, mancha)
-	await _clic(true)
+	await _clic(true, MOUSE_BUTTON_LEFT)
 	assert_bool(estado.esta_limpia()).is_true()
 	assert_bool(mancha.visible).is_true()
 	await get_tree().create_timer(0.5).timeout
 	assert_bool(mancha.visible).is_false()
-	await _clic(false)
+	await _clic(false, MOUSE_BUTTON_LEFT)
 
 
 func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> void:
@@ -106,7 +106,7 @@ func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> voi
 	if jugador.has_signal("uso_pedido"):
 		jugador.connect("uso_pedido", func(nodo: Node3D) -> void: avisos.append(nodo))
 	var estado := limpiador.piso().mancha_de(PisoDelLocal.Lugar.ENTRADA)
-	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+	for ruta: String in ["Estructura/base compu/StaticBody3D"]:
 		var puesto: Node3D = almacen.get_node(ruta)
 		var panel: CanvasLayer = puesto.get("pantalla") if "compu" in ruta else puesto.get("panel")
 		puesto.call("abrir")
@@ -129,8 +129,8 @@ func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> voi
 		assert_array(avisos).is_empty()
 		assert_bool(estado.esta_limpia()).is_false()
 	await _enfocar(jugador, mancha)
-	await _clic(true)
-	await _clic(false)
+	await _clic(true, MOUSE_BUTTON_LEFT)
+	await _clic(false, MOUSE_BUTTON_LEFT)
 	assert_int(avisos.size()).is_equal(1)
 	assert_bool(estado.esta_limpia()).is_true()
 
@@ -141,8 +141,8 @@ func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> voi
 func _usar_con(jugador: Node3D, agarre: Agarre, util: Node3D, objetivo: Node3D) -> void:
 	assert_bool(agarre.pedir_agarrar(util.call("interactuar"), util)).is_true()
 	jugador.set("_enfocado", objetivo)
-	await _clic(true)
-	await _clic(false)
+	await _clic(true, MOUSE_BUTTON_LEFT)
+	await _clic(false, MOUSE_BUTTON_LEFT)
 	agarre.soltar(true)
 	util.global_transform = util.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 
@@ -173,9 +173,9 @@ func _enfocar(jugador: Node3D, mancha: Node3D) -> void:
 	assert_object(jugador.get("_enfocado")).is_same(mancha)
 
 
-func _clic(presionado: bool) -> void:
+func _clic(presionado: bool, boton: MouseButton = MOUSE_BUTTON_RIGHT) -> void:
 	var evento := InputEventMouseButton.new()
-	evento.button_index = MOUSE_BUTTON_RIGHT
+	evento.button_index = boton
 	evento.pressed = presionado
 	evento.position = get_viewport().get_visible_rect().get_center()
 	get_viewport().push_input(evento)
@@ -244,7 +244,7 @@ func test_el_izquierdo_abre_lo_fijo_sin_soltar_y_el_derecho_no_abre_paneles() ->
 	assert_bool(agarre.pedir_agarrar(unidad.get("datos"), unidad)).is_true()
 	_accion_en(jugador, puerta, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_bool(puerta.call("puerta").abierta()).is_false()
-	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+	for ruta: String in ["Estructura/base compu/StaticBody3D"]:
 		var puesto: Node3D = almacen.get_node(ruta)
 		_accion_en(jugador, puesto, ReglasDelJugador.ACCION_USAR)
 		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
@@ -252,6 +252,10 @@ func test_el_izquierdo_abre_lo_fijo_sin_soltar_y_el_derecho_no_abre_paneles() ->
 		assert_bool(jugador.get("_control").esta_suspendido()).is_true()
 		puesto.call("cerrar")
 		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+	var hueco: Node3D = almacen.get_node("Estructura/Ventanilla")
+	_accion_en(jugador, hueco, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_bool(hueco.get("panel").visible).is_false()
+	assert_bool(jugador.get("_control").esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_same(unidad.get("datos"))
 	assert_array(soltados).is_empty()
 
@@ -271,7 +275,7 @@ func test_el_izquierdo_abre_y_el_derecho_cierra_paneles_con_cualquier_mano() -> 
 			dato = objeto.get("datos")
 			assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
 			padre = objeto.get_parent()
-		for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+		for ruta: String in ["Estructura/base compu/StaticBody3D"]:
 			var puesto: Node3D = almacen.get_node(ruta)
 			var panel: CanvasLayer = (
 				puesto.get("pantalla") if "compu" in ruta else puesto.get("panel")
@@ -293,7 +297,7 @@ func test_el_izquierdo_abre_y_el_derecho_cierra_paneles_con_cualquier_mano() -> 
 	assert_array(pedidos).is_empty()
 
 
-func test_la_trabada_con_mopa_avisa_sin_pedir_limpieza() -> void:  # AC-PLY-057
+func test_las_trabadas_con_mopa_avisan_sin_usarla() -> void:  # AC-PLY-057
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -302,18 +306,25 @@ func test_la_trabada_con_mopa_avisa_sin_pedir_limpieza() -> void:  # AC-PLY-057
 	assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
 	var pedidos: Array[Node3D] = []
 	jugador.uso_pedido.connect(func(nodo: Node3D) -> void: pedidos.append(nodo))
-	var puerta: Node3D = almacen.get_node("Estructura/porton/CuerpoDeLaHoja")
-	var avisos := [0]
-	puerta.connect("porton_trabado", func(_nodo: Node3D) -> void: avisos[0] += 1)
-	var lugar: Transform3D = puerta.get("hoja").global_transform
-	_accion_en(jugador, puerta, ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_int(avisos[0]).is_zero()
-	for intento in 10:
+	for caso: Array in [
+		["Estructura/puertaentrada/CuerpoDeLaHoja", "puerta_trabada"],
+		["Estructura/porton/CuerpoDeLaHoja", "porton_trabado"],
+		["Estructura/puertajefe/CuerpoDeLaHoja", "puerta_trabada"],
+	]:
+		var puerta: Node3D = almacen.get_node(caso[0])
+		var avisos := [0]
+		puerta.connect(caso[1], func(_nodo: Node3D) -> void: avisos[0] += 1)
+		var lugar: Transform3D = puerta.get("hoja").global_transform
 		_accion_en(jugador, puerta, ReglasDelJugador.ACCION_USAR)
-	assert_int(avisos[0]).is_equal(10)
-	assert_array(pedidos).is_empty()
-	assert_object(agarre.manos().sostenido()).is_same(mopa.get("datos"))
-	assert_bool(puerta.get("hoja").global_transform.is_equal_approx(lugar)).is_true()
+		assert_int(avisos[0]).is_zero()
+		for intento in 10:
+			_accion_en(jugador, puerta, ReglasDeLosObjetos.ACCION_AGARRAR)
+		assert_int(avisos[0]).is_equal(10)
+		_accion_en(jugador, puerta, ReglasDelJugador.ACCION_USAR)
+		assert_int(avisos[0]).is_equal(10)
+		assert_array(pedidos).is_empty()
+		assert_object(agarre.manos().sostenido()).is_same(mopa.get("datos"))
+		assert_bool(puerta.get("hoja").global_transform.is_equal_approx(lugar)).is_true()
 	# La que abre, con el derecho, ni se abre ni avisa: se abre con el izquierdo.
 	var interior: Node3D = almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja")
 	var avisos_de_la_interior := [0]

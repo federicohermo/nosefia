@@ -8,6 +8,7 @@ const CAPA_DE_LA_CARGA := 10
 ## La barra se reparte entre leer el almacén y calentar sus shaders.
 const PARTE_DE_LA_LECTURA := 0.5
 const DURACION_DEL_FUNDIDO := 0.3
+const TEMA := preload("res://assets/audio/MUS_MenuPrincipal.ogg")
 
 const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 	MenuDeInicio.Opcion.NUEVO_JUEGO: "NUEVO JUEGO",
@@ -41,6 +42,7 @@ var _calentamiento: CalentamientoDeShaders
 var _nuevo_juego: bool = false
 var _fundiendo: bool = false
 var _fundido: ColorRect
+var _musica: AudioStreamPlayer
 var _inicio_del_fundido: int = 0
 var _ahora: Callable = Time.get_ticks_usec
 
@@ -58,6 +60,7 @@ func _ready() -> void:
 	_configuraciones.preferencias_cambiadas.connect(_ajuste.previsualizar)
 	_configuraciones.preferencias_confirmadas.connect(_ajuste.cambiar)
 	_configuraciones.cerrada.connect(_al_cerrar_las_configuraciones)
+	_sonar_el_tema()
 	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())
 	_pedidos.preparar(menu, _guardado)
 	for opcion: MenuDeInicio.Opcion in menu.opciones():
@@ -96,6 +99,18 @@ func _ready() -> void:
 	_carga.fallo.connect(_al_fallar_la_carga)
 	_carga.pedir(ESCENA_DEL_ALMACEN)
 	print("[carga] menú visible")
+
+
+## Una sola voz para todo el menú y la carga: abrir configuraciones o reintentar no la tocan.
+## Como los bucles del local, suena como stream también en la web.
+func _sonar_el_tema() -> void:
+	_musica = AudioStreamPlayer.new()
+	_musica.name = "Musica"
+	_musica.stream = TEMA
+	_musica.bus = EntradaSonora.BUS_DE_MUSICA
+	_musica.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
+	add_child(_musica)
+	_musica.play()
 
 
 func _process(delta: float) -> void:
@@ -174,6 +189,9 @@ func _pintar_el_calentamiento(progreso: float) -> void:
 
 
 func _entrar(almacen: Node) -> void:
+	if _musica != null:
+		_musica.stop()
+		_musica.stream = null
 	almacen.call("empezar_partida_nueva" if _nuevo_juego else "anunciar_la_noche")
 	almacen.process_mode = Node.PROCESS_MODE_INHERIT
 	get_tree().current_scene = almacen

@@ -118,7 +118,11 @@ func test_otras_pantallas_impiden_abrir_otra_hoja() -> void:  # AC-PLY-066
 	var hoja: Node3D = (almacen.get_node("Estructura/NotasDelAlmacen").get("notas") as Array)[0]
 	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var pantalla: Node3D = almacen.get_node(ruta)
-		pantalla.call("abrir")
+		if ruta.ends_with("Ventanilla"):
+			(almacen.get("_reloj") as RelojDelTurno).avanzar(120.0)
+			pantalla.get_node("Comprador/Objetivo").call("accionar")
+		else:
+			pantalla.call("abrir")
 		_accion(jugador, hoja, ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_bool(_vista(almacen).visible).is_false()
 		assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
