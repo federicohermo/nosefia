@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+DIAGNOSTICO426_FINAL fallo=false
+
+  ok        capas       2.4s
+  ok        formato    17.9s
+  ok        harness   118.4s
+  ok        lint       20.4s
+  ok        specs       1.2s
+  ok        tdd         1.2s
+  ok        tests     902.9s
+
+7/7 nodos en verde, en 913.5s.
+reports/report_1: 267 suites corridas, 267 archivos `*_test.gd`

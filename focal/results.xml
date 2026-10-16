@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-15" name="report_1" tests="3" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="productos_extraidos_visibles_test" package="test/escenas/objetos" timestamp="2026-10-15T20:36:20" hostname="localhost" tests="3" failures="0" errors="0" skipped="0" flaky="0" time="3.093">
+		<testcase name="test_saladik_sale_de_su_caja_se_enfoca_se_recoge_y_se_devuelve" classname="productos_extraidos_visibles_test" time="2.029">
+		</testcase>
+		<testcase name="test_caja_completa_conserva_cada_dibujo_al_cruzar_la_capacidad_inicial" classname="productos_extraidos_visibles_test" time="0.574">
+		</testcase>
+		<testcase name="test_el_deposito_conserva_dibujos_independientes_de_productos_distintos" classname="productos_extraidos_visibles_test" time="0.458">
+		</testcase>
+	</testsuite>
+</testsuites>

@@ -1,0 +1,18 @@
+{
+  "fuente": "e3f9aafc",
+  "control": "Control05: conserva04 pero todas las rotaciones pasan por ControlDelJugador.orientar/girar; no Camera3D.look_at directo. Fuente, luz, GI y colliders intactos. No atribuye causa antes del resultado.",
+  "anterior": "Comprobaciones funcionales pasaron; primer escenario Saladik no es evidencia visual valida porque sus PNG muestran el mundo casi negro. Jorgillo y mixtos visibles. Causa no atribuida.",
+  "exit": 0,
+  "args": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-426-visibilidad",
+    "--rendering-driver",
+    "opengl3",
+    "--script",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\426\\diagnostico426_05.gd",
+    "--",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\426\\nativo-05"
+  ],
+  "script_sha256": "05566d1795fa8123a74463947e9cb5cb5c2e9b710c70109008bc3c6c7e4b0512"
+}

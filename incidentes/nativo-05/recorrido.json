@@ -1,0 +1,1286 @@
+{
+	"fallo": false,
+	"recorrido_de_diagnostico": true,
+	"registro": [
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "arranque-0",
+			"mirada": "(0.0, 0.0, -1.0)",
+			"ojo": "(5.71, 1.807576, 5.3)"
+		},
+		{
+			"distancia": 1.12785995006561,
+			"enfocado": "/root/Almacen/Objetos/CajaDeSaladik",
+			"ojo": "(3.519988, 1.803237, -7.903344)",
+			"rayo": "/root/Almacen/Objetos/CajaDeSaladik"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj24-mano",
+			"mirada": "(0.000006, 0.594153, -0.804352)",
+			"ojo": "(3.519986, 1.803237, -7.903344)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "saladik-caida",
+			"id": 372521312471,
+			"posicion": "(4.121567, 0.137737, -8.853385)",
+			"velocidad": "(-0.0, -0.0, -0.0)"
+		},
+		{
+			"aabb": "[P: (4.002126, 0.061674, -8.995926), S: (0.238881, 0.152126, 0.285082)]",
+			"capacidad": 10,
+			"cuerpos": 1,
+			"producto": "Saladik",
+			"validacion": "saladik-caida"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj24-caida",
+			"mirada": "(0.000005, -0.802135, -0.597143)",
+			"ojo": "(4.179978, 1.803237, -7.903344)"
+		},
+		{
+			"distancia": 1.91749656200409,
+			"enfocado": "/root/Almacen/ObjetoAgarrable",
+			"ojo": "(4.130882, 1.803308, -7.903343)",
+			"rayo": "/root/Almacen/ObjetoAgarrable"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "saladik-enfocado",
+			"id": 372521312471,
+			"posicion": "(4.121567, 0.137737, -8.853385)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (4.18, 0.4, -8.95), S: (0.0, 0.0, 0.0)]",
+			"capacidad": 10,
+			"cuerpos": 1,
+			"producto": "Saladik",
+			"validacion": "saladik-enfocado"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj24-enfocado",
+			"mirada": "(-0.00485, -0.868616, -0.495463)",
+			"ojo": "(4.130882, 1.803308, -7.903343)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "saladik-foco-perdido",
+			"id": 372521312471,
+			"posicion": "(4.121567, 0.137737, -8.853385)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (4.002126, 0.061674, -8.995926), S: (0.238881, 0.152126, 0.285082)]",
+			"capacidad": 10,
+			"cuerpos": 1,
+			"producto": "Saladik",
+			"validacion": "saladik-foco-perdido"
+		},
+		{
+			"distancia": 1.91749656200409,
+			"enfocado": "/root/Almacen/ObjetoAgarrable",
+			"ojo": "(4.130882, 1.803308, -7.903343)",
+			"rayo": "/root/Almacen/ObjetoAgarrable"
+		},
+		{
+			"aabb": "[P: (0.0, 0.0, 0.0), S: (0.0, 0.0, 0.0)]",
+			"capacidad": 10,
+			"cuerpos": 0,
+			"producto": "Saladik",
+			"validacion": "saladik-mano"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj24-recogido",
+			"mirada": "(-0.00485, -0.868616, -0.495463)",
+			"ojo": "(4.130882, 1.803308, -7.903343)"
+		},
+		{
+			"distancia": 1.12785995006561,
+			"enfocado": "/root/Almacen/Objetos/CajaDeSaladik",
+			"ojo": "(3.519989, 1.803237, -7.903344)",
+			"rayo": "/root/Almacen/Objetos/CajaDeSaladik"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj24-devuelto",
+			"mirada": "(0.000004, 0.594153, -0.804352)",
+			"ojo": "(3.519988, 1.803237, -7.903344)"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "arranque-17",
+			"mirada": "(0.0, 0.0, -1.0)",
+			"ojo": "(5.71, 1.807576, 5.3)"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj25-mano",
+			"mirada": "(-0.974199, -0.225692, 0.0)",
+			"ojo": "(4.57, 1.803253, -11.01425)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "cantidad-1",
+			"id": 1111339570645,
+			"posicion": "(4.18, 0.397278, -8.95)",
+			"velocidad": "(0.0, -0.163333, 0.0)"
+		},
+		{
+			"aabb": "[P: (4.016469, 0.245233, -9.096852), S: (0.327061, 0.308553, 0.293705)]",
+			"capacidad": 6,
+			"cuerpos": 1,
+			"producto": "Jorgillo",
+			"validacion": "cantidad-1"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj25-1",
+			"mirada": "(0.0, -0.927435, -0.373985)",
+			"ojo": "(5.0, 1.803728, -8.653301)"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-2",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "cantidad-2",
+			"id": 1366504251636,
+			"posicion": "(4.78, 0.397278, -8.95)",
+			"velocidad": "(0.0, -0.163333, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949724, 0.053976, -9.096852), S: (0.993807, 0.499708, 0.389056)]",
+			"capacidad": 6,
+			"cuerpos": 2,
+			"producto": "Jorgillo",
+			"validacion": "cantidad-2"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-3",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-3",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "cantidad-3",
+			"id": 1567595958302,
+			"posicion": "(5.38, 0.397278, -8.95)",
+			"velocidad": "(0.0, -0.163333, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949724, 0.053975, -9.096852), S: (1.593807, 0.499714, 0.389056)]",
+			"capacidad": 6,
+			"cuerpos": 3,
+			"producto": "Jorgillo",
+			"validacion": "cantidad-3"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-4",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-4",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-4",
+			"id": 1567595958302,
+			"posicion": "(5.324184, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "cantidad-4",
+			"id": 1773704061150,
+			"posicion": "(5.98, 0.397278, -8.95)",
+			"velocidad": "(0.0, -0.163333, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949724, 0.053975, -9.096852), S: (2.193806, 0.499719, 0.389056)]",
+			"capacidad": 6,
+			"cuerpos": 4,
+			"producto": "Jorgillo",
+			"validacion": "cantidad-4"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-5",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-5",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-5",
+			"id": 1567595958302,
+			"posicion": "(5.324184, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-5",
+			"id": 1773704061150,
+			"posicion": "(5.924186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "cantidad-5",
+			"id": 1984274899185,
+			"posicion": "(4.18, 0.397278, -9.55)",
+			"velocidad": "(0.0, -0.163333, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949724, 0.053975, -9.696853), S: (2.148923, 0.499723, 0.989057)]",
+			"capacidad": 6,
+			"cuerpos": 5,
+			"producto": "Jorgillo",
+			"validacion": "cantidad-5"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-6",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-6",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-6",
+			"id": 1567595958302,
+			"posicion": "(5.324184, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-6",
+			"id": 1773704061150,
+			"posicion": "(5.924186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-6",
+			"id": 1984274899185,
+			"posicion": "(4.124185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "cantidad-6",
+			"id": 2206757560584,
+			"posicion": "(4.78, 0.397278, -9.55)",
+			"velocidad": "(0.0, -0.163333, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949723, 0.053975, -9.696853), S: (2.148924, 0.499728, 0.989057)]",
+			"capacidad": 6,
+			"cuerpos": 6,
+			"producto": "Jorgillo",
+			"validacion": "cantidad-6"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj25-6",
+			"mirada": "(0.0, -0.927435, -0.373985)",
+			"ojo": "(5.0, 1.803728, -8.653301)"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-7",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-7",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-7",
+			"id": 1567595958302,
+			"posicion": "(5.324184, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-7",
+			"id": 1773704061150,
+			"posicion": "(5.924186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-7",
+			"id": 1984274899185,
+			"posicion": "(4.124185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-7",
+			"id": 2206757560584,
+			"posicion": "(4.724185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "cantidad-7",
+			"id": 2507791147233,
+			"posicion": "(5.38, 0.397278, -9.55)",
+			"velocidad": "(0.0, -0.163333, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949723, 0.053974, -9.696853), S: (2.148924, 0.498827, 0.989057)]",
+			"capacidad": 12,
+			"cuerpos": 7,
+			"producto": "Jorgillo",
+			"validacion": "cantidad-7"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj25-7",
+			"mirada": "(0.0, -0.927435, -0.373985)",
+			"ojo": "(5.0, 1.803728, -8.653301)"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-8",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-8",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-8",
+			"id": 1567595958302,
+			"posicion": "(5.324184, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-8",
+			"id": 1773704061150,
+			"posicion": "(5.924186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-8",
+			"id": 1984274899185,
+			"posicion": "(4.124185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-8",
+			"id": 2206757560584,
+			"posicion": "(4.724185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "cantidad-8",
+			"id": 2507791147233,
+			"posicion": "(5.324183, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "cantidad-8",
+			"id": 2819142721834,
+			"posicion": "(5.98, 0.397278, -9.55)",
+			"velocidad": "(0.0, -0.163333, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949723, 0.053974, -9.696853), S: (2.193808, 0.498832, 0.989057)]",
+			"capacidad": 12,
+			"cuerpos": 8,
+			"producto": "Jorgillo",
+			"validacion": "cantidad-8"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj25-8",
+			"mirada": "(0.0, -0.927435, -0.373985)",
+			"ojo": "(5.0, 1.803728, -8.653301)"
+		},
+		{
+			"distancia": 1.86703956127167,
+			"enfocado": "/root/Almacen/@RigidBody3D@3057",
+			"ojo": "(4.33763, 1.802979, -8.653759)",
+			"rayo": "/root/Almacen/@RigidBody3D@3057"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-enfocada",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-enfocada",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-enfocada",
+			"id": 1567595958302,
+			"posicion": "(5.324184, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-enfocada",
+			"id": 1773704061150,
+			"posicion": "(5.924186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-enfocada",
+			"id": 1984274899185,
+			"posicion": "(4.124185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-enfocada",
+			"id": 2206757560584,
+			"posicion": "(4.724185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-enfocada",
+			"id": 2507791147233,
+			"posicion": "(5.324183, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-enfocada",
+			"id": 2819142721834,
+			"posicion": "(5.924186, 0.133013, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949724, 0.053974, -9.614018), S: (2.148923, 0.346026, 0.906222)]",
+			"capacidad": 12,
+			"cuerpos": 8,
+			"producto": "Jorgillo",
+			"validacion": "intermedia-enfocada"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj25-intermedia-enfocada",
+			"mirada": "(-0.114323, -0.894446, -0.432315)",
+			"ojo": "(4.33763, 1.802979, -8.653759)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-retirada",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-retirada",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-retirada",
+			"id": 1567595958302,
+			"posicion": "(5.324184, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-retirada",
+			"id": 1773704061150,
+			"posicion": "(5.924186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-retirada",
+			"id": 2206757560584,
+			"posicion": "(4.724185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-retirada",
+			"id": 2507791147233,
+			"posicion": "(5.324183, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-retirada",
+			"id": 2819142721834,
+			"posicion": "(5.924186, 0.133013, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949724, 0.053974, -9.614018), S: (2.148923, 0.158079, 0.906222)]",
+			"capacidad": 12,
+			"cuerpos": 7,
+			"producto": "Jorgillo",
+			"validacion": "intermedia-retirada"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj25-intermedia-retirada",
+			"mirada": "(-0.114323, -0.894446, -0.432315)",
+			"ojo": "(4.33763, 1.802979, -8.653759)"
+		},
+		{
+			"distancia": 1.21891641616821,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.92785)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"distancia": 1.07780873775482,
+			"enfocado": "/root/Almacen/Objetos/CajaDeJorgillo",
+			"ojo": "(4.57, 1.803253, -11.01425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeJorgillo"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-devuelta",
+			"id": 1111339570645,
+			"posicion": "(4.124186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-devuelta",
+			"id": 1366504251636,
+			"posicion": "(4.724185, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-devuelta",
+			"id": 1567595958302,
+			"posicion": "(5.324184, 0.133012, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-devuelta",
+			"id": 1773704061150,
+			"posicion": "(5.924186, 0.133013, -8.860908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-devuelta",
+			"id": 2206757560584,
+			"posicion": "(4.724185, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-devuelta",
+			"id": 2507791147233,
+			"posicion": "(5.324183, 0.133012, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "intermedia-devuelta",
+			"id": 2819142721834,
+			"posicion": "(5.924186, 0.133013, -9.460908)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.949724, 0.053974, -9.614018), S: (2.148923, 0.158079, 0.906222)]",
+			"capacidad": 12,
+			"cuerpos": 7,
+			"producto": "Jorgillo",
+			"validacion": "intermedia-devuelta"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "arranque-113",
+			"mirada": "(0.0, 0.0, -1.0)",
+			"ojo": "(5.71, 1.807576, 5.3)"
+		},
+		{
+			"distancia": 1.41567528247833,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMarolini",
+			"ojo": "(2.813708, 1.803253, -13.9013)",
+			"rayo": "/root/Almacen/Objetos/CajaDeMarolini"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj23-mano",
+			"mirada": "(0.0, -0.670737, -0.741696)",
+			"ojo": "(2.813708, 1.803253, -13.9013)"
+		},
+		{
+			"distancia": 1.41567528247833,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMarolini",
+			"ojo": "(2.813708, 1.803253, -13.9013)",
+			"rayo": "/root/Almacen/Objetos/CajaDeMarolini"
+		},
+		{
+			"distancia": 1.41567528247833,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMarolini",
+			"ojo": "(2.813708, 1.803253, -13.9013)",
+			"rayo": "/root/Almacen/Objetos/CajaDeMarolini"
+		},
+		{
+			"distancia": 1.12785995006561,
+			"enfocado": "/root/Almacen/Objetos/CajaDeSaladik",
+			"ojo": "(3.519989, 1.803237, -7.903344)",
+			"rayo": "/root/Almacen/Objetos/CajaDeSaladik"
+		},
+		{
+			"distancia": 1.12785995006561,
+			"enfocado": "/root/Almacen/Objetos/CajaDeSaladik",
+			"ojo": "(3.519989, 1.803237, -7.903344)",
+			"rayo": "/root/Almacen/Objetos/CajaDeSaladik"
+		},
+		{
+			"distancia": 1.12785995006561,
+			"enfocado": "/root/Almacen/Objetos/CajaDeSaladik",
+			"ojo": "(3.519989, 1.803237, -7.903344)",
+			"rayo": "/root/Almacen/Objetos/CajaDeSaladik"
+		},
+		{
+			"distancia": 1.52830994129181,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.927849)",
+			"rayo": "/root/Almacen/Objetos/CajaDeLaysntt"
+		},
+		{
+			"distancia": 1.41567492485046,
+			"enfocado": "/root/Almacen/Objetos/CajaDeLaysntt",
+			"ojo": "(4.57, 1.803253, -10.79425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeLaysntt"
+		},
+		{
+			"distancia": 1.52830994129181,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.927849)",
+			"rayo": "/root/Almacen/Objetos/CajaDeLaysntt"
+		},
+		{
+			"distancia": 1.41567492485046,
+			"enfocado": "/root/Almacen/Objetos/CajaDeLaysntt",
+			"ojo": "(4.57, 1.803253, -10.79425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeLaysntt"
+		},
+		{
+			"distancia": 1.52830994129181,
+			"enfocado": "/root/Almacen/Objetos/CajaDeMalbardo",
+			"ojo": "(3.515919, 2.112702, -9.927849)",
+			"rayo": "/root/Almacen/Objetos/CajaDeLaysntt"
+		},
+		{
+			"distancia": 1.41567492485046,
+			"enfocado": "/root/Almacen/Objetos/CajaDeLaysntt",
+			"ojo": "(4.57, 1.803253, -10.79425)",
+			"rayo": "/root/Almacen/Objetos/CajaDeLaysntt"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 3461911418325,
+			"posicion": "(4.089292, 0.133262, -8.780738)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 3631310971104,
+			"posicion": "(4.689292, 0.133262, -8.780738)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 3794133852424,
+			"posicion": "(5.289292, 0.133262, -8.780739)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.912952, 0.087838, -9.009389), S: (1.55268, 0.09085, 0.457301)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Marolini",
+			"validacion": "mixtos-quieto"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Marolini",
+			"tramo": "quieto"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 3966049984806,
+			"posicion": "(5.921567, 0.137737, -8.853384)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 4143854919887,
+			"posicion": "(4.121566, 0.137737, -9.453386)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 4332330164427,
+			"posicion": "(4.721568, 0.137737, -9.453385)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (4.002126, 0.061674, -9.595927), S: (2.038882, 0.152126, 0.885084)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Saladik",
+			"validacion": "mixtos-quieto"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Saladik",
+			"tramo": "quieto"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 4585179586832,
+			"posicion": "(5.299309, 0.143319, -9.410243)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 4846518280453,
+			"posicion": "(5.899309, 0.143319, -9.410244)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": false,
+			"estado_cuerpo": "mixtos-quieto",
+			"id": 5114014212394,
+			"posicion": "(4.099308, 0.143319, -10.01024)",
+			"velocidad": "(0.0, -0.0, -0.0)"
+		},
+		{
+			"aabb": "[P: (3.926797, 0.097643, -10.23163), S: (2.145021, 0.091352, 1.042782)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Laysntt",
+			"validacion": "mixtos-quieto"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Laysntt",
+			"tramo": "quieto"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj23-quieto",
+			"mirada": "(0.0, -0.927435, -0.373985)",
+			"ojo": "(5.0, 1.803728, -8.653301)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 3461911418325,
+			"posicion": "(4.089292, 0.133262, -8.780738)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 3631310971104,
+			"posicion": "(4.689292, 0.133262, -8.780738)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 3794133852424,
+			"posicion": "(5.289292, 0.133262, -8.780739)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.912952, 0.087838, -9.009389), S: (1.55268, 0.09085, 0.457301)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Marolini",
+			"validacion": "mixtos-costado"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Marolini",
+			"tramo": "costado"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 3966049984806,
+			"posicion": "(5.921567, 0.137737, -8.853384)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 4143854919887,
+			"posicion": "(4.121566, 0.137737, -9.453386)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 4332330164427,
+			"posicion": "(4.721568, 0.137737, -9.453385)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (4.002126, 0.061674, -9.595927), S: (2.038882, 0.152126, 0.885084)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Saladik",
+			"validacion": "mixtos-costado"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Saladik",
+			"tramo": "costado"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 4585179586832,
+			"posicion": "(5.299309, 0.143319, -9.410243)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 4846518280453,
+			"posicion": "(5.899309, 0.143319, -9.410244)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-costado",
+			"id": 5114014212394,
+			"posicion": "(4.099308, 0.143319, -10.01024)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.926797, 0.097643, -10.23163), S: (2.070214, 0.282695, 1.042782)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Laysntt",
+			"validacion": "mixtos-costado"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Laysntt",
+			"tramo": "costado"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj23-costado",
+			"mirada": "(0.0, -0.927435, -0.373985)",
+			"ojo": "(5.875001, 1.802759, -8.653301)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 3461911418325,
+			"posicion": "(4.089292, 0.133262, -8.780738)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 3631310971104,
+			"posicion": "(4.689292, 0.133262, -8.780738)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 3794133852424,
+			"posicion": "(5.289292, 0.133262, -8.780739)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.912952, 0.087838, -9.009389), S: (1.55268, 0.09085, 0.457301)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Marolini",
+			"validacion": "mixtos-giro"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Marolini",
+			"tramo": "giro"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 3966049984806,
+			"posicion": "(5.921567, 0.137737, -8.853384)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 4143854919887,
+			"posicion": "(4.121566, 0.137737, -9.453386)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 4332330164427,
+			"posicion": "(4.721568, 0.137737, -9.453385)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (4.002126, 0.061674, -9.595927), S: (2.038882, 0.152126, 0.885084)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Saladik",
+			"validacion": "mixtos-giro"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Saladik",
+			"tramo": "giro"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 4585179586832,
+			"posicion": "(5.299309, 0.143319, -9.410243)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 4846518280453,
+			"posicion": "(5.899309, 0.143319, -9.410244)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"congelado": false,
+			"dormido": true,
+			"estado_cuerpo": "mixtos-giro",
+			"id": 5114014212394,
+			"posicion": "(4.099308, 0.143319, -10.01024)",
+			"velocidad": "(0.0, 0.0, 0.0)"
+		},
+		{
+			"aabb": "[P: (3.926797, 0.097643, -10.23163), S: (2.145021, 0.091352, 1.042782)]",
+			"capacidad": 10,
+			"cuerpos": 3,
+			"producto": "Laysntt",
+			"validacion": "mixtos-giro"
+		},
+		{
+			"origen_fuera": true,
+			"producto": "Laysntt",
+			"tramo": "giro"
+		},
+		{
+			"camara_actual": "/root/Almacen/Jugador/Giro/Camara",
+			"camara_correcta": true,
+			"camara_esperada": "/root/Almacen/Jugador/Giro/Camara",
+			"captura": "gj23-giro",
+			"mirada": "(-0.562228, -0.766907, -0.30944)",
+			"ojo": "(5.875001, 1.802759, -8.653301)"
+		}
+	],
+	"renderer": "opengl3"
+}

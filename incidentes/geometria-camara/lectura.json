@@ -1,0 +1,2545 @@
+{
+  "revision_fuente": "e3f9aafcc2fdf65757b2ecd9da18126518f4322c",
+  "metodo": "Lectura binaria GLB, matrices glTF mundiales, baric\u00e9ntricas XY y rayos contra tri\u00e1ngulos",
+  "limite": "No ejecuta renderer/colisiones ni atribuye iluminaci\u00f3n. No altera entradas de 05.",
+  "fuentes": {
+    "glb": {
+      "ruta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-426-visibilidad\\assets\\models\\SEPT_JUEGOS_PROTOTIPO.glb",
+      "bytes": 46416404,
+      "sha256": "634b8b86d58b4a5a01935a625c23b01c5e3974bb092095cc1f6758256e3e0930"
+    },
+    "estructura": {
+      "ruta": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-426-visibilidad\\src\\escenas\\puestos\\estructura_del_almacen.tscn",
+      "bytes": 680720,
+      "sha256": "b17eb97b80fcd789e5803a4bef82dd2d58eef20348ef48afd1bee90432a3124d"
+    },
+    "fixture_04": {
+      "ruta": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\426\\diagnostico426_04.gd",
+      "bytes": 11008,
+      "sha256": "839f32c96fd9b7cc59d998981cfcbcf802c5f3354c177599a274fff19b805deb"
+    },
+    "recorrido_04": {
+      "ruta": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\426\\nativo-04\\recorrido.json",
+      "bytes": 34430,
+      "sha256": "e117d56b135da73fd4d71d6f67d77efbda39d66df434d54e8ef5309517c87caf"
+    }
+  },
+  "triangulos_del_casco": 748,
+  "capturas": {
+    "arranque-0": {
+      "ojo": [
+        5.71,
+        1.807576,
+        5.3
+      ],
+      "direccion": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6126020162633379,
+            0.36711942909919837,
+            0.020278554637463753
+          ],
+          "distancia_firmada_z": -13.553290360922848
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.020569568881191058,
+            0.3668284148554711,
+            0.6126020162633379
+          ],
+          "distancia_firmada_z": -13.170003903956331
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": []
+    },
+    "gj24-mano": {
+      "ojo": [
+        3.519991,
+        1.803237,
+        -7.903344
+      ],
+      "direccion": [
+        6e-06,
+        0.594153,
+        -0.804352
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": true,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6110433345063903,
+            0.11048336694964386,
+            0.27847329854396585
+          ],
+          "distancia_firmada_z": -0.34994636092284725
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.28246962361854905,
+            0.10648704187506071,
+            0.6110433345063901
+          ],
+          "distancia_firmada_z": 0.03334009604366894
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 0.4350661910741159,
+          "baricentricas": [
+            0.7039017849544342,
+            0.017625224258701697,
+            0.27847299078686405
+          ]
+        }
+      ]
+    },
+    "gj24-caida": {
+      "ojo": [
+        4.179987,
+        1.803237,
+        -7.903344
+      ],
+      "direccion": [
+        5e-06,
+        -0.802135,
+        -0.597143
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": true,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6110433345063903,
+            0.18829469019046882,
+            0.20066197530314092
+          ],
+          "distancia_firmada_z": -0.34994636092284725
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.20354164271690106,
+            0.1854150227767087,
+            0.6110433345063903
+          ],
+          "distancia_firmada_z": 0.03334009604366894
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 0.5860344355084917,
+          "baricentricas": [
+            0.44217881646466084,
+            0.35715955368970775,
+            0.20066162984563143
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 2.1205901616358958,
+          "baricentricas": [
+            0.12825604139595903,
+            0.2315609399658847,
+            0.6401830186381563
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.3780434472756076,
+          "baricentricas": [
+            0.1880449708229407,
+            0.44678601926372297,
+            0.36516900991333634
+          ]
+        }
+      ]
+    },
+    "gj24-enfocado": {
+      "ojo": [
+        4.130882,
+        1.803308,
+        -7.903344
+      ],
+      "direccion": [
+        -0.00485,
+        -0.868616,
+        -0.495463
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": true,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6110688395547293,
+            0.1824798697103078,
+            0.20645129073496285
+          ],
+          "distancia_firmada_z": -0.34994636092284725
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.20941403967411812,
+            0.17951712077115256,
+            0.6110688395547293
+          ],
+          "distancia_firmada_z": 0.03334009604366894
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 0.7063017035032835,
+          "baricentricas": [
+            0.390681886405858,
+            0.4024629603959814,
+            0.20685515319816064
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.958368933226891,
+          "baricentricas": [
+            0.0868271804751668,
+            0.22849000880226905,
+            0.6846828107225642
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.1961175946337845,
+          "baricentricas": [
+            0.14509720735821363,
+            0.48413752708324215,
+            0.37076526555854417
+          ]
+        }
+      ]
+    },
+    "gj24-recogido": {
+      "ojo": [
+        4.130882,
+        1.803308,
+        -7.903343
+      ],
+      "direccion": [
+        -0.00485,
+        -0.868616,
+        -0.495463
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": true,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6110688395547293,
+            0.1824798697103078,
+            0.20645129073496285
+          ],
+          "distancia_firmada_z": -0.3499473609228474
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.20941403967411812,
+            0.17951712077115256,
+            0.6110688395547293
+          ],
+          "distancia_firmada_z": 0.0333390960436688
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 0.7063037218174666,
+          "baricentricas": [
+            0.39068125663233333,
+            0.40246358901543644,
+            0.20685515435223023
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.958368933226891,
+          "baricentricas": [
+            0.0868270405110132,
+            0.22848997508126576,
+            0.684682984407721
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.1961175946337845,
+          "baricentricas": [
+            0.14509707797292315,
+            0.4841376564685327,
+            0.37076526555854417
+          ]
+        }
+      ]
+    },
+    "gj24-devuelto": {
+      "ojo": [
+        3.519993,
+        1.803237,
+        -7.903344
+      ],
+      "direccion": [
+        4e-06,
+        0.594153,
+        -0.804352
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": true,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6110433345063903,
+            0.1104836027429615,
+            0.27847306275064826
+          ],
+          "distancia_firmada_z": -0.34994636092284725
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.2824693844413998,
+            0.10648728105220996,
+            0.6110433345063903
+          ],
+          "distancia_firmada_z": 0.03334009604366894
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 0.4350661910741159,
+          "baricentricas": [
+            0.7039017849544342,
+            0.017625357466318763,
+            0.278472857579247
+          ]
+        }
+      ]
+    },
+    "arranque-17": {
+      "ojo": [
+        5.71,
+        1.807576,
+        5.3
+      ],
+      "direccion": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6126020162633379,
+            0.36711942909919837,
+            0.020278554637463753
+          ],
+          "distancia_firmada_z": -13.553290360922848
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.020569568881191058,
+            0.3668284148554711,
+            0.6126020162633379
+          ],
+          "distancia_firmada_z": -13.170003903956331
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": []
+    },
+    "gj25-mano": {
+      "ojo": [
+        4.57,
+        1.803253,
+        -11.01425
+      ],
+      "direccion": [
+        -0.974199,
+        -0.225692,
+        0.0
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6110490821229174,
+            0.23427017217400575,
+            0.15468074570307683
+          ],
+          "distancia_firmada_z": 2.7609596390771536
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.1569005439596442,
+            0.23205037391743846,
+            0.6110490821229173
+          ],
+          "distancia_firmada_z": 3.14424609604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": []
+    },
+    "gj25-1": {
+      "ojo": [
+        5.0,
+        1.803728,
+        -8.653301
+      ],
+      "direccion": [
+        0.0,
+        -0.927435,
+        -0.373985
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6112197144885663,
+            0.28479510310503553,
+            0.1039851824063982
+          ],
+          "distancia_firmada_z": 0.40001063907715384
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.10547745686864873,
+            0.28330282864278505,
+            0.6112197144885663
+          ],
+          "distancia_firmada_z": 0.78329709604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.8346197731418479,
+          "baricentricas": [
+            0.15201939399548825,
+            0.14061060655180527,
+            0.7073699994527065
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.057290139557402,
+          "baricentricas": [
+            0.20089560258543382,
+            0.5107144530652956,
+            0.28838994434927057
+          ]
+        }
+      ]
+    },
+    "gj25-6": {
+      "ojo": [
+        5.0,
+        1.803728,
+        -8.653301
+      ],
+      "direccion": [
+        0.0,
+        -0.927435,
+        -0.373985
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6112197144885663,
+            0.28479510310503553,
+            0.1039851824063982
+          ],
+          "distancia_firmada_z": 0.40001063907715384
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.10547745686864873,
+            0.28330282864278505,
+            0.6112197144885663
+          ],
+          "distancia_firmada_z": 0.78329709604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.8346197731418479,
+          "baricentricas": [
+            0.15201939399548825,
+            0.14061060655180527,
+            0.7073699994527065
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.057290139557402,
+          "baricentricas": [
+            0.20089560258543382,
+            0.5107144530652956,
+            0.28838994434927057
+          ]
+        }
+      ]
+    },
+    "gj25-7": {
+      "ojo": [
+        5.0,
+        1.803728,
+        -8.653301
+      ],
+      "direccion": [
+        0.0,
+        -0.927435,
+        -0.373985
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6112197144885663,
+            0.28479510310503553,
+            0.1039851824063982
+          ],
+          "distancia_firmada_z": 0.40001063907715384
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.10547745686864873,
+            0.28330282864278505,
+            0.6112197144885663
+          ],
+          "distancia_firmada_z": 0.78329709604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.8346197731418479,
+          "baricentricas": [
+            0.15201939399548825,
+            0.14061060655180527,
+            0.7073699994527065
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.057290139557402,
+          "baricentricas": [
+            0.20089560258543382,
+            0.5107144530652956,
+            0.28838994434927057
+          ]
+        }
+      ]
+    },
+    "gj25-8": {
+      "ojo": [
+        5.0,
+        1.803728,
+        -8.653301
+      ],
+      "direccion": [
+        0.0,
+        -0.927435,
+        -0.373985
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6112197144885663,
+            0.28479510310503553,
+            0.1039851824063982
+          ],
+          "distancia_firmada_z": 0.40001063907715384
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.10547745686864873,
+            0.28330282864278505,
+            0.6112197144885663
+          ],
+          "distancia_firmada_z": 0.78329709604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.8346197731418479,
+          "baricentricas": [
+            0.15201939399548825,
+            0.14061060655180527,
+            0.7073699994527065
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.057290139557402,
+          "baricentricas": [
+            0.20089560258543382,
+            0.5107144530652956,
+            0.28838994434927057
+          ]
+        }
+      ]
+    },
+    "gj25-intermedia-enfocada": {
+      "ojo": [
+        4.33763,
+        1.802979,
+        -8.653759
+      ],
+      "direccion": [
+        -0.114323,
+        -0.894446,
+        -0.432315
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6109506541898906,
+            0.206972953494825,
+            0.1820763923152844
+          ],
+          "distancia_firmada_z": 0.4004686390771539
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.18468934104646895,
+            0.20436000476364055,
+            0.6109506541898905
+          ],
+          "distancia_firmada_z": 0.7837550960436701
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.9014469172021673,
+          "baricentricas": [
+            0.17110515063232168,
+            0.24892834288315094,
+            0.5799665064845274
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.1323298226840075,
+          "baricentricas": [
+            0.22067868008634084,
+            0.4060864710400198,
+            0.37323484887363934
+          ]
+        }
+      ]
+    },
+    "gj25-intermedia-retirada": {
+      "ojo": [
+        4.33763,
+        1.802979,
+        -8.653759
+      ],
+      "direccion": [
+        -0.114323,
+        -0.894446,
+        -0.432315
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6109506541898906,
+            0.206972953494825,
+            0.1820763923152844
+          ],
+          "distancia_firmada_z": 0.4004686390771539
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.18468934104646895,
+            0.20436000476364055,
+            0.6109506541898905
+          ],
+          "distancia_firmada_z": 0.7837550960436701
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.9014469172021673,
+          "baricentricas": [
+            0.17110515063232168,
+            0.24892834288315094,
+            0.5799665064845274
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.1323298226840075,
+          "baricentricas": [
+            0.22067868008634084,
+            0.4060864710400198,
+            0.37323484887363934
+          ]
+        }
+      ]
+    },
+    "arranque-113": {
+      "ojo": [
+        5.71,
+        1.807576,
+        5.3
+      ],
+      "direccion": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6126020162633379,
+            0.36711942909919837,
+            0.020278554637463753
+          ],
+          "distancia_firmada_z": -13.553290360922848
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.020569568881191058,
+            0.3668284148554711,
+            0.6126020162633379
+          ],
+          "distancia_firmada_z": -13.170003903956331
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": []
+    },
+    "gj23-mano": {
+      "ojo": [
+        2.813708,
+        1.803253,
+        -13.9013
+      ],
+      "direccion": [
+        0.0,
+        -0.670737,
+        -0.741696
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6110490821229174,
+            0.027209213445051447,
+            0.36174170443203113
+          ],
+          "distancia_firmada_z": 5.648009639077154
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.36693300087410624,
+            0.022017917002976416,
+            0.6110490821229173
+          ],
+          "distancia_firmada_z": 6.03129609604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 16,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -4.594376742892678,
+              3.70223698248941,
+              -15.397976880116858
+            ],
+            [
+              -4.594376742892678,
+              0.10223741069619052,
+              -15.397976880116858
+            ]
+          ],
+          "distancia": 2.017911489500896,
+          "baricentricas": [
+            0.5917040788353045,
+            0.09653548108544295,
+            0.3117604400792525
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 0,
+          "triangulo": 24,
+          "material": "paredes",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              -4.705045730014604,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              -4.705045730014604,
+              4.854506264059296,
+              -15.598857740992116
+            ]
+          ],
+          "distancia": 2.2887513765641385,
+          "baricentricas": [
+            0.5880893707440972,
+            0.3368160369243886,
+            0.07509459233151418
+          ]
+        }
+      ]
+    },
+    "gj23-quieto": {
+      "ojo": [
+        5.0,
+        1.803728,
+        -8.653301
+      ],
+      "direccion": [
+        0.0,
+        -0.927435,
+        -0.373985
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6112197144885663,
+            0.28479510310503553,
+            0.1039851824063982
+          ],
+          "distancia_firmada_z": 0.40001063907715384
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.10547745686864873,
+            0.28330282864278505,
+            0.6112197144885663
+          ],
+          "distancia_firmada_z": 0.78329709604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.8346197731418479,
+          "baricentricas": [
+            0.15201939399548825,
+            0.14061060655180527,
+            0.7073699994527065
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.057290139557402,
+          "baricentricas": [
+            0.20089560258543382,
+            0.5107144530652956,
+            0.28838994434927057
+          ]
+        }
+      ]
+    },
+    "gj23-costado": {
+      "ojo": [
+        5.875001,
+        1.802759,
+        -8.653301
+      ],
+      "direccion": [
+        0.0,
+        -0.927435,
+        -0.373985
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6108716244626426,
+            0.3883028875034176,
+            0.0008254880339397253
+          ],
+          "distancia_firmada_z": 0.40001063907715384
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.0008373344786297627,
+            0.3882910410587275,
+            0.6108716244626426
+          ],
+          "distancia_firmada_z": 0.78329709604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 1.8335749559848502,
+          "baricentricas": [
+            0.15196470357017555,
+            0.037437735834071985,
+            0.8105975605957525
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.0562453224004047,
+          "baricentricas": [
+            0.2008450458078444,
+            0.5926938735311562,
+            0.20646108066099939
+          ]
+        }
+      ]
+    },
+    "gj23-giro": {
+      "ojo": [
+        5.875001,
+        1.802759,
+        -8.653301
+      ],
+      "direccion": [
+        -0.562228,
+        -0.766907,
+        -0.30944
+      ],
+      "camara_correcta_segun_fixture": true,
+      "dentro_espesor_visual_entre_caras": false,
+      "caras_que_contienen_xy": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 5,
+          "triangulo": 8,
+          "material": "deposito_revestimiento_bloques",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "plano_z": -8.253290360922847,
+          "baricentricas_xy": [
+            0.6108716244626426,
+            0.3883028875034176,
+            0.0008254880339397253
+          ],
+          "distancia_firmada_z": 0.40001063907715384
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 191,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              -2.480000040951154,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -7.870003903956331
+            ],
+            [
+              5.882002793283505,
+              2.886000023339534,
+              -7.870003903956331
+            ]
+          ],
+          "plano_z": -7.870003903956331,
+          "baricentricas_xy": [
+            0.0008373344786297627,
+            0.3882910410587275,
+            0.6108716244626426
+          ],
+          "distancia_firmada_z": 0.78329709604367
+        }
+      ],
+      "intersecciones_visuales_hasta_3m": [
+        {
+          "nodo": "almacen-col",
+          "primitiva": 4,
+          "triangulo": 4,
+          "material": "deposito_concreto",
+          "doubleSided": false,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              7.925538207625436,
+              0.10223741069619052,
+              -15.397976880116858
+            ],
+            [
+              -2.600001785373024,
+              0.10223741069619052,
+              -8.253290360922847
+            ],
+            [
+              5.882002793283505,
+              0.10223741069619052,
+              -8.253290360922847
+            ]
+          ],
+          "distancia": 2.2173765388812585,
+          "baricentricas": [
+            0.15202285395596327,
+            0.18443011216597988,
+            0.6635470338780568
+          ]
+        },
+        {
+          "nodo": "almacen-col",
+          "primitiva": 8,
+          "triangulo": 168,
+          "material": "local_pared_pintada",
+          "doubleSided": true,
+          "alphaMode": "OPAQUE",
+          "vertices_mundiales": [
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -15.598857740992116
+            ],
+            [
+              8.08000719570191,
+              -0.10427488058041945,
+              -7.870003903956331
+            ],
+            [
+              -2.600001785373024,
+              -0.10427488058041945,
+              -7.870003903956331
+            ]
+          ],
+          "distancia": 2.486655983816055,
+          "baricentricas": [
+            0.20090532909744307,
+            0.461728492413801,
+            0.33736617848875594
+          ]
+        }
+      ]
+    }
+  }
+}
