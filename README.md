@@ -90,5 +90,5 @@ mismos 25 errores deliberados y 42 avisos Rescate, con sus causas/contextos de t
 cero diagnósticos nuevos/ausentes, nuevas familias de rescate, retención o abortos.
 `auditoria-crudo.json` y `diagnosticos-completos.json` conservan la comparación y los
 contextos completos. La rama de código coincide con el SHA remoto citado arriba y está limpia.
-El único skipped del unittest Python del harness es el de plataforma presente en la base;
+El unittest Python del harness registra 606 pruebas y un skipped, igual que la base;
 ningún nodo se salteó ni ningún caso gdUnit4 se omitió.
