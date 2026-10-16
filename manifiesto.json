@@ -1,6 +1,6 @@
 {
   "rama": "capturas/430",
-  "cabeza_auditada": "d50b69b01e926f68d6601856c34ee167f0eb0de9",
+  "cabeza_auditada": "669ec9b1c1ef55065fb1dd8bc3e8c3714265ecbd",
   "archivos": {
     "completa/auditoria-crudo.json": {
       "bytes": 2176,
@@ -48,6 +48,12 @@
       "bytes": 335778,
       "sha256": "5159fbd1b61f67ed9f2e89c3a394ef8ce2df4ce8d98e9454f18b2837487c75fd",
       "procedencia_local_sha256": "5159fbd1b61f67ed9f2e89c3a394ef8ce2df4ce8d98e9454f18b2837487c75fd",
+      "normalizacion_crlf": false
+    },
+    "completa/revision-root-estricta-final.json": {
+      "bytes": 141704,
+      "sha256": "ae25505f884f00b5f5b07addf460548a299798f2fb143812f4f2691f5c3d3b3d",
+      "procedencia_local_sha256": "ae25505f884f00b5f5b07addf460548a299798f2fb143812f4f2691f5c3d3b3d",
       "normalizacion_crlf": false
     },
     "completa/specs.log": {
@@ -501,10 +507,10 @@
       "normalizacion_crlf": true
     },
     "README.md": {
-      "bytes": 5439,
-      "sha256": "02012862f3b0ac10fe2a127f877f50a9fb8d5a4477a22a8bbba7609f7b7fc783",
-      "procedencia_local_sha256": "02012862f3b0ac10fe2a127f877f50a9fb8d5a4477a22a8bbba7609f7b7fc783",
-      "normalizacion_crlf": false
+      "bytes": 6051,
+      "sha256": "0bd4196fffe1cdde4bca16e389374d56e08f0628f7a6e8e84c1f0298b4ab4808",
+      "procedencia_local_sha256": "e6b5a2be394daaf2b69073cea82d15422816548795d24dc595b735588bfd9434",
+      "normalizacion_crlf": true
     },
     "tdd/glifos-rojo.log": {
       "bytes": 11198,
