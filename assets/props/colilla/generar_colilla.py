@@ -25,7 +25,7 @@ def generar(destino: Path) -> None:
             f'[node name="{nombre}" type="MeshInstance3D" parent="."]',
             f'position = Vector3({centro}, 0, 0)',
             'rotation = Vector3(0, 0, -1.570796326794897)',
-            f'mesh = SubResource("malla_{nombre}")', '',
+            f'mesh = SubResource("malla_{nombre}")', 'gi_mode = 2', '',
         ]
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text('\n'.join(lineas), encoding='utf-8', newline='\n')

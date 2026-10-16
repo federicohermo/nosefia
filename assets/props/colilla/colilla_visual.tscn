@@ -54,18 +54,22 @@ rings = 1
 position = Vector3(-0.03, 0, 0)
 rotation = Vector3(0, 0, -1.570796326794897)
 mesh = SubResource("malla_Filtro")
+gi_mode = 2
 
 [node name="Papel" type="MeshInstance3D" parent="."]
 position = Vector3(0.004, 0, 0)
 rotation = Vector3(0, 0, -1.570796326794897)
 mesh = SubResource("malla_Papel")
+gi_mode = 2
 
 [node name="Quemado" type="MeshInstance3D" parent="."]
 position = Vector3(0.029, 0, 0)
 rotation = Vector3(0, 0, -1.570796326794897)
 mesh = SubResource("malla_Quemado")
+gi_mode = 2
 
 [node name="Ceniza" type="MeshInstance3D" parent="."]
 position = Vector3(0.034, 0, 0)
 rotation = Vector3(0, 0, -1.570796326794897)
 mesh = SubResource("malla_Ceniza")
+gi_mode = 2

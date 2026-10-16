@@ -352,3 +352,12 @@ func test_recibido_futuro_no_aparece_en_el_chat_abierto() -> void:  # AC-INV-028
 	)
 	assert_array(_pantalla().get("_historial")).is_equal(anteriores)
 	assert_int(_celular().bandeja().no_leidos(Conversacion.Interlocutor.YASMIN)).is_equal(0)
+
+
+func test_colilla_levantable_toma_luz_dinamica() -> void:
+	var escena := load("res://src/escenas/objetos/colilla.tscn") as PackedScene
+	var colilla: RigidBody3D = auto_free(escena.instantiate())
+	var mallas := colilla.find_children("*", "MeshInstance3D", true, false)
+	assert_array(mallas).is_not_empty()
+	for malla: MeshInstance3D in mallas:
+		assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
