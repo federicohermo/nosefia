@@ -307,14 +307,26 @@ func _limpiar(almacen: Node3D) -> void:
 	for nombre: String in ["JabonAmarillo", "JabonAzul", "JabonRosa"]:
 		jabones.append(almacen.get_node("Objetos/" + nombre))
 	for jabon in jabones:
-		var pedida := ReglasDeLaLimpieza.agua_del_jabon(jabon.get("datos").id)
+		var jornada := _piso(almacen).jornada()
+		var sustituto := not AnomaliasDeLaJornada.util_disponible(jabon.get("datos").id, jornada)
+		var identidad: StringName = (
+			AnomaliasDeLaJornada.id_de_poetico() if sustituto else jabon.get("datos").id
+		)
+		var pedida := ReglasDeLaLimpieza.agua_del_jabon(identidad, jornada)
 		_agarrar(agarre, balde)
 		_usar_sobre(jugador, inodoro)
 		_usar_sobre(jugador, lavatorio)
 		_soltar_lejos(agarre)
-		_agarrar(agarre, jabon)
+		if sustituto:
+			almacen.get("_reposicion_manual").call("retirar", Producto.Id.POETICO)
+			assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
+		else:
+			_agarrar(agarre, jabon)
 		_usar_sobre(jugador, balde)
-		_soltar_lejos(agarre)
+		if sustituto:
+			almacen.get("_reposicion_manual").call("devolver", Producto.Id.POETICO)
+		else:
+			_soltar_lejos(agarre)
 		_agarrar(agarre, mopa)
 		_usar_sobre(jugador, balde)
 		for mancha: Node3D in limpieza.call("manchas"):

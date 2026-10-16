@@ -94,6 +94,8 @@ static func _jabon_de(limpiador: Limpiador, lugar: PisoDelLocal.Lugar) -> String
 	]
 	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
 		if ReglasDeLaLimpieza.JABONES[jabon] == pedida:
+			if limpiador.piso().jornada() == 2 and pedida == ReglasDeLaLimpieza.Agua.AZUL:
+				return AnomaliasDeLaJornada.id_de_poetico()
 			return jabon
 	return &""
 
@@ -367,3 +369,29 @@ func test_la_mopa_avisa_que_se_seco_y_la_pasada_seca_dice_su_motivo() -> void:
 	assert_int(limpiador.pasar(MOPA, lugar)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_SECA)
 	assert_array(rechazadas).contains_exactly([[lugar, ReglasDeLaLimpieza.Resultado.MOPA_SECA]])
 	assert_bool(limpiador.piso().mopa().se_mojo()).is_true()
+
+
+func test_el_tenido_aceptado_publica_identidad_y_conserva_la_senal_de_audio() -> void:  # AC-CLN-066
+	for jornada: int in [1, 2]:
+		var limpiador := _limpiador(Reglas.DURACION_DEL_TURNO, jornada)
+		var identidad := &"jabon_azul" if jornada == 1 else AnomaliasDeLaJornada.id_de_poetico()
+		var aceptados: Array[Array] = []
+		limpiador.balde_tenido_con.connect(
+			func(id: StringName, agua: ReglasDeLaLimpieza.Agua) -> void:
+				aceptados.append([id, agua])
+		)
+		assert_int(limpiador.usar(identidad, BALDE)).is_equal(
+			ReglasDeLaLimpieza.Resultado.BALDE_VACIO
+		)
+		assert_array(aceptados).is_empty()
+		limpiador.usar(BALDE, LAVATORIO)
+		_emitidas.clear()
+		assert_int(limpiador.usar(identidad, BALDE)).is_equal(
+			ReglasDeLaLimpieza.Resultado.BALDE_TENIDO
+		)
+		assert_array(aceptados).contains_exactly([[identidad, ReglasDeLaLimpieza.Agua.AZUL]])
+		assert_array(_emitidas).contains_exactly([["balde_tenido", ReglasDeLaLimpieza.Agua.AZUL]])
+		assert_int(limpiador.usar(identidad, BALDE)).is_equal(
+			ReglasDeLaLimpieza.Resultado.BALDE_YA_TENIDO
+		)
+		assert_array(aceptados).has_size(1)
