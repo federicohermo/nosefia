@@ -472,7 +472,11 @@ func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
 
 
 func _recoger_caja(almacen: Node3D, caja: RigidBody3D, desde: Vector3) -> void:
-	await _mirar_desde_el_piso(almacen, caja, caja.global_position, desde)
+	var limites := _limites(caja)
+	var cara := limites.get_center()
+	cara += desde.normalized() * limites.size.dot(desde.normalized().abs()) / 2.0
+	cara.y = limites.position.y + limites.size.y / 4.0
+	await _mirar_desde_el_piso(almacen, caja, cara, desde)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.call("_leer_la_mira")
 	assert_object(jugador.get("_enfocado")).is_same(caja)
@@ -514,6 +518,20 @@ func _retirar_soporte(producto: Producto.Id) -> bool:
 	assert_float(caja.global_position.y).is_less(inicial.y - _limites(debajo).size.y / 2.0)
 	assert_float(_limites(caja).position.y).is_equal_approx(piso.y, ReglasDeLosObjetos.ROCE)
 	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
+	print(
+		"428_CASCADA_FINAL producto=",
+		producto,
+		" inicial=",
+		inicial,
+		" final=",
+		caja.global_transform,
+		" base=",
+		_limites(caja).position.y,
+		" piso=",
+		piso,
+		" entra=",
+		almacen.get("_reposicion_manual").call("_entra_entera", caja)
+	)
 	assert_vector(ajena.global_position).is_equal(aparte.origin)
 	assert_bool(ajena.global_basis.is_equal_approx(aparte.basis)).is_true()
 	assert_dict(_estado_del_local(almacen)).is_equal(antes)
