@@ -77,8 +77,6 @@ func test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila() -> void:  #
 				]
 			)
 		)
-		if faltantes.size() != 3:
-			return
 		assert_int(faltantes[Producto.Id.ACTRONCITO]).is_between(1, 5)
 		assert_int(faltantes[Producto.Id.CORACOLA]).is_between(1, 4)
 		assert_int(faltantes[Producto.Id.MAROLINI]).is_between(1, 8)
