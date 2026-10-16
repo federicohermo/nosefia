@@ -158,6 +158,12 @@ Cada agente recibe, literal:
   - Lo que corre de fondo va con el `run_in_background` de Bash. Un `nohup … &` adentro de un
     comando muere con él, sin dejar salida: le pasó a una verificación integrada del padre el
     2026-09-30.
+- **La plantilla Web se comprueba en el preflight contra la receta de la base integrada.**
+  Fijar la pareja ZIP/manifiesto y ejecutar la guardia `--comprobar` en una copia externa
+  antes de repartir su ruta. Cada export comprueba también su JS y WASM con
+  `--verificar-export`. Una caché compartida que coincide con su propio manifiesto puede
+  pertenecer a otra receta; en #431 obligó a repetir export y capturas. Preparar o compilar
+  la receta vigente en una carpeta propia, sin reemplazar cachés de otras sesiones.
 - **Las capturas que pide un issue suben con `scripts/capturas_a_rama.py`**, a la rama huérfana
   `capturas/<N>`, que no se mergea, y el PR las muestra por su URL cruda. **No con un worktree
   aparte**: el guard rechaza `git -C <otro worktree>` desde el worktree de un carril. Medido el
