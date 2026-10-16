@@ -1,4 +1,4 @@
-## Los valores fijos de reponer: cuánto trae la caja de cada producto.
+## Los valores fijos de reponer.
 ##
 ## Es un archivo aparte de `reglas.gd` y de `reglas_de_los_objetos.gd` por el mismo criterio que
 ## separa a esos dos: no es de qué trata el número, es quién lo toca y probando qué. `reglas.gd`
@@ -8,8 +8,7 @@
 ## **El cupo del estante NO vive acá**, y es la decisión que evita el mismo número escrito dos
 ## veces: cuántas unidades pide la góndola de cada producto son los casilleros de su fila de
 ## adelante, que la escena mide del modelo y le pasa al `Inventario`. Un `CUPO` acá sería una
-## copia que se desincroniza sin que ningún gate lo diga. **Lo que falta en cada jornada
-## tampoco**: es un dato de la jornada, y vive en `Apertura`.
+## copia que se desincroniza sin que ningún gate lo diga.
 class_name ReglasDelEstante
 extends RefCounted
 

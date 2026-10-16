@@ -103,10 +103,10 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
 
 - **`counter-service` y `store-stock`.** Cobrar es de la ventanilla; cuántas unidades hay y dónde
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
-  En la primera noche, el contrato establece que la ventanilla recibe unidades físicas y la
-  mercadería las retira una sola vez al completar la venta. Si la compra vence, siguen
-  registradas afuera de su caja. Quedan como unidades sueltas en el piso interior frente a la
-  ventanilla; el ticket aceptado se descarta.
+  En la primera noche, la ventanilla recibe unidades físicas y la mercadería las retira una sola
+  vez, al completar la venta. Si la compra vence, las unidades siguen afuera como unidades
+  sueltas. Registrar espera a que terminen ambas compras, vendidas o vencidas. Después compara
+  la planilla sólo con las ventas completas, sin depender de atención.
 
   La apertura comparte una sola selección de compradores y pedidos entre atención y reposición.
   La segunda noche usa los pedidos fijos de Fede y Mía, sus conversaciones propias y sus figuras
@@ -114,8 +114,6 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   Sus compras vencidas también dejan las unidades recogibles en el piso interior, todavía
   registradas afuera, y descartan el ticket.
 
-  Registrar espera a que ambas compras terminen, vendidas o vencidas.
-  Compara la planilla con las ventas completas, independientemente de cumplir atención.
   Atención exige completar las dos compras.
 - **`player-actions` e `investigation`.** Agarrar y examinar son del cuerpo; **qué esconde** el
   objeto es de la investigación. La identidad de lo que se agarra es opaca a propósito: lo que se
