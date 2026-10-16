@@ -1008,6 +1008,8 @@ func _repintar(nodo: Node3D) -> void:
 ## vacío, o el último si la fila está llena.
 func casillero(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> ZonaDeReposicion:
 	var zonas: Array = _casilleros[id]
+	if zonas.is_empty():
+		return null
 	if indice == Estante.PRIMERO_VACIO:
 		var vacios := repositor.estante().casilleros_vacios(Catalogo.de(id))
 		indice = zonas.size() - 1 if vacios.is_empty() else vacios[0]
@@ -1017,7 +1019,10 @@ func casillero(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> ZonaDeRe
 ## Dónde está la unidad de ese casillero, alineado a los ejes del local: donde la mira la
 ## encuentra. Sin índice, el del primero vacío.
 func zona(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> AABB:
-	var elegido := casillero(id, indice).casillero
+	var encontrado := casillero(id, indice)
+	if encontrado == null:
+		return AABB()
+	var elegido := encontrado.casillero
 	return global_transform * _copia_del_casillero(id, elegido) * _modelos[id].get_aabb()
 
 
@@ -1048,6 +1053,10 @@ func _giro_del_frente(id: Producto.Id) -> float:
 	var frente := DisposicionDeLaGondola.frente(
 		disposicion.principales[id], disposicion.filas_de_adelante[id]
 	)
+	if frente.is_zero_approx():
+		var modelo := contenido.get_child(id) as Node3D
+		var local: Vector3 = modelo.get_meta("frente_del_modelo")
+		frente = (modelo.basis * local).normalized()
 	return giro_hacia_la_camara(global_basis * frente)
 
 
@@ -1158,6 +1167,10 @@ func _preparar_los_casilleros() -> void:
 	# La superficie invisible fija la profundidad antes de dibujar las aristas.
 	sin_superficie.render_priority = -1
 	for producto in Catalogo.todos():
+		if disposicion.casilleros_de(producto.id) == 0:
+			_casilleros.append([])
+			_envolver_la_fila([])
+			continue
 		var modelo := _modelos[producto.id]
 		var fantasma := modelo.duplicate() as ArrayMesh
 		for superficie in fantasma.get_surface_count():
@@ -1268,6 +1281,8 @@ func _armar_los_bloques() -> void:
 func _preparar_la_guia() -> void:
 	for id in _grupos.size():
 		_mostrar_lo_puesto(id)
+		if _bloques[id].is_empty():
+			continue
 		_desenfoque.agregar(_grupos[id], _bloques[id], _primera_dibujada(id))
 
 
@@ -1314,6 +1329,8 @@ func _primera_dibujada(id: Producto.Id) -> int:
 ## ocupados, y al final los vacíos, que quedan fuera del corte. Cada copia lleva su lugar, así que
 ## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio.
 func _mostrar_lo_puesto(id: Producto.Id) -> void:
+	if _bloques[id].is_empty():
+		return
 	var producto := Catalogo.de(id)
 	var de_la_noche := repositor.estante()
 	var primera := _primera_dibujada(id)
@@ -1367,7 +1384,9 @@ func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiM
 	copias.transform_format = MultiMesh.TRANSFORM_3D
 	copias.mesh = malla
 	copias.instance_count = DisposicionDeLaGondola.copias(bloque)
-	copias.buffer = bloque
+	if not bloque.is_empty():
+		copias.buffer = bloque
+	grupo.visible = not bloque.is_empty()
 	copias.visible_instance_count = copias.instance_count
 	grupo.multimesh = copias
 	add_child(grupo)

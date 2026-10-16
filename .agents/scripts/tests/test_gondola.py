@@ -23,6 +23,7 @@ from lib.gondola import (
     centros,
     columnas_que_entran,
     copia_relativa,
+    desplazamiento_que_entra,
     escribir_disposicion,
     separar_filas,
     escribir_escena_de_mallas,
@@ -49,6 +50,42 @@ LATA = Envase(ancho=0.18, fondo=0.18, alto=0.23)
 #: Lo que se echa hacia atrás una unidad sobre la rampa de una cabecera, contra su chapa: la
 #: chapa baja once grados hacia el pasillo y la unidad sube otro tanto, como la ponía el artista.
 INCLINACION = 2 * math.asin(0.19)
+
+
+class EncajeMedido(unittest.TestCase):
+    def test_conserva_la_posicion_si_apoya_y_no_intersecta(self):
+        self.assertEqual(desplazamiento_que_entra(-0.1, 0.1, 0.001, lambda _: True), 0)
+
+    def test_elige_la_traslacion_valida_mas_cercana_sin_agregar_margen(self):
+        # AC-STK-085: la malla de Oaaaa cabe a -6 mm; a -7 mm toca el labio.
+        self.assertEqual(
+            desplazamiento_que_entra(-0.006, 0.05, 0.001, lambda v: v <= -0.006), -0.006
+        )
+
+    def test_comprueba_ambos_extremos_fisicos_aunque_no_coincidan_con_el_paso(self):
+        self.assertEqual(
+            desplazamiento_que_entra(0.0024, 0.0037, 0.001, lambda v: v == 0.0037), 0.0037
+        )
+
+    def test_un_obstaculo_no_se_elude_saliendo_del_intervalo_de_apoyo(self):
+        vistos = []
+
+        def no_entra(v):
+            vistos.append(v)
+            return v > 0.002
+
+        self.assertIsNone(desplazamiento_que_entra(0, 0.002, 0.001, no_entra))
+        self.assertEqual(set(vistos), {0, 0.001, 0.002})
+
+    def test_sin_intervalo_comun_de_apoyo_no_hay_posicion_valida(self):
+        self.assertIsNone(desplazamiento_que_entra(0.1, -0.1, 0.001, lambda _: True))
+
+    def test_el_paso_invalido_y_las_medidas_no_finitas_fallan_explicitamente(self):
+        for desde, hasta, paso_medido in ((0, 1, 0), (0, 1, -0.1),
+                                          (math.nan, 1, 0.001), (0, math.inf, 0.001)):
+            with self.subTest(desde=desde, hasta=hasta, paso=paso_medido):
+                with self.assertRaises(ValueError):
+                    desplazamiento_que_entra(desde, hasta, paso_medido, lambda _: True)
 
 
 class Repartir(unittest.TestCase):

@@ -192,11 +192,17 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 ## medida desde la raíz del modelo, así que el modelo va al árbol sin transformar.
 func _del_modelo(modelo: Node3D, producto: Producto) -> MeshInstance3D:
 	var bloque: PackedFloat32Array = DISPOSICION.principales[producto.id]
+	var posiciones := PackedVector3Array()
+	if bloque.is_empty():
+		var contenido: Node3D = auto_free(CONTENIDO.instantiate())
+		posiciones.append((contenido.get_child(producto.id) as Node3D).position)
+	else:
+		for indice in DisposicionDeLaGondola.copias(bloque):
+			posiciones.append(DisposicionDeLaGondola.copia(bloque, indice).origin)
 	var encima: Array[MeshInstance3D] = []
 	for nodo: MeshInstance3D in modelo.find_children("*", "MeshInstance3D", true, false):
-		for indice in DisposicionDeLaGondola.copias(bloque):
-			var copia := DisposicionDeLaGondola.copia(bloque, indice)
-			if nodo.global_position.distance_to(copia.origin) < TOLERANCIA:
+		for posicion in posiciones:
+			if nodo.global_position.distance_to(posicion) < TOLERANCIA:
 				encima.append(nodo)
 				break
 	(
