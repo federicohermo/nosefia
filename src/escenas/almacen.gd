@@ -103,6 +103,7 @@ var _gestos := SubtitulosDeLosGestos.new()
 ## Dónde nació el pensamiento que se ve, y a qué distancia estaba el jugador entonces.
 var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
+var _jornada_del_celular: int = 0
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
@@ -291,6 +292,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
+	_jornada_del_celular = jornada
 	_celular.abrir_jornada(jornada)
 	_pantalla_del_celular.mostrar_recordatorio(true)
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
@@ -379,6 +381,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 ## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+	_jornada_del_celular = jornada
 	_gestos.descartar()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
 	_celular.cerrar_jornada()
@@ -623,7 +626,8 @@ func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
 	_pantalla_del_celular.mostrar_chat(
 		_celular.bandeja().conversacion_de(quien),
 		_celular.bandeja().mensajes_de(quien),
-		_celular.celular().fijo()
+		_celular.celular().fijo(),
+		_jornada_del_celular
 	)
 
 
