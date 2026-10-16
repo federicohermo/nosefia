@@ -404,12 +404,14 @@ func _impacto_visible(malla: MeshInstance3D, desde: Vector3, hasta: Vector3) -> 
 
 ## Saladik cambia de sector: el borde reportado pertenece al mueble, no a esa referencia.
 func _metal_de_la_cabecera_reportada(malla: MeshInstance3D, frente: Vector3) -> Vector3:
-	var centro := (malla.global_transform * malla.get_aabb()).get_center()
+	var limites := malla.global_transform * malla.get_aabb()
+	var centro := limites.get_center()
+	var fondo := absf(frente.dot(limites.size))
 	var area_mayor := 0.0
 	var objetivo := Vector3.INF
 	for cara in _superiores(malla):
 		var punto := (cara[0] + cara[1] + cara[2]) / 3.0
-		if (punto - centro).dot(frente) <= 0.0:
+		if (punto - centro).dot(frente) <= fondo / 3.0:
 			continue
 		var area := (cara[1] - cara[0]).cross(cara[2] - cara[0]).length_squared()
 		if area > area_mayor:
