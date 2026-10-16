@@ -10,6 +10,7 @@ acá se ve antes de correr nada.
 import re
 import unittest
 from collections import Counter
+from unittest.mock import patch
 
 from lib.reparto import (
     CABECERAS,
@@ -47,8 +48,7 @@ CARAS_DE_LADO = ("A.oeste", "A.este", "B.oeste", "B.este", "N.sur")
 
 
 def _es_de_reposicion(estante: str) -> bool:
-    """Si el estante está a la altura de la mano: en una cara de lado, los que no son ni el de
-    arriba ni el zócalo, también en las cuatro chapas de cada cabecera."""
+    """Los niveles centrales son principales; zócalo y superior son fijos, también en cabeceras."""
     _, _, nivel = partes(estante)
     if es_cabecera(estante):
         return 0 < nivel < NIVELES_DE_CABECERA - 1
@@ -94,15 +94,18 @@ class ElReparto(unittest.TestCase):
             "B.sur.2": ("JORGILLO",), "B.sur.1": ("SALADIK",),
             "B.norte.2": ("BURBALOO",), "B.norte.1": ("FLINPUF",),
             "N.sur.2": ("ACTRONCITO", "DUREXTRA"),
-            "N.sur.1": ("POETICO",),
+            "N.sur.1": ("POETICO", "DURONGA"),
         }
         for estante, productos in esperados.items():
             self.assertEqual(tuple(t.producto for t in ESTANTES[estante]), productos, estante)
 
-    def test_duronga_no_tiene_tanda_y_no_se_inventan_muebles_ni_niveles(self):
-        # AC-STK-088, AC-STK-085: sigue en el catálogo, sin unidad ni referencia en el local.
+    def test_duronga_comparte_no_comestibles_sin_inventar_muebles_ni_niveles(self):
+        # AC-STK-088, AC-STK-085: destino provisional inferior derecho del mapa.
         self.assertIn("DURONGA", {p.clave for p in PRODUCTOS})
-        self.assertNotIn("DURONGA", {t.producto for ts in ESTANTES.values() for t in ts})
+        self.assertEqual([t.producto for t in ESTANTES["N.sur.1"]], ["POETICO", "DURONGA"])
+        self.assertEqual([t.producto for t in ESTANTES["N.sur.3"]], ["POETICO", "DURONGA"])
+        for clave in ("N.sur.1", "N.sur.3"):
+            self.assertEqual(ESTANTES[clave][1].cantidad_de_filas, 2)
         self.assertFalse(any(e.startswith("S.") for e in ESTANTES))
         self.assertNotIn("S", MUEBLES)
         for mueble in ("A", "B"):
@@ -146,7 +149,7 @@ class ElReparto(unittest.TestCase):
             t.producto for tandas in ESTANTES.values() for t in tandas if not t.fija
         )
         for p in PRODUCTOS:
-            self.assertEqual(principales[p.clave], 0 if p.clave in SOLO_DEPOSITO else 1, p.nombre)
+            self.assertEqual(principales[p.clave], 1, p.nombre)
 
     def test_lo_que_se_repite_es_un_producto_del_catalogo(self):
         claves = {p.clave for p in PRODUCTOS}
@@ -177,15 +180,21 @@ class ElReparto(unittest.TestCase):
             for columna, t in enumerate(tandas):
                 self.assertIn(t.producto, SECTORES[sector_de(estante, columna)])
                 vistos.add(t.producto)
-        self.assertEqual(vistos, {p.clave for p in PRODUCTOS} - set(SOLO_DEPOSITO))
+        self.assertEqual(vistos, {p.clave for p in PRODUCTOS})
 
-    def test_solo_el_producto_de_deposito_admite_cero_tandas(self):  # AC-STK-085
-        cantidades = {p.clave: int(p.clave not in SOLO_DEPOSITO) for p in PRODUCTOS}
+    def test_solo_una_declaracion_explicita_admite_cero_tandas(self):  # AC-STK-085
+        self.assertEqual(SOLO_DEPOSITO, ())
+        cantidades = {p.clave: 1 for p in PRODUCTOS}
         validar_tandas(cantidades)
-        for clave, cantidad in (("ACTRONCITO", 0), ("ACTRONCITO", 2), ("DURONGA", 1),
+        for clave, cantidad in (("ACTRONCITO", 0), ("ACTRONCITO", 2), ("DURONGA", 0),
                                 ("DESCONOCIDO", 1)):
             with self.subTest(clave=clave, cantidad=cantidad), self.assertRaises(ValueError):
                 validar_tandas(cantidades | {clave: cantidad})
+        # Capacidad futura, no el reparto vigente: una declaración explícita admite el vacío.
+        with patch("lib.reparto.SOLO_DEPOSITO", ("DURONGA",)):
+            validar_tandas(cantidades | {"DURONGA": 0})
+            with self.assertRaises(ValueError):
+                validar_tandas(cantidades)
 
     def test_un_producto_ajeno_no_recibe_sector_por_defecto(self):  # AC-STK-085
         with self.assertRaises(ValueError):

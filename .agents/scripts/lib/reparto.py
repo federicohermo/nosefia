@@ -9,9 +9,8 @@ a correr el acomodador. **Qué entra y cómo se ordena no se decide acá**: lo c
 
 Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue al `.blend`:
 
-- cada producto exhibido tiene **una sola** tanda principal; Duronga sólo tiene su fuente
-  exportable y caja en el depósito. Lo que se repite para
-  completar un estante es fijo;
+- cada producto exhibido tiene **una sola** tanda principal; Duronga conserva su destino
+  provisional de no comestibles. Lo que se repite para completar un estante es fijo;
 - los faltantes de apertura van en las principales a altura de la mano: niveles 1 y 2 de los
   cuatro existentes, tanto en laterales como en cabeceras; 0 y 3 llevan referencias fijas.
   Las filas de adelante de ambas tienen casilleros interactuables;
@@ -119,13 +118,14 @@ FRIOS = ("CORACOLA", "FERNET_GOD", "CINDOLOR", "MAYONCHIS")
 DE_CABECERA = ("MALBARDO", "AMARGADITO", "OAAAA", "TERMINATOR", "SALADIK",
                "JORGILLO", "BURBALOO", "FLINPUF")
 
-SOLO_DEPOSITO = ("DURONGA",)
+#: Capacidad para futuras declaraciones explícitas; los 32 productos actuales se exhiben.
+SOLO_DEPOSITO: tuple[str, ...] = ()
 
 #: Identidades del diseño, sin traducir nombres comerciales ni asignar marcas desconocidas.
 SECTORES = {
     "heladera_1": ("CORACOLA", "FERNET_GOD"),
     "heladera_2": ("CINDOLOR", "MAYONCHIS"),
-    "no_comestibles": ("ACTRONCITO", "DUREXTRA", "POETICO"),
+    "no_comestibles": ("ACTRONCITO", "DUREXTRA", "POETICO", "DURONGA"),
     "cabecera_no_comestibles": ("MALBARDO",),
     "cabecera_almacen": ("AMARGADITO",),
     "almacen": ("MAROLINI", "ARVEJAS", "UAKAS", "MARRANOS"),
@@ -239,9 +239,9 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "B.norte.1": (_p("FLINPUF"),),
     "B.norte.0": (_f("BURBALOO"), _f("FLINPUF")),
     # La estantería existente de no comestibles.
-    "N.sur.3": (_f("POETICO"),),
+    "N.sur.3": (_f("POETICO"), _f("DURONGA")),
     "N.sur.2": (_p("ACTRONCITO"), _p("DUREXTRA")),
-    "N.sur.1": (_p("POETICO"),),
+    "N.sur.1": (_p("POETICO"), _p("DURONGA")),
     "N.sur.0": (_f("ACTRONCITO"), _f("DUREXTRA")),
     # Las heladeras. Lo frío es menos que las bandejas: cada uno va una vez con casilleros, y las
     # bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el

@@ -313,8 +313,11 @@ def envase_de(p, unidad):
 
 
 def _puntos(unidad):
-    """Los vértices de la malla con la escala del objeto: el espacio en el que gira."""
-    escala = unidad.matrix_world.to_scale()
+    """La escala local conserva el arte: los marcos heredados medidos son rígidos.
+
+    Extraerla de la matriz global reconstruida realimenta el error de su descomposición.
+    """
+    escala = unidad.scale.copy()
     return [
         Vector((c.co.x * escala.x, c.co.y * escala.y, c.co.z * escala.z))
         for c in unidad.data.vertices
@@ -359,7 +362,7 @@ def matriz_de(p, unidad, estante, u, v):
     if inclinacion_de(estante) != 0.0:
         bajo = min((ubicacion + giro @ pt - estante.origen).dot(estante.normal) for pt in puntos)
         ubicacion = ubicacion - estante.normal * bajo
-    escala = unidad.matrix_world.to_scale()
+    escala = unidad.scale.copy()
     return Matrix.Translation(ubicacion) @ giro.to_4x4() @ Matrix.Diagonal(escala.to_4d())
 
 
@@ -382,6 +385,7 @@ def preparar_unidades():
 
 def poner(unidad, mueble, matriz, datos, copia):
     """La unidad misma, o una copia enlazada de ella en `guia`, en su lugar y con su rótulo."""
+    escala = unidad.scale.copy()
     if copia:
         objeto = unidad.copy()
         for coleccion in list(objeto.users_collection):
@@ -394,6 +398,9 @@ def poner(unidad, mueble, matriz, datos, copia):
     if copia:
         objeto.parent = mueble
     objeto.matrix_world = matriz
+    # Blender descompone la matriz; conservar la escala local evita degradarla en cada vuelta.
+    # Tanto los padres fuente como los de las copias tienen marcos rígidos en este modelo.
+    objeto.scale = escala
     for clave, valor in datos.items():
         objeto[clave] = valor
 
@@ -435,7 +442,10 @@ def medir_encaje(estante, bm, arbol, hojas, posiciones):
     def entra(delta):
         for unidad, matriz in posiciones:
             puntos = [matriz @ v.co + estante.v * delta for v in unidad.data.vertices]
-            if min((v - estante.origen).dot(estante.normal) for v in puntos) < -TOLERANCIA_DEL_PLANO:
+            if (
+                min((v - estante.origen).dot(estante.normal) for v in puntos)
+                < -TOLERANCIA_DEL_PLANO
+            ):
                 return False
             propio = BVHTree.FromPolygons(puntos, [list(p.vertices) for p in unidad.data.polygons])
             if any(i not in apoyo for i, _ in arbol.overlap(propio)):
@@ -476,7 +486,9 @@ def acomodar_mueble(letra, envases, resumen):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
             for lugar in tanda(envase, [izquierda + u for u in us], inclinacion, filas[indice]):
-                posiciones.append((unidad, matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v)))
+                posiciones.append(
+                    (unidad, matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v))
+                )
         desplazamiento = medir_encaje(estante, bm, arbol, hojas, posiciones)
         if desplazamiento is None:
             resumen["choques"].append(
