@@ -208,14 +208,9 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
-	var puesto: Node3D = almacen.get("_reposicion_manual")
-	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
-	var bloque := disposicion.principales[Producto.Id.SALADIK]
-	var frente := DisposicionDeLaGondola.frente(
-		bloque, disposicion.filas_de_adelante[Producto.Id.SALADIK]
-	)
-	var objetivo := (puesto.global_transform * DisposicionDeLaGondola.copia(bloque, 0)).origin
-	objetivo.y = (gondola.global_transform * gondola.get_aabb()).end.y - 0.03
+	var frente := Vector3.FORWARD
+	var objetivo := _metal_de_la_cabecera_reportada(gondola, frente)
+	assert_vector(objetivo).is_not_equal(Vector3.INF)
 	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
 	var visible := _impacto_visible(
@@ -223,7 +218,7 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	)
 	(
 		assert_bool(visible.is_empty())
-		. override_failure_message("Premisa: cabecera visible sobre Saladik")
+		. override_failure_message("Premisa: metal visible de la cabecera reportada")
 		. is_false()
 	)
 	if visible.is_empty():
@@ -405,6 +400,22 @@ func _impacto_visible(malla: MeshInstance3D, desde: Vector3, hasta: Vector3) -> 
 		distancia = desde.distance_to(punto)
 		salida = {"punto": punto, "triangulo": indice / 3, "distancia": distancia}
 	return salida
+
+
+## Saladik cambia de sector: el borde reportado pertenece al mueble, no a esa referencia.
+func _metal_de_la_cabecera_reportada(malla: MeshInstance3D, frente: Vector3) -> Vector3:
+	var centro := (malla.global_transform * malla.get_aabb()).get_center()
+	var area_mayor := 0.0
+	var objetivo := Vector3.INF
+	for cara in _superiores(malla):
+		var punto := (cara[0] + cara[1] + cara[2]) / 3.0
+		if (punto - centro).dot(frente) <= 0.0:
+			continue
+		var area := (cara[1] - cara[0]).cross(cara[2] - cara[0]).length_squared()
+		if area > area_mayor:
+			area_mayor = area
+			objetivo = punto
+	return objetivo
 
 
 func _superiores(malla: MeshInstance3D) -> Array[PackedVector3Array]:
