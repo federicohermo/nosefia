@@ -1,0 +1,166 @@
+WorkerThreadPool: 16 threads, 12 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://.godot/usuario_de_los_tests/Godot/editor_settings-4.7.tres remapped: res://.godot/usuario_de_los_tests/Godot/editor_settings-4.7.tres
+Completed load for: 'res://.godot/usuario_de_los_tests/Godot/editor_settings-4.7.tres' remapped 'res://.godot/usuario_de_los_tests/Godot/editor_settings-4.7.tres' at thread -1
+EditorSettings: Load OK!
+EditorTheme: Generating new theme for the config '3810048042'.
+EditorTheme: Generating new icons.
+EditorTheme: Generating new fonts.
+EditorTheme: Generating new styles.
+Loading resource: C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res remapped: C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res
+Loaded system CA certificates
+Completed load for: 'C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res' remapped 'C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res' at thread -1
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gd remapped: res://addons/godot_mcp/mcp_screenshot_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_input_service.gd remapped: res://addons/godot_mcp/mcp_input_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gd remapped: res://addons/godot_mcp/mcp_game_inspector_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gd' at thread -1
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+Loading resource: res://addons/gdUnit4/plugin.gd remapped: res://addons/gdUnit4/plugin.gd
+Completed load for: 'res://addons/gdUnit4/plugin.gd' remapped 'res://addons/gdUnit4/plugin.gd' at thread -1
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+Loading resource: res://addons/godot_mcp/plugin.gd remapped: res://addons/godot_mcp/plugin.gd
+Loading resource: res://addons/godot_mcp/ui/status_panel.tscn remapped: res://addons/godot_mcp/ui/status_panel.tscn
+Loading resource: res://addons/godot_mcp/ui/status_panel.gd remapped: res://addons/godot_mcp/ui/status_panel.gd
+Completed load for: 'res://addons/godot_mcp/ui/status_panel.gd' remapped 'res://addons/godot_mcp/ui/status_panel.gd' at thread -1
+Completed load for: 'res://addons/godot_mcp/ui/status_panel.tscn' remapped 'res://addons/godot_mcp/ui/status_panel.tscn' at thread -1
+Completed load for: 'res://addons/godot_mcp/plugin.gd' remapped 'res://addons/godot_mcp/plugin.gd' at thread -1
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[MCP] Connected on port 6505
+[MCP] Connected on port 6506
+[MCP] Connected on port 6507
+[MCP] Connected on port 6508
+[MCP] Connected on port 6509
+[MCP] Connected on port 6510
+[MCP] Connected on port 6511
+[MCP] Connected on port 6512
+[MCP] Connected on port 6513
+[MCP] Connected on port 6514
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+EditorFileSystem: Importing file: res://reports/report_8/css/logo.png
+EditorFileSystem: "res://reports/report_8/css/logo.png" import took 33 ms.
+[  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Loading resource: res://src/escenas/menu_de_inicio.tscn remapped: res://src/escenas/menu_de_inicio.tscn
+Loading resource: res://src/escenas/menu_de_inicio.gd remapped: res://src/escenas/menu_de_inicio.gd
+Loading resource: res://src/ui/interrupciones/pantalla_de_carga.tscn remapped: res://src/ui/interrupciones/pantalla_de_carga.tscn
+Loading resource: res://src/ui/interrupciones/pantalla_de_carga.gd remapped: res://src/ui/interrupciones/pantalla_de_carga.gd
+Completed load for: 'res://src/ui/interrupciones/pantalla_de_carga.gd' remapped 'res://src/ui/interrupciones/pantalla_de_carga.gd' at thread -1
+Loading resource: res://assets/ui/manada/tema.tres remapped: res://assets/ui/manada/tema.tres
+Loading resource: res://assets/ui/manada/unscii-16.ttf remapped: res://assets/ui/manada/unscii-16.ttf
+Loading resource: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata remapped: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata
+Completed load for: 'res://assets/ui/manada/unscii-16.ttf' remapped 'res://assets/ui/manada/unscii-16.ttf' at thread -1
+Loading resource: res://assets/ui/manada/barra_marco.png remapped: res://assets/ui/manada/barra_marco.png
+Loading resource: res://.godot/imported/barra_marco.png-f276a24fe8cae9289a6e66f6b4a87be2.ctex remapped: res://.godot/imported/barra_marco.png-f276a24fe8cae9289a6e66f6b4a87be2.ctex
+Completed load for: 'res://assets/ui/manada/barra_marco.png' remapped 'res://assets/ui/manada/barra_marco.png' at thread -1
+Loading resource: res://assets/ui/manada/barra_relleno.png remapped: res://assets/ui/manada/barra_relleno.png
+Loading resource: res://.godot/imported/barra_relleno.png-e20ed7c7a91eb13c2caed5270c7a7a4e.ctex remapped: res://.godot/imported/barra_relleno.png-e20ed7c7a91eb13c2caed5270c7a7a4e.ctex
+Completed load for: 'res://assets/ui/manada/barra_relleno.png' remapped 'res://assets/ui/manada/barra_relleno.png' at thread -1
+Loading resource: res://assets/ui/manada/barra_control.png remapped: res://assets/ui/manada/barra_control.png
+Loading resource: res://.godot/imported/barra_control.png-cbe1fbfb42b7621ce4b1269efdfec888.ctex remapped: res://.godot/imported/barra_control.png-cbe1fbfb42b7621ce4b1269efdfec888.ctex
+Completed load for: 'res://assets/ui/manada/barra_control.png' remapped 'res://assets/ui/manada/barra_control.png' at thread -1
+Completed load for: 'res://assets/ui/manada/tema.tres' remapped 'res://assets/ui/manada/tema.tres' at thread -1
+Loading resource: res://assets/ui/manada/cabecera.svg remapped: res://assets/ui/manada/cabecera.svg
+Loading resource: res://.godot/imported/cabecera.svg-28bd8b6dabcd9aaefdfb782c69a95659.ctex remapped: res://.godot/imported/cabecera.svg-28bd8b6dabcd9aaefdfb782c69a95659.ctex
+Completed load for: 'res://assets/ui/manada/cabecera.svg' remapped 'res://assets/ui/manada/cabecera.svg' at thread -1
+Loading resource: res://assets/ui/manada/puntos_de_carga.svg remapped: res://assets/ui/manada/puntos_de_carga.svg
+Loading resource: res://.godot/imported/puntos_de_carga.svg-800474211bb95a59af15cade369729bc.ctex remapped: res://.godot/imported/puntos_de_carga.svg-800474211bb95a59af15cade369729bc.ctex
+Completed load for: 'res://assets/ui/manada/puntos_de_carga.svg' remapped 'res://assets/ui/manada/puntos_de_carga.svg' at thread -1
+Completed load for: 'res://src/ui/interrupciones/pantalla_de_carga.tscn' remapped 'res://src/ui/interrupciones/pantalla_de_carga.tscn' at thread -1
+Loading resource: res://src/sistemas/marco/contorno.gdshader remapped: res://src/sistemas/marco/contorno.gdshader
+Completed load for: 'res://src/sistemas/marco/contorno.gdshader' remapped 'res://src/sistemas/marco/contorno.gdshader' at thread -1
+Completed load for: 'res://src/escenas/menu_de_inicio.gd' remapped 'res://src/escenas/menu_de_inicio.gd' at thread -1
+Loading resource: res://assets/ui/manada/fondo_inicio.png remapped: res://assets/ui/manada/fondo_inicio.png
+Loading resource: res://.godot/imported/fondo_inicio.png-caeeae01aa7c0933705058ccdaf27bc9.ctex remapped: res://.godot/imported/fondo_inicio.png-caeeae01aa7c0933705058ccdaf27bc9.ctex
+Completed load for: 'res://assets/ui/manada/fondo_inicio.png' remapped 'res://assets/ui/manada/fondo_inicio.png' at thread -1
+Loading resource: res://src/ui/interrupciones/cabecera_con_solapa.gd remapped: res://src/ui/interrupciones/cabecera_con_solapa.gd
+Completed load for: 'res://src/ui/interrupciones/cabecera_con_solapa.gd' remapped 'res://src/ui/interrupciones/cabecera_con_solapa.gd' at thread -1
+Loading resource: res://assets/ui/manada/titulo_inicio.png remapped: res://assets/ui/manada/titulo_inicio.png
+Loading resource: res://.godot/imported/titulo_inicio.png-10a2a622cc4002b5c10d3576f698fc1a.ctex remapped: res://.godot/imported/titulo_inicio.png-10a2a622cc4002b5c10d3576f698fc1a.ctex
+Completed load for: 'res://assets/ui/manada/titulo_inicio.png' remapped 'res://assets/ui/manada/titulo_inicio.png' at thread -1
+Loading resource: res://src/ui/interrupciones/pantalla_de_configuraciones.tscn remapped: res://src/ui/interrupciones/pantalla_de_configuraciones.tscn
+Completed load for: 'res://src/ui/interrupciones/pantalla_de_configuraciones.tscn' remapped 'res://src/ui/interrupciones/pantalla_de_configuraciones.tscn' at thread -1
+Completed load for: 'res://src/escenas/menu_de_inicio.tscn' remapped 'res://src/escenas/menu_de_inicio.tscn' at thread -1
+Unloading addon: res://addons/gdUnit4/plugin.cfg
+Unloading addon: res://addons/godot_mcp/plugin.cfg
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+Script docs haven't been properly loaded or regenerated, so don't save them to disk.
+EditorSettings: Save OK!
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Orphan StringName: Vector2 (static: 0, total: 1)
+Orphan StringName: Vector3 (static: 0, total: 1)
+Orphan StringName: Vector4 (static: 0, total: 1)
+Orphan StringName: PackedVector4Array (static: 0, total: 1)
+Orphan StringName: RID (static: 0, total: 1)
+Orphan StringName: Color (static: 3, total: 4)
+Orphan StringName: PackedByteArray (static: 0, total: 1)
+Orphan StringName: Vector2i (static: 0, total: 1)
+Orphan StringName: Callable (static: 0, total: 1)
+Orphan StringName: Vector3i (static: 0, total: 1)
+Orphan StringName: Vector4i (static: 0, total: 1)
+Orphan StringName: PackedStringArray (static: 0, total: 1)
+Orphan StringName: Basis (static: 0, total: 1)
+Orphan StringName: int (static: 1, total: 2)
+Orphan StringName: PackedFloat32Array (static: 0, total: 1)
+Orphan StringName: Plane (static: 0, total: 1)
+Orphan StringName: PackedFloat64Array (static: 0, total: 1)
+Orphan StringName: NodePath (static: 1, total: 2)
+Orphan StringName: Signal (static: 0, total: 1)
+Orphan StringName: StringName (static: 0, total: 1)
+Orphan StringName: String (static: 0, total: 1)
+Orphan StringName: Transform2D (static: 0, total: 1)
+Orphan StringName: Transform3D (static: 0, total: 1)
+Orphan StringName: Array (static: 0, total: 1)
+Orphan StringName: Quaternion (static: 0, total: 1)
+Orphan StringName: bool (static: 1, total: 2)
+Orphan StringName: PackedColorArray (static: 0, total: 1)
+Orphan StringName: Node (static: 8, total: 9)
+Orphan StringName: PackedVector2Array (static: 0, total: 1)
+Orphan StringName: Object (static: 5, total: 6)
+Orphan StringName: AABB (static: 0, total: 1)
+Orphan StringName: float (static: 1, total: 2)
+Orphan StringName: Dictionary (static: 0, total: 1)
+Orphan StringName: Projection (static: 0, total: 1)
+Orphan StringName: Rect2 (static: 0, total: 1)
+Orphan StringName: PackedVector3Array (static: 0, total: 1)
+Orphan StringName: PackedInt32Array (static: 0, total: 1)
+Orphan StringName: Rect2i (static: 0, total: 1)
+Orphan StringName: PackedInt64Array (static: 0, total: 1)
+StringName: 39 unclaimed string names at exit.

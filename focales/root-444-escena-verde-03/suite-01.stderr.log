@@ -1,0 +1,17 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+SCRIPT ERROR: Trying to assign an array of type "Array" to a variable of type "Array[String]".
+   at: test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2 (res://test/escenas/atencion_de_la_segunda_jornada_test.gd:838)
+   GDScript backtrace (most recent call first):
+       [0] test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2 (res://test/escenas/atencion_de_la_segunda_jornada_test.gd:838)
+       [1] _pulsar_real (res://test/escenas/atencion_de_la_segunda_jornada_test.gd:109)
+WARNING: 159 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 117 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)

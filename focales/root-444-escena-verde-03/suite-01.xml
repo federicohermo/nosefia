@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-16" name="report_7" tests="14" failures="3" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="atencion_de_la_segunda_jornada_test" package="test/escenas" timestamp="2026-10-16T19:50:43" hostname="localhost" tests="14" failures="3" errors="1" skipped="0" flaky="0" time="31.589">
+		<testcase name="test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2" classname="atencion_de_la_segunda_jornada_test" time="10.075">
+		</testcase>
+		<testcase name="test_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido" classname="atencion_de_la_segunda_jornada_test" time="2.525">
+		</testcase>
+		<testcase name="test_el_primer_clic_y_las_iniciales_productivas_no_entregan" classname="atencion_de_la_segunda_jornada_test" time="1.756">
+		</testcase>
+		<testcase name="test_los_tickets_y_despedidas_productivos_completan_una_venta" classname="atencion_de_la_segunda_jornada_test" time="3.756">
+		</testcase>
+		<testcase name="test_fede_parcial_vence_a_las_2330_sin_despedida_y_devuelve_la_unidad" classname="atencion_de_la_segunda_jornada_test" time="1.366">
+		</testcase>
+		<testcase name="test_mia_incompleta_vence_antes_del_cierre_aun_con_dialogo_abierto" classname="atencion_de_la_segunda_jornada_test" time="0.873">
+		</testcase>
+		<testcase name="test_la_venta_de_las_075959_cuenta_aunque_siga_la_despedida" classname="atencion_de_la_segunda_jornada_test" time="1.373">
+		</testcase>
+		<testcase name="test_dos_atenciones_del_mismo_recurso_tienen_cursores_independientes" classname="atencion_de_la_segunda_jornada_test" time="1.560">
+		</testcase>
+		<testcase name="test_reabrir_la_jornada_limpia_introduccion_y_venta_sin_imagenes_heredadas" classname="atencion_de_la_segunda_jornada_test" time="2.232">
+		</testcase>
+		<testcase name="test_duronga_del_deposito_se_vende_sin_consumir_reserva_ni_reponer" classname="atencion_de_la_segunda_jornada_test" time="1.286">
+		</testcase>
+		<testcase name="test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez" classname="atencion_de_la_segunda_jornada_test" time="0.916">
+			<failure message="FAILED: res://test/escenas/atencion_de_la_segunda_jornada_test.gd:659" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RigidBody3D>
+ to refer to the same object
+ <AnimatableBody3D>
+	at '_mirar_balde' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:659
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/atencion_de_la_segunda_jornada_test.gd:676" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 1
+	at 'test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:676
+	at '_pulsar_real' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/atencion_de_la_segunda_jornada_test.gd:677" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:677
+	at '_pulsar_real' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:109
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_el_bidon_azul_no_satisface_poetico_ni_cambia_cantidades" classname="atencion_de_la_segunda_jornada_test" time="1.190">
+		</testcase>
+		<testcase name="test_las_figuras_propias_ocultan_el_corte_inferior_y_conservan_orientacion" classname="atencion_de_la_segunda_jornada_test" time="1.929">
+		</testcase>
+		<testcase name="test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2" classname="atencion_de_la_segunda_jornada_test" time="0.698">
+			<error message="ERROR: res://test/escenas/atencion_de_la_segunda_jornada_test.gd:838" type="ABORT">
+<![CDATA[
+Godot Runtime Error !
+  'Trying to assign an array of type "Array" to a variable of type "Array[String]".'
+	at 'test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:838
+	at '_pulsar_real' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:109
+]]>
+			</error>
+		</testcase>
+	</testsuite>
+</testsuites>

@@ -1,0 +1,17 @@
+{
+  "nodo": "harness",
+  "codigo": 0,
+  "segundos": 190.1141445999965,
+  "salteado": false,
+  "aviso": null,
+  "comando": [
+    "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\filefish\\.claude\\scripts\\tests",
+    "-t",
+    "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\filefish\\.claude\\scripts"
+  ]
+}

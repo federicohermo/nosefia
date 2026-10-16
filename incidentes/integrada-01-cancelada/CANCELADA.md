@@ -1,0 +1,1 @@
+Corrida propia interrumpida antes de editar fuente: la sonda PCK detectó selección de primer Node3D visible en lugar del Ticket físico. No es convergencia aceptada. Se preservan todos los crudos parciales. PID de turno comprobado 33780; sólo su árbol. 2026-10-16T20:09Z.

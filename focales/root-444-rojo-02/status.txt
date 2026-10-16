@@ -1,0 +1,2 @@
+?? assets/dialogos/compradores_jornada_2.tres
+?? test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd

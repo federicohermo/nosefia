@@ -1,0 +1,7 @@
+ M src/dominio/almacen/compradores.gd
+ M test/dominio/almacen/agenda_de_compradores_test.gd
+ M test/escenas/atencion_de_la_primera_jornada_test.gd
+ M test/escenas/reposicion_manual_test.gd
+?? assets/dialogos/compradores_jornada_2.tres
+?? test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd
+?? test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd.uid

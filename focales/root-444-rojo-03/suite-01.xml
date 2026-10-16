@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-16" name="report_3" tests="4" failures="13" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="dialogos_de_compradores_jornada_2_test" package="test/dominio/almacen" timestamp="2026-10-16T19:18:42" hostname="localhost" tests="4" failures="13" errors="0" skipped="0" flaky="0" time="0.057">
+		<testcase name="test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques" classname="dialogos_de_compradores_jornada_2_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:55" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio., Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?, Quiero una botella de jabón Poético, una lata de papitas Progres y unos preservativos Duronga.]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.	1	<N/A>	Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?	2	<N/A>	Quiero una botella de jabón Poético, una lata de papitas Progres y unos preservativos Duronga.	
+	at 'test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:55
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:60" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips., Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.	1	<N/A>	Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.	
+	at 'test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:60
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:64" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[Hola… ¿me darías un vino Terminator, un Fernet God y una cajita de Actroncito?]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	Hola… ¿me darías un vino Terminator, un Fernet God y una cajita de Actroncito?	
+	at 'test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:64
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:69" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[Zzzzzz.zzzzz.zzzzz, Perdon, me quedé dormida... ¿En dónde estaba?, Ah sí, gracias… Espero que esto me ayude a dormir mejor…]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	Zzzzzz.zzzzz.zzzzz	1	<N/A>	Perdon, me quedé dormida... ¿En dónde estaba?	2	<N/A>	Ah sí, gracias… Espero que esto me ayude a dormir mejor…	
+	at 'test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:69
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_los_seis_productos_se_destacan_solo_en_amarillo" classname="dialogos_de_compradores_jornada_2_test" time="0.007">
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:83" type="FAILURE">
+<![CDATA[
+Expecting:
+ must not be empty
+	at 'test_los_seis_productos_se_destacan_solo_en_amarillo' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:83
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:83" type="FAILURE">
+<![CDATA[
+Expecting:
+ must not be empty
+	at 'test_los_seis_productos_se_destacan_solo_en_amarillo' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:83
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido" classname="dialogos_de_compradores_jornada_2_test" time="0.013">
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:112" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.'
+ but was
+ 'Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.'
+	at 'test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:112
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:113" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?'
+ but was
+ 'Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?'
+	at 'test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:113
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:114" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.'
+ but was
+ 'Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.'
+	at 'test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:114
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion" classname="dialogos_de_compradores_jornada_2_test" time="0.006">
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:123" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'Fede'
+ but was
+ 'FedeMarta'
+	at 'test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:123
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:124" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'Mía'
+ but was
+ 'MíaRubén'
+	at 'test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:124
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:127" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ '<null>'
+	at 'test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:127
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:127" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ '<null>'
+	at 'test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:127
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

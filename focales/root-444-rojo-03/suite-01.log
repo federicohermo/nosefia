@@ -1,0 +1,103 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to C:/Users/fede_/orca/workspaces/nosefia/filefish/reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mHola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mSalí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mQuiero una botella de jabón Poético, una lata de papitas Progres y unos preservativos Duronga.[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?[/right]	[/cell][cell][right]2[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Quiero una botella de jabón Poético, una lata de papitas Progres y unos preservativos Duronga.[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:55[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mGracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:60[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mHola… ¿me darías un vino Terminator, un Fernet God y una cajita de Actroncito?[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Hola… ¿me darías un vino Terminator, un Fernet God y una cajita de Actroncito?[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:64[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mZzzzzz.zzzzz.zzzzz[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mPerdon, me quedé dormida... ¿En dónde estaba?[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mAh sí, gracias… Espero que esto me ayude a dormir mejor…[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Zzzzzz.zzzzz.zzzzz[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Perdon, me quedé dormida... ¿En dónde estaba?[/right]	[/cell][cell][right]2[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]Ah sí, gracias… Espero que esto me ayude a dormir mejor…[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:69[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_seis_productos_se_destacan_solo_en_amarillo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_seis_productos_se_destacan_solo_en_amarillo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must not be empty[0m[38;2;173;216;230m	at 'test_los_seis_productos_se_destacan_solo_en_amarillo' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:83[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must not be empty[0m[38;2;173;216;230m	at 'test_los_seis_productos_se_destacan_solo_en_amarillo' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:83[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_atencion_tiene_cursor_independiente_del_recurso_compartido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_atencion_tiene_cursor_independiente_del_recurso_compartido[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 13ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mHola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mHola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:112[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mSalí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mSalí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:113[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mHola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mHola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:114[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mFede[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mFede[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mMarta[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:123[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mMía[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mMía[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mRubén[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:124[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:127[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion' in res://test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd:127[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 13 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 57ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 4 test cases | 0 errors | 13 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (4/4)[0m
+[38;2;233;150;122mTotal execution time: 57ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://C:/Users/fede_/orca/workspaces/nosefia/filefish/reports/report_3/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://C:/Users/fede_/orca/workspaces/nosefia/filefish/reports/report_3/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)

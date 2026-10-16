@@ -1,0 +1,11 @@
+{
+  "nodo": "tdd",
+  "codigo": 0,
+  "segundos": 0.3993660002015531,
+  "salteado": false,
+  "aviso": null,
+  "comando": [
+    "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\filefish\\.claude\\scripts\\gate_de_tests.py"
+  ]
+}

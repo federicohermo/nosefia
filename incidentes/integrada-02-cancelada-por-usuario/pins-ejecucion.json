@@ -1,0 +1,9 @@
+{
+  "antes_de_ejecucion": {
+    "head": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+    "estado_porcelain": "",
+    "utc": "2026-10-16T20:10:29.109897+00:00"
+  },
+  "esperado": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+  "limite": "Este pin se toma al adquirir turno; el pin separado pre-enqueue identifica el inicio de congelaci\u00f3n."
+}

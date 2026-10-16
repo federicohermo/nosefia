@@ -1,0 +1,564 @@
+{
+  "issue": 444,
+  "base": "e6cc0ac4bff25335c0b6a605d85b70cb9014cab0",
+  "head": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+  "owned_count": 13,
+  "criteria": {
+    "AC-CTR-057": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd",
+          "method": "test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion",
+          "line": 120,
+          "ids": [
+            "AC-CTR-001",
+            "AC-CTR-041",
+            "AC-CTR-057"
+          ],
+          "body_sha256": "17d3ffd1ae880e4de530ddb4edac6cf8087fbb627f6173ae6aafe79e4f801177",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2",
+          "line": 283,
+          "ids": [
+            "AC-CTR-057"
+          ],
+          "body_sha256": "9b559e69446a34438b1da5c08ba7c5c08f7be70dd8187cfecffd63aa9c94c484",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-058": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd",
+          "method": "test_los_nueve_guiones_productivos_conservan_sus_cuatro_bloques",
+          "line": 50,
+          "ids": [
+            "AC-CTR-058"
+          ],
+          "body_sha256": "c1d89912bcf016de048db6297773bb5bc76fee0d9271fc3117a37ca45ea7e1f8",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-059": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd",
+          "method": "test_los_seis_productos_se_destacan_solo_en_amarillo",
+          "line": 75,
+          "ids": [
+            "AC-CTR-036",
+            "AC-CTR-059"
+          ],
+          "body_sha256": "4d1dc248656181a768181c0408c338719ee1537267f1550c449078e721f5d4ef",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-060": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_el_primer_clic_y_las_iniciales_productivas_no_entregan",
+          "line": 351,
+          "ids": [
+            "AC-CTR-060"
+          ],
+          "body_sha256": "78cd188bc027e652619ff1bb0166317c1b339d13bcf1d0542e2b15a20b37c0a8",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2",
+          "line": 827,
+          "ids": [
+            "AC-CTR-060",
+            "AC-CTR-061",
+            "AC-CTR-064"
+          ],
+          "body_sha256": "ab6cbf42f5ee7f27f6067e699453a5f434872379e4ec4da8c00ddbebc3d372ac",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-061": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_los_tickets_y_despedidas_productivos_completan_una_venta",
+          "line": 402,
+          "ids": [
+            "AC-CTR-041",
+            "AC-CTR-061"
+          ],
+          "body_sha256": "485f92ed69d6318290b21fab67e4633e8cb319c04461551bc95de510958aebf6",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2",
+          "line": 827,
+          "ids": [
+            "AC-CTR-060",
+            "AC-CTR-061",
+            "AC-CTR-064"
+          ],
+          "body_sha256": "ab6cbf42f5ee7f27f6067e699453a5f434872379e4ec4da8c00ddbebc3d372ac",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-062": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_fede_parcial_vence_a_las_2330_sin_despedida_y_devuelve_la_unidad",
+          "line": 428,
+          "ids": [
+            "AC-CTR-062"
+          ],
+          "body_sha256": "cd408f8da0b0ca811a3be1303c948021c5ac0283390815cfab6da0ba3c61a67e",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_mia_incompleta_vence_antes_del_cierre_aun_con_dialogo_abierto",
+          "line": 461,
+          "ids": [
+            "AC-CTR-062"
+          ],
+          "body_sha256": "5f6e1c125392f5f5e0412cce9ceced82f108915e3d948969976386b21f03f28f",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_la_venta_de_las_075959_cuenta_aunque_siga_la_despedida",
+          "line": 496,
+          "ids": [
+            "AC-CTR-041",
+            "AC-CTR-062"
+          ],
+          "body_sha256": "972d30fd80679821d53a9220cb1f23de24378f68e9418c68fd0dc83fae005417",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_el_bidon_azul_no_satisface_poetico_ni_cambia_cantidades",
+          "line": 706,
+          "ids": [
+            "AC-CTR-062",
+            "AC-STK-091"
+          ],
+          "body_sha256": "1039fd72d688908f39db02ea412c338d590e10a7d2208d76c9640c6017b6c168",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-063": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd",
+          "method": "test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido",
+          "line": 104,
+          "ids": [
+            "AC-CTR-063"
+          ],
+          "body_sha256": "0f6b8ddf3994015eb72660416de040192efe57d16824154a9e4ff439b8bce5e6",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido",
+          "line": 321,
+          "ids": [
+            "AC-CTR-001",
+            "AC-CTR-041",
+            "AC-CTR-063"
+          ],
+          "body_sha256": "ba57f4ca49b9136f325402f23240add91337e9dff882237787b3feb9a63db2ae",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_dos_atenciones_del_mismo_recurso_tienen_cursores_independientes",
+          "line": 526,
+          "ids": [
+            "AC-CTR-063"
+          ],
+          "body_sha256": "9751e833c10fc0484c90ee8435afa4f8bc8954a93c8c7d0415e51c6cb59804fa",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_reabrir_la_jornada_limpia_introduccion_y_venta_sin_imagenes_heredadas",
+          "line": 548,
+          "ids": [
+            "AC-CTR-041",
+            "AC-CTR-063"
+          ],
+          "body_sha256": "572b510eb86e449c0e362ea69d370028e17479c2cbca8eac73c1f28bf20c5f57",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_las_figuras_propias_ocultan_el_corte_inferior_y_conservan_orientacion",
+          "line": 785,
+          "ids": [
+            "AC-CTR-063"
+          ],
+          "body_sha256": "70e0ba74d20c142ba611a018d1ca8262df42fd3a7b4260aeff68e05cf90bd51f",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-064": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2",
+          "line": 827,
+          "ids": [
+            "AC-CTR-060",
+            "AC-CTR-061",
+            "AC-CTR-064"
+          ],
+          "body_sha256": "ab6cbf42f5ee7f27f6067e699453a5f434872379e4ec4da8c00ddbebc3d372ac",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-STK-090": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_duronga_del_deposito_se_vende_sin_consumir_reserva_ni_reponer",
+          "line": 589,
+          "ids": [
+            "AC-STK-090"
+          ],
+          "body_sha256": "f0fb5ef1166f5de0152f3c56715c41411ff4e1a188f463850ec72650850a710c",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-STK-091": {
+      "kind": "nuevos",
+      "citations": [
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez",
+          "line": 668,
+          "ids": [
+            "AC-STK-091"
+          ],
+          "body_sha256": "a263e8675f55493bc0f80e0605732a5029f56bde775fdbd38923d74afe0e8107",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_el_bidon_azul_no_satisface_poetico_ni_cambia_cantidades",
+          "line": 706,
+          "ids": [
+            "AC-CTR-062",
+            "AC-STK-091"
+          ],
+          "body_sha256": "1039fd72d688908f39db02ea412c338d590e10a7d2208d76c9640c6017b6c168",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-001": {
+      "kind": "modificados",
+      "citations": [
+        {
+          "file": "test/dominio/almacen/compradores_test.gd",
+          "method": "test_la_jornada_trae_los_compradores_que_pide_el_balance",
+          "line": 12,
+          "ids": [
+            "AC-CTR-001"
+          ],
+          "body_sha256": "9b397f681b89e03f0289327a4e35dd5da11bdc542e3a5a94d2fd6dbff28c9fe3",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/dominio/almacen/compradores_test.gd",
+          "method": "test_el_padron_no_se_sortea",
+          "line": 18,
+          "ids": [
+            "AC-CTR-001"
+          ],
+          "body_sha256": "e6f64bddce2f06e2674ae97aa8350211efbcf47487a3c324a1cb1c6cf7b6364d",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/dominio/almacen/compradores_test.gd",
+          "method": "test_cada_jornada_recibe_compradores_propios",
+          "line": 43,
+          "ids": [
+            "AC-CTR-001"
+          ],
+          "body_sha256": "508d040e9fe396da24984daeece5150800128d22154092da7e143e6d1a1c53d3",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd",
+          "method": "test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion",
+          "line": 120,
+          "ids": [
+            "AC-CTR-001",
+            "AC-CTR-041",
+            "AC-CTR-057"
+          ],
+          "body_sha256": "17d3ffd1ae880e4de530ddb4edac6cf8087fbb627f6173ae6aafe79e4f801177",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/dominio/almacen/reglas_de_la_ventanilla_test.gd",
+          "method": "test_por_la_ventanilla_no_pasan_mas_de_dos_compradores_por_jornada",
+          "line": 21,
+          "ids": [
+            "AC-CTR-001"
+          ],
+          "body_sha256": "dcdbeee4aa9b6ea34d63526a40a1ffec3ae92e9cfba703bbd5187e7dac0e21c2",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido",
+          "line": 321,
+          "ids": [
+            "AC-CTR-001",
+            "AC-CTR-041",
+            "AC-CTR-063"
+          ],
+          "body_sha256": "ba57f4ca49b9136f325402f23240add91337e9dff882237787b3feb9a63db2ae",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-036": {
+      "kind": "modificados",
+      "citations": [
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd",
+          "method": "test_los_seis_productos_se_destacan_solo_en_amarillo",
+          "line": 75,
+          "ids": [
+            "AC-CTR-036",
+            "AC-CTR-059"
+          ],
+          "body_sha256": "4d1dc248656181a768181c0408c338719ee1537267f1550c449078e721f5d4ef",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_test.gd",
+          "method": "test_el_pedido_y_los_nombres_destacados_salen_de_la_ficha",
+          "line": 6,
+          "ids": [
+            "AC-CTR-036"
+          ],
+          "body_sha256": "80f5fc1fe26e11139d5a5bb7cbfef6895e80538cd8b543a0a15873af897035f3",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_test.gd",
+          "method": "test_tin_y_ambas_despedidas_conservan_cada_entrada",
+          "line": 72,
+          "ids": [
+            "AC-CTR-036"
+          ],
+          "body_sha256": "f3a14d4ec00379367859e4d53b0b4dcbdc84be88639f56e4ea2555cfe1992413",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/dominio/almacen/recepcion_de_compra_test.gd",
+          "method": "test_atencion_habla_antes_de_recibir_y_solo_vende_el_pedido_completo",
+          "line": 5,
+          "ids": [
+            "AC-CTR-036",
+            "AC-CTR-039"
+          ],
+          "body_sha256": "1844bd85f1d2ed558a46833aa69ab623eb33ff6c0b5dc758a117da0d197bc642",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/dominio/almacen/recepcion_de_compra_test.gd",
+          "method": "test_un_clic_termina_el_recordatorio_y_otro_entrega",
+          "line": 81,
+          "ids": [
+            "AC-CTR-036"
+          ],
+          "body_sha256": "d756bfabab4e3e329ff92ec84881a8ea7566339a41d6b70041f809fe7b3627ae",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/dominio/almacen/recepcion_de_compra_test.gd",
+          "method": "test_antes_de_hablar_no_recibe_ni_rechaza",
+          "line": 128,
+          "ids": [
+            "AC-CTR-036"
+          ],
+          "body_sha256": "683eca960d6b4487a2eaaaded48e7b5b3ab48c9cab8766fa53fc88070bef19e3",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/ui/diegetica/compradores_de_la_primera_jornada_test.gd",
+          "method": "test_muestra_ambos_compradores_dialogo_y_clic_izquierdo_sin_botones",
+          "line": 44,
+          "ids": [
+            "AC-CTR-036",
+            "AC-PLY-079"
+          ],
+          "body_sha256": "7d665c4e69a9d1f1b3916dcd711c8925ee34ffb5b977f8ad31dcf0ba32eeb53a",
+          "method_changed_since_base": true
+        }
+      ],
+      "has_changed_cited_method": true
+    },
+    "AC-CTR-041": {
+      "kind": "modificados",
+      "citations": [
+        {
+          "file": "test/dominio/almacen/agenda_de_compradores_test.gd",
+          "method": "test_otras_jornadas_conservan_el_padron",
+          "line": 51,
+          "ids": [
+            "AC-CTR-041"
+          ],
+          "body_sha256": "f8c5c20bedc62be5e6ae9d162e8ab53b2e3fa97e3aaa81465273bae4bcc48278",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/dominio/almacen/dialogos_de_compradores_jornada_2_test.gd",
+          "method": "test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion",
+          "line": 120,
+          "ids": [
+            "AC-CTR-001",
+            "AC-CTR-041",
+            "AC-CTR-057"
+          ],
+          "body_sha256": "17d3ffd1ae880e4de530ddb4edac6cf8087fbb627f6173ae6aafe79e4f801177",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/dominio/almacen/tarea_de_atender_test.gd",
+          "method": "test_ambas_compras_y_no_los_despachos_cumplen_la_primera_noche",
+          "line": 28,
+          "ids": [
+            "AC-CTR-041"
+          ],
+          "body_sha256": "a05b2bd245c00b7eff7fea83735afabcca183023dbe6202e20521e016511d2d4",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/escenas/atencion_de_la_primera_jornada_test.gd",
+          "method": "test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse",
+          "line": 77,
+          "ids": [
+            "AC-CTR-039",
+            "AC-CTR-041",
+            "AC-STK-054",
+            "AC-STK-056"
+          ],
+          "body_sha256": "7267ccfa37a707d28ba60e9f25b0602b7412bcaa816590ca0923a690f1217d09",
+          "method_changed_since_base": false
+        },
+        {
+          "file": "test/escenas/atencion_de_la_primera_jornada_test.gd",
+          "method": "test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj",
+          "line": 260,
+          "ids": [
+            "AC-CTR-041"
+          ],
+          "body_sha256": "4969a2955be06b0c609bf3187bd1ff7b6bc141b60b65d29c67081eedce4cb469",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido",
+          "line": 321,
+          "ids": [
+            "AC-CTR-001",
+            "AC-CTR-041",
+            "AC-CTR-063"
+          ],
+          "body_sha256": "ba57f4ca49b9136f325402f23240add91337e9dff882237787b3feb9a63db2ae",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_los_tickets_y_despedidas_productivos_completan_una_venta",
+          "line": 402,
+          "ids": [
+            "AC-CTR-041",
+            "AC-CTR-061"
+          ],
+          "body_sha256": "485f92ed69d6318290b21fab67e4633e8cb319c04461551bc95de510958aebf6",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_la_venta_de_las_075959_cuenta_aunque_siga_la_despedida",
+          "line": 496,
+          "ids": [
+            "AC-CTR-041",
+            "AC-CTR-062"
+          ],
+          "body_sha256": "972d30fd80679821d53a9220cb1f23de24378f68e9418c68fd0dc83fae005417",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/escenas/atencion_de_la_segunda_jornada_test.gd",
+          "method": "test_reabrir_la_jornada_limpia_introduccion_y_venta_sin_imagenes_heredadas",
+          "line": 548,
+          "ids": [
+            "AC-CTR-041",
+            "AC-CTR-063"
+          ],
+          "body_sha256": "572b510eb86e449c0e362ea69d370028e17479c2cbca8eac73c1f28bf20c5f57",
+          "method_changed_since_base": true
+        },
+        {
+          "file": "test/sistemas/tareas/ventanilla_test.gd",
+          "method": "test_publica_compra_solo_al_recibir_el_ultimo_elemento",
+          "line": 77,
+          "ids": [
+            "AC-CTR-039",
+            "AC-CTR-041"
+          ],
+          "body_sha256": "a5a1e92bdf242c396c173c472644ee6f556abd19f7ee0af13cff38ae2f1c43b1",
+          "method_changed_since_base": false
+        }
+      ],
+      "has_changed_cited_method": true
+    }
+  },
+  "missing": [],
+  "inherited_methods_only": [],
+  "brief_sha256": "52f0a100a2cf82c9edb9a6ba50c7145cd83a8090c2f11c4d3f387de3e174a140",
+  "limitation": "Auditoría estática de citas y cuerpos. Un cambio de cuerpo puede ser sólo formato y no prueba conducta ni ejecución. La revisión funcional, TDD, crudos y XML siguen siendo obligatorios. Los criterios propios de431/437 tampoco quedan acreditados por tener cero AC nuevos."
+}

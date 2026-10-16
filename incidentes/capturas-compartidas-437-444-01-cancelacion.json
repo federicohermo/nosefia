@@ -1,0 +1,13 @@
+﻿{
+    "utc":  "2026-10-16T20:17:21.5852088Z",
+    "etiqueta":  "carril-C-437-444-capturas-compartidas-01",
+    "pid":  50836,
+    "comando":  "\"C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" .claude/skills/implement-batch/scripts/turno.py C:/Users/fede_/AppData/Local/Temp/nosefia-batch-367-385/cola carril-C-437-444-capturas-compartidas-01 D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-01-turno.log -- python D:/nosefia-carril-C-429-444/444-wrapper-01/ejecutar-capturas-437-444.py --web D:/nosefia-carril-B-429-444/export-final-437-444-02/web --pck D:/nosefia-carril-B-429-444/export-final-437-444-02/web/index.pck --sha256 9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5 --head 4fa20754cd58c7f4a62699183a4a625df3e0d90a --godot \"D:/Program Files/Godot/Godot_v4.7.2-stable_win64.exe\" --output D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-01",
+    "boleto":  "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-367-385\\cola\\01792181626331139500-50836.json",
+    "hijos":  0,
+    "log_ejecucion_existe":  false,
+    "salida_wrapper_existe":  false,
+    "motivo":  "Raíz detectó captura de presencia desactivada en driver04; preparar driver05 antes de medir.",
+    "fuente_y_pck_modificados":  false,
+    "turno_raiz_tocado":  false
+}

@@ -1,0 +1,88 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to C:/Users/fede_/orca/workspaces/nosefia/filefish/reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10s 75ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 525ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_primer_clic_y_las_iniciales_productivas_no_entregan[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_primer_clic_y_las_iniciales_productivas_no_entregan[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 756ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tickets_y_despedidas_productivos_completan_una_venta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tickets_y_despedidas_productivos_completan_una_venta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 756ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_fede_parcial_vence_a_las_2330_sin_despedida_y_devuelve_la_unidad[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_fede_parcial_vence_a_las_2330_sin_despedida_y_devuelve_la_unidad[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 366ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mia_incompleta_vence_antes_del_cierre_aun_con_dialogo_abierto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mia_incompleta_vence_antes_del_cierre_aun_con_dialogo_abierto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 873ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_venta_de_las_075959_cuenta_aunque_siga_la_despedida[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_venta_de_las_075959_cuenta_aunque_siga_la_despedida[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 373ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_atenciones_del_mismo_recurso_tienen_cursores_independientes[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_atenciones_del_mismo_recurso_tienen_cursores_independientes[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 560ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reabrir_la_jornada_limpia_introduccion_y_venta_sin_imagenes_heredadas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reabrir_la_jornada_limpia_introduccion_y_venta_sin_imagenes_heredadas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 232ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_duronga_del_deposito_se_vende_sin_consumir_reserva_ni_reponer[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_duronga_del_deposito_se_vende_sin_consumir_reserva_ni_reponer[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 286ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 916ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<AnimatableBody3D>[0m[0m[38;2;173;216;230m	at '_mirar_balde' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:659[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:676
+	at '_pulsar_real' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:109[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:677
+	at '_pulsar_real' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:109[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_bidon_azul_no_satisface_poetico_ni_cambia_cantidades[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_bidon_azul_no_satisface_poetico_ni_cambia_cantidades[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 190ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_figuras_propias_ocultan_el_corte_inferior_y_conservan_orientacion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_figuras_propias_ocultan_el_corte_inferior_y_conservan_orientacion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 929ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/atencion_de_la_segunda_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 698ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mTrying to assign an array of type "Array" to a variable of type "Array[String]".[0m'[0m[38;2;173;216;230m	at 'test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:838
+	at '_pulsar_real' in res://test/escenas/atencion_de_la_segunda_jornada_test.gd:109[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 14 test cases | 1 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 31s 589ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 14 test cases | 1 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (14/14)[0m
+[38;2;233;150;122mTotal execution time: 31s 589ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://C:/Users/fede_/orca/workspaces/nosefia/filefish/reports/report_7/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://C:/Users/fede_/orca/workspaces/nosefia/filefish/reports/report_7/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
