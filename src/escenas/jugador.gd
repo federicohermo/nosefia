@@ -681,7 +681,11 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	var ojo := _camara.global_position
 	var adelante := -_camara.global_basis.z
 	var puntos: Array[Vector3] = [ojo + adelante * ReglasDelJugador.ALCANCE_DE_LA_MIRA]
-	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+	var formas := cuerpo.find_children("*", "CollisionShape3D", false, false)
+	# La persona requiere la mira sobre alfa real: un rayo auxiliar no rescata transparencia.
+	if cuerpo.has_method("admite_foco_en"):
+		formas.clear()
+	for forma: CollisionShape3D in formas:
 		if forma.disabled or forma.shape == null:
 			continue
 		var limites := forma.global_transform * LimitesDeForma.de(forma.shape)
@@ -706,6 +710,8 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 		if golpe.get("collider") != cuerpo:
 			continue
 		var impacto: Vector3 = golpe.position
+		if cuerpo.has_method("admite_foco_en") and not cuerpo.call("admite_foco_en", impacto, ojo):
+			continue
 		var candidato := CampoDeInteraccion.Candidato.new(
 			cuerpo.get_instance_id(),
 			ojo.distance_to(impacto),

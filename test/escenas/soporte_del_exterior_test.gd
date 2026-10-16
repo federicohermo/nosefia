@@ -46,11 +46,11 @@ func test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo() -> vo
 	jugador.set_physics_process(false)
 	await get_tree().physics_frame
 	var ventana: Node3D = _almacen.get_node("Estructura/Ventanilla")
-	var vidrio := _limites(ventana.get_node("Vidrio"))
+	var hueco := _limites_del_hueco(ventana)
 	var jambas: Array[Vector3] = []
 	for direccion: Vector3 in [Vector3.LEFT, Vector3.RIGHT, Vector3.UP]:
 		var consulta := PhysicsRayQueryParameters3D.create(
-			vidrio.get_center(), vidrio.get_center() + direccion * 4, 1 | 8
+			hueco.get_center(), hueco.get_center() + direccion * 4, 1 | 8
 		)
 		consulta.exclude = [(ventana as CollisionObject3D).get_rid()]
 		var golpe := _almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
@@ -59,7 +59,7 @@ func test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo() -> vo
 			return
 		jambas.append(golpe.position)
 	# La holgura superior es numérica, no un tercer paso físico.
-	assert_float(absf(jambas[2].y - vidrio.end.y)).is_less(0.00001)
+	assert_float(absf(jambas[2].y - hueco.end.y)).is_less(0.00001)
 	var agarre: Agarre = _almacen.get("_agarre")
 	for lado: int in 2:
 		# El papel real cabe por el lateral; una caja de producto más ancha no cabe.
@@ -75,12 +75,12 @@ func test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo() -> vo
 		elif limites.size.z < limites.size.x:
 			giro = Basis(Vector3.UP, PI / 2)
 		var orientado := Transform3D(giro, Vector3.ZERO) * limites
-		var desde := jambas[0].x if lado == 0 else vidrio.end.x
-		var hasta := vidrio.position.x if lado == 0 else jambas[1].x
+		var desde := jambas[0].x if lado == 0 else hueco.get_center().x
+		var hasta := hueco.get_center().x if lado == 0 else jambas[1].x
 		assert_float(orientado.size.x).is_less(hasta - desde)
-		var centro := Vector3((desde + hasta) / 2, vidrio.get_center().y, vidrio.end.z)
+		var centro := Vector3((desde + hasta) / 2, hueco.get_center().y, hueco.end.z)
 		centro.z += orientado.size.z / 2 + 0.02
-		# La forma real entra entre jamba y vidrio; no se escala ni se sustituye por una caja falsa.
+		# La forma real cruza cada lateral visible; no se escala ni se sustituye por una falsa.
 		assert_float(centro.x - orientado.size.x / 2).is_greater(desde)
 		assert_float(centro.x + orientado.size.x / 2).is_less(hasta)
 		agarre.punto_de_soltado.global_position = centro
@@ -121,5 +121,11 @@ func test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo() -> vo
 		jugador.call("reanudar")
 
 
-func _limites(forma: CollisionShape3D) -> AABB:
-	return forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+func _limites_del_hueco(ventana: Node3D) -> AABB:
+	var soporte: MeshInstance3D = ventana.get_node("Antepecho")
+	var bajo := soporte.global_transform * soporte.get_aabb()
+	var arriba: Vector3 = ventana.get_node("BordeSuperior").global_position
+	return AABB(
+		Vector3(bajo.position.x, bajo.end.y, arriba.z),
+		Vector3(bajo.size.x, arriba.y - bajo.end.y, 0.0)
+	)

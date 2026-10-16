@@ -106,7 +106,7 @@ func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> voi
 	if jugador.has_signal("uso_pedido"):
 		jugador.connect("uso_pedido", func(nodo: Node3D) -> void: avisos.append(nodo))
 	var estado := limpiador.piso().mancha_de(PisoDelLocal.Lugar.ENTRADA)
-	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+	for ruta: String in ["Estructura/base compu/StaticBody3D"]:
 		var puesto: Node3D = almacen.get_node(ruta)
 		var panel: CanvasLayer = puesto.get("pantalla") if "compu" in ruta else puesto.get("panel")
 		puesto.call("abrir")
@@ -244,7 +244,7 @@ func test_el_izquierdo_abre_lo_fijo_sin_soltar_y_el_derecho_no_abre_paneles() ->
 	assert_bool(agarre.pedir_agarrar(unidad.get("datos"), unidad)).is_true()
 	_accion_en(jugador, puerta, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_bool(puerta.call("puerta").abierta()).is_false()
-	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+	for ruta: String in ["Estructura/base compu/StaticBody3D"]:
 		var puesto: Node3D = almacen.get_node(ruta)
 		_accion_en(jugador, puesto, ReglasDelJugador.ACCION_USAR)
 		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
@@ -252,6 +252,10 @@ func test_el_izquierdo_abre_lo_fijo_sin_soltar_y_el_derecho_no_abre_paneles() ->
 		assert_bool(jugador.get("_control").esta_suspendido()).is_true()
 		puesto.call("cerrar")
 		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+	var hueco: Node3D = almacen.get_node("Estructura/Ventanilla")
+	_accion_en(jugador, hueco, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_bool(hueco.get("panel").visible).is_false()
+	assert_bool(jugador.get("_control").esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_same(unidad.get("datos"))
 	assert_array(soltados).is_empty()
 
@@ -271,7 +275,7 @@ func test_el_izquierdo_abre_y_el_derecho_cierra_paneles_con_cualquier_mano() -> 
 			dato = objeto.get("datos")
 			assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
 			padre = objeto.get_parent()
-		for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+		for ruta: String in ["Estructura/base compu/StaticBody3D"]:
 			var puesto: Node3D = almacen.get_node(ruta)
 			var panel: CanvasLayer = (
 				puesto.get("pantalla") if "compu" in ruta else puesto.get("panel")

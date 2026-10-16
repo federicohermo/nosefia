@@ -31,6 +31,14 @@ una tarea son los metros, no la torpeza del control.
 
 ## Comportamiento normativo
 
+Las reglas de interacción directa sobre la figura, foco de silueta y retorno automático del diálogo
+se aplican al recorrido de atención física con comprador representado en el mundo.
+Las jornadas 3 a 5 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
+panel de cobro. Sólo en ese recorrido genérico se admite una consulta de acceso en el hueco:
+NO DEBE bloquear al jugador ni los objetos sostenidos, ni permanecer activa al usar atención física.
+La barrera de vidrio NO DEBE existir en ningún recorrido. Esta excepción NO DEBE convertir el hueco,
+marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 3 a 5.
+
 ### BR-PLY-001 — La diagonal no camina más rápido
 
 CUANDO se camina en diagonal, el sistema DEBE normalizar la dirección. Es el bug clásico del

@@ -43,6 +43,14 @@ func conversacion_iniciada() -> bool:
 	return _presentado
 
 
+func contexto_de_interaccion(objeto: ObjetoDelAlmacen) -> ReferenciaDeControles.Contexto:
+	if not fisica() or _despachada:
+		return ReferenciaDeControles.contexto_primario(
+			ReferenciaDeControles.Linea.NINGUNA, ReferenciaDeControles.Ruta.IGNORAR
+		)
+	return ReferenciaDeControles.contexto_de_atencion(true, _inicial_terminada, objeto != null)
+
+
 func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	if not fisica() or _despachada:
 		return RecepcionDeCompra.Resultado.BLOQUEADA
@@ -55,6 +63,7 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	if not _presentado:
 		_presentado = true
 		_dialogo = _comprador.dialogos.inicial(_comprador.personaje)
+		_inicial_terminada = _dialogo.terminado()
 		return RecepcionDeCompra.Resultado.DIALOGO
 	if objeto == null:
 		_dialogo = _comprador.dialogos.recordatorio(_comprador.personaje)
@@ -69,6 +78,7 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	elif resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		_vendida = _inventario.vender_unidades(_recepcion.unidades())
 		_dialogo = _comprador.dialogos.despedida(_comprador.personaje)
+		_despachada = _vendida and _dialogo.terminado()
 	return resultado
 
 

@@ -132,7 +132,11 @@ func test_derecho_y_examen_vacios_no_abren_y_otras_pantallas_bloquean() -> void:
 		assert_bool(_vista(almacen).visible).is_false()
 	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var pantalla: Node3D = almacen.get_node(ruta)
-		pantalla.call("abrir")
+		if ruta.ends_with("Ventanilla"):
+			(almacen.get("_reloj") as RelojDelTurno).avanzar(120.0)
+			pantalla.get_node("Comprador/Objetivo").call("accionar")
+		else:
+			pantalla.call("abrir")
 		_accion(jugador, _puesto(almacen), ReglasDeLosObjetos.ACCION_AGARRAR)
 		assert_bool(_vista(almacen).visible).is_false()
 		pantalla.call("cerrar")
