@@ -116,6 +116,46 @@ func test_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra() -> void:  
 	assert_bool(await _retirar_soporte(Producto.Id.ACTRONCITO)).is_true()
 
 
+func test_la_cascada_grande_atraviesa_una_caja_que_ya_esta_despierta() -> void:  # AC-PLY-095
+	assert_bool(await _atravesar_puente_despierto(Catalogo.TamanoDeCaja.GRANDE)).is_true()
+
+
+func test_la_cascada_chica_atraviesa_una_caja_que_ya_esta_despierta() -> void:  # AC-PLY-095
+	assert_bool(await _atravesar_puente_despierto(Catalogo.TamanoDeCaja.CHICA)).is_true()
+
+
+func _atravesar_puente_despierto(tamano: Catalogo.TamanoDeCaja) -> bool:
+	var almacen := await _abrir()
+	var cajas: Array[RigidBody3D] = []
+	for caja: RigidBody3D in almacen.get("_cajas_de_productos"):
+		if Catalogo.caja_de(caja.get("producto")) == tamano and cajas.size() < 3:
+			cajas.append(caja)
+	assert_int(cajas.size()).is_equal(3)
+	var piso := _piso_del_deposito(almacen)
+	for indice in cajas.size():
+		var caja: RigidBody3D = cajas[indice]
+		caja.global_basis = Basis.IDENTITY
+		caja.global_position = piso + Vector3.UP * _limites(caja).size.y * (indice + 0.5)
+		caja.call("quedarse_quieta")
+	await get_tree().physics_frame
+	var intermedia: RigidBody3D = cajas[1]
+	var superior: RigidBody3D = cajas[2]
+	intermedia.call("soltarse")
+	assert_bool(intermedia.freeze or intermedia.sleeping).is_false()
+	assert_bool(superior.freeze and superior.sleeping).is_true()
+	# La consulta encuentra el puente real; el estado despierto no corta la cadena.
+	var golpe := _rayo(
+		almacen,
+		cajas[0].global_position,
+		superior.global_position,
+		[cajas[0].get_rid(), almacen.get("_jugador").get_rid()]
+	)
+	assert_object(golpe.get("collider")).is_same(intermedia)
+	almacen.get("_reposicion_manual").call("despertar_lo_de_arriba", cajas[0])
+	assert_bool(intermedia.freeze or intermedia.sleeping).is_false()
+	return not superior.freeze and not superior.sleeping
+
+
 func _sobre_el_riel(producto: Producto.Id) -> Dictionary:
 	var almacen := await _abrir()
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
