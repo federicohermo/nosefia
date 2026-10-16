@@ -130,7 +130,6 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 
 | Lo que apareció | Qué skill se corrige |
 |---|---|
-| un ID emitido en paralelo que designa otra regla | `to-spec` — la reserva cruza las ramas publicadas de todos los lotes que cambian esa capacidad, además del máximo histórico local |
 | una espera de staging que el usuario sustituyó por ramas | `implement-batch` — fijar e incorporar las dependencias autorizadas antes del preflight, sin exigir su merge remoto |
 | un criterio que no se puede ver fallar | `to-spec` |
 | una entrega física sin destino de productos o ticket al vencer | `to-issue` y `to-spec` — distinguir venta de vencimiento y resolver cada objeto con el usuario |
