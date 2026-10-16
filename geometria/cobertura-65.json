@@ -1,0 +1,1231 @@
+{
+  "sha256_glb": "634b8b86d58b4a5a01935a625c23b01c5e3974bb092095cc1f6758256e3e0930",
+  "sha256_candidate": "4d6926f1b74680eb9c7d52fa13e9a51496077f94a5bad4f94704baa795c38aaf",
+  "coverage_method": "Cada triángulo físico fuente se recorta contra todos los cascos de su componente; unión poligonal de los recortes en el plano del triángulo, comparación de áreas completas.",
+  "physical_triangles": 7184,
+  "decorative_label_triangles": 96,
+  "hulls": 65,
+  "reports": [
+    {
+      "component": 0,
+      "triangles": 848,
+      "hulls": 11,
+      "source_surface_area": 30.25399479080596,
+      "uncovered_surface_area": 6.087539509034739e-16,
+      "worst_uncovered_triangle": {
+        "triangle": 2737,
+        "area": 1.6044039389391902e-16,
+        "vertices": [
+          [
+            3.917351022362709,
+            2.012327790260315,
+            -2.0451016426086426
+          ],
+          [
+            3.919472336769104,
+            2.011449098587036,
+            -0.5019063949584961
+          ],
+          [
+            3.919472336769104,
+            2.011449098587036,
+            -2.0451016426086426
+          ]
+        ]
+      },
+      "source_volume": 3.1936391027000877,
+      "hull_volume_sum": 3.2296227527850223,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 3.2296227527850223,
+      "union_minus_source_volume": 0.03598365008493465
+    },
+    {
+      "component": 1,
+      "triangles": 276,
+      "hulls": 2,
+      "source_surface_area": 4.300868699402269,
+      "uncovered_surface_area": 1.7389705805697612e-20,
+      "worst_uncovered_triangle": {
+        "triangle": 4916,
+        "area": 1.7389645650320423e-20,
+        "vertices": [
+          [
+            3.75591061450541,
+            1.7194460332393646,
+            -3.588296890258789
+          ],
+          [
+            4.293536603450775,
+            1.7364418804645538,
+            -3.588296890258789
+          ],
+          [
+            4.207791775465012,
+            1.7194460332393646,
+            -3.588296890258789
+          ]
+        ]
+      },
+      "source_volume": 0.05711956245078268,
+      "hull_volume_sum": 0.06241490344640773,
+      "overlap_pairs": [
+        {
+          "a": "11",
+          "b": "12",
+          "volume": 0.005096657267364499
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.057318246179043235,
+      "union_minus_source_volume": 0.00019868372826055414
+    },
+    {
+      "component": 2,
+      "triangles": 276,
+      "hulls": 2,
+      "source_surface_area": 4.300868818502732,
+      "uncovered_surface_area": 8.188612181086082e-26,
+      "worst_uncovered_triangle": {
+        "triangle": 117,
+        "area": 5.641933194140678e-26,
+        "vertices": [
+          [
+            4.293536603450775,
+            0.7904500365257263,
+            -0.5019066333770752
+          ],
+          [
+            4.290529727935791,
+            0.7934507727622986,
+            -0.5031745433807373
+          ],
+          [
+            4.290532231330872,
+            0.7925713658332825,
+            -0.502785325050354
+          ]
+        ]
+      },
+      "source_volume": 0.057119757044508467,
+      "hull_volume_sum": 0.06241512461036029,
+      "overlap_pairs": [
+        {
+          "a": "13",
+          "b": "14",
+          "volume": 0.005096683826423763
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.05731844078393653,
+      "union_minus_source_volume": 0.0001986837394280655
+    },
+    {
+      "component": 3,
+      "triangles": 276,
+      "hulls": 2,
+      "source_surface_area": 4.550569438710618,
+      "uncovered_surface_area": 7.495022747211007e-19,
+      "worst_uncovered_triangle": {
+        "triangle": 5843,
+        "area": 7.399159575116503e-19,
+        "vertices": [
+          [
+            3.925248369574547,
+            0.11557793617248535,
+            -3.588296890258789
+          ],
+          [
+            4.293536603450775,
+            0.31745409965515137,
+            -3.588296890258789
+          ],
+          [
+            4.196751952171326,
+            0.11557793617248535,
+            -3.588296890258789
+          ]
+        ]
+      },
+      "source_volume": 0.29457761187178644,
+      "hull_volume_sum": 0.3409150320801095,
+      "overlap_pairs": [
+        {
+          "a": "15",
+          "b": "16",
+          "volume": 0.04613933017735834
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.29477570190275115,
+      "union_minus_source_volume": 0.0001980900309647149
+    },
+    {
+      "component": 4,
+      "triangles": 276,
+      "hulls": 2,
+      "source_surface_area": 4.300869428721602,
+      "uncovered_surface_area": 2.6273667954393995e-26,
+      "worst_uncovered_triangle": {
+        "triangle": 890,
+        "area": 2.627366795364168e-26,
+        "vertices": [
+          [
+            4.293536603450775,
+            1.263445995748043,
+            -3.588296890258789
+          ],
+          [
+            4.290532171726227,
+            1.2655673325061798,
+            -3.5874181985855103
+          ],
+          [
+            4.290529668331146,
+            1.2664467319846153,
+            -3.587028980255127
+          ]
+        ]
+      },
+      "source_volume": 0.05711976997926494,
+      "hull_volume_sum": 0.062415137987699876,
+      "overlap_pairs": [
+        {
+          "a": "17",
+          "b": "18",
+          "volume": 0.005096683785741672
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.057318454201958205,
+      "union_minus_source_volume": 0.0001986842226932642
+    },
+    {
+      "component": 5,
+      "triangles": 276,
+      "hulls": 2,
+      "source_surface_area": 4.300868705984715,
+      "uncovered_surface_area": 6.086375977612187e-20,
+      "worst_uncovered_triangle": {
+        "triangle": 4613,
+        "area": 6.086375977612149e-20,
+        "vertices": [
+          [
+            3.707659026607871,
+            1.7194460332393646,
+            -0.5019066333770752
+          ],
+          [
+            3.170033037662506,
+            1.7364418804645538,
+            -0.5019066333770752
+          ],
+          [
+            3.2557778656482697,
+            1.7194460332393646,
+            -0.5019066333770752
+          ]
+        ]
+      },
+      "source_volume": 0.0571195624657922,
+      "hull_volume_sum": 0.06241490350091882,
+      "overlap_pairs": [
+        {
+          "a": "19",
+          "b": "20",
+          "volume": 0.005096657278454425
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.0573182462224644,
+      "union_minus_source_volume": 0.00019868375667219523
+    },
+    {
+      "component": 6,
+      "triangles": 276,
+      "hulls": 2,
+      "source_surface_area": 4.300868825085296,
+      "uncovered_surface_area": 5.984090314242958e-22,
+      "worst_uncovered_triangle": {
+        "triangle": 3381,
+        "area": 5.984090314239107e-22,
+        "vertices": [
+          [
+            3.172160506248474,
+            0.8376573324203491,
+            -3.5874181985855103
+          ],
+          [
+            3.170033037662506,
+            0.7904500365257263,
+            -3.588296890258789
+          ],
+          [
+            3.1700326800346375,
+            0.8376573324203491,
+            -3.588296890258789
+          ]
+        ]
+      },
+      "source_volume": 0.05711975705951746,
+      "hull_volume_sum": 0.06241512465166438,
+      "overlap_pairs": [
+        {
+          "a": "21",
+          "b": "22",
+          "volume": 0.005096683837513749
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.05731844081415063,
+      "union_minus_source_volume": 0.00019868375463316656
+    },
+    {
+      "component": 7,
+      "triangles": 276,
+      "hulls": 2,
+      "source_surface_area": 4.550569452788858,
+      "uncovered_surface_area": 2.54667898966785e-26,
+      "worst_uncovered_triangle": {
+        "triangle": 5514,
+        "area": 2.546678987260437e-26,
+        "vertices": [
+          [
+            3.170033037662506,
+            0.31745409965515137,
+            -0.5019066333770752
+          ],
+          [
+            3.1730374097824097,
+            0.3195754289627075,
+            -0.502785325050354
+          ],
+          [
+            3.1730399131774902,
+            0.32045483589172363,
+            -0.5031745433807373
+          ]
+        ]
+      },
+      "source_volume": 0.29457761190991527,
+      "hull_volume_sum": 0.34091503213167174,
+      "overlap_pairs": [
+        {
+          "a": "23",
+          "b": "24",
+          "volume": 0.04613933019933231
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.29477570193233943,
+      "union_minus_source_volume": 0.00019809002242415774
+    },
+    {
+      "component": 8,
+      "triangles": 276,
+      "hulls": 2,
+      "source_surface_area": 4.300869436001826,
+      "uncovered_surface_area": 2.60844896952898e-20,
+      "worst_uncovered_triangle": {
+        "triangle": 4697,
+        "area": 2.60844896952898e-20,
+        "vertices": [
+          [
+            3.707659026607871,
+            1.2464500442147255,
+            -0.5019066333770752
+          ],
+          [
+            3.170033037662506,
+            1.263445995748043,
+            -0.5019066333770752
+          ],
+          [
+            3.2557779252529144,
+            1.2464500442147255,
+            -0.5019066333770752
+          ]
+        ]
+      },
+      "source_volume": 0.057119770273912074,
+      "hull_volume_sum": 0.06241513800783405,
+      "overlap_pairs": [
+        {
+          "a": "25",
+          "b": "26",
+          "volume": 0.005096683795595312
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.05731845421223874,
+      "union_minus_source_volume": 0.00019868393832666448
+    },
+    {
+      "component": 9,
+      "triangles": 252,
+      "hulls": 2,
+      "source_surface_area": 2.2393392151389104,
+      "uncovered_surface_area": 8.755053739493289e-22,
+      "worst_uncovered_triangle": {
+        "triangle": 6312,
+        "area": 6.641628973902666e-22,
+        "vertices": [
+          [
+            4.27657425403595,
+            0.3778080940246582,
+            0.18979215621948242
+          ],
+          [
+            4.276574373245239,
+            0.34690022468566895,
+            0.18979239463806152
+          ],
+          [
+            4.2744529247283936,
+            0.3502105474472046,
+            0.1889181137084961
+          ]
+        ]
+      },
+      "source_volume": 0.17102828931513336,
+      "hull_volume_sum": 0.18159219643148203,
+      "overlap_pairs": [
+        {
+          "a": "27",
+          "b": "28",
+          "volume": 0.01050438567356754
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.1710878107579145,
+      "union_minus_source_volume": 5.9521442781124145e-05
+    },
+    {
+      "component": 10,
+      "triangles": 252,
+      "hulls": 3,
+      "source_surface_area": 0.924249503615181,
+      "uncovered_surface_area": 1.2626915868745024e-14,
+      "worst_uncovered_triangle": {
+        "triangle": 4751,
+        "area": 4.931555957037749e-15,
+        "vertices": [
+          [
+            3.1861185431480408,
+            1.2926259003579617,
+            -0.3355141878128052
+          ],
+          [
+            3.1861166954040527,
+            1.3265649927780032,
+            -0.26657378673553467
+          ],
+          [
+            3.1861185431480408,
+            1.3265660451725125,
+            -0.3355141878128052
+          ]
+        ]
+      },
+      "source_volume": 0.016099619528057694,
+      "hull_volume_sum": 0.01803779637308049,
+      "overlap_pairs": [
+        {
+          "a": "30",
+          "b": "31",
+          "volume": 0.00187953425660331
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.016158262116477178,
+      "union_minus_source_volume": 5.864258841948439e-05
+    },
+    {
+      "component": 11,
+      "triangles": 252,
+      "hulls": 3,
+      "source_surface_area": 0.8130326195279249,
+      "uncovered_surface_area": 1.8388557722092537e-19,
+      "worst_uncovered_triangle": {
+        "triangle": 4574,
+        "area": 1.702317322840366e-19,
+        "vertices": [
+          [
+            3.1861166954040527,
+            1.7721794843673706,
+            -0.26657378673553467
+          ],
+          [
+            3.1861166954040527,
+            1.7649073600769043,
+            -0.1053001880645752
+          ],
+          [
+            3.1861166954040527,
+            1.8060848116874695,
+            -0.26657378673553467
+          ]
+        ]
+      },
+      "source_volume": 0.013900564291573178,
+      "hull_volume_sum": 0.015781384379660805,
+      "overlap_pairs": [
+        {
+          "a": "33",
+          "b": "34",
+          "volume": 0.0018232821835960224
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.013958102196064782,
+      "union_minus_source_volume": 5.7537904491604744e-05
+    },
+    {
+      "component": 12,
+      "triangles": 252,
+      "hulls": 2,
+      "source_surface_area": 2.239338342626223,
+      "uncovered_surface_area": 7.229946294625596e-21,
+      "worst_uncovered_triangle": {
+        "triangle": 5857,
+        "area": 7.22624983126325e-21,
+        "vertices": [
+          [
+            4.2774529457092285,
+            0.12382912635803223,
+            -4.279121398925781
+          ],
+          [
+            4.2774529457092285,
+            0.34021615982055664,
+            -4.316131114959717
+          ],
+          [
+            4.2774529457092285,
+            0.3436039686203003,
+            -4.282106399536133
+          ]
+        ]
+      },
+      "source_volume": 0.17102818387292595,
+      "hull_volume_sum": 0.18159209084954603,
+      "overlap_pairs": [
+        {
+          "a": "35",
+          "b": "36",
+          "volume": 0.01050438551756538
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.17108770533198064,
+      "union_minus_source_volume": 5.9521459054689974e-05
+    },
+    {
+      "component": 13,
+      "triangles": 252,
+      "hulls": 3,
+      "source_surface_area": 0.9242487346028029,
+      "uncovered_surface_area": 2.3751581925874926e-15,
+      "worst_uncovered_triangle": {
+        "triangle": 4890,
+        "area": 8.521292440278984e-16,
+        "vertices": [
+          [
+            3.1861166954040527,
+            1.2926272451877594,
+            -3.823629856109619
+          ],
+          [
+            3.1861166954040527,
+            1.2855722829699516,
+            -4.03528892993927
+          ],
+          [
+            3.1861166954040527,
+            1.2522158771753311,
+            -4.032303810119629
+          ]
+        ]
+      },
+      "source_volume": 0.016099597137782817,
+      "hull_volume_sum": 0.018037766282141002,
+      "overlap_pairs": [
+        {
+          "a": "37",
+          "b": "39",
+          "volume": 0.0018795293253947617
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.01615823695674624,
+      "union_minus_source_volume": 5.863981896342407e-05
+    },
+    {
+      "component": 14,
+      "triangles": 252,
+      "hulls": 3,
+      "source_surface_area": 0.8130316066797334,
+      "uncovered_surface_area": 7.892194213303443e-20,
+      "worst_uncovered_triangle": {
+        "triangle": 3108,
+        "area": 3.482075097708751e-20,
+        "vertices": [
+          [
+            3.1869953870773315,
+            1.7700241804122925,
+            -3.823629856109619
+          ],
+          [
+            3.1869953870773315,
+            1.7296114563941956,
+            -3.9819178581237793
+          ],
+          [
+            3.1891167163848877,
+            1.7287180721759796,
+            -3.9819178581237793
+          ]
+        ]
+      },
+      "source_volume": 0.013900543226540036,
+      "hull_volume_sum": 0.01578136250567472,
+      "overlap_pairs": [
+        {
+          "a": "40",
+          "b": "42",
+          "volume": 0.0018232813730797205
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.013958081132595,
+      "union_minus_source_volume": 5.753790605496356e-05
+    },
+    {
+      "component": 15,
+      "triangles": 252,
+      "hulls": 3,
+      "source_surface_area": 1.3172773644315228,
+      "uncovered_surface_area": 8.059901238600343e-15,
+      "worst_uncovered_triangle": {
+        "triangle": 3952,
+        "area": 1.0276267356689202e-15,
+        "vertices": [
+          [
+            4.2744529247283936,
+            0.9300645589828491,
+            -0.26657378673553467
+          ],
+          [
+            4.2744529247283936,
+            0.8526511490345001,
+            0.10937619209289551
+          ],
+          [
+            4.276574432849884,
+            0.85112464427948,
+            0.11247587203979492
+          ]
+        ]
+      },
+      "source_volume": 0.023528219739447034,
+      "hull_volume_sum": 0.02545568590436309,
+      "overlap_pairs": [
+        {
+          "a": "44",
+          "b": "45",
+          "volume": 0.0018683835996205875
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.023587302304742503,
+      "union_minus_source_volume": 5.908256529546865e-05
+    },
+    {
+      "component": 16,
+      "triangles": 252,
+      "hulls": 3,
+      "source_surface_area": 1.3172772323513764,
+      "uncovered_surface_area": 1.129432408379904e-20,
+      "worst_uncovered_triangle": {
+        "triangle": 5315,
+        "area": 1.0164395367051604e-20,
+        "vertices": [
+          [
+            4.2774529457092285,
+            0.8150854706764221,
+            -4.202517986297607
+          ],
+          [
+            4.2774529457092285,
+            0.8450517952442169,
+            -4.239527702331543
+          ],
+          [
+            4.2774529457092285,
+            0.8483994007110596,
+            -4.205502986907959
+          ]
+        ]
+      },
+      "source_volume": 0.023528216089573215,
+      "hull_volume_sum": 0.02545567860926089,
+      "overlap_pairs": [
+        {
+          "a": "46",
+          "b": "48",
+          "volume": 0.0018683843243824277
+        }
+      ],
+      "overlap_triples": [],
+      "union_volume": 0.023587294284878463,
+      "union_minus_source_volume": 5.907819530524827e-05
+    },
+    {
+      "component": 17,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.09784683262487945,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 48,
+        "area": 0.0,
+        "vertices": [
+          [
+            4.276030778884888,
+            1.2823177836835384,
+            -0.3384021520614624
+          ],
+          [
+            4.276030778884888,
+            1.2844455651938915,
+            -0.33752334117889404
+          ],
+          [
+            4.277762830257416,
+            1.2840432412922382,
+            -0.33713412284851074
+          ]
+        ]
+      },
+      "source_volume": 0.0014098291549689034,
+      "hull_volume_sum": 0.0014135692009355214,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0014135692009355214,
+      "union_minus_source_volume": 3.7400459666180053e-06
+    },
+    {
+      "component": 18,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.08143223414990532,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 204,
+        "area": 0.0,
+        "vertices": [
+          [
+            4.144819468259811,
+            1.7648570835590363,
+            -0.33540213108062744
+          ],
+          [
+            4.144819468259811,
+            1.7639784216880798,
+            -0.33752334117889404
+          ],
+          [
+            4.143087416887283,
+            1.7635772824287415,
+            -0.33713436126708984
+          ]
+        ]
+      },
+      "source_volume": 0.0011733164260407925,
+      "hull_volume_sum": 0.0011762082006512825,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0011762082006512825,
+      "union_minus_source_volume": 2.8917746104899916e-06
+    },
+    {
+      "component": 19,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.09784683178848258,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 282,
+        "area": 0.0,
+        "vertices": [
+          [
+            4.144819468259811,
+            1.2296155989170074,
+            -0.08089959621429443
+          ],
+          [
+            4.144819498062134,
+            1.2304927334189415,
+            -0.07877838611602783
+          ],
+          [
+            4.143087446689606,
+            1.2308822944760323,
+            -0.07916760444641113
+          ]
+        ]
+      },
+      "source_volume": 0.001409829182027994,
+      "hull_volume_sum": 0.0014135691966043237,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0014135691966043237,
+      "union_minus_source_volume": 3.740014576329633e-06
+    },
+    {
+      "component": 20,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.08143223489063418,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 386,
+        "area": 0.0,
+        "vertices": [
+          [
+            3.1875388622283936,
+            1.7121524810791016,
+            -0.12828528881072998
+          ],
+          [
+            3.1854175329208374,
+            1.7121533453464508,
+            -0.12916386127471924
+          ],
+          [
+            3.1858068108558655,
+            1.7104216814041138,
+            -0.12955307960510254
+          ]
+        ]
+      },
+      "source_volume": 0.0011733164275304759,
+      "hull_volume_sum": 0.0011762082013360674,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0011762082013360674,
+      "union_minus_source_volume": 2.891773805591526e-06
+    },
+    {
+      "component": 21,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.09784683224902757,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 434,
+        "area": 0.0,
+        "vertices": [
+          [
+            3.1875388622283936,
+            1.2823177836835384,
+            -0.3384021520614624
+          ],
+          [
+            3.1854175329208374,
+            1.2823021858930588,
+            -0.33752334117889404
+          ],
+          [
+            3.185806691646576,
+            1.284043274819851,
+            -0.33713436126708984
+          ]
+        ]
+      },
+      "source_volume": 0.0014098291834728578,
+      "hull_volume_sum": 0.0014135691961261441,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0014135691961261441,
+      "union_minus_source_volume": 3.7400126532863114e-06
+    },
+    {
+      "component": 22,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.09784683268290126,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 670,
+        "area": 0.0,
+        "vertices": [
+          [
+            3.31875017285347,
+            1.2296155989170074,
+            -0.08089959621429443
+          ],
+          [
+            3.3208714425563812,
+            1.2304942831397057,
+            -0.08089971542358398
+          ],
+          [
+            3.3204821944236755,
+            1.2308822944760323,
+            -0.07916760444641113
+          ]
+        ]
+      },
+      "source_volume": 0.0014098291554586195,
+      "hull_volume_sum": 0.001413569198339741,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.001413569198339741,
+      "union_minus_source_volume": 3.74004288112152e-06
+    },
+    {
+      "component": 23,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.09784697052467381,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 722,
+        "area": 0.0,
+        "vertices": [
+          [
+            3.1896300315856934,
+            1.2326156124472618,
+            -4.00930380821228
+          ],
+          [
+            3.190508723258972,
+            1.2326140701770782,
+            -4.011425137519836
+          ],
+          [
+            3.1908980011940002,
+            1.2308822944760323,
+            -4.011035919189453
+          ]
+        ]
+      },
+      "source_volume": 0.0014098310801378352,
+      "hull_volume_sum": 0.0014135711068450105,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0014135711068450105,
+      "union_minus_source_volume": 3.7400267071752234e-06
+    },
+    {
+      "component": 24,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.08143240277772729,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 750,
+        "area": 0.0,
+        "vertices": [
+          [
+            3.1896300315856934,
+            1.7121554911136627,
+            -3.958918333053589
+          ],
+          [
+            3.190508723258972,
+            1.7121533453464508,
+            -3.961039662361145
+          ],
+          [
+            3.1908980011940002,
+            1.7104216814041138,
+            -3.9606504440307617
+          ]
+        ]
+      },
+      "source_volume": 0.0011733193141780923,
+      "hull_volume_sum": 0.0011762110926856865,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0011762110926856865,
+      "union_minus_source_volume": 2.891778507594202e-06
+    },
+    {
+      "component": 25,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.09784697193239912,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 814,
+        "area": 0.0,
+        "vertices": [
+          [
+            3.1875388622283936,
+            1.2326134219765663,
+            -4.012303829193115
+          ],
+          [
+            3.1875388622283936,
+            1.2304927334189415,
+            -4.011425137519836
+          ],
+          [
+            3.1858068108558655,
+            1.2308822944760323,
+            -4.011035919189453
+          ]
+        ]
+      },
+      "source_volume": 0.0014098310529922712,
+      "hull_volume_sum": 0.0014135711124929604,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0014135711124929604,
+      "union_minus_source_volume": 3.7400595006892214e-06
+    },
+    {
+      "component": 26,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.09784695812340473,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 906,
+        "area": 0.0,
+        "vertices": [
+          [
+            4.270939588546753,
+            1.2823177836835384,
+            -3.751801013946533
+          ],
+          [
+            4.273060917854309,
+            1.2823021858930588,
+            -3.7526798248291016
+          ],
+          [
+            4.272671759128571,
+            1.284043274819851,
+            -3.7530689239501953
+          ]
+        ]
+      },
+      "source_volume": 0.001409831014081573,
+      "hull_volume_sum": 0.001413571063822422,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.001413571063822422,
+      "union_minus_source_volume": 3.740049740848933e-06
+    },
+    {
+      "component": 27,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.08143240685460194,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 958,
+        "area": 0.0,
+        "vertices": [
+          [
+            4.146910667419434,
+            1.761800765991211,
+            -3.754801034927368
+          ],
+          [
+            4.147789388895035,
+            1.7618289589881897,
+            -3.752679705619812
+          ],
+          [
+            4.1481786370277405,
+            1.763577252626419,
+            -3.7530689239501953
+          ]
+        ]
+      },
+      "source_volume": 0.001173319324960775,
+      "hull_volume_sum": 0.001176211103170065,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.001176211103170065,
+      "union_minus_source_volume": 2.891778209290069e-06
+    },
+    {
+      "component": 28,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.09784695712686535,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 996,
+        "area": 0.0,
+        "vertices": [
+          [
+            4.149910658597946,
+            1.2296155989170074,
+            -4.00930380821228
+          ],
+          [
+            4.147789388895035,
+            1.2304942831397057,
+            -4.00930380821228
+          ],
+          [
+            4.1481786370277405,
+            1.2308822944760323,
+            -4.011035919189453
+          ]
+        ]
+      },
+      "source_volume": 0.0014098310421926323,
+      "hull_volume_sum": 0.0014135710603070707,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0014135710603070707,
+      "union_minus_source_volume": 3.740018114438458e-06
+    },
+    {
+      "component": 29,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.17825764453408968,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 1470,
+        "area": 0.0,
+        "vertices": [
+          [
+            4.144819468259811,
+            0.7924817800521851,
+            0.08931446075439453
+          ],
+          [
+            4.144819498062134,
+            0.793359637260437,
+            0.09143590927124023
+          ],
+          [
+            4.143087446689606,
+            0.7937490940093994,
+            0.09104657173156738
+          ]
+        ]
+      },
+      "source_volume": 0.003455367126090304,
+      "hull_volume_sum": 0.0034619499833274735,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0034619499833274735,
+      "union_minus_source_volume": 6.5828572371694725e-06
+    },
+    {
+      "component": 30,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.1782576482677793,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 1518,
+        "area": 0.0,
+        "vertices": [
+          [
+            3.1875388622283936,
+            0.8827899992465973,
+            -0.3384021520614624
+          ],
+          [
+            3.1854175329208374,
+            0.882773756980896,
+            -0.3375234603881836
+          ],
+          [
+            3.185806691646576,
+            0.8845152258872986,
+            -0.33713436126708984
+          ]
+        ]
+      },
+      "source_volume": 0.0034553671390259635,
+      "hull_volume_sum": 0.003461949989581214,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.003461949989581214,
+      "union_minus_source_volume": 6.5828505552505655e-06
+    },
+    {
+      "component": 31,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.1782576175123688,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 1618,
+        "area": 0.0,
+        "vertices": [
+          [
+            3.31875017285347,
+            0.7924817204475403,
+            -4.179517507553101
+          ],
+          [
+            3.3187501430511475,
+            0.7933595776557922,
+            -4.181638717651367
+          ],
+          [
+            3.3204821944236755,
+            0.7937490344047546,
+            -4.181249380111694
+          ]
+        ]
+      },
+      "source_volume": 0.0034553674636924755,
+      "hull_volume_sum": 0.0034619503303667987,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0034619503303667987,
+      "union_minus_source_volume": 6.582866674323222e-06
+    },
+    {
+      "component": 32,
+      "triangles": 132,
+      "hulls": 1,
+      "source_surface_area": 0.17825762809976764,
+      "uncovered_surface_area": 0.0,
+      "worst_uncovered_triangle": {
+        "triangle": 1666,
+        "area": 0.0,
+        "vertices": [
+          [
+            4.276030778884888,
+            0.8827899396419525,
+            -3.751801013946533
+          ],
+          [
+            4.278152108192444,
+            0.8827736973762512,
+            -3.752679705619812
+          ],
+          [
+            4.277762949466705,
+            0.8845151364803314,
+            -3.7530689239501953
+          ]
+        ]
+      },
+      "source_volume": 0.0034553674853835636,
+      "hull_volume_sum": 0.0034619503700140043,
+      "overlap_pairs": [],
+      "overlap_triples": [],
+      "union_volume": 0.0034619503700140043,
+      "union_minus_source_volume": 6.582884630440718e-06
+    }
+  ],
+  "failures": [],
+  "uncovered_surface_area_total": 2.3671865896904097e-14,
+  "limit": "La cobertura y el volumen no prueban por sí solos la holgura ni la física de Godot."
+}

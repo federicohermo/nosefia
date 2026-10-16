@@ -1,0 +1,143 @@
+{
+  "comparacion_cascada": "Igualdad exacta de poses/bases/fisica/dibujo/piso/intersecciones; sólo se sustituyen IDs de instancia, collider_id y RID.",
+  "lecturas": {
+    "control425": [
+      "428_CASCADA_SUPERFICIES producto=4 base_visual=0.08824928104877 base_fisica=0.08824928104877 piso_bounds=[P: (-4.594377, -0.103771, -15.39797), S: (12.51991, 0.206508, 7.144682)] piso_shape=BoxShape3D piso_margin=0.03999999910593 caja_margin=0.03999999910593 intersecciones_reducida=[\"/root/Almacen/Estructura/SueloSolido\"]",
+      "428_CASCADA_CONTROL producto=4 inicial=[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (4.49, 1.01386, -10.0)] base_inicial=0.71015021204948 apoyo_inicial={ \"position\": (4.49, 0.710152, -10.0), \"normal\": (0.0, 1.0, 0.0), \"face_index\": -1, \"collider_id\": ID, \"collider\": CajaDeSaladik:<RigidBody3D#ID>, \"shape\": 0, \"rid\": RID(ID) } final=[X: (1.0, -0.000003, -0.000001), Y: (0.000003, 1.0, -0.000004), Z: (0.000001, 0.000004, 1.0), O: (4.489997, 0.391959, -9.999991)] bounds_final=[P: (4.186288, 0.088249, -10.3037), S: (0.607418, 0.60742, 0.607418)] piso=(4.49, 0.102737, -10.0) apoyo_final={ \"position\": (4.489997, 0.102737, -9.999991), \"normal\": (0.0, 1.0, 0.0), \"face_index\": -1, \"collider_id\": ID, \"collider\": SueloSolido:<StaticBody3D#ID>, \"shape\": 2, \"rid\": RID(ID) } entra=false ajena_intacta=true congelada=true dormida=true",
+      "428_CASCADA_SUPERFICIES producto=0 base_visual=0.08824949711561 base_fisica=0.08824949711561 piso_bounds=[P: (-4.594377, -0.103771, -15.39797), S: (12.51991, 0.206508, 7.144682)] piso_shape=BoxShape3D piso_margin=0.03999999910593 caja_margin=0.03999999910593 intersecciones_reducida=[\"/root/Almacen/Estructura/SueloSolido\"]",
+      "428_CASCADA_CONTROL producto=0 inicial=[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (4.49, 0.910152, -10.0)] base_inicial=0.71015034615994 apoyo_inicial={ \"position\": (4.49, 0.710152, -10.0), \"normal\": (0.0, 1.0, 0.0), \"face_index\": -1, \"collider_id\": ID, \"collider\": CajaDeSaladik:<RigidBody3D#ID>, \"shape\": 0, \"rid\": RID(ID) } final=[X: (1.0, -0.000004, -0.000002), Y: (0.000004, 1.0, -0.000006), Z: (0.000002, 0.000006, 1.0), O: (4.489997, 0.288252, -9.999992)] bounds_final=[P: (4.289996, 0.088249, -10.19999), S: (0.400002, 0.400004, 0.400002)] piso=(4.49, 0.102737, -10.0) apoyo_final={ \"position\": (4.489997, 0.102737, -9.999992), \"normal\": (0.0, 1.0, 0.0), \"face_index\": -1, \"collider_id\": ID, \"collider\": SueloSolido:<StaticBody3D#ID>, \"shape\": 2, \"rid\": RID(ID) } entra=false ajena_intacta=true congelada=true dormida=true"
+    ],
+    "candidato428": [
+      "428_CASCADA_SUPERFICIES producto=4 base_visual=0.08824928104877 base_fisica=0.08824928104877 piso_bounds=[P: (-4.594377, -0.103771, -15.39797), S: (12.51991, 0.206508, 7.144682)] piso_shape=BoxShape3D piso_margin=0.03999999910593 caja_margin=0.03999999910593 intersecciones_reducida=[\"/root/Almacen/Estructura/SueloSolido\"]",
+      "428_CASCADA_CONTROL producto=4 inicial=[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (4.49, 1.01386, -10.0)] base_inicial=0.71015021204948 apoyo_inicial={ \"position\": (4.49, 0.710152, -10.0), \"normal\": (0.0, 1.0, 0.0), \"face_index\": -1, \"collider_id\": ID, \"collider\": CajaDeSaladik:<RigidBody3D#ID>, \"shape\": 0, \"rid\": RID(ID) } final=[X: (1.0, -0.000003, -0.000001), Y: (0.000003, 1.0, -0.000004), Z: (0.000001, 0.000004, 1.0), O: (4.489997, 0.391959, -9.999991)] bounds_final=[P: (4.186288, 0.088249, -10.3037), S: (0.607418, 0.60742, 0.607418)] piso=(4.49, 0.102737, -10.0) apoyo_final={ \"position\": (4.489997, 0.102737, -9.999991), \"normal\": (0.0, 1.0, 0.0), \"face_index\": -1, \"collider_id\": ID, \"collider\": SueloSolido:<StaticBody3D#ID>, \"shape\": 2, \"rid\": RID(ID) } entra=false ajena_intacta=true congelada=true dormida=true",
+      "428_CASCADA_SUPERFICIES producto=0 base_visual=0.08824949711561 base_fisica=0.08824949711561 piso_bounds=[P: (-4.594377, -0.103771, -15.39797), S: (12.51991, 0.206508, 7.144682)] piso_shape=BoxShape3D piso_margin=0.03999999910593 caja_margin=0.03999999910593 intersecciones_reducida=[\"/root/Almacen/Estructura/SueloSolido\"]",
+      "428_CASCADA_CONTROL producto=0 inicial=[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (4.49, 0.910152, -10.0)] base_inicial=0.71015034615994 apoyo_inicial={ \"position\": (4.49, 0.710152, -10.0), \"normal\": (0.0, 1.0, 0.0), \"face_index\": -1, \"collider_id\": ID, \"collider\": CajaDeSaladik:<RigidBody3D#ID>, \"shape\": 0, \"rid\": RID(ID) } final=[X: (1.0, -0.000004, -0.000002), Y: (0.000004, 1.0, -0.000006), Z: (0.000002, 0.000006, 1.0), O: (4.489997, 0.288252, -9.999992)] bounds_final=[P: (4.289996, 0.088249, -10.19999), S: (0.400002, 0.400004, 0.400002)] piso=(4.49, 0.102737, -10.0) apoyo_final={ \"position\": (4.489997, 0.102737, -9.999992), \"normal\": (0.0, 1.0, 0.0), \"face_index\": -1, \"collider_id\": ID, \"collider\": SueloSolido:<StaticBody3D#ID>, \"shape\": 2, \"rid\": RID(ID) } entra=false ajena_intacta=true congelada=true dormida=true"
+    ]
+  },
+  "rendimiento": [
+    {
+      "malla": "gondolanueva",
+      "direccion": "(1.0, 0.0, 0.0)",
+      "muestras_por_variante": 300,
+      "query_us": {
+        "control": {
+          "max": 77.0,
+          "p50": 44.0,
+          "p95": 56.0
+        },
+        "candidato": {
+          "max": 314.0,
+          "p50": 92.0,
+          "p95": 122.0
+        }
+      },
+      "physics_ms": {
+        "control": {
+          "max": 3.484,
+          "p50": 2.202,
+          "p95": 3.484
+        },
+        "candidato": {
+          "max": 2.504,
+          "p50": 2.214,
+          "p95": 2.504
+        }
+      },
+      "physics_frame_interval_ms": {
+        "control": {
+          "max": 28.992,
+          "p50": 16.666,
+          "p95": 16.701
+        },
+        "candidato": {
+          "max": 82.726,
+          "p50": 16.665,
+          "p95": 16.704
+        }
+      }
+    },
+    {
+      "malla": "gondolanueva2",
+      "direccion": "(1.0, 0.0, 0.0)",
+      "muestras_por_variante": 300,
+      "query_us": {
+        "control": {
+          "max": 87.0,
+          "p50": 44.0,
+          "p95": 57.0
+        },
+        "candidato": {
+          "max": 172.0,
+          "p50": 93.0,
+          "p95": 132.0
+        }
+      },
+      "physics_ms": {
+        "control": {
+          "max": 2.362,
+          "p50": 2.144,
+          "p95": 2.362
+        },
+        "candidato": {
+          "max": 2.314,
+          "p50": 1.812,
+          "p95": 2.314
+        }
+      },
+      "physics_frame_interval_ms": {
+        "control": {
+          "max": 17.004,
+          "p50": 16.666,
+          "p95": 16.695
+        },
+        "candidato": {
+          "max": 17.131,
+          "p50": 16.667,
+          "p95": 16.697
+        }
+      }
+    },
+    {
+      "malla": "gondolanueva2",
+      "direccion": "(0.0, 0.0, 1.0)",
+      "muestras_por_variante": 300,
+      "query_us": {
+        "control": {
+          "max": 72.0,
+          "p50": 43.0,
+          "p95": 52.0
+        },
+        "candidato": {
+          "max": 118.0,
+          "p50": 62.0,
+          "p95": 79.0
+        }
+      },
+      "physics_ms": {
+        "control": {
+          "max": 3.074,
+          "p50": 1.857,
+          "p95": 3.074
+        },
+        "candidato": {
+          "max": 2.024,
+          "p50": 1.823,
+          "p95": 2.024
+        }
+      },
+      "physics_frame_interval_ms": {
+        "control": {
+          "max": 17.842,
+          "p50": 16.666,
+          "p95": 16.688
+        },
+        "candidato": {
+          "max": 16.81,
+          "p50": 16.665,
+          "p95": 16.692
+        }
+      }
+    }
+  ],
+  "limite": "Intersección con SueloSolido de 14.488 mm heredada en ambos tamaños. No se afirma ausencia de penetración ni se convierte .02 en permiso para penetrar."
+}

@@ -1,0 +1,1073 @@
+{
+  "control": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\425\\crudo-02\\tests.log",
+  "candidata": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\full03\\crudo\\tests.log",
+  "conteo_control": 67,
+  "conteo_candidata": 73,
+  "nuevos": {
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.805113, 0.112, -1.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.21, 0.112, -9.255); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307126, 0.184598, 4.392635); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099979, 0.185369, -4.550042); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.4, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.75, 0.112, -14.396); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.8, 0.112, 0.1); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31528, 0.187648, 3.205922); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.489997, 0.391959, -9.999991); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `SueloSolido` en (4.489997, 0.288252, -9.999992); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.486106, 0.387052, -10.0041); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.489835, 0.391251, -10.00008); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696749, 0.259515, 2.015986); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1
+  },
+  "ausentes": {
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.80507, 0.185369, -1.000021); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.760729, 0.186466, -6.003136); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210046, 0.185659, -9.255016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307175, 0.186442, 4.392656); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099983, 0.185383, -4.56449); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750046, 0.185659, -14.39602); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.80004, 0.185369, 0.100021); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31514, 0.188104, 3.205934); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696779, 0.259515, 2.015986); va a DESHACER": 1
+  },
+  "bloques_control": [
+    {
+      "encabezado": "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+      "firma_sin_contadores_de_nodo": "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+      "contexto": "ERROR: The remote port number must be between 1 and 65535 (inclusive).\n   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+      "firma_sin_contadores_de_nodo": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+      "contexto": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.\n   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_el_rescate_usa_el_origen_de_la_noche (res://test/escenas/deposito_ordenado_test.gd:355)\n       [2] _abrir (res://test/escenas/deposito_ordenado_test.gd:29)\n",
+      "casos_en_stack": [
+        "test_el_rescate_usa_el_origen_de_la_noche"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_quedar_quieta (res://src/sistemas/marco/red_de_seguridad.gd:149)\n       [2] _physics_process (res://src/escenas/puestos/puerta_del_local.gd:129)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_quedar_quieta (res://src/sistemas/marco/red_de_seguridad.gd:149)\n       [2] cerrar_de_golpe (res://src/escenas/puestos/puerta_del_local.gd:116)\n       [3] _al_abrir_la_jornada (res://src/escenas/almacen.gd:351)\n       [4] test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro (res://test/escenas/hoja_que_arrastra_test.gd:296)\n",
+      "casos_en_stack": [
+        "test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.80507, 0.185369, -1.000021); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.80507, 0.185369, -1.000021); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.80507, 0.185369, -1.000021); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.760729, 0.186466, -6.003136); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.760729, 0.186466, -6.003136); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.760729, 0.186466, -6.003136); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210046, 0.185659, -9.255016); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210046, 0.185659, -9.255016); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210046, 0.185659, -9.255016); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22192, 0.185764, 4.844925); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22192, 0.185764, 4.844925); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22192, 0.185764, 4.844925); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307175, 0.186442, 4.392656); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307175, 0.186442, 4.392656); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307175, 0.186442, 4.392656); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099983, 0.185383, -4.56449); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099983, 0.185383, -4.56449); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099983, 0.185383, -4.56449); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750046, 0.185659, -14.39602); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750046, 0.185659, -14.39602); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750046, 0.185659, -14.39602); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.80004, 0.185369, 0.100021); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.80004, 0.185369, 0.100021); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.80004, 0.185369, 0.100021); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31514, 0.188104, 3.205934); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31514, 0.188104, 3.205934); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31514, 0.188104, 3.205934); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696779, 0.259515, 2.015986); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696779, 0.259515, 2.015986); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696779, 0.259515, 2.015986); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+      "firma_sin_contadores_de_nodo": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+      "contexto": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] primera_reponible (res://src/escenas/puestos/disposicion_de_la_gondola.gd:64)\n       [1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:29)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:28)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "contexto": "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescate_devuelve_cuerpo_libre_sin_reponer_el_tacho (res://test/escenas/puestos/tachos_de_basura_test.gd:149)\n       [2] _abrir (res://test/escenas/puestos/tachos_de_basura_test.gd:20)\n",
+      "casos_en_stack": [
+        "test_rescate_devuelve_cuerpo_libre_sin_reponer_el_tacho"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER",
+      "contexto": "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _physics_process (res://src/sistemas/marco/red_de_seguridad.gd:61)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.00371, 5.922562, -11.00625); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.00371, 5.922562, -11.00625); va a DESHACER",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.00371, 5.922562, -11.00625); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "contexto": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_encima_de_la_caja_que_ocupa_el_origen (res://test/escenas/red_de_seguridad_integrada_test.gd:145)\n",
+      "casos_en_stack": [
+        "test_encima_de_la_caja_que_ocupa_el_origen"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "contexto": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_el_origen_es_el_ultimo_recurso (res://test/escenas/red_de_seguridad_integrada_test.gd:156)\n       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)\n",
+      "casos_en_stack": [
+        "test_el_origen_es_el_ultimo_recurso"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@646660` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@646660` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano (res://test/escenas/red_de_seguridad_integrada_test.gd:179)\n",
+      "casos_en_stack": [
+        "test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "contexto": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia (res://test/escenas/red_de_seguridad_integrada_test.gd:190)\n       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)\n",
+      "casos_en_stack": [
+        "test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia (res://test/escenas/red_de_seguridad_integrada_test.gd:197)\n       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)\n",
+      "casos_en_stack": [
+        "test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta (res://test/escenas/red_de_seguridad_integrada_test.gd:231)\n       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)\n",
+      "casos_en_stack": [
+        "test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _cableada (res://src/sistemas/investigacion/computadora_de_escritorio.gd:120)\n       [1] revisar_registro (res://src/sistemas/investigacion/computadora_de_escritorio.gd:98)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:308)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_revisar_registro_sin_cableado_avisa_el_error",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _cableada (res://src/sistemas/investigacion/computadora_de_escritorio.gd:120)\n       [1] revisar_registro (res://src/sistemas/investigacion/computadora_de_escritorio.gd:98)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:312)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_revisar_registro_sin_cableado_avisa_el_error",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _cableada (res://src/sistemas/investigacion/computadora_de_escritorio.gd:120)\n       [1] revisar_registro (res://src/sistemas/investigacion/computadora_de_escritorio.gd:98)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:318)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_revisar_registro_sin_cableado_avisa_el_error",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+      "firma_sin_contadores_de_nodo": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+      "contexto": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] iniciar (res://src/sistemas/investigacion/examen.gd:62)\n       [1] <anonymous lambda> (res://test/sistemas/investigacion/examen_test.gd:316)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado (res://test/sistemas/investigacion/examen_test.gd:315)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "firma_sin_contadores_de_nodo": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "contexto": "ERROR: Cannot open file 'res://no_existe.tscn'.\n   at: load (scene/resources/resource_format_text.cpp:1442)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "firma_sin_contadores_de_nodo": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "contexto": "ERROR: Failed loading resource: res://no_existe.tscn.\n   at: _load (core/io/resource_loader.cpp:317)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "firma_sin_contadores_de_nodo": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "contexto": "ERROR: Cannot open file 'res://no_existe.tscn'.\n   at: load (scene/resources/resource_format_text.cpp:1442)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "firma_sin_contadores_de_nodo": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "contexto": "ERROR: Failed loading resource: res://no_existe.tscn.\n   at: _load (core/io/resource_loader.cpp:317)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "firma_sin_contadores_de_nodo": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "contexto": "ERROR: Cannot open file 'res://no_existe.tscn'.\n   at: load (scene/resources/resource_format_text.cpp:1442)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "firma_sin_contadores_de_nodo": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "contexto": "ERROR: Failed loading resource: res://no_existe.tscn.\n   at: _load (core/io/resource_loader.cpp:317)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792372` en (4.000026, 1.100338, -0.000002); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.000026, 1.100338, -0.000002); va a DESHACER",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792372` en (4.000026, 1.100338, -0.000002); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792382` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792382` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:87)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792392` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792392` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_el_aviso_nombra_el_objeto_el_solido_y_la_posicion (res://test/sistemas/marco/red_de_seguridad_test.gd:98)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_el_aviso_nombra_el_objeto_el_solido_y_la_posicion"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@792408` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@ID` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@792408` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_quedar_quieta (res://src/sistemas/marco/red_de_seguridad.gd:149)\n       [2] test_al_quedar_quieta_la_hoja_rescata_lo_que_quedo_adentro (res://test/sistemas/marco/red_de_seguridad_test.gd:122)\n",
+      "casos_en_stack": [
+        "test_al_quedar_quieta_la_hoja_rescata_lo_que_quedo_adentro"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792414` en (1.99, 0.08, 0.0); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); va a DESHACER",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792414` en (1.99, 0.08, 0.0); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792425` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792425` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_un_lugar_adentro_de_un_area_nueva_no_es_candidato (res://test/sistemas/marco/red_de_seguridad_test.gd:167)\n",
+      "casos_en_stack": [
+        "test_un_lugar_adentro_de_un_area_nueva_no_es_candidato"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792437` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792437` en (1.99, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_alrededor_no_deja_nada_metido_en_la_pared (res://test/sistemas/marco/red_de_seguridad_test.gd:180)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_alrededor_no_deja_nada_metido_en_la_pared"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792447` en (1.946, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.946, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792447` en (1.946, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_lo_congelado_apenas_metido_se_rescata (res://test/sistemas/marco/red_de_seguridad_test.gd:199)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_lo_congelado_apenas_metido_se_rescata"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792447` en (1.96, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.96, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792447` en (1.96, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_lo_congelado_apenas_metido_se_rescata (res://test/sistemas/marco/red_de_seguridad_test.gd:199)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_lo_congelado_apenas_metido_se_rescata"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792457` en (2.06, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (2.06, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792457` en (2.06, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_lo_vivo_metido_entero_se_detecta (res://test/sistemas/marco/red_de_seguridad_test.gd:213)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_lo_vivo_metido_entero_se_detecta"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `@RigidBody3D@792472` estaba adentro de `@StaticBody3D@792467` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `@RigidBody3D@ID` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `@RigidBody3D@792472` estaba adentro de `@StaticBody3D@792467` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:155)\n       [2] test_lo_que_nace_despues_se_mira_al_dormirse (res://test/sistemas/marco/red_de_seguridad_test.gd:225)\n       [3] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_lo_que_nace_despues_se_mira_al_dormirse"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792478` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792478` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_va_encima_de_lo_que_ocupa_el_origen_si_admite_otro_encima (res://test/sistemas/marco/red_de_seguridad_test.gd:250)\n       [2] _ocupante_del_origen (res://test/sistemas/marco/red_de_seguridad_test.gd:241)\n",
+      "casos_en_stack": [
+        "test_va_encima_de_lo_que_ocupa_el_origen_si_admite_otro_encima"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792489` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792489` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_no_va_encima_de_lo_que_ocupa_el_origen_si_no_admite_otro_encima (res://test/sistemas/marco/red_de_seguridad_test.gd:261)\n       [2] _ocupante_del_origen (res://test/sistemas/marco/red_de_seguridad_test.gd:241)\n",
+      "casos_en_stack": [
+        "test_no_va_encima_de_lo_que_ocupa_el_origen_si_no_admite_otro_encima"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792500` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@792500` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_va_encima_de_lo_que_ocupa_el_origen_aunque_este_de_costado (res://test/sistemas/marco/red_de_seguridad_test.gd:274)\n",
+      "casos_en_stack": [
+        "test_va_encima_de_lo_que_ocupa_el_origen_aunque_este_de_costado"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "contexto": "ERROR: Caja registradora sin generador: revisar almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)\n       [1] pedir_borrar (res://src/sistemas/tareas/caja_registradora.gd:40)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:81)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_generador_el_cableado_avisa_y_no_publica_eventos",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "contexto": "ERROR: Caja registradora sin generador: revisar almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)\n       [1] pedir_imprimir (res://src/sistemas/tareas/caja_registradora.gd:47)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:84)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_generador_el_cableado_avisa_y_no_publica_eventos",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "contexto": "ERROR: Caja registradora sin generador: revisar almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)\n       [1] pedir_anotar (res://src/sistemas/tareas/caja_registradora.gd:27)\n       [2] <anonymous lambda> (res://test/sistemas/tareas/caja_registradora_test.gd:88)\n       [3] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [4] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [5] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:87)\n       [6] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [7] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [17] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [18] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [19] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [20] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [21] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [22] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_generador_el_cableado_avisa_y_no_publica_eventos",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "contexto": "ERROR: Caja registradora sin generador: revisar almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)\n       [1] pedir_elegir (res://src/sistemas/tareas/caja_registradora.gd:62)\n       [2] <anonymous lambda> (res://test/sistemas/tareas/caja_registradora_test.gd:92)\n       [3] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [4] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [5] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:91)\n       [6] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [7] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [17] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [18] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [19] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [20] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [21] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [22] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_generador_el_cableado_avisa_y_no_publica_eventos",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:48)\n       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_cableado_no_entrega_ni_publica",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:48)\n       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_cableado_no_entrega_ni_publica",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:48)\n       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_cableado_no_entrega_ni_publica",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:48)\n       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:148)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:148)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_cableado_no_entrega_ni_publica",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:165)\n       [1] pedir_abrir (res://src/sistemas/tareas/ventanilla.gd:94)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:343)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:165)\n       [1] pedir_atender (res://src/sistemas/tareas/ventanilla.gd:108)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:343)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:165)\n       [1] pedir_cobrar (res://src/sistemas/tareas/ventanilla.gd:122)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:343)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:165)\n       [1] pedir_despachar_sin_vender (res://src/sistemas/tareas/ventanilla.gd:140)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:343)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice",
+        "test_completed"
+      ]
+    }
+  ],
+  "bloques_candidata": [
+    {
+      "encabezado": "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+      "firma_sin_contadores_de_nodo": "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+      "contexto": "ERROR: The remote port number must be between 1 and 65535 (inclusive).\n   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+      "firma_sin_contadores_de_nodo": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+      "contexto": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.\n   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_el_rescate_usa_el_origen_de_la_noche (res://test/escenas/deposito_ordenado_test.gd:355)\n       [2] _abrir (res://test/escenas/deposito_ordenado_test.gd:29)\n",
+      "casos_en_stack": [
+        "test_el_rescate_usa_el_origen_de_la_noche"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_quedar_quieta (res://src/sistemas/marco/red_de_seguridad.gd:149)\n       [2] _physics_process (res://src/escenas/puestos/puerta_del_local.gd:129)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_quedar_quieta (res://src/sistemas/marco/red_de_seguridad.gd:149)\n       [2] cerrar_de_golpe (res://src/escenas/puestos/puerta_del_local.gd:116)\n       [3] _al_abrir_la_jornada (res://src/escenas/almacen.gd:353)\n       [4] test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro (res://test/escenas/hoja_que_arrastra_test.gd:296)\n",
+      "casos_en_stack": [
+        "test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.805113, 0.112, -1.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.805113, 0.112, -1.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.805113, 0.112, -1.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.21, 0.112, -9.255); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.21, 0.112, -9.255); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.21, 0.112, -9.255); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22192, 0.185764, 4.844925); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22192, 0.185764, 4.844925); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22192, 0.185764, 4.844925); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307126, 0.184598, 4.392635); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307126, 0.184598, 4.392635); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307126, 0.184598, 4.392635); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099979, 0.185369, -4.550042); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099979, 0.185369, -4.550042); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099979, 0.185369, -4.550042); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.4, 0.112, 1.74); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.4, 0.112, 1.74); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.4, 0.112, 1.74); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.75, 0.112, -14.396); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.75, 0.112, -14.396); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.75, 0.112, -14.396); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.8, 0.112, 0.1); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.8, 0.112, 0.1); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.8, 0.112, 0.1); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31528, 0.187648, 3.205922); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31528, 0.187648, 3.205922); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31528, 0.187648, 3.205922); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.489997, 0.391959, -9.999991); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.489997, 0.391959, -9.999991); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.489997, 0.391959, -9.999991); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `SueloSolido` en (4.489997, 0.288252, -9.999992); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `SueloSolido` en (4.489997, 0.288252, -9.999992); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `SueloSolido` en (4.489997, 0.288252, -9.999992); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.486106, 0.387052, -10.0041); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.486106, 0.387052, -10.0041); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.486106, 0.387052, -10.0041); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.489835, 0.391251, -10.00008); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.489835, 0.391251, -10.00008); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.489835, 0.391251, -10.00008); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696749, 0.259515, 2.015986); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696749, 0.259515, 2.015986); va a DESHACER",
+      "contexto": "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696749, 0.259515, 2.015986); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+      "firma_sin_contadores_de_nodo": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+      "contexto": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] primera_reponible (res://src/escenas/puestos/disposicion_de_la_gondola.gd:64)\n       [1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:29)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:28)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "contexto": "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescate_devuelve_cuerpo_libre_sin_reponer_el_tacho (res://test/escenas/puestos/tachos_de_basura_test.gd:149)\n       [2] _abrir (res://test/escenas/puestos/tachos_de_basura_test.gd:20)\n",
+      "casos_en_stack": [
+        "test_rescate_devuelve_cuerpo_libre_sin_reponer_el_tacho"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER",
+      "contexto": "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _physics_process (res://src/sistemas/marco/red_de_seguridad.gd:61)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.00371, 5.922562, -11.00625); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.00371, 5.922562, -11.00625); va a DESHACER",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.00371, 5.922562, -11.00625); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "contexto": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_encima_de_la_caja_que_ocupa_el_origen (res://test/escenas/red_de_seguridad_integrada_test.gd:145)\n",
+      "casos_en_stack": [
+        "test_encima_de_la_caja_que_ocupa_el_origen"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "contexto": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_el_origen_es_el_ultimo_recurso (res://test/escenas/red_de_seguridad_integrada_test.gd:156)\n       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)\n",
+      "casos_en_stack": [
+        "test_el_origen_es_el_ultimo_recurso"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@678910` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@678910` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano (res://test/escenas/red_de_seguridad_integrada_test.gd:179)\n",
+      "casos_en_stack": [
+        "test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "contexto": "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia (res://test/escenas/red_de_seguridad_integrada_test.gd:190)\n       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)\n",
+      "casos_en_stack": [
+        "test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia (res://test/escenas/red_de_seguridad_integrada_test.gd:197)\n       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)\n",
+      "casos_en_stack": [
+        "test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta (res://test/escenas/red_de_seguridad_integrada_test.gd:231)\n       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)\n",
+      "casos_en_stack": [
+        "test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _cableada (res://src/sistemas/investigacion/computadora_de_escritorio.gd:120)\n       [1] revisar_registro (res://src/sistemas/investigacion/computadora_de_escritorio.gd:98)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:308)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_revisar_registro_sin_cableado_avisa_el_error",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _cableada (res://src/sistemas/investigacion/computadora_de_escritorio.gd:120)\n       [1] revisar_registro (res://src/sistemas/investigacion/computadora_de_escritorio.gd:98)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:312)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_revisar_registro_sin_cableado_avisa_el_error",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _cableada (res://src/sistemas/investigacion/computadora_de_escritorio.gd:120)\n       [1] revisar_registro (res://src/sistemas/investigacion/computadora_de_escritorio.gd:98)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:318)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_revisar_registro_sin_cableado_avisa_el_error",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+      "firma_sin_contadores_de_nodo": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+      "contexto": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] iniciar (res://src/sistemas/investigacion/examen.gd:62)\n       [1] <anonymous lambda> (res://test/sistemas/investigacion/examen_test.gd:316)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado (res://test/sistemas/investigacion/examen_test.gd:315)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "firma_sin_contadores_de_nodo": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "contexto": "ERROR: Cannot open file 'res://no_existe.tscn'.\n   at: load (scene/resources/resource_format_text.cpp:1442)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "firma_sin_contadores_de_nodo": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "contexto": "ERROR: Failed loading resource: res://no_existe.tscn.\n   at: _load (core/io/resource_loader.cpp:317)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "firma_sin_contadores_de_nodo": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "contexto": "ERROR: Cannot open file 'res://no_existe.tscn'.\n   at: load (scene/resources/resource_format_text.cpp:1442)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "firma_sin_contadores_de_nodo": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "contexto": "ERROR: Failed loading resource: res://no_existe.tscn.\n   at: _load (core/io/resource_loader.cpp:317)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "firma_sin_contadores_de_nodo": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "contexto": "ERROR: Cannot open file 'res://no_existe.tscn'.\n   at: load (scene/resources/resource_format_text.cpp:1442)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "firma_sin_contadores_de_nodo": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "contexto": "ERROR: Failed loading resource: res://no_existe.tscn.\n   at: _load (core/io/resource_loader.cpp:317)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824622` en (4.000026, 1.100338, -0.000002); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.000026, 1.100338, -0.000002); va a DESHACER",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824622` en (4.000026, 1.100338, -0.000002); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824632` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824632` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:87)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824642` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824642` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_el_aviso_nombra_el_objeto_el_solido_y_la_posicion (res://test/sistemas/marco/red_de_seguridad_test.gd:98)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_el_aviso_nombra_el_objeto_el_solido_y_la_posicion"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@824658` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@ID` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@824658` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_quedar_quieta (res://src/sistemas/marco/red_de_seguridad.gd:149)\n       [2] test_al_quedar_quieta_la_hoja_rescata_lo_que_quedo_adentro (res://test/sistemas/marco/red_de_seguridad_test.gd:122)\n",
+      "casos_en_stack": [
+        "test_al_quedar_quieta_la_hoja_rescata_lo_que_quedo_adentro"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824664` en (1.99, 0.08, 0.0); va a DESHACER",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); va a DESHACER",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824664` en (1.99, 0.08, 0.0); va a DESHACER\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824675` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824675` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_un_lugar_adentro_de_un_area_nueva_no_es_candidato (res://test/sistemas/marco/red_de_seguridad_test.gd:167)\n",
+      "casos_en_stack": [
+        "test_un_lugar_adentro_de_un_area_nueva_no_es_candidato"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824687` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824687` en (1.99, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_alrededor_no_deja_nada_metido_en_la_pared (res://test/sistemas/marco/red_de_seguridad_test.gd:180)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_alrededor_no_deja_nada_metido_en_la_pared"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824697` en (1.946, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.946, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824697` en (1.946, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_lo_congelado_apenas_metido_se_rescata (res://test/sistemas/marco/red_de_seguridad_test.gd:199)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_lo_congelado_apenas_metido_se_rescata"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824697` en (1.96, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.96, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824697` en (1.96, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_lo_congelado_apenas_metido_se_rescata (res://test/sistemas/marco/red_de_seguridad_test.gd:199)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_lo_congelado_apenas_metido_se_rescata"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824707` en (2.06, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (2.06, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824707` en (2.06, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_lo_vivo_metido_entero_se_detecta (res://test/sistemas/marco/red_de_seguridad_test.gd:213)\n       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)\n",
+      "casos_en_stack": [
+        "test_lo_vivo_metido_entero_se_detecta"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `@RigidBody3D@824722` estaba adentro de `@StaticBody3D@824717` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `@RigidBody3D@ID` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `@RigidBody3D@824722` estaba adentro de `@StaticBody3D@824717` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824728` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824728` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_va_encima_de_lo_que_ocupa_el_origen_si_admite_otro_encima (res://test/sistemas/marco/red_de_seguridad_test.gd:256)\n       [2] _ocupante_del_origen (res://test/sistemas/marco/red_de_seguridad_test.gd:247)\n",
+      "casos_en_stack": [
+        "test_va_encima_de_lo_que_ocupa_el_origen_si_admite_otro_encima"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824739` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824739` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_no_va_encima_de_lo_que_ocupa_el_origen_si_no_admite_otro_encima (res://test/sistemas/marco/red_de_seguridad_test.gd:267)\n       [2] _ocupante_del_origen (res://test/sistemas/marco/red_de_seguridad_test.gd:247)\n",
+      "casos_en_stack": [
+        "test_no_va_encima_de_lo_que_ocupa_el_origen_si_no_admite_otro_encima"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824750` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824750` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_va_encima_de_lo_que_ocupa_el_origen_aunque_este_de_costado (res://test/sistemas/marco/red_de_seguridad_test.gd:280)\n",
+      "casos_en_stack": [
+        "test_va_encima_de_lo_que_ocupa_el_origen_aunque_este_de_costado"
+      ]
+    },
+    {
+      "encabezado": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824761` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@824761` en (1.99, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] _al_cambiar_el_reposo (res://src/sistemas/marco/red_de_seguridad.gd:159)\n",
+      "casos_en_stack": []
+    },
+    {
+      "encabezado": "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@824791` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "firma_sin_contadores_de_nodo": "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@ID` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "contexto": "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@824791` en (1.99, 0.08, 0.0); va a ALREDEDOR\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)\n       [1] test_rescatar_una_caja_quieta_anota_el_apoyo_nuevo_para_la_cascada (res://test/sistemas/marco/red_de_seguridad_test.gd:339)\n",
+      "casos_en_stack": [
+        "test_rescatar_una_caja_quieta_anota_el_apoyo_nuevo_para_la_cascada"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "contexto": "ERROR: Caja registradora sin generador: revisar almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)\n       [1] pedir_borrar (res://src/sistemas/tareas/caja_registradora.gd:40)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:81)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_generador_el_cableado_avisa_y_no_publica_eventos",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "contexto": "ERROR: Caja registradora sin generador: revisar almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)\n       [1] pedir_imprimir (res://src/sistemas/tareas/caja_registradora.gd:47)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:84)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_generador_el_cableado_avisa_y_no_publica_eventos",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "contexto": "ERROR: Caja registradora sin generador: revisar almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)\n       [1] pedir_anotar (res://src/sistemas/tareas/caja_registradora.gd:27)\n       [2] <anonymous lambda> (res://test/sistemas/tareas/caja_registradora_test.gd:88)\n       [3] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [4] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [5] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:87)\n       [6] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [7] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [17] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [18] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [19] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [20] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [21] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [22] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_generador_el_cableado_avisa_y_no_publica_eventos",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "contexto": "ERROR: Caja registradora sin generador: revisar almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)\n       [1] pedir_elegir (res://src/sistemas/tareas/caja_registradora.gd:62)\n       [2] <anonymous lambda> (res://test/sistemas/tareas/caja_registradora_test.gd:92)\n       [3] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [4] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [5] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:91)\n       [6] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [7] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [17] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [18] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [19] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [20] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [21] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [22] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_generador_el_cableado_avisa_y_no_publica_eventos",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:48)\n       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_cableado_no_entrega_ni_publica",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:48)\n       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_cableado_no_entrega_ni_publica",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:48)\n       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_cableado_no_entrega_ni_publica",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:48)\n       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:148)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:148)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_sin_cableado_no_entrega_ni_publica",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:165)\n       [1] pedir_abrir (res://src/sistemas/tareas/ventanilla.gd:94)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:343)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:165)\n       [1] pedir_atender (res://src/sistemas/tareas/ventanilla.gd:108)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:343)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:165)\n       [1] pedir_cobrar (res://src/sistemas/tareas/ventanilla.gd:122)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:343)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice",
+        "test_completed"
+      ]
+    },
+    {
+      "encabezado": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "firma_sin_contadores_de_nodo": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "contexto": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd\n   at: push_error (core/variant/variant_utility.cpp:1023)\n   GDScript backtrace (most recent call first):\n       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:165)\n       [1] pedir_despachar_sin_vender (res://src/sistemas/tareas/ventanilla.gd:140)\n       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)\n       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)\n       [4] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:343)\n       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)\n       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)\n       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)\n       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)\n       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)\n       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)\n       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)\n       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)\n       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)\n       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)\n       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)\n",
+      "casos_en_stack": [
+        "test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice",
+        "test_completed"
+      ]
+    }
+  ],
+  "script_parse": [],
+  "fugas": [],
+  "conteos": [
+    "Executed test suites: (269/269)",
+    "Executed test cases : (2075/2075)"
+  ],
+  "limites": "Se preservan poses completas. Sólo se normalizan contadores @N de nodos. stdout y stderr concatenados no permiten atribuir fase por su orden."
+}

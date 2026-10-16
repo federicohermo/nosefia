@@ -1,0 +1,23 @@
+test_gondola (unittest.loader._FailedTest.test_gondola) ... ERROR
+
+======================================================================
+ERROR: test_gondola (unittest.loader._FailedTest.test_gondola)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_gondola
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Programs\Python\Python313\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "C:\Users\fede_\AppData\Local\Programs\Python\Python313\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-428-apoyos\.claude\scripts\tests\test_gondola.py", line 12, in <module>
+    from lib.gondola import (
+    ...<31 lines>...
+    )
+ModuleNotFoundError: No module named 'lib.gondola'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

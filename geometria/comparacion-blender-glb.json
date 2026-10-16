@@ -1,0 +1,941 @@
+{
+  "source_glb_sha256": "634b8b86d58b4a5a01935a625c23b01c5e3974bb092095cc1f6758256e3e0930",
+  "source_dump_sha256": "43c0fd4244a9e3a2ec1c521b7055f16e6c8ea5257dd9bb12f4f3869a16a08d76",
+  "pure_helper_sha256": "a2bd824c473d040102b8d78499e555759bc05352c93f696a003b7e1f1d9b2c50",
+  "method": "GLB accessor local; Blender.evaluada localGodot. Nubes de vértices y65cascos comparados por emparejamiento geométrico, sin exigir la misma diagonal ni orden de triángulos.",
+  "results": [
+    {
+      "label": "A",
+      "triangles": 7280,
+      "hulls": 65,
+      "source_vertex_cloud_maximum_nearest_distance": 0.0,
+      "maximum_plane_violation_mutual": 4.440892098500626e-16,
+      "maximum_bbox_delta": 0.0,
+      "maximum_absolute_volume_delta": 0.0,
+      "pairs": [
+        {
+          "glb_piece": 0,
+          "blender_piece": 0,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 1,
+          "blender_piece": 1,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 2,
+          "blender_piece": 2,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 3,
+          "blender_piece": 3,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 4,
+          "blender_piece": 4,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 5,
+          "blender_piece": 5,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 6,
+          "blender_piece": 6,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 7,
+          "blender_piece": 7,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 8,
+          "blender_piece": 8,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 9,
+          "blender_piece": 9,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 10,
+          "blender_piece": 10,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 11,
+          "blender_piece": 11,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 12,
+          "blender_piece": 12,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 13,
+          "blender_piece": 13,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 14,
+          "blender_piece": 14,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 15,
+          "blender_piece": 15,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 16,
+          "blender_piece": 16,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 17,
+          "blender_piece": 17,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 18,
+          "blender_piece": 18,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 19,
+          "blender_piece": 19,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 20,
+          "blender_piece": 20,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 21,
+          "blender_piece": 21,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 22,
+          "blender_piece": 22,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 23,
+          "blender_piece": 23,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 24,
+          "blender_piece": 24,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 25,
+          "blender_piece": 25,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 26,
+          "blender_piece": 26,
+          "maximum_plane_violation_mutual": 2.3592239273284576e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 27,
+          "blender_piece": 27,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 28,
+          "blender_piece": 28,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 29,
+          "blender_piece": 29,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 30,
+          "blender_piece": 30,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 31,
+          "blender_piece": 31,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 32,
+          "blender_piece": 32,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 33,
+          "blender_piece": 33,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 34,
+          "blender_piece": 34,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 35,
+          "blender_piece": 35,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 36,
+          "blender_piece": 36,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 37,
+          "blender_piece": 37,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 38,
+          "blender_piece": 38,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 39,
+          "blender_piece": 39,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 40,
+          "blender_piece": 40,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 41,
+          "blender_piece": 41,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 42,
+          "blender_piece": 42,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 43,
+          "blender_piece": 43,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 44,
+          "blender_piece": 44,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 45,
+          "blender_piece": 45,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 46,
+          "blender_piece": 46,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 47,
+          "blender_piece": 47,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 48,
+          "blender_piece": 48,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 49,
+          "blender_piece": 49,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 50,
+          "blender_piece": 50,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 51,
+          "blender_piece": 51,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 52,
+          "blender_piece": 52,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 53,
+          "blender_piece": 53,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 54,
+          "blender_piece": 54,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 55,
+          "blender_piece": 55,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 56,
+          "blender_piece": 56,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 57,
+          "blender_piece": 57,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 58,
+          "blender_piece": 58,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 59,
+          "blender_piece": 59,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 60,
+          "blender_piece": 60,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 61,
+          "blender_piece": 61,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 62,
+          "blender_piece": 62,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 63,
+          "blender_piece": 63,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 64,
+          "blender_piece": 64,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        }
+      ]
+    },
+    {
+      "label": "B",
+      "triangles": 7280,
+      "hulls": 65,
+      "source_vertex_cloud_maximum_nearest_distance": 0.0,
+      "maximum_plane_violation_mutual": 4.440892098500626e-16,
+      "maximum_bbox_delta": 0.0,
+      "maximum_absolute_volume_delta": 0.0,
+      "pairs": [
+        {
+          "glb_piece": 0,
+          "blender_piece": 0,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 1,
+          "blender_piece": 1,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 2,
+          "blender_piece": 2,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 3,
+          "blender_piece": 3,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 4,
+          "blender_piece": 4,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 5,
+          "blender_piece": 5,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 6,
+          "blender_piece": 6,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 7,
+          "blender_piece": 7,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 8,
+          "blender_piece": 8,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 9,
+          "blender_piece": 9,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 10,
+          "blender_piece": 10,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 11,
+          "blender_piece": 11,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 12,
+          "blender_piece": 12,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 13,
+          "blender_piece": 13,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 14,
+          "blender_piece": 14,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 15,
+          "blender_piece": 15,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 16,
+          "blender_piece": 16,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 17,
+          "blender_piece": 17,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 18,
+          "blender_piece": 18,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 19,
+          "blender_piece": 19,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 20,
+          "blender_piece": 20,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 21,
+          "blender_piece": 21,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 22,
+          "blender_piece": 22,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 23,
+          "blender_piece": 23,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 24,
+          "blender_piece": 24,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 25,
+          "blender_piece": 25,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 26,
+          "blender_piece": 26,
+          "maximum_plane_violation_mutual": 2.3592239273284576e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 27,
+          "blender_piece": 27,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 28,
+          "blender_piece": 28,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 29,
+          "blender_piece": 29,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 30,
+          "blender_piece": 30,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 31,
+          "blender_piece": 31,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 32,
+          "blender_piece": 32,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 33,
+          "blender_piece": 33,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 34,
+          "blender_piece": 34,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 35,
+          "blender_piece": 35,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 36,
+          "blender_piece": 36,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 37,
+          "blender_piece": 37,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 38,
+          "blender_piece": 38,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 39,
+          "blender_piece": 39,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 40,
+          "blender_piece": 40,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 41,
+          "blender_piece": 41,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 42,
+          "blender_piece": 42,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 43,
+          "blender_piece": 43,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 44,
+          "blender_piece": 44,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 45,
+          "blender_piece": 45,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 46,
+          "blender_piece": 46,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 47,
+          "blender_piece": 47,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 48,
+          "blender_piece": 48,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 49,
+          "blender_piece": 49,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 50,
+          "blender_piece": 50,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 51,
+          "blender_piece": 51,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 52,
+          "blender_piece": 52,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 53,
+          "blender_piece": 53,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 54,
+          "blender_piece": 54,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 55,
+          "blender_piece": 55,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 56,
+          "blender_piece": 56,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 57,
+          "blender_piece": 57,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 58,
+          "blender_piece": 58,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 59,
+          "blender_piece": 59,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 60,
+          "blender_piece": 60,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 61,
+          "blender_piece": 61,
+          "maximum_plane_violation_mutual": 2.220446049250313e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 62,
+          "blender_piece": 62,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 63,
+          "blender_piece": 63,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        },
+        {
+          "glb_piece": 64,
+          "blender_piece": 64,
+          "maximum_plane_violation_mutual": 4.440892098500626e-16,
+          "maximum_bbox_delta": 0.0,
+          "volume_delta": 0.0
+        }
+      ]
+    }
+  ],
+  "limit": "Violación de planos no es distanciaEuclídea deHausdorff; registra inequívocamente coordenadas y volumen."
+}

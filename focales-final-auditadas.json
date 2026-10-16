@@ -1,0 +1,71 @@
+{
+  "focales": [
+    {
+      "nombre": "cajas heredadas",
+      "ruta": "cascada-rid-verde01/cascada-heredada.log",
+      "casos": 20,
+      "head": "3e381d1be90e30589e9c7b38905199a576c43201",
+      "errores_assert_skips_orphans": 0,
+      "retenciones_al_cerrar": [
+        "WARNING: 141 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 100 resources still in use at exit (run with --verbose for details).",
+        "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE",
+        "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE"
+      ]
+    },
+    {
+      "nombre": "reposicion heredada y bolsa",
+      "ruta": "full-regresiones-verde01/bolsa-heredada.log",
+      "casos": 20,
+      "head": "3d1b7cb791f06a64671e269f072b47e7ac74a2eb",
+      "errores_assert_skips_orphans": 0,
+      "retenciones_al_cerrar": [
+        "WARNING: 141 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 100 resources still in use at exit (run with --verbose for details).",
+        "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE",
+        "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE"
+      ]
+    },
+    {
+      "nombre": "red causal",
+      "ruta": "cascada-rid-verde01/sistema.log",
+      "casos": 18,
+      "head": "3e381d1be90e30589e9c7b38905199a576c43201",
+      "errores_assert_skips_orphans": 0,
+      "retenciones_al_cerrar": []
+    },
+    {
+      "nombre": "red integrada",
+      "ruta": "cascada-rid-verde01/integrada.log",
+      "casos": 7,
+      "head": "3e381d1be90e30589e9c7b38905199a576c43201",
+      "errores_assert_skips_orphans": 0,
+      "retenciones_al_cerrar": [
+        "WARNING: 141 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 100 resources still in use at exit (run with --verbose for details).",
+        "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE",
+        "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE"
+      ]
+    },
+    {
+      "nombre": "matriz ambos tamanos y puentes",
+      "ruta": "cascada-rid-verde01/puentes-y-matriz.log",
+      "casos": 18,
+      "head": "3e381d1be90e30589e9c7b38905199a576c43201",
+      "errores_assert_skips_orphans": 0,
+      "retenciones_al_cerrar": []
+    },
+    {
+      "nombre": "reserva y recogida final",
+      "ruta": "cascada-rid-verde01/reserva.log",
+      "casos": 3,
+      "head": "3e381d1be90e30589e9c7b38905199a576c43201",
+      "errores_assert_skips_orphans": 0,
+      "retenciones_al_cerrar": []
+    }
+  ],
+  "nativo_final05": "cuatro gestos reales, cero errores/avisos/fugas",
+  "casos_en_cabeza_3e": 66,
+  "casos_previos_en_3d": 20,
+  "limite": "Las retenciones de suites aisladas se conservan explicitamente. La auditoria de la completa definitiva se exige por separado."
+}

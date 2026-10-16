@@ -1,0 +1,168 @@
+{
+  "head": "3e381d1be90e30589e9c7b38905199a576c43201",
+  "criterios_PLY": 95,
+  "sin_cita": [],
+  "lote": {
+    "AC-PLY-095": [
+      {
+        "ruta": "test/sistemas/marco/red_de_seguridad_test.gd",
+        "linea": 285,
+        "caso": "func test_el_reposo_revisa_tambien_la_caja_que_ya_se_congelo() -> void:  # BR-PLY-015 AC-PLY-095"
+      },
+      {
+        "ruta": "test/sistemas/marco/red_de_seguridad_test.gd",
+        "linea": 329,
+        "caso": "func test_rescatar_una_caja_quieta_anota_el_apoyo_nuevo_para_la_cascada() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 79,
+        "caso": "func test_la_caja_grande_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 83,
+        "caso": "func test_la_caja_chica_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 87,
+        "caso": "func test_la_caja_grande_queda_estable_y_recogible_sobre_mostrador() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 91,
+        "caso": "func test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 95,
+        "caso": "func test_la_caja_grande_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 99,
+        "caso": "func test_la_caja_chica_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 103,
+        "caso": "func test_la_caja_grande_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 107,
+        "caso": "func test_la_caja_chica_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 111,
+        "caso": "func test_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 115,
+        "caso": "func test_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 119,
+        "caso": "func test_la_cascada_grande_atraviesa_una_caja_que_ya_esta_despierta() -> void:  # AC-PLY-095"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 123,
+        "caso": "func test_la_cascada_chica_atraviesa_una_caja_que_ya_esta_despierta() -> void:  # AC-PLY-095"
+      }
+    ],
+    "AC-PLY-096": [
+      {
+        "ruta": "test/dominio/jugador/referencia_de_controles_test.gd",
+        "linea": 249,
+        "caso": "func test_hablar_y_entregar_solo_declaran_el_contexto_habilitado() -> void:  # AC-PLY-096"
+      }
+    ],
+    "AC-PLY-097": [
+      {
+        "ruta": "test/escenas/interacciones_con_el_izquierdo_test.gd",
+        "linea": 71,
+        "caso": "func test_los_seis_pares_ejecutan_un_uso_y_el_derecho_ninguno() -> void:  # AC-CLN-067 AC-PLY-097"
+      },
+      {
+        "ruta": "test/escenas/interacciones_con_el_izquierdo_test.gd",
+        "linea": 108,
+        "caso": "func test_rechazar_conserva_util_agua_y_carga() -> void:  # AC-CLN-068 AC-PLY-097"
+      },
+      {
+        "ruta": "test/escenas/interacciones_con_el_izquierdo_test.gd",
+        "linea": 151,
+        "caso": "func test_caja_separa_gestos_y_rechaza_repeticion() -> void:  # AC-STK-038 AC-PLY-097"
+      },
+      {
+        "ruta": "test/dominio/jugador/referencia_de_controles_test.gd",
+        "linea": 62,
+        "caso": "func test_devolver_consume_aun_con_caja_llena() -> void:  # AC-PLY-083 AC-PLY-097"
+      },
+      {
+        "ruta": "test/dominio/jugador/referencia_de_controles_test.gd",
+        "linea": 188,
+        "caso": "func test_sin_interaccion_declarada_conserva_agarrar_y_dejar() -> void:  # AC-PLY-087 AC-PLY-097"
+      }
+    ],
+    "AC-PLY-098": [
+      {
+        "ruta": "test/escenas/interacciones_con_el_izquierdo_test.gd",
+        "linea": 213,
+        "caso": "func test_salir_de_computadora_caja_y_nota_consume_el_clic() -> void:  # AC-PLY-098"
+      },
+      {
+        "ruta": "test/escenas/interacciones_con_el_izquierdo_test.gd",
+        "linea": 265,
+        "caso": "func test_examen_celular_pausa_y_cierre_bloquean_ambos_gestos() -> void:  # AC-PLY-098"
+      },
+      {
+        "ruta": "test/dominio/jugador/referencia_de_controles_test.gd",
+        "linea": 221,
+        "caso": "func test_suspender_vacia_referencia_y_bloquea_ambos_gestos() -> void:  # AC-PLY-089 AC-PLY-098"
+      }
+    ],
+    "AC-PLY-099": [
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 5,
+        "caso": "func test_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void:  # AC-PLY-099"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 10,
+        "caso": "func test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void:  # AC-PLY-099"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 31,
+        "caso": "func test_cada_cara_superior_del_riel_visible_tiene_apoyo_fisico() -> void:  # AC-PLY-099"
+      }
+    ],
+    "AC-PLY-100": [
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 15,
+        "caso": "func test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100"
+      },
+      {
+        "ruta": "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd",
+        "linea": 23,
+        "caso": "func test_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100"
+      }
+    ],
+    "BR-PLY-040": {
+      "regla_presente": true,
+      "criterios_ejercidos": [
+        "AC-PLY-099",
+        "AC-PLY-100"
+      ],
+      "nota": "Cita literal de AC en tests; no se afirma cita literal de BR040."
+    }
+  },
+  "OQ-PLY-004": "Intacta; la ratificacion no la declara resuelta."
+}

@@ -1,0 +1,12 @@
+{
+  "full_head": "3e381d1be90e30589e9c7b38905199a576c43201",
+  "nativo_final05_head": "3e381d1be90e30589e9c7b38905199a576c43201",
+  "full_misma_fuente_que_nativo_final05": true,
+  "decision_inmutable": "f1ef7fbb6e6c1fc4e82be1d606cb0b0deeab5e45",
+  "control425_head": "bc26e68435b03298bcd8fb07524b73f3671cd7cf",
+  "perf_y_cascada_antes_fix_head": "d9bfd08235bfdccc28ab6b6654a50d2ba273fc86",
+  "native_script": "428_nativo_final05.gd",
+  "completa_roja_preservada": "full01: 269/269 suites,2072/2072 casos,2 fallos funcionales.",
+  "segunda_completa_roja_preservada": "full02: 269/269 suites,2073/2073 casos,1 fallo de cascada.",
+  "completa_final": "full03: después del TDD de puente despierto y recorrido por RID visitados."
+}

@@ -1,0 +1,54 @@
+{
+  "head": "ff9abe4b1a2a6f06c13d7c1761bfaf8ed677b0e3",
+  "inputs": {
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428_traza_pila01.gd": "e8371fc93f5617effb46123aa4c9468fe17bf099a488c6e0ec29f16209f30d55",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\traza-bolsa430.gd": "8af074f10aff61a19bd1029085c4cd3f03a2abafe3b34d33a32f015c38332ff7"
+  },
+  "fases": [
+    {
+      "nombre": "import",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        ".",
+        "--headless",
+        "--import",
+        "--quit"
+      ],
+      "exit": 0,
+      "duracion_s": 13.414044899865985,
+      "errores": []
+    },
+    {
+      "nombre": "pila",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        ".",
+        "--headless",
+        "--script",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428_traza_pila01.gd"
+      ],
+      "exit": 0,
+      "duracion_s": 12.6157658000011,
+      "errores": []
+    },
+    {
+      "nombre": "bolsa",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        ".",
+        "--headless",
+        "--script",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\traza-bolsa430.gd"
+      ],
+      "exit": 0,
+      "duracion_s": 2.2544523999094963,
+      "errores": [
+        "WARNING: 29 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ]
+}

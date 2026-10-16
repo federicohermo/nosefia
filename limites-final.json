@@ -1,0 +1,13 @@
+{
+  "head": "3e381d1be90e30589e9c7b38905199a576c43201",
+  "rutas_preservadas": [
+    "assets",
+    "src/ui",
+    "src/escenas/jugador.tscn",
+    "src/escenas/almacen.tscn",
+    "project.godot",
+    "export_presets.cfg",
+    "specs/store-stock/store-stock.md"
+  ],
+  "exit_diff": 0
+}

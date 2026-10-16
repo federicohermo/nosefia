@@ -1,0 +1,171 @@
+[
+  {
+    "frame": 2196,
+    "etapa": "reposo:CajaDeProngles",
+    "caja": "CajaDeZucarachas",
+    "posicion": [
+      4.48982858657837,
+      0.392247676849365,
+      -10.0012016296387
+    ],
+    "apoyo": [
+      4.48999977111816,
+      1.01310002803802,
+      -10.0
+    ],
+    "delta_apoyo": 0.6208535376354203,
+    "query_pose": "[X: (0.303708, 0.0, 0.0), Y: (0.0, 0.303708, 0.0), Z: (0.0, 0.0, 0.303708), O: (4.49, 1.620515, -10.0)]",
+    "encima": [
+      {
+        "freeze": true,
+        "nombre": "CajaDeProngles",
+        "sleeping": true
+      },
+      {
+        "freeze": false,
+        "nombre": "CajaDeChisitos",
+        "sleeping": false
+      }
+    ]
+  },
+  {
+    "frame": 2196,
+    "etapa": "reposo:CajaDeProngles",
+    "caja": "CajaDeLaysntt",
+    "posicion": [
+      4.48682546615601,
+      0.998766243457794,
+      -10.0081205368042
+    ],
+    "apoyo": [
+      4.48638820648193,
+      0.998622953891754,
+      -10.0060739517212
+    ],
+    "delta_apoyo": 0.0020976745277250294,
+    "query_pose": "[X: (0.303708, 0.0, 0.0), Y: (0.0, 0.303708, 0.0), Z: (0.0, 0.0, 0.303708), O: (4.486388, 1.606038, -10.00607)]",
+    "encima": [
+      {
+        "freeze": true,
+        "nombre": "CajaDeProngles",
+        "sleeping": true
+      },
+      {
+        "freeze": false,
+        "nombre": "CajaDeChisitos",
+        "sleeping": false
+      }
+    ]
+  },
+  {
+    "frame": 2196,
+    "etapa": "reposo:CajaDeChisitos",
+    "caja": "CajaDeZucarachas",
+    "posicion": [
+      4.48982858657837,
+      0.392247676849365,
+      -10.0012016296387
+    ],
+    "apoyo": [
+      4.48999977111816,
+      1.01310002803802,
+      -10.0
+    ],
+    "delta_apoyo": 0.6208535376354203,
+    "query_pose": "[X: (0.303708, 0.0, 0.0), Y: (0.0, 0.303708, 0.0), Z: (0.0, 0.0, 0.303708), O: (4.49, 1.620515, -10.0)]",
+    "encima": [
+      {
+        "freeze": true,
+        "nombre": "CajaDeChisitos",
+        "sleeping": true
+      },
+      {
+        "freeze": true,
+        "nombre": "CajaDeProngles",
+        "sleeping": true
+      }
+    ]
+  },
+  {
+    "frame": 2196,
+    "etapa": "reposo:CajaDeChisitos",
+    "caja": "CajaDeLaysntt",
+    "posicion": [
+      4.48682546615601,
+      0.998766243457794,
+      -10.0081205368042
+    ],
+    "apoyo": [
+      4.48638820648193,
+      0.998622953891754,
+      -10.0060739517212
+    ],
+    "delta_apoyo": 0.0020976745277250294,
+    "query_pose": "[X: (0.303708, 0.0, 0.0), Y: (0.0, 0.303708, 0.0), Z: (0.0, 0.0, 0.303708), O: (4.486388, 1.606038, -10.00607)]",
+    "encima": [
+      {
+        "freeze": true,
+        "nombre": "CajaDeChisitos",
+        "sleeping": true
+      },
+      {
+        "freeze": true,
+        "nombre": "CajaDeProngles",
+        "sleeping": true
+      }
+    ]
+  },
+  {
+    "frame": 2196,
+    "etapa": "reposo:CajaDeLaysntt",
+    "caja": "CajaDeZucarachas",
+    "posicion": [
+      4.48982858657837,
+      0.392247676849365,
+      -10.0012016296387
+    ],
+    "apoyo": [
+      4.48999977111816,
+      1.01310002803802,
+      -10.0
+    ],
+    "delta_apoyo": 0.6208535376354203,
+    "query_pose": "[X: (0.303708, 0.0, 0.0), Y: (0.0, 0.303708, 0.0), Z: (0.0, 0.0, 0.303708), O: (4.49, 1.620515, -10.0)]",
+    "encima": [
+      {
+        "freeze": true,
+        "nombre": "CajaDeChisitos",
+        "sleeping": true
+      },
+      {
+        "freeze": true,
+        "nombre": "CajaDeProngles",
+        "sleeping": true
+      }
+    ]
+  },
+  {
+    "frame": 2247,
+    "etapa": "reposo:CajaDeChisitos",
+    "caja": "CajaDeLaysntt",
+    "posicion": [
+      4.48618507385254,
+      0.386465817689896,
+      -10.0081720352173
+    ],
+    "apoyo": [
+      4.48681449890137,
+      0.998765647411346,
+      -10.0081224441528
+    ],
+    "delta_apoyo": 0.6123001552442089,
+    "query_pose": "[X: (0.303708, 0.0, 0.0), Y: (0.0, 0.303708, 0.0), Z: (0.0, 0.0, 0.303708), O: (4.486814, 1.606181, -10.00812)]",
+    "encima": [
+      {
+        "freeze": true,
+        "nombre": "CajaDeChisitos",
+        "sleeping": true
+      }
+    ]
+  }
+]

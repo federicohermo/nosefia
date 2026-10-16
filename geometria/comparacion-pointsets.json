@@ -1,0 +1,26 @@
+{
+  "method": "Puntos raw delhelper (no vértices delcasco), round9, cero negativo a0.0 yordenlexicográficodepuntos/gruposporbbox.",
+  "helper_sha256": "a2bd824c473d040102b8d78499e555759bc05352c93f696a003b7e1f1d9b2c50",
+  "dump_sha256": "43c0fd4244a9e3a2ec1c521b7055f16e6c8ea5257dd9bb12f4f3869a16a08d76",
+  "glb_sha256": "634b8b86d58b4a5a01935a625c23b01c5e3974bb092095cc1f6758256e3e0930",
+  "results": [
+    {
+      "object": "A",
+      "raw_pointsets_byte_identical_round9": true,
+      "points_glb_total": 5270,
+      "points_blender_total": 5270,
+      "sha256_glb_canonical": "347549cabdb258bc56e77f75e80d44740b14479b8f7921c5b75d8bf36e0f9dde",
+      "sha256_blender_canonical": "347549cabdb258bc56e77f75e80d44740b14479b8f7921c5b75d8bf36e0f9dde",
+      "differences": []
+    },
+    {
+      "object": "B",
+      "raw_pointsets_byte_identical_round9": true,
+      "points_glb_total": 5270,
+      "points_blender_total": 5270,
+      "sha256_glb_canonical": "347549cabdb258bc56e77f75e80d44740b14479b8f7921c5b75d8bf36e0f9dde",
+      "sha256_blender_canonical": "347549cabdb258bc56e77f75e80d44740b14479b8f7921c5b75d8bf36e0f9dde",
+      "differences": []
+    }
+  ]
+}

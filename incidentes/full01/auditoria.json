@@ -1,0 +1,49 @@
+{
+  "head": "ff9abe4b1a2a6f06c13d7c1761bfaf8ed677b0e3",
+  "exit_verificar": 1,
+  "exit_conteo": 0,
+  "duracion_s": 982.0078092000913,
+  "cantidad_suites_fuente": 269,
+  "salidas": {
+    "conteo.log": {
+      "bytes": 65,
+      "sha256": "74078a715d97f441419802355fe7628a3c56abff31492822ffcfc7921c612f0e"
+    },
+    "verificar.log": {
+      "bytes": 1179003,
+      "sha256": "8473af99ed983413a2239e3cee02e3a26aac84d9da7a164a2a5b1f34535b81e4"
+    },
+    "crudo/capas.log": {
+      "bytes": 143,
+      "sha256": "c5678113c68c9037f43e14581fa5bc91a66ccaf92e0dfaef195efad8f82f8352"
+    },
+    "crudo/formato.log": {
+      "bytes": 35,
+      "sha256": "7036e911a7fd2d83a98a617ca63ec37aa04ce8a34c31c56e4aae7a87fbc69338"
+    },
+    "crudo/harness.log": {
+      "bytes": 3393,
+      "sha256": "81bd45603af357c9a587cba3b21413b8612ab82184b3d313f41649f143d8906e"
+    },
+    "crudo/lint.log": {
+      "bytes": 28,
+      "sha256": "098424cb171ea105b5f32277ddcb3b139ff90d7f943970e0e55a7268d9468b1e"
+    },
+    "crudo/specs.log": {
+      "bytes": 322,
+      "sha256": "f4ad05077025e50253c4e9a18ffee747afffbdbe00bf875658667538c32c9cb6"
+    },
+    "crudo/tdd.log": {
+      "bytes": 140,
+      "sha256": "fffbe17e90622b572fb33f3845c63d29486d04b636b52aa7d2336d139fd888ef"
+    },
+    "crudo/tests-import.log": {
+      "bytes": 2921,
+      "sha256": "90951d4b746ff3354dc43081e49fe9097b8d7cafda918c8d61f9c54c14337d7e"
+    },
+    "crudo/tests.log": {
+      "bytes": 1178716,
+      "sha256": "11ceee61bf3304a1f9b66faa7253673e943d8a9d5d7e0d4cb7dc251a66cdcf3c"
+    }
+  }
+}

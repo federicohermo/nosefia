@@ -1,0 +1,55 @@
+{
+  "head": "3e381d1be90e30589e9c7b38905199a576c43201",
+  "exit_verificar": 0,
+  "exit_conteo": 0,
+  "duracion_s": 998.612663900014,
+  "limite_verificar_s": 2700,
+  "reporte_original": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-428-apoyos\\reports\\report_4\\results.xml",
+  "cantidad_suites_fuente": 269,
+  "salidas": {
+    "conteo.log": {
+      "bytes": 65,
+      "sha256": "44f84d6542f6104e710f2620981efd4558a9fe87b3a47b657b143be65b680a03"
+    },
+    "results.xml": {
+      "bytes": 340152,
+      "sha256": "11c891555d1d55162e2b52aa32dc0c9c5ef6d1ea983fc9723e4bfe35ae465d6d"
+    },
+    "verificar.log": {
+      "bytes": 244,
+      "sha256": "cabbd232c6e10d78a095fef64bdf2428524f689523dd69227bfca05beb80ce81"
+    },
+    "crudo/capas.log": {
+      "bytes": 143,
+      "sha256": "c5678113c68c9037f43e14581fa5bc91a66ccaf92e0dfaef195efad8f82f8352"
+    },
+    "crudo/formato.log": {
+      "bytes": 35,
+      "sha256": "7036e911a7fd2d83a98a617ca63ec37aa04ce8a34c31c56e4aae7a87fbc69338"
+    },
+    "crudo/harness.log": {
+      "bytes": 3393,
+      "sha256": "6462d8ff7fa21e13a13bfc93e25dadde90863dce1da419ed3d6375ce43f04d7e"
+    },
+    "crudo/lint.log": {
+      "bytes": 28,
+      "sha256": "098424cb171ea105b5f32277ddcb3b139ff90d7f943970e0e55a7268d9468b1e"
+    },
+    "crudo/specs.log": {
+      "bytes": 322,
+      "sha256": "f4ad05077025e50253c4e9a18ffee747afffbdbe00bf875658667538c32c9cb6"
+    },
+    "crudo/tdd.log": {
+      "bytes": 140,
+      "sha256": "fffbe17e90622b572fb33f3845c63d29486d04b636b52aa7d2336d139fd888ef"
+    },
+    "crudo/tests-import.log": {
+      "bytes": 3125,
+      "sha256": "d54dff352b144b971041facc06d41f21f3237ed8b6ed5ebf77622debcb46d28b"
+    },
+    "crudo/tests.log": {
+      "bytes": 1179301,
+      "sha256": "e918f0336fb9ae938dd52856562b5106037e09d06f4e4e2903225222175c6ec2"
+    }
+  }
+}

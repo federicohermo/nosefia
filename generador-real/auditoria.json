@@ -1,0 +1,69 @@
+{
+  "head": "74e9c4bd233743292817ce04250bdba4e2482cc3",
+  "blend_sha256_antes": "0c23ea7db6393ea4a0fa86088b4d4897a5d7484d81ae0c0aedf7f8e7d7213f19",
+  "blend_sha256_despues": "0c23ea7db6393ea4a0fa86088b4d4897a5d7484d81ae0c0aedf7f8e7d7213f19",
+  "script_sha256": "cba867444e9fdb02725cff6a0f1f180400fd3f4160065a2a83047b5b78d09571",
+  "pasos": [
+    {
+      "paso": 1,
+      "diferencias": [],
+      "archivos": {
+        "src\\escenas\\puestos\\disposicion_de_la_gondola.tres": {
+          "antes_sha256": "415f306531922fa578c5d1edf231ff32bbe519ae4cb026e010558f46d8a6622a",
+          "calculado_sha256": "415f306531922fa578c5d1edf231ff32bbe519ae4cb026e010558f46d8a6622a",
+          "bytes": 41964,
+          "byteidentico": true
+        },
+        "src\\escenas\\puestos\\contenido_del_estante.tscn": {
+          "antes_sha256": "114d8f2081c4632f185343aafe544d7eb32fc147d4a7200ddd98378afaadf387",
+          "calculado_sha256": "114d8f2081c4632f185343aafe544d7eb32fc147d4a7200ddd98378afaadf387",
+          "bytes": 11744,
+          "byteidentico": true
+        },
+        "src\\escenas\\puestos\\guia_del_estante.tscn": {
+          "antes_sha256": "115c0b929547f265b62a4a60a33be95273941ed830752216610dc79130664ff7",
+          "calculado_sha256": "115c0b929547f265b62a4a60a33be95273941ed830752216610dc79130664ff7",
+          "bytes": 11010,
+          "byteidentico": true
+        },
+        "src\\escenas\\puestos\\estructura_del_almacen.tscn": {
+          "antes_sha256": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e",
+          "calculado_sha256": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e",
+          "bytes": 1150860,
+          "byteidentico": true
+        }
+      }
+    },
+    {
+      "paso": 2,
+      "diferencias": [],
+      "archivos": {
+        "src\\escenas\\puestos\\disposicion_de_la_gondola.tres": {
+          "antes_sha256": "415f306531922fa578c5d1edf231ff32bbe519ae4cb026e010558f46d8a6622a",
+          "calculado_sha256": "415f306531922fa578c5d1edf231ff32bbe519ae4cb026e010558f46d8a6622a",
+          "bytes": 41964,
+          "byteidentico": true
+        },
+        "src\\escenas\\puestos\\contenido_del_estante.tscn": {
+          "antes_sha256": "114d8f2081c4632f185343aafe544d7eb32fc147d4a7200ddd98378afaadf387",
+          "calculado_sha256": "114d8f2081c4632f185343aafe544d7eb32fc147d4a7200ddd98378afaadf387",
+          "bytes": 11744,
+          "byteidentico": true
+        },
+        "src\\escenas\\puestos\\guia_del_estante.tscn": {
+          "antes_sha256": "115c0b929547f265b62a4a60a33be95273941ed830752216610dc79130664ff7",
+          "calculado_sha256": "115c0b929547f265b62a4a60a33be95273941ed830752216610dc79130664ff7",
+          "bytes": 11010,
+          "byteidentico": true
+        },
+        "src\\escenas\\puestos\\estructura_del_almacen.tscn": {
+          "antes_sha256": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e",
+          "calculado_sha256": "a634041606b845eaa204f7536f965d53a122edf7564e9be932c21cf32e0d577e",
+          "bytes": 1150860,
+          "byteidentico": true
+        }
+      }
+    }
+  ],
+  "limite": "No exporta arte; el generador ejecutado es el versionado y evalúa bpy real."
+}

@@ -1,0 +1,12 @@
+{
+  "head_generacion_real": "418b8883",
+  "head_actual": "3e381d1be90e30589e9c7b38905199a576c43201",
+  "rutas_byteidenticas": [
+    ".claude/scripts/lib/apoyos_del_modelo.py",
+    ".claude/scripts/lib/gondola.py",
+    ".claude/scripts/blender/disponer.py",
+    ".claude/scripts/actualizar_apoyos.py",
+    "src/escenas/puestos/estructura_del_almacen.tscn"
+  ],
+  "exit_diff": 0
+}

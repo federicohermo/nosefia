@@ -1,0 +1,37 @@
+[
+  {
+    "wt": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-425-controles",
+    "head": "bc26e68435b03298bcd8fb07524b73f3671cd7cf",
+    "fase": "import",
+    "comando": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--path",
+      ".",
+      "--headless",
+      "--import",
+      "--quit"
+    ],
+    "exit": 0,
+    "duracion_s": 11.571888400008902,
+    "diagnosticos": []
+  },
+  {
+    "wt": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-425-controles",
+    "head": "bc26e68435b03298bcd8fb07524b73f3671cd7cf",
+    "fase": "cascada",
+    "comando": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--path",
+      ".",
+      "--headless",
+      "--script",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428_cascada_control01.gd"
+    ],
+    "exit": 0,
+    "duracion_s": 11.063222299795598,
+    "diagnosticos": [
+      "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+    ]
+  }
+]

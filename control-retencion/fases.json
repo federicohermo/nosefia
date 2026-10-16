@@ -1,0 +1,118 @@
+[
+  {
+    "nombre": "control425",
+    "head": "bc26e68435b03298bcd8fb07524b73f3671cd7cf",
+    "suite": "volumen_de_los_solidos",
+    "exit": 0,
+    "comando": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--path",
+      ".",
+      "--verbose",
+      "--headless",
+      "-s",
+      "-d",
+      "--remote-debug",
+      "tcp://127.0.0.1:0",
+      "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+      "-a",
+      "test/escenas/volumen_de_los_solidos_test.gd",
+      "--continue",
+      "--ignoreHeadlessMode",
+      "-rd",
+      "res://reports/428-control-verbose01"
+    ],
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\control-verbose01\\control425-volumen_de_los_solidos.log",
+    "conteo": [
+      "Executed test suites: (1/1)\u001b[0m\r",
+      "Executed test cases : (5/5)\u001b[0m\r"
+    ]
+  },
+  {
+    "nombre": "control425",
+    "head": "bc26e68435b03298bcd8fb07524b73f3671cd7cf",
+    "suite": "contorno_de_los_muebles",
+    "exit": 0,
+    "comando": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--path",
+      ".",
+      "--verbose",
+      "--headless",
+      "-s",
+      "-d",
+      "--remote-debug",
+      "tcp://127.0.0.1:0",
+      "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+      "-a",
+      "test/escenas/contorno_de_los_muebles_test.gd",
+      "--continue",
+      "--ignoreHeadlessMode",
+      "-rd",
+      "res://reports/428-control-verbose01"
+    ],
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\control-verbose01\\control425-contorno_de_los_muebles.log",
+    "conteo": [
+      "Executed test suites: (1/1)\u001b[0m\r",
+      "Executed test cases : (5/5)\u001b[0m\r"
+    ]
+  },
+  {
+    "nombre": "candidato428",
+    "head": "d9bfd08235bfdccc28ab6b6654a50d2ba273fc86",
+    "suite": "volumen_de_los_solidos",
+    "exit": 0,
+    "comando": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--path",
+      ".",
+      "--verbose",
+      "--headless",
+      "-s",
+      "-d",
+      "--remote-debug",
+      "tcp://127.0.0.1:0",
+      "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+      "-a",
+      "test/escenas/volumen_de_los_solidos_test.gd",
+      "--continue",
+      "--ignoreHeadlessMode",
+      "-rd",
+      "res://reports/428-control-verbose01"
+    ],
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\control-verbose01\\candidato428-volumen_de_los_solidos.log",
+    "conteo": [
+      "Executed test suites: (1/1)\u001b[0m\r",
+      "Executed test cases : (5/5)\u001b[0m\r"
+    ]
+  },
+  {
+    "nombre": "candidato428",
+    "head": "d9bfd08235bfdccc28ab6b6654a50d2ba273fc86",
+    "suite": "contorno_de_los_muebles",
+    "exit": 0,
+    "comando": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--path",
+      ".",
+      "--verbose",
+      "--headless",
+      "-s",
+      "-d",
+      "--remote-debug",
+      "tcp://127.0.0.1:0",
+      "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+      "-a",
+      "test/escenas/contorno_de_los_muebles_test.gd",
+      "--continue",
+      "--ignoreHeadlessMode",
+      "-rd",
+      "res://reports/428-control-verbose01"
+    ],
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\control-verbose01\\candidato428-contorno_de_los_muebles.log",
+    "conteo": [
+      "Executed test suites: (1/1)\u001b[0m\r",
+      "Executed test cases : (6/6)\u001b[0m\r"
+    ]
+  }
+]

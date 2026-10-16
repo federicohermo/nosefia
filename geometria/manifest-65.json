@@ -1,0 +1,331 @@
+{
+  "frozen_helper_sha256": "a2bd824c473d040102b8d78499e555759bc05352c93f696a003b7e1f1d9b2c50",
+  "frozen_candidate_sha256": "4d6926f1b74680eb9c7d52fa13e9a51496077f94a5bad4f94704baa795c38aaf",
+  "files": [
+    {
+      "path": "analizar.py",
+      "bytes": 4856,
+      "sha256": "019337a6c961d4c4f559291521e89b8c4c59e6b1a285c7833a6680eb917a654c"
+    },
+    {
+      "path": "candidato-01.json",
+      "bytes": 2326880,
+      "sha256": "8cd0d2e5d74c3f96a9fe5a97c1dfc7e27f76e95d5335e511f077a5ccdca485fa"
+    },
+    {
+      "path": "candidato-02.json",
+      "bytes": 2340779,
+      "sha256": "d3f416d045c90844c527d19f132cae618640dfd3e96b56e71597719d43bec300"
+    },
+    {
+      "path": "candidato-03.json",
+      "bytes": 1666256,
+      "sha256": "1929246fe80104309b1c24743b2b118eb3fb20e7fe614ddb55e8e6cf1bb28340"
+    },
+    {
+      "path": "candidato-04.json",
+      "bytes": 1624627,
+      "sha256": "2e96601da9a03947abd3067f00ab6229513bc072be9554d9ffa65d057a668cf1"
+    },
+    {
+      "path": "candidato-55.json",
+      "bytes": 1307912,
+      "sha256": "c8ff34d806f1755bc9c19ee6d494fdbe8b7c7156bd6fcd8193a865bffc4d7908"
+    },
+    {
+      "path": "candidato-61.json",
+      "bytes": 1345267,
+      "sha256": "5755a901cb23b910ca1065dc36f1d01ceeb98a88f5886bb82a840b853ff76620"
+    },
+    {
+      "path": "candidato-61.log",
+      "bytes": 20796,
+      "sha256": "83a1f7f9fd1dddcb5ab15f7615ebaeac5472712c8ad9a34b1edd863734f498b9"
+    },
+    {
+      "path": "candidato-65-repro.json",
+      "bytes": 1393746,
+      "sha256": "afce0a41edff7ce676b2bdef811424f22c52fdee6aa4107027a24a60cba07c25"
+    },
+    {
+      "path": "candidato-65.json",
+      "bytes": 1457322,
+      "sha256": "4d6926f1b74680eb9c7d52fa13e9a51496077f94a5bad4f94704baa795c38aaf"
+    },
+    {
+      "path": "candidato-material-rojo59.json",
+      "bytes": 1241383,
+      "sha256": "af25694bcd0d27a734ed339664f33624d734bfe5506e75dc2154b1144bd78483"
+    },
+    {
+      "path": "candidato-material.json",
+      "bytes": 1263547,
+      "sha256": "792724d97690aeaeccc9753f6c9f6c369670dcd4edf05602120dcf669320d6a5"
+    },
+    {
+      "path": "candidato-planos-rojo55.json",
+      "bytes": 1305278,
+      "sha256": "e56f9a701e9c7595de300b1e18680a9f81202f4f7e0a3735d67bd782e3b61dfa"
+    },
+    {
+      "path": "candidato-planos.json",
+      "bytes": 1307912,
+      "sha256": "c8ff34d806f1755bc9c19ee6d494fdbe8b7c7156bd6fcd8193a865bffc4d7908"
+    },
+    {
+      "path": "candidato-planos.log",
+      "bytes": 15412,
+      "sha256": "0cd20fb14d36172b1876d487bb35fda1b03a45d1c78c218e43d5ab29f132cd7a"
+    },
+    {
+      "path": "candidato.json",
+      "bytes": 2326880,
+      "sha256": "8cd0d2e5d74c3f96a9fe5a97c1dfc7e27f76e95d5335e511f077a5ccdca485fa"
+    },
+    {
+      "path": "certificado-continuo-65.json",
+      "bytes": 2398033,
+      "sha256": "0b26743baff9de403fb5bf48f4fd8b10f7b507f98bd141ff4a323cf0cfa33ed3"
+    },
+    {
+      "path": "certificado-continuo-65.log",
+      "bytes": 3580,
+      "sha256": "65e5c408ceb8aa0525e7d89f60c0726b60c8bc19951d2d9cb5c7ee7861fa32b4"
+    },
+    {
+      "path": "certificar-holgura.py",
+      "bytes": 6655,
+      "sha256": "8f8d4520c5118dcac59e5634fe1ceece518ef03b7eb9c8a9aca6279055f08367"
+    },
+    {
+      "path": "cobertura-61.json",
+      "bytes": 32049,
+      "sha256": "308413bd91674314092b9f87f46af159ea1141672d9a74ba609b45e075dc64e0"
+    },
+    {
+      "path": "cobertura-61.log",
+      "bytes": 12710,
+      "sha256": "bc02cbbd5de8e45ed09aac1ae7cf42f77e8e77fa5444f9c64aa1fe28798d258f"
+    },
+    {
+      "path": "cobertura-65.json",
+      "bytes": 32597,
+      "sha256": "c6afd9bde4dfe6c11612a82875060ced69de4ce3017578b5bb4cfa85961234c7"
+    },
+    {
+      "path": "cobertura-65.log",
+      "bytes": 12710,
+      "sha256": "93d90d67586c5a38abeb69891f2d0315661820a4b14a050035f5ab886ae41867"
+    },
+    {
+      "path": "cobertura-volumenes-55.json",
+      "bytes": 32086,
+      "sha256": "4c07487f5dcb1c16ae6510e14055b045c8bd2c7902458e81e5663a06c66f8a06"
+    },
+    {
+      "path": "cobertura-volumenes-rojo55.json",
+      "bytes": 32968,
+      "sha256": "e2e4490aa0287fc17a7ab65005aeb7e8cc2864e6d7311011c4c6eff33a301fb9"
+    },
+    {
+      "path": "cobertura-volumenes.json",
+      "bytes": 32086,
+      "sha256": "4c07487f5dcb1c16ae6510e14055b045c8bd2c7902458e81e5663a06c66f8a06"
+    },
+    {
+      "path": "cobertura-volumenes.log",
+      "bytes": 12700,
+      "sha256": "d3c6501c081ce99b448cf964a7bf300dd210296ff9559fce4f9332dfab7e4d3f"
+    },
+    {
+      "path": "comparacion-blender-glb.json",
+      "bytes": 28861,
+      "sha256": "a09cf1e2dac96c893fc19e6e3b8d54649f8474ad16a402e6ce2c482d7ae7c5da"
+    },
+    {
+      "path": "comparacion-pointsets-signo-cero.json",
+      "bytes": 1146,
+      "sha256": "36466716d903a686e24d2554a24d6e0202ee1cd9ce3744d215a0d324777c4343"
+    },
+    {
+      "path": "comparacion-pointsets.json",
+      "bytes": 1164,
+      "sha256": "f11935a103cc8124ae1e3d34e9ef31a05fa0db4eb4b898f872dbc2bf34979a3d"
+    },
+    {
+      "path": "comparar-evaluada.py",
+      "bytes": 3805,
+      "sha256": "ffa35fd2e6a5e699c4e2648a98c76c1b206cfe862310d6c052a8e065ccfc677a"
+    },
+    {
+      "path": "comparar-pointsets.py",
+      "bytes": 2628,
+      "sha256": "0825f1115a3d2c38291ab50b38b38f76d5389c82e4c237c7b51626e1566b7066"
+    },
+    {
+      "path": "componentes-completas.json",
+      "bytes": 139643,
+      "sha256": "769984e4dafa511b72c45e50310676fd08464860117d3cded63253947f4f7a5f"
+    },
+    {
+      "path": "convexos_gondola-55.py",
+      "bytes": 7818,
+      "sha256": "3557284909708b6f2b573a52aff5aef59775d3197d75f60d30f5472874d1eabf"
+    },
+    {
+      "path": "convexos_gondola-61.py",
+      "bytes": 9113,
+      "sha256": "b169c22db67c7ea2b2faf4c84f2a57695909c67d85fe4861547669516f82972d"
+    },
+    {
+      "path": "convexos_gondola.py",
+      "bytes": 10141,
+      "sha256": "a2bd824c473d040102b8d78499e555759bc05352c93f696a003b7e1f1d9b2c50"
+    },
+    {
+      "path": "generar-candidato65.py",
+      "bytes": 1855,
+      "sha256": "95691bb7601fd6c51b5e94035ea0ca307d7bc586e0ad629d9f4a2fd76f87c67b"
+    },
+    {
+      "path": "grilla-61-puntos.json",
+      "bytes": 36304781,
+      "sha256": "869df9b6a2766ee33c09e02e48f7946115ff06f1670081356b2369cedcb5b295"
+    },
+    {
+      "path": "grilla-61.json",
+      "bytes": 40832,
+      "sha256": "9c7f5c33a8516e2a674074f90142919e61a7582dd0699e3b7797e09fc27f5bd9"
+    },
+    {
+      "path": "grilla-61.log",
+      "bytes": 1120,
+      "sha256": "0fcd2f55d513f2b5f4d8fff50e2b2c265bd4ba2afe88728f173988f8154b93b7"
+    },
+    {
+      "path": "grilla-65-puntos.json",
+      "bytes": 31100616,
+      "sha256": "7db13d164c0681a03baf93125d0402915253da97e21614b4dddffa5dd46fe0b1"
+    },
+    {
+      "path": "grilla-65.json",
+      "bytes": 40741,
+      "sha256": "8e1358bcea54ec0b8b722b7f4a55b702919d552f24dd16587b527e421c6a8872"
+    },
+    {
+      "path": "grilla-65.log",
+      "bytes": 1120,
+      "sha256": "43f3a89930bc118bb3abc495ecdd1dd664b8ddd228c8c0233c0a46dca0e99039"
+    },
+    {
+      "path": "grilla-tres-ejes-55.json",
+      "bytes": 40643,
+      "sha256": "ff9811b79072735666f265d6f894b52764205337aa687d2f95800d4e9370509c"
+    },
+    {
+      "path": "grilla-tres-ejes-puntos.json",
+      "bytes": 42009422,
+      "sha256": "a048dda0fd9739cdc142b42574b35306a99f5a047bb4efdf21cd5aa1c90bb7cd"
+    },
+    {
+      "path": "grilla-tres-ejes.json",
+      "bytes": 40643,
+      "sha256": "ff9811b79072735666f265d6f894b52764205337aa687d2f95800d4e9370509c"
+    },
+    {
+      "path": "grilla-tres-ejes.log",
+      "bytes": 1118,
+      "sha256": "5c15acf41ccb36567e3b1fc73bf44ce291ca2c8c7f5cbccd8feee9f58940b17e"
+    },
+    {
+      "path": "perfiles.json",
+      "bytes": 6458,
+      "sha256": "987c2374ec054b18c6c2f653534d54219c78fae9dfa12791f6d3b138bb9af1ad"
+    },
+    {
+      "path": "perfiles.png",
+      "bytes": 68442,
+      "sha256": "2dcab72ef88ae1468301ce6d306d6ee0a9657b2cc750987c922874af19c2f328"
+    },
+    {
+      "path": "perfiles.py",
+      "bytes": 1679,
+      "sha256": "abe620adc0ec52fe0c5f2e9497d328ca9a0a82faaee88b6866aba29787272e08"
+    },
+    {
+      "path": "pointsets-puros-61.json",
+      "bytes": 328076,
+      "sha256": "7c9b2679f4a85ceb91f2f2c5fbec048c8f0357a29b1f01479aea35b120efaf73"
+    },
+    {
+      "path": "pointsets-puros.json",
+      "bytes": 313860,
+      "sha256": "f0753b4176527445557c45fc414bac1c3a36dfefb4c892e2a0de6ac98d9c0f13"
+    },
+    {
+      "path": "prototipo-01.py",
+      "bytes": 8333,
+      "sha256": "01786ac4c53496bb6bc79157faa72dfdebda8173f311709e5fcf1fc7fac93600"
+    },
+    {
+      "path": "prototipo-material-rojo59.py",
+      "bytes": 4422,
+      "sha256": "7319b28e3eccb06c073b0e011a122ae40b744febf6a00973b1c4991255113146"
+    },
+    {
+      "path": "prototipo-material.py",
+      "bytes": 5263,
+      "sha256": "f000808db407b5b2de8003b68bd11da2828c5d0ec2bf6f45dd482159194b5f9e"
+    },
+    {
+      "path": "prototipo-planos.py",
+      "bytes": 4601,
+      "sha256": "2a0b4b229b01d3db6baf244530ffcd8c904c1f8ae77469d8989d368aa08cb731"
+    },
+    {
+      "path": "prototipo-pliegue.py",
+      "bytes": 3208,
+      "sha256": "3048b97a7d239a907ed1991d305600d199500c0412abd5886a404b74a31397c3"
+    },
+    {
+      "path": "prototipo.py",
+      "bytes": 9302,
+      "sha256": "0235a261dc5e485a873f5b3cdce61be1f54ecc95141f69ca20eeab484deb8682"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5925,
+      "sha256": "3d655bb0866fe4bbfac5079baf461f93bc6088d9d0aff21cf1827b12184dfc58"
+    },
+    {
+      "path": "secciones.json",
+      "bytes": 63172,
+      "sha256": "f8772821c905f6dd6f93ff818041187e2b748926a3978ae42ada2daf83bd462f"
+    },
+    {
+      "path": "secciones.png",
+      "bytes": 83524,
+      "sha256": "df30cdca0569263564d36de00d64fc03ef2810926f81a933726c5645f32ccaab"
+    },
+    {
+      "path": "secciones.py",
+      "bytes": 2298,
+      "sha256": "08b8d0c5a6062ce7c7f231d219d5c3a594b89f1b623f72809a0dd5499a916eda"
+    },
+    {
+      "path": "topologia.json",
+      "bytes": 454089,
+      "sha256": "1e12bf5c7fadae6c99d34e650f23927f95863becdef58877353de9da673407ed"
+    },
+    {
+      "path": "verificar-cobertura.py",
+      "bytes": 6069,
+      "sha256": "45bbbff026eb19c034f4f2fec5e020de3db436f208eed685a5be251328124406"
+    },
+    {
+      "path": "verificar-grilla.py",
+      "bytes": 9226,
+      "sha256": "52e410d6d18f922d578c14bb768d10fab05594f92ed423f543b3ac5cd8ab8eb7"
+    }
+  ]
+}
