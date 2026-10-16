@@ -35,6 +35,7 @@ const METODO_CONTEXTO := &"contexto_de_interaccion"
 const NotaDelLocal := preload("res://src/escenas/objetos/nota_pegada.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
+const ManchaEnElPiso := preload("res://src/escenas/objetos/mancha_en_el_piso.gd")
 
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
@@ -702,11 +703,17 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 		var consulta := PhysicsRayQueryParameters3D.create(
 			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
 		)
-		consulta.exclude = [get_rid()]
+		var excluidos: Array[RID] = [get_rid()]
 		# Con la máscara del campo y no con todas: el contorno de un mueble lo envuelve, y un
 		# rayo que lo mirara pegaría siempre ahí antes que en el mueble.
 		consulta.collision_mask = _campo.collision_mask
+		consulta.exclude = excluidos
 		var golpe := espacio.intersect_ray(consulta)
+		# Una mancha es una superficie: no tapa lo que quedó tirado encima de ella.
+		while golpe.get("collider") is ManchaEnElPiso and golpe.get("collider") != cuerpo:
+			excluidos.append((golpe["collider"] as CollisionObject3D).get_rid())
+			consulta.exclude = excluidos
+			golpe = espacio.intersect_ray(consulta)
 		if golpe.get("collider") != cuerpo:
 			continue
 		var impacto: Vector3 = golpe.position
