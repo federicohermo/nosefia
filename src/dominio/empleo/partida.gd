@@ -19,6 +19,13 @@ extends RefCounted
 enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
 enum Llamado { LOCAL_DESORDENADO, OBJETO_AFUERA, PAPEL_EN_EL_INODORO, OBJETO_TIRADO }
 
+var expediente: Expediente:
+	get:
+		return _expediente
+	set(_nuevo):
+		push_error("El expediente pertenece a la partida y no se sustituye")
+
+var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
 var _obligatorias: Array[Tarea] = []
@@ -78,6 +85,7 @@ func anotar_mopa_secada() -> void:
 
 func _init(legajo: Legajo) -> void:
 	_legajo = legajo
+	_expediente = Expediente.new(CasoDeInvestigacion.de_la_partida())
 
 
 ## El legajo que la partida recibió, **la misma instancia** y no una copia. Con una copia, un

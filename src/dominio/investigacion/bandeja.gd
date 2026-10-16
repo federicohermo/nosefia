@@ -27,7 +27,10 @@ func abrir_jornada(jornada: int) -> void:
 func conversaciones() -> Array[Conversacion]:
 	var visibles: Array[Conversacion] = []
 	for conversacion in _conversaciones:
-		if not mensajes_de(conversacion.interlocutor).is_empty():
+		if (
+			conversacion.jornada_de_menu <= _jornada
+			and not mensajes_de(conversacion.interlocutor).is_empty()
+		):
 			visibles.append(conversacion)
 	return visibles
 
@@ -50,7 +53,9 @@ func mensajes_de(quien: Conversacion.Interlocutor) -> Array[Mensaje]:
 	var fechados: Array[Dictionary] = []
 	var sin_fecha: Array[Mensaje] = []
 	var todos: Array[Mensaje] = visibles.duplicate()
-	todos.append_array(_recibidos[quien])
+	for recibido: Mensaje in _recibidos[quien]:
+		if recibido.jornada <= _jornada:
+			todos.append(recibido)
 	for posicion: int in todos.size():
 		var mensaje := todos[posicion]
 		if mensaje.momento == Mensaje.Momento.SIN_FECHA:

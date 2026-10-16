@@ -108,6 +108,8 @@ var _jornada_del_celular: int = 0
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
 @onready var _pantalla_del_celular: PantallaDelCelular = $Interfaz/PantallaDelCelular
+@onready var _investigador: Investigador = $Servicios/Investigador
+@onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
 
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
@@ -116,6 +118,7 @@ func _ready() -> void:
 	azar_de_la_apertura.randomize()
 	_instrucciones.comenzar_pedido.connect(anunciar_la_noche)
 	_cablear_el_celular()
+	_cablear_la_investigacion()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
@@ -304,6 +307,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
+	_colilla.volver_a_su_lugar()
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
@@ -634,10 +638,42 @@ func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
 func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if not _celular.celular().abierto():
 		return
+	var indice := _celular.bandeja().mensajes_de(quien).find(mensaje)
+	if indice < 0:
+		return
 	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
 		_mostrar_el_menu_del_celular()
 	elif _celular.celular().chat() == quien:
-		_pantalla_del_celular.recibir(mensaje, _celular.bandeja().mensajes_de(quien).find(mensaje))
+		_pantalla_del_celular.recibir(mensaje, indice)
+
+
+func _cablear_la_investigacion() -> void:
+	_investigador.nota_agregada.connect(
+		func(mensaje: Mensaje) -> void: _celular.recibir(Conversacion.Interlocutor.NOTAS, mensaje)
+	)
+	_investigador.usar(_partida.expediente)
+	_celular.tramo_de_pista_pedido.connect(_al_pedir_pista_del_chat)
+	_agarre.objeto_agarrado.connect(_al_agarrar_una_pista)
+
+
+func _al_pedir_pista_del_chat(identidad: String) -> void:
+	_investigador.pedir_pista(
+		StringName(identidad), Pista.Canal.CHAT, _partida.jornada(), _se_puede_investigar()
+	)
+
+
+func _al_agarrar_una_pista(nodo: Node3D) -> void:
+	if not nodo.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
+		return
+	var datos: ObjetoDelAlmacen = nodo.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
+	if datos != null:
+		_investigador.pedir_pista(
+			datos.id, Pista.Canal.LEVANTAR, _partida.jornada(), _se_puede_investigar()
+		)
+
+
+func _se_puede_investigar() -> bool:
+	return _reloj.corriendo() and not get_tree().paused and not _jugador.examen.esta_examinando()
 
 
 ## Las señales pueden llegar antes de sincronizar los cuerpos con el espacio físico.

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "2B"
+jornada = 2
+titulo = "CIGARRILLO EN EL DEPÓSITO"
+texto = "¿Puede ser que alguien se esté metiendo sin que nos demos cuenta? Debería examinar bien las formas de ingreso al local…"
+exigencias = PackedStringArray("2B")
