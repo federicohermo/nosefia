@@ -52,6 +52,12 @@ func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
 	var manchas: Array = almacen.get("_limpieza").manchas()
 	objetos.append_array(manchas)
 	for objeto: Node3D in objetos:
+		# Una bolsa en su tacho tiene el cuerpo apagado: se muestra desbordando, no se apoya.
+		if (
+			objeto.has_method("en_el_tacho")
+			and (objeto.get_node("Forma") as CollisionShape3D).disabled
+		):
+			continue
 		# Cada cosa se apoya hacia su propio abajo: la mancha de la pared, contra la pared.
 		var abajo := Vector3.DOWN
 		if objeto is StaticBody3D and objeto in manchas:
