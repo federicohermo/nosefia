@@ -516,7 +516,18 @@ func _retirar_soporte(producto: Producto.Id) -> bool:
 	for cuadro in 180:
 		await get_tree().physics_frame
 	assert_float(caja.global_position.y).is_less(inicial.y - _limites(debajo).size.y / 2.0)
-	assert_float(_limites(caja).position.y).is_equal_approx(piso.y, ReglasDeLosObjetos.ROCE)
+	# Vector3 almacena float32: el borde de ROCE puede redondear unas decenas de nm.
+	var separacion := absf(_limites(caja).position.y - piso.y)
+	(
+		assert_bool(
+			(
+				separacion <= ReglasDeLosObjetos.ROCE
+				or is_equal_approx(separacion, ReglasDeLosObjetos.ROCE)
+			)
+		)
+		. override_failure_message("Separación respecto del piso: %.12f m" % separacion)
+		. is_true()
+	)
 	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
 	print(
 		"428_CASCADA_FINAL producto=",
