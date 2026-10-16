@@ -73,19 +73,41 @@ static func _primera_noche() -> Array[Comprador]:
 	return [tin, tia]
 
 
-static func _desde_apertura(hora: int) -> float:
+## Declaración preparada para J2; su entrega de contenido activa la selección productiva.
+static func segunda_jornada_definida() -> Array[Comprador]:
+	var fede := _comprador_de(
+		["Fede", [[Producto.Id.POETICO, 1], [Producto.Id.PRONGLES, 1], [Producto.Id.DURONGA, 1]], 0]
+	)
+	var mia := _comprador_de(
+		[
+			"Mía",
+			[[Producto.Id.TERMINATOR, 1], [Producto.Id.FERNET_GOD, 1], [Producto.Id.ACTRONCITO, 1]],
+			0
+		]
+	)
+	fede.personaje = DialogosDeCompradores.Personaje.FEDE
+	mia.personaje = DialogosDeCompradores.Personaje.MIA
+	fede.horario = Vector2(_desde_apertura(20, 30), _desde_apertura(23, 30))
+	mia.horario = Vector2(_desde_apertura(5), _desde_apertura(8))
+	return [fede, mia]
+
+
+static func _desde_apertura(hora: int, minuto: int = 0) -> float:
 	return float(
 		(
-			posmod(hora - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
-			* Marcador.MINUTOS_POR_HORA
+			(
+				(
+					posmod(hora - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
+					* Marcador.MINUTOS_POR_HORA
+				)
+				+ minuto
+			)
 			* Marcador.SEGUNDOS_POR_MINUTO
 		)
 	)
 
 
-## Un `Producto.Id` sin fila en el catálogo se saltea en vez de meter un `null` en el pedido: así
-## la falta se lee como un producto que no está y no revienta al desreferenciarlo. Es la misma
-## forma que `Catalogo.todos()`.
+## Un dato inválido rechaza al comprador completo: nunca publica un pedido parcial.
 static func _comprador_de(fila: Array) -> Comprador:
 	var nombre: String = fila[0]
 	var lineas: Array = fila[1]
@@ -94,6 +116,7 @@ static func _comprador_de(fila: Array) -> Comprador:
 	for linea: Array in lineas:
 		var producto := Catalogo.de(linea[0])
 		if producto == null:
-			continue
+			push_error("El pedido requiere un producto sin catálogo: %s" % linea[0])
+			return null
 		pedido.agregar(producto, linea[1])
 	return Comprador.new(nombre, pedido, pedido.total() + desvio)

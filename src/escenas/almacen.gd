@@ -84,6 +84,8 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 
 ## Una fuente por sesión; los tests pueden sembrarla antes de cada apertura.
 var azar_de_la_apertura := RandomNumberGenerator.new()
+## La apertura selecciona una vez; faltantes y atención reciben esa misma lista.
+var compradores_de_la_apertura: Callable = Compradores.de_la_jornada
 
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
@@ -316,7 +318,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
-	var compradores := Compradores.de_la_jornada(jornada)
+	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
 	var inventario := Apertura.inventario_de_la_jornada(
 		compradores,
 		_reposicion_manual.casilleros(),
