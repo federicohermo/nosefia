@@ -1,0 +1,62 @@
+{
+  "codigo": "1d71c173",
+  "archivos": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11939,
+      "sha256": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5441,
+      "sha256": "51dadd86b636fd39833585aac7d6aa9f5aeb7706703d5d6f5eb3e58e3e6e6524"
+    },
+    "index.icon.png": {
+      "bytes": 5765,
+      "sha256": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7"
+    },
+    "index.js": {
+      "bytes": 320319,
+      "sha256": "0919abc3567464f80131ebf28f4187beebeadb41b56e78f18b58e102bbd88483"
+    },
+    "index.pck": {
+      "bytes": 95919380,
+      "sha256": "8659cced12f6c908f0455fccce8841ecb04dff76c752fe2fe75a56ccfd756c1b"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 38850612,
+      "sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+    }
+  },
+  "configuracion": {
+    "project.godot": {
+      "bytes": 5550,
+      "sha256": "be5aaed1a355a1033036f364b0d09fcd85ceb9c43d1fbd78dfad54d9ffc789cc",
+      "identico_blob": true
+    },
+    "export_presets.cfg": {
+      "bytes": 1462,
+      "sha256": "5b8b04c24b013973b147955b2b43974d740cdb875db74e9bca0e8eac16742d4d",
+      "identico_blob": true
+    }
+  },
+  "export_control": "Plugins ON, repeticion verbose limpia y mismos cuatro hashes que export original; primera retencion111recursos conservada, causa no atribuida.",
+  "paquete_control": "Primera sonda funcional completa con4recursos/24ObjectDB al salir; repeticion exacta verbose y helper retornado ambas limpias, causa no atribuida.",
+  "completa": {
+    "nodos": "7/7",
+    "suites": "266/266",
+    "casos": "2035/2035",
+    "segundos": 918.9,
+    "primera_completa_ejecutada": true
+  }
+}

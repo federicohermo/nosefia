@@ -1,0 +1,19 @@
+CAPTURA427 web-1920-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_LISTO
+CAPTURA427 web-1920-jornada2 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_PASO
+CAPTURA427 web-1920-local {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO427_PASO
+CAPTURA427 web-1920-carga-estado {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO427_PASO
+CAPTURA427 web-1920-espera-carga {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO427_PASO
+CAPTURA427 web-1920-escape-control {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO427_PASO
+CAPTURA427 web-1920-foco-menu {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_PASO
+CAPTURA427 web-1920-continuar-foco {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_PASO
+CAPTURA427 web-1920-entrada-teclado {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_PASO
+RECORRIDO427_FINAL errores=0

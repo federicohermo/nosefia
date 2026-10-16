@@ -1,0 +1,8 @@
+RUTA427_CONFIG /userfs/godot/app_userdata/No se fía
+CAPTURA427 web-1920-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_LISTO
+COMANDO427 {"click":[960,537],"wait":20000,"snapshot":"web-1920-j2-entrada"}
+CAPTURA427 web-1920-j2-entrada {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO427_PASO
+Error: Timeout esperando comando 2
+RECORRIDO427_FINAL errores=0

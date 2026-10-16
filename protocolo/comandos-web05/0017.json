@@ -1,0 +1,16 @@
+{
+  "hold": {
+    "key": "w",
+    "pasos": [
+      {
+        "ms": 100,
+        "snapshot": "web-1280-prongles-adelante-01"
+      },
+      {
+        "ms": 100,
+        "snapshot": "web-1280-prongles-adelante-02"
+      }
+    ]
+  },
+  "snapshot": "web-1280-prongles-reposo"
+}

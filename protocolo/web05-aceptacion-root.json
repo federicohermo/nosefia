@@ -1,0 +1,49 @@
+{
+  "aceptado": true,
+  "exit": 0,
+  "segundos_turno": 143,
+  "revisor": "root, abrio personalmente15PNG",
+  "capturas": [
+    "web-1920-prongles-referencia.png",
+    "web-1920-prongles-atras-02.png",
+    "web-1920-prongles-adelante-02.png",
+    "web-1280-frontal-enfocado.png",
+    "web-1280-mano.png",
+    "web-1280-mano-atras-02.png",
+    "web-1280-mano-adelante-02.png",
+    "web-1280-pausa.png",
+    "web-1280-reanudar.png",
+    "web-1920-reanudado-mano-atras-02.png",
+    "web-1920-reanudado-mano-adelante-02.png",
+    "web-1920-pausa.png",
+    "web-1920-reanudar-final.png",
+    "web-1280-prongles-atras-02.png",
+    "web-1280-prongles-adelante-02.png"
+  ],
+  "hashes": {
+    "web-1920-prongles-referencia.png": "1b4f2ab3e3d3bd92fcb4f119e6048b67aa1516800cdd8ca3f67739ee938b2d9d",
+    "web-1920-prongles-atras-02.png": "46c7053959570a151eef525d2b771616f38f0cc0bcc2def95f9a985f518edcd7",
+    "web-1920-prongles-adelante-02.png": "10ad3533d235e7e52038a852199f338342584370db329ab68faf9d7bbe46de21",
+    "web-1280-frontal-enfocado.png": "b83e1685ccb97ac1e61232493183a5451a21e40296e024b57759733561e9230d",
+    "web-1280-mano.png": "02e092cc732df9681c3b0ce577c44b0e978fe67f6bba77c4178a8ccf18c8aef9",
+    "web-1280-mano-atras-02.png": "f9992dbe5936d7b4f59b3671f8c52adf79366e92acce3a18f56b60b678e80af6",
+    "web-1280-mano-adelante-02.png": "8d35e3817269242b731eca39d8f1cece6138b2ba1dcb4b1ec3c4901aad8528ab",
+    "web-1280-pausa.png": "d6598f6ad44758a4df841f47fa0b4a5865f20e20bd6a927ac14e22e5f863e2d0",
+    "web-1280-reanudar.png": "40c5ef3be4b42cbd03843b064da37d7f31ba08e90b6c9faa49879f9c72b1c001",
+    "web-1920-reanudado-mano-atras-02.png": "1660654fc9c33f348a2cde21a6b5019cb6ca77478db9507f7327dfd2fce5a79c",
+    "web-1920-reanudado-mano-adelante-02.png": "e051bfefc006caad7031af6440d7dcb8eb3fd3173826191a5d64937c78cef52a",
+    "web-1920-pausa.png": "1843a396aaf10e12950e5c0029885b17118d367ea442a47bbd2cfa4846de489e",
+    "web-1920-reanudar-final.png": "f45d301de2d604f8e05160ce44e15f4dcb865ea7d6b0eb962953be524d394f4b",
+    "web-1280-prongles-atras-02.png": "faabca07bfc667f53a73a03b8f8be4cc75389f9bea0f86cb9d0a418e6bae8ced",
+    "web-1280-prongles-adelante-02.png": "0ce0656978318cb261437e8e03f1c54737402dcb7f1bd57dc2d96adad6ed676b"
+  },
+  "referencia": "Prongles fila trasera",
+  "objeto_en_mano": "Laysntt, confirmado por imagen/HUD, no Prongles",
+  "resultado": "Referencia conserva desenfoque atras/adelante, ambosres; estante/frontal/HUD/mano nitidos; oclusion; pausa/reanudacion correctas y PointerLock metadata.33comandos disponibles desde inicio;Chrome/Node cerrados normal.",
+  "consola": {
+    "errores": 0,
+    "advertencias": 36,
+    "todas_antes_de_carga_almacen": true,
+    "causa_no_atribuida": true
+  }
+}

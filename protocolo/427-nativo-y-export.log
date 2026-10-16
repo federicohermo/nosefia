@@ -1,0 +1,51 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+PROBE427_PROTOCOLO {"frente":"(0.0, 0.0, -1.0)","guia":4,"objetivo":"(0.66844, 0.490665, -4.1152)","ojo_inicial":"(0.66844, 1.8, -5.5152)","pasos":["quieto","atras","quieto","adelante","costado","giro"],"producto":"ACTRONCITO","renderer":"opengl3"}
+PROBE427_FINAL
+MASCARA427_VERDE traslacion=0.0 giro=0.0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CHECKPOINT430_FINAL jornada=2
+exportar imprimi� errores; leer C:\Users\fede_\AppData\Local\Temp\nosefia427-web-1/exportar.log
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-425-435\427\verificar_presentacion427.py", line 20, in <module>
+    subprocess.run([sys.executable,str(p.parent/'430/exportar_paquete430.py'),str(p.parent.parent/'nosefia427-web-1')],check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fede_\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', 'C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\430\\exportar_paquete430.py', 'C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia427-web-1']' returned non-zero exit status 1.

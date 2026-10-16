@@ -1,0 +1,132 @@
+RUTA427_CONFIG /userfs/godot/app_userdata/No se fía
+CAPTURA427 web-1920-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_LISTO
+COMANDO427 {"click":[960,537],"wait":60000,"snapshot":"web-1920-j2-entrada"}
+CAPTURA427 web-1920-j2-entrada {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO427_PASO
+COMANDO427 {"click":[960,540],"hold":{"key":"w","pasos":[{"ms":1000,"snapshot":"web-1920-caminar-entrada"}]},"snapshot":"web-1920-entrada-desplazada"}
+CAPTURA427 web-1920-caminar-entrada {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-entrada-desplazada {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"w","pasos":[{"ms":1000,"snapshot":"web-1920-caminar-02"},{"ms":1000,"snapshot":"web-1920-caminar-03"}]},"snapshot":"web-1920-pasillo-derecho"}
+CAPTURA427 web-1920-caminar-02 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-caminar-03 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-pasillo-derecho {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"w","pasos":[{"ms":650,"snapshot":"web-1920-hacia-fondo"}]},"snapshot":"web-1920-fondo"}
+CAPTURA427 web-1920-hacia-fondo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-fondo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"a","pasos":[{"ms":900,"snapshot":"web-1920-cruzar-fondo"}]},"snapshot":"web-1920-fondo-izquierda"}
+CAPTURA427 web-1920-cruzar-fondo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-fondo-izquierda {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"move":[1860,800],"wait":500,"snapshot":"web-1920-girar-hacia-referencia"}
+CAPTURA427 web-1920-girar-hacia-referencia {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":false}
+RECORRIDO427_PASO
+COMANDO427 {"move":[2007,740],"hold":{"key":"d","pasos":[{"ms":600,"snapshot":"web-1920-lateral-oeste"}]},"snapshot":"web-1920-referencia-oeste"}
+CAPTURA427 web-1920-lateral-oeste {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-referencia-oeste {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"s","pasos":[{"ms":120,"snapshot":"web-1920-atras-01"},{"ms":120,"snapshot":"web-1920-atras-02"}]},"snapshot":"web-1920-quieto-tras-atras"}
+CAPTURA427 web-1920-atras-01 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-atras-02 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-quieto-tras-atras {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"w","pasos":[{"ms":750,"snapshot":"web-1920-acercar-referencia"}]},"snapshot":"web-1920-frente-norte"}
+CAPTURA427 web-1920-acercar-referencia {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-frente-norte {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"d","pasos":[{"ms":500,"snapshot":"web-1920-acercar-oeste"}]},"snapshot":"web-1920-posicion-oeste"}
+CAPTURA427 web-1920-acercar-oeste {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-posicion-oeste {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"move":[2257,680],"snapshot":"web-1920-prongles-referencia"}
+CAPTURA427 web-1920-prongles-referencia {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":false}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"s","pasos":[{"ms":100,"snapshot":"web-1920-prongles-atras-01"},{"ms":100,"snapshot":"web-1920-prongles-atras-02"}]},"snapshot":"web-1920-prongles-quieto"}
+CAPTURA427 web-1920-prongles-atras-01 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-prongles-atras-02 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-prongles-quieto {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"w","pasos":[{"ms":100,"snapshot":"web-1920-prongles-adelante-01"},{"ms":100,"snapshot":"web-1920-prongles-adelante-02"}]},"snapshot":"web-1920-prongles-reposo"}
+CAPTURA427 web-1920-prongles-adelante-01 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-prongles-adelante-02 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1920-prongles-reposo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"move":[1957,580],"snapshot":"web-1920-unidad-enfocada"}
+CAPTURA427 web-1920-unidad-enfocada {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"move":[2257,680],"size":[1280,720],"snapshot":"web-1280-prongles-reposo"}
+CAPTURA427 web-1280-prongles-reposo {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":false}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"s","pasos":[{"ms":100,"snapshot":"web-1280-prongles-atras-01"},{"ms":100,"snapshot":"web-1280-prongles-atras-02"}]},"snapshot":"web-1280-prongles-quieto"}
+CAPTURA427 web-1280-prongles-atras-01 {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1280-prongles-atras-02 {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1280-prongles-quieto {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"w","pasos":[{"ms":100,"snapshot":"web-1280-prongles-adelante-01"},{"ms":100,"snapshot":"web-1280-prongles-adelante-02"}]},"snapshot":"web-1280-prongles-reposo"}
+CAPTURA427 web-1280-prongles-adelante-01 {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1280-prongles-adelante-02 {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1280-prongles-reposo {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"move":[2167,650],"snapshot":"web-1280-frontal-enfocado"}
+CAPTURA427 web-1280-frontal-enfocado {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"click":[2167,650],"snapshot":"web-1280-mano"}
+CAPTURA427 web-1280-mano {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"s","pasos":[{"ms":100,"snapshot":"web-1280-mano-atras-01"},{"ms":100,"snapshot":"web-1280-mano-atras-02"}]},"snapshot":"web-1280-mano-quieto"}
+CAPTURA427 web-1280-mano-atras-01 {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1280-mano-atras-02 {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1280-mano-quieto {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"w","pasos":[{"ms":100,"snapshot":"web-1280-mano-adelante-01"},{"ms":100,"snapshot":"web-1280-mano-adelante-02"}]},"snapshot":"web-1280-mano-reposo"}
+CAPTURA427 web-1280-mano-adelante-01 {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1280-mano-adelante-02 {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+CAPTURA427 web-1280-mano-reposo {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"key":"Escape","snapshot":"web-1280-pausa"}
+CAPTURA427 web-1280-pausa {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO427_PASO
+COMANDO427 {"click":[640,342],"snapshot":"web-1280-reanudar"}
+CAPTURA427 web-1280-reanudar {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"size":[1920,1080],"snapshot":"web-1920-mano-referencia"}
+CAPTURA427 web-1920-mano-referencia {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"s","pasos":[{"ms":100,"snapshot":"web-1920-mano-atras-01"},{"ms":100,"snapshot":"web-1920-mano-atras-02"}]},"snapshot":"web-1920-mano-quieto"}
+CAPTURA427 web-1920-mano-atras-01 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+CAPTURA427 web-1920-mano-atras-02 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+CAPTURA427 web-1920-mano-quieto {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"hold":{"key":"w","pasos":[{"ms":100,"snapshot":"web-1920-mano-adelante-01"},{"ms":100,"snapshot":"web-1920-mano-adelante-02"}]},"snapshot":"web-1920-mano-reposo"}
+CAPTURA427 web-1920-mano-adelante-01 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+CAPTURA427 web-1920-mano-adelante-02 {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+CAPTURA427 web-1920-mano-reposo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO427_PASO
+COMANDO427 {"key":"Escape","snapshot":"web-1920-volver-a-pausa"}
+CAPTURA427 web-1920-volver-a-pausa {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO427_PASO
+CORRECTO: el proceso con PID 53012 (proceso secundario de PID 131868)
+ha sido terminado.
+CORRECTO: el proceso con PID 18108 (proceso secundario de PID 131868)
+ha sido terminado.
+CORRECTO: el proceso con PID 56200 (proceso secundario de PID 131868)
+ha sido terminado.
+CORRECTO: el proceso con PID 15452 (proceso secundario de PID 131868)
+ha sido terminado.
+CORRECTO: el proceso con PID 26336 (proceso secundario de PID 131868)
+ha sido terminado.
+CORRECTO: el proceso con PID 135264 (proceso secundario de PID 131868)
+ha sido terminado.
+CORRECTO: el proceso con PID 61452 (proceso secundario de PID 131868)
+ha sido terminado.
+CORRECTO: el proceso con PID 104864 (proceso secundario de PID 131868)
+ha sido terminado.
+CORRECTO: el proceso con PID 131868 (proceso secundario de PID 75268)
+ha sido terminado.
+CORRECTO: el proceso con PID 86668 (proceso secundario de PID 75268)
+ha sido terminado.
+CORRECTO: el proceso con PID 75268 (proceso secundario de PID 34520)
+ha sido terminado.

@@ -1,0 +1,16 @@
+{
+  "hold": {
+    "key": "s",
+    "pasos": [
+      {
+        "ms": 100,
+        "snapshot": "web-1280-mano-atras-01"
+      },
+      {
+        "ms": 100,
+        "snapshot": "web-1280-mano-atras-02"
+      }
+    ]
+  },
+  "snapshot": "web-1280-mano-quieto"
+}

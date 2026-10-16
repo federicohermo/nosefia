@@ -1,0 +1,12 @@
+{
+  "hold": {
+    "key": "d",
+    "pasos": [
+      {
+        "ms": 500,
+        "snapshot": "web-1920-acercar-oeste"
+      }
+    ]
+  },
+  "snapshot": "web-1920-posicion-oeste"
+}

@@ -1,0 +1,16 @@
+{
+  "hold": {
+    "key": "w",
+    "pasos": [
+      {
+        "ms": 1000,
+        "snapshot": "web-1920-caminar-02"
+      },
+      {
+        "ms": 1000,
+        "snapshot": "web-1920-caminar-03"
+      }
+    ]
+  },
+  "snapshot": "web-1920-pasillo-derecho"
+}

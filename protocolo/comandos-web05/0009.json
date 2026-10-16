@@ -1,0 +1,12 @@
+{
+  "hold": {
+    "key": "w",
+    "pasos": [
+      {
+        "ms": 750,
+        "snapshot": "web-1920-acercar-referencia"
+      }
+    ]
+  },
+  "snapshot": "web-1920-frente-norte"
+}

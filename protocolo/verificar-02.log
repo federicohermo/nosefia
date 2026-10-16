@@ -1,0 +1,16 @@
+paquete427-retencion-verbose.log exit 0
+PAQUETE427_MODELOS 32
+PAQUETE427_FINAL
+paquete427-02.log exit 0
+PAQUETE427_MODELOS 32
+PAQUETE427_FINAL
+  ok        capas       2.8s
+  ok        formato    15.3s
+  ok        harness    99.5s
+  ok        lint       16.2s
+  ok        specs       1.7s
+  ok        tdd         1.7s
+  ok        tests     907.0s
+
+7/7 nodos en verde, en 918.9s.
+reports/report_1: 266 suites corridas, 266 archivos `*_test.gd`

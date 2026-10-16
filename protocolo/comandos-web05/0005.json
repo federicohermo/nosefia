@@ -1,0 +1,12 @@
+{
+  "hold": {
+    "key": "a",
+    "pasos": [
+      {
+        "ms": 900,
+        "snapshot": "web-1920-cruzar-fondo"
+      }
+    ]
+  },
+  "snapshot": "web-1920-fondo-izquierda"
+}

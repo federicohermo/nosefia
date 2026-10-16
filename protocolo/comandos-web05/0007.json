@@ -1,0 +1,16 @@
+{
+  "move": [
+    2007,
+    740
+  ],
+  "hold": {
+    "key": "d",
+    "pasos": [
+      {
+        "ms": 600,
+        "snapshot": "web-1920-lateral-oeste"
+      }
+    ]
+  },
+  "snapshot": "web-1920-referencia-oeste"
+}

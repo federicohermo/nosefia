@@ -1,0 +1,16 @@
+{
+  "hold": {
+    "key": "w",
+    "pasos": [
+      {
+        "ms": 100,
+        "snapshot": "web-1920-mano-adelante-01"
+      },
+      {
+        "ms": 100,
+        "snapshot": "web-1920-mano-adelante-02"
+      }
+    ]
+  },
+  "snapshot": "web-1920-mano-reposo"
+}

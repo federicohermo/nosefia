@@ -1,0 +1,11 @@
+{
+  "primera_sonda": {
+    "salida": 0,
+    "retencion": false
+  },
+  "control": {
+    "salida": 0,
+    "retencion": false
+  },
+  "cambio": "La corrutina que conserva referencias locales retorna antes de quit; paquete y produccion identicos."
+}

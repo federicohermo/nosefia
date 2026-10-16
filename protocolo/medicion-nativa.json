@@ -1,0 +1,31 @@
+{
+  "antes": 144,
+  "despues": 288,
+  "tramos": {
+    "adelante": {
+      "antes_max_mm": 58.2818984985352,
+      "despues_max_mm": 0.0
+    },
+    "atras": {
+      "antes_max_mm": 51.9213676452637,
+      "despues_max_mm": 0.0
+    },
+    "costado": {
+      "antes_max_mm": 55.3245022892952,
+      "despues_max_mm": 0.0
+    },
+    "giro": {
+      "antes_max_mm": 9.01830196380615,
+      "despues_max_mm": 0.0
+    },
+    "quieto": {
+      "antes_max_mm": 0.0,
+      "despues_max_mm": 0.0
+    },
+    "quieto_2": {
+      "antes_max_mm": 0.0,
+      "despues_max_mm": 0.0
+    }
+  },
+  "despues_giro_max": 0.0
+}
