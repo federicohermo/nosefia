@@ -185,3 +185,71 @@ func test_modificar_la_lista_devuelta_no_borra_lo_visible() -> void:  # AC-NTF-0
 	assert_array(estado.visibles()).is_equal(
 		[Notificaciones.Tipo.LECTURA_FALLIDA, Notificaciones.Tipo.CLIENTE]
 	)
+
+
+func test_las_siete_avisan_sin_renovarse_por_otra_lectura() -> void:  # AC-NTF-020
+	var estado := Notificaciones.new()
+	estado.actualizar_tiempo(3601.0)
+	assert_array(estado.visibles()).is_empty()
+	assert_str(Marcador.hora(3600.0)).is_equal("07:00")
+	estado.actualizar_tiempo(3600.0)
+	assert_array(estado.visibles()).has_size(1)
+	estado.avanzar(2.0)
+	estado.actualizar_tiempo(3600.0)
+	estado.actualizar_tiempo(3599.0)
+	assert_array(estado.visibles()).has_size(1)
+	estado.avanzar(1.0)
+	assert_array(estado.visibles()).is_empty()
+
+
+func test_saltar_el_umbral_o_entrar_despues_avisa_una_vez() -> void:  # AC-NTF-021
+	var estado := Notificaciones.new()
+	estado.actualizar_tiempo(3660.0)
+	assert_array(estado.visibles()).is_empty()
+	estado.actualizar_tiempo(3540.0)
+	assert_array(estado.visibles()).has_size(1)
+	var iniciado_tarde := Notificaciones.new()
+	iniciado_tarde.actualizar_tiempo(3540.0)
+	assert_array(iniciado_tarde.visibles()).is_equal(estado.visibles())
+	for restante: float in [0.0, -1.0]:
+		var cerrado := Notificaciones.new()
+		cerrado.actualizar_tiempo(3660.0)
+		cerrado.actualizar_tiempo(restante)
+		assert_array(cerrado.visibles()).is_empty()
+
+
+func test_vencer_no_habilita_otro_aviso_y_otra_noche_si() -> void:  # AC-NTF-022
+	var estado := Notificaciones.new()
+	for _jornada in range(1, 6):
+		estado.actualizar_tiempo(3600.0)
+		assert_array(estado.visibles()).has_size(1)
+		estado.avanzar(2.9)
+		assert_array(estado.visibles()).has_size(1)
+		estado.avanzar(0.1)
+		assert_array(estado.visibles()).is_empty()
+		estado.actualizar_tiempo(100.0)
+		assert_array(estado.visibles()).is_empty()
+		estado.vaciar()
+
+
+func test_cierre_proximo_no_temporiza_ni_renueva_otros_avisos() -> void:  # AC-NTF-025
+	var estado := Notificaciones.new()
+	var esperando := Compradores.de_la_jornada(1)[0]
+	estado.llego(esperando)
+	estado.se_fue(_comprador())
+	estado.lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
+	var anteriores := estado.visibles()
+	estado.avanzar(1.0)
+	estado.actualizar_tiempo(3600.0)
+	var juntos := estado.visibles()
+	assert_array(juntos).has_size(4)
+	assert_array(juntos.slice(1)).is_equal(anteriores)
+	estado.lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
+	assert_array(estado.visibles()).has_size(4)
+	assert_int(estado.visibles()[0]).is_equal(Notificaciones.Tipo.LECTURA_FALLIDA)
+	estado.avanzar(2.0)
+	assert_array(estado.visibles()).has_size(3)
+	estado.avanzar(1.0)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.CLIENTE])
+	estado.vaciar()
+	assert_array(estado.visibles()).is_empty()
