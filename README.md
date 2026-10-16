@@ -86,9 +86,17 @@ fallos, errores, flaky, skipped y huérfanos. `completa/` conserva los siete cru
 XML, conteo inmediato y la salida con los marcadores finales.
 
 Se leyeron íntegros los 1.160.340 bytes del crudo del juego y se compararon con la base:
-mismos 25 errores deliberados y 42 avisos Rescate, con sus causas/contextos de tests;
-cero diagnósticos nuevos/ausentes, nuevas familias de rescate, retención o abortos.
-`auditoria-crudo.json` y `diagnosticos-completos.json` conservan la comparación y los
-contextos completos. La rama de código coincide con el SHA remoto citado arriba y está limpia.
+mismos conteos de 25 errores deliberados y 42 avisos Rescate, sin nuevas familias ni
+retención, abortos, Script Error o Parse Error. El auditor propio normaliza poses,
+identidades efímeras y líneas; esa equivalencia de familias no significa igualdad del crudo.
+La comparación estricta del padre conserva cuatro variaciones de pose de Balde,
+redondeadas a milímetros: StaticBody3D (7.761, Y 0.186 → 0.187, -6.003),
+CuerpoDeLaHoja (X 13.220 → 13.222, 0.186, 4.845), StaticBody3D
+(1.307, Y 0.144 → 0.185, 4.393), y SueloSolido (-0.100, 0.185, Z -4.565 → -4.564).
+No se atribuye causa a estas diferencias ni se afirma que los diagnósticos sean byteidénticos.
+`completa/revision-root-estricta-final.json` conserva ambos contextos sin suprimir las poses;
+`completa/auditoria-crudo.json` y `completa/diagnosticos-completos.json` conservan el
+auditor propio y los contextos completos. La rama de código coincide con el SHA remoto
+citado arriba y está limpia.
 El unittest Python del harness registra 606 pruebas y un skipped, igual que la base;
 ningún nodo se salteó ni ningún caso gdUnit4 se omitió.
