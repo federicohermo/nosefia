@@ -676,7 +676,7 @@ deslizándose desde la izquierda hasta el sitio de espera, conservando altura, p
 orientación y animación. Después permanece quieto. Abrir, cerrar y repintar no reinician el
 movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el turno lo retira.
 
-### AC-CTR-046 — Una entrada por pulsación desde el mundo *(verifica BR-CTR-035, BR-CTR-028)*
+### AC-CTR-065 — Una entrada por pulsación desde el mundo *(verifica BR-CTR-035, BR-CTR-028)*
 
 DADO un comprador sin atender y un ticket en mano CUANDO se pulsa izquierdo una vez sobre la
 persona ENTONCES aparece la primera entrada inicial, sin entrega ni rechazo. El siguiente

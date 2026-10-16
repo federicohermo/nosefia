@@ -370,7 +370,7 @@ completas. Una compra vencida NO DEBE impedirlo. El vencimiento DEBE revisar reg
 la venta y cada modificación de planilla. Al cierre, dos compras vencidas con planilla en cero
 DEBEN contar registrar cumplida; una unidad de más o de menos DEBE dejarla pendiente.
 
-### BR-STK-043 — El pedido fijo admite mercadería sin góndola y distingue Poético
+### BR-STK-045 — El pedido fijo admite mercadería sin góndola y distingue Poético
 
 CUANDO se prepara la compra de Fede, el sistema DEBE permitir obtener y entregar Duronga desde
 el depósito aunque su cupo de góndola sea cero. Progres DEBE usar la identidad del producto
@@ -813,14 +813,14 @@ entregada y lo vendido suma una por cada producto. Repetir recepción o volver a
 afuera no cambia cantidades. Una unidad vendida desde góndola deja su casillero vacío y
 reposición pendiente hasta rellenarlo.
 
-### AC-STK-085 — Duronga se obtiene sin casilleros *(verifica BR-STK-043, BR-STK-041)*
+### AC-STK-090 — Duronga se obtiene sin casilleros *(verifica BR-STK-045, BR-STK-041)*
 
 DADO jornada 2 y Duronga con cupo de góndola cero y contenido inicial en depósito CUANDO se saca
 una unidad de su caja y se entrega a Fede, junto con Poético, Progres y ticket exacto ENTONCES
 la compra se completa, lo vendido de Duronga es una unidad y no se exige colocarla en góndola.
 Progres corresponde al producto ya existente de ese subtítulo, sin una fila adicional de catálogo.
 
-### AC-STK-086 — Poético vendible conserva su identidad después de limpiar *(verifica BR-STK-043, BR-STK-041)*
+### AC-STK-091 — Poético vendible conserva su identidad después de limpiar *(verifica BR-STK-045, BR-STK-041)*
 
 DADO una unidad vendible de Poético retirada de caja en jornada 2 CUANDO tiñe un balde y después
 se entrega a Fede con los demás productos y ticket ENTONCES se vende esa misma identidad una
