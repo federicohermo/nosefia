@@ -130,6 +130,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 
 | Lo que apareció | Qué skill se corrige |
 |---|---|
+| una espera de staging que el usuario sustituyó por ramas | `implement-batch` — fijar e incorporar las dependencias autorizadas antes del preflight, sin exigir su merge remoto |
 | un ID nuevo que otra rama publicada ya asigna a otro comportamiento | `to-spec` e `implement-batch` — traer contratos abiertos, cruzar BR/AC/OQ y reservar contra toda la historia remota |
 | fase de un diagnóstico inferida del final de stdout+stderr concatenados | `implement-feature` — preservar el registro cronológico y los deltas; contrastar causa y fixture sin inventar fase ni mecanismo |
 | glifos del guion que el paquete real muestra como cuadros ausentes | `to-issue` — medir fuente, vista previa y burbujas; declarar fallback, licencia y generador sin cambiar texto, orden ni tema compartido |
