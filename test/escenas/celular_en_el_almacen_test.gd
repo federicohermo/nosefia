@@ -268,7 +268,7 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 	await get_tree().process_frame
 
 
-func test_mensaje_recibido_suena_una_vez_y_anotar_ya_no_suena() -> void:  # AC-INV-029
+func test_mensaje_recibido_suena_una_vez_y_anotar_no_repite_el_aviso() -> void:  # AC-INV-029
 	_abrir()
 	var reproductor: ReproductorDeSonidos = _almacen.get_node(
 		"Servicios/AudioDelAlmacen/Reproductor"
