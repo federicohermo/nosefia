@@ -24,7 +24,10 @@ func after_test() -> void:
 func _limpiar_almacenes() -> void:
 	get_tree().paused = false
 	for almacen in _almacenes:
-		almacen.get_node("Servicios/AudioDelAlmacen/Reproductor").silenciar()
+		for tipo: String in ["AudioStreamPlayer", "AudioStreamPlayer3D"]:
+			for audio: Node in almacen.find_children("*", tipo, true, false):
+				audio.call("stop")
+				audio.set("stream", null)
 		almacen.queue_free()
 	_almacenes.clear()
 	_listas.clear()
@@ -56,6 +59,7 @@ func _abrir(jornada: int = 2, checkpoint: bool = false, medir: bool = false) -> 
 		almacen.set("compradores_de_la_apertura", _fabrica)
 	_almacenes.append(almacen)
 	add_child(almacen)
+	almacen.set_meta("camara_original", almacen.get_node("Jugador/Giro/Camara").transform)
 	almacen.get_node("Jugador").set_physics_process(false)
 	almacen.get("_reloj").set_process(false)
 	for cuadro in 3:
@@ -315,7 +319,7 @@ func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() ->
 
 # AC-CTR-001 AC-CTR-041 AC-CTR-063
 func test_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido() -> void:
-	for jornada in [1, 3, 4, 5]:
+	for jornada: int in [1, 3, 4, 5]:
 		var almacen := await _abrir(jornada)
 		var compradores: Array = _atenciones(almacen).tarea().get("_compradores")
 		assert_array(compradores).has_size(2)
@@ -651,6 +655,7 @@ func _mirar_balde(almacen: Node3D) -> void:
 		return
 	jugador.call("ubicar", Transform3D(Basis.IDENTITY, encontrada))
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	camara.transform = almacen.get_meta("camara_original")
 	camara.look_at(objetivo.global_position + Vector3.UP * 0.1)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -835,10 +840,12 @@ func test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2() -
 		for indice in 1 if mia else 3:
 			assert_str(_texto(almacen).text).is_equal(inicial.entrada_actual())
 			if (mia and indice == 0) or (not mia and indice == 2):
-				var nombres: Array[String] = (
-					["Terminator", "Fernet God", "Actroncito"]
-					if mia
-					else ["Poético", "Progres", "Duronga"]
+				var nombres := PackedStringArray(
+					(
+						["Terminator", "Fernet God", "Actroncito"]
+						if mia
+						else ["Poético", "Progres", "Duronga"]
+					)
 				)
 				for nombre in nombres:
 					assert_str(_texto(almacen).text).contains(
