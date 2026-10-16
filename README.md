@@ -10,8 +10,12 @@ HEAD/status se observaron antes/después en herramienta, sin archivo de pin inde
 nativo-03: cinco PNG1280×720 y protocolo posterior al dibujo; SueloSolido, cápsula libre,
 transform actual/dibujado, silueta/frame y retorno. Cursor de escritorio aislado: no acredita
 Pointer Lock. web-04 acredita Chrome real,1280×720/DPR1, dos recorridos separados:
-main original menú/instrucciones/almacén; luego fixture EXTERNO Node+override.cfg prepara
+main original menú/instrucciones; luego fixture EXTERNO Node+override.cfg prepara
 pose/reloj/frames y observa, conservando callbacks/cursor productivos. No equivale al main.
+CORRECCIÓN: PNG02-main-almacen conserva su nombre original pero muestra instrucciones1/12
+(Enrique), NO el almacén. La etiqueta, protocolo y scope originales quedan preservados como
+registro histórico; no acreditan llegada al almacén desde main. El fixturePCK sí ejercita
+almacén, callbacks y cursor. Esta nota corrige explícitamente aquella descripción.
 Todas las entradas de juego son mouse/keyboard reales; CDP userGesture:false sólo prepara
 y observa. El primer clic muestra inicial completa, derecho no avanza, Esc pausa/resume;
 último clic devuelve Pointer Lock sin pulsación extra. Mano/pedido conservan ID string,

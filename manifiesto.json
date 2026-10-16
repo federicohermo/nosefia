@@ -27,6 +27,7 @@
     "external_override": "application/run/main_scene=/fixture429.tscn",
     "scope": "Main original: menú, instrucciones y almacén. Fixture externo: sólo prepara pose/reloj/frames y observa. Callbacks, arte, preset, interacción y cursor de producción conservados. Entradas de juego reales desde Chrome; CDP userGesture:false."
   },
+  "correccion_main_original": "PNG02-main-almacen muestra instrucciones1/12 (Enrique). Main original acredita menú/instrucciones; sólo el fixture externo acredita almacén/callbacks/cursor. Nombre, protocolo y provenance de corrida originales se preservan sin reescribir.",
   "archivos": {
     "export-web-01/dialogos-pck.json": {
       "bytes": 527,
@@ -401,10 +402,10 @@
       "local_sha256": "c500313552af303f4c9cf22f347294862e75d2b5bfdfea96b526aa749e4463a7"
     },
     "README.md": {
-      "bytes": 2675,
-      "sha256": "d7c025ce270c2d8cac4690b0c42baf4d7a7f520397817b0aad5a9e845e78ce3c",
-      "oid": "88f9299b1eb07886c78e9baf4b867ba0c199cd33",
-      "local_sha256": "3ee3af1e1d0ef7afdbb704a30ad8408d978e57aa1f02c85db64faa10f7b3cd9a"
+      "bytes": 3029,
+      "sha256": "d2db35d81a67759f336a0295a5f149037ddaa1b6dbc028e8139e0efc391daba8",
+      "oid": "8f85d176b7f364adba5c3c92d99e72c78fefe533",
+      "local_sha256": "eeb08d8f52772887628694eaa5ba58347cbc74c1093f09a459f65a097fe79d75"
     },
     "web-04/00-main-menu.png": {
       "bytes": 765490,
