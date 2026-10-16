@@ -20,7 +20,7 @@ en ese orden.
 3. **Pone cada tanda**: la unidad del producto en el primer lugar de su tanda, y una copia
    enlazada de ella en cada uno de los demás, en `guia`. Cada unidad y cada copia llevan escrito
    de qué tanda son, en qué fila y en qué orden: es lo que lee `disponer.py`. En la rampa de una
-   cabecera, la unidad va echada hacia atrás, como la ponía el artista (`lib/gondola.py`).
+   cabecera, la unidad se apoya de plano (`lib/gondola.py`).
 
 Al final imprime un resumen —estantes, tandas, unidades, choques y filas cortas— y, si hay
 choques, sale con error y no guarda.
@@ -39,8 +39,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from lib.blender import COLECCION_DE_GUIA, es_un_array  # noqa: E402
 from lib.gondola import (  # noqa: E402
+    MARGEN,
     Envase,
-    alto_en_la_rampa,
     centros,
     desplazamiento_que_entra,
     franja_libre,
@@ -73,6 +73,10 @@ MIRA = {
     "norte": Vector((0.0, 1.0, 0.0)),
 }
 
+#: Cuánto detrás del frente de la bandeja más corta empieza la mercadería de una heladera, en
+#: metros. Es lo que dejaba el artista: medido el 2026-10-16 en el `.blend` de staging.
+RETIRO_EN_LA_HELADERA = 0.02
+
 #: A qué altura sobre la chapa se tantean los costados del estante, en metros.
 ALTURAS_DEL_TANTEO = (0.03, 0.12)
 
@@ -90,6 +94,9 @@ TECHO_DE_LA_HELADERA = 2.3
 
 #: Cuánto puede separarse un vértice del plano de la chapa y seguir siendo de su cara de arriba.
 TOLERANCIA_DEL_PLANO = 0.002
+
+#: Cuánto puede bajar la chapa detrás de su plano y seguir contando como fondo, en metros.
+CAIDA_DE_LA_CHAPA = 0.02
 
 class Estante:
     """La chapa de un estante, medida: su marco y su tamaño."""
@@ -110,7 +117,15 @@ class Estante:
         vs = [(p - base).dot(self.v) for p in vertices]
         self.origen = base + self.u * min(us) + self.v * min(vs)
         self.largo = max(us) - min(us)
-        self.fondo = max(vs) - min(vs)
+        # La chapa sigue detrás de su plano con una caída leve hasta el panel: en la bandeja de
+        # arriba de una cabecera, de 16 a 23 cm. Ahí también se apoya la fila de atrás.
+        detras = [
+            (vert.co - base).dot(self.v)
+            for c in isla if c.normal.dot(cara_de_arriba.normal) > 0.95
+            for vert in c.verts
+            if -CAIDA_DE_LA_CHAPA <= (vert.co - base).dot(self.normal) < TOLERANCIA_DEL_PLANO
+        ]
+        self.fondo = max(vs + detras) - min(vs)
 
     def punto(self, u, v):
         return self.origen + self.u * u + self.v * v
@@ -202,19 +217,21 @@ def medir(letra):
     return objeto, bm, estantes
 
 
-def tramo_util(estante, arbol, desde_v, hasta_v):
+def tramo_util(estante, arbol, desde_v, hasta_v, alto):
     """El tramo a lo largo que se puede llenar: la chapa recortada contra lo que tenga al costado.
 
-    Se tantea desde el medio de la chapa hacia los dos lados, a dos alturas y a dos
-    profundidades del tramo libre, y gana lo más cerca que se encuentre.
+    Se tantea desde el medio de la chapa hacia los dos lados, a tres alturas —la última, la de
+    la unidad más alta— y a tres profundidades del tramo libre, y gana lo más cerca que se
+    encuentre. El costado de una cabecera se inclina hacia el fondo: a la altura de la unidad y
+    detrás de todo, la fila de atrás lo pisaba.
     """
     medio = estante.largo / 2
     izquierda = 0.0
     derecha = estante.largo
-    for alto in ALTURAS_DEL_TANTEO:
-        for fraccion in (0.25, 0.75):
+    for altura in (*ALTURAS_DEL_TANTEO, alto):
+        for fraccion in (0.25, 0.75, 0.95):
             v = desde_v + (hasta_v - desde_v) * fraccion
-            desde = estante.punto(medio, v) + estante.normal * alto
+            desde = estante.punto(medio, v) + estante.normal * altura
             for sentido in (-1.0, 1.0):
                 golpe = arbol.ray_cast(desde, estante.u * sentido, estante.largo)
                 if golpe[0] is None:
@@ -276,29 +293,10 @@ def muestras_de_arriba(estante, arbol):
     return muestras
 
 
-def inclinacion_de(estante):
-    """Lo que se echa hacia atrás una unidad contra la chapa, en radianes: el doble de lo que la
-    chapa baja hacia el pasillo, porque la unidad sube otro tanto. Cero en un estante plano."""
-    if estante.normal.z > 0.9999:
-        return 0.0
-    return 2 * math.asin(max(-1.0, min(1.0, estante.normal.dot(estante.mira))))
-
-
 def _marco(estante):
-    """Hacia dónde miran el frente y lo de arriba de una unidad sobre este estante.
-
-    En un estante plano, el frente al pasillo y lo de arriba por la normal de la chapa. En la
-    rampa de una cabecera, echada hacia atrás lo que baja la chapa: el frente mira hacia arriba y
-    hacia el pasillo. Medido el 2026-09-30 sobre el `.blend` del artista: Malbardo, Durextra,
-    Duronga, Chisitos y Laysntt iban echados entre 9 y 15 grados; la chapa baja 11. Apoyada de
-    plano, la unidad caía hacia adelante, con el frente mirando al piso.
-    """
-    if inclinacion_de(estante) == 0.0:
-        return -estante.v, estante.normal
-    seno = estante.normal.dot(estante.mira)
-    coseno = math.sqrt(1.0 - seno * seno)
-    vertical = Vector((0.0, 0.0, 1.0))
-    return estante.mira * coseno + vertical * seno, vertical * coseno - estante.mira * seno
+    """Hacia dónde miran el frente y lo de arriba de una unidad sobre este estante: el frente al
+    pasillo y lo de arriba por la normal de la chapa, también en la rampa de una cabecera."""
+    return -estante.v, estante.normal
 
 
 def envase_de(p, unidad):
@@ -342,11 +340,7 @@ def _ejes(p):
 
 
 def matriz_de(p, unidad, estante, u, v):
-    """Dónde va la unidad para que su base quede sobre la chapa en `(u, v)`, mirando al pasillo.
-
-    Echada en una rampa, su base ya no está en el plano de la chapa: se la levanta hasta que lo
-    más bajo de la unidad la toque.
-    """
+    """Dónde va la unidad para que su base quede sobre la chapa en `(u, v)`, mirando al pasillo."""
     frente, arriba, derecha = _ejes(p)
     local = Matrix((derecha, frente, arriba)).transposed()
     adelante, hacia_arriba = _marco(estante)
@@ -359,9 +353,6 @@ def matriz_de(p, unidad, estante, u, v):
         + arriba * min(pt.dot(arriba) for pt in puntos)
     )
     ubicacion = estante.punto(u, v) - giro @ referencia
-    if inclinacion_de(estante) != 0.0:
-        bajo = min((ubicacion + giro @ pt - estante.origen).dot(estante.normal) for pt in puntos)
-        ubicacion = ubicacion - estante.normal * bajo
     escala = unidad.scale.copy()
     return Matrix.Translation(ubicacion) @ giro.to_4x4() @ Matrix.Diagonal(escala.to_4d())
 
@@ -434,8 +425,10 @@ def medir_encaje(estante, bm, arbol, hojas, posiciones):
         desde = max(desde, -min(v.dot(estante.v) for v in contactos))
         hasta = min(hasta, estante.fondo - max(v.dot(estante.v) for v in contactos))
     bm.faces.ensure_lookup_table()
+    # Lo que está debajo de la base no la toca: la caída de la chapa detrás de su plano también es
+    # apoyo.
     apoyo = {i for i in estante.caras if all(
-        abs((v.co - estante.origen).dot(estante.normal)) <= TOLERANCIA_DEL_PLANO
+        (v.co - estante.origen).dot(estante.normal) <= TOLERANCIA_DEL_PLANO
         for v in bm.faces[i].verts
     )}
 
@@ -466,15 +459,27 @@ def acomodar_mueble(letra, envases, resumen):
     # El mapa cambia productos, no muebles: se reparte sobre la chapa existente.
     arbol = BVHTree.FromBMesh(bm)
     hojas = obstaculos_del_mueble(objeto)
+    franjas = {}
+    for clave, estante in propios.items():
+        alto = max(envases[t.producto].alto for t in ESTANTES[clave]) - ROCE_DE_ARRIBA
+        franjas[clave] = franja_del_estante(estante, arbol, alto)
+    if letra in HELADERAS:
+        # Las bandejas de una heladera no llegan todas igual de adelante: la de abajo sobresale.
+        # La mercadería se alinea detrás de la más corta, y no de su propia bandeja.
+        linea = max(e.origen.dot(e.v) + franjas[c][0] for c, e in propios.items())
+        for clave, estante in propios.items():
+            desde_v, hasta_v = franjas[clave]
+            franjas[clave] = (linea + RETIRO_EN_LA_HELADERA - estante.origen.dot(estante.v), hasta_v)
     for clave, estante in sorted(propios.items()):
         reparto = ESTANTES[clave]
         de_estas = [envases[t.producto] for t in reparto]
-        inclinacion = inclinacion_de(estante)
-        alto = max(alto_en_la_rampa(e, inclinacion) for e in de_estas) - ROCE_DE_ARRIBA
-        desde_v, hasta_v = franja_del_estante(estante, arbol, alto)
+        alto = max(e.alto for e in de_estas) - ROCE_DE_ARRIBA
+        desde_v, hasta_v = franjas[clave]
         filas = [t.cantidad_de_filas for t in reparto]
-        izquierda, derecha = tramo_util(estante, arbol, desde_v, hasta_v)
-        largo = derecha - izquierda
+        izquierda, derecha = tramo_util(estante, arbol, desde_v, hasta_v, alto)
+        # Sin margen, la unidad de cada punta roza el costado del mueble.
+        izquierda += MARGEN
+        largo = derecha - MARGEN - izquierda
         pedidos = [1 if t.fija else FILA_DE_ADELANTE_PEDIDA for t in reparto]
         cuentas = repartir(largo, de_estas)
         for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
@@ -485,7 +490,7 @@ def acomodar_mueble(letra, envases, resumen):
         for indice, (t, envase, us) in enumerate(zip(reparto, de_estas, centros_por_tanda)):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            for lugar in tanda(envase, [izquierda + u for u in us], inclinacion, filas[indice]):
+            for lugar in tanda(envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v):
                 posiciones.append(
                     (unidad, matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v))
                 )
@@ -502,7 +507,7 @@ def acomodar_mueble(letra, envases, resumen):
         ):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            lugares = tanda(envase, [izquierda + u for u in us], inclinacion, filas[indice])
+            lugares = tanda(envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v)
             resumen["tandas"] += 1
             for orden, lugar in enumerate(lugares):
                 matriz = matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v)

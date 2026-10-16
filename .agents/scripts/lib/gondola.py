@@ -16,7 +16,7 @@ normal de la chapa. Acá sólo importan `u` y `v`: dónde queda la chapa en el m
 ## Dos filas, o una según el reparto aprobado
 
 En una tanda de dos filas, una queda detrás de la otra. La de adelante toca el frente útil y la de
-atrás va pegada a ella, con el mismo aire que separa dos unidades vecinas. Las chapas conservan
+atrás va pegada a ella, con `AIRE` de por medio. Las chapas conservan
 su geometría. El acomodador mide el apoyo y las intersecciones de las unidades para ubicar la
 tanda sobre ellas sin cambiar la separación de sus filas.
 
@@ -28,14 +28,11 @@ entra con las filas declaradas falla; el acomodador no reduce sus filas ni agran
 Dos tandas se reparten el estante en partes iguales, y cada una llena la suya. Una tanda sola lo
 ocupa de punta a punta.
 
-## En la rampa de una cabecera, la unidad se echa hacia atrás
+## En la rampa de una cabecera, la unidad se apoya de plano
 
-La chapa de una cabecera baja hacia el pasillo. Apoyada de plano, la unidad caía hacia adelante,
-con el frente mirando al piso; el artista la ponía echada hacia atrás lo mismo que baja la
-chapa, con el frente mirando hacia arriba y hacia el pasillo. Contra la chapa, entonces, la
-unidad queda girada el doble: es la `inclinacion` que reciben las funciones de acá, en radianes,
-y cero en un estante plano. Echada, se apoya en su canto de abajo de atrás, y su cabeza se va
-hacia el fondo: las filas se separan más, y el estante pide más fondo y más alto.
+La chapa de una cabecera baja hacia el pasillo, y la unidad se apoya entera sobre ella, como en
+un estante plano. Echada hacia atrás tocaba la chapa sólo con su canto de atrás, y una caja honda
+flotaba adelante hasta 4 cm.
 """
 
 from __future__ import annotations
@@ -46,20 +43,22 @@ import unicodedata
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
-#: El aire entre dos unidades vecinas, a lo largo del estante y entre las dos filas, en metros.
-#: Sin aire, dos cajas que se tocan titilan donde se superponen sus caras. Con 6 mm, la
-#: bandeja de la heladera —1,083 m— daba cinco latas de Coracola de frente y no seis: la
-#: sexta no entraba por 3 mm. Medido el 2026-09-29.
-AIRE = 0.004
+#: El aire mínimo entre las dos filas de una tanda, en metros. Con 4 mm se leían como un solo
+#: bloque.
+AIRE = 0.02
+
+#: Hasta dónde crece ese aire si el estante tiene fondo de sobra, en metros. Más atrás, la fila
+#: de atrás queda en la sombra del panel y se lee como un hueco.
+AIRE_MAXIMO = 0.05
+
+#: El hueco mínimo entre dos unidades vecinas a lo largo del estante, en metros. Decide cuántas
+#: columnas entran; lo que sobra se reparte entre todos los huecos del estante.
+HUECO_MINIMO = 0.01
 
 #: Lo que queda libre detrás del labio y delante del panel del fondo, en metros. Es lo que evita
 #: que una unidad pise el labio de la bandeja —medido el 2026-09-21: una fila de Malbardo
 #: quedaba montada sobre él— o se meta en el panel.
 MARGEN = 0.004
-
-#: Lo que sobra de un estante por menos que esto se reparte entre los dos bordes. Dejarlo todo de
-#: un lado hace que la tanda sobresalga de ese lado, que es donde se ve.
-SOBRANTE_TOLERADO = 0.05
 
 #: Los decimales con que se escribe una posición en un `.tscn`, que es lo que hace el editor.
 DECIMALES_DE_ESCENA = 6
@@ -111,7 +110,7 @@ def desplazamiento_que_entra(
 
 def paso(envase: Envase) -> float:
     """Lo que ocupa una columna a lo largo del estante, con el aire que la separa de la próxima."""
-    return envase.ancho + AIRE
+    return envase.ancho + HUECO_MINIMO
 
 
 def alinear_frentes(fondos: Sequence[float], requeridos: Sequence[float]) -> list[float]:
@@ -120,33 +119,27 @@ def alinear_frentes(fondos: Sequence[float], requeridos: Sequence[float]) -> lis
     return [frente - fondo for fondo in fondos]
 
 
-def fondo_del_estante(
-    envases: Sequence[Envase], inclinacion: float = 0.0, filas: Sequence[int] | None = None
-) -> float:
+def fondo_del_estante(envases: Sequence[Envase], filas: Sequence[int] | None = None) -> float:
     """La profundidad útil que necesita un estante para su tanda más honda.
 
-    `filas` dice cuántas filas tiene la tanda de cada envase; sin ella, todas tienen dos. En una
-    rampa va del canto de abajo de adelante de la fila de adelante hasta la cabeza de la última
-    fila, que está echada hacia el fondo.
+    `filas` dice cuántas filas tiene la tanda de cada envase; sin ella, todas tienen dos.
     """
     if not envases:
         raise ValueError("un estante sin productos no tiene fondo")
-    coseno = math.cos(inclinacion)
-    seno = math.sin(inclinacion)
     return 2 * MARGEN + max(
-        (n - 1) * (e.fondo + AIRE) / coseno + e.fondo * coseno + e.alto * seno
+        (n - 1) * (e.fondo + AIRE) + e.fondo
         for e, n in zip(envases, filas or [2] * len(envases))
     )
 
 
 def ancho_de_la_tanda(envase: Envase, columnas: int) -> float:
     """Lo que ocupa una tanda a lo largo, sin el aire que la separaría de la siguiente."""
-    return columnas * paso(envase) - AIRE
+    return columnas * paso(envase) - HUECO_MINIMO
 
 
 def columnas_que_entran(envase: Envase, largo: float) -> int:
     """Cuántas columnas de ese envase entran solas en un estante de ese largo."""
-    return max(0, math.floor((largo + AIRE) / paso(envase) + 1e-9))
+    return max(0, math.floor((largo + HUECO_MINIMO) / paso(envase) + 1e-9))
 
 
 def repartir(largo: float, envases: Sequence[Envase]) -> list[int]:
@@ -160,7 +153,7 @@ def repartir(largo: float, envases: Sequence[Envase]) -> list[int]:
     Una tanda que no entra en su parte es un error del reparto y no algo que se acomode en
     silencio.
     """
-    parte = (largo - (len(envases) - 1) * AIRE) / len(envases)
+    parte = (largo - (len(envases) - 1) * HUECO_MINIMO) / len(envases)
     cuentas = [columnas_que_entran(envase, parte) for envase in envases]
     if 0 in cuentas:
         raise ValueError(f"una tanda no entra en su parte del estante, de {parte:.3f} m")
@@ -173,35 +166,39 @@ def sobrante(largo: float, envases: Sequence[Envase], cuentas: Sequence[int]) ->
 
 
 def centros(largo: float, envases: Sequence[Envase], cuentas: Sequence[int]) -> list[list[float]]:
-    """El centro a lo largo de cada columna de cada tanda, con el sobrante repartido en los bordes.
+    """El centro a lo largo de cada columna de cada tanda, de punta a punta del estante.
 
-    El sobrante va la mitad a cada lado: la mercadería queda centrada en el estante, y ningún
-    borde se ve más vacío que el otro.
+    Todos los huecos del estante miden lo mismo, también el que separa dos tandas: lo que sobra
+    se reparte entre ellos, y ningún borde queda vacío. Una unidad sola va al medio.
     """
-    inicio = sobrante(largo, envases, cuentas) / 2
+    unidades = sum(cuentas)
+    if unidades == 1:
+        return [[largo / 2] if cuenta else [] for cuenta in cuentas]
+    hueco = HUECO_MINIMO + sobrante(largo, envases, cuentas) / (unidades - 1)
+    inicio = 0.0
     salida = []
     for envase, cuenta in zip(envases, cuentas):
-        salida.append([inicio + j * paso(envase) + envase.ancho / 2 for j in range(cuenta)])
-        inicio += cuenta * paso(envase)
+        salida.append([inicio + j * (envase.ancho + hueco) + envase.ancho / 2 for j in range(cuenta)])
+        inicio += cuenta * (envase.ancho + hueco)
     return salida
 
 
 def tanda(
-    envase: Envase, centros_u: Sequence[float], inclinacion: float = 0.0, filas: int = 2
+    envase: Envase, centros_u: Sequence[float], filas: int = 2, fondo: float = 0.0
 ) -> list[Lugar]:
     """Las unidades de una tanda: la fila de atrás entera y después la de adelante, cada una de
     izquierda a derecha. Una tanda de una sola fila es toda de adelante.
+
+    `fondo` es la profundidad libre del estante: lo que sobra detrás de las dos filas separa la
+    de atrás, entre `AIRE` y `AIRE_MAXIMO`.
 
     **El orden es el del dibujo.** El juego corta las copias de un bloque por el final para
     mostrar sólo lo repuesto, así que lo que va último es lo que el jugador llena: la fila de
     adelante, empezando por su izquierda.
     """
-    # En una rampa, `v` sigue siendo el medio de la base de la unidad. Echada, su canto de abajo
-    # de adelante queda a medio fondo por el coseno, y la fila de atrás se aparta lo que haga
-    # falta para que, medido a lo hondo de la unidad, entre ella y el aire.
-    coseno = math.cos(inclinacion)
-    adelante = MARGEN + envase.fondo / 2 * coseno
-    atras = adelante + envase.fondo / coseno + AIRE / coseno
+    adelante = MARGEN + envase.fondo / 2
+    aire = min(max(fondo - 2 * MARGEN - 2 * envase.fondo, AIRE), AIRE_MAXIMO)
+    atras = adelante + envase.fondo + aire
     lugares = [Lugar("atras", j, u, atras) for j, u in enumerate(centros_u)] if filas == 2 else []
     lugares += [Lugar("adelante", j, u, adelante) for j, u in enumerate(centros_u)]
     return lugares
@@ -237,7 +234,6 @@ def fondo_nuevo(
     adelante: float,
     envases: Sequence[Envase],
     atras: float,
-    inclinacion: float = 0.0,
     filas: Sequence[int] | None = None,
 ) -> float:
     """La profundidad a la que se achica un estante: su tanda más honda, más lo que el mueble tapa.
@@ -246,22 +242,14 @@ def fondo_nuevo(
     al fondo: ahí no entra el producto de alto, y achicar la chapa sin contarlo lo metería
     debajo de la tapa.
     """
-    return adelante + fondo_del_estante(envases, inclinacion, filas) + atras
-
-
-def alto_en_la_rampa(envase: Envase, inclinacion: float) -> float:
-    """Lo alto que queda una unidad sobre la chapa: echada, su canto de arriba de adelante sube
-    lo que le suma su fondo."""
-    if inclinacion == 0.0:
-        return envase.alto
-    return envase.alto * math.cos(inclinacion) + envase.fondo * math.sin(inclinacion)
+    return adelante + fondo_del_estante(envases, filas) + atras
 
 
 def _ocupado(envases: Sequence[Envase], cuentas: Sequence[int]) -> float:
     usados = [(e, c) for e, c in zip(envases, cuentas) if c > 0]
     if not usados:
         return 0.0
-    return sum(c * paso(e) for e, c in usados) - AIRE
+    return sum(c * paso(e) for e, c in usados) - HUECO_MINIMO
 
 
 # --- De Blender a Godot ----------------------------------------------------------------------

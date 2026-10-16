@@ -112,10 +112,10 @@ HELADERAS = ("H1", "H2")
 CABECERAS = ("norte", "sur")
 
 #: Lo que se vende frío, y por eso va en la heladera y en ningún otro lado.
-FRIOS = ("CORACOLA", "FERNET_GOD", "CINDOLOR", "MAYONCHIS")
+FRIOS = ("CORACOLA", "OAAAA", "CINDOLOR", "MAYONCHIS")
 
 #: Lo que se exhibe en una cabecera y en ningún otro lado.
-DE_CABECERA = ("MALBARDO", "AMARGADITO", "OAAAA", "TERMINATOR", "SALADIK",
+DE_CABECERA = ("MALBARDO", "AMARGADITO", "FERNET_GOD", "TERMINATOR", "SALADIK",
                "JORGILLO", "BURBALOO", "FLINPUF")
 
 #: Capacidad para futuras declaraciones explícitas; los 32 productos actuales se exhiben.
@@ -123,14 +123,14 @@ SOLO_DEPOSITO: tuple[str, ...] = ()
 
 #: Identidades del diseño, sin traducir nombres comerciales ni asignar marcas desconocidas.
 SECTORES = {
-    "heladera_1": ("CORACOLA", "FERNET_GOD"),
+    "heladera_1": ("CORACOLA", "OAAAA"),
     "heladera_2": ("CINDOLOR", "MAYONCHIS"),
     "no_comestibles": ("ACTRONCITO", "DUREXTRA", "POETICO", "DURONGA"),
     "cabecera_no_comestibles": ("MALBARDO",),
     "cabecera_almacen": ("AMARGADITO",),
     "almacen": ("MAROLINI", "ARVEJAS", "UAKAS", "MARRANOS"),
     "cereales": ("ZUCARACHAS", "FROTLUPS"),
-    "bebidas_sin_refrigerar": ("OAAAA", "TERMINATOR"),
+    "bebidas_sin_refrigerar": ("FERNET_GOD", "TERMINATOR"),
     "dulces_primera_isla": ("MACUMBAS", "PEPITOS"),
     "dulces_segunda_isla": ("OREMOS", "PETISAS", "COSA_DE_MANI", "FEEL_RICKY_FORT"),
     "salados": ("DONSATURADOS", "PRONGLES", "CHISITOS", "LAYSNTT", "SALADIK"),
@@ -148,8 +148,8 @@ DESTINOS = {
     "A.norte": ("bebidas_sin_refrigerar",),
     "B.este": ("dulces_segunda_isla", "dulces_segunda_isla"),
     "B.oeste": ("salados", "salados"),
-    "B.sur.0": ("salados",), "B.sur.1": ("salados",),
-    "B.sur.2": ("golosinas",), "B.sur.3": ("golosinas",),
+    "B.sur.0": ("golosinas",), "B.sur.1": ("golosinas",),
+    "B.sur.2": ("salados",), "B.sur.3": ("salados",),
     "B.norte": ("golosinas", "golosinas"),
 }
 
@@ -157,10 +157,6 @@ DESTINOS = {
 #: Las cinco excepciones globales del arte vigente, confirmadas para #434. Actroncito y
 #: Prongles conservan las dos hileras que ya tenían: se corrige la lista antigua, no su arte.
 DE_UNA_FILA = ("COSA_DE_MANI", "FLINPUF", "BURBALOO", "MARRANOS", "POETICO")
-
-#: La cabecera admite una fila en la principal de Amargadito y dos en su referencia inferior.
-#: Separarla evita que una excepción global reduzca también esa fija viable.
-PRINCIPALES_DE_UNA_FILA = ("AMARGADITO",)
 
 
 @dataclass(frozen=True)
@@ -180,12 +176,10 @@ class Tanda:
 
     @property
     def cantidad_de_filas(self) -> int:
-        """La excepción principal no cambia sus fijas; una fija puede declarar su encaje."""
+        """Una fija puede declarar su encaje; si no, rige la excepción global de una fila."""
         if self.filas is not None:
             return self.filas
-        if self.producto in DE_UNA_FILA or (
-            not self.fija and self.producto in PRINCIPALES_DE_UNA_FILA
-        ):
+        if self.producto in DE_UNA_FILA:
             return 1
         return 2
 
@@ -205,49 +199,49 @@ def _f(clave: str, filas: int | None = None) -> Tanda:
 #: van arriba de todo y en el zócalo, y repiten un producto que se repone en otro lado.
 ESTANTES: dict[str, tuple[Tanda, ...]] = {
     # Góndola del medio, la de la derecha entrando: su cara oeste da al pasillo central.
-    "A.oeste.3": (_f("UAKAS"), _f("MARRANOS")),
+    "A.oeste.3": (_f("MAROLINI"), _f("ARVEJAS")),
     "A.oeste.2": (_p("MAROLINI"), _p("ARVEJAS")),
     "A.oeste.1": (_p("UAKAS"), _p("MARRANOS")),
-    "A.oeste.0": (_f("MAROLINI"), _f("ARVEJAS")),
-    "A.este.3": (_f("PEPITOS"), _f("FROTLUPS")),
+    "A.oeste.0": (_f("UAKAS"), _f("MARRANOS")),
+    "A.este.3": (_f("MACUMBAS"), _f("ZUCARACHAS")),
     "A.este.2": (_p("MACUMBAS"), _p("ZUCARACHAS")),
     "A.este.1": (_p("PEPITOS"), _p("FROTLUPS")),
-    "A.este.0": (_f("MACUMBAS"), _f("ZUCARACHAS")),
+    "A.este.0": (_f("PEPITOS"), _f("FROTLUPS")),
     "A.sur.3": (_f("MALBARDO"),),
     "A.sur.2": (_p("MALBARDO"),),
     "A.sur.1": (_p("AMARGADITO"),),
     "A.sur.0": (_f("AMARGADITO"),),
-    "A.norte.3": (_f("OAAAA", filas=1),),
-    "A.norte.2": (_p("OAAAA"),),
-    "A.norte.1": (_p("TERMINATOR"),),
-    "A.norte.0": (_f("TERMINATOR"),),
+    "A.norte.3": (_f("TERMINATOR"),),
+    "A.norte.2": (_p("TERMINATOR"),),
+    "A.norte.1": (_p("FERNET_GOD"),),
+    "A.norte.0": (_f("FERNET_GOD"),),
     # Góndola del medio, la de la izquierda: su cara este da al pasillo central.
-    "B.este.3": (_f("COSA_DE_MANI"), _f("FEEL_RICKY_FORT")),
+    "B.este.3": (_f("OREMOS"), _f("PETISAS")),
     "B.este.2": (_p("OREMOS"), _p("PETISAS")),
     "B.este.1": (_p("COSA_DE_MANI"), _p("FEEL_RICKY_FORT")),
-    "B.este.0": (_f("OREMOS"), _f("PETISAS")),
-    "B.oeste.3": (_f("CHISITOS"), _f("LAYSNTT")),
+    "B.este.0": (_f("COSA_DE_MANI"), _f("FEEL_RICKY_FORT")),
+    "B.oeste.3": (_f("DONSATURADOS"), _f("PRONGLES")),
     "B.oeste.2": (_p("DONSATURADOS"), _p("PRONGLES")),
     "B.oeste.1": (_p("CHISITOS"), _p("LAYSNTT")),
-    "B.oeste.0": (_f("DONSATURADOS"), _f("PRONGLES")),
-    "B.sur.3": (_f("JORGILLO"),),
-    "B.sur.2": (_p("JORGILLO"),),
-    "B.sur.1": (_p("SALADIK"),),
-    "B.sur.0": (_f("SALADIK"),),
-    "B.norte.3": (_f("BURBALOO"), _f("FLINPUF")),
-    "B.norte.2": (_p("BURBALOO"),),
-    "B.norte.1": (_p("FLINPUF"),),
-    "B.norte.0": (_f("BURBALOO"), _f("FLINPUF")),
+    "B.oeste.0": (_f("CHISITOS"), _f("LAYSNTT")),
+    "B.sur.3": (_f("SALADIK"),),
+    "B.sur.2": (_p("SALADIK"),),
+    "B.sur.1": (_p("FLINPUF"),),
+    "B.sur.0": (_f("FLINPUF"),),
+    "B.norte.3": (_f("JORGILLO"),),
+    "B.norte.2": (_p("JORGILLO"),),
+    "B.norte.1": (_p("BURBALOO"),),
+    "B.norte.0": (_f("BURBALOO"),),
     # La estantería existente de no comestibles.
-    "N.sur.3": (_f("POETICO"), _f("DURONGA")),
+    "N.sur.3": (_f("ACTRONCITO"), _f("DUREXTRA")),
     "N.sur.2": (_p("ACTRONCITO"), _p("DUREXTRA")),
     "N.sur.1": (_p("POETICO"), _p("DURONGA")),
-    "N.sur.0": (_f("ACTRONCITO"), _f("DUREXTRA")),
+    "N.sur.0": (_f("POETICO"), _f("DURONGA")),
     # Las heladeras. Lo frío es menos que las bandejas: cada uno va una vez con casilleros, y las
     # bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el
     # 2026-09-29, igual que los estantes de góndola que no se completan sin repetir.
-    "H1.sur.0": (_f("FERNET_GOD", filas=1),),
-    "H1.sur.1": (_p("FERNET_GOD"),),
+    "H1.sur.0": (_f("OAAAA"),),
+    "H1.sur.1": (_p("OAAAA"),),
     "H1.sur.2": (_p("CORACOLA"),),
     "H1.sur.3": (_f("CORACOLA"),),
     "H2.sur.0": (_f("MAYONCHIS"),),
