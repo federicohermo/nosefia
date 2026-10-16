@@ -396,7 +396,8 @@ func despertar_lo_de_arriba(nodo: Node3D) -> void:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:
 		return
-	_despertar_sobre(caja, caja.apoyo_que_dejo())
+	var visitadas: Dictionary[RID, bool] = {}
+	_despertar_sobre(caja, caja.apoyo_que_dejo(), visitadas)
 
 
 ## Despierta lo apoyado sobre un lugar, y sigue hacia arriba desde cada caja que despierta.
@@ -407,9 +408,15 @@ func despertar_lo_de_arriba(nodo: Node3D) -> void:
 ## Lo que no es una caja sólo se despierta.
 ##
 ## Despertar de más no cuesta nada, y por eso no se comprueba si lo de arriba se iba a caer: si
-## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. La `freeze` que se mira
-## es el corte de la recursión: una caja ya despierta no se vuelve a visitar.
-func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
+## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. Una caja despierta puede
+## sostener otra ya congelada: se atraviesan ambas y los RID visitados cortan la recursión.
+func _despertar_sobre(
+	caja: CajaDelDeposito, lugar: Vector3, visitadas: Dictionary[RID, bool]
+) -> void:
+	var id := caja.get_rid()
+	if visitadas.has(id):
+		return
+	visitadas[id] = true
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var media := _media_caja(caja)
 	var consulta := PhysicsShapeQueryParameters3D.new()
@@ -429,9 +436,10 @@ func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
 		var caja_de_arriba := encima as CajaDelDeposito
 		if caja_de_arriba == null:
 			encima.sleeping = false
-		elif caja_de_arriba.freeze:
-			caja_de_arriba.soltarse()
-			_despertar_sobre(caja_de_arriba, caja_de_arriba.global_position)
+		else:
+			if caja_de_arriba.freeze:
+				caja_de_arriba.soltarse()
+			_despertar_sobre(caja_de_arriba, caja_de_arriba.global_position, visitadas)
 
 
 ## Deja la caja en el piso al lado del jugador. Devuelve si encontró dónde.
