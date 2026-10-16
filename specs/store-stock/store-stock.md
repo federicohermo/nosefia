@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: draft
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y ficha detallada de Duronga contrastados el 2026-10-15 (#434); decisión del dueño de #434: Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y ficha detallada de Duronga contrastados el 2026-10-15 (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente
 ---
 
 # Capacidad: la mercadería del almacén
@@ -572,8 +572,11 @@ DADO cada tanda principal y fija del local ENTONCES sus filas coinciden con esta
 | Actroncito, Prongles y los demás productos exhibidos | 2 | 2 |
 
 La fila de adelante es la más cercana al pasillo y cada lugar suyo es un casillero del
-producto. La fila de atrás, cuando existe, no tiene casilleros. El cupo suma sólo los lugares
-frontales de las tandas del producto: una copia posterior no agrega un casillero.
+producto. Los casilleros totales suman los frontales de su principal y sus fijas; los
+casilleros reponibles usados por la apertura y el sorteo suman sólo los frontales de la
+principal. Una principal con cero casilleros NO DEBE volver elegible al producto aunque
+tenga guía. Las filas delanteras fijas conservan su interacción de BR-STK-024. La fila de
+atrás, cuando existe, no tiene casilleros: una copia posterior no agrega ninguno.
 
 ### AC-STK-031 — La fila de atrás de cada tanda permanece entera *(verifica BR-STK-025)*
 
