@@ -6,7 +6,7 @@ extends RefCounted
 
 enum Campo { JORNADA, MEDIOS, FALLAS, LLAMADOS, NOCHES_SIN_SUMAR, DEVOLUCIONES, MOPA_SECADA }
 
-const VERSION: int = 1
+const VERSION: int = 2
 const CLAVE_DE_VERSION := "version"
 
 ## El tipo de cada campo es el de su defecto.
