@@ -1,0 +1,919 @@
+[
+  {
+    "fixture": "checkpoint de Partida real",
+    "sha256": "2c4a6412ed834470ff52ab69525f02dd7029bb4ef5be4c21d2f0eb7a687c2899",
+    "path": "/userfs/godot/app_userdata/No se fía/partida.guardado"
+  },
+  {
+    "medicion": "web-1920-inicio",
+    "cuadros": 145,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-inicio",
+    "cuadros": 145,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      956,
+      540
+    ],
+    "wait": 20000,
+    "snapshot": "web-1920-almacen-tras-carga"
+  },
+  {
+    "medicion": "web-1920-almacen-tras-carga",
+    "cuadros": 86,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": false
+    }
+  },
+  {
+    "snapshot": "web-1920-almacen-tras-carga",
+    "cuadros": 86,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": false
+    }
+  },
+  {
+    "wait": 2500,
+    "snapshot": "web-1920-almacen-listo"
+  },
+  {
+    "medicion": "web-1920-almacen-listo",
+    "cuadros": 112,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-almacen-listo",
+    "cuadros": 112,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "key": "Q",
+    "wait": 700,
+    "snapshot": "web-1920-chats",
+    "expectCursor": false
+  },
+  {
+    "medicion": "web-1920-chats",
+    "cuadros": 94,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-chats",
+    "cuadros": 94,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1920-yasmin-final",
+    "click": [
+      960,
+      450
+    ],
+    "wait": 500
+  },
+  {
+    "medicion": "web-1920-yasmin-final",
+    "cuadros": 94,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-yasmin-final",
+    "cuadros": 94,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "wheel": [
+      0,
+      -10000
+    ],
+    "move": [
+      950,
+      510
+    ],
+    "expectCursor": false,
+    "snapshot": "web-1920-yasmin-inicio",
+    "wait": 500
+  },
+  {
+    "medicion": "web-1920-yasmin-inicio",
+    "cuadros": 106,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-yasmin-inicio",
+    "cuadros": 106,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1920-yasmin-prefijo",
+    "click": [
+      757,
+      762
+    ],
+    "wait": 100
+  },
+  {
+    "medicion": "web-1920-yasmin-prefijo",
+    "cuadros": 107,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-yasmin-prefijo",
+    "cuadros": 107,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      939,
+      762
+    ],
+    "wait": 100
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1920-yasmin-tramo",
+    "click": [
+      939,
+      762
+    ],
+    "wait": 100
+  },
+  {
+    "medicion": "web-1920-yasmin-tramo",
+    "cuadros": 113,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-yasmin-tramo",
+    "cuadros": 113,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1920-chats-leidos",
+    "click": [
+      751,
+      135
+    ],
+    "wait": 250
+  },
+  {
+    "medicion": "web-1920-chats-leidos",
+    "cuadros": 104,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-chats-leidos",
+    "cuadros": 104,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1920-enrique",
+    "click": [
+      960,
+      323
+    ],
+    "wait": 350
+  },
+  {
+    "medicion": "web-1920-enrique",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-enrique",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "wheel": [
+      0,
+      -10000
+    ],
+    "move": [
+      950,
+      510
+    ],
+    "expectCursor": false,
+    "snapshot": "web-1920-enrique-ayer",
+    "wait": 350
+  },
+  {
+    "medicion": "web-1920-enrique-ayer",
+    "cuadros": 110,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-enrique-ayer",
+    "cuadros": 110,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "wheel": [
+      0,
+      10000
+    ],
+    "move": [
+      950,
+      510
+    ],
+    "expectCursor": false,
+    "snapshot": "web-1920-enrique-hoy",
+    "wait": 350
+  },
+  {
+    "medicion": "web-1920-enrique-hoy",
+    "cuadros": 113,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-enrique-hoy",
+    "cuadros": 113,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1920-contenedor",
+    "click": [
+      917,
+      544
+    ],
+    "wait": 350
+  },
+  {
+    "medicion": "web-1920-contenedor",
+    "cuadros": 110,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-contenedor",
+    "cuadros": 110,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1920-foto-cerrada",
+    "click": [
+      960,
+      540
+    ],
+    "wait": 350
+  },
+  {
+    "medicion": "web-1920-foto-cerrada",
+    "cuadros": 99,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-foto-cerrada",
+    "cuadros": 99,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-mundo",
+    "key": "Q",
+    "expectCursor": true,
+    "wait": 350
+  },
+  {
+    "medicion": "web-1920-mundo",
+    "cuadros": 110,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-mundo",
+    "cuadros": 110,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "wait": 500,
+    "size": [
+      1280,
+      720
+    ]
+  },
+  {
+    "snapshot": "web-1280-chats",
+    "key": "Q",
+    "expectCursor": false,
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-chats",
+    "cuadros": 121,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-chats",
+    "cuadros": 121,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1280-yasmin-final",
+    "click": [
+      640,
+      303
+    ],
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-yasmin-final",
+    "cuadros": 114,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-yasmin-final",
+    "cuadros": 114,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "wheel": [
+      0,
+      -10000
+    ],
+    "move": [
+      633,
+      340
+    ],
+    "expectCursor": false,
+    "snapshot": "web-1280-yasmin-inicio",
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-yasmin-inicio",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-yasmin-inicio",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1280-yasmin-prefijo",
+    "click": [
+      504,
+      508
+    ],
+    "wait": 100
+  },
+  {
+    "medicion": "web-1280-yasmin-prefijo",
+    "cuadros": 105,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-yasmin-prefijo",
+    "cuadros": 105,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      626,
+      508
+    ],
+    "wait": 100
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1280-yasmin-tramo",
+    "click": [
+      626,
+      508
+    ],
+    "wait": 100
+  },
+  {
+    "medicion": "web-1280-yasmin-tramo",
+    "cuadros": 98,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-yasmin-tramo",
+    "cuadros": 98,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1280-chats-leidos",
+    "click": [
+      501,
+      90
+    ],
+    "wait": 250
+  },
+  {
+    "medicion": "web-1280-chats-leidos",
+    "cuadros": 108,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-chats-leidos",
+    "cuadros": 108,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1280-enrique",
+    "click": [
+      640,
+      215
+    ],
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-enrique",
+    "cuadros": 120,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-enrique",
+    "cuadros": 120,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "wheel": [
+      0,
+      -10000
+    ],
+    "move": [
+      633,
+      340
+    ],
+    "expectCursor": false,
+    "snapshot": "web-1280-enrique-ayer",
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-enrique-ayer",
+    "cuadros": 119,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-enrique-ayer",
+    "cuadros": 119,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "wheel": [
+      0,
+      10000
+    ],
+    "move": [
+      633,
+      340
+    ],
+    "expectCursor": false,
+    "snapshot": "web-1280-enrique-hoy",
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-enrique-hoy",
+    "cuadros": 112,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-enrique-hoy",
+    "cuadros": 112,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1280-contenedor",
+    "click": [
+      611,
+      363
+    ],
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-contenedor",
+    "cuadros": 121,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-contenedor",
+    "cuadros": 121,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "expectCursor": false,
+    "snapshot": "web-1280-foto-cerrada",
+    "click": [
+      640,
+      360
+    ],
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-foto-cerrada",
+    "cuadros": 112,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-foto-cerrada",
+    "cuadros": 112,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-mundo",
+    "key": "Q",
+    "expectCursor": true,
+    "wait": 350
+  },
+  {
+    "medicion": "web-1280-mundo",
+    "cuadros": 128,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-mundo",
+    "cuadros": 128,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "fin": true
+  }
+]

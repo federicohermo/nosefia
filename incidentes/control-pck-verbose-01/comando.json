@@ -1,0 +1,18 @@
+{
+  "cmd": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--verbose",
+    "--path",
+    "D:\\nosefia-carril-C-429-444\\431-export-03\\web",
+    "--main-pack",
+    "D:\\nosefia-carril-C-429-444\\431-export-03\\web\\index.pck",
+    "--script",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-431\\paquete431.gd",
+    "--",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-431\\evidencia-04\\control-pck-verbose-01\\checkpoint.guardado"
+  ],
+  "codigo": 0,
+  "fuente": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "godot_procedencia": "registro"
+}

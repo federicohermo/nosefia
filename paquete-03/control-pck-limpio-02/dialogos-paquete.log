@@ -1,0 +1,29 @@
+WorkerThreadPool: 16 threads, 4 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res remapped: res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: D:/nosefia-carril-C-429-444/431-export-03/proyecto/.github/scripts/verificar_dialogos_exportados.gd remapped: D:/nosefia-carril-C-429-444/431-export-03/proyecto/.github/scripts/verificar_dialogos_exportados.gd
+Completed load for: 'D:/nosefia-carril-C-429-444/431-export-03/proyecto/.github/scripts/verificar_dialogos_exportados.gd' remapped 'D:/nosefia-carril-C-429-444/431-export-03/proyecto/.github/scripts/verificar_dialogos_exportados.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gdc remapped: res://addons/godot_mcp/mcp_screenshot_service.gdc
+Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gdc' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_input_service.gdc remapped: res://addons/godot_mcp/mcp_input_service.gdc
+Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gdc' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gdc remapped: res://addons/godot_mcp/mcp_game_inspector_service.gdc
+Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gdc' at thread -1
+Loaded system CA certificates
+Loading resource: res://.godot/exported/133200997/export-c76a209bc0adb3d6d30411f3294ea989-compradores_jornada_1.res remapped: res://.godot/exported/133200997/export-c76a209bc0adb3d6d30411f3294ea989-compradores_jornada_1.res
+Loading resource: res://src/dominio/almacen/dialogos_de_compradores.gdc remapped: res://src/dominio/almacen/dialogos_de_compradores.gdc
+Completed load for: 'res://src/dominio/almacen/dialogos_de_compradores.gd' remapped 'res://src/dominio/almacen/dialogos_de_compradores.gdc' at thread -1
+Completed load for: 'res://assets/dialogos/compradores_jornada_1.tres' remapped 'res://.godot/exported/133200997/export-c76a209bc0adb3d6d30411f3294ea989-compradores_jornada_1.res' at thread -1
+Diálogos exportados: las nueve entradas de Tin y Tia y sus recordatorios están presentes.
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"

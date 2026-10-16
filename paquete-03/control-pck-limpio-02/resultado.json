@@ -1,0 +1,47 @@
+{
+  "fuente": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "godot": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "origen": "registro",
+  "comandos": [
+    {
+      "nombre": "sonda-paquete",
+      "cmd": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "--path",
+        "D:\\nosefia-carril-C-429-444\\431-export-03\\web",
+        "--main-pack",
+        "D:\\nosefia-carril-C-429-444\\431-export-03\\web\\index.pck",
+        "--script",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-431\\paquete431-sin-marco.gd",
+        "--",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-431\\evidencia-04\\control-pck-limpio-02\\checkpoint-jornada-2.guardado"
+      ],
+      "codigo": 0,
+      "diagnosticos": []
+    },
+    {
+      "nombre": "dialogos-paquete",
+      "cmd": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "--path",
+        "D:\\nosefia-carril-C-429-444\\431-export-03\\web",
+        "--main-pack",
+        "D:\\nosefia-carril-C-429-444\\431-export-03\\web\\index.pck",
+        "--script",
+        "D:\\nosefia-carril-C-429-444\\431-export-03\\proyecto\\.github\\scripts\\verificar_dialogos_exportados.gd"
+      ],
+      "codigo": 0,
+      "diagnosticos": []
+    }
+  ],
+  "huellas_antes": {
+    "index.html": "2bc747f486602bd03bb4beef01792482dbdca6d6e3af04e5608771bc3a7fd6c1",
+    "index.js": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b",
+    "index.pck": "11241e5624f15091af87f07ac2bd48fb01cafebe4123d1cbc40a3d4fe0a4cd6e",
+    "index.wasm": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61"
+  }
+}

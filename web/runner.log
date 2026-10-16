@@ -1,10 +1,14 @@
-CAPTURA431 web-1920-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+CAPTURA431 web-1920-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
 RECORRIDO431_LISTO
 CAPTURA431 web-1920-almacen-tras-carga {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
 RECORRIDO431_PASO
 CAPTURA431 web-1920-almacen-listo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
 RECORRIDO431_PASO
 CAPTURA431 web-1920-chats {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-entrada-completa {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-chats-validado {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
 RECORRIDO431_PASO
 CAPTURA431 web-1920-yasmin-final {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
 RECORRIDO431_PASO

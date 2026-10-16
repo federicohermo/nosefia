@@ -1,0 +1,32 @@
+{
+  "commit": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "head_del_orquestador": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "preset_sha256": "5b8b04c24b013973b147955b2b43974d740cdb875db74e9bca0e8eac16742d4d",
+  "proyecto_sha256": "be5aaed1a355a1033036f364b0d09fcd85ceb9c43d1fbd78dfad54d9ffc789cc",
+  "plantilla_sha256": "56ef44d05a4715ed4b86ea612a1c983173e36ee2e032d7037f67a7055e0c35f7",
+  "archivos": {
+    "index.html": {
+      "bytes": 5441,
+      "sha256": "2bc747f486602bd03bb4beef01792482dbdca6d6e3af04e5608771bc3a7fd6c1"
+    },
+    "index.js": {
+      "bytes": 320316,
+      "sha256": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b"
+    },
+    "index.pck": {
+      "bytes": 96628164,
+      "sha256": "11241e5624f15091af87f07ac2bd48fb01cafebe4123d1cbc40a3d4fe0a4cd6e"
+    },
+    "index.wasm": {
+      "bytes": 38850640,
+      "sha256": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61"
+    }
+  },
+  "plantilla_manifest_sha256": "903e74ea7a28d3bd1924e60c0f5cc9d05473e4402a5f79938fde75e1592c6c43",
+  "guardias": {
+    "comprobar": 0,
+    "verificar_export": 0
+  },
+  "control_exportacion": null,
+  "configuracion_identica": true
+}

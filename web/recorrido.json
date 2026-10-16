@@ -6,26 +6,26 @@
   },
   {
     "medicion": "web-1920-inicio",
-    "cuadros": 145,
+    "cuadros": 139,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
       "alto": 1080,
       "aislado": true,
       "cursor": false,
-      "activo": true
+      "activo": false
     }
   },
   {
     "snapshot": "web-1920-inicio",
-    "cuadros": 145,
+    "cuadros": 139,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
       "alto": 1080,
       "aislado": true,
       "cursor": false,
-      "activo": true
+      "activo": false
     }
   },
   {
@@ -38,7 +38,7 @@
   },
   {
     "medicion": "web-1920-almacen-tras-carga",
-    "cuadros": 86,
+    "cuadros": 38,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -50,7 +50,7 @@
   },
   {
     "snapshot": "web-1920-almacen-tras-carga",
-    "cuadros": 86,
+    "cuadros": 38,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -66,7 +66,7 @@
   },
   {
     "medicion": "web-1920-almacen-listo",
-    "cuadros": 112,
+    "cuadros": 72,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -78,7 +78,7 @@
   },
   {
     "snapshot": "web-1920-almacen-listo",
-    "cuadros": 112,
+    "cuadros": 72,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -96,7 +96,7 @@
   },
   {
     "medicion": "web-1920-chats",
-    "cuadros": 94,
+    "cuadros": 86,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -108,7 +108,65 @@
   },
   {
     "snapshot": "web-1920-chats",
-    "cuadros": 94,
+    "cuadros": 86,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "wait": 5000,
+    "snapshot": "web-1920-entrada-completa"
+  },
+  {
+    "medicion": "web-1920-entrada-completa",
+    "cuadros": 86,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": false
+    }
+  },
+  {
+    "snapshot": "web-1920-entrada-completa",
+    "cuadros": 86,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": false
+    }
+  },
+  {
+    "key": "Q",
+    "wait": 1000,
+    "snapshot": "web-1920-chats-validado",
+    "expectCursor": false
+  },
+  {
+    "medicion": "web-1920-chats-validado",
+    "cuadros": 91,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-chats-validado",
+    "cuadros": 91,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -129,7 +187,7 @@
   },
   {
     "medicion": "web-1920-yasmin-final",
-    "cuadros": 94,
+    "cuadros": 107,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -141,7 +199,7 @@
   },
   {
     "snapshot": "web-1920-yasmin-final",
-    "cuadros": 94,
+    "cuadros": 107,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -199,7 +257,7 @@
   },
   {
     "medicion": "web-1920-yasmin-prefijo",
-    "cuadros": 107,
+    "cuadros": 84,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -211,7 +269,7 @@
   },
   {
     "snapshot": "web-1920-yasmin-prefijo",
-    "cuadros": 107,
+    "cuadros": 84,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -239,7 +297,7 @@
   },
   {
     "medicion": "web-1920-yasmin-tramo",
-    "cuadros": 113,
+    "cuadros": 85,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -251,7 +309,7 @@
   },
   {
     "snapshot": "web-1920-yasmin-tramo",
-    "cuadros": 113,
+    "cuadros": 85,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -272,7 +330,7 @@
   },
   {
     "medicion": "web-1920-chats-leidos",
-    "cuadros": 104,
+    "cuadros": 93,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -284,7 +342,7 @@
   },
   {
     "snapshot": "web-1920-chats-leidos",
-    "cuadros": 104,
+    "cuadros": 93,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -305,7 +363,7 @@
   },
   {
     "medicion": "web-1920-enrique",
-    "cuadros": 118,
+    "cuadros": 95,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -317,7 +375,7 @@
   },
   {
     "snapshot": "web-1920-enrique",
-    "cuadros": 118,
+    "cuadros": 95,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -342,7 +400,7 @@
   },
   {
     "medicion": "web-1920-enrique-ayer",
-    "cuadros": 110,
+    "cuadros": 99,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -354,7 +412,7 @@
   },
   {
     "snapshot": "web-1920-enrique-ayer",
-    "cuadros": 110,
+    "cuadros": 99,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -379,7 +437,7 @@
   },
   {
     "medicion": "web-1920-enrique-hoy",
-    "cuadros": 113,
+    "cuadros": 104,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -391,7 +449,7 @@
   },
   {
     "snapshot": "web-1920-enrique-hoy",
-    "cuadros": 113,
+    "cuadros": 104,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -412,7 +470,7 @@
   },
   {
     "medicion": "web-1920-contenedor",
-    "cuadros": 110,
+    "cuadros": 85,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -424,7 +482,7 @@
   },
   {
     "snapshot": "web-1920-contenedor",
-    "cuadros": 110,
+    "cuadros": 85,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -445,7 +503,7 @@
   },
   {
     "medicion": "web-1920-foto-cerrada",
-    "cuadros": 99,
+    "cuadros": 82,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -457,7 +515,7 @@
   },
   {
     "snapshot": "web-1920-foto-cerrada",
-    "cuadros": 99,
+    "cuadros": 82,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -475,7 +533,7 @@
   },
   {
     "medicion": "web-1920-mundo",
-    "cuadros": 110,
+    "cuadros": 92,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -487,7 +545,7 @@
   },
   {
     "snapshot": "web-1920-mundo",
-    "cuadros": 110,
+    "cuadros": 92,
     "estado": {
       "visible": "visible",
       "ancho": 1920,
@@ -512,7 +570,7 @@
   },
   {
     "medicion": "web-1280-chats",
-    "cuadros": 121,
+    "cuadros": 103,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -524,7 +582,7 @@
   },
   {
     "snapshot": "web-1280-chats",
-    "cuadros": 121,
+    "cuadros": 103,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -545,7 +603,7 @@
   },
   {
     "medicion": "web-1280-yasmin-final",
-    "cuadros": 114,
+    "cuadros": 92,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -557,7 +615,7 @@
   },
   {
     "snapshot": "web-1280-yasmin-final",
-    "cuadros": 114,
+    "cuadros": 92,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -582,7 +640,7 @@
   },
   {
     "medicion": "web-1280-yasmin-inicio",
-    "cuadros": 118,
+    "cuadros": 112,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -594,7 +652,7 @@
   },
   {
     "snapshot": "web-1280-yasmin-inicio",
-    "cuadros": 118,
+    "cuadros": 112,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -615,7 +673,7 @@
   },
   {
     "medicion": "web-1280-yasmin-prefijo",
-    "cuadros": 105,
+    "cuadros": 86,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -627,7 +685,7 @@
   },
   {
     "snapshot": "web-1280-yasmin-prefijo",
-    "cuadros": 105,
+    "cuadros": 86,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -655,7 +713,7 @@
   },
   {
     "medicion": "web-1280-yasmin-tramo",
-    "cuadros": 98,
+    "cuadros": 83,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -667,7 +725,7 @@
   },
   {
     "snapshot": "web-1280-yasmin-tramo",
-    "cuadros": 98,
+    "cuadros": 83,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -688,7 +746,7 @@
   },
   {
     "medicion": "web-1280-chats-leidos",
-    "cuadros": 108,
+    "cuadros": 82,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -700,7 +758,7 @@
   },
   {
     "snapshot": "web-1280-chats-leidos",
-    "cuadros": 108,
+    "cuadros": 82,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -721,7 +779,7 @@
   },
   {
     "medicion": "web-1280-enrique",
-    "cuadros": 120,
+    "cuadros": 98,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -733,7 +791,7 @@
   },
   {
     "snapshot": "web-1280-enrique",
-    "cuadros": 120,
+    "cuadros": 98,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -758,7 +816,7 @@
   },
   {
     "medicion": "web-1280-enrique-ayer",
-    "cuadros": 119,
+    "cuadros": 99,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -770,7 +828,7 @@
   },
   {
     "snapshot": "web-1280-enrique-ayer",
-    "cuadros": 119,
+    "cuadros": 99,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -795,7 +853,7 @@
   },
   {
     "medicion": "web-1280-enrique-hoy",
-    "cuadros": 112,
+    "cuadros": 106,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -807,7 +865,7 @@
   },
   {
     "snapshot": "web-1280-enrique-hoy",
-    "cuadros": 112,
+    "cuadros": 106,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -828,7 +886,7 @@
   },
   {
     "medicion": "web-1280-contenedor",
-    "cuadros": 121,
+    "cuadros": 107,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -840,7 +898,7 @@
   },
   {
     "snapshot": "web-1280-contenedor",
-    "cuadros": 121,
+    "cuadros": 107,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -861,7 +919,7 @@
   },
   {
     "medicion": "web-1280-foto-cerrada",
-    "cuadros": 112,
+    "cuadros": 93,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -873,7 +931,7 @@
   },
   {
     "snapshot": "web-1280-foto-cerrada",
-    "cuadros": 112,
+    "cuadros": 93,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -891,7 +949,7 @@
   },
   {
     "medicion": "web-1280-mundo",
-    "cuadros": 128,
+    "cuadros": 89,
     "estado": {
       "visible": "visible",
       "ancho": 1280,
@@ -903,7 +961,7 @@
   },
   {
     "snapshot": "web-1280-mundo",
-    "cuadros": 128,
+    "cuadros": 89,
     "estado": {
       "visible": "visible",
       "ancho": 1280,

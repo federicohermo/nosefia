@@ -1,0 +1,11 @@
+GODOT431 registro D:\Program Files\Godot\Godot_v4.7.2-stable_win64_console.exe
+exportar 0 C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-04\exportar.log
+sonda-paquete 0 C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-04\sonda-paquete.log
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\capturas-y-paquete.py", line 62, in <module>
+    correr("sonda-paquete", [godot, "--headless", "--path", str(web), "--main-pack", str(web / "index.pck"), "--script", str(scratch / "paquete431.gd"), "--", str(checkpoint)], cwd=web, marcador="PAQUETE431_FINAL fallos=0")
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\capturas-y-paquete.py", line 49, in correr
+    assert not re.search(r"SCRIPT ERROR|Parse Error|(^|\n)(ERROR:|WARNING:)|leaked|still in use", texto), f"Diagnósticos en {log}"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Diagnósticos en C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-04\sonda-paquete.log
