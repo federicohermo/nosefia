@@ -34,6 +34,15 @@ func _foto() -> Array[CIERRE.Estado]:
 	return _almacen.call("_estados_del_cierre")
 
 
+func _utiles_disponibles() -> int:
+	var jornada: int = _almacen.get("_limpiador").piso().jornada()
+	var cuantos := 0
+	for util: ObjetoAgarrable in _almacen.get("_utiles_de_limpieza"):
+		if AnomaliasDeLaJornada.util_disponible(util.datos.id, jornada):
+			cuantos += 1
+	return cuantos
+
+
 func _centro(partes: Array[AABB], indice: int = 0) -> Vector3:
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	return lector.to_global(partes[indice].get_center())
@@ -127,7 +136,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 	assert_array(_foto()).has_size(
 		(
 			_almacen.get("_cajas_de_productos").size()
-			+ _almacen.get("_utiles_de_limpieza").size()
+			+ _utiles_disponibles()
 			+ _almacen.get("_bolsas").size()
 			- 1
 		)
@@ -137,7 +146,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 	assert_array(_foto()).has_size(
 		(
 			_almacen.get("_cajas_de_productos").size()
-			+ _almacen.get("_utiles_de_limpieza").size()
+			+ _utiles_disponibles()
 			+ _almacen.get("_bolsas").size()
 		)
 	)

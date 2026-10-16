@@ -231,6 +231,7 @@ func _ready() -> void:
 		(get_node(ruta) as PuertaDelLocal).identidad = trabadas[ruta]
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
 	_cablear_los_gestos()
+	_limpiador.balde_tenido_con.connect(_al_tenir_con)
 	for util: UtilDeLimpieza in _utiles_de_limpieza:
 		util.examen = _jugador.examen
 	_manija_del_balde.observador = _jugador
@@ -366,6 +367,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# nuevo, que el limpiador recibe arriba y el puesto pinta abajo.
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		util.volver_a_su_lugar()
+		if not AnomaliasDeLaJornada.util_disponible(util.datos.id, jornada):
+			util.hide()
+			util.freeze = true
+			util.collision_layer = 0
+			util.collision_mask = 0
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()
@@ -448,7 +454,9 @@ func volver_al_menu() -> void:
 func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 	var candidatos: Array[Node3D] = []
 	candidatos.append_array(_cajas_de_productos)
-	candidatos.append_array(_utiles_de_limpieza)
+	for util: ObjetoAgarrable in _utiles_de_limpieza:
+		if AnomaliasDeLaJornada.util_disponible(util.datos.id, _limpiador.piso().jornada()):
+			candidatos.append(util)
 	candidatos.append_array(_bolsas)
 	candidatos.append_array(_reposicion_manual.unidades_sueltas())
 	candidatos.append_array(_puesto_de_la_caja.tickets_en_el_mundo())
@@ -478,6 +486,16 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 			ReglasDelCierre.Estado.new(clase, _habitaciones.de(nodo.global_position), en_mano)
 		)
 	return estados
+
+
+func _al_tenir_con(identidad: StringName, _agua: ReglasDeLaLimpieza.Agua) -> void:
+	var permitido := (
+		_reloj.corriendo()
+		and not get_tree().paused
+		and not _jugador.suspendido()
+		and not _jugador.examen.esta_examinando()
+	)
+	_partida.anotar_uso_de_poetico(identidad, ReglasDeLaLimpieza.Resultado.BALDE_TENIDO, permitido)
 
 
 ## Los gestos que salen mal piensan (BR-SUB-013), y la mopa berreta sale una vez por partida y

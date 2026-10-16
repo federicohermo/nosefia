@@ -257,7 +257,10 @@ func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void
 	var balde := _util(almacen, "Balde")
 	var mopa := _util(almacen, "Mopa")
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
-	_usar(almacen, _util(almacen, "JabonAzul"), balde)
+	# Preparar la bolsa abre J2: su azul se prepara con la unidad vendible real.
+	almacen.get("_reposicion_manual").call("retirar", Producto.Id.POETICO)
+	_accion(almacen, balde, ReglasDeLosObjetos.ACCION_AGARRAR)
+	almacen.get("_reposicion_manual").call("devolver", Producto.Id.POETICO)
 	_usar(almacen, mopa, balde)
 	balde.global_position = EN_EL_DEPOSITO
 	mopa.global_position = EN_EL_LOCAL

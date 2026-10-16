@@ -95,19 +95,38 @@ func test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta() -> void:  # AC-
 	var ticket := _ticket(almacen)
 	objetos.append(ticket)
 	for objeto in objetos:
+		if objeto.datos.id == &"jabon_azul":
+			assert_bool(objeto.visible).is_false()
+			assert_int(objeto.collision_layer).is_zero()
+			continue
 		if objeto != unidad:
 			_agarrar(almacen, objeto)
 			_clic(jugador, contenedor, MOUSE_BUTTON_LEFT)
-		assert_object(agarre.manos().sostenido()).is_null()
-		assert_bool(objeto.visible).is_false()
-		assert_bool(objeto.freeze).is_true()
-		assert_int(objeto.collision_layer).is_zero()
-		assert_int(objeto.collision_mask).is_zero()
-		assert_object(objeto.get_parent()).is_same(contenedor)
-		var candidato: CampoDeInteraccion.Candidato = jugador.call("_medir_candidato", objeto)
-		assert_bool(candidato.visible).is_false()
+		_comprobar_tirado(objeto, contenedor, jugador, agarre)
 	assert_int(recolector.tarea().depositadas()).is_equal(1)
-	assert_array(contenedor.call("tirados")).has_size(objetos.size())
+	assert_array(contenedor.call("tirados")).has_size(objetos.size() - 1)
+	# El azul se ejerce disponible; J2 conserva la bolsa y el resto de la matriz.
+	almacen.call("_al_abrir_la_jornada", 1)
+	var azul: ObjetoAgarrable = almacen.get_node("Objetos/JabonAzul")
+	assert_bool(azul.visible).is_true()
+	_agarrar(almacen, azul)
+	_clic(jugador, contenedor, MOUSE_BUTTON_LEFT)
+	_comprobar_tirado(azul, contenedor, jugador, agarre)
+	assert_array(contenedor.call("tirados")).contains_exactly([azul])
+	assert_int(recolector.tarea().depositadas()).is_zero()
+
+
+func _comprobar_tirado(
+	objeto: ObjetoAgarrable, contenedor: Node3D, jugador: Node3D, agarre: Agarre
+) -> void:
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_bool(objeto.visible).is_false()
+	assert_bool(objeto.freeze).is_true()
+	assert_int(objeto.collision_layer).is_zero()
+	assert_int(objeto.collision_mask).is_zero()
+	assert_object(objeto.get_parent()).is_same(contenedor)
+	var candidato: CampoDeInteraccion.Candidato = jugador.call("_medir_candidato", objeto)
+	assert_bool(candidato.visible).is_false()
 
 
 func test_cuerpo_rechaza_durante_giro_y_tapa_no_tira() -> void:  # AC-CLN-037 AC-CLN-035

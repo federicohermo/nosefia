@@ -15,6 +15,7 @@ extends Node
 ## una fila de la tabla de sonidos las hace sonar sin tocar este archivo.
 signal balde_llenado
 signal balde_tenido(agua: ReglasDeLaLimpieza.Agua)
+signal balde_tenido_con(identidad: StringName, agua: ReglasDeLaLimpieza.Agua)
 signal balde_vaciado
 signal mopa_mojada(agua: ReglasDeLaLimpieza.Agua)
 signal piso_humedecido
@@ -71,6 +72,7 @@ func usar(en_la_mano: StringName, objetivo: StringName) -> ReglasDeLaLimpieza.Re
 			balde_llenado.emit()
 		ReglasDeLaLimpieza.Resultado.BALDE_TENIDO:
 			balde_tenido.emit(_piso.balde().agua())
+			balde_tenido_con.emit(en_la_mano, _piso.balde().agua())
 		ReglasDeLaLimpieza.Resultado.BALDE_VACIADO:
 			balde_vaciado.emit()
 		ReglasDeLaLimpieza.Resultado.MOPA_MOJADA:
