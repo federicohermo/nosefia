@@ -1,15 +1,16 @@
 ---
 schema_version: 1
 capability_id: CAP-INV
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A
 ---
 
 # Capacidad: la investigación
 
 ## Propósito
 
+Conservar las pistas descubiertas y consultar las hipótesis que habilitan, sin duplicar progreso.
 Darle al minuto que no se paga algo que comprar. Lo único que tiene que hacer bien es **no
 rendir dos veces**: lo que un objeto esconde se ve sólo al examinarlo, y examinarlo otra vez no
 suma. Sin eso, se puede pasar la noche examinando la misma lata.
@@ -20,6 +21,12 @@ suma. Sin eso, se puede pasar la noche examinando la misma lata.
 |---|---|---|
 | **Revelación** | lo que un objeto esconde y sólo se ve al examinarlo | secreto, lore |
 | **Hallazgo** | la primera vez que se ve una revelación. La segunda no lo es | descubrimiento |
+| **Pista** | dato narrativo con identidad estable, jornada, canal y posibles exigencias | revelación automática |
+| **Expediente** | identidades de pistas descubiertas de una partida, en orden | estado global |
+| **Hipótesis** | opción de interpretación disponible al cierre de una jornada | final |
+| **Desenlace** | resultado que declara umbral y pistas exigidas | hipótesis de jornada |
+| **Caso** | conjunto declarado de pistas, exigencias y desenlaces | reglas dentro de la pantalla |
+| **Chat de notas** | conversación del protagonista consigo mismo que recibe fotos y textos de pistas | cuaderno de la computadora |
 
 ## Comportamiento normativo
 
@@ -135,7 +142,8 @@ sin error; un chat de un solo mensaje NO DEBE exigir desplazamiento para verlo.
 CUANDO se abre la jornada N, el sistema DEBE mostrar sólo los mensajes del guión cuya jornada
 de llegada es menor o igual que N, en su orden y con el más reciente abajo. El menú DEBE listar
 un botón por conversación con al menos un mensaje visible, en el orden declarado de
-interlocutores. Cada botón DEBE mostrar nombre, imagen y cantidad de no leídos cuando es mayor
+interlocutores, salvo el chat de notas cuyo permiso de menú lo fija BR-INV-040.
+Cada botón DEBE mostrar nombre, imagen y cantidad de no leídos cuando es mayor
 que cero; sin imagen, DEBE mostrar un círculo liso del tema. La jornada NO DEBE programar nuevas
 llegadas durante su transcurso. Al continuar desde un guardado, los mensajes del guión DEBEN
 reconstruirse según esa jornada, todos sin leer. Las devoluciones de Enrique de las noches ya
@@ -247,6 +255,115 @@ la identidad del texto visible ni registrar por ese gesto un hallazgo o hipótes
 Leer el mensaje, abrir el chat, pulsar otro tramo o una identidad inexistente NO DEBE emitir
 ese pedido. Repetir el clic válido PUEDE repetir el pedido; la aceptación e idempotencia
 del hallazgo corresponden a quien registra la pista.
+
+### BR-INV-032 — Las pistas se registran por identidad una sola vez
+
+CUANDO se registra una pista conocida y habilitada, el sistema DEBE contestar ANOTADA, agregar
+su identidad una sola vez al final del expediente y publicar una pista nueva con identidad,
+jornada y sus datos. Si ya está registrada DEBE contestar REPETIDA, sin alterar orden ni emitir
+otra pista nueva. Una identidad ajena al caso DEBE contestar DESCONOCIDA y conservar el estado.
+Las pistas DEBEN ser datos con identidad estable y jornada; una revelación de examen NO DEBE
+convertirse por sí misma en una pista de jornada.
+
+### BR-INV-033 — Las exigencias son datos y se cumplen juntas
+
+SI una pista declara otras pistas exigidas y falta alguna, ENTONCES el sistema DEBE contestar
+DESCONOCIDA sin registrarla. Con todas descubiertas DEBE permitir ANOTADA. El sistema DEBE
+recibir las exigencias como datos del caso, sin depender de una pantalla ni del gesto que lo
+consulta.
+
+### BR-INV-034 — El desenlace exige umbral y pistas a la vez
+
+CUANDO se consulta un desenlace, el sistema DEBE declararlo alcanzado sólo si la cantidad de
+pistas descubiertas alcanza su umbral declarado y están todas sus pistas exigidas. Sin pistas
+exigidas DEBE bastar el umbral. El sistema DEBE publicar cada desenlace alcanzado al registrar
+la pista que completa sus condiciones, una sola vez. Consultar o repetir una pista NO DEBE
+emitir otro alcance. Los umbrales y exigencias DEBEN proceder del caso declarado, sin inventar
+finales ni valores para contenido no definido.
+
+### BR-INV-035 — Un caso inconsistente se rechaza explícitamente
+
+El sistema DEBE declarar inconsistente un caso con identidades de pista repetidas, una
+exigencia inexistente, un ciclo de exigencias o un desenlace inalcanzable por cantidad o por
+sus exigencias. Un caso consistente DEBE poder ejercerse independientemente de la presentación.
+
+### BR-INV-036 — Reconstruir sanea sin volver a descubrir
+
+CUANDO se entrega lo descubierto, el sistema DEBE ofrecer una copia ordenada de sus identidades.
+CUANDO se reconstruye desde una lista, el sistema DEBE conservar las identidades conocidas una
+sola vez, en su orden, e ignorar las desconocidas. Reconstruir y consultar NO DEBEN publicar
+pista nueva ni duplicar mensajes. Registrar y reconstruir DEBEN operar sobre el expediente
+recibido de la partida, sin escribir disco ni crear un expediente global alternativo.
+
+### BR-INV-037 — Cada canal exige su gesto
+
+El sistema DEBE distinguir pistas por levantar un objeto, examinar algo no levantable, pulsar
+una frase de chat y pulsar un fragmento de diálogo de comprador. El gesto DEBE coincidir con
+el canal y la jornada declarados. Mirar, leer sin pulsar el fragmento y un agarre rechazado NO
+DEBEN registrar. Las revelaciones de examen de BR-INV-001 a BR-INV-004 DEBEN conservar su cuenta
+independiente: el subtítulo con mano vacía NO DEBE registrar una pista levantable.
+
+### BR-INV-038 — Dos gestos concretos descubren las pistas de la segunda noche
+
+MIENTRAS jornada 2 está abierta, CUANDO se pulsa la frase lila «acá siempre falta algo» del
+mensaje J2_6 de Yasmín, el sistema DEBE registrar 2A. Abrir o leer ese chat, o pulsar otra parte,
+NO DEBE registrarla. CUANDO se acepta levantar la colilla del fondo del depósito cerca de la
+puerta garage, el sistema DEBE registrar 2B. La colilla DEBE distinguirse visualmente como tal,
+ser levantable y tener identidad propia independiente de los productos vendibles. Mirarla,
+mostrar su subtítulo con E y manos vacías, un agarre rechazado o durante pausa NO DEBEN anotarla.
+Soltarla y volver a levantarla NO DEBE duplicarla. Las pistas 2A y 2B NO DEBEN registrarse por
+esos gestos fuera de jornada 2.
+
+### BR-INV-039 — Las hipótesis de la segunda noche salen de sus pistas
+
+CUANDO se consultan las hipótesis del cierre de jornada 2, el sistema DEBE devolver exactamente:
+
+| Pistas de jornada 2 | Hipótesis disponibles |
+|---|---|
+| ninguna | sólo 2P |
+| sólo 2A | sólo 2A |
+| sólo 2B | sólo 2B |
+| 2A y 2B | 2A y 2B |
+
+La predeterminada NO DEBE acompañar una hipótesis desbloqueada. Consultar y navegar NO DEBEN
+mutar expediente ni elegir una opción. La primera jornada no tiene pistas; el sistema NO DEBE
+inventar 2L ni una pista o foto para 2P.
+
+### BR-INV-040 — Cada pista agrega foto y texto una vez al chat de notas
+
+CUANDO una pista de jornada 2 resulta ANOTADA, el sistema DEBE agregar al chat de notas primero
+su foto y después su texto, una sola vez, conservando el orden de descubrimiento entre pistas.
+REPETIDA y DESCONOCIDA NO DEBEN agregar mensajes ni publicar pista nueva. La foto DEBE ampliarse
+con el texto siguiente como adjunto según BR-INV-025. El chat DEBE tener identidad y contenido
+propios, separados del cuaderno, y sus mensajes DEBEN conservarse en memoria entre aperturas.
+El menú durante el turno DEBE ocultarlo en jornadas 1 y 2, aun con mensajes, y ofrecerlo desde
+la 3 cuando tenga contenido. Esa disponibilidad NO DEBE impedir su apertura fija por el cierre
+en jornadas 1 y 2. Consultar mensajes DEBE devolver copias sin alterar el guion compartido ni
+registrar pistas. Reconstruir identidades y mensajes NO DEBE duplicar el contenido ya recibido.
+
+### BR-INV-041 — El contenido de 2A, 2B y 2P procede de sus fichas
+
+El sistema DEBE entregar para cada identidad los siguientes datos, según las fichas «2A», «2B»
+y «2P» de la lista de pistas e hipótesis. Por decisión del usuario del 2026-10-16,
+la imagen de 2A DEBE ser el círculo existente del contacto de Yasmín, aun sin retrato:
+
+| Identidad | Foto de pista | Texto de pista | Título de hipótesis |
+|---|---|---|---|
+| 2A | círculo existente del contacto de Yasmín | Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”. | SIEMPRE FALTAN COSAS |
+| 2B | colilla de cigarrillo en el piso | Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro… | CIGARRILLO EN EL DEPÓSITO |
+| 2P | ninguna | ninguno | NO PASA NADA |
+
+Los textos de hipótesis DEBEN ser:
+
+- **2A:** «No me sorprendería tener un jefe inútil. Pero también, ¿no es responsabilidad de Yasmín
+  avisar si faltan cosas esenciales? Si esto va a ser frecuente, tengo que empezar a prestar más
+  atención a las dinámicas internas del local.»
+- **2B:** «¿Puede ser que alguien se esté metiendo sin que nos demos cuenta? Debería examinar bien
+  las formas de ingreso al local…»
+- **2P:** «Solo se acabó un jabón. No me tengo que hacer la cabeza con algo tan poco trascendental.»
+
+La errata «cigarrilo» DEBE conservarse como aparece en la fuente. Las fotos DEBEN representar
+los motivos indicados; NO DEBEN reemplazarse por imágenes de otro personaje u objeto.
 
 ## Criterios de aceptación
 
@@ -365,8 +482,9 @@ a la vista sin desplazar.
 ### AC-INV-028 — El corte por jornada incluye el límite *(verifica BR-INV-023)*
 
 DADO un chat con un mensaje de jornada 1 y otro de jornada 3 CUANDO se abren las jornadas 1 y 2
-ENTONCES muestra sólo el primero; en la 3 muestra los dos, en ese orden. DADO otro chat con todo
-en jornada 2 ENTONCES no tiene botón en la 1 y sí en la 2. Los botones visibles conservan el orden
+ENTONCES muestra sólo el primero; en la 3 muestra los dos, en ese orden. DADO otro chat distinto
+del de notas, con todo en jornada 2, ENTONCES no tiene botón en la 1 y sí en la 2. Los botones
+visibles conservan el orden
 de interlocutores. Dejar correr una jornada no agrega mensajes del guión de la siguiente.
 
 ### AC-INV-029 — Recibir tiene efecto local y avisa una vez *(verifica BR-INV-024, BR-INV-009)*
@@ -477,6 +595,95 @@ El recorrido de ambos chats, foto y tramo de pista a 1920×1080 y 1280×720, en 
 web, conserva textos completos dentro del celular, sin recortes ni errores.
 DADO Yasmín sin retrato aprobado ENTONCES muestra el círculo liso, conservando nombre y rol.
 
+### AC-INV-043 — Nueva, repetida y ajena *(verifica BR-INV-032)*
+
+DADO un caso consistente con una pista A sin exigencias CUANDO se registra A dos veces y luego
+una identidad ajena ENTONCES responde ANOTADA, REPETIDA y DESCONOCIDA; el expediente contiene
+sólo A y se publica una pista nueva con su identidad y jornada, sin cambios por los otros intentos.
+
+### AC-INV-044 — Una exigencia pendiente no registra *(verifica BR-INV-033)*
+
+DADO pistas A y B con B exigiendo A CUANDO se registra B antes de A ENTONCES responde DESCONOCIDA
+y quedan cero pistas. CUANDO se registra A y después B ENTONCES ambas resultan ANOTADA y el orden
+es A/B. DADO una pista C que exige A y B ENTONCES tener sólo A no basta para registrarla.
+
+### AC-INV-045 — Umbral exacto y condición adicional *(verifica BR-INV-034)*
+
+DADO un caso de prueba con tres pistas A/B/C sin exigencias, un desenlace con umbral 2 sin
+exigencias y otro con umbral 2 que exige C CUANDO se registran A y B ENTONCES sólo se alcanza
+el primero; con una pista no se alcanza ninguno. CUANDO se registra C ENTONCES se alcanza el
+segundo. Consultar y repetir B/C no repite avisos; cada desenlace se publica una vez.
+
+### AC-INV-046 — Cuatro inconsistencias se distinguen del caso válido *(verifica BR-INV-035)*
+
+DADO, por turno, un caso con A repetida, B que exige una pista inexistente, A/B que se exigen
+entre sí, y un desenlace cuyo umbral supera la cantidad de pistas posibles CUANDO se valida
+ENTONCES los cuatro son inconsistentes. Un desenlace que exige una identidad inexistente
+también es inconsistente. El caso A/B sin ciclos con desenlace alcanzable sí es consistente.
+
+### AC-INV-047 — Reconstrucción saneada y sin mensajes nuevos *(verifica BR-INV-036)*
+
+DADO un caso con A/B y la lista B/A/B/ajena CUANDO se reconstruye ENTONCES el expediente entrega
+B/A, sin duplicados ni desconocidas y sin publicar pista nueva. Modificar la copia entregada
+no altera el expediente. Consultar no escribe disco ni reconstruye un expediente alternativo.
+
+### AC-INV-048 — La frase exacta es el disparador *(verifica BR-INV-038, BR-INV-037, BR-INV-032)*
+
+DADO jornada 2 sin pistas CUANDO se abre y lee el chat de Yasmín o se pulsa otra parte de J2_6
+ENTONCES no hay pista nueva. CUANDO se pulsa «acá siempre falta algo» ENTONCES anota sólo 2A;
+repetir la pulsación no la duplica ni emite otro aviso. En jornada 1 o 3 ese gesto no registra 2A.
+
+### AC-INV-049 — La colilla exige un levantamiento aceptado *(verifica BR-INV-038, BR-INV-037)*
+
+DADO jornada 2 y la colilla visible al fondo del depósito cerca de la puerta garage CUANDO se
+mira o se pide E con manos vacías ENTONCES sigue sin 2B. Agarre rechazado o pausa tampoco anota.
+CUANDO el agarre se acepta ENTONCES la misma colilla queda en mano y se anota 2B. Soltarla y
+volver a levantarla no duplica pista ni mensajes; sostenerla al cierre conserva el hallazgo.
+La colilla es reconocible visualmente y no pertenece al catálogo vendible. En otra jornada,
+levantarla no registra 2B.
+
+### AC-INV-050 — Cuatro combinaciones y ninguna opción extra *(verifica BR-INV-039)*
+
+DADO expedientes de jornada 2 con cero pistas, sólo 2A, sólo 2B y ambas, CUANDO se consultan
+las opciones ENTONCES son respectivamente [2P], [2A], [2B] y [2A, 2B]. Repetir la consulta y
+navegar conserva identidades y mensajes. Nunca aparece 2L y 2P no crea foto ni pista ficticia.
+
+### AC-INV-051 — Orden de descubrimiento y pares de mensajes *(verifica BR-INV-040, BR-INV-032, BR-INV-025)*
+
+DADO notas vacías CUANDO se anota 2B y después 2A ENTONCES hay exactamente cuatro mensajes:
+foto 2B, texto 2B, foto 2A y texto 2A. Repetir ambas pistas y registrar una desconocida conserva
+esos cuatro. Ampliar cada foto usa sólo su texto siguiente; cerrarla conserva chat y posición.
+Reabrir otra jornada y reconstruir las mismas identidades y mensajes no duplica el contenido.
+
+### AC-INV-052 — Menú y modo fijo tienen permisos distintos *(verifica BR-INV-040, BR-INV-026, BR-INV-023)*
+
+DADO notas con dos mensajes de 2A CUANDO se abre el menú durante jornadas 1 y 2 ENTONCES notas
+no tiene botón; en la 3 sí. DADO cierre de jornada 1 o 2 CUANDO se fija notas ENTONCES abre su
+chat propio sin pasar por el menú, aun vacío en la 1, permite leer y ampliar, y Q no lo cierra.
+El cuaderno de la computadora conserva sus notas independientes.
+
+### AC-INV-053 — Datos exactos y fotos propias *(verifica BR-INV-041)*
+
+DADO las identidades 2A, 2B y 2P CUANDO se consultan sus datos ENTONCES títulos, textos de pista
+y de hipótesis coinciden exactamente con BR-INV-041, incluida «cigarrilo». La foto 2A corresponde
+al círculo existente del contacto de Yasmín, aprobado por el usuario, y 2B muestra la colilla
+en el piso; 2P no tiene foto ni texto de pista.
+Las tres opciones conservan sus identidades al volver a consultar.
+
+### AC-INV-054 — Revelación y pista no comparten contador *(verifica BR-INV-037, BR-INV-032, BR-INV-001)*
+
+DADO un objeto con revelación ajena a las pistas del caso CUANDO se lo examina dos veces ENTONCES
+su cuenta de hallazgos es 1 y el expediente sigue vacío. DADO la colilla levantada en jornada 2
+ENTONCES 2B está anotada por el agarre, sin exigir examen ni convertir los demás subtítulos en
+pistas. DADO una pista de objeto no levantable o diálogo de comprador declarada en un caso de
+prueba CUANDO se usa otro canal ENTONCES no se anota; el gesto declarado sí la anota una vez.
+
+### AC-INV-055 — Consultar notas entrega copias *(verifica BR-INV-040, BR-INV-036)*
+
+DADO 2A anotada y una copia de sus identidades y mensajes CUANDO se vacían o reordenan esas
+copias ENTONCES el expediente conserva 2A, notas conserva foto/texto en ese orden y el guion
+compartido permanece intacto. Las consultas no registran pistas ni emiten pista nueva.
+
 ### AC-INV-056 — El historial fechado vuelve igual y no fusiona textos *(verifica BR-INV-030, BR-INV-023, BR-INV-008)*
 
 DADO checkpoint de apertura 2 con devolución 1 fechada CUANDO se retoma ENTONCES muestra
@@ -490,19 +697,24 @@ lista consultada no cambia el historial ni el guion.
 - Esta capacidad NO inventa el contenido: consume los guiones decididos; la apertura de
   jornada 2 y su tramo de pista están fijados en BR-INV-029 y BR-INV-031.
 - Esta capacidad NO descuenta tiempo del turno.
-- Esta capacidad NO define contactos o mensajes de jornadas posteriores a la 2 ni hipótesis; consume
-  el contenido decidido para cada conversación. Las notas de la computadora conservan su uso.
+- Esta capacidad NO inventa contactos, pistas, hipótesis o desenlaces de jornadas futuras:
+  consume el contenido decidido. El cuaderno de la computadora conserva su uso independiente.
+- Esta capacidad NO elige una hipótesis por el jugador ni escribe checkpoints: entrega opciones,
+  identidades y mensajes al cierre y al guardado.
 
 ## Contratos
 
 - **Entrada:** el objeto examinado, la entrada de movimiento y los segundos del cuadro, el
-  arrastre del mouse, la app elegida, la conversación abierta, y el título y el
-  cuerpo de una nota; la jornada, Q, el estado del control y los pedidos de recibir mensajes,
-  navegar chats, ampliar fotos, fijar y soltar el celular; identidad y metadatos temporales de
-  mensajes y el tramo de pista pulsado.
+  arrastre del mouse, la app elegida, la conversación abierta, y el título y el cuerpo de una
+  nota; caso, pistas, exigencias y desenlaces, expediente recibido, identidades para
+  reconstrucción y gestos de pista con canal y jornada; la jornada, Q, el estado del control
+  y los pedidos de recibir mensajes, navegar chats, ampliar fotos, fijar y soltar el celular;
+  identidad y metadatos temporales de mensajes y el tramo de pista pulsado.
 - **Salida:** el texto visible, si fue hallazgo, cuántos mensajes sin leer hay y las notas;
-  celular abierto o cerrado, menú, chat o foto, modo fijo, historial cronológico, listas visibles
-  de chats y mensajes, y pedido identificado del tramo de pista.
+  celular abierto o cerrado, menú, chat o foto, modo fijo, historial cronológico, listas
+  visibles de chats y mensajes, y pedido identificado del tramo de pista;
+  ANOTADA/REPETIDA/DESCONOCIDA, expediente ordenado, consistencia, desenlaces alcanzados e
+  hipótesis disponibles con sus datos. Una exigencia pendiente no registra.
 - **Falla:** una revelación vacía y una nota sin título se rechazan sin cambiar nada.
 - **Falla del celular:** Q bloqueado, chat inexistente, recepción inválida, ampliación sin foto
   y soltar sin modo fijo conservan el estado. Una conversación sin mensajes visibles se omite
@@ -512,6 +724,8 @@ lista consultada no cambia el historial ni el guion.
 
 - El hallazgo nuevo y la computadora abierta.
 - El tramo de pista pedido con su identidad; pedirlo no registra por sí solo un hallazgo.
+- La pista nueva con identidad, jornada y datos, sólo tras ANOTADA; cada desenlace alcanzado
+  una sola vez. Repetidas, desconocidas y consultas no publican progreso.
 - El celular abierto o cerrado, menú mostrado, chat abierto, foto ampliada o cerrada, cambios
   de no leídos y mensaje recibido. Un gesto rechazado no publica cambio de estado.
 
@@ -528,8 +742,21 @@ lista consultada no cambia el historial ni el guion.
 - [`subtitles`](../subtitles/subtitles.md) (alimenta): cuándo arranca y termina el examen de lo
   que se lleva, que deja su texto fijo en la línea de subtítulo.
 
+- [`employment-record`](../employment-record/employment-record.md) (consume y alimenta): el
+  expediente y las notas pertenecen a cada partida y conservan orden entre aperturas en memoria.
+- [`save-and-resume`](../save-and-resume/save-and-resume.md) (alimenta): entrega identidades y
+  mensajes para reconstruir; investigación no escribe disco.
+- [`notifications`](../notifications/notifications.md) (alimenta): pista nueva aceptada, sin
+  duplicar desde investigación la presentación del aviso.
+
 ## Preguntas abiertas
 
+- **OQ-INV-004 — ¿Qué pistas, hipótesis y desenlaces definen las jornadas 3 a 5?**
+  - Por qué sigue abierta: las fichas de ese contenido siguen «A desarrollar» y no fijan
+    exigencias ni umbrales de los finales. Los ejemplos de aceptación son casos de prueba,
+    no contenido para el juego.
+  - Decide: game design.
+  - Bloquea: publicar ese contenido y sus finales; no bloquea el motor ni las pistas de jornada 2.
 - **OQ-INV-005 — ¿Dónde se intercalan las devoluciones legadas sin jornada?**
   - Por qué sigue abierta: los guardados antiguos sólo contienen textos y orden de recepción;
     no permiten reconstruir qué cierre produjo cada bloque ni su relación con una apertura.

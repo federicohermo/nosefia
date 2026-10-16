@@ -283,3 +283,67 @@ func test_un_producto_que_nadie_compro_contesta_cero() -> void:  # AC-CTR-020
 		tarea.atencion().cobrar()
 	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.DUREXTRA))).is_equal(0)
 	assert_int(tarea.vendidas_de(null)).is_equal(0)
+
+
+func test_compras_cerradas_incluye_despedidas_vencidas_y_vacia() -> void:  # AC-STK-056
+	assert_bool(TareaDeAtender.new([], Inventario.new([])).compras_cerradas()).is_true()
+	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var compradores := Compradores.de_la_jornada(1)
+	var tarea := TareaDeAtender.new(compradores, inventario)
+	assert_bool(tarea.compras_cerradas()).is_false()
+	tarea.avanzar(compradores[0].horario.x)
+	assert_bool(tarea.compras_cerradas()).is_false()
+	tarea.avanzar(compradores[0].horario.y)
+	assert_bool(tarea.compras_cerradas()).is_false()
+	tarea.avanzar(compradores[1].horario.x)
+	var atencion := tarea.atencion()
+	atencion.interactuar(null)
+	atencion.interactuar(null)
+	var productos: Array[Producto] = []
+	for producto in compradores[1].pedido().productos():
+		atencion.interactuar(Estante.new(inventario, Catalogo.todos()).retirar(producto))
+		productos.append(producto)
+	assert_bool(tarea.compras_cerradas()).is_false()
+	assert_int(atencion.interactuar(Ticket.new(productos))).is_equal(
+		RecepcionDeCompra.Resultado.COMPLETA
+	)
+	assert_bool(atencion.despachada()).is_false()
+	assert_bool(tarea.compras_cerradas()).is_true()
+	assert_bool(tarea.completada()).is_false()
+	var anterior := TareaDeAtender.new(_compradores(1), _inventario())
+	assert_bool(anterior.compras_cerradas()).is_false()
+	anterior.atender()
+	anterior.atencion().despachar_sin_vender()
+	assert_bool(anterior.compras_cerradas()).is_true()
+
+
+func test_un_salto_vence_dos_entregas_una_vez_sin_retirarlas() -> void:  # AC-CTR-040
+	var compradores := Compradores.de_la_jornada(1)
+	compradores[0].horario = Vector2(10, 30)
+	compradores[1].horario = Vector2(20, 40)
+	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var tarea := TareaDeAtender.new(compradores, inventario)
+	var recepciones: Array[RecepcionDeCompra] = []
+	var entregadas: Array[UnidadDeProducto] = []
+	for tiempo: float in [10.0, 20.0]:
+		tarea.avanzar(tiempo)
+		var atencion := tarea.atencion()
+		while not atencion.conversacion_iniciada() or not atencion.puede_abandonar():
+			atencion.interactuar(null)
+		var producto := atencion.comprador().pedido().productos()[0]
+		var unidad := Estante.new(inventario, Catalogo.todos()).retirar(producto)
+		assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
+		entregadas.append(unidad)
+		recepciones.append(atencion.get("_recepcion") as RecepcionDeCompra)
+	var eventos := tarea.avanzar(50.0)
+	assert_array(eventos).has_size(2)
+	for evento in eventos:
+		assert_int(evento.tipo).is_equal(AgendaDeCompradores.Tipo.VENCIO)
+	assert_array(tarea.avanzar(50.0)).is_empty()
+	assert_bool(tarea.compras_cerradas()).is_true()
+	assert_bool(tarea.completada()).is_false()
+	for indice in entregadas.size():
+		var unidad := entregadas[indice]
+		assert_array(recepciones[indice].unidades()).contains_exactly([unidad])
+		assert_bool(inventario.esta_afuera(unidad)).is_true()
+		assert_int(tarea.vendidas_de(unidad.producto)).is_zero()

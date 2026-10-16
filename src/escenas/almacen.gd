@@ -22,6 +22,7 @@ const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_p
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
+const PuestoDeVentanilla := preload("res://src/escenas/puestos/ventanilla.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 const PuestoDeLaCaja := preload("res://src/escenas/puestos/caja_registradora.gd")
 const TachoDelLocal := preload("res://src/escenas/puestos/tacho_de_basura.gd")
@@ -81,6 +82,9 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
 
+## Una fuente por sesión; los tests pueden sembrarla antes de cada apertura.
+var azar_de_la_apertura := RandomNumberGenerator.new()
+
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
 var _partida := Partida.desde(Guardado.new().cargar())
@@ -108,6 +112,7 @@ var _distancia_al_pensar := 0.0
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
 ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
+	azar_de_la_apertura.randomize()
 	_instrucciones.comenzar_pedido.connect(anunciar_la_noche)
 	_cablear_el_celular()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
@@ -142,6 +147,11 @@ func _ready() -> void:
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
+	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
+	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
+	ventanilla.entregas_abandonadas.connect(
+		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
+	)
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
@@ -303,11 +313,17 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
-	var inventario := Apertura.inventario_de_la_jornada(jornada, _reposicion_manual.casilleros())
+	var compradores := Compradores.de_la_jornada(jornada)
+	var inventario := Apertura.inventario_de_la_jornada(
+		compradores,
+		_reposicion_manual.casilleros(),
+		_reposicion_manual.casilleros_reponibles(),
+		azar_de_la_apertura
+	)
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
 	_contenedor.reiniciar()
-	var atender := TareaDeAtender.new(Compradores.de_la_jornada(jornada), inventario)
+	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una

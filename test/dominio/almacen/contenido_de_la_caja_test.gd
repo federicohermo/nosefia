@@ -53,7 +53,9 @@ func test_la_jornada_abre_con_cada_caja_llena() -> void:  # AC-STK-036
 		casilleros[producto.id] = CASILLEROS
 	for vez in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
 		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + vez
-		var inventario := Apertura.inventario_de_la_jornada(jornada, casilleros)
+		var inventario := Apertura.inventario_de_la_jornada(
+			Compradores.de_la_jornada(jornada), casilleros, casilleros, RandomNumberGenerator.new()
+		)
 		var estante := Estante.new(inventario, Catalogo.todos())
 		for producto in Catalogo.todos():
 			(

@@ -29,6 +29,7 @@ flowchart TD
   CTR["counter-service<br/><i>la ventanilla</i>"]
   STK["store-stock<br/><i>la mercadería</i>"]
   CLN["store-cleanup<br/><i>el local en orden</i>"]
+  ANO["anomalies<br/><i>la excepción de la jornada</i>"]
   AMB["ambience<br/><i>qué suena</i>"]
   NTF["notifications<br/><i>qué se avisa</i>"]
   CFG["settings<br/><i>cómo suena, se ve y responde</i>"]
@@ -43,7 +44,7 @@ flowchart TD
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
   STK -- "unidades en góndola" --> CTR
-  CTR -- "lo vendido" --> STK
+  CTR -- "lo vendido y qué compras terminaron" --> STK
   PLY -- "qué se lleva y qué se tira" --> CLN
   CLN -- "la unidad tirada" --> STK
   PLY -- "la unidad viaja en la mano" --> STK
@@ -53,6 +54,11 @@ flowchart TD
   PLY -- "qué se mira y qué se lleva" --> SUB
   INV -- "el examen empieza y termina" --> SUB
   STK -- "el texto de la caja" --> SUB
+  SHF -- "jornada que abre" --> ANO
+  ANO -- "útiles disponibles y sustituto permitido" --> CLN
+  CLN -- "uso aceptado de Poético" --> EMP
+  EMP -- "expediente y notas de cada partida" --> INV
+  INV -- "pistas y notas que cruzan aperturas" --> EMP
   SHF -.-> AMB
   EMP -.-> AMB
   CTR -.-> AMB
@@ -61,6 +67,7 @@ flowchart TD
   PLY -.-> AMB
   INV -.-> AMB
   CTR -.-> NTF
+  INV -.-> NTF
   SHF -.-> NTF
   SAV -- "los dos menús abren Configuraciones" --> CFG
   CFG -- "volumen de cada bus" --> AMB
@@ -69,9 +76,9 @@ flowchart TD
 ```
 
 La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
-`notifications` escucha la llegada y salida de compradores, el rechazo del lector, el tiempo
-restante y el cierre del turno. Ninguna contesta a quien publica el suceso. Por eso la tabla de
-sonidos es un archivo y no un `match`:
+El contrato de `notifications` incluye llegada, vencimiento, rechazo del lector, pista nueva
+anotada, tiempo restante y cierre del turno. Ninguna contesta a quien publica el suceso.
+Por eso la tabla de sonidos es un archivo y no un `match`:
 agregar un sonido no toca a quien lo emite.
 
 ## Las dos mitades de la resta
@@ -92,12 +99,22 @@ no diseño.
 
 ## Las fronteras que más se rompen
 
-Cuatro pares se confunden seguido, y cada uno tiene su regla escrita en los dos specs:
+Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos specs:
 
 - **`counter-service` y `store-stock`.** Cobrar es de la ventanilla; cuántas unidades hay y dónde
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
-  En la primera noche, la ventanilla recibe unidades físicas: la mercadería las retira una sola
-  vez, al completar la venta o al vencer la compra.
+  En la primera noche, la ventanilla recibe unidades físicas y la mercadería las retira una sola
+  vez, al completar la venta. Si la compra vence, las unidades siguen afuera como unidades
+  sueltas. Registrar espera a que terminen ambas compras, vendidas o vencidas. Después compara
+  la planilla sólo con las ventas completas, sin depender de atención.
+
+  La apertura comparte una sola selección de compradores y pedidos entre atención y reposición.
+  La segunda noche usa los pedidos fijos de Fede y Mía, sus conversaciones propias y sus figuras
+  en el mundo. Ninguna consulta reconstruye la lista de apertura.
+  Sus compras vencidas también dejan las unidades recogibles en el piso interior, todavía
+  registradas afuera, y descartan el ticket.
+
+  Atención exige completar las dos compras.
 - **`player-actions` e `investigation`.** Agarrar y examinar son del cuerpo; **qué esconde** el
   objeto es de la investigación. La identidad de lo que se agarra es opaca a propósito: lo que se
   investiga no está en el catálogo.
@@ -106,6 +123,14 @@ Cuatro pares se confunden seguido, y cada uno tiene su regla escrita en los dos 
 - **`save-and-resume` y `settings`.** El guardado es la partida y se borra con ella; las
   preferencias son del jugador, viven en su propio archivo y ningún final las toca. Los menús
   son del guardado; lo que se ajusta adentro de Configuraciones, de `settings`.
+
+- **`anomalies` y `store-cleanup`.** La anomalía decide qué útil falta y qué sustituto queda
+  habilitado por jornada; limpieza decide el efecto y sus rechazos. La segunda noche deja
+  ausente el azul y habilita Poético para preparar esa mezcla, conservando la mercadería.
+  Limpieza entrega el teñido aceptado con identidad; el legajo conserva el hecho para el cierre.
+- **`employment-record` e `investigation`.** Cada partida posee un único expediente y sus notas.
+  Investigación recibe ese estado, registra pistas y consulta hipótesis, sin escribir disco.
+  Las revelaciones por examen conservan su cuenta independiente de las pistas por jornada.
 
 ## Dónde va una regla nueva
 

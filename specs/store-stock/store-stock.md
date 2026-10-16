@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444
 ---
 
 # Capacidad: la mercadería del almacén
@@ -37,6 +37,8 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Cupo** | cuántos casilleros suman las filas de adelante de las tandas de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
+| **Máximo reponible** | el menor entre los casilleros de la tanda reponible de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
+| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
 | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
@@ -154,14 +156,20 @@ cumplida: dos planillas distintas pueden sumar lo mismo.
 MIENTRAS esa noche haya al menos una venta y, para cada producto, lo anotado sea igual a lo
 vendido, el sistema DEBE dar registrar por cumplida. CUANDO no coincidan, el sistema DEBE
 descumplirla. La jornada DEBE abrir con registrar sin cumplir. El sistema DEBE revisarla con
-cada «+» o «−» que cambia una fila y con cada venta cobrada. El cierre DEBE contar el estado de
-ese instante (BR-SHF-007 de [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
+cada «+» o «−» que cambia una fila, con cada venta cobrada y con cada vencimiento de compra.
+El cierre DEBE contar el estado de ese instante (BR-SHF-007 de
+[`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
 ventas con la planilla en cero cuenta como cumplida recién ahí.
 
-En la primera jornada, registrar DEBE permanecer pendiente hasta completar las compras de
-Tin y Tia, con todos sus productos y sus tickets, y anotar exactamente todas las unidades
-vendidas. Registrar sólo la primera compra o anticipar la segunda NO DEBE cumplir la tarea.
-Si alguna compra vence sin completarse, registrar NO DEBE cumplirse, tampoco al cerrar.
+En la primera jornada, registrar DEBE permanecer pendiente mientras quede alguna compra
+abierta de Tin o Tia, porque el comprador todavía no llegó o sigue esperando completar su
+compra. CUANDO ambas compras terminaron, vendidas o vencidas, el sistema DEBE evaluar registrar
+por la coincidencia exacta con lo vendido en compras completas, sin exigir cumplir atención.
+Una compra vendida DEBE contar como terminada aunque su despedida continúe. Registrar sólo
+la primera compra o anticipar la segunda NO DEBE cumplir la tarea mientras la segunda siga
+abierta. Las unidades de compras vencidas NO DEBEN contarse como vendidas. Con ambas compras
+vencidas y la planilla en cero, registrar DEBE contar como cumplida al cierre; antes del cierre,
+sin ventas, DEBE seguir pendiente como en las demás jornadas.
 
 ### BR-STK-023 — Cada producto declara su sonoridad
 
@@ -203,16 +211,30 @@ El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mi
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
 
-CUANDO se abre una jornada, el sistema DEBE dejar faltando lo que dice su fila, y ningún otro
-producto:
+CUANDO se abre cualquier jornada, de la 1 a la 5, el sistema DEBE sortear sus faltantes.
+DEBE elegir entre 4 y 7 productos distintos y, de cada uno, entre 1 unidad y su máximo
+reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
+[ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
 
-| Jornada | Faltan en la góndola |
-|---|---|
-| 1 | 4 Actroncito, 5 Coracola, 2 Marolini, 8 Prongles y 4 Laysntt |
-| 2 a 5 | los de la jornada 1, mientras la ficha no decida los suyos (OQ-STK-005) |
+Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
+caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casilleros de la fila de
+adelante de su tanda reponible (BR-STK-024). El inventario DEBE conservar el cupo total de todas las
+tandas (BR-STK-008), incluidas las guías. Las guías DEBEN abrir completas: los faltantes iniciales
+DEBEN quedar sólo en la tanda reponible. Sólo los productos con máximo reponible mayor o igual a 1
+DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
+incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
+compradores ni pedidos.
 
-La distribución del modelo confirmada durante la prueba del 2026-10-13 conserva cuatro lugares
-de Actroncito y cinco de Coracola; sus faltantes respetan esos cupos.
+La cantidad de productos y las unidades de cada elegido DEBEN sortearse con reparto parejo
+entre los enteros de sus intervalos inclusivos. Los productos DEBEN elegirse sin repetición.
+SI hay menos elegibles que la cantidad sorteada, ENTONCES DEBEN faltar todos los elegibles
+y ninguno más. Con cero elegibles NO DEBE faltar nada.
+
+El sistema DEBE recibir la fuente de azar: con la misma semilla inicial, pedidos y casilleros,
+DEBE producir los mismos faltantes. En juego, la fuente DEBE inicializarse al azar.
+CUANDO abre la jornada siguiente o se retoma una jornada desde el menú o en otra sesión,
+el sistema DEBE sortear de nuevo, sin recuperar una semilla guardada. Dos sorteos pueden
+coincidir: sortear de nuevo NO DEBE exigir un resultado distinto del anterior.
 
 ### BR-STK-027 — Lo que se vende no le quita a lo que se repone
 
@@ -322,7 +344,9 @@ inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-S
 CUANDO se completa una compra física, el sistema DEBE retirar definitivamente sus unidades
 registradas afuera, una sola vez por identidad. NO DEBE volver a descontar el pedido completo.
 Una recepción parcial DEBE conservarlas hasta la salida del comprador. SI vence la atención,
-ENTONCES sus unidades recibidas DEBEN retirarse del inventario una vez, sin contar como venta.
+ENTONCES sus unidades recibidas DEBEN seguir registradas afuera, sin contar como venta ni
+modificar el depósito, la caja o la góndola por el vencimiento. DEBEN conservar su identidad
+y permitir agarrar, colocar, devolver a su caja o desechar como cualquier unidad suelta.
 Una unidad vendida NO DEBE poder registrarse afuera otra vez.
 Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir reponer.
 
@@ -416,6 +440,44 @@ La capacidad de representar un futuro producto declarado sólo-depósito DEBE di
 de esta exhibición: en ese caso sus listas pueden estar vacías y su cupo ser cero, sin
 índices negativos ni elegibilidad por tener sólo una guía. Duronga NO DEBE usar ese estado
 mientras conserve su exhibición provisional.
+
+### BR-STK-040 — La segunda apertura comparte los pedidos construidos
+
+CUANDO se calculan faltantes de reposición para el padrón definido de jornada 2, el sistema
+DEBE recibir los mismos pedidos ya construidos que recibe atención (BR-CTR-038). Consultar
+faltantes, en cualquier orden con atención, NO DEBE reconstruir la lista ni crear otro pedido. El
+conjunto DEBE pertenecer a esa apertura y no heredar pedidos mutables de otra jornada.
+
+### BR-STK-041 — Las compras físicas de la segunda noche conservan identidades
+
+CUANDO se completa una compra de jornada 2 con productos y ticket exactos, el sistema DEBE
+retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas,
+sin descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence
+sin completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar
+recogibles en el piso interior del local frente a la ventanilla; depósito, caja y góndola DEBEN
+conservarse como antes del vencimiento. El ticket aceptado DEBE descartarse. Esas unidades
+DEBEN poder colocarse, devolverse o recogerse como cualquier unidad suelta. Vender una unidad
+retirada de góndola NO DEBE rellenar su casillero ni cumplir reposición.
+
+### BR-STK-042 — Registrar la segunda noche espera al cierre de ambas compras
+
+EN jornada 2 con el padrón definido, MIENTRAS quede un comprador sin llegar o una compra en
+curso, el sistema DEBE mantener registrar pendiente aunque la planilla coincida con lo vendido
+o anticipe todos los pedidos. CUANDO ambas compras terminan, vendidas o vencidas, el sistema
+DEBE cumplir registrar si para cada producto lo anotado coincide exactamente con las ventas
+completas. Una compra vencida NO DEBE impedirlo. El vencimiento DEBE revisar registrar, como
+la venta y cada modificación de planilla. Al cierre, dos compras vencidas con planilla en cero
+DEBEN contar registrar cumplida; una unidad de más o de menos DEBE dejarla pendiente.
+
+### BR-STK-045 — El pedido fijo admite el depósito y distingue Poético
+
+CUANDO se prepara la compra de Fede, el sistema DEBE permitir obtener y entregar Duronga desde
+el depósito, con la exhibición y cupo positivo de BR-STK-044, sin exigir colocarla antes en la
+góndola. Progres DEBE usar la identidad del producto existente que su subtítulo denomina así,
+sin crear otra fila de catálogo. Poético DEBE ser la unidad vendible del pedido, distinta del
+bidón azul de limpieza; entregar el bidón NO DEBE satisfacerla. Usar previamente esa unidad para
+teñir el balde durante jornada 2 NO DEBE impedir su venta ni descontarla dos veces. Atención y
+reposición DEBEN consumir los mismos pedidos fijos de la única lista construida al abrir jornada 2.
 
 ## Criterios de aceptación
 
@@ -534,7 +596,8 @@ total es igual al de lo vendido y registrar no se cumple.
 DADO una jornada que se abre ENTONCES registrar arranca sin cumplir. DADO una noche
 que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
-En la primera jornada se exige además completar ambos pedidos (AC-STK-056).
+En la primera jornada se exige además que ambas compras hayan terminado, vendidas o vencidas
+(AC-STK-056).
 
 ### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
@@ -604,22 +667,48 @@ DADO un producto de 12 casilleros al que la jornada le hace faltar 8 CUANDO se c
 unidades de su caja ENTONCES su fila de adelante queda completa, el depósito en 0 y no es
 faltante.
 
-### AC-STK-033 — Ningún faltante pasa de una caja ni de su fila *(verifica BR-STK-004)*
+### AC-STK-033 — Ningún faltante pasa de una caja ni de su fila *(verifica BR-STK-004, BR-STK-024)*
 
-DADO los faltantes de cada jornada, de la 1 a la 5, ENTONCES ninguno pasa de 8 ni de los
-casilleros de la fila de adelante de su producto.
+DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 1 a la 5 y los casilleros
+medidos en el local CUANDO se abren las jornadas ENTONCES ningún faltante pasa de las unidades
+de una caja —8 en el balance vigente— ni de los casilleros de la fila de adelante de la tanda
+reponible de su producto. El inventario conserva el cupo total de todas las tandas y las guías
+abren completas. DADO un producto sin casilleros principales pero con casilleros de guía
+CUANDO abre la jornada ENTONCES ese producto no falta y su guía está completa.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
-DADO la jornada 1 que se abre ENTONCES faltan 4 Actroncito, 5 Coracola, 2 Marolini, 8 Prongles y
-4 Laysntt, y todos los demás productos tienen su fila de adelante completa. DADO las jornadas 2,
-3, 4 y 5 ENTONCES faltan los mismos.
+DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
+cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y
+7 productos distintos. Cada faltante está entre 1 y `mínimo(C − P, F)`, y los productos no elegidos
+están completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y dos
+conjuntos de productos distintos.
+
+DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
+se pueden obtener 4 y 7 productos, y 1 y el máximo reponible de cada elegido. La elección de
+cantidad tiene cuatro alternativas equiprobables; la de unidades tiene tantas alternativas
+equiprobables como su máximo reponible.
+
+DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
+su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
+pedidas o con cero casilleros principales, el producto nunca falta. DADO exactamente tres elegibles
+CUANDO la cantidad sorteada es 4 o 7 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
+principales CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
+
+DADO dos fuentes con la misma semilla inicial, los mismos pedidos y casilleros CUANDO se
+abre la misma jornada ENTONCES los faltantes coinciden. Consultar los pedidos conserva las
+identidades y cantidades recibidas y no consume azar. CUANDO se abre otra jornada, se vuelve
+al menú y se continúa, o se retoma en otra sesión ENTONCES se realiza un nuevo sorteo.
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO cada jornada, de la 1 a la 5, CUANDO se completan todas sus compras por el recorrido de su jornada
-ENTONCES ningún cobro se rechaza, y después se puede reponer todo lo que falta y dar reponer por
-cumplida.
+DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 1 a la 5 CUANDO
+se completan todas las compras de los pedidos usados para acotar los faltantes, por el
+recorrido de esa jornada, ENTONCES ningún cobro se rechaza. CUANDO después se repone todo lo
+que falta ENTONCES la góndola queda completa y reponer queda cumplida.
+En el recorrido físico, el resultado se conserva tanto tomando las unidades vendidas de sus
+cajas como de casilleros ocupados: también se reponen los casilleros vaciados por esas ventas.
 
 ### AC-STK-036 — La caja arranca en 8 y cuenta lo que sale *(verifica BR-STK-028)*
 
@@ -775,23 +864,37 @@ Repetir la venta o intentar registrar esa identidad afuera no cambia cantidades.
 ### AC-STK-055 — Salida y reposición *(verifica BR-STK-037, BR-STK-033, BR-STK-030)*
 
 DADO una unidad retirada de góndola CUANDO se entrega en una compra parcial y ésta vence
-ENTONCES deja de estar registrada afuera y sale del inventario una sola vez, sin sumar una venta.
+ENTONCES sigue registrada afuera con la misma identidad, sin cambiar el depósito, la caja
+ni la góndola y sin sumar una venta. CUANDO se recupera y coloca en un casillero vacío de su
+producto ENTONCES ocupa ese casillero y deja de estar afuera; devolverla a su caja con espacio
+suma una al contenido y también deja de estar afuera. Una caja llena la rechaza y conserva
+la unidad en la mano y registrada afuera.
 DADO esa unidad en una compra completa ENTONCES el casillero sigue vacío y reponer incompleta
 hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas parciales.
 
-### AC-STK-056 — Registro exige ambas ventas de la primera noche *(verifica BR-STK-022)*
+### AC-STK-056 — Registro espera al cierre de ambas compras *(verifica BR-STK-022)*
 
 DADO la primera jornada CUANDO se registra la venta completa de Tin pero Tia aún no
 compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados anticipadamente
-ENTONCES registrar sigue pendiente hasta que ambas compras estén vendidas con productos y
-ticket. CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES
-registrar se cumple. Una unidad de más o de menos la descumple. Si una compra vence incompleta,
-registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con lo vendido.
+ENTONCES registrar sigue pendiente mientras alguna compra siga abierta.
+CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES registrar
+se cumple. Una unidad de más o de menos la descumple.
+
+DADO Tin vendido y anotado —un Marolini, una Coracola y un Malbardo; los demás productos en cero—
+y Tia con una Zucarachas recibida, pero sin Pepito ni ticket, CUANDO vence Tia ENTONCES registrar
+se cumple en ese vencimiento y cuenta al cierre, aunque atención siga pendiente. La Zucarachas
+no suma una venta ni se anota. CUANDO se suma una Zucarachas en la planilla ENTONCES registrar
+se descumple; restarla vuelve a cumplirla. DADO la segunda compra ya anotada anticipadamente
+CUANDO vence sin venderse ENTONCES registrar sigue pendiente hasta quitar esas unidades.
+
+DADO ambas compras vencidas y todas las filas en cero CUANDO todavía no cerró la jornada
+ENTONCES registrar sigue pendiente. CUANDO cierra ENTONCES cuenta como cumplida, mientras
+atención sigue pendiente. Con una unidad anotada de cualquier producto no cuenta como cumplida.
 
 ### AC-STK-077 — La pila es completa, alcanzable y estable *(verifica BR-STK-038)*
 
-DADO la jornada 1 abierta CUANDO se recorre el conjunto de cajas del catálogo —31 en el catálogo
-vigente— ENTONCES todas están dentro del depósito, ninguna se apoya en una estantería y ningún
+DADO la jornada 1 abierta CUANDO se recorre el conjunto de cajas del catálogo
+vigente ENTONCES todas están dentro del depósito, ninguna se apoya en una estantería y ningún
 cuerpo se superpone con otro. Para cada caja existe un punto libre del piso desde el cual la
 mira la enfoca dentro del alcance vigente. CUANDO pasan 120 cuadros de física sin tocar la pila
 ENTONCES ninguna caja se desplazó más de 0,01 m desde su pose inicial. DADO la jornada 2 abierta
@@ -878,6 +981,58 @@ tamaño y alturas, los estantes útiles sus tandas reponibles y cada envase su o
 separación de filas. Una identidad exhibible sin tanda o con dos principales, y una identidad
 desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino por defecto.
 
+### AC-STK-081 — Reposición y atención comparten los pedidos fijos *(verifica BR-STK-040)*
+
+DADO una apertura de jornada 2 con los pedidos de Fede y Mía construidos CUANDO se consultan
+faltantes antes y después de construir atención, y se repiten ambas consultas ENTONCES se usan
+las mismas instancias de compradores y pedidos, con los seis productos fijos de BR-CTR-038,
+sin reconstrucción ni azar. Otra apertura crea estados propios sin heredar entregas.
+
+### AC-STK-082 — Vencer devuelve productos al piso interior sin venta *(verifica BR-STK-041)*
+
+DADO jornada 2 y una compra parcial con dos unidades recibidas, una de caja y otra de góndola,
+CUANDO vence ENTONCES ambas identidades siguen afuera, los cuerpos quedan visibles y recogibles
+en el piso interior frente a ventanilla, sin superponerse con sólidos ni entre sí, y no suman
+venta ni descuento. El ticket aceptado desaparece. Repetir vencimiento no duplica cuerpos.
+Colocar o devolver esas unidades conserva los permisos habituales; dejarlas sueltas al cierre
+produce desorden, no objeto afuera; sostenerlas sin examen, colocarlas o devolverlas evita ese
+desorden. Una apertura posterior las retira como unidades sueltas de la noche anterior.
+
+### AC-STK-083 — Una sola venta, anticipación y vencimiento *(verifica BR-STK-042)*
+
+DADO Fede vendido y correctamente anotado, Mía sin llegar o esperando, CUANDO se evalúa durante
+la noche ENTONCES registrar sigue pendiente. Anotar también su pedido por adelantado no la
+cumple. CUANDO Mía vence ENTONCES la planilla exacta de sólo lo vendido a Fede cumple registrar,
+incluso al cierre; sumar una unidad de Mía la descumple y restarla la vuelve a cumplir. DADO
+ambas compras vencidas y planilla cero CUANDO cierra ENTONCES registrar cuenta cumplida aunque
+atención no. Si ambas se venden, sólo su suma exacta cumple registrar.
+
+### AC-STK-084 — La venta de jornada 2 no descuenta dos veces *(verifica BR-STK-041)*
+
+DADO Fede con su inicial terminada y cajas con el contenido inicial declarado CUANDO se retiran
+una unidad de Poético, una de Progres y una de Duronga y se entregan con ticket exacto ENTONCES
+cada caja conserva su contenido inicial menos una, cada depósito pierde sólo su identidad
+entregada y lo vendido suma una por cada producto. Repetir recepción o volver a registrarlas
+afuera no cambia cantidades. Una unidad vendida desde góndola deja su casillero vacío y
+reposición pendiente hasta rellenarlo.
+
+### AC-STK-090 — Duronga del depósito completa el pedido fijo *(verifica BR-STK-045, BR-STK-041, BR-STK-027, BR-STK-044)*
+
+DADO jornada 2, Duronga con la exhibición y cupo positivo de BR-STK-044, contenido inicial en
+depósito y faltantes que respetan BR-STK-027 CUANDO se saca una unidad de su caja y se entrega a
+Fede junto con Poético, Progres y ticket exacto ENTONCES la compra se completa y lo vendido de
+Duronga es una unidad, sin exigir colocarla antes en góndola. El cupo y la reserva de reposición
+se conservan según el reparto vigente. Progres corresponde al producto ya existente de ese
+subtítulo, sin una fila adicional de catálogo.
+
+### AC-STK-091 — Poético vendible conserva su identidad después de limpiar *(verifica BR-STK-045, BR-STK-041)*
+
+DADO una unidad vendible de Poético retirada de caja en jornada 2 CUANDO tiñe un balde y después
+se entrega a Fede con los demás productos y ticket ENTONCES se vende esa misma identidad una
+sola vez; el teñido no agrega descuento de inventario y la venta no vuelve a retirar el pedido
+entero. DADO un intento de recepción que identifica el bidón azul en lugar de Poético CUANDO
+se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades de la compra.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -888,14 +1043,20 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
 ## Contratos
 
 - **Entrada:** el sector y destino declarado de cada producto y si admite exhibición;
-  los productos que existen, los casilleros de la fila de adelante de cada uno, la
-  jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
-  que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
+  los productos que existen, sus casilleros totales y los de la fila de adelante
+  de su tanda reponible, la jornada que se abre, sus pedidos ya construidos y la fuente de azar,
+  lo vendido de cada producto, qué compras terminaron y cuáles siguen abiertas, lo que el jugador
+  lleva en la mano, la caja que examina, el casillero que elige, y los pedidos de ingresar,
+  mover, cobrar, sacar y devolver
   a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la planilla.
 - **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
   obligatoria está cumplida, y el motivo de cada rechazo.
+- **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
+  producto y devuelve faltantes dentro del máximo de su tanda reponible. El inventario conserva
+  el cupo total y las guías abren completas. Con menos elegibles que la
+  cantidad sorteada devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
 - **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
   una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
   la condición de orden. Ciclos y apoyos ausentes contestan pendiente; el conjunto vacío,
@@ -919,8 +1080,12 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
 
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
-  compara la planilla, y cada cobro vuelve a compararla; lo que piden los compradores de cada
-  jornada entra en lo que la reposición deja (BR-STK-027).
+  compara la planilla, y cada cobro o vencimiento vuelve a compararla; en la primera noche,
+  cerrar todas las compras habilita evaluar registrar, independientemente de atención.
+  Los mismos pedidos construidos para esa apertura acotan los faltantes, sin otra selección
+  de compradores o productos (BR-STK-026, BR-STK-027). En jornada 2, el padrón fijo conserva
+  sus identidades, recepción y revisión de registrar por venta o vencimiento (BR-STK-040,
+  BR-STK-041, BR-STK-042, BR-STK-045).
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja
   en la mano, y lo que la mano lleva decide qué hace el clic sobre la caja y sobre cada casillero;
   qué casilleros están vacíos y cuáles ocupados decide cuáles se muestran y cuáles se agarran.
@@ -940,13 +1105,6 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
     la botella plástica y la cajita, que son las más parecidas.
   - Decide: el equipo de sonido.
   - Bloquea: nada.
-- **OQ-STK-005 — ¿Qué falta en las jornadas 2 a 5?**
-  - Por qué sigue abierta: la ficha «8. Tarea: Reposición» fija los faltantes de la jornada 1 y
-    dice «A definir» en las otras cuatro. Mientras tanto arrancan con los de la jornada 1
-    (BR-STK-026).
-  - Decide: el diseño, en la ficha.
-  - Bloquea: nada.
-
 - **OQ-STK-007 — ¿Cómo se concilian los cuatro niveles del mapa con las alturas actuales?**
   - Por qué sigue abierta: el texto del mapa habla de cuatro estantes y del primero como
     levantable; los muebles vigentes tienen cuatro chapas laterales y cuatro en cabeceras,

@@ -22,8 +22,10 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 func _almacen_con_jugador_quieto() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	return almacen
 
 
@@ -116,9 +118,7 @@ func test_con_la_caja_llena_la_unidad_sigue_en_la_mano() -> void:  # AC-STK-040
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
-	var inventario := Apertura.inventario_de_la_jornada(
-		ReglasDeLaPartida.PRIMERA_JORNADA, casilleros
-	)
+	var inventario := Apertura.inventario_con_faltantes({}, casilleros)
 	var coracola := Catalogo.de(Producto.Id.CORACOLA)
 	inventario.ingresar(coracola, Inventario.Ubicacion.DEPOSITO, 1)
 	var repositor: Repositor = almacen.get("_repositor")

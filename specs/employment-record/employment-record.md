@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-EMP
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15
 ---
 
 # Capacidad: el legajo del empleado
@@ -329,6 +329,24 @@ BR-INV-030. La devolución de la noche 1 DEBE preceder a la apertura 2, y la dev
 DEBE seguirla. Una partida nueva DEBE empezar sin devoluciones; repetir el cierre o elegir
 continuar dos veces NO DEBE duplicar sus mensajes ni alterar jornada u orden.
 
+### BR-EMP-032 — El uso de Poético es un hecho de la segunda jornada
+
+CUANDO se acepta teñir el balde con la unidad real de Poético durante jornada 2 abierta, el
+sistema DEBE registrar una sola vez ese hecho y ofrecerlo al evaluar su devolución. Repetir
+teñidos aceptados DEBE contestar ya registrado, sin sumar otro hecho. Rechazos, pausa, examen,
+fuera de jornada abierta o uso de otro objeto NO DEBEN registrarlo. El hecho DEBE conservarse
+hasta evaluar esa devolución y NO DEBE heredarse como uso de otra noche. Registrarlo NO DEBE
+escribir mensajes ni decidir apercibimientos por sí solo.
+
+### BR-EMP-033 — El expediente pertenece a cada partida
+
+El sistema DEBE conservar un único expediente de investigación y los mensajes de sus notas
+por partida, compartidos por quienes registran y consultan. Abrir otra jornada de esa partida
+DEBE conservar identidades y orden en memoria. Una partida nueva DEBE empezar sin pistas ni
+mensajes heredados. Un consumidor sin expediente recibido NO DEBE crear uno alternativo.
+La investigación DEBE registrar sin escribir disco; la capacidad de guardado recibe el estado
+que deba cruzar sesiones.
+
 ## Criterios de aceptación
 
 ### AC-EMP-001 — Los tres cortes *(verifica BR-EMP-001)*
@@ -611,6 +629,26 @@ ENTONCES los mensajes de devolución conservan su orden de recepción. CUANDO se
 en noche 3 ENTONCES muestra instrucciones, devolución 1, foto y texto de apertura 2,
 devolución 2, en ese orden; no adelanta la apertura 2 a la devolución 1.
 
+### AC-EMP-067 — Registrar uso una vez y sólo al aceptar *(verifica BR-EMP-032)*
+
+DADO jornada 2 abierta sin uso de Poético CUANDO se rechaza por balde vacío o ya teñido ENTONCES
+el hecho sigue falso. CUANDO se acepta un teñido real con Poético ENTONCES registra éxito y la
+consulta queda verdadera; aceptar otra mezcla contesta ya registrado y conserva un solo hecho.
+El registro no agrega mensajes ni cambia la deuda laboral.
+
+### AC-EMP-068 — La devolución recibe el hecho de su noche *(verifica BR-EMP-032)*
+
+DADO uso aceptado en jornada 2 CUANDO se evalúa su devolución ENTONCES la consulta de esa jornada
+es verdadera. CUANDO abre la 3 ENTONCES no registra uso de Poético en esa noche. Un evento antes
+de abrir, después del cierre, durante pausa o examen, o en jornadas 1, 3, 4 y 5 no crea el hecho.
+
+### AC-EMP-069 — Dos aperturas comparten un expediente, dos partidas no *(verifica BR-EMP-033)*
+
+DADO una partida con 2B y después 2A, y sus cuatro mensajes de foto/texto CUANDO abre otra jornada
+y dos consumidores consultan ENTONCES reciben el mismo expediente con orden 2B/2A y los mismos
+cuatro mensajes. Crear otra partida deja cero pistas y cero mensajes. Un consumidor sin
+expediente recibido no anota ni emite ni crea un expediente independiente.
+
 ### AC-EMP-070 — La devolución lleva la noche cerrada y el orden *(verifica BR-EMP-031, BR-EMP-007)*
 
 DADO una devolución de tres mensajes al cerrar noche 2 CUANDO se consultan sus datos
@@ -639,12 +677,14 @@ Una partida nueva sigue sin devoluciones.
 - **Entrada:** cuántas obligatorias se cumplieron y cuántas se habían declarado, y cuáles
   quedaron sin cumplir; un legajo, las cuentas y las devoluciones, que pueden venir de un
   guardado; motivos de la jornada abierta; el tiempo que pasa con la devolución en pantalla;
-  mensajes introductorios y pedidos de avanzar, volver y comenzar.
+  mensajes introductorios y pedidos de avanzar, volver y comenzar; el teñido aceptado con
+  identidad y el expediente y mensajes de investigación de esta partida.
 - **Salida:** la banda, los medios exactos y los apercibimientos enteros, si está despedido, qué jornada va, el final,
   las fallas por obligatoria fija, los llamados por motivo, R, si hubo llamados en la partida,
   la devolución con lo que el jugador puede elegir, cuántos de sus mensajes están a la vista, y
   las devoluciones recibidas con identidad, jornada cerrada y orden; pantallas introductorias, índice actual,
-  permiso de volver y finalización de las instrucciones.
+  permiso de volver y finalización de las instrucciones; el hecho de uso de Poético por
+  jornada y el expediente compartido con sus notas.
 - **Falla:** cerrar dos veces o abrir sobre una partida terminada no cambian nada y no avisan.
   Elegir dos veces la opción de la devolución no pide nada otra vez.
 - **Falla de las instrucciones:** volver desde la primera pantalla conserva esa pantalla; repetir
@@ -669,6 +709,11 @@ Una partida nueva sigue sin devoluciones.
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): los llamados de la noche.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (alimenta): el legajo, la jornada,
   las cuentas de la devolución y las devoluciones recibidas, que cruzan la sesión.
+
+- [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): teñido aceptado e identidad
+  de Poético para registrar el hecho de la jornada.
+- [`investigation`](../investigation/investigation.md) (consume y alimenta): expediente y
+  mensajes de pistas de la partida, conservados entre aperturas sin duplicar su titularidad.
 
 ## Preguntas abiertas
 

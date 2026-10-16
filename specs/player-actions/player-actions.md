@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425 y bordes de GJ-52 (#428)
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429)
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -222,10 +222,11 @@ CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
 ### BR-PLY-026 — El primario acciona lo fijo y conserva la mano
 
 CUANDO se hace el primario sobre una puerta interior, de heladera o trabada, la computadora,
-la ventanilla, la caja registradora o una nota pegada, el sistema DEBE resolver esa interacción
+la caja registradora o una nota pegada, el sistema DEBE resolver esa interacción
 con las manos vacías o con cualquier cosa en la mano. Las puertas habilitadas DEBEN alternar;
 las trabadas DEBEN avisar una vez por pulsación sin girar; los paneles DEBEN abrirse y las notas
 DEBEN mostrar su lectura. Lo que se lleva DEBE seguir en la mano sin soltarse ni usarse.
+La atención DEBE iniciarse sobre la persona según BR-PLY-034, sin abrir el hueco.
 
 CUANDO se hace el secundario sobre esos objetivos cerrados, el sistema NO DEBE abrirlos,
 alternarlos ni emitir el aviso de trabada. Una puerta NO DEBE pedir uso de herramienta ni
@@ -235,19 +236,21 @@ de devolver el control: NO DEBE actuar también sobre el mundo.
 
 ### BR-PLY-027 — Asomarse encuadra los bordes visibles y devuelve la vista
 
-CUANDO se abre la ventanilla, el sistema DEBE situar la vista frente a sus bordes visibles,
+CUANDO se inicia un diálogo con el comprador, el sistema DEBE situar la vista frente a los
+bordes visibles de su marco,
 considerando su ancho, alto y diferencia de profundidad, el campo vertical y el aspecto de
 pantalla. Los bordes DEBEN entrar completos y ocupar de borde a borde el eje que limita, sin
 que la cáscara ni el antepecho oculten la abertura. El cuerpo y los ángulos efectivos de la
 mirada NO DEBEN cambiar. MIENTRAS se está asomado, el encuadre DEBE permanecer estable aunque
 el dibujo de la mirada termine de alcanzar su giro.
 
-CUANDO se cierra, el sistema DEBE recuperar la posición de reposo de la vista y su orientación
-efectiva anterior. Con el dibujo ya alcanzado, DEBE recuperar la pose exacta anterior; con un
+CUANDO termina el diálogo inicial, recordatorio, rechazo o despedida, o vence el comprador, el
+sistema DEBE devolver automáticamente el movimiento y recuperar la posición de reposo de la
+vista y su orientación efectiva anterior. Con el dibujo ya alcanzado, DEBE recuperar la pose exacta anterior; con un
 giro dibujado pendiente, NO DEBE devolver la vista a los ángulos dibujados atrasados. Abrir de
 nuevo sin cerrar DEBE conservar el reposo de la primera apertura. Cerrar sin abrir NO DEBE
 mover la vista ni devolver el control tomado por otra cosa. El cierre del turno DEBE devolver
-la vista antes de mostrar la devolución.
+la vista antes de mostrar la devolución y conservar el control suspendido por ese cierre.
 
 SI el ancho, alto o aspecto no son positivos, la profundidad es negativa o el campo vertical
 no está entre 0 y 180 grados sin incluir los extremos, ENTONCES el sistema NO DEBE mover la
@@ -324,12 +327,20 @@ terminar el examen y vaciar las manos.
 
 ### BR-PLY-034 — Clic sobre el comprador
 
-MIENTRAS la ventanilla de la primera noche está abierta, el clic izquierdo sobre el comprador
-DEBE solicitar diálogo o recepción según el estado que decide atención. Antes de aceptar,
-el cuerpo y la mano DEBEN conservarse. Una aceptación DEBE vaciar la mano y conservar el mismo
-cuerpo en el puesto. Un rechazo DEBE mantenerlo en la mano.
-MIENTRAS el comprador habla, clic derecho NO DEBE abandonar la ventanilla; Esc DEBE abrir pausa.
-El vencimiento DEBE liberar ese bloqueo. Fuera del comprador, el izquierdo NO DEBE soltar ni agarrar.
+CUANDO se hace clic izquierdo sobre el comprador físico vigente dentro del alcance, el sistema
+DEBE solicitar una sola interacción según el estado de atención. El primer clic DEBE iniciar
+la conversación y su encuadre sin un clic previo sobre el hueco, conservando cualquier objeto
+sostenido. Antes de terminar la inicial NO DEBE intentar entregarlo. Después, la mano vacía
+DEBE pedir recordatorio y la mano ocupada DEBE intentar entrega en esa misma pulsación.
+Una aceptación DEBE vaciar la mano y conservar el mismo cuerpo recibido; un rechazo DEBE
+mantenerlo en la mano y abrir su diálogo.
+MIENTRAS habla, cada izquierdo DEBE avanzar exactamente una entrada, sin entregar ni soltar;
+el que abre NO DEBE saltar la primera. Derecho NO DEBE abandonar y Esc DEBE abrir pausa.
+El clic que termina un diálogo NO DEBE actuar también sobre el mundo. Vencimiento, salida y
+cierre del turno DEBEN retirar el foco y liberar el encuadre; cerrar el turno conserva el control
+del cierre. MIENTRAS habla, un clic fuera de la persona NO DEBE agarrar ni soltar.
+La referencia DEBE decir «Hablar» antes de terminar la inicial, aun con mano ocupada; después,
+«Hablar» con mano vacía y «Entregar» con producto o ticket, según el permiso de atención.
 
 ### BR-PLY-035 — La referencia nombra el gesto contextual
 
@@ -344,11 +355,11 @@ primero el examen, después la acción primaria y por último el secundario disp
 | Examinar | examinar | mano vacía y un interactuable enfocado |
 | Agarrar | primario | mano vacía y un levantable enfocado |
 | Dejar | primario | mano ocupada sin interacción primaria declarada sobre el objetivo |
-| Abrir | primario | puerta cerrada o trabada, computadora, ventanilla o caja registradora |
+| Abrir | primario | puerta cerrada o trabada, computadora o caja registradora |
 | Cerrar | primario | puerta abierta |
 | Mirar | primario | nota pegada |
-| Hablar | primario | comprador sin objeto en mano o todavía sin atender, cuando atención habilita el gesto |
-| Entregar | primario | comprador ya atendido con objeto en mano, cuando atención habilita el gesto |
+| Hablar | primario | comprador con inicial pendiente, aun con objeto en mano, o inicial terminada con mano vacía, cuando atención habilita el gesto |
+| Entregar | primario | comprador con inicial terminada y objeto en mano, cuando atención habilita el gesto |
 | Llenar | primario | balde sobre lavatorio |
 | Vaciar | primario | balde sobre inodoro |
 | Vertir | primario | jabón o producto de limpieza habilitado sobre balde |
@@ -401,6 +412,16 @@ MIENTRAS el control está suspendido —por el examen, una nota pegada, la compu
 registradora, la ventanilla o el celular—, la pausa está abierta o la jornada cerró, la
 referencia NO DEBE mostrar ninguna línea. Al reanudar, DEBE volver a armarse con lo que la mira
 enfoca y lo que se lleva.
+
+### BR-PLY-039 — El foco pertenece a la silueta de la persona
+
+MIENTRAS un comprador está vigente, el sistema DEBE permitir enfocar su figura visible dentro
+del alcance y dibujar el contorno de su silueta animada con el color común del foco. Cada cambio
+de dibujo DEBE actualizar el contorno, sin enmarcar zonas transparentes. Los sólidos que lo
+ocultan DEBEN ocultar también su contorno. Perder foco DEBE restituir su apariencia original.
+SI el comprador no llegó, venció o quedó despachado, ENTONCES NO DEBE ofrecer foco ni interacción,
+aunque su imagen siga retirándose. El hueco, el marco y el antepecho NO DEBEN ser objetivos de
+atención. El hueco NO DEBE tener una barrera de vidrio; sus sólidos reales DEBEN conservarse.
 
 ### BR-PLY-040 — Apoyo visible en los bordes del baño y de la góndola
 
@@ -737,18 +758,17 @@ queda cerrada y avisa una vez que se cerró, aunque la hoja todavía esté giran
 
 ### AC-PLY-055 — Agarrar abre lo fijo sin soltar *(verifica BR-PLY-026)*
 
-DADO una puerta interior, la computadora o la ventanilla cerradas y las manos vacías CUANDO
-se hace el gesto de agarrar ENTONCES se abren. DADO una unidad en la mano CUANDO se hace ese
-gesto sobre ellas ENTONCES se abren y la unidad sigue en la mano. DADO la computadora o la
-ventanilla cerradas CUANDO se usan ENTONCES siguen cerradas.
+DADO una puerta interior o la computadora cerradas, con mano vacía y luego con una unidad,
+CUANDO se hace el gesto de agarrar ENTONCES se abren y se conserva la mano. DADO la computadora
+cerrada CUANDO se usa ENTONCES sigue cerrada. DADO el hueco vacío de atención CUANDO se hace
+izquierdo ENTONCES no se abre ninguna interfaz de atención.
 
 ### AC-PLY-056 — El panel abre y cierra sin cambiar la mano *(verifica BR-PLY-026, BR-PLY-006)*
 
-DADO la computadora o la ventanilla cerradas y cualquier cosa en la mano CUANDO se hace el
-gesto de agarrar sobre ellas ENTONCES se abren, el jugador queda suspendido y la mano lleva lo
-mismo. CUANDO se usa, sin conversación en curso, ENTONCES se cierran, el jugador se reanuda y
-la mano sigue igual. DADO el control ya suspendido por otra pantalla ENTONCES ningún gesto abre
-lo fijo.
+DADO la computadora cerrada y cualquier cosa en la mano CUANDO se hace el gesto de agarrar
+ENTONCES se abre, el jugador queda suspendido y la mano lleva lo mismo. CUANDO se usa ENTONCES
+se cierra, se reanuda y la mano sigue igual. DADO el control suspendido por otra pantalla
+ENTONCES ningún gesto abre lo fijo.
 
 ### AC-PLY-057 — Lo fijo gana y sólo el primario avisa trabada *(verifica BR-PLY-026, BR-PLY-012, BR-PLY-020)*
 
@@ -778,9 +798,8 @@ vista y usa el aspecto nuevo en la siguiente apertura.
 
 DADO el marco visible de la ventanilla CUANDO se observan sus bordes superiores e inferiores
 desde la vista asomada ENTONCES ninguna malla de la cáscara o del antepecho corta el recorrido
-antes de llegar a esos puntos, con 2 milímetros de tolerancia. El propio vidrio transparente
-no cuenta como oclusión. DADO el hueco físico CUANDO se cruza el muro 2 centímetros por dentro
-de cada borde ENTONCES el recorrido está libre; 2 centímetros por fuera, está tapado.
+antes de llegar a esos puntos, con 2 milímetros de tolerancia. DADO el hueco físico CUANDO se
+cruza el muro 2 centímetros por dentro de cada borde ENTONCES el recorrido está libre; 2 centímetros por fuera, está tapado.
 
 ### AC-PLY-060 — Salir recupera el reposo y la orientación efectiva *(verifica BR-PLY-027)*
 
@@ -916,13 +935,14 @@ sigue sostenido y hay cero descartes. Un ticket ajeno o ya descartado no se desc
 vez. Un objeto distinto de ticket no se desecha como papel; conserva su uso declarado.
 DADO el control suspendido CUANDO se pulsan ambos gestos ENTONCES no hay descarte.
 
-### AC-PLY-079 — Entrega, rechazo y bloqueo *(verifica BR-PLY-034, BR-PLY-028)*
+### AC-PLY-079 — Entrega, rechazo y bloqueo *(verifica BR-PLY-034, BR-PLY-028, BR-PLY-027)*
 
-DADO un producto sostenido y el comprador hablando CUANDO se hace izquierdo sobre él ENTONCES
-avanza una entrada y conserva cuerpo y mano; derecho no cierra y Esc abre pausa.
-DADO conversación terminada CUANDO se acepta ENTONCES la mano queda vacía y el puesto retiene
-el mismo cuerpo. Al rechazar, cuerpo y mano no cambian. Fuera del comprador no se suelta.
-Al vencer se cierra el diálogo y derecho puede abandonar.
+DADO un producto sostenido y el comprador hablando CUANDO se hace izquierdo ENTONCES avanza
+una entrada y conserva cuerpo y mano; derecho no cierra y Esc abre pausa. DADO la inicial
+terminada y ninguna conversación activa CUANDO se acepta el producto ENTONCES la mano queda
+vacía y el puesto retiene ese cuerpo. Al rechazar, cuerpo y mano no cambian y empieza su diálogo.
+DADO un diálogo activo CUANDO se pulsa fuera del comprador ENTONCES no se agarra ni suelta.
+CUANDO vence ENTONCES se cierra el diálogo y se devuelve automáticamente la vista, sin derecho.
 
 ### AC-PLY-080 — La nota cambia con la particular *(verifica BR-PLY-030)*
 
@@ -1009,6 +1029,38 @@ la mano y la mira pasa a una caja del depósito ENTONCES la referencia siguiente
 «[E] Examinar (mano)» y «[Click Izq] Dejar», y no se mostró ninguna combinación de la mano
 anterior con la mira nueva ni al revés.
 
+### AC-PLY-091 — Primera pulsación y última pulsación *(verifica BR-PLY-034, BR-PLY-027)*
+
+DADO un comprador sin atender y, por turno, mano vacía, producto, ticket, caja y mopa CUANDO se
+pulsa izquierdo sobre su figura ENTONCES se ve su primera entrada y se encuadra en ese clic,
+sin recepción ni cambio de mano. DADO un diálogo de una entrada, por turno inicial,
+recordatorio, rechazo y despedida, CUANDO se avanza ENTONCES vuelve la vista y el movimiento
+normales, conserva la mano resultante y no se ejecuta otra interacción por esa pulsación.
+
+### AC-PLY-092 — Sólo la figura vigente responde *(verifica BR-PLY-039, BR-PLY-004)*
+
+DADO un comprador dentro del alcance CUANDO la mira apunta a su figura visible ENTONCES el
+objetivo es la persona. Sobre el hueco vacío, una zona transparente del dibujo, marco o
+antepecho no hay objetivo de atención. Antes de llegar, después de vencer y durante su retirada
+no hay foco, contorno ni entrega posible. Con el comprador fuera del alcance no hay foco.
+El hueco no tiene vidrio que bloquee el paso y conserva los sólidos de sus bordes.
+
+### AC-PLY-093 — Contorno animado y oculto por el mundo *(verifica BR-PLY-039)*
+
+DADO la interfaz cerrada y un comprador enfocado CUANDO se comparan dos dibujos de su animación
+ENTONCES el contorno sigue el alfa de cada figura, con el color común del foco, sin rectángulo
+sobre transparencia. CUANDO pared o antepecho ocultan parte de la figura ENTONCES también
+ocultan esa parte del contorno. Perder foco restaura la apariencia anterior; otro comprador
+no hereda el contorno. Desde los laterales accesibles el antepecho oculta el corte inferior.
+
+### AC-PLY-094 — El gesto sigue al estado de la atención *(verifica BR-PLY-034, BR-PLY-035)*
+
+DADO la inicial pendiente y un ticket sostenido CUANDO se consulta la referencia ENTONCES dice
+«Hablar». DADO la inicial terminada CUANDO se consulta con mano vacía ENTONCES dice «Hablar»;
+con producto o ticket, «Entregar». La consulta no entrega ni inicia diálogos. DADO un diálogo
+abierto CUANDO cierra el turno ENTONCES desaparecen foco y encuadre, la vista vuelve y el
+control permanece suspendido por el cierre. Pausar y reanudar conserva entrada y mano.
+
 ### AC-PLY-097 — Un primario produce un solo efecto contextual *(verifica BR-PLY-012, BR-PLY-026, BR-PLY-036)*
 
 DADO un par declarado y, por separado, su estado aceptable y rechazado CUANDO se hace un
@@ -1070,7 +1122,8 @@ ni entrega por consultar, ni habilita atención directa si el puesto no la ofrec
   que el rayo encontró, el objeto que se quiere agarrar, la superficie que la mira toca, los
   casilleros vacíos y ocupados de cada producto, los segundos del cuadro y el nombre del control
   asignado a cada gesto; la acción primaria o secundaria y el contexto declarado del par
-  mano/objetivo, independiente del resultado del intento.
+  mano/objetivo, independiente del resultado del intento; la vigencia del comprador, el
+  estado de su conversación y su figura animada visible para foco, contorno e interacción directa.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
@@ -1089,6 +1142,8 @@ ni entrega por consultar, ni habilita atención directa si el puesto no la ofrec
 - [`counter-service`](../counter-service/counter-service.md) (consume y alimenta): el lector
   recibe lo sostenido y contesta lectura o rechazo; imprimir entrega un papel levantable y
   usarlo sobre el inodoro publica su descarte; si el programa es manual, el lector no está.
+  La vigencia de la persona y el estado de atención deciden hablar o entregar; terminar el
+  diálogo devuelve automáticamente la vista y el movimiento, salvo el control tomado por el cierre.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): las obligatorias declaradas que
   enumera la nota de tareas.
 

@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15
 ---
 
 # Capacidad: dejar el local en orden
@@ -66,8 +66,8 @@ declaró y nunca contra un número escrito.
 
 ### BR-CLN-012 — Cada mancha pide su jabón
 
-El sistema DEBE tener **tres tipos de mancha**, y a cada uno lo borra **un solo jabón**: al moho,
-el azul; a la caca, el rosa; al polvo, el amarillo. Cada tipo DEBE verse de su color —el moho
+El sistema DEBE tener **tres tipos de mancha**, y a cada uno lo borra **una sola mezcla**: azul para
+moho, rosa para caca y amarilla para polvo. Cada tipo DEBE verse de su color —el moho
 verde, la caca marrón y el polvo negro o gris, con transparencia entre sus trazos que deja ver la
 superficie de abajo—, que es lo que le dice al jugador qué jabón buscar. El agua del balde también DEBE verse transparente,
 conservando el color del jabón cuando está teñida.
@@ -105,11 +105,14 @@ misma pasada y el mismo alcance que una del piso, apuntándola con la mira desde
 piso. El paso del jugador DEBE tocar sólo las manchas del piso: una de pared o de techo NO DEBE
 ondular cuando el jugador camina a su lado o debajo.
 
-### BR-CLN-014 — Los útiles arrancan en el baño
+### BR-CLN-014 — Los útiles disponibles arrancan en el baño
 
-CUANDO se abre una jornada, el sistema DEBE dejar la mopa, el balde y los tres jabones en su
-lugar del baño, con el balde vacío y la mopa seca, aunque la noche anterior hayan quedado en otro
-lado, en la mano, llenos o mojados. Los cinco se levantan; el lavatorio y el inodoro no.
+CUANDO se abre una jornada, el sistema DEBE dejar la mopa, el balde y los jabones disponibles
+en su lugar del baño, con el balde vacío y la mopa seca, aunque la noche anterior hayan quedado
+en otro lado, en la mano, llenos o mojados. En jornada 2 sólo DEBEN estar rosa y amarillo; en
+1, 3, 4 y 5, los tres. La disponibilidad la decide BR-ANO-001 de
+[`anomalies`](../anomalies/anomalies.md). Los útiles presentes DEBEN ser levantables; lavatorio
+e inodoro NO DEBEN serlo.
 
 ### BR-CLN-015 — El balde se llena en el lavatorio
 
@@ -220,8 +223,9 @@ Una caja del depósito NO DEBE entrar. Con mano vacía, caja o tapa cerrada o gi
 DEBE conservar manos y tarea sin soltar genéricamente. Abrir NO DEBE tirar automáticamente.
 Con el jugador suspendido por examen, pausa o cierre, ambos clics NO DEBEN tirar ni alternar.
 El secundario NO DEBE desechar. Accionar la tapa NO DEBE desechar además lo sostenido.
-Al abrir otra noche, los objetos de arranque tirados DEBEN volver a sus padres y poses de
-arranque, visibles, físicos y recogibles, con mopa seca y balde vacío. Las bolsas DEBEN seguir
+Al abrir otra noche, los objetos de arranque tirados y disponibles en esa jornada DEBEN volver
+a sus padres y poses de arranque, visibles, físicos y recogibles, con mopa seca y balde vacío.
+El bidón azul DEBE permanecer ausente durante jornada 2, según BR-CLN-014. Las bolsas DEBEN seguir
 la declaración de la jornada nueva: fuera del mundo si no declara basura, o en su tacho y sin
 depositar si la declara, nunca sueltas por haber sido tiradas en la noche anterior.
 Las unidades y tickets tirados DEBEN retirarse con los demás creados en la noche anterior.
@@ -261,7 +265,6 @@ DEBE sumar un medio apercibimiento al cierre, además de la banda y de los otros
 Vaciar el balde o enjuagar la mopa NO DEBE anotarlo. Un evento sin jornada abierta o con
 partida terminada NO DEBE sumar ni quedar pendiente para otra noche.
 
-
 ### BR-CLN-031 — Tirar objetos importantes
 
 CUANDO se acepta tirar al contenedor un objeto que no sea bolsa ni ticket durante una jornada
@@ -271,7 +274,6 @@ DEBEN conservar su descarte normal sin este motivo. Una unidad ordinaria, la mop
 y los jabones NO DEBEN considerarse exentos. El motivo DEBE sumar un medio al cierre, además
 de la banda y los demás motivos, y reiniciarse al abrir otra noche sin borrar la deuda.
 Un gesto rechazado o fuera de jornada abierta NO DEBE anotar este motivo.
-
 
 ### BR-CLN-032 — El primario sobre un tacho entrega su única bolsa
 
@@ -289,6 +291,32 @@ DEBE ser un levantable con su identidad original. Extraer NO DEBE contar como de
 sólo el tiro aceptado al cuerpo del contenedor lo hace. Una bolsa sacada y rescatada DEBE
 volver libre a su origen, sin reponer el tacho ni crear otra identidad. Sólo la jornada que
 declara basura DEBE permitir extraer; las demás DEBEN conservar los tachos sin bolsa.
+
+### BR-CLN-033 — Poético prepara azul sólo durante la segunda jornada
+
+MIENTRAS la jornada es 2, CUANDO se usa con clic izquierdo una unidad real del producto Poético
+sobre el balde, el sistema DEBE aplicar los mismos permisos, rechazos y mezcla azul del jabón
+azul (BR-CLN-016). La identidad DEBE ser la del producto, no su nombre visible. En jornadas
+1, 3, 4 y 5 Poético NO DEBE actuar como jabón, y ningún otro producto DEBE adquirir ese efecto.
+La referencia de controles y el uso DEBEN consultar el mismo permiso por jornada: «echar jabón»
+sólo donde está habilitado. El rechazo NO DEBE convertirse en soltar ni en otra operación.
+Sobre lavatorio, inodoro o mancha Poético NO DEBE preparar mezcla ni limpiar directamente.
+
+### BR-CLN-034 — Sustituir jabón no consume mercadería
+
+CUANDO Poético tiñe el balde de azul, el sistema DEBE conservar la misma unidad en la mano, sin
+consumirla, transformarla, venderla ni descontarla otra vez del inventario. Vaciar y rellenar
+DEBE permitir reutilizarla. El agua y la mopa DEBEN tener los mismos colores, carga, desgaste y
+efectos que con el bidón azul: borrar moho y rechazar caca o polvo. La unidad DEBE conservar su
+venta y devolución normales. El bidón azul DEBE conservar identidad, envase y subtítulo de
+marca «2», sin presentarse como Poético.
+
+### BR-CLN-035 — El uso aceptado identifica qué preparó la mezcla
+
+CUANDO un teñido se acepta, el sistema DEBE publicar el resultado junto con la identidad del
+objeto utilizado. Una mezcla azul preparada con Poético DEBE distinguirse de una preparada
+con el bidón azul. Pausa, examen y cierre DEBEN bloquear el uso; un rechazo NO DEBE publicar
+un teñido aceptado ni alterar agua, mopa, manchas, mano o inventario.
 
 ### BR-CLN-036 — El primario ejecuta los pares de limpieza y el descarte de papel
 
@@ -322,7 +350,6 @@ de todos ellos, por encima del alcance de la mira. Las posiciones se derivan del
 DADO una bolsa soltada en el piso a menos de 1 metro del contenedor o por su boca física
 CUANDO queda suelta ENTONCES no cuenta y se puede recoger. CUANDO después se la tira con el
 primario sobre el cuerpo completamente abierto ENTONCES sí cuenta; sobre la tapa no deposita.
-
 
 ### AC-CLN-011 — El orden y la idempotencia *(verifica BR-CLN-010)*
 
@@ -364,12 +391,12 @@ hacia arriba en el piso, en horizontal en la pared y hacia abajo en el techo. Ni
 de un mueble ni tapada, y la mira enfoca cada una desde un punto libre del piso. Las manchas de
 otra noche no se ven y la mira no las enfoca.
 
-### AC-CLN-018 — Los útiles vuelven al baño *(verifica BR-CLN-014)*
+### AC-CLN-018 — Los útiles disponibles vuelven al baño *(verifica BR-CLN-014)*
 
-DADO la mopa mojada y soltada en el local, el balde teñido y soltado en el depósito, y un jabón en
-la mano CUANDO se abre la jornada siguiente ENTONCES los cinco útiles están en su lugar del baño,
-con la mano vacía, el balde vacío y la mopa seca. DADO el lavatorio o el inodoro CUANDO se los
-quiere agarrar ENTONCES se rechaza por no levantable.
+DADO la mopa mojada en el local, el balde teñido en depósito y un jabón en mano CUANDO se abre
+cada jornada ENTONCES se vacía la mano y vuelven al baño los útiles disponibles, con balde vacío
+y mopa seca: cuatro en la 2 —mopa, balde, rosa y amarillo— y cinco en 1, 3, 4 y 5. El azul no
+está en la segunda. Lavatorio e inodoro se rechazan al intentar agarrarlos.
 
 ### AC-CLN-019 — Llenar el balde *(verifica BR-CLN-015)*
 
@@ -527,7 +554,7 @@ abierta; el secundario sigue sin ejecutar ninguno de esos gestos.
 
 ### AC-CLN-040 — Interiores, techos y pasos exactos *(verifica BR-CLN-027)*
 
-DADO el almacén al abrir ENTONCES todas las cajas están en depósito, los cinco útiles en baño
+DADO el almacén al abrir ENTONCES todas las cajas están en depósito, los útiles disponibles en baño
 y el jugador en local. CUANDO se consultan centros de los pasos ENTONCES pertenecen a su
 habitación destino; un punto junto al lateral o sobre un techo bajo queda afuera. DADO una
 unión disjunta trasladada y girada 45° ENTONCES sus partes conservan pertenencia y sus huecos
@@ -682,6 +709,49 @@ mancha, también las de pared y la de techo, se borra pasándole la mopa mojada 
 apuntándola con la mira desde un punto libre del piso. Las manchas del mismo tipo en la misma
 habitación se borran por separado y cuenta cada una.
 
+### AC-CLN-061 — Sustitución limitada por jornada e identidad *(verifica BR-CLN-033)*
+
+DADO una unidad real de Poético retirada de caja y luego una de góndola, en casos separados,
+CUANDO se usa con izquierdo sobre agua sin jabón en jornada 2 ENTONCES tiñe azul y conserva la
+unidad. En jornadas 1, 3, 4 y 5 no tiñe ni ofrece «echar jabón». Otro producto renombrado Poético
+no tiñe en ninguna jornada. En jornada 2 lavatorio, inodoro y manchas no reciben efecto de Poético.
+
+### AC-CLN-062 — Vacío y teñido rechazan sin caída *(verifica BR-CLN-033, BR-CLN-035)*
+
+DADO jornada 2 y Poético en mano CUANDO se usa sobre balde vacío ENTONCES responde «balde vacío»;
+sobre agua azul, rosa o amarilla, «balde ya teñido». En todos los casos permanecen idénticos
+agua, mopa, manchas, mano y cantidades de mercadería, sin soltar ni publicar teñido aceptado.
+La consulta previa de controles no ejecuta el uso. Un clic aceptado publica una sola operación.
+
+### AC-CLN-063 — La mezcla sustituta limpia sólo moho *(verifica BR-CLN-034, BR-CLN-018, BR-CLN-019, BR-CLN-022)*
+
+DADO jornada 2 y agua teñida con Poético CUANDO se moja la mopa ENTONCES agua y punta muestran
+el azul del jabón azul y la carga es la declarada para la mopa. CUANDO se pasa por moho ENTONCES
+lo borra; sobre caca y polvo rechaza por jabón equivocado. Los límites de tiempo y recorrido
+son los mismos del bidón azul; usar Poético no cambia las manchas declaradas de la jornada.
+
+### AC-CLN-064 — Dos mezclas usan el mismo envase *(verifica BR-CLN-034)*
+
+DADO Poético en mano y balde con agua limpia en jornada 2 CUANDO tiñe, se vacía y rellena el balde
+y se vuelve a teñir ENTONCES ambas mezclas se aceptan, la misma unidad sigue en mano y las
+cantidades de caja, depósito, góndola y unidades afuera no cambian por los teñidos. No hay venta
+ni envase vacío nuevo. Devolver o vender esa unidad conserva el recorrido normal de mercadería.
+El bidón azul sigue siendo marca «2», con identidad y envase distintos de Poético.
+
+### AC-CLN-065 — Volver de la ausencia restaura el azul *(verifica BR-CLN-014, BR-CLN-026)*
+
+DADO el azul tirado al contenedor en jornada 1 CUANDO se abre la 2 dos veces ENTONCES sigue
+oculto, sin foco ni colisión. CUANDO abre la 3 ENTONCES vuelve a padre, pose, visibilidad y
+colisiones originales y puede recogerse; mopa seca y balde vacío. No se restaura Poético como
+si fuera un bidón de limpieza.
+
+### AC-CLN-066 — Sólo un uso aceptado publica su identidad *(verifica BR-CLN-035)*
+
+DADO jornada 2 CUANDO Poético tiñe agua limpia ENTONCES se publica un teñido aceptado con la
+identidad de Poético. DADO el bidón azul en una jornada disponible CUANDO tiñe ENTONCES el
+resultado identifica ese bidón. DADO pausa, examen, cierre, balde vacío o ya teñido ENTONCES
+no se publica teñido aceptado ni cambian mano o estados de limpieza.
+
 ### AC-CLN-067 — Los seis pares usan el primario y conservan su efecto *(verifica BR-CLN-036, BR-CLN-015, BR-CLN-016, BR-CLN-017, BR-CLN-018, BR-CLN-019, BR-CLN-023)*
 
 DADO balde vacío sobre lavatorio, jabón sobre agua sola, mopa sobre balde con agua,
@@ -710,8 +780,8 @@ anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CL
 
 - Esta capacidad NO dibuja: declara de qué color se ven cada mancha, el agua del balde y la punta
   de la mopa, y la escena lo pinta.
-- Esta capacidad NO saca un jabón en la jornada 2 ni lo cambia por otro producto: la ficha lo
-  pide, y depende de las anomalías.
+- Esta capacidad NO decide qué anomalía ocurre: consume la disponibilidad y sustitución por
+  jornada de [`anomalies`](../anomalies/anomalies.md) y resuelve su efecto de limpieza.
 
 ## Contratos
 
@@ -732,8 +802,8 @@ anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CL
 
 ## Señales
 
-- El balde lleno, teñido y vaciado; la mopa mojada; la pasada que borra una mancha; el uso
-  rechazado, con su motivo; la bolsa depositada y el objeto tirado.
+- El balde lleno, teñido con identidad de lo utilizado y vaciado; la mopa mojada; la pasada
+  que borra una mancha; el uso rechazado, con su motivo; la bolsa depositada y el objeto tirado.
 - La bolsa sacada, sólo cuando un tacho entrega su bolsa.
 
 ## Dependencias
@@ -744,6 +814,11 @@ anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CL
   afuera y se descuenta del depósito.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta y consume): avisa cuándo cada obligatoria quedó
   cumplida; consume si la jornada declara basura para preparar sus tachos y contar sólo esa tarea.
+
+- [`anomalies`](../anomalies/anomalies.md) (consume): qué bidón falta y qué producto puede
+  sustituirlo en la jornada.
+- [`employment-record`](../employment-record/employment-record.md) (alimenta): el teñido
+  aceptado con identidad permite conservar el hecho de uso de Poético para la devolución.
 
 ## Preguntas abiertas
 
