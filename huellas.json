@@ -375,5 +375,225 @@
       "crlf_lf": true
     }
   },
-  "correccion": "Atribucion de contexto del auditor original; fuentes y crudos originales intactos. Todos los textos publicables LF. README/ERRATA son documentacion nueva; revision vieja conserva contenido."
+  "correccion": "Atribucion de contexto del auditor original; fuentes y crudos originales intactos. Todos los textos publicables LF. README/ERRATA son documentacion nueva; revision vieja conserva contenido.",
+  "historial_huellas_publicacion_anterior": {
+    "commit_codigo": "6fbfe2af",
+    "primera_publicacion": "46d24ad5f5a292f099fe37bab3b497cb681a2c89",
+    "normalizados_por_git": [
+      "huellas.json",
+      "protocolo/capturar435.gd",
+      "pruebas/capturas-motor.log",
+      "pruebas/dominio-rojo.log",
+      "pruebas/focales-verde.log",
+      "pruebas/motor-completo.log",
+      "pruebas/revision-diagnosticos.json",
+      "pruebas/verificar.log",
+      "README.md"
+    ],
+    "procedencia_local_primera_publicacion": {
+      "nativo/1280x720-celular.png": {
+        "bytes": 297217,
+        "sha256": "24b3f8ec67a8d5652a8f93fc5b80d5daff20c63b92270f073a603a09a1043531"
+      },
+      "nativo/1280x720-computadora.png": {
+        "bytes": 65754,
+        "sha256": "5c66d8c4eea5021614fb6d9f855c675de672ca130b3887ec39ee8ddc8ce5a721"
+      },
+      "nativo/1280x720-local.png": {
+        "bytes": 953705,
+        "sha256": "f3fbc23575c3578adf465dea489dcf3932e648efdbfb0d143bbfc4ce990fe060"
+      },
+      "nativo/1280x720-pausa.png": {
+        "bytes": 533655,
+        "sha256": "6469e2ab490192e5bd07f5cc2f91e5991bd72f02483a87559f50e60fe77a5c87"
+      },
+      "nativo/1280x720-reanudar.png": {
+        "bytes": 960709,
+        "sha256": "add9f1cac67ad4512d0201f00622352bc9d0274f537ef912e37610fec5597752"
+      },
+      "nativo/1280x720-vencido.png": {
+        "bytes": 957830,
+        "sha256": "e5e8789b4594be6d214054d6cee631d0412877eb3deff9f80e3c5276eca48cf6"
+      },
+      "nativo/1280x720-ventanilla.png": {
+        "bytes": 287171,
+        "sha256": "d4431140e0a689dd9dcb85f0cf8e23c394183dc8c0eac3e91f17853f6ab760da"
+      },
+      "nativo/1920x1080-celular.png": {
+        "bytes": 577532,
+        "sha256": "7f026085b3d5a9b0bbdfcacfc4f6ea649d2b9e47eecab82ab2ce98dc9d95c9a2"
+      },
+      "nativo/1920x1080-computadora.png": {
+        "bytes": 76390,
+        "sha256": "af0cf25db0db6637d64cae18c4fd92357af2765fd330078ada5cbbdf780052d6"
+      },
+      "nativo/1920x1080-local.png": {
+        "bytes": 2009739,
+        "sha256": "a12082a4620f763e466c6f317075c48347acd0f75bdf5d0f538186fa53ce7faa"
+      },
+      "nativo/1920x1080-pausa.png": {
+        "bytes": 1099197,
+        "sha256": "1d18e4cfebc726d32f1aadcc72c0e66735316b6bebce44d6a321ff50b34c0a43"
+      },
+      "nativo/1920x1080-reanudar.png": {
+        "bytes": 2021642,
+        "sha256": "a56db7d6171b9e14cb63d93340800486fc054601e32d0bf527b844a135799412"
+      },
+      "nativo/1920x1080-vencido.png": {
+        "bytes": 2029961,
+        "sha256": "de147e89e6ed2aab96cd1850986aa4f76f27edd435f14954725b89ba990f9672"
+      },
+      "nativo/1920x1080-ventanilla.png": {
+        "bytes": 532433,
+        "sha256": "e35d071d1455c523b9964e497b5198bee4a393c00efaeb67e569126b0669710b"
+      },
+      "nativo/medidas.json": {
+        "bytes": 4561,
+        "sha256": "ba6700517141ecfa7ab6acbde8931b85d5355b5cfffb2b938f8f08c1ec78e81f"
+      },
+      "protocolo/capturar435.gd": {
+        "bytes": 3150,
+        "sha256": "49a7905d32f49a4f5eca70fbd0998308edacfde00a550f10785e9aee06cff0ed"
+      },
+      "protocolo/capturar435.py": {
+        "bytes": 1097,
+        "sha256": "d5e5ab4be292ef2e570a7e4037b24b3e4db2c87197292b5d38ad639ffc0c372f"
+      },
+      "pruebas/capturas-motor.log": {
+        "bytes": 207,
+        "sha256": "bb686a9df2fd22d18d2817d5612fd71f389ec839f52ae6b520c23aa0710adf58"
+      },
+      "pruebas/dominio-rojo.log": {
+        "bytes": 145249,
+        "sha256": "4862fdacd77a93cea4ee48517997527974e77fdd2aef30cb0b4231e5c32d11b0"
+      },
+      "pruebas/focales-verde.log": {
+        "bytes": 24361,
+        "sha256": "77fde87287d5e1091abf4e9c0ba560d1d67f2bb21253bb95b2bcb8443b00440f"
+      },
+      "pruebas/motor-completo.log": {
+        "bytes": 1156665,
+        "sha256": "b5cc4ebb108ac11cd3f663f0389dd1768cb9b65dfa3e11fe832bf4ed31cb9283"
+      },
+      "pruebas/results.xml": {
+        "bytes": 334485,
+        "sha256": "4a25eec5c2d8e5508dba70e897186183592ad0cb554d8561b8d8a7ea1df717b1"
+      },
+      "pruebas/revision-diagnosticos.json": {
+        "bytes": 24109,
+        "sha256": "efad2018b997057ad602d0edddbfe60cb54d8d2540676822b2352c186abc9b7a"
+      },
+      "pruebas/verificar.log": {
+        "bytes": 244,
+        "sha256": "e320726f6ba7b9daf64cc35c7ab7c69452ccdbcf1959c4d192ef56535a4e5840"
+      },
+      "README.md": {
+        "bytes": 1557,
+        "sha256": "93229bceff8dced9b547f3b79d884ef4bd25b5c5884d44c86a7857d1a8e471e5"
+      }
+    },
+    "archivos_publicados": {
+      "nativo/1280x720-celular.png": {
+        "bytes": 297217,
+        "sha256": "24b3f8ec67a8d5652a8f93fc5b80d5daff20c63b92270f073a603a09a1043531"
+      },
+      "nativo/1280x720-computadora.png": {
+        "bytes": 65754,
+        "sha256": "5c66d8c4eea5021614fb6d9f855c675de672ca130b3887ec39ee8ddc8ce5a721"
+      },
+      "nativo/1280x720-local.png": {
+        "bytes": 953705,
+        "sha256": "f3fbc23575c3578adf465dea489dcf3932e648efdbfb0d143bbfc4ce990fe060"
+      },
+      "nativo/1280x720-pausa.png": {
+        "bytes": 533655,
+        "sha256": "6469e2ab490192e5bd07f5cc2f91e5991bd72f02483a87559f50e60fe77a5c87"
+      },
+      "nativo/1280x720-reanudar.png": {
+        "bytes": 960709,
+        "sha256": "add9f1cac67ad4512d0201f00622352bc9d0274f537ef912e37610fec5597752"
+      },
+      "nativo/1280x720-vencido.png": {
+        "bytes": 957830,
+        "sha256": "e5e8789b4594be6d214054d6cee631d0412877eb3deff9f80e3c5276eca48cf6"
+      },
+      "nativo/1280x720-ventanilla.png": {
+        "bytes": 287171,
+        "sha256": "d4431140e0a689dd9dcb85f0cf8e23c394183dc8c0eac3e91f17853f6ab760da"
+      },
+      "nativo/1920x1080-celular.png": {
+        "bytes": 577532,
+        "sha256": "7f026085b3d5a9b0bbdfcacfc4f6ea649d2b9e47eecab82ab2ce98dc9d95c9a2"
+      },
+      "nativo/1920x1080-computadora.png": {
+        "bytes": 76390,
+        "sha256": "af0cf25db0db6637d64cae18c4fd92357af2765fd330078ada5cbbdf780052d6"
+      },
+      "nativo/1920x1080-local.png": {
+        "bytes": 2009739,
+        "sha256": "a12082a4620f763e466c6f317075c48347acd0f75bdf5d0f538186fa53ce7faa"
+      },
+      "nativo/1920x1080-pausa.png": {
+        "bytes": 1099197,
+        "sha256": "1d18e4cfebc726d32f1aadcc72c0e66735316b6bebce44d6a321ff50b34c0a43"
+      },
+      "nativo/1920x1080-reanudar.png": {
+        "bytes": 2021642,
+        "sha256": "a56db7d6171b9e14cb63d93340800486fc054601e32d0bf527b844a135799412"
+      },
+      "nativo/1920x1080-vencido.png": {
+        "bytes": 2029961,
+        "sha256": "de147e89e6ed2aab96cd1850986aa4f76f27edd435f14954725b89ba990f9672"
+      },
+      "nativo/1920x1080-ventanilla.png": {
+        "bytes": 532433,
+        "sha256": "e35d071d1455c523b9964e497b5198bee4a393c00efaeb67e569126b0669710b"
+      },
+      "nativo/medidas.json": {
+        "bytes": 4561,
+        "sha256": "ba6700517141ecfa7ab6acbde8931b85d5355b5cfffb2b938f8f08c1ec78e81f"
+      },
+      "protocolo/capturar435.gd": {
+        "bytes": 3060,
+        "sha256": "a1adaa235923165a7b955562cabf92acd3458f86512533592f47cc1d4d7b5b0b"
+      },
+      "protocolo/capturar435.py": {
+        "bytes": 1097,
+        "sha256": "d5e5ab4be292ef2e570a7e4037b24b3e4db2c87197292b5d38ad639ffc0c372f"
+      },
+      "pruebas/capturas-motor.log": {
+        "bytes": 202,
+        "sha256": "53525e7fc643f3665bade71cfa287b438cbfc91ad696af2076562468c40fd3ec"
+      },
+      "pruebas/dominio-rojo.log": {
+        "bytes": 143370,
+        "sha256": "066929d083d4144f0b3d34c39d7fed297f606658e0207aa5ecaa0b68ad1ba23e"
+      },
+      "pruebas/focales-verde.log": {
+        "bytes": 24158,
+        "sha256": "2de4c6730ad0a4dd97b3bfac42b8135dbfd756d9e8dfbf9172db9f039d95be8c"
+      },
+      "pruebas/motor-completo.log": {
+        "bytes": 1148745,
+        "sha256": "1693cc42f2a2e2ca31033e5aecfdbdf0ae5ba2c807fc4670805527b71e6290fb"
+      },
+      "pruebas/results.xml": {
+        "bytes": 334485,
+        "sha256": "4a25eec5c2d8e5508dba70e897186183592ad0cb554d8561b8d8a7ea1df717b1"
+      },
+      "pruebas/revision-diagnosticos.json": {
+        "bytes": 23766,
+        "sha256": "ad99c20fc3206715799b130144eebc60ef5724c345e000412a04235a5d6a59e0"
+      },
+      "pruebas/verificar.log": {
+        "bytes": 235,
+        "sha256": "97440b08e2e233a7100d5f7be8ba92b0d2c5603da365325e9cd95178aaa5826d"
+      },
+      "README.md": {
+        "bytes": 1723,
+        "sha256": "80f819e1089bff344a7273ca56d6ef96b92ce09d9fde3dce196c9f394faab2e3"
+      }
+    },
+    "correccion_textos": "Tercera publicacion: tildes y signos UTF-8 de README corregidos; capturas y crudos intactos."
+  }
 }
