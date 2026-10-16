@@ -138,7 +138,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 			assert_str(texto.text).is_equal(despedida.entrada_actual())
 			textos.append(texto.text)
 			_pulsar(almacen)
-		if atendida.comprador().personaje == DialogosDeCompradores.Personaje.TIAGO:
+		if atendida.comprador().personaje == DialogosDeCompradores.Personaje.TIA:
 			assert_array(textos).has_size(4)
 			assert_str(textos[1]).contains("investigador criminal")
 			assert_str(textos[2]).contains("Enrique Peldaño")
@@ -154,7 +154,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		[Producto.Id.MAROLINI, 1],
 		[Producto.Id.CORACOLA, 1],
 		[Producto.Id.MALBARDO, 1],
-		[Producto.Id.ZUCARACHAS, 2],
+		[Producto.Id.ZUCARACHAS, 1],
 		[Producto.Id.PEPITOS, 1]
 	]:
 		var producto := Catalogo.de(fila[0])
@@ -229,3 +229,41 @@ func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -
 	(almacen.get("_reloj") as RelojDelTurno).avanzar(1.0)
 	assert_object(renglones.get_child(0)).is_same(primero)
 	assert_bool((_panel(almacen).get("_cobrar") as Button).visible).is_true()
+
+
+func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_todo() -> void:  # AC-CTR-037
+	var almacen := await _abrir()
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	var agarre: Agarre = almacen.get("_agarre")
+	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
+	reloj.avanzar(480.0)
+	puesto.abrir()
+	_conversar(almacen)
+	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
+	var texto: RichTextLabel = _panel(almacen).get_node("Fisico/Dialogo/Texto")
+	_pulsar(almacen)
+	var recordatorio := texto.text
+	assert_str(texto.get_parsed_text()).is_equal(
+		"Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito."
+	)
+	_pulsar(almacen)
+	almacen.get("_reposicion_manual").retirar(producto.id)
+	var primera := agarre.cuerpo_sostenido()
+	_pulsar(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_null()
+	assert_bool(primera.visible).is_false()
+	_pulsar(almacen)
+	assert_str(texto.text).is_equal(recordatorio)
+	_pulsar(almacen)
+	almacen.get("_reposicion_manual").retirar(producto.id)
+	var sobrante := agarre.cuerpo_sostenido()
+	var identidad := agarre.manos().sostenido()
+	_pulsar(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_same(sobrante)
+	assert_object(agarre.manos().sostenido()).is_same(identidad)
+	assert_str(texto.text).is_equal("Yo no pedí esto. " + recordatorio)
+	assert_int(atenciones.tarea().vendidas_de(producto)).is_zero()
+	assert_bool(atenciones.atencion().vendida()).is_false()
+	_pulsar(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_same(sobrante)

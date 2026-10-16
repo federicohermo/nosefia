@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; migración de los specs 013, 035
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365; migración de los specs 013, 035
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -191,9 +191,9 @@ lavatorio con un ticket NO DEBE desecharlo.
 
 ### BR-CTR-026 — La primera jornada usa horarios propios
 
-EN la primera jornada, el sistema DEBE recibir a Martín desde las 22:00 hasta las 00:00 y a
-Tiago desde las 04:00 hasta las 06:00. La llegada se incluye y el límite se excluye.
-Martín DEBE pedir un Marolini, una Coracola y un Malbardo. Tiago DEBE pedir dos Zucarachas
+EN la primera jornada, el sistema DEBE recibir a Tin desde las 22:00 hasta las 00:00 y a
+Tia desde las 04:00 hasta las 06:00. La llegada se incluye y el límite se excluye.
+Tin DEBE pedir un Marolini, una Coracola y un Malbardo. Tia DEBE pedir una Zucarachas
 y un Pepito. Estos horarios DEBEN derivarse del reloj del turno, cuya apertura es a las 20:00.
 Las jornadas siguientes DEBEN conservar el padrón y recorrido anteriores, sin copiar estos personajes.
 
@@ -215,9 +215,27 @@ NO DEBEN recibirse ni rechazarse. Terminada esa conversación, un clic con manos
 mostrar un recordatorio de una entrada. Mientras una entrada esté activa, el clic DEBE avanzar
 el diálogo, también con un objeto rechazado en la mano. Terminada la entrada, con objeto sostenido
 DEBE intentar recibirlo sin avanzar diálogo en el mismo clic. Reabrir DEBE conservar el estado.
-Los textos DEBEN corresponder al diseño de Figma, con las cantidades del pedido de la ficha:
-una Marolini para Martín, Coracola en lugar de Pura-Cola y dos Zucarachas para Tiago.
-Los productos pedidos DEBEN distinguirse con negrita y color.
+Los textos DEBEN conservar el diseño de Figma y usar las cantidades del pedido de la ficha
+«Atención al cliente»: un Marolini para Tin, Coracola en lugar de Pura-Cola y una Zucarachas
+para Tia. La tabla de pedidos DEBE prevalecer sobre cantidades distintas en los diálogos.
+CUANDO un recordatorio o rechazo nombra una unidad, el sistema DEBE usar el subtítulo al
+examinar de la base «Productos y cajas contenedoras», con primera letra en minúscula y sin
+el punto final, sustituyendo Pura-Cola por Coracola. Para los pedidos de la primera noche:
+
+| Producto | Texto de una unidad |
+|---|---|
+| Marolini | una caja de fideos Marolini |
+| Coracola | una lata de Coracola |
+| Malbardo | un paquete de cigarrillos Malbardo |
+| Zucarachas | una caja de cereal Zucarachas |
+| Pepito | una caja de galletitas Pepito |
+
+El recordatorio DEBE enumerar el pedido entero en el orden de la tabla de compradores,
+incluso después de una entrega parcial: «Quiero [producto1], [producto2] y [producto3].»
+para Tin y «Quiero [producto1] y [producto2].» para Tia. El rechazo DEBE anteponer
+«Yo no pedí esto. » al mismo texto. La entrada inicial de Tia DEBE decir
+«Hola! Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito, por favor.».
+Los nombres de los productos pedidos DEBEN distinguirse con negrita y color.
 
 ### BR-CTR-029 — Productos pendientes y ticket exacto
 
@@ -247,7 +265,7 @@ Una nueva jornada DEBE empezar sin agenda, conversación, entregas, cuerpos ni v
 
 El sistema DEBE mostrar a cada comprador con sus ocho dibujos en orden numérico, en bucle,
 con transparencia y proporción conservadas, con una duración uniforme de 0,5 segundos por dibujo.
-Martín DEBE usar su animación nueva. La pausa DEBE detener la animación.
+Tin DEBE usar su animación nueva. La pausa DEBE detener la animación.
 Al irse el comprador, su imagen DEBE dejar de mostrarse.
 MIENTRAS espera, DEBE verse detrás de la ventanilla dentro del mundo aunque la interfaz esté
 cerrada. Su dibujo DEBE mantener posición y orientación fijas hacia el interior del local,
@@ -476,15 +494,16 @@ desechado.
 
 ### AC-CTR-034 — Las dos ventanas *(verifica BR-CTR-026, BR-CTR-027)*
 
-DADO la primera noche CUANDO pasan 21:59:59, 22:00:00, 23:59:59 y 00:00:00 ENTONCES Martín está
+DADO la primera noche CUANDO pasan 21:59:59, 22:00:00, 23:59:59 y 00:00:00 ENTONCES Tin está
 ausente, llega, espera y vence. DADO 03:59:59, 04:00:00, 05:59:59 y 06:00:00 ENTONCES ocurre
-lo mismo con Tiago. Repetir cada instante no repite eventos. Los pedidos son los de BR-CTR-026.
+lo mismo con Tia. Repetir cada instante no repite eventos. Tin pide un Marolini, una Coracola
+y un Malbardo; Tia pide una Zucarachas y un Pepito, sin una segunda Zucarachas.
 
 ### AC-CTR-035 — Cruces con la ventanilla cerrada *(verifica BR-CTR-027)*
 
 DADO la ventanilla cerrada CUANDO el tiempo cruza toda la noche ENTONCES se publican llegada
-de Martín, salida de Martín, llegada de Tiago y salida de Tiago, en ese orden, sin nadie esperando.
-DADO Martín esperando CUANDO se cierra y reabre ENTONCES no hay nueva llegada; en pausa no vence.
+de Tin, salida de Tin, llegada de Tia y salida de Tia, en ese orden, sin nadie esperando.
+DADO Tin esperando CUANDO se cierra y reabre ENTONCES no hay nueva llegada; en pausa no vence.
 
 ### AC-CTR-036 — Prioridad de la conversación *(verifica BR-CTR-028, BR-CTR-029)*
 
@@ -492,17 +511,38 @@ DADO un objeto en la mano CUANDO se inicia y avanza la conversación inicial ENT
 cambia una entrada por clic, sin recibir ni rechazar el objeto. Al terminar, manos vacías muestran
 un recordatorio; un objeto correcto se recibe y ese clic no avanza una conversación.
 Reabrir conserva el progreso y los nombres pedidos aparecen con negrita y color.
+DADO Tia CUANDO se inicia su conversación ENTONCES tiene una entrada cuyo texto visible es
+«Hola! Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito, por favor.»,
+con «Zucarachas» y «Pepito» en negrita y color. La conversación inicial de Tin conserva sus
+tres entradas y ambos conservan los textos de sus despedidas.
 
-### AC-CTR-037 — Identidad y sobrantes *(verifica BR-CTR-029)*
+### AC-CTR-037 — Identidad y sobrantes *(verifica BR-CTR-028, BR-CTR-029)*
 
-DADO Tiago listo para recibir CUANDO recibe una Zucarachas ENTONCES falta otra.
-Repetir esa identidad, ofrecer una tercera, un producto ajeno u otro objeto se rechaza sin
-alterar entregas ni mano. El rechazo recuerda dos Zucarachas y un Pepito.
+DADO Tia lista para recibir CUANDO recibe una Zucarachas ENTONCES no falta otra Zucarachas
+y sigue pendiente un Pepito. CUANDO se ofrece otra Zucarachas con identidad distinta, la misma
+unidad ya recibida, un producto ajeno u otro objeto ENTONCES se rechaza sin alterar entregas,
+mano ni ventas. DADO un pedido de prueba de dos Zucarachas CUANDO se entrega una unidad y se
+repite su identidad ENTONCES se rechaza la repetición y sigue faltando una; una segunda unidad
+distinta se acepta y una tercera se rechaza como sobrante.
+
+DADO cada comprador de la primera noche, terminada su conversación inicial, CUANDO se ofrece
+un objeto incorrecto ENTONCES el texto visible del rechazo es:
+
+| Comprador | Rechazo |
+|---|---|
+| Tin | Yo no pedí esto. Quiero una caja de fideos Marolini, una lata de Coracola y un paquete de cigarrillos Malbardo. |
+| Tia | Yo no pedí esto. Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito. |
+
+CUANDO se le habla con manos vacías ENTONCES el recordatorio tiene el mismo texto sin
+«Yo no pedí esto. ». Los nombres de los productos llevan negrita y color en ambos textos.
+Para Tia, antes y después de recibir la Zucarachas, rechazo y recordatorio enumeran el mismo
+pedido entero, incluido el Pepito pendiente.
 
 ### AC-CTR-038 — El ticket es un multiconjunto *(verifica BR-CTR-029, BR-CTR-030)*
 
-DADO Tiago CUANDO recibe un ticket con Pepito y dos Zucarachas en cualquier orden ENTONCES se
-acepta. Una o tres Zucarachas, omitir Pepito o agregar otro producto se rechaza.
+DADO Tia CUANDO recibe un ticket con una Zucarachas y un Pepito, o un Pepito y una Zucarachas,
+ENTONCES se acepta. Cero o dos Zucarachas, omitir Pepito o agregar otro producto se rechaza
+sin alterar mano, entregas ni ventas.
 Sólo ticket o sólo productos dejan la compra incompleta y las ventas en cero.
 
 ### AC-CTR-039 — Venta y despedida *(verifica BR-CTR-030)*
@@ -520,9 +560,9 @@ Las ventas de esa compra siguen en cero. Completar la otra no cumple atención.
 
 ### AC-CTR-041 — Ambas compras y reinicio *(verifica BR-CTR-026, BR-CTR-031)*
 
-DADO la primera noche CUANDO se completa sólo Martín ENTONCES atención sigue sin cumplir.
-Al completar Tiago, cuenta una vez; lo vendido es un Marolini, una Coracola, un Malbardo,
-dos Zucarachas y un Pepito. Reabrir conserva ese resultado. Reiniciar crea estados nuevos
+DADO la primera noche CUANDO se completa sólo Tin ENTONCES atención sigue sin cumplir.
+Al completar Tia, cuenta una vez; lo vendido es un Marolini, una Coracola, un Malbardo,
+una Zucarachas y un Pepito. Reabrir conserva ese resultado. Reiniciar crea estados nuevos
 sin entregas ni ventas. Las jornadas 2–5 conservan el recorrido anterior.
 
 ### AC-CTR-042 — Dos animaciones y pausa *(verifica BR-CTR-032)*
@@ -609,3 +649,10 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
     deja ventas que se rechazan.
   - Decide: game design.
   - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón.
+- **OQ-CTR-003 — ¿Cuáles son los límites de atención de la primera noche?**
+  - Por qué sigue abierta: la ficha «Atención al cliente» consultada el 2026-10-15 indica
+    01:00 para Tin y 07:00 para Tia, pero la decisión de #365 conserva los límites vigentes
+    de 00:00 y 06:00. No hay una resolución que concilie ambas fuentes.
+  - Decide: game design.
+  - Bloquea: cambiar los límites de BR-CTR-026 y sus bordes en AC-CTR-034; no bloquea los
+    nombres ni los pedidos resueltos.

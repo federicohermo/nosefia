@@ -22,8 +22,8 @@ extends StaticBody3D
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const CompradorEnRetirada := preload("res://src/escenas/objetos/comprador_en_retirada.gd")
 const ANIMACIONES := {
-	DialogosDeCompradores.Personaje.MARTIN: preload("res://assets/characters/martin/idle.tres"),
-	DialogosDeCompradores.Personaje.TIAGO: preload("res://assets/characters/tiago/idle.tres"),
+	DialogosDeCompradores.Personaje.TIN: preload("res://assets/characters/martin/idle.tres"),
+	DialogosDeCompradores.Personaje.TIA: preload("res://assets/characters/tiago/idle.tres"),
 }
 
 @export var jugador: JugadorDelLocal
