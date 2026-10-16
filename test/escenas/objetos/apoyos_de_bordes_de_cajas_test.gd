@@ -209,9 +209,14 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
 	var referencia: MeshInstance3D = gondola.get_node("saladix-2oeste2")
+	var disposicion: DisposicionDeLaGondola = almacen.get("_reposicion_manual").get("disposicion")
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[Producto.Id.SALADIK],
+		disposicion.filas_de_adelante[Producto.Id.SALADIK]
+	)
 	var objetivo := referencia.global_position
 	objetivo.y = (gondola.global_transform * gondola.get_aabb()).end.y - 0.03
-	await _mirar_desde_el_piso(almacen, caja, objetivo, Vector3.FORWARD * 1.2)
+	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
 	var visible := _impacto_visible(
 		gondola, mira.origin, mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
@@ -270,7 +275,7 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
 	assert_dict(_estado_del_local(almacen)).is_equal(antes)
-	await _mirar_desde_el_piso(almacen, caja, final, Vector3.FORWARD * 1.2)
+	await _mirar_desde_el_piso(almacen, caja, final, frente * 1.2)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.call("_leer_la_mira")
 	assert_object(jugador.get("_enfocado")).is_same(caja)
