@@ -18,8 +18,8 @@ func _puesto(almacen: Node3D) -> Node3D:
 
 
 func _inventario(almacen: Node3D) -> Inventario:
-	var atenciones: Ventanilla = almacen.get("_atenciones")
-	return atenciones.tarea().get("_inventario")
+	var repositor: Repositor = almacen.get("_repositor")
+	return repositor.estante().get("_inventario")
 
 
 func _destinos() -> Dictionary:
@@ -227,6 +227,8 @@ func test_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida() -> vo
 	var puesto := _puesto(almacen)
 	var repositor: Repositor = almacen.get("_repositor")
 	var inventario := _inventario(almacen)
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	assert_object(atenciones.tarea().get("_inventario")).is_same(inventario)
 	var cupos: Dictionary[Producto.Id, int] = puesto.call("casilleros")
 	assert_int(cupos.size()).is_equal(Producto.Id.size())
 	assert_int(cupos[Producto.Id.DURONGA]).is_greater(0)

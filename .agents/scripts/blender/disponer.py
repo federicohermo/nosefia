@@ -7,8 +7,8 @@
 repo salió de ese `.blend`.
 
 - `disposicion_de_la_gondola.tres`: una tanda principal por producto exhibido, en el orden de
-  `Producto.Id`, y un bloque vacío para Duronga; la fila de atrás primero y la de adelante al
-  final; las tandas fijas; y cuántas copias forman sus filas de adelante.
+  `Producto.Id`, y un bloque vacío si un producto se declara sin exhibición; la fila de atrás
+  primero y la de adelante al final; las tandas fijas y sus filas de adelante.
 - `contenido_del_estante.tscn`: la unidad de cada producto, con la vuelta que le da el modelo.
 - `guia_del_estante.tscn`: una malla por tanda fija, con la vuelta de la unidad de su producto.
 - `estructura_del_almacen.tscn`, las unidades apagadas y los contornos de los muebles activos:

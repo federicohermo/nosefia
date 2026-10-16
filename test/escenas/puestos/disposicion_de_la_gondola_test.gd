@@ -77,8 +77,8 @@ func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
 
 
 ## Lo que una jornada hace faltar de un producto tiene que entrar en su fila: con más, la góndola
-## arrancaría vacía y faltaría menos de lo que la jornada dice. Coracola tiene seis casilleros a
-## propósito, para los seis que le faltan en la jornada 1.
+## arrancaría vacía y faltaría menos de lo que la jornada dice. El cupo nuevo no cambia los
+## faltantes declarados por una jornada.
 func test_ningun_faltante_de_ninguna_jornada_pasa_de_su_fila() -> void:  # AC-STK-033
 	var disposicion := _disposicion()
 	for numero in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:

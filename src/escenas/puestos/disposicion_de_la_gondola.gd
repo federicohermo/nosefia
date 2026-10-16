@@ -13,8 +13,8 @@
 ## Hay dos listas porque el juego las trata distinto:
 ##
 ## - `principales`, una por producto y **en el orden de `Producto.Id`**, es la tanda donde abre
-##   los faltantes de reposición. Duronga tiene bloque vacío. Las demás tienen una fila, o dos
-##   del mismo largo. En dos filas sus copias
+##   los faltantes de reposición. Un producto declarado sin exhibición puede tener bloque
+##   vacío; los exhibidos tienen una fila, o dos del mismo largo. En dos filas sus copias
 ##   van con la fila de atrás primero y la de adelante al final, de izquierda a derecha:
 ##   `visible_instance_count` corta por el final, así que los casilleros son las últimas copias
 ##   y caen todos en la fila de adelante, que es la que da al pasillo.

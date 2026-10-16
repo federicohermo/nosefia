@@ -28,6 +28,9 @@ func test_solo_las_mallas_reemplazadas_son_geometria_de_referencia() -> void:
 	utiles.append(String(lector.get_meta("modelo_reemplazado")).trim_prefix("Estructura/"))
 	var esperados: Array[String] = []
 	for malla: MeshInstance3D in estructura.find_children("*", "MeshInstance3D", true, false):
+		# El contenido normalizado sirve al puesto; no es una unidad del GLB reemplazada.
+		if contenido.is_ancestor_of(malla):
+			continue
 		var reemplazada := String(estructura.get_path_to(malla)) in utiles
 		for lugar: Vector3 in lugares:
 			reemplazada = reemplazada or malla.global_position.distance_to(lugar) < TOLERANCIA

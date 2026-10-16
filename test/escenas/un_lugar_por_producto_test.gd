@@ -484,11 +484,18 @@ func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC
 	assert_array(faltan).contains_exactly(
 		["Actroncito", "Laysntt", "Prongles", "Coracola", "Marolini"]
 	)
-	# A Coracola le falta la tanda reponible entera: lo que queda es la fila de su tanda fija.
+	# El cupo nuevo no cambia los faltantes de la ficha: las referencias abren llenas y
+	# sólo la principal pierde esas unidades, aunque ahora conserve un resto ocupado.
 	var coracola := Catalogo.de(Producto.Id.CORACOLA)
-	assert_int(estante.unidades_en_gondola(coracola)).is_equal(
-		estante.cupo(coracola) - disposicion.filas_de_adelante[Producto.Id.CORACOLA]
-	)
+	var principal := disposicion.filas_de_adelante[coracola.id]
+	var fijas := estante.cupo(coracola) - principal
+	var ocupados := estante.casilleros_ocupados(coracola)
+	var resto_principal := principal - _faltante(almacen, coracola)
+	assert_int(ocupados.size()).is_equal(fijas + resto_principal)
+	for indice in fijas:
+		assert_array(ocupados).contains(indice)
+	for indice in estante.casilleros_vacios(coracola):
+		assert_int(indice).is_greater_equal(fijas)
 	assert_bool(estante.completada()).is_false()
 
 
