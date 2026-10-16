@@ -5,8 +5,9 @@ const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 const PANTALLA_DE_CARGA := preload("res://src/ui/interrupciones/pantalla_de_carga.tscn")
 ## Por encima de todas las capas del almacén: se lo arma detrás de la pantalla de carga.
 const CAPA_DE_LA_CARGA := 10
-## La barra se reparte entre leer el almacén y calentar sus shaders.
-const PARTE_DE_LA_LECTURA := 0.5
+## La barra se reparte entre leer el almacén y calentar sus shaders. Lo que ya se leyó mientras
+## el menú estaba abierto no ocupa barra. Calentar es lo que tarda: ~12 s de 19 en la web.
+const PARTE_DE_LA_LECTURA := 0.15
 const DURACION_DEL_FUNDIDO := 0.3
 const TEMA := preload("res://assets/audio/MUS_MenuPrincipal.ogg")
 ## A 0 dB tapaba todo lo demás de la intro.
@@ -46,6 +47,10 @@ var _fundiendo: bool = false
 var _fundido: ColorRect
 var _musica: AudioStreamPlayer
 var _inicio_del_fundido: int = 0
+var _lectura_inicial := 0.0
+var _parte_de_la_lectura := PARTE_DE_LA_LECTURA
+## Lo que ya mostró la barra: el calentamiento vuelve a cero en cada pasada, y la barra no.
+var _mostrado := 0.0
 var _ahora: Callable = Time.get_ticks_usec
 
 
@@ -120,9 +125,11 @@ func _process(delta: float) -> void:
 	if _fundiendo:
 		_pintar_el_fundido()
 		return
-	_pantalla.pintar(_carga.progreso() * PARTE_DE_LA_LECTURA)
 	if _espera == null:
 		return
+	if _lectura_inicial < 1.0:
+		var leido := (_carga.progreso() - _lectura_inicial) / (1.0 - _lectura_inicial)
+		_pintar(_parte_de_la_lectura * clampf(leido, 0.0, 1.0))
 	_espera.avanzar(delta)
 	if _espera.puede_entrar():
 		_espera = null
@@ -166,6 +173,10 @@ func _pintar_el_fundido() -> void:
 
 func _preparar_la_entrada() -> void:
 	_espera = EsperaDeLaCarga.new()
+	_mostrado = 0.0
+	_lectura_inicial = 1.0 if _almacen != null else _carga.progreso()
+	_parte_de_la_lectura = PARTE_DE_LA_LECTURA * (1.0 - _lectura_inicial)
+	_pantalla.pintar(0.0)
 	if _almacen != null:
 		_espera.terminar_carga()
 	else:
@@ -188,7 +199,12 @@ func _calentar_el_almacen() -> void:
 
 
 func _pintar_el_calentamiento(progreso: float) -> void:
-	_pantalla.pintar(PARTE_DE_LA_LECTURA + progreso * (1.0 - PARTE_DE_LA_LECTURA))
+	_pintar(_parte_de_la_lectura + progreso * (1.0 - _parte_de_la_lectura))
+
+
+func _pintar(valor: float) -> void:
+	_mostrado = maxf(_mostrado, valor)
+	_pantalla.pintar(_mostrado)
 
 
 func _entrar(almacen: Node) -> void:
