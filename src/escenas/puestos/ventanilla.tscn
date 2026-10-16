@@ -1,19 +1,29 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/ventanilla.gd" id="1_ventanilla"]
+[ext_resource type="Script" path="res://src/escenas/objetos/comprador_interactuable.gd" id="2_comprador"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_vidrio"]
-size = Vector3(1.2, 1.4, 0.12)
+[sub_resource type="BoxShape3D" id="BoxShape3D_acceso"]
+size = Vector3(1.2, 1.4, 0.001)
 
 [sub_resource type="BoxMesh" id="BoxMesh_antepecho"]
 size = Vector3(1.4, 0.08, 0.4)
 
-[node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible", "piso_de_entregas") groups=["interactuable"]]
+[node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible", "piso_de_entregas", "objetivo", "acceso_al_cobro")]
+collision_layer = 0
+collision_mask = 0
 script = ExtResource("1_ventanilla")
 borde_superior = NodePath("BordeSuperior")
 antepecho = NodePath("Antepecho")
 comprador_visible = NodePath("Comprador")
 piso_de_entregas = NodePath("PisoDeEntregas")
+objetivo = NodePath("Comprador/Objetivo")
+acceso_al_cobro = NodePath("AccesoAlCobro")
+
+[node name="AccesoAlCobro" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.7, 0)
+shape = SubResource("BoxShape3D_acceso")
+disabled = true
 
 [node name="Comprador" type="AnimatedSprite3D" parent="."]
 visible = false
@@ -22,9 +32,15 @@ rotation = Vector3(0, 3.1415927, 0)
 pixel_size = 0.001
 texture_filter = 0
 
-[node name="Vidrio" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-shape = SubResource("BoxShape3D_vidrio")
+[node name="Objetivo" type="StaticBody3D" parent="Comprador" node_paths=PackedStringArray("figura_de_foco", "forma", "antepecho") groups=["interactuable"]]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_comprador")
+figura_de_foco = NodePath("..")
+forma = NodePath("Forma")
+antepecho = NodePath("../../Antepecho")
+
+[node name="Forma" type="CollisionShape3D" parent="Comprador/Objetivo"]
 
 [node name="Antepecho" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_antepecho")

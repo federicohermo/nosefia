@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://src/escenas/objetos/superficie_liquida.gd" id="liquido"]
 [ext_resource type="Script" path="res://src/escenas/objetos/fibras_de_la_mopa.gd" id="fibras"]
 [ext_resource type="Script" path="res://src/escenas/objetos/manija_del_balde.gd" id="manija"]
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/colilla.tscn" id="colilla"]
 
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
@@ -376,3 +377,6 @@ producto = 31
 metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_1_1"
 metadata/desplazamiento_sobre_tabla = Vector3(0.324,0,0)
 transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,2.8140000499999998,1.66370769404686,-14.95129715)
+
+[node name="Colilla" parent="." instance=ExtResource("colilla")]
+position = Vector3(-3.75, 0.12, -11.20)

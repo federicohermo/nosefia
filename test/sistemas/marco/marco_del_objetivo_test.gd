@@ -147,6 +147,18 @@ func test_el_overlay_recibe_los_valores_del_dominio() -> void:
 	marco.apagar()
 
 
+func test_el_sprite_animado_recupera_su_material_al_perder_foco() -> void:  # AC-PLY-093
+	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
+	var sprite: AnimatedSprite3D = auto_free(AnimatedSprite3D.new())
+	var previo := StandardMaterial3D.new()
+	sprite.material_overlay = previo
+	marco.enfocar(sprite)
+	assert_object(sprite.material_overlay).is_not_same(previo)
+	assert_object(sprite.material_overlay).is_not_null()
+	marco.apagar()
+	assert_object(sprite.material_overlay).is_same(previo)
+
+
 func _malla() -> MeshInstance3D:
 	var malla := MeshInstance3D.new()
 	var geometria := BoxMesh.new()

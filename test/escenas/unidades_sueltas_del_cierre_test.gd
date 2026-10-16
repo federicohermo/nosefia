@@ -138,8 +138,11 @@ func _pulsar_comprador() -> void:
 	var evento := InputEventMouseButton.new()
 	evento.pressed = true
 	evento.button_index = MOUSE_BUTTON_LEFT
-	var panel: PanelDeLaVentanilla = _almacen.get_node("Estructura/Ventanilla").get("panel")
-	panel.get_node("Fisico/Blanco").gui_input.emit(evento)
+	var puesto: Node3D = _almacen.get_node("Estructura/Ventanilla")
+	if puesto.get("_abierta"):
+		puesto.call("_input", evento)
+	else:
+		puesto.get_node("Comprador/Objetivo").call("accionar")
 
 
 func _entregar_a_tin(
@@ -181,10 +184,12 @@ func _entregar_a_tin(
 	for contacto: Dictionary in contactos:
 		encuentra_jugador = encuentra_jugador or contacto["collider"] == jugador
 	assert_bool(encuentra_jugador).is_true()
+	# El testigo sólido es una jamba real; el centro del hueco ya no contiene vidrio.
+	var jamba := (
+		ventana.global_transform * Vector3(antepecho.get_aabb().end.x + capsula.radius, 0.5, 0.0)
+	)
 	var pared := PhysicsRayQueryParameters3D.create(
-		ventana.global_position + Vector3.UP * 0.5 - ventana.global_basis.z,
-		ventana.global_position + Vector3.UP * 0.5 + ventana.global_basis.z,
-		1
+		jamba - ventana.global_basis.z, jamba + ventana.global_basis.z, 1
 	)
 	(
 		assert_object(

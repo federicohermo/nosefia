@@ -1,4 +1,4 @@
-## La ventanilla que se ve: el vidrio por el que se atiende. Cablea y nada más.
+## El soporte de la atención: cablea persona, diálogo y objetos recibidos.
 ##
 ## **No decide nada sobre el juego.** A quién hay que atender, cuánto marca la caja y cuándo la
 ## obligatoria queda cumplida son preguntas del dominio; qué señal va con qué método es lo único
@@ -23,9 +23,12 @@ signal entregas_abandonadas(cuerpos: Array[Node3D])
 ## `suspender()` no compilaría.
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const CompradorEnRetirada := preload("res://src/escenas/objetos/comprador_en_retirada.gd")
+const CompradorInteractuable := preload("res://src/escenas/objetos/comprador_interactuable.gd")
 const ANIMACIONES := {
 	DialogosDeCompradores.Personaje.TIN: preload("res://assets/characters/martin/idle.tres"),
 	DialogosDeCompradores.Personaje.TIA: preload("res://assets/characters/tiago/idle.tres"),
+	DialogosDeCompradores.Personaje.FEDE: preload("res://assets/characters/fede/idle.tres"),
+	DialogosDeCompradores.Personaje.MIA: preload("res://assets/characters/mia/idle.tres"),
 }
 
 @export var jugador: JugadorDelLocal
@@ -36,8 +39,10 @@ const ANIMACIONES := {
 @export var antepecho: MeshInstance3D
 @export var comprador_visible: AnimatedSprite3D
 @export var piso_de_entregas: Marker3D
+@export var objetivo: CompradorInteractuable
+@export var acceso_al_cobro: CollisionShape3D
 
-## Si el vidrio está abierto ahora mismo. Es estado de cáscara —qué ventana hay arriba— y no una
+## Si el panel está abierto ahora mismo. Es estado de cáscara —qué ventana hay arriba— y no una
 ## regla del juego: a quién hay que atender lo sigue contestando el dominio.
 var _abierta := false
 var _recibidos: Dictionary[Comprador, Array] = {}
@@ -49,6 +54,8 @@ var _posicion_de_espera: Vector3
 
 func _ready() -> void:
 	_posicion_de_espera = comprador_visible.position
+	objetivo.atenciones = atenciones
+	objetivo.interaccion_pedida.connect(_al_pulsar)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	panel.cobro_pedido.connect(atenciones.pedir_cobrar)
 	panel.despacho_pedido.connect(atenciones.pedir_despachar_sin_vender)
@@ -59,7 +66,7 @@ func _ready() -> void:
 	atenciones.presentacion_cambiada.connect(_repintar)
 	atenciones.comprador_vencido.connect(_al_vencer)
 	atenciones.jornada_preparada.connect(_al_preparar)
-	panel.comprador_pulsado.connect(_al_pulsar)
+	atenciones.conversacion_terminada.connect(cerrar)
 
 
 func _al_preparar() -> void:
@@ -70,36 +77,22 @@ func _al_preparar() -> void:
 	for comprador: Comprador in _recibidos:
 		_descartar_recibidos(comprador)
 	_recibidos.clear()
+	var generica := not atenciones.tarea().fisica()
+	collision_layer = 2 if generica else 0
+	acceso_al_cobro.set_deferred("disabled", not generica)
+	if generica:
+		add_to_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+	else:
+		remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	panel.preparar(atenciones.tarea().fisica())
 	comprador_visible.hide()
 	comprador_visible.stop()
 	cerrar()
 
 
-func _process(_delta: float) -> void:
-	if _abierta:
-		_ubicar_blanco()
-
-
-func _ubicar_blanco() -> void:
-	if not comprador_visible.visible:
-		return
-	var camara := get_viewport().get_camera_3d()
-	if camara == null:
-		return
-	var centro := comprador_visible.global_position
-	var textura := comprador_visible.sprite_frames.get_frame_texture(&"idle", 0)
-	var mitad := textura.get_size() * comprador_visible.pixel_size / 2.0
-	var area := Rect2(camara.unproject_position(centro), Vector2.ZERO)
-	for x: float in [-1.0, 1.0]:
-		for y: float in [-1.0, 1.0]:
-			var esquina := centro + comprador_visible.global_basis.x * mitad.x * x
-			esquina += Vector3.UP * mitad.y * y
-			area = area.expand(camara.unproject_position(esquina))
-	panel.ubicar_comprador(area)
-
-
 func _al_pulsar() -> void:
+	if not _abierta and jugador.suspendido():
+		return
 	var comprador := atenciones.tarea().en_ventanilla()
 	if comprador == null:
 		return
@@ -121,13 +114,20 @@ func _repintar() -> void:
 	_mostrar_personaje(atendida)
 	if atendida != null and atendida.vendida() and atendida.despachada():
 		_descartar_recibidos(atendida.comprador())
+	if atendida != null and atendida.fisica():
+		var dialogo := atendida.dialogo()
+		if dialogo != null and not dialogo.terminado() and not _abierta:
+			abrir()
+		elif atendida.despachada():
+			cerrar()
+	elif atenciones.tarea().fisica():
+		cerrar()
 	if not _abierta:
 		return
 	if atenciones.tarea().en_ventanilla() == null:
 		panel.mostrar_sin_nadie()
 	else:
 		panel.mostrar(atendida)
-		_ubicar_blanco()
 
 
 func _mostrar_personaje(atendida: Atencion) -> void:
@@ -175,6 +175,11 @@ func _distancia_hasta_la_pared() -> float:
 func _conservar_imagen() -> void:
 	_detener_entrada()
 	var imagen := comprador_visible.duplicate(0) as AnimatedSprite3D
+	# La retirada conserva sólo el dibujo, nunca el objetivo ni su contorno transitorio.
+	for hijo in imagen.get_children():
+		imagen.remove_child(hijo)
+		hijo.free()
+	imagen.material_overlay = null
 	imagen.set_script(CompradorEnRetirada)
 	var retirada := imagen as CompradorEnRetirada
 	var recorrido := (imagen.position - _posicion_de_espera).dot(imagen.basis.x)
@@ -218,10 +223,11 @@ func _al_vencer(comprador: Comprador) -> void:
 
 ## El clic izquierdo abre lo fijo.
 func accionar() -> void:
-	abrir()
+	if not atenciones.tarea().fisica():
+		abrir()
 
 
-## Clava al jugador delante del vidrio y pide a quien corresponda.
+## Encuadra la atención sin mover el cuerpo del jugador.
 func abrir() -> void:
 	_abierta = true
 	var referencia := borde_superior.global_transform
@@ -244,12 +250,22 @@ func cerrar() -> void:
 	_abierta = false
 	panel.ocultar()
 	jugador.dejar_de_asomarse()
-	jugador.reanudar()
+	if reloj.corriendo():
+		jugador.reanudar()
 
 
 ## Atiende el cierre antes de que la interfaz reciba el gesto.
 func _input(evento: InputEvent) -> void:
-	if _abierta and evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
+	if not _abierta:
+		return
+	if atenciones.tarea().fisica():
+		if evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
+			get_viewport().set_input_as_handled()
+			_al_pulsar()
+			jugador.tomar_el_cursor_desde_entrada()
+		elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
+			get_viewport().set_input_as_handled()
+	elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		get_viewport().set_input_as_handled()
 		if atenciones.puede_abandonar():
 			cerrar()

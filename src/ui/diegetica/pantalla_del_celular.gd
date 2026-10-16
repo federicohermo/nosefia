@@ -33,6 +33,7 @@ const LILA := Color("c99cf4")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "RUEDA DEL MOUSE / DESPLAZAR HISTORIAL"
+const DIAS: Array[String] = ["HOY", "AYER", "HACE DOS DÍAS", "HACE TRES DÍAS", "HACE CUATRO DÍAS"]
 
 @export var _velo: Control
 @export var _lienzo: Control
@@ -63,6 +64,9 @@ var _texto_de_la_opcion: String = ""
 var _opcion: Button
 var _basurero: Control
 var _fuente_del_chat: FontVariation
+var _jornada_de_referencia: int = 0
+var _historial: Array[Mensaje] = []
+var _burbujas: Array[PanelContainer] = []
 
 
 func _ready() -> void:
@@ -144,7 +148,10 @@ func mostrar_menu(bandeja: Bandeja) -> void:
 	_filtrar("")
 
 
-func mostrar_chat(conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bool) -> void:
+func mostrar_chat(
+	conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bool, jornada: int
+) -> void:
+	_jornada_de_referencia = jornada
 	_foto_ampliada.hide()
 	_volver.visible = not fijo
 	_titulo.text = conversacion.nombre.to_upper()
@@ -167,8 +174,12 @@ func mostrar_chat(conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bo
 	_pie.show()
 	_componer(false)
 	_limpiar()
+	_historial = mensajes.duplicate()
 	for indice in mensajes.size():
-		_mensajes.add_child(_burbuja_de(mensajes[indice], indice))
+		var burbuja := _burbuja_de(mensajes[indice], indice)
+		_burbujas.append(burbuja)
+		_mensajes.add_child(burbuja)
+	_ordenar_el_historial()
 	_agregar_la_opcion()
 	_ir_al_ultimo.call_deferred()
 
@@ -186,8 +197,11 @@ func recibir(mensaje: Mensaje, indice: int) -> void:
 	var barra := _scroll.get_v_scroll_bar()
 	var al_final := _scroll.scroll_vertical >= int(barra.max_value - barra.page) - 1
 	var burbuja := _burbuja_de(mensaje, indice)
+	var lugar := clampi(indice, 0, _historial.size())
+	_historial.insert(lugar, mensaje)
+	_burbujas.insert(lugar, burbuja)
 	_mensajes.add_child(burbuja)
-	_mensajes.move_child(burbuja, clampi(indice, 0, _mensajes.get_child_count() - 1))
+	_ordenar_el_historial()
 	if opcion() != null:
 		_mensajes.move_child(_opcion, _mensajes.get_child_count() - 1)
 	if al_final and not _foto_ampliada.visible:
@@ -392,8 +406,9 @@ func _avatar(imagen: Texture2D) -> PanelContainer:
 	return avatar
 
 
-func _burbuja_de(mensaje: Mensaje, _indice: int) -> PanelContainer:
+func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 	var panel := PanelContainer.new()
+	panel.set_meta("indice_de_mensaje", indice)
 	panel.custom_minimum_size = Vector2(368, 0)
 	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	panel.add_theme_stylebox_override("panel", _estilo(Color("0b363d"), 16, 16))
@@ -408,7 +423,9 @@ func _burbuja_de(mensaje: Mensaje, _indice: int) -> PanelContainer:
 		foto.ignore_texture_size = true
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		foto.custom_minimum_size = Vector2(0, 240)
-		foto.pressed.connect(func() -> void: foto_pedida.emit(panel.get_index()))
+		foto.pressed.connect(
+			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
+		)
 		contenido.add_child(foto)
 	if not mensaje.texto.is_empty():
 		var texto := _texto(mensaje.texto, PAPEL, 28)
@@ -433,6 +450,32 @@ func _burbuja_de(mensaje: Mensaje, _indice: int) -> PanelContainer:
 	return panel
 
 
+func _ordenar_el_historial() -> void:
+	# Reordenar sólo la composición conserva las burbujas y la foto que se esté leyendo.
+	for hijo: Node in _mensajes.get_children():
+		if hijo.has_meta("separador_de_jornada"):
+			hijo.reparent(_basurero, false)
+			hijo.queue_free()
+	var posicion := 0
+	var anterior := 0
+	for indice: int in _historial.size():
+		var mensaje := _historial[indice]
+		var jornada := mensaje.jornada if mensaje.momento != Mensaje.Momento.SIN_FECHA else 0
+		var diferencia := _jornada_de_referencia - jornada
+		if jornada > 0 and jornada != anterior and diferencia >= 0 and diferencia < DIAS.size():
+			var separador := _etiqueta(DIAS[diferencia], GRIS, 24)
+			separador.set_meta("separador_de_jornada", jornada)
+			separador.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			_mensajes.add_child(separador)
+			_mensajes.move_child(separador, posicion)
+			posicion += 1
+		var burbuja := _burbujas[indice]
+		burbuja.set_meta("indice_de_mensaje", indice)
+		_mensajes.move_child(burbuja, posicion)
+		posicion += 1
+		anterior = jornada
+
+
 func _ir_al_ultimo() -> void:
 	# El contenedor debe terminar de medir los mensajes antes de pedir el extremo del scroll.
 	await get_tree().process_frame
@@ -440,6 +483,8 @@ func _ir_al_ultimo() -> void:
 
 
 func _limpiar() -> void:
+	_historial.clear()
+	_burbujas.clear()
 	# Lo viejo espera su liberación dentro del árbol, en un nodo oculto: sacado del árbol y
 	# liberado al final del cuadro, cada mensaje que llega dejaba huérfano todo el chat anterior.
 	if _basurero == null:

@@ -18,7 +18,15 @@ extends RefCounted
 ## `enum`: un `String` suelto dejaría al `if` del menú sin entrar nunca, sin decir una palabra.
 enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
 enum Llamado { LOCAL_DESORDENADO, OBJETO_AFUERA, PAPEL_EN_EL_INODORO, OBJETO_TIRADO }
+enum RegistroDePoetico { RECHAZADO, ANOTADO, REPETIDO }
 
+var expediente: Expediente:
+	get:
+		return _expediente
+	set(_nuevo):
+		push_error("El expediente pertenece a la partida y no se sustituye")
+
+var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
 var _obligatorias: Array[Tarea] = []
@@ -28,6 +36,28 @@ var _llamados: Array[Llamado] = []
 var _antecedentes := Antecedentes.new()
 var _devoluciones: Array[Mensaje] = []
 var _mopa_secada := false
+var _poetico_usado_en: Array[int] = []
+
+
+func anotar_uso_de_poetico(
+	identidad: StringName, resultado: ReglasDeLaLimpieza.Resultado, permitido: bool
+) -> RegistroDePoetico:
+	if (
+		not permitido
+		or not _jornada_abierta
+		or terminada()
+		or resultado != ReglasDeLaLimpieza.Resultado.BALDE_TENIDO
+		or not AnomaliasDeLaJornada.sustituye_azul(identidad, _jornada)
+	):
+		return RegistroDePoetico.RECHAZADO
+	if uso_de_poetico_en(_jornada):
+		return RegistroDePoetico.REPETIDO
+	_poetico_usado_en.append(_jornada)
+	return RegistroDePoetico.ANOTADO
+
+
+func uso_de_poetico_en(jornada: int) -> bool:
+	return _poetico_usado_en.has(jornada)
 
 
 func anotar_llamado(llamado: Llamado) -> void:
@@ -78,6 +108,7 @@ func anotar_mopa_secada() -> void:
 
 func _init(legajo: Legajo) -> void:
 	_legajo = legajo
+	_expediente = Expediente.new(CasoDeInvestigacion.de_la_partida())
 
 
 ## El legajo que la partida recibió, **la misma instancia** y no una copia. Con una copia, un

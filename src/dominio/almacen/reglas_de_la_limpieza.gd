@@ -102,6 +102,12 @@ const COLOR_DE_LA_MANCHA: Dictionary[TipoDeMancha, Color] = {
 ##
 ## Lo que se lleva entra como `id` y no como objeto: es lo que evita que el dominio de la limpieza
 ## tenga que conocer al de agarrar.
-static func agua_del_jabon(id: StringName) -> Agua:
+static func agua_del_jabon(
+	id: StringName, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
+) -> Agua:
+	if AnomaliasDeLaJornada.sustituye_azul(id, jornada):
+		return Agua.AZUL
+	if not AnomaliasDeLaJornada.util_disponible(id, jornada):
+		return Agua.NINGUNA
 	var agua: Agua = JABONES.get(id, Agua.NINGUNA)
 	return agua

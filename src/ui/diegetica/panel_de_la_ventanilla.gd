@@ -17,7 +17,6 @@ extends CanvasLayer
 
 signal cobro_pedido
 signal despacho_pedido
-signal comprador_pulsado
 
 ## Lo único propio de esta capa son las palabras de los botones y el cartel de la ventanilla
 ## vacía. Viven acá y **no** además en el `.tscn`: un texto en los dos lados se cambia en uno solo
@@ -60,7 +59,7 @@ func _ready() -> void:
 	_despachar.text = TEXTO_DE_DESPACHAR
 	_cobrar.pressed.connect(cobro_pedido.emit)
 	_despachar.pressed.connect(despacho_pedido.emit)
-	_blanco.gui_input.connect(_al_pulsar_el_comprador)
+	_blanco.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func preparar(fisica: bool) -> void:
@@ -101,17 +100,11 @@ func ocultar() -> void:
 	visible = false
 
 
-func ubicar_comprador(area: Rect2) -> void:
-	var local := _fisico.get_global_transform_with_canvas().affine_inverse() * area
-	_blanco.position = local.position
-	_blanco.size = local.size
-
-
 func _mostrar_comprador(atencion: Atencion) -> void:
 	if atencion.despachada():
 		mostrar_sin_nadie()
 		return
-	_blanco.show()
+	_blanco.hide()
 	var dialogo := atencion.dialogo()
 	_burbuja.visible = dialogo != null and not dialogo.terminado()
 	if _burbuja.visible:
@@ -124,14 +117,6 @@ func _acomodar_dialogo() -> void:
 	var alto := maxf(136.0, float(_texto.get_content_height()) + 30.0)
 	_burbuja.position.y = 1000.0 - alto
 	_burbuja.size.y = alto
-
-
-func _al_pulsar_el_comprador(evento: InputEvent) -> void:
-	if evento is InputEventMouseButton:
-		var clic := evento as InputEventMouseButton
-		if clic.pressed and clic.button_index == MOUSE_BUTTON_LEFT:
-			_blanco.accept_event()
-			comprador_pulsado.emit()
 
 
 ## Reemplaza los renglones de la atención anterior.

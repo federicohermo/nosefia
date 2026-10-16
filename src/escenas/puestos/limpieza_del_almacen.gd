@@ -119,6 +119,7 @@ func _al_usar_la_superficie(punto: Vector3, normal: Vector3, cuerpo: PhysicsBody
 
 
 func reiniciar() -> void:
+	_pares = Uso.para_el_almacen(limpiador.piso().jornada())
 	_charcos.limpiar()
 	_muestreada = false
 	_cantidad_mostrada = -1.0

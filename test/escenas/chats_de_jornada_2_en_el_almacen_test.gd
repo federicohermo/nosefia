@@ -61,6 +61,14 @@ func _pantalla() -> PantallaDelCelular:
 	return _almacen.get("_pantalla_del_celular")
 
 
+func _burbuja(indice: int) -> PanelContainer:
+	var lista: VBoxContainer = _pantalla().get("_mensajes")
+	for hijo: Node in lista.get_children():
+		if hijo.has_meta("indice_de_mensaje") and int(hijo.get_meta("indice_de_mensaje")) == indice:
+			return hijo as PanelContainer
+	return null
+
+
 func _q() -> void:
 	var tecla := InputEventAction.new()
 	tecla.action = Celular.ACCION
@@ -126,9 +134,7 @@ func test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll() -> void:
 	await _q()
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
 	await _clic((lista.get_child(1) as Button).get_global_rect().get_center())
-	var texto := (
-		lista.get_child(5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
-	)
+	var texto := _burbuja(5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
 	var scroll: ScrollContainer = _pantalla().get("_scroll")
 	scroll.ensure_control_visible(texto)
 	await _cuadros(4)
@@ -152,9 +158,7 @@ func test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll() -> void:
 	_celular().pedir_volver()
 	_celular().pedir_chat(JEFE)
 	await _cuadros(4)
-	var foto := (
-		lista.get_child(21).find_children("*", "TextureButton", true, false)[0] as TextureButton
-	)
+	var foto := _burbuja(21).find_children("*", "TextureButton", true, false)[0] as TextureButton
 	scroll.ensure_control_visible(foto)
 	await _cuadros(4)
 	var posicion := scroll.scroll_vertical

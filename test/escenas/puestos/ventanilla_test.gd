@@ -24,12 +24,14 @@ func _ventanilla() -> VentanillaQueSeVe:
 	return auto_free(load(ESCENA).instantiate())
 
 
-func test_la_ventanilla_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:
+func test_la_persona_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:
 	# Sin el grupo, el rayo la ve y el jugador no: la mira no la marca como algo con lo
 	# que se puede interactuar, y el jugador no tiene cómo enterarse de que ahí se atiende.
 	var ventanilla := _ventanilla()
-	assert_bool(ventanilla.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	assert_bool(ventanilla.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)).is_true()
+	assert_bool(ventanilla.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_false()
+	var persona := ventanilla.get_node("Comprador/Objetivo")
+	assert_bool(persona.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
+	assert_bool(persona.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)).is_true()
 
 
 func test_la_ventanilla_recibe_al_jugador_y_al_reloj_por_export() -> void:
@@ -75,7 +77,7 @@ func test_el_almacen_instancia_la_ventanilla_exactamente_una_vez() -> void:
 
 
 func test_tocar_la_ventanilla_clava_al_jugador_y_no_entrega_nada_para_levantar() -> void:
-	var almacen := await _almacen_en()
+	var almacen := await _almacen_en(Vector2i(1280, 720), false)
 	var ventanilla: VentanillaQueSeVe = almacen.get_node("Estructura/Ventanilla")
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var pose := jugador.transform
@@ -159,14 +161,20 @@ func after_test() -> void:
 	get_tree().paused = false
 
 
-func _almacen_en(tamano: Vector2i = Vector2i(1280, 720)) -> Node3D:
+func _almacen_en(tamano: Vector2i = Vector2i(1280, 720), con_comprador: bool = true) -> Node3D:
 	var viewport: SubViewport = auto_free(SubViewport.new())
 	viewport.size = tamano
 	viewport.world_3d = World3D.new()
 	add_child(viewport)
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	var partida: GDScript = load("res://src/dominio/empleo/partida.gd")
+	almacen.set("_partida", partida.call("nueva"))
 	viewport.add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	reloj.set_process(false)
+	if con_comprador:
+		reloj.avanzar(120.0)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	return almacen
@@ -217,8 +225,6 @@ func _afirmar_encuadre(ventanilla: VentanillaQueSeVe, camara: Camera3D) -> void:
 		minimo = minimo.min(punto)
 		maximo = maximo.max(punto)
 		var consulta := PhysicsRayQueryParameters3D.create(camara.global_position, esquina)
-		# El vidrio es el cuerpo de interacción transparente, no un obstáculo de la vista.
-		consulta.exclude = [ventanilla.get_rid()]
 		var golpe := camara.get_world_3d().direct_space_state.intersect_ray(consulta)
 		# Un contacto en el propio borde no tapa el recorrido anterior de la vista.
 		if not golpe.is_empty():

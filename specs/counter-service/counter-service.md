@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433 y #444; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035
 ---
@@ -30,6 +30,14 @@ jugador**: es el único lugar donde el juego puede mentir en vivo.
 | **Ticket** | papel que conserva los productos anotados al imprimir | pedido de la ventanilla |
 
 ## Comportamiento normativo
+
+Las reglas de interacción directa sobre la figura, foco de silueta y retorno automático del diálogo
+se aplican al recorrido de atención física con comprador representado en el mundo.
+Las jornadas 3 a 5 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
+panel de cobro. Sólo en ese recorrido genérico se admite una consulta de acceso en el hueco:
+NO DEBE bloquear al jugador ni los objetos sostenidos, ni permanecer activa al usar atención física.
+La barrera de vidrio NO DEBE existir en ningún recorrido. Esta excepción NO DEBE convertir el hueco,
+marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 3 a 5.
 
 ### BR-CTR-001 — Dos compradores por noche
 
@@ -895,6 +903,15 @@ izquierdo avanza exactamente una entrada. Repetir con mano vacía conserva la mi
 - Esta capacidad NO descuenta tiempo del turno. Atender cuesta porque el reloj corre.
 
 ## Contratos
+
+`Compradores.segunda_jornada_definida() -> Array[Comprador]` declara el padrón fijo J2 sin azar.
+`DialogosDeCompradores.Personaje` conserva NINGUNO/TIN/TIA y añade FEDE/MIA. Sus campos
+`fede`, `mia`, `despedida_fede` y `despedida_mia` son `PackedStringArray`; cada consulta crea
+un cursor propio. `inicial(personaje)` y `despedida(personaje)` conservan sus firmas.
+`recordatorio(personaje: int, rechazo: bool = false, pedido: Venta = null,
+productos_completos: bool = false) -> Dialogo` conserva los lectores J1 y calcula los comunes
+J2 desde el pedido original y la recepción. Un dato requerido sin catálogo devuelve `null`
+en la construcción del comprador y emite el diagnóstico, sin publicar una compra parcial.
 
 - **Entrada:** el padrón de la noche, los vendibles de cada producto, el objeto leído y los
   pedidos de borrar o imprimir, el número de jornada, las elecciones por renglón y el objeto

@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444
 ---
@@ -1041,6 +1041,14 @@ se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades 
 - Esta capacidad NO decide el precio final de nada: el catálogo es un primer valor de balance.
 
 ## Contratos
+
+La apertura de escena selecciona compradores una vez mediante
+`compradores_de_la_apertura: Callable`, cuyo valor productivo conserva
+`Compradores.de_la_jornada`. Pasa la misma `Array[Comprador]` a
+`Apertura.inventario_de_la_jornada(compradores, totales, reponibles, azar)` y a
+`TareaDeAtender`; las consultas `Apertura.pedidos_de(compradores)` leen las mismas `Venta`.
+La fuente inyectable no activa por sí sola el padrón J2 ni sustituye el inventario de uno
+solo de sus consumidores.
 
 - **Entrada:** el sector y destino declarado de cada producto y si admite exhibición;
   los productos que existen, sus casilleros totales y los de la fila de adelante

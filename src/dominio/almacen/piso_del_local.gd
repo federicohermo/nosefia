@@ -93,10 +93,15 @@ var _mopa := Mopa.new()
 ## Qué hace cada cosa en la mano sobre cada otra. Es la única puerta de los gestos: sin el par
 ## declarado, ni la mopa mojada del jabón justo borra nada.
 var _uso := Uso.para_el_almacen()
+var _jornada: int
 
 
-func _init(manchas: Dictionary[Lugar, Mancha]) -> void:
+func _init(
+	manchas: Dictionary[Lugar, Mancha], jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
+) -> void:
 	_manchas = manchas
+	_jornada = jornada
+	_uso = Uso.para_el_almacen(jornada)
 
 
 ## El piso de esa noche: las manchas que declara su fila, todas sucias, el balde vacío y la mopa
@@ -111,7 +116,7 @@ static func de_la_jornada(jornada: int) -> PisoDelLocal:
 	var manchas: Dictionary[Lugar, Mancha] = {}
 	for lugar: Lugar in fila:
 		manchas[lugar] = Mancha.new(fila[lugar])
-	return PisoDelLocal.new(manchas)
+	return PisoDelLocal.new(manchas, jornada)
 
 
 ## En qué habitación está ese lugar, según la pertenencia del cierre.
@@ -141,6 +146,10 @@ func balde() -> Balde:
 	return _balde
 
 
+func jornada() -> int:
+	return _jornada
+
+
 func mopa() -> Mopa:
 	return _mopa
 
@@ -167,7 +176,7 @@ func usar(en_la_mano: StringName, objetivo: StringName) -> ReglasDeLaLimpieza.Re
 		Uso.Efecto.LLENAR:
 			return _balde.llenar()
 		Uso.Efecto.TENIR:
-			return _balde.tenir(ReglasDeLaLimpieza.agua_del_jabon(en_la_mano))
+			return _balde.tenir(ReglasDeLaLimpieza.agua_del_jabon(en_la_mano, _jornada))
 		Uso.Efecto.VACIAR:
 			return _balde.vaciar()
 		Uso.Efecto.MOJAR:

@@ -91,6 +91,11 @@ func test_al_cerrar_baja_la_persiana_y_sube_el_celular_fijo() -> void:  # AC-EMP
 	)
 	assert_bool((almacen.get_node("Jugador") as Node).call("suspendido")).is_true()
 	assert_int(pantalla.a_la_vista()).is_equal(1)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(2)
+	var lista: VBoxContainer = _pantalla_del_celular(almacen).get("_mensajes")
+	var separadores := lista.get_children().filter(func(hijo: Node) -> bool: return hijo is Label)
+	assert_int(separadores.size()).is_equal(1)
+	assert_str((separadores[0] as Label).text).is_equal("HOY")
 
 
 func test_un_mensaje_por_segundo_y_la_opcion_al_final() -> void:  # AC-EMP-062
