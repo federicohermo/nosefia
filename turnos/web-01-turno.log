@@ -1,0 +1,18 @@
+CHROME431 http://127.0.0.1:62842/index.html C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-02\web
+CAPTURA431 web-1920-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_LISTO
+file:///C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-431/recorrer_archivos431.mjs:61
+  if(cuadros<2 || estado.visible!=='visible') throw new Error('Chrome no dibuja');
+                                                    ^
+
+Error: Chrome no dibuja
+    at snapshot (file:///C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-431/recorrer_archivos431.mjs:61:53)
+    at async file:///C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-431/recorrer_archivos431.mjs:85:22
+
+Node.js v22.18.0
+
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\chrome431.py", line 38, in <module>
+    assert resultado.returncode == 0, "Falló el recorrido Web"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Falló el recorrido Web

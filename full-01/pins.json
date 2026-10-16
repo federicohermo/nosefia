@@ -1,0 +1,19 @@
+{
+  "antes": {
+    "head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+    "estado_porcelain": "",
+    "fuente": "Lectura git status --short y git rev-parse HEAD en el mismo exec_command que encoló full-01; salida de la conversación y mensaje al padre anteriores a la corrida."
+  },
+  "despues": {
+    "head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+    "estado_porcelain": "",
+    "utc": "2026-10-16T16:12:57.679524+00:00"
+  },
+  "base": "e6cc0ac4bff25335c0b6a605d85b70cb9014cab0",
+  "remotos_contrastados": [
+    "e6cc0ac4bff25335c0b6a605d85b70cb9014cab0\trefs/heads/feature/429-444-contratos-integrados",
+    "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87\trefs/heads/improvement/431-separadores-de-jornadas-en-chats"
+  ],
+  "congelado": "Sin ediciones desde enqueue hasta resultado. La captura posterior conservó la misma fuente.",
+  "limite": "El wrapper original no mide SHA. Se distingue la lectura previa de la captura posterior; no se inventa un archivo previo del wrapper."
+}

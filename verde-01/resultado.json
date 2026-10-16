@@ -1,0 +1,50 @@
+{
+  "godot": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "origen": "registro",
+  "cwd": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+  "head": "e6cc0ac4bff25335c0b6a605d85b70cb9014cab0",
+  "comandos": [
+    {
+      "nombre": "import",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "--import",
+        "--quit"
+      ],
+      "codigo": 0
+    },
+    {
+      "nombre": "tests",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "-s",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+        "-a",
+        "res://test/ui/diegetica/separadores_del_celular_test.gd",
+        "-a",
+        "res://test/ui/diegetica/pantalla_del_celular_test.gd",
+        "-a",
+        "res://test/escenas/chats_de_jornada_2_en_el_almacen_test.gd",
+        "-a",
+        "res://test/escenas/celular_en_el_almacen_test.gd",
+        "-a",
+        "res://test/escenas/devolucion_en_el_almacen_test.gd",
+        "--continue",
+        "--ignoreHeadlessMode",
+        "-rd",
+        "res://reports"
+      ],
+      "codigo": 0
+    }
+  ],
+  "head_despues": "e6cc0ac4bff25335c0b6a605d85b70cb9014cab0"
+}

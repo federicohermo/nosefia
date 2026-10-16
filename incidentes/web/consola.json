@@ -1,0 +1,52 @@
+[
+  {
+    "type": "log",
+    "text": "Godot Engine v4.7.2.stable.custom_build - https://godotengine.org",
+    "time": 1792167544586
+  },
+  {
+    "type": "log",
+    "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "time": 1792167545997
+  },
+  {
+    "type": "log",
+    "text": "Build configuration: Emscripten 4.0.11, multi-threaded, no GDExtension support.",
+    "time": 1792167546694
+  },
+  {
+    "type": "log",
+    "text": "[carga] menú visible",
+    "time": 1792167547063
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x569403e8e800] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792167609610
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x569403e8e800] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792167609611
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x569403e8e800] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792167609616
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x569403e8e800] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792167609630
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x569403e8e800] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792167609634
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x569403e8e800] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792167609636
+  }
+]

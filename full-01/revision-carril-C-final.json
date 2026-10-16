@@ -1,0 +1,249 @@
+{
+  "head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "estado": "",
+  "codigo": 0,
+  "nodos": {
+    "lint": {
+      "nodo": "lint",
+      "codigo": 0,
+      "segundos": 23.341432299930602,
+      "salteado": false,
+      "aviso": null,
+      "comando": [
+        "gdlint",
+        "src",
+        "test"
+      ]
+    },
+    "formato": {
+      "nodo": "formato",
+      "codigo": 0,
+      "segundos": 21.565958899911493,
+      "salteado": false,
+      "aviso": null,
+      "comando": [
+        "gdformat",
+        "--check",
+        "src",
+        "test"
+      ]
+    },
+    "capas": {
+      "nodo": "capas",
+      "codigo": 0,
+      "segundos": 2.6608412999194115,
+      "salteado": false,
+      "aviso": null,
+      "comando": [
+        "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion\\.claude\\scripts\\gate_de_capas.py"
+      ]
+    },
+    "tdd": {
+      "nodo": "tdd",
+      "codigo": 0,
+      "segundos": 0.40851929993368685,
+      "salteado": false,
+      "aviso": null,
+      "comando": [
+        "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion\\.claude\\scripts\\gate_de_tests.py"
+      ]
+    },
+    "specs": {
+      "nodo": "specs",
+      "codigo": 0,
+      "segundos": 0.7421827001962811,
+      "salteado": false,
+      "aviso": null,
+      "comando": [
+        "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion\\.claude\\scripts\\gate_de_specs.py"
+      ]
+    },
+    "harness": {
+      "nodo": "harness",
+      "codigo": 0,
+      "segundos": 120.44924629991874,
+      "salteado": false,
+      "aviso": null,
+      "comando": [
+        "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion\\.claude\\scripts\\tests",
+        "-t",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion\\.claude\\scripts"
+      ]
+    },
+    "tests": {
+      "nodo": "tests",
+      "codigo": 0,
+      "segundos": 1055.9185488000512,
+      "salteado": false,
+      "aviso": null,
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "--headless",
+        "-s",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+        "-a",
+        "test",
+        "--continue",
+        "--ignoreHeadlessMode",
+        "-rd",
+        "res://reports"
+      ]
+    },
+    "tests-import": {
+      "nodo": "tests",
+      "codigo": 0,
+      "segundos": 7.258715400006622,
+      "salteado": false,
+      "aviso": null,
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "--import",
+        "--quit"
+      ]
+    }
+  },
+  "suites": 279,
+  "casos": 2147,
+  "xml_atributos": {
+    "id": "2026-10-16",
+    "name": "report_3",
+    "tests": "2147",
+    "failures": "0",
+    "skipped": "0",
+    "flaky": "0",
+    "time": "0.000"
+  },
+  "problemas_xml": {
+    "failure": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "diagnosticos_completos": {
+    "ERROR: The remote port number must be between 1 and 65535 (inclusive).": 1,
+    "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.": 1,
+    "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.80507, 0.185369, -1.000021); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.21, 0.112, -9.255); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185373, 4.004475); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22192, 0.185764, 4.844925); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307122, 0.185353, 4.392648); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.1, 0.112, -4.55); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.1, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750046, 0.185659, -14.39602); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.8, 0.112, 0.1); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31528, 0.187648, 3.205922); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.489997, 0.391959, -9.999991); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `SueloSolido` en (4.489997, 0.288252, -9.999992); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.475773, 0.387328, -10.0111); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.49056, 0.390854, -9.99792); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696749, 0.259515, 2.015986); va a DESHACER": 1,
+    "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros": 1,
+    "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN": 1,
+    "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.003712, 5.922572, -11.00624); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN": 2,
+    "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@771371` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR": 1,
+    "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd": 3,
+    "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn": 1,
+    "ERROR: Cannot open file 'res://no_existe.tscn'.": 3,
+    "ERROR: Failed loading resource: res://no_existe.tscn.": 3,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952562` en (4.000026, 1.100338, -0.000002); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952572` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952582` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@952598` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952604` en (1.99, 0.08, 0.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952615` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952627` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952637` en (1.946, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952637` en (1.96, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952647` en (2.06, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `@RigidBody3D@952662` estaba adentro de `@StaticBody3D@952657` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952668` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952679` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952690` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952701` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@952731` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "ERROR: Caja registradora sin generador: revisar almacen.gd": 4,
+    "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd": 4,
+    "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd": 4
+  },
+  "nuevos_literales": {
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.1, 0.112, -4.55); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.1, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@771371` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952562` en (4.000026, 1.100338, -0.000002); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952572` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952582` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@952598` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952604` en (1.99, 0.08, 0.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952615` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952627` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952637` en (1.946, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952637` en (1.96, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952647` en (2.06, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `@RigidBody3D@952662` estaba adentro de `@StaticBody3D@952657` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952668` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952679` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952690` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952701` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@952731` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1
+  },
+  "retirados_literales": {
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.760849, 0.186519, -6.002918); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099979, 0.185369, -4.550042); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.4, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@771079` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952145` en (4.000026, 1.100338, -0.000002); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952155` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952165` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@952181` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952187` en (1.99, 0.08, 0.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952198` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952210` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952220` en (1.946, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952220` en (1.96, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952230` en (2.06, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `@RigidBody3D@952245` estaba adentro de `@StaticBody3D@952240` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952251` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952262` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952273` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952284` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@952314` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1
+  },
+  "incidentes": {},
+  "base": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\base-integrada-02\\crudo",
+  "cotejo_adicional_solo_ids_generados": {
+    "iguales": false,
+    "alcance": "Se reemplaza sólo @StaticBody3D@decimal en este cotejo adicional. Se conservan todos los literales, coordenadas, cuerpos, destinos y cantidades en los mapas anteriores."
+  },
+  "limite_cronologia": "El wrapper concatena stdout+stderr; no se atribuye fase por la posición final de esos canales. El cotejo literal y su delta se conservan íntegros."
+}

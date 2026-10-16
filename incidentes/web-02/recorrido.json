@@ -1,0 +1,734 @@
+[
+  {
+    "fixture": "checkpoint de Partida real",
+    "sha256": "2c4a6412ed834470ff52ab69525f02dd7029bb4ef5be4c21d2f0eb7a687c2899",
+    "path": "/userfs/godot/app_userdata/No se fía/partida.guardado"
+  },
+  {
+    "medicion": "web-1920-inicio",
+    "cuadros": 96,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-inicio",
+    "cuadros": 96,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      956,
+      540
+    ],
+    "wait": 20000,
+    "snapshot": "web-1920-almacen-real"
+  },
+  {
+    "medicion": "web-1920-almacen-real",
+    "cuadros": 64,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": false
+    }
+  },
+  {
+    "snapshot": "web-1920-almacen-real",
+    "cuadros": 64,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": false
+    }
+  },
+  {
+    "key": "Q",
+    "wait": 700,
+    "snapshot": "web-1920-chats"
+  },
+  {
+    "medicion": "web-1920-chats",
+    "cuadros": 88,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-chats",
+    "cuadros": 88,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      960,
+      450
+    ],
+    "wait": 300,
+    "snapshot": "web-1920-yasmin-final"
+  },
+  {
+    "medicion": "web-1920-yasmin-final",
+    "cuadros": 75,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-yasmin-final",
+    "cuadros": 75,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "move": [
+      950,
+      510
+    ],
+    "wheel": [
+      0,
+      -5000
+    ],
+    "wait": 300,
+    "snapshot": "web-1920-yasmin-inicio"
+  },
+  {
+    "medicion": "web-1920-yasmin-inicio",
+    "cuadros": 85,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-yasmin-inicio",
+    "cuadros": 85,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      757,
+      762
+    ],
+    "wait": 100
+  },
+  {
+    "click": [
+      939,
+      762
+    ],
+    "wait": 100
+  },
+  {
+    "click": [
+      939,
+      762
+    ],
+    "wait": 100,
+    "snapshot": "web-1920-yasmin-tramo"
+  },
+  {
+    "medicion": "web-1920-yasmin-tramo",
+    "cuadros": 145,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-yasmin-tramo",
+    "cuadros": 145,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      751,
+      135
+    ],
+    "wait": 150,
+    "snapshot": "web-1920-menu-leido"
+  },
+  {
+    "medicion": "web-1920-menu-leido",
+    "cuadros": 145,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-menu-leido",
+    "cuadros": 145,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      960,
+      323
+    ],
+    "wait": 200,
+    "snapshot": "web-1920-enrique"
+  },
+  {
+    "medicion": "web-1920-enrique",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-enrique",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "move": [
+      950,
+      510
+    ],
+    "wheel": [
+      0,
+      -10000
+    ],
+    "wait": 300,
+    "snapshot": "web-1920-enrique-ayer"
+  },
+  {
+    "medicion": "web-1920-enrique-ayer",
+    "cuadros": 107,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-enrique-ayer",
+    "cuadros": 107,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "wheel": [
+      0,
+      10000
+    ],
+    "wait": 300
+  },
+  {
+    "click": [
+      917,
+      544
+    ],
+    "wait": 200,
+    "snapshot": "web-1920-contenedor"
+  },
+  {
+    "medicion": "web-1920-contenedor",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-contenedor",
+    "cuadros": 118,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      960,
+      540
+    ],
+    "wait": 200,
+    "snapshot": "web-1920-foto-cerrada"
+  },
+  {
+    "medicion": "web-1920-foto-cerrada",
+    "cuadros": 113,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-foto-cerrada",
+    "cuadros": 113,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "key": "Q",
+    "wait": 500,
+    "snapshot": "web-1920-cursor-cerrado"
+  },
+  {
+    "medicion": "web-1920-cursor-cerrado",
+    "cuadros": 111,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-cursor-cerrado",
+    "cuadros": 111,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "size": [
+      1280,
+      720
+    ],
+    "wait": 300
+  },
+  {
+    "key": "Q",
+    "wait": 500,
+    "snapshot": "web-1280-chats"
+  },
+  {
+    "medicion": "web-1280-chats",
+    "cuadros": 124,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-chats",
+    "cuadros": 124,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      640,
+      303
+    ],
+    "wait": 200,
+    "snapshot": "web-1280-yasmin-final"
+  },
+  {
+    "medicion": "web-1280-yasmin-final",
+    "cuadros": 122,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-yasmin-final",
+    "cuadros": 122,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "move": [
+      633,
+      340
+    ],
+    "wheel": [
+      0,
+      -5000
+    ],
+    "wait": 300,
+    "snapshot": "web-1280-yasmin-inicio"
+  },
+  {
+    "medicion": "web-1280-yasmin-inicio",
+    "cuadros": 129,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-yasmin-inicio",
+    "cuadros": 129,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      504,
+      508
+    ],
+    "wait": 100
+  },
+  {
+    "click": [
+      626,
+      508
+    ],
+    "wait": 100
+  },
+  {
+    "click": [
+      626,
+      508
+    ],
+    "wait": 100,
+    "snapshot": "web-1280-yasmin-tramo"
+  },
+  {
+    "medicion": "web-1280-yasmin-tramo",
+    "cuadros": 127,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-yasmin-tramo",
+    "cuadros": 127,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      501,
+      90
+    ],
+    "wait": 150
+  },
+  {
+    "click": [
+      640,
+      215
+    ],
+    "wait": 200,
+    "snapshot": "web-1280-enrique"
+  },
+  {
+    "medicion": "web-1280-enrique",
+    "cuadros": 123,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-enrique",
+    "cuadros": 123,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "move": [
+      633,
+      340
+    ],
+    "wheel": [
+      0,
+      -10000
+    ],
+    "wait": 300,
+    "snapshot": "web-1280-enrique-ayer"
+  },
+  {
+    "medicion": "web-1280-enrique-ayer",
+    "cuadros": 122,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-enrique-ayer",
+    "cuadros": 122,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "wheel": [
+      0,
+      10000
+    ],
+    "wait": 300
+  },
+  {
+    "click": [
+      611,
+      363
+    ],
+    "wait": 200,
+    "snapshot": "web-1280-contenedor"
+  },
+  {
+    "medicion": "web-1280-contenedor",
+    "cuadros": 114,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-contenedor",
+    "cuadros": 114,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "click": [
+      640,
+      360
+    ],
+    "wait": 200,
+    "snapshot": "web-1280-foto-cerrada"
+  },
+  {
+    "medicion": "web-1280-foto-cerrada",
+    "cuadros": 123,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-foto-cerrada",
+    "cuadros": 123,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": true,
+      "activo": true
+    }
+  },
+  {
+    "key": "Q",
+    "wait": 500,
+    "snapshot": "web-1280-cursor-cerrado"
+  },
+  {
+    "medicion": "web-1280-cursor-cerrado",
+    "cuadros": 109,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1280-cursor-cerrado",
+    "cuadros": 109,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1280,
+      "alto": 720,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "fin": true
+  }
+]

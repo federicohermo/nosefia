@@ -1,0 +1,30 @@
+{
+  "head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "codigo_runner": 0,
+  "web_definitiva": false,
+  "limitacion_plantilla": "Medición de receta anterior257ba2; guardia vigente exige otra identidad. Pendiente repetir paquete y Chrome.",
+  "snapshots": 27,
+  "consola_por_tipo": {
+    "log": 5,
+    "warning": 36
+  },
+  "avisos_literales": {
+    "[.WebGL-0x2dac01e82800] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.": 36
+  },
+  "base_430_literales": {
+    "[.WebGL-0x221c0104a800] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.": 36
+  },
+  "cotejo_solo_handle_WebGL": true,
+  "limite": "El cotejo sustituye solamente el handle hexadecimal de WebGL. Los registros completos conservan los literales. La entrada se aprobó mirando CHATS real, no por duración ni RAF.",
+  "inspeccion_visual": [
+    "CHATS real antes de continuar",
+    "Yasmín HOY y tramo lila a ambas resoluciones",
+    "Enrique AYER y HOY a ambas resoluciones",
+    "Foto ampliada, adjunto y regreso al chat a ambas resoluciones"
+  ],
+  "fixture": {
+    "fixture": "checkpoint de Partida real",
+    "sha256": "2c4a6412ed834470ff52ab69525f02dd7029bb4ef5be4c21d2f0eb7a687c2899",
+    "path": "/userfs/godot/app_userdata/No se fía/partida.guardado"
+  }
+}

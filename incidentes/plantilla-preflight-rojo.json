@@ -1,0 +1,45 @@
+{
+  "fuente": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "modo": "Funciones puras _identidad, _cache y validar_zip; no preparar(), sin escritura build ni motor",
+  "plantilla": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\build\\templates\\web_release.zip",
+  "identidad_exigida": {
+    "version_del_motor": "4.7.2-stable",
+    "commit_del_motor": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "emscripten": "4.0.11",
+    "scons": "4.9.1",
+    "opciones": [
+      "platform=web",
+      "target=template_release",
+      "threads=yes",
+      "optimize=size",
+      "lto=thin"
+    ],
+    "fuente_zip_sha256": "098b0a71e95ad98ab44651199d55c3f085e4e02c735514e284a2d5263ac81fb2",
+    "emsdk_zip_sha256": "1e0e53bb21fd9308079991eb222efa6216ca8fdb53f742f9c98b6156c13e5ac4",
+    "archivos": {
+      "drivers/gles3/rasterizer_gles3.cpp": {
+        "original_sha256": "7906073ee78a23816dfa0a0a21ec5879980f10f4eb5119ffa39051aba957311e",
+        "modificado_sha256": "0b6a9c661c8e9b9f88f5d490e2675ed146ac4c2747295062fec3fbefe4988a81"
+      },
+      "drivers/gles3/shader_gles3.cpp": {
+        "original_sha256": "17c01277dc3468a1d53081f01a6f7665f5d0f82e7882a8198e1f486ee344d5d8",
+        "modificado_sha256": "0a01d118ed6dcc8974a2560870a77e4c698a2098be2665e6b9b210f2607c6d42"
+      },
+      "drivers/gles3/shader_gles3.h": {
+        "original_sha256": "d17a9858ac8f7d55c34bb4d65f6dcd7eac467108b6c09cd12680d42c2d4e6c43",
+        "modificado_sha256": "b708a79df32a1162e3b6ec9871f9756ca3408c13ab42eacc0557fb475632c380"
+      },
+      "drivers/gles3/storage/render_scene_buffers_gles3.cpp": {
+        "original_sha256": "eed85d446a818f3ffbdac02b3461f297fb40f58cf938aea88b3a641cb0b47155",
+        "modificado_sha256": "dbb13509d5054acc60c363f7f6f86ffa96a950141f4d69f91e46cd947dc9426a"
+      }
+    },
+    "parche_sha256": "428cadc668fc3bd0f59b9e7ffc2829bb7ec2c57af358dbdcc380c3761f063045",
+    "preparador_sha256": "ea56131e7a1db79769b0d6c7aa3733003a991539f1ecd9215a14cbdd53365c17",
+    "formato": 1,
+    "consulta_de_recorte": "isEnabled"
+  },
+  "receta_exigida": "d8b6ba2bc89cd8c041831c20bbe3739f3364529431b390698cccfece327a2b56",
+  "error": "La identidad de la caché no coincide con fuentes, parche u opciones",
+  "tipo": "ValueError"
+}

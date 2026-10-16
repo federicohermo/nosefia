@@ -1,0 +1,10 @@
+CHROME431 http://127.0.0.1:53540/index.html C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-02\web-03
+CAPTURA431 web-1920-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_LISTO
+RECORRIDO431_TIMEOUT 90 segundos sin comando
+
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\chrome431.py", line 38, in <module>
+    assert resultado.returncode == 0, "Falló el recorrido Web"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Falló el recorrido Web

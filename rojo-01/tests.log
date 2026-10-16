@@ -1,0 +1,148 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-investigacion/reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_bloque_conocido_separa_los_cinco_dias[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_bloque_conocido_separa_los_cinco_dias[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 31ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mHACE CUATRO DÍAS[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHACE TRES DÍAS[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHACE DOS DÍAS[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mAYER[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHOY[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HACE CUATRO DÍAS[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HACE TRES DÍAS[/right]	[/cell][cell][right]2[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HACE DOS DÍAS[/right]	[/cell][cell][right]3[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]AYER[/right]	[/cell][cell][right]4[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HOY[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_cada_bloque_conocido_separa_los_cinco_dias' in res://test/ui/diegetica/separadores_del_celular_test.gd:61[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vacio_huecos_repetidos_y_legacy_no_inventan_bloques[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vacio_huecos_repetidos_y_legacy_no_inventan_bloques[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 26ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mHACE DOS DÍAS[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHOY[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HACE DOS DÍAS[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HOY[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_vacio_huecos_repetidos_y_legacy_no_inventan_bloques' in res://test/ui/diegetica/separadores_del_celular_test.gd:77
+	at 'after_test' in res://test/ui/diegetica/separadores_del_celular_test.gd:7
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reabrir_historial_real_de_jornada_2_conserva_lecturas_y_guion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reabrir_historial_real_de_jornada_2_conserva_lecturas_y_guion[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 131ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mAYER[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHOY[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]AYER[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HOY[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_reabrir_historial_real_de_jornada_2_conserva_lecturas_y_guion' in res://test/ui/diegetica/separadores_del_celular_test.gd:93
+	at 'after_test' in res://test/ui/diegetica/separadores_del_celular_test.gd:7
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mAYER[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHOY[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]AYER[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HOY[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_reabrir_historial_real_de_jornada_2_conserva_lecturas_y_guion' in res://test/ui/diegetica/separadores_del_celular_test.gd:93
+	at 'after_test' in res://test/ui/diegetica/separadores_del_celular_test.gd:7
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_foto_y_tramo_despues_del_separador_conservan_indices_y_metadata[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_foto_y_tramo_despues_del_separador_conservan_indices_y_metadata[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 29ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mAYER[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHOY[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]AYER[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HOY[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_foto_y_tramo_despues_del_separador_conservan_indices_y_metadata' in res://test/ui/diegetica/separadores_del_celular_test.gd:123
+	at 'after_test' in res://test/ui/diegetica/separadores_del_celular_test.gd:7
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_intercalar_actualiza_fotos_sin_reconstruir_la_ampliada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_intercalar_actualiza_fotos_sin_reconstruir_la_ampliada[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 83ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mAYER[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHOY[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]AYER[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HOY[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_intercalar_actualiza_fotos_sin_reconstruir_la_ampliada' in res://test/ui/diegetica/separadores_del_celular_test.gd:145
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_en_un_bloque_no_duplica_y_conserva_la_opcion_al_final[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_recibir_en_un_bloque_no_duplica_y_conserva_la_opcion_al_final[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 30ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mAYER[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]AYER[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_recibir_en_un_bloque_no_duplica_y_conserva_la_opcion_al_final' in res://test/ui/diegetica/separadores_del_celular_test.gd:162
+	at 'after_test' in res://test/ui/diegetica/separadores_del_celular_test.gd:7
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mAYER[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mHOY[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]AYER[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HOY[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_recibir_en_un_bloque_no_duplica_y_conserva_la_opcion_al_final' in res://test/ui/diegetica/separadores_del_celular_test.gd:165
+	at 'after_test' in res://test/ui/diegetica/separadores_del_celular_test.gd:7
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_contexto_fijo_cerrado_recalcula_solo_al_abrir_otra_jornada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/separadores_del_celular_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_contexto_fijo_cerrado_recalcula_solo_al_abrir_otra_jornada[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 30ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mHOY[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]HOY[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_el_contexto_fijo_cerrado_recalcula_solo_al_abrir_otra_jornada' in res://test/ui/diegetica/separadores_del_celular_test.gd:176
+	at 'after_test' in res://test/ui/diegetica/separadores_del_celular_test.gd:7
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mAYER[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]AYER[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_el_contexto_fijo_cerrado_recalcula_solo_al_abrir_otra_jornada' in res://test/ui/diegetica/separadores_del_celular_test.gd:179
+	at 'after_test' in res://test/ui/diegetica/separadores_del_celular_test.gd:7
+	at '_cuadros' in res://test/ui/diegetica/separadores_del_celular_test.gd:12[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 7 test cases | 0 errors | 10 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 441ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 7 test cases | 0 errors | 10 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (7/7)[0m
+[38;2;233;150;122mTotal execution time: 441ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-investigacion/reports/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-investigacion/reports/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

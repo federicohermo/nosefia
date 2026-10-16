@@ -1,0 +1,17 @@
+SERVIDOR431_LISTO http://127.0.0.1:62842/index.html desde D:\nosefia-carril-C-429-444\431-export-02\web
+127.0.0.1 - - [16/Oct/2026 13:19:03] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:04] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:07] "GET /index.audio.position.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 13:19:07] "GET /index.audio.worklet.js HTTP/1.1" 200 -

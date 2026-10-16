@@ -1,0 +1,12 @@
+GODOT431 registro D:\Program Files\Godot\Godot_v4.7.2-stable_win64_console.exe
+nativo-1920 0 C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-01\nativo-1920.log
+nativo-1280 0 C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-01\nativo-1280.log
+exportar 1 C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-01\exportar.log
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\capturas-y-paquete.py", line 46, in <module>
+    correr("exportar", [sys.executable, str(scratch / "exportar_paquete431.py"), str(paquete)], timeout=600)
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\capturas-y-paquete.py", line 35, in correr
+    assert resultado.returncode == 0, nombre
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: exportar

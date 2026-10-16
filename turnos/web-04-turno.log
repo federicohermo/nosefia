@@ -1,0 +1,61 @@
+CHROME431 http://127.0.0.1:53700/index.html C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-431\evidencia-02\web-04
+CAPTURA431 web-1920-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_LISTO
+CAPTURA431 web-1920-almacen-tras-carga {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":false}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-almacen-listo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-chats {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-yasmin-final {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-yasmin-inicio {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-yasmin-prefijo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+RECORRIDO431_PASO
+CAPTURA431 web-1920-yasmin-tramo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-chats-leidos {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-enrique {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-enrique-ayer {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-enrique-hoy {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-contenedor {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-foto-cerrada {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1920-mundo {"visible":"visible","ancho":1920,"alto":1080,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO431_PASO
+RECORRIDO431_PASO
+CAPTURA431 web-1280-chats {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-yasmin-final {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-yasmin-inicio {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-yasmin-prefijo {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+RECORRIDO431_PASO
+CAPTURA431 web-1280-yasmin-tramo {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-chats-leidos {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-enrique {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-enrique-ayer {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-enrique-hoy {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-contenedor {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-foto-cerrada {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":false,"activo":true}
+RECORRIDO431_PASO
+CAPTURA431 web-1280-mundo {"visible":"visible","ancho":1280,"alto":720,"aislado":true,"cursor":true,"activo":true}
+RECORRIDO431_PASO
+RECORRIDO431_FINAL errores=0
+
+CHROME431_FINAL

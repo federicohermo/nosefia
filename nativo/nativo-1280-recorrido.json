@@ -1,0 +1,75 @@
+{
+	"capturas": [
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-chats",
+			"scroll": 0,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-yasmin-final",
+			"scroll": 1059,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-yasmin-inicio",
+			"scroll": 0,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-yasmin-tramo",
+			"scroll": 0,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-enrique",
+			"scroll": 6392,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-enrique-ayer",
+			"scroll": 0,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-contenedor",
+			"scroll": 6392,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-foto-intercalada",
+			"scroll": 6392,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-foto-cerrada",
+			"scroll": 6392,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-cierre-jornada-2-hoy",
+			"scroll": 7440,
+			"viewport": "(1280, 720)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1280-cierre-jornada-2-rotulo-hoy",
+			"scroll": 6667,
+			"viewport": "(1280, 720)"
+		}
+	],
+	"fallos": [],
+	"pedidos": [
+		"2A",
+		"2A"
+	]
+}

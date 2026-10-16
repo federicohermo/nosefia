@@ -1,0 +1,31 @@
+[
+  {
+    "fixture": "checkpoint de Partida real",
+    "sha256": "2c4a6412ed834470ff52ab69525f02dd7029bb4ef5be4c21d2f0eb7a687c2899",
+    "path": "/userfs/godot/app_userdata/No se fía/partida.guardado"
+  },
+  {
+    "medicion": "web-1920-inicio",
+    "cuadros": 145,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  },
+  {
+    "snapshot": "web-1920-inicio",
+    "cuadros": 145,
+    "estado": {
+      "visible": "visible",
+      "ancho": 1920,
+      "alto": 1080,
+      "aislado": true,
+      "cursor": false,
+      "activo": true
+    }
+  }
+]

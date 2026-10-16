@@ -1,0 +1,27 @@
+[
+  {
+    "type": "log",
+    "text": "Godot Engine v4.7.2.stable.custom_build - https://godotengine.org",
+    "time": 1792167996270
+  },
+  {
+    "type": "log",
+    "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "time": 1792167997579
+  },
+  {
+    "type": "log",
+    "text": "Build configuration: Emscripten 4.0.11, multi-threaded, no GDExtension support.",
+    "time": 1792167998299
+  },
+  {
+    "type": "log",
+    "text": "[carga] menú visible",
+    "time": 1792167998618
+  },
+  {
+    "type": "runner-error",
+    "text": "90 segundos sin comando",
+    "time": 1792168090588
+  }
+]

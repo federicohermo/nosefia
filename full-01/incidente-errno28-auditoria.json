@@ -1,0 +1,6 @@
+{
+  "error": "OSError: [Errno 28] No space left on device",
+  "operacion": "Primera escritura de revision-carril-C.json mientras el export incompleto agot? C:",
+  "resultado": "Auditor?a inicial no emitida ?ntegra; no es resultado v?lido",
+  "limitacion": "Al regenerar tras liberar espacio se sustituy? el archivo parcial; sus bytes no se preservaron. La traza de la herramienta y este registro conservan el incidente. La auditor?a definitiva se distingue por nombre final y existe revisi?n independiente de ra?z."
+}
