@@ -9,6 +9,8 @@ const CAPA_DE_LA_CARGA := 10
 const PARTE_DE_LA_LECTURA := 0.5
 const DURACION_DEL_FUNDIDO := 0.3
 const TEMA := preload("res://assets/audio/MUS_MenuPrincipal.ogg")
+## A 0 dB tapaba todo lo demás de la intro.
+const VOLUMEN_DEL_TEMA_DB := -8.0
 
 const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 	MenuDeInicio.Opcion.NUEVO_JUEGO: "NUEVO JUEGO",
@@ -107,6 +109,7 @@ func _sonar_el_tema() -> void:
 	_musica = AudioStreamPlayer.new()
 	_musica.name = "Musica"
 	_musica.stream = TEMA
+	_musica.volume_db = VOLUMEN_DEL_TEMA_DB
 	_musica.bus = EntradaSonora.BUS_DE_MUSICA
 	_musica.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 	add_child(_musica)
