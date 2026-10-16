@@ -3,8 +3,11 @@
 import json
 import struct
 import unittest
+from pathlib import Path
 
-from lib.apoyos_del_modelo import mallas_del_glb, poner_compuesto, prismas_verticales
+from lib.apoyos_del_modelo import (
+    actualizar_apoyos, grupos_convexos, mallas_del_glb, poner_compuesto, prismas_verticales,
+)
 
 
 def prisma(x0, z0, x1, z1):
@@ -79,6 +82,14 @@ class LecturaLocalDelGlb(unittest.TestCase):
 
 
 class EscrituraAcotada(unittest.TestCase):
+    def test_el_orden_de_triangulacion_y_el_cero_negativo_no_cambian_el_recurso(self):
+        texto = '[gd_scene format=3]\n\n[node name="Estructura" type="Node3D"]\n'
+        a = [(0., 0., 0.), (1., 0., 0.), (0., 1., 0.), (0., 0., 1.)]
+        b = [(2., 0., 0.), (3., 0., 0.), (2., 1., 0.), (2., 0., 1.)]
+        otra_a = [tuple(-0. if c == 0 else c for c in p) for p in reversed(a)]
+        self.assertEqual(poner_compuesto(texto, 'riel', 'ApoyoDelRiel', [a, b], 1),
+                         poner_compuesto(texto, 'riel', 'ApoyoDelRiel', [b, otra_a], 1))
+
     def test_compuesto_idempotente_conserva_capa_y_bloques_ajenos(self):
         texto = ('[gd_scene load_steps=2 format=3]\n\n'
                  '[sub_resource type="BoxShape3D" id="viejo"]\nsize = Vector3(9, 9, 9)\n\n'
@@ -110,6 +121,28 @@ class EscrituraAcotada(unittest.TestCase):
         for piezas in [[], [[(0, 0, 0)]], [[(0, 0, 0), (1, 0, 0), (0, 0, 1), (1, 0, 1)]]]:
             with self.subTest(piezas=piezas), self.assertRaises(ValueError):
                 poner_compuesto('[gd_scene format=3]\n', 'mueble', 'Contorno', piezas, 8)
+
+
+class GeometriaVigente(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.raiz = Path(__file__).resolve().parents[3]
+        cls.mallas = mallas_del_glb(
+            (cls.raiz / 'assets/models/SEPT_JUEGOS_PROTOTIPO.glb').read_bytes(),
+            ['bano_riel_frontal', 'gondolanueva', 'gondolanueva2'])
+
+    def test_las_gondolas_iguales_generan_el_mismo_metal_volumetrico(self):
+        a = grupos_convexos(self.mallas['gondolanueva'])
+        b = grupos_convexos(self.mallas['gondolanueva2'])
+        self.assertGreater(len(a), 1, 'Un casco único volvería a rellenar el aire de la cabecera')
+        escena = '[gd_scene format=3]\n\n[node name="Estructura" type="Node3D"]\n'
+        self.assertEqual(poner_compuesto(escena, 'mueble', 'Contorno', a, 8),
+                         poner_compuesto(escena, 'mueble', 'Contorno', b, 8))
+
+    def test_regenerar_el_modelo_dos_veces_conserva_la_escena_entera(self):
+        escena = self.raiz / 'src/escenas/puestos/estructura_del_almacen.tscn'
+        primero = actualizar_apoyos(escena.read_text(encoding='utf-8'), self.mallas)
+        self.assertEqual(primero, actualizar_apoyos(primero, self.mallas))
 
 
 if __name__ == '__main__':
