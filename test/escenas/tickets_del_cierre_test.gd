@@ -25,7 +25,7 @@ func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
 	add_child(_almacen)
 	# Conserva los cinco cierres del caso y aísla el ticket del reparto físico de compradores.
-	_almacen.call("_al_abrir_la_jornada", 2)
+	_almacen.call("_al_abrir_la_jornada", 3)
 	assert_bool((_almacen.get("_atenciones") as Ventanilla).tarea().fisica()).is_false()
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)

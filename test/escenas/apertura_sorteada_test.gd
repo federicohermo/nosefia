@@ -85,7 +85,7 @@ func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-
 				var huecos_por_ventas := 0
 				for comprador in compradores:
 					var atencion: Atencion
-					if jornada == 1:
+					if tarea.fisica():
 						tarea.avanzar(comprador.horario.x)
 						atencion = tarea.atencion()
 						assert_object(atencion.comprador()).is_same(comprador)

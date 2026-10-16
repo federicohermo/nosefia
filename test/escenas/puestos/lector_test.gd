@@ -318,8 +318,8 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 		]
 	)
 	sonidos.clear()
-	# El aviso de cobro pertenece al recorrido anterior, conservado desde la jornada 2.
-	almacen.call("_al_abrir_la_jornada", 2)
+	# El aviso de cobro pertenece al recorrido anterior, conservado desde la jornada 3.
+	almacen.call("_al_abrir_la_jornada", 3)
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	atenciones.pedir_atender()
 	assert_object(atenciones.atencion()).is_not_null()
