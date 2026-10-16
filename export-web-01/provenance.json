@@ -1,0 +1,11 @@
+{
+  "head": "e78fc06d19c0fcce18c964ff17edc7f5ddc9668f",
+  "equivalent_review_head": "5c30cc53",
+  "equivalence": "git diff e78fc06d 5c30cc53 was measured empty before the full freeze; this export reads only the already archived source and its external import cache.",
+  "source_archive": "D:\\nosefia-carril-A-429-444\\429-paquete-nativo-01\\head.tar",
+  "archive_sha256": "fe52a1d745aa4a49c1055343477897ada2c314bd9119623a43facbaadca74377",
+  "source": "D:\\nosefia-carril-A-429-444\\429-paquete-nativo-01\\proyecto",
+  "preset_sha256": "5b8b04c24b013973b147955b2b43974d740cdb875db74e9bca0e8eac16742d4d",
+  "project_sha256": "be5aaed1a355a1033036f364b0d09fcd85ceb9c43d1fbd78dfad54d9ffc789cc",
+  "template_sha256": "56ef44d05a4715ed4b86ea612a1c983173e36ee2e032d7037f67a7055e0c35f7"
+}

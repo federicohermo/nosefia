@@ -1,0 +1,335 @@
+{
+	"alcance": "CPU nativa por consulta en la pose más densa de las sondas físicamente válidas por cada estado de mano. Máscaras, papeles y grupos productivos intactos; las poblaciones cambian por diseño y no son control de igual carga. Cuerpo/cámara fijos sólo durante la medición CPU; no acredita FPS ni Web.",
+	"cache_comprador": [
+		{
+			"consultas": 200,
+			"frame": 0,
+			"image_id_antes": "-9223371594607353099",
+			"image_id_despues": "-9223371594607353099",
+			"imagenes_antes": 6,
+			"imagenes_despues": 6
+		},
+		{
+			"consultas": 200,
+			"frame": 3,
+			"image_id_antes": "-9223371662504746264",
+			"image_id_despues": "-9223371662504746264",
+			"imagenes_antes": 6,
+			"imagenes_despues": 6
+		}
+	],
+	"medidas": [
+		{
+			"camara": "[X: (0.398512, 0.0, -0.917163), Y: (0.0, 1.0, 0.0), Z: (0.917163, 0.0, 0.398512), O: (4.887028, 1.805237, -1.032867)]",
+			"campo": 22,
+			"consultas": 200,
+			"mano": "vacia",
+			"max_us": 916,
+			"maximo_medido": 18,
+			"p50_us": 570,
+			"p95_us": 665,
+			"poblacion": [
+				"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero3",
+				"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero4",
+				"/root/Almacen/ReposicionManual/ZonaDeCosa de Maní/Casillero2",
+				"/root/Almacen/ReposicionManual/ZonaDeCosa de Maní/Casillero3",
+				"/root/Almacen/ReposicionManual/ZonaDeCosa de Maní/Casillero4",
+				"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero10",
+				"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero11",
+				"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero0",
+				"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero1",
+				"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero2",
+				"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero3",
+				"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero12",
+				"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero13",
+				"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero14",
+				"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero15",
+				"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero16",
+				"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero17",
+				"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero18"
+			],
+			"pose": "[X: (0.398512, 0.0, -0.917163), Y: (0.0, 1.0, 0.0), Z: (0.917163, 0.0, 0.398512), O: (4.887028, 0.105237, -1.032867)]",
+			"sondas": [
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [
+						"/root/Almacen/Estructura/puerta/CuerpoDeLaHoja",
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelDeposito",
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelRinconOpuestoAlMostrador"
+					],
+					"pose": "[X: (-0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, -0.540759), O: (5.214468, 0.105237, -7.126921)]"
+				},
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (5.214468, 0.105237, -4.729081)]"
+				},
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero5",
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero6",
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero7",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero0",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero6",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero7",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero4",
+						"/root/Almacen/ReposicionManual/ZonaDeFlinpuf/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeFlinpuf/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDePetisas/Casillero10",
+						"/root/Almacen/ReposicionManual/ZonaDePetisas/Casillero11",
+						"/root/Almacen/ReposicionManual/ZonaDePetisas/Casillero9"
+					],
+					"pose": "[X: (0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, 0.540759), O: (5.214468, 0.105237, -2.331241)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero4",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero10",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero11",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero8",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero9",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero0",
+						"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero12",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero13",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero14"
+					],
+					"pose": "[X: (-0.398512, 0.0, -0.917163), Y: (0.0, 1.0, 0.0), Z: (0.917163, 0.0, -0.398512), O: (4.887028, 0.105237, -3.148186)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero4",
+						"/root/Almacen/ReposicionManual/ZonaDeCosa de Maní/Casillero5",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero10",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero11",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero0",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero0",
+						"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero12",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero13",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero14",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero15"
+					],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (4.887028, 0.105237, -2.090527)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero4",
+						"/root/Almacen/ReposicionManual/ZonaDeCosa de Maní/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeCosa de Maní/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeCosa de Maní/Casillero4",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero10",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero11",
+						"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero0",
+						"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeLaysntt/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero12",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero13",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero14",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero15",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero16",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero17",
+						"/root/Almacen/ReposicionManual/ZonaDeProngles/Casillero18"
+					],
+					"pose": "[X: (0.398512, 0.0, -0.917163), Y: (0.0, 1.0, 0.0), Z: (0.917163, 0.0, 0.398512), O: (4.887028, 0.105237, -1.032867)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelRinconOpuestoAlMostrador"
+					],
+					"pose": "[X: (-0.413322, 0.0, -0.910585), Y: (0.0, 1.0, 0.0), Z: (0.910585, 0.0, -0.413322), O: (4.936028, 0.105237, -5.63973)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero4",
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero5",
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero6",
+						"/root/Almacen/ReposicionManual/ZonaDeBurbaloo/Casillero7",
+						"/root/Almacen/ReposicionManual/ZonaDeFlinpuf/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeFlinpuf/Casillero3"
+					],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (4.936028, 0.105237, -3.950482)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero0",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeChisitos/Casillero3",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero6",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero7",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero8",
+						"/root/Almacen/ReposicionManual/ZonaDeDonsaturados/Casillero9",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero1",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero2",
+						"/root/Almacen/ReposicionManual/ZonaDeFeel Ricky Fort/Casillero3"
+					],
+					"pose": "[X: (0.413322, 0.0, -0.910585), Y: (0.0, 1.0, 0.0), Z: (0.910585, 0.0, 0.413322), O: (4.936028, 0.105237, -2.261235)]"
+				}
+			]
+		},
+		{
+			"camara": "[X: (-0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, -0.540759), O: (5.214468, 1.805237, -7.126921)]",
+			"campo": 9,
+			"consultas": 200,
+			"mano": "caja",
+			"max_us": 111,
+			"maximo_medido": 3,
+			"p50_us": 65,
+			"p95_us": 71,
+			"poblacion": [
+				"/root/Almacen/Estructura/puerta/CuerpoDeLaHoja",
+				"/root/Almacen/LimpiezaDelAlmacen/ManchaDelDeposito",
+				"/root/Almacen/LimpiezaDelAlmacen/ManchaDelRinconOpuestoAlMostrador"
+			],
+			"pose": "[X: (-0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, -0.540759), O: (5.214468, 0.105237, -7.126921)]",
+			"sondas": [
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [
+						"/root/Almacen/Estructura/puerta/CuerpoDeLaHoja",
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelDeposito",
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelRinconOpuestoAlMostrador"
+					],
+					"pose": "[X: (-0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, -0.540759), O: (5.214468, 0.105237, -7.126921)]"
+				},
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (5.214468, 0.105237, -4.729081)]"
+				},
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [],
+					"pose": "[X: (0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, 0.540759), O: (5.214468, 0.105237, -2.331241)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [],
+					"pose": "[X: (-0.398512, 0.0, -0.917163), Y: (0.0, 1.0, 0.0), Z: (0.917163, 0.0, -0.398512), O: (4.887028, 0.105237, -3.148186)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (4.887028, 0.105237, -2.090527)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [],
+					"pose": "[X: (0.398512, 0.0, -0.917163), Y: (0.0, 1.0, 0.0), Z: (0.917163, 0.0, 0.398512), O: (4.887028, 0.105237, -1.032867)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelRinconOpuestoAlMostrador"
+					],
+					"pose": "[X: (-0.413322, 0.0, -0.910585), Y: (0.0, 1.0, 0.0), Z: (0.910585, 0.0, -0.413322), O: (4.936028, 0.105237, -5.63973)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (4.936028, 0.105237, -3.950482)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [],
+					"pose": "[X: (0.413322, 0.0, -0.910585), Y: (0.0, 1.0, 0.0), Z: (0.910585, 0.0, 0.413322), O: (4.936028, 0.105237, -2.261235)]"
+				}
+			]
+		},
+		{
+			"camara": "[X: (-0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, -0.540759), O: (5.214468, 1.805237, -7.126921)]",
+			"campo": 9,
+			"consultas": 200,
+			"mano": "unidad",
+			"max_us": 183,
+			"maximo_medido": 3,
+			"p50_us": 67,
+			"p95_us": 129,
+			"poblacion": [
+				"/root/Almacen/Estructura/puerta/CuerpoDeLaHoja",
+				"/root/Almacen/LimpiezaDelAlmacen/ManchaDelDeposito",
+				"/root/Almacen/LimpiezaDelAlmacen/ManchaDelRinconOpuestoAlMostrador"
+			],
+			"pose": "[X: (-0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, -0.540759), O: (5.214468, 0.105237, -7.126921)]",
+			"sondas": [
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [
+						"/root/Almacen/Estructura/puerta/CuerpoDeLaHoja",
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelDeposito",
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelRinconOpuestoAlMostrador"
+					],
+					"pose": "[X: (-0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, -0.540759), O: (5.214468, 0.105237, -7.126921)]"
+				},
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (5.214468, 0.105237, -4.729081)]"
+				},
+				{
+					"mueble": "gondolanueva",
+					"poblacion": [],
+					"pose": "[X: (0.540759, 0.0, -0.841178), Y: (0.0, 1.0, 0.0), Z: (0.841178, 0.0, 0.540759), O: (5.214468, 0.105237, -2.331241)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [],
+					"pose": "[X: (-0.398512, 0.0, -0.917163), Y: (0.0, 1.0, 0.0), Z: (0.917163, 0.0, -0.398512), O: (4.887028, 0.105237, -3.148186)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (4.887028, 0.105237, -2.090527)]"
+				},
+				{
+					"mueble": "gondolanueva2",
+					"poblacion": [],
+					"pose": "[X: (0.398512, 0.0, -0.917163), Y: (0.0, 1.0, 0.0), Z: (0.917163, 0.0, 0.398512), O: (4.887028, 0.105237, -1.032867)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [
+						"/root/Almacen/LimpiezaDelAlmacen/ManchaDelRinconOpuestoAlMostrador"
+					],
+					"pose": "[X: (-0.413322, 0.0, -0.910585), Y: (0.0, 1.0, 0.0), Z: (0.910585, 0.0, -0.413322), O: (4.936028, 0.105237, -5.63973)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [],
+					"pose": "[X: (0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, 0.0), O: (4.936028, 0.105237, -3.950482)]"
+				},
+				{
+					"mueble": "gondolanueva_001",
+					"poblacion": [],
+					"pose": "[X: (0.413322, 0.0, -0.910585), Y: (0.0, 1.0, 0.0), Z: (0.910585, 0.0, 0.413322), O: (4.936028, 0.105237, -2.261235)]"
+				}
+			]
+		}
+	]
+}

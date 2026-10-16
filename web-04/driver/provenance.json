@@ -1,0 +1,19 @@
+{
+  "export": "D:\\nosefia-carril-A-429-444\\429-web-export-01",
+  "product_head": "e78fc06d",
+  "equivalent_review_head": "5c30cc53",
+  "sha256": {
+    "index.html": "dd5f1e04c4c628aeb2c85865bf964cc55333d1573444715d8cec08a7a31c63fd",
+    "index.pck": "fecf236008ae82a085ea332793efcdb731448d807b93b96e9db3c1cdf16a9faa",
+    "index.js": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b",
+    "index.wasm": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61",
+    "fixture-web-429.gd": "6526d69f947e452d3f5f79ca0d289e1ab0cccbf8ae1d2f3ec981a95ee74ddd27",
+    "recorrer-web-429.mjs": "3ae86c39e37dbde86d6cca87e21b9e2299b10bac36628ab4f2cf707a2fe87507",
+    "fixture429.tscn": "9cbc7ecedc0a76a6d97bf943e8418fa8ed29f1778a49f86e24febe4508423f83",
+    "override.cfg": "b69dc45a030354394426a7b26785e58fe3dea2f7751dd37b5da3bc48f9f255e6"
+  },
+  "main_args": [],
+  "fixture_args": [],
+  "external_override": "application/run/main_scene=/fixture429.tscn",
+  "scope": "Main original: menú, instrucciones y almacén. Fixture externo: sólo prepara pose/reloj/frames y observa. Callbacks, arte, preset, interacción y cursor de producción conservados. Entradas de juego reales desde Chrome; CDP userGesture:false."
+}

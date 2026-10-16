@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\nosefia-carril-A-429-444\\429-web-export-01\\web",
+    "--main-pack",
+    "D:\\nosefia-carril-A-429-444\\429-web-export-01\\web\\index.pck",
+    "--script",
+    "D:\\nosefia-carril-A-429-444\\429-web-export-01\\proyecto\\.github\\scripts\\verificar_dialogos_exportados.gd"
+  ],
+  "cwd": "D:\\nosefia-carril-A-429-444\\429-web-export-01\\web",
+  "pid": 105760,
+  "exit_code": 0,
+  "timeout": false
+}

@@ -1,0 +1,14 @@
+{
+  "command": [
+    "node",
+    "D:\\nosefia-carril-A-429-444\\429-web-recorrido-04\\recorrer-web-429.mjs",
+    "http://127.0.0.1:61422/index.html",
+    "D:\\nosefia-carril-A-429-444\\429-web-recorrido-04\\capturas",
+    "D:\\nosefia-carril-A-429-444\\429-web-recorrido-04\\fixture-web-429.gd"
+  ],
+  "cwd": "D:\\nosefia-carril-A-429-444\\429-web-recorrido-04",
+  "url": "http://127.0.0.1:61422/index.html",
+  "pid": 143856,
+  "timeout": false,
+  "exit_code": 0
+}

@@ -1,0 +1,9 @@
+{
+  "head": "5c30cc53",
+  "product_pck_head": "e78fc06d",
+  "source_diff": "git diff e78fc06d 5c30cc53 was measured empty before the full freeze; this retry reads only the existing external PCK, fixture and provenance.",
+  "pck_sha256": "fecf236008ae82a085ea332793efcdb731448d807b93b96e9db3c1cdf16a9faa",
+  "fixture_sha256": "31e50963ed5aa858c2026cebe39b53f0f25b19d6d8588dc628f63effde242a46",
+  "scope": "Native PCK capture; no WASM/Chrome/Pointer Lock claim",
+  "fixture_delta": "Require SueloSolido at the original floor height and a free prospective capsule before placing; preserve wide/narrow ray diagnostics, affirm drawn direction, stream both output channels and guard nil dialog."
+}

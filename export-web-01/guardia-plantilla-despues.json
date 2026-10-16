@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "-B",
+    ".github/scripts/preparar_plantilla_web.py",
+    "--comprobar"
+  ],
+  "cwd": "D:\\nosefia-carril-A-429-444\\429-web-export-01\\proyecto",
+  "pid": 73916,
+  "exit_code": 0,
+  "timeout": false
+}

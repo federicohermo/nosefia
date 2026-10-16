@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--path",
+    "D:\\nosefia-carril-A-429-444\\429-medicion-mira-05\\paquete",
+    "--main-pack",
+    "D:\\nosefia-carril-A-429-444\\429-medicion-mira-05\\paquete\\index.pck",
+    "--script",
+    "D:\\nosefia-carril-A-429-444\\429-medicion-mira-05\\medir-mira-real-429.gd"
+  ],
+  "cwd": "D:\\nosefia-carril-A-429-444\\429-medicion-mira-05\\paquete",
+  "pid": 66228,
+  "godot_origin": "previous external provenance: registro",
+  "exit_code": 0,
+  "timeout": false
+}

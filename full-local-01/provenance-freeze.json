@@ -1,0 +1,23 @@
+{
+  "record_kind": "Post-run account of contemporaneous tool observations; not a reconstructed pre-run snapshot",
+  "head": "5c30cc5374801343dad202d387270b2966e9c649",
+  "branch_during_run": "feature/429-interaccion-directa-con-compradores",
+  "pre_enqueue": {
+    "source": "Conversation tool outputs and lane message immediately before ticket carril-a-429-full-01",
+    "head_observed": "5c30cc53",
+    "status_observed": "clean",
+    "separate_pin_file": null,
+    "exact_observation_timestamp": null
+  },
+  "post_run": {
+    "source": "exec_command immediately after full01 finished: git status --short printed nothing, then git rev-parse HEAD printed the full SHA above; performed before git switch -c feature/433-agenda-compradores-jornada-2",
+    "head_observed": "5c30cc5374801343dad202d387270b2966e9c649",
+    "status_observed": "clean",
+    "separate_pin_file": null,
+    "exact_observation_timestamp": null
+  },
+  "queue_log": "C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-a-429-full-01-cola.log",
+  "command_evidence": "tests.json records the exact worktree, engine and command; other node JSONs record their commands and exit codes",
+  "runtime_seconds": 1078.2,
+  "limitations": "No independent pre-enqueue or post-run pin file was saved. The two clean-state observations exist in the conversation/tool transcript, not in the original raw directory. This explanatory file was written after completion and branch creation; it is not evidence captured before the run. No source edits occurred during the ticket. Native capture and Web export use the previously archived e78 tree, measured equivalent to 5c before the freeze."
+}

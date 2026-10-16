@@ -1,0 +1,21 @@
+CAPTURA_WEB_429 00-main-menu {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":false}
+CAPTURA_WEB_429 01-main-instrucciones {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 02-main-almacen {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 03-hueco {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":false}
+CAPTURA_WEB_429 04-hueco-cursor {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 05-frame-0 {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 06-frame-3 {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 07-lateral-izquierdo {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 08-lateral-derecho {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 09-antepecho {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 10-antes-primer-clic {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 11-primera-entrada {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 12-derecho-no-cierra {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 13-pausa {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 14-resume {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 15-entrada-1 {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 15-entrada-2 {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 16-ultimo-clic-retorna {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 17-objeto-no-pedido {"visible":"visible","aislado":true,"cursor":false,"ancho":1280,"alto":720,"activo":true}
+CAPTURA_WEB_429 18-retorno-rechazo {"visible":"visible","aislado":true,"cursor":true,"ancho":1280,"alto":720,"activo":true}
+RECORRIDO_WEB_429_OK

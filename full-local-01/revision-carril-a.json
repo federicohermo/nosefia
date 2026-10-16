@@ -1,0 +1,37 @@
+{
+  "head": "5c30cc5374801343dad202d387270b2966e9c649",
+  "nodes": {
+    "capas": 0,
+    "formato": 0,
+    "harness": 0,
+    "lint": 0,
+    "specs": 0,
+    "tdd": 0,
+    "tests-import": 0,
+    "tests": 0
+  },
+  "suite_count": 281,
+  "cases": 2155,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "raw_diagnostics": {
+    "SCRIPT ERROR": 0,
+    "Parse Error": 0,
+    "ObjectDB instances leaked": 0,
+    "ObjectDB instances were leaked": 0,
+    "resources still in use": 0
+  },
+  "expected_or_other_errors": {
+    "The remote port number must be between 1 and 65535 (inclusive).": 1,
+    "Remote Debugger: Unable to connect to host '127.0.0.1:0'.": 1,
+    "DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros": 1,
+    "Computadora sin cablear: revisar almacen.tscn y almacen.gd": 3,
+    "Examen sin punto de examen cableado: revisar jugador.tscn": 1,
+    "Cannot open file 'res://no_existe.tscn'.": 3,
+    "Failed loading resource: res://no_existe.tscn.": 3,
+    "Caja registradora sin generador: revisar almacen.gd": 4,
+    "Recolector sin cablear: revisar almacen.tscn y almacen.gd": 4,
+    "Ventanilla sin cablear: revisar almacen.tscn y almacen.gd": 4
+  }
+}

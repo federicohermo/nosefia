@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "-B",
+    ".claude/scripts/verificar_export.py",
+    "D:\\nosefia-carril-A-429-444\\429-web-export-01\\web"
+  ],
+  "cwd": "D:\\nosefia-carril-A-429-444\\429-web-export-01\\proyecto",
+  "pid": 33828,
+  "exit_code": 0,
+  "timeout": false
+}

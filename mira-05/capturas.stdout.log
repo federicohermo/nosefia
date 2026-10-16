@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+CONTROL_PISO_429 {"altura_original":0.112000003457069,"posicion_acotada":"(-0.8, 0.102237, 5.440001)","posicion_amplia":"(-0.8, 4.400004, 5.440001)","rayo_acotado":"SueloSolido:<StaticBody3D#200051528032>","rayo_amplio":"StaticBody3D:<StaticBody3D#183190424951>","suelo_exigido":"/root/Almacen/Estructura/SueloSolido"}
+POSE_429 {"camara":"[X: (-1.0, 0.0, 0.0), Y: (-0.0, 0.992898, -0.118967), Z: (-0.0, -0.118967, -0.992898), O: (-0.8, 1.802675, 5.440001)]","cursor_real":0,"error_angular":0.0011847218265757,"objetivo":"(-0.8, 1.96, 6.74)","pitch":0.119249176025391,"sensibilidad":0.003,"yaw":-3.14159250259399}
+POSE_429 {"camara":"[X: (-0.984512, 0.0, 0.175319), Y: (-0.022234, 0.991926, -0.124858), Z: (-0.173903, -0.126822, -0.976562), O: (-0.8, 1.802675, 5.440001)]","cursor_real":0,"error_angular":0.000000124428567005452,"objetivo":"(-0.5685, 1.9715, 6.74)","pitch":0.127164390563965,"sensibilidad":0.003,"yaw":-2.9653627872467}
+CAPTURAS_429_PAQUETE_OK

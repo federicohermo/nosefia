@@ -1,0 +1,29 @@
+{
+  "head_producto": "e78fc06d19c0fcce18c964ff17edc7f5ddc9668f",
+  "equivalente": "5c30cc5374801343dad202d387270b2966e9c649",
+  "resultado": "El intento04 falla su control de población y no acredita comparación a igual carga",
+  "observaciones": {
+    "misma_camara": true,
+    "mismo_jugador": true,
+    "interactuables": [
+      18,
+      0
+    ],
+    "campo": [
+      22,
+      4
+    ]
+  },
+  "fuentes": [
+    "src/dominio/almacen/estante.gd:135–138: casilleros_para_agarrar devuelve vacío con objeto sostenido",
+    "src/escenas/puestos/reposicion_manual.gd:923–934: papel de cada casillero depende de mano y consultas para colocar/agarrar",
+    "src/escenas/puestos/reposicion_manual.gd:949: ofrece a la mira sólo los casilleros con papel y dentro del campo"
+  ],
+  "decision_raiz": "Medir mayor densidad real de cada mano vacía/caja/unidad sin forzar máscara/grupos, sin presentar poblaciones como igual carga; cache de alfa estable separado",
+  "procedencia_diagnostico": "Observaciones y decisión comunicadas a raíz antes de crear fixture05; este archivo explicativo se añade después sin cambiar ningún raw04",
+  "raw_sha256": {
+    "capturas.stdout.log": "74fe700f55068cd24f6063c88ffd7235fe8949fec739c20fcc4eaf50c08b160f",
+    "capturas.stderr.log": "e2ec852e9e912b07340232cff18569a23c3a95c3fb6d5ba0110a5e29f38a7da1",
+    "capturas/medicion-mira.json": "f3eb7630954c0ffbf92c7794adb140e2f465ead0670db620451f8e1196743528"
+  }
+}
