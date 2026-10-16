@@ -13,6 +13,10 @@ func alternar() -> void:
 	_abierta = not _abierta
 
 
+func abierta() -> bool:
+	return _abierta
+
+
 func angulo() -> float:
 	return _angulo
 

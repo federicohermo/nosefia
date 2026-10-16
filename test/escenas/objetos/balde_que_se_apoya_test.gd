@@ -306,7 +306,7 @@ func test_el_balde_se_apoya_derecho_donde_se_mira() -> void:  # AC-PLY-051
 	_agarrar(almacen, balde)
 	jugador.set("_enfocado", almacen.get_node(LAVATORIO))
 	var uso := InputEventAction.new()
-	uso.action = ReglasDelJugador.ACCION_USAR
+	uso.action = ReglasDeLosObjetos.ACCION_AGARRAR
 	uso.pressed = true
 	jugador.call("_unhandled_input", uso)
 	assert_bool(balde.carga.visible).is_true()

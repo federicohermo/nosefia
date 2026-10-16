@@ -23,7 +23,7 @@ static func sacar(almacen: Node3D, numero: int = 0) -> ObjetoAgarrable:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set("_enfocado", almacen.get_node(RUTAS[numero]))
 	var evento := InputEventAction.new()
-	evento.action = ReglasDelJugador.ACCION_USAR
+	evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
 	evento.pressed = true
 	jugador.call("_unhandled_input", evento)
 	return agarre.cuerpo_sostenido() as ObjetoAgarrable
