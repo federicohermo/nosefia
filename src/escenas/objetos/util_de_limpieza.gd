@@ -103,8 +103,8 @@ func _ready() -> void:
 		for parte: Node3D in [malla, carga, get_node("Forma")]:
 			_tamanos_originales[parte] = parte.transform
 		_actualizar_tamano()
-	set_process(datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE)
-	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
+	set_process(datos.se_apoya_derecho)
+	if datos.se_apoya_derecho:
 		set_notify_transform(true)
 
 
@@ -114,7 +114,7 @@ func _process(_delta: float) -> void:
 
 ## Conserva el punto de carga y el giro horizontal, sin heredar el cabeceo de la vista.
 func _mantener_vertical() -> void:
-	if not is_inside_tree() or datos == null or datos.id != ReglasDeLaLimpieza.ID_DEL_BALDE:
+	if not is_inside_tree() or datos == null or not datos.se_apoya_derecho:
 		return
 	if not freeze or top_level:
 		return
