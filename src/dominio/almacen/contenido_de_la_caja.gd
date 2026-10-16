@@ -81,23 +81,22 @@ func meter(unidad: UnidadDeProducto) -> bool:
 	return _estante.devolver(unidad)
 
 
-## Qué hace el clic sobre la caja con lo que hay en la mano: con nada, sacar; con una unidad de
-## su producto, meterla; con cualquier otra cosa, nada.
+## El secundario saca con mano vacía; el primario devuelve una unidad coincidente.
 ##
 ## Cualquier otra cosa incluye otra caja. Todas las cajas comparten el mismo objeto, y llevar una
 ## es lo que impide sacarle a la que se lleva.
-func uso(sostenido: ObjetoDelAlmacen) -> Gesto:
-	if sostenido == null:
+func uso(sostenido: ObjetoDelAlmacen, primario: bool) -> Gesto:
+	if not primario and sostenido == null:
 		return Gesto.SACAR
-	if _es_de_su_producto(sostenido as UnidadDeProducto):
+	if primario and _es_de_su_producto(sostenido as UnidadDeProducto):
 		return Gesto.METER
 	return Gesto.NADA
 
 
-## Qué haría el clic sobre la caja, sin hacerlo: como `uso()`, pero sin nada que sacar no saca, y
+## Qué haría el gesto sobre la caja, sin hacerlo: como `uso()`, pero sin nada que sacar no saca, y
 ## llena no mete. Lo pregunta la referencia de controles, y no cambia nada.
-func derecho_posible(sostenido: ObjetoDelAlmacen) -> Gesto:
-	var gesto := uso(sostenido)
+func gesto_posible(sostenido: ObjetoDelAlmacen, primario: bool) -> Gesto:
+	var gesto := uso(sostenido, primario)
 	if gesto == Gesto.SACAR and unidades() <= 0:
 		return Gesto.NADA
 	if gesto == Gesto.METER and unidades() >= ReglasDelEstante.UNIDADES_POR_CAJA:

@@ -1,15 +1,32 @@
 class_name Notificaciones
 extends RefCounted
 
-enum Tipo { CLIENTE, LECTURA_FALLIDA, CLIENTE_CANSADO }
+enum Tipo { CLIENTE, LECTURA_FALLIDA, CLIENTE_CANSADO, CIERRE_PROXIMO }
 
 const DURACION := 3.0
+const HORA_DEL_AVISO := 7
+const UMBRAL_DEL_AVISO := (
+	Reglas.DURACION_DEL_TURNO
+	- (
+		(Marcador.HORAS_POR_DIA - Reglas.HORA_DE_APERTURA + HORA_DEL_AVISO)
+		* Marcador.MINUTOS_POR_HORA
+		* Marcador.SEGUNDOS_POR_MINUTO
+	)
+)
 
 var _compradores: Array[Comprador] = []
 var _salidos: Array[Comprador] = []
 var _orden: Array[Tipo] = []
 var _transcurrido: Dictionary[Tipo, float] = {}
 var _esperando: Comprador = null
+var _cierre_avisado := false
+
+
+func actualizar_tiempo(restante: float) -> void:
+	if _cierre_avisado or restante <= 0.0 or restante > UMBRAL_DEL_AVISO:
+		return
+	_cierre_avisado = true
+	_avisar(Tipo.CIERRE_PROXIMO)
 
 
 func atendido(comprador: Comprador) -> void:
@@ -63,6 +80,7 @@ func vaciar() -> void:
 	_compradores.clear()
 	_salidos.clear()
 	_esperando = null
+	_cierre_avisado = false
 
 
 func _avisar(tipo: Tipo) -> void:

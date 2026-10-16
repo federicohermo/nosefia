@@ -46,6 +46,14 @@ sin sus parámetros. Se le pide al usuario dónde está, y va al preámbulo. En 
 2026-10-06 el prototipo apareció con los carriles en vuelo: el de #320 rehízo su escenario,
 dos exports y una ronda de mediciones.
 
+**Una vista resumida de Notion no acredita que no haya respuestas posteriores.** Si el
+contrato depende de una discusión, consultar los comentarios completos, incluidas respuestas,
+resueltos y paginación, y guardar su procedencia. Antes de generar recursos, volver a leer el
+issue entero vigente y contrastarlo con el spec y el reparto: una nota posterior no corrige
+un contrato que todavía afirma lo contrario. En #434, la vista resumida omitía una respuesta
+de Tiago que mantenía Duronga exhibida; el issue ya incorporaba esa decisión pero conservaba
+párrafos de cupo cero. Se corrigieron todos antes de regenerar, sin reabrir las filas decididas.
+
 ## Paso 1 — Repartir en carriles
 
 **Un carril es una cadena de dependencias**, y los carriles corren concurrentes. Tres cosas
@@ -92,6 +100,15 @@ issue: el gate no cobra todavía los AC de un `draft`. En el lote del 2026-10-10
 el cierre de la jornada 3 con cuatro cumplidas, pero `AC-EMP-050` quedó sin cita ni los bordes
 de tres y dos cumplidas; la ratificación posterior de #374 recién mostró el hueco. Se amplió
 su issue entero antes de extender ese único caso, sin cambiar el dominio.
+
+**El checker cruza también las ramas de contratos publicadas que todavía no aterrizaron.**
+Traer sus cabezas y comparar BR, AC y OQ por ID y significado contra el contrato del lote.
+El máximo histórico se calcula con `git log --all -p`, no sólo con staging ni con el índice
+MCP. Una coincidencia de números no prueba una misma regla. En el lote 425–435, contratos
+publicados minutos antes habían reservado esos IDs para otras capacidades del mismo sistema.
+La reserva anterior se conserva; el padre corrige contrato, issue y citas de las familias que
+chocan antes de cerrar ningún carril, y publica la matriz de reasignación. Un árbol ya encolado
+no se edita: se espera su resultado o se cancela sólo su turno propio, conservando el incidente.
 
 ## Paso 3 — Un worktree por carril
 
@@ -227,10 +244,13 @@ Cada agente recibe, literal:
   copia para eludir ese control.
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
-  Antes de explorar opciones, leer su parser: `verificar.py` ignora `--help` y arranca todos
-  los nodos. En #306 del 2026-10-09 se abortó esa invocación accidental fuera de la cola.
-  Su log se conserva como incidente, nunca como prueba; la verificación formal empieza dentro
-  del turno y con el árbol congelado.
+  Antes de explorar opciones, leer su parser y medir la ayuda sin levantar el motor. El parser
+  actual de `verificar.py` usa `argparse`: `--help` muestra las opciones y sale con cero, y
+  `--solo` acepta un único nodo. Medido el 2026-10-15 al preparar #365–366. En #306 del
+  2026-10-09, el parser anterior ignoraba `--help` y se abortó esa invocación accidental fuera
+  de la cola. Su log se conserva como incidente, nunca como prueba; la verificación formal
+  empieza dentro del turno y con el árbol congelado. No se extrapola una limitación histórica
+  a un parser que ya cambió.
 
 - **Coordiná las corridas del motor y las capturas entre carriles.** Una suite que mide tiempos
   por cuadro puede fallar bajo carga aunque el código no cambie. En el lote 282–285 del
@@ -241,13 +261,38 @@ Cada agente recibe, literal:
   en sus worktrees mientras otro verifica. Ante un fallo, conservá el log, comprobá el caso
   aislado y repetí la convergencia con la carga controlada. No cambies el umbral del test para
   esconder el fallo ni declares verde la primera corrida.
+- **Cerrar las sondas cortas que pueden abrir una decisión antes de encolar completas.**
+  Si el encaje de un modelo o el gesto real puede contradecir el contrato, reservar primero
+  esa medición y revisar su resultado. En #434, un barrido de segundos quedó una hora detrás
+  de completas ya encoladas y demoró la evidencia para decidir las filas. Esta prioridad se
+  prepara al repartir; los turnos ya emitidos conservan su orden.
 - **El turno lo da `scripts/turno.py`, y es una cola.** Todo lo que levanta el motor entero,
   exporta o mide va adentro: `python .claude/skills/implement-batch/scripts/turno.py <cola>
-  <etiqueta> <log> -- <comando>`. `<cola>` es una carpeta del scratch del lote, la misma para
-  todos los carriles. Va con `run_in_background`: la espera pasa los 10 minutos. Un servidor
+  <etiqueta> <log> -- <comando>`. `<cola>` es la ruta común de coordinación de la máquina,
+  la misma para todos los carriles y lotes activos. Va con `run_in_background`: la espera pasa
+  los 10 minutos. Un servidor
   levantado no carga la máquina y queda afuera. En el lote del 2026-10-06 el turno era un cerrojo
   que cada carril reintentaba: una prueba de 30 s esperó 55 minutos, y los carriles pasaron a
   encadenar sus pasos adentro de un solo turno.
+- **La cola compartida alcanza a todos los lotes activos de la máquina.** Una cola por lote
+  serializa sus carriles, pero deja correr juntas las completas de lotes distintos. Antes de
+  levantar otro motor, reutilizar la ruta común comunicada por la coordinación; el scratch y
+  los logs conservan nombres propios por lote. En #365–366, una completa coincidió con la del
+  lote #367–385 y quedaron 1,7 GiB físicos libres. Si la coordinación llega con una corrida
+  activa, no interrumpirla sólo para cambiar de cola: conservar carga y contexto, dejarla
+  terminar y usar la cola común en las siguientes importaciones, exports, capturas y suites.
+- **Una captura interactiva libera el turno al terminar de medir.** Cada espera de entrada y
+  cada comando tienen un tiempo límite; al finalizar se cierra el navegador y el proceso del
+  runner sale de verdad. Guardar un marcador final no libera la cola si Node conserva stdin.
+  En #427, el navegador ya estaba cerrado y ese proceso seguía reteniendo el turno. La
+  investigación posterior avanza afuera y el control siguiente vuelve al final de la cola.
+- **El guardado de una sonda Web va a la ruta real de su paquete.** No suponer que
+  `user://` es `/userfs`: en Godot 4.7.2 incorpora el directorio de la aplicación. Resolver
+  la ruta con su configuración y la fuente de la versión exacta del motor, o medir
+  `OS.get_user_data_dir()` en el paquete; conservar nombres Unicode sin sustituir caracteres.
+  Comprobar que Continuar abre la jornada preparada. En #427, una sonda externa de arranque
+  no obtuvo la ruta y terminó por timeout; no se presenta como medición cumplida. Un menú
+  sin errores no demuestra que se haya cargado el fixture.
 - **El árbol queda congelado desde que se encola hasta recibir el resultado.** Vale también para
   la espera, la importación y los rojos y verdes cortos: no se edita, formatea ni cambia de rama
   mientras el motor puede leerlo. Los borradores externos pueden avanzar. En #300 se agregó un

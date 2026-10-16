@@ -30,7 +30,7 @@ func _ready() -> void:
 	top_level = true
 
 
-func usar() -> void:
+func accionar() -> void:
 	_tapa.alternar()
 
 
@@ -101,9 +101,8 @@ func recibe_objetos() -> bool:
 	return _tapa.recibe_objetos()
 
 
-func interactuar() -> ObjetoDelAlmacen:
-	recolector.pedir_tirar(recibe_objetos())
-	return null
+func contexto_de_interaccion(_sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Contexto:
+	return ReferenciaDeControles.contexto_de_lo_fijo(_tapa.abierta())
 
 
 ## El cuerpo y la tapa dicen lo mismo: son el mismo contenedor.

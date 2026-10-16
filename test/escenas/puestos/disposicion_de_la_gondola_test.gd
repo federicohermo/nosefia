@@ -21,6 +21,15 @@ func test_una_fila_es_entera_de_casilleros_y_dos_conservan_la_de_atras() -> void
 	assert_int(disposicion.primera_reponible(Producto.Id.ACTRONCITO, 1)).is_equal(1)
 
 
+func test_un_bloque_vacio_con_cupo_cero_no_indexa_antes_del_comienzo() -> void:
+	var disposicion := DisposicionDeLaGondola.new()
+	disposicion.principales = [PackedFloat32Array()]
+	assert_int(disposicion.primera_reponible(Producto.Id.ACTRONCITO, 0)).is_zero()
+	assert_vector(DisposicionDeLaGondola.frente(disposicion.principales[0], 0)).is_equal(
+		Vector3.ZERO
+	)
+
+
 func test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso() -> void:
 	var disposicion := DisposicionDeLaGondola.new()
 	disposicion.resource_name = "disposicion_erronea"
@@ -67,30 +76,20 @@ func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
 		)
 
 
-## Lo que una jornada hace faltar de un producto tiene que entrar en su fila: con más, la góndola
-## arrancaría vacía y faltaría menos de lo que la jornada dice. Coracola tiene seis casilleros a
-## propósito, para los seis que le faltan en la jornada 1.
-func test_ningun_faltante_de_ninguna_jornada_pasa_de_su_fila() -> void:  # AC-STK-033
+## Los faltantes caben en la fila principal medida en el recurso vigente.
+func test_doscientas_semillas_entran_en_fila_y_caja() -> void:  # AC-STK-033
 	var disposicion := _disposicion()
-	for numero in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
-		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + numero
-		var faltantes := Apertura.faltantes_de_la_jornada(jornada)
-		for id: Producto.Id in faltantes:
-			(
-				assert_int(faltantes[id])
-				. override_failure_message(
-					(
-						"jornada %d: faltan %d %s y su fila tiene %d casilleros"
-						% [
-							jornada,
-							faltantes[id],
-							Catalogo.de(id).nombre,
-							disposicion.filas_de_adelante[id],
-						]
-					)
-				)
-				. is_less_equal(disposicion.filas_de_adelante[id])
-			)
+	var casilleros: Dictionary[Producto.Id, int] = {}
+	for producto in Catalogo.todos():
+		casilleros[producto.id] = disposicion.filas_de_adelante[producto.id]
+	for jornada in range(1, 6):
+		var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(jornada))
+		for semilla in 200:
+			var azar := RandomNumberGenerator.new()
+			azar.seed = semilla
+			var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, azar)
+			for id: Producto.Id in faltantes:
+				assert_int(faltantes[id]).is_between(1, mini(8, casilleros[id]))
 
 
 ## Una fila entera de casilleros, o dos iguales con los casilleros en la de adelante: las
@@ -107,6 +106,9 @@ func test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante() -> void: 
 		var adelante := disposicion.filas_de_adelante[producto.id]
 		var nombre := producto.nombre
 		var total := DisposicionDeLaGondola.copias(bloque)
+		assert_int(total).override_failure_message(nombre).is_equal(
+			adelante * _filas_esperadas(producto.id, false)
+		)
 		var una_fila := total == adelante
 		(
 			assert_int(DisposicionDeLaGondola.copias(bloque))
@@ -211,7 +213,7 @@ func test_hay_una_malla_por_bloque_de_guia() -> void:
 
 ## Cada tanda fija dice de qué producto es y cuántas de sus últimas copias son su fila de
 ## adelante: son casilleros de ese producto, y el cupo los suma a los de su tanda reponible.
-func test_cada_tanda_fija_suma_su_fila_de_adelante_al_cupo_de_su_producto() -> void:  # AC-STK-028
+func test_las_fijas_conservan_filas_y_casilleros() -> void:  # AC-STK-028 AC-STK-030
 	var disposicion := _disposicion()
 	var guias := disposicion.guias.size()
 	assert_int(disposicion.productos_de_las_guias.size()).is_equal(guias)
@@ -228,6 +230,35 @@ func test_cada_tanda_fija_suma_su_fila_de_adelante_al_cupo_de_su_producto() -> v
 			. override_failure_message("la tanda fija %d tiene más fila que copias" % indice)
 			. is_between(0, DisposicionDeLaGondola.copias(disposicion.guias[indice]))
 		)
+		var bloque := disposicion.guias[indice]
+		var principal := disposicion.principales[id]
+		var altura_fija := DisposicionDeLaGondola.copia(bloque, 0).origin.y
+		var altura_principal := DisposicionDeLaGondola.copia(principal, 0).origin.y
+		var fija_simple := (
+			(id == Producto.Id.FERNET_GOD and altura_fija < altura_principal)
+			or (id == Producto.Id.OAAAA and altura_fija > altura_principal)
+		)
+		assert_int(DisposicionDeLaGondola.copias(bloque)).is_equal(
+			adelante * _filas_esperadas(id, true, fija_simple)
+		)
 		esperado[id] += adelante
 	for producto in Catalogo.todos():
 		assert_int(disposicion.casilleros_de(producto.id)).is_equal(esperado[producto.id])
+
+
+## La decisión conserva dos filas de Actroncito/Prongles y distingue las excepciones por tanda.
+static func _filas_esperadas(id: Producto.Id, fija: bool, fija_simple: bool = false) -> int:
+	if (
+		id
+		in [
+			Producto.Id.COSA_DE_MANI,
+			Producto.Id.FLINPUF,
+			Producto.Id.BURBALOO,
+			Producto.Id.MARRANOS,
+			Producto.Id.POETICO
+		]
+	):
+		return 1
+	if (id == Producto.Id.AMARGADITO and not fija) or fija_simple:
+		return 1
+	return 2

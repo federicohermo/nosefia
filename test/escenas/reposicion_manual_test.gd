@@ -10,6 +10,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	# inventario da por lleno, y el jugador repondría lo que no falta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	# El cobro automático continúa en las jornadas posteriores a la primera.
 	almacen.call("_al_abrir_la_jornada", 2)
 	almacen.get("_jugador").set_physics_process(false)
@@ -49,6 +50,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
@@ -104,6 +106,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 	for giro: float in [0.8, 1.6, 5.6]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
+		AperturaConLugar.abrir_con_semilla(almacen)
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		almacen.get("_jugador").set_physics_process(false)
 		var agarre: Agarre = almacen.get("_agarre")
@@ -139,6 +142,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -159,6 +163,7 @@ func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
 func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -199,6 +204,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", true, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
@@ -230,6 +236,7 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -252,6 +259,7 @@ func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
 func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
@@ -300,6 +308,7 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
 func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -333,6 +342,7 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -375,6 +385,7 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	# La segunda jornada restaura las cajas en sus estantes. La primera ahora entrega sobre
 	# pallets, y este caso ejerce el alcance de las dos alturas del rack, no la descarga.
 	almacen.call("_al_abrir_la_jornada", 2)
@@ -429,10 +440,13 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	# Lo expuesto al abrir se cuenta: la góndola del inventario es la fila menos lo que la jornada
 	# hace faltar, y lo dibujado son esas mismas unidades y ninguna más.
 	var estante: Estante = almacen.get("_repositor").estante()
-	var faltantes := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+	var faltantes: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 4}
+	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
+	estante = almacen.get("_repositor").estante()
 	for producto in Catalogo.todos():
 		var puestas := estante.unidades_en_gondola(producto)
 		assert_int(puestas).is_equal(estante.cupo(producto) - faltantes.get(producto.id, 0))
@@ -470,6 +484,7 @@ func _clic_real(jugador: Node3D) -> void:
 func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
@@ -518,7 +533,10 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 		var le_quedan := estante.disponibles_para_retirar(producto)
 		_sacar_de_la_caja(jugador, caja)
 		assert_int(estante.disponibles_para_retirar(producto)).is_equal(maxi(0, le_quedan - 1))
-		_sacar_de_la_caja(jugador, caja)
+		if le_quedan > 0:
+			_accion(jugador, caja)
+		else:
+			_sacar_de_la_caja(jugador, caja)
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 		assert_int(estante.disponibles_para_retirar(producto)).is_equal(le_quedan)
 
@@ -526,6 +544,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -570,6 +589,8 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void:  # AC-STK-017
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
+	AperturaConLugar.abrir_con_faltantes(almacen, {Producto.Id.ACTRONCITO: 4})
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
@@ -601,8 +622,8 @@ func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void
 	assert_object(agarre.manos().sostenido()).is_same(unidad)
 	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_equal(1)
 	assert_int(del_dominio.unidades_en_gondola(producto)).is_equal(del_dominio.cupo(producto))
-	# Devuelta a su caja, la caja la vuelve a contar.
-	_sacar_de_la_caja(jugador, caja)
+	# Devuelta por primario, la caja la vuelve a contar.
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(del_dominio.disponibles_para_retirar(producto)).is_equal(en_la_caja)
 
@@ -610,6 +631,7 @@ func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void
 func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
@@ -642,6 +664,7 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 func test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
@@ -757,6 +780,8 @@ func _transformacion_de_copia(copias: MultiMesh, indice: int) -> Transform3D:
 func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_coloca() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
+	AperturaConLugar.abrir_con_faltantes(almacen, {Producto.Id.ACTRONCITO: 4})
 	await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -792,6 +817,7 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 func test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira() -> void:  # AC-PLY-033
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -820,6 +846,7 @@ func test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira() -> void:  # AC-
 func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-035
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -853,22 +880,95 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	_soltar(almacen, bolsa)
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
 	# Un estante de la góndola es horizontal y la bolsa entra, pero queda adentro del mueble.
-	var apoyo: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
-	# Detrás del casillero, sobre la misma chapa, y desde arriba: el casillero está a seis
-	# centímetros del frente del estante, y un rayo tendido hacia él pega en el portaprecio, que
-	# es inclinado. La cámara queda lo bastante afuera para que el punto de soltar sin mira caiga
-	# en el pasillo y no adentro del contorno del mueble.
-	var estante := apoyo + Vector3.LEFT * 0.12
-	camara.global_position = estante + Vector3(2.0, 1.4, 0.0)
-	camara.look_at(estante)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var apoyo: Vector3 = puesto.call("_apoyo", Producto.Id.UAKAS)
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[Producto.Id.UAKAS], disposicion.filas_de_adelante[Producto.Id.UAKAS]
+	)
+	# Uakas cambió de mueble: se mira desde su frente real, con el jugador en piso libre.
+	# La postura anterior atravesaba el lateral y dejaba la mano dentro de la reserva.
+	var estante := apoyo - frente * 0.12
+	var candidato := estante + frente * 1.3 + frente.cross(Vector3.UP)
+	var suelo := PhysicsRayQueryParameters3D.create(
+		Vector3(candidato.x, 3.0, candidato.z), Vector3(candidato.x, -1.0, candidato.z), 1
+	)
+	suelo.exclude = [jugador.get_rid(), bolsa.get_rid()]
+	var piso_libre := jugador.get_world_3d().direct_space_state.intersect_ray(suelo)
+	assert_object(piso_libre["collider"]).is_same(almacen.get_node("Estructura/SueloSolido"))
+	jugador.call("ubicar", Transform3D(Basis.IDENTITY, piso_libre["position"] + Vector3.UP * 0.005))
+	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+	camara.rotation = Vector3.ZERO
+	var vista := Transform3D(Basis.IDENTITY, camara.global_position).looking_at(estante)
+	var angulos := vista.basis.get_euler()
+	var control: ControlDelJugador = jugador.get("_control")
+	control.orientar(angulos.y)
+	control.girar(Vector2(0, -angulos.x / ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE))
+	control.avanzar_el_dibujo(1.0)
+	jugador.call("_aplicar_la_rotacion")
+	await get_tree().physics_frame
+	var cuerpo_del_jugador: CollisionShape3D = jugador.get_node("Cuerpo")
+	var consulta_del_jugador := PhysicsShapeQueryParameters3D.new()
+	consulta_del_jugador.shape = cuerpo_del_jugador.shape
+	consulta_del_jugador.transform = cuerpo_del_jugador.global_transform
+	consulta_del_jugador.collision_mask = jugador.collision_mask
+	consulta_del_jugador.exclude = [jugador.get_rid()]
+	consulta_del_jugador.margin = 0.0
+	(
+		assert_array(
+			jugador.get_world_3d().direct_space_state.intersect_shape(consulta_del_jugador)
+		)
+		. is_empty()
+	)
 	# Sin el contorno que envuelve al mueble: si lo soltado choca con él, la mira pega en su cara
 	# y no llega al estante.
 	var en_el_estante := _golpe_de_la_mira(jugador, bolsa, true)
 	assert_object(en_el_estante["collider"]).is_same(almacen.get("_estante"))
 	assert_float(en_el_estante["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
 	var sin_mira_del_estante := agarre.punto_de_soltado.global_position
-	_soltar(almacen, bolsa)
+	var mascara := bolsa.collision_mask
+	assert_bool(agarre.pedir_agarrar(bolsa.get("datos"), bolsa)).is_true()
+	var derecha: Basis = jugador.call("_derecho", bolsa.global_basis)
+	var mano := Transform3D(derecha, sin_mira_del_estante)
+	var libre := _ocupaciones_en_pose(jugador, bolsa, mano, mascara)
+	assert_array(libre["fisicos"]).is_empty()
+	assert_array(libre["reservas"]).is_empty()
+	var minimo := INF
+	for forma in _formas(bolsa):
+		var limites: AABB = Transform3D(derecha) * forma.transform * LimitesDeForma.de(forma.shape)
+		minimo = minf(minimo, limites.position.y)
+	var apoyada := Transform3D(
+		derecha, en_el_estante["position"] + Vector3.UP * (ReglasDeLosObjetos.ROCE - minimo)
+	)
+	var ocupada := _ocupaciones_en_pose(jugador, bolsa, apoyada, mascara)
+	assert_array(ocupada["fisicos"]).is_empty()
+	assert_array(ocupada["reservas"]).contains(almacen.get("_estante").get_parent())
+	agarre.soltar(true)
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_del_estante, Vector3.ONE * 0.01)
+
+
+func _ocupaciones_en_pose(
+	jugador: Node3D, cuerpo: RigidBody3D, pose: Transform3D, mascara: int
+) -> Dictionary:
+	var fisicos: Array[Dictionary] = []
+	var reservas: Array[MeshInstance3D] = []
+	var muebles: Array[PhysicsBody3D] = jugador.get("muebles_con_reserva")
+	for forma in _formas(cuerpo):
+		var global := pose * forma.transform
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = global
+		consulta.collision_mask = mascara | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		consulta.exclude = [cuerpo.get_rid()]
+		consulta.margin = 0.0
+		fisicos.append_array(jugador.get_world_3d().direct_space_state.intersect_shape(consulta))
+		for mueble in muebles:
+			var malla := mueble.get_parent() as MeshInstance3D
+			if ReservaDeLaGondola.se_superponen(
+				LimitesDeForma.de(forma.shape), global, malla.get_aabb(), malla.global_transform
+			):
+				reservas.append(malla)
+	return {"fisicos": fisicos, "reservas": reservas}
 
 
 func _soltar(almacen: Node3D, cuerpo: RigidBody3D) -> void:

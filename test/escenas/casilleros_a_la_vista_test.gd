@@ -55,7 +55,8 @@ func _agarre(almacen: Node3D) -> Agarre:
 
 
 func _casilleros(almacen: Node3D, producto: Producto) -> Array[Node]:
-	return _puesto(almacen).get_node("ZonaDe" + producto.nombre).get_children()
+	var zona := _puesto(almacen).get_node_or_null("ZonaDe" + producto.nombre)
+	return zona.get_children() if zona != null else []
 
 
 func _frente(almacen: Node3D, producto: Producto) -> Vector3:
@@ -415,7 +416,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(
 		ReglasDelEstante.UNIDADES_POR_CAJA
 	)
-	puesto.call("usar_la_caja", caja)
+	puesto.call("usar_la_caja", caja, true)
 	assert_object(_agarre(almacen).manos().sostenido()).is_same(unidad)
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(
 		ReglasDelEstante.UNIDADES_POR_CAJA
@@ -440,7 +441,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 	var en_la_caja := repositor.caja(actroncito.id).unidades()
 	assert_int(en_la_caja).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
 	puesto.call("agarrar_de_la_gondola", actroncito.id, puesta)
-	puesto.call("usar_la_caja", caja)
+	puesto.call("usar_la_caja", caja, true)
 	assert_object(_agarre(almacen).manos().sostenido()).is_null()
 	assert_int(repositor.caja(actroncito.id).unidades()).is_equal(en_la_caja + 1)
 	assert_bool(estante.casilleros_vacios(actroncito).has(puesta)).is_true()
@@ -450,7 +451,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 ## los que tiene al alcance: ninguno queda escondido detrás del mueble ni tapado por el de al
 ## lado. Se mide con los rayos de la mira sobre todos los casilleros, sin pasos de física: el
 ## campo de la mira es la esfera de su alcance.
-func test_cada_casillero_se_enfoca_desde_el_pasillo() -> void:  # AC-STK-029
+func test_cada_casillero_se_enfoca_desde_el_pasillo() -> void:  # AC-STK-029 AC-STK-085
 	var almacen := _almacen()
 	await AperturaConLugar.abrir_heladeras(almacen)
 	var sin_faltantes: Dictionary[Producto.Id, int] = {}

@@ -28,7 +28,7 @@ func test_subida_llega_en_trescientos_milisegundos_reales() -> void:  # AC-EMP-0
 	var pantalla := _pantalla()
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
-	pantalla.mostrar(GUION.mensajes)
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
 	var marco: Control = pantalla.get("_marco")
 	assert_float(marco.position.y).is_equal(1080.0)
 	_cuadros(ahora, 150000, [pantalla])
@@ -46,7 +46,7 @@ func test_un_cuadro_largo_adelanta_la_subida_un_paso_maximo() -> void:  # AC-EMP
 	var pantalla := _pantalla()
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
-	pantalla.mostrar(GUION.mensajes)
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
 	ahora[0] = 150000
 	pantalla._process(0.0)
 	var marco: Control = pantalla.get("_marco")
@@ -60,7 +60,7 @@ func _sin_formato(texto: String) -> String:
 
 func _comprobar_pantalla(pantalla: PantallaDeInstrucciones, numero: int) -> void:
 	var contenido: Control = pantalla.get("_contenido")
-	var pasos := InstruccionesDelJefe.pasos_de(GUION.mensajes)
+	var pasos := InstruccionesDelJefe.pasos_de(_mensajes_de_la_primera_jornada())
 	var paso: InstruccionesDelJefe.Paso = pasos[numero - 1]
 	var cuerpos: Array[Node] = contenido.find_children("*", "RichTextLabel", false, false)
 	for indice in paso.textos.size():
@@ -87,7 +87,7 @@ func _comprobar_pantalla(pantalla: PantallaDeInstrucciones, numero: int) -> void
 
 func test_doce_pantallas_y_ok_idempotente() -> void:  # AC-EMP-045, AC-EMP-046
 	var pantalla := _pantalla()
-	pantalla.mostrar(GUION.mensajes)
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
 	var botones: Control = pantalla.get("_botones")
 	var posicion := botones.position
 	var siguiente := _boton(pantalla, "_siguiente")
@@ -113,7 +113,7 @@ func test_doce_pantallas_y_ok_idempotente() -> void:  # AC-EMP-045, AC-EMP-046
 
 func test_volver_tres_veces_recupera_solo_la_primera_pantalla() -> void:  # AC-EMP-045
 	var pantalla := _pantalla()
-	pantalla.mostrar(GUION.mensajes)
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
 	for _paso in 3:
 		_boton(pantalla, "_siguiente").pressed.emit()
 	for _paso in 4:
@@ -129,7 +129,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 		var pantalla := _pantalla()
 		var viewport: SubViewport = pantalla.get_viewport()
 		viewport.size = resolucion
-		pantalla.mostrar(GUION.mensajes)
+		pantalla.mostrar(_mensajes_de_la_primera_jornada())
 		pantalla.set("_avance", 1.0)
 		pantalla.set("_transcurrido", roundi(PantallaDeInstrucciones.DURACION_DE_LA_SUBIDA * 1e6))
 		pantalla.call("_ajustar")
@@ -160,7 +160,7 @@ func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC
 	var pantalla := _pantalla()
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
-	pantalla.mostrar(GUION.mensajes)
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
 	_cuadros(ahora, 150000, [pantalla])
 	var marco: Control = pantalla.get("_marco")
 	var posicion := marco.position
@@ -180,3 +180,7 @@ func _cuadros(ahora: Array[int], hasta: int, nodos: Array[Node]) -> void:
 		ahora[0] = mini(ahora[0] + 10000, hasta)
 		for nodo in nodos:
 			nodo.call("_process", 0.0)
+
+
+func _mensajes_de_la_primera_jornada() -> Array[Mensaje]:
+	return Bandeja.new([GUION]).mensajes_de(Conversacion.Interlocutor.JEFE)

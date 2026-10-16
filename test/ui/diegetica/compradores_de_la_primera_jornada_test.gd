@@ -59,7 +59,7 @@ func test_muestra_ambos_compradores_dialogo_y_clic_izquierdo_sin_botones() -> vo
 		panel.mostrar(atencion)
 		assert_bool(sprite.is_visible_in_tree()).is_true()
 		assert_str(sprite.sprite_frames.resource_path).contains(
-			"martin" if comprador.personaje == DialogosDeCompradores.Personaje.MARTIN else "tiago"
+			"martin" if comprador.personaje == DialogosDeCompradores.Personaje.TIN else "tiago"
 		)
 		var texto := panel.get_node("Fisico/Dialogo/Texto") as RichTextLabel
 		assert_str(texto.text).is_equal(atencion.dialogo().entrada_actual())

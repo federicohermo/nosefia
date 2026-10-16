@@ -8,11 +8,12 @@ size = Vector3(1.2, 1.4, 0.12)
 [sub_resource type="BoxMesh" id="BoxMesh_antepecho"]
 size = Vector3(1.4, 0.08, 0.4)
 
-[node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible") groups=["interactuable"]]
+[node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible", "piso_de_entregas") groups=["interactuable"]]
 script = ExtResource("1_ventanilla")
 borde_superior = NodePath("BordeSuperior")
 antepecho = NodePath("Antepecho")
 comprador_visible = NodePath("Comprador")
+piso_de_entregas = NodePath("PisoDeEntregas")
 
 [node name="Comprador" type="AnimatedSprite3D" parent="."]
 visible = false
@@ -33,3 +34,7 @@ gi_mode = 2
 [node name="BordeSuperior" type="Marker3D" parent="."]
 position = Vector3(0, 1.4, 0.02)
 rotation = Vector3(0, 3.1415927, 0)
+
+[node name="PisoDeEntregas" type="Marker3D" parent="."]
+position = Vector3(0, -0.9377625, -0.8)
+editor_description = "Piso interior frente a la ventanilla; la consulta física elige un apoyo libre alrededor."

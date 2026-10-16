@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 15 de octubre de 2026; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A
 ---
 
 # Capacidad: la investigación
@@ -142,18 +142,20 @@ sin error; un chat de un solo mensaje NO DEBE exigir desplazamiento para verlo.
 CUANDO se abre la jornada N, el sistema DEBE mostrar sólo los mensajes del guión cuya jornada
 de llegada es menor o igual que N, en su orden y con el más reciente abajo. El menú DEBE listar
 un botón por conversación con al menos un mensaje visible, en el orden declarado de
-interlocutores, salvo el chat de notas cuyo permiso de menú lo fija BR-INV-040. Cada botón DEBE mostrar nombre, imagen y cantidad de no leídos cuando es mayor
+interlocutores, salvo el chat de notas cuyo permiso de menú lo fija BR-INV-040.
+Cada botón DEBE mostrar nombre, imagen y cantidad de no leídos cuando es mayor
 que cero; sin imagen, DEBE mostrar un círculo liso del tema. La jornada NO DEBE programar nuevas
 llegadas durante su transcurso. Al continuar desde un guardado, los mensajes del guión DEBEN
 reconstruirse según esa jornada, todos sin leer. Las devoluciones de Enrique de las noches ya
-cerradas DEBEN volver a su chat, después de sus instrucciones y en el orden en que llegaron
-(`BR-EMP-031`, `BR-SAV-019`); los demás recibidos fuera del guión NO DEBEN guardarse.
+cerradas DEBEN volver a su chat intercaladas con las aperturas en orden cronológico
+(BR-INV-030, BR-EMP-031, BR-SAV-019); los demás recibidos fuera del guión NO DEBEN guardarse.
 
 ### BR-INV-024 — Recibir agrega sin alterar el guión
 
 CUANDO se recibe un mensaje válido para una conversación existente, el sistema DEBE agregarlo
-al final de ese chat y avisar la recepción una sola vez, incluso con el celular cerrado. Si
-ese chat está a la vista, el mensaje DEBE aparecer al final. La recepción NO DEBE alterar el
+a ese chat en su posición cronológica (BR-INV-030) y avisar la recepción una sola vez,
+incluso con el celular cerrado. SI ese chat está a la vista, ENTONCES el mensaje DEBE
+aparecer en su posición cronológica. La recepción NO DEBE alterar el
 guión compartido. Un mensaje nulo o un interlocutor sin conversación DEBEN rechazarse sin
 alterar contenido ni contadores ni emitir aviso. Consultar conversaciones o mensajes DEBE
 entregar una copia de la lista, sin permitir vaciar la bandeja al modificarla.
@@ -192,6 +194,67 @@ CUANDO se pausa con el celular abierto, el sistema DEBE mostrar la pausa encima,
 reanudar en la misma pantalla del celular. CUANDO cierra el turno, el celular DEBE cerrarse,
 soltar su modo fijo y dejar el control suspendido por el cierre. CUANDO se abre otra jornada,
 el celular DEBE empezar cerrado y preparado para abrir en el menú.
+
+### BR-INV-029 — La segunda jornada incorpora a Yasmín y la tarea de Enrique
+
+CUANDO abre la jornada 1, el sistema DEBE ofrecer sólo el chat de Enrique. CUANDO abre la
+jornada 2, por transición o desde un checkpoint, DEBE ofrecer Enrique y Yasmín. El rol de
+Enrique DEBE leerse «Jefe» y el de Yasmín «Compañera de trabajo», como dato del contacto,
+independiente de su imagen. Sin retrato aprobado, DEBE usar el círculo liso de BR-INV-023.
+
+Enrique DEBE incorporar dos mensajes de apertura de la jornada 2: primero una foto del
+contenedor de basura del local, después el texto literal «Buen día, pibe. Hoy te pido que tires
+la basura de todos los tachos del local en el contenedor. Saludos». La foto NO DEBE mostrar
+un tacho interior en lugar del contenedor; ampliarla DEBE usar ese texto como adjunto.
+Yasmín DEBE incorporar exactamente los siguientes quince mensajes independientes, con estas
+identidades estables y en este orden:
+
+| Identidad | Texto literal |
+|---|---|
+| J2_1 | holuuu ✨ |
+| J2_2 | que onda compa? |
+| J2_3 | soy Yas del turno diurno |
+| J2_4 | la otra esclavita de enrique jsjsj |
+| J2_5 | el chabon es bastante denso pero ya te vas a acostumbrar |
+| J2_6 | y te aviso q acá siempre falta algo o anda todo a medias |
+| J2_7 | para que te vayas acostumbrando también |
+| J2_8 | p ejemplo hoy parece que se acabo uno de los jabones para la limpieza y no había ningún repuesto |
+| J2_9 | no le reclames a enrique porque no va a hacer nada y encima se va a irritar |
+| J2_10 | creo que lo podes reemplazar con chorrito del producto ese de limpieza que vendemos |
+| J2_11 | no creo que enrique se de cuenta si usás uno |
+| J2_12 | pero nada |
+| J2_13 | quería darte la bienvenida |
+| J2_14 | quedamos en contacto p cualquier cosa |
+| J2_15 | exitos con eso!  💪 |
+
+Los mensajes DEBEN estar disponibles al abrir la jornada, sin arribos programados durante
+el turno. Mensajes de jornada 3 o posteriores NO DEBEN adelantarse a la 2. Reabrir el celular,
+volver al menú o repetir la apertura NO DEBE duplicar el guion ni alterar sus recursos.
+Leer DEBE conservar el transcurso del turno de BR-INV-006 y las marcas de BR-INV-008/009.
+
+### BR-INV-030 — El historial mezcla guion y devoluciones en orden temporal
+
+El sistema DEBE ordenar los mensajes por jornada, momento de apertura o cierre y orden
+dentro del bloque, sin ordenarlos por texto ni inventar horas. En Enrique, el orden DEBE ser
+instrucciones de jornada 1, devolución del cierre 1, foto y texto de apertura 2, devolución
+del cierre 2, y los bloques posteriores cuando estén disponibles. Cada mensaje DEBE conservar
+su identidad; dos textos iguales con identidades distintas NO DEBEN fusionarse por su texto.
+
+Cada devolución nueva DEBE aportar explícitamente la jornada que cerró y el orden de sus
+mensajes (BR-EMP-031). Los mensajes legados sin jornada DEBEN conservar texto y orden relativo,
+sin recibir una jornada ni hora inventada. Su intercalado con bloques fechados depende de
+OQ-INV-005. La vista cronológica y sus consultas NO DEBEN mutar el guion compartido ni sus
+marcas de lectura. Retomar DEBE reconstruir el guion y conservar las devoluciones guardadas
+con esos metadatos, con los mensajes del guion sin leer según BR-INV-023.
+
+### BR-INV-031 — Sólo el tramo de pista emite su identidad
+
+El sistema DEBE mostrar en J2_6 sólo «acá siempre falta algo» en lila y el resto del texto
+en blanco. CUANDO se pulsa ese tramo, DEBE emitir un pedido identificado con 2A, sin deducir
+la identidad del texto visible ni registrar por ese gesto un hallazgo o hipótesis.
+Leer el mensaje, abrir el chat, pulsar otro tramo o una identidad inexistente NO DEBE emitir
+ese pedido. Repetir el clic válido PUEDE repetir el pedido; la aceptación e idempotencia
+del hallazgo corresponden a quien registra la pista.
 
 ### BR-INV-032 — Las pistas se registran por identidad una sola vez
 
@@ -281,11 +344,12 @@ registrar pistas. Reconstruir identidades y mensajes NO DEBE duplicar el conteni
 ### BR-INV-041 — El contenido de 2A, 2B y 2P procede de sus fichas
 
 El sistema DEBE entregar para cada identidad los siguientes datos, según las fichas «2A», «2B»
-y «2P» de la lista de pistas e hipótesis:
+y «2P» de la lista de pistas e hipótesis. Por decisión del usuario del 2026-10-16,
+la imagen de 2A DEBE ser el círculo existente del contacto de Yasmín, aun sin retrato:
 
 | Identidad | Foto de pista | Texto de pista | Título de hipótesis |
 |---|---|---|---|
-| 2A | foto de perfil de Yasmín | Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”. | SIEMPRE FALTAN COSAS |
+| 2A | círculo existente del contacto de Yasmín | Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”. | SIEMPRE FALTAN COSAS |
 | 2B | colilla de cigarrillo en el piso | Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro… | CIGARRILLO EN EL DEPÓSITO |
 | 2P | ninguna | ninguno | NO PASA NADA |
 
@@ -418,8 +482,9 @@ a la vista sin desplazar.
 ### AC-INV-028 — El corte por jornada incluye el límite *(verifica BR-INV-023)*
 
 DADO un chat con un mensaje de jornada 1 y otro de jornada 3 CUANDO se abren las jornadas 1 y 2
-ENTONCES muestra sólo el primero; en la 3 muestra los dos, en ese orden. DADO otro chat con todo
-en jornada 2 ENTONCES no tiene botón en la 1 y sí en la 2. Los botones visibles conservan el orden
+ENTONCES muestra sólo el primero; en la 3 muestra los dos, en ese orden. DADO otro chat distinto
+del de notas, con todo en jornada 2, ENTONCES no tiene botón en la 1 y sí en la 2. Los botones
+visibles conservan el orden
 de interlocutores. Dejar correr una jornada no agrega mensajes del guión de la siguiente.
 
 ### AC-INV-029 — Recibir tiene efecto local y avisa una vez *(verifica BR-INV-024, BR-INV-009)*
@@ -487,14 +552,48 @@ Q permitido abre el menú.
 DADO un guardado en jornada 3, con chats que antes se leyeron y mensajes recibidos fuera del guión,
 CUANDO se retoma ENTONCES se ven los mensajes del guión de jornada menor o igual a 3, todos sin
 leer, y ninguno de los recibidos fuera de él salvo las devoluciones de Enrique de las jornadas 1
-y 2, que siguen a sus instrucciones en ese orden. Abrir y cerrar sin entrar a un chat conserva los
-contadores.
+y 2, intercaladas con las aperturas: instrucciones, devolución 1, foto y texto de apertura 2,
+devolución 2. Los registros legados sin jornada conservan su orden sin fechas inventadas.
+Abrir y cerrar sin entrar a un chat conserva los contadores.
 
 ### AC-INV-038 — Un botón por chat y una imagen de reemplazo *(verifica BR-INV-023)*
 
 DADO dos chats visibles, uno con imagen y dos no leídos y otro sin imagen ni no leídos, CUANDO
 se muestra el menú ENTONCES hay dos botones: el primero con nombre, imagen y contador 2, y el
 segundo con nombre y círculo liso del tema, sin contador cero.
+
+### AC-INV-039 — La entrada exacta en jornada 2 ofrece sus dos chats *(verifica BR-INV-029, BR-INV-023, BR-INV-008, BR-INV-009)*
+
+DADO jornada 1 CUANDO se abre el menú ENTONCES sólo ofrece Enrique. DADO apertura de jornada 2
+por transición y, por separado, checkpoint CUANDO se consulta ENTONCES ofrece Enrique y Yasmín,
+con los roles Jefe y Compañera de trabajo. Yasmín tiene exactamente las quince identidades
+J2_1 a J2_15 con los textos de BR-INV-029, incluido el doble espacio antes de 💪, sin mensajes
+de jornada 3. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni el guion.
+
+### AC-INV-040 — La apertura queda entre las devoluciones *(verifica BR-INV-030, BR-INV-029)*
+
+DADO cierre 1 y apertura 2 CUANDO se recorre Enrique ENTONCES están las 19 entradas de las
+instrucciones, los mensajes de devolución 1, la foto del contenedor y su texto, en ese orden.
+CUANDO cierra la 2 ENTONCES su devolución queda después de ese texto, cada mensaje una vez.
+Reabrir celular, volver al menú y repetir apertura 2 no cambian identidades, contenido u orden.
+Los quince mensajes de Yasmín tampoco se duplican al repetir esos recorridos.
+
+### AC-INV-041 — El clic de pista tiene un borde exacto *(verifica BR-INV-031)*
+
+DADO J2_6 visible CUANDO se mide el texto ENTONCES sólo «acá siempre falta algo» está en lila
+y las palabras anteriores y posteriores siguen blancas y literales. CUANDO se abre o lee,
+o se pulsa fuera del tramo ENTONCES hay cero pedidos de 2A. Un clic dentro emite exactamente
+un pedido de 2A y dos clics válidos pueden emitir dos, con cero cambios directos del expediente.
+Una identidad o tramo inexistente no emite. Se ejerce en escritorio y paquete web.
+
+### AC-INV-042 — La foto del contenedor usa el adjunto de su apertura *(verifica BR-INV-029, BR-INV-025, BR-INV-027)*
+
+DADO Enrique en jornada 2 CUANDO se pulsa su foto de apertura ENTONCES se amplía completa,
+muestra el contenedor del local y adjunta exactamente el texto de BR-INV-029, no la devolución
+anterior ni un tacho interior. CUANDO se cierra ENTONCES vuelve al mismo chat y desplazamiento.
+El recorrido de ambos chats, foto y tramo de pista a 1920×1080 y 1280×720, en escritorio y
+web, conserva textos completos dentro del celular, sin recortes ni errores.
+DADO Yasmín sin retrato aprobado ENTONCES muestra el círculo liso, conservando nombre y rol.
 
 ### AC-INV-043 — Nueva, repetida y ajena *(verifica BR-INV-032)*
 
@@ -567,7 +666,8 @@ El cuaderno de la computadora conserva sus notas independientes.
 
 DADO las identidades 2A, 2B y 2P CUANDO se consultan sus datos ENTONCES títulos, textos de pista
 y de hipótesis coinciden exactamente con BR-INV-041, incluida «cigarrilo». La foto 2A corresponde
-al perfil de Yasmín y 2B muestra la colilla en el piso; 2P no tiene foto ni texto de pista.
+al círculo existente del contacto de Yasmín, aprobado por el usuario, y 2B muestra la colilla
+en el piso; 2P no tiene foto ni texto de pista.
 Las tres opciones conservan sus identidades al volver a consultar.
 
 ### AC-INV-054 — Revelación y pista no comparten contador *(verifica BR-INV-037, BR-INV-032, BR-INV-001)*
@@ -584,10 +684,18 @@ DADO 2A anotada y una copia de sus identidades y mensajes CUANDO se vacían o re
 copias ENTONCES el expediente conserva 2A, notas conserva foto/texto en ese orden y el guion
 compartido permanece intacto. Las consultas no registran pistas ni emiten pista nueva.
 
+### AC-INV-056 — El historial fechado vuelve igual y no fusiona textos *(verifica BR-INV-030, BR-INV-023, BR-INV-008)*
+
+DADO checkpoint de apertura 2 con devolución 1 fechada CUANDO se retoma ENTONCES muestra
+instrucciones, devolución 1 y apertura 2 en ese orden, y los quince mensajes de Yasmín están
+sin leer. DADO dos devoluciones de distintas jornadas con el mismo texto CUANDO se reconstruyen
+ENTONCES permanecen dos mensajes con sus identidades y posiciones distintas; modificar una
+lista consultada no cambia el historial ni el guion.
+
 ## No objetivos
 
-- Esta capacidad NO escribe el contenido: qué revela cada objeto y qué dice cada chat es
-  contenido, y entra como dato.
+- Esta capacidad NO inventa el contenido: consume los guiones decididos; la apertura de
+  jornada 2 y su tramo de pista están fijados en BR-INV-029 y BR-INV-031.
 - Esta capacidad NO descuenta tiempo del turno.
 - Esta capacidad NO inventa contactos, pistas, hipótesis o desenlaces de jornadas futuras:
   consume el contenido decidido. El cuaderno de la computadora conserva su uso independiente.
@@ -597,12 +705,14 @@ compartido permanece intacto. Las consultas no registran pistas ni emiten pista 
 ## Contratos
 
 - **Entrada:** el objeto examinado, la entrada de movimiento y los segundos del cuadro, el
-  arrastre del mouse, la app elegida, la conversación abierta, y el título y el
-  cuerpo de una nota; caso, pistas, exigencias y desenlaces, expediente recibido, identidades
-  para reconstrucción y gestos de pista con canal y jornada; la jornada, Q, el estado del control y los pedidos de recibir mensajes,
-  navegar chats, ampliar fotos, fijar y soltar el celular.
+  arrastre del mouse, la app elegida, la conversación abierta, y el título y el cuerpo de una
+  nota; caso, pistas, exigencias y desenlaces, expediente recibido, identidades para
+  reconstrucción y gestos de pista con canal y jornada; la jornada, Q, el estado del control
+  y los pedidos de recibir mensajes, navegar chats, ampliar fotos, fijar y soltar el celular;
+  identidad y metadatos temporales de mensajes y el tramo de pista pulsado.
 - **Salida:** el texto visible, si fue hallazgo, cuántos mensajes sin leer hay y las notas;
-  celular abierto o cerrado, menú, chat o foto, modo fijo y listas visibles de chats y mensajes;
+  celular abierto o cerrado, menú, chat o foto, modo fijo, historial cronológico, listas
+  visibles de chats y mensajes, y pedido identificado del tramo de pista;
   ANOTADA/REPETIDA/DESCONOCIDA, expediente ordenado, consistencia, desenlaces alcanzados e
   hipótesis disponibles con sus datos. Una exigencia pendiente no registra.
 - **Falla:** una revelación vacía y una nota sin título se rechazan sin cambiar nada.
@@ -613,6 +723,7 @@ compartido permanece intacto. Las consultas no registran pistas ni emiten pista 
 ## Señales
 
 - El hallazgo nuevo y la computadora abierta.
+- El tramo de pista pedido con su identidad; pedirlo no registra por sí solo un hallazgo.
 - La pista nueva con identidad, jornada y datos, sólo tras ANOTADA; cada desenlace alcanzado
   una sola vez. Repetidas, desconocidas y consultas no publican progreso.
 - El celular abierto o cerrado, menú mostrado, chat abierto, foto ampliada o cerrada, cambios
@@ -622,6 +733,10 @@ compartido permanece intacto. Las consultas no registran pistas ni emiten pista 
 
 - [`player-actions`](../player-actions/player-actions.md) (consume): qué objeto se está
   examinando.
+- [`employment-record`](../employment-record/employment-record.md) (consume): identidad,
+  jornada cerrada y orden de los mensajes de devolución.
+- [`save-and-resume`](../save-and-resume/save-and-resume.md) (consume): devoluciones restauradas
+  con sus metadatos disponibles; el guion se reconstruye según la jornada guardada.
 - [`ambience`](../ambience/ambience.md) (alimenta): cada recepción aceptada dispara el sonido
   de mensaje del celular; escribir una nota en la computadora no es recibir un mensaje.
 - [`subtitles`](../subtitles/subtitles.md) (alimenta): cuándo arranca y termina el examen de lo
@@ -642,3 +757,11 @@ compartido permanece intacto. Las consultas no registran pistas ni emiten pista 
     no contenido para el juego.
   - Decide: game design.
   - Bloquea: publicar ese contenido y sus finales; no bloquea el motor ni las pistas de jornada 2.
+- **OQ-INV-005 — ¿Dónde se intercalan las devoluciones legadas sin jornada?**
+  - Por qué sigue abierta: los guardados antiguos sólo contienen textos y orden de recepción;
+    no permiten reconstruir qué cierre produjo cada bloque ni su relación con una apertura.
+    La compatibilidad exige conservarlos sin inventar una fecha, pero no está decidida su
+    posición entre bloques fechados.
+  - Decide: el dueño del repo con diseño narrativo.
+  - Bloquea: fijar un intercalado cronológico entre registros legados sin fecha y aperturas;
+    no bloquea conservar sus textos y orden relativo ni ordenar los registros nuevos fechados.

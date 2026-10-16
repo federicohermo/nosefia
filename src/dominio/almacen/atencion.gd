@@ -82,8 +82,6 @@ func puede_abandonar() -> bool:
 
 func vencer() -> void:
 	if not _vendida:
-		for unidad in _recepcion.unidades():
-			_inventario.desechar(unidad)
 		_despachada = true
 		_dialogo = null
 

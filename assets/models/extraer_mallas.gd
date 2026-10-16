@@ -19,6 +19,7 @@ extends SceneTree
 
 const MODELO := "res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb"
 const DISPOSICION := "res://src/escenas/puestos/disposicion_de_la_gondola.tres"
+const CONTENIDO := "res://src/escenas/puestos/contenido_del_estante.tscn"
 const CARPETA := "res://assets/models/"
 
 ## Cuánto puede separarse la unidad horneada de la copia sobre la que está parada, en metros.
@@ -39,17 +40,24 @@ func _extraer() -> void:
 	var modelo: Node3D = escena.instantiate()
 	root.add_child(modelo)
 	var disposicion: DisposicionDeLaGondola = load(DISPOSICION)
+	var contenido := (load(CONTENIDO) as PackedScene).instantiate() as Node3D
 	var mallas: Array[MeshInstance3D] = []
 	for nodo: MeshInstance3D in modelo.find_children("*", "MeshInstance3D", true, false):
 		mallas.append(nodo)
 	var fallas := 0
 	for producto in Catalogo.todos():
 		var bloque := disposicion.principales[producto.id]
+		var posiciones := PackedVector3Array()
+		if bloque.is_empty():
+			# Una fuente exportable no necesita exhibición: su pose también sale del .blend.
+			posiciones.append((contenido.get_child(producto.id) as Node3D).position)
+		else:
+			for indice in DisposicionDeLaGondola.copias(bloque):
+				posiciones.append(DisposicionDeLaGondola.copia(bloque, indice).origin)
 		var encima: Array[MeshInstance3D] = []
 		for malla in mallas:
-			for indice in DisposicionDeLaGondola.copias(bloque):
-				var copia := DisposicionDeLaGondola.copia(bloque, indice)
-				if malla.global_position.distance_to(copia.origin) < TOLERANCIA:
+			for posicion in posiciones:
+				if malla.global_position.distance_to(posicion) < TOLERANCIA:
 					encima.append(malla)
 					break
 		if encima.size() != 1:
@@ -63,6 +71,7 @@ func _extraer() -> void:
 			fallas += 1
 			continue
 		print("guardada: ", ruta)
+	contenido.free()
 	modelo.free()
 	quit(1 if fallas > 0 else 0)
 

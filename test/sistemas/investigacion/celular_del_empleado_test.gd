@@ -108,7 +108,8 @@ func test_otra_jornada_cierra_el_fijo_y_conserva_lecturas() -> void:  # AC-INV-0
 	sistema.abrir_jornada(3)
 	assert_bool(sistema.celular().abierto()).is_false()
 	assert_bool(sistema.celular().fijo()).is_false()
-	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_zero()
+	# La introducción sigue leída; los dos mensajes de apertura J2 son nuevos.
+	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(2)
 	sistema.pedir_alternar(false)
 	assert_int(sistema.celular().pantalla()).is_equal(Celular.Pantalla.MENU)
 
@@ -134,3 +135,51 @@ func test_interlocutor_sin_conversacion_no_emite_llegada_ni_cuenta() -> void:  #
 	assert_array(cuentas).is_empty()
 	assert_int(bandeja.no_leidos_totales()).is_zero()
 	assert_array(bandeja.mensajes_de(Conversacion.Interlocutor.PROVEEDOR)).is_empty()
+
+
+func test_el_tramo_identificado_emite_solo_en_su_chat_visible() -> void:  # AC-INV-041
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	var pedidos: Array[String] = []
+	sistema.tramo_de_pista_pedido.connect(
+		func(identidad: String) -> void: pedidos.append(identidad)
+	)
+	sistema.abrir_jornada(1)
+	sistema.pedir_alternar(false)
+	sistema.pedir_chat(Conversacion.Interlocutor.JEFE)
+	sistema.pedir_tramo("J2_6", "falta_algo")
+	assert_array(pedidos).is_empty()
+	sistema.abrir_jornada(2)
+	sistema.pedir_tramo("J2_6", "falta_algo")
+	assert_array(pedidos).is_empty()
+	sistema.pedir_alternar(false)
+	sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
+	assert_array(pedidos).is_empty()
+	sistema.pedir_tramo("inexistente", "falta_algo")
+	sistema.pedir_tramo("J2_6", "fuera")
+	sistema.pedir_tramo("J2_5", "falta_algo")
+	assert_array(pedidos).is_empty()
+	sistema.pedir_tramo("J2_6", "falta_algo")
+	sistema.pedir_tramo("J2_6", "falta_algo")
+	assert_array(pedidos).is_equal(["2A", "2A"])
+	sistema.pedir_volver()
+	sistema.pedir_tramo("J2_6", "falta_algo")
+	assert_array(pedidos).is_equal(["2A", "2A"])
+
+
+# AC-INV-039, AC-INV-040
+func test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura() -> void:
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	sistema.abrir_jornada(2)
+	sistema.pedir_alternar(false)
+	sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
+	var jefe := sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)
+	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.YASMIN)).is_zero()
+	for _vez: int in 2:
+		sistema.pedir_volver()
+		sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
+		sistema.pedir_alternar(false)
+		sistema.pedir_alternar(false)
+		sistema.abrir_jornada(2)
+	assert_int(sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN).size()).is_equal(15)
+	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.YASMIN)).is_zero()
+	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(jefe)

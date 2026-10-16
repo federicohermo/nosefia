@@ -6,9 +6,10 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Jugador := preload("res://src/escenas/jugador.gd")
 
 var _almacen: Node3D
+var _ruta_guardado: String
 
 
-func after_test() -> void:
+func _desmontar_almacen() -> void:
 	get_tree().paused = false
 	if is_instance_valid(_almacen):
 		for tipo: String in ["AudioStreamPlayer", "AudioStreamPlayer3D"]:
@@ -213,6 +214,7 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
 	var conversaciones := _celular().bandeja().conversaciones()
 	var originales: Array[Mensaje] = conversaciones[0].mensajes.duplicate()
+	var cantidad_visible := _celular().bandeja().mensajes_de(conversaciones[0].interlocutor).size()
 	assert_int(conversaciones.size()).is_equal(1)
 	assert_int(conversaciones[0].interlocutor).is_equal(Conversacion.Interlocutor.JEFE)
 	assert_int(lista.get_child_count()).is_equal(1)
@@ -221,9 +223,10 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 		(lista.get_child(indice) as Button).pressed.emit()
 		assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.CHAT)
 		assert_int(_celular().bandeja().no_leidos(conversacion.interlocutor)).is_zero()
-		assert_int(lista.get_child_count()).is_equal(conversacion.mensajes.size())
-		for entrada in conversacion.mensajes.size():
-			var mensaje := conversacion.mensajes[entrada]
+		var visibles := _celular().bandeja().mensajes_de(conversacion.interlocutor)
+		assert_int(lista.get_child_count()).is_equal(visibles.size())
+		for entrada in visibles.size():
+			var mensaje := visibles[entrada]
 			var burbuja := lista.get_child(entrada)
 			var textos := burbuja.find_children("*", "RichTextLabel", true, false)
 			var fotografias := burbuja.find_children("*", "TextureButton", true, false)
@@ -263,7 +266,7 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 			"Llegó este mensaje completo."
 		)
 	assert_array(conversaciones[0].mensajes).is_equal(originales)
-	assert_int(lista.get_child_count()).is_equal(originales.size() + 1)
+	assert_int(lista.get_child_count()).is_equal(cantidad_visible + 1)
 	await get_tree().process_frame
 	await get_tree().process_frame
 
@@ -328,7 +331,7 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 	var guardado := Guardado.new()
 	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 1}))).is_true()
 	assert_bool(guardado.hay_guardado()).is_true()
-	await after_test()
+	await _desmontar_almacen()
 	# La escena reconstruye Partida desde el archivo real; no se inyecta _partida.
 	_almacen = ALMACEN.instantiate()
 	get_tree().root.add_child(_almacen)
@@ -469,3 +472,15 @@ func test_cursor_nativo_no_repite_escrituras_del_mismo_modo() -> void:  # AC-PLY
 	assert_array(escrituras).is_equal(
 		[Input.MOUSE_MODE_CAPTURED, Input.MOUSE_MODE_VISIBLE, Input.MOUSE_MODE_CAPTURED]
 	)
+
+
+func before_test() -> void:
+	_ruta_guardado = Guardado.ruta_por_defecto
+	Guardado.ruta_por_defecto = "user://celular_430.guardado"
+	Guardado.new().borrar()
+
+
+func after_test() -> void:
+	await _desmontar_almacen()
+	Guardado.new().borrar()
+	Guardado.ruta_por_defecto = _ruta_guardado

@@ -44,7 +44,7 @@ flowchart TD
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
   STK -- "unidades en góndola" --> CTR
-  CTR -- "lo vendido" --> STK
+  CTR -- "lo vendido y qué compras terminaron" --> STK
   PLY -- "qué se lleva y qué se tira" --> CLN
   CLN -- "la unidad tirada" --> STK
   PLY -- "la unidad viaja en la mano" --> STK
@@ -59,7 +59,6 @@ flowchart TD
   CLN -- "uso aceptado de Poético" --> EMP
   EMP -- "expediente y notas de cada partida" --> INV
   INV -- "pistas y notas que cruzan aperturas" --> EMP
-  INV -- "pista nueva" --> NTF
   SHF -.-> AMB
   EMP -.-> AMB
   CTR -.-> AMB
@@ -68,6 +67,7 @@ flowchart TD
   PLY -.-> AMB
   INV -.-> AMB
   CTR -.-> NTF
+  INV -.-> NTF
   SHF -.-> NTF
   SAV -- "los dos menús abren Configuraciones" --> CFG
   CFG -- "volumen de cada bus" --> AMB
@@ -76,8 +76,9 @@ flowchart TD
 ```
 
 La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
-`notifications` escucha la llegada, el rechazo del lector y el cierre del turno. Ninguna
-contesta a quien publica el suceso. Por eso la tabla de sonidos es un archivo y no un `match`:
+El contrato de `notifications` incluye llegada, vencimiento, rechazo del lector, pista nueva
+anotada, tiempo restante y cierre del turno. Ninguna contesta a quien publica el suceso.
+Por eso la tabla de sonidos es un archivo y no un `match`:
 agregar un sonido no toca a quien lo emite.
 
 ## Las dos mitades de la resta
@@ -102,13 +103,20 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
 
 - **`counter-service` y `store-stock`.** Cobrar es de la ventanilla; cuántas unidades hay y dónde
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
-  En la primera noche, la ventanilla recibe unidades físicas: la mercadería las retira una sola
-  vez, al completar la venta o al vencer la compra. El padrón definido de la segunda comparte
-  sus pedidos fijos de Fede y Mía ya construidos con reposición, junto con sus conversaciones
-  propias y figuras en el mundo. Ninguna consulta reconstruye la lista de apertura. Sus
-  compras vencidas devuelven las unidades al piso interior, todavía registradas afuera, y
-  descartan el ticket. Registrar espera a que ambas compras terminen, vendidas o vencidas, y
-  compara sólo las ventas completas; atención exige completar las dos.
+  En la primera noche, el contrato establece que la ventanilla recibe unidades físicas y la
+  mercadería las retira una sola vez al completar la venta. Si la compra vence, siguen
+  registradas afuera de su caja. Quedan como unidades sueltas en el piso interior frente a la
+  ventanilla; el ticket aceptado se descarta.
+
+  La apertura comparte una sola selección de compradores y pedidos entre atención y reposición.
+  La segunda noche usa los pedidos fijos de Fede y Mía, sus conversaciones propias y sus figuras
+  en el mundo. Ninguna consulta reconstruye la lista de apertura.
+  Sus compras vencidas también dejan las unidades recogibles en el piso interior, todavía
+  registradas afuera, y descartan el ticket.
+
+  Registrar espera a que ambas compras terminen, vendidas o vencidas.
+  Compara la planilla con las ventas completas, independientemente de cumplir atención.
+  Atención exige completar las dos compras.
 - **`player-actions` e `investigation`.** Agarrar y examinar son del cuerpo; **qué esconde** el
   objeto es de la investigación. La identidad de lo que se agarra es opaca a propósito: lo que se
   investiga no está en el catálogo.

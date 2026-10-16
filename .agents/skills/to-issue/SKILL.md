@@ -48,6 +48,20 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Un requisito al cierre se mide contra el orden de sus señales y lectores.** Probar también
+un salto desde apertura hasta cierre en un único avance, y la repetición sin eventos nuevos.
+En #366, registrar pasó a depender de compras cerradas, pero la computadora revisaba antes
+de que la agenda venciera a los compradores. El plan debe incluir al traductor y su espejo
+si ese orden impide el criterio; no alcanza con cambiar el predicado de dominio.
+
+**Una rama con contrato preparado también se mide por su diff.** Cruzar los archivos de sus
+commits contra «Se escribe», incluida la documentación de responsabilidades que el contrato
+actualizó. En #366, el contrato ya traía `docs/architecture/capacidades.md`, pero el plan sólo
+nombraba los specs. El issue debe declarar ese delta completo antes de implementar sobre él.
+Aplicar también las reglas y controles estáticos a ese delta: un commit preparado no equivale
+a un commit validado. En la misma rama, una oración heredada de 28 palabras hizo fallar el
+harness recién en la primera completa; el límite documental ya era de 25.
+
 **Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
 reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
 acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
@@ -68,12 +82,32 @@ capturas del modelo vigente antes de fijar sus criterios. En #297 el antepecho o
 120 píxeles inferiores de 1080 aunque los rayos al hueco pasaran; sus bordes y los del dintel
 estaban a distinta profundidad. El encuadre se define con esos bordes, conservando el modelo.
 
+Si la geometría viene de Blender, cruzar la malla cruda, la evaluada con sus modificadores y el
+GLB que usa el juego antes de definir el generador de colisión. En #428, el bisel multiplicaba
+los triángulos de la góndola y explicaba 233 µm de diferencia de altura: no era un error de
+ejes. La lectura evaluada se libera al terminar y ambos caminos se prueban por idempotencia,
+sin quitar modificadores ni modificar el arte para hacer coincidir los números.
+
+**Un contorno puede reservar ocupación además de representar contacto físico.** Antes de
+reemplazarlo por una geometría más precisa, clasificar cada consulta y máscara que lo usa:
+apoyo, locomoción, rechazo de colocación y movimiento posterior. En #428, el contorno lleno
+también impedía que unidades sueltas entraran entre mercadería sin cuerpo; los convexos del
+metal corregían el apoyo de cajas, pero abrían esa regresión. Conservar ambos comportamientos
+sin convertir la reserva lógica en una plataforma que sostenga cajas. Declarar los lectores
+afectados en los límites y medir tanto el instante de soltar como la caída o rodadura posterior;
+una consulta de metal libre no demuestra que el lugar esté disponible para el objeto.
+
 **La captura verifica el foco y la pose dibujada en el cuadro que guarda.** Preparar la cámara
 y comprobar un rayo unos cuadros antes no basta: entradas o interpolación pueden cambiar el
 encuadre. El fixture conserva la pose preparada, comprueba también la pose interpolada y el
 foco después del dibujo, y el padre abre el PNG. En #302 la primera foto de la caja mostraba
 la puerta y cortaba la caja, aunque la prueba física de foco pasara. Se corrigió el montaje
 externo y se repitió la captura, sin mover arte ni cambiar la producción.
+
+La cámara tampoco puede empezar dentro del espesor de una pared: un foco correcto no excluye
+ese montaje inválido. En #426, la proyección sobre los triángulos del GLB ubicó cinco ojos entre
+la cara exterior y la interior, mientras los escenarios visibles usaban otra posición. Separar
+posición y orden de instancia antes de atribuir una diferencia al ciclo de vida o a la luz.
 
 **Una entrada nativa en Windows verifica su escala DPI y el destino real.** El driver declara
 `PER_MONITOR_AWARE_V2` antes de consultar ventanas. Cruza el rectángulo de cliente con el
@@ -83,6 +117,21 @@ Sólo opera el HWND de su proceso, validando descendencia, ejecutable y proyecto
 el driver sin consciencia DPI medía 1536 píxeles donde Godot dibujaba 1920 y elegía otra fila.
 La selección pasó en ambas resoluciones al corregir el driver, sin tocar producción.
 
+**Un dato compartido entra por parámetro, también en las firmas del issue.** Si dos
+consumidores deben usar la misma selección aleatoria, declarar quién la construye una vez y
+pasar esa instancia a ambos; ninguna consulta vuelve a invocar la fábrica. Al ampliar un issue,
+actualizar premisa, criterios, firmas y límites juntos, sin conservar un contrato previo que
+contradiga el agregado. En #367, el cruce con #433 exigía compartir pedidos, pero la firma
+original de apertura todavía los reconstruía por jornada. Una fábrica futura no bloquea la
+recepción de una lista ya representable: el test usa datos propios dentro del alcance vigente.
+
+**Al reemplazar una tabla fija por un sorteo, medir las invariantes que sus valores
+protegían.** Leer reglas y tests anteriores antes de generalizar los límites. Separar el cupo
+total del cupo donde se permite abrir huecos: un inventario puede contar guías y tanda principal
+sin que ambas admitan faltantes iniciales. En #367, usar el total permitía vaciar guías y
+debilitaba el AC que antes acotaba la fila principal. Declarar ambos datos en las firmas y
+probar la apertura sobre la geometría real, conservando las interacciones de cada tanda.
+
 ```bash
 rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro
@@ -90,6 +139,55 @@ gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otr
 
 Consultá `nosefia-index` para saber quién usa lo que vas a tocar. Lo que aparece ahí entra en
 «Sólo lectura» o en «No se toca».
+
+**Reasignar un gesto sigue sus estímulos y sus consultas, no sólo su despachador.**
+Buscar acciones en los fixtures compartidos y leer el par mano/objetivo de cada caso antes de
+incluirlo: en #425, los fixtures de basura y devolución debían migrar al primario, pero dos
+fixtures de subtítulos sacaban de cajas con mano vacía y conservaban el secundario. Medir
+además qué dato puro necesita la referencia durante una animación: el permiso de descarte de
+una tapa no distingue su intención abierta/cerrada mientras gira. Las consultas faltantes y
+sus espejos entran en los límites antes de repartir.
+
+**Ampliar un guion revisa también los consumidores de su lista completa.** Una intro y sus
+fixtures pueden esperar sólo la primera jornada aunque el recurso pase a contener varias.
+Declarar la vista que consume cada uno y conservar su inmutabilidad; en #430, dos suites de
+instrucciones necesitaban filtrar J1, mientras otro lector del primer mensaje seguía válido.
+
+**Un guion con símbolos nuevos se prueba con la tipografía del paquete real.** Revisar
+los glifos en cada camino que presenta el texto, incluidos vista previa y burbuja, a las
+resoluciones pedidas. En #430, el contenido literal y los tests de texto pasaban, pero el
+paquete Web dibujaba los dos emojis como cuadros hexadecimales. Si falta un fallback portable,
+su recurso, licencia, origen fijado y generador reproducible entran en los límites antes de
+corregirlo. Conservar la fuente principal y el orden del guion; no adelantar un mensaje para
+forzar su símbolo en la vista previa ni mutar el tema compartido.
+
+**La salida del detector no sustituye la medición de la malla.** Antes de declarar muebles,
+chapas o niveles, contrastar nombres reales, islas, materiales, normales y transformaciones
+del modelo. Separar las chapas físicas de los niveles con exhibición: una chapa vacía no
+autoriza un nivel activo nuevo. En #434, un umbral de distancia clasificaba cabeceras
+superiores como laterales y una tabla conservaba un mural ausente. El modelo original
+usaba cuatro niveles activos en cada cabecera, aunque el generador anterior declaraba tres.
+Guardar la medición independiente y probar el caso que confundía al detector antes de
+regenerar recursos; una tabla vieja no autoriza a reconstruir muebles ni a borrar exhibiciones.
+
+**La diferencia entre arte y contrato no se resuelve copiando el arte al contrato.** Medir
+filas, copias y modificadores de la fuente, y buscar cuándo y quién cerró la regla vigente.
+En #434, dos productos aparecían con una fila en el arte posterior, pero no estaban en la
+lista de excepciones cerrada antes por el diseñador. Medir apoyo e intersecciones de las
+alternativas permitidas y presentar las imágenes y la decisión concreta al dueño; ni la
+lista antigua de un generador ni el arte nuevo sustituyen esa decisión.
+
+**Un producto sin exhibición se sigue hasta los generadores de su fuente.** Buscar también
+extractores de mallas, miniaturas y validadores que localizan la unidad por su tanda, no sólo
+las consultas de cupo del juego. En #434, el dominio aceptaba cupo cero pero el extractor no
+podía encontrar Duronga con su bloque principal vacío. Cada consumidor que deba cambiar entra
+en los límites con su responsabilidad; no se omite la regeneración para evitar una escena
+prohibida.
+
+**Cada comando de verificación se ejecuta literalmente desde la raíz declarada.** Incluir el
+entorno que necesita; en #434, unittest discover no encontraba lib sin PYTHONPATH apuntando a
+.claude/scripts. No entregar un comando que sólo funcionó desde otro directorio o después de
+un ajuste manual que el issue omite.
 
 **Un recorrido web se cruza con el preset versionado antes de cerrar los límites.**
 Revisar los filtros de exportación y las dependencias importadas que usa ese recorrido,
@@ -205,6 +303,12 @@ Lo que más se rompe:
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
   comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
   mintiendo, y el implementador no lo puede tocar.
+- **Renombrar propiedades de un recurso incluye las sondas externas del paquete.** El barrido
+  de lectores alcanza `.github/scripts/`, además de `src/`, `test/`, `assets/` y el harness;
+  busca también claves leídas con `get()` y textos esperados. En #365, la sonda exportada
+  seguía buscando `martin`, `tiago` y dos paquetes de Zucarachas, aunque el juego ya usaba
+  Tin y Tia. Sus claves, aserciones y mensaje final entran en «Se escribe» antes de implementar,
+  y la verificación exige ejercerla contra el paquete real fuera del proyecto fuente.
 - **Si el issue borra un nombre, «Verificación» lleva el `rg` que lo prueba**: `rg -i <nombre>
   src test specs docs .claude` da cero. El carril lo corre también después de mergear otra
   rama, porque un carril en vuelo puede sumarle un lector. En el #266, un caso de #176, escrito

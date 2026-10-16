@@ -404,7 +404,7 @@ func test_devolver_una_unidad_suena_una_vez_desde_la_mano() -> void:  # AC-AMB-0
 	)
 	puesto.call("usar_la_caja", caja)
 	assert_object(repositor.agarre.manos().sostenido() as UnidadDeProducto).is_not_null()
-	puesto.call("usar_la_caja", caja)
+	puesto.call("usar_la_caja", caja, true)
 	assert_object(repositor.agarre.manos().sostenido()).is_null()
 	assert_int(escucha["pedidos"].count(EntradaSonora.Evento.UNIDAD_DEVUELTA)).is_equal(1)
 	assert_bool(escucha["rechazados"].has(EntradaSonora.Evento.UNIDAD_DEVUELTA)).is_false()
