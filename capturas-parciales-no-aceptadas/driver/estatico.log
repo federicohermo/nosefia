@@ -1,0 +1,13 @@
+COMMAND gdformat --check D:\nosefia-carril-B-429-444\444-capturas-driver-01\fixture444.gd D:\nosefia-carril-B-429-444\444-capturas-driver-01\nativo444.gd
+EXIT 0
+2 files would be left unchanged
+
+COMMAND gdlint D:\nosefia-carril-B-429-444\444-capturas-driver-01\fixture444.gd D:\nosefia-carril-B-429-444\444-capturas-driver-01\nativo444.gd
+EXIT 0
+Success: no problems found
+
+COMMAND node --check D:\nosefia-carril-B-429-444\444-capturas-driver-01\recorrer444-web.mjs
+EXIT 0
+
+COMMAND python -m py_compile D:\nosefia-carril-B-429-444\444-capturas-driver-01\recorrer444-nativo.py
+EXIT 0

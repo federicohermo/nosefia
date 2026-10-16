@@ -2,10 +2,262 @@
   "issue": 437,
   "own_head": "838e0baae3ed7f61f6f3190a00058a5d6c10b503",
   "integrated_export_head": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
-  "scope": "partial delivery by explicit user instruction: own CI7/7, focal9/9, export/probes green; shared local full canceled; no real Fede/Mia captures",
+  "scope": "partial delivery by explicit user instruction: CI7/7,focal9/9,export/probes green; local full canceled;8partial capture PNGs unreviewed/unaccepted",
   "all_8_criteria_complete": false,
   "self_excluded": true,
   "files": [
+    {
+      "path": "README.md",
+      "bytes": 4487,
+      "sha256": "480a49f7df0b0a9ad91243eb69ad55634d83f4be5a920a914d2a66ab9f94be3d",
+      "git_blob": "485a5bf3a8b4dd8b3281cf4f4920a40b0579f84d"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/capturas-compartidas-437-444-02-cierre-arbol-propio.log",
+      "bytes": 1084,
+      "sha256": "20d4d3e29b44840d28b24ba4a35efb701df409ddd2e330c2c6d26d0933317b13",
+      "git_blob": "f5d588de9a36e1e052efaf6771b42bdf0379a851"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/capturas-compartidas-437-444-02-estado-final.json",
+      "bytes": 1551,
+      "sha256": "fbf36b5399e310defd993de9c0495bfe89c467ed8385120b6dde1a134bd13d83",
+      "git_blob": "67beced78a40f6ba10ece7ab9e4baada4b51d168"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/capturas-compartidas-437-444-02-interrumpida.json",
+      "bytes": 4159,
+      "sha256": "104be490431e6d6e82afa0815782cb68ee6baa3971ce870cb8869a6c730c0d0f",
+      "git_blob": "8c4534c01c487eb625bfe05f1f84c3885b153352"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/PROTOCOLO.md",
+      "bytes": 6069,
+      "sha256": "2587b87465613cfffd2ab984813e6b826037ff192b12abe1ebfaa6cdc398c242",
+      "git_blob": "1d3564e226e74759d1705ae359facf1ed50fac6d"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/delta-cierre-root.json",
+      "bytes": 433,
+      "sha256": "3bdcfc48469c002e29b4dadd4367e7a6dd77ebd880991470deefe2d5c3bed0b5",
+      "git_blob": "517bb4dfa08d5a871762fe9a37436f6545bfe2ad"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/delta-identidades-root.json",
+      "bytes": 413,
+      "sha256": "4941e8739727c7b5fe2536f40c184f616d2b7c5bd285d3133d201d6ff526a87a",
+      "git_blob": "ef74f1040a55951ac4c8101c38af76be3511c47d"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/delta-root.json",
+      "bytes": 564,
+      "sha256": "21ac9e7161d54eb70966c11e9250d41074abd6959ce0a7f3a527cc31d10d38c3",
+      "git_blob": "dd251917416409dd48906bb6b8310c5f03a1178d"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/estatico.log",
+      "bytes": 584,
+      "sha256": "912c13f671563224a3413bd2abe968884f4216e8defd9872628ae912f8b929da",
+      "git_blob": "b7a8004778a9f94bbd5f95323d1e49c461813abd"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/fixture444.gd",
+      "bytes": 17308,
+      "sha256": "25933b58b2044b8af80bdf99caa1071f978c58ef9960ca027d9f2a67038edaf8",
+      "git_blob": "a3fd4ab631b80cf52eb280afbcc5bcf7d5c3cabb"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/fixture444.tscn",
+      "bytes": 156,
+      "sha256": "a584ed8c36cd95a8b984c0a50c2e5707854347271b8975153d87b2a60fcff4ea",
+      "git_blob": "b83fe5d75da3dca419e67b5021eeb2913efa8233"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/manifest.json",
+      "bytes": 2757,
+      "sha256": "43ca5293c78bd002f46bfd875729ca70c66e5ac4a915383a9443bef230b85a81",
+      "git_blob": "5185749dcd2db0a1e36757dc6d34a3a85ffdd59a"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/nativo444.gd",
+      "bytes": 228,
+      "sha256": "30466eacb8d62ebbd40b1e524d59498ddc5a4e76473a6021a7dde74558d3297a",
+      "git_blob": "753b2d36103193985372862c9572d5a2abb4674f"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/override.cfg",
+      "bytes": 48,
+      "sha256": "b030effa55a4bd7c53e4e58a482644533da84891af3c652df04013cf58fdfe43",
+      "git_blob": "e3a698018b778c8c41bb1321db3a0b15fcde5dbf"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/recorrer444-nativo.py",
+      "bytes": 11032,
+      "sha256": "6a5d035417092075cb416567c7c438179c786cdc750591a6669968aae6562d60",
+      "git_blob": "036c3fd3a6a6139e155f747ab032b4cbc6bb771f"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/driver/recorrer444-web.mjs",
+      "bytes": 9524,
+      "sha256": "fc6583f2e4b0e5122ccc9cce1daee7da77238a5192a87fa5638ff55e71502493",
+      "git_blob": "936b5345e67c09e6e5c84c3dfb257a77c1698a0a"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/http.log",
+      "bytes": 607,
+      "sha256": "99ab0e908309a9470d20fc379ed873ce124ab2cf25e12a883a49976159fefa57",
+      "git_blob": "2c4eaf56439911a912f3af851346f7859234c85c"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo-driver.proceso.json",
+      "bytes": 758,
+      "sha256": "17ff0c0fb241726996d4935e99a56b3ba0e098c507a4c5cb8b64bc3b4d375495",
+      "git_blob": "f4d313511d8a28cc000236bc7809ab336db8d668"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo-driver.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo-driver.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo/capturas/fede-presencia.png",
+      "bytes": 721534,
+      "sha256": "3fec90911dc0411a93e3032ba5573fcd7a16b2afd660c29d143e5472833d9376",
+      "git_blob": "e7c766a38f01a6c2eefba60217f45405429ebaf0"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo/cierre-pid-propio.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo/comando.json",
+      "bytes": 31,
+      "sha256": "efbcf1a61b288bdfd8034bd347fe8465a8dfd5986725caf7a2a91ec86453d2d1",
+      "git_blob": "753281e14e285ee0ad8881c757524a1d0291753c"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo/estado.json",
+      "bytes": 1892,
+      "sha256": "ba547be86c7b54dee94ca635ac0be43351c5eda040e2f4a8f84651693700c16e",
+      "git_blob": "b09b10dddd3a750db1f700f21be90764c0b04415"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo/motor.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo/motor.stdout.log",
+      "bytes": 202,
+      "sha256": "c7ef1e9841252fd27e299f6b35840f9877a3ca4df9dc506d0151442f4319cd5f",
+      "git_blob": "d33d3f62e12d6f6be8a838d42273f9b6116b8f05"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo/proceso.json",
+      "bytes": 712,
+      "sha256": "53b0dd23ed61689b254bef07dbea591386a1d0a5cb4b5af9c28083c0c5108783",
+      "git_blob": "e7a3b63f8446b77a54a0b0fc769358bd88aa96b5"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/nativo/recorrido.json",
+      "bytes": 5211,
+      "sha256": "78b9d09f9c53fef4a1450f4b5f89f479b4ffb5bbf84370222f61fed3995b560a",
+      "git_blob": "b41558f7728b63653ef6b6200da6da4c3210b0be"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web-driver.proceso.json",
+      "bytes": 626,
+      "sha256": "897c2a47926965b8ab4929a604443db33a44591d4b0d32fd1e76b8ca9064ff59",
+      "git_blob": "e571d37693e77cf5e62f0942af8b966e0ea2d3eb"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web-driver.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web-driver.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/consola.json",
+      "bytes": 2482,
+      "sha256": "18b237bb36791ac99904efe7ab32ca90620735733e13874879349a8896a4b7b8",
+      "git_blob": "58af25d5c753357fd95fc764d71a86bf28f4738d"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/fede-despedida-0.png",
+      "bytes": 720507,
+      "sha256": "343dcbbbf4a99d5b66446a7275e89309cea0d286836b1903c25ab3c2b904d73e",
+      "git_blob": "411de016c13c51e5f3ec8e9338f1afba17b927eb"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/fede-inicial-0.png",
+      "bytes": 741586,
+      "sha256": "5cc1a535ecd29c8c0b46752b4957d6586cb7c049a204715eac1f03b3350bda47",
+      "git_blob": "42691dc71bc5f4c6af1c95c1e217715c207f6498"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/fede-inicial-2.png",
+      "bytes": 744681,
+      "sha256": "cd49ad46bfee952e5bf8ef4193cf4d633d5d3bba66cb2c7cd26d5d672a331647",
+      "git_blob": "f32866422cc95febc8334c5c2eb1a5fa21d53f0a"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/fede-presencia.png",
+      "bytes": 584112,
+      "sha256": "5b5cddd006439cb1baf93e17a02cd8e375fde850577555d2731d388e0b2b8e17",
+      "git_blob": "5ac031c0c3afae56228d633fe5070d0f2a276657"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/fede-retorno-final.png",
+      "bytes": 560644,
+      "sha256": "091e5452351b6df0c2477fa43131ec19439e24dfdf4c65f46c6acd60fdf70fee",
+      "git_blob": "08b9ecca6b7791271b5988a10dd53463c80d27d3"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/fede-retorno-inicial.png",
+      "bytes": 613845,
+      "sha256": "224ad79d70a8fe3fff6ef9a035c1ef81d40cddb0e875421d393d36608c3d3554",
+      "git_blob": "f47e8efa29587cd5871225aff1b22745e6b0192b"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/mia-presencia.png",
+      "bytes": 328756,
+      "sha256": "08ac5bcf9379264e40e95a175ebe805844aaf1f1f640cfc31c03922aeae7aa60",
+      "git_blob": "59ead9099946b39c72515b467d30b69bcf2befa6"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/recorrido.json",
+      "bytes": 42506,
+      "sha256": "f404aa44255ae4b069e86c79ddd24c36daf0980f02ff28422d7148ccf0e012d6",
+      "git_blob": "7eea859704b8a36c3b55047933cadbab1825a077"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/web/resultado.json",
+      "bytes": 1137,
+      "sha256": "71bc7e7a46c92cc419cf0c3c68712922e6e023b96be3b7ac49799a7872ba3d38",
+      "git_blob": "c08327ba2eea7d1d76aeea02f5f5ff92fa239ab5"
+    },
+    {
+      "path": "capturas-parciales-no-aceptadas/wrapper.json",
+      "bytes": 4440,
+      "sha256": "cc139bed946c6986631764b3b56b1eba35c4c40357d7aa5dc4c321ca1428c53e",
+      "git_blob": "c970c3fcf9bb0634ea7e8e13fd1a152477e4d418"
+    },
     {
       "path": "ci470-838e/estado.json",
       "bytes": 3724,
@@ -1886,9 +2138,9 @@
     },
     {
       "path": "cierre-por-instruccion-usuario.json",
-      "bytes": 750,
-      "sha256": "22b3c162ae193e955167c6626ef0ca825936469bb379b8722619135fb581dafb",
-      "git_blob": "a55d9d8f8c674c432b14f63d0e8f2ddc5bc448d9"
+      "bytes": 806,
+      "sha256": "9f0db419937a4fa729b63250d1e0148662ee9b55fb14156096b92e0683bd0fbd",
+      "git_blob": "77234d46b5af6f6c1963dd9b14bf1d5058d6bb45"
     },
     {
       "path": "documentacion/437-entrega-B.md",
@@ -3233,12 +3485,6 @@
       "bytes": 2701,
       "sha256": "337e96bcfb9eb3177da1fdfb24c8427b362417c40790444ba09470a950811a84",
       "git_blob": "e0064f4046b3074446b1d19ec894f892c2d8075c"
-    },
-    {
-      "path": "README.md",
-      "bytes": 3975,
-      "sha256": "f5dfe8ea106b5647486f53dd56ee0d3cf85657b648e8a8bb1b64bd4ba6ee2ed2",
-      "git_blob": "19547d02b6f954aa0203868652ce1566b7502869"
     },
     {
       "path": "reproduccion/437-auditar-pines-B.py",

@@ -6,7 +6,7 @@
   "own_focal": "9/9green",
   "export_02": "green, both external probes markers exit0",
   "shared_local_full": "canceled by user instruction; partial raw/pins retained, not accepted as convergence",
-  "shared_captures": "canceled by user instruction before real Fede/Mia captures",
+  "shared_captures": "interrupted by user instruction:7WebPNGs+1nativePNG retained, unreviewed/unaccepted; no completed capture protocol",
   "all_8_criteria_complete": false,
   "criterion7_real_captures_complete": false,
   "publication_and_PR_ready": "authorized with explicit limits; no new motor runs"

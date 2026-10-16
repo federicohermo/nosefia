@@ -1,0 +1,20 @@
+{
+  "exit_code": 1,
+  "head": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+  "pck_sha256": "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5",
+  "remote_pck_sha256": "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5",
+  "original": {
+    "index.html": "57a3ed5dbf4244736108f8320b8b1299876f50e0a3df8b148d2e3c8143e528e5",
+    "index.js": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b",
+    "index.wasm": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61",
+    "index.pck": "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5"
+  },
+  "after": {
+    "index.html": "57a3ed5dbf4244736108f8320b8b1299876f50e0a3df8b148d2e3c8143e528e5",
+    "index.js": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b",
+    "index.wasm": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61",
+    "index.pck": "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5"
+  },
+  "export_unchanged": true,
+  "scope": "Fixture externo: preparación/observación; clics Chrome reales, CDP userGesture:false; no reemplaza prueba del main original."
+}

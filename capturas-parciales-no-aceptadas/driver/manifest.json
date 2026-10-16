@@ -1,0 +1,75 @@
+{
+  "files": [
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01\\fixture444.gd",
+      "bytes": 16427,
+      "sha256": "4e3d1f38e76c0a4ccf5e5439f02c9ea51baac7e5977ca3ccea03b48bf0956c27"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01\\fixture444.tscn",
+      "bytes": 156,
+      "sha256": "a584ed8c36cd95a8b984c0a50c2e5707854347271b8975153d87b2a60fcff4ea"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01\\override.cfg",
+      "bytes": 48,
+      "sha256": "b030effa55a4bd7c53e4e58a482644533da84891af3c652df04013cf58fdfe43"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01\\nativo444.gd",
+      "bytes": 228,
+      "sha256": "30466eacb8d62ebbd40b1e524d59498ddc5a4e76473a6021a7dde74558d3297a"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01\\recorrer444-web.mjs",
+      "bytes": 9377,
+      "sha256": "fbd66fe3b6986e8ff2e92e8704793c8dc4649caeb8a8418ad511cd50f40b5f0f"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01\\recorrer444-nativo.py",
+      "bytes": 10790,
+      "sha256": "2027f0de76caa43cd2a0e733dfdeb594e36144c5c66b8d8e91099a1f22e03220"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01\\PROTOCOLO.md",
+      "bytes": 6069,
+      "sha256": "2587b87465613cfffd2ab984813e6b826037ff192b12abe1ebfaa6cdc398c242"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01\\estatico.log",
+      "bytes": 584,
+      "sha256": "912c13f671563224a3413bd2abe968884f4216e8defd9872628ae912f8b929da"
+    }
+  ],
+  "sources": [
+    {
+      "path": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\preparacion-444\\.github\\scripts\\verificar_dialogos_jornada_2_exportados.gd",
+      "bytes": 8216,
+      "sha256": "e8d0261eedb17e3ac4507679d8def207d92de2106053fc48c2d2076592ccbe6f"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\429-web-override-03\\fixture-web-429.gd",
+      "bytes": 10398,
+      "sha256": "d06782cda31c8e95976a9df062c9efe75d533805f436993524cf95e183f3df08"
+    },
+    {
+      "path": "D:\\nosefia-carril-B-429-444\\429-web-override-03\\manifest.json",
+      "bytes": 3323,
+      "sha256": "af974cb5de07550dd687a383f8e4831966612d5f43bc938c14b5d20d8e7a53fe"
+    }
+  ],
+  "static_checks_exit": {
+    "gdformat_check": 0,
+    "gdlint": 0,
+    "node_check": 0,
+    "python_compile": 0
+  },
+  "motor_executed": false,
+  "browser_opened": false,
+  "native_inputs_sent": false,
+  "worktrees_modified": false,
+  "product_pack_js_wasm_html_preset_modified": false,
+  "worktree_head": "3990d557617970ef41a06dea06e3044a96bd1852",
+  "worktree_status": "",
+  "runtime_validation_pending": true
+}

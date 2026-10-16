@@ -1,0 +1,19 @@
+{
+  "comando": [
+    "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver\\recorrer444-nativo.py",
+    "--godot",
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64.exe",
+    "--pck",
+    "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web\\index.pck",
+    "--sha256",
+    "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5",
+    "--head",
+    "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+    "--output",
+    "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\nativo"
+  ],
+  "cwd": "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver",
+  "timeout": false,
+  "pid": 95436
+}

@@ -8,7 +8,7 @@ La exportación compartida #437+#444 usa
 17:30 ART, sin más verificaciones locales, dejando la validación al PR. Por esa
 instrucción se cancelaron la completa local conjunta y las capturas compartidas.
 Esta publicación preserva lo ejecutado y sus límites: no hay completa local final
-verde ni capturas reales de Fede/Mía. El PR queda listo para revisión con CI propia
+verde ni un recorrido de capturas reales completado y aceptado de Fede/Mía. El PR queda listo para revisión con CI propia
 verde; eso no marca cumplidos los ocho criterios ni equivale a aceptación final.
 
 | Evidencia | Ubicación |
@@ -52,3 +52,5 @@ Los archivos bajo `reproduccion/` son copias documentales de los controladores
 externos usados. Sus rutas absolutas registran el entorno de ejecución original;
 reproducirlos exige destinos externos propios y el preset/plantilla aprobados.
 Los pines contienen los originales usados por la prueba, sin modificar su PNG.
+
+El intento compartido adquirió FIFO al liberarse el turno de la completa: Web salió 1 y el nativo se interrumpió por instrucción del usuario. Se conservaron siete PNG Web y uno nativo como incidente parcial, sin nueva inspección ni aceptación visual. No se afirma ausencia total de imágenes ni se usan para completar el criterio. Acta, crudos y archivos parciales están en `capturas-parciales-no-aceptadas/`.

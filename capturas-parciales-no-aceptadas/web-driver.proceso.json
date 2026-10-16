@@ -1,0 +1,16 @@
+{
+  "comando": [
+    "node",
+    "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver\\recorrer444-web.mjs",
+    "http://127.0.0.1:56066/index.html",
+    "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web",
+    "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web",
+    "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5",
+    "4fa20754cd58c7f4a62699183a4a625df3e0d90a"
+  ],
+  "cwd": "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver",
+  "timeout": false,
+  "pid": 110728,
+  "exit_code": 1,
+  "segundos": 68.07921770005487
+}

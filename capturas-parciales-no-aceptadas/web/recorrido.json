@@ -1,0 +1,1252 @@
+[
+  {
+    "montaje": "override-Node",
+    "html_original_sha256": "57a3ed5dbf4244736108f8320b8b1299876f50e0a3df8b148d2e3c8143e528e5",
+    "html_servido_sha256": "ce9e017501796ea8781a362d4c49b8384c0eed10a9f1eed7d78477afde09155a",
+    "preloads": [
+      {
+        "path": "/fixture444.gd",
+        "sha256": "25933b58b2044b8af80bdf99caa1071f978c58ef9960ca027d9f2a67038edaf8"
+      },
+      {
+        "path": "/fixture444.tscn",
+        "sha256": "a584ed8c36cd95a8b984c0a50c2e5707854347271b8975153d87b2a60fcff4ea"
+      },
+      {
+        "path": "/override.cfg",
+        "sha256": "b030effa55a4bd7c53e4e58a482644533da84891af3c652df04013cf58fdfe43"
+      }
+    ],
+    "args": []
+  },
+  {
+    "preparacion": {
+      "id": 1,
+      "accion": "fede"
+    },
+    "userGesture": false
+  },
+  {
+    "preparacion": {
+      "id": 2,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-presencia",
+    "game": {
+      "camara_actual": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "camara_dibujada": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": true,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 0,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 2,
+      "identidad_mano": "0",
+      "indice": -1,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "0",
+      "nombre": "Fede",
+      "panel": false,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "",
+      "ultima_captura": "",
+      "unidades_preparadas": [],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "preparacion": {
+      "id": 3,
+      "accion": "unidad",
+      "indice": 0
+    },
+    "userGesture": false
+  },
+  {
+    "preparacion": {
+      "id": 4,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-unidad-preparada",
+    "game": {
+      "camara_actual": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "camara_dibujada": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": true,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 0,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 4,
+      "identidad_mano": "-9223371560381832559",
+      "indice": -1,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "476355500292",
+      "nombre": "Fede",
+      "panel": false,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 5,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-inicial-0",
+    "game": {
+      "camara_actual": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "camara_dibujada": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": false,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 0,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 0,
+      "id": 5,
+      "identidad_mano": "-9223371560381832559",
+      "indice": 0,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "476355500292",
+      "nombre": "Fede",
+      "panel": true,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": true,
+      "terminado": false,
+      "texto_panel": "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 6,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-inicial-1",
+    "game": {
+      "camara_actual": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "camara_dibujada": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": false,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 0,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 0,
+      "id": 6,
+      "identidad_mano": "-9223371560381832559",
+      "indice": 1,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "476355500292",
+      "nombre": "Fede",
+      "panel": true,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": true,
+      "terminado": false,
+      "texto_panel": "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 7,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-inicial-2",
+    "game": {
+      "camara_actual": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "camara_dibujada": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": false,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color].",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 0,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 0,
+      "id": 7,
+      "identidad_mano": "-9223371560381832559",
+      "indice": 2,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "476355500292",
+      "nombre": "Fede",
+      "panel": true,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": true,
+      "terminado": false,
+      "texto_panel": "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color].",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 8,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-retorno-inicial",
+    "game": {
+      "camara_actual": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "camara_dibujada": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": true,
+      "cursor": 2,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 1,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 8,
+      "identidad_mano": "-9223371560381832559",
+      "indice": 3,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "476355500292",
+      "nombre": "Fede",
+      "panel": false,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color].",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": true,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 9,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-entrega-0",
+    "game": {
+      "camara_actual": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "camara_dibujada": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": true,
+      "cursor": 2,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 1,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 9,
+      "identidad_mano": "0",
+      "indice": -1,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "0",
+      "nombre": "Fede",
+      "panel": false,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color].",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": true,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "preparacion": {
+      "id": 10,
+      "accion": "unidad",
+      "indice": 1
+    },
+    "userGesture": false
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 11,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-entrega-1",
+    "game": {
+      "camara_actual": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "camara_dibujada": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": true,
+      "cursor": 2,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 1,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 11,
+      "identidad_mano": "0",
+      "indice": -1,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "0",
+      "nombre": "Fede",
+      "panel": false,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color].",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        },
+        {
+          "cuerpo": "727778861699",
+          "identidad": "-9223371308958473596",
+          "producto": 6
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": true,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "preparacion": {
+      "id": 12,
+      "accion": "unidad",
+      "indice": 2
+    },
+    "userGesture": false
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 13,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-entrega-2",
+    "game": {
+      "camara_actual": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "camara_dibujada": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 0,
+      "contorno": true,
+      "cursor": 2,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 1,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 13,
+      "identidad_mano": "0",
+      "indice": -1,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "0",
+      "nombre": "Fede",
+      "panel": false,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color].",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        },
+        {
+          "cuerpo": "727778861699",
+          "identidad": "-9223371308958473596",
+          "producto": 6
+        },
+        {
+          "cuerpo": "775761699461",
+          "identidad": "-9223371260975638267",
+          "producto": 24
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": true,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "preparacion": {
+      "id": 14,
+      "accion": "ticket"
+    },
+    "userGesture": false
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 15,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-despedida-0",
+    "game": {
+      "camara_actual": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "camara_dibujada": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "capsula_libre": true,
+      "compras": 1,
+      "contorno": false,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 1,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 0,
+      "id": 15,
+      "identidad_mano": "0",
+      "indice": 0,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "0",
+      "nombre": "Fede",
+      "panel": true,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": true,
+      "terminado": false,
+      "texto_panel": "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        },
+        {
+          "cuerpo": "727778861699",
+          "identidad": "-9223371308958473596",
+          "producto": 6
+        },
+        {
+          "cuerpo": "775761699461",
+          "identidad": "-9223371260975638267",
+          "producto": 24
+        }
+      ],
+      "vendida": true,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 16,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-despedida-1",
+    "game": {
+      "camara_actual": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "camara_dibujada": "[X: (-1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (-0.0, 0.0, -1.0), O: (-0.8, 1.829059, 5.603807)]",
+      "capsula_libre": true,
+      "compras": 1,
+      "contorno": false,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 1,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 0,
+      "id": 16,
+      "identidad_mano": "0",
+      "indice": 1,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "0",
+      "nombre": "Fede",
+      "panel": true,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": true,
+      "terminado": false,
+      "texto_panel": "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        },
+        {
+          "cuerpo": "727778861699",
+          "identidad": "-9223371308958473596",
+          "producto": 6
+        },
+        {
+          "cuerpo": "775761699461",
+          "identidad": "-9223371260975638267",
+          "producto": 24
+        }
+      ],
+      "vendida": true,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 17,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "fede-retorno-final",
+    "game": {
+      "camara_actual": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "camara_dibujada": "[X: (-0.990184, 0.0, 0.139768), Y: (-0.017826, 0.991833, -0.126289), Z: (-0.138627, -0.127541, -0.982098), O: (-0.8, 1.802675, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 1,
+      "contorno": false,
+      "cursor": 2,
+      "despachada": true,
+      "despedidas": [
+        "¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.",
+        "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos."
+      ],
+      "entrada": "",
+      "etapa": "fede",
+      "fallos": [],
+      "finales": 2,
+      "foco_fisico": "",
+      "foco_logico": 0,
+      "id": 17,
+      "identidad_mano": "0",
+      "indice": 2,
+      "iniciales": [
+        "Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.",
+        "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?",
+        "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color]."
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.102674, 5.440001)]",
+      "mano": "0",
+      "nombre": "Fede",
+      "panel": false,
+      "pausa": false,
+      "pedido": "-9223371806570703664",
+      "soltados": 0,
+      "sprite": "res://assets/characters/fede/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        },
+        {
+          "cuerpo": "727778861699",
+          "identidad": "-9223371308958473596",
+          "producto": 6
+        },
+        {
+          "cuerpo": "775761699461",
+          "identidad": "-9223371260975638267",
+          "producto": 24
+        }
+      ],
+      "vendida": true,
+      "viewport": "(1280, 720)",
+      "visible": false
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": true,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "preparacion": {
+      "id": 18,
+      "accion": "mia"
+    },
+    "userGesture": false
+  },
+  {
+    "preparacion": {
+      "id": 19,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "mia-presencia",
+    "game": {
+      "camara_actual": "[X: (-0.982355, 0.0, 0.187026), Y: (-0.023452, 0.992107, -0.123183), Z: (-0.185549, -0.125396, -0.974601), O: (-0.8, 1.804237, 5.440001)]",
+      "camara_dibujada": "[X: (-0.982355, 0.0, 0.187026), Y: (-0.023452, 0.992107, -0.123183), Z: (-0.185549, -0.125396, -0.974601), O: (-0.8, 1.804237, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 1,
+      "contorno": true,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "Zzzzzz.zzzzz.zzzzz",
+        "Perdon, me quedé dormida... ¿En dónde estaba?",
+        "Ah sí, gracias… Espero que esto me ayude a dormir mejor…"
+      ],
+      "entrada": "",
+      "etapa": "mia",
+      "fallos": [],
+      "finales": 2,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 19,
+      "identidad_mano": "0",
+      "indice": -1,
+      "iniciales": [
+        "Hola… ¿me darías un vino [color=#e4f850]Terminator[/color], un [color=#e4f850]Fernet God[/color] y una cajita de [color=#e4f850]Actroncito[/color]?"
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.104237, 5.440001)]",
+      "mano": "0",
+      "nombre": "Mía",
+      "panel": false,
+      "pausa": true,
+      "pedido": "-9223371806486817075",
+      "soltados": 0,
+      "sprite": "res://assets/characters/mia/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        },
+        {
+          "cuerpo": "727778861699",
+          "identidad": "-9223371308958473596",
+          "producto": 6
+        },
+        {
+          "cuerpo": "775761699461",
+          "identidad": "-9223371260975638267",
+          "producto": 24
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "preparacion": {
+      "id": 20,
+      "accion": "unidad",
+      "indice": 0
+    },
+    "userGesture": false
+  },
+  {
+    "preparacion": {
+      "id": 21,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "mia-unidad-preparada",
+    "game": {
+      "camara_actual": "[X: (-0.982355, 0.0, 0.187026), Y: (-0.023452, 0.992107, -0.123183), Z: (-0.185549, -0.125396, -0.974601), O: (-0.8, 1.804237, 5.440001)]",
+      "camara_dibujada": "[X: (-0.982355, 0.0, 0.187026), Y: (-0.023452, 0.992107, -0.123183), Z: (-0.185549, -0.125396, -0.974601), O: (-0.8, 1.804237, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 1,
+      "contorno": true,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "Zzzzzz.zzzzz.zzzzz",
+        "Perdon, me quedé dormida... ¿En dónde estaba?",
+        "Ah sí, gracias… Espero que esto me ayude a dormir mejor…"
+      ],
+      "entrada": "",
+      "etapa": "mia",
+      "fallos": [],
+      "finales": 2,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 21,
+      "identidad_mano": "-9223370983597923669",
+      "indice": -1,
+      "iniciales": [
+        "Hola… ¿me darías un vino [color=#e4f850]Terminator[/color], un [color=#e4f850]Fernet God[/color] y una cajita de [color=#e4f850]Actroncito[/color]?"
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.104237, 5.440001)]",
+      "mano": "1053139409156",
+      "nombre": "Mía",
+      "panel": false,
+      "pausa": true,
+      "pedido": "-9223371806486817075",
+      "soltados": 0,
+      "sprite": "res://assets/characters/mia/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        },
+        {
+          "cuerpo": "727778861699",
+          "identidad": "-9223371308958473596",
+          "producto": 6
+        },
+        {
+          "cuerpo": "775761699461",
+          "identidad": "-9223371260975638267",
+          "producto": 24
+        },
+        {
+          "cuerpo": "1053139409156",
+          "identidad": "-9223370983597923669",
+          "producto": 28
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  },
+  {
+    "input": "mouse",
+    "button": "left",
+    "x": 640,
+    "y": 360
+  },
+  {
+    "preparacion": {
+      "id": 22,
+      "accion": "observar"
+    },
+    "userGesture": false
+  },
+  {
+    "snapshot": "mia-inicial-0",
+    "game": {
+      "camara_actual": "[X: (-0.982355, 0.0, 0.187026), Y: (-0.023452, 0.992107, -0.123183), Z: (-0.185549, -0.125396, -0.974601), O: (-0.8, 1.804237, 5.440001)]",
+      "camara_dibujada": "[X: (-0.982355, 0.0, 0.187026), Y: (-0.023452, 0.992107, -0.123183), Z: (-0.185549, -0.125396, -0.974601), O: (-0.8, 1.804237, 5.440001)]",
+      "capsula_libre": true,
+      "compras": 1,
+      "contorno": true,
+      "cursor": 0,
+      "despachada": false,
+      "despedidas": [
+        "Zzzzzz.zzzzz.zzzzz",
+        "Perdon, me quedé dormida... ¿En dónde estaba?",
+        "Ah sí, gracias… Espero que esto me ayude a dormir mejor…"
+      ],
+      "entrada": "",
+      "etapa": "mia",
+      "fallos": [],
+      "finales": 2,
+      "foco_fisico": "/root/Almacen/Estructura/Ventanilla/Comprador/Objetivo",
+      "foco_logico": 199531434267,
+      "id": 22,
+      "identidad_mano": "-9223370983597923669",
+      "indice": -1,
+      "iniciales": [
+        "Hola… ¿me darías un vino [color=#e4f850]Terminator[/color], un [color=#e4f850]Fernet God[/color] y una cajita de [color=#e4f850]Actroncito[/color]?"
+      ],
+      "interpolada": true,
+      "jugador": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-0.8, 0.104237, 5.440001)]",
+      "mano": "1053139409156",
+      "nombre": "Mía",
+      "panel": false,
+      "pausa": true,
+      "pedido": "-9223371806486817075",
+      "soltados": 0,
+      "sprite": "res://assets/characters/mia/idle.tres",
+      "suelo": true,
+      "suspendido": false,
+      "terminado": true,
+      "texto_panel": "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.",
+      "ultima_captura": "",
+      "unidades_preparadas": [
+        {
+          "cuerpo": "476355500292",
+          "identidad": "-9223371560381832559",
+          "producto": 31
+        },
+        {
+          "cuerpo": "727778861699",
+          "identidad": "-9223371308958473596",
+          "producto": 6
+        },
+        {
+          "cuerpo": "775761699461",
+          "identidad": "-9223371260975638267",
+          "producto": 24
+        },
+        {
+          "cuerpo": "1053139409156",
+          "identidad": "-9223370983597923669",
+          "producto": 28
+        }
+      ],
+      "vendida": false,
+      "viewport": "(1280, 720)",
+      "visible": true
+    },
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "pointer": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "frames": 4
+  }
+]

@@ -1,0 +1,113 @@
+{
+  "utc": "2026-10-16T20:19:57.442210+00:00",
+  "head_suministrado": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+  "pck": "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web\\index.pck",
+  "pck_sha256_autorizado": "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5",
+  "web": "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web",
+  "driver_original": "D:\\nosefia-carril-root-429-444\\444-capturas-driver-05",
+  "driver_copia": "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver",
+  "godot_real": {
+    "ruta": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64.exe",
+    "bytes": 180858888,
+    "sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424"
+  },
+  "artefactos_antes": {
+    "index.html": {
+      "bytes": 5442,
+      "sha256": "57a3ed5dbf4244736108f8320b8b1299876f50e0a3df8b148d2e3c8143e528e5"
+    },
+    "index.js": {
+      "bytes": 320316,
+      "sha256": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b"
+    },
+    "index.wasm": {
+      "bytes": 38850640,
+      "sha256": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61"
+    },
+    "index.pck": {
+      "bytes": 109308012,
+      "sha256": "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5"
+    }
+  },
+  "driver_antes": {
+    "__pycache__/recorrer444-nativo.cpython-313.pyc": {
+      "bytes": 18763,
+      "sha256": "7368bc29d3e6db3f5ee68dff7f975ecf6a473db2ace38dc0306566edbb2d7000"
+    },
+    "delta-cierre-root.json": {
+      "bytes": 433,
+      "sha256": "3bdcfc48469c002e29b4dadd4367e7a6dd77ebd880991470deefe2d5c3bed0b5"
+    },
+    "delta-identidades-root.json": {
+      "bytes": 413,
+      "sha256": "4941e8739727c7b5fe2536f40c184f616d2b7c5bd285d3133d201d6ff526a87a"
+    },
+    "delta-root.json": {
+      "bytes": 564,
+      "sha256": "21ac9e7161d54eb70966c11e9250d41074abd6959ce0a7f3a527cc31d10d38c3"
+    },
+    "estatico.log": {
+      "bytes": 584,
+      "sha256": "912c13f671563224a3413bd2abe968884f4216e8defd9872628ae912f8b929da"
+    },
+    "fixture444.gd": {
+      "bytes": 17308,
+      "sha256": "25933b58b2044b8af80bdf99caa1071f978c58ef9960ca027d9f2a67038edaf8"
+    },
+    "fixture444.tscn": {
+      "bytes": 156,
+      "sha256": "a584ed8c36cd95a8b984c0a50c2e5707854347271b8975153d87b2a60fcff4ea"
+    },
+    "manifest.json": {
+      "bytes": 2757,
+      "sha256": "43ca5293c78bd002f46bfd875729ca70c66e5ac4a915383a9443bef230b85a81"
+    },
+    "nativo444.gd": {
+      "bytes": 228,
+      "sha256": "30466eacb8d62ebbd40b1e524d59498ddc5a4e76473a6021a7dde74558d3297a"
+    },
+    "override.cfg": {
+      "bytes": 48,
+      "sha256": "b030effa55a4bd7c53e4e58a482644533da84891af3c652df04013cf58fdfe43"
+    },
+    "PROTOCOLO.md": {
+      "bytes": 6069,
+      "sha256": "2587b87465613cfffd2ab984813e6b826037ff192b12abe1ebfaa6cdc398c242"
+    },
+    "recorrer444-nativo.py": {
+      "bytes": 11032,
+      "sha256": "6a5d035417092075cb416567c7c438179c786cdc750591a6669968aae6562d60"
+    },
+    "recorrer444-web.mjs": {
+      "bytes": 9524,
+      "sha256": "fc6583f2e4b0e5122ccc9cce1daee7da77238a5192a87fa5638ff55e71502493"
+    }
+  },
+  "limite_manifest_heredado": "Se conserva manifest.json y sus deltas. Los hashes actuales por archivo fijan la copia del driver seleccionado; no se atribuyen al antiguo driver01.",
+  "alcance": "Capturas compartidas437/444 por fixture externo; inputs Chrome/Win32 reales. No exporta, no cambia el paquete ni acredita main original.",
+  "pasos": [
+    {
+      "comando": [
+        "node",
+        "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver\\recorrer444-web.mjs",
+        "http://127.0.0.1:56066/index.html",
+        "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web",
+        "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web",
+        "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5",
+        "4fa20754cd58c7f4a62699183a4a625df3e0d90a"
+      ],
+      "cwd": "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver",
+      "timeout": false,
+      "pid": 110728,
+      "exit_code": 1,
+      "segundos": 68.07921770005487
+    }
+  ],
+  "servidor": {
+    "url": "http://127.0.0.1:56066/index.html",
+    "loopback": true,
+    "puerto_efimero": true,
+    "COOP": "same-origin",
+    "COEP": "require-corp"
+  }
+}

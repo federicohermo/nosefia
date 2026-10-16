@@ -1,0 +1,18 @@
+{
+  "pid": 99236,
+  "command": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64.exe",
+    "--path",
+    "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\nativo\\paquete",
+    "--main-pack",
+    "D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web\\index.pck",
+    "--script",
+    "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver\\nativo444.gd",
+    "--resolution",
+    "1280x720",
+    "--windowed"
+  ],
+  "head": "4fa20754cd58c7f4a62699183a4a625df3e0d90a",
+  "pck_sha256": "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5",
+  "scope": "Fixture externo sin cambio de cursor; inputs Win32 a la ventana del PID propio."
+}

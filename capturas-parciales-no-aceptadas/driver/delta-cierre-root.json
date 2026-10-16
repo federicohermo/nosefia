@@ -1,0 +1,7 @@
+{
+  "origen": "D:\\nosefia-carril-root-429-444\\444-capturas-driver-02",
+  "destino": "D:\\nosefia-carril-root-429-444\\444-capturas-driver-03",
+  "hallazgo_A": "_leer_comando intentaba publicar referencias nulas después de cerrar escena",
+  "cambio": "Flag de cierre exclusivamente en comando salir nativo; cortar publicación y lectura posterior, manteniendo fallos de todos los otros comandos",
+  "motor_ejecutado": false
+}

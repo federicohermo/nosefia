@@ -1,0 +1,8 @@
+{
+  "origen": "D:\\nosefia-carril-B-429-444\\444-capturas-driver-01",
+  "destino": "D:\\nosefia-carril-root-429-444\\444-capturas-driver-01",
+  "cambio": "Sólo desmontaje nativo: liberar escena/audio/referencias y diferir quit después del retorno, como control PCK431 medido. Sin cambios de entradas, pose, assertions, PCK o producto.",
+  "fixture_origen_sha256": "4e3d1f38e76c0a4ccf5e5439f02c9ea51baac7e5977ca3ccea03b48bf0956c27",
+  "fixture_raiz_sha256": "4fe433fa0a35cdedb1699341e0f4e2c0abdd613446ec48575a542831f2f80d5d",
+  "runtime_ejecutado": false
+}

@@ -1,0 +1,21 @@
+﻿{
+    "utc":  "2026-10-16T20:26:43.6548190Z",
+    "acta":  "D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-02-interrumpida.json",
+    "procesos_propios_presentes":  [
+
+                                   ],
+    "resultado":  "INTERUMPIDO por orden usuario, sin resultado final natural",
+    "png_parciales":  [
+                          "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web\\fede-despedida-0.png",
+                          "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web\\fede-inicial-0.png",
+                          "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web\\fede-inicial-2.png",
+                          "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web\\fede-presencia.png",
+                          "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web\\fede-retorno-final.png",
+                          "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web\\fede-retorno-inicial.png",
+                          "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\web\\mia-presencia.png",
+                          "D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\nativo\\capturas\\fede-presencia.png"
+                      ],
+    "capturas_aceptadas":  false,
+    "pck_sha256_post_interrupcion":  "9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5",
+    "pin_post_es_revision_posterior_no_finally_wrapper":  true
+}

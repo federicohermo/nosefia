@@ -1,0 +1,62 @@
+[
+  {
+    "type": "log",
+    "text": "Godot Engine v4.7.2.stable.custom_build - https://godotengine.org",
+    "time": 1792182000973
+  },
+  {
+    "type": "log",
+    "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "time": 1792182003433
+  },
+  {
+    "type": "log",
+    "text": "Build configuration: Emscripten 4.0.11, multi-threaded, no GDExtension support.",
+    "time": 1792182003695
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x299c0ac0ee00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792182011081
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x299c0ac0ee00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792182011114
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x299c0ac0ee00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792182011164
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x299c0ac0ee00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792182011166
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x299c0ac0ee00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792182011167
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x299c0ac0ee00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.",
+    "time": 1792182011168
+  },
+  {
+    "type": "log",
+    "text": "FIXTURE_444_LISTO",
+    "time": 1792182011222
+  },
+  {
+    "type": "warning",
+    "text": "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio",
+    "time": 1792182011543
+  },
+  {
+    "type": "runner-error",
+    "text": "Error: mia-inicial-0: panel=false, esperadotrue\n    at demand (file:///D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-02/driver/recorrer444-web.mjs:24:56)\n    at snapshot (file:///D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-02/driver/recorrer444-web.mjs:74:54)\n    at async file:///D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-02/driver/recorrer444-web.mjs:89:18",
+    "time": 1792182064838
+  }
+]

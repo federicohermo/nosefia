@@ -1,0 +1,40 @@
+﻿{
+    "utc":  "2026-10-16T20:21:13.6763731Z",
+    "etiqueta":  "carril-C-437-444-capturas-compartidas-02",
+    "pid_raiz":  14864,
+    "arbol_propio":  [
+                         {
+                             "ProcessId":  14864,
+                             "ParentProcessId":  115040,
+                             "Name":  "python.exe",
+                             "CommandLine":  "\"C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" .claude/skills/implement-batch/scripts/turno.py C:/Users/fede_/AppData/Local/Temp/nosefia-batch-367-385/cola carril-C-437-444-capturas-compartidas-02 D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-02-turno.log -- python D:/nosefia-carril-C-429-444/444-wrapper-01/ejecutar-capturas-437-444.py --driver D:/nosefia-carril-root-429-444/444-capturas-driver-05 --web D:/nosefia-carril-B-429-444/export-final-437-444-02/web --pck D:/nosefia-carril-B-429-444/export-final-437-444-02/web/index.pck --sha256 9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5 --head 4fa20754cd58c7f4a62699183a4a625df3e0d90a --godot \"D:/Program Files/Godot/Godot_v4.7.2-stable_win64.exe\" --output D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-02"
+                         },
+                         {
+                             "ProcessId":  86844,
+                             "ParentProcessId":  14864,
+                             "Name":  "python.exe",
+                             "CommandLine":  "python D:/nosefia-carril-C-429-444/444-wrapper-01/ejecutar-capturas-437-444.py --driver D:/nosefia-carril-root-429-444/444-capturas-driver-05 --web D:/nosefia-carril-B-429-444/export-final-437-444-02/web --pck D:/nosefia-carril-B-429-444/export-final-437-444-02/web/index.pck --sha256 9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5 --head 4fa20754cd58c7f4a62699183a4a625df3e0d90a --godot \"D:/Program Files/Godot/Godot_v4.7.2-stable_win64.exe\" --output D:/nosefia-carril-root-429-444/capturas-compartidas-437-444-02"
+                         },
+                         {
+                             "ProcessId":  95436,
+                             "ParentProcessId":  86844,
+                             "Name":  "python.exe",
+                             "CommandLine":  "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver\\recorrer444-nativo.py --godot \"D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64.exe\" --pck D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web\\index.pck --sha256 9a974e7cdc6ffebe3017b2aafc7b91ec5843dc55c17728d087585deda93a5fc5 --head 4fa20754cd58c7f4a62699183a4a625df3e0d90a --output D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\nativo"
+                         },
+                         {
+                             "ProcessId":  93324,
+                             "ParentProcessId":  95436,
+                             "Name":  "conhost.exe",
+                             "CommandLine":  "\\??\\C:\\Windows\\system32\\conhost.exe 0x4"
+                         },
+                         {
+                             "ProcessId":  99236,
+                             "ParentProcessId":  95436,
+                             "Name":  "Godot_v4.7.2-stable_win64.exe",
+                             "CommandLine":  "\"D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64.exe\" --path D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\nativo\\paquete --main-pack D:\\nosefia-carril-B-429-444\\export-final-437-444-02\\web\\index.pck --script D:\\nosefia-carril-root-429-444\\capturas-compartidas-437-444-02\\driver\\nativo444.gd --resolution 1280x720 --windowed"
+                         }
+                     ],
+    "motivo":  "Orden explícita del usuario: no más verificaciones locales. El turno adquirió durante la cancelación de full raíz; se conserva intento interrumpido, no se afirma que nunca arrancó.",
+    "turno_ajeno_tocado":  false,
+    "resultado":  "INTERUMPIDO; no acredita capturas válidas ni código verde"
+}

@@ -1,0 +1,6 @@
+{
+  "origen": "D:\\nosefia-carril-root-429-444\\444-capturas-driver-01",
+  "destino": "D:\\nosefia-carril-root-429-444\\444-capturas-driver-02",
+  "cambio": "Sólo serialización de InstanceID a String y guards de cero; conserva identidad int64 exacta en JavaScript. Mantiene const Array literal y desmontaje nativo de variante01. Sin cambio de producto, PCK, entradas o poses.",
+  "ejecutado_motor": false
+}
