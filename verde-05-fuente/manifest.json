@@ -1,0 +1,255 @@
+{
+  "head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "status": " M src/dominio/empleo/partida.gd\n M src/dominio/investigacion/bandeja.gd\n M src/dominio/investigacion/conversacion.gd\n M src/escenas/almacen.gd\n M src/escenas/puestos/objetos_del_almacen.tscn\n M src/escenas/puestos/servicios_del_almacen.tscn\n M test/dominio/investigacion/bandeja_test.gd\n M test/dominio/investigacion/celular_test.gd\n M test/dominio/investigacion/conversacion_test.gd\n?? assets/investigacion/\n?? assets/props/\n?? assets/ui/manada/pistas/\n?? src/dominio/investigacion/caso.gd\n?? src/dominio/investigacion/caso.gd.uid\n?? src/dominio/investigacion/colilla.tres\n?? src/dominio/investigacion/conversacion_de_notas.tres\n?? src/dominio/investigacion/desenlace.gd\n?? src/dominio/investigacion/desenlace.gd.uid\n?? src/dominio/investigacion/expediente.gd\n?? src/dominio/investigacion/expediente.gd.uid\n?? src/dominio/investigacion/hipotesis.gd\n?? src/dominio/investigacion/hipotesis.gd.uid\n?? src/dominio/investigacion/hipotesis_de_la_jornada.gd\n?? src/dominio/investigacion/hipotesis_de_la_jornada.gd.uid\n?? src/dominio/investigacion/pista.gd\n?? src/dominio/investigacion/pista.gd.uid\n?? src/escenas/objetos/colilla.gd\n?? src/escenas/objetos/colilla.gd.uid\n?? src/escenas/objetos/colilla.tscn\n?? src/sistemas/investigacion/investigador.gd\n?? src/sistemas/investigacion/investigador.gd.uid\n?? test/dominio/empleo/expediente_de_la_partida_test.gd\n?? test/dominio/empleo/expediente_de_la_partida_test.gd.uid\n?? test/dominio/investigacion/caso_test.gd\n?? test/dominio/investigacion/caso_test.gd.uid\n?? test/dominio/investigacion/desenlace_test.gd\n?? test/dominio/investigacion/desenlace_test.gd.uid\n?? test/dominio/investigacion/expediente_test.gd\n?? test/dominio/investigacion/expediente_test.gd.uid\n?? test/dominio/investigacion/hipotesis_de_la_jornada_test.gd\n?? test/dominio/investigacion/hipotesis_de_la_jornada_test.gd.uid\n?? test/dominio/investigacion/hipotesis_test.gd\n?? test/dominio/investigacion/hipotesis_test.gd.uid\n?? test/dominio/investigacion/pista_test.gd\n?? test/dominio/investigacion/pista_test.gd.uid\n?? test/escenas/pistas_de_la_segunda_jornada_test.gd\n?? test/escenas/pistas_de_la_segunda_jornada_test.gd.uid\n?? test/sistemas/investigacion/investigador_test.gd\n?? test/sistemas/investigacion/investigador_test.gd.uid\n",
+  "archivos": {
+    "assets/investigacion/jornada_2/caso.tres": {
+      "bytes": 838,
+      "sha256": "761d0a59214cc24f66cf3ae9e85a1a0b0eb36af1d1673854fb6353ef3b402243"
+    },
+    "assets/investigacion/jornada_2/hipotesis.tres": {
+      "bytes": 777,
+      "sha256": "629abae7a46efb9d0055e793b43ba77ef144ac219c09b410f1141ada4c0a908f"
+    },
+    "assets/investigacion/jornada_2/hipotesis_2a.tres": {
+      "bytes": 551,
+      "sha256": "c2f28e1902c5dabb98f3c300ceb063117683a5289a2b9530ccdaa54fe1e4d008"
+    },
+    "assets/investigacion/jornada_2/hipotesis_2b.tres": {
+      "bytes": 446,
+      "sha256": "700b6f8fe7381cca19107f0d09f7b217c91a8530f6abae8d9056c1559d773b34"
+    },
+    "assets/investigacion/jornada_2/hipotesis_2p.tres": {
+      "bytes": 361,
+      "sha256": "da433780ff9cd31cf8ca9c67058bdc41cfa67d374ed2bb4bcbc003fa352bb46e"
+    },
+    "assets/investigacion/jornada_2/pista_2a.tres": {
+      "bytes": 477,
+      "sha256": "109c0cab2247c04577d5248b9bdee902febef24ab471dcd1e53803be11551526"
+    },
+    "assets/investigacion/jornada_2/pista_2b.tres": {
+      "bytes": 496,
+      "sha256": "80b1faf40b5e103eee40b7f72a562a1dc27a8cd5acba4d058fb322769ad381d3"
+    },
+    "assets/props/colilla/colilla_visual.tscn": {
+      "bytes": 1949,
+      "sha256": "1c66ea92b5af7ea8fef379f839418f2edbce6621974f857d7d7a68b2906726d4"
+    },
+    "assets/props/colilla/generar_colilla.py": {
+      "bytes": 1575,
+      "sha256": "d805407ef5ea75cbb4f7be8990bec83778058f5c3fc0bc89d9f9dc24bda67fde"
+    },
+    "assets/ui/manada/pistas/capturar_colilla.gd": {
+      "bytes": 4587,
+      "sha256": "8bbc9bc3a9fd8042775bb124f79c49da760c6be609f528d69ae0dc00785b65f6"
+    },
+    "assets/ui/manada/pistas/capturar_colilla.gd.uid": {
+      "bytes": 20,
+      "sha256": "7cbb89a9c7fabe553fad49a213008a5b2251f01cad705b3e1169753c01f12d8c"
+    },
+    "assets/ui/manada/pistas/colilla.png": {
+      "bytes": 381628,
+      "sha256": "01e585f0604a76df271942837b9656f2ea855ef1ffb7b551badb1bbd6b78f682"
+    },
+    "assets/ui/manada/pistas/colilla.png.procedencia.json": {
+      "bytes": 478,
+      "sha256": "215cf410ed0e82d0296a35c561e56925f512f5cba3734265c16cabfee3af02dd"
+    },
+    "assets/ui/manada/pistas/procedencia.md": {
+      "bytes": 681,
+      "sha256": "72499c3054d426cb671650a812d7b7213344a6afd2fa1c44d7972debe91c66d3"
+    },
+    "assets/ui/manada/pistas/yasmin-circulo-original.png": {
+      "bytes": 993,
+      "sha256": "d5db6fd633d376c2bdf35ffdc864786820906b5c79c2d3fb21d904c52b67d29b"
+    },
+    "assets/ui/manada/pistas/yasmin-circulo-original.png.import": {
+      "bytes": 997,
+      "sha256": "c41b57689a194a73439cc0e10a2e25733747e78686daaad00a971b8cc53441b3"
+    },
+    "src/dominio/empleo/partida.gd": {
+      "bytes": 7466,
+      "sha256": "77c675141494ab4d3087eca9d8ed88a58c96d268adbb681ad57a227f86bb79a2"
+    },
+    "src/dominio/investigacion/bandeja.gd": {
+      "bytes": 4412,
+      "sha256": "5ce9505b83478713fd689e80122faceda8fd3206175d021bf30b24c3c0c86163"
+    },
+    "src/dominio/investigacion/caso.gd": {
+      "bytes": 2693,
+      "sha256": "3407aedf6bdf8b8c54be4137599108c2d097609ad8e8998ce4a93fb844412d05"
+    },
+    "src/dominio/investigacion/caso.gd.uid": {
+      "bytes": 20,
+      "sha256": "5064914e45a845778b13fa3290fe74c1a3c247dbbe061203ae0afcb8095cfa06"
+    },
+    "src/dominio/investigacion/colilla.tres": {
+      "bytes": 319,
+      "sha256": "b06e764cfe4d5f5bd48932df500b3535a7c9f280ac00b611824ec992692319b2"
+    },
+    "src/dominio/investigacion/conversacion.gd": {
+      "bytes": 3171,
+      "sha256": "032a7fb6cbe57705305633e6eee2bbcd39d682b0566489f5f0d9553f28f7f3f4"
+    },
+    "src/dominio/investigacion/conversacion_de_notas.tres": {
+      "bytes": 273,
+      "sha256": "d2cff61c293b00893ac74650108d317f8fadb4049f29da4e06ec08cb5f303a83"
+    },
+    "src/dominio/investigacion/desenlace.gd": {
+      "bytes": 379,
+      "sha256": "6e57dd4147770f53b2248341a7af36e8ed728896a0543095e1dc514c812508ca"
+    },
+    "src/dominio/investigacion/desenlace.gd.uid": {
+      "bytes": 20,
+      "sha256": "a12e5ff22198eeb80eec50b7f57ae31f6e1bdc78cacd8be2de1f3061f2071b50"
+    },
+    "src/dominio/investigacion/expediente.gd": {
+      "bytes": 3961,
+      "sha256": "49ce3d5e8a9f42de14679a34851018f61a6210009602145acec6a06962037a20"
+    },
+    "src/dominio/investigacion/expediente.gd.uid": {
+      "bytes": 19,
+      "sha256": "ad8e076e342b5895f824a18f5d467903ce2004b920376a479cb96f05354ad9c7"
+    },
+    "src/dominio/investigacion/hipotesis.gd": {
+      "bytes": 405,
+      "sha256": "c5404f8900b0b7d4b887d16db950256394e3c7e94d7ab3fb5f070faad7ff376c"
+    },
+    "src/dominio/investigacion/hipotesis.gd.uid": {
+      "bytes": 20,
+      "sha256": "e667e35416a0fea209c07cf0de0e598f3ffda4564d6f16c5293fdb8cfc06c747"
+    },
+    "src/dominio/investigacion/hipotesis_de_la_jornada.gd": {
+      "bytes": 520,
+      "sha256": "fffe9fc662e57c09de6d8c3b76d2057bc604adc107f62494af9f748f43720b12"
+    },
+    "src/dominio/investigacion/hipotesis_de_la_jornada.gd.uid": {
+      "bytes": 20,
+      "sha256": "2cb1bc4fa660f080f758c0202bf4ad95e0c6e01f5b8edd050e3ca2e5a20eb81c"
+    },
+    "src/dominio/investigacion/pista.gd": {
+      "bytes": 550,
+      "sha256": "cc735a2120a8d791f261bb98d7184daf6a21f861a8932a07efce7260edbf6b8e"
+    },
+    "src/dominio/investigacion/pista.gd.uid": {
+      "bytes": 19,
+      "sha256": "ca0497464d68c4b80a5f7b046ef2582f75a8bfbb32feda33ae8de65b16a5219a"
+    },
+    "src/escenas/almacen.gd": {
+      "bytes": 34349,
+      "sha256": "1fd2366d15c80cb9fd55a6103b514c2c4a08812a9fc278e763fee65f02d271f4"
+    },
+    "src/escenas/objetos/colilla.gd": {
+      "bytes": 101,
+      "sha256": "1b6fa1043bea6de18ed5d2f93eb4b45368791df017a5f293449b00f6972637f7"
+    },
+    "src/escenas/objetos/colilla.gd.uid": {
+      "bytes": 20,
+      "sha256": "f7edecc552f113fb2c2c2841e6052cb925995f3912e715a1b5b8db4f57533619"
+    },
+    "src/escenas/objetos/colilla.tscn": {
+      "bytes": 707,
+      "sha256": "63bfb9f4fcae3f313c6b8876865ab1b853368e1e13f29ed241a221323987d02d"
+    },
+    "src/escenas/puestos/objetos_del_almacen.tscn": {
+      "bytes": 20787,
+      "sha256": "83237de2cd2a881876fd1146fa6a3feefa5abb0a3481654bd2ef91c31e632333"
+    },
+    "src/escenas/puestos/servicios_del_almacen.tscn": {
+      "bytes": 2454,
+      "sha256": "0ce7e848e1098e8b34dea24617f40dd1c04647b1cd5c5908d6022eb030feedf0"
+    },
+    "src/sistemas/investigacion/investigador.gd": {
+      "bytes": 1028,
+      "sha256": "4b4caa4c6dfb8d45e8cca4598b80c3b8c92a38a7067618b0f3af3bac022d5d61"
+    },
+    "src/sistemas/investigacion/investigador.gd.uid": {
+      "bytes": 20,
+      "sha256": "b04c58fac6fcf04611187667ad666cceafd9c5c853d56b0e5adf6bd70d5d1f3f"
+    },
+    "test/dominio/empleo/expediente_de_la_partida_test.gd": {
+      "bytes": 3732,
+      "sha256": "9e940a3d0e7e6f8d26d6adadfa1946a71a6341b5c7b9108cbe87881d806a6a5f"
+    },
+    "test/dominio/empleo/expediente_de_la_partida_test.gd.uid": {
+      "bytes": 19,
+      "sha256": "e9aaf4235bf63e6b4f7d556f621f37d73e115b87217e23a634e934ee535b91e1"
+    },
+    "test/dominio/investigacion/bandeja_test.gd": {
+      "bytes": 10518,
+      "sha256": "410d79ed26a76928eef807aa6973e26e188a6526fab8890fecb16bf15c93c2f6"
+    },
+    "test/dominio/investigacion/caso_test.gd": {
+      "bytes": 5616,
+      "sha256": "c1f3e9312012e055f53d99b8557686498c2ee8089345a925567a97c9858cd084"
+    },
+    "test/dominio/investigacion/caso_test.gd.uid": {
+      "bytes": 20,
+      "sha256": "c42f78110b072a65b81bf7630601645b0da98473466c3cd0e8a76bb17f62246c"
+    },
+    "test/dominio/investigacion/celular_test.gd": {
+      "bytes": 5342,
+      "sha256": "df94abb11e9a69510f0fff3c4cfce953f1e09a1e2a7bef92444bb8c59b57389c"
+    },
+    "test/dominio/investigacion/conversacion_test.gd": {
+      "bytes": 4201,
+      "sha256": "4360528348d5b27bed8e6f59a7ff9fec21b3582c533cb91abace86412cc67c96"
+    },
+    "test/dominio/investigacion/desenlace_test.gd": {
+      "bytes": 623,
+      "sha256": "b2d741c5d3f1e6741264a9625ca4d92a4feb7d3a8c8532b66ceb6edc32ec47c7"
+    },
+    "test/dominio/investigacion/desenlace_test.gd.uid": {
+      "bytes": 19,
+      "sha256": "c6dc63d72cd4fd3f2093f0c35e86e813bb46746bc4b64809df17062c7b7f1c9b"
+    },
+    "test/dominio/investigacion/expediente_test.gd": {
+      "bytes": 9700,
+      "sha256": "db135d2a01c6450fd0ed97511f37b3a77e2c96942d4afd6a32db20c8948f9e4a"
+    },
+    "test/dominio/investigacion/expediente_test.gd.uid": {
+      "bytes": 20,
+      "sha256": "b53f80c9a1ecdf1ef394423c0175bbca76d823265a15830bb6c6c526cfd9d7d0"
+    },
+    "test/dominio/investigacion/hipotesis_de_la_jornada_test.gd": {
+      "bytes": 1375,
+      "sha256": "1f0c1c0150d63edf1bf3adb5070f68f81242315a481c7d36e4ea7ebdd2ece88e"
+    },
+    "test/dominio/investigacion/hipotesis_de_la_jornada_test.gd.uid": {
+      "bytes": 19,
+      "sha256": "ab306f1d783b1d03873c902ab9129d2dea843603a6ff94c48ffcbf3dd7979edb"
+    },
+    "test/dominio/investigacion/hipotesis_test.gd": {
+      "bytes": 537,
+      "sha256": "450f36ef90202256edcb0fd63ef7ccc934040a2c08ade3ebec3e388d36c6653f"
+    },
+    "test/dominio/investigacion/hipotesis_test.gd.uid": {
+      "bytes": 20,
+      "sha256": "ee682f46c3c227be58e361ad814e29bfcdfc8f089778fd582f6ca068584bc1a1"
+    },
+    "test/dominio/investigacion/pista_test.gd": {
+      "bytes": 679,
+      "sha256": "55e7847d7b1da22dee0d7132be4c881786c15cbae80cbeb6de76d4679bb2c575"
+    },
+    "test/dominio/investigacion/pista_test.gd.uid": {
+      "bytes": 20,
+      "sha256": "5000cca9238657ffdc37f32c9b25c8f12cfc86f0e314320188320840aaf195f3"
+    },
+    "test/escenas/pistas_de_la_segunda_jornada_test.gd": {
+      "bytes": 14565,
+      "sha256": "a4676244b28c50a2df7f668b0fd9a6a9d151d6f69f279d9dc38a3f2009a14c53"
+    },
+    "test/escenas/pistas_de_la_segunda_jornada_test.gd.uid": {
+      "bytes": 19,
+      "sha256": "b315fdbfe4a7f1476ea1d5b0dfcf5c28131dcbf162ea58303ccc1f433ecb5011"
+    },
+    "test/sistemas/investigacion/investigador_test.gd": {
+      "bytes": 4887,
+      "sha256": "9633c9768ce788926ba7559c888b4a765d5e047505cbc45344b4c4119532fd5f"
+    },
+    "test/sistemas/investigacion/investigador_test.gd.uid": {
+      "bytes": 20,
+      "sha256": "aae700fde74e7fd7480e669049af7ead1f04c336eefae23024bf2836457e1ac4"
+    }
+  },
+  "momento": "Copia durante espera de cola, posterior a enqueue. Árbol congelado desde enqueue; no inventa pin previo."
+}

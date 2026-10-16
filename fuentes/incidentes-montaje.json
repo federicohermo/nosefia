@@ -1,0 +1,29 @@
+{
+  "incidentes": [
+    {
+      "intento": "fisico-rojo-03",
+      "codigo": 105,
+      "hecho": "La suite nueva omitió preload de ReglasDelCierre, que no declara class_name.",
+      "lectura": "No acredita rojo funcional. Foto anterior sí terminó limpia y conserva su procedencia.",
+      "xml": "El wrapper copió el último XML existente después del corte de discovery; ese XML no representa este intento.",
+      "correccion": "Sólo const/preload en fixture y formato del nombre de test; rojo04 válido posterior."
+    },
+    {
+      "intento": "encolado fisico-rojo-03",
+      "hecho": "gdlint señaló línea larga; PowerShell continuó al enqueue porque no se comprobó exit1.",
+      "correccion": "Se conservó el árbol congelado y se corrigió el nombre tras terminar; en enqueue04 se comprobó exit de lint."
+    },
+    {
+      "intento": "pin pre-enqueue full-01",
+      "hecho": "Trim sobre salida nula de git status vacío dio error no terminante de PowerShell.",
+      "estado": "El JSON previo conserva estado_porcelain nulo como salida sin líneas; HEAD89310954 quedó registrado.",
+      "limite": "No se presenta como comprobación exitosa de ese Trim.",
+      "control": "full-con-pins.py afirmó HEAD esperado y status vacío al tomar turno antes de ejecutar motor; registra ambos otra vez al finalizar."
+    },
+    {
+      "intento": "preflight-cierre estático",
+      "hecho": "Primera invocación usó nombre incorrecto yasmin.png y falló por archivo ausente.",
+      "correccion": "Se leyó ruta real del recurso y se repitió con yasmin-circulo-original.png; comprobación posterior pasó."
+    }
+  ]
+}

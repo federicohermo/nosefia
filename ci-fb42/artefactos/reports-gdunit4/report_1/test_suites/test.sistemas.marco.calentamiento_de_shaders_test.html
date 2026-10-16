@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>GdUnit4 Testsuite</title>
+	<link rel="stylesheet" href="../css/styles.css">
+	<link href="../css/breadcrumb.css" rel="stylesheet" type="text/css" />
+
+	<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+	<script>
+		$(document).ready(function () {
+			var report_view = $('#report_area').find('.report-column')
+
+			$('#report-table tr').click(function () {
+				var report = $(this).find('.report-column').html();
+				report_view.html(report)
+				$('.selected').removeClass('selected');
+				$(this).addClass('selected');
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<header>
+		<div class="logo">
+			<img src="../css/logo.png" alt="GdUnit4 Logo">
+			<span>GdUnit4</span>
+		</div>
+		<div class="report-container">
+			<h1>Testsuite Report</h1>
+			<div>
+				<span class="label">res://test/sistemas/marco/calentamiento_de_shaders_test.gd</span>
+			</div>
+			<div class="summary">
+				<div class="summary-item">
+					<span class="label">Tests</span>
+					<span class="value">20</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Skipped</span>
+					<span class="value">0</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Flaky</span>
+					<span class="value">0</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Failures</span>
+					<span class="value">0</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Orphans</span>
+					<span class="value">0</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Duration</span>
+					<span class="value">1s 308ms</span>
+				</div>
+				<div class="success-rate">
+					<div class="check-icon status-passed">✓</div>
+					<div class="rate-text">
+						<span class="label">Success Rate</span>
+						<span class="value">100%</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="breadcrumb">
+			<a href="../index.html"><span>All</span></a>
+			<a href="../path/test.sistemas.marco.html"><span>test/sistemas/marco</span></a>
+			<a class="active" href="#"><span>calentamiento_de_shaders_test</span></a>
+		</div>
+	</header>
+
+	<main>
+		<div class="tab-report-grid">
+			<div class="grid-item tab">
+				<table id="report-table">
+					<thead>
+						<tr>
+							<th>Testcase</th>
+							<th>Result</th>
+							<th>Skipped</th>
+							<th>Orphans</th>
+							<th>Duration</th>
+							<th class="report-column">Report</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+								<tr class="testcase-group">
+									<td>test_el_util_se_calienta_con_reflejos_sin_mover_el_objeto_real</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>203ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_un_cuadro_por_material_nuevo</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>64ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_el_material_de_un_multimesh_cuenta_como_nuevo</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>28ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>28ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_los_que_repiten_material_se_destapan_juntos</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>28ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_termina_con_todo_visible_y_la_camara_de_antes</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>57ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_lo_oculto_se_dibuja_y_vuelve_a_quedar_oculto</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>50ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_el_modelo_reemplazado_no_se_destapa_durante_el_calentamiento</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>49ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_una_escena_sin_objetos_termina_igual</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>15ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_antes_de_calentar_no_hace_nada</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>14ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_los_objetos_movibles_se_dibujan_tambien_sin_los_focos_del_cuarto</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>91ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_el_contorno_se_dibuja_antes_de_jugar_y_se_retira_al_terminar</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>28ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_el_calentamiento_restaura_el_pase_y_los_uniformes_del_foco_previo</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>29ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_las_gotas_se_calientan_con_omni_y_area_sin_mover_el_lote_real</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>139ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_cancelar_el_calentamiento_restaura_luces_y_gotas_y_libera_muestras</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>98ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_fuera_de_la_web_la_plantilla_no_enlaza_en_paralelo</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>14ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_con_cola_la_pasada_destapa_todos_sus_objetos_en_un_cuadro</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>29ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_no_termina_mientras_quedan_programas_en_cola</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>78ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_las_pasadas_no_esperan_la_cola_y_el_final_espera_la_de_la_ultima</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>77ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_con_cola_el_progreso_sale_de_los_programas_que_terminaron</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>49ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+					</tbody>
+				</table>
+			</div>
+			<div id="report_area" class="grid-item tab">
+				<h4>Failure Report</h4>
+				<div class="report-column"></div>
+			</div>
+		</div>
+	</main>
+
+	<footer>
+		<p>Generated by <a href="https://github.com/MikeSchulze/gdUnit4">GdUnit4</a> at 2026-10-16 19:41:25</p>
+		<div class="status-legend">
+			<span class="status-legend-item">
+				<span class="status-box status-skipped"></span> Skipped
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-passed"></span> Passed
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-flaky"></span> Flaky
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-warning"></span> Warning
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-failed"></span> Failed
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-error"></span> Error
+			</span>
+		</div>
+	</footer>
+</body>
+
+<script>
+	function groupTableRows() {
+		const table = document.getElementById('report-table');
+		const rows = table.querySelectorAll('tbody tr');
+
+		let previousTestCase = '';
+		let groupStartIndex = 0;
+		let groupColorToggle = true; // Toggle between two colors
+
+		rows.forEach((row, index) => {
+			const testCaseName = row.cells[0].textContent.trim();
+
+			if (testCaseName !== previousTestCase) {
+				// Close the previous group
+				if (index > 0 && groupStartIndex !== index - 1) {
+					// Apply background color to the group
+					const groupClass = groupColorToggle ? 'group-bg-1' : 'group-bg-2';
+					for (let i = groupStartIndex; i <= index - 1; i++) {
+						rows[i].classList.add(groupClass);
+					}
+
+					// Toggle background color for the next group
+					groupColorToggle = !groupColorToggle;
+				}
+
+				// Start a new group
+				groupStartIndex = index;
+			}
+
+			previousTestCase = testCaseName;
+		});
+
+		// Handle the last group
+		if (groupStartIndex !== rows.length - 1) {
+			// Apply background color to the last group
+			const groupClass = groupColorToggle ? 'group-bg-1' : 'group-bg-2';
+			for (let i = groupStartIndex; i < rows.length; i++) {
+				rows[i].classList.add(groupClass);
+			}
+		}
+	}
+
+	// Call the function to group table rows after the DOM loads
+	document.addEventListener('DOMContentLoaded', groupTableRows);
+</script>
+
+</html>

@@ -1,0 +1,14 @@
+{
+  "cmd": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+    "--script",
+    "res://.github/scripts/generar_volumenes_para_colilla.gd",
+    "--",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\geometria-verde-09\\volumenes-regenerados.json"
+  ],
+  "codigo": 0,
+  "godot_origen": "registro"
+}

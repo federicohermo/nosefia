@@ -1,0 +1,9 @@
+OK — 13 capacidades, 519 criterios, 6 ratificadas.
+Borradores, y cuánto les falta para ratificar:
+  anomalies: 0/4 criterios con test
+  counter-service: 45/63 criterios con test
+  employment-record: 42/44 criterios con test
+  notifications: 19/22 criterios con test
+  player-actions: 95/99 criterios con test
+  store-cleanup: 55/61 criterios con test
+  store-stock: 59/65 criterios con test

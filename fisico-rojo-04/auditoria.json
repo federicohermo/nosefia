@@ -1,0 +1,838 @@
+{
+  "carpeta": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\fisico-rojo-04",
+  "codigo": "100",
+  "xml": {
+    "id": "2026-10-16",
+    "name": "report_6",
+    "tests": "16",
+    "failures": "16",
+    "skipped": "0",
+    "flaky": "0",
+    "time": "0.000"
+  },
+  "suites": 2,
+  "casos": 16,
+  "fallos": 16,
+  "errores": 0,
+  "skips": 0,
+  "script_parse": [],
+  "diagnosticos": [
+    "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+    "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'."
+  ],
+  "conteos": [
+    "Executed test suites: (2/2)"
+  ],
+  "casos_previos": {
+    "('pista_test', 'test_canal_origen_y_jornada_se_cumplen_juntos')": {
+      "ausente": true
+    },
+    "('hipotesis_test', 'test_las_exigencias_de_una_opcion_se_cumplen_juntas')": {
+      "ausente": true
+    },
+    "('desenlace_test', 'test_umbral_y_exigencias_se_cumplen_simultaneamente')": {
+      "ausente": true
+    },
+    "('hipotesis_de_la_jornada_test', 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada')": {
+      "ausente": true
+    },
+    "('hipotesis_de_la_jornada_test', 'test_jornada_sin_guion_no_inventa_una_opcion')": {
+      "ausente": true
+    },
+    "('caso_test', 'test_caso_valido_y_repetida_tienen_diagnosticos_distintos')": {
+      "ausente": true
+    },
+    "('caso_test', 'test_exigencia_inexistente_y_ciclo_se_rechazan')": {
+      "ausente": true
+    },
+    "('caso_test', 'test_desenlace_inalcanzable_por_umbral_o_por_exigencia')": {
+      "ausente": true
+    },
+    "('caso_test', 'test_ciclo_largo_no_depende_del_orden_de_los_recursos')": {
+      "ausente": true
+    },
+    "('expediente_test', 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva')": {
+      "fallos": 0,
+      "errores": 0,
+      "skips": 0
+    },
+    "('expediente_test', 'test_una_y_dos_exigencias_pendientes_no_registran')": {
+      "fallos": 0,
+      "errores": 0,
+      "skips": 0
+    },
+    "('expediente_test', 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez')": {
+      "fallos": 0,
+      "errores": 0,
+      "skips": 0
+    },
+    "('expediente_test', 'test_caso_inconsistente_no_registra_ni_publica')": {
+      "fallos": 0,
+      "errores": 0,
+      "skips": 0
+    },
+    "('expediente_test', 'test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia')": {
+      "fallos": 0,
+      "errores": 0,
+      "skips": 0
+    },
+    "('expediente_test', 'test_canal_y_jornada_ajenos_no_registran_la_pista')": {
+      "fallos": 0,
+      "errores": 0,
+      "skips": 0
+    },
+    "('expediente_test', 'test_notas_se_agregan_foto_texto_en_orden_de_descubrimiento')": {
+      "fallos": 0,
+      "errores": 0,
+      "skips": 0
+    },
+    "('expediente_test', 'test_consultar_notas_no_muta_estado_ni_guion')": {
+      "fallos": 0,
+      "errores": 0,
+      "skips": 0
+    }
+  },
+  "todos_los_17_previos_verdes": false,
+  "retenciones": {
+    "clases": {},
+    "rutas": [],
+    "recursos": [],
+    "lineas_recursos": [],
+    "paginas": [],
+    "avisos": [
+      "StringName: 38 unclaimed string names at exit."
+    ]
+  },
+  "base_retenciones": {
+    "clases": {
+      "GDScriptNativeClass": 27,
+      "GDScript": 111,
+      "RegEx": 2,
+      "RefCounted": 1
+    },
+    "rutas": [
+      "res://addons/gdUnit4/src/GdUnitArrayAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitAwaiter.gd",
+      "res://addons/gdUnit4/src/GdUnitBoolAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitDictionaryAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitFailureAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitFileAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitFloatAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitFuncAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitGodotErrorAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitIntAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitObjectAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitResultAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitSceneRunner.gd",
+      "res://addons/gdUnit4/src/GdUnitSignalAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitStringAssert.gd",
+      "res://addons/gdUnit4/src/GdUnitTestSuite.gd",
+      "res://addons/gdUnit4/src/GdUnitTuple.gd",
+      "res://addons/gdUnit4/src/GdUnitValueExtractor.gd",
+      "res://addons/gdUnit4/src/GdUnitVectorAssert.gd",
+      "res://addons/gdUnit4/src/asserts/GdAssertMessages.gd",
+      "res://addons/gdUnit4/src/asserts/GdAssertReports.gd",
+      "res://addons/gdUnit4/src/asserts/GdUnitAssertImpl.gd",
+      "res://addons/gdUnit4/src/asserts/GdUnitAssertions.gd",
+      "res://addons/gdUnit4/src/core/GdArrayTools.gd",
+      "res://addons/gdUnit4/src/core/GdObjects.gd",
+      "res://addons/gdUnit4/src/core/GdUnitFileAccess.gd",
+      "res://addons/gdUnit4/src/core/GdUnitProperty.gd",
+      "res://addons/gdUnit4/src/core/GdUnitResult.gd",
+      "res://addons/gdUnit4/src/core/GdUnitRunnerConfig.gd",
+      "res://addons/gdUnit4/src/core/GdUnitSceneRunnerImpl.gd",
+      "res://addons/gdUnit4/src/core/GdUnitSettings.gd",
+      "res://addons/gdUnit4/src/core/GdUnitSignalAwaiter.gd",
+      "res://addons/gdUnit4/src/core/GdUnitSignalCollector.gd",
+      "res://addons/gdUnit4/src/core/GdUnitSignals.gd",
+      "res://addons/gdUnit4/src/core/GdUnitSingleton.gd",
+      "res://addons/gdUnit4/src/core/GdUnitStackTrace.gd",
+      "res://addons/gdUnit4/src/core/GdUnitStackTraceElement.gd",
+      "res://addons/gdUnit4/src/core/GdUnitTestResourceLoader.gd",
+      "res://addons/gdUnit4/src/core/GdUnitTestSuiteScanner.gd",
+      "res://addons/gdUnit4/src/core/GdUnitTools.gd",
+      "res://addons/gdUnit4/src/core/LocalTime.gd",
+      "res://addons/gdUnit4/src/core/_TestCase.gd",
+      "res://addons/gdUnit4/src/core/attributes/TestCaseAttribute.gd",
+      "res://addons/gdUnit4/src/core/command/GdUnitShortcut.gd",
+      "res://addons/gdUnit4/src/core/discovery/GdUnitGUID.gd",
+      "res://addons/gdUnit4/src/core/discovery/GdUnitTestCase.gd",
+      "res://addons/gdUnit4/src/core/discovery/GdUnitTestDiscoverSink.gd",
+      "res://addons/gdUnit4/src/core/discovery/GdUnitTestDiscoverer.gd",
+      "res://addons/gdUnit4/src/core/event/GdUnitEvent.gd",
+      "res://addons/gdUnit4/src/core/event/GdUnitEventTestDiscoverEnd.gd",
+      "res://addons/gdUnit4/src/core/event/GdUnitEventTestDiscoverStart.gd",
+      "res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd",
+      "res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd",
+      "res://addons/gdUnit4/src/core/execution/GdUnitProjectSettingsSnapshot.gd",
+      "res://addons/gdUnit4/src/core/execution/GdUnitTestReportCollector.gd",
+      "res://addons/gdUnit4/src/core/hooks/GdUnitBaseReporterTestSessionHook.gd",
+      "res://addons/gdUnit4/src/core/hooks/GdUnitHtmlReporterTestSessionHook.gd",
+      "res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHook.gd",
+      "res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd",
+      "res://addons/gdUnit4/src/core/hooks/GdUnitXMLReporterTestSessionHook.gd",
+      "res://addons/gdUnit4/src/core/parameters/GdBuiltinConstants.gd",
+      "res://addons/gdUnit4/src/core/parameters/GdCallableParameterSetResolver.gd",
+      "res://addons/gdUnit4/src/core/parameters/GdInlineParameterSetResolver.gd",
+      "res://addons/gdUnit4/src/core/parameters/GdParameterSetResolver.gd",
+      "res://addons/gdUnit4/src/core/parameters/GdParameterSetResolverFactory.gd",
+      "res://addons/gdUnit4/src/core/parameters/GdPropertyParameterSetResolver.gd",
+      "res://addons/gdUnit4/src/core/parse/GdClassDescriptor.gd",
+      "res://addons/gdUnit4/src/core/parse/GdDefaultValueDecoder.gd",
+      "res://addons/gdUnit4/src/core/parse/GdFunctionArgument.gd",
+      "res://addons/gdUnit4/src/core/parse/GdFunctionDescriptor.gd",
+      "res://addons/gdUnit4/src/core/parse/GdScriptParser.gd",
+      "res://addons/gdUnit4/src/core/parse/GdUnitExpressionRunner.gd",
+      "res://addons/gdUnit4/src/core/report/GdUnitError.gd",
+      "res://addons/gdUnit4/src/core/report/GdUnitReport.gd",
+      "res://addons/gdUnit4/src/core/runners/GdUnitTestSession.gd",
+      "res://addons/gdUnit4/src/core/templates/test_suite/GdUnitTestSuiteTemplate.gd",
+      "res://addons/gdUnit4/src/core/thread/GdUnitThreadContext.gd",
+      "res://addons/gdUnit4/src/core/thread/GdUnitThreadManager.gd",
+      "res://addons/gdUnit4/src/dotnet/GdUnit4CSharpApiLoader.gd",
+      "res://addons/gdUnit4/src/fuzzers/Fuzzer.gd",
+      "res://addons/gdUnit4/src/matchers/GdUnitArgumentMatcher.gd",
+      "res://addons/gdUnit4/src/mocking/GdUnitMock.gd",
+      "res://addons/gdUnit4/src/monitor/ErrorLogEntry.gd",
+      "res://addons/gdUnit4/src/monitor/GdUnitMonitor.gd",
+      "res://addons/gdUnit4/src/monitor/GdUnitOrphanNodeInfo.gd",
+      "res://addons/gdUnit4/src/monitor/GdUnitOrphanNodesMonitor.gd",
+      "res://addons/gdUnit4/src/monitor/GodotGdErrorMonitor.gd",
+      "res://addons/gdUnit4/src/reporters/GdUnitReportSummary.gd",
+      "res://addons/gdUnit4/src/reporters/GdUnitReportWriter.gd",
+      "res://addons/gdUnit4/src/reporters/GdUnitTestCaseReport.gd",
+      "res://addons/gdUnit4/src/reporters/GdUnitTestReporter.gd",
+      "res://addons/gdUnit4/src/reporters/GdUnitTestSuiteReport.gd",
+      "res://addons/gdUnit4/src/reporters/html/GdUnitByPathReport.gd",
+      "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlEncoder.gd",
+      "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlPatterns.gd",
+      "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlReportWriter.gd",
+      "res://addons/gdUnit4/src/reporters/xml/JUnitXmlReportWriter.gd",
+      "res://addons/gdUnit4/src/reporters/xml/XmlElement.gd",
+      "res://addons/gdUnit4/src/ui/utils/GdUnitEditorColorTheme.gd"
+    ],
+    "recursos": [
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitArrayAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitAwaiter.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitBoolAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitDictionaryAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitFailureAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitFileAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitFloatAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitFuncAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitGodotErrorAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitIntAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitObjectAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitResultAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitSceneRunner.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitSignalAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitStringAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitTestSuite.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitTuple.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitValueExtractor.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/GdUnitVectorAssert.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/asserts/GdAssertMessages.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/asserts/GdAssertReports.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/asserts/GdUnitAssertImpl.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/asserts/GdUnitAssertions.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdArrayTools.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdObjects.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitFileAccess.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitProperty.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitResult.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitRunnerConfig.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitSceneRunnerImpl.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitSettings.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitSignalAwaiter.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitSignalCollector.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitSignals.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitSingleton.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitStackTrace.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitStackTraceElement.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitTestResourceLoader.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitTestSuiteScanner.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/GdUnitTools.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/LocalTime.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/_TestCase.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/attributes/TestCaseAttribute.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/command/GdUnitShortcut.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/discovery/GdUnitGUID.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/discovery/GdUnitTestCase.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/discovery/GdUnitTestDiscoverSink.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/discovery/GdUnitTestDiscoverer.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/event/GdUnitEvent.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/event/GdUnitEventTestDiscoverEnd.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/event/GdUnitEventTestDiscoverStart.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/execution/GdUnitProjectSettingsSnapshot.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/execution/GdUnitTestReportCollector.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/hooks/GdUnitBaseReporterTestSessionHook.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/hooks/GdUnitHtmlReporterTestSessionHook.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHook.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/hooks/GdUnitXMLReporterTestSessionHook.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parameters/GdBuiltinConstants.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parameters/GdCallableParameterSetResolver.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parameters/GdInlineParameterSetResolver.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parameters/GdParameterSetResolver.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parameters/GdParameterSetResolverFactory.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parameters/GdPropertyParameterSetResolver.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parse/GdClassDescriptor.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parse/GdDefaultValueDecoder.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parse/GdFunctionArgument.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parse/GdFunctionDescriptor.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parse/GdScriptParser.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/parse/GdUnitExpressionRunner.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/report/GdUnitError.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/report/GdUnitReport.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/runners/GdUnitTestSession.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/templates/test_suite/GdUnitTestSuiteTemplate.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/thread/GdUnitThreadContext.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/core/thread/GdUnitThreadManager.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/dotnet/GdUnit4CSharpApiLoader.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/fuzzers/Fuzzer.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/matchers/GdUnitArgumentMatcher.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/mocking/GdUnitMock.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/monitor/ErrorLogEntry.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/monitor/GdUnitMonitor.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/monitor/GdUnitOrphanNodeInfo.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/monitor/GdUnitOrphanNodesMonitor.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/monitor/GodotGdErrorMonitor.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/GdUnitReportSummary.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/GdUnitReportWriter.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/GdUnitTestCaseReport.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/GdUnitTestReporter.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/GdUnitTestSuiteReport.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/html/GdUnitByPathReport.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlEncoder.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlPatterns.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlReportWriter.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/xml/JUnitXmlReportWriter.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/reporters/xml/XmlElement.gd",
+        "clase": "GDScript"
+      },
+      {
+        "ruta": "res://addons/gdUnit4/src/ui/utils/GdUnitEditorColorTheme.gd",
+        "clase": "GDScript"
+      }
+    ],
+    "lineas_recursos": [
+      "Resource still in use: res://addons/gdUnit4/src/core/discovery/GdUnitGUID.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/discovery/GdUnitTestCase.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitResult.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/matchers/GdUnitArgumentMatcher.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitProperty.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/templates/test_suite/GdUnitTestSuiteTemplate.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/command/GdUnitShortcut.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitStackTraceElement.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitStackTrace.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/report/GdUnitError.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/report/GdUnitReport.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/event/GdUnitEvent.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitSignals.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitSettings.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parse/GdFunctionDescriptor.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parse/GdClassDescriptor.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parse/GdScriptParser.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdObjects.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitSingleton.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdArrayTools.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parse/GdDefaultValueDecoder.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parse/GdFunctionArgument.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/fuzzers/Fuzzer.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/attributes/TestCaseAttribute.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parameters/GdParameterSetResolver.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/monitor/GdUnitMonitor.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/monitor/GdUnitOrphanNodeInfo.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitFuncAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitSceneRunner.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/monitor/GdUnitOrphanNodesMonitor.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/execution/GdUnitTestReportCollector.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/LocalTime.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/execution/GdUnitProjectSettingsSnapshot.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/monitor/ErrorLogEntry.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/ui/utils/GdUnitEditorColorTheme.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/asserts/GdAssertMessages.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/monitor/GodotGdErrorMonitor.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/mocking/GdUnitMock.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitValueExtractor.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitTuple.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitBoolAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitStringAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitIntAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitFloatAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitVectorAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitArrayAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitDictionaryAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitFileAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitObjectAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitResultAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitSignalAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitFailureAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitGodotErrorAssert.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/asserts/GdUnitAssertions.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitTestSuite.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitSignalCollector.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/thread/GdUnitThreadContext.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/thread/GdUnitThreadManager.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/_TestCase.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/asserts/GdAssertReports.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/asserts/GdUnitAssertImpl.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitSignalAwaiter.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/GdUnitAwaiter.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitSceneRunnerImpl.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitTools.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitRunnerConfig.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitFileAccess.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parse/GdUnitExpressionRunner.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parameters/GdBuiltinConstants.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parameters/GdInlineParameterSetResolver.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parameters/GdCallableParameterSetResolver.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parameters/GdPropertyParameterSetResolver.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/parameters/GdParameterSetResolverFactory.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/event/GdUnitEventTestDiscoverStart.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/discovery/GdUnitTestDiscoverSink.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/event/GdUnitEventTestDiscoverEnd.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/dotnet/GdUnit4CSharpApiLoader.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/discovery/GdUnitTestDiscoverer.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitTestResourceLoader.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/GdUnitTestSuiteScanner.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/runners/GdUnitTestSession.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHook.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/GdUnitTestCaseReport.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/GdUnitTestSuiteReport.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/GdUnitReportSummary.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/GdUnitTestReporter.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/GdUnitReportWriter.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/hooks/GdUnitBaseReporterTestSessionHook.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/html/GdUnitHtmlEncoder.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/html/GdUnitHtmlPatterns.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/html/GdUnitByPathReport.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/html/GdUnitHtmlReportWriter.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/hooks/GdUnitHtmlReporterTestSessionHook.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/xml/XmlElement.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/reporters/xml/JUnitXmlReportWriter.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/hooks/GdUnitXMLReporterTestSessionHook.gd (GDScript)",
+      "Resource still in use: res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd (GDScript)"
+    ],
+    "paginas": [
+      "N12VariantPools11BucketSmallE",
+      "N12VariantPools12BucketMediumE"
+    ],
+    "avisos": [
+      "StringName: 1897 unclaimed string names at exit.",
+      "WARNING: 141 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 100 resources still in use at exit.",
+      "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE",
+      "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE"
+    ]
+  },
+  "delta_rutas_agregadas": [],
+  "delta_rutas_retiradas": [
+    "res://addons/gdUnit4/src/GdUnitArrayAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitAwaiter.gd",
+    "res://addons/gdUnit4/src/GdUnitBoolAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitDictionaryAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitFailureAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitFileAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitFloatAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitFuncAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitGodotErrorAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitIntAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitObjectAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitResultAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitSceneRunner.gd",
+    "res://addons/gdUnit4/src/GdUnitSignalAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitStringAssert.gd",
+    "res://addons/gdUnit4/src/GdUnitTestSuite.gd",
+    "res://addons/gdUnit4/src/GdUnitTuple.gd",
+    "res://addons/gdUnit4/src/GdUnitValueExtractor.gd",
+    "res://addons/gdUnit4/src/GdUnitVectorAssert.gd",
+    "res://addons/gdUnit4/src/asserts/GdAssertMessages.gd",
+    "res://addons/gdUnit4/src/asserts/GdAssertReports.gd",
+    "res://addons/gdUnit4/src/asserts/GdUnitAssertImpl.gd",
+    "res://addons/gdUnit4/src/asserts/GdUnitAssertions.gd",
+    "res://addons/gdUnit4/src/core/GdArrayTools.gd",
+    "res://addons/gdUnit4/src/core/GdObjects.gd",
+    "res://addons/gdUnit4/src/core/GdUnitFileAccess.gd",
+    "res://addons/gdUnit4/src/core/GdUnitProperty.gd",
+    "res://addons/gdUnit4/src/core/GdUnitResult.gd",
+    "res://addons/gdUnit4/src/core/GdUnitRunnerConfig.gd",
+    "res://addons/gdUnit4/src/core/GdUnitSceneRunnerImpl.gd",
+    "res://addons/gdUnit4/src/core/GdUnitSettings.gd",
+    "res://addons/gdUnit4/src/core/GdUnitSignalAwaiter.gd",
+    "res://addons/gdUnit4/src/core/GdUnitSignalCollector.gd",
+    "res://addons/gdUnit4/src/core/GdUnitSignals.gd",
+    "res://addons/gdUnit4/src/core/GdUnitSingleton.gd",
+    "res://addons/gdUnit4/src/core/GdUnitStackTrace.gd",
+    "res://addons/gdUnit4/src/core/GdUnitStackTraceElement.gd",
+    "res://addons/gdUnit4/src/core/GdUnitTestResourceLoader.gd",
+    "res://addons/gdUnit4/src/core/GdUnitTestSuiteScanner.gd",
+    "res://addons/gdUnit4/src/core/GdUnitTools.gd",
+    "res://addons/gdUnit4/src/core/LocalTime.gd",
+    "res://addons/gdUnit4/src/core/_TestCase.gd",
+    "res://addons/gdUnit4/src/core/attributes/TestCaseAttribute.gd",
+    "res://addons/gdUnit4/src/core/command/GdUnitShortcut.gd",
+    "res://addons/gdUnit4/src/core/discovery/GdUnitGUID.gd",
+    "res://addons/gdUnit4/src/core/discovery/GdUnitTestCase.gd",
+    "res://addons/gdUnit4/src/core/discovery/GdUnitTestDiscoverSink.gd",
+    "res://addons/gdUnit4/src/core/discovery/GdUnitTestDiscoverer.gd",
+    "res://addons/gdUnit4/src/core/event/GdUnitEvent.gd",
+    "res://addons/gdUnit4/src/core/event/GdUnitEventTestDiscoverEnd.gd",
+    "res://addons/gdUnit4/src/core/event/GdUnitEventTestDiscoverStart.gd",
+    "res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd",
+    "res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd",
+    "res://addons/gdUnit4/src/core/execution/GdUnitProjectSettingsSnapshot.gd",
+    "res://addons/gdUnit4/src/core/execution/GdUnitTestReportCollector.gd",
+    "res://addons/gdUnit4/src/core/hooks/GdUnitBaseReporterTestSessionHook.gd",
+    "res://addons/gdUnit4/src/core/hooks/GdUnitHtmlReporterTestSessionHook.gd",
+    "res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHook.gd",
+    "res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd",
+    "res://addons/gdUnit4/src/core/hooks/GdUnitXMLReporterTestSessionHook.gd",
+    "res://addons/gdUnit4/src/core/parameters/GdBuiltinConstants.gd",
+    "res://addons/gdUnit4/src/core/parameters/GdCallableParameterSetResolver.gd",
+    "res://addons/gdUnit4/src/core/parameters/GdInlineParameterSetResolver.gd",
+    "res://addons/gdUnit4/src/core/parameters/GdParameterSetResolver.gd",
+    "res://addons/gdUnit4/src/core/parameters/GdParameterSetResolverFactory.gd",
+    "res://addons/gdUnit4/src/core/parameters/GdPropertyParameterSetResolver.gd",
+    "res://addons/gdUnit4/src/core/parse/GdClassDescriptor.gd",
+    "res://addons/gdUnit4/src/core/parse/GdDefaultValueDecoder.gd",
+    "res://addons/gdUnit4/src/core/parse/GdFunctionArgument.gd",
+    "res://addons/gdUnit4/src/core/parse/GdFunctionDescriptor.gd",
+    "res://addons/gdUnit4/src/core/parse/GdScriptParser.gd",
+    "res://addons/gdUnit4/src/core/parse/GdUnitExpressionRunner.gd",
+    "res://addons/gdUnit4/src/core/report/GdUnitError.gd",
+    "res://addons/gdUnit4/src/core/report/GdUnitReport.gd",
+    "res://addons/gdUnit4/src/core/runners/GdUnitTestSession.gd",
+    "res://addons/gdUnit4/src/core/templates/test_suite/GdUnitTestSuiteTemplate.gd",
+    "res://addons/gdUnit4/src/core/thread/GdUnitThreadContext.gd",
+    "res://addons/gdUnit4/src/core/thread/GdUnitThreadManager.gd",
+    "res://addons/gdUnit4/src/dotnet/GdUnit4CSharpApiLoader.gd",
+    "res://addons/gdUnit4/src/fuzzers/Fuzzer.gd",
+    "res://addons/gdUnit4/src/matchers/GdUnitArgumentMatcher.gd",
+    "res://addons/gdUnit4/src/mocking/GdUnitMock.gd",
+    "res://addons/gdUnit4/src/monitor/ErrorLogEntry.gd",
+    "res://addons/gdUnit4/src/monitor/GdUnitMonitor.gd",
+    "res://addons/gdUnit4/src/monitor/GdUnitOrphanNodeInfo.gd",
+    "res://addons/gdUnit4/src/monitor/GdUnitOrphanNodesMonitor.gd",
+    "res://addons/gdUnit4/src/monitor/GodotGdErrorMonitor.gd",
+    "res://addons/gdUnit4/src/reporters/GdUnitReportSummary.gd",
+    "res://addons/gdUnit4/src/reporters/GdUnitReportWriter.gd",
+    "res://addons/gdUnit4/src/reporters/GdUnitTestCaseReport.gd",
+    "res://addons/gdUnit4/src/reporters/GdUnitTestReporter.gd",
+    "res://addons/gdUnit4/src/reporters/GdUnitTestSuiteReport.gd",
+    "res://addons/gdUnit4/src/reporters/html/GdUnitByPathReport.gd",
+    "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlEncoder.gd",
+    "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlPatterns.gd",
+    "res://addons/gdUnit4/src/reporters/html/GdUnitHtmlReportWriter.gd",
+    "res://addons/gdUnit4/src/reporters/xml/JUnitXmlReportWriter.gd",
+    "res://addons/gdUnit4/src/reporters/xml/XmlElement.gd",
+    "res://addons/gdUnit4/src/ui/utils/GdUnitEditorColorTheme.gd"
+  ],
+  "rutas_y_cantidades_iguales": false,
+  "clases_iguales": false,
+  "paginas_iguales": false,
+  "limite": "Se comparan nombres, rutas completas y páginas. Los IDs de instancias son efímeros. No se atribuyen instancias sin ruta individualmente. El focal no certifica una completa sin retenciones."
+}

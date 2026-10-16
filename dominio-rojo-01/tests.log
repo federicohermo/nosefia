@@ -1,0 +1,286 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-investigacion/reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/pista_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/pista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_canal_origen_y_jornada_se_cumplen_juntos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/pista_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_canal_origen_y_jornada_se_cumplen_juntos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 10ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_canal_origen_y_jornada_se_cumplen_juntos' in res://test/dominio/investigacion/pista_test.gd:11[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_canal_origen_y_jornada_se_cumplen_juntos' in res://test/dominio/investigacion/pista_test.gd:11[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_canal_origen_y_jornada_se_cumplen_juntos' in res://test/dominio/investigacion/pista_test.gd:11[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_canal_origen_y_jornada_se_cumplen_juntos' in res://test/dominio/investigacion/pista_test.gd:11[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 1 test cases | 0 errors | 4 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 29ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/hipotesis_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/hipotesis_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_exigencias_de_una_opcion_se_cumplen_juntas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/hipotesis_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_exigencias_de_una_opcion_se_cumplen_juntas[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 10ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_exigencias_de_una_opcion_se_cumplen_juntas' in res://test/dominio/investigacion/hipotesis_test.gd:10[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 1 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 25ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/desenlace_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/desenlace_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_umbral_y_exigencias_se_cumplen_simultaneamente[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/desenlace_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_umbral_y_exigencias_se_cumplen_simultaneamente[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_umbral_y_exigencias_se_cumplen_simultaneamente' in res://test/dominio/investigacion/desenlace_test.gd:12[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_umbral_y_exigencias_se_cumplen_simultaneamente' in res://test/dominio/investigacion/desenlace_test.gd:14[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 1 test cases | 0 errors | 2 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 26ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_predeterminada_solo_si_ninguna_opcion_esta_habilitada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_predeterminada_solo_si_ninguna_opcion_esta_habilitada[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371835326855278>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371835326855278>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:20[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371835360409743>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371835360409743>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:21[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371835343632510>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371835343632510>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371835360409743>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371835343632510>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371835360409743>[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371835343632510>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:23[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371835360409743>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371835343632510>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371835360409743>[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371835343632510>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:28[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_jornada_sin_guion_no_inventa_una_opcion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_jornada_sin_guion_no_inventa_una_opcion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 2 test cases | 0 errors | 5 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 43ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caso_valido_y_repetida_tienen_diagnosticos_distintos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caso_valido_y_repetida_tienen_diagnosticos_distintos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_caso_valido_y_repetida_tienen_diagnosticos_distintos' in res://test/dominio/investigacion/caso_test.gd:23[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_exigencia_inexistente_y_ciclo_se_rechazan[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_exigencia_inexistente_y_ciclo_se_rechazan[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 10ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_exigencia_inexistente_y_ciclo_se_rechazan' in res://test/dominio/investigacion/caso_test.gd:29[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m3[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_exigencia_inexistente_y_ciclo_se_rechazan' in res://test/dominio/investigacion/caso_test.gd:30[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m3[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_exigencia_inexistente_y_ciclo_se_rechazan' in res://test/dominio/investigacion/caso_test.gd:32[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_desenlace_inalcanzable_por_umbral_o_por_exigencia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_desenlace_inalcanzable_por_umbral_o_por_exigencia[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m4[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_desenlace_inalcanzable_por_umbral_o_por_exigencia' in res://test/dominio/investigacion/caso_test.gd:40[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m4[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_desenlace_inalcanzable_por_umbral_o_por_exigencia' in res://test/dominio/investigacion/caso_test.gd:45[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ciclo_largo_no_depende_del_orden_de_los_recursos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/caso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ciclo_largo_no_depende_del_orden_de_los_recursos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m3[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_ciclo_largo_no_depende_del_orden_de_los_recursos' in res://test/dominio/investigacion/caso_test.gd:60[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 7 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 82ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 11ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva' in res://test/dominio/investigacion/expediente_test.gd:32[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva' in res://test/dominio/investigacion/expediente_test.gd:33[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mA[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]A[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva' in res://test/dominio/investigacion/expediente_test.gd:35[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva' in res://test/dominio/investigacion/expediente_test.gd:36[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_y_dos_exigencias_pendientes_no_registran[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_y_dos_exigencias_pendientes_no_registran[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_una_y_dos_exigencias_pendientes_no_registran' in res://test/dominio/investigacion/expediente_test.gd:50[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_una_y_dos_exigencias_pendientes_no_registran' in res://test/dominio/investigacion/expediente_test.gd:52[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_una_y_dos_exigencias_pendientes_no_registran' in res://test/dominio/investigacion/expediente_test.gd:53[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mA[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mB[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mC[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]A[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]B[/right]	[/cell][cell][right]2[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]C[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_una_y_dos_exigencias_pendientes_no_registran' in res://test/dominio/investigacion/expediente_test.gd:54[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_umbral_y_exigencia_publican_cada_desenlace_una_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_umbral_y_exigencia_publican_cada_desenlace_una_vez[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 11ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371781908199415>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371781908199415>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:74[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371781908199415>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371781908199415>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:75[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371781908199415>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371781891422200>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371781908199415>[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371781891422200>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:77[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371781908199415>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371781891422200>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371781908199415>[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371781891422200>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:80[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371781908199415>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m():<Resource#-9223371781891422200>[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371781908199415>[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]():<Resource#-9223371781891422200>[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:83[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caso_inconsistente_no_registra_ni_publica[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caso_inconsistente_no_registra_ni_publica[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 10ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mB[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mA[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]B[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]A[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia' in res://test/dominio/investigacion/expediente_test.gd:101[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255mB[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255mA[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]B[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]A[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia' in res://test/dominio/investigacion/expediente_test.gd:105[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia' in res://test/dominio/investigacion/expediente_test.gd:108[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_canal_y_jornada_ajenos_no_registran_la_pista[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_canal_y_jornada_ajenos_no_registran_la_pista[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 12ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_canal_y_jornada_ajenos_no_registran_la_pista' in res://test/dominio/investigacion/expediente_test.gd:130[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_canal_y_jornada_ajenos_no_registran_la_pista' in res://test/dominio/investigacion/expediente_test.gd:133[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m2[0m[0m[38;2;173;216;230m	at 'test_canal_y_jornada_ajenos_no_registran_la_pista' in res://test/dominio/investigacion/expediente_test.gd:136[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_notas_se_agregan_foto_texto_en_orden_de_descubrimiento[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_notas_se_agregan_foto_texto_en_orden_de_descubrimiento[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m4[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_notas_se_agregan_foto_texto_en_orden_de_descubrimiento' in res://test/dominio/investigacion/expediente_test.gd:148[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_consultar_notas_no_muta_estado_ni_guion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/investigacion/expediente_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_consultar_notas_no_muta_estado_ni_guion[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_consultar_notas_no_muta_estado_ni_guion' in res://test/dominio/investigacion/expediente_test.gd:182[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 21 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 173ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 17 test cases | 0 errors | 40 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (6/6)[0m
+[38;2;233;150;122mExecuted test cases : (17/17)[0m
+[38;2;233;150;122mTotal execution time: 378ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-investigacion/reports/report_4/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-429-444-investigacion/reports/report_4/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
+WARNING: 142 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 100 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)

@@ -1,0 +1,37 @@
+{
+  "product_head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+  "snapshots": 33,
+  "png_web": 33,
+  "png_nativos": 26,
+  "errores": [],
+  "avisos_literales": {
+    "[.WebGL-0x4c54015bf400] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.": 6,
+    "[.WebGL-0x4fc4010b2200] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.": 6
+  },
+  "avisos_solo_handle_conocidos": true,
+  "limite_avisos": "Se conserva cantidad por cada mensaje literal. La comparación contra431 reemplaza sólohandle hexadecimal; no se asume igual número de inicializaciones.",
+  "probes": {
+    "sonda-paquete.log": {
+      "sin_script_parse_retenciones": true,
+      "sha256": "cca4e5a2ef8a435c6c98837ea7766c2a9501f8436e5619fe89391303ffa067b1"
+    },
+    "dialogos-paquete.log": {
+      "sin_script_parse_retenciones": true,
+      "sha256": "e7d71eb019ccc21d3cd8391e47ad98a6135603ae61a2445bf7d968c54e363bfe"
+    },
+    "nativo-1280.log": {
+      "sin_script_parse_retenciones": true,
+      "sha256": "1cbcff2dff7d73d78df0341f7f53253642bf08702bf1859c7bd88f769e1c99b1"
+    },
+    "nativo-1920.log": {
+      "sin_script_parse_retenciones": true,
+      "sha256": "3552cb9866e53e99b0cd11db7f078fb3154906f2b98c9cbf83b8f4558405f141"
+    }
+  },
+  "guardias": {
+    "comprobar": 0,
+    "verificar_export": 0
+  },
+  "inspeccion_visual": "Abiertas7PNGWeb y6nativas: mainmenú original, frase lila, HOY/AYER y fotos con adjuntos. Círculo original y colilla visibles, texto completo.",
+  "full_local": "Dos completas locales rojas conservadas; CI propia verde y final integrada pendiente."
+}

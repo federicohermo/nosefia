@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-16" name="report_9" tests="17" failures="5" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="volumen_de_los_solidos_test" package="test/escenas" timestamp="2026-10-16T19:19:38" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="2.667">
+		<testcase name="test_el_corte_sale_del_agarrable_mas_chico" classname="volumen_de_los_solidos_test" time="0.576">
+		</testcase>
+		<testcase name="test_cada_pieza_donde_cabe_un_objeto_tiene_volumen" classname="volumen_de_los_solidos_test" time="0.610">
+		</testcase>
+		<testcase name="test_una_pieza_nueva_sin_volumen_se_nombra_y_una_exencion_vacia_no_la_salva" classname="volumen_de_los_solidos_test" time="0.016">
+		</testcase>
+		<testcase name="test_cada_caja_de_volumen_va_por_dentro_de_la_malla_visible" classname="volumen_de_los_solidos_test" time="0.475">
+		</testcase>
+		<testcase name="test_todo_lo_que_se_suelta_choca_con_la_capa_del_contorno" classname="volumen_de_los_solidos_test" time="0.379">
+		</testcase>
+		<testcase name="test_el_nuevo_corte_conserva_volumen_sin_rellenar_huecos" classname="volumen_de_los_solidos_test" time="0.557">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="iluminacion_horneada_test" package="test/escenas" timestamp="2026-10-16T19:19:40" hostname="localhost" tests="3" failures="1" errors="4" skipped="0" flaky="0" time="1.001">
+		<testcase name="test_el_local_tiene_su_luz_horneada" classname="iluminacion_horneada_test" time="0.392">
+		</testcase>
+		<testcase name="test_toda_malla_con_gi_estatico_entro_al_horneado" classname="iluminacion_horneada_test" time="0.459">
+			<error message="ERROR: res://test/escenas/iluminacion_horneada_test.gd:65" type="ABORT">
+<![CDATA[
+Godot Runtime Error !
+  'Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'.'
+	at '_con_uv2' in res://test/escenas/iluminacion_horneada_test.gd:65
+	at 'test_toda_malla_con_gi_estatico_entro_al_horneado' in res://test/escenas/iluminacion_horneada_test.gd:29
+]]>
+			</error>
+			<error message="ERROR: res://test/escenas/iluminacion_horneada_test.gd:65" type="ABORT">
+<![CDATA[
+Godot Runtime Error !
+  'Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'.'
+	at '_con_uv2' in res://test/escenas/iluminacion_horneada_test.gd:65
+	at 'test_toda_malla_con_gi_estatico_entro_al_horneado' in res://test/escenas/iluminacion_horneada_test.gd:29
+]]>
+			</error>
+			<error message="ERROR: res://test/escenas/iluminacion_horneada_test.gd:65" type="ABORT">
+<![CDATA[
+Godot Runtime Error !
+  'Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'.'
+	at '_con_uv2' in res://test/escenas/iluminacion_horneada_test.gd:65
+	at 'test_toda_malla_con_gi_estatico_entro_al_horneado' in res://test/escenas/iluminacion_horneada_test.gd:29
+]]>
+			</error>
+			<error message="ERROR: res://test/escenas/iluminacion_horneada_test.gd:65" type="ABORT">
+<![CDATA[
+Godot Runtime Error !
+  'Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'.'
+	at '_con_uv2' in res://test/escenas/iluminacion_horneada_test.gd:65
+	at 'test_toda_malla_con_gi_estatico_entro_al_horneado' in res://test/escenas/iluminacion_horneada_test.gd:29
+]]>
+			</error>
+			<failure message="FAILED: res://test/escenas/iluminacion_horneada_test.gd:32" type="FAILURE">
+<![CDATA[
+quedan negras al lado del lightmap: Objetos/Colilla/Visual/Filtro, Objetos/Colilla/Visual/Papel, Objetos/Colilla/Visual/Quemado, Objetos/Colilla/Visual/Ceniza
+	at 'test_toda_malla_con_gi_estatico_entro_al_horneado' in res://test/escenas/iluminacion_horneada_test.gd:32
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_las_hojas_que_abren_no_llevan_sombras_de_la_posicion_cerrada" classname="iluminacion_horneada_test" time="0.115">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="pistas_de_la_segunda_jornada_test" package="test/escenas" timestamp="2026-10-16T19:19:41" hostname="localhost" tests="8" failures="4" errors="0" skipped="0" flaky="0" time="6.088">
+		<testcase name="test_frase_real_anota_una_vez_y_leer_o_prefijo_no_anotan" classname="pistas_de_la_segunda_jornada_test" time="0.759">
+		</testcase>
+		<testcase name="test_colilla_real_exige_agarre_y_conserva_hallazgo_al_cerrar" classname="pistas_de_la_segunda_jornada_test" time="0.999">
+		</testcase>
+		<testcase name="test_rechazo_y_pausa_no_registran_colilla" classname="pistas_de_la_segunda_jornada_test" time="0.583">
+		</testcase>
+		<testcase name="test_canales_fuera_de_j2_no_anotan_y_revelaciones_siguen_aparte" classname="pistas_de_la_segunda_jornada_test" time="0.868">
+		</testcase>
+		<testcase name="test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll" classname="pistas_de_la_segunda_jornada_test" time="1.231">
+		</testcase>
+		<testcase name="test_cierre_j1_abre_notas_vacias_fijas_y_conserva_cuaderno" classname="pistas_de_la_segunda_jornada_test" time="0.795">
+		</testcase>
+		<testcase name="test_recibido_futuro_no_aparece_en_el_chat_abierto" classname="pistas_de_la_segunda_jornada_test" time="0.758">
+		</testcase>
+		<testcase name="test_colilla_levantable_toma_luz_dinamica" classname="pistas_de_la_segunda_jornada_test" time="0.013">
+			<failure message="FAILED: res://test/escenas/pistas_de_la_segunda_jornada_test.gd:363" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 1
+	at 'test_colilla_levantable_toma_luz_dinamica' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:363
+	at 'after_test' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:32
+	at '_cuadros' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:37
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/pistas_de_la_segunda_jornada_test.gd:363" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 1
+	at 'test_colilla_levantable_toma_luz_dinamica' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:363
+	at 'after_test' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:32
+	at '_cuadros' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:37
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/pistas_de_la_segunda_jornada_test.gd:363" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 1
+	at 'test_colilla_levantable_toma_luz_dinamica' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:363
+	at 'after_test' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:32
+	at '_cuadros' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:37
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/pistas_de_la_segunda_jornada_test.gd:363" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 1
+	at 'test_colilla_levantable_toma_luz_dinamica' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:363
+	at 'after_test' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:32
+	at '_cuadros' in res://test/escenas/pistas_de_la_segunda_jornada_test.gd:37
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

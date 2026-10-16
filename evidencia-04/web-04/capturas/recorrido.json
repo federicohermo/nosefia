@@ -1,0 +1,2600 @@
+[
+  {
+    "snapshot": "web-1280-main-menu-original",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": null
+  },
+  {
+    "width": 1280,
+    "montaje": "override.cfg externo, mismo PCK",
+    "html_original_sha256": "d5d930511f422e68ff3d2a0a6a6cfd312ef1ee82070c7c6a1e42ffcfc4f404e6",
+    "html_servido_sha256": "904cbcd48861374b8de45c434b09dd59abfeb3682da56956882bc1517798a8ce",
+    "fixture_sha256": "aab3b9f29691750939826b60932e404e63f17a15b1f0e9517b7cb433333272ba",
+    "scene_sha256": "380a3586b5e48cb832abcb46b5bddf68d6f6a94ab5b5764d11cde760a79db9d0",
+    "override_sha256": "14df75fb81b1da8a15028315a147bdfae8082ce6309c998151d13178cad6186c",
+    "args": []
+  },
+  {
+    "snapshot": "web-1280-colilla-suelo",
+    "frames": 13,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": false,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        1029.33337402344
+      ],
+      "chat": 0,
+      "colilla_en_mano": false,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 0,
+      "notas_emitidas": [],
+      "nuevas": [],
+      "pantalla": 0,
+      "pensamientos": [],
+      "pistas": [],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        482,
+        728
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "teclado",
+    "key": "e"
+  },
+  {
+    "snapshot": "web-1280-colilla-examinada-sin-pista",
+    "frames": 48,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": true,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": false,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        1029.33337402344
+      ],
+      "chat": 0,
+      "colilla_en_mano": false,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 0,
+      "notas_emitidas": [],
+      "nuevas": [],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        482,
+        728
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      640,
+      360
+    ]
+  },
+  {
+    "snapshot": "web-1280-colilla-levantada-2B",
+    "frames": 70,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": true,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": false,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        1029.33337402344
+      ],
+      "chat": 0,
+      "colilla_en_mano": true,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 2,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO"
+      ],
+      "nuevas": [
+        "2B"
+      ],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B"
+      ],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        482,
+        728
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "teclado",
+    "key": "q"
+  },
+  {
+    "snapshot": "web-1280-menu-j2-sin-notas",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 0,
+      "colilla_en_mano": true,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [
+        {
+          "punto": [
+            640,
+            215.333343505859
+          ],
+          "quien": 0
+        },
+        {
+          "punto": [
+            640,
+            303.333343505859
+          ],
+          "quien": 3
+        }
+      ],
+      "notas": 2,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO"
+      ],
+      "nuevas": [
+        "2B"
+      ],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B"
+      ],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        77.3333358764648
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      640,
+      303.333343505859
+    ]
+  },
+  {
+    "width": 1280,
+    "entrada": "rueda",
+    "delta": -2000
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      504.666656494141,
+      508.333343505859
+    ]
+  },
+  {
+    "snapshot": "web-1280-yasmin-prefijo-sin-pista",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 3,
+      "colilla_en_mano": true,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 2,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO"
+      ],
+      "nuevas": [
+        "2B"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B"
+      ],
+      "puntos": {
+        "max_y": 593.333374023438,
+        "min_y": 128,
+        "prefijo": [
+          504.666656494141,
+          508.333343505859
+        ],
+        "tramo": [
+          626,
+          508.333343505859
+        ]
+      },
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      626,
+      508.333343505859
+    ]
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      626,
+      508.333343505859
+    ]
+  },
+  {
+    "snapshot": "web-1280-yasmin-tramo-2A-idempotente",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 3,
+      "colilla_en_mano": true,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {
+        "max_y": 593.333374023438,
+        "min_y": 128,
+        "prefijo": [
+          504.666656494141,
+          508.333343505859
+        ],
+        "tramo": [
+          626,
+          508.333343505859
+        ]
+      },
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "teclado",
+    "key": "q"
+  },
+  {
+    "width": 1280,
+    "preparacion": {
+      "id": 1,
+      "accion": "cerrar"
+    },
+    "userGesture": false
+  },
+  {
+    "width": 1280,
+    "preparacion": {
+      "id": 2,
+      "accion": "fijar_notas"
+    },
+    "userGesture": false
+  },
+  {
+    "width": 1280,
+    "entrada": "rueda",
+    "delta": -2400
+  },
+  {
+    "snapshot": "web-1280-notas-j2-hoy",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            263.333343505859
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            599.333374023438
+          ],
+          "visible": false
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "snapshot": "web-1280-notas-par-0",
+    "frames": 70,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            263.333343505859
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            599.333374023438
+          ],
+          "visible": false
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      611.333312988281,
+      263.333343505859
+    ]
+  },
+  {
+    "snapshot": "web-1280-notas-foto-0",
+    "frames": 72,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro…",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            263.333343505859
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            599.333374023438
+          ],
+          "visible": false
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 2,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      640,
+      360
+    ]
+  },
+  {
+    "snapshot": "web-1280-notas-scroll-conservado-0",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro…",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            263.333343505859
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            599.333374023438
+          ],
+          "visible": false
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "rueda",
+    "delta": 250
+  },
+  {
+    "snapshot": "web-1280-notas-par-2",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro…",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            -0.00000762939453125
+          ],
+          "visible": false
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            336
+          ],
+          "visible": true
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 395,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      611.333312988281,
+      336
+    ]
+  },
+  {
+    "snapshot": "web-1280-notas-foto-2",
+    "frames": 72,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            -0.00000762939453125
+          ],
+          "visible": false
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            336
+          ],
+          "visible": true
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 2,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 395,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      640,
+      360
+    ]
+  },
+  {
+    "snapshot": "web-1280-notas-scroll-conservado-2",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            -0.00000762939453125
+          ],
+          "visible": false
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            336
+          ],
+          "visible": true
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 395,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "teclado",
+    "key": "q"
+  },
+  {
+    "snapshot": "web-1280-notas-fijas-q-bloqueada",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            -0.00000762939453125
+          ],
+          "visible": false
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            336
+          ],
+          "visible": true
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 395,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "preparacion": {
+      "id": 3,
+      "accion": "abrir3"
+    },
+    "userGesture": false
+  },
+  {
+    "width": 1280,
+    "entrada": "teclado",
+    "key": "q"
+  },
+  {
+    "snapshot": "web-1280-menu-j3-con-notas",
+    "frames": 39,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": false,
+      "etapa": "jornada3",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 3,
+      "jornada": 3,
+      "menu": [
+        {
+          "punto": [
+            640,
+            215.333343505859
+          ],
+          "quien": 0
+        },
+        {
+          "punto": [
+            640,
+            303.333343505859
+          ],
+          "quien": 3
+        },
+        {
+          "punto": [
+            640,
+            391.333343505859
+          ],
+          "quien": 4
+        }
+      ],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      640,
+      391.333343505859
+    ]
+  },
+  {
+    "width": 1280,
+    "entrada": "rueda",
+    "delta": -2400
+  },
+  {
+    "snapshot": "web-1280-notas-j3-ayer",
+    "frames": 40,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        640,
+        360
+      ],
+      "chat": 4,
+      "colilla_en_mano": false,
+      "etapa": "jornada3",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            611.333312988281,
+            263.333343505859
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            611.333312988281,
+            599.333374023438
+          ],
+          "visible": false
+        }
+      ],
+      "id": 3,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "AYER"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        500.666656494141,
+        90
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "preparacion": {
+      "id": 4,
+      "accion": "fin"
+    },
+    "userGesture": false
+  },
+  {
+    "width": 1920,
+    "montaje": "override.cfg externo, mismo PCK",
+    "html_original_sha256": "d5d930511f422e68ff3d2a0a6a6cfd312ef1ee82070c7c6a1e42ffcfc4f404e6",
+    "html_servido_sha256": "904cbcd48861374b8de45c434b09dd59abfeb3682da56956882bc1517798a8ce",
+    "fixture_sha256": "aab3b9f29691750939826b60932e404e63f17a15b1f0e9517b7cb433333272ba",
+    "scene_sha256": "380a3586b5e48cb832abcb46b5bddf68d6f6a94ab5b5764d11cde760a79db9d0",
+    "override_sha256": "14df75fb81b1da8a15028315a147bdfae8082ce6309c998151d13178cad6186c",
+    "args": []
+  },
+  {
+    "snapshot": "web-1920-colilla-suelo",
+    "frames": 72,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": false,
+      "adjunto": "",
+      "cerrar_foto": [
+        960,
+        1544
+      ],
+      "chat": 0,
+      "colilla_en_mano": false,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 0,
+      "notas_emitidas": [],
+      "nuevas": [],
+      "pantalla": 0,
+      "pensamientos": [],
+      "pistas": [],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        723,
+        1092
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "teclado",
+    "key": "e"
+  },
+  {
+    "snapshot": "web-1920-colilla-examinada-sin-pista",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": true,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": false,
+      "adjunto": "",
+      "cerrar_foto": [
+        960,
+        1544
+      ],
+      "chat": 0,
+      "colilla_en_mano": false,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 0,
+      "notas_emitidas": [],
+      "nuevas": [],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        723,
+        1092
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      960,
+      540
+    ]
+  },
+  {
+    "snapshot": "web-1920-colilla-levantada-2B",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": true,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": false,
+      "adjunto": "",
+      "cerrar_foto": [
+        960,
+        1544
+      ],
+      "chat": 0,
+      "colilla_en_mano": true,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 2,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO"
+      ],
+      "nuevas": [
+        "2B"
+      ],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B"
+      ],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        723,
+        1092
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "teclado",
+    "key": "q"
+  },
+  {
+    "snapshot": "web-1920-menu-j2-sin-notas",
+    "frames": 71,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 0,
+      "colilla_en_mano": true,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [
+        {
+          "punto": [
+            960,
+            323
+          ],
+          "quien": 0
+        },
+        {
+          "punto": [
+            960,
+            455
+          ],
+          "quien": 3
+        }
+      ],
+      "notas": 2,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO"
+      ],
+      "nuevas": [
+        "2B"
+      ],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B"
+      ],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        116
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      960,
+      455
+    ]
+  },
+  {
+    "width": 1920,
+    "entrada": "rueda",
+    "delta": -2000
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      757,
+      762.5
+    ]
+  },
+  {
+    "snapshot": "web-1920-yasmin-prefijo-sin-pista",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 3,
+      "colilla_en_mano": true,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 2,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO"
+      ],
+      "nuevas": [
+        "2B"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B"
+      ],
+      "puntos": {
+        "max_y": 890,
+        "min_y": 192,
+        "prefijo": [
+          757,
+          762.5
+        ],
+        "tramo": [
+          939,
+          762.5
+        ]
+      },
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      939,
+      762.5
+    ]
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      939,
+      762.5
+    ]
+  },
+  {
+    "snapshot": "web-1920-yasmin-tramo-2A-idempotente",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 3,
+      "colilla_en_mano": true,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {
+        "max_y": 890,
+        "min_y": 192,
+        "prefijo": [
+          757,
+          762.5
+        ],
+        "tramo": [
+          939,
+          762.5
+        ]
+      },
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "teclado",
+    "key": "q"
+  },
+  {
+    "width": 1920,
+    "preparacion": {
+      "id": 1,
+      "accion": "cerrar"
+    },
+    "userGesture": false
+  },
+  {
+    "width": 1920,
+    "preparacion": {
+      "id": 2,
+      "accion": "fijar_notas"
+    },
+    "userGesture": false
+  },
+  {
+    "width": 1920,
+    "entrada": "rueda",
+    "delta": -2400
+  },
+  {
+    "snapshot": "web-1920-notas-j2-hoy",
+    "frames": 72,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            395
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            899
+          ],
+          "visible": false
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "snapshot": "web-1920-notas-par-0",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            395
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            899
+          ],
+          "visible": false
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      917,
+      395
+    ]
+  },
+  {
+    "snapshot": "web-1920-notas-foto-0",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro…",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            395
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            899
+          ],
+          "visible": false
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 2,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      960,
+      540
+    ]
+  },
+  {
+    "snapshot": "web-1920-notas-scroll-conservado-0",
+    "frames": 72,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro…",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            395
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            899
+          ],
+          "visible": false
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "rueda",
+    "delta": 250
+  },
+  {
+    "snapshot": "web-1920-notas-par-2",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro…",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            0
+          ],
+          "visible": false
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            504
+          ],
+          "visible": true
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 395,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      917,
+      504
+    ]
+  },
+  {
+    "snapshot": "web-1920-notas-foto-2",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            0
+          ],
+          "visible": false
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            504
+          ],
+          "visible": true
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 2,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 395,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      960,
+      540
+    ]
+  },
+  {
+    "snapshot": "web-1920-notas-scroll-conservado-2",
+    "frames": 73,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            0
+          ],
+          "visible": false
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            504
+          ],
+          "visible": true
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 395,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "teclado",
+    "key": "q"
+  },
+  {
+    "snapshot": "web-1920-notas-fijas-q-bloqueada",
+    "frames": 72,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": true,
+      "etapa": "notas_fijas",
+      "fallos": [],
+      "fijo": true,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            0
+          ],
+          "visible": false
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            504
+          ],
+          "visible": true
+        }
+      ],
+      "id": 2,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "HOY"
+      ],
+      "scroll": 395,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "preparacion": {
+      "id": 3,
+      "accion": "abrir3"
+    },
+    "userGesture": false
+  },
+  {
+    "width": 1920,
+    "entrada": "teclado",
+    "key": "q"
+  },
+  {
+    "snapshot": "web-1920-menu-j3-con-notas",
+    "frames": 42,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": false,
+      "etapa": "jornada3",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 3,
+      "jornada": 3,
+      "menu": [
+        {
+          "punto": [
+            960,
+            323
+          ],
+          "quien": 0
+        },
+        {
+          "punto": [
+            960,
+            455
+          ],
+          "quien": 3
+        },
+        {
+          "punto": [
+            960,
+            587
+          ],
+          "quien": 4
+        }
+      ],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "entrada": "mouse",
+    "punto": [
+      960,
+      587
+    ]
+  },
+  {
+    "width": 1920,
+    "entrada": "rueda",
+    "delta": -2400
+  },
+  {
+    "snapshot": "web-1920-notas-j3-ayer",
+    "frames": 43,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1920,
+      "alto": 1080
+    },
+    "game": {
+      "abierto": true,
+      "adjunto": "Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”.",
+      "cerrar_foto": [
+        960,
+        540
+      ],
+      "chat": 4,
+      "colilla_en_mano": false,
+      "etapa": "jornada3",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [
+        {
+          "indice": 0,
+          "punto": [
+            917,
+            395
+          ],
+          "visible": true
+        },
+        {
+          "indice": 2,
+          "punto": [
+            917,
+            899
+          ],
+          "visible": false
+        }
+      ],
+      "id": 3,
+      "jornada": 3,
+      "menu": [],
+      "notas": 4,
+      "notas_emitidas": [
+        "NOTA_2B_FOTO",
+        "NOTA_2B_TEXTO",
+        "NOTA_2A_FOTO",
+        "NOTA_2A_TEXTO"
+      ],
+      "nuevas": [
+        "2B",
+        "2A"
+      ],
+      "pantalla": 1,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [
+        "2B",
+        "2A"
+      ],
+      "puntos": {},
+      "rotulos": [
+        "AYER"
+      ],
+      "scroll": 0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "volver": [
+        751,
+        135
+      ]
+    }
+  },
+  {
+    "width": 1920,
+    "preparacion": {
+      "id": 4,
+      "accion": "fin"
+    },
+    "userGesture": false
+  }
+]

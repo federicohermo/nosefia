@@ -1,0 +1,12 @@
+{
+  "nodo": "lint",
+  "codigo": 0,
+  "segundos": 37.60949679999612,
+  "salteado": false,
+  "aviso": null,
+  "comando": [
+    "gdlint",
+    "src",
+    "test"
+  ]
+}

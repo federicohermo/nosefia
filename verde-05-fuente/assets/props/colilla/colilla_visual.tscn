@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="material_Filtro"]
+albedo_color = Color(0.70, 0.39, 0.12, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="malla_Filtro"]
+material = SubResource("material_Filtro")
+top_radius = 0.007
+bottom_radius = 0.007
+height = 0.024
+radial_segments = 10
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="material_Papel"]
+albedo_color = Color(0.86, 0.82, 0.69, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="malla_Papel"]
+material = SubResource("material_Papel")
+top_radius = 0.007
+bottom_radius = 0.007
+height = 0.044
+radial_segments = 10
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="material_Quemado"]
+albedo_color = Color(0.18, 0.15, 0.12, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="malla_Quemado"]
+material = SubResource("material_Quemado")
+top_radius = 0.0075
+bottom_radius = 0.0075
+height = 0.006
+radial_segments = 10
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="material_Ceniza"]
+albedo_color = Color(0.48, 0.46, 0.43, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="malla_Ceniza"]
+material = SubResource("material_Ceniza")
+top_radius = 0.006
+bottom_radius = 0.006
+height = 0.004
+radial_segments = 10
+rings = 1
+
+[node name="ColillaVisual" type="Node3D"]
+
+[node name="Filtro" type="MeshInstance3D" parent="."]
+position = Vector3(-0.03, 0, 0)
+rotation = Vector3(0, 0, -1.570796326794897)
+mesh = SubResource("malla_Filtro")
+
+[node name="Papel" type="MeshInstance3D" parent="."]
+position = Vector3(0.004, 0, 0)
+rotation = Vector3(0, 0, -1.570796326794897)
+mesh = SubResource("malla_Papel")
+
+[node name="Quemado" type="MeshInstance3D" parent="."]
+position = Vector3(0.029, 0, 0)
+rotation = Vector3(0, 0, -1.570796326794897)
+mesh = SubResource("malla_Quemado")
+
+[node name="Ceniza" type="MeshInstance3D" parent="."]
+position = Vector3(0.034, 0, 0)
+rotation = Vector3(0, 0, -1.570796326794897)
+mesh = SubResource("malla_Ceniza")

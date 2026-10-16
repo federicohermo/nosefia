@@ -1,0 +1,72 @@
+[
+  {
+    "ruta": "board tareas",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tableroluz",
+    "vertices": 8,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tachitobasura/tachitobasura-col_bisagra_001/tachitobasura-col_tapa_001",
+    "vertices": 16,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tachitobasura_001/tachitobasura-col_001_bisagra/tachitobasura-col_001_tapa",
+    "vertices": 16,
+    "delta_maximo": 0.0
+  },
+  {
+    "ruta": "tachitobasura_002/tachitobasura-col_002_bisagra_001/tachitobasura-col_002_tapa_001",
+    "vertices": 16,
+    "delta_maximo": 0.0
+  }
+]

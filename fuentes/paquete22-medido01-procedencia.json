@@ -1,0 +1,5 @@
+{
+  "sha256": "5b8fcfbc1c8a20dc7a8d4e5cc3ed7e786b5b824ce80744cb9d632ce65340063e",
+  "metodo": "Reconstrucción determinista con preparar-paquete.py conservado y native encodado02 anterior al cambio. Bytes contrastados contra hash registrado durante espera, antes de modificar fixture.",
+  "limite": "Se distingue esta reconstrucción verificada de una copia archivada antes del cambio."
+}

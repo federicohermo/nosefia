@@ -1,0 +1,6 @@
+test_un_asset_sin_referencias_miradas_no_se_declara_huerfano_si_hay_comprimidos (tests.test_mcp.LosAssets.test_un_asset_sin_referencias_miradas_no_se_declara_huerfano_si_hay_comprimidos) ... skipped 'no hay `.res` comprimidos'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.014s
+
+OK (skipped=1)

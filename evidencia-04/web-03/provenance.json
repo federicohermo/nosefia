@@ -1,0 +1,21 @@
+{
+  "product_head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+  "export": "D:\\nosefia-carril-C-429-444\\22-export-04",
+  "artefactos_antes": {
+    "index.html": "d5d930511f422e68ff3d2a0a6a6cfd312ef1ee82070c7c6a1e42ffcfc4f404e6",
+    "index.pck": "19ec504aa029f3416b440aa3585fd2caa7d8f75d024e105afc7e306d9496ec13",
+    "index.js": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b",
+    "index.wasm": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61"
+  },
+  "guardias": {
+    "comprobar": 0,
+    "verificar_export": 0
+  },
+  "fixture_sha256": {
+    "fixture-web-22.gd": "ff3e557a91cc4e07fa7fe89a72b63d2ad268d48bd1a1645fd8862b0206b3bf0b",
+    "fixture22.tscn": "380a3586b5e48cb832abcb46b5bddf68d6f6a94ab5b5764d11cde760a79db9d0",
+    "override.cfg": "14df75fb81b1da8a15028315a147bdfae8082ce6309c998151d13178cad6186c",
+    "recorrer-web-22.mjs": "457998754f38cd16e14539cd3afb830da45e1501d82a38d02ef0a8d4c58f0890"
+  },
+  "limite": "Fixture externo crea Partida J2 en memoria y prepara pose/reloj/apertura/fijación. No registra identidades ni reemplaza PCK; gestos reales de Chrome. No acredita persistencia436."
+}

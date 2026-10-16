@@ -1,0 +1,275 @@
+{
+  "head_declared": "893109542cafeef5a6483a8b3f041e5dc39c8f05",
+  "raw_directory": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\full-01",
+  "exit_code": 1,
+  "nodes": {
+    "lint": {
+      "codigo": 0,
+      "salteado": false,
+      "segundos": 22.51530950004235
+    },
+    "formato": {
+      "codigo": 0,
+      "salteado": false,
+      "segundos": 21.051287500187755
+    },
+    "capas": {
+      "codigo": 0,
+      "salteado": false,
+      "segundos": 3.19733739993535
+    },
+    "tdd": {
+      "codigo": 0,
+      "salteado": false,
+      "segundos": 0.47641339991241693
+    },
+    "specs": {
+      "codigo": 0,
+      "salteado": false,
+      "segundos": 0.36463149986229837
+    },
+    "harness": {
+      "codigo": 0,
+      "salteado": false,
+      "segundos": 120.35322580020875
+    },
+    "tests": {
+      "codigo": 100,
+      "salteado": false,
+      "segundos": 1061.342544700019
+    },
+    "tests-import": {
+      "codigo": 0,
+      "salteado": false,
+      "segundos": 8.422645699931309
+    }
+  },
+  "suites": 288,
+  "tracked_test_suites_at_head": 288,
+  "cases": 2189,
+  "root_xml": {
+    "id": "2026-10-16",
+    "name": "report_8",
+    "tests": "2189",
+    "failures": "2",
+    "skipped": "0",
+    "flaky": "0",
+    "time": "0.000"
+  },
+  "xml_problems": {
+    "failure": 2,
+    "error": 4,
+    "skipped": 0
+  },
+  "incidents": [
+    {
+      "file": "tests.log",
+      "line": "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'."
+    },
+    {
+      "file": "tests.log",
+      "line": "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'."
+    },
+    {
+      "file": "tests.log",
+      "line": "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'."
+    },
+    {
+      "file": "tests.log",
+      "line": "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'."
+    },
+    {
+      "file": "wrapper-completo.log",
+      "line": "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'."
+    },
+    {
+      "file": "wrapper-completo.log",
+      "line": "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'."
+    },
+    {
+      "file": "wrapper-completo.log",
+      "line": "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'."
+    },
+    {
+      "file": "wrapper-completo.log",
+      "line": "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'."
+    }
+  ],
+  "diagnostics": {
+    "ERROR: The remote port number must be between 1 and 65535 (inclusive).": 1,
+    "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.": 1,
+    "ERROR: El expediente pertenece a la partida y no se sustituye": 1,
+    "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `StaticBody3D` en (1.401252, 5.554022, -15.49841); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.982046, 0.202237, -9.028996); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.982046, 0.202237, -8.028996); va a ALREDEDOR": 1,
+    "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'.": 4,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000043, 0.185369, 4.300022); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.80507, 0.185369, -1.000021); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.499954, 0.185659, -9.254984); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210046, 0.185659, -9.255016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `CuerpoDeLaHoja` en (13.22192, 0.185764, 4.844925); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (1.307122, 0.185353, 4.392648); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.1, 0.112, -4.55); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.1, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.722957, 0.185659, -8.900022); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.75, 0.112, -14.396); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (12.8, 0.112, 0.1); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31514, 0.188104, 3.205934); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.489997, 0.391959, -9.999991); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeActroncito` estaba adentro de `SueloSolido` en (4.489997, 0.288252, -9.999992); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.487307, 0.38648, -10.00676); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.490265, 0.391309, -10.00106); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696779, 0.259515, 2.015986); va a DESHACER": 1,
+    "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros": 1,
+    "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN": 1,
+    "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.003712, 5.922572, -11.00624); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN": 2,
+    "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@783720` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `StaticBody3D` en (2.0, 5.9, -11.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR": 1,
+    "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd": 3,
+    "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn": 1,
+    "ERROR: Cannot open file 'res://no_existe.tscn'.": 3,
+    "ERROR: Failed loading resource: res://no_existe.tscn.": 3,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964917` en (4.000026, 1.100338, -0.000002); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964927` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964937` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@964953` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964959` en (1.99, 0.08, 0.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964970` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964982` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964992` en (1.946, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964992` en (1.96, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965002` en (2.06, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `@RigidBody3D@965017` estaba adentro de `@StaticBody3D@965012` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965023` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965034` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965045` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965056` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@965086` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "ERROR: Caja registradora sin generador: revisar almacen.gd": 4,
+    "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd": 4,
+    "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd": 4
+  },
+  "new_literal": {
+    "ERROR: El expediente pertenece a la partida y no se sustituye": 1,
+    "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'.": 4,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210046, 0.185659, -9.255016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.1, 0.112, -4.55); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.1, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.75, 0.112, -14.396); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31514, 0.188104, 3.205934); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.487307, 0.38648, -10.00676); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.490265, 0.391309, -10.00106); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696779, 0.259515, 2.015986); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@783720` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964917` en (4.000026, 1.100338, -0.000002); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964927` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964937` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@964953` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964959` en (1.99, 0.08, 0.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964970` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964982` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964992` en (1.946, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@964992` en (1.96, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965002` en (2.06, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `@RigidBody3D@965017` estaba adentro de `@StaticBody3D@965012` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965023` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965034` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965045` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@965056` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@965086` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1
+  },
+  "removed_literal": {
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.760849, 0.186519, -6.002918); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.21, 0.112, -9.255); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185373, 4.004475); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099979, 0.185369, -4.550042); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.4, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750046, 0.185659, -14.39602); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31528, 0.187648, 3.205922); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.475773, 0.387328, -10.0111); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.49056, 0.390854, -9.99792); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696749, 0.259515, 2.015986); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@771079` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952145` en (4.000026, 1.100338, -0.000002); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952155` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952165` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@952181` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952187` en (1.99, 0.08, 0.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952198` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952210` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952220` en (1.946, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952220` en (1.96, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952230` en (2.06, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `@RigidBody3D@952245` estaba adentro de `@StaticBody3D@952240` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952251` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952262` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952273` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@952284` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeProductos` estaba adentro de `@StaticBody3D@952314` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1
+  },
+  "new_with_only_automatic_ids_grouped": {
+    "ERROR: El expediente pertenece a la partida y no se sustituye": 1,
+    "SCRIPT ERROR: Invalid call. Nonexistent function 'surface_get_format' in base 'CylinderMesh'.": 4,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.8, 0.112, -6.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.210046, 0.185659, -9.255016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185376, 4.004624); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.1, 0.112, -4.55); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.399954, 0.185369, 1.740016); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.1, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.75, 0.112, -14.396); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31514, 0.188104, 3.205934); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.487307, 0.38648, -10.00676); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.490265, 0.391309, -10.00106); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696779, 0.259515, 2.015986); va a DESHACER": 1
+  },
+  "removed_with_only_automatic_ids_grouped": {
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.760849, 0.186519, -6.002918); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (2.21, 0.112, -9.255); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (11.74504, 0.185373, 4.004475); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (-0.099979, 0.185369, -4.550042); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (7.4, 0.112, 1.74); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (10.10004, 0.185369, 1.740021); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (4.750046, 0.185659, -14.39602); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (13.31528, 0.187648, 3.205922); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeLaysntt` estaba adentro de `SueloSolido` en (4.475773, 0.387328, -10.0111); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeZucarachas` estaba adentro de `SueloSolido` en (4.49056, 0.390854, -9.99792); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (7.696749, 0.259515, 2.015986); va a DESHACER": 1
+  },
+  "conteo": "reports/report_8: 288 suites corridas, 288 archivos `*_test.gd`\n",
+  "sha256": {
+    "capas.json": "1d442db96fcb9423db52bd423555c214c13b874dd68a292059fa2cb62ea0b124",
+    "capas.log": "50215cfec3f5ffc2714fb38ba54d4b2e2091aa85e89765f11f3a850f22d478db",
+    "conteo.log": "89b07f2685435f96f70c4f7900e1da6ceff30c9fe3c85b6765925564324071d9",
+    "exit-code.txt": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "formato.json": "7b6001914e3591bc7979d10b32f4b32b6dc01e8d5a683e084ce2ce19cabaac96",
+    "formato.log": "ddacddebae13b99ef56fc734dcbe182bde5693b2d29ad7b4550764c85aed1f3a",
+    "harness.json": "80f60adb6b83913297d2f5fbc5d2f8f788e61cb1b79046b16e21daa4ba22e674",
+    "harness.log": "63f3740034c29c81f938a37ad199fd45b13256795b36e7e28be4ea9854ec8384",
+    "lint.json": "12c7c437c290e9f605cce0525cc7a32d38719faa9a1b73019bc07ee1656c4a4d",
+    "lint.log": "098424cb171ea105b5f32277ddcb3b139ff90d7f943970e0e55a7268d9468b1e",
+    "pin-pre-enqueue.json": "04e20e371201aa0a7bd95f7440653e897cb5c0e6239b99b12840972d030924bf",
+    "pins-ejecucion.json": "c1838fdaf6c1bbf171752b80a2c758f351490a2ef3c0b7e1403e1acf4d04401f",
+    "results.xml": "d5665d467626889c3be4469e47b0d12ba8a8b338a1caeca5275868e737023420",
+    "specs.json": "fb6618b438c5ebb5c024d07b74ec2a66c69ff06a29781d3b8116ffb050386175",
+    "specs.log": "b6a56bf122390873ec554cc75d93a11c6d00bec8ec699acbe681d44d31b97593",
+    "tdd.json": "e4048331c636701d45a1d415b54aa122563b40a86b322a7d598374a39b2d2ca9",
+    "tdd.log": "0e32dca1402724450bc16845ca1727ae55586ad87c3d68ac7419bedfc9920e7d",
+    "tests-import.json": "f04f73484ac8751344b9f924fe9e2b9ebfcae3cc25025e72b3cfc917eb3457b7",
+    "tests-import.log": "ebfd8de4439b84f2a4c2fe2fc7cbca9f9f0ee53b3670a1770fdfd4ca2524ad68",
+    "tests.json": "85d2863ef36ee8d55b8e759e7bcd4cbeab388f46f7a2e0b826ec2c9368c2b94c",
+    "tests.log": "462b4df7130f69634ee57fe3d81a018ed9853ee2e60f6cc50c643dff79dc398e",
+    "wrapper-completo.log": "1041be5c59a377db0118a54aefb1373e668eac4504bf9618cd8890ab81729125"
+  },
+  "limitation": "La cabeza declarada debe contrastarse con los pins/estado congelado del carril. No se infiere esa cabeza del XML. Los deltas de diagnósticos se revisan manualmente; sólo se agrupan IDs efímeros, sin borrar posiciones, acciones ni cantidades."
+}

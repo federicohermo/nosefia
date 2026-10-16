@@ -1,0 +1,19 @@
+{
+  "cmd": [
+    "node",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\evidencia-04\\web-04\\recorrer-web-22.mjs",
+    "http://127.0.0.1:56900/index.html",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\evidencia-04\\web-04\\capturas",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\evidencia-04\\web-04\\fixture-web-22.gd"
+  ],
+  "codigo": 0,
+  "pid": 51748,
+  "url": "http://127.0.0.1:56900/index.html",
+  "artefactos_despues": {
+    "index.html": "d5d930511f422e68ff3d2a0a6a6cfd312ef1ee82070c7c6a1e42ffcfc4f404e6",
+    "index.pck": "19ec504aa029f3416b440aa3585fd2caa7d8f75d024e105afc7e306d9496ec13",
+    "index.js": "1fa2dfa3e6371b3ceeaa6eb37d6806a961358b0e1fb297f23f3f0beda961884b",
+    "index.wasm": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61"
+  },
+  "identicos": true
+}

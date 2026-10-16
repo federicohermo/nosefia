@@ -1,0 +1,90 @@
+{
+  "fuente": "fb4236e69c752e6879bb338b80e734e16b211b41",
+  "godot": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "origen": "registro",
+  "comandos": [
+    {
+      "nombre": "exportar",
+      "cmd": [
+        "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\exportar_paquete22-02.py",
+        "D:\\nosefia-carril-C-429-444\\22-export-04",
+        "D:/nosefia-429-444-plantilla-compilada-03/build/templates/web_release.zip",
+        "D:/nosefia-429-444-plantilla-compilada-03/build/templates/web_release.manifiesto.json"
+      ],
+      "codigo": 0,
+      "cwd": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion"
+    },
+    {
+      "nombre": "sonda-paquete",
+      "cmd": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "--path",
+        "D:\\nosefia-carril-C-429-444\\22-export-04\\web",
+        "--main-pack",
+        "D:\\nosefia-carril-C-429-444\\22-export-04\\web\\index.pck",
+        "--script",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\paquete22.gd",
+        "--",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\evidencia-04",
+        "1280",
+        "720"
+      ],
+      "codigo": 0,
+      "cwd": "D:\\nosefia-carril-C-429-444\\22-export-04\\web"
+    },
+    {
+      "nombre": "dialogos-paquete",
+      "cmd": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\nosefia-carril-C-429-444\\22-export-04\\web",
+        "--main-pack",
+        "D:\\nosefia-carril-C-429-444\\22-export-04\\web\\index.pck",
+        "--script",
+        "D:\\nosefia-carril-C-429-444\\22-export-04\\proyecto\\.github\\scripts\\verificar_dialogos_exportados.gd"
+      ],
+      "codigo": 0,
+      "cwd": "D:\\nosefia-carril-C-429-444\\22-export-04\\web"
+    },
+    {
+      "nombre": "nativo-1920",
+      "cmd": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        "D:\\nosefia-carril-C-429-444\\22-export-04\\proyecto",
+        "--rendering-driver",
+        "opengl3",
+        "--script",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\capturar_nativo22.gd",
+        "--",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\evidencia-04\\nativo",
+        "1920",
+        "1080"
+      ],
+      "codigo": 0,
+      "cwd": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion"
+    },
+    {
+      "nombre": "nativo-1280",
+      "cmd": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        "D:\\nosefia-carril-C-429-444\\22-export-04\\proyecto",
+        "--rendering-driver",
+        "opengl3",
+        "--script",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\capturar_nativo22.gd",
+        "--",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\evidencia-04\\nativo",
+        "1280",
+        "720"
+      ],
+      "codigo": 0,
+      "cwd": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion"
+    }
+  ]
+}

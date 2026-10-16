@@ -1,0 +1,393 @@
+{
+  "head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+  "dueño": 22,
+  "criterios": {
+    "AC-INV-043": [
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 28,
+        "caso": "test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 26,
+        "caso": "test_solo_anotada_publica_pista_y_dos_mensajes",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-044": [
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 43,
+        "caso": "test_una_y_dos_exigencias_pendientes_no_registran",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-045": [
+      {
+        "ruta": "test/dominio/investigacion/desenlace_test.gd",
+        "linea": 4,
+        "caso": "test_umbral_y_exigencias_se_cumplen_simultaneamente",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 57,
+        "caso": "test_umbral_y_exigencia_publican_cada_desenlace_una_vez",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-046": [
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 19,
+        "caso": "test_caso_valido_y_repetida_tienen_diagnosticos_distintos",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 26,
+        "caso": "test_exigencia_inexistente_y_ciclo_se_rechazan",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 35,
+        "caso": "test_desenlace_inalcanzable_por_umbral_o_por_exigencia",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 52,
+        "caso": "test_ciclo_largo_no_depende_del_orden_de_los_recursos",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 86,
+        "caso": "test_caso_inconsistente_no_registra_ni_publica",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-047": [
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 96,
+        "caso": "test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 197,
+        "caso": "test_reconstruir_sin_b_conserva_adjuntos_de_a_y_c",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-048": [
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 149,
+        "caso": "test_frase_real_anota_una_vez_y_leer_o_prefijo_no_anotan",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 54,
+        "caso": "test_rechazos_sin_efecto",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-049": [
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 183,
+        "caso": "test_colilla_real_exige_agarre_y_conserva_hallazgo_al_cerrar",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 216,
+        "caso": "test_rechazo_y_pausa_no_registran_colilla",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 54,
+        "caso": "test_rechazos_sin_efecto",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-050": [
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 70,
+        "caso": "test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/hipotesis_de_la_jornada_test.gd",
+        "linea": 12,
+        "caso": "test_predeterminada_solo_si_ninguna_opcion_esta_habilitada",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/hipotesis_de_la_jornada_test.gd",
+        "linea": 31,
+        "caso": "test_jornada_sin_guion_no_inventa_una_opcion",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/hipotesis_test.gd",
+        "linea": 4,
+        "caso": "test_las_exigencias_de_una_opcion_se_cumplen_juntas",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-051": [
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 106,
+        "caso": "test_notas_j2_amplian_con_adjunto_sin_necesitar_boton",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 141,
+        "caso": "test_notas_se_agregan_foto_texto_en_orden_de_descubrimiento",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 197,
+        "caso": "test_reconstruir_sin_b_conserva_adjuntos_de_a_y_c",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 263,
+        "caso": "test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 26,
+        "caso": "test_solo_anotada_publica_pista_y_dos_mensajes",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 90,
+        "caso": "test_reconectar_al_mismo_no_duplica_las_notas_recibidas",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-052": [
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 186,
+        "caso": "test_notas_recibidas_j2_no_dan_boton_hasta_j3",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 88,
+        "caso": "test_notas_vacias_abren_fijas_en_cierre_j1_y_q_no_las_cierra",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 106,
+        "caso": "test_notas_j2_amplian_con_adjunto_sin_necesitar_boton",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/conversacion_test.gd",
+        "linea": 86,
+        "caso": "test_notas_tiene_recurso_propio_sin_mover_interlocutores",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 263,
+        "caso": "test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 315,
+        "caso": "test_cierre_j1_abre_notas_vacias_fijas_y_conserva_cuaderno",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-053": [
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 93,
+        "caso": "test_contenido_literal_y_circulo_aprobado_no_tienen_sustitutos",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-054": [
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 112,
+        "caso": "test_canal_y_jornada_ajenos_no_registran_la_pista",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/pista_test.gd",
+        "linea": 4,
+        "caso": "test_canal_origen_y_jornada_se_cumplen_juntos",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 235,
+        "caso": "test_canales_fuera_de_j2_no_anotan_y_revelaciones_siguen_aparte",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 54,
+        "caso": "test_rechazos_sin_efecto",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-055": [
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 175,
+        "caso": "test_consultar_notas_no_muta_estado_ni_guion",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-EMP-069": [
+      {
+        "ruta": "test/dominio/empleo/expediente_de_la_partida_test.gd",
+        "linea": 4,
+        "caso": "test_misma_partida_conserva_el_expediente_entre_aperturas",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/empleo/expediente_de_la_partida_test.gd",
+        "linea": 46,
+        "caso": "test_otra_partida_empieza_con_otro_expediente_limpio",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/empleo/expediente_de_la_partida_test.gd",
+        "linea": 59,
+        "caso": "test_rechazar_sustitucion_conserva_la_instancia_poseida",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/empleo/expediente_de_la_partida_test.gd",
+        "linea": 71,
+        "caso": "test_consumidores_reciben_la_misma_identidad_sin_crear_duenos",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 17,
+        "caso": "test_sin_usar_no_crea_un_expediente_alternativo",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 74,
+        "caso": "test_dos_consumidores_observan_el_mismo_registro",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 106,
+        "caso": "test_cambiar_de_partida_desconecta_los_eventos_anteriores",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ],
+    "AC-INV-028": [
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 9,
+        "caso": "test_la_primera_jornada_solo_ofrece_la_introduccion_documentada",
+        "nuevo_en22": false,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 43,
+        "caso": "test_el_corte_de_jornada_filtra_y_ordena_el_menu",
+        "nuevo_en22": false,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 186,
+        "caso": "test_notas_recibidas_j2_no_dan_boton_hasta_j3",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 216,
+        "caso": "test_recibido_futuro_no_aparece_antes_de_su_jornada",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      },
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 334,
+        "caso": "test_recibido_futuro_no_aparece_en_el_chat_abierto",
+        "nuevo_en22": true,
+        "limite": "Una cita heredada conserva regresión; sólo los casos nuevos prueban el delta22."
+      }
+    ]
+  }
+}

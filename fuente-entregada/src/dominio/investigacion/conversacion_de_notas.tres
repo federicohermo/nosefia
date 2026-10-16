@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Conversacion" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/conversacion.gd" id="conversacion"]
+
+[resource]
+script = ExtResource("conversacion")
+interlocutor = 4
+nombre = "Notas"
+jornada_de_menu = 3

@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-16" name="report_5" tests="58" failures="42" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="pista_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:33" hostname="localhost" tests="1" failures="0" errors="0" skipped="0" flaky="0" time="0.021">
+		<testcase name="test_canal_origen_y_jornada_se_cumplen_juntos" classname="pista_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="hipotesis_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:33" hostname="localhost" tests="1" failures="0" errors="0" skipped="0" flaky="0" time="0.021">
+		<testcase name="test_las_exigencias_de_una_opcion_se_cumplen_juntas" classname="hipotesis_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="desenlace_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:33" hostname="localhost" tests="1" failures="0" errors="0" skipped="0" flaky="0" time="0.021">
+		<testcase name="test_umbral_y_exigencias_se_cumplen_simultaneamente" classname="desenlace_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="hipotesis_de_la_jornada_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:33" hostname="localhost" tests="2" failures="0" errors="0" skipped="0" flaky="0" time="0.030">
+		<testcase name="test_predeterminada_solo_si_ninguna_opcion_esta_habilitada" classname="hipotesis_de_la_jornada_test" time="0.008">
+		</testcase>
+		<testcase name="test_jornada_sin_guion_no_inventa_una_opcion" classname="hipotesis_de_la_jornada_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="caso_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:33" hostname="localhost" tests="6" failures="13" errors="0" skipped="0" flaky="0" time="0.109">
+		<testcase name="test_caso_valido_y_repetida_tienen_diagnosticos_distintos" classname="caso_test" time="0.008">
+		</testcase>
+		<testcase name="test_exigencia_inexistente_y_ciclo_se_rechazan" classname="caso_test" time="0.007">
+		</testcase>
+		<testcase name="test_desenlace_inalcanzable_por_umbral_o_por_exigencia" classname="caso_test" time="0.009">
+		</testcase>
+		<testcase name="test_ciclo_largo_no_depende_del_orden_de_los_recursos" classname="caso_test" time="0.008">
+		</testcase>
+		<testcase name="test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar" classname="caso_test" time="0.011">
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:84" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2P]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2P	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:84
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:84" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2P]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2P	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:84
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:84" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:84
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:84" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:84
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:85" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:85
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:84" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2B]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2B	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:84
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:84" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2B]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2B	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:84
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:85" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2B]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2B	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:85
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:84" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A, 2B]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	1	<N/A>	2B	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:84
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:84" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A, 2B]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	1	<N/A>	2B	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:84
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:85" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2B, 2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2B	1	<N/A>	2A	
+	at 'test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar' in res://test/dominio/investigacion/caso_test.gd:85
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_contenido_literal_y_circulo_aprobado_no_tienen_sustitutos" classname="caso_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:97" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_contenido_literal_y_circulo_aprobado_no_tienen_sustitutos' in res://test/dominio/investigacion/caso_test.gd:97
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:98" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_contenido_literal_y_circulo_aprobado_no_tienen_sustitutos' in res://test/dominio/investigacion/caso_test.gd:98
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="expediente_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:33" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="0.120">
+		<testcase name="test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva" classname="expediente_test" time="0.007">
+		</testcase>
+		<testcase name="test_una_y_dos_exigencias_pendientes_no_registran" classname="expediente_test" time="0.007">
+		</testcase>
+		<testcase name="test_umbral_y_exigencia_publican_cada_desenlace_una_vez" classname="expediente_test" time="0.010">
+		</testcase>
+		<testcase name="test_caso_inconsistente_no_registra_ni_publica" classname="expediente_test" time="0.008">
+		</testcase>
+		<testcase name="test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia" classname="expediente_test" time="0.008">
+		</testcase>
+		<testcase name="test_canal_y_jornada_ajenos_no_registran_la_pista" classname="expediente_test" time="0.008">
+		</testcase>
+		<testcase name="test_notas_se_agregan_foto_texto_en_orden_de_descubrimiento" classname="expediente_test" time="0.008">
+		</testcase>
+		<testcase name="test_consultar_notas_no_muta_estado_ni_guion" classname="expediente_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="6" name="conversacion_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:33" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="0.662">
+		<testcase name="test_el_catalogo_carga_las_conversaciones_documentadas" classname="conversacion_test" time="0.196">
+		</testcase>
+		<testcase name="test_cada_conversacion_documentada_es_de_su_interlocutor" classname="conversacion_test" time="0.090">
+		</testcase>
+		<testcase name="test_un_interlocutor_sin_guion_documentado_no_carga_textos_inventados" classname="conversacion_test" time="0.009">
+		</testcase>
+		<testcase name="test_guiones_fijos_tienen_texto_y_notas_recibe_su_contenido" classname="conversacion_test" time="0.098">
+		</testcase>
+		<testcase name="test_cada_interlocutor_se_presenta_con_un_nombre" classname="conversacion_test" time="0.105">
+		</testcase>
+		<testcase name="test_lo_leido_no_vuelve_al_disco" classname="conversacion_test" time="0.009">
+		</testcase>
+		<testcase name="test_un_interlocutor_sin_fila_contesta_null_en_vez_de_reventar" classname="conversacion_test" time="0.008">
+		</testcase>
+		<testcase name="test_notas_tiene_recurso_propio_sin_mover_interlocutores" classname="conversacion_test" time="0.099">
+		</testcase>
+	</testsuite>
+	<testsuite id="7" name="bandeja_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:34" hostname="localhost" tests="14" failures="6" errors="0" skipped="0" flaky="0" time="0.303">
+		<testcase name="test_la_primera_jornada_solo_ofrece_la_introduccion_documentada" classname="bandeja_test" time="0.096">
+		</testcase>
+		<testcase name="test_el_corte_de_jornada_filtra_y_ordena_el_menu" classname="bandeja_test" time="0.009">
+		</testcase>
+		<testcase name="test_recibir_despues_de_leer_suma_sin_mutar_el_guion" classname="bandeja_test" time="0.007">
+		</testcase>
+		<testcase name="test_recepciones_invalidas_no_cambian_la_bandeja" classname="bandeja_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_adjunto_exige_foto_y_texto_inmediatamente_despues" classname="bandeja_test" time="0.010">
+		</testcase>
+		<testcase name="test_una_bandeja_nueva_tiene_todo_sin_leer" classname="bandeja_test" time="0.009">
+		</testcase>
+		<testcase name="test_marcar_leida_deja_esa_conversacion_en_cero" classname="bandeja_test" time="0.009">
+		</testcase>
+		<testcase name="test_marcar_leida_no_toca_las_otras_dos" classname="bandeja_test" time="0.008">
+		</testcase>
+		<testcase name="test_marcar_leida_dos_veces_devuelve_false_la_segunda" classname="bandeja_test" time="0.007">
+		</testcase>
+		<testcase name="test_marcar_un_interlocutor_que_no_esta_en_la_bandeja_devuelve_false" classname="bandeja_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_conversacion_se_pide_por_interlocutor_y_la_que_falta_es_null" classname="bandeja_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_bandeja_no_se_arma_con_las_conversaciones_del_disco_en_cada_llamada" classname="bandeja_test" time="0.008">
+		</testcase>
+		<testcase name="test_notas_recibidas_j2_no_dan_boton_hasta_j3" classname="bandeja_test" time="0.010">
+			<failure message="FAILED: res://test/dominio/investigacion/bandeja_test.gd:205" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[():<Resource#-9223371541759129301>, (res://src/dominio/investigacion/conversacion_de_notas.tres):<Resource#-9223371541641688753>]'
+	at 'test_notas_recibidas_j2_no_dan_boton_hasta_j3' in res://test/dominio/investigacion/bandeja_test.gd:205
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/bandeja_test.gd:206" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[():<Resource#-9223371541507471023>]'
+	at 'test_notas_recibidas_j2_no_dan_boton_hasta_j3' in res://test/dominio/investigacion/bandeja_test.gd:206
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/bandeja_test.gd:208" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371541759129301>]'
+ but was
+ '[():<Resource#-9223371541759129301>, (res://src/dominio/investigacion/conversacion_de_notas.tres):<Resource#-9223371541641688753>]'
+
+Differences found:
+Index	Current	Expected	1	(res://src/dominio/investigacion/conversacion_de_notas.tres):<Resource#-9223371541641688753>	<N/A>	
+	at 'test_notas_recibidas_j2_no_dan_boton_hasta_j3' in res://test/dominio/investigacion/bandeja_test.gd:208
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_recibido_futuro_no_aparece_antes_de_su_jornada" classname="bandeja_test" time="0.009">
+			<failure message="FAILED: res://test/dominio/investigacion/bandeja_test.gd:226" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[():<Resource#-9223371539477427886>]'
+	at 'test_recibido_futuro_no_aparece_antes_de_su_jornada' in res://test/dominio/investigacion/bandeja_test.gd:226
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/bandeja_test.gd:227" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[():<Resource#-9223371539510982309>]'
+	at 'test_recibido_futuro_no_aparece_antes_de_su_jornada' in res://test/dominio/investigacion/bandeja_test.gd:227
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/bandeja_test.gd:228" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_recibido_futuro_no_aparece_antes_de_su_jornada' in res://test/dominio/investigacion/bandeja_test.gd:228
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="8" name="celular_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:59:34" hostname="localhost" tests="7" failures="1" errors="0" skipped="0" flaky="0" time="0.112">
+		<testcase name="test_los_cinco_estados_de_q" classname="celular_test" time="0.009">
+		</testcase>
+		<testcase name="test_reabrir_desde_chat_y_foto_siempre_vuelve_al_menu" classname="celular_test" time="0.008">
+		</testcase>
+		<testcase name="test_menu_chat_foto_y_gestos_rechazados" classname="celular_test" time="0.007">
+		</testcase>
+		<testcase name="test_fijo_fuera_de_jornada_bloquea_q_y_atras_pero_admite_foto" classname="celular_test" time="0.009">
+		</testcase>
+		<testcase name="test_deshabilitar_y_otra_jornada_sueltan_el_modo_fijo" classname="celular_test" time="0.008">
+		</testcase>
+		<testcase name="test_notas_vacias_abren_fijas_en_cierre_j1_y_q_no_las_cierra" classname="celular_test" time="0.010">
+		</testcase>
+		<testcase name="test_notas_j2_amplian_con_adjunto_sin_necesitar_boton" classname="celular_test" time="0.011">
+			<failure message="FAILED: res://test/dominio/investigacion/celular_test.gd:126" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[(res://src/dominio/investigacion/conversacion_de_notas.tres):<Resource#-9223371509865641867>]'
+	at 'test_notas_j2_amplian_con_adjunto_sin_necesitar_boton' in res://test/dominio/investigacion/celular_test.gd:126
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="9" name="expediente_de_la_partida_test" package="test/dominio/empleo" timestamp="2026-10-16T17:59:34" hostname="localhost" tests="4" failures="11" errors="0" skipped="0" flaky="0" time="0.080">
+		<testcase name="test_misma_partida_conserva_el_expediente_entre_aperturas" classname="expediente_de_la_partida_test" time="0.009">
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:16" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_misma_partida_conserva_el_expediente_entre_aperturas' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:16
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:19" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_misma_partida_conserva_el_expediente_entre_aperturas' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:19
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:27" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2B, 2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2B	1	<N/A>	2A	
+	at 'test_misma_partida_conserva_el_expediente_entre_aperturas' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:27
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:29" type="FAILURE">
+<![CDATA[
+Expecting:
+ 4
+ but was
+ 0
+	at 'test_misma_partida_conserva_el_expediente_entre_aperturas' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:29
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_otra_partida_empieza_con_otro_expediente_limpio" classname="expediente_de_la_partida_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:51" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	
+	at 'test_otra_partida_empieza_con_otro_expediente_limpio' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:51
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_rechazar_sustitucion_conserva_la_instancia_poseida" classname="expediente_de_la_partida_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:63" type="FAILURE">
+<![CDATA[
+Expecting: push_error() is called.
+	expected: 'El expediente pertenece a la partida y no se sustituye'
+	current: 'no errors'
+
+	at 'test_rechazar_sustitucion_conserva_la_instancia_poseida' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:63
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_consumidores_reciben_la_misma_identidad_sin_crear_duenos" classname="expediente_de_la_partida_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:77" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_consumidores_reciben_la_misma_identidad_sin_crear_duenos' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:77
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:78" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_consumidores_reciben_la_misma_identidad_sin_crear_duenos' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:78
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:79" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_consumidores_reciben_la_misma_identidad_sin_crear_duenos' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:79
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:82" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_consumidores_reciben_la_misma_identidad_sin_crear_duenos' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:82
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/empleo/expediente_de_la_partida_test.gd:85" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[2A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	2A	
+	at 'test_consumidores_reciben_la_misma_identidad_sin_crear_duenos' in res://test/dominio/empleo/expediente_de_la_partida_test.gd:85
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="10" name="investigador_test" package="test/sistemas/investigacion" timestamp="2026-10-16T17:59:35" hostname="localhost" tests="6" failures="11" errors="0" skipped="0" flaky="0" time="0.220">
+		<testcase name="test_sin_usar_no_crea_un_expediente_alternativo" classname="investigador_test" time="0.005">
+		</testcase>
+		<testcase name="test_solo_anotada_publica_pista_y_dos_mensajes" classname="investigador_test" time="0.011">
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:34" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_solo_anotada_publica_pista_y_dos_mensajes' in res://test/sistemas/investigacion/investigador_test.gd:34
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:35" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_solo_anotada_publica_pista_y_dos_mensajes' in res://test/sistemas/investigacion/investigador_test.gd:35
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:38" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_solo_anotada_publica_pista_y_dos_mensajes' in res://test/sistemas/investigacion/investigador_test.gd:38
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:44" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_solo_anotada_publica_pista_y_dos_mensajes' in res://test/sistemas/investigacion/investigador_test.gd:44
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 0
+	at 'test_solo_anotada_publica_pista_y_dos_mensajes' in res://test/sistemas/investigacion/investigador_test.gd:45
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_rechazos_sin_efecto" classname="investigador_test" time="0.010">
+		</testcase>
+		<testcase name="test_dos_consumidores_observan_el_mismo_registro" classname="investigador_test" time="0.012">
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:80" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_dos_consumidores_observan_el_mismo_registro' in res://test/sistemas/investigacion/investigador_test.gd:80
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:83" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_dos_consumidores_observan_el_mismo_registro' in res://test/sistemas/investigacion/investigador_test.gd:83
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:86" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	A	
+	at 'test_dos_consumidores_observan_el_mismo_registro' in res://test/sistemas/investigacion/investigador_test.gd:86
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_reconectar_al_mismo_no_duplica_las_notas_recibidas" classname="investigador_test" time="0.105">
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:100" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 0
+	at 'test_reconectar_al_mismo_no_duplica_las_notas_recibidas' in res://test/sistemas/investigacion/investigador_test.gd:100
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:103" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 0
+	at 'test_reconectar_al_mismo_no_duplica_las_notas_recibidas' in res://test/sistemas/investigacion/investigador_test.gd:103
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_cambiar_de_partida_desconecta_los_eventos_anteriores" classname="investigador_test" time="0.011">
+			<failure message="FAILED: res://test/sistemas/investigacion/investigador_test.gd:118" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_cambiar_de_partida_desconecta_los_eventos_anteriores' in res://test/sistemas/investigacion/investigador_test.gd:118
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

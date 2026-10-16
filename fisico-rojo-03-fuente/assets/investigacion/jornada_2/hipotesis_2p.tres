@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "2P"
+jornada = 2
+titulo = "NO PASA NADA"
+texto = "Solo se acabó un jabón. No me tengo que hacer la cabeza con algo tan poco trascendental."

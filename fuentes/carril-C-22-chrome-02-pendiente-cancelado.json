@@ -1,0 +1,459 @@
+﻿{
+    "CimClass":  {
+                     "CimSuperClassName":  "CIM_Process",
+                     "CimSuperClass":  {
+                                           "CimSuperClassName":  "CIM_LogicalElement",
+                                           "CimSuperClass":  "ROOT/cimv2:CIM_LogicalElement",
+                                           "CimClassProperties":  "Caption Description InstallDate Name Status CreationClassName CreationDate CSCreationClassName CSName ExecutionState Handle KernelModeTime OSCreationClassName OSName Priority TerminationDate UserModeTime WorkingSetSize",
+                                           "CimClassQualifiers":  "Locale = 1033 UUID = \"{8502C566-5FBB-11D2-AAC1-006008C78BC7}\" Abstract = True",
+                                           "CimClassMethods":  "",
+                                           "CimSystemProperties":  "Microsoft.Management.Infrastructure.CimSystemProperties"
+                                       },
+                     "CimClassProperties":  [
+                                                "Caption",
+                                                "Description",
+                                                "InstallDate",
+                                                "Name",
+                                                "Status",
+                                                "CreationClassName",
+                                                "CreationDate",
+                                                "CSCreationClassName",
+                                                "CSName",
+                                                "ExecutionState",
+                                                "Handle",
+                                                "KernelModeTime",
+                                                "OSCreationClassName",
+                                                "OSName",
+                                                "Priority",
+                                                "TerminationDate",
+                                                "UserModeTime",
+                                                "WorkingSetSize",
+                                                "CommandLine",
+                                                "ExecutablePath",
+                                                "HandleCount",
+                                                "MaximumWorkingSetSize",
+                                                "MinimumWorkingSetSize",
+                                                "OtherOperationCount",
+                                                "OtherTransferCount",
+                                                "PageFaults",
+                                                "PageFileUsage",
+                                                "ParentProcessId",
+                                                "PeakPageFileUsage",
+                                                "PeakVirtualSize",
+                                                "PeakWorkingSetSize",
+                                                "PrivatePageCount",
+                                                "ProcessId",
+                                                "QuotaNonPagedPoolUsage",
+                                                "QuotaPagedPoolUsage",
+                                                "QuotaPeakNonPagedPoolUsage",
+                                                "QuotaPeakPagedPoolUsage",
+                                                "ReadOperationCount",
+                                                "ReadTransferCount",
+                                                "SessionId",
+                                                "ThreadCount",
+                                                "VirtualSize",
+                                                "WindowsVersion",
+                                                "WriteOperationCount",
+                                                "WriteTransferCount"
+                                            ],
+                     "CimClassQualifiers":  [
+                                                "Locale = 1033",
+                                                "UUID = \"{8502C4DC-5FBB-11D2-AAC1-006008C78BC7}\"",
+                                                "CreateBy = \"Create\"",
+                                                "DeleteBy = \"DeleteInstance\"",
+                                                "dynamic = True",
+                                                "provider = \"CIMWin32\"",
+                                                "SupportsCreate = True",
+                                                "SupportsDelete = True"
+                                            ],
+                     "CimClassMethods":  [
+                                             "Create",
+                                             "Terminate",
+                                             "GetOwner",
+                                             "GetOwnerSid",
+                                             "SetPriority",
+                                             "AttachDebugger",
+                                             "GetAvailableVirtualSize"
+                                         ],
+                     "CimSystemProperties":  {
+                                                 "Namespace":  "root/cimv2",
+                                                 "ServerName":  "FEDE",
+                                                 "ClassName":  "Win32_Process",
+                                                 "Path":  null
+                                             }
+                 },
+    "CimInstanceProperties":  [
+                                  {
+                                      "Name":  "Caption",
+                                      "Value":  "python.exe",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "Description",
+                                      "Value":  "python.exe",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "InstallDate",
+                                      "Value":  null,
+                                      "CimType":  13,
+                                      "Flags":  "Property, ReadOnly, NotModified, NullValue",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "Name",
+                                      "Value":  "python.exe",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "Status",
+                                      "Value":  null,
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified, NullValue",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "CreationClassName",
+                                      "Value":  "Win32_Process",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "CreationDate",
+                                      "Value":  "\/Date(1792179151018)\/",
+                                      "CimType":  13,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "CSCreationClassName",
+                                      "Value":  "Win32_ComputerSystem",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "CSName",
+                                      "Value":  "FEDE",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "ExecutionState",
+                                      "Value":  null,
+                                      "CimType":  4,
+                                      "Flags":  "Property, ReadOnly, NotModified, NullValue",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "Handle",
+                                      "Value":  "18092",
+                                      "CimType":  14,
+                                      "Flags":  "Property, Key, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "KernelModeTime",
+                                      "Value":  625000,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "OSCreationClassName",
+                                      "Value":  "Win32_OperatingSystem",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "OSName",
+                                      "Value":  "Microsoft Windows 11 Home Single Language|C:\\Windows|\\Device\\Harddisk0\\Partition3",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "Priority",
+                                      "Value":  8,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "TerminationDate",
+                                      "Value":  null,
+                                      "CimType":  13,
+                                      "Flags":  "Property, ReadOnly, NotModified, NullValue",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "UserModeTime",
+                                      "Value":  312500,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "WorkingSetSize",
+                                      "Value":  16969728,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "CommandLine",
+                                      "Value":  "\"C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" .claude/skills/implement-batch/scripts/turno.py C:/Users/fede_/AppData/Local/Temp/nosefia-batch-367-385/cola carril-C-22-chrome-02 C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-22/chrome-02-turno.log -- python C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-22/ejecutar-web-22.py D:/nosefia-carril-C-429-444/22-export-02 C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-22/evidencia-02/web-02 fb4236e69c752e6879bb338b80e734e16b211b41",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "ExecutablePath",
+                                      "Value":  "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "HandleCount",
+                                      "Value":  121,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "MaximumWorkingSetSize",
+                                      "Value":  1380,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "MinimumWorkingSetSize",
+                                      "Value":  200,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "OtherOperationCount",
+                                      "Value":  2061,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "OtherTransferCount",
+                                      "Value":  337664,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "PageFaults",
+                                      "Value":  4242,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "PageFileUsage",
+                                      "Value":  9500,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "ParentProcessId",
+                                      "Value":  7816,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "PeakPageFileUsage",
+                                      "Value":  9608,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "PeakVirtualSize",
+                                      "Value":  4412911616,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "PeakWorkingSetSize",
+                                      "Value":  16616,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "PrivatePageCount",
+                                      "Value":  9728000,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "ProcessId",
+                                      "Value":  18092,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "QuotaNonPagedPoolUsage",
+                                      "Value":  10,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "QuotaPagedPoolUsage",
+                                      "Value":  153,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "QuotaPeakNonPagedPoolUsage",
+                                      "Value":  12,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "QuotaPeakPagedPoolUsage",
+                                      "Value":  153,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "ReadOperationCount",
+                                      "Value":  100,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "ReadTransferCount",
+                                      "Value":  883027,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "SessionId",
+                                      "Value":  1,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "ThreadCount",
+                                      "Value":  1,
+                                      "CimType":  6,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "VirtualSize",
+                                      "Value":  4403867648,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "WindowsVersion",
+                                      "Value":  "10.0.26200",
+                                      "CimType":  14,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "WriteOperationCount",
+                                      "Value":  4,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  },
+                                  {
+                                      "Name":  "WriteTransferCount",
+                                      "Value":  178,
+                                      "CimType":  8,
+                                      "Flags":  "Property, ReadOnly, NotModified",
+                                      "IsValueModified":  false
+                                  }
+                              ],
+    "CimSystemProperties":  {
+                                "Namespace":  "root/cimv2",
+                                "ServerName":  "FEDE",
+                                "ClassName":  "Win32_Process",
+                                "Path":  null
+                            },
+    "ProcessName":  "python.exe",
+    "Handles":  121,
+    "VM":  4403867648,
+    "WS":  16969728,
+    "Path":  "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "Caption":  "python.exe",
+    "Description":  "python.exe",
+    "InstallDate":  null,
+    "Name":  "python.exe",
+    "Status":  null,
+    "CreationClassName":  "Win32_Process",
+    "CreationDate":  "\/Date(1792179151018)\/",
+    "CSCreationClassName":  "Win32_ComputerSystem",
+    "CSName":  "FEDE",
+    "ExecutionState":  null,
+    "Handle":  "18092",
+    "KernelModeTime":  625000,
+    "OSCreationClassName":  "Win32_OperatingSystem",
+    "OSName":  "Microsoft Windows 11 Home Single Language|C:\\Windows|\\Device\\Harddisk0\\Partition3",
+    "Priority":  8,
+    "TerminationDate":  null,
+    "UserModeTime":  312500,
+    "WorkingSetSize":  16969728,
+    "CommandLine":  "\"C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" .claude/skills/implement-batch/scripts/turno.py C:/Users/fede_/AppData/Local/Temp/nosefia-batch-367-385/cola carril-C-22-chrome-02 C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-22/chrome-02-turno.log -- python C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-22/ejecutar-web-22.py D:/nosefia-carril-C-429-444/22-export-02 C:/Users/fede_/AppData/Local/Temp/nosefia-watch-429-444/carril-C-22/evidencia-02/web-02 fb4236e69c752e6879bb338b80e734e16b211b41",
+    "ExecutablePath":  "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "HandleCount":  121,
+    "MaximumWorkingSetSize":  1380,
+    "MinimumWorkingSetSize":  200,
+    "OtherOperationCount":  2061,
+    "OtherTransferCount":  337664,
+    "PageFaults":  4242,
+    "PageFileUsage":  9500,
+    "ParentProcessId":  7816,
+    "PeakPageFileUsage":  9608,
+    "PeakVirtualSize":  4412911616,
+    "PeakWorkingSetSize":  16616,
+    "PrivatePageCount":  9728000,
+    "ProcessId":  18092,
+    "QuotaNonPagedPoolUsage":  10,
+    "QuotaPagedPoolUsage":  153,
+    "QuotaPeakNonPagedPoolUsage":  12,
+    "QuotaPeakPagedPoolUsage":  153,
+    "ReadOperationCount":  100,
+    "ReadTransferCount":  883027,
+    "SessionId":  1,
+    "ThreadCount":  1,
+    "VirtualSize":  4403867648,
+    "WindowsVersion":  "10.0.26200",
+    "WriteOperationCount":  4,
+    "WriteTransferCount":  178,
+    "PSComputerName":  null
+}

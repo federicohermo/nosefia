@@ -1,0 +1,5 @@
+{
+  "test": "tests.test_mcp.LosAssets.test_un_asset_sin_referencias_miradas_no_se_declara_huerfano_si_hay_comprimidos",
+  "motivo": "no hay `.res` comprimidos",
+  "alcance": "El mismo único skip figura en harness de base, full01 y full02. Esta sonda estática ejerce su condición existente; no modifica ni sustituye ningún nodo."
+}

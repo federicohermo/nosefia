@@ -1,0 +1,382 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/objetos/superficie_liquida.gd" id="liquido"]
+[ext_resource type="Script" path="res://src/escenas/objetos/fibras_de_la_mopa.gd" id="fibras"]
+[ext_resource type="Script" path="res://src/escenas/objetos/manija_del_balde.gd" id="manija"]
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/colilla.tscn" id="colilla"]
+
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_1.tres" id="26_bolsa1"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_2.tres" id="27_bolsa2"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_3.tres" id="28_bolsa3"]
+[ext_resource type="Script" path="res://src/escenas/objetos/util_de_limpieza.gd" id="30_util"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/mopa.tres" id="31_mopa"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/balde.tres" id="32_balde"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/jabon_azul.tres" id="33_jabon_azul"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/jabon_rosa.tres" id="34_jabon_rosa"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/jabon_amarillo.tres" id="35_jabon_amarillo"]
+
+[sub_resource type="ConvexPolygonShape3D" id="forma_de_la_mopa"]
+margin = 0.005
+points = PackedVector3Array(0.1300000, -0.8518224, 0.0000000, 0.1125833, -0.8518224, 0.0650000, 0.0650000, -0.8518224, 0.1125833, 0.0000000, -0.8518224, 0.1300000, -0.0650000, -0.8518224, 0.1125833, -0.1125833, -0.8518224, 0.0650000, -0.1300000, -0.8518224, 0.0000000, -0.1125833, -0.8518224, -0.0650000, -0.0650000, -0.8518224, -0.1125833, -0.0000000, -0.8518224, -0.1300000, 0.0650000, -0.8518224, -0.1125833, 0.1125833, -0.8518224, -0.0650000, 0.1300000, -0.7560000, 0.0000000, 0.1125833, -0.7560000, 0.0650000, 0.0650000, -0.7560000, 0.1125833, 0.0000000, -0.7560000, 0.1300000, -0.0650000, -0.7560000, 0.1125833, -0.1125833, -0.7560000, 0.0650000, -0.1300000, -0.7560000, 0.0000000, -0.1125833, -0.7560000, -0.0650000, -0.0650000, -0.7560000, -0.1125833, -0.0000000, -0.7560000, -0.1300000, 0.0650000, -0.7560000, -0.1125833, 0.1125833, -0.7560000, -0.0650000, 0.0230000, 0.3979809, 0.0000000, 0.0162635, 0.3979809, 0.0162635, 0.0000000, 0.3979809, 0.0230000, -0.0162635, 0.3979809, 0.0162635, -0.0230000, 0.3979809, 0.0000000, -0.0162635, 0.3979809, -0.0162635, -0.0000000, 0.3979809, -0.0230000, 0.0162635, 0.3979809, -0.0162635)
+
+[sub_resource type="CylinderMesh" id="punta_de_la_mopa"]
+top_radius = 0.060
+bottom_radius = 0.075
+height = 0.066822447
+radial_segments = 18
+
+[sub_resource type="StandardMaterial3D" id="tinte_de_la_mopa"]
+resource_local_to_scene = true
+blend_mode = 3
+shading_mode = 0
+albedo_color = Color(0.74, 0.89, 0.98, 1)
+
+[sub_resource type="CylinderShape3D" id="forma_del_balde"]
+height = 0.3314925
+radius = 0.195
+
+[sub_resource type="CylinderMesh" id="agua_del_balde"]
+top_radius = 0.172
+bottom_radius = 0.172
+height = 0.002
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="color_del_agua"]
+resource_local_to_scene = true
+albedo_color = Color(0.74, 0.89, 0.98, 1)
+roughness = 0.2
+
+[sub_resource type="CylinderShape3D" id="forma_del_bidon"]
+height = 0.66
+radius = 0.1689
+
+[sub_resource type="CylinderShape3D" id="actual_Balde"]
+height = 0.5039904
+radius = 0.198
+
+[sub_resource type="CylinderShape3D" id="actual_JabonAzul"]
+height = 0.7016206
+radius = 0.229031565
+
+[sub_resource type="CylinderShape3D" id="actual_JabonRosa"]
+height = 0.7016206
+radius = 0.229031565
+
+[sub_resource type="CylinderShape3D" id="actual_JabonAmarillo"]
+height = 0.7016206
+radius = 0.229031565
+
+[node name="Objetos" type="Node3D"]
+
+[node name="Mopa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("31_mopa")
+orientacion_en_mano = Basis(1, 0, 0, 0, 0.258819, -0.965926, 0, 0.965926, 0.258819)
+nodo_del_modelo = &"mopa"
+escala_apoyada = 1.12
+malla = NodePath("Malla")
+carga = NodePath("Punta")
+mallas = [NodePath("Malla")]
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,11.8,0.95405942,0.45)
+
+[node name="Forma" type="CollisionShape3D" parent="Mopa"]
+shape = SubResource("forma_de_la_mopa")
+
+[node name="Malla" type="MeshInstance3D" parent="Mopa"]
+script = ExtResource("fibras")
+gi_mode = 2
+
+[node name="Punta" type="MeshInstance3D" parent="Mopa"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.818411224, 0)
+visible = false
+material_override = SubResource("tinte_de_la_mopa")
+cast_shadow = 0
+mesh = SubResource("punta_de_la_mopa")
+gi_mode = 2
+
+
+[node name="BolsaDeBasura1" parent="." instance=ExtResource("22_agarrable")]
+datos = ExtResource("26_bolsa1")
+transform = Transform3D(1,0,0,0,1,0,0,0,1,7.364315300,1.123648460,4.839459635)
+
+[node name="BolsaDeBasura2" parent="." instance=ExtResource("22_agarrable")]
+datos = ExtResource("27_bolsa2")
+transform = Transform3D(1,0,0,0,1,0,0,0,1,0.519124090,1.129984060,5.866384300)
+
+[node name="BolsaDeBasura3" parent="." instance=ExtResource("22_agarrable")]
+datos = ExtResource("28_bolsa3")
+transform = Transform3D(1,0,0,0,1,0,0,0,1,9.138609635,1.123648440,5.448094900)
+
+[node name="CajaDeActroncito" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 0
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_1_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000000, 0.000000000, -0.220001785)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,1.560000007980232,-9.354248084999998)
+
+[node name="CajaDeDurextra" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 1
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_1_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000000, 0.000000000, 0.219998215)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,1.560000007980232,-8.914248084999999)
+
+[node name="CajaDeBurbaloo" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 2
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_0_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000000, 0.000000000, -0.323709485)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,0.85370769404686,-9.457955785)
+
+[node name="CajaDeZucarachas" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 3
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_0_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000055, 0.000000000, -0.323709485)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973000000005,0.85370769404686,-9.457955785)
+
+[node name="CajaDeLaysntt" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 4
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_0_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000225, 0.000000000, -0.000003785)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,0.85370769404686,-10.794248085)
+
+[node name="CajaDeMalbardo" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 5
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_1_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000225, 0.000000000, 0.219996215)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,1.560000007980232,-10.574248084999999)
+
+[node name="CajaDeProngles" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 6
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_0_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000055, 0.000000000, 0.323705915)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973000000005,0.85370769404686,-8.810540385)
+
+[node name="CajaDeJorgillo" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 7
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_1_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000225, 0.000000000, -0.220003785)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,1.560000007980232,-11.014248084999998)
+
+[node name="CajaDeArvejas" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 8
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_0_0"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.323708095, 0.000000000, -0.000000656)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,0.5062921435000001,0.7499998379802321,-14.951296805999998)
+
+[node name="CajaDeChisitos" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 9
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_0_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000245, 0.000000000, -0.000003785)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973,0.85370769404686,-10.794248085)
+
+[node name="CajaDeOremos" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 10
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_0_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000000, 0.000000000, 0.323705915)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,0.85370769404686,-8.810540385)
+
+[node name="CajaDePepitos" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 11
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_0_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.219999605, 0.000000000, -0.000000656)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,1.0499998435,0.8537075240468601,-14.951296805999998)
+
+[node name="CajaDeSaladik" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 12
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_2_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000000, 0.000000000, 0.323705915)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,2.47335827504686,-8.810540385)
+
+[node name="CajaDeUakas" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 13
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_0_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.323707907, 0.000000000, 0.000000344)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,2.1662921429999997,0.8537075240468601,-14.951296806)
+
+[node name="CajaDeCoracola" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 14
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_2_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000000, 0.000000000, -0.323709485)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,2.47335827504686,-9.457955785)
+
+[node name="CajaDeFrotlups" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 15
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_2_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000225, 0.000000000, 0.219996215)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,2.47335827504686,-10.574248084999999)
+
+[node name="CajaDeMarolini" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 16
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_0_1"
+metadata/desplazamiento_sobre_tabla = Vector3(0.323707493, 0.000000000, 0.000000344)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,2.813707543,0.8537075240468601,-14.951296806)
+
+[node name="CajaDeAmargadito" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 17
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_1_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000055, 0.000000000, 0.323705915)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973000000005,1.66370769404686,-8.810540385)
+
+[node name="CajaDeCindolor" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 18
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_2_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000055, 0.000000000, 0.323705915)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973000000005,2.47335827504686,-8.810540385)
+
+[node name="CajaDeFlinpuf" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 19
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_1_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000055, 0.000000000, -0.323709485)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973000000005,1.66370769404686,-9.457955785)
+
+[node name="CajaDeDonsaturados" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 20
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_2_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.000000055, 0.000000000, -0.323709485)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973000000005,2.47335827504686,-9.457955785)
+
+[node name="CajaDePetisas" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 21
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_2_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000245, 0.000000000, 0.219996215)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973,2.47335827504686,-10.574248084999999)
+
+[node name="CajaDeMacumbas" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 22
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_2_0"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.323708095, 0.000000000, -0.000000656)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,0.5062921435000001,2.47335827504686,-14.951296805999998)
+
+[node name="CajaDeCosaDeMani" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 23
+metadata/soporte_del_modelo = "gondola_deposito03/deposito_pallet_central_derecho_2_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000225, 0.000000000, -0.323711485)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,3.5200002,2.3696505889802317,-11.117955785)
+
+[node name="CajaDeDuronga" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 24
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_2_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000245, 0.000000000, -0.323711485)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973,2.3696505889802317,-11.117955785)
+
+[node name="CajaDeFernetGod" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 25
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_2_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.323707305, 0.000000000, -0.000000656)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,1.1537075435,2.47335827504686,-14.951296805999998)
+
+[node name="CajaDeMayonchis" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 26
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_2_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000207, 0.000000000, 0.000000344)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,2.489999843,2.47335827504686,-14.951296806)
+
+[node name="CajaDeOaaaa" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 27
+metadata/soporte_del_modelo = "gondola_deposito_central_izquierda/deposito_pallet_central_izquierdo_1_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.000000245, 0.000000000, -0.000003785)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,-0.21099973,1.560000007980232,-10.794248085)
+
+[node name="CajaDeTerminator" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 28
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_1_0"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.323708095, 0.000000000, -0.000000656)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,0.5062921435000001,1.66370769404686,-14.951296805999998)
+
+[node name="CajaDeMarranos" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 29
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_1_0"
+metadata/desplazamiento_sobre_tabla = Vector3(0.323707305, 0.000000000, -0.000000656)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,1.1537075435,1.66370769404686,-14.951296805999998)
+
+[node name="CajaDeFeelRickyFort" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 30
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_1_1"
+metadata/desplazamiento_sobre_tabla = Vector3(-0.324,0,0)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,2.16600005,1.66370769404686,-14.95129715)
+
+[node name="Balde" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("32_balde")
+nodo_del_modelo = &"balde"
+malla = NodePath("Malla")
+carga = NodePath("Agua")
+mallas = [NodePath("Malla")]
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,12.456797,0.25823700000000005,0.44862247)
+
+[node name="Forma" type="CollisionShape3D" parent="Balde"]
+shape = SubResource("actual_Balde")
+position = Vector3(0.000000000, 0.095995200, 0.000000000)
+
+[node name="Malla" type="MeshInstance3D" parent="Balde"]
+script = ExtResource("manija")
+gi_mode = 2
+
+[node name="Agua" type="MeshInstance3D" parent="Balde"]
+script = ExtResource("liquido")
+en_balde = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.115, 0)
+visible = false
+material_override = SubResource("color_del_agua")
+mesh = SubResource("agua_del_balde")
+gi_mode = 2
+
+[node name="JabonAzul" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("33_jabon_azul")
+nodo_del_modelo = &"bidón jabon01_001"
+malla = NodePath("Malla")
+mallas = [NodePath("Malla")]
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,10.501369,0.45391496,0.33181167)
+
+[node name="Forma" type="CollisionShape3D" parent="JabonAzul"]
+shape = SubResource("actual_JabonAzul")
+position = Vector3(0.000000005, -0.000867650, 0.000000245)
+
+[node name="Malla" type="MeshInstance3D" parent="JabonAzul"]
+gi_mode = 2
+
+[node name="JabonRosa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("34_jabon_rosa")
+nodo_del_modelo = &"bidón jabon01"
+malla = NodePath("Malla")
+mallas = [NodePath("Malla")]
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,9.9666195,0.43199953999999996,-0.11691927)
+
+[node name="Forma" type="CollisionShape3D" parent="JabonRosa"]
+shape = SubResource("actual_JabonRosa")
+position = Vector3(0.000000005, 0.021047750, 0.036910775)
+
+[node name="Malla" type="MeshInstance3D" parent="JabonRosa"]
+gi_mode = 2
+
+[node name="JabonAmarillo" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("35_jabon_amarillo")
+nodo_del_modelo = &"bidón jabon01_002"
+malla = NodePath("Malla")
+mallas = [NodePath("Malla")]
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,11.03491,0.43199953999999996,-0.11691927)
+
+[node name="Forma" type="CollisionShape3D" parent="JabonAmarillo"]
+shape = SubResource("actual_JabonAmarillo")
+position = Vector3(0.000000005, 0.021047750, 0.036910775)
+
+[node name="Malla" type="MeshInstance3D" parent="JabonAmarillo"]
+gi_mode = 2
+
+[node name="CajaDePoetico" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 31
+metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_1_1"
+metadata/desplazamiento_sobre_tabla = Vector3(0.324,0,0)
+transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,2.8140000499999998,1.66370769404686,-14.95129715)
+
+[node name="Colilla" parent="." instance=ExtResource("colilla")]
+position = Vector3(-3.75, 0.12, -11.20)

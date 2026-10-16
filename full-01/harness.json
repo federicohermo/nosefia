@@ -1,0 +1,17 @@
+{
+  "nodo": "harness",
+  "codigo": 0,
+  "segundos": 120.35322580020875,
+  "salteado": false,
+  "aviso": null,
+  "comando": [
+    "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion\\.claude\\scripts\\tests",
+    "-t",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion\\.claude\\scripts"
+  ]
+}

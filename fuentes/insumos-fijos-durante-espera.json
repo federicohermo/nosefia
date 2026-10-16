@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-16T19:28:01.019027+00:00",
+  "momento": "Lectura durante espera FIFO posterior al enqueue; archivos inmóviles desde sus respectivos encolados. No se inventa pin anterior.",
+  "product_head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+  "insumos": {
+    "exportar_paquete22-02.py": {
+      "sha256": "aff89a8586d003f869ef5ca1317130c58f233cc2ecb90e5abb75feae41d96e63",
+      "bytes": 6381
+    },
+    "paquete-y-nativo-02.py": {
+      "sha256": "6f79f0edeee8fbe67c7f54c48ef4701a88d90f9b84bd6eb7399e740b1fcbfade",
+      "bytes": 2732
+    },
+    "paquete22.gd": {
+      "sha256": "5b8fcfbc1c8a20dc7a8d4e5cc3ed7e786b5b824ce80744cb9d632ce65340063e",
+      "bytes": 11311
+    },
+    "capturar_nativo22.gd": {
+      "sha256": "4b732ede252e9f58495a4789663029a12f83fb15ead63e787ddc7432ea8596c1",
+      "bytes": 11819
+    },
+    "ejecutar-web-22.py": {
+      "sha256": "313635a49b38cf4ede0816e773e8a7d424a472ddc2560bcb5c9ac4f591721dd7",
+      "bytes": 3448
+    },
+    "recorrer-web-22.mjs": {
+      "sha256": "adf78a89385a29c1010e522552fb5d3b77cacfca8e98888be17868013e5de6c2",
+      "bytes": 8696
+    },
+    "fixture-web-22.gd": {
+      "sha256": "6a0c68920f1460ef13631c2a66bf00ab16301fecc857d682b59f9efab853168a",
+      "bytes": 9140
+    },
+    "fixture22.tscn": {
+      "sha256": "380a3586b5e48cb832abcb46b5bddf68d6f6a94ab5b5764d11cde760a79db9d0",
+      "bytes": 154
+    },
+    "override.cfg": {
+      "sha256": "14df75fb81b1da8a15028315a147bdfae8082ce6309c998151d13178cad6186c",
+      "bytes": 47
+    }
+  }
+}

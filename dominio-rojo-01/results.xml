@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-16" name="report_4" tests="17" failures="40" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="pista_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:06:13" hostname="localhost" tests="1" failures="4" errors="0" skipped="0" flaky="0" time="0.029">
+		<testcase name="test_canal_origen_y_jornada_se_cumplen_juntos" classname="pista_test" time="0.010">
+			<failure message="FAILED: res://test/dominio/investigacion/pista_test.gd:11" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_canal_origen_y_jornada_se_cumplen_juntos' in res://test/dominio/investigacion/pista_test.gd:11
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/pista_test.gd:11" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_canal_origen_y_jornada_se_cumplen_juntos' in res://test/dominio/investigacion/pista_test.gd:11
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/pista_test.gd:11" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_canal_origen_y_jornada_se_cumplen_juntos' in res://test/dominio/investigacion/pista_test.gd:11
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/pista_test.gd:11" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_canal_origen_y_jornada_se_cumplen_juntos' in res://test/dominio/investigacion/pista_test.gd:11
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="hipotesis_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:06:14" hostname="localhost" tests="1" failures="1" errors="0" skipped="0" flaky="0" time="0.025">
+		<testcase name="test_las_exigencias_de_una_opcion_se_cumplen_juntas" classname="hipotesis_test" time="0.010">
+			<failure message="FAILED: res://test/dominio/investigacion/hipotesis_test.gd:10" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_las_exigencias_de_una_opcion_se_cumplen_juntas' in res://test/dominio/investigacion/hipotesis_test.gd:10
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="desenlace_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:06:14" hostname="localhost" tests="1" failures="2" errors="0" skipped="0" flaky="0" time="0.026">
+		<testcase name="test_umbral_y_exigencias_se_cumplen_simultaneamente" classname="desenlace_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/investigacion/desenlace_test.gd:12" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_umbral_y_exigencias_se_cumplen_simultaneamente' in res://test/dominio/investigacion/desenlace_test.gd:12
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/desenlace_test.gd:14" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_umbral_y_exigencias_se_cumplen_simultaneamente' in res://test/dominio/investigacion/desenlace_test.gd:14
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="hipotesis_de_la_jornada_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:06:14" hostname="localhost" tests="2" failures="5" errors="0" skipped="0" flaky="0" time="0.043">
+		<testcase name="test_predeterminada_solo_si_ninguna_opcion_esta_habilitada" classname="hipotesis_de_la_jornada_test" time="0.009">
+			<failure message="FAILED: res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:20" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371835326855278>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371835326855278>	
+	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:21" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371835360409743>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371835360409743>	
+	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:21
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:22" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371835343632510>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371835343632510>	
+	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:22
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:23" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371835360409743>, ():<Resource#-9223371835343632510>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371835360409743>	1	<N/A>	():<Resource#-9223371835343632510>	
+	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:23
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:28" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371835360409743>, ():<Resource#-9223371835343632510>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371835360409743>	1	<N/A>	():<Resource#-9223371835343632510>	
+	at 'test_predeterminada_solo_si_ninguna_opcion_esta_habilitada' in res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd:28
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_jornada_sin_guion_no_inventa_una_opcion" classname="hipotesis_de_la_jornada_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="caso_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:06:14" hostname="localhost" tests="4" failures="7" errors="0" skipped="0" flaky="0" time="0.082">
+		<testcase name="test_caso_valido_y_repetida_tienen_diagnosticos_distintos" classname="caso_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:23" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_caso_valido_y_repetida_tienen_diagnosticos_distintos' in res://test/dominio/investigacion/caso_test.gd:23
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_exigencia_inexistente_y_ciclo_se_rechazan" classname="caso_test" time="0.010">
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:29" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 0
+	at 'test_exigencia_inexistente_y_ciclo_se_rechazan' in res://test/dominio/investigacion/caso_test.gd:29
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:30" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 0
+	at 'test_exigencia_inexistente_y_ciclo_se_rechazan' in res://test/dominio/investigacion/caso_test.gd:30
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:32" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 0
+	at 'test_exigencia_inexistente_y_ciclo_se_rechazan' in res://test/dominio/investigacion/caso_test.gd:32
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_desenlace_inalcanzable_por_umbral_o_por_exigencia" classname="caso_test" time="0.009">
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:40" type="FAILURE">
+<![CDATA[
+Expecting:
+ 4
+ but was
+ 0
+	at 'test_desenlace_inalcanzable_por_umbral_o_por_exigencia' in res://test/dominio/investigacion/caso_test.gd:40
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting:
+ 4
+ but was
+ 0
+	at 'test_desenlace_inalcanzable_por_umbral_o_por_exigencia' in res://test/dominio/investigacion/caso_test.gd:45
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_ciclo_largo_no_depende_del_orden_de_los_recursos" classname="caso_test" time="0.009">
+			<failure message="FAILED: res://test/dominio/investigacion/caso_test.gd:60" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 0
+	at 'test_ciclo_largo_no_depende_del_orden_de_los_recursos' in res://test/dominio/investigacion/caso_test.gd:60
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="expediente_test" package="test/dominio/investigacion" timestamp="2026-10-16T17:06:14" hostname="localhost" tests="8" failures="21" errors="0" skipped="0" flaky="0" time="0.173">
+		<testcase name="test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva" classname="expediente_test" time="0.011">
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:32" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva' in res://test/dominio/investigacion/expediente_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:33" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva' in res://test/dominio/investigacion/expediente_test.gd:33
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:35" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	A	
+	at 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva' in res://test/dominio/investigacion/expediente_test.gd:35
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:36" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_registrar_nueva_repetida_y_ajena_publica_solo_la_nueva' in res://test/dominio/investigacion/expediente_test.gd:36
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_una_y_dos_exigencias_pendientes_no_registran" classname="expediente_test" time="0.009">
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:50" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_una_y_dos_exigencias_pendientes_no_registran' in res://test/dominio/investigacion/expediente_test.gd:50
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:52" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_una_y_dos_exigencias_pendientes_no_registran' in res://test/dominio/investigacion/expediente_test.gd:52
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:53" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_una_y_dos_exigencias_pendientes_no_registran' in res://test/dominio/investigacion/expediente_test.gd:53
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:54" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[A, B, C]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	A	1	<N/A>	B	2	<N/A>	C	
+	at 'test_una_y_dos_exigencias_pendientes_no_registran' in res://test/dominio/investigacion/expediente_test.gd:54
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_umbral_y_exigencia_publican_cada_desenlace_una_vez" classname="expediente_test" time="0.011">
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:74" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371781908199415>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371781908199415>	
+	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:74
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:75" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371781908199415>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371781908199415>	
+	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:75
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:77" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371781908199415>, ():<Resource#-9223371781891422200>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371781908199415>	1	<N/A>	():<Resource#-9223371781891422200>	
+	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:77
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:80" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371781908199415>, ():<Resource#-9223371781891422200>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371781908199415>	1	<N/A>	():<Resource#-9223371781891422200>	
+	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:80
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:83" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[():<Resource#-9223371781908199415>, ():<Resource#-9223371781891422200>]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	():<Resource#-9223371781908199415>	1	<N/A>	():<Resource#-9223371781891422200>	
+	at 'test_umbral_y_exigencia_publican_cada_desenlace_una_vez' in res://test/dominio/investigacion/expediente_test.gd:83
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_caso_inconsistente_no_registra_ni_publica" classname="expediente_test" time="0.010">
+		</testcase>
+		<testcase name="test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia" classname="expediente_test" time="0.010">
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:101" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[B, A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	B	1	<N/A>	A	
+	at 'test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia' in res://test/dominio/investigacion/expediente_test.gd:101
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:105" type="FAILURE">
+<![CDATA[
+Expecting:
+ '[B, A]'
+ but was
+ '<empty>'
+
+Differences found:
+Index	Current	Expected	0	<N/A>	B	1	<N/A>	A	
+	at 'test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia' in res://test/dominio/investigacion/expediente_test.gd:105
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:108" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_reconstruir_sanea_en_orden_sin_emitir_y_entrega_copia' in res://test/dominio/investigacion/expediente_test.gd:108
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_canal_y_jornada_ajenos_no_registran_la_pista" classname="expediente_test" time="0.012">
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:130" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_canal_y_jornada_ajenos_no_registran_la_pista' in res://test/dominio/investigacion/expediente_test.gd:130
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:133" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_canal_y_jornada_ajenos_no_registran_la_pista' in res://test/dominio/investigacion/expediente_test.gd:133
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:136" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_canal_y_jornada_ajenos_no_registran_la_pista' in res://test/dominio/investigacion/expediente_test.gd:136
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_notas_se_agregan_foto_texto_en_orden_de_descubrimiento" classname="expediente_test" time="0.008">
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:148" type="FAILURE">
+<![CDATA[
+Expecting:
+ 4
+ but was
+ 0
+	at 'test_notas_se_agregan_foto_texto_en_orden_de_descubrimiento' in res://test/dominio/investigacion/expediente_test.gd:148
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_consultar_notas_no_muta_estado_ni_guion" classname="expediente_test" time="0.009">
+			<failure message="FAILED: res://test/dominio/investigacion/expediente_test.gd:182" type="FAILURE">
+<![CDATA[
+Expecting:
+ 2
+ but was
+ 0
+	at 'test_consultar_notas_no_muta_estado_ni_guion' in res://test/dominio/investigacion/expediente_test.gd:182
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

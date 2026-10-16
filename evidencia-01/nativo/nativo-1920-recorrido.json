@@ -1,0 +1,87 @@
+{
+	"capturas": [
+		{
+			"cursor": 2,
+			"nombre": "nativo-1920-colilla-en-piso",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 2,
+			"nombre": "nativo-1920-colilla-pensamiento",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 2,
+			"nombre": "nativo-1920-colilla-en-mano",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-menu-j2-sin-notas",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-yasmin-tramo-registrado",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-notas-j2-par-0",
+			"scroll": 83,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-notas-j2-foto-0",
+			"scroll": 83,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-notas-j2-par-2",
+			"scroll": 129,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-notas-j2-foto-2",
+			"scroll": 129,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-notas-j2-q-bloqueada",
+			"scroll": 129,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-menu-j3-con-notas",
+			"scroll": 0,
+			"viewport": "(1920, 1080)"
+		},
+		{
+			"cursor": 0,
+			"nombre": "nativo-1920-notas-j3-ayer",
+			"scroll": 395,
+			"viewport": "(1920, 1080)"
+		}
+	],
+	"fallos": [],
+	"jornada_final": 3,
+	"notas": 4,
+	"pedidos": [
+		"2A",
+		"2A"
+	],
+	"pistas": [
+		"2B",
+		"2A"
+	]
+}

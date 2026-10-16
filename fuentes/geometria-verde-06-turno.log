@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-watch-429-444\carril-C-22\focal-geometria.py", line 28, in <module>
+    else:raise AssertionError('No coincide regeneración '+ruta)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: No coincide regeneración tableroluz

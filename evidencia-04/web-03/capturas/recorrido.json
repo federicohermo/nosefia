@@ -1,0 +1,129 @@
+[
+  {
+    "snapshot": "web-1280-main-menu-original",
+    "frames": 75,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": null
+  },
+  {
+    "width": 1280,
+    "montaje": "override.cfg externo, mismo PCK",
+    "html_original_sha256": "d5d930511f422e68ff3d2a0a6a6cfd312ef1ee82070c7c6a1e42ffcfc4f404e6",
+    "html_servido_sha256": "a615a5c4b50f769fb62109d8405bb4ddcf5814250e3295ece64d742345662379",
+    "fixture_sha256": "ff3e557a91cc4e07fa7fe89a72b63d2ad268d48bd1a1645fd8862b0206b3bf0b",
+    "scene_sha256": "380a3586b5e48cb832abcb46b5bddf68d6f6a94ab5b5764d11cde760a79db9d0",
+    "override_sha256": "14df75fb81b1da8a15028315a147bdfae8082ce6309c998151d13178cad6186c",
+    "args": []
+  },
+  {
+    "snapshot": "web-1280-colilla-suelo",
+    "frames": 39,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": false,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": false,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        1029.33337402344
+      ],
+      "chat": 0,
+      "colilla_en_mano": false,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 0,
+      "notas_emitidas": [],
+      "nuevas": [],
+      "pantalla": 0,
+      "pensamientos": [],
+      "pistas": [],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        482,
+        728
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "teclado",
+    "key": "e"
+  },
+  {
+    "snapshot": "web-1280-colilla-examinada-sin-pista",
+    "frames": 50,
+    "dom": {
+      "visible": "visible",
+      "aislado": true,
+      "cursor": true,
+      "ancho": 1280,
+      "alto": 720
+    },
+    "game": {
+      "abierto": false,
+      "adjunto": "",
+      "cerrar_foto": [
+        640,
+        1029.33337402344
+      ],
+      "chat": 0,
+      "colilla_en_mano": false,
+      "etapa": "colilla",
+      "fallos": [],
+      "fijo": false,
+      "fotos": [],
+      "id": 0,
+      "jornada": 2,
+      "menu": [],
+      "notas": 0,
+      "notas_emitidas": [],
+      "nuevas": [],
+      "pantalla": 0,
+      "pensamientos": [
+        "Una colilla de cigarrillo."
+      ],
+      "pistas": [],
+      "puntos": {},
+      "rotulos": [],
+      "scroll": 0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "volver": [
+        482,
+        728
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "entrada": "mouse",
+    "punto": [
+      640,
+      360
+    ]
+  }
+]

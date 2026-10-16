@@ -1,0 +1,65 @@
+{
+  "godot": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "origen": "registro",
+  "cwd": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+  "head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "comandos": [
+    {
+      "nombre": "import",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "--import",
+        "--quit"
+      ],
+      "codigo": 0
+    },
+    {
+      "nombre": "tests",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--verbose",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "-s",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+        "-a",
+        "res://test/dominio/investigacion/pista_test.gd",
+        "-a",
+        "res://test/dominio/investigacion/hipotesis_test.gd",
+        "-a",
+        "res://test/dominio/investigacion/desenlace_test.gd",
+        "-a",
+        "res://test/dominio/investigacion/hipotesis_de_la_jornada_test.gd",
+        "-a",
+        "res://test/dominio/investigacion/caso_test.gd",
+        "-a",
+        "res://test/dominio/investigacion/expediente_test.gd",
+        "-a",
+        "res://test/sistemas/investigacion/investigador_test.gd",
+        "-a",
+        "res://test/dominio/empleo/expediente_de_la_partida_test.gd",
+        "-a",
+        "res://test/dominio/investigacion/bandeja_test.gd",
+        "-a",
+        "res://test/dominio/investigacion/celular_test.gd",
+        "-a",
+        "res://test/dominio/investigacion/conversacion_test.gd",
+        "-a",
+        "res://test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "--continue",
+        "--ignoreHeadlessMode",
+        "-rd",
+        "res://reports"
+      ],
+      "codigo": 0
+    }
+  ],
+  "head_despues": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87"
+}

@@ -1,0 +1,47 @@
+{
+  "godot": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "origen": "registro",
+  "cwd": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+  "head": "893109542cafeef5a6483a8b3f041e5dc39c8f05",
+  "comandos": [
+    {
+      "nombre": "import",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "--import",
+        "--quit"
+      ],
+      "codigo": 0
+    },
+    {
+      "nombre": "tests",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--verbose",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "-s",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+        "-a",
+        "test/escenas/volumen_de_los_solidos_test.gd",
+        "-a",
+        "test/escenas/iluminacion_horneada_test.gd",
+        "-a",
+        "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "--continue",
+        "--ignoreHeadlessMode",
+        "-rd",
+        "res://reports"
+      ],
+      "codigo": 100
+    }
+  ],
+  "head_despues": "893109542cafeef5a6483a8b3f041e5dc39c8f05"
+}

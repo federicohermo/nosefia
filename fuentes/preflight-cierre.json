@@ -1,0 +1,669 @@
+{
+  "ids": 49,
+  "faltantes": [],
+  "citas": {
+    "AC-INV-001": [
+      {
+        "ruta": "test/dominio/almacen/objeto_del_almacen_test.gd",
+        "linea": 33
+      },
+      {
+        "ruta": "test/dominio/almacen/objeto_del_almacen_test.gd",
+        "linea": 67
+      }
+    ],
+    "AC-INV-002": [
+      {
+        "ruta": "test/dominio/investigacion/hallazgos_test.gd",
+        "linea": 47
+      },
+      {
+        "ruta": "test/dominio/investigacion/revelacion_test.gd",
+        "linea": 11
+      },
+      {
+        "ruta": "test/dominio/investigacion/revelacion_test.gd",
+        "linea": 15
+      }
+    ],
+    "AC-INV-003": [
+      {
+        "ruta": "test/dominio/investigacion/hallazgos_test.gd",
+        "linea": 22
+      }
+    ],
+    "AC-INV-004": [
+      {
+        "ruta": "test/dominio/investigacion/hallazgos_test.gd",
+        "linea": 37
+      }
+    ],
+    "AC-INV-005": [
+      {
+        "ruta": "test/dominio/investigacion/hallazgos_test.gd",
+        "linea": 61
+      }
+    ],
+    "AC-INV-006": [
+      {
+        "ruta": "test/dominio/investigacion/computadora_test.gd",
+        "linea": 57
+      }
+    ],
+    "AC-INV-007": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 191
+      },
+      {
+        "ruta": "test/sistemas/investigacion/computadora_de_escritorio_test.gd",
+        "linea": 91
+      },
+      {
+        "ruta": "test/sistemas/investigacion/computadora_de_escritorio_test.gd",
+        "linea": 105
+      }
+    ],
+    "AC-INV-008": [
+      {
+        "ruta": "test/dominio/investigacion/computadora_test.gd",
+        "linea": 37
+      },
+      {
+        "ruta": "test/dominio/investigacion/computadora_test.gd",
+        "linea": 46
+      }
+    ],
+    "AC-INV-009": [
+      {
+        "ruta": "test/dominio/investigacion/conversacion_test.gd",
+        "linea": 64
+      }
+    ],
+    "AC-INV-010": [
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 4
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 59
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 134
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 141
+      }
+    ],
+    "AC-INV-011": [
+      {
+        "ruta": "test/dominio/investigacion/cuaderno_test.gd",
+        "linea": 13
+      },
+      {
+        "ruta": "test/dominio/investigacion/nota_test.gd",
+        "linea": 11
+      }
+    ],
+    "AC-INV-012": [
+      {
+        "ruta": "test/sistemas/investigacion/computadora_de_escritorio_test.gd",
+        "linea": 145
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 172
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 27
+      },
+      {
+        "ruta": "test/dominio/investigacion/cuaderno_test.gd",
+        "linea": 22
+      }
+    ],
+    "AC-INV-019": [
+      {
+        "ruta": "test/dominio/dialogo_test.gd",
+        "linea": 44
+      },
+      {
+        "ruta": "test/sistemas/investigacion/examen_test.gd",
+        "linea": 223
+      },
+      {
+        "ruta": "test/sistemas/marco/locutor_test.gd",
+        "linea": 72
+      }
+    ],
+    "AC-INV-020": [
+      {
+        "ruta": "test/sistemas/investigacion/examen_test.gd",
+        "linea": 242
+      },
+      {
+        "ruta": "test/sistemas/investigacion/examen_test.gd",
+        "linea": 323
+      },
+      {
+        "ruta": "test/escenas/objetos/carga_de_la_mopa_test.gd",
+        "linea": 18
+      },
+      {
+        "ruta": "test/escenas/objetos/manija_del_balde_test.gd",
+        "linea": 103
+      }
+    ],
+    "AC-INV-022": [
+      {
+        "ruta": "test/sistemas/investigacion/examen_test.gd",
+        "linea": 198
+      },
+      {
+        "ruta": "test/dominio/almacen/reglas_de_los_objetos_test.gd",
+        "linea": 118
+      }
+    ],
+    "AC-INV-023": [
+      {
+        "ruta": "test/sistemas/investigacion/examen_test.gd",
+        "linea": 185
+      }
+    ],
+    "AC-INV-024": [
+      {
+        "ruta": "test/sistemas/investigacion/examen_test.gd",
+        "linea": 270
+      }
+    ],
+    "AC-INV-025": [
+      {
+        "ruta": "test/escenas/jornada_integrada_test.gd",
+        "linea": 111
+      }
+    ],
+    "AC-INV-026": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 60
+      },
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 80
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 4
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 13
+      }
+    ],
+    "AC-INV-027": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 60
+      },
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 218
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 117
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 27
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 42
+      }
+    ],
+    "AC-INV-028": [
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 334
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 9
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 43
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 186
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 216
+      }
+    ],
+    "AC-INV-029": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 218
+      },
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 281
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 43
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 59
+      }
+    ],
+    "AC-INV-030": [
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 43
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 117
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 79
+      }
+    ],
+    "AC-INV-031": [
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 117
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 69
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 86
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 42
+      },
+      {
+        "ruta": "test/dominio/investigacion/mensaje_test.gd",
+        "linea": 9
+      }
+    ],
+    "AC-INV-032": [
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 69
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 61
+      }
+    ],
+    "AC-INV-033": [
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 37
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 103
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 231
+      }
+    ],
+    "AC-INV-034": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 301
+      }
+    ],
+    "AC-INV-035": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 166
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 168
+      }
+    ],
+    "AC-INV-036": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 142
+      },
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 166
+      },
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 428
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 105
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 77
+      }
+    ],
+    "AC-INV-037": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 321
+      },
+      {
+        "ruta": "test/escenas/devolucion_en_el_almacen_test.gd",
+        "linea": 257
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 105
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 43
+      }
+    ],
+    "AC-INV-038": [
+      {
+        "ruta": "test/escenas/celular_en_el_almacen_test.gd",
+        "linea": 218
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 67
+      }
+    ],
+    "AC-INV-039": [
+      {
+        "ruta": "test/escenas/chats_de_jornada_2_en_el_almacen_test.gd",
+        "linea": 100
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 251
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 305
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 169
+      },
+      {
+        "ruta": "test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd",
+        "linea": 27
+      }
+    ],
+    "AC-INV-040": [
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 282
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 169
+      },
+      {
+        "ruta": "test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd",
+        "linea": 63
+      },
+      {
+        "ruta": "test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd",
+        "linea": 72
+      }
+    ],
+    "AC-INV-041": [
+      {
+        "ruta": "test/escenas/chats_de_jornada_2_en_el_almacen_test.gd",
+        "linea": 129
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 251
+      },
+      {
+        "ruta": "test/sistemas/investigacion/celular_del_empleado_test.gd",
+        "linea": 140
+      }
+    ],
+    "AC-INV-042": [
+      {
+        "ruta": "test/escenas/chats_de_jornada_2_en_el_almacen_test.gd",
+        "linea": 129
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 251
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 282
+      },
+      {
+        "ruta": "test/ui/diegetica/pantalla_del_celular_test.gd",
+        "linea": 305
+      },
+      {
+        "ruta": "test/dominio/investigacion/chats_de_la_segunda_jornada_test.gd",
+        "linea": 51
+      }
+    ],
+    "AC-INV-043": [
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 26
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 28
+      }
+    ],
+    "AC-INV-044": [
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 43
+      }
+    ],
+    "AC-INV-045": [
+      {
+        "ruta": "test/dominio/investigacion/desenlace_test.gd",
+        "linea": 4
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 57
+      }
+    ],
+    "AC-INV-046": [
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 19
+      },
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 26
+      },
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 35
+      },
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 52
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 86
+      }
+    ],
+    "AC-INV-047": [
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 96
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 197
+      }
+    ],
+    "AC-INV-048": [
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 149
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 54
+      }
+    ],
+    "AC-INV-049": [
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 183
+      },
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 216
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 54
+      }
+    ],
+    "AC-INV-050": [
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 70
+      },
+      {
+        "ruta": "test/dominio/investigacion/hipotesis_de_la_jornada_test.gd",
+        "linea": 12
+      },
+      {
+        "ruta": "test/dominio/investigacion/hipotesis_de_la_jornada_test.gd",
+        "linea": 31
+      },
+      {
+        "ruta": "test/dominio/investigacion/hipotesis_test.gd",
+        "linea": 4
+      }
+    ],
+    "AC-INV-051": [
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 263
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 26
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 90
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 106
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 141
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 197
+      }
+    ],
+    "AC-INV-052": [
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 263
+      },
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 315
+      },
+      {
+        "ruta": "test/dominio/investigacion/bandeja_test.gd",
+        "linea": 186
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 88
+      },
+      {
+        "ruta": "test/dominio/investigacion/celular_test.gd",
+        "linea": 106
+      },
+      {
+        "ruta": "test/dominio/investigacion/conversacion_test.gd",
+        "linea": 86
+      }
+    ],
+    "AC-INV-053": [
+      {
+        "ruta": "test/dominio/investigacion/caso_test.gd",
+        "linea": 93
+      }
+    ],
+    "AC-INV-054": [
+      {
+        "ruta": "test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "linea": 235
+      },
+      {
+        "ruta": "test/sistemas/investigacion/investigador_test.gd",
+        "linea": 54
+      },
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 112
+      },
+      {
+        "ruta": "test/dominio/investigacion/pista_test.gd",
+        "linea": 4
+      }
+    ],
+    "AC-INV-055": [
+      {
+        "ruta": "test/dominio/investigacion/expediente_test.gd",
+        "linea": 175
+      }
+    ],
+    "AC-INV-056": [
+      {
+        "ruta": "test/escenas/chats_de_jornada_2_en_el_almacen_test.gd",
+        "linea": 100
+      },
+      {
+        "ruta": "test/dominio/empleo/devoluciones_fechadas_test.gd",
+        "linea": 78
+      }
+    ]
+  },
+  "generador_reproduce_bytes": true,
+  "publicos_instancia_partida": 18,
+  "estaticos_partida": 2,
+  "foto_2a_sha256": "d5db6fd633d376c2bdf35ffdc864786820906b5c79c2d3fb21d904c52b67d29b",
+  "foto_2b_sha256": "01e585f0604a76df271942837b9656f2ea855ef1ffb7b551badb1bbd6b78f682"
+}

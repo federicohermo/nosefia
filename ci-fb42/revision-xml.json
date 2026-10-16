@@ -1,0 +1,31 @@
+{
+  "head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+  "job_conclusion": "success",
+  "suites": 288,
+  "casos": 2191,
+  "problemas": {
+    "failure": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "giro_suite": {
+    "id": "106",
+    "name": "giro_parejo_test",
+    "package": "test/escenas",
+    "timestamp": "2026-10-16T19:38:25",
+    "hostname": "localhost",
+    "tests": "8",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "flaky": "0",
+    "time": "35.923"
+  },
+  "giro_caso": {
+    "name": "test_una_caja_contra_la_pared_se_corre_sin_escalones",
+    "classname": "giro_parejo_test",
+    "time": "4.246"
+  },
+  "giro_xml": "<testcase name=\"test_una_caja_contra_la_pared_se_corre_sin_escalones\" classname=\"giro_parejo_test\" time=\"4.246\">\n\t\t</testcase>\n\t\t",
+  "incidentes_raw": []
+}

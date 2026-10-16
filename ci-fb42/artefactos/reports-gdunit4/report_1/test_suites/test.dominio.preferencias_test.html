@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>GdUnit4 Testsuite</title>
+	<link rel="stylesheet" href="../css/styles.css">
+	<link href="../css/breadcrumb.css" rel="stylesheet" type="text/css" />
+
+	<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+	<script>
+		$(document).ready(function () {
+			var report_view = $('#report_area').find('.report-column')
+
+			$('#report-table tr').click(function () {
+				var report = $(this).find('.report-column').html();
+				report_view.html(report)
+				$('.selected').removeClass('selected');
+				$(this).addClass('selected');
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<header>
+		<div class="logo">
+			<img src="../css/logo.png" alt="GdUnit4 Logo">
+			<span>GdUnit4</span>
+		</div>
+		<div class="report-container">
+			<h1>Testsuite Report</h1>
+			<div>
+				<span class="label">res://test/dominio/preferencias_test.gd</span>
+			</div>
+			<div class="summary">
+				<div class="summary-item">
+					<span class="label">Tests</span>
+					<span class="value">16</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Skipped</span>
+					<span class="value">0</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Flaky</span>
+					<span class="value">0</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Failures</span>
+					<span class="value">0</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Orphans</span>
+					<span class="value">0</span>
+				</div>
+				<div class="summary-item">
+					<span class="label">Duration</span>
+					<span class="value">253ms</span>
+				</div>
+				<div class="success-rate">
+					<div class="check-icon status-passed">✓</div>
+					<div class="rate-text">
+						<span class="label">Success Rate</span>
+						<span class="value">100%</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="breadcrumb">
+			<a href="../index.html"><span>All</span></a>
+			<a href="../path/test.dominio.html"><span>test/dominio</span></a>
+			<a class="active" href="#"><span>preferencias_test</span></a>
+		</div>
+	</header>
+
+	<main>
+		<div class="tab-report-grid">
+			<div class="grid-item tab">
+				<table id="report-table">
+					<thead>
+						<tr>
+							<th>Testcase</th>
+							<th>Result</th>
+							<th>Skipped</th>
+							<th>Orphans</th>
+							<th>Duration</th>
+							<th class="report-column">Report</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+								<tr class="testcase-group">
+									<td>test_sin_ajustar_cada_preferencia_esta_en_su_defecto</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_recorrer_con_mas_pasa_por_cada_valor_hasta_el_maximo</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_mas_en_el_maximo_y_menos_en_el_minimo_no_cambian_nada</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_textos_de_uno_coma_cuatro_llega_a_uno_coma_cinco_y_ahi_se_queda</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_sensibilidad_de_medio_baja_a_un_cuarto_y_ahi_se_queda</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_arrastrar_el_brillo_a_123_da_lo_mismo_que_dos_mas</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_arrastrar_la_sensibilidad_cae_en_el_paso_mas_cercano</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_arrastrar_mas_alla_de_un_tope_queda_en_el_tope</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_el_volumen_es_proporcional_a_la_amplitud</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>11ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_un_volumen_de_150_en_los_datos_vuelve_a_100</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>11ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_los_datos_vuelven_con_los_cinco_valores_y_su_tipo</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_un_campo_faltante_vuelve_a_su_defecto_y_conserva_los_demas</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>11ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_un_campo_de_otro_tipo_vuelve_a_su_defecto</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_un_valor_fuera_de_rango_vuelve_a_su_defecto</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>11ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_sin_datos_todas_quedan_en_su_defecto</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>12ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_una_copia_no_comparte_los_valores</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>11ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+					</tbody>
+				</table>
+			</div>
+			<div id="report_area" class="grid-item tab">
+				<h4>Failure Report</h4>
+				<div class="report-column"></div>
+			</div>
+		</div>
+	</main>
+
+	<footer>
+		<p>Generated by <a href="https://github.com/MikeSchulze/gdUnit4">GdUnit4</a> at 2026-10-16 19:41:25</p>
+		<div class="status-legend">
+			<span class="status-legend-item">
+				<span class="status-box status-skipped"></span> Skipped
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-passed"></span> Passed
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-flaky"></span> Flaky
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-warning"></span> Warning
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-failed"></span> Failed
+			</span>
+			<span class="status-legend-item">
+				<span class="status-box status-error"></span> Error
+			</span>
+		</div>
+	</footer>
+</body>
+
+<script>
+	function groupTableRows() {
+		const table = document.getElementById('report-table');
+		const rows = table.querySelectorAll('tbody tr');
+
+		let previousTestCase = '';
+		let groupStartIndex = 0;
+		let groupColorToggle = true; // Toggle between two colors
+
+		rows.forEach((row, index) => {
+			const testCaseName = row.cells[0].textContent.trim();
+
+			if (testCaseName !== previousTestCase) {
+				// Close the previous group
+				if (index > 0 && groupStartIndex !== index - 1) {
+					// Apply background color to the group
+					const groupClass = groupColorToggle ? 'group-bg-1' : 'group-bg-2';
+					for (let i = groupStartIndex; i <= index - 1; i++) {
+						rows[i].classList.add(groupClass);
+					}
+
+					// Toggle background color for the next group
+					groupColorToggle = !groupColorToggle;
+				}
+
+				// Start a new group
+				groupStartIndex = index;
+			}
+
+			previousTestCase = testCaseName;
+		});
+
+		// Handle the last group
+		if (groupStartIndex !== rows.length - 1) {
+			// Apply background color to the last group
+			const groupClass = groupColorToggle ? 'group-bg-1' : 'group-bg-2';
+			for (let i = groupStartIndex; i < rows.length; i++) {
+				rows[i].classList.add(groupClass);
+			}
+		}
+	}
+
+	// Call the function to group table rows after the DOM loads
+	document.addEventListener('DOMContentLoaded', groupTableRows);
+</script>
+
+</html>

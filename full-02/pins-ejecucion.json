@@ -1,0 +1,21 @@
+{
+  "antes_de_ejecucion": {
+    "head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+    "estado_porcelain": "",
+    "utc": "2026-10-16T19:22:05.091018+00:00"
+  },
+  "esperado": "fb4236e69c752e6879bb338b80e734e16b211b41",
+  "limite": "Este pin se toma al adquirir turno; el pin separado pre-enqueue identifica el inicio de congelaci\u00f3n.",
+  "despues_de_ejecucion": {
+    "head": "fb4236e69c752e6879bb338b80e734e16b211b41",
+    "estado_porcelain": "",
+    "utc": "2026-10-16T19:40:02.834812+00:00"
+  },
+  "comando": [
+    "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\verificar-con-crudo.py",
+    "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\full-02"
+  ],
+  "codigo": 1,
+  "misma_fuente_limpia": true
+}

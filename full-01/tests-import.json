@@ -1,0 +1,15 @@
+{
+  "nodo": "tests",
+  "codigo": 0,
+  "segundos": 8.422645699931309,
+  "salteado": false,
+  "aviso": null,
+  "comando": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+    "--import",
+    "--quit"
+  ]
+}

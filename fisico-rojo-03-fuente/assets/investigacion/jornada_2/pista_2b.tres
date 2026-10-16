@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Pista" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/pista.gd" id="pista"]
+
+[resource]
+script = ExtResource("pista")
+identidad = "2B"
+jornada = 2
+canal = 0
+origen = &"colilla"
+texto = "Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro…"

@@ -1,0 +1,47 @@
+{
+  "godot": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "origen": "registro",
+  "comandos": [
+    {
+      "nombre": "import",
+      "cmd": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "--import",
+        "--quit"
+      ],
+      "codigo": 0
+    },
+    {
+      "nombre": "foto",
+      "cmd": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-429-444-investigacion",
+        "--rendering-driver",
+        "opengl3",
+        "--script",
+        "res://assets/ui/manada/pistas/capturar_colilla.gd",
+        "--",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\fisico-rojo-03\\colilla.png"
+      ],
+      "codigo": 0
+    },
+    {
+      "nombre": "focal",
+      "cmd": [
+        "C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\focal-verbose.py",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-watch-429-444\\carril-C-22\\fisico-rojo-03\\focal",
+        "res://test/escenas/pistas_de_la_segunda_jornada_test.gd",
+        "res://test/dominio/investigacion/expediente_test.gd"
+      ],
+      "codigo": 105
+    }
+  ],
+  "source_head": "6d60f82c16bbbc1f7182e656ebead8df8bf5ad87",
+  "estado_inicial": " M src/dominio/empleo/partida.gd\n M src/dominio/investigacion/bandeja.gd\n M src/dominio/investigacion/conversacion.gd\n M src/escenas/puestos/objetos_del_almacen.tscn\n M src/escenas/puestos/servicios_del_almacen.tscn\n M test/dominio/investigacion/bandeja_test.gd\n M test/dominio/investigacion/celular_test.gd\n M test/dominio/investigacion/conversacion_test.gd\n?? assets/investigacion/\n?? assets/props/\n?? assets/ui/manada/pistas/\n?? src/dominio/investigacion/caso.gd\n?? src/dominio/investigacion/caso.gd.uid\n?? src/dominio/investigacion/colilla.tres\n?? src/dominio/investigacion/conversacion_de_notas.tres\n?? src/dominio/investigacion/desenlace.gd\n?? src/dominio/investigacion/desenlace.gd.uid\n?? src/dominio/investigacion/expediente.gd\n?? src/dominio/investigacion/expediente.gd.uid\n?? src/dominio/investigacion/hipotesis.gd\n?? src/dominio/investigacion/hipotesis.gd.uid\n?? src/dominio/investigacion/hipotesis_de_la_jornada.gd\n?? src/dominio/investigacion/hipotesis_de_la_jornada.gd.uid\n?? src/dominio/investigacion/pista.gd\n?? src/dominio/investigacion/pista.gd.uid\n?? src/escenas/objetos/colilla.gd\n?? src/escenas/objetos/colilla.tscn\n?? src/sistemas/investigacion/investigador.gd\n?? src/sistemas/investigacion/investigador.gd.uid\n?? test/dominio/empleo/expediente_de_la_partida_test.gd\n?? test/dominio/empleo/expediente_de_la_partida_test.gd.uid\n?? test/dominio/investigacion/caso_test.gd\n?? test/dominio/investigacion/caso_test.gd.uid\n?? test/dominio/investigacion/desenlace_test.gd\n?? test/dominio/investigacion/desenlace_test.gd.uid\n?? test/dominio/investigacion/expediente_test.gd\n?? test/dominio/investigacion/expediente_test.gd.uid\n?? test/dominio/investigacion/hipotesis_de_la_jornada_test.gd\n?? test/dominio/investigacion/hipotesis_de_la_jornada_test.gd.uid\n?? test/dominio/investigacion/hipotesis_test.gd\n?? test/dominio/investigacion/hipotesis_test.gd.uid\n?? test/dominio/investigacion/pista_test.gd\n?? test/dominio/investigacion/pista_test.gd.uid\n?? test/escenas/pistas_de_la_segunda_jornada_test.gd\n?? test/sistemas/investigacion/investigador_test.gd\n?? test/sistemas/investigacion/investigador_test.gd.uid\n",
+  "estado_final": " M src/dominio/empleo/partida.gd\n M src/dominio/investigacion/bandeja.gd\n M src/dominio/investigacion/conversacion.gd\n M src/escenas/puestos/objetos_del_almacen.tscn\n M src/escenas/puestos/servicios_del_almacen.tscn\n M test/dominio/investigacion/bandeja_test.gd\n M test/dominio/investigacion/celular_test.gd\n M test/dominio/investigacion/conversacion_test.gd\n?? assets/investigacion/\n?? assets/props/\n?? assets/ui/manada/pistas/\n?? src/dominio/investigacion/caso.gd\n?? src/dominio/investigacion/caso.gd.uid\n?? src/dominio/investigacion/colilla.tres\n?? src/dominio/investigacion/conversacion_de_notas.tres\n?? src/dominio/investigacion/desenlace.gd\n?? src/dominio/investigacion/desenlace.gd.uid\n?? src/dominio/investigacion/expediente.gd\n?? src/dominio/investigacion/expediente.gd.uid\n?? src/dominio/investigacion/hipotesis.gd\n?? src/dominio/investigacion/hipotesis.gd.uid\n?? src/dominio/investigacion/hipotesis_de_la_jornada.gd\n?? src/dominio/investigacion/hipotesis_de_la_jornada.gd.uid\n?? src/dominio/investigacion/pista.gd\n?? src/dominio/investigacion/pista.gd.uid\n?? src/escenas/objetos/colilla.gd\n?? src/escenas/objetos/colilla.gd.uid\n?? src/escenas/objetos/colilla.tscn\n?? src/sistemas/investigacion/investigador.gd\n?? src/sistemas/investigacion/investigador.gd.uid\n?? test/dominio/empleo/expediente_de_la_partida_test.gd\n?? test/dominio/empleo/expediente_de_la_partida_test.gd.uid\n?? test/dominio/investigacion/caso_test.gd\n?? test/dominio/investigacion/caso_test.gd.uid\n?? test/dominio/investigacion/desenlace_test.gd\n?? test/dominio/investigacion/desenlace_test.gd.uid\n?? test/dominio/investigacion/expediente_test.gd\n?? test/dominio/investigacion/expediente_test.gd.uid\n?? test/dominio/investigacion/hipotesis_de_la_jornada_test.gd\n?? test/dominio/investigacion/hipotesis_de_la_jornada_test.gd.uid\n?? test/dominio/investigacion/hipotesis_test.gd\n?? test/dominio/investigacion/hipotesis_test.gd.uid\n?? test/dominio/investigacion/pista_test.gd\n?? test/dominio/investigacion/pista_test.gd.uid\n?? test/escenas/pistas_de_la_segunda_jornada_test.gd\n?? test/escenas/pistas_de_la_segunda_jornada_test.gd.uid\n?? test/sistemas/investigacion/investigador_test.gd\n?? test/sistemas/investigacion/investigador_test.gd.uid\n"
+}
