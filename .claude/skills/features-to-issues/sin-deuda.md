@@ -187,6 +187,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un gesto que **deshace una obligatoria** sin que el issue diga qué pasa | `to-issue` — el cruce miró los criterios del gesto y no las tareas que su efecto toca |
 | un caso de escena **verde por suerte** después de que cambió el local | la regla de tests — el caso afirmaba el resultado y no su premisa |
 | un generador que **da vuelta lo que el artista hizo** | `implement-feature` — se probó el generador contra el issue y no contra el `.blend` del artista |
+| un collider generado **que ignora los modificadores del modelo** | `to-issue` e `implement-feature` — se cruzan malla cruda, evaluada y GLB real antes de escribir; se libera la lectura evaluada y ambos caminos deben regenerar la misma colisión sin alterar el arte |
 | un nombre que el issue borra **y que un carril en vuelo vuelve a usar** | `to-issue` — «Verificación» no llevaba el `rg` del nombre, y nadie lo corrió después del merge |
 | un test que afirma sobre **una escena entera que el issue escribe**, afuera de «Se escribe» | `to-issue` — los tests de la escena no se buscaron con `tests_de` ni `quien_instancia` |
 | un archivo nuevo **que el contrato implica y «Se escribe» no nombra** | `to-issue` — «Se escribe» se armó sólo con lo que ya existía |

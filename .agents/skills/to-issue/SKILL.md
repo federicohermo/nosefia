@@ -68,6 +68,12 @@ capturas del modelo vigente antes de fijar sus criterios. En #297 el antepecho o
 120 píxeles inferiores de 1080 aunque los rayos al hueco pasaran; sus bordes y los del dintel
 estaban a distinta profundidad. El encuadre se define con esos bordes, conservando el modelo.
 
+Si la geometría viene de Blender, cruzar la malla cruda, la evaluada con sus modificadores y el
+GLB que usa el juego antes de definir el generador de colisión. En #428, el bisel multiplicaba
+los triángulos de la góndola y explicaba 233 µm de diferencia de altura: no era un error de
+ejes. La lectura evaluada se libera al terminar y ambos caminos se prueban por idempotencia,
+sin quitar modificadores ni modificar el arte para hacer coincidir los números.
+
 **La captura verifica el foco y la pose dibujada en el cuadro que guarda.** Preparar la cámara
 y comprobar un rayo unos cuadros antes no basta: entradas o interpolación pueden cambiar el
 encuadre. El fixture conserva la pose preparada, comprueba también la pose interpolada y el

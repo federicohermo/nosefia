@@ -113,6 +113,14 @@ clics posteriores sobre la pista y Volver. El control que añadió sólo esa lib
 ambas resoluciones con la misma fuente, coordenadas y ubicación del cursor. Conservá ambos
 resultados: no se atribuye el arreglo del fixture a `warp_mouse` ni a un cambio del producto.
 
+**La colisión generada se contrasta con la malla evaluada, no sólo con `objeto.data`.** Los
+modificadores forman parte de lo que se exporta. En #428, la góndola tenía 1392 triángulos
+crudos y 7280 después del bisel; una diferencia de altura de 233 µm provenía de ese modificador,
+no de la conversión de ejes. Leé la malla con `evaluated_get(depsgraph).to_mesh()`, calculá sus
+`loop_triangles` y liberala con `to_mesh_clear()` en `finally`. Antes de escribir, compará el
+volcado evaluado convertido a Godot con el GLB real y comprobá que ambos generadores produzcan
+la misma colisión. No se alteran los modificadores del artista para hacer coincidir los datos.
+
 **Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
 
 - **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan
