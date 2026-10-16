@@ -880,22 +880,95 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	_soltar(almacen, bolsa)
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
 	# Un estante de la góndola es horizontal y la bolsa entra, pero queda adentro del mueble.
-	var apoyo: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
-	# Detrás del casillero, sobre la misma chapa, y desde arriba: el casillero está a seis
-	# centímetros del frente del estante, y un rayo tendido hacia él pega en el portaprecio, que
-	# es inclinado. La cámara queda lo bastante afuera para que el punto de soltar sin mira caiga
-	# en el pasillo y no adentro del contorno del mueble.
-	var estante := apoyo + Vector3.LEFT * 0.12
-	camara.global_position = estante + Vector3(2.0, 1.4, 0.0)
-	camara.look_at(estante)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var apoyo: Vector3 = puesto.call("_apoyo", Producto.Id.UAKAS)
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[Producto.Id.UAKAS], disposicion.filas_de_adelante[Producto.Id.UAKAS]
+	)
+	# Uakas cambió de mueble: se mira desde su frente real, con el jugador en piso libre.
+	# La postura anterior atravesaba el lateral y dejaba la mano dentro de la reserva.
+	var estante := apoyo - frente * 0.12
+	var candidato := estante + frente * 1.3 + frente.cross(Vector3.UP)
+	var suelo := PhysicsRayQueryParameters3D.create(
+		Vector3(candidato.x, 3.0, candidato.z), Vector3(candidato.x, -1.0, candidato.z), 1
+	)
+	suelo.exclude = [jugador.get_rid(), bolsa.get_rid()]
+	var piso_libre := jugador.get_world_3d().direct_space_state.intersect_ray(suelo)
+	assert_object(piso_libre["collider"]).is_same(almacen.get_node("Estructura/SueloSolido"))
+	jugador.call("ubicar", Transform3D(Basis.IDENTITY, piso_libre["position"] + Vector3.UP * 0.005))
+	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+	camara.rotation = Vector3.ZERO
+	var vista := Transform3D(Basis.IDENTITY, camara.global_position).looking_at(estante)
+	var angulos := vista.basis.get_euler()
+	var control: ControlDelJugador = jugador.get("_control")
+	control.orientar(angulos.y)
+	control.girar(Vector2(0, -angulos.x / ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE))
+	control.avanzar_el_dibujo(1.0)
+	jugador.call("_aplicar_la_rotacion")
+	await get_tree().physics_frame
+	var cuerpo_del_jugador: CollisionShape3D = jugador.get_node("Cuerpo")
+	var consulta_del_jugador := PhysicsShapeQueryParameters3D.new()
+	consulta_del_jugador.shape = cuerpo_del_jugador.shape
+	consulta_del_jugador.transform = cuerpo_del_jugador.global_transform
+	consulta_del_jugador.collision_mask = jugador.collision_mask
+	consulta_del_jugador.exclude = [jugador.get_rid()]
+	consulta_del_jugador.margin = 0.0
+	(
+		assert_array(
+			jugador.get_world_3d().direct_space_state.intersect_shape(consulta_del_jugador)
+		)
+		. is_empty()
+	)
 	# Sin el contorno que envuelve al mueble: si lo soltado choca con él, la mira pega en su cara
 	# y no llega al estante.
 	var en_el_estante := _golpe_de_la_mira(jugador, bolsa, true)
 	assert_object(en_el_estante["collider"]).is_same(almacen.get("_estante"))
 	assert_float(en_el_estante["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
 	var sin_mira_del_estante := agarre.punto_de_soltado.global_position
-	_soltar(almacen, bolsa)
+	var mascara := bolsa.collision_mask
+	assert_bool(agarre.pedir_agarrar(bolsa.get("datos"), bolsa)).is_true()
+	var derecha: Basis = jugador.call("_derecho", bolsa.global_basis)
+	var mano := Transform3D(derecha, sin_mira_del_estante)
+	var libre := _ocupaciones_en_pose(jugador, bolsa, mano, mascara)
+	assert_array(libre["fisicos"]).is_empty()
+	assert_array(libre["reservas"]).is_empty()
+	var minimo := INF
+	for forma in _formas(bolsa):
+		var limites: AABB = Transform3D(derecha) * forma.transform * LimitesDeForma.de(forma.shape)
+		minimo = minf(minimo, limites.position.y)
+	var apoyada := Transform3D(
+		derecha, en_el_estante["position"] + Vector3.UP * (ReglasDeLosObjetos.ROCE - minimo)
+	)
+	var ocupada := _ocupaciones_en_pose(jugador, bolsa, apoyada, mascara)
+	assert_array(ocupada["fisicos"]).is_empty()
+	assert_array(ocupada["reservas"]).contains(almacen.get("_estante").get_parent())
+	agarre.soltar(true)
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_del_estante, Vector3.ONE * 0.01)
+
+
+func _ocupaciones_en_pose(
+	jugador: Node3D, cuerpo: RigidBody3D, pose: Transform3D, mascara: int
+) -> Dictionary:
+	var fisicos: Array[Dictionary] = []
+	var reservas: Array[MeshInstance3D] = []
+	var muebles: Array[PhysicsBody3D] = jugador.get("muebles_con_reserva")
+	for forma in _formas(cuerpo):
+		var global := pose * forma.transform
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = global
+		consulta.collision_mask = mascara | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		consulta.exclude = [cuerpo.get_rid()]
+		consulta.margin = 0.0
+		fisicos.append_array(jugador.get_world_3d().direct_space_state.intersect_shape(consulta))
+		for mueble in muebles:
+			var malla := mueble.get_parent() as MeshInstance3D
+			if ReservaDeLaGondola.se_superponen(
+				LimitesDeForma.de(forma.shape), global, malla.get_aabb(), malla.global_transform
+			):
+				reservas.append(malla)
+	return {"fisicos": fisicos, "reservas": reservas}
 
 
 func _soltar(almacen: Node3D, cuerpo: RigidBody3D) -> void:

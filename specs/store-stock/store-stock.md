@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y ficha detallada de Duronga contrastados el 2026-10-15 (#434)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente
 ---
 
 # Capacidad: la mercadería del almacén
@@ -30,7 +30,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Cara de lado** | cada uno de los dos lados largos de un mueble de estantes, el que da a un pasillo | frente, lateral |
 | **Cabecera** | cada uno de los dos extremos cortos de un mueble de estantes | punta, testero |
 | **Zócalo** | el estante de más abajo de una cara de lado | base, piso |
-| **Estante de reposición** | un estante a la altura de la mano: en una cara de lado, los que no son ni el de arriba ni el zócalo; en una cabecera, los que no son el de arriba | estante del medio, estante útil |
+| **Estante de reposición** | un estante a la altura de la mano: los niveles 1 y 2 de los cuatro existentes, tanto en laterales como en cabeceras | estante del medio, estante útil |
 | **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone. En una tanda de una sola fila, es esa fila | frente, cara |
 | **Fila de atrás** | la fila de una tanda de dos filas contra el fondo del estante: fija, entera toda la noche | guía, fondo |
 | **Casillero** | cada lugar de la fila de adelante, que el jugador llena colocando una unidad y vacía agarrándola. Cada uno está vacío u ocupado por separado | hueco, slot |
@@ -188,20 +188,25 @@ casilleros vacíos con que abre una jornada DEBEN quedar en la tanda reponible.
 
 En un mueble de estantes, la tanda reponible DEBE ir en un estante de reposición. Un estante
 de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la altura de la mano se
-agarra y se repone. Los demás estantes —el de arriba y el zócalo de una cara de lado, y el de
-arriba de una cabecera— DEBEN llevar sólo tandas fijas, que repiten un producto del local. En una
-heladera, cualquier bandeja puede llevar la tanda reponible o una tanda fija.
+agarra y se repone. Los demás estantes —el de arriba y el zócalo, tanto de una cara de lado
+como de una cabecera— DEBEN llevar sólo tandas fijas, que repiten un producto del local.
+En una heladera, cualquier bandeja puede llevar la tanda reponible o una tanda fija.
 
-### BR-STK-025 — La tanda tiene dos filas, o una según el reparto aprobado
+### BR-STK-025 — Las filas corresponden a cada tanda aprobada
 
-La tanda reponible de cada producto exhibido DEBE tener dos filas, una detrás de la otra. Cada lugar
-de la fila de adelante DEBE ser un casillero del producto, y ninguno de la fila de atrás. La fila
-de atrás DEBE verse entera desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la
-que dice qué va ahí.
+Cada tanda principal o fija de un producto exhibido DEBE tener dos filas, una detrás de la
+otra, salvo las excepciones siguientes. Cada lugar de la fila de adelante DEBE ser un
+casillero del producto, y ninguno de la fila de atrás. La fila de atrás DEBE verse entera
+desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la que dice qué va ahí.
 
-Las tandas de Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo DEBEN tener una sola fila,
-según el reparto aprobado. Cada lugar de su tanda reponible DEBE ser un casillero, y la fila de
-adelante de sus tandas fijas también (BR-STK-024). Esas tandas no tienen fila de atrás.
+Todas las tandas de Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético DEBEN tener una sola
+fila. La tanda principal de Amargadito DEBE tener una fila y sus tandas fijas dos. La tanda
+fija inferior de Fernet God y la tanda fija superior de Oaaaa DEBEN tener una fila; sus
+principales DEBEN tener dos. Las demás tandas DEBEN tener dos filas, incluidas las
+principales y fijas de Actroncito y Prongles, que conservan las dos hileras del arte vigente.
+
+Cada lugar de una tanda de una fila DEBE ser un casillero, sea principal o fija; esa tanda
+NO DEBE tener fila posterior. La cantidad de filas se decide por tanda, no sólo por producto.
 El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mismo.
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
@@ -380,7 +385,7 @@ no implica renombrar productos.
 |---|---|
 | Heladera 1 | Coracola (Pura-Cola en el diseño), Fernet God |
 | Heladera 2 | Cindolor, Mayonchis |
-| Estantería de no comestibles | Actroncito, Durextra, Poético |
+| Estantería de no comestibles | Actroncito, Durextra, Poético, Duronga (provisional) |
 | Cabecera de no comestibles, isla de almacén | Malbardo |
 | Cabecera de almacén, misma isla | Amargadito |
 | Lado de almacén | Marolini, Arvejas (Arvecor), Uakas (Uakalas), Marranos |
@@ -390,12 +395,11 @@ no implica renombrar productos.
 | Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
 | Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
 | Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillo |
-| Sin exhibición, sólo depósito | Duronga |
 
 La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
 con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
-snacks salados y golosinas. Los tres no comestibles DEBEN ocupar una estantería; un mueble
-sobrante PUEDE quedar sin exhibición, sin duplicar tandas principales para llenarlo.
+snacks salados y golosinas. Los cuatro no comestibles DEBEN ocupar la estantería existente;
+el reparto NO DEBE reconstruir un segundo mural ausente ni duplicar tandas principales.
 Cada heladera funcional DEBE agrupar sus dos productos en mitades verticales según el
 [esquema de diseño](https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676): Coracola
 arriba de Fernet God y Cindolor arriba de Mayonchis. La heladera fuera de servicio DEBE
@@ -407,22 +411,35 @@ separación de filas, orientaciones de envases y alcance vigentes (BR-STK-024, B
 BR-STK-035). Los cupos DEBEN salir de la geometría de ese reparto, sin copiar los anteriores.
 El mismo reparto DEBE conservarse al abrir otra jornada y en escritorio o web.
 
-### BR-STK-044 — Duronga existe sin exhibición
+La medición del modelo del 2026-10-15 confirma cuatro chapas físicas y cuatro niveles con
+exhibición en cada cabecera: niveles 0 y 3 fijos, niveles 1 y 2 reponibles. El antiguo detector
+por distancia confundía las chapas superiores inclinadas con laterales; corregir su
+clasificación conserva ese patrón original, sin agregar niveles ni modificar alturas.
 
-El sistema DEBE mantener Duronga sólo en su caja del depósito, según su
-[ficha detallada](https://app.notion.com/p/3e586efecd9d804ea459e6283e9c9868), que prevalece
-sobre su ubicación provisional en el mapa general. NO DEBE tener unidades exhibidas, guías,
-tandas ni casilleros en el local, y su cupo DEBE ser cero. Esta ausencia DEBE ser válida al
-abrir, consultar faltantes, reponer y cerrar: NO DEBE crear faltantes ni impedir cumplir reponer.
+### BR-STK-044 — Duronga conserva su exhibición provisional
 
-Duronga DEBE conservar identidad, fila del catálogo, caja y unidad física utilizable: DEBE
-poder sacarse, devolverse, examinarse y venderse. Su caja DEBE abrir con las unidades por caja
-de BR-STK-004; su cupo cero NO DEBE restarle vendibles por reposición (BR-STK-018).
-Las consultas indexadas por producto DEBEN conservar las 32 identidades vigentes, aunque una
-no tenga exhibición. Los otros 31 productos DEBEN tener su tanda reponible y referencias.
-Un producto exhibible sin tanda o con dos principales, y una marca desconocida sin sector,
-NO DEBEN aceptarse como repartos válidos. Un cupo cero NO DEBE volver elegible a Duronga para
-faltantes sorteados ni cambiar la regla de selección de esos faltantes.
+El sistema DEBE exhibir la tanda principal de Duronga en la mitad inferior derecha de la
+estantería de no comestibles, junto a la principal de Poético en la mitad inferior izquierda;
+las principales de Actroncito y Durextra ocupan la mitad superior. Esa ubicación provisional
+DEBE conservarse hasta reemplazar el producto
+según una decisión posterior de diseño. El
+[comentario de Tiago del 2026-10-15](https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676?d=3fa86efecd9d81de96d5001c64307456&pvs=42)
+confirma el mapa y prevalece sobre la indicación anterior de sólo depósito de la
+[ficha detallada](https://app.notion.com/p/3e586efecd9d804ea459e6283e9c9868).
+
+Duronga DEBE tener una tanda principal, referencias fijas, casilleros y cupo reponible
+positivo derivados del reparto, sin cambiar su identidad, caja ni unidad física utilizable.
+DEBE poder sacarse de su caja, devolverse, examinarse, reponerse y venderse. Su caja DEBE abrir
+con las unidades por caja de BR-STK-004; las vendibles y faltantes DEBEN respetar BR-STK-018
+y BR-STK-027, como para los demás productos exhibidos.
+
+Las consultas indexadas DEBEN conservar las 32 identidades vigentes. Cada una DEBE tener
+una sola tanda principal y sus referencias en el sector declarado. Un producto exhibible
+sin tanda o con dos principales, y una marca desconocida sin sector, NO DEBEN aceptarse.
+La capacidad de representar un futuro producto declarado sólo-depósito DEBE distinguirse
+de esta exhibición: en ese caso sus listas pueden estar vacías y su cupo ser cero, sin
+índices negativos ni elegibilidad por tener sólo una guía. Duronga NO DEBE usar ese estado
+mientras conserve su exhibición provisional.
 
 ## Criterios de aceptación
 
@@ -566,31 +583,45 @@ DADO el local armado ENTONCES cada producto con exhibición declarada tiene una 
 solo estante y con sus unidades juntas, y la fila de adelante de cada tanda fija suya también es
 de casilleros: el cupo del producto los suma a todos. DADO una cara de lado ENTONCES sus tandas con casilleros están en los
 estantes que no son ni el de arriba ni el zócalo, y esos estantes no llevan ninguna tanda fija; el
-de arriba y el zócalo llevan sólo tandas fijas. DADO una cabecera ENTONCES el estante de arriba
-lleva sólo tandas fijas, y los demás, sólo tandas con casilleros.
+de arriba y el zócalo llevan sólo tandas fijas. DADO una cabecera ENTONCES los niveles 0 y 3
+llevan sólo tandas fijas y los niveles 1 y 2 sólo tandas reponibles, como en el modelo original.
 
 ### AC-STK-029 — El casillero está al alcance *(verifica BR-STK-024)*
 
 DADO cualquier producto exhibido en la mano CUANDO el jugador se para en el pasillo frente a
 su tanda ENTONCES la mira alcanza su casillero y el producto se coloca.
 
-### AC-STK-030 — Dos filas, o una, y el cupo adelante *(verifica BR-STK-025)*
+### AC-STK-030 — Filas por tanda y casilleros adelante *(verifica BR-STK-025)*
 
-DADO la tanda reponible de cualquier producto, salvo Actroncito, Cosa de Maní, Prongles,
-Flin Puf y Burbaloo,
-ENTONCES tiene dos filas, una detrás de la otra; la de adelante es la más cercana al pasillo, y
-cada uno de sus lugares es un casillero: tiene tantos como el cupo del producto. DADO la tanda
-de Actroncito, la de Cosa de Maní, la de Prongles, la de Flin Puf y la de Burbaloo ENTONCES cada
-una tiene una sola fila, y
-tantas unidades como el cupo de su producto.
+DADO cada tanda principal y fija del local ENTONCES sus filas coinciden con esta tabla:
 
-### AC-STK-031 — La fila de atrás, entera toda la noche *(verifica BR-STK-025)*
+| Producto | Principal | Fijas |
+|---|---|---|
+| Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético | 1 | 1 |
+| Amargadito | 1 | 2 |
+| Fernet God | 2 | 1 en la inferior; 2 en cualquier otra |
+| Oaaaa | 2 | 1 en la superior; 2 en cualquier otra |
+| Actroncito, Prongles y los demás productos exhibidos | 2 | 2 |
 
-DADO una jornada que se abre ENTONCES de cada producto de dos filas se ve entera la fila de
-atrás, y la de adelante completa salvo sus faltantes. CUANDO se repone lo que falta ENTONCES la
-fila de adelante queda completa y la de atrás no cambió. DADO un producto de una sola fila
-ENTONCES no se ve ninguna unidad suya detrás de sus casilleros, y con todos sus casilleros vacíos
-no se ve ninguna unidad de su tanda.
+La fila de adelante es la más cercana al pasillo y cada lugar suyo es un casillero del
+producto. Los casilleros totales suman los frontales de su principal y sus fijas; los
+casilleros reponibles usados por la apertura y el sorteo suman sólo los frontales de la
+principal. Una principal con cero casilleros NO DEBE volver elegible al producto aunque
+tenga guía. Las filas delanteras fijas conservan su interacción de BR-STK-024. La fila de
+atrás, cuando existe, no tiene casilleros: una copia posterior no agrega ninguno.
+
+### AC-STK-031 — La fila de atrás de cada tanda permanece entera *(verifica BR-STK-025)*
+
+DADO una jornada que se abre ENTONCES cada tanda de dos filas muestra entera su fila de
+atrás y su fila delantera completa salvo los faltantes declarados. CUANDO se agarra o repone
+una unidad de delante ENTONCES sólo cambia ese casillero y la fila de atrás no cambió ni se
+puede agarrar. DADO una tanda de una fila ENTONCES no tiene unidades detrás de sus
+casilleros; al vaciar todos sus casilleros no queda ninguna unidad de esa tanda.
+
+DADO Amargadito, Fernet God y Oaaaa ENTONCES la comprobación distingue sus tandas principales
+de sus referencias fijas según AC-STK-030: una tanda simple no elimina la fila posterior de
+otra tanda doble del mismo producto. DADO Actroncito y Prongles ENTONCES sus tandas
+principales y fijas conservan ambas filas.
 
 ### AC-STK-032 — Una caja entera alcanza para el faltante más grande *(verifica BR-STK-004)*
 
@@ -869,9 +900,10 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
 ### AC-STK-086 — Cada sector contiene exactamente sus productos *(verifica BR-STK-043, BR-STK-044)*
 
 DADO el local armado CUANDO se recorre cada destino de la tabla de BR-STK-043 ENTONCES sus
-productos coinciden con la fila, sin ajenos, y los destinos de exhibición reúnen 31 productos
-distintos. Duronga es la identidad restante y no tiene tanda. Las referencias fijas de cada
-uno de los 31 están en su mismo sector. Abrir jornada 2 en escritorio y web conserva el mapa.
+productos coinciden con la fila, sin ajenos, y los destinos de exhibición reúnen 32 productos
+distintos. La principal de Duronga comparte la mitad inferior de la estantería con Poético,
+a su derecha; las de Actroncito y Durextra están arriba. Las referencias fijas están en su mismo
+sector. Abrir jornada 2 en escritorio y web conserva el mapa.
 
 ### AC-STK-087 — Dos heladeras separan los fríos de las bebidas sin refrigerar *(verifica BR-STK-043)*
 
@@ -881,26 +913,30 @@ Oaaaa y Terminator están en su cabecera de bebidas sin refrigerar, y no en ning
 Cindolor no aparece además en un estante exterior. La heladera fuera de servicio tiene cero
 unidades y referencias de productos.
 
-### AC-STK-088 — Cero cupo no impide usar Duronga *(verifica BR-STK-044, BR-STK-018, BR-STK-028, BR-STK-030)*
+### AC-STK-088 — Duronga exhibida conserva caja y unidad utilizables *(verifica BR-STK-044, BR-STK-018, BR-STK-028, BR-STK-030)*
 
-DADO apertura con Duronga sólo en depósito CUANDO se consulta ENTONCES tiene cero casilleros,
-cero unidades en góndola, ningún faltante y las unidades por caja en depósito y vendibles.
+DADO apertura con Duronga en su exhibición provisional CUANDO se consulta ENTONCES tiene
+principal, referencias y casilleros con cupo reponible positivo; la caja tiene las unidades
+por caja y las vendibles respetan la reserva por faltantes de BR-STK-018.
 CUANDO se saca una unidad ENTONCES la caja tiene una menos, la unidad se puede examinar y
 devolver una sola vez; devolverla restaura el contenido. CUANDO se saca y vende una unidad
-ENTONCES se conserva su cuerpo y producto hasta la venta, se retira una vez y no aparece
-un casillero ni faltante. DADO caja vacía ENTONCES no entrega ni vende otra unidad.
+ENTONCES se conserva su cuerpo y producto hasta la venta y se retira una sola vez, sin
+fabricar otra unidad ni alterar los casilleros declarados. DADO caja vacía ENTONCES no
+entrega ni vende otra unidad.
 
-### AC-STK-089 — Reponer y cerrar admiten la identidad sin tanda *(verifica BR-STK-044, BR-STK-013, BR-STK-027)*
+### AC-STK-089 — Reponer y cerrar incluyen Duronga exhibible *(verifica BR-STK-044, BR-STK-013, BR-STK-027)*
 
 DADO jornada 2 con pedidos y faltantes que respetan BR-STK-027 CUANDO se consulta el cupo de
-las 32 identidades ENTONCES Duronga devuelve cero sin error ni índice ajeno; sólo los productos
-con cupo positivo pueden aportar faltantes. CUANDO se completan las compras y se llenan todos
-los casilleros declarados ENTONCES reponer se cumple y el cierre conserva su cumplimiento,
-sin exigir una unidad invisible de Duronga ni rechazar una venta válida de ella.
+las 32 identidades ENTONCES Duronga devuelve su cupo principal positivo sin error ni índice
+ajeno y puede aportar faltantes según la regla vigente. Los cupos totales suman frontales
+principales y fijas; los reponibles del sorteo suman sólo frontales principales. Un producto
+con principal cero no es elegible aunque tenga guía. CUANDO se completan las compras y se
+llenan todos los casilleros declarados, incluidos los de Duronga, ENTONCES reponer se cumple
+y el cierre conserva su cumplimiento sin rechazar una venta válida de ese producto.
 
 ### AC-STK-085 — El nuevo reparto conserva alcance y unicidad *(verifica BR-STK-043, BR-STK-044, BR-STK-024, BR-STK-025, BR-STK-035)*
 
-DADO los 31 productos exhibidos CUANDO se enfoca cada casillero reponible desde piso libre
+DADO los 32 productos exhibidos CUANDO se enfoca cada casillero reponible desde piso libre
 del pasillo ENTONCES entra en el alcance vigente y acepta su unidad. Cada producto tiene una
 sola tanda principal; ninguna referencia queda en el sector anterior. Los muebles conservan
 tamaño y alturas, los estantes útiles sus tandas reponibles y cada envase su orientación y
@@ -979,8 +1015,9 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
   - Bloquea: nada.
 - **OQ-STK-007 — ¿Cómo se concilian los cuatro niveles del mapa con las alturas actuales?**
   - Por qué sigue abierta: el texto del mapa habla de cuatro estantes y del primero como
-    levantable; los muebles vigentes tienen cuatro niveles laterales y tres en cabeceras,
-    con reposición a altura de la mano. El reparto aprobado fija sectores y conserva esas alturas.
+    levantable; los muebles vigentes tienen cuatro chapas laterales y cuatro en cabeceras,
+    con niveles 0 y 3 fijos y 1 y 2 reponibles. El reparto aprobado fija sectores y conserva
+    esas alturas; no define la interacción de levantar un estante.
   - Decide: el dueño del repo con game design y arte.
   - Bloquea: cambiar niveles, alturas o qué estante es reponible a partir de esa frase;
-    no bloquea los sectores ni la excepción de Duronga de BR-STK-043 y BR-STK-044.
+    no bloquea los sectores ni la exhibición provisional de Duronga de BR-STK-043 y BR-STK-044.

@@ -208,17 +208,17 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
-	var referencia: MeshInstance3D = gondola.get_node("saladix-2oeste2")
-	var objetivo := referencia.global_position
-	objetivo.y = (gondola.global_transform * gondola.get_aabb()).end.y - 0.03
-	await _mirar_desde_el_piso(almacen, caja, objetivo, Vector3.FORWARD * 1.2)
+	var frente := Vector3.FORWARD
+	var objetivo := _metal_de_la_cabecera_reportada(gondola, frente)
+	assert_vector(objetivo).is_not_equal(Vector3.INF)
+	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
 	var visible := _impacto_visible(
 		gondola, mira.origin, mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
 	)
 	(
 		assert_bool(visible.is_empty())
-		. override_failure_message("Premisa: cabecera visible sobre Saladik")
+		. override_failure_message("Premisa: metal visible de la cabecera reportada")
 		. is_false()
 	)
 	if visible.is_empty():
@@ -270,7 +270,8 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
 	assert_dict(_estado_del_local(almacen)).is_equal(antes)
-	await _mirar_desde_el_piso(almacen, caja, final, Vector3.FORWARD * 1.2)
+	# La caja se acomoda hacia el metal: recogerla no mete el cuerpo debajo del mueble.
+	await _mirar_desde_el_piso(almacen, caja, final, objetivo + frente * 1.2 - final)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.call("_leer_la_mira")
 	assert_object(jugador.get("_enfocado")).is_same(caja)
@@ -400,6 +401,24 @@ func _impacto_visible(malla: MeshInstance3D, desde: Vector3, hasta: Vector3) -> 
 		distancia = desde.distance_to(punto)
 		salida = {"punto": punto, "triangulo": indice / 3, "distancia": distancia}
 	return salida
+
+
+## Saladik cambia de sector: el borde reportado pertenece al mueble, no a esa referencia.
+func _metal_de_la_cabecera_reportada(malla: MeshInstance3D, frente: Vector3) -> Vector3:
+	var limites := malla.global_transform * malla.get_aabb()
+	var centro := limites.get_center()
+	var fondo := absf(frente.dot(limites.size))
+	var area_mayor := 0.0
+	var objetivo := Vector3.INF
+	for cara in _superiores(malla):
+		var punto := (cara[0] + cara[1] + cara[2]) / 3.0
+		if (punto - centro).dot(frente) <= fondo / 3.0:
+			continue
+		var area := (cara[1] - cara[0]).cross(cara[2] - cara[0]).length_squared()
+		if area > area_mayor:
+			area_mayor = area
+			objetivo = punto
+	return objetivo
 
 
 func _superiores(malla: MeshInstance3D) -> Array[PackedVector3Array]:

@@ -82,6 +82,13 @@ func _centro_de_la_fila(almacen: Node3D, producto: Producto, adelante: bool) -> 
 
 func _frente(almacen: Node3D, producto: Producto) -> Vector3:
 	var disposicion := _disposicion(almacen)
+	if disposicion.principales[producto.id].is_empty():
+		var contenido: Node3D = almacen.get("_reposicion_manual").get("contenido")
+		var modelo := contenido.get_child(producto.id) as Node3D
+		var local: Vector3 = modelo.get_meta("frente_del_modelo")
+		var frente := modelo.basis * local
+		frente.y = 0.0
+		return frente.normalized()
 	return DisposicionDeLaGondola.frente(
 		disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
 	)
@@ -177,7 +184,10 @@ func test_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano()
 			. override_failure_message("%s no muestra el frente como los demás" % producto.nombre)
 			. is_less(1.0)
 		)
-		presentacion.call("pedir_colocar", producto.id)
+		if _cupo(almacen, producto) == 0:
+			presentacion.call("devolver", producto.id)
+		else:
+			presentacion.call("pedir_colocar", producto.id)
 	# Las cabeceras son rampas: sin ninguna, el caso no está mirando lo que dice.
 	assert_int(en_rampa).is_greater(0)
 
@@ -212,6 +222,7 @@ func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -
 	var planos: Array[PackedVector3Array] = []
 	for producto in Catalogo.todos():
 		var ocupados := estante.casilleros_ocupados(producto)
+		assert_array(ocupados).is_not_empty()
 		var indice := ocupados[ocupados.size() - 1]
 		var bloque := _disposicion(almacen).principales[producto.id]
 		var de_la_tanda := DisposicionDeLaGondola.copias(bloque) - _cupo(almacen, producto) + indice
@@ -285,7 +296,7 @@ func test_la_fila_de_adelante_de_cada_tanda_es_de_casilleros() -> void:  # AC-ST
 		(
 			assert_int(presentacion.find_children("ZonaDe" + nombre, "", false, false).size())
 			. override_failure_message("%s no tiene un solo casillero" % nombre)
-			. is_equal(1)
+			. is_equal(0 if cupo == 0 else 1)
 		)
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + nombre)
 		var copias := grupo.multimesh
@@ -326,9 +337,12 @@ func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> vo
 	var repositor: Repositor = almacen.get("_repositor")
 	var uno_de_cada: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
-		uno_de_cada[producto.id] = 1
+		if _cupo(almacen, producto) > 0:
+			uno_de_cada[producto.id] = 1
 	AperturaConLugar.abrir_con_faltantes(almacen, uno_de_cada)
 	for producto in Catalogo.todos():
+		if _cupo(almacen, producto) == 0:
+			continue
 		presentacion.retirar(producto.id)
 		var zona: Node3D = presentacion.casillero(producto.id)
 		var pie := _lugar_en_el_pasillo(almacen, zona.global_position, _frente(almacen, producto))
@@ -477,11 +491,18 @@ func test_la_apertura_fija_dibuja_sus_faltantes() -> void:  # AC-STK-004
 	assert_array(faltan).contains_exactly(
 		["Actroncito", "Laysntt", "Prongles", "Coracola", "Marolini"]
 	)
-	# A Coracola le falta la tanda reponible entera: lo que queda es la fila de su tanda fija.
+	# El cupo nuevo no cambia los faltantes de la ficha: las referencias abren llenas y
+	# sólo la principal pierde esas unidades, aunque ahora conserve un resto ocupado.
 	var coracola := Catalogo.de(Producto.Id.CORACOLA)
-	assert_int(estante.unidades_en_gondola(coracola)).is_equal(
-		estante.cupo(coracola) - disposicion.filas_de_adelante[Producto.Id.CORACOLA]
-	)
+	var principal := disposicion.filas_de_adelante[coracola.id]
+	var fijas := estante.cupo(coracola) - principal
+	var ocupados := estante.casilleros_ocupados(coracola)
+	var resto_principal := principal - _faltante(almacen, coracola)
+	assert_int(ocupados.size()).is_equal(fijas + resto_principal)
+	for indice in fijas:
+		assert_array(ocupados).contains(indice)
+	for indice in estante.casilleros_vacios(coracola):
+		assert_int(indice).is_greater_equal(fijas)
 	assert_bool(estante.completada()).is_false()
 
 
@@ -537,6 +558,8 @@ func test_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo() -> v
 	var agarre: Agarre = almacen.get("_agarre")
 	var estante := (almacen.get("_repositor") as Repositor).estante()
 	for producto in Catalogo.todos():
+		if _cupo(almacen, producto) == 0:
+			continue
 		# El último casillero es de la tanda reponible, que es la que está a la altura de la mano.
 		var ultimo := _cupo(almacen, producto) - 1
 		var zona: Node3D = presentacion.casillero(producto.id, ultimo)
@@ -571,6 +594,8 @@ func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  
 	var agarre: Agarre = almacen.get("_agarre")
 	var miradas := 0
 	for producto in Catalogo.todos():
+		if _cupo(almacen, producto) == 0:
+			continue
 		var id := producto.id
 		var disposicion := _disposicion(almacen)
 		if (

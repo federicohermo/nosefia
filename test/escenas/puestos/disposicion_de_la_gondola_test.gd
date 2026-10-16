@@ -21,6 +21,15 @@ func test_una_fila_es_entera_de_casilleros_y_dos_conservan_la_de_atras() -> void
 	assert_int(disposicion.primera_reponible(Producto.Id.ACTRONCITO, 1)).is_equal(1)
 
 
+func test_un_bloque_vacio_con_cupo_cero_no_indexa_antes_del_comienzo() -> void:
+	var disposicion := DisposicionDeLaGondola.new()
+	disposicion.principales = [PackedFloat32Array()]
+	assert_int(disposicion.primera_reponible(Producto.Id.ACTRONCITO, 0)).is_zero()
+	assert_vector(DisposicionDeLaGondola.frente(disposicion.principales[0], 0)).is_equal(
+		Vector3.ZERO
+	)
+
+
 func test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso() -> void:
 	var disposicion := DisposicionDeLaGondola.new()
 	disposicion.resource_name = "disposicion_erronea"
@@ -97,6 +106,9 @@ func test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante() -> void: 
 		var adelante := disposicion.filas_de_adelante[producto.id]
 		var nombre := producto.nombre
 		var total := DisposicionDeLaGondola.copias(bloque)
+		assert_int(total).override_failure_message(nombre).is_equal(
+			adelante * _filas_esperadas(producto.id, false)
+		)
 		var una_fila := total == adelante
 		(
 			assert_int(DisposicionDeLaGondola.copias(bloque))
@@ -201,7 +213,7 @@ func test_hay_una_malla_por_bloque_de_guia() -> void:
 
 ## Cada tanda fija dice de qué producto es y cuántas de sus últimas copias son su fila de
 ## adelante: son casilleros de ese producto, y el cupo los suma a los de su tanda reponible.
-func test_cada_tanda_fija_suma_su_fila_de_adelante_al_cupo_de_su_producto() -> void:  # AC-STK-028
+func test_las_fijas_conservan_filas_y_casilleros() -> void:  # AC-STK-028 AC-STK-030
 	var disposicion := _disposicion()
 	var guias := disposicion.guias.size()
 	assert_int(disposicion.productos_de_las_guias.size()).is_equal(guias)
@@ -218,6 +230,35 @@ func test_cada_tanda_fija_suma_su_fila_de_adelante_al_cupo_de_su_producto() -> v
 			. override_failure_message("la tanda fija %d tiene más fila que copias" % indice)
 			. is_between(0, DisposicionDeLaGondola.copias(disposicion.guias[indice]))
 		)
+		var bloque := disposicion.guias[indice]
+		var principal := disposicion.principales[id]
+		var altura_fija := DisposicionDeLaGondola.copia(bloque, 0).origin.y
+		var altura_principal := DisposicionDeLaGondola.copia(principal, 0).origin.y
+		var fija_simple := (
+			(id == Producto.Id.FERNET_GOD and altura_fija < altura_principal)
+			or (id == Producto.Id.OAAAA and altura_fija > altura_principal)
+		)
+		assert_int(DisposicionDeLaGondola.copias(bloque)).is_equal(
+			adelante * _filas_esperadas(id, true, fija_simple)
+		)
 		esperado[id] += adelante
 	for producto in Catalogo.todos():
 		assert_int(disposicion.casilleros_de(producto.id)).is_equal(esperado[producto.id])
+
+
+## La decisión conserva dos filas de Actroncito/Prongles y distingue las excepciones por tanda.
+static func _filas_esperadas(id: Producto.Id, fija: bool, fija_simple: bool = false) -> int:
+	if (
+		id
+		in [
+			Producto.Id.COSA_DE_MANI,
+			Producto.Id.FLINPUF,
+			Producto.Id.BURBALOO,
+			Producto.Id.MARRANOS,
+			Producto.Id.POETICO
+		]
+	):
+		return 1
+	if (id == Producto.Id.AMARGADITO and not fija) or fija_simple:
+		return 1
+	return 2
