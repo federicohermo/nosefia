@@ -118,8 +118,8 @@ func test_la_caja_que_se_lleva_no_da_nada() -> void:  # AC-STK-016
 	var caja := _caja(actroncito, _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA))
 	var llevada := load("res://src/dominio/almacen/caja_de_reposicion.tres") as ObjetoDelAlmacen
 	assert_object(llevada).is_not_null()
-	assert_int(caja.uso(llevada)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
-	assert_int(caja.uso(null)).is_equal(ContenidoDeLaCaja.Gesto.SACAR)
+	assert_int(caja.uso(llevada, false)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	assert_int(caja.uso(null, false)).is_equal(ContenidoDeLaCaja.Gesto.SACAR)
 
 
 func test_el_gesto_sale_de_lo_que_lleva_la_mano() -> void:  # AC-STK-038
@@ -129,11 +129,11 @@ func test_el_gesto_sale_de_lo_que_lleva_la_mano() -> void:  # AC-STK-038
 	assert_object(mopa).is_not_null()
 	var gestos := {
 		"las manos vacías": [null, ContenidoDeLaCaja.Gesto.SACAR],
-		"su producto": [UnidadDeProducto.new(actroncito), ContenidoDeLaCaja.Gesto.METER],
+		"su producto": [UnidadDeProducto.new(actroncito), ContenidoDeLaCaja.Gesto.NADA],
 		"otra instancia de su producto":
 		[
 			UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO)),
-			ContenidoDeLaCaja.Gesto.METER,
+			ContenidoDeLaCaja.Gesto.NADA,
 		],
 		"otro producto":
 		[UnidadDeProducto.new(_producto(Producto.Id.MALBARDO)), ContenidoDeLaCaja.Gesto.NADA],
@@ -142,10 +142,18 @@ func test_el_gesto_sale_de_lo_que_lleva_la_mano() -> void:  # AC-STK-038
 	for mano: String in gestos:
 		var sostenido: ObjetoDelAlmacen = gestos[mano][0]
 		(
-			assert_int(caja.uso(sostenido))
+			assert_int(caja.uso(sostenido, false))
 			. override_failure_message("con %s en la mano" % mano)
 			. is_equal(gestos[mano][1])
 		)
+
+	var unidad := UnidadDeProducto.new(actroncito)
+	assert_int(caja.uso(unidad, true)).is_equal(ContenidoDeLaCaja.Gesto.METER)
+	assert_int(caja.uso(null, true)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	assert_int(caja.uso(mopa, true)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	assert_int(caja.uso(UnidadDeProducto.new(_producto(Producto.Id.MALBARDO)), true)).is_equal(
+		ContenidoDeLaCaja.Gesto.NADA
+	)
 
 
 func test_sacar_devolver_y_sacar_pasa_por_siete_ocho_y_siete() -> void:  # AC-STK-039
@@ -348,21 +356,21 @@ func test_el_derecho_posible_saca_con_una_y_no_con_cero() -> void:  # AC-PLY-083
 	# Contesta como el gesto pero mirando el contenido, y no saca nada al contestar.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var con_una := _caja(actroncito, _estante(actroncito, 1))
-	assert_int(con_una.derecho_posible(null)).is_equal(ContenidoDeLaCaja.Gesto.SACAR)
+	assert_int(con_una.gesto_posible(null, false)).is_equal(ContenidoDeLaCaja.Gesto.SACAR)
 	assert_int(con_una.unidades()).is_equal(1)
 	var vacia := _caja(actroncito, _estante(actroncito, 0))
-	assert_int(vacia.derecho_posible(null)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	assert_int(vacia.gesto_posible(null, false)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
 	# Otra cosa en la mano no saca, aunque la caja tenga.
-	assert_int(con_una.derecho_posible(Ticket.new())).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	assert_int(con_una.gesto_posible(Ticket.new(), false)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
 
 
 func test_el_derecho_posible_mete_sin_llenar_y_no_cambia_nada() -> void:  # AC-PLY-083
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var unidad := UnidadDeProducto.new(actroncito)
 	var casi := _caja(actroncito, _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA - 1))
-	assert_int(casi.derecho_posible(unidad)).is_equal(ContenidoDeLaCaja.Gesto.METER)
+	assert_int(casi.gesto_posible(unidad, true)).is_equal(ContenidoDeLaCaja.Gesto.METER)
 	assert_int(casi.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
 	var llena := _caja(actroncito, _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA))
-	assert_int(llena.derecho_posible(unidad)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	assert_int(llena.gesto_posible(unidad, true)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
 	var otra := UnidadDeProducto.new(_producto(Producto.Id.DUREXTRA))
-	assert_int(casi.derecho_posible(otra)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	assert_int(casi.gesto_posible(otra, true)).is_equal(ContenidoDeLaCaja.Gesto.NADA)

@@ -47,13 +47,41 @@ func mensajes_de(quien: Conversacion.Interlocutor) -> Array[Mensaje]:
 	for mensaje in conversacion.mensajes:
 		if mensaje != null and mensaje.jornada <= _jornada:
 			visibles.append(mensaje)
-	visibles.append_array(_recibidos[quien])
+	var fechados: Array[Dictionary] = []
+	var sin_fecha: Array[Mensaje] = []
+	var todos: Array[Mensaje] = visibles.duplicate()
+	todos.append_array(_recibidos[quien])
+	for posicion: int in todos.size():
+		var mensaje := todos[posicion]
+		if mensaje.momento == Mensaje.Momento.SIN_FECHA:
+			sin_fecha.append(mensaje)
+		else:
+			(
+				fechados
+				. append(
+					{
+						"mensaje": mensaje,
+						"posicion": posicion,
+						"orden": mensaje.orden if not mensaje.identidad.is_empty() else posicion,
+					}
+				)
+			)
+	fechados.sort_custom(_antes)
+	visibles.clear()
+	for entrada: Dictionary in fechados:
+		visibles.append(entrada.mensaje)
+	# El legado conserva su posición previa y su orden: no se reconstruye un cierre sin fecha.
+	visibles.append_array(sin_fecha)
 	return visibles
 
 
 func recibir(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> bool:
 	if mensaje == null or not _recibidos.has(quien):
 		return false
+	if not mensaje.identidad.is_empty():
+		for recibido: Mensaje in _recibidos[quien]:
+			if recibido.identidad == mensaje.identidad:
+				return false
 	_recibidos[quien].append(mensaje)
 	return true
 
@@ -86,3 +114,25 @@ func adjunto_de(quien: Conversacion.Interlocutor, indice: int) -> Mensaje:
 		return null
 	var siguiente := mensajes[indice + 1]
 	return siguiente if siguiente.foto == null and siguiente.dice_algo() else null
+
+
+func pista_de(quien: Conversacion.Interlocutor, identidad: String, tramo: String) -> String:
+	if identidad.is_empty():
+		return ""
+	for mensaje: Mensaje in mensajes_de(quien):
+		if mensaje.identidad == identidad:
+			return mensaje.pista_del_tramo(tramo)
+	return ""
+
+
+static func _antes(a: Dictionary, b: Dictionary) -> bool:
+	var uno: Mensaje = a.mensaje
+	var otro: Mensaje = b.mensaje
+	if uno.jornada != otro.jornada:
+		return uno.jornada < otro.jornada
+	if uno.momento != otro.momento:
+		return uno.momento < otro.momento
+	# La posición suple el orden ausente; todos los pares usan la misma clave de comparación.
+	if a.orden != b.orden:
+		return a.orden < b.orden
+	return a.posicion < b.posicion

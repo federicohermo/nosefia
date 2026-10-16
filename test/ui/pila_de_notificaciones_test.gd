@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ESCENA := "res://src/ui/pila_de_notificaciones.tscn"
+const COMPUTADORA := "res://src/ui/diegetica/pantalla_de_computadora.tscn"
 
 
 func after_test() -> void:
@@ -122,9 +123,7 @@ func test_el_clic_sobre_el_cartel_llega_al_boton_de_notas() -> void:  # AC-NTF-0
 	var viewport: SubViewport = auto_free(SubViewport.new())
 	viewport.size = Vector2i(1920, 1080)
 	add_child(viewport)
-	var pantalla: PantallaDeComputadora = (
-		load("res://src/ui/diegetica/pantalla_de_computadora.tscn").instantiate()
-	)
+	var pantalla: PantallaDeComputadora = load(COMPUTADORA).instantiate()
 	viewport.add_child(pantalla)
 	var pedidos: Array[Computadora.App] = []
 	pantalla.app_pedida.connect(func(app: Computadora.App) -> void: pedidos.append(app))
@@ -189,3 +188,95 @@ func test_todos_los_avisos_usan_una_linea_y_el_ancho_de_su_contenido() -> void: 
 				texto.get_global_rect().get_center().y, 1.0
 			)
 		assert_float((carteles[0] as Control).size.x).is_greater((carteles[2] as Control).size.x)
+
+
+func test_el_aviso_de_una_hora_conserva_su_resto_en_pausa() -> void:  # AC-NTF-023
+	var pila := _pila()
+	pila.set_process(false)
+	pila.actualizar_tiempo(3600.0)
+	pila._process(2.0)
+	get_tree().paused = true
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_bool(pila.can_process()).is_false()
+	assert_array(_textos(pila)).is_equal(["QUEDA UNA HORA DE JORNADA"])
+	get_tree().paused = false
+	pila._process(0.9)
+	assert_array(_textos(pila)).has_size(1)
+	pila._process(0.1)
+	assert_array(_textos(pila)).is_empty()
+	pila.actualizar_tiempo(3500.0)
+	assert_array(_textos(pila)).is_empty()
+
+
+func test_una_hora_comparte_esquina_y_su_texto_entra_en_ambas_resoluciones() -> void:  # AC-NTF-024
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
+	pila.avisar_salida(Comprador.new("Otro", Venta.new(), 0))
+	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
+	pila.actualizar_tiempo(3600.0)
+	assert_str(_textos(pila)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var carteles := pila.get_node("Marco/Pila").get_children()
+		assert_int(carteles.size()).is_equal(4)
+		var derecha: float = carteles[0].get_global_rect().end.x
+		for cartel: PanelContainer in carteles:
+			var fila: HBoxContainer = cartel.get_child(0)
+			var simbolo: TextureRect = fila.get_child(0)
+			var texto: Label = fila.get_child(1)
+			assert_int(texto.get_line_count()).is_equal(1)
+			assert_float(texto.size.x).is_greater_equal(texto.get_minimum_size().x)
+			assert_object(texto.get_theme_font("font")).is_same(pila._marco.get_theme_font("font"))
+			assert_float(cartel.get_global_rect().end.x).is_equal_approx(derecha, 0.1)
+			(
+				assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(cartel.get_global_rect()))
+				. is_true()
+			)
+			assert_float(cartel.size.x).is_equal_approx(
+				fila.get_combined_minimum_size().x + pila._estilo.get_minimum_size().x, 1.0
+			)
+			assert_float(simbolo.get_global_rect().end.x).is_less(
+				texto.get_global_rect().position.x
+			)
+		for control: Control in pila.find_children("*", "Control", true, false):
+			assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
+
+
+func test_el_aviso_de_una_hora_deja_pasar_el_clic_hacia_la_computadora() -> void:  # AC-NTF-024
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pantalla: PantallaDeComputadora = load(COMPUTADORA).instantiate()
+	viewport.add_child(pantalla)
+	var pedidos: Array[Computadora.App] = []
+	pantalla.app_pedida.connect(func(app: Computadora.App) -> void: pedidos.append(app))
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.actualizar_tiempo(3600.0)
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		pantalla.mostrar(Computadora.App.CAJA)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var notas: Button = pantalla.get_node("Fondo/Marco/Opciones").get_child(1)
+		var centro := notas.get_global_rect().get_center()
+		var cartel: Control = pila.get_node("Marco/Pila").get_child(0)
+		assert_bool(cartel.get_global_rect().has_point(centro)).is_true()
+		for apretado: bool in [true, false]:
+			var clic := InputEventMouseButton.new()
+			clic.button_index = MOUSE_BUTTON_LEFT
+			clic.pressed = apretado
+			clic.position = centro
+			clic.global_position = centro
+			viewport.push_input(clic)
+			await get_tree().process_frame
+	assert_array(pedidos).is_equal([Computadora.App.NOTAS, Computadora.App.NOTAS])

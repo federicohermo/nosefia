@@ -13,7 +13,9 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	var quien := Conversacion.Interlocutor.JEFE
 	assert_int(bandeja.conversaciones()[0].interlocutor).is_equal(quien)
 	var mensajes := bandeja.mensajes_de(quien)
-	assert_array(mensajes).is_equal(Conversacion.de(quien).mensajes)
+	assert_array(mensajes).is_equal(
+		Conversacion.de(quien).mensajes.filter(func(m: Mensaje) -> bool: return m.jornada == 1)
+	)
 	assert_int(mensajes.size()).is_equal(19)
 	var textos := 0
 	var fotos := 0
@@ -32,10 +34,10 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	restaurada.abrir_jornada(1)
 	assert_array(restaurada.conversaciones()).is_equal(bandeja.conversaciones())
 	assert_int(restaurada.no_leidos_totales()).is_equal(19)
-	# No se asigna arbitrariamente una noche futura a los textos retirados.
+	# Los bloques documentados siguen disponibles; no aparecen contactos sin guion.
 	restaurada.abrir_jornada(5)
-	assert_int(restaurada.conversaciones().size()).is_equal(1)
-	assert_array(restaurada.mensajes_de(quien)).is_equal(mensajes)
+	assert_int(restaurada.conversaciones().size()).is_equal(2)
+	assert_array(restaurada.mensajes_de(quien)).is_equal(Conversacion.de(quien).mensajes)
 
 
 func test_el_corte_de_jornada_filtra_y_ordena_el_menu() -> void:  # AC-INV-028, AC-INV-037

@@ -8,9 +8,9 @@ extends GdUnitTestSuite
 const CONVERSACION := "res://src/dominio/investigacion/conversacion.gd"
 
 
-func test_el_catalogo_carga_solo_la_conversacion_documentada_de_enrique() -> void:
+func test_el_catalogo_carga_las_conversaciones_documentadas() -> void:
 	var todas := Conversacion.desde_disco()
-	assert_int(todas.size()).is_equal(1)
+	assert_int(todas.size()).is_equal(2)
 	assert_int(todas[0].interlocutor).is_equal(Conversacion.Interlocutor.JEFE)
 	assert_str(todas[0].nombre).is_equal("Enrique Peldaño")
 

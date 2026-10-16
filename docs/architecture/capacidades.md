@@ -71,7 +71,7 @@ flowchart TD
 
 La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
 El contrato de `notifications` incluye llegada, vencimiento, rechazo del lector, pista nueva
-anotada y cierre del turno. Ninguna contesta a quien publica el suceso.
+anotada, tiempo restante y cierre del turno. Ninguna contesta a quien publica el suceso.
 Por eso la tabla de sonidos es un archivo y no un `match`:
 agregar un sonido no toca a quien lo emite.
 

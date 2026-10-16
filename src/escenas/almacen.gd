@@ -142,6 +142,7 @@ func _ready() -> void:
 	# mesa, y la noche en que falla, ni caminar alcanza. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
+	_reloj.tiempo_consumido.connect(avisos.actualizar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
@@ -202,7 +203,7 @@ func _ready() -> void:
 	_recolector.bolsas = _bolsas
 	_recolector.bolsa_sacada.connect(_al_sacar_una_bolsa)
 	_jugador.uso_pedido.connect(_usar_un_tacho)
-	_jugador.consultar_el_derecho_con(_derecho_sobre_un_tacho)
+	_jugador.consultar_interaccion_con(_contexto_sobre_un_tacho)
 	_jugador.referencia_cambiada.connect(_hud.pintar_referencia)
 	_recolector.objeto_tirado.connect(_contenedor.recibir)
 	_recolector.objeto_tirado.connect(_al_tirar_un_objeto)
@@ -253,6 +254,8 @@ func _ready() -> void:
 	_arranque = _jugador.global_transform
 	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
 	_ciclo.arrancar(_partida, _reloj)
+	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
+	_jugador.muebles_con_reserva = _muebles_con_contorno
 	_reposicion_manual.preparar()
 
 
@@ -418,7 +421,9 @@ func empezar_partida_nueva() -> void:
 	_jugador.suspender()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
-	_instrucciones.mostrar(GUION_DEL_JEFE.mensajes)
+	_instrucciones.mostrar(
+		Bandeja.new([GUION_DEL_JEFE]).mensajes_de(Conversacion.Interlocutor.JEFE)
+	)
 
 
 func anunciar_la_noche() -> void:
@@ -591,12 +596,13 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.chat_pedido.connect(_celular.pedir_chat)
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
+	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
 	_pantalla_del_celular.cierre_pedido.connect(_alternar_el_celular)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
 	# Al retomar, las devoluciones de las noches ya cerradas vuelven al chat de Enrique.
-	for texto: String in _partida.mensajes_del_jefe():
-		_celular.recibir(Conversacion.Interlocutor.JEFE, DevolucionDelJefe.mensaje(texto))
+	for mensaje: Mensaje in _partida.devoluciones_del_jefe():
+		_celular.recibir(Conversacion.Interlocutor.JEFE, mensaje)
 
 
 func _al_abrir_el_celular() -> void:
@@ -627,7 +633,7 @@ func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaj
 	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
 		_mostrar_el_menu_del_celular()
 	elif _celular.celular().chat() == quien:
-		_pantalla_del_celular.recibir(mensaje, _celular.bandeja().mensajes_de(quien).size() - 1)
+		_pantalla_del_celular.recibir(mensaje, _celular.bandeja().mensajes_de(quien).find(mensaje))
 
 
 ## Las señales pueden llegar antes de sincronizar los cuerpos con el espacio físico.
@@ -677,14 +683,14 @@ func _usar_un_tacho(objetivo: Node3D) -> void:
 		_recolector.sacar_bolsa(objetivo.tacho)
 
 
-## Si sacar la bolsa de ese tacho tendría efecto: lo contesta la tarea, sin sacarla.
-func _derecho_sobre_un_tacho(
+## Declara el gesto del tacho con la bolsa y la mano actuales, sin extraerla.
+func _contexto_sobre_un_tacho(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
-) -> ReferenciaDeControles.Derecho:
+) -> ReferenciaDeControles.Contexto:
 	if not objetivo is TachoDelLocal or _recolector.tarea() == null:
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return null
 	var con_bolsa := _recolector.tarea().tiene_bolsa(objetivo.tacho)
-	return ReferenciaDeControles.derecho_del_tacho(con_bolsa, sostenido != null)
+	return ReferenciaDeControles.contexto_del_tacho(con_bolsa, sostenido != null)
 
 
 func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:

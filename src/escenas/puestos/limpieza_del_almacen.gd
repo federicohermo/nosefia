@@ -32,7 +32,7 @@ var _cantidad_mostrada := -1.0
 var _charcos := CharcosTemporales.new()
 var _recipiente_de_la_mojada: Node3D
 
-## Los pares declarados, para contestar si el clic derecho tendría efecto sin usar nada.
+## Los pares declarados permiten consultar el gesto sin usar ni revelar el estado de la mezcla.
 var _pares := Uso.para_el_almacen()
 
 
@@ -61,7 +61,7 @@ func _physics_process(delta: float) -> void:
 
 func _ready() -> void:
 	jugador.uso_pedido.connect(_al_pedir_uso)
-	jugador.consultar_el_derecho_con(_derecho_de_limpiar)
+	jugador.consultar_interaccion_con(_contexto_de_limpiar)
 	jugador.uso_sobre_superficie_pedido.connect(_al_usar_la_superficie)
 	jugador.paso_dado.connect(_al_dar_un_paso)
 	limpiador.balde_llenado.connect(_al_llenar_el_balde)
@@ -190,7 +190,7 @@ func _todas_las_manchas() -> Array[ManchaQueSeVe]:
 	return encontradas
 
 
-## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo que
+## El uso contextual llega por `uso_pedido`, que se reparte entre los puestos: se descarta lo que
 ## no es de limpiar.
 func _al_pedir_uso(objetivo: Node3D) -> void:
 	var mancha := objetivo as ManchaQueSeVe
@@ -205,16 +205,16 @@ func _al_pedir_uso(objetivo: Node3D) -> void:
 		_recipiente_de_la_mojada = null
 
 
-## Si el clic derecho sobre ese objetivo tendría efecto con lo que hay en la mano: el par declarado
+## El gesto de ese objetivo con lo que hay en la mano: el par declarado
 ## alcanza, aunque el uso vaya a rechazarse. No toca el piso.
-func _derecho_de_limpiar(
+func _contexto_de_limpiar(
 	objetivo: Node3D, sostenido: ObjetoDelAlmacen
-) -> ReferenciaDeControles.Derecho:
+) -> ReferenciaDeControles.Contexto:
 	var destino := Uso.MANCHA if objetivo is ManchaQueSeVe else _destino_de(objetivo)
 	if destino == &"":
-		return ReferenciaDeControles.Derecho.NINGUNO
+		return null
 	var en_la_mano := ObjetoDelAlmacen.SIN_ID if sostenido == null else sostenido.id
-	return ReferenciaDeControles.derecho_del_uso(_pares.resolver(en_la_mano, destino))
+	return ReferenciaDeControles.contexto_del_uso(_pares.resolver(en_la_mano, destino))
 
 
 ## Qué es, para limpiar, lo que la mira tiene adelante: un artefacto del baño dice qué es, y un

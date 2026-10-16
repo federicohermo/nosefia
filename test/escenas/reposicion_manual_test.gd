@@ -533,7 +533,10 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 		var le_quedan := estante.disponibles_para_retirar(producto)
 		_sacar_de_la_caja(jugador, caja)
 		assert_int(estante.disponibles_para_retirar(producto)).is_equal(maxi(0, le_quedan - 1))
-		_sacar_de_la_caja(jugador, caja)
+		if le_quedan > 0:
+			_accion(jugador, caja)
+		else:
+			_sacar_de_la_caja(jugador, caja)
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 		assert_int(estante.disponibles_para_retirar(producto)).is_equal(le_quedan)
 
@@ -619,8 +622,8 @@ func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void
 	assert_object(agarre.manos().sostenido()).is_same(unidad)
 	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_equal(1)
 	assert_int(del_dominio.unidades_en_gondola(producto)).is_equal(del_dominio.cupo(producto))
-	# Devuelta a su caja, la caja la vuelve a contar.
-	_sacar_de_la_caja(jugador, caja)
+	# Devuelta por primario, la caja la vuelve a contar.
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(del_dominio.disponibles_para_retirar(producto)).is_equal(en_la_caja)
 

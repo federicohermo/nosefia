@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: draft
+status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425
 ---
 
 # Capacidad: dejar el local en orden
@@ -49,7 +49,7 @@ alcance de la mira.
 
 ### BR-CLN-009 — La bolsa cuenta por el tiro al contenedor
 
-CUANDO una bolsa se tira con clic izquierdo al contenedor completamente abierto, el sistema
+CUANDO una bolsa se tira con el primario al cuerpo del contenedor completamente abierto, el sistema
 DEBE contarla como depositada. Soltarla en el piso cerca o por la boca física NO DEBE contarla
 ni impedir recogerla y tirarla después.
 
@@ -201,22 +201,25 @@ detener su evaporación durante la pausa y desaparecer al abrir otra jornada. La
 simultánea DEBE estar acotada; repetir pasadas no reserva nodos sin límite. Los charcos no
 obstruyen el movimiento ni la mira.
 
-### BR-CLN-025 — Tapa del contenedor de basura
+### BR-CLN-025 — La tapa alterna con el primario y no desecha
 
-CUANDO abre una jornada, el contenedor DEBE tener la tapa completamente abierta. El clic
-derecho sobre el cuerpo o la tapa DEBE alternar abrir y cerrar con cualquier mano, sin cambiar
-lo sostenido. Otro derecho durante el giro DEBE invertirlo. La bisagra y la colisión DEBEN
-acompañar la tapa y el giro DEBE detenerse ante un objeto sin atravesarlo ni comprimirlo.
-Sólo la tapa completamente abierta DEBE permitir recibir objetos; cerrar corta ese permiso
-desde el inicio del giro y abrir lo recupera al alcanzar el tope.
+CUANDO abre una jornada, el contenedor DEBE tener la tapa completamente abierta. El primario
+—clic izquierdo por defecto— sobre la tapa DEBE alternar abrir y cerrar con cualquier mano,
+sin cambiar lo sostenido ni desecharlo. Otro primario durante el giro DEBE invertirlo.
+El secundario NO DEBE alternar. La tapa y el cuerpo DEBEN ser objetivos distintos: el cuerpo
+recibe según BR-CLN-026 y NO DEBE alternar además la tapa con el mismo clic.
+La bisagra y la colisión DEBEN acompañar la tapa y el giro DEBE detenerse ante un objeto sin
+atravesarlo ni comprimirlo. Sólo la tapa completamente abierta DEBE permitir recibir objetos;
+cerrar corta ese permiso desde el inicio del giro y abrir lo recupera al alcanzar el tope.
 
-### BR-CLN-026 — Tirar consume el izquierdo y retira lo sostenido
+### BR-CLN-026 — Tirar al cuerpo consume el primario y retira lo sostenido
 
-CUANDO se hace clic izquierdo sobre cuerpo o tapa completamente abierta con un objeto que
+CUANDO se hace el primario sobre el cuerpo del contenedor completamente abierto con un objeto que
 entra, el sistema DEBE retirarlo de la mano y de la jornada: oculto, sin colisión ni foco.
-Una caja del depósito NO DEBE entrar. Con mano vacía, caja o tapa cerrada o girando, el gesto
+Una caja del depósito NO DEBE entrar. Con mano vacía, caja o tapa cerrada o girando, el primario sobre el cuerpo
 DEBE conservar manos y tarea sin soltar genéricamente. Abrir NO DEBE tirar automáticamente.
 Con el jugador suspendido por examen, pausa o cierre, ambos clics NO DEBEN tirar ni alternar.
+El secundario NO DEBE desechar. Accionar la tapa NO DEBE desechar además lo sostenido.
 Al abrir otra noche, los objetos de arranque tirados DEBEN volver a sus padres y poses de
 arranque, visibles, físicos y recogibles, con mopa seca y balde vacío. Las bolsas DEBEN seguir
 la declaración de la jornada nueva: fuera del mundo si no declara basura, o en su tacho y sin
@@ -270,20 +273,35 @@ de la banda y los demás motivos, y reiniciarse al abrir otra noche sin borrar l
 Un gesto rechazado o fuera de jornada abierta NO DEBE anotar este motivo.
 
 
-### BR-CLN-032 — Usar un tacho entrega su única bolsa
+### BR-CLN-032 — El primario sobre un tacho entrega su única bolsa
 
-CUANDO el jugador enfoca un tacho con bolsa y lo usa con clic derecho con la mano vacía, el
-sistema DEBE ponerle esa bolsa en la mano y dejar el tacho sin bolsa. Con la mano ocupada o el
-tacho vacío, NO DEBE cambiar manos, tacho ni cuenta. Otro derecho NO DEBE producir una segunda
-bolsa de ese tacho. Ningún gesto DEBE devolver una bolsa al tacho. Un izquierdo sobre el tacho
-NO DEBE sacar ni tirar objetos. La suspensión del control NO DEBE permitir extraer la bolsa.
+CUANDO el jugador enfoca un tacho con bolsa y hace el primario con la mano vacía, el sistema
+DEBE ponerle esa bolsa en la mano y dejar el tacho sin bolsa. Con la mano ocupada o el tacho
+vacío, NO DEBE cambiar manos, tacho ni cuenta. Otro primario NO DEBE producir una segunda bolsa.
+Ningún gesto DEBE devolver una bolsa al tacho. El secundario NO DEBE extraer bolsas.
+El primario sobre el tacho con mano ocupada NO DEBE tirar ni soltar el objeto.
+La suspensión del control NO DEBE permitir extraer la bolsa.
 
-Cada tacho DEBE ser enfocable, con contorno al mirarlo desde un punto libre del piso dentro del
-alcance vigente. «Con basura» DEBE verse como una bolsa en la boca del tacho; «sin basura», como
-el mismo tacho sin ella. Mientras está en la boca, la bolsa NO DEBE interceptar la mira ni tener
-colisión propia. Al sacarla, DEBE ser un objeto levantable con su identidad original. Sacarla
-NO DEBE contar como depositarla: sólo el tiro aceptado al contenedor lo hace. Una bolsa sacada
-y rescatada DEBE volver libre a su origen, sin reponer el estado del tacho ni crear otra identidad.
+Cada tacho DEBE ser enfocable, con contorno desde piso libre dentro del alcance vigente.
+«Con basura» DEBE verse como una bolsa en la boca del tacho; «sin basura», como el mismo tacho
+sin ella. En la boca, la bolsa NO DEBE interceptar la mira ni tener colisión propia. Al sacarla,
+DEBE ser un levantable con su identidad original. Extraer NO DEBE contar como depositar:
+sólo el tiro aceptado al cuerpo del contenedor lo hace. Una bolsa sacada y rescatada DEBE
+volver libre a su origen, sin reponer el tacho ni crear otra identidad. Sólo la jornada que
+declara basura DEBE permitir extraer; las demás DEBEN conservar los tachos sin bolsa.
+
+### BR-CLN-036 — El primario ejecuta los pares de limpieza y el descarte de papel
+
+CUANDO el primario encuentra balde/lavatorio, jabón/balde, mopa/balde, mopa/inodoro,
+mopa/mancha o balde/inodoro, el sistema DEBE pedir respectivamente llenar, teñir, mojar,
+enjuagar, limpiar o vaciar, conservando los resultados y rechazos de BR-CLN-015 a BR-CLN-023.
+El secundario NO DEBE ejecutar esos pares. Un rechazo DEBE conservar el útil en la mano,
+sin soltarlo ni cambiar el agua, carga o manchas por un efecto adicional.
+El agua temporal sobre piso despejado DEBE conservar el secundario y BR-CLN-024.
+
+CUANDO se hace el primario con un ticket propio sobre el inodoro, el sistema DEBE pedir su
+descarte y, si se acepta, anotar papel según BR-CLN-030 una sola vez. El secundario NO DEBE
+desechar papel. Un objeto distinto de ticket NO DEBE descartarse por ese destino.
 
 ## Criterios de aceptación
 
@@ -302,8 +320,8 @@ de todos ellos, por encima del alcance de la mira. Las posiciones se derivan del
 ### AC-CLN-009 — Soltar no deposita *(verifica BR-CLN-009)*
 
 DADO una bolsa soltada en el piso a menos de 1 metro del contenedor o por su boca física
-CUANDO queda suelta ENTONCES no cuenta y se puede recoger. CUANDO después se la tira con clic
-izquierdo sobre cuerpo o tapa completamente abierta ENTONCES sí cuenta.
+CUANDO queda suelta ENTONCES no cuenta y se puede recoger. CUANDO después se la tira con el
+primario sobre el cuerpo completamente abierto ENTONCES sí cuenta; sobre la tapa no deposita.
 
 
 ### AC-CLN-011 — El orden y la idempotencia *(verifica BR-CLN-010)*
@@ -460,21 +478,21 @@ muestra ambos líquidos durante la transición y termina con el color del jabón
 agua acepta inmediatamente mojar la mopa de ese jabón. Una actualización repetida no reinicia
 la transición; un uso rechazado no la dispara. Vaciar o abrir otra jornada cancela la mezcla.
 
-### AC-CLN-034 — Tapa que se abre y se cierra *(verifica BR-CLN-025)*
+### AC-CLN-034 — La tapa alterna sin desechar *(verifica BR-CLN-025)*
 
-DADO el contenedor al empezar una jornada ENTONCES tiene la tapa abierta. CUANDO se usa el
-cuerpo o la tapa con clic derecho, con mano vacía o cargada, ENTONCES gira hasta cerrarse sin
-cambiar la mano; otro derecho invierte el giro hasta abrirse. La tapa y su colisión conservan
-la bisagra en ambos estados y durante el movimiento. Abrir otra jornada restaura la tapa
-abierta. Dividir el tiempo entre cuadros conserva el giro. Con un objeto en el recorrido de
-cierre, la tapa se detiene sin atravesarlo ni comprimirlo; al retirarlo continúa cerrándose.
+DADO el contenedor al abrir ENTONCES tiene la tapa abierta. DADO mano vacía y, por separado,
+bolsa sostenida CUANDO se hace primario sobre la tapa ENTONCES gira para cerrar sin cambiar
+la mano ni depositar; otro primario invierte el giro. El secundario no alterna. La bisagra
+y colisión acompañan ambos estados y el movimiento; un objeto en el recorrido detiene el
+cierre sin atravesarlo ni comprimirlo y retirarlo permite continuar. Dividir el tiempo entre
+cuadros conserva el giro y abrir otra jornada restaura la tapa abierta.
 
-### AC-CLN-035 — Sólo plenamente abierta recibe *(verifica BR-CLN-025, BR-CLN-026)*
+### AC-CLN-035 — Sólo el cuerpo plenamente abierto recibe *(verifica BR-CLN-025, BR-CLN-026)*
 
-DADO una bolsa sostenida y la tapa cerrada o a mitad de cualquiera de sus giros CUANDO se
-pulsa izquierdo sobre cuerpo o tapa ENTONCES la bolsa sigue en la mano y no cuenta. CUANDO
-termina de abrir ENTONCES sigue sostenida; un izquierdo posterior la tira. Cerrar desactiva
-el permiso desde el inicio del giro.
+DADO una bolsa sostenida y tapa cerrada o girando CUANDO se hace primario sobre el cuerpo
+ENTONCES la bolsa sigue sostenida y no cuenta. Terminar de abrir no la tira; el primario
+posterior sobre el cuerpo sí. DADO la tapa abierta CUANDO se pulsa sobre ella ENTONCES
+comienza a cerrar, conserva la bolsa y corta el permiso desde el inicio.
 
 ### AC-CLN-036 — Cada objeto aceptado sale de la jornada *(verifica BR-CLN-026, BR-CLN-009)*
 
@@ -482,11 +500,12 @@ DADO por turno bolsa, mopa, balde, cada jabón, unidad y ticket sostenidos CUAND
 izquierdo sobre el contenedor completamente abierto ENTONCES queda mano vacía y el mismo
 cuerpo oculto, sin colisión ni foco. Sólo la bolsa aumenta lo depositado.
 
-### AC-CLN-037 — Los dos destinos consumen el gesto *(verifica BR-CLN-026)*
+### AC-CLN-037 — El rechazo consume el gesto *(verifica BR-CLN-026, BR-CLN-025)*
 
-DADO cuerpo y tapa, por turno, con mano vacía, caja sostenida o tapa no abierta CUANDO se
-pulsa izquierdo ENTONCES no hay soltar adicional, la carga conserva su padre y la tarea no
-cambia. La caja rechazada sigue disponible y la mano vacía sigue vacía.
+DADO el cuerpo del contenedor con mano vacía, caja sostenida o tapa no abierta, por turno,
+CUANDO se hace primario ENTONCES no hay soltado adicional, la carga conserva su lugar y la
+tarea no cambia. DADO bolsa sostenida CUANDO se hace secundario sobre cuerpo o tapa
+ENTONCES no se tira ni se suelta, no cuenta y la tapa conserva su estado.
 
 ### AC-CLN-038 — Los tirados vuelven con la noche nueva *(verifica BR-CLN-026, BR-CLN-014)*
 
@@ -499,11 +518,12 @@ La vuelta conserva el estado físico original: un útil móvil elevado 0,5 m vue
 y apoyarse. Consultar los descartados entrega una copia independiente y la noche nueva
 vacía ese registro, sin leer cuerpos ya liberados.
 
-### AC-CLN-039 — La suspensión bloquea ambos gestos *(verifica BR-CLN-026)*
+### AC-CLN-039 — La suspensión bloquea ambos destinos *(verifica BR-CLN-026, BR-CLN-025)*
 
-DADO algo sostenido y el control suspendido por examen, pausa o cierre CUANDO se pulsan
-izquierdo y derecho sobre cuerpo o tapa ENTONCES manos, objetos, tarea y tapa siguen iguales.
-CUANDO se reanuda ENTONCES el derecho alterna y el izquierdo tira sólo completamente abierta.
+DADO algo sostenido y control suspendido por examen, pausa o cierre CUANDO se pulsan ambos
+gestos sobre cuerpo o tapa ENTONCES manos, objetos, tarea y tapa siguen iguales. Al reanudar,
+el primario sobre la tapa alterna sin tirar, y sobre el cuerpo tira sólo si está completamente
+abierta; el secundario sigue sin ejecutar ninguno de esos gestos.
 
 ### AC-CLN-040 — Interiores, techos y pasos exactos *(verifica BR-CLN-027)*
 
@@ -603,28 +623,28 @@ continuar. DADO además un ticket aceptado en el inodoro ENTONCES registra ocho 
 despide y borra el guardado de la partida terminada. Al continuar desde siete, los objetos persistentes vuelven
 a poder usarse y una noche impecable sin motivos conserva los siete medios.
 
-### AC-CLN-053 — Extraer una vez, con la mano vacía *(verifica BR-CLN-032)*
+### AC-CLN-053 — Extraer una vez con el primario *(verifica BR-CLN-032)*
 
-DADO un tacho con bolsa y la mano vacía CUANDO se lo usa ENTONCES esa identidad queda en la mano
-y el tacho queda sin bolsa, sin aumentar las depositadas. CUANDO se vacía la mano y se vuelve
-a usar ENTONCES no entrega nada. DADO otro tacho con bolsa y la mano ocupada CUANDO se usa
-ENTONCES conserva su bolsa y la mano conserva lo que llevaba.
+DADO jornada 2, tacho con bolsa y mano vacía CUANDO se pulsa primario ENTONCES esa identidad
+queda sostenida y el tacho sin bolsa, sin aumentar depositadas. CUANDO se vacía la mano y se
+repite ENTONCES no entrega nada. DADO otro tacho con bolsa y mano ocupada CUANDO se pulsa
+primario ENTONCES conserva bolsa y mano, sin soltar. El secundario no extrae con ninguna mano.
 
 ### AC-CLN-054 — De los tres tachos al contenedor *(verifica BR-CLN-032, BR-CLN-007, BR-CLN-009, BR-CLN-011)*
 
 DADO la jornada 2 CUANDO se enfoca cada tacho desde un punto libre del piso dentro del alcance
 vigente ENTONCES aparece su contorno y la mira no se detiene en la bolsa. CUANDO se hace clic
-derecho con la mano vacía ENTONCES la bolsa queda en la mano y desaparece de la boca de ese
+izquierdo con la mano vacía ENTONCES la bolsa queda en la mano y desaparece de la boca de ese
 tacho. CUANDO se tiran dos al contenedor con la tapa abierta ENTONCES la basura sigue pendiente;
 tirar la tercera la cumple y sube el HUD en 1. Repetir la misma identidad no vuelve a sumar.
 
 ### AC-CLN-055 — Otros gestos y otras noches conservan el estado *(verifica BR-CLN-032, BR-CLN-007)*
 
-DADO las jornadas 1, 3, 4 y 5 CUANDO se usa cualquiera de los tres tachos ENTONCES no se entrega
-bolsa y la mano no cambia. DADO la jornada 2 CUANDO se pulsa izquierdo sobre un tacho, con mano
-vacía o cargada, ENTONCES no se agarra ni tira nada. DADO el control suspendido CUANDO se pulsa
-derecho ENTONCES no sale bolsa. Dos derechos consecutivos entregan sólo una bolsa; mirar otro
-tacho con esa bolsa sostenida no la devuelve ni extrae la del segundo.
+DADO jornadas 1, 3, 4 y 5 CUANDO se pulsa primario o secundario sobre los tres tachos
+ENTONCES no sale bolsa ni cambia la mano. DADO jornada 2 CUANDO se pulsa secundario, o
+primario con control suspendido, ENTONCES no sale bolsa. DADO mano vacía CUANDO se pulsan
+dos primarios seguidos ENTONCES sale sólo una bolsa; mirar otro tacho con ella sostenida no
+la devuelve ni extrae la del segundo ni la suelta.
 
 ### AC-CLN-056 — Rescatar conserva bolsa y tacho agotado *(verifica BR-CLN-032, BR-CLN-010)*
 
@@ -662,6 +682,30 @@ mancha, también las de pared y la de techo, se borra pasándole la mopa mojada 
 apuntándola con la mira desde un punto libre del piso. Las manchas del mismo tipo en la misma
 habitación se borran por separado y cuenta cada una.
 
+### AC-CLN-067 — Los seis pares usan el primario y conservan su efecto *(verifica BR-CLN-036, BR-CLN-015, BR-CLN-016, BR-CLN-017, BR-CLN-018, BR-CLN-019, BR-CLN-023)*
+
+DADO balde vacío sobre lavatorio, jabón sobre agua sola, mopa sobre balde con agua,
+mopa sobre inodoro, mopa del jabón correcto sobre mancha y balde lleno sobre inodoro,
+por turno CUANDO se hace un primario ENTONCES ocurre exactamente llenar, teñir, mojar,
+enjuagar, borrar o vaciar respectivamente, con el útil sostenido, las animaciones vigentes
+y sin efecto secundario adicional. El secundario no ejecuta ninguno de esos seis usos.
+
+### AC-CLN-068 — El uso rechazado no suelta ni recarga *(verifica BR-CLN-036, BR-CLN-020, BR-CLN-024)*
+
+DADO balde ya lleno al llenar, balde vacío o teñido al teñir, balde vacío al mojar o vaciar,
+mopa seca, sin jabón o con jabón incorrecto al limpiar CUANDO se hace primario ENTONCES se
+conservan los rechazos vigentes, el útil sigue sostenido y no hay soltado, recarga ni otro
+cambio de agua o manchas. DADO mopa con agua sola sobre piso despejado CUANDO se hace
+secundario ENTONCES conserva el charco temporal; el primario sin par declarado conserva dejar.
+
+### AC-CLN-069 — El papel se descarta una sola vez por primario *(verifica BR-CLN-036, BR-CLN-030)*
+
+DADO ticket propio sostenido CUANDO se pulsa primario sobre el inodoro ENTONCES se acepta
+un descarte, desaparece el papel y se anota un motivo único de papel. Repetir con mano vacía,
+un ticket ajeno o ya retirado no agrega descartes ni motivos. DADO ticket sostenido CUANDO
+se pulsa secundario ENTONCES no se descarta ni suelta; balde y mopa conservan sus usos sin
+anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CLN-030.
+
 ## No objetivos
 
 - Esta capacidad NO dibuja: declara de qué color se ven cada mancha, el agua del balde y la punta
@@ -673,6 +717,7 @@ habitación se borran por separado y cuenta cada una.
 
 - **Entrada:** la jornada que abre, qué se lleva en la mano, sobre qué se usa —una mancha, el balde, el lavatorio,
   el inodoro o piso despejado—, tiempo real y recorrido de la mopa, el permiso de la tapa y
+  el gesto primario o secundario, el destino cuerpo/tapa del contenedor,
   el pedido de tirar lo sostenido y el estado físico de los cuerpos al cerrar.
 - **Salida:** cómo salió cada uso, qué tiene el balde y la carga restante de la mopa, qué manchas
   quedan, el color de cada cosa, el agua temporal, cuántas bolsas faltan y si cada obligatoria
