@@ -21,11 +21,12 @@ func after_test() -> void:
 	_almacen = null
 
 
-func _abrir() -> void:
+func _abrir(con_lugar: bool = true) -> void:
 	_almacen = ALMACEN.instantiate()
 	add_child(_almacen)
 	AperturaConLugar.abrir_con_semilla(_almacen)
-	AperturaConLugar.abrir_con_todo_el_lugar(_almacen)
+	if con_lugar:
+		AperturaConLugar.abrir_con_todo_el_lugar(_almacen)
 	_almacen.get("_jugador").set_process(false)
 	_almacen.get("_jugador").set_physics_process(false)
 
@@ -144,7 +145,8 @@ func _pulsar_comprador() -> void:
 func _entregar_a_tin(
 	todas: bool = true, desde_gondola: bool = false, solapados: bool = false
 ) -> Array[ObjetoAgarrable]:
-	_abrir()
+	# La recepción y las unidades retiradas deben pertenecer al mismo inventario.
+	_abrir(false)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.set_process(false)
 	for _cuadro in 3:
