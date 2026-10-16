@@ -51,6 +51,10 @@ enum Evento {
 	UNIDAD_DEVUELTA,
 	LECTOR_ESCANEADO,
 	TICKET_IMPRESO,
+	TICKET_DESECHADO,
+	NOTA_ESCRITA,
+	PASADA_CON_JABON_EQUIVOCADO,
+	AMBIENTE_EXTERIOR,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.

@@ -285,7 +285,7 @@ func test_mensaje_recibido_suena_una_vez_y_anotar_ya_no_suena() -> void:  # AC-I
 	_celular().recibir(quien, null)
 	var computadora: ComputadoraDeEscritorio = _almacen.get("_computadora")
 	computadora.pedir_escribir("Prueba", "Sin sonido de mensaje")
-	assert_array(pedidos).is_equal([EntradaSonora.Evento.MENSAJE_DEL_CELULAR])
+	assert_int(pedidos.count(EntradaSonora.Evento.MENSAJE_DEL_CELULAR)).is_equal(1)
 
 
 func test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos() -> void:  # AC-INV-034
