@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/escenas/objetos/bolsa_de_basura.gd" id="1_bolsa"]
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
-size = Vector3(0.28, 0.38, 0.28)
+size = Vector3(0.22, 0.28, 0.22)
 
 [sub_resource type="StandardMaterial3D" id="plastico"]
 albedo_color = Color(0.05, 0.05, 0.06, 1)
@@ -11,8 +11,8 @@ roughness = 0.35
 
 [sub_resource type="SphereMesh" id="bulto"]
 material = SubResource("plastico")
-radius = 0.14
-height = 0.34
+radius = 0.11
+height = 0.25
 radial_segments = 16
 rings = 8
 
@@ -76,51 +76,60 @@ continuous_cd = true
 script = ExtResource("1_bolsa")
 
 [node name="Forma" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
 shape = SubResource("cuerpo")
 
 [node name="Cerrada" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
 visible = false
 
 [node name="Bulto" type="MeshInstance3D" parent="Cerrada"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9, 0, -0.02, 0)
+gi_mode = 2
 mesh = SubResource("bulto")
 
 [node name="Nudo" type="MeshInstance3D" parent="Cerrada"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+gi_mode = 2
 mesh = SubResource("nudo")
 
 [node name="OrejaIzquierda" type="MeshInstance3D" parent="Cerrada"]
-transform = Transform3D(0.94, 0.34, 0, -0.34, 0.94, 0, 0, 0, 1, -0.015, 0.2, 0)
+transform = Transform3D(0.94, 0.34, 0, -0.34, 0.94, 0, 0, 0, 1, -0.015, 0.15, 0)
+gi_mode = 2
 mesh = SubResource("oreja")
 
 [node name="OrejaDerecha" type="MeshInstance3D" parent="Cerrada"]
-transform = Transform3D(0.94, -0.34, 0, 0.34, 0.94, 0, 0, 0, 1, 0.015, 0.2, 0)
+transform = Transform3D(0.94, -0.34, 0, 0.34, 0.94, 0, 0, 0, 1, 0.015, 0.15, 0)
+gi_mode = 2
 mesh = SubResource("oreja")
 
 [node name="Desborde" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06, 0)
 
 [node name="Colchon" type="MeshInstance3D" parent="Desborde"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+gi_mode = 2
 mesh = SubResource("colchon")
 
 [node name="Bollo1" type="MeshInstance3D" parent="Desborde"]
 transform = Transform3D(1, 0, 0, 0, 0.8, 0.2, 0, -0.2, 1, -0.1, 0.0, 0.06)
+gi_mode = 2
 mesh = SubResource("bollo")
 
 [node name="Bollo2" type="MeshInstance3D" parent="Desborde"]
 transform = Transform3D(0.9, 0.3, 0, -0.3, 0.9, 0, 0, 0, 1.1, 0.12, -0.01, -0.08)
+gi_mode = 2
 mesh = SubResource("bollo")
 
 [node name="Bollo3" type="MeshInstance3D" parent="Desborde"]
 transform = Transform3D(1.2, 0, 0, 0, 0.9, 0, 0, 0, 1, 0.02, 0.02, -0.14)
+gi_mode = 2
 mesh = SubResource("bollo")
 
 [node name="Caja" type="MeshInstance3D" parent="Desborde"]
 transform = Transform3D(0.87, 0.26, -0.42, -0.17, 0.96, 0.22, 0.47, -0.12, 0.88, 0.02, 0.02, 0.06)
+gi_mode = 2
 mesh = SubResource("caja")
 
 [node name="Lata" type="MeshInstance3D" parent="Desborde"]
 transform = Transform3D(0, -1, 0, 0.94, 0, 0.34, -0.34, 0, 0.94, -0.12, 0.0, -0.06)
+gi_mode = 2
 mesh = SubResource("lata")
