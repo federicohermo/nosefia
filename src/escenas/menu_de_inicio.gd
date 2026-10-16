@@ -189,8 +189,9 @@ func _pintar_el_calentamiento(progreso: float) -> void:
 
 
 func _entrar(almacen: Node) -> void:
-	_musica.stop()
-	_musica.stream = null
+	if _musica != null:
+		_musica.stop()
+		_musica.stream = null
 	almacen.call("empezar_partida_nueva" if _nuevo_juego else "anunciar_la_noche")
 	almacen.process_mode = Node.PROCESS_MODE_INHERIT
 	get_tree().current_scene = almacen
