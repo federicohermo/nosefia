@@ -1,0 +1,3733 @@
+{
+  "sourcepins": {
+    "inputs": {
+      "434-cierre-geometrico.json": "e471c8b8d9ff251e6b25b8192224f28178438c7e6159455129242ae277b32a5a",
+      "434-medir_cierre.py": "3405c06bf9cfd21deae6341d8b79c50118c3a1dc9155baeb93d1c717444c42c0",
+      "ejecutar.py": "2e8a46446c05d8757f5380151602219509285cc7e70f019181ffb3d5c60d9c70",
+      "fuente.blend": "0c23ea7db6393ea4a0fa86088b4d4897a5d7484d81ae0c0aedf7f8e7d7213f19",
+      "renderizar.py": "68b0e42e3cbcf1ae4c9653b4999c958a2b3b0c88a786a4ab5112f0d0d58413b4",
+      "helpers/blender/acomodar.py": "aee6b0e01c7bd0230efb704ca164af00e9eee056a9e3c1c60905035e20be22cd",
+      "helpers/lib/archivos.py": "885716b450e6e799b134526e4f57e8118c23518f2acfa05853af3842cdfee476",
+      "helpers/lib/artefactos_del_bano.py": "f45f5c25684f8d08b1d0fb2f8956de0ea84c83b9bf65235c99832830c0d394fb",
+      "helpers/lib/blender.py": "b6f03171875543101c11edae6b3d955b1d88bfd553a6f2910d4fe12f5a4413ee",
+      "helpers/lib/cabinas_del_bano.py": "a060abaff7d362d4707693f9230d85c2f0773d2b0f866964199ca66a442ff2f7",
+      "helpers/lib/capas.py": "e4872747b34c65160f629bb616eaad633bd01ac5ad5b5a567b5c5534102f4f77",
+      "helpers/lib/consola.py": "81fc31c1e5be3db94fdfb656a2383f9d881937d8bd72be0b3855f631fc796d52",
+      "helpers/lib/despliegue.py": "e602809ad830b9a86d530ebd563dbf75e658879e2c65c4f2b612017f0500b738",
+      "helpers/lib/escenas.py": "8c477b022b934385f4804c0f782633dafc9cf25747ddd4ccca293f9ba3cdd0b8",
+      "helpers/lib/formato.py": "f8d53f2ad7de12af8c01fa3c78014d09a6dab62a46ac647822a7bf856be0f285",
+      "helpers/lib/godot.py": "22602bc3a429fb05327b38e0140f58934d9385fccf1424bd43f99c6d935aa183",
+      "helpers/lib/gondola.py": "b4adb610812c1e8da4791474e37bd31fe3320f3fa9199191ce70ef20cdf4ca6f",
+      "helpers/lib/horneado.py": "9bb5e0ba289deda09d61929a68cd457664cfcbc7b91d383a2cddb01373ec8d3e",
+      "helpers/lib/integracion_modelo.py": "2e2d408cef5f91d41395a82a4bdd7090022a4f750b1cdee8a0aa38f91e49c48c",
+      "helpers/lib/oraciones.py": "bd6d6b400b143d4b0b94164ef9f7d0cb33af6b74db580d95d0aa7004c2fc4096",
+      "helpers/lib/piso_del_bano.py": "68b68bb67615cae4680d3569cb96900463930eeae11e925bbc26e4066ff8cd8a",
+      "helpers/lib/recordatorio.py": "d7a61360e86a269b12db6b831b0e633d59d39b15e34288f17eced583a253c148",
+      "helpers/lib/recorte_convexo.py": "4d10b56ea0eb63dd210c8ae35ad44294c94ead89bb838e26195e5161e7dbb533",
+      "helpers/lib/rejilla_bano.py": "da66a13726fa73e176788e084a5f90fd28a81ababec03495045873921f185500",
+      "helpers/lib/reparto.py": "85fe24adb499073524abd4eaadc97aac44906b0796452e89ef0ae82a65729c1d",
+      "helpers/lib/repo.py": "58ac040cfc20106944a6067b844bfd87e5cb6a377e8a497cc72eb7301fb6b7d8",
+      "helpers/lib/rutas_protegidas.py": "aa73718abd9d90c0f8d4568e5bf9397683835369ad23fb9ed9c098c604e38514",
+      "helpers/lib/specs.py": "0a8f5721b42b12bd7690fc1d8460ceebba7baf96e9f7af22b0e2be67a9583d9f",
+      "helpers/lib/tdd.py": "55f6de5d4035ae3dbb138172f441f3bf25742ffd928e49993ce3c1892abeebe1",
+      "helpers/lib/verificacion.py": "cc9edd37b95be99dc4f15216c97ea6014328f00b6bf99ce17eb75eb2d82f491c",
+      "helpers/lib/volumenes_modelo.py": "b03551b96661544e091fc9ebe9ff725565ce49ca88463a17158f3bd8fd7cde0e",
+      "helpers/lib/volumen_rectilineo.py": "2e64d1b1e36129f37d364343d054da048d201ec029b465b5415a7f5fa2783b3b",
+      "helpers/lib/worktrees.py": "6e50bceacee9a7207ed68acf0c97d147eb38604ebbfa38b7db1a40191c0065a9",
+      "helpers/lib/__init__.py": "7aa9c630877cb55daf4dac24f5a4c17c06c3f067a041d083f8f62b3c8a939a1b",
+      "renderizar02.py": "28432e964e7f40abbb04eff06f710773e5f487b4b185aabd91c4800bd8e5f2a0",
+      "ejecutar02.py": "a2d3406092e1c265b4f3caf008a6de708f4e26c9b782590cba44ce0024c230f7"
+    },
+    "head434": "c90d1523e51816813702a27c3ae6f994f9233d5f",
+    "purpose": "Copia de visualizacion de poses medidas; NO reparto final generado; NO save_mainfile; OQ-STK-008 pendiente",
+    "timeout_seconds": 180,
+    "correccion": "S?lo c?mara observadora lateral: evitar oclusi?n por chapa superior. Poses y arte id?nticos; primer intento preservado."
+  },
+  "leyenda": {
+    "dorado": "fila de adelante",
+    "azul": "fila de atras",
+    "gris": "mueble y referencia vecina sin cambios"
+  },
+  "productos": {
+    "ACTRONCITO": {
+      "estante": "N.sur.2",
+      "desplazamiento": 0,
+      "variantes": {
+        "1": [
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                1.5620795488357544
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                1.7960795164108276
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.0300793647766113
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.2640795707702637
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.498079299926758
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.73207950592041
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                2.9366250038146973
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.111715793609619
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.286806583404541
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.461897373199463
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.636988639831543
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.812079429626465
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 6,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.9871702194213867
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 7,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                4.162261009216309
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                2.9366250038146973
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.111715793609619
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.286806583404541
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.461897373199463
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.636988639831543
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.812079429626465
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 6,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.9871702194213867
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 7,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                4.162261009216309
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          }
+        ],
+        "2": [
+          {
+            "producto": "ACTRONCITO",
+            "fila": "atras",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                1.5620795488357544
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.470243453979492
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "atras",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                1.7960795164108276
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.470243453979492
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "atras",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.0300793647766113
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.470243453979492
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "atras",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.2640795707702637
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.470243453979492
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "atras",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.498079299926758
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.470243453979492
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "atras",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.73207950592041
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.470243453979492
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                1.5620795488357544
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                1.7960795164108276
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.0300793647766113
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.2640795707702637
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.498079299926758
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "ACTRONCITO",
+            "fila": "adelante",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.0,
+                0.0,
+                -0.14540694653987885,
+                2.73207950592041
+              ],
+              [
+                0.0,
+                0.21367216110229492,
+                0.0,
+                7.416243553161621
+              ],
+              [
+                0.1264408379793167,
+                0.0,
+                0.0,
+                1.373535394668579
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                2.9366250038146973
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.111715793609619
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.286806583404541
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.461897373199463
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.636988639831543
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.812079429626465
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 6,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.9871702194213867
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "atras",
+            "columna": 7,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                4.162261009216309
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.211502552032471
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                2.9366250038146973
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.111715793609619
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.286806583404541
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.461897373199463
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.636988639831543
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.812079429626465
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 6,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                3.9871702194213867
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DUREXTRA",
+            "fila": "adelante",
+            "columna": 7,
+            "matrix_world": [
+              [
+                0.10000000149011612,
+                0.0,
+                0.0,
+                4.162261009216309
+              ],
+              [
+                0.0,
+                0.11244899034500122,
+                0.0,
+                7.15617561340332
+              ],
+              [
+                0.0,
+                0.0,
+                0.10000000149011612,
+                1.3590807914733887
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          }
+        ]
+      },
+      "camaras": {
+        "lateral-alta": {
+          "location": [
+            4.201714515686035,
+            3.8748133182525635,
+            1.9077403545379639
+          ],
+          "rotation_euler": [
+            1.436844825744629,
+            2.5712527218502146e-08,
+            0.5448639392852783
+          ],
+          "ortho_scale": 1.6284003257751465
+        }
+      }
+    },
+    "PRONGLES": {
+      "estante": "B.oeste.2",
+      "desplazamiento": 0,
+      "variantes": {
+        "1": [
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                3.395512580871582
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                3.151512622833252
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.907512664794922
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.663512706756592
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.4195125102996826
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.1755125522613525
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                3.395512580871582
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                3.151512622833252
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.907512664794922
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.663512706756592
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.4195125102996826
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.1755125522613525
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.9918116331100464
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.8684098720550537
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.745008111000061
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.6216062307357788
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.4982044696807861
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.374802589416504
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 6,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.2514009475708008
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 7,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.1279990673065186
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 8,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.0045974254608154
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 9,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.8811955451965332
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 10,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.757793664932251
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 11,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.6343920230865479
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          }
+        ],
+        "2": [
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                3.395512580871582
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                3.151512622833252
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.907512664794922
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.663512706756592
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.4195125102996826
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "atras",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.249041795730591
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.1755125522613525
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                3.395512580871582
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                3.151512622833252
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.907512664794922
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.663512706756592
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.4195125102996826
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "DONSATURADOS",
+            "fila": "adelante",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.6545454263687134,
+                0.0,
+                0.0,
+                3.2000417709350586
+              ],
+              [
+                0.0,
+                0.8727272748947144,
+                0.0,
+                2.1755125522613525
+              ],
+              [
+                0.0,
+                0.0,
+                0.7879317402839661,
+                1.3864459991455078
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 4,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.9918116331100464
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.8684098720550537
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.745008111000061
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.6216062307357788
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.4982044696807861
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.374802589416504
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 6,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.2514009475708008
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 7,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.1279990673065186
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 8,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.0045974254608154
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 9,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.8811955451965332
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 10,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.757793664932251
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "atras",
+            "columna": 11,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.360644578933716
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.6343920230865479
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 0,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.9918116331100464
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 1,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.8684098720550537
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 2,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.745008111000061
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 3,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.6216062307357788
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 4,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.4982044696807861
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 5,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.374802589416504
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 6,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.2514009475708008
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 7,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.1279990673065186
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 8,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                1.0045974254608154
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 9,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.8811955451965332
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 10,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.757793664932251
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          },
+          {
+            "producto": "PRONGLES",
+            "fila": "adelante",
+            "columna": 11,
+            "matrix_world": [
+              [
+                0.5468372106552124,
+                0.0,
+                0.0,
+                3.2372426986694336
+              ],
+              [
+                0.0,
+                0.5519353747367859,
+                0.0,
+                0.6343920230865479
+              ],
+              [
+                0.0,
+                0.0,
+                0.7769021987915039,
+                1.427028775215149
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "contactos": 32,
+            "intersecciones_obstaculos": 0
+          }
+        ]
+      },
+      "camaras": {
+        "lateral-alta": {
+          "location": [
+            -0.09120392799377441,
+            -0.7415330410003662,
+            1.9650638103485107
+          ],
+          "rotation_euler": [
+            1.4368449449539185,
+            8.681694807499696e-10,
+            -1.0259324312210083
+          ],
+          "ortho_scale": 1.7866860628128052
+        }
+      }
+    }
+  }
+}
