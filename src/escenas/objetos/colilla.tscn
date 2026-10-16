@@ -6,7 +6,7 @@
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
 margin = 0.001
-size = Vector3(0.082, 0.015, 0.015)
+size = Vector3(0.1025, 0.019, 0.019)
 
 [node name="Colilla" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.01

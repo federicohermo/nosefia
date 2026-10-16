@@ -6,9 +6,9 @@ roughness = 1.0
 
 [sub_resource type="CylinderMesh" id="malla_Filtro"]
 material = SubResource("material_Filtro")
-top_radius = 0.007
-bottom_radius = 0.007
-height = 0.024
+top_radius = 0.00875
+bottom_radius = 0.00875
+height = 0.03
 radial_segments = 10
 rings = 1
 
@@ -18,9 +18,9 @@ roughness = 1.0
 
 [sub_resource type="CylinderMesh" id="malla_Papel"]
 material = SubResource("material_Papel")
-top_radius = 0.007
-bottom_radius = 0.007
-height = 0.044
+top_radius = 0.00875
+bottom_radius = 0.00875
+height = 0.055
 radial_segments = 10
 rings = 1
 
@@ -30,9 +30,9 @@ roughness = 1.0
 
 [sub_resource type="CylinderMesh" id="malla_Quemado"]
 material = SubResource("material_Quemado")
-top_radius = 0.0075
-bottom_radius = 0.0075
-height = 0.006
+top_radius = 0.009375
+bottom_radius = 0.009375
+height = 0.0075
 radial_segments = 10
 rings = 1
 
@@ -42,34 +42,34 @@ roughness = 1.0
 
 [sub_resource type="CylinderMesh" id="malla_Ceniza"]
 material = SubResource("material_Ceniza")
-top_radius = 0.006
-bottom_radius = 0.006
-height = 0.004
+top_radius = 0.0075
+bottom_radius = 0.0075
+height = 0.005
 radial_segments = 10
 rings = 1
 
 [node name="ColillaVisual" type="Node3D"]
 
 [node name="Filtro" type="MeshInstance3D" parent="."]
-position = Vector3(-0.03, 0, 0)
+position = Vector3(-0.0375, 0, 0)
 rotation = Vector3(0, 0, -1.570796326794897)
 mesh = SubResource("malla_Filtro")
 gi_mode = 2
 
 [node name="Papel" type="MeshInstance3D" parent="."]
-position = Vector3(0.004, 0, 0)
+position = Vector3(0.005, 0, 0)
 rotation = Vector3(0, 0, -1.570796326794897)
 mesh = SubResource("malla_Papel")
 gi_mode = 2
 
 [node name="Quemado" type="MeshInstance3D" parent="."]
-position = Vector3(0.029, 0, 0)
+position = Vector3(0.03625, 0, 0)
 rotation = Vector3(0, 0, -1.570796326794897)
 mesh = SubResource("malla_Quemado")
 gi_mode = 2
 
 [node name="Ceniza" type="MeshInstance3D" parent="."]
-position = Vector3(0.034, 0, 0)
+position = Vector3(0.0425, 0, 0)
 rotation = Vector3(0, 0, -1.570796326794897)
 mesh = SubResource("malla_Ceniza")
 gi_mode = 2

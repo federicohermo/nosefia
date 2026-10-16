@@ -1,6 +1,9 @@
 """Regenera la malla propia de colilla sin depender del modelo del local."""
 from pathlib import Path
 
+#: A escala 1 la colilla se perdía en el piso.
+ESCALA = 1.25
+
 
 def generar(destino: Path) -> None:
     partes = [
@@ -10,20 +13,21 @@ def generar(destino: Path) -> None:
         ("Ceniza", 0.034, 0.004, 0.006, "Color(0.48, 0.46, 0.43, 1)"),
     ]
     lineas = ['[gd_scene format=3]', '']
+    partes = [(n, c * ESCALA, l * ESCALA, r * ESCALA, color) for n, c, l, r, color in partes]
     for nombre, _, largo, radio, color in partes:
         lineas += [
             f'[sub_resource type="StandardMaterial3D" id="material_{nombre}"]',
             f'albedo_color = {color}', 'roughness = 1.0', '',
             f'[sub_resource type="CylinderMesh" id="malla_{nombre}"]',
             f'material = SubResource("material_{nombre}")',
-            f'top_radius = {radio}', f'bottom_radius = {radio}', f'height = {largo}',
+            f'top_radius = {radio:g}', f'bottom_radius = {radio:g}', f'height = {largo:g}',
             'radial_segments = 10', 'rings = 1', '',
         ]
     lineas += ['[node name="ColillaVisual" type="Node3D"]', '']
     for nombre, centro, _, _, _ in partes:
         lineas += [
             f'[node name="{nombre}" type="MeshInstance3D" parent="."]',
-            f'position = Vector3({centro}, 0, 0)',
+            f'position = Vector3({centro:g}, 0, 0)',
             'rotation = Vector3(0, 0, -1.570796326794897)',
             f'mesh = SubResource("malla_{nombre}")', 'gi_mode = 2', '',
         ]
