@@ -1266,7 +1266,9 @@ func _armar_los_bloques() -> void:
 		var atras := DisposicionDeLaGondola.copias(principal)
 		atras -= disposicion.filas_de_adelante[producto.id]
 		fijas.append(principal.slice(0, atras * flotantes))
-		casilleros.append(PackedFloat32Array())
+		# La primera de la reponible va antes que las guías: los faltantes salen del final, y
+		# si la vaciaran entera, el último sale de una guía y la reponible no queda pelada.
+		casilleros.append(principal.slice(atras * flotantes, (atras + 1) * flotantes))
 	for indice in disposicion.guias.size():
 		var id := disposicion.productos_de_las_guias[indice]
 		var modelo := get_node(GUIA).get_child(indice) as MeshInstance3D
@@ -1280,7 +1282,7 @@ func _armar_los_bloques() -> void:
 		var principal := disposicion.principales[producto.id]
 		var atras := DisposicionDeLaGondola.copias(principal)
 		atras -= disposicion.filas_de_adelante[producto.id]
-		casilleros[producto.id].append_array(principal.slice(atras * flotantes))
+		casilleros[producto.id].append_array(principal.slice((atras + 1) * flotantes))
 		_fijas.append(DisposicionDeLaGondola.copias(fijas[producto.id]))
 		_bloques.append(fijas[producto.id] + casilleros[producto.id])
 

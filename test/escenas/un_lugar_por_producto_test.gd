@@ -283,8 +283,8 @@ static func _inclinado(eje: Vector3) -> bool:
 
 
 ## Al abrir, de cada producto falta sólo lo que su jornada pide, y los casilleros son las
-## últimas copias de su tanda: las guías que lo repiten en otros estantes se dibujan enteras y no
-## se reponen nunca. Reponer lo que falta prende exactamente esas copias, y ninguna otra.
+## últimas copias de su tanda. Reponer lo que falta prende exactamente esas copias, y ninguna
+## otra.
 func test_la_fila_de_adelante_de_cada_tanda_es_de_casilleros() -> void:  # AC-STK-028
 	var almacen := _almacen()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
@@ -526,6 +526,9 @@ func _casilleros_de_la_disposicion(
 			lugares.append(
 				DisposicionDeLaGondola.copia(bloques[orden], total - filas[orden] + columna)
 			)
+	# La primera de la reponible va antes que las guías: vaciarla entera deja una puesta.
+	if filas[-1] > 0:
+		lugares.push_front(lugares.pop_at(lugares.size() - filas[-1]))
 	return lugares
 
 
