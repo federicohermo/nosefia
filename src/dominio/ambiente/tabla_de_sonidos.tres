@@ -42,6 +42,13 @@
 
 [ext_resource type="AudioStream" path="res://assets/audio/SFX_NOLEV_Lector_Escanear.wav" id="40_lector_escanear"]
 [ext_resource type="AudioStream" path="res://assets/audio/SFX_INTERFAZ_Computadora_Imprimir.wav" id="41_imprimir"]
+[ext_resource type="AudioStream" uid="uid://b28ufc1m2h6s5" path="res://assets/audio/SFX_OBJETO_Caja_Alzar.wav" id="42_caja_a"]
+[ext_resource type="AudioStream" uid="uid://biua70unu522x" path="res://assets/audio/SFX_OBJETO_Caja_Dejar.wav" id="43_caja_d"]
+[ext_resource type="AudioStream" uid="uid://dc3tghwbuexje" path="res://assets/audio/SFX_OBJETO_Bolsa_Dejar.wav" id="44_bolsa_d"]
+[ext_resource type="AudioStream" uid="uid://3bxorvwdq4qe" path="res://assets/audio/SFX_NOLEV_Inodoro.wav" id="45_inodoro"]
+[ext_resource type="AudioStream" uid="uid://cpsitooq1p0c1" path="res://assets/audio/SFX_INTERFAZ_Celular_Mensaje_Enviado.wav" id="46_enviado"]
+[ext_resource type="AudioStream" uid="uid://cdchcx0vogjhw" path="res://assets/audio/SFX_OBJETO_Mopa_Limpiar.wav" id="47_mopa_limpiar"]
+[ext_resource type="AudioStream" uid="uid://dyk74c784kqv5" path="res://assets/audio/AMB_PROXIMIDAD_Exterior.ogg" id="48_exterior"]
 
 [sub_resource type="Resource" id="Resource_x3pvh"]
 script = ExtResource("1_qermt")
@@ -89,6 +96,7 @@ evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 3
 posicional = true
+stream = ExtResource("42_caja_a")
 
 [sub_resource type="Resource" id="Resource_ag4"]
 script = ExtResource("1_qermt")
@@ -160,6 +168,7 @@ evento = 5
 senal = &"contacto_recibido"
 sonoridad = 3
 posicional = true
+stream = ExtResource("43_caja_d")
 
 [sub_resource type="Resource" id="Resource_so4"]
 script = ExtResource("1_qermt")
@@ -191,6 +200,7 @@ evento = 5
 senal = &"contacto_recibido"
 sonoridad = 7
 posicional = true
+stream = ExtResource("44_bolsa_d")
 
 [sub_resource type="Resource" id="Resource_so8"]
 script = ExtResource("1_qermt")
@@ -235,6 +245,7 @@ evento = 7
 senal = &"unidad_colocada"
 sonoridad = 3
 posicional = true
+stream = ExtResource("43_caja_d")
 
 [sub_resource type="Resource" id="Resource_co4"]
 script = ExtResource("1_qermt")
@@ -266,6 +277,7 @@ evento = 7
 senal = &"unidad_colocada"
 sonoridad = 7
 posicional = true
+stream = ExtResource("44_bolsa_d")
 
 [sub_resource type="Resource" id="Resource_co8"]
 script = ExtResource("1_qermt")
@@ -435,6 +447,7 @@ evento = 27
 senal = &"unidad_devuelta"
 sonoridad = 3
 posicional = true
+stream = ExtResource("43_caja_d")
 
 [sub_resource type="Resource" id="Resource_de4"]
 script = ExtResource("1_qermt")
@@ -466,6 +479,7 @@ evento = 27
 senal = &"unidad_devuelta"
 sonoridad = 7
 posicional = true
+stream = ExtResource("44_bolsa_d")
 
 [sub_resource type="Resource" id="Resource_de8"]
 script = ExtResource("1_qermt")
@@ -499,6 +513,34 @@ posicional = true
 emisor = &"Caja"
 stream = ExtResource("41_imprimir")
 
+[sub_resource type="Resource" id="Resource_ticket_desechado"]
+script = ExtResource("1_qermt")
+evento = 30
+senal = &"ticket_desechado"
+stream = ExtResource("45_inodoro")
+
+[sub_resource type="Resource" id="Resource_nota_escrita"]
+script = ExtResource("1_qermt")
+evento = 31
+senal = &"nota_escrita"
+bus = "Interfaz"
+stream = ExtResource("46_enviado")
+
+[sub_resource type="Resource" id="Resource_jabon_equivocado"]
+script = ExtResource("1_qermt")
+evento = 32
+senal = &"pasada_con_jabon_equivocado"
+stream = ExtResource("47_mopa_limpiar")
+
+[sub_resource type="Resource" id="Resource_exterior"]
+script = ExtResource("1_qermt")
+evento = 33
+bus = "Ambiente"
+en_bucle = true
+posicional = true
+emisor = &"Ventanilla"
+stream = ExtResource("48_exterior")
+
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_ag9"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_so9"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_co9"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos"), SubResource("Resource_compra"), SubResource("Resource_lector"), SubResource("Resource_celular"), SubResource("Resource_puerta_abierta"), SubResource("Resource_puerta_cerrada"), SubResource("Resource_puerta_trabada"), SubResource("Resource_porton_trabado"), SubResource("Resource_balde_llenado"), SubResource("Resource_balde_tenido"), SubResource("Resource_balde_vaciado"), SubResource("Resource_mopa_mojada"), SubResource("Resource_de1"), SubResource("Resource_de2"), SubResource("Resource_de3"), SubResource("Resource_de4"), SubResource("Resource_de5"), SubResource("Resource_de6"), SubResource("Resource_de7"), SubResource("Resource_de8"), SubResource("Resource_de9"), SubResource("Resource_escaneo"), SubResource("Resource_impresion")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_ag9"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_so9"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_co9"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos"), SubResource("Resource_compra"), SubResource("Resource_lector"), SubResource("Resource_celular"), SubResource("Resource_puerta_abierta"), SubResource("Resource_puerta_cerrada"), SubResource("Resource_puerta_trabada"), SubResource("Resource_porton_trabado"), SubResource("Resource_balde_llenado"), SubResource("Resource_balde_tenido"), SubResource("Resource_balde_vaciado"), SubResource("Resource_mopa_mojada"), SubResource("Resource_de1"), SubResource("Resource_de2"), SubResource("Resource_de3"), SubResource("Resource_de4"), SubResource("Resource_de5"), SubResource("Resource_de6"), SubResource("Resource_de7"), SubResource("Resource_de8"), SubResource("Resource_de9"), SubResource("Resource_escaneo"), SubResource("Resource_impresion"), SubResource("Resource_ticket_desechado"), SubResource("Resource_nota_escrita"), SubResource("Resource_jabon_equivocado"), SubResource("Resource_exterior")])

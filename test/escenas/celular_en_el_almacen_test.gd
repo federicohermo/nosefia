@@ -268,7 +268,7 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 	await get_tree().process_frame
 
 
-func test_mensaje_recibido_suena_una_vez_y_anotar_ya_no_suena() -> void:  # AC-INV-029
+func test_mensaje_recibido_suena_una_vez_y_anotar_no_repite_el_aviso() -> void:  # AC-INV-029
 	_abrir()
 	var reproductor: ReproductorDeSonidos = _almacen.get_node(
 		"Servicios/AudioDelAlmacen/Reproductor"
@@ -285,7 +285,7 @@ func test_mensaje_recibido_suena_una_vez_y_anotar_ya_no_suena() -> void:  # AC-I
 	_celular().recibir(quien, null)
 	var computadora: ComputadoraDeEscritorio = _almacen.get("_computadora")
 	computadora.pedir_escribir("Prueba", "Sin sonido de mensaje")
-	assert_array(pedidos).is_equal([EntradaSonora.Evento.MENSAJE_DEL_CELULAR])
+	assert_int(pedidos.count(EntradaSonora.Evento.MENSAJE_DEL_CELULAR)).is_equal(1)
 
 
 func test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos() -> void:  # AC-INV-034

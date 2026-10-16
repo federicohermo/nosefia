@@ -254,6 +254,10 @@ Lo que más se rompe:
   una línea en el scratch, se corren las suites que ejercen la regla, y los casos que salen rojos
   van a «Se escribe». En el #276, tres casos de `reposicion_manual_test.gd` afirmaban el corte
   sin nombrarlo, y aparecieron recién en la corrida del carril.
+- **Si el issue hace sonar un gesto que estaba mudo, el barrido busca quién escucha
+  `sonido_pedido` con una lista exacta y ejerce ese gesto.** Un caso puede afirmar el silencio
+  sin nombrar el evento nuevo. En el #452, `celular_en_el_almacen_test.gd` escribía una nota y
+  exigía un solo pedido, y quedó fuera de «Se escribe».
 - **Un criterio con «siempre», «nunca» o «ninguno» se prueba igual, aunque el issue no invierta
   ninguna regla.** El parche es la lectura literal del criterio. Si un caso de «Sólo lectura»
   sale rojo y afirma algo que los bordes del issue conservan, se acota el criterio: el caso no
