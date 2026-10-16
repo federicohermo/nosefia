@@ -130,6 +130,15 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 
 | Lo que apareció | Qué skill se corrige |
 |---|---|
+| un ID nuevo que otra rama publicada ya asigna a otro comportamiento | `to-spec` e `implement-batch` — traer contratos abiertos, cruzar BR/AC/OQ y reservar contra toda la historia remota |
+| fase de un diagnóstico inferida del final de stdout+stderr concatenados | `implement-feature` — preservar el registro cronológico y los deltas; contrastar causa y fixture sin inventar fase ni mecanismo |
+| glifos del guion que el paquete real muestra como cuadros ausentes | `to-issue` — medir fuente, vista previa y burbujas; declarar fallback, licencia y generador sin cambiar texto, orden ni tema compartido |
+| un contorno usado como soporte físico y también como reserva de mercadería | `to-issue` — clasificar consultas y máscaras antes de reemplazarlo; conservar colocación y movimiento posterior sin sostener cajas sobre reservas invisibles |
+| una tabla o detector que se tomó por geometría sin contrastar la malla | `to-issue` — medir nombres, chapas y niveles activos de manera independiente antes de fijar límites o reconstruir recursos |
+| arte posterior que difiere de una regla cerrada por el diseñador | `to-issue` — medir geometría e historia de la decisión, y consultar al dueño con alternativas concretas; no ratificar el contrato copiando la fuente |
+| un esquema visual convertido en exclusividad que el dibujo no pide | `to-issue` y `to-spec` — contrastar cada región antes de agrupar sectores entre muebles |
+| un producto sin exhibición que su extractor todavía busca por la tanda | `to-issue` — seguir también generadores de fuentes, miniaturas y validadores antes de cerrar límites |
+| un comando focal que sólo funciona desde otro directorio o con entorno omitido | `to-issue` — ejecutar literalmente cada verificación desde la raíz declarada |
 | un criterio que no se puede ver fallar | `to-spec` |
 | una entrega física sin destino de productos o ticket al vencer | `to-issue` y `to-spec` — distinguir venta de vencimiento y resolver cada objeto con el usuario |
 | una animación que confunde tasa del video con duración de los dibujos | `to-issue` y `to-spec` — verificar los PNG disponibles y registrar el ritmo decidido |
@@ -150,6 +159,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un issue que escribe a disco sin decir cómo lo aíslan los tests | `to-issue` — las suites que levantan la escena escriben la carpeta del usuario, y ningún gate lo ve |
 | un criterio de un issue que contradice un criterio `ratified` de otra capacidad | `to-issue` — el `rg` de los límites no buscó la regla en los specs vecinos |
 | varios carriles que pierden una vuelta con un comando compuesto en Bash | `implement-batch` — el preámbulo no dijo que el worktree los rechaza |
+| una vista resumida que omite una respuesta posterior de diseño | `implement-batch` — leer comentarios completos y contrastar issue entero, spec y datos antes de generar |
+| una segunda generación que pisa los archivos de la primera | `implement-feature` — preservar todas las salidas y probar la causa antes de corregir componentes, sin redondeos para ocultarla |
 | una ficha verde de Notion que se cayó del lote sin motivo escrito | `features-to-issues` — el reparto no se mostró entero |
 | un nodo del harness en verde sin haber ejercido nada | `implement-feature` — se leyó el color del nodo y no el conteo |
 | dos carriles que se pisan un archivo de scratch | `implement-batch` — el prompt no le dio un nombre propio |
@@ -179,6 +190,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un gesto que **deshace una obligatoria** sin que el issue diga qué pasa | `to-issue` — el cruce miró los criterios del gesto y no las tareas que su efecto toca |
 | un caso de escena **verde por suerte** después de que cambió el local | la regla de tests — el caso afirmaba el resultado y no su premisa |
 | un generador que **da vuelta lo que el artista hizo** | `implement-feature` — se probó el generador contra el issue y no contra el `.blend` del artista |
+| un collider generado **que ignora los modificadores del modelo** | `to-issue` e `implement-feature` — se cruzan malla cruda, evaluada y GLB real antes de escribir; se libera la lectura evaluada y ambos caminos deben regenerar la misma colisión sin alterar el arte |
 | un nombre que el issue borra **y que un carril en vuelo vuelve a usar** | `to-issue` — «Verificación» no llevaba el `rg` del nombre, y nadie lo corrió después del merge |
 | un test que afirma sobre **una escena entera que el issue escribe**, afuera de «Se escribe» | `to-issue` — los tests de la escena no se buscaron con `tests_de` ni `quien_instancia` |
 | un archivo nuevo **que el contrato implica y «Se escribe» no nombra** | `to-issue` — «Se escribe» se armó sólo con lo que ya existía |
@@ -204,7 +216,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una corrida que **leyó una versión distinta de la fuente actual** | `implement-batch` — el árbol se congela desde encolar hasta el resultado, incluida la espera y los rojos y verdes cortos |
 | un comando de un issue apilado **que cobra rutas de sus ancestros** | `to-issue` — el diff se compara contra la base explícita medida, no contra `staging` |
 | un hueco libre por rayos **que una malla sin collider tapa en pantalla** | `to-issue` — el encuadre cruza mallas, profundidades, proyección y capturas; los bordes físicos y los visibles se prueban aparte |
-| una captura **que ya no muestra el foco y la pose preparados** | `to-issue` — el fixture comprueba foco y pose dibujada al guardar, y el padre abre el PNG; un rayo anterior no certifica el cuadro final |
+| una captura **que ya no muestra el foco y la pose preparados** | `to-issue` e `implement-feature` — el fixture comprueba foco, pose dibujada y ojo fuera del espesor visual al guardar; el padre abre el PNG y separa posición de orden de instancia antes de atribuir causas |
 | un historial de reportes **que falla sólo al superar veinte corridas** | `implement-batch` — se usa `res://reports` para que gdUnit4 globalice la ruta antes de retirarlos, sin modificar addon ni retención |
 | un XML sin errores **que oculta un callback abortado o una fuga al desmontar** | `implement-feature` — se conserva la salida cruda también en verde y el fixture afirma la entrega válida y la ejecución del receptor |
 | un aviso demorado **que reemplaza un examen o cruza el cierre de la noche** | `implement-feature` — el caso se abre con la respuesta todavía en vuelo y afirma la prioridad de la interfaz y el descarte al cerrar |
@@ -216,10 +228,13 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una base **sin stderr que impide comparar el desmontaje** | `implement-feature` — se guardan ambos canales del subproceso también en la base; `godot.log` no sustituye esa salida |
 | un import frío de export **que retiene recursos de plugins del editor** | `implement-feature` — se identifican con verbose y se aísla sólo el editor en la copia externa; preset y juego permanecen idénticos, y el paquete real conserva sus chequeos estrictos |
 | una lectura del navegador **que altera la activación que intenta observar** | `implement-feature` — se usa CDP con userGesture false para observar y entradas físicas para actuar; la consola se conserva desde la carga |
+| una sonda interactiva que retiene la cola o prepara un guardado en una ruta supuesta | `implement-batch` — medir userdir en el paquete, acotar esperas y comprobar salida real del runner; investigar afuera y reencolar el control |
+| una decisión de diseño que espera detrás de completas largas | `implement-batch` — reservar y cerrar primero las sondas cortas que pueden abrirla, manteniendo FIFO para los turnos emitidos |
 | un fixture **que apaga el callback que actualiza el cursor** | `implement-feature` — se mantiene activa la traducción del control y se afirma Pointer Lock al abrir, cerrar, pausar y reanudar, sin atribuirle otros errores sin prueba |
 | un AC del contrato común **que queda sin dueño mientras su capacidad sigue draft** | `implement-batch` — antes de repartir se asigna cada AC nuevo a un issue y test permitido; el cierre contrasta esa lista completa, incluidos sus bordes, además de los criterios descartables de cada issue |
 | una precarga de un fixture **que retiene scripts durante el descubrimiento de tests** | `implement-feature` — se identifican recursos y fase con controles equivalentes, se carga el fixture dentro del caso sin perder aserciones y se repite la completa; `implement-batch` revisa el crudo definitivo antes de encolar la integrada |
 | una entrada nativa **que selecciona otra fila por la escala DPI** | `to-issue` — el driver declara consciencia DPI antes de consultar ventanas, cruza cliente y viewport y afirma la selección real sobre el HWND propio |
+| una rueda sintética **que deja fallar los clics siguientes** | `implement-feature` — el fixture completa pressed/released también para la rueda y compara un control que cambia sólo esa liberación antes de atribuir el fallo al producto o a las coordenadas |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 | un contrato que **exige compartir una selección pero vuelve a fabricarla** | `to-issue` — la ampliación actualiza premisa, criterios, firmas y límites juntos; declara un único dueño y pasa la misma instancia a cada consumidor |
 | un sorteo que **confunde capacidad total con cupo habilitado y debilita un AC** | `to-issue` — medir las invariantes de la tabla fija en reglas y tests; separar los cupos en las firmas y verificar la apertura sobre la geometría real |

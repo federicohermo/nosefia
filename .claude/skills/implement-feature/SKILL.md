@@ -100,6 +100,27 @@ En #369, un rayo directo encontraba la caja mientras la mira real todavía no la
 Esperá cuadros de física, comprobá el campo actualizado y ejercé la mira real. En una pila,
 probá puntos de las caras visibles: el centro puede estar tapado aunque otra cara sea accesible.
 
+**Una cámara válida también queda fuera del espesor visual del escenario.** La identidad de la
+cámara activa y un foco correcto no prueban esa condición: el rayo físico puede ignorar la cara
+que tapa la imagen. En #426, cinco capturas de Saladik pusieron el ojo entre las dos caras de una
+pared del GLB; otros escenarios usaban otra posición. Antes de atribuir la diferencia al orden
+de instancias o a la iluminación, cruzá la pose real con los triángulos visibles, guardá ese
+control y repetí el mismo escenario desde piso libre, conservando luz, GI y producción.
+
+**La entrada sintética completa también la liberación de cada botón, incluida la rueda.** En
+#430, un evento de rueda con `pressed=true` sin su pareja `pressed=false` dejaba fallar los
+clics posteriores sobre la pista y Volver. El control que añadió sólo esa liberación pasó
+ambas resoluciones con la misma fuente, coordenadas y ubicación del cursor. Conservá ambos
+resultados: no se atribuye el arreglo del fixture a `warp_mouse` ni a un cambio del producto.
+
+**La colisión generada se contrasta con la malla evaluada, no sólo con `objeto.data`.** Los
+modificadores forman parte de lo que se exporta. En #428, la góndola tenía 1392 triángulos
+crudos y 7280 después del bisel; una diferencia de altura de 233 µm provenía de ese modificador,
+no de la conversión de ejes. Leé la malla con `evaluated_get(depsgraph).to_mesh()`, calculá sus
+`loop_triangles` y liberala con `to_mesh_clear()` en `finally`. Antes de escribir, compará el
+volcado evaluado convertido a Godot con el GLB real y comprobá que ambos generadores produzcan
+la misma colisión. No se alteran los modificadores del artista para hacer coincidir los datos.
+
 **Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
 
 - **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan
@@ -162,6 +183,15 @@ externo `.github/scripts/verificar_dialogos_exportados.gd` con `--main-pack` des
 del export, además del recorrido de interacción. No des por resuelto un reporte del build
 porque la misma conversación funcione desde el checkout.
 
+**Una repetición del generador conserva cada salida antes de sobrescribirla.** Copiar y
+hashear todos los textos, recursos binarios y fuentes de cada pasada por separado, además del
+log. Un hash solo no recupera el archivo perdido ni prueba la causa de una diferencia. En
+#434, releer la escala de una matriz global descompuesta realimentaba errores entre pasadas:
+la sonda comparó el código anterior y el corregido sobre la misma fuente y conservó la escala
+local del artista, después de medir que los marcos heredados eran rígidos. No generalizar esa
+equivalencia a padres con escala o shear ni redondear salidas para ocultar la deriva. La prueba
+funcional de componentes no sustituye dos regeneraciones completas y su comparación estricta.
+
 ## Cuando lo que escribís es un gate sobre prosa
 
 Una parte de lo que este repo verifica no es código: es que un `.md` diga algo. Tres cosas se
@@ -214,6 +244,13 @@ La salida cruda incluye **stdout y stderr del subproceso**, también en la base 
 cambio. El archivo `godot.log` no los reemplaza: en el lote del 2026-10-10 omitió los avisos
 de recursos al salir que sí estaban en stderr. Sin ambos canales de la base no se puede
 atribuir un diagnóstico al cambio sólo porque su XML siga verde.
+
+**Concatenar stdout y stderr no conserva su cronología.** Un aviso al final de ese
+archivo puede haber ocurrido durante un caso, no al desmontar. Para atribuir fase o fixture,
+conservar además el registro cronológico y su contexto; no reemplaza los canales completos.
+En #425, tres rescates conservaban causa y cantidad pero cambiaban coordenadas: se guardaron
+los deltas y los casos concretos, sin borrarlos con una normalización amplia ni atribuirlos
+al azar o a una fase sin control equivalente.
 
 **La retención se identifica por recursos y por fase, no sólo por el contador.** En #374,
 el `preload` del guion en la suite nueva de dominio hacía que el descubrimiento completo
