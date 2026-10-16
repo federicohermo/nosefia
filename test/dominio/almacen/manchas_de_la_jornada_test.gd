@@ -47,7 +47,11 @@ const FICHA := {
 
 
 ## El jabón que borra ese tipo de mancha, sacado de las reglas y no copiado.
-static func _jabon_de(tipo: ReglasDeLaLimpieza.TipoDeMancha) -> StringName:
+static func _jabon_de(
+	tipo: ReglasDeLaLimpieza.TipoDeMancha, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
+) -> StringName:
+	if tipo == MOHO and jornada == AnomaliasDeLaJornada.JORNADA_SIN_AZUL:
+		return UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO)).id
 	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
 		if ReglasDeLaLimpieza.JABONES[jabon] == ReglasDeLaLimpieza.AGUA_QUE_BORRA[tipo]:
 			return jabon
@@ -58,7 +62,7 @@ static func _jabon_de(tipo: ReglasDeLaLimpieza.TipoDeMancha) -> StringName:
 static func _borrar(piso: PisoDelLocal, lugar: PisoDelLocal.Lugar) -> ReglasDeLaLimpieza.Resultado:
 	piso.usar(BALDE, INODORO)
 	piso.usar(BALDE, LAVATORIO)
-	piso.usar(_jabon_de(piso.mancha_de(lugar).tipo()), BALDE)
+	piso.usar(_jabon_de(piso.mancha_de(lugar).tipo(), piso.jornada()), BALDE)
 	piso.usar(MOPA, BALDE)
 	return piso.pasar(MOPA, lugar)
 
