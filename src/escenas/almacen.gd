@@ -244,6 +244,7 @@ func _ready() -> void:
 	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
+	_jugador.muebles_con_reserva = _muebles_con_contorno
 	_reposicion_manual.preparar()
 
 

@@ -377,6 +377,14 @@ func _mover(cuerpo: PhysicsBody3D, lugar: Transform3D) -> void:
 	if rigido != null:
 		rigido.linear_velocity = Vector3.ZERO
 		rigido.angular_velocity = Vector3.ZERO
+		# El aviso previo conserva el apoyo que abandona. Después del rescate,
+		# una caja ya quieta debe anotar el destino para la próxima cascada.
+		if (
+			rigido.freeze
+			and rigido.sleeping
+			and rigido.has_method(ReglasDeLosObjetos.METODO_QUEDARSE_QUIETA)
+		):
+			rigido.call(ReglasDeLosObjetos.METODO_QUEDARSE_QUIETA)
 	cuerpo.reset_physics_interpolation()
 
 
