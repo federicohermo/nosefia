@@ -65,6 +65,9 @@ const GUIA := "Guia"
 ## **Ningún apoyo está escrito acá.** Los mide el `.blend` y llegan en este recurso.
 @export var disposicion: DisposicionDeLaGondola
 
+## La raíz entrega sólo las góndolas: su hueco comercial no es soporte físico.
+var muebles_con_reserva: Array[PhysicsBody3D] = []
+
 var _unidades: Array[Node3D] = []
 ## Los casilleros de cada producto, en el orden de `Producto.Id` y, adentro, en el de su fila.
 var _casilleros: Array[Array] = []
@@ -167,9 +170,9 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 	var forma: CollisionShape3D = unidad.get_node("Forma")
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
-	# **Con el contorno del mueble además de lo que el producto choca.** El hueco de un estante es
-	# lugar libre, y ahí la mercadería no tiene cuerpo: el producto quedaba adentro de la góndola,
-	# encimado con ella y fuera de la vista. Medido: 10 de 75 soltadas alrededor de una góndola.
+	# El contacto mide el metal. La reserva de mercadería se pregunta aparte: el hueco
+	# comercial no tiene cuerpo y no puede volver a ser una plataforma invisible para cajas.
+	# Antes el contorno cumplía ambas funciones; 10 de 75 soltadas entraban sin esa reserva.
 	consulta.collision_mask = unidad.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	consulta.exclude = [unidad.get_rid(), jugador.get_rid()]
 	var espacio := get_world_3d().direct_space_state
@@ -181,9 +184,23 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 		# derecha ocupa otro volumen que el real: contesta libre donde el producto igual se
 		# mete en el panel, que es el caso que esta función existe para sacar.
 		consulta.transform = forma.global_transform
-		if espacio.intersect_shape(consulta, 1).is_empty():
+		if espacio.intersect_shape(consulta, 1).is_empty() and not _ocupa_una_reserva(forma):
 			return
 		unidad.global_position += atras * paso
+
+
+## Conserva orientación y escala de la unidad, sin añadir formas a la simulación.
+func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
+	var volumen := LimitesDeForma.de(forma.shape)
+	for cuerpo: PhysicsBody3D in muebles_con_reserva:
+		var malla := cuerpo.get_parent() as MeshInstance3D
+		if malla == null or malla.mesh == null:
+			continue
+		if ReservaDeLaGondola.se_superponen(
+			volumen, forma.global_transform, malla.get_aabb(), malla.global_transform
+		):
+			return true
+	return false
 
 
 func _agrupar_suelto(nodo: Node3D) -> void:
@@ -379,7 +396,8 @@ func despertar_lo_de_arriba(nodo: Node3D) -> void:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:
 		return
-	_despertar_sobre(caja, caja.apoyo_que_dejo())
+	var visitadas: Dictionary[RID, bool] = {}
+	_despertar_sobre(caja, caja.apoyo_que_dejo(), visitadas)
 
 
 ## Despierta lo apoyado sobre un lugar, y sigue hacia arriba desde cada caja que despierta.
@@ -390,9 +408,15 @@ func despertar_lo_de_arriba(nodo: Node3D) -> void:
 ## Lo que no es una caja sólo se despierta.
 ##
 ## Despertar de más no cuesta nada, y por eso no se comprueba si lo de arriba se iba a caer: si
-## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. La `freeze` que se mira
-## es el corte de la recursión: una caja ya despierta no se vuelve a visitar.
-func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
+## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. Una caja despierta puede
+## sostener otra ya congelada: se atraviesan ambas y los RID visitados cortan la recursión.
+func _despertar_sobre(
+	caja: CajaDelDeposito, lugar: Vector3, visitadas: Dictionary[RID, bool]
+) -> void:
+	var id := caja.get_rid()
+	if visitadas.has(id):
+		return
+	visitadas[id] = true
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var media := _media_caja(caja)
 	var consulta := PhysicsShapeQueryParameters3D.new()
@@ -412,9 +436,10 @@ func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
 		var caja_de_arriba := encima as CajaDelDeposito
 		if caja_de_arriba == null:
 			encima.sleeping = false
-		elif caja_de_arriba.freeze:
-			caja_de_arriba.soltarse()
-			_despertar_sobre(caja_de_arriba, caja_de_arriba.global_position)
+		else:
+			if caja_de_arriba.freeze:
+				caja_de_arriba.soltarse()
+			_despertar_sobre(caja_de_arriba, caja_de_arriba.global_position, visitadas)
 
 
 ## Deja la caja en el piso al lado del jugador. Devuelve si encontró dónde.

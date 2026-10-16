@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425 y bordes de GJ-52 (#428)
 ---
@@ -149,9 +149,7 @@ sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo m�
 CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
 el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
 horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
-que admite otro encima. Sólo las cajas contenedoras admiten otro encima. El borde de apoyo
-insuficiente de BR-PLY-040 es una excepción: la caja cae hasta un soporte real en lugar de
-quedar inmovilizada en el punto apuntado.
+que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
 
 SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
@@ -404,17 +402,19 @@ registradora, la ventanilla o el celular—, la pausa está abierta o la jornada
 referencia NO DEBE mostrar ninguna línea. Al reanudar, DEBE volver a armarse con lo que la mira
 enfoca y lo que se lleva.
 
-### BR-PLY-040 — Apoyo visible y caída desde un borde insuficiente
+### BR-PLY-040 — Apoyo visible en los bordes del baño y de la góndola
 
 CUANDO se suelta una caja sobre el borde superior gris de una división del baño, el sistema
 DEBE apoyar su base sobre ese borde visible, sin hundirla hasta la pared blanca ni atravesarlo.
-SI una caja queda en el apoyo insuficiente del borde de góndola documentado en
-[GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), ENTONCES el sistema DEBE
-dejarla perder ese apoyo y caer hasta otro soporte real, sin devolverla a la mano y conservándola
-recogible y fuera de sólidos. El reposo de BR-PLY-013 DEBE producirse después de la caída.
+CUANDO se suelta una caja hacia el borde de góndola documentado en
+[GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), el sistema DEBE acomodarla
+sobre metal visible, conservando la selección del apoyo según la mira, la mano vacía y el
+reposo estable de BR-PLY-013. La caja DEBE quedar recogible y fuera de sólidos.
+En ambos encuadres, el soporte físico DEBE corresponder al borde visible; NO DEBE aparecer
+una plataforma invisible bajo la caja. El sistema NO DEBE forzar la caída de una caja que
+quedó apoyada de forma estable sobre ese metal.
 Los apoyos válidos de piso, mostrador, pallet del depósito y otra caja DEBEN conservarse,
-incluida la caída en cascada al retirar el apoyo inferior. Un punto horizontal aislado NO DEBE
-bastar para inmovilizar la caja en el equilibrio rechazado. La regla general para decidir
+incluida la caída en cascada al retirar el apoyo inferior. La regla general para decidir
 otros apoyos parciales depende de OQ-PLY-004.
 
 ## Criterios de aceptación
@@ -1032,12 +1032,12 @@ GJ-52 CUANDO se suelta mirando su borde gris superior desde piso transitable ENT
 descansa sobre la cara superior visible, no sobre la pared blanca, y no atraviesa el borde.
 La comprobación cruza la base dibujada y la superficie física del mismo contacto.
 
-### AC-PLY-100 — El borde insuficiente deja caer *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-016)*
+### AC-PLY-100 — La cabecera acomoda la caja sobre metal visible *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
 
-DADO la caja en el apoyo parcial del segundo encuadre de GJ-52, con un soporte real libre
-debajo CUANDO se suelta por el gesto real y avanza la física ENTONCES abandona ese apoyo,
-desciende y termina en reposo sobre el soporte inferior, recogible y sin superposición.
-La mano queda vacía; ni inventario ni tareas cambian por la caída o por un rescate.
+DADO una caja chica y otra grande, por separado, y el segundo encuadre de GJ-52 CUANDO se
+suelta por el mismo gesto real y avanza la física ENTONCES la caja queda acomodada y estable
+sobre metal visible, con el contacto físico correspondiente, recogible y sin superposición.
+La mano queda vacía; ni inventario ni tareas cambian por el acomodo o por la recogida.
 
 ### AC-PLY-095 — Los apoyos válidos siguen estables *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-018)*
 

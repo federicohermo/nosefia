@@ -49,6 +49,9 @@ const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 ## él, cada cosa dice sólo su propio texto.
 var texto_contado: Callable
 
+## Reserva comercial de las tres góndolas, separada de sus apoyos físicos precisos.
+var muebles_con_reserva: Array[PhysicsBody3D] = []
+
 ## Se arma en la declaración y no en `_ready()` a propósito: así un test puede instanciar la
 ## escena sin entrarla al árbol y el control ya existe. Entrar la escena al árbol haría correr
 ## `_ready()`, que toca el cursor y conecta sistemas — dos cosas que en headless no significan nada.
@@ -1007,8 +1010,8 @@ func _dejar_al_lado(cuerpo: RigidBody3D) -> bool:
 	return false
 
 
-## Si lo soltado entra entero donde está, cuerpo del jugador incluido. Con el contorno de los
-## muebles: el hueco de un estante es lugar libre y no es un apoyo.
+## Si lo soltado entra entero donde está, cuerpo del jugador incluido. El hueco comercial
+## conserva su reserva lógica aunque los contornos físicos dejen ese aire libre.
 func _entra_entero(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) -> bool:
 	var espacio := get_world_3d().direct_space_state
 	for forma in formas:
@@ -1017,9 +1020,23 @@ func _entra_entero(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) -> bool
 		lugar.transform = forma.global_transform
 		lugar.collision_mask = cuerpo.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 		lugar.exclude = [cuerpo.get_rid()]
-		if not espacio.intersect_shape(lugar, 1).is_empty():
+		if not espacio.intersect_shape(lugar, 1).is_empty() or _ocupa_una_reserva(forma):
 			return false
 	return true
+
+
+## La forma completa conserva orientación y escala al consultar la reserva del mueble.
+func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
+	var volumen := LimitesDeForma.de(forma.shape)
+	for cuerpo: PhysicsBody3D in muebles_con_reserva:
+		var malla := cuerpo.get_parent() as MeshInstance3D
+		if malla == null or malla.mesh == null:
+			continue
+		if ReservaDeLaGondola.se_superponen(
+			volumen, forma.global_transform, malla.get_aabb(), malla.global_transform
+		):
+			return true
+	return false
 
 
 ## La misma orientación sin la inclinación: el rumbo en el piso, y arriba para arriba. Si el
