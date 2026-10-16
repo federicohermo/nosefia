@@ -36,6 +36,13 @@ func _pantalla() -> PantallaDelCelular:
 	return _almacen.get_node("Interfaz/PantallaDelCelular")
 
 
+func _burbujas() -> Array[Node]:
+	var lista: VBoxContainer = _pantalla().get("_mensajes")
+	return lista.get_children().filter(
+		func(hijo: Node) -> bool: return hijo.has_meta("indice_de_mensaje")
+	)
+
+
 func _jugador() -> Jugador:
 	return _almacen.get("_jugador")
 
@@ -224,10 +231,10 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 		assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.CHAT)
 		assert_int(_celular().bandeja().no_leidos(conversacion.interlocutor)).is_zero()
 		var visibles := _celular().bandeja().mensajes_de(conversacion.interlocutor)
-		assert_int(lista.get_child_count()).is_equal(visibles.size())
+		assert_int(_burbujas().size()).is_equal(visibles.size())
 		for entrada in visibles.size():
 			var mensaje := visibles[entrada]
-			var burbuja := lista.get_child(entrada)
+			var burbuja := _burbujas()[entrada]
 			var textos := burbuja.find_children("*", "RichTextLabel", true, false)
 			var fotografias := burbuja.find_children("*", "TextureButton", true, false)
 			assert_int(textos.size()).is_equal(0 if mensaje.texto.is_empty() else 1)
@@ -266,7 +273,7 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 			"Llegó este mensaje completo."
 		)
 	assert_array(conversaciones[0].mensajes).is_equal(originales)
-	assert_int(lista.get_child_count()).is_equal(cantidad_visible + 1)
+	assert_int(_burbujas().size()).is_equal(cantidad_visible + 1)
 	await get_tree().process_frame
 	await get_tree().process_frame
 
