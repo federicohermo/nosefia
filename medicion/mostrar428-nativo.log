@@ -1,0 +1,9 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+MOSTRAR428_INICIO MISMO_GESTO_V9_SIN_SOLTARSE_NI_POSE_V5
+REPRO_428_POSE malla=/root/Almacen/Estructura/gondolanueva2 piso=/root/Almacen/Estructura/SueloSolido pies=(4.151785, 0.107237, -5.050358) visible={ "malla": "/root/Almacen/Estructura/gondolanueva2", "punto": (4.151785, 1.996885, -3.751202), "normal": (0.0, 0.0, 1.0), "triangulo": 5464, "distancia": 1.31292593479156 }
+MOSTRAR428_PNG frontal camara=[X: (-1.0, 0.0, 0.0), Y: (0.0, 0.989513, -0.144447), Z: (0.0, -0.144447, -0.989513), O: (4.151785, 1.807237, -5.050358)] caja=[X: (-0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, -0.0), O: (4.037211, 2.316036, -3.669745)]
+MOSTRAR428_PNG lateral camara=[X: (-0.247764, 0.0, -0.96882), Y: (-0.449125, 0.886055, 0.114858), Z: (0.858429, 0.463579, -0.219533), O: (4.9, 2.5, -3.9)] caja=[X: (-0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, -0.0), O: (4.037211, 2.316036, -3.669745)]
+MOSTRAR428_PNG alta camara=[X: (0.111161, 0.0, -0.993802), Y: (-0.800377, 0.592775, -0.089525), Z: (0.589101, 0.805368, 0.065893), O: (4.9, 2.95, -3.7)] caja=[X: (-0.0, 0.0, -1.0), Y: (0.0, 1.0, 0.0), Z: (1.0, 0.0, -0.0), O: (4.037211, 2.316036, -3.669745)]
+MOSTRAR428_FINAL fallos=0 detalle=[]

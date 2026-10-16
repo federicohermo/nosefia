@@ -1,0 +1,14 @@
+{
+  "decision/ahora.png": {
+    "bytes": 1153111,
+    "sha256": "aa50082433f9a5b7ea08265a8474bdf53bfc1e707f678b80efc37095fac4f7bf"
+  },
+  "decision/antes.png": {
+    "bytes": 1076568,
+    "sha256": "b964ceebfb016245f0162da2d0ba6eb4d36e109a605701e8ef2464760e4397a1"
+  },
+  "README.md": {
+    "bytes": 628,
+    "sha256": "bd2e764b65fa14413c5b47038a96baf5650a1f9b09cee0490d6839b965bde1e1"
+  }
+}

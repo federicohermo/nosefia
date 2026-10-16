@@ -1,0 +1,62 @@
+{
+  "head": "0b143269795239f1c2ce89ed26dfc85411ec311e",
+  "binario": "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "origen": "entorno",
+  "timeout_total_s": 180,
+  "fases": [
+    {
+      "nombre": "import",
+      "pid_propio": 146792,
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        ".",
+        "--headless",
+        "--import",
+        "--quit"
+      ],
+      "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\mostrar428-01\\mostrar428-import.log",
+      "exit": 0,
+      "diagnosticos": []
+    },
+    {
+      "nombre": "nativo",
+      "pid_propio": 48824,
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        ".",
+        "--rendering-driver",
+        "opengl3",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--position",
+        "0,0",
+        "--script",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\mostrar428.gd",
+        "--",
+        "--salida=C:/Users/fede_/AppData/Local/Temp/nosefia-batch-425-435/428/mostrar428-01"
+      ],
+      "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\428\\mostrar428-01\\mostrar428-nativo.log",
+      "exit": 0,
+      "diagnosticos": []
+    }
+  ],
+  "png": {
+    "mostrar428-alta.png": {
+      "bytes": 1136352,
+      "sha256": "1137aac5ba2e2bfa47002228fa3715f90efd67cb2df633cd04af00434e6c3d78"
+    },
+    "mostrar428-frontal.png": {
+      "bytes": 1153142,
+      "sha256": "6b3bf99394df96c5ff1e0e26f6ad7c88bccc70290988736544cfe227fdcf0060"
+    },
+    "mostrar428-lateral.png": {
+      "bytes": 992138,
+      "sha256": "41a469de0f019b62d155b4dd9183e623d082e0f6d7afe6a3f63d65d9c25e89a4"
+    }
+  },
+  "final": "OK",
+  "duracion_s": 12.029304299969226
+}
