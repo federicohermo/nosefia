@@ -1,6 +1,6 @@
 {
   "rama": "capturas/430",
-  "cabeza_auditada": "0a936821453de6dae733f6c30c41a3a6e2c9e7be",
+  "cabeza_auditada": "d50b69b01e926f68d6601856c34ee167f0eb0de9",
   "archivos": {
     "completa/auditoria-crudo.json": {
       "bytes": 2176,
@@ -501,9 +501,9 @@
       "normalizacion_crlf": true
     },
     "README.md": {
-      "bytes": 5445,
-      "sha256": "28009bf00760d0b4118bb3dc8497b5b766af23adfb78423d3b5baafd8f4733c9",
-      "procedencia_local_sha256": "28009bf00760d0b4118bb3dc8497b5b766af23adfb78423d3b5baafd8f4733c9",
+      "bytes": 5439,
+      "sha256": "02012862f3b0ac10fe2a127f877f50a9fb8d5a4477a22a8bbba7609f7b7fc783",
+      "procedencia_local_sha256": "02012862f3b0ac10fe2a127f877f50a9fb8d5a4477a22a8bbba7609f7b7fc783",
       "normalizacion_crlf": false
     },
     "tdd/glifos-rojo.log": {
