@@ -99,13 +99,22 @@ contrato siguió pidiendo `sacar() -> bool` y una caja que guarda su propio núm
 Lo que aparezca se corrige ahora —el issue con `gh issue edit`, el contrato con `to-spec`— y no
 se reparte roto.
 
-**Cada AC añadido al contrato común tiene dueño antes de repartir.** El padre lo asigna a un
+**Cada AC nuevo o existente modificado tiene dueño antes de repartir.** El padre lo asigna a un
 issue y a un test dentro de sus límites, aunque la capacidad siga `draft` por otro carril.
 Al recibir las entregas contrasta esa lista completa, además de los criterios propios de cada
 issue: el gate no cobra todavía los AC de un `draft`. En el lote del 2026-10-10, #369 probaba
 el cierre de la jornada 3 con cuatro cumplidas, pero `AC-EMP-050` quedó sin cita ni los bordes
 de tres y dos cumplidas; la ratificación posterior de #374 recién mostró el hueco. Se amplió
 su issue entero antes de extender ese único caso, sin cambiar el dominio.
+
+Comparar los bloques completos de AC entre la base y la cabeza, además de contar IDs nuevos.
+Una cita heredada no demuestra el delta de una regla modificada: asignarle una prueba que
+ejerza ese cambio y conservar sus regresiones pertinentes. En el lote 429–444, el cruce encontró
+54 AC nuevos y 11 modificados; contar sólo los nuevos omitía las excepciones de compradores
+de jornada 2 en AC-CTR-001/041. La matriz separa propuesta de prueba y evidencia ya ejecutada.
+Una sonda bajo `.github/scripts/` tampoco aporta por sí sola una cita al gate: éste lee `test/`
+y `.claude/scripts/tests/`. El caso funcional citado y la medición del paquete real se
+complementan; verificar recursos fuente no acredita su exportación.
 
 **El checker cruza también las ramas de contratos publicadas que todavía no aterrizaron.**
 Traer sus cabezas y comparar BR, AC y OQ por ID y significado contra el contrato del lote.
