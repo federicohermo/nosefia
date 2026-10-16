@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const CIERRE := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 var _almacen: Node3D
@@ -23,6 +24,8 @@ func after_test() -> void:
 func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
 	add_child(_almacen)
+	AperturaConLugar.abrir_con_semilla(_almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(_almacen)
 	_almacen.get("_jugador").set_process(false)
 	_almacen.get("_jugador").set_physics_process(false)
 

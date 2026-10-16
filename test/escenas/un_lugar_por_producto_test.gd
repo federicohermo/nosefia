@@ -13,6 +13,14 @@ const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 ## Hasta dónde se busca, delante de una unidad, un lugar donde el jugador entre parado, en
 ## metros. El cuerpo del jugador no pasa del contorno del mueble, y un zócalo hondo asoma por
 ## delante de lo de arriba: el lugar aparece antes de cruzar el pasillo.
+const FALTANTES_DE_PRUEBA: Dictionary[Producto.Id, int] = {
+	Producto.Id.ACTRONCITO: 4,
+	Producto.Id.CORACOLA: 5,
+	Producto.Id.MAROLINI: 2,
+	Producto.Id.PRONGLES: 8,
+	Producto.Id.LAYSNTT: 4
+}
+
 const HASTA_EL_PASILLO := 1.5
 
 ## De a cuánto se avanza buscando ese lugar, en metros.
@@ -26,6 +34,8 @@ const HOLGURA_DEL_PISO := 0.02
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
+	AperturaConLugar.abrir_con_faltantes(almacen, FALTANTES_DE_PRUEBA)
 	almacen.get("_jugador").set_physics_process(false)
 	return almacen
 
@@ -40,10 +50,7 @@ func _cupo(almacen: Node3D, producto: Producto) -> int:
 
 ## Lo que la jornada 1 hace faltar de ese producto, que es con lo que abre el local armado.
 func _faltante(almacen: Node3D, producto: Producto) -> int:
-	var pedido: int = Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA).get(
-		producto.id, 0
-	)
-	return mini(pedido, _cupo(almacen, producto))
+	return mini(FALTANTES_DE_PRUEBA.get(producto.id, 0), _cupo(almacen, producto))
 
 
 ## Una copia del bloque principal, en el mundo.
@@ -447,7 +454,7 @@ func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
 
 
 ## La apertura deja los huecos pedidos hasta el cupo real que tiene cada fila del modelo.
-func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC-STK-004
+func test_la_apertura_fija_dibuja_sus_faltantes() -> void:  # AC-STK-004
 	var almacen := _almacen()
 	var estante := (almacen.get("_repositor") as Repositor).estante()
 	var disposicion := _disposicion(almacen)

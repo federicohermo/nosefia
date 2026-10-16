@@ -117,6 +117,14 @@ func casilleros() -> Dictionary[Producto.Id, int]:
 	return por_producto
 
 
+## Sólo la fila principal: las guías conservan sus casilleros y abren completas.
+func casilleros_reponibles() -> Dictionary[Producto.Id, int]:
+	var por_producto: Dictionary[Producto.Id, int] = {}
+	for producto in Catalogo.todos():
+		por_producto[producto.id] = disposicion.filas_de_adelante[producto.id]
+	return por_producto
+
+
 func preparar() -> void:
 	_desenfoque = DesenfoqueDeReferencias.new()
 	add_child(_desenfoque)
