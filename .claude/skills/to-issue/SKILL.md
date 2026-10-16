@@ -74,6 +74,15 @@ los triángulos de la góndola y explicaba 233 µm de diferencia de altura: no e
 ejes. La lectura evaluada se libera al terminar y ambos caminos se prueban por idempotencia,
 sin quitar modificadores ni modificar el arte para hacer coincidir los números.
 
+**Un contorno puede reservar ocupación además de representar contacto físico.** Antes de
+reemplazarlo por una geometría más precisa, clasificar cada consulta y máscara que lo usa:
+apoyo, locomoción, rechazo de colocación y movimiento posterior. En #428, el contorno lleno
+también impedía que unidades sueltas entraran entre mercadería sin cuerpo; los convexos del
+metal corregían el apoyo de cajas, pero abrían esa regresión. Conservar ambos comportamientos
+sin convertir la reserva lógica en una plataforma que sostenga cajas. Declarar los lectores
+afectados en los límites y medir tanto el instante de soltar como la caída o rodadura posterior;
+una consulta de metal libre no demuestra que el lugar esté disponible para el objeto.
+
 **La captura verifica el foco y la pose dibujada en el cuadro que guarda.** Preparar la cámara
 y comprobar un rayo unos cuadros antes no basta: entradas o interpolación pueden cambiar el
 encuadre. El fixture conserva la pose preparada, comprueba también la pose interpolada y el
