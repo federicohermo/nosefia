@@ -324,3 +324,21 @@ func test_destruir_el_cuerpo_antes_de_revisar_reposo_no_deja_callback_invalido()
 	for cuadro in 3:
 		await get_tree().physics_frame
 	assert_array(red.rescates).is_empty()
+
+
+func test_rescatar_una_caja_quieta_anota_el_apoyo_nuevo_para_la_cascada() -> void:  # AC-PLY-095
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var escena := load("res://src/escenas/objetos/caja_de_productos.tscn") as PackedScene
+	var caja := escena.instantiate() as RigidBody3D
+	red.get_parent().add_child(caja)
+	caja.global_position = CONTRA_LA_PARED
+	caja.call("quedarse_quieta")
+	var anterior: Vector3 = caja.call("apoyo_que_dejo")
+	await get_tree().physics_frame
+	red.revisar(caja)
+	assert_int(red.rescates.size()).is_equal(1)
+	assert_bool(caja.freeze and caja.sleeping).is_true()
+	assert_vector(caja.global_position).is_not_equal(anterior)
+	var anotado: Vector3 = caja.call("apoyo_que_dejo")
+	assert_vector(anotado).is_equal(caja.global_position)
