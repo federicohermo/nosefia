@@ -28,7 +28,7 @@ reescriben como reglas y criterios de la capacidad, sin nada propio de esa entre
   **IDs emitidos en continuación**, y **los existentes no se renumeran ni se reescriben** salvo
   que la entrevista haya resuelto explícitamente cambiarlos. El ID es la dirección: los issues y
   los tests apuntan ahí. **La continuación sale del más alto que tuvo el spec**, borrados
-  incluidos: si se borró el último, `git log -p -- <spec>` lo muestra.
+  incluidos: si se borró el último, `git log --all -p -- <spec>` lo muestra.
 - **Borrar** (la funcionalidad se quita del juego): el spec se borra **en su propio commit**, y
   en la misma rama se borran el código y los tests que lo citaban. La historia queda en git.
   Si otra capacidad dependía de ésta, su spec se actualiza en la misma corrida.
@@ -42,10 +42,26 @@ continuación del último que ve, y las dos emiten el mismo. El gate de specs ve
 recién después del merge, y no ve qué test quedó citando un criterio ajeno. Hay dos salidas:
 
 - **Repartí los IDs nuevos entre los dos antes de abrir las ramas.**
-- **Escribilos en orden:** el segundo, desde `staging` con la rama del primero ya mergeada.
+- **Escribilos en orden:** el segundo, desde una base que ya contenga la rama del primero.
+
+**La reserva incluye las ramas publicadas de otros lotes que modifican la misma capacidad.**
+Antes de emitir IDs, traer las referencias y cruzar los contratos y su historia, incluidos
+los IDs retirados. El máximo del checkout o de staging puede estar atrasado.
+Si dos emisiones existentes significan cosas distintas, conservar la asignación anterior y
+dar al delta posterior un ID libre. Actualizar sus issues, tests y referencias sin reemplazar
+globalmente el identificador. En #429–444, las colisiones STK y CTR aparecieron al reunir
+contratos de sesiones que habían trabajado en paralelo.
 
 Si uno de los dos no emite IDs nuevos, como el que sólo borra, no hace falta repartir. Si no
 comparten ningún spec, escribilos uno detrás del otro.
+
+**El espacio de IDs incluye las ramas publicadas, no sólo la base del checkout.** Traer las
+ramas de contratos abiertas y comparar los BR, AC y OQ nuevos de cada capacidad antes de
+emitir números. El máximo sale de `git log --all -p -- <spec>`, también para IDs retirados;
+comparar además el significado de los IDs coincidentes. En el lote 425–435, tres contratos
+publicados sobre staging asignaron los mismos números a ruteo, apoyos, pistas, limpieza,
+sectores y avisos. Se conservó la asignación publicada primero y se reasignaron sólo las
+familias en colisión, actualizando referencias, issues y citas sin cambiar el comportamiento.
 
 ## Qué NO necesita tocar un spec
 
@@ -86,6 +102,15 @@ rg --no-ignore -n "AC-XXX" specs/ test/         # si ese ID ya se usó
   jornada. El catálogo de tipos posibles no dice cuáles se exigen en una apertura.
 - **El GDD manda sobre el código.** Si el GDD y el código difieren en un valor, la regla dice
   lo que dice el GDD y el código está en falta. Eso es el hallazgo.
+- **Un gesto universal se cruza con cada modo y jornada que otra regla conserva.** Delimitar
+  su alcance antes de escribir DEBE o NO DEBE, también contra contratos draft. En #429,
+  prohibir cualquier acceso en el hueco contradecía el cobro genérico de J3–5, que no tiene
+  figura. La interacción directa corresponde a atención física; el recorrido anterior
+  conserva una consulta de acceso sin barrera. No inventar arte para resolver esa contradicción.
+- **Una tabla de sectores se contrasta con cada región del esquema visual.** No convertir una
+  agrupación informal en exclusividad entre muebles: en #434, snacks dulces compartía media
+  cara de la primera isla con cereales y el contrato los había separado. Recorrer las regiones,
+  contar identidades y conservar las excepciones explícitas antes de escribir DEBE o NO DEBE.
 - **Un hueco es una `OQ-<COD>-###`**, con por qué sigue abierta, quién la decide y qué bloquea.
   Nunca un valor inventado.
 - **Lo que el motor soporta se mide en el juego, no en el editor.** Son dos procesos de Godot y
