@@ -221,6 +221,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una precarga de un fixture **que retiene scripts durante el descubrimiento de tests** | `implement-feature` — se identifican recursos y fase con controles equivalentes, se carga el fixture dentro del caso sin perder aserciones y se repite la completa; `implement-batch` revisa el crudo definitivo antes de encolar la integrada |
 | una entrada nativa **que selecciona otra fila por la escala DPI** | `to-issue` — el driver declara consciencia DPI antes de consultar ventanas, cruza cliente y viewport y afirma la selección real sobre el HWND propio |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
+| un contrato que **exige compartir una selección pero vuelve a fabricarla** | `to-issue` — la ampliación actualiza premisa, criterios, firmas y límites juntos; declara un único dueño y pasa la misma instancia a cada consumidor |
+| un sorteo que **confunde capacidad total con cupo habilitado y debilita un AC** | `to-issue` — medir las invariantes de la tabla fija en reglas y tests; separar los cupos en las firmas y verificar la apertura sobre la geometría real |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
