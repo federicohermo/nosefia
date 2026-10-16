@@ -924,3 +924,18 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
   - Decide: el dueño del repo con game design y arte.
   - Bloquea: cambiar niveles, alturas o qué estante es reponible a partir de esa frase;
     no bloquea los sectores ni la excepción de Duronga de BR-STK-043 y BR-STK-044.
+
+- **OQ-STK-008 — ¿Qué excepciones de una fila rigen en el nuevo reparto por sectores?**
+  - Por qué sigue abierta: BR-STK-025 conserva los cinco productos aprobados —Actroncito,
+    Cosa de Maní, Prongles, Flin Puf y Burbaloo—, pero el arte posterior usa Cosa de Maní,
+    Flin Puf, Burbaloo, Marranos y Poético. El encaje medido del nuevo reparto necesita una
+    fila en Marranos y Poético, tanto en su principal como en sus fijas, y una fila sólo en
+    la principal de Amargadito; su fija admite y conserva dos. Las dos opciones viables son
+    conservar los cinco aprobados y añadir Marranos y Poético globalmente, o seguir los
+    cinco del arte posterior y devolver Actroncito y Prongles a dos filas en todas sus
+    tandas. Ambas conservan la excepción de Amargadito sólo principal y su fija doble.
+    La medición no decide cuál lista debe regir; ninguna opción se aplica por defecto.
+  - Decide: el dueño del repo.
+  - Bloquea: regenerar y entregar el nuevo reparto de #434 hasta recibir la elección y
+    actualizar BR-STK-025 y sus criterios. No bloquea la documentación de la pregunta ni
+    la implementación independiente de esa elección.
