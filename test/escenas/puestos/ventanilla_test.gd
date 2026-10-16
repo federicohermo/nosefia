@@ -269,6 +269,9 @@ func test_encuadra_y_vuelve_en_dos_aspectos() -> void:  # AC-PLY-058, AC-PLY-059
 		var giro_antes := giro.transform
 		var angulos := Vector2(control.yaw(), control.pitch())
 		var ventanilla: VentanillaQueSeVe = almacen.get_node("Estructura/Ventanilla")
+		assert_object(ventanilla.get_node_or_null("Vidrio")).is_null()
+		assert_int(ventanilla.collision_layer).is_zero()
+		assert_bool(ventanilla.acceso_al_cobro.disabled).is_true()
 		ventanilla.abrir()
 		for _cuadro in 8:
 			await get_tree().process_frame
