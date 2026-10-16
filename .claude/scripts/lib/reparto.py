@@ -18,8 +18,8 @@ Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue 
 - un estante de lado lleva dos tandas, mitad y mitad, o una sola principal que lo ocupa
   entero;
 - los destinos y sus productos siguen los sectores del mapa aprobado;
-- Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo van en una sola fila: su tanda con
-  casilleros es toda de casilleros;
+- Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético llevan una fila en todas sus tandas;
+  Amargadito sólo en la principal. Actroncito y Prongles conservan sus dos hileras;
 - la heladera lleva lo que se vende frío: cada uno se repone en una sola tanda, y lo que
   repite para llenar una bandeja es fijo;
 
@@ -154,13 +154,13 @@ DESTINOS = {
 }
 
 
-#: Lo que va en una sola fila, toda de casilleros. Dos filas de Actroncito o de Cosa de Maní
-#: piden un estante más hondo que cualquier otro producto, y la góndola crecía para ellos: con
-#: Actroncito en el zócalo, una del medio medía 54 cm más que la otra. Medido el 2026-09-29:
-#: Actroncito mide 0,395 de fondo y Cosa de Maní 0,340. Las Prongles van en una fila para que su
-#: estante dé los casilleros que una jornada les hace faltar. Flin Puf y Burbaloo llevan una
-#: fila por decisión del usuario al revisar el reparto el 2026-10-02; sus tandas fijas se conservan.
-DE_UNA_FILA = ("ACTRONCITO", "COSA_DE_MANI", "PRONGLES", "FLINPUF", "BURBALOO")
+#: Las cinco excepciones globales del arte vigente, confirmadas para #434. Actroncito y
+#: Prongles conservan las dos hileras que ya tenían: se corrige la lista antigua, no su arte.
+DE_UNA_FILA = ("COSA_DE_MANI", "FLINPUF", "BURBALOO", "MARRANOS", "POETICO")
+
+#: La cabecera admite una fila en la principal de Amargadito y dos en su referencia inferior.
+#: Separarla evita que una excepción global reduzca también esa fija viable.
+PRINCIPALES_DE_UNA_FILA = ("AMARGADITO",)
 
 
 @dataclass(frozen=True)
@@ -175,11 +175,19 @@ class Tanda:
     def __post_init__(self) -> None:
         if self.filas is not None and (not self.fija or self.filas not in (1, 2)):
             raise ValueError("sólo una tanda fija puede declarar una o dos filas")
+        if self.producto in DE_UNA_FILA and self.filas == 2:
+            raise ValueError("la excepción global de una fila también rige las tandas fijas")
 
     @property
     def cantidad_de_filas(self) -> int:
-        """La regla de la tanda reponible y el encaje explícito de una referencia fija."""
-        return self.filas if self.filas is not None else (1 if self.producto in DE_UNA_FILA else 2)
+        """La excepción principal no cambia sus fijas; una fija puede declarar su encaje."""
+        if self.filas is not None:
+            return self.filas
+        if self.producto in DE_UNA_FILA or (
+            not self.fija and self.producto in PRINCIPALES_DE_UNA_FILA
+        ):
+            return 1
+        return 2
 
 
 def _p(clave: str) -> Tanda:
@@ -209,7 +217,7 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "A.sur.2": (_p("MALBARDO"),),
     "A.sur.1": (_p("AMARGADITO"),),
     "A.sur.0": (_f("AMARGADITO"),),
-    "A.norte.3": (_f("OAAAA"),),
+    "A.norte.3": (_f("OAAAA", filas=1),),
     "A.norte.2": (_p("OAAAA"),),
     "A.norte.1": (_p("TERMINATOR"),),
     "A.norte.0": (_f("TERMINATOR"),),
