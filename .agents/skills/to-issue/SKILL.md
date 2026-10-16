@@ -48,6 +48,20 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Un requisito al cierre se mide contra el orden de sus señales y lectores.** Probar también
+un salto desde apertura hasta cierre en un único avance, y la repetición sin eventos nuevos.
+En #366, registrar pasó a depender de compras cerradas, pero la computadora revisaba antes
+de que la agenda venciera a los compradores. El plan debe incluir al traductor y su espejo
+si ese orden impide el criterio; no alcanza con cambiar el predicado de dominio.
+
+**Una rama con contrato preparado también se mide por su diff.** Cruzar los archivos de sus
+commits contra «Se escribe», incluida la documentación de responsabilidades que el contrato
+actualizó. En #366, el contrato ya traía `docs/architecture/capacidades.md`, pero el plan sólo
+nombraba los specs. El issue debe declarar ese delta completo antes de implementar sobre él.
+Aplicar también las reglas y controles estáticos a ese delta: un commit preparado no equivale
+a un commit validado. En la misma rama, una oración heredada de 28 palabras hizo fallar el
+harness recién en la primera completa; el límite documental ya era de 25.
+
 **Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
 reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
 acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
@@ -205,6 +219,12 @@ Lo que más se rompe:
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
   comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
   mintiendo, y el implementador no lo puede tocar.
+- **Renombrar propiedades de un recurso incluye las sondas externas del paquete.** El barrido
+  de lectores alcanza `.github/scripts/`, además de `src/`, `test/`, `assets/` y el harness;
+  busca también claves leídas con `get()` y textos esperados. En #365, la sonda exportada
+  seguía buscando `martin`, `tiago` y dos paquetes de Zucarachas, aunque el juego ya usaba
+  Tin y Tia. Sus claves, aserciones y mensaje final entran en «Se escribe» antes de implementar,
+  y la verificación exige ejercerla contra el paquete real fuera del proyecto fuente.
 - **Si el issue borra un nombre, «Verificación» lleva el `rg` que lo prueba**: `rg -i <nombre>
   src test specs docs .claude` da cero. El carril lo corre también después de mergear otra
   rama, porque un carril en vuelo puede sumarle un lector. En el #266, un caso de #176, escrito
