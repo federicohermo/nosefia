@@ -183,6 +183,15 @@ externo `.github/scripts/verificar_dialogos_exportados.gd` con `--main-pack` des
 del export, además del recorrido de interacción. No des por resuelto un reporte del build
 porque la misma conversación funcione desde el checkout.
 
+**Una repetición del generador conserva cada salida antes de sobrescribirla.** Copiar y
+hashear todos los textos, recursos binarios y fuentes de cada pasada por separado, además del
+log. Un hash solo no recupera el archivo perdido ni prueba la causa de una diferencia. En
+#434, releer la escala de una matriz global descompuesta realimentaba errores entre pasadas:
+la sonda comparó el código anterior y el corregido sobre la misma fuente y conservó la escala
+local del artista, después de medir que los marcos heredados eran rígidos. No generalizar esa
+equivalencia a padres con escala o shear ni redondear salidas para ocultar la deriva. La prueba
+funcional de componentes no sustituye dos regeneraciones completas y su comparación estricta.
+
 ## Cuando lo que escribís es un gate sobre prosa
 
 Una parte de lo que este repo verifica no es código: es que un `.md` diga algo. Tres cosas se

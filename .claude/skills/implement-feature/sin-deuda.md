@@ -159,6 +159,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un issue que escribe a disco sin decir cómo lo aíslan los tests | `to-issue` — las suites que levantan la escena escriben la carpeta del usuario, y ningún gate lo ve |
 | un criterio de un issue que contradice un criterio `ratified` de otra capacidad | `to-issue` — el `rg` de los límites no buscó la regla en los specs vecinos |
 | varios carriles que pierden una vuelta con un comando compuesto en Bash | `implement-batch` — el preámbulo no dijo que el worktree los rechaza |
+| una vista resumida que omite una respuesta posterior de diseño | `implement-batch` — leer comentarios completos y contrastar issue entero, spec y datos antes de generar |
+| una segunda generación que pisa los archivos de la primera | `implement-feature` — preservar todas las salidas y probar la causa antes de corregir componentes, sin redondeos para ocultarla |
 | una ficha verde de Notion que se cayó del lote sin motivo escrito | `features-to-issues` — el reparto no se mostró entero |
 | un nodo del harness en verde sin haber ejercido nada | `implement-feature` — se leyó el color del nodo y no el conteo |
 | dos carriles que se pisan un archivo de scratch | `implement-batch` — el prompt no le dio un nombre propio |
