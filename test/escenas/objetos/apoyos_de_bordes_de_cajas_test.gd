@@ -270,7 +270,8 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
 	assert_dict(_estado_del_local(almacen)).is_equal(antes)
-	await _mirar_desde_el_piso(almacen, caja, final, frente * 1.2)
+	# La caja se acomoda hacia el metal: recogerla no mete el cuerpo debajo del mueble.
+	await _mirar_desde_el_piso(almacen, caja, final, objetivo + frente * 1.2 - final)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.call("_leer_la_mira")
 	assert_object(jugador.get("_enfocado")).is_same(caja)
