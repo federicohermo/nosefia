@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: draft
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y ficha detallada de Duronga contrastados el 2026-10-15 (#434)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; decisiones de #425; Mapa de góndolas y ficha detallada de Duronga contrastados el 2026-10-15 (#434); decisión del dueño de #434: Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente
 ---
 
 # Capacidad: la mercadería del almacén
@@ -184,16 +184,21 @@ agarra y se repone. Los demás estantes —el de arriba y el zócalo, tanto de u
 como de una cabecera— DEBEN llevar sólo tandas fijas, que repiten un producto del local.
 En una heladera, cualquier bandeja puede llevar la tanda reponible o una tanda fija.
 
-### BR-STK-025 — La tanda tiene dos filas, o una según el reparto aprobado
+### BR-STK-025 — Las filas corresponden a cada tanda aprobada
 
-La tanda reponible de cada producto exhibido DEBE tener dos filas, una detrás de la otra. Cada lugar
-de la fila de adelante DEBE ser un casillero del producto, y ninguno de la fila de atrás. La fila
-de atrás DEBE verse entera desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la
-que dice qué va ahí.
+Cada tanda principal o fija de un producto exhibido DEBE tener dos filas, una detrás de la
+otra, salvo las excepciones siguientes. Cada lugar de la fila de adelante DEBE ser un
+casillero del producto, y ninguno de la fila de atrás. La fila de atrás DEBE verse entera
+desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la que dice qué va ahí.
 
-Las tandas de Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo DEBEN tener una sola fila,
-según el reparto aprobado. Cada lugar de su tanda reponible DEBE ser un casillero, y la fila de
-adelante de sus tandas fijas también (BR-STK-024). Esas tandas no tienen fila de atrás.
+Todas las tandas de Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético DEBEN tener una sola
+fila. La tanda principal de Amargadito DEBE tener una fila y sus tandas fijas dos. La tanda
+fija inferior de Fernet God y la tanda fija superior de Oaaaa DEBEN tener una fila; sus
+principales DEBEN tener dos. Las demás tandas DEBEN tener dos filas, incluidas las
+principales y fijas de Actroncito y Prongles, que conservan las dos hileras del arte vigente.
+
+Cada lugar de una tanda de una fila DEBE ser un casillero, sea principal o fija; esa tanda
+NO DEBE tener fila posterior. La cantidad de filas se decide por tanda, no sólo por producto.
 El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mismo.
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
@@ -554,23 +559,34 @@ llevan sólo tandas fijas y los niveles 1 y 2 sólo tandas reponibles, como en e
 DADO cualquier producto exhibido en la mano CUANDO el jugador se para en el pasillo frente a
 su tanda ENTONCES la mira alcanza su casillero y el producto se coloca.
 
-### AC-STK-030 — Dos filas, o una, y el cupo adelante *(verifica BR-STK-025)*
+### AC-STK-030 — Filas por tanda y casilleros adelante *(verifica BR-STK-025)*
 
-DADO la tanda reponible de cualquier producto, salvo Actroncito, Cosa de Maní, Prongles,
-Flin Puf y Burbaloo,
-ENTONCES tiene dos filas, una detrás de la otra; la de adelante es la más cercana al pasillo, y
-cada uno de sus lugares es un casillero: tiene tantos como el cupo del producto. DADO la tanda
-de Actroncito, la de Cosa de Maní, la de Prongles, la de Flin Puf y la de Burbaloo ENTONCES cada
-una tiene una sola fila, y
-tantas unidades como el cupo de su producto.
+DADO cada tanda principal y fija del local ENTONCES sus filas coinciden con esta tabla:
 
-### AC-STK-031 — La fila de atrás, entera toda la noche *(verifica BR-STK-025)*
+| Producto | Principal | Fijas |
+|---|---|---|
+| Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético | 1 | 1 |
+| Amargadito | 1 | 2 |
+| Fernet God | 2 | 1 en la inferior; 2 en cualquier otra |
+| Oaaaa | 2 | 1 en la superior; 2 en cualquier otra |
+| Actroncito, Prongles y los demás productos exhibidos | 2 | 2 |
 
-DADO una jornada que se abre ENTONCES de cada producto de dos filas se ve entera la fila de
-atrás, y la de adelante completa salvo sus faltantes. CUANDO se repone lo que falta ENTONCES la
-fila de adelante queda completa y la de atrás no cambió. DADO un producto de una sola fila
-ENTONCES no se ve ninguna unidad suya detrás de sus casilleros, y con todos sus casilleros vacíos
-no se ve ninguna unidad de su tanda.
+La fila de adelante es la más cercana al pasillo y cada lugar suyo es un casillero del
+producto. La fila de atrás, cuando existe, no tiene casilleros. El cupo suma sólo los lugares
+frontales de las tandas del producto: una copia posterior no agrega un casillero.
+
+### AC-STK-031 — La fila de atrás de cada tanda permanece entera *(verifica BR-STK-025)*
+
+DADO una jornada que se abre ENTONCES cada tanda de dos filas muestra entera su fila de
+atrás y su fila delantera completa salvo los faltantes declarados. CUANDO se agarra o repone
+una unidad de delante ENTONCES sólo cambia ese casillero y la fila de atrás no cambió ni se
+puede agarrar. DADO una tanda de una fila ENTONCES no tiene unidades detrás de sus
+casilleros; al vaciar todos sus casilleros no queda ninguna unidad de esa tanda.
+
+DADO Amargadito, Fernet God y Oaaaa ENTONCES la comprobación distingue sus tandas principales
+de sus referencias fijas según AC-STK-030: una tanda simple no elimina la fila posterior de
+otra tanda doble del mismo producto. DADO Actroncito y Prongles ENTONCES sus tandas
+principales y fijas conservan ambas filas.
 
 ### AC-STK-032 — Una caja entera alcanza para el faltante más grande *(verifica BR-STK-004)*
 
@@ -924,18 +940,3 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
   - Decide: el dueño del repo con game design y arte.
   - Bloquea: cambiar niveles, alturas o qué estante es reponible a partir de esa frase;
     no bloquea los sectores ni la excepción de Duronga de BR-STK-043 y BR-STK-044.
-
-- **OQ-STK-008 — ¿Qué excepciones de una fila rigen en el nuevo reparto por sectores?**
-  - Por qué sigue abierta: BR-STK-025 conserva los cinco productos aprobados —Actroncito,
-    Cosa de Maní, Prongles, Flin Puf y Burbaloo—, pero el arte posterior usa Cosa de Maní,
-    Flin Puf, Burbaloo, Marranos y Poético. El encaje medido del nuevo reparto necesita una
-    fila en Marranos y Poético, tanto en su principal como en sus fijas, y una fila sólo en
-    la principal de Amargadito; su fija admite y conserva dos. Las dos opciones viables son
-    conservar los cinco aprobados y añadir Marranos y Poético globalmente, o seguir los
-    cinco del arte posterior y devolver Actroncito y Prongles a dos filas en todas sus
-    tandas. Ambas conservan la excepción de Amargadito sólo principal y su fija doble.
-    La medición no decide cuál lista debe regir; ninguna opción se aplica por defecto.
-  - Decide: el dueño del repo.
-  - Bloquea: regenerar y entregar el nuevo reparto de #434 hasta recibir la elección y
-    actualizar BR-STK-025 y sus criterios. No bloquea la documentación de la pregunta ni
-    la implementación independiente de esa elección.
