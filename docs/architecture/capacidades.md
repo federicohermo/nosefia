@@ -95,12 +95,10 @@ Cuatro pares se confunden seguido, y cada uno tiene su regla escrita en los dos 
 
 - **`counter-service` y `store-stock`.** Cobrar es de la ventanilla; cuántas unidades hay y dónde
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
-  En la primera noche, el contrato establece que la ventanilla recibe unidades físicas y la
-  mercadería las retira una sola vez al completar la venta. Si la compra vence, siguen
-  registradas afuera de su caja. Quedan como unidades sueltas en el piso interior frente a la
-  ventanilla; el ticket aceptado se descarta. Registrar espera a que ambas compras terminen,
-  vendidas o vencidas,
-  y compara la planilla con las ventas completas, independientemente de cumplir atención.
+  En la primera noche, la ventanilla recibe unidades físicas y la mercadería las retira una sola
+  vez, al completar la venta. Si la compra vence, las unidades siguen afuera como unidades
+  sueltas. Registrar espera a que terminen ambas compras, vendidas o vencidas. Después compara
+  la planilla sólo con las ventas completas, sin depender de atención.
 - **`player-actions` e `investigation`.** Agarrar y examinar son del cuerpo; **qué esconde** el
   objeto es de la investigación. La identidad de lo que se agarra es opaca a propósito: lo que se
   investiga no está en el catálogo.
