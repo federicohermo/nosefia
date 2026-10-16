@@ -412,6 +412,8 @@ SI una caja queda en el apoyo insuficiente del borde de góndola documentado en
 [GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), ENTONCES el sistema DEBE
 dejarla perder ese apoyo y caer hasta otro soporte real, sin devolverla a la mano y conservándola
 recogible y fuera de sólidos. El reposo de BR-PLY-013 DEBE producirse después de la caída.
+En ambos encuadres, el soporte físico DEBE corresponder al borde visible; NO DEBE aparecer
+una plataforma invisible bajo la caja que sostenga el equilibrio rechazado.
 Los apoyos válidos de piso, mostrador, pallet del depósito y otra caja DEBEN conservarse,
 incluida la caída en cascada al retirar el apoyo inferior. Un punto horizontal aislado NO DEBE
 bastar para inmovilizar la caja en el equilibrio rechazado. La regla general para decidir
