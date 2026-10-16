@@ -1969,126 +1969,6 @@
       "bytes": 6162,
       "sha256": "021ff126eb1651cf07ea7dfa893433f01d2598386546621fba1bc1e6d817afd4"
     },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/logs/godot.log": {
-      "bytes": 202,
-      "sha256": "db4f4f325109097afda5ea0acab83c307556c7eccc3fb063cc788108e4b5c311"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/CanvasShaderGLES3/391f15b3e24e2762fc617bf31a11cbab0a7246522279c255fe46624defb508e3/00d5f967be5941ece6516e71565af348ff06f727.cache": {
-      "bytes": 17375,
-      "sha256": "0c24f0bd25590f8694d030b87c172e5d297f86b50ce8caedd9d31fdaa4e36940"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/CanvasShaderGLES3/391f15b3e24e2762fc617bf31a11cbab0a7246522279c255fe46624defb508e3/7d5d1b97d8d9a7ef91be87f3fb5d635e29e03ed4.cache": {
-      "bytes": 17062,
-      "sha256": "a67ebbeee0711902cdbc3d3731ac853a8904076b2c1af71506ddcc39e08fd5b4"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/CopyShaderGLES3/e05058fd104c94fa8cf42e0afd821d4f1cd30d99ad54af6628dbff14061b1d20/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache": {
-      "bytes": 118055,
-      "sha256": "ca3de2dc317ee4100f38ae90f28a773d2d8f45cbf4d970c067239afdc7fe7ad0"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/CubemapFilterShaderGLES3/8f04fb4a95162edf49987181abd3b23a74b3757b1a2ef6134a81e7727a6e6e53/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache": {
-      "bytes": 26057,
-      "sha256": "ba3869ca887579436de23109ecc2a16c1ebfca8f7ab0f34feb830ce2c1138fe9"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/FeedShaderGLES3/6040ecd3a0375bd6d1cf7b7303474ba74485fc8d97e09b338f68d4630dde5983/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache": {
-      "bytes": 8261,
-      "sha256": "edf8814399fb06703b9cd670325fb3fb48eca236588610cf77e3d3ed0bece687"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/PostShaderGLES3/73a22458e36a89a6744e04f390b22a47d317e7a503e8229fc7e0f912d1b8737a/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache": {
-      "bytes": 27580,
-      "sha256": "bb1e560cac47d71bdfbaa12ba954ec6a063a3d4141b60a99165ecee02b786c1e"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/104cff527752a4293bc264d41ba2b23565f4ce92.cache": {
-      "bytes": 3410057,
-      "sha256": "6d3d9404817e913e7c1639d7f0f82094e8a29258c92b8a87984dd6aac59ff5eb"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/22245f37fa562d06f80e2af4aeac1efc34207070.cache": {
-      "bytes": 992382,
-      "sha256": "7fd4f58c066e7660c232ae2658170ee58a9220e1153372355e9a56313c17ef2b"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/2f7dd96910e0a0ac62df1206cc41d381eb7df05c.cache": {
-      "bytes": 1152682,
-      "sha256": "942c602b99716ff69b7d30cf2125c5a18903b1bf7f24259b8d4805ca6e5019d2"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/3b2322daa9068c2a940323bfda67e3d04f7a57dd.cache": {
-      "bytes": 949310,
-      "sha256": "2bb0c2546b38b64c110fb3b6b0b09299e4ec9c1d49a3e8b4bbdc3c293f0e38cc"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/3cf2db996bca840a8ea325936a2cb9552198ed28.cache": {
-      "bytes": 1456629,
-      "sha256": "1c21381126ae4def1fc410218791833ccc482aadbf1db539718bc7d8599531c6"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/46256a5e5dd61baf8b9c471f97388e1b26f8f4d7.cache": {
-      "bytes": 988048,
-      "sha256": "c9122dfeb921a2ddcc563aa819dc1e846fc80c8e154d68ab5a8b2d3288a0b2f5"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/6a0938a9a0fc1fd50d0db66009eca4d3fe324bcc.cache": {
-      "bytes": 1107501,
-      "sha256": "1972428777f6368c0b56d5ebdb0e9f4f47b1e2f9b9bf08acecdd8752911318b0"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache": {
-      "bytes": 800909,
-      "sha256": "58e3539c9e943b6cd8bda50744e60ef8a7fe8a505d78b3ac34522c37ff1cfb28"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/75dbda390b4d6b8d1bba67e8943ace8a4f64f756.cache": {
-      "bytes": 2685450,
-      "sha256": "dabb6c8c6faa72d4eb5f5fa56c432ff735119fd2f95e3cbbcb2518bd496c17e7"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/77047cd41f429f33ceff24e890e174f5465e755e.cache": {
-      "bytes": 1300732,
-      "sha256": "2df237c8d1b36897be9eef0013eb3c9e768b8225fa7c521c7e61164f9c100aa6"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/7c9ab8d8a58eac27a470caa640624db1eb86a3c5.cache": {
-      "bytes": 743084,
-      "sha256": "4547cf9bdb895102b9e2e0400f4d25c039276b194614bb134cb1dba7a62d1a9b"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/8240bc172bec242fb228da6dfd10b5a6e4f85d6c.cache": {
-      "bytes": 1035744,
-      "sha256": "e34b3afdaf212ed49a67a4a532ce322c6a931258c093ab3aca427b6a27b64af6"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/84366ed46520476083c6b869fefb772ed1a067ee.cache": {
-      "bytes": 988098,
-      "sha256": "391d98fb41fbd75c57053702cd27804e405a13247c93305564c575cec914e17b"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/a89936e8502e14c76730a9c88ad1cd5020355bb5.cache": {
-      "bytes": 1797595,
-      "sha256": "a6376bd7b63621ffbab757e46df4692b999d8b4d278ed1bc7c5c711370adfd6f"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/b120243254cc98a5db44e9259b09cdb89487b166.cache": {
-      "bytes": 2904817,
-      "sha256": "90dc2c0b9542ac0c03fd746d19306268d8e4fa45dd178cd444e48487e911080a"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/bd3ec329b8d412569093905d27cab3f30a500a45.cache": {
-      "bytes": 911804,
-      "sha256": "7676407d0d00ee3dada56b896d1f2abf1bd5782f54c889bc023ee1867005948a"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/c175a238af09034d3ceac0d9fc75d1bf0cd75616.cache": {
-      "bytes": 979933,
-      "sha256": "53098ac7b40d161a637aaf1c582d5e4ccf5a65858a2f7f49887fa0c610380ae1"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/e6e9cc0a11d31e5e673a8b1287690c7d29bf999a.cache": {
-      "bytes": 1481431,
-      "sha256": "b10e7afde634446ee834470e583210fdea32280b81a6fd5f0e231e09e6a43b23"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/f2e328ac8a780a17a0c65e242b0c8bc4fc063f03.cache": {
-      "bytes": 993479,
-      "sha256": "c4377a8d77b17c2fc7a5999ecfaa2042f6c51ca3cd819502f304b9a5010f190a"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/fb0e7113047a8ec7b8e0f5fe77a3704a6763ff09.cache": {
-      "bytes": 997110,
-      "sha256": "2609169ee443eddb7887068f8ec45bea4d82d1cce1e55a08aa8d033655794a57"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SceneShaderGLES3/056fcab5251ee4359b98324340662de37296b2271a5b4a5e8690613922d28281/ff11adeb777c9097559a8522784b49c39fc355a2.cache": {
-      "bytes": 976547,
-      "sha256": "3977eb1c178a4af2165ee616a8d92f4fc2d532aaee9f5423a2da465e5db3ca82"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/app_userdata/No se fía/shader_cache/SkyShaderGLES3/4e6cdc07aac5276b67b1018b98ad22ee58fc1679fd1313ccd0185763af55566e/2229459719c74ebf3cbbc709ebed1ef53beb9417.cache": {
-      "bytes": 82939,
-      "sha256": "5d97d5f5d95797972590e5a2b6a1fc4871aa22377ba5e9436f25024f3d13a7bb"
-    },
-    "fisico-rojo-03/usuario-aislado/Godot/editor_settings-4.7.tres": {
-      "bytes": 17780,
-      "sha256": "177ac978056df3dff2530fc83743b1440b55a1876564db5c1bb1c4272a5f77be"
-    },
     "fisico-rojo-03-fuente/assets/investigacion/jornada_2/caso.tres": {
       "bytes": 838,
       "sha256": "761d0a59214cc24f66cf3ae9e85a1a0b0eb36af1d1673854fb6353ef3b402243"
@@ -2817,6 +2697,10 @@
       "bytes": 1029,
       "sha256": "a85f5c4faeba908a201b51a1b3f069116466f2f475c1bec5a0d245b42c2b62b3"
     },
+    "fuentes/mover-caches-propias.py": {
+      "bytes": 2550,
+      "sha256": "e54c6ea435c8c04cc9e50567286a10e91f12c042829daf8f1c988aa5c22d7bf1"
+    },
     "fuentes/override.cfg": {
       "bytes": 47,
       "sha256": "14df75fb81b1da8a15028315a147bdfae8082ce6309c998151d13178cad6186c"
@@ -2894,8 +2778,8 @@
       "sha256": "02f2208e7db2081d1ed4d1d009bea7f81f9a525dfa1ca49e844d6cbb3de8d2d9"
     },
     "fuentes/publicar-blobs-exactos.py": {
-      "bytes": 5340,
-      "sha256": "85ff8f0f46869ad5fd9450694618762586a3bdc90c40c5ad74d024a23a133952"
+      "bytes": 6275,
+      "sha256": "b9bb40006bb355d5207571dca075b79a78939cf9ea5943de17820bc58a7fed0d"
     },
     "fuentes/recorrer-web-22-encolado01.mjs": {
       "bytes": 8696,
@@ -3252,6 +3136,10 @@
     "giro-control-01/tests.log": {
       "bytes": 319724,
       "sha256": "4c8484204f6fd564181f14b156eddcf345f0f9cd6e49d3c0318556ac9374fe1a"
+    },
+    "incidentes-publicacion.json": {
+      "bytes": 10009,
+      "sha256": "c86536de6192e3467fcee459abfd0a633aebfab1c04d9dcc46550b8c2781a0ec"
     },
     "integracion-rojo-02/auditoria.json": {
       "bytes": 63388,

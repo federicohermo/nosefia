@@ -9,8 +9,13 @@ import tempfile
 
 
 def git(*args, env=None, entrada=None):
-    return subprocess.run(["git", *args], input=entrada, stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE, env=env, check=True).stdout
+    resultado = subprocess.run(["git", *args], input=entrada, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, env=env)
+    if resultado.returncode:
+        fallo={"cmd":["git",*args],"codigo":resultado.returncode,"stdout":resultado.stdout.decode("utf8",errors="replace"),"stderr":resultado.stderr.decode("utf8",errors="replace")}
+        Path(__file__).with_name("publicacion-fallo.json").write_text(json.dumps(fallo,ensure_ascii=False,indent=2),encoding="utf8")
+        raise RuntimeError(json.dumps(fallo,ensure_ascii=True))
+    return resultado.stdout
 
 
 def texto(*args, **kwargs):
@@ -49,13 +54,19 @@ local = json.loads((carpeta / "manifiesto.json").read_text(encoding="utf-8"))
 local["procedencia"] = "Huellas de archivos locales previas a publicar; no describen blobs Git."
 local["archivos"] = {p.relative_to(carpeta).as_posix(): {"bytes":p.stat().st_size, "sha256":hashlib.sha256(p.read_bytes()).hexdigest()}
                      for p in sorted(carpeta.rglob("*")) if p.is_file() and p.name not in ("manifiesto.json", "manifiesto-local.json")}
-with tempfile.TemporaryDirectory() as temp:
+with tempfile.TemporaryDirectory(dir="D:/nosefia-carril-C-429-444") as temp:
     env = {**os.environ, "GIT_INDEX_FILE": str(Path(temp) / "index")}
     git("read-tree", *([padre] if padre else ["--empty"]), env=env)
-    for ruta in sorted(carpeta.rglob("*")):
-        if ruta.is_file() and ruta.name not in ("manifiesto.json", "manifiesto-local.json"):
-            blob = texto("hash-object", "-w", "--no-filters", str(ruta))
-            git("update-index", "--add", "--cacheinfo", f"100644,{blob},{ruta.relative_to(carpeta).as_posix()}", env=env)
+    rutas=[p for p in sorted(carpeta.rglob("*")) if p.is_file() and p.name not in ("manifiesto.json","manifiesto-local.json")]
+    lista=("\n".join(p.as_posix() for p in rutas)+"\n").encode("utf8")
+    oids=git("hash-object","-w","--no-filters","--stdin-paths",entrada=lista).decode("ascii").splitlines()
+    assert len(oids)==len(rutas)
+    entradas=b"".join((f"100644 {oid}\t{p.relative_to(carpeta).as_posix()}\0").encode("utf8") for p,oid in zip(rutas,oids))
+    if padre:
+        for registro in git("ls-tree","-r","-z",padre).split(b"\0"):
+            if registro and registro.split(b"\t",1)[1].startswith(b"fisico-rojo-03/usuario-aislado/"):
+                entradas+=b"0 "+b"0"*40+b"\t"+registro.split(b"\t",1)[1]+b"\0"
+    git("update-index","-z","--index-info",env=env,entrada=entradas)
     blob_local = texto("hash-object", "-w", "--stdin", entrada=json.dumps(local, ensure_ascii=False, indent=2).encode("utf-8"))
     git("update-index", "--add", "--cacheinfo", f"100644,{blob_local},manifiesto-local.json", env=env)
     arbol = texto("write-tree", env=env)
