@@ -246,12 +246,14 @@ const ULTIMA_JORNADA := (
 const MEDIOS_DEL_DESPIDO := Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO * MEDIOS_POR_PUNTO
 
 var _mensajes: Array[String] = []
+var _jornada: int = 0
 var _opciones: Array[Opcion] = []
 
 
 ## La partida ya cerró esa noche: sus cuentas incluyen la noche, y sus obligatorias y llamados
 ## son los de la noche cerrada.
 func _init(jornada: int, partida: Partida) -> void:
+	_jornada = jornada
 	var sin_cumplir: Array[Tarea.Tipo] = []
 	for tarea: Tarea in partida.obligatorias():
 		if not tarea.completada():
@@ -282,11 +284,24 @@ static func retos() -> Array[Partida.Llamado]:
 	]
 
 
-## Un mensaje de la devolución como lo recibe el chat de Enrique: sólo texto.
-static func mensaje(texto: String) -> Mensaje:
+## Sin jornada explícita sigue siendo un texto legado: no se reconstruye su fecha.
+static func mensaje(texto: String, jornada: int = 0, orden: int = 0) -> Mensaje:
 	var nuevo := Mensaje.new()
 	nuevo.texto = texto
+	nuevo.de_quien = "Enrique Peldaño"
+	nuevo.jornada = jornada
+	nuevo.orden = orden
+	nuevo.momento = Mensaje.Momento.CIERRE if jornada > 0 else Mensaje.Momento.SIN_FECHA
+	if jornada > 0:
+		nuevo.identidad = "DEVOLUCION_J%d_%d" % [jornada, orden]
 	return nuevo
+
+
+func mensajes_fechados() -> Array[Mensaje]:
+	var fechados: Array[Mensaje] = []
+	for indice: int in _mensajes.size():
+		fechados.append(mensaje(_mensajes[indice], _jornada, indice))
+	return fechados
 
 
 ## Cuántos mensajes están a la vista después de `transcurrido` segundos: el primero en cero.

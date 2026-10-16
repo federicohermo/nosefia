@@ -403,7 +403,9 @@ func empezar_partida_nueva() -> void:
 	_jugador.suspender()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
-	_instrucciones.mostrar(GUION_DEL_JEFE.mensajes)
+	_instrucciones.mostrar(
+		Bandeja.new([GUION_DEL_JEFE]).mensajes_de(Conversacion.Interlocutor.JEFE)
+	)
 
 
 func anunciar_la_noche() -> void:
@@ -576,12 +578,13 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.chat_pedido.connect(_celular.pedir_chat)
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
+	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
 	_pantalla_del_celular.cierre_pedido.connect(_alternar_el_celular)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
 	# Al retomar, las devoluciones de las noches ya cerradas vuelven al chat de Enrique.
-	for texto: String in _partida.mensajes_del_jefe():
-		_celular.recibir(Conversacion.Interlocutor.JEFE, DevolucionDelJefe.mensaje(texto))
+	for mensaje: Mensaje in _partida.devoluciones_del_jefe():
+		_celular.recibir(Conversacion.Interlocutor.JEFE, mensaje)
 
 
 func _al_abrir_el_celular() -> void:
@@ -612,7 +615,7 @@ func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaj
 	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
 		_mostrar_el_menu_del_celular()
 	elif _celular.celular().chat() == quien:
-		_pantalla_del_celular.recibir(mensaje, _celular.bandeja().mensajes_de(quien).size() - 1)
+		_pantalla_del_celular.recibir(mensaje, _celular.bandeja().mensajes_de(quien).find(mensaje))
 
 
 ## Las señales pueden llegar antes de sincronizar los cuerpos con el espacio físico.

@@ -11,9 +11,19 @@ const SEGUNDOS_REALES_DE_UN_TURNO := (
 )
 const JEFE := Conversacion.Interlocutor.JEFE
 
+var _ruta_guardado: String
+
+
+func before_test() -> void:
+	_ruta_guardado = Guardado.ruta_por_defecto
+	Guardado.ruta_por_defecto = "user://devolucion_430.guardado"
+	Guardado.new().borrar()
+
 
 func after_test() -> void:
 	get_tree().paused = false
+	Guardado.new().borrar()
+	Guardado.ruta_por_defecto = _ruta_guardado
 
 
 func _almacen(partida: Partida = null) -> Node3D:
@@ -191,9 +201,13 @@ func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC
 	var partida: Partida = almacen.get("_partida")
 	assert_int(partida.jornada()).is_equal(2)
 	persiana.terminar()
-	assert_array(_ultimos_del_chat(almacen, partida.mensajes_del_jefe().size())).is_equal(
-		partida.mensajes_del_jefe()
-	)
+	var historial := _celular(almacen).bandeja().mensajes_de(JEFE)
+	var devolucion := PackedStringArray()
+	for indice: int in range(19, 19 + partida.mensajes_del_jefe().size()):
+		devolucion.append(historial[indice].texto)
+	assert_array(devolucion).is_equal(partida.mensajes_del_jefe())
+	assert_str(historial[-2].identidad).is_equal("J2_CONTENEDOR_FOTO")
+	assert_str(historial[-1].identidad).is_equal("J2_CONTENEDOR_TEXTO")
 
 
 func test_despedido_vuelve_al_menu_una_sola_vez() -> void:  # AC-EMP-064, AC-EMP-065, AC-EMP-016

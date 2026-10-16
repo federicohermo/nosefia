@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430
 ---
