@@ -1,119 +1,6 @@
 {
-  "commit_codigo": "6fbfe2af",
-  "primera_publicacion": "46d24ad5f5a292f099fe37bab3b497cb681a2c89",
-  "normalizados_por_git": [
-    "huellas.json",
-    "protocolo/capturar435.gd",
-    "pruebas/capturas-motor.log",
-    "pruebas/dominio-rojo.log",
-    "pruebas/focales-verde.log",
-    "pruebas/motor-completo.log",
-    "pruebas/revision-diagnosticos.json",
-    "pruebas/verificar.log",
-    "README.md"
-  ],
-  "procedencia_local_primera_publicacion": {
-    "nativo/1280x720-celular.png": {
-      "bytes": 297217,
-      "sha256": "24b3f8ec67a8d5652a8f93fc5b80d5daff20c63b92270f073a603a09a1043531"
-    },
-    "nativo/1280x720-computadora.png": {
-      "bytes": 65754,
-      "sha256": "5c66d8c4eea5021614fb6d9f855c675de672ca130b3887ec39ee8ddc8ce5a721"
-    },
-    "nativo/1280x720-local.png": {
-      "bytes": 953705,
-      "sha256": "f3fbc23575c3578adf465dea489dcf3932e648efdbfb0d143bbfc4ce990fe060"
-    },
-    "nativo/1280x720-pausa.png": {
-      "bytes": 533655,
-      "sha256": "6469e2ab490192e5bd07f5cc2f91e5991bd72f02483a87559f50e60fe77a5c87"
-    },
-    "nativo/1280x720-reanudar.png": {
-      "bytes": 960709,
-      "sha256": "add9f1cac67ad4512d0201f00622352bc9d0274f537ef912e37610fec5597752"
-    },
-    "nativo/1280x720-vencido.png": {
-      "bytes": 957830,
-      "sha256": "e5e8789b4594be6d214054d6cee631d0412877eb3deff9f80e3c5276eca48cf6"
-    },
-    "nativo/1280x720-ventanilla.png": {
-      "bytes": 287171,
-      "sha256": "d4431140e0a689dd9dcb85f0cf8e23c394183dc8c0eac3e91f17853f6ab760da"
-    },
-    "nativo/1920x1080-celular.png": {
-      "bytes": 577532,
-      "sha256": "7f026085b3d5a9b0bbdfcacfc4f6ea649d2b9e47eecab82ab2ce98dc9d95c9a2"
-    },
-    "nativo/1920x1080-computadora.png": {
-      "bytes": 76390,
-      "sha256": "af0cf25db0db6637d64cae18c4fd92357af2765fd330078ada5cbbdf780052d6"
-    },
-    "nativo/1920x1080-local.png": {
-      "bytes": 2009739,
-      "sha256": "a12082a4620f763e466c6f317075c48347acd0f75bdf5d0f538186fa53ce7faa"
-    },
-    "nativo/1920x1080-pausa.png": {
-      "bytes": 1099197,
-      "sha256": "1d18e4cfebc726d32f1aadcc72c0e66735316b6bebce44d6a321ff50b34c0a43"
-    },
-    "nativo/1920x1080-reanudar.png": {
-      "bytes": 2021642,
-      "sha256": "a56db7d6171b9e14cb63d93340800486fc054601e32d0bf527b844a135799412"
-    },
-    "nativo/1920x1080-vencido.png": {
-      "bytes": 2029961,
-      "sha256": "de147e89e6ed2aab96cd1850986aa4f76f27edd435f14954725b89ba990f9672"
-    },
-    "nativo/1920x1080-ventanilla.png": {
-      "bytes": 532433,
-      "sha256": "e35d071d1455c523b9964e497b5198bee4a393c00efaeb67e569126b0669710b"
-    },
-    "nativo/medidas.json": {
-      "bytes": 4561,
-      "sha256": "ba6700517141ecfa7ab6acbde8931b85d5355b5cfffb2b938f8f08c1ec78e81f"
-    },
-    "protocolo/capturar435.gd": {
-      "bytes": 3150,
-      "sha256": "49a7905d32f49a4f5eca70fbd0998308edacfde00a550f10785e9aee06cff0ed"
-    },
-    "protocolo/capturar435.py": {
-      "bytes": 1097,
-      "sha256": "d5e5ab4be292ef2e570a7e4037b24b3e4db2c87197292b5d38ad639ffc0c372f"
-    },
-    "pruebas/capturas-motor.log": {
-      "bytes": 207,
-      "sha256": "bb686a9df2fd22d18d2817d5612fd71f389ec839f52ae6b520c23aa0710adf58"
-    },
-    "pruebas/dominio-rojo.log": {
-      "bytes": 145249,
-      "sha256": "4862fdacd77a93cea4ee48517997527974e77fdd2aef30cb0b4231e5c32d11b0"
-    },
-    "pruebas/focales-verde.log": {
-      "bytes": 24361,
-      "sha256": "77fde87287d5e1091abf4e9c0ba560d1d67f2bb21253bb95b2bcb8443b00440f"
-    },
-    "pruebas/motor-completo.log": {
-      "bytes": 1156665,
-      "sha256": "b5cc4ebb108ac11cd3f663f0389dd1768cb9b65dfa3e11fe832bf4ed31cb9283"
-    },
-    "pruebas/results.xml": {
-      "bytes": 334485,
-      "sha256": "4a25eec5c2d8e5508dba70e897186183592ad0cb554d8561b8d8a7ea1df717b1"
-    },
-    "pruebas/revision-diagnosticos.json": {
-      "bytes": 24109,
-      "sha256": "efad2018b997057ad602d0edddbfe60cb54d8d2540676822b2352c186abc9b7a"
-    },
-    "pruebas/verificar.log": {
-      "bytes": 244,
-      "sha256": "e320726f6ba7b9daf64cc35c7ab7c69452ccdbcf1959c4d192ef56535a4e5840"
-    },
-    "README.md": {
-      "bytes": 1557,
-      "sha256": "93229bceff8dced9b547f3b79d884ef4bd25b5c5884d44c86a7857d1a8e471e5"
-    }
-  },
+  "commit_codigo": "6fbfe2af744d138f3606dd3dd94f044643f7d4a6",
+  "publicacion_anterior": "ada7d847d7662bd0698fc13daa2e169c5f51b2e1",
   "archivos_publicados": {
     "nativo/1280x720-celular.png": {
       "bytes": 297217,
@@ -183,9 +70,53 @@
       "bytes": 1097,
       "sha256": "d5e5ab4be292ef2e570a7e4037b24b3e4db2c87197292b5d38ad639ffc0c372f"
     },
+    "protocolo/ERRATA-revision-diagnosticos.md": {
+      "bytes": 1590,
+      "sha256": "9377842d1a8ded6f70072d3596805d37202333b1eedd78e78f96c7b83db6625d"
+    },
+    "protocolo/revisar_crudo_por_causas.py": {
+      "bytes": 3299,
+      "sha256": "d003dff0a2e0a55df4079accb7502131b7cdb549fcc83402c8c02a171ac5318c"
+    },
+    "pruebas/base-tests.log": {
+      "bytes": 1143466,
+      "sha256": "3a93ebebb8223d8c522a73beda705c57b4dd954897c98a6c45144fbbaf7a82ce"
+    },
     "pruebas/capturas-motor.log": {
       "bytes": 202,
       "sha256": "53525e7fc643f3665bade71cfa287b438cbfc91ad696af2076562468c40fd3ec"
+    },
+    "pruebas/crudo/capas.log": {
+      "bytes": 142,
+      "sha256": "b42b35aaff8cff687a3d4135ed01ca0c91e0ebb642675f87d105b5d45c059c81"
+    },
+    "pruebas/crudo/formato.log": {
+      "bytes": 34,
+      "sha256": "477cf58ded092425f040e6ad0d6abab0f420d282060ddfab75fcd341cf653aba"
+    },
+    "pruebas/crudo/harness.log": {
+      "bytes": 3348,
+      "sha256": "f2558032317b992755c412a946404a8dcb80d96fe5b603b670d1703a72e81d63"
+    },
+    "pruebas/crudo/lint.log": {
+      "bytes": 27,
+      "sha256": "d2f45ecead8ebe024d64d724cef92d4c7b89f8d0150b30b296320bddb760e4be"
+    },
+    "pruebas/crudo/specs.log": {
+      "bytes": 358,
+      "sha256": "87626172df19647654ab3409261ec93b8485d5889f32b724e9473258dbf5b811"
+    },
+    "pruebas/crudo/tdd.log": {
+      "bytes": 139,
+      "sha256": "da2a5cc5b02c477c999f50e695f1df1f2c3808c42261b9b401be16d9cbf3aeac"
+    },
+    "pruebas/crudo/tests-import.log": {
+      "bytes": 2058,
+      "sha256": "e8b7721605a580035f9238d5b7cd5be8f1e8f36bff200d3e5dfa6c116256967e"
+    },
+    "pruebas/crudo/tests.log": {
+      "bytes": 1148745,
+      "sha256": "1693cc42f2a2e2ca31033e5aecfdbdf0ae5ba2c807fc4670805527b71e6290fb"
     },
     "pruebas/dominio-rojo.log": {
       "bytes": 143370,
@@ -207,14 +138,242 @@
       "bytes": 23766,
       "sha256": "ad99c20fc3206715799b130144eebc60ef5724c345e000412a04235a5d6a59e0"
     },
+    "pruebas/revision-root-estricta-final.json": {
+      "bytes": 139837,
+      "sha256": "e63a7630497e9d3bb262b8a7290baebb9983626f43ac2f4512df7d74a5e5ded3"
+    },
     "pruebas/verificar.log": {
       "bytes": 235,
       "sha256": "97440b08e2e233a7100d5f7be8ba92b0d2c5603da365325e9cd95178aaa5826d"
     },
     "README.md": {
-      "bytes": 1723,
-      "sha256": "80f819e1089bff344a7273ca56d6ef96b92ce09d9fde3dce196c9f394faab2e3"
+      "bytes": 2673,
+      "sha256": "231fc1b5efc3741380be7aa01e6916a917698360c980f5da234054b338a3439c"
     }
   },
-  "correccion_textos": "Tercera publicacion: tildes y signos UTF-8 de README corregidos; capturas y crudos intactos."
+  "procedencia_original": {
+    "huellas.json": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\huellas.json",
+      "bytes_original": 8018,
+      "sha256_original": "697c2affcf2a77872e2de0b28c10fc12f4702d444075de409a978401af301f37",
+      "crlf_lf": false
+    },
+    "nativo/1280x720-celular.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1280x720-celular.png",
+      "bytes_original": 297217,
+      "sha256_original": "24b3f8ec67a8d5652a8f93fc5b80d5daff20c63b92270f073a603a09a1043531",
+      "crlf_lf": false
+    },
+    "nativo/1280x720-computadora.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1280x720-computadora.png",
+      "bytes_original": 65754,
+      "sha256_original": "5c66d8c4eea5021614fb6d9f855c675de672ca130b3887ec39ee8ddc8ce5a721",
+      "crlf_lf": false
+    },
+    "nativo/1280x720-local.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1280x720-local.png",
+      "bytes_original": 953705,
+      "sha256_original": "f3fbc23575c3578adf465dea489dcf3932e648efdbfb0d143bbfc4ce990fe060",
+      "crlf_lf": false
+    },
+    "nativo/1280x720-pausa.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1280x720-pausa.png",
+      "bytes_original": 533655,
+      "sha256_original": "6469e2ab490192e5bd07f5cc2f91e5991bd72f02483a87559f50e60fe77a5c87",
+      "crlf_lf": false
+    },
+    "nativo/1280x720-reanudar.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1280x720-reanudar.png",
+      "bytes_original": 960709,
+      "sha256_original": "add9f1cac67ad4512d0201f00622352bc9d0274f537ef912e37610fec5597752",
+      "crlf_lf": false
+    },
+    "nativo/1280x720-vencido.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1280x720-vencido.png",
+      "bytes_original": 957830,
+      "sha256_original": "e5e8789b4594be6d214054d6cee631d0412877eb3deff9f80e3c5276eca48cf6",
+      "crlf_lf": false
+    },
+    "nativo/1280x720-ventanilla.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1280x720-ventanilla.png",
+      "bytes_original": 287171,
+      "sha256_original": "d4431140e0a689dd9dcb85f0cf8e23c394183dc8c0eac3e91f17853f6ab760da",
+      "crlf_lf": false
+    },
+    "nativo/1920x1080-celular.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1920x1080-celular.png",
+      "bytes_original": 577532,
+      "sha256_original": "7f026085b3d5a9b0bbdfcacfc4f6ea649d2b9e47eecab82ab2ce98dc9d95c9a2",
+      "crlf_lf": false
+    },
+    "nativo/1920x1080-computadora.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1920x1080-computadora.png",
+      "bytes_original": 76390,
+      "sha256_original": "af0cf25db0db6637d64cae18c4fd92357af2765fd330078ada5cbbdf780052d6",
+      "crlf_lf": false
+    },
+    "nativo/1920x1080-local.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1920x1080-local.png",
+      "bytes_original": 2009739,
+      "sha256_original": "a12082a4620f763e466c6f317075c48347acd0f75bdf5d0f538186fa53ce7faa",
+      "crlf_lf": false
+    },
+    "nativo/1920x1080-pausa.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1920x1080-pausa.png",
+      "bytes_original": 1099197,
+      "sha256_original": "1d18e4cfebc726d32f1aadcc72c0e66735316b6bebce44d6a321ff50b34c0a43",
+      "crlf_lf": false
+    },
+    "nativo/1920x1080-reanudar.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1920x1080-reanudar.png",
+      "bytes_original": 2021642,
+      "sha256_original": "a56db7d6171b9e14cb63d93340800486fc054601e32d0bf527b844a135799412",
+      "crlf_lf": false
+    },
+    "nativo/1920x1080-vencido.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1920x1080-vencido.png",
+      "bytes_original": 2029961,
+      "sha256_original": "de147e89e6ed2aab96cd1850986aa4f76f27edd435f14954725b89ba990f9672",
+      "crlf_lf": false
+    },
+    "nativo/1920x1080-ventanilla.png": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\1920x1080-ventanilla.png",
+      "bytes_original": 532433,
+      "sha256_original": "e35d071d1455c523b9964e497b5198bee4a393c00efaeb67e569126b0669710b",
+      "crlf_lf": false
+    },
+    "nativo/medidas.json": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\nativo\\medidas.json",
+      "bytes_original": 4561,
+      "sha256_original": "ba6700517141ecfa7ab6acbde8931b85d5355b5cfffb2b938f8f08c1ec78e81f",
+      "crlf_lf": false
+    },
+    "protocolo/capturar435.gd": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\protocolo\\capturar435.gd",
+      "bytes_original": 3060,
+      "sha256_original": "a1adaa235923165a7b955562cabf92acd3458f86512533592f47cc1d4d7b5b0b",
+      "crlf_lf": false
+    },
+    "protocolo/capturar435.py": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\protocolo\\capturar435.py",
+      "bytes_original": 1097,
+      "sha256_original": "d5e5ab4be292ef2e570a7e4037b24b3e4db2c87197292b5d38ad639ffc0c372f",
+      "crlf_lf": false
+    },
+    "pruebas/capturas-motor.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\pruebas\\capturas-motor.log",
+      "bytes_original": 202,
+      "sha256_original": "53525e7fc643f3665bade71cfa287b438cbfc91ad696af2076562468c40fd3ec",
+      "crlf_lf": false
+    },
+    "pruebas/dominio-rojo.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\pruebas\\dominio-rojo.log",
+      "bytes_original": 143370,
+      "sha256_original": "066929d083d4144f0b3d34c39d7fed297f606658e0207aa5ecaa0b68ad1ba23e",
+      "crlf_lf": false
+    },
+    "pruebas/focales-verde.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\pruebas\\focales-verde.log",
+      "bytes_original": 24158,
+      "sha256_original": "2de4c6730ad0a4dd97b3bfac42b8135dbfd756d9e8dfbf9172db9f039d95be8c",
+      "crlf_lf": false
+    },
+    "pruebas/motor-completo.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\pruebas\\motor-completo.log",
+      "bytes_original": 1148745,
+      "sha256_original": "1693cc42f2a2e2ca31033e5aecfdbdf0ae5ba2c807fc4670805527b71e6290fb",
+      "crlf_lf": false
+    },
+    "pruebas/results.xml": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\pruebas\\results.xml",
+      "bytes_original": 334485,
+      "sha256_original": "4a25eec5c2d8e5508dba70e897186183592ad0cb554d8561b8d8a7ea1df717b1",
+      "crlf_lf": false
+    },
+    "pruebas/revision-diagnosticos.json": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\pruebas\\revision-diagnosticos.json",
+      "bytes_original": 23766,
+      "sha256_original": "ad99c20fc3206715799b130144eebc60ef5724c345e000412a04235a5d6a59e0",
+      "crlf_lf": false
+    },
+    "pruebas/verificar.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\pruebas\\verificar.log",
+      "bytes_original": 235,
+      "sha256_original": "97440b08e2e233a7100d5f7be8ba92b0d2c5603da365325e9cd95178aaa5826d",
+      "crlf_lf": false
+    },
+    "README.md": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-entrega\\README.md",
+      "bytes_original": 1723,
+      "sha256_original": "80f819e1089bff344a7273ca56d6ef96b92ce09d9fde3dce196c9f394faab2e3",
+      "crlf_lf": false
+    },
+    "pruebas/revision-root-estricta-final.json": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435\\revision-root-estricta-final.json",
+      "bytes_original": 139837,
+      "sha256_original": "e63a7630497e9d3bb262b8a7290baebb9983626f43ac2f4512df7d74a5e5ded3",
+      "crlf_lf": false
+    },
+    "protocolo/revisar_crudo_por_causas.py": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\revisar_crudo_por_causas.py",
+      "bytes_original": 3299,
+      "sha256_original": "d003dff0a2e0a55df4079accb7502131b7cdb549fcc83402c8c02a171ac5318c",
+      "crlf_lf": false
+    },
+    "pruebas/base-tests.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\base\\tests.log",
+      "bytes_original": 1151353,
+      "sha256_original": "4b004ec2454fff9968727c69795c4a9749072381dca5378df215dd51ba90395e",
+      "crlf_lf": true
+    },
+    "pruebas/crudo/capas.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-crudo-01\\capas.log",
+      "bytes_original": 143,
+      "sha256_original": "4bdf191e1145628eb9ab9a58cd38f994deac1c51d429f013709091b225b95a3e",
+      "crlf_lf": true
+    },
+    "pruebas/crudo/formato.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-crudo-01\\formato.log",
+      "bytes_original": 35,
+      "sha256_original": "94509746e87a23cd68706ff13e60c45f643bf23810e40e0e8a2e93a0276b5bc7",
+      "crlf_lf": true
+    },
+    "pruebas/crudo/harness.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-crudo-01\\harness.log",
+      "bytes_original": 3379,
+      "sha256_original": "7d528bea5d2245d656e079b3045ace7f7ad951a056b60f3287e8ff8baeb40531",
+      "crlf_lf": true
+    },
+    "pruebas/crudo/lint.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-crudo-01\\lint.log",
+      "bytes_original": 28,
+      "sha256_original": "098424cb171ea105b5f32277ddcb3b139ff90d7f943970e0e55a7268d9468b1e",
+      "crlf_lf": true
+    },
+    "pruebas/crudo/specs.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-crudo-01\\specs.log",
+      "bytes_original": 366,
+      "sha256_original": "52dc2ad0907a217aa4521d051c07c307877bf534b9873782db1ba055bb74a37b",
+      "crlf_lf": true
+    },
+    "pruebas/crudo/tdd.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-crudo-01\\tdd.log",
+      "bytes_original": 140,
+      "sha256_original": "1b1aac25a27de0a7678a694d57b6a331d09ce7e2015dca5e3cb47fd7b4c2d94a",
+      "crlf_lf": true
+    },
+    "pruebas/crudo/tests-import.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-crudo-01\\tests-import.log",
+      "bytes_original": 2091,
+      "sha256_original": "ebfd8de4439b84f2a4c2fe2fc7cbca9f9f0ee53b3670a1770fdfd4ca2524ad68",
+      "crlf_lf": true
+    },
+    "pruebas/crudo/tests.log": {
+      "origen": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-425-435\\435-crudo-01\\tests.log",
+      "bytes_original": 1156665,
+      "sha256_original": "b5cc4ebb108ac11cd3f663f0389dd1768cb9b65dfa3e11fe832bf4ed31cb9283",
+      "crlf_lf": true
+    }
+  },
+  "correccion": "Atribucion de contexto del auditor original; fuentes y crudos originales intactos. Todos los textos publicables LF. README/ERRATA son documentacion nueva; revision vieja conserva contenido."
 }
