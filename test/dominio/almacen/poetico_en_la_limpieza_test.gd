@@ -97,3 +97,39 @@ func test_dos_mezclas_conservan_la_unidad_y_no_habilitan_otros_destinos() -> voi
 	otro.nombre = unidad.nombre
 	piso.usar(BALDE, LAVATORIO)
 	assert_int(piso.usar(otro.id, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.SIN_EFECTO)
+
+
+func test_la_unidad_mezclada_de_caja_o_gondola_se_vende_una_sola_vez() -> void:  # AC-CLN-064
+	var producto := Catalogo.de(Producto.Id.POETICO)
+	for desde_gondola: bool in [false, true]:
+		var casilleros: Dictionary[Producto.Id, int] = {producto.id: 1}
+		var inventario := Inventario.new([producto], casilleros)
+		inventario.ingresar(
+			producto, Inventario.Ubicacion.DEPOSITO, ReglasDelEstante.UNIDADES_POR_CAJA
+		)
+		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 1)
+		var estante := Estante.new(inventario, [producto])
+		var unidad := estante.agarrar(producto, 0) if desde_gondola else estante.retirar(producto)
+		assert_object(unidad).is_not_null()
+		assert_bool(inventario.esta_afuera(unidad)).is_true()
+		var deposito := inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)
+		var gondola := inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)
+		var afuera := inventario.afuera(producto)
+		var piso := PisoDelLocal.de_la_jornada(2)
+		piso.usar(BALDE, LAVATORIO)
+		assert_int(piso.usar(unidad.id, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_TENIDO)
+		assert_object(unidad.producto).is_same(producto)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(deposito)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(gondola)
+		assert_int(inventario.afuera(producto)).is_equal(afuera)
+		assert_bool(inventario.vender_unidades([unidad])).is_true()
+		assert_bool(inventario.esta_afuera(unidad)).is_false()
+		assert_int(inventario.afuera(producto)).is_equal(afuera - 1)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
+			deposito - 1
+		)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(gondola)
+		assert_bool(inventario.vender_unidades([unidad])).is_false()
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
+			deposito - 1
+		)
