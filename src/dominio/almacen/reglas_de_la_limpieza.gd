@@ -41,9 +41,9 @@ enum Resultado {
 }
 
 ## Tiempo real y recorrido adicionales: la caminata combina ambas pérdidas. Quieta dura 12 s;
-## caminando a toda velocidad, unos 3 s. Con 7,5 m duraba menos de 2 s caminando.
+## caminando a toda velocidad, unos 2,3 s. Con 7,5 m duraba 1,8 s caminando.
 const DURACION_DE_LA_CARGA := 12.0
-const RECORRIDO_DE_LA_CARGA := 15.0
+const RECORRIDO_DE_LA_CARGA := 10.0
 
 ## Agua temporal sobre suelo despejado: sólo presentación, sin convertirla en una mancha.
 const DURACION_DEL_CHARCO := 4.0
