@@ -10,7 +10,7 @@ const PREPARANDO := "Preparando el local: %d de %d"
 const COMPILANDO := "Compilando sombreadores: quedan %d"
 const ENTRANDO := "Entrando al local"
 ## El lado de cada punto, en proporción a la letra.
-const LADO_DEL_PUNTO := 0.16
+const LADO_DEL_PUNTO := 0.2
 
 @export var _marco: Control
 @export var _barra: ProgressBar
@@ -82,11 +82,15 @@ func _latir(prendido: bool) -> void:
 ## lienzo puede medir otra cosa: la proporción la saca la página.
 func _process(_delta: float) -> void:
 	var letra := _texto.get_theme_font_size("font_size")
-	var ancho := _texto.get_theme_font("font").get_string_size(_texto.text, 0, -1, letra).x
+	var fuente := _texto.get_theme_font("font")
+	var ancho := fuente.get_string_size(_texto.text, 0, -1, letra).x
+	var lado_propio := letra * LADO_DEL_PUNTO
+	var renglon := (_texto.size.y - fuente.get_height(letra)) / 2.0
+	var base := renglon + fuente.get_ascent(letra) - lado_propio
 	var lienzo := _texto.get_global_transform_with_canvas()
-	var final := lienzo * Vector2((_texto.size.x + ancho) / 2.0, _texto.size.y / 2.0)
-	var lado := letra * LADO_DEL_PUNTO * lienzo.get_scale().y
-	var ubicacion := "%d,%d,%d" % [final.x + lado, final.y, lado]
+	var final := lienzo * Vector2((_texto.size.x + ancho) / 2.0 + lado_propio * 0.6, base)
+	var lado := lado_propio * lienzo.get_scale().y
+	var ubicacion := "%d,%d,%d" % [final.x, final.y, lado]
 	if ubicacion == _ubicacion_de_los_puntos:
 		return
 	_ubicacion_de_los_puntos = ubicacion

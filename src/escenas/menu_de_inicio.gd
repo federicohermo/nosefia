@@ -9,6 +9,8 @@ const CAPA_DE_LA_CARGA := 10
 ## el menú estaba abierto no ocupa barra. Calentar es lo que tarda: ~12 s de 19 en la web.
 const PARTE_DE_LA_LECTURA := 0.15
 const DURACION_DEL_FUNDIDO := 0.3
+## En segundos: la barra termina de llenarse antes de entrar, desde donde haya quedado.
+const LLENADO_FINAL := 0.35
 const TEMA := preload("res://assets/audio/MUS_MenuPrincipal.ogg")
 ## A 0 dB tapaba todo lo demás de la intro.
 const VOLUMEN_DEL_TEMA_DB := -8.0
@@ -208,7 +210,7 @@ func _calentar_el_almacen() -> void:
 	var almacen := _almacen.instantiate()
 	get_tree().root.add_child(almacen)
 	almacen.process_mode = Node.PROCESS_MODE_DISABLED
-	_calentamiento.terminado.connect(_entrar.bind(almacen))
+	_calentamiento.terminado.connect(_llenar_y_entrar.bind(almacen))
 	_calentamiento.calentar(almacen)
 
 
@@ -228,6 +230,18 @@ func _pintar_el_calentamiento(progreso: float, calentamiento: CalentamientoDeSha
 func _pintar(valor: float) -> void:
 	_mostrado = maxf(_mostrado, valor)
 	_pantalla.pintar(_mostrado)
+
+
+func _llenar_y_entrar(almacen: Node) -> void:
+	_pantalla.contar_entrada()
+	var desde := _mostrado
+	var inicio: int = _ahora.call()
+	while _mostrado < 1.0:
+		await get_tree().process_frame
+		var transcurrido: float = (_ahora.call() - inicio) / 1000000.0
+		_pintar(lerpf(desde, 1.0, minf(1.0, transcurrido / LLENADO_FINAL)))
+	await get_tree().process_frame
+	_entrar(almacen)
 
 
 func _entrar(almacen: Node) -> void:
@@ -280,13 +294,12 @@ func _sirve_la_copia() -> bool:
 
 func _entrar_con_la_copia() -> void:
 	set_process(false)
-	_pantalla.contar_entrada()
 	_copia.visible = true
 	for capa: CanvasLayer in _capas_de_la_copia:
 		capa.visible = true
 	await get_tree().process_frame
 	await get_tree().process_frame
-	_entrar(_copia)
+	_llenar_y_entrar(_copia)
 
 
 func _descartar_la_copia() -> void:
