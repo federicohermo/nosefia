@@ -271,7 +271,7 @@ func texto_del_examen(nodo: Node3D) -> String:
 
 ## Baja a la cintura la caja recién levantada y le da su volumen al cuerpo del jugador.
 func _colgar_la_caja(nodo: Node3D) -> void:
-	if not nodo is CajaDelDeposito:
+	if not _se_lleva_como_caja(nodo):
 		return
 	if punto_de_la_caja == null:
 		push_error("ReposicionManual sin punto de la caja cableado: revisar almacen.tscn")
@@ -293,9 +293,9 @@ func _colgar_la_caja(nodo: Node3D) -> void:
 ## ahí está cortado, la caja va al piso al lado del jugador. Antes se le volvía a la mano, y eso
 ## era un clic que no hacía nada y no decía por qué: parado cerca de un mueble pasaba seguido.
 func _apoyar_la_caja(nodo: Node3D) -> void:
-	var caja := nodo as CajaDelDeposito
-	if caja == null or punto_de_la_caja == null:
+	if not _se_lleva_como_caja(nodo) or punto_de_la_caja == null:
 		return
+	var caja := nodo as RigidBody3D
 	jugador.ocupar_el_frente(false)
 	caja.top_level = false
 	caja.global_basis = _giro_de_la_mano(caja)
@@ -311,16 +311,16 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 		caja.global_basis = _giro_de_la_mano(caja)
 	if not llego and not _al_lado_del_jugador(caja):
 		# Ni donde apunta ni al lado: el jugador está metido en un hueco del tamaño de su cuerpo.
-		repositor.agarre.pedir_agarrar(caja.datos, caja)
+		repositor.agarre.pedir_agarrar(caja.get("datos"), caja)
 		return
-	caja.quedarse_quieta()
+	_quedar_quieta(caja)
 
 
 ## Cómo queda la caja sobre lo que la sostiene. Sobre otra caja copia su giro: girada encima de
 ## otra del mismo tamaño le quedan las esquinas en el aire. Sobre un mueble va al cuarto de vuelta
 ## más cercano al que tenía: derecha, y mirando todavía al jugador. En el piso queda como venía, y
 ## también sobre lo que está a ras del piso: una alfombra no es un mueble.
-func _giro_sobre(caja: CajaDelDeposito, apoyo: Node3D, punto: Vector3) -> Basis:
+func _giro_sobre(caja: RigidBody3D, apoyo: Node3D, punto: Vector3) -> Basis:
 	if apoyo == null or apoyo == suelo:
 		return caja.global_basis
 	if _a_ras_del_piso(caja, apoyo, punto):
@@ -337,7 +337,7 @@ func _giro_sobre(caja: CajaDelDeposito, apoyo: Node3D, punto: Vector3) -> Basis:
 ## Si debajo del apoyo, a menos de `A_RAS_DEL_PISO`, está el piso. El rayo sigue de largo por lo
 ## que no es el piso: arranca en la cara del apoyo, y el cuerpo del edificio tiene caras a la misma
 ## altura que el suelo.
-func _a_ras_del_piso(caja: CajaDelDeposito, apoyo: Node3D, punto: Vector3) -> bool:
+func _a_ras_del_piso(caja: RigidBody3D, apoyo: Node3D, punto: Vector3) -> bool:
 	var consulta := PhysicsRayQueryParameters3D.create(
 		punto + Vector3.UP * TOLERANCIA_DEL_APOYO,
 		punto + Vector3.DOWN * A_RAS_DEL_PISO,
@@ -358,8 +358,9 @@ func _a_ras_del_piso(caja: CajaDelDeposito, apoyo: Node3D, punto: Vector3) -> bo
 
 ## El giro horizontal que la caja tenía en la mano. La mano cuelga del giro del jugador, así que
 ## no se inclina con la mirada.
-func _giro_de_la_mano(caja: CajaDelDeposito) -> Basis:
-	var en_la_mano := punto_de_la_caja.global_basis.orthonormalized() * caja.orientacion_en_mano
+func _giro_de_la_mano(caja: RigidBody3D) -> Basis:
+	var orientacion: Basis = caja.get("orientacion_en_mano")
+	var en_la_mano := punto_de_la_caja.global_basis.orthonormalized() * orientacion
 	return Basis(Vector3.UP, atan2(-en_la_mano.x.z, en_la_mano.x.x))
 
 
@@ -372,7 +373,7 @@ func _giro_de_la_mano(caja: CajaDelDeposito) -> Basis:
 ##
 ## Se prueba el punto y después anillos cada vez más abiertos, hasta una caja de distancia. Sólo
 ## cuentan los lugares que siguen teniendo el mismo apoyo debajo: correrla no es bajarla.
-func _cerca_de(caja: CajaDelDeposito, punto: Vector3) -> bool:
+func _cerca_de(caja: RigidBody3D, punto: Vector3) -> bool:
 	var paso := _media_caja(caja).x / PASOS_PARA_ACERCAR * 2.0
 	for anillo in PASOS_PARA_ACERCAR + 1:
 		for lado in 1 if anillo == 0 else ReglasDeLosObjetos.LADOS_ALREDEDOR:
@@ -458,7 +459,7 @@ func _despertar_sobre(
 ##
 ## El radio sale del cuerpo del jugador y del de la caja, y no de un número escrito acá: más
 ## cerca, la caja queda adentro del jugador y lo sube arriba de ella.
-func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
+func _al_lado_del_jugador(caja: RigidBody3D) -> bool:
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var media := _media_caja(caja)
 	var radio: float = (cuerpo.shape as CapsuleShape3D).radius + media.length()
@@ -488,13 +489,13 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 ## estante la deja metida entre los paneles y dice que llegó. Medido: de 256 soltadas alrededor
 ## de la góndola del pasillo, 20 quedaban adentro de ella, todas a la altura del estante de
 ## arriba.
-func _entra_entera(caja: CajaDelDeposito) -> bool:
-	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+func _entra_entera(caja: RigidBody3D) -> bool:
+	var forma: CollisionShape3D = _cuerpo_de(caja)
 	var encogida := BoxShape3D.new()
 	# Jolt redondea las aristas con el margen, y una esquina metida unos milímetros no choca.
 	encogida.margin = 0.0
 	encogida.size = (
-		(forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
+		LimitesDeForma.de(forma.shape).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = encogida
@@ -506,8 +507,8 @@ func _entra_entera(caja: CajaDelDeposito) -> bool:
 
 ## Si la caja terminó adentro del cuerpo del jugador es que ahí no hay lugar para apoyarla, y
 ## dejarla igual lo sube arriba de ella.
-func _le_queda_encima_al_jugador(caja: CajaDelDeposito) -> bool:
-	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+func _le_queda_encima_al_jugador(caja: RigidBody3D) -> bool:
+	var forma: CollisionShape3D = _cuerpo_de(caja)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
 	consulta.transform = forma.global_transform
@@ -526,7 +527,7 @@ func _le_queda_encima_al_jugador(caja: CajaDelDeposito) -> bool:
 ## debajo del cursor, que resuelve `_apoyo_sobrevolado()`. **El costado de otra caja** es apilar:
 ## con una caja justo enfrente el cursor cae ahí y no en su tapa. **Cualquier otra cara vertical**
 ## la resuelve `_apoyo_debajo()`.
-func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
+func _apoyo_apuntado(caja: RigidBody3D) -> Dictionary:
 	var ojo := jugador.mira()
 	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
 	var golpe := _rayo(caja, ojo.origin, lejos)
@@ -564,7 +565,7 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 ##
 ## **Media caja antes de la punta y media caja después del ojo.** El rayo que baja no puede
 ## arrancar adentro de lo que la caja va a ocupar, y donde está parado el jugador no hay lugar.
-func _apoyo_sobrevolado(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Dictionary:
+func _apoyo_sobrevolado(caja: RigidBody3D, desde: Vector3, hasta: Vector3) -> Dictionary:
 	var margen := _media_caja(caja).length()
 	var recorrido := desde.distance_to(hasta) - margen
 	var mejor := {}
@@ -595,7 +596,7 @@ func _apoyo_sobrevolado(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -
 ## Lo que queda **delante** de la caja no cambia: apuntar al piso al pie de una pila sigue
 ## dejando la caja en el piso, porque ese lugar sí se ve.
 func _caja_rozada(
-	caja: CajaDelDeposito, desde: Vector3, hasta: Vector3, golpe: Dictionary
+	caja: RigidBody3D, desde: Vector3, hasta: Vector3, golpe: Dictionary
 ) -> CajaDelDeposito:
 	if golpe.get("collider") is CajaDelDeposito:
 		return null
@@ -634,7 +635,7 @@ func _caja_rozada(
 ## Se camina el rayo a pasos cortos, y en cada uno se mira hacia abajo una caja de altura. Se
 ## corta en lo que el rayo tocó: lo que queda detrás de una pared no cuenta.
 func _caja_sobrevolada(
-	caja: CajaDelDeposito, desde: Vector3, hasta: Vector3, golpe: Dictionary
+	caja: RigidBody3D, desde: Vector3, hasta: Vector3, golpe: Dictionary
 ) -> CajaDelDeposito:
 	if golpe.get("collider") is CajaDelDeposito:
 		return null
@@ -662,7 +663,7 @@ func _caja_sobrevolada(
 ##
 ## **La cara de abajo de una tabla no es un canto.** Encima de ella está esa misma tabla, que la
 ## mira no ve: la caja tiene que ir a la de abajo, que es la que se mira.
-func _tapa_de_ese_canto(caja: CajaDelDeposito, canto: Dictionary) -> Dictionary:
+func _tapa_de_ese_canto(caja: RigidBody3D, canto: Dictionary) -> Dictionary:
 	var adentro: Vector3 = -canto["normal"]
 	adentro.y = 0.0
 	if adentro.is_zero_approx():
@@ -678,7 +679,7 @@ func _tapa_de_ese_canto(caja: CajaDelDeposito, canto: Dictionary) -> Dictionary:
 ## de altura, y más arriba que eso la mira sobre la pared no daba nada: la caja iba al piso al
 ## lado del jugador, y la zona donde soltar subía la caja tenía un techo invisible. Se baja
 ## derecho desde media caja afuera de la pared, que es donde la caja va a quedar.
-func _apoyo_al_pie(caja: CajaDelDeposito, pared: Dictionary) -> Dictionary:
+func _apoyo_al_pie(caja: RigidBody3D, pared: Dictionary) -> Dictionary:
 	var afuera: Vector3 = pared["normal"]
 	afuera.y = 0.0
 	afuera = afuera.normalized()
@@ -705,7 +706,7 @@ func _apoyo_al_pie(caja: CajaDelDeposito, pared: Dictionary) -> Dictionary:
 ## Se sube de a una: desde el centro de cada caja, un rayo corto hacia arriba encuentra la que
 ## tiene apoyada encima. Un rayo desde bien arriba no sirve, porque en el depósito pegaría en el
 ## estante de arriba y no en la pila.
-func _tapa_de_la_pila(caja: CajaDelDeposito, base: CajaDelDeposito) -> Dictionary:
+func _tapa_de_la_pila(caja: RigidBody3D, base: CajaDelDeposito) -> Dictionary:
 	var tope := base
 	for piso in PISOS_DE_UNA_PILA:
 		var centro := tope.global_position
@@ -732,14 +733,14 @@ func _tapa_de_la_pila(caja: CajaDelDeposito, base: CajaDelDeposito) -> Dictionar
 ## y el ángulo de la vista decide en lugar del cursor. Medido a 0,9 m del estante del depósito:
 ## adentro del hueco la tapa queda entre 0,12 y 0,73 m debajo de lo apuntado; desde el frente de
 ## la madera, a 1,6.
-func _apoyo_debajo(caja: CajaDelDeposito, ojo: Vector3, punto: Vector3) -> Dictionary:
+func _apoyo_debajo(caja: RigidBody3D, ojo: Vector3, punto: Vector3) -> Dictionary:
 	var media := _media_caja(caja)
 	var desde := punto + (ojo - punto).normalized() * media.length()
 	return _rayo(caja, desde, desde + Vector3.DOWN * media.y * 2.0)
 
 
 ## Dónde va el centro de la caja para quedar encima del punto apoyado y adentro de su huella.
-func _lugar_sobre(caja: CajaDelDeposito, punto: Vector3) -> Vector3:
+func _lugar_sobre(caja: RigidBody3D, punto: Vector3) -> Vector3:
 	var media := _media_caja(caja)
 	var huella := _huella_del_apoyo(caja, punto)
 	var lugar := punto + Vector3.UP * media.y
@@ -752,8 +753,8 @@ func _lugar_sobre(caja: CajaDelDeposito, punto: Vector3) -> Vector3:
 ##
 ## Apuntar al piso al pie de un mueble da un lugar donde la caja no entra: media caja queda
 ## adentro de la madera, y entonces el barrido que la baja se frena a mitad de camino.
-func _apartado(caja: CajaDelDeposito, destino: Vector3) -> Vector3:
-	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+func _apartado(caja: RigidBody3D, destino: Vector3) -> Vector3:
+	var forma: CollisionShape3D = _cuerpo_de(caja)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
 	consulta.transform = Transform3D(forma.global_basis, destino)
@@ -775,7 +776,7 @@ func _apartado(caja: CajaDelDeposito, destino: Vector3) -> Vector3:
 ## edificio entero, así que su volumen abarca el local y no dice nada de dónde termina la tapa.
 ## Se tantea hasta una caja de distancia hacia cada lado: con eso alcanza para correrla media
 ## caja y que entre entera.
-func _huella_del_apoyo(caja: CajaDelDeposito, punto: Vector3) -> AABB:
+func _huella_del_apoyo(caja: RigidBody3D, punto: Vector3) -> AABB:
 	var huella := AABB(punto, Vector3.ZERO)
 	for direccion: Vector3 in [Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK]:
 		huella = huella.expand(punto + direccion * _borde_del_apoyo(caja, punto, direccion))
@@ -786,7 +787,7 @@ func _huella_del_apoyo(caja: CajaDelDeposito, punto: Vector3) -> AABB:
 ##
 ## A pasos fijos el canto de un apoyo del tamaño de la caja cae entre dos pasos, y entonces la
 ## huella sale más chica que la caja y la deja descentrada justo donde tenía que entrar justa.
-func _borde_del_apoyo(caja: CajaDelDeposito, punto: Vector3, direccion: Vector3) -> float:
+func _borde_del_apoyo(caja: RigidBody3D, punto: Vector3, direccion: Vector3) -> float:
 	var cerca := 0.0
 	var lejos := 2.0 * _media_caja(caja).x
 	if _hay_apoyo(caja, punto + direccion * lejos, punto.y):
@@ -801,7 +802,7 @@ func _borde_del_apoyo(caja: CajaDelDeposito, punto: Vector3, direccion: Vector3)
 
 
 ## Si debajo de ese punto hay superficie a la altura dada.
-func _hay_apoyo(caja: CajaDelDeposito, donde: Vector3, altura: float) -> bool:
+func _hay_apoyo(caja: RigidBody3D, donde: Vector3, altura: float) -> bool:
 	var golpe := _rayo(
 		caja, donde + Vector3.UP * TOLERANCIA_DEL_APOYO, donde + Vector3.DOWN * TOLERANCIA_DEL_APOYO
 	)
@@ -821,7 +822,7 @@ func _hay_apoyo(caja: CajaDelDeposito, donde: Vector3, altura: float) -> bool:
 ## caja—, igual que `jugador.gd` al medir la caída. El precio es que `Agarre` le pone la máscara
 ## en 0 mientras la lleva: esto corre desde `objeto_soltado`, que `soltar()` emite DESPUÉS de
 ## devolvérsela. Emitirlo antes dejaría todas estas consultas contestando vacío.
-func _rayo(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Dictionary:
+func _rayo(caja: RigidBody3D, desde: Vector3, hasta: Vector3) -> Dictionary:
 	var consulta := PhysicsRayQueryParameters3D.create(desde, hasta, caja.collision_mask)
 	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
 	return get_world_3d().direct_space_state.intersect_ray(consulta)
@@ -836,7 +837,7 @@ func _rayo(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Dictionary:
 ## **Se prueba desde la mano y, si se traba, desde el cuerpo.** Parado contra un estante, la mano
 ## queda debajo del canto de la tabla de arriba, y la subida choca con él por un par de
 ## centímetros: la caja no llegaba a un lugar donde entraba de sobra.
-func _llevar_hasta(caja: CajaDelDeposito, destino: Vector3) -> Vector3:
+func _llevar_hasta(caja: RigidBody3D, destino: Vector3) -> Vector3:
 	var mano := punto_de_la_caja.global_position
 	var cuerpo := Vector3(jugador.global_position.x, mano.y, jugador.global_position.z)
 	var llegada := mano
@@ -851,8 +852,8 @@ func _llevar_hasta(caja: CajaDelDeposito, destino: Vector3) -> Vector3:
 
 
 ## El punto más cercano a `hasta` al que la caja llega sin meterse adentro de nada.
-func _barrer(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Vector3:
-	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+func _barrer(caja: RigidBody3D, desde: Vector3, hasta: Vector3) -> Vector3:
+	var forma: CollisionShape3D = _cuerpo_de(caja)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
 	consulta.transform = Transform3D(forma.global_basis, desde)
@@ -870,10 +871,39 @@ static func _adentro(valor: float, desde: float, hasta: float) -> float:
 	return clampf(valor, desde, hasta)
 
 
+## Lo que se lleva al frente y se apoya como una caja: las cajas del depósito y los bidones de
+## jabón.
+static func _se_lleva_como_caja(nodo: Node3D) -> bool:
+	if nodo is CajaDelDeposito:
+		return true
+	var objeto := nodo as ObjetoAgarrable
+	return (
+		objeto != null and objeto.datos != null and ReglasDeLaLimpieza.JABONES.has(objeto.datos.id)
+	)
+
+
+## El volumen de lo que se lleva como caja: la caja lo llama `Cuerpo`; un bidón, `Forma`.
+static func _cuerpo_de(caja: RigidBody3D) -> CollisionShape3D:
+	var cuerpo := caja.get_node_or_null("Cuerpo") as CollisionShape3D
+	return cuerpo if cuerpo != null else caja.get_node("Forma") as CollisionShape3D
+
+
+## La caja se congela donde quedó. Un bidón sólo se duerme: tiene que caer si le sacan lo de
+## abajo, y congelado el útil vuelve al tamaño de la mano.
+static func _quedar_quieta(caja: RigidBody3D) -> void:
+	var del_deposito := caja as CajaDelDeposito
+	if del_deposito != null:
+		del_deposito.quedarse_quieta()
+		return
+	caja.linear_velocity = Vector3.ZERO
+	caja.angular_velocity = Vector3.ZERO
+	caja.sleeping = true
+
+
 ## La mitad de lo que ocupa en cada eje del mundo: girada, la caja ocupa más que su lado.
-func _media_caja(caja: CajaDelDeposito) -> Vector3:
-	var forma: CollisionShape3D = caja.get_node("Cuerpo")
-	var media := (forma.shape as BoxShape3D).size * forma.scale / 2.0
+func _media_caja(caja: RigidBody3D) -> Vector3:
+	var forma: CollisionShape3D = _cuerpo_de(caja)
+	var media := LimitesDeForma.de(forma.shape).size * forma.scale / 2.0
 	var giro := caja.global_basis.orthonormalized()
 	return (Transform3D(giro) * AABB(-media, media * 2.0)).size / 2.0
 

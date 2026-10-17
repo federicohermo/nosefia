@@ -238,22 +238,30 @@ func test_el_balde_se_mantiene_vertical_al_mirar_en_la_mano() -> void:  # AC-PLY
 	assert_object(agarre.manos().sostenido()).is_same(balde.datos)
 
 
-func test_los_bidones_se_llevan_y_se_apoyan_como_el_balde() -> void:  # AC-PLY-101
+func test_los_bidones_se_llevan_y_se_apoyan_como_las_cajas() -> void:  # AC-PLY-101
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
+	var punto: Node3D = (almacen.get("_reposicion_manual") as Node).get("punto_de_la_caja")
 	for nombre: String in ["JabonAzul", "JabonRosa", "JabonAmarillo"]:
-		var bidon: Node3D = almacen.get_node("Objetos/" + nombre)
+		var bidon: RigidBody3D = almacen.get_node("Objetos/" + nombre)
+		var mascara := bidon.collision_mask
 		_agarrar(almacen, bidon)
-		for alto: float in [0.0, MIRANDO_ABAJO]:
-			await _parar(jugador, PISO_LIBRE, Vector3.RIGHT, alto)
-			await get_tree().process_frame
-			await get_tree().process_frame
-			_comprobar_derecho(bidon, "%s en la mano, mirando %.0f grados" % [nombre, alto])
+		await get_tree().physics_frame
+		assert_object(bidon.get_parent()).override_failure_message(nombre).is_same(punto)
+		await _parar(jugador, PISO_LIBRE, Vector3.RIGHT, MIRANDO_AL_PISO)
+		var golpe := _golpe_de_la_mira(jugador, bidon, mascara)
+		assert_bool(golpe.is_empty()).override_failure_message(nombre).is_false()
 		agarre.soltar(true)
 		await _dos_segundos_de_fisica()
 		_comprobar_derecho(bidon, "%s soltado" % nombre)
 		_comprobar_la_mano_vacia(almacen, nombre)
+		var lejos := _en_el_piso(bidon.global_position - (golpe["position"] as Vector3)).length()
+		(
+			assert_float(lejos)
+			. override_failure_message("%s quedó a %.2f m de donde se miraba" % [nombre, lejos])
+			. is_less(MEDIO_HUECO)
+		)
 
 
 ## Los cuatro apoyos: el punto que se mira, hacia dónde mira el jugador y cuánto baja la vista.

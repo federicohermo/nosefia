@@ -11,7 +11,6 @@ texto = "El azul es el que saca el moho."
 script = ExtResource("1_objeto")
 id = &"jabon_azul"
 nombre = "Jabón azul"
-se_apoya_derecho = true
 sonoridad = 5
 subtitulo = "Un bidón de jabón azul, marca “2”. Sirve para manchas de humedad."
 revelacion = SubResource("Resource_revelacion")

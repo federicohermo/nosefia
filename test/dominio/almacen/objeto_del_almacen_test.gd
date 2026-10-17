@@ -111,17 +111,13 @@ func test_solo_la_caja_del_deposito_admite_otro_objeto_encima() -> void:  # AC-P
 		)
 
 
-func test_solo_el_balde_y_los_bidones_se_apoyan_derechos() -> void:  # AC-PLY-051 AC-PLY-101
+func test_solo_el_balde_se_apoya_derecho() -> void:  # AC-PLY-051
 	assert_bool(ObjetoDelAlmacen.new().se_apoya_derecho).is_false()
 	for objeto in _objetos_del_almacen():
-		var derecho: bool = (
-			objeto.id == ReglasDeLaLimpieza.ID_DEL_BALDE
-			or ReglasDeLaLimpieza.JABONES.has(objeto.id)
-		)
 		(
 			assert_bool(objeto.se_apoya_derecho)
 			. override_failure_message("%s: se apoya derecho" % objeto.id)
-			. is_equal(derecho)
+			. is_equal(objeto.id == ReglasDeLaLimpieza.ID_DEL_BALDE)
 		)
 
 
