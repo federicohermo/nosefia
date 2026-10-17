@@ -49,9 +49,9 @@ const A_RAS_DEL_PISO := 0.05
 ## a null value` que no nombra ni al `@export` ni a la escena. Siendo hija no hay nada que
 ## resolver. Medido el 2026-09-19.
 const GUIA := "Guia"
-## Un bidón cuelga del punto de la caja corrido a la derecha y más abajo: en el medio tapaba el
-## balde donde se lo vuelca.
-const BIDON_A_UN_COSTADO := Vector3(0.35, -0.15, 0.0)
+## Un bidón cuelga del punto de la caja corrido a la derecha, más abajo y más cerca del cuerpo:
+## en el medio tapaba el balde donde se lo vuelca.
+const BIDON_A_UN_COSTADO := Vector3(0.35, -0.15, 0.2)
 
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal
@@ -279,9 +279,10 @@ func _colgar_la_caja(nodo: Node3D) -> void:
 	if punto_de_la_caja == null:
 		push_error("ReposicionManual sin punto de la caja cableado: revisar almacen.tscn")
 		return
-	repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
-	if not nodo is CajaDelDeposito:
-		nodo.position = BIDON_A_UN_COSTADO
+	# El bidón tiene su propio punto: examinarlo lo devuelve a él, y no al medio de la caja.
+	repositor.agarre.mover_lo_sostenido(
+		punto_de_la_caja if nodo is CajaDelDeposito else _punto_del_bidon()
+	)
 	jugador.ocupar_el_frente(true)
 	despertar_lo_de_arriba(nodo)
 
@@ -874,6 +875,16 @@ static func _adentro(valor: float, desde: float, hasta: float) -> float:
 	if desde > hasta:
 		return (desde + hasta) / 2.0
 	return clampf(valor, desde, hasta)
+
+
+func _punto_del_bidon() -> Node3D:
+	var punto := punto_de_la_caja.get_node_or_null("PuntoDelBidon") as Node3D
+	if punto == null:
+		punto = Node3D.new()
+		punto.name = "PuntoDelBidon"
+		punto.position = BIDON_A_UN_COSTADO
+		punto_de_la_caja.add_child(punto)
+	return punto
 
 
 ## Lo que se lleva al frente y se apoya como una caja: las cajas del depósito y los bidones de
