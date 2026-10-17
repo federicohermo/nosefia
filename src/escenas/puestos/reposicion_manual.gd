@@ -50,9 +50,9 @@ const A_RAS_DEL_PISO := 0.05
 ## resolver. Medido el 2026-09-19.
 const GUIA := "Guia"
 ## Dónde va el bidón en la mano, desde el giro del jugador: a la derecha, con el centro a 1,28 m
-## del piso y a 35 cm, pegado al cuerpo como la caja. No cuelga del punto de la caja porque ése se
+## del piso y a 45 cm, cerca del cuerpo como la caja. No cuelga del punto de la caja porque ése se
 ## estira hasta lo libre, y el bidón quedaba lejos. En el medio tapaba el balde donde se lo vuelca.
-const BIDON_A_UN_COSTADO := Vector3(0.3, 1.28, -0.35)
+const BIDON_A_UN_COSTADO := Vector3(0.3, 1.28, -0.45)
 
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal
