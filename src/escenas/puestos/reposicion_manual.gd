@@ -49,6 +49,9 @@ const A_RAS_DEL_PISO := 0.05
 ## a null value` que no nombra ni al `@export` ni a la escena. Siendo hija no hay nada que
 ## resolver. Medido el 2026-09-19.
 const GUIA := "Guia"
+## Un bidón cuelga del punto de la caja corrido a la derecha y más abajo: en el medio tapaba el
+## balde donde se lo vuelca.
+const BIDON_A_UN_COSTADO := Vector3(0.35, -0.15, 0.0)
 
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal
@@ -277,6 +280,8 @@ func _colgar_la_caja(nodo: Node3D) -> void:
 		push_error("ReposicionManual sin punto de la caja cableado: revisar almacen.tscn")
 		return
 	repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
+	if not nodo is CajaDelDeposito:
+		nodo.position = BIDON_A_UN_COSTADO
 	jugador.ocupar_el_frente(true)
 	despertar_lo_de_arriba(nodo)
 

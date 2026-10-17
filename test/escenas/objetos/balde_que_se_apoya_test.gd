@@ -249,6 +249,8 @@ func test_los_bidones_se_llevan_y_se_apoyan_como_las_cajas() -> void:  # AC-PLY-
 		_agarrar(almacen, bidon)
 		await get_tree().physics_frame
 		assert_object(bidon.get_parent()).override_failure_message(nombre).is_same(punto)
+		# Corrido a un costado: en el medio tapaba el balde donde se lo vuelca.
+		assert_float(bidon.position.x).override_failure_message(nombre).is_greater(0.2)
 		await _parar(jugador, PISO_LIBRE, Vector3.RIGHT, MIRANDO_AL_PISO)
 		var golpe := _golpe_de_la_mira(jugador, bidon, mascara)
 		assert_bool(golpe.is_empty()).override_failure_message(nombre).is_false()
