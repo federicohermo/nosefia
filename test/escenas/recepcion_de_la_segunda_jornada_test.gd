@@ -185,7 +185,7 @@ func test_rechazo_conserva_cuerpo_y_pedido_en_la_mano() -> void:  # AC-CTR-055, 
 	var agarre: Agarre = almacen.get("_agarre")
 	var papel := _ticket(almacen, [])
 	assert_object(agarre.cuerpo_sostenido()).is_same(papel)
-	assert_str(atendida.dialogo().entrada_actual()).starts_with("Yo no pedí esto. ")
+	assert_str(atendida.dialogo().entrada_actual()).starts_with(DialogosDeCompradores.RECHAZO)
 	_pulsar(almacen)
 	assert_object(agarre.cuerpo_sostenido()).is_same(papel)
 	assert_object(atendida.comprador().pedido()).is_same(pedido)
