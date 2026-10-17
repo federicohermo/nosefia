@@ -11,7 +11,6 @@ texto = "El amarillo es el que saca el polvo."
 script = ExtResource("1_objeto")
 id = &"jabon_amarillo"
 nombre = "Jabón amarillo"
-se_apoya_derecho = true
 sonoridad = 5
 subtitulo = "Un bidón de jabón amarillo, marca “O”. Sirve para manchas de polvo."
 revelacion = SubResource("Resource_revelacion")

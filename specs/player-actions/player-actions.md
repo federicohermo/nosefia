@@ -163,7 +163,10 @@ SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adent
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
 lugar.
 
-Algunas cosas se apoyan derechas: hoy, el balde y los tres bidones de jabón. CUANDO se suelta una de ellas, el sistema
+Los tres bidones de jabón se llevan y se apoyan como las cajas: abajo y al frente en la mano, y
+al soltarlos quedan derechos donde la mira toca, o al lado del jugador si ahí no entran.
+
+Algunas cosas se apoyan derechas: hoy, sólo el balde. CUANDO se suelta una de ellas, el sistema
 DEBE dejarla con su eje vertical, mire adonde mire la vista. SI justo en el punto que la mira
 toca no entra, ENTONCES el sistema DEBE probar alrededor de ese punto, sobre el mismo apoyo y
 hasta un ancho de lo soltado. SI ahí tampoco entra, o la superficie no la admite, ENTONCES DEBE
@@ -220,10 +223,10 @@ adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérse
 dibujarse una sola vez. La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada
 mientras la mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
 
-### BR-PLY-025 — El balde y los bidones se llevan verticales
+### BR-PLY-025 — El balde se lleva vertical
 
-MIENTRAS el jugador lleva el balde o un bidón de jabón en la mano, el sistema DEBE sostenerlo
-en el mismo punto de carga que las cajas, sin rotación adicional hacia la cara. Su eje DEBE permanecer vertical
+MIENTRAS el jugador lleva el balde en la mano, el sistema DEBE sostenerlo en el mismo punto
+de carga que las cajas, sin rotación adicional hacia la cara. Su eje DEBE permanecer vertical
 respecto del piso al mirar arriba o abajo, y DEBE acompañar el giro horizontal del jugador.
 CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
 
@@ -1092,10 +1095,10 @@ GJ-52 CUANDO se suelta mirando su borde gris superior desde piso transitable ENT
 descansa sobre la cara superior visible, no sobre la pared blanca, y no atraviesa el borde.
 La comprobación cruza la base dibujada y la superficie física del mismo contacto.
 
-### AC-PLY-101 — Los bidones se llevan y se apoyan como el balde *(verifica BR-PLY-025, BR-PLY-018)*
+### AC-PLY-101 — Los bidones se llevan y se apoyan como las cajas *(verifica BR-PLY-018)*
 
-DADO cada bidón de jabón en la mano CUANDO el jugador mira al frente o hacia abajo ENTONCES el
-bidón sigue vertical. CUANDO se lo suelta ENTONCES queda derecho y la mano queda vacía.
+DADO cada bidón de jabón en la mano ENTONCES cuelga del mismo punto que una caja. CUANDO se lo
+suelta mirando al piso libre ENTONCES queda derecho donde la mira tocaba y la mano queda vacía.
 
 ### AC-PLY-100 — La cabecera acomoda la caja sobre metal visible *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
 
