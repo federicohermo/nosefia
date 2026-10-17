@@ -21,10 +21,25 @@ func _ready() -> void:
 
 func mostrar() -> void:
 	visible = true
+	_latir(true)
 
 
 func ocultar() -> void:
 	visible = false
+	_latir(false)
+
+
+func _exit_tree() -> void:
+	_latir(false)
+
+
+## Mientras compila, el motor puede trabar la imagen, y la barra se traba con él.
+## Los puntos de `html/head_include` los anima el navegador aparte, y siguen latiendo.
+func _latir(prendido: bool) -> void:
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval(
+			"document.body.classList.toggle('cargando', %s)" % ("true" if prendido else "false")
+		)
 
 
 func pintar(progreso: float) -> void:
