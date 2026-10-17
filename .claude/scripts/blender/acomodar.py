@@ -195,16 +195,36 @@ def medir(letra):
     bm.from_mesh(objeto.data)
     bm.transform(objeto.matrix_world)
     centro = objeto.matrix_world.translation
+    if objeto.data.get('estructura_central_unica_v1'):
+        lado = bm.faces.layers.int['lado_de_estante']
+        nivel = bm.faces.layers.int['nivel_de_estante']
+        nombres = {1: 'este', 2: 'oeste', 3: 'norte', 4: 'sur'}
+        regiones = {}
+        for cara in bm.faces:
+            if cara[lado]:
+                regiones.setdefault((cara[lado], cara[nivel]), []).append(cara)
+        estantes = {}
+        for (numero, altura), caras in sorted(regiones.items()):
+            clave = f'{letra}.{nombres[numero]}.{altura}'
+            estantes[clave] = Estante(clave, caras, max(caras, key=lambda c: c.calc_area()))
+        return objeto, bm, estantes
     por_cara = {}
     for isla in _islas(bm):
         cara = _cara_de_arriba(isla)
         if cara is None or _es_panel(isla, objeto):
             continue
+        if all("Zocalo" in objeto.material_slots[c.material_index].material.name for c in isla):
+            continue
         medio = cara.calc_center_median()
         if letra in HELADERAS and medio.z > TECHO_DE_LA_HELADERA:
             continue
         if letra in ("A", "B"):
-            nombre = cara_de_isla(tuple(cara.normal), tuple(medio - centro))
+            vertices = {v for c in isla for v in c.verts}
+            centro_de_isla = Vector(tuple(
+                (min(v.co[eje] for v in vertices) + max(v.co[eje] for v in vertices)) / 2
+                for eje in range(3)
+            ))
+            nombre = cara_de_isla(tuple(cara.normal), tuple(centro_de_isla - centro))
         else:
             nombre = next(partes(c)[1] for c in ESTANTES if partes(c)[0] == letra)
         por_cara.setdefault(nombre, []).append((medio.z, isla, cara))

@@ -293,11 +293,8 @@ def partes(estante: str) -> tuple[str, str, int]:
     return mueble, cara, int(nivel)
 
 
-def cara_de_isla(normal: tuple[float, float, float], medio: tuple[float, float, float]) -> str:
-    """Clasifica una chapa de isla por su normal y centro relativo al mueble."""
-    # Las cabeceras son rampas: las altas acortan su fondo y el centro cruza el antiguo
-    # umbral espacial de 1,9 m. Su inclinación conserva la identidad de la cara.
-    if abs(normal[1]) > 0.01:
+def cara_de_isla(_normal: tuple[float, float, float], medio: tuple[float, float, float]) -> str:
+    if abs(medio[1]) > abs(medio[0]):
         return "norte" if medio[1] > 0 else "sur"
     return "oeste" if medio[0] < 0 else "este"
 
