@@ -654,7 +654,7 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
 	assert_int(jugador.get_node("Giro/Camara/PuntoDeExamen").get_child_count()).is_equal(1)
 	# La unidad recién sacada de la caja se examina a la distancia de siempre.
-	assert_float(jugador.get_node("Giro/Camara/PuntoDeExamen").position.length()).is_equal_approx(
+	assert_float(-jugador.get_node("Giro/Camara/PuntoDeExamen").position.z).is_equal_approx(
 		ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN, 0.001
 	)
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
