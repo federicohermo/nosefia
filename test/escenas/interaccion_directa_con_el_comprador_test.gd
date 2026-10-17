@@ -100,7 +100,9 @@ func test_la_recepcion_real_conserva_pedido_y_rechazo_y_vende_una_vez() -> void:
 	await _interaccion_real(almacen)
 	await _pulsar_real()
 	await _interaccion_real(almacen)
-	assert_str(atendida.dialogo().entrada_actual()).is_equal("Recordatorio")
+	assert_int(atendida.dialogo().entrada_actual().count("[color=#e4f850]")).is_equal(
+		pedido.productos().size()
+	)
 	await _pulsar_real()
 	var incorrecto: ObjetoAgarrable = load(OBJETO).instantiate()
 	incorrecto.datos = Ticket.new([])
@@ -108,7 +110,7 @@ func test_la_recepcion_real_conserva_pedido_y_rechazo_y_vende_una_vez() -> void:
 	assert_bool(agarre.pedir_agarrar(incorrecto.datos, incorrecto)).is_true()
 	await _interaccion_real(almacen)
 	assert_object(agarre.cuerpo_sostenido()).is_same(incorrecto)
-	assert_str(atendida.dialogo().entrada_actual()).starts_with("Yo no pedí esto. ")
+	assert_str(atendida.dialogo().entrada_actual()).starts_with(DialogosDeCompradores.RECHAZO)
 	await _pulsar_real()
 	assert_object(agarre.cuerpo_sostenido()).is_same(incorrecto)
 	assert_object(agarre.entregar()).is_same(incorrecto)
@@ -148,7 +150,6 @@ func _una_entrada(almacen: Node3D) -> Atencion:
 	var comprador := atenciones.atencion().comprador()
 	var guion := DialogosDeCompradores.new()
 	guion.tin = PackedStringArray(["Inicial"])
-	guion.recordatorio_tin = "Recordatorio"
 	guion.despedida_tin = PackedStringArray(["Despedida"])
 	comprador.dialogos = guion
 	return atenciones.atencion()
