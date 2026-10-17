@@ -170,8 +170,9 @@ func test_tia_rechaza_otra_zucarachas_y_conserva_el_pedido_entero() -> void:  # 
 		assert_bool(atencion.vendida()).is_false()
 		assert_int(atencion.interactuar(objeto)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
 	assert_int(atencion.interactuar(null)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
-	assert_str(atencion.dialogo().entrada_actual()).contains("Pepito")
-	assert_str(atencion.dialogo().entrada_actual()).contains("Zucarachas")
+	# El recordatorio nombra sólo lo que falta: el Pepito, y no la Zucarachas ya recibida.
+	assert_int(atencion.dialogo().entrada_actual().count("[color=#e4f850]")).is_equal(1)
+	assert_str(atencion.dialogo().entrada_actual()).not_contains(primera.producto.nombre)
 
 
 func test_el_ticket_compara_cantidades_sin_orden() -> void:  # AC-CTR-038
