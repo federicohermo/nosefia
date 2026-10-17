@@ -163,9 +163,9 @@ SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adent
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
 lugar.
 
-Los tres bidones de jabón se llevan y se apoyan como las cajas: abajo y al frente en la mano,
-corridos a un costado para no tapar el balde, y al soltarlos quedan derechos donde la mira
-toca, o al lado del jugador si ahí no entran.
+Los tres bidones de jabón se llevan como el balde: verticales, a un costado y acompañando la
+mira, para no perderlos de vista al volcarlos. Se apoyan como las cajas: al soltarlos quedan
+derechos donde la mira toca, o al lado del jugador si ahí no entran.
 
 Algunas cosas se apoyan derechas: hoy, sólo el balde. CUANDO se suelta una de ellas, el sistema
 DEBE dejarla con su eje vertical, mire adonde mire la vista. SI justo en el punto que la mira
