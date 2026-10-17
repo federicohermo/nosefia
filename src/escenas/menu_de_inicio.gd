@@ -42,6 +42,11 @@ var _pantalla: PantallaDeCarga
 var _almacen: PackedScene
 var _espera: EsperaDeLaCarga
 var _calentamiento: CalentamientoDeShaders
+var _calentamiento_en_el_menu: CalentamientoDeShaders
+var _copia: Node3D
+var _capas_de_la_copia: Array[CanvasLayer] = []
+var _copia_leyo_un_guardado := false
+var _copia_con_las_preferencias := true
 var _nuevo_juego: bool = false
 var _fundiendo: bool = false
 var _fundido: ColorRect
@@ -66,6 +71,9 @@ func _ready() -> void:
 	_configuraciones.preparar(_ajuste.cargar_y_aplicar())
 	_configuraciones.preferencias_cambiadas.connect(_ajuste.previsualizar)
 	_configuraciones.preferencias_confirmadas.connect(_ajuste.cambiar)
+	_configuraciones.preferencias_confirmadas.connect(
+		func(_nuevas: Preferencias) -> void: _copia_con_las_preferencias = false
+	)
 	_configuraciones.cerrada.connect(_al_cerrar_las_configuraciones)
 	_sonar_el_tema()
 	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())
@@ -131,9 +139,13 @@ func _process(delta: float) -> void:
 		var leido := (_carga.progreso() - _lectura_inicial) / (1.0 - _lectura_inicial)
 		_pintar(_parte_de_la_lectura * clampf(leido, 0.0, 1.0))
 	_espera.avanzar(delta)
-	if _espera.puede_entrar():
+	if _espera.puede_entrar() and _calentamiento_en_el_menu == null:
 		_espera = null
-		_calentar_el_almacen()
+		if _copia != null and _sirve_la_copia():
+			_entrar_con_la_copia()
+		else:
+			_descartar_la_copia()
+			_calentar_el_almacen()
 
 
 ## Esc la cierra sola; el foco vuelve al botón que la abrió.
@@ -199,7 +211,8 @@ func _calentar_el_almacen() -> void:
 
 
 func _pintar_el_calentamiento(progreso: float) -> void:
-	_pintar(_parte_de_la_lectura + progreso * (1.0 - _parte_de_la_lectura))
+	if _pantalla.visible:
+		_pintar(_parte_de_la_lectura + progreso * (1.0 - _parte_de_la_lectura))
 
 
 func _pintar(valor: float) -> void:
@@ -222,6 +235,51 @@ func _al_cargar_el_almacen(escena: PackedScene) -> void:
 	_almacen = escena
 	if _espera != null:
 		_espera.terminar_carga()
+	elif OS.has_feature("web"):
+		_calentar_debajo_del_menu()
+
+
+func _calentar_debajo_del_menu() -> void:
+	_copia = _almacen.instantiate()
+	_copia_leyo_un_guardado = _guardado.hay_guardado()
+	get_tree().root.add_child(_copia)
+	_copia.process_mode = Node.PROCESS_MODE_DISABLED
+	for capa: CanvasLayer in _copia.find_children("*", "CanvasLayer", true, false):
+		if capa.visible:
+			capa.visible = false
+			_capas_de_la_copia.append(capa)
+	_calentamiento_en_el_menu = CalentamientoDeShaders.new()
+	add_child(_calentamiento_en_el_menu)
+	_calentamiento_en_el_menu.avanzo.connect(_pintar_el_calentamiento)
+	_calentamiento_en_el_menu.terminado.connect(_al_calentar_debajo_del_menu)
+	_calentamiento_en_el_menu.calentar(_copia)
+
+
+func _al_calentar_debajo_del_menu() -> void:
+	_calentamiento_en_el_menu.queue_free()
+	_calentamiento_en_el_menu = null
+	_copia.visible = false
+	print("[carga] almacén calentado debajo del menú")
+
+
+func _sirve_la_copia() -> bool:
+	return _copia_con_las_preferencias and not (_nuevo_juego and _copia_leyo_un_guardado)
+
+
+func _entrar_con_la_copia() -> void:
+	set_process(false)
+	_copia.visible = true
+	for capa: CanvasLayer in _capas_de_la_copia:
+		capa.visible = true
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_entrar(_copia)
+
+
+func _descartar_la_copia() -> void:
+	if _copia != null:
+		_copia.queue_free()
+		_copia = null
 
 
 ## Una carga fallida no deja al jugador colgado en la pantalla de carga: vuelve al menú, y el
