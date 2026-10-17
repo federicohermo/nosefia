@@ -50,9 +50,9 @@ const A_RAS_DEL_PISO := 0.05
 ## resolver. Medido el 2026-09-19.
 const GUIA := "Guia"
 ## Un bidón cuelga del punto de la caja corrido a la derecha, con el centro a 1,19 m del piso y a
-## 75 cm de la cámara. En el medio tapaba el balde donde se lo vuelca; a la altura del balde, que
-## cuelga del asa, tapaba la vista.
-const BIDON_A_UN_COSTADO := Vector3(0.3, 0.05, 0.05)
+## 60 cm del cuerpo, como el balde. En el medio tapaba el balde donde se lo vuelca; a la altura del
+## balde, que cuelga del asa, tapaba la vista.
+const BIDON_A_UN_COSTADO := Vector3(0.3, 0.05, 0.2)
 
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal
