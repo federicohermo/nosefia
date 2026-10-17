@@ -64,7 +64,7 @@ func _extraer() -> void:
 			push_error("%s: %d nodos del modelo sobre su tanda" % [producto.nombre, encima.size()])
 			fallas += 1
 			continue
-		var ruta := ruta_de_la_malla(producto)
+		var ruta := (contenido.get_child(producto.id) as MeshInstance3D).mesh.resource_path
 		var error := ResourceSaver.save(encima[0].mesh, ruta)
 		if error != OK:
 			push_error("%s: no se pudo guardar %s (%d)" % [producto.nombre, ruta, error])
