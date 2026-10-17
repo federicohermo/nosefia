@@ -614,6 +614,8 @@ func _alternar_el_celular() -> void:
 
 
 func _cablear_el_celular() -> void:
+	_computadora.computadora_abierta.connect(_pantalla_del_celular.cubrir_recordatorio.bind(true))
+	_computadora.computadora_cerrada.connect(_pantalla_del_celular.cubrir_recordatorio.bind(false))
 	_celular.celular_abierto.connect(_al_abrir_el_celular)
 	_celular.celular_cerrado.connect(_al_cerrar_el_celular)
 	_celular.menu_mostrado.connect(_mostrar_el_menu_del_celular)

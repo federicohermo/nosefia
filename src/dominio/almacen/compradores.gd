@@ -27,7 +27,7 @@ const DIALOGOS_SEGUNDA := preload("res://assets/dialogos/compradores_jornada_2.t
 const FILAS := [
 	["Marta", [[Producto.Id.ACTRONCITO, 2], [Producto.Id.ZUCARACHAS, 1]], 0],
 	["Rubén", [[Producto.Id.BURBALOO, 1], [Producto.Id.DUREXTRA, 2]], -500],
-	["Nélida", [[Producto.Id.MALBARDO, 1], [Producto.Id.LAYSNTT, 1]], 300],
+	["Nélida", [[Producto.Id.MALBARDO, 1], [Producto.Id.LAYSNNT, 1]], 300],
 	["El pibe del kiosco", [[Producto.Id.BURBALOO, 3]], 0],
 ]
 
@@ -65,11 +65,11 @@ static func _primera_noche() -> Array[Comprador]:
 	var tin := _comprador_de(
 		[
 			"Tin",
-			[[Producto.Id.MAROLINI, 1], [Producto.Id.CORACOLA, 1], [Producto.Id.MALBARDO, 1]],
+			[[Producto.Id.MAROLINI, 1], [Producto.Id.PURA_COLA, 1], [Producto.Id.MALBARDO, 1]],
 			0
 		]
 	)
-	var tia := _comprador_de(["Tia", [[Producto.Id.ZUCARACHAS, 1], [Producto.Id.PEPITOS, 1]], 0])
+	var tia := _comprador_de(["Tia", [[Producto.Id.ZUCARACHAS, 1], [Producto.Id.PEPITO, 1]], 0])
 	tin.personaje = DialogosDeCompradores.Personaje.TIN
 	tia.personaje = DialogosDeCompradores.Personaje.TIA
 	tin.horario = Vector2(_desde_apertura(22), _desde_apertura(0))
@@ -82,7 +82,7 @@ static func _primera_noche() -> Array[Comprador]:
 ## Declaración preparada para J2; su entrega de contenido activa la selección productiva.
 static func segunda_jornada_definida() -> Array[Comprador]:
 	var fede := _comprador_de(
-		["Fede", [[Producto.Id.POETICO, 1], [Producto.Id.PRONGLES, 1], [Producto.Id.DURONGA, 1]], 0]
+		["Fede", [[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1], [Producto.Id.DURONGA, 1]], 0]
 	)
 	var mia := _comprador_de(
 		[

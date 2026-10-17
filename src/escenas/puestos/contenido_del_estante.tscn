@@ -14,7 +14,7 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_pepitos.res" id="malla11"]
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_saladik.res" id="malla12"]
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_uakas.res" id="malla13"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_coracola.res" id="malla14"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_pura_cola.res" id="malla14"]
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_frotlups.res" id="malla15"]
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_marolini.res" id="malla16"]
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_amargadito.res" id="malla17"]
@@ -133,7 +133,7 @@ mesh = ExtResource("malla13")
 gi_mode = 2
 metadata/frente_del_modelo = Vector3(-1, 0, 0)
 
-[node name="Coracola" type="MeshInstance3D" parent="."]
+[node name="Pura Cola" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.259076, 0, 1.037381, 0, 1.533742, 0, -1.033323, 0, 0.260094, -1.796289, 1.637684, -7.327054)
 visible = false
 mesh = ExtResource("malla14")

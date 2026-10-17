@@ -1,6 +1,6 @@
 ## El escritorio del local: el mueble con la computadora. Cablea y nada más.
 ##
-## **No decide nada sobre el juego.** Si se puede abrir, qué app sigue y cuándo `REGISTRAR` está
+## **No decide nada sobre el juego.** Si se puede abrir y cuándo `REGISTRAR` está
 ## cumplida son preguntas del dominio; qué señal va con qué método es lo único que se decide acá.
 ##
 ## **Suspender es clavar la cámara, y alcanza.** El 004 dejó `suspender()` y `reanudar()` en el
@@ -32,13 +32,9 @@ func _ready() -> void:
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	computadora.computadora_abierta.connect(_al_abrirse)
 	computadora.computadora_cerrada.connect(_al_cerrarse)
-	computadora.app_cambiada.connect(_al_cambiar_de_app)
-	computadora.nota_escrita.connect(_al_escribirse_una_nota)
 	computadora.registro_actualizado.connect(_al_cambiar_el_registro)
-	pantalla.app_pedida.connect(computadora.pedir_cambiar_a)
 	pantalla.caja().suma_pedida.connect(computadora.pedir_sumar)
 	pantalla.caja().resta_pedida.connect(computadora.pedir_restar)
-	pantalla.notas().escritura_pedida.connect(computadora.pedir_escribir)
 
 
 ## El clic izquierdo abre lo fijo sin soltar lo que se lleva.
@@ -65,32 +61,14 @@ func _input(evento: InputEvent) -> void:
 		jugador.tomar_el_cursor_desde_entrada()
 
 
-func _al_abrirse(app: Computadora.App) -> void:
-	pantalla.mostrar(app)
-	_repintar(app)
+func _al_abrirse() -> void:
+	pantalla.mostrar()
+	_al_cambiar_el_registro()
 
 
 func _al_cerrarse() -> void:
 	pantalla.ocultar()
 	jugador.reanudar()
-
-
-func _al_cambiar_de_app(app: Computadora.App) -> void:
-	pantalla.cambiar_a(app)
-	_repintar(app)
-
-
-## Cada app se repinta al entrar y no por cuadro: el estado que muestran sólo cambia cuando el
-## jugador hace algo, y repintar por cuadro sería reconstruir las listas sesenta veces por
-## segundo para que digan lo mismo.
-func _repintar(_app: Computadora.App) -> void:
-	pantalla.caja().mostrar(computadora.registro())
-	pantalla.notas().mostrar(computadora.cuaderno().notas())
-
-
-func _al_escribirse_una_nota(_nota: Nota) -> void:
-	pantalla.notas().limpiar_campos()
-	pantalla.notas().mostrar(computadora.cuaderno().notas())
 
 
 func _al_cambiar_el_registro() -> void:
