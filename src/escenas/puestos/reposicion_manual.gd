@@ -52,7 +52,7 @@ const GUIA := "Guia"
 ## Dónde va el bidón en la mano, desde el punto donde se lleva el balde: 15 cm más abajo y más
 ## adelante, porque es más grande y a la misma distancia se veía pegado al cuerpo. Acompaña la
 ## mira como el balde, para no perderlo de vista al volcarlo.
-const BIDON_A_UN_COSTADO := Vector3(0.0, -0.15, -0.15)
+const BIDON_A_UN_COSTADO := Vector3(0.0, -0.15, -0.22)
 
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal
