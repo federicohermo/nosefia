@@ -67,7 +67,10 @@ func iniciar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "")
 	# Una distancia fija dejaba la caja grande con las esquinas afuera del cuadro, y al girarla
 	# le metía una esquina adentro de la cámara.
 	var distancia := ReglasDeLosObjetos.distancia_de_examen(_radio(nodo))
-	punto_de_examen.position = Vector3.FORWARD * distancia
+	punto_de_examen.position = (
+		Vector3.FORWARD * distancia
+		+ Vector3.UP * distancia * ReglasDeLosObjetos.ELEVACION_DEL_EXAMEN
+	)
 	_examinando = nodo
 	examen_iniciado.emit(nodo)
 	objeto_revelado.emit(datos, _hallazgos.registrar(datos))
