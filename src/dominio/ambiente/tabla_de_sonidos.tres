@@ -537,6 +537,7 @@ script = ExtResource("1_qermt")
 evento = 33
 bus = "Ambiente"
 en_bucle = true
+volumen_db = -10.0
 posicional = true
 emisor = &"Ventanilla"
 stream = ExtResource("48_exterior")

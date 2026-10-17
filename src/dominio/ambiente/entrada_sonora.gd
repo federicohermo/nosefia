@@ -109,6 +109,9 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 
 @export var en_bucle: bool = false
 
+## Cuánto se corre esta fila del volumen de su bus, en dB. Negativo, suena más bajo.
+@export var volumen_db: float = 0.0
+
 ## Si suena desde un lugar del local y no pegado a la cabeza del jugador.
 @export var posicional: bool = false
 

@@ -49,9 +49,9 @@ const A_RAS_DEL_PISO := 0.05
 ## a null value` que no nombra ni al `@export` ni a la escena. Siendo hija no hay nada que
 ## resolver. Medido el 2026-09-19.
 const GUIA := "Guia"
-## Un bidón cuelga del punto de la caja corrido a la derecha, más abajo y más cerca del cuerpo:
-## en el medio tapaba el balde donde se lo vuelca.
-const BIDON_A_UN_COSTADO := Vector3(0.35, -0.15, 0.2)
+## Un bidón cuelga del punto de la caja corrido adonde se lleva el balde: a la derecha, a 1,4 m
+## del piso y a 62 cm de la cámara. En el medio tapaba el balde donde se lo vuelca.
+const BIDON_A_UN_COSTADO := Vector3(0.3, 0.26, 0.18)
 
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal

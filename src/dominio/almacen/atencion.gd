@@ -37,7 +37,7 @@ var _recepcion: RecepcionDeCompra = null
 var _dialogo: Dialogo = null
 var _presentado: bool = false
 var _inicial_terminada: bool = false
-## «Gracias.» al recibir: se lee, pero no retiene el clic siguiente ni la ventanilla.
+## El agradecimiento al recibir: se lee, pero no retiene el clic siguiente ni la ventanilla.
 var _acuse: bool = false
 
 
@@ -75,15 +75,16 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	if not objeto is UnidadDeProducto or _inventario.esta_afuera(objeto as UnidadDeProducto):
 		resultado = _recepcion.recibir(objeto, _inicial_terminada)
 	if resultado == RecepcionDeCompra.Resultado.RECHAZADA:
-		_acuse = _ya_entregado(objeto)
+		# Retiene como cualquier rechazo: con lo repetido en la mano, cada clic lo volvería a
+		# ofrecer y la ventanilla no se podría cerrar.
 		_dialogo = (
 			DialogosDeCompradores.una(DialogosDeCompradores.YA_ENTREGADO)
-			if _acuse
+			if _ya_entregado(objeto)
 			else _recordatorio(true)
 		)
 	elif resultado == RecepcionDeCompra.Resultado.ACEPTADA:
 		_acuse = true
-		_dialogo = DialogosDeCompradores.una(DialogosDeCompradores.GRACIAS)
+		_dialogo = DialogosDeCompradores.agradecimiento(_comprador.pedido(), _recepcion)
 	elif resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		_vendida = _inventario.vender_unidades(_recepcion.unidades())
 		_dialogo = _comprador.dialogos.despedida(_comprador.personaje)
