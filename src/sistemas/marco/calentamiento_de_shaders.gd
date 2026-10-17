@@ -191,8 +191,16 @@ func _muestras_con_omni(escena: Node3D) -> Array[GeometryInstance3D]:
 	return _muestras
 
 
+func objetos_a_preparar() -> int:
+	return _total
+
+
+func objetos_por_preparar() -> int:
+	return _pendientes.size() + _sin_focos.size() + _con_area.size()
+
+
 func progreso() -> float:
-	var faltan := _pendientes.size() + _sin_focos.size() + _con_area.size()
+	var faltan := objetos_por_preparar()
 	var destapado := 1.0 - float(faltan) / maxi(_total, 1)
 	if not _con_cola:
 		return destapado

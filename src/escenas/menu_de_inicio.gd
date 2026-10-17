@@ -109,7 +109,7 @@ func _ready() -> void:
 	add_child(_carga)
 	add_child(capa)
 	add_child(_calentamiento)
-	_calentamiento.avanzo.connect(_pintar_el_calentamiento)
+	_calentamiento.avanzo.connect(_pintar_el_calentamiento.bind(_calentamiento))
 	_carga.lista.connect(_al_cargar_el_almacen)
 	_carga.fallo.connect(_al_fallar_la_carga)
 	_carga.pedir(ESCENA_DEL_ALMACEN)
@@ -138,6 +138,7 @@ func _process(delta: float) -> void:
 	if _lectura_inicial < 1.0:
 		var leido := (_carga.progreso() - _lectura_inicial) / (1.0 - _lectura_inicial)
 		_pintar(_parte_de_la_lectura * clampf(leido, 0.0, 1.0))
+		_pantalla.contar_lectura(_carga.progreso())
 	_espera.avanzar(delta)
 	if _espera.puede_entrar() and _calentamiento_en_el_menu == null:
 		_espera = null
@@ -189,6 +190,7 @@ func _preparar_la_entrada() -> void:
 	_lectura_inicial = 1.0 if _almacen != null else _carga.progreso()
 	_parte_de_la_lectura = PARTE_DE_LA_LECTURA * (1.0 - _lectura_inicial)
 	_pantalla.pintar(0.0)
+	_pantalla.contar_lectura(1.0 if _almacen != null else _carga.progreso())
 	if _almacen != null:
 		_espera.terminar_carga()
 	else:
@@ -210,9 +212,17 @@ func _calentar_el_almacen() -> void:
 	_calentamiento.calentar(almacen)
 
 
-func _pintar_el_calentamiento(progreso: float) -> void:
-	if _pantalla.visible:
-		_pintar(_parte_de_la_lectura + progreso * (1.0 - _parte_de_la_lectura))
+func _pintar_el_calentamiento(progreso: float, calentamiento: CalentamientoDeShaders) -> void:
+	if not _pantalla.visible:
+		return
+	_pintar(_parte_de_la_lectura + progreso * (1.0 - _parte_de_la_lectura))
+	var total := calentamiento.objetos_a_preparar()
+	var faltan := calentamiento.objetos_por_preparar()
+	var cola: int = calentamiento.programas_en_cola.call()
+	if faltan == 0 and cola > 0:
+		_pantalla.contar_compilacion(cola)
+	else:
+		_pantalla.contar_preparacion(total - faltan, total)
 
 
 func _pintar(valor: float) -> void:
@@ -250,7 +260,9 @@ func _calentar_debajo_del_menu() -> void:
 			_capas_de_la_copia.append(capa)
 	_calentamiento_en_el_menu = CalentamientoDeShaders.new()
 	add_child(_calentamiento_en_el_menu)
-	_calentamiento_en_el_menu.avanzo.connect(_pintar_el_calentamiento)
+	_calentamiento_en_el_menu.avanzo.connect(
+		_pintar_el_calentamiento.bind(_calentamiento_en_el_menu)
+	)
 	_calentamiento_en_el_menu.terminado.connect(_al_calentar_debajo_del_menu)
 	_calentamiento_en_el_menu.calentar(_copia)
 
@@ -268,6 +280,7 @@ func _sirve_la_copia() -> bool:
 
 func _entrar_con_la_copia() -> void:
 	set_process(false)
+	_pantalla.contar_entrada()
 	_copia.visible = true
 	for capa: CanvasLayer in _capas_de_la_copia:
 		capa.visible = true
