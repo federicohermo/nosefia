@@ -117,7 +117,7 @@ editor_description = "Donde el jugador arranca cada noche: frente a la puerta de
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=2127617826]
 quality = 2
 bounces = 6
-texel_scale = 0.5
+texel_scale = 1.0
 directional = true
 generate_probes_subdiv = 3
 light_data = ExtResource("lightmap")
