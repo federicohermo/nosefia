@@ -96,7 +96,7 @@ func test_los_seis_productos_se_destacan_solo_en_amarillo() -> void:
 		for texto: String in entradas:
 			assert_str(texto).not_contains("[b]").not_contains("[url").not_contains("c99cf4")
 	var primero := load("res://assets/dialogos/compradores_jornada_1.tres") as DialogosDeCompradores
-	assert_str(primero.inicial(DialogosDeCompradores.Personaje.TIN).entrada_actual()).contains(
+	assert_str(primero.inicial(DialogosDeCompradores.Personaje.TIN).entrada_actual()).not_contains(
 		"[b]"
 	)
 
