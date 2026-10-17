@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1")
-fede = PackedStringArray("Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.", "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?", "Quiero una botella de jabón [color=#e4f850]Poético[/color], una lata de papitas [color=#e4f850]Progres[/color] y unos preservativos [color=#e4f850]Duronga[/color].")
+fede = PackedStringArray("Hola, ¿qué tal? Qué tarde se hizo… me alegra que todavía esté abierto el negocio.", "Salí tardísimo del trabajo y no tuve un buen día. No vendimos suficiente. Por eso busco un momento de tranquilidad y placer, ¿vos entendes?", "Quiero una botella de jabón [color=#e4f850]{31}[/color], una lata de papitas [color=#e4f850]{6}[/color] y unos preservativos [color=#e4f850]{24}[/color].")
 despedida_fede = PackedStringArray("¡Guau, salió la colección de los productos del Chiqui Tapia! No me había dado cuenta. Ese señor es mi ídolo. Siempre me da los mejores tips.", "Gracias, compañero. Cuando quieras podes venir a casa y los probamos juntos.")
-mia = PackedStringArray("Hola… ¿me darías un vino [color=#e4f850]Terminator[/color], un [color=#e4f850]Fernet God[/color] y una cajita de [color=#e4f850]Actroncito[/color]?")
+mia = PackedStringArray("Hola… ¿me darías un vino [color=#e4f850]{28}[/color], un [color=#e4f850]{25}[/color] y una cajita de [color=#e4f850]{0}[/color]?")
 despedida_mia = PackedStringArray("Zzzzzz.zzzzz.zzzzz", "Perdon, me quedé dormida... ¿En dónde estaba?", "Ah sí, gracias… Espero que esto me ayude a dormir mejor…")

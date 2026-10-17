@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bw8wr4ub8rjdy"
-path="res://.godot/imported/coracola.png-a9afe89a3f55b661ede7ef305b159946.ctex"
+path="res://.godot/imported/pura_cola.png-a89937a9084bf0c6e73825415543facc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/manada/coracola.png"
-dest_files=["res://.godot/imported/coracola.png-a9afe89a3f55b661ede7ef305b159946.ctex"]
+source_file="res://assets/ui/manada/pura_cola.png"
+dest_files=["res://.godot/imported/pura_cola.png-a89937a9084bf0c6e73825415543facc.ctex"]
 
 [params]
 

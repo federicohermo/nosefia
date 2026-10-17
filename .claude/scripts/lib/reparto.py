@@ -65,23 +65,23 @@ PRODUCTOS: tuple[Producto, ...] = (
     Producto("DUREXTRA", "Durextra", "durextra-col.001", _MENOS_Y, _Z),
     Producto("BURBALOO", "Burbaloo", "burgaloo-convcol", _X, _Z),
     Producto("ZUCARACHAS", "Zucarachas", "Zucarachas-col", _MENOS_X, _Z),
-    Producto("LAYSNTT", "Laysntt", "snackpapas1-convcol.002", _X, _Z),
+    Producto("LAYSNNT", "Laysntt", "snackpapas1-convcol.002", _X, _Z),
     Producto("MALBARDO", "Malbardo", "malbardocig-convcol", _MENOS_Y, _Z),
-    Producto("PRONGLES", "Prongles", "pringles3-convcol.001", _MENOS_X, _Z),
+    Producto("PROGRES", "Prongles", "pringles3-convcol.001", _MENOS_X, _Z),
     Producto("JORGILLO", "Jorgillo", "alfajorescaja2-2oeste1-col.001", _Z, _X),
-    Producto("ARVEJAS", "Arvejas", "lataarvejas-convcol.002", (-0.0177, -0.9998, 0.0), _Z),
+    Producto("ARVECOR", "Arvejas", "lataarvejas-convcol.002", (-0.0177, -0.9998, 0.0), _Z),
     Producto("CHISITOS", "Chisitos", "chisitos2-convcol.001", _X, _Z),
     Producto("OREMOS", "Oremos", "oremos-col", _X, _Z),
-    Producto("PEPITOS", "Pepitos", "pepitos2-col.025", _X, _Z),
-    Producto("SALADIK", "Saladik", "saladix-2oeste2-col", _MENOS_X, _Z),
-    Producto("UAKAS", "Uakas", "wakas-col.021", _MENOS_X, _Z),
-    Producto("CORACOLA", "Coracola", "bebida helada02-este2-convcol", (-0.97, -0.2432, 0.0), _Z),
-    Producto("FROTLUPS", "Frotlups", "cereal-2norte2-col", _MENOS_X, _Z),
+    Producto("PEPITO", "Pepitos", "pepitos2-col.025", _X, _Z),
+    Producto("SALADICK", "Saladik", "saladix-2oeste2-col", _MENOS_X, _Z),
+    Producto("UAKALAS", "Uakas", "wakas-col.021", _MENOS_X, _Z),
+    Producto("PURA_COLA", "Pura Cola", "bebida helada02-este2-convcol", (-0.97, -0.2432, 0.0), _Z),
+    Producto("FROT_LUPS", "Frotlups", "cereal-2norte2-col", _MENOS_X, _Z),
     Producto("MAROLINI", "Marolini", "fideos2-col", _MENOS_X, _Z),
     Producto("AMARGADITO", "Amargadito", "amargadito-convcol", _MENOS_X, _Z),
     Producto("CINDOLOR", "Cindolor", "cindolor-convcol.001", _MENOS_X, _Z),
-    Producto("FLINPUF", "Flinpuf", "flimpof-convcol", _MENOS_X, _Z),
-    Producto("DONSATURADOS", "Donsaturados", "donsaturados-convcol.001", _MENOS_X, _Z),
+    Producto("FLIM_POF", "Flinpuf", "flimpof-convcol", _MENOS_X, _Z),
+    Producto("DON_SATURADOS", "Donsaturados", "donsaturados-convcol.001", _MENOS_X, _Z),
     Producto("PETISAS", "Petisas", "petisas-convcol", _MENOS_X, _Z),
     Producto("MACUMBAS", "Macumbas", "macumbas-convcol", _MENOS_X, _Z),
     Producto("COSA_DE_MANI", "Cosa de Maní", "cosademani-col", _MENOS_X, _Z),
@@ -112,29 +112,29 @@ HELADERAS = ("H1", "H2")
 CABECERAS = ("norte", "sur")
 
 #: Lo que se vende frío, y por eso va en la heladera y en ningún otro lado.
-FRIOS = ("CORACOLA", "OAAAA", "CINDOLOR", "MAYONCHIS")
+FRIOS = ("PURA_COLA", "OAAAA", "CINDOLOR", "MAYONCHIS")
 
 #: Lo que se exhibe en una cabecera y en ningún otro lado.
-DE_CABECERA = ("MALBARDO", "AMARGADITO", "FERNET_GOD", "TERMINATOR", "SALADIK",
-               "JORGILLO", "BURBALOO", "FLINPUF")
+DE_CABECERA = ("MALBARDO", "AMARGADITO", "FERNET_GOD", "TERMINATOR", "SALADICK",
+               "JORGILLO", "BURBALOO", "FLIM_POF")
 
 #: Capacidad para futuras declaraciones explícitas; los 32 productos actuales se exhiben.
 SOLO_DEPOSITO: tuple[str, ...] = ()
 
 #: Identidades del diseño, sin traducir nombres comerciales ni asignar marcas desconocidas.
 SECTORES = {
-    "heladera_1": ("CORACOLA", "OAAAA"),
+    "heladera_1": ("PURA_COLA", "OAAAA"),
     "heladera_2": ("CINDOLOR", "MAYONCHIS"),
     "no_comestibles": ("ACTRONCITO", "DUREXTRA", "POETICO", "DURONGA"),
     "cabecera_no_comestibles": ("MALBARDO",),
     "cabecera_almacen": ("AMARGADITO",),
-    "almacen": ("MAROLINI", "ARVEJAS", "UAKAS", "MARRANOS"),
-    "cereales": ("ZUCARACHAS", "FROTLUPS"),
+    "almacen": ("MAROLINI", "ARVECOR", "UAKALAS", "MARRANOS"),
+    "cereales": ("ZUCARACHAS", "FROT_LUPS"),
     "bebidas_sin_refrigerar": ("FERNET_GOD", "TERMINATOR"),
-    "dulces_primera_isla": ("MACUMBAS", "PEPITOS"),
+    "dulces_primera_isla": ("MACUMBAS", "PEPITO"),
     "dulces_segunda_isla": ("OREMOS", "PETISAS", "COSA_DE_MANI", "FEEL_RICKY_FORT"),
-    "salados": ("DONSATURADOS", "PRONGLES", "CHISITOS", "LAYSNTT", "SALADIK"),
-    "golosinas": ("BURBALOO", "FLINPUF", "JORGILLO"),
+    "salados": ("DON_SATURADOS", "PROGRES", "CHISITOS", "LAYSNNT", "SALADICK"),
+    "golosinas": ("BURBALOO", "FLIM_POF", "JORGILLO"),
 }
 
 #: Cada columna conserva su sector también en zócalo y referencias superiores.
@@ -156,7 +156,7 @@ DESTINOS = {
 
 #: Las cinco excepciones globales del arte vigente, confirmadas para #434. Actroncito y
 #: Prongles conservan las dos hileras que ya tenían: se corrige la lista antigua, no su arte.
-DE_UNA_FILA = ("COSA_DE_MANI", "FLINPUF", "BURBALOO", "MARRANOS", "POETICO")
+DE_UNA_FILA = ("COSA_DE_MANI", "FLIM_POF", "BURBALOO", "MARRANOS", "POETICO")
 
 
 @dataclass(frozen=True)
@@ -199,14 +199,14 @@ def _f(clave: str, filas: int | None = None) -> Tanda:
 #: van arriba de todo y en el zócalo, y repiten un producto que se repone en otro lado.
 ESTANTES: dict[str, tuple[Tanda, ...]] = {
     # Góndola del medio, la de la derecha entrando: su cara oeste da al pasillo central.
-    "A.oeste.3": (_f("MAROLINI"), _f("ARVEJAS")),
-    "A.oeste.2": (_p("MAROLINI"), _p("ARVEJAS")),
-    "A.oeste.1": (_p("UAKAS"), _p("MARRANOS")),
-    "A.oeste.0": (_f("UAKAS"), _f("MARRANOS")),
+    "A.oeste.3": (_f("MAROLINI"), _f("ARVECOR")),
+    "A.oeste.2": (_p("MAROLINI"), _p("ARVECOR")),
+    "A.oeste.1": (_p("UAKALAS"), _p("MARRANOS")),
+    "A.oeste.0": (_f("UAKALAS"), _f("MARRANOS")),
     "A.este.3": (_f("MACUMBAS"), _f("ZUCARACHAS")),
     "A.este.2": (_p("MACUMBAS"), _p("ZUCARACHAS")),
-    "A.este.1": (_p("PEPITOS"), _p("FROTLUPS")),
-    "A.este.0": (_f("PEPITOS"), _f("FROTLUPS")),
+    "A.este.1": (_p("PEPITO"), _p("FROT_LUPS")),
+    "A.este.0": (_f("PEPITO"), _f("FROT_LUPS")),
     "A.sur.3": (_f("MALBARDO"),),
     "A.sur.2": (_p("MALBARDO"),),
     "A.sur.1": (_p("AMARGADITO"),),
@@ -220,14 +220,14 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "B.este.2": (_p("OREMOS"), _p("PETISAS")),
     "B.este.1": (_p("COSA_DE_MANI"), _p("FEEL_RICKY_FORT")),
     "B.este.0": (_f("COSA_DE_MANI"), _f("FEEL_RICKY_FORT")),
-    "B.oeste.3": (_f("DONSATURADOS"), _f("PRONGLES")),
-    "B.oeste.2": (_p("DONSATURADOS"), _p("PRONGLES")),
-    "B.oeste.1": (_p("CHISITOS"), _p("LAYSNTT")),
-    "B.oeste.0": (_f("CHISITOS"), _f("LAYSNTT")),
-    "B.sur.3": (_f("SALADIK"),),
-    "B.sur.2": (_p("SALADIK"),),
-    "B.sur.1": (_p("FLINPUF"),),
-    "B.sur.0": (_f("FLINPUF"),),
+    "B.oeste.3": (_f("DON_SATURADOS"), _f("PROGRES")),
+    "B.oeste.2": (_p("DON_SATURADOS"), _p("PROGRES")),
+    "B.oeste.1": (_p("CHISITOS"), _p("LAYSNNT")),
+    "B.oeste.0": (_f("CHISITOS"), _f("LAYSNNT")),
+    "B.sur.3": (_f("SALADICK"),),
+    "B.sur.2": (_p("SALADICK"),),
+    "B.sur.1": (_p("FLIM_POF"),),
+    "B.sur.0": (_f("FLIM_POF"),),
     "B.norte.3": (_f("JORGILLO"),),
     "B.norte.2": (_p("JORGILLO"),),
     "B.norte.1": (_p("BURBALOO"),),
@@ -242,8 +242,8 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     # 2026-09-29, igual que los estantes de góndola que no se completan sin repetir.
     "H1.sur.0": (_f("OAAAA"),),
     "H1.sur.1": (_p("OAAAA"),),
-    "H1.sur.2": (_p("CORACOLA"),),
-    "H1.sur.3": (_f("CORACOLA"),),
+    "H1.sur.2": (_p("PURA_COLA"),),
+    "H1.sur.3": (_f("PURA_COLA"),),
     "H2.sur.0": (_f("MAYONCHIS"),),
     "H2.sur.1": (_p("MAYONCHIS"),),
     "H2.sur.2": (_p("CINDOLOR"),),
@@ -293,11 +293,8 @@ def partes(estante: str) -> tuple[str, str, int]:
     return mueble, cara, int(nivel)
 
 
-def cara_de_isla(normal: tuple[float, float, float], medio: tuple[float, float, float]) -> str:
-    """Clasifica una chapa de isla por su normal y centro relativo al mueble."""
-    # Las cabeceras son rampas: las altas acortan su fondo y el centro cruza el antiguo
-    # umbral espacial de 1,9 m. Su inclinación conserva la identidad de la cara.
-    if abs(normal[1]) > 0.01:
+def cara_de_isla(_normal: tuple[float, float, float], medio: tuple[float, float, float]) -> str:
+    if abs(medio[1]) > abs(medio[0]):
         return "norte" if medio[1] > 0 else "sur"
     return "oeste" if medio[0] < 0 else "este"
 

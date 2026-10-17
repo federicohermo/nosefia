@@ -1,8 +1,8 @@
 ## Lo que dice cada cosa del local cuando se la examina: las tablas de la ficha «Subtítulos».
 ##
 ## **No es la revelación.** Lo que un objeto esconde vive en su `Revelacion`, y sale sólo al
-## examinarlo según las reglas de investigación; esto lo nombra, y se dice gratis. Los nombres se
-## copian de la ficha aunque difieran del catálogo: el catálogo no se toca desde acá.
+## examinarlo según las reglas de investigación; esto lo nombra, y se dice gratis. La ficha
+## define las descripciones; el nombre de cada producto sale del catálogo.
 ##
 ## Lo levantable escrito en un `.tres` lleva su texto en `ObjetoDelAlmacen.subtitulo`. Acá van
 ## los productos, que no tienen `.tres`, y lo fijo, que no tiene `datos`: con `datos`, lo fijo
@@ -23,38 +23,38 @@ const PORTON := &"porton"
 const CONTENEDOR := &"contenedor"
 
 const DE_LOS_PRODUCTOS := {
-	Producto.Id.ZUCARACHAS: "Una caja de cereal Zucarachas.",
-	Producto.Id.FROTLUPS: "Una caja de cereal Frot Lups.",
-	Producto.Id.CORACOLA: "Una lata de Pura-Cola.",
-	Producto.Id.MARRANOS: "Una lata de atún Marranos.",
-	Producto.Id.ARVEJAS: "Una lata de arvejas Arvecor.",
-	Producto.Id.MAYONCHIS: "Un paquete de Mayonchis.",
-	Producto.Id.JORGILLO: "Un alfajor Jorgillo.",
-	Producto.Id.MAROLINI: "Una caja de fideos Marolini.",
-	Producto.Id.UAKAS: "Una caja de fideos Uakalas.",
-	Producto.Id.SALADIK: "Una caja de Saladick.",
-	Producto.Id.PEPITOS: "Una caja de galletitas Pepito.",
-	Producto.Id.OREMOS: "Una caja de galletitas Oremos.",
-	Producto.Id.DONSATURADOS: "Un paquete de Don Saturados.",
-	Producto.Id.PETISAS: "Un paquete de galletitas Petisas.",
-	Producto.Id.MACUMBAS: "Un paquete de galletitas Macumbas.",
-	Producto.Id.PRONGLES: "Un tubo de papitas Progres.",
-	Producto.Id.LAYSNTT: "Un paquete de papitas Laysnnt.",
-	Producto.Id.CHISITOS: "Un paquete de Chisitos.",
-	Producto.Id.DUREXTRA: "Una caja de preservativos Durextra.",
-	Producto.Id.DURONGA: "Una caja de preservativos Duronga.",
-	Producto.Id.ACTRONCITO: "Una caja de medicamentos Actroncito.",
-	Producto.Id.BURBALOO: "Una caja de chicles Burbaloo.",
-	Producto.Id.FLINPUF: "Una caja de caramelos Flim Pof.",
-	Producto.Id.MALBARDO: "Un paquete de cigarrillos Malbardo.",
-	Producto.Id.AMARGADITO: "Una caja de yerba Amargadito.",
-	Producto.Id.CINDOLOR: "Una caja de chocolatada Cindolor.",
-	Producto.Id.COSA_DE_MANI: "Una barra de Cosa de Maní.",
-	Producto.Id.FEEL_RICKY_FORT: "Una caja de barritas Feel Ricky Fort.",
-	Producto.Id.FERNET_GOD: "Una botella de Fernet God.",
-	Producto.Id.OAAAA: "Una caja de jugo Oaaaa.",
-	Producto.Id.TERMINATOR: "Una caja de vino Terminator.",
-	Producto.Id.POETICO: "Una botella de Poético.",
+	Producto.Id.ZUCARACHAS: "Una caja de cereal %s.",
+	Producto.Id.FROT_LUPS: "Una caja de cereal %s.",
+	Producto.Id.PURA_COLA: "Una lata de %s.",
+	Producto.Id.MARRANOS: "Una lata de atún %s.",
+	Producto.Id.ARVECOR: "Una lata de arvejas %s.",
+	Producto.Id.MAYONCHIS: "Un paquete de %s.",
+	Producto.Id.JORGILLO: "Un alfajor %s.",
+	Producto.Id.MAROLINI: "Una caja de fideos %s.",
+	Producto.Id.UAKALAS: "Una caja de fideos %s.",
+	Producto.Id.SALADICK: "Una caja de %s.",
+	Producto.Id.PEPITO: "Una caja de galletitas %s.",
+	Producto.Id.OREMOS: "Una caja de galletitas %s.",
+	Producto.Id.DON_SATURADOS: "Un paquete de %s.",
+	Producto.Id.PETISAS: "Un paquete de galletitas %s.",
+	Producto.Id.MACUMBAS: "Un paquete de galletitas %s.",
+	Producto.Id.PROGRES: "Un tubo de papitas %s.",
+	Producto.Id.LAYSNNT: "Un paquete de papitas %s.",
+	Producto.Id.CHISITOS: "Un paquete de %s.",
+	Producto.Id.DUREXTRA: "Una caja de preservativos %s.",
+	Producto.Id.DURONGA: "Una caja de preservativos %s.",
+	Producto.Id.ACTRONCITO: "Una caja de medicamentos %s.",
+	Producto.Id.BURBALOO: "Una caja de chicles %s.",
+	Producto.Id.FLIM_POF: "Una caja de caramelos %s.",
+	Producto.Id.MALBARDO: "Un paquete de cigarrillos %s.",
+	Producto.Id.AMARGADITO: "Una caja de yerba %s.",
+	Producto.Id.CINDOLOR: "Una caja de chocolatada %s.",
+	Producto.Id.COSA_DE_MANI: "Una barra de %s.",
+	Producto.Id.FEEL_RICKY_FORT: "Una caja de barritas %s.",
+	Producto.Id.FERNET_GOD: "Una botella de %s.",
+	Producto.Id.OAAAA: "Una caja de jugo %s.",
+	Producto.Id.TERMINATOR: "Una caja de vino %s.",
+	Producto.Id.POETICO: "Una botella de %s.",
 }
 
 const DE_LAS_NOTAS := {
@@ -98,7 +98,8 @@ const PREFIJO_DEL_TACHO := "tacho_"
 
 
 static func de_producto(id: Producto.Id) -> String:
-	return DE_LOS_PRODUCTOS.get(id, "")
+	var plantilla: String = DE_LOS_PRODUCTOS.get(id, "")
+	return "" if plantilla.is_empty() else plantilla % Catalogo.de(id).nombre
 
 
 ## Lo que dice algo que no se levanta. Una identidad sin fila no dice nada: las puertas

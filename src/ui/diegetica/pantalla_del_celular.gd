@@ -67,6 +67,8 @@ var _fuente_del_chat: FontVariation
 var _jornada_de_referencia: int = 0
 var _historial: Array[Mensaje] = []
 var _burbujas: Array[PanelContainer] = []
+var _recordatorio_pedido: bool = false
+var _recordatorio_cubierto: bool = false
 
 
 func _ready() -> void:
@@ -250,7 +252,13 @@ func cerrar_foto() -> void:
 
 
 func mostrar_recordatorio(se_ve: bool) -> void:
-	_recordatorio.visible = se_ve
+	_recordatorio_pedido = se_ve
+	_recordatorio.visible = _recordatorio_pedido and not _recordatorio_cubierto
+
+
+func cubrir_recordatorio(cubierto: bool) -> void:
+	_recordatorio_cubierto = cubierto
+	_recordatorio.visible = _recordatorio_pedido and not _recordatorio_cubierto
 
 
 func _input(evento: InputEvent) -> void:

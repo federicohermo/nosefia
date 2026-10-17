@@ -1,100 +1,56 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/ui/diegetica/pantalla_de_computadora.gd" id="1"]
-
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/app_caja.tscn" id="2"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema_del_registro.tres" id="3"]
 
-
-[ext_resource type="PackedScene" path="res://src/ui/diegetica/app_notas.tscn" id="4"]
-
-[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="5"]
-
-[ext_resource type="Shader" path="res://src/ui/diegetica/fondo_de_computadora.gdshader" id="6"]
-
-[ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="7"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_pantalla"]
-shader = ExtResource("6")
-
-[node name="PantallaDeComputadora" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_titulo", "_opciones", "_salida", "_caja", "_notas")]
+[node name="PantallaDeComputadora" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_caja")]
 layer = 3
 script = ExtResource("1")
-_fondo = NodePath("Fondo")
 _marco = NodePath("Fondo/Marco")
-_titulo = NodePath("Fondo/Marco/Titulo")
-_opciones = NodePath("Fondo/Marco/Opciones")
-_salida = NodePath("Fondo/Marco/Salida")
-_caja = NodePath("Fondo/Marco/Apps/AppCaja")
-_notas = NodePath("Fondo/Marco/Apps/AppNotas")
+_titulo = NodePath("Fondo/Marco/Margenes/Contenido/Cabecera/Titulo")
+_caja = NodePath("Fondo/Marco/Margenes/Contenido/AppCaja")
 
 [node name="Fondo" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_pantalla")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+color = Color(0.121569, 0.141176, 0.14902, 1)
 
 [node name="Marco" type="Control" parent="Fondo"]
 layout_mode = 0
-offset_left = 0.0
-offset_top = 0.0
 offset_right = 1920.0
 offset_bottom = 1080.0
-theme = ExtResource("5")
+theme = ExtResource("3")
 mouse_filter = 2
 
-[node name="Cabecera" type="TextureRect" parent="Fondo/Marco"]
+[node name="Margenes" type="MarginContainer" parent="Fondo/Marco"]
 layout_mode = 0
-offset_left = 71.0
-offset_top = 45.0
-offset_right = 1783.0
-offset_bottom = 115.3
-texture = ExtResource("7")
-expand_mode = 1
-stretch_mode = 0
+offset_left = 24.0
+offset_top = 42.0
+offset_right = 1896.0
+offset_bottom = 1016.0
 mouse_filter = 2
 
-[node name="Opciones" type="HBoxContainer" parent="Fondo/Marco"]
-layout_mode = 0
-offset_left = 1120.0
-offset_top = 22.0
-offset_right = 1758.0
-offset_bottom = 94.0
-theme_override_constants/separation = 18
-alignment = 2
-
-[node name="Titulo" type="Label" parent="Fondo/Marco"]
-layout_mode = 0
-offset_left = 100.0
-offset_top = 54.0
-offset_right = 344.0
-offset_bottom = 102.0
-theme_override_font_sizes/font_size = 44
+[node name="Contenido" type="VBoxContainer" parent="Fondo/Marco/Margenes"]
+layout_mode = 2
+theme_override_constants/separation = 30
 mouse_filter = 2
 
-[node name="Apps" type="Control" parent="Fondo/Marco"]
-layout_mode = 0
-offset_left = 0.0
-offset_top = 125.0
-offset_right = 1920.0
-offset_bottom = 1010.0
+[node name="Cabecera" type="PanelContainer" parent="Fondo/Marco/Margenes/Contenido"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_type_variation = &"CabeceraDelRegistro"
 mouse_filter = 2
 
-[node name="AppCaja" parent="Fondo/Marco/Apps" instance=ExtResource("2")]
-layout_mode = 0
-
-[node name="AppNotas" parent="Fondo/Marco/Apps" instance=ExtResource("4")]
-layout_mode = 0
-visible = false
-
-[node name="Salida" type="Label" parent="Fondo/Marco"]
-layout_mode = 0
-offset_left = 71.0
-offset_top = 963.0
-offset_right = 1857.0
-offset_bottom = 1011.0
-theme_type_variation = &"TextoSecundario"
+[node name="Titulo" type="Label" parent="Fondo/Marco/Margenes/Contenido/Cabecera"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+vertical_alignment = 1
 mouse_filter = 2
-horizontal_alignment = 2
+
+[node name="AppCaja" parent="Fondo/Marco/Margenes/Contenido" instance=ExtResource("2")]
+custom_minimum_size = Vector2(0, 864)
+layout_mode = 2

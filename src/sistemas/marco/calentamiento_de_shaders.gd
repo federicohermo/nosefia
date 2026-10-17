@@ -99,7 +99,7 @@ func calentar(escena: Node3D) -> void:
 		# producción. Dibujarlo acá compilaría variantes que nunca aparecen en la partida.
 		if objeto.is_in_group(&"geometria_de_referencia"):
 			continue
-		var suya := objeto.global_transform * objeto.get_aabb()
+		var suya := _caja_en_mundo(objeto)
 		caja = suya if _pendientes.is_empty() else caja.merge(suya)
 		if not objeto.visible:
 			_ocultos.append(objeto)
@@ -343,7 +343,7 @@ func _agregar_muestras_con_reflejos() -> void:
 	var caja := AABB()
 	for indice: int in _objetos.size():
 		var objeto := _objetos[indice]
-		var suya := objeto.global_transform * objeto.get_aabb()
+		var suya := _caja_en_mundo(objeto)
 		caja = suya if indice == 0 else caja.merge(suya)
 	_encuadrar(caja)
 	if _area != null:
@@ -396,6 +396,13 @@ func _materiales_de(objeto: GeometryInstance3D) -> Array:
 			else:
 				materiales.append(malla.surface_get_material(superficie))
 	return materiales.filter(func(material: Variant) -> bool: return material != null)
+
+
+func _caja_en_mundo(objeto: GeometryInstance3D) -> AABB:
+	var caja := objeto.custom_aabb
+	if caja == AABB():
+		caja = objeto.get_aabb()
+	return objeto.global_transform * caja
 
 
 ## Desde arriba y ortogonal: así entra la escena entera, sin importar su forma.
