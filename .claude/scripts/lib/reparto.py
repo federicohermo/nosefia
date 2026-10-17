@@ -115,7 +115,7 @@ CABECERAS = ("norte", "sur")
 FRIOS = ("PURA_COLA", "OAAAA", "CINDOLOR", "MAYONCHIS")
 
 #: Lo que se exhibe en una cabecera y en ningún otro lado.
-DE_CABECERA = ("MALBARDO", "AMARGADITO", "FERNET_GOD", "TERMINATOR", "SALADICK",
+DE_CABECERA = ("MALBARDO", "AMARGADITO", "FERNET_GOD", "TERMINATOR", "COSA_DE_MANI",
                "JORGILLO", "BURBALOO", "FLIM_POF")
 
 #: Capacidad para futuras declaraciones explícitas; los 32 productos actuales se exhiben.
@@ -142,14 +142,19 @@ DESTINOS = {
     "H1.sur": ("heladera_1",), "H2.sur": ("heladera_2",),
     "N.sur": ("no_comestibles", "no_comestibles"),
     "A.oeste": ("almacen", "almacen"),
-    "A.este": ("dulces_primera_isla", "cereales"),
+    "A.este.0": ("cereales", "cereales"), "A.este.1": ("cereales", "cereales"),
+    "A.este.2": ("dulces_primera_isla", "dulces_primera_isla"),
+    "A.este.3": ("dulces_primera_isla", "dulces_primera_isla"),
     "A.sur.0": ("cabecera_almacen",), "A.sur.1": ("cabecera_almacen",),
     "A.sur.2": ("cabecera_no_comestibles",), "A.sur.3": ("cabecera_no_comestibles",),
     "A.norte": ("bebidas_sin_refrigerar",),
-    "B.este": ("dulces_segunda_isla", "dulces_segunda_isla"),
+    "B.este.0": ("dulces_segunda_isla", "dulces_segunda_isla"),
+    "B.este.1": ("dulces_segunda_isla", "dulces_segunda_isla"),
+    "B.este.2": ("salados", "dulces_segunda_isla"),
+    "B.este.3": ("salados", "dulces_segunda_isla"),
     "B.oeste": ("salados", "salados"),
     "B.sur.0": ("golosinas",), "B.sur.1": ("golosinas",),
-    "B.sur.2": ("salados",), "B.sur.3": ("salados",),
+    "B.sur.2": ("dulces_segunda_isla",), "B.sur.3": ("dulces_segunda_isla",),
     "B.norte": ("golosinas", "golosinas"),
 }
 
@@ -199,14 +204,14 @@ def _f(clave: str, filas: int | None = None) -> Tanda:
 #: van arriba de todo y en el zócalo, y repiten un producto que se repone en otro lado.
 ESTANTES: dict[str, tuple[Tanda, ...]] = {
     # Góndola del medio, la de la derecha entrando: su cara oeste da al pasillo central.
-    "A.oeste.3": (_f("MAROLINI"), _f("ARVECOR")),
-    "A.oeste.2": (_p("MAROLINI"), _p("ARVECOR")),
-    "A.oeste.1": (_p("UAKALAS"), _p("MARRANOS")),
-    "A.oeste.0": (_f("UAKALAS"), _f("MARRANOS")),
-    "A.este.3": (_f("MACUMBAS"), _f("ZUCARACHAS")),
-    "A.este.2": (_p("MACUMBAS"), _p("ZUCARACHAS")),
-    "A.este.1": (_p("PEPITO"), _p("FROT_LUPS")),
-    "A.este.0": (_f("PEPITO"), _f("FROT_LUPS")),
+    "A.oeste.3": (_f("MARRANOS"), _f("ARVECOR")),
+    "A.oeste.2": (_p("MARRANOS"), _p("ARVECOR")),
+    "A.oeste.1": (_p("UAKALAS"), _p("MAROLINI")),
+    "A.oeste.0": (_f("UAKALAS"), _f("MAROLINI")),
+    "A.este.3": (_f("MACUMBAS"), _f("PEPITO")),
+    "A.este.2": (_p("MACUMBAS"), _p("PEPITO")),
+    "A.este.1": (_p("ZUCARACHAS"), _p("FROT_LUPS")),
+    "A.este.0": (_f("ZUCARACHAS"), _f("FROT_LUPS")),
     "A.sur.3": (_f("MALBARDO"),),
     "A.sur.2": (_p("MALBARDO"),),
     "A.sur.1": (_p("AMARGADITO"),),
@@ -216,16 +221,16 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "A.norte.1": (_p("FERNET_GOD"),),
     "A.norte.0": (_f("FERNET_GOD"),),
     # Góndola del medio, la de la izquierda: su cara este da al pasillo central.
-    "B.este.3": (_f("OREMOS"), _f("PETISAS")),
-    "B.este.2": (_p("OREMOS"), _p("PETISAS")),
-    "B.este.1": (_p("COSA_DE_MANI"), _p("FEEL_RICKY_FORT")),
-    "B.este.0": (_f("COSA_DE_MANI"), _f("FEEL_RICKY_FORT")),
-    "B.oeste.3": (_f("DON_SATURADOS"), _f("PROGRES")),
-    "B.oeste.2": (_p("DON_SATURADOS"), _p("PROGRES")),
+    "B.este.3": (_f("DON_SATURADOS"), _f("PETISAS")),
+    "B.este.2": (_p("DON_SATURADOS"), _p("PETISAS")),
+    "B.este.1": (_p("OREMOS"), _p("FEEL_RICKY_FORT")),
+    "B.este.0": (_f("OREMOS"), _f("FEEL_RICKY_FORT")),
+    "B.oeste.3": (_f("SALADICK"), _f("PROGRES")),
+    "B.oeste.2": (_p("SALADICK"), _p("PROGRES")),
     "B.oeste.1": (_p("CHISITOS"), _p("LAYSNNT")),
     "B.oeste.0": (_f("CHISITOS"), _f("LAYSNNT")),
-    "B.sur.3": (_f("SALADICK"),),
-    "B.sur.2": (_p("SALADICK"),),
+    "B.sur.3": (_f("COSA_DE_MANI"),),
+    "B.sur.2": (_p("COSA_DE_MANI"),),
     "B.sur.1": (_p("FLIM_POF"),),
     "B.sur.0": (_f("FLIM_POF"),),
     "B.norte.3": (_f("JORGILLO"),),
@@ -233,10 +238,10 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "B.norte.1": (_p("BURBALOO"),),
     "B.norte.0": (_f("BURBALOO"),),
     # La estantería existente de no comestibles.
-    "N.sur.3": (_f("ACTRONCITO"), _f("DUREXTRA")),
-    "N.sur.2": (_p("ACTRONCITO"), _p("DUREXTRA")),
-    "N.sur.1": (_p("POETICO"), _p("DURONGA")),
-    "N.sur.0": (_f("POETICO"), _f("DURONGA")),
+    "N.sur.3": (_f("DURONGA"), _f("DUREXTRA")),
+    "N.sur.2": (_p("DURONGA"), _p("DUREXTRA")),
+    "N.sur.1": (_p("POETICO"), _p("ACTRONCITO")),
+    "N.sur.0": (_f("POETICO"), _f("ACTRONCITO")),
     # Las heladeras. Lo frío es menos que las bandejas: cada uno va una vez con casilleros, y las
     # bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el
     # 2026-09-29, igual que los estantes de góndola que no se completan sin repetir.
