@@ -40,9 +40,10 @@ enum Resultado {
 	CHARCO_DEJADO,
 }
 
-## Tiempo real y recorrido adicionales: la caminata combina ambas pérdidas.
+## Tiempo real y recorrido adicionales: la caminata combina ambas pérdidas. Quieta dura 12 s;
+## caminando a toda velocidad, unos 3 s. Con 7,5 m duraba menos de 2 s caminando.
 const DURACION_DE_LA_CARGA := 12.0
-const RECORRIDO_DE_LA_CARGA := 7.5
+const RECORRIDO_DE_LA_CARGA := 15.0
 
 ## Agua temporal sobre suelo despejado: sólo presentación, sin convertirla en una mancha.
 const DURACION_DEL_CHARCO := 4.0
