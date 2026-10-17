@@ -76,10 +76,13 @@ func _caja_chica() -> RigidBody3D:
 	return _caja(0.4)
 
 
-## Examina lo que se lleva y devuelve a qué distancia del ojo quedó.
+## Examina lo que se lleva y devuelve a qué distancia del ojo quedó, hacia adelante.
 func _distancia_examinando(examen: Node) -> float:
 	examen.iniciar()
-	return examen.punto_de_examen.position.length()
+	var punto: Vector3 = examen.punto_de_examen.position
+	# Sube una fracción de esa distancia, para dejar libre la banda del subtítulo.
+	assert_float(punto.y).is_equal_approx(-punto.z * ReglasDeLosObjetos.ELEVACION_DEL_EXAMEN, 0.001)
+	return -punto.z
 
 
 func test_la_caja_grande_se_examina_mas_lejos_que_la_chica() -> void:

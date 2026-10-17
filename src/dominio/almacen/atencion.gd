@@ -37,6 +37,8 @@ var _recepcion: RecepcionDeCompra = null
 var _dialogo: Dialogo = null
 var _presentado: bool = false
 var _inicial_terminada: bool = false
+## El agradecimiento al recibir: se lee, pero no retiene el clic siguiente ni la ventanilla.
+var _acuse: bool = false
 
 
 func conversacion_iniciada() -> bool:
@@ -54,7 +56,7 @@ func contexto_de_interaccion(objeto: ObjetoDelAlmacen) -> ReferenciaDeControles.
 func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	if not fisica() or _despachada:
 		return RecepcionDeCompra.Resultado.BLOQUEADA
-	if _dialogo != null and not _dialogo.terminado():
+	if _dialogo != null and not _dialogo.terminado() and not (_acuse and objeto != null):
 		_dialogo.avanzar()
 		if _dialogo.terminado():
 			_inicial_terminada = true
@@ -65,6 +67,7 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 		_dialogo = _comprador.dialogos.inicial(_comprador.personaje)
 		_inicial_terminada = _dialogo.terminado()
 		return RecepcionDeCompra.Resultado.DIALOGO
+	_acuse = false
 	if objeto == null:
 		_dialogo = _recordatorio()
 		return RecepcionDeCompra.Resultado.DIALOGO
@@ -72,9 +75,16 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	if not objeto is UnidadDeProducto or _inventario.esta_afuera(objeto as UnidadDeProducto):
 		resultado = _recepcion.recibir(objeto, _inicial_terminada)
 	if resultado == RecepcionDeCompra.Resultado.RECHAZADA:
-		_dialogo = _recordatorio(true)
+		# Retiene como cualquier rechazo: con lo repetido en la mano, cada clic lo volvería a
+		# ofrecer y la ventanilla no se podría cerrar.
+		_dialogo = (
+			DialogosDeCompradores.una(DialogosDeCompradores.YA_ENTREGADO)
+			if _ya_entregado(objeto)
+			else _recordatorio(true)
+		)
 	elif resultado == RecepcionDeCompra.Resultado.ACEPTADA:
-		_dialogo = null
+		_acuse = true
+		_dialogo = DialogosDeCompradores.agradecimiento(_comprador.pedido(), _recepcion)
 	elif resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		_vendida = _inventario.vender_unidades(_recepcion.unidades())
 		_dialogo = _comprador.dialogos.despedida(_comprador.personaje)
@@ -83,16 +93,21 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 
 
 func _recordatorio(rechazo: bool = false) -> Dialogo:
-	return _comprador.dialogos.recordatorio(
-		_comprador.personaje, rechazo, _comprador.pedido(), _productos_completos()
+	return DialogosDeCompradores.recordatorio(_comprador.pedido(), _recepcion, rechazo)
+
+
+## Esa misma unidad, o un producto del pedido que ya llegó entero.
+func _ya_entregado(objeto: ObjetoDelAlmacen) -> bool:
+	var unidad := objeto as UnidadDeProducto
+	if unidad == null:
+		return false
+	return (
+		_recepcion.unidades().has(unidad)
+		or (
+			_comprador.pedido().unidades_de(unidad.producto) > 0
+			and _recepcion.pendientes(unidad.producto) <= 0
+		)
 	)
-
-
-func _productos_completos() -> bool:
-	for producto in _comprador.pedido().productos():
-		if _recepcion.pendientes(producto) > 0:
-			return false
-	return true
 
 
 func dialogo() -> Dialogo:
@@ -100,7 +115,7 @@ func dialogo() -> Dialogo:
 
 
 func puede_abandonar() -> bool:
-	return _dialogo == null or _dialogo.puede_abandonar()
+	return _dialogo == null or _acuse or _dialogo.puede_abandonar()
 
 
 func vencer() -> void:

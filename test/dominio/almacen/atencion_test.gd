@@ -277,8 +277,9 @@ func test_vencer_conserva_cero_ticket_parcial_y_todos_sin_vender() -> void:  # A
 			assert_int(atencion.interactuar(Ticket.new(renglones))).is_equal(
 				RecepcionDeCompra.Resultado.ACEPTADA
 			)
-		atencion.interactuar(null)
-		assert_bool(atencion.puede_abandonar()).is_false()
+		# Un clic cierra el agradecimiento, si lo hay; el siguiente abre el recordatorio.
+		while atencion.puede_abandonar():
+			atencion.interactuar(null)
 		atencion.vencer()
 		atencion.vencer()
 		assert_bool(atencion.despachada()).is_true()

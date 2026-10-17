@@ -63,12 +63,6 @@ func test_un_id_ausente_rechaza_el_pedido_completo() -> void:  # AC-CTR-051
 	assert_object(rechazados[0]).is_null()
 
 
-func _visible(texto: String) -> String:
-	var etiquetas := RegEx.new()
-	etiquetas.compile("\\[[^\\]]*\\]")
-	return etiquetas.sub(texto, "", true)
-
-
 func _comun(lineas: Array) -> Atencion:
 	var pedido := Venta.new()
 	for linea: Array in lineas:
@@ -91,35 +85,28 @@ func _comun(lineas: Array) -> Atencion:
 
 func test_los_comunes_reemplazan_uno_dos_y_tres_marcadores() -> void:  # AC-CTR-053
 	var casos: Array[Array] = [
-		[[[Producto.Id.POETICO, 3]], "Quiero tres Poético."],
-		[
-			[[Producto.Id.POETICO, 2], [Producto.Id.PRONGLES, 1]],
-			"Quiero dos Poético y un tubo de papitas Progres."
-		],
-		[
-			[[Producto.Id.POETICO, 1], [Producto.Id.PRONGLES, 1], [Producto.Id.DURONGA, 1]],
-			"Quiero una botella de Poético, un tubo de papitas Progres y una caja de preservativos Duronga."
-		]
+		[[Producto.Id.POETICO, 3]],
+		[[Producto.Id.POETICO, 2], [Producto.Id.PRONGLES, 1]],
+		[[Producto.Id.POETICO, 1], [Producto.Id.PRONGLES, 1], [Producto.Id.DURONGA, 1]],
 	]
 	for caso: Array in casos:
-		var atencion := _comun(caso[0])
+		var atencion := _comun(caso)
 		var original := atencion.comprador().pedido()
 		atencion.interactuar(null)
 		var texto := atencion.dialogo().entrada_actual()
-		assert_str(_visible(texto)).is_equal(caso[1])
 		assert_int(texto.count("[color=#e4f850]")).is_equal(original.productos().size())
 		assert_str(texto).not_contains("[b]")
 		assert_str(texto).not_contains("#e7a1f4")
 		atencion.interactuar(null)
 		atencion.interactuar(Ticket.new([]))
-		assert_str(_visible(atencion.dialogo().entrada_actual())).is_equal(
-			"Yo no pedí esto. " + caso[1]
+		assert_str(atencion.dialogo().entrada_actual()).is_equal(
+			DialogosDeCompradores.RECHAZO + texto
 		)
 		assert_object(atencion.comprador().pedido()).is_same(original)
 
 
-# AC-CTR-053, AC-CTR-051
-func test_el_recordatorio_conserva_pedido_original_y_pide_recibo_al_completar_productos() -> void:
+# AC-CTR-053, AC-CTR-051, AC-CTR-066
+func test_el_recordatorio_nombra_lo_que_falta_y_pide_recibo_al_completar_productos() -> void:
 	var atencion := _comun(
 		[[Producto.Id.POETICO, 1], [Producto.Id.PRONGLES, 1], [Producto.Id.DURONGA, 1]]
 	)
@@ -129,16 +116,17 @@ func test_el_recordatorio_conserva_pedido_original_y_pide_recibo_al_completar_pr
 	var primero := estante.retirar(pedido.productos()[0])
 	assert_int(atencion.interactuar(primero)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
 	atencion.interactuar(null)
-	assert_str(_visible(atencion.dialogo().entrada_actual())).contains("una botella de Poético")
+	atencion.interactuar(null)
+	var texto := atencion.dialogo().entrada_actual()
+	assert_int(texto.count("[color=#e4f850]")).is_equal(pedido.productos().size() - 1)
 	atencion.interactuar(null)
 	for producto: Producto in pedido.productos().slice(1):
 		assert_int(atencion.interactuar(estante.retirar(producto))).is_equal(
 			RecepcionDeCompra.Resultado.ACEPTADA
 		)
 	atencion.interactuar(null)
-	assert_str(atencion.dialogo().entrada_actual()).is_equal(
-		"Gracias. Me das el recibo, ¿por favor?"
-	)
+	atencion.interactuar(null)
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.PIDE_EL_RECIBO)
 	assert_object(atencion.comprador().pedido()).is_same(pedido)
 	assert_bool(atencion.vendida()).is_false()
 

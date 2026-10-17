@@ -238,22 +238,11 @@ Los textos DEBEN conservar el diseño de Figma y usar las cantidades del pedido 
 para Tia. La tabla de pedidos DEBE prevalecer sobre cantidades distintas en los diálogos.
 CUANDO un recordatorio o rechazo nombra una unidad, el sistema DEBE usar el subtítulo al
 examinar de la base «Productos y cajas contenedoras», con primera letra en minúscula y sin
-el punto final, sustituyendo Pura-Cola por Coracola. Para los pedidos de la primera noche:
+el punto final: el mismo que lee el jugador al examinar ese producto.
 
-| Producto | Texto de una unidad |
-|---|---|
-| Marolini | una caja de fideos Marolini |
-| Coracola | una lata de Coracola |
-| Malbardo | un paquete de cigarrillos Malbardo |
-| Zucarachas | una caja de cereal Zucarachas |
-| Pepito | una caja de galletitas Pepito |
-
-El recordatorio DEBE enumerar el pedido entero en el orden de la tabla de compradores,
-incluso después de una entrega parcial: «Quiero [producto1], [producto2] y [producto3].»
-para Tin y «Quiero [producto1] y [producto2].» para Tia. El rechazo DEBE anteponer
-«Yo no pedí esto. » al mismo texto. La entrada inicial de Tia DEBE decir
-«Hola! Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito, por favor.».
-En la primera jornada, los nombres de los productos pedidos DEBEN distinguirse con negrita y color.
+El recordatorio y el rechazo de Tin y Tia DEBEN seguir BR-CTR-039, como los de cualquier
+comprador. Los textos de sus entradas DEBEN ser los de la ficha «Diálogos de compradores», y
+los nombres de los productos pedidos DEBEN distinguirse con color, sin negrita.
 La presentación de los productos de jornada 2 DEBE seguir BR-CTR-043.
 
 ### BR-CTR-029 — Productos pendientes y ticket exacto
@@ -261,7 +250,9 @@ La presentación de los productos de jornada 2 DEBE seguir BR-CTR-043.
 El sistema DEBE aceptar una unidad física distinta de cada producto todavía pendiente y un
 ticket con las cantidades exactas del pedido. El orden del ticket NO DEBE importar.
 Una unidad repetida, extra, producto ajeno, ticket incorrecto u otro objeto DEBE rechazarse
-con el texto de rechazo y el recordatorio, sin alterar mano, entregas ni ventas.
+sin alterar mano, entregas ni ventas. Una unidad ya recibida, o de un producto del pedido que
+ya llegó entero, DEBE contestarse con el agradecimiento de lo ya entregado; lo demás, con el
+texto de rechazo.
 Antes de terminar la conversación inicial NO DEBE haber recepción ni rechazo.
 
 ### BR-CTR-030 — La compra completa vende una vez
@@ -376,10 +367,12 @@ publicar un pedido parcial ni sustituirlo.
 
 ### BR-CTR-039 — Los textos comunes usan el pedido real
 
-CUANDO se pide recordatorio, el sistema DEBE usar «Quiero [producto1].», «Quiero [producto1] y
-[producto2].» o «Quiero [producto1], [producto2] y [producto3].», según los tipos distintos del
-pedido. Un rechazo DEBE anteponer «Yo no pedí esto. ». Con todos los productos recibidos y sólo
-el ticket pendiente DEBE decir «Gracias. Me das el recibo, ¿por favor?».
+CUANDO se pide recordatorio, el sistema DEBE enumerar los productos que todavía faltan, en el
+orden del pedido, con los textos comunes de la ficha «Diálogos de compradores». Un rechazo DEBE
+anteponer su prefijo y enumerar el pedido entero. Con todos los productos recibidos y sólo el
+ticket pendiente DEBE pedir el recibo. CUANDO recibe un producto, el comprador DEBE agradecer
+nombrando lo que todavía falta, o pedir el recibo si sólo falta el ticket. Ese agradecimiento NO
+DEBE retener el clic siguiente con un objeto ni impedir dejar la ventanilla.
 Para una unidad, cada marcador DEBE usar el subtítulo del producto con primera letra minúscula
 y sin punto final. Para más de una DEBE usar «dos» o «tres» seguido del nombre del producto.
 Los productos DEBEN llevar el resaltado amarillo común. En jornada 2 NO DEBE inventarse una
@@ -648,10 +641,9 @@ la conversación inicial ENTONCES sólo
 cambia una entrada por clic, sin recibir ni rechazar el objeto. Al terminar, manos vacías muestran
 un recordatorio; un objeto correcto se recibe y ese clic no avanza una conversación.
 Reabrir conserva el progreso y los nombres pedidos aparecen con negrita y color.
-DADO Tia CUANDO se inicia su conversación ENTONCES tiene una entrada cuyo texto visible es
-«Hola! Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito, por favor.»,
-con «Zucarachas» y «Pepito» en negrita y color. La conversación inicial de Tin conserva sus
-tres entradas y ambos conservan los textos de sus despedidas.
+DADO Tia CUANDO se inicia su conversación ENTONCES tiene una entrada que nombra sus productos
+resaltados con color y sin negrita. La conversación inicial de Tin conserva sus tres entradas, y
+sus despedidas, una y cuatro.
 
 ### AC-CTR-037 — Identidad y sobrantes *(verifica BR-CTR-028, BR-CTR-029)*
 
@@ -663,17 +655,9 @@ repite su identidad ENTONCES se rechaza la repetición y sigue faltando una; una
 distinta se acepta y una tercera se rechaza como sobrante.
 
 DADO cada comprador de la primera noche, terminada su conversación inicial, CUANDO se ofrece
-un objeto incorrecto ENTONCES el texto visible del rechazo es:
-
-| Comprador | Rechazo |
-|---|---|
-| Tin | Yo no pedí esto. Quiero una caja de fideos Marolini, una lata de Coracola y un paquete de cigarrillos Malbardo. |
-| Tia | Yo no pedí esto. Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito. |
-
-CUANDO se le habla con manos vacías ENTONCES el recordatorio tiene el mismo texto sin
-«Yo no pedí esto. ». Los nombres de los productos llevan negrita y color en ambos textos.
-Para Tia, antes y después de recibir la Zucarachas, rechazo y recordatorio enumeran el mismo
-pedido entero, incluido el Pepito pendiente.
+un objeto incorrecto ENTONCES el rechazo antepone su prefijo y nombra todos los productos del
+pedido, resaltados con color. CUANDO se le habla con manos vacías ENTONCES el recordatorio no
+lleva el prefijo.
 
 ### AC-CTR-038 — El ticket es un multiconjunto *(verifica BR-CTR-029, BR-CTR-030)*
 
@@ -894,6 +878,20 @@ cerrado y los textos completos al hablar, conservando los gestos de entrada y re
 DADO un comprador sin atender y un ticket en mano CUANDO se pulsa izquierdo una vez sobre la
 persona ENTONCES aparece la primera entrada inicial, sin entrega ni rechazo. El siguiente
 izquierdo avanza exactamente una entrada. Repetir con mano vacía conserva la misma secuencia.
+
+### AC-CTR-066 — El recordatorio nombra lo que falta *(verifica BR-CTR-039)*
+
+DADO un comprador que recibió uno de sus productos CUANDO se le habla con manos vacías ENTONCES
+el recordatorio nombra los que faltan y no el recibido; el rechazo sigue nombrando el pedido
+entero. Con todos los productos recibidos, pide el recibo.
+
+### AC-CTR-067 — Recibir agradece sin retener *(verifica BR-CTR-029, BR-CTR-039)*
+
+DADO un comprador listo para recibir CUANDO recibe un producto ENTONCES agradece nombrando lo que
+falta y se puede dejar la ventanilla. CUANDO después se le ofrece otra unidad de ese producto ya completo, o la misma
+unidad, ENTONCES la rechaza en ese mismo clic con el agradecimiento de lo ya entregado, que
+retiene como cualquier rechazo: el clic siguiente lo cierra aunque la unidad siga en la mano. Un
+producto ajeno se rechaza con el prefijo de rechazo.
 
 ## No objetivos
 

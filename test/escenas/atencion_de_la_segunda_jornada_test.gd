@@ -436,6 +436,8 @@ func test_fede_parcial_vence_a_las_2330_sin_despedida_y_devuelve_la_unidad() -> 
 	var identidad := cuerpo.datos
 	await _pulsar(almacen)
 	var papel := await _entregar_ticket(almacen, atendida.comprador().pedido())
+	# El primer clic cierra el agradecimiento; el segundo abre el recordatorio, que retiene.
+	await _pulsar(almacen)
 	await _pulsar(almacen)
 	assert_bool(_puesto(almacen).get("_abierta")).is_true()
 	_ir_a(almacen, 23, 30)
@@ -719,7 +721,7 @@ func test_el_bidon_azul_no_satisface_poetico_ni_cambia_cantidades() -> void:
 		RecepcionDeCompra.Resultado.RECHAZADA
 	)
 	assert_bool(atendida.vendida()).is_false()
-	assert_str(atendida.dialogo().entrada_actual()).starts_with("Yo no pedí esto. ")
+	assert_str(atendida.dialogo().entrada_actual()).starts_with(DialogosDeCompradores.RECHAZO)
 	assert_array(_cantidades(almacen, Catalogo.de(Producto.Id.POETICO))).is_equal(cantidades)
 	await _pulsar_real()
 	for producto in atendida.comprador().pedido().productos():

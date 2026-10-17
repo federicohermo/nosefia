@@ -238,6 +238,43 @@ func test_el_balde_se_mantiene_vertical_al_mirar_en_la_mano() -> void:  # AC-PLY
 	assert_object(agarre.manos().sostenido()).is_same(balde.datos)
 
 
+func test_los_bidones_se_llevan_y_se_apoyan_como_las_cajas() -> void:  # AC-PLY-101
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var punto: Node3D = (almacen.get("_reposicion_manual") as Node).get("punto_de_la_caja")
+	for nombre: String in ["JabonAzul", "JabonRosa", "JabonAmarillo"]:
+		var bidon: RigidBody3D = almacen.get_node("Objetos/" + nombre)
+		var mascara := bidon.collision_mask
+		_agarrar(almacen, bidon)
+		await get_tree().physics_frame
+		# Corrido a un costado: en el medio tapaba el balde donde se lo vuelca.
+		var al_costado := punto.to_local(bidon.global_position)
+		assert_float(al_costado.x).override_failure_message(nombre).is_greater(0.2)
+		# Examinarlo lo devuelve a su costado, y no al medio.
+		var examen: Examen = jugador.get("examen")
+		assert_bool(examen.iniciar()).override_failure_message(nombre).is_true()
+		examen.terminar()
+		await get_tree().process_frame
+		var devuelto := punto.to_local(bidon.global_position)
+		assert_vector(devuelto).override_failure_message(nombre).is_equal_approx(
+			al_costado, Vector3.ONE * 0.01
+		)
+		await _parar(jugador, PISO_LIBRE, Vector3.RIGHT, MIRANDO_AL_PISO)
+		var golpe := _golpe_de_la_mira(jugador, bidon, mascara)
+		assert_bool(golpe.is_empty()).override_failure_message(nombre).is_false()
+		agarre.soltar(true)
+		await _dos_segundos_de_fisica()
+		_comprobar_derecho(bidon, "%s soltado" % nombre)
+		_comprobar_la_mano_vacia(almacen, nombre)
+		var lejos := _en_el_piso(bidon.global_position - (golpe["position"] as Vector3)).length()
+		(
+			assert_float(lejos)
+			. override_failure_message("%s quedó a %.2f m de donde se miraba" % [nombre, lejos])
+			. is_less(MEDIO_HUECO)
+		)
+
+
 ## Los cuatro apoyos: el punto que se mira, hacia dónde mira el jugador y cuánto baja la vista.
 func _apoyos(almacen: Node3D, balde: UtilDeLimpieza) -> Dictionary[String, Array]:
 	var piso := _piso(almacen)

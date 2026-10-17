@@ -163,6 +163,10 @@ SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adent
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
 lugar.
 
+Los tres bidones de jabón se llevan como el balde: verticales, a un costado y acompañando la
+mira, para no perderlos de vista al volcarlos. Se apoyan como las cajas: al soltarlos quedan
+derechos donde la mira toca, o al lado del jugador si ahí no entran.
+
 Algunas cosas se apoyan derechas: hoy, sólo el balde. CUANDO se suelta una de ellas, el sistema
 DEBE dejarla con su eje vertical, mire adonde mire la vista. SI justo en el punto que la mira
 toca no entra, ENTONCES el sistema DEBE probar alrededor de ese punto, sobre el mismo apoyo y
@@ -274,8 +278,8 @@ ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano, salvo una e
 ### BR-PLY-029 — Leer una nota pegada
 
 CUANDO el clic izquierdo apunta a una nota pegada, el sistema DEBE mostrar su lectura y
-suspender el control. Otro clic, izquierdo o derecho, DEBE cerrar y reanudar. Lo que se lleva DEBE conservar
-su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
+suspender el control. Sólo un clic derecho DEBE cerrar y reanudar; un clic izquierdo NO DEBE
+cerrarla. Lo que se lleva DEBE conservar su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
 abrir otra hoja. Leer NO DEBE detener el turno.
 
 CUANDO termina el turno, la lectura DEBE cerrarse antes de la devolución. La pausa DEBE verse
@@ -303,8 +307,8 @@ renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, 
 ### BR-PLY-031 — El programa abre sin soltar la mano
 
 CUANDO se hace clic izquierdo sobre la caja registradora, el sistema DEBE abrir su programa y
-suspender el control, conservando lo que se lleva y su lugar en la mano. Un clic derecho, o un
-clic izquierdo por fuera del panel del programa, DEBE cerrar y reanudar. Una pantalla o examen
+suspender el control, conservando lo que se lleva y su lugar en la mano. Sólo un clic derecho
+DEBE cerrar y reanudar; un clic izquierdo, adentro o afuera del panel, NO DEBE cerrarlo. Una pantalla o examen
 abiertos NO DEBEN permitir abrir el programa.
 Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
 continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar la devolución.
@@ -832,11 +836,11 @@ DADO las manos vacías, un levantable enfocado y el control suspendido por la co
 la ventanilla CUANDO se hace el gesto de agarrar ENTONCES las manos siguen vacías y el objeto
 permanece donde estaba.
 
-### AC-PLY-063 — Cada hoja abre su lectura y cierra con cualquier clic *(verifica BR-PLY-029, BR-PLY-006)*
+### AC-PLY-063 — Cada hoja abre su lectura y cierra con el derecho *(verifica BR-PLY-029, BR-PLY-006)*
 
 DADO cada una de las seis notas pegadas enfocadas, CUANDO se hace clic izquierdo ENTONCES
-aparece su contenido propio y se suspenden caminata, mirada y foco. CUANDO se hace otro clic,
-izquierdo o derecho, ENTONCES la lectura se cierra y el control vuelve.
+aparece su contenido propio y se suspenden caminata, mirada y foco. Un clic izquierdo no la
+cierra. CUANDO se hace clic derecho ENTONCES la lectura se cierra y el control vuelve.
 
 ### AC-PLY-064 — La lectura conserva lo llevado *(verifica BR-PLY-029, BR-PLY-026)*
 
@@ -893,8 +897,8 @@ al agregar lectura.
 
 DADO la caja cerrada y, por turno, manos vacías, unidad, caja, mopa, balde, jabón, bolsa y
 ticket, CUANDO se hace clic izquierdo ENTONCES abre el programa y suspende el control sin
-cambiar lo sostenido ni su padre o pose. CUANDO se hace clic derecho, o izquierdo por fuera del
-panel, ENTONCES cierra y la mano sigue igual. El derecho y E con mano vacía no abren; abierto,
+cambiar lo sostenido ni su padre o pose. Un clic izquierdo, adentro o afuera del panel, no
+cierra. CUANDO se hace clic derecho ENTONCES cierra y la mano sigue igual. El derecho y E con mano vacía no abren; abierto,
 el izquierdo y E no agarran ni examinan.
 DADO otra pantalla o examen abiertos ENTONCES no abre el programa encima.
 
@@ -1091,6 +1095,11 @@ DADO una caja chica y otra grande, por separado, y la división del baño del pr
 GJ-52 CUANDO se suelta mirando su borde gris superior desde piso transitable ENTONCES la base
 descansa sobre la cara superior visible, no sobre la pared blanca, y no atraviesa el borde.
 La comprobación cruza la base dibujada y la superficie física del mismo contacto.
+
+### AC-PLY-101 — Los bidones se llevan y se apoyan como las cajas *(verifica BR-PLY-018)*
+
+DADO cada bidón de jabón en la mano ENTONCES cuelga del mismo punto que una caja. CUANDO se lo
+suelta mirando al piso libre ENTONCES queda derecho donde la mira tocaba y la mano queda vacía.
 
 ### AC-PLY-100 — La cabecera acomoda la caja sobre metal visible *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
 

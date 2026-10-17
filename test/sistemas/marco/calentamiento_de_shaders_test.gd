@@ -430,16 +430,17 @@ func test_fuera_de_la_web_la_plantilla_no_enlaza_en_paralelo() -> void:
 	assert_int(_calentamiento().programas_en_cola.call()).is_equal(-1)
 
 
-func test_con_cola_la_pasada_destapa_todos_sus_objetos_en_un_cuadro() -> void:
-	var escena := _escena(3)
+func test_con_cola_un_cuadro_destapa_a_lo_sumo_cuatro_materiales_nuevos() -> void:
+	var escena := _escena(6)
 	var cola: Array[int] = [0]
 	var calentamiento := _calentamiento_con_cola(cola)
 	calentamiento.calentar(escena)
-	assert_int(_visibles(escena)).is_zero()
+	await calentamiento.avanzo
+	# El común trae también su contorno: con dos propios llega a cuatro y cierra el cuadro.
+	assert_int(_visibles(escena)).is_equal(CUANTOS - 4)
 	await calentamiento.avanzo
 	assert_int(_visibles(escena)).is_equal(CUANTOS)
 	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
-	assert_int(_visibles(escena)).is_equal(CUANTOS)
 	assert_float(calentamiento.progreso()).is_equal(1.0)
 
 
@@ -487,18 +488,19 @@ func test_con_cola_el_progreso_sale_de_los_programas_que_terminaron() -> void:
 	var progresos: Array[float] = []
 	calentamiento.avanzo.connect(func(progreso: float) -> void: progresos.append(progreso))
 	calentamiento.calentar(escena)
+	# La primera mitad es destapar: con todo destapado y nada enlazado, va por la mitad.
 	await calentamiento.avanzo
-	assert_float(progresos[-1]).is_zero()
+	assert_float(progresos[-1]).is_equal_approx(0.5, 0.001)
 	cola[0] = 4
 	await calentamiento.avanzo
-	assert_float(progresos[-1]).is_zero()
+	assert_float(progresos[-1]).is_equal_approx(0.5, 0.001)
 	cola[0] = 1
 	await calentamiento.avanzo
-	assert_float(progresos[-1]).is_equal_approx(0.75, 0.001)
+	assert_float(progresos[-1]).is_equal_approx(0.875, 0.001)
 	# Una variante que entra tarde a la cola no hace retroceder la barra.
 	cola[0] = 3
 	await calentamiento.avanzo
-	assert_float(progresos[-1]).is_equal_approx(0.75, 0.001)
+	assert_float(progresos[-1]).is_equal_approx(0.875, 0.001)
 	cola[0] = 0
 	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
 	assert_float(calentamiento.progreso()).is_equal(1.0)

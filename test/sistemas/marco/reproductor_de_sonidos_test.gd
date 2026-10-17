@@ -67,6 +67,14 @@ func test_pedir_un_evento_con_sonido_deja_una_voz_con_ese_stream_y_ese_bus() -> 
 	assert_int(_pedidos.size()).is_equal(1)
 
 
+func test_la_fila_corre_el_volumen_de_su_voz() -> void:
+	var entrada := _entrada(EntradaSonora.Evento.OBJETO_AGARRADO)
+	entrada.volumen_db = -10.0
+	var reproductor := _reproductor([entrada] as Array[EntradaSonora])
+	assert_bool(reproductor.pedir(EntradaSonora.Evento.OBJETO_AGARRADO)).is_true()
+	assert_float(reproductor.voces()[0].volume_db).is_equal(-10.0)
+
+
 func test_una_fila_sin_stream_no_ocupa_ninguna_voz() -> void:
 	var reproductor := _reproductor(
 		[_entrada(EntradaSonora.Evento.OBJETO_AGARRADO, false)] as Array[EntradaSonora]
