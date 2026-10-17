@@ -49,10 +49,11 @@ const A_RAS_DEL_PISO := 0.05
 ## a null value` que no nombra ni al `@export` ni a la escena. Siendo hija no hay nada que
 ## resolver. Medido el 2026-09-19.
 const GUIA := "Guia"
-## Dónde va el bidón en la mano, desde el punto donde se lleva el balde: a su misma distancia y
-## 10 cm más abajo, porque es más alto y su tapa quedaría a la altura del ojo. Acompaña la mira
-## como el balde, para no perderlo de vista al volcarlo.
-const BIDON_A_UN_COSTADO := Vector3(0.0, -0.1, -0.03)
+## Dónde va el bidón en la mano, desde el punto donde se lleva el balde: con el mismo encuadre que
+## el balde. Es 1,4 veces más grande (70 cm contra 50), así que va 1,4 veces más lejos sobre la
+## misma línea desde el ojo: unos 18° abajo y 26° al costado, casi entero a la vista. Acompaña la
+## mira como el balde, para no perderlo de vista al volcarlo.
+const BIDON_A_UN_COSTADO := Vector3(0.12, 0.02, -0.25)
 
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal
