@@ -36,10 +36,7 @@ func cerrar() -> void:
 func _input(evento: InputEvent) -> void:
 	if not _abierta:
 		return
-	if (
-		evento.is_action_pressed(ReglasDelJugador.ACCION_USAR)
-		or evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR)
-	):
+	if evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		get_viewport().set_input_as_handled()
 		cerrar()
 		jugador.tomar_el_cursor_desde_entrada()
