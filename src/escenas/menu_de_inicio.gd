@@ -11,6 +11,10 @@ const PARTE_DE_LA_LECTURA := 0.15
 const DURACION_DEL_FUNDIDO := 0.3
 ## En segundos: la barra termina de llenarse antes de entrar, desde donde haya quedado.
 const LLENADO_FINAL := 0.35
+## Un cuadro trabado no saltea el llenado: dura también al menos estos cuadros.
+const CUADROS_DEL_LLENADO := 10
+## En segundos: la barra llena se ve antes de pasar a la partida.
+const BARRA_LLENA := 0.3
 const TEMA := preload("res://assets/audio/MUS_MenuPrincipal.ogg")
 ## A 0 dB tapaba todo lo demás de la intro.
 const VOLUMEN_DEL_TEMA_DB := -8.0
@@ -142,6 +146,8 @@ func _process(delta: float) -> void:
 		_pintar(_parte_de_la_lectura * clampf(leido, 0.0, 1.0))
 		_pantalla.contar_lectura(_carga.progreso())
 	_espera.avanzar(delta)
+	if _calentamiento_en_el_menu == null and _copia != null and _sirve_la_copia():
+		_pintar(_espera.avance() * (1.0 - _parte_de_la_lectura) + _parte_de_la_lectura)
 	if _espera.puede_entrar() and _calentamiento_en_el_menu == null:
 		_espera = null
 		if _copia != null and _sirve_la_copia():
@@ -236,11 +242,14 @@ func _llenar_y_entrar(almacen: Node) -> void:
 	_pantalla.contar_entrada()
 	var desde := _mostrado
 	var inicio: int = _ahora.call()
+	var cuadros := 0
 	while _mostrado < 1.0:
 		await get_tree().process_frame
+		cuadros += 1
 		var transcurrido: float = (_ahora.call() - inicio) / 1000000.0
-		_pintar(lerpf(desde, 1.0, minf(1.0, transcurrido / LLENADO_FINAL)))
-	await get_tree().process_frame
+		var avance := minf(transcurrido / LLENADO_FINAL, float(cuadros) / CUADROS_DEL_LLENADO)
+		_pintar(lerpf(desde, 1.0, minf(1.0, avance)))
+	await get_tree().create_timer(BARRA_LLENA).timeout
 	_entrar(almacen)
 
 
@@ -298,6 +307,8 @@ func _entrar_con_la_copia() -> void:
 	for capa: CanvasLayer in _capas_de_la_copia:
 		capa.visible = true
 	await get_tree().process_frame
+	while _calentamiento.programas_en_cola.call() > 0:
+		await get_tree().process_frame
 	await get_tree().process_frame
 	_llenar_y_entrar(_copia)
 

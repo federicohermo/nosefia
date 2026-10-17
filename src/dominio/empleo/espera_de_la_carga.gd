@@ -18,5 +18,10 @@ func terminar_carga() -> void:
 	_cargada = true
 
 
+## Cuánto del mínimo ya pasó, de 0 a 1.
+func avance() -> float:
+	return clampf(_transcurrido / MINIMO, 0.0, 1.0)
+
+
 func puede_entrar() -> bool:
 	return _cargada and _transcurrido >= MINIMO
