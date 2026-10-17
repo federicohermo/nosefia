@@ -33,6 +33,10 @@ const DISTANCIA_DE_SOLTADO := 1.2
 ## borde del cuadro no lo fija el GDD: es pregunta abierta.
 const RADIOS_DE_EXAMEN := 1.7
 
+## Cuánto sube lo examinado, como fracción de su distancia al ojo: unos 6° de la vista. Centrado,
+## un objeto alto llegaba a la banda de abajo, donde va el subtítulo.
+const ELEVACION_DEL_EXAMEN := 0.1
+
 ## Los nombres de las dos acciones que este spec agrega al `InputMap`. Tienen que coincidir letra
 ## por letra con la sección `[input]` de `project.godot`, y el test del objeto agarrable afirma
 ## justamente eso: es la única forma de que ese par de `String` no se separe en silencio.
