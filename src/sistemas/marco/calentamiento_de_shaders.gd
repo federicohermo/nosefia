@@ -17,10 +17,14 @@ const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
 ## Cuántos materiales nuevos destapa un cuadro con cola. Todos juntos compilaban ~125 programas en
 ## un solo cuadro: la web quedaba congelada 10 s y la barra no se movía. Medido el 2026-10-16.
 const MATERIALES_NUEVOS_CON_COLA := 4
+## Cuánto tarda el navegador en enlazar un programa de la cola, hasta medirlo en la corrida. Es lo
+## que tardó sin caché, en Chrome con ANGLE sobre D3D11: con caché, la cola se vacía antes.
+const SEGUNDOS_POR_PROGRAMA := 0.16
 
 ## Cuántos programas pidió la plantilla web y todavía no puede dibujar. Devuelve −1 si la
 ## plantilla no enlaza en paralelo: ahí cada programa nuevo frena el cuadro que lo pide.
 var programas_en_cola: Callable = _cola_de_la_plantilla
+var ahora: Callable = Time.get_ticks_usec
 
 var _pendientes: Array[GeometryInstance3D] = []
 var _sin_focos: Array[GeometryInstance3D] = []
@@ -37,10 +41,13 @@ var _alcance_ampliado := 0.0
 var _ocultos: Array[GeometryInstance3D] = []
 var _vistos: Dictionary = {}
 var _total := 0
-## Con cola, la barra es mitad destapar y mitad enlazar lo que quedó en la cola.
-var _pico_de_la_cola := 0
-var _por_enlazar := 0.0
+## Con cola, el progreso es tiempo sobre tiempo estimado: destapar y enlazar no duran lo mismo,
+## y cuánto dura enlazar depende del caché del navegador.
 var _con_cola := false
+var _cola := 0
+var _inicio := 0
+var _fin_del_destape := -1
+var _cola_al_destapar := 0
 var _camara: Camera3D
 var _anterior: Camera3D
 var _contornos_listos := false
@@ -67,6 +74,7 @@ func _ready() -> void:
 
 func calentar(escena: Node3D) -> void:
 	_escena = escena
+	_inicio = ahora.call()
 	_dibujar_materiales_2d(escena)
 	for reflejo: ReflectionProbe in escena.find_children("*", "ReflectionProbe", true, false):
 		if reflejo.is_visible_in_tree() and reflejo.intensity > 0.0:
@@ -202,9 +210,18 @@ func objetos_por_preparar() -> int:
 func progreso() -> float:
 	var faltan := objetos_por_preparar()
 	var destapado := 1.0 - float(faltan) / maxi(_total, 1)
-	if not _con_cola:
+	if not _con_cola or (faltan == 0 and _cola <= 0):
 		return destapado
-	return (destapado + 1.0 - _por_enlazar) / 2.0
+	var hechos := _total - faltan
+	var transcurrido: float = (ahora.call() - _inicio) / 1000000.0
+	if hechos == 0 or transcurrido <= 0.0:
+		return 0.0
+	var por_programa := SEGUNDOS_POR_PROGRAMA
+	if _fin_del_destape >= 0 and _cola < _cola_al_destapar:
+		var enlazando: float = (ahora.call() - _fin_del_destape) / 1000000.0
+		por_programa = enlazando / (_cola_al_destapar - _cola)
+	var resta := faltan * transcurrido / hechos + maxi(_cola, 0) * por_programa
+	return transcurrido / (transcurrido + resta)
 
 
 static func _cola_de_la_plantilla() -> int:
@@ -228,14 +245,15 @@ func _process(_delta: float) -> void:
 		_cuadros_de_asentamiento -= 1
 		return
 	var cola: int = programas_en_cola.call()
+	_cola = cola
 	if _pendientes.is_empty():
 		if _sin_focos.is_empty() and _con_area.is_empty():
+			if _fin_del_destape < 0:
+				_fin_del_destape = ahora.call()
+				_cola_al_destapar = cola
 			if cola > 0:
-				_pico_de_la_cola = maxi(_pico_de_la_cola, cola)
-				_por_enlazar = minf(_por_enlazar, float(cola) / _pico_de_la_cola)
 				avanzo.emit(progreso())
 				return
-			_por_enlazar = 0.0
 			_terminar()
 			return
 		# Al salir del baño, un útil puede recibir sus focos y las luces de área del local,
@@ -261,7 +279,6 @@ func _process(_delta: float) -> void:
 		_vistos.clear()
 	if cola >= 0:
 		_con_cola = true
-		_por_enlazar = 1.0
 	var tope := MATERIALES_NUEVOS_CON_COLA if cola >= 0 else 1
 	var nuevos := 0
 	while not _pendientes.is_empty() and nuevos < tope:
