@@ -48,7 +48,7 @@ func _ids_de_las_seis_hojas() -> Array:
 	return ids
 
 
-func test_las_seis_hojas_abren_su_propio_dato_y_cierran_con_cualquier_clic() -> void:  # AC-PLY-063
+func test_las_seis_hojas_abren_su_propio_dato_y_cierran_solo_con_el_derecho() -> void:  # AC-PLY-063
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var puesto: Node = almacen.get_node("Estructura/NotasDelAlmacen")
@@ -66,7 +66,9 @@ func test_las_seis_hojas_abren_su_propio_dato_y_cierran_con_cualquier_clic() -> 
 			assert_object((vista.get("_imagen") as TextureRect).texture).is_same(
 				hoja.call("imagen")
 			)
-		await _derecho(MOUSE_BUTTON_LEFT if ids.size() % 2 == 0 else MOUSE_BUTTON_RIGHT)
+		await _derecho(MOUSE_BUTTON_LEFT)
+		assert_bool(vista.visible).is_true()
+		await _derecho()
 		assert_bool(vista.visible).is_false()
 		assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_false()
 	assert_array(ids).contains_exactly_in_any_order(_ids_de_las_seis_hojas())
