@@ -232,6 +232,7 @@ func test_salir_de_computadora_caja_y_nota_consume_el_clic() -> void:  # AC-PLY-
 	var margenes := (programa.borrar.get_parent() as Control).get_global_rect()
 	assert_bool(get_viewport().get_visible_rect().has_point(fuera)).is_true()
 	assert_bool(margenes.has_point(fuera)).is_false()
+	# Sólo el derecho sale; el izquierdo, en la nota o por fuera del panel de tickets, no.
 	for caso: Array in [
 		[computadora, MOUSE_BUTTON_RIGHT, centro],
 		[caja, MOUSE_BUTTON_RIGHT, centro],
@@ -243,6 +244,9 @@ func test_salir_de_computadora_caja_y_nota_consume_el_clic() -> void:  # AC-PLY-
 		assert_bool(jugador.call("suspendido")).is_true()
 		await get_tree().process_frame
 		await _clic_real(caso[1], caso[2])
+		if caso[1] == MOUSE_BUTTON_LEFT:
+			assert_bool(jugador.call("suspendido")).override_failure_message(str(caso)).is_true()
+			await _clic_real(MOUSE_BUTTON_RIGHT, centro)
 		assert_bool(jugador.call("suspendido")).override_failure_message(str(caso)).is_false()
 		assert_object(agarre.manos().sostenido()).is_same(unidad)
 		assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
