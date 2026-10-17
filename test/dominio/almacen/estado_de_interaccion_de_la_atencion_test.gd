@@ -52,7 +52,10 @@ func test_recibir_agradece_sin_retener_y_lo_repetido_ya_estaba() -> void:  # AC-
 	var segundo := comprador.pedido().productos()[1]
 	var unidad := estante.retirar(primero)
 	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
-	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.GRACIAS)
+	(
+		assert_bool(atencion.dialogo().entrada_actual().begins_with(DialogosDeCompradores.FALTA))
+		. is_true()
+	)
 	assert_bool(atencion.puede_abandonar()).is_true()
 	# El agradecimiento no se come el clic: lo repetido se ofrece y se contesta en el mismo.
 	var otra := estante.retirar(primero)

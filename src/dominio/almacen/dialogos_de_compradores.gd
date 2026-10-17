@@ -4,7 +4,7 @@ extends Resource
 
 enum Personaje { NINGUNO, TIN, TIA, FEDE, MIA }
 
-const GRACIAS := "Gracias."
+const FALTA := "Gracias. Falta que me des "
 const YA_ENTREGADO := "Gracias, pero ya me habías dado esto."
 const PIDE_EL_RECIBO := "Gracias. Me das el recibo, ¿por favor?"
 const RECHAZO := "Yo no pedí esto. "
@@ -50,35 +50,35 @@ func despedida(personaje: int) -> Dialogo:
 static func recordatorio(
 	pedido: Venta, recepcion: RecepcionDeCompra, rechazo: bool = false
 ) -> Dialogo:
-	var productos: Array[Producto] = []
-	var cantidades: Array[int] = []
-	for producto in pedido.productos():
-		var cantidad := pedido.unidades_de(producto) if rechazo else recepcion.pendientes(producto)
-		if cantidad > 0:
-			productos.append(producto)
-			cantidades.append(cantidad)
 	if rechazo:
-		return una(RECHAZO + _quiero(productos, cantidades))
-	if productos.is_empty():
-		return una(PIDE_EL_RECIBO)
-	return una(_quiero(productos, cantidades))
+		return una(RECHAZO + "Quiero " + _enumeracion(pedido, pedido.unidades_de) + ".")
+	var faltan := _enumeracion(pedido, recepcion.pendientes)
+	return una(PIDE_EL_RECIBO if faltan.is_empty() else "Quiero " + faltan + ".")
+
+
+## Lo que dice al recibir un producto: agradece y nombra lo que falta, o pide el recibo.
+static func agradecimiento(pedido: Venta, recepcion: RecepcionDeCompra) -> Dialogo:
+	var faltan := _enumeracion(pedido, recepcion.pendientes)
+	return una(PIDE_EL_RECIBO if faltan.is_empty() else FALTA + faltan + ".")
 
 
 static func una(texto: String) -> Dialogo:
 	return Dialogo.new(PackedStringArray([texto]))
 
 
-static func _quiero(productos: Array[Producto], cantidades: Array[int]) -> String:
+## Los productos del pedido con cantidad positiva, en su orden: «a», «a y b» o «a, b y c». Vacío
+## si no queda ninguno.
+static func _enumeracion(pedido: Venta, cantidad: Callable) -> String:
 	var marcadores: PackedStringArray = []
-	for indice in productos.size():
-		var producto := productos[indice]
+	for producto in pedido.productos():
+		var cuantas: int = cantidad.call(producto)
+		if cuantas <= 0:
+			continue
 		var texto := SubtitulosAlExaminar.de_producto(producto.id).trim_suffix(".")
 		texto = texto.left(1).to_lower() + texto.substr(1)
-		if cantidades[indice] > 1:
-			texto = ("dos" if cantidades[indice] == 2 else "tres") + " " + producto.nombre
+		if cuantas > 1:
+			texto = ("dos" if cuantas == 2 else "tres") + " " + producto.nombre
 		marcadores.append("[color=#e4f850]" + texto + "[/color]")
-	if marcadores.size() == 1:
-		return "Quiero " + marcadores[0] + "."
-	if marcadores.size() == 2:
-		return "Quiero " + marcadores[0] + " y " + marcadores[1] + "."
-	return "Quiero " + marcadores[0] + ", " + marcadores[1] + " y " + marcadores[2] + "."
+	if marcadores.size() < 2:
+		return "".join(marcadores)
+	return ", ".join(marcadores.slice(0, -1)) + " y " + marcadores[-1]

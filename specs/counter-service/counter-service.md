@@ -370,9 +370,9 @@ publicar un pedido parcial ni sustituirlo.
 CUANDO se pide recordatorio, el sistema DEBE enumerar los productos que todavía faltan, en el
 orden del pedido, con los textos comunes de la ficha «Diálogos de compradores». Un rechazo DEBE
 anteponer su prefijo y enumerar el pedido entero. Con todos los productos recibidos y sólo el
-ticket pendiente DEBE pedir el recibo. CUANDO recibe un producto, el comprador DEBE agradecer, y
-ese agradecimiento NO DEBE retener el clic siguiente con un objeto ni impedir dejar la
-ventanilla.
+ticket pendiente DEBE pedir el recibo. CUANDO recibe un producto, el comprador DEBE agradecer
+nombrando lo que todavía falta, o pedir el recibo si sólo falta el ticket. Ese agradecimiento NO
+DEBE retener el clic siguiente con un objeto ni impedir dejar la ventanilla.
 Para una unidad, cada marcador DEBE usar el subtítulo del producto con primera letra minúscula
 y sin punto final. Para más de una DEBE usar «dos» o «tres» seguido del nombre del producto.
 Los productos DEBEN llevar el resaltado amarillo común. En jornada 2 NO DEBE inventarse una
@@ -887,8 +887,8 @@ entero. Con todos los productos recibidos, pide el recibo.
 
 ### AC-CTR-067 — Recibir agradece sin retener *(verifica BR-CTR-029, BR-CTR-039)*
 
-DADO un comprador listo para recibir CUANDO recibe un producto ENTONCES agradece y se puede dejar
-la ventanilla. CUANDO después se le ofrece otra unidad de ese producto ya completo, o la misma
+DADO un comprador listo para recibir CUANDO recibe un producto ENTONCES agradece nombrando lo que
+falta y se puede dejar la ventanilla. CUANDO después se le ofrece otra unidad de ese producto ya completo, o la misma
 unidad, ENTONCES la rechaza en ese mismo clic con el agradecimiento de lo ya entregado, que
 retiene como cualquier rechazo: el clic siguiente lo cierra aunque la unidad siga en la mano. Un
 producto ajeno se rechaza con el prefijo de rechazo.

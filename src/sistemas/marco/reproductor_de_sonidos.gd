@@ -439,7 +439,7 @@ func _poner(voz: Node, entrada: EntradaSonora, bus: String, volumen_db: float) -
 	_anteriores[entrada] = indice
 	voz.set(&"stream", entrada.variante(indice))
 	voz.set(&"bus", bus)
-	voz.set(&"volume_db", volumen_db)
+	voz.set(&"volume_db", volumen_db + entrada.volumen_db)
 	voz.call(&"play")
 
 

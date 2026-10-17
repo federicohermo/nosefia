@@ -37,7 +37,7 @@ var _recepcion: RecepcionDeCompra = null
 var _dialogo: Dialogo = null
 var _presentado: bool = false
 var _inicial_terminada: bool = false
-## «Gracias.» al recibir: se lee, pero no retiene el clic siguiente ni la ventanilla.
+## El agradecimiento al recibir: se lee, pero no retiene el clic siguiente ni la ventanilla.
 var _acuse: bool = false
 
 
@@ -84,7 +84,7 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 		)
 	elif resultado == RecepcionDeCompra.Resultado.ACEPTADA:
 		_acuse = true
-		_dialogo = DialogosDeCompradores.una(DialogosDeCompradores.GRACIAS)
+		_dialogo = DialogosDeCompradores.agradecimiento(_comprador.pedido(), _recepcion)
 	elif resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		_vendida = _inventario.vender_unidades(_recepcion.unidades())
 		_dialogo = _comprador.dialogos.despedida(_comprador.personaje)
