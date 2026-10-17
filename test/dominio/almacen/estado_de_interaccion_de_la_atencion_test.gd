@@ -58,8 +58,13 @@ func test_recibir_agradece_sin_retener_y_lo_repetido_ya_estaba() -> void:  # AC-
 	var otra := estante.retirar(primero)
 	assert_int(atencion.interactuar(otra)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
 	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.YA_ENTREGADO)
+	# Lo ya entregado retiene como un rechazo: el clic siguiente lo cierra aunque siga en la mano.
+	assert_bool(atencion.puede_abandonar()).is_false()
+	assert_int(atencion.interactuar(otra)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
+	assert_bool(atencion.puede_abandonar()).is_true()
 	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
 	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.YA_ENTREGADO)
+	atencion.interactuar(null)
 	var ajeno := estante.retirar(Catalogo.de(Producto.Id.MALBARDO))
 	assert_int(atencion.interactuar(ajeno)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
 	(

@@ -889,8 +889,9 @@ entero. Con todos los productos recibidos, pide el recibo.
 
 DADO un comprador listo para recibir CUANDO recibe un producto ENTONCES agradece y se puede dejar
 la ventanilla. CUANDO después se le ofrece otra unidad de ese producto ya completo, o la misma
-unidad, ENTONCES la rechaza con el agradecimiento de lo ya entregado, en ese mismo clic. Un
-producto ajeno se rechaza con el prefijo de rechazo, que sí retiene hasta el clic siguiente.
+unidad, ENTONCES la rechaza en ese mismo clic con el agradecimiento de lo ya entregado, que
+retiene como cualquier rechazo: el clic siguiente lo cierra aunque la unidad siga en la mano. Un
+producto ajeno se rechaza con el prefijo de rechazo.
 
 ## No objetivos
 
