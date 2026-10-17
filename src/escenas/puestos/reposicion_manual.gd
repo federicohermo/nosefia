@@ -49,10 +49,10 @@ const A_RAS_DEL_PISO := 0.05
 ## a null value` que no nombra ni al `@export` ni a la escena. Siendo hija no hay nada que
 ## resolver. Medido el 2026-09-19.
 const GUIA := "Guia"
-## Un bidón cuelga del punto de la caja corrido a la derecha, con el centro a 1,26 m del piso y a
-## 60 cm del cuerpo, como el balde. En el medio tapaba el balde donde se lo vuelca; a la altura del
-## balde, que cuelga del asa, tapaba la vista; más abajo, tan cerca, quedaba fuera de cuadro.
-const BIDON_A_UN_COSTADO := Vector3(0.3, 0.12, 0.2)
+## Dónde va el bidón en la mano, desde el giro del jugador: a la derecha, con el centro a 1,2 m
+## del piso y a 35 cm, pegado al cuerpo como la caja. No cuelga del punto de la caja porque ése se
+## estira hasta lo libre, y el bidón quedaba lejos. En el medio tapaba el balde donde se lo vuelca.
+const BIDON_A_UN_COSTADO := Vector3(0.3, 1.2, -0.35)
 
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal
@@ -879,12 +879,13 @@ static func _adentro(valor: float, desde: float, hasta: float) -> float:
 
 
 func _punto_del_bidon() -> Node3D:
-	var punto := punto_de_la_caja.get_node_or_null("PuntoDelBidon") as Node3D
+	var giro := punto_de_la_caja.get_parent()
+	var punto := giro.get_node_or_null("PuntoDelBidon") as Node3D
 	if punto == null:
 		punto = Node3D.new()
 		punto.name = "PuntoDelBidon"
 		punto.position = BIDON_A_UN_COSTADO
-		punto_de_la_caja.add_child(punto)
+		giro.add_child(punto)
 	return punto
 
 
