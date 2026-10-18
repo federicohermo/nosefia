@@ -16,6 +16,20 @@ depende de la salida de otro.
 La CI llama al script y no enumera los nodos. Una segunda lista en el workflow seguiría
 corriendo la vieja el día que se agregue un nodo, y en verde.
 
+En GitHub Actions, las suites de Godot se reparten entre cuatro runners independientes:
+
+```bash
+python .claude/scripts/verificar.py --particion-tests 0/4
+```
+
+El índice empieza en cero. La partición cero corre también los demás nodos; las otras sólo
+corren sus suites. La asignación depende del hash de la ruta relativa de cada archivo, por lo
+que incorpora suites nuevas automáticamente y conserva la misma selección en Windows y Linux.
+Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes. El check
+obligatorio `verify` sólo pasa cuando pasan las cuatro particiones.
+
+Sin `--particion-tests`, el comando conserva la ejecución completa en un solo checkout.
+
 ## Un nodo salteado no es un nodo verde
 
 El principio está en la [constitución](../architecture/constitution.md). El reporte distingue
@@ -35,6 +49,11 @@ que está en `.gitignore`.
 Desde gdUnit4 6.2.1, una suite que no parsea corta la corrida con 105 y el nodo sale rojo. El
 conteo crudo sigue siendo el control de que corrió todo. Cómo leerlo, en
 [la regla de tests](../../.claude/rules/tests.md).
+
+Cada partición coteja las rutas de sus suites con el XML JUnit recién generado: una suite
+faltante, inesperada, duplicada o sin casos hace fallar el nodo aunque Godot termine con cero.
+Los artefactos `reports-gdunit4-<índice>` incluyen la selección esperada, el resultado del cotejo,
+la salida de gdUnit4 y sus reportes. No se aceptan XML de una ejecución anterior.
 
 ## Lo que esta verificación NO cubre
 

@@ -34,6 +34,7 @@ import argparse
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
@@ -51,6 +52,11 @@ from lib.godot import (  # noqa: E402
     como_declararlo,
     entorno_de_la_suite,
     resolver,
+)
+from lib.particiones_de_tests import (  # noqa: E402
+    ParticionTests,
+    comprobar_reporte,
+    seleccionar_suites,
 )
 from lib.repo import RAIZ, REPORTES, TESTS  # noqa: E402
 from lib.tdd import SUFIJO_DE_TEST  # noqa: E402
@@ -156,7 +162,7 @@ def nodo_harness() -> Resultado:
     )
 
 
-def nodo_tests() -> Resultado:
+def nodo_tests(particion: ParticionTests | None = None) -> Resultado:
     """La suite de gdUnit4, en Godot headless.
 
     El veredicto sale del **código de salida**, y eso hay que decirlo porque la alternativa
@@ -165,6 +171,11 @@ def nodo_tests() -> Resultado:
     """
     tests = scripts_gd(RAIZ, TESTS)
     suites = [r for r in tests if r.endswith(SUFIJO_DE_TEST)]
+    if particion is not None:
+        try:
+            suites = seleccionar_suites(suites, particion)
+        except ValueError as error:
+            return Resultado("tests", 1, str(error), 0.0)
     if not suites:
         return _saltear(
             "tests",
@@ -197,6 +208,21 @@ def nodo_tests() -> Resultado:
         importacion.aviso = aviso
         return importacion
 
+    directorio_reportes = REPORTES
+    seleccion = ["-a", TESTS]
+    if particion is not None:
+        (RAIZ / REPORTES).mkdir(parents=True, exist_ok=True)
+        reportes = Path(
+            tempfile.mkdtemp(
+                prefix=f"particion-{particion.indice}-de-{particion.total}-", dir=RAIZ / REPORTES
+            )
+        )
+        directorio_reportes = reportes.relative_to(RAIZ).as_posix()
+        seleccion = [argumento for suite in suites for argumento in ("-a", suite)]
+        (reportes / "suites-esperadas.txt").write_text(
+            "\n".join(suites) + "\n", encoding="utf-8"
+        )
+
     resultado = _correr(
         "tests",
         [
@@ -209,18 +235,36 @@ def nodo_tests() -> Resultado:
             # puerto 0 no se liga nunca, así que la conexión siempre se rechaza.
             "--remote-debug", "tcp://127.0.0.1:0",
             "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
-            "-a", TESTS,
+            *seleccion,
             # Por defecto gdUnit4 corta en el primer fallo. Acá se corre todo: en una corrida de
             # CI, saber que fallan siete cosas y cuáles vale más que saber cuál fue la primera.
             "--continue",
             # gdUnit4 se niega a correr headless salvo que se lo declare, y correr headless es
             # justamente todo el punto: es lo que hace que la CI y esta máquina hagan lo mismo.
             "--ignoreHeadlessMode",
-            "-rd", REPORTES,
+            "-rd", directorio_reportes,
         ],
         # `user://` adentro del checkout: si no, dos corridas a la vez se borran `user://tmp`.
         entorno=entorno_de_la_suite(dict(os.environ), RAIZ, sys.platform),
     )
+    if particion is not None:
+        reportes = RAIZ / directorio_reportes
+        (reportes / "salida-gdunit4.log").write_text(resultado.salida, encoding="utf-8")
+        try:
+            archivos = list(reportes.rglob("results.xml"))
+            if len(archivos) != 1:
+                raise ValueError(
+                    f"se esperaba un reporte JUnit nuevo, se encontraron {len(archivos)}"
+                )
+            ejecutadas = comprobar_reporte(suites, archivos[0].read_text(encoding="utf-8"))
+            cobertura = f"{len(ejecutadas)}/{len(suites)} suites verificadas por ruta en JUnit"
+        except (OSError, ValueError) as error:
+            resultado.codigo = resultado.codigo or 1
+            cobertura = str(error)
+        detalle = f"Partición {particion.indice}/{particion.total}: {cobertura}"
+        (reportes / "cobertura.txt").write_text(detalle + "\n", encoding="utf-8")
+        resultado.salida += "\n" + detalle
+        aviso = "\n".join(texto for texto in (aviso, detalle) if texto)
     resultado.aviso = aviso
     return resultado
 
@@ -234,12 +278,26 @@ def main(argumentos: list[str] | None = None) -> None:
         description="Verifica todos los nodos o uno solo.", allow_abbrev=False
     )
     parser.add_argument("--solo", choices=nodos, help="corre un único nodo, sin comas")
+    parser.add_argument(
+        "--particion-tests",
+        type=ParticionTests.desde_texto,
+        metavar="ÍNDICE/TOTAL",
+        help="reparte las suites; la partición 0 también corre los demás nodos",
+    )
     opciones = parser.parse_args(argumentos)
+    particion = opciones.particion_tests
+    if particion is not None and opciones.solo not in (None, "tests"):
+        parser.error("--particion-tests sólo admite --solo tests o la verificación completa")
     a_correr = [nodos[opciones.solo]] if opciones.solo is not None else list(NODOS)
+    tests = nodos.get("tests")
+    if particion is not None and particion.indice != 0:
+        a_correr = [n for n in a_correr if n is tests]
 
     arranque = time.monotonic()
     with ThreadPoolExecutor(max_workers=len(a_correr)) as pool:
-        resultados = list(pool.map(lambda n: n(), a_correr))
+        resultados = list(
+            pool.map(lambda n: n(particion) if n is tests and particion else n(), a_correr)
+        )
     total = time.monotonic() - arranque
 
     for r in sorted(resultados, key=lambda r: r.nodo):
