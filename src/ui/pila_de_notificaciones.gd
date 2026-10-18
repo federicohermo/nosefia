@@ -6,12 +6,14 @@ const TEXTOS := {
 	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO LEER",
 	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ DE ESPERAR.",
 	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA UNA HORA DE JORNADA",
+	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
 }
 const SIMBOLOS := {
 	Notificaciones.Tipo.CLIENTE: preload("res://assets/ui/manada/notificacion_cliente.svg"),
 	Notificaciones.Tipo.LECTURA_FALLIDA: preload("res://assets/ui/manada/notificacion_lectura.svg"),
 	Notificaciones.Tipo.CLIENTE_CANSADO: preload("res://assets/ui/manada/notificacion_salida.svg"),
 	Notificaciones.Tipo.CIERRE_PROXIMO: preload("res://assets/ui/manada/notificacion_cierre.svg"),
+	Notificaciones.Tipo.PISTA: preload("res://assets/ui/manada/notificacion_pista.svg"),
 }
 const ESCALA_DEL_CARTEL := 0.4
 
@@ -50,6 +52,11 @@ func iniciar_conversacion(comprador: Comprador) -> void:
 
 func avisar_lectura_rechazada(motivo: GeneradorDeTickets.Resultado) -> void:
 	_estado.lectura_rechazada(motivo)
+	_pintar()
+
+
+func avisar_pista() -> void:
+	_estado.pista_anotada()
 	_pintar()
 
 

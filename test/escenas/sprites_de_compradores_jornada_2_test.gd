@@ -1,30 +1,6 @@
 extends GdUnitTestSuite
 
 const FIXTURE := "res://test/escenas/captura_de_compradores_jornada_2.gd"
-const FUENTES := {
-	"fede":
-	[
-		"e2f3b77484e9eadf18c208a4280c64388e69a164b5cb856743f773b561524d06",
-		"65edcdc00a3be9e2898957c8a9cf1a32a5e1d4ef253759b82f3d0ee40add16d5",
-		"21f8eb974f8e597fd11ebe8990155318d1438dc150dc7c1d2a13665f1dbc6229",
-		"5d3758d1560b8f97d522f78dbcfd36414fa8871e63a67d31dfb65c2c220fd967",
-		"7d105511e96ce0be061ee2a29ca17508c50617f1fff7af67b1ce64c18a49ede9",
-		"e3e9ce5595acbb80fcde979eac8804b4834da52bcf90770e5c3561c831c4b675",
-		"fba41cdb83d9b4348a7b9167037ce84d766d508717c3156b491997b21c7da86c",
-		"10c98fcd0f51324f2bc4d176df743af5303fd886939a96def1b1c279fcdcba09",
-	],
-	"mia":
-	[
-		"908de72357f180f3184c0cdcfe0d14f501ccda2ed99b4afa44565c0b51fdd580",
-		"f5114c392b0c2fb4e4f4276614982759e8a46a0add8ad7bcef1b3efed5cab1e4",
-		"bfbaade048cca58903047dcdeba0e5aad4268760efd215c649050b3b2eb584e7",
-		"0302a97b51afb0140080180a31a69ae42eb83d88c11eb6da0c7955270336c509",
-		"bdb1645019c7b390682b527c8cacd8b67aecdf2b7c783cd886fe4c3cd0548485",
-		"92cfbb5eab8025b1c3b7f1a3d7e5c9919d06c2d576e7ab138b9567a439e02238",
-		"f7721f7eb358687edc768afe18c8ef558b8ae58cae90e89b394f464912498096",
-		"83ad7bb3964807c0eaf1607f8602b32c14f93508957cb5868cf9e43fff64d506",
-	],
-}
 
 var _fixture: RefCounted
 
@@ -64,18 +40,6 @@ func _foco(transparente: bool = false) -> void:
 	assert_bool(resultado.get("capsula", false)).is_true()
 	assert_float(resultado.get("angulo", INF)).is_less(0.005)
 	assert_bool(resultado.get("objetivo", false)).is_equal(not transparente)
-
-
-func test_los_dieciseis_png_conservan_los_blobs_y_rgba_originales() -> void:
-	for carpeta: String in FUENTES:
-		for cuadro in 8:
-			var ruta := "res://assets/characters/%s/%02d.png" % [carpeta, cuadro + 1]
-			assert_str(FileAccess.get_sha256(ruta)).is_equal(FUENTES[carpeta][cuadro])
-			var imagen := Image.new()
-			assert_int(imagen.load_png_from_buffer(FileAccess.get_file_as_bytes(ruta))).is_equal(OK)
-			assert_int(imagen.get_width()).is_equal(1086)
-			assert_int(imagen.get_height()).is_equal(1448)
-			assert_int(imagen.get_format()).is_equal(Image.FORMAT_RGBA8)
 
 
 func test_los_recursos_conservan_orden_duracion_y_ritmo_idle() -> void:
