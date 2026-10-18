@@ -258,7 +258,7 @@ func _entrar(almacen: Node) -> void:
 	if _musica != null:
 		_musica.stop()
 		_musica.stream = null
-	almacen.call("empezar_partida_nueva" if _nuevo_juego else "anunciar_la_noche")
+	almacen.call("empezar_partida_nueva" if _nuevo_juego else "retomar_la_partida")
 	almacen.process_mode = Node.PROCESS_MODE_INHERIT
 	get_tree().current_scene = almacen
 	queue_free()

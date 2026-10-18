@@ -65,6 +65,7 @@ func _cerrar_y_seguir() -> void:
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	pantalla.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	await get_tree().process_frame
 

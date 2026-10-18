@@ -192,6 +192,17 @@ func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC
 	pantalla.elegir()
 	assert_int(aperturas[0]).is_zero()
 	assert_bool((almacen.get("_jugador") as Node).call("suspendido")).is_true()
+	assert_bool(_celular(almacen).celular().fijo()).is_true()
+	assert_int(_celular(almacen).celular().chat()).is_equal(Conversacion.Interlocutor.NOTAS)
+	AvanceDeDevolucion.animar_celular(
+		interfaz, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
+	)
+	assert_bool(interfaz.a_la_izquierda()).is_true()
+	var recuadro: PantallaDeHipotesis = almacen.get_node("Interfaz/PantallaDeHipotesis")
+	for _texto: int in ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size():
+		assert_int(aperturas[0]).is_zero()
+		recuadro.botones().back().pressed.emit()
+	assert_bool(recuadro.visible).is_false()
 	AvanceDeDevolucion.animar_celular(
 		interfaz, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0) - 1000
 	)

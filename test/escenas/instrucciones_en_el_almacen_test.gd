@@ -252,6 +252,7 @@ func test_seguir_despues_de_la_primera_noche_no_repite_la_intro() -> void:
 	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_false()
