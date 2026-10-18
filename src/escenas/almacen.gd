@@ -587,25 +587,30 @@ func _al_tenir_con(identidad: StringName, _agua: ReglasDeLaLimpieza.Agua) -> voi
 func _cablear_los_gestos() -> void:
 	_recolector.tiro_pedido.connect(
 		func(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> void:
-			_pensar(SubtitulosDeLosGestos.al_tirar(sostenido, tiro))
+			_pensar_gesto(SubtitulosDeLosGestos.al_tirar(sostenido, tiro))
 	)
 	_limpiador.pasada_rechazada.connect(
 		func(_lugar: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado) -> void:
 			var se_mojo := _limpiador.piso().mopa().se_mojo()
-			_pensar(SubtitulosDeLosGestos.al_pasar_la_mopa(motivo, se_mojo))
+			_pensar_gesto(SubtitulosDeLosGestos.al_pasar_la_mopa(motivo, se_mojo))
 	)
 	_limpiador.pasada_dada.connect(
-		func(lugar: PisoDelLocal.Lugar) -> void: _pensar(SubtitulosDeLosGestos.al_borrar(lugar))
+		func(lugar: PisoDelLocal.Lugar) -> void:
+			_pensar_gesto(SubtitulosDeLosGestos.al_borrar(lugar))
 	)
 	_limpiador.mopa_secada.connect(
 		func() -> void:
 			var examinando := _jugador.examen.esta_examinando()
-			_pensar(_gestos.al_secarse_la_mopa(_partida, examinando))
+			_pensar_gesto(_gestos.al_secarse_la_mopa(_partida, examinando))
 	)
 	_jugador.examen.examen_terminado.connect(
-		func() -> void: _pensar(_gestos.al_terminar_el_examen(_partida))
+		func() -> void: _pensar_gesto(_gestos.al_terminar_el_examen(_partida))
 	)
 	_agarre.objeto_soltado.connect(_vigilar_si_queda_afuera)
+
+
+func _pensar_gesto(id: SubtitulosDeLosGestos.Id) -> void:
+	_pensar(SubtitulosDeLosGestos.texto(id))
 
 
 ## Los avisos de acciones duran lo mismo aunque el jugador camine.
@@ -657,7 +662,7 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 			await get_tree().physics_frame
 			if jornada != _partida.jornada() or not _reloj.corriendo():
 				return
-		_pensar(SubtitulosDeLosGestos.al_quedar_afuera(datos))
+		_pensar_gesto(SubtitulosDeLosGestos.al_quedar_afuera(datos))
 
 
 func _al_agotar_el_turno(_jornada: int) -> void:

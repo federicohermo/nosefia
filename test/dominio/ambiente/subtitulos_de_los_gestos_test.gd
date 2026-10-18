@@ -1,19 +1,9 @@
-## Lo que piensa el protagonista cuando un gesto le sale mal, y la mopa berreta una sola vez.
+## Qué pensamiento elige cada gesto, sin fijar su redacción.
 extends GdUnitTestSuite
 
 const R := ReglasDeLaLimpieza.Resultado
 const T := ReglasDeLaBasura.Tiro
-const MALA_IDEA := "Me parece que eso fue una mala idea…"
-const CAJA := (
-	"La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no"
-	+ " tire las cajas de productos, ni siquiera las vacías."
-)
-const VENTANA := "Si Enrique se entera de que estoy tirando cosas por la ventana, me mata."
-const JABON := "Esto no está funcionando… Creo que no estoy usando el jabón correcto."
-const SIN_MOJAR := "Necesitaría mojar la mopa en agua con jabón."
-const YA_SECA := "Ya se secó la mopa…"
-const BERRETA := "Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal."
-const PARED := "Se ve que alguien no tuvo tiempo de apuntar bien…"
+const S := SubtitulosDeLosGestos.Id
 const BOLSA := preload("res://src/dominio/almacen/bolsa_de_basura_1.tres")
 
 
@@ -25,64 +15,92 @@ func test_lo_que_se_tira_piensa_salvo_la_bolsa_y_el_ticket() -> void:  # AC-SUB-
 	var mopa := load("res://src/dominio/almacen/mopa.tres") as ObjetoDelAlmacen
 	var jabon := load("res://src/dominio/almacen/jabon_azul.tres") as ObjetoDelAlmacen
 	for tirado: ObjetoDelAlmacen in [_unidad(), jabon, mopa]:
-		assert_str(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO)).is_equal(MALA_IDEA)
-	assert_str(SubtitulosDeLosGestos.al_tirar(BOLSA, T.TIRADO)).is_empty()
-	assert_str(SubtitulosDeLosGestos.al_tirar(Ticket.new(), T.TIRADO)).is_empty()
+		assert_int(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO)).is_equal(S.MALA_IDEA)
+	assert_int(SubtitulosDeLosGestos.al_tirar(BOLSA, T.TIRADO)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.al_tirar(Ticket.new(), T.TIRADO)).is_equal(S.NINGUNO)
 	var caja := load("res://src/dominio/almacen/caja_de_reposicion.tres") as ObjetoDelAlmacen
-	assert_str(SubtitulosDeLosGestos.al_tirar(caja, T.NO_ENTRA)).is_equal(CAJA)
-	assert_str(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA)).is_empty()
-	assert_str(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA)).is_empty()
+	assert_int(SubtitulosDeLosGestos.al_tirar(caja, T.NO_ENTRA)).is_equal(S.CAJA_EN_EL_CONTENEDOR)
+	assert_int(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA)).is_equal(S.NINGUNO)
 
 
 func test_lo_que_queda_afuera_piensa_salvo_el_ticket() -> void:  # AC-SUB-017
 	for afuera: ObjetoDelAlmacen in [_unidad(), BOLSA]:
-		assert_str(SubtitulosDeLosGestos.al_quedar_afuera(afuera)).is_equal(VENTANA)
-	assert_str(SubtitulosDeLosGestos.al_quedar_afuera(Ticket.new())).is_empty()
-	assert_str(SubtitulosDeLosGestos.al_quedar_afuera(null)).is_empty()
+		assert_int(SubtitulosDeLosGestos.al_quedar_afuera(afuera)).is_equal(S.POR_LA_VENTANA)
+	assert_int(SubtitulosDeLosGestos.al_quedar_afuera(Ticket.new())).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.al_quedar_afuera(null)).is_equal(S.NINGUNO)
 
 
 func test_la_mopa_sobre_una_mancha() -> void:  # AC-SUB-018
-	for resultado: R in [R.JABON_EQUIVOCADO, R.SIN_JABON]:
-		assert_str(SubtitulosDeLosGestos.al_pasar_la_mopa(resultado, true)).is_equal(JABON)
-	assert_str(SubtitulosDeLosGestos.al_pasar_la_mopa(R.MOPA_SECA, false)).is_equal(SIN_MOJAR)
-	assert_str(SubtitulosDeLosGestos.al_pasar_la_mopa(R.MOPA_SECA, true)).is_equal(YA_SECA)
+	assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(R.JABON_EQUIVOCADO, true)).is_equal(
+		S.JABON_EQUIVOCADO
+	)
+	assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(R.SIN_JABON, true)).is_equal(S.MOPA_SIN_MOJAR)
+	assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(R.MOPA_SECA, false)).is_equal(
+		S.MOPA_SIN_MOJAR
+	)
+	assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(R.MOPA_SECA, true)).is_equal(S.MOPA_YA_SECA)
 	for callado: R in [R.YA_ESTABA_LIMPIA, R.MANCHA_BORRADA, R.SIN_EFECTO]:
-		assert_str(SubtitulosDeLosGestos.al_pasar_la_mopa(callado, true)).is_empty()
+		assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(callado, true)).is_equal(S.NINGUNO)
 	var pared := PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO
-	assert_str(SubtitulosDeLosGestos.al_borrar(pared)).is_equal(PARED)
+	assert_int(SubtitulosDeLosGestos.al_borrar(pared)).is_equal(S.PARED_DEL_OTRO_INODORO)
 	for lugar: PisoDelLocal.Lugar in PisoDelLocal.Lugar.values():
 		if lugar != pared:
-			assert_str(SubtitulosDeLosGestos.al_borrar(lugar)).is_empty()
+			assert_int(SubtitulosDeLosGestos.al_borrar(lugar)).is_equal(S.NINGUNO)
+
+
+func test_el_agua_sola_pide_jabon_y_al_secarse_lo_avisa() -> void:  # AC-SUB-018
+	var mopa := Mopa.new()
+	mopa.enjuagar()
+	var mancha := Mancha.new(ReglasDeLaLimpieza.TipoDeMancha.POLVO)
+	(
+		assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(mancha.borrar_con(mopa), mopa.se_mojo()))
+		. is_equal(S.MOPA_SIN_MOJAR)
+	)
+	assert_bool(mancha.esta_limpia()).is_false()
+	assert_bool(mopa.desgastar(ReglasDeLaLimpieza.DURACION_DE_LA_CARGA, 0.0)).is_true()
+	(
+		assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(mancha.borrar_con(mopa), mopa.se_mojo()))
+		. is_equal(S.MOPA_YA_SECA)
+	)
+	assert_bool(mancha.esta_limpia()).is_false()
 
 
 func test_la_mopa_berreta_sale_una_vez_por_partida() -> void:  # AC-SUB-019
 	var gestos := SubtitulosDeLosGestos.new()
 	var partida := Partida.nueva()
-	assert_str(gestos.al_secarse_la_mopa(partida, false)).is_equal(BERRETA)
+	assert_int(gestos.al_secarse_la_mopa(partida, false)).is_equal(S.MOPA_BERRETA)
 	assert_bool(partida.mopa_secada()).is_true()
-	assert_str(gestos.al_secarse_la_mopa(partida, false)).is_empty()
-	assert_str(SubtitulosDeLosGestos.new().al_secarse_la_mopa(Partida.nueva(), false)).is_equal(
-		BERRETA
+	assert_int(gestos.al_secarse_la_mopa(partida, false)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.new().al_secarse_la_mopa(Partida.nueva(), false)).is_equal(
+		S.MOPA_BERRETA
 	)
 
 
 func test_durante_un_examen_la_mopa_berreta_espera_y_no_se_duplica() -> void:  # AC-SUB-019
 	var gestos := SubtitulosDeLosGestos.new()
 	var partida := Partida.nueva()
-	assert_str(gestos.al_terminar_el_examen(partida)).is_empty()
-	assert_str(gestos.al_secarse_la_mopa(partida, true)).is_empty()
-	assert_str(gestos.al_secarse_la_mopa(partida, true)).is_empty()
+	assert_int(gestos.al_terminar_el_examen(partida)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_secarse_la_mopa(partida, true)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_secarse_la_mopa(partida, true)).is_equal(S.NINGUNO)
 	assert_bool(partida.mopa_secada()).is_false()
-	assert_str(gestos.al_terminar_el_examen(partida)).is_equal(BERRETA)
+	assert_int(gestos.al_terminar_el_examen(partida)).is_equal(S.MOPA_BERRETA)
 	assert_bool(partida.mopa_secada()).is_true()
-	assert_str(gestos.al_terminar_el_examen(partida)).is_empty()
+	assert_int(gestos.al_terminar_el_examen(partida)).is_equal(S.NINGUNO)
 
 
 func test_el_cierre_descarta_la_mopa_berreta_pendiente() -> void:  # AC-SUB-019
 	var gestos := SubtitulosDeLosGestos.new()
 	var partida := Partida.nueva()
-	assert_str(gestos.al_secarse_la_mopa(partida, true)).is_empty()
+	assert_int(gestos.al_secarse_la_mopa(partida, true)).is_equal(S.NINGUNO)
 	gestos.descartar()
-	assert_str(gestos.al_terminar_el_examen(partida)).is_empty()
+	assert_int(gestos.al_terminar_el_examen(partida)).is_equal(S.NINGUNO)
 	assert_bool(partida.mopa_secada()).is_false()
-	assert_str(gestos.al_secarse_la_mopa(partida, false)).is_equal(BERRETA)
+	assert_int(gestos.al_secarse_la_mopa(partida, false)).is_equal(S.MOPA_BERRETA)
+
+
+func test_cada_id_tiene_texto_salvo_ninguno() -> void:  # AC-SUB-018
+	assert_str(SubtitulosDeLosGestos.texto(S.NINGUNO)).is_empty()
+	for id: S in S.values():
+		if id != S.NINGUNO:
+			assert_str(SubtitulosDeLosGestos.texto(id)).is_not_empty()

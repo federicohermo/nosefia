@@ -350,7 +350,7 @@ func test_la_e_con_manos_vacias_no_examina_ni_revela_un_levantable() -> void:  #
 	examen.pensamiento_pedido.connect(linea.pensar)
 	assert_bool(examen.iniciar(mopa, mopa.texto_al_examinar())).is_false()
 	examen.alternar(mopa, mopa.texto_al_examinar())
-	assert_str(linea.texto()).is_equal("Una mopa para limpiar las manchas del local.")
+	assert_str(linea.texto()).is_equal(mopa.subtitulo)
 	assert_str(linea.texto()).not_contains(mopa.revelacion.texto)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_object(cuerpo.get_parent()).is_same(padre)
