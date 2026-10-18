@@ -159,3 +159,30 @@ func test_pausar_antes_del_umbral_no_consume_ni_dispara() -> void:  # AC-NTF-023
 	get_tree().paused = false
 	reloj.avanzar(1.0 / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+
+
+# AC-NTF-014, AC-NTF-016
+func test_solo_la_pista_anotada_avisa_y_el_cierre_la_retira() -> void:
+	var local := _local(2)
+	var investigador: Investigador = local.get("_investigador")
+	var balde: ObjetoAgarrable = local.get_node("Objetos/Balde")
+	var examen: Examen = local.get("_jugador").examen
+	examen.objeto_revelado.emit(balde.datos, true)
+	assert_int(investigador.pedir_pista(balde.datos.id, Pista.Canal.LEVANTAR, 2, true)).is_equal(
+		Expediente.Resultado.DESCONOCIDA
+	)
+	assert_array(_textos(local)).is_empty()
+	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, 2, true)).is_equal(
+		Expediente.Resultado.ANOTADA
+	)
+	assert_array(_textos(local)).is_equal(["¡NUEVA PISTA!"])
+	var pila: PilaDeNotificaciones = local.get_node("Interfaz/PilaDeNotificaciones")
+	pila._process(2.0)
+	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, 2, true)).is_equal(
+		Expediente.Resultado.REPETIDA
+	)
+	pila._process(0.9)
+	assert_array(_textos(local)).is_equal(["¡NUEVA PISTA!"])
+	var reloj: RelojDelTurno = local.get("_reloj")
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	assert_array(_textos(local)).is_empty()

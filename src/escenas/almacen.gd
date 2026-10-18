@@ -127,6 +127,7 @@ func _ready() -> void:
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
+	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
 	_acomodador = AcomodadorDelDeposito.new()
