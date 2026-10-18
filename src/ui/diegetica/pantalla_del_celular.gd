@@ -19,8 +19,8 @@ const RECORRIDO_COMPLETO := 0.25
 const PASO_MAXIMO := CabeceraConSolapa.PASO_MAXIMO
 const TAMANO := Vector2(522.0, 928.0)
 const CENTRO := Vector2(960.0, 540.0)
-const CENTRO_A_LA_IZQUIERDA := Vector2(480.0, 540.0)
-const FONDO_DE_NOTAS := Color("efe9da")
+const CENTRO_A_LA_IZQUIERDA := Vector2(356.0, 540.0)
+const FONDO_DE_NOTAS := Color("f0f4d1")
 const TEXTO_DEL_MENU := "CHATS"
 const TEXTO_DEL_RECORDATORIO := "Q"
 const TINTA := Color("1a1a1a")
@@ -340,7 +340,9 @@ func _componer(menu: bool, notas: bool = false) -> void:
 		marco.set_border_width_all(8)
 		marco.border_color = Color("c8c8c8")
 	_telefono.add_theme_stylebox_override("panel", marco)
-	_cabecera.add_theme_stylebox_override("panel", _estilo(PAPEL, 16, 16))
+	_cabecera.add_theme_stylebox_override(
+		"panel", _estilo(FONDO_DE_NOTAS if notas else PAPEL, 16, 16)
+	)
 	var historial := _estilo(FONDO_DE_NOTAS if notas else PAPEL, 12, 12 if menu else 22)
 	if menu:
 		historial.content_margin_top = 4
