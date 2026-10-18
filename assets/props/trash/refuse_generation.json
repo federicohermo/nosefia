@@ -1,0 +1,13 @@
+{
+  "tool": "image_gen.imagegen",
+  "asset": "refuse_atlas.png",
+  "reference": "trash_atlas.png",
+  "purpose": "Desborde rectangular compuesto enteramente de residuos. La bolsa cerrada usa el atlas original.",
+  "layout": {
+    "top_left": "mixed_paper_cardboard_wrappers_and_foil",
+    "top_right": "dirty_receipt_paper",
+    "bottom_left": "worn_cardboard",
+    "bottom_right": "faded_red_can"
+  },
+  "prompt": "Edit this square game albedo texture atlas. Preserve the TOP RIGHT dirty receipt paper, BOTTOM LEFT cardboard, and BOTTOM RIGHT red can texture quadrants and their layout. REPLACE ONLY the TOP LEFT black plastic quadrant completely. That quadrant must now depict a seamless flat material texture made entirely of densely piled mixed convenience store refuse: overlapping torn dirty receipts and newspaper fragments, soggy beige cardboard pieces, crumpled food wrappers with tiny faded red and olive printed fragments, small silver foil scraps, brown stains and dark dirty crevices BETWEEN the scraps. Fill the whole TOP LEFT quadrant edge to edge with refuse at consistent scale. The viewer must see lots of irregular overlapping paper and packaging pieces, absolutely NO black trash bag, NO plastic liner, NO long shiny black folds, NO bin, NO container, NO recognizable large object, NO text that can be read. This is 2D orthographic flat albedo artwork for mapping over a very simple rectangular mound of garbage, not a photograph of a bin, no perspective, no directional light or cast shadow. Match the gritty restrained-color retro PS1/PS2 horror game phototexture style of the other quadrants. Neutral even lighting, broad readable scraps, realistic dirty material detail. Keep exact four-quadrant geometry. No borders, captions, or gutters."
+}

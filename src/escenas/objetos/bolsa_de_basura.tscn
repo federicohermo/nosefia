@@ -1,74 +1,13 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/escenas/objetos/bolsa_de_basura.gd" id="1_bolsa"]
+[ext_resource type="Mesh" path="res://assets/props/trash/bag.obj" id="2_bolsa"]
+[ext_resource type="Mesh" path="res://assets/props/trash/overflow.obj" id="3_desborde"]
+[ext_resource type="Material" path="res://assets/props/trash/bag_material.tres" id="4_plastico"]
+[ext_resource type="Material" path="res://assets/props/trash/overflow_material.tres" id="5_residuos"]
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
-size = Vector3(0.22, 0.28, 0.22)
-
-[sub_resource type="StandardMaterial3D" id="plastico"]
-albedo_color = Color(0.05, 0.05, 0.06, 1)
-roughness = 0.35
-
-[sub_resource type="SphereMesh" id="bulto"]
-material = SubResource("plastico")
-radius = 0.11
-height = 0.25
-radial_segments = 16
-rings = 8
-
-[sub_resource type="SphereMesh" id="nudo"]
-material = SubResource("plastico")
-radius = 0.025
-height = 0.05
-radial_segments = 8
-rings = 4
-
-[sub_resource type="CylinderMesh" id="oreja"]
-material = SubResource("plastico")
-top_radius = 0.004
-bottom_radius = 0.018
-height = 0.07
-radial_segments = 8
-rings = 1
-
-[sub_resource type="SphereMesh" id="colchon"]
-material = SubResource("plastico")
-radius = 0.27
-height = 0.2
-radial_segments = 16
-rings = 8
-
-[sub_resource type="StandardMaterial3D" id="papel"]
-albedo_color = Color(0.86, 0.85, 0.8, 1)
-roughness = 1.0
-
-[sub_resource type="SphereMesh" id="bollo"]
-material = SubResource("papel")
-radius = 0.05
-height = 0.08
-radial_segments = 6
-rings = 3
-
-[sub_resource type="StandardMaterial3D" id="carton"]
-albedo_color = Color(0.55, 0.4, 0.24, 1)
-roughness = 1.0
-
-[sub_resource type="BoxMesh" id="caja"]
-material = SubResource("carton")
-size = Vector3(0.16, 0.05, 0.11)
-
-[sub_resource type="StandardMaterial3D" id="lata"]
-albedo_color = Color(0.7, 0.1, 0.08, 1)
-metallic = 0.6
-roughness = 0.4
-
-[sub_resource type="CylinderMesh" id="lata"]
-material = SubResource("lata")
-top_radius = 0.033
-bottom_radius = 0.033
-height = 0.12
-radial_segments = 10
-rings = 1
+size = Vector3(0.34, 0.464, 0.32)
 
 [node name="BolsaDeBasura" type="RigidBody3D" groups=["interactuable"]]
 collision_mask = 9
@@ -80,56 +19,17 @@ shape = SubResource("cuerpo")
 
 [node name="Cerrada" type="Node3D" parent="."]
 visible = false
+scale = Vector3(1.6, 1.6, 1.6)
 
 [node name="Bulto" type="MeshInstance3D" parent="Cerrada"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9, 0, -0.02, 0)
 gi_mode = 2
-mesh = SubResource("bulto")
-
-[node name="Nudo" type="MeshInstance3D" parent="Cerrada"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
-gi_mode = 2
-mesh = SubResource("nudo")
-
-[node name="OrejaIzquierda" type="MeshInstance3D" parent="Cerrada"]
-transform = Transform3D(0.94, 0.34, 0, -0.34, 0.94, 0, 0, 0, 1, -0.015, 0.15, 0)
-gi_mode = 2
-mesh = SubResource("oreja")
-
-[node name="OrejaDerecha" type="MeshInstance3D" parent="Cerrada"]
-transform = Transform3D(0.94, -0.34, 0, 0.34, 0.94, 0, 0, 0, 1, 0.015, 0.15, 0)
-gi_mode = 2
-mesh = SubResource("oreja")
+mesh = ExtResource("2_bolsa")
+material_override = ExtResource("4_plastico")
 
 [node name="Desborde" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06, 0)
+position = Vector3(0, -0.105, 0)
 
-[node name="Colchon" type="MeshInstance3D" parent="Desborde"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+[node name="Residuos" type="MeshInstance3D" parent="Desborde"]
 gi_mode = 2
-mesh = SubResource("colchon")
-
-[node name="Bollo1" type="MeshInstance3D" parent="Desborde"]
-transform = Transform3D(1, 0, 0, 0, 0.8, 0.2, 0, -0.2, 1, -0.1, 0.0, 0.06)
-gi_mode = 2
-mesh = SubResource("bollo")
-
-[node name="Bollo2" type="MeshInstance3D" parent="Desborde"]
-transform = Transform3D(0.9, 0.3, 0, -0.3, 0.9, 0, 0, 0, 1.1, 0.12, -0.01, -0.08)
-gi_mode = 2
-mesh = SubResource("bollo")
-
-[node name="Bollo3" type="MeshInstance3D" parent="Desborde"]
-transform = Transform3D(1.2, 0, 0, 0, 0.9, 0, 0, 0, 1, 0.02, 0.02, -0.14)
-gi_mode = 2
-mesh = SubResource("bollo")
-
-[node name="Caja" type="MeshInstance3D" parent="Desborde"]
-transform = Transform3D(0.87, 0.26, -0.42, -0.17, 0.96, 0.22, 0.47, -0.12, 0.88, 0.02, 0.02, 0.06)
-gi_mode = 2
-mesh = SubResource("caja")
-
-[node name="Lata" type="MeshInstance3D" parent="Desborde"]
-transform = Transform3D(0, -1, 0, 0.94, 0, 0.34, -0.34, 0, 0.94, -0.12, 0.0, -0.06)
-gi_mode = 2
-mesh = SubResource("lata")
+mesh = ExtResource("3_desborde")
+material_override = ExtResource("5_residuos")
