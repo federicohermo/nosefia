@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1,5 segundos
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1,5 segundos
 ---
 
 # Capacidad: la investigación
@@ -342,12 +342,13 @@ registrar pistas. Reconstruir identidades y mensajes NO DEBE duplicar el conteni
 ### BR-INV-041 — El contenido de 2A, 2B y 2P procede de sus fichas
 
 El sistema DEBE entregar para cada identidad los siguientes datos, según las fichas «2A», «2B»
-y «2P» de la lista de pistas e hipótesis. Por decisión del usuario del 2026-10-16,
-la imagen de 2A DEBE ser el círculo existente del contacto de Yasmín, aun sin retrato:
+y «2P» de la lista de pistas e hipótesis. Por decisión del usuario del 2026-10-18,
+la imagen de 2A DEBE ser una captura del mensaje de Yasmín que dispara la pista, tal como
+lo dibuja el chat:
 
 | Identidad | Foto de pista | Texto de pista | Título de hipótesis |
 |---|---|---|---|
-| 2A | círculo existente del contacto de Yasmín | Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”. | SIEMPRE FALTAN COSAS |
+| 2A | captura del mensaje de Yasmín con la queja | Hoy Yasmín se quejó de que en el local “siempre falta algo o anda todo a medias”. | SIEMPRE FALTAN COSAS |
 | 2B | colilla de cigarrillo en el piso | Encontré una colilla de cigarrilo en el depósito. Pero, por lo que me dijeron, ni Enrique ni Yasmín fuman. Raro… | CIGARRILLO EN EL DEPÓSITO |
 | 2P | ninguna | ninguno | NO PASA NADA |
 
@@ -745,8 +746,8 @@ chat propio sin pasar por el menú, aun vacío en la 1, permite leer y ampliar, 
 ### AC-INV-053 — Datos exactos y fotos propias *(verifica BR-INV-041)*
 
 DADO las identidades 2A, 2B y 2P CUANDO se consultan sus datos ENTONCES títulos, textos de pista
-y de hipótesis coinciden exactamente con BR-INV-041, incluida «cigarrilo». La foto 2A corresponde
-al círculo existente del contacto de Yasmín, aprobado por el usuario, y 2B muestra la colilla
+y de hipótesis coinciden exactamente con BR-INV-041, incluida «cigarrilo». La foto 2A es la captura
+del mensaje de Yasmín con la queja, no la imagen de su contacto, y 2B muestra la colilla
 en el piso; 2P no tiene foto ni texto de pista.
 Las tres opciones conservan sus identidades al volver a consultar.
 
