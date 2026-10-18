@@ -92,11 +92,11 @@ func _draw() -> void:
 	var borde := 1.0 * escala.y
 	var tapado := Vector2(INF, INF)
 	if contenido != null:
-		var caja := Rect2(contenido.position - position, contenido.size)
+		var caja := Rect2(contenido.position - position, contenido.size * contenido.scale)
 		if volteada:
 			caja = Rect2(size - caja.end, caja.size)
 		else:
-			caja.size.x = contenido.get_minimum_size().x
+			caja.size.x = contenido.get_minimum_size().x * contenido.scale.x
 		cierre = maxf(cierre, caja.end.x + AIRE)
 		if caja.position.y < borde and caja.end.y > borde:
 			tapado = Vector2(caja.position.x, caja.end.x)

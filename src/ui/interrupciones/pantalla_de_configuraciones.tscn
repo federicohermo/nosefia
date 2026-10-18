@@ -52,9 +52,10 @@ volteada = true
 [node name="Titulo" type="Label" parent="Fondo/Panel"]
 layout_mode = 0
 offset_left = 155.0
-offset_top = 61.0
+offset_top = 56.333
 offset_right = 700.0
-offset_bottom = 103.0
+offset_bottom = 98.333
+scale = Vector2(1.2222222, 1.2222222)
 theme_type_variation = &"TextoDelMenu"
 vertical_alignment = 1
 
@@ -64,13 +65,16 @@ offset_left = 360.0
 offset_top = 180.0
 offset_right = 1560.0
 offset_bottom = 940.0
+pivot_offset = Vector2(600, 380)
+scale = Vector2(1.2222222, 1.2222222)
 theme_type_variation = &"ColumnaDelMenu"
 alignment = 1
 
 [node name="Volver" type="Button" parent="Fondo/Panel"]
 layout_mode = 0
-offset_left = 1510.0
-offset_top = 958.0
-offset_right = 1750.0
-offset_bottom = 1018.0
+offset_left = 1456.667
+offset_top = 951.333
+offset_right = 1696.667
+offset_bottom = 1011.333
+scale = Vector2(1.2222222, 1.2222222)
 theme_type_variation = &"BotonDelMenu"

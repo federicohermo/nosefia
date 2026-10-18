@@ -55,9 +55,10 @@ volteada = true
 [node name="Titulo" type="Label" parent="Fondo/Panel"]
 layout_mode = 0
 offset_left = 155.0
-offset_top = 61.0
+offset_top = 56.333
 offset_right = 380.0
-offset_bottom = 103.0
+offset_bottom = 98.333
+scale = Vector2(1.2222222, 1.2222222)
 theme_type_variation = &"TextoDelMenu"
 vertical_alignment = 1
 
@@ -66,6 +67,8 @@ layout_mode = 0
 offset_left = 746.0
 offset_right = 1173.0
 offset_bottom = 1080.0
+pivot_offset = Vector2(213.5, 540)
+scale = Vector2(1.2222222, 1.2222222)
 theme_type_variation = &"Placa"
 alignment = 1
 

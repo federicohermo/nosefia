@@ -75,14 +75,18 @@ offset_left = 746.0
 offset_top = 507.0
 offset_right = 1173.0
 offset_bottom = 715.0
+pivot_offset = Vector2(213.5, 0)
+scale = Vector2(1.2222222, 1.2222222)
 theme_type_variation = &"ColumnaDelMenu"
 
 [node name="Fila" type="HBoxContainer" parent="Marco"]
 layout_mode = 0
 offset_left = 517.0
-offset_top = 768.0
+offset_top = 826.0
 offset_right = 1403.0
-offset_bottom = 828.0
+offset_bottom = 886.0
+pivot_offset = Vector2(443, 0)
+scale = Vector2(1.2222222, 1.2222222)
 theme_type_variation = &"FilaDelMenu"
 alignment = 1
 
