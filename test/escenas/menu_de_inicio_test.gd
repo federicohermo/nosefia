@@ -267,3 +267,23 @@ func test_un_archivo_de_preferencias_ilegible_no_impide_el_menu() -> void:  # AC
 		assert_float((fila.get_child(2) as HSlider).value).is_equal_approx(
 			Preferencias.new().valor(campo), 1e-6
 		)
+
+
+## En la web, el almacén se calienta debajo del menú, detenido. Lo que corre siempre, como la
+## pausa, escucharía Esc en el menú: pausaría el árbol con el menú en pantalla.
+func test_la_pausa_del_almacen_que_se_calienta_no_escucha_el_menu() -> void:
+	var menu := _menu()
+	menu.set_process(false)
+	var modelo := Node3D.new()
+	var pausa := ControlDePausa.new()
+	modelo.add_child(pausa)
+	pausa.owner = modelo
+	var escena := PackedScene.new()
+	assert_int(escena.pack(modelo)).is_equal(OK)
+	modelo.free()
+	menu.set("_almacen", escena)
+	menu.call("_calentar_debajo_del_menu")
+	var copia: Node3D = auto_free(menu.get("_copia"))
+	var pausas := copia.find_children("*", "ControlDePausa", true, false)
+	assert_array(pausas).has_size(1)
+	assert_bool((pausas[0] as ControlDePausa).can_process()).is_false()

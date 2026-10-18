@@ -90,12 +90,10 @@ show_percentage = false
 [node name="Texto" type="Label" parent="Marco/Centro"]
 layout_mode = 2
 theme_type_variation = &"TextoDeCarga"
-theme_override_font_sizes/font_size = 44
 horizontal_alignment = 1
 
 [node name="Detalle" type="Label" parent="Marco/Centro"]
 layout_mode = 2
-theme_type_variation = &"TextoDeCarga"
-theme_override_font_sizes/font_size = 32
+theme_type_variation = &"DetalleDeCarga"
 horizontal_alignment = 1
 clip_text = true
