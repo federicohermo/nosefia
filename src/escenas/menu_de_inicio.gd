@@ -51,6 +51,7 @@ var _calentamiento: CalentamientoDeShaders
 var _calentamiento_en_el_menu: CalentamientoDeShaders
 var _copia: Node3D
 var _capas_de_la_copia: Array[CanvasLayer] = []
+var _siempre_de_la_copia: Array[Node] = []
 var _copia_leyo_un_guardado := false
 var _copia_con_las_preferencias := true
 var _nuevo_juego: bool = false
@@ -277,6 +278,11 @@ func _calentar_debajo_del_menu() -> void:
 	_copia_leyo_un_guardado = _guardado.hay_guardado()
 	get_tree().root.add_child(_copia)
 	_copia.process_mode = Node.PROCESS_MODE_DISABLED
+	# Lo que corre siempre, como la pausa, escucharía Esc en el menú aunque la copia esté detenida.
+	for nodo: Node in _copia.find_children("*", "Node", true, false):
+		if nodo.process_mode == Node.PROCESS_MODE_ALWAYS:
+			nodo.process_mode = Node.PROCESS_MODE_INHERIT
+			_siempre_de_la_copia.append(nodo)
 	for capa: CanvasLayer in _copia.find_children("*", "CanvasLayer", true, false):
 		if capa.visible:
 			capa.visible = false
@@ -306,6 +312,8 @@ func _entrar_con_la_copia() -> void:
 	_copia.visible = true
 	for capa: CanvasLayer in _capas_de_la_copia:
 		capa.visible = true
+	for nodo: Node in _siempre_de_la_copia:
+		nodo.process_mode = Node.PROCESS_MODE_ALWAYS
 	await get_tree().process_frame
 	while _calentamiento.programas_en_cola.call() > 0:
 		await get_tree().process_frame
