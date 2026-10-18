@@ -45,6 +45,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	await get_tree().process_frame
 	var ciclo: CicloDeJornadas = almacen.get("_ciclo")

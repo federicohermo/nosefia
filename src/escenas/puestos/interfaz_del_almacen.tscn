@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/pantalla_del_celular.tscn" id="celular_ui"]
 [ext_resource type="Script" path="res://src/sistemas/investigacion/celular_del_empleado.gd" id="celular"]
 [ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_instrucciones.tscn" id="instrucciones"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_hipotesis.tscn" id="hipotesis"]
 
 [node name="Interfaz" type="Node3D"]
 
@@ -38,6 +39,8 @@
 script = ExtResource("celular")
 
 [node name="PantallaDelCelular" parent="." instance=ExtResource("celular_ui")]
+
+[node name="PantallaDeHipotesis" parent="." instance=ExtResource("hipotesis")]
 
 [node name="PantallaDeInstrucciones" parent="." instance=ExtResource("instrucciones")]
 

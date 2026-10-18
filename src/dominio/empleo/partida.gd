@@ -26,6 +26,13 @@ var expediente: Expediente:
 	set(_nuevo):
 		push_error("El expediente pertenece a la partida y no se sustituye")
 
+## La reflexión de la última noche cerrada, o `null` si esa noche no tiene o la partida terminó.
+var reflexion: ReflexionDeCierre:
+	get:
+		return _reflexion
+	set(_nueva):
+		push_error("La reflexión la abre el cierre de la jornada y no se sustituye")
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -37,6 +44,7 @@ var _antecedentes := Antecedentes.new()
 var _devoluciones: Array[Mensaje] = []
 var _mopa_secada := false
 var _poetico_usado_en: Array[int] = []
+var _reflexion: ReflexionDeCierre = null
 
 
 func anotar_uso_de_poetico(
@@ -94,7 +102,29 @@ static func desde(datos: Dictionary) -> Partida:
 		if mensaje != null:
 			partida._devoluciones.append(mensaje)
 	partida._mopa_secada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA)]
+	partida._restaurar_la_investigacion(saneado)
 	return partida
+
+
+func _restaurar_la_investigacion(saneado: Dictionary) -> void:
+	var notas := PackedStringArray()
+	for dato: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.NOTAS)]:
+		var nota := Mensaje.desde_datos(dato)
+		if nota != null:
+			notas.append(nota.identidad)
+	ReflexionDeCierre.restaurar_notas(_expediente, notas)
+	var identidades := PackedStringArray()
+	for dato: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.EXPEDIENTE)]:
+		if dato is String:
+			identidades.append(dato)
+	_expediente.restaurar(
+		identidades, saneado[PartidaSerializada.clave(PartidaSerializada.Campo.ELECCIONES)]
+	)
+	var pendiente: int = saneado[PartidaSerializada.clave(
+		PartidaSerializada.Campo.CIERRE_PENDIENTE
+	)]
+	if pendiente == _jornada - 1:
+		_reflexion = ReflexionDeCierre.para(pendiente, _expediente)
 
 
 ## Si la mopa ya se secó una vez en la partida y se mostró su pensamiento (BR-SUB-014).
@@ -221,5 +251,6 @@ func cerrar_la_jornada(cumplidas: int) -> void:
 		_final = Final.CONTRATO_CUMPLIDO
 	else:
 		_jornada += 1
+	_reflexion = null if terminada() else ReflexionDeCierre.para(cerrada, _expediente)
 	# Después de anotar la noche: la devolución lee las cuentas que ya la incluyen.
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())

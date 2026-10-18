@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-SHF
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364 y #369; migración de los specs 001, 007, 011, 016, 027, 031
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369 y #436; migración de los specs 001, 007, 011, 016, 027, 031
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -103,7 +103,9 @@ La placa DEBE desaparecer con un fade de opacidad 1 a 0 y la persiana DEBE subir
 1, sin invertir ninguno de los avances. Hasta terminar la subida, el control del jugador DEBE
 estar suspendido; al terminar, la entrada DEBE desaparecer y devolver el control una sola vez.
 Un tiempo real no positivo NO DEBE avanzar la entrada. La pausa DEBE congelarla y reanudarla
-desde el mismo punto. Cambiar de pestaña NO DEBE saltearla.
+desde el mismo punto. Cambiar de pestaña NO DEBE saltearla. SI el cierre tiene una reflexión
+pendiente (BR-INV-042), ENTONCES la entrada NO DEBE empezar hasta que esa reflexión termine, y
+MIENTRAS tanto el turno de la jornada siguiente NO DEBE descontar.
 
 La entrada DEBE dibujarse encima del HUD, las interfaces diegéticas y el cierre, y debajo de
 los avisos y la pausa. Un segundo pedido de seguir el mismo cierre NO DEBE anunciar otra noche.
@@ -235,7 +237,8 @@ sin cobrar los 10 retenidos ni descontarlos en el cuadro siguiente.
 
 ### AC-SHF-024 — Seguir anuncia la jornada siguiente una vez *(verifica BR-SHF-019, BR-SHF-003)*
 
-DADO el cierre de la jornada 1 CUANDO se elige seguir dos veces ENTONCES aparece una sola entrada
+DADO el cierre de la jornada 1 con su reflexión terminada CUANDO se pide seguir dos veces
+ENTONCES aparece una sola entrada
 «NOCHE 2», la persiana empieza baja, el control está suspendido y los cuadros no descuentan turno.
 CUANDO termina de subir ENTONCES la entrada ya no está visible, el control está activo y el turno
 descuenta desde el valor conservado. DADO una partida terminada CUANDO vuelve al menú ENTONCES
@@ -258,6 +261,14 @@ su orden de dibujo ENTONCES la entrada está sobre los tres primeros y debajo de
 DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `0/5`. DADO la jornada 3
 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una
 tarea ajena a esa lista no aumenta la cuenta.
+
+### AC-SHF-028 — La reflexión retiene la entrada *(verifica BR-SHF-019)*
+
+DADO el cierre de la jornada 1 con la reflexión en el texto 2 CUANDO pasan 30 segundos
+ENTONCES no hay entrada y el turno de la jornada 2 conserva su valor inicial. DADO el cierre de
+la jornada 2 en la elección CUANDO pasan 30 segundos ENTONCES tampoco hay entrada. CUANDO
+termina la reflexión ENTONCES empieza una sola entrada, y el turno empieza a descontar recién al
+terminar esa entrada.
 
 ## No objetivos
 
@@ -288,6 +299,8 @@ tarea ajena a esa lista no aumenta la cuenta.
 
 - [`employment-record`](../employment-record/employment-record.md) (alimenta): recibe cuántas
   obligatorias se cumplieron al cerrar.
+- [`investigation`](../investigation/investigation.md) (consume): si el cierre tiene una
+  reflexión pendiente, y cuándo termina.
 - Las capacidades de tarea (alimentan): cada una avisa cuándo su obligatoria quedó hecha.
   Registrar y ordenar las cajas avisan también cuándo dejaron de estarlo.
 

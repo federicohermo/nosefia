@@ -1,6 +1,7 @@
 ## Abre la segunda jornada y usa sus tachos para preparar bolsas físicas en los fixtures.
 extends RefCounted
 
+const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
 const RUTAS: Array[NodePath] = [
 	^"Estructura/tachitobasura/StaticBody3D",
 	^"Estructura/tachitobasura_001/StaticBody3D",
@@ -12,6 +13,7 @@ static func abrir(almacen: Node3D) -> void:
 	var partida: Partida = almacen.get("_partida")
 	while partida.jornada() < 2:
 		partida.cerrar_la_jornada(partida.obligatorias().size())
+		FinDeLaReflexion.terminar(partida)
 		almacen.get("_ciclo").abrir_la_jornada()
 
 

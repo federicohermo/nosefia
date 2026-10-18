@@ -179,6 +179,7 @@ func test_cierre_baja_celular_y_otra_jornada_cierra() -> void:  # AC-INV-035, AC
 	assert_bool(cierre.visible).is_true()
 	AvanceDeDevolucion.entregar(cierre)
 	cierre.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(cierre)
 	AvanceDeDevolucion.terminar_movimiento(cierre)
 	await get_tree().process_frame
 	assert_bool(_celular().celular().abierto()).is_false()

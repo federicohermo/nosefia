@@ -230,6 +230,7 @@ func test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche() -> void:  # AC
 	var pantalla: PantallaDeDevolucion = local.get("_pantalla")
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	await get_tree().process_frame
 	for _cuadro in 4:
@@ -394,6 +395,7 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		var pantalla: PantallaDeDevolucion = local.get("_pantalla")
 		AvanceDeDevolucion.entregar(pantalla)
 		pantalla.elegir()
+		AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 		AvanceDeDevolucion.terminar_movimiento(pantalla)
 		await get_tree().process_frame
 		local.get_node("Interfaz/PersianaDeLaNoche").terminar()
