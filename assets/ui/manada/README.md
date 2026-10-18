@@ -8,6 +8,10 @@ durante la ejecución.
 de 2026 para el aviso de una hora restante (#435). El diseño prescribe comunicar el tiempo y
 reutilizar la composición de los avisos; no prescribe una ilustración para este tipo.
 
+`notificacion_pista.svg` es un signo de pregunta original del proyecto, creado el 18 de octubre
+de 2026 para el aviso «¡NUEVA PISTA!» (#385). Sigue el frame `477:225`: el símbolo a la izquierda
+del texto, con los bloques negros del símbolo del cliente.
+
 Las dos notas del corcho usan los SVG originales del frame
 [notas (`482:827`)](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI?node-id=482-827),
 descargados el 9 de octubre de 2026 en `notas/`: papeles `482:831` y `482:833`,
