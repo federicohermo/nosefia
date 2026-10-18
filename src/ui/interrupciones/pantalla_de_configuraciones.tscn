@@ -72,9 +72,9 @@ alignment = 1
 
 [node name="Volver" type="Button" parent="Fondo/Panel"]
 layout_mode = 0
-offset_left = 1450.0
-offset_top = 941.067
-offset_right = 1690.0
-offset_bottom = 1001.067
+offset_left = 1456.667
+offset_top = 951.333
+offset_right = 1696.667
+offset_bottom = 1011.333
 scale = Vector2(1.2222222, 1.2222222)
 theme_type_variation = &"BotonDelMenu"
