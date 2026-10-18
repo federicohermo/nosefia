@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436
 ---
 
 # Capacidad: guardar y retomar
@@ -28,8 +28,9 @@ guardado hay que jugar las cinco de una sentada.
 
 ### BR-SAV-001 — Se guarda al cerrar la jornada
 
-CUANDO cierra una jornada, el sistema DEBE guardar. Es el checkpoint que pide el GDD, y es el
-único momento en que se escribe.
+CUANDO cierra una jornada, el sistema DEBE guardar. Es el checkpoint que pide el GDD. Además,
+cada paso aceptado de la reflexión de cierre DEBE volver a escribirlo (BR-SAV-021). Fuera de
+esos momentos no se escribe.
 
 ### BR-SAV-002 — Un final resetea el progreso
 
@@ -102,6 +103,8 @@ CUANDO arranca la partida, SI hay guardado, ENTONCES el sistema DEBE seguir en l
 guardada y con los apercibimientos guardados. SI no hay guardado, ENTONCES DEBE arrancar una
 partida nueva. Retomar un guardado NO DEBE mostrar las instrucciones: DEBE anunciar directamente
 la jornada guardada sobre la persiana baja y comenzar a descontar cuando termine su entrada.
+SI el guardado conserva una reflexión de cierre pendiente, ENTONCES DEBE mostrarla antes de esa
+entrada (BR-SAV-021).
 
 ### BR-SAV-016 — Esc pausa la jornada
 
@@ -110,10 +113,11 @@ curso o terminada, el sistema DEBE pausarlo y mostrar el menú de pausa. Un segu
 reanudarlo, igual que «reanudar». La devolución no es una excepción: con la devolución en
 pantalla, Esc DEBE abrir la pausa por encima de ella, y reanudar DEBE dejar la misma devolución,
 con el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa está en pantalla,
-la devolución NO DEBE responder a ningún gesto. SI el cursor pasa de tomado a suelto con la ventana
+la devolución NO DEBE responder a ningún gesto. Lo mismo vale para la reflexión de cierre y la
+espera posterior a elegir (BR-INV-046). SI el cursor pasa de tomado a suelto con la ventana
 activa y sin que el juego lo suelte, ENTONCES el sistema DEBE pausar: en la web el navegador
 consume Esc para soltar el cursor. Soltarlo el propio juego NO DEBE pausar, y con la
-devolución en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
+devolución o la reflexión de cierre en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 
 SI Configuraciones está abierta desde la pausa, ENTONCES Esc DEBE cerrarla y dejar el menú de
@@ -132,8 +136,9 @@ inicio.
 CUANDO el jugador elige «volver al menú» en la pausa, el sistema DEBE sacar el juego de la pausa,
 llevarlo al menú de inicio y NO DEBE escribir ni borrar el guardado. SI la pausa está sobre la
 devolución de una partida en curso, ENTONCES el guardado que dejó el cierre DEBE quedar intacto, con la
-jornada siguiente y la deuda acumulada exacta, y continuar desde el menú DEBE abrir esa jornada
-sin volver a jugar la noche cerrada. SI la partida terminó, ENTONCES el guardado ya borrado por el
+jornada siguiente y la deuda acumulada exacta, y continuar desde el menú DEBE retomar la
+reflexión pendiente si el guardado la conserva (BR-SAV-021), o abrir esa jornada, sin volver a
+jugar la noche cerrada. SI la partida terminó, ENTONCES el guardado ya borrado por el
 final NO DEBE reaparecer.
 
 ### BR-SAV-019 — Las cuentas y las devoluciones cruzan la sesión
@@ -160,6 +165,29 @@ asignarles una jornada u hora que el archivo no contiene. La falta de fecha NO D
 la lista válida de devoluciones ni borrar el progreso. Su posición entre aperturas
 queda sujeta a OQ-INV-005; conservar orden y texto NO DEBE depender de resolver esa pregunta.
 Los campos ausentes o de tipo incorrecto DEBEN conservar el saneamiento de BR-SAV-006.
+
+### BR-SAV-021 — El cierre pendiente cruza la sesión
+
+CUANDO se guarda, el sistema DEBE escribir, además de BR-SAV-019, las identidades del expediente
+en orden, los mensajes del chat de notas en orden y con su identidad, el paso pendiente de la
+reflexión de cierre —cuántos textos de jornada 1 se recibieron, o si falta elegir en jornada 2— y
+la identidad elegida en jornada 2. El checkpoint del cierre DEBE conservar el paso pendiente.
+CUANDO se acepta un «Continuar» de jornada 1 o una elección de jornada 2, el sistema DEBE
+escribir el guardado con la nota y el paso nuevo antes de dejar el cierre.
+
+CUANDO se retoma con un paso pendiente, el sistema DEBE mostrar ese paso sobre la persiana baja
+(BR-INV-042), con el texto siguiente de jornada 1 o con las opciones que habilita el expediente
+restaurado, y NO DEBE volver a jugar la noche cerrada ni anunciar la jornada guardada antes de
+terminarlo. CUANDO se retoma sin paso pendiente, NO DEBE repetir textos, elección ni notas, y
+DEBE seguir BR-SAV-015. Salir por la pausa NO DEBE escribir (BR-SAV-018), y un final laboral DEBE
+borrar el guardado sin mostrar reflexión (BR-SAV-002).
+
+SI falta alguno de esos campos o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) con
+expediente vacío, notas vacías, sin paso pendiente y sin elección. Una identidad desconocida
+dentro de una lista DEBE ignorarse sin descartar las válidas (BR-INV-036). Una elección que no
+está entre las opciones del expediente restaurado DEBE descartarse; si falta elegir, la elección
+DEBE volver a ofrecerse. Sanear NO DEBE crear pistas, reflexiones ni elección, ni alterar la
+jornada, el legajo, las cuentas o las devoluciones.
 
 ## Criterios de aceptación
 
@@ -277,7 +305,8 @@ DADO el juego en pausa CUANDO se elige volver al menú ENTONCES el juego sale de
 pedido de ir al menú se emite una sola vez y no se escribe ningún guardado. DADO la devolución de la
 jornada 2 cerrada con la partida en curso y 7 medios de apercibimiento CUANDO se abre la pausa y
 se elige volver al menú ENTONCES el guardado no se escribe ni se borra y sigue en la jornada 3 con
-7 medios; CUANDO se elige continuar desde el menú ENTONCES se anuncia «NOCHE 3» con 7 medios.
+7 medios; CUANDO se elige continuar desde el menú ENTONCES vuelve la elección de jornada 2, y
+después de elegir se anuncia «NOCHE 3» con 7 medios.
 DADO la devolución de una partida terminada CUANDO se sale al menú desde la pausa ENTONCES no hay
 guardado y continuar sigue deshabilitado.
 
@@ -348,6 +377,39 @@ orden, sin fusionar los dos iguales ni asignarles jornada u hora. El resto del p
 válido se conserva. DADO lista ausente o campo de devoluciones numérico ENTONCES se sanea a
 cero devoluciones, sin perder la jornada ni inventar mensajes de cierre.
 
+### AC-SAV-029 — Salir antes de elegir y retomar *(verifica BR-SAV-021, BR-SAV-015, BR-SAV-018)*
+
+DADO el cierre de jornada 2 con 2A anotada, 7 medios y la elección en pantalla CUANDO se elige
+volver al menú desde la pausa ENTONCES no se escribe ni se borra el guardado. CUANDO se elige
+continuar ENTONCES la persiana está baja, las notas están fijas a la izquierda, se ofrece sólo
+2A, no hay entrada y la jornada 2 no vuelve a jugarse. CUANDO se elige 2A ENTONCES el guardado
+se escribe con la elección 2A y su nota antes de la entrada, y después se anuncia «NOCHE 3» con
+7 medios.
+
+### AC-SAV-030 — Retomar después de elegir y a mitad de la primera reflexión *(verifica BR-SAV-021)*
+
+DADO la elección 2B aceptada y la salida al menú durante la espera CUANDO se elige continuar
+ENTONCES se anuncia «NOCHE 3» sin reflexión, las notas tienen el texto de hipótesis 2B una sola
+vez y la elección es 2B. DADO el cierre de jornada 1 con dos textos recibidos y la salida al menú
+CUANDO se elige continuar ENTONCES el recuadro muestra el texto 3 y las notas son [texto 1,
+texto 2]; CUANDO se pulsa «Continuar» ENTONCES son [texto 1, texto 2, texto 3] y empieza
+«NOCHE 2».
+
+### AC-SAV-031 — Un guardado sin los campos del cierre o con tipos ajenos *(verifica BR-SAV-021, BR-SAV-006)*
+
+DADO un guardado de jornada 3 sin esos campos CUANDO se retoma ENTONCES se anuncia «NOCHE 3»
+directamente, con expediente y notas vacíos y sin elección. DADO el paso pendiente como texto y
+el expediente como número ENTONCES pasa lo mismo, y la jornada, los medios, las cuentas y las
+devoluciones son las guardadas. DADO el paso de elegir pendiente, el expediente [2B, una
+desconocida, 2B] y la elección 2A CUANDO se retoma ENTONCES el expediente es [2B], la elección
+se descarta y se ofrece sólo 2B.
+
+### AC-SAV-032 — El despido gana sobre la reflexión *(verifica BR-SAV-021, BR-SAV-002)*
+
+DADO un despido en jornada 2 CUANDO termina la devolución ENTONCES se ofrece sólo volver al menú,
+no aparece la reflexión y no hay guardado. CUANDO se vuelve al menú, desde la opción o desde la
+pausa, ENTONCES continuar sigue deshabilitado.
+
 ## No objetivos
 
 - Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
@@ -382,6 +444,8 @@ cero devoluciones, sin perder la jornada ni inventar mensajes de cierre.
   al empezar o continuar, sin repetir las instrucciones al retomar.
 - [`investigation`](../investigation/investigation.md) (alimenta): devoluciones restauradas
   con identidad, jornada y orden cuando existen, sin inventar metadatos del legado.
+- [`investigation`](../investigation/investigation.md) (consume y alimenta): expediente, notas,
+  reflexión pendiente y elección, que se escriben en cada paso aceptado del cierre.
 - [`settings`](../settings/settings.md) (alimenta): los dos menús abren Configuraciones, y Esc
   la cierra.
 
