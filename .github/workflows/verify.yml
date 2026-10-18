@@ -32,20 +32,13 @@ concurrency:
 
 jobs:
   verify-particion:
-    name: ${{ matrix.nombre }}
+    name: Partición ${{ matrix.particion }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - particion: 0
-            nombre: Colisiones y caídas
-          - particion: 1
-            nombre: Agarre y jornada
-          - particion: 2
-            nombre: Cajas, apoyos y giro
-          - particion: 3
-            nombre: Reposición, puertas y checks
+        particion: [0, 1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v5
 

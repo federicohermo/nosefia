@@ -16,10 +16,10 @@ depende de la salida de otro.
 La CI llama al script y no enumera los nodos. Una segunda lista en el workflow seguiría
 corriendo la vieja el día que se agregue un nodo, y en verde.
 
-En GitHub Actions, las suites de Godot se reparten entre cuatro runners independientes:
+En GitHub Actions, las suites de Godot se reparten entre seis runners independientes:
 
 ```bash
-python .claude/scripts/verificar.py --particion-tests 0/4
+python .claude/scripts/verificar.py --particion-tests 0/6
 ```
 
 El índice empieza en cero. La última partición corre también los demás nodos; las otras sólo
@@ -30,14 +30,43 @@ Las suites nuevas reciben un costo estimado por defecto. Los tiempos orientan el
 el inventario sigue saliendo de todos los archivos `_test.gd` actuales.
 El orden es determinista y conserva la selección en Windows y Linux.
 Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes. El check
-obligatorio `verify` sólo pasa cuando pasan las cuatro particiones.
+obligatorio `verify` sólo pasa cuando pasan las seis particiones.
+Cada partición tiene un límite de veinte minutos. Si lo agota, el check falla.
 
-Los jobs se llaman "Colisiones y caídas", "Agarre y jornada", "Cajas, apoyos y giro"
-y "Reposición, puertas y checks".
-Los nombres describen sus suites principales.
-Cada grupo incluye también suites más cortas para equilibrar la duración.
+Los jobs se llaman «Partición 0» a «Partición 5». Sus suites se asignan por duración estimada,
+sin reservar un grupo a un tema. La última partición corre también los demás checks.
 
 Sin `--particion-tests`, el comando conserva la ejecución completa en un solo checkout.
+
+## Medir el reparto en Actions
+
+El workflow manual `medir-verificacion.yml` compara cantidades de particiones sin cambiar
+el workflow habitual. Recibe la cantidad, el modo de preparación y una etiqueta de corrida.
+
+```bash
+gh workflow run medir-verificacion.yml --ref <rama> \
+  -f particiones=6 -f preparacion=independiente -f etiqueta=ronda-1
+```
+
+El modo `independiente` prepara e importa en cada runner. `compartida` prepara una copia
+completa y la distribuye. `importaciones` distribuye sólo la caché de recursos importados;
+cada runner instala sus herramientas. Las copias restauradas validan revisión y entorno,
+y siempre pasan por la importación incremental del motor antes de probar.
+
+El job «Preparación compartida» sólo corre en los dos modos que distribuyen un artefacto.
+Que se saltee en el modo independiente no saltea la preparación de cada runner.
+Los modos compartidos medidos esperan a que termine ese job antes de iniciar los workers.
+No prueban solapar trabajo de los workers con esa preparación ni reutilizarla entre corridas.
+
+Cada worker registra el equipo, las versiones, las suites seleccionadas y el tiempo de pared
+y CPU del motor. Los artefactos `medicion-worker-*` contienen esos datos y el XML JUnit.
+`medicion-preparacion` registra la importación común. Los artefactos duran un día.
+
+Para decidir, conservar el mismo código de juego y comparar al menos cinco corridas por
+opción, alternando el orden. Medir desde la creación del workflow hasta el final de su último
+job, incluida la preparación. Cotejar la unión de suites y casos con la referencia, exigir
+cero errores, fallos y saltos, y distinguir las muestras con cola por capacidad.
+Una diferencia menor que la variación entre corridas no demuestra una mejora.
 
 ## Un nodo salteado no es un nodo verde
 
