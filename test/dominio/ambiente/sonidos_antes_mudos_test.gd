@@ -1,5 +1,5 @@
 ## Los usos que no tenían sonido, en la tabla del disco: la caja, lo que deja una bolsa, el
-## ticket desechado, la nota escrita, el jabón equivocado y el ambiente de afuera.
+## ticket desechado, el jabón equivocado y el ambiente de afuera.
 ##
 ## La fila sin audio de AC-AMB-010 la sigue probando una tabla armada en su suite: ésta mira la
 ## tabla que suena en el juego.
@@ -22,13 +22,13 @@ static func _audio(entrada: EntradaSonora) -> String:
 	return entrada.stream.resource_path.get_file().get_basename()
 
 
-func test_los_eventos_nuevos_van_al_final_sin_mover_los_anteriores() -> void:
+func test_retirar_las_notas_no_cambia_los_numeros_de_los_eventos_restantes() -> void:
 	assert_int(EntradaSonora.Evento.TICKET_IMPRESO).is_equal(29)
 	assert_int(EntradaSonora.Evento.TICKET_DESECHADO).is_equal(30)
-	assert_int(EntradaSonora.Evento.NOTA_ESCRITA).is_equal(31)
+	assert_array(EntradaSonora.Evento.values()).not_contains(31)
 	assert_int(EntradaSonora.Evento.PASADA_CON_JABON_EQUIVOCADO).is_equal(32)
 	assert_int(EntradaSonora.Evento.AMBIENTE_EXTERIOR).is_equal(33)
-	assert_int(EntradaSonora.Evento.size()).is_equal(34)
+	assert_int(EntradaSonora.Evento.size()).is_equal(33)
 
 
 func test_la_caja_se_alza_y_se_deja_con_su_audio() -> void:
@@ -60,13 +60,11 @@ func test_la_bolsa_se_deja_con_su_audio_y_se_alza_como_antes() -> void:
 	assert_array(tabla.pares_sin_fila()).is_empty()
 
 
-func test_el_ticket_la_nota_y_el_jabon_equivocado_suenan_por_su_bus() -> void:
+func test_el_ticket_y_el_jabon_equivocado_suenan_por_su_bus() -> void:
 	var tabla := _tabla()
 	var esperado := {
 		EntradaSonora.Evento.TICKET_DESECHADO:
 		["ticket_desechado", EntradaSonora.BUS_DE_EFECTOS, "SFX_NOLEV_Inodoro"],
-		EntradaSonora.Evento.NOTA_ESCRITA:
-		["nota_escrita", EntradaSonora.BUS_DE_INTERFAZ, "SFX_INTERFAZ_Celular_Mensaje_Enviado"],
 		EntradaSonora.Evento.PASADA_CON_JABON_EQUIVOCADO:
 		["pasada_con_jabon_equivocado", EntradaSonora.BUS_DE_EFECTOS, "SFX_OBJETO_Mopa_Limpiar"],
 	}
