@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo y la reanudación del cierre
 ---
 
 # Capacidad: la investigación
@@ -371,12 +371,14 @@ celular DEBE desplazarse desde el centro hasta la mitad izquierda del encuadre s
 margen inferior, y abrir el chat de notas en modo fijo (BR-INV-026). Un recuadro con el
 encabezado de la jornada y su texto actual DEBE aparecer en la mitad derecha, sin superponerse
 con el celular. El recorrido DEBE ser continuo y conservar el contenido y el desplazamiento del
-chat; un cuadro largo NO DEBE adelantarlo más de 1/30 de segundo. Su duración la fija
-OQ-INV-007.
+chat, y DEBE durar 0,25 segundos reales, como subir y bajar (BR-INV-027). Un cuadro largo NO
+DEBE adelantarlo más de 1/30 de segundo.
 
 MIENTRAS dura la reflexión, el jugador DEBE poder desplazar las notas, ampliar sus fotos y
 cerrarlas. Q, volver al menú de chats y el movimiento del jugador NO DEBEN responder, y el
-turno DEBE seguir cerrado, con el control suspendido. CUANDO termina la reflexión, el celular
+turno DEBE seguir cerrado, con el control suspendido. La reflexión NO DEBE tener límite de
+tiempo: NO DEBE avanzar un texto ni elegir una hipótesis por el jugador, pase el tiempo que
+pase. CUANDO termina la reflexión, el celular
 DEBE cerrarse y soltar su modo fijo (BR-INV-028), el recuadro DEBE retirarse y recién entonces
 DEBE pedirse la entrada de la noche siguiente. La apertura libre siguiente DEBE subir al centro
 (BR-INV-027) y empezar en el menú (BR-INV-022).
@@ -774,8 +776,8 @@ lista consultada no cambia el historial ni el guion.
 
 DADO la devolución de jornada 1 terminada, a 1920 × 1080 y a 1280 × 720, CUANDO se elige
 continuar ENTONCES la persiana sigue baja y en cada cuadro el borde inferior del celular queda
-dentro del encuadre. Su centro horizontal nunca aumenta y termina a la izquierda del centro del
-encuadre. Al final, el chat de notas está abierto en modo fijo y el recuadro está entero a la
+dentro del encuadre. Su centro horizontal nunca aumenta y, a los 0,25 segundos, termina a la
+izquierda del centro del encuadre; a los 0,125 segundos todavía no llegó. Al final, el chat de notas está abierto en modo fijo y el recuadro está entero a la
 derecha del centro, sin intersección con el celular. DADO el recorrido empezado CUANDO un cuadro
 llega 2 segundos tarde ENTONCES avanzó lo que corresponde a 1/30 de segundo. DADO la reflexión en
 pantalla CUANDO se pulsa Q o se pide volver al menú de chats ENTONCES sigue fija en notas; la
@@ -815,7 +817,9 @@ final, y la elección es 2B. CUANDO se pide elegir otra vez, 2B o 2A, ENTONCES c
 las notas siguen con cinco. DADO sólo 2A anotada CUANDO se pide 2B, 2P o una identidad
 desconocida ENTONCES contesta NO_DISPONIBLE. DADO la devolución o la reflexión de jornada 1 en
 pantalla CUANDO se pide elegir ENTONCES contesta FUERA_DE_ETAPA. En esos tres casos no hay nota,
-elección ni entrada. Antes de elegir, consultar la elección no devuelve ninguna.
+elección ni entrada. Antes de elegir, consultar la elección no devuelve ninguna. DADO la
+elección de jornada 2 o el texto 2 de jornada 1 en pantalla CUANDO pasan 10 minutos ENTONCES
+siguen en pantalla, sin nota nueva, sin elección y sin entrada.
 
 ### AC-INV-062 — La espera retiene la tercera noche *(verifica BR-INV-045)*
 
@@ -916,11 +920,6 @@ menú no lo ofrece.
     sin cifra. Los tiempos de la placa y de la persiana son otra cosa.
   - Decide: el dueño de diseño.
   - Bloquea: fijar la duración de BR-INV-045; no bloquea la elección, las notas ni el guardado.
-- **OQ-INV-007 — ¿Cuánto dura el recorrido del celular del centro a la izquierda?**
-  - Por qué sigue abierta: la ficha y el diseño fijan las posiciones de inicio y fin, pero no la
-    duración. El 0,25 de BR-INV-027 es la duración de subir y bajar, no la de este recorrido.
-  - Decide: el dueño de diseño.
-  - Bloquea: fijar la duración de BR-INV-042; no bloquea el recorrido continuo ni sus bordes.
 - **OQ-INV-005 — ¿Dónde se intercalan las devoluciones legadas sin jornada?**
   - Por qué sigue abierta: los guardados antiguos sólo contienen textos y orden de recepción;
     no permiten reconstruir qué cierre produjo cada bloque ni su relación con una apertura.

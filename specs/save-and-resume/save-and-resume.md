@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre
 ---
 
 # Capacidad: guardar y retomar
@@ -175,10 +175,12 @@ la identidad elegida en jornada 2. El checkpoint del cierre DEBE conservar el pa
 CUANDO se acepta un «Continuar» de jornada 1 o una elección de jornada 2, el sistema DEBE
 escribir el guardado con la nota y el paso nuevo antes de dejar el cierre.
 
-CUANDO se retoma con un paso pendiente, el sistema DEBE mostrar ese paso sobre la persiana baja
-(BR-INV-042), con el texto siguiente de jornada 1 o con las opciones que habilita el expediente
-restaurado, y NO DEBE volver a jugar la noche cerrada ni anunciar la jornada guardada antes de
-terminarlo. CUANDO se retoma sin paso pendiente, NO DEBE repetir textos, elección ni notas, y
+CUANDO se retoma con un paso pendiente, el sistema DEBE mostrar ese paso sobre la persiana baja,
+con el texto siguiente de jornada 1 o con las opciones que habilita el expediente restaurado.
+El celular DEBE llegar con su animación: subir desde el margen inferior al centro (BR-INV-027)
+y desplazarse a la izquierda en el chat de notas (BR-INV-042). NO DEBE volver a entregar los
+mensajes de la devolución, volver a jugar la noche cerrada ni anunciar la jornada guardada antes
+de terminar el paso. CUANDO se retoma sin paso pendiente, NO DEBE repetir textos, elección ni notas, y
 DEBE seguir BR-SAV-015. Salir por la pausa NO DEBE escribir (BR-SAV-018), y un final laboral DEBE
 borrar el guardado sin mostrar reflexión (BR-SAV-002).
 
@@ -381,8 +383,9 @@ cero devoluciones, sin perder la jornada ni inventar mensajes de cierre.
 
 DADO el cierre de jornada 2 con 2A anotada, 7 medios y la elección en pantalla CUANDO se elige
 volver al menú desde la pausa ENTONCES no se escribe ni se borra el guardado. CUANDO se elige
-continuar ENTONCES la persiana está baja, las notas están fijas a la izquierda, se ofrece sólo
-2A, no hay entrada y la jornada 2 no vuelve a jugarse. CUANDO se elige 2A ENTONCES el guardado
+continuar ENTONCES la persiana está baja, el celular sube desde el margen inferior al centro y
+se desplaza a la izquierda con las notas fijas, no aparece ningún mensaje nuevo de la
+devolución, se ofrece sólo 2A, no hay entrada y la jornada 2 no vuelve a jugarse. CUANDO se elige 2A ENTONCES el guardado
 se escribe con la elección 2A y su nota antes de la entrada, y después se anuncia «NOCHE 3» con
 7 medios.
 
