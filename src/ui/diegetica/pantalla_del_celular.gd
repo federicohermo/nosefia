@@ -12,11 +12,17 @@ signal cierre_pedido
 ## La opción que se ofrece debajo del último mensaje del chat, como la de la devolución.
 signal opcion_elegida
 signal celular_bajado
+## Llegó a la mitad izquierda del encuadre, para la reflexión de cierre.
+signal celular_desplazado
 
 const RECORRIDO_COMPLETO := 0.25
 const PASO_MAXIMO := CabeceraConSolapa.PASO_MAXIMO
 const TAMANO := Vector2(522.0, 928.0)
 const CENTRO := Vector2(960.0, 540.0)
+## El centro del teléfono en la reflexión de cierre: la mitad izquierda del lienzo.
+const CENTRO_A_LA_IZQUIERDA := Vector2(480.0, 540.0)
+## El chat de notas tiene un fondo propio, distinto del de los demás chats.
+const FONDO_DE_NOTAS := Color("efe9da")
 const TEXTO_DEL_MENU := "CHATS"
 const TEXTO_DEL_RECORDATORIO := "Q"
 const TINTA := Color("1a1a1a")
@@ -57,6 +63,8 @@ const DIAS: Array[String] = ["HOY", "AYER", "HACE DOS DÍAS", "HACE TRES DÍAS",
 
 var _avance: float = 0.0
 var _destino: float = 0.0
+var _lateral: float = 0.0
+var _destino_lateral: float = 0.0
 var _ultimo: int = 0
 var _ahora: Callable = Time.get_ticks_usec
 var _bandeja: Bandeja
@@ -112,11 +120,21 @@ func _process(_delta: float) -> void:
 	var ahora: int = _ahora.call()
 	var segundos := clampf((ahora - _ultimo) / 1000000.0, 0.0, PASO_MAXIMO)
 	_ultimo = ahora
+	var llegaba := is_equal_approx(_lateral, _destino_lateral)
+	# Al retomar el cierre, el teléfono sube primero y después se corre: nunca en diagonal.
+	var arriba := is_equal_approx(_avance, 1.0)
 	_avance = move_toward(_avance, _destino, segundos / RECORRIDO_COMPLETO)
+	if arriba or _destino == 0.0:
+		_lateral = move_toward(_lateral, _destino_lateral, segundos / RECORRIDO_COMPLETO)
 	_pintar_posicion()
-	if is_equal_approx(_avance, _destino):
+	if not llegaba and _lateral == 1.0:
+		celular_desplazado.emit()
+	if is_equal_approx(_avance, _destino) and is_equal_approx(_lateral, _destino_lateral):
 		set_process(false)
 		if _destino == 0.0:
+			# La apertura libre siguiente vuelve a subir al centro.
+			_lateral = 0.0
+			_destino_lateral = 0.0
 			_telefono.hide()
 			_velo.hide()
 			celular_bajado.emit()
@@ -131,7 +149,18 @@ func bajar() -> void:
 
 
 func centrado() -> bool:
-	return _destino == 1.0 and is_equal_approx(_avance, 1.0)
+	return _destino == 1.0 and is_equal_approx(_avance, 1.0) and _destino_lateral == 0.0
+
+
+## Lleva el teléfono, ya arriba o subiendo, hasta la mitad izquierda sin bajarlo.
+func desplazar_a_la_izquierda() -> void:
+	_destino_lateral = 1.0
+	_ultimo = _ahora.call()
+	set_process(true)
+
+
+func a_la_izquierda() -> bool:
+	return _destino_lateral == 1.0 and _lateral == 1.0
 
 
 func mostrar_menu(bandeja: Bandeja) -> void:
@@ -174,7 +203,7 @@ func mostrar_chat(
 	_busqueda.hide()
 	_busqueda.release_focus()
 	_pie.show()
-	_componer(false)
+	_componer(false, conversacion.interlocutor == Conversacion.Interlocutor.NOTAS)
 	_limpiar()
 	_historial = mensajes.duplicate()
 	for indice in mensajes.size():
@@ -270,7 +299,12 @@ func _input(evento: InputEvent) -> void:
 	if _foto_ampliada.visible:
 		get_viewport().set_input_as_handled()
 		cierre_de_foto_pedido.emit()
-	elif _destino == 1.0 and not _telefono.get_global_rect().has_point(clic.position):
+	# A un costado, el resto del encuadre es del recuadro de la reflexión.
+	elif (
+		_destino == 1.0
+		and _destino_lateral == 0.0
+		and not _telefono.get_global_rect().has_point(clic.position)
+	):
 		get_viewport().set_input_as_handled()
 		cierre_pedido.emit()
 
@@ -297,17 +331,18 @@ func _ajustar() -> void:
 func _pintar_posicion() -> void:
 	_telefono.size = TAMANO
 	var arriba := CENTRO.y - TAMANO.y / 2.0
-	_telefono.position = Vector2(CENTRO.x - TAMANO.x / 2.0, lerpf(1080.0, arriba, _avance))
+	var centro := lerpf(CENTRO.x, CENTRO_A_LA_IZQUIERDA.x, _lateral)
+	_telefono.position = Vector2(centro - TAMANO.x / 2.0, lerpf(1080.0, arriba, _avance))
 
 
-func _componer(menu: bool) -> void:
+func _componer(menu: bool, notas: bool = false) -> void:
 	var marco := _estilo(PAPEL if menu else Color("c8c8c8"), 35 if menu else 26, 12)
 	if menu:
 		marco.set_border_width_all(8)
 		marco.border_color = Color("c8c8c8")
 	_telefono.add_theme_stylebox_override("panel", marco)
 	_cabecera.add_theme_stylebox_override("panel", _estilo(PAPEL, 16, 16))
-	var historial := _estilo(PAPEL, 12, 12 if menu else 22)
+	var historial := _estilo(FONDO_DE_NOTAS if notas else PAPEL, 12, 12 if menu else 22)
 	if menu:
 		historial.content_margin_top = 4
 		historial.content_margin_bottom = 4
