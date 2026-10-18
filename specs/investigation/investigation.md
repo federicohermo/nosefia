@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo y la reanudación del cierre
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1,5 segundos
 ---
 
 # Capacidad: la investigación
@@ -426,7 +426,7 @@ el jugador. Consultar la elección DEBE devolver su identidad, o ninguna antes d
 ### BR-INV-045 — La tercera noche espera a la elección
 
 CUANDO la elección de jornada 2 resulta ACEPTADA, el sistema DEBE terminar la reflexión después
-de una espera cuya duración fija OQ-INV-006, y entonces pedir una sola entrada a «NOCHE 3»
+de una espera de 1,5 segundos, y entonces pedir una sola entrada a «NOCHE 3»
 (BR-SHF-019). Antes de una elección aceptada, NO DEBE empezar ninguna entrada. MIENTRAS corre la
 espera, el recuadro NO DEBE responder a navegar ni a elegir. La espera DEBE correr con el tiempo
 real del juego en ejecución y NO DEBE correr con la pausa. Un cuadro largo NO DEBE pedir dos
@@ -915,11 +915,6 @@ menú no lo ofrece.
     no contenido para el juego.
   - Decide: game design.
   - Bloquea: publicar ese contenido y sus finales; no bloquea el motor ni las pistas de jornada 2.
-- **OQ-INV-006 — ¿Cuánto dura la espera entre elegir la hipótesis de jornada 2 y «NOCHE 3»?**
-  - Por qué sigue abierta: la ficha «Pantalla entre jornadas» dice «después de unos segundos»,
-    sin cifra. Los tiempos de la placa y de la persiana son otra cosa.
-  - Decide: el dueño de diseño.
-  - Bloquea: fijar la duración de BR-INV-045; no bloquea la elección, las notas ni el guardado.
 - **OQ-INV-005 — ¿Dónde se intercalan las devoluciones legadas sin jornada?**
   - Por qué sigue abierta: los guardados antiguos sólo contienen textos y orden de recepción;
     no permiten reconstruir qué cierre produjo cada bloque ni su relación con una apertura.
