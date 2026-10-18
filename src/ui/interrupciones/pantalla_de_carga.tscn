@@ -68,14 +68,15 @@ expand_mode = 1
 
 [node name="Centro" type="VBoxContainer" parent="Marco"]
 layout_mode = 0
-offset_left = 719.0
+offset_left = 567.0
 offset_top = 525.0
-offset_right = 1176.0
+offset_right = 1328.0
 offset_bottom = 605.0
 theme_type_variation = &"Placa"
 
 [node name="Borde" type="PanelContainer" parent="Marco/Centro"]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_type_variation = &"MarcoDeLaBarra"
 
 [node name="Barra" type="ProgressBar" parent="Marco/Centro/Borde"]
@@ -95,5 +96,6 @@ horizontal_alignment = 1
 [node name="Detalle" type="Label" parent="Marco/Centro"]
 layout_mode = 2
 theme_type_variation = &"TextoDeCarga"
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
+clip_text = true
