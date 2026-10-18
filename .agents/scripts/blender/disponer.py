@@ -41,6 +41,7 @@ from lib.gondola import (  # noqa: E402
     escribir_escena_de_mallas,
     flotantes_de_la_copia,
     nombre_en_godot,
+    ordenar_copias_por_frente,
     punto_en_godot,
     ruta_de_la_malla,
     separar_filas,
@@ -56,6 +57,13 @@ DISPOSICION = PUESTOS / "disposicion_de_la_gondola.tres"
 CONTENIDO = PUESTOS / "contenido_del_estante.tscn"
 GUIA = PUESTOS / "guia_del_estante.tscn"
 ESTRUCTURA = PUESTOS / "estructura_del_almacen.tscn"
+
+FRENTES = {
+    "oeste": (-1.0, 0.0, 0.0),
+    "este": (1.0, 0.0, 0.0),
+    "sur": (0.0, 0.0, 1.0),
+    "norte": (0.0, 0.0, -1.0),
+}
 
 
 def en_godot(objeto):
@@ -105,12 +113,13 @@ def uids(texto):
     return propio.group(1), script.group(1)
 
 
-def bloque(copias, base_del_modelo):
+def bloque(copias, base_del_modelo, clave):
     flotantes = []
     for copia in copias:
         base, origen = en_godot(copia)
         flotantes += flotantes_de_la_copia(copia_relativa(base, base_del_modelo), origen)
-    return flotantes
+    cara = clave.split("/")[0].split(".")[1]
+    return ordenar_copias_por_frente(flotantes, FRENTES[cara])
 
 
 def principal():
@@ -136,7 +145,7 @@ def principal():
     identidades = []
     bases = {}
     validar_tandas({clave: len(tandas) for clave, tandas in por_producto.items()})
-    for p in PRODUCTOS:
+    for producto_id, p in enumerate(PRODUCTOS):
         unidad = bpy.data.objects[p.objeto]
         if not any(sufijo in unidad.name for sufijo in SUFIJOS_DE_IMPORTACION):
             raise SystemExit(f"{unidad.name} no tiene colisión: la escena no sabe qué apagar")
@@ -145,7 +154,7 @@ def principal():
         base, origen = en_godot(unidad)
         bases[p.clave] = base
         contenido.append(NodoDeMalla(p.nombre, ruta_de_la_malla(p.nombre), base, origen,
-                                    punto_en_godot(p.frente)))
+                                    punto_en_godot(p.frente), producto_id))
         if p.clave in SOLO_DEPOSITO:
             principales.append([])
             filas_de_adelante.append(0)
@@ -157,7 +166,7 @@ def principal():
         if reserva:
             fijas.append((clave + ".reserva", p.clave, [copias[i] for i in reserva]))
         copias = [copias[i] for i in principales_de_la_tanda]
-        principales.append(bloque(copias, base))
+        principales.append(bloque(copias, base, clave))
         filas_de_adelante.append(sum(1 for c in copias if str(c["fila"]) == "adelante"))
     guias = []
     nodos_de_guia = []
@@ -165,11 +174,11 @@ def principal():
     productos_de_las_guias = []
     filas_de_adelante_de_las_guias = []
     indices = {p.clave: indice for indice, p in enumerate(PRODUCTOS)}
-    for numero, (_, producto, copias) in enumerate(fijas):
+    for numero, (clave, producto, copias) in enumerate(fijas):
         base = bases[producto]
         _, origen = en_godot(copias[0])
         orden, adelante = separar_filas([str(c["fila"]) for c in copias])
-        guias.append(bloque([copias[i] for i in orden], base))
+        guias.append(bloque([copias[i] for i in orden], base, clave))
         productos_de_las_guias.append(indices[producto])
         filas_de_adelante_de_las_guias.append(adelante)
         nodos_de_guia.append(

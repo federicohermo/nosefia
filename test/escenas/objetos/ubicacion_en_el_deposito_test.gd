@@ -212,7 +212,7 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 	for caja: Node3D in cajas:
 		caja.global_transform = Transform3D(Basis(Vector3.UP, 0.5), LEJOS_DE_SU_LUGAR)
 	var jugador: Node3D = almacen.get("_jugador")
-	var en_brazos: Node3D = cajas[Producto.Id.LAYSNTT]
+	var en_brazos: Node3D = cajas[Producto.Id.LAYSNNT]
 	_agarrar(jugador, en_brazos)
 	assert_object(en_brazos.get_parent()).is_not_same(mundo)
 	almacen.get("_ciclo").abrir_la_jornada()

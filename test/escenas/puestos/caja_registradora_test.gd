@@ -198,7 +198,7 @@ func test_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios() -> void:
 	_vista(almacen).imprimir.pressed.emit()
 	assert_array(_papeles(almacen)).is_empty()
 	var productos: Array[Producto] = [
-		Catalogo.de(Producto.Id.MAROLINI), Catalogo.de(Producto.Id.CORACOLA)
+		Catalogo.de(Producto.Id.MAROLINI), Catalogo.de(Producto.Id.PURA_COLA)
 	]
 	for producto in productos:
 		_caja(almacen).pedir_anotar(UnidadDeProducto.new(producto))

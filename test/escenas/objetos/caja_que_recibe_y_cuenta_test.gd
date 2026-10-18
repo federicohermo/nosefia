@@ -99,7 +99,7 @@ func test_con_una_caja_en_la_mano_el_clic_sobre_otra_no_hace_nada() -> void:  # 
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
-	var llevada := _caja(almacen, Producto.Id.LAYSNTT)
+	var llevada := _caja(almacen, Producto.Id.LAYSNNT)
 	_accion(jugador, llevada, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_same(llevada.get("datos"))
 	var actroncito := _contenido(almacen, Producto.Id.ACTRONCITO)
@@ -113,20 +113,20 @@ func test_con_una_caja_en_la_mano_el_clic_sobre_otra_no_hace_nada() -> void:  # 
 
 
 func test_con_la_caja_llena_la_unidad_sigue_en_la_mano() -> void:  # AC-STK-040
-	# Una noche con nueve Coracola en el depósito: sacada una, la caja sigue con las de una caja
+	# Una noche con nueve Pura-Cola en el depósito: sacada una, la caja sigue con las de una caja
 	# entera. Es lo que pasa al agarrar una unidad de la góndola con la caja llena (BR-STK-034).
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
 	var inventario := Apertura.inventario_con_faltantes({}, casilleros)
-	var coracola := Catalogo.de(Producto.Id.CORACOLA)
+	var coracola := Catalogo.de(Producto.Id.PURA_COLA)
 	inventario.ingresar(coracola, Inventario.Ubicacion.DEPOSITO, 1)
 	var repositor: Repositor = almacen.get("_repositor")
 	repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	puesto.call("limpiar")
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
-	var caja := _caja(almacen, Producto.Id.CORACOLA)
+	var caja := _caja(almacen, Producto.Id.PURA_COLA)
 	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
 	var unidad := agarre.manos().sostenido() as UnidadDeProducto
 	assert_object(unidad).is_not_null()

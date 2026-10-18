@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 
 func test_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void:  # AC-PLY-099
-	var medicion := await _sobre_el_riel(Producto.Id.LAYSNTT)
+	var medicion := await _sobre_el_riel(Producto.Id.LAYSNNT)
 	assert_float(medicion.base).is_equal_approx(medicion.gris, ReglasDeLosObjetos.ROCE)
 
 
@@ -12,20 +12,21 @@ func test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void
 	assert_float(medicion.base).is_equal_approx(medicion.gris, ReglasDeLosObjetos.ROCE)
 
 
-func test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
-	var medicion := await _en_la_cabecera(Producto.Id.LAYSNTT)
+func test_la_caja_grande_respeta_el_espacio_del_metal_visible() -> void:  # AC-PLY-100 AC-PLY-026
+	var medicion := await _en_el_estante(Producto.Id.LAYSNNT, false)
 	assert_vector(medicion.final).is_equal_approx(
 		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
-	assert_float(medicion.base).is_equal_approx(medicion.metal, ReglasDeLosObjetos.ROCE)
+	assert_float(medicion.base).is_equal_approx(medicion.apoyo, ReglasDeLosObjetos.ROCE)
 
 
-func test_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
-	var medicion := await _en_la_cabecera(Producto.Id.ACTRONCITO)
+func test_la_caja_chica_se_acomoda_sobre_metal_visible_del_estante() -> void:  # AC-PLY-100
+	var medicion := await _en_el_estante(Producto.Id.ACTRONCITO)
+	assert_bool(medicion.sobre_metal).is_true()
 	assert_vector(medicion.final).is_equal_approx(
 		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
-	assert_float(medicion.base).is_equal_approx(medicion.metal, ReglasDeLosObjetos.ROCE)
+	assert_float(medicion.base).is_equal_approx(medicion.apoyo, ReglasDeLosObjetos.ROCE)
 
 
 func test_cada_cara_superior_del_riel_visible_tiene_apoyo_fisico() -> void:  # AC-PLY-099
@@ -77,7 +78,7 @@ func test_el_collider_del_riel_conserva_el_aire_entre_sus_brazos() -> void:
 
 
 func test_la_caja_grande_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PLY-095
-	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "piso")).is_true()
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNNT, "piso")).is_true()
 
 
 func test_la_caja_chica_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PLY-095
@@ -85,7 +86,7 @@ func test_la_caja_chica_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PL
 
 
 func test_la_caja_grande_queda_estable_y_recogible_sobre_mostrador() -> void:  # AC-PLY-095
-	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "mostrador")).is_true()
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNNT, "mostrador")).is_true()
 
 
 func test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador() -> void:  # AC-PLY-095
@@ -93,7 +94,7 @@ func test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador() -> void:  # 
 
 
 func test_la_caja_grande_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-PLY-095
-	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "pallet")).is_true()
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNNT, "pallet")).is_true()
 
 
 func test_la_caja_chica_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-PLY-095
@@ -101,7 +102,7 @@ func test_la_caja_chica_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-
 
 
 func test_la_caja_grande_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PLY-095
-	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "caja")).is_true()
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNNT, "caja")).is_true()
 
 
 func test_la_caja_chica_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PLY-095
@@ -109,7 +110,7 @@ func test_la_caja_chica_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PL
 
 
 func test_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra() -> void:  # AC-PLY-095
-	assert_bool(await _retirar_soporte(Producto.Id.LAYSNTT)).is_true()
+	assert_bool(await _retirar_soporte(Producto.Id.LAYSNNT)).is_true()
 
 
 func test_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra() -> void:  # AC-PLY-095
@@ -203,13 +204,13 @@ func _sobre_el_riel(producto: Producto.Id) -> Dictionary:
 	return {"base": limites.position.y, "gris": objetivo.y}
 
 
-func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
+func _en_el_estante(producto: Producto.Id, sobre_metal := true) -> Dictionary:
 	var almacen := await _abrir()
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
-	var frente := Vector3.FORWARD
-	var objetivo := _metal_de_la_cabecera_reportada(gondola, frente)
+	var frente := Vector3.LEFT
+	var objetivo := _metal_visible_del_estante(gondola, frente)
 	assert_vector(objetivo).is_not_equal(Vector3.INF)
 	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
@@ -218,11 +219,25 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	)
 	(
 		assert_bool(visible.is_empty())
-		. override_failure_message("Premisa: metal visible de la cabecera reportada")
+		. override_failure_message("Premisa: metal visible del estante actual")
 		. is_false()
 	)
 	if visible.is_empty():
-		return {"final": Vector3.INF, "inicial": Vector3.ZERO, "base": -INF, "metal": INF}
+		return {
+			"final": Vector3.INF,
+			"inicial": Vector3.ZERO,
+			"base": -INF,
+			"apoyo": INF,
+			"sobre_metal": false
+		}
+	if not sobre_metal:
+		# La caja grande ya se prueba sobre metal admitido en el riel. En esta bandeja, que
+		# admite la chica, su volumen choca con la de arriba: BR-PLY-018 exige el piso.
+		(
+			assert_bool(_hay_volumen_libre_sobre(almacen, caja, visible.punto))
+			. override_failure_message("Premisa: la caja grande no cabe sobre el metal apuntado")
+			. is_false()
+		)
 	var fisico := _rayo(
 		almacen,
 		mira.origin,
@@ -244,14 +259,6 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	assert_bool(caja.sleeping).is_true()
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
-	var metal := _impacto_visible(
-		gondola, final, final + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO
-	)
-	(
-		assert_bool(metal.is_empty())
-		. override_failure_message("Premisa: metal bajo el centro")
-		. is_false()
-	)
 	var contacto := _rayo(
 		almacen,
 		final,
@@ -259,13 +266,33 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 		[caja.get_rid(), almacen.get("_jugador").get_rid()]
 	)
 	assert_bool(contacto.is_empty()).is_false()
-	if metal.is_empty() or contacto.is_empty():
-		return {"final": final, "inicial": inicial, "base": limites.position.y, "metal": INF}
+	if contacto.is_empty():
+		return {
+			"final": final,
+			"inicial": inicial,
+			"base": limites.position.y,
+			"apoyo": INF,
+			"sobre_metal": false
+		}
+	if sobre_metal:
+		var metal := _impacto_visible(
+			gondola, final, final + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO
+		)
+		(
+			assert_dict(metal)
+			. override_failure_message("metal bajo el centro de la caja")
+			. is_not_empty()
+		)
+		assert_bool(gondola.is_ancestor_of(contacto.collider)).is_true()
+		if not metal.is_empty():
+			assert_float((contacto.position as Vector3).y).is_equal_approx(
+				(metal.punto as Vector3).y, ReglasDeLosObjetos.ROCE
+			)
+	else:
+		# BR-PLY-018: sin volumen libre en ese metal, soltar deja la caja en el piso.
+		assert_object(contacto.collider).is_same(almacen.get_node("Estructura/SueloSolido"))
 	assert_float(limites.position.y).is_equal_approx(
-		(metal.punto as Vector3).y, ReglasDeLosObjetos.ROCE
-	)
-	assert_float((contacto.position as Vector3).y).is_equal_approx(
-		(metal.punto as Vector3).y, ReglasDeLosObjetos.ROCE
+		(contacto.position as Vector3).y, ReglasDeLosObjetos.ROCE
 	)
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
@@ -286,7 +313,8 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 		"final": final,
 		"inicial": inicial,
 		"base": limites.position.y,
-		"metal": (metal.punto as Vector3).y
+		"apoyo": (contacto.position as Vector3).y,
+		"sobre_metal": sobre_metal
 	}
 
 
@@ -403,16 +431,46 @@ func _impacto_visible(malla: MeshInstance3D, desde: Vector3, hasta: Vector3) -> 
 	return salida
 
 
-## Saladik cambia de sector: el borde reportado pertenece al mueble, no a esa referencia.
-func _metal_de_la_cabecera_reportada(malla: MeshInstance3D, frente: Vector3) -> Vector3:
+## Se consulta el volumen real de la caja antes del gesto, sin llamar al acomodador.
+func _hay_volumen_libre_sobre(almacen: Node3D, caja: RigidBody3D, punto: Vector3) -> bool:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var tamano := LimitesDeForma.de(forma.shape).size * forma.global_basis.get_scale()
+	var interior := BoxShape3D.new()
+	interior.size = tamano - Vector3.ONE * ReglasDeLosObjetos.ROCE
+	interior.margin = 0.0
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = interior
+	consulta.transform = Transform3D(Basis.IDENTITY, punto + Vector3.UP * tamano.y / 2.0)
+	consulta.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+	consulta.exclude = [caja.get_rid(), almacen.get("_jugador").get_rid()]
+	return almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
+
+
+## El apoyo sigue el metal accesible del mueble actual, aunque desaparezcan sus cabeceras.
+func _metal_visible_del_estante(malla: MeshInstance3D, frente: Vector3) -> Vector3:
 	var limites := malla.global_transform * malla.get_aabb()
 	var centro := limites.get_center()
 	var fondo := absf(frente.dot(limites.size))
 	var area_mayor := 0.0
 	var objetivo := Vector3.INF
-	for cara in _superiores(malla):
+	var caras := malla.mesh.get_faces()
+	for indice in range(0, caras.size(), 3):
+		var cara := PackedVector3Array(
+			[
+				malla.to_global(caras[indice]),
+				malla.to_global(caras[indice + 1]),
+				malla.to_global(caras[indice + 2]),
+			]
+		)
 		var punto := (cara[0] + cara[1] + cara[2]) / 3.0
-		if (punto - centro).dot(frente) <= fondo / 3.0:
+		var normal := (cara[1] - cara[0]).cross(cara[2] - cara[0]).normalized()
+		if (
+			absf(normal.y) < 0.999
+			or punto.y < 0.4
+			or punto.y > ReglasDelJugador.ALTURA_DE_LA_CAMARA
+		):
+			continue
+		if (punto - centro).dot(frente) <= fondo * 0.1:
 			continue
 		var area := (cara[1] - cara[0]).cross(cara[2] - cara[0]).length_squared()
 		if area > area_mayor:
@@ -477,7 +535,7 @@ func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
 				vecina.global_position += Vector3.RIGHT * 100.0
 				vecina.call("quedarse_quieta")
 	elif tipo == "caja":
-		var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+		var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADICK]
 		debajo.global_basis = Basis.IDENTITY
 		debajo.global_position = objetivo + Vector3.UP * _limites(debajo).size.y / 2.0
 		debajo.call("quedarse_quieta")
@@ -551,7 +609,7 @@ func _retirar_soporte(producto: Producto.Id) -> bool:
 	var almacen := await _abrir()
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
-	var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADICK]
 	var ajena: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.OREMOS]
 	var piso := _piso_del_deposito(almacen)
 	for cuerpo: RigidBody3D in [debajo, caja, ajena]:

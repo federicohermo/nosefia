@@ -53,10 +53,10 @@ func test_ambas_compras_y_no_los_despachos_cumplen_la_primera_noche() -> void:  
 	assert_bool(tarea.completada()).is_true()
 	for id: Producto.Id in [
 		Producto.Id.MAROLINI,
-		Producto.Id.CORACOLA,
+		Producto.Id.PURA_COLA,
 		Producto.Id.MALBARDO,
 		Producto.Id.ZUCARACHAS,
-		Producto.Id.PEPITOS
+		Producto.Id.PEPITO
 	]:
 		assert_int(tarea.vendidas_de(Catalogo.de(id))).is_equal(1)
 	assert_array(tarea.avanzar(36000)).is_empty()

@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="3_cabecera"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/puntos_de_carga.svg" id="4_puntos"]
 
-[node name="PantallaDeCarga" type="Control" node_paths=PackedStringArray("_marco", "_barra", "_texto")]
+[node name="PantallaDeCarga" type="Control" node_paths=PackedStringArray("_marco", "_barra", "_texto", "_detalle")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,6 +17,7 @@ script = ExtResource("1_pantalla")
 _marco = NodePath("Marco")
 _barra = NodePath("Marco/Centro/Borde/Barra")
 _texto = NodePath("Marco/Centro/Texto")
+_detalle = NodePath("Marco/Centro/Detalle")
 
 [node name="Fondo" type="ColorRect" parent="."]
 layout_mode = 1
@@ -67,18 +68,19 @@ expand_mode = 1
 
 [node name="Centro" type="VBoxContainer" parent="Marco"]
 layout_mode = 0
-offset_left = 719.0
+offset_left = 566.0
 offset_top = 525.0
-offset_right = 1176.0
+offset_right = 1328.0
 offset_bottom = 605.0
 theme_type_variation = &"Placa"
 
 [node name="Borde" type="PanelContainer" parent="Marco/Centro"]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_type_variation = &"MarcoDeLaBarra"
 
 [node name="Barra" type="ProgressBar" parent="Marco/Centro/Borde"]
-custom_minimum_size = Vector2(437, 10)
+custom_minimum_size = Vector2(570, 22)
 layout_mode = 2
 theme_type_variation = &"BarraDeCarga"
 max_value = 1.0
@@ -89,3 +91,9 @@ show_percentage = false
 layout_mode = 2
 theme_type_variation = &"TextoDeCarga"
 horizontal_alignment = 1
+
+[node name="Detalle" type="Label" parent="Marco/Centro"]
+layout_mode = 2
+theme_type_variation = &"DetalleDeCarga"
+horizontal_alignment = 1
+clip_text = true

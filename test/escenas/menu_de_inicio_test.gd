@@ -208,6 +208,36 @@ func test_configuraciones_se_abre_y_esc_la_cierra() -> void:  # AC-CFG-010, AC-S
 	assert_bool(menu.get("_fundiendo")).is_false()
 
 
+func test_cerrar_configuraciones_sin_cambios_conserva_la_copia() -> void:
+	var menu := _menu()
+	menu.set_process(false)
+	var pantalla := _configuraciones(menu)
+	assert_bool(menu.call("_sirve_la_copia")).is_true()
+	_boton(menu, "CONFIGURACIONES").pressed.emit()
+	pantalla._unhandled_input(_esc())
+	assert_bool(pantalla.visible).is_false()
+	assert_bool(menu.call("_sirve_la_copia")).is_true()
+	_boton(menu, "CONFIGURACIONES").pressed.emit()
+	(pantalla.marco().get_node("Volver") as Button).pressed.emit()
+	assert_bool(pantalla.visible).is_false()
+	assert_bool(menu.call("_sirve_la_copia")).is_true()
+
+
+func test_cambiar_una_preferencia_invalida_la_copia() -> void:
+	for campo: Preferencias.Campo in Preferencias.CAMPOS:
+		var menu := _menu()
+		menu.set_process(false)
+		var pantalla := _configuraciones(menu)
+		_boton(menu, "CONFIGURACIONES").pressed.emit()
+		assert_bool(menu.call("_sirve_la_copia")).is_true()
+		var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.find(campo)]
+		(fila.get_child(1) as Button).pressed.emit()
+		pantalla._unhandled_input(_esc())
+		assert_bool(pantalla.visible).is_false()
+		assert_bool(menu.call("_sirve_la_copia")).is_false()
+		remove_child(menu)
+
+
 func test_la_letra_cambia_al_volver_de_configuraciones() -> void:  # AC-CFG-008, AC-CFG-010
 	var menu := _menu()
 	_boton(menu, "CONFIGURACIONES").pressed.emit()
@@ -267,3 +297,23 @@ func test_un_archivo_de_preferencias_ilegible_no_impide_el_menu() -> void:  # AC
 		assert_float((fila.get_child(2) as HSlider).value).is_equal_approx(
 			Preferencias.new().valor(campo), 1e-6
 		)
+
+
+## En la web, el almacén se calienta debajo del menú, detenido. Lo que corre siempre, como la
+## pausa, escucharía Esc en el menú: pausaría el árbol con el menú en pantalla.
+func test_la_pausa_del_almacen_que_se_calienta_no_escucha_el_menu() -> void:
+	var menu := _menu()
+	menu.set_process(false)
+	var modelo := Node3D.new()
+	var pausa := ControlDePausa.new()
+	modelo.add_child(pausa)
+	pausa.owner = modelo
+	var escena := PackedScene.new()
+	assert_int(escena.pack(modelo)).is_equal(OK)
+	modelo.free()
+	menu.set("_almacen", escena)
+	menu.call("_calentar_debajo_del_menu")
+	var copia: Node3D = auto_free(menu.get("_copia"))
+	var pausas := copia.find_children("*", "ControlDePausa", true, false)
+	assert_array(pausas).has_size(1)
+	assert_bool((pausas[0] as ControlDePausa).can_process()).is_false()

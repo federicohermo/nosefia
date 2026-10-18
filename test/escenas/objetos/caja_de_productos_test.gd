@@ -20,6 +20,20 @@ const CAJAS_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 ## Donde el juego carga las etiquetas: `source/` no se importa, y el juego no lo ve.
 const ETIQUETAS := "res://assets/boxes/"
 
+## Los archivos conservan el nombre del arte, aunque cambie el nombre visible del producto.
+const NOMBRES_DISTINTOS_DEL_ID := {
+	Producto.Id.LAYSNNT: "laysntt",
+	Producto.Id.PROGRES: "prongles",
+	Producto.Id.ARVECOR: "arvejas",
+	Producto.Id.PEPITO: "pepitos",
+	Producto.Id.SALADICK: "saladik",
+	Producto.Id.UAKALAS: "uakas",
+	Producto.Id.PURA_COLA: "coracola",
+	Producto.Id.FROT_LUPS: "frotlups",
+	Producto.Id.FLIM_POF: "flinpuf",
+	Producto.Id.DON_SATURADOS: "donsaturados",
+}
+
 ## Donde el artista dejó las etiquetas. Lleva nombres con acento, que la copia no lleva.
 const ORIGEN := "res://assets/source/textures/stockroom/DEPOSITO CAJAS TEXTURA/"
 
@@ -41,14 +55,14 @@ const ORIGEN_DE_CADA_ETIQUETA := {
 	Producto.Id.BURBALOO: "CAJA BURBALOO.png",
 	Producto.Id.CINDOLOR: "CAJA CINDOLOR.png",
 	Producto.Id.COSA_DE_MANI: "CAJA COSA DE MANÍ.png",
-	Producto.Id.DONSATURADOS: "CAJA DON SATURADOS.png",
+	Producto.Id.DON_SATURADOS: "CAJA DON SATURADOS.png",
 	Producto.Id.DUREXTRA: "CAJA DUREXTRA.png",
 	Producto.Id.DURONGA: "CAJA DURONGA.png",
 	Producto.Id.FERNET_GOD: "CAJA FERNET-GOD.png",
-	Producto.Id.FLINPUF: "CAJA FLIN POF.png",
-	Producto.Id.FROTLUPS: "CAJA FROTLUPS.png",
+	Producto.Id.FLIM_POF: "CAJA FLIN POF.png",
+	Producto.Id.FROT_LUPS: "CAJA FROTLUPS.png",
 	Producto.Id.JORGILLO: "CAJA JORGILLO.png",
-	Producto.Id.LAYSNTT: "CAJA LAYSNT´T.png",
+	Producto.Id.LAYSNNT: "CAJA LAYSNT´T.png",
 	Producto.Id.MACUMBAS: "CAJA MACUMBAS.png",
 	Producto.Id.MAYONCHIS: "CAJA MAYONCHIS.png",
 	Producto.Id.OAAAA: "CAJA OAAAAA.png",
@@ -59,16 +73,16 @@ const ORIGEN_DE_CADA_ETIQUETA := {
 
 ## Los que el artista no dibujó: su caja lleva el logo del envase en tinta.
 const DEL_ENVASE := [
-	Producto.Id.ARVEJAS,
+	Producto.Id.ARVECOR,
 	Producto.Id.CHISITOS,
-	Producto.Id.CORACOLA,
+	Producto.Id.PURA_COLA,
 	Producto.Id.MALBARDO,
 	Producto.Id.MAROLINI,
 	Producto.Id.OREMOS,
-	Producto.Id.PEPITOS,
-	Producto.Id.PRONGLES,
-	Producto.Id.SALADIK,
-	Producto.Id.UAKAS,
+	Producto.Id.PEPITO,
+	Producto.Id.PROGRES,
+	Producto.Id.SALADICK,
+	Producto.Id.UAKALAS,
 	Producto.Id.MARRANOS,
 	Producto.Id.FEEL_RICKY_FORT,
 	Producto.Id.POETICO,
@@ -432,7 +446,9 @@ func _nombre(id: Producto.Id) -> String:
 	return Catalogo.de(id).nombre
 
 
-## La copia lleva el nombre del `Producto.Id` en minúsculas, igual que las miniaturas de la
-## computadora.
+## Las rutas esperadas son independientes de la tabla del script que viste cada caja.
 func _ruta_de_la_etiqueta(id: Producto.Id) -> String:
-	return ETIQUETAS + (Producto.Id.keys()[id] as String).to_lower() + ".png"
+	var nombre: String = NOMBRES_DISTINTOS_DEL_ID.get(
+		id, (Producto.Id.keys()[id] as String).to_lower()
+	)
+	return ETIQUETAS + nombre + ".png"

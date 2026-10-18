@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-INV
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-16 sobre el círculo de Yasmín para 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos
 ---
 
 # Capacidad: la investigación
@@ -26,7 +26,7 @@ suma. Sin eso, se puede pasar la noche examinando la misma lata.
 | **Hipótesis** | opción de interpretación disponible al cierre de una jornada | final |
 | **Desenlace** | resultado que declara umbral y pistas exigidas | hipótesis de jornada |
 | **Caso** | conjunto declarado de pistas, exigencias y desenlaces | reglas dentro de la pantalla |
-| **Chat de notas** | conversación del protagonista consigo mismo que recibe fotos y textos de pistas | cuaderno de la computadora |
+| **Chat de notas** | conversación del protagonista consigo mismo que recibe fotos y textos de pistas | editor de notas manuales |
 
 ## Comportamiento normativo
 
@@ -52,22 +52,21 @@ misma góndola son el mismo secreto.
 El sistema DEBE ofrecer preguntar si algo ya se vio **sin marcarlo como visto**. Si preguntarlo
 lo registrara, mirar la pantalla cerraría el hallazgo.
 
-### BR-INV-005 — La computadora tiene dos apps y los chats están en el celular
+### BR-INV-005 — La computadora ofrece el registro y los chats están en el celular
 
-El sistema DEBE ofrecer exactamente **caja y notas** en la computadora. Los chats DEBEN leerse
-en el celular. Las notas escritas por el jugador DEBEN permanecer en la computadora.
+El sistema DEBE ofrecer únicamente el registro de ventas en la computadora, sin una app de notas
+manuales. Los chats, incluido el de notas de pistas, DEBEN leerse en el celular.
 
 ### BR-INV-006 — Leer no cobra tiempo adicional
 
-CUANDO se abre la computadora o se cambia de app, o se abre o cierra el celular, se lee un chat
-o se amplía una foto, el sistema NO DEBE descontar tiempo por el gesto. MIENTRAS el celular está
-abierto durante la jornada sin pausa, el reloj DEBE seguir descontando el tiempo real de juego.
+CUANDO se abre o cierra la computadora, o se abre o cierra el celular, se lee un chat o se amplía
+una foto, el sistema NO DEBE descontar tiempo por el gesto. MIENTRAS el celular está abierto
+durante la jornada sin pausa, el reloj DEBE seguir descontando el tiempo real de juego.
 
-### BR-INV-007 — Reabrir vuelve donde se dejó
+### BR-INV-007 — Reabrir conserva el registro
 
-CUANDO se cierra y se vuelve a abrir la computadora, el sistema DEBE mostrar la última app
-elegida. Con la computadora cerrada, cambiar de app no hace nada: reabrir en una app que el
-jugador nunca eligió sería un salto.
+CUANDO se cierra y se vuelve a abrir la computadora durante la jornada, el sistema DEBE mostrar
+el registro con las mismas unidades anotadas y el mismo total.
 
 ### BR-INV-008 — Lo leído es de la partida, no del guión
 
@@ -81,16 +80,10 @@ la cuenta **por interlocutor**. Con un contador global, leer al jefe apagaría e
 otros. Los mensajes que llegan después de esa lectura DEBEN contar como no leídos de ese chat,
 sin modificar los contadores de los demás.
 
-### BR-INV-010 — Una nota sin título no se guarda
+### BR-INV-011 — Lo leído no depende de la pantalla
 
-SI el título está vacío o es sólo espacios, ENTONCES el sistema DEBE rechazar la nota. Un renglón
-sin título es una entrada que el jugador no va a poder encontrar después. El cuerpo sí puede
-estar vacío.
-
-### BR-INV-011 — El cuaderno y la bandeja no son de la pantalla
-
-El sistema DEBE conservar lo anotado al cambiar de app o cerrar la computadora, y lo leído al
-cerrar y reabrir el celular. Esos estados NO DEBEN depender de reconstruir su pantalla.
+El sistema DEBE conservar lo leído al cerrar y reabrir el celular. Ese estado NO DEBE depender
+de reconstruir su pantalla.
 
 ### BR-INV-017 — Pensar no clava al jugador
 
@@ -183,6 +176,8 @@ verse desenfocado y oscuro, y la pantalla del celular DEBE permanecer nítida e 
 en escritorio como en web. Al cerrarlo, DEBE bajar fuera del margen inferior y retirar ese velo.
 MIENTRAS el turno está abierto, el sistema DEBE mostrar en la esquina inferior izquierda un
 ícono de celular con «Q», incluso con el celular arriba; con el turno cerrado NO DEBE mostrarlo.
+MIENTRAS la computadora está abierta, el sistema DEBE ocultar ese recordatorio. Al cerrarla,
+DEBE volver a mostrarlo sólo si la jornada todavía lo permite.
 El celular DEBE dibujarse sobre HUD, computadora y cierre, y debajo de avisos y pausa. La
 duración completa de subir y de bajar DEBE ser de 0,25 segundos reales por recorrido.
 Un cuadro largo NO DEBE adelantar el movimiento más de 1/30 de segundo. Si el dibujo se
@@ -335,7 +330,7 @@ CUANDO una pista de jornada 2 resulta ANOTADA, el sistema DEBE agregar al chat d
 su foto y después su texto, una sola vez, conservando el orden de descubrimiento entre pistas.
 REPETIDA y DESCONOCIDA NO DEBEN agregar mensajes ni publicar pista nueva. La foto DEBE ampliarse
 con el texto siguiente como adjunto según BR-INV-025. El chat DEBE tener identidad y contenido
-propios, separados del cuaderno, y sus mensajes DEBEN conservarse en memoria entre aperturas.
+propios, y sus mensajes DEBEN conservarse en memoria entre aperturas.
 El menú durante el turno DEBE ocultarlo en jornadas 1 y 2, aun con mensajes, y ofrecerlo desde
 la 3 cuando tenga contenido. Esa disponibilidad NO DEBE impedir su apertura fija por el cierre
 en jornadas 1 y 2. Consultar mensajes DEBE devolver copias sin alterar el guion compartido ni
@@ -391,22 +386,22 @@ DADO dos instancias con la misma identidad CUANDO se examinan las dos ENTONCES l
 DADO un objeto sin examinar CUANDO se pregunta dos veces si ya se vio ENTONCES las dos contestan
 que no, y la cuenta sigue en 0.
 
-### AC-INV-006 — Dos apps y un celular *(verifica BR-INV-005)*
+### AC-INV-006 — Un registro y un celular *(verifica BR-INV-005)*
 
-DADO la computadora y el celular CUANDO se enumeran sus opciones ENTONCES la computadora tiene
-exactamente caja y notas, y los chats se ofrecen en el celular.
+DADO la computadora y el celular CUANDO se enumeran sus opciones ENTONCES la computadora ofrece
+sólo el registro de ventas, sin una app de notas manuales, y los chats se ofrecen en el celular.
 
 ### AC-INV-007 — Abrir no descuenta *(verifica BR-INV-006)*
 
-DADO un turno entero CUANDO se abre la computadora y se cambia de app, o se abre el celular,
-se lee un chat, se amplía una foto y se cierra el celular en el mismo instante ENTONCES el turno
-no bajó un solo segundo. CUANDO pasan 30 segundos reales con el celular abierto, sin pausa,
-ENTONCES descuenta exactamente lo mismo que 30 segundos sin el celular.
+DADO un turno entero CUANDO se abre y cierra la computadora, o se abre el celular, se lee un
+chat, se amplía una foto y se cierra el celular en el mismo instante ENTONCES el turno no bajó
+un solo segundo. CUANDO pasan 30 segundos reales con el celular abierto, sin pausa, ENTONCES
+descuenta exactamente lo mismo que 30 segundos sin el celular.
 
-### AC-INV-008 — Reabrir vuelve a la última app *(verifica BR-INV-007)*
+### AC-INV-008 — Reabrir conserva lo anotado *(verifica BR-INV-007)*
 
-DADO la computadora abierta en notas CUANDO se cierra y se vuelve a abrir ENTONCES está en notas;
-y con la computadora cerrada, cambiar de app no cambia nada.
+DADO el registro abierto con 2 unidades de un producto y 3 de otro CUANDO se cierra y se vuelve
+a abrir la computadora ENTONCES siguen esas cantidades y el mismo total.
 
 ### AC-INV-009 — Lo leído no vive en el guión *(verifica BR-INV-008)*
 
@@ -419,15 +414,9 @@ DADO tres conversaciones con mensajes sin leer CUANDO se lee una ENTONCES ésa q
 otras dos conservan los suyos. CUANDO llegan dos mensajes más a la conversación leída ENTONCES
 ésta tiene 2 sin leer y las otras conservan los suyos; abrirla de nuevo la deja en 0.
 
-### AC-INV-011 — La nota sin título se rechaza *(verifica BR-INV-010)*
+### AC-INV-012 — Cerrar el celular conserva lo leído *(verifica BR-INV-011)*
 
-DADO un título de sólo espacios CUANDO se escribe la nota ENTONCES no se guarda y el cuaderno
-sigue con las que tenía; con título y cuerpo vacío, se guarda.
-
-### AC-INV-012 — Cambiar de app no borra *(verifica BR-INV-011)*
-
-DADO dos notas escritas y un chat leído CUANDO se cambia de app, se cierra y reabre la computadora,
-y se cierra y reabre el celular ENTONCES siguen las dos notas y ese chat sigue leído.
+DADO un chat leído CUANDO se cierra y reabre el celular ENTONCES ese chat sigue leído.
 
 ### AC-INV-019 — El pensamiento no retiene *(verifica BR-INV-017)*
 
@@ -539,6 +528,9 @@ Su orden de dibujo está encima del HUD, computadora y cierre, y debajo de aviso
 
 DADO el turno abierto CUANDO el celular está cerrado o abierto ENTONCES se ve un único ícono
 con «Q» en la esquina inferior izquierda. CUANDO cierra el turno ENTONCES el ícono no se ve.
+DADO el recordatorio visible CUANDO se abre la computadora ENTONCES se oculta; al cerrarla
+reaparece. SI el turno cierra con la computadora abierta, ENTONCES cerrar la computadora NO
+DEBE volver a mostrarlo.
 
 ### AC-INV-036 — Pausar conserva, cerrar limpia *(verifica BR-INV-028)*
 
@@ -660,7 +652,6 @@ Reabrir otra jornada y reconstruir las mismas identidades y mensajes no duplica 
 DADO notas con dos mensajes de 2A CUANDO se abre el menú durante jornadas 1 y 2 ENTONCES notas
 no tiene botón; en la 3 sí. DADO cierre de jornada 1 o 2 CUANDO se fija notas ENTONCES abre su
 chat propio sin pasar por el menú, aun vacío en la 1, permite leer y ampliar, y Q no lo cierra.
-El cuaderno de la computadora conserva sus notas independientes.
 
 ### AC-INV-053 — Datos exactos y fotos propias *(verifica BR-INV-041)*
 
@@ -698,24 +689,24 @@ lista consultada no cambia el historial ni el guion.
   jornada 2 y su tramo de pista están fijados en BR-INV-029 y BR-INV-031.
 - Esta capacidad NO descuenta tiempo del turno.
 - Esta capacidad NO inventa contactos, pistas, hipótesis o desenlaces de jornadas futuras:
-  consume el contenido decidido. El cuaderno de la computadora conserva su uso independiente.
+  consume el contenido decidido.
 - Esta capacidad NO elige una hipótesis por el jugador ni escribe checkpoints: entrega opciones,
   identidades y mensajes al cierre y al guardado.
 
 ## Contratos
 
 - **Entrada:** el objeto examinado, la entrada de movimiento y los segundos del cuadro, el
-  arrastre del mouse, la app elegida, la conversación abierta, y el título y el cuerpo de una
-  nota; caso, pistas, exigencias y desenlaces, expediente recibido, identidades para
-  reconstrucción y gestos de pista con canal y jornada; la jornada, Q, el estado del control
+  arrastre del mouse y la conversación abierta; caso, pistas, exigencias y desenlaces,
+  expediente recibido, identidades para reconstrucción y gestos de pista con canal y jornada;
+  la jornada, Q, el estado del control
   y los pedidos de recibir mensajes, navegar chats, ampliar fotos, fijar y soltar el celular;
   identidad y metadatos temporales de mensajes y el tramo de pista pulsado.
-- **Salida:** el texto visible, si fue hallazgo, cuántos mensajes sin leer hay y las notas;
+- **Salida:** el texto visible, si fue hallazgo, cuántos mensajes sin leer hay y las notas de pistas;
   celular abierto o cerrado, menú, chat o foto, modo fijo, historial cronológico, listas
   visibles de chats y mensajes, y pedido identificado del tramo de pista;
   ANOTADA/REPETIDA/DESCONOCIDA, expediente ordenado, consistencia, desenlaces alcanzados e
   hipótesis disponibles con sus datos. Una exigencia pendiente no registra.
-- **Falla:** una revelación vacía y una nota sin título se rechazan sin cambiar nada.
+- **Falla:** una revelación vacía se rechaza sin cambiar nada.
 - **Falla del celular:** Q bloqueado, chat inexistente, recepción inválida, ampliación sin foto
   y soltar sin modo fijo conservan el estado. Una conversación sin mensajes visibles se omite
   del menú; una foto sin texto siguiente se amplía sin adjunto.
@@ -738,7 +729,7 @@ lista consultada no cambia el historial ni el guion.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (consume): devoluciones restauradas
   con sus metadatos disponibles; el guion se reconstruye según la jornada guardada.
 - [`ambience`](../ambience/ambience.md) (alimenta): cada recepción aceptada dispara el sonido
-  de mensaje del celular; escribir una nota en la computadora no es recibir un mensaje.
+  de mensaje del celular.
 - [`subtitles`](../subtitles/subtitles.md) (alimenta): cuándo arranca y termina el examen de lo
   que se lleva, que deja su texto fijo en la línea de subtítulo.
 

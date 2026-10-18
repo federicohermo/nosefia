@@ -31,5 +31,15 @@ func test_el_tiempo_se_acumula_entre_cuadros() -> void:
 	assert_bool(espera.puede_entrar()).is_true()
 
 
+## Con el local ya listo, la barra se llena en el mínimo y no lo pasa.
+func test_el_avance_llega_a_uno_al_cumplir_el_minimo() -> void:
+	var espera := EsperaDeLaCarga.new()
+	assert_float(espera.avance()).is_zero()
+	espera.avanzar(EsperaDeLaCarga.MINIMO / 2)
+	assert_float(espera.avance()).is_equal_approx(0.5, 0.001)
+	espera.avanzar(EsperaDeLaCarga.MINIMO * 2)
+	assert_float(espera.avance()).is_equal(1.0)
+
+
 func test_el_minimo_es_un_segundo() -> void:
 	assert_float(EsperaDeLaCarga.MINIMO).is_equal(1.0)

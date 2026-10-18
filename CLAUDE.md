@@ -157,10 +157,10 @@ su arreglo.
 - **`GODOT_BIN` declarada no es `GODOT_BIN` visible.** Una terminal abierta antes de declararla
   no la ve nunca. Se cierra el host de la terminal.
 - **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado.
-- **`verificar.py` no imprime cuántas suites corrieron.** Desde gdUnit4 6.2.1, una suite que no
-  parsea sale roja, pero el control de que corrió todo sigue siendo el
-  `Executed test suites: (N/N)` de la salida cruda. Cómo leerlo, en
-  [.claude/rules/tests.md](./.claude/rules/tests.md).
+- **Sin particionar, `verificar.py` no imprime cuántas suites corrieron.** Desde gdUnit4 6.2.1,
+  una suite que no parsea sale roja; en ese modo se controla el total con
+  `Executed test suites: (N/N)` de la salida cruda. En CI, cada partición coteja sus suites con
+  el XML JUnit e imprime el resultado. Detalle en [verificación](./docs/guides/verificacion.md).
 
 Y las del modelo, que no tienen síntoma legible:
 

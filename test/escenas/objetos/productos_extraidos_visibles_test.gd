@@ -82,7 +82,7 @@ func _afirmar_dibujos(grupo: MultiMeshInstance3D, cuerpos: Array[RigidBody3D]) -
 
 func test_saladik_sale_de_su_caja_se_enfoca_se_recoge_y_se_devuelve() -> void:
 	var local := _local()
-	var id := Producto.Id.SALADIK
+	var id := Producto.Id.SALADICK
 	var agarre: Agarre = local.get("_agarre")
 	var repositor: Repositor = local.get("_repositor")
 	var cantidad := repositor.caja(id).unidades()
@@ -151,7 +151,7 @@ func test_caja_completa_conserva_cada_dibujo_al_cruzar_la_capacidad_inicial() ->
 func test_el_deposito_conserva_dibujos_independientes_de_productos_distintos() -> void:
 	var local := _local()
 	var productos: Array[Producto.Id] = [
-		Producto.Id.MAROLINI, Producto.Id.SALADIK, Producto.Id.LAYSNTT
+		Producto.Id.MAROLINI, Producto.Id.SALADICK, Producto.Id.LAYSNNT
 	]
 	var por_producto: Dictionary[Producto.Id, Array] = {}
 	var lugar := 0
@@ -172,9 +172,9 @@ func test_el_deposito_conserva_dibujos_independientes_de_productos_distintos() -
 		_afirmar_dibujos(_grupo(local, id), cuerpos)
 		for cuerpo in cuerpos:
 			assert_int((cuerpo.get("datos") as UnidadDeProducto).producto.id).is_equal(id)
-	var recogida: RigidBody3D = por_producto[Producto.Id.SALADIK][1]
+	var recogida: RigidBody3D = por_producto[Producto.Id.SALADICK][1]
 	_accion(local.get("_jugador"), recogida, ReglasDeLosObjetos.ACCION_AGARRAR)
-	por_producto[Producto.Id.SALADIK].erase(recogida)
+	por_producto[Producto.Id.SALADICK].erase(recogida)
 	for id in productos:
 		var cuerpos: Array[RigidBody3D] = []
 		cuerpos.assign(por_producto[id])

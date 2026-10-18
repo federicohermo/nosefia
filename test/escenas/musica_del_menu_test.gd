@@ -6,6 +6,7 @@ extends GdUnitTestSuite
 
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 const TEMA := "MUS_MenuPrincipal.ogg"
+const ESPERA_DE_LA_ENTRADA_MS := 3000
 
 
 ## Lo que el menú llama al entregar el control, sin cargar el almacén entero.
@@ -130,12 +131,21 @@ func test_el_tema_sigue_durante_el_calentamiento_hasta_su_senal_de_fin() -> void
 	assert_int(almacen.anuncios).is_zero()
 	assert_array(_voces_del_tema(menu)).is_equal([voz])
 	assert_object(voz.stream).is_same(tema)
+	var musica_cortada_al_salir: Array[bool] = []
+	voz.tree_exiting.connect(func() -> void: musica_cortada_al_salir.append(voz.stream == null))
 	calentamiento.terminado.emit()
+	# La barra se llena y se sostiene llena antes de entregar el control.
+	var limite := Time.get_ticks_msec() + ESPERA_DE_LA_ENTRADA_MS
+	while (
+		(get_tree().current_scene != almacen or musica_cortada_al_salir.is_empty())
+		and Time.get_ticks_msec() < limite
+	):
+		await get_tree().process_frame
 	assert_object(get_tree().current_scene).is_same(almacen)
 	get_tree().current_scene = anterior
 	assert_int(almacen.anuncios).is_equal(1)
 	assert_int(almacen.process_mode).is_equal(Node.PROCESS_MODE_INHERIT)
-	assert_object(voz.stream).is_null()
+	assert_array(musica_cortada_al_salir).is_equal([true])
 
 
 func test_entregar_el_control_al_almacen_corta_el_tema() -> void:

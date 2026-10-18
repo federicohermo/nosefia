@@ -216,6 +216,8 @@ def componentes(triangulos):
             aristas[tuple(sorted((tri[j], tri[(j + 1) % 3])))].append(i)
     vecindad = [set() for _ in triangulos]
     for caras in aristas.values():
+        if len(caras) != 2:
+            continue
         for cara in caras:
             vecindad[cara].update(caras)
     pendientes = set(range(len(triangulos)))
@@ -241,6 +243,36 @@ def puntos_unicos(poligonos):
 def _plana(puntos, normal, origen):
     largo = norma(normal)
     return all(abs(producto(normal, resta(p, origen))) <= EPS * largo for p in puntos)
+
+
+def _convexa(tris):
+    """El redondeo float32 también afecta la normal de las caras del bisel.
+
+    Cada resta de posiciones tiene un error de hasta un ULP por coordenada.
+    Expandir el producto triple acota sus términos lineales, cuadráticos y cúbicos,
+    sin desplazar puntos ni ampliar los cascos de colisión.
+    """
+    puntos = puntos_unicos(tris)
+    magnitud = max(abs(c) for p in puntos for c in p)
+    precision = max(EPS, math.ldexp(1.0, math.frexp(magnitud)[1] - 23))
+    error_de_resta = precision / 2
+    for tri in tris:
+        u, v = resta(tri[1], tri[0]), resta(tri[2], tri[0])
+        normal = cruz(u, v)
+        if norma(normal) <= 1e-12:
+            raise ValueError("Triángulo degenerado en la fuente.")
+        for p in puntos:
+            w = resta(p, tri[0])
+            determinante = producto(normal, w)
+            if determinante <= precision * norma(normal):
+                continue
+            lineal = sum(abs(c) for n in (normal, cruz(v, w), cruz(w, u)) for c in n)
+            cuadratico = 2 * sum(abs(c) for direccion in (u, v, w) for c in direccion)
+            error = (error_de_resta * lineal + error_de_resta ** 2 * cuadratico
+                     + 6 * error_de_resta ** 3)
+            if determinante > error:
+                return False
+    return True
 
 
 def _area2(poligono):
@@ -300,11 +332,14 @@ def _armazon(tris):
         [(2, z1, True), (2, z2, False)],
         [(2, z0, True), (2, z1, False)],
         [(2, z2, True), (2, z3, False)],
-        [(2, z0, False), (0, xcentro, False)],
-        [(2, z0, False), (0, xcentro, True)],
-        [(2, z3, True), (0, xcentro, False)],
-        [(2, z3, True), (0, xcentro, True)],
     ]
+    if min(p[2] for p in puntos) < z0 - EPS or max(p[2] for p in puntos) > z3 + EPS:
+        regiones.extend([
+            [(2, z0, False), (0, xcentro, False)],
+            [(2, z0, False), (0, xcentro, True)],
+            [(2, z3, True), (0, xcentro, False)],
+            [(2, z3, True), (0, xcentro, True)],
+        ])
     salida = []
     for i, region in enumerate(regiones):
         # Sólo tocar el corte no da volumen: incluir esas caras extendería el panel
@@ -369,11 +404,10 @@ def _chapa(tris, eje_fondo):
 
 
 def grupos_convexos(triangulos):
-    """Divide las 33 islas de metal en 65 nubes locales con volumen.
+    """Conserva cada sólido convexo y corta el armazón por sus planos originales.
 
-    Los cortes siguen los planos originales, incluidos los quiebres de rampas y patas.
-    Las 48 etiquetas planas quedan fuera de la colisión; una topología desconocida falla
-    en lugar de fabricar un casco general que rellene aire.
+    Admite las bandejas rectangulares actuales y las chapas plegadas originales.
+    Las etiquetas planas quedan fuera de la colisión; una topología desconocida falla.
     """
     triangulos = [tuple(tuple(float(v) for v in p) for p in tri) for tri in triangulos]
     if not triangulos or any(len(tri) != 3 or any(len(p) != 3 for p in tri) for tri in triangulos):
@@ -395,25 +429,37 @@ def grupos_convexos(triangulos):
         if set(incidencias.values()) != {2}:
             raise ValueError("Componente no cerrada: no se fabrica volumen.")
         cerrados.append(tris)
-    if len(cerrados) != 33 or etiquetas != 48:
+    if not cerrados:
+        raise ValueError("La fuente no conserva sus sólidos cerrados.")
+    if (len(cerrados), etiquetas) == (5, 48):
+        if not all(_convexa(tris) for tris in cerrados):
+            raise ValueError("El centro y las cuatro repisas deben conservar sus sólidos convexos.")
+        return [puntos_unicos(tris) for tris in cerrados]
+    armazon = cerrados[0]
+    salida = _armazon(armazon)
+    cantidades = {(33, 48, 11): 65, (37, 48, 11): 47, (37, 48, 3): 39}
+    cantidad = cantidades.get((len(cerrados), etiquetas, len(salida)))
+    if cantidad is None:
         raise ValueError(
             f"Topología fuente inesperada: {len(cerrados)} sólidos y {etiquetas} etiquetas.")
-    armazon = cerrados[0]
     limites = [max(p[d] for tri in armazon for p in tri)
                - min(p[d] for tri in armazon for p in tri) for d in range(3)]
-    salida = _armazon(armazon)
     for tris in cerrados[1:]:
         puntos = puntos_unicos(tris)
         ancho = max(p[0] for p in puntos) - min(p[0] for p in puntos)
         largo = max(p[2] for p in puntos) - min(p[2] for p in puntos)
-        if largo > limites[2] * .6:
+        if _convexa(tris):
+            salida.append(puntos)
+        elif cantidad in (39, 47):
+            raise ValueError("Las bandejas rectangulares no conservan sus sólidos convexos.")
+        elif largo > limites[2] * .6:
             salida.extend(_chapa(tris, 0))
         elif ancho > limites[0] * .8:
             salida.extend(_chapa(tris, 2))
         else:
             salida.append(puntos)
-    if len(salida) != 65 or any(len(puntos) < 4 for puntos in salida):
-        raise ValueError("La partición no conserva sus 65 volúmenes.")
+    if len(salida) != cantidad or any(len(puntos) < 4 for puntos in salida):
+        raise ValueError(f"La partición no conserva sus {cantidad} volúmenes.")
     return salida
 
 

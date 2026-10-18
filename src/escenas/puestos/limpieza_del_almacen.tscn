@@ -16,9 +16,9 @@ acuosa = true
 [node name="ManchaEntreLasGondolas" parent="." instance=ExtResource("2_mancha")]
 editor_description = "Polvo, en el piso del pasillo entre las dos góndolas del medio."
 lugar = 1
-escala_visual = 1.6
+escala_visual = 1.4
 acuosa = true
-transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,2.00511258,0.104,-2.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.291279, 0.104, -2)
 
 [node name="ManchaDelDeposito" parent="." instance=ExtResource("2_mancha")]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 4.7, 1.2, -8.255)

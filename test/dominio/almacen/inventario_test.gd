@@ -20,7 +20,7 @@ extends GdUnitTestSuite
 
 func test_un_inventario_recien_construido_no_tiene_nada_en_ningun_lado() -> void:
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
-	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100)
+	var laysntt := Producto.new(Producto.Id.LAYSNNT, "Laysnnt", 1100)
 	var productos: Array[Producto] = [actroncito, laysntt]
 	var inventario := Inventario.new(productos)
 	for producto in productos:
@@ -191,10 +191,10 @@ func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construcc
 	# devolviera otro orden, se pone en rojo. Con dos productos los dos errores pasarían.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
 	var durextra := Producto.new(Producto.Id.DUREXTRA, "Durextra", 1200)
-	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100)
+	var laysntt := Producto.new(Producto.Id.LAYSNNT, "Laysnnt", 1100)
 	var productos: Array[Producto] = [actroncito, durextra, laysntt]
 	var casilleros: Dictionary[Producto.Id, int] = {
-		Producto.Id.ACTRONCITO: 5, Producto.Id.DUREXTRA: 2, Producto.Id.LAYSNTT: 3
+		Producto.Id.ACTRONCITO: 5, Producto.Id.DUREXTRA: 2, Producto.Id.LAYSNNT: 3
 	}
 	var inventario := Inventario.new(productos, casilleros)
 	inventario.ingresar(durextra, Inventario.Ubicacion.GONDOLA, 2)
@@ -306,9 +306,9 @@ func test_un_cobro_que_supera_los_vendibles_no_mueve_una_sola_unidad() -> void: 
 	# Todo o nada: la línea que sí entraba tampoco se descuenta. Un cobro a medias deja un
 	# estado que el jugador no puede distinguir de una venta completa.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
-	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100)
+	var laysntt := Producto.new(Producto.Id.LAYSNNT, "Laysnnt", 1100)
 	var productos: Array[Producto] = [actroncito, laysntt]
-	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 4, Producto.Id.LAYSNTT: 3})
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 4, Producto.Id.LAYSNNT: 3})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 4)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 6)
 	inventario.ingresar(laysntt, Inventario.Ubicacion.GONDOLA, 3)

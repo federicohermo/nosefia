@@ -125,7 +125,7 @@ func test_la_reserva_no_se_extiende_al_interior_de_la_heladera() -> void:  # AC-
 		return
 	unidad.freeze = true
 	var heladera: MeshInstance3D = almacen.get_node("Estructura/heladeranueva")
-	var zona: AABB = puesto.call("zona", Producto.Id.CORACOLA)
+	var zona: AABB = puesto.call("zona", Producto.Id.PURA_COLA)
 	unidad.global_basis = Basis.IDENTITY
 	unidad.global_position = zona.get_center()
 	(
