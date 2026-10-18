@@ -7,11 +7,11 @@ func test_los_bordes_de_ambas_ventanas() -> void:  # AC-CTR-034
 	assert_that(compradores[0].horario).is_equal(Vector2(7200, 14400))
 	assert_that(compradores[1].horario).is_equal(Vector2(28800, 36000))
 	for fila: Array in [
-		[Producto.Id.MAROLINI, 1], [Producto.Id.CORACOLA, 1], [Producto.Id.MALBARDO, 1]
+		[Producto.Id.MAROLINI, 1], [Producto.Id.PURA_COLA, 1], [Producto.Id.MALBARDO, 1]
 	]:
 		assert_int(compradores[0].pedido().unidades_de(Catalogo.de(fila[0]))).is_equal(fila[1])
 	assert_int(compradores[1].pedido().unidades_de(Catalogo.de(Producto.Id.ZUCARACHAS))).is_equal(1)
-	assert_int(compradores[1].pedido().unidades_de(Catalogo.de(Producto.Id.PEPITOS))).is_equal(1)
+	assert_int(compradores[1].pedido().unidades_de(Catalogo.de(Producto.Id.PEPITO))).is_equal(1)
 	assert_str(compradores[0].nombre()).is_equal("Tin")
 	assert_str(compradores[1].nombre()).is_equal("Tia")
 	for i in 2:

@@ -210,7 +210,7 @@ func test_el_cupo_de_cada_producto_son_los_casilleros_de_su_fila() -> void:  # A
 	var estante := Estante.new(inventario, aceptados)
 	assert_int(estante.cupo(actroncito)).is_equal(4)
 	assert_int(estante.cupo(malbardo)).is_equal(2)
-	assert_int(estante.cupo(_producto(Producto.Id.LAYSNTT))).is_zero()
+	assert_int(estante.cupo(_producto(Producto.Id.LAYSNNT))).is_zero()
 
 
 func test_el_estante_no_lleva_el_cupo_ni_el_stock_escritos_adentro() -> void:

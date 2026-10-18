@@ -55,7 +55,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
-	var producto := Catalogo.de(Producto.Id.LAYSNTT)
+	var producto := Catalogo.de(Producto.Id.LAYSNNT)
 	# El lugar de todo el depósito puede no vaciar la góndola: tiene más casilleros que la caja.
 	var puestas: int = almacen.get("_repositor").estante().unidades_en_gondola(producto)
 	var grupo: MultiMeshInstance3D = presentacion.get_node_or_null("SueltosDe" + producto.nombre)
@@ -110,11 +110,11 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		almacen.get("_jugador").set_physics_process(false)
 		var agarre: Agarre = almacen.get("_agarre")
-		var laysntt := Catalogo.de(Producto.Id.LAYSNTT)
+		var laysntt := Catalogo.de(Producto.Id.LAYSNNT)
 		var puestas: int = almacen.get("_repositor").estante().unidades_en_gondola(laysntt)
 		var bolsas: Array[RigidBody3D] = []
 		for turno in 9:
-			var id := Producto.Id.LAYSNTT if turno < 3 else Producto.Id.BURBALOO
+			var id := Producto.Id.LAYSNNT if turno < 3 else Producto.Id.BURBALOO
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
 			cuerpo.global_position = Vector3(0.6, 1.7, -5.7)
@@ -131,7 +131,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 			assert_float(bolsa.global_position.y).is_greater(0.1)
 			assert_bool(bolsa.is_visible_in_tree()).is_true()
 			assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
-			almacen.get("_reposicion_manual").pedir_colocar(Producto.Id.LAYSNTT)
+			almacen.get("_reposicion_manual").pedir_colocar(Producto.Id.LAYSNNT)
 		assert_int(almacen.get("_repositor").estante().unidades_en_gondola(laysntt)).is_equal(
 			puestas + 3
 		)
@@ -173,7 +173,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var estante: Estante = almacen.get("_repositor").estante()
 	# Tantas como casilleros vacíos: al final se colocan todas, y la caja da más que eso.
-	for id: Producto.Id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
+	for id: Producto.Id in [Producto.Id.LAYSNNT, Producto.Id.JORGILLO]:
 		var producto := Catalogo.de(id)
 		for indice in estante.cupo(producto) - estante.unidades_en_gondola(producto):
 			almacen.get("_reposicion_manual").retirar(id)
@@ -881,12 +881,13 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
 	# Un estante de la góndola es horizontal y la bolsa entra, pero queda adentro del mueble.
 	var puesto: Node3D = almacen.get("_reposicion_manual")
-	var apoyo: Vector3 = puesto.call("_apoyo", Producto.Id.UAKAS)
+	var apoyo: Vector3 = puesto.call("_apoyo", Producto.Id.UAKALAS)
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	var frente := DisposicionDeLaGondola.frente(
-		disposicion.principales[Producto.Id.UAKAS], disposicion.filas_de_adelante[Producto.Id.UAKAS]
+		disposicion.principales[Producto.Id.UAKALAS],
+		disposicion.filas_de_adelante[Producto.Id.UAKALAS]
 	)
-	# Uakas cambió de mueble: se mira desde su frente real, con el jugador en piso libre.
+	# Uakalas cambió de mueble: se mira desde su frente real, con el jugador en piso libre.
 	# La postura anterior atravesaba el lateral y dejaba la mano dentro de la reserva.
 	var estante := apoyo - frente * 0.12
 	var candidato := estante + frente * 1.3 + frente.cross(Vector3.UP)

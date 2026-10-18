@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 func test_se_llena_en_orden_y_repite_productos() -> void:  # AC-CTR-021
 	var generador := GeneradorDeTickets.new()
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	var coracola := Catalogo.de(Producto.Id.CORACOLA)
+	var coracola := Catalogo.de(Producto.Id.PURA_COLA)
 	for producto: Producto in [marolini, marolini, coracola]:
 		assert_int(generador.anotar(UnidadDeProducto.new(producto))).is_equal(
 			GeneradorDeTickets.Resultado.ANOTADO
@@ -51,7 +51,7 @@ func test_el_rechazo_por_tipo_precede_al_programa_lleno() -> void:  # AC-CTR-022
 func test_imprimir_y_borrar_preserva_el_papel() -> void:  # AC-CTR-023
 	var generador := GeneradorDeTickets.new()
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	var coracola := Catalogo.de(Producto.Id.CORACOLA)
+	var coracola := Catalogo.de(Producto.Id.PURA_COLA)
 	generador.anotar(UnidadDeProducto.new(marolini))
 	generador.anotar(UnidadDeProducto.new(coracola))
 	var ticket := generador.imprimir()
@@ -141,7 +141,7 @@ func test_un_indice_invalido_y_el_modo_automatico_rechazan_la_eleccion() -> void
 
 func test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion() -> void:  # AC-CTR-028
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	var coracola := Catalogo.de(Producto.Id.CORACOLA)
+	var coracola := Catalogo.de(Producto.Id.PURA_COLA)
 	for elegido: int in [1, 2]:
 		var generador := GeneradorDeTickets.para_la_jornada(3)
 		assert_bool(generador.elegir(elegido, marolini)).is_true()

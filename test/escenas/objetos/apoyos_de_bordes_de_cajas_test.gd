@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 
 func test_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void:  # AC-PLY-099
-	var medicion := await _sobre_el_riel(Producto.Id.LAYSNTT)
+	var medicion := await _sobre_el_riel(Producto.Id.LAYSNNT)
 	assert_float(medicion.base).is_equal_approx(medicion.gris, ReglasDeLosObjetos.ROCE)
 
 
@@ -13,7 +13,7 @@ func test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void
 
 
 func test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
-	var medicion := await _en_la_cabecera(Producto.Id.LAYSNTT)
+	var medicion := await _en_la_cabecera(Producto.Id.LAYSNNT)
 	assert_vector(medicion.final).is_equal_approx(
 		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
@@ -77,7 +77,7 @@ func test_el_collider_del_riel_conserva_el_aire_entre_sus_brazos() -> void:
 
 
 func test_la_caja_grande_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PLY-095
-	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "piso")).is_true()
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNNT, "piso")).is_true()
 
 
 func test_la_caja_chica_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PLY-095
@@ -85,7 +85,7 @@ func test_la_caja_chica_queda_estable_y_recogible_sobre_piso() -> void:  # AC-PL
 
 
 func test_la_caja_grande_queda_estable_y_recogible_sobre_mostrador() -> void:  # AC-PLY-095
-	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "mostrador")).is_true()
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNNT, "mostrador")).is_true()
 
 
 func test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador() -> void:  # AC-PLY-095
@@ -93,7 +93,7 @@ func test_la_caja_chica_queda_estable_y_recogible_sobre_mostrador() -> void:  # 
 
 
 func test_la_caja_grande_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-PLY-095
-	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "pallet")).is_true()
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNNT, "pallet")).is_true()
 
 
 func test_la_caja_chica_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-PLY-095
@@ -101,7 +101,7 @@ func test_la_caja_chica_queda_estable_y_recogible_sobre_pallet() -> void:  # AC-
 
 
 func test_la_caja_grande_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PLY-095
-	assert_bool(await _apoyo_valido(Producto.Id.LAYSNTT, "caja")).is_true()
+	assert_bool(await _apoyo_valido(Producto.Id.LAYSNNT, "caja")).is_true()
 
 
 func test_la_caja_chica_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PLY-095
@@ -109,7 +109,7 @@ func test_la_caja_chica_queda_estable_y_recogible_sobre_caja() -> void:  # AC-PL
 
 
 func test_retirar_el_soporte_hace_caer_la_caja_grande_sin_mover_otra() -> void:  # AC-PLY-095
-	assert_bool(await _retirar_soporte(Producto.Id.LAYSNTT)).is_true()
+	assert_bool(await _retirar_soporte(Producto.Id.LAYSNNT)).is_true()
 
 
 func test_retirar_el_soporte_hace_caer_la_caja_chica_sin_mover_otra() -> void:  # AC-PLY-095
@@ -403,7 +403,7 @@ func _impacto_visible(malla: MeshInstance3D, desde: Vector3, hasta: Vector3) -> 
 	return salida
 
 
-## Saladik cambia de sector: el borde reportado pertenece al mueble, no a esa referencia.
+## Saladick cambia de sector: el borde reportado pertenece al mueble, no a esa referencia.
 func _metal_de_la_cabecera_reportada(malla: MeshInstance3D, frente: Vector3) -> Vector3:
 	var limites := malla.global_transform * malla.get_aabb()
 	var centro := limites.get_center()
@@ -477,7 +477,7 @@ func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
 				vecina.global_position += Vector3.RIGHT * 100.0
 				vecina.call("quedarse_quieta")
 	elif tipo == "caja":
-		var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+		var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADICK]
 		debajo.global_basis = Basis.IDENTITY
 		debajo.global_position = objetivo + Vector3.UP * _limites(debajo).size.y / 2.0
 		debajo.call("quedarse_quieta")
@@ -551,7 +551,7 @@ func _retirar_soporte(producto: Producto.Id) -> bool:
 	var almacen := await _abrir()
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
-	var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	var debajo: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADICK]
 	var ajena: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.OREMOS]
 	var piso := _piso_del_deposito(almacen)
 	for cuerpo: RigidBody3D in [debajo, caja, ajena]:

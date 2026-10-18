@@ -13,23 +13,23 @@ const NOMBRES: Array[String] = [
 	"Durextra",
 	"Burbaloo",
 	"Zucarachas",
-	"Laysntt",
+	"Laysnnt",
 	"Malbardo",
-	"Prongles",
+	"Progres",
 	"Jorgillo",
-	"Arvejas",
+	"Arvecor",
 	"Chisitos",
 	"Oremos",
-	"Pepitos",
-	"Saladik",
-	"Uakas",
-	"Coracola",
-	"Frotlups",
+	"Pepito",
+	"Saladick",
+	"Uakalas",
+	"Pura-Cola",
+	"Frot Lups",
 	"Marolini",
 	"Amargadito",
 	"Cindolor",
-	"Flinpuf",
-	"Donsaturados",
+	"Flim Pof",
+	"Don Saturados",
 	"Petisas",
 	"Macumbas",
 	"Cosa de Maní",
@@ -76,7 +76,7 @@ const SONORIDADES_NUEVAS := {
 ## demás van en caja grande. **No sale del volumen de la unidad**: Actroncito es una caja grande
 ## de remedio y va en caja chica, y Zucarachas al revés.
 const EN_CAJA_CHICA: Array[String] = [
-	"Actroncito", "Arvejas", "Durextra", "Jorgillo", "Malbardo", "Duronga", "Oaaaa", "Cosa de Maní"
+	"Actroncito", "Arvecor", "Durextra", "Jorgillo", "Malbardo", "Duronga", "Oaaaa", "Cosa de Maní"
 ]
 
 
@@ -190,5 +190,5 @@ func test_ningun_producto_queda_sin_sonoridad() -> void:  # AC-STK-027
 			. override_failure_message("%s no tiene sonoridad" % Producto.Id.find_key(id))
 			. is_not_equal(EntradaSonora.Sonoridad.NINGUNA)
 		)
-	for id: Producto.Id in [Producto.Id.ARVEJAS, Producto.Id.CORACOLA, Producto.Id.PRONGLES]:
+	for id: Producto.Id in [Producto.Id.ARVECOR, Producto.Id.PURA_COLA, Producto.Id.PROGRES]:
 		assert_int(Catalogo.sonoridad_de(id)).is_equal(EntradaSonora.Sonoridad.LATA)

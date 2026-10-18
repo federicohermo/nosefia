@@ -15,10 +15,10 @@ const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 ## delante de lo de arriba: el lugar aparece antes de cruzar el pasillo.
 const FALTANTES_DE_PRUEBA: Dictionary[Producto.Id, int] = {
 	Producto.Id.ACTRONCITO: 4,
-	Producto.Id.CORACOLA: 5,
+	Producto.Id.PURA_COLA: 5,
 	Producto.Id.MAROLINI: 2,
-	Producto.Id.PRONGLES: 8,
-	Producto.Id.LAYSNTT: 4
+	Producto.Id.PROGRES: 8,
+	Producto.Id.LAYSNNT: 4
 }
 
 const HASTA_EL_PASILLO := 1.5
@@ -489,11 +489,11 @@ func test_la_apertura_fija_dibuja_sus_faltantes() -> void:  # AC-STK-004
 		if estante.unidades_en_gondola(producto) < estante.cupo(producto):
 			faltan.append(nombre)
 	assert_array(faltan).contains_exactly(
-		["Actroncito", "Laysntt", "Prongles", "Coracola", "Marolini"]
+		["Actroncito", "Laysnnt", "Progres", "Pura-Cola", "Marolini"]
 	)
 	# El cupo nuevo no cambia los faltantes de la ficha: las referencias abren llenas y
 	# sólo la principal pierde esas unidades, aunque ahora conserve un resto ocupado.
-	var coracola := Catalogo.de(Producto.Id.CORACOLA)
+	var coracola := Catalogo.de(Producto.Id.PURA_COLA)
 	var principal := disposicion.filas_de_adelante[coracola.id]
 	var fijas := estante.cupo(coracola) - principal
 	var ocupados := estante.casilleros_ocupados(coracola)

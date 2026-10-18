@@ -237,13 +237,13 @@ func test_las_fijas_conservan_filas_y_casilleros() -> void:  # AC-STK-028 AC-STK
 		assert_int(disposicion.casilleros_de(producto.id)).is_equal(esperado[producto.id])
 
 
-## La decisión conserva dos filas de Actroncito/Prongles y distingue las excepciones por tanda.
+## La decisión conserva dos filas de Actroncito/Progres y distingue las excepciones por tanda.
 static func _filas_esperadas(id: Producto.Id) -> int:
 	if (
 		id
 		in [
 			Producto.Id.COSA_DE_MANI,
-			Producto.Id.FLINPUF,
+			Producto.Id.FLIM_POF,
 			Producto.Id.BURBALOO,
 			Producto.Id.MARRANOS,
 			Producto.Id.POETICO

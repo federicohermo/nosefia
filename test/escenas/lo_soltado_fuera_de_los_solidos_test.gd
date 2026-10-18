@@ -960,7 +960,7 @@ func _soltar_la_caja_sobre(almacen: Node3D, caja: Node3D, cara: String, tapa: Ve
 func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-PLY-021
 	var almacen: Node3D = await _almacen(2)
 	var caja := _caja_grande(almacen)
-	var tabla: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.UAKAS]
+	var tabla: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.UAKALAS]
 	var lugar := tabla.global_position
 	tabla.global_position = Vector3(lugar.x, lugar.y, lugar.z + 3.0)
 	tabla.global_position.y = MEDIA_CAJA + _piso(almacen)

@@ -27,13 +27,13 @@ func _destinos() -> Dictionary:
 		"gondolanueva":
 		{
 			Vector3.LEFT:
-			[Producto.Id.MAROLINI, Producto.Id.ARVEJAS, Producto.Id.UAKAS, Producto.Id.MARRANOS],
+			[Producto.Id.MAROLINI, Producto.Id.ARVECOR, Producto.Id.UAKALAS, Producto.Id.MARRANOS],
 			Vector3.RIGHT:
 			[
 				Producto.Id.MACUMBAS,
-				Producto.Id.PEPITOS,
+				Producto.Id.PEPITO,
 				Producto.Id.ZUCARACHAS,
-				Producto.Id.FROTLUPS
+				Producto.Id.FROT_LUPS
 			],
 			Vector3.BACK: [Producto.Id.MALBARDO, Producto.Id.AMARGADITO],
 			Vector3.FORWARD: [Producto.Id.FERNET_GOD, Producto.Id.TERMINATOR],
@@ -44,17 +44,12 @@ func _destinos() -> Dictionary:
 			[
 				Producto.Id.OREMOS,
 				Producto.Id.PETISAS,
-				Producto.Id.COSA_DE_MANI,
+				Producto.Id.DON_SATURADOS,
 				Producto.Id.FEEL_RICKY_FORT
 			],
 			Vector3.LEFT:
-			[
-				Producto.Id.DONSATURADOS,
-				Producto.Id.PRONGLES,
-				Producto.Id.CHISITOS,
-				Producto.Id.LAYSNTT
-			],
-			Vector3.BACK: [Producto.Id.SALADIK, Producto.Id.FLINPUF],
+			[Producto.Id.SALADICK, Producto.Id.PROGRES, Producto.Id.CHISITOS, Producto.Id.LAYSNNT],
+			Vector3.BACK: [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
 			Vector3.FORWARD: [Producto.Id.JORGILLO, Producto.Id.BURBALOO],
 		},
 		"gondolanueva_001":
@@ -62,7 +57,7 @@ func _destinos() -> Dictionary:
 			Vector3.BACK:
 			[Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO, Producto.Id.DURONGA]
 		},
-		"heladeranueva": {Vector3.BACK: [Producto.Id.CORACOLA, Producto.Id.OAAAA]},
+		"heladeranueva": {Vector3.BACK: [Producto.Id.PURA_COLA, Producto.Id.OAAAA]},
 		"heladeranueva_001": {Vector3.BACK: [Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]},
 	}
 
@@ -137,7 +132,7 @@ func _altura(disposicion: DisposicionDeLaGondola, id: Producto.Id) -> float:
 func test_las_mitades_verticales_separan_los_frios() -> void:  # AC-STK-087
 	var almacen := _almacen()
 	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
-	assert_float(_altura(disposicion, Producto.Id.CORACOLA)).is_greater(
+	assert_float(_altura(disposicion, Producto.Id.PURA_COLA)).is_greater(
 		_altura(disposicion, Producto.Id.OAAAA)
 	)
 	assert_float(_altura(disposicion, Producto.Id.CINDOLOR)).is_greater(

@@ -408,7 +408,7 @@ func test_la_fila_de_atras_no_tiene_casilleros() -> void:  # AC-PLY-049
 
 func test_vaciar_la_reponible_entera_deja_una_puesta_y_saca_una_guia() -> void:  # AC-STK-093
 	var almacen := _almacen()
-	var flinpuf := Catalogo.de(Producto.Id.FLINPUF)
+	var flinpuf := Catalogo.de(Producto.Id.FLIM_POF)
 	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
 	var reponibles := disposicion.filas_de_adelante[flinpuf.id]
 	var guias := disposicion.casilleros_de(flinpuf.id) - reponibles

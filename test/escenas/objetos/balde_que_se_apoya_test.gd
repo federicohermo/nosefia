@@ -280,8 +280,8 @@ func _apoyos(almacen: Node3D, balde: UtilDeLimpieza) -> Dictionary[String, Array
 	var piso := _piso(almacen)
 	# Una caja chica sobre una grande: la tapa que se mira es la de una caja en una pila.
 	var cajas: Array = almacen.get("_cajas_de_productos")
-	var abajo: RigidBody3D = cajas[Producto.Id.SALADIK]
-	var arriba: RigidBody3D = cajas[Producto.Id.ARVEJAS]
+	var abajo: RigidBody3D = cajas[Producto.Id.SALADICK]
+	var arriba: RigidBody3D = cajas[Producto.Id.ARVECOR]
 	var media_de_abajo := (abajo.get_node("Cuerpo") as Node3D).scale.y
 	var media_de_arriba := (arriba.get_node("Cuerpo") as Node3D).scale.y
 	var pila := Vector3(PISO_LIBRE.x + 2.0, piso, PISO_LIBRE.y)
@@ -295,7 +295,7 @@ func _apoyos(almacen: Node3D, balde: UtilDeLimpieza) -> Dictionary[String, Array
 	var tabla: MeshInstance3D = almacen.get_node(ESTANTE_DEL_DEPOSITO)
 	var estante := tabla.global_transform * tabla.get_aabb()
 	var forma := balde.get_node("Forma").shape as CylinderShape3D
-	# Arvejas deja libre el extremo al pasar a la pila. El centro del estante ampliado
+	# Arvecor deja libre el extremo al pasar a la pila. El centro del estante ampliado
 	# ahora tiene cajas: este caso necesita lugar para todo el balde, además de para la mira.
 	var libre := Vector3(
 		estante.position.x + forma.radius + 0.05, estante.end.y, estante.get_center().z
@@ -402,7 +402,7 @@ func test_si_justo_ahi_no_entra_el_balde_queda_cerca_sobre_el_mismo_apoyo() -> v
 	var piso := _piso(almacen)
 	# Una caja en el piso, y la mira sobre el piso pegada a su cara de adelante: el balde no entra
 	# justo ahí. La tapa de la caja es el otro apoyo, libre y más cerca que el piso libre.
-	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADICK]
 	var media := (caja.get_node("Cuerpo") as Node3D).scale.x
 	var punto := Vector3(PISO_LIBRE.x, piso, PISO_LIBRE.y)
 	caja.global_basis = Basis.IDENTITY

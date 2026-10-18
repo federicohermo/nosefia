@@ -278,7 +278,7 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 	await get_tree().process_frame
 
 
-func test_mensaje_recibido_suena_una_vez_y_anotar_no_repite_el_aviso() -> void:  # AC-INV-029
+func test_mensaje_recibido_suena_una_vez_y_leer_no_repite_el_aviso() -> void:  # AC-INV-029
 	_abrir()
 	var reproductor: ReproductorDeSonidos = _almacen.get_node(
 		"Servicios/AudioDelAlmacen/Reproductor"
@@ -293,8 +293,9 @@ func test_mensaje_recibido_suena_una_vez_y_anotar_no_repite_el_aviso() -> void: 
 	_celular().recibir(quien, mensaje)
 	assert_array(pedidos).is_equal([EntradaSonora.Evento.MENSAJE_DEL_CELULAR])
 	_celular().recibir(quien, null)
-	var computadora: ComputadoraDeEscritorio = _almacen.get("_computadora")
-	computadora.pedir_escribir("Prueba", "Sin sonido de mensaje")
+	await _q()
+	_celular().pedir_chat(quien)
+	assert_int(_celular().bandeja().no_leidos(quien)).is_zero()
 	assert_int(pedidos.count(EntradaSonora.Evento.MENSAJE_DEL_CELULAR)).is_equal(1)
 
 

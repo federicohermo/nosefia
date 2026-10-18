@@ -185,7 +185,7 @@ func _reponer(almacen: Node3D) -> void:
 			direccion = Vector3(1.5, 0, 0)
 		elif producto.id == Producto.Id.ZUCARACHAS:
 			direccion = Vector3(-1.5, 0, 0)
-		elif producto.id == Producto.Id.LAYSNTT:
+		elif producto.id == Producto.Id.LAYSNNT:
 			direccion = Vector3(0, 0, -1.5)
 		camara.global_position = zona.get_center() + direccion
 		camara.look_at(zona.get_center())

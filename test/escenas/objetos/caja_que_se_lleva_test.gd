@@ -166,7 +166,7 @@ func test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto() -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var repositor: Repositor = almacen.get("_repositor")
-	var producto := Catalogo.de(Producto.Id.LAYSNTT)
+	var producto := Catalogo.de(Producto.Id.LAYSNNT)
 	var caja: Node3D = almacen.get("_cajas_de_productos")[producto.id]
 	var antes := repositor.estante().disponibles_para_retirar(producto)
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
@@ -187,7 +187,7 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNNT]
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	# De frente y no de costado: un producto se mira girado en la mano, una caja se lleva con
 	# las dos manos y muestra su cara rotulada.
@@ -214,7 +214,7 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:
 func test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer() -> void:
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNNT]
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	# Sin un solo cuadro de física de por medio: la caja no cae, se apoya.
@@ -364,11 +364,11 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNNT]
 	# **Las dos son del tamaño grande.** El caso mide que una caja quede centrada en la tapa de
 	# otra, y una grande sobre una chica cuelga de las cuatro esquinas: lo que se pondría en rojo
 	# sería el enunciado, no el puesto.
-	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADICK]
 	# La tapa y el costado se prueban con espacio libre sobre una sola caja grande.
 	debajo.global_position = (
 		PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * _limites_de(debajo).size.y / 2.0
@@ -398,8 +398,8 @@ func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
-	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNNT]
+	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADICK]
 	# La tapa y el costado se prueban con espacio libre sobre una sola caja grande.
 	debajo.global_position = (
 		PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * _limites_de(debajo).size.y / 2.0
@@ -433,7 +433,7 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	almacen.get_node("Estructura/deposito_pallet_piso").position.x += 100
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PRONGLES]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PROGRES]
 	var soporte := almacen.get_node(ESTANTE_DEL_DEPOSITO) as StaticBody3D
 	var estante := _limites_de(soporte)
 	# La vecina sube a la tabla de arriba: deja media tabla libre a su lado y la del medio entera.
@@ -593,9 +593,9 @@ func test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila() -> void:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var cajas: Array = almacen.get("_cajas_de_productos")
-	var base: RigidBody3D = cajas[Producto.Id.SALADIK]
-	var nueva: Node3D = cajas[Producto.Id.LAYSNTT]
-	# Saladik puede empezar sobre un estante. Este gesto requiere una caja apoyada en el piso.
+	var base: RigidBody3D = cajas[Producto.Id.SALADICK]
+	var nueva: Node3D = cajas[Producto.Id.LAYSNNT]
+	# Saladick puede empezar sobre un estante. Este gesto requiere una caja apoyada en el piso.
 	var media_base := (base.get_node("Cuerpo") as Node3D).scale.x
 	base.global_position = Vector3(
 		PISO_LIBRE_DEL_DEPOSITO.x, PISO_LIBRE_DEL_DEPOSITO.y + media_base, -11.2
@@ -648,9 +648,9 @@ func test_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando() -> void:
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var cajas: Array = almacen.get("_cajas_de_productos")
-	var base: Node3D = cajas[Producto.Id.SALADIK]
+	var base: Node3D = cajas[Producto.Id.SALADICK]
 	var chica: Node3D = cajas[Producto.Id.MALBARDO]
-	var nueva: Node3D = cajas[Producto.Id.LAYSNTT]
+	var nueva: Node3D = cajas[Producto.Id.LAYSNNT]
 	var tapa := _limites_de(base)
 	var media_chica := _limites_de(chica).size / 2.0
 	# La chica, corrida a una esquina de la tapa de la grande.
@@ -759,7 +759,7 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var estante: Node3D = almacen.get_node(ESTANTE_DEL_DEPOSITO)
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNNT]
 	# El cursor necesita superficies libres; las cajas iniciales ocupan todos los niveles.
 	_apartar_las_cajas_del_estante(almacen, _limites_de(estante), caja)
 	await get_tree().physics_frame
@@ -901,7 +901,7 @@ func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:
 ## Devuelve cuántas se soltaron de verdad, para que el caso no pueda pasar sin ejercer nada.
 func _soltar_en_los_doce_gestos(almacen: Node3D, mueble: Node3D) -> int:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNNT]
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	if caja.get_parent() != mano:
 		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
@@ -1035,7 +1035,7 @@ func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
 	await get_tree().physics_frame
 	await _abrir_las_cabinas(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNNT]
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var manchas: Array = almacen.get("_limpieza").call("manchas")
 	assert_array(manchas).is_not_empty()

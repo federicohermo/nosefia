@@ -14,7 +14,7 @@ func test_identidades_horarios_y_seis_productos_en_orden() -> void:  # AC-CTR-05
 	if compradores.size() != 2:
 		return
 	var pedidos: Array[Array] = [
-		[Producto.Id.POETICO, Producto.Id.PRONGLES, Producto.Id.DURONGA],
+		[Producto.Id.POETICO, Producto.Id.PROGRES, Producto.Id.DURONGA],
 		[Producto.Id.TERMINATOR, Producto.Id.FERNET_GOD, Producto.Id.ACTRONCITO]
 	]
 	for indice in 2:
@@ -86,8 +86,8 @@ func _comun(lineas: Array) -> Atencion:
 func test_los_comunes_reemplazan_uno_dos_y_tres_marcadores() -> void:  # AC-CTR-053
 	var casos: Array[Array] = [
 		[[Producto.Id.POETICO, 3]],
-		[[Producto.Id.POETICO, 2], [Producto.Id.PRONGLES, 1]],
-		[[Producto.Id.POETICO, 1], [Producto.Id.PRONGLES, 1], [Producto.Id.DURONGA, 1]],
+		[[Producto.Id.POETICO, 2], [Producto.Id.PROGRES, 1]],
+		[[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1], [Producto.Id.DURONGA, 1]],
 	]
 	for caso: Array in casos:
 		var atencion := _comun(caso)
@@ -108,7 +108,7 @@ func test_los_comunes_reemplazan_uno_dos_y_tres_marcadores() -> void:  # AC-CTR-
 # AC-CTR-053, AC-CTR-051, AC-CTR-066
 func test_el_recordatorio_nombra_lo_que_falta_y_pide_recibo_al_completar_productos() -> void:
 	var atencion := _comun(
-		[[Producto.Id.POETICO, 1], [Producto.Id.PRONGLES, 1], [Producto.Id.DURONGA, 1]]
+		[[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1], [Producto.Id.DURONGA, 1]]
 	)
 	var pedido := atencion.comprador().pedido()
 	var inventario: Inventario = atencion.get("_inventario")

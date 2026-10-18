@@ -245,8 +245,8 @@ func test_el_texto_dice_cuantas_tiene_y_cuantas_entran() -> void:  # AC-STK-041
 		[Producto.Id.ACTRONCITO, 7, "Una caja con 7 cajitas de Actroncito. Entra 1 más."],
 		[Producto.Id.ACTRONCITO, 1, "Una caja con 1 cajita de Actroncito. Entran 7 más."],
 		[Producto.Id.ACTRONCITO, 0, "Una caja con 0 cajitas de Actroncito. Entran 8 más."],
-		[Producto.Id.LAYSNTT, 8, "Una caja con 8 paquetes de Laysntt."],
-		[Producto.Id.CORACOLA, 1, "Una caja con 1 lata de Coracola. Entran 7 más."],
+		[Producto.Id.LAYSNNT, 8, "Una caja con 8 paquetes de Laysnnt."],
+		[Producto.Id.PURA_COLA, 1, "Una caja con 1 lata de Pura-Cola. Entran 7 más."],
 		[Producto.Id.TERMINATOR, 6, "Una caja con 6 cartones de Terminator. Entran 2 más."],
 		[Producto.Id.FERNET_GOD, 1, "Una caja con 1 botella de Fernet God. Entran 7 más."],
 	]
