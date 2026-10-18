@@ -253,3 +253,51 @@ func test_cierre_proximo_no_temporiza_ni_renueva_otros_avisos() -> void:  # AC-N
 	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.CLIENTE])
 	estado.vaciar()
 	assert_array(estado.visibles()).is_empty()
+
+
+# AC-NTF-014, AC-NTF-016
+func test_una_pista_avisa_una_vez_por_cuadro_y_el_cierre_la_retira() -> void:
+	var estado := Notificaciones.new()
+	estado.pista_anotada()
+	estado.pista_anotada()
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.PISTA])
+	estado.avanzar(2.9)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.PISTA])
+	estado.avanzar(0.1)
+	assert_array(estado.visibles()).is_empty()
+	estado.pista_anotada()
+	estado.avanzar(10.0)
+	assert_array(estado.visibles()).is_empty()
+	estado.pista_anotada()
+	estado.vaciar()
+	assert_array(estado.visibles()).is_empty()
+
+
+func test_otra_pista_renueva_solo_su_tipo_y_convive_en_orden() -> void:  # AC-NTF-015
+	var estado := Notificaciones.new()
+	estado.pista_anotada()
+	estado.lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
+	estado.avanzar(2.0)
+	estado.pista_anotada()
+	assert_array(estado.visibles()).is_equal(
+		[Notificaciones.Tipo.PISTA, Notificaciones.Tipo.LECTURA_FALLIDA]
+	)
+	estado.avanzar(1.0)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.PISTA])
+	estado.avanzar(1.9)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.PISTA])
+	estado.avanzar(0.1)
+	assert_array(estado.visibles()).is_empty()
+	estado.pista_anotada()
+	estado.llego(_comprador())
+	estado.lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
+	(
+		assert_array(estado.visibles())
+		. is_equal(
+			[
+				Notificaciones.Tipo.LECTURA_FALLIDA,
+				Notificaciones.Tipo.CLIENTE,
+				Notificaciones.Tipo.PISTA,
+			]
+		)
+	)

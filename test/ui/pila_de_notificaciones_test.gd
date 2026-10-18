@@ -40,26 +40,31 @@ func _textos(pila: PilaDeNotificaciones) -> Array[String]:
 
 func test_los_textos_se_pintan_en_el_orden_del_dominio() -> void:  # AC-NTF-009
 	var pila := _pila()
+	pila.avisar_pista()
 	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
-	assert_array(_textos(pila)).is_equal(["NO SE PUDO LEER", "¡HAY UN CLIENTE!"])
+	assert_array(_textos(pila)).is_equal(["NO SE PUDO LEER", "¡HAY UN CLIENTE!", "¡NUEVA PISTA!"])
 	var simbolos := pila.find_children("*", "TextureRect", true, false)
-	assert_int(simbolos.size()).is_equal(2)
+	assert_int(simbolos.size()).is_equal(3)
 	assert_str((simbolos[0] as TextureRect).texture.resource_path).is_equal(
 		"res://assets/ui/manada/notificacion_lectura.svg"
 	)
 	assert_str((simbolos[1] as TextureRect).texture.resource_path).is_equal(
 		"res://assets/ui/manada/notificacion_cliente.svg"
 	)
+	assert_str((simbolos[2] as TextureRect).texture.resource_path).is_equal(
+		"res://assets/ui/manada/notificacion_pista.svg"
+	)
 
 
-func test_los_dos_carteles_entran_en_la_esquina_en_dos_resoluciones() -> void:  # AC-NTF-009
+func test_los_tres_carteles_entran_en_la_esquina_en_dos_resoluciones() -> void:  # AC-NTF-009
 	var viewport: SubViewport = auto_free(SubViewport.new())
 	viewport.size = Vector2i(1920, 1080)
 	add_child(viewport)
 	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
 	viewport.add_child(pila)
 	pila.set_process(false)
+	pila.avisar_pista()
 	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
@@ -68,7 +73,7 @@ func test_los_dos_carteles_entran_en_la_esquina_en_dos_resoluciones() -> void:  
 		await get_tree().process_frame
 		var pantalla := Rect2(Vector2.ZERO, Vector2(tamano))
 		var carteles := pila.get_node("Marco/Pila").get_children()
-		assert_int(carteles.size()).is_equal(2)
+		assert_int(carteles.size()).is_equal(3)
 		for cartel: Control in carteles:
 			var rect := cartel.get_global_rect()
 			assert_bool(pantalla.encloses(rect)).is_true()
@@ -162,6 +167,7 @@ func test_todos_los_avisos_usan_una_linea_y_el_ancho_de_su_contenido() -> void: 
 	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
 	viewport.add_child(pila)
 	pila.set_process(false)
+	pila.avisar_pista()
 	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
 	pila.avisar_salida(Comprador.new("Otro", Venta.new(), 0))
@@ -170,7 +176,7 @@ func test_todos_los_avisos_usan_una_linea_y_el_ancho_de_su_contenido() -> void: 
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var carteles := pila.get_node("Marco/Pila").get_children()
-		assert_int(carteles.size()).is_equal(3)
+		assert_int(carteles.size()).is_equal(4)
 		var derecha: float = carteles[0].get_global_rect().end.x
 		for cartel: PanelContainer in carteles:
 			var fila: HBoxContainer = cartel.get_child(0)
@@ -288,3 +294,28 @@ func test_el_aviso_de_una_hora_deja_pasar_el_clic_hacia_la_computadora() -> void
 			viewport.push_input(clic)
 			await get_tree().process_frame
 	assert_array(pedidos).is_equal([true, true])
+
+
+# AC-NTF-014, AC-NTF-016
+func test_la_pista_tiene_su_simbolo_y_la_pausa_conserva_su_tiempo() -> void:
+	var pila := _pila()
+	pila.set_process(false)
+	get_tree().paused = true
+	pila.avisar_pista()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_bool(pila.can_process()).is_false()
+	assert_array(_textos(pila)).is_equal(["¡NUEVA PISTA!"])
+	var fila: HBoxContainer = pila.get_node("Marco/Pila").get_child(0).get_child(0)
+	assert_str((fila.get_child(0) as TextureRect).texture.resource_path).is_equal(
+		"res://assets/ui/manada/notificacion_pista.svg"
+	)
+	assert_object(fila.get_child(1)).is_instanceof(Label)
+	get_tree().paused = false
+	pila._process(2.9)
+	assert_array(_textos(pila)).has_size(1)
+	pila._process(0.1)
+	assert_array(_textos(pila)).is_empty()
+	pila.avisar_pista()
+	pila.vaciar()
+	assert_array(_textos(pila)).is_empty()

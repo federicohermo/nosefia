@@ -1,7 +1,7 @@
 class_name Notificaciones
 extends RefCounted
 
-enum Tipo { CLIENTE, LECTURA_FALLIDA, CLIENTE_CANSADO, CIERRE_PROXIMO }
+enum Tipo { CLIENTE, LECTURA_FALLIDA, CLIENTE_CANSADO, CIERRE_PROXIMO, PISTA }
 
 const DURACION := 3.0
 const HORA_DEL_AVISO := 7
@@ -56,6 +56,10 @@ func llego(comprador: Comprador) -> void:
 func lectura_rechazada(motivo: GeneradorDeTickets.Resultado) -> void:
 	if motivo == GeneradorDeTickets.Resultado.LLENO:
 		_avisar(Tipo.LECTURA_FALLIDA)
+
+
+func pista_anotada() -> void:
+	_avisar(Tipo.PISTA)
 
 
 func avanzar(segundos: float) -> void:
