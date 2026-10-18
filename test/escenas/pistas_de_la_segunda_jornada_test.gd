@@ -38,12 +38,7 @@ func _cuadros(cantidad: int = 3) -> void:
 
 
 func _abrir(jornada: int = 2) -> void:
-	var partida := Partida.nueva()
-	while partida.jornada() < jornada:
-		partida.abrir_la_jornada()
-		for tarea: Tarea in partida.obligatorias():
-			tarea.completar()
-		partida.cerrar_la_jornada(partida.obligatorias().size())
+	var partida := Partida.desde({"jornada": jornada, "medios": 0})
 	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
 	_almacen = escena.instantiate()
 	_almacen.set("_partida", partida)

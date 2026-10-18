@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const Avance := preload("res://test/avance_de_devolucion.gd")
+const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
 const JEFE := Conversacion.Interlocutor.JEFE
 const YASMIN := Conversacion.Interlocutor.YASMIN
 var _almacen: Node3D
@@ -94,6 +95,7 @@ func _checkpoint() -> Partida:
 	for tarea: Tarea in partida.obligatorias():
 		tarea.completar()
 	partida.cerrar_la_jornada(partida.obligatorias().size())
+	FinDeLaReflexion.terminar(partida)
 	return partida
 
 
