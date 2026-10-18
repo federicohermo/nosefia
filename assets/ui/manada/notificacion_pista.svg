@@ -1,8 +1,6 @@
-<svg width="120" height="168" viewBox="0 0 120 168" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M24 0H96V24H24V0Z" fill="black"/>
-<path d="M0 24H24V60H0V24Z" fill="black"/>
-<path d="M96 24H120V72H96V24Z" fill="black"/>
-<path d="M72 72H96V96H72V72Z" fill="black"/>
-<path d="M48 84H72V120H48V84Z" fill="black"/>
-<path d="M48 144H72V168H48V144Z" fill="black"/>
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="95" height="172.672" viewBox="0 0 95 172.672" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group">
+<path id="Vector" d="M95 0V95H56.2224V114.389H19.372V58.1496H58.1496V36.8337H0V0H95Z" fill="black"/>
+<path id="Vector_2" d="M56.2225 135.822H19.3721V172.672H56.2225V135.822Z" fill="black"/>
+</g>
 </svg>
