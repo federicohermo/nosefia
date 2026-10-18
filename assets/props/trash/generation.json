@@ -1,0 +1,12 @@
+{
+  "tool": "image_gen.imagegen",
+  "asset": "trash_atlas.png",
+  "purpose": "Albedo de la bolsa cerrada. Referencia de la variante refuse_atlas.png para los residuos de los tachos.",
+  "layout": {
+    "top_left": "black_wrinkled_plastic",
+    "top_right": "dirty_receipt_paper",
+    "bottom_left": "worn_cardboard",
+    "bottom_right": "faded_red_can"
+  },
+  "prompt": "Create a production-ready square diffuse ALBEDO TEXTURE ATLAS for a low polygon PS1/PS2 horror game set in an old Argentine convenience store at night. Output exactly one square image, ideally 1024x1024. This is flat 2D texture paint, no rendered object, no perspective, no captions, no layout gutters, no borders. Four equal square quadrants filling the canvas precisely. TOP LEFT: charcoal black polyethylene trash bag plastic, dense crumpled creases with long vertical stretched folds, slight greasy gray highlights, rich readable dark gray midtones, never pure black, dirty and worn. TOP RIGHT: dirty off-white crumpled paper with small fragments of faded illegible receipt ink, many fine creases, muted warm gray, no coherent words. BOTTOM LEFT: flattened brown corrugated cardboard, water stained, scuffed fibers, creases and scraps of torn off-white packing tape, no legible text. BOTTOM RIGHT: battered faded dark red aluminum drink can label as flat wrap texture, scratches revealing dull silver, dirty cream horizontal bands, tiny illegible label marks, no logos and no coherent words. Match a gritty hand-painted phototexture aesthetic, restrained saturation, readable broad folds and material wear, deliberately low resolution detail. Lighting is neutral and uniform, no cast shadows, no 3D objects. Each quadrant independent usable material swatch, detail fills to edges. Save the output to disk for use as a game texture."
+}
