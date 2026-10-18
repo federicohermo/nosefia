@@ -197,7 +197,8 @@ letra por letra. Ninguno cambia el resultado del gesto.
 | Tirar al contenedor algo que no es una bolsa de basura ni un ticket | Me parece que eso fue una mala idea… |
 | Tirar al contenedor una caja del depósito, que no entra | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
 | Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
-| Pasar por una mancha la mopa mojada con el jabón que no es el suyo, o con agua sola | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
+| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
+| Pasar por una mancha la mopa mojada con agua sola | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | Se ve que alguien no tuvo tiempo de apuntar bien… |
@@ -205,6 +206,10 @@ letra por letra. Ninguno cambia el resultado del gesto.
 Tirar una bolsa o un ticket, borrar cualquier otra mancha, o pasar la mopa por una mancha ya
 limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
 el texto del jabón, no el de la caca.
+
+Los pensamientos de la mopa de esta tabla DEBEN aparecer sólo al intentar limpiar una mancha.
+Mojarla, transportarla o dejar marcas de agua NO DEBE dispararlos. SI se secó después de mojarla
+sólo con agua, ENTONCES al intentar limpiar DEBE decir «Ya se secó la mopa…».
 
 ### BR-SUB-014 — La primera vez que se seca la mopa
 
@@ -215,6 +220,10 @@ una vez. SI se seca durante un examen, ENTONCES el texto fijo del examen DEBE se
 pensamiento DEBE mostrarse entero al terminar el examen. Recién al mostrarse cuenta como
 mostrado: si la jornada cierra antes, la vez siguiente se muestra. Secarse otra vez con el
 pensamiento pendiente NO DEBE duplicarlo.
+
+La frase de los tres segundos expresa una queja del protagonista; NO DEBE fijar una duración
+exacta ni modificar el desgaste por tiempo y recorrido de
+[`store-cleanup`](../store-cleanup/store-cleanup.md) (BR-CLN-022).
 
 ## Criterios de aceptación
 
@@ -368,9 +377,12 @@ el texto es el de la ventana. DADO un ticket ENTONCES no hay texto.
 
 ### AC-SUB-018 — La mopa sobre una mancha *(verifica BR-SUB-013)*
 
-DADO el resultado del jabón equivocado o de la mopa sin jabón ENTONCES el texto es el del jabón.
+DADO el resultado del jabón equivocado ENTONCES el texto es el del jabón.
+DADO la mopa mojada con agua sola CUANDO se intenta limpiar una mancha ENTONCES el texto es
+«Necesitaría mojar la mopa en agua con jabón.» y la mancha permanece.
 DADO la mopa seca sin haberse mojado en la jornada ENTONCES pide mojarla; DADO la mopa seca
-después de mojarla ENTONCES «Ya se secó la mopa…». DADO una mancha ya limpia o una mancha
+después de mojarla, incluso sólo con agua, ENTONCES «Ya se secó la mopa…».
+DADO una mancha ya limpia o una mancha
 borrada ENTONCES no hay texto, salvo la caca de la pared del otro inodoro, que al borrarse piensa
 el suyo.
 
