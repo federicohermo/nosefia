@@ -14,6 +14,9 @@ import time
 import xml.etree.ElementTree as ET
 
 
+TIPOS_SNAPSHOT = ("completo", "importaciones")
+
+
 def guardar(ruta: Path, datos: dict) -> None:
     ruta.parent.mkdir(parents=True, exist_ok=True)
     ruta.write_text(json.dumps(datos, indent=2) + "\n", encoding="utf-8")
@@ -104,7 +107,7 @@ def godot(argumentos: list[str]) -> int:
     return dato["codigo"]
 
 
-def preparar() -> int:
+def preparar(tipo: str = "completo") -> int:
     datos = identidad()
     datos["import_frio"] = ejecutar_medido(
         [os.environ["GODOT_BIN"], "--headless", "--path", str(Path.cwd()), "--import", "--quit"],
@@ -112,6 +115,7 @@ def preparar() -> int:
     )
     guardar(Path("reports/medicion-ci/preparacion.json"), datos)
     guardar(Path(".ci-tools/snapshot.json"), {
+        "tipo": tipo,
         "workspace": str(Path.cwd()), "python": sys.version,
         "commit": datos["commit"], "arbol_juego": datos["arbol_juego"],
         "godot_version": captura(os.environ["GODOT_BIN"], "--version"),
@@ -120,12 +124,27 @@ def preparar() -> int:
     return datos["import_frio"]["codigo"]
 
 
-def empaquetar(destino: Path) -> int:
+def nombres_snapshot(tipo: str) -> bytes:
+    if tipo == "completo":
+        return subprocess.check_output(["git", "ls-files", "-z"]) + b".git\0.godot\0.ci-tools\0"
+    rutas = [Path(".godot/imported"), Path(".ci-tools/snapshot.json")]
+    rutas.extend(sorted(Path(".godot/editor").glob("filesystem_cache*")))
+    rutas.extend(
+        ruta for ruta in (
+            Path(".godot/global_script_class_cache.cfg"), Path(".godot/uid_cache.bin"),
+        ) if ruta.exists()
+    )
+    return b"".join(os.fsencode(ruta.as_posix()) + b"\0" for ruta in rutas)
+
+
+def empaquetar(destino: Path, tipo: str = "completo") -> int:
     destino = destino.resolve()
     if destino.is_relative_to(Path.cwd().resolve()):
         raise ValueError("el snapshot debe escribirse fuera del workspace")
-    nombres = subprocess.check_output(["git", "ls-files", "-z"])
-    nombres += b".git\0.godot\0.ci-tools\0"
+    manifest = json.loads(Path(".ci-tools/snapshot.json").read_text(encoding="utf-8"))
+    if manifest["tipo"] != tipo:
+        raise ValueError("el tipo de snapshot no coincide con la preparación")
+    nombres = nombres_snapshot(tipo)
     inicio = time.monotonic()
     subprocess.run(
         ["tar", "--zstd", "-cf", str(destino), "--null", "-T", "-"],
@@ -138,17 +157,24 @@ def empaquetar(destino: Path) -> int:
     return 0
 
 
-def validar_snapshot() -> int:
+def validar_snapshot(tipo: str = "completo") -> int:
     datos = json.loads(Path(".ci-tools/snapshot.json").read_text(encoding="utf-8"))
-    if datos["workspace"] != str(Path.cwd()) or datos["python"] != sys.version:
-        raise ValueError("el venv requiere el mismo workspace y Python del preparador")
+    if datos["tipo"] != tipo:
+        raise ValueError("el tipo de snapshot no coincide con el esperado")
+    if datos["workspace"] != str(Path.cwd()):
+        raise ValueError("el snapshot requiere el mismo workspace del preparador")
+    if tipo == "completo" and datos["python"] != sys.version:
+        raise ValueError("el venv requiere el mismo Python del preparador")
     if datos["sistema"] != platform.system() or datos["arquitectura"] != platform.machine():
         raise ValueError("el snapshot requiere el mismo sistema y arquitectura del preparador")
-    motores = list(Path(".ci-tools/godot").glob("Godot_v*"))
-    if (
-        len(motores) != 1
-        or captura(str(motores[0].resolve()), "--version") != datos["godot_version"]
-    ):
+    if tipo == "completo":
+        motores = list(Path(".ci-tools/godot").glob("Godot_v*"))
+        if len(motores) != 1:
+            raise ValueError("el snapshot requiere un único motor")
+        motor = str(motores[0].resolve())
+    else:
+        motor = os.environ["GODOT_BIN"]
+    if captura(motor, "--version") != datos["godot_version"]:
         raise ValueError("el motor no coincide con la versión del preparador")
     if datos["commit"] != captura("git", "rev-parse", "HEAD"):
         raise ValueError("el snapshot no coincide con el commit empaquetado")
@@ -247,25 +273,28 @@ def main(argumentos: list[str] | None = None) -> int:
     comandos = parser.add_subparsers(dest="comando", required=True)
     matriz = comandos.add_parser("matriz")
     matriz.add_argument("particiones", type=cantidad)
-    comandos.add_parser("preparar")
+    preparacion = comandos.add_parser("preparar")
+    preparacion.add_argument("--tipo", choices=TIPOS_SNAPSHOT, default="completo")
     paquete = comandos.add_parser("empaquetar")
     paquete.add_argument("destino", type=Path)
-    comandos.add_parser("validar-snapshot")
+    paquete.add_argument("--tipo", choices=TIPOS_SNAPSHOT, default="completo")
+    validacion = comandos.add_parser("validar-snapshot")
+    validacion.add_argument("--tipo", choices=TIPOS_SNAPSHOT, default="completo")
     worker = comandos.add_parser("verificar")
     worker.add_argument("indice", type=int)
     worker.add_argument("particiones", type=cantidad)
-    worker.add_argument("preparacion", choices=("independiente", "compartida"))
+    worker.add_argument("preparacion", choices=("independiente", "compartida", "importaciones"))
     worker.add_argument("etiqueta")
     opciones = parser.parse_args(argumentos)
     if opciones.comando == "matriz":
         print(json.dumps({"indice": list(range(opciones.particiones))}))
         return 0
     if opciones.comando == "preparar":
-        return preparar()
+        return preparar(opciones.tipo)
     if opciones.comando == "empaquetar":
-        return empaquetar(opciones.destino)
+        return empaquetar(opciones.destino, opciones.tipo)
     if opciones.comando == "validar-snapshot":
-        return validar_snapshot()
+        return validar_snapshot(opciones.tipo)
     return verificar(
         opciones.indice, opciones.particiones, opciones.preparacion, opciones.etiqueta
     )

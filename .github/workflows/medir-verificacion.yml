@@ -2,9 +2,6 @@ name: medir-verificacion
 run-name: Medir ${{ inputs.particiones || '4' }} ${{ inputs.preparacion || 'independiente' }} ${{ inputs.etiqueta || 'registro' }}
 
 on:
-  push:
-    branches: [federicohermo/verificacion-paralela-por-suite]
-    paths: [.github/workflows/medir-verificacion.yml]
   workflow_dispatch:
     inputs:
       particiones:
@@ -14,7 +11,7 @@ on:
       preparacion:
         description: Preparación de herramientas e importación
         type: choice
-        options: [independiente, compartida]
+        options: [independiente, compartida, importaciones]
         default: independiente
         required: true
       etiqueta:
@@ -28,6 +25,7 @@ permissions:
 env:
   PARTICIONES: ${{ inputs.particiones || '4' }}
   PREPARACION: ${{ inputs.preparacion || 'independiente' }}
+  TIPO_SNAPSHOT: ${{ inputs.preparacion == 'importaciones' && 'importaciones' || 'completo' }}
   ETIQUETA: ${{ inputs.etiqueta || 'registro' }}
 
 jobs:
@@ -49,7 +47,7 @@ jobs:
 
   preparar:
     needs: plan
-    if: inputs.preparacion == 'compartida'
+    if: inputs.preparacion == 'compartida' || inputs.preparacion == 'importaciones'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -62,9 +60,13 @@ jobs:
       - name: Preparar herramientas
         run: |
           set -euo pipefail
-          python -m venv .ci-tools/python
+          if [ "$PREPARACION" = compartida ]; then
+            python -m venv .ci-tools/python
+            .ci-tools/python/bin/pip install 'gdtoolkit==4.*'
+          else
+            mkdir -p .ci-tools
+          fi
           touch .ci-tools/.gdignore
-          .ci-tools/python/bin/pip install 'gdtoolkit==4.*'
           version="$(tr -d '[:space:]' < .godot-version)"
           test -n "$version"
           mkdir -p .ci-tools/godot
@@ -74,9 +76,9 @@ jobs:
           chmod +x "$bin"
           echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
       - name: Importar una vez
-        run: python .github/scripts/medir_verificacion.py preparar
+        run: python .github/scripts/medir_verificacion.py preparar --tipo "$TIPO_SNAPSHOT"
       - name: Empaquetar preservando fechas y permisos
-        run: python .github/scripts/medir_verificacion.py empaquetar "$RUNNER_TEMP/snapshot.tar.zst"
+        run: python .github/scripts/medir_verificacion.py empaquetar "$RUNNER_TEMP/snapshot.tar.zst" --tipo "$TIPO_SNAPSHOT"
       - uses: actions/upload-artifact@v4
         with:
           name: snapshot-preparado
@@ -103,14 +105,14 @@ jobs:
       matrix: ${{ fromJSON(needs.plan.outputs.matriz) }}
     steps:
       - uses: actions/checkout@v5
-        if: env.PREPARACION == 'independiente'
+        if: env.PREPARACION != 'compartida'
         with:
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
       - name: Preparar herramientas independientes
-        if: env.PREPARACION == 'independiente'
+        if: env.PREPARACION != 'compartida'
         run: |
           set -euo pipefail
           pip install 'gdtoolkit==4.*'
@@ -122,20 +124,24 @@ jobs:
           chmod +x "$bin"
           echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
       - uses: actions/download-artifact@v4
-        if: env.PREPARACION == 'compartida'
+        if: env.PREPARACION != 'independiente'
         with:
           name: snapshot-preparado
           path: ${{ runner.temp }}/snapshot
       - name: Restaurar copia privada de la preparación
-        if: env.PREPARACION == 'compartida'
+        if: env.PREPARACION != 'independiente'
         run: |
           set -euo pipefail
           tar --zstd -xf "$RUNNER_TEMP/snapshot/snapshot.tar.zst" -C "$GITHUB_WORKSPACE"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          python .github/scripts/medir_verificacion.py validar-snapshot
-          echo "$GITHUB_WORKSPACE/.ci-tools/python/bin" >> "$GITHUB_PATH"
-          bin="$(find "$GITHUB_WORKSPACE/.ci-tools/godot" -type f -name 'Godot_v*' | head -1)"
-          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+          if [ "$PREPARACION" = compartida ]; then
+            git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          fi
+          python .github/scripts/medir_verificacion.py validar-snapshot --tipo "$TIPO_SNAPSHOT"
+          if [ "$PREPARACION" = compartida ]; then
+            echo "$GITHUB_WORKSPACE/.ci-tools/python/bin" >> "$GITHUB_PATH"
+            bin="$(find "$GITHUB_WORKSPACE/.ci-tools/godot" -type f -name 'Godot_v*' | head -1)"
+            echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+          fi
       - name: Medir verificación
         env:
           INDICE: ${{ matrix.indice }}

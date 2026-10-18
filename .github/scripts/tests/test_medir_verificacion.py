@@ -3,6 +3,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import platform
 import sys
 import tempfile
 import unittest
@@ -16,6 +17,23 @@ SPEC.loader.exec_module(medir)
 
 
 class MedicionTests(unittest.TestCase):
+    def snapshot_importaciones(self):
+        return {
+            "tipo": "importaciones", "workspace": str(Path.cwd()), "python": "otro Python",
+            "sistema": platform.system(), "arquitectura": platform.machine(),
+            "godot_version": "4.x.stable", "commit": "commit-preparado",
+            "arbol_juego": {"src": "arbol-src", "test": "arbol-test", "assets": "arbol-assets"},
+        }
+
+    def captura_snapshot(self, *comando):
+        return {
+            ("motor-worker", "--version"): "4.x.stable",
+            ("git", "rev-parse", "HEAD"): "commit-preparado",
+            ("git", "rev-parse", "HEAD:src"): "arbol-src",
+            ("git", "rev-parse", "HEAD:test"): "arbol-test",
+            ("git", "rev-parse", "HEAD:assets"): "arbol-assets",
+        }[comando]
+
     def datos_validos(self):
         return {
             "godot": [
@@ -82,10 +100,71 @@ class MedicionTests(unittest.TestCase):
 
     def test_snapshot_rechaza_ruta_distinta(self):
         with patch.object(Path, "read_text", return_value=json.dumps({
-            "workspace": "/otro/workspace", "python": sys.version,
+            "tipo": "completo", "workspace": "/otro/workspace", "python": sys.version,
         })):
             with self.assertRaisesRegex(ValueError, "mismo workspace"):
                 medir.validar_snapshot()
+
+    def test_importaciones_valida_motor_del_worker_sin_requerir_venv(self):
+        with patch.object(Path, "read_text", return_value=json.dumps(
+            self.snapshot_importaciones()
+        )), patch.dict("os.environ", {"GODOT_BIN": "motor-worker"}), patch.object(
+            medir, "captura", side_effect=self.captura_snapshot
+        ) as captura:
+            self.assertEqual(medir.validar_snapshot("importaciones"), 0)
+        captura.assert_any_call("motor-worker", "--version")
+
+    def test_importaciones_rechaza_snapshot_incompatible(self):
+        diferencias = (
+            ("tipo", "completo", "tipo de snapshot"),
+            ("workspace", "/otro/workspace", "mismo workspace"),
+            ("sistema", "otro sistema", "mismo sistema"),
+            ("arquitectura", "otra arquitectura", "arquitectura"),
+            ("godot_version", "otro motor", "motor no coincide"),
+            ("commit", "otro-commit", "commit empaquetado"),
+            ("arbol_juego", {"src": "otro-arbol"}, "árbol src"),
+        )
+        for campo, valor, mensaje in diferencias:
+            datos = self.snapshot_importaciones() | {campo: valor}
+            with self.subTest(campo=campo), patch.object(
+                Path, "read_text", return_value=json.dumps(datos)
+            ), patch.dict("os.environ", {"GODOT_BIN": "motor-worker"}), patch.object(
+                medir, "captura", side_effect=self.captura_snapshot
+            ), self.assertRaisesRegex(ValueError, mensaje):
+                medir.validar_snapshot("importaciones")
+
+    def test_importaciones_empaqueta_cache_y_manifest_sin_fuentes_git_ni_herramientas(self):
+        raiz = Path.cwd()
+        with tempfile.TemporaryDirectory() as carpeta:
+            try:
+                os.chdir(carpeta)
+                incluidos = (
+                    ".godot/imported/modelo.glb-md5.mesh",
+                    ".godot/imported/modelo.glb-md5.md5",
+                    ".godot/editor/filesystem_cache10",
+                    ".godot/global_script_class_cache.cfg", ".godot/uid_cache.bin",
+                    ".ci-tools/snapshot.json",
+                )
+                excluidos = (
+                    "src/modelo.gd", ".git/config", ".ci-tools/python/bin/python",
+                    ".ci-tools/godot/Godot_v4", ".godot/editor/proyecto.godot-folding",
+                )
+                for nombre in incluidos + excluidos:
+                    ruta = Path(nombre)
+                    ruta.parent.mkdir(parents=True, exist_ok=True)
+                    ruta.touch()
+                entradas = medir.nombres_snapshot("importaciones").decode().split("\0")[:-1]
+                archivos = set()
+                for entrada in entradas:
+                    ruta = Path(entrada)
+                    archivos.update(
+                        archivo.as_posix() for archivo in (
+                            ruta.rglob("*") if ruta.is_dir() else [ruta]
+                        ) if archivo.is_file()
+                    )
+                self.assertEqual(archivos, set(incluidos))
+            finally:
+                os.chdir(raiz)
 
     def test_worker_conserva_no_cero_y_guarda_metricas_aunque_falte_junit(self):
         raiz = Path.cwd()
