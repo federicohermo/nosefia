@@ -32,6 +32,11 @@ El orden es determinista y conserva la selección en Windows y Linux.
 Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes. El check
 obligatorio `verify` sólo pasa cuando pasan las cuatro particiones.
 
+Los jobs se llaman "Colisiones y caídas", "Agarre y jornada", "Cajas, apoyos y giro"
+y "Reposición, puertas y checks".
+Los nombres describen sus suites principales.
+Cada grupo incluye también suites más cortas para equilibrar la duración.
+
 Sin `--particion-tests`, el comando conserva la ejecución completa en un solo checkout.
 
 ## Un nodo salteado no es un nodo verde
