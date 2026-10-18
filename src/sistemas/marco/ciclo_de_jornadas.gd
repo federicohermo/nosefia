@@ -28,7 +28,6 @@ func arrancar(partida: Partida, reloj: RelojDelTurno) -> void:
 	_partida = partida
 	_reloj = reloj
 	_reloj.turno_cerrado.connect(_al_cerrar_el_turno)
-	# Un guardado con la reflexión de cierre pendiente abre la noche cuando esa reflexión termina.
 	if _partida.reflexion == null or not _partida.reflexion.pendiente():
 		abrir_la_jornada()
 

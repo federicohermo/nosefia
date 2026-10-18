@@ -16,8 +16,7 @@ const TEXTO_DE_CONTINUAR := "Continuar"
 const TEXTO_DE_ANTERIOR := "Anterior"
 const TEXTO_DE_SIGUIENTE := "Siguiente"
 const TEXTO_DE_ELEGIR := "Elegir"
-## La mitad derecha del lienzo de Figma, a la par del teléfono corrido a la izquierda.
-const LUGAR := Rect2(1010.0, 250.0, 760.0, 580.0)
+const RECUADRO_A_LA_DERECHA := Rect2(1010.0, 250.0, 760.0, 580.0)
 const TINTA := Color("f0f4d1")
 const RESALTE := Color("e4f850")
 const TEMA := preload("res://assets/ui/manada/tema.tres")
@@ -43,8 +42,8 @@ func _ready() -> void:
 	add_child(_lienzo)
 	var recuadro := PanelContainer.new()
 	recuadro.name = "Recuadro"
-	recuadro.position = LUGAR.position
-	recuadro.size = LUGAR.size
+	recuadro.position = RECUADRO_A_LA_DERECHA.position
+	recuadro.size = RECUADRO_A_LA_DERECHA.size
 	recuadro.add_theme_stylebox_override("panel", _marco())
 	_lienzo.add_child(recuadro)
 	var columna := VBoxContainer.new()

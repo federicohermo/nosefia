@@ -32,8 +32,6 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.NOCHES_SIN_SUMAR: 0,
 	Campo.DEVOLUCIONES: [],
 	Campo.MOPA_SECADA: false,
-	## La investigación (BR-SAV-021): las pistas en orden, el chat de notas, la jornada cuya
-	## reflexión falta terminar —cero si ninguna— y las hipótesis elegidas por jornada.
 	Campo.EXPEDIENTE: [],
 	Campo.NOTAS: [],
 	Campo.CIERRE_PENDIENTE: 0,

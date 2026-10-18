@@ -83,7 +83,6 @@ const PARTICULARES: Dictionary[int, String] = {
 	2: "De verdad era tan difícil tirar tres bolsas de basura?",
 }
 
-## El uso sólo se anota la noche en que falta el jabón azul. Va aunque limpiar se haya cumplido.
 const POETICO := (
 	"Che, si usás un producto del local para la limpieza, me tenés que avisar. No podés "
 	+ "hacer esas cosas sin consultarme. Espero que quede claro."

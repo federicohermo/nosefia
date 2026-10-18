@@ -19,9 +19,7 @@ const RECORRIDO_COMPLETO := 0.25
 const PASO_MAXIMO := CabeceraConSolapa.PASO_MAXIMO
 const TAMANO := Vector2(522.0, 928.0)
 const CENTRO := Vector2(960.0, 540.0)
-## El centro del teléfono en la reflexión de cierre: la mitad izquierda del lienzo.
 const CENTRO_A_LA_IZQUIERDA := Vector2(480.0, 540.0)
-## El chat de notas tiene un fondo propio, distinto del de los demás chats.
 const FONDO_DE_NOTAS := Color("efe9da")
 const TEXTO_DEL_MENU := "CHATS"
 const TEXTO_DEL_RECORDATORIO := "Q"
@@ -121,10 +119,9 @@ func _process(_delta: float) -> void:
 	var segundos := clampf((ahora - _ultimo) / 1000000.0, 0.0, PASO_MAXIMO)
 	_ultimo = ahora
 	var llegaba := is_equal_approx(_lateral, _destino_lateral)
-	# Al retomar el cierre, el teléfono sube primero y después se corre: nunca en diagonal.
-	var arriba := is_equal_approx(_avance, 1.0)
+	var puede_correrse := _sube_antes_de_correrse()
 	_avance = move_toward(_avance, _destino, segundos / RECORRIDO_COMPLETO)
-	if arriba or _destino == 0.0:
+	if puede_correrse:
 		_lateral = move_toward(_lateral, _destino_lateral, segundos / RECORRIDO_COMPLETO)
 	_pintar_posicion()
 	if not llegaba and _lateral == 1.0:
@@ -132,7 +129,6 @@ func _process(_delta: float) -> void:
 	if is_equal_approx(_avance, _destino) and is_equal_approx(_lateral, _destino_lateral):
 		set_process(false)
 		if _destino == 0.0:
-			# La apertura libre siguiente vuelve a subir al centro.
 			_lateral = 0.0
 			_destino_lateral = 0.0
 			_telefono.hide()
@@ -299,14 +295,17 @@ func _input(evento: InputEvent) -> void:
 	if _foto_ampliada.visible:
 		get_viewport().set_input_as_handled()
 		cierre_de_foto_pedido.emit()
-	# A un costado, el resto del encuadre es del recuadro de la reflexión.
-	elif (
-		_destino == 1.0
-		and _destino_lateral == 0.0
-		and not _telefono.get_global_rect().has_point(clic.position)
-	):
+	elif _cierra_con_un_clic_afuera() and not _telefono.get_global_rect().has_point(clic.position):
 		get_viewport().set_input_as_handled()
 		cierre_pedido.emit()
+
+
+func _sube_antes_de_correrse() -> bool:
+	return is_equal_approx(_avance, 1.0) or _destino == 0.0
+
+
+func _cierra_con_un_clic_afuera() -> bool:
+	return _destino == 1.0 and _destino_lateral == 0.0
 
 
 func _mover_hacia(destino: float) -> void:

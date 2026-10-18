@@ -5,7 +5,6 @@ extends GdUnitTestSuite
 const C := PartidaSerializada.Campo
 
 
-## La noche jugada con todas sus obligatorias y las pistas anotadas, ya cerrada.
 func _cerrada(jornada: int, medios: int, pistas: Array[String]) -> Partida:
 	var partida := Partida.desde({"jornada": jornada, "medios": medios})
 	partida.abrir_la_jornada()
@@ -17,7 +16,6 @@ func _cerrada(jornada: int, medios: int, pistas: Array[String]) -> Partida:
 	return partida
 
 
-## Los datos como vuelven del disco: escritos como texto y leídos de nuevo.
 func _por_disco(partida: Partida) -> Dictionary:
 	return PartidaSerializada.sanear(str_to_var(var_to_str(PoliticaDeGuardado.datos(partida))))
 

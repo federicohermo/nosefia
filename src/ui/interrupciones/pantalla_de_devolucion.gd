@@ -5,8 +5,7 @@
 ## y se entregan los mensajes al chat. El tiempo es el del árbol: con la pausa en pantalla no
 ## corre, y al reanudar sigue desde el mismo mensaje.
 ##
-## No dibuja nada propio: el celular tiene su capa. Está visible desde que llega la devolución
-## hasta que el cierre termina, reflexión incluida, y por eso la pausa la mira como placa.
+## No dibuja nada propio: el celular tiene su capa.
 class_name PantallaDeDevolucion
 extends CanvasLayer
 
@@ -94,7 +93,6 @@ func elegir() -> void:
 	devolucion_despachada.emit(_opcion)
 
 
-## Termina el cierre: suelta el celular y deja de ser la placa de la pausa.
 func cerrar() -> void:
 	visible = false
 	_celular.soltar()

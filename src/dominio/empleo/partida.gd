@@ -27,7 +27,6 @@ var expediente: Expediente:
 		push_error("El expediente pertenece a la partida y no se sustituye")
 
 ## La reflexión de la última noche cerrada, o `null` si esa noche no tiene o la partida terminó.
-## Una propiedad, como el expediente: la abre el cierre y nadie la sustituye.
 var reflexion: ReflexionDeCierre:
 	get:
 		return _reflexion
@@ -107,8 +106,6 @@ static func desde(datos: Dictionary) -> Partida:
 	return partida
 
 
-## Los textos de la reflexión van primero: son de la primera noche. Un cierre pendiente sólo se
-## ofrece si es el de la noche anterior a la guardada.
 func _restaurar_la_investigacion(saneado: Dictionary) -> void:
 	var notas := PackedStringArray()
 	for dato: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.NOTAS)]:

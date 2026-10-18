@@ -84,7 +84,6 @@ func encabezado() -> String:
 	return ENCABEZADOS[_jornada]
 
 
-## Termina la devolución y deja responder a la reflexión.
 func empezar() -> void:
 	if _etapa != Etapa.POR_EMPEZAR:
 		return
