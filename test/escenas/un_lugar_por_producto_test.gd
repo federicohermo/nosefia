@@ -146,12 +146,9 @@ func test_la_mano_gira_el_frente_de_la_tanda_hacia_la_camara() -> void:
 		)
 
 
-## En la mano, lo de una cabecera va derecho y con el frente hacia la cámara, igual que lo de un
-## estante plano: la inclinación de la rampa es del estante, no del producto. Se mide sobre el
-## envase y relativo a la cámara, de la que cuelga la mano: lo de arriba es el eje del envase más
-## cercano a la vertical, y el frente, el pasillo de su tanda visto desde el envase —en la rampa,
-## echado con él—. No sale de sus ejes: una lata puede tener la etiqueta entre dos.
-func test_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -> void:
+## El envase va derecho y de frente en la mano, cualquiera sea el mueble del que sale.
+## La orientación se mide sobre el envase, sin exigir que el arte conserve estantes inclinados.
+func test_cada_producto_retirado_va_derecho_y_de_frente_en_la_mano() -> void:
 	var almacen := _almacen()
 	# Cada producto tiene que poder volver a la góndola: si no, la unidad se queda en la mano
 	# y el retiro del siguiente se rechaza, y se mide la de antes.
@@ -161,14 +158,11 @@ func test_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano()
 	var contenido: Node3D = presentacion.get("contenido")
 	var arriba_de_referencia := Vector3.ZERO
 	var frente_de_referencia := Vector3.ZERO
-	var en_rampa := 0
 	for producto in Catalogo.todos():
 		var modelo := (contenido.get_child(producto.id) as Node3D).global_basis
 		var arriba := _eje(modelo, Vector3.UP)
 		var pasillo := presentacion.global_basis * _frente(almacen, producto)
 		var frente := (pasillo - arriba * pasillo.dot(arriba)).normalized()
-		if arriba.angle_to(Vector3.UP) > deg_to_rad(1.0):
-			en_rampa += 1
 		presentacion.call("retirar", producto.id)
 		var en_la_mano := _sin_la_pose(presentacion, producto.id, agarre)
 		if arriba_de_referencia == Vector3.ZERO:
@@ -188,8 +182,6 @@ func test_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano()
 			presentacion.call("devolver", producto.id)
 		else:
 			presentacion.call("pedir_colocar", producto.id)
-	# Las cabeceras son rampas: sin ninguna, el caso no está mirando lo que dice.
-	assert_int(en_rampa).is_greater(0)
 
 
 ## El eje de un giro que más se parece a `hacia`, dado vuelta si apunta al revés.
@@ -202,12 +194,8 @@ static func _eje(giro: Basis, hacia: Vector3) -> Vector3:
 	return mejor if mejor.dot(hacia) > 0.0 else -mejor
 
 
-## Agarrada con la mano vacía de su casillero, lo de una cabecera también va derecho en la mano,
-## como lo de un estante plano: la rampa se queda en el estante. Se mide como al retirarlo de la
-## caja, sobre el último casillero de cada producto. Un casillero es de una cabecera si la chapa
-## de debajo de su unidad está inclinada, y ahí la unidad va echada con ella; en un estante plano
-## va derecha, y es contra lo que se mide.
-func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -> void:
+## Agarrar cada producto de su casillero conserva la orientación de la mano y su apoyo real.
+func test_cada_producto_agarrado_va_derecho_y_de_frente_en_la_mano() -> void:
 	var almacen := _almacen()
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -218,8 +206,7 @@ func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var contenido: Node3D = presentacion.get("contenido")
 	var estante := (almacen.get("_repositor") as Repositor).estante()
-	var de_cabecera: Dictionary[String, PackedVector3Array] = {}
-	var planos: Array[PackedVector3Array] = []
+	var medidas: Dictionary[String, PackedVector3Array] = {}
 	for producto in Catalogo.todos():
 		var ocupados := estante.casilleros_ocupados(producto)
 		assert_array(ocupados).is_not_empty()
@@ -247,23 +234,19 @@ func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -
 		)
 		var en_la_mano := _sin_la_pose(presentacion, producto.id, agarre)
 		var medida := PackedVector3Array([en_la_mano * arriba, en_la_mano * frente])
-		if en_rampa:
-			de_cabecera[producto.nombre] = medida
-		else:
-			planos.append(medida)
+		medidas[producto.nombre] = medida
 		presentacion.call("pedir_colocar", producto.id, indice)
-	# Sin una cabecera el caso no mira lo que dice, y sin un estante plano no tiene contra qué.
-	assert_int(de_cabecera.size()).is_greater(0)
-	assert_int(planos.size()).is_greater(0)
-	for nombre: String in de_cabecera:
-		var medida := de_cabecera[nombre]
+	assert_int(medidas.size()).is_equal(Catalogo.todos().size())
+	var referencia: PackedVector3Array = medidas[Catalogo.todos()[0].nombre]
+	for nombre: String in medidas:
+		var medida := medidas[nombre]
 		(
-			assert_float(rad_to_deg(medida[0].angle_to(planos[0][0])))
+			assert_float(rad_to_deg(medida[0].angle_to(referencia[0])))
 			. override_failure_message("%s no va derecho en la mano" % nombre)
 			. is_less(1.0)
 		)
 		(
-			assert_float(rad_to_deg(medida[1].angle_to(planos[0][1])))
+			assert_float(rad_to_deg(medida[1].angle_to(referencia[1])))
 			. override_failure_message("%s no muestra el frente como los demás" % nombre)
 			. is_less(1.0)
 		)

@@ -211,10 +211,11 @@ def nodo_tests(particion: ParticionTests | None = None) -> Resultado:
     directorio_reportes = REPORTES
     seleccion = ["-a", TESTS]
     if particion is not None:
-        (RAIZ / REPORTES).mkdir(parents=True, exist_ok=True)
+        base_reportes = RAIZ / REPORTES.removeprefix("res://")
+        base_reportes.mkdir(parents=True, exist_ok=True)
         reportes = Path(
             tempfile.mkdtemp(
-                prefix=f"particion-{particion.indice}-de-{particion.total}-", dir=RAIZ / REPORTES
+                prefix=f"particion-{particion.indice}-de-{particion.total}-", dir=base_reportes
             )
         )
         directorio_reportes = reportes.relative_to(RAIZ).as_posix()

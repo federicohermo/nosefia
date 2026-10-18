@@ -155,8 +155,10 @@ func test_la_tanda_de_cada_producto_esta_junta_sobre_un_solo_estante() -> void: 
 			DisposicionDeLaGondola.copia(bloque, 0).origin,
 			DisposicionDeLaGondola.copia(bloque, inicio_adelante).origin,
 		]
-		var segunda := DisposicionDeLaGondola.copia(bloque, mini(inicio_adelante + 1, total - 1))
-		var paso := absf((segunda.origin - primeras[1]).dot(costado))
+		var ultima := DisposicionDeLaGondola.copia(bloque, total - 1)
+		# El artista puede desplazar una columna unos milímetros: se mide el paso de la fila
+		# completa para no acumular el error de su primer hueco sobre todas las demás.
+		var paso := absf((ultima.origin - primeras[1]).dot(costado)) / maxi(adelante - 1, 1)
 		var fondo := (primeras[1] - primeras[0]).dot(frente)
 		(
 			assert_float(absf(primeras[0].y - primeras[1].y))

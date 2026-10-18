@@ -147,24 +147,24 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 		)
 
 
-func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondola() -> void:
-	# Los casos están medidos: una caja chica entra en el hueco de una bandeja, y ahí se encima
-	# con la mercadería, que no tiene cuerpo. Se volvieron a medir el 2026-09-30, con la góndola
-	# angostada hasta sus estantes: sin el contorno, dos de los cuatro quedan adentro.
+func test_una_caja_chica_soltada_hacia_la_gondola_no_atraviesa_sus_solidos() -> void:
+	# Los huecos entre bandejas pertenecen al AABB del mueble, pero no son metal. El resultado
+	# se contrasta contra las formas actuales y sigue siendo recogible desde el pasillo.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
 	var mueble := gondola.global_transform * gondola.get_aabb()
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
-	var adentro: Array[String] = []
+	jugador.set_physics_process(false)
+	var centro := mueble.get_center()
+	var desde := Vector3(mueble.position.x - 0.8, 0.11, centro.z)
 	for caso: Array in [
-		[Vector3(-0.861390, 0.11, -3.255100), Vector3(0.338610, 1.0, -3.255100)],
-		[Vector3(-0.861390, 0.11, -3.255100), Vector3(0.338610, 1.7, -3.255100)],
-		[Vector3(-0.861390, 0.11, -2.655100), Vector3(0.338610, 1.0, -2.655100)],
-		# Frente a una cabecera, mirando su base, que es hueca: así se perdió la caja de Malbardo.
+		[desde, mueble.position + mueble.size * Vector3(0.5, 0.4, 0.25)],
+		[desde, mueble.position + mueble.size * Vector3(0.5, 0.7, 0.25)],
+		[desde, mueble.position + mueble.size * Vector3(0.5, 0.4, 0.75)],
 		[
 			Vector3(mueble.get_center().x, 0.11, mueble.end.z + 1.0),
 			Vector3(mueble.get_center().x, mueble.position.y + 0.15, mueble.end.z - 0.1),
@@ -183,13 +183,30 @@ func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondol
 		for cuadro in 6:
 			await get_tree().physics_frame
 		_accion(jugador, caja)
-		if caja.get_parent() != mano and mueble.grow(-0.05).has_point(caja.global_position):
-			adentro.append("mirando %v queda en %v" % [caso[1], caja.global_position])
-	(
-		assert_array(adentro)
-		. override_failure_message("la caja quedó adentro de la góndola: %s" % ", ".join(adentro))
-		. is_empty()
-	)
+		assert_object(caja.get_parent()).is_not_same(mano)
+		await get_tree().physics_frame
+		var forma: CollisionShape3D = caja.get_node("Cuerpo")
+		var interior := BoxShape3D.new()
+		interior.margin = 0.0
+		interior.size = (
+			LimitesDeForma.de(forma.shape).size * forma.global_basis.get_scale()
+			- Vector3.ONE * 0.02
+		)
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = interior
+		consulta.transform = Transform3D(
+			forma.global_basis.orthonormalized(), forma.global_position
+		)
+		consulta.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		consulta.exclude = [caja.get_rid(), jugador.get_rid()]
+		(
+			assert_array(almacen.get_world_3d().direct_space_state.intersect_shape(consulta))
+			. override_failure_message("la caja atraviesa un sólido mirando %v" % caso[1])
+			. is_empty()
+		)
+		_mirar(jugador, caja.global_position)
+		jugador.call("_leer_la_mira")
+		assert_object(jugador.get("_enfocado")).is_same(caja)
 
 
 func _accion(jugador: Node, objetivo: Node) -> void:

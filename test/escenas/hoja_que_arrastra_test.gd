@@ -258,13 +258,17 @@ func test_el_balde_en_el_recorrido_se_arrastra_al_abrir() -> void:
 ## Cuánto corre la hoja al abrir al objeto que se le pone en el recorrido, soltado con el centro a
 ## `alto` del piso. Un almacén por objeto: dos a la vez comparten el mundo, y la red de uno vigila
 ## los cuerpos del otro.
-func _corrida_al_abrir(ruta: String, alto: float = 0.15) -> float:
+func _corrida_al_abrir(ruta: String, alto: float = 0.0) -> float:
 	var almacen: Node3D = await _almacen()
 	if ruta == "Objetos/BolsaDeBasura1":
 		BolsaEnLaMano.preparar(almacen)
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
 	var objeto: RigidBody3D = almacen.get_node(ruta)
 	objeto.global_basis = Basis.IDENTITY
+	var forma: CollisionShape3D = objeto.get_node("Forma")
+	var limites := forma.transform * forma.shape.get_debug_mesh().get_aabb()
+	# El modelo de la bolsa puede cambiar de tamaño: debe nacer sobre el piso, sin penetrarlo.
+	alto = maxf(alto, -limites.position.y + ReglasDeLosObjetos.ROCE)
 	objeto.global_position = _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * alto
 	for cuadro in CUADROS_PARA_DORMIRSE:
 		await get_tree().physics_frame

@@ -2,10 +2,20 @@
 
 import unittest
 
-from lib.integracion_modelo import bloques, poner, propiedad, ruta
+from lib.integracion_modelo import bloques, poner, propiedad, ruta, trasladar_sin_girar
 
 
 class ComposicionDelModelo(unittest.TestCase):
+    def test_reubicar_una_bolsa_conserva_el_giro_de_la_boca_del_tacho(self):
+        bloque = ('[node name="BolsaDeBasura2" parent="."]\n'
+                  'transform = Transform3D(0,0,-1,0,1,0,1,0,0,4,5,6)\n')
+        self.assertEqual(
+            trasladar_sin_girar(bloque, (7, 8, 9)),
+            'Transform3D(0.000000000,0.000000000,-1.000000000,'
+            '0.000000000,1.000000000,0.000000000,1.000000000,0.000000000,0.000000000,'
+            '7.000000000,8.000000000,9.000000000)',
+        )
+
     def test_actualizar_un_volumen_no_duplica_el_nodo_ni_su_forma(self):
         texto = '[node name="Volumen" type="CollisionShape3D" parent="Mueble/Cuerpo"]\n'
         escena = bloques(texto)

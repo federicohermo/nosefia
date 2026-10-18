@@ -12,16 +12,16 @@ func test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void
 	assert_float(medicion.base).is_equal_approx(medicion.gris, ReglasDeLosObjetos.ROCE)
 
 
-func test_la_caja_grande_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
-	var medicion := await _en_la_cabecera(Producto.Id.LAYSNNT)
+func test_la_caja_grande_se_acomoda_sobre_metal_visible_del_estante() -> void:  # AC-PLY-100
+	var medicion := await _en_el_estante(Producto.Id.LAYSNNT)
 	assert_vector(medicion.final).is_equal_approx(
 		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
 	assert_float(medicion.base).is_equal_approx(medicion.metal, ReglasDeLosObjetos.ROCE)
 
 
-func test_la_caja_chica_se_acomoda_sobre_metal_visible_de_la_cabecera() -> void:  # AC-PLY-100
-	var medicion := await _en_la_cabecera(Producto.Id.ACTRONCITO)
+func test_la_caja_chica_se_acomoda_sobre_metal_visible_del_estante() -> void:  # AC-PLY-100
+	var medicion := await _en_el_estante(Producto.Id.ACTRONCITO)
 	assert_vector(medicion.final).is_equal_approx(
 		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
@@ -203,13 +203,13 @@ func _sobre_el_riel(producto: Producto.Id) -> Dictionary:
 	return {"base": limites.position.y, "gris": objetivo.y}
 
 
-func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
+func _en_el_estante(producto: Producto.Id) -> Dictionary:
 	var almacen := await _abrir()
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
-	var frente := Vector3.FORWARD
-	var objetivo := _metal_de_la_cabecera_reportada(gondola, frente)
+	var frente := Vector3.LEFT
+	var objetivo := _metal_visible_del_estante(gondola, frente)
 	assert_vector(objetivo).is_not_equal(Vector3.INF)
 	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
@@ -218,7 +218,7 @@ func _en_la_cabecera(producto: Producto.Id) -> Dictionary:
 	)
 	(
 		assert_bool(visible.is_empty())
-		. override_failure_message("Premisa: metal visible de la cabecera reportada")
+		. override_failure_message("Premisa: metal visible del estante actual")
 		. is_false()
 	)
 	if visible.is_empty():
@@ -403,16 +403,31 @@ func _impacto_visible(malla: MeshInstance3D, desde: Vector3, hasta: Vector3) -> 
 	return salida
 
 
-## Saladick cambia de sector: el borde reportado pertenece al mueble, no a esa referencia.
-func _metal_de_la_cabecera_reportada(malla: MeshInstance3D, frente: Vector3) -> Vector3:
+## El apoyo sigue el metal accesible del mueble actual, aunque desaparezcan sus cabeceras.
+func _metal_visible_del_estante(malla: MeshInstance3D, frente: Vector3) -> Vector3:
 	var limites := malla.global_transform * malla.get_aabb()
 	var centro := limites.get_center()
 	var fondo := absf(frente.dot(limites.size))
 	var area_mayor := 0.0
 	var objetivo := Vector3.INF
-	for cara in _superiores(malla):
+	var caras := malla.mesh.get_faces()
+	for indice in range(0, caras.size(), 3):
+		var cara := PackedVector3Array(
+			[
+				malla.to_global(caras[indice]),
+				malla.to_global(caras[indice + 1]),
+				malla.to_global(caras[indice + 2]),
+			]
+		)
 		var punto := (cara[0] + cara[1] + cara[2]) / 3.0
-		if (punto - centro).dot(frente) <= fondo / 3.0:
+		var normal := (cara[1] - cara[0]).cross(cara[2] - cara[0]).normalized()
+		if (
+			absf(normal.y) < 0.999
+			or punto.y < 0.4
+			or punto.y > ReglasDelJugador.ALTURA_DE_LA_CAMARA
+		):
+			continue
+		if (punto - centro).dot(frente) <= fondo * 0.1:
 			continue
 		var area := (cara[1] - cara[0]).cross(cara[2] - cara[0]).length_squared()
 		if area > area_mayor:

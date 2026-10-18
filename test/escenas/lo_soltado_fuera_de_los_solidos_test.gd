@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
@@ -1071,24 +1072,33 @@ func test_un_objeto_dejado_arriba_del_inodoro_queda_quieto() -> void:
 	var inodoro: MeshInstance3D = almacen.get_node("Estructura/inodoro")
 	var tanque: CollisionShape3D = inodoro.get_node("StaticBody3D/Volumen3")
 	var tapa := tanque.global_transform * tanque.shape.get_debug_mesh().get_aabb()
-	var bolsa := BolsaEnLaMano.preparar(almacen)
-	var forma: CollisionShape3D = bolsa.get_node("Forma")
+	# La tapa angosta admite objetos chicos; la bolsa agrandada toca la pared antes de apoyar.
+	var objeto: RigidBody3D = OBJETO_SUELTO.instantiate()
+	almacen.add_child(objeto)
+	var forma: CollisionShape3D = objeto.get_node("Forma")
 	var media_altura := (forma.shape as BoxShape3D).size.y / 2.0
-	bolsa.global_basis = Basis.IDENTITY
-	bolsa.global_position = Vector3(
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = Vector3(
 		tapa.get_center().x, tapa.end.y + media_altura + 0.01, tapa.get_center().z
 	)
-	bolsa.linear_velocity = Vector3.ZERO
-	bolsa.angular_velocity = Vector3.ZERO
-	var partida := bolsa.global_position
+	var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+	assert_float(limites.position.x).is_greater(tapa.position.x)
+	assert_float(limites.end.x).is_less(tapa.end.x)
+	assert_float(limites.position.z).is_greater(tapa.position.z)
+	assert_float(limites.end.z).is_less(tapa.end.z)
+	objeto.linear_velocity = Vector3.ZERO
+	objeto.angular_velocity = Vector3.ZERO
+	var partida := objeto.global_position
 	for cuadro in CUADROS_DE_REPOSO * 2:
 		await get_tree().physics_frame
-	var corrida := Vector2(bolsa.global_position.x - partida.x, bolsa.global_position.z - partida.z)
+	var corrida := Vector2(
+		objeto.global_position.x - partida.x, objeto.global_position.z - partida.z
+	)
 	(
 		assert_float(corrida.length())
 		. override_failure_message(
-			"la bolsa se deslizó de %v a %v" % [partida, bolsa.global_position]
+			"el objeto se deslizó de %v a %v" % [partida, objeto.global_position]
 		)
 		. is_less(0.02)
 	)
-	assert_bool(bolsa.sleeping).override_failure_message("la bolsa no se durmió").is_true()
+	assert_bool(objeto.sleeping).override_failure_message("el objeto no se durmió").is_true()

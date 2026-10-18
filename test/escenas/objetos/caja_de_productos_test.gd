@@ -20,6 +20,20 @@ const CAJAS_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 ## Donde el juego carga las etiquetas: `source/` no se importa, y el juego no lo ve.
 const ETIQUETAS := "res://assets/boxes/"
 
+## Los archivos conservan el nombre del arte, aunque cambie el nombre visible del producto.
+const NOMBRES_DISTINTOS_DEL_ID := {
+	Producto.Id.LAYSNNT: "laysntt",
+	Producto.Id.PROGRES: "prongles",
+	Producto.Id.ARVECOR: "arvejas",
+	Producto.Id.PEPITO: "pepitos",
+	Producto.Id.SALADICK: "saladik",
+	Producto.Id.UAKALAS: "uakas",
+	Producto.Id.PURA_COLA: "coracola",
+	Producto.Id.FROT_LUPS: "frotlups",
+	Producto.Id.FLIM_POF: "flinpuf",
+	Producto.Id.DON_SATURADOS: "donsaturados",
+}
+
 ## Donde el artista dejó las etiquetas. Lleva nombres con acento, que la copia no lleva.
 const ORIGEN := "res://assets/source/textures/stockroom/DEPOSITO CAJAS TEXTURA/"
 
@@ -432,7 +446,9 @@ func _nombre(id: Producto.Id) -> String:
 	return Catalogo.de(id).nombre
 
 
-## La copia lleva el nombre del `Producto.Id` en minúsculas, igual que las miniaturas de la
-## computadora.
+## Las rutas esperadas son independientes de la tabla del script que viste cada caja.
 func _ruta_de_la_etiqueta(id: Producto.Id) -> String:
-	return ETIQUETAS + (Producto.Id.keys()[id] as String).to_lower() + ".png"
+	var nombre: String = NOMBRES_DISTINTOS_DEL_ID.get(
+		id, (Producto.Id.keys()[id] as String).to_lower()
+	)
+	return ETIQUETAS + nombre + ".png"
