@@ -1,7 +1,7 @@
 ## El llamador del guardado: al cerrar cada jornada le pregunta a la política qué hacer y lo hace.
 ##
-## Escucha sólo el cierre. El final de la partida llega en el mismo cierre, así que hay una
-## sola llamada por noche.
+## Escucha el cierre. El final de la partida llega en el mismo cierre, así que hay una sola
+## llamada por noche, más una por cada paso aceptado de la reflexión de cierre.
 class_name EnlaceDeGuardado
 extends Node
 
@@ -16,6 +16,11 @@ func _init(ciclo: CicloDeJornadas, guardado: Guardado) -> void:
 
 
 func _al_cerrar_la_jornada(_jornada: int, _cumplidas: int) -> void:
+	guardar()
+
+
+## También lo pide cada paso aceptado de la reflexión de cierre, antes de dejar el cierre.
+func guardar() -> void:
 	var partida := _ciclo.partida()
 	match PoliticaDeGuardado.accion(partida):
 		PoliticaDeGuardado.Accion.ESCRIBIR:

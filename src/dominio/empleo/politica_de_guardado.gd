@@ -14,6 +14,10 @@ static func accion(partida: Partida) -> Accion:
 ## La jornada que se guarda es la que la partida tiene por abrir: la cerrada ya está en el legajo.
 static func datos(partida: Partida) -> Dictionary:
 	var cuentas := partida.antecedentes().a_datos()
+	var notas: Array = []
+	for nota: Mensaje in partida.expediente.mensajes_de_notas():
+		notas.append(nota.a_datos())
+	var reflexion := partida.reflexion
 	return (
 		PartidaSerializada
 		. sanear(
@@ -30,6 +34,13 @@ static func datos(partida: Partida) -> Dictionary:
 				partida.datos_de_devoluciones(),
 				PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA):
 				partida.mopa_secada(),
+				PartidaSerializada.clave(PartidaSerializada.Campo.EXPEDIENTE):
+				Array(partida.expediente.identidades()),
+				PartidaSerializada.clave(PartidaSerializada.Campo.NOTAS): notas,
+				PartidaSerializada.clave(PartidaSerializada.Campo.CIERRE_PENDIENTE):
+				reflexion.jornada() if reflexion != null and reflexion.pendiente() else 0,
+				PartidaSerializada.clave(PartidaSerializada.Campo.ELECCIONES):
+				partida.expediente.elecciones(),
 			}
 		)
 	)

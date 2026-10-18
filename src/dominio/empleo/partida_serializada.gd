@@ -4,7 +4,19 @@
 class_name PartidaSerializada
 extends RefCounted
 
-enum Campo { JORNADA, MEDIOS, FALLAS, LLAMADOS, NOCHES_SIN_SUMAR, DEVOLUCIONES, MOPA_SECADA }
+enum Campo {
+	JORNADA,
+	MEDIOS,
+	FALLAS,
+	LLAMADOS,
+	NOCHES_SIN_SUMAR,
+	DEVOLUCIONES,
+	MOPA_SECADA,
+	EXPEDIENTE,
+	NOTAS,
+	CIERRE_PENDIENTE,
+	ELECCIONES,
+}
 
 const VERSION: int = 2
 const CLAVE_DE_VERSION := "version"
@@ -20,6 +32,12 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.NOCHES_SIN_SUMAR: 0,
 	Campo.DEVOLUCIONES: [],
 	Campo.MOPA_SECADA: false,
+	## La investigación (BR-SAV-021): las pistas en orden, el chat de notas, la jornada cuya
+	## reflexión falta terminar —cero si ninguna— y las hipótesis elegidas por jornada.
+	Campo.EXPEDIENTE: [],
+	Campo.NOTAS: [],
+	Campo.CIERRE_PENDIENTE: 0,
+	Campo.ELECCIONES: {},
 }
 
 
