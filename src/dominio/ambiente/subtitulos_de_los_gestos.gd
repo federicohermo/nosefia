@@ -7,20 +7,37 @@
 class_name SubtitulosDeLosGestos
 extends RefCounted
 
+enum Id {
+	NINGUNO,
+	MALA_IDEA,
+	CAJA_EN_EL_CONTENEDOR,
+	POR_LA_VENTANA,
+	JABON_EQUIVOCADO,
+	MOPA_SIN_MOJAR,
+	MOPA_YA_SECA,
+	MOPA_BERRETA,
+	PARED_DEL_OTRO_INODORO,
+}
+
 ## No declara `class_name`: se preloadea para preguntarle qué se tira sin llamado.
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
-const MALA_IDEA := "Me parece que eso fue una mala idea…"
-const CAJA_EN_EL_CONTENEDOR := (
-	"La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no"
-	+ " tire las cajas de productos, ni siquiera las vacías."
-)
-const POR_LA_VENTANA := "Si Enrique se entera de que estoy tirando cosas por la ventana, me mata."
-const JABON_EQUIVOCADO := "Esto no está funcionando… Creo que no estoy usando el jabón correcto."
-const MOPA_SIN_MOJAR := "Necesitaría mojar la mopa en agua con jabón."
-const MOPA_YA_SECA := "Ya se secó la mopa…"
-const MOPA_BERRETA := "Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal."
-const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, String] = {
-	PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: "Se ve que alguien no tuvo tiempo de apuntar bien…",
+const TEXTOS: Dictionary[Id, String] = {
+	Id.NINGUNO: "",
+	Id.MALA_IDEA: "Me parece que eso fue una mala idea…",
+	Id.CAJA_EN_EL_CONTENEDOR:
+	(
+		"La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no"
+		+ " tire las cajas de productos, ni siquiera las vacías."
+	),
+	Id.POR_LA_VENTANA: "Si Enrique se entera de que estoy tirando cosas por la ventana, me mata.",
+	Id.JABON_EQUIVOCADO: "Esto no está funcionando… Creo que no estoy usando el jabón correcto.",
+	Id.MOPA_SIN_MOJAR: "Necesitaría mojar la mopa en agua con jabón.",
+	Id.MOPA_YA_SECA: "Ya se secó la mopa…",
+	Id.MOPA_BERRETA: "Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.",
+	Id.PARED_DEL_OTRO_INODORO: "Se ve que alguien no tuvo tiempo de apuntar bien…",
+}
+const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, Id] = {
+	PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: Id.PARED_DEL_OTRO_INODORO,
 }
 
 ## Cuánto se espera que lo soltado quede quieto antes de mirar si cayó afuera.
@@ -30,52 +47,58 @@ var _berreta_pendiente := false
 
 
 ## Lo tirado sin llamado —una bolsa o un ticket— no piensa: es lo que va al contenedor.
-static func al_tirar(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> String:
+static func al_tirar(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> Id:
 	match tiro:
 		ReglasDeLaBasura.Tiro.TIRADO:
-			return "" if ReglasDelCierre.se_tira_sin_llamado(sostenido) else MALA_IDEA
+			return Id.NINGUNO if ReglasDelCierre.se_tira_sin_llamado(sostenido) else Id.MALA_IDEA
 		ReglasDeLaBasura.Tiro.NO_ENTRA:
-			return CAJA_EN_EL_CONTENEDOR
-	return ""
+			return Id.CAJA_EN_EL_CONTENEDOR
+	return Id.NINGUNO
 
 
-static func al_quedar_afuera(objeto: ObjetoDelAlmacen) -> String:
+static func al_quedar_afuera(objeto: ObjetoDelAlmacen) -> Id:
 	if objeto == null or objeto is Ticket:
-		return ""
-	return POR_LA_VENTANA
+		return Id.NINGUNO
+	return Id.POR_LA_VENTANA
 
 
 ## `se_mojo` dice si la mopa se mojó en esta jornada: seca, la queja es otra.
-static func al_pasar_la_mopa(resultado: ReglasDeLaLimpieza.Resultado, se_mojo: bool) -> String:
+static func al_pasar_la_mopa(resultado: ReglasDeLaLimpieza.Resultado, se_mojo: bool) -> Id:
 	match resultado:
-		ReglasDeLaLimpieza.Resultado.JABON_EQUIVOCADO, ReglasDeLaLimpieza.Resultado.SIN_JABON:
-			return JABON_EQUIVOCADO
+		ReglasDeLaLimpieza.Resultado.JABON_EQUIVOCADO:
+			return Id.JABON_EQUIVOCADO
+		ReglasDeLaLimpieza.Resultado.SIN_JABON:
+			return Id.MOPA_SIN_MOJAR
 		ReglasDeLaLimpieza.Resultado.MOPA_SECA:
-			return MOPA_YA_SECA if se_mojo else MOPA_SIN_MOJAR
-	return ""
+			return Id.MOPA_YA_SECA if se_mojo else Id.MOPA_SIN_MOJAR
+	return Id.NINGUNO
 
 
-static func al_borrar(lugar: PisoDelLocal.Lugar) -> String:
-	return DE_LAS_MANCHAS.get(lugar, "")
+static func al_borrar(lugar: PisoDelLocal.Lugar) -> Id:
+	return DE_LAS_MANCHAS.get(lugar, Id.NINGUNO)
 
 
-## El texto que hay que mostrar ya, o vacío si no toca o si queda esperando al examen.
-func al_secarse_la_mopa(partida: Partida, examinando: bool) -> String:
+static func texto(id: Id) -> String:
+	return TEXTOS[id]
+
+
+## La identidad que hay que mostrar ya, o `NINGUNO` si no toca o si espera al examen.
+func al_secarse_la_mopa(partida: Partida, examinando: bool) -> Id:
 	if partida.mopa_secada() or _berreta_pendiente:
-		return ""
+		return Id.NINGUNO
 	if examinando:
 		_berreta_pendiente = true
-		return ""
+		return Id.NINGUNO
 	partida.anotar_mopa_secada()
-	return MOPA_BERRETA
+	return Id.MOPA_BERRETA
 
 
-func al_terminar_el_examen(partida: Partida) -> String:
+func al_terminar_el_examen(partida: Partida) -> Id:
 	if not _berreta_pendiente:
-		return ""
+		return Id.NINGUNO
 	_berreta_pendiente = false
 	partida.anotar_mopa_secada()
-	return MOPA_BERRETA
+	return Id.MOPA_BERRETA
 
 
 ## El cierre de la jornada tira el aviso que no llegó a mostrarse: la partida sigue sin marca.

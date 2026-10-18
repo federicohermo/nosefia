@@ -190,18 +190,19 @@ texto fijo del examen NO DEBE acortarse.
 ### BR-SUB-013 — Los gestos que salen mal piensan
 
 CUANDO un gesto da uno de estos resultados, el sistema DEBE mostrar su pensamiento (BR-SUB-002),
-letra por letra. Ninguno cambia el resultado del gesto.
+identificado por un ID estable. Ninguno cambia el resultado del gesto. La redacción de la tabla
+es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición que elige el pensamiento.
 
-| Gesto | Pensamiento |
-|---|---|
-| Tirar al contenedor algo que no es una bolsa de basura ni un ticket | Me parece que eso fue una mala idea… |
-| Tirar al contenedor una caja del depósito, que no entra | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
-| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
-| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
-| Pasar por una mancha la mopa mojada con agua sola | Necesitaría mojar la mopa en agua con jabón. |
-| Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | Necesitaría mojar la mopa en agua con jabón. |
-| Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | Ya se secó la mopa… |
-| Borrar la caca de la pared del otro inodoro | Se ve que alguien no tuvo tiempo de apuntar bien… |
+| Gesto | ID | Pensamiento |
+|---|---|---|
+| Tirar al contenedor algo que no es una bolsa de basura ni un ticket | `MALA_IDEA` | Me parece que eso fue una mala idea… |
+| Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
+| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
+| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
+| Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
+| Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
+| Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
+| Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
 
 Tirar una bolsa o un ticket, borrar cualquier otra mancha, o pasar la mopa por una mancha ya
 limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
@@ -214,7 +215,8 @@ sólo con agua, ENTONCES al intentar limpiar DEBE decir «Ya se secó la mopa…
 ### BR-SUB-014 — La primera vez que se seca la mopa
 
 CUANDO la carga de la mopa pasa de más de cero a cero por primera vez en la partida, el sistema
-DEBE mostrar «Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.». Las veces
+DEBE mostrar el pensamiento `MOPA_BERRETA`, cuyo texto actual es
+«Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.». Las veces
 siguientes, en esa jornada o en otra, NO DEBE mostrarlo. Una partida nueva lo vuelve a mostrar
 una vez. SI se seca durante un examen, ENTONCES el texto fijo del examen DEBE seguir, y el
 pensamiento DEBE mostrarse entero al terminar el examen. Recién al mostrarse cuenta como
@@ -360,35 +362,35 @@ la opacidad está estrictamente entre 0 y 1, y a los 0,5 la línea está vacía.
 acercarse durante el desvanecido ENTONCES la opacidad no sube. DADO un texto fijo CUANDO el
 jugador se aleja 10 metros ENTONCES sigue entero.
 
-DADO el aviso «Ya se secó la mopa…» o «Me parece que eso fue una mala idea…» CUANDO el jugador
+DADO el pensamiento `MOPA_YA_SECA` o `MALA_IDEA` CUANDO el jugador
 camina 5 metros y transcurre 1 segundo desde que apareció ENTONCES sigue con opacidad 1.
 
 ### AC-SUB-016 — Lo que se tira *(verifica BR-SUB-013)*
 
-DADO una unidad, un jabón o la mopa tirados al contenedor ENTONCES el texto es «Me parece que eso
-fue una mala idea…». DADO una bolsa o un ticket tirados ENTONCES no hay texto. DADO una caja del
-depósito que no entra ENTONCES el texto es el de la caja; DADO la mano vacía o la tapa cerrada
+DADO una unidad, un jabón o la mopa tirados al contenedor ENTONCES el pensamiento es `MALA_IDEA`.
+DADO una bolsa o un ticket tirados ENTONCES no hay pensamiento. DADO una caja del
+depósito que no entra ENTONCES el pensamiento es `CAJA_EN_EL_CONTENEDOR`; DADO la mano vacía o la tapa cerrada
 con algo que entra ENTONCES no hay texto.
 
 ### AC-SUB-017 — Lo que queda afuera *(verifica BR-SUB-013)*
 
 DADO una unidad o una bolsa soltadas que quedan quietas fuera de las tres habitaciones ENTONCES
-el texto es el de la ventana. DADO un ticket ENTONCES no hay texto.
+el pensamiento es `POR_LA_VENTANA`. DADO un ticket ENTONCES no hay pensamiento.
 
 ### AC-SUB-018 — La mopa sobre una mancha *(verifica BR-SUB-013)*
 
-DADO el resultado del jabón equivocado ENTONCES el texto es el del jabón.
+DADO el resultado del jabón equivocado ENTONCES el pensamiento es `JABON_EQUIVOCADO`.
 DADO la mopa mojada con agua sola CUANDO se intenta limpiar una mancha ENTONCES el texto es
-«Necesitaría mojar la mopa en agua con jabón.» y la mancha permanece.
-DADO la mopa seca sin haberse mojado en la jornada ENTONCES pide mojarla; DADO la mopa seca
-después de mojarla, incluso sólo con agua, ENTONCES «Ya se secó la mopa…».
+el asociado a `MOPA_SIN_MOJAR` y la mancha permanece.
+DADO la mopa seca sin haberse mojado en la jornada ENTONCES el pensamiento es `MOPA_SIN_MOJAR`;
+DADO la mopa seca después de mojarla, incluso sólo con agua, ENTONCES es `MOPA_YA_SECA`.
 DADO una mancha ya limpia o una mancha
 borrada ENTONCES no hay texto, salvo la caca de la pared del otro inodoro, que al borrarse piensa
 el suyo.
 
 ### AC-SUB-019 — La mopa berreta, una vez *(verifica BR-SUB-014)*
 
-DADO una partida sin la marca CUANDO la mopa se seca ENTONCES se muestra el texto y la partida
+DADO una partida sin la marca CUANDO la mopa se seca ENTONCES se muestra `MOPA_BERRETA` y la partida
 queda marcada; CUANDO se seca otra vez ENTONCES no. DADO un examen en curso CUANDO la mopa se
 seca ENTONCES no se muestra; CUANDO se seca de nuevo ENTONCES sigue habiendo uno solo pendiente;
 CUANDO termina el examen ENTONCES se muestra y recién ahí la partida queda marcada. DADO el
