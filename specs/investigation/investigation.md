@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1,5 segundos
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo
 ---
 
 # Capacidad: la investigación
@@ -427,7 +427,7 @@ el jugador. Consultar la elección DEBE devolver su identidad, o ninguna antes d
 ### BR-INV-045 — La tercera noche espera a la elección
 
 CUANDO la elección de jornada 2 resulta ACEPTADA, el sistema DEBE terminar la reflexión después
-de una espera de 1,5 segundos, y entonces pedir una sola entrada a «NOCHE 3»
+de una espera de 1 segundo, y entonces pedir una sola entrada a «NOCHE 3»
 (BR-SHF-019). Antes de una elección aceptada, NO DEBE empezar ninguna entrada. MIENTRAS corre la
 espera, el recuadro NO DEBE responder a navegar ni a elegir. La espera DEBE correr con el tiempo
 real del juego en ejecución y NO DEBE correr con la pausa. Un cuadro largo NO DEBE pedir dos

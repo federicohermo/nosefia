@@ -36,7 +36,7 @@ const TEXTOS_DE_LA_PRIMERA: Array[String] = [
 	),
 ]
 ## En segundos de juego, entre elegir la hipótesis y pedir la entrada de la noche siguiente.
-const ESPERA_ANTES_DE_LA_NOCHE := 1.5
+const ESPERA_ANTES_DE_LA_NOCHE := 1.0
 
 var _jornada: int
 var _expediente: Expediente
