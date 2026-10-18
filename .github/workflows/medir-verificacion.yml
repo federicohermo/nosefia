@@ -46,6 +46,7 @@ jobs:
           PY
 
   preparar:
+    name: Preparación compartida
     needs: plan
     if: inputs.preparacion == 'compartida' || inputs.preparacion == 'importaciones'
     runs-on: ubuntu-latest
