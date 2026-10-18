@@ -83,6 +83,16 @@ const PARTICULARES: Dictionary[int, String] = {
 	2: "De verdad era tan difícil tirar tres bolsas de basura?",
 }
 
+## El uso sólo se anota la noche en que falta el jabón azul. Va aunque limpiar se haya cumplido.
+const POETICO := (
+	"Che, si usás un producto del local para la limpieza, me tenés que avisar. No podés "
+	+ "hacer esas cosas sin consultarme. Espero que quede claro."
+)
+const POETICO_EN_EL_DESPIDO := (
+	"Si usás un producto del local para la limpieza, me tenés que avisar. No podés hacer "
+	+ "esas cosas sin consultarme."
+)
+
 ## Los textos de los Retos; `retos()` los ordena como la ficha.
 const PAPEL_1 := (
 	"El baño se tapó. Por si no lo leíste, hay un cartelito muy claro "
@@ -259,7 +269,12 @@ func _init(jornada: int, partida: Partida) -> void:
 		if not tarea.completada():
 			sin_cumplir.append(tarea.tipo())
 	_mensajes = DevolucionDelJefe.armar(
-		jornada, partida.medios(), partida.antecedentes(), sin_cumplir, partida.llamados()
+		jornada,
+		partida.medios(),
+		partida.antecedentes(),
+		sin_cumplir,
+		partida.llamados(),
+		partida.uso_de_poetico_en(jornada)
 	)
 	# Con la partida en curso, sólo continuar: salir al menú pasa por la pausa.
 	_opciones.append(Opcion.VOLVER_AL_MENU if partida.terminada() else Opcion.CONTINUAR)
@@ -316,13 +331,16 @@ static func armar(
 	medios: int,
 	antecedentes: Antecedentes,
 	sin_cumplir: Array[Tarea.Tipo],
-	llamados: Array[Partida.Llamado]
+	llamados: Array[Partida.Llamado],
+	uso_de_poetico: bool = false
 ) -> Array[String]:
 	var mensajes: Array[String] = [_saludo(medios)]
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
 		if sin_cumplir.has(tipo):
 			var textos: Array = TAREAS[tipo]
 			mensajes.append(textos[clampi(antecedentes.fallas(tipo), 1, textos.size()) - 1])
+	if uso_de_poetico:
+		mensajes.append(POETICO_EN_EL_DESPIDO if medios >= MEDIOS_DEL_DESPIDO else POETICO)
 	if PARTICULARES.has(jornada) and _alguna_particular(sin_cumplir):
 		mensajes.append(PARTICULARES[jornada])
 	for motivo: Partida.Llamado in retos():
