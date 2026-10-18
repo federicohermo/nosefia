@@ -32,12 +32,20 @@ concurrency:
 
 jobs:
   verify-particion:
-    name: verify-particion-${{ matrix.particion }}
+    name: ${{ matrix.nombre }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        particion: [0, 1, 2, 3]
+        include:
+          - particion: 0
+            nombre: Colisiones y caídas
+          - particion: 1
+            nombre: Agarre y jornada
+          - particion: 2
+            nombre: Cajas, apoyos y giro
+          - particion: 3
+            nombre: Reposición, puertas y checks
     steps:
       - uses: actions/checkout@v5
 
@@ -92,7 +100,7 @@ jobs:
       - name: verificar
         run: >-
           python .claude/scripts/verificar.py
-          --particion-tests ${{ strategy.job-index }}/${{ strategy.job-total }}
+          --particion-tests ${{ matrix.particion }}/${{ strategy.job-total }}
 
       # Los reportes de gdUnit4, para poder mirar QUÉ falló sin reproducir la corrida. `always()`
       # porque el caso en que sirven es justamente aquel en que el paso anterior falló.

@@ -28,13 +28,45 @@ class SeleccionDeSuites(unittest.TestCase):
         self.assertEqual(Counter(ruta for parte in particiones for ruta in parte), Counter(suites))
         self.assertTrue(all(particiones))
 
-    def test_la_asignacion_tiene_vectores_sha256_conocidos(self):
-        # Primeros 32 bits de SHA256, big endian. Estos valores no usan hash() de Python.
-        suites = ["f", "test", "hello", "abc"]
-        self.assertEqual(seleccionar_suites(suites, ParticionTests(0, 4)), ["f"])
-        self.assertEqual(seleccionar_suites(suites, ParticionTests(1, 4)), ["test"])
-        self.assertEqual(seleccionar_suites(suites, ParticionTests(2, 4)), ["hello"])
-        self.assertEqual(seleccionar_suites(suites, ParticionTests(3, 4)), ["abc"])
+    def test_balancea_costos_y_reserva_tiempo_para_los_gates_de_la_ultima(self):
+        costos = {"a.gd": 100.0, "b.gd": 80.0, "c.gd": 50.0, "d.gd": 20.0}
+        particiones = [
+            seleccionar_suites(list(costos), ParticionTests(i, 2), costos) for i in range(2)
+        ]
+        self.assertEqual(particiones, [["a.gd", "c.gd"], ["b.gd", "d.gd"]])
+        self.assertEqual(
+            [sum(costos[ruta] for ruta in parte) for parte in particiones], [150.0, 100.0]
+        )
+
+    def test_asigna_las_suites_mas_costosas_primero(self):
+        costos = {"a.gd": 1.0, "b.gd": 90.0, "c.gd": 100.0, "d.gd": 80.0}
+        self.assertEqual(
+            seleccionar_suites(list(costos), ParticionTests(0, 2), costos), ["c.gd", "d.gd"]
+        )
+        self.assertEqual(
+            seleccionar_suites(list(costos), ParticionTests(1, 2), costos), ["a.gd", "b.gd"]
+        )
+
+    def test_desempata_por_ruta_y_por_indice_con_cualquier_total(self):
+        costos = {f"{letra}.gd": 60.0 for letra in "fedcba"}
+        particiones = [
+            seleccionar_suites(list(costos), ParticionTests(i, 3), costos) for i in range(3)
+        ]
+        self.assertEqual(
+            particiones, [["a.gd", "d.gd"], ["b.gd", "e.gd"], ["c.gd", "f.gd"]]
+        )
+
+    def test_una_suite_nueva_cuesta_un_segundo_y_una_borrada_no_se_ejecuta(self):
+        suites = ["a.gd", "b.gd", "nueva.gd"]
+        costos = {"a.gd": 100.0, "b.gd": 100.0, "borrada.gd": 1000.0}
+        self.assertEqual(
+            seleccionar_suites(suites, ParticionTests(0, 2), costos), ["a.gd", "nueva.gd"]
+        )
+        self.assertEqual(seleccionar_suites(suites, ParticionTests(1, 2), costos), ["b.gd"])
+        self.assertEqual(
+            seleccionar_suites(suites, ParticionTests(0, 2), {**costos, "nueva.gd": 1.0}),
+            seleccionar_suites(suites, ParticionTests(0, 2), costos),
+        )
 
     def test_el_orden_de_descubrimiento_no_cambia_la_asignacion(self):
         suites = [f"test/dominio/suite_{numero}_test.gd" for numero in range(100)]
@@ -46,14 +78,24 @@ class SeleccionDeSuites(unittest.TestCase):
                     seleccionar_suites(list(reversed(suites)), particion),
                 )
 
+    def test_la_reserva_no_deja_un_runner_vacio_si_alcanzan_las_suites(self):
+        suites = ["a.gd", "b.gd", "c.gd", "d.gd"]
+        particiones = [
+            seleccionar_suites(suites, ParticionTests(i, 4), {}) for i in range(4)
+        ]
+        self.assertEqual(particiones, [["a.gd"], ["b.gd"], ["c.gd"], ["d.gd"]])
+
     def test_normaliza_barras_y_puntos_antes_de_asignar(self):
         unix = [f"test/dominio/ejemplo_{numero}_test.gd" for numero in range(100)]
         windows = [".\\" + ruta.replace("/", "\\") for ruta in unix]
+        costos = {ruta: float(numero + 1) for numero, ruta in enumerate(unix)}
+        costos_windows = {".\\" + ruta.replace("/", "\\"): costo for ruta, costo in costos.items()}
         for indice in range(4):
             with self.subTest(indice=indice):
                 particion = ParticionTests(indice, 4)
                 self.assertEqual(
-                    seleccionar_suites(windows, particion), seleccionar_suites(unix, particion)
+                    seleccionar_suites(windows, particion, costos_windows),
+                    seleccionar_suites(unix, particion, costos),
                 )
 
     def test_una_sola_particion_conserva_todas_las_suites(self):
@@ -74,7 +116,21 @@ class SeleccionDeSuites(unittest.TestCase):
     def test_rechaza_un_descubrimiento_vacio_y_una_particion_vacia(self):
         for suites in ([], ["abc"]):
             with self.subTest(suites=suites), self.assertRaisesRegex(ValueError, "no contiene"):
-                seleccionar_suites(suites, ParticionTests(0, 4))
+                seleccionar_suites(suites, ParticionTests(1, 4))
+
+    def test_la_reserva_no_excluye_suites_de_una_particion_unica(self):
+        self.assertEqual(seleccionar_suites(["nueva.gd"], ParticionTests(0, 1)), ["nueva.gd"])
+
+    def test_rechaza_costos_invalidos(self):
+        for costo in (0, -1, float("nan"), float("inf"), float("-inf"), True, "1", None):
+            with self.subTest(costo=costo), self.assertRaises(ValueError):
+                seleccionar_suites(["a.gd"], ParticionTests(0, 1), {"a.gd": costo})
+
+    def test_rechaza_estimaciones_duplicadas_despues_de_normalizar(self):
+        with self.assertRaisesRegex(ValueError, "duplicadas"):
+            seleccionar_suites(
+                ["test/a.gd"], ParticionTests(0, 1), {"test/a.gd": 1.0, "test\\a.gd": 2.0}
+            )
 
     def test_rechaza_duplicados_despues_de_normalizar(self):
         with self.assertRaisesRegex(ValueError, "duplicadas"):
