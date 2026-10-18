@@ -86,9 +86,9 @@ sigue su regla (BR-INV-017), y el subtítulo sale igual.
 
 ### BR-SUB-009 — Lo que dice cada producto
 
-Cada producto del catálogo DEBE tener su texto al examinar, letra por letra como en la tabla.
-Lo dice cada unidad del producto. El nombre adentro del texto se copia de la ficha, aunque
-difiera del nombre del catálogo.
+Cada producto del catálogo DEBE tener un subtítulo asociado a su identidad. Cada unidad DEBE
+elegir el subtítulo de su producto. La tabla conserva la redacción de referencia, que es contenido
+editable y NO DEBE formar parte de la identidad. Los nombres de productos salen del catálogo.
 
 | Producto del catálogo | Texto al examinar |
 |---|---|
@@ -126,7 +126,8 @@ difiera del nombre del catálogo.
 
 ### BR-SUB-010 — Lo que dicen los útiles, las bolsas y lo fijo
 
-Cada objeto de la tabla DEBE decir su texto al examinar, letra por letra. Todas las instancias
+Cada objeto de la tabla DEBE elegir su subtítulo por identidad, con texto no vacío. La redacción
+es contenido editable, como en BR-SUB-009. Todas las instancias
 de un mismo objeto DEBEN decir el mismo texto: los dos inodoros, los dos lavatorios, cada nota
 con el mismo contenido, y el cuerpo y la tapa del contenedor.
 
@@ -164,10 +165,12 @@ bolsa.
 
 ### BR-SUB-011 — El ticket dice qué tiene
 
-El texto al examinar de un ticket DEBE ser «Un ticket de compra por » seguido de cada producto
-del ticket con su cantidad y su nombre del catálogo. Los productos DEBEN ir en el orden en que
-aparecen por primera vez en los renglones. Se separan con «, », y el último con « y ». Con un
-solo producto no va « y ».
+El subtítulo del ticket DEBE presentar cada producto con su cantidad y su nombre del catálogo.
+Los productos DEBEN ir en el orden en que aparecen por primera vez en los renglones. La redacción
+actual usa «Un ticket de compra por », separa con «, » y antepone « y » al último de varios productos.
+
+El ticket DEBE conservar su identidad y un resumen ordenado de identidades de producto y cantidades.
+La redacción que presenta ese resumen es editable; cambiarla NO DEBE cambiar el resumen ni su orden.
 
 ### BR-SUB-012 — La caja dice cuántas tiene, apoyada o en la mano
 
@@ -263,11 +266,12 @@ tolerancia de 0,001 segundos:
 | 12 | 12 caracteres | 2,000 | 2,500 |
 | 13 | 13 caracteres | 2,020 | 2,520 |
 | 15 | 15 caracteres | 2,100 | 2,600 |
-| 20 | «Una bolsa de basura.» | 2,300 | 2,800 |
-| 26 | «Una barra de Cosa de Maní.» | 2,540 | 3,040 |
-| 117 | el texto del lector | 6,180 | 6,680 |
+| 20 | 20 caracteres de prueba | 2,300 | 2,800 |
+| 26 | 26 caracteres de prueba | 2,540 | 3,040 |
+| 117 | 117 caracteres de prueba | 6,180 | 6,680 |
 
-El texto del lector dura estrictamente más que «Una bolsa de basura.».
+La muestra de 117 caracteres dura estrictamente más que la de 20. Las muestras de duración
+son artificiales: editar los textos del juego NO DEBE cambiar los valores de estos casos.
 
 ### AC-SUB-005 — Entero, desvanecido y vacío *(verifica BR-SUB-004)*
 
@@ -317,41 +321,45 @@ como en AC-INV-019.
 
 ### AC-SUB-011 — Cada producto dice su texto *(verifica BR-SUB-009)*
 
-DADO cada producto del catálogo CUANDO se pide su texto al examinar ENTONCES es el de la tabla
-de BR-SUB-009, letra por letra. Un producto sin texto hace fallar el caso con su nombre.
+DADO cada producto del catálogo CUANDO se pide su texto al examinar ENTONCES es el asociado a
+su identidad. Una unidad elige el mismo subtítulo que su producto. Una identidad sin texto hace
+fallar el caso; editar la redacción conservando la identidad no cambia la selección.
 
 ### AC-SUB-012 — Cada útil y cada bolsa *(verifica BR-SUB-010)*
 
 DADO la mopa, el balde, los tres jabones y las tres bolsas de basura CUANDO se pide su texto al
-examinar ENTONCES cada uno es el de la tabla de BR-SUB-010, letra por letra.
+examinar ENTONCES cada uno conserva su identidad y devuelve el subtítulo no vacío asociado a ella.
 
 ### AC-SUB-013 — Lo fijo dice su texto, y lo demás calla *(verifica BR-SUB-010)*
 
 DADO los dos inodoros, los dos lavatorios, las cinco notas, la computadora, la caja
 registradora, el lector, la entrada principal, la puerta del jefe, el portón del depósito, los
 tres tachos y el cuerpo y la tapa del contenedor CUANDO se pide su texto al examinar ENTONCES
-cada uno es el de la tabla de BR-SUB-010, letra por letra. DADO una puerta interior, una puerta
+cada uno devuelve el subtítulo asociado a su identidad. DADO una puerta interior, una puerta
 de heladera, la ventanilla, el comprador, la góndola y una mancha ENTONCES no tienen texto. DADO
 un tacho con bolsa y otro sin bolsa CUANDO se pide examinar con las manos vacías ENTONCES los
 dos muestran su texto y el primero sigue con su bolsa.
 
 ### AC-SUB-014 — El texto del ticket *(verifica BR-SUB-011)*
 
-DADO un ticket con estos renglones CUANDO se pide su texto al examinar ENTONCES es:
+DADO un ticket con estos renglones CUANDO se consulta su resumen al examinar ENTONCES conserva
+las identidades de producto, cantidades y orden siguientes. Su subtítulo presenta ese resumen.
 
-| Renglones | Texto |
+| Renglones | Resumen ordenado |
 |---|---|
-| Marolini | Un ticket de compra por 1 Marolini |
-| Marolini, Marolini, Coracola | Un ticket de compra por 2 Marolini y 1 Coracola |
-| Marolini, Coracola, Malbardo | Un ticket de compra por 1 Marolini, 1 Coracola y 1 Malbardo |
-| Malbardo, Malbardo, Malbardo | Un ticket de compra por 3 Malbardo |
+| Marolini | Marolini: 1 |
+| Marolini, Marolini, Coracola | Marolini: 2; Coracola: 1 |
+| Marolini, Coracola, Malbardo | Marolini: 1; Coracola: 1; Malbardo: 1 |
+| Malbardo, Malbardo, Malbardo | Malbardo: 3 |
+| Coracola, Marolini, Coracola | Coracola: 2; Marolini: 1 |
+| Sin renglones | Resumen vacío |
 
 ### AC-SUB-015 — La caja apoyada y en la mano *(verifica BR-SUB-012)*
 
 DADO una caja del depósito apoyada con 0 de Actroncito y las manos vacías CUANDO se pide
-examinar ENTONCES la línea muestra «Una caja con 0 cajitas de Actroncito. Entran 8 más.» como
+examinar ENTONCES la línea muestra el subtítulo de esa caja, con 0 unidades y 8 lugares libres, como
 pensamiento, sin examen. DADO una caja con 5 de Malbardo en la mano CUANDO se pide examinar
-ENTONCES la línea muestra «Una caja con 5 cajitas de Malbardo. Entran 3 más.» fijo hasta que
+ENTONCES la línea muestra el subtítulo de esa caja, con 5 unidades y 3 lugares libres, fijo hasta que
 termina el examen.
 
 ### AC-SUB-020 — Irse lo desvanece antes *(verifica BR-SUB-015)*
