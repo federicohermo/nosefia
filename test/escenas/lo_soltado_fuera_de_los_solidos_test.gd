@@ -5,6 +5,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
 
 const GeometriaDelMostrador := preload("res://test/escenas/geometria_del_mostrador.gd")
 
@@ -715,6 +716,7 @@ func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() ->
 			var partida: Partida = almacen.get("_partida")
 			assert_int(partida.jornada()).is_equal(2)
 			partida.cerrar_la_jornada(partida.obligatorias().size())
+			FinDeLaReflexion.terminar(partida)
 			almacen.get("_ciclo").abrir_la_jornada()
 			assert_int(partida.jornada()).is_equal(3)
 			assert_int(almacen.get("_limpiador").piso().jornada()).is_equal(3)

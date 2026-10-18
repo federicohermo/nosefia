@@ -34,3 +34,20 @@ static func animar_celular(pantalla: PantallaDelCelular, reloj: Array, microsegu
 		reloj[0] += paso
 		pantalla.call("_process", 0.0)
 		restantes -= paso
+
+
+## Después de elegir «continuar»: el celular llega a las notas y se pulsa la acción del recuadro
+## hasta terminar la reflexión, espera incluida. Lo deja bajando, como sin reflexión.
+static func pasar_la_reflexion(pantalla: PantallaDeDevolucion) -> void:
+	var almacen := pantalla.get_parent().get_parent()
+	var partida: Partida = almacen.get("_partida")
+	var reflexion := partida.reflexion
+	if reflexion == null:
+		return
+	terminar_movimiento(pantalla)
+	var recuadro: PantallaDeHipotesis = almacen.get("_hipotesis")
+	for _gesto: int in ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size():
+		if reflexion.etapa() in [ReflexionDeCierre.Etapa.TEXTOS, ReflexionDeCierre.Etapa.ELEGIR]:
+			recuadro.botones().back().pressed.emit()
+	if reflexion.etapa() == ReflexionDeCierre.Etapa.ESPERA:
+		almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)

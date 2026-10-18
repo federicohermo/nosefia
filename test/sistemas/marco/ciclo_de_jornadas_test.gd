@@ -14,6 +14,7 @@ extends GdUnitTestSuite
 const NOMBRES_QUE_DECIDEN := ["Legajo", "Consecuencias", "ReglasDeLaPartida"]
 
 const CICLO := "res://src/sistemas/marco/ciclo_de_jornadas.gd"
+const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
 
 var _aperturas: int = 0
 var _cierres: int = 0
@@ -70,6 +71,31 @@ func test_sobre_una_partida_que_termino_no_se_abre_nada_ni_se_emite_nada() -> vo
 	var aperturas_antes := _aperturas
 	assert_bool(ciclo.abrir_la_jornada()).is_false()
 	assert_int(_aperturas).is_equal(aperturas_antes)
+
+
+func test_un_cierre_retomado_con_reflexion_no_abre_la_noche() -> void:  # AC-SHF-028
+	var partida := (
+		Partida
+		. desde(
+			(
+				PartidaSerializada
+				. sanear(
+					{
+						PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 2,
+						PartidaSerializada.clave(PartidaSerializada.Campo.CIERRE_PENDIENTE): 1,
+					}
+				)
+			)
+		)
+	)
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	var ciclo := _ciclo_arrancado(partida, reloj)
+	assert_int(_aperturas).is_zero()
+	assert_bool(reloj.corriendo()).is_false()
+	FinDeLaReflexion.terminar(partida)
+	assert_bool(ciclo.abrir_la_jornada()).is_true()
+	assert_int(_aperturas).is_equal(1)
+	assert_bool(reloj.corriendo()).is_true()
 
 
 func test_el_ciclo_no_decide_como_pesa_una_jornada() -> void:

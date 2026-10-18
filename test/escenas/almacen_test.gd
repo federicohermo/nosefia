@@ -423,6 +423,7 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_false()
@@ -476,6 +477,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	var celular: PantallaDelCelular = almacen.get_node("Interfaz/PantallaDelCelular")
 	var ahora := [Time.get_ticks_usec()]
 	celular.set("_ahora", func() -> int: return ahora[0])

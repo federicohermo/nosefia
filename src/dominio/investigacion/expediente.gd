@@ -11,6 +11,7 @@ var _consistente: bool = false
 var _identidades: PackedStringArray = PackedStringArray()
 var _notas: Array[Mensaje] = []
 var _avisados: Array[Desenlace] = []
+var _elecciones: Dictionary[int, String] = {}
 
 
 func _init(caso: CasoDeInvestigacion) -> void:
@@ -78,6 +79,62 @@ func reconstruir(identidades_conocidas: PackedStringArray, mensajes: Array[Mensa
 	_avisados = desenlaces_alcanzados()
 
 
+## La partida guardada: las pistas vuelven con sus notas, y una elección sólo si sigue entre las
+## opciones que esas pistas habilitan.
+func restaurar(identidades_conocidas: PackedStringArray, elecciones_guardadas: Dictionary) -> void:
+	if not _consistente:
+		return
+	for identidad: String in identidades_conocidas:
+		var pista := _caso.pista_de(identidad)
+		if pista != null and not _identidades.has(identidad):
+			_identidades.append(identidad)
+			_agregar_notas(pista)
+	for jornada: Variant in elecciones_guardadas:
+		var identidad: Variant = elecciones_guardadas[jornada]
+		if jornada is int and identidad is String:
+			elegir(jornada, identidad)
+	_avisados = desenlaces_alcanzados()
+
+
+## Una nota que no es de una pista, como un texto de la reflexión. Cada identidad entra una vez.
+func anotar(mensaje: Mensaje) -> bool:
+	if mensaje == null or mensaje.identidad.is_empty() or not mensaje.dice_algo():
+		return false
+	for anterior: Mensaje in _notas:
+		if anterior.identidad == mensaje.identidad:
+			return false
+	var nota := mensaje.duplicate() as Mensaje
+	nota.orden = _orden_siguiente()
+	_notas.append(nota)
+	return true
+
+
+## Fija la hipótesis de la jornada, una sola vez, si sus pistas la habilitan.
+func elegir(jornada: int, identidad: String) -> Resultado:
+	if _elecciones.has(jornada):
+		return Resultado.REPETIDA
+	for opcion: Hipotesis in hipotesis_para(jornada):
+		if opcion.identidad == identidad:
+			_elecciones[jornada] = identidad
+			var nota := Mensaje.new()
+			nota.identidad = "NOTA_%s_HIPOTESIS" % identidad
+			nota.jornada = jornada
+			nota.momento = Mensaje.Momento.CIERRE
+			nota.texto = opcion.texto
+			anotar(nota)
+			return Resultado.ANOTADA
+	return Resultado.DESCONOCIDA
+
+
+## La identidad elegida esa jornada, o vacía antes de elegir.
+func eleccion(jornada: int) -> String:
+	return _elecciones.get(jornada, "")
+
+
+func elecciones() -> Dictionary:
+	return _elecciones.duplicate()
+
+
 func hipotesis_para(jornada: int) -> Array[Hipotesis]:
 	return _caso.hipotesis_para(jornada, _identidades) if _consistente else []
 
@@ -94,9 +151,7 @@ func desenlaces_alcanzados() -> Array[Desenlace]:
 func _agregar_notas(pista: Pista) -> void:
 	if pista.foto == null or pista.texto.is_empty():
 		return
-	var orden := 0
-	for anterior: Mensaje in _notas:
-		orden = maxi(orden, anterior.orden + 1)
+	var orden := _orden_siguiente()
 	for es_foto: bool in [true, false]:
 		var mensaje := Mensaje.new()
 		mensaje.identidad = _identidad_de_nota(pista.identidad, es_foto)
@@ -107,6 +162,13 @@ func _agregar_notas(pista: Pista) -> void:
 		mensaje.foto = pista.foto if es_foto else null
 		mensaje.texto = "" if es_foto else pista.texto
 		_notas.append(mensaje)
+
+
+func _orden_siguiente() -> int:
+	var orden := 0
+	for anterior: Mensaje in _notas:
+		orden = maxi(orden, anterior.orden + 1)
+	return orden
 
 
 func _es_nota_conocida(mensaje: Mensaje) -> bool:
