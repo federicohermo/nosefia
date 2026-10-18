@@ -22,9 +22,10 @@ En GitHub Actions, las suites de Godot se reparten entre cuatro runners independ
 python .claude/scripts/verificar.py --particion-tests 0/4
 ```
 
-El índice empieza en cero. La partición cero corre también los demás nodos; las otras sólo
-corren sus suites. La asignación depende del hash de la ruta relativa de cada archivo, por lo
-que incorpora suites nuevas automáticamente y conserva la misma selección en Windows y Linux.
+El índice empieza en cero. La última partición corre también los demás nodos; las otras sólo
+corren sus suites. En el reparto actual es más liviana y deja CPU libre en la partición más larga.
+La asignación usa el hash de la ruta relativa de cada archivo.
+Incorpora suites nuevas automáticamente y conserva la selección en Windows y Linux.
 Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes. El check
 obligatorio `verify` sólo pasa cuando pasan las cuatro particiones.
 
@@ -50,8 +51,9 @@ Desde gdUnit4 6.2.1, una suite que no parsea corta la corrida con 105 y el nodo 
 conteo crudo sigue siendo el control de que corrió todo. Cómo leerlo, en
 [la regla de tests](../../.claude/rules/tests.md).
 
-Cada partición coteja las rutas de sus suites con el XML JUnit recién generado: una suite
-faltante, inesperada, duplicada o sin casos hace fallar el nodo aunque Godot termine con cero.
+Cada partición coteja sus suites con el XML JUnit recién generado.
+El nodo falla si falta una suite, se repite, sobra alguna o no tiene casos,
+aunque Godot termine con cero.
 Los artefactos `reports-gdunit4-<índice>` incluyen la selección esperada, el resultado del cotejo,
 la salida de gdUnit4 y sus reportes. No se aceptan XML de una ejecución anterior.
 

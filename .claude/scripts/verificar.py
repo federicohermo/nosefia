@@ -283,7 +283,7 @@ def main(argumentos: list[str] | None = None) -> None:
         "--particion-tests",
         type=ParticionTests.desde_texto,
         metavar="ÍNDICE/TOTAL",
-        help="reparte las suites; la partición 0 también corre los demás nodos",
+        help="reparte las suites; la última partición también corre los demás nodos",
     )
     opciones = parser.parse_args(argumentos)
     particion = opciones.particion_tests
@@ -291,7 +291,7 @@ def main(argumentos: list[str] | None = None) -> None:
         parser.error("--particion-tests sólo admite --solo tests o la verificación completa")
     a_correr = [nodos[opciones.solo]] if opciones.solo is not None else list(NODOS)
     tests = nodos.get("tests")
-    if particion is not None and particion.indice != 0:
+    if particion is not None and particion.indice != particion.total - 1:
         a_correr = [n for n in a_correr if n is tests]
 
     arranque = time.monotonic()

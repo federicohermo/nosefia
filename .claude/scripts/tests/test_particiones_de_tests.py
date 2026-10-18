@@ -226,6 +226,11 @@ class SeleccionDeNodos(unittest.TestCase):
         for indice in range(4):
             codigo, nuevas = self._invocar(["--particion-tests", f"{indice}/4"])
             self.assertEqual(codigo, 0)
+            esperados_en_esta = (
+                {n.__name__.removeprefix("nodo_") for n in verificar.NODOS}
+                if indice == 3 else {"tests"}
+            )
+            self.assertEqual({nombre for nombre, _ in nuevas}, esperados_en_esta)
             llamadas.extend(nuevas)
         esperados = {n.__name__.removeprefix("nodo_"): 1 for n in verificar.NODOS}
         esperados["tests"] = 4
