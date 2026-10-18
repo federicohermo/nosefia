@@ -84,8 +84,6 @@ func test_la_reflexion_retiene_la_entrada_y_fija_las_notas() -> void:  # AC-SHF-
 	var almacen: Node3D = await _almacen()
 	var aperturas := _aperturas(almacen)
 	var pantalla := await _hasta_la_reflexion(almacen)
-	var interfaz: PantallaDelCelular = almacen.get_node("Interfaz/PantallaDelCelular")
-	assert_bool(interfaz.a_la_izquierda()).is_true()
 	assert_bool(pantalla.visible).is_true()
 	assert_bool(_recuadro(almacen).visible).is_true()
 	assert_int(_celular(almacen).celular().chat()).is_equal(NOTAS)
@@ -175,3 +173,29 @@ func test_las_notas_de_la_tercera_noche() -> void:  # AC-INV-064
 		assert_str(notas[indice].identidad).is_equal(esperadas[indice].identidad)
 	assert_object(notas[0].foto).is_not_null()
 	assert_str(notas[2].identidad).is_equal("NOTA_2B_HIPOTESIS")
+
+
+func test_la_pausa_congela_la_eleccion_y_la_espera() -> void:  # AC-INV-063
+	var almacen: Node3D = await _almacen(_segunda_con(["2A", "2B"]))
+	await _hasta_la_reflexion(almacen)
+	var recuadro := _recuadro(almacen)
+	var reflexion := (almacen.get("_partida") as Partida).reflexion
+	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
+	recuadro.botones()[1].pressed.emit()
+	var mostrado := recuadro.texto()
+	pausa.pausar()
+	assert_bool(recuadro.can_process()).is_false()
+	for _cuadro: int in 10:
+		await get_tree().process_frame
+	pausa.reanudar()
+	assert_str(recuadro.texto()).is_equal(mostrado)
+	assert_str(reflexion.mostrada().identidad).is_equal("2B")
+	recuadro.botones().back().pressed.emit()
+	var restante := reflexion.restante()
+	pausa.pausar()
+	for _cuadro: int in 10:
+		await get_tree().process_frame
+	assert_float(reflexion.restante()).is_equal(restante)
+	assert_bool(recuadro.visible).is_true()
+	pausa.reanudar()
+	assert_float(reflexion.restante()).is_equal(restante)

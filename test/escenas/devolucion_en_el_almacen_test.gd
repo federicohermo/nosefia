@@ -197,7 +197,6 @@ func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC
 	AvanceDeDevolucion.animar_celular(
 		interfaz, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
 	)
-	assert_bool(interfaz.a_la_izquierda()).is_true()
 	var recuadro: PantallaDeHipotesis = almacen.get_node("Interfaz/PantallaDeHipotesis")
 	for _texto: int in ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size():
 		assert_int(aperturas[0]).is_zero()

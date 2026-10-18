@@ -155,10 +155,6 @@ func desplazar_a_la_izquierda() -> void:
 	set_process(true)
 
 
-func a_la_izquierda() -> bool:
-	return _destino_lateral == 1.0 and _lateral == 1.0
-
-
 func mostrar_menu(bandeja: Bandeja) -> void:
 	_bandeja = bandeja
 	_foto_ampliada.hide()
