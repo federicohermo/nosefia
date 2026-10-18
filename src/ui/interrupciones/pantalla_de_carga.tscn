@@ -68,7 +68,7 @@ expand_mode = 1
 
 [node name="Centro" type="VBoxContainer" parent="Marco"]
 layout_mode = 0
-offset_left = 567.0
+offset_left = 566.0
 offset_top = 525.0
 offset_right = 1328.0
 offset_bottom = 605.0
