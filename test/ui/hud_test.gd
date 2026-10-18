@@ -200,8 +200,9 @@ func test_el_hud_pinta_el_subtitulo_que_le_llega_y_lo_vacia() -> void:  # AC-SUB
 	add_child(hud)
 	var subtitulo: Label = hud.get_node("Subtitulo")
 	assert_str(subtitulo.text).is_empty()
-	hud.pensar("Una bolsa de basura.")
-	assert_str(subtitulo.text).is_equal("Una bolsa de basura.")
+	var pensamiento := "a".repeat(20)
+	hud.pensar(pensamiento)
+	assert_str(subtitulo.text).is_equal(pensamiento)
 	assert_float(subtitulo.modulate.a).is_equal(1.0)
 	hud.call("_process", 2.55)
 	assert_float(subtitulo.modulate.a).is_greater(0.0)
@@ -209,9 +210,10 @@ func test_el_hud_pinta_el_subtitulo_que_le_llega_y_lo_vacia() -> void:  # AC-SUB
 	hud.call("_process", 2.8 - 2.55)
 	assert_str(subtitulo.text).is_empty()
 	assert_float(subtitulo.modulate.a).is_equal(0.0)
-	hud.mostrar_subtitulo("Una caja con 8 cajitas de Actroncito.")
+	var fijo := "Texto fijo de prueba."
+	hud.mostrar_subtitulo(fijo)
 	hud.call("_process", 60.0)
-	assert_str(subtitulo.text).is_equal("Una caja con 8 cajitas de Actroncito.")
+	assert_str(subtitulo.text).is_equal(fijo)
 	assert_float(subtitulo.modulate.a).is_equal(1.0)
 	hud.vaciar_subtitulo()
 	assert_str(subtitulo.text).is_empty()
@@ -224,15 +226,16 @@ func test_el_subtitulo_va_abajo_al_centro_y_uno_por_vez() -> void:  # AC-SUB-001
 		add_child(ventana)
 		var hud: Hud = load(ESCENA_DEL_HUD).instantiate()
 		ventana.add_child(hud)
-		hud.pensar("Una bolsa de basura.")
+		hud.pensar("Primer pensamiento de prueba.")
 		await get_tree().process_frame
 		var subtitulo: Label = hud.get_node("Subtitulo")
 		var caja := subtitulo.get_global_rect()
 		assert_float(caja.get_center().x).is_equal_approx(tamano.x / 2.0, 1.0)
 		assert_float(caja.get_center().y).is_greater(tamano.y / 2.0)
 		assert_float(caja.get_center().y).is_less(float(tamano.y))
-		hud.pensar("Un alfajor Jorgillo.")
-		assert_str(subtitulo.text).is_equal("Un alfajor Jorgillo.")
+		var segundo := "Segundo pensamiento de prueba."
+		hud.pensar(segundo)
+		assert_str(subtitulo.text).is_equal(segundo)
 
 
 func test_el_hud_no_arma_el_texto_de_la_caja() -> void:
