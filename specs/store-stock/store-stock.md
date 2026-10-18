@@ -282,6 +282,9 @@ no se muestra. CUANDO termina el examen, el texto DEBE desaparecer. Con la caja 
 examen: el texto es un pensamiento (BR-SUB-002), y la caja sigue apoyada. Examinar NO DEBE
 cambiar el contenido.
 
+La redacción es contenido editable de [`subtitles`](../subtitles/subtitles.md). Cambiarla NO DEBE
+cambiar la identidad del producto, el contenido ni los lugares libres que presenta el examen.
+
 La unidad DEBE nombrarse por la familia sonora de su producto (BR-STK-023), y no por lo que el
 producto es: Actroncito es una caja de medicamentos y Malbardo un paquete de cigarrillos, y los
 dos se cuentan en cajitas. Con una sola unidad va el singular:
@@ -750,19 +753,20 @@ producto ENTONCES tiene 1.
 
 ### AC-STK-041 — El texto de la caja examinada *(verifica BR-STK-031)*
 
-DADO una caja con tope de 8 CUANDO se la examina ENTONCES el texto es:
+DADO una caja con tope de 8 CUANDO se la examina ENTONCES se conservan los datos siguientes,
+independientemente de la redacción usada para presentarlos:
 
-| En la caja | Texto |
-|---|---|
-| 8 de Actroncito | Una caja con 8 cajitas de Actroncito. |
-| 5 de Malbardo | Una caja con 5 cajitas de Malbardo. Entran 3 más. |
-| 7 de Actroncito | Una caja con 7 cajitas de Actroncito. Entra 1 más. |
-| 1 de Actroncito | Una caja con 1 cajita de Actroncito. Entran 7 más. |
-| 0 de Actroncito | Una caja con 0 cajitas de Actroncito. Entran 8 más. |
-| 8 de Laysntt | Una caja con 8 paquetes de Laysntt. |
-| 1 de Coracola | Una caja con 1 lata de Coracola. Entran 7 más. |
-| 6 de Terminator | Una caja con 6 cartones de Terminator. Entran 2 más. |
-| 1 de Fernet God | Una caja con 1 botella de Fernet God. Entran 7 más. |
+| Producto | En la caja | Lugares libres |
+|---|---|---|
+| Actroncito | 8 | 0 |
+| Malbardo | 5 | 3 |
+| Actroncito | 7 | 1 |
+| Actroncito | 1 | 7 |
+| Actroncito | 0 | 8 |
+| Laysntt | 8 | 0 |
+| Coracola | 1 | 7 |
+| Terminator | 6 | 2 |
+| Fernet God | 1 | 7 |
 
 DADO cada producto del catálogo ENTONCES su familia sonora tiene su palabra, en singular y en
 plural.
@@ -772,7 +776,7 @@ plural.
 DADO una caja en la mano CUANDO se la examina ENTONCES se lee su texto y no su pista. CUANDO
 termina el examen ENTONCES el texto desaparece y la caja tiene lo mismo que antes.
 DADO la caja apoyada con 5 de Malbardo y las manos vacías CUANDO se pide examinar ENTONCES no
-hay examen, la línea de subtítulo muestra «Una caja con 5 cajitas de Malbardo. Entran 3 más.»,
+hay examen, la línea presenta Malbardo con 5 unidades y 3 lugares libres,
 y la caja sigue apoyada con 5.
 
 ### AC-STK-043 — El casillero ocupado se rechaza *(verifica BR-STK-009, BR-STK-032)*

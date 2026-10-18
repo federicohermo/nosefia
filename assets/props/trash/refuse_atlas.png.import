@@ -2,20 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2gmsd4h8an10"
-path="res://.godot/imported/yasmin-circulo-original.png-b1c3be72b765a90e232f5a5167b3bab2.ctex"
+uid="uid://cx6g6hil6d6pq"
+path.s3tc="res://.godot/imported/refuse_atlas.png-144e170c25687ccee54e127f292da90f.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
-source_file="res://assets/ui/manada/pistas/yasmin-circulo-original.png"
-dest_files=["res://.godot/imported/yasmin-circulo-original.png-b1c3be72b765a90e232f5a5167b3bab2.ctex"]
+source_file="res://assets/props/trash/refuse_atlas.png"
+dest_files=["res://.godot/imported/refuse_atlas.png-144e170c25687ccee54e127f292da90f.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -23,7 +24,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -36,5 +37,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
-detect_3d/compress_to=1
+process/size_limit=1024
+detect_3d/compress_to=0

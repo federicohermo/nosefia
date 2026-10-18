@@ -1,6 +1,6 @@
 # El nodo de convergencia, corrido por la máquina y no por la memoria de quien commitea.
 #
-# Corre `verificar.py` ENTERO y NO enumera sus nodos como pasos separados. No es pereza:
+# Corre `verificar.py` en particiones y NO enumera sus nodos como pasos separados. No es pereza:
 # enumerarlos acá crearía un segundo lugar donde vive la lista, y el día que alguien agregue un
 # nodo al script, la CI seguiría corriendo la lista vieja — en verde, que es exactamente el
 # modo de falla que este workflow existe para cerrar.
@@ -26,9 +26,26 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: verify-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  verify:
+  verify-particion:
+    name: ${{ matrix.nombre }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - particion: 0
+            nombre: Colisiones y caídas
+          - particion: 1
+            nombre: Agarre y jornada
+          - particion: 2
+            nombre: Cajas, apoyos y giro
+          - particion: 3
+            nombre: Reposición, puertas y checks
     steps:
       - uses: actions/checkout@v5
 
@@ -79,26 +96,28 @@ jobs:
           chmod +x "$bin"
           echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
 
-      # La PRIMERA apertura de un proyecto de Godot importa los recursos y genera `.godot/`, que
-      # está en el .gitignore. Sin este paso, la corrida de tests hace las dos cosas a la vez y
-      # un fallo de importación se lee como un fallo de test.
-      #
-      # `|| true` porque `--import` sale distinto de cero en algunas versiones aunque importe
-      # bien; lo que decide si el proyecto está sano es el paso siguiente, que es el que
-      # verifica de verdad.
-      - name: Importar los recursos del proyecto
-        run: "$GODOT_BIN --headless --path . --import || true"
-
       # Ningún nodo sale a la red: el gate que consultaba GitHub se fue con el mapa de specs.
       - name: verificar
-        run: python .claude/scripts/verificar.py
+        run: >-
+          python .claude/scripts/verificar.py
+          --particion-tests ${{ matrix.particion }}/${{ strategy.job-total }}
 
       # Los reportes de gdUnit4, para poder mirar QUÉ falló sin reproducir la corrida. `always()`
       # porque el caso en que sirven es justamente aquel en que el paso anterior falló.
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: reports-gdunit4
+          name: reports-gdunit4-${{ matrix.particion }}
           path: reports/
           if-no-files-found: ignore
           retention-days: 7
+
+  verify:
+    if: always()
+    needs: verify-particion
+    runs-on: ubuntu-latest
+    steps:
+      - name: Todas las particiones deben pasar
+        env:
+          RESULTADO: ${{ needs.verify-particion.result }}
+        run: test "$RESULTADO" = success

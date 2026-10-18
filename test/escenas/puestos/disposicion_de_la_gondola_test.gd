@@ -155,8 +155,10 @@ func test_la_tanda_de_cada_producto_esta_junta_sobre_un_solo_estante() -> void: 
 			DisposicionDeLaGondola.copia(bloque, 0).origin,
 			DisposicionDeLaGondola.copia(bloque, inicio_adelante).origin,
 		]
-		var segunda := DisposicionDeLaGondola.copia(bloque, mini(inicio_adelante + 1, total - 1))
-		var paso := absf((segunda.origin - primeras[1]).dot(costado))
+		var ultima := DisposicionDeLaGondola.copia(bloque, total - 1)
+		# El artista puede desplazar una columna unos milímetros: se mide el paso de la fila
+		# completa para no acumular el error de su primer hueco sobre todas las demás.
+		var paso := absf((ultima.origin - primeras[1]).dot(costado)) / maxi(adelante - 1, 1)
 		var fondo := (primeras[1] - primeras[0]).dot(frente)
 		(
 			assert_float(absf(primeras[0].y - primeras[1].y))
@@ -237,13 +239,13 @@ func test_las_fijas_conservan_filas_y_casilleros() -> void:  # AC-STK-028 AC-STK
 		assert_int(disposicion.casilleros_de(producto.id)).is_equal(esperado[producto.id])
 
 
-## La decisión conserva dos filas de Actroncito/Prongles y distingue las excepciones por tanda.
+## La decisión conserva dos filas de Actroncito/Progres y distingue las excepciones por tanda.
 static func _filas_esperadas(id: Producto.Id) -> int:
 	if (
 		id
 		in [
 			Producto.Id.COSA_DE_MANI,
-			Producto.Id.FLINPUF,
+			Producto.Id.FLIM_POF,
 			Producto.Id.BURBALOO,
 			Producto.Id.MARRANOS,
 			Producto.Id.POETICO

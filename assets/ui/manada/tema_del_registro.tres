@@ -1,0 +1,153 @@
+[gd_resource type="Theme" format=3 uid="uid://dccpq1jdgtnmf"]
+
+[ext_resource type="FontFile" uid="uid://vkrg0oe6eepu" path="res://assets/ui/manada/unscii-16.ttf" id="fuente"]
+
+[sub_resource type="StyleBoxFlat" id="foco"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.941176, 0.956863, 0.819608, 1)
+
+[sub_resource type="StyleBoxFlat" id="hover"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.32, 0.35, 0.37, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.611765, 0.65098, 0.568627, 1)
+
+[sub_resource type="StyleBoxFlat" id="boton"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.235294, 0.254902, 0.27451, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.611765, 0.65098, 0.568627, 1)
+
+[sub_resource type="StyleBoxFlat" id="pulsado"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.164706, 0.188235, 0.211765, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.611765, 0.65098, 0.568627, 1)
+
+[sub_resource type="StyleBoxFlat" id="cabecera"]
+content_margin_left = 20.0
+content_margin_top = 0.0
+content_margin_right = 20.0
+content_margin_bottom = 0.0
+bg_color = Color(0.235294, 0.254902, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="cantidad"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.164706, 0.188235, 0.211765, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.611765, 0.65098, 0.568627, 1)
+
+[sub_resource type="StyleBoxFlat" id="oscuro"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.164706, 0.188235, 0.211765, 1)
+
+[sub_resource type="StyleBoxFlat" id="alterna"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 26.0
+content_margin_bottom = 0.0
+bg_color = Color(0.235294, 0.254902, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="fila"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 26.0
+content_margin_bottom = 0.0
+bg_color = Color(0.164706, 0.188235, 0.211765, 1)
+
+[sub_resource type="StyleBoxLine" id="separador"]
+color = Color(0.611765, 0.65098, 0.568627, 1)
+
+[sub_resource type="StyleBoxFlat" id="importe"]
+content_margin_left = 20.0
+content_margin_top = 0.0
+content_margin_right = 20.0
+content_margin_bottom = 0.0
+bg_color = Color(0.164706, 0.188235, 0.211765, 1)
+
+[sub_resource type="StyleBoxFlat" id="panel"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.235294, 0.254902, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="agarre"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0.941176, 0.956863, 0.819608, 1)
+
+[sub_resource type="StyleBoxFlat" id="carril"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0.611765, 0.65098, 0.568627, 1)
+expand_margin_left = -3.0
+expand_margin_right = -3.0
+
+[sub_resource type="StyleBoxEmpty" id="vacio"]
+
+[resource]
+default_font = ExtResource("fuente")
+default_font_size = 36
+BotonDelRegistro/base_type = &"Button"
+BotonDelRegistro/colors/font_color = Color(0.941176, 0.956863, 0.819608, 1)
+BotonDelRegistro/colors/font_hover_color = Color(0.941176, 0.956863, 0.819608, 1)
+BotonDelRegistro/colors/font_pressed_color = Color(0.941176, 0.956863, 0.819608, 1)
+BotonDelRegistro/font_sizes/font_size = 32
+BotonDelRegistro/styles/focus = SubResource("foco")
+BotonDelRegistro/styles/hover = SubResource("hover")
+BotonDelRegistro/styles/normal = SubResource("boton")
+BotonDelRegistro/styles/pressed = SubResource("pulsado")
+CabeceraDelRegistro/base_type = &"PanelContainer"
+CabeceraDelRegistro/styles/panel = SubResource("cabecera")
+CantidadDelRegistro/base_type = &"Label"
+CantidadDelRegistro/font_sizes/font_size = 32
+CantidadDelRegistro/styles/normal = SubResource("cantidad")
+EncabezadoDelRegistro/base_type = &"PanelContainer"
+EncabezadoDelRegistro/styles/panel = SubResource("oscuro")
+FilaAlternaDelRegistro/base_type = &"PanelContainer"
+FilaAlternaDelRegistro/styles/panel = SubResource("alterna")
+FilaDelRegistro/base_type = &"PanelContainer"
+FilaDelRegistro/styles/panel = SubResource("fila")
+HSeparator/constants/separation = 1
+HSeparator/styles/separator = SubResource("separador")
+ImporteDelRegistro/base_type = &"PanelContainer"
+ImporteDelRegistro/styles/panel = SubResource("importe")
+Label/colors/font_color = Color(0.941176, 0.956863, 0.819608, 1)
+PanelContainer/styles/panel = SubResource("panel")
+VScrollBar/styles/grabber = SubResource("agarre")
+VScrollBar/styles/grabber_highlight = SubResource("agarre")
+VScrollBar/styles/grabber_pressed = SubResource("agarre")
+VScrollBar/styles/scroll = SubResource("carril")
+VScrollBar/styles/scroll_focus = SubResource("vacio")

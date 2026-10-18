@@ -231,7 +231,14 @@ def _cajas(soportes):
     texto = (RAIZ / "src/escenas/puestos/objetos_del_almacen.tscn").read_text(encoding="utf-8")
     producto = (RAIZ / "src/dominio/almacen/producto.gd").read_text(encoding="utf-8")
     catalogo = (RAIZ / "src/dominio/almacen/catalogo.gd").read_text(encoding="utf-8")
-    nombres = re.findall(r"^\s*(\w+),", re.search(r"enum Id \{(.*?)\}", producto, re.S)[1], re.M)
+    nombres = {
+        int(numero): nombre
+        for nombre, numero in re.findall(
+            r"^\s*(\w+)\s*=\s*(\d+),",
+            re.search(r"enum Id \{(.*?)\}", producto, re.S)[1],
+            re.M,
+        )
+    }
     tamanos = dict(re.findall(r"Producto.Id.(\w+): TamanoDeCaja.(\w+)", catalogo))
     cajas = {}
     for bloque in texto.split("[node ")[1:]:

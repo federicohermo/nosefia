@@ -611,7 +611,7 @@ func test_duronga_del_deposito_se_vende_sin_consumir_reserva_ni_reponer() -> voi
 	var lista: Array = _atenciones(almacen).tarea().get("_compradores")
 	assert_object(_atenciones(almacen).tarea().get("_inventario")).is_same(inventario)
 	assert_object(_atenciones(almacen).atencion().comprador()).is_same(lista[0])
-	assert_int(lista[0].pedido().unidades_de(Catalogo.de(Producto.Id.PRONGLES))).is_equal(1)
+	assert_int(lista[0].pedido().unidades_de(Catalogo.de(Producto.Id.PROGRES))).is_equal(1)
 	await _comprar(almacen)
 	assert_int(_atenciones(almacen).tarea().vendidas_de(producto)).is_equal(1)
 	assert_int(_cantidades(almacen, producto)[0]).is_equal(cantidades[0] - 1)

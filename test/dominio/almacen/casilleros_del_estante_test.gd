@@ -93,7 +93,7 @@ func test_el_casillero_de_otro_producto_es_producto_no_aceptado() -> void:  # AC
 	assert_int(estante.colocar_unidad(unidad, actroncito, 1)).is_equal(Estante.Rechazo.NINGUNO)
 	assert_array(estante.casilleros_ocupados(actroncito)).is_equal([1])
 	# Un producto que el estante no acepta se rechaza en cualquier casillero.
-	var laysntt := _producto(Producto.Id.LAYSNTT)
+	var laysntt := _producto(Producto.Id.LAYSNNT)
 	assert_int(estante.colocar(laysntt, 0)).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
 
 

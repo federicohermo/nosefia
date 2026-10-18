@@ -8,7 +8,7 @@ func test_siempre_presenta_tres_filas_y_repinta_sin_restos() -> void:  # AC-CTR-
 	add_child(vista)
 	assert_bool(vista.visible).is_false()
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	var coracola := Catalogo.de(Producto.Id.CORACOLA)
+	var coracola := Catalogo.de(Producto.Id.PURA_COLA)
 	vista.mostrar(_automatico([marolini, marolini, coracola]))
 	assert_bool(vista.visible).is_true()
 	assert_int(vista.filas.size()).is_equal(GeneradorDeTickets.RENGLONES)

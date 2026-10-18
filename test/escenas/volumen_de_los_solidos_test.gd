@@ -333,7 +333,7 @@ func test_el_nuevo_corte_conserva_volumen_sin_rellenar_huecos() -> void:
 	assert_int(medidos).is_greater(0)
 	(
 		assert_array(afuera)
-		. override_failure_message("volúmenes fuera de su malla: %s" % afuera)
+		. override_failure_message("volúmenes fuera de su malla: %s" % [afuera])
 		. is_empty()
 	)
 	assert_array(_sin_volumen(almacen, corte_colilla)).is_empty()

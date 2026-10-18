@@ -38,12 +38,7 @@ func _cuadros(cantidad: int = 3) -> void:
 
 
 func _abrir(jornada: int = 2) -> void:
-	var partida := Partida.nueva()
-	while partida.jornada() < jornada:
-		partida.abrir_la_jornada()
-		for tarea: Tarea in partida.obligatorias():
-			tarea.completar()
-		partida.cerrar_la_jornada(partida.obligatorias().size())
+	var partida := Partida.desde({"jornada": jornada, "medios": 0})
 	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
 	_almacen = escena.instantiate()
 	_almacen.set("_partida", partida)
@@ -262,8 +257,6 @@ func test_canales_fuera_de_j2_no_anotan_y_revelaciones_siguen_aparte() -> void: 
 
 func test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll() -> void:  # AC-INV-051, AC-INV-052
 	await _abrir()
-	var cuaderno := (_almacen.get("_computadora") as ComputadoraDeEscritorio).cuaderno()
-	var nota_independiente := cuaderno.escribir("Nota del cuaderno", "Contenido independiente")
 	assert_int(_expediente().registrar("2B")).is_equal(Expediente.Resultado.ANOTADA)
 	assert_int(_expediente().registrar("2A")).is_equal(Expediente.Resultado.ANOTADA)
 	var notas := _celular().bandeja().mensajes_de(Conversacion.Interlocutor.NOTAS)
@@ -309,13 +302,10 @@ func test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll() -> void:  # AC-INV
 	assert_array(Array(_expediente().identidades())).is_equal(["2B", "2A"])
 	assert_int(_celular().bandeja().mensajes_de(Conversacion.Interlocutor.NOTAS).size()).is_equal(4)
 	assert_array(Conversacion.de(Conversacion.Interlocutor.NOTAS).mensajes).is_empty()
-	assert_array(cuaderno.notas()).is_equal([nota_independiente])
 
 
-func test_cierre_j1_abre_notas_vacias_fijas_y_conserva_cuaderno() -> void:  # AC-INV-052
+func test_cierre_j1_abre_notas_vacias_fijas() -> void:  # AC-INV-052
 	await _abrir(1)
-	var cuaderno := (_almacen.get("_computadora") as ComputadoraDeEscritorio).cuaderno()
-	var nota_independiente := cuaderno.escribir("Nota del cuaderno", "Contenido independiente")
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.avanzar((reloj.get("_turno") as Turno).tiempo_restante())
 	Avance.entregar(_almacen.get("_pantalla") as PantallaDeDevolucion)
@@ -328,7 +318,6 @@ func test_cierre_j1_abre_notas_vacias_fijas_y_conserva_cuaderno() -> void:  # AC
 	await _tecla(Celular.ACCION)
 	assert_bool(_celular().celular().abierto()).is_true()
 	assert_array(Array(_expediente().identidades())).is_empty()
-	assert_array(cuaderno.notas()).is_equal([nota_independiente])
 
 
 func test_recibido_futuro_no_aparece_en_el_chat_abierto() -> void:  # AC-INV-028

@@ -91,32 +91,24 @@ func test_un_ticket_en_el_inodoro_pide_su_audio_una_vez() -> void:
 	assert_array(_voces_con("SFX_OBJETO_Mopa_MojarEnBalde")).is_empty()
 
 
-func test_escribir_una_nota_pide_el_mensaje_enviado_y_leer_no() -> void:
+func test_recibir_un_mensaje_pide_su_audio_una_vez_y_leer_no() -> void:
 	await _abrir()
-	var computadora: ComputadoraDeEscritorio = _almacen.get("_computadora")
 	var celular: CelularDelEmpleado = _almacen.get("_celular")
-	var evento := EntradaSonora.Evento.NOTA_ESCRITA
-	computadora.pedir_cambiar_a(Computadora.App.NOTAS)
+	var evento := EntradaSonora.Evento.MENSAJE_DEL_CELULAR
 	var quien := celular.bandeja().conversaciones()[0].interlocutor
-	celular.pedir_chat(quien)
 	var mensaje := Mensaje.new()
 	mensaje.texto = "Prueba de llegada"
-	celular.recibir(quien, mensaje)
-	computadora.pedir_escribir("", "Sin título no se guarda")
+	celular.recibir(quien, null)
 	assert_int(_pedidos.count(evento)).is_zero()
-	computadora.pedir_escribir("Prueba", "Una nota")
+	celular.recibir(quien, mensaje)
 	assert_int(_pedidos.count(evento)).is_equal(1)
-	var pantalla: PantallaDeComputadora = _almacen.get_node("Interfaz/PantallaDeComputadora")
-	var lista: VBoxContainer = pantalla.notas().get("_lista")
-	assert_int(lista.get_child_count()).is_equal(computadora.cuaderno().cuantas())
-	assert_int(lista.get_child_count()).is_greater(0)
-	var boton: Button = lista.get_child(lista.get_child_count() - 1)
-	boton.pressed.emit()
-	var detalle: Label = pantalla.notas().get("_detalle_texto")
-	assert_str(detalle.text).is_equal("Una nota")
+	celular.pedir_alternar(false)
+	celular.pedir_chat(quien)
+	assert_int(celular.bandeja().no_leidos(quien)).is_zero()
 	assert_int(_pedidos.count(evento)).is_equal(1)
 	assert_bool(_rechazados.has(evento)).is_false()
-	var voces := _voces_con("SFX_INTERFAZ_Celular_Mensaje_Enviado")
+	var voces := _voces_con("SFX_INTERFAZ_Celular_Mensaje_A")
+	voces.append_array(_voces_con("SFX_INTERFAZ_Celular_Mensaje_B"))
 	assert_int(voces.size()).is_equal(1)
 	if voces.size() == 1:
 		assert_str(voces[0].bus).is_equal(EntradaSonora.BUS_DE_INTERFAZ)

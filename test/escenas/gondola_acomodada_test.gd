@@ -2,7 +2,8 @@
 extends GdUnitTestSuite
 
 const ESTRUCTURA := preload("res://src/escenas/puestos/estructura_del_almacen.tscn")
-const GONDOLAS := ["gondolanueva", "gondolanueva2", "gondolanueva_001"]
+## AC-STK-051 exige este retiro en las caras de lado de las dos islas centrales.
+const GONDOLAS := ["gondolanueva", "gondolanueva2"]
 const ALTO_DEL_ZOCALO := 0.5
 
 

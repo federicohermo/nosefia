@@ -65,7 +65,7 @@ func test_la_mira_no_atrae_un_producto_fuera_de_su_tolerancia() -> void:  # AC-P
 	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	puesto.set_physics_process(false)
-	var producto := Catalogo.de(Producto.Id.ARVEJAS)
+	var producto := Catalogo.de(Producto.Id.ARVECOR)
 	var zona: Node3D = puesto.get_node("ZonaDe" + producto.nombre).get_child(0)
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	var frente := DisposicionDeLaGondola.frente(
@@ -96,7 +96,7 @@ func test_el_producto_suelto_se_enfoca_con_las_aristas_de_los_casilleros() -> vo
 	var faltantes: Dictionary[Producto.Id, int] = {}
 	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
 	var puesto: Node3D = almacen.get("_reposicion_manual")
-	var producto := Catalogo.de(Producto.Id.ARVEJAS)
+	var producto := Catalogo.de(Producto.Id.ARVECOR)
 	puesto.call("agarrar_de_la_gondola", producto.id, 1)
 	var unidades: Array[Node3D] = puesto.get("_unidades")
 	assert_int(unidades.size()).is_equal(1)

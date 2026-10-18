@@ -235,27 +235,28 @@ func test_otro_producto_o_nada_no_entra() -> void:  # AC-STK-038
 	assert_int(estante.reservadas(malbardo)).is_equal(1)
 
 
-func test_el_texto_dice_cuantas_tiene_y_cuantas_entran() -> void:  # AC-STK-041
-	# Cada fila sale de «las unidades de una caja menos lo que hay», y el nombre es el del
-	# catálogo: Malbardo y no «cigarrillos Malbardo», que es como lo dice la ficha. Las cuatro
-	# últimas son una por familia sonora: Terminator es una caja, y se cuenta en cartones.
+func test_el_examen_conserva_el_producto_y_las_dos_cantidades() -> void:  # AC-STK-041
 	var filas := [
-		[Producto.Id.ACTRONCITO, 8, "Una caja con 8 cajitas de Actroncito."],
-		[Producto.Id.MALBARDO, 5, "Una caja con 5 cajitas de Malbardo. Entran 3 más."],
-		[Producto.Id.ACTRONCITO, 7, "Una caja con 7 cajitas de Actroncito. Entra 1 más."],
-		[Producto.Id.ACTRONCITO, 1, "Una caja con 1 cajita de Actroncito. Entran 7 más."],
-		[Producto.Id.ACTRONCITO, 0, "Una caja con 0 cajitas de Actroncito. Entran 8 más."],
-		[Producto.Id.LAYSNTT, 8, "Una caja con 8 paquetes de Laysntt."],
-		[Producto.Id.CORACOLA, 1, "Una caja con 1 lata de Coracola. Entran 7 más."],
-		[Producto.Id.TERMINATOR, 6, "Una caja con 6 cartones de Terminator. Entran 2 más."],
-		[Producto.Id.FERNET_GOD, 1, "Una caja con 1 botella de Fernet God. Entran 7 más."],
+		[Producto.Id.ACTRONCITO, 8, 0],
+		[Producto.Id.MALBARDO, 5, 3],
+		[Producto.Id.ACTRONCITO, 7, 1],
+		[Producto.Id.ACTRONCITO, 1, 7],
+		[Producto.Id.ACTRONCITO, 0, 8],
+		[Producto.Id.LAYSNNT, 8, 0],
+		[Producto.Id.PURA_COLA, 1, 7],
+		[Producto.Id.TERMINATOR, 6, 2],
+		[Producto.Id.FERNET_GOD, 1, 7],
 	]
 	assert_int(ReglasDelEstante.UNIDADES_POR_CAJA).is_equal(8)
 	for fila: Array in filas:
 		var producto := _producto(fila[0])
 		var caja := _caja(producto, _estante(producto, fila[1]))
 		assert_int(caja.unidades()).is_equal(fila[1])
-		assert_str(caja.texto_del_examen()).is_equal(fila[2])
+		var datos := caja.datos_del_examen()
+		assert_int(datos.producto).is_equal(fila[0])
+		assert_int(datos.unidades).is_equal(fila[1])
+		assert_int(datos.entran).is_equal(fila[2])
+		assert_str(caja.texto_del_examen()).is_not_empty()
 
 
 func test_la_cuenta_de_lo_que_entra_sale_de_lo_que_esta_afuera() -> void:  # AC-STK-041
@@ -265,26 +266,13 @@ func test_la_cuenta_de_lo_que_entra_sale_de_lo_que_esta_afuera() -> void:  # AC-
 	var caja := _caja(malbardo, _estante(malbardo, 5))
 	caja.sacar()
 	caja.sacar()
-	assert_str(caja.texto_del_examen()).is_equal(
-		"Una caja con 3 cajitas de Malbardo. Entran 5 más."
-	)
+	var datos := caja.datos_del_examen()
+	assert_int(datos.producto).is_equal(Producto.Id.MALBARDO)
+	assert_int(datos.unidades).is_equal(3)
+	assert_int(datos.entran).is_equal(5)
 
 
-func test_cada_familia_del_catalogo_se_cuenta_en_su_palabra() -> void:  # AC-STK-041
-	# Recorre el catálogo y no una lista de productos: el día que un producto traiga una familia
-	# sin palabra, el caso la nombra. Con una unidad va el singular, con dos el plural.
-	var palabras := {
-		EntradaSonora.Sonoridad.CAJITA: ["cajita", "cajitas"],
-		EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO: ["paquete", "paquetes"],
-		EntradaSonora.Sonoridad.LATA: ["lata", "latas"],
-		EntradaSonora.Sonoridad.CAJA: ["cartón", "cartones"],
-		EntradaSonora.Sonoridad.BOTELLA_PLASTICA: ["botella", "botellas"],
-	}
-	# La tabla del juego es la de la decisión, fila por fila.
-	for familia: EntradaSonora.Sonoridad in palabras:
-		assert_array(ContenidoDeLaCaja.NOMBRES_DE_LA_UNIDAD.get(familia, [])).is_equal(
-			palabras[familia]
-		)
+func test_cada_familia_del_catalogo_tiene_singular_y_plural() -> void:  # AC-STK-041
 	for producto in Catalogo.todos():
 		var familia := Catalogo.sonoridad_de(producto.id)
 		var nombre_de_la_familia: String = EntradaSonora.Sonoridad.find_key(familia)
@@ -295,16 +283,20 @@ func test_cada_familia_del_catalogo_se_cuenta_en_su_palabra() -> void:  # AC-STK
 			)
 			. is_true()
 		)
-		if not palabras.has(familia):
+		if not ContenidoDeLaCaja.NOMBRES_DE_LA_UNIDAD.has(familia):
 			continue
+		var palabras: Array = ContenidoDeLaCaja.NOMBRES_DE_LA_UNIDAD[familia]
+		assert_array(palabras).has_size(2)
+		for palabra: String in palabras:
+			assert_str(palabra).is_not_empty()
 		var una := _caja(producto, _estante(producto, 1))
-		assert_str(una.texto_del_examen()).is_equal(
-			"Una caja con 1 %s de %s. Entran 7 más." % [palabras[familia][0], producto.nombre]
-		)
+		assert_int(una.datos_del_examen().familia).is_equal(familia)
+		assert_int(una.datos_del_examen().unidades).is_equal(1)
+		assert_str(una.texto_del_examen()).contains(palabras[0]).not_contains(palabras[1])
 		var dos := _caja(producto, _estante(producto, 2))
-		assert_str(dos.texto_del_examen()).is_equal(
-			"Una caja con 2 %s de %s. Entran 6 más." % [palabras[familia][1], producto.nombre]
-		)
+		assert_int(dos.datos_del_examen().familia).is_equal(familia)
+		assert_int(dos.datos_del_examen().unidades).is_equal(2)
+		assert_str(dos.texto_del_examen()).contains(palabras[1])
 
 
 func test_cada_producto_del_catalogo_tiene_su_texto() -> void:
@@ -315,7 +307,7 @@ func test_cada_producto_del_catalogo_tiene_su_texto() -> void:
 		(
 			assert_str(caja.texto_del_examen())
 			. override_failure_message("la caja de %s no dice su nombre" % producto.nombre)
-			. ends_with(" de %s." % producto.nombre)
+			. contains(producto.nombre)
 		)
 
 

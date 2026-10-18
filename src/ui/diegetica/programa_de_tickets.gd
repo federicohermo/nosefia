@@ -28,7 +28,7 @@ func _ready() -> void:
 		var selector := selectores[indice]
 		selector.add_item("")
 		for producto in _catalogo:
-			selector.add_item(producto.nombre)
+			selector.add_item(Catalogo.de(producto.id).nombre)
 		for opcion in selector.item_count:
 			selector.get_popup().set_item_as_radio_checkable(opcion, false)
 		selector.get_popup().add_theme_stylebox_override("panel", menu)
@@ -57,7 +57,7 @@ func mostrar(generador: GeneradorDeTickets) -> void:
 			else (renglones[indice] if indice < renglones.size() else null)
 		)
 		var tiene_producto := producto != null
-		filas[indice].text = producto.nombre if tiene_producto else ""
+		filas[indice].text = Catalogo.de(producto.id).nombre if tiene_producto else ""
 		selectores[indice].select(_opcion_de(producto))
 		for estado: StringName in [&"normal", &"hover", &"pressed"]:
 			selectores[indice].add_theme_stylebox_override(

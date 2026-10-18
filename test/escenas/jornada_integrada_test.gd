@@ -45,6 +45,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	await get_tree().process_frame
 	var ciclo: CicloDeJornadas = almacen.get("_ciclo")
@@ -185,7 +186,7 @@ func _reponer(almacen: Node3D) -> void:
 			direccion = Vector3(1.5, 0, 0)
 		elif producto.id == Producto.Id.ZUCARACHAS:
 			direccion = Vector3(-1.5, 0, 0)
-		elif producto.id == Producto.Id.LAYSNTT:
+		elif producto.id == Producto.Id.LAYSNNT:
 			direccion = Vector3(0, 0, -1.5)
 		camara.global_position = zona.get_center() + direccion
 		camara.look_at(zona.get_center())
@@ -205,7 +206,7 @@ func _registrar(almacen: Node3D) -> void:
 	await _comprobar_reloj(almacen)
 	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
 	var atender: TareaDeAtender = almacen.get("_atenciones").tarea()
-	var filas: Node = pantalla.caja().get_node("Desplazamiento/Filas")
+	var filas: Container = pantalla.caja().get("_filas")
 	var productos := computadora.registro().productos()
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var tarea := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
@@ -230,7 +231,7 @@ func _registrar(almacen: Node3D) -> void:
 
 ## Los botones de una fila de la planilla: «−» en la columna 3 y «+» en la 5.
 func _boton_de_la_fila(filas: Node, indice: int, columna: int) -> Button:
-	return filas.get_child(indice).get_child(columna)
+	return filas.get_child(indice).get_child(0).get_child(columna)
 
 
 func _pulsar_ventanilla(ventanilla: Node3D) -> void:

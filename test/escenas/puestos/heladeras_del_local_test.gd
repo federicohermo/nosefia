@@ -53,7 +53,7 @@ func test_abrir_cada_heladera_libera_el_rayo_hacia_sus_productos() -> void:
 		assert_bool(puerta.call("puerta").abierta()).is_true()
 		assert_object(espacio.intersect_ray(rayo).get("collider")).is_not_same(puerta)
 		var presentacion: Node3D = almacen.get("_reposicion_manual")
-		var id: Producto.Id = [Producto.Id.CORACOLA, Producto.Id.MAYONCHIS][numero]
+		var id: Producto.Id = [Producto.Id.PURA_COLA, Producto.Id.MAYONCHIS][numero]
 		presentacion.call("retirar", id)
 		var casillero: Node3D = presentacion.call("casillero", id)
 		var jugador: CharacterBody3D = almacen.get("_jugador")

@@ -369,3 +369,20 @@ Sus pruebas se corren con `node --test .github/scripts/tests/carga_de_cuadros_te
 La comparación no prueba el primer dibujo de cada programa ni todas las variantes de la partida.
 Un programa puede terminar con su objeto ya tapado. Una variante nueva aparece cuando termina su enlace.
 El resultado depende de los hilos libres del equipo y de la caché del driver.
+
+### El calentamiento debajo del menú
+
+En la web, el menú calienta una copia del almacén apenas termina de leerlo. La copia queda
+detenida y oculta. Cuando termina, la consola muestra `[carga] almacén calentado debajo del menú`.
+Si el jugador hace clic después de ese aviso, entra con la copia y no espera el calentamiento.
+
+- **Con 30 s en el menú,** el clic llega al almacén en 1,3 a 1,4 s. Sin la copia tardaba 22,4 s.
+- **Con un clic rápido,** la espera es la misma de antes: la carga sigue el calentamiento que ya
+  empezó.
+- **El costo:** mientras calienta, el menú se traba hasta 1,5 a 1,7 s por cuadro.
+- **No sirve la copia** si el jugador cambió las preferencias, o si eligió «Nuevo juego» con una
+  partida guardada. En esos casos se carga el almacén otra vez.
+
+La barra de carga reparte por tiempo estimado: el tiempo que pasó, sobre el que pasó más el que
+falta. Lo que falta del destape sale de su ritmo. Lo que falta de la cola sale del ritmo de
+enlace medido, y antes de medirlo, de `SEGUNDOS_POR_PROGRAMA`.

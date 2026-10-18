@@ -20,6 +20,7 @@ extends Resource
 ##
 ## **Uno nuevo va al final.** Los `.tres` guardan el evento por número, y uno metido en el medio le
 ## cambiaría el significado a cada fila de abajo sin que el archivo cambie un byte.
+## Al quitar un evento se conserva el número de los siguientes: el 31 quedó libre.
 enum Evento {
 	TAREA_CUMPLIDA,
 	TURNO_CERRADO,
@@ -52,8 +53,7 @@ enum Evento {
 	LECTOR_ESCANEADO,
 	TICKET_IMPRESO,
 	TICKET_DESECHADO,
-	NOTA_ESCRITA,
-	PASADA_CON_JABON_EQUIVOCADO,
+	PASADA_CON_JABON_EQUIVOCADO = 32,
 	AMBIENTE_EXTERIOR,
 }
 

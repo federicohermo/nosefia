@@ -107,10 +107,12 @@ var _gestos := SubtitulosDeLosGestos.new()
 var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
+var _enlace_de_guardado: EnlaceDeGuardado
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
 @onready var _pantalla_del_celular: PantallaDelCelular = $Interfaz/PantallaDelCelular
+@onready var _hipotesis: PantallaDeHipotesis = $Interfaz/PantallaDeHipotesis
 @onready var _investigador: Investigador = $Servicios/Investigador
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
 
@@ -127,6 +129,7 @@ func _ready() -> void:
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
+	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
 	_acomodador = AcomodadorDelDeposito.new()
@@ -260,11 +263,12 @@ func _ready() -> void:
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
 	_cablear_las_preferencias(pausa)
 	_arranque = _jugador.global_transform
-	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
-	_ciclo.arrancar(_partida, _reloj)
+	_enlace_de_guardado = EnlaceDeGuardado.new(_ciclo, Guardado.new())
+	add_child(_enlace_de_guardado)
 	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
 	_jugador.muebles_con_reserva = _muebles_con_contorno
-	_reposicion_manual.preparar()
+	_ciclo.jornada_abierta.connect(_reposicion_manual.preparar.unbind(1), CONNECT_ONE_SHOT)
+	_ciclo.arrancar(_partida, _reloj)
 
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
@@ -411,8 +415,16 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 
 
 ## Qué hace cada opción de la devolución. Cuáles se ofrecen lo decidió ella; acá sólo se busca
-## la acción de la elegida.
+## la acción de la elegida. Las noches con reflexión pasan antes por las notas.
 func _al_despachar_la_devolucion(opcion: DevolucionDelJefe.Opcion) -> void:
+	if opcion == DevolucionDelJefe.Opcion.CONTINUAR and _partida.reflexion != null:
+		_empezar_la_reflexion()
+		return
+	_salir_del_cierre(opcion)
+
+
+func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
+	_pantalla.cerrar()
 	if opcion == DevolucionDelJefe.Opcion.CONTINUAR:
 		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
 		_jugador.suspender()
@@ -429,6 +441,68 @@ func _al_despachar_la_devolucion(opcion: DevolucionDelJefe.Opcion) -> void:
 func _seguir() -> void:
 	_ciclo.abrir_la_jornada()
 	anunciar_la_noche()
+
+
+## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
+## entregar otra vez la devolución; si no, se anuncia la jornada guardada.
+func retomar_la_partida() -> void:
+	if _partida.reflexion == null:
+		anunciar_la_noche()
+		return
+	_jugador.suspender()
+	_pantalla_del_celular.mostrar_recordatorio(false)
+	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
+	_jornada_del_celular = _partida.reflexion.jornada()
+	_celular.bandeja().abrir_jornada(_jornada_del_celular)
+	_pantalla.visible = true
+	_empezar_la_reflexion()
+
+
+## El celular pasa de la devolución a las notas sin bajar, y el recuadro espera a que llegue.
+func _empezar_la_reflexion() -> void:
+	var reflexion := _partida.reflexion
+	reflexion.empezar()
+	_celular.mostrar_fijo(Conversacion.Interlocutor.NOTAS)
+	_pantalla_del_celular.desplazar_a_la_izquierda()
+	await _pantalla_del_celular.celular_desplazado
+	_hipotesis.mostrar(reflexion)
+
+
+func _al_continuar_la_reflexion(identidad: String) -> void:
+	var reflexion := _partida.reflexion
+	if reflexion == null or not reflexion.continuar(identidad):
+		return
+	_anotar_el_paso()
+	if reflexion.etapa() == ReflexionDeCierre.Etapa.TERMINADA:
+		_terminar_la_reflexion()
+	else:
+		_hipotesis.mostrar(reflexion)
+
+
+func _al_elegir_la_hipotesis(identidad: String) -> void:
+	var reflexion := _partida.reflexion
+	if reflexion == null or reflexion.elegir(identidad) != ReflexionDeCierre.Eleccion.ACEPTADA:
+		return
+	_anotar_el_paso()
+	_hipotesis.mostrar(reflexion)
+
+
+func _navegar_las_hipotesis(adelante: bool) -> void:
+	var reflexion := _partida.reflexion
+	if reflexion != null and (reflexion.siguiente() if adelante else reflexion.anterior()):
+		_hipotesis.mostrar(reflexion)
+
+
+## La nota llega al chat y el guardado la conserva antes de dejar el cierre.
+func _anotar_el_paso() -> void:
+	for nota: Mensaje in _partida.expediente.mensajes_de_notas():
+		_celular.recibir(Conversacion.Interlocutor.NOTAS, nota)
+	_enlace_de_guardado.guardar()
+
+
+func _terminar_la_reflexion() -> void:
+	_hipotesis.ocultar()
+	_salir_del_cierre(DevolucionDelJefe.Opcion.CONTINUAR)
 
 
 ## La introducción conserva el presupuesto completo; comenzar usa la misma entrada que seguir.
@@ -513,25 +587,30 @@ func _al_tenir_con(identidad: StringName, _agua: ReglasDeLaLimpieza.Agua) -> voi
 func _cablear_los_gestos() -> void:
 	_recolector.tiro_pedido.connect(
 		func(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> void:
-			_pensar(SubtitulosDeLosGestos.al_tirar(sostenido, tiro))
+			_pensar_gesto(SubtitulosDeLosGestos.al_tirar(sostenido, tiro))
 	)
 	_limpiador.pasada_rechazada.connect(
 		func(_lugar: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado) -> void:
 			var se_mojo := _limpiador.piso().mopa().se_mojo()
-			_pensar(SubtitulosDeLosGestos.al_pasar_la_mopa(motivo, se_mojo))
+			_pensar_gesto(SubtitulosDeLosGestos.al_pasar_la_mopa(motivo, se_mojo))
 	)
 	_limpiador.pasada_dada.connect(
-		func(lugar: PisoDelLocal.Lugar) -> void: _pensar(SubtitulosDeLosGestos.al_borrar(lugar))
+		func(lugar: PisoDelLocal.Lugar) -> void:
+			_pensar_gesto(SubtitulosDeLosGestos.al_borrar(lugar))
 	)
 	_limpiador.mopa_secada.connect(
 		func() -> void:
 			var examinando := _jugador.examen.esta_examinando()
-			_pensar(_gestos.al_secarse_la_mopa(_partida, examinando))
+			_pensar_gesto(_gestos.al_secarse_la_mopa(_partida, examinando))
 	)
 	_jugador.examen.examen_terminado.connect(
-		func() -> void: _pensar(_gestos.al_terminar_el_examen(_partida))
+		func() -> void: _pensar_gesto(_gestos.al_terminar_el_examen(_partida))
 	)
 	_agarre.objeto_soltado.connect(_vigilar_si_queda_afuera)
+
+
+func _pensar_gesto(id: SubtitulosDeLosGestos.Id) -> void:
+	_pensar(SubtitulosDeLosGestos.texto(id))
 
 
 ## Los avisos de acciones duran lo mismo aunque el jugador camine.
@@ -550,7 +629,9 @@ func _pensar_en(texto: String, lugar: Vector3) -> void:
 		_distancia_al_pensar = _jugador.global_position.distance_to(lugar)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if _partida.reflexion != null and _partida.reflexion.avanzar(delta):
+		_terminar_la_reflexion()
 	if _lugar_del_pensamiento.is_finite():
 		var distancia := _jugador.global_position.distance_to(_lugar_del_pensamiento)
 		_hud.alejarse(distancia - _distancia_al_pensar)
@@ -581,7 +662,7 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 			await get_tree().physics_frame
 			if jornada != _partida.jornada() or not _reloj.corriendo():
 				return
-		_pensar(SubtitulosDeLosGestos.al_quedar_afuera(datos))
+		_pensar_gesto(SubtitulosDeLosGestos.al_quedar_afuera(datos))
 
 
 func _al_agotar_el_turno(_jornada: int) -> void:
@@ -614,6 +695,8 @@ func _alternar_el_celular() -> void:
 
 
 func _cablear_el_celular() -> void:
+	_computadora.computadora_abierta.connect(_pantalla_del_celular.cubrir_recordatorio.bind(true))
+	_computadora.computadora_cerrada.connect(_pantalla_del_celular.cubrir_recordatorio.bind(false))
 	_celular.celular_abierto.connect(_al_abrir_el_celular)
 	_celular.celular_cerrado.connect(_al_cerrar_el_celular)
 	_celular.menu_mostrado.connect(_mostrar_el_menu_del_celular)
@@ -628,6 +711,10 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
 	_pantalla_del_celular.cierre_pedido.connect(_alternar_el_celular)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
+	_hipotesis.continuacion_pedida.connect(_al_continuar_la_reflexion)
+	_hipotesis.eleccion_pedida.connect(_al_elegir_la_hipotesis)
+	_hipotesis.siguiente_pedido.connect(_navegar_las_hipotesis.bind(true))
+	_hipotesis.anterior_pedido.connect(_navegar_las_hipotesis.bind(false))
 	# Al retomar, las devoluciones de las noches ya cerradas vuelven al chat de Enrique.
 	for mensaje: Mensaje in _partida.devoluciones_del_jefe():
 		_celular.recibir(Conversacion.Interlocutor.JEFE, mensaje)

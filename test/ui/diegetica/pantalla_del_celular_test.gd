@@ -114,6 +114,22 @@ func test_un_cuadro_largo_no_salta_la_animacion_del_celular() -> void:  # AC-INV
 	assert_bool(pantalla.is_processing()).is_true()
 
 
+func test_llegar_a_la_izquierda_avisa_una_sola_vez() -> void:  # AC-INV-057
+	var pantalla := _pantalla()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	var llegadas: Array[bool] = []
+	pantalla.celular_desplazado.connect(func() -> void: llegadas.append(true))
+	pantalla.desplazar_a_la_izquierda()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	assert_bool(pantalla.is_processing()).is_false()
+	assert_array(llegadas).is_equal([true])
+	pantalla._process(0.0)
+	assert_array(llegadas).is_equal([true])
+
+
 func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	var pantalla := _pantalla()
 	var conversacion := _conversacion(24)

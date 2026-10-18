@@ -19,6 +19,21 @@ extends RefCounted
 ## para cualquier otra cosa en la mano no inventa un efecto: por eso existe `NADA`.
 enum Gesto { SACAR, METER, NADA }
 
+
+## Los datos que cambian al examinar una caja, separados de las palabras que los presentan.
+class DatosDelExamen:
+	var producto: Producto.Id
+	var unidades: int
+	var entran: int
+	var familia: EntradaSonora.Sonoridad
+
+	func _init(un_producto: Producto, cuantas: int) -> void:
+		producto = un_producto.id
+		unidades = cuantas
+		entran = ReglasDelEstante.UNIDADES_POR_CAJA - cuantas
+		familia = Catalogo.sonoridad_de(producto)
+
+
 ## El texto al examinar la caja: cuántas tiene, cómo se llaman y de qué producto. Lo que entra va
 ## en otra frase porque con la caja llena no se dice, y porque una sola unidad va en singular.
 const TEXTO_DEL_EXAMEN := "Una caja con %d %s de %s."
@@ -104,22 +119,25 @@ func gesto_posible(sostenido: ObjetoDelAlmacen, primario: bool) -> Gesto:
 	return gesto
 
 
+func datos_del_examen() -> DatosDelExamen:
+	return DatosDelExamen.new(producto, unidades()) if producto != null else null
+
+
 ## Lo que dice la caja al examinarla: cuántas tiene y, si no está llena, cuántas le entran.
 ##
 ## No dice la pista de la caja. Esa se registra en la investigación, y el texto dice sólo la
 ## cuenta.
 func texto_del_examen() -> String:
-	if producto == null:
+	var datos := datos_del_examen()
+	if datos == null:
 		return ""
-	var cuantas := unidades()
-	var nombres: Array = NOMBRES_DE_LA_UNIDAD.get(Catalogo.sonoridad_de(producto.id), ["", ""])
-	var nombre: String = nombres[0] if cuantas == 1 else nombres[1]
-	var texto := TEXTO_DEL_EXAMEN % [cuantas, nombre, producto.nombre]
-	var entran := ReglasDelEstante.UNIDADES_POR_CAJA - cuantas
-	if entran == 1:
-		texto += TEXTO_DE_UNA_MAS % entran
-	elif entran > 1:
-		texto += TEXTO_DE_VARIAS_MAS % entran
+	var nombres: Array = NOMBRES_DE_LA_UNIDAD.get(datos.familia, ["", ""])
+	var nombre: String = nombres[0] if datos.unidades == 1 else nombres[1]
+	var texto := TEXTO_DEL_EXAMEN % [datos.unidades, nombre, producto.nombre]
+	if datos.entran == 1:
+		texto += TEXTO_DE_UNA_MAS % datos.entran
+	elif datos.entran > 1:
+		texto += TEXTO_DE_VARIAS_MAS % datos.entran
 	return texto
 
 

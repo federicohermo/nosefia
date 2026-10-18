@@ -192,6 +192,7 @@ func test_la_pendiente_en_tacho_piso_o_mano_no_cruza_de_noche() -> void:  # AC-C
 		var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
 		AvanceDeDevolucion.entregar(pantalla)
 		pantalla.elegir()
+		AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 		AvanceDeDevolucion.terminar_movimiento(pantalla)
 		await get_tree().process_frame
 		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)

@@ -152,8 +152,13 @@ func test_con_la_letra_al_maximo_nada_se_sale_del_lienzo() -> void:  # AC-CFG-00
 		# La lista del desplegable es una ventana aparte, cerrada: no se dibuja en el lienzo.
 		if not control.is_visible_in_tree():
 			continue
+		# Lo que se dibuja escalado ocupa su tamaño por su escala.
+		var escala := (
+			control.get_global_transform().get_scale() / marco.get_global_transform().get_scale()
+		)
 		var rect := Rect2(
-			marco.get_global_transform().affine_inverse() * control.global_position, control.size
+			marco.get_global_transform().affine_inverse() * control.global_position,
+			control.size * escala
 		)
 		(
 			assert_bool(lienzo.encloses(rect))

@@ -4,6 +4,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+const S := SubtitulosDeLosGestos.Id
 
 
 func _almacen() -> Node3D:
@@ -26,7 +27,7 @@ func test_tirar_una_unidad_al_contenedor_piensa_la_mala_idea() -> void:  # AC-SU
 	assert_bool(agarre.pedir_agarrar(datos, cuerpo)).is_true()
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	recolector.pedir_tirar(true)
-	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.MALA_IDEA)
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.MALA_IDEA))
 	var jugador: Node3D = almacen.get("_jugador")
 	var hud: Hud = almacen.get("_hud")
 	jugador.global_position += Vector3.RIGHT * 5.0
@@ -40,11 +41,11 @@ func test_la_mopa_seca_y_la_que_se_seca_piensan() -> void:  # AC-SUB-018, AC-SUB
 	var limpiador: Limpiador = almacen.get("_limpiador")
 	var lugar: PisoDelLocal.Lugar = limpiador.piso().lugares()[0]
 	limpiador.pasar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, lugar)
-	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.MOPA_SIN_MOJAR)
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.MOPA_SIN_MOJAR))
 	var partida: Partida = almacen.get("_partida")
 	assert_bool(partida.mopa_secada()).is_false()
 	limpiador.mopa_secada.emit()
-	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.MOPA_BERRETA)
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.MOPA_BERRETA))
 	assert_bool(partida.mopa_secada()).is_true()
 	# Se seca caminando: alejarse no la apura.
 	var jugador: Node3D = almacen.get("_jugador")
@@ -89,7 +90,7 @@ func test_la_mopa_ya_seca_no_acorta_el_aviso_al_caminar() -> void:  # AC-SUB-018
 	assert_int(limpiador.pasar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, lugar)).is_equal(
 		ReglasDeLaLimpieza.Resultado.MOPA_SECA
 	)
-	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.MOPA_YA_SECA)
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.MOPA_YA_SECA))
 	var jugador: Node3D = almacen.get("_jugador")
 	var hud: Hud = almacen.get("_hud")
 	jugador.global_position += Vector3.RIGHT * 5.0
@@ -119,7 +120,7 @@ func _examen_con_aviso_esperando() -> Node3D:
 	examinar.pressed = true
 	jugador.call("_unhandled_input", examinar)
 	assert_bool(jugador.get("examen").esta_examinando()).is_true()
-	assert_str(_linea(almacen)).is_equal("Una caja de medicamentos Actroncito.")
+	assert_str(_linea(almacen)).is_equal(SubtitulosAlExaminar.de_producto(Producto.Id.ACTRONCITO))
 	return almacen
 
 
@@ -128,11 +129,11 @@ func test_lo_caido_afuera_espera_al_examen_sin_reemplazarlo() -> void:  # AC-SUB
 	var jugador: Node3D = almacen.get("_jugador")
 	await get_tree().physics_frame
 	await get_tree().process_frame
-	assert_str(_linea(almacen)).is_equal("Una caja de medicamentos Actroncito.")
+	assert_str(_linea(almacen)).is_equal(SubtitulosAlExaminar.de_producto(Producto.Id.ACTRONCITO))
 	jugador.get("examen").terminar()
 	await get_tree().physics_frame
 	await get_tree().process_frame
-	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.POR_LA_VENTANA)
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.POR_LA_VENTANA))
 
 
 func test_el_cierre_descarta_el_aviso_que_esperaba_al_examen() -> void:  # AC-SUB-009
@@ -159,4 +160,4 @@ func test_el_aviso_espera_tambien_a_que_termine_la_pausa() -> void:  # AC-SUB-00
 	assert_str(linea_pausada).is_empty()
 	await get_tree().physics_frame
 	await get_tree().process_frame
-	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.POR_LA_VENTANA)
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.POR_LA_VENTANA))

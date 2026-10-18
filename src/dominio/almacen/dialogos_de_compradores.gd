@@ -22,27 +22,38 @@ const RECHAZO := "Yo no pedí esto. "
 func inicial(personaje: int) -> Dialogo:
 	match personaje:
 		Personaje.TIN:
-			return Dialogo.new(tin)
+			return _crear_dialogo(tin)
 		Personaje.TIA:
-			return Dialogo.new(tia)
+			return _crear_dialogo(tia)
 		Personaje.FEDE:
-			return Dialogo.new(fede)
+			return _crear_dialogo(fede)
 		Personaje.MIA:
-			return Dialogo.new(mia)
+			return _crear_dialogo(mia)
 	return Dialogo.new()
 
 
 func despedida(personaje: int) -> Dialogo:
 	match personaje:
 		Personaje.TIN:
-			return Dialogo.new(despedida_tin)
+			return _crear_dialogo(despedida_tin)
 		Personaje.TIA:
-			return Dialogo.new(despedida_tia)
+			return _crear_dialogo(despedida_tia)
 		Personaje.FEDE:
-			return Dialogo.new(despedida_fede)
+			return _crear_dialogo(despedida_fede)
 		Personaje.MIA:
-			return Dialogo.new(despedida_mia)
+			return _crear_dialogo(despedida_mia)
 	return Dialogo.new()
+
+
+## Las referencias guardan el número de Producto.Id para sobrevivir a cualquier renombre.
+static func _crear_dialogo(entradas: PackedStringArray) -> Dialogo:
+	var nombres: Dictionary[String, String] = {}
+	for producto: Producto in Catalogo.todos():
+		nombres[str(producto.id)] = producto.nombre
+	var resueltas := PackedStringArray()
+	for entrada: String in entradas:
+		resueltas.append(entrada.format(nombres))
+	return Dialogo.new(resueltas)
 
 
 ## Lo que dice cualquier comprador al hablarle: lo que todavía le falta, o el recibo si sólo falta

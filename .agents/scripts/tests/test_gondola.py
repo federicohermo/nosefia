@@ -35,6 +35,7 @@ from lib.gondola import (
     nombre_en_godot,
     numero_de_escena,
     numero_de_recurso,
+    ordenar_copias_por_frente,
     paso,
     punto_en_godot,
     repartir,
@@ -310,6 +311,30 @@ class Nombres(unittest.TestCase):
 
 
 class LaEscritura(unittest.TestCase):
+    def test_ordenar_las_copias_conserva_geometria_y_alinea_columnas(self):
+        origenes = [(0.0, 1.0, 1.0), (0.0, 1.0, 0.0), (-0.2, 1.0, 0.0),
+                    (-0.2, 1.0, 1.0)]
+        copias = [[1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z] for x, y, z in origenes]
+        ordenadas = ordenar_copias_por_frente(
+            [valor for copia in copias for valor in copia], (-1.0, 0.0, 0.0)
+        )
+        self.assertEqual(ordenadas, copias[1] + copias[0] + copias[2] + copias[3])
+
+    def test_una_fila_unica_oeste_ordena_sus_columnas_hacia_z_positivo(self):
+        copias = [[1, 0, 0, -0.4, 0, 1, 0, 1.3, 0, 0, 1, z] for z in (-2.0, -3.0)]
+        self.assertEqual(
+            ordenar_copias_por_frente(copias[0] + copias[1], (-1.0, 0.0, 0.0)),
+            copias[1] + copias[0],
+        )
+
+    def test_la_identidad_del_producto_no_depende_del_nombre_del_artista(self):
+        identidad = ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0))
+        nodo = NodoDeMalla("Objeto del artista", "res://a.res", identidad, (0, 0, 0),
+                           producto_id=29)
+        self.assertIn(
+            "metadata/producto_id = 29", escribir_escena_de_mallas("Contenido", [nodo])
+        )
+
     def test_los_numeros_del_recurso_llevan_seis_cifras_y_el_ruido_es_cero(self):
         self.assertEqual(numero_de_recurso(-3.388727), "-3.38873")
         self.assertEqual(numero_de_recurso(1.0), "1")

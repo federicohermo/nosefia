@@ -81,20 +81,20 @@ class ElReparto(unittest.TestCase):
 
     def test_los_sectores_siguen_el_esquema_y_no_reparten_por_marca(self):  # AC-STK-086
         esperados = {
-            "A.oeste.2": ("MAROLINI", "ARVEJAS"),
-            "A.oeste.1": ("UAKAS", "MARRANOS"),
-            "A.este.2": ("MACUMBAS", "ZUCARACHAS"),
-            "A.este.1": ("PEPITOS", "FROTLUPS"),
+            "A.oeste.2": ("MARRANOS", "ARVECOR"),
+            "A.oeste.1": ("UAKALAS", "MAROLINI"),
+            "A.este.2": ("MACUMBAS", "PEPITO"),
+            "A.este.1": ("ZUCARACHAS", "FROT_LUPS"),
             "A.sur.2": ("MALBARDO",), "A.sur.1": ("AMARGADITO",),
             "A.norte.2": ("TERMINATOR",), "A.norte.1": ("FERNET_GOD",),
-            "B.este.2": ("OREMOS", "PETISAS"),
-            "B.este.1": ("COSA_DE_MANI", "FEEL_RICKY_FORT"),
-            "B.oeste.2": ("DONSATURADOS", "PRONGLES"),
-            "B.oeste.1": ("CHISITOS", "LAYSNTT"),
-            "B.sur.2": ("SALADIK",), "B.sur.1": ("FLINPUF",),
+            "B.este.2": ("DON_SATURADOS", "PETISAS"),
+            "B.este.1": ("OREMOS", "FEEL_RICKY_FORT"),
+            "B.oeste.2": ("SALADICK", "PROGRES"),
+            "B.oeste.1": ("CHISITOS", "LAYSNNT"),
+            "B.sur.2": ("COSA_DE_MANI",), "B.sur.1": ("FLIM_POF",),
             "B.norte.2": ("JORGILLO",), "B.norte.1": ("BURBALOO",),
-            "N.sur.2": ("ACTRONCITO", "DUREXTRA"),
-            "N.sur.1": ("POETICO", "DURONGA"),
+            "N.sur.2": ("DURONGA", "DUREXTRA"),
+            "N.sur.1": ("POETICO", "ACTRONCITO"),
         }
         for estante, productos in esperados.items():
             self.assertEqual(tuple(t.producto for t in ESTANTES[estante]), productos, estante)
@@ -111,10 +111,18 @@ class ElReparto(unittest.TestCase):
     def test_duronga_comparte_no_comestibles_sin_inventar_muebles_ni_niveles(self):
         # AC-STK-088, AC-STK-085: destino provisional inferior derecho del mapa.
         self.assertIn("DURONGA", {p.clave for p in PRODUCTOS})
-        self.assertEqual([t.producto for t in ESTANTES["N.sur.1"]], ["POETICO", "DURONGA"])
-        self.assertEqual([t.producto for t in ESTANTES["N.sur.0"]], ["POETICO", "DURONGA"])
-        for clave in ("N.sur.1", "N.sur.0"):
-            self.assertEqual(ESTANTES[clave][1].cantidad_de_filas, 2)
+        tandas_de_duronga = [
+            (estante, tanda)
+            for estante, tandas in ESTANTES.items()
+            for tanda in tandas
+            if tanda.producto == "DURONGA"
+        ]
+        self.assertEqual(len(tandas_de_duronga), 2)
+        for estante, tanda in tandas_de_duronga:
+            mueble, cara, nivel = partes(estante)
+            self.assertEqual((mueble, cara), ("N", "sur"))
+            self.assertIn(nivel, range(NIVELES_DE_LADO))
+            self.assertEqual(tanda.cantidad_de_filas, 2)
         self.assertFalse(any(e.startswith("S.") for e in ESTANTES))
         self.assertNotIn("S", MUEBLES)
         for mueble in ("A", "B"):
@@ -136,7 +144,7 @@ class ElReparto(unittest.TestCase):
                 Tanda("FERNET_GOD", fija=fija, filas=filas)
 
     def test_las_heladeras_tienen_mitades_verticales_y_solo_esos_frios(self):  # AC-STK-087
-        esperados = {"H1": ("OAAAA", "CORACOLA"), "H2": ("MAYONCHIS", "CINDOLOR")}
+        esperados = {"H1": ("OAAAA", "PURA_COLA"), "H2": ("MAYONCHIS", "CINDOLOR")}
         for mueble, (abajo, arriba) in esperados.items():
             for nivel in range(BANDEJAS_DE_HELADERA):
                 self.assertEqual(
@@ -222,7 +230,7 @@ class ElReparto(unittest.TestCase):
     def test_lo_de_una_fila_se_conserva_en_el_sector_del_mapa(self):  # AC-STK-030
         self.assertEqual(
             set(DE_UNA_FILA),
-            {"COSA_DE_MANI", "FLINPUF", "BURBALOO", "MARRANOS", "POETICO"},
+            {"COSA_DE_MANI", "FLIM_POF", "BURBALOO", "MARRANOS", "POETICO"},
         )
         for estante, tandas in ESTANTES.items():
             for t in tandas:
@@ -270,20 +278,20 @@ class ElReparto(unittest.TestCase):
 
 
 class DecisionDeFilas(unittest.TestCase):
-    def test_actroncito_y_prongles_conservan_dos_filas_en_todas_sus_tandas(self):  # AC-STK-030
-        for producto in ("ACTRONCITO", "PRONGLES"):
+    def test_actroncito_y_progres_conservan_dos_filas_en_todas_sus_tandas(self):  # AC-STK-030
+        for producto in ("ACTRONCITO", "PROGRES"):
             for fija in (False, True):
                 with self.subTest(producto=producto, fija=fija):
                     self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 2)
 
     def test_los_cinco_del_arte_tienen_una_fila_principal_y_fija(self):  # AC-STK-030
-        for producto in ("COSA_DE_MANI", "FLINPUF", "BURBALOO", "MARRANOS", "POETICO"):
+        for producto in ("COSA_DE_MANI", "FLIM_POF", "BURBALOO", "MARRANOS", "POETICO"):
             for fija in (False, True):
                 with self.subTest(producto=producto, fija=fija):
                     self.assertEqual(Tanda(producto, fija=fija).cantidad_de_filas, 1)
 
     def test_una_fija_no_puede_eludir_la_excepcion_global_de_una_fila(self):  # AC-STK-030
-        for producto in ("COSA_DE_MANI", "FLINPUF", "BURBALOO", "MARRANOS", "POETICO"):
+        for producto in ("COSA_DE_MANI", "FLIM_POF", "BURBALOO", "MARRANOS", "POETICO"):
             with self.subTest(producto=producto), self.assertRaises(ValueError):
                 Tanda(producto, fija=True, filas=2)
 

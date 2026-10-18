@@ -481,26 +481,27 @@ func test_las_pasadas_no_esperan_la_cola_y_el_final_espera_la_de_la_ultima() -> 
 	assert_bool(foco.visible).is_true()
 
 
-func test_con_cola_el_progreso_sale_de_los_programas_que_terminaron() -> void:
+## La barra es el tiempo que pasó sobre el que se estima en total: la compilación, que sigue al
+## destape, no recibe una mitad fija.
+func test_con_cola_el_progreso_reparte_por_el_tiempo_estimado() -> void:
 	var escena := _escena()
-	var cola: Array[int] = [0]
+	var cola: Array[int] = [4]
+	var reloj: Array[int] = [0]
 	var calentamiento := _calentamiento_con_cola(cola)
-	var progresos: Array[float] = []
-	calentamiento.avanzo.connect(func(progreso: float) -> void: progresos.append(progreso))
+	calentamiento.ahora = func() -> int: return reloj[0]
 	calentamiento.calentar(escena)
-	# La primera mitad es destapar: con todo destapado y nada enlazado, va por la mitad.
+	reloj[0] = 1000000
+	while calentamiento.objetos_por_preparar() > 0:
+		await calentamiento.avanzo
+	# El cuadro que anota el fin del destape: hasta ver enlazar, cada programa vale lo medido.
 	await calentamiento.avanzo
-	assert_float(progresos[-1]).is_equal_approx(0.5, 0.001)
-	cola[0] = 4
+	var por_programa := CalentamientoDeShaders.SEGUNDOS_POR_PROGRAMA
+	assert_float(calentamiento.progreso()).is_equal_approx(1.0 / (1.0 + 4 * por_programa), 0.001)
+	# En un segundo enlazó dos: los dos que quedan valen un segundo más.
+	reloj[0] = 2000000
+	cola[0] = 2
 	await calentamiento.avanzo
-	assert_float(progresos[-1]).is_equal_approx(0.5, 0.001)
-	cola[0] = 1
-	await calentamiento.avanzo
-	assert_float(progresos[-1]).is_equal_approx(0.875, 0.001)
-	# Una variante que entra tarde a la cola no hace retroceder la barra.
-	cola[0] = 3
-	await calentamiento.avanzo
-	assert_float(progresos[-1]).is_equal_approx(0.875, 0.001)
+	assert_float(calentamiento.progreso()).is_equal_approx(2.0 / 3.0, 0.001)
 	cola[0] = 0
 	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
 	assert_float(calentamiento.progreso()).is_equal(1.0)

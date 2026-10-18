@@ -84,10 +84,16 @@ func test_el_disco_completo_de_agua_se_reserva_fuera_de_las_manchas() -> void:  
 	assert_array([suelo, casco]).contains(golpe.get("collider"))
 	assert_bool(PisoParaAgua.admite(golpe, suelo, sectores, [], casco)).is_true()
 	var mancha: Node3D = almacen.get("_limpieza").manchas()[1]
-	var punto := mancha.global_position + Vector3.FORWARD * 1.19
+	var forma := mancha.get_node("Cuerpo") as CollisionShape3D
+	var limites := forma.global_transform * LimitesDeForma.de(forma.shape)
+	var radio := maxf(limites.size.x, limites.size.z) * 0.5
+	# El centro cae fuera de la mancha, pero medio disco de agua invade su sector reservado.
+	var distancia := radio + ReglasDeLaLimpieza.RADIO_DEL_CHARCO * 0.5
+	var punto := limites.get_center() + Vector3.FORWARD * distancia
 	golpe = _golpe(almacen, punto)
 	assert_array([suelo, casco]).contains(golpe.get("collider"))
-	assert_float(punto.distance_to(mancha.global_position)).is_greater(0.96)
+	assert_float(distancia).is_greater(radio)
+	assert_float(distancia).is_less(radio + ReglasDeLaLimpieza.RADIO_DEL_CHARCO)
 	assert_bool(PisoParaAgua.admite(golpe, suelo, sectores, [], casco)).is_false()
 	mancha.call("mostrar", false, Color.BLACK)
 	for cuadro in 2:
