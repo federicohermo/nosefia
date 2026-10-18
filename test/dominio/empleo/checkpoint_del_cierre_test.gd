@@ -1,5 +1,3 @@
-## El checkpoint del cierre: la reflexión pendiente, el expediente, las notas y la elección cruzan
-## la sesión por los datos del guardado, sin tocar disco.
 extends GdUnitTestSuite
 
 const C := PartidaSerializada.Campo

@@ -124,7 +124,7 @@ func _process(_delta: float) -> void:
 	if puede_correrse:
 		_lateral = move_toward(_lateral, _destino_lateral, segundos / RECORRIDO_COMPLETO)
 	_pintar_posicion()
-	if not llegaba and _lateral == 1.0:
+	if not llegaba and is_equal_approx(_lateral, 1.0):
 		celular_desplazado.emit()
 	if is_equal_approx(_avance, _destino) and is_equal_approx(_lateral, _destino_lateral):
 		set_process(false)

@@ -1,4 +1,3 @@
-## La reflexión de la primera jornada y la espera de la segunda, sin levantar una escena.
 extends GdUnitTestSuite
 
 const E := ReflexionDeCierre.Etapa

@@ -264,10 +264,10 @@ func _ready() -> void:
 	_arranque = _jugador.global_transform
 	_enlace_de_guardado = EnlaceDeGuardado.new(_ciclo, Guardado.new())
 	add_child(_enlace_de_guardado)
-	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
 	_jugador.muebles_con_reserva = _muebles_con_contorno
-	_reposicion_manual.preparar()
+	_ciclo.jornada_abierta.connect(_reposicion_manual.preparar.unbind(1), CONNECT_ONE_SHOT)
+	_ciclo.arrancar(_partida, _reloj)
 
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el

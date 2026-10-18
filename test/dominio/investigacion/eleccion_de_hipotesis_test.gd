@@ -1,5 +1,3 @@
-## La elección de la segunda jornada contra el caso real: qué se ofrece, cómo se navega y qué
-## deja elegir una sola vez.
 extends GdUnitTestSuite
 
 const R := ReflexionDeCierre.Eleccion

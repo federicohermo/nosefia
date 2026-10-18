@@ -1,4 +1,3 @@
-## La advertencia de Enrique por Poético, con la noche ya anotada en la partida.
 extends GdUnitTestSuite
 
 const T := Tarea.Tipo

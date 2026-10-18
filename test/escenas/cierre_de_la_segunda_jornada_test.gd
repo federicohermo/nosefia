@@ -1,5 +1,3 @@
-## El cierre de las jornadas 1 y 2 en el almacén: de la devolución a las notas sin bajar el
-## celular, la elección que se guarda antes de la noche siguiente y el cierre retomado.
 extends GdUnitTestSuite
 
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
@@ -34,7 +32,6 @@ func _almacen(partida: Partida = null) -> Node3D:
 	return almacen
 
 
-## Cierra la noche, entrega la devolución entera, elige continuar y deja el celular a la izquierda.
 func _hasta_la_reflexion(almacen: Node3D) -> PantallaDeDevolucion:
 	(almacen.get_node("Servicios/RelojDelTurno") as RelojDelTurno).avanzar(
 		SEGUNDOS_REALES_DE_UN_TURNO
@@ -139,7 +136,14 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	var almacen: Node3D = await _almacen()
 	var aperturas := _aperturas(almacen)
 	assert_bool((almacen.get("_reloj") as RelojDelTurno).corriendo()).is_false()
+	var reposicion: Node3D = almacen.get("_reposicion_manual")
+	(
+		assert_array(reposicion.find_children("SueltosDe*", "MultiMeshInstance3D", false, false))
+		. is_empty()
+	)
 	almacen.call("retomar_la_partida")
+	await get_tree().physics_frame
+	await get_tree().physics_frame
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
 	assert_int(pantalla.a_la_vista()).is_zero()
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
@@ -155,6 +159,26 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	assert_array(aperturas).is_equal([3])
 	assert_str(_placa(almacen)).is_equal("NOCHE 3")
 	assert_int(pantalla.a_la_vista()).is_zero()
+	var grupos := reposicion.find_children("SueltosDe*", "MultiMeshInstance3D", false, false)
+	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
+	var casilleros: Dictionary = reposicion.call("casilleros")
+	for producto: Producto in Catalogo.todos():
+		var grupo := reposicion.get_node("SueltosDe" + producto.nombre) as MultiMeshInstance3D
+		assert_int(grupo.multimesh.instance_count).is_equal(casilleros[producto.id])
+	almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
+		tarea.completar()
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	await get_tree().process_frame
+	AvanceDeDevolucion.entregar(pantalla)
+	pantalla.elegir()
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	assert_array(aperturas).is_equal([3, 4])
+	(
+		assert_array(reposicion.find_children("SueltosDe*", "MultiMeshInstance3D", false, false))
+		. is_equal(grupos)
+	)
 
 
 func test_las_notas_de_la_tercera_noche() -> void:  # AC-INV-064
