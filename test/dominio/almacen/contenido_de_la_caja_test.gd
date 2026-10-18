@@ -292,9 +292,11 @@ func test_cada_familia_del_catalogo_tiene_singular_y_plural() -> void:  # AC-STK
 		var una := _caja(producto, _estante(producto, 1))
 		assert_int(una.datos_del_examen().familia).is_equal(familia)
 		assert_int(una.datos_del_examen().unidades).is_equal(1)
+		assert_str(una.texto_del_examen()).contains(palabras[0]).not_contains(palabras[1])
 		var dos := _caja(producto, _estante(producto, 2))
 		assert_int(dos.datos_del_examen().familia).is_equal(familia)
 		assert_int(dos.datos_del_examen().unidades).is_equal(2)
+		assert_str(dos.texto_del_examen()).contains(palabras[1])
 
 
 func test_cada_producto_del_catalogo_tiene_su_texto() -> void:

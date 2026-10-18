@@ -388,8 +388,8 @@ el pensamiento es `POR_LA_VENTANA`. DADO un ticket ENTONCES no hay pensamiento.
 ### AC-SUB-018 — La mopa sobre una mancha *(verifica BR-SUB-013)*
 
 DADO el resultado del jabón equivocado ENTONCES el pensamiento es `JABON_EQUIVOCADO`.
-DADO la mopa mojada con agua sola CUANDO se intenta limpiar una mancha ENTONCES el texto es
-el asociado a `MOPA_SIN_MOJAR` y la mancha permanece.
+DADO la mopa mojada con agua sola CUANDO se intenta limpiar una mancha ENTONCES el pensamiento
+es `MOPA_SIN_MOJAR` y la mancha permanece.
 DADO la mopa seca sin haberse mojado en la jornada ENTONCES el pensamiento es `MOPA_SIN_MOJAR`;
 DADO la mopa seca después de mojarla, incluso sólo con agua, ENTONCES es `MOPA_YA_SECA`.
 DADO una mancha ya limpia o una mancha

@@ -40,8 +40,8 @@ func texto_al_examinar() -> String:
 		if not productos.has(producto.id):
 			productos[producto.id] = producto
 	var partes: Array[String] = []
-	for producto: Producto.Id in cuantos:
-		partes.append("%d %s" % [cuantos[producto], productos[producto].nombre])
+	for id: Producto.Id in cuantos:
+		partes.append("%d %s" % [cuantos[id], productos[id].nombre])
 	var lista: String = partes.back() if not partes.is_empty() else ""
 	if partes.size() > 1:
 		lista = ", ".join(partes.slice(0, -1)) + " y " + lista

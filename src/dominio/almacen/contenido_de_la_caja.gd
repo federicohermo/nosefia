@@ -119,14 +119,14 @@ func gesto_posible(sostenido: ObjetoDelAlmacen, primario: bool) -> Gesto:
 	return gesto
 
 
-## Lo que dice la caja al examinarla: cuántas tiene y, si no está llena, cuántas le entran.
-##
-## No dice la pista de la caja. Esa se registra en la investigación, y el texto dice sólo la
-## cuenta.
 func datos_del_examen() -> DatosDelExamen:
 	return DatosDelExamen.new(producto, unidades()) if producto != null else null
 
 
+## Lo que dice la caja al examinarla: cuántas tiene y, si no está llena, cuántas le entran.
+##
+## No dice la pista de la caja. Esa se registra en la investigación, y el texto dice sólo la
+## cuenta.
 func texto_del_examen() -> String:
 	var datos := datos_del_examen()
 	if datos == null:
