@@ -90,7 +90,7 @@ func _generar() -> void:
 		for _cuadro in CUADROS:
 			await process_frame
 		await RenderingServer.frame_post_draw
-		var ruta := argumentos[0].path_join(nombre_de_archivo(producto))
+		var ruta := argumentos[0].path_join(nombre_de_archivo(producto, contenido))
 		var error := root.get_texture().get_image().save_png(ruta)
 		if error != OK:
 			push_error("generar_miniaturas: no se pudo guardar %s (%d)" % [ruta, error])
@@ -101,9 +101,10 @@ func _generar() -> void:
 	quit(1 if fallas > 0 else 0)
 
 
-## El nombre del `.png` de un producto: el de su malla, con la misma regla.
-static func nombre_de_archivo(producto: Producto) -> String:
-	return ExtraerMallas.slug(producto.nombre) + ".png"
+## Las miniaturas conservan el nombre del recurso de la malla, aunque se renombre el producto.
+static func nombre_de_archivo(producto: Producto, contenido: Node3D) -> String:
+	var malla := ExtraerMallas.ruta_de_la_malla(producto, contenido).get_file().get_basename()
+	return malla.trim_prefix("producto_") + ".png"
 
 
 ## Dónde va la cámara para ver entero un envase que ocupa `caja` y mira hacia `frente`: delante,

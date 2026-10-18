@@ -27,7 +27,7 @@ mesh = ExtResource("2_bolsa")
 material_override = ExtResource("4_plastico")
 
 [node name="Desborde" type="Node3D" parent="."]
-position = Vector3(0, -0.105, 0)
+position = Vector3(0, -0.197, 0)
 
 [node name="Residuos" type="MeshInstance3D" parent="Desborde"]
 gi_mode = 2

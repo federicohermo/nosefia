@@ -252,7 +252,7 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 	add_child(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNNT]
 	jugador.set("_enfocado", caja)
 	var clic := InputEventAction.new()
 	clic.action = ReglasDeLosObjetos.ACCION_AGARRAR

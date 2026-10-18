@@ -153,10 +153,10 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	var registro: RegistroDeVentas = almacen.get("_computadora").registro()
 	for fila: Array in [
 		[Producto.Id.MAROLINI, 1],
-		[Producto.Id.CORACOLA, 1],
+		[Producto.Id.PURA_COLA, 1],
 		[Producto.Id.MALBARDO, 1],
 		[Producto.Id.ZUCARACHAS, 1],
-		[Producto.Id.PEPITOS, 1]
+		[Producto.Id.PEPITO, 1]
 	]:
 		var producto := Catalogo.de(fila[0])
 		assert_int(atenciones.tarea().vendidas_de(producto)).is_equal(fila[1])

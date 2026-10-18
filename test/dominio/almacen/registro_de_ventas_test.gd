@@ -123,7 +123,7 @@ func test_el_total_sigue_a_cada_gesto() -> void:  # AC-STK-023
 
 func test_el_mismo_total_con_otro_producto_no_coincide() -> void:  # AC-STK-023
 	var durextra := _de(Producto.Id.DUREXTRA)
-	var prongles := _de(Producto.Id.PRONGLES)
+	var prongles := _de(Producto.Id.PROGRES)
 	assert_int(prongles.precio).is_equal(durextra.precio)
 	var registro := _registro([_venta({Producto.Id.DUREXTRA: 1})])
 	registro.sumar(prongles)
@@ -147,9 +147,9 @@ func test_una_unidad_de_mas_deja_de_coincidir_y_restarla_vuelve() -> void:  # AC
 	var actroncito := _de(Producto.Id.ACTRONCITO)
 	registro.sumar(actroncito)
 	assert_bool(registro.coincide()).is_true()
-	registro.sumar(_de(Producto.Id.FLINPUF))
+	registro.sumar(_de(Producto.Id.FLIM_POF))
 	assert_bool(registro.coincide()).is_false()
-	registro.restar(_de(Producto.Id.FLINPUF))
+	registro.restar(_de(Producto.Id.FLIM_POF))
 	assert_bool(registro.coincide()).is_true()
 
 

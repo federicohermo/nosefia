@@ -1,6 +1,6 @@
-## La computadora del escritorio: si está abierta y en qué app.
+## La computadora del escritorio: si la terminal de ventas está abierta.
 ##
-## **Ni un `Node` en toda la suite.** Abrir, cerrar y cambiar de app son decisiones del juego, no
+## **Ni un `Node` en toda la suite.** Abrir y cerrar son decisiones del juego, no
 ## del motor: escritas en la pantalla nacerían sin test y ningún gate lo diría.
 extends GdUnitTestSuite
 
@@ -26,33 +26,10 @@ func test_cerrar_sin_haber_abierto_devuelve_false() -> void:
 	assert_bool(computadora.cerrar()).is_false()
 
 
-func test_cambiar_a_la_misma_app_devuelve_false() -> void:
+func test_reabrir_vuelve_a_encender_la_terminal() -> void:
 	var computadora := Computadora.new()
 	computadora.abrir()
-	assert_bool(computadora.cambiar_a(computadora.app())).is_false()
-	assert_bool(computadora.cambiar_a(Computadora.App.NOTAS)).is_true()
-	assert_int(computadora.app()).is_equal(Computadora.App.NOTAS)
-
-
-func test_cambiar_de_app_con_la_computadora_cerrada_devuelve_false() -> void:  # AC-INV-008
-	# Con la pantalla apagada no hay a qué cambiar, y dejar que cambie igual haría que reabrir
-	# apareciera en una app que el jugador nunca eligió.
-	var computadora := Computadora.new()
-	var arranque := computadora.app()
-	assert_bool(computadora.cambiar_a(Computadora.App.NOTAS)).is_false()
-	assert_int(computadora.app()).is_equal(arranque)
-
-
-func test_reabrir_vuelve_a_la_app_donde_se_habia_dejado() -> void:  # AC-INV-008
-	# Es lo que hace que ir a atender y volver no cueste dos clics de más — o sea, tiempo de
-	# turno por una decisión de pantalla.
-	var computadora := Computadora.new()
-	computadora.abrir()
-	computadora.cambiar_a(Computadora.App.NOTAS)
 	computadora.cerrar()
-	computadora.abrir()
-	assert_int(computadora.app()).is_equal(Computadora.App.NOTAS)
-
-
-func test_solo_caja_y_notas_estan_declaradas() -> void:  # AC-INV-006
-	assert_array(Computadora.App.keys()).is_equal(["CAJA", "NOTAS"])
+	assert_bool(computadora.abierta()).is_false()
+	assert_bool(computadora.abrir()).is_true()
+	assert_bool(computadora.abierta()).is_true()

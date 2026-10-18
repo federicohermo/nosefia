@@ -354,8 +354,7 @@ def transform_de_escena(base: Matriz, origen: Vector) -> str:
 def slug(nombre: str) -> str:
     """El nombre de archivo de un producto: minúsculas, sin acentos y con guion bajo.
 
-    La misma regla vive en `assets/models/extraer_mallas.gd`, que es quien escribe la malla: si
-    difieren, la escena apunta a un archivo que nadie escribió.
+    La usa la generación de escenas para conservar las rutas de los recursos de producto.
     """
     sin_acentos = unicodedata.normalize("NFKD", nombre).encode("ascii", "ignore").decode()
     return "_".join(sin_acentos.lower().split())
@@ -422,6 +421,25 @@ def escribir_disposicion(
     )
 
 
+def ordenar_copias_por_frente(bloque: list[float], frente: Vector) -> list[float]:
+    """El orden lógico sigue las filas y sus columnas aunque el artista cambie sus rótulos.
+
+    El juego infiere el frente de una fila única por el sentido de sus columnas. Ordenar por
+    los números heredados de Blender puede invertirlo sin mover una sola unidad visible.
+    """
+    copias = [bloque[i:i + 12] for i in range(0, len(bloque), 12)]
+    lateral = (frente[2], 0.0, -frente[0])
+
+    def orden(copia: list[float]) -> tuple[float, float]:
+        origen = (copia[3], copia[7], copia[11])
+        fondo = sum(a * b for a, b in zip(origen, frente))
+        columna = sum(a * b for a, b in zip(origen, lateral))
+        # La escritura de matrices conserva pequeños errores entre copias de la misma fila.
+        return round(fondo, 4), columna
+
+    return [valor for copia in sorted(copias, key=orden) for valor in copia]
+
+
 def separar_filas(filas: list[str]) -> tuple[list[int], int]:
     """El orden de una tanda fija para el juego, y cuántas copias tiene su fila de adelante.
 
@@ -442,6 +460,7 @@ class NodoDeMalla:
     base: Matriz
     origen: Vector
     frente: Vector | None = None
+    producto_id: int | None = None
 
 
 def escribir_escena_de_mallas(raiz: str, nodos: Sequence[NodoDeMalla]) -> str:
@@ -472,6 +491,8 @@ def escribir_escena_de_mallas(raiz: str, nodos: Sequence[NodoDeMalla]) -> str:
         if nodo.frente is not None:
             lineas.append("metadata/frente_del_modelo = Vector3("
                           + ", ".join(numero_de_escena(v) for v in nodo.frente) + ")")
+        if nodo.producto_id is not None:
+            lineas.append(f"metadata/producto_id = {nodo.producto_id}")
     return "\n".join(lineas) + "\n"
 
 

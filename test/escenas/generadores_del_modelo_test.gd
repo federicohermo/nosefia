@@ -3,7 +3,7 @@
 ## (`generar_miniaturas.gd`).
 ##
 ## Se corren a mano y no en la suite: uno reescribe `producto_*.res` y el otro necesita pantalla.
-## Acá se prueba lo que deciden —el nombre de cada archivo, dónde va la cámara y cómo se endereza
+## Acá se prueba lo que deciden —el recurso de cada producto, dónde va la cámara y cómo se endereza
 ## lo que está en una rampa—. Qué nodo del modelo es la unidad de cada producto lo prueba
 ## `modelo_exportado_test.gd`, contra la malla que el extractor dejó en el contenido.
 extends GdUnitTestSuite
@@ -20,10 +20,13 @@ const RAMPA := 1.0
 const DERECHO := 0.5
 
 
-func test_el_nombre_de_archivo_va_en_minusculas_sin_acentos_y_con_guion_bajo() -> void:
-	assert_str(ExtraerMallas.slug("Cosa de Maní")).is_equal("cosa_de_mani")
-	assert_str(ExtraerMallas.slug("Feel Ricky Fort")).is_equal("feel_ricky_fort")
-	assert_str(ExtraerMallas.slug("Oaaaa")).is_equal("oaaaa")
+func test_renombrar_un_producto_no_cambia_los_recursos_que_regeneran_las_herramientas() -> void:
+	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
+	var producto := Producto.new(Producto.Id.PROGRES, "Un nombre nuevo con acéntos", 100)
+	assert_str(ExtraerMallas.ruta_de_la_malla(producto, contenido)).is_equal(
+		"res://assets/models/producto_prongles.res"
+	)
+	assert_str(GenerarMiniaturas.nombre_de_archivo(producto, contenido)).is_equal("prongles.png")
 
 
 ## Si el extractor escribe otro nombre que el que la escena carga, la escena queda apuntando a un
@@ -33,16 +36,17 @@ func test_la_escena_del_estante_carga_la_malla_que_escribe_el_extractor() -> voi
 	for producto in Catalogo.todos():
 		var nodo: MeshInstance3D = contenido.get_child(producto.id)
 		assert_str(nodo.mesh.resource_path).override_failure_message(producto.nombre).is_equal(
-			ExtraerMallas.ruta_de_la_malla(producto)
+			ExtraerMallas.ruta_de_la_malla(producto, contenido)
 		)
 
 
 ## Lo mismo con la planilla: la miniatura que el generador escribe en `assets/ui/manada/`
 ## reemplaza a la que la planilla muestra, en vez de quedar suelta al lado.
 func test_la_planilla_muestra_la_miniatura_que_escribe_el_generador() -> void:
+	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
 	for producto in Catalogo.todos():
 		var imagen: Texture2D = AppCaja.IMAGENES[producto.id]
-		var nombre: String = GenerarMiniaturas.nombre_de_archivo(producto)
+		var nombre: String = GenerarMiniaturas.nombre_de_archivo(producto, contenido)
 		assert_str(imagen.resource_path).override_failure_message(producto.nombre).is_equal(
 			"res://assets/ui/manada".path_join(nombre)
 		)
@@ -82,9 +86,8 @@ func test_una_fila_lateral_plana_no_se_endereza() -> void:  # AC-STK-030
 ## En la rampa la unidad va echada hacia atrás, y la miniatura la endereza: se mira el envase como
 ## lo gira el generador, y no la normal de la chapa. El eje que queda arriba no es el mismo en
 ## todos los envases, y por eso se busca entre los tres.
-func test_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho() -> void:
+func test_la_miniatura_endereza_el_modelo_y_deja_quieto_lo_que_esta_derecho() -> void:
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
-	var en_rampa := 0
 	for producto in Catalogo.todos():
 		var bloque := DISPOSICION.principales[producto.id]
 		var fila := DISPOSICION.filas_de_adelante[producto.id]
@@ -98,16 +101,24 @@ func test_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho() -> 
 			. override_failure_message("%s sale torcido en su miniatura" % producto.nombre)
 			. is_less(DERECHO)
 		)
-		if _arriba(modelo.basis).angle_to(Vector3.UP) > deg_to_rad(RAMPA):
-			en_rampa += 1
-		else:
+		if _arriba(modelo.basis).angle_to(Vector3.UP) <= deg_to_rad(RAMPA):
 			(
 				assert_float(derecho.get_rotation_quaternion().get_angle())
 				. override_failure_message(producto.nombre)
 				. is_less(deg_to_rad(RAMPA))
 			)
-	# Las cabeceras son rampas: sin ninguna, este test no está mirando lo que endereza.
-	assert_int(en_rampa).is_greater(0)
+
+
+func test_la_miniatura_endereza_un_envase_inclinado_en_cualquier_eje() -> void:
+	var bases: Array[Basis] = [
+		Basis(Vector3.RIGHT, deg_to_rad(20.0)),
+		Basis(Vector3.BACK, deg_to_rad(-15.0)),
+		Basis(Vector3.RIGHT, deg_to_rad(15.0)) * Basis(Vector3.BACK, PI / 2.0),
+	]
+	for base in bases:
+		assert_float(_arriba(base).angle_to(Vector3.UP)).is_greater(deg_to_rad(RAMPA))
+		var derecho: Basis = GenerarMiniaturas.enderezar_envase(base)
+		assert_float(rad_to_deg(_arriba(derecho * base).angle_to(Vector3.UP))).is_less(DERECHO)
 
 
 ## El eje de la unidad que más se acerca a la vertical, hacia arriba.

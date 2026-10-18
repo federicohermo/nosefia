@@ -66,6 +66,13 @@ def vec(valores):
     return 'Vector3(' + ', '.join(f'{n:.9f}' for n in valores) + ')'
 
 
+def trasladar_sin_girar(bloque, posicion):
+    """Reubicar una bolsa no cambia el giro que ajusta su basura a la boca rectangular."""
+    actual = re.search(r'^transform = (Transform3D\([^\n]+\))', bloque, re.M)
+    base = numeros(actual[1])[:9] if actual else [1, 0, 0, 0, 1, 0, 0, 0, 1]
+    return 'Transform3D(' + ','.join(f'{n:.9f}' for n in [*base, *posicion]) + ')'
+
+
 def casco(modelo, lista, path, nombre, transform=None):
     id_ = 'modelo_' + re.sub(r'[^a-z0-9_]', '_', nombre.lower())
     puntos = modelo[path]['casco']
@@ -236,9 +243,9 @@ def integrar(modelo: dict, fuentes: dict[str, str]) -> dict[str, str]:
         pie = modelo[f':BolsaDeBasura{numero}']['pie']
         posicion = (caja[0] + caja[3] / 2, caja[1] + caja[4] + pie + 0.004,
                     caja[2] + caja[5] / 2)
+        bolsa = next(b for b in lista if ruta(b) == f'BolsaDeBasura{numero}')
         poner(lista, f'BolsaDeBasura{numero}', {
-            'transform': 'Transform3D(1,0,0,0,1,0,0,0,1,'
-                         + ','.join(f'{n:.9f}' for n in posicion) + ')',
+            'transform': trasladar_sin_girar(bolsa, posicion),
         })
     resultados[archivo] = ''.join(lista)
     return resultados

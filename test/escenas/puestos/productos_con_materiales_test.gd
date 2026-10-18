@@ -43,7 +43,12 @@ func test_la_fila_apagada_conserva_la_textura_de_cada_parte_del_producto() -> vo
 			if material == null:
 				continue
 			var fuente := original.surface_get_material(superficie) as BaseMaterial3D
-			assert_object(material.get_shader_parameter("textura")).is_same(fuente.albedo_texture)
+			if fuente.albedo_texture == null:
+				assert_object(material.get_shader_parameter("textura")).is_null()
+			else:
+				assert_object(material.get_shader_parameter("textura")).is_same(
+					fuente.albedo_texture
+				)
 			assert_str(str(material.get_shader_parameter("color"))).is_equal(
 				str(fuente.albedo_color)
 			)

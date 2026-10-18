@@ -111,10 +111,10 @@ func test_lo_soltado_adentro_va_al_piso_al_lado_del_jugador() -> void:  # AC-PLY
 
 func test_encima_de_la_caja_que_ocupa_el_origen() -> void:  # AC-PLY-027
 	var almacen: Node3D = await _almacen()
-	var caja := _caja(almacen, Producto.Id.ARVEJAS) as RigidBody3D
+	var caja := _caja(almacen, Producto.Id.ARVECOR) as RigidBody3D
 	var ocupante := _caja(almacen, Producto.Id.CHISITOS) as RigidBody3D
 	var red := _red(almacen)
-	# Arvejas ahora nace en el estante inferior: una caja grande puesta en su centro se
+	# Arvecor ahora nace en el estante inferior: una caja grande puesta en su centro se
 	# hunde en el tablero, y el estante siguiente impide apilar. Este caso necesita piso
 	# libre y un origen ocupado con espacio encima, independientemente de la distribucion.
 	var origen := Transform3D(
@@ -136,7 +136,7 @@ func test_encima_de_la_caja_que_ocupa_el_origen() -> void:  # AC-PLY-027
 	var golpe := caja.get_world_3d().direct_space_state.intersect_ray(consulta)
 	assert_dict(golpe).is_not_empty()
 	assert_object(golpe.get("collider")).is_same(ocupante)
-	# Media caja de cada una, que no son del mismo tamaño: Arvejas va en caja chica.
+	# Media caja de cada una, que no son del mismo tamaño: Arvecor va en caja chica.
 	var alto := _media(caja) + _media(ocupante)
 	var encima := origen
 	encima.origin.y = ocupante.global_position.y + alto + ReglasDeLosObjetos.ROCE
@@ -150,7 +150,7 @@ func test_encima_de_la_caja_que_ocupa_el_origen() -> void:  # AC-PLY-027
 
 func test_el_origen_es_el_ultimo_recurso() -> void:  # AC-PLY-028
 	var almacen: Node3D = await _almacen(2)
-	var caja := _caja(almacen, Producto.Id.ARVEJAS)
+	var caja := _caja(almacen, Producto.Id.ARVECOR)
 	var origen: Transform3D = caja.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 	caja.global_position = ENTRETECHO
 	_red(almacen).revisar(caja)
@@ -185,7 +185,7 @@ func test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano() -> void:  # AC-PLY
 func test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia() -> void:  # AC-PLY-042
 	var almacen: Node3D = await _almacen()
 	var antes := _tareas(almacen)
-	var caja := _caja(almacen, Producto.Id.ARVEJAS)
+	var caja := _caja(almacen, Producto.Id.ARVECOR)
 	caja.global_position = ENTRETECHO
 	_red(almacen).revisar(caja)
 	assert_dict(_tareas(almacen)).is_equal(antes)

@@ -55,15 +55,15 @@ func test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila() -> void:  #
 	assert_dict(Apertura.faltantes_al_azar({}, {}, _azar(0))).is_empty()
 	var casilleros: Dictionary[Producto.Id, int] = {
 		Producto.Id.ACTRONCITO: 6,
-		Producto.Id.CORACOLA: 4,
+		Producto.Id.PURA_COLA: 4,
 		Producto.Id.MAROLINI: 8,
-		Producto.Id.PRONGLES: 8,
-		Producto.Id.LAYSNTT: 0,
+		Producto.Id.PROGRES: 8,
+		Producto.Id.LAYSNNT: 0,
 	}
 	var pedidos: Dictionary[Producto.Id, int] = {
 		Producto.Id.ACTRONCITO: 3,
-		Producto.Id.CORACOLA: 1,
-		Producto.Id.PRONGLES: 8,
+		Producto.Id.PURA_COLA: 1,
+		Producto.Id.PROGRES: 8,
 	}
 	for semilla in 200:
 		var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, _azar(semilla))
@@ -72,13 +72,13 @@ func test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila() -> void:  #
 			. contains_exactly_in_any_order(
 				[
 					Producto.Id.ACTRONCITO,
-					Producto.Id.CORACOLA,
+					Producto.Id.PURA_COLA,
 					Producto.Id.MAROLINI,
 				]
 			)
 		)
 		assert_int(faltantes[Producto.Id.ACTRONCITO]).is_between(1, 5)
-		assert_int(faltantes[Producto.Id.CORACOLA]).is_between(1, 4)
+		assert_int(faltantes[Producto.Id.PURA_COLA]).is_between(1, 4)
 		assert_int(faltantes[Producto.Id.MAROLINI]).is_between(1, 8)
 	var unico: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 1}
 	assert_dict(Apertura.faltantes_al_azar({}, unico, _azar(0))).is_equal(unico)
@@ -96,7 +96,7 @@ func test_extremos_de_cantidad_con_fuentes_controladas() -> void:  # AC-STK-034
 			assert_int(cantidad).is_equal(1)
 		var tres: Dictionary[Producto.Id, int] = {
 			Producto.Id.ACTRONCITO: 1,
-			Producto.Id.CORACOLA: 1,
+			Producto.Id.PURA_COLA: 1,
 			Producto.Id.MAROLINI: 1,
 		}
 		assert_dict(Apertura.faltantes_al_azar({}, tres, _azar(caso[1]))).is_equal(tres)

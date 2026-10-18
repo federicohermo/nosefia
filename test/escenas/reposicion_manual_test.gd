@@ -55,7 +55,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
-	var producto := Catalogo.de(Producto.Id.LAYSNTT)
+	var producto := Catalogo.de(Producto.Id.LAYSNNT)
 	# El lugar de todo el depósito puede no vaciar la góndola: tiene más casilleros que la caja.
 	var puestas: int = almacen.get("_repositor").estante().unidades_en_gondola(producto)
 	var grupo: MultiMeshInstance3D = presentacion.get_node_or_null("SueltosDe" + producto.nombre)
@@ -110,11 +110,11 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		almacen.get("_jugador").set_physics_process(false)
 		var agarre: Agarre = almacen.get("_agarre")
-		var laysntt := Catalogo.de(Producto.Id.LAYSNTT)
+		var laysntt := Catalogo.de(Producto.Id.LAYSNNT)
 		var puestas: int = almacen.get("_repositor").estante().unidades_en_gondola(laysntt)
 		var bolsas: Array[RigidBody3D] = []
 		for turno in 9:
-			var id := Producto.Id.LAYSNTT if turno < 3 else Producto.Id.BURBALOO
+			var id := Producto.Id.LAYSNNT if turno < 3 else Producto.Id.BURBALOO
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
 			cuerpo.global_position = Vector3(0.6, 1.7, -5.7)
@@ -131,7 +131,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 			assert_float(bolsa.global_position.y).is_greater(0.1)
 			assert_bool(bolsa.is_visible_in_tree()).is_true()
 			assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
-			almacen.get("_reposicion_manual").pedir_colocar(Producto.Id.LAYSNTT)
+			almacen.get("_reposicion_manual").pedir_colocar(Producto.Id.LAYSNNT)
 		assert_int(almacen.get("_repositor").estante().unidades_en_gondola(laysntt)).is_equal(
 			puestas + 3
 		)
@@ -173,7 +173,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var estante: Estante = almacen.get("_repositor").estante()
 	# Tantas como casilleros vacíos: al final se colocan todas, y la caja da más que eso.
-	for id: Producto.Id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
+	for id: Producto.Id in [Producto.Id.LAYSNNT, Producto.Id.JORGILLO]:
 		var producto := Catalogo.de(id)
 		for indice in estante.cupo(producto) - estante.unidades_en_gondola(producto):
 			almacen.get("_reposicion_manual").retirar(id)
@@ -358,7 +358,13 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		var etiqueta: Vector3 = modelo.get_meta("frente_del_modelo", Vector3.ZERO)
 		var frente := (modelo.global_basis * etiqueta).normalized()
 		# Los finitos van echados hacia abajo y a la izquierda, pero de frente igual.
-		assert_float((orientacion * frente).dot(Vector3.BACK)).is_greater(0.7)
+		(
+			assert_float((orientacion * frente).dot(Vector3.BACK))
+			. override_failure_message(
+				"el frente de %s queda de espaldas en la mano" % producto.nombre
+			)
+			. is_greater(0.7)
+		)
 		assert_bool(orientacion.is_equal_approx(Basis.IDENTITY)).is_false()
 		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Giro/Camara/PuntoDeExamen"))
 		unidad.rotate_y(0.7)
@@ -456,12 +462,14 @@ func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
 			_guia(almacen, producto) + puestas
 		)
-	# Cada producto del catálogo tiene su malla en el contenido y en el mismo orden. Sin esto el
-	# inventario habla de un producto y la góndola muestra otro, y los dos dan verde.
+	# La identidad del catálogo conserva el orden aunque el artista nombre distinto la malla.
+	# Sin ella el inventario puede hablar de un producto y la góndola mostrar otro.
 	var contenido: Node3D = almacen.get_node("Estructura/gondolanueva/StaticBody3D/Contenido")
 	assert_int(contenido.get_child_count()).is_equal(Catalogo.todos().size())
 	for producto in Catalogo.todos():
-		assert_str(contenido.get_child(producto.id).name).is_equal(producto.nombre)
+		var modelo := contenido.get_child(producto.id) as MeshInstance3D
+		assert_object(modelo.mesh).is_not_null()
+		assert_int(int(modelo.get_meta("producto_id", -1))).is_equal(producto.id)
 
 
 func _mirar_foco(jugador: Node3D, ojo: Vector3, punto: Vector3) -> void:
@@ -879,21 +887,27 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	var sin_mira_al_costado := agarre.punto_de_soltado.global_position
 	_soltar(almacen, bolsa)
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
-	# Un estante de la góndola es horizontal y la bolsa entra, pero queda adentro del mueble.
+	# La unidad cabe entre las chapas, pero la reserva comercial rechaza ese apoyo. La bolsa
+	# grande ya choca con el metal y no permite distinguir la reserva de una colisión física.
 	var puesto: Node3D = almacen.get("_reposicion_manual")
-	var apoyo: Vector3 = puesto.call("_apoyo", Producto.Id.UAKAS)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+	puesto.call("retirar", Producto.Id.MALBARDO)
+	var unidad := agarre.soltar(false) as RigidBody3D
+	assert_object(unidad).is_not_null()
+	var apoyo: Vector3 = puesto.call("_apoyo", Producto.Id.UAKALAS)
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	var frente := DisposicionDeLaGondola.frente(
-		disposicion.principales[Producto.Id.UAKAS], disposicion.filas_de_adelante[Producto.Id.UAKAS]
+		disposicion.principales[Producto.Id.UAKALAS],
+		disposicion.filas_de_adelante[Producto.Id.UAKALAS]
 	)
-	# Uakas cambió de mueble: se mira desde su frente real, con el jugador en piso libre.
+	# Uakalas cambió de mueble: se mira desde su frente real, con el jugador en piso libre.
 	# La postura anterior atravesaba el lateral y dejaba la mano dentro de la reserva.
 	var estante := apoyo - frente * 0.12
 	var candidato := estante + frente * 1.3 + frente.cross(Vector3.UP)
 	var suelo := PhysicsRayQueryParameters3D.create(
 		Vector3(candidato.x, 3.0, candidato.z), Vector3(candidato.x, -1.0, candidato.z), 1
 	)
-	suelo.exclude = [jugador.get_rid(), bolsa.get_rid()]
+	suelo.exclude = [jugador.get_rid(), unidad.get_rid()]
 	var piso_libre := jugador.get_world_3d().direct_space_state.intersect_ray(suelo)
 	assert_object(piso_libre["collider"]).is_same(almacen.get_node("Estructura/SueloSolido"))
 	jugador.call("ubicar", Transform3D(Basis.IDENTITY, piso_libre["position"] + Vector3.UP * 0.005))
@@ -922,29 +936,29 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	)
 	# Sin el contorno que envuelve al mueble: si lo soltado choca con él, la mira pega en su cara
 	# y no llega al estante.
-	var en_el_estante := _golpe_de_la_mira(jugador, bolsa, true)
+	var en_el_estante := _golpe_de_la_mira(jugador, unidad, true)
 	assert_object(en_el_estante["collider"]).is_same(almacen.get("_estante"))
 	assert_float(en_el_estante["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
 	var sin_mira_del_estante := agarre.punto_de_soltado.global_position
-	var mascara := bolsa.collision_mask
-	assert_bool(agarre.pedir_agarrar(bolsa.get("datos"), bolsa)).is_true()
-	var derecha: Basis = jugador.call("_derecho", bolsa.global_basis)
+	var mascara := unidad.collision_mask
+	assert_bool(agarre.pedir_agarrar(unidad.get("datos"), unidad)).is_true()
+	var derecha: Basis = jugador.call("_derecho", unidad.global_basis)
 	var mano := Transform3D(derecha, sin_mira_del_estante)
-	var libre := _ocupaciones_en_pose(jugador, bolsa, mano, mascara)
+	var libre := _ocupaciones_en_pose(jugador, unidad, mano, mascara)
 	assert_array(libre["fisicos"]).is_empty()
 	assert_array(libre["reservas"]).is_empty()
 	var minimo := INF
-	for forma in _formas(bolsa):
+	for forma in _formas(unidad):
 		var limites: AABB = Transform3D(derecha) * forma.transform * LimitesDeForma.de(forma.shape)
 		minimo = minf(minimo, limites.position.y)
 	var apoyada := Transform3D(
 		derecha, en_el_estante["position"] + Vector3.UP * (ReglasDeLosObjetos.ROCE - minimo)
 	)
-	var ocupada := _ocupaciones_en_pose(jugador, bolsa, apoyada, mascara)
+	var ocupada := _ocupaciones_en_pose(jugador, unidad, apoyada, mascara)
 	assert_array(ocupada["fisicos"]).is_empty()
 	assert_array(ocupada["reservas"]).contains(almacen.get("_estante").get_parent())
 	agarre.soltar(true)
-	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_del_estante, Vector3.ONE * 0.01)
+	assert_vector(unidad.global_position).is_equal_approx(sin_mira_del_estante, Vector3.ONE * 0.01)
 
 
 func _ocupaciones_en_pose(

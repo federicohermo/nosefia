@@ -1,33 +1,25 @@
-## El nodo dueño de la computadora: abre, cambia de app, registra y publica.
-##
-## **Es dueño de las cuatro piezas del dominio a propósito**: si las construyera la pantalla,
-## esconder el panel al cambiar de app tiraría lo leído y lo anotado — sin un solo error, y con
-## los nodos en verde.
+## El nodo dueño de la computadora conserva el registro al cerrar la pantalla.
 ##
 ## Ningún caso entra el nodo al árbol. El único `avanzar()` que corre es el del reloj, llamado a
 ## mano, y justamente porque el criterio mide que nadie lo haya pausado.
 extends GdUnitTestSuite
 
-## Los cinco archivos de `ui/` y `escenas/` de este spec, que son los que ningún gate mira, más
-## los dos de abajo que tampoco pueden decidir el balance.
+## La presentación y sus sistemas conservan el transcurso del turno.
 const ARCHIVOS_DE_LA_CASCARA := [
 	"res://src/ui/diegetica/pantalla_de_computadora.gd",
 	"res://src/ui/diegetica/app_caja.gd",
 	"res://src/ui/diegetica/pantalla_del_celular.gd",
 	"res://src/sistemas/investigacion/celular_del_empleado.gd",
-	"res://src/ui/diegetica/app_notas.gd",
 	"res://src/escenas/puestos/escritorio.gd",
 	"res://src/sistemas/investigacion/computadora_de_escritorio.gd",
 ]
 
-## Los ocho `.gd` de `dominio/` y `sistemas/` que este spec escribe, y que por eso llevan espejo.
+## Los componentes de dominio y sistemas tienen pruebas propias.
 const ARCHIVOS_CON_ESPEJO = [
 	"res://src/dominio/investigacion/computadora.gd",
 	"res://src/dominio/investigacion/mensaje.gd",
 	"res://src/dominio/investigacion/conversacion.gd",
 	"res://src/dominio/investigacion/bandeja.gd",
-	"res://src/dominio/investigacion/nota.gd",
-	"res://src/dominio/investigacion/cuaderno.gd",
 	"res://src/dominio/almacen/registro_de_ventas.gd",
 	"res://src/sistemas/investigacion/computadora_de_escritorio.gd",
 ]
@@ -95,8 +87,8 @@ func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # AC-INV-
 	var avisos_al_abrir := _avisos_de_tarea
 	var antes := _turno.tiempo_restante()
 	escritorio.pedir_abrir()
-	escritorio.pedir_cambiar_a(Computadora.App.NOTAS)
-	escritorio.pedir_escribir("Puerta del fondo", "Estaba abierta.")
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
+	escritorio.pedir_restar(Catalogo.de(Producto.Id.ACTRONCITO))
 	escritorio.pedir_cerrar()
 	assert_float(_turno.tiempo_restante()).is_equal(antes)
 	assert_int(_avisos_de_tarea).is_equal(avisos_al_abrir)
@@ -142,14 +134,20 @@ func test_ningun_archivo_de_la_cascara_pausa_el_juego() -> void:
 			)
 
 
-func test_lo_anotado_sobrevive_a_cambiar_de_app_y_a_cerrar() -> void:  # AC-INV-012
+func test_reabrir_conserva_las_unidades_anotadas_y_el_total() -> void:  # AC-INV-008
 	var escritorio := _escritorio()
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	var durextra := Catalogo.de(Producto.Id.DUREXTRA)
 	escritorio.pedir_abrir()
-	escritorio.pedir_escribir("Puerta del fondo", "Estaba abierta.")
-	escritorio.pedir_cambiar_a(Computadora.App.CAJA)
+	for unidad in 2:
+		escritorio.pedir_sumar(actroncito)
+	for unidad in 3:
+		escritorio.pedir_sumar(durextra)
 	escritorio.pedir_cerrar()
 	escritorio.pedir_abrir()
-	assert_int(escritorio.cuaderno().cuantas()).is_equal(1)
+	assert_int(escritorio.registro().unidades_de(actroncito)).is_equal(2)
+	assert_int(escritorio.registro().unidades_de(durextra)).is_equal(3)
+	assert_int(escritorio.registro().total()).is_equal(2 * actroncito.precio + 3 * durextra.precio)
 
 
 # AC-STK-024, AC-STK-052
@@ -237,7 +235,7 @@ func test_el_cierre_cuenta_la_planilla_de_ese_instante() -> void:  # AC-STK-052
 	var pedidos: Array[Venta] = [
 		_venta(Producto.Id.ACTRONCITO, 1),
 		_venta(Producto.Id.DUREXTRA, 2),
-		_venta(Producto.Id.FLINPUF, 1),
+		_venta(Producto.Id.FLIM_POF, 1),
 	]
 	for de_mas: int in [0, 1]:
 		var atender := _atender(pedidos)
@@ -257,7 +255,7 @@ func test_el_cierre_cuenta_la_planilla_de_ese_instante() -> void:  # AC-STK-052
 		escritorio.reloj.avanzar(Reglas.DURACION_DEL_TURNO)
 		assert_array(cierres).is_equal([1 - de_mas])
 		# Con el turno cerrado, un gesto ya no cumple ni descumple.
-		escritorio.pedir_sumar(Catalogo.de(Producto.Id.FLINPUF))
+		escritorio.pedir_sumar(Catalogo.de(Producto.Id.FLIM_POF))
 		assert_int(_turno.tareas_cumplidas()).is_equal(1 - de_mas)
 		# Un cobro posterior tampoco modifica el cierre ya contado.
 		ventanilla.pedir_atender()
@@ -354,11 +352,10 @@ func test_los_casilleros_y_los_interlocutores_no_se_escriben_en_la_cascara() -> 
 			)
 
 
-func test_los_ocho_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:
+func test_los_componentes_de_dominio_y_sistemas_tienen_su_espejo() -> void:
 	# Es la mitad falsable del criterio de terminado: sin los espejos el nodo `tdd` no pasa. Acá
 	# se lee al revés —cada archivo del spec contra su suite— así que el rojo dice qué queda sin
 	# ejercer y no sólo que falta un archivo.
-	assert_int(ARCHIVOS_CON_ESPEJO.size()).is_equal(8)
 	for ruta: String in ARCHIVOS_CON_ESPEJO:
 		var espejo := ruta.replace("res://src/", "res://test/").replace(".gd", "_test.gd")
 		(
