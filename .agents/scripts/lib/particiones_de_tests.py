@@ -1,10 +1,42 @@
 """Una suite pertenece a una sola partición, independientemente del orden y la plataforma."""
 
-import hashlib
+import math
 from collections import Counter
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import PurePosixPath
+from types import MappingProxyType
 from xml.etree import ElementTree
+
+
+# Las 20 suites más lentas del run 39087916563, commit
+# 563abcf781df923d67cbdb1ef82d5a0334dcf7a9. Son estimaciones, nunca el inventario.
+SEGUNDOS_ESTIMADOS: Mapping[str, float] = MappingProxyType({
+    "test/escenas/lo_soltado_fuera_de_los_solidos_test.gd": 185.440,
+    "test/escenas/agarre_fisico_test.gd": 147.102,
+    "test/escenas/objetos/caja_que_se_lleva_test.gd": 71.055,
+    "test/escenas/reposicion_manual_test.gd": 68.623,
+    "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd": 58.918,
+    "test/escenas/hoja_que_arrastra_test.gd": 40.436,
+    "test/escenas/giro_parejo_test.gd": 35.820,
+    "test/escenas/objetos/mancha_en_el_piso_test.gd": 28.310,
+    "test/escenas/objetos/balde_que_se_apoya_test.gd": 27.052,
+    "test/escenas/unidades_sueltas_del_cierre_test.gd": 17.931,
+    "test/escenas/jornada_integrada_test.gd": 15.338,
+    "test/escenas/recorrido_por_el_modelo_test.gd": 14.468,
+    "test/escenas/puestos/caja_registradora_test.gd": 14.419,
+    "test/escenas/objetos/producto_soltado_test.gd": 10.251,
+    "test/escenas/un_lugar_por_producto_test.gd": 8.815,
+    "test/escenas/deposito_ordenado_test.gd": 8.583,
+    "test/escenas/atencion_de_la_segunda_jornada_test.gd": 8.244,
+    "test/escenas/puestos/bano_publico_test.gd": 7.696,
+    "test/escenas/puestos/heladeras_del_local_test.gd": 5.659,
+    "test/escenas/puestos/contenedor_de_basura_test.gd": 5.599,
+})
+SEGUNDOS_POR_SUITE_NUEVA = 1.0
+# Los otros gates comparten la última partición. Sus imports agregaron unos 50 s
+# en esa corrida; reservar toda su duración contaría dos veces el trabajo concurrente.
+SEGUNDOS_RESERVADOS_PARA_GATES = 50.0
 
 
 @dataclass(frozen=True)
@@ -39,16 +71,42 @@ def _ruta_relativa(ruta: str) -> str:
     return normalizada.as_posix()
 
 
-def seleccionar_suites(suites: list[str], particion: ParticionTests) -> list[str]:
+def seleccionar_suites(
+    suites: list[str],
+    particion: ParticionTests,
+    segundos_estimados: Mapping[str, float] | None = None,
+) -> list[str]:
     normalizadas = sorted(_ruta_relativa(ruta) for ruta in suites)
     if len(set(normalizadas)) != len(normalizadas):
         raise ValueError("la lista contiene suites duplicadas")
-    seleccionadas = [
-        ruta
-        for ruta in normalizadas
-        if int.from_bytes(hashlib.sha256(ruta.encode("utf-8")).digest()[:4], "big")
-        % particion.total == particion.indice
-    ]
+    estimaciones = SEGUNDOS_ESTIMADOS if segundos_estimados is None else segundos_estimados
+    costos = {}
+    for ruta, segundos in estimaciones.items():
+        normalizada = _ruta_relativa(ruta)
+        if normalizada in costos:
+            raise ValueError("las estimaciones contienen suites duplicadas")
+        if (
+            isinstance(segundos, bool)
+            or not isinstance(segundos, (int, float))
+            or not math.isfinite(segundos)
+            or segundos <= 0
+        ):
+            raise ValueError(f"el costo estimado debe ser finito y positivo: {ruta!r}")
+        costos[normalizada] = segundos
+    cargas = [0.0] * particion.total
+    cargas[-1] = SEGUNDOS_RESERVADOS_PARA_GATES
+    asignadas: list[list[str]] = [[] for _ in range(particion.total)]
+    for ruta in sorted(
+        normalizadas,
+        key=lambda ruta: (-costos.get(ruta, SEGUNDOS_POR_SUITE_NUEVA), ruta),
+    ):
+        indice = min(
+            range(particion.total),
+            key=lambda indice: (bool(asignadas[indice]), cargas[indice], indice),
+        )
+        asignadas[indice].append(ruta)
+        cargas[indice] += costos.get(ruta, SEGUNDOS_POR_SUITE_NUEVA)
+    seleccionadas = sorted(asignadas[particion.indice])
     if not seleccionadas:
         raise ValueError(f"la partición {particion.indice}/{particion.total} no contiene suites")
     return seleccionadas

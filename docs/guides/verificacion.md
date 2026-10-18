@@ -24,8 +24,11 @@ python .claude/scripts/verificar.py --particion-tests 0/4
 
 El índice empieza en cero. La última partición corre también los demás nodos; las otras sólo
 corren sus suites. En el reparto actual es más liviana y deja CPU libre en la partición más larga.
-La asignación usa el hash de la ruta relativa de cada archivo.
-Incorpora suites nuevas automáticamente y conserva la selección en Windows y Linux.
+La asignación prioriza las suites más lentas y las agrega al runner con menor carga estimada.
+Usa las duraciones medidas de veinte suites y reserva margen para los demás nodos en la última partición.
+Las suites nuevas reciben un costo estimado por defecto. Los tiempos orientan el reparto;
+el inventario sigue saliendo de todos los archivos `_test.gd` actuales.
+El orden es determinista y conserva la selección en Windows y Linux.
 Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes. El check
 obligatorio `verify` sólo pasa cuando pasan las cuatro particiones.
 
