@@ -1,6 +1,7 @@
 """Particionar conserva todas las suites y exige evidencia nueva de que corrieron."""
 
 import io
+import json
 import tempfile
 import unittest
 from collections import Counter
@@ -9,7 +10,13 @@ from pathlib import Path
 from unittest.mock import patch
 
 import verificar
-from lib.particiones_de_tests import ParticionTests, comprobar_reporte, seleccionar_suites
+from lib.particiones_de_tests import (
+    ParticionTests,
+    agrupar_suites,
+    comprobar_cobertura,
+    comprobar_reporte,
+    seleccionar_suites,
+)
 
 
 SUITES = ["test/dominio/ejemplo_test.gd", "test/escenas/ejemplo_test.gd"]
@@ -19,6 +26,41 @@ XML = """<testsuites tests="2">
 <testsuite name="ejemplo_test" package="test/escenas" tests="1">
 <testcase name="test_escena" /></testsuite>
 </testsuites>"""
+FISICAS = [
+    "test/escenas/agarre_fisico_test.gd",
+    "test/escenas/lo_soltado_fuera_de_los_solidos_test.gd",
+]
+
+
+def reporte(suites):
+    return "<testsuites>" + "".join(
+        f'<testsuite name="{Path(ruta).stem}" package="{Path(ruta).parent.as_posix()}" '
+        'tests="1"><testcase name="test_regla" /></testsuite>' for ruta in suites
+    ) + "</testsuites>"
+
+
+class GruposTemporales(unittest.TestCase):
+    def test_solo_las_dos_rutas_auditadas_reciben_fps_fijos(self):
+        nueva = "test/escenas/nueva_fisica_test.gd"
+        suites = [*SUITES, nueva, *FISICAS]
+        normal, fisica = agrupar_suites(list(reversed(suites)))
+        self.assertEqual((normal.nombre, normal.fps_fijos), ("normal", None))
+        self.assertEqual((fisica.nombre, fisica.fps_fijos), ("fisica60", 60))
+        self.assertEqual(normal.suites, tuple(sorted([*SUITES, nueva])))
+        self.assertEqual(fisica.suites, tuple(FISICAS))
+        self.assertEqual(Counter(normal.suites + fisica.suites), Counter(suites))
+
+    def test_omite_grupos_vacios_y_normaliza_rutas(self):
+        self.assertEqual(agrupar_suites([]), ())
+        self.assertEqual(len(agrupar_suites(SUITES)), 1)
+        grupo, = agrupar_suites([ruta.replace("/", "\\") for ruta in FISICAS])
+        self.assertEqual(grupo.suites, tuple(FISICAS))
+        self.assertEqual(grupo.fps_fijos, 60)
+
+    def test_rechaza_rutas_invalidas_y_duplicadas(self):
+        for suites in ([SUITES[0], SUITES[0].replace("/", "\\")], ["../test.gd"]):
+            with self.subTest(suites=suites), self.assertRaises(ValueError):
+                agrupar_suites(suites)
 
 
 class SeleccionDeSuites(unittest.TestCase):
@@ -143,6 +185,11 @@ class SeleccionDeSuites(unittest.TestCase):
 
 
 class EvidenciaDeEjecucion(unittest.TestCase):
+    def test_la_union_rechaza_grupos_ausentes_y_suites_repetidas(self):
+        for ejecutadas in (SUITES[:1], [*SUITES, SUITES[0]]):
+            with self.subTest(ejecutadas=ejecutadas), self.assertRaises(ValueError):
+                comprobar_cobertura(SUITES, ejecutadas)
+
     def test_el_paquete_distingue_suites_con_el_mismo_nombre(self):
         self.assertEqual(comprobar_reporte(SUITES, XML), SUITES)
 
@@ -175,7 +222,7 @@ class EvidenciaDeEjecucion(unittest.TestCase):
 
 
 class CableadoDeLaSuite(unittest.TestCase):
-    def _correr_suite(self, particion, xml=XML, codigo=0):
+    def _correr_suite(self, particion, xml=XML, codigo=0, suites=SUITES, repetido=False):
         self.temporal = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporal.cleanup)
         self.raiz = Path(self.temporal.name)
@@ -188,17 +235,29 @@ class CableadoDeLaSuite(unittest.TestCase):
             self.comandos.append((comando, opciones))
             if "-rd" in comando:
                 reportes = self.raiz / comando[comando.index("-rd") + 1]
-                if particion is not None and xml is not None:
+                contenido = xml.get(reportes.name) if isinstance(xml, dict) else xml
+                if contenido is not None:
                     (reportes / "report_1").mkdir()
-                    (reportes / "report_1" / "results.xml").write_text(xml, encoding="utf-8")
+                    (reportes / "report_1" / "results.xml").write_text(
+                        contenido, encoding="utf-8"
+                    )
+                    if repetido:
+                        (reportes / "report_2").mkdir()
+                        (reportes / "report_2" / "results.xml").write_text(
+                            contenido, encoding="utf-8"
+                        )
+                retorno = codigo.get(reportes.name, 0) if isinstance(codigo, dict) else codigo
+            else:
+                retorno = 0
             return verificar.Resultado(
-                nodo, codigo if "-rd" in comando else 0, "salida de gdUnit4", 0.1
+                nodo, retorno, "salida de gdUnit4", 0.1
             )
 
         with (
             patch.object(verificar, "RAIZ", self.raiz),
-            patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
+            patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(suites, "")),
             patch.object(verificar, "resolver", return_value=("godot", None)),
+            patch.object(verificar, "validar_motor", return_value={}),
             patch.object(verificar, "_correr", side_effect=correr),
         ):
             return verificar.nodo_tests(particion)
@@ -218,6 +277,8 @@ class CableadoDeLaSuite(unittest.TestCase):
         self.assertFalse(Path(directorio).is_absolute())
         self.assertTrue(directorio.startswith("reports/particion-0-de-1-"))
         reportes = self.raiz / directorio
+        self.assertEqual(reportes.name, "normal")
+        self.assertNotIn("--fixed-fps", comando)
         self.assertEqual(
             (reportes / "suites-esperadas.txt").read_text(encoding="utf-8").splitlines(), SUITES
         )
@@ -225,18 +286,73 @@ class CableadoDeLaSuite(unittest.TestCase):
             (reportes / "salida-gdunit4.log").read_text(encoding="utf-8"), "salida de gdUnit4"
         )
         self.assertIn("2/2 suites", (reportes / "cobertura.txt").read_text(encoding="utf-8"))
+        raiz_reportes = reportes.parent
+        self.assertEqual(
+            json.loads((raiz_reportes / "grupos.json").read_text(encoding="utf-8")),
+            [{"nombre": "normal", "suites": SUITES, "fps_fijos": None}],
+        )
+        self.assertIn("2/2 suites", (raiz_reportes / "cobertura.txt").read_text(encoding="utf-8"))
 
-    def test_sin_particion_conserva_el_comando_de_la_suite_completa(self):
+    def test_sin_particion_exige_archivos_explicitos_y_reportes_nuevos(self):
         resultado = self._correr_suite(None)
         comando, _ = self.comandos[1]
         self.assertEqual(resultado.codigo, 0)
-        self.assertEqual(comando[comando.index("-a") + 1], verificar.TESTS)
-        self.assertEqual(comando[comando.index("-rd") + 1], verificar.REPORTES)
+        self.assertEqual(
+            [comando[i + 1] for i, valor in enumerate(comando) if valor == "-a"], SUITES
+        )
+        self.assertTrue(comando[comando.index("-rd") + 1].startswith("reports/suite-"))
+
+    def test_ambos_modos_local_y_particionado_importan_una_vez_y_aislan_relojes(self):
+        suites = [*SUITES, *FISICAS]
+        xml = {"normal": XML, "fisica60": reporte(FISICAS)}
+        for particion in (None, ParticionTests(0, 1)):
+            with self.subTest(particion=particion):
+                resultado = self._correr_suite(particion, xml, suites=suites)
+                self.assertEqual(resultado.codigo, 0)
+                self.assertAlmostEqual(resultado.segundos, 0.2)
+                self.assertEqual(len(self.comandos), 3)
+                self.assertIn("--import", self.comandos[0][0])
+                normal, fisica = [comando for comando, _ in self.comandos[1:]]
+                self.assertNotIn("--fixed-fps", normal)
+                self.assertEqual(fisica[fisica.index("--fixed-fps") + 1], "60")
+                self.assertEqual(
+                    [fisica[i + 1] for i, valor in enumerate(fisica) if valor == "-a"], FISICAS
+                )
+                self.assertIn("4/4 suites", resultado.aviso)
+
+    def test_un_grupo_ausente_no_se_rescata_con_el_reporte_del_otro(self):
+        for faltante in ("normal", "fisica60"):
+            xml = {"normal": XML, "fisica60": reporte(FISICAS), faltante: None}
+            with self.subTest(faltante=faltante):
+                resultado = self._correr_suite(None, xml, suites=[*SUITES, *FISICAS])
+                self.assertEqual(resultado.codigo, 1)
+                self.assertEqual(len(self.comandos), 3)
+                self.assertIn("faltantes=", resultado.aviso)
+
+    def test_un_solo_grupo_fisico_no_lanza_un_proceso_normal_vacio(self):
+        resultado = self._correr_suite(None, reporte(FISICAS), suites=FISICAS)
+        self.assertEqual(resultado.codigo, 0)
+        self.assertEqual(len(self.comandos), 2)
+        self.assertIn("--fixed-fps", self.comandos[1][0])
+
+    def test_un_fallo_no_impide_el_otro_grupo_ni_se_oculta_con_su_exito(self):
+        for fallido in ("normal", "fisica60"):
+            with self.subTest(fallido=fallido):
+                resultado = self._correr_suite(
+                    None, {"normal": XML, "fisica60": reporte(FISICAS)},
+                    codigo={fallido: 3}, suites=[*SUITES, *FISICAS],
+                )
+                self.assertEqual(resultado.codigo, 3)
+                self.assertEqual(len(self.comandos), 3)
+
+    def test_dos_xml_en_un_grupo_no_demuestran_una_ejecucion_unica(self):
+        self.assertEqual(self._correr_suite(None, repetido=True).codigo, 1)
 
     def test_un_reporte_viejo_no_rescata_una_corrida_sin_suites(self):
-        for xml in (None, "<testsuites />"):
-            with self.subTest(xml=xml):
-                self.assertEqual(self._correr_suite(ParticionTests(0, 1), xml).codigo, 1)
+        for particion in (None, ParticionTests(0, 1)):
+            for xml in (None, "<testsuites />"):
+                with self.subTest(particion=particion, xml=xml):
+                    self.assertEqual(self._correr_suite(particion, xml).codigo, 1)
 
     def test_un_reporte_completo_no_oculta_el_codigo_de_fallo_del_motor(self):
         for xml in (XML, "<testsuites />"):
@@ -247,12 +363,51 @@ class CableadoDeLaSuite(unittest.TestCase):
         with (
             patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
             patch.object(verificar, "resolver", return_value=("godot", None)),
+            patch.object(verificar, "validar_motor", return_value={}),
             patch.object(
                 verificar, "_correr", return_value=verificar.Resultado("tests", 1, "", 0)
             ) as correr,
         ):
             self.assertEqual(verificar.nodo_tests(ParticionTests(0, 1)).codigo, 1)
             self.assertEqual(correr.call_count, 1)
+
+    def test_motor_oficial_rechazado_no_lanza_importacion_ni_tests(self):
+        with (
+            patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
+            patch.object(verificar, "resolver", return_value=("oficial", None)),
+            patch.object(verificar, "validar_motor", side_effect=ValueError("sin parche")),
+            patch.object(verificar, "_correr") as correr,
+        ):
+            resultado = verificar.nodo_tests()
+        self.assertEqual(resultado.codigo, 1)
+        self.assertIn("sin parche", resultado.salida)
+        correr.assert_not_called()
+
+    def test_godot_bin_oficial_pide_cambiar_la_variable_y_no_descargar(self):
+        # La variable le gana a la copia gestionada: descargarla dejaría el mismo rojo.
+        with (
+            patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
+            patch.object(verificar, "resolver", return_value=("oficial", verificar.ENTORNO)),
+            patch.object(verificar, "validar_motor", side_effect=ValueError("sin parche")),
+            patch.object(verificar, "_correr") as correr,
+        ):
+            resultado = verificar.nodo_tests()
+        self.assertEqual(resultado.codigo, 1)
+        self.assertIn("GODOT_BIN", resultado.salida)
+        self.assertNotIn("descargar_godot_nativo.py descargar", resultado.salida)
+        correr.assert_not_called()
+
+    def test_copia_gestionada_con_manifiesto_incompleto_es_un_rojo_explicito(self):
+        with (
+            patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
+            patch.object(verificar, "resolver", side_effect=KeyError("receta_sha256")),
+            patch.object(verificar, "_correr") as correr,
+        ):
+            resultado = verificar.nodo_tests()
+        self.assertEqual(resultado.codigo, 1)
+        self.assertIn("Motor nativo no válido", resultado.salida)
+        self.assertIn("descargar_godot_nativo.py descargar", resultado.salida)
+        correr.assert_not_called()
 
 
 class SeleccionDeNodos(unittest.TestCase):
@@ -303,6 +458,13 @@ class SeleccionDeNodos(unittest.TestCase):
             {n.__name__.removeprefix("nodo_") for n in verificar.NODOS},
         )
         self.assertTrue(all(particion is None for _, particion in llamadas))
+
+    def test_solo_tests_conserva_el_mismo_nodo_con_o_sin_particion(self):
+        self.assertEqual(self._invocar(["--solo", "tests"]), (0, [("tests", None)]))
+        self.assertEqual(
+            self._invocar(["--solo", "tests", "--particion-tests", "0/1"]),
+            (0, [("tests", ParticionTests(0, 1))]),
+        )
 
     def test_un_argumento_invalido_no_lanza_ningun_nodo(self):
         for argumentos in (

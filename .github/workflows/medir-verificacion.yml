@@ -1,0 +1,193 @@
+name: medir-verificacion
+run-name: Medir ${{ inputs.particiones || '4' }} ${{ inputs.preparacion || 'independiente' }} ${{ inputs.programacion || 'serial' }} ${{ inputs.etiqueta || 'registro' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      particiones:
+        description: Cantidad de particiones
+        default: '4'
+        required: true
+      preparacion:
+        description: Preparación de herramientas e importación
+        type: choice
+        options: [independiente, compartida, importaciones]
+        default: independiente
+        required: true
+      etiqueta:
+        description: Identificador de repetición
+        default: manual
+        required: true
+      programacion:
+        description: Cuándo inician los workers y de dónde obtienen el snapshot
+        type: choice
+        options: [serial, solapada, reutilizada]
+        default: serial
+        required: true
+      corrida_previa:
+        description: Run exitoso del mismo commit, sólo para reutilizada
+        default: ''
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  PARTICIONES: ${{ inputs.particiones || '4' }}
+  PREPARACION: ${{ inputs.preparacion || 'independiente' }}
+  TIPO_SNAPSHOT: ${{ inputs.preparacion == 'importaciones' && 'importaciones' || 'completo' }}
+  ETIQUETA: ${{ inputs.etiqueta || 'registro' }}
+  PROGRAMACION: ${{ inputs.programacion || 'serial' }}
+  CORRIDA_PREVIA: ${{ inputs.corrida_previa }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matriz: ${{ steps.plan.outputs.matriz }}
+    steps:
+      - id: plan
+        run: |
+          python - <<'PY'
+          import json, os
+          n = int(os.environ['PARTICIONES'])
+          if not 1 <= n <= 256:
+              raise ValueError('particiones debe estar entre 1 y 256')
+          programa = os.environ['PROGRAMACION']
+          previa = os.environ['CORRIDA_PREVIA']
+          if os.environ['PREPARACION'] == 'independiente' and programa != 'serial':
+              raise ValueError('independiente sólo admite programación serial')
+          if programa == 'reutilizada':
+              if not previa.isdigit() or int(previa) <= 0 or previa == os.environ['GITHUB_RUN_ID']:
+                  raise ValueError('reutilizada requiere una corrida anterior positiva')
+          elif previa:
+              raise ValueError('corrida_previa sólo corresponde a reutilizada')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as salida:
+              salida.write('matriz=' + json.dumps({'indice': list(range(n))}) + '\n')
+          PY
+
+  motor:
+    needs: plan
+    uses: ./.github/workflows/preparar-godot-nativo.yml
+
+  preparar:
+    name: Preparación compartida
+    needs: [plan, motor]
+    if: inputs.programacion != 'reutilizada' && (inputs.preparacion == 'compartida' || inputs.preparacion == 'importaciones')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Preparar herramientas
+        run: |
+          set -euo pipefail
+          if [ "$PREPARACION" = compartida ]; then
+            python -m venv .ci-tools/python
+            .ci-tools/python/bin/pip install 'gdtoolkit==4.*'
+          else
+            mkdir -p .ci-tools
+          fi
+          touch .ci-tools/.gdignore
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.motor.outputs.artifact-id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/motor-nativo
+      - name: Validar motor nativo de esta corrida
+        env:
+          RECETA_ESPERADA: ${{ needs.motor.outputs.receta }}
+        run: |
+          set -euo pipefail
+          mkdir -p .ci-tools/godot
+          tar --zstd -xf "$RUNNER_TEMP/motor-nativo/godot-nativo.tar.zst" -C .ci-tools/godot
+          python .github/scripts/descargar_godot_nativo.py comprobar \
+            --plataforma linux-x86_64 --destino .ci-tools/godot \
+            > "$RUNNER_TEMP/motor-nativo.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'motor-nativo.json').read_text())
+          if datos['receta_sha256'] != os.environ['RECETA_ESPERADA']:
+              raise ValueError('el motor descargado no coincide con la receta del productor')
+          with open(os.environ['GITHUB_ENV'], 'a') as salida:
+              salida.write(f"GODOT_BIN={datos['binario']}\n")
+              salida.write(f"GODOT_NATIVE_RECIPE={datos['receta_sha256']}\n")
+          PY
+
+      - name: Importar una vez
+        run: python .github/scripts/medir_verificacion.py preparar --tipo "$TIPO_SNAPSHOT"
+      - name: Empaquetar preservando fechas y permisos
+        run: python .github/scripts/medir_verificacion.py empaquetar "$RUNNER_TEMP/snapshot.tar.zst" --tipo "$TIPO_SNAPSHOT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-${{ env.TIPO_SNAPSHOT }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/snapshot.tar.zst
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: medicion-preparacion
+          path: reports/medicion-ci/
+          retention-days: 1
+          if-no-files-found: warn
+
+  worker:
+    name: worker-${{ matrix.indice }}
+    needs: [plan, preparar, motor]
+    if: always() && inputs.programacion == 'serial' && needs.motor.result == 'success' && needs.plan.result == 'success' && (needs.preparar.result == 'success' || needs.preparar.result == 'skipped')
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matriz) }}
+    uses: ./.github/workflows/medir-particion.yml
+    with:
+      indice: ${{ matrix.indice }}
+      particiones: ${{ fromJSON(inputs.particiones) }}
+      preparacion: ${{ inputs.preparacion }}
+      programacion: ${{ inputs.programacion }}
+      corrida_snapshot: ${{ github.run_id }}
+      etiqueta: ${{ inputs.etiqueta }}
+      motor_artifact_id: ${{ needs.motor.outputs.artifact-id }}
+      motor_receta: ${{ needs.motor.outputs.receta }}
+
+  worker-anticipado:
+    name: worker-${{ matrix.indice }}
+    needs: [plan, motor]
+    if: needs.motor.result == 'success' && (inputs.programacion == 'solapada' || inputs.programacion == 'reutilizada')
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matriz) }}
+    uses: ./.github/workflows/medir-particion.yml
+    with:
+      indice: ${{ matrix.indice }}
+      particiones: ${{ fromJSON(inputs.particiones) }}
+      preparacion: ${{ inputs.preparacion }}
+      programacion: ${{ inputs.programacion }}
+      corrida_snapshot: ${{ inputs.programacion == 'reutilizada' && inputs.corrida_previa || github.run_id }}
+      etiqueta: ${{ inputs.etiqueta }}
+      motor_artifact_id: ${{ needs.motor.outputs.artifact-id }}
+      motor_receta: ${{ needs.motor.outputs.receta }}
+
+  resultado:
+    needs: [plan, motor, preparar, worker, worker-anticipado]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          PLAN: ${{ needs.plan.result }}
+          MOTOR: ${{ needs.motor.result }}
+          PREPARAR: ${{ needs.preparar.result }}
+          WORKERS: ${{ needs.worker.result }}
+          ANTICIPADOS: ${{ needs.worker-anticipado.result }}
+        run: |
+          test "$PLAN" = success
+          test "$MOTOR" = success
+          test "$PREPARAR" = success -o "$PREPARAR" = skipped
+          test "$WORKERS:$ANTICIPADOS" = success:skipped -o "$WORKERS:$ANTICIPADOS" = skipped:success

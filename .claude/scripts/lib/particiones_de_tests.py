@@ -12,8 +12,9 @@ from xml.etree import ElementTree
 # Las 20 suites más lentas del run 39087916563, commit
 # 563abcf781df923d67cbdb1ef82d5a0334dcf7a9. Son estimaciones, nunca el inventario.
 SEGUNDOS_ESTIMADOS: Mapping[str, float] = MappingProxyType({
-    "test/escenas/lo_soltado_fuera_de_los_solidos_test.gd": 185.440,
-    "test/escenas/agarre_fisico_test.gd": 147.102,
+    # Provisionales: JUnit local Windows con fixed-fps 60, 2026-10-19; falta calibrar en CI.
+    "test/escenas/lo_soltado_fuera_de_los_solidos_test.gd": 24.0,
+    "test/escenas/agarre_fisico_test.gd": 13.0,
     "test/escenas/objetos/caja_que_se_lleva_test.gd": 71.055,
     "test/escenas/reposicion_manual_test.gd": 68.623,
     "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd": 58.918,
@@ -37,6 +38,37 @@ SEGUNDOS_POR_SUITE_NUEVA = 1.0
 # Los otros gates comparten la última partición. Sus imports agregaron unos 50 s
 # en esa corrida; reservar toda su duración contaría dos veces el trabajo concurrente.
 SEGUNDOS_RESERVADOS_PARA_GATES = 50.0
+
+
+# Estas suites afirman pasos de simulación y estado físico a 60 Hz, sin depender de
+# duración real, relojes monotónicos ni cantidad variable de frames de presentación.
+# Cambiar ese contrato en las suites o en su código ejercido requiere volver a comparar
+# ambos modos, o retirar la ruta de esta lista. Las demás suites conservan reloj normal.
+SUITES_FISICA_60 = frozenset({
+    "test/escenas/lo_soltado_fuera_de_los_solidos_test.gd",
+    "test/escenas/agarre_fisico_test.gd",
+})
+
+
+@dataclass(frozen=True)
+class GrupoTests:
+    suites: tuple[str, ...]
+    fps_fijos: int | None = None
+
+    @property
+    def nombre(self) -> str:
+        return "normal" if self.fps_fijos is None else "fisica60"
+
+
+def agrupar_suites(suites: list[str]) -> tuple[GrupoTests, ...]:
+    normalizadas = sorted(_ruta_relativa(ruta) for ruta in suites)
+    if len(set(normalizadas)) != len(normalizadas):
+        raise ValueError("la lista contiene suites duplicadas")
+    normales = tuple(ruta for ruta in normalizadas if ruta not in SUITES_FISICA_60)
+    fisicas = tuple(ruta for ruta in normalizadas if ruta in SUITES_FISICA_60)
+    return tuple(
+        grupo for grupo in (GrupoTests(normales), GrupoTests(fisicas, 60)) if grupo.suites
+    )
 
 
 @dataclass(frozen=True)
@@ -131,8 +163,12 @@ def comprobar_reporte(suites: list[str], xml: str) -> list[str]:
         if casos < 1 or len(suite.findall("testcase")) != casos:
             raise ValueError(f"el reporte contiene una suite sin todos sus casos: {ruta}")
         ejecutadas.append(ruta)
+    return comprobar_cobertura(suites, ejecutadas)
+
+
+def comprobar_cobertura(suites: list[str], ejecutadas: list[str]) -> list[str]:
     esperadas = Counter(_ruta_relativa(ruta) for ruta in suites)
-    observadas = Counter(ejecutadas)
+    observadas = Counter(_ruta_relativa(ruta) for ruta in ejecutadas)
     if not esperadas or esperadas != observadas:
         faltantes = sorted((esperadas - observadas).elements())
         sobrantes = sorted((observadas - esperadas).elements())

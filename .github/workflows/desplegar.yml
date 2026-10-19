@@ -34,10 +34,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  motor:
+    uses: ./.github/workflows/preparar-godot-nativo.yml
+
   desplegar:
-    runs-on: ubuntu-latest
+    needs: motor
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       # PRIMERO los secretos, antes de preparar la plantilla. Sin este paso, la falta de
       # uno se ve treinta minutos después como un error de la CLI de Vercel que no lo nombra —
@@ -84,21 +90,32 @@ jobs:
         with:
           python-version: "3.13"
 
-      # El mismo bloque que `verify.yml`, por el mismo motivo: el nombre del ejecutable sale
-      # del zip y se resuelve con un glob, porque pinearlo lo rompería en el próximo bump con
-      # un "no such file" que no dice nada.
-      - name: Bajar Godot ${{ env.GODOT_VERSION }}
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.motor.outputs.artifact-id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/motor-nativo
+      - name: Validar motor nativo de esta corrida
+        env:
+          RECETA_ESPERADA: ${{ needs.motor.outputs.receta }}
         run: |
           set -euo pipefail
-          base="https://github.com/godotengine/godot/releases/download"
-          curl -fsSL -o godot.zip "$base/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q godot.zip -d "$HOME/godot"
-          bin="$(find "$HOME/godot" -maxdepth 1 -type f -name 'Godot_v*' | head -1)"
-          chmod +x "$bin"
-          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+          mkdir -p build/godot-native/linux-x86_64
+          tar --zstd -xf "$RUNNER_TEMP/motor-nativo/godot-nativo.tar.zst" -C build/godot-native/linux-x86_64
+          python .github/scripts/descargar_godot_nativo.py comprobar \
+            --plataforma linux-x86_64 --destino build/godot-native/linux-x86_64 \
+            > "$RUNNER_TEMP/motor-nativo.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'motor-nativo.json').read_text())
+          if datos['receta_sha256'] != os.environ['RECETA_ESPERADA']:
+              raise ValueError('el motor descargado no coincide con la receta del productor')
+          with open(os.environ['GITHUB_ENV'], 'a') as salida:
+              salida.write(f"GODOT_BIN={datos['binario']}\n")
+              salida.write(f"GODOT_NATIVE_RECIPE={datos['receta_sha256']}\n")
+          PY
 
-      # Sólo se cachea el ZIP web terminado y su manifiesto. Cambiar las fuentes, el SDK,
-      # las opciones, el parche o el preparador cambia la clave. Cada restauración se valida.
       - name: Caché de la plantilla web optimizada
         id: plantilla
         uses: actions/cache@v4

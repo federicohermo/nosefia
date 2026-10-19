@@ -1,0 +1,17 @@
+{
+  "formato": 1,
+  "plataformas": {
+    "windows-x86_64": {
+      "receta_sha256": "53ecfcafaa37f40e935b2a41b69406318150182f91adc4b2109ad2ce068a66d1",
+      "archivo_sha256": "7e43251ea593cc4a80d9f4c17e4dcba0b9273d0b69277115f94b0017a30ea3e1",
+      "manifiesto_sha256": "5bd4a42ce9c44c6bb97137b804c50c5cc65b6eae305c606a25a5316729fd702a",
+      "url": "https://github.com/federicohermo/nosefia/releases/download/godot-native-classdb-1/windows-x86_64.zip"
+    },
+    "linux-x86_64": {
+      "receta_sha256": "f728a5267db7fb7f56ed17bb3169ee9bd7a5725e8e6bed9f2a2a387a3c53c34b",
+      "archivo_sha256": "e362415082b6fffc089e2bc5c8cd53f15495a435607ab49918ea072392feae7a",
+      "manifiesto_sha256": "278a7af0af7adf3520918075b0fb5ba324bf5278491626e309f4c2193d20ad27",
+      "url": "https://github.com/federicohermo/nosefia/releases/download/godot-native-classdb-1/linux-x86_64.zip"
+    }
+  }
+}

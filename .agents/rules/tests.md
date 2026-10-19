@@ -106,20 +106,15 @@ El corte de los dos primeros lo anuncia «Script errors were detected during tes
 tres. Con la versión de antes, medida el 2026-09-01, salían con 0. Un error de parseo dejaba el
 dominio entero sin correr con la CI en verde.
 
-**El conteo crudo sigue siendo el control, y no cuesta nada**: el `Executed test suites: (N/N)`
-de la salida cruda, contra la cantidad de `*_test.gd`. `verificar.py` no lo imprime.
+**`verificar.py` coteja cada suite con el JUnit de su corrida.** Imprime cuántas verificó, y
+una suite que no corrió deja el nodo rojo.
 
 **También se lee la salida cruda cuando el XML da cero errores.** Un callback de señal o el
 desmontaje puede fallar fuera del contador del caso. El fixture usa el tipo de la señal y afirma
 que su receptor se ejecutó. La ausencia de una reacción no prueba nada si la entrega abortó.
 Los errores nuevos y las fugas se corrigen; se distinguen los diagnósticos esperados de
-`assert_error` y del debugger remoto deliberadamente inaccesible.
-
-```bash
-"$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
-  res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
-  -rd res://reports 2>&1 | grep "Executed test suites"
-```
+`assert_error` y del debugger remoto deliberadamente inaccesible. `verificar.py` guarda esa
+salida en `salida-gdunit4.log`, adentro de su carpeta de `reports/`.
 
 **Re-importá después de crear cada archivo con `class_name` nuevo**, no una vez por worktree. Sin
 eso la corrida entera sale con 105 aunque el archivo ya esté en disco, y se lee como «todavía no
