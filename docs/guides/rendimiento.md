@@ -147,6 +147,31 @@ Los casos del contador se corren a mano:
 node --test .github/scripts/tests/enlaces_de_shaders_test.mjs
 ```
 
+### El tope de la carga web
+
+El job "Carga web" de `verify.yml` frena un PR que suma programas a la carga o agranda el motor.
+Protege lo que ganaron #514 y #523. Exporta el juego y corre `medir_la_carga.mjs` dos veces en
+Chrome. La primera usa el enlace en paralelo. La segunda pasa `--sin-enlace-en-paralelo` y
+recorre el camino de Firefox.
+
+La CI no tiene GPU, así que mide con `--sin-ventana --software`. El conteo depende de los
+materiales del juego, no de la GPU. Los tiempos de esa medición no describen la carga de un
+jugador, y el job no los controla.
+
+`.github/scripts/tope_de_carga.py` compara cada corrida con los topes de
+`.github/performance/topes-de-carga.json`:
+
+- **`programas_con_paralelo` y `programas_sin_paralelo`:** el máximo medido en la CI, más 2.
+  Entre corridas, el conteo varía en 1.
+- **`wasm_bytes`:** 30 MB. El motor de #514 pesa 29,1 MB.
+
+Una corrida sobre su tope da rojo, aunque las otras dos queden debajo. También da rojo si la
+medición con enlace en paralelo no ve `KHR_parallel_shader_compile`. Sin esa extensión, los dos
+caminos medirían lo mismo.
+
+Un PR que baja un conteo no baja el tope. Subir un tope es una decisión del PR. El PR la
+justifica con los conteos del artefacto `carga-web`, que el job sube también cuando falla.
+
 ## La memoria de texturas en la web
 
 `.github/scripts/medir_memoria_de_texturas.mjs` hace el inventario de las texturas de WebGL que

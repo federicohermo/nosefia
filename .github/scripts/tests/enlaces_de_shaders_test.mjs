@@ -71,3 +71,28 @@ test('sin programas antes del aviso ambos conteos quedan en cero', () => {
   assert.equal(enlaces.programas, 0);
   assert.equal(enlaces.fuentes.size, 0);
 });
+
+const inicioDelRenderer = script.indexOf('function rendererRechazado(');
+const finDelRenderer = script.indexOf('\nfunction aviso(', inicioDelRenderer);
+
+function rendererRechazado(...argumentos) {
+  assert.ok(inicioDelRenderer >= 0 && finDelRenderer > inicioDelRenderer,
+    'la regla del renderer sigue en el medidor');
+  const entorno = {};
+  runInNewContext(`${script.slice(inicioDelRenderer, finDelRenderer)}\nthis.regla = rendererRechazado;`, entorno);
+  return entorno.regla(...argumentos);
+}
+
+test('sin ventana rechaza un renderer por software salvo que la medición lo pida', () => {
+  const swiftshader = 'ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device), SwiftShader driver)';
+  assert.equal(rendererRechazado(swiftshader, { sinVentana: true, software: false }), true);
+  assert.equal(rendererRechazado(null, { sinVentana: true, software: false }), true);
+  assert.equal(rendererRechazado(swiftshader, { sinVentana: true, software: true }), false);
+  assert.equal(rendererRechazado(null, { sinVentana: true, software: true }), true);
+});
+
+test('con ventana o con una GPU real no rechaza el renderer', () => {
+  const real = 'ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Direct3D11 vs_5_0 ps_5_0, D3D11)';
+  assert.equal(rendererRechazado(real, { sinVentana: true, software: false }), false);
+  assert.equal(rendererRechazado('SwiftShader', { sinVentana: false, software: false }), false);
+});
