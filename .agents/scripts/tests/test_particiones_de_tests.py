@@ -383,6 +383,20 @@ class CableadoDeLaSuite(unittest.TestCase):
         self.assertIn("sin parche", resultado.salida)
         correr.assert_not_called()
 
+    def test_godot_bin_oficial_pide_cambiar_la_variable_y_no_descargar(self):
+        # La variable le gana a la copia gestionada: descargarla dejaría el mismo rojo.
+        with (
+            patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
+            patch.object(verificar, "resolver", return_value=("oficial", verificar.ENTORNO)),
+            patch.object(verificar, "validar_motor", side_effect=ValueError("sin parche")),
+            patch.object(verificar, "_correr") as correr,
+        ):
+            resultado = verificar.nodo_tests()
+        self.assertEqual(resultado.codigo, 1)
+        self.assertIn("GODOT_BIN", resultado.salida)
+        self.assertNotIn("descargar_godot_nativo.py descargar", resultado.salida)
+        correr.assert_not_called()
+
     def test_copia_gestionada_con_manifiesto_incompleto_es_un_rojo_explicito(self):
         with (
             patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),

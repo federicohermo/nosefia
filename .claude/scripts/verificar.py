@@ -27,7 +27,7 @@ mentira chiquita que se vuelve grande el día que el walk se rompa y siga dicien
 
 Y `tests` es un salteo **con fecha de vencimiento**: mientras no haya un solo `*_test.gd` no
 hay nada que correr y no hace falta Godot. En cuanto exista el primero, Godot pasa a ser
-obligatorio y la falta de `GODOT_BIN` es un rojo — no un salteo.
+obligatorio y la falta de un motor nativo válido es un rojo — no un salteo.
 """
 
 import argparse
@@ -49,6 +49,8 @@ configurar()
 
 from lib.archivos import scripts_gd  # noqa: E402
 from lib.godot import (  # noqa: E402
+    ENTORNO,
+    VARIABLE,
     aviso_de_entorno_viejo,
     como_declararlo,
     entorno_de_la_suite,
@@ -188,17 +190,20 @@ def nodo_tests(particion: ParticionTests | None = None) -> Resultado:
             "pasa a necesitar Godot y deja de saltearse.",
         )
 
+    origen = None
     try:
         godot, origen = resolver(dict(os.environ))
         if godot is not None:
             validar_motor(godot, RAIZ)
     except (OSError, ValueError, ImportError, RuntimeError, KeyError, TypeError) as error:
-        return Resultado(
-            "tests", 1,
-            f"Motor nativo no válido: {error}\n"
-            "Descargalo con python .github/scripts/descargar_godot_nativo.py descargar.",
-            0.0,
+        # `GODOT_BIN` le gana a la copia gestionada: descargarla no cambia nada si sigue declarada.
+        salida = (
+            f"`{VARIABLE}` apunta a un motor sin la receta del proyecto. Borrala, o apuntala al "
+            "ejecutable de consola de `build/godot-native/`."
+            if origen == ENTORNO
+            else "Descargalo con python .github/scripts/descargar_godot_nativo.py descargar."
         )
+        return Resultado("tests", 1, f"Motor nativo no válido: {error}\n{salida}", 0.0)
     if godot is None:
         return Resultado("tests", 1, como_declararlo(dict(os.environ)), 0.0)
 

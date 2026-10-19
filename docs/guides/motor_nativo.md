@@ -18,8 +18,9 @@ python .claude/scripts/verificar.py
 La descarga valida los hashes antes de extraer o ejecutar el motor.
 Una copia válida en `build/godot-native/<plataforma>` permite reutilizarlo sin red.
 La copia conserva el ejecutable principal, el de consola, las DLL necesarias y `manifiesto.json` en la misma carpeta.
-El verificador encuentra esa copia sin cambiar `GODOT_BIN` en el registro global.
-Una variable explícita sigue teniendo prioridad y debe apuntar a un motor con el mismo manifiesto válido.
+El verificador usa esa copia cuando `GODOT_BIN` no está declarada.
+Una `GODOT_BIN` declarada tiene prioridad y debe apuntar a un motor con el mismo manifiesto válido.
+Si apunta al motor oficial, el nodo `tests` sale rojo aunque la copia exista.
 
 ## Construir otra receta
 
