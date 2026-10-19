@@ -12,7 +12,8 @@ const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const TACHO := "Estructura/tachitobasura/StaticBody3D"
 const PORTON := "Estructura/porton/CuerpoDeLaHoja"
-const PUERTA_INTERIOR := "Estructura/puerta2/CuerpoDeLaHoja"
+## La del depósito: la del baño se traba en las noches que no piden limpiar.
+const PUERTA_INTERIOR := "Estructura/puerta/CuerpoDeLaHoja"
 const LECTOR := "Estructura/Lector"
 
 

@@ -55,13 +55,17 @@ func test_la_gravedad_asienta_al_jugador_a_la_misma_altura_en_los_tres_cuartos()
 
 func test_abrir_el_bano_no_barre_los_utiles_de_limpieza() -> void:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
+	local.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(local)
+	var bano: Node = local.get_node("Estructura/puerta2/CuerpoDeLaHoja")
+	assert_bool(bano.call("puerta").trabada()).is_false()
 	local.get("_jugador").set_physics_process(false)
 	var utiles: Array = local.get("_utiles_de_limpieza")
 	var origenes: Array[Vector3] = []
 	for util: Node3D in utiles:
 		origenes.append(util.global_position)
-	local.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("alternar")
+	bano.call("alternar")
+	assert_bool(bano.call("puerta").abierta()).is_true()
 	for cuadro in 90:
 		await get_tree().physics_frame
 	for indice in utiles.size():
