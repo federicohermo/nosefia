@@ -157,7 +157,7 @@ texto = "Lo que les entregues lo sacás de las [b]góndolas[/b]. Después, [b]re
 [sub_resource type="Resource" id="Intro12"]
 script = ExtResource("mensaje")
 identidad = "J1_Intro12"
-orden = 18
+orden = 11
 de_quien = "Enrique Peldaño"
 texto = "Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.\n\nMe parece que con eso cubrimos todo. No te olvides de dejar el local correctamente ordenado antes de irte. ¿Estamos?"
 

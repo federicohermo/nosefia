@@ -139,7 +139,7 @@ func test_las_pantallas_de_cada_jornada() -> void:  # AC-EMP-045, AC-EMP-046
 func test_fuera_de_la_introduccion_no_hay_instrucciones() -> void:  # AC-EMP-046, AC-EMP-077
 	var mensajes := _guion().mensajes
 	var ultima := PRIMERA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
-	for jornada in [PRIMERA - 1, ultima + 1]:
+	for jornada: int in [PRIMERA - 1, ultima + 1]:
 		assert_array(InstruccionesDelJefe.de_la_jornada(mensajes, jornada)).is_empty()
 	for jornada in range(COMPLETA, ultima + 1):
 		assert_array(InstruccionesDelJefe.de_la_jornada(mensajes, jornada)).is_empty()

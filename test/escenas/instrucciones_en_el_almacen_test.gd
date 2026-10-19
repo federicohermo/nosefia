@@ -371,11 +371,11 @@ func test_retomar_la_tercera_y_la_cuarta() -> void:  # AC-EMP-076, AC-SAV-021, A
 	var celular: CelularDelEmpleado = _almacen.get("_celular")
 	var chat := celular.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)
 	var de_la_cuarta: Array[String] = []
-	for mensaje in GUION.mensajes:
+	for mensaje: Mensaje in GUION.mensajes:
 		if mensaje.jornada == COMPLETA:
 			de_la_cuarta.append(mensaje.identidad)
 	var ultimos: Array[String] = []
-	for mensaje in chat.slice(chat.size() - de_la_cuarta.size()):
+	for mensaje: Mensaje in chat.slice(chat.size() - de_la_cuarta.size()):
 		ultimos.append(mensaje.identidad)
 	assert_array(ultimos).is_equal(de_la_cuarta)
 
