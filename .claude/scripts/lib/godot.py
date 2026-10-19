@@ -183,7 +183,7 @@ def como_declararlo(entorno: dict[str, str], del_registro: Callable[[], str | No
         )
     return (
         "No se encontró Godot nativo preparado para este proyecto:\n\n"
-        "  python .github/scripts/preparar_godot_nativo.py preparar\n\n"
+        "  python .github/scripts/descargar_godot_nativo.py descargar\n\n"
         f"Para elegir otra copia preparada con manifiesto válido, usá `{VARIABLE}`:\n"
         '  PowerShell:  $env:GODOT_BIN="C:\\ruta\\godot.windows.editor.x86_64.console.exe"\n'
         '  bash:        export GODOT_BIN="/ruta/al/motor-preparado"\n\n'

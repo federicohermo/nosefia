@@ -30,7 +30,7 @@ Las suites nuevas reciben un costo estimado por defecto. Los tiempos orientan el
 el inventario sigue saliendo de todos los archivos `_test.gd` actuales.
 El orden es determinista y conserva la selección en Windows y Linux.
 Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes. El check
-obligatorio `verify` sólo pasa cuando pasan la preparación del motor y las seis particiones.
+obligatorio `verify` sólo pasa cuando pasan las seis particiones.
 Cada partición tiene un límite de veinte minutos. Si lo agota, el check falla.
 
 Los jobs se llaman «Partición 0» a «Partición 5». Sus suites se asignan por duración estimada,
@@ -47,11 +47,17 @@ La importación multihilo permanece habilitada con el motor corregido.
 El alcance es la carrera reproducida del getter, sin prometer seguridad de hilos para todos los accesos de `ClassDB`.
 La causa de los timeouts anteriores de Linux sigue sin confirmarse.
 
-El job de preparación compila Linux una vez si falta la caché del motor.
-Después distribuye el mismo artefacto validado a las seis particiones.
-Una caché correcta evita recompilar. Una caché expulsada exige otra compilación inicial.
-La primera construcción puede durar mucho más que los tests.
-El costo del productor y la transferencia forma parte del tiempo total de CI.
+Las seis particiones comienzan en paralelo, sin esperar un job de preparación del motor.
+Cada una restaura o descarga el mismo motor Linux publicado y valida la receta y los hashes contra el lock versionado.
+Cada máquina necesita su propia copia del ejecutable.
+El trabajo acumulado incluye esas transferencias, aunque se solapen en el tiempo.
+Si se expulsa la caché, vuelve a descargarlo. `verify` nunca compila el editor.
+Una release ausente o incompatible produce un fallo, sin iniciar una construcción.
+Cada partición limita a tres minutos la descarga y validación del motor.
+Esos pasos forman parte del tiempo total de CI.
+
+La construcción y las ocho reproducciones concurrentes pertenecen al workflow manual `construir-godot-nativo`.
+Se ejecuta al cambiar la receta del motor, antes de actualizar el lock que consumen las verificaciones.
 
 El [flujo local](./motor_nativo.md) usa la misma receta para Windows y Linux.
 La plantilla web mantiene sus parches y su validación independientes del editor nativo.
@@ -87,7 +93,7 @@ Los cambios del propio helper también invalidan la caché.
 Cada worker obtiene el checkout actual y ejecuta siempre la importación del verificador.
 Los índices de clases y UID, los datos de usuario y los reportes se generan en ese worker.
 Sólo la partición cero publica importaciones después de pasar su verificación y encontrar una clave ausente.
-La preparación del motor precede a las particiones. No hay un productor previo de importaciones del juego.
+Cada partición prepara su propio motor e importaciones. No depende de un productor previo.
 
 Los importadores `importar_modelo.gd` e `importar_caja.gd` tienen hashes auditados en el helper.
 Un importador cambiado, desconocido o un nuevo `EditorImportPlugin` desactiva el reuso hasta actualizar esa política.

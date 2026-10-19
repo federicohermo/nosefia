@@ -34,14 +34,15 @@ Godot 4.7.2 oficial contiene una carrera durante la importación concurrente.
 El proyecto usa una compilación con el bloqueo oficial aplicado a `ClassDB`.
 La receta comprueba las fuentes y el parche antes de compilar, y los ejecutables antes de reutilizarlos.
 
-En Windows, preparar la copia con Docker según [motor nativo](./motor_nativo.md).
-En Linux x86_64, con el compilador y las dependencias de esa guía:
+Descargar la copia publicada para Windows o Linux x86_64:
 
 ```bash
-python .github/scripts/preparar_godot_nativo.py preparar --plataforma linux-x86_64 --jobs 4
+python .github/scripts/descargar_godot_nativo.py descargar
 ```
 
 El verificador encuentra la copia de `build/godot-native/<plataforma>` sin modificar el registro global.
+La descarga comprueba el paquete y su manifiesto contra el lock versionado.
+No requiere Docker ni un compilador. La [guía del motor](./motor_nativo.md) explica cómo construir otra receta.
 Para usar una copia en otra ubicación, declarar `GODOT_BIN` con su ejecutable de consola y conservar el manifiesto junto a él.
 
 Una variable explícita que apunta al editor oficial vulnerable hace fallar el preflight.

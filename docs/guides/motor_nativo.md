@@ -5,17 +5,44 @@ La versión upstream sigue en `.godot-version`.
 La [receta nativa](../../.github/patches/godot-native-compilacion.json) fija la revisión, el parche, el compilador y las opciones.
 La plantilla web conserva su receta y sus parches propios.
 
-## Windows x86_64
+## Descargar para trabajar
+
+Windows y Linux x86_64 usan los paquetes de la release de herramientas del proyecto.
+El lock `.github/patches/godot-native-artefactos.json` fija su URL, receta y SHA256 del ZIP y del manifiesto.
+
+```bash
+python .github/scripts/descargar_godot_nativo.py descargar
+python .claude/scripts/verificar.py
+```
+
+La descarga valida los hashes antes de extraer o ejecutar el motor.
+Una copia válida en `build/godot-native/<plataforma>` permite reutilizarlo sin red.
+La copia conserva el ejecutable principal, el de consola, las DLL necesarias y `manifiesto.json` en la misma carpeta.
+El verificador encuentra esa copia sin cambiar `GODOT_BIN` en el registro global.
+Una variable explícita sigue teniendo prioridad y debe apuntar a un motor con el mismo manifiesto válido.
+
+## Construir otra receta
+
+La construcción está separada de `verify`.
+El workflow manual `construir-godot-nativo` construye ambas plataformas y prueba cada ejecutable en su sistema operativo.
+Sus artifacts son resultados de construcción con retención limitada, no la distribución consumida por `verify`.
+Después de revisar las ocho reproducciones concurrentes por plataforma, publicar los ZIP en una release de herramientas y actualizar el lock con sus hashes.
+Publicar con una etiqueta nueva por receta, como prerelease y sin marcarla como última versión del juego.
+No reemplazar archivos de una distribución aprobada.
+
+También se puede construir localmente con los comandos siguientes.
+
+### Windows x86_64
 
 Docker Desktop permite compilar con MinGW sin instalar un compilador global en Windows.
 Desde la raíz del checkout, preparar la imagen y el directorio de salida:
 
 ```powershell
 docker build -t nosefia-godot-nativo:4.7.2 .github/containers/godot-native
-New-Item -ItemType Directory -Force build/godot-native/windows-x86_64
+New-Item -ItemType Directory -Force build/godot-native
 docker volume create nosefia-godot-nativo
 $repo_motor = $PWD.Path
-$salida_motor = (Resolve-Path build/godot-native/windows-x86_64).Path
+$salida_motor = (Resolve-Path build/godot-native).Path
 ```
 
 Compilar con las fuentes en un volumen de Docker y la salida en el checkout:
@@ -27,7 +54,7 @@ docker run --rm `
   --mount type=volume,source=nosefia-godot-nativo,target=/trabajo `
   nosefia-godot-nativo:4.7.2 `
   python3 /repo/.github/scripts/preparar_godot_nativo.py preparar `
-  --plataforma windows-x86_64 --destino /salida --trabajo /trabajo --jobs 4
+  --plataforma windows-x86_64 --destino /salida/windows-x86_64 --trabajo /trabajo --jobs 4
 ```
 
 Comprobar el artefacto desde Windows antes de abrir el proyecto:
@@ -37,14 +64,10 @@ python .github/scripts/preparar_godot_nativo.py comprobar --plataforma windows-x
 python .claude/scripts/verificar.py
 ```
 
-La copia conserva el ejecutable principal, el de consola, las DLL necesarias y `manifiesto.json` en la misma carpeta.
-El verificador encuentra esa copia sin cambiar `GODOT_BIN` en el registro global.
-Una variable explícita sigue teniendo prioridad y debe apuntar a un motor con el mismo manifiesto válido.
-
-## Linux x86_64
+### Linux x86_64
 
 Instalar GCC 13.3.0 y las dependencias indicadas por la [documentación oficial de compilación](https://docs.godotengine.org/en/4.7/engine_details/development/compiling/compiling_for_linuxbsd.html).
-El workflow de preparación enumera los paquetes usados en Ubuntu 24.04.
+El Dockerfile enumera los paquetes usados en Ubuntu 24.04.
 Después ejecutar:
 
 ```bash
@@ -55,6 +78,16 @@ python .claude/scripts/verificar.py
 
 El preparador instala la versión fijada de SCons en un entorno privado.
 Una copia completa y válida evita otra compilación.
+
+Para validar y empaquetar una construcción antes de publicarla:
+
+```bash
+python .github/scripts/probar_godot_nativo.py
+python .github/scripts/empaquetar_godot_nativo.py --plataforma linux-x86_64 --salida reports/motor-nativo/linux-x86_64.zip
+```
+
+En Windows usar `--plataforma windows-x86_64` y su nombre de ZIP.
+El empaquetador genera junto al ZIP un JSON con las tres huellas para el lock.
 
 ## Qué se comprueba
 
@@ -69,10 +102,14 @@ Los hashes identifican el artefacto real, sin prometer compilaciones idénticas 
 
 ## Costo inicial y alcance
 
-La primera construcción compila el editor completo y puede durar mucho más que las suites.
-En CI, un único productor prepara el motor y las seis particiones consumen el mismo artefacto validado.
-La caché del motor evita repetir esa construcción mientras siga disponible y sea compatible.
-Su expulsión exige reconstruir, sin sustituir el resultado por el editor oficial.
+Cada receta necesita una construcción y validación inicial del editor completo por plataforma.
+Ese costo queda fuera de las verificaciones del juego.
+En `verify`, las seis particiones restauran o descargan el mismo motor publicado en paralelo.
+Cada una valida el paquete contra el lock antes de usar su copia privada.
+Ninguna espera un job previo de preparación del motor.
+Las seis máquinas necesitan sus propias transferencias, que forman parte del trabajo acumulado de CI.
+La caché acelera la descarga; su expulsión no provoca otra compilación.
+La release sigue siendo necesaria para una descarga fría y puede perderse por eliminación explícita del repositorio o de la publicación.
 
 El backport corrige el getter concurrente reproducido.
 No incorpora propuestas adicionales pendientes sobre otros escritores de `ClassDB`.

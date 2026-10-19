@@ -392,7 +392,7 @@ class CableadoDeLaSuite(unittest.TestCase):
             resultado = verificar.nodo_tests()
         self.assertEqual(resultado.codigo, 1)
         self.assertIn("Motor nativo no válido", resultado.salida)
-        self.assertIn("preparar_godot_nativo.py preparar", resultado.salida)
+        self.assertIn("descargar_godot_nativo.py descargar", resultado.salida)
         correr.assert_not_called()
 
 

@@ -102,7 +102,7 @@ jobs:
           set -euo pipefail
           mkdir -p build/godot-native/linux-x86_64
           tar --zstd -xf "$RUNNER_TEMP/motor-nativo/godot-nativo.tar.zst" -C build/godot-native/linux-x86_64
-          python .github/scripts/preparar_godot_nativo.py comprobar \
+          python .github/scripts/descargar_godot_nativo.py comprobar \
             --plataforma linux-x86_64 --destino build/godot-native/linux-x86_64 \
             > "$RUNNER_TEMP/motor-nativo.json"
           python - <<'PY'

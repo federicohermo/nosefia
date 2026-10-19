@@ -372,15 +372,47 @@ def _toolchain(datos: dict, plataforma: str) -> dict:
     version = subprocess.check_output(
         [perfil["compilador"], "-dumpfullversion", "-dumpversion"], text=True
     ).strip()
-    if version != perfil["version_compilador"]:
-        raise ValueError(
-            f"compilador no compatible: esperado {perfil['version_compilador']}, {version}"
+    reportada = version
+    evidencia = {}
+    esperada = perfil["version_compilador"]
+    if (
+        version != esperada and plataforma == "windows-x86_64"
+        and platform.system() == "Linux"
+        and version == esperada.split(".", 1)[0] + "-posix"
+    ):
+        localizado = shutil.which(perfil["compilador"])
+        if not localizado:
+            raise ValueError("no se puede resolver el compilador MinGW para verificar su paquete")
+        archivo = Path(localizado).resolve(strict=True)
+        paquete = "g++-mingw-w64-x86-64-posix"
+        propietario = subprocess.check_output(
+            ["dpkg-query", "-S", str(archivo)], text=True
+        ).splitlines()
+        if propietario != [f"{paquete}: {archivo}"]:
+            raise ValueError("el compilador MinGW no tiene un único propietario de paquete permitido")
+        version_paquete = subprocess.check_output(
+            ["dpkg-query", "-W", "-f=${Version}", paquete], text=True
+        ).strip()
+        if not version_paquete.startswith(esperada + "-"):
+            raise ValueError("la versión del paquete MinGW no coincide con la receta")
+        verificacion = subprocess.run(
+            ["dpkg", "--verify", paquete], capture_output=True, text=True, check=True
         )
+        if verificacion.stdout.strip() or verificacion.stderr.strip():
+            raise ValueError("el paquete MinGW contiene archivos modificados o no verificables")
+        version = version_paquete.split("-", 1)[0]
+        evidencia = {
+            "paquete_compilador": {
+                "nombre": paquete, "version": version_paquete, "archivo": str(archivo),
+            },
+        }
+    if version != esperada:
+        raise ValueError(f"compilador no compatible: esperado {esperada}, {version}")
     return {
         "compilador": perfil["compilador"], "version_compilador": version,
-        "scons": datos["scons"], "host": platform.platform(),
+        "version_reportada": reportada, "scons": datos["scons"],
+        "host": platform.platform(), **evidencia,
     }
-
 
 def _version_generada(fuente: Path, datos: dict) -> str:
     texto = (fuente / "core/version_generated.gen.h").read_text(encoding="utf-8")

@@ -187,7 +187,7 @@ class ComoDeclararlo(unittest.TestCase):
     def test_sin_la_variable_dice_como_declararla(self):
         mensaje = como_declararlo({}, del_registro=nada)
         self.assertIn("GODOT_BIN", mensaje)
-        self.assertIn("preparar_godot_nativo.py", mensaje)
+        self.assertIn("descargar_godot_nativo.py descargar", mensaje)
 
     def test_con_la_variable_rota_dice_que_se_movio(self):
         mensaje = como_declararlo({"GODOT_BIN": "/se/movio/godot"}, del_registro=nada)

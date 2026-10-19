@@ -196,7 +196,7 @@ def nodo_tests(particion: ParticionTests | None = None) -> Resultado:
         return Resultado(
             "tests", 1,
             f"Motor nativo no válido: {error}\n"
-            "Preparalo con python .github/scripts/preparar_godot_nativo.py preparar.",
+            "Descargalo con python .github/scripts/descargar_godot_nativo.py descargar.",
             0.0,
         )
     if godot is None:

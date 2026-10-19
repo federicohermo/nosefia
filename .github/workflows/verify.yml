@@ -13,12 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  motor:
-    uses: ./.github/workflows/preparar-godot-nativo.yml
-
   verify-particion:
     name: Partición ${{ matrix.particion }}
-    needs: motor
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
@@ -34,31 +30,52 @@ jobs:
         with:
           python-version: "3.13"
 
-      - uses: actions/download-artifact@v4
-        with:
-          artifact-ids: ${{ needs.motor.outputs.artifact-id }}
-          merge-multiple: true
-          path: ${{ runner.temp }}/motor-nativo
-      - name: Validar motor nativo de esta corrida
-        env:
-          RECETA_ESPERADA: ${{ needs.motor.outputs.receta }}
+      - name: Identificar motor publicado
+        id: motor
         run: |
           set -euo pipefail
-          mkdir -p build/godot-native/linux-x86_64
-          tar --zstd -xf "$RUNNER_TEMP/motor-nativo/godot-nativo.tar.zst" -C build/godot-native/linux-x86_64
-          python .github/scripts/preparar_godot_nativo.py comprobar \
+          python .github/scripts/descargar_godot_nativo.py identidad \
+            --plataforma linux-x86_64 > "$RUNNER_TEMP/motor-identidad.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'motor-identidad.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as salida:
+              salida.write(f"receta={datos['receta_sha256']}\n")
+              salida.write(f"archivo={datos['archivo_sha256']}\n")
+          PY
+
+      - name: Restaurar motor publicado
+        id: restaurar-motor
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: build/godot-native/linux-x86_64
+          key: godot-publicado-linux-x86_64-${{ steps.motor.outputs.archivo }}
+
+      - name: Descargar y validar motor publicado
+        timeout-minutes: 3
+        run: |
+          set -euo pipefail
+          python .github/scripts/descargar_godot_nativo.py descargar \
             --plataforma linux-x86_64 --destino build/godot-native/linux-x86_64 \
             > "$RUNNER_TEMP/motor-nativo.json"
           python - <<'PY'
           import json, os
           from pathlib import Path
           datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'motor-nativo.json').read_text())
-          if datos['receta_sha256'] != os.environ['RECETA_ESPERADA']:
-              raise ValueError('el motor descargado no coincide con la receta del productor')
           with open(os.environ['GITHUB_ENV'], 'a') as salida:
               salida.write(f"GODOT_BIN={datos['binario']}\n")
               salida.write(f"GODOT_NATIVE_RECIPE={datos['receta_sha256']}\n")
           PY
+
+      - name: Guardar motor publicado
+        if: matrix.particion == 0 && steps.restaurar-motor.outputs.cache-hit != 'true'
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: build/godot-native/linux-x86_64
+          key: godot-publicado-linux-x86_64-${{ steps.motor.outputs.archivo }}
 
       - name: Identidad de las importaciones actuales
         id: importaciones
@@ -115,13 +132,10 @@ jobs:
 
   verify:
     if: always()
-    needs: [motor, verify-particion]
+    needs: verify-particion
     runs-on: ubuntu-latest
     steps:
       - name: Todas las particiones deben pasar
         env:
-          MOTOR: ${{ needs.motor.result }}
           RESULTADO: ${{ needs.verify-particion.result }}
-        run: |
-          test "$MOTOR" = success
-          test "$RESULTADO" = success
+        run: test "$RESULTADO" = success
