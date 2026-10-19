@@ -138,6 +138,11 @@ El parche hace estas cosas, todas bajo `WEB_ENABLED`:
   `rendering/web/area_lights_need_parallel_link`. El juego la prende: hoy sólo Firefox cae en
   ese caso. Medido el 2026-10-19, la carga baja de 36 s a 25 s, y la imagen cambia menos de 1
   sobre 255.
+- **No separa variantes por sondas de reflejo.** Una sonda sin caja no aporta nada: la variante
+  de dos sondas dibuja igual que la de una o la de ninguna. Cada material enlaza una variante y
+  no tres. Medido el 2026-10-19, Firefox enlaza 94 programas en vez de 133, y la preparación
+  baja de 21 s a 14 s.
+- **Un material sin luz no separa variantes por luces ni por lightmaps.** Su código no los usa.
 
 La receta también apaga los módulos del motor que el juego no usa. Son red, navegación 2D,
 física 2D, XR, CSG, glTF y video, y los cargadores de imágenes que sólo usa el importador. La

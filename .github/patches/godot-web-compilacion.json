@@ -14,7 +14,7 @@
     },
     "drivers/gles3/rasterizer_scene_gles3.cpp": {
       "original_sha256": "6d0719c9cd2caf685a9825028183bdf058081d7bc92d4b27ed2587f39b081221",
-      "modificado_sha256": "4d936250d5f297e6b74969cbab4daefaff584e0e7b9b026933d11b6a98d07ae4"
+      "modificado_sha256": "eb0c69acffd6a769b402e914e7ba9db019329c9dce4db12c444ceb73b96510ca"
     },
     "drivers/gles3/rasterizer_scene_gles3.h": {
       "original_sha256": "4e3d4c1b13ec5982afb5f6ab477e317bb83b2b2dd7e631ae7738891ef35ffaf7",
@@ -42,9 +42,9 @@
     }
   },
   "plantilla_local": {
-    "receta_sha256": "d8b6ba2bc89cd8c041831c20bbe3739f3364529431b390698cccfece327a2b56",
-    "zip_sha256": "012d4d1572bc1889071003c3791195656a25897f1a273d264d505f77671f0187",
-    "wasm_sha256": "47b267630a0bbfcd0c8a1276a7b8f83adf24c2f1425ee2b83396331aa6e82c61"
+    "receta_sha256": "1cf2f80a85d23feb6bfc1b62ba639d22c80167b67d91da7961dbda2a19f0d06b",
+    "zip_sha256": "7a7bb1746d2885b9f478fd3868689879c8201a572cc08ed287f531a19df0bdb7",
+    "wasm_sha256": "efa9ff1af0a2db4becb291f44a1b7ce0973eb6622afb543f56e94abd2c9bea17"
   },
   "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y las huellas de cada archivo, antes y después. Todo el cambio queda bajo WEB_ENABLED: conserva el camino nativo.",
   "estado": "Plantilla release validada localmente e integrada al preset Web y al flujo de despliegue. El editor y la plantilla debug siguen usando el motor oficial."
