@@ -2,7 +2,7 @@
 class_name AnomaliasDeLaJornada
 extends RefCounted
 
-const JORNADA_SIN_AZUL := 2
+const JORNADA_SIN_AZUL := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 
 
 static func util_disponible(identidad: StringName, jornada: int) -> bool:

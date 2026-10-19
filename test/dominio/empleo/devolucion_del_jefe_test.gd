@@ -115,7 +115,7 @@ func test_p_4_en_la_quinta_despide() -> void:  # AC-EMP-055
 	var despido := DevolucionDelJefe.armar(5, 4 * M, _antecedentes(), [], [])
 	assert_str(despido[0]).is_equal("Che")
 	assert_str(despido.back()).is_equal(DevolucionDelJefe.CIERRE_DEL_DESPIDO)
-	for fila: Array in DevolucionDelJefe.CIERRES_DE_LA_QUINTA:
+	for fila: Array in DevolucionDelJefe.CIERRES_DE_LA_ULTIMA:
 		assert_array(despido).not_contains([fila[1]])
 	var al_borde := DevolucionDelJefe.armar(5, 7, _antecedentes(), [], [])
 	assert_str(al_borde[0]).is_equal("Buenos días...")
@@ -165,7 +165,7 @@ func test_los_cuatro_bordes_de_la_quinta() -> void:  # AC-EMP-058
 	assert_str(_cierre(5, 4, 1)).is_equal(provisorio)
 	var cierres := 0
 	var todos: Array[String] = [DevolucionDelJefe.CIERRE_DEL_DESPIDO, DevolucionDelJefe.MEJORA_ALTA]
-	for fila: Array in DevolucionDelJefe.CIERRES_DE_LA_QUINTA:
+	for fila: Array in DevolucionDelJefe.CIERRES_DE_LA_ULTIMA:
 		todos.append(fila[1])
 	for mensaje: String in DevolucionDelJefe.armar(5, 4, _antecedentes({}, {}, 1), [], []):
 		if todos.has(mensaje):

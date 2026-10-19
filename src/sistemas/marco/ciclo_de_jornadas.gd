@@ -23,7 +23,7 @@ var _reloj: RelojDelTurno = null
 ## Le entrega al ciclo la partida y el reloj con el que va a correr, y abre la primera noche.
 ##
 ## El reloj entra por parámetro en vez de buscarse en el árbol: es lo que permite ejercer el
-## ciclo entero sin levantar una escena, que es la única forma de correr cinco noches en un test.
+## ciclo entero sin levantar una escena, que es la única forma de correr una partida en un test.
 func arrancar(partida: Partida, reloj: RelojDelTurno) -> void:
 	_partida = partida
 	_reloj = reloj
@@ -46,7 +46,7 @@ func abrir_la_jornada() -> bool:
 	if _partida == null or _partida.terminada():
 		return false
 	var turno := _partida.abrir_la_jornada()
-	_reloj.arrancar(turno, _partida.obligatorias())
+	_reloj.arrancar(turno, _partida.obligatorias(), Ritmo.de_la_jornada(_partida.jornada()))
 	jornada_abierta.emit(_partida.jornada())
 	return true
 

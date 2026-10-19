@@ -61,10 +61,11 @@ const LUGARES: Dictionary[Lugar, Array] = {
 
 ## Qué mancha pone cada jornada en cada lugar, según la ficha: `jornada → {Lugar: TipoDeMancha}`.
 ##
-## Una jornada sin fila arranca como la primera: las filas de la 3 a la 5 dependen de un cuartito
-## de limpieza que el almacén no tiene y de techos que hoy quedan fuera del alcance de la mira.
+## Una jornada que pide limpiar y no tiene fila usa la primera: las filas siguientes de la ficha
+## dependen de un cuartito de limpieza que el almacén no tiene y de techos que hoy quedan fuera
+## del alcance de la mira.
 const MANCHAS_POR_JORNADA: Dictionary[int, Dictionary] = {
-	1:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 	{
 		Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
 		Lugar.GONDOLAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
@@ -74,7 +75,7 @@ const MANCHAS_POR_JORNADA: Dictionary[int, Dictionary] = {
 		Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
 		Lugar.PARED_DEL_OTRO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
 	},
-	2:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	{
 		Lugar.DETRAS_DEL_MOSTRADOR: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
 		Lugar.CERCA_DE_LAS_HELADERAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
@@ -105,15 +106,17 @@ func _init(
 
 
 ## El piso de esa noche: las manchas que declara su fila, todas sucias, el balde vacío y la mopa
-## seca. Una jornada sin fila arranca con las de la primera.
+## seca. Una jornada que no pide limpiar abre sin manchas.
 ##
 ## Se construye entero cada vez: con un piso compartido, lo borrado anoche llegaría borrado esta
 ## noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
 static func de_la_jornada(jornada: int) -> PisoDelLocal:
 	var fila: Dictionary = MANCHAS_POR_JORNADA.get(
-		jornada, MANCHAS_POR_JORNADA[ReglasDeLaPartida.PRIMERA_JORNADA]
+		jornada, MANCHAS_POR_JORNADA[ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA]
 	)
 	var manchas: Dictionary[Lugar, Mancha] = {}
+	if not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR):
+		return PisoDelLocal.new(manchas, jornada)
 	for lugar: Lugar in fila:
 		manchas[lugar] = Mancha.new(fila[lugar])
 	return PisoDelLocal.new(manchas, jornada)

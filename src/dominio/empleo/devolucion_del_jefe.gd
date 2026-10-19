@@ -73,14 +73,15 @@ const TAREAS: Dictionary[Tarea.Tipo, Array] = {
 
 ## La Tarea 5 sale de la jornada: sólo las que declaran una particular tienen texto.
 const PARTICULARES: Dictionary[int, String] = {
-	1:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 	(
 		"Cuando te pedí que ordenaras las cajas en las estanterías del depósito, "
 		+ "lo que quería decir es que pongas TODAS y cada una de las CAJAS de "
 		+ "cartón con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se "
 		+ "entendió?"
 	),
-	2: "De verdad era tan difícil tirar tres bolsas de basura?",
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
+	"De verdad era tan difícil tirar tres bolsas de basura?",
 }
 
 const POETICO := (
@@ -108,12 +109,12 @@ const PAPEL_MAS_DESPEDIDO := (
 	+ "al gastroenterólogo, una de dos."
 )
 const BASURA_POR_JORNADA: Dictionary[int, String] = {
-	2:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	(
 		'Por si no lo sabías, la "basura" que te pedí que tiraras no incluye '
 		+ "productos ni elementos del local. Estamos de acuerdo?"
 	),
-	3:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2:
 	(
 		"Cuando te pedí que tiraras algunos productos, no me refería a objetos "
 		+ "útiles y en buen estado!"
@@ -158,8 +159,8 @@ const CIERRE_DEL_DESPIDO := (
 	+ "reputación de mi local. Que ni se te ocurra volver a aparecer por acá, "
 	+ "entendiste?"
 )
-## Por medios máximos, en la quinta: la primera fila cuyo tope alcanza a los medios gana.
-const CIERRES_DE_LA_QUINTA: Array[Array] = [
+## Por medios máximos, en la última: la primera fila cuyo tope alcanza a los medios gana.
+const CIERRES_DE_LA_ULTIMA: Array[Array] = [
 	[
 		0,
 		(
@@ -203,6 +204,7 @@ const CIERRES_DE_LA_QUINTA: Array[Array] = [
 		)
 	],
 ]
+## La ficha escribe hasta la cuarta: las siguientes repiten la última fila.
 const CIERRES_IMPECABLES: Dictionary[int, String] = {
 	1:
 	(
@@ -385,11 +387,11 @@ static func _cierre(jornada: int, medios: int, antecedentes: Antecedentes) -> St
 	if medios >= MEDIOS_DEL_DESPIDO:
 		return CIERRE_DEL_DESPIDO
 	if jornada == ULTIMA_JORNADA:
-		for fila: Array in CIERRES_DE_LA_QUINTA:
+		for fila: Array in CIERRES_DE_LA_ULTIMA:
 			if medios <= fila[0]:
 				return fila[1]
 	if medios == 0:
-		return CIERRES_IMPECABLES[jornada]
+		return CIERRES_IMPECABLES.get(jornada, CIERRES_IMPECABLES.values().back())
 	var noches := antecedentes.noches_sin_sumar()
 	if noches >= 1:
 		if medios < 2 * MEDIOS_POR_PUNTO:

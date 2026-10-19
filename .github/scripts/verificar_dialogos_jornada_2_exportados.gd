@@ -104,7 +104,7 @@ func _probar(
 	nombre: String, inicial: StringName, final: StringName, tiempo: float, esperado: Resource
 ) -> void:
 	var clase_partida: Script = load("res://src/dominio/empleo/partida.gd")
-	var partida: RefCounted = clase_partida.call("desde", {"jornada": 2})
+	var partida: RefCounted = clase_partida.call("desde", {"jornada": 5})
 	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
 	if not _exigir(escena != null, "El paquete no contiene el almacén"):
 		return
@@ -124,7 +124,7 @@ func _probar(
 	var comprador: RefCounted = atencion.call("comprador")
 	_exigir(comprador.call("nombre") == nombre, "La selección exportada usó otro comprador")
 	var guion: Resource = comprador.get("dialogos")
-	_exigir(guion == esperado, "La atención no usa el guion productivo de jornada 2")
+	_exigir(guion == esperado, "La atención no usa el guion productivo de jornada 5")
 	var puesto: Node = _local.get_node("Estructura/Ventanilla")
 	var sprite: AnimatedSprite3D = puesto.get("comprador_visible")
 	var carpeta := "fede" if nombre == "Fede" else "mia"
@@ -179,7 +179,7 @@ func _limpiar() -> void:
 
 func _recorrer() -> void:
 	var guion: Resource = load("res://assets/dialogos/compradores_jornada_2.tres")
-	if _exigir(guion != null, "El paquete no contiene los diálogos de jornada 2"):
+	if _exigir(guion != null, "El paquete no contiene los diálogos de jornada 5"):
 		var bloques := {&"fede": 3, &"despedida_fede": 2, &"mia": 1, &"despedida_mia": 3}
 		var textos := PackedStringArray()
 		for bloque: StringName in bloques:
@@ -206,7 +206,7 @@ func _recorrer() -> void:
 				"Se agregó negrita o pista al pedido"
 			)
 		var ritmo: Script = load("res://src/dominio/jornada/ritmo.gd")
-		var factor: float = ritmo.call("escalar", 1.0)
+		var factor: float = ritmo.call("de_la_jornada", 5)
 		await _probar("Fede", &"fede", &"despedida_fede", 1800.0 / factor, guion)
 		await _probar("Mía", &"mia", &"despedida_mia", 32400.0 / factor, guion)
 	_salir.call_deferred()

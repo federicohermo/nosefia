@@ -24,6 +24,6 @@ extends RefCounted
 ## atender, así que bajar este número aprieta las dos cosas a la vez.
 const UNIDADES_POR_CAJA := 8
 
-## Intervalos inclusivos de la ficha de reposición, iguales en las cinco noches.
+## Intervalos inclusivos de la ficha de reposición.
 const TIPOS_QUE_FALTAN := Vector2i(4, 7)
 const MENOS_QUE_FALTA := 1
