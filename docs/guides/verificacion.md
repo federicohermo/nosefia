@@ -30,10 +30,7 @@ Las suites nuevas reciben un costo estimado por defecto. Los tiempos orientan el
 el inventario sigue saliendo de todos los archivos `_test.gd` actuales.
 El orden es determinista y conserva la selección en Windows y Linux.
 Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes. El check
-obligatorio `verify` sólo pasa cuando pasan las cuatro particiones y el job "Carga web".
-
-"Carga web" no corre `verificar.py`. Exporta el juego y cuenta los programas de shader de la
-carga, con los topes de [la guía de rendimiento](./rendimiento.md#el-tope-de-la-carga-web).
+obligatorio `verify` sólo pasa cuando pasan las cuatro particiones.
 
 Los jobs se llaman "Colisiones y caídas", "Agarre y jornada", "Cajas, apoyos y giro"
 y "Reposición, puertas y checks".

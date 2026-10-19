@@ -7,9 +7,9 @@
 #
 # Lo que este workflow NO hace, a propósito:
 #
-#   - No exporta el juego para publicarlo: el que exporta y publica es `desplegar.yml`, y sólo
-#     en `main`. El job `carga-web` exporta sólo para medir. Comparte con `desplegar.yml` la
-#     caché de la plantilla web optimizada, y no publica nada.
+#   - No exporta el juego, y sigue sin hacerlo ahora que hay quien sí: el que exporta y publica
+#     es `desplegar.yml`, y sólo en `main`. La plantilla web optimizada se compila y cachea
+#     allá por versión y parche. Acá sólo se prueban sus guardias, sin construir el motor.
 #   - No corre el editor. Los tests corren headless, que es lo que hace que la CI y la máquina
 #     de cualquiera del equipo hagan exactamente lo mismo.
 name: verify
@@ -112,116 +112,12 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-  # Frena un PR que suma programas de shader a la carga web o agranda el motor: lo que ganaron
-  # #514 y #523. Cuenta, no cronometra: la CI no tiene GPU, y el conteo depende de los
-  # materiales del juego y no de la GPU. Los topes y cómo se sube uno: docs/guides/rendimiento.md.
-  carga-web:
-    name: Carga web
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: La versión del motor, leída de `.godot-version`
-        run: |
-          set -euo pipefail
-          version="$(tr -d '[:space:]' < .godot-version)"
-          if [ -z "$version" ]; then
-            echo '::error::falta .godot-version o está vacío: es el único lugar donde vive la versión del motor y los dos workflows la leen de ahí.'
-            exit 1
-          fi
-          echo "GODOT_VERSION=$version" >> "$GITHUB_ENV"
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-
-      - name: Bajar Godot ${{ env.GODOT_VERSION }}
-        run: |
-          set -euo pipefail
-          url="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          curl -fsSL -o godot.zip "$url"
-          unzip -q godot.zip -d "$HOME/godot"
-          bin="$(find "$HOME/godot" -maxdepth 1 -type f -name 'Godot_v*' | head -1)"
-          chmod +x "$bin"
-          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
-
-      # Las dos cachés, con las mismas claves que `desplegar.yml`: la plantilla de un parche se
-      # compila una vez para los dos workflows.
-      - name: Caché de la plantilla web optimizada
-        id: plantilla
-        uses: actions/cache@v4
-        with:
-          path: build/templates
-          key: web-optimizada-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ hashFiles('.godot-version', '.github/patches/godot-web-compilacion.json', '.github/patches/godot-web-compilacion.patch', '.github/scripts/preparar_plantilla_web.py') }}
-
-      - name: Caché de los objetos del motor
-        if: steps.plantilla.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
-        with:
-          path: build/godot-web/cache-de-scons
-          key: objetos-web-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ hashFiles('.github/patches/godot-web-compilacion.json', '.github/patches/godot-web-compilacion.patch') }}
-          restore-keys: objetos-web-${{ runner.os }}-${{ env.GODOT_VERSION }}-
-
-      - name: Preparar y validar la plantilla web
-        run: python .github/scripts/preparar_plantilla_web.py --jobs 2
-
-      - name: Importar los recursos del proyecto
-        run: "$GODOT_BIN --headless --path . --import || true"
-
-      # El código de salida del export no significa nada: decide el paso siguiente. El porqué
-      # está en el encabezado de `desplegar.yml`.
-      - name: Exportar la web
-        run: |
-          set -euo pipefail
-          mkdir -p export/web
-          "$GODOT_BIN" --headless --path . --export-release "Web" export/web/index.html || true
-
-      - name: El veredicto del export
-        run: python .claude/scripts/verificar_export.py export/web
-
-      - name: El export usa la plantilla optimizada
-        run: python .github/scripts/preparar_plantilla_web.py --verificar-export export/web
-
-      # Las dos mediciones van en el mismo paso que el servidor: el `trap` lo cierra también
-      # cuando una medición falla o vence su plazo.
-      - name: Contar los programas de la carga, con y sin enlace en paralelo
-        run: |
-          set -euo pipefail
-          npm install --no-save playwright
-          npx playwright install --with-deps chrome
-          mkdir -p reports/carga-web
-          python .github/scripts/servir_export.py export/web 8060 > reports/carga-web/servidor.log 2>&1 &
-          servidor=$!
-          trap 'kill "$servidor" 2>/dev/null || true' EXIT
-          for intento in $(seq 30); do
-            curl -fs -o /dev/null http://localhost:8060/index.html && break
-            sleep 1
-          done
-          node .github/scripts/medir_la_carga.mjs http://localhost:8060             reports/carga-web/con-paralelo.json --sin-ventana --software
-          node .github/scripts/medir_la_carga.mjs http://localhost:8060             reports/carga-web/sin-paralelo.json --sin-ventana --software --sin-enlace-en-paralelo
-
-      - name: Los topes de la carga
-        run: >-
-          python .github/scripts/tope_de_carga.py .github/performance/topes-de-carga.json
-          reports/carga-web/con-paralelo.json reports/carga-web/sin-paralelo.json
-          export/web/index.wasm
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: carga-web
-          path: reports/carga-web/
-          if-no-files-found: ignore
-          retention-days: 7
-
   verify:
     if: always()
-    needs: [verify-particion, carga-web]
+    needs: verify-particion
     runs-on: ubuntu-latest
     steps:
-      - name: Todas las particiones y la carga web deben pasar
+      - name: Todas las particiones deben pasar
         env:
-          PARTICIONES: ${{ needs.verify-particion.result }}
-          CARGA_WEB: ${{ needs.carga-web.result }}
-        run: test "$PARTICIONES" = success && test "$CARGA_WEB" = success
+          RESULTADO: ${{ needs.verify-particion.result }}
+        run: test "$RESULTADO" = success

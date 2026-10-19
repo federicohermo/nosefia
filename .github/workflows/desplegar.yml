@@ -145,6 +145,33 @@ jobs:
       - name: Copiar el cuadro conserva el recorte sin una consulta síncrona
         run: node --test .github/scripts/tests/recorte_webgl_test.mjs
 
+      # Frena una publicación que suma programas de shader a la carga o agranda el motor: lo
+      # que ganaron #514 y #523. Una carga, en el Chromium del humo y por software, porque el
+      # runner no tiene GPU. Los topes y cómo se sube uno: docs/guides/rendimiento.md.
+      - name: Los topes de la carga web
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+          mkdir -p reports/carga-web
+          python .github/scripts/servir_export.py export/web 8060 > reports/carga-web/servidor.log 2>&1 &
+          servidor=$!
+          trap 'kill "$servidor" 2>/dev/null || true' EXIT
+          for intento in $(seq 30); do
+            curl -fs -o /dev/null http://localhost:8060/index.html && break
+            sleep 1
+          done
+          node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga-web/carga.json             --sin-ventana --software --corridas=1 --sin-enlace-en-paralelo
+          python .github/scripts/tope_de_carga.py .github/performance/topes-de-carga.json             reports/carga-web/carga.json export/web/index.wasm
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: carga-web
+          path: reports/carga-web/
+          if-no-files-found: ignore
+          retention-days: 7
+
       # `vercel.json` se copia ADENTRO del directorio que se publica porque es ahí donde la CLI
       # lo lee: en la raíz del repo lo leería un build de Vercel, y acá no hay build de Vercel.
       # Y la URL sale del stdout de la CLI en vez de escribirse a mano: escrita, verificaríamos

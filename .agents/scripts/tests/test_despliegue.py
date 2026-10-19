@@ -376,6 +376,13 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
         self.assertIn("verificar_export.py", self.texto)
         self.assertIn("|| true", self.texto)
 
+    def test_los_topes_de_la_carga_se_controlan_antes_de_publicar(self):
+        # Después de publicar, el rojo llega tarde: la web con la regresión ya está en la URL.
+        control = self.texto.index("python .github/scripts/tope_de_carga.py")
+        self.assertLess(self.texto.index("export-release"), control)
+        self.assertLess(control, self.texto.index("vercel deploy"))
+        self.assertIn("--software", self.texto)
+
     def test_le_pega_a_la_url_publicada(self):
         # La cita de la publicación corrida de verdad. Contra una URL viva se corre con
         #   python .claude/scripts/verificar_despliegue.py https://<proyecto>.vercel.app
@@ -416,20 +423,13 @@ class LaDocumentacion(unittest.TestCase):
         # de referencia no tienen índice de docs: el archivo de raíz apunta y nada más.
         self.assertIn("docs/infra/despliegue.md", _texto(RAIZ / "CLAUDE.md"))
 
-    def test_verify_exporta_solo_para_medir_y_no_publica(self):
-        # `verify.yml` exporta en un solo job, `carga-web`, para contar lo que cuesta la carga.
-        # El encabezado tiene que seguir nombrando al único que publica, que es lo que evita que
-        # alguien le agregue a `verify.yml` un paso de publicación.
+    def test_verify_sigue_diciendo_que_el_no_exporta(self):
+        # Ahora que SÍ hay quien exporta, el encabezado de `verify.yml` tiene que seguir
+        # diciendo que él no — y nombrar al que sí, que es lo que evita que alguien le agregue
+        # el paso de export por segunda vez.
         texto = _texto(VERIFY)
-        self.assertIn("No exporta el juego para publicarlo", texto)
+        self.assertIn("No exporta el juego", texto)
         self.assertIn("desplegar.yml", texto)
-        self.assertIn("El job `carga-web` exporta sólo para medir", texto)
-        self.assertNotIn("vercel", texto.lower())
-
-    def test_verify_y_desplegar_comparten_la_cache_de_la_plantilla(self):
-        # Con dos claves distintas, cada workflow compilaría el motor por su cuenta.
-        clave = re.compile(r"key: (web-optimizada-.*)")
-        self.assertEqual(clave.findall(_texto(VERIFY)), clave.findall(_texto(DESPLEGAR)))
 
     def test_el_repo_ignora_lo_que_escribe_la_cli_de_vercel(self):
         # La otra mitad —«`verificar.py` deja los siete nodos en verde»— es la

@@ -5,7 +5,7 @@
 //     node .github/scripts/medir_la_carga.mjs http://localhost:8060
 //     node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
 //     node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json --sin-ventana
-//     node .github/scripts/medir_la_carga.mjs http://localhost:8060 carga.json --sin-ventana --software
+//     node .github/scripts/medir_la_carga.mjs http://localhost:8060 carga.json --sin-ventana --software --corridas=1
 //
 // ## Qué mide
 //
@@ -40,9 +40,11 @@
 // el renderer real y falla si Chrome usa renderizado por software. No mide la presentación
 // de una ventana ni reemplaza un benchmark de FPS durante la partida.
 //
-// --software acepta el renderizado por software sin ventana, y lo registra. Sirve para contar
-// programas en una máquina sin GPU, como la CI: el conteo depende de los materiales del juego,
-// no de la GPU. Los tiempos de esa medición no describen la carga de un jugador.
+// --software fuerza SwiftShader en el Chromium de Playwright, sin ventana, y lo registra. Sirve
+// para contar programas en una máquina sin GPU, como la CI: el conteo depende de los materiales
+// del juego, no de la GPU. Los tiempos de esa medición no describen la carga de un jugador.
+//
+// --corridas=N cambia las 3 corridas por N.
 //
 // Cada corrida registra también si la página vio `KHR_parallel_shader_compile`.
 //
@@ -53,7 +55,6 @@ import { writeFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const ESPERA = 180_000;
-const CORRIDAS = 3;
 const AVISO_DEL_MENU = '[carga] menú visible';
 const AVISO_DEL_ALMACEN = '[carga] almacén en pantalla';
 const ALTURA_DE_NUEVO_JUEGO = 0.56;
@@ -68,10 +69,16 @@ const salida = argumentos[1];
 const sinVentana = process.argv.includes('--sin-ventana');
 const sinEnlaceEnParalelo = process.argv.includes('--sin-enlace-en-paralelo');
 const software = process.argv.includes('--software');
+const opcionDeCorridas = process.argv.find((argumento) => argumento.startsWith('--corridas='));
+const CORRIDAS = opcionDeCorridas ? Number(opcionDeCorridas.split('=')[1]) : 3;
+if (!Number.isInteger(CORRIDAS) || CORRIDAS < 1) {
+  console.error(`--corridas necesita un entero positivo: ${opcionDeCorridas}`);
+  process.exit(2);
+}
 
 const navegador = await chromium.launch({
-  channel: 'chrome',
-  headless: sinVentana,
+  ...(software ? {} : { channel: 'chrome' }),
+  headless: sinVentana || software,
   args: [
     '--window-size=1600,900',
     '--disable-backgrounding-occluded-windows',
@@ -79,12 +86,12 @@ const navegador = await chromium.launch({
     '--disable-background-timer-throttling',
     ...(sinVentana && process.platform === 'win32' && !software ? ['--use-angle=d3d11'] : []),
     // Desde Chrome 137, WebGL no cae solo en SwiftShader: hay que pedirlo.
-    ...(software ? ['--enable-unsafe-swiftshader'] : []),
+    ...(software ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] : []),
   ],
 });
 
 function rendererRechazado(gpu, { sinVentana, software }) {
-  if (!sinVentana) return false;
+  if (!sinVentana && !software) return false;
   if (!gpu) return true;
   return !software && /swiftshader|llvmpipe|software|basic render driver|warp/i.test(gpu);
 }
