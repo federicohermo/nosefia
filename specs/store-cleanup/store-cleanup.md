@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541
 ---
 
 # Capacidad: dejar el local en orden
@@ -12,7 +12,7 @@ provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza»
 
 Las dos obligatorias que se pagan caminando: borrar las manchas de la jornada y llevar las bolsas
 al fondo. Lo único que tienen que hacer bien es **costar recorrido**: una tarea que se cierra con
-un clic no le disputa nada a la investigación. Limpiar cuesta ir al baño: cada mancha pide su
+un clic no le disputa nada a la investigación. Limpiar cuesta ir al cuartito y al baño: cada mancha pide su
 jabón, el jabón se mezcla en el balde, y cambiar de jabón es vaciar el balde y volver a llenarlo.
 
 ## Lenguaje de la capacidad
@@ -20,7 +20,8 @@ jabón, el jabón se mezcla en el balde, y cambiar de jabón es vaciar el balde 
 | Término | Significado acá | Evitar |
 |---|---|---|
 | **Mancha** | lo que hay que borrar: moho, caca o polvo, en un lugar del local, del depósito o del baño, sobre el piso, una pared o el techo | suciedad |
-| **Jabón** | uno de los tres bidones del baño: azul, rosa o amarillo | detergente, producto |
+| **Jabón** | uno de los tres bidones del cuartito: azul, rosa o amarillo | detergente, producto |
+| **Cuartito** | el cuarto de limpieza detrás de la puerta del fondo del depósito, donde se guardan los útiles | depósito de limpieza, baño |
 | **Balde** | donde se prepara la mezcla: vacío, con agua, o con agua teñida de un jabón | cubeta |
 | **Mopa** | con lo que se borra una mancha: seca, o mojada de lo que tenía el balde | trapo, escoba |
 | **Lavatorio** | donde se llena el balde | pileta, canilla |
@@ -106,10 +107,10 @@ misma pasada y el mismo alcance que una del piso, apuntándola con la mira desde
 piso. El paso del jugador DEBE tocar sólo las manchas del piso: una de pared o de techo NO DEBE
 ondular cuando el jugador camina a su lado o debajo.
 
-### BR-CLN-014 — Los útiles disponibles arrancan en el baño
+### BR-CLN-014 — Los útiles disponibles arrancan en el cuartito
 
 CUANDO se abre una jornada, el sistema DEBE dejar la mopa, el balde y los jabones disponibles
-en su lugar del baño, con el balde vacío y la mopa seca, aunque la noche anterior hayan quedado
+en su lugar del cuartito, con el balde vacío y la mopa seca, aunque la noche anterior hayan quedado
 en otro lado, en la mano, llenos o mojados. En jornada 5 sólo DEBEN estar rosa y amarillo; en
 las demás, los tres. La disponibilidad la decide BR-ANO-001 de
 [`anomalies`](../anomalies/anomalies.md). Los útiles presentes DEBEN ser levantables; lavatorio
@@ -233,17 +234,17 @@ Las unidades y tickets tirados DEBEN retirarse con los demás creados en la noch
 
 ### BR-CLN-027 — Pertenencia a las habitaciones
 
-El sistema DEBE distinguir el interior del local, del depósito y del baño, incluidos sus pasos
-de acceso, según piso, paredes y techos existentes. Cada habitación DEBE admitir una unión
+El sistema DEBE distinguir el interior del local, del depósito, del baño y del cuartito,
+incluidos sus pasos de acceso, según piso, paredes y techos existentes. Cada habitación DEBE admitir una unión
 finita de volúmenes locales sin rellenar huecos, ensanchar pasos ni elevar techos bajos. Un
-punto fuera de las tres DEBE clasificarse afuera. Trasladar o rotar el conjunto NO DEBE agrandar
+punto fuera de las cuatro DEBE clasificarse afuera. Trasladar o rotar el conjunto NO DEBE agrandar
 sus interiores ni cambiar la pertenencia de un punto que conserva su posición relativa.
 
 ### BR-CLN-028 — El desorden cuenta una vez al cierre
 
 CUANDO termina la jornada, el sistema DEBE anotar un llamado por desorden si queda alguna
 unidad suelta dentro de cualquier habitación, una caja dentro y fuera del depósito o un útil
-dentro y fuera del baño. El cuerpo sostenido DEBE excluirse por identidad, salvo mientras se
+dentro y fuera del cuartito. El cuerpo sostenido DEBE excluirse por identidad, salvo mientras se
 examina: entonces cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
@@ -394,12 +395,13 @@ hacia arriba en el piso, en horizontal en la pared y hacia abajo en el techo. Ni
 de un mueble ni tapada, y la mira enfoca cada una desde un punto libre del piso. Las manchas de
 otra noche no se ven y la mira no las enfoca.
 
-### AC-CLN-018 — Los útiles disponibles vuelven al baño *(verifica BR-CLN-014)*
+### AC-CLN-018 — Los útiles disponibles vuelven al cuartito *(verifica BR-CLN-014)*
 
 DADO la mopa mojada en el local, el balde teñido en depósito y un jabón en mano CUANDO se abre
-cada jornada ENTONCES se vacía la mano y vuelven al baño los útiles disponibles, con balde vacío
+cada jornada ENTONCES se vacía la mano y vuelven al cuartito los útiles disponibles, con balde vacío
 y mopa seca: cuatro en la 5 —mopa, balde, rosa y amarillo— y cinco en las demás. El azul no
-está en la quinta. Lavatorio e inodoro se rechazan al intentar agarrarlos.
+está en la quinta y su lugar queda vacío. Ningún útil queda en el baño. Lavatorio e inodoro se
+rechazan al intentar agarrarlos.
 
 ### AC-CLN-019 — Llenar el balde *(verifica BR-CLN-015)*
 
@@ -462,7 +464,7 @@ DADO la mopa recién mojada CUANDO se recorre su distancia máxima ENTONCES lleg
 la mancha sigue. CUANDO se moja nuevamente en el balde cercano ENTONCES recupera toda
 la carga y borra la mancha correspondiente. La punta pierde color y gotea durante el viaje.
 
-DADO el balde en su ubicación inicial del baño CUANDO se lleva la mopa hasta cualquiera
+DADO el balde en su ubicación inicial del cuartito CUANDO se lleva la mopa hasta cualquiera
 de las manchas del almacén ENTONCES se agota antes de poder limpiarla, incluso tomando
 el trayecto más corto y aprovechando el alcance de interacción. DADO el balde acercado
 a la zona de limpieza ENTONCES hay carga suficiente para caminar unos pasos y limpiar.
@@ -557,7 +559,7 @@ abierta; el secundario sigue sin ejecutar ninguno de esos gestos.
 
 ### AC-CLN-040 — Interiores, techos y pasos exactos *(verifica BR-CLN-027)*
 
-DADO el almacén al abrir ENTONCES todas las cajas están en depósito, los útiles disponibles en baño
+DADO el almacén al abrir ENTONCES todas las cajas están en depósito, los útiles disponibles en cuartito
 y el jugador en local. CUANDO se consultan centros de los pasos ENTONCES pertenecen a su
 habitación destino; un punto junto al lateral o sobre un techo bajo queda afuera. DADO una
 unión disjunta trasladada y girada 45° ENTONCES sus partes conservan pertenencia y sus huecos
@@ -565,15 +567,17 @@ siguen afuera, incluso cuando caen dentro de una envolvente mayor.
 
 ### AC-CLN-041 — Suelta no significa visible ni apoyada en el piso *(verifica BR-CLN-028)*
 
-DADO una unidad suelta en local, depósito o baño, incluso agrupada o apoyada en caja o góndola,
+DADO una unidad suelta en local, depósito, baño o cuartito, incluso agrupada o apoyada en caja o góndola,
 CUANDO cierra ENTONCES hay desorden. DADO la unidad colocada, devuelta o sostenida sin examen
 ENTONCES no lo produce. El cuerpo de repuesto no cuenta como unidad suelta.
 
 ### AC-CLN-042 — Cada clase tiene su habitación *(verifica BR-CLN-027, BR-CLN-028)*
 
-DADO una caja en local CUANDO cierra ENTONCES hay desorden; en depósito o su paso, no.
-DADO un útil en local o depósito ENTONCES hay desorden; en baño o su paso, no. DADO una bolsa
-adentro ENTONCES no produce desorden. DADO la lista vacía ENTONCES no hay ninguno de los motivos.
+DADO una caja en local o cuartito CUANDO cierra ENTONCES hay desorden; en depósito o su paso, no.
+DADO un útil en local, depósito o baño ENTONCES hay desorden; en cuartito o su paso, no. DADO un
+útil en el umbral de la puerta del cuartito ENTONCES del lado del cuartito no produce desorden y
+del lado del depósito sí. DADO una bolsa adentro, también en el cuartito, ENTONCES no produce
+desorden. DADO la lista vacía ENTONCES no hay ninguno de los motivos.
 
 ### AC-CLN-043 — La mano excluye sólo su cuerpo *(verifica BR-CLN-028, BR-CLN-029)*
 
@@ -615,7 +619,7 @@ la siguiente noche. Abrir otra noche permite anotar de nuevo el mismo motivo.
 
 DADO tickets propios activos ENTONCES la consulta entrega una copia independiente y omite
 cuerpos liberados o pendientes de liberar; conserva los válidos de ranura, mundo, mano, examen
-y contenedor. DADO tickets dentro de local, depósito o baño CUANDO cierra ENTONCES no producen
+y contenedor. DADO tickets dentro de local, depósito, baño o cuartito CUANDO cierra ENTONCES no producen
 desorden ni afuera; uno o varios afuera producen un único motivo de afuera. Recuperarlos al
 interior o sostenerlos sin examen elimina ese motivo. DADO dos cuerpos con los mismos datos
 ENTONCES sólo se excluye el sostenido; un examen real lo hace contar por su posición física
@@ -831,8 +835,8 @@ anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CL
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.
 - **OQ-CLN-002 — ¿Qué manchas hay en las jornadas 6 a 8?**
-  - Por qué sigue abierta: sus filas de la ficha dependen en parte de un cuartito de limpieza
-    que el almacén no tiene, y de manchas en el techo del local y del depósito, que hoy quedan
+  - Por qué sigue abierta: sus filas de la ficha dependen en parte de manchas en el cuartito de
+    limpieza, que #541 dejó fuera, y de manchas en el techo del local y del depósito, que hoy quedan
     fuera del alcance de la mira. Hasta entonces, las jornadas 6, 7 y 8 arrancan con las de la 4.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.

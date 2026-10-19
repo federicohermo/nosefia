@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: draft
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; baño trabado sin limpieza de #538
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; baño trabado sin limpieza de #538; cuartito de limpieza de #541
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -183,9 +183,9 @@ su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas 
 
 SI una puerta está trabada, ENTONCES el primario NO DEBE abrirla ni girar la hoja, y
 DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. La entrada al local, el portón del depósito y
-la oficina del jefe están trabadas en todas las jornadas. La puerta del baño DEBE estar trabada
-en las jornadas que no piden limpiar, y abrir en las que sí. La otra puerta interior no está
-trabada en ninguna. La traba de la jornada DEBE decidirse al abrirla, desde las obligatorias que
+la oficina del jefe están trabadas en todas las jornadas. La puerta del baño y la del cuartito de
+limpieza DEBEN estar trabadas en las jornadas que no piden limpiar, y abrir en las que sí. La
+puerta de «Solo empleados» no está trabada en ninguna. La traba de la jornada DEBE decidirse al abrirla, desde las obligatorias que
 declara, antes de cerrar las puertas de BR-PLY-019.
 
 CUANDO se acciona una puerta que abre, el sistema DEBE avisar una vez si se abrió o se cerró.
@@ -292,12 +292,13 @@ encima de la nota; al reanudar, la nota DEBE continuar abierta y el control susp
 
 El sistema DEBE permitir leer las notas de tareas a realizar, mantener el local ordenado,
 jabones y manchas, instrucciones de limpieza y no tirar papel. La hoja y la lectura DEBEN
-compartir su contenido: texto para las dos del corcho, imagen original completa para las cuatro
-del baño. Hay una hoja de no tirar papel arriba de cada uno de los dos inodoros, y las dos
-comparten la misma imagen. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a
+compartir su contenido: texto para las dos del corcho, imagen original completa para las dos de
+limpieza y las dos de no tirar papel. Las de jabones y manchas y de instrucciones de limpieza
+están pegadas en una pared del cuartito. Hay una hoja de no tirar papel arriba de cada uno de
+los dos inodoros del baño, y las dos comparten la misma imagen. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a
 A4, con el contenido visible en el mundo; NO DEBEN presentarse como post its ni como una hoja
 por tarea.
-Las hojas del baño DEBEN conservar sus imágenes artísticas.
+Las hojas del cuartito y del baño DEBEN conservar sus imágenes artísticas.
 
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
 atención al cliente, registro de productos vendidos, limpieza, reposición y, al final, la
@@ -673,11 +674,11 @@ está trabada y queda abierta.
 
 DADO el almacén armado en cualquier jornada ENTONCES la entrada, el portón del depósito y la
 oficina del jefe están trabadas y contestan al primario. DADO la jornada 1 o la 2 abierta
-ENTONCES la puerta del baño está trabada, contesta al primario y la hoja no gira. DADO la
-jornada 3 abierta ENTONCES no está trabada y alterna. DADO el cierre de la 2 CUANDO se sigue a la
-3 ENTONCES se destraba; DADO una partida guardada en la 2 con la puerta abierta la noche
-anterior CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. La otra puerta
-interior no está trabada en ninguna jornada.
+ENTONCES la puerta del baño y la del cuartito están trabadas, contestan al primario y la hoja no
+gira. DADO la jornada 3 abierta ENTONCES no están trabadas y alternan. DADO el cierre de la 2
+CUANDO se sigue a la 3 ENTONCES se destraban; DADO una partida guardada en la 2 con las dos
+puertas abiertas la noche anterior CUANDO se retoma ENTONCES abren cerradas y trabadas, sin
+girar ni avisar. La puerta de «Solo empleados» no está trabada en ninguna jornada.
 
 ### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
 
@@ -878,7 +879,7 @@ devolución y el control suspendido.
 
 DADO la nota de ordenado, ENTONCES su hoja y su lectura comparten «MANTENER EL LOCAL ORDENADO»
 y las viñetas «No dejar productos tirados.», «Dejar las cajas en el depósito.» y
-«Dejar los elementos de limpieza en el baño.», exactamente.
+«Dejar los elementos de limpieza en el cuartito.», exactamente.
 
 ### AC-PLY-069 — Las obligatorias dan los renglones de tareas *(verifica BR-PLY-030)*
 
@@ -887,18 +888,18 @@ regla. DADO limpieza y tirar la basura, ENTONCES da «1. Limpieza» y «2. Tirar
 DADO cero, ENTONCES conserva el título y cero renglones. Cada tipo declarado tiene nombre,
 y los títulos y renglones son iguales en la hoja y su lectura.
 
-### AC-PLY-070 — El baño comparte la imagen artística completa *(verifica BR-PLY-030)*
+### AC-PLY-070 — El cuartito y el baño comparten la imagen artística completa *(verifica BR-PLY-030)*
 
-DADO cada hoja del baño —jabones y manchas, instrucciones de limpieza y las dos de no tirar
-papel—, ENTONCES su lectura amplía la misma imagen frontal original completa y no agrega
-renglones. Las dos de no tirar papel abren la misma imagen.
+DADO cada hoja de imagen —jabones y manchas e instrucciones de limpieza, en el cuartito, y las
+dos de no tirar papel, en el baño—, ENTONCES su lectura amplía la misma imagen frontal
+original completa y no agrega renglones. Las dos de no tirar papel abren la misma imagen.
 
-### AC-PLY-071 — Las notas del corcho y del baño se pueden leer *(verifica BR-PLY-030, BR-PLY-004)*
+### AC-PLY-071 — Las notas del corcho, del cuartito y del baño se pueden leer *(verifica BR-PLY-030, BR-PLY-004)*
 
 DADO cada una de las seis notas funcionales, ENTONCES tiene foco y contorno sobre su propia
-hoja desde un lugar transitable al alcance. Hay una hoja de no tirar papel arriba de cada
-inodoro. El corcho presenta dos hojas: tareas a realizar y mantener el local ordenado. No
-aparecen papeles vacíos ni una hoja por tarea. Las imágenes originales del baño se conservan
+hoja desde un lugar transitable al alcance. Las dos de limpieza están en una pared del
+cuartito y se leen desde adentro. Hay una hoja de no tirar papel arriba de cada inodoro. El corcho presenta dos hojas: tareas a realizar y mantener el local ordenado. No
+aparecen papeles vacíos ni una hoja por tarea. Las imágenes originales del cuartito y del baño se conservan
 al agregar lectura.
 
 ### AC-PLY-072 — La caja abre con cada mano y la conserva *(verifica BR-PLY-031, BR-PLY-026, BR-PLY-006, BR-PLY-028)*

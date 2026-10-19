@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541
 ---
 
 # Capacidad: el legajo del empleado
@@ -147,7 +147,7 @@ unidades» (OQ-EMP-006).
 Las siete fotos DEBEN mostrar el juego y acompañar Intro 2, 3, 4, 6, 7, 9 y 11, cada una en la
 jornada de su Intro: respectivamente,
 la nota de tareas, la ventanilla, el lector y la caja registradora, la computadora, una estantería
-con cajas, los útiles y notas del baño y el depósito con sus cajas en el piso. La foto de la
+con cajas, los útiles y notas del cuartito y el depósito con sus cajas en el piso. La foto de la
 estantería NO DEBE cambiar la disposición jugable de las cajas de la primera noche. El encuadre
 artístico de cada tema es territorio de juicio humano; la correspondencia se verifica en
 AC-EMP-047.
@@ -523,7 +523,7 @@ precede inmediatamente al texto de su Intro y ampliarla muestra ese texto, nunca
 paso. CUANDO se valida cada captura ENTONCES existe una imagen con proporción adecuada a su
 marco y el rayo central de su encuadre alcanza el tema correspondiente: corcho con sus dos
 notas, ventanilla, lector y caja, computadora,
-estantería con cajas, útiles y notas del baño, y cajas del depósito en el piso. Preparar la foto
+estantería con cajas, útiles y notas del cuartito, y cajas del depósito en el piso. Preparar la foto
 de Intro 7 y después la de Intro 11 deja restaurada la pila jugable de la jornada 1.
 
 ### AC-EMP-048 — Leer retiene y comenzar anuncia *(verifica BR-EMP-022, BR-EMP-024)*
