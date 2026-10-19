@@ -44,10 +44,7 @@ class PlantillaWebTest(unittest.TestCase):
             "parche": self.parche.name,
             "emscripten": "4.0.11",
             "scons": "4.9.1",
-            "opciones": [
-                "platform=web", "target=template_release", "threads=yes",
-                "optimize=size", "lto=thin",
-            ],
+            "opciones": list(plantilla.OPCIONES),
             "archivos": {
                 "motor.cpp": {"original_sha256": "c" * 64, "modificado_sha256": "d" * 64},
             },

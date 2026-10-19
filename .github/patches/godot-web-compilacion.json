@@ -6,11 +6,19 @@
   "emscripten": "4.0.11",
   "emsdk_zip_sha256": "1e0e53bb21fd9308079991eb222efa6216ca8fdb53f742f9c98b6156c13e5ac4",
   "scons": "4.9.1",
-  "opciones": ["platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin"],
+  "opciones": ["platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin", "module_text_server_adv_enabled=no", "module_text_server_fb_enabled=yes", "disable_physics_2d=yes", "disable_navigation_2d=yes", "disable_xr=yes", "minizip=no", "module_astcenc_enabled=no", "module_basis_universal_enabled=no", "module_bmp_enabled=no", "module_csg_enabled=no", "module_dds_enabled=no", "module_enet_enabled=no", "module_etcpak_enabled=no", "module_fbx_enabled=no", "module_gltf_enabled=no", "module_godot_physics_2d_enabled=no", "module_godot_physics_3d_enabled=no", "module_gridmap_enabled=no", "module_hdr_enabled=no", "module_interactive_music_enabled=no", "module_jpg_enabled=no", "module_jsonrpc_enabled=no", "module_ktx_enabled=no", "module_meshoptimizer_enabled=no", "module_mobile_vr_enabled=no", "module_mp3_enabled=no", "module_msdfgen_enabled=no", "module_multiplayer_enabled=no", "module_navigation_2d_enabled=no", "module_noise_enabled=no", "module_regex_enabled=no", "module_theora_enabled=no", "module_tga_enabled=no", "module_tinyexr_enabled=no", "module_upnp_enabled=no", "module_vhacd_enabled=no", "module_visual_shader_enabled=no", "module_webrtc_enabled=no", "module_websocket_enabled=no", "module_webxr_enabled=no", "module_zip_enabled=no"],
   "archivos": {
     "drivers/gles3/rasterizer_gles3.cpp": {
       "original_sha256": "7906073ee78a23816dfa0a0a21ec5879980f10f4eb5119ffa39051aba957311e",
       "modificado_sha256": "0b6a9c661c8e9b9f88f5d490e2675ed146ac4c2747295062fec3fbefe4988a81"
+    },
+    "drivers/gles3/rasterizer_scene_gles3.cpp": {
+      "original_sha256": "6d0719c9cd2caf685a9825028183bdf058081d7bc92d4b27ed2587f39b081221",
+      "modificado_sha256": "4d936250d5f297e6b74969cbab4daefaff584e0e7b9b026933d11b6a98d07ae4"
+    },
+    "drivers/gles3/rasterizer_scene_gles3.h": {
+      "original_sha256": "4e3d4c1b13ec5982afb5f6ab477e317bb83b2b2dd7e631ae7738891ef35ffaf7",
+      "modificado_sha256": "516e72d1c7a480892fb526634a41020ec5fc351d28ca3153d8e37cd40006b3eb"
     },
     "drivers/gles3/shader_gles3.cpp": {
       "original_sha256": "17c01277dc3468a1d53081f01a6f7665f5d0f82e7882a8198e1f486ee344d5d8",
@@ -18,7 +26,15 @@
     },
     "drivers/gles3/shader_gles3.h": {
       "original_sha256": "d17a9858ac8f7d55c34bb4d65f6dcd7eac467108b6c09cd12680d42c2d4e6c43",
-      "modificado_sha256": "b708a79df32a1162e3b6ec9871f9756ca3408c13ab42eacc0557fb475632c380"
+      "modificado_sha256": "daf950c246731646daa8a0fcbcb10704ed71978388803ea17348326e79b786b0"
+    },
+    "drivers/gles3/shaders/area_lights_inc.glsl": {
+      "original_sha256": "f051b01ed8522306e7acbcd44442a7642b1a8ed7a54c0562b899516dd08925d2",
+      "modificado_sha256": "db24f54e0de28fc10d6e0d2c176fb32caa0ad20b41efdf40ea232d75bc1cf398"
+    },
+    "drivers/gles3/shaders/scene.glsl": {
+      "original_sha256": "2c77be0c85b7ab1a85ed8009c77cdb6216f1494d43083592213ad68f9e812977",
+      "modificado_sha256": "8b7586bfb5ab1e1fd2ccea8e23621c8bb7e489f584699c528d2fd33df4aafee7"
     },
     "drivers/gles3/storage/render_scene_buffers_gles3.cpp": {
       "original_sha256": "eed85d446a818f3ffbdac02b3461f297fb40f58cf938aea88b3a641cb0b47155",
