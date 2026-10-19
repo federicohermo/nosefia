@@ -56,7 +56,7 @@ y siempre pasan por la importación incremental del motor antes de probar.
 El job «Preparación compartida» sólo corre en los dos modos que distribuyen un artefacto.
 Que se saltee en el modo independiente no saltea la preparación de cada runner.
 La programación `serial` espera a que termine ese job antes de iniciar los workers.
-`solapada` inicia los workers mientras el productor prepara: adelantan el trabajo propio
+`solapada` inicia los workers mientras el productor prepara. Adelantan el trabajo propio
 de su modo y esperan la publicación del snapshot en la misma VM antes de restaurarlo.
 `reutilizada` recibe `corrida_previa`, omite el productor y restaura su snapshot. Exige que
 esa corrida haya terminado con éxito en la misma rama y revisión. Si el artefacto no existe,
