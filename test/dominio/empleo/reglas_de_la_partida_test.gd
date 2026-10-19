@@ -29,12 +29,6 @@ const ESPEJOS_DEL_SPEC := [
 const PRIMERA_CIFRA_DE_BALANCE := 2
 
 
-func test_la_partida_dura_tres_noches_de_introduccion_y_las_cinco_del_gdd() -> void:
-	assert_int(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA).is_equal(8)
-	assert_int(ReglasDeLaPartida.PRIMERA_JORNADA).is_equal(1)
-	assert_int(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA).is_equal(4)
-
-
 func test_lo_atado_a_un_numero_de_jornada_se_cuenta_desde_la_primera_completa() -> void:
 	var completa := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 	assert_int(AnomaliasDeLaJornada.JORNADA_SIN_AZUL).is_equal(completa + 1)

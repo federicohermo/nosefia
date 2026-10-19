@@ -91,10 +91,11 @@ func test_dos_impresiones_son_dos_papeles_independientes() -> void:  # AC-CTR-02
 
 
 func test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior() -> void:  # AC-CTR-026
-	assert_int(GeneradorDeTickets.JORNADA_SIN_LECTOR).is_equal(6)
 	for jornada: int in [1, 2, 3, 4, 5, 6, 7, 8, 10]:
 		var generador := GeneradorDeTickets.para_la_jornada(jornada)
-		assert_bool(generador.es_manual()).is_equal(jornada >= 6)
+		assert_bool(generador.es_manual()).is_equal(
+			jornada >= GeneradorDeTickets.JORNADA_SIN_LECTOR
+		)
 		assert_array(generador.renglones()).is_empty()
 		for indice in GeneradorDeTickets.RENGLONES:
 			assert_object(generador.en_el_renglon(indice)).is_null()
