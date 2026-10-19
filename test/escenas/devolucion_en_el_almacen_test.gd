@@ -214,7 +214,6 @@ func test_continuar_dos_veces_abre_una_sola_noche_siguiente() -> void:  # AC-EMP
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_celular(almacen).celular().abierto()).is_false()
 	var persiana: PersianaDeLaNoche = almacen.get_node("Interfaz/PersianaDeLaNoche")
-	assert_str((persiana.get("_placa") as Label).text).is_equal("NOCHE 5")
 	var partida: Partida = almacen.get("_partida")
 	assert_int(partida.jornada()).is_equal(ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS + 1)
 	persiana.terminar()

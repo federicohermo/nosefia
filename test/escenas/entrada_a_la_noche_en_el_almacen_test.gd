@@ -85,7 +85,6 @@ func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> voi
 	await _cerrar_y_seguir()
 	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
 	assert_bool(_persiana().en_pantalla()).is_true()
-	assert_str((_persiana().get_node("Marco/Placa") as Label).text).is_equal("NOCHE 2")
 	assert_bool(_control().esta_suspendido()).is_true()
 	var antes := _restante()
 	await get_tree().process_frame

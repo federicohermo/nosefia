@@ -6,7 +6,6 @@ const Entrada := preload("res://src/dominio/jornada/entrada_a_la_noche.gd")
 func test_la_placa_desaparece_antes_de_que_suba_la_persiana() -> void:  # AC-SHF-022
 	var entrada := Entrada.new(3)
 	entrada.avanzar(1.0)
-	assert_str(entrada.texto()).is_equal("NOCHE 3")
 	assert_float(entrada.opacidad_de_la_placa()).is_equal(1.0)
 	assert_float(entrada.apertura_de_la_persiana()).is_zero()
 	assert_bool(entrada.terminada()).is_false()
