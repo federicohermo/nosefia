@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536
 ---
 
 # Capacidad: la investigación
@@ -312,8 +312,14 @@ NO DEBE registrarla. CUANDO se acepta levantar la colilla del fondo del depósit
 puerta garage, el sistema DEBE registrar 2B. La colilla DEBE distinguirse visualmente como tal,
 ser levantable y tener identidad propia independiente de los productos vendibles. Mirarla,
 mostrar su subtítulo con E y manos vacías, un agarre rechazado o durante pausa NO DEBEN anotarla.
-Soltarla y volver a levantarla NO DEBE duplicarla. Las pistas 2A y 2B NO DEBEN registrarse por
-esos gestos fuera de jornada 5.
+Soltarla y volver a levantarla NO DEBE duplicarla. La pista 2A NO DEBE registrarse por ese
+gesto fuera de jornada 5.
+
+La colilla DEBE estar en el depósito sólo mientras está abierta la jornada de 2B, en su lugar
+de origen. Fuera de esa jornada NO DEBE verse, la mira NO DEBE enfocarla y NO DEBE poder
+levantarse. CUANDO se abre otra jornada, la colilla DEBE salir de la mano y del local, aunque
+la noche anterior haya quedado en la mano o en el contenedor. La jornada de la colilla DEBE
+salir de la pista 2B, sin repetirse en otro lugar.
 
 ### BR-INV-039 — Las hipótesis de la quinta noche salen de sus pistas
 
@@ -726,8 +732,12 @@ DADO jornada 5 y la colilla visible al fondo del depósito cerca de la puerta ga
 mira o se pide E con manos vacías ENTONCES sigue sin 2B. Agarre rechazado o pausa tampoco anota.
 CUANDO el agarre se acepta ENTONCES la misma colilla queda en mano y se anota 2B. Soltarla y
 volver a levantarla no duplica pista ni mensajes; sostenerla al cierre conserva el hallazgo.
-La colilla es reconocible visualmente y no pertenece al catálogo vendible. En otra jornada,
-levantarla no registra 2B.
+La colilla es reconocible visualmente y no pertenece al catálogo vendible. DADO las jornadas 1,
+4 y 6 abiertas ENTONCES la colilla no se ve, no tiene colisión, la mira no la enfoca y no se
+puede agarrar. DADO la colilla en la mano o en el contenedor al cerrar la jornada 5 CUANDO se
+abre la 6 ENTONCES no queda en la mano, no se ve y no está en el contenedor. DADO una partida
+guardada en la jornada 5 CUANDO se continúa, una o dos veces seguidas, ENTONCES hay una sola
+colilla, visible y levantable en su lugar de origen.
 
 ### AC-INV-050 — Cuatro combinaciones y ninguna opción extra *(verifica BR-INV-039)*
 
