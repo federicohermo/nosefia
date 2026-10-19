@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 func after_test() -> void:
@@ -33,7 +34,7 @@ func test_la_llegada_avisa_hasta_conversar_y_el_cierre_vacia() -> void:
 	ventanilla.accionar()
 	assert_array(_textos(local)).is_empty()
 	var reloj: RelojDelTurno = local.get("_reloj")
-	reloj.avanzar(120.0)
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
 	assert_array(_textos(local)).is_equal(["¡HAY UN CLIENTE!"])
 	var panel: PanelDeLaVentanilla = local.get_node("Interfaz/PanelDeLaVentanilla")
 	assert_bool(panel.visible).is_false()
@@ -49,7 +50,7 @@ func test_la_llegada_avisa_hasta_conversar_y_el_cierre_vacia() -> void:
 	var caja: CajaRegistradora = local.get_node("Servicios/CajaRegistradora")
 	caja.lectura_rechazada.emit(GeneradorDeTickets.Resultado.LLENO)
 	assert_array(_textos(local)).is_equal(["NO SE PUDO LEER"])
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(_textos(local)).is_empty()
 
 
@@ -68,7 +69,7 @@ func test_la_caja_publica_el_motivo_y_solo_lleno_avisa() -> void:  # AC-NTF-002
 func test_el_programa_manual_no_publica_rechazo_ni_aviso() -> void:  # AC-NTF-002
 	var local := _local()
 	var caja: CajaRegistradora = local.get_node("Servicios/CajaRegistradora")
-	caja.arrancar(GeneradorDeTickets.para_la_jornada(6))
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR))
 	assert_bool(caja.generador().es_manual()).is_true()
 	var rechazos: Array[GeneradorDeTickets.Resultado] = []
 	caja.lectura_rechazada.connect(
@@ -96,57 +97,58 @@ func test_la_pila_se_dibuja_sobre_las_interfaces_y_debajo_de_pausa() -> void:  #
 
 
 func test_todas_las_noches_y_reloj_apagado() -> void:  # AC-NTF-020, AC-NTF-023
-	for jornada in range(1, 9):
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	for jornada in range(primera, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		var local := _local(jornada)
 		var reloj: RelojDelTurno = local.get("_reloj")
 		var pila: PilaDeNotificaciones = local.get_node("Interfaz/PilaDeNotificaciones")
-		var ritmo := Ritmo.de_la_jornada(jornada)
-		reloj.avanzar((Reglas.DURACION_DEL_TURNO - 3601.0) / ritmo)
+		RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3601.0)
 		assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
 		if jornada == Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ:
 			assert_str((local.get("_reloj_de_mesa") as Label3D).text).is_empty()
-		reloj.avanzar(1.0 / ritmo)
+		RelojDePrueba.avanzar_turno(reloj, 1.0)
 		assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_true()
 		pila._process(Notificaciones.DURACION)
-		reloj.avanzar(1.0)
+		RelojDePrueba.avanzar_turno(reloj, 1.0)
 		assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
 		local.queue_free()
 		await get_tree().process_frame
 
 
 func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
-	var local := _local(5)
+	var jornada := Compradores.JORNADA_DE_FEDE_Y_MIA
+	var local := _local(jornada)
 	var reloj: RelojDelTurno = local.get("_reloj")
-	reloj.avanzar((Reglas.DURACION_DEL_TURNO - 3660.0) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3660.0)
 	assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
-	reloj.avanzar(120.0 / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, 120.0)
 	assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(_textos(local)).is_empty()
-	reloj.avanzar(1.0)
+	RelojDePrueba.avanzar_turno(reloj, 1.0)
 	assert_array(_textos(local)).is_empty()
-	assert_int((local.get("_partida") as Partida).jornada()).is_equal(6)
+	assert_int((local.get("_partida") as Partida).jornada()).is_equal(jornada + 1)
 	assert_bool(local.get("_ciclo").abrir_la_jornada()).is_true()
 	reloj.set_process(false)
-	reloj.avanzar((Reglas.DURACION_DEL_TURNO - 3600.0) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3600.0)
 	assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
 
 
 func test_saltar_directamente_hasta_cerrar_no_deja_cartel() -> void:  # AC-NTF-021, AC-NTF-022
-	var local := _local(5)
+	var local := _local(Compradores.JORNADA_DE_FEDE_Y_MIA)
 	var reloj: RelojDelTurno = local.get("_reloj")
-	reloj.avanzar((Reglas.DURACION_DEL_TURNO - 3660.0) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3660.0)
 	assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
-	reloj.avanzar(3660.0 / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, 3660.0)
 	assert_array(_textos(local)).is_empty()
 
 
 func test_pausar_antes_del_umbral_no_consume_ni_dispara() -> void:  # AC-NTF-023
-	var local := _local(5)
+	var local := _local(Compradores.JORNADA_DE_FEDE_Y_MIA)
 	var reloj: RelojDelTurno = local.get("_reloj")
 	var restantes: Array[float] = []
 	reloj.tiempo_consumido.connect(func(restante: float) -> void: restantes.append(restante))
-	reloj.avanzar((Reglas.DURACION_DEL_TURNO - 3601.0) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3601.0)
 	var antes := restantes.duplicate()
 	get_tree().paused = true
 	await get_tree().process_frame
@@ -155,51 +157,55 @@ func test_pausar_antes_del_umbral_no_consume_ni_dispara() -> void:  # AC-NTF-023
 	assert_array(restantes).is_equal(antes)
 	assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
 	get_tree().paused = false
-	reloj.avanzar(1.0 / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, 1.0)
 	assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
 
 
 func test_solo_la_pista_anotada_avisa_sin_renovar_por_otros_resultados() -> void:  # AC-NTF-014
-	var local := _local(5)
+	var jornada := Compradores.JORNADA_DE_FEDE_Y_MIA
+	var local := _local(jornada)
 	var investigador: Investigador = local.get("_investigador")
 	var balde: ObjetoAgarrable = local.get_node("Objetos/Balde")
 	var examen: Examen = local.get("_jugador").examen
 	examen.objeto_revelado.emit(balde.datos, true)
-	assert_int(investigador.pedir_pista(balde.datos.id, Pista.Canal.LEVANTAR, 5, true)).is_equal(
-		Expediente.Resultado.DESCONOCIDA
+	(
+		assert_int(investigador.pedir_pista(balde.datos.id, Pista.Canal.LEVANTAR, jornada, true))
+		. is_equal(Expediente.Resultado.DESCONOCIDA)
 	)
 	assert_array(_textos(local)).is_empty()
-	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, 5, true)).is_equal(
+	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
 		Expediente.Resultado.ANOTADA
 	)
 	assert_array(_textos(local)).is_equal(["¡NUEVA PISTA!"])
 	var pila: PilaDeNotificaciones = local.get_node("Interfaz/PilaDeNotificaciones")
 	pila._process(2.0)
-	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, 5, true)).is_equal(
+	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
 		Expediente.Resultado.REPETIDA
 	)
-	assert_int(investigador.pedir_pista(balde.datos.id, Pista.Canal.LEVANTAR, 5, true)).is_equal(
-		Expediente.Resultado.DESCONOCIDA
+	(
+		assert_int(investigador.pedir_pista(balde.datos.id, Pista.Canal.LEVANTAR, jornada, true))
+		. is_equal(Expediente.Resultado.DESCONOCIDA)
 	)
 	pila._process(0.9)
 	assert_array(_textos(local)).is_equal(["¡NUEVA PISTA!"])
 	pila._process(0.1)
 	assert_array(_textos(local)).is_empty()
-	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, 5, true)).is_equal(
+	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
 		Expediente.Resultado.REPETIDA
 	)
 	assert_array(_textos(local)).is_empty()
 
 
 func test_cerrar_retira_la_pista_y_reabrir_no_la_recupera() -> void:  # AC-NTF-016
-	var local := _local(5)
+	var jornada := Compradores.JORNADA_DE_FEDE_Y_MIA
+	var local := _local(jornada)
 	var investigador: Investigador = local.get("_investigador")
-	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, 5, true)).is_equal(
+	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
 		Expediente.Resultado.ANOTADA
 	)
 	assert_array(_textos(local)).is_equal(["¡NUEVA PISTA!"])
 	var reloj: RelojDelTurno = local.get("_reloj")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(_textos(local)).is_empty()
 	assert_bool(local.get("_ciclo").abrir_la_jornada()).is_true()
 	assert_array(_textos(local)).is_empty()

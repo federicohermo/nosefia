@@ -70,10 +70,13 @@ func _completar_compra_fisica(atencion: Atencion, estante: Estante, desde_gondol
 func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-035
 	var casilleros := _casilleros_medidos()
 	var reponibles := _casilleros_reponibles()
-	for jornada in range(2, 9):
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	for jornada in range(primera + 1, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		for semilla in 200:
 			# La primera noche completa se recorre dos veces: cajas y casilleros ocupados.
-			for desde_gondola: bool in [false, true] if jornada == 4 else [false]:
+			for desde_gondola: bool in (
+				[false, true] if jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA else [false]
+			):
 				var compradores := Compradores.de_la_jornada(jornada)
 				var inventario := Apertura.inventario_de_la_jornada(
 					jornada, compradores, casilleros, reponibles, _azar(semilla)
@@ -134,7 +137,11 @@ func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC
 	var azar: RandomNumberGenerator = almacen.get("azar_de_la_apertura")
 	var control := _azar(17)
 	azar.seed = 17
-	for jornada: int in [4, 4, 5]:
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	]:
 		var esperado := Apertura.faltantes_al_azar(
 			Apertura.pedidos_de(Compradores.de_la_jornada(jornada)),
 			_casilleros_reponibles(),
@@ -148,8 +155,8 @@ func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC
 		assert_int(azar.state).is_equal(control.state)
 		assert_object(almacen.get("azar_de_la_apertura")).is_same(azar)
 	azar.seed = 17
-	almacen.call("_al_abrir_la_jornada", 4)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	var primera := _faltantes_de(almacen)
 	azar.seed = 17
-	almacen.call("_al_abrir_la_jornada", 4)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	assert_dict(_faltantes_de(almacen)).is_equal(primera)

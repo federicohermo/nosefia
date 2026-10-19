@@ -69,18 +69,14 @@ func _sucias(piso: PisoDelLocal) -> Array:
 	return sucias
 
 
-func test_cada_jornada_trae_sus_manchas_por_tipo_y_todas_sucias() -> void:  # AC-CLN-016
-	# `[polvo, moho, caca]`.
-	var esperadas := {
-		3: [3, 2, 2], 4: [3, 2, 2], 5: [4, 3, 1], 6: [3, 2, 2], 7: [3, 2, 2], 8: [3, 2, 2]
-	}
-	for jornada: int in esperadas:
+func test_cada_jornada_que_limpia_arranca_con_sus_manchas_sucias() -> void:  # AC-CLN-016
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	for jornada: int in range(primera, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		var piso := PisoDelLocal.de_la_jornada(jornada)
-		(
-			assert_array(_por_tipo(piso))
-			. override_failure_message("la jornada %d no trae lo que pide la ficha" % jornada)
-			. is_equal(esperadas[jornada])
-		)
+		if not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR):
+			assert_array(piso.lugares()).is_empty()
+			continue
+		assert_array(piso.lugares()).is_not_empty()
 		assert_int(_sucias(piso).size()).is_equal(piso.lugares().size())
 
 

@@ -240,18 +240,18 @@ func test_otro_producto_o_nada_no_entra() -> void:  # AC-STK-038
 
 
 func test_el_examen_conserva_el_producto_y_las_dos_cantidades() -> void:  # AC-STK-041
+	var llena := ReglasDelEstante.UNIDADES_POR_CAJA
 	var filas := [
-		[Producto.Id.ACTRONCITO, 8, 0],
-		[Producto.Id.MALBARDO, 5, 3],
-		[Producto.Id.ACTRONCITO, 7, 1],
-		[Producto.Id.ACTRONCITO, 1, 7],
-		[Producto.Id.ACTRONCITO, 0, 8],
-		[Producto.Id.LAYSNNT, 8, 0],
-		[Producto.Id.PURA_COLA, 1, 7],
-		[Producto.Id.TERMINATOR, 6, 2],
-		[Producto.Id.FERNET_GOD, 1, 7],
+		[Producto.Id.ACTRONCITO, llena],
+		[Producto.Id.MALBARDO, llena - 3],
+		[Producto.Id.ACTRONCITO, llena - 1],
+		[Producto.Id.ACTRONCITO, 1],
+		[Producto.Id.ACTRONCITO, 0],
+		[Producto.Id.LAYSNNT, llena],
+		[Producto.Id.PURA_COLA, 1],
+		[Producto.Id.TERMINATOR, llena - 2],
+		[Producto.Id.FERNET_GOD, 1],
 	]
-	assert_int(ReglasDelEstante.UNIDADES_POR_CAJA).is_equal(8)
 	for fila: Array in filas:
 		var producto := _producto(fila[0])
 		var caja := _caja(producto, _estante(producto, fila[1]))
@@ -259,7 +259,7 @@ func test_el_examen_conserva_el_producto_y_las_dos_cantidades() -> void:  # AC-S
 		var datos := caja.datos_del_examen()
 		assert_int(datos.producto).is_equal(fila[0])
 		assert_int(datos.unidades).is_equal(fila[1])
-		assert_int(datos.entran).is_equal(fila[2])
+		assert_int(datos.entran).is_equal(llena - fila[1])
 		assert_str(caja.texto_del_examen()).is_not_empty()
 
 

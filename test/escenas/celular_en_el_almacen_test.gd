@@ -29,7 +29,7 @@ func _llegada() -> Mensaje:
 	return mensaje
 
 
-func _abrir(jornada: int = 4) -> void:
+func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> void:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set("_partida", Partida.desde(PartidaSerializada.sanear({"jornada": jornada})))
 	get_tree().root.add_child(_almacen)

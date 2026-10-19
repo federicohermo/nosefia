@@ -18,6 +18,7 @@ const VentanillaQueSeVe := preload("res://src/escenas/puestos/ventanilla.gd")
 const ESCRITURAS_PROHIBIDAS := [
 	"jugador.transform", "jugador.position", "jugador.rotation", "jugador.global_position"
 ]
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 func _ventanilla() -> VentanillaQueSeVe:
@@ -174,7 +175,7 @@ func _almacen_en(tamano: Vector2i = Vector2i(1280, 720), con_comprador: bool = t
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	reloj.set_process(false)
 	if con_comprador:
-		reloj.avanzar(120.0)
+		RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	return almacen

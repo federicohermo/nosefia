@@ -4,6 +4,7 @@ const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Menu := preload("res://src/escenas/menu_de_inicio.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 class MenuSinCarga:
@@ -59,7 +60,7 @@ func _restante() -> float:
 
 func _cerrar_y_seguir() -> void:
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
@@ -123,13 +124,13 @@ func test_desde_la_tercera_seguir_anuncia_sin_instrucciones() -> void:  # AC-EMP
 
 
 func test_el_menu_anuncia_la_jornada_nueva_y_la_guardada() -> void:  # AC-SHF-025
-	for jornada: int in [1, 5]:
+	for jornada: int in [ReglasDeLaPartida.PRIMERA_JORNADA, Compradores.JORNADA_DE_FEDE_Y_MIA]:
 		_abrir(jornada)
 		var menu := MenuSinCarga.new()
 		get_tree().root.add_child(menu)
-		menu.set("_nuevo_juego", jornada == 1)
+		menu.set("_nuevo_juego", jornada == ReglasDeLaPartida.PRIMERA_JORNADA)
 		menu.call("_entrar", _almacen)
-		if jornada == 1:
+		if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
 			var instrucciones: PantallaDeInstrucciones = _almacen.get_node(
 				"Interfaz/PantallaDeInstrucciones"
 			)
@@ -198,7 +199,7 @@ func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC
 	var pedidos := [0]
 	_almacen.set("_ir_al_menu", func() -> void: pedidos[0] += 1)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)

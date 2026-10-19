@@ -12,6 +12,7 @@ const ALTURA_DEL_JUGADOR := 0.112
 ## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
 ## origen, adonde la red de seguridad lo puede devolver.
 const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 # AC-CLN-060
@@ -43,7 +44,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	assert_bool(reloj.corriendo()).is_true()
 	assert_float(tiempos.back()).is_less(tiempos.front())
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
@@ -138,7 +139,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	)
 	var terminados := [0]
 	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
-	almacen.call("_al_abrir_la_jornada", 5)
+	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
 	assert_int(terminados[0]).is_zero()
 	# Lo que se llevaba queda a los pies, y no en la cara ni donde se mira.
 	assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
@@ -146,7 +147,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.look_at(jugador.global_position + jugador.frente() * 1.2)
 	var pies := agarre.punto_de_respaldo.global_position
-	almacen.call("_al_abrir_la_jornada", 5)
+	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_bool(control.esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_null()
@@ -260,8 +261,8 @@ func _atender(almacen: Node3D) -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var caja: CajaRegistradora = almacen.get("_caja")
 	var destino: Node3D = almacen.get("_puesto_de_la_caja").get("destino_de_los_tickets")
-	for intervalo: float in [120.0, 360.0]:
-		reloj.avanzar(intervalo)
+	for hora: Vector2i in [Vector2i(22, 0), Vector2i(4, 0)]:
+		RelojDePrueba.avanzar_hasta(reloj, hora)
 		_pulsar_ventanilla(ventanilla)
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)

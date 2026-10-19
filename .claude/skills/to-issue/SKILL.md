@@ -258,7 +258,13 @@ Lo que más se rompe:
   #295, aunque #300 no los tocara; se corrigió el comando contra su base `9664069f`.
 - **Un comando que prueba una ausencia se corre hoy, y devuelve todo lo que el criterio saca.**
   Si deja casos afuera, se amplía. Si no se puede, el criterio nombra el test que los cubre. En
-  el #140, el `rg` de la verificación no veía los productos de la raíz del modelo.
+  el #140, el `rg` de la verificación no veía los productos de la raíz del modelo. En el #531,
+  el `rg` de jornadas literales contaba 59 líneas y dejaba afuera unas 40 con la misma jornada
+  escrita como parámetro por defecto, rango de un bucle o comparación.
+- **Un ayudante que reemplaza una llamada conserva sus bordes.** Antes de fijar qué hace con
+  cero o con un valor repetido, buscar cómo lo usan las llamadas que reemplaza. En el #531, el
+  contrato decía que avanzar cero no hacía nada, y los tests usaban `avanzar(0.0)` para entregar
+  un cuadro sin consumir tiempo.
 - **Un valor de balance no se inventa.** Un costo, un tiempo o un umbral sale del GDD o del
   dominio. Si ninguno lo fija, el criterio lo nombra como pregunta abierta y `to-spec` lo
   registra. Un número propuesto por el agente se lee como decidido.

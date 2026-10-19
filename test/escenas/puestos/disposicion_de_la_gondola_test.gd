@@ -82,7 +82,10 @@ func test_doscientas_semillas_entran_en_fila_y_caja() -> void:  # AC-STK-033
 	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
 		casilleros[producto.id] = disposicion.filas_de_adelante[producto.id]
-	for jornada in range(1, 9):
+	for jornada in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA,
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	):
 		var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(jornada))
 		for semilla in 200:
 			var azar := RandomNumberGenerator.new()

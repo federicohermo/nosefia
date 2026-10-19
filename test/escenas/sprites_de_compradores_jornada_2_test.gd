@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const FIXTURE := "res://test/escenas/captura_de_compradores_jornada_2.gd"
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _fixture: RefCounted
 
@@ -135,7 +136,7 @@ func test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes() -> void:
 		return
 	var local: Node3D = _fixture.get("local")
 	var reloj: RelojDelTurno = local.get("_reloj")
-	reloj.avanzar(30.0)
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(20, 30))
 	await _fixture.call("cuadros")
 	var posicion := _figura().position
 	var cuadro := _figura().frame
@@ -144,7 +145,7 @@ func test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes() -> void:
 	assert_vector(_figura().position).is_equal(posicion)
 	assert_int(_figura().frame).is_equal(cuadro)
 	get_tree().paused = false
-	reloj.avanzar(180.0)
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	var puesto: Node3D = _fixture.call("puesto")
 	var retiradas: Array = puesto.get("_retiradas")
 	assert_array(retiradas).has_size(1)
@@ -166,8 +167,10 @@ func test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes() -> void:
 
 
 func test_el_fixture_no_modifica_las_selecciones_productivas() -> void:
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	var jornadas := range(primera, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	var antes: Array[Array] = []
-	for jornada in range(1, 9):
+	for jornada: int in jornadas:
 		var datos: Array = []
 		for comprador in Compradores.de_la_jornada(jornada):
 			datos.append([comprador.nombre(), comprador.personaje, comprador.horario])
@@ -175,11 +178,11 @@ func test_el_fixture_no_modifica_las_selecciones_productivas() -> void:
 	if not await _crear():
 		return
 	await _fixture.call("llegar")
-	for jornada in range(1, 9):
+	for jornada: int in jornadas:
 		var datos: Array = []
 		for comprador in Compradores.de_la_jornada(jornada):
 			datos.append([comprador.nombre(), comprador.personaje, comprador.horario])
-		assert_array(datos).is_equal(antes[jornada - 1])
+		assert_array(datos).is_equal(antes[jornada - primera])
 
 
 func _segmento_cruza_el_antepecho(antepecho: MeshInstance3D, ojo: Vector3, punto: Vector3) -> bool:

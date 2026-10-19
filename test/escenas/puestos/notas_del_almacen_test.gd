@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const UNIDAD := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 func after_test() -> void:
@@ -121,7 +122,7 @@ func test_otras_pantallas_impiden_abrir_otra_hoja() -> void:  # AC-PLY-066
 	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var pantalla: Node3D = almacen.get_node(ruta)
 		if ruta.ends_with("Ventanilla"):
-			(almacen.get("_reloj") as RelojDelTurno).avanzar(120.0)
+			RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(22, 0))
 			pantalla.get_node("Comprador/Objetivo").call("accionar")
 		else:
 			pantalla.call("abrir")

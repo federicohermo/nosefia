@@ -22,6 +22,7 @@ const ARCHIVOS_DEL_SPEC := [
 const SEGUNDOS_REALES_ABIERTA := 30.0
 
 const EN_GONDOLA := 9
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _turno: Turno = null
 var _llegados: int = 0
@@ -394,7 +395,7 @@ func test_el_lector_del_cierre_ve_ambas_compras_vencidas_una_sola_vez() -> void:
 		func() -> void: cerradas_al_leer.append(tarea.compras_cerradas())
 	)
 	assert_bool(tarea.compras_cerradas()).is_false()
-	ventanilla.reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(ventanilla.reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(cerradas_al_leer).contains_exactly([true])
 	assert_array(eventos).contains_exactly(["llega Tin", "vence Tin", "llega Tia", "vence Tia"])
 	assert_bool(tarea.compras_cerradas()).is_true()

@@ -5,6 +5,7 @@ const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 class Sitio:
@@ -17,7 +18,7 @@ class Sitio:
 		punto = objetivo
 
 
-func _abrir(jornada: int = 4) -> Node3D:
+func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> Node3D:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
 	local.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(local)
@@ -224,9 +225,7 @@ func test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche() -> void:  # AC
 		assert_float(cajas[indice].global_position.distance_to(originales[indice])).is_less_equal(
 			0.01
 		)
-	local.get("_reloj").avanzar(
-		Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-	)
+	RelojDePrueba.avanzar_turno(local.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = local.get("_pantalla")
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
@@ -318,7 +317,7 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud() -> vo
 	await get_tree().process_frame
 	assert_bool(tarea.completada()).is_false()
 	assert_str(contador.text).is_equal("Tareas 0/5")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	agarre.soltar(false)
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_false()
@@ -386,12 +385,10 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		]
 	)
 	var partida: Partida = local.get("_partida")
-	for jornada in range(5, 7):
+	for jornada in range(Compradores.JORNADA_DE_FEDE_Y_MIA, Compradores.JORNADA_DE_FEDE_Y_MIA + 2):
 		for tarea in partida.obligatorias():
 			local.get("_reloj").completar(tarea)
-		local.get("_reloj").avanzar(
-			Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-		)
+		RelojDePrueba.avanzar_turno(local.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 		var pantalla: PantallaDeDevolucion = local.get("_pantalla")
 		AvanceDeDevolucion.entregar(pantalla)
 		pantalla.elegir()
@@ -403,7 +400,7 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		for _cuadro in 4:
 			await get_tree().physics_frame
 		var esperada := NotaPegada.tareas_a_realizar(Apertura.obligatorias(jornada))
-		if jornada == 5:
+		if jornada == Compradores.JORNADA_DE_FEDE_Y_MIA:
 			assert_str(hoja.call("dato").renglones()[4]).is_equal("Tirar la basura")
 		assert_array(hoja.call("dato").renglones()).contains_exactly(esperada.renglones())
 		assert_str(hoja.get("renglones_del_papel").text).is_equal(
