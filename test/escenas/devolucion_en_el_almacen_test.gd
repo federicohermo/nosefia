@@ -6,10 +6,8 @@ extends GdUnitTestSuite
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
-const SEGUNDOS_REALES_DE_UN_TURNO := (
-	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-)
 const JEFE := Conversacion.Interlocutor.JEFE
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _ruta_guardado: String
 
@@ -36,8 +34,8 @@ func _almacen(partida: Partida = null) -> Node3D:
 
 
 func _cerrar(almacen: Node3D) -> PantallaDeDevolucion:
-	(almacen.get_node("Servicios/RelojDelTurno") as RelojDelTurno).avanzar(
-		SEGUNDOS_REALES_DE_UN_TURNO
+	RelojDePrueba.avanzar_turno(
+		almacen.get_node("Servicios/RelojDelTurno"), Reglas.DURACION_DEL_TURNO
 	)
 	await get_tree().process_frame
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
@@ -131,7 +129,7 @@ func test_un_cuadro_largo_no_entrega_la_devolucion_de_golpe() -> void:  # AC-EMP
 
 func test_los_intervalos_esperan_al_celular_en_el_centro() -> void:  # AC-EMP-062
 	var almacen: Node3D = await _almacen()
-	(almacen.get("_reloj") as RelojDelTurno).avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
 	assert_bool(_pantalla_del_celular(almacen).centrado()).is_false()
 	pantalla.call("_process", 5.0)
@@ -268,8 +266,9 @@ func test_volver_al_menu_desde_la_pausa_conserva_el_guardado() -> void:  # AC-SA
 
 func test_retomar_trae_las_devoluciones() -> void:  # AC-INV-037, AC-SAV-024, AC-EMP-066
 	var devoluciones := ["Buenas", "Que no se repita, ok?", "Hola", "Sin comentarios."]
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 	var datos := {
-		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 3,
+		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): jornada,
 		PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS): 4,
 		PartidaSerializada.clave(PartidaSerializada.Campo.DEVOLUCIONES): devoluciones,
 	}
@@ -277,7 +276,7 @@ func test_retomar_trae_las_devoluciones() -> void:  # AC-INV-037, AC-SAV-024, AC
 	var bandeja := _celular(almacen).bandeja()
 	var guion := 0
 	for mensaje: Mensaje in Conversacion.de(JEFE).mensajes:
-		if mensaje.jornada <= 3:
+		if mensaje.jornada <= jornada:
 			guion += 1
 	assert_int(bandeja.mensajes_de(JEFE).size()).is_equal(guion + devoluciones.size())
 	assert_array(_ultimos_del_chat(almacen, devoluciones.size())).is_equal(

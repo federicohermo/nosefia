@@ -5,6 +5,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const S := SubtitulosDeLosGestos.Id
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 func _almacen() -> Node3D:
@@ -141,7 +142,7 @@ func test_el_cierre_descarta_el_aviso_que_esperaba_al_examen() -> void:  # AC-SU
 	var almacen := await _examen_con_aviso_esperando()
 	await get_tree().physics_frame
 	await get_tree().process_frame
-	almacen.get("_reloj").avanzar(10000.0)
+	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 	assert_bool(almacen.get("_reloj").corriendo()).is_false()
 	almacen.get("_jugador").get("examen").terminar()
 	await get_tree().physics_frame

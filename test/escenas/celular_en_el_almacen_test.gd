@@ -4,6 +4,7 @@ const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Jugador := preload("res://src/escenas/jugador.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacen: Node3D
 var _ruta_guardado: String
@@ -22,7 +23,7 @@ func _desmontar_almacen() -> void:
 	_almacen = null
 
 
-func _abrir(jornada: int = 4) -> void:
+func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> void:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set("_partida", Partida.desde(PartidaSerializada.sanear({"jornada": jornada})))
 	get_tree().root.add_child(_almacen)
@@ -94,7 +95,7 @@ func test_q_no_abre_con_otra_interfaz_ni_examen_ni_turno_cerrado() -> void:  # A
 	assert_bool(_jugador().examen.esta_examinando()).is_true()
 	_jugador().examen.terminar()
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_bool((_almacen.get("_pantalla") as CanvasLayer).visible).is_true()
 	# El cierre sube el celular fijo con la devolución: Q ni lo abre de nuevo ni lo cierra.
 	assert_bool(_celular().celular().fijo()).is_true()
@@ -169,7 +170,7 @@ func test_cierre_baja_celular_y_otra_jornada_cierra() -> void:  # AC-INV-035, AC
 	var recordatorio: Control = _pantalla().get("_recordatorio")
 	assert_bool(recordatorio.visible).is_true()
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	# La devolución sube el celular fijo en el chat de Enrique, sin el recordatorio.
 	assert_bool(_celular().celular().abierto()).is_true()
 	assert_bool(_celular().celular().fijo()).is_true()
@@ -207,13 +208,14 @@ func test_celular_no_cobra_acciones_y_el_reloj_sigue_corriendo() -> void:  # AC-
 	_celular().pedir_volver()
 	_celular().pedir_alternar(false)
 	assert_float(turno.tiempo_restante()).is_equal(antes)
-	reloj.avanzar(30.0)
+	var media_hora := 1800.0
+	RelojDePrueba.avanzar_turno(reloj, media_hora)
 	var sin_celular := antes - turno.tiempo_restante()
 	_celular().pedir_alternar(false)
 	antes = turno.tiempo_restante()
-	reloj.avanzar(30.0)
+	RelojDePrueba.avanzar_turno(reloj, media_hora)
 	assert_float(antes - turno.tiempo_restante()).is_equal(sin_celular)
-	assert_float(sin_celular).is_equal(Ritmo.escalar(30.0))
+	assert_float(sin_celular).is_equal(media_hora)
 
 
 func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-029, AC-INV-038
@@ -321,7 +323,8 @@ func test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos() -> void:  # AC-INV
 
 
 func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-INV-037
-	_abrir(6)
+	var jornada := ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	_abrir(jornada)
 	(_almacen.get("_reloj") as RelojDelTurno).set_process(false)
 	var anterior := _celular().bandeja()
 	var esperados: Dictionary = {}
@@ -338,14 +341,17 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 		assert_int(anterior.mensajes_de(quien).size()).is_equal(esperados[quien].size() + 1)
 		_celular().pedir_volver()
 	var guardado := Guardado.new()
-	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 1}))).is_true()
+	(
+		assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": jornada, "medios": 1})))
+		. is_true()
+	)
 	assert_bool(guardado.hay_guardado()).is_true()
 	await _desmontar_almacen()
 	# La escena reconstruye Partida desde el archivo real; no se inyecta _partida.
 	_almacen = ALMACEN.instantiate()
 	get_tree().root.add_child(_almacen)
 	_almacen.call("anunciar_la_noche")
-	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(6)
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(jornada)
 	assert_int((_almacen.get("_partida") as Partida).medios()).is_equal(1)
 	var nueva := _celular().bandeja()
 	assert_object(nueva).is_not_same(anterior)
@@ -361,7 +367,7 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 		assert_int(nueva.no_leidos(quien)).is_equal(mensajes.size())
 		assert_bool(mensajes.has(recibido)).is_false()
 		for mensaje in mensajes:
-			assert_int(mensaje.jornada).is_less_equal(6)
+			assert_int(mensaje.jornada).is_less_equal(jornada)
 	assert_array(quienes).is_equal(esperados.keys())
 	guardado.borrar()
 

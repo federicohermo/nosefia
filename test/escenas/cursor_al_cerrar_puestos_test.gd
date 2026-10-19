@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+
 
 func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.MouseMode]:
 	var local: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
@@ -23,7 +25,7 @@ func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.Mo
 	if nombre.ends_with("NotasDelAlmacen"):
 		puesto.call("_abrir", puesto.get("notas")[0])
 	elif nombre.ends_with("Ventanilla"):
-		(local.get("_reloj") as RelojDelTurno).avanzar(480.0)
+		RelojDePrueba.avanzar_hasta(local.get("_reloj"), Vector2i(4, 0))
 		puesto.get_node("Comprador/Objetivo").call("accionar")
 	else:
 		puesto.call("abrir")

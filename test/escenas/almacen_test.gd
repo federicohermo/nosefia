@@ -60,13 +60,11 @@ const BAJO_EL_ANTEPECHO := 0.3
 ## las dos constantes y no de un número escrito: el turno se mide en segundos de ficción y el
 ## reloj recibe los del jugador, así que rebalancear cualquiera de los dos no deja este caso
 ## cerrando la noche a medias.
-const SEGUNDOS_REALES_DE_UN_TURNO := (
-	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-)
 
 ## Cuadros de física antes de mirar al jugador. Arranca en el aire y cae; 30 a 60 Hz son medio
 ## segundo, de sobra para medio metro.
 const CUADROS_DE_FISICA := 30
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 ## Los labels de la escena que pintan la hora: los que llevan el script del reloj de mesa.
@@ -414,7 +412,7 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 
 	# Una obligatoria adicional distingue el marcador del cierre del de la apertura siguiente.
 	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	(
 		assert_bool(pantalla.visible)
 		. override_failure_message("la noche cerró y la devolución no apareció")
@@ -474,7 +472,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	jugador.global_position = Vector3(5.0, 0.2, -3.0)
 	jugador.velocity = Vector3(2.0, 0.0, 1.0)
 	control.girar(Vector2(170.0, -90.0))
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
@@ -507,7 +505,7 @@ func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> 
 	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	var aperturas := [0]
 	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
@@ -531,7 +529,7 @@ func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() ->
 	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
 	var menu: MenuDePausa = almacen.get_node("Interfaz/MenuDePausa")
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_bool(ciclo.partida().terminada()).is_false()
 	AvanceDeDevolucion.entregar(pantalla)
 	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
@@ -566,7 +564,7 @@ func test_con_la_devolucion_en_pantalla_esc_pausa_encima() -> void:  # AC-SAV-01
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var esc := InputEventAction.new()
 	esc.action = &"ui_cancel"
 	esc.pressed = true

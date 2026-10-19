@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ENLACE := "res://src/sistemas/marco/enlace_de_guardado.gd"
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 ## Un guardado de verdad que además cuenta cuántas veces lo llamaron.
@@ -51,7 +52,7 @@ func _en_la_jornada(jornada: int) -> Partida:
 
 
 func _agotar_la_noche() -> void:
-	_reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(_reloj, Reglas.DURACION_DEL_TURNO)
 
 
 func _jugar_la_noche_impecable() -> void:

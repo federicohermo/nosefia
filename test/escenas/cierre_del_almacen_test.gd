@@ -5,6 +5,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const CIERRE := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacen: Node3D
 
@@ -141,7 +142,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 			- 1
 		)
 	)
-	_almacen.call("_al_abrir_la_jornada", 5)
+	_almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
 	assert_array(contenedor.call("tirados")).is_empty()
 	assert_array(_foto()).has_size(
 		(
@@ -170,7 +171,7 @@ func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:
 		func(_jornada: int, _cumplidas: int) -> void: observado.append(partida.medios())
 	)
 	# Sin ventas, registrar se cumple al cierre: las otras cuatro dejan la banda GRAVE.
-	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_int(partida.medios()).is_equal(6)
 	assert_array(observado).contains_exactly([6])
 	assert_int(Partida.desde(Guardado.new().cargar()).medios()).is_equal(6)
@@ -185,7 +186,7 @@ func test_un_producto_en_el_piso_trae_el_reto_del_desorden() -> void:
 	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
 	assert_object(unidad).is_not_null()
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var partida: Partida = _almacen.get("_partida")
 	assert_int(partida.medios()).is_equal(5)
 	assert_array(partida.mensajes_del_jefe()).contains([DevolucionDelJefe.DESORDEN[0]])

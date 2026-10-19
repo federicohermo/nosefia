@@ -217,15 +217,18 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	assert_float(_restante()).is_equal(restante)
 
 
-func test_continuar_carga_seis_y_siete_medios_sin_instrucciones() -> void:  # AC-SAV-021
+func test_continuar_carga_la_jornada_y_los_medios_sin_instrucciones() -> void:  # AC-SAV-021
+	var jornada := ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
 	(
-		assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 7})))
+		assert_bool(
+			Guardado.new().escribir(PartidaSerializada.sanear({"jornada": jornada, "medios": 7}))
+		)
 		. is_true()
 	)
 	_abrir()
 	_almacen.call("anunciar_la_noche")
 	var partida: Partida = _almacen.get("_partida")
-	assert_int(partida.jornada()).is_equal(6)
+	assert_int(partida.jornada()).is_equal(jornada)
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(_instrucciones().visible).is_false()
 	assert_bool(_jugador().suspendido()).is_true()
@@ -268,7 +271,13 @@ func test_abandonar_preparacion_no_escribe_y_preserva_checkpoint_anterior() -> v
 	var guardado := Guardado.new()
 	for preparacion: String in ["instrucciones", "entrada_nueva", "entrada_guardada"]:
 		(
-			assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 7})))
+			assert_bool(
+				guardado.escribir(
+					PartidaSerializada.sanear(
+						{"jornada": ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA, "medios": 7}
+					)
+				)
+			)
 			. is_true()
 		)
 		var anterior := FileAccess.get_file_as_string(guardado.ruta)

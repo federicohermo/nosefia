@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 const GUIONES := "res://assets/dialogos/compradores_jornada_2.tres"
 const FEDE := "res://assets/characters/fede/idle.tres"
 const MIA := "res://assets/characters/mia/idle.tres"
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacenes: Array[Node3D] = []
 var _listas: Array[Array] = []
@@ -41,7 +42,9 @@ func _fabrica(jornada: int) -> Array[Comprador]:
 	return compradores
 
 
-func _abrir(jornada: int = 5, checkpoint: bool = false, medir: bool = false) -> Node3D:
+func _abrir(
+	jornada: int = Compradores.JORNADA_DE_FEDE_Y_MIA, checkpoint: bool = false, medir: bool = false
+) -> Node3D:
 	assert_str(Guardado.ruta_por_defecto).is_not_equal(Guardado.RUTA_DEL_USUARIO)
 	if checkpoint:
 		(
@@ -91,10 +94,10 @@ func _inventario(almacen: Node3D) -> Inventario:
 func _ir_a(almacen: Node3D, hora: int, minuto: int = 0, segundo: int = 0) -> void:
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var turno: Turno = reloj.get("_turno")
-	var destino := float(posmod(hora - Reglas.HORA_DE_APERTURA, 24) * 3600 + minuto * 60 + segundo)
+	var destino := RelojDePrueba.desde_la_apertura(Vector2i(hora, minuto)) + segundo
 	var consumido := Reglas.DURACION_DEL_TURNO - turno.tiempo_restante()
 	assert_float(destino).is_greater_equal(consumido)
-	reloj.avanzar(maxf(0.0, destino - consumido) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, maxf(0.0, destino - consumido))
 
 
 func _entrada_actual(almacen: Node3D) -> String:
@@ -287,7 +290,7 @@ func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() ->
 			var reloj: RelojDelTurno = almacen.get("_reloj")
 			for tarea: Tarea in almacen.get("_partida").obligatorias():
 				reloj.completar(tarea)
-			reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+			RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 			assert_int(almacen.get("_partida").jornada()).is_equal(5)
 			assert_bool(almacen.get("_ciclo").abrir_la_jornada()).is_true()
 		var lista: Array = _listas.back()
@@ -319,7 +322,14 @@ func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() ->
 
 # AC-CTR-001 AC-CTR-041 AC-CTR-063
 func test_jornada_cuatro_y_genericas_seis_a_ocho_conservan_su_recorrido() -> void:
-	for jornada: int in [4, 6, 7, 8]:
+	var jornadas: Array = [ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA]
+	jornadas.append_array(
+		range(
+			Compradores.JORNADA_DE_FEDE_Y_MIA + 1,
+			ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+		)
+	)
+	for jornada: int in jornadas:
 		var almacen := await _abrir(jornada)
 		var compradores: Array = _atenciones(almacen).tarea().get("_compradores")
 		assert_array(compradores).has_size(2)
@@ -327,8 +337,10 @@ func test_jornada_cuatro_y_genericas_seis_a_ocho_conservan_su_recorrido() -> voi
 		for indice in 2:
 			assert_object(compradores[indice]).is_not_same(nuevos[indice])
 			assert_str(compradores[indice].nombre()).is_equal(nuevos[indice].nombre())
-			assert_bool(nuevos[indice].tiene_horario()).is_equal(jornada == 4)
-		if jornada == 4:
+			assert_bool(nuevos[indice].tiene_horario()).is_equal(
+				jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+			)
+		if jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 			_ir_a(almacen, 22)
 			assert_int(_atenciones(almacen).atencion().comprador().personaje).is_equal(
 				DialogosDeCompradores.Personaje.TIN
@@ -595,7 +607,7 @@ func test_duronga_del_deposito_se_vende_sin_consumir_reserva_ni_reponer() -> voi
 	# Elegir una apertura real reproducible que ejerza reserva positiva, sin sustituir stock.
 	for semilla in range(1, 257):
 		almacen.get("azar_de_la_apertura").seed = semilla
-		almacen.call("_al_abrir_la_jornada", 5)
+		almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
 		if not repositor.estante().casilleros_vacios(producto).is_empty():
 			break
 	var inventario := _inventario(almacen)

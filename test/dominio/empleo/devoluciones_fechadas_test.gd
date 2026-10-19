@@ -91,12 +91,12 @@ func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC
 		assert_bool(bandeja.recibir(JEFE, mensaje)).is_true()
 	var historial := bandeja.mensajes_de(JEFE)
 	assert_int(historial.size()).is_equal(25)
-	assert_str(historial[19].texto).is_equal("Buen día!")
-	assert_str(historial[19].get("identidad")).is_not_equal(historial[23].get("identidad"))
-	assert_str(historial[21].get("identidad")).is_equal("J2_CONTENEDOR_FOTO")
-	assert_str(historial[22].get("identidad")).is_equal("J2_CONTENEDOR_TEXTO")
-	assert_str(historial[23].texto).is_equal("Buen día!")
-	assert_int(historial[23].jornada).is_equal(5)
+	assert_str(historial[-6].texto).is_equal("Buen día!")
+	assert_str(historial[-6].get("identidad")).is_not_equal(historial[-2].get("identidad"))
+	assert_str(historial[-4].get("identidad")).is_equal("J2_CONTENEDOR_FOTO")
+	assert_str(historial[-3].get("identidad")).is_equal("J2_CONTENEDOR_TEXTO")
+	assert_str(historial[-2].texto).is_equal("Buen día!")
+	assert_int(historial[-2].jornada).is_equal(5)
 	assert_int(bandeja.conversaciones().size()).is_equal(2)
 	if bandeja.conversaciones().size() != 2:
 		return

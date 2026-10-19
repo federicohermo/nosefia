@@ -85,7 +85,7 @@ func test_el_nuevo_turno_cierra_las_heladeras_activas() -> void:
 		_hoja(almacen, numero).get_node("CuerpoDeLaHoja").call("alternar")
 	for cuadro in 60:
 		await get_tree().physics_frame
-	almacen.call("_al_abrir_la_jornada", 5)
+	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
 	for numero in 2:
 		(
 			assert_bool(_hoja(almacen, numero).get_node("CuerpoDeLaHoja").call("puerta").abierta())

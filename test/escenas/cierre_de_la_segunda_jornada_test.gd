@@ -3,10 +3,8 @@ extends GdUnitTestSuite
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
-const SEGUNDOS_REALES_DE_UN_TURNO := (
-	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-)
 const NOTAS := Conversacion.Interlocutor.NOTAS
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _ruta_guardado: String
 
@@ -33,8 +31,8 @@ func _almacen(partida: Partida = null) -> Node3D:
 
 
 func _hasta_la_reflexion(almacen: Node3D) -> PantallaDeDevolucion:
-	(almacen.get_node("Servicios/RelojDelTurno") as RelojDelTurno).avanzar(
-		SEGUNDOS_REALES_DE_UN_TURNO
+	RelojDePrueba.avanzar_turno(
+		almacen.get_node("Servicios/RelojDelTurno"), Reglas.DURACION_DEL_TURNO
 	)
 	await get_tree().process_frame
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
@@ -66,7 +64,7 @@ func _q() -> InputEventAction:
 
 
 func _segunda_con(pistas: Array[String]) -> Partida:
-	var partida := Partida.desde({"jornada": 5})
+	var partida := Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA})
 	partida.abrir_la_jornada()
 	for pista: String in pistas:
 		partida.expediente.registrar(pista)
@@ -164,7 +162,7 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		tarea.completar()
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	await get_tree().process_frame
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()

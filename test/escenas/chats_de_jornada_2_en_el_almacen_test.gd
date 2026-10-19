@@ -4,6 +4,7 @@ const Avance := preload("res://test/avance_de_devolucion.gd")
 const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
 const JEFE := Conversacion.Interlocutor.JEFE
 const YASMIN := Conversacion.Interlocutor.YASMIN
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 var _almacen: Node3D
 var _ruta_anterior: String
 var _tamano_anterior: Vector2i
@@ -126,8 +127,9 @@ func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() ->
 	var reloj := _almacen.get("_reloj") as RelojDelTurno
 	var turno := reloj.get("_turno") as Turno
 	var antes := turno.tiempo_restante()
-	reloj.avanzar(30.0)
-	assert_float(turno.tiempo_restante()).is_equal(antes - Ritmo.escalar(30.0))
+	var media_hora := 1800.0
+	RelojDePrueba.avanzar_turno(reloj, media_hora)
+	assert_float(turno.tiempo_restante()).is_equal(antes - media_hora)
 
 
 # AC-INV-041, AC-INV-042

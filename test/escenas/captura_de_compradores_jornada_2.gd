@@ -1,6 +1,8 @@
 ## Fixture de arte: no activa la agenda productiva ni publica guiones de reemplazo.
 extends RefCounted
 
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+
 var local: Node3D
 var _padre: Node
 
@@ -23,7 +25,9 @@ func tabla() -> Dictionary:
 func crear(padre: Node) -> Node3D:
 	_padre = padre
 	local = load("res://src/escenas/almacen.tscn").instantiate()
-	local.set("_partida", Partida.desde({"jornada": 5, "medios": 0}))
+	local.set(
+		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+	)
 	local.set("compradores_de_la_apertura", _compradores)
 	padre.add_child(local)
 	local.get("_reloj").set_process(false)
@@ -52,11 +56,7 @@ func atenciones() -> Ventanilla:
 
 
 func llegar(mia: bool = false) -> void:
-	var reloj: RelojDelTurno = local.get("_reloj")
-	var turno: Turno = reloj.get("_turno")
-	var consumido := Reglas.DURACION_DEL_TURNO - turno.tiempo_restante()
-	var destino := 32400.0 if mia else 1800.0
-	reloj.avanzar((destino - consumido) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_hasta(local.get("_reloj"), Vector2i(5, 0) if mia else Vector2i(20, 30))
 	figura().stop()
 	await cuadros()
 	var entrada: Tween = puesto().get("_entrada")

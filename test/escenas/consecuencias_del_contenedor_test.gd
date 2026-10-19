@@ -10,6 +10,7 @@ const CUERPO := (
 	"Estructura/deposito_contenedor_grande_soporte/"
 	+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
 )
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacen: Node3D
 
@@ -28,7 +29,9 @@ func after_test() -> void:
 
 func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
-	_almacen.set("_partida", Partida.desde({"jornada": 5, "medios": 0}))
+	_almacen.set(
+		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+	)
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
@@ -74,7 +77,7 @@ func _cerrar(impecable: bool) -> void:
 	if impecable:
 		for tarea: Tarea in partida.obligatorias():
 			reloj.completar(tarea)
-	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 
 
 func _seguir() -> void:

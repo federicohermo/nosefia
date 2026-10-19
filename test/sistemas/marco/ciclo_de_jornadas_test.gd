@@ -15,6 +15,7 @@ const NOMBRES_QUE_DECIDEN := ["Legajo", "Consecuencias", "ReglasDeLaPartida"]
 
 const CICLO := "res://src/sistemas/marco/ciclo_de_jornadas.gd"
 const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _aperturas: int = 0
 var _cierres: int = 0
@@ -149,7 +150,7 @@ func _ciclo_arrancado(partida: Partida, reloj: RelojDelTurno) -> CicloDeJornadas
 ##
 ## Sin completar nada, o sea la banda grave: es el camino corto al despido.
 func _agotar_la_noche(reloj: RelojDelTurno) -> void:
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 
 
 ## Las obligatorias declaradas cumplidas y después la noche agotada.

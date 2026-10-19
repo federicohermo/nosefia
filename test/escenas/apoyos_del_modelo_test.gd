@@ -47,7 +47,7 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_su_alcance() -> void:
 
 
 func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
-	var almacen := await _abrir(5)
+	var almacen := await _abrir(Compradores.JORNADA_DE_FEDE_Y_MIA)
 	var objetos: Array[Node] = almacen.get_node("Objetos").get_children()
 	var manchas: Array = almacen.get("_limpieza").manchas()
 	objetos.append_array(manchas)
@@ -141,7 +141,7 @@ func test_el_tablero_de_cada_pallet_no_deja_pasar_un_rayo() -> void:
 		)
 
 
-func _abrir(jornada: int = 4) -> Node3D:
+func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)

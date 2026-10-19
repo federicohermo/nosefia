@@ -120,7 +120,7 @@ const DERECHO := 3.0
 const AL_LADO := 1.0
 
 
-func _almacen(jornada: int = 4) -> Node3D:
+func _almacen(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)
@@ -961,7 +961,7 @@ func _soltar_la_caja_sobre(almacen: Node3D, caja: Node3D, cara: String, tapa: Ve
 ## **La tabla de abajo del estante del fondo arranca llena**: se corre al piso la caja del medio
 ## para dejarle lugar a la que se suelta.
 func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-PLY-021
-	var almacen: Node3D = await _almacen(5)
+	var almacen: Node3D = await _almacen(Compradores.JORNADA_DE_FEDE_Y_MIA)
 	var caja := _caja_grande(almacen)
 	var tabla: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.UAKALAS]
 	var lugar := tabla.global_position

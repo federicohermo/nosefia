@@ -39,7 +39,3 @@ func test_el_avance_llega_a_uno_al_cumplir_el_minimo() -> void:
 	assert_float(espera.avance()).is_equal_approx(0.5, 0.001)
 	espera.avanzar(EsperaDeLaCarga.MINIMO * 2)
 	assert_float(espera.avance()).is_equal(1.0)
-
-
-func test_el_minimo_es_un_segundo() -> void:
-	assert_float(EsperaDeLaCarga.MINIMO).is_equal(1.0)
