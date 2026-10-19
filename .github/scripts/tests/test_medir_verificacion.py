@@ -41,6 +41,7 @@ class MedicionTests(unittest.TestCase):
                 {"fase": "tests", "codigo": 0, "wall_s": 2},
             ],
             "suites": ["test/a_test.gd"],
+            "grupos": [{"nombre": "normal", "suites": ["test/a_test.gd"], "fps_fijos": None}],
             "suites_verificadas": 1,
             "casos": 3,
         }
@@ -58,6 +59,30 @@ class MedicionTests(unittest.TestCase):
 
     def test_trabajo_completo_es_valido(self):
         medir.comprobar_trabajo(self.datos_validos())
+
+    def test_dos_grupos_requieren_dos_ejecuciones_reales(self):
+        datos = self.datos_validos()
+        datos["grupos"].append({"nombre": "fisica60", "suites": ["test/b_test.gd"], "fps_fijos": 60})
+        datos["suites"].append("test/b_test.gd")
+        datos["suites_verificadas"] = 2
+        datos["casos"] = 4
+        with self.assertRaisesRegex(ValueError, "ejecución real"):
+            medir.comprobar_trabajo(datos)
+        datos["godot"].append({"fase": "tests", "codigo": 0, "wall_s": 1})
+        medir.comprobar_trabajo(datos)
+        datos["godot"][-1]["codigo"] = 100
+        with self.assertRaisesRegex(ValueError, "Godot falló"):
+            medir.comprobar_trabajo(datos)
+
+    def test_una_importacion_extra_o_un_plan_vacio_no_es_trabajo_completo(self):
+        for cambio in ("import", "vacio"):
+            datos = self.datos_validos()
+            if cambio == "import":
+                datos["godot"].append({"fase": "import", "codigo": 0, "wall_s": 1})
+            else:
+                datos["grupos"] = []
+            with self.subTest(cambio=cambio), self.assertRaisesRegex(ValueError, "ejecución real"):
+                medir.comprobar_trabajo(datos)
 
     def test_cobertura_incompleta_es_roja(self):
         datos = self.datos_validos()
@@ -193,6 +218,66 @@ class MedicionTests(unittest.TestCase):
                 self.assertIn("JUnit", datos["error"])
             finally:
                 os.chdir(raiz)
+
+    def test_worker_exige_el_plan_actual_y_un_xml_por_grupo(self):
+        raiz = Path.cwd()
+        sys.path.insert(0, str(raiz / ".claude/scripts"))
+        fisica = "test/escenas/agarre_fisico_test.gd"
+        grupos = [
+            {"nombre": "normal", "suites": ["test/a_test.gd"], "fps_fijos": None},
+            {"nombre": "fisica60", "suites": [fisica], "fps_fijos": 60},
+        ]
+        for modo in ("completo", "ausente", "plan_distinto", "duplicado"):
+            with self.subTest(modo=modo), tempfile.TemporaryDirectory() as carpeta:
+                try:
+                    os.chdir(carpeta)
+                    reportes = Path("reports/particion-0-de-1-nueva")
+                    reportes.mkdir(parents=True)
+                    plan = grupos[:1] if modo == "plan_distinto" else grupos
+                    (reportes / "grupos.json").write_text(json.dumps(plan), encoding="utf-8")
+                    for grupo, nombre, paquete in (
+                        ("normal", "a_test", "test"),
+                        ("fisica60", "agarre_fisico_test", "test/escenas"),
+                    ):
+                        if modo == "ausente" and grupo == "fisica60":
+                            continue
+                        destino = reportes / grupo / "report_1"
+                        destino.mkdir(parents=True)
+                        xml = (
+                            f'<testsuites><testsuite name="{nombre}" package="{paquete}" tests="1">'
+                            '<testcase name="test_regla" /></testsuite></testsuites>'
+                        )
+                        (destino / "results.xml").write_text(xml, encoding="utf-8")
+                        if modo == "duplicado" and grupo == "normal":
+                            (destino.parent / "results.xml").write_text(xml, encoding="utf-8")
+                    metricas = Path("reports/medicion-ci/godot.jsonl")
+                    metricas.parent.mkdir()
+
+                    def ejecutar(*args):
+                        datos = [
+                            {"fase": fase, "codigo": 0, "wall_s": 1}
+                            for fase in ("import", "tests", "tests")
+                        ]
+                        metricas.write_text("\n".join(map(json.dumps, datos)), encoding="utf-8")
+                        return {"codigo": 0}
+
+                    with (
+                        patch.dict("os.environ", {"GODOT_BIN": sys.executable, "RUNNER_TEMP": carpeta}),
+                        patch.object(medir, "identidad", return_value={}),
+                        patch.object(medir, "captura", return_value="version"),
+                        patch.object(medir, "ejecutar_medido", side_effect=ejecutar),
+                        patch("lib.archivos.scripts_gd", return_value=dict.fromkeys(["test/a_test.gd", fisica])),
+                    ):
+                        codigo = medir.verificar(0, 1, "independiente", "prueba")
+                    self.assertEqual(codigo, 0 if modo == "completo" else 1)
+                    datos = json.loads(metricas.with_name("worker.json").read_text(encoding="utf-8"))
+                    if modo == "completo":
+                        self.assertEqual(datos["suites_verificadas"], 2)
+                        self.assertEqual(datos["casos"], 2)
+                    else:
+                        self.assertIn("error", datos)
+                finally:
+                    os.chdir(raiz)
 
 
 if __name__ == "__main__":

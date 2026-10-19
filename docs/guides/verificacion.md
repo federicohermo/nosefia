@@ -38,6 +38,25 @@ sin reservar un grupo a un tema. La última partición corre también los demás
 
 Sin `--particion-tests`, el comando conserva la ejecución completa en un solo checkout.
 
+## Paso fijo en pruebas físicas
+
+Las suites `lo_soltado_fuera_de_los_solidos_test.gd` y `agarre_fisico_test.gd` observan pasos de física y estados espaciales.
+El verificador las ejecuta con `--fixed-fps 60`, sin esperar que transcurra el tiempo real de cada paso.
+La frecuencia física sigue en 60 Hz y `time_scale` conserva su valor normal.
+Los casos, bucles y aserciones permanecen completos.
+
+Las demás suites conservan el reloj habitual, incluidas las de tiempo real e interpolación a 144 Hz.
+Agregar una suite no la incorpora automáticamente al modo de paso fijo.
+Al modificar las dos suites auditadas o la temporización del código que ejercen, revisar su contrato temporal.
+Una aserción sobre reloj real o cuadros de presentación requiere ejecución normal o una nueva comparación de equivalencia.
+La lista de suites auditadas vive en `lib/particiones_de_tests.py`.
+
+Cada partición ejecuta hasta dos grupos secuenciales, `normal` y `fisica60`, después de una única importación.
+El comando local usa los mismos grupos.
+Cada grupo genera su propio JUnit en una carpeta nueva y exige cobertura exacta de las suites seleccionadas.
+Un grupo fallido o sin reporte mantiene rojo el nodo completo, aunque el otro pase.
+`grupos.json` registra el plan; `cobertura.txt` y `salida-gdunit4.log` conservan el resultado del nodo.
+
 ## Reutilizar importaciones entre revisiones
 
 Cada partición restaura `.godot/imported` con una clave exacta por contenido.

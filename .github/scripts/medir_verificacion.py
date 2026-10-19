@@ -189,8 +189,10 @@ def validar_snapshot(tipo: str = "completo") -> int:
 
 def comprobar_trabajo(datos: dict) -> None:
     invocaciones = datos["godot"]
-    if sorted(dato["fase"] for dato in invocaciones) != ["import", "tests"]:
-        raise ValueError("se requiere una importación y una ejecución real de tests")
+    grupos = datos["grupos"]
+    fases_esperadas = ["import"] + ["tests"] * len(grupos)
+    if not grupos or sorted(dato["fase"] for dato in invocaciones) != fases_esperadas:
+        raise ValueError("se requiere una importación y una ejecución real de tests por grupo")
     if any(dato["codigo"] != 0 for dato in invocaciones):
         raise ValueError("una invocación de Godot falló")
     if any(dato["wall_s"] <= 0 for dato in invocaciones):
@@ -206,7 +208,9 @@ def verificar(indice: int, total: int, modo: str, etiqueta: str) -> int:
         raise ValueError("índice de partición fuera de rango")
     sys.path.insert(0, str(Path(".claude/scripts").resolve()))
     from lib.archivos import scripts_gd
-    from lib.particiones_de_tests import ParticionTests, comprobar_reporte, seleccionar_suites
+    from lib.particiones_de_tests import (
+        ParticionTests, agrupar_suites, comprobar_reporte, seleccionar_suites,
+    )
 
     destino = Path("reports/medicion-ci")
     destino.mkdir(parents=True, exist_ok=True)
@@ -221,6 +225,10 @@ def verificar(indice: int, total: int, modo: str, etiqueta: str) -> int:
         ),
         "godot": [], "suites_verificadas": 0, "casos": 0,
     }
+    datos["grupos"] = [
+        {"nombre": grupo.nombre, "suites": list(grupo.suites), "fps_fijos": grupo.fps_fijos}
+        for grupo in agrupar_suites(datos["suites"])
+    ]
     codigo = 1
     try:
         real = os.environ["GODOT_BIN"]
@@ -252,12 +260,19 @@ def verificar(indice: int, total: int, modo: str, etiqueta: str) -> int:
         )
         codigo = datos["verificacion"]["codigo"]
         datos["godot"] = [json.loads(linea) for linea in metricas.read_text().splitlines()]
-        reportes = list(Path("reports").glob(f"particion-{indice}-de-{total}-*/**/results.xml"))
-        if len(reportes) != 1:
-            raise ValueError(f"se esperaba un único JUnit nuevo, se encontraron {len(reportes)}")
-        xml = reportes[0].read_text(encoding="utf-8")
-        datos["suites_verificadas"] = len(comprobar_reporte(datos["suites"], xml))
-        datos["casos"] = len(ET.fromstring(xml).findall(".//testcase"))
+        raices = list(Path("reports").glob(f"particion-{indice}-de-{total}-*"))
+        if len(raices) != 1:
+            raise ValueError(f"se esperaba una raíz nueva de reportes JUnit, se encontraron {len(raices)}")
+        grupos_guardados = json.loads((raices[0] / "grupos.json").read_text(encoding="utf-8"))
+        if grupos_guardados != datos["grupos"]:
+            raise ValueError("los grupos ejecutados no coinciden con la selección actual")
+        for grupo in datos["grupos"]:
+            reportes = list((raices[0] / grupo["nombre"]).rglob("results.xml"))
+            if len(reportes) != 1:
+                raise ValueError(f"se esperaba un único JUnit nuevo en {grupo['nombre']}")
+            xml = reportes[0].read_text(encoding="utf-8")
+            datos["suites_verificadas"] += len(comprobar_reporte(grupo["suites"], xml))
+            datos["casos"] += len(ET.fromstring(xml).findall(".//testcase"))
         comprobar_trabajo(datos)
     except Exception as error:
         datos["error"] = str(error)
