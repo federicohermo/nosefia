@@ -17,7 +17,7 @@ func after_test() -> void:
 
 func _abrir(recibir: bool = true) -> Node3D:
 	_almacen = ALMACEN.instantiate()
-	_almacen.set("_partida", Partida.nueva())
+	_almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(_almacen)
 	_almacen.get_node("Jugador").set_physics_process(false)
 	_almacen.get("_reloj").set_process(false)
@@ -155,7 +155,7 @@ func test_reiniciar_retira_las_imagenes_de_ventas_y_de_cansancio() -> void:  # A
 	var puesto := _abrir()
 	_vender(puesto)
 	assert_array(_visibles(puesto)).has_size(1)
-	_almacen.call("_al_abrir_la_jornada", 1)
+	_almacen.call("_al_abrir_la_jornada", 4)
 	assert_array(_visibles(puesto)).is_empty()
 
 	var obligatorias: Array[Tarea] = (_almacen.get("_partida") as Partida).obligatorias()
@@ -207,7 +207,7 @@ func test_ambos_entran_por_la_izquierda_y_la_pausa_conserva_su_entrada() -> void
 		if cerrar_turno:
 			reloj.turno_cerrado.emit(0)
 		else:
-			_almacen.call("_al_abrir_la_jornada", 1)
+			_almacen.call("_al_abrir_la_jornada", 4)
 		await get_tree().create_timer(0.1).timeout
 		assert_array(_visibles(puesto)).is_empty()
 		assert_bool(sprite.global_position.is_equal_approx(espera.origin)).is_true()

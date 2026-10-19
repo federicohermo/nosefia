@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-NTF
 status: draft
 owner: por definir
-provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435
+provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526
 ---
 
 # Capacidad: los avisos durante la noche
@@ -87,12 +87,12 @@ Una compra completa NO DEBE producirlo. El cierre DEBE olvidar las identidades d
 
 ### BR-NTF-009 — La llegada espera a la conversación
 
-EN la primera jornada, el aviso de llegada DEBE permanecer hasta iniciar la conversación con
+EN las jornadas 1 a 4, el aviso de llegada DEBE permanecer hasta iniciar la conversación con
 ese comprador, sin vencer por tiempo. Abrir o cerrar la ventanilla NO DEBE retirarlo.
 El primer clic que inicia la conversación DEBE retirarlo una sola vez; reabrir o volver a
 hablar NO DEBE recrearlo. Si el comprador vence antes, su salida DEBE retirar la llegada.
 Un evento de otra identidad NO DEBE retirar el aviso del comprador que está esperando.
-Los avisos de lectura y de cansancio DEBEN conservar su duración. Las jornadas posteriores
+Los avisos de lectura y de cansancio DEBEN conservar su duración. Las jornadas 5 a 8
 conservan el recorrido y duración anteriores hasta que tengan diálogos diseñados.
 
 ### BR-NTF-010 — Sólo una pista anotada avisa
@@ -213,7 +213,7 @@ Cerrar y comenzar otra jornada permite avisar otra vez la misma identidad.
 
 ### AC-NTF-012 — Espera y primer clic *(verifica BR-NTF-009, BR-NTF-001, BR-NTF-006)*
 
-DADO un comprador de la primera noche CUANDO pasan más de tres segundos, se abre o se cierra
+DADO un comprador de las jornadas 1 a 4 CUANDO pasan más de tres segundos, se abre o se cierra
 la ventanilla ENTONCES la llegada sigue visible. CUANDO el primer clic inicia su conversación
 ENTONCES desaparece; avanzar diálogo y reabrir no la repiten. La salida antes de conversar y el
 cierre del turno la retiran. Una identidad distinta no puede ocultarla.

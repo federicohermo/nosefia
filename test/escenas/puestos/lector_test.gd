@@ -319,7 +319,7 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 	)
 	sonidos.clear()
 	# El aviso de cobro pertenece al recorrido anterior, conservado desde la jornada 3.
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", 6)
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	atenciones.pedir_atender()
 	assert_object(atenciones.atencion()).is_not_null()
@@ -352,18 +352,18 @@ func test_la_tres_vacia_y_la_uno_recupera_la_lectura() -> void:  # AC-CTR-026, A
 	var almacen := await _abrir()
 	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
 	var malla: MeshInstance3D = lector.get_node("Malla")
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	_caja(almacen).pedir_anotar(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)))
 	assert_int(_caja(almacen).generador().renglones().size()).is_equal(1)
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", 6)
 	assert_bool(_caja(almacen).generador().es_manual()).is_true()
 	assert_array(_caja(almacen).generador().renglones()).is_empty()
 	await get_tree().physics_frame
 	var centro := malla.to_global(malla.mesh.get_aabb().get_center())
 	assert_bool(await _enfocar(almacen, lector, centro)).is_true()
-	almacen.call("_al_abrir_la_jornada", 5)
+	almacen.call("_al_abrir_la_jornada", 8)
 	assert_bool(_caja(almacen).generador().es_manual()).is_true()
-	almacen.call("_al_abrir_la_jornada", 1)
+	almacen.call("_al_abrir_la_jornada", 4)
 	assert_bool(_caja(almacen).generador().es_manual()).is_false()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var unidad := _unidad(almacen)
@@ -374,7 +374,7 @@ func test_la_tres_vacia_y_la_uno_recupera_la_lectura() -> void:  # AC-CTR-026, A
 
 func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # AC-CTR-029
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", 6)
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var lector: Node3D = almacen.get_node("Estructura/Lector")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -407,15 +407,15 @@ func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # 
 			agarre.entregar()
 
 
-func test_la_partida_retomada_en_cuatro_es_manual_y_una_nueva_es_automatica() -> void:  # AC-CTR-026
-	var datos := {PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 4}
+func test_la_partida_retomada_en_siete_es_manual_y_una_nueva_es_automatica() -> void:  # AC-CTR-026
+	var datos := {PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 7}
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde(datos))
 	add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)
 	for _cuadro in 4:
 		await get_tree().physics_frame
-	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(4)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(7)
 	assert_bool(_caja(almacen).generador().es_manual()).is_true()
 	var nueva: Node3D = auto_free(ALMACEN.instantiate())
 	nueva.set("_partida", Partida.nueva())
@@ -429,7 +429,7 @@ func test_la_partida_retomada_en_cuatro_es_manual_y_una_nueva_es_automatica() ->
 
 func test_el_popup_pausa_y_reanuda_programa_y_mano() -> void:  # AC-CTR-030, AC-PLY-074
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", 6)
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var unidad := _unidad(almacen)

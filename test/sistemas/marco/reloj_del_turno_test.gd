@@ -165,7 +165,7 @@ func test_completar_dos_veces_la_misma_tarea_no_vuelve_a_avisar() -> void:
 func test_el_reloj_entrega_la_misma_instancia_de_tarea_que_recibio_el_turno() -> void:
 	# Es la razón de existir de `obligatoria()`: el `Turno` no expone su lista, y completar una
 	# copia devuelve `true` sin que `tareas_cumplidas()` suba — sin error y sin rojo.
-	var obligatorias := Apertura.obligatorias(1)
+	var obligatorias := Apertura.obligatorias(4)
 	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
 	assert_object(reponer).is_same(_de_la_lista(obligatorias, Tarea.Tipo.REPONER))
@@ -232,3 +232,26 @@ func _de_la_lista(obligatorias: Array[Tarea], tipo: Tarea.Tipo) -> Tarea:
 		if tarea.tipo() == tipo:
 			return tarea
 	return null
+
+
+func test_el_borde_de_la_noche_corta() -> void:  # AC-SHF-029
+	var ritmo := Ritmo.de_la_jornada(1)
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
+	reloj.arrancar(_turno, _sin_obligatorias(), ritmo)
+	reloj.avanzar(330.0)
+	assert_float(_turno.tiempo_restante()).is_equal(3600.0)
+	reloj.avanzar(29.0)
+	assert_bool(_turno.cerrado()).is_false()
+	assert_float(_turno.tiempo_restante()).is_equal(120.0)
+	reloj.avanzar(1.0)
+	reloj.avanzar(1.0)
+	assert_int(_cierres).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(0.0)
+	before_test()
+	var corto := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
+	corto.arrancar(_turno, _sin_obligatorias(), ritmo)
+	corto.avanzar(359.0)
+	corto.avanzar(5.0)
+	corto.avanzar(5.0)
+	assert_int(_cierres).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(0.0)

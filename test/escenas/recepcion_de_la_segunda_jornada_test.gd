@@ -28,7 +28,7 @@ func after_test() -> void:
 func _abrir() -> Node3D:
 	var almacen: Node3D = load("res://src/escenas/almacen.tscn").instantiate()
 	var partida: GDScript = load("res://src/dominio/empleo/partida.gd")
-	almacen.set("_partida", partida.call("desde", {"jornada": 2}))
+	almacen.set("_partida", partida.call("desde", {"jornada": 5}))
 	var compradores := Compradores.segunda_jornada_definida()
 	var textos := DialogosDeCompradores.new()
 	textos.fede = PackedStringArray(["Inicial Fede fixture"])
@@ -325,6 +325,6 @@ func test_la_compra_parcial_vencida_conserva_unidades_reales_y_sus_destinos() ->
 	manual.call("pedir_colocar", producto.id)
 	assert_object(agarre.cuerpo_sostenido()).is_null()
 	assert_bool(inventario.esta_afuera(unidades[1])).is_false()
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", 6)
 	await get_tree().process_frame
 	assert_array(manual.call("unidades_sueltas")).is_empty()

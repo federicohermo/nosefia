@@ -329,6 +329,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
 	var inventario := Apertura.inventario_de_la_jornada(
+		jornada,
 		compradores,
 		_reposicion_manual.casilleros(),
 		_reposicion_manual.casilleros_reponibles(),

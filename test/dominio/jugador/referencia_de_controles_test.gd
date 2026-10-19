@@ -109,7 +109,7 @@ func test_los_seis_pares_declaran_verbo_sin_consultar_agua_carga_o_jabon() -> vo
 func test_lector_ofrece_uso_con_cero_dos_y_tres_renglones() -> void:  # AC-PLY-084
 	var unidad := UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
 	for cantidad: int in [0, 2, 3]:
-		var generador := GeneradorDeTickets.para_la_jornada(1)
+		var generador := GeneradorDeTickets.para_la_jornada(4)
 		for indice in cantidad:
 			generador.anotar(unidad)
 		var contexto := R.contexto_del_lector(unidad, true)
@@ -158,7 +158,7 @@ func test_puerta_abierta_cierra_y_cerrada_o_trabada_abre_y_nota_mira() -> void: 
 
 
 func test_tacho_solo_ofrece_extraccion_con_bolsa_y_mano_vacia_sin_sacarla() -> void:  # AC-PLY-085
-	var tarea := TareaDeLaBasura.de_la_jornada(2)
+	var tarea := TareaDeLaBasura.de_la_jornada(5)
 	for mano: bool in [false, true]:
 		for bolsa: bool in [false, true]:
 			var contexto := R.contexto_del_tacho(bolsa, mano)

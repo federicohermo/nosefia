@@ -22,7 +22,7 @@ const TECHO := PisoDelLocal.Superficie.TECHO
 ## La tabla de la ficha, fila por fila: `[tipo, habitación, superficie]` de cada mancha. Es la del
 ## contrato, escrita sin lugares: el caso compara qué hay, no cómo se llama cada sitio.
 const FICHA := {
-	1:
+	4:
 	[
 		[POLVO, LOCAL, PISO],
 		[POLVO, LOCAL, PISO],
@@ -32,7 +32,7 @@ const FICHA := {
 		[CACA, BANO, PISO],
 		[CACA, BANO, PARED],
 	],
-	2:
+	5:
 	[
 		[POLVO, LOCAL, PISO],
 		[POLVO, LOCAL, PISO],
@@ -94,19 +94,19 @@ func test_cada_jornada_trae_las_manchas_de_su_fila_en_la_ficha() -> void:  # AC-
 		)
 
 
-func test_las_jornadas_sin_fila_traen_las_de_la_primera() -> void:  # AC-CLN-016
-	var primera := PisoDelLocal.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
-	for jornada: int in [3, 4, 5]:
+func test_las_jornadas_sin_fila_traen_las_de_la_primera_completa() -> void:  # AC-CLN-016
+	var primera := PisoDelLocal.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	for jornada: int in [3, 6, 7, 8]:
 		var piso := PisoDelLocal.de_la_jornada(jornada)
 		assert_array(piso.lugares()).contains_exactly_in_any_order(primera.lugares())
-		assert_array(_filas(piso)).contains_exactly_in_any_order(FICHA[1])
+		assert_array(_filas(piso)).contains_exactly_in_any_order(FICHA[4])
 		for lugar: PisoDelLocal.Lugar in piso.lugares():
 			assert_bool(piso.mancha_de(lugar).esta_limpia()).is_false()
 
 
 func test_un_lugar_que_la_noche_no_puso_no_tiene_mancha() -> void:  # AC-CLN-016
-	var primera := PisoDelLocal.de_la_jornada(1)
-	var segunda := PisoDelLocal.de_la_jornada(2)
+	var primera := PisoDelLocal.de_la_jornada(4)
+	var segunda := PisoDelLocal.de_la_jornada(5)
 	for lugar: PisoDelLocal.Lugar in segunda.lugares():
 		assert_object(primera.mancha_de(lugar)).is_null()
 		assert_int(primera.pasar(MOPA, lugar)).is_equal(ReglasDeLaLimpieza.Resultado.SIN_EFECTO)
@@ -158,3 +158,10 @@ func test_las_del_mismo_tipo_y_habitacion_se_borran_por_separado() -> void:  # A
 		assert_int(piso.pasar(MOPA, del_local[0])).is_equal(
 			ReglasDeLaLimpieza.Resultado.YA_ESTABA_LIMPIA
 		)
+
+
+func test_las_noches_que_no_piden_limpiar_abren_sin_manchas() -> void:  # AC-CLN-016
+	for jornada: int in [1, 2]:
+		var piso := PisoDelLocal.de_la_jornada(jornada)
+		assert_array(piso.lugares()).is_empty()
+		assert_bool(piso.esta_limpio()).is_true()

@@ -20,7 +20,7 @@ func _abrir(compradores: Array[Comprador]) -> void:
 	add_child(_reloj)
 	add_child(_ventanilla)
 	_reloj.set_process(false)
-	var obligatorias := Apertura.obligatorias(2)
+	var obligatorias := Apertura.obligatorias(5)
 	_reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
 	_ventanilla.arrancar(TareaDeAtender.new(compradores, Inventario.new(Catalogo.todos())))
 

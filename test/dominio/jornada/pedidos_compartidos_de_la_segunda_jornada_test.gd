@@ -34,10 +34,10 @@ func test_atencion_y_faltantes_comparten_compradores_y_ventas_en_ambos_ordenes()
 		var pedidos: Dictionary[Producto.Id, int]
 		if consultar_primero:
 			pedidos = Apertura.pedidos_de(compradores)
-			inventario = Apertura.inventario_de_la_jornada(compradores, _cupos(), _cupos(), azar)
+			inventario = Apertura.inventario_de_la_jornada(5, compradores, _cupos(), _cupos(), azar)
 			atender = TareaDeAtender.new(compradores, inventario)
 		else:
-			inventario = Apertura.inventario_de_la_jornada(compradores, _cupos(), _cupos(), azar)
+			inventario = Apertura.inventario_de_la_jornada(5, compradores, _cupos(), _cupos(), azar)
 			atender = TareaDeAtender.new(compradores, inventario)
 			pedidos = Apertura.pedidos_de(compradores)
 		for _lectura in 3:

@@ -273,12 +273,12 @@ func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
 		func(identidad: String) -> void: pedidos.append(identidad)
 	)
 	pantalla.tramo_pedido.connect(sistema.pedir_tramo)
-	sistema.abrir_jornada(2)
+	sistema.abrir_jornada(5)
 	sistema.pedir_alternar(false)
 	sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
 	var conversacion := sistema.bandeja().conversacion_de(Conversacion.Interlocutor.YASMIN)
 	var mensajes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN)
-	pantalla.mostrar_chat(conversacion, mensajes, false, 2)
+	pantalla.mostrar_chat(conversacion, mensajes, false, 5)
 	assert_str((pantalla.get("_subtitulo") as Label).text).is_equal("Compañera de trabajo")
 	assert_bool((pantalla.get("_subtitulo") as Label).visible).is_true()
 	assert_object((pantalla.get("_avatar_del_chat") as TextureRect).texture).is_not_null()
@@ -326,7 +326,7 @@ func test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema() -> v
 	var caracteres := primaria.get_supported_chars()
 	var pantalla := _pantalla()
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(2)
+	bandeja.abrir_jornada(5)
 	pantalla.mostrar_menu(bandeja)
 	var lista: VBoxContainer = pantalla.get("_mensajes")
 	var resumen := lista.get_child(1).find_child("VistaPrevia", true, false) as Label
@@ -334,7 +334,7 @@ func test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema() -> v
 	for codigo: int in [0x2728, 0x1f4aa]:
 		assert_bool(fuente.get_supported_chars().contains(String.chr(codigo))).is_true()
 	var conversacion := bandeja.conversacion_de(Conversacion.Interlocutor.YASMIN)
-	pantalla.mostrar_chat(conversacion, bandeja.mensajes_de(conversacion.interlocutor), false, 2)
+	pantalla.mostrar_chat(conversacion, bandeja.mensajes_de(conversacion.interlocutor), false, 5)
 	for caso: Vector2i in [Vector2i(0, 0x2728), Vector2i(14, 0x1f4aa)]:
 		var texto := (
 			_burbuja(pantalla, caso.x).find_children("*", "RichTextLabel", true, false)[0]

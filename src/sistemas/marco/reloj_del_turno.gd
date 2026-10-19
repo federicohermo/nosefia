@@ -24,6 +24,7 @@ signal turno_cerrado(cumplidas: int)
 
 var _turno: Turno = null
 var _obligatorias: Array[Tarea] = []
+var _ritmo: float = Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 var _ultimo_cuadro_usec: int = 0
 var _retenido := false
 
@@ -67,7 +68,7 @@ func soltar() -> void:
 func avanzar(segundos_reales: float) -> void:
 	if not corriendo():
 		return
-	var segundos := Ritmo.escalar(segundos_reales)
+	var segundos := Ritmo.escalar(segundos_reales, _ritmo)
 	if _turno.se_agota_con(segundos):
 		cierre_iniciado.emit()
 	_turno.consumir(segundos)
@@ -80,9 +81,14 @@ func avanzar(segundos_reales: float) -> void:
 ##
 ## La lista se recibe además del turno porque el `Turno` no la expone, y `obligatoria()` la
 ## necesita para contestar con la misma instancia que el turno está contando.
-func arrancar(turno: Turno, obligatorias: Array[Tarea]) -> void:
+func arrancar(
+	turno: Turno,
+	obligatorias: Array[Tarea],
+	ritmo: float = Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
+) -> void:
 	_turno = turno
 	_obligatorias = obligatorias
+	_ritmo = ritmo
 	_ultimo_cuadro_usec = _ahora_usec()
 
 

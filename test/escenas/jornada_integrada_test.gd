@@ -17,6 +17,7 @@ const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 # AC-CLN-060
 func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	var control := RandomNumberGenerator.new()
@@ -28,7 +29,9 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
-	_comprobar_huecos(almacen, _completos_al_abrir(almacen, 1, control))
+	_comprobar_huecos(
+		almacen, _completos_al_abrir(almacen, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, control)
+	)
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
 	await _atender(almacen)
@@ -49,13 +52,16 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	await get_tree().process_frame
 	var ciclo: CicloDeJornadas = almacen.get("_ciclo")
-	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(reloj.corriendo()).is_true()
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
-	_comprobar_huecos(almacen, _completos_al_abrir(almacen, 2, control))
+	_comprobar_huecos(
+		almacen,
+		_completos_al_abrir(almacen, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, control)
+	)
 	_comprobar_planilla_en_cero(almacen)
 
 
@@ -100,11 +106,13 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
 	# con la mopa mojada de su jabón, enfocada desde el piso, y la obligatoria se cumple recién
 	# con la última.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	almacen.set("_partida", Partida.desde({"jornada": jornada}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	almacen.call("_al_abrir_la_jornada", jornada)
 	assert_int(_piso(almacen).lugares().size()).is_equal(8)
 	await _limpiar(almacen)
 
@@ -130,7 +138,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	)
 	var terminados := [0]
 	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	assert_int(terminados[0]).is_zero()
 	# Lo que se llevaba queda a los pies, y no en la cara ni donde se mira.
 	assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
@@ -138,7 +146,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.look_at(jugador.global_position + jugador.frente() * 1.2)
 	var pies := agarre.punto_de_respaldo.global_position
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_bool(control.esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_null()

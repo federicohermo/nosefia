@@ -25,6 +25,7 @@ const EN_EL_DEPOSITO := Vector3(2.0, 1.0, -11.0)
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame

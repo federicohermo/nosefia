@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433 y #444; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433 y #444; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -33,43 +33,43 @@ jugador**: es el único lugar donde el juego puede mentir en vivo.
 
 Las reglas de interacción directa sobre la figura, foco de silueta y retorno automático del diálogo
 se aplican al recorrido de atención física con comprador representado en el mundo.
-Las jornadas 3 a 5 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
+Las jornadas 6 a 8 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
 panel de cobro. Sólo en ese recorrido genérico se admite una consulta de acceso en el hueco:
 NO DEBE bloquear al jugador ni los objetos sostenidos, ni permanecer activa al usar atención física.
 La barrera de vidrio NO DEBE existir en ningún recorrido. Esta excepción NO DEBE convertir el hueco,
-marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 3 a 5.
+marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 6 a 8.
 
 ### BR-CTR-001 — Dos compradores por noche
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 El sistema DEBE hacer pasar **2 compradores por jornada**, tomados en orden de un padrón fijo. El
 padrón no se sortea: un sorteo daría noches distintas con el mismo balance.
 
 ### BR-CTR-002 — La caja no vuelve a sumar
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 El sistema DEBE tomar el total de la caja del pedido y no recalcularlo. Una segunda suma daría el
 mismo número hasta el día que cambie el catálogo, y ahí las dos ventanas dirían distinto.
 
 ### BR-CTR-003 — La diferencia lleva signo
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 El sistema DEBE calcular la diferencia como **lo que paga menos el total**. Positiva es que pagó
 de más y negativa que pagó de menos: el valor absoluto haría indistinguibles los dos casos.
 
 ### BR-CTR-004 — Alguien paga distinto
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 El padrón DEBE incluir al menos un comprador que paga de más y uno que paga de menos. Un padrón
 donde todos pagan justo deja la ventanilla sin nada que mirar.
 
 ### BR-CTR-006 — El cobro es todo o nada
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 SI alguna línea del pedido supera los vendibles de su producto, ENTONCES el sistema DEBE
 rechazar el cobro entero y **no mover una sola unidad**. Descontar lo que se pueda deja un
@@ -77,7 +77,7 @@ estado que el jugador no distingue de una venta completa.
 
 ### BR-CTR-007 — Se puede despachar sin vender
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 El sistema DEBE permitir despachar a un comprador sin cobrarle nada. Un pedido puede superar los
 vendibles de la noche, y exigir la venta dejaría a ese comprador sin forma de irse.
@@ -89,7 +89,7 @@ vez, y no cambiar nada.
 
 ### BR-CTR-009 — La obligatoria es atender, no vender
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 CUANDO todos los compradores de la noche quedaron despachados, el sistema DEBE dar la obligatoria
 por cumplida, **contando igual las dos formas**: vender y despachar sin vender.
@@ -102,14 +102,14 @@ diferencia no es plata que falte.
 
 ### BR-CTR-011 — La ventanilla dice qué falta
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 SI el pedido tiene productos que superan sus vendibles, ENTONCES el sistema DEBE nombrarlos, en
 el orden del pedido. Es la explicación de por qué el cobro va a fallar.
 
 ### BR-CTR-012 — El pedido no da la cuenta hecha
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 El sistema DEBE mostrar las líneas del pedido **sin el precio de cada una**, y mostrar aparte el
 total, lo que paga y la diferencia. Repartir el precio por renglón le daría al jugador la cuenta
@@ -123,7 +123,7 @@ abandonar desde el principio.
 
 ### BR-CTR-014 — La venta sale del depósito, y deja el estante como está
 
-En las jornadas 3 a 5 se aplica el recorrido anterior:
+En las jornadas 6 a 8 se aplica el recorrido anterior:
 
 CUANDO se cobra un pedido, el sistema DEBE descontar cada línea **del depósito**, y sólo hasta
 los vendibles de su producto. La góndola no se toca: una venta que vacía el estante deshace lo
@@ -168,10 +168,10 @@ Consultar los renglones NO DEBE permitir cambiar el programa ni el ticket.
 CUANDO abre una jornada, el sistema DEBE iniciar el programa vacío y DEBE retirar los tickets
 de la noche anterior, estén en la mano, en la ranura o sueltos.
 
-### BR-CTR-022 — Desde la tercera noche se escribe a mano
+### BR-CTR-022 — Desde la sexta noche se escribe a mano
 
-DESDE la jornada 3 y hasta el fin de la partida, el programa DEBE ser manual. Antes DEBE ser
-automático. El modo DEBE salir del número de jornada: retomar una partida en la 4 no recupera
+DESDE la jornada 6 y hasta el fin de la partida, el programa DEBE ser manual. Antes DEBE ser
+automático. El modo DEBE salir del número de jornada: retomar una partida en la 7 no recupera
 el lector, y una partida nueva vuelve al automático.
 
 ### BR-CTR-023 — Cada elección conserva su renglón
@@ -197,14 +197,23 @@ dejar la mano vacía y publicar una vez su descarte. Ningún otro levantable DEB
 usar el inodoro. Las herramientas DEBEN conservar los efectos de limpieza vigentes. Usar el
 lavatorio con un ticket NO DEBE desecharlo.
 
-### BR-CTR-026 — La primera jornada usa horarios propios
+### BR-CTR-026 — Las jornadas 1 a 4 reciben a Tin y Tia por horario
 
-EN la primera jornada, el sistema DEBE recibir a Tin desde las 22:00 hasta las 00:00 y a
-Tia desde las 04:00 hasta las 06:00. La llegada se incluye y el límite se excluye.
+EN las jornadas 1 a 4, el sistema DEBE recibir a Tin y a Tia en estas ventanas. La llegada se
+incluye y el límite se excluye.
+
+| Jornada | Tin | Tia |
+|---|---|---|
+| 1 | 21:00 a 01:00 | 02:00 a 06:00 |
+| 2 | 21:30 a 00:10 | 03:30 a 06:10 |
+| 3 | 22:30 a 01:00 | 04:30 a 07:00 |
+| 4 | 22:00 a 00:00 | 04:00 a 06:00 |
+
 Tin DEBE pedir un Marolini, una Coracola y un Malbardo. Tia DEBE pedir una Zucarachas
-y un Pepito. Estos horarios DEBEN derivarse del reloj del turno, cuya apertura es a las 20:00.
-La segunda jornada DEBE usar el padrón definido en BR-CTR-037, sin copiar estos personajes.
-Las jornadas 3 a 5 DEBEN conservar su recorrido anterior.
+y un Pepito. Las cuatro jornadas DEBEN usar esos pedidos, los mismos diálogos y la misma
+recepción física. Estos horarios DEBEN derivarse del reloj del turno, cuya apertura es a las
+20:00. La quinta jornada DEBE usar el padrón definido en BR-CTR-037, sin copiar estos
+personajes. Las jornadas 6 a 8 DEBEN conservar su recorrido anterior.
 
 ### BR-CTR-027 — Llegada y vencimiento independientes de la interfaz
 
@@ -243,7 +252,7 @@ el punto final: el mismo que lee el jugador al examinar ese producto.
 El recordatorio y el rechazo de Tin y Tia DEBEN seguir BR-CTR-039, como los de cualquier
 comprador. Los textos de sus entradas DEBEN ser los de la ficha «Diálogos de compradores», y
 los nombres de los productos pedidos DEBEN distinguirse con color, sin negrita.
-La presentación de los productos de jornada 2 DEBE seguir BR-CTR-043.
+La presentación de los productos de jornada 5 DEBE seguir BR-CTR-043.
 
 ### BR-CTR-029 — Productos pendientes y ticket exacto
 
@@ -258,15 +267,16 @@ Antes de terminar la conversación inicial NO DEBE haber recepción ni rechazo.
 ### BR-CTR-030 — La compra completa vende una vez
 
 SÓLO al recibir todos los productos y el ticket, el sistema DEBE registrar la compra una vez
-y comenzar su despedida. Los botones de cobro y despacho NO DEBEN ofrecerse en la primera jornada.
+y comenzar su despedida. Los botones de cobro y despacho NO DEBEN ofrecerse en las jornadas 1 a
+4.
 Las entregas parciales NO DEBEN contar como ventas. La recepción DEBE usar las unidades físicas,
 sin ejecutar además el descuento automático del pedido. Completar la compra antes del límite
 DEBE conservar el resultado aunque la despedida continúe. Al terminarla, la atención DEBE
 quedar despachada; la imagen del comprador DEBE retirarse según BR-CTR-033.
 
-### BR-CTR-031 — La primera jornada exige ambas compras
+### BR-CTR-031 — Las jornadas 1 a 4 exigen ambas compras
 
-EN la primera jornada, atención DEBE cumplirse sólo al completar ambas compras.
+EN las jornadas 1 a 4, atención DEBE cumplirse sólo al completar ambas compras.
 Una compra perdida DEBE dejar la tarea sin cumplir aunque se complete la otra.
 La finalización DEBE contarse una sola vez y conservarse al reabrir.
 Una nueva jornada DEBE empezar sin agenda, conversación, entregas, cuerpos ni ventas heredados.
@@ -285,12 +295,12 @@ siempre el corte inferior del dibujo desde las posiciones accesibles del local.
 Abrir o cerrar la interfaz NO DEBE
 reiniciar ni detener su animación. El diálogo conserva el diseño de Figma en pantalla.
 
-La llegada de la primera noche usa la entrada de BR-CTR-034; la posición fija corresponde
+La llegada de las jornadas 1 a 4 usa la entrada de BR-CTR-034; la posición fija corresponde
 a la espera posterior a esa entrada.
 
 ### BR-CTR-033 — Salida visible de los compradores
 
-EN la primera noche, CUANDO termina una despedida después de vender o una compra incompleta
+EN las jornadas 1 a 4, CUANDO termina una despedida después de vender o una compra incompleta
 vence, el comprador DEBE deslizarse hacia la derecha, vista desde el interior frente a la
 ventanilla, hasta quedar detrás de la pared. DEBE permanecer animado mientras sale del hueco
 y retirarse definitivamente después de quedar oculto; volver a mirar NO DEBE hacerlo reaparecer.
@@ -301,7 +311,7 @@ Cerrar o reiniciar la jornada DEBE retirar también las imágenes pendientes de 
 
 ### BR-CTR-034 — Entrada desde la izquierda
 
-EN la primera noche, CUANDO llega cada comprador, su imagen DEBE deslizarse desde detrás de
+EN las jornadas 1 a 4, CUANDO llega cada comprador, su imagen DEBE deslizarse desde detrás de
 la pared izquierda, vista desde el interior frente a la ventanilla, hasta su sitio de espera.
 DEBE conservar el idle, altura, profundidad y orientación durante la entrada y detenerse
 en ese sitio. Abrir, cerrar o repintar la interfaz NO DEBE repetir la entrada.
@@ -326,9 +336,9 @@ entrada, el derecho NO DEBE abandonar, ningún clic DEBE entregar ni soltar y el
 seguir corriendo salvo pausa. Vencimiento y cierre DEBEN terminar conversación y encuadre.
 SI el cierre u otra interfaz conserva el control, ENTONCES terminar el diálogo NO DEBE reanudarlo.
 
-### BR-CTR-037 — La segunda jornada tiene dos compras físicas por horario
+### BR-CTR-037 — La quinta jornada tiene dos compras físicas por horario
 
-El sistema DEBE declarar para la segunda jornada exactamente Fede y Mía, con identidad propia:
+El sistema DEBE declarar para la quinta jornada exactamente Fede y Mía, con identidad propia:
 
 | Comprador | Llega, incluido | Vence, excluido | Desde apertura hasta llegada | Desde apertura hasta vencimiento |
 |---|---|---|---|---|
@@ -348,7 +358,7 @@ Una apertura nueva DEBE crear estados nuevos sin heredar entregas, conversacione
 
 ### BR-CTR-038 — Un pedido fijo por comprador y apertura
 
-CUANDO se construye el padrón de la segunda jornada, el sistema DEBE declarar exactamente estos
+CUANDO se construye el padrón de la quinta jornada, el sistema DEBE declarar exactamente estos
 pedidos, en el orden indicado y con una unidad de cada producto, según «Atención al cliente» y
 la decisión de conservar los productos nombrados por «Diálogos de compradores, Jornada 2»:
 
@@ -375,12 +385,12 @@ nombrando lo que todavía falta, o pedir el recibo si sólo falta el ticket. Ese
 DEBE retener el clic siguiente con un objeto ni impedir dejar la ventanilla.
 Para una unidad, cada marcador DEBE usar el subtítulo del producto con primera letra minúscula
 y sin punto final. Para más de una DEBE usar «dos» o «tres» seguido del nombre del producto.
-Los productos DEBEN llevar el resaltado amarillo común. En jornada 2 NO DEBE inventarse una
+Los productos DEBEN llevar el resaltado amarillo común. En jornada 5 NO DEBE inventarse una
 pista dentro de esos textos.
 
-### BR-CTR-041 — La segunda noche activa a Fede y Mía con su contenido propio
+### BR-CTR-041 — La quinta noche activa a Fede y Mía con su contenido propio
 
-CUANDO se abre jornada 2, por transición o desde una partida retomada, el sistema DEBE activar
+CUANDO se abre jornada 5, por transición o desde una partida retomada, el sistema DEBE activar
 exactamente Fede y Mía con horarios de BR-CTR-037, pedidos de BR-CTR-038, guiones de BR-CTR-042
 y sus figuras propias. NO DEBE activar el padrón genérico ni duplicar compradores. Cada figura
 DEBE conservar presencia animada en el mundo con la interfaz cerrada, orientación fija y
@@ -388,10 +398,10 @@ oclusión por los sólidos, incluido el corte inferior detrás del antepecho des
 accesibles. La entrada y retirada DEBEN usar el recorrido existente desde la izquierda y
 hacia la derecha, respectivamente, conservando orientación, altura y profundidad.
 La apertura DEBE construir una sola lista compartida por reposición y atención. Reiniciar
-DEBE limpiar conversaciones, entregas, ventas e imágenes anteriores. La primera jornada y
-las jornadas 3 a 5 DEBEN conservar sus recorridos propios.
+DEBE limpiar conversaciones, entregas, ventas e imágenes anteriores. Las jornadas 1 a 4 y
+las jornadas 6 a 8 DEBEN conservar sus recorridos propios.
 
-### BR-CTR-042 — Nueve entradas propias de la segunda jornada
+### BR-CTR-042 — Nueve entradas propias de la quinta jornada
 
 El sistema DEBE entregar los siguientes textos sólo al comprador y etapa indicados, en su
 orden, conservando puntuación y límites de entrada de «Diálogos de compradores, Jornada 2».
@@ -492,7 +502,7 @@ precio unitario, y al final están el total, lo que paga y la diferencia.
 
 DADO una conversación de tres entradas CUANDO se avanzó dos veces ENTONCES no se puede abandonar;
 al tercer avance se vuelve automáticamente a la vista normal. Con cero entradas no hay
-bloqueo. Las conversaciones propias de jornada 2 son las de BR-CTR-042.
+bloqueo. Las conversaciones propias de jornada 5 son las de BR-CTR-042.
 
 ### AC-CTR-015 — La venta no toca el estante *(verifica BR-CTR-014)*
 
@@ -561,11 +571,11 @@ ticket ni aviso de impresión, y los renglones siguen vacíos.
 DADO un ticket en la mano, otro suelto y el programa con un producto, CUANDO abre otra jornada
 ENTONCES el programa está vacío, las manos están vacías y ninguno de esos papeles existe.
 
-### AC-CTR-026 — El corte es la jornada tres *(verifica BR-CTR-022)*
+### AC-CTR-026 — El corte es la jornada seis *(verifica BR-CTR-022)*
 
-DADO jornadas 1, 2, 3, 4 y 5, CUANDO abre cada una ENTONCES las 1 y 2 son automáticas y
-las 3, 4 y 5 manuales. DADO una partida retomada en la 4 ENTONCES abre manual; CUANDO
-se abre una partida nueva ENTONCES vuelve al automático. Abrir la 3 tras escribir en la 2
+DADO jornadas 1 a 8, CUANDO abre cada una ENTONCES de la 1 a la 5 son automáticas y
+la 6, la 7 y la 8 manuales. DADO una partida retomada en la 7 ENTONCES abre manual; CUANDO
+se abre una partida nueva ENTONCES vuelve al automático. Abrir la 6 tras escribir en la 5
 deja los 3 renglones vacíos.
 
 ### AC-CTR-027 — Elegir y vaciar conserva los otros *(verifica BR-CTR-023)*
@@ -623,7 +633,7 @@ desechado.
 
 ### AC-CTR-034 — Las dos ventanas *(verifica BR-CTR-026, BR-CTR-027)*
 
-DADO la primera noche CUANDO pasan 21:59:59, 22:00:00, 23:59:59 y 00:00:00 ENTONCES Tin está
+DADO la cuarta noche CUANDO pasan 21:59:59, 22:00:00, 23:59:59 y 00:00:00 ENTONCES Tin está
 ausente, llega, espera y vence. DADO 03:59:59, 04:00:00, 05:59:59 y 06:00:00 ENTONCES ocurre
 lo mismo con Tia. Repetir cada instante no repite eventos. Tin pide un Marolini, una Coracola
 y un Malbardo; Tia pide una Zucarachas y un Pepito, sin una segunda Zucarachas.
@@ -636,7 +646,7 @@ DADO Tin esperando CUANDO se cierra y reabre ENTONCES no hay nueva llegada; en p
 
 ### AC-CTR-036 — Prioridad de la conversación *(verifica BR-CTR-028, BR-CTR-029)*
 
-DADO un comprador de la primera jornada y un objeto en la mano CUANDO se inicia y avanza
+DADO un comprador de las jornadas 1 a 4 y un objeto en la mano CUANDO se inicia y avanza
 la conversación inicial ENTONCES sólo
 cambia una entrada por clic, sin recibir ni rechazar el objeto. Al terminar, manos vacías muestran
 un recordatorio; un objeto correcto se recibe y ese clic no avanza una conversación.
@@ -654,7 +664,7 @@ mano ni ventas. DADO un pedido de prueba de dos Zucarachas CUANDO se entrega una
 repite su identidad ENTONCES se rechaza la repetición y sigue faltando una; una segunda unidad
 distinta se acepta y una tercera se rechaza como sobrante.
 
-DADO cada comprador de la primera noche, terminada su conversación inicial, CUANDO se ofrece
+DADO cada comprador de las jornadas 1 a 4, terminada su conversación inicial, CUANDO se ofrece
 un objeto incorrecto ENTONCES el rechazo antepone su prefijo y nombra todos los productos del
 pedido, resaltados con color. CUANDO se le habla con manos vacías ENTONCES el recordatorio no
 lleva el prefijo.
@@ -686,10 +696,20 @@ procesa ambas compras una sola vez, y repetir el instante no vuelve a entregar s
 
 ### AC-CTR-041 — Ambas compras y reinicio *(verifica BR-CTR-026, BR-CTR-031)*
 
-DADO la primera noche CUANDO se completa sólo Tin ENTONCES atención sigue sin cumplir.
+DADO cada jornada de la 1 a la 4 CUANDO se completa sólo Tin ENTONCES atención sigue sin cumplir.
 Al completar Tia, cuenta una vez; lo vendido es un Marolini, una Coracola, un Malbardo,
 una Zucarachas y un Pepito. Reabrir conserva ese resultado. Reiniciar crea estados nuevos
-sin entregas ni ventas. Las jornadas 3–5 conservan el recorrido anterior; la segunda usa BR-CTR-037.
+sin entregas ni ventas. Las jornadas 6–8 conservan el recorrido anterior; la quinta usa BR-CTR-037.
+
+### AC-CTR-068 — Las ventanas de la introducción *(verifica BR-CTR-026, BR-CTR-031)*
+
+DADO la jornada 1 CUANDO pasan 20:59:59, 21:00:00, 00:59:59 y 01:00:00 ENTONCES Tin está ausente,
+llega, espera y vence; con 01:59:59, 02:00:00, 05:59:59 y 06:00:00 ocurre lo mismo con Tia.
+DADO la jornada 2 ENTONCES pasa lo mismo con Tin en 21:29:59, 21:30:00, 00:09:59 y 00:10:00, y
+con Tia en 03:29:59, 03:30:00, 06:09:59 y 06:10:00. DADO la jornada 3 ENTONCES pasa con Tin en
+22:29:59, 22:30:00, 00:59:59 y 01:00:00, y con Tia en 04:29:59, 04:30:00, 06:59:59 y 07:00:00.
+En las tres, Tin y Tia piden lo mismo que en la 4, y atención se cumple sólo al completar las
+dos compras.
 
 ### AC-CTR-042 — Dos animaciones y pausa *(verifica BR-CTR-032)*
 
@@ -719,7 +739,7 @@ Cerrar o reiniciar la jornada retira cualquier imagen pendiente, también la de 
 
 ### AC-CTR-045 — Ambos entran desde la izquierda *(verifica BR-CTR-034, BR-CTR-032)*
 
-DADO cada comprador de la primera noche CUANDO llega con la interfaz cerrada ENTONCES aparece
+DADO cada comprador de las jornadas 1 a 4 CUANDO llega con la interfaz cerrada ENTONCES aparece
 deslizándose desde la izquierda hasta el sitio de espera, conservando altura, profundidad,
 orientación y animación. Después permanece quieto. Abrir, cerrar y repintar no reinician el
 movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el turno lo retira.
@@ -764,7 +784,7 @@ otro derecho; conserva el resultado y destino de cada objeto que fija la compra.
 
 ### AC-CTR-050 — Las fronteras de Fede y Mía *(verifica BR-CTR-037)*
 
-DADO el padrón definido de jornada 2 CUANDO se recorren 20:29:59, 20:30:00, 23:29:59 y 23:30:00
+DADO el padrón definido de jornada 5 CUANDO se recorren 20:29:59, 20:30:00, 23:29:59 y 23:30:00
 ENTONCES Fede está ausente, llega, espera y vence si no completó. En 04:59:59, 05:00:00,
 07:59:59 y 08:00:00 ocurre lo mismo con Mía. Repetir cada instante no repite eventos.
 Saltar desde apertura a cierre entrega llegada Fede, vencimiento Fede, llegada Mía y vencimiento
@@ -772,7 +792,7 @@ Mía, en ese orden, cada uno con su comprador original; en pausa no cruza ningun
 
 ### AC-CTR-051 — Los seis productos son fijos *(verifica BR-CTR-038)*
 
-DADO la apertura de jornada 2 CUANDO se construyen sus compradores ENTONCES Fede pide una unidad
+DADO la apertura de jornada 5 CUANDO se construyen sus compradores ENTONCES Fede pide una unidad
 de Poético, Progres y Duronga, en ese orden; Mía una de Terminator, Fernet God y Actroncito,
 en ese orden. Cada pedido tiene tres tipos y tres unidades. Progres corresponde al producto
 existente de ese subtítulo. Un producto requerido ausente del catálogo falla explícitamente,
@@ -802,7 +822,7 @@ Mía vence antes de evaluar: atención queda pendiente, sus tres cuerpos vuelven
 recogibles y no cuentan como venta. DADO Mía completa a 07:59:59 ENTONCES ambas compras cuentan
 una vez y atención queda cumplida, aunque la despedida siga. Repetir el cierre no duplica salidas.
 
-### AC-CTR-055 — Recepción física y destinos de jornada 2 *(verifica BR-CTR-037, BR-CTR-038, BR-CTR-029, BR-CTR-030)*
+### AC-CTR-055 — Recepción física y destinos de jornada 5 *(verifica BR-CTR-037, BR-CTR-038, BR-CTR-029, BR-CTR-030)*
 
 DADO Fede con su inicial terminada CUANDO se entrega un ticket exacto antes de los productos
 ENTONCES se acepta y aún no vende. Una unidad de Poético, una de Progres y una de Duronga
@@ -813,14 +833,14 @@ local, sin venta. Una apertura posterior no hereda esos cuerpos ni entregas.
 
 ### AC-CTR-057 — Dos caminos de apertura activan los mismos compradores *(verifica BR-CTR-041, BR-CTR-038)*
 
-DADO una transición de jornada 1 a 2 y, por separado, una partida retomada directamente en 2
+DADO una transición de jornada 4 a 5 y, por separado, una partida retomada directamente en 5
 CUANDO llega 20:30 ENTONCES hay un único Fede con su figura, pedido fijo e inicial propia.
 A 05:00 hay una única Mía con los suyos. No aparecen compradores genéricos ni copias de Fede/Mía.
 Reposición y atención reciben la misma lista y los mismos pedidos de cada apertura.
 
 ### AC-CTR-058 — Nueve textos en cuatro bloques *(verifica BR-CTR-042)*
 
-DADO los diálogos propios de jornada 2 CUANDO se consultan inicial y despedida de cada comprador
+DADO los diálogos propios de jornada 5 CUANDO se consultan inicial y despedida de cada comprador
 ENTONCES Fede tiene tres entradas iniciales y dos finales; Mía una inicial y tres finales.
 Las nueve coinciden exactamente, en texto y orden, con BR-CTR-042, sin espacios finales, sin
 corregir «entendes», «podes» o «Perdon», y sin entradas de otro comprador.
@@ -859,11 +879,11 @@ atención queda cumplida aunque siga en su despedida. Pausar conserva el estado 
 ### AC-CTR-063 — Progreso independiente y figuras propias *(verifica BR-CTR-041, BR-CTR-043)*
 
 DADO dos atenciones independientes del mismo guion de Fede CUANDO sólo una avanza ENTONCES la
-otra conserva su primera entrada y el contenido compartido no cambia. DADO la jornada 2 con
+otra conserva su primera entrada y el contenido compartido no cambia. DADO la jornada 5 con
 introducción o despedida en curso CUANDO se reinicia ENTONCES no quedan cursores, entregas,
 ventas ni imágenes heredadas. Con la interfaz cerrada, cada figura durante su presencia conserva animación,
 orientación fija y oclusión; el antepecho oculta el corte inferior desde laterales accesibles.
-La primera jornada y las 3 a 5 mantienen sus compradores y conversaciones anteriores.
+Las jornadas 1 a 4 y las 6 a 8 mantienen sus compradores y conversaciones anteriores.
 
 ### AC-CTR-064 — El paquete conserva conversaciones y figuras *(verifica BR-CTR-042, BR-CTR-041, BR-CTR-043)*
 
@@ -902,24 +922,25 @@ producto ajeno se rechaza con el prefijo de rechazo.
 
 ## Contratos
 
-`Compradores.segunda_jornada_definida() -> Array[Comprador]` declara el padrón fijo J2 sin azar.
+`Compradores.segunda_jornada_definida() -> Array[Comprador]` declara el padrón fijo de la
+jornada 5 sin azar.
 `DialogosDeCompradores.Personaje` conserva NINGUNO/TIN/TIA y añade FEDE/MIA. Sus campos
 `fede`, `mia`, `despedida_fede` y `despedida_mia` son `PackedStringArray`; cada consulta crea
 un cursor propio. `inicial(personaje)` y `despedida(personaje)` conservan sus firmas.
 `recordatorio(personaje: int, rechazo: bool = false, pedido: Venta = null,
-productos_completos: bool = false) -> Dialogo` conserva los lectores J1 y calcula los comunes
-J2 desde el pedido original y la recepción. Un dato requerido sin catálogo devuelve `null`
+productos_completos: bool = false) -> Dialogo` conserva los lectores de Tin y Tia y calcula los
+comunes de Fede y Mía desde el pedido original y la recepción. Un dato requerido sin catálogo devuelve `null`
 en la construcción del comprador y emite el diagnóstico, sin publicar una compra parcial.
 
 - **Entrada:** el padrón de la noche, los vendibles de cada producto, el objeto leído y los
   pedidos de borrar o imprimir, el número de jornada, las elecciones por renglón y el objeto
-  sostenido con su destino de uso; catálogo y apertura del padrón fijo de jornada 2,
+  sostenido con su destino de uso; catálogo y apertura del padrón fijo de jornada 5,
   compartido por atención y reposición, con los guiones y figuras propios de Fede/Mía.
 - **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
   faltantes, cuántos van despachados, el desvío de la noche, lo vendido de cada producto y el
   papel impreso o desechado; al vencer una compra incompleta, las unidades recibidas que
   vuelven al piso interior y el descarte del ticket aceptado; agenda, pedidos fijos, textos
-  comunes y conversaciones propias de jornada 2 con progreso independiente por atención.
+  comunes y conversaciones propias de jornada 5 con progreso independiente por atención.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
   rechaza todo lo demás. Fuera de la entrega al comprador, usar un objeto que no sea ticket,
   o un destino distinto del inodoro, no produce descarte. Un producto requerido ausente
@@ -956,15 +977,16 @@ en la construcción del comprador y emite el diagnóstico, sin publicar una comp
   - Bloquea: nada de lo escrito acá. Abriría una regla en
     [`employment-record`](../employment-record/employment-record.md).
 - **OQ-CTR-002 — ¿Cuántos compradores vienen por noche, y cuánto compra cada uno?**
-  - Por qué sigue abierta: para las jornadas 3–5 game design dio un margen de 1 a 3 compradores, con 1 a 3 productos
+  - Por qué sigue abierta: para las jornadas 6–8 game design dio un margen de 1 a 3 compradores, con 1 a 3 productos
     cada uno, y no eligió un valor. Con pocos vendibles por producto, un padrón que pide de más
     deja ventas que se rechazan.
   - Decide: game design.
-  - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón. La jornada 2 está decidida en BR-CTR-037.
-- **OQ-CTR-003 — ¿Cuáles son los límites de atención de la primera noche?**
+  - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón. La jornada 5 está decidida en BR-CTR-037.
+- **OQ-CTR-003 — ¿Cuáles son los límites de atención de la cuarta noche?**
   - Por qué sigue abierta: la ficha «Atención al cliente» consultada el 2026-10-15 indica
     01:00 para Tin y 07:00 para Tia, pero la decisión de #365 conserva los límites vigentes
-    de 00:00 y 06:00. No hay una resolución que concilie ambas fuentes.
+    de 00:00 y 06:00. No hay una resolución que concilie ambas fuentes. Las ventanas de las
+    jornadas 1 a 3 las decidió #526.
   - Decide: game design.
-  - Bloquea: cambiar los límites de BR-CTR-026 y sus bordes en AC-CTR-034; no bloquea los
+  - Bloquea: cambiar los límites de la jornada 4 en BR-CTR-026 y sus bordes en AC-CTR-034; no bloquea los
     nombres ni los pedidos resueltos.

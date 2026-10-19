@@ -46,7 +46,7 @@ func _caja(producto: Producto, estante: Estante) -> ContenidoDeLaCaja:
 
 
 func test_la_jornada_abre_con_cada_caja_llena() -> void:  # AC-STK-036
-	# Las cinco jornadas y no sólo la primera: todas abren con la caja llena, y la que hace
+	# Todas las jornadas abren con la caja llena, y la que hace
 	# faltar algo también, porque lo que falta está en la góndola y no en la caja.
 	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
@@ -54,7 +54,11 @@ func test_la_jornada_abre_con_cada_caja_llena() -> void:  # AC-STK-036
 	for vez in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
 		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + vez
 		var inventario := Apertura.inventario_de_la_jornada(
-			Compradores.de_la_jornada(jornada), casilleros, casilleros, RandomNumberGenerator.new()
+			jornada,
+			Compradores.de_la_jornada(jornada),
+			casilleros,
+			casilleros,
+			RandomNumberGenerator.new()
 		)
 		var estante := Estante.new(inventario, Catalogo.todos())
 		for producto in Catalogo.todos():

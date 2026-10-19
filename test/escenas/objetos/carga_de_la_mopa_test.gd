@@ -5,6 +5,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame

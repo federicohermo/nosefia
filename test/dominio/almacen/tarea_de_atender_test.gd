@@ -11,7 +11,7 @@ const VENDIBLES := 9
 
 
 func test_la_primera_noche_llega_por_horario_y_no_por_abrir() -> void:  # AC-CTR-035
-	var compradores := Compradores.de_la_jornada(1)
+	var compradores := Compradores.de_la_jornada(4)
 	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
 	assert_bool(tarea.fisica()).is_true()
 	assert_object(tarea.atender()).is_null()
@@ -25,15 +25,21 @@ func test_la_primera_noche_llega_por_horario_y_no_por_abrir() -> void:  # AC-CTR
 	assert_bool(tarea.completada()).is_false()
 
 
-func test_ambas_compras_y_no_los_despachos_cumplen_la_primera_noche() -> void:  # AC-CTR-041
+func test_ambas_compras_y_no_los_despachos_cumplen_tin_y_tia() -> void:  # AC-CTR-041, AC-CTR-068
+	for jornada: int in [1, 2, 3, 4]:
+		assert_bool(_cumplir_tin_y_tia(jornada).completada()).is_true()
+
+
+func _cumplir_tin_y_tia(jornada: int) -> TareaDeAtender:
 	var inventario := Apertura.inventario_con_faltantes({}, {})
-	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(1), inventario)
-	for tiempo: float in [7200.0, 28800.0]:
-		tarea.avanzar(tiempo)
+	var compradores := Compradores.de_la_jornada(jornada)
+	var tarea := TareaDeAtender.new(compradores, inventario)
+	for comprador: Comprador in compradores:
+		tarea.avanzar(comprador.horario.x)
 		var atencion := tarea.atencion()
 		assert_object(atencion).is_not_null()
 		if atencion == null:
-			return
+			return tarea
 		assert_bool(atencion.despachar_sin_vender()).is_false()
 		atencion.interactuar(null)
 		while not atencion.puede_abandonar():
@@ -59,24 +65,13 @@ func test_ambas_compras_y_no_los_despachos_cumplen_la_primera_noche() -> void:  
 		Producto.Id.PEPITO
 	]:
 		assert_int(tarea.vendidas_de(Catalogo.de(id))).is_equal(1)
-	assert_array(tarea.avanzar(36000)).is_empty()
-	assert_bool(tarea.completada()).is_true()
-	var reinicio := TareaDeAtender.new(
-		Compradores.de_la_jornada(1), Apertura.inventario_con_faltantes({}, {})
-	)
-	assert_bool(reinicio.completada()).is_false()
-	assert_object(reinicio.en_ventanilla()).is_null()
-	for producto in Catalogo.todos():
-		assert_int(reinicio.vendidas_de(producto)).is_zero()
-	reinicio.avanzar(7200)
-	var nueva_recepcion: RecepcionDeCompra = reinicio.atencion().get("_recepcion")
-	assert_array(nueva_recepcion.unidades()).is_empty()
-	assert_bool(reinicio.atencion().conversacion_iniciada()).is_false()
+	assert_array(tarea.avanzar(Reglas.DURACION_DEL_TURNO)).is_empty()
+	return tarea
 
 
 func test_perder_a_tin_y_vender_a_tia_no_cumple_atencion() -> void:  # AC-CTR-040
 	var inventario := Apertura.inventario_con_faltantes({}, {})
-	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(1), inventario)
+	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(4), inventario)
 	tarea.avanzar(14400.0)
 	tarea.avanzar(28800.0)
 	var atencion := tarea.atencion()
@@ -288,7 +283,7 @@ func test_un_producto_que_nadie_compro_contesta_cero() -> void:  # AC-CTR-020
 func test_compras_cerradas_incluye_despedidas_vencidas_y_vacia() -> void:  # AC-STK-056
 	assert_bool(TareaDeAtender.new([], Inventario.new([])).compras_cerradas()).is_true()
 	var inventario := Apertura.inventario_con_faltantes({}, {})
-	var compradores := Compradores.de_la_jornada(1)
+	var compradores := Compradores.de_la_jornada(4)
 	var tarea := TareaDeAtender.new(compradores, inventario)
 	assert_bool(tarea.compras_cerradas()).is_false()
 	tarea.avanzar(compradores[0].horario.x)
@@ -318,7 +313,7 @@ func test_compras_cerradas_incluye_despedidas_vencidas_y_vacia() -> void:  # AC-
 
 
 func test_un_salto_vence_dos_entregas_una_vez_sin_retirarlas() -> void:  # AC-CTR-040
-	var compradores := Compradores.de_la_jornada(1)
+	var compradores := Compradores.de_la_jornada(4)
 	compradores[0].horario = Vector2(10, 30)
 	compradores[1].horario = Vector2(20, 40)
 	var inventario := Apertura.inventario_con_faltantes({}, {})

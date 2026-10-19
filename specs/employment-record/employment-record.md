@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526
 ---
 
 # Capacidad: el legajo del empleado
@@ -23,7 +23,7 @@ noche impecable suma cero y conserva la deuda acumulada.
 | **Medio** | media unidad de apercibimiento, conservada exactamente entre noches | fracción flotante |
 | **Llamado** | un motivo distinto de la noche que suma medio apercibimiento | repetición, banda |
 | **Legajo** | el contador de apercibimientos que cruza la noche | racha, historial |
-| **Partida** | las cinco jornadas del contrato, con su final | run, sesión |
+| **Partida** | las ocho jornadas del contrato, con su final | run, sesión |
 | **Final** | cómo termina la partida: en curso, contrato cumplido o despedido | game over |
 | **Devolución** | los mensajes que Enrique manda por el chat al cerrar cada noche: Saludo, las Tareas y los Retos que correspondan, y Cierre | placa del cierre, parte, reporte |
 | **P** | la deuda exacta en apercibimientos, con su medio: los medios del legajo divididos por 2, después de anotar la noche. Elige textos y nunca se muestra | puntaje, puntos visibles |
@@ -49,10 +49,10 @@ CUANDO se anota una banda, el sistema DEBE sumar **1** apercibimiento por `AVISO
 SI el legajo llega a **8 medios o más**, equivalentes a 4 apercibimientos, ENTONCES el sistema
 DEBE declararlo despedido. Con 7 medios todavía no está despedido.
 
-### BR-EMP-004 — El contrato dura cinco noches
+### BR-EMP-004 — El contrato dura ocho noches
 
 El sistema DEBE numerar las jornadas **desde 1** y terminar la partida con contrato cumplido al
-cerrar la **quinta**.
+cerrar la **octava**.
 
 ### BR-EMP-005 — El despido se pregunta primero
 
@@ -102,7 +102,7 @@ BR-EMP-029. Ningún mensaje DEBE mostrar P, medios, apercibimientos, la banda ni
 ### BR-EMP-011 — Lo que ofrece la devolución depende del final
 
 CUANDO se arma la devolución, el sistema DEBE decir qué puede elegir el jugador. Con la partida
-en curso, ofrece **sólo continuar**. En las jornadas 1 y 2, continuar pasa a la reflexión de
+en curso, ofrece **sólo continuar**. En las jornadas 4 y 5, continuar pasa a la reflexión de
 cierre (BR-INV-042) y la entrada de la noche siguiente empieza cuando ésta termina. En las
 demás, el celular baja por el margen inferior y después empieza la entrada de la noche
 siguiente (BR-SHF-019). Salir al menú pasa por la pausa, como en cualquier
@@ -224,48 +224,50 @@ particular (BR-SHF-005):
 
 | J | Texto |
 |---|---|
-| 1 | Cuando te pedí que ordenaras las cajas en las estanterías del depósito, lo que quería decir es que pongas TODAS y cada una de las CAJAS de cartón con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se entendió? |
-| 2 | De verdad era tan difícil tirar tres bolsas de basura? |
+| 4 | Cuando te pedí que ordenaras las cajas en las estanterías del depósito, lo que quería decir es que pongas TODAS y cada una de las CAJAS de cartón con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se entendió? |
+| 5 | De verdad era tan difícil tirar tres bolsas de basura? |
 
 ### BR-EMP-028 — Los Retos dicen el llamado que es
 
 Para cada Reto, el sistema DEBE elegir el texto por n, la cantidad de llamados de ese motivo
-contando esta noche (BR-EMP-025), y por P cuando la fila lo pide. En Reto 2, las filas de J = 2 y
-J = 3 DEBEN ganarle a las de n, y esos llamados DEBEN contar igual para la n de las noches
-siguientes. La fila de J = 3 se conserva aunque esa noche no declare una particular de vencidos.
+contando esta noche (BR-EMP-025), y por P cuando la fila lo pide. En Reto 2, las filas de J = 5 y
+J = 6 DEBEN ganarle a las de n, y esos llamados DEBEN contar igual para la n de las noches
+siguientes. La fila de J = 6 se conserva aunque esa noche no declare una particular de vencidos.
 
 | Parte | Condición | Texto |
 |---|---|---|
 | Reto 1 | n = 1 | El baño se tapó. Por si no lo leíste, hay un cartelito muy claro diciendo que no se puede tirar papel en el inodoro. |
 | Reto 1 | n = 2 | Se tapó el baño de nuevo. Pensé que el cartelito y mi mensaje iban a ser suficientes, pero veo que te lo voy a tener que repetir. El papel se tira EN EL TACHO. |
-| Reto 1 | n de 3 a 5 y P < 4 | Dejá de tirar papel en el inodoro. Ya no sé cómo pedírtelo. |
-| Reto 1 | n de 3 a 5 y P ≥ 4 | Una vez más tapaste el baño. Increíble. Yo que vos iría al neurólogo. O al gastroenterólogo, una de dos. |
-| Reto 2 | J = 2 | Por si no lo sabías, la "basura" que te pedí que tiraras no incluye productos ni elementos del local. Estamos de acuerdo? |
-| Reto 2 | J = 3 | Cuando te pedí que tiraras algunos productos, no me refería a objetos útiles y en buen estado! |
-| Reto 2 | n = 1, J distinta de 2 y 3 | Puede ser que hayas estado tirando cosas a la basura? |
-| Reto 2 | n = 2, J distinta de 2 y 3 | El contenedor de basura es para BASURA solamente. |
-| Reto 2 | n de 3 a 5, J distinta de 2 y 3 | Una vez más tuve que sacar cosas de la basura. Te parece gracioso? |
+| Reto 1 | n ≥ 3 y P < 4 | Dejá de tirar papel en el inodoro. Ya no sé cómo pedírtelo. |
+| Reto 1 | n ≥ 3 y P ≥ 4 | Una vez más tapaste el baño. Increíble. Yo que vos iría al neurólogo. O al gastroenterólogo, una de dos. |
+| Reto 2 | J = 5 | Por si no lo sabías, la "basura" que te pedí que tiraras no incluye productos ni elementos del local. Estamos de acuerdo? |
+| Reto 2 | J = 6 | Cuando te pedí que tiraras algunos productos, no me refería a objetos útiles y en buen estado! |
+| Reto 2 | n = 1, J distinta de 5 y 6 | Puede ser que hayas estado tirando cosas a la basura? |
+| Reto 2 | n = 2, J distinta de 5 y 6 | El contenedor de basura es para BASURA solamente. |
+| Reto 2 | n ≥ 3, J distinta de 5 y 6 | Una vez más tuve que sacar cosas de la basura. Te parece gracioso? |
 | Reto 3 | n = 1 | Puedo saber por qué hay propiedad del local al pie de la ventana? Del lado de AFUERA? |
 | Reto 3 | n = 2 | Ya es la segunda vez que encuentro algo “mágicamente” depositado del otro lado de la ventanilla. Más te vale que no haya sido obra tuya. |
 | Reto 3 | n = 3 | En serio, si sigue apareciendo propiedad del local en la vereda, voy a tener que poner una reja en la ventanilla. |
 | Reto 3 | n = 4 | BASTA DE TIRAR COSAS POR LA VENTANILLA! |
-| Reto 3 | n = 5 | A esta altura del partido, ya estoy considerando tirarte a VOS por la ventanilla. |
+| Reto 3 | n ≥ 5 | A esta altura del partido, ya estoy considerando tirarte a VOS por la ventanilla. |
 | Reto 4 | n = 1 | Más allá de cumplir con los quehaceres, el orden también es importante. |
 | Reto 4 | n = 2 y P < 4 | Dejá las cosas donde corresponde. Es una estación de servicio, no un pelotero. |
 | Reto 4 | n = 3 y P < 4 | Me parece que no está quedando claro el temita de dejar todo ordenado. En el corcho hay una nota que seguro te va a servir. Pegale una leída, dale? |
 | Reto 4 | n = 4 y P < 4 | Y si esta vez dejás ordenado? Sería mucho pedir? |
-| Reto 4 | n = 5, o n de 2 a 4 y P ≥ 4 | Realmente me sorprende cómo alguien puede tener tan poca conciencia de lo que es el orden. |
+| Reto 4 | n ≥ 5, o n de 2 a 4 y P ≥ 4 | Realmente me sorprende cómo alguien puede tener tan poca conciencia de lo que es el orden. |
 
-Un llamado se anota una vez por noche y la partida dura cinco, así que n no pasa de 5.
+Un llamado se anota una vez por noche y la partida dura ocho, así que n no pasa de 8. La ficha
+escribe hasta n = 5: la última fila de cada Reto cubre también las n mayores.
 
 ### BR-EMP-029 — El Cierre, y qué fila gana
 
 El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cumple:
 
-1. **P ≥ 4**, en cualquier jornada: el despido. En J = 5 gana sobre el contrato cumplido
+1. **P ≥ 4**, en cualquier jornada: el despido. En J = 8 gana sobre el contrato cumplido
    (BR-EMP-005).
-2. **J = 5**: la fila final por P. Las filas de R no se usan en J = 5.
-3. **P = 0**: la fila de esa jornada.
+2. **J = 8**: la fila final por P. Las filas de R no se usan en J = 8.
+3. **P = 0**: la fila de esa jornada. La ficha escribe hasta J = 4: de J = 4 a J = 7 rige la
+   misma fila.
 4. **0 < P < 4 y R ≥ 1**: con R = 1, la fila «terminó la jornada sin sumar puntos»; con R ≥ 2, la
    fila «lleva más de una jornada sin sumar puntos». Cada una distingue P < 2 de P ≥ 2. Reconocen
    la mejora sin mostrar P, y les ganan a las filas por P.
@@ -274,15 +276,15 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 | Condición | Texto |
 |---|---|
 | P ≥ 4 | Es absurdo que tenga que estar persiguiéndote con estas cosas tan básicas. No puedo dejar que un desastre como vos siga perjudicando la reputación de mi local. Que ni se te ocurra volver a aparecer por acá, entendiste? |
-| J = 5 y P = 0 | La verdad es que estoy impresionado. No hizo falta corregirte ni una sola cosa en las cinco noches. Un trabajo excepcional. Va a ser un placer tenerte trabajando acá. |
-| J = 5 y 0 < P ≤ 1 | Bueno, más allá de alguna que otra cosita que te mencioné, no tengo nada para corregirte. Un trabajo bien hecho. Felicitaciones, el puesto es tuyo. |
-| J = 5 y 1 < P ≤ 2 | Tuviste algunos tropiezos, pero cumpliste con lo necesario. Te voy a dar el puesto. Espero que de acá en adelante no tenga que estar atrás tuyo por las mismas cosas, estamos? |
-| J = 5 y 2 < P ≤ 3 | Honestamente, solo puedo concluir que no sos el empleado ideal, pero tampoco sos un inútil. Decidí darte el puesto. No me hagas cambiar de opinión, ok? |
-| J = 5 y 3 < P < 4 | Me parece que quedan muchas cosas para pulir, pero ya te vas a curtir con el tiempo. No voy a negar que conocí peores empleados, así que te voy a dar una oportunidad. El puesto es tuyo, pero te voy a tener cortito para sacarte bien, está claro? |
+| J = 8 y P = 0 | La verdad es que estoy impresionado. No hizo falta corregirte ni una sola cosa en las cinco noches. Un trabajo excepcional. Va a ser un placer tenerte trabajando acá. |
+| J = 8 y 0 < P ≤ 1 | Bueno, más allá de alguna que otra cosita que te mencioné, no tengo nada para corregirte. Un trabajo bien hecho. Felicitaciones, el puesto es tuyo. |
+| J = 8 y 1 < P ≤ 2 | Tuviste algunos tropiezos, pero cumpliste con lo necesario. Te voy a dar el puesto. Espero que de acá en adelante no tenga que estar atrás tuyo por las mismas cosas, estamos? |
+| J = 8 y 2 < P ≤ 3 | Honestamente, solo puedo concluir que no sos el empleado ideal, pero tampoco sos un inútil. Decidí darte el puesto. No me hagas cambiar de opinión, ok? |
+| J = 8 y 3 < P < 4 | Me parece que quedan muchas cosas para pulir, pero ya te vas a curtir con el tiempo. No voy a negar que conocí peores empleados, así que te voy a dar una oportunidad. El puesto es tuyo, pero te voy a tener cortito para sacarte bien, está claro? |
 | P = 0 y J = 1 | Seguiste todas mis instrucciones al pie de la letra. Excelente. Seguí así y vas a tener el puesto asegurado. |
 | P = 0 y J = 2 | Nuevamente, todo en orden. Seguí así! |
 | P = 0 y J = 3 | Sin comentarios por mi parte. Dale para adelante. |
-| P = 0 y J = 4 | La jornada cerró cuadrada, como de costumbre. Excelente trabajo. |
+| P = 0 y J de 4 a 7 | La jornada cerró cuadrada, como de costumbre. Excelente trabajo. |
 | 0 < P < 2 y R = 1 | Ahora sí le vas agarrando la mano! Muy bien. Seguí así. |
 | 0 < P < 2 y R ≥ 2 | Sin nada para comentar. Adelante con eso. |
 | 2 ≤ P < 4 y R = 1 | Esta vez sí cumpliste con todo. Bien. Continuá por este camino. |
@@ -296,7 +298,8 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 | P = 3 y R = 0 | En serio, mi paciencia tiene un límite... |
 | P = 3,5 y R = 0 | Hay un límite en lo que te puedo dejar pasar. Un error más y te podés ir despidiendo de tu puesto. |
 
-El texto de J = 5 y 1 < P ≤ 2 es **provisorio**: la ficha lo deja «A DEFINIR», y el usuario
+El texto de J = 8 y P = 0 conserva «las cinco noches» de la ficha hasta que diseño lo corrija.
+El texto de J = 8 y 1 < P ≤ 2 es **provisorio**: la ficha lo deja «A DEFINIR», y el usuario
 autorizó esta frase el 2026-10-10 hasta que diseño decida la definitiva (OQ-EMP-005). Las demás
 filas salen de la ficha. P avanza de a medio, así que las filas de R = 0 cubren todo 0 < P < 4.
 
@@ -328,13 +331,13 @@ Los textos, su selección y su ritmo DEBEN conservar BR-EMP-025 a BR-EMP-030.
 
 Desde la noche siguiente, el chat DEBE conservar las 19 entradas de instrucciones y cada
 devolución recibida, intercalada con los mensajes de apertura en el orden temporal de
-BR-INV-030. La devolución de la noche 1 DEBE preceder a la apertura 2, y la devolución 2
+BR-INV-030. La devolución de la noche 4 DEBE preceder a la apertura 5, y la devolución 5
 DEBE seguirla. Una partida nueva DEBE empezar sin devoluciones; repetir el cierre o elegir
 continuar dos veces NO DEBE duplicar sus mensajes ni alterar jornada u orden.
 
-### BR-EMP-032 — El uso de Poético es un hecho de la segunda jornada
+### BR-EMP-032 — El uso de Poético es un hecho de la quinta jornada
 
-CUANDO se acepta teñir el balde con la unidad real de Poético durante jornada 2 abierta, el
+CUANDO se acepta teñir el balde con la unidad real de Poético durante jornada 5 abierta, el
 sistema DEBE registrar una sola vez ese hecho y ofrecerlo al evaluar su devolución. Repetir
 teñidos aceptados DEBE contestar ya registrado, sin sumar otro hecho. Rechazos, pausa, examen,
 fuera de jornada abierta o uso de otro objeto NO DEBEN registrarlo. El hecho DEBE conservarse
@@ -352,7 +355,7 @@ que deba cruzar sesiones.
 
 ### BR-EMP-034 — Enrique advierte el uso de Poético
 
-CUANDO se arma la devolución de jornada 2 y el hecho de BR-EMP-032 es verdadero, el sistema DEBE
+CUANDO se arma la devolución de jornada 5 y el hecho de BR-EMP-032 es verdadero, el sistema DEBE
 agregar una sola advertencia, después de Tarea 4 si va y antes de Tarea 5 (BR-EMP-009). La
 advertencia DEBE ir aunque limpiar se haya cumplido. Su texto DEBE elegirse por P, después de
 anotar la noche (BR-EMP-025):
@@ -401,14 +404,15 @@ despedido.
 DADO un legajo limpio ENTONCES despiden dos noches graves, una grave más dos avisos, y cuatro
 avisos; y ninguna combinación más corta.
 
-### AC-EMP-008 — La quinta cierra el contrato *(verifica BR-EMP-004)*
+### AC-EMP-008 — La octava cierra el contrato *(verifica BR-EMP-004)*
 
-DADO una partida en la jornada 5 CUANDO cierra con todas cumplidas ENTONCES el final es contrato
-cumplido, y la jornada no avanza a 6.
+DADO una partida en la jornada 8 CUANDO cierra con todas cumplidas ENTONCES el final es contrato
+cumplido, y la jornada no avanza a 9. DADO la jornada 5 CUANDO cierra con todas cumplidas
+ENTONCES la partida sigue en curso y la jornada avanza a 6.
 
 ### AC-EMP-009 — Despedido gana sobre cumplido *(verifica BR-EMP-005)*
 
-DADO la jornada 5 con 3 apercibimientos CUANDO cierra con menos de 3 cumplidas ENTONCES el final
+DADO la jornada 8 con 3 apercibimientos CUANDO cierra con menos de 3 cumplidas ENTONCES el final
 es despedido y no contrato cumplido.
 
 ### AC-EMP-010 — La partida terminada no abre *(verifica BR-EMP-006)*
@@ -456,9 +460,9 @@ una noche impecable sin motivos sigue con 7. DADO el dato ausente, antiguo o con
 CUANDO se reanuda ENTONCES restaura 0 medios y conserva una jornada válida. Si también hay un
 dato antiguo, el entero 7 de medios sigue prevaleciendo.
 
-### AC-EMP-022 — La quinta impecable admite siete medios *(verifica BR-EMP-004, BR-EMP-005, BR-EMP-008)*
+### AC-EMP-022 — La octava impecable admite siete medios *(verifica BR-EMP-004, BR-EMP-005, BR-EMP-008)*
 
-DADO la quinta jornada con 7 medios CUANDO cierra impecable sin motivos ENTONCES conserva 7
+DADO la octava jornada con 7 medios CUANDO cierra impecable sin motivos ENTONCES conserva 7
 y termina con contrato cumplido. DADO un motivo adicional ENTONCES llega a 8 y termina despedido.
 
 ### AC-EMP-045 — Doce pantallas, atrás y OK *(verifica BR-EMP-023)*
@@ -530,27 +534,27 @@ compañera…», y ninguna otra Tarea si las otras obligatorias se cumplieron. D
 reponer cumplido ENTONCES Tarea 3 no aparece. DADO la tercera falla de registrar ENTONCES el
 texto dice «está mal otra vez».
 
-### AC-EMP-053 — El Reto 2 de la jornada 2 cuenta para después *(verifica BR-EMP-025, BR-EMP-027, BR-EMP-028)*
+### AC-EMP-053 — El Reto 2 de la jornada 5 cuenta para después *(verifica BR-EMP-025, BR-EMP-027, BR-EMP-028)*
 
-DADO la jornada 2 con el llamado por objetos importantes en la basura CUANDO se arma la
-devolución ENTONCES trae la fila J = 2 de Reto 2, «Por si no lo sabías, la "basura"…». DADO
-después la jornada 4 con el mismo llamado ENTONCES trae la fila n = 2, «El contenedor de basura
+DADO la jornada 5 con el llamado por objetos importantes en la basura CUANDO se arma la
+devolución ENTONCES trae la fila J = 5 de Reto 2, «Por si no lo sabías, la "basura"…». DADO
+después la jornada 7 con el mismo llamado ENTONCES trae la fila n = 2, «El contenedor de basura
 es para BASURA solamente.». DADO la jornada 1 con el primer llamado de ese motivo ENTONCES trae
-«Puede ser que hayas estado tirando cosas a la basura?». DADO la jornada 2 con la basura sin
+«Puede ser que hayas estado tirando cosas a la basura?». DADO la jornada 5 con la basura sin
 sacar ENTONCES Tarea 5 es «De verdad era tan difícil tirar tres bolsas de basura?».
 
-### AC-EMP-054 — El Reto 2 de la jornada 3 *(verifica BR-EMP-027, BR-EMP-028)*
+### AC-EMP-054 — El Reto 2 de la jornada 6 *(verifica BR-EMP-027, BR-EMP-028)*
 
-DADO la jornada 3 con el llamado por objetos importantes en la basura, sin una particular
+DADO la jornada 6 con el llamado por objetos importantes en la basura, sin una particular
 declarada CUANDO se arma la devolución ENTONCES trae «Cuando te pedí que tiraras algunos
 productos, no me refería a objetos útiles y en buen estado!», sea el primer llamado o el
 segundo, y no trae Tarea 5.
 
-### AC-EMP-055 — P = 4 en la quinta despide *(verifica BR-EMP-005, BR-EMP-026, BR-EMP-029)*
+### AC-EMP-055 — P = 4 en la octava despide *(verifica BR-EMP-005, BR-EMP-026, BR-EMP-029)*
 
-DADO la jornada 5 que cierra con P = 4 CUANDO se arma la devolución ENTONCES el Saludo es «Che»,
+DADO la jornada 8 que cierra con P = 4 CUANDO se arma la devolución ENTONCES el Saludo es «Che»,
 el Cierre es el del despido, «Es absurdo que tenga que estar persiguiéndote…», y ningún mensaje
-es un Cierre de J = 5. Con P = 3,5 en la jornada 5 el Saludo es «Buenos días...» y el Cierre
+es un Cierre de J = 8. Con P = 3,5 en la jornada 8 el Saludo es «Buenos días...» y el Cierre
 «Me parece que quedan muchas cosas para pulir…».
 
 ### AC-EMP-056 — P = 2 con y sin llamados en la partida *(verifica BR-EMP-025, BR-EMP-029)*
@@ -571,39 +575,39 @@ Continuá por este camino.»; con R = 2, «Sin comentarios.». DADO J = 1 y P = 
 es «Que no se repita, ok?»; con J = 2, P = 1,5 y R = 0, «No duermas con tus responsabilidades…», con
 un solo «tus».
 
-### AC-EMP-058 — Los cuatro bordes de la quinta *(verifica BR-EMP-029)*
+### AC-EMP-058 — Los cuatro bordes de la octava *(verifica BR-EMP-029)*
 
-DADO la jornada 5 terminada con contrato cumplido CUANDO se arma la devolución ENTONCES con
+DADO la jornada 8 terminada con contrato cumplido CUANDO se arma la devolución ENTONCES con
 P = 1 el Cierre es «Bueno, más allá de alguna que otra cosita…»; con P = 1,5 y con P = 2 es
 «Tuviste algunos tropiezos, pero cumpliste con lo necesario. Te voy a dar el puesto. Espero que
 de acá en adelante no tenga que estar atrás tuyo por las mismas cosas, estamos?»; con P = 2,5 es
-«Honestamente, solo puedo concluir…». Con R = 1 en la jornada 5 y P = 2, el Cierre sigue siendo
+«Honestamente, solo puedo concluir…». Con R = 1 en la jornada 8 y P = 2, el Cierre sigue siendo
 el provisorio y no «Esta vez sí cumpliste…». Hay un solo Cierre por devolución.
 
 ### AC-EMP-059 — Las cuentas *(verifica BR-EMP-006, BR-EMP-007, BR-EMP-025)*
 
 DADO una partida nueva ENTONCES tiene cero fallas, cero llamados, R = 0 y ningún llamado en la
-partida. DADO la noche 1 con reponer y limpiar sin cumplir, la particular sin cumplir y el
+partida. DADO la noche 4 con reponer y limpiar sin cumplir, la particular sin cumplir y el
 llamado por papel anotado dos veces CUANDO cierra ENTONCES reponer y limpiar tienen 1 falla,
-atender y registrar 0, papel 1 llamado, hubo llamados y R = 0. CUANDO la noche 2 cierra
-impecable sin llamados ENTONCES R = 1 y las fallas no cambian; la noche 3 igual, R = 2; la noche
-4 con un llamado, R = 0. DADO una obligatoria cumplida y después descumplida antes del cierre
+atender y registrar 0, papel 1 llamado, hubo llamados y R = 0. CUANDO la noche 5 cierra
+impecable sin llamados ENTONCES R = 1 y las fallas no cambian; la noche 6 igual, R = 2; la noche
+7 con un llamado, R = 0. DADO una obligatoria cumplida y después descumplida antes del cierre
 ENTONCES suma una falla. DADO un segundo cierre de la misma noche ENTONCES nada cambia.
 
 ### AC-EMP-060 — Ningún número, y siempre Saludo y Cierre *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
 
-DADO cada J de 1 a 5, cada P de 0 a 4 de a medio, cada R de 0 a 4, con y sin llamados en la
-partida, y cada combinación de fallas con n de 1 a 4 y llamados con n de 1 a 5 CUANDO se arma
+DADO cada J de 1 a 8, cada P de 0 a 4 de a medio, cada R de 0 a 7, con y sin llamados en la
+partida, y cada combinación de fallas con n de 1 a 4 y llamados con n de 1 a 8 CUANDO se arma
 la devolución ENTONCES el primer mensaje es un Saludo y el último un Cierre, hay uno de cada uno,
 las Tareas y los Retos van en el orden de BR-EMP-009, y ningún mensaje contiene un dígito, un
 espacio final ni las palabras «punto», «medio» o «apercibimiento».
 
 ### AC-EMP-061 — El despido en la primera noche *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
 
-DADO la noche 1 con sólo registrar cumplido, la particular sin cumplir y los cuatro llamados
-CUANDO cierra ENTONCES P = 4 y la devolución es, en orden: «Che», la fila n = 1 de Tarea 1, de
-Tarea 3 y de Tarea 4, la Tarea 5 de J = 1, la fila n = 1 de Reto 1, Reto 2, Reto 3 y Reto 4, y el
-Cierre del despido: diez mensajes, y la única opción es volver al menú.
+DADO la noche 1 con sólo registrar cumplido y los cuatro llamados CUANDO cierra ENTONCES P = 4 y
+la devolución es, en orden: «Che», la fila n = 1 de Tarea 1 y de Tarea 3, la fila n = 1 de Reto 1,
+Reto 2, Reto 3 y Reto 4, y el Cierre del despido: ocho mensajes, sin Tarea 4 ni Tarea 5, y la
+única opción es volver al menú.
 
 ### AC-EMP-062 — Un mensaje más por segundo *(verifica BR-EMP-011, BR-EMP-030)*
 
@@ -624,43 +628,46 @@ pulsa una foto de las instrucciones ENTONCES se amplía, y un clic la cierra en 
 DADO 2 mensajes a la vista CUANDO se pausa, pasan 3 segundos y se reanuda ENTONCES siguen 2, y
 un segundo después 3.
 
-### AC-EMP-064 — Del cierre a la noche 2, por el celular *(verifica BR-EMP-011, BR-EMP-030, BR-EMP-031)*
+### AC-EMP-064 — Del cierre a la noche 5, por el celular *(verifica BR-EMP-011, BR-EMP-030, BR-EMP-031)*
 
-DADO el almacén en la noche 1 CUANDO cierra el turno ENTONCES la persiana está baja, el celular
+DADO el almacén en la noche 4 CUANDO cierra el turno ENTONCES la persiana está baja, el celular
 está en el centro con la devolución en el chat de Enrique y el turno sigue cerrado. CUANDO está
 el último mensaje a la vista y se elige «continuar» ENTONCES el celular pasa a las notas, sin
-bajar; tras los tres «Continuar» de la reflexión, baja y la persiana muestra «NOCHE 2».
-CUANDO la noche 2 está abierta y se abre el celular con Q ENTONCES el chat de
-Enrique tiene las 19 entradas de las instrucciones, los mensajes de la devolución 1 y después
-la foto y el texto de apertura 2 definidos por `investigation`. DADO una partida despedida
+bajar; tras los tres «Continuar» de la reflexión, baja y la persiana muestra «NOCHE 5».
+CUANDO la noche 5 está abierta y se abre el celular con Q ENTONCES el chat de
+Enrique tiene las 19 entradas de las instrucciones, los mensajes de las devoluciones 1 a 4 y
+después la foto y el texto de apertura 5 definidos por `investigation`. DADO el almacén en la
+noche 1 CUANDO cierra el turno y se elige «continuar» ENTONCES el celular baja sin pasar por las
+notas y la persiana muestra «NOCHE 2». DADO una partida despedida
 CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se anuncia otra noche.
 
 ### AC-EMP-065 — Elegir dos veces *(verifica BR-EMP-011)*
 
-DADO la devolución de la noche 1 con la opción a la vista CUANDO se elige «continuar» dos veces
+DADO la devolución de la noche 4 con la opción a la vista CUANDO se elige «continuar» dos veces
 ENTONCES empieza una sola reflexión y no se anuncia ninguna noche; terminada la reflexión, se
-anuncia una sola «NOCHE 2» y la jornada es 2. DADO una partida terminada CUANDO se
+anuncia una sola «NOCHE 5» y la jornada es 5. DADO una partida terminada CUANDO se
 elige «volver al menú» dos veces ENTONCES el menú se pide una sola vez.
 
 ### AC-EMP-066 — Las devoluciones conservan su lugar entre aperturas *(verifica BR-EMP-031)*
 
-DADO una partida nueva ENTONCES no tiene devoluciones. CUANDO cierran las noches 1 y 2
+DADO una partida nueva ENTONCES no tiene devoluciones. CUANDO cierran las noches 1 a 5
 ENTONCES los mensajes de devolución conservan su orden de recepción. CUANDO se abre el chat
-en noche 3 ENTONCES muestra instrucciones, devolución 1, foto y texto de apertura 2,
-devolución 2, en ese orden; no adelanta la apertura 2 a la devolución 1.
+en noche 6 ENTONCES muestra instrucciones, devoluciones 1 a 4, foto y texto de apertura 5,
+devolución 5, en ese orden; no adelanta la apertura 5 a la devolución 4.
 
 ### AC-EMP-067 — Registrar uso una vez y sólo al aceptar *(verifica BR-EMP-032)*
 
-DADO jornada 2 abierta sin uso de Poético CUANDO se rechaza por balde vacío o ya teñido ENTONCES
+DADO jornada 5 abierta sin uso de Poético CUANDO se rechaza por balde vacío o ya teñido ENTONCES
 el hecho sigue falso. CUANDO se acepta un teñido real con Poético ENTONCES registra éxito y la
 consulta queda verdadera; aceptar otra mezcla contesta ya registrado y conserva un solo hecho.
 El registro no agrega mensajes ni cambia la deuda laboral.
 
 ### AC-EMP-068 — La devolución recibe el hecho de su noche *(verifica BR-EMP-032)*
 
-DADO uso aceptado en jornada 2 CUANDO se evalúa su devolución ENTONCES la consulta de esa jornada
-es verdadera. CUANDO abre la 3 ENTONCES no registra uso de Poético en esa noche. Un evento antes
-de abrir, después del cierre, durante pausa o examen, o en jornadas 1, 3, 4 y 5 no crea el hecho.
+DADO uso aceptado en jornada 5 CUANDO se evalúa su devolución ENTONCES la consulta de esa jornada
+es verdadera. CUANDO abre la 6 ENTONCES no registra uso de Poético en esa noche. Un evento antes
+de abrir, después del cierre, durante pausa o examen, o en jornadas 1 a 4 y 6 a 8 no crea el
+hecho.
 
 ### AC-EMP-069 — Dos aperturas comparten un expediente, dos partidas no *(verifica BR-EMP-033)*
 
@@ -680,15 +687,39 @@ Una partida nueva sigue sin devoluciones.
 
 ### AC-EMP-071 — Poético justo debajo del despido y en el despido *(verifica BR-EMP-034, BR-EMP-009)*
 
-DADO jornada 2 con uso aceptado de Poético, limpiar cumplido y P = 3,5 después de anotar la noche
+DADO jornada 5 con uso aceptado de Poético, limpiar cumplido y P = 3,5 después de anotar la noche
 CUANDO se arma la devolución ENTONCES contiene una sola vez «Che, si usás un producto del local
 para la limpieza, me tenés que avisar. No podés hacer esas cosas sin consultarme. Espero que
 quede claro.», sin Tarea 4. DADO lo mismo con P = 4 ENTONCES contiene una sola vez «Si usás un
 producto del local para la limpieza, me tenés que avisar. No podés hacer esas cosas sin
 consultarme.» y el Cierre del despido. DADO limpiar y Tarea 5 sin cumplir, con el uso aceptado,
-ENTONCES el orden es Tarea 4, advertencia y Tarea 5, cada una una vez. DADO jornada 2 con sólo
-teñidos rechazados, o un teñido aceptado en jornada 3, ENTONCES no hay advertencia. Los medios,
+ENTONCES el orden es Tarea 4, advertencia y Tarea 5, cada una una vez. DADO jornada 5 con sólo
+teñidos rechazados, o un teñido aceptado en jornada 6, ENTONCES no hay advertencia. Los medios,
 la banda y el final son los mismos con y sin el hecho.
+
+### AC-EMP-072 — Tres declaradas no admiten aviso *(verifica BR-EMP-001, BR-EMP-003)*
+
+DADO la jornada 1 con sus tres obligatorias declaradas CUANDO cierra con las tres cumplidas
+ENTONCES la banda es NINGUNA; con dos, con una y con cero es GRAVE. DADO un legajo limpio CUANDO
+las jornadas 1 y 2 cierran con dos de tres cumplidas y sin llamados ENTONCES la partida termina
+despedida al cerrar la 2, y no se abre la 3.
+
+### AC-EMP-073 — El impecable de las noches del medio *(verifica BR-EMP-029)*
+
+DADO P = 0 CUANDO se arma la devolución de J = 1, 2, 3 y 4 ENTONCES el Cierre es la fila de esa
+jornada, sin espacio final. DADO P = 0 en J = 5, 6 y 7 ENTONCES el Cierre es «La jornada cerró
+cuadrada, como de costumbre. Excelente trabajo.». DADO P = 0 en J = 8 ENTONCES es «La verdad es
+que estoy impresionado…».
+
+### AC-EMP-074 — Los Retos más allá de la ficha *(verifica BR-EMP-028)*
+
+DADO el sexto llamado por papel con P < 4 CUANDO se arma la devolución ENTONCES Reto 1 es «Dejá
+de tirar papel en el inodoro. Ya no sé cómo pedírtelo.». DADO el sexto llamado por objetos en la
+basura en J = 8 ENTONCES Reto 2 es «Una vez más tuve que sacar cosas de la basura. Te parece
+gracioso?». DADO el sexto y el octavo llamado por objetos afuera ENTONCES Reto 3 es «A esta
+altura del partido, ya estoy considerando tirarte a VOS por la ventanilla.». DADO el sexto llamado
+por desorden con P < 4 ENTONCES Reto 4 es «Realmente me sorprende cómo alguien puede tener tan
+poca conciencia de lo que es el orden.».
 
 ## No objetivos
 
@@ -697,12 +728,13 @@ la banda y el final son los mismos con y sin el hecho.
   devoluciones a [`save-and-resume`](../save-and-resume/save-and-resume.md).
 - Esta capacidad NO dibuja el celular ni el chat: elige los mensajes, su ritmo y la opción, y
   el celular es de [`investigation`](../investigation/investigation.md).
-- Esta capacidad NO muestra la reflexión de cierre que sigue a «continuar» en las jornadas 1 y
-  2: es de [`investigation`](../investigation/investigation.md).
-- Esta capacidad NO trae la Tarea 5 de las jornadas 3 a 5: esas noches no declaran particular
-  mientras siga abierta OQ-SHF-006. Los textos esperan en la ficha.
+- Esta capacidad NO muestra la reflexión de cierre que sigue a «continuar» en las jornadas 4 y
+  5: es de [`investigation`](../investigation/investigation.md).
+- Esta capacidad NO trae la Tarea 5 de las jornadas 1 a 3 ni de las 6 a 8: esas noches no
+  declaran particular (BR-SHF-005). Los textos de las 6 a 8 esperan en la ficha mientras siga
+  abierta OQ-SHF-006.
 - Esta capacidad NO redacta mensajes de apertura: `investigation` consume el guion de cada
-  contacto, incluida la apertura de la jornada 2. Entrega a ese historial las devoluciones fechadas.
+  contacto, incluida la apertura de la jornada 5. Entrega a ese historial las devoluciones fechadas.
 
 ## Contratos
 
@@ -749,7 +781,7 @@ la banda y el final son los mismos con y sin el hecho.
 
 ## Preguntas abiertas
 
-- **OQ-EMP-005 — ¿Cuál es el Cierre definitivo de J = 5 con 1 < P ≤ 2?**
+- **OQ-EMP-005 — ¿Cuál es el Cierre definitivo de J = 8 con 1 < P ≤ 2?**
   - Por qué sigue abierta: la ficha lo deja «A DEFINIR» y no aparece en Figma. El usuario
     autorizó la frase provisoria de BR-EMP-029, y la ficha no se reescribe.
   - Decide: una persona de game design.

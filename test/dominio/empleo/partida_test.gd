@@ -29,13 +29,13 @@ func test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia() -> void:  # A
 
 
 func test_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso() -> void:  # AC-EMP-012
-	var restaurado := Legajo.con_medios(
-		(
-			(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO - Reglas.APERCIBIMIENTOS_POR_AVISO)
-			* Reglas.MEDIOS_POR_APERCIBIMIENTO
-		)
+	var medios := (
+		(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO - Reglas.APERCIBIMIENTOS_POR_AVISO)
+		* Reglas.MEDIOS_POR_APERCIBIMIENTO
 	)
-	var partida := Partida.new(restaurado)
+	var partida := Partida.desde(
+		{"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, "medios": medios}
+	)
 	_jugar(partida, Consecuencias.CUMPLIDAS_MINIMAS_PARA_AVISO)
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
@@ -136,7 +136,7 @@ func test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada() -> void:  # AC
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
 
-func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  # AC-EMP-008
+func test_todas_las_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  # AC-EMP-008
 	var partida := Partida.nueva()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		_jugar(partida, Apertura.cantidad_de_obligatorias(partida.jornada()))
@@ -257,7 +257,7 @@ func _cerrar_con(partida: Partida, sin_cumplir: Array[Tarea.Tipo], llamados: Arr
 
 
 func test_cerrar_anota_las_cuentas_de_la_noche() -> void:  # AC-EMP-059
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
 	partida.abrir_la_jornada()
 	for tarea: Tarea in partida.obligatorias():
 		if tarea.tipo() in [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR]:
@@ -292,16 +292,16 @@ func test_cerrar_anota_las_cuentas_de_la_noche() -> void:  # AC-EMP-059
 
 
 func test_las_devoluciones_se_concatenan_y_vuelven_del_guardado() -> void:  # AC-EMP-066, AC-SAV-024
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
 	assert_array(partida.mensajes_del_jefe()).is_empty()
 	_cerrar_con(partida, [Tarea.Tipo.REPONER], [Partida.Llamado.PAPEL_EN_EL_INODORO])
-	var primera := DevolucionDelJefe.new(1, partida).mensajes()
+	var primera := DevolucionDelJefe.new(4, partida).mensajes()
 	_cerrar_con(partida, [Tarea.Tipo.REPONER], [])
-	var segunda := DevolucionDelJefe.new(2, partida).mensajes()
+	var segunda := DevolucionDelJefe.new(5, partida).mensajes()
 	var esperado := PackedStringArray(primera + segunda)
 	assert_array(partida.mensajes_del_jefe()).is_equal(esperado)
 	var retomada := Partida.desde(PoliticaDeGuardado.datos(partida))
-	assert_int(retomada.jornada()).is_equal(3)
+	assert_int(retomada.jornada()).is_equal(6)
 	assert_array(retomada.mensajes_del_jefe()).is_equal(esperado)
 	assert_int(retomada.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(2)
 	assert_int(retomada.antecedentes().llamados(Partida.Llamado.PAPEL_EN_EL_INODORO)).is_equal(1)
@@ -312,7 +312,7 @@ func test_las_devoluciones_se_concatenan_y_vuelven_del_guardado() -> void:  # AC
 	_cerrar_con(retomada, [Tarea.Tipo.REPONER], [])
 	(
 		assert_bool(
-			DevolucionDelJefe.new(3, retomada).mensajes()[1].begins_with(
+			DevolucionDelJefe.new(6, retomada).mensajes()[1].begins_with(
 				"De nuevo quedaron algunas"
 			)
 		)

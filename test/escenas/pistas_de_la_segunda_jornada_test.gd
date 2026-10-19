@@ -37,13 +37,13 @@ func _cuadros(cantidad: int = 3) -> void:
 		await get_tree().process_frame
 
 
-func _abrir(jornada: int = 2) -> void:
+func _abrir(jornada: int = 5) -> void:
 	var partida := Partida.desde({"jornada": jornada, "medios": 0})
 	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
 	_almacen = escena.instantiate()
 	_almacen.set("_partida", partida)
 	add_child(_almacen)
-	if jornada == 1:
+	if jornada == 4:
 		_almacen.call("anunciar_la_noche")
 	(_almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
 	(_almacen.get("_reloj") as Node).set_process(false)
@@ -228,7 +228,7 @@ func test_rechazo_y_pausa_no_registran_colilla() -> void:  # AC-INV-049
 
 
 func test_canales_fuera_de_j2_no_anotan_y_revelaciones_siguen_aparte() -> void:  # AC-INV-054
-	await _abrir(3)
+	await _abrir(6)
 	var colilla := _colilla()
 	assert_object(colilla).is_not_null()
 	if colilla == null:
@@ -294,7 +294,7 @@ func test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll() -> void:  # AC-INV
 			assert_int(scroll.scroll_vertical).is_equal(posicion)
 		await _tecla(Celular.ACCION)
 		assert_bool(_celular().celular().abierto()).is_true()
-	_celular().abrir_jornada(3)
+	_celular().abrir_jornada(6)
 	var visibles: Array[Conversacion.Interlocutor] = []
 	for conversacion: Conversacion in _celular().bandeja().conversaciones():
 		visibles.append(conversacion.interlocutor)
@@ -305,7 +305,7 @@ func test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll() -> void:  # AC-INV
 
 
 func test_cierre_j1_abre_notas_vacias_fijas() -> void:  # AC-INV-052
-	await _abrir(1)
+	await _abrir(4)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.avanzar((reloj.get("_turno") as Turno).tiempo_restante())
 	Avance.entregar(_almacen.get("_pantalla") as PantallaDeDevolucion)
@@ -331,7 +331,7 @@ func test_recibido_futuro_no_aparece_en_el_chat_abierto() -> void:  # AC-INV-028
 	assert_int(anteriores.size()).is_equal(15)
 	var futuro := Mensaje.new()
 	futuro.identidad = "FUTURO_DE_PRUEBA"
-	futuro.jornada = 3
+	futuro.jornada = 6
 	futuro.momento = Mensaje.Momento.APERTURA
 	futuro.texto = "Este mensaje todavía no llegó."
 	_celular().recibir(Conversacion.Interlocutor.YASMIN, futuro)

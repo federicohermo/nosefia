@@ -81,8 +81,8 @@ func test_un_cierre_retomado_con_reflexion_no_abre_la_noche() -> void:  # AC-SHF
 				PartidaSerializada
 				. sanear(
 					{
-						PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 2,
-						PartidaSerializada.clave(PartidaSerializada.Campo.CIERRE_PENDIENTE): 1,
+						PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 5,
+						PartidaSerializada.clave(PartidaSerializada.Campo.CIERRE_PENDIENTE): 4,
 					}
 				)
 			)
@@ -171,3 +171,19 @@ func _anotar_apertura(_jornada: int) -> void:
 func _anotar_cierre(jornada: int, _cumplidas: int) -> void:
 	_cierres += 1
 	_ultima_jornada_cerrada = jornada
+
+
+func test_el_ritmo_no_se_hereda() -> void:  # AC-SHF-030
+	var casos := {3: 60.0, 4: 60.0, 2: 80.0}
+	for desde: int in casos:
+		var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+		var restantes: Array[float] = []
+		reloj.tiempo_consumido.connect(func(restante: float) -> void: restantes.append(restante))
+		var ciclo := _ciclo_arrancado(Partida.desde({"jornada": desde}), reloj)
+		if desde == 3:
+			_agotar_la_noche(reloj)
+			assert_bool(ciclo.abrir_la_jornada()).is_true()
+			assert_int(ciclo.partida().jornada()).is_equal(4)
+		restantes.clear()
+		reloj.avanzar(1.0)
+		assert_float(restantes.back()).is_equal(Reglas.DURACION_DEL_TURNO - casos[desde])

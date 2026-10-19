@@ -22,7 +22,7 @@ func after_test() -> void:
 	_almacen = null
 
 
-func _abrir(jornada: int = 2, desde_checkpoint: bool = false) -> Node3D:
+func _abrir(jornada: int = 5, desde_checkpoint: bool = false) -> Node3D:
 	_almacen = load("res://src/escenas/almacen.tscn").instantiate()
 	if not desde_checkpoint:
 		_almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
@@ -131,24 +131,24 @@ func _mirar_desde_piso_libre(objetivo: Node3D) -> void:
 
 # AC-ANO-001 AC-CLN-018
 func test_la_disponibilidad_de_lavandina_cubre_las_cinco_jornadas() -> void:
-	await _abrir(1)
-	for jornada in range(1, 6):
+	await _abrir(4)
+	for jornada in range(1, 9):
 		_almacen.call("_al_abrir_la_jornada", jornada)
 		var presentes := 0
 		for util: ObjetoAgarrable in _almacen.get("_utiles_de_limpieza"):
 			if util.is_visible_in_tree():
 				presentes += 1
-		assert_int(presentes).is_equal(4 if jornada == 2 else 5)
+		assert_int(presentes).is_equal(4 if jornada == 5 else 5)
 		var piso: PisoDelLocal = _almacen.get("_limpiador").piso()
 		assert_bool(piso.balde().tiene_agua()).is_false()
 		assert_bool(piso.mopa().esta_mojada()).is_false()
-		if jornada == 2:
+		if jornada == 5:
 			_azul_ausente()
 
 
 func test_los_objetos_disponibles_arrancan_dentro_de_su_habitacion() -> void:  # AC-CLN-040
-	await _abrir(1)
-	for jornada in range(1, 6):
+	await _abrir(4)
+	for jornada in range(1, 9):
 		_almacen.call("_al_abrir_la_jornada", jornada)
 		var estados: Array[ReglasDelCierre.Estado] = _almacen.call("_estados_del_cierre")
 		assert_bool(ReglasDelCierre.hay_desorden(estados)).is_false()
@@ -161,12 +161,12 @@ func test_los_objetos_disponibles_arrancan_dentro_de_su_habitacion() -> void:  #
 
 
 func test_cualquier_destino_previo_equivale_a_la_apertura_directa() -> void:  # AC-ANO-002
-	await _abrir(1)
+	await _abrir(4)
 	var agarre: Agarre = _almacen.get("_agarre")
 	var jugador: Node3D = _almacen.get("_jugador")
 	var azul: ObjetoAgarrable = _almacen.get_node("Objetos/JabonAzul")
 	for destino: String in ["mano", "examen", "piso", "contenedor"]:
-		_almacen.call("_al_abrir_la_jornada", 1)
+		_almacen.call("_al_abrir_la_jornada", 4)
 		assert_bool(agarre.pedir_agarrar(azul.datos, azul)).is_true()
 		match destino:
 			"examen":
@@ -176,27 +176,27 @@ func test_cualquier_destino_previo_equivale_a_la_apertura_directa() -> void:  # 
 			"contenedor":
 				_clic(_almacen.get_node(CUERPO))
 				assert_array(_almacen.get("_contenedor").tirados()).contains_exactly([azul])
-		_almacen.call("_al_abrir_la_jornada", 2)
+		_almacen.call("_al_abrir_la_jornada", 5)
 		assert_bool(jugador.examen.esta_examinando()).is_false()
 		assert_object(agarre.cuerpo_sostenido()).is_null()
 		_azul_ausente()
-		_almacen.call("_al_abrir_la_jornada", 2)
+		_almacen.call("_al_abrir_la_jornada", 5)
 		_azul_ausente()
 	await after_test()
 	assert_str(Guardado.ruta_por_defecto).is_not_equal(Guardado.RUTA_DEL_USUARIO)
 	(
 		assert_bool(
-			Guardado.new().escribir(PoliticaDeGuardado.datos(Partida.desde({"jornada": 2})))
+			Guardado.new().escribir(PoliticaDeGuardado.datos(Partida.desde({"jornada": 5})))
 		)
 		. is_true()
 	)
-	await _abrir(2, true)
+	await _abrir(5, true)
 	_azul_ausente()
 
 
 # AC-ANO-003 AC-CLN-065
 func test_la_tercera_jornada_recupera_el_mismo_bidon_y_su_estado_fisico() -> void:
-	await _abrir(1)
+	await _abrir(4)
 	var azul: ObjetoAgarrable = _almacen.get_node("Objetos/JabonAzul")
 	var padre := azul.get_parent()
 	var pose := azul.lugar_de_origen()
@@ -205,10 +205,10 @@ func test_la_tercera_jornada_recupera_el_mismo_bidon_y_su_estado_fisico() -> voi
 	var congelado := azul.freeze
 	assert_bool(_almacen.get("_agarre").pedir_agarrar(azul.datos, azul)).is_true()
 	_clic(_almacen.get_node(CUERPO))
-	_almacen.call("_al_abrir_la_jornada", 2)
-	_almacen.call("_al_abrir_la_jornada", 2)
+	_almacen.call("_al_abrir_la_jornada", 5)
+	_almacen.call("_al_abrir_la_jornada", 5)
 	_azul_ausente()
-	_almacen.call("_al_abrir_la_jornada", 3)
+	_almacen.call("_al_abrir_la_jornada", 6)
 	assert_object(_almacen.get_node("Objetos/JabonAzul")).is_same(azul)
 	assert_object(azul.get_parent()).is_same(padre)
 	assert_bool(azul.global_transform.is_equal_approx(pose)).is_true()
@@ -225,7 +225,7 @@ func test_la_tercera_jornada_recupera_el_mismo_bidon_y_su_estado_fisico() -> voi
 
 # AC-CLN-061 AC-CLN-064 AC-EMP-067
 func test_poetico_de_caja_y_gondola_tine_sin_descontar_y_se_devuelve() -> void:
-	await _abrir(2)
+	await _abrir(5)
 	var agarre: Agarre = _almacen.get("_agarre")
 	var balde: ObjetoAgarrable = _almacen.get_node("Objetos/Balde")
 	var piso: PisoDelLocal = _almacen.get("_limpiador").piso()
@@ -246,7 +246,7 @@ func test_poetico_de_caja_y_gondola_tine_sin_descontar_y_se_devuelve() -> void:
 			assert_object(agarre.cuerpo_sostenido()).is_same(unidad)
 			assert_object(agarre.manos().sostenido()).is_same(identidad)
 			assert_array(_cantidades()).is_equal(cantidades)
-		assert_bool(partida.uso_de_poetico_en(2)).is_true()
+		assert_bool(partida.uso_de_poetico_en(5)).is_true()
 		if de_gondola:
 			_almacen.get("_reposicion_manual").call("pedir_colocar", Producto.Id.POETICO)
 		else:
@@ -256,7 +256,7 @@ func test_poetico_de_caja_y_gondola_tine_sin_descontar_y_se_devuelve() -> void:
 
 
 func test_los_rechazos_no_sueltan_ni_publican_y_la_consulta_no_actua() -> void:  # AC-CLN-062
-	await _abrir(2)
+	await _abrir(5)
 	var unidad := _unidad()
 	var balde: Node3D = _almacen.get_node("Objetos/Balde")
 	var jugador: Node3D = _almacen.get("_jugador")
@@ -301,13 +301,13 @@ func test_los_rechazos_no_sueltan_ni_publican_y_la_consulta_no_actua() -> void: 
 		assert_object(_almacen.get("_agarre").cuerpo_sostenido()).is_same(unidad)
 		assert_array(_cantidades()).is_equal(cantidades)
 		assert_bool(limpiador.piso().mopa().esta_mojada()).is_false()
-		assert_bool(partida.uso_de_poetico_en(2)).is_false()
+		assert_bool(partida.uso_de_poetico_en(5)).is_false()
 	assert_array(rechazados).has_size(4)
 	assert_array(aceptados).is_empty()
 
 
 func test_pausa_y_examen_bloquean_el_tenido_hasta_reanudar() -> void:  # AC-CLN-066 AC-EMP-068
-	await _abrir(2)
+	await _abrir(5)
 	var unidad := _unidad()
 	var balde: Node3D = _almacen.get_node("Objetos/Balde")
 	var jugador: Node3D = _almacen.get("_jugador")
@@ -322,7 +322,7 @@ func test_pausa_y_examen_bloquean_el_tenido_hasta_reanudar() -> void:  # AC-CLN-
 	assert_bool(get_tree().paused).is_true()
 	_clic(balde)
 	assert_array(aceptados).is_empty()
-	assert_bool(_almacen.get("_partida").uso_de_poetico_en(2)).is_false()
+	assert_bool(_almacen.get("_partida").uso_de_poetico_en(5)).is_false()
 	pausa.reanudar()
 	assert_bool(jugador.examen.iniciar()).is_true()
 	_clic(balde)
@@ -333,11 +333,11 @@ func test_pausa_y_examen_bloquean_el_tenido_hasta_reanudar() -> void:  # AC-CLN-
 	jugador.examen.terminar()
 	_clic(balde)
 	assert_array(aceptados).contains_exactly([unidad.datos.id])
-	assert_bool(_almacen.get("_partida").uso_de_poetico_en(2)).is_true()
+	assert_bool(_almacen.get("_partida").uso_de_poetico_en(5)).is_true()
 
 
 func test_el_cierre_bloquea_el_tenido_sin_anotar_un_hecho_futuro() -> void:  # AC-CLN-066 AC-EMP-068
-	await _abrir(2)
+	await _abrir(5)
 	var unidad := _unidad()
 	var limpiador: Limpiador = _almacen.get("_limpiador")
 	var aceptados: Array[StringName] = []
@@ -351,11 +351,11 @@ func test_el_cierre_bloquea_el_tenido_sin_anotar_un_hecho_futuro() -> void:  # A
 	assert_array(aceptados).is_empty()
 	assert_int(limpiador.piso().balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.LIMPIA)
 	assert_object(_almacen.get("_agarre").cuerpo_sostenido()).is_same(unidad)
-	assert_bool(_almacen.get("_partida").uso_de_poetico_en(2)).is_false()
+	assert_bool(_almacen.get("_partida").uso_de_poetico_en(5)).is_false()
 
 
 func test_la_mopa_azul_de_poetico_muestra_carga_y_borra_solo_moho() -> void:  # AC-CLN-063
-	await _abrir(2)
+	await _abrir(5)
 	_unidad()
 	var limpiador: Limpiador = _almacen.get("_limpiador")
 	var balde: Node3D = _almacen.get_node("Objetos/Balde")

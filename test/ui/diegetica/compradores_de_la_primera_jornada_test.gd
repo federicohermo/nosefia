@@ -18,7 +18,7 @@ func after_test() -> void:
 func _panel() -> PanelDeLaVentanilla:
 	# La animación se ejerce sobre la interfaz cableada del juego y su modo real de pausa.
 	var almacen: Node3D = ALMACEN.instantiate()
-	almacen.set("_partida", Partida.nueva())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	_almacenes.append(almacen)
 	add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)

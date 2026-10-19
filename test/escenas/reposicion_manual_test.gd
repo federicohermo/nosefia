@@ -12,7 +12,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	# El cobro automático continúa desde la tercera jornada.
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", 6)
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var repositor: Repositor = almacen.get("_repositor")
@@ -95,7 +95,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	assert_object(agarre.punto_de_producto.get_child(0)).is_same(cuerpos[1])
 	agarre.soltar(true)
 	assert_int(grupo.multimesh.visible_instance_count).is_equal(2)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	await get_tree().process_frame
 	assert_int(grupo.multimesh.visible_instance_count).is_zero()
 	for cuerpo in cuerpos:
@@ -318,7 +318,7 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	var suelta := agarre.soltar(true)
 	presentacion.call("retirar", Producto.Id.JORGILLO)
 	var sostenida := agarre.punto_de_producto.get_child(0)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	await get_tree().process_frame
 	assert_bool(is_instance_valid(suelta)).is_false()
 	assert_bool(is_instance_valid(sostenida)).is_false()
@@ -394,7 +394,7 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 	AperturaConLugar.abrir_con_semilla(almacen)
 	# La segunda jornada restaura las cajas en sus estantes. La primera ahora entrega sobre
 	# pallets, y este caso ejerce el alcance de las dos alturas del rack, no la descarga.
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)

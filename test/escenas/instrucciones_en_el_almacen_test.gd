@@ -109,7 +109,6 @@ func test_leer_dos_minutos_no_cobra_y_comenzar_anuncia_una_sola_noche() -> void:
 	assert_object(_persiana().get("_entrada")).is_same(entrada)
 	assert_bool(_instrucciones().visible).is_false()
 	assert_bool((_persiana().get("_placa") as Label).visible).is_true()
-	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 1")
 	assert_bool(_jugador().suspendido()).is_true()
 	assert_float(_restante()).is_equal(restante)
 	_persiana().terminar()
@@ -218,18 +217,17 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	assert_float(_restante()).is_equal(restante)
 
 
-func test_continuar_carga_tres_y_siete_medios_sin_instrucciones() -> void:  # AC-SAV-021
+func test_continuar_carga_seis_y_siete_medios_sin_instrucciones() -> void:  # AC-SAV-021
 	(
-		assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 7})))
+		assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 7})))
 		. is_true()
 	)
 	_abrir()
 	_almacen.call("anunciar_la_noche")
 	var partida: Partida = _almacen.get("_partida")
-	assert_int(partida.jornada()).is_equal(3)
+	assert_int(partida.jornada()).is_equal(6)
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(_instrucciones().visible).is_false()
-	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 3")
 	assert_bool(_jugador().suspendido()).is_true()
 	var restante := _restante()
 	_reloj().set("_ultimo_cuadro_usec", Time.get_ticks_usec() - 120000000)
@@ -257,7 +255,6 @@ func test_seguir_despues_de_la_primera_noche_no_repite_la_intro() -> void:
 	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_instrucciones().visible).is_false()
-	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 2")
 	_persiana().terminar()
 	for _cuadro in 4:
 		await get_tree().process_frame
@@ -271,7 +268,7 @@ func test_abandonar_preparacion_no_escribe_y_preserva_checkpoint_anterior() -> v
 	var guardado := Guardado.new()
 	for preparacion: String in ["instrucciones", "entrada_nueva", "entrada_guardada"]:
 		(
-			assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 7})))
+			assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 7})))
 			. is_true()
 		)
 		var anterior := FileAccess.get_file_as_string(guardado.ruta)

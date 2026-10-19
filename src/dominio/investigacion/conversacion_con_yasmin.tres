@@ -6,7 +6,7 @@
 [sub_resource type="Resource" id="J2_1"]
 script = ExtResource("mensaje")
 identidad = "J2_1"
-jornada = 2
+jornada = 5
 orden = 0
 de_quien = "Yasmín"
 texto = "holuuu ✨"
@@ -14,7 +14,7 @@ texto = "holuuu ✨"
 [sub_resource type="Resource" id="J2_2"]
 script = ExtResource("mensaje")
 identidad = "J2_2"
-jornada = 2
+jornada = 5
 orden = 1
 de_quien = "Yasmín"
 texto = "que onda compa?"
@@ -22,7 +22,7 @@ texto = "que onda compa?"
 [sub_resource type="Resource" id="J2_3"]
 script = ExtResource("mensaje")
 identidad = "J2_3"
-jornada = 2
+jornada = 5
 orden = 2
 de_quien = "Yasmín"
 texto = "soy Yas del turno diurno"
@@ -30,7 +30,7 @@ texto = "soy Yas del turno diurno"
 [sub_resource type="Resource" id="J2_4"]
 script = ExtResource("mensaje")
 identidad = "J2_4"
-jornada = 2
+jornada = 5
 orden = 3
 de_quien = "Yasmín"
 texto = "la otra esclavita de enrique jsjsj"
@@ -38,7 +38,7 @@ texto = "la otra esclavita de enrique jsjsj"
 [sub_resource type="Resource" id="J2_5"]
 script = ExtResource("mensaje")
 identidad = "J2_5"
-jornada = 2
+jornada = 5
 orden = 4
 de_quien = "Yasmín"
 texto = "el chabon es bastante denso pero ya te vas a acostumbrar"
@@ -46,7 +46,7 @@ texto = "el chabon es bastante denso pero ya te vas a acostumbrar"
 [sub_resource type="Resource" id="J2_6"]
 script = ExtResource("mensaje")
 identidad = "J2_6"
-jornada = 2
+jornada = 5
 orden = 5
 de_quien = "Yasmín"
 texto = "y te aviso q acá siempre falta algo o anda todo a medias"
@@ -57,7 +57,7 @@ pista = "2A"
 [sub_resource type="Resource" id="J2_7"]
 script = ExtResource("mensaje")
 identidad = "J2_7"
-jornada = 2
+jornada = 5
 orden = 6
 de_quien = "Yasmín"
 texto = "para que te vayas acostumbrando también"
@@ -65,7 +65,7 @@ texto = "para que te vayas acostumbrando también"
 [sub_resource type="Resource" id="J2_8"]
 script = ExtResource("mensaje")
 identidad = "J2_8"
-jornada = 2
+jornada = 5
 orden = 7
 de_quien = "Yasmín"
 texto = "p ejemplo hoy parece que se acabo uno de los jabones para la limpieza y no había ningún repuesto"
@@ -73,7 +73,7 @@ texto = "p ejemplo hoy parece que se acabo uno de los jabones para la limpieza y
 [sub_resource type="Resource" id="J2_9"]
 script = ExtResource("mensaje")
 identidad = "J2_9"
-jornada = 2
+jornada = 5
 orden = 8
 de_quien = "Yasmín"
 texto = "no le reclames a enrique porque no va a hacer nada y encima se va a irritar"
@@ -81,7 +81,7 @@ texto = "no le reclames a enrique porque no va a hacer nada y encima se va a irr
 [sub_resource type="Resource" id="J2_10"]
 script = ExtResource("mensaje")
 identidad = "J2_10"
-jornada = 2
+jornada = 5
 orden = 9
 de_quien = "Yasmín"
 texto = "creo que lo podes reemplazar con chorrito del producto ese de limpieza que vendemos"
@@ -89,7 +89,7 @@ texto = "creo que lo podes reemplazar con chorrito del producto ese de limpieza 
 [sub_resource type="Resource" id="J2_11"]
 script = ExtResource("mensaje")
 identidad = "J2_11"
-jornada = 2
+jornada = 5
 orden = 10
 de_quien = "Yasmín"
 texto = "no creo que enrique se de cuenta si usás uno"
@@ -97,7 +97,7 @@ texto = "no creo que enrique se de cuenta si usás uno"
 [sub_resource type="Resource" id="J2_12"]
 script = ExtResource("mensaje")
 identidad = "J2_12"
-jornada = 2
+jornada = 5
 orden = 11
 de_quien = "Yasmín"
 texto = "pero nada"
@@ -105,7 +105,7 @@ texto = "pero nada"
 [sub_resource type="Resource" id="J2_13"]
 script = ExtResource("mensaje")
 identidad = "J2_13"
-jornada = 2
+jornada = 5
 orden = 12
 de_quien = "Yasmín"
 texto = "quería darte la bienvenida"
@@ -113,7 +113,7 @@ texto = "quería darte la bienvenida"
 [sub_resource type="Resource" id="J2_14"]
 script = ExtResource("mensaje")
 identidad = "J2_14"
-jornada = 2
+jornada = 5
 orden = 13
 de_quien = "Yasmín"
 texto = "quedamos en contacto p cualquier cosa"
@@ -121,7 +121,7 @@ texto = "quedamos en contacto p cualquier cosa"
 [sub_resource type="Resource" id="J2_15"]
 script = ExtResource("mensaje")
 identidad = "J2_15"
-jornada = 2
+jornada = 5
 orden = 14
 de_quien = "Yasmín"
 texto = "exitos con eso!  💪"

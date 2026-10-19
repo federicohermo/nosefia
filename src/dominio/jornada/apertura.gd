@@ -5,19 +5,33 @@
 class_name Apertura
 extends RefCounted
 
-const PARTICULARES := {1: [Tarea.Tipo.ORDENAR_LAS_CAJAS], 2: [Tarea.Tipo.SACAR_LA_BASURA]}
+const FIJAS: Array[Tarea.Tipo] = [
+	Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
+]
+## Las noches de introducción que todavía no piden todas las fijas.
+const INTRODUCCION := {
+	1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER],
+	2: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER],
+}
+const PARTICULARES := {
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA: [Tarea.Tipo.ORDENAR_LAS_CAJAS],
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1: [Tarea.Tipo.SACAR_LA_BASURA],
+}
 
 
-## Las cuatro fijas y la particular declarada, siempre con instancias nuevas.
+## Las fijas de la jornada y su particular declarada, siempre con instancias nuevas.
 static func obligatorias(jornada: int) -> Array[Tarea]:
-	var tipos: Array[Tarea.Tipo] = [
-		Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
-	]
+	var tipos: Array[Tarea.Tipo] = []
+	tipos.assign(INTRODUCCION.get(jornada, FIJAS))
 	tipos.append_array(PARTICULARES.get(jornada, []))
 	var lista: Array[Tarea] = []
 	for tipo in tipos:
 		lista.append(Tarea.new(tipo))
 	return lista
+
+
+static func pide(jornada: int, tipo: Tarea.Tipo) -> bool:
+	return tipo in INTRODUCCION.get(jornada, FIJAS) or tipo in PARTICULARES.get(jornada, [])
 
 
 static func cantidad_de_obligatorias(jornada: int) -> int:
@@ -34,11 +48,14 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 
 ## Recibe los mismos compradores de Atención y la fuente de azar de esta sesión.
 static func inventario_de_la_jornada(
+	jornada: int,
 	compradores: Array[Comprador],
 	casilleros_totales: Dictionary[Producto.Id, int],
 	casilleros_reponibles: Dictionary[Producto.Id, int],
 	azar: RandomNumberGenerator
 ) -> Inventario:
+	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
+		return inventario_con_faltantes({}, casilleros_totales)
 	return inventario_con_faltantes(
 		faltantes_al_azar(pedidos_de(compradores), casilleros_reponibles, azar), casilleros_totales
 	)

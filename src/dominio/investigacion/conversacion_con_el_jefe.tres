@@ -149,7 +149,7 @@ texto = "Te voy a tener cortito con esos detalles. Para trabajar en una estació
 [sub_resource type="Resource" id="J2_FOTO"]
 script = ExtResource("mensaje")
 identidad = "J2_CONTENEDOR_FOTO"
-jornada = 2
+jornada = 5
 orden = 0
 de_quien = "Enrique Peldaño"
 foto = ExtResource("contenedor")
@@ -157,7 +157,7 @@ foto = ExtResource("contenedor")
 [sub_resource type="Resource" id="J2_TEXTO"]
 script = ExtResource("mensaje")
 identidad = "J2_CONTENEDOR_TEXTO"
-jornada = 2
+jornada = 5
 orden = 1
 de_quien = "Enrique Peldaño"
 texto = "Buen día, pibe. Hoy te pido que tires la basura de todos los tachos del local en el contenedor. Saludos"

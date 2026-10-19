@@ -20,8 +20,8 @@ const PATRONES_DE_DECISION := "(?m)^\\s*(if|elif|match)\\b|var\\s+_(limpia|tipo|
 ## Lo más claro que puede ser un marrón.
 const LO_MAS_CLARO_DEL_MARRON := 0.5
 
-## Las dos noches que la ficha decide; de la tercera a la quinta arrancan como la primera.
-const JORNADAS: Array[int] = [1, 2]
+## Las dos noches que la ficha decide.
+const JORNADAS: Array[int] = [4, 5]
 
 ## Dónde quedan los pies del jugador parado en el piso del almacén.
 const ALTURA_DEL_JUGADOR := 0.112

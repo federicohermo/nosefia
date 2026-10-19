@@ -256,7 +256,7 @@ func test_el_aviso_nombra_lo_que_no_se_puede_vender_y_es_vacio_si_esta_todo() ->
 
 func test_vencer_conserva_cero_ticket_parcial_y_todos_sin_vender() -> void:  # AC-CTR-040
 	for modo: int in [0, 1, 2, 3]:
-		var comprador := Compradores.de_la_jornada(1)[0]
+		var comprador := Compradores.de_la_jornada(4)[0]
 		var inventario := Inventario.new(Catalogo.todos())
 		for producto in Catalogo.todos():
 			inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)

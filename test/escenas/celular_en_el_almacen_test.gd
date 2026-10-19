@@ -22,7 +22,7 @@ func _desmontar_almacen() -> void:
 	_almacen = null
 
 
-func _abrir(jornada: int = 1) -> void:
+func _abrir(jornada: int = 4) -> void:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set("_partida", Partida.desde(PartidaSerializada.sanear({"jornada": jornada})))
 	get_tree().root.add_child(_almacen)
@@ -321,7 +321,7 @@ func test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos() -> void:  # AC-INV
 
 
 func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-INV-037
-	_abrir(3)
+	_abrir(6)
 	(_almacen.get("_reloj") as RelojDelTurno).set_process(false)
 	var anterior := _celular().bandeja()
 	var esperados: Dictionary = {}
@@ -338,14 +338,14 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 		assert_int(anterior.mensajes_de(quien).size()).is_equal(esperados[quien].size() + 1)
 		_celular().pedir_volver()
 	var guardado := Guardado.new()
-	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 1}))).is_true()
+	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 1}))).is_true()
 	assert_bool(guardado.hay_guardado()).is_true()
 	await _desmontar_almacen()
 	# La escena reconstruye Partida desde el archivo real; no se inyecta _partida.
 	_almacen = ALMACEN.instantiate()
 	get_tree().root.add_child(_almacen)
 	_almacen.call("anunciar_la_noche")
-	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(3)
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(6)
 	assert_int((_almacen.get("_partida") as Partida).medios()).is_equal(1)
 	var nueva := _celular().bandeja()
 	assert_object(nueva).is_not_same(anterior)
@@ -361,7 +361,7 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 		assert_int(nueva.no_leidos(quien)).is_equal(mensajes.size())
 		assert_bool(mensajes.has(recibido)).is_false()
 		for mensaje in mensajes:
-			assert_int(mensaje.jornada).is_less_equal(3)
+			assert_int(mensaje.jornada).is_less_equal(6)
 	assert_array(quienes).is_equal(esperados.keys())
 	guardado.borrar()
 

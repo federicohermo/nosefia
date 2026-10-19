@@ -18,6 +18,17 @@ extends RefCounted
 const DIALOGOS := preload("res://assets/dialogos/compradores_jornada_1.tres")
 const DIALOGOS_SEGUNDA := preload("res://assets/dialogos/compradores_jornada_2.tres")
 
+const JORNADA_DE_FEDE_Y_MIA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+## Las jornadas de Tin y Tia: `jornada → [llegada de Tin, límite de Tin, llegada de Tia, límite
+## de Tia]`, cada hora como `Vector2i(hora, minuto)`.
+const HORARIOS_DE_TIN_Y_TIA: Dictionary[int, Array] = {
+	1: [Vector2i(21, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(6, 0)],
+	2: [Vector2i(21, 30), Vector2i(0, 10), Vector2i(3, 30), Vector2i(6, 10)],
+	3: [Vector2i(22, 30), Vector2i(1, 0), Vector2i(4, 30), Vector2i(7, 0)],
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+	[Vector2i(22, 0), Vector2i(0, 0), Vector2i(4, 0), Vector2i(6, 0)],
+}
+
 ## Cada fila es `[nombre, líneas del pedido, cuánto paga de más]`, y una línea es
 ## `[Producto.Id, unidades]`.
 ##
@@ -44,11 +55,11 @@ static func padron() -> Array[Comprador]:
 	return lista
 
 
-## Las dos primeras noches tienen contenido propio; las demás usan el padrón vigente.
+## Las jornadas con contenido propio lo traen; las demás usan el padrón vigente.
 static func de_la_jornada(jornada: int) -> Array[Comprador]:
-	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
-		return _primera_noche()
-	if jornada == 2:
+	if HORARIOS_DE_TIN_Y_TIA.has(jornada):
+		return _tin_y_tia(HORARIOS_DE_TIN_Y_TIA[jornada])
+	if jornada == JORNADA_DE_FEDE_Y_MIA:
 		var segunda := segunda_jornada_definida()
 		for comprador: Comprador in segunda:
 			comprador.dialogos = DIALOGOS_SEGUNDA
@@ -61,7 +72,7 @@ static func de_la_jornada(jornada: int) -> Array[Comprador]:
 	return lista
 
 
-static func _primera_noche() -> Array[Comprador]:
+static func _tin_y_tia(horario: Array) -> Array[Comprador]:
 	var tin := _comprador_de(
 		[
 			"Tin",
@@ -72,14 +83,13 @@ static func _primera_noche() -> Array[Comprador]:
 	var tia := _comprador_de(["Tia", [[Producto.Id.ZUCARACHAS, 1], [Producto.Id.PEPITO, 1]], 0])
 	tin.personaje = DialogosDeCompradores.Personaje.TIN
 	tia.personaje = DialogosDeCompradores.Personaje.TIA
-	tin.horario = Vector2(_desde_apertura(22), _desde_apertura(0))
-	tia.horario = Vector2(_desde_apertura(4), _desde_apertura(6))
+	tin.horario = Vector2(_desde_apertura(horario[0]), _desde_apertura(horario[1]))
+	tia.horario = Vector2(_desde_apertura(horario[2]), _desde_apertura(horario[3]))
 	tin.dialogos = DIALOGOS
 	tia.dialogos = DIALOGOS
 	return [tin, tia]
 
 
-## Declaración preparada para J2; su entrega de contenido activa la selección productiva.
 static func segunda_jornada_definida() -> Array[Comprador]:
 	var fede := _comprador_de(
 		["Fede", [[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1], [Producto.Id.DURONGA, 1]], 0]
@@ -93,20 +103,20 @@ static func segunda_jornada_definida() -> Array[Comprador]:
 	)
 	fede.personaje = DialogosDeCompradores.Personaje.FEDE
 	mia.personaje = DialogosDeCompradores.Personaje.MIA
-	fede.horario = Vector2(_desde_apertura(20, 30), _desde_apertura(23, 30))
-	mia.horario = Vector2(_desde_apertura(5), _desde_apertura(8))
+	fede.horario = Vector2(_desde_apertura(Vector2i(20, 30)), _desde_apertura(Vector2i(23, 30)))
+	mia.horario = Vector2(_desde_apertura(Vector2i(5, 0)), _desde_apertura(Vector2i(8, 0)))
 	return [fede, mia]
 
 
-static func _desde_apertura(hora: int, minuto: int = 0) -> float:
+static func _desde_apertura(hora: Vector2i) -> float:
 	return float(
 		(
 			(
 				(
-					posmod(hora - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
+					posmod(hora.x - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
 					* Marcador.MINUTOS_POR_HORA
 				)
-				+ minuto
+				+ hora.y
 			)
 			* Marcador.SEGUNDOS_POR_MINUTO
 		)

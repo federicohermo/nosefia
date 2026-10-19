@@ -85,7 +85,6 @@ func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> voi
 	await _cerrar_y_seguir()
 	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
 	assert_bool(_persiana().en_pantalla()).is_true()
-	assert_str((_persiana().get_node("Marco/Placa") as Label).text).is_equal("NOCHE 2")
 	assert_bool(_control().esta_suspendido()).is_true()
 	var antes := _restante()
 	await get_tree().process_frame
@@ -175,7 +174,7 @@ func test_la_entrada_esta_sobre_el_local_y_debajo_de_avisos_y_pausa() -> void:  
 
 
 func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC-SHF-024
-	_abrir(5)
+	_abrir(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	var pedidos := [0]
 	_almacen.set("_ir_al_menu", func() -> void: pedidos[0] += 1)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")

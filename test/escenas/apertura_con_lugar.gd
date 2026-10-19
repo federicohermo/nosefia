@@ -46,7 +46,7 @@ static func abrir_con_todo_el_lugar(almacen: Node3D) -> void:
 
 
 ## Reabre con una fuente reproducible sin cambiar el cableado compartido de la venta.
-static func abrir_con_semilla(almacen: Node3D, jornada: int = 1, semilla: int = 17) -> void:
+static func abrir_con_semilla(almacen: Node3D, jornada: int = 4, semilla: int = 17) -> void:
 	var azar: RandomNumberGenerator = almacen.get("azar_de_la_apertura")
 	azar.seed = semilla
 	almacen.call("_al_abrir_la_jornada", jornada)

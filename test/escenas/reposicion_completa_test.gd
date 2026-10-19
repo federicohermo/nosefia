@@ -7,6 +7,7 @@ const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 func test_reponer_todos_los_huecos_de_la_apertura_cumple_la_tarea() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var puesto: Node3D = almacen.get("_reposicion_manual")

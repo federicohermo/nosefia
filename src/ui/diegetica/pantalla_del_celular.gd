@@ -37,7 +37,16 @@ const LILA := Color("c99cf4")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "RUEDA DEL MOUSE / DESPLAZAR HISTORIAL"
-const DIAS: Array[String] = ["HOY", "AYER", "HACE DOS DÍAS", "HACE TRES DÍAS", "HACE CUATRO DÍAS"]
+const DIAS: Array[String] = [
+	"HOY",
+	"AYER",
+	"HACE DOS DÍAS",
+	"HACE TRES DÍAS",
+	"HACE CUATRO DÍAS",
+	"HACE CINCO DÍAS",
+	"HACE SEIS DÍAS",
+	"HACE SIETE DÍAS",
+]
 
 @export var _velo: Control
 @export var _lienzo: Control

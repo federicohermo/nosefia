@@ -120,7 +120,7 @@ const DERECHO := 3.0
 const AL_LADO := 1.0
 
 
-func _almacen(jornada: int = 1) -> Node3D:
+func _almacen(jornada: int = 4) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)
@@ -708,18 +708,18 @@ func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() ->
 	var filas_en_segunda := 0
 	for objeto in objetos:
 		var piso: PisoDelLocal = almacen.get("_limpiador").piso()
-		assert_int(piso.jornada()).is_equal(2)
+		assert_int(piso.jornada()).is_equal(5)
 		if objeto.name == "JabonAzul":
 			assert_int(filas_en_segunda).is_equal(3)
 			assert_bool(objeto.visible).is_false()
 			assert_int((objeto as ObjetoAgarrable).collision_layer).is_zero()
 			var partida: Partida = almacen.get("_partida")
-			assert_int(partida.jornada()).is_equal(2)
+			assert_int(partida.jornada()).is_equal(5)
 			partida.cerrar_la_jornada(partida.obligatorias().size())
 			FinDeLaReflexion.terminar(partida)
 			almacen.get("_ciclo").abrir_la_jornada()
-			assert_int(partida.jornada()).is_equal(3)
-			assert_int(almacen.get("_limpiador").piso().jornada()).is_equal(3)
+			assert_int(partida.jornada()).is_equal(6)
+			assert_int(almacen.get("_limpiador").piso().jornada()).is_equal(6)
 			assert_bool(objeto.is_visible_in_tree()).is_true()
 			assert_int((objeto as ObjetoAgarrable).collision_layer).is_not_zero()
 			assert_int((objeto as ObjetoAgarrable).collision_mask).is_not_zero()
@@ -961,7 +961,7 @@ func _soltar_la_caja_sobre(almacen: Node3D, caja: Node3D, cara: String, tapa: Ve
 ## **La tabla de abajo del estante del fondo arranca llena**: se corre al piso la caja del medio
 ## para dejarle lugar a la que se suelta.
 func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-PLY-021
-	var almacen: Node3D = await _almacen(2)
+	var almacen: Node3D = await _almacen(5)
 	var caja := _caja_grande(almacen)
 	var tabla: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.UAKALAS]
 	var lugar := tabla.global_position

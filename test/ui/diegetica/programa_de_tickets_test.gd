@@ -66,7 +66,7 @@ func _automatico(productos: Array[Producto]) -> GeneradorDeTickets:
 func test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado() -> void:  # AC-CTR-030
 	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
 	add_child(vista)
-	vista.mostrar(GeneradorDeTickets.para_la_jornada(3))
+	vista.mostrar(GeneradorDeTickets.para_la_jornada(6))
 	assert_int(vista.selectores.size()).is_equal(GeneradorDeTickets.RENGLONES)
 	var catalogo := Catalogo.todos()
 	for selector in vista.selectores:
@@ -77,7 +77,7 @@ func test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado() -> void:  
 			assert_str(selector.get_item_text(indice + 1)).is_equal(catalogo[indice].nombre)
 	for fila in vista.filas:
 		assert_bool(fila.is_visible_in_tree()).is_false()
-	vista.mostrar(GeneradorDeTickets.para_la_jornada(2))
+	vista.mostrar(GeneradorDeTickets.para_la_jornada(5))
 	for selector in vista.selectores:
 		assert_bool(selector.is_visible_in_tree()).is_false()
 	for fila in vista.filas:
@@ -95,7 +95,7 @@ func test_solo_dos_o_tres_conserva_su_posicion_al_repintar() -> void:  # AC-CTR-
 		func(indice: int, _producto: Producto) -> void: elecciones.append(indice)
 	)
 	for elegido: int in [1, 2]:
-		var generador := GeneradorDeTickets.para_la_jornada(3)
+		var generador := GeneradorDeTickets.para_la_jornada(6)
 		generador.elegir(elegido, marolini)
 		for _repintado in 2:
 			vista.mostrar(generador)
@@ -121,7 +121,7 @@ func test_solo_dos_o_tres_conserva_su_posicion_al_repintar() -> void:  # AC-CTR-
 func test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null() -> void:  # AC-CTR-030
 	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
 	add_child(vista)
-	var generador := GeneradorDeTickets.para_la_jornada(3)
+	var generador := GeneradorDeTickets.para_la_jornada(6)
 	vista.mostrar(generador)
 	var indices: Array[int] = []
 	var productos: Array[Producto] = []
