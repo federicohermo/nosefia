@@ -53,6 +53,7 @@ from lib.godot import (  # noqa: E402
     como_declararlo,
     entorno_de_la_suite,
     resolver,
+    validar_motor,
 )
 from lib.particiones_de_tests import (  # noqa: E402
     GrupoTests,
@@ -187,7 +188,17 @@ def nodo_tests(particion: ParticionTests | None = None) -> Resultado:
             "pasa a necesitar Godot y deja de saltearse.",
         )
 
-    godot, origen = resolver(dict(os.environ))
+    try:
+        godot, origen = resolver(dict(os.environ))
+        if godot is not None:
+            validar_motor(godot, RAIZ)
+    except (OSError, ValueError, ImportError, RuntimeError, KeyError, TypeError) as error:
+        return Resultado(
+            "tests", 1,
+            f"Motor nativo no válido: {error}\n"
+            "Preparalo con python .github/scripts/preparar_godot_nativo.py preparar.",
+            0.0,
+        )
     if godot is None:
         return Resultado("tests", 1, como_declararlo(dict(os.environ)), 0.0)
 

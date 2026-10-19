@@ -1,8 +1,8 @@
 """Encontrar el ejecutable de Godot, o decir cómo se declara.
 
-Godot no se instala: se baja un `.exe` y se lo deja en algún lado. O sea que **no hay ninguna
-ruta que se pueda dar por cierta**, y cada máquina del equipo lo tiene en otro lugar. La única
-fuente confiable es que alguien lo declare una vez, y eso es `GODOT_BIN`.
+La copia gestionada del proyecto contiene la corrección nativa requerida. `GODOT_BIN` permite
+elegir otra copia con manifiesto válido. El registro y PATH conservan el diagnóstico de las
+declaraciones anteriores, pero encontrar un ejecutable no acredita su receta ni sus archivos.
 
 ## Por qué además se lee el registro de Windows
 
@@ -37,8 +37,10 @@ registro entra por parámetro por lo mismo, y además porque en Linux —donde c
 registro que leer.
 """
 
+import importlib.util
 import os
 import shutil
+import sys
 from collections.abc import Callable
 from pathlib import Path
 
@@ -50,6 +52,46 @@ VARIABLE = "GODOT_BIN"
 ENTORNO = "entorno"
 REGISTRO = "registro"
 PATH = "PATH"
+GESTIONADO = "gestionado"
+WRAPPER_MEDICION = '#!/bin/sh\nexec "$CI_BENCH_PYTHON" "$CI_BENCH_SCRIPT" godot "$@"\n'
+
+
+def preparador_nativo(raiz: Path):
+    ruta = raiz / ".github/scripts/preparar_godot_nativo.py"
+    spec = importlib.util.spec_from_file_location("_preparador_godot_nativo", ruta)
+    modulo = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = modulo
+    spec.loader.exec_module(modulo)
+    return modulo
+
+
+def motor_gestionado(raiz: Path) -> str | None:
+    preparador = preparador_nativo(raiz)
+    carpeta = raiz / "build/godot-native" / preparador.plataforma_actual()
+    if not carpeta.exists():
+        return None
+    return preparador.validar(carpeta, raiz)["binario"]
+
+
+def validar_motor(binario: str | Path, raiz: Path, entorno: dict[str, str] | None = None) -> dict:
+    entorno = dict(os.environ) if entorno is None else entorno
+    ruta = Path(binario).absolute()
+    wrapper = Path(entorno.get("RUNNER_TEMP", str(raiz / ".ci-tools"))) / "godot-medido"
+    if ruta == wrapper.absolute():
+        script = raiz / ".github/scripts/medir_verificacion.py"
+        if (
+            ruta.is_symlink()
+            or ruta.read_text(encoding="utf-8") != WRAPPER_MEDICION
+            or Path(entorno.get("CI_BENCH_SCRIPT", "")).resolve() != script.resolve()
+            or Path(entorno.get("CI_BENCH_PYTHON", "")).resolve() != Path(sys.executable).resolve()
+            or not entorno.get("CI_GODOT_REAL")
+        ):
+            raise ValueError("El wrapper de medición no corresponde al verificador actual")
+        ruta = Path(entorno["CI_GODOT_REAL"]).absolute()
+    datos = preparador_nativo(raiz).validar_binario(ruta, raiz)
+    return {clave: datos[clave] for clave in (
+        "receta_sha256", "binario_sha256", "plataforma", "archivos",
+    )}
 
 
 def leer_del_registro_de_windows() -> str | None:
@@ -89,15 +131,18 @@ def resolver(
     en_el_path: Callable[[str], str | None] = shutil.which,
     existe: Callable[[str], bool] = os.path.isfile,
     del_registro: Callable[[], str | None] = leer_del_registro_de_windows,
+    gestionado: Callable[[], str | None] | None = None,
 ) -> tuple[str | None, str | None]:
     """El ejecutable de Godot y de dónde salió: `(ruta, origen)`.
 
-    El orden es entorno → registro → PATH, y cada paso tiene su motivo:
+    El orden es entorno, copia gestionada, registro y PATH:
 
     - **El entorno gana** porque es lo que alguien puso *para esta corrida*: un
       `GODOT_BIN=… python verificar.py` para probar otra versión tiene que ganarle a lo que
       diga el registro.
-    - **El registro va segundo** porque es la declaración persistente del usuario. Ver el
+    - **La copia gestionada** valida la receta y los archivos del motor corregido del proyecto.
+      Si existe pero está corrupta, no se sustituye por el oficial vulnerable del registro.
+    - **El registro va tercero** porque es la declaración persistente del usuario. Ver el
       encabezado: que el proceso no la tenga no quiere decir que no exista.
     - **El PATH va último** porque es el único que no fue una decisión sobre este repo: en una
       máquina con varias versiones bajadas, la que quedó primera en el PATH es un accidente.
@@ -110,6 +155,12 @@ def resolver(
     declarado = entorno.get(VARIABLE, "").strip().strip('"')
     if declarado:
         return (declarado, ENTORNO) if existe(declarado) else (None, None)
+
+    propio = (gestionado or (
+        lambda: motor_gestionado(Path(__file__).resolve().parents[3])
+    ))()
+    if propio:
+        return propio, GESTIONADO
 
     del_reg = del_registro()
     if del_reg:
@@ -131,11 +182,12 @@ def como_declararlo(entorno: dict[str, str], del_registro: Callable[[], str | No
             "Se movió el ejecutable, o la ruta quedó vieja. Corregila y volvé a correr."
         )
     return (
-        f"No se encontró Godot. Declaralo una vez en `{VARIABLE}`:\n\n"
-        '  PowerShell:  [Environment]::SetEnvironmentVariable("GODOT_BIN", '
-        '"C:\\ruta\\a\\Godot_v4.7.2-stable_win64_console.exe", "User")\n'
-        '  bash:        export GODOT_BIN="/c/ruta/a/Godot_v4.7.2-stable_win64_console.exe"\n\n'
-        "En Windows conviene el `_console.exe`: el otro no escribe en la consola, así que la "
+        "No se encontró Godot nativo preparado para este proyecto:\n\n"
+        "  python .github/scripts/preparar_godot_nativo.py preparar\n\n"
+        f"Para elegir otra copia preparada con manifiesto válido, usá `{VARIABLE}`:\n"
+        '  PowerShell:  $env:GODOT_BIN="C:\\ruta\\godot.windows.editor.x86_64.console.exe"\n'
+        '  bash:        export GODOT_BIN="/ruta/al/motor-preparado"\n\n'
+        "En Windows usá la entrada `.console.exe`: el otro no escribe en la consola, así que la "
         "salida de los tests se pierde entera.\n"
         "Y **no lo dejes adentro de OneDrive**: si el archivo está descargado sólo en la nube, "
         "Windows lo rechaza con «el proveedor de archivos de nube no se está ejecutando» y los "

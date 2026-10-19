@@ -30,7 +30,7 @@ Las suites nuevas reciben un costo estimado por defecto. Los tiempos orientan el
 el inventario sigue saliendo de todos los archivos `_test.gd` actuales.
 El orden es determinista y conserva la selección en Windows y Linux.
 Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes. El check
-obligatorio `verify` sólo pasa cuando pasan las seis particiones.
+obligatorio `verify` sólo pasa cuando pasan la preparación del motor y las seis particiones.
 Cada partición tiene un límite de veinte minutos. Si lo agota, el check falla.
 
 Los jobs se llaman «Partición 0» a «Partición 5». Sus suites se asignan por duración estimada,
@@ -38,15 +38,23 @@ sin reservar un grupo a un tema. La última partición corre también los demás
 
 Sin `--particion-tests`, el comando conserva la ejecución completa en un solo checkout.
 
-## Importación secuencial de recursos
+## Motor nativo corregido
 
-En Godot 4.7.2, `project.godot` fija `editor/import/use_multiple_threads=false` para procesar las importaciones de recursos en secuencia.
-El [PR oficial de Godot #123546](https://github.com/godotengine/godot/pull/123546) corrige una carrera de `ClassDB` durante importaciones concurrentes.
-El ajuste serializa la importación de cada worker; las seis particiones de suites siguen en paralelo.
-No modifica los hilos del juego ni los que un importador pueda crear por su cuenta.
-La causa de los timeouts observados en Linux sigue sin confirmarse.
+Godot 4.7.2 recibe el bloqueo de escritura del [PR oficial #123546](https://github.com/godotengine/godot/pull/123546) en el getter de valores predeterminados de `ClassDB`.
+La [receta nativa](../../.github/patches/godot-native-compilacion.json) fija fuente, parche, compilador y opciones.
+El preparador comprueba las fuentes antes y después del parche, y los hashes de cada binario al restaurarlo.
+La importación multihilo permanece habilitada con el motor corregido.
+El alcance es la carrera reproducida del getter, sin prometer seguridad de hilos para todos los accesos de `ClassDB`.
+La causa de los timeouts anteriores de Linux sigue sin confirmarse.
 
-Al adoptar una versión estable que incluya la corrección, validar importaciones frías y cálidas antes de retirar este ajuste.
+El job de preparación compila Linux una vez si falta la caché del motor.
+Después distribuye el mismo artefacto validado a las seis particiones.
+Una caché correcta evita recompilar. Una caché expulsada exige otra compilación inicial.
+La primera construcción puede durar mucho más que los tests.
+El costo del productor y la transferencia forma parte del tiempo total de CI.
+
+El [flujo local](./motor_nativo.md) usa la misma receta para Windows y Linux.
+La plantilla web mantiene sus parches y su validación independientes del editor nativo.
 
 ## Paso fijo en pruebas físicas
 
@@ -70,7 +78,7 @@ Un grupo fallido o sin reporte mantiene rojo el nodo completo, aunque el otro pa
 ## Reutilizar importaciones entre revisiones
 
 Cada partición restaura `.godot/imported` con una clave exacta por contenido.
-La clave incluye nombres y bytes de recursos, opciones de importación, addons, motor, sistema operativo concreto y arquitectura.
+La clave incluye nombres y bytes de recursos, opciones de importación, addons, identidad del motor nativo, sistema operativo concreto y arquitectura.
 El helper `.github/scripts/cache_importaciones.py` concentra esa selección y la política de compatibilidad.
 Cambiar scripts normales de `src/` o `test/` conserva la clave, incluso al agregar clases.
 Cambiar modelos, materiales, shaders o recursos externos a `assets/` produce otra clave.
@@ -79,7 +87,7 @@ Los cambios del propio helper también invalidan la caché.
 Cada worker obtiene el checkout actual y ejecuta siempre la importación del verificador.
 Los índices de clases y UID, los datos de usuario y los reportes se generan en ese worker.
 Sólo la partición cero publica importaciones después de pasar su verificación y encontrar una clave ausente.
-No hay un productor previo que retrase el comienzo de las particiones.
+La preparación del motor precede a las particiones. No hay un productor previo de importaciones del juego.
 
 Los importadores `importar_modelo.gd` e `importar_caja.gd` tienen hashes auditados en el helper.
 Un importador cambiado, desconocido o un nuevo `EditorImportPlugin` desactiva el reuso hasta actualizar esa política.

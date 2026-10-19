@@ -7,6 +7,10 @@ from pathlib import Path, PurePosixPath
 import re
 import shutil
 import subprocess
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / ".claude/scripts"))
+from lib.godot import validar_motor
 
 
 IMPORTADORES = {
@@ -27,6 +31,9 @@ class IdentidadImportacion:
     motor: str
     sistema: str
     arquitectura: str
+    receta_motor_sha256: str
+    binario_motor_sha256: str
+    artefacto_motor_sha256: str
     alcance: str = "recursos"
 
 
@@ -47,7 +54,16 @@ def configuracion_importacion(ruta: Path) -> tuple[str, list[str]]:
     )
 
 
-def identidad(raiz: Path, sistema: str, arquitectura: str) -> IdentidadImportacion:
+def identidad(
+    raiz: Path, sistema: str, arquitectura: str, motor_nativo: dict,
+) -> IdentidadImportacion:
+    receta = motor_nativo["receta_sha256"]
+    binario = motor_nativo["binario_sha256"]
+    artefacto = hashlib.sha256(json.dumps(
+        motor_nativo["archivos"], sort_keys=True, separators=(",", ":"),
+    ).encode("utf-8")).hexdigest()
+    if not all(re.fullmatch(r"[0-9a-f]{64}", valor) for valor in (receta, binario)):
+        raise ValueError("La identidad del motor nativo requiere receta y binario SHA256")
     nombres = archivos_versionados(raiz)
     seleccion = []
     motivo = "importadores auditados y recursos cubiertos"
@@ -111,9 +127,12 @@ def identidad(raiz: Path, sistema: str, arquitectura: str) -> IdentidadImportaci
                 motivo = ""
     motor = (raiz / ".godot-version").read_text(encoding="utf-8").strip()
     if motivo:
-        return IdentidadImportacion("", False, motivo, len(seleccion), motor, sistema, arquitectura)
+        return IdentidadImportacion(
+            "", False, motivo, len(seleccion), motor, sistema, arquitectura,
+            receta, binario, artefacto,
+        )
     huella = hashlib.sha256()
-    for valor in ("importaciones-v1", sistema, arquitectura, motor):
+    for valor in ("importaciones-v2", sistema, arquitectura, motor, receta, binario, artefacto):
         datos = valor.encode("utf-8")
         huella.update(len(datos).to_bytes(8, "big") + datos)
     politica = Path(__file__).read_bytes()
@@ -126,9 +145,9 @@ def identidad(raiz: Path, sistema: str, arquitectura: str) -> IdentidadImportaci
         with archivo.open("rb") as entrada:
             huella.update(hashlib.file_digest(entrada, "sha256").digest())
     return IdentidadImportacion(
-        f"godot-importaciones-v1-{huella.hexdigest()}", not motivo,
+        f"godot-importaciones-v2-{huella.hexdigest()}", not motivo,
         motivo or "importadores auditados y recursos cubiertos", len(seleccion),
-        motor, sistema, arquitectura,
+        motor, sistema, arquitectura, receta, binario, artefacto,
     )
 
 
@@ -182,7 +201,8 @@ def main() -> int:
         release = Path("/etc/os-release")
         if release.exists():
             sistema += "-" + hashlib.sha256(release.read_bytes()).hexdigest()[:16]
-        resultado = identidad(raiz, sistema, os.environ["RUNNER_ARCH"])
+        nativo = validar_motor(os.environ["GODOT_BIN"], raiz)
+        resultado = identidad(raiz, sistema, os.environ["RUNNER_ARCH"], nativo)
         datos = asdict(resultado) | {"commit": os.environ.get("GITHUB_SHA", "")}
         with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as salida:
             salida.write(f"key={resultado.key}\ncacheable={str(resultado.cacheable).lower()}\n")

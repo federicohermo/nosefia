@@ -1,0 +1,98 @@
+name: preparar-godot-nativo
+
+on:
+  workflow_call:
+    outputs:
+      artifact-id:
+        description: Artefacto del motor validado para esta corrida
+        value: ${{ jobs.preparar.outputs.artifact-id }}
+      receta:
+        description: SHA256 de la receta nativa
+        value: ${{ jobs.preparar.outputs.receta }}
+
+permissions:
+  contents: read
+
+jobs:
+  preparar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    outputs:
+      artifact-id: ${{ steps.publicar.outputs.artifact-id }}
+      receta: ${{ steps.identidad.outputs.receta }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Identificar receta nativa
+        id: identidad
+        run: |
+          set -euo pipefail
+          python .github/scripts/preparar_godot_nativo.py identidad \
+            --plataforma linux-x86_64 --destino build/godot-native/linux-x86_64 \
+            > "$RUNNER_TEMP/receta-nativa.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'receta-nativa.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as salida:
+              salida.write(f"receta={datos['receta_sha256']}\n")
+          PY
+      - uses: actions/cache/restore@v4
+        id: cache
+        continue-on-error: true
+        with:
+          path: build/godot-native/linux-x86_64
+          key: godot-nativo-linux-x86_64-${{ steps.identidad.outputs.receta }}
+      - name: Comprobar motor restaurado
+        id: comprobar
+        run: |
+          if python .github/scripts/preparar_godot_nativo.py comprobar \
+            --plataforma linux-x86_64 --destino build/godot-native/linux-x86_64; then
+            echo 'valido=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'valido=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Instalar dependencias para compilar
+        if: steps.comprobar.outputs.valido != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libx11-dev libxcursor-dev \
+            libxinerama-dev libxi-dev libxrandr-dev libwayland-dev libxkbcommon-dev \
+            libgl1-mesa-dev libglu1-mesa-dev libasound2-dev libpulse-dev libudev-dev
+      - name: Preparar motor nativo
+        run: >-
+          python .github/scripts/preparar_godot_nativo.py preparar
+          --plataforma linux-x86_64 --destino build/godot-native/linux-x86_64 --jobs 2
+      - name: Probar consultas concurrentes de ClassDB
+        run: >-
+          python .github/scripts/probar_godot_nativo.py
+          --destino build/godot-native/linux-x86_64
+      - uses: actions/cache/save@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        with:
+          path: build/godot-native/linux-x86_64
+          key: godot-nativo-linux-x86_64-${{ steps.identidad.outputs.receta }}
+      - name: Empaquetar motor con permisos de ejecución
+        run: tar --zstd -cf "$RUNNER_TEMP/godot-nativo.tar.zst" -C build/godot-native/linux-x86_64 .
+      - uses: actions/upload-artifact@v4
+        id: publicar
+        with:
+          name: godot-nativo-linux-x86_64-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/godot-nativo.tar.zst
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: motor-diagnostico-${{ github.run_attempt }}
+          path: |
+            reports/motor-nativo/
+            build/godot-native-compilacion/linux-x86_64/compilacion.log
+          if-no-files-found: warn
+          retention-days: 7

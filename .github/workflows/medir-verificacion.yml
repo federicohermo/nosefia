@@ -67,11 +67,15 @@ jobs:
               salida.write('matriz=' + json.dumps({'indice': list(range(n))}) + '\n')
           PY
 
+  motor:
+    needs: plan
+    uses: ./.github/workflows/preparar-godot-nativo.yml
+
   preparar:
     name: Preparación compartida
-    needs: plan
+    needs: [plan, motor]
     if: inputs.programacion != 'reutilizada' && (inputs.preparacion == 'compartida' || inputs.preparacion == 'importaciones')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
@@ -90,14 +94,32 @@ jobs:
             mkdir -p .ci-tools
           fi
           touch .ci-tools/.gdignore
-          version="$(tr -d '[:space:]' < .godot-version)"
-          test -n "$version"
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.motor.outputs.artifact-id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/motor-nativo
+      - name: Validar motor nativo de esta corrida
+        env:
+          RECETA_ESPERADA: ${{ needs.motor.outputs.receta }}
+        run: |
+          set -euo pipefail
           mkdir -p .ci-tools/godot
-          curl -fsSL -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/${version}/Godot_v${version}_linux.x86_64.zip"
-          unzip -q "$RUNNER_TEMP/godot.zip" -d .ci-tools/godot
-          bin="$(find "$GITHUB_WORKSPACE/.ci-tools/godot" -type f -name 'Godot_v*' | head -1)"
-          chmod +x "$bin"
-          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+          tar --zstd -xf "$RUNNER_TEMP/motor-nativo/godot-nativo.tar.zst" -C .ci-tools/godot
+          python .github/scripts/preparar_godot_nativo.py comprobar \
+            --plataforma linux-x86_64 --destino .ci-tools/godot \
+            > "$RUNNER_TEMP/motor-nativo.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'motor-nativo.json').read_text())
+          if datos['receta_sha256'] != os.environ['RECETA_ESPERADA']:
+              raise ValueError('el motor descargado no coincide con la receta del productor')
+          with open(os.environ['GITHUB_ENV'], 'a') as salida:
+              salida.write(f"GODOT_BIN={datos['binario']}\n")
+              salida.write(f"GODOT_NATIVE_RECIPE={datos['receta_sha256']}\n")
+          PY
+
       - name: Importar una vez
         run: python .github/scripts/medir_verificacion.py preparar --tipo "$TIPO_SNAPSHOT"
       - name: Empaquetar preservando fechas y permisos
@@ -119,8 +141,8 @@ jobs:
 
   worker:
     name: worker-${{ matrix.indice }}
-    needs: [plan, preparar]
-    if: always() && inputs.programacion == 'serial' && needs.plan.result == 'success' && (needs.preparar.result == 'success' || needs.preparar.result == 'skipped')
+    needs: [plan, preparar, motor]
+    if: always() && inputs.programacion == 'serial' && needs.motor.result == 'success' && needs.plan.result == 'success' && (needs.preparar.result == 'success' || needs.preparar.result == 'skipped')
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matriz) }}
@@ -132,11 +154,13 @@ jobs:
       programacion: ${{ inputs.programacion }}
       corrida_snapshot: ${{ github.run_id }}
       etiqueta: ${{ inputs.etiqueta }}
+      motor_artifact_id: ${{ needs.motor.outputs.artifact-id }}
+      motor_receta: ${{ needs.motor.outputs.receta }}
 
   worker-anticipado:
     name: worker-${{ matrix.indice }}
-    needs: plan
-    if: inputs.programacion == 'solapada' || inputs.programacion == 'reutilizada'
+    needs: [plan, motor]
+    if: needs.motor.result == 'success' && (inputs.programacion == 'solapada' || inputs.programacion == 'reutilizada')
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matriz) }}
@@ -148,18 +172,22 @@ jobs:
       programacion: ${{ inputs.programacion }}
       corrida_snapshot: ${{ inputs.programacion == 'reutilizada' && inputs.corrida_previa || github.run_id }}
       etiqueta: ${{ inputs.etiqueta }}
+      motor_artifact_id: ${{ needs.motor.outputs.artifact-id }}
+      motor_receta: ${{ needs.motor.outputs.receta }}
 
   resultado:
-    needs: [plan, preparar, worker, worker-anticipado]
+    needs: [plan, motor, preparar, worker, worker-anticipado]
     if: always()
     runs-on: ubuntu-latest
     steps:
       - env:
           PLAN: ${{ needs.plan.result }}
+          MOTOR: ${{ needs.motor.result }}
           PREPARAR: ${{ needs.preparar.result }}
           WORKERS: ${{ needs.worker.result }}
           ANTICIPADOS: ${{ needs.worker-anticipado.result }}
         run: |
           test "$PLAN" = success
+          test "$MOTOR" = success
           test "$PREPARAR" = success -o "$PREPARAR" = skipped
           test "$WORKERS:$ANTICIPADOS" = success:skipped -o "$WORKERS:$ANTICIPADOS" = skipped:success

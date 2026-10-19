@@ -13,6 +13,8 @@ import sys
 import time
 import xml.etree.ElementTree as ET
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / ".claude/scripts"))
+from lib.godot import WRAPPER_MEDICION, validar_motor
 
 TIPOS_SNAPSHOT = ("completo", "importaciones")
 
@@ -100,6 +102,7 @@ def ejecutar_medido(comando: list[str], log: Path | None = None) -> dict:
 
 
 def godot(argumentos: list[str]) -> int:
+    validar_motor(os.environ["CI_GODOT_REAL"], Path.cwd(), {})
     dato = ejecutar_medido([os.environ["CI_GODOT_REAL"], *argumentos])
     dato["fase"] = "import" if "--import" in argumentos else "tests"
     with Path(os.environ["CI_GODOT_METRICAS"]).open("a", encoding="utf-8") as archivo:
@@ -109,6 +112,7 @@ def godot(argumentos: list[str]) -> int:
 
 def preparar(tipo: str = "completo") -> int:
     datos = identidad()
+    datos["motor_nativo"] = validar_motor(os.environ["GODOT_BIN"], Path.cwd())
     datos["import_frio"] = ejecutar_medido(
         [os.environ["GODOT_BIN"], "--headless", "--path", str(Path.cwd()), "--import", "--quit"],
         Path("reports/medicion-ci/import-frio.log"),
@@ -119,6 +123,7 @@ def preparar(tipo: str = "completo") -> int:
         "workspace": str(Path.cwd()), "python": sys.version,
         "commit": datos["commit"], "arbol_juego": datos["arbol_juego"],
         "godot_version": captura(os.environ["GODOT_BIN"], "--version"),
+        "motor_nativo": datos["motor_nativo"],
         "sistema": platform.system(), "arquitectura": platform.machine(),
     })
     return datos["import_frio"]["codigo"]
@@ -171,9 +176,11 @@ def validar_snapshot(tipo: str = "completo") -> int:
         motores = list(Path(".ci-tools/godot").glob("Godot_v*"))
         if len(motores) != 1:
             raise ValueError("el snapshot requiere un único motor")
-        motor = str(motores[0].resolve())
+        motor = str(motores[0].absolute())
     else:
         motor = os.environ["GODOT_BIN"]
+    if validar_motor(motor, Path.cwd()) != datos.get("motor_nativo"):
+        raise ValueError("la identidad nativa del motor no coincide con el preparador")
     if captura(motor, "--version") != datos["godot_version"]:
         raise ValueError("el motor no coincide con la versión del preparador")
     if datos["commit"] != captura("git", "rev-parse", "HEAD"):
@@ -232,6 +239,7 @@ def verificar(indice: int, total: int, modo: str, etiqueta: str) -> int:
     codigo = 1
     try:
         real = os.environ["GODOT_BIN"]
+        datos["motor_nativo"] = validar_motor(real, Path.cwd())
         datos["godot_version"] = captura(real, "--version")
         datos["gdtoolkit_version"] = captura(
             sys.executable, "-c",
@@ -239,10 +247,7 @@ def verificar(indice: int, total: int, modo: str, etiqueta: str) -> int:
         )
         wrapper = Path(os.environ.get("RUNNER_TEMP", ".ci-tools")) / "godot-medido"
         wrapper.parent.mkdir(parents=True, exist_ok=True)
-        wrapper.write_text(
-            '#!/bin/sh\nexec "$CI_BENCH_PYTHON" "$CI_BENCH_SCRIPT" godot "$@"\n',
-            encoding="utf-8",
-        )
+        wrapper.write_text(WRAPPER_MEDICION, encoding="utf-8", newline="\n")
         wrapper.chmod(0o755)
         os.environ.update({
             "CI_GODOT_REAL": real,

@@ -17,11 +17,20 @@ SPEC.loader.exec_module(medir)
 
 
 class MedicionTests(unittest.TestCase):
+    NATIVO = {"receta_sha256": "a" * 64, "binario_sha256": "b" * 64,
+              "plataforma": "linux-x86_64", "archivos": {"Godot_v4": "b" * 64}}
+
+    def setUp(self):
+        nativo = patch.object(medir, "validar_motor", return_value=self.NATIVO)
+        self.nativo = nativo.start()
+        self.addCleanup(nativo.stop)
+
     def snapshot_importaciones(self):
         return {
             "tipo": "importaciones", "workspace": str(Path.cwd()), "python": "otro Python",
             "sistema": platform.system(), "arquitectura": platform.machine(),
             "godot_version": "4.x.stable", "commit": "commit-preparado",
+            "motor_nativo": self.NATIVO,
             "arbol_juego": {"src": "arbol-src", "test": "arbol-test", "assets": "arbol-assets"},
         }
 
@@ -146,6 +155,10 @@ class MedicionTests(unittest.TestCase):
             ("sistema", "otro sistema", "mismo sistema"),
             ("arquitectura", "otra arquitectura", "arquitectura"),
             ("godot_version", "otro motor", "motor no coincide"),
+            ("motor_nativo", self.NATIVO | {"receta_sha256": "c" * 64}, "identidad nativa"),
+            ("motor_nativo", self.NATIVO | {
+                "archivos": self.NATIVO["archivos"] | {"motor.dll": "d" * 64},
+            }, "identidad nativa"),
             ("commit", "otro-commit", "commit empaquetado"),
             ("arbol_juego", {"src": "otro-arbol"}, "árbol src"),
         )
@@ -166,6 +179,57 @@ class MedicionTests(unittest.TestCase):
         }), patch.object(medir, "captura", side_effect=self.captura_snapshot):
             with self.assertRaisesRegex(ValueError, "commit objetivo externo"):
                 medir.validar_snapshot("importaciones")
+
+    def test_snapshot_sin_identidad_nativa_no_se_acepta_por_version_coincidente(self):
+        datos = self.snapshot_importaciones()
+        del datos["motor_nativo"]
+        with patch.object(Path, "read_text", return_value=json.dumps(datos)), (
+            patch.dict("os.environ", {"GODOT_BIN": "motor-worker"})
+        ), patch.object(medir, "captura", side_effect=self.captura_snapshot), (
+            self.assertRaisesRegex(ValueError, "identidad nativa")
+        ):
+            medir.validar_snapshot("importaciones")
+
+    def test_snapshot_no_ejecuta_un_motor_que_no_pasa_su_validacion(self):
+        self.nativo.side_effect = ValueError("oficial sin parche")
+        with patch.object(Path, "read_text", return_value=json.dumps(
+            self.snapshot_importaciones()
+        )), patch.dict("os.environ", {"GODOT_BIN": "oficial"}), patch.object(
+            medir, "captura"
+        ) as capturar, self.assertRaisesRegex(ValueError, "sin parche"):
+            medir.validar_snapshot("importaciones")
+        capturar.assert_not_called()
+
+    def test_preparador_rechaza_oficial_antes_de_importar(self):
+        self.nativo.side_effect = ValueError("oficial sin parche")
+        with patch.object(medir, "identidad", return_value={}), (
+            patch.dict("os.environ", {"GODOT_BIN": "oficial"})
+        ), patch.object(medir, "ejecutar_medido") as ejecutar, (
+            self.assertRaisesRegex(ValueError, "sin parche")
+        ):
+            medir.preparar()
+        ejecutar.assert_not_called()
+
+    def test_worker_rechaza_oficial_antes_de_crear_o_usar_wrapper(self):
+        self.nativo.side_effect = ValueError("oficial sin parche")
+        anterior = Path.cwd()
+        with tempfile.TemporaryDirectory() as carpeta:
+            try:
+                os.chdir(carpeta)
+                with (
+                    patch.dict("os.environ", {"GODOT_BIN": "oficial", "RUNNER_TEMP": carpeta}),
+                    patch.object(medir, "identidad", return_value={}),
+                    patch.object(medir, "ejecutar_medido") as ejecutar,
+                    patch("lib.archivos.scripts_gd", return_value={"test/a_test.gd": ""}),
+                ):
+                    self.assertEqual(medir.verificar(0, 1, "independiente", "prueba"), 1)
+                    self.assertEqual(os.environ["GODOT_BIN"], "oficial")
+                ejecutar.assert_not_called()
+                self.assertFalse(Path("godot-medido").exists())
+                datos = json.loads(Path("reports/medicion-ci/worker.json").read_text())
+                self.assertIn("sin parche", datos["error"])
+            finally:
+                os.chdir(anterior)
 
     def test_importaciones_empaqueta_cache_y_manifest_sin_fuentes_git_ni_herramientas(self):
         raiz = Path.cwd()

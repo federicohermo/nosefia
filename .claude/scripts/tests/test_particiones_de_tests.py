@@ -257,6 +257,7 @@ class CableadoDeLaSuite(unittest.TestCase):
             patch.object(verificar, "RAIZ", self.raiz),
             patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(suites, "")),
             patch.object(verificar, "resolver", return_value=("godot", None)),
+            patch.object(verificar, "validar_motor", return_value={}),
             patch.object(verificar, "_correr", side_effect=correr),
         ):
             return verificar.nodo_tests(particion)
@@ -362,12 +363,37 @@ class CableadoDeLaSuite(unittest.TestCase):
         with (
             patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
             patch.object(verificar, "resolver", return_value=("godot", None)),
+            patch.object(verificar, "validar_motor", return_value={}),
             patch.object(
                 verificar, "_correr", return_value=verificar.Resultado("tests", 1, "", 0)
             ) as correr,
         ):
             self.assertEqual(verificar.nodo_tests(ParticionTests(0, 1)).codigo, 1)
             self.assertEqual(correr.call_count, 1)
+
+    def test_motor_oficial_rechazado_no_lanza_importacion_ni_tests(self):
+        with (
+            patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
+            patch.object(verificar, "resolver", return_value=("oficial", None)),
+            patch.object(verificar, "validar_motor", side_effect=ValueError("sin parche")),
+            patch.object(verificar, "_correr") as correr,
+        ):
+            resultado = verificar.nodo_tests()
+        self.assertEqual(resultado.codigo, 1)
+        self.assertIn("sin parche", resultado.salida)
+        correr.assert_not_called()
+
+    def test_copia_gestionada_con_manifiesto_incompleto_es_un_rojo_explicito(self):
+        with (
+            patch.object(verificar, "scripts_gd", return_value=dict.fromkeys(SUITES, "")),
+            patch.object(verificar, "resolver", side_effect=KeyError("receta_sha256")),
+            patch.object(verificar, "_correr") as correr,
+        ):
+            resultado = verificar.nodo_tests()
+        self.assertEqual(resultado.codigo, 1)
+        self.assertIn("Motor nativo no válido", resultado.salida)
+        self.assertIn("preparar_godot_nativo.py preparar", resultado.salida)
+        correr.assert_not_called()
 
 
 class SeleccionDeNodos(unittest.TestCase):

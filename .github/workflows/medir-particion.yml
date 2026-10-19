@@ -21,6 +21,12 @@ on:
       etiqueta:
         type: string
         required: true
+      motor_artifact_id:
+        type: string
+        required: true
+      motor_receta:
+        type: string
+        required: true
 
 permissions:
   contents: read
@@ -33,7 +39,7 @@ env:
 
 jobs:
   ejecutar:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
@@ -48,13 +54,34 @@ jobs:
         run: |
           set -euo pipefail
           pip install 'gdtoolkit==4.*'
-          version="$(tr -d '[:space:]' < .godot-version)"
-          test -n "$version"
-          curl -fsSL -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/${version}/Godot_v${version}_linux.x86_64.zip"
-          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
-          bin="$(find "$RUNNER_TEMP/godot" -type f -name 'Godot_v*' | head -1)"
-          chmod +x "$bin"
-          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        if: env.PREPARACION != 'compartida'
+        with:
+          artifact-ids: ${{ inputs.motor_artifact_id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/motor-nativo
+      - name: Validar motor nativo de esta corrida
+        if: env.PREPARACION != 'compartida'
+        env:
+          RECETA_ESPERADA: ${{ inputs.motor_receta }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/godot-native/linux-x86_64
+          tar --zstd -xf "$RUNNER_TEMP/motor-nativo/godot-nativo.tar.zst" -C build/godot-native/linux-x86_64
+          python .github/scripts/preparar_godot_nativo.py comprobar \
+            --plataforma linux-x86_64 --destino build/godot-native/linux-x86_64 \
+            > "$RUNNER_TEMP/motor-nativo.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'motor-nativo.json').read_text())
+          if datos['receta_sha256'] != os.environ['RECETA_ESPERADA']:
+              raise ValueError('el motor descargado no coincide con la receta del productor')
+          with open(os.environ['GITHUB_ENV'], 'a') as salida:
+              salida.write(f"GODOT_BIN={datos['binario']}\n")
+              salida.write(f"GODOT_NATIVE_RECIPE={datos['receta_sha256']}\n")
+          PY
+
       - name: Esperar el snapshot publicado
         id: origen
         if: env.PREPARACION != 'independiente'
@@ -97,9 +124,26 @@ jobs:
           python .github/scripts/medir_verificacion.py validar-snapshot --tipo "$TIPO_SNAPSHOT"
           if [ "$PREPARACION" = compartida ]; then
             echo "$GITHUB_WORKSPACE/.ci-tools/python/bin" >> "$GITHUB_PATH"
-            bin="$(find "$GITHUB_WORKSPACE/.ci-tools/godot" -type f -name 'Godot_v*' | head -1)"
-            echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
           fi
+      - name: Validar motor incluido en el snapshot completo
+        if: env.PREPARACION == 'compartida'
+        env:
+          RECETA_ESPERADA: ${{ inputs.motor_receta }}
+        run: |
+          set -euo pipefail
+          python .github/scripts/preparar_godot_nativo.py comprobar \
+            --plataforma linux-x86_64 --destino .ci-tools/godot \
+            > "$RUNNER_TEMP/motor-nativo.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'motor-nativo.json').read_text())
+          if datos['receta_sha256'] != os.environ['RECETA_ESPERADA']:
+              raise ValueError('el snapshot no coincide con la receta del productor')
+          with open(os.environ['GITHUB_ENV'], 'a') as salida:
+              salida.write(f"GODOT_BIN={datos['binario']}\n")
+              salida.write(f"GODOT_NATIVE_RECIPE={datos['receta_sha256']}\n")
+          PY
       - name: Medir verificación
         env:
           INDICE: ${{ inputs.indice }}

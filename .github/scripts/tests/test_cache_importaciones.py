@@ -13,6 +13,8 @@ SPEC = importlib.util.spec_from_file_location("cache_importaciones", REPO / ".gi
 cache = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = cache
 SPEC.loader.exec_module(cache)
+NATIVO = {"receta_sha256": "1" * 64, "binario_sha256": "2" * 64,
+          "plataforma": "linux-x86_64", "archivos": {"Godot_v4": "2" * 64}}
 
 
 class CacheImportacionesTests(unittest.TestCase):
@@ -44,7 +46,35 @@ class CacheImportacionesTests(unittest.TestCase):
             self.nombres.append(nombre)
 
     def identidad(self, sistema="Linux-Ubuntu24", arquitectura="X64"):
-        return cache.identidad(self.raiz, sistema, arquitectura)
+        return cache.identidad(self.raiz, sistema, arquitectura, NATIVO)
+
+    def test_receta_y_binario_reales_cambian_la_clave_sin_cambiar_version_base(self):
+        original = self.identidad()
+        self.assertTrue(original.key.startswith("godot-importaciones-v2-"))
+        for campo in ("receta_sha256", "binario_sha256"):
+            with self.subTest(campo=campo):
+                otro = cache.identidad(self.raiz, "Linux-Ubuntu24", "X64", NATIVO | {
+                    campo: "3" * 64,
+                })
+                self.assertNotEqual(original.key, otro.key)
+
+    def test_cambiar_exe_real_o_dll_invalida_aunque_el_launcher_no_cambie(self):
+        original = self.identidad()
+        otro = cache.identidad(self.raiz, "Linux-Ubuntu24", "X64", NATIVO | {
+            "archivos": NATIVO["archivos"] | {"motor.dll": "3" * 64},
+        })
+        self.assertNotEqual(original.key, otro.key)
+        self.assertNotEqual(original.artefacto_motor_sha256, otro.artefacto_motor_sha256)
+
+    def test_cli_rechaza_motor_no_acreditado_antes_de_generar_clave(self):
+        entorno = {"RUNNER_OS": "Linux", "RUNNER_ARCH": "X64", "GODOT_BIN": "oficial"}
+        with patch.object(sys, "argv", ["cache", "identidad", "--raiz", str(self.raiz)]), (
+            patch.dict(os.environ, entorno, clear=True)
+        ), patch.object(cache, "validar_motor", side_effect=ValueError("sin parche")), (
+            patch.object(cache, "identidad")
+        ) as calcular, self.assertRaisesRegex(ValueError, "sin parche"):
+            cache.main()
+        calcular.assert_not_called()
 
     def test_codigo_tests_clases_uid_y_documentacion_conservan_clave(self):
         original = self.identidad()
@@ -202,13 +232,13 @@ class CacheImportacionesTests(unittest.TestCase):
 
 class CheckoutActualTests(unittest.TestCase):
     def test_recursos_actuales_son_elegibles_y_clase_nueva_conserva_clave(self):
-        original = cache.identidad(REPO, "Linux-Ubuntu24", "X64")
+        original = cache.identidad(REPO, "Linux-Ubuntu24", "X64", NATIVO)
         self.assertTrue(original.cacheable, original.motivo)
         nombres = cache.archivos_versionados(REPO)
         with patch.object(cache, "archivos_versionados", return_value=nombres + [
             "src/dominio/clase_nueva.gd", "test/dominio/clase_nueva_test.gd",
         ]):
-            actual = cache.identidad(REPO, "Linux-Ubuntu24", "X64")
+            actual = cache.identidad(REPO, "Linux-Ubuntu24", "X64", NATIVO)
         self.assertEqual(original.key, actual.key)
 
 

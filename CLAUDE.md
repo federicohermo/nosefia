@@ -29,8 +29,8 @@ gdformat src test                               # arregla el formato, no sólo l
 - **`verificar.py` es el nodo de convergencia**, y se corre antes de cada PR. Sus nodos los
   declara `NODOS`, adentro del script. **La CI llama al script**, no a la lista.
 - **Un nodo `salteado` NO es un nodo verde.** Cada salteo dice qué no miró y hasta cuándo vale.
-  Sin `GODOT_BIN`, el nodo `tests` sale **rojo**. En Windows va el `_console.exe`, y **fuera de
-  OneDrive**.
+  Sin un motor corregido válido, el nodo `tests` sale **rojo**. La copia gestionada vive en
+  `build/godot-native/`. En Windows va el ejecutable de consola, y **fuera de OneDrive**.
 - **El veredicto sale del código de salida, nunca de un grep.** Un `| grep` sin match devuelve 1
   y se traga la salida entera.
 
@@ -140,6 +140,7 @@ spec, el implementador si no.
 | [Capacidades](./docs/architecture/capacidades.md) | Qué decide cada una y qué pasa entre ellas |
 | [Decisiones](./docs/architecture/decisions/) | Qué se decidió, cuándo y por qué |
 | [Inicio rápido](./docs/guides/quickstart.md) | Qué instalar, `GODOT_BIN`, qué correr |
+| [Motor nativo](./docs/guides/motor_nativo.md) | Preparar y validar el editor con la corrección de ClassDB |
 | [Verificación](./docs/guides/verificacion.md) | Los nodos, qué se saltea y hasta cuándo |
 | [TDD sin cobertura](./docs/guides/tdd.md) | Qué reemplaza al umbral y qué se pierde |
 | [Directrices](./docs/guides/conventions.md) | Cómo se escribe el código y los docs, el lenguaje y el glosario |

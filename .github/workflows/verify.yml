@@ -1,28 +1,10 @@
-# El nodo de convergencia, corrido por la máquina y no por la memoria de quien commitea.
-#
-# Corre `verificar.py` en particiones y NO enumera sus nodos como pasos separados. No es pereza:
-# enumerarlos acá crearía un segundo lugar donde vive la lista, y el día que alguien agregue un
-# nodo al script, la CI seguiría corriendo la lista vieja — en verde, que es exactamente el
-# modo de falla que este workflow existe para cerrar.
-#
-# Lo que este workflow NO hace, a propósito:
-#
-#   - No exporta el juego, y sigue sin hacerlo ahora que hay quien sí: el que exporta y publica
-#     es `desplegar.yml`, y sólo en `main`. La plantilla web optimizada se compila y cachea
-#     allá por versión y parche. Acá sólo se prueban sus guardias, sin construir el motor.
-#   - No corre el editor. Los tests corren headless, que es lo que hace que la CI y la máquina
-#     de cualquiera del equipo hagan exactamente lo mismo.
 name: verify
 
 on:
   pull_request:
-  # Las DOS ramas: `staging` es donde aterriza el trabajo —el push que de verdad hay que
-  # verificar— y `main` es lo que se entrega, así que no puede ser la única sin corrida propia.
   push:
     branches: [staging, main]
 
-# Sólo leer el código: desde que el gate del mapa se fue, ningún nodo consulta la API. El
-# default del repo es `read` a secas, así que todo permiso hay que declararlo igual.
 permissions:
   contents: read
 
@@ -31,9 +13,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  motor:
+    uses: ./.github/workflows/preparar-godot-nativo.yml
+
   verify-particion:
     name: Partición ${{ matrix.particion }}
-    runs-on: ubuntu-latest
+    needs: motor
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -41,35 +27,38 @@ jobs:
         particion: [0, 1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
-      # La versión vive UNA vez, y ese lugar es `.godot-version`. Antes vivía en un `env:` de
-      # acá y otra vez en la guía de inicio, con el encabezado diciendo «una vez» tres líneas
-      # más arriba de la segunda copia. Con dos workflows que bajan Godot, dos copias que se
-      # separan hacen que la CI verifique con un motor y el despliegue exporte con otro — y eso
-      # no da rojo en ningún lado: las dos corridas salen verdes, cada una con el suyo.
-      #
-      # El `set -euo pipefail` y el `-z` no son ceremonia: con un `echo` pelado, si el archivo
-      # falta, `tr` falla, el `echo` escribe igual una versión vacía y ESTE paso sale VERDE. El
-      # rojo aparecería tres pasos después como un 404 de `curl` sobre una URL sin versión
-      # adentro, que no nombra ni al archivo ni a quien lo borró.
-      #
-      # `tr -d` porque el archivo termina en salto de línea y el nombre de la release no.
-      - name: La versión del motor, leída de `.godot-version`
-        run: |
-          set -euo pipefail
-          version="$(tr -d '[:space:]' < .godot-version)"
-          if [ -z "$version" ]; then
-            echo '::error::falta .godot-version o está vacío: es el único lugar donde vive la versión del motor y los dos workflows la leen de ahí.'
-            exit 1
-          fi
-          echo "GODOT_VERSION=$version" >> "$GITHUB_ENV"
-
-      # Versión EXACTA y no `3.x`: `3.x` resuelve a la última del día y convierte al runtime de
-      # todas las herramientas en un blanco móvil — el mismo commit puede dar verde hoy y rojo
-      # el mes que viene sin que nadie toque una línea.
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.motor.outputs.artifact-id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/motor-nativo
+      - name: Validar motor nativo de esta corrida
+        env:
+          RECETA_ESPERADA: ${{ needs.motor.outputs.receta }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/godot-native/linux-x86_64
+          tar --zstd -xf "$RUNNER_TEMP/motor-nativo/godot-nativo.tar.zst" -C build/godot-native/linux-x86_64
+          python .github/scripts/preparar_godot_nativo.py comprobar \
+            --plataforma linux-x86_64 --destino build/godot-native/linux-x86_64 \
+            > "$RUNNER_TEMP/motor-nativo.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          datos = json.loads((Path(os.environ['RUNNER_TEMP']) / 'motor-nativo.json').read_text())
+          if datos['receta_sha256'] != os.environ['RECETA_ESPERADA']:
+              raise ValueError('el motor descargado no coincide con la receta del productor')
+          with open(os.environ['GITHUB_ENV'], 'a') as salida:
+              salida.write(f"GODOT_BIN={datos['binario']}\n")
+              salida.write(f"GODOT_NATIVE_RECIPE={datos['receta_sha256']}\n")
+          PY
 
       - name: Identidad de las importaciones actuales
         id: importaciones
@@ -91,25 +80,8 @@ jobs:
           CACHE_CLAVE_RESTAURADA: ${{ steps.restaurar-importaciones.outputs.cache-matched-key }}
         run: python .github/scripts/cache_importaciones.py preparar
 
-      # El harness no tiene dependencias: esto es el linter del JUEGO, no de las herramientas.
       - run: pip install "gdtoolkit==4.*"
 
-      # Godot se baja acá y no se cachea entre corridas: es un zip de ~78 MB —77.860.424 bytes
-      # el de 4.7.2, medido el 2026-09-06 contra la release de GitHub— y bajarlo tarda menos
-      # que el paso de restaurar caché que habría que mantener. El nombre del ejecutable
-      # sale del zip y por eso se resuelve con un glob: pinearlo a mano lo rompería en el
-      # próximo bump de versión, y lo rompería con un "no such file" que no dice nada.
-      - name: Bajar Godot ${{ env.GODOT_VERSION }}
-        run: |
-          set -euo pipefail
-          url="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          curl -fsSL -o godot.zip "$url"
-          unzip -q godot.zip -d "$HOME/godot"
-          bin="$(find "$HOME/godot" -maxdepth 1 -type f -name 'Godot_v*' | head -1)"
-          chmod +x "$bin"
-          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
-
-      # Ningún nodo sale a la red: el gate que consultaba GitHub se fue con el mapa de specs.
       - name: verificar
         run: >-
           python .claude/scripts/verificar.py
@@ -133,8 +105,6 @@ jobs:
           path: .godot/imported
           key: ${{ steps.importaciones.outputs.key }}
 
-      # Los reportes de gdUnit4, para poder mirar QUÉ falló sin reproducir la corrida. `always()`
-      # porque el caso en que sirven es justamente aquel en que el paso anterior falló.
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -145,10 +115,13 @@ jobs:
 
   verify:
     if: always()
-    needs: verify-particion
+    needs: [motor, verify-particion]
     runs-on: ubuntu-latest
     steps:
       - name: Todas las particiones deben pasar
         env:
+          MOTOR: ${{ needs.motor.result }}
           RESULTADO: ${{ needs.verify-particion.result }}
-        run: test "$RESULTADO" = success
+        run: |
+          test "$MOTOR" = success
+          test "$RESULTADO" = success
