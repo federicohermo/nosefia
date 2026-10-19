@@ -261,8 +261,8 @@ func _atender(almacen: Node3D) -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var caja: CajaRegistradora = almacen.get("_caja")
 	var destino: Node3D = almacen.get("_puesto_de_la_caja").get("destino_de_los_tickets")
-	for intervalo: float in [120.0, 360.0]:
-		reloj.avanzar(intervalo)
+	for hora: Vector2i in [Vector2i(22, 0), Vector2i(4, 0)]:
+		RelojDePrueba.avanzar_hasta(reloj, hora)
 		_pulsar_ventanilla(ventanilla)
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)

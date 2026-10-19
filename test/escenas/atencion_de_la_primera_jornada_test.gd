@@ -130,7 +130,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		assert_object(agarre.manos().sostenido()).is_null()
 		assert_bool(atendida.vendida()).is_true()
 		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_equal(
-			intervalo == 180.0
+			hora == Vector2i(4, 0)
 		)
 		assert_bool(atendida.despachada()).is_false()
 		var despedida := atendida.dialogo()

@@ -170,7 +170,7 @@ func test_el_fixture_no_modifica_las_selecciones_productivas() -> void:
 	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
 	var jornadas := range(primera, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	var antes: Array[Array] = []
-	for jornada in jornadas:
+	for jornada: int in jornadas:
 		var datos: Array = []
 		for comprador in Compradores.de_la_jornada(jornada):
 			datos.append([comprador.nombre(), comprador.personaje, comprador.horario])
@@ -178,7 +178,7 @@ func test_el_fixture_no_modifica_las_selecciones_productivas() -> void:
 	if not await _crear():
 		return
 	await _fixture.call("llegar")
-	for jornada in jornadas:
+	for jornada: int in jornadas:
 		var datos: Array = []
 		for comprador in Compradores.de_la_jornada(jornada):
 			datos.append([comprador.nombre(), comprador.personaje, comprador.horario])
