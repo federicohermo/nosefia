@@ -97,7 +97,7 @@ identidad = "J1_Intro07"
 jornada = 2
 orden = 11
 de_quien = "Enrique Peldaño"
-texto = "Tercero, hacer la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndolas [/b]y reponé los ítems que falten con los de las [b]cajas del depósito[/b]."
+texto = "Hoy te voy a pedir que hagas la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndolas [/b]y reponé los ítems que falten con los de las [b]cajas del depósito[/b]."
 
 [sub_resource type="Resource" id="Intro08"]
 script = ExtResource("mensaje")
