@@ -65,6 +65,8 @@ La caché nunca restaura esos recursos versionados.
 Una ausencia, un error del servicio o una coincidencia parcial limpia las importaciones restauradas y continúa con una verificación fría.
 No se usan claves aproximadas.
 La disponibilidad también depende del alcance de ramas y la retención de GitHub Actions.
+Las PR pueden leer la caché de su rama base. Una caché creada dentro de una PR sirve para sus siguientes corridas.
+El primer push a `staging` puede preparar en frío y publicar una caché para futuras PR dirigidas a esa rama.
 El archivo `reports/cache-importaciones.json` registra clave, revisión actual, compatibilidad y acierto real de cada partición.
 `reports/cache-recursos.sha256` conserva las huellas de los recursos derivados para comparar corridas frías y cálidas.
 El resumen del job muestra ese estado aunque falle la verificación posterior.

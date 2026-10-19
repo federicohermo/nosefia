@@ -84,6 +84,18 @@ class CacheImportacionesTests(unittest.TestCase):
         self.escribir("otro_icono.svg", "original")
         self.assertNotEqual(original.key, self.identidad().key)
 
+    def test_recurso_importado_en_documentacion_incluye_origen_y_opciones(self):
+        self.escribir("docs/diagrama.svg", "imagen original")
+        self.escribir("docs/diagrama.svg.import", 'import_script/path=""\n')
+        original = self.identidad()
+        self.assertTrue(original.cacheable)
+        self.escribir("docs/diagrama.svg", "imagen cambiada")
+        self.assertNotEqual(original.key, self.identidad().key)
+        self.escribir("docs/diagrama.svg", "imagen original")
+        self.assertEqual(original.key, self.identidad().key)
+        self.escribir("docs/diagrama.svg.import", 'import_script/path=""\ncompress/mode=2\n')
+        self.assertNotEqual(original.key, self.identidad().key)
+
     def test_importadores_nuevos_cambiados_y_plugins_desactivan(self):
         self.escribir("assets/models/importar_modelo.gd", "modificado")
         self.assertFalse(self.identidad().cacheable)
