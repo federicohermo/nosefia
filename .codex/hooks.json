@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/scripts/gate_de_rama.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_rama.py\" || exit 0",
+            "command": "python .claude/scripts/gate_de_rama.py || python \"$(git rev-parse --show-toplevel)/.claude/scripts/gate_de_rama.py\" || exit 0",
             "timeout": 10
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/scripts/gate_de_worktrees.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_worktrees.py\" || exit 0",
+            "command": "python .claude/scripts/gate_de_worktrees.py || python \"$(git rev-parse --show-toplevel)/.claude/scripts/gate_de_worktrees.py\" || exit 0",
             "timeout": 10
           }
         ]
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/scripts/recordatorio_del_indice.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/recordatorio_del_indice.py\" || exit 0",
+            "command": "python .claude/scripts/recordatorio_del_indice.py || python \"$(git rev-parse --show-toplevel)/.claude/scripts/recordatorio_del_indice.py\" || exit 0",
             "timeout": 10
           }
         ]
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/scripts/formatear_al_editar.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/formatear_al_editar.py\" || exit 0",
+            "command": "python .claude/scripts/formatear_al_editar.py || python \"$(git rev-parse --show-toplevel)/.claude/scripts/formatear_al_editar.py\" || exit 0",
             "timeout": 30
           }
         ]
@@ -49,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/scripts/recordatorio_del_indice.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/recordatorio_del_indice.py\" || exit 0",
+            "command": "python .claude/scripts/recordatorio_del_indice.py || python \"$(git rev-parse --show-toplevel)/.claude/scripts/recordatorio_del_indice.py\" || exit 0",
             "timeout": 10
           }
         ]
