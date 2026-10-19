@@ -132,14 +132,14 @@ revisada el 2026-10-11 y una línea sobre reponer lo vendido, repartidos así:
 
 | Jornada | En pantalla | Sólo en el chat |
 |---|---|---|
-| 1 | Intro 1 a 6, la línea de reponer e Intro 12 | — |
+| 1 | Intro 1 a 6 y la línea de reponer | — |
 | 2 | Intro 7 y 8 | — |
-| 3 | Intro 9 | — |
+| 3 | Intro 9 e Intro 12 | — |
 | 4 | — | Intro 10 e Intro 11, al abrir la jornada |
 
 Cada mensaje DEBE conservar su orden y los énfasis en amarillo. DEBE corregir «vas a tener» en
 Intro 3 e «instrucciones» en Intro 10, mostrar el horario como «20:00 a 08:00» y decir «ocho
-jornadas» en Intro 1. La línea de reponer DEBE ir entre Intro 6 e Intro 12, sin foto. Su texto
+jornadas» en Intro 1. La línea de reponer DEBE cerrar la jornada 1, después de Intro 6, sin foto. Su texto
 provisorio es «Lo que les entregues lo sacás de las góndolas. Después, reponé esas unidades con
 las cajas del depósito. No quiero ver huecos.», con énfasis en «góndolas» y en «reponé esas
 unidades» (OQ-EMP-006).
@@ -174,7 +174,7 @@ mantener visible el objeto ilustrado. La foto de Intro 11 DEBE acompañar su tex
 aunque su frame de referencia omita esa foto.
 
 Los trece textos y siete fotos DEBEN conservarse como 20 entradas separadas en el chat de
-Enrique: 12 de la jornada 1, 3 de la 2, 2 de la 3 y 3 de la 4. Cada foto DEBE ir inmediatamente
+Enrique: 11 de la jornada 1, 3 de la 2, 3 de la 3 y 3 de la 4. Cada foto DEBE ir inmediatamente
 antes del texto de su Intro. Desde que abre su jornada, ese chat DEBE permitir releer cada
 entrada y ampliar cada foto con el texto de su propia Intro.
 
@@ -486,27 +486,29 @@ dato antiguo, el entero 7 de medios sigue prevaleciendo.
 DADO la octava jornada con 7 medios CUANDO cierra impecable sin motivos ENTONCES conserva 7
 y termina con contrato cumplido. DADO un motivo adicional ENTONCES llega a 8 y termina despedido.
 
-### AC-EMP-045 — Ocho pantallas, una pantalla, atrás y OK *(verifica BR-EMP-023)*
+### AC-EMP-045 — Siete pantallas, una pantalla, atrás y OK *(verifica BR-EMP-023)*
 
 DADO las instrucciones de la jornada 1 recién abiertas CUANDO se consulta su estado ENTONCES se
-muestra sólo la primera pantalla, el contador dice «1/8» y «Volver» está visible y
-deshabilitado; intentar volver conserva 1. CUANDO se avanza siete veces ENTONCES se muestra sólo
-la pantalla 8/8 y el botón dice «OK». CUANDO se vuelve ENTONCES se muestra 7/8 y dice
-«Siguiente». CUANDO se llega a 8 y se elige «OK» dos veces ENTONCES las instrucciones terminan y
+muestra sólo la primera pantalla, el contador dice «1/7» y «Volver» está visible y
+deshabilitado; intentar volver conserva 1. CUANDO se avanza seis veces ENTONCES se muestra sólo
+la pantalla 7/7 y el botón dice «OK». CUANDO se vuelve ENTONCES se muestra 6/7 y dice
+«Siguiente». CUANDO se llega a 7 y se elige «OK» dos veces ENTONCES las instrucciones terminan y
 se pide una sola entrada a la noche 1. Avanzar 3 y volver 3 desde el inicio recupera sólo la
-primera pantalla. DADO las de la jornada 2 ENTONCES el contador dice «1/2». DADO las de la
-jornada 3 ENTONCES dice «1/1», «Volver» está deshabilitado y el botón dice «OK»; elegirlo dos
-veces pide una sola entrada a la noche 3. Los controles no se mueven al cambiar de pantalla y no
-existe desplazamiento del contenido.
+primera pantalla. DADO las de la jornada 2 o la 3 ENTONCES el contador dice «1/2». CUANDO en la
+3 se llega a 2/2 y se elige «OK» dos veces ENTONCES se pide una sola entrada a la noche 3. DADO
+instrucciones de una sola pantalla ENTONCES la primera es la última: «Volver» está deshabilitado y
+el botón dice «OK». Los controles no se mueven al cambiar de pantalla y no existe desplazamiento
+del contenido.
 
 ### AC-EMP-046 — Las entradas de cada jornada forman sus pantallas *(verifica BR-EMP-022, BR-EMP-023)*
 
 DADO los textos de la ficha revisada, la línea de reponer, sus énfasis y las siete fotos CUANDO
-se agrupan las entradas de cada jornada ENTONCES la jornada 1 tiene 12 entradas y 8 pantallas,
-la 2 tiene 3 y 2, la 3 tiene 2 y 1, y la 4 tiene 3 entradas y ninguna pantalla. Las jornadas 5 a
+se agrupan las entradas de cada jornada ENTONCES la jornada 1 tiene 11 entradas y 7 pantallas,
+la 2 tiene 3 y 2, la 3 tiene 3 y 2, y la 4 tiene 3 entradas y ninguna pantalla. Las jornadas 5 a
 8 no tienen entradas ni pantallas. En la jornada 1, las pantallas 2, 3, 4 y 6 muestran la foto de
-su Intro después del texto, la 7 es la línea de reponer sin foto y la 8 es Intro 12. La primera
-pantalla de la jornada 2 muestra la foto de Intro 7, y la de la 3 la de Intro 9.
+su Intro después del texto y la 7 es la línea de reponer sin foto. La primera pantalla de la
+jornada 2 muestra la foto de Intro 7. En la 3, la primera muestra la foto de Intro 9 y la
+segunda es Intro 12.
 CUANDO se avanza y vuelve por todas ENTONCES sólo se muestra el contenido de la actual,
 el contador coincide y la secuencia original de 20 entradas sigue intacta. El retrato y
 bocadillo se mantienen visibles en todas las pantallas. La pantalla de Intro 4 incluye interfaz
@@ -758,14 +760,14 @@ DADO el cierre de la jornada 1 CUANDO se elige «continuar» ENTONCES la persian
 Intro 7 en «1/2», el control está suspendido y no hay placa. CUANDO pasan 120 segundos reales
 ENTONCES queda el mismo presupuesto de turno. CUANDO se elige «OK» en «2/2» ENTONCES aparece una
 sola «NOCHE 2», con el turno y el control retenidos hasta que termine de subir la persiana.
-DADO el cierre de la jornada 2 CUANDO se elige «continuar» ENTONCES se ve Intro 9 en «1/1», y su
-«OK» anuncia una sola «NOCHE 3».
+DADO el cierre de la jornada 2 CUANDO se elige «continuar» ENTONCES se ve Intro 9 en «1/2», y el
+«OK» de Intro 12 en «2/2» anuncia una sola «NOCHE 3».
 
 ### AC-EMP-076 — Retomar repite las instrucciones de su jornada *(verifica BR-EMP-022)*
 
 DADO un guardado en la jornada 2 CUANDO se elige continuar ENTONCES salen sus instrucciones
 desde «1/2», y después de su «OK» se anuncia «NOCHE 2». DADO un guardado en la jornada 3
-ENTONCES salen desde «1/1». DADO un guardado en la jornada 4 ENTONCES se anuncia «NOCHE 4» sin
+ENTONCES salen desde «1/2». DADO un guardado en la jornada 4 ENTONCES se anuncia «NOCHE 4» sin
 instrucciones, y el chat de Enrique tiene Intro 10, la foto de Intro 11 e Intro 11 después de la
 devolución 3. DADO un guardado del cierre 4 con la reflexión pendiente CUANDO se retoma y termina
 la reflexión ENTONCES se anuncia «NOCHE 5» sin instrucciones.

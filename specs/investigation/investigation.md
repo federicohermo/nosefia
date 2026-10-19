@@ -856,10 +856,10 @@ menú no lo ofrece.
 
 ### AC-INV-065 — Las instrucciones llegan con su jornada *(verifica BR-INV-030, BR-INV-023)*
 
-DADO la jornada 1 abierta CUANDO se recorre Enrique ENTONCES tiene 12 entradas y ninguna de las
-jornadas 2 a 4. DADO el cierre 1 y la jornada 2 abierta ENTONCES tiene las 12 de la jornada 1,
+DADO la jornada 1 abierta CUANDO se recorre Enrique ENTONCES tiene 11 entradas y ninguna de las
+jornadas 2 a 4. DADO el cierre 1 y la jornada 2 abierta ENTONCES tiene las 11 de la jornada 1,
 los mensajes de la devolución 1 y las 3 de la jornada 2, en ese orden. DADO la jornada 3 tras el
-cierre 2 ENTONCES siguen la devolución 2 y las 2 de la jornada 3. DADO la jornada 4 tras el
+cierre 2 ENTONCES siguen la devolución 2 y las 3 de la jornada 3. DADO la jornada 4 tras el
 cierre 3 ENTONCES siguen la devolución 3, Intro 10, la foto de Intro 11 e Intro 11. DADO un
 guardado de la jornada 4 CUANDO se retoma ENTONCES el orden es el mismo.
 
