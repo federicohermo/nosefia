@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526
 ---
 
 # Capacidad: la investigación
@@ -27,7 +27,7 @@ suma. Sin eso, se puede pasar la noche examinando la misma lata.
 | **Desenlace** | resultado que declara umbral y pistas exigidas | hipótesis de jornada |
 | **Caso** | conjunto declarado de pistas, exigencias y desenlaces | reglas dentro de la pantalla |
 | **Chat de notas** | conversación del protagonista consigo mismo que recibe fotos y textos de pistas, reflexiones e hipótesis elegidas | editor de notas manuales |
-| **Reflexión de cierre** | el paso que sigue a la devolución de las jornadas 1 y 2: el celular en notas y un recuadro con textos o hipótesis | pantalla de hipótesis aparte |
+| **Reflexión de cierre** | el paso que sigue a la devolución de las jornadas 4 y 5: el celular en notas y un recuadro con textos o hipótesis | pantalla de hipótesis aparte |
 | **Elección** | la hipótesis que el jugador fijó al cerrar una jornada; una sola por jornada | hipótesis desbloqueada |
 
 ## Comportamiento normativo
@@ -193,14 +193,14 @@ reanudar en la misma pantalla del celular. CUANDO cierra el turno, el celular DE
 soltar su modo fijo y dejar el control suspendido por el cierre. CUANDO se abre otra jornada,
 el celular DEBE empezar cerrado y preparado para abrir en el menú.
 
-### BR-INV-029 — La segunda jornada incorpora a Yasmín y la tarea de Enrique
+### BR-INV-029 — La quinta jornada incorpora a Yasmín y la tarea de Enrique
 
-CUANDO abre la jornada 1, el sistema DEBE ofrecer sólo el chat de Enrique. CUANDO abre la
-jornada 2, por transición o desde un checkpoint, DEBE ofrecer Enrique y Yasmín. El rol de
+CUANDO abre una jornada de la 1 a la 4, el sistema DEBE ofrecer sólo el chat de Enrique. CUANDO
+abre la jornada 5, por transición o desde un checkpoint, DEBE ofrecer Enrique y Yasmín. El rol de
 Enrique DEBE leerse «Jefe» y el de Yasmín «Compañera de trabajo», como dato del contacto,
 independiente de su imagen. Sin retrato aprobado, DEBE usar el círculo liso de BR-INV-023.
 
-Enrique DEBE incorporar dos mensajes de apertura de la jornada 2: primero una foto del
+Enrique DEBE incorporar dos mensajes de apertura de la jornada 5: primero una foto del
 contenedor de basura del local, después el texto literal «Buen día, pibe. Hoy te pido que tires
 la basura de todos los tachos del local en el contenedor. Saludos». La foto NO DEBE mostrar
 un tacho interior en lugar del contenedor; ampliarla DEBE usar ese texto como adjunto.
@@ -226,7 +226,8 @@ identidades estables y en este orden:
 | J2_15 | exitos con eso!  💪 |
 
 Los mensajes DEBEN estar disponibles al abrir la jornada, sin arribos programados durante
-el turno. Mensajes de jornada 3 o posteriores NO DEBEN adelantarse a la 2. Reabrir el celular,
+el turno. Mensajes de jornada 6 o posteriores NO DEBEN adelantarse a la 5. Las identidades
+J2_1 a J2_15 conservan su nombre: son identidades, no la jornada. Reabrir el celular,
 volver al menú o repetir la apertura NO DEBE duplicar el guion ni alterar sus recursos.
 Leer DEBE conservar el transcurso del turno de BR-INV-006 y las marcas de BR-INV-008/009.
 
@@ -234,8 +235,8 @@ Leer DEBE conservar el transcurso del turno de BR-INV-006 y las marcas de BR-INV
 
 El sistema DEBE ordenar los mensajes por jornada, momento de apertura o cierre y orden
 dentro del bloque, sin ordenarlos por texto ni inventar horas. En Enrique, el orden DEBE ser
-instrucciones de jornada 1, devolución del cierre 1, foto y texto de apertura 2, devolución
-del cierre 2, y los bloques posteriores cuando estén disponibles. Cada mensaje DEBE conservar
+instrucciones de jornada 1, devoluciones de los cierres 1 a 4, foto y texto de apertura 5,
+devolución del cierre 5, y los bloques posteriores cuando estén disponibles. Cada mensaje DEBE conservar
 su identidad; dos textos iguales con identidades distintas NO DEBEN fusionarse por su texto.
 
 Cada devolución nueva DEBE aportar explícitamente la jornada que cerró y el orden de sus
@@ -301,22 +302,22 @@ el canal y la jornada declarados. Mirar, leer sin pulsar el fragmento y un agarr
 DEBEN registrar. Las revelaciones de examen de BR-INV-001 a BR-INV-004 DEBEN conservar su cuenta
 independiente: el subtítulo con mano vacía NO DEBE registrar una pista levantable.
 
-### BR-INV-038 — Dos gestos concretos descubren las pistas de la segunda noche
+### BR-INV-038 — Dos gestos concretos descubren las pistas de la quinta noche
 
-MIENTRAS jornada 2 está abierta, CUANDO se pulsa la frase lila «acá siempre falta algo» del
+MIENTRAS jornada 5 está abierta, CUANDO se pulsa la frase lila «acá siempre falta algo» del
 mensaje J2_6 de Yasmín, el sistema DEBE registrar 2A. Abrir o leer ese chat, o pulsar otra parte,
 NO DEBE registrarla. CUANDO se acepta levantar la colilla del fondo del depósito cerca de la
 puerta garage, el sistema DEBE registrar 2B. La colilla DEBE distinguirse visualmente como tal,
 ser levantable y tener identidad propia independiente de los productos vendibles. Mirarla,
 mostrar su subtítulo con E y manos vacías, un agarre rechazado o durante pausa NO DEBEN anotarla.
 Soltarla y volver a levantarla NO DEBE duplicarla. Las pistas 2A y 2B NO DEBEN registrarse por
-esos gestos fuera de jornada 2.
+esos gestos fuera de jornada 5.
 
-### BR-INV-039 — Las hipótesis de la segunda noche salen de sus pistas
+### BR-INV-039 — Las hipótesis de la quinta noche salen de sus pistas
 
-CUANDO se consultan las hipótesis del cierre de jornada 2, el sistema DEBE devolver exactamente:
+CUANDO se consultan las hipótesis del cierre de jornada 5, el sistema DEBE devolver exactamente:
 
-| Pistas de jornada 2 | Hipótesis disponibles |
+| Pistas de jornada 5 | Hipótesis disponibles |
 |---|---|
 | ninguna | sólo 2P |
 | sólo 2A | sólo 2A |
@@ -324,19 +325,19 @@ CUANDO se consultan las hipótesis del cierre de jornada 2, el sistema DEBE devo
 | 2A y 2B | 2A y 2B |
 
 La predeterminada NO DEBE acompañar una hipótesis desbloqueada. Consultar y navegar NO DEBEN
-mutar expediente ni elegir una opción. La primera jornada no tiene pistas; el sistema NO DEBE
+mutar expediente ni elegir una opción. Las jornadas 1 a 4 no tienen pistas; el sistema NO DEBE
 inventar 2L ni una pista o foto para 2P.
 
 ### BR-INV-040 — Cada pista agrega foto y texto una vez al chat de notas
 
-CUANDO una pista de jornada 2 resulta ANOTADA, el sistema DEBE agregar al chat de notas primero
+CUANDO una pista de jornada 5 resulta ANOTADA, el sistema DEBE agregar al chat de notas primero
 su foto y después su texto, una sola vez, conservando el orden de descubrimiento entre pistas.
 REPETIDA y DESCONOCIDA NO DEBEN agregar mensajes ni publicar pista nueva. La foto DEBE ampliarse
 con el texto siguiente como adjunto según BR-INV-025. El chat DEBE tener identidad y contenido
 propios, y sus mensajes DEBEN conservarse en memoria entre aperturas.
-El menú durante el turno DEBE ocultarlo en jornadas 1 y 2, aun con mensajes, y ofrecerlo desde
-la 3 cuando tenga contenido. Esa disponibilidad NO DEBE impedir su apertura fija por el cierre
-en jornadas 1 y 2. Consultar mensajes DEBE devolver copias sin alterar el guion compartido ni
+El menú durante el turno DEBE ocultarlo en jornadas 1 a 5, aun con mensajes, y ofrecerlo desde
+la 6 cuando tenga contenido. Esa disponibilidad NO DEBE impedir su apertura fija por el cierre
+en jornadas 4 y 5. Consultar mensajes DEBE devolver copias sin alterar el guion compartido ni
 registrar pistas. Reconstruir identidades y mensajes NO DEBE duplicar el contenido ya recibido.
 
 ### BR-INV-041 — El contenido de 2A, 2B y 2P procede de sus fichas
@@ -364,9 +365,9 @@ Los textos de hipótesis DEBEN ser:
 La errata «cigarrilo» DEBE conservarse como aparece en la fuente. Las fotos DEBEN representar
 los motivos indicados; NO DEBEN reemplazarse por imágenes de otro personaje u objeto.
 
-### BR-INV-042 — El cierre de las jornadas 1 y 2 pasa a las notas
+### BR-INV-042 — El cierre de las jornadas 4 y 5 pasa a las notas
 
-CUANDO se elige continuar al terminar la devolución de jornada 1 o 2 con la partida en curso
+CUANDO se elige continuar al terminar la devolución de jornada 4 o 5 con la partida en curso
 (BR-EMP-011), el sistema DEBE pasar a la reflexión de cierre sobre la misma persiana baja. El
 celular DEBE desplazarse desde el centro hasta la mitad izquierda del encuadre sin salir por el
 margen inferior, y abrir el chat de notas en modo fijo (BR-INV-026). Un recuadro con el
@@ -384,12 +385,13 @@ DEBE cerrarse y soltar su modo fijo (BR-INV-028), el recuadro DEBE retirarse y r
 DEBE pedirse la entrada de la noche siguiente. La apertura libre siguiente DEBE subir al centro
 (BR-INV-027) y empezar en el menú (BR-INV-022).
 
-Una partida terminada NO DEBE mostrar reflexión. Las jornadas 3 a 5 no declaran reflexión
-mientras siga OQ-INV-004: su continuar sigue BR-EMP-011 sin pasar por las notas.
+Una partida terminada NO DEBE mostrar reflexión. Las jornadas 1 a 3 no declaran reflexión: su
+cierre es sólo la devolución. Las jornadas 6 a 8 tampoco la declaran mientras siga OQ-INV-004.
+En todas ellas, continuar sigue BR-EMP-011 sin pasar por las notas.
 
-### BR-INV-043 — La primera jornada reflexiona en tres textos
+### BR-INV-043 — La cuarta jornada reflexiona en tres textos
 
-La reflexión de jornada 1 DEBE mostrar el encabezado «Primera jornada terminada…» y estos
+La reflexión de jornada 4 DEBE mostrar el encabezado «Primera jornada terminada…» y estos
 textos, de a uno por vez y en este orden, cada uno con el botón «Continuar»:
 
 1. «Bueno, no será el mejor trabajo del mundo, pero es algo. Por lo menos, con lo que tengo me
@@ -402,13 +404,14 @@ textos, de a uno por vez y en este orden, cada uno con el botón «Continuar»:
 CUANDO se pulsa «Continuar», el sistema DEBE agregar el texto actual al chat de notas una sola
 vez y reemplazar el recuadro por el texto siguiente. El recuadro NO DEBE acumular textos; las
 notas sí. CUANDO se recibe el tercero, la reflexión DEBE terminar y pedir una sola entrada a
-«NOCHE 2» (BR-SHF-019). Un pedido repetido sobre un texto ya recibido, o fuera de la reflexión,
+«NOCHE 5» (BR-SHF-019). Un pedido repetido sobre un texto ya recibido, o fuera de la reflexión,
 NO DEBE avanzar otro texto ni agregar otra nota. Cada texto DEBE tener identidad propia, y
-recibirlo NO DEBE registrar una pista ni contar como hipótesis elegida.
+recibirlo NO DEBE registrar una pista ni contar como hipótesis elegida. El encabezado conserva
+«Primera» hasta que diseño lo corrija.
 
-### BR-INV-044 — La segunda jornada se cierra eligiendo una hipótesis
+### BR-INV-044 — La quinta jornada se cierra eligiendo una hipótesis
 
-La reflexión de jornada 2 DEBE mostrar el encabezado «Hoy faltabo uno de los jabones para la
+La reflexión de jornada 5 DEBE mostrar el encabezado «Hoy faltabo uno de los jabones para la
 limpieza del local. No me quiero empezar a perseguir, pero…», con la errata «faltabo» de la
 fuente. El recuadro DEBE mostrar una opción por vez, entre las que habilita BR-INV-039, con su
 título y su texto de hipótesis de BR-INV-041. La primera mostrada DEBE ser la primera de esa
@@ -417,17 +420,17 @@ y «Elegir»; «Anterior» y «Siguiente» DEBEN mostrar la otra opción. Navega
 agregar notas ni modificar el expediente.
 
 CUANDO se elige la opción mostrada, el sistema DEBE contestar ACEPTADA, agregar su texto de
-hipótesis al chat de notas una sola vez y fijar su identidad como la elección de jornada 2 de la
+hipótesis al chat de notas una sola vez y fijar su identidad como la elección de jornada 5 de la
 partida. Una identidad desconocida, de otra noche o no habilitada por el expediente DEBE
 contestar NO_DISPONIBLE. Un pedido después de una elección aceptada DEBE contestar REPETIDA. Un
 pedido fuera de la etapa de elegir DEBE contestar FUERA_DE_ETAPA. Esas tres respuestas NO DEBEN
 agregar notas, cambiar la elección ni pedir una noche. Pausar o salir al menú NO DEBE elegir por
 el jugador. Consultar la elección DEBE devolver su identidad, o ninguna antes de elegir.
 
-### BR-INV-045 — La tercera noche espera a la elección
+### BR-INV-045 — La sexta noche espera a la elección
 
-CUANDO la elección de jornada 2 resulta ACEPTADA, el sistema DEBE terminar la reflexión después
-de una espera de 1 segundo, y entonces pedir una sola entrada a «NOCHE 3»
+CUANDO la elección de jornada 5 resulta ACEPTADA, el sistema DEBE terminar la reflexión después
+de una espera de 1 segundo, y entonces pedir una sola entrada a «NOCHE 6»
 (BR-SHF-019). Antes de una elección aceptada, NO DEBE empezar ninguna entrada. MIENTRAS corre la
 espera, el recuadro NO DEBE responder a navegar ni a elegir. La espera DEBE correr con el tiempo
 real del juego en ejecución y NO DEBE correr con la pausa. Un cuadro largo NO DEBE pedir dos
@@ -444,8 +447,8 @@ ampliada, el texto o la opción mostrada, la posición del celular y lo que falt
 ### BR-INV-047 — Las notas conservan el cierre en orden
 
 El chat de notas DEBE conservar, en el orden en que los recibió, los textos de la reflexión de
-jornada 1, la foto y el texto de cada pista (BR-INV-040) y el texto de la hipótesis elegida. DEBE
-tener un fondo propio, distinto del de los demás chats. Desde jornada 3, el menú DEBE ofrecerlo
+jornada 4, la foto y el texto de cada pista (BR-INV-040) y el texto de la hipótesis elegida. DEBE
+tener un fondo propio, distinto del de los demás chats. Desde jornada 6, el menú DEBE ofrecerlo
 con todo ese historial (BR-INV-040), y sus fotos DEBEN ampliarse según BR-INV-025. El historial
 de notas cruza la sesión por el guardado (BR-SAV-021); reconstruirlo NO DEBE duplicar mensajes,
 publicar pistas ni elegir una hipótesis.
@@ -631,11 +634,11 @@ Q permitido abre el menú.
 
 ### AC-INV-037 — Retomar reconstruye los chats *(verifica BR-INV-023, BR-INV-008)*
 
-DADO un guardado en jornada 3, con chats que antes se leyeron y mensajes recibidos fuera del guión,
-CUANDO se retoma ENTONCES se ven los mensajes del guión de jornada menor o igual a 3, todos sin
+DADO un guardado en jornada 6, con chats que antes se leyeron y mensajes recibidos fuera del guión,
+CUANDO se retoma ENTONCES se ven los mensajes del guión de jornada menor o igual a 6, todos sin
 leer, y ninguno de los recibidos fuera de él salvo las devoluciones de Enrique de las jornadas 1
-y 2, intercaladas con las aperturas: instrucciones, devolución 1, foto y texto de apertura 2,
-devolución 2. Los registros legados sin jornada conservan su orden sin fechas inventadas.
+a 5, intercaladas con las aperturas: instrucciones, devoluciones 1 a 4, foto y texto de apertura
+5, devolución 5. Los registros legados sin jornada conservan su orden sin fechas inventadas.
 Abrir y cerrar sin entrar a un chat conserva los contadores.
 
 ### AC-INV-038 — Un botón por chat y una imagen de reemplazo *(verifica BR-INV-023)*
@@ -644,20 +647,20 @@ DADO dos chats visibles, uno con imagen y dos no leídos y otro sin imagen ni no
 se muestra el menú ENTONCES hay dos botones: el primero con nombre, imagen y contador 2, y el
 segundo con nombre y círculo liso del tema, sin contador cero.
 
-### AC-INV-039 — La entrada exacta en jornada 2 ofrece sus dos chats *(verifica BR-INV-029, BR-INV-023, BR-INV-008, BR-INV-009)*
+### AC-INV-039 — La entrada exacta en jornada 5 ofrece sus dos chats *(verifica BR-INV-029, BR-INV-023, BR-INV-008, BR-INV-009)*
 
-DADO jornada 1 CUANDO se abre el menú ENTONCES sólo ofrece Enrique. DADO apertura de jornada 2
+DADO las jornadas 1 y 4 CUANDO se abre el menú ENTONCES sólo ofrece Enrique. DADO apertura de jornada 5
 por transición y, por separado, checkpoint CUANDO se consulta ENTONCES ofrece Enrique y Yasmín,
 con los roles Jefe y Compañera de trabajo. Yasmín tiene exactamente las quince identidades
 J2_1 a J2_15 con los textos de BR-INV-029, incluido el doble espacio antes de 💪, sin mensajes
-de jornada 3. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni el guion.
+de jornada 6. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni el guion.
 
 ### AC-INV-040 — La apertura queda entre las devoluciones *(verifica BR-INV-030, BR-INV-029)*
 
-DADO cierre 1 y apertura 2 CUANDO se recorre Enrique ENTONCES están las 19 entradas de las
-instrucciones, los mensajes de devolución 1, la foto del contenedor y su texto, en ese orden.
-CUANDO cierra la 2 ENTONCES su devolución queda después de ese texto, cada mensaje una vez.
-Reabrir celular, volver al menú y repetir apertura 2 no cambian identidades, contenido u orden.
+DADO cierre 4 y apertura 5 CUANDO se recorre Enrique ENTONCES están las 19 entradas de las
+instrucciones, los mensajes de las devoluciones 1 a 4, la foto del contenedor y su texto, en ese
+orden. CUANDO cierra la 5 ENTONCES su devolución queda después de ese texto, cada mensaje una
+vez. Reabrir celular, volver al menú y repetir apertura 5 no cambian identidades, contenido u orden.
 Los quince mensajes de Yasmín tampoco se duplican al repetir esos recorridos.
 
 ### AC-INV-041 — El clic de pista tiene un borde exacto *(verifica BR-INV-031)*
@@ -670,7 +673,7 @@ Una identidad o tramo inexistente no emite. Se ejerce en escritorio y paquete we
 
 ### AC-INV-042 — La foto del contenedor usa el adjunto de su apertura *(verifica BR-INV-029, BR-INV-025, BR-INV-027)*
 
-DADO Enrique en jornada 2 CUANDO se pulsa su foto de apertura ENTONCES se amplía completa,
+DADO Enrique en jornada 5 CUANDO se pulsa su foto de apertura ENTONCES se amplía completa,
 muestra el contenedor del local y adjunta exactamente el texto de BR-INV-029, no la devolución
 anterior ni un tacho interior. CUANDO se cierra ENTONCES vuelve al mismo chat y desplazamiento.
 El recorrido de ambos chats, foto y tramo de pista a 1920×1080 y 1280×720, en escritorio y
@@ -711,13 +714,13 @@ no altera el expediente. Consultar no escribe disco ni reconstruye un expediente
 
 ### AC-INV-048 — La frase exacta es el disparador *(verifica BR-INV-038, BR-INV-037, BR-INV-032)*
 
-DADO jornada 2 sin pistas CUANDO se abre y lee el chat de Yasmín o se pulsa otra parte de J2_6
+DADO jornada 5 sin pistas CUANDO se abre y lee el chat de Yasmín o se pulsa otra parte de J2_6
 ENTONCES no hay pista nueva. CUANDO se pulsa «acá siempre falta algo» ENTONCES anota sólo 2A;
-repetir la pulsación no la duplica ni emite otro aviso. En jornada 1 o 3 ese gesto no registra 2A.
+repetir la pulsación no la duplica ni emite otro aviso. En jornada 4 o 6 ese gesto no registra 2A.
 
 ### AC-INV-049 — La colilla exige un levantamiento aceptado *(verifica BR-INV-038, BR-INV-037)*
 
-DADO jornada 2 y la colilla visible al fondo del depósito cerca de la puerta garage CUANDO se
+DADO jornada 5 y la colilla visible al fondo del depósito cerca de la puerta garage CUANDO se
 mira o se pide E con manos vacías ENTONCES sigue sin 2B. Agarre rechazado o pausa tampoco anota.
 CUANDO el agarre se acepta ENTONCES la misma colilla queda en mano y se anota 2B. Soltarla y
 volver a levantarla no duplica pista ni mensajes; sostenerla al cierre conserva el hallazgo.
@@ -726,7 +729,7 @@ levantarla no registra 2B.
 
 ### AC-INV-050 — Cuatro combinaciones y ninguna opción extra *(verifica BR-INV-039)*
 
-DADO expedientes de jornada 2 con cero pistas, sólo 2A, sólo 2B y ambas, CUANDO se consultan
+DADO expedientes de jornada 5 con cero pistas, sólo 2A, sólo 2B y ambas, CUANDO se consultan
 las opciones ENTONCES son respectivamente [2P], [2A], [2B] y [2A, 2B]. Repetir la consulta y
 navegar conserva identidades y mensajes. Nunca aparece 2L y 2P no crea foto ni pista ficticia.
 
@@ -739,9 +742,9 @@ Reabrir otra jornada y reconstruir las mismas identidades y mensajes no duplica 
 
 ### AC-INV-052 — Menú y modo fijo tienen permisos distintos *(verifica BR-INV-040, BR-INV-026, BR-INV-023)*
 
-DADO notas con dos mensajes de 2A CUANDO se abre el menú durante jornadas 1 y 2 ENTONCES notas
-no tiene botón; en la 3 sí. DADO cierre de jornada 1 o 2 CUANDO se fija notas ENTONCES abre su
-chat propio sin pasar por el menú, aun vacío en la 1, permite leer y ampliar, y Q no lo cierra.
+DADO notas con dos mensajes de 2A CUANDO se abre el menú durante jornadas 1 a 5 ENTONCES notas
+no tiene botón; en la 6 sí. DADO cierre de jornada 4 o 5 CUANDO se fija notas ENTONCES abre su
+chat propio sin pasar por el menú, aun vacío en la 4, permite leer y ampliar, y Q no lo cierra.
 
 ### AC-INV-053 — Datos exactos y fotos propias *(verifica BR-INV-041)*
 
@@ -754,7 +757,7 @@ Las tres opciones conservan sus identidades al volver a consultar.
 ### AC-INV-054 — Revelación y pista no comparten contador *(verifica BR-INV-037, BR-INV-032, BR-INV-001)*
 
 DADO un objeto con revelación ajena a las pistas del caso CUANDO se lo examina dos veces ENTONCES
-su cuenta de hallazgos es 1 y el expediente sigue vacío. DADO la colilla levantada en jornada 2
+su cuenta de hallazgos es 1 y el expediente sigue vacío. DADO la colilla levantada en jornada 5
 ENTONCES 2B está anotada por el agarre, sin exigir examen ni convertir los demás subtítulos en
 pistas. DADO una pista de objeto no levantable o diálogo de comprador declarada en un caso de
 prueba CUANDO se usa otro canal ENTONCES no se anota; el gesto declarado sí la anota una vez.
@@ -767,15 +770,15 @@ compartido permanece intacto. Las consultas no registran pistas ni emiten pista 
 
 ### AC-INV-056 — El historial fechado vuelve igual y no fusiona textos *(verifica BR-INV-030, BR-INV-023, BR-INV-008)*
 
-DADO checkpoint de apertura 2 con devolución 1 fechada CUANDO se retoma ENTONCES muestra
-instrucciones, devolución 1 y apertura 2 en ese orden, y los quince mensajes de Yasmín están
+DADO checkpoint de apertura 5 con las devoluciones 1 a 4 fechadas CUANDO se retoma ENTONCES
+muestra instrucciones, devoluciones 1 a 4 y apertura 5 en ese orden, y los quince mensajes de Yasmín están
 sin leer. DADO dos devoluciones de distintas jornadas con el mismo texto CUANDO se reconstruyen
 ENTONCES permanecen dos mensajes con sus identidades y posiciones distintas; modificar una
 lista consultada no cambia el historial ni el guion.
 
 ### AC-INV-057 — Del centro a la izquierda sin bajar *(verifica BR-INV-042)*
 
-DADO la devolución de jornada 1 terminada, a 1920 × 1080 y a 1280 × 720, CUANDO se elige
+DADO la devolución de jornada 4 terminada, a 1920 × 1080 y a 1280 × 720, CUANDO se elige
 continuar ENTONCES la persiana sigue baja y en cada cuadro el borde inferior del celular queda
 dentro del encuadre. Su centro horizontal nunca aumenta y, a los 0,25 segundos, termina a la
 izquierda del centro del encuadre; a los 0,125 segundos todavía no llegó. Al final, el chat de notas está abierto en modo fijo y el recuadro está entero a la
@@ -786,24 +789,24 @@ rueda desplaza y una foto se amplía y se cierra. El turno no descuenta y el jug
 
 ### AC-INV-058 — Sin reflexión, y la apertura siguiente al centro *(verifica BR-INV-042)*
 
-DADO un despido en jornada 1 o 2 CUANDO termina su devolución ENTONCES sólo se ofrece volver al
-menú y no aparece la reflexión. DADO el cierre de jornada 3 con la partida en curso CUANDO se
-elige continuar ENTONCES el celular baja y empieza «NOCHE 4», sin reflexión. DADO la reflexión de
-jornada 1 terminada CUANDO empieza la entrada ENTONCES el celular está cerrado, sin modo fijo, y
-el recuadro no está; CUANDO se pulsa Q en la noche 2 ENTONCES sube al centro y abre el menú.
+DADO un despido en jornada 4 o 5 CUANDO termina su devolución ENTONCES sólo se ofrece volver al
+menú y no aparece la reflexión. DADO el cierre de la jornada 1, 2, 3 o 6 con la partida en curso
+CUANDO se elige continuar ENTONCES el celular baja y empieza la noche siguiente, sin reflexión.
+DADO la reflexión de jornada 4 terminada CUANDO empieza la entrada ENTONCES el celular está
+cerrado, sin modo fijo, y el recuadro no está; CUANDO se pulsa Q en la noche 5 ENTONCES sube al centro y abre el menú.
 
 ### AC-INV-059 — Tres textos, tres notas *(verifica BR-INV-043)*
 
-DADO la reflexión de jornada 1 con notas vacías ENTONCES el recuadro dice «Primera jornada
+DADO la reflexión de jornada 4 con notas vacías ENTONCES el recuadro dice «Primera jornada
 terminada…» y el texto 1. CUANDO se pulsa «Continuar» ENTONCES las notas son [texto 1], el
 recuadro muestra sólo el texto 2 y no hay entrada. CUANDO se repite el pedido del texto 1
 ENTONCES las notas siguen [texto 1] y el recuadro sigue en el texto 2. CUANDO se pulsa
 «Continuar» dos veces más ENTONCES las notas son [texto 1, texto 2, texto 3], hay una sola
-entrada «NOCHE 2» y otro pedido no agrega nada. El expediente sigue vacío y no hay elección.
+entrada «NOCHE 5» y otro pedido no agrega nada. El expediente sigue vacío y no hay elección.
 
 ### AC-INV-060 — Cuatro combinaciones en el recuadro *(verifica BR-INV-044, BR-INV-039)*
 
-DADO el cierre de jornada 2 ENTONCES el encabezado es «Hoy faltabo uno de los jabones para la
+DADO el cierre de jornada 5 ENTONCES el encabezado es «Hoy faltabo uno de los jabones para la
 limpieza del local. No me quiero empezar a perseguir, pero…». DADO cero pistas, sólo 2A y sólo
 2B ENTONCES se muestran 2P, 2A y 2B con su título y su texto, y sólo «Elegir». DADO 2A y 2B
 ENTONCES se muestra 2A con «Anterior», «Siguiente» y «Elegir»; «Siguiente» muestra 2B,
@@ -816,42 +819,42 @@ DADO 2A y 2B anotadas, con sus cuatro mensajes en notas, CUANDO se muestra 2B y 
 ENTONCES contesta ACEPTADA, las notas tienen cinco mensajes con el texto de hipótesis 2B al
 final, y la elección es 2B. CUANDO se pide elegir otra vez, 2B o 2A, ENTONCES contesta REPETIDA y
 las notas siguen con cinco. DADO sólo 2A anotada CUANDO se pide 2B, 2P o una identidad
-desconocida ENTONCES contesta NO_DISPONIBLE. DADO la devolución o la reflexión de jornada 1 en
+desconocida ENTONCES contesta NO_DISPONIBLE. DADO la devolución o la reflexión de jornada 4 en
 pantalla CUANDO se pide elegir ENTONCES contesta FUERA_DE_ETAPA. En esos tres casos no hay nota,
 elección ni entrada. Antes de elegir, consultar la elección no devuelve ninguna. DADO la
-elección de jornada 2 o el texto 2 de jornada 1 en pantalla CUANDO pasan 10 minutos ENTONCES
+elección de jornada 5 o el texto 2 de jornada 4 en pantalla CUANDO pasan 10 minutos ENTONCES
 siguen en pantalla, sin nota nueva, sin elección y sin entrada.
 
-### AC-INV-062 — La espera retiene la tercera noche *(verifica BR-INV-045)*
+### AC-INV-062 — La espera retiene la sexta noche *(verifica BR-INV-045)*
 
-DADO la elección de jornada 2 aceptada CUANDO pasa la espera declarada menos un cuadro
+DADO la elección de jornada 5 aceptada CUANDO pasa la espera declarada menos un cuadro
 ENTONCES no hay entrada; CUANDO pasa el cuadro siguiente ENTONCES hay exactamente una entrada
-«NOCHE 3». DADO la espera empezada CUANDO un cuadro llega 10 segundos tarde ENTONCES hay a lo
+«NOCHE 6». DADO la espera empezada CUANDO un cuadro llega 10 segundos tarde ENTONCES hay a lo
 sumo una entrada. DADO la espera a mitad CUANDO se pausa, pasan 3 segundos y se reanuda
 ENTONCES falta lo mismo que antes de pausar. Navegar o elegir durante la espera no cambia nada.
-Ni la espera ni la entrada descuentan el turno de la jornada 3.
+Ni la espera ni la entrada descuentan el turno de la jornada 6.
 
 ### AC-INV-063 — La pausa congela cada etapa *(verifica BR-INV-046)*
 
 DADO cada etapa por separado —la devolución con 2 de 4 mensajes, el recorrido lateral a mitad,
-la reflexión de jornada 1 en el texto 2 con las notas desplazadas, la elección mostrando 2B y la
+la reflexión de jornada 4 en el texto 2 con las notas desplazadas, la elección mostrando 2B y la
 espera a mitad— CUANDO se pulsa Esc, se pulsan los botones del cierre, pasan 3 segundos y se
 reanuda ENTONCES la etapa, los mensajes visibles, la posición del celular, el desplazamiento, el
 texto u opción mostrada y lo que falta de la espera son los mismos, y los botones pulsados
 durante la pausa no tuvieron efecto.
 
-### AC-INV-064 — Las notas de la tercera noche *(verifica BR-INV-047, BR-INV-040)*
+### AC-INV-064 — Las notas de la sexta noche *(verifica BR-INV-047, BR-INV-040)*
 
-DADO una partida que recibió los tres textos de jornada 1, anotó 2B y eligió 2B CUANDO se abre
-el menú en jornada 3 ENTONCES ofrece el chat de notas; CUANDO se abre ENTONCES muestra texto 1,
+DADO una partida que recibió los tres textos de jornada 4, anotó 2B y eligió 2B CUANDO se abre
+el menú en jornada 6 ENTONCES ofrece el chat de notas; CUANDO se abre ENTONCES muestra texto 1,
 texto 2, texto 3, foto 2B, texto de pista 2B y texto de hipótesis 2B, en ese orden, y la foto 2B
-se amplía con su texto. Su fondo difiere del fondo del chat de Enrique. En jornadas 1 y 2, el
+se amplía con su texto. Su fondo difiere del fondo del chat de Enrique. En jornadas 1 a 5, el
 menú no lo ofrece.
 
 ## No objetivos
 
 - Esta capacidad NO inventa el contenido: consume los guiones decididos; la apertura de
-  jornada 2 y su tramo de pista están fijados en BR-INV-029 y BR-INV-031.
+  jornada 5 y su tramo de pista están fijados en BR-INV-029 y BR-INV-031.
 - Esta capacidad NO descuenta tiempo del turno.
 - Esta capacidad NO inventa contactos, pistas, hipótesis o desenlaces de jornadas futuras:
   consume el contenido decidido.
@@ -910,12 +913,12 @@ menú no lo ofrece.
 
 ## Preguntas abiertas
 
-- **OQ-INV-004 — ¿Qué pistas, hipótesis y desenlaces definen las jornadas 3 a 5?**
+- **OQ-INV-004 — ¿Qué pistas, hipótesis y desenlaces definen las jornadas 6 a 8?**
   - Por qué sigue abierta: las fichas de ese contenido siguen «A desarrollar» y no fijan
     exigencias ni umbrales de los finales. Los ejemplos de aceptación son casos de prueba,
     no contenido para el juego.
   - Decide: game design.
-  - Bloquea: publicar ese contenido y sus finales; no bloquea el motor ni las pistas de jornada 2.
+  - Bloquea: publicar ese contenido y sus finales; no bloquea el motor ni las pistas de jornada 5.
 - **OQ-INV-005 — ¿Dónde se intercalan las devoluciones legadas sin jornada?**
   - Por qué sigue abierta: los guardados antiguos sólo contienen textos y orden de recepción;
     no permiten reconstruir qué cierre produjo cada bloque ni su relación con una apertura.

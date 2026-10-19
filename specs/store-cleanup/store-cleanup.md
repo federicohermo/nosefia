@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526
 ---
 
 # Capacidad: dejar el local en orden
@@ -39,7 +39,7 @@ CUANDO se abre una jornada que declara tirar la basura, el sistema DEBE poner un
 uno de los tres tachos: compradores cerca de la entrada del local, escritorio y baño. Las demás
 jornadas DEBEN abrir con los tres tachos sin bolsa y ninguna bolsa en el mundo. La cantidad de
 bolsas sale de esos tres orígenes y DEBE ser mayor que las manos disponibles. La apertura que
-declara esta particular es la jornada 2.
+declara esta particular es la jornada 5.
 
 ### BR-CLN-008 — El contenedor está lejos
 
@@ -79,25 +79,26 @@ con su tipo, su habitación y su superficie:
 
 | Jornada | Tipo | Habitación | Superficie | Lugar |
 |---|---|---|---|---|
-| 1 | polvo | local | piso | frente a la puerta de entrada |
-| 1 | polvo | local | piso | entre dos góndolas |
-| 1 | polvo | local | piso | en el rincón opuesto al mostrador |
-| 1 | moho | depósito | pared | cerca de la puerta al local |
-| 1 | moho | depósito | pared | arriba de la caja eléctrica |
-| 1 | caca | baño | piso | al lado de un inodoro |
-| 1 | caca | baño | pared | al lado del otro inodoro |
-| 2 | polvo | local | piso | detrás del mostrador |
-| 2 | polvo | local | piso | cerca de las heladeras |
-| 2 | polvo | local | piso | frente a la puerta del baño |
-| 2 | moho | depósito | pared | en una esquina, cerca del techo |
-| 2 | moho | depósito | pared | al lado del contenedor |
-| 2 | polvo | baño | piso | frente a la puerta del baño |
-| 2 | moho | baño | techo | en una esquina que no es la de la puerta |
-| 2 | caca | baño | piso | bajo la puerta de un cubículo |
+| 4 | polvo | local | piso | frente a la puerta de entrada |
+| 4 | polvo | local | piso | entre dos góndolas |
+| 4 | polvo | local | piso | en el rincón opuesto al mostrador |
+| 4 | moho | depósito | pared | cerca de la puerta al local |
+| 4 | moho | depósito | pared | arriba de la caja eléctrica |
+| 4 | caca | baño | piso | al lado de un inodoro |
+| 4 | caca | baño | pared | al lado del otro inodoro |
+| 5 | polvo | local | piso | detrás del mostrador |
+| 5 | polvo | local | piso | cerca de las heladeras |
+| 5 | polvo | local | piso | frente a la puerta del baño |
+| 5 | moho | depósito | pared | en una esquina, cerca del techo |
+| 5 | moho | depósito | pared | al lado del contenedor |
+| 5 | polvo | baño | piso | frente a la puerta del baño |
+| 5 | moho | baño | techo | en una esquina que no es la de la puerta |
+| 5 | caca | baño | piso | bajo la puerta de un cubículo |
 
-La jornada 1 suma 7 —3 de polvo, 2 de moho y 2 de caca— y la 2 suma 8 —4 de polvo, 3 de moho y 1
-de caca—. Las jornadas 3, 4 y 5 DEBEN arrancar con las de la 1 (`OQ-CLN-002`). Cada jornada DEBE
-arrancar con todas sus manchas sucias, aunque la anterior las haya borrado.
+La jornada 4 suma 7 —3 de polvo, 2 de moho y 2 de caca— y la 5 suma 8 —4 de polvo, 3 de moho y 1
+de caca—. Las jornadas 1 y 2 DEBEN arrancar sin manchas. La 3 DEBE arrancar con las de la 4. Las
+jornadas 6, 7 y 8 DEBEN arrancar con las de la 4 (`OQ-CLN-002`). Cada jornada DEBE arrancar con
+todas sus manchas sucias, aunque la anterior las haya borrado.
 
 Una mancha que la jornada no declara NO DEBE verse, ni detener la mira, ni reservar el sector de
 un charco temporal, ni contar para limpiar. Una mancha de pared o de techo DEBE borrarse con la
@@ -109,8 +110,8 @@ ondular cuando el jugador camina a su lado o debajo.
 
 CUANDO se abre una jornada, el sistema DEBE dejar la mopa, el balde y los jabones disponibles
 en su lugar del baño, con el balde vacío y la mopa seca, aunque la noche anterior hayan quedado
-en otro lado, en la mano, llenos o mojados. En jornada 2 sólo DEBEN estar rosa y amarillo; en
-1, 3, 4 y 5, los tres. La disponibilidad la decide BR-ANO-001 de
+en otro lado, en la mano, llenos o mojados. En jornada 5 sólo DEBEN estar rosa y amarillo; en
+las demás, los tres. La disponibilidad la decide BR-ANO-001 de
 [`anomalies`](../anomalies/anomalies.md). Los útiles presentes DEBEN ser levantables; lavatorio
 e inodoro NO DEBEN serlo.
 
@@ -225,7 +226,7 @@ Con el jugador suspendido por examen, pausa o cierre, ambos clics NO DEBEN tirar
 El secundario NO DEBE desechar. Accionar la tapa NO DEBE desechar además lo sostenido.
 Al abrir otra noche, los objetos de arranque tirados y disponibles en esa jornada DEBEN volver
 a sus padres y poses de arranque, visibles, físicos y recogibles, con mopa seca y balde vacío.
-El bidón azul DEBE permanecer ausente durante jornada 2, según BR-CLN-014. Las bolsas DEBEN seguir
+El bidón azul DEBE permanecer ausente durante jornada 5, según BR-CLN-014. Las bolsas DEBEN seguir
 la declaración de la jornada nueva: fuera del mundo si no declara basura, o en su tacho y sin
 depositar si la declara, nunca sueltas por haber sido tiradas en la noche anterior.
 Las unidades y tickets tirados DEBEN retirarse con los demás creados en la noche anterior.
@@ -292,12 +293,12 @@ sólo el tiro aceptado al cuerpo del contenedor lo hace. Una bolsa sacada y resc
 volver libre a su origen, sin reponer el tacho ni crear otra identidad. Sólo la jornada que
 declara basura DEBE permitir extraer; las demás DEBEN conservar los tachos sin bolsa.
 
-### BR-CLN-033 — Poético prepara azul sólo durante la segunda jornada
+### BR-CLN-033 — Poético prepara azul sólo durante la quinta jornada
 
-MIENTRAS la jornada es 2, CUANDO se usa con clic izquierdo una unidad real del producto Poético
+MIENTRAS la jornada es 5, CUANDO se usa con clic izquierdo una unidad real del producto Poético
 sobre el balde, el sistema DEBE aplicar los mismos permisos, rechazos y mezcla azul del jabón
-azul (BR-CLN-016). La identidad DEBE ser la del producto, no su nombre visible. En jornadas
-1, 3, 4 y 5 Poético NO DEBE actuar como jabón, y ningún otro producto DEBE adquirir ese efecto.
+azul (BR-CLN-016). La identidad DEBE ser la del producto, no su nombre visible. En las demás
+jornadas Poético NO DEBE actuar como jabón, y ningún otro producto DEBE adquirir ese efecto.
 La referencia de controles y el uso DEBEN consultar el mismo permiso por jornada: «echar jabón»
 sólo donde está habilitado. El rechazo NO DEBE convertirse en soltar ni en otra operación.
 Sobre lavatorio, inodoro o mancha Poético NO DEBE preparar mezcla ni limpiar directamente.
@@ -335,9 +336,9 @@ desechar papel. Un objeto distinto de ticket NO DEBE descartarse por ese destino
 
 ### AC-CLN-007 — Tres bolsas son más que las manos *(verifica BR-CLN-007)*
 
-DADO la jornada 2 abierta CUANDO se consultan los tachos ENTONCES hay 3 con una bolsa cada uno,
+DADO la jornada 5 abierta CUANDO se consultan los tachos ENTONCES hay 3 con una bolsa cada uno,
 con identidades distintas, más bolsas que manos disponibles y ninguna depositada. DADO las
-jornadas 1, 3, 4 y 5 abiertas ENTONCES los tres tachos están sin bolsa y no hay bolsas en el mundo.
+jornadas 1, 4, 6 y 8 abiertas ENTONCES los tres tachos están sin bolsa y no hay bolsas en el mundo.
 
 ### AC-CLN-008 — El viaje llega al contenedor *(verifica BR-CLN-008)*
 
@@ -360,7 +361,7 @@ depositada» y la cantidad sigue igual.
 ### AC-CLN-012 — Las dos obligatorias cierran *(verifica BR-CLN-011)*
 
 DADO las manchas de la jornada borradas ENTONCES limpiar está cumplida; DADO las tres
-bolsas de la jornada 2 depositadas ENTONCES la basura está cumplida; con una sola pendiente en
+bolsas de la jornada 5 depositadas ENTONCES la basura está cumplida; con una sola pendiente en
 cada caso, no. En una jornada sin basura declarada, cero bolsas NO suma una obligatoria.
 
 ### AC-CLN-014 — Cada jabón borra un solo tipo *(verifica BR-CLN-012)*
@@ -377,15 +378,17 @@ con el dibujo de polvo de la guía y transparencia entre los trazos que deja ver
 
 ### AC-CLN-016 — Las manchas de cada jornada *(verifica BR-CLN-013)*
 
-DADO la jornada 1 ENTONCES tiene 7 manchas: 3 de polvo, 2 de moho y 2 de caca. DADO la 2 ENTONCES
-tiene 8: 4 de polvo, 3 de moho y 1 de caca. DADO la 3, la 4 y la 5 ENTONCES tiene las mismas 7 de
-la 1. En cada una, cada mancha lleva el tipo, la habitación y la superficie que declara su lugar,
-y ninguna arranca borrada. DADO la 1 con sus 7 borradas CUANDO abre la 2 ENTONCES sus 8 están
-sucias; DADO la 2 con sus 8 borradas CUANDO abre la 3 ENTONCES sus 7 están sucias.
+DADO la jornada 1 y la 2 ENTONCES no tienen manchas. DADO la 4 ENTONCES tiene 7 manchas: 3 de
+polvo, 2 de moho y 2 de caca. DADO la 5 ENTONCES tiene 8: 4 de polvo, 3 de moho y 1 de caca. DADO
+la 3, la 6, la 7 y la 8 ENTONCES tiene las mismas 7 de la 4. En cada una, cada mancha lleva el
+tipo, la habitación y la superficie que declara su lugar, y ninguna arranca borrada. DADO la 3
+con sus 7 borradas CUANDO abre la 4 ENTONCES sus 7 están sucias; DADO la 4 con sus 7 borradas
+CUANDO abre la 5 ENTONCES sus 8 están sucias; DADO la 5 con sus 8 borradas CUANDO abre la 6
+ENTONCES sus 7 están sucias.
 
 ### AC-CLN-017 — Cada mancha en su habitación y su superficie *(verifica BR-CLN-013, BR-CLN-027)*
 
-DADO la jornada 1 y después la 2 ENTONCES cada mancha de la noche está en la habitación que
+DADO la jornada 4 y después la 5 ENTONCES cada mancha de la noche está en la habitación que
 declara su lugar, según la pertenencia de `BR-CLN-027`, y sobre la superficie que declara: mira
 hacia arriba en el piso, en horizontal en la pared y hacia abajo en el techo. Ninguna queda debajo
 de un mueble ni tapada, y la mira enfoca cada una desde un punto libre del piso. Las manchas de
@@ -395,8 +398,8 @@ otra noche no se ven y la mira no las enfoca.
 
 DADO la mopa mojada en el local, el balde teñido en depósito y un jabón en mano CUANDO se abre
 cada jornada ENTONCES se vacía la mano y vuelven al baño los útiles disponibles, con balde vacío
-y mopa seca: cuatro en la 2 —mopa, balde, rosa y amarillo— y cinco en 1, 3, 4 y 5. El azul no
-está en la segunda. Lavatorio e inodoro se rechazan al intentar agarrarlos.
+y mopa seca: cuatro en la 5 —mopa, balde, rosa y amarillo— y cinco en las demás. El azul no
+está en la quinta. Lavatorio e inodoro se rechazan al intentar agarrarlos.
 
 ### AC-CLN-019 — Llenar el balde *(verifica BR-CLN-015)*
 
@@ -538,7 +541,7 @@ ENTONCES no se tira ni se suelta, no cuenta y la tapa conserva su estado.
 
 DADO mopa mojada y balde teñido tirados CUANDO abre otra noche ENTONCES vuelven a sus
 padres y lugares originales, visibles, físicos y recogibles; mopa seca y balde vacío.
-DADO una bolsa tirada en la jornada 2 CUANDO abre otra noche ENTONCES no está en el mundo.
+DADO una bolsa tirada en la jornada 5 CUANDO abre otra noche ENTONCES no está en el mundo.
 DADO un ticket y una unidad tirados ENTONCES se retiran junto con los demás
 creados en la noche anterior, sin dejar entradas inválidas en la lista de tirados.
 La vuelta conserva el estado físico original: un útil móvil elevado 0,5 m vuelve a caer
@@ -652,14 +655,14 @@ a poder usarse y una noche impecable sin motivos conserva los siete medios.
 
 ### AC-CLN-053 — Extraer una vez con el primario *(verifica BR-CLN-032)*
 
-DADO jornada 2, tacho con bolsa y mano vacía CUANDO se pulsa primario ENTONCES esa identidad
+DADO jornada 5, tacho con bolsa y mano vacía CUANDO se pulsa primario ENTONCES esa identidad
 queda sostenida y el tacho sin bolsa, sin aumentar depositadas. CUANDO se vacía la mano y se
 repite ENTONCES no entrega nada. DADO otro tacho con bolsa y mano ocupada CUANDO se pulsa
 primario ENTONCES conserva bolsa y mano, sin soltar. El secundario no extrae con ninguna mano.
 
 ### AC-CLN-054 — De los tres tachos al contenedor *(verifica BR-CLN-032, BR-CLN-007, BR-CLN-009, BR-CLN-011)*
 
-DADO la jornada 2 CUANDO se enfoca cada tacho desde un punto libre del piso dentro del alcance
+DADO la jornada 5 CUANDO se enfoca cada tacho desde un punto libre del piso dentro del alcance
 vigente ENTONCES aparece su contorno y la mira no se detiene en la bolsa. CUANDO se hace clic
 izquierdo con la mano vacía ENTONCES la bolsa queda en la mano y desaparece de la boca de ese
 tacho. CUANDO se tiran dos al contenedor con la tapa abierta ENTONCES la basura sigue pendiente;
@@ -667,8 +670,8 @@ tirar la tercera la cumple y sube el HUD en 1. Repetir la misma identidad no vue
 
 ### AC-CLN-055 — Otros gestos y otras noches conservan el estado *(verifica BR-CLN-032, BR-CLN-007)*
 
-DADO jornadas 1, 3, 4 y 5 CUANDO se pulsa primario o secundario sobre los tres tachos
-ENTONCES no sale bolsa ni cambia la mano. DADO jornada 2 CUANDO se pulsa secundario, o
+DADO jornadas 1, 4, 6 y 8 CUANDO se pulsa primario o secundario sobre los tres tachos
+ENTONCES no sale bolsa ni cambia la mano. DADO jornada 5 CUANDO se pulsa secundario, o
 primario con control suspendido, ENTONCES no sale bolsa. DADO mano vacía CUANDO se pulsan
 dos primarios seguidos ENTONCES sale sólo una bolsa; mirar otro tacho con ella sostenida no
 la devuelve ni extrae la del segundo ni la suelta.
@@ -682,28 +685,29 @@ crea otra bolsa.
 
 ### AC-CLN-057 — La bolsa pendiente no cruza de noche *(verifica BR-CLN-007, BR-CLN-011, BR-CLN-026)*
 
-DADO la jornada 2 con dos bolsas depositadas y la tercera, por turno, en el tacho, en el piso o
-en la mano, CUANDO cierra ENTONCES la basura queda pendiente. CUANDO abre la jornada 3 ENTONCES
+DADO la jornada 5 con dos bolsas depositadas y la tercera, por turno, en el tacho, en el piso o
+en la mano, CUANDO cierra ENTONCES la basura queda pendiente. CUANDO abre la jornada 6 ENTONCES
 la mano está vacía, los tres tachos están sin bolsa y ninguna bolsa está en el mundo.
 
 ### AC-CLN-058 — El paso toca sólo el piso *(verifica BR-CLN-013)*
 
-DADO la jornada 1 y después la 2 CUANDO el jugador da un paso al lado de cada mancha de pared, y
+DADO la jornada 4 y después la 5 CUANDO el jugador da un paso al lado de cada mancha de pared, y
 debajo de la de techo, ENTONCES ninguna recibe el toque del paso ni ondula. DADO una mancha del
 piso de la misma noche CUANDO el jugador da un paso a su lado ENTONCES sí lo recibe.
 
 ### AC-CLN-059 — El charco reserva sólo las manchas de la noche *(verifica BR-CLN-024, BR-CLN-013)*
 
-DADO la jornada 1 y la mopa húmeda de agua sin jabón CUANDO se intenta dejar agua sobre el sector
-de un lugar del piso que sólo declara la jornada 2 ENTONCES aparece el charco; CUANDO se intenta
-sobre el sector de una mancha del piso de la jornada 1, ya limpia, ENTONCES se rechaza. DADO la
-jornada 2 ENTONCES vale lo mismo al revés: el sector de un lugar del piso que sólo declara la 1
-recibe el charco, y el de una mancha de la 2 lo rechaza.
+DADO la jornada 4 y la mopa húmeda de agua sin jabón CUANDO se intenta dejar agua sobre el sector
+de un lugar del piso que sólo declara la jornada 5 ENTONCES aparece el charco; CUANDO se intenta
+sobre el sector de una mancha del piso de la jornada 4, ya limpia, ENTONCES se rechaza. DADO la
+jornada 5 ENTONCES vale lo mismo al revés: el sector de un lugar del piso que sólo declara la 4
+recibe el charco, y el de una mancha de la 5 lo rechaza. DADO la jornada 1 ENTONCES ningún lugar
+del piso reserva su sector.
 
 ### AC-CLN-060 — Limpiar se cumple con la última mancha de la noche *(verifica BR-CLN-011, BR-CLN-013, BR-CLN-019)*
 
-DADO la jornada 1 CUANDO se borran 6 de sus 7 manchas ENTONCES limpiar no está cumplida; CUANDO
-se borra la séptima ENTONCES se cumple, una sola vez. DADO la jornada 2 CUANDO se borran 7 de sus
+DADO la jornada 3 CUANDO se borran 6 de sus 7 manchas ENTONCES limpiar no está cumplida; CUANDO
+se borra la séptima ENTONCES se cumple, una sola vez. DADO la jornada 5 CUANDO se borran 7 de sus
 8 ENTONCES no está cumplida; CUANDO se borra la octava ENTONCES se cumple, una sola vez. Cada
 mancha, también las de pared y la de techo, se borra pasándole la mopa mojada del jabón que pide,
 apuntándola con la mira desde un punto libre del piso. Las manchas del mismo tipo en la misma
@@ -712,27 +716,27 @@ habitación se borran por separado y cuenta cada una.
 ### AC-CLN-061 — Sustitución limitada por jornada e identidad *(verifica BR-CLN-033)*
 
 DADO una unidad real de Poético retirada de caja y luego una de góndola, en casos separados,
-CUANDO se usa con izquierdo sobre agua sin jabón en jornada 2 ENTONCES tiñe azul y conserva la
-unidad. En jornadas 1, 3, 4 y 5 no tiñe ni ofrece «echar jabón». Otro producto renombrado Poético
-no tiñe en ninguna jornada. En jornada 2 lavatorio, inodoro y manchas no reciben efecto de Poético.
+CUANDO se usa con izquierdo sobre agua sin jabón en jornada 5 ENTONCES tiñe azul y conserva la
+unidad. En jornadas 1, 4 y 6 no tiñe ni ofrece «echar jabón». Otro producto renombrado Poético
+no tiñe en ninguna jornada. En jornada 5 lavatorio, inodoro y manchas no reciben efecto de Poético.
 
 ### AC-CLN-062 — Vacío y teñido rechazan sin caída *(verifica BR-CLN-033, BR-CLN-035)*
 
-DADO jornada 2 y Poético en mano CUANDO se usa sobre balde vacío ENTONCES responde «balde vacío»;
+DADO jornada 5 y Poético en mano CUANDO se usa sobre balde vacío ENTONCES responde «balde vacío»;
 sobre agua azul, rosa o amarilla, «balde ya teñido». En todos los casos permanecen idénticos
 agua, mopa, manchas, mano y cantidades de mercadería, sin soltar ni publicar teñido aceptado.
 La consulta previa de controles no ejecuta el uso. Un clic aceptado publica una sola operación.
 
 ### AC-CLN-063 — La mezcla sustituta limpia sólo moho *(verifica BR-CLN-034, BR-CLN-018, BR-CLN-019, BR-CLN-022)*
 
-DADO jornada 2 y agua teñida con Poético CUANDO se moja la mopa ENTONCES agua y punta muestran
+DADO jornada 5 y agua teñida con Poético CUANDO se moja la mopa ENTONCES agua y punta muestran
 el azul del jabón azul y la carga es la declarada para la mopa. CUANDO se pasa por moho ENTONCES
 lo borra; sobre caca y polvo rechaza por jabón equivocado. Los límites de tiempo y recorrido
 son los mismos del bidón azul; usar Poético no cambia las manchas declaradas de la jornada.
 
 ### AC-CLN-064 — Dos mezclas usan el mismo envase *(verifica BR-CLN-034)*
 
-DADO Poético en mano y balde con agua limpia en jornada 2 CUANDO tiñe, se vacía y rellena el balde
+DADO Poético en mano y balde con agua limpia en jornada 5 CUANDO tiñe, se vacía y rellena el balde
 y se vuelve a teñir ENTONCES ambas mezclas se aceptan, la misma unidad sigue en mano y las
 cantidades de caja, depósito, góndola y unidades afuera no cambian por los teñidos. No hay venta
 ni envase vacío nuevo. Devolver o vender esa unidad conserva el recorrido normal de mercadería.
@@ -740,14 +744,14 @@ El bidón azul sigue siendo marca «2», con identidad y envase distintos de Po�
 
 ### AC-CLN-065 — Volver de la ausencia restaura el azul *(verifica BR-CLN-014, BR-CLN-026)*
 
-DADO el azul tirado al contenedor en jornada 1 CUANDO se abre la 2 dos veces ENTONCES sigue
-oculto, sin foco ni colisión. CUANDO abre la 3 ENTONCES vuelve a padre, pose, visibilidad y
+DADO el azul tirado al contenedor en jornada 4 CUANDO se abre la 5 dos veces ENTONCES sigue
+oculto, sin foco ni colisión. CUANDO abre la 6 ENTONCES vuelve a padre, pose, visibilidad y
 colisiones originales y puede recogerse; mopa seca y balde vacío. No se restaura Poético como
 si fuera un bidón de limpieza.
 
 ### AC-CLN-066 — Sólo un uso aceptado publica su identidad *(verifica BR-CLN-035)*
 
-DADO jornada 2 CUANDO Poético tiñe agua limpia ENTONCES se publica un teñido aceptado con la
+DADO jornada 5 CUANDO Poético tiñe agua limpia ENTONCES se publica un teñido aceptado con la
 identidad de Poético. DADO el bidón azul en una jornada disponible CUANDO tiñe ENTONCES el
 resultado identifica ese bidón. DADO pausa, examen, cierre, balde vacío o ya teñido ENTONCES
 no se publica teñido aceptado ni cambian mano o estados de limpieza.
@@ -826,9 +830,9 @@ anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CL
   - Por qué sigue abierta: hoy están todas desde la apertura. El GDD no lo dice.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.
-- **OQ-CLN-002 — ¿Qué manchas hay en las jornadas 3 a 5?**
+- **OQ-CLN-002 — ¿Qué manchas hay en las jornadas 6 a 8?**
   - Por qué sigue abierta: sus filas de la ficha dependen en parte de un cuartito de limpieza
     que el almacén no tiene, y de manchas en el techo del local y del depósito, que hoy quedan
-    fuera del alcance de la mira. Hasta entonces, las jornadas 3, 4 y 5 arrancan con las de la 1.
+    fuera del alcance de la mira. Hasta entonces, las jornadas 6, 7 y 8 arrancan con las de la 4.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.

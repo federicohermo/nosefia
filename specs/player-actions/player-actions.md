@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: draft
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429)
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -33,11 +33,11 @@ una tarea son los metros, no la torpeza del control.
 
 Las reglas de interacción directa sobre la figura, foco de silueta y retorno automático del diálogo
 se aplican al recorrido de atención física con comprador representado en el mundo.
-Las jornadas 3 a 5 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
+Las jornadas 6 a 8 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
 panel de cobro. Sólo en ese recorrido genérico se admite una consulta de acceso en el hueco:
 NO DEBE bloquear al jugador ni los objetos sostenidos, ni permanecer activa al usar atención física.
 La barrera de vidrio NO DEBE existir en ningún recorrido. Esta excepción NO DEBE convertir el hueco,
-marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 3 a 5.
+marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 6 a 8.
 
 ### BR-PLY-001 — La diagonal no camina más rápido
 
@@ -958,10 +958,10 @@ CUANDO vence ENTONCES se cierra el diálogo y se devuelve automáticamente la vi
 
 ### AC-PLY-080 — La nota cambia con la particular *(verifica BR-PLY-030)*
 
-DADO la jornada 1 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
+DADO la jornada 4 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
 cliente», «Registro de productos vendidos», «Limpieza», «Reposición» y «Ordenar cajas en el
-depósito». CUANDO se sigue a la jornada 2 sin recargar el local ENTONCES el quinto renglón dice
-«Tirar la basura». DADO la jornada 3 ENTONCES sólo están los cuatro primeros. En los tres casos,
+depósito». CUANDO se sigue a la jornada 5 sin recargar el local ENTONCES el quinto renglón dice
+«Tirar la basura». DADO la jornada 6 ENTONCES sólo están los cuatro primeros. En los tres casos,
 la hoja visible y su lectura tienen los mismos renglones.
 
 ### AC-PLY-081 — El celular conserva la mano y suspende el cuerpo *(verifica BR-PLY-006)*
@@ -1000,7 +1000,7 @@ lector, inodoro, lavatorio o balde no ofrece esos usos; el lector ausente tampoc
 
 ### AC-PLY-085 — Consultar el tacho no le saca la bolsa *(verifica BR-PLY-036, BR-PLY-035)*
 
-DADO jornada 2, mano vacía y tacho con bolsa CUANDO se consulta ENTONCES ofrece
+DADO jornada 5, mano vacía y tacho con bolsa CUANDO se consulta ENTONCES ofrece
 «[E] Examinar» y «[Click Izq] Interactuar», sin línea secundaria ni cambio de bolsa o mano.
 DADO tacho sin bolsa u objeto sostenido ENTONCES no ofrece extracción.
 
