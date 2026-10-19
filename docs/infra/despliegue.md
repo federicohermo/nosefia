@@ -139,12 +139,12 @@ El parche hace estas cosas, todas bajo `WEB_ENABLED`:
   ese caso. Medido el 2026-10-19, la carga baja de 36 s a 25 s, y la imagen cambia menos de 1
   sobre 255.
 
-La receta también apaga los módulos del motor que el juego no usa: red, navegación 2D, física
-2D, XR, CSG, glTF, video y los cargadores de imágenes que sólo usa el importador. La navegación
-3D queda: el addon del editor nombra sus monitores, y sin ella su script no compila. Brotli
-queda: la fuente por defecto del motor viene en WOFF2. Usa el servidor de texto simple, sin ICU.
-El motor compila menos y el WASM pesa menos. Si el juego empieza a usar uno de esos módulos, hay
-que sacarlo de `OPCIONES` en el preparador.
+La receta también apaga los módulos del motor que el juego no usa. Son red, navegación 2D,
+física 2D, XR, CSG, glTF y video, y los cargadores de imágenes que sólo usa el importador. La
+navegación 3D queda: el addon del editor nombra sus monitores, y sin ella su script no compila.
+Brotli queda: la fuente por defecto del motor viene en WOFF2. Usa el servidor de texto simple,
+sin ICU. El motor compila menos y el WASM pesa menos. Si el juego empieza a usar uno de esos
+módulos, hay que sacarlo de `OPCIONES` en el preparador.
 
 `test_plantilla_web.py` falla si el parche agrega una línea fuera de `WEB_ENABLED`.
 

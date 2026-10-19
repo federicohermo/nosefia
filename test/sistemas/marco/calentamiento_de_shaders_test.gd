@@ -181,7 +181,6 @@ func test_los_que_repiten_material_se_destapan_juntos() -> void:
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
 	await calentamiento.avanzo
-	await calentamiento.avanzo
 	assert_int(_visibles(escena)).is_equal(CUANTOS)
 
 
