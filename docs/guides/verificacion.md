@@ -38,6 +38,38 @@ sin reservar un grupo a un tema. La última partición corre también los demás
 
 Sin `--particion-tests`, el comando conserva la ejecución completa en un solo checkout.
 
+## Reutilizar importaciones entre revisiones
+
+Cada partición restaura `.godot/imported` con una clave exacta por contenido.
+La clave incluye nombres y bytes de recursos, opciones de importación, addons, motor, sistema operativo concreto y arquitectura.
+El helper `.github/scripts/cache_importaciones.py` concentra esa selección y la política de compatibilidad.
+Cambiar scripts normales de `src/` o `test/` conserva la clave, incluso al agregar clases.
+Cambiar modelos, materiales, shaders o recursos externos a `assets/` produce otra clave.
+Los cambios del propio helper también invalidan la caché.
+
+Cada worker obtiene el checkout actual y ejecuta siempre la importación del verificador.
+Los índices de clases y UID, los datos de usuario y los reportes se generan en ese worker.
+Sólo la partición cero publica importaciones después de pasar su verificación y encontrar una clave ausente.
+No hay un productor previo que retrase el comienzo de las particiones.
+
+Los importadores `importar_modelo.gd` e `importar_caja.gd` tienen hashes auditados en el helper.
+Un importador cambiado, desconocido o un nuevo `EditorImportPlugin` desactiva el reuso hasta actualizar esa política.
+El material precargado `vidrio_del_local.tres` también se controla.
+Si incorpora scripts u otros materiales dependientes, la verificación trabaja en frío hasta auditar esas dependencias.
+Los materiales y escenas de ejecución ajenos a ese importador no activan esa restricción.
+
+El importador de caja escribe recursos versionados fuera de `.godot/imported`.
+Para regenerarlos, cada worker elimina las salidas importadas declaradas por los tres GLB de caja antes de verificar.
+La caché nunca restaura esos recursos versionados.
+
+Una ausencia, un error del servicio o una coincidencia parcial limpia las importaciones restauradas y continúa con una verificación fría.
+No se usan claves aproximadas.
+La disponibilidad también depende del alcance de ramas y la retención de GitHub Actions.
+El archivo `reports/cache-importaciones.json` registra clave, revisión actual, compatibilidad y acierto real de cada partición.
+`reports/cache-recursos.sha256` conserva las huellas de los recursos derivados para comparar corridas frías y cálidas.
+El resumen del job muestra ese estado aunque falle la verificación posterior.
+Un acierto reutiliza trabajo de importación; los tests y su cotejo JUnit se ejecutan nuevamente.
+
 ## Medir el reparto en Actions
 
 El workflow manual `medir-verificacion.yml` compara cantidades de particiones sin cambiar

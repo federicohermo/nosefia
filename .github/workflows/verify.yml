@@ -71,6 +71,26 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Identidad de las importaciones actuales
+        id: importaciones
+        run: python .github/scripts/cache_importaciones.py identidad
+
+      - name: Restaurar importaciones compatibles
+        id: restaurar-importaciones
+        if: steps.importaciones.outputs.cacheable == 'true'
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: .godot/imported
+          key: ${{ steps.importaciones.outputs.key }}
+
+      - name: Preparar importaciones para la verificación actual
+        env:
+          CACHE_HIT: ${{ steps.restaurar-importaciones.outputs.cache-hit }}
+          CACHE_RESULTADO: ${{ steps.restaurar-importaciones.outcome }}
+          CACHE_CLAVE_RESTAURADA: ${{ steps.restaurar-importaciones.outputs.cache-matched-key }}
+        run: python .github/scripts/cache_importaciones.py preparar
+
       # El harness no tiene dependencias: esto es el linter del JUEGO, no de las herramientas.
       - run: pip install "gdtoolkit==4.*"
 
@@ -94,6 +114,24 @@ jobs:
         run: >-
           python .claude/scripts/verificar.py
           --particion-tests ${{ matrix.particion }}/${{ strategy.job-total }}
+
+      - name: Registrar recursos derivados actuales
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          git ls-files -z 'assets/models/*.res' | xargs -0 -r sha256sum > reports/cache-recursos.sha256
+
+      - name: Guardar importaciones para próximas revisiones
+        if: >-
+          success() && matrix.particion == 0 &&
+          steps.importaciones.outputs.cacheable == 'true' &&
+          steps.restaurar-importaciones.outputs.cache-hit != 'true'
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: .godot/imported
+          key: ${{ steps.importaciones.outputs.key }}
 
       # Los reportes de gdUnit4, para poder mirar QUÉ falló sin reproducir la corrida. `always()`
       # porque el caso en que sirven es justamente aquel en que el paso anterior falló.
