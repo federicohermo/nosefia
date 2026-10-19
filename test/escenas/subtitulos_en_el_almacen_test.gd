@@ -8,11 +8,9 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 
-const INODORO := (
-	"Un inodoro. Enrique me pidió encarecidamente" + " que no tire papel en él, porque se tapa."
-)
-const LAVATORIO := "Un lavatorio. Acá puedo cargar el balde."
-const BOLSA := "Una bolsa de basura."
+const INODORO := SubtitulosAlExaminar.INODORO
+const LAVATORIO := SubtitulosAlExaminar.LAVATORIO
+const TEXTO_DE_PRUEBA := "abcdefghijklmnopqrst"
 
 
 func _almacen_con_jugador_quieto() -> Node3D:
@@ -65,21 +63,20 @@ func test_lo_fijo_del_local_dice_su_texto_con_las_manos_vacias() -> void:  # AC-
 		"Estructura/bano_inodoro_2/StaticBody3D": INODORO,
 		"Estructura/vanitory/StaticBody3D": LAVATORIO,
 		"Estructura/bano_lavatorio_2/StaticBody3D": LAVATORIO,
-		"Estructura/base compu/StaticBody3D":
-		SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.COMPUTADORA),
-		"Estructura/cajaregistradora/StaticBody3D":
-		"La caja registradora. Acá puedo hacer los tickets para los compradores.",
-		"Estructura/Lector": SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.LECTOR),
-		"Estructura/puertaentrada/CuerpoDeLaHoja":
-		"La entrada principal al local. Queda cerrada con llave durante el turno nocturno.",
-		"Estructura/puertajefe/CuerpoDeLaHoja":
-		"Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada.",
-		"Estructura/porton/CuerpoDeLaHoja": "Un portón que da a la calle.",
+		"Estructura/base compu/StaticBody3D": SubtitulosAlExaminar.COMPUTADORA,
+		"Estructura/cajaregistradora/StaticBody3D": SubtitulosAlExaminar.CAJA_REGISTRADORA,
+		"Estructura/Lector": SubtitulosAlExaminar.LECTOR,
+		"Estructura/puertaentrada/CuerpoDeLaHoja": SubtitulosAlExaminar.ENTRADA_PRINCIPAL,
+		"Estructura/puertajefe/CuerpoDeLaHoja": SubtitulosAlExaminar.PUERTA_DEL_JEFE,
+		"Estructura/porton/CuerpoDeLaHoja": SubtitulosAlExaminar.PORTON,
 	}
 	for ruta: String in casos:
-		_piensa(almacen, almacen.get_node_or_null(ruta), casos[ruta])
-	_piensa(almacen, almacen.get("_contenedor"), "Un contenedor de basura.")
-	_piensa(almacen, almacen.get("_tapa_del_contenedor"), "Un contenedor de basura.")
+		_piensa(
+			almacen, almacen.get_node_or_null(ruta), SubtitulosAlExaminar.de_lo_fijo(casos[ruta])
+		)
+	var contenedor := SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.CONTENEDOR)
+	_piensa(almacen, almacen.get("_contenedor"), contenedor)
+	_piensa(almacen, almacen.get("_tapa_del_contenedor"), contenedor)
 	var notas: Array = almacen.get_node("Estructura/NotasDelAlmacen").get("notas")
 	assert_int(notas.size()).is_greater_equal(5)
 	for nota: Node3D in notas:
@@ -143,7 +140,7 @@ func test_lo_que_no_tiene_texto_no_cambia_la_linea() -> void:  # AC-SUB-003, AC-
 	_examinar(jugador, almacen.get_node("Estructura/inodoro/StaticBody3D"))
 	for objetivo in callados:
 		_examinar(jugador, objetivo)
-		assert_str(_linea(almacen).text).is_equal(INODORO)
+		assert_str(_linea(almacen).text).is_equal(SubtitulosAlExaminar.de_lo_fijo(INODORO))
 
 
 func test_la_unidad_en_la_mano_queda_fija_mientras_se_examina() -> void:  # AC-SUB-007, AC-SUB-011
@@ -152,7 +149,7 @@ func test_la_unidad_en_la_mano_queda_fija_mientras_se_examina() -> void:  # AC-S
 	var hud: Hud = almacen.get("_hud")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
 	_examinar(jugador, almacen.get_node("Estructura/inodoro/StaticBody3D"))
-	assert_str(_linea(almacen).text).is_equal(INODORO)
+	assert_str(_linea(almacen).text).is_equal(SubtitulosAlExaminar.de_lo_fijo(INODORO))
 	jugador.set("_enfocado", caja)
 	var usar := InputEventAction.new()
 	usar.action = ReglasDelJugador.ACCION_USAR
@@ -161,9 +158,13 @@ func test_la_unidad_en_la_mano_queda_fija_mientras_se_examina() -> void:  # AC-S
 	assert_object(almacen.get("_agarre").manos().sostenido() as UnidadDeProducto).is_not_null()
 	_examinar(jugador, caja)
 	assert_bool(jugador.get("examen").esta_examinando()).is_true()
-	assert_str(_linea(almacen).text).is_equal("Una caja de medicamentos Actroncito.")
+	assert_str(_linea(almacen).text).is_equal(
+		SubtitulosAlExaminar.de_producto(Producto.Id.ACTRONCITO)
+	)
 	hud.call("_process", 60.0)
-	assert_str(_linea(almacen).text).is_equal("Una caja de medicamentos Actroncito.")
+	assert_str(_linea(almacen).text).is_equal(
+		SubtitulosAlExaminar.de_producto(Producto.Id.ACTRONCITO)
+	)
 	assert_float(_linea(almacen).modulate.a).is_equal(1.0)
 	_examinar(jugador, caja)
 	assert_bool(jugador.get("examen").esta_examinando()).is_false()
@@ -186,16 +187,16 @@ func test_con_otra_interfaz_o_la_pausa_la_e_no_piensa() -> void:  # AC-SUB-008
 		assert_int(nodo.process_mode).is_equal(Node.PROCESS_MODE_INHERIT)
 	assert_int(almacen.process_mode).is_equal(Node.PROCESS_MODE_INHERIT)
 	almacen.process_mode = Node.PROCESS_MODE_PAUSABLE
-	hud.pensar(BOLSA)
+	hud.pensar(TEXTO_DE_PRUEBA)
 	hud.call("_process", 1.0)
 	get_tree().paused = true
 	var pausados := not hud.can_process() and not jugador.can_process()
 	get_tree().paused = false
 	assert_bool(pausados).is_true()
-	assert_str(_linea(almacen).text).is_equal(BOLSA)
+	assert_str(_linea(almacen).text).is_equal(TEXTO_DE_PRUEBA)
 	assert_float(_linea(almacen).modulate.a).is_equal(1.0)
 	hud.call("_process", 1.79)
-	assert_str(_linea(almacen).text).is_equal(BOLSA)
+	assert_str(_linea(almacen).text).is_equal(TEXTO_DE_PRUEBA)
 	hud.call("_process", 1.8 - 1.79)
 	assert_str(_linea(almacen).text).is_empty()
 
@@ -203,9 +204,9 @@ func test_con_otra_interfaz_o_la_pausa_la_e_no_piensa() -> void:  # AC-SUB-008
 func test_la_jornada_nueva_abre_con_la_linea_vacia() -> void:  # AC-SUB-009
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var hud: Hud = almacen.get("_hud")
-	hud.pensar(BOLSA)
+	hud.pensar(TEXTO_DE_PRUEBA)
 	hud.call("_process", 2.55)
 	assert_float(_linea(almacen).modulate.a).is_less(1.0)
-	assert_str(_linea(almacen).text).is_equal(BOLSA)
+	assert_str(_linea(almacen).text).is_equal(TEXTO_DE_PRUEBA)
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_str(_linea(almacen).text).is_empty()

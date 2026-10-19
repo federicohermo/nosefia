@@ -147,6 +147,35 @@ Los casos del contador se corren a mano:
 node --test .github/scripts/tests/enlaces_de_shaders_test.mjs
 ```
 
+### El tope de la carga web
+
+El paso "Los topes de la carga web" de `desplegar.yml` frena una publicación que suma programas
+a la carga o agranda el motor. Protege lo que ganaron #514 y #523. Corre entre el export y la
+publicación, así que no suma tiempo a los PR.
+
+El runner no tiene GPU, así que mide una carga con `--sin-ventana --software --corridas=1`.
+`--software` fuerza SwiftShader, que no tiene `KHR_parallel_shader_compile`. Por eso la carga
+recorre el camino de Firefox, y `--sin-enlace-en-paralelo` lo deja explícito. Tarda alrededor de
+1 minuto.
+
+El conteo depende del renderizador. Medido el 2026-10-19, sobre la versión de #523: 87 programas
+por software, 94 en Firefox y 100 en Chrome con GPU. Un tope sale siempre de una medición por
+software.
+
+`.github/scripts/tope_de_carga.py` compara la carga con `.github/performance/topes-de-carga.json`:
+
+- **`programas`:** 89. Son los 87 medidos por software, más 2. Entre corridas, el conteo varía
+  en 1.
+- **`wasm_bytes`:** 30 MB. El motor de #514 pesa 29,1 MB.
+
+Un PR que baja un conteo no baja el tope. Subir un tope es una decisión del PR. El PR la
+justifica con una medición por software, como la que guarda el artefacto `carga-web`.
+
+```powershell
+node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json --sin-ventana --software --corridas=1 --sin-enlace-en-paralelo
+python .github/scripts/tope_de_carga.py .github/performance/topes-de-carga.json reports/carga.json export/web/index.wasm
+```
+
 ## La memoria de texturas en la web
 
 `.github/scripts/medir_memoria_de_texturas.mjs` hace el inventario de las texturas de WebGL que

@@ -120,7 +120,7 @@ Se corrige el JavaScript generado del ZIP, sin modificar el WASM. El preparador 
 plantilla que conserve esa consulta o cambie el código esperado de la copia. La CI prueba que
 el export conserva tanto el recorte habilitado como el deshabilitado y el framebuffer anterior.
 
-El parche hace tres cosas, todas bajo `WEB_ENABLED`:
+El parche hace estas cosas, todas bajo `WEB_ENABLED`:
 
 - **No compila las variantes predeterminadas** de un shader. Compila sólo la que pide un dibujo.
 - **Enlaza los shaders de escena en paralelo**, con `KHR_parallel_shader_compile`. Publica la
@@ -129,6 +129,27 @@ El parche hace tres cosas, todas bajo `WEB_ENABLED`:
 - **Consulta el estado de la copia de pantalla sólo al crearla.** El motor lo consultaba en cada
   cuadro en que un material 3D lee la pantalla o la profundidad. En el navegador, esa consulta
   espera a la GPU: medido el 2026-10-14, entre 1 y 2,4 ms del hilo principal por cuadro.
+- **No separa variantes por luces omni y focos.** Un bucle de luces vacío dibuja igual que uno
+  apagado, y cada variante es un enlace más.
+- **Aproxima la luz de área con un punto representativo.** El código LTC exacto era la mayor
+  parte del tiempo de enlace de cada variante iluminada. Firefox no tiene enlace en paralelo y
+  compila uno por uno: medido el 2026-10-18 sobre los shaders del juego, de 56 s a 24,5 s.
+- **Puede apagar las luces de área sin enlace en paralelo**, con la opción de proyecto
+  `rendering/web/area_lights_need_parallel_link`. El juego la prende: hoy sólo Firefox cae en
+  ese caso. Medido el 2026-10-19, la carga baja de 36 s a 25 s, y la imagen cambia menos de 1
+  sobre 255.
+- **No separa variantes por sondas de reflejo.** Una sonda sin caja no aporta nada: la variante
+  de dos sondas dibuja igual que la de una o la de ninguna. Cada material enlaza una variante y
+  no tres. Medido el 2026-10-19, Firefox enlaza 94 programas en vez de 133, y la preparación
+  baja de 21 s a 14 s.
+- **Un material sin luz no separa variantes por luces ni por lightmaps.** Su código no los usa.
+
+La receta también apaga los módulos del motor que el juego no usa. Son red, navegación 2D,
+física 2D, XR, CSG, glTF y video, y los cargadores de imágenes que sólo usa el importador. La
+navegación 3D queda: el addon del editor nombra sus monitores, y sin ella su script no compila.
+Brotli queda: la fuente por defecto del motor viene en WOFF2. Usa el servidor de texto simple,
+sin ICU. El motor compila menos y el WASM pesa menos. Si el juego empieza a usar uno de esos
+módulos, hay que sacarlo de `OPCIONES` en el preparador.
 
 `test_plantilla_web.py` falla si el parche agrega una línea fuera de `WEB_ENABLED`.
 
@@ -143,6 +164,10 @@ La primera compilación local medida tarda unos 30 minutos. Las siguientes prepa
 reutilizan la plantilla validada. Actions guarda `build/templates` en caché. Su clave incluye
 la versión, el parche, la receta y el script. Restaurar la caché no reemplaza las comprobaciones.
 El workflow prepara la plantilla con `--jobs 2` para limitar la memoria de compilación.
+
+Los objetos compilados quedan en `build/godot-web/cache-de-scons`, acá y en la caché de
+Actions. SCons reusa un objeto sólo si sus entradas son idénticas. Cambiar el parche recompila
+los archivos que toca, no el motor entero.
 
 Para importar una plantilla local ya compilada, correr el comando de abajo. El ZIP tiene que
 ser el que la receta declara en `plantilla_local`:

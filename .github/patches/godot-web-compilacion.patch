@@ -12,6 +12,88 @@
  	//scene->iteration();
  }
  
+--- a/drivers/gles3/rasterizer_scene_gles3.cpp
++++ b/drivers/gles3/rasterizer_scene_gles3.cpp
+@@ -3564,6 +3564,14 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
+ 						if (inst->area_light_gl_cache.is_empty()) {
+ 							spec_constants |= SceneShaderGLES3::DISABLE_LIGHT_AREA;
+ 						}
++#ifdef WEB_ENABLED
++						// On the web every variant costs a link, and the light counts are uploaded for every
++						// draw: an empty omni or spot loop draws the same as a disabled one, at half the variants.
++						spec_constants &= ~(SceneShaderGLES3::DISABLE_LIGHT_OMNI | SceneShaderGLES3::DISABLE_LIGHT_SPOT);
++						if (web_area_lights_need_parallel_link && !material_storage->shaders.scene_shader.has_parallel_link()) {
++							spec_constants |= SceneShaderGLES3::DISABLE_LIGHT_AREA;
++						}
++#endif
+ 
+ 						if (p_render_data->directional_light_count == p_render_data->directional_shadow_count) {
+ 							spec_constants |= SceneShaderGLES3::DISABLE_LIGHT_DIRECTIONAL;
+@@ -3600,6 +3608,17 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
+ 							spec_constants |= SceneShaderGLES3::USE_SUN_SCATTER;
+ 						}
+ 					}
++#ifdef WEB_ENABLED
++					// A probe whose box holds nothing adds nothing: the two-probe variant draws the same
++					// as one probe or none, and every material links it once instead of three times.
++					spec_constants &= ~SceneShaderGLES3::DISABLE_REFLECTION_PROBE;
++					spec_constants |= SceneShaderGLES3::SECOND_REFLECTION_PROBE;
++					if (shader->unshaded) {
++						// Unshaded code skips lights and lightmaps, so their variants all draw the same.
++						spec_constants &= ~(SceneShaderGLES3::USE_LIGHTMAP | SceneShaderGLES3::USE_SH_LIGHTMAP | SceneShaderGLES3::LIGHTMAP_BICUBIC_FILTER | SceneShaderGLES3::USE_LIGHTMAP_CAPTURE);
++						spec_constants |= SceneShaderGLES3::DISABLE_LIGHT_OMNI | SceneShaderGLES3::DISABLE_LIGHT_SPOT | SceneShaderGLES3::DISABLE_LIGHT_AREA | SceneShaderGLES3::DISABLE_LIGHT_DIRECTIONAL | SceneShaderGLES3::DISABLE_LIGHTMAP;
++					}
++#endif
+ 				} else {
+ 					// Only base pass uses the radiance map.
+ 					spec_constants &= ~SceneShaderGLES3::USE_RADIANCE_MAP;
+@@ -3875,6 +3894,22 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
+ 						spec_constants |= SceneShaderGLES3::SECOND_REFLECTION_PROBE;
+ 					}
+ 				}
++#ifdef WEB_ENABLED
++				if (pass == 0 && inst->reflection_probe_rid_cache.size() < 2) {
++					GLES3::Config *config = GLES3::Config::get_singleton();
++					GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
++					GLuint black = texture_storage->get_texture(texture_storage->texture_gl_get_default(GLES3::DEFAULT_GL_TEXTURE_CUBEMAP_BLACK))->tex_id;
++					// A negative extent puts every fragment outside the box.
++					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::REFPROBE2_BOX_EXTENTS, Vector3(-1.0, -1.0, -1.0), shader->version, instance_variant, spec_constants);
++					glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 9);
++					glBindTexture(GL_TEXTURE_CUBE_MAP, black);
++					if (inst->reflection_probe_rid_cache.is_empty()) {
++						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::REFPROBE1_BOX_EXTENTS, Vector3(-1.0, -1.0, -1.0), shader->version, instance_variant, spec_constants);
++						glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 8);
++						glBindTexture(GL_TEXTURE_CUBE_MAP, black);
++					}
++				}
++#endif
+ 			}
+ 
+ 			if constexpr (p_pass_mode == PASS_MODE_MOTION_VECTORS) {
+@@ -4607,6 +4642,11 @@ RasterizerSceneGLES3::RasterizerSceneGLES3() {
+ 		global_defines += "\n#define MAX_DIRECTIONAL_LIGHT_DATA_STRUCTS " + itos(MAX_DIRECTIONAL_LIGHTS) + "\n";
+ 		global_defines += "\n#define MAX_FORWARD_LIGHTS " + itos(config->max_lights_per_object) + "u\n";
+ 		global_defines += "\n#define MAX_ROUGHNESS_LOD " + itos(sky_globals.roughness_layers - 1) + ".0\n";
++#ifdef WEB_ENABLED
++		// The LTC area light is most of the link time of every lit variant without parallel linking.
++		global_defines += "\n#define WEB_ENABLED\n";
++		web_area_lights_need_parallel_link = ProjectSettings::get_singleton()->get_setting("rendering/web/area_lights_need_parallel_link", false);
++#endif
+ 		if (config->force_vertex_shading) {
+ 			global_defines += "\n#define USE_VERTEX_LIGHTING\n";
+ 		}
+--- a/drivers/gles3/rasterizer_scene_gles3.h
++++ b/drivers/gles3/rasterizer_scene_gles3.h
+@@ -785,6 +785,9 @@ protected:
+ 	bool glow_bicubic_upscale = false;
+ 
+ 	bool lightmap_bicubic_upscale = false;
++#ifdef WEB_ENABLED
++	bool web_area_lights_need_parallel_link = false;
++#endif
+ 
+ 	/* Sky */
+ 
 --- a/drivers/gles3/shader_gles3.cpp
 +++ b/drivers/gles3/shader_gles3.cpp
 @@ -41,6 +41,13 @@
@@ -204,7 +286,7 @@
  		if (!spec) {
  			if (false) {
  				// Queue load this specialization and use defaults in the meantime (TODO)
-@@ -243,6 +270,12 @@ public:
+@@ -243,6 +270,13 @@ public:
  
  	bool version_free(RID p_version);
  
@@ -212,14 +294,83 @@
 +	// Call once per frame, outside of any draw. Queuing starts with the first call:
 +	// a shader that nobody polls would never leave the queue.
 +	void poll_link_queue();
++	bool has_parallel_link() const { return parallel_link; }
 +#endif
 +
  	static void set_shader_cache_dir(const String &p_dir);
  	static void set_shader_cache_save_compressed(bool p_enable);
  	static void set_shader_cache_save_compressed_zstd(bool p_enable);
+--- a/drivers/gles3/shaders/area_lights_inc.glsl
++++ b/drivers/gles3/shaders/area_lights_inc.glsl
+@@ -240,3 +240,50 @@ void ltc_evaluate_specular(vec3 normal, vec3 eye_vec, float roughness, vec3 poin
+ 	ltc_evaluate(normal, eye_vec, M_inv, points, ltc_specular);
+ 	fresnel = vec2(M_brdf_e_mag_fres.yz);
+ }
++
++#ifdef WEB_ENABLED
++// Same outputs as the LTC pair, without clipping the quad: diffuse is the form factor sampled at the
++// corners and the center; specular is GGX at the representative point (Karis 2013), with the lobe
++// widened by the light's apparent size and renormalized.
++void area_representative_point(vec3 normal, vec3 eye_vec, float roughness, vec3 points[4], vec3 area_direction, vec3 area_width, vec3 area_height, sampler2D ltc_lut2, out float diffuse, out float specular, out vec2 fresnel) {
++	vec3 center = (points[0] + points[2]) * 0.5;
++	float width = length(area_width);
++	float height = length(area_height);
++	float area = width * height;
++	float sum = 0.0;
++	for (int i = 0; i < 5; i++) {
++		vec3 p = i == 4 ? center : points[i];
++		float d2 = max(dot(p, p), 1e-4);
++		vec3 l = p * inversesqrt(d2);
++		sum += max(dot(normal, l), 0.0) * max(dot(area_direction, -l), 0.0) / d2;
++	}
++	diffuse = min(area * sum / (5.0 * M_PI), 1.0);
++
++	vec3 r = reflect(-eye_vec, normal);
++	float toward = dot(r, area_direction);
++	vec3 point = center;
++	if (toward < -1e-4) {
++		vec3 u = area_width / width;
++		vec3 v = area_height / height;
++		vec3 on_plane = r * (dot(center, area_direction) / toward) - center;
++		point = center + u * clamp(dot(on_plane, u), -0.5 * width, 0.5 * width) + v * clamp(dot(on_plane, v), -0.5 * height, 0.5 * height);
++	}
++	float d2 = max(dot(point, point), 1e-4);
++	vec3 l = point * inversesqrt(d2);
++	float ndotl = max(dot(normal, l), 0.0);
++	float ndotv = max(dot(normal, eye_vec), 1e-4);
++	float ndoth = max(dot(normal, normalize(l + eye_vec)), 0.0);
++	float alpha = max(roughness * roughness, 1e-3);
++	float wide = min(alpha + sqrt(area / M_PI) * inversesqrt(d2) * 0.5, 1.0);
++	float a2 = wide * wide;
++	float den = ndoth * ndoth * (a2 - 1.0) + 1.0;
++	float k = wide * 0.5;
++	float vis = 0.25 / ((ndotl * (1.0 - k) + k) * (ndotv * (1.0 - k) + k));
++	float energy = (alpha / wide) * (alpha / wide);
++	specular = a2 / (M_PI * den * den) * vis * ndotl * energy * area * max(dot(area_direction, -l), 0.0) / d2;
++
++	float theta = acos_approx(dot(normal, eye_vec));
++	vec2 lut_uv = vec2(max(roughness, 0.02), theta / (0.5 * M_PI)) * (63.0 / 64.0) + vec2(0.5 / 64.0);
++	fresnel = texture(ltc_lut2, lut_uv).yz;
++}
++#endif
+--- a/drivers/gles3/shaders/scene.glsl
++++ b/drivers/gles3/shaders/scene.glsl
+@@ -1824,8 +1824,12 @@ void light_process_area(uint idx, vec3 vertex, vec3 eye_vec, vec3 normal, vec3 f
+ 	float ltc_diffuse = 0.0;
+ 	float ltc_specular = 0.0;
+ 	vec2 ltc_fresnel = vec2(0.0);
++#ifdef WEB_ENABLED
++	area_representative_point(normal, eye_vec, roughness, points, area_direction, area_width, area_height, ltc_lut2, ltc_diffuse, ltc_specular, ltc_fresnel);
++#else
+ 	ltc_evaluate(normal, eye_vec, mat3(1), points, ltc_diffuse);
+ 	ltc_evaluate_specular(normal, eye_vec, roughness, points, ltc_lut1, ltc_lut2, ltc_specular, ltc_fresnel);
++#endif
+ 
+ 	float f90 = clamp(dot(f0, vec3(50.0 * 0.33)), metallic, 1.0);
+ 	vec3 fresnel_color = f0 * max(ltc_fresnel.x, 0.0) + (f90 - f0) * max(ltc_fresnel.y, 0.0);
 --- a/drivers/gles3/storage/render_scene_buffers_gles3.cpp
 +++ b/drivers/gles3/storage/render_scene_buffers_gles3.cpp
-@@ -475,6 +475,11 @@
+@@ -475,6 +475,11 @@ void RenderSceneBuffersGLES3::check_backbuffer(bool p_need_color, bool p_need_de
  	GLenum texture_target = use_multiview ? GL_TEXTURE_2D_ARRAY : GL_TEXTURE_2D;
  	GLenum depth_format = GL_DEPTH24_STENCIL8;
  	uint32_t depth_format_size = 4;
@@ -231,7 +382,7 @@
  
  	if (backbuffer3d.color == 0 && p_need_color) {
  		glGenTextures(1, &backbuffer3d.color);
-@@ -532,11 +537,17 @@
+@@ -532,11 +537,17 @@ void RenderSceneBuffersGLES3::check_backbuffer(bool p_need_color, bool p_need_de
  		}
  	}
  

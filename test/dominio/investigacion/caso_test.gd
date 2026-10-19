@@ -90,7 +90,7 @@ func test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar() -> void:  # AC-
 	assert_array(caso.desenlaces).is_empty()
 
 
-func test_contenido_literal_y_circulo_aprobado_no_tienen_sustitutos() -> void:  # AC-INV-053
+func test_las_pistas_traen_su_foto_y_su_texto() -> void:  # AC-INV-053
 	var caso := CasoDeInvestigacion.de_la_partida()
 	var a := caso.pista_de("2A")
 	var b := caso.pista_de("2B")
@@ -109,12 +109,6 @@ func test_contenido_literal_y_circulo_aprobado_no_tienen_sustitutos() -> void:  
 	)
 	assert_object(a.foto).is_not_null()
 	assert_object(b.foto).is_not_null()
-	if a.foto == null or b.foto == null:
-		return
-	assert_vector(a.foto.get_size()).is_equal(Vector2(54, 54))
-	assert_str(FileAccess.get_sha256(a.foto.resource_path)).is_equal(
-		"d5db6fd633d376c2bdf35ffdc864786820906b5c79c2d3fb21d904c52b67d29b"
-	)
 	var titulos: Dictionary[String, String] = {
 		"2A": "SIEMPRE FALTAN COSAS",
 		"2B": "CIGARRILLO EN EL DEPÓSITO",

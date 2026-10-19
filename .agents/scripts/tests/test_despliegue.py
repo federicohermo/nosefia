@@ -375,6 +375,13 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
         self.assertIn("verificar_export.py", self.texto)
         self.assertIn("|| true", self.texto)
 
+    def test_los_topes_de_la_carga_se_controlan_antes_de_publicar(self):
+        # Después de publicar, el rojo llega tarde: la web con la regresión ya está en la URL.
+        control = self.texto.index("python .github/scripts/tope_de_carga.py")
+        self.assertLess(self.texto.index("export-release"), control)
+        self.assertLess(control, self.texto.index("vercel deploy"))
+        self.assertIn("--software", self.texto)
+
     def test_le_pega_a_la_url_publicada(self):
         # La cita de la publicación corrida de verdad. Contra una URL viva se corre con
         #   python .claude/scripts/verificar_despliegue.py https://<proyecto>.vercel.app

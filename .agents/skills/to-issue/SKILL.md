@@ -201,6 +201,16 @@ en una partida web, pero el preset excluía texturas del almacén y no entraba e
 Declarar su corrección acotada y verificar el paquete real. Corregir sólo una copia externa
 para obtener la captura deja el preset publicado con el mismo defecto.
 
+**Un job nuevo de CI se cruza con el encabezado de su workflow, sus tests y la regla de la rama.**
+El encabezado puede prohibir lo que el job hace, y `test_despliegue.py` puede exigirlo. La regla
+de `staging` dice qué check frena un PR: un workflow aparte no frena nada. En #524, el job
+exportaba dentro de `verify.yml`, cuyo encabezado decía que no exporta, y un test lo exigía.
+Leer `gh api repos/<dueño>/<repo>/rulesets` y declarar en los límites el encabezado y su test.
+Medir también cuánto suma a la duración de los PR, contra los PR abiertos que la recortan. Un
+job en un PR no compila el motor: una caché ausente no inicia una compilación, como fija #513.
+Un PR lee la caché de su rama y de la rama por defecto, no la de `main`. En #524, el job
+compilaba el motor en cada PR, y el control terminó en `desplegar.yml`.
+
 **Si el issue tiene pantalla, buscá su frame en Figma.** El campo «Diseño» del Contexto lleva
 el link al frame, con su `node-id`, y no al archivo entero; el link a la base lo trae el template.
 El `node-id` se copia de la URL del frame, nunca se escribe de memoria. Si la pantalla no tiene

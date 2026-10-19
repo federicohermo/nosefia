@@ -5,10 +5,7 @@
 ## mira; acá se afirma qué hace `Examen` con él.
 extends GdUnitTestSuite
 
-const INODORO := (
-	"Un inodoro. Enrique me pidió encarecidamente" + " que no tire papel en él, porque se tapa."
-)
-const BOLSA := "Una bolsa de basura."
+const TEXTO_DE_PRUEBA := "abcdefghijklmnopqrst"
 
 
 func _agarre() -> Agarre:
@@ -55,9 +52,9 @@ func test_lo_fijo_con_texto_se_piensa_sin_examen() -> void:  # AC-SUB-002
 	var avisos := Avisos.new(examen)
 	var linea := Subtitulo.new()
 	examen.pensamiento_pedido.connect(linea.pensar)
-	examen.alternar(null, INODORO)
-	assert_array(avisos.pensamientos).contains_exactly([INODORO])
-	assert_str(linea.texto()).is_equal(INODORO)
+	examen.alternar(null, TEXTO_DE_PRUEBA)
+	assert_array(avisos.pensamientos).contains_exactly([TEXTO_DE_PRUEBA])
+	assert_str(linea.texto()).is_equal(TEXTO_DE_PRUEBA)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_int(avisos.iniciados).is_zero()
 	assert_int(avisos.terminados).is_zero()
@@ -71,7 +68,7 @@ func test_un_levantable_con_texto_se_piensa_y_no_se_registra() -> void:  # AC-SU
 	var avisos := Avisos.new(examen)
 	var bolsa := load("res://src/dominio/almacen/bolsa_de_basura_1.tres") as ObjetoDelAlmacen
 	examen.alternar(bolsa, bolsa.texto_al_examinar())
-	assert_array(avisos.pensamientos).contains_exactly([BOLSA])
+	assert_array(avisos.pensamientos).contains_exactly([bolsa.subtitulo])
 	assert_int(avisos.iniciados).is_zero()
 	assert_array(avisos.revelados).is_empty()
 	assert_int(examen.hallazgos().cantidad()).is_zero()
@@ -90,7 +87,7 @@ func test_sin_texto_o_sin_nada_en_la_mira_no_se_pide_nada() -> void:  # AC-SUB-0
 	assert_array(avisos.pensamientos).is_empty()
 	assert_str(linea.texto()).is_empty()
 	# Un pensamiento que se ve sigue su curso: el gesto sin texto no lo reinicia.
-	linea.pensar(BOLSA)
+	linea.pensar(TEXTO_DE_PRUEBA)
 	linea.avanzar(1.0)
 	examen.alternar(null, "")
 	linea.avanzar(1.8)
@@ -106,9 +103,9 @@ func test_lo_fijo_con_revelacion_se_publica_y_el_subtitulo_sale_igual() -> void:
 	puerta.id = &"puerta"
 	puerta.levantable = false
 	puerta.revelacion = revelacion
-	examen.alternar(puerta, "Un portón que da a la calle.")
+	examen.alternar(puerta, TEXTO_DE_PRUEBA)
 	assert_array(avisos.revelados).contains_exactly([puerta])
-	assert_array(avisos.pensamientos).contains_exactly(["Un portón que da a la calle."])
+	assert_array(avisos.pensamientos).contains_exactly([TEXTO_DE_PRUEBA])
 	assert_int(avisos.iniciados).is_zero()
 
 
@@ -117,9 +114,9 @@ func test_repetir_el_gesto_pide_el_pensamiento_otra_vez() -> void:  # AC-SUB-006
 	var avisos := Avisos.new(examen)
 	var linea := Subtitulo.new()
 	examen.pensamiento_pedido.connect(linea.pensar)
-	examen.alternar(null, BOLSA)
+	examen.alternar(null, TEXTO_DE_PRUEBA)
 	linea.avanzar(2.0)
-	examen.alternar(null, BOLSA)
+	examen.alternar(null, TEXTO_DE_PRUEBA)
 	assert_int(avisos.pensamientos.size()).is_equal(2)
 	assert_float(linea.opacidad()).is_equal(1.0)
 	linea.avanzar(2.8)
@@ -132,10 +129,10 @@ func test_con_algo_en_la_mano_se_examina_y_no_se_piensa() -> void:  # AC-SUB-007
 	var avisos := Avisos.new(examen)
 	var mopa := load("res://src/dominio/almacen/mopa.tres") as ObjetoDelAlmacen
 	agarre.pedir_agarrar(mopa, _cuerpo())
-	examen.alternar(null, INODORO)
+	examen.alternar(null, TEXTO_DE_PRUEBA)
 	assert_bool(examen.esta_examinando()).is_true()
 	assert_int(avisos.iniciados).is_equal(1)
 	assert_array(avisos.pensamientos).is_empty()
-	examen.alternar(null, INODORO)
+	examen.alternar(null, TEXTO_DE_PRUEBA)
 	assert_int(avisos.terminados).is_equal(1)
 	assert_array(avisos.pensamientos).is_empty()

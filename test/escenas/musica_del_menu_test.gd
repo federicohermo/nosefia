@@ -15,7 +15,7 @@ class AlmacenFalso:
 
 	var anuncios: int = 0
 
-	func anunciar_la_noche() -> void:
+	func retomar_la_partida() -> void:
 		anuncios += 1
 
 

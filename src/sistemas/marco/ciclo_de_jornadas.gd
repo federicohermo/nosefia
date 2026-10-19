@@ -28,7 +28,8 @@ func arrancar(partida: Partida, reloj: RelojDelTurno) -> void:
 	_partida = partida
 	_reloj = reloj
 	_reloj.turno_cerrado.connect(_al_cerrar_el_turno)
-	abrir_la_jornada()
+	if _partida.reflexion == null or not _partida.reflexion.pendiente():
+		abrir_la_jornada()
 
 
 ## La partida que el ciclo está corriendo, o `null` si todavía no arrancó.

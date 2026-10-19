@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436
 ---
 
 # Capacidad: el legajo del empleado
@@ -81,8 +81,9 @@ no DEBE sustituir el dato de medios ni migrarse.
 ### BR-EMP-009 — La devolución de Enrique
 
 CUANDO cierra la jornada, el sistema DEBE armar la devolución de esa noche: un mensaje por
-parte, en este orden: Saludo, Tarea 1, Tarea 2, Tarea 3, Tarea 4, Tarea 5, Reto 1, Reto 2,
-Reto 3, Reto 4 y Cierre. Saludo y Cierre DEBEN ir siempre.
+parte, en este orden: Saludo, Tarea 1, Tarea 2, Tarea 3, Tarea 4, la advertencia por Poético,
+Tarea 5, Reto 1, Reto 2, Reto 3, Reto 4 y Cierre. Saludo y Cierre DEBEN ir siempre. La
+advertencia DEBE ir sólo según BR-EMP-034.
 
 - Tarea 1 es atender (cobrar en la caja), Tarea 2 registrar, Tarea 3 reponer, Tarea 4 limpiar,
   y Tarea 5 la particular de esa noche. Una Tarea DEBE ir sólo si su obligatoria quedó sin
@@ -101,8 +102,10 @@ BR-EMP-029. Ningún mensaje DEBE mostrar P, medios, apercibimientos, la banda ni
 ### BR-EMP-011 — Lo que ofrece la devolución depende del final
 
 CUANDO se arma la devolución, el sistema DEBE decir qué puede elegir el jugador. Con la partida
-en curso, ofrece **sólo continuar**: el celular baja por el margen inferior y después empieza la
-entrada de la noche siguiente (BR-SHF-019). Salir al menú pasa por la pausa, como en cualquier
+en curso, ofrece **sólo continuar**. En las jornadas 1 y 2, continuar pasa a la reflexión de
+cierre (BR-INV-042) y la entrada de la noche siguiente empieza cuando ésta termina. En las
+demás, el celular baja por el margen inferior y después empieza la entrada de la noche
+siguiente (BR-SHF-019). Salir al menú pasa por la pausa, como en cualquier
 otro momento de la jornada. Con la partida terminada, despedido o contrato cumplido, ofrece sólo
 volver al menú: no hay noche siguiente que abrir. La opción DEBE aparecer debajo del último
 mensaje, recién cuando ése está a la vista (BR-EMP-030). Elegirla dos veces NO DEBE abrir dos
@@ -346,6 +349,21 @@ DEBE conservar identidades y orden en memoria. Una partida nueva DEBE empezar si
 mensajes heredados. Un consumidor sin expediente recibido NO DEBE crear uno alternativo.
 La investigación DEBE registrar sin escribir disco; la capacidad de guardado recibe el estado
 que deba cruzar sesiones.
+
+### BR-EMP-034 — Enrique advierte el uso de Poético
+
+CUANDO se arma la devolución de jornada 2 y el hecho de BR-EMP-032 es verdadero, el sistema DEBE
+agregar una sola advertencia, después de Tarea 4 si va y antes de Tarea 5 (BR-EMP-009). La
+advertencia DEBE ir aunque limpiar se haya cumplido. Su texto DEBE elegirse por P, después de
+anotar la noche (BR-EMP-025):
+
+| Condición | Texto |
+|---|---|
+| P < 4 | Che, si usás un producto del local para la limpieza, me tenés que avisar. No podés hacer esas cosas sin consultarme. Espero que quede claro. |
+| P ≥ 4 | Si usás un producto del local para la limpieza, me tenés que avisar. No podés hacer esas cosas sin consultarme. |
+
+Sin el hecho, o en otra jornada, NO DEBE haber advertencia. La advertencia NO DEBE sumar medios
+ni llamados, ni cambiar la banda, el final o el Cierre.
 
 ## Criterios de aceptación
 
@@ -610,8 +628,9 @@ un segundo después 3.
 
 DADO el almacén en la noche 1 CUANDO cierra el turno ENTONCES la persiana está baja, el celular
 está en el centro con la devolución en el chat de Enrique y el turno sigue cerrado. CUANDO está
-el último mensaje a la vista y se elige «continuar» ENTONCES el celular baja y la persiana
-muestra «NOCHE 2». CUANDO la noche 2 está abierta y se abre el celular con Q ENTONCES el chat de
+el último mensaje a la vista y se elige «continuar» ENTONCES el celular pasa a las notas, sin
+bajar; tras los tres «Continuar» de la reflexión, baja y la persiana muestra «NOCHE 2».
+CUANDO la noche 2 está abierta y se abre el celular con Q ENTONCES el chat de
 Enrique tiene las 19 entradas de las instrucciones, los mensajes de la devolución 1 y después
 la foto y el texto de apertura 2 definidos por `investigation`. DADO una partida despedida
 CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se anuncia otra noche.
@@ -619,7 +638,8 @@ CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se an
 ### AC-EMP-065 — Elegir dos veces *(verifica BR-EMP-011)*
 
 DADO la devolución de la noche 1 con la opción a la vista CUANDO se elige «continuar» dos veces
-ENTONCES se anuncia una sola «NOCHE 2» y la jornada es 2. DADO una partida terminada CUANDO se
+ENTONCES empieza una sola reflexión y no se anuncia ninguna noche; terminada la reflexión, se
+anuncia una sola «NOCHE 2» y la jornada es 2. DADO una partida terminada CUANDO se
 elige «volver al menú» dos veces ENTONCES el menú se pide una sola vez.
 
 ### AC-EMP-066 — Las devoluciones conservan su lugar entre aperturas *(verifica BR-EMP-031)*
@@ -658,6 +678,18 @@ DADO un texto repetido en otra jornada ENTONCES conserva otra identidad y no se 
 Repetir cierre 2 o elegir continuar dos veces no agrega mensajes ni cambia sus metadatos.
 Una partida nueva sigue sin devoluciones.
 
+### AC-EMP-071 — Poético justo debajo del despido y en el despido *(verifica BR-EMP-034, BR-EMP-009)*
+
+DADO jornada 2 con uso aceptado de Poético, limpiar cumplido y P = 3,5 después de anotar la noche
+CUANDO se arma la devolución ENTONCES contiene una sola vez «Che, si usás un producto del local
+para la limpieza, me tenés que avisar. No podés hacer esas cosas sin consultarme. Espero que
+quede claro.», sin Tarea 4. DADO lo mismo con P = 4 ENTONCES contiene una sola vez «Si usás un
+producto del local para la limpieza, me tenés que avisar. No podés hacer esas cosas sin
+consultarme.» y el Cierre del despido. DADO limpiar y Tarea 5 sin cumplir, con el uso aceptado,
+ENTONCES el orden es Tarea 4, advertencia y Tarea 5, cada una una vez. DADO jornada 2 con sólo
+teñidos rechazados, o un teñido aceptado en jornada 3, ENTONCES no hay advertencia. Los medios,
+la banda y el final son los mismos con y sin el hecho.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -665,8 +697,8 @@ Una partida nueva sigue sin devoluciones.
   devoluciones a [`save-and-resume`](../save-and-resume/save-and-resume.md).
 - Esta capacidad NO dibuja el celular ni el chat: elige los mensajes, su ritmo y la opción, y
   el celular es de [`investigation`](../investigation/investigation.md).
-- Esta capacidad NO muestra la pantalla de hipótesis que la ficha pone después de «continuar»:
-  es de la investigación, y su diseño no está cerrado.
+- Esta capacidad NO muestra la reflexión de cierre que sigue a «continuar» en las jornadas 1 y
+  2: es de [`investigation`](../investigation/investigation.md).
 - Esta capacidad NO trae la Tarea 5 de las jornadas 3 a 5: esas noches no declaran particular
   mientras siga abierta OQ-SHF-006. Los textos esperan en la ficha.
 - Esta capacidad NO redacta mensajes de apertura: `investigation` consume el guion de cada
