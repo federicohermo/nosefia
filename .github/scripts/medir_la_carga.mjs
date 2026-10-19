@@ -5,6 +5,7 @@
 //     node .github/scripts/medir_la_carga.mjs http://localhost:8060
 //     node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
 //     node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json --sin-ventana
+//     node .github/scripts/medir_la_carga.mjs http://localhost:8060 carga.json --sin-ventana --software --corridas=1
 //
 // ## Qué mide
 //
@@ -39,14 +40,21 @@
 // el renderer real y falla si Chrome usa renderizado por software. No mide la presentación
 // de una ventana ni reemplaza un benchmark de FPS durante la partida.
 //
-// No es un gate y no tiene umbral: el número depende de la máquina. Sirve para comparar un
-// cambio contra el anterior en el mismo equipo.
+// --software fuerza SwiftShader en el Chromium de Playwright, sin ventana, y lo registra. Sirve
+// para contar programas en una máquina sin GPU, como la CI: el conteo depende de los materiales
+// del juego, no de la GPU. Los tiempos de esa medición no describen la carga de un jugador.
+//
+// --corridas=N cambia las 3 corridas por N.
+//
+// Cada corrida registra también si la página vio `KHR_parallel_shader_compile`.
+//
+// Los tiempos no tienen umbral: dependen de la máquina. Sirven para comparar un cambio contra
+// el anterior en el mismo equipo. Los conteos sí lo tienen: `tope_de_carga.py` los controla.
 
 import { writeFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const ESPERA = 180_000;
-const CORRIDAS = 3;
 const AVISO_DEL_MENU = '[carga] menú visible';
 const AVISO_DEL_ALMACEN = '[carga] almacén en pantalla';
 const ALTURA_DE_NUEVO_JUEGO = 0.56;
@@ -60,18 +68,33 @@ if (!url) {
 const salida = argumentos[1];
 const sinVentana = process.argv.includes('--sin-ventana');
 const sinEnlaceEnParalelo = process.argv.includes('--sin-enlace-en-paralelo');
+const software = process.argv.includes('--software');
+const opcionDeCorridas = process.argv.find((argumento) => argumento.startsWith('--corridas='));
+const CORRIDAS = opcionDeCorridas ? Number(opcionDeCorridas.split('=')[1]) : 3;
+if (!Number.isInteger(CORRIDAS) || CORRIDAS < 1) {
+  console.error(`--corridas necesita un entero positivo: ${opcionDeCorridas}`);
+  process.exit(2);
+}
 
 const navegador = await chromium.launch({
-  channel: 'chrome',
-  headless: sinVentana,
+  ...(software ? {} : { channel: 'chrome' }),
+  headless: sinVentana || software,
   args: [
     '--window-size=1600,900',
     '--disable-backgrounding-occluded-windows',
     '--disable-renderer-backgrounding',
     '--disable-background-timer-throttling',
-    ...(sinVentana && process.platform === 'win32' ? ['--use-angle=d3d11'] : []),
+    ...(sinVentana && process.platform === 'win32' && !software ? ['--use-angle=d3d11'] : []),
+    // Desde Chrome 137, WebGL no cae solo en SwiftShader: hay que pedirlo.
+    ...(software ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] : []),
   ],
 });
+
+function rendererRechazado(gpu, { sinVentana, software }) {
+  if (!sinVentana && !software) return false;
+  if (!gpu) return true;
+  return !software && /swiftshader|llvmpipe|software|basic render driver|warp/i.test(gpu);
+}
 
 function aviso(pagina, texto) {
   return new Promise((listo) => {
@@ -164,13 +187,16 @@ async function corrida() {
     await pagina.goto(url, { waitUntil: 'load', timeout: ESPERA });
     await pagina.waitForSelector('#status', { state: 'detached', timeout: ESPERA });
     const overlay = Date.now() - desde;
-    const gpu = await pagina.evaluate(() => {
+    const { gpu, enlace_en_paralelo } = await pagina.evaluate(() => {
       const gl = document.createElement('canvas').getContext('webgl2');
       const info = gl?.getExtension('WEBGL_debug_renderer_info');
-      return info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : null;
+      return {
+        gpu: info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : null,
+        enlace_en_paralelo: Boolean(gl?.getExtension('KHR_parallel_shader_compile')),
+      };
     });
-    if (sinVentana && (!gpu || /swiftshader|llvmpipe|software|basic render driver|warp/i.test(gpu))) {
-      throw new Error(`la medición sin ventana exige GPU real; renderer: ${gpu}`);
+    if (rendererRechazado(gpu, { sinVentana, software })) {
+      throw new Error(`la medición sin ventana exige GPU real o --software; renderer: ${gpu}`);
     }
     const vioElMenu = (await dentroDe(menu, 'el aviso del menú')) - desde;
     // El aviso sale antes del primer cuadro del menú: se espera ese cuadro para que el botón
@@ -200,7 +226,7 @@ async function corrida() {
     }));
     return {
       overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic,
-      cuadro_mas_largo_ms: cuadroMasLargo, gpu, ...enlaces,
+      cuadro_mas_largo_ms: cuadroMasLargo, gpu, enlace_en_paralelo, ...enlaces,
     };
   } finally {
     await contexto.close();
@@ -245,7 +271,7 @@ if (salida) {
   writeFileSync(salida, JSON.stringify({ url, fecha: new Date().toISOString(), corridas, medianas,
     condiciones: { navegador: navegador.version(), viewport: { ancho: 1536, alto: 760 },
       sincronizacionHabitual: true, cpuLimitada: false, contextosHTTPNuevos: true,
-      sinVentana, sinEnlaceEnParalelo,
+      sinVentana, sinEnlaceEnParalelo, software,
       cacheDeShadersCompartida: 'posible dentro del mismo navegador' } }, null, 1));
   console.log(`guardado en ${salida}`);
 }
