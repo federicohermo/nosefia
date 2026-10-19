@@ -17,8 +17,7 @@ func after_test() -> void:
 
 func _abrir() -> Node3D:
 	var almacen: Node3D = load("res://src/escenas/almacen.tscn").instantiate()
-	var partida: GDScript = load("res://src/dominio/empleo/partida.gd")
-	almacen.set("_partida", partida.call("nueva"))
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	_almacenes.append(almacen)
 	add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)
