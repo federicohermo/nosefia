@@ -161,8 +161,10 @@ jobs:
             curl -fs -o /dev/null http://localhost:8060/index.html && break
             sleep 1
           done
-          node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga-web/carga.json             --sin-ventana --software --corridas=1 --sin-enlace-en-paralelo
-          python .github/scripts/tope_de_carga.py .github/performance/topes-de-carga.json             reports/carga-web/carga.json export/web/index.wasm
+          node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga-web/carga.json \
+            --sin-ventana --software --corridas=1 --sin-enlace-en-paralelo
+          python .github/scripts/tope_de_carga.py .github/performance/topes-de-carga.json \
+            reports/carga-web/carga.json export/web/index.wasm
 
       - uses: actions/upload-artifact@v4
         if: always()
