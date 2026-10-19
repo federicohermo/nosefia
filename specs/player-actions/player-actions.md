@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: draft
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; baño trabado sin limpieza de #538
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -179,11 +179,14 @@ mano.
 CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
 su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas o a medio giro.
 
-### BR-PLY-020 — Tres puertas no abren, y cada gesto sobre una puerta avisa
+### BR-PLY-020 — Las trabadas no abren, y cada gesto sobre una puerta avisa
 
 SI una puerta está trabada, ENTONCES el primario NO DEBE abrirla ni girar la hoja, y
 DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. La entrada al local, el portón del depósito y
-la oficina del jefe están trabadas; las dos puertas interiores no.
+la oficina del jefe están trabadas en todas las jornadas. La puerta del baño DEBE estar trabada
+en las jornadas que no piden limpiar, y abrir en las que sí. La otra puerta interior no está
+trabada en ninguna. La traba de la jornada DEBE decidirse al abrirla, desde las obligatorias que
+declara, antes de cerrar las puertas de BR-PLY-019.
 
 CUANDO se acciona una puerta que abre, el sistema DEBE avisar una vez si se abrió o se cerró.
 CUANDO se acciona una trabada con el primario, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
@@ -668,8 +671,13 @@ está trabada y queda abierta.
 
 ### AC-PLY-040 — Qué puertas están trabadas *(verifica BR-PLY-020)*
 
-DADO el almacén armado ENTONCES la entrada, el portón del depósito y la oficina del jefe están
-trabadas y contestan al primario, y las dos puertas interiores no están trabadas.
+DADO el almacén armado en cualquier jornada ENTONCES la entrada, el portón del depósito y la
+oficina del jefe están trabadas y contestan al primario. DADO la jornada 1 o la 2 abierta
+ENTONCES la puerta del baño está trabada, contesta al primario y la hoja no gira. DADO la
+jornada 3 abierta ENTONCES no está trabada y alterna. DADO el cierre de la 2 CUANDO se sigue a la
+3 ENTONCES se destraba; DADO una partida guardada en la 2 con la puerta abierta la noche
+anterior CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. La otra puerta
+interior no está trabada en ninguna jornada.
 
 ### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
 
