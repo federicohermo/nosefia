@@ -178,6 +178,9 @@ def validar_snapshot(tipo: str = "completo") -> int:
         raise ValueError("el motor no coincide con la versión del preparador")
     if datos["commit"] != captura("git", "rev-parse", "HEAD"):
         raise ValueError("el snapshot no coincide con el commit empaquetado")
+    esperado = os.environ.get("CI_COMMIT_ESPERADO")
+    if esperado and datos["commit"] != esperado:
+        raise ValueError("el snapshot no coincide con el commit objetivo externo")
     for nombre, arbol in datos["arbol_juego"].items():
         if arbol != captura("git", "rev-parse", f"HEAD:{nombre}"):
             raise ValueError(f"el árbol {nombre} no coincide con el snapshot")
@@ -211,6 +214,7 @@ def verificar(indice: int, total: int, modo: str, etiqueta: str) -> int:
     metricas.write_text("", encoding="utf-8")
     datos = identidad() | {
         "indice": indice, "particiones": total, "preparacion": modo, "etiqueta": etiqueta,
+        "programacion": os.environ.get("PROGRAMACION", "serial"),
         "suites": seleccionar_suites(
             [r for r in scripts_gd(Path.cwd(), "test") if r.endswith("_test.gd")],
             ParticionTests(indice, total),

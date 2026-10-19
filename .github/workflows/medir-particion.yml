@@ -1,0 +1,127 @@
+name: medir-particion
+
+on:
+  workflow_call:
+    inputs:
+      indice:
+        type: number
+        required: true
+      particiones:
+        type: number
+        required: true
+      preparacion:
+        type: string
+        required: true
+      programacion:
+        type: string
+        required: true
+      corrida_snapshot:
+        type: string
+        required: true
+      etiqueta:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  PREPARACION: ${{ inputs.preparacion }}
+  PROGRAMACION: ${{ inputs.programacion }}
+  TIPO_SNAPSHOT: ${{ inputs.preparacion == 'importaciones' && 'importaciones' || 'completo' }}
+
+jobs:
+  ejecutar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        if: env.PREPARACION != 'compartida'
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Preparar herramientas independientes
+        if: env.PREPARACION != 'compartida'
+        run: |
+          set -euo pipefail
+          pip install 'gdtoolkit==4.*'
+          version="$(tr -d '[:space:]' < .godot-version)"
+          test -n "$version"
+          curl -fsSL -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/${version}/Godot_v${version}_linux.x86_64.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          bin="$(find "$RUNNER_TEMP/godot" -type f -name 'Godot_v*' | head -1)"
+          chmod +x "$bin"
+          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+      - name: Esperar el snapshot publicado
+        id: origen
+        if: env.PREPARACION != 'independiente'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CORRIDA_SNAPSHOT: ${{ inputs.corrida_snapshot }}
+        run: |
+          set -euo pipefail
+          gh api -H 'Accept: application/vnd.github.raw+json' \
+            "repos/$GITHUB_REPOSITORY/contents/.github/scripts/resolver_snapshot.py?ref=$GITHUB_SHA" \
+            > "$RUNNER_TEMP/resolver_snapshot.py"
+          argumentos=()
+          if [ "$PROGRAMACION" = reutilizada ]; then
+            argumentos+=(--previo)
+          fi
+          python "$RUNNER_TEMP/resolver_snapshot.py" "$CORRIDA_SNAPSHOT" \
+            --tipo "$TIPO_SNAPSHOT" "${argumentos[@]}"
+      - uses: actions/download-artifact@v4
+        if: env.PREPARACION != 'independiente'
+        with:
+          artifact-ids: ${{ steps.origen.outputs.artefacto_id }}
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.corrida_snapshot }}
+          path: ${{ runner.temp }}/snapshot
+      - name: Extraer copia privada de la preparación
+        if: env.PREPARACION != 'independiente'
+        run: |
+          set -euo pipefail
+          tar --zstd -xf "$RUNNER_TEMP/snapshot/snapshot.tar.zst" -C "$GITHUB_WORKSPACE"
+          if [ "$PREPARACION" = compartida ]; then
+            git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          fi
+      - name: Validar preparación restaurada
+        if: env.PREPARACION != 'independiente'
+        env:
+          CI_COMMIT_ESPERADO: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python .github/scripts/medir_verificacion.py validar-snapshot --tipo "$TIPO_SNAPSHOT"
+          if [ "$PREPARACION" = compartida ]; then
+            echo "$GITHUB_WORKSPACE/.ci-tools/python/bin" >> "$GITHUB_PATH"
+            bin="$(find "$GITHUB_WORKSPACE/.ci-tools/godot" -type f -name 'Godot_v*' | head -1)"
+            echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+          fi
+      - name: Medir verificación
+        env:
+          INDICE: ${{ inputs.indice }}
+          PARTICIONES: ${{ inputs.particiones }}
+          ETIQUETA: ${{ inputs.etiqueta }}
+        run: |
+          python_bin=python
+          if [ "$PREPARACION" = compartida ]; then
+            python_bin=.ci-tools/python/bin/python
+          fi
+          "$python_bin" .github/scripts/medir_verificacion.py verificar "$INDICE" "$PARTICIONES" "$PREPARACION" "$ETIQUETA"
+      - name: Conservar procedencia aunque falle la restauración
+        if: always() && env.PREPARACION != 'independiente'
+        run: |
+          mkdir -p reports/medicion-ci
+          if [ -f "$RUNNER_TEMP/snapshot-origen.json" ]; then
+            cp "$RUNNER_TEMP/snapshot-origen.json" reports/medicion-ci/snapshot-origen.json
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: medicion-worker-${{ inputs.indice }}
+          path: reports/
+          retention-days: 1
+          if-no-files-found: warn

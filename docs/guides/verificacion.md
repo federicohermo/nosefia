@@ -55,8 +55,25 @@ y siempre pasan por la importación incremental del motor antes de probar.
 
 El job «Preparación compartida» sólo corre en los dos modos que distribuyen un artefacto.
 Que se saltee en el modo independiente no saltea la preparación de cada runner.
-Los modos compartidos medidos esperan a que termine ese job antes de iniciar los workers.
-No prueban solapar trabajo de los workers con esa preparación ni reutilizarla entre corridas.
+La programación `serial` espera a que termine ese job antes de iniciar los workers.
+`solapada` inicia los workers mientras el productor prepara: adelantan el trabajo propio
+de su modo y esperan la publicación del snapshot en la misma VM antes de restaurarlo.
+`reutilizada` recibe `corrida_previa`, omite el productor y restaura su snapshot. Exige que
+esa corrida haya terminado con éxito en la misma rama y revisión. Si el artefacto no existe,
+expiró o es incompatible, falla sin sustituirlo por una preparación fría.
+
+```bash
+gh workflow run medir-verificacion.yml --ref <rama> \
+  -f particiones=6 -f preparacion=importaciones -f programacion=solapada -f etiqueta=semilla
+gh workflow run medir-verificacion.yml --ref <rama> \
+  -f particiones=6 -f preparacion=importaciones -f programacion=reutilizada \
+  -f corrida_previa=<run-exitoso> -f etiqueta=reuso-1
+```
+
+El tipo y el intento identifican el snapshot. Los workers registran su origen, ID inmutable,
+edad y espera, y validan el commit objetivo fuera del paquete restaurado. La reutilización
+mide una preparación ya disponible para la misma revisión; no evalúa hits ante cambios de
+juego. Su costo inicial se informa aparte de la latencia de cada uso posterior.
 
 Cada worker registra el equipo, las versiones, las suites seleccionadas y el tiempo de pared
 y CPU del motor. Los artefactos `medicion-worker-*` contienen esos datos y el XML JUnit.

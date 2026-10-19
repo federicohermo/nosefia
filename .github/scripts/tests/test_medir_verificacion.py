@@ -133,6 +133,15 @@ class MedicionTests(unittest.TestCase):
             ), self.assertRaisesRegex(ValueError, mensaje):
                 medir.validar_snapshot("importaciones")
 
+    def test_snapshot_y_git_coherentes_rechazan_commit_objetivo_distinto(self):
+        with patch.object(Path, "read_text", return_value=json.dumps(
+            self.snapshot_importaciones()
+        )), patch.dict("os.environ", {
+            "GODOT_BIN": "motor-worker", "CI_COMMIT_ESPERADO": "otro-commit",
+        }), patch.object(medir, "captura", side_effect=self.captura_snapshot):
+            with self.assertRaisesRegex(ValueError, "commit objetivo externo"):
+                medir.validar_snapshot("importaciones")
+
     def test_importaciones_empaqueta_cache_y_manifest_sin_fuentes_git_ni_herramientas(self):
         raiz = Path.cwd()
         with tempfile.TemporaryDirectory() as carpeta:
