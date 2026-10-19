@@ -351,9 +351,8 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	_comprobar_una_noche(PRIMERA + 1)
 	await _cerrar_y_seguir()
 	_comprobar_instrucciones_de(PRIMERA + 2)
-	assert_bool((_instrucciones().get("_volver") as Button).disabled).is_true()
-	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
-	_siguiente().pressed.emit()
+	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_SIGUIENTE)
+	_leer_todo(PRIMERA + 2)
 	_comprobar_una_noche(PRIMERA + 2)
 
 
@@ -362,7 +361,7 @@ func test_retomar_la_tercera_y_la_cuarta() -> void:  # AC-EMP-076, AC-SAV-021, A
 	_abrir()
 	_almacen.call("retomar_la_partida")
 	_comprobar_instrucciones_de(PRIMERA + 2)
-	_siguiente().pressed.emit()
+	_leer_todo(PRIMERA + 2)
 	_comprobar_una_noche(PRIMERA + 2)
 	await _cerrar_almacen()
 	_guardar(COMPLETA)

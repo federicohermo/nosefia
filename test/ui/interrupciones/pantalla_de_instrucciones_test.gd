@@ -134,9 +134,12 @@ func test_la_segunda_y_la_tercera_cuentan_sus_pantallas() -> void:  # AC-EMP-045
 	tercera.mostrar(_mensajes_de(primera + 2))
 	await get_tree().process_frame
 	_comprobar_pantalla(tercera, 1, primera + 2)
-	assert_bool(_boton(tercera, "_volver").disabled).is_true()
 	var comienzos: Array[int] = [0]
 	tercera.comenzar_pedido.connect(func() -> void: comienzos[0] += 1)
+	_boton(tercera, "_siguiente").pressed.emit()
+	await get_tree().process_frame
+	_comprobar_pantalla(tercera, 2, primera + 2)
+	assert_int(comienzos[0]).is_zero()
 	_boton(tercera, "_siguiente").pressed.emit()
 	_boton(tercera, "_siguiente").pressed.emit()
 	assert_int(comienzos[0]).is_equal(1)
