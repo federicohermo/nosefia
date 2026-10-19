@@ -85,6 +85,9 @@ job, incluida la preparación. Cotejar la unión de suites y casos con la refere
 cero errores, fallos y saltos, y distinguir las muestras con cola por capacidad.
 Una diferencia menor que la variación entre corridas no demuestra una mejora.
 
+El [informe de preparación](../../.github/benchmarks/preparacion-2026-10-19.md) compara solapamiento y reuso previo.
+Conserva también el costo de generar los snapshots y las limitaciones de la muestra.
+
 ## Un nodo salteado no es un nodo verde
 
 El principio está en la [constitución](../architecture/constitution.md). El reporte distingue

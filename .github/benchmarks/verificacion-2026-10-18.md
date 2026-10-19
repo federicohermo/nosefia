@@ -87,6 +87,9 @@ tardaron más hasta el resultado. No establecen una mediana para los diseños co
 No prueban solapar trabajo de los workers con la preparación ni restaurar una preparación
 de una corrida anterior. Esas alternativas podrían dar otro resultado y no se midieron.
 
+El [seguimiento del 19 de octubre](preparacion-2026-10-19.md) mide ambas alternativas con seis particiones.
+Sus resultados distinguen la primera preparación de los reusos de una misma revisión.
+
 ## Intentos que no completaron el trabajo
 
 La confirmación tuvo cinco corridas completas sin cola para cada opción. Además, cuatro y
