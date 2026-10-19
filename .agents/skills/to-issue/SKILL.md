@@ -298,6 +298,10 @@ Lo que más se rompe:
   enum corre sobre `src/`, `test/` y `assets/`. En el #262, las 23 cajas del depósito vivían en
   `objetos_del_almacen.tscn` y la planilla pedía una miniatura por producto: ninguna de las dos
   estaba en los límites.
+- **Un criterio que cambia cómo arranca una obligatoria lleva a «Se escribe» al sistema que la
+  evalúa.** El dominio arma el estado y el sistema decide cuándo mirarlo. En el #526, J1 abría
+  sin faltantes desde `Apertura`, pero el repositor revisaba reponer sólo después de un gesto:
+  la obligatoria arrancaba sin cumplir, y su archivo no estaba en los límites.
 - **Cada suite de «Se escribe» se cuenta contra el tope de 20 métodos públicos de `gdlint`**, con
   `rg -c '^func [a-z]'`: cuentan también `before_test` y cualquier ayudante sin `_`. En el #277,
   `repositor_test.gd` tenía 19 casos y 20 métodos, y el issue le pedía uno más. Si una ya está
