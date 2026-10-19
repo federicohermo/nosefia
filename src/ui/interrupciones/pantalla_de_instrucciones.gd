@@ -18,39 +18,42 @@ const SEPARACION_HORIZONTAL := 32.0
 const SEPARACION_DEL_SECTOR := 64.0
 const TAMANO_DE_LA_CAJA := Vector2(136, 316)
 const TAMANO_DEL_TICKET := Vector2(109, 186)
+const FOTO_DEL_LECTOR := "J1_Foto04"
+## Cada foto lleva su leyenda; la pantalla en que cae depende de la jornada.
 const FOTOS := {
-	2:
+	"J1_Foto02":
 	{
 		"tamano": Vector2(324, 233),
 		"titulo": "Listas de tareas a realizar",
 		"sector": "Sector de ventas"
 	},
-	3:
+	"J1_Foto03":
 	{
 		"tamano": Vector2(279, 201),
 		"titulo": "Ventanilla de recepción",
 		"sector": "Sector de ventas"
 	},
-	4:
+	"J1_Foto04":
 	{
 		"tamano": Vector2(426, 258),
 		"titulo": "Lector y la caja registradora",
 		"sector": "Sector de ventas"
 	},
-	6: {"tamano": Vector2(373, 300), "titulo": "Computadora", "sector": "Sector de ventas"},
-	7:
+	"J1_Foto06":
+	{"tamano": Vector2(373, 300), "titulo": "Computadora", "sector": "Sector de ventas"},
+	"J1_Foto07":
 	{
 		"tamano": Vector2(373, 365),
 		"titulo": "Estantería con cajas contenedoras",
 		"sector": "Sector de depósito"
 	},
-	9:
+	"J1_Foto09":
 	{
 		"tamano": Vector2(548, 315),
 		"titulo": "1 Mopa\n2 Balde\n3 Productos de limpieza",
 		"sector": "Sector de baño"
 	},
-	11:
+	"J1_Foto11":
 	{"tamano": Vector2(480, 270), "titulo": "Cajas del proveedor", "sector": "Sector de depósito"},
 }
 
@@ -142,12 +145,13 @@ func _pintar() -> void:
 	var ancho_de_la_leyenda := 350.0
 	var x_del_ticket := ANCHO_DEL_TEXTO - TAMANO_DEL_TICKET.x
 	var x_de_la_caja := x_del_ticket - SEPARACION_HORIZONTAL - TAMANO_DE_LA_CAJA.x
-	if numero == 4:
-		var tamano_de_la_foto: Vector2 = FOTOS[numero]["tamano"]
+	var con_caja := paso.foto != null and paso.foto.identidad == FOTO_DEL_LECTOR
+	if con_caja:
+		var tamano_de_la_foto: Vector2 = FOTOS[FOTO_DEL_LECTOR]["tamano"]
 		ancho_de_la_leyenda = x_de_la_caja - tamano_de_la_foto.x - 2.0 * SEPARACION_HORIZONTAL
 	if paso.foto != null:
-		_foto(paso.foto.foto, FOTOS[numero], altura_de_la_foto, ancho_de_la_leyenda)
-	if numero == 4:
+		_foto(paso.foto.foto, FOTOS[paso.foto.identidad], altura_de_la_foto, ancho_de_la_leyenda)
+	if con_caja:
 		_imagen(CAJA, Rect2(Vector2(x_de_la_caja, altura_de_la_foto), TAMANO_DE_LA_CAJA))
 		var titulo := _texto(
 			"ticket",

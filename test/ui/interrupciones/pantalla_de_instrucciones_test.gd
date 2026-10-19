@@ -58,50 +58,63 @@ func _sin_formato(texto: String) -> String:
 	return texto.replace("[b]", "").replace("[/b]", "")
 
 
-func _comprobar_pantalla(pantalla: PantallaDeInstrucciones, numero: int) -> void:
+func _comprobar_pantalla(
+	pantalla: PantallaDeInstrucciones, numero: int, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
+) -> void:
 	var contenido: Control = pantalla.get("_contenido")
-	var pasos := InstruccionesDelJefe.pasos_de(_mensajes_de_la_primera_jornada())
+	var pasos := InstruccionesDelJefe.pasos_de(_mensajes_de(jornada))
+	var total := pasos.size()
 	var paso: InstruccionesDelJefe.Paso = pasos[numero - 1]
 	var cuerpos: Array[Node] = contenido.find_children("*", "RichTextLabel", false, false)
 	for indice in paso.textos.size():
 		var cuerpo: RichTextLabel = cuerpos[indice]
 		assert_str(cuerpo.get_parsed_text()).is_equal(_sin_formato(paso.textos[indice].texto))
-	if numero == 12:
+	if paso.foto == null:
 		assert_int(cuerpos.size()).is_equal(paso.textos.size())
 	var fotos: Array[Node] = contenido.find_children("*", "TextureRect", false, false)
-	var cantidad := 1 + (1 if paso.foto != null else 0) + (2 if numero == 4 else 0)
+	var con_caja := (
+		paso.foto != null and paso.foto.identidad == PantallaDeInstrucciones.FOTO_DEL_LECTOR
+	)
+	var cantidad := 1 + (1 if paso.foto != null else 0) + (2 if con_caja else 0)
 	assert_int(fotos.size()).is_equal(cantidad)
 	if paso.foto != null:
 		var foto: TextureRect = fotos[1]
 		assert_object(foto.texture).is_same(paso.foto.foto)
 	var contador: Label = pantalla.get("_contador")
-	assert_str(contador.text).is_equal("%d/12" % numero)
+	assert_str(contador.text).is_equal("%d/%d" % [numero, total])
 	var retrato: Control = pantalla.get("_retrato")
 	assert_bool(retrato.visible).is_true()
 	var volver := _boton(pantalla, "_volver")
 	assert_bool(volver.visible).is_true()
 	assert_bool(volver.disabled).is_equal(numero == 1)
-	assert_str(_boton(pantalla, "_siguiente").text).is_equal("OK" if numero == 12 else "Siguiente")
+	assert_str(_boton(pantalla, "_siguiente").text).is_equal(
+		(
+			PantallaDeInstrucciones.TEXTO_DE_COMENZAR
+			if numero == total
+			else PantallaDeInstrucciones.TEXTO_DE_SIGUIENTE
+		)
+	)
 	assert_int(pantalla.find_children("*", "ScrollContainer", true, false).size()).is_zero()
 
 
-func test_doce_pantallas_y_ok_idempotente() -> void:  # AC-EMP-045, AC-EMP-046
+func test_pantallas_de_la_primera_y_ok_idempotente() -> void:  # AC-EMP-045, AC-EMP-046
 	var pantalla := _pantalla()
 	pantalla.mostrar(_mensajes_de_la_primera_jornada())
+	var total := InstruccionesDelJefe.pasos_de(_mensajes_de_la_primera_jornada()).size()
 	var botones: Control = pantalla.get("_botones")
 	var posicion := botones.position
 	var siguiente := _boton(pantalla, "_siguiente")
-	for numero in range(1, 13):
+	for numero in range(1, total + 1):
 		await get_tree().process_frame
 		await get_tree().process_frame
 		_comprobar_pantalla(pantalla, numero)
 		assert_vector(botones.position).is_equal(posicion)
-		if numero < 12:
+		if numero < total:
 			siguiente.pressed.emit()
 	var volver := _boton(pantalla, "_volver")
 	volver.pressed.emit()
 	await get_tree().process_frame
-	_comprobar_pantalla(pantalla, 11)
+	_comprobar_pantalla(pantalla, total - 1)
 	var comienzos: Array[int] = [0]
 	pantalla.comenzar_pedido.connect(func() -> void: comienzos[0] += 1)
 	siguiente.pressed.emit()
@@ -109,6 +122,25 @@ func test_doce_pantallas_y_ok_idempotente() -> void:  # AC-EMP-045, AC-EMP-046
 	siguiente.pressed.emit()
 	assert_int(comienzos[0]).is_equal(1)
 	assert_bool(pantalla.visible).is_false()
+
+
+func test_la_segunda_y_la_tercera_cuentan_sus_pantallas() -> void:  # AC-EMP-045, AC-EMP-046
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	var segunda := _pantalla()
+	segunda.mostrar(_mensajes_de(primera + 1))
+	await get_tree().process_frame
+	_comprobar_pantalla(segunda, 1, primera + 1)
+	var tercera := _pantalla()
+	tercera.mostrar(_mensajes_de(primera + 2))
+	await get_tree().process_frame
+	_comprobar_pantalla(tercera, 1, primera + 2)
+	assert_bool(_boton(tercera, "_volver").disabled).is_true()
+	var comienzos: Array[int] = [0]
+	tercera.comenzar_pedido.connect(func() -> void: comienzos[0] += 1)
+	_boton(tercera, "_siguiente").pressed.emit()
+	_boton(tercera, "_siguiente").pressed.emit()
+	assert_int(comienzos[0]).is_equal(1)
+	assert_bool(tercera.visible).is_false()
 
 
 func test_volver_tres_veces_recupera_solo_la_primera_pantalla() -> void:  # AC-EMP-045
@@ -133,7 +165,8 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 		pantalla.set("_avance", 1.0)
 		pantalla.set("_transcurrido", roundi(PantallaDeInstrucciones.DURACION_DE_LA_SUBIDA * 1e6))
 		pantalla.call("_ajustar")
-		for numero in range(1, 13):
+		var total := InstruccionesDelJefe.pasos_de(_mensajes_de_la_primera_jornada()).size()
+		for numero in range(1, total + 1):
 			await get_tree().process_frame
 			await get_tree().process_frame
 			var botones: Control = pantalla.get("_botones")
@@ -152,7 +185,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 			await get_tree().process_frame
 			assert_vector(botones.global_position).is_equal(posicion)
 			_comprobar_pantalla(pantalla, numero)
-			if numero < 12:
+			if numero < total:
 				_boton(pantalla, "_siguiente").pressed.emit()
 
 
@@ -183,4 +216,8 @@ func _cuadros(ahora: Array[int], hasta: int, nodos: Array[Node]) -> void:
 
 
 func _mensajes_de_la_primera_jornada() -> Array[Mensaje]:
-	return Bandeja.new([GUION]).mensajes_de(Conversacion.Interlocutor.JEFE)
+	return _mensajes_de(ReglasDeLaPartida.PRIMERA_JORNADA)
+
+
+func _mensajes_de(jornada: int) -> Array[Mensaje]:
+	return InstruccionesDelJefe.de_la_jornada(GUION.mensajes, jornada)

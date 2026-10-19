@@ -22,6 +22,13 @@ func _desmontar_almacen() -> void:
 	_almacen = null
 
 
+## Lo que llega durante la noche es de la jornada abierta.
+func _llegada() -> Mensaje:
+	var mensaje := Mensaje.new()
+	mensaje.jornada = (_almacen.get("_partida") as Partida).jornada()
+	return mensaje
+
+
 func _abrir(jornada: int = 4) -> void:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set("_partida", Partida.desde(PartidaSerializada.sanear({"jornada": jornada})))
@@ -141,7 +148,7 @@ func test_celular_bloquea_entrada_y_conserva_la_unidad_y_la_pose() -> void:  # A
 
 func test_esc_cubre_la_foto_q_no_cambia_y_reanudar_conserva_la_pantalla() -> void:  # AC-INV-036
 	_abrir()
-	var mensaje := Mensaje.new()
+	var mensaje := _llegada()
 	mensaje.foto = GradientTexture2D.new()
 	var quien := _celular().bandeja().conversaciones()[0].interlocutor
 	_celular().recibir(quien, mensaje)
@@ -196,7 +203,7 @@ func test_celular_no_cobra_acciones_y_el_reloj_sigue_corriendo() -> void:  # AC-
 	var turno: Turno = reloj.get("_turno")
 	var antes := turno.tiempo_restante()
 	var quien := _celular().bandeja().conversaciones()[0].interlocutor
-	var foto := Mensaje.new()
+	var foto := _llegada()
 	foto.foto = GradientTexture2D.new()
 	_celular().recibir(quien, foto)
 	_celular().pedir_alternar(false)
@@ -261,7 +268,7 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 		await get_tree().process_frame
 	var quien := conversaciones[0].interlocutor
 	(lista.get_child(0) as Button).pressed.emit()
-	var recibido := Mensaje.new()
+	var recibido := _llegada()
 	recibido.texto = "Llegó este mensaje [b]completo[/b]."
 	_celular().recibir(quien, recibido)
 	assert_int(_celular().bandeja().no_leidos(quien)).is_equal(1)

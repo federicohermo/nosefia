@@ -81,9 +81,15 @@ func test_instanciar_sin_menu_conserva_el_turno_corriendo() -> void:
 
 
 func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> void:  # AC-SHF-024
-	_abrir()
+	# La primera completa abre la noche siguiente sin instrucciones.
+	_abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	await _cerrar_y_seguir()
-	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
+	var siguiente := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(siguiente)
+	var instrucciones: PantallaDeInstrucciones = _almacen.get_node(
+		"Interfaz/PantallaDeInstrucciones"
+	)
+	assert_bool(instrucciones.visible).is_false()
 	assert_bool(_persiana().en_pantalla()).is_true()
 	assert_bool(_control().esta_suspendido()).is_true()
 	var antes := _restante()
@@ -94,12 +100,26 @@ func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> voi
 	_persiana().persiana_subida.connect(func(jornada: int) -> void: subidas.append(jornada))
 	_persiana().terminar()
 	_persiana().terminar()
-	assert_array(subidas).is_equal([2])
+	assert_array(subidas).is_equal([siguiente])
 	assert_bool(_persiana().en_pantalla()).is_false()
 	assert_bool(_control().esta_suspendido()).is_false()
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_float(_restante()).is_less(antes)
+
+
+func test_desde_la_tercera_seguir_anuncia_sin_instrucciones() -> void:  # AC-EMP-077
+	var ultima := ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA + 2, ultima):
+		_abrir(jornada)
+		await _cerrar_y_seguir()
+		assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(jornada + 1)
+		var instrucciones: PantallaDeInstrucciones = _almacen.get_node(
+			"Interfaz/PantallaDeInstrucciones"
+		)
+		assert_bool(instrucciones.visible).is_false()
+		assert_object(_persiana().get("_entrada")).is_not_null()
+		await after_test()
 
 
 func test_el_menu_anuncia_la_jornada_nueva_y_la_guardada() -> void:  # AC-SHF-025

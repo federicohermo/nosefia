@@ -441,14 +441,14 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 ## La jornada abre detrás de la entrada; el control vuelve cuando la persiana termina de subir.
 func _seguir() -> void:
 	_ciclo.abrir_la_jornada()
-	anunciar_la_noche()
+	_entrar_a_la_jornada()
 
 
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
-## entregar otra vez la devolución; si no, se anuncia la jornada guardada.
+## entregar otra vez la devolución; si no, entra a la jornada guardada.
 func retomar_la_partida() -> void:
 	if _partida.reflexion == null:
-		anunciar_la_noche()
+		_entrar_a_la_jornada()
 		return
 	_jugador.suspender()
 	_pantalla_del_celular.mostrar_recordatorio(false)
@@ -506,15 +506,23 @@ func _terminar_la_reflexion() -> void:
 	_salir_del_cierre(DevolucionDelJefe.Opcion.CONTINUAR)
 
 
-## La introducción conserva el presupuesto completo; comenzar usa la misma entrada que seguir.
 func empezar_partida_nueva() -> void:
+	_entrar_a_la_jornada()
+
+
+## Las instrucciones conservan el presupuesto completo, y su «OK» usa la misma entrada que seguir.
+func _entrar_a_la_jornada() -> void:
+	var instrucciones := InstruccionesDelJefe.de_la_jornada(
+		GUION_DEL_JEFE.mensajes, _partida.jornada()
+	)
+	if instrucciones.is_empty():
+		anunciar_la_noche()
+		return
 	_reloj.retener()
 	_jugador.suspender()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
-	_instrucciones.mostrar(
-		Bandeja.new([GUION_DEL_JEFE]).mensajes_de(Conversacion.Interlocutor.JEFE)
-	)
+	_instrucciones.mostrar(instrucciones)
 
 
 func anunciar_la_noche() -> void:

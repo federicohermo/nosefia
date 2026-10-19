@@ -17,6 +17,20 @@ func _init(cantidad: int) -> void:
 	_cantidad = cantidad
 
 
+## Sólo una jornada de introducción abre con instrucciones; en las demás, la noche sale directa.
+static func de_la_jornada(mensajes: Array[Mensaje], jornada: int) -> Array[Mensaje]:
+	var propios: Array[Mensaje] = []
+	if (
+		jornada < ReglasDeLaPartida.PRIMERA_JORNADA
+		or jornada >= ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
+		return propios
+	for mensaje in mensajes:
+		if mensaje.jornada == jornada and mensaje.momento == Mensaje.Momento.APERTURA:
+			propios.append(mensaje)
+	return propios
+
+
 static func pasos_de(mensajes: Array[Mensaje]) -> Array[Paso]:
 	var pasos: Array[Paso] = []
 	var indice := 0
