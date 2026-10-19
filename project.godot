@@ -108,3 +108,4 @@ common/physics_interpolation=true
 
 renderer/rendering_method="gl_compatibility"
 reflections/reflection_atlas/reflection_count.web=4
+web/area_lights_need_parallel_link=true

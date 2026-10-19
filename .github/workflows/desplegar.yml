@@ -100,10 +100,21 @@ jobs:
       # Sólo se cachea el ZIP web terminado y su manifiesto. Cambiar las fuentes, el SDK,
       # las opciones, el parche o el preparador cambia la clave. Cada restauración se valida.
       - name: Caché de la plantilla web optimizada
+        id: plantilla
         uses: actions/cache@v4
         with:
           path: build/templates
           key: web-optimizada-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ hashFiles('.godot-version', '.github/patches/godot-web-compilacion.json', '.github/patches/godot-web-compilacion.patch', '.github/scripts/preparar_plantilla_web.py') }}
+
+      # Sólo cuando hay que compilar. SCons valida cada objeto por sus entradas: la caché de
+      # otra receta sólo aporta los objetos que no cambiaron.
+      - name: Caché de los objetos del motor
+        if: steps.plantilla.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: build/godot-web/cache-de-scons
+          key: objetos-web-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ hashFiles('.github/patches/godot-web-compilacion.json', '.github/patches/godot-web-compilacion.patch') }}
+          restore-keys: objetos-web-${{ runner.os }}-${{ env.GODOT_VERSION }}-
 
       # Incluso con cache-hit: una versión distinta o un ZIP corrupto no llega al export.
       # Dos trabajos limitan la memoria del compilador cuando hace falta construir el motor.
