@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527
 ---
 
 # Capacidad: el legajo del empleado
@@ -119,15 +119,33 @@ con NINGUNA. Abrir otra jornada DEBE vaciar los motivos pendientes. Antes de abr
 cerrar y con la partida terminada, anotar un llamado NO DEBE modificar el legajo ni una noche
 futura. Los motivos pendientes no DEBEN persistirse ni mostrar un contador nuevo.
 
-### BR-EMP-022 — Enrique introduce una partida nueva
+### BR-EMP-022 — Enrique introduce cada jornada de introducción
 
-CUANDO se inicia una partida nueva, el sistema DEBE presentar las instrucciones de Enrique
-Peldaño antes del comienzo jugable de la jornada 1, sobre la persiana baja. DEBE mostrar los
-doce mensajes introductorios de la ficha «Chat con el jefe» revisada el 2026-10-11,
-en su orden y con los énfasis en amarillo. DEBE corregir «vas a tener» en Intro 3 e
-«instrucciones» en Intro 10 y mostrar el horario como «20:00 a 08:00».
+CUANDO abre una jornada de introducción (BR-SHF-005), por partida nueva, al seguir desde el
+cierre anterior o retomada desde el menú, el sistema DEBE presentar las instrucciones de Enrique
+Peldaño propias de esa jornada antes de su comienzo jugable, sobre la persiana baja. CUANDO abre
+otra jornada, o una de introducción sin instrucciones propias, el sistema NO DEBE mostrar
+instrucciones y DEBE anunciar la noche directamente (BR-SHF-019).
 
-Las siete fotos DEBEN mostrar el juego y acompañar Intro 2, 3, 4, 6, 7, 9 y 11: respectivamente,
+Las instrucciones DEBEN ser los doce mensajes introductorios de la ficha «Chat con el jefe»
+revisada el 2026-10-11 y una línea sobre reponer lo vendido, repartidos así:
+
+| Jornada | En pantalla | Sólo en el chat |
+|---|---|---|
+| 1 | Intro 1 a 6, la línea de reponer e Intro 12 | — |
+| 2 | Intro 7 y 8 | — |
+| 3 | Intro 9 | — |
+| 4 | — | Intro 10 e Intro 11, al abrir la jornada |
+
+Cada mensaje DEBE conservar su orden y los énfasis en amarillo. DEBE corregir «vas a tener» en
+Intro 3 e «instrucciones» en Intro 10, mostrar el horario como «20:00 a 08:00» y decir «ocho
+jornadas» en Intro 1. La línea de reponer DEBE ir entre Intro 6 e Intro 12, sin foto. Su texto
+provisorio es «Lo que les entregues lo sacás de las góndolas. Después, reponé esas unidades con
+las cajas del depósito. No quiero ver huecos.», con énfasis en «góndolas» y en «reponé esas
+unidades» (OQ-EMP-006).
+
+Las siete fotos DEBEN mostrar el juego y acompañar Intro 2, 3, 4, 6, 7, 9 y 11, cada una en la
+jornada de su Intro: respectivamente,
 la nota de tareas, la ventanilla, el lector y la caja registradora, la computadora, una estantería
 con cajas, los útiles y notas del baño y el depósito con sus cajas en el piso. La foto de la
 estantería NO DEBE cambiar la disposición jugable de las cajas de la primera noche. El encuadre
@@ -136,29 +154,31 @@ AC-EMP-047.
 
 ### BR-EMP-023 — Las instrucciones avanzan por pasos de contenido
 
-CUANDO se muestran las instrucciones, el sistema DEBE presentar doce pantallas independientes,
-sin desplazamiento ni acumulación de contenido, una por cada Intro de la ficha, en orden. Cada «Siguiente» DEBE
-reemplazar la pantalla actual por la siguiente y «Volver» por la anterior, sin bajar de uno.
+CUANDO se muestran las instrucciones de una jornada, el sistema DEBE presentar una pantalla
+independiente por cada texto de esa jornada, en orden, sin desplazamiento ni acumulación de
+contenido. Cada «Siguiente» DEBE reemplazar la pantalla actual por la siguiente y «Volver» por
+la anterior, sin bajar de uno.
 
 La navegación y el contador DEBEN permanecer fijos abajo, separados del contenido. «Volver»
 DEBE estar visible y deshabilitado en la primera pantalla. El contador DEBE indicar la pantalla
-actual sobre doce. En la última, «Siguiente» DEBE decir «OK»; retroceder DEBE restaurar
-«Siguiente». Elegir «OK» DEBE terminar las instrucciones y pedir una sola entrada a «NOCHE 1»,
-aunque se repita el gesto.
+actual sobre el total de esa jornada. En la última, «Siguiente» DEBE decir «OK»; retroceder DEBE
+restaurar «Siguiente». Con una sola pantalla, la primera es la última. Elegir «OK» DEBE terminar
+las instrucciones y pedir una sola entrada a la noche de esa jornada, aunque se repita el gesto.
 
 Cada pantalla DEBE mostrar sus textos antes de las fotos y conservar el separador y las etiquetas
-del diseño. El retrato de Enrique y su bocadillo DEBEN permanecer visibles en las doce
-pantallas, por aclaración explícita del usuario. La cuarta DEBE acompañar el lector con la
-interfaz de caja y el ticket. La última DEBE mostrar sólo su texto de instrucciones y el botón
-«OK», sin el rótulo «SI A JUGAR!!». Las fotos DEBEN cubrir su marco sin franjas negras y mantener
-visible el objeto ilustrado. Las siete fotos del juego DEBEN acompañar sus textos, incluida Intro 11,
+del diseño. El retrato de Enrique y su bocadillo DEBEN permanecer visibles en todas las
+pantallas, por aclaración explícita del usuario. La de Intro 4 DEBE acompañar el lector con la
+interfaz de caja y el ticket. La de Intro 12 DEBE mostrar sólo su texto de instrucciones y el
+botón «OK», sin el rótulo «SI A JUGAR!!». Las fotos DEBEN cubrir su marco sin franjas negras y
+mantener visible el objeto ilustrado. La foto de Intro 11 DEBE acompañar su texto en el chat,
 aunque su frame de referencia omita esa foto.
 
-Los doce textos y siete fotos DEBEN conservarse como 19 entradas separadas en el chat de
-Enrique, cada foto inmediatamente antes del texto de su Intro. Desde la primera noche, ese chat
-DEBE permitir releerlos y ampliar cada foto con el texto de su propia Intro.
+Los trece textos y siete fotos DEBEN conservarse como 20 entradas separadas en el chat de
+Enrique: 12 de la jornada 1, 3 de la 2, 2 de la 3 y 3 de la 4. Cada foto DEBE ir inmediatamente
+antes del texto de su Intro. Desde que abre su jornada, ese chat DEBE permitir releer cada
+entrada y ampliar cada foto con el texto de su propia Intro.
 
-### BR-EMP-024 — La preparación no consume la primera noche
+### BR-EMP-024 — La preparación no consume la noche
 
 MIENTRAS se leen las instrucciones, el sistema DEBE conservar la persiana baja, suspender al
 jugador y retener todo el presupuesto del turno, aunque la lectura dure minutos. La interfaz
@@ -329,10 +349,11 @@ partida, con identidad estable, la jornada que acaba de cerrar y el orden de cad
 dentro de esa devolución. NO DEBE asignarles la jornada inicial por defecto ni la siguiente.
 Los textos, su selección y su ritmo DEBEN conservar BR-EMP-025 a BR-EMP-030.
 
-Desde la noche siguiente, el chat DEBE conservar las 19 entradas de instrucciones y cada
-devolución recibida, intercalada con los mensajes de apertura en el orden temporal de
-BR-INV-030. La devolución de la noche 4 DEBE preceder a la apertura 5, y la devolución 5
-DEBE seguirla. Una partida nueva DEBE empezar sin devoluciones; repetir el cierre o elegir
+Desde la noche siguiente, el chat DEBE conservar las entradas de instrucciones recibidas y cada
+devolución, intercalada con ellas y con los mensajes de apertura en el orden temporal de
+BR-INV-030. Cada devolución DEBE seguir a los mensajes de su jornada y preceder a los de la
+siguiente: la devolución de la noche 3 precede a los mensajes de la 4, la de la 4 a la apertura 5,
+y la devolución 5 la sigue. Una partida nueva DEBE empezar sin devoluciones; repetir el cierre o elegir
 continuar dos veces NO DEBE duplicar sus mensajes ni alterar jornada u orden.
 
 ### BR-EMP-032 — El uso de Poético es un hecho de la quinta jornada
@@ -465,30 +486,37 @@ dato antiguo, el entero 7 de medios sigue prevaleciendo.
 DADO la octava jornada con 7 medios CUANDO cierra impecable sin motivos ENTONCES conserva 7
 y termina con contrato cumplido. DADO un motivo adicional ENTONCES llega a 8 y termina despedido.
 
-### AC-EMP-045 — Doce pantallas, atrás y OK *(verifica BR-EMP-023)*
+### AC-EMP-045 — Ocho pantallas, una pantalla, atrás y OK *(verifica BR-EMP-023)*
 
-DADO las instrucciones recién abiertas CUANDO se consulta su estado ENTONCES se muestra sólo
-la primera pantalla y «Volver» está visible y deshabilitado; intentar volver conserva 1.
-CUANDO se avanza once veces ENTONCES se muestra sólo la pantalla 12/12 y el botón dice «OK».
-CUANDO se vuelve ENTONCES se muestra 11/12 y dice «Siguiente». CUANDO se llega a 12 y se elige
-«OK» dos veces ENTONCES las instrucciones terminan y se pide una sola entrada a la noche 1.
-Avanzar 3 y volver 3 desde el inicio recupera sólo la primera pantalla. Los controles no se
-mueven al cambiar de pantalla y no existe desplazamiento del contenido.
+DADO las instrucciones de la jornada 1 recién abiertas CUANDO se consulta su estado ENTONCES se
+muestra sólo la primera pantalla, el contador dice «1/8» y «Volver» está visible y
+deshabilitado; intentar volver conserva 1. CUANDO se avanza siete veces ENTONCES se muestra sólo
+la pantalla 8/8 y el botón dice «OK». CUANDO se vuelve ENTONCES se muestra 7/8 y dice
+«Siguiente». CUANDO se llega a 8 y se elige «OK» dos veces ENTONCES las instrucciones terminan y
+se pide una sola entrada a la noche 1. Avanzar 3 y volver 3 desde el inicio recupera sólo la
+primera pantalla. DADO las de la jornada 2 ENTONCES el contador dice «1/2». DADO las de la
+jornada 3 ENTONCES dice «1/1», «Volver» está deshabilitado y el botón dice «OK»; elegirlo dos
+veces pide una sola entrada a la noche 3. Los controles no se mueven al cambiar de pantalla y no
+existe desplazamiento del contenido.
 
-### AC-EMP-046 — Diecinueve entradas forman doce pantallas *(verifica BR-EMP-022, BR-EMP-023)*
+### AC-EMP-046 — Las entradas de cada jornada forman sus pantallas *(verifica BR-EMP-022, BR-EMP-023)*
 
-DADO los doce textos de la ficha revisada, sus énfasis y las siete fotos CUANDO se agrupan
-las 19 entradas ENTONCES hay doce pantallas, una por Intro. Las pantallas 2, 3, 4, 6, 7, 9 y 11
-muestran la foto de su Intro después del texto.
+DADO los textos de la ficha revisada, la línea de reponer, sus énfasis y las siete fotos CUANDO
+se agrupan las entradas de cada jornada ENTONCES la jornada 1 tiene 12 entradas y 8 pantallas,
+la 2 tiene 3 y 2, la 3 tiene 2 y 1, y la 4 tiene 3 entradas y ninguna pantalla. Las jornadas 5 a
+8 no tienen entradas ni pantallas. En la jornada 1, las pantallas 2, 3, 4 y 6 muestran la foto de
+su Intro después del texto, la 7 es la línea de reponer sin foto y la 8 es Intro 12. La primera
+pantalla de la jornada 2 muestra la foto de Intro 7, y la de la 3 la de Intro 9.
 CUANDO se avanza y vuelve por todas ENTONCES sólo se muestra el contenido de la actual,
-el contador coincide y la secuencia original de 19 entradas sigue intacta. El retrato y
-bocadillo se mantienen visibles en las doce pantallas. La pantalla 4 incluye interfaz de caja
-y ticket y la última sólo su texto de instrucciones, sin el rótulo «SI A JUGAR!!», conservando «OK».
+el contador coincide y la secuencia original de 20 entradas sigue intacta. El retrato y
+bocadillo se mantienen visibles en todas las pantallas. La pantalla de Intro 4 incluye interfaz
+de caja y ticket y la de Intro 12 sólo su texto de instrucciones, sin el rótulo «SI A JUGAR!!»,
+conservando «OK».
 Los tres mensajes de prueba previos no aparecen entre los textos de la conversación.
 
 ### AC-EMP-047 — Cada foto adjunta su propia Intro *(verifica BR-EMP-022, BR-EMP-023)*
 
-DADO el chat de Enrique desde la jornada 1 CUANDO se recorren sus siete fotos ENTONCES cada una
+DADO el chat de Enrique en la jornada 4 CUANDO se recorren sus siete fotos ENTONCES cada una
 precede inmediatamente al texto de su Intro y ampliarla muestra ese texto, nunca el siguiente
 paso. CUANDO se valida cada captura ENTONCES existe una imagen con proporción adecuada a su
 marco y el rayo central de su encuadre alcanza el tema correspondiente: corcho con sus dos
@@ -500,7 +528,7 @@ de Intro 7 y después la de Intro 11 deja restaurada la pila jugable de la jorna
 
 DADO una partida nueva preparada CUANDO empiezan las instrucciones ENTONCES la persiana está
 baja, se ve Intro 1, «Volver» está deshabilitado y el control está suspendido. CUANDO pasan 120 segundos
-reales leyendo ENTONCES queda el mismo presupuesto de turno. CUANDO se llega a 12 y se elige
+reales leyendo ENTONCES queda el mismo presupuesto de turno. CUANDO se llega a 8 y se elige
 «OK» ENTONCES desaparecen las instrucciones y aparece «NOCHE 1» sobre la persiana, con
 el turno y el control todavía retenidos hasta que termine de subir.
 
@@ -511,7 +539,8 @@ ENTONCES sigue la pantalla 4 y el mismo presupuesto de turno. DADO las instrucci
 en pantalla ENTONCES su orden de dibujo está sobre la persiana y debajo de avisos y pausa;
 la interfaz empieza fuera del margen inferior y termina dentro del encuadre en 0,3 segundos
 reales. El fade in de la persiana baja pasa de negro a visible en 0,3 segundos reales. Un cuadro
-de 150 ms adelanta cada una sólo 1/30 de segundo.
+de 150 ms adelanta cada una sólo 1/30 de segundo. DADO las instrucciones de la jornada 2 en su
+pantalla 2 CUANDO se pulsa Esc y se reanuda ENTONCES sigue la pantalla 2.
 
 ### AC-EMP-050 — Todas depende de lo declarado *(verifica BR-EMP-001)*
 
@@ -635,10 +664,11 @@ está en el centro con la devolución en el chat de Enrique y el turno sigue cer
 el último mensaje a la vista y se elige «continuar» ENTONCES el celular pasa a las notas, sin
 bajar; tras los tres «Continuar» de la reflexión, baja y la persiana muestra «NOCHE 5».
 CUANDO la noche 5 está abierta y se abre el celular con Q ENTONCES el chat de
-Enrique tiene las 19 entradas de las instrucciones, los mensajes de las devoluciones 1 a 4 y
+Enrique tiene los mensajes de las jornadas 1 a 4 intercalados con las devoluciones 1 a 4, y
 después la foto y el texto de apertura 5 definidos por `investigation`. DADO el almacén en la
 noche 1 CUANDO cierra el turno y se elige «continuar» ENTONCES el celular baja sin pasar por las
-notas y la persiana muestra «NOCHE 2». DADO una partida despedida
+notas, salen las instrucciones de la jornada 2 sobre la persiana y, tras su «OK», la persiana
+muestra «NOCHE 2». DADO una partida despedida
 CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se anuncia otra noche.
 
 ### AC-EMP-065 — Elegir dos veces *(verifica BR-EMP-011)*
@@ -652,8 +682,9 @@ elige «volver al menú» dos veces ENTONCES el menú se pide una sola vez.
 
 DADO una partida nueva ENTONCES no tiene devoluciones. CUANDO cierran las noches 1 a 5
 ENTONCES los mensajes de devolución conservan su orden de recepción. CUANDO se abre el chat
-en noche 6 ENTONCES muestra instrucciones, devoluciones 1 a 4, foto y texto de apertura 5,
-devolución 5, en ese orden; no adelanta la apertura 5 a la devolución 4.
+en noche 6 ENTONCES muestra las instrucciones de la 1, la devolución 1, las de la 2, la
+devolución 2, las de la 3, la devolución 3, los mensajes de la 4, la devolución 4, la foto y el
+texto de apertura 5 y la devolución 5, en ese orden; no adelanta la apertura 5 a la devolución 4.
 
 ### AC-EMP-067 — Registrar uso una vez y sólo al aceptar *(verifica BR-EMP-032)*
 
@@ -721,6 +752,31 @@ altura del partido, ya estoy considerando tirarte a VOS por la ventanilla.». DA
 por desorden con P < 4 ENTONCES Reto 4 es «Realmente me sorprende cómo alguien puede tener tan
 poca conciencia de lo que es el orden.».
 
+### AC-EMP-075 — Las jornadas 2 y 3 abren con lo suyo *(verifica BR-EMP-022, BR-EMP-024)*
+
+DADO el cierre de la jornada 1 CUANDO se elige «continuar» ENTONCES la persiana está baja, se ve
+Intro 7 en «1/2», el control está suspendido y no hay placa. CUANDO pasan 120 segundos reales
+ENTONCES queda el mismo presupuesto de turno. CUANDO se elige «OK» en «2/2» ENTONCES aparece una
+sola «NOCHE 2», con el turno y el control retenidos hasta que termine de subir la persiana.
+DADO el cierre de la jornada 2 CUANDO se elige «continuar» ENTONCES se ve Intro 9 en «1/1», y su
+«OK» anuncia una sola «NOCHE 3».
+
+### AC-EMP-076 — Retomar repite las instrucciones de su jornada *(verifica BR-EMP-022)*
+
+DADO un guardado en la jornada 2 CUANDO se elige continuar ENTONCES salen sus instrucciones
+desde «1/2», y después de su «OK» se anuncia «NOCHE 2». DADO un guardado en la jornada 3
+ENTONCES salen desde «1/1». DADO un guardado en la jornada 4 ENTONCES se anuncia «NOCHE 4» sin
+instrucciones, y el chat de Enrique tiene Intro 10, la foto de Intro 11 e Intro 11 después de la
+devolución 3. DADO un guardado del cierre 4 con la reflexión pendiente CUANDO se retoma y termina
+la reflexión ENTONCES se anuncia «NOCHE 5» sin instrucciones.
+
+### AC-EMP-077 — Sin instrucciones propias, la noche directa *(verifica BR-EMP-022)*
+
+DADO el cierre de cada jornada de la 3 a la 7 CUANDO se elige seguir ENTONCES la noche siguiente
+se anuncia sin instrucciones en pantalla. DADO un guion sin mensajes de la jornada 2 CUANDO abre
+la jornada 2 ENTONCES se anuncia «NOCHE 2» directamente, sin instrucciones y sin error. DADO la
+jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -741,7 +797,8 @@ poca conciencia de lo que es el orden.».
 - **Entrada:** cuántas obligatorias se cumplieron y cuántas se habían declarado, y cuáles
   quedaron sin cumplir; un legajo, las cuentas y las devoluciones, que pueden venir de un
   guardado; motivos de la jornada abierta; el tiempo que pasa con la devolución en pantalla;
-  mensajes introductorios y pedidos de avanzar, volver y comenzar; el teñido aceptado con
+  mensajes introductorios con su jornada, la jornada que abre y pedidos de avanzar, volver y
+  comenzar; el teñido aceptado con
   identidad y el expediente y mensajes de investigación de esta partida.
 - **Salida:** la banda, los medios exactos y los apercibimientos enteros, si está despedido, qué jornada va, el final,
   las fallas por obligatoria fija, los llamados por motivo, R, si hubo llamados en la partida,
@@ -764,10 +821,12 @@ poca conciencia de lo que es el orden.».
 ## Dependencias
 
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): cuántas obligatorias se cumplieron.
+- [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): qué jornadas son de introducción.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): tras las instrucciones, anuncia la
-  primera noche y conserva la retención hasta que termine de subir la persiana.
-- [`investigation`](../investigation/investigation.md) (alimenta): las 19 entradas de Enrique
-  y la correspondencia entre cada foto y el texto siguiente para releerlas en el celular.
+  noche que introducen y conserva la retención hasta que termine de subir la persiana.
+- [`investigation`](../investigation/investigation.md) (alimenta): las 20 entradas de Enrique
+  con la jornada en que llega cada una, y la correspondencia entre cada foto y el texto
+  siguiente para releerlas en el celular.
 - [`investigation`](../investigation/investigation.md) (alimenta): las devoluciones, que el chat
   de Enrique intercala con las aperturas por jornada cerrada y orden; el celular en modo fijo durante la devolución.
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): los llamados de la noche.
@@ -786,3 +845,10 @@ poca conciencia de lo que es el orden.».
     autorizó la frase provisoria de BR-EMP-029, y la ficha no se reescribe.
   - Decide: una persona de game design.
   - Bloquea: nada. Mientras tanto, la salida es la frase provisoria.
+
+- **OQ-EMP-006 — ¿Cuál es el texto definitivo de la línea de reponer?**
+  - Por qué sigue abierta: #527 reparte las instrucciones sin ficha ni frame. La línea de la
+    jornada 1 sobre reponer lo vendido tiene texto provisorio, y la ficha «Chat con el jefe»
+    todavía no la incluye.
+  - Decide: una persona de game design.
+  - Bloquea: nada. Mientras tanto, va el texto provisorio de BR-EMP-022.

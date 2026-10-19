@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527
 ---
 
 # Capacidad: guardar y retomar
@@ -101,8 +101,11 @@ puede cerrar su pestaña. Las otras cuatro opciones DEBEN quedar en el mismo ord
 
 CUANDO arranca la partida, SI hay guardado, ENTONCES el sistema DEBE seguir en la jornada
 guardada y con los apercibimientos guardados. SI no hay guardado, ENTONCES DEBE arrancar una
-partida nueva. Retomar un guardado NO DEBE mostrar las instrucciones: DEBE anunciar directamente
-la jornada guardada sobre la persiana baja y comenzar a descontar cuando termine su entrada.
+partida nueva. Retomar un guardado NO DEBE mostrar las instrucciones de otra jornada. SI la
+jornada guardada tiene instrucciones propias (BR-EMP-022), ENTONCES DEBE mostrarlas desde su
+primera pantalla y anunciar la jornada después de su «OK». Sin ellas, DEBE anunciar directamente
+la jornada guardada sobre la persiana baja. En los dos casos, DEBE comenzar a descontar cuando
+termine su entrada.
 SI el guardado conserva una reflexión de cierre pendiente, ENTONCES DEBE mostrarla antes de esa
 entrada (BR-SAV-021).
 
@@ -312,11 +315,13 @@ después de elegir se anuncia «NOCHE 6» con 7 medios.
 DADO la devolución de una partida terminada CUANDO se sale al menú desde la pausa ENTONCES no hay
 guardado y continuar sigue deshabilitado.
 
-### AC-SAV-021 — Continuar evita las instrucciones *(verifica BR-SAV-015)*
+### AC-SAV-021 — Continuar evita las instrucciones ajenas *(verifica BR-SAV-015)*
 
-DADO un guardado válido en la jornada 3 con 7 medios de apercibimiento CUANDO se elige continuar
-ENTONCES se conservan jornada 3 y 7 medios, se anuncia «NOCHE 3» y las instrucciones no están
-en pantalla. El turno permanece retenido hasta terminar la subida de la persiana.
+DADO un guardado válido en la jornada 5 con 7 medios de apercibimiento CUANDO se elige continuar
+ENTONCES se conservan jornada 5 y 7 medios, se anuncia «NOCHE 5» y las instrucciones no están
+en pantalla. El turno permanece retenido hasta terminar la subida de la persiana. DADO un
+guardado en la jornada 3 CUANDO se elige continuar ENTONCES se muestran sólo las instrucciones de
+la jornada 3, y después de su «OK» se anuncia «NOCHE 3».
 
 ### AC-SAV-022 — Nuevo juego funde directamente *(verifica BR-SAV-012)*
 
@@ -339,8 +344,8 @@ DADO una partida con la noche 5 cerrada, reponer cumplido en las noches 1 a 3 y 
 4 y la 5, un llamado por papel en la noche 4 y R = 0 CUANDO se guarda, se lee el archivo y se
 retoma ENTONCES reponer tiene 2 fallas, papel 1 llamado, hubo llamados en la partida, R = 0, y
 las cinco devoluciones están en orden y letra por letra en el chat de Enrique, intercalando foto
-y texto de apertura 5 entre las devoluciones 4 y 5 y conservando las 19 entradas de
-instrucciones al principio. CUANDO la noche 6 cierra con reponer sin cumplir ENTONCES su devolución trae la fila n = 3 de Tarea 3,
+y texto de apertura 5 entre las devoluciones 4 y 5 y cada devolución de las noches 1 a 3 antes
+de los mensajes de la jornada siguiente. CUANDO la noche 6 cierra con reponer sin cumplir ENTONCES su devolución trae la fila n = 3 de Tarea 3,
 «De nuevo quedaron algunas góndolas incompletas…».
 
 DADO la noche 1 con reponer pendiente y un llamado por papel, y la 2 impecable sin llamados
@@ -350,7 +355,7 @@ CUANDO se guarda y retoma ENTONCES reponer conserva 1 falla, papel 1 llamado y R
 
 DADO un guardado de la jornada 6 sin fallas, llamados, R ni devoluciones CUANDO se retoma
 ENTONCES sigue en la jornada 6 con su legajo, cero fallas, cero llamados, R = 0, sin llamados en
-la partida, y el chat de Enrique tiene las 19 entradas de instrucciones y los mensajes
+la partida, y el chat de Enrique tiene las 20 entradas de las jornadas 1 a 4 y los mensajes
 de apertura 5 reconstruidos, sin devoluciones inventadas. DADO las
 fallas con un valor que no es un diccionario, o las devoluciones con un número ENTONCES vuelven
 con su defecto. DADO las fallas con una obligatoria desconocida y reponer en 1 ENTONCES reponer
@@ -366,7 +371,8 @@ sin la marca.
 
 DADO cierre 4 con las devoluciones 1 a 4 fechadas CUANDO se guarda, lee y retoma ENTONCES abre
 jornada 5, conserva identidad, texto, jornada y orden de cada mensaje de esas devoluciones, y el
-chat ordena instrucciones, devoluciones 1 a 4, foto y texto de apertura 5. El guion de Yasmín vuelve con
+chat ordena los mensajes de las jornadas 1 a 4 intercalados con las devoluciones 1 a 4, y
+después la foto y el texto de apertura 5. El guion de Yasmín vuelve con
 sus quince mensajes sin leer. No se repiten las instrucciones en modo introductorio.
 CUANDO cierra la 5 y se repite guardar y retomar ENTONCES la devolución 5 vuelve detrás de
 la apertura 5, sin duplicar ni serializar de nuevo los mensajes del guion.
@@ -416,7 +422,8 @@ pausa, ENTONCES continuar sigue deshabilitado.
 ### AC-SAV-033 — Un guardado de cinco jornadas no se migra *(verifica BR-SAV-015)*
 
 DADO un guardado escrito antes de las ocho jornadas, en la jornada 2 CUANDO se elige continuar
-ENTONCES se anuncia «NOCHE 2» y abre la jornada 2 de hoy: cobrar, registrar y reponer, con Tin y
+ENTONCES se muestran las instrucciones de la jornada 2, después de su «OK» se anuncia
+«NOCHE 2» y abre la jornada 2 de hoy: cobrar, registrar y reponer, con Tin y
 Tia, sin Yasmín, sin Fede ni Mía y con los tres bidones. Los medios y las cuentas son los
 guardados.
 
@@ -449,9 +456,9 @@ guardados.
 
 - [`employment-record`](../employment-record/employment-record.md) (consume): la jornada, el
   legajo y el final; las cuentas de la devolución y las devoluciones recibidas con identidad, jornada y orden; las
-  instrucciones previas a una partida nueva.
+  instrucciones de cada jornada de introducción.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): la jornada que anuncia la entrada
-  al empezar o continuar, sin repetir las instrucciones al retomar.
+  al empezar o continuar, después de las instrucciones de la jornada guardada si las tiene.
 - [`investigation`](../investigation/investigation.md) (alimenta): devoluciones restauradas
   con identidad, jornada y orden cuando existen, sin inventar metadatos del legado.
 - [`investigation`](../investigation/investigation.md) (consume y alimenta): expediente, notas,

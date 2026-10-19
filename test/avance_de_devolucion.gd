@@ -51,3 +51,13 @@ static func pasar_la_reflexion(pantalla: PantallaDeDevolucion) -> void:
 			recuadro.botones().back().pressed.emit()
 	if reflexion.etapa() == ReflexionDeCierre.Etapa.ESPERA:
 		almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
+
+
+## Una jornada de introducción abre con instrucciones: se leen hasta su «OK», que anuncia la noche.
+static func leer_las_instrucciones(almacen: Node) -> void:
+	var instrucciones: PantallaDeInstrucciones = almacen.get_node(
+		"Interfaz/PantallaDeInstrucciones"
+	)
+	var siguiente: Button = instrucciones.get("_siguiente")
+	while instrucciones.visible:
+		siguiente.pressed.emit()

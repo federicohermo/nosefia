@@ -3,7 +3,7 @@
 ## **Es la pieza que hace jugable la regla del despido.** Hasta acá el legajo vivía adentro del
 ## script de la escena y moría con ella, así que `despedido()` no podía devolver `true` jugando:
 ## la regla estaba en verde en los tests y muerta en la build. Con la partida el mismo legajo
-## cruza las cinco jornadas y el despido se alcanza.
+## cruza todas las jornadas y el despido se alcanza.
 ##
 ## **Va en `dominio/` y no en un autoload**, y está medido por qué: el gate de tests no mira
 ## `escenas/`, así que «qué jornada va» escrito ahí nace sin test; y un autoload es peor, porque

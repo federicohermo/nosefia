@@ -308,6 +308,14 @@ Lo que más se rompe:
   evalúa.** El dominio arma el estado y el sistema decide cuándo mirarlo. En el #526, J1 abría
   sin faltantes desde `Apertura`, pero el repositor revisaba reponer sólo después de un gesto:
   la obligatoria arrancaba sin cumplir, y su archivo no estaba en los límites.
+- **Un recurso que se reparte en otra unidad lleva a «Se escribe» a quien lo lee por posición.**
+  El `rg` sigue a cada lector del recurso, también a la interfaz. En el #527, las instrucciones
+  pasaron de una lista a tres jornadas. La pantalla elegía cada foto por número de pantalla, y en
+  J2 la foto caía en la pantalla 1. El issue tenía esa pantalla en «Sólo lectura».
+- **Un flujo que gana un paso lleva a «Se escribe» los fixtures que lo atraviesan.** Se buscan
+  los ayudantes compartidos de `test/` y las suites que siguen de noche, no sólo las que nombran
+  el flujo. En el #527, la jornada 2 pasó a abrir con instrucciones, y `tickets_del_cierre_test.gd`
+  y `avance_de_devolucion.gd` seguían de J1 a J2 sin estar en los límites.
 - **Cada suite de «Se escribe» se cuenta contra el tope de 20 métodos públicos de `gdlint`**, con
   `rg -c '^func [a-z]'`: cuentan también `before_test` y cualquier ayudante sin `_`. En el #277,
   `repositor_test.gd` tenía 19 casos y 20 métodos, y el issue le pedía uno más. Si una ya está
