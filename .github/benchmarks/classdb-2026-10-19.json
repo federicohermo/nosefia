@@ -189,5 +189,25 @@
         "manifiesto_aprobado_sha256": "278a7af0af7adf3520918075b0fb5ba324bf5278491626e309f4c2193d20ad27"
       }
     ]
+  },
+  "ci_fria_sin_compilacion": {
+    "url": "https://github.com/federicohermo/nosefia/actions/runs/39264961371",
+    "total_s": 314.0,
+    "suites": 309,
+    "casos": 2328,
+    "fallos": 0,
+    "errores": 0,
+    "saltos": 0,
+    "inventario_igual_a_referencia": true,
+    "recursos_iguales_por_worker": 40,
+    "aciertos_cache_importaciones": 0,
+    "motor_paso_s": {
+      "minimo": 0,
+      "maximo": 3
+    },
+    "referencia_fria_s": 320,
+    "referencia_caliente_s": 181,
+    "muestras_por_condicion": 1,
+    "mejora_significativa_demostrada": false
   }
 }

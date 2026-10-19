@@ -33,8 +33,20 @@ Cada runner importa sus recursos y tiene sus propios datos de usuario y reportes
 obligatorio `verify` sólo pasa cuando pasan las seis particiones.
 Cada partición tiene un límite de veinte minutos. Si lo agota, el check falla.
 
-Los jobs se llaman «Partición 0» a «Partición 5». Sus suites se asignan por duración estimada,
-sin reservar un grupo a un tema. La última partición corre también los demás checks.
+Los nombres de los jobs señalan sus suites principales:
+
+| Partición | Nombre |
+| --- | --- |
+| 0 | Cajas y agarre |
+| 1 | Reposición y puestos |
+| 2 | Apoyos y cierre |
+| 3 | Arrastre y colisiones |
+| 4 | Giro y balde |
+| 5 | Limpieza y validaciones |
+
+Cada partición incluye también suites de otras áreas, asignadas por duración estimada.
+La última corre además los demás checks del proyecto.
+Revisar los nombres si cambia la asignación de las suites principales.
 
 Sin `--particion-tests`, el comando conserva la ejecución completa en un solo checkout.
 

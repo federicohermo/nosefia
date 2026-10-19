@@ -14,13 +14,25 @@ concurrency:
 
 jobs:
   verify-particion:
-    name: Partición ${{ matrix.particion }}
+    name: Partición ${{ matrix.particion }} · ${{ matrix.tema }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        particion: [0, 1, 2, 3, 4, 5]
+        include:
+          - particion: 0
+            tema: Cajas y agarre
+          - particion: 1
+            tema: Reposición y puestos
+          - particion: 2
+            tema: Apoyos y cierre
+          - particion: 3
+            tema: Arrastre y colisiones
+          - particion: 4
+            tema: Giro y balde
+          - particion: 5
+            tema: Limpieza y validaciones
     steps:
       - uses: actions/checkout@v5
         with:
