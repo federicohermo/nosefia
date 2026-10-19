@@ -175,6 +175,66 @@ func test_frase_real_anota_una_vez_y_leer_o_prefijo_no_anotan() -> void:  # AC-I
 	assert_int(_expediente().mensajes_de_notas().size()).is_equal(2)
 
 
+## Sin afirmar nada: el caso dice si la espera.
+func _la_mira_la_encuentra(colilla: ObjetoAgarrable) -> bool:
+	var jugador := _almacen.get("_jugador") as CharacterBody3D
+	var camara: Camera3D = jugador.get("_camara")
+	jugador.call(
+		"ubicar", Transform3D(Basis.IDENTITY, colilla.global_position + Vector3(0, 0, 0.75))
+	)
+	camara.look_at(colilla.global_position)
+	for _cuadro: int in 12:
+		await get_tree().physics_frame
+	jugador.call("_leer_la_mira")
+	var consulta := PhysicsRayQueryParameters3D.create(
+		camara.global_position, colilla.global_position
+	)
+	consulta.exclude = [jugador.get_rid()]
+	var golpe := jugador.get_world_3d().direct_space_state.intersect_ray(consulta)
+	return golpe.get("collider") == colilla or jugador.call("enfocado") == colilla
+
+
+func test_la_colilla_esta_solo_la_noche_de_su_pista() -> void:  # AC-INV-049
+	var jornada := CasoDeInvestigacion.de_la_partida().pista_de("2B").jornada
+	await _abrir(jornada)
+	var colilla := _colilla()
+	assert_object(colilla).is_not_null()
+	if colilla == null:
+		return
+	var origen := colilla.global_transform
+	var agarre: Agarre = _almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(colilla.datos, colilla)).is_true()
+	for otra: int in [ReglasDeLaPartida.PRIMERA_JORNADA, jornada - 1, jornada + 1]:
+		_almacen.call("_al_abrir_la_jornada", otra)
+		await _cuadros()
+		var mensaje := "jornada %d" % otra
+		assert_object(agarre.cuerpo_sostenido()).override_failure_message(mensaje).is_null()
+		assert_bool(colilla.is_visible_in_tree()).override_failure_message(mensaje).is_false()
+		assert_int(colilla.process_mode).is_equal(Node.PROCESS_MODE_DISABLED)
+		(
+			assert_bool(await _la_mira_la_encuentra(colilla))
+			. override_failure_message(mensaje)
+			. is_false()
+		)
+	_almacen.call("_al_abrir_la_jornada", jornada)
+	await _cuadros()
+	var contenedor: Node3D = _almacen.get("_contenedor")
+	contenedor.call("recibir", colilla)
+	_almacen.call("_al_abrir_la_jornada", jornada + 1)
+	await _cuadros()
+	assert_array(contenedor.call("tirados")).not_contains([colilla])
+	assert_bool(colilla.is_visible_in_tree()).is_false()
+	for _vez in 2:
+		_almacen.call("_al_abrir_la_jornada", jornada)
+	await _cuadros()
+	var colillas := _almacen.find_children("*", "ObjetoAgarrable", true, false).filter(
+		func(nodo: Node) -> bool: return nodo.get("datos") == colilla.datos
+	)
+	assert_array(colillas).contains_exactly([colilla])
+	assert_bool(colilla.global_transform.is_equal_approx(origen)).is_true()
+	assert_bool(await _mirar_colilla()).is_true()
+
+
 func test_colilla_real_exige_agarre_y_conserva_hallazgo_al_cerrar() -> void:  # AC-INV-049
 	await _abrir()
 	if not await _mirar_colilla():
@@ -233,11 +293,10 @@ func test_canales_fuera_de_j2_no_anotan_y_revelaciones_siguen_aparte() -> void: 
 	assert_object(colilla).is_not_null()
 	if colilla == null:
 		return
-	var agarre: Agarre = _almacen.get("_agarre")
-	assert_bool(agarre.pedir_agarrar(colilla.datos, colilla)).is_true()
+	assert_bool(colilla.is_visible_in_tree()).is_false()
+	assert_bool(await _la_mira_la_encuentra(colilla)).is_false()
 	assert_array(Array(_expediente().identidades())).is_empty()
 	var examen: Examen = _almacen.get("_jugador").get("examen")
-	agarre.soltar(false)
 	await _tecla(Celular.ACCION)
 	_celular().pedir_chat(Conversacion.Interlocutor.YASMIN)
 	await _cuadros()

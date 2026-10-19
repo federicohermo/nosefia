@@ -136,3 +136,35 @@ func test_las_pistas_traen_su_foto_y_su_texto() -> void:  # AC-INV-053
 	for opcion: Hipotesis in opciones:
 		assert_str(opcion.titulo).is_equal(titulos[opcion.identidad])
 		assert_str(opcion.texto).is_equal(textos[opcion.identidad])
+
+
+func test_lo_que_se_levanta_para_una_pista_esta_solo_su_noche() -> void:  # AC-INV-049
+	var levantar := _pista("L")
+	levantar.canal = Pista.Canal.LEVANTAR
+	levantar.origen = &"cosa"
+	var mirar := _pista("M")
+	mirar.canal = Pista.Canal.EXAMINAR_NO_LEVANTABLE
+	mirar.origen = &"otra"
+	var sin_origen := _pista("S")
+	sin_origen.canal = Pista.Canal.LEVANTAR
+	var caso := _caso([levantar, mirar, sin_origen])
+	for jornada in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
+	):
+		assert_bool(caso.esta_en_el_local(&"cosa", jornada)).is_equal(jornada == levantar.jornada)
+		assert_bool(caso.esta_en_el_local(&"otra", jornada)).is_true()
+		assert_bool(caso.esta_en_el_local(&"ninguna", jornada)).is_true()
+		assert_bool(caso.esta_en_el_local(&"", jornada)).is_true()
+
+
+func test_la_colilla_del_caso_esta_la_noche_de_2b() -> void:  # AC-INV-049
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var pista := caso.pista_de("2B")
+	assert_object(pista).is_not_null()
+	if pista == null:
+		return
+	assert_int(pista.canal).is_equal(Pista.Canal.LEVANTAR)
+	for jornada in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
+	):
+		assert_bool(caso.esta_en_el_local(pista.origen, jornada)).is_equal(jornada == pista.jornada)

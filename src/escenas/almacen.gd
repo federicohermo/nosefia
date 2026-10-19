@@ -316,6 +316,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
 	_colilla.volver_a_su_lugar()
+	if CasoDeInvestigacion.de_la_partida().esta_en_el_local(_colilla.datos.id, jornada):
+		_colilla.process_mode = Node.PROCESS_MODE_INHERIT
+	else:
+		_colilla.hide()
+		_colilla.process_mode = Node.PROCESS_MODE_DISABLED
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
