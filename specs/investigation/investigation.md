@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527
 ---
 
 # Capacidad: la investigación
@@ -234,9 +234,11 @@ Leer DEBE conservar el transcurso del turno de BR-INV-006 y las marcas de BR-INV
 ### BR-INV-030 — El historial mezcla guion y devoluciones en orden temporal
 
 El sistema DEBE ordenar los mensajes por jornada, momento de apertura o cierre y orden
-dentro del bloque, sin ordenarlos por texto ni inventar horas. En Enrique, el orden DEBE ser
-instrucciones de jornada 1, devoluciones de los cierres 1 a 4, foto y texto de apertura 5,
-devolución del cierre 5, y los bloques posteriores cuando estén disponibles. Cada mensaje DEBE conservar
+dentro del bloque, sin ordenarlos por texto ni inventar horas. En Enrique, cada devolución
+DEBE ir después de los mensajes de su jornada y antes de los de la siguiente: instrucciones de
+jornada 1, devolución 1, instrucciones de jornada 2, devolución 2, instrucciones de jornada 3,
+devolución 3, mensajes de jornada 4, devolución 4, foto y texto de apertura 5, devolución 5, y
+los bloques posteriores cuando estén disponibles. Cada mensaje DEBE conservar
 su identidad; dos textos iguales con identidades distintas NO DEBEN fusionarse por su texto.
 
 Cada devolución nueva DEBE aportar explícitamente la jornada que cerró y el orden de sus
@@ -637,8 +639,8 @@ Q permitido abre el menú.
 DADO un guardado en jornada 6, con chats que antes se leyeron y mensajes recibidos fuera del guión,
 CUANDO se retoma ENTONCES se ven los mensajes del guión de jornada menor o igual a 6, todos sin
 leer, y ninguno de los recibidos fuera de él salvo las devoluciones de Enrique de las jornadas 1
-a 5, intercaladas con las aperturas: instrucciones, devoluciones 1 a 4, foto y texto de apertura
-5, devolución 5. Los registros legados sin jornada conservan su orden sin fechas inventadas.
+a 5, intercaladas con los mensajes de cada jornada: cada devolución después de los de su
+jornada y antes de los de la siguiente, hasta la devolución 5. Los registros legados sin jornada conservan su orden sin fechas inventadas.
 Abrir y cerrar sin entrar a un chat conserva los contadores.
 
 ### AC-INV-038 — Un botón por chat y una imagen de reemplazo *(verifica BR-INV-023)*
@@ -657,9 +659,9 @@ de jornada 6. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni
 
 ### AC-INV-040 — La apertura queda entre las devoluciones *(verifica BR-INV-030, BR-INV-029)*
 
-DADO cierre 4 y apertura 5 CUANDO se recorre Enrique ENTONCES están las 19 entradas de las
-instrucciones, los mensajes de las devoluciones 1 a 4, la foto del contenedor y su texto, en ese
-orden. CUANDO cierra la 5 ENTONCES su devolución queda después de ese texto, cada mensaje una
+DADO cierre 4 y apertura 5 CUANDO se recorre Enrique ENTONCES están las entradas de las
+jornadas 1 a 4, cada bloque seguido por la devolución de su cierre, y después la foto del
+contenedor y su texto, en ese orden. CUANDO cierra la 5 ENTONCES su devolución queda después de ese texto, cada mensaje una
 vez. Reabrir celular, volver al menú y repetir apertura 5 no cambian identidades, contenido u orden.
 Los quince mensajes de Yasmín tampoco se duplican al repetir esos recorridos.
 
@@ -771,7 +773,8 @@ compartido permanece intacto. Las consultas no registran pistas ni emiten pista 
 ### AC-INV-056 — El historial fechado vuelve igual y no fusiona textos *(verifica BR-INV-030, BR-INV-023, BR-INV-008)*
 
 DADO checkpoint de apertura 5 con las devoluciones 1 a 4 fechadas CUANDO se retoma ENTONCES
-muestra instrucciones, devoluciones 1 a 4 y apertura 5 en ese orden, y los quince mensajes de Yasmín están
+muestra los mensajes de las jornadas 1 a 4 intercalados con las devoluciones 1 a 4, y después
+la apertura 5, y los quince mensajes de Yasmín están
 sin leer. DADO dos devoluciones de distintas jornadas con el mismo texto CUANDO se reconstruyen
 ENTONCES permanecen dos mensajes con sus identidades y posiciones distintas; modificar una
 lista consultada no cambia el historial ni el guion.
@@ -850,6 +853,15 @@ el menú en jornada 6 ENTONCES ofrece el chat de notas; CUANDO se abre ENTONCES 
 texto 2, texto 3, foto 2B, texto de pista 2B y texto de hipótesis 2B, en ese orden, y la foto 2B
 se amplía con su texto. Su fondo difiere del fondo del chat de Enrique. En jornadas 1 a 5, el
 menú no lo ofrece.
+
+### AC-INV-065 — Las instrucciones llegan con su jornada *(verifica BR-INV-030, BR-INV-023)*
+
+DADO la jornada 1 abierta CUANDO se recorre Enrique ENTONCES tiene 12 entradas y ninguna de las
+jornadas 2 a 4. DADO el cierre 1 y la jornada 2 abierta ENTONCES tiene las 12 de la jornada 1,
+los mensajes de la devolución 1 y las 3 de la jornada 2, en ese orden. DADO la jornada 3 tras el
+cierre 2 ENTONCES siguen la devolución 2 y las 2 de la jornada 3. DADO la jornada 4 tras el
+cierre 3 ENTONCES siguen la devolución 3, Intro 10, la foto de Intro 11 e Intro 11. DADO un
+guardado de la jornada 4 CUANDO se retoma ENTONCES el orden es el mismo.
 
 ## No objetivos
 

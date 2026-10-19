@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: draft
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436 y #526; migración de los specs 001, 007, 011, 016, 027, 031
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526 y #527; migración de los specs 001, 007, 011, 016, 027, 031
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -58,7 +58,7 @@ ventana no es una pausa: ese tiempo DEBE descontarse, también si el navegador s
 cuadros y sólo permite actualizar la jornada al volver. La entrada de la noche, desde que aparece
 la placa hasta que termina de subir la persiana, NO DEBE descontar turno, tampoco al cambiar de
 pestaña. Soltar esa retención DEBE continuar desde el presupuesto conservado, sin cobrar el
-intervalo retenido. Las instrucciones previas a la primera noche tampoco son tiempo de juego.
+intervalo retenido. Las instrucciones previas a una noche tampoco son tiempo de juego.
 
 ### BR-SHF-004 — El turno no baja de cero
 
