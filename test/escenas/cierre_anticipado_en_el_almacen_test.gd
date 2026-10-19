@@ -13,21 +13,24 @@ func before_test() -> void:
 	_cierres = 0
 
 
-func _abrir(jornada: int) -> RelojDelTurno:
+func _abrir(jornada: int, con_compradores: bool = false) -> RelojDelTurno:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada}))
-	almacen.set(
-		"compradores_de_la_apertura",
-		func(_jornada: int) -> Array[Comprador]:
-			var nadie: Array[Comprador] = []
-			return nadie
-	)
+	if not con_compradores:
+		almacen.set(
+			"compradores_de_la_apertura",
+			func(_jornada: int) -> Array[Comprador]:
+				var nadie: Array[Comprador] = []
+				return nadie
+		)
 	add_child(almacen)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	reloj.set_process(false)
 	almacen.get("_jugador").set_physics_process(false)
 	await get_tree().process_frame
-	assert_bool((almacen.get("_atenciones") as Ventanilla).tarea().compras_cerradas()).is_true()
+	assert_bool((almacen.get("_atenciones") as Ventanilla).tarea().compras_cerradas()).is_equal(
+		not con_compradores
+	)
 	reloj.turno_cerrado.connect(func(_cumplidas: int) -> void: _cierres += 1)
 	return reloj
 
@@ -65,6 +68,35 @@ func test_cumplir_lo_ultimo_acelera_hasta_el_cierre() -> void:  # AC-SHF-031, AC
 	assert_float(_restante(reloj)).is_equal(0.0)
 	assert_int(_cierres).is_equal(1)
 	assert_bool(cobrar.completada()).is_false()
+
+
+func test_si_nadie_compra_acelera_al_vencer_el_ultimo() -> void:  # AC-SHF-032
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
+	var reloj := await _abrir(jornada, true)
+	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
+	if not reponer.completada():
+		reloj.completar(reponer)
+	var compradores := Compradores.de_la_jornada(jornada)
+	var vencido := [false]
+	var atenciones: Ventanilla = reloj.get_parent().get("_atenciones")
+	atenciones.comprador_vencido.connect(
+		func(comprador: Comprador) -> void:
+			if comprador.nombre() == compradores[-1].nombre():
+				vencido[0] = true
+	)
+	assert_float(_baja_en(reloj, 1.0)).is_equal(Ritmo.de_la_jornada(jornada))
+	var transcurrido := Reglas.DURACION_DEL_TURNO - _restante(reloj)
+	RelojDePrueba.avanzar_turno(reloj, compradores[-1].horario.y - transcurrido - 1.0)
+	assert_bool(vencido[0]).is_false()
+	RelojDePrueba.avanzar_turno(reloj, 2.0)
+	assert_bool(vencido[0]).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	var restante := _restante(reloj)
+	var duracion := CierreAnticipado.DURACION_DE_LA_ACELERACION
+	assert_float(_baja_en(reloj, 1.0)).is_equal_approx(restante / duracion, 0.001)
+	reloj.avanzar(duracion)
+	assert_int(_cierres).is_equal(1)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
 
 func test_descumplir_despues_de_acelerar_no_frena() -> void:  # AC-SHF-034

@@ -143,7 +143,9 @@ el ritmo para que el turno restante se consuma en la duración de la aceleració
 la misma desde cualquier hora. No queda ningún comprador por atender cuando llegaron todos los
 compradores de la noche y cada uno completó su compra o venció. Un comprador que espera en la
 ventanilla, o que todavía no llegó, queda por atender. Si el último vence, cobrar en la caja
-queda sin cumplir y no impide acelerar.
+queda sin cumplir y no impide acelerar. Registrar lo vendido cuenta como cumplido cuando el
+registro coincide con lo vendido, aunque nadie haya comprado: acelerar NO DEBE depender de que
+algún comprador complete su compra.
 
 SI no se cumple la condición, ENTONCES el ritmo DEBE seguir siendo el de BR-SHF-002. Una vez
 acelerado, el ritmo NO DEBE volver al de BR-SHF-002 en esa noche, aunque una obligatoria se
@@ -340,7 +342,9 @@ DADO la jornada 1 con registrar y reponer cumplidos CUANDO todavía falta llegar
 uno espera en la ventanilla, ENTONCES el ritmo es el de BR-SHF-002. DADO la jornada 1 con el
 último comprador vencido y registrar sin cumplir ENTONCES tampoco acelera. CUANDO registrar se
 cumple ENTONCES acelera, y el cierre cuenta cobrar en la caja como no cumplida. DADO la jornada 1
-sin compradores en la lista y registrar y reponer cumplidos ENTONCES acelera.
+sin compradores en la lista y registrar y reponer cumplidos ENTONCES acelera. DADO la jornada 1
+con reponer cumplido y el registro sin anotar CUANDO el último comprador vence sin que nadie
+haya comprado ENTONCES acelera en ese instante. Con una unidad anotada de más, no acelera.
 
 ### AC-SHF-033 — La duración no depende de la hora *(verifica BR-SHF-020, BR-SHF-004)*
 
