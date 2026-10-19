@@ -386,6 +386,10 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.freeze = true
 			util.collision_layer = 0
 			util.collision_mask = 0
+	var bano: PuertaDelLocal = $Estructura/puerta2/CuerpoDeLaHoja
+	var se_limpia := Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
+	bano.traba = PuertaDelLocal.Traba.NINGUNA if se_limpia else PuertaDelLocal.Traba.PUERTA
+	bano.identidad = &"" if se_limpia else SubtitulosAlExaminar.BANO_CERRADO
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()

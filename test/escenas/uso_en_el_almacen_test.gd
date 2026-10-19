@@ -160,6 +160,8 @@ func _abrir() -> Node3D:
 	add_child(almacen)
 	for cuadro in 4:
 		await get_tree().physics_frame
+	var bano: Puerta = almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("puerta")
+	assert_bool(bano.trabada()).is_false()
 	return almacen
 
 

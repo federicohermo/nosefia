@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SUB
-status: draft
+status: ratified
 owner: por definir
 provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; baño trabado sin limpieza de #538
 ---
