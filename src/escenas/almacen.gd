@@ -162,6 +162,9 @@ func _ready() -> void:
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
 	)
+	_reloj.tarea_completada.connect(_acelerar_si_se_cerro_el_ciclo.unbind(1))
+	_atenciones.compra_realizada.connect(_acelerar_si_se_cerro_el_ciclo)
+	_atenciones.comprador_vencido.connect(_acelerar_si_se_cerro_el_ciclo.unbind(1))
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
@@ -392,6 +395,12 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_audio.arrancar_el_ambiente()
 	_limpieza.reiniciar()
 	_estante.mostrar(0)
+
+
+func _acelerar_si_se_cerro_el_ciclo() -> void:
+	var compras_cerradas := _atenciones.tarea().compras_cerradas()
+	if CierreAnticipado.corresponde(_partida.jornada(), compras_cerradas, _partida.obligatorias()):
+		_reloj.acelerar_hasta_el_cierre(CierreAnticipado.DURACION_DE_LA_ACELERACION)
 
 
 ## Al cerrar, la persiana baja y la devolución de Enrique llega por el celular.

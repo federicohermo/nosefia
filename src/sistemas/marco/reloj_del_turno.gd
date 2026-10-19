@@ -27,6 +27,7 @@ var _obligatorias: Array[Tarea] = []
 var _ritmo: float = Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 var _ultimo_cuadro_usec: int = 0
 var _retenido := false
+var _acelerado := false
 
 
 ## El navegador puede suspender los cuadros de una pestaña oculta. El reloj monotónico sigue
@@ -89,7 +90,17 @@ func arrancar(
 	_turno = turno
 	_obligatorias = obligatorias
 	_ritmo = ritmo
+	_acelerado = false
 	_ultimo_cuadro_usec = _ahora_usec()
+
+
+## Lo que queda del turno pasa en esos segundos reales. La primera aceleración de la noche es la
+## que vale: pedirla otra vez la estiraría a cada obligatoria que se vuelve a cumplir.
+func acelerar_hasta_el_cierre(segundos_reales: float) -> void:
+	if _acelerado or not corriendo() or segundos_reales <= 0.0:
+		return
+	_acelerado = true
+	_ritmo = _turno.tiempo_restante() / segundos_reales
 
 
 ## Si hay un turno en curso que todavía no se agotó.

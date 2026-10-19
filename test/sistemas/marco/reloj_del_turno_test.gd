@@ -69,6 +69,36 @@ func test_con_el_arbol_en_pausa_el_turno_no_descuenta() -> void:  # AC-SHF-020
 	remove_child(reloj)
 
 
+func test_acelerar_consume_lo_que_queda_en_la_duracion_pedida() -> void:  # AC-SHF-033, AC-SHF-034
+	var duracion := 10.0
+	for restante: float in [Reglas.DURACION_DEL_TURNO, 60.0]:
+		_cierres = 0
+		var reloj := _reloj_arrancado(restante, _sin_obligatorias())
+		reloj.acelerar_hasta_el_cierre(duracion)
+		reloj.acelerar_hasta_el_cierre(duracion * 0.5)
+		reloj.avanzar(duracion * 0.9)
+		assert_float(_turno.tiempo_restante()).is_equal_approx(restante * 0.1, 0.001)
+		assert_int(_cierres).is_zero()
+		reloj.avanzar(duracion)
+		assert_float(_turno.tiempo_restante()).is_equal(0.0)
+		assert_int(_cierres).is_equal(1)
+		reloj.avanzar(duracion)
+		assert_int(_cierres).is_equal(1)
+	var pausado := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
+	pausado.acelerar_hasta_el_cierre(duracion)
+	add_child(pausado)
+	get_tree().paused = true
+	var al_pausar := _turno.tiempo_restante()
+	for _cuadro in 5:
+		await get_tree().process_frame
+	assert_float(_turno.tiempo_restante()).is_equal(al_pausar)
+	get_tree().paused = false
+	for _cuadro in 3:
+		await get_tree().process_frame
+	assert_float(_turno.tiempo_restante()).is_less(al_pausar)
+	remove_child(pausado)
+
+
 func _sin_obligatorias() -> Array[Tarea]:
 	var ninguna: Array[Tarea] = []
 	return ninguna
