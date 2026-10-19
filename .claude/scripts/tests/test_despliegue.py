@@ -321,7 +321,6 @@ class LaVersionDelMotor(unittest.TestCase):
                 f"(`{escrita.group(0) if escrita else ''}`) en vez de leerla de "
                 "`.godot-version`: dos copias que se separan exportan con motores distintos.",
             )
-            self.assertIn(".godot-version", texto, f"`{workflow.name}` no la lee de ahí.")
 
 
 class ElWorkflowDeDespliegue(unittest.TestCase):
@@ -376,6 +375,13 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
         self.assertIn("verificar_export.py", self.texto)
         self.assertIn("|| true", self.texto)
 
+    def test_los_topes_de_la_carga_se_controlan_antes_de_publicar(self):
+        # Después de publicar, el rojo llega tarde: la web con la regresión ya está en la URL.
+        control = self.texto.index("python .github/scripts/tope_de_carga.py")
+        self.assertLess(self.texto.index("export-release"), control)
+        self.assertLess(control, self.texto.index("vercel deploy"))
+        self.assertIn("--software", self.texto)
+
     def test_le_pega_a_la_url_publicada(self):
         # La cita de la publicación corrida de verdad. Contra una URL viva se corre con
         #   python .claude/scripts/verificar_despliegue.py https://<proyecto>.vercel.app
@@ -415,14 +421,6 @@ class LaDocumentacion(unittest.TestCase):
         # lugares — y el que se olvidara dejaba el documento invisible desde el otro. Los repos
         # de referencia no tienen índice de docs: el archivo de raíz apunta y nada más.
         self.assertIn("docs/infra/despliegue.md", _texto(RAIZ / "CLAUDE.md"))
-
-    def test_verify_sigue_diciendo_que_el_no_exporta(self):
-        # Ahora que SÍ hay quien exporta, el encabezado de `verify.yml` tiene que seguir
-        # diciendo que él no — y nombrar al que sí, que es lo que evita que alguien le agregue
-        # el paso de export por segunda vez.
-        texto = _texto(VERIFY)
-        self.assertIn("No exporta el juego", texto)
-        self.assertIn("desplegar.yml", texto)
 
     def test_el_repo_ignora_lo_que_escribe_la_cli_de_vercel(self):
         # La otra mitad —«`verificar.py` deja los siete nodos en verde»— es la

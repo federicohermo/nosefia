@@ -176,16 +176,16 @@ confianza y la tabla de triage. Cuatro cosas que no se negocian y que están all
 python .claude/scripts/verificar.py
 ```
 
-**La falta de `GODOT_BIN` no se saltea: sale roja.** Desde que existe el primer `*_test.gd` —y hay
-muchos— el nodo `tests` **exige** Godot, y `verificar.py` devuelve rojo con un mensaje que habla
-de la variable y no del código (`verificar.py:132-142`). Los que sí se saltean son `lint` y
-`formato` sobre cero archivos, y un nodo salteado no es un nodo verde: un reporte que dice «7/7»
-sin leerlos da por mirado lo que nadie miró.
+**La falta de un motor nativo válido no se saltea: sale roja.** Desde que existe el primer
+`*_test.gd` —y hay muchos— el nodo `tests` **exige** el motor corregido de `build/godot-native/`,
+y `verificar.py` devuelve rojo con un mensaje que habla del motor y no del código. Los que sí se
+saltean son `lint` y `formato` sobre cero archivos, y un nodo salteado no es un nodo verde: un
+reporte que dice «7/7» sin leerlos da por mirado lo que nadie miró.
 
 1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.**
-2. Si el rojo de `tests` es por `GODOT_BIN`: en esta máquina **no está en el entorno de la
-   terminal**, se lee del registro de Windows, y una terminal anterior a la variable le pasa el
-   entorno viejo a todo lo que lance. Se arregla cerrando el **host** de la terminal, no una
+2. Si el rojo de `tests` es por el motor, el mensaje dice qué hacer: descargar la copia, o
+   corregir una `GODOT_BIN` que apunta al motor oficial. Una terminal abierta antes de cambiar
+   la variable sigue viendo la vieja. Se arregla cerrando el **host** de la terminal, no una
    pestaña.
 3. Si Godot está adentro de OneDrive y el archivo no está descargado, Windows contesta «el
    proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni a los tests.

@@ -1,0 +1,122 @@
+{
+  "fecha": "2026-10-19",
+  "plataforma": "Windows",
+  "motor": "4.7.2-stable",
+  "revision_fuente": "af526b4d1045937a5e7023698d5b131fed0f7022",
+  "tipo": "pareja funcional local, no latencia CI",
+  "casos_iguales": true,
+  "ambas_verdes": true,
+  "fallos_negativos_iguales": true,
+  "ejecuciones": [
+    {
+      "label": "import",
+      "seconds": 62.12729410000611,
+      "exit_code": 3221225477
+    },
+    {
+      "label": "import-retry",
+      "seconds": 6.281273100001272,
+      "exit_code": 0
+    },
+    {
+      "label": "baseline",
+      "seconds": 339.7386944000027,
+      "exit_code": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "nombre": "lo_soltado_fuera_de_los_solidos_test",
+          "paquete": "test/escenas",
+          "casos": 20,
+          "segundos": 188.022
+        },
+        {
+          "nombre": "agarre_fisico_test",
+          "paquete": "test/escenas",
+          "casos": 3,
+          "segundos": 147.236
+        }
+      ],
+      "casos": 23,
+      "inventario_sha256": "5cf7071522869f9b0fa1cd7f333f5c91b1846a56a03d10f4fe5df4241e060269",
+      "fallos_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "casos_fallidos": []
+    },
+    {
+      "label": "fixed60",
+      "seconds": 40.47253379999893,
+      "exit_code": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "nombre": "lo_soltado_fuera_de_los_solidos_test",
+          "paquete": "test/escenas",
+          "casos": 20,
+          "segundos": 23.518
+        },
+        {
+          "nombre": "agarre_fisico_test",
+          "paquete": "test/escenas",
+          "casos": 3,
+          "segundos": 12.471
+        }
+      ],
+      "casos": 23,
+      "inventario_sha256": "5cf7071522869f9b0fa1cd7f333f5c91b1846a56a03d10f4fe5df4241e060269",
+      "fallos_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "casos_fallidos": []
+    },
+    {
+      "label": "negative-baseline",
+      "seconds": 192.26347080001142,
+      "exit_code": 100,
+      "failures": 57,
+      "errors": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "nombre": "lo_soltado_fuera_de_los_solidos_test",
+          "paquete": "test/escenas",
+          "casos": 20,
+          "segundos": 187.898
+        }
+      ],
+      "casos": 20,
+      "inventario_sha256": "bf32a36a8214395692c8893ec386f917f055ddda3377844975ef40b2ee4361d1",
+      "fallos_sha256": "4ce82e27549121bb3c1a1b7583047f901efb3312ee30c3ac68a241c912286fca",
+      "casos_fallidos": [
+        "test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro",
+        "test_lo_que_no_toca_el_cuerpo_se_sigue_soltando_adelante",
+        "test_lo_soltado_contra_una_pared_cae_sin_rozarla"
+      ]
+    },
+    {
+      "label": "negative-fixed60",
+      "seconds": 26.30164049999439,
+      "exit_code": 100,
+      "failures": 57,
+      "errors": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "nombre": "lo_soltado_fuera_de_los_solidos_test",
+          "paquete": "test/escenas",
+          "casos": 20,
+          "segundos": 22.087
+        }
+      ],
+      "casos": 20,
+      "inventario_sha256": "bf32a36a8214395692c8893ec386f917f055ddda3377844975ef40b2ee4361d1",
+      "fallos_sha256": "4ce82e27549121bb3c1a1b7583047f901efb3312ee30c3ac68a241c912286fca",
+      "casos_fallidos": [
+        "test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro",
+        "test_lo_que_no_toca_el_cuerpo_se_sigue_soltando_adelante",
+        "test_lo_soltado_contra_una_pared_cae_sin_rozarla"
+      ]
+    }
+  ]
+}

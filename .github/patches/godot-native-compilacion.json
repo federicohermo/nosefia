@@ -1,0 +1,42 @@
+{
+  "formato": 1,
+  "version_del_motor": "4.7.2-stable",
+  "commit_del_motor": "ed1daf0bf001b61586d9930840f2f1394092c079",
+  "fuente_zip_sha256": "098b0a71e95ad98ab44651199d55c3f085e4e02c735514e284a2d5263ac81fb2",
+  "parche": "godot-native-classdb.patch",
+  "parche_sha256": "865df808044b687b52f168d48be333d3cfeecefa56041232d1ef0c74bce3f7a1",
+  "upstream": "https://github.com/godotengine/godot/pull/123546",
+  "scons": "4.9.1",
+  "build_name": "nosefia_classdb_1",
+  "opciones_comunes": [
+    "target=editor",
+    "arch=x86_64",
+    "debug_symbols=no",
+    "optimize=speed",
+    "lto=none"
+  ],
+  "archivos": {
+    "core/object/class_db.cpp": {
+      "original_sha256": "ab8d4ad25aa6a3d68ee5486dd67d89393752cf203fe255802afc1a607a159837",
+      "modificado_sha256": "f8c800405c3be7d59c56b68b2d23694009f33f454b6806137fa05748222fabb2"
+    }
+  },
+  "plataformas": {
+    "linux-x86_64": {
+      "opciones": [
+        "platform=linuxbsd"
+      ],
+      "compilador": "g++",
+      "version_compilador": "13.3.0"
+    },
+    "windows-x86_64": {
+      "opciones": [
+        "platform=windows",
+        "use_mingw=yes"
+      ],
+      "compilador": "x86_64-w64-mingw32-g++",
+      "version_compilador": "13.2.0"
+    }
+  },
+  "source_date_epoch": 1787069548
+}

@@ -270,30 +270,14 @@ Ante un aumento, guardá los nombres con `--verbose`, separá descubrimiento de 
 contrastá controles equivalentes antes de atribuir una causa. No se cambia el addon ni se
 descartan diagnósticos para hacer pasar la entrega; la corrección vuelve a la suite completa.
 
-**Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
-**no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
-muchos.
+**Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin un
+motor nativo válido **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo
+`*_test.gd`, y hay muchos.
 
-**Y el conteo crudo confirma que corrió todo.** Desde gdUnit4 6.2.1, una suite que no parsea corta
+**Y `verificar.py` confirma que corrió todo.** Desde gdUnit4 6.2.1, una suite que no parsea corta
 la corrida entera con 105, y el nodo `tests` sale rojo. Con la versión de antes se descartaba en
-silencio y el nodo salía verde. Medido el 2026-09-30, en `.claude/rules/tests.md`. El conteo
-crudo sigue siendo el control, y `verificar.py` **no lo imprime**:
-
-```powershell
-& $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
-  res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-  -rd res://reports 2>$null | Select-String "Executed test suites"
-```
-
-**Va en PowerShell y no en Bash**, porque en un worktree aislado Bash rechaza cualquier forma de
-invocar Godot como comando. **Y el `2>$null` no se saca**: PowerShell no pasa el stderr de Godot
-por `Select-String`, y sin él la corrida devuelve 4,5 MB. Medido el 2026-09-24.
-
-Esta vista filtrada sólo presenta el conteo; no reemplaza el archivo crudo de la corrida ni
-su veredicto. Los errores fuera del contador se revisan en ese archivo completo.
-
-Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
-suite que no corrió.
+silencio y el nodo salía verde. Medido el 2026-09-30, en `.claude/rules/tests.md`. Además, el
+nodo coteja cada suite con el JUnit de su corrida: una suite que no corrió también lo deja rojo.
 
 **El escalón que cuesta una vuelta:** crear el `.gd` no alcanza para que su test lo vea. Un
 `class_name` nuevo no entra al registro global hasta que se vuelve a correr

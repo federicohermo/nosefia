@@ -27,10 +27,11 @@ mentira chiquita que se vuelve grande el día que el walk se rompa y siga dicien
 
 Y `tests` es un salteo **con fecha de vencimiento**: mientras no haya un solo `*_test.gd` no
 hay nada que correr y no hace falta Godot. En cuanto exista el primero, Godot pasa a ser
-obligatorio y la falta de `GODOT_BIN` es un rojo — no un salteo.
+obligatorio y la falta de un motor nativo válido es un rojo — no un salteo.
 """
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -48,13 +49,19 @@ configurar()
 
 from lib.archivos import scripts_gd  # noqa: E402
 from lib.godot import (  # noqa: E402
+    ENTORNO,
+    VARIABLE,
     aviso_de_entorno_viejo,
     como_declararlo,
     entorno_de_la_suite,
     resolver,
+    validar_motor,
 )
 from lib.particiones_de_tests import (  # noqa: E402
+    GrupoTests,
     ParticionTests,
+    agrupar_suites,
+    comprobar_cobertura,
     comprobar_reporte,
     seleccionar_suites,
 )
@@ -183,7 +190,20 @@ def nodo_tests(particion: ParticionTests | None = None) -> Resultado:
             "pasa a necesitar Godot y deja de saltearse.",
         )
 
-    godot, origen = resolver(dict(os.environ))
+    origen = None
+    try:
+        godot, origen = resolver(dict(os.environ))
+        if godot is not None:
+            validar_motor(godot, RAIZ)
+    except (OSError, ValueError, ImportError, RuntimeError, KeyError, TypeError) as error:
+        # `GODOT_BIN` le gana a la copia gestionada: descargarla no cambia nada si sigue declarada.
+        salida = (
+            f"`{VARIABLE}` apunta a un motor sin la receta del proyecto. Borrala, o apuntala al "
+            "ejecutable de consola de `build/godot-native/`."
+            if origen == ENTORNO
+            else "Descargalo con python .github/scripts/descargar_godot_nativo.py descargar."
+        )
+        return Resultado("tests", 1, f"Motor nativo no válido: {error}\n{salida}", 0.0)
     if godot is None:
         return Resultado("tests", 1, como_declararlo(dict(os.environ)), 0.0)
 
@@ -208,26 +228,58 @@ def nodo_tests(particion: ParticionTests | None = None) -> Resultado:
         importacion.aviso = aviso
         return importacion
 
-    directorio_reportes = REPORTES
-    seleccion = ["-a", TESTS]
-    if particion is not None:
-        base_reportes = RAIZ / REPORTES.removeprefix("res://")
-        base_reportes.mkdir(parents=True, exist_ok=True)
-        reportes = Path(
-            tempfile.mkdtemp(
-                prefix=f"particion-{particion.indice}-de-{particion.total}-", dir=base_reportes
-            )
-        )
-        directorio_reportes = reportes.relative_to(RAIZ).as_posix()
-        seleccion = [argumento for suite in suites for argumento in ("-a", suite)]
-        (reportes / "suites-esperadas.txt").write_text(
-            "\n".join(suites) + "\n", encoding="utf-8"
-        )
+    grupos = agrupar_suites(suites)
+    base_reportes = RAIZ / REPORTES.removeprefix("res://")
+    base_reportes.mkdir(parents=True, exist_ok=True)
+    prefijo = (
+        f"particion-{particion.indice}-de-{particion.total}-" if particion else "suite-"
+    )
+    reportes = Path(tempfile.mkdtemp(prefix=prefijo, dir=base_reportes))
+    (reportes / "suites-esperadas.txt").write_text("\n".join(suites) + "\n", encoding="utf-8")
+    (reportes / "grupos.json").write_text(
+        json.dumps([
+            {"nombre": grupo.nombre, "suites": grupo.suites, "fps_fijos": grupo.fps_fijos}
+            for grupo in grupos
+        ], ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    entorno = entorno_de_la_suite(dict(os.environ), RAIZ, sys.platform)
+    resultado = Resultado("tests", 0, "", 0.0)
+    ejecutadas: list[str] = []
+    for grupo in grupos:
+        carpeta = reportes / grupo.nombre
+        carpeta.mkdir()
+        parcial, comprobadas = _ejecutar_grupo(godot, grupo, carpeta, entorno)
+        resultado.codigo = resultado.codigo or parcial.codigo
+        resultado.segundos += parcial.segundos
+        resultado.salida += f"\nGrupo {grupo.nombre}:\n{parcial.salida}\n"
+        ejecutadas.extend(comprobadas)
+    (reportes / "salida-gdunit4.log").write_text(resultado.salida, encoding="utf-8")
+    try:
+        comprobar_cobertura(suites, ejecutadas)
+        cobertura = f"{len(ejecutadas)}/{len(suites)} suites verificadas por ruta en JUnit"
+    except ValueError as error:
+        resultado.codigo = resultado.codigo or 1
+        cobertura = str(error)
+    alcance = f"Partición {particion.indice}/{particion.total}" if particion else "Suite completa"
+    detalle = f"{alcance}: {cobertura}"
+    (reportes / "cobertura.txt").write_text(detalle + "\n", encoding="utf-8")
+    resultado.salida += "\n" + detalle
+    resultado.aviso = "\n".join(texto for texto in (aviso, detalle) if texto)
+    return resultado
 
+
+def _ejecutar_grupo(
+    godot: str, grupo: GrupoTests, reportes: Path, entorno: dict[str, str]
+) -> tuple[Resultado, list[str]]:
+    (reportes / "suites-esperadas.txt").write_text(
+        "\n".join(grupo.suites) + "\n", encoding="utf-8"
+    )
     resultado = _correr(
         "tests",
         [
             godot,
+            *(["--fixed-fps", str(grupo.fps_fijos)] if grupo.fps_fijos else []),
             "--path", str(RAIZ),
             "--headless",
             "-s", "-d",
@@ -236,38 +288,35 @@ def nodo_tests(particion: ParticionTests | None = None) -> Resultado:
             # puerto 0 no se liga nunca, así que la conexión siempre se rechaza.
             "--remote-debug", "tcp://127.0.0.1:0",
             "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
-            *seleccion,
+            *(argumento for suite in grupo.suites for argumento in ("-a", suite)),
             # Por defecto gdUnit4 corta en el primer fallo. Acá se corre todo: en una corrida de
             # CI, saber que fallan siete cosas y cuáles vale más que saber cuál fue la primera.
             "--continue",
             # gdUnit4 se niega a correr headless salvo que se lo declare, y correr headless es
             # justamente todo el punto: es lo que hace que la CI y esta máquina hagan lo mismo.
             "--ignoreHeadlessMode",
-            "-rd", directorio_reportes,
+            "-rd", reportes.relative_to(RAIZ).as_posix(),
         ],
         # `user://` adentro del checkout: si no, dos corridas a la vez se borran `user://tmp`.
-        entorno=entorno_de_la_suite(dict(os.environ), RAIZ, sys.platform),
+        entorno=entorno,
     )
-    if particion is not None:
-        reportes = RAIZ / directorio_reportes
-        (reportes / "salida-gdunit4.log").write_text(resultado.salida, encoding="utf-8")
-        try:
-            archivos = list(reportes.rglob("results.xml"))
-            if len(archivos) != 1:
-                raise ValueError(
-                    f"se esperaba un reporte JUnit nuevo, se encontraron {len(archivos)}"
-                )
-            ejecutadas = comprobar_reporte(suites, archivos[0].read_text(encoding="utf-8"))
-            cobertura = f"{len(ejecutadas)}/{len(suites)} suites verificadas por ruta en JUnit"
-        except (OSError, ValueError) as error:
-            resultado.codigo = resultado.codigo or 1
-            cobertura = str(error)
-        detalle = f"Partición {particion.indice}/{particion.total}: {cobertura}"
-        (reportes / "cobertura.txt").write_text(detalle + "\n", encoding="utf-8")
-        resultado.salida += "\n" + detalle
-        aviso = "\n".join(texto for texto in (aviso, detalle) if texto)
-    resultado.aviso = aviso
-    return resultado
+    (reportes / "salida-gdunit4.log").write_text(resultado.salida, encoding="utf-8")
+    ejecutadas: list[str] = []
+    try:
+        archivos = list(reportes.rglob("results.xml"))
+        if len(archivos) != 1:
+            raise ValueError(
+                f"se esperaba un reporte JUnit nuevo, se encontraron {len(archivos)}"
+            )
+        ejecutadas = comprobar_reporte(list(grupo.suites), archivos[0].read_text(encoding="utf-8"))
+        cobertura = f"{len(ejecutadas)}/{len(grupo.suites)} suites verificadas por ruta en JUnit"
+    except (OSError, ValueError) as error:
+        resultado.codigo = resultado.codigo or 1
+        cobertura = str(error)
+    detalle = f"Grupo {grupo.nombre}: {cobertura}"
+    (reportes / "cobertura.txt").write_text(detalle + "\n", encoding="utf-8")
+    resultado.salida += "\n" + detalle
+    return resultado, ejecutadas
 
 
 NODOS = (nodo_lint, nodo_formato, nodo_capas, nodo_tdd, nodo_specs, nodo_harness, nodo_tests)

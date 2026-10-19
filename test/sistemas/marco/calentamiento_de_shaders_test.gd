@@ -1,5 +1,5 @@
-## El calentamiento de shaders: dibuja cada objeto una vez, un material nuevo por cuadro, y deja
-## la escena como estaba.
+## El calentamiento de shaders: dibuja cada objeto una vez, pocos materiales nuevos por cuadro, y
+## deja la escena como estaba.
 extends GdUnitTestSuite
 
 const CUANTOS := 20
@@ -118,21 +118,26 @@ func _calentamiento() -> CalentamientoDeShaders:
 	return calentamiento
 
 
-func test_un_cuadro_por_material_nuevo() -> void:
-	var escena := _escena(3)
+## Sin cola, cada material nuevo frena el cuadro que lo dibuja. Destapar de a uno, y esperar el
+## asentamiento en cada paso, sumaba cuadros vacíos: medido el 2026-10-19 en Firefox, 22 s de la
+## carga. El asentamiento espera la captura de LightmapGI sólo antes de cambiar las luces.
+func test_sin_cola_cada_cuadro_destapa_hasta_cuatro_materiales_nuevos() -> void:
+	var escena := _escena(6)
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
 	assert_int(_visibles(escena)).is_zero()
-	var por_cuadro: Array[int] = []
-	for _cuadro: int in 4:
-		await calentamiento.avanzo
-		por_cuadro.append(_visibles(escena))
-	assert_array(por_cuadro).is_equal([1, CUANTOS - 2, CUANTOS - 1, CUANTOS])
+	await calentamiento.avanzo
+	# El común trae también su contorno: con dos propios llega a cuatro y cierra el cuadro.
+	assert_int(_visibles(escena)).is_equal(CUANTOS - 4)
+	# El primero abre el cuadro siguiente; el segundo llega después de su `_process`.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_int(_visibles(escena)).is_equal(CUANTOS)
 
 
 func test_el_material_de_un_multimesh_cuenta_como_nuevo() -> void:
 	var escena: Node3D = auto_free(Node3D.new())
-	for _i: int in 3:
+	for _i: int in 5:
 		var malla := BoxMesh.new()
 		malla.material = StandardMaterial3D.new()
 		var instancias := MultiMeshInstance3D.new()
@@ -146,8 +151,8 @@ func test_el_material_de_un_multimesh_cuenta_como_nuevo() -> void:
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
 	await calentamiento.avanzo
-	await calentamiento.avanzo
-	assert_int(_visibles(escena)).is_equal(2)
+	# La clase cuenta como el primero: el tercer material propio llena el cuadro.
+	assert_int(_visibles(escena)).is_equal(3)
 
 
 func test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo() -> void:
@@ -157,7 +162,7 @@ func test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo() -> void:
 	comun.size = Vector3(0.2, 0.1, 0.1)
 	assert_float(comun.size.x).is_greater(maxf(comun.size.y, comun.size.z))
 	comun.material = StandardMaterial3D.new()
-	for _i: int in 3:
+	for _i: int in 5:
 		var malla := MeshInstance3D.new()
 		malla.mesh = comun
 		malla.set_surface_override_material(0, ShaderMaterial.new())
@@ -167,15 +172,14 @@ func test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo() -> void:
 	calentamiento.calentar(escena)
 	assert_float(get_viewport().get_camera_3d().size).is_equal(comun.size.x)
 	await calentamiento.avanzo
-	await calentamiento.avanzo
-	assert_int(_visibles(escena)).is_equal(2)
+	# La clase cuenta como el primero: el tercer material propio llena el cuadro.
+	assert_int(_visibles(escena)).is_equal(3)
 
 
 func test_los_que_repiten_material_se_destapan_juntos() -> void:
 	var escena := _escena()
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
-	await calentamiento.avanzo
 	await calentamiento.avanzo
 	assert_int(_visibles(escena)).is_equal(CUANTOS)
 

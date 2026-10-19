@@ -1,0 +1,213 @@
+{
+  "formato": 1,
+  "fecha": "2026-10-19",
+  "motor": {
+    "version": "4.7.2.stable.nosefia_classdb_1",
+    "fuente": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "parche_sha256": "865df808044b687b52f168d48be333d3cfeecefa56041232d1ef0c74bce3f7a1",
+    "upstream": "https://github.com/godotengine/godot/pull/123546"
+  },
+  "control_windows_oficial": {
+    "codigo": 3221225477,
+    "hex": "0xc0000005"
+  },
+  "pruebas_concurrentes": {
+    "windows-x86_64": {
+      "procesos": 8,
+      "threads_por_proceso": 16,
+      "clases_por_proceso": 37,
+      "consultas_por_proceso": 592,
+      "receta_ensayada": "8e59d989e7fc1286bb723c461d91763d62069a2c117f34a598d4d749055203bc",
+      "receta_aprobada": "53ecfcafaa37f40e935b2a41b69406318150182f91adc4b2109ad2ce068a66d1",
+      "archivos": {
+        "godot.windows.editor.x86_64.console.exe": "1664444d47de574fb19645f07dd6d918f753d11746df908f82b29122f623ff86",
+        "godot.windows.editor.x86_64.exe": "0f812d6634cf96ec3de4b291d0c48a6768979ee5113c2c49d3809606cff9ae94",
+        "d3d12SDKLayers.dll": "bcec9e1315fb4dbc767371926fb5eb8281de1b3ab1fb530a636b3c193a9a2bbd",
+        "D3D12Core.dll": "560f9574372a52ab66ad95ee1222f1eb4c9f6161d8f6b7b025d89f684b07246c"
+      }
+    },
+    "linux-x86_64": {
+      "procesos": 8,
+      "threads_por_proceso": 16,
+      "clases_por_proceso": 37,
+      "consultas_por_proceso": 592,
+      "receta_ensayada": "bd3b9642d0f1917027188be440b8d0fc1d29dbb5a7e310bfae8a5d90ae7cd72b",
+      "receta_aprobada": "f728a5267db7fb7f56ed17bb3169ee9bd7a5725e8e6bed9f2a2a387a3c53c34b",
+      "archivos": {
+        "Godot_v4.7.2-stable_nosefia_classdb_linux.x86_64": "e26dfc8e6f351ee959f6d4812ee3e8ec313db1ff17b9c1c5a8edb556ab43ec47"
+      }
+    }
+  },
+  "importacion_proyecto_windows": {
+    "fria_s": 60.25341050000861,
+    "caliente_s": 6.37831540001207,
+    "errores": 0,
+    "recursos_iguales": 40
+  },
+  "fixture_importador_concurrente": [
+    {
+      "label": "native-after-1",
+      "exit_code": 0,
+      "begun": 32,
+      "finished": 32,
+      "outputs": 32,
+      "thread_ids": [
+        "10",
+        "11",
+        "13",
+        "14",
+        "15",
+        "17",
+        "19",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "errors": [
+        "ERROR: Parameter \"singleton\" is null."
+      ]
+    },
+    {
+      "label": "native-after-2",
+      "exit_code": 0,
+      "begun": 32,
+      "finished": 32,
+      "outputs": 32,
+      "thread_ids": [
+        "10",
+        "11",
+        "12",
+        "14",
+        "15",
+        "16",
+        "18",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "errors": []
+    }
+  ],
+  "ci_inicial_con_construccion": {
+    "url": "https://github.com/federicohermo/nosefia/actions/runs/39256945290",
+    "total_s": 3092.0,
+    "compilacion_s": 2706,
+    "productor_s": 2770,
+    "suites": 309,
+    "casos": 2328,
+    "fallos": 0,
+    "errores": 0,
+    "saltos": 0,
+    "inventario_igual_a_referencia": true,
+    "inventario_sha256": "59bdb30be091f5bd6cc1b8db1024e60090caa1ea0582265d5029b9b0e59b9843",
+    "recursos": {
+      "assets/models/caja_de_productos.res": "fe2ef22e618c90a8bf6b827f5d0dd0837fe1bf000b8324041f9ff62db4811f0b",
+      "assets/models/caja_registradora.res": "6a2d73f1448d7c285eafdfec42d875c4fedbf610aa25dcbb691a96389ab78dc2",
+      "assets/models/caja_registradora_colision.res": "cee073a6ccf968d3c6020a1feed980c85bdb768cb14ce68ba804091e0b0b11df",
+      "assets/models/lector_de_productos.res": "8dcb1e4f7cc04eada0c9f0f131257373afccc8883b4e900dd9ee21bdd03bec67",
+      "assets/models/lector_de_productos_colision.res": "b4fede933cf675d6066dbdf9ae910920f135c9e31cfa1775b9e8585c55cbb7a8",
+      "assets/models/lector_del_almacen.res": "fb9d6998ac2e83afa5245e5db19785f9ccc64edaada4d93d493e5617d24dd157",
+      "assets/models/lector_del_almacen_colision.res": "fde788fa47eedb54f6e7df8c9dd6f4f5daf59705fd97dc53df4a6ba02f2b56b3",
+      "assets/models/producto_actroncito.res": "293828e4e0e66de9130bfb82e2c70d83850e661244cbbc00aebded07e525ab25",
+      "assets/models/producto_amargadito.res": "3cbffc6f634a66f30877fe2cb6a74a1e621d2260a854dddc49c7842493e39cec",
+      "assets/models/producto_arvejas.res": "c44a46b92bbecf7883bd4901af7de4f3471dc7f013fc94c4e5e64485219c3b15",
+      "assets/models/producto_burbaloo.res": "7494da1298e2df3bf45421477f8342c40fef638f8faeb772e48485a92e7a1b20",
+      "assets/models/producto_chisitos.res": "799d64ba2380a0ddd9fae4b003bf17982906abba94f246c82e81f87c8e7ef11b",
+      "assets/models/producto_cindolor.res": "139949e0c1a00fada00ba8c2b92bb0f2394ac5bfdf959e9c1188863bb66d150a",
+      "assets/models/producto_cosa_de_mani.res": "99f24e583c1af79faa3d847991a9bda7345073612c6be88db8bedfc3e0c7cf53",
+      "assets/models/producto_donsaturados.res": "629a144a3f1f3caae9bcafbd3baf22da04c4d0d6c8090766d27a84dea8cc2be9",
+      "assets/models/producto_durextra.res": "96c1825ab87c241b4fb06af9c5187573315bccb7f3c9a734a972c5e1995986dd",
+      "assets/models/producto_duronga.res": "ece70a4ee6ea9e2381db1a0ff23be9319016bd8259573bd24f5f991520198c57",
+      "assets/models/producto_feel_ricky_fort.res": "d3c0d8c7fae417921bba73d3f67c4def6dc216f534c4e48a1944da3fca0bc16e",
+      "assets/models/producto_fernet_god.res": "a30e3b91535571e612a6cf0a9e2690f5e6b570aa152371e46e15698d0873a088",
+      "assets/models/producto_flinpuf.res": "4788e3141bbdb14995c0aa9612a7deccdfd3d7db961e0c14a39e9a012ade00c9",
+      "assets/models/producto_frotlups.res": "b8a627e75d59e2144bf981361a9703e2f4c2bc3e9d2cdc865133977f4b41c099",
+      "assets/models/producto_jorgillo.res": "42d11f452387ad0a3f69bd0a7c8717c9e520e1f4e951522d0869da46b5d74aa1",
+      "assets/models/producto_laysntt.res": "4edf99b03467acd5971fa46e6c7f11b6c30f51cff8c962470e345fc8d5294f8d",
+      "assets/models/producto_macumbas.res": "87009bb084008e24b4e387813f2d52d75e6eee278f68c1210feb5bd832a3bfde",
+      "assets/models/producto_malbardo.res": "4694f634092375b3c516ee7be7da42e0c638f59dac44e3362c0de6f06df22c89",
+      "assets/models/producto_marolini.res": "ae3685243f4828e44ab057099afa0883d47213860e9cf84157ab1393194c2dd2",
+      "assets/models/producto_marranos.res": "4b722e8b54a20c1d8084ed8601b5f8ed4e98c95dd58ff1f059f6654ca8289aa7",
+      "assets/models/producto_mayonchis.res": "ab48738bf91c15b1f4a347d02aa4827cadd48b7134f4868028c2f2b167f12c1e",
+      "assets/models/producto_oaaaa.res": "43890e1670d8c614f251f0baf170fceba7727b129fe38a63cc22140bc57585e4",
+      "assets/models/producto_oremos.res": "410fc2e0b86192ab9a92e3e0a578f357e8bc8eed1bd93d257e6ce8763fd19eb2",
+      "assets/models/producto_pepitos.res": "f22d9bd5b1d1550663ca79ab7766cd755e528b94243706a20cd46780b9ea02ee",
+      "assets/models/producto_petisas.res": "a54778a452296de9294752728e6ddcd35ac0b55e12bf1d88bd1a0741c7a88875",
+      "assets/models/producto_poetico.res": "16a9f4a247d43b7967bb3fe3f2fef28c896e35e1e10d470c6d269105da454337",
+      "assets/models/producto_prongles.res": "de2566ab6307da98adfce5864b7ff76d245a1ae4cf2ddfe9d5cbf9f7e0ee7fbb",
+      "assets/models/producto_pura_cola.res": "b9cd387b8c3caa27d43645d2a4e4510e610f9d5cf4f79d78b1bb196457e0e850",
+      "assets/models/producto_saladik.res": "ee80487ef1d07267df9149db197a120b54460c497a9885e65c4435a14666353f",
+      "assets/models/producto_terminator.res": "2a5073e77b04cf0b2a7ea17bcee7129493e1bc81bb55c1bacfcd5c13291a5b63",
+      "assets/models/producto_uakas.res": "53a11af7fc501fb032ea596a23bc32150f305d4dba88ff991d8ea29ce927cc6f",
+      "assets/models/producto_zucarachas.res": "8976b542b80e995befa13deb56b9ab69f84a3d3e8fa1090c848f74610aca9939",
+      "assets/models/ticket_impreso.res": "20844e2f6d5097a065fe4009d437e3443eb0e799e9672c359923d85788137b6b"
+    }
+  },
+  "distribucion": {
+    "release": "https://github.com/federicohermo/nosefia/releases/tag/godot-native-classdb-1",
+    "lock": ".github/patches/godot-native-artefactos.json",
+    "descarga_windows": {
+      "frio_s": 6.138632899994263,
+      "caliente_s": 0.21442819997901097,
+      "version": "4.7.2.stable.nosefia_classdb_1",
+      "receta_sha256": "53ecfcafaa37f40e935b2a41b69406318150182f91adc4b2109ad2ce068a66d1",
+      "archivos": {
+        "godot.windows.editor.x86_64.console.exe": "1664444d47de574fb19645f07dd6d918f753d11746df908f82b29122f623ff86",
+        "godot.windows.editor.x86_64.exe": "0f812d6634cf96ec3de4b291d0c48a6768979ee5113c2c49d3809606cff9ae94",
+        "d3d12SDKLayers.dll": "bcec9e1315fb4dbc767371926fb5eb8281de1b3ab1fb530a636b3c193a9a2bbd",
+        "D3D12Core.dll": "560f9574372a52ab66ad95ee1222f1eb4c9f6161d8f6b7b025d89f684b07246c"
+      },
+      "sin_compilar": true,
+      "caliente_sin_red": true
+    },
+    "reaprobacion": [
+      {
+        "plataforma": "windows-x86_64",
+        "receta_anterior": "8e59d989e7fc1286bb723c461d91763d62069a2c117f34a598d4d749055203bc",
+        "receta_aprobada": "53ecfcafaa37f40e935b2a41b69406318150182f91adc4b2109ad2ce068a66d1",
+        "archivos": {
+          "godot.windows.editor.x86_64.console.exe": "1664444d47de574fb19645f07dd6d918f753d11746df908f82b29122f623ff86",
+          "godot.windows.editor.x86_64.exe": "0f812d6634cf96ec3de4b291d0c48a6768979ee5113c2c49d3809606cff9ae94",
+          "d3d12SDKLayers.dll": "bcec9e1315fb4dbc767371926fb5eb8281de1b3ab1fb530a636b3c193a9a2bbd",
+          "D3D12Core.dll": "560f9574372a52ab66ad95ee1222f1eb4c9f6161d8f6b7b025d89f684b07246c"
+        },
+        "manifiesto_original_sha256": "8fe9d96a348305884cf2376be38077bc64f7c256f3eea20ba55fe3068a386772",
+        "manifiesto_aprobado_sha256": "5bd4a42ce9c44c6bb97137b804c50c5cc65b6eae305c606a25a5316729fd702a"
+      },
+      {
+        "plataforma": "linux-x86_64",
+        "receta_anterior": "bd3b9642d0f1917027188be440b8d0fc1d29dbb5a7e310bfae8a5d90ae7cd72b",
+        "receta_aprobada": "f728a5267db7fb7f56ed17bb3169ee9bd7a5725e8e6bed9f2a2a387a3c53c34b",
+        "archivos": {
+          "Godot_v4.7.2-stable_nosefia_classdb_linux.x86_64": "e26dfc8e6f351ee959f6d4812ee3e8ec313db1ff17b9c1c5a8edb556ab43ec47"
+        },
+        "manifiesto_original_sha256": "ff90e79c7e3f703cd5e5a37c929cf387cbd0b79fad8c174af4c48e79f6678e89",
+        "manifiesto_aprobado_sha256": "278a7af0af7adf3520918075b0fb5ba324bf5278491626e309f4c2193d20ad27"
+      }
+    ]
+  },
+  "ci_fria_sin_compilacion": {
+    "url": "https://github.com/federicohermo/nosefia/actions/runs/39264961371",
+    "total_s": 314.0,
+    "suites": 309,
+    "casos": 2328,
+    "fallos": 0,
+    "errores": 0,
+    "saltos": 0,
+    "inventario_igual_a_referencia": true,
+    "recursos_iguales_por_worker": 40,
+    "aciertos_cache_importaciones": 0,
+    "motor_paso_s": {
+      "minimo": 0,
+      "maximo": 3
+    },
+    "referencia_fria_s": 320,
+    "referencia_caliente_s": 181,
+    "muestras_por_condicion": 1,
+    "mejora_significativa_demostrada": false
+  }
+}

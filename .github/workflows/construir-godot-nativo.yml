@@ -1,0 +1,102 @@
+name: construir-godot-nativo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  construir:
+    strategy:
+      fail-fast: false
+      matrix:
+        plataforma: [linux-x86_64, windows-x86_64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Preparar entorno de compilación
+        run: docker build -t motor-nativo .github/containers/godot-native
+      - name: Construir motor para publicar
+        env:
+          PLATAFORMA: ${{ matrix.plataforma }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/motor-salida" "$RUNNER_TEMP/motor-trabajo"
+          docker run --rm \
+            --mount "type=bind,source=$GITHUB_WORKSPACE,target=/repo,readonly" \
+            --mount "type=bind,source=$RUNNER_TEMP/motor-salida,target=/salida" \
+            --mount "type=bind,source=$RUNNER_TEMP/motor-trabajo,target=/trabajo" \
+            motor-nativo python3 /repo/.github/scripts/preparar_godot_nativo.py preparar \
+            --plataforma "$PLATAFORMA" --destino "/salida/$PLATAFORMA" \
+            --trabajo /trabajo --jobs 2
+          python3 .github/scripts/empaquetar_godot_nativo.py --plataforma "$PLATAFORMA" \
+            --destino "$RUNNER_TEMP/motor-salida/$PLATAFORMA" \
+            --salida "$RUNNER_TEMP/paquetes/$PLATAFORMA.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: motor-construido-${{ matrix.plataforma }}
+          path: ${{ runner.temp }}/paquetes/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compilacion-${{ matrix.plataforma }}
+          path: ${{ runner.temp }}/motor-trabajo/compilacion.log
+          if-no-files-found: warn
+          retention-days: 7
+
+  validar:
+    needs: construir
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - plataforma: linux-x86_64
+            runner: ubuntu-24.04
+          - plataforma: windows-x86_64
+            runner: windows-2025
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          name: motor-construido-${{ matrix.plataforma }}
+          path: ${{ runner.temp }}/motor-construido
+      - name: Validar y probar el motor construido
+        env:
+          PLATAFORMA: ${{ matrix.plataforma }}
+        run: |
+          set -euo pipefail
+          mkdir -p "build/godot-native/$PLATAFORMA"
+          python -m zipfile -e "$RUNNER_TEMP/motor-construido/$PLATAFORMA.zip" \
+            "build/godot-native/$PLATAFORMA"
+          if [ "$PLATAFORMA" = linux-x86_64 ]; then
+            chmod +x build/godot-native/linux-x86_64/*.x86_64
+          fi
+          python .github/scripts/preparar_godot_nativo.py comprobar --plataforma "$PLATAFORMA"
+          python .github/scripts/probar_godot_nativo.py --destino "build/godot-native/$PLATAFORMA"
+          cp "$RUNNER_TEMP/motor-construido/$PLATAFORMA.zip" reports/motor-nativo/
+          cp "$RUNNER_TEMP/motor-construido/$PLATAFORMA.json" reports/motor-nativo/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: motor-validado-${{ matrix.plataforma }}
+          path: reports/motor-nativo/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
