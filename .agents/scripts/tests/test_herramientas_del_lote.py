@@ -1,6 +1,6 @@
-"""Lo que deciden las herramientas de un lote: quién pasa, cuántas suites corrieron, qué se exporta.
+"""Lo que deciden las herramientas de un lote: quién pasa y qué se exporta.
 
-Las tres son cableado alrededor de una decisión chica. Los casos ejercen la decisión, sin
+Las dos son cableado alrededor de una decisión chica. Los casos ejercen la decisión, sin
 levantar Godot ni un navegador.
 """
 
@@ -26,7 +26,6 @@ def _cargar(ruta: Path) -> ModuleType:
 
 
 turno = _cargar(LOTE / "turno.py")
-conteo = _cargar(LOTE / "conteo.py")
 escenario = _cargar(RAIZ / ".github" / "scripts" / "exportar_escenario.py")
 
 PROYECTO = (
@@ -81,25 +80,6 @@ class ElTurnoEsUnaCola(unittest.TestCase):
             self.assertEqual(turno._primero(cola), boleto.name)
             for ajeno in ajenos:
                 self.assertTrue(ajeno.exists(), ajeno.name)
-
-
-class ElConteoSaleDelReporte(unittest.TestCase):
-    def test_cuenta_las_suites_y_no_los_casos(self):
-        xml = '<testsuites><testsuite name="a"><testcase/></testsuite><testsuite name="b"/>'
-        self.assertEqual(conteo.suites_corridas(xml), 2)
-
-    def test_toma_el_reporte_de_numero_mas_alto_y_no_el_ultimo_por_nombre(self):
-        with tempfile.TemporaryDirectory() as carpeta:
-            reportes = Path(carpeta)
-            for numero in (2, 10):
-                (reportes / f"report_{numero}").mkdir()
-                (reportes / f"report_{numero}" / "results.xml").write_text("", encoding="utf-8")
-            (reportes / "report_11").mkdir()
-            self.assertEqual(conteo.ultimo_reporte(reportes), reportes / "report_10")
-
-    def test_sin_reportes_no_inventa_uno(self):
-        with tempfile.TemporaryDirectory() as carpeta:
-            self.assertIsNone(conteo.ultimo_reporte(Path(carpeta)))
 
 
 class LaCopiaDelEscenario(unittest.TestCase):

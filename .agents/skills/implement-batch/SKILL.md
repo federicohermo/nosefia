@@ -138,14 +138,13 @@ Cada agente recibe, literal:
   son los de la máquina Windows del equipo. En un contenedor Linux de la nube no hay PowerShell,
   ni Godot, ni Blender, y `download.blender.org` puede estar bloqueado. Lo que anduvo el
   2026-09-29, medido antes de repartir:
-  - Godot del zip de la release, con un enlace en el PATH: `lib/godot.py` lo encuentra ahí.
+  - El motor nativo, con `python .github/scripts/descargar_godot_nativo.py descargar`:
+    `lib/godot.py` lo encuentra en `build/godot-native/`.
   - Blender como `bpy` de PyPI, de la serie que pinnea `lib/blender.py`, envuelto en un script
     que emula `blender <x.blend> --background --python <s.py> -- <args>`, y declarado en
     `BLENDER_BIN` adelante de cada comando. Reexportó el `.glb` con el mismo tamaño en bytes.
   - Las capturas, con `xvfb-run` y `--rendering-driver opengl3` (llvmpipe).
   - El horneado, con `xvfb-run` y lavapipe: `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json`.
-  - El conteo crudo sale sin volver a correr: `grep -c "<testsuite "` sobre el `results.xml` del
-    último `reports/report_N/`.
   - **El `-rd` de gdUnit4 es relativo al proyecto aunque empiece con `/`**: `-rd /tmp/x` crea
     `tmp/x` adentro del repo. Pasó en dos carriles del lote del 2026-09-29, el segundo con la
     advertencia en su preámbulo, y por eso `/tmp/` está en `.gitignore`.
@@ -228,12 +227,6 @@ Cada agente recibe, literal:
   para que su test lo vea, y hasta el `--import` siguiente el error es `Parse Error: Identifier
   "X" not declared` **con el archivo ya escrito en disco**. Se lee como un error del código y no
   de la caché. **Medido el 2026-09-01: lo pisaron los dos carriles que crearon clases.**
-- **Dale al carril el comando del conteo crudo, no sólo la orden de mirarlo.** `verificar.py` **no
-  imprime** el `Executed test suites: (N/N)`. `python .claude/skills/implement-batch/scripts/conteo.py`
-  lo saca del `results.xml` de la corrida que `verificar.py` acaba de hacer, y sale con 1 si una
-  suite no corrió. Va justo después de `verificar.py`: una suite suelta en el medio deja otro
-  reporte último. Hasta el 2026-10-06 el conteo pedía otra corrida entera del motor.
-
 - **El carril no corrige un skill: reporta la falla, y la regla la escribe el padre.**
   `implement-feature` le pide cerrar el lazo, y en un lote eso da N copias de la misma lección.
   Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete

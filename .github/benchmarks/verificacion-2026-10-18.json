@@ -1,0 +1,1982 @@
+{
+  "repository": "federicohermo/nosefia",
+  "base_game_commit": "d72aae87217482bc6f336ec8d894547c98048338",
+  "game_trees": {
+    "src": "4fd013a6f9c7ca153fc9ccc623167259d00cf05b",
+    "test": "6b283501a4421e3e45276cabe8eb1ee37482f419",
+    "assets": "469f4ef5a4c648845a75c0cfff543635d2d04478"
+  },
+  "suite_inventory_sha256": "5e89f70bc973a15f7e47f7b4683ec153d93973ff3fd24472152ec8c3ba068f0e",
+  "metric": "Seconds from workflow created_at to the last job completed_at, including preparation and final result.",
+  "validation": "304 identical unique JUnit suites, 2287 cases, zero failures, errors or skips; fixed game trees.",
+  "confirmation_schedule": [
+    {
+      "options": [
+        [
+          "independiente",
+          4
+        ],
+        [
+          "independiente",
+          6
+        ],
+        [
+          "independiente",
+          8
+        ]
+      ],
+      "other_jobs": [],
+      "worker_budget": 19,
+      "remaining": {
+        "independiente:4": 5,
+        "independiente:6": 5,
+        "independiente:8": 5
+      }
+    },
+    {
+      "options": [
+        [
+          "independiente",
+          6
+        ],
+        [
+          "independiente",
+          8
+        ],
+        [
+          "independiente",
+          4
+        ]
+      ],
+      "other_jobs": [],
+      "worker_budget": 19,
+      "remaining": {
+        "independiente:4": 4,
+        "independiente:6": 4,
+        "independiente:8": 5
+      }
+    },
+    {
+      "options": [
+        [
+          "independiente",
+          8
+        ],
+        [
+          "independiente",
+          4
+        ],
+        [
+          "independiente",
+          6
+        ]
+      ],
+      "other_jobs": [],
+      "worker_budget": 19,
+      "remaining": {
+        "independiente:4": 3,
+        "independiente:6": 3,
+        "independiente:8": 4
+      }
+    },
+    {
+      "options": [
+        [
+          "independiente",
+          4
+        ],
+        [
+          "independiente",
+          6
+        ],
+        [
+          "independiente",
+          8
+        ]
+      ],
+      "other_jobs": [],
+      "worker_budget": 19,
+      "remaining": {
+        "independiente:4": 2,
+        "independiente:6": 2,
+        "independiente:8": 3
+      }
+    }
+  ],
+  "groups": [
+    {
+      "stage": "confirmation",
+      "mode": "independiente",
+      "partitions": 4,
+      "samples": 5,
+      "median_seconds": 463.0,
+      "min_seconds": 453.0,
+      "max_seconds": 480.0,
+      "run_ids": [
+        39163194854,
+        39158889258,
+        39159949300,
+        39160661181,
+        39161253478
+      ]
+    },
+    {
+      "stage": "confirmation",
+      "mode": "independiente",
+      "partitions": 6,
+      "samples": 5,
+      "median_seconds": 386.0,
+      "min_seconds": 369.0,
+      "max_seconds": 415.0,
+      "run_ids": [
+        39162249010,
+        39158956193,
+        39159738295,
+        39160730623,
+        39161339423
+      ]
+    },
+    {
+      "stage": "confirmation",
+      "mode": "independiente",
+      "partitions": 8,
+      "samples": 5,
+      "median_seconds": 376.0,
+      "min_seconds": 330.0,
+      "max_seconds": 379.0,
+      "run_ids": [
+        39162393149,
+        39162777111,
+        39163268265,
+        39159856635,
+        39160567130
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "compartida",
+      "partitions": 4,
+      "samples": 1,
+      "median_seconds": 550.0,
+      "min_seconds": 550.0,
+      "max_seconds": 550.0,
+      "run_ids": [
+        39154336452
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "importaciones",
+      "partitions": 7,
+      "samples": 1,
+      "median_seconds": 409.0,
+      "min_seconds": 409.0,
+      "max_seconds": 409.0,
+      "run_ids": [
+        39158309811
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "independiente",
+      "partitions": 4,
+      "samples": 1,
+      "median_seconds": 454.0,
+      "min_seconds": 454.0,
+      "max_seconds": 454.0,
+      "run_ids": [
+        39153732626
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "independiente",
+      "partitions": 5,
+      "samples": 1,
+      "median_seconds": 394.0,
+      "min_seconds": 394.0,
+      "max_seconds": 394.0,
+      "run_ids": [
+        39157240535
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "independiente",
+      "partitions": 6,
+      "samples": 1,
+      "median_seconds": 380.0,
+      "min_seconds": 380.0,
+      "max_seconds": 380.0,
+      "run_ids": [
+        39155074388
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "independiente",
+      "partitions": 7,
+      "samples": 1,
+      "median_seconds": 382.0,
+      "min_seconds": 382.0,
+      "max_seconds": 382.0,
+      "run_ids": [
+        39157772284
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "independiente",
+      "partitions": 8,
+      "samples": 1,
+      "median_seconds": 346.0,
+      "min_seconds": 346.0,
+      "max_seconds": 346.0,
+      "run_ids": [
+        39155612044
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "independiente",
+      "partitions": 12,
+      "samples": 1,
+      "median_seconds": 374.0,
+      "min_seconds": 374.0,
+      "max_seconds": 374.0,
+      "run_ids": [
+        39156089841
+      ]
+    },
+    {
+      "stage": "pilot",
+      "mode": "independiente",
+      "partitions": 16,
+      "samples": 1,
+      "median_seconds": 403.0,
+      "min_seconds": 403.0,
+      "max_seconds": 403.0,
+      "run_ids": [
+        39156594503
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "run_id": 39162249010,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39162249010",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 388.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-anticipada-6",
+      "mode": "independiente",
+      "partitions": 6,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T20:12:30Z",
+      "runner_seconds": 2003.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T20:12:32Z",
+          "started_at": "2026-10-18T20:12:34Z",
+          "completed_at": "2026-10-18T20:12:36Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T20:12:36Z",
+          "started_at": "2026-10-18T20:12:36Z",
+          "completed_at": "2026-10-18T20:12:36Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T20:18:53Z",
+          "started_at": "2026-10-18T20:18:55Z",
+          "completed_at": "2026-10-18T20:18:58Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39162393149,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39162393149",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 378.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-extra8-1",
+      "mode": "independiente",
+      "partitions": 8,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T20:14:24Z",
+      "runner_seconds": 2430.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T20:14:26Z",
+          "started_at": "2026-10-18T20:14:27Z",
+          "completed_at": "2026-10-18T20:14:30Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T20:14:31Z",
+          "started_at": "2026-10-18T20:14:31Z",
+          "completed_at": "2026-10-18T20:14:30Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T20:20:38Z",
+          "started_at": "2026-10-18T20:20:40Z",
+          "completed_at": "2026-10-18T20:20:42Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39162777111,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39162777111",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 357.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-extra8-2",
+      "mode": "independiente",
+      "partitions": 8,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T20:19:27Z",
+      "runner_seconds": 2306.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T20:19:28Z",
+          "started_at": "2026-10-18T20:19:30Z",
+          "completed_at": "2026-10-18T20:19:33Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T20:19:34Z",
+          "started_at": "2026-10-18T20:19:34Z",
+          "completed_at": "2026-10-18T20:19:33Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T20:25:18Z",
+          "started_at": "2026-10-18T20:25:21Z",
+          "completed_at": "2026-10-18T20:25:24Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39163268265,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39163268265",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 330.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-extra8-final-1",
+      "mode": "independiente",
+      "partitions": 8,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T20:25:57Z",
+      "runner_seconds": 2377.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T20:26:00Z",
+          "started_at": "2026-10-18T20:26:01Z",
+          "completed_at": "2026-10-18T20:26:04Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T20:26:04Z",
+          "started_at": "2026-10-18T20:26:04Z",
+          "completed_at": "2026-10-18T20:26:04Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T20:31:22Z",
+          "started_at": "2026-10-18T20:31:24Z",
+          "completed_at": "2026-10-18T20:31:27Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39163194854,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39163194854",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 479.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-reserva-4",
+      "mode": "independiente",
+      "partitions": 4,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T20:24:59Z",
+      "runner_seconds": 1804.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T20:25:00Z",
+          "started_at": "2026-10-18T20:25:02Z",
+          "completed_at": "2026-10-18T20:25:06Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T20:25:07Z",
+          "started_at": "2026-10-18T20:25:07Z",
+          "completed_at": "2026-10-18T20:25:06Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T20:32:54Z",
+          "started_at": "2026-10-18T20:32:55Z",
+          "completed_at": "2026-10-18T20:32:58Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39158889258,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39158889258",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 459.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w1-independiente-4",
+      "mode": "independiente",
+      "partitions": 4,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:27:59Z",
+      "runner_seconds": 1654.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:28:01Z",
+          "started_at": "2026-10-18T19:28:03Z",
+          "completed_at": "2026-10-18T19:28:05Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:28:06Z",
+          "started_at": "2026-10-18T19:28:06Z",
+          "completed_at": "2026-10-18T19:28:06Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:35:32Z",
+          "started_at": "2026-10-18T19:35:35Z",
+          "completed_at": "2026-10-18T19:35:38Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39158956193,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39158956193",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 369.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w1-independiente-6",
+      "mode": "independiente",
+      "partitions": 6,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:28:54Z",
+      "runner_seconds": 1937.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:28:56Z",
+          "started_at": "2026-10-18T19:28:58Z",
+          "completed_at": "2026-10-18T19:29:00Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:29:01Z",
+          "started_at": "2026-10-18T19:29:01Z",
+          "completed_at": "2026-10-18T19:29:00Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:34:59Z",
+          "started_at": "2026-10-18T19:35:00Z",
+          "completed_at": "2026-10-18T19:35:03Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39159022581,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39159022581",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 534.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w1-independiente-8",
+      "mode": "independiente",
+      "partitions": 8,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:29:50Z",
+      "runner_seconds": 2378.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:29:51Z",
+          "started_at": "2026-10-18T19:29:52Z",
+          "completed_at": "2026-10-18T19:29:55Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:29:55Z",
+          "started_at": "2026-10-18T19:29:55Z",
+          "completed_at": "2026-10-18T19:29:55Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:38:38Z",
+          "started_at": "2026-10-18T19:38:40Z",
+          "completed_at": "2026-10-18T19:38:44Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": false,
+      "max_job_queue_seconds": 238.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39159949300,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39159949300",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 480.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w2-independiente-4",
+      "mode": "independiente",
+      "partitions": 4,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:41:55Z",
+      "runner_seconds": 1792.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:41:56Z",
+          "started_at": "2026-10-18T19:41:58Z",
+          "completed_at": "2026-10-18T19:42:02Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:42:03Z",
+          "started_at": "2026-10-18T19:42:03Z",
+          "completed_at": "2026-10-18T19:42:02Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:49:50Z",
+          "started_at": "2026-10-18T19:49:52Z",
+          "completed_at": "2026-10-18T19:49:55Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39159738295,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39159738295",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 415.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w2-independiente-6",
+      "mode": "independiente",
+      "partitions": 6,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:39:06Z",
+      "runner_seconds": 2039.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:39:08Z",
+          "started_at": "2026-10-18T19:39:10Z",
+          "completed_at": "2026-10-18T19:39:14Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:39:14Z",
+          "started_at": "2026-10-18T19:39:14Z",
+          "completed_at": "2026-10-18T19:39:14Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:45:55Z",
+          "started_at": "2026-10-18T19:45:57Z",
+          "completed_at": "2026-10-18T19:46:01Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39159856635,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39159856635",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 376.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w2-independiente-8",
+      "mode": "independiente",
+      "partitions": 8,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:40:41Z",
+      "runner_seconds": 2324.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:40:42Z",
+          "started_at": "2026-10-18T19:40:44Z",
+          "completed_at": "2026-10-18T19:40:48Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:40:48Z",
+          "started_at": "2026-10-18T19:40:48Z",
+          "completed_at": "2026-10-18T19:40:48Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:46:52Z",
+          "started_at": "2026-10-18T19:46:54Z",
+          "completed_at": "2026-10-18T19:46:57Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39160661181,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39160661181",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 453.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w3-independiente-4",
+      "mode": "independiente",
+      "partitions": 4,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:51:27Z",
+      "runner_seconds": 1689.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:51:28Z",
+          "started_at": "2026-10-18T19:51:30Z",
+          "completed_at": "2026-10-18T19:51:33Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:51:33Z",
+          "started_at": "2026-10-18T19:51:33Z",
+          "completed_at": "2026-10-18T19:51:33Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:58:56Z",
+          "started_at": "2026-10-18T19:58:58Z",
+          "completed_at": "2026-10-18T19:59:00Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39160730623,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39160730623",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 386.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w3-independiente-6",
+      "mode": "independiente",
+      "partitions": 6,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:52:22Z",
+      "runner_seconds": 1966.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:52:23Z",
+          "started_at": "2026-10-18T19:52:25Z",
+          "completed_at": "2026-10-18T19:52:28Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:52:28Z",
+          "started_at": "2026-10-18T19:52:28Z",
+          "completed_at": "2026-10-18T19:52:28Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:58:43Z",
+          "started_at": "2026-10-18T19:58:45Z",
+          "completed_at": "2026-10-18T19:58:48Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39160567130,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39160567130",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 379.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w3-independiente-8",
+      "mode": "independiente",
+      "partitions": 8,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:50:11Z",
+      "runner_seconds": 2416.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:50:13Z",
+          "started_at": "2026-10-18T19:50:15Z",
+          "completed_at": "2026-10-18T19:50:18Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:50:19Z",
+          "started_at": "2026-10-18T19:50:19Z",
+          "completed_at": "2026-10-18T19:50:18Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:56:25Z",
+          "started_at": "2026-10-18T19:56:27Z",
+          "completed_at": "2026-10-18T19:56:30Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39161253478,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39161253478",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 463.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w4-independiente-4",
+      "mode": "independiente",
+      "partitions": 4,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T19:59:42Z",
+      "runner_seconds": 1663.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:59:44Z",
+          "started_at": "2026-10-18T19:59:46Z",
+          "completed_at": "2026-10-18T19:59:49Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:59:50Z",
+          "started_at": "2026-10-18T19:59:50Z",
+          "completed_at": "2026-10-18T19:59:50Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T20:07:20Z",
+          "started_at": "2026-10-18T20:07:22Z",
+          "completed_at": "2026-10-18T20:07:25Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39161339423,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39161339423",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 379.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "confirmacion-w4-independiente-6",
+      "mode": "independiente",
+      "partitions": 6,
+      "stage": "confirmation",
+      "created_at": "2026-10-18T20:00:45Z",
+      "runner_seconds": 1976.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T20:00:46Z",
+          "started_at": "2026-10-18T20:00:49Z",
+          "completed_at": "2026-10-18T20:00:52Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T20:00:52Z",
+          "started_at": "2026-10-18T20:00:52Z",
+          "completed_at": "2026-10-18T20:00:52Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T20:06:58Z",
+          "started_at": "2026-10-18T20:07:00Z",
+          "completed_at": "2026-10-18T20:07:04Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39153732626,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39153732626",
+      "commit": "1d84dcc4fae32132e49e20182cf07407d3334b8b",
+      "valid": true,
+      "end_to_end_seconds": 454.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "exploracion-1-independiente-4",
+      "mode": "independiente",
+      "partitions": 4,
+      "stage": "pilot",
+      "created_at": "2026-10-18T18:20:45Z",
+      "runner_seconds": 1676.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T18:20:45Z",
+          "started_at": "2026-10-18T18:20:48Z",
+          "completed_at": "2026-10-18T18:20:51Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "preparar",
+          "created_at": "2026-10-18T18:20:52Z",
+          "started_at": "2026-10-18T18:20:52Z",
+          "completed_at": "2026-10-18T18:20:51Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T18:28:15Z",
+          "started_at": "2026-10-18T18:28:17Z",
+          "completed_at": "2026-10-18T18:28:19Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39154336452,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39154336452",
+      "commit": "1d84dcc4fae32132e49e20182cf07407d3334b8b",
+      "valid": true,
+      "end_to_end_seconds": 550.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "exploracion-2-compartida-4",
+      "mode": "compartida",
+      "partitions": 4,
+      "stage": "pilot",
+      "created_at": "2026-10-18T18:28:53Z",
+      "runner_seconds": 1507.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T18:28:54Z",
+          "started_at": "2026-10-18T18:28:56Z",
+          "completed_at": "2026-10-18T18:28:58Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "preparar",
+          "created_at": "2026-10-18T18:28:59Z",
+          "started_at": "2026-10-18T18:29:00Z",
+          "completed_at": "2026-10-18T18:32:07Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T18:37:59Z",
+          "started_at": "2026-10-18T18:38:01Z",
+          "completed_at": "2026-10-18T18:38:03Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39155074388,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39155074388",
+      "commit": "1d84dcc4fae32132e49e20182cf07407d3334b8b",
+      "valid": true,
+      "end_to_end_seconds": 380.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "exploracion-3-independiente-6",
+      "mode": "independiente",
+      "partitions": 6,
+      "stage": "pilot",
+      "created_at": "2026-10-18T18:38:24Z",
+      "runner_seconds": 2152.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T18:38:26Z",
+          "started_at": "2026-10-18T18:38:28Z",
+          "completed_at": "2026-10-18T18:38:32Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "preparar",
+          "created_at": "2026-10-18T18:38:32Z",
+          "started_at": "2026-10-18T18:38:32Z",
+          "completed_at": "2026-10-18T18:38:32Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T18:44:40Z",
+          "started_at": "2026-10-18T18:44:41Z",
+          "completed_at": "2026-10-18T18:44:44Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39155612044,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39155612044",
+      "commit": "1d84dcc4fae32132e49e20182cf07407d3334b8b",
+      "valid": true,
+      "end_to_end_seconds": 346.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "exploracion-4-independiente-8",
+      "mode": "independiente",
+      "partitions": 8,
+      "stage": "pilot",
+      "created_at": "2026-10-18T18:45:22Z",
+      "runner_seconds": 2410.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T18:45:23Z",
+          "started_at": "2026-10-18T18:45:25Z",
+          "completed_at": "2026-10-18T18:45:29Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "preparar",
+          "created_at": "2026-10-18T18:45:29Z",
+          "started_at": "2026-10-18T18:45:29Z",
+          "completed_at": "2026-10-18T18:45:29Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T18:51:04Z",
+          "started_at": "2026-10-18T18:51:06Z",
+          "completed_at": "2026-10-18T18:51:08Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39156089841,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39156089841",
+      "commit": "1d84dcc4fae32132e49e20182cf07407d3334b8b",
+      "valid": true,
+      "end_to_end_seconds": 374.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "exploracion-5-independiente-12",
+      "mode": "independiente",
+      "partitions": 12,
+      "stage": "pilot",
+      "created_at": "2026-10-18T18:51:32Z",
+      "runner_seconds": 3026.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T18:51:33Z",
+          "started_at": "2026-10-18T18:51:35Z",
+          "completed_at": "2026-10-18T18:51:37Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "preparar",
+          "created_at": "2026-10-18T18:51:38Z",
+          "started_at": "2026-10-18T18:51:38Z",
+          "completed_at": "2026-10-18T18:51:37Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T18:57:42Z",
+          "started_at": "2026-10-18T18:57:44Z",
+          "completed_at": "2026-10-18T18:57:46Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39156594503,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39156594503",
+      "commit": "1d84dcc4fae32132e49e20182cf07407d3334b8b",
+      "valid": true,
+      "end_to_end_seconds": 403.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "exploracion-6-independiente-16",
+      "mode": "independiente",
+      "partitions": 16,
+      "stage": "pilot",
+      "created_at": "2026-10-18T18:58:19Z",
+      "runner_seconds": 3777.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T18:58:21Z",
+          "started_at": "2026-10-18T18:58:22Z",
+          "completed_at": "2026-10-18T18:58:25Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "preparar",
+          "created_at": "2026-10-18T18:58:25Z",
+          "started_at": "2026-10-18T18:58:25Z",
+          "completed_at": "2026-10-18T18:58:25Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:04:58Z",
+          "started_at": "2026-10-18T19:05:00Z",
+          "completed_at": "2026-10-18T19:05:02Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 3.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39157240535,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39157240535",
+      "commit": "ab5459ff36007ad09d668979b3b0421b5429436b",
+      "valid": true,
+      "end_to_end_seconds": 394.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "refinamiento-1-independiente-5",
+      "mode": "independiente",
+      "partitions": 5,
+      "stage": "pilot",
+      "created_at": "2026-10-18T19:06:34Z",
+      "runner_seconds": 1841.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:06:35Z",
+          "started_at": "2026-10-18T19:06:37Z",
+          "completed_at": "2026-10-18T19:06:40Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "preparar",
+          "created_at": "2026-10-18T19:06:40Z",
+          "started_at": "2026-10-18T19:06:40Z",
+          "completed_at": "2026-10-18T19:06:40Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:13:03Z",
+          "started_at": "2026-10-18T19:13:05Z",
+          "completed_at": "2026-10-18T19:13:08Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39157772284,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39157772284",
+      "commit": "ab5459ff36007ad09d668979b3b0421b5429436b",
+      "valid": true,
+      "end_to_end_seconds": 382.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "refinamiento-2-independiente-7",
+      "mode": "independiente",
+      "partitions": 7,
+      "stage": "pilot",
+      "created_at": "2026-10-18T19:13:25Z",
+      "runner_seconds": 2218.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:13:27Z",
+          "started_at": "2026-10-18T19:13:29Z",
+          "completed_at": "2026-10-18T19:13:33Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "preparar",
+          "created_at": "2026-10-18T19:13:33Z",
+          "started_at": "2026-10-18T19:13:33Z",
+          "completed_at": "2026-10-18T19:13:33Z",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:19:42Z",
+          "started_at": "2026-10-18T19:19:44Z",
+          "completed_at": "2026-10-18T19:19:47Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    },
+    {
+      "run_id": 39158309811,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39158309811",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "valid": true,
+      "end_to_end_seconds": 409.0,
+      "suites": 304,
+      "cases": 2287,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "label": "refinamiento-3-importaciones-7",
+      "mode": "importaciones",
+      "partitions": 7,
+      "stage": "pilot",
+      "created_at": "2026-10-18T19:20:22Z",
+      "runner_seconds": 1517.0,
+      "control_jobs": [
+        {
+          "name": "plan",
+          "created_at": "2026-10-18T19:20:23Z",
+          "started_at": "2026-10-18T19:20:25Z",
+          "completed_at": "2026-10-18T19:20:27Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preparación compartida",
+          "created_at": "2026-10-18T19:20:27Z",
+          "started_at": "2026-10-18T19:20:29Z",
+          "completed_at": "2026-10-18T19:23:05Z",
+          "conclusion": "success"
+        },
+        {
+          "name": "resultado",
+          "created_at": "2026-10-18T19:27:06Z",
+          "started_at": "2026-10-18T19:27:08Z",
+          "completed_at": "2026-10-18T19:27:11Z",
+          "conclusion": "success"
+        }
+      ],
+      "comparison_eligible": true,
+      "max_job_queue_seconds": 2.0,
+      "environments": [
+        {
+          "image_os": "ubuntu24",
+          "image": "20261012.334.1",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "godot_version": "4.7.2.stable.official.ed1daf0bf",
+          "gdtoolkit_version": "4.5.0"
+        }
+      ]
+    }
+  ],
+  "rejected_trials": [
+    {
+      "run_id": 39162317738,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39162317738",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "conclusion": "cancelled",
+      "mode": "independiente",
+      "partitions": 4,
+      "label": "confirmacion-anticipada-4",
+      "end_to_end_seconds": 1231.0,
+      "observed_partial_junit": {
+        "suites": 230,
+        "cases": 1659,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "jobs": [
+        {
+          "name": "plan",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "worker-2",
+          "conclusion": "success",
+          "seconds": 441.0
+        },
+        {
+          "name": "worker-3",
+          "conclusion": "cancelled",
+          "seconds": 1217.0
+        },
+        {
+          "name": "worker-0",
+          "conclusion": "success",
+          "seconds": 425.0
+        },
+        {
+          "name": "worker-1",
+          "conclusion": "success",
+          "seconds": 435.0
+        },
+        {
+          "name": "Preparación compartida",
+          "conclusion": "skipped",
+          "seconds": 0.0
+        },
+        {
+          "name": "resultado",
+          "conclusion": "failure",
+          "seconds": 2.0
+        }
+      ]
+    },
+    {
+      "run_id": 39161426701,
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/39161426701",
+      "commit": "be59ffab1988fd4e8b194fe40aef5ffb09598827",
+      "conclusion": "cancelled",
+      "mode": "independiente",
+      "partitions": 8,
+      "label": "confirmacion-w4-independiente-8",
+      "end_to_end_seconds": 1232.0,
+      "observed_partial_junit": {
+        "suites": 256,
+        "cases": 1947,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "jobs": [
+        {
+          "name": "plan",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "worker-0",
+          "conclusion": "success",
+          "seconds": 367.0
+        },
+        {
+          "name": "worker-4",
+          "conclusion": "success",
+          "seconds": 235.0
+        },
+        {
+          "name": "worker-1",
+          "conclusion": "success",
+          "seconds": 345.0
+        },
+        {
+          "name": "worker-2",
+          "conclusion": "success",
+          "seconds": 298.0
+        },
+        {
+          "name": "worker-3",
+          "conclusion": "success",
+          "seconds": 311.0
+        },
+        {
+          "name": "worker-5",
+          "conclusion": "success",
+          "seconds": 291.0
+        },
+        {
+          "name": "worker-7",
+          "conclusion": "cancelled",
+          "seconds": 1218.0
+        },
+        {
+          "name": "worker-6",
+          "conclusion": "success",
+          "seconds": 304.0
+        },
+        {
+          "name": "Preparación compartida",
+          "conclusion": "skipped",
+          "seconds": -1.0
+        },
+        {
+          "name": "resultado",
+          "conclusion": "failure",
+          "seconds": 3.0
+        }
+      ]
+    }
+  ],
+  "workers_file": "verificacion-2026-10-18-workers.csv",
+  "comparison_rule": "Keep every correct trial; confirmation statistics require maximum non-skipped job queue <= 15 seconds. Checkout outliers remain included.",
+  "dispatch_capacity_checks": [
+    {
+      "at": "2026-10-18T19:39:06.815175+00:00",
+      "label": "confirmacion-w2-independiente-6",
+      "requested_workers": 6,
+      "occupied": 0,
+      "active_run_ids": []
+    },
+    {
+      "at": "2026-10-18T19:40:40.616216+00:00",
+      "label": "confirmacion-w2-independiente-8",
+      "requested_workers": 8,
+      "occupied": 6,
+      "active_run_ids": [
+        39159738295
+      ]
+    },
+    {
+      "at": "2026-10-18T19:41:54.576729+00:00",
+      "label": "confirmacion-w2-independiente-4",
+      "requested_workers": 4,
+      "occupied": 14,
+      "active_run_ids": [
+        39159738295,
+        39159856635
+      ]
+    },
+    {
+      "at": "2026-10-18T19:50:11.472342+00:00",
+      "label": "confirmacion-w3-independiente-8",
+      "requested_workers": 8,
+      "occupied": 0,
+      "active_run_ids": []
+    },
+    {
+      "at": "2026-10-18T19:51:26.714852+00:00",
+      "label": "confirmacion-w3-independiente-4",
+      "requested_workers": 4,
+      "occupied": 8,
+      "active_run_ids": [
+        39160567130
+      ]
+    },
+    {
+      "at": "2026-10-18T19:52:20.839575+00:00",
+      "label": "confirmacion-w3-independiente-6",
+      "requested_workers": 6,
+      "occupied": 12,
+      "active_run_ids": [
+        39160567130,
+        39160661181
+      ]
+    },
+    {
+      "at": "2026-10-18T19:59:42.656243+00:00",
+      "label": "confirmacion-w4-independiente-4",
+      "requested_workers": 4,
+      "occupied": 0,
+      "active_run_ids": []
+    },
+    {
+      "at": "2026-10-18T20:00:45.380887+00:00",
+      "label": "confirmacion-w4-independiente-6",
+      "requested_workers": 6,
+      "occupied": 4,
+      "active_run_ids": [
+        39161253478
+      ]
+    },
+    {
+      "at": "2026-10-18T20:01:48.416465+00:00",
+      "label": "confirmacion-w4-independiente-8",
+      "requested_workers": 8,
+      "occupied": 10,
+      "active_run_ids": [
+        39161253478,
+        39161339423
+      ]
+    },
+    {
+      "at": "2026-10-18T20:12:30.656425+00:00",
+      "label": "confirmacion-anticipada-6",
+      "requested_workers": 6,
+      "occupied": 1,
+      "active_run_ids": [
+        39161426701
+      ]
+    },
+    {
+      "at": "2026-10-18T20:13:26.565248+00:00",
+      "label": "confirmacion-anticipada-4",
+      "requested_workers": 4,
+      "occupied": 7,
+      "active_run_ids": [
+        39161426701,
+        39162249010
+      ]
+    },
+    {
+      "at": "2026-10-18T20:14:24.612036+00:00",
+      "label": "confirmacion-extra8-1",
+      "requested_workers": 8,
+      "occupied": 11,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738
+      ]
+    },
+    {
+      "at": "2026-10-18T20:15:25.686396+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 19,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:15:45.552885+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 19,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:16:06.354760+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 19,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:16:26.033631+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 19,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:16:46.310482+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 19,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:17:06.079693+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 19,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:17:26.816852+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 19,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:17:46.952749+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 17,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:18:07.416842+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 17,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:18:27.179158+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 15,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:18:47.493994+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 14,
+      "active_run_ids": [
+        39161426701,
+        39162249010,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:19:07.280493+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 12,
+      "active_run_ids": [
+        39161426701,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:19:26.863016+00:00",
+      "label": "confirmacion-extra8-2",
+      "requested_workers": 8,
+      "occupied": 11,
+      "active_run_ids": [
+        39161426701,
+        39162317738,
+        39162393149
+      ]
+    },
+    {
+      "at": "2026-10-18T20:24:59.318539+00:00",
+      "label": "confirmacion-reserva-4",
+      "requested_workers": 4,
+      "occupied": 3,
+      "active_run_ids": [
+        39162317738,
+        39162777111
+      ]
+    },
+    {
+      "at": "2026-10-18T20:25:57.833930+00:00",
+      "label": "confirmacion-extra8-final-1",
+      "requested_workers": 8,
+      "occupied": 5,
+      "active_run_ids": [
+        39162317738,
+        39163194854
+      ]
+    }
+  ]
+}

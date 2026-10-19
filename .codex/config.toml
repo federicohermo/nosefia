@@ -1,0 +1,3 @@
+[mcp_servers.nosefia-index]
+command = "python"
+args = ["mcp-server/servidor.py"]

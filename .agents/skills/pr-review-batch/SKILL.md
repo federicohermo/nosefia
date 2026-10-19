@@ -293,21 +293,21 @@ rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
 
 ## Paso 4 — El protocolo de contención
 
-**Acá el rojo casi nunca es del PR, y la falta de `GODOT_BIN` no se saltea: sale roja.**
+**Acá el rojo casi nunca es del PR, y la falta de un motor nativo válido no se saltea: sale
+roja.**
 
-Desde que existe el primer `*_test.gd` el nodo `tests` **exige** Godot, y
-`verificar.py` devuelve rojo si no encuentra `GODOT_BIN`, con un mensaje que habla de la variable
-y no del código (`verificar.py:132-142`). Medido en esta máquina: `GODOT_BIN` **no está en el
-entorno de la terminal**, se lee del registro de Windows, y una terminal anterior a la variable le
-pasa el entorno viejo a todo lo que lance. El salteo que sí hay que leer es el de los **otros**
-nodos —`lint` y `formato` sobre cero archivos—, y un nodo salteado no es un nodo verde.
+Desde que existe el primer `*_test.gd` el nodo `tests` **exige** el motor corregido de
+`build/godot-native/`, y `verificar.py` devuelve rojo sin él, con un mensaje que habla del motor
+y no del código. Una `GODOT_BIN` declarada le gana a esa copia, y si apunta al motor oficial
+también sale rojo. El salteo que sí hay que leer es el de los **otros** nodos —`lint` y
+`formato` sobre cero archivos—, y un nodo salteado no es un nodo verde.
 
 El protocolo, y no hay que improvisarlo:
 
 1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.** Un
    reporte que dice «7/7» sin mirar qué se salteó da por mirado lo que nadie miró.
-2. Si el rojo de `tests` es por `GODOT_BIN`, no lo declares como pasado: exportalo en el worktree y
-   volvé a correr. Si no se puede, **es un bloqueante del lote y no del PR**.
+2. Si el rojo de `tests` es por el motor, no lo declares como pasado: hacé lo que dice el mensaje
+   y volvé a correr. Si no se puede, **es un bloqueante del lote y no del PR**.
 3. ¿El test que falló está en un archivo que el PR toca? **Si sí, es tuyo** — arreglalo.
 4. Si no, y huele a contención —N motores a la vez—, **corré `verificar.py --solo tests`** solo.
    Una contención ya no es: hasta el 2026-10-01 los N carriles compartían `user://`, y gdUnit4
