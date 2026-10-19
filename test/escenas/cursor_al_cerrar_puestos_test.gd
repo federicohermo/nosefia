@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.MouseMode]:
 	var local: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
-	local.set("_partida", Partida.nueva())
+	local.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(local)
 	local.get_node("Interfaz/PersianaDeLaNoche").terminar()
 	(local.get("_reloj") as Node).set_process(false)

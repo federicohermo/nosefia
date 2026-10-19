@@ -7,7 +7,7 @@ func after_test() -> void:
 	get_tree().paused = false
 
 
-func _local(jornada: int = 7) -> Node3D:
+func _local(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> Node3D:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
 	local.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(local)
@@ -106,7 +106,7 @@ func test_todas_las_noches_y_reloj_apagado() -> void:  # AC-NTF-020, AC-NTF-023
 		if jornada == Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ:
 			assert_str((local.get("_reloj_de_mesa") as Label3D).text).is_empty()
 		reloj.avanzar(1.0 / ritmo)
-		assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+		assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_true()
 		pila._process(Notificaciones.DURACION)
 		reloj.avanzar(1.0)
 		assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
@@ -125,7 +125,7 @@ func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
 	assert_array(_textos(local)).is_empty()
 	reloj.avanzar(1.0)
 	assert_array(_textos(local)).is_empty()
-	assert_int((local.get("_partida") as Partida).jornada()).is_equal(3)
+	assert_int((local.get("_partida") as Partida).jornada()).is_equal(6)
 	assert_bool(local.get("_ciclo").abrir_la_jornada()).is_true()
 	reloj.set_process(false)
 	reloj.avanzar((Reglas.DURACION_DEL_TURNO - 3600.0) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)

@@ -345,7 +345,7 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 	_almacen = ALMACEN.instantiate()
 	get_tree().root.add_child(_almacen)
 	_almacen.call("anunciar_la_noche")
-	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(3)
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(6)
 	assert_int((_almacen.get("_partida") as Partida).medios()).is_equal(1)
 	var nueva := _celular().bandeja()
 	assert_object(nueva).is_not_same(anterior)
@@ -361,7 +361,7 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 		assert_int(nueva.no_leidos(quien)).is_equal(mensajes.size())
 		assert_bool(mensajes.has(recibido)).is_false()
 		for mensaje in mensajes:
-			assert_int(mensaje.jornada).is_less_equal(3)
+			assert_int(mensaje.jornada).is_less_equal(6)
 	assert_array(quienes).is_equal(esperados.keys())
 	guardado.borrar()
 

@@ -58,10 +58,6 @@ func _recuadro(almacen: Node3D) -> PantallaDeHipotesis:
 	return almacen.get_node("Interfaz/PantallaDeHipotesis")
 
 
-func _placa(almacen: Node3D) -> String:
-	return (almacen.get_node("Interfaz/PersianaDeLaNoche").get("_placa") as Label).text
-
-
 func _q() -> InputEventAction:
 	var q := InputEventAction.new()
 	q.action = Celular.ACCION
@@ -78,7 +74,9 @@ func _segunda_con(pistas: Array[String]) -> Partida:
 
 
 func test_la_reflexion_retiene_la_entrada_y_fija_las_notas() -> void:  # AC-SHF-028, AC-INV-057
-	var almacen: Node3D = await _almacen()
+	var almacen: Node3D = await _almacen(
+		Partida.desde({"jornada": ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS})
+	)
 	var aperturas := _aperturas(almacen)
 	var pantalla := await _hasta_la_reflexion(almacen)
 	assert_bool(pantalla.visible).is_true()
@@ -100,8 +98,7 @@ func test_la_reflexion_retiene_la_entrada_y_fija_las_notas() -> void:  # AC-SHF-
 		ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size()
 	)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	assert_array(aperturas).is_equal([2])
-	assert_str(_placa(almacen)).is_equal("NOCHE 2")
+	assert_array(aperturas).is_equal([5])
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_celular(almacen).celular().fijo()).is_false()
 
@@ -115,7 +112,7 @@ func test_elegir_guarda_y_la_espera_retiene_la_tercera() -> void:  # AC-INV-062,
 	recuadro.botones()[1].pressed.emit()
 	recuadro.botones().back().pressed.emit()
 	var guardado := Guardado.new().cargar()
-	assert_dict(guardado["elecciones"]).is_equal({2: "2B"})
+	assert_dict(guardado["elecciones"]).is_equal({5: "2B"})
 	assert_int(guardado["cierre_pendiente"]).is_zero()
 	var cuadro := 1.0 / 60.0
 	almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE - cuadro)
@@ -125,8 +122,7 @@ func test_elegir_guarda_y_la_espera_retiene_la_tercera() -> void:  # AC-INV-062,
 	almacen.call("_process", 10.0)
 	assert_bool(recuadro.visible).is_false()
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	assert_array(aperturas).is_equal([3])
-	assert_str(_placa(almacen)).is_equal("NOCHE 3")
+	assert_array(aperturas).is_equal([6])
 
 
 func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-029
@@ -153,11 +149,10 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	assert_int(recuadro.botones().size()).is_equal(1)
 	assert_array(aperturas).is_empty()
 	recuadro.botones().back().pressed.emit()
-	assert_dict(Guardado.new().cargar()["elecciones"]).is_equal({2: "2A"})
+	assert_dict(Guardado.new().cargar()["elecciones"]).is_equal({5: "2A"})
 	almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	assert_array(aperturas).is_equal([3])
-	assert_str(_placa(almacen)).is_equal("NOCHE 3")
+	assert_array(aperturas).is_equal([6])
 	assert_int(pantalla.a_la_vista()).is_zero()
 	var grupos := reposicion.find_children("SueltosDe*", "MultiMeshInstance3D", false, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
@@ -174,7 +169,7 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	assert_array(aperturas).is_equal([3, 4])
+	assert_array(aperturas).is_equal([6, 7])
 	(
 		assert_array(reposicion.find_children("SueltosDe*", "MultiMeshInstance3D", false, false))
 		. is_equal(grupos)

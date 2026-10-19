@@ -17,7 +17,7 @@ func after_test() -> void:
 
 func _abrir(recibir: bool = true) -> Node3D:
 	_almacen = ALMACEN.instantiate()
-	_almacen.set("_partida", Partida.nueva())
+	_almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(_almacen)
 	_almacen.get_node("Jugador").set_physics_process(false)
 	_almacen.get("_reloj").set_process(false)

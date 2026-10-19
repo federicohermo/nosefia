@@ -81,8 +81,8 @@ func test_un_cierre_retomado_con_reflexion_no_abre_la_noche() -> void:  # AC-SHF
 				PartidaSerializada
 				. sanear(
 					{
-						PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 2,
-						PartidaSerializada.clave(PartidaSerializada.Campo.CIERRE_PENDIENTE): 1,
+						PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 5,
+						PartidaSerializada.clave(PartidaSerializada.Campo.CIERRE_PENDIENTE): 4,
 					}
 				)
 			)

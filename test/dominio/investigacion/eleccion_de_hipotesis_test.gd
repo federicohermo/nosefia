@@ -61,7 +61,7 @@ func test_elegir_una_sola_vez() -> void:  # AC-INV-061
 	assert_int(notas.size()).is_equal(5)
 	var hipotesis_2b: Hipotesis = reflexion.opciones()[1]
 	assert_str(notas[-1].texto).is_equal(hipotesis_2b.texto)
-	assert_int(notas[-1].jornada).is_equal(2)
+	assert_int(notas[-1].jornada).is_equal(5)
 	assert_int(notas[-1].orden).is_greater(notas[-2].orden)
 	assert_str(expediente.eleccion(5)).is_equal("2B")
 	for otra: String in ["2B", "2A"]:

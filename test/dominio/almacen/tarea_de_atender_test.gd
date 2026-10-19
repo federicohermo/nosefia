@@ -27,10 +27,10 @@ func test_la_primera_noche_llega_por_horario_y_no_por_abrir() -> void:  # AC-CTR
 
 func test_ambas_compras_y_no_los_despachos_cumplen_tin_y_tia() -> void:  # AC-CTR-041, AC-CTR-068
 	for jornada: int in [1, 2, 3, 4]:
-		_cumplir_tin_y_tia(jornada)
+		assert_bool(_cumplir_tin_y_tia(jornada).completada()).is_true()
 
 
-func _cumplir_tin_y_tia(jornada: int) -> void:
+func _cumplir_tin_y_tia(jornada: int) -> TareaDeAtender:
 	var inventario := Apertura.inventario_con_faltantes({}, {})
 	var compradores := Compradores.de_la_jornada(jornada)
 	var tarea := TareaDeAtender.new(compradores, inventario)
@@ -39,7 +39,7 @@ func _cumplir_tin_y_tia(jornada: int) -> void:
 		var atencion := tarea.atencion()
 		assert_object(atencion).is_not_null()
 		if atencion == null:
-			return
+			return tarea
 		assert_bool(atencion.despachar_sin_vender()).is_false()
 		atencion.interactuar(null)
 		while not atencion.puede_abandonar():
@@ -66,6 +66,7 @@ func _cumplir_tin_y_tia(jornada: int) -> void:
 	]:
 		assert_int(tarea.vendidas_de(Catalogo.de(id))).is_equal(1)
 	assert_array(tarea.avanzar(Reglas.DURACION_DEL_TURNO)).is_empty()
+	return tarea
 
 
 func test_perder_a_tin_y_vender_a_tia_no_cumple_atencion() -> void:  # AC-CTR-040

@@ -105,7 +105,7 @@ func test_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre() -> void:  # AC-
 func test_otra_jornada_cierra_el_fijo_y_conserva_lecturas() -> void:  # AC-INV-036, AC-INV-037
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
 	sistema.mostrar_fijo(Conversacion.Interlocutor.JEFE)
-	sistema.abrir_jornada(3)
+	sistema.abrir_jornada(6)
 	assert_bool(sistema.celular().abierto()).is_false()
 	assert_bool(sistema.celular().fijo()).is_false()
 	# La introducción sigue leída; los dos mensajes de apertura J2 son nuevos.
@@ -148,7 +148,7 @@ func test_el_tramo_identificado_emite_solo_en_su_chat_visible() -> void:  # AC-I
 	sistema.pedir_chat(Conversacion.Interlocutor.JEFE)
 	sistema.pedir_tramo("J2_6", "falta_algo")
 	assert_array(pedidos).is_empty()
-	sistema.abrir_jornada(2)
+	sistema.abrir_jornada(5)
 	sistema.pedir_tramo("J2_6", "falta_algo")
 	assert_array(pedidos).is_empty()
 	sistema.pedir_alternar(false)
@@ -169,7 +169,7 @@ func test_el_tramo_identificado_emite_solo_en_su_chat_visible() -> void:  # AC-I
 # AC-INV-039, AC-INV-040
 func test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura() -> void:
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
-	sistema.abrir_jornada(2)
+	sistema.abrir_jornada(5)
 	sistema.pedir_alternar(false)
 	sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
 	var jefe := sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)
@@ -179,7 +179,7 @@ func test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura() -> void:
 		sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
 		sistema.pedir_alternar(false)
 		sistema.pedir_alternar(false)
-		sistema.abrir_jornada(2)
+		sistema.abrir_jornada(5)
 	assert_int(sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN).size()).is_equal(15)
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.YASMIN)).is_zero()
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(jefe)

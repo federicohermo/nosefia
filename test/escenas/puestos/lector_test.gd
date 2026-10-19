@@ -407,15 +407,15 @@ func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # 
 			agarre.entregar()
 
 
-func test_la_partida_retomada_en_cuatro_es_manual_y_una_nueva_es_automatica() -> void:  # AC-CTR-026
-	var datos := {PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 4}
+func test_la_partida_retomada_en_siete_es_manual_y_una_nueva_es_automatica() -> void:  # AC-CTR-026
+	var datos := {PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 7}
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde(datos))
 	add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)
 	for _cuadro in 4:
 		await get_tree().physics_frame
-	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(4)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(7)
 	assert_bool(_caja(almacen).generador().es_manual()).is_true()
 	var nueva: Node3D = auto_free(ALMACEN.instantiate())
 	nueva.set("_partida", Partida.nueva())
