@@ -1,4 +1,4 @@
-## Abre la segunda jornada y usa sus tachos para preparar bolsas físicas en los fixtures.
+## Abre la noche de sacar la basura y usa sus tachos para preparar bolsas físicas en los fixtures.
 extends RefCounted
 
 const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
@@ -11,7 +11,7 @@ const RUTAS: Array[NodePath] = [
 
 static func abrir(almacen: Node3D) -> void:
 	var partida: Partida = almacen.get("_partida")
-	while partida.jornada() < 2:
+	while partida.jornada() < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 		partida.cerrar_la_jornada(partida.obligatorias().size())
 		FinDeLaReflexion.terminar(partida)
 		almacen.get("_ciclo").abrir_la_jornada()

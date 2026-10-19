@@ -21,7 +21,10 @@ func _piso() -> PisoDelLocal:
 static func _jabon_de(
 	tipo: ReglasDeLaLimpieza.TipoDeMancha, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
 ) -> StringName:
-	if jornada == 2 and tipo == ReglasDeLaLimpieza.TipoDeMancha.MOHO:
+	if (
+		jornada == AnomaliasDeLaJornada.JORNADA_SIN_AZUL
+		and tipo == ReglasDeLaLimpieza.TipoDeMancha.MOHO
+	):
 		return AnomaliasDeLaJornada.id_de_poetico()
 	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
 		if ReglasDeLaLimpieza.JABONES[jabon] == ReglasDeLaLimpieza.AGUA_QUE_BORRA[tipo]:

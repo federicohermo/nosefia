@@ -218,7 +218,7 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	assert_float(_restante()).is_equal(restante)
 
 
-func test_continuar_carga_tres_y_siete_medios_sin_instrucciones() -> void:  # AC-SAV-021
+func test_continuar_carga_seis_y_siete_medios_sin_instrucciones() -> void:  # AC-SAV-021
 	(
 		assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 7})))
 		. is_true()
@@ -226,10 +226,10 @@ func test_continuar_carga_tres_y_siete_medios_sin_instrucciones() -> void:  # AC
 	_abrir()
 	_almacen.call("anunciar_la_noche")
 	var partida: Partida = _almacen.get("_partida")
-	assert_int(partida.jornada()).is_equal(3)
+	assert_int(partida.jornada()).is_equal(6)
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(_instrucciones().visible).is_false()
-	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 3")
+	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 6")
 	assert_bool(_jugador().suspendido()).is_true()
 	var restante := _restante()
 	_reloj().set("_ultimo_cuadro_usec", Time.get_ticks_usec() - 120000000)

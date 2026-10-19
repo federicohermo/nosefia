@@ -68,14 +68,14 @@ func test_la_lectura_entera_del_comentario_descarta_solo_el_medio() -> void:  # 
 	assert_int(Legajo.con_medios(6).apercibimientos()).is_equal(3)
 
 
-func test_la_quinta_con_siete_cumple_y_con_un_motivo_despide() -> void:  # AC-EMP-022
+func test_la_ultima_con_siete_cumple_y_con_un_motivo_despide() -> void:  # AC-EMP-022
 	for llamado: bool in [false, true]:
 		var partida := Partida.new(Legajo.con_medios(7))
-		for noche: int in 5:
+		for noche: int in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
 			partida.abrir_la_jornada()
-			if noche == 4 and llamado:
+			if noche == ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1 and llamado:
 				partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
-			partida.cerrar_la_jornada(5)
+			partida.cerrar_la_jornada(partida.obligatorias().size())
 		var final := Partida.Final.DESPEDIDO if llamado else Partida.Final.CONTRATO_CUMPLIDO
 		assert_int(partida.final()).is_equal(final)
 		assert_int(partida.medios()).is_equal(8 if llamado else 7)

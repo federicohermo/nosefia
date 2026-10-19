@@ -288,7 +288,7 @@ func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() ->
 			for tarea: Tarea in almacen.get("_partida").obligatorias():
 				reloj.completar(tarea)
 			reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
-			assert_int(almacen.get("_partida").jornada()).is_equal(2)
+			assert_int(almacen.get("_partida").jornada()).is_equal(5)
 			assert_bool(almacen.get("_ciclo").abrir_la_jornada()).is_true()
 		var lista: Array = _listas.back()
 		var tarea := _atenciones(almacen).tarea()
@@ -681,7 +681,7 @@ func test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez() -> void:
 	await _mirar_balde(almacen)
 	await _pulsar_real()
 	assert_int(piso.balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
-	assert_bool(almacen.get("_partida").uso_de_poetico_en(2)).is_true()
+	assert_bool(almacen.get("_partida").uso_de_poetico_en(5)).is_true()
 	assert_object(almacen.get("_agarre").cuerpo_sostenido()).is_same(cuerpo)
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_same(identidad)
 	assert_array(_cantidades(almacen, poetico)).is_equal(retirado)

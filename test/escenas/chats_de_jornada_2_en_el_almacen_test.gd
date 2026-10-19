@@ -91,11 +91,12 @@ func _clic(punto: Vector2) -> void:
 
 func _checkpoint() -> Partida:
 	var partida := Partida.nueva()
-	partida.abrir_la_jornada()
-	for tarea: Tarea in partida.obligatorias():
-		tarea.completar()
-	partida.cerrar_la_jornada(partida.obligatorias().size())
-	FinDeLaReflexion.terminar(partida)
+	for _noche in ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		partida.abrir_la_jornada()
+		for tarea: Tarea in partida.obligatorias():
+			tarea.completar()
+		partida.cerrar_la_jornada(partida.obligatorias().size())
+		FinDeLaReflexion.terminar(partida)
 	return partida
 
 
@@ -104,14 +105,15 @@ func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() ->
 	assert_vector(get_viewport().get_visible_rect().size).is_equal(Vector2(1920, 1080))
 	assert_bool(Guardado.new().escribir(PoliticaDeGuardado.datos(_checkpoint()))).is_true()
 	await _abrir()
-	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	)
 	assert_bool((_almacen.get("_instrucciones") as CanvasLayer).visible).is_false()
 	var bandeja := _celular().bandeja()
 	assert_int(bandeja.no_leidos(YASMIN)).is_equal(15)
 	var jefe := bandeja.mensajes_de(JEFE)
-	assert_int(jefe.size()).is_equal(23)
-	assert_bool(jefe[19].identidad.begins_with("DEVOLUCION_J1_")).is_true()
-	assert_str(jefe[21].identidad).is_equal("J2_CONTENEDOR_FOTO")
+	assert_str(jefe[-2].identidad).is_equal("J2_CONTENEDOR_FOTO")
+	assert_bool(jefe[-3].identidad.begins_with("DEVOLUCION_J4_")).is_true()
 	await _q()
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
 	assert_int(lista.get_child_count()).is_equal(2)
@@ -120,7 +122,7 @@ func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() ->
 	await _clic((lista.get_child(1) as Button).get_global_rect().get_center())
 	assert_int(_celular().celular().chat()).is_equal(YASMIN)
 	assert_int(bandeja.no_leidos(YASMIN)).is_zero()
-	assert_int(bandeja.no_leidos(JEFE)).is_equal(23)
+	assert_int(bandeja.no_leidos(JEFE)).is_equal(jefe.size())
 	var reloj := _almacen.get("_reloj") as RelojDelTurno
 	var turno := reloj.get("_turno") as Turno
 	var antes := turno.tiempo_restante()
@@ -160,7 +162,11 @@ func test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll() -> void:
 	_celular().pedir_volver()
 	_celular().pedir_chat(JEFE)
 	await _cuadros(4)
-	var foto := _burbuja(21).find_children("*", "TextureButton", true, false)[0] as TextureButton
+	var indice_de_la_foto := _celular().bandeja().mensajes_de(JEFE).size() - 2
+	var foto := (
+		_burbuja(indice_de_la_foto).find_children("*", "TextureButton", true, false)[0]
+		as TextureButton
+	)
 	scroll.ensure_control_visible(foto)
 	await _cuadros(4)
 	var posicion := scroll.scroll_vertical

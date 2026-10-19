@@ -171,8 +171,10 @@ func test_q_no_cierra_y_la_pausa_congela_la_devolucion() -> void:  # AC-EMP-063,
 	)
 
 
-func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC-EMP-065
-	var almacen: Node3D = await _almacen()
+func test_continuar_dos_veces_abre_una_sola_noche_siguiente() -> void:  # AC-EMP-064, AC-EMP-065
+	var almacen: Node3D = await _almacen(
+		Partida.desde({"jornada": ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS})
+	)
 	var pantalla := await _cerrar(almacen)
 	var interfaz := _pantalla_del_celular(almacen)
 	var ahora := [0]
@@ -212,13 +214,14 @@ func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_celular(almacen).celular().abierto()).is_false()
 	var persiana: PersianaDeLaNoche = almacen.get_node("Interfaz/PersianaDeLaNoche")
-	assert_str((persiana.get("_placa") as Label).text).is_equal("NOCHE 2")
+	assert_str((persiana.get("_placa") as Label).text).is_equal("NOCHE 5")
 	var partida: Partida = almacen.get("_partida")
-	assert_int(partida.jornada()).is_equal(2)
+	assert_int(partida.jornada()).is_equal(ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS + 1)
 	persiana.terminar()
 	var historial := _celular(almacen).bandeja().mensajes_de(JEFE)
 	var devolucion := PackedStringArray()
-	for indice: int in range(19, 19 + partida.mensajes_del_jefe().size()):
+	var hasta := historial.size() - 2
+	for indice: int in range(hasta - partida.mensajes_del_jefe().size(), hasta):
 		devolucion.append(historial[indice].texto)
 	assert_array(devolucion).is_equal(partida.mensajes_del_jefe())
 	assert_str(historial[-2].identidad).is_equal("J2_CONTENEDOR_FOTO")
