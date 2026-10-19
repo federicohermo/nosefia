@@ -331,7 +331,7 @@ func test_recibido_futuro_no_aparece_en_el_chat_abierto() -> void:  # AC-INV-028
 	assert_int(anteriores.size()).is_equal(15)
 	var futuro := Mensaje.new()
 	futuro.identidad = "FUTURO_DE_PRUEBA"
-	futuro.jornada = 3
+	futuro.jornada = 6
 	futuro.momento = Mensaje.Momento.APERTURA
 	futuro.texto = "Este mensaje todavía no llegó."
 	_celular().recibir(Conversacion.Interlocutor.YASMIN, futuro)

@@ -195,7 +195,7 @@ func test_la_pendiente_en_tacho_piso_o_mano_no_cruza_de_noche() -> void:  # AC-C
 		AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 		AvanceDeDevolucion.terminar_movimiento(pantalla)
 		await get_tree().process_frame
-		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
+		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(6)
 		assert_object(agarre.manos().sostenido()).is_null()
 		for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):
 			assert_bool(bolsa.visible).is_false()

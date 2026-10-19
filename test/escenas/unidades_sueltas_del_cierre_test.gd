@@ -23,6 +23,7 @@ func after_test() -> void:
 
 func _abrir(con_lugar: bool = true) -> void:
 	_almacen = ALMACEN.instantiate()
+	_almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(_almacen)
 	AperturaConLugar.abrir_con_semilla(_almacen)
 	if con_lugar:

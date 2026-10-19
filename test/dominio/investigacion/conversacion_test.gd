@@ -92,7 +92,7 @@ func test_notas_tiene_recurso_propio_sin_mover_interlocutores() -> void:  # AC-I
 	assert_int(Conversacion.Interlocutor.YASMIN).is_equal(3)
 	assert_int(notas.interlocutor).is_equal(Conversacion.Interlocutor.NOTAS)
 	assert_str(notas.nombre).is_equal("Notas")
-	assert_int(notas.jornada_de_menu).is_equal(3)
+	assert_int(notas.jornada_de_menu).is_equal(6)
 	assert_array(notas.mensajes).is_empty()
 	assert_object(notas).is_not_same(Conversacion.de(Conversacion.Interlocutor.JEFE))
 	assert_object(notas).is_not_same(Conversacion.de(Conversacion.Interlocutor.YASMIN))
