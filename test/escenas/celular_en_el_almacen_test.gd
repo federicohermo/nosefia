@@ -22,7 +22,7 @@ func _desmontar_almacen() -> void:
 	_almacen = null
 
 
-func _abrir(jornada: int = 1) -> void:
+func _abrir(jornada: int = 4) -> void:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set("_partida", Partida.desde(PartidaSerializada.sanear({"jornada": jornada})))
 	get_tree().root.add_child(_almacen)
@@ -321,7 +321,7 @@ func test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos() -> void:  # AC-INV
 
 
 func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-INV-037
-	_abrir(3)
+	_abrir(6)
 	(_almacen.get("_reloj") as RelojDelTurno).set_process(false)
 	var anterior := _celular().bandeja()
 	var esperados: Dictionary = {}
@@ -338,7 +338,7 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 		assert_int(anterior.mensajes_de(quien).size()).is_equal(esperados[quien].size() + 1)
 		_celular().pedir_volver()
 	var guardado := Guardado.new()
-	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 1}))).is_true()
+	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 1}))).is_true()
 	assert_bool(guardado.hay_guardado()).is_true()
 	await _desmontar_almacen()
 	# La escena reconstruye Partida desde el archivo real; no se inyecta _partida.

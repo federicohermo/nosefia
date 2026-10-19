@@ -10,7 +10,7 @@ const CONTENEDOR := (
 )
 
 
-func _abrir(jornada: int = 2) -> Node3D:
+func _abrir(jornada: int = 5) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)
@@ -51,19 +51,19 @@ func _cumplidas(almacen: Node3D) -> int:
 
 
 func test_solo_la_segunda_noche_muestra_bolsas_en_los_tachos() -> void:  # AC-CLN-007
-	for jornada in range(1, 6):
+	for jornada in range(1, 9):
 		var almacen := await _abrir(jornada)
 		var bolsas: Array[Node3D] = almacen.get("_bolsas")
 		for numero in bolsas.size():
 			var bolsa := bolsas[numero] as ObjetoAgarrable
-			assert_bool(bolsa.visible).is_equal(jornada == 2)
+			assert_bool(bolsa.visible).is_equal(jornada == 5)
 			assert_bool(bolsa.freeze).is_true()
 			assert_bool(bolsa.get_node("Forma").disabled).is_true()
 			var tacho := almacen.get_node(BolsaEnLaMano.RUTAS[numero]) as StaticBody3D
 			assert_bool(tacho.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 			assert_int(tacho.get("tacho")).is_equal(numero)
 			assert_str(bolsa.datos.id).is_equal(ReglasDeLaBasura.id_de_la_bolsa(numero + 1))
-			if jornada != 2:
+			if jornada != 5:
 				_accion(almacen, tacho, ReglasDeLosObjetos.ACCION_AGARRAR)
 				_accion(almacen, tacho, ReglasDelJugador.ACCION_USAR)
 				assert_object((almacen.get("_agarre") as Agarre).manos().sostenido()).is_null()

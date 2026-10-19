@@ -130,7 +130,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	)
 	var terminados := [0]
 	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	assert_int(terminados[0]).is_zero()
 	# Lo que se llevaba queda a los pies, y no en la cara ni donde se mira.
 	assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
@@ -138,7 +138,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.look_at(jugador.global_position + jugador.frente() * 1.2)
 	var pies := agarre.punto_de_respaldo.global_position
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_bool(control.esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_null()

@@ -5,21 +5,32 @@ extends GdUnitTestSuite
 
 
 func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-005
-	for jornada in range(1, 6):
-		var tareas := Apertura.obligatorias(jornada)
-		var tipos: Array[Tarea.Tipo] = []
-		for tarea in tareas:
+	var introduccion: Array[Tarea.Tipo] = [
+		Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER
+	]
+	var fijas: Array[Tarea.Tipo] = [
+		Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
+	]
+	var tabla := {
+		1: introduccion,
+		2: introduccion,
+		3: fijas,
+		4: fijas + [Tarea.Tipo.ORDENAR_LAS_CAJAS],
+		5: fijas + [Tarea.Tipo.SACAR_LA_BASURA],
+		6: fijas,
+		7: fijas,
+		8: fijas,
+	}
+	for jornada: int in tabla:
+		var tipos: Array = []
+		for tarea in Apertura.obligatorias(jornada):
 			tipos.append(tarea.tipo())
-		var esperadas: Array[Tarea.Tipo] = [
-			Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
-		]
-		if jornada == 1:
-			esperadas.append(Tarea.Tipo.ORDENAR_LAS_CAJAS)
-		elif jornada == 2:
-			esperadas.append(Tarea.Tipo.SACAR_LA_BASURA)
-		assert_array(tipos).contains_exactly(esperadas)
+		var esperadas: Array = tabla[jornada]
+		assert_array(tipos).override_failure_message("jornada %d" % jornada).contains_exactly(
+			esperadas
+		)
 		assert_int(Apertura.cantidad_de_obligatorias(jornada)).is_equal(esperadas.size())
-		assert_bool(Apertura.cajas_apiladas(jornada)).is_equal(jornada == 1)
+		assert_bool(Apertura.cajas_apiladas(jornada)).is_equal(jornada == 4)
 
 
 func test_el_turno_de_la_jornada_nace_con_el_presupuesto_entero() -> void:  # AC-SHF-001
@@ -34,7 +45,7 @@ func test_el_turno_de_la_jornada_nace_sin_ninguna_tarea_cumplida() -> void:  # A
 
 
 func test_dos_aperturas_no_comparten_instancias_ni_cumplidas() -> void:  # AC-SHF-005
-	for jornada in range(1, 6):
+	for jornada in _jornadas():
 		var primera := Apertura.obligatorias(jornada)
 		for tarea in primera:
 			tarea.completar()
@@ -83,6 +94,7 @@ func test_cada_caja_del_deposito_arranca_con_ocho_en_todas_las_jornadas() -> voi
 	# reponer ni vender, sin un solo error.
 	for jornada in _jornadas():
 		var inventario := Apertura.inventario_de_la_jornada(
+			jornada,
 			Compradores.de_la_jornada(jornada),
 			_casilleros(),
 			_casilleros(),
@@ -179,11 +191,36 @@ func test_cada_jornada_recibe_un_inventario_propio() -> void:
 	var azar := RandomNumberGenerator.new()
 	azar.seed = 17
 	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 8}
-	var una := Apertura.inventario_de_la_jornada([], casilleros, casilleros, azar)
+	var una := Apertura.inventario_de_la_jornada(2, [], casilleros, casilleros, azar)
 	azar.seed = 17
-	var otra := Apertura.inventario_de_la_jornada([], casilleros, casilleros, azar)
+	var otra := Apertura.inventario_de_la_jornada(2, [], casilleros, casilleros, azar)
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var al_abrir := otra.unidades(actroncito, Inventario.Ubicacion.GONDOLA)
 	una.mover(actroncito, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)
 	assert_int(una.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(al_abrir + 1)
 	assert_int(otra.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(al_abrir)
+
+
+func test_la_primera_jornada_abre_sin_faltantes_con_cualquier_semilla() -> void:  # AC-STK-094
+	for semilla in range(20):
+		var azar := RandomNumberGenerator.new()
+		azar.seed = semilla
+		var inventario := Apertura.inventario_de_la_jornada(
+			1, Compradores.de_la_jornada(1), _casilleros(), _casilleros(), azar
+		)
+		assert_array(inventario.faltantes()).is_empty()
+		for producto in Catalogo.todos():
+			assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
+				ReglasDelEstante.UNIDADES_POR_CAJA
+			)
+
+
+func test_la_segunda_jornada_sortea_faltantes() -> void:  # AC-STK-094
+	var azar := RandomNumberGenerator.new()
+	azar.seed = 3
+	var inventario := Apertura.inventario_de_la_jornada(
+		2, Compradores.de_la_jornada(2), _casilleros(), _casilleros(), azar
+	)
+	assert_int(inventario.faltantes().size()).is_between(
+		ReglasDelEstante.TIPOS_QUE_FALTAN.x, ReglasDelEstante.TIPOS_QUE_FALTAN.y
+	)

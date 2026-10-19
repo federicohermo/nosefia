@@ -32,7 +32,7 @@ const ARCHIVOS_DEL_SPEC := [
 const PATRONES_DE_ESTADO_PROPIO := "var\\s+_(manchas|limpias|cumplida|balde|mopa|agua)\\b"
 
 ## Las dos noches que la ficha decide: siete manchas la primera y ocho la segunda.
-const JORNADAS: Array[int] = [1, 2]
+const JORNADAS: Array[int] = [4, 5]
 
 var _turno: Turno = null
 var _avisos_de_tarea: int = 0
@@ -49,9 +49,10 @@ func before_test() -> void:
 
 
 func _limpiador(
-	presupuesto: float = Reglas.DURACION_DEL_TURNO, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
+	presupuesto: float = Reglas.DURACION_DEL_TURNO,
+	jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 ) -> Limpiador:
-	var obligatorias := Apertura.obligatorias(1)
+	var obligatorias := Apertura.obligatorias(4)
 	_turno = Turno.new(presupuesto, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
@@ -94,7 +95,7 @@ static func _jabon_de(limpiador: Limpiador, lugar: PisoDelLocal.Lugar) -> String
 	]
 	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
 		if ReglasDeLaLimpieza.JABONES[jabon] == pedida:
-			if limpiador.piso().jornada() == 2 and pedida == ReglasDeLaLimpieza.Agua.AZUL:
+			if limpiador.piso().jornada() == 5 and pedida == ReglasDeLaLimpieza.Agua.AZUL:
 				return AnomaliasDeLaJornada.id_de_poetico()
 			return jabon
 	return &""
@@ -184,7 +185,7 @@ func test_con_una_mancha_de_menos_la_obligatoria_no_se_cuenta() -> void:
 		before_test()
 		var limpiador := _limpiador(Reglas.DURACION_DEL_TURNO, jornada)
 		var total := limpiador.piso().lugares().size()
-		assert_int(total).is_equal(7 if jornada == 1 else 8)
+		assert_int(total).is_equal(7 if jornada == 4 else 8)
 		assert_int(_borrar_menos(limpiador, 1)).is_equal(total - 1)
 		assert_bool(limpiador.piso().esta_limpio()).is_false()
 		assert_int(_avisos_de_tarea).is_equal(0)
@@ -372,9 +373,9 @@ func test_la_mopa_avisa_que_se_seco_y_la_pasada_seca_dice_su_motivo() -> void:
 
 
 func test_el_tenido_aceptado_publica_identidad_y_conserva_la_senal_de_audio() -> void:  # AC-CLN-066
-	for jornada: int in [1, 2]:
+	for jornada: int in [4, 5]:
 		var limpiador := _limpiador(Reglas.DURACION_DEL_TURNO, jornada)
-		var identidad := &"jabon_azul" if jornada == 1 else AnomaliasDeLaJornada.id_de_poetico()
+		var identidad := &"jabon_azul" if jornada == 4 else AnomaliasDeLaJornada.id_de_poetico()
 		var aceptados: Array[Array] = []
 		limpiador.balde_tenido_con.connect(
 			func(id: StringName, agua: ReglasDeLaLimpieza.Agua) -> void:

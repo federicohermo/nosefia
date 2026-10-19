@@ -317,7 +317,7 @@ func test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa()
 	_accion(jugador, papeles[1], ReglasDeLosObjetos.ACCION_AGARRAR)
 	_accion(jugador, papeles[1], ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_true()
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	assert_array(_papeles(almacen)).is_empty()
@@ -451,7 +451,7 @@ func test_caja_lee_imprime_y_entrega_el_ticket_desde_el_mismo_puesto() -> void:
 # AC-PLY-072, AC-CTR-026
 func test_la_caja_manual_abre_sin_escanear_la_unidad_sostenida() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", 6)
 	var unidad := _unidad(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
@@ -688,7 +688,7 @@ func test_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado() -> voi
 	assert_bool(is_instance_valid(segundo)).is_true()
 	assert_int(avisos.size()).is_equal(1)
 	assert_int((_puesto(almacen).get("_tickets") as Array).size()).is_equal(1)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	assert_bool(is_instance_valid(segundo)).is_false()

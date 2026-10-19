@@ -20,7 +20,7 @@ func before_test() -> void:
 
 
 func _limpiador() -> Limpiador:
-	var obligatorias := Apertura.obligatorias(1)
+	var obligatorias := Apertura.obligatorias(4)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias), obligatorias)
 	var limpiador: Limpiador = auto_free(Limpiador.new())
@@ -31,7 +31,7 @@ func _limpiador() -> Limpiador:
 	limpiador.uso_rechazado.connect(
 		func(motivo: ReglasDeLaLimpieza.Resultado) -> void: _rechazos.append(motivo)
 	)
-	limpiador.arrancar(PisoDelLocal.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA))
+	limpiador.arrancar(PisoDelLocal.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA))
 	return limpiador
 
 

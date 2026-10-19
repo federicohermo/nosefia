@@ -28,7 +28,7 @@ func after_test() -> void:
 
 func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
-	_almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
+	_almacen.set("_partida", Partida.desde({"jornada": 5, "medios": 0}))
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)

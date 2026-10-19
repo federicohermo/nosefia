@@ -136,7 +136,7 @@ func test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada() -> void:  # AC
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
 
-func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  # AC-EMP-008
+func test_todas_las_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  # AC-EMP-008
 	var partida := Partida.nueva()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		_jugar(partida, Apertura.cantidad_de_obligatorias(partida.jornada()))

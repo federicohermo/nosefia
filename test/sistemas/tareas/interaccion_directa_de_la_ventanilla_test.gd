@@ -3,11 +3,11 @@ extends GdUnitTestSuite
 
 func test_el_fin_se_publica_solo_en_la_pulsacion_que_termina() -> void:  # AC-CTR-047
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
-	var obligatorias := Apertura.obligatorias(1)
+	var obligatorias := Apertura.obligatorias(4)
 	reloj.arrancar(Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias), obligatorias)
 	var ventanilla: Ventanilla = auto_free(Ventanilla.new())
 	ventanilla.reloj = reloj
-	var compradores := Compradores.de_la_jornada(1)
+	var compradores := Compradores.de_la_jornada(4)
 	var dialogos := DialogosDeCompradores.new()
 	dialogos.tin = PackedStringArray(["Una sola entrada"])
 	compradores[0].dialogos = dialogos

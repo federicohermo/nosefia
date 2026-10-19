@@ -200,7 +200,7 @@ func _entregar_a_tin(
 	assert_bool(_desorden()).is_false()
 	var atenciones: Ventanilla = _almacen.get("_atenciones")
 	if solapados:
-		var compradores := Compradores.de_la_jornada(1)
+		var compradores := Compradores.de_la_jornada(4)
 		compradores[1].horario = Vector2(10800, 18000)
 		var inventario: Inventario = (_almacen.get("_repositor") as Repositor).estante().get(
 			"_inventario"
@@ -430,7 +430,7 @@ func test_tirar_la_abandonada_descuenta_y_conserva_el_motivo_importante() -> voi
 
 func test_otra_jornada_retira_todas_las_abandonadas() -> void:  # AC-CTR-046
 	var cuerpos := await _abandonar_tin()
-	_almacen.call("_al_abrir_la_jornada", 2)
+	_almacen.call("_al_abrir_la_jornada", 5)
 	for _cuadro in 4:
 		await get_tree().process_frame
 	assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas")).is_empty()

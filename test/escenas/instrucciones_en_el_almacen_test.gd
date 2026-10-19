@@ -220,7 +220,7 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 
 func test_continuar_carga_tres_y_siete_medios_sin_instrucciones() -> void:  # AC-SAV-021
 	(
-		assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 7})))
+		assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 7})))
 		. is_true()
 	)
 	_abrir()
@@ -271,7 +271,7 @@ func test_abandonar_preparacion_no_escribe_y_preserva_checkpoint_anterior() -> v
 	var guardado := Guardado.new()
 	for preparacion: String in ["instrucciones", "entrada_nueva", "entrada_guardada"]:
 		(
-			assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 7})))
+			assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 7})))
 			. is_true()
 		)
 		var anterior := FileAccess.get_file_as_string(guardado.ruta)

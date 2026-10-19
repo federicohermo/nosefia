@@ -16,7 +16,7 @@ func _resaltados(texto: String, cuantos: int) -> void:
 
 
 func test_el_pedido_y_los_nombres_destacados_salen_de_la_ficha() -> void:  # AC-CTR-036
-	var compradores := Compradores.de_la_jornada(1)
+	var compradores := Compradores.de_la_jornada(4)
 	var tin: Dialogo = TEXTOS.inicial(DialogosDeCompradores.Personaje.TIN)
 	var entradas := ""
 	for _entrada in 3:
@@ -32,7 +32,7 @@ func test_el_pedido_y_los_nombres_destacados_salen_de_la_ficha() -> void:  # AC-
 
 
 func test_rechazo_y_recordatorio_enumeran_el_pedido() -> void:  # AC-CTR-037
-	for comprador in Compradores.de_la_jornada(1):
+	for comprador in Compradores.de_la_jornada(4):
 		var recepcion := RecepcionDeCompra.new(comprador.pedido())
 		for rechazar: bool in [false, true]:
 			var dialogo := DialogosDeCompradores.recordatorio(
@@ -50,7 +50,7 @@ func test_rechazo_y_recordatorio_enumeran_el_pedido() -> void:  # AC-CTR-037
 
 
 func test_el_recordatorio_nombra_lo_que_falta_y_el_rechazo_todo_el_pedido() -> void:  # AC-CTR-066
-	var tia: Comprador = Compradores.de_la_jornada(1)[1]
+	var tia: Comprador = Compradores.de_la_jornada(4)[1]
 	var recepcion := RecepcionDeCompra.new(tia.pedido())
 	var primero := tia.pedido().productos()[0]
 	var segundo := tia.pedido().productos()[1]

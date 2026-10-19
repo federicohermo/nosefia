@@ -23,7 +23,7 @@ func tabla() -> Dictionary:
 func crear(padre: Node) -> Node3D:
 	_padre = padre
 	local = load("res://src/escenas/almacen.tscn").instantiate()
-	local.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
+	local.set("_partida", Partida.desde({"jornada": 5, "medios": 0}))
 	local.set("compradores_de_la_apertura", _compradores)
 	padre.add_child(local)
 	local.get("_reloj").set_process(false)

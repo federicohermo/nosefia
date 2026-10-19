@@ -101,3 +101,29 @@ func test_un_guardado_sin_cuentas_retoma_limpio() -> void:  # AC-SAV-025
 	datos[PartidaSerializada.clave(PartidaSerializada.Campo.FALLAS)] = {"VOLAR": 2, "REPONER": 1}
 	partida = Partida.desde(datos)
 	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(1)
+
+
+func test_un_guardado_de_cinco_jornadas_no_se_migra() -> void:  # AC-SAV-033
+	var anterior := _completo()
+	anterior[JORNADA] = 2
+	anterior.erase("cierre_pendiente")
+	var retomada := Partida.desde(PartidaSerializada.sanear(anterior))
+	assert_int(retomada.jornada()).is_equal(2)
+	assert_int(retomada.medios()).is_equal(anterior[MEDIOS])
+	assert_object(retomada.reflexion).is_null()
+	retomada.abrir_la_jornada()
+	var tipos: Array[Tarea.Tipo] = []
+	for tarea: Tarea in retomada.obligatorias():
+		tipos.append(tarea.tipo())
+	assert_array(tipos).contains_exactly(
+		[Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER]
+	)
+	var nombres: Array[String] = []
+	for comprador: Comprador in Compradores.de_la_jornada(retomada.jornada()):
+		nombres.append(comprador.nombre())
+	assert_array(nombres).contains_exactly(["Tin", "Tia"])
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(retomada.jornada())
+	assert_int(bandeja.conversaciones().size()).is_equal(1)
+	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
+		assert_bool(AnomaliasDeLaJornada.util_disponible(jabon, retomada.jornada())).is_true()

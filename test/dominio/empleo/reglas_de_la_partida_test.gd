@@ -29,9 +29,25 @@ const ESPEJOS_DEL_SPEC := [
 const PRIMERA_CIFRA_DE_BALANCE := 2
 
 
-func test_la_partida_dura_las_cinco_jornadas_del_gdd() -> void:
-	assert_int(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA).is_equal(5)
+func test_la_partida_dura_tres_noches_de_introduccion_y_las_cinco_del_gdd() -> void:
+	assert_int(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA).is_equal(8)
 	assert_int(ReglasDeLaPartida.PRIMERA_JORNADA).is_equal(1)
+	assert_int(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA).is_equal(4)
+
+
+func test_lo_atado_a_un_numero_de_jornada_se_cuenta_desde_la_primera_completa() -> void:
+	var completa := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	assert_int(AnomaliasDeLaJornada.JORNADA_SIN_AZUL).is_equal(completa + 1)
+	assert_int(GeneradorDeTickets.JORNADA_SIN_LECTOR).is_equal(completa + 2)
+	assert_int(Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ).is_equal(completa + 2)
+	assert_int(ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS).is_equal(completa)
+	assert_array(ReflexionDeCierre.ENCABEZADOS.keys()).contains_exactly([completa, completa + 1])
+	assert_array(Apertura.PARTICULARES.keys()).contains_exactly([completa, completa + 1])
+	assert_array(PisoDelLocal.MANCHAS_POR_JORNADA.keys()).contains_exactly([completa, completa + 1])
+	assert_array(DevolucionDelJefe.BASURA_POR_JORNADA.keys()).contains_exactly(
+		[completa + 1, completa + 2]
+	)
+	assert_array(DevolucionDelJefe.PARTICULARES.keys()).contains_exactly([completa, completa + 1])
 
 
 func test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance() -> void:

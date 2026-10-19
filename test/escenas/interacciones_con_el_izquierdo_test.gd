@@ -17,6 +17,7 @@ func after_test() -> void:
 
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	for cuadro in 3:
 		await get_tree().physics_frame

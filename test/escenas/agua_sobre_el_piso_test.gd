@@ -18,6 +18,7 @@ func test_instanciar_y_descartar_el_almacen_sin_abrirlo_no_deja_nodos_huerfanos(
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	for cuadro in 2:
 		await get_tree().physics_frame
@@ -153,7 +154,7 @@ func test_agua_limpia_deja_charco_sin_cambiar_las_manchas_y_la_jornada_lo_borra(
 	assert_int(limpiador.piso().lugares().size()).is_equal(7)
 	assert_bool(limpiador.piso().esta_limpio()).is_false()
 	assert_bool(limpiador.piso().balde().tiene_agua()).is_false()
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	assert_int(charcos.call("cantidad")).is_zero()
 	assert_int(limpiador.piso().lugares().size()).is_equal(8)
 	assert_int(puesto.manchas().size()).is_equal(8)
@@ -309,7 +310,7 @@ func test_las_senales_llenan_y_vacian_con_nivel_gradual_sin_reiniciar_al_repinta
 	agua.call("_physics_process", .125)
 	assert_float(agua.position.y).is_less(reposo)
 	assert_bool(agua.visible).is_true()
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 5)
 	assert_bool(agua.visible).is_false()
 	assert_float(agua.position.y).is_equal_approx(reposo, .00001)
 
@@ -350,8 +351,8 @@ func test_el_charco_reserva_solo_las_manchas_de_la_noche() -> void:  # AC-CLN-05
 	var agarre: Agarre = almacen.get("_agarre")
 	var mopa: RigidBody3D = almacen.get_node("Objetos/Mopa")
 	var puesto: Node3D = almacen.get("_limpieza")
-	for jornada: int in [1, 2]:
-		if jornada != 1:
+	for jornada: int in [4, 5]:
+		if jornada != 4:
 			almacen.call("_al_abrir_la_jornada", jornada)
 		assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
 		var piso := limpiador.piso()

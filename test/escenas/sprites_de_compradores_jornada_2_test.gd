@@ -167,7 +167,7 @@ func test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes() -> void:
 
 func test_el_fixture_no_modifica_las_selecciones_productivas() -> void:
 	var antes: Array[Array] = []
-	for jornada in range(1, 6):
+	for jornada in range(1, 9):
 		var datos: Array = []
 		for comprador in Compradores.de_la_jornada(jornada):
 			datos.append([comprador.nombre(), comprador.personaje, comprador.horario])
@@ -175,7 +175,7 @@ func test_el_fixture_no_modifica_las_selecciones_productivas() -> void:
 	if not await _crear():
 		return
 	await _fixture.call("llegar")
-	for jornada in range(1, 6):
+	for jornada in range(1, 9):
 		var datos: Array = []
 		for comprador in Compradores.de_la_jornada(jornada):
 			datos.append([comprador.nombre(), comprador.personaje, comprador.horario])

@@ -156,6 +156,7 @@ func _mancha_de(almacen: Node3D, lugar: PisoDelLocal.Lugar) -> Node3D:
 
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	for cuadro in 4:
 		await get_tree().physics_frame

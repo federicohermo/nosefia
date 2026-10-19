@@ -481,7 +481,7 @@ func test_la_retirada_no_conserva_objetivo_ni_contorno_y_cambia_la_figura() -> v
 # AC-PLY-092, AC-PLY-055, AC-PLY-056
 func test_la_consulta_generica_no_es_una_barrera_y_se_apaga_en_fisico() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", 6)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
@@ -515,7 +515,7 @@ func test_la_consulta_generica_no_es_una_barrera_y_se_apaga_en_fisico() -> void:
 	assert_bool(puesto.get("panel").visible).is_true()
 	assert_bool(jugador.suspendido()).is_true()
 	puesto.call("cerrar")
-	almacen.call("_al_abrir_la_jornada", 1)
+	almacen.call("_al_abrir_la_jornada", 4)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	assert_bool(puesto.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_false()

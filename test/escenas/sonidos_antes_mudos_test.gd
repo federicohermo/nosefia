@@ -37,6 +37,7 @@ func after_test() -> void:
 
 func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
+	_almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	# Se escucha antes de entrar al árbol: abrir el almacén ya arranca el ambiente.
 	var reproductor: ReproductorDeSonidos = _almacen.get_node(REPRODUCTOR)
 	reproductor.sonido_pedido.connect(

@@ -124,6 +124,7 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 
 func _almacen_con_jugador_quieto() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -181,6 +182,7 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:
 	# lo que tiene que impedir que la caja entre en la madera es que el cuerpo no llegue, y eso
 	# sólo se ejerce con `move_and_slide` corriendo.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -358,6 +360,7 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	# Mirando la tapa de otra caja queda centrada sobre ella, que es el caso donde el apoyo mide
 	# lo mismo que la caja y las dos cuentas del margen se cruzan.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -392,6 +395,7 @@ func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
 	# Con una caja justo enfrente el cursor cae en su costado, no en su tapa. Antes eso mandaba la
 	# caja al piso de adelante, y apilar pedía subir la mira hasta la tapa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -754,6 +758,7 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
 	# que la mira toca. Desde dos lugares, que es lo que trae las dos clases de apoyo: pegado al
 	# estante la mira llega a la madera, y un paso atrás ya no, así que el apoyo es el piso.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	almacen.get_node("Estructura/deposito_pallet_piso").position.x += 100
@@ -884,6 +889,7 @@ func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:
 	# llegado, porque `cast_motion` contesta que el movimiento entero es seguro cuando la forma
 	# arranca ya tocando algo. De 256 soltadas alrededor de esa góndola, 20 quedaban adentro de ella.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -1029,6 +1035,7 @@ func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
 	# `interactuable` y tenía `interactuar()`, y `jugador.gd` le daba el clic entero a cualquier
 	# cosa enfocada que contestara `null` —que para una mancha es siempre—.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -1082,6 +1089,7 @@ func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:
 	# y la primera importa tanto como la segunda: una pila que se acomoda sola apenas carga la
 	# escena sería peor que una que no se desarma nunca.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -1159,6 +1167,7 @@ func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:
 	# La caja llevada entra donde entra el cuerpo, así que darle su volumen no puede empujar a
 	# nadie. Antes nacía 0,8 m adelante: agarrando de cerca el jugador se subía al estante.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -1184,6 +1193,7 @@ func test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso() -> void:
 	# Una caja olvidada en un pasillo no puede ser una pared. Se corre de un empujón, y sin
 	# tumbarse ni levantarse del piso: se arrastra.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	await get_tree().physics_frame
@@ -1324,6 +1334,7 @@ func test_levantar_la_caja_hace_caer_el_producto_apoyado_encima() -> void:
 	# La cascada que desarma una pila lo tiene que despertar también a él, y sólo a él: el
 	# producto del piso, a un metro, no estaba encima de nada.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
@@ -1353,6 +1364,7 @@ func test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto() -> void
 	# avisarle, y cuando sale entera de abajo el producto se queda en el aire. Se empuja el
 	# doble que el caso del arrastre, porque tiene que salir entera y no sólo moverse.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
@@ -1395,6 +1407,7 @@ func test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo() -> voi
 	# La cascada llega hasta el producto de arriba de todo y no se corta en la última caja:
 	# sacada la de abajo, la del medio cae, y el producto cae con ella.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)

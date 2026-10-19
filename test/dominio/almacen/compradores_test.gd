@@ -6,7 +6,7 @@
 extends GdUnitTestSuite
 
 const COMPRADORES := "res://src/dominio/almacen/compradores.gd"
-const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA + 2
+const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 
 
 func test_la_jornada_trae_los_compradores_que_pide_el_balance() -> void:  # AC-CTR-001
