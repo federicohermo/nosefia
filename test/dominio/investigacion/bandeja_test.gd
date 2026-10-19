@@ -5,6 +5,41 @@
 ## recurso dejaría al test siguiente —y a la partida siguiente— empezando leído.
 extends GdUnitTestSuite
 
+const JEFE := Conversacion.Interlocutor.JEFE
+const PRIMERA := ReglasDeLaPartida.PRIMERA_JORNADA
+const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+
+
+## Cada devolución queda después de los mensajes de su jornada y antes de los de la siguiente.
+func test_las_instrucciones_llegan_con_su_jornada() -> void:  # AC-INV-065, AC-EMP-066
+	var guion := Conversacion.de(JEFE)
+	var bandeja := Bandeja.new([guion])
+	var esperado: Array[Mensaje] = []
+	var devoluciones: Array[Mensaje] = []
+	for jornada in range(PRIMERA, COMPLETA + 1):
+		bandeja.abrir_jornada(jornada)
+		var propios := guion.mensajes.filter(
+			func(mensaje: Mensaje) -> bool: return mensaje.jornada == jornada
+		)
+		assert_array(propios).is_not_empty()
+		esperado.append_array(propios)
+		assert_array(bandeja.mensajes_de(JEFE)).is_equal(esperado)
+		if jornada == COMPLETA:
+			break
+		var devolucion := Mensaje.new()
+		devolucion.identidad = "devolucion_%d" % jornada
+		devolucion.jornada = jornada
+		devolucion.momento = Mensaje.Momento.CIERRE
+		devolucion.texto = devolucion.identidad
+		assert_bool(bandeja.recibir(JEFE, devolucion)).is_true()
+		devoluciones.append(devolucion)
+		esperado.append(devolucion)
+	var retomada := Bandeja.new([guion])
+	retomada.abrir_jornada(COMPLETA)
+	for devolucion in devoluciones:
+		retomada.recibir(JEFE, devolucion)
+	assert_array(retomada.mensajes_de(JEFE)).is_equal(esperado)
+
 
 func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void:  # AC-INV-028
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
@@ -16,24 +51,16 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	assert_array(mensajes).is_equal(
 		Conversacion.de(quien).mensajes.filter(func(m: Mensaje) -> bool: return m.jornada == 1)
 	)
-	assert_int(mensajes.size()).is_equal(19)
-	var textos := 0
-	var fotos := 0
+	assert_array(mensajes).is_not_empty()
 	for mensaje in mensajes:
 		assert_int(mensaje.jornada).is_equal(1)
 		assert_str(mensaje.de_quien).is_equal("Enrique Peldaño")
-		if mensaje.foto != null:
-			fotos += 1
-		else:
-			textos += 1
-	assert_int(textos).is_equal(12)
-	assert_int(fotos).is_equal(7)
-	assert_int(bandeja.no_leidos_totales()).is_equal(19)
+	assert_int(bandeja.no_leidos_totales()).is_equal(mensajes.size())
 	# La reconstrucción desde un guardado no depende de una bandeja previamente filtrada.
 	var restaurada := Bandeja.new(Conversacion.desde_disco())
 	restaurada.abrir_jornada(1)
 	assert_array(restaurada.conversaciones()).is_equal(bandeja.conversaciones())
-	assert_int(restaurada.no_leidos_totales()).is_equal(19)
+	assert_int(restaurada.no_leidos_totales()).is_equal(mensajes.size())
 	# Los bloques documentados siguen disponibles; no aparecen contactos sin guion.
 	restaurada.abrir_jornada(5)
 	assert_int(restaurada.conversaciones().size()).is_equal(2)

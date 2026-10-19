@@ -18,7 +18,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro01"
 orden = 0
 de_quien = "Enrique Peldaño"
-texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo cinco jornadas. ¿Quién pudiera, no?\n\nDe todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
+texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo ocho jornadas. ¿Quién pudiera, no?\n\nDe todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
 
 [sub_resource type="Resource" id="Foto02"]
 script = ExtResource("mensaje")
@@ -86,6 +86,7 @@ texto = "En segundo lugar, [b]ANOTAR LOS PRODUCTOS VENDIDOS [/b]durante la noche
 [sub_resource type="Resource" id="Foto07"]
 script = ExtResource("mensaje")
 identidad = "J1_Foto07"
+jornada = 2
 orden = 10
 de_quien = "Enrique Peldaño"
 foto = ExtResource("foto09")
@@ -93,6 +94,7 @@ foto = ExtResource("foto09")
 [sub_resource type="Resource" id="Intro07"]
 script = ExtResource("mensaje")
 identidad = "J1_Intro07"
+jornada = 2
 orden = 11
 de_quien = "Enrique Peldaño"
 texto = "Tercero, hacer la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndolas [/b]y reponé los ítems que falten con los de las [b]cajas del depósito[/b]."
@@ -100,6 +102,7 @@ texto = "Tercero, hacer la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndol
 [sub_resource type="Resource" id="Intro08"]
 script = ExtResource("mensaje")
 identidad = "J1_Intro08"
+jornada = 2
 orden = 12
 de_quien = "Enrique Peldaño"
 texto = "No quiero ver ni un solo hueco vacío.\n\nUn único producto ausente en la mañana puede hacer la diferencia entre un local de excelencia y uno mediocre. No podemos dar la impresión de que estamos cortos de stock."
@@ -107,6 +110,7 @@ texto = "No quiero ver ni un solo hueco vacío.\n\nUn único producto ausente en
 [sub_resource type="Resource" id="Foto09"]
 script = ExtResource("mensaje")
 identidad = "J1_Foto09"
+jornada = 3
 orden = 13
 de_quien = "Enrique Peldaño"
 foto = ExtResource("foto11")
@@ -114,6 +118,7 @@ foto = ExtResource("foto11")
 [sub_resource type="Resource" id="Intro09"]
 script = ExtResource("mensaje")
 identidad = "J1_Intro09"
+jornada = 3
 orden = 14
 de_quien = "Enrique Peldaño"
 texto = "Cuarto, pero no menor, [b]LIMPIAR[/b]. Vas a encontrar los [b]productos de limpieza en el baño[/b], además de algunas [b]notitas [/b]explicando cómo usarlos. No deberías tener problemas con eso."
@@ -121,6 +126,7 @@ texto = "Cuarto, pero no menor, [b]LIMPIAR[/b]. Vas a encontrar los [b]productos
 [sub_resource type="Resource" id="Intro10"]
 script = ExtResource("mensaje")
 identidad = "J1_Intro10"
+jornada = 4
 orden = 15
 de_quien = "Enrique Peldaño"
 texto = "Además de los quehaceres rutinarios, siempre queda alguna cosita por hacer. Por eso, no te sorprendas si ves una quinta tarea diferente cada noche. Tranqui, que te voy a dejar instrucciones por mensaje."
@@ -128,6 +134,7 @@ texto = "Además de los quehaceres rutinarios, siempre queda alguna cosita por h
 [sub_resource type="Resource" id="Foto11"]
 script = ExtResource("mensaje")
 identidad = "J1_Foto11"
+jornada = 4
 orden = 16
 de_quien = "Enrique Peldaño"
 foto = ExtResource("foto13")
@@ -135,9 +142,17 @@ foto = ExtResource("foto13")
 [sub_resource type="Resource" id="Intro11"]
 script = ExtResource("mensaje")
 identidad = "J1_Intro11"
+jornada = 4
 orden = 17
 de_quien = "Enrique Peldaño"
 texto = "Para esta noche, te pido [b]ORGANIZAR LAS CAJAS[/b] que dejó el proveedor. Acomodalas [b]en los estantes del depósito[/b] y que no quede ni una en el piso, ¿ok?"
+
+[sub_resource type="Resource" id="Reponer"]
+script = ExtResource("mensaje")
+identidad = "J1_Reponer"
+orden = 10
+de_quien = "Enrique Peldaño"
+texto = "Lo que les entregues lo sacás de las [b]góndolas[/b]. Después, [b]reponé esas unidades[/b] con las cajas del depósito. No quiero ver huecos."
 
 [sub_resource type="Resource" id="Intro12"]
 script = ExtResource("mensaje")
@@ -167,4 +182,4 @@ script = ExtResource("conversacion")
 nombre = "Enrique Peldaño"
 rol = "Jefe"
 imagen = ExtResource("enrique")
-mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("Foto09"), SubResource("Intro09"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("Intro12"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])
+mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("Reponer"), SubResource("Intro12"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("Foto09"), SubResource("Intro09"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])

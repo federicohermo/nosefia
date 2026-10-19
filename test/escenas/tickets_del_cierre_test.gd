@@ -79,6 +79,7 @@ func _seguir() -> void:
 	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	await get_tree().process_frame
+	AvanceDeDevolucion.leer_las_instrucciones(_almacen)
 	_almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 
 

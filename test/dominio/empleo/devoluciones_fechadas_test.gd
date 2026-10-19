@@ -90,17 +90,21 @@ func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC
 	for mensaje: Mensaje in devoluciones:
 		assert_bool(bandeja.recibir(JEFE, mensaje)).is_true()
 	var historial := bandeja.mensajes_de(JEFE)
-	assert_int(historial.size()).is_equal(25)
-	assert_str(historial[19].texto).is_equal("Buen día!")
-	assert_str(historial[19].get("identidad")).is_not_equal(historial[23].get("identidad"))
-	assert_str(historial[21].get("identidad")).is_equal("J2_CONTENEDOR_FOTO")
-	assert_str(historial[22].get("identidad")).is_equal("J2_CONTENEDOR_TEXTO")
-	assert_str(historial[23].texto).is_equal("Buen día!")
-	assert_int(historial[23].jornada).is_equal(5)
+	var guion := Conversacion.de(JEFE).mensajes
+	var previos := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada < 5)
+	var apertura := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)
+	var cuarta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 4)
+	var quinta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)
+	assert_array(cuarta).is_not_empty()
+	assert_array(quinta).is_not_empty()
+	var esperado: Array = previos + cuarta + apertura + quinta
+	assert_array(historial).is_equal(esperado)
+	assert_str(cuarta[0].identidad).is_not_equal(quinta[0].identidad)
+	var cantidad := guion.size()
 	assert_int(bandeja.conversaciones().size()).is_equal(2)
 	if bandeja.conversaciones().size() != 2:
 		return
 	assert_int(bandeja.no_leidos(bandeja.conversaciones()[1].interlocutor)).is_equal(15)
 	historial.clear()
-	assert_int(bandeja.mensajes_de(JEFE).size()).is_equal(25)
-	assert_int(Conversacion.de(JEFE).mensajes.size()).is_equal(21)
+	assert_int(bandeja.mensajes_de(JEFE).size()).is_equal(esperado.size())
+	assert_int(Conversacion.de(JEFE).mensajes.size()).is_equal(cantidad)

@@ -108,8 +108,12 @@ func test_otra_jornada_cierra_el_fijo_y_conserva_lecturas() -> void:  # AC-INV-0
 	sistema.abrir_jornada(6)
 	assert_bool(sistema.celular().abierto()).is_false()
 	assert_bool(sistema.celular().fijo()).is_false()
-	# La introducción sigue leída; los dos mensajes de apertura J2 son nuevos.
-	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(2)
+	# Lo leído en la primera sigue leído; lo de las jornadas siguientes es nuevo.
+	var nuevos := Conversacion.de(Conversacion.Interlocutor.JEFE).mensajes.filter(
+		func(mensaje: Mensaje) -> bool: return mensaje.jornada > ReglasDeLaPartida.PRIMERA_JORNADA
+	)
+	assert_array(nuevos).is_not_empty()
+	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(nuevos.size())
 	sistema.pedir_alternar(false)
 	assert_int(sistema.celular().pantalla()).is_equal(Celular.Pantalla.MENU)
 

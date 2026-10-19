@@ -1,93 +1,67 @@
 extends GdUnitTestSuite
 
 const GUION := "res://src/dominio/investigacion/conversacion_con_el_jefe.tres"
-const TEXTOS: Array[String] = [
-	(
-		"¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a "
-		+ "ser de solo cinco jornadas. ¿Quién pudiera, no?\n\nDe todos modos, acordate "
-		+ "de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
-	),
-	(
-		"Bueno, como ya te comenté, [b]la jornada es de 20:00 a 08:00. [/b]Debería "
-		+ "sobrarte el tiempo para cumplir con las [b]tareas [/b]que te voy a "
-		+ "dejar.\n\nCualquier cosa, siempre van a quedar [b]anotadas en el corcho[/b],"
-		+ " atrás del mostrador. Te las resumo:"
-	),
-	(
-		"Primero, y lo más importante: [b]ATENDER A LOS CLIENTES[/b]. A esa hora, la "
-		+ "entrada principal queda cerrada, así que vas a tener que [b]hablarles y "
-		+ "entregarles los productos por la ventanilla[/b]. ¡Y no te olvides de "
-		+ "[b]darles un ticket [/b]de recibo!"
-	),
-	(
-		"Para [b]generar un ticket[/b], tenés que pasar todos los productos por el "
-		+ "[b]lector del mostrador[/b] y darle al botón “IMPRIMIR” en el [b]programa de"
-		+ " la caja registradora[/b]. Nada muy complejo."
-	),
-	(
-		"Conozco a varios que hasta son capaces de dejar los productos e irse si no "
-		+ "les das su recibo. Eso NO puede pasar.\n\nMi estación de servicio es el "
-		+ "único local del pueblo que queda abierto las 24 horas, así que los "
-		+ "compradores nocturnos dependen de nosotros. Atenderlos mal es faltarle el "
-		+ "respeto a nuestros vecinos, así que ojito."
-	),
-	(
-		"En segundo lugar, [b]ANOTAR LOS PRODUCTOS VENDIDOS [/b]durante la noche en "
-		+ "la [b]computadora[/b]. Bastante simple."
-	),
-	(
-		"Tercero, hacer la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndolas [/b]y"
-		+ " reponé los ítems que falten con los de las [b]cajas del depósito[/b]."
-	),
-	(
-		"No quiero ver ni un solo hueco vacío.\n\nUn único producto ausente en la "
-		+ "mañana puede hacer la diferencia entre un local de excelencia y uno "
-		+ "mediocre. No podemos dar la impresión de que estamos cortos de stock."
-	),
-	(
-		"Cuarto, pero no menor, [b]LIMPIAR[/b]. Vas a encontrar los [b]productos de "
-		+ "limpieza en el baño[/b], además de algunas [b]notitas [/b]explicando cómo "
-		+ "usarlos. No deberías tener problemas con eso."
-	),
-	(
-		"Además de los quehaceres rutinarios, siempre queda alguna cosita por hacer. "
-		+ "Por eso, no te sorprendas si ves una quinta tarea diferente cada noche. "
-		+ "Tranqui, que te voy a dejar instrucciones por mensaje."
-	),
-	(
-		"Para esta noche, te pido [b]ORGANIZAR LAS CAJAS[/b] que dejó el proveedor. "
-		+ "Acomodalas [b]en los estantes del depósito[/b] y que no quede ni una en el "
-		+ "piso, ¿ok?"
-	),
-	(
-		"Te voy a tener cortito con esos detalles. Para trabajar en una estación de "
-		+ "servicio tan prestigiosa como esta, tenés que estar al nivel.\n\nMe parece "
-		+ "que con eso cubrimos todo. No te olvides de dejar el local correctamente "
-		+ "ordenado antes de irte. ¿Estamos?"
-	),
-]
+const PRIMERA := ReglasDeLaPartida.PRIMERA_JORNADA
+const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+## Qué recibe cada jornada, en orden. Las fotos van antes de su Intro.
+const ENTRADAS := {
+	PRIMERA:
+	[
+		"J1_Intro01",
+		"J1_Foto02",
+		"J1_Intro02",
+		"J1_Foto03",
+		"J1_Intro03",
+		"J1_Foto04",
+		"J1_Intro04",
+		"J1_Intro05",
+		"J1_Foto06",
+		"J1_Intro06",
+		"J1_Reponer",
+		"J1_Intro12",
+	],
+	PRIMERA + 1: ["J1_Foto07", "J1_Intro07", "J1_Intro08"],
+	PRIMERA + 2: ["J1_Foto09", "J1_Intro09"],
+	COMPLETA: ["J1_Intro10", "J1_Foto11", "J1_Intro11"],
+}
 
 
-func test_uno_doce_volver_y_ok_son_pantallas() -> void:  # AC-EMP-045
-	var instrucciones := InstruccionesDelJefe.new(12)
+func _guion() -> Conversacion:
+	return load(GUION)
+
+
+func _identidades(mensajes: Array[Mensaje]) -> Array[String]:
+	var identidades: Array[String] = []
+	for mensaje in mensajes:
+		identidades.append(mensaje.identidad)
+	return identidades
+
+
+func test_volver_y_ok_recorren_las_pantallas_de_la_primera() -> void:  # AC-EMP-045
+	var cantidad := (
+		InstruccionesDelJefe
+		. pasos_de(InstruccionesDelJefe.de_la_jornada(_guion().mensajes, PRIMERA))
+		. size()
+	)
+	var instrucciones := InstruccionesDelJefe.new(cantidad)
 	assert_int(instrucciones.paso_actual()).is_equal(1)
 	assert_bool(instrucciones.se_puede_volver()).is_false()
 	assert_bool(instrucciones.volver()).is_false()
-	for paso in 11:
+	for paso in cantidad - 1:
 		instrucciones.avanzar()
-	assert_int(instrucciones.paso_actual()).is_equal(12)
+	assert_int(instrucciones.paso_actual()).is_equal(cantidad)
 	assert_bool(instrucciones.en_el_ultimo()).is_true()
 	assert_bool(instrucciones.terminadas()).is_false()
 	assert_bool(instrucciones.volver()).is_true()
-	assert_int(instrucciones.paso_actual()).is_equal(11)
+	assert_int(instrucciones.paso_actual()).is_equal(cantidad - 1)
 	assert_bool(instrucciones.en_el_ultimo()).is_false()
 	instrucciones.avanzar()
 	instrucciones.avanzar()
 	assert_bool(instrucciones.terminadas()).is_true()
 	instrucciones.avanzar()
-	assert_int(instrucciones.paso_actual()).is_equal(12)
+	assert_int(instrucciones.paso_actual()).is_equal(cantidad)
 	assert_bool(instrucciones.volver()).is_false()
-	var otras := InstruccionesDelJefe.new(12)
+	var otras := InstruccionesDelJefe.new(cantidad)
 	for paso in 3:
 		otras.avanzar()
 	for paso in 3:
@@ -107,43 +81,77 @@ func test_un_paso_termina_al_primer_avance() -> void:  # AC-EMP-045
 	assert_int(instrucciones.paso_actual()).is_equal(1)
 
 
-func test_guion_y_siete_fotos_en_doce_pantallas() -> void:  # AC-EMP-046, AC-EMP-047
-	var guion: Conversacion = load(GUION)
+func test_cada_jornada_de_introduccion_recibe_lo_suyo() -> void:  # AC-EMP-046, AC-EMP-047
+	var guion := _guion()
 	var originales: Array[Mensaje] = guion.mensajes.duplicate()
-	var mensajes := Bandeja.new([guion]).mensajes_de(guion.interlocutor)
-	var pasos := InstruccionesDelJefe.pasos_de(mensajes)
-	assert_int(mensajes.size()).is_equal(19)
-	assert_int(pasos.size()).is_equal(12)
 	assert_str(guion.nombre).is_equal("Enrique Peldaño")
 	assert_object(guion.imagen).is_not_null()
-	var fotos: Array[int] = [2, 3, 4, 6, 7, 9, 11]
+	for jornada: int in ENTRADAS:
+		var propios: Array[Mensaje] = []
+		for mensaje in guion.mensajes:
+			if mensaje.jornada == jornada:
+				propios.append(mensaje)
+		assert_array(_identidades(propios)).is_equal(ENTRADAS[jornada])
 	var bandeja := Bandeja.new([guion])
-	var texto_actual := 0
-	var entrada := 0
-	for indice in pasos.size():
-		var paso: InstruccionesDelJefe.Paso = pasos[indice]
-		assert_int(paso.textos.size()).is_equal(1)
-		for texto in paso.textos:
-			if fotos.has(texto_actual + 1):
-				assert_object(paso.foto).is_same(mensajes[entrada])
-				assert_object(paso.foto.foto).is_not_null()
-				assert_str(paso.foto.texto).is_empty()
-				assert_object(bandeja.adjunto_de(guion.interlocutor, entrada)).is_same(texto)
-				assert_str(paso.foto.foto.resource_path).is_equal(
-					(
-						"res://assets/ui/manada/fotos/intro-%02d.png"
-						% ([4, 6, 7, 8, 9, 11, 13][fotos.find(texto_actual + 1)])
-					)
-				)
-				entrada += 1
-			assert_object(texto).is_same(mensajes[entrada])
-			assert_str(texto.texto).is_equal(TEXTOS[texto_actual])
-			assert_int(texto.jornada).is_equal(1)
-			entrada += 1
-			texto_actual += 1
-	assert_int(texto_actual).is_equal(12)
-	assert_int(entrada).is_equal(19)
+	bandeja.abrir_jornada(COMPLETA)
+	var chat := bandeja.mensajes_de(guion.interlocutor)
+	var esperado: Array[String] = []
+	for jornada: int in ENTRADAS:
+		esperado.append_array(ENTRADAS[jornada])
+	assert_array(_identidades(chat)).is_equal(esperado)
+	for indice in chat.size():
+		if chat[indice].foto != null:
+			assert_str(chat[indice].texto).is_empty()
+			assert_str(chat[indice + 1].identidad).is_equal(
+				chat[indice].identidad.replace("Foto", "Intro")
+			)
+			assert_object(bandeja.adjunto_de(guion.interlocutor, indice)).is_same(chat[indice + 1])
 	assert_array(guion.mensajes).is_equal(originales)
+
+
+func test_las_pantallas_de_cada_jornada() -> void:  # AC-EMP-045, AC-EMP-046
+	var mensajes := _guion().mensajes
+	var primera := InstruccionesDelJefe.pasos_de(
+		InstruccionesDelJefe.de_la_jornada(mensajes, PRIMERA)
+	)
+	var con_foto: Array[String] = []
+	for paso in primera:
+		assert_int(paso.textos.size()).is_equal(1)
+		if paso.foto != null:
+			con_foto.append(paso.textos[0].identidad)
+	assert_array(con_foto).is_equal(["J1_Intro02", "J1_Intro03", "J1_Intro04", "J1_Intro06"])
+	assert_str(primera[-2].textos[0].identidad).is_equal("J1_Reponer")
+	assert_object(primera[-2].foto).is_null()
+	assert_str(primera[-1].textos[0].identidad).is_equal("J1_Intro12")
+	for jornada_y_intro: Array in [[PRIMERA + 1, "J1_Intro07"], [PRIMERA + 2, "J1_Intro09"]]:
+		var pasos := InstruccionesDelJefe.pasos_de(
+			InstruccionesDelJefe.de_la_jornada(mensajes, jornada_y_intro[0])
+		)
+		assert_str(pasos[0].textos[0].identidad).is_equal(jornada_y_intro[1])
+		assert_object(pasos[0].foto).is_not_null()
+	for jornada in range(PRIMERA, COMPLETA):
+		var propios := InstruccionesDelJefe.de_la_jornada(mensajes, jornada)
+		var textos := propios.filter(func(mensaje: Mensaje) -> bool: return mensaje.foto == null)
+		assert_array(_identidades(propios)).is_equal(ENTRADAS[jornada])
+		assert_int(InstruccionesDelJefe.pasos_de(propios).size()).is_equal(textos.size())
+
+
+func test_fuera_de_la_introduccion_no_hay_instrucciones() -> void:  # AC-EMP-046, AC-EMP-077
+	var mensajes := _guion().mensajes
+	var ultima := PRIMERA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	for jornada in [PRIMERA - 1, ultima + 1]:
+		assert_array(InstruccionesDelJefe.de_la_jornada(mensajes, jornada)).is_empty()
+	for jornada in range(COMPLETA, ultima + 1):
+		assert_array(InstruccionesDelJefe.de_la_jornada(mensajes, jornada)).is_empty()
+
+
+func test_una_jornada_sin_mensajes_propios_no_tiene_instrucciones() -> void:  # AC-EMP-077
+	var sin_la_segunda: Array[Mensaje] = []
+	for mensaje in _guion().mensajes:
+		if mensaje.jornada != PRIMERA + 1:
+			sin_la_segunda.append(mensaje)
+	assert_array(InstruccionesDelJefe.de_la_jornada(sin_la_segunda, PRIMERA + 1)).is_empty()
+	assert_array(InstruccionesDelJefe.de_la_jornada(sin_la_segunda, PRIMERA)).is_not_empty()
 
 
 func test_sin_mensajes_no_inventa_pantallas() -> void:  # AC-EMP-046
