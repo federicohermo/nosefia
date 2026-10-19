@@ -89,10 +89,13 @@ func _leer_todo(jornada: int = PRIMERA) -> void:
 		_siguiente().pressed.emit()
 
 
-func _guardar(jornada: int) -> void:
+## Sin medios: cerrar una noche vacía no despide.
+func _guardar(jornada: int, medios: int = 0) -> void:
 	(
 		assert_bool(
-			Guardado.new().escribir(PartidaSerializada.sanear({"jornada": jornada, "medios": 7}))
+			Guardado.new().escribir(
+				PartidaSerializada.sanear({"jornada": jornada, "medios": medios})
+			)
 		)
 		. is_true()
 	)
@@ -293,7 +296,7 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 
 
 func test_continuar_una_completa_no_muestra_instrucciones() -> void:  # AC-SAV-021, AC-EMP-077
-	_guardar(COMPLETA + 1)
+	_guardar(COMPLETA + 1, 7)
 	_abrir()
 	_almacen.call("retomar_la_partida")
 	var partida: Partida = _almacen.get("_partida")

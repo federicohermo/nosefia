@@ -69,7 +69,7 @@ func _comprobar_pantalla(
 	for indice in paso.textos.size():
 		var cuerpo: RichTextLabel = cuerpos[indice]
 		assert_str(cuerpo.get_parsed_text()).is_equal(_sin_formato(paso.textos[indice].texto))
-	if numero == total:
+	if paso.foto == null:
 		assert_int(cuerpos.size()).is_equal(paso.textos.size())
 	var fotos: Array[Node] = contenido.find_children("*", "TextureRect", false, false)
 	var con_caja := (
