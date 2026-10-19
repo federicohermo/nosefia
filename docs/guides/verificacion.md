@@ -38,6 +38,16 @@ sin reservar un grupo a un tema. La última partición corre también los demás
 
 Sin `--particion-tests`, el comando conserva la ejecución completa en un solo checkout.
 
+## Importación secuencial de recursos
+
+En Godot 4.7.2, `project.godot` fija `editor/import/use_multiple_threads=false` para procesar las importaciones de recursos en secuencia.
+El [PR oficial de Godot #123546](https://github.com/godotengine/godot/pull/123546) corrige una carrera de `ClassDB` durante importaciones concurrentes.
+El ajuste serializa la importación de cada worker; las seis particiones de suites siguen en paralelo.
+No modifica los hilos del juego ni los que un importador pueda crear por su cuenta.
+La causa de los timeouts observados en Linux sigue sin confirmarse.
+
+Al adoptar una versión estable que incluya la corrección, validar importaciones frías y cálidas antes de retirar este ajuste.
+
 ## Paso fijo en pruebas físicas
 
 Las suites `lo_soltado_fuera_de_los_solidos_test.gd` y `agarre_fisico_test.gd` observan pasos de física y estados espaciales.

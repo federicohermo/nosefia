@@ -34,6 +34,10 @@ gdscript/warnings/untyped_declaration=2
 
 window/size/mode=2
 
+[editor]
+
+import/use_multiple_threads=false
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg", "res://addons/godot_mcp/plugin.cfg")
