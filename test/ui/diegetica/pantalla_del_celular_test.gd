@@ -346,3 +346,78 @@ func test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema() -> v
 	assert_array(primaria.fallbacks).is_equal(respaldos)
 	assert_str(primaria.get_supported_chars()).is_equal(caracteres)
 	assert_object((fuente as FontVariation).base_font).is_same(primaria)
+
+
+func _boton_del_mouse(posicion: Vector2, apretado: bool) -> InputEventMouseButton:
+	var boton := InputEventMouseButton.new()
+	boton.button_index = MOUSE_BUTTON_LEFT
+	boton.pressed = apretado
+	boton.position = posicion
+	return boton
+
+
+func _movimiento(posicion: Vector2, relativo: Vector2) -> InputEventMouseMotion:
+	var movimiento := InputEventMouseMotion.new()
+	movimiento.position = posicion
+	movimiento.relative = relativo
+	return movimiento
+
+
+func test_arrastrar_el_historial_lo_desplaza_y_soltar_termina() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(24)
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var centro := scroll.get_global_rect().get_center()
+	var abajo := scroll.scroll_vertical
+	assert_int(abajo).is_greater(0)
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	get_viewport().push_input(_boton_del_mouse(centro, true))
+	await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 60), Vector2(0, 60)))
+	await get_tree().process_frame
+	var arrastrado := scroll.scroll_vertical
+	assert_int(arrastrado).is_less(abajo)
+	get_viewport().push_input(_movimiento(centro, Vector2(0, -100000)))
+	await get_tree().process_frame
+	var barra := scroll.get_v_scroll_bar()
+	assert_int(scroll.scroll_vertical).is_equal(int(barra.max_value - barra.page))
+	get_viewport().push_input(_boton_del_mouse(Vector2(1, 1), false))
+	await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	assert_bool((pantalla.get("_telefono") as Control).visible).is_true()
+	var soltado := scroll.scroll_vertical
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 60), Vector2(0, 60)))
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_equal(soltado)
+
+
+func test_ocultar_el_celular_termina_el_arrastre() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(24)
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var centro := scroll.get_global_rect().get_center()
+	get_viewport().push_input(_boton_del_mouse(centro, true))
+	await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
+	(pantalla.get("_telefono") as Control).hide()
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	(pantalla.get("_telefono") as Control).show()
+	var quieto := scroll.scroll_vertical
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 60), Vector2(0, 60)))
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_equal(quieto)

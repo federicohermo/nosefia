@@ -36,7 +36,7 @@ const BUSCAR := "Buscar contacto..."
 const LILA := Color("c99cf4")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
-const AYUDA := "RUEDA DEL MOUSE / DESPLAZAR HISTORIAL"
+const AYUDA := "ARRASTRÁ O USÁ LA RUEDA / DESPLAZAR HISTORIAL"
 const DIAS: Array[String] = [
 	"HOY",
 	"AYER",
@@ -84,6 +84,8 @@ var _historial: Array[Mensaje] = []
 var _burbujas: Array[PanelContainer] = []
 var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
+var _arrastrando: bool = false
+var _posicion_del_arrastre: float = 0.0
 
 
 func _ready() -> void:
@@ -108,6 +110,13 @@ func _ready() -> void:
 	_opciones.text = "..."
 	_entrada.placeholder_text = MENSAJE
 	_ayuda.text = AYUDA
+	_scroll.gui_input.connect(_al_tocar_el_historial)
+	_scroll.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_telefono.visibility_changed.connect(
+		func() -> void:
+			if not _telefono.is_visible_in_tree():
+				_terminar_arrastre()
+	)
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
 	_foto_ampliada.hide()
 	_recordatorio.hide()
@@ -121,6 +130,8 @@ func _ready() -> void:
 func _notification(que: int) -> void:
 	if que == NOTIFICATION_UNPAUSED:
 		_ultimo = _ahora.call()
+	elif que == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_terminar_arrastre()
 
 
 func _process(_delta: float) -> void:
@@ -292,6 +303,9 @@ func cubrir_recordatorio(cubierto: bool) -> void:
 
 
 func _input(evento: InputEvent) -> void:
+	if _arrastrando:
+		_arrastrar(evento)
+		return
 	if not _telefono.visible:
 		return
 	var clic := evento as InputEventMouseButton
@@ -303,6 +317,49 @@ func _input(evento: InputEvent) -> void:
 	elif _cierra_con_un_clic_afuera() and not _telefono.get_global_rect().has_point(clic.position):
 		get_viewport().set_input_as_handled()
 		cierre_pedido.emit()
+
+
+## El mismo arrastre que la planilla de la computadora: el clic sobre un botón queda en el botón.
+func _al_tocar_el_historial(evento: InputEvent) -> void:
+	var clic := evento as InputEventMouseButton
+	if clic != null and clic.pressed and clic.button_index == MOUSE_BUTTON_LEFT:
+		_arrastrando = true
+		_posicion_del_arrastre = _scroll.scroll_vertical
+		_pintar_cursor(Control.CURSOR_DRAG)
+		_scroll.accept_event()
+
+
+func _arrastrar(evento: InputEvent) -> void:
+	if evento is InputEventMouseButton and evento.button_index == MOUSE_BUTTON_LEFT:
+		if not evento.pressed:
+			_terminar_arrastre()
+			get_viewport().set_input_as_handled()
+	elif evento is InputEventMouseMotion:
+		var escala := _scroll.get_global_transform_with_canvas().get_scale().y
+		var barra := _scroll.get_v_scroll_bar()
+		_posicion_del_arrastre = clampf(
+			_posicion_del_arrastre - evento.relative.y / escala,
+			barra.min_value,
+			maxf(barra.min_value, barra.max_value - barra.page)
+		)
+		_scroll.scroll_vertical = roundi(_posicion_del_arrastre)
+		get_viewport().set_input_as_handled()
+
+
+func _terminar_arrastre() -> void:
+	if not _arrastrando:
+		return
+	_arrastrando = false
+	_pintar_cursor(Control.CURSOR_POINTING_HAND)
+
+
+## Las burbujas dejan pasar el clic al historial, así que muestran el mismo cursor que él.
+func _pintar_cursor(forma: Control.CursorShape) -> void:
+	_scroll.mouse_default_cursor_shape = forma
+	for hijo: Node in _mensajes.find_children("*", "Control", true, false):
+		var control := hijo as Control
+		if control.mouse_filter == Control.MOUSE_FILTER_PASS:
+			control.mouse_default_cursor_shape = forma
 
 
 func _sube_antes_de_correrse() -> bool:
@@ -462,9 +519,11 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	panel.add_theme_stylebox_override("panel", _estilo(Color("0b363d"), 16, 16))
 	panel.mouse_filter = Control.MOUSE_FILTER_PASS
+	panel.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	var contenido := VBoxContainer.new()
 	contenido.add_theme_constant_override("separation", 12)
 	contenido.mouse_filter = Control.MOUSE_FILTER_PASS
+	contenido.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	panel.add_child(contenido)
 	if mensaje.foto != null:
 		var foto := TextureButton.new()
