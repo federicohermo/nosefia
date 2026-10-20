@@ -153,7 +153,7 @@ def _material():
     nombre = MATERIAL_CUBIERTA
     assert nombre not in bpy.data.materials, "El material nuevo ya existe"
     rutas = {"Base Color": "diff_1k.jpg", "Roughness": "rough_1k.jpg",
-             "Metallic": "metal_1k.jpg", "Normal": "nor_gl_1k.png"}
+             "Normal": "nor_gl_1k.png"}
     for sufijo in rutas.values():
         assert (TEXTURAS / ("corrugated_iron_02_" + sufijo)).is_file()
     m = bpy.data.materials.new(nombre)
@@ -162,6 +162,7 @@ def _material():
     nodos, enlaces = m.node_tree.nodes, m.node_tree.links
     salida = nodos.new("ShaderNodeOutputMaterial")
     pbr = nodos.new("ShaderNodeBsdfPrincipled")
+    pbr.inputs["Metallic"].default_value = .45
     enlaces.new(pbr.outputs["BSDF"], salida.inputs["Surface"])
     for entrada, sufijo in rutas.items():
         ruta = TEXTURAS / ("corrugated_iron_02_" + sufijo)
@@ -172,9 +173,16 @@ def _material():
         textura.image, textura.extension = imagen, "REPEAT"
         if entrada == "Normal":
             normal = nodos.new("ShaderNodeNormalMap")
-            normal.inputs["Strength"].default_value = .5
+            normal.inputs["Strength"].default_value = 1.35
             enlaces.new(textura.outputs["Color"], normal.inputs["Color"])
             enlaces.new(normal.outputs["Normal"], pbr.inputs["Normal"])
+        elif entrada == "Roughness":
+            rugosidad = nodos.new("ShaderNodeMath")
+            rugosidad.name = "RugosidadDeLaChapa"
+            rugosidad.operation = "MULTIPLY"
+            rugosidad.inputs[1].default_value = .38
+            enlaces.new(textura.outputs["Color"], rugosidad.inputs[0])
+            enlaces.new(rugosidad.outputs[0], pbr.inputs[entrada])
         else:
             enlaces.new(textura.outputs["Color"], pbr.inputs[entrada])
     return m
