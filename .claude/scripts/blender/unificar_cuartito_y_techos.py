@@ -172,8 +172,8 @@ def _material(nombre, metalizado, factor_rugosidad):
     pbr = nodos.new("ShaderNodeBsdfPrincipled")
     pbr.inputs["Metallic"].default_value = metalizado
     if not cuartito:
-        # El galvanizado claro conserva legibilidad sin el albedo fotográfico oscuro.
-        pbr.inputs["Base Color"].default_value = (.235, .25, .265, 1)
+        # El tono intermedio conserva las ondas sin aclarar el techo frente a los laterales.
+        pbr.inputs["Base Color"].default_value = (.11, .12, .13, 1)
     enlaces.new(pbr.outputs["BSDF"], salida.inputs["Surface"])
     for entrada, ruta in rutas.items():
         imagen = bpy.data.images.load(str(ruta), check_existing=True)
