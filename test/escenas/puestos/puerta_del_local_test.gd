@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 
-## Las dos hojas, con el tramo que va desde piso libre del local hasta adentro del
+## Las hojas interiores, con el tramo que va desde piso libre hasta adentro del
 ## cuarto. La altura y el largo están medidos:
 ##
 ## **La cápsula no nace tocando el piso.** A 0,9 m `cast_motion` devolvía 0,37 aun con las hojas
@@ -16,6 +16,7 @@ const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 const VANOS := {
 	"Estructura/puerta": [Vector3(6.744, 1.05, -5.0), Vector3(6.744, 1.05, -9.5)],
 	"Estructura/puerta2": [Vector3(6.7, 1.05, 0.736), Vector3(8.8, 1.05, 0.736)],
+	"Estructura/puerta_limpieza": [Vector3(6.7, 1.05, -13.96), Vector3(9.4, 1.05, -13.96)],
 }
 
 const BANO := "Estructura/puerta2"
@@ -34,7 +35,7 @@ const TRABADAS := {
 const AVISOS := [&"puerta_abierta", &"puerta_cerrada", &"puerta_trabada", &"porton_trabado"]
 
 
-func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
+func test_las_puertas_interiores_cumplen_el_contrato_de_interaccion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
@@ -203,7 +204,7 @@ func _avance(almacen: Node3D, hoja: String) -> float:
 	return espacio.cast_motion(consulta)[1]
 
 
-## Corre cuadros de física hasta que las dos hojas llegaron al tope, o se rinde.
+## Corre cuadros de física hasta que las hojas llegaron al tope, o se rinde.
 func _esperar_el_giro(almacen: Node3D) -> void:
 	for _cuadro in range(120):
 		await get_tree().physics_frame

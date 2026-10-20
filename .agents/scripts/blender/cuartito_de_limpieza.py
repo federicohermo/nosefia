@@ -20,8 +20,8 @@ Hace cinco cosas, todas desde lo que ya trae el modelo:
    del fondo del cuartito, con la misma disposición.
 5. Cuelga sobre las notas una luminaria tubular como la del tablero, más larga.
 
-El cartel se dibuja con una tipografía de píxeles escrita acá: el harness no tiene dependencias,
-y el estilo del original es de bloques de píxeles.
+El cartel usa el atlas artístico de `assets/source/`, con el mismo estilo de las otras puertas.
+Su procedencia acompaña la imagen; la receta del cuarto no vuelve a dibujar la tipografía.
 """
 
 import argparse
@@ -40,7 +40,6 @@ from mathutils import Matrix, Vector
 RAIZ = Path(__file__).resolve().parents[3]
 FUENTE = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend"
 CARPETA_DEL_CARTEL = RAIZ / "assets/source/textures/furniture/Puerta"
-CARTEL_ORIGINAL = CARPETA_DEL_CARTEL / "puerta_solo_empleados.png"
 CARTEL = CARPETA_DEL_CARTEL / "puerta_productos_de_limpieza.png"
 PREFIJO = "cuartito_"
 MARCA = "cuartito_de_limpieza"
@@ -76,25 +75,6 @@ SEPARACION_DEL_REVESTIMIENTO = 0.003
 # La pared del fondo del baño queda a esta distancia detrás de las notas.
 DETRAS_DE_LAS_NOTAS = 0.005
 
-TEXTO_DEL_CARTEL = ("PRODUCTOS", "DE", "LIMPIEZA")
-LETRAS = {
-    "A": ("01110", "10001", "10001", "11111", "10001", "10001", "10001"),
-    "C": ("01111", "10000", "10000", "10000", "10000", "10000", "01111"),
-    "D": ("11110", "10001", "10001", "10001", "10001", "10001", "11110"),
-    "E": ("11111", "10000", "10000", "11110", "10000", "10000", "11111"),
-    "I": ("11111", "00100", "00100", "00100", "00100", "00100", "11111"),
-    "L": ("10000", "10000", "10000", "10000", "10000", "10000", "11111"),
-    "M": ("10001", "11011", "10101", "10101", "10001", "10001", "10001"),
-    "O": ("01110", "10001", "10001", "10001", "10001", "10001", "01110"),
-    "P": ("11110", "10001", "10001", "11110", "10000", "10000", "10000"),
-    "R": ("11110", "10001", "10001", "11110", "10100", "10010", "10001"),
-    "S": ("01111", "10000", "10000", "01110", "00001", "00001", "11110"),
-    "T": ("11111", "00100", "00100", "00100", "00100", "00100", "00100"),
-    "U": ("10001", "10001", "10001", "10001", "10001", "10001", "01110"),
-    "Z": ("11111", "00001", "00010", "00100", "01000", "10000", "11111"),
-    " ": ("00000",) * 7,
-}
-
 
 def _receta(nombre):
     ruta = Path(__file__).with_name(nombre + ".py")
@@ -110,95 +90,6 @@ def _caja_mundial(objeto):
             Vector([max(p[i] for p in puntos) for i in range(3)]))
 
 
-# --- El cartel -------------------------------------------------------------------------------
-
-
-def _pintar_cartel():
-    """Borra el texto de los dos carteles amarillos del atlas y escribe el nuevo."""
-    original = bpy.data.images.load(str(CARTEL_ORIGINAL), check_existing=False)
-    ancho, alto = original.size
-    canales = original.channels
-    pixeles = np.empty(ancho * alto * canales, dtype=np.float32)
-    original.pixels.foreach_get(pixeles)
-    bpy.data.images.remove(original)
-    pixeles = pixeles.reshape(alto, ancho, canales)
-    rgb = pixeles[:, :, :3]
-    amarillo = (rgb[:, :, 0] > 0.55) & (rgb[:, :, 1] > 0.4) & (rgb[:, :, 2] < 0.3)
-    carteles = []
-    for desde, hasta in ((0, ancho // 2), (ancho // 2, ancho)):
-        # Proyecciones y no píxeles sueltos: una mancha de óxido amarilla agrandaría la caja.
-        mitad = amarillo[:, desde:hasta]
-        columnas = np.nonzero(mitad.sum(axis=0) > 15)[0]
-        filas = np.nonzero(mitad.sum(axis=1) > 15)[0]
-        assert columnas.size > 20 and filas.size > 20, "No se encontró el cartel amarillo"
-        carteles.append((columnas.min() + desde, filas.min(), columnas.max() + desde, filas.max()))
-    for x0, y0, x1, y1 in carteles:
-        zona = pixeles[y0 + 2:y1 - 1, x0 + 2:x1 - 1]
-        brillo = zona[:, :, :3].mean(axis=2)
-        tinta = np.median(zona[brillo < 0.3][:, :3], axis=0)
-        # La letra vieja y su borde suavizado son lo que no llega al brillo del amarillo. Se
-        # ensancha dos píxeles para no dejar el halo, y se respetan los remaches de las esquinas.
-        sucio = brillo < 0.8 * np.median(brillo)
-        for _ in range(2):
-            sucio[1:] |= sucio[:-1]
-            sucio[:-1] |= sucio[1:]
-            sucio[:, 1:] |= sucio[:, :-1]
-            sucio[:, :-1] |= sucio[:, 1:]
-        alto_zona, ancho_zona = sucio.shape
-        esquina_y, esquina_x = alto_zona // 6, ancho_zona // 10
-        for filas, columnas in ((slice(0, esquina_y), slice(0, esquina_x)),
-                                (slice(0, esquina_y), slice(-esquina_x, None)),
-                                (slice(-esquina_y, None), slice(0, esquina_x)),
-                                (slice(-esquina_y, None), slice(-esquina_x, None))):
-            sucio[filas, columnas] = False
-        # Cada píxel sucio toma el amarillo limpio más cercano de su columna, y si no hay, de su
-        # fila: las letras son más altas que anchas y la columna conserva el desgaste vertical.
-        for columna in range(ancho_zona):
-            limpio = np.nonzero(~sucio[:, columna])[0]
-            if limpio.size < alto_zona // 4:
-                continue
-            for fila in np.nonzero(sucio[:, columna])[0]:
-                zona[fila, columna] = zona[limpio[np.argmin(np.abs(limpio - fila))], columna]
-                sucio[fila, columna] = False
-        for fila in range(alto_zona):
-            limpio = np.nonzero(~sucio[fila])[0]
-            for columna in np.nonzero(sucio[fila])[0]:
-                zona[fila, columna] = zona[fila, limpio[np.argmin(np.abs(limpio - columna))]]
-        _escribir(zona, tinta)
-    imagen = bpy.data.images.new("puerta_productos_de_limpieza.png", ancho, alto,
-                                 alpha=canales == 4)
-    imagen.pixels.foreach_set(pixeles.reshape(-1))
-    imagen.filepath_raw = str(CARTEL)
-    imagen.file_format = "PNG"
-    imagen.save()
-    bpy.data.images.remove(imagen)
-    imagen = bpy.data.images.load(str(CARTEL), check_existing=False)
-    imagen.filepath = "//../source/textures/furniture/Puerta/puerta_productos_de_limpieza.png"
-    return imagen, carteles
-
-
-def _escribir(zona, tinta):
-    alto, ancho = zona.shape[:2]
-    columnas = max(len(linea) for linea in TEXTO_DEL_CARTEL) * 6 - 1
-    filas = len(TEXTO_DEL_CARTEL) * 7 + (len(TEXTO_DEL_CARTEL) - 1) * 2
-    # El píxel de la letra es más alto que ancho, como en el cartel original.
-    escala_x = max(1, int(ancho * 0.88 / columnas))
-    escala_y = max(1, min(int(alto * 0.84 / filas), escala_x * 2))
-    # La fila 0 de Blender es la de abajo: el texto se escribe de arriba hacia abajo.
-    arriba = alto - 1 - (alto - filas * escala_y) // 2
-    for numero, linea in enumerate(TEXTO_DEL_CARTEL):
-        izquierda = (ancho - (len(linea) * 6 - 1) * escala_x) // 2
-        techo = arriba - numero * 9 * escala_y
-        for indice, letra in enumerate(linea):
-            for fila, bits in enumerate(LETRAS[letra]):
-                for columna, bit in enumerate(bits):
-                    if bit != "1":
-                        continue
-                    x = izquierda + (indice * 6 + columna) * escala_x
-                    y = techo - (fila + 1) * escala_y + 1
-                    zona[y:y + escala_y, x:x + escala_x, :3] = tinta
-
-
 def _material_del_cartel(imagen):
     base = bpy.data.materials["puerta_metal_solo_empleados"]
     material = bpy.data.materials.get("puerta_metal_productos_de_limpieza") or base.copy()
@@ -208,9 +99,6 @@ def _material_del_cartel(imagen):
                 "puerta_solo_empleados"):
             nodo.image = imagen
     return material
-
-
-# --- La puerta -------------------------------------------------------------------------------
 
 
 def _puerta(material):
@@ -233,9 +121,6 @@ def _puerta(material):
     marco = bpy.data.objects.new(PREFIJO + "marco_puerta", marco_modelo.data.copy())
     marco.matrix_world = hoja.matrix_world @ relativo
     return hoja, marco
-
-
-# --- La pared --------------------------------------------------------------------------------
 
 
 def _ajuste_uv(caras, capa, ejes, matriz):
@@ -354,9 +239,6 @@ def _hueco(edificio, marco):
     return {"x_adentro": x_adentro, "x_afuera": x_afuera, "z_piso": z_piso,
             "y_hueco": (y0, y1), "z_hueco": z1, "ajuste_piso": ajuste_piso,
             "ajuste_bloques": ajuste_bloques}
-
-
-# --- El cuarto -------------------------------------------------------------------------------
 
 
 def _caja(nombre, minimo, maximo, materiales, por_cara, coleccion):
@@ -556,9 +438,6 @@ def _chapa(x0, x1, y0, y1, alto, material, coleccion):
     return objeto
 
 
-# --- La mudanza y la luz ---------------------------------------------------------------------
-
-
 def _mudar(cuarto):
     """Gira la fila del fondo del baño y la apoya en la pared del fondo del cuartito."""
     objetos = [bpy.data.objects[n] for n in MUDANZA]
@@ -630,13 +509,11 @@ def _luminaria(cuarto, coleccion):
     return [round(v, 4) for v in tubo.matrix_world.translation], largo
 
 
-# --- Todo ------------------------------------------------------------------------------------
-
-
 def aplicar():
     escena = bpy.context.scene
     assert MARCA not in escena, "El cuartito ya está en el modelo"
-    imagen, carteles = _pintar_cartel()
+    imagen = bpy.data.images.load(str(CARTEL), check_existing=False)
+    imagen.filepath = "//../source/textures/furniture/Puerta/puerta_productos_de_limpieza.png"
     material = _material_del_cartel(imagen)
     coleccion = bpy.data.collections.new(COLECCION)
     escena.collection.children.link(coleccion)
@@ -656,7 +533,7 @@ def aplicar():
         assert cerrada or objeto.name == PREFIJO + "revestimiento", objeto.name
         bm.free()
     return {
-        "carteles_px": [list(map(int, c)) for c in carteles],
+        "cartel": CARTEL.name,
         "hueco": {"x": [pared["x_adentro"], pared["x_afuera"]], "y": list(pared["y_hueco"]),
                   "z": [pared["z_piso"], pared["z_hueco"]]},
         "cuarto": {k: list(v) for k, v in cuarto.items()},

@@ -1,0 +1,33 @@
+{
+  "tool": "image_gen built-in",
+  "input": "puerta_productos_de_limpieza.png at b7124c2e6ea246588b41397e3788f121debfe384",
+  "reference": "assets/source/textures/furniture/Puerta/puerta_solo_empleados.png",
+  "output": "puerta_productos_de_limpieza.png",
+  "prompt": "Edit the FIRST image, a game door UV texture atlas, using the SECOND image as the exact typography and art style reference. The first image is the target, the second is the existing matching door of the same game. Preserve the entire target atlas layout and all UV island positions, dimensions, black gutters, metal, handles, screws, rust, borders and yellow sign backgrounds. Change ONLY the lettering inside the two yellow signs, the large sign on the left door face and the small detached sign at the right. Both signs must read exactly PRODUCTOS DE LIMPIEZA, arranged as three centered lines PRODUCTOS / DE / LIMPIEZA. Replace the current thin monoline 5x7 lettering with the SAME chunky dark heavy condensed uppercase block lettering as SOLO EMPLEADOS in the reference: thick strokes, subtle irregular pixel-shaped corners, small pale warm bevel/highlight edge and restrained dark depth. Match the handmade low resolution pixel texture aesthetic, ink color and thickness, spacing, aging, proportions, and material of the existing reference. Make all three lines visibly bold and legible, including DE. Fit the longer wording into the same sign areas by condensed character widths and appropriate spacing, not thin strokes. Do not add signage, ornament, geometry, new panels or new colors. Do not move, enlarge or crop either sign. Do not change any pixel outside the yellow sign interiors. Keep the output as a flat UV atlas, never a rendered scene or photograph. Keep the same aspect ratio as the provided target.",
+  "input_sha256": "a998d5c656799c3176b3aedcc767254ec2456cbe5d861e57ed6b1cb7ad49aae8",
+  "reference_sha256": "1e9420adc302a87b9d66703f8f5776586b391d0e45d16b8c0f38690bcde1a169",
+  "generated_sha256": "d1dc21a22f579d2e56a64ccfcc6bc0ed47d9dc225e984c60d218dd0789d687be",
+  "output_sha256": "038028dcd2a7c8a682f01d95e09a248cbf8f2c16250db9d38e497a8db5ee8cd2",
+  "integration": {
+    "tool": "Blender 5.2.1 Image.pixels",
+    "regions_xyxy_bottom_left": [
+      [
+        268,
+        628,
+        514,
+        791
+      ],
+      [
+        1338,
+        541,
+        1504,
+        679
+      ]
+    ],
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "changed_pixels_outside_regions": 0
+  }
+}
