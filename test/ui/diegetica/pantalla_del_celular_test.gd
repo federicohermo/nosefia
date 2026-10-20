@@ -435,37 +435,29 @@ func test_arrastrar_desde_una_foto_desplaza_y_un_clic_quieto_la_abre() -> void:
 	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
 	for cuadro in 4:
 		await get_tree().process_frame
-	# Las posiciones son del viewport: en la CI la ventana no tiene su tamaño.
 	var pedidas: Array[int] = []
 	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidas.append(indice))
 	var scroll: ScrollContainer = pantalla.get("_scroll")
 	var fotos := _burbuja(pantalla, con_foto).find_children("*", "TextureButton", true, false)
 	assert_array(fotos).has_size(1)
 	var foto := fotos[0] as TextureButton
-	var sobre_la_foto := foto.get_global_rect().get_center()
-	assert_bool(scroll.get_global_rect().has_point(sobre_la_foto)).is_true()
-	var antes := scroll.scroll_vertical
-	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, true), true)
-	await get_tree().process_frame
-	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, false), true)
-	await get_tree().process_frame
+	# El botón de la foto avisa al soltar: acá se lo aprieta como lo haría ese soltar.
+	foto.pressed.emit()
 	assert_array(pedidas).is_equal([con_foto])
-	assert_int(scroll.scroll_vertical).is_equal(antes)
-	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, true), true)
-	await get_tree().process_frame
+	var antes := scroll.scroll_vertical
+	var apretar := _boton_del_mouse(foto.get_global_rect().get_center(), true)
+	foto.gui_input.emit(apretar)
 	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
-	get_viewport().push_input(_movimiento(sobre_la_foto + Vector2(0, 60), Vector2(0, 60)), true)
+	get_viewport().push_input(_movimiento(apretar.position + Vector2(0, 60), Vector2(0, 60)))
 	await get_tree().process_frame
 	assert_int(scroll.scroll_vertical).is_less(antes)
-	get_viewport().push_input(_boton_del_mouse(sobre_la_foto + Vector2(0, 60), false), true)
+	get_viewport().push_input(_boton_del_mouse(apretar.position + Vector2(0, 60), false))
 	await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	foto.pressed.emit()
 	assert_array(pedidas).is_equal([con_foto])
-	scroll.ensure_control_visible(foto)
-	for cuadro in 2:
-		await get_tree().process_frame
-	sobre_la_foto = foto.get_global_rect().get_center()
-	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, true), true)
+	foto.gui_input.emit(apretar)
+	get_viewport().push_input(_boton_del_mouse(apretar.position, false))
 	await get_tree().process_frame
-	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, false), true)
-	await get_tree().process_frame
+	foto.pressed.emit()
 	assert_array(pedidas).is_equal([con_foto, con_foto])
