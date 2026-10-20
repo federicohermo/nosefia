@@ -87,6 +87,7 @@ var _recordatorio_cubierto: bool = false
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
 var _arrastre_desplazo: bool = false
+var _arrastre_desde_la_foto: bool = false
 
 
 func _ready() -> void:
@@ -329,7 +330,7 @@ func _al_tocar_el_historial(evento: InputEvent) -> void:
 ## La foto se queda con el clic, así que el arrastre arranca también desde ella. Si no se movió,
 ## el soltar le llega y la foto se amplía.
 func _al_tocar_la_foto(evento: InputEvent) -> void:
-	_empezar_arrastre(evento)
+	_arrastre_desde_la_foto = _empezar_arrastre(evento)
 
 
 func _empezar_arrastre(evento: InputEvent) -> bool:
@@ -338,6 +339,7 @@ func _empezar_arrastre(evento: InputEvent) -> bool:
 		return false
 	_arrastrando = true
 	_arrastre_desplazo = false
+	_arrastre_desde_la_foto = false
 	_posicion_del_arrastre = _scroll.scroll_vertical
 	_pintar_cursor(Control.CURSOR_DRAG)
 	return true
@@ -347,8 +349,10 @@ func _arrastrar(evento: InputEvent) -> void:
 	if evento is InputEventMouseButton and evento.button_index == MOUSE_BUTTON_LEFT:
 		if not evento.pressed:
 			_terminar_arrastre()
-			# Un clic quieto sigue hasta la frase: el enlace de la pista se pide al soltar.
-			if _arrastre_desplazo:
+			# Un clic quieto sigue hasta la frase: el enlace de la pista se pide al soltar. La foto
+			# recibe el soltar siempre, para que su botón no quede a medio apretar, y descarta
+			# el clic si hubo arrastre.
+			if _arrastre_desplazo and not _arrastre_desde_la_foto:
 				get_viewport().set_input_as_handled()
 	elif evento is InputEventMouseMotion:
 		var escala := _scroll.get_global_transform_with_canvas().get_scale().y
@@ -552,7 +556,9 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		foto.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 		foto.gui_input.connect(_al_tocar_la_foto)
 		foto.pressed.connect(
-			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
+			func() -> void:
+				if not _arrastre_desplazo:
+					foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
 		)
 		contenido.add_child(foto)
 	if not mensaje.texto.is_empty():
