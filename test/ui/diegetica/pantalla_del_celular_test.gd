@@ -453,6 +453,10 @@ func test_arrastrar_desde_una_foto_desplaza_y_un_clic_quieto_la_abre() -> void:
 	get_viewport().push_input(_boton_del_mouse(sobre_la_foto + Vector2(0, 60), false))
 	await get_tree().process_frame
 	assert_array(pedidas).is_empty()
+	# El arrastre corrió la foto fuera de la vista: el clic quieto la necesita a la vista.
+	scroll.ensure_control_visible(foto)
+	for cuadro in 2:
+		await get_tree().process_frame
 	sobre_la_foto = foto.get_global_rect().get_center()
 	assert_bool(scroll.get_global_rect().has_point(sobre_la_foto)).is_true()
 	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, true))
