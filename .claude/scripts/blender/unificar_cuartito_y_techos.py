@@ -22,6 +22,7 @@ PAREDES = ("cuartito_pared_fondo-convcol", "cuartito_pared_norte-convcol",
 RETIRADOS = (*PAREDES, "cuartito_techo-convcol", "cuartito_chapa")
 DEPOSITO = "deposito_techo_chapa"
 TEXTURAS = RAIZ / "assets/source/textures/warehouse/polyhaven/corrugated-iron-02/1K"
+TEXTURAS_CUARTITO = RAIZ / "assets/source/textures/warehouse/final"
 ESPESOR = .006
 MATERIAL_CUBIERTA = "cuartito_cubierta_corrugada_cc0"
 MATERIAL_DEPOSITO = "deposito_cubierta_corrugada_cc0"
@@ -152,10 +153,17 @@ def _limites(objeto):
 
 def _material(nombre, metalizado, factor_rugosidad):
     assert nombre not in bpy.data.materials, "El material nuevo ya existe"
-    rutas = {"Base Color": "diff_1k.jpg", "Roughness": "rough_1k.jpg",
-             "Normal": "nor_gl_1k.png"}
-    for sufijo in rutas.values():
-        assert (TEXTURAS / ("corrugated_iron_02_" + sufijo)).is_file()
+    assert nombre in (MATERIAL_CUBIERTA, MATERIAL_DEPOSITO)
+    cuartito = nombre == MATERIAL_CUBIERTA
+    rutas = {"Roughness": TEXTURAS / "corrugated_iron_02_rough_1k.jpg",
+             "Normal": TEXTURAS / "corrugated_iron_02_nor_gl_1k.png"}
+    if cuartito:
+        # Los alias pertenecen a EDIFICIO: sólo este techo conserva relieve de 1024 px.
+        rutas.update({"Base Color": TEXTURAS / "corrugated_iron_02_diff_1k.jpg",
+                      "Roughness": TEXTURAS_CUARTITO / "cuartito_chapa_rough_1k.jpg",
+                      "Normal": TEXTURAS_CUARTITO / "cuartito_chapa_normal_1k.png"})
+    for ruta in rutas.values():
+        assert ruta.is_file(), ruta
     m = bpy.data.materials.new(nombre)
     m.use_nodes = True
     m.node_tree.nodes.clear()
@@ -163,9 +171,11 @@ def _material(nombre, metalizado, factor_rugosidad):
     salida = nodos.new("ShaderNodeOutputMaterial")
     pbr = nodos.new("ShaderNodeBsdfPrincipled")
     pbr.inputs["Metallic"].default_value = metalizado
+    if not cuartito:
+        # El galvanizado claro conserva legibilidad sin el albedo fotográfico oscuro.
+        pbr.inputs["Base Color"].default_value = (.235, .25, .265, 1)
     enlaces.new(pbr.outputs["BSDF"], salida.inputs["Surface"])
-    for entrada, sufijo in rutas.items():
-        ruta = TEXTURAS / ("corrugated_iron_02_" + sufijo)
+    for entrada, ruta in rutas.items():
         imagen = bpy.data.images.load(str(ruta), check_existing=True)
         imagen.colorspace_settings.name = "sRGB" if entrada == "Base Color" else "Non-Color"
         imagen.filepath = bpy.path.relpath(str(ruta), start=str(RAIZ / "assets/models"))
