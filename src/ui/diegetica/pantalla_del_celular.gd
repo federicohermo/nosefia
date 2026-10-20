@@ -86,8 +86,8 @@ var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
-var _arrastre_desplazo: bool = false
-var _arrastre_desde_la_foto: bool = false
+var _descartar_clic_del_arrastre: bool = false
+var _arrastre_desde_un_boton: bool = false
 
 
 func _ready() -> void:
@@ -117,7 +117,7 @@ func _ready() -> void:
 	_telefono.visibility_changed.connect(
 		func() -> void:
 			if not _telefono.is_visible_in_tree():
-				_terminar_arrastre()
+				_terminar_arrastre(true)
 	)
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
 	_foto_ampliada.hide()
@@ -133,7 +133,7 @@ func _notification(que: int) -> void:
 	if que == NOTIFICATION_UNPAUSED:
 		_ultimo = _ahora.call()
 	elif que == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
-		_terminar_arrastre()
+		_terminar_arrastre(true)
 
 
 func _process(_delta: float) -> void:
@@ -308,6 +308,9 @@ func _input(evento: InputEvent) -> void:
 	if _arrastrando:
 		_arrastrar(evento)
 		return
+	# Cancelar puede preceder al soltar de un botón. El teclado comienza otra activación.
+	if evento.is_action_pressed(&"ui_accept"):
+		_descartar_clic_del_arrastre = false
 	if not _telefono.visible:
 		return
 	var clic := evento as InputEventMouseButton
@@ -321,16 +324,14 @@ func _input(evento: InputEvent) -> void:
 		cierre_pedido.emit()
 
 
-## El mismo arrastre que la planilla de la computadora: el clic sobre un botón queda en el botón.
 func _al_tocar_el_historial(evento: InputEvent) -> void:
 	if _empezar_arrastre(evento):
 		_scroll.accept_event()
 
 
-## La foto se queda con el clic, así que el arrastre arranca también desde ella. Si no se movió,
-## el soltar le llega y la foto se amplía.
-func _al_tocar_la_foto(evento: InputEvent) -> void:
-	_arrastre_desde_la_foto = _empezar_arrastre(evento)
+## El botón conserva el soltar nativo para terminar su pulsación, incluso después de arrastrar.
+func _al_tocar_un_boton(evento: InputEvent) -> void:
+	_arrastre_desde_un_boton = _empezar_arrastre(evento)
 
 
 func _empezar_arrastre(evento: InputEvent) -> bool:
@@ -338,8 +339,8 @@ func _empezar_arrastre(evento: InputEvent) -> bool:
 	if clic == null or not clic.pressed or clic.button_index != MOUSE_BUTTON_LEFT:
 		return false
 	_arrastrando = true
-	_arrastre_desplazo = false
-	_arrastre_desde_la_foto = false
+	_descartar_clic_del_arrastre = false
+	_arrastre_desde_un_boton = false
 	_posicion_del_arrastre = _scroll.scroll_vertical
 	_pintar_cursor(Control.CURSOR_DRAG)
 	return true
@@ -349,12 +350,14 @@ func _arrastrar(evento: InputEvent) -> void:
 	if evento is InputEventMouseButton and evento.button_index == MOUSE_BUTTON_LEFT:
 		if not evento.pressed:
 			_terminar_arrastre()
-			# Un clic quieto sigue hasta la frase: el enlace de la pista se pide al soltar. La foto
-			# recibe el soltar siempre, para que su botón no quede a medio apretar, y descarta
-			# el clic si hubo arrastre.
-			if _arrastre_desplazo and not _arrastre_desde_la_foto:
+			# Un clic quieto conserva los enlaces. El botón necesita el soltar nativo
+			# para terminar su pulsación, aunque su activación quede vetada.
+			if _descartar_clic_del_arrastre and not _arrastre_desde_un_boton:
 				get_viewport().set_input_as_handled()
 	elif evento is InputEventMouseMotion:
+		_descartar_clic_del_arrastre = (
+			_descartar_clic_del_arrastre or evento.relative != Vector2.ZERO
+		)
 		var escala := _scroll.get_global_transform_with_canvas().get_scale().y
 		var barra := _scroll.get_v_scroll_bar()
 		_posicion_del_arrastre = clampf(
@@ -362,26 +365,30 @@ func _arrastrar(evento: InputEvent) -> void:
 			barra.min_value,
 			maxf(barra.min_value, barra.max_value - barra.page)
 		)
-		var antes := _scroll.scroll_vertical
 		_scroll.scroll_vertical = roundi(_posicion_del_arrastre)
-		_arrastre_desplazo = _arrastre_desplazo or _scroll.scroll_vertical != antes
 		get_viewport().set_input_as_handled()
 
 
-func _terminar_arrastre() -> void:
+func _terminar_arrastre(cancelado: bool = false) -> void:
 	if not _arrastrando:
 		return
 	_arrastrando = false
+	_descartar_clic_del_arrastre = _descartar_clic_del_arrastre or cancelado
 	_pintar_cursor(Control.CURSOR_POINTING_HAND)
 
 
-## Las burbujas y las fotos arrancan el mismo arrastre, así que muestran el mismo cursor.
 func _pintar_cursor(forma: Control.CursorShape) -> void:
 	_scroll.mouse_default_cursor_shape = forma
 	for hijo: Node in _mensajes.find_children("*", "Control", true, false):
 		var control := hijo as Control
-		if control.mouse_filter == Control.MOUSE_FILTER_PASS or control is TextureButton:
+		if control.mouse_filter == Control.MOUSE_FILTER_PASS or control is BaseButton:
 			control.mouse_default_cursor_shape = forma
+
+
+func _aceptar_activacion() -> bool:
+	var descartar := _descartar_clic_del_arrastre
+	_descartar_clic_del_arrastre = false
+	return not descartar
 
 
 func _sube_antes_de_correrse() -> bool:
@@ -506,7 +513,13 @@ func _boton_de(conversacion: Conversacion, sin_leer: int, resumen: String) -> Bu
 		badge.add_child(cuenta)
 		fila.add_child(badge)
 	var quien := conversacion.interlocutor
-	boton.pressed.connect(func() -> void: chat_pedido.emit(quien))
+	boton.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
+	boton.gui_input.connect(_al_tocar_un_boton)
+	boton.pressed.connect(
+		func() -> void:
+			if _aceptar_activacion():
+				chat_pedido.emit(quien)
+	)
 	return boton
 
 
@@ -554,10 +567,10 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		foto.custom_minimum_size = Vector2(0, 240)
 		foto.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
-		foto.gui_input.connect(_al_tocar_la_foto)
+		foto.gui_input.connect(_al_tocar_un_boton)
 		foto.pressed.connect(
 			func() -> void:
-				if not _arrastre_desplazo:
+				if _aceptar_activacion():
 					foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
 		)
 		contenido.add_child(foto)
