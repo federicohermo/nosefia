@@ -36,7 +36,7 @@ const BUSCAR := "Buscar contacto..."
 const LILA := Color("c99cf4")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
-const AYUDA := "ARRASTRÁ O USÁ LA RUEDA / DESPLAZAR HISTORIAL"
+const AYUDA := "ARRASTRÁ EL FONDO O USÁ LA RUEDA"
 const UMBRAL_DEL_ARRASTRE := 6.0
 const DIAS: Array[String] = [
 	"HOY",
@@ -88,8 +88,7 @@ var _recordatorio_cubierto: bool = false
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
 var _desplazamiento_del_arrastre: float = 0.0
-var _descartar_clic_del_arrastre: bool = false
-var _arrastre_desde_un_boton: bool = false
+var _umbral_de_arrastre_superado: bool = false
 
 
 func _ready() -> void:
@@ -119,7 +118,7 @@ func _ready() -> void:
 	_telefono.visibility_changed.connect(
 		func() -> void:
 			if not _telefono.is_visible_in_tree():
-				_terminar_arrastre(true)
+				_terminar_arrastre()
 	)
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
 	_foto_ampliada.hide()
@@ -135,7 +134,7 @@ func _notification(que: int) -> void:
 	if que == NOTIFICATION_UNPAUSED:
 		_ultimo = _ahora.call()
 	elif que == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
-		_terminar_arrastre(true)
+		_terminar_arrastre()
 
 
 func _process(_delta: float) -> void:
@@ -315,9 +314,6 @@ func _input(evento: InputEvent) -> void:
 	if _arrastrando:
 		_arrastrar(evento)
 		return
-	# Cancelar puede preceder al soltar de un botón. El teclado comienza otra activación.
-	if evento.is_action_pressed(&"ui_accept"):
-		_descartar_clic_del_arrastre = false
 	if not _telefono.visible:
 		return
 	var clic := evento as InputEventMouseButton
@@ -336,17 +332,10 @@ func _al_tocar_el_historial(evento: InputEvent) -> void:
 		_scroll.accept_event()
 
 
-## El botón conserva el soltar nativo para terminar su pulsación, incluso después de arrastrar.
-func _al_tocar_un_boton(evento: InputEvent) -> void:
-	if _empezar_arrastre(evento):
-		_arrastre_desde_un_boton = true
-
-
 func _empezar_arrastre(evento: InputEvent) -> bool:
 	var clic := evento as InputEventMouseButton
 	if clic == null or not clic.pressed or clic.button_index != MOUSE_BUTTON_LEFT:
 		return false
-	_descartar_clic_del_arrastre = false
 	if (
 		not _telefono.is_visible_in_tree()
 		or _foto_ampliada.visible
@@ -354,7 +343,7 @@ func _empezar_arrastre(evento: InputEvent) -> bool:
 	):
 		return false
 	_arrastrando = true
-	_arrastre_desde_un_boton = false
+	_umbral_de_arrastre_superado = false
 	_posicion_del_arrastre = _scroll.scroll_vertical
 	_desplazamiento_del_arrastre = 0.0
 	_pintar_cursor(Control.CURSOR_DRAG)
@@ -364,20 +353,18 @@ func _empezar_arrastre(evento: InputEvent) -> bool:
 func _arrastrar(evento: InputEvent) -> void:
 	if evento is InputEventMouseButton and evento.button_index == MOUSE_BUTTON_LEFT:
 		if not evento.pressed:
-			_terminar_arrastre()
-			# Un clic quieto conserva los enlaces. El botón necesita el soltar nativo
-			# para terminar su pulsación, aunque su activación quede vetada.
-			if _descartar_clic_del_arrastre and not _arrastre_desde_un_boton:
+			if _umbral_de_arrastre_superado:
 				get_viewport().set_input_as_handled()
+			_terminar_arrastre()
 	elif evento is InputEventMouseMotion:
 		var escala := _scroll.get_global_transform_with_canvas().get_scale().y
 		var desplazamiento: float = evento.relative.y / escala
-		if not _descartar_clic_del_arrastre:
+		if not _umbral_de_arrastre_superado:
 			_desplazamiento_del_arrastre += desplazamiento
 			if absf(_desplazamiento_del_arrastre) < UMBRAL_DEL_ARRASTRE:
 				return
 			desplazamiento = _desplazamiento_del_arrastre
-			_descartar_clic_del_arrastre = true
+			_umbral_de_arrastre_superado = true
 		var barra := _scroll.get_v_scroll_bar()
 		_posicion_del_arrastre = clampf(
 			_posicion_del_arrastre - desplazamiento,
@@ -388,11 +375,12 @@ func _arrastrar(evento: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _terminar_arrastre(cancelado: bool = false) -> void:
+func _terminar_arrastre() -> void:
 	if not _arrastrando:
 		return
 	_arrastrando = false
-	_descartar_clic_del_arrastre = _descartar_clic_del_arrastre or cancelado
+	_umbral_de_arrastre_superado = false
+	_desplazamiento_del_arrastre = 0.0
 	_actualizar_desplazamiento()
 
 
@@ -404,7 +392,7 @@ func _hay_historial_desplazable() -> bool:
 func _actualizar_desplazamiento() -> void:
 	var desplazable := _hay_historial_desplazable() and not _foto_ampliada.visible
 	if _arrastrando and (not desplazable or not _telefono.is_visible_in_tree()):
-		_terminar_arrastre(true)
+		_terminar_arrastre()
 		return
 	_ayuda.modulate.a = 1.0 if desplazable else 0.0
 	var forma: Control.CursorShape = (
@@ -419,18 +407,8 @@ func _pintar_cursor(forma: Control.CursorShape) -> void:
 	_scroll.mouse_default_cursor_shape = forma
 	for hijo: Node in _mensajes.find_children("*", "Control", true, false):
 		var control := hijo as Control
-		if control.mouse_filter == Control.MOUSE_FILTER_PASS or control is BaseButton:
-			control.mouse_default_cursor_shape = (
-				Control.CURSOR_POINTING_HAND
-				if control is BaseButton and forma == Control.CURSOR_ARROW
-				else forma
-			)
-
-
-func _aceptar_activacion() -> bool:
-	var descartar := _descartar_clic_del_arrastre
-	_descartar_clic_del_arrastre = false
-	return not descartar
+		if control.mouse_filter == Control.MOUSE_FILTER_PASS:
+			control.mouse_default_cursor_shape = forma
 
 
 func _sube_antes_de_correrse() -> bool:
@@ -608,11 +586,8 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		foto.custom_minimum_size = Vector2(0, 240)
 		foto.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		foto.gui_input.connect(_al_tocar_un_boton)
 		foto.pressed.connect(
-			func() -> void:
-				if _aceptar_activacion():
-					foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
+			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
 		)
 		contenido.add_child(foto)
 	if not mensaje.texto.is_empty():
@@ -630,7 +605,7 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 			texto.pop()
 			texto.add_text(mensaje.texto.substr(inicio + mensaje.texto_del_tramo.length()))
 			texto.meta_underlined = false
-			texto.mouse_filter = Control.MOUSE_FILTER_PASS
+			texto.mouse_filter = Control.MOUSE_FILTER_STOP
 			texto.meta_clicked.connect(
 				func(tramo: Variant) -> void: tramo_pedido.emit(mensaje.identidad, str(tramo))
 			)
@@ -672,7 +647,7 @@ func _ir_al_ultimo() -> void:
 
 
 func _limpiar() -> void:
-	_terminar_arrastre(true)
+	_terminar_arrastre()
 	_historial.clear()
 	_burbujas.clear()
 	# Lo viejo espera su liberación dentro del árbol, en un nodo oculto: sacado del árbol y
