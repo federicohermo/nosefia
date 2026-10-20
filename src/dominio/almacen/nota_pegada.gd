@@ -1,4 +1,4 @@
-## Lo que dice una nota pegada. Las imágenes del baño las conserva su soporte.
+## Lo que dice una nota pegada. Las imágenes del cuartito y del baño las conserva su soporte.
 class_name NotaPegada
 extends RefCounted
 
@@ -46,7 +46,7 @@ static func de(id: Id) -> NotaPegada:
 					[
 						"No dejar productos tirados.",
 						"Dejar las cajas en el depósito.",
-						"Dejar los elementos de limpieza en el baño.",
+						"Dejar los elementos de limpieza en el cuartito.",
 					]
 				)
 			)

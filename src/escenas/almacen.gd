@@ -121,6 +121,8 @@ var _enlace_de_guardado: EnlaceDeGuardado
 ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
 	azar_de_la_apertura.randomize()
+	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
+	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
 	_instrucciones.comenzar_pedido.connect(anunciar_la_noche)
 	_cablear_el_celular()
 	_cablear_la_investigacion()
@@ -192,6 +194,7 @@ func _ready() -> void:
 				$Interfaz/PantallaDeComputadora,
 				$Estructura/puerta/CuerpoDeLaHoja,
 				$Estructura/puerta2/CuerpoDeLaHoja,
+				$Estructura/puerta_limpieza/CuerpoDeLaHoja,
 				$Estructura/bano_puerta_1/CuerpoDeLaHoja,
 				$Estructura/bano_puerta_2/CuerpoDeLaHoja,
 				$Estructura/puertaentrada/CuerpoDeLaHoja,
@@ -386,10 +389,14 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.freeze = true
 			util.collision_layer = 0
 			util.collision_mask = 0
-	var bano: PuertaDelLocal = $Estructura/puerta2/CuerpoDeLaHoja
 	var se_limpia := Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
-	bano.traba = PuertaDelLocal.Traba.NINGUNA if se_limpia else PuertaDelLocal.Traba.PUERTA
-	bano.identidad = &"" if se_limpia else SubtitulosAlExaminar.BANO_CERRADO
+	var cerradas_sin_limpieza := {
+		$Estructura/puerta2/CuerpoDeLaHoja: SubtitulosAlExaminar.BANO_CERRADO,
+		$Estructura/puerta_limpieza/CuerpoDeLaHoja: SubtitulosAlExaminar.CUARTITO_CERRADO,
+	}
+	for puerta: PuertaDelLocal in cerradas_sin_limpieza:
+		puerta.traba = PuertaDelLocal.Traba.NINGUNA if se_limpia else PuertaDelLocal.Traba.PUERTA
+		puerta.identidad = &"" if se_limpia else cerradas_sin_limpieza[puerta]
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()

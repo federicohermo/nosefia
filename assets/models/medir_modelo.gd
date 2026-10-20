@@ -15,8 +15,8 @@ func _inventariar() -> void:
 	for producto in Catalogo.todos():
 		var minimo := 1
 		for numero: int in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
-			var faltantes := Apertura.faltantes_de_la_jornada(
-				numero + ReglasDeLaPartida.PRIMERA_JORNADA
+			var faltantes := Apertura.pedidos_de(
+				Compradores.de_la_jornada(numero + ReglasDeLaPartida.PRIMERA_JORNADA)
 			)
 			minimo = maxi(minimo, faltantes.get(producto.id, 0))
 		minimos[str(Producto.Id.keys()[producto.id])] = minimo
@@ -97,13 +97,16 @@ func _inventariar() -> void:
 	var a_mundo := estructura.transform * habitaciones.transform
 	var techos: Array[Vector3] = []
 	for nombre: String in [
-		"almacen", "bano_cielorraso", "deposito_techo_industrial/deposito_techo_chapa"
+		"almacen",
+		"bano_cielorraso",
+		"deposito_techo_industrial/deposito_techo_chapa",
+		"cuartito_techo",
 	]:
 		var malla: MeshInstance3D = modelo.get_node(nombre)
 		for punto: Vector3 in malla.mesh.get_faces():
 			techos.append(malla.to_global(punto))
 	var limites_de_habitaciones: Dictionary = {}
-	for nombre: String in ["local", "deposito", "bano"]:
+	for nombre: String in ["local", "deposito", "bano", "cuartito"]:
 		var partes: Array[String] = []
 		for caja: AABB in habitaciones.get(nombre):
 			var origen := a_mundo * caja.get_center()
