@@ -129,6 +129,5 @@ func _physics_process(delta: float) -> void:
 		hoja_quieta.emit(self)
 
 
-## Lo que dice la puerta al examinarla. Las interiores y las de las heladeras callan.
 func texto_al_examinar() -> String:
 	return SubtitulosAlExaminar.de_lo_fijo(identidad)

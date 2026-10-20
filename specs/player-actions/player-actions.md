@@ -189,7 +189,7 @@ puerta de «Solo empleados» no está trabada en ninguna. La traba de la jornada
 declara, antes de cerrar las puertas de BR-PLY-019.
 
 CUANDO se acciona una puerta que abre, el sistema DEBE avisar una vez si se abrió o se cerró.
-CUANDO se acciona una trabada con el primario, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
+CUANDO se acciona una trabada con el primario, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las demás. Cerrar las
 puertas al abrir la jornada NO DEBE avisar: no es un gesto del jugador.
 
 ### BR-PLY-021 — Cada noche arranca en la entrada

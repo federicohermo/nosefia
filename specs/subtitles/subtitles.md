@@ -340,7 +340,7 @@ examinar ENTONCES cada uno conserva su identidad y devuelve el subtítulo no vac
 DADO los dos inodoros, los dos lavatorios, las cinco notas, la computadora, la caja
 registradora, el lector, la entrada principal, la puerta del jefe, el portón del depósito, los
 tres tachos y el cuerpo y la tapa del contenedor CUANDO se pide su texto al examinar ENTONCES
-cada uno devuelve el subtítulo asociado a su identidad. DADO una puerta interior, una puerta
+cada uno devuelve el subtítulo asociado a su identidad. DADO una puerta interior sin traba, una puerta
 de heladera, la ventanilla, el comprador, la góndola y una mancha ENTONCES no tienen texto. DADO
 un tacho con bolsa y otro sin bolsa CUANDO se pide examinar con las manos vacías ENTONCES los
 dos muestran su texto y el primero sigue con su bolsa.
