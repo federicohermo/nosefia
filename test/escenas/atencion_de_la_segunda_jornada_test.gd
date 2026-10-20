@@ -648,7 +648,17 @@ func _mirar_balde(almacen: Node3D) -> void:
 	consulta.exclude = [jugador.get_rid()]
 	var encontrada := Vector3.INF
 	for distancia: float in [0.6, 0.9, 1.2, 1.5]:
-		for direccion: Vector3 in [Vector3.BACK, Vector3.LEFT, Vector3.FORWARD, Vector3.RIGHT]:
+		# Las diagonales también: contra un rincón con otros útiles, las cuatro rectas se tapan.
+		for direccion: Vector3 in [
+			Vector3.BACK,
+			Vector3.LEFT,
+			Vector3.FORWARD,
+			Vector3.RIGHT,
+			(Vector3.FORWARD + Vector3.LEFT).normalized(),
+			(Vector3.FORWARD + Vector3.RIGHT).normalized(),
+			(Vector3.BACK + Vector3.LEFT).normalized(),
+			(Vector3.BACK + Vector3.RIGHT).normalized(),
+		]:
 			var punto := objetivo.global_position + direccion * distancia
 			var rayo := PhysicsRayQueryParameters3D.create(
 				Vector3(punto.x, 3.0, punto.z), Vector3(punto.x, -1.0, punto.z), 1

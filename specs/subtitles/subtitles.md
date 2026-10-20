@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; baño trabado sin limpieza de #538
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; baño trabado sin limpieza de #538; cuartito de limpieza de #541
 ---
 
 # Capacidad: los subtítulos
@@ -152,6 +152,7 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Entrada principal | La entrada principal al local. Queda cerrada con llave durante el turno nocturno. |
 | Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada. |
 | Puerta del baño, trabada | Ese es el baño. Parece que Yasmín lo cerró con llave hoy. |
+| Puerta del cuartito, trabada | Acá guardan las cosas de limpieza. Está cerrado con llave. |
 | Portón del depósito | Un portón que da a la calle. |
 | Contenedor de basura | Un contenedor de basura. |
 | Tacho del local | Un tacho de basura para los compradores diurnos. |
@@ -159,9 +160,10 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Tacho del baño | El tacho de basura del baño. Mejor ni mirar lo que tiene adentro. |
 
 Las puertas interiores, las puertas de las heladeras, la ventanilla, el comprador, la góndola y
-las manchas NO DEBEN tener texto al examinar. La excepción es la puerta del baño mientras está
-trabada (BR-PLY-020 de [`player-actions`](../player-actions/player-actions.md)): DEBE decir su
-texto en las jornadas que no piden limpiar, y callar en las que sí.
+las manchas NO DEBEN tener texto al examinar. La excepción son la puerta del baño y la del
+cuartito mientras están trabadas (BR-PLY-020 de
+[`player-actions`](../player-actions/player-actions.md)): cada una DEBE decir su texto en las
+jornadas que no piden limpiar, y callar en las que sí.
 
 Un tacho DEBE decir su texto con bolsa o sin bolsa. Examinarlo NO DEBE retirar ni cambiar su
 bolsa.
@@ -349,6 +351,13 @@ DADO la jornada 1 o la 2 abierta CUANDO se pide examinar la puerta del baño con
 vacías ENTONCES piensa el subtítulo asociado a la puerta del baño trabada. DADO la jornada 3
 abierta ENTONCES examinarla no muestra texto y la línea no cambia. DADO el cierre de la 2
 CUANDO se sigue a la 3 ENTONCES deja de tener texto.
+
+### AC-SUB-022 — La puerta del cuartito habla sólo trabada *(verifica BR-SUB-010)*
+
+DADO la jornada 1 o la 2 abierta CUANDO se pide examinar la puerta del cuartito con las manos
+vacías ENTONCES piensa el subtítulo asociado a la puerta del cuartito trabada, distinto del de
+la puerta del baño. DADO la jornada 3 abierta ENTONCES examinarla no muestra texto y la línea no
+cambia. DADO una partida guardada en la 2 CUANDO se retoma ENTONCES vuelve a tener texto.
 
 ### AC-SUB-014 — El texto del ticket *(verifica BR-SUB-011)*
 

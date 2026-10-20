@@ -1,0 +1,14 @@
+{
+  "source": "../polyhaven/corrugated-iron-02/source.json",
+  "license": "CC0-1.0",
+  "original": "../polyhaven/corrugated-iron-02/1K/corrugated_iron_02_diff_1k.jpg",
+  "original_sha256": "7a7b43099d015c1b08ebb175da5965caeae44b86de65a727b3fffa20a7c69a93",
+  "file": "deposito_chapa_color.png",
+  "sha256": "e95bcb65eba615717eb764def1574b660a21717a0864811b70c98f77bd2029c3",
+  "operation": "Blender material bake: linear_color * 0.9 + 0.1; sRGB PNG",
+  "generator": ".claude/scripts/blender/tonificar_chapa_del_deposito.py",
+  "size": [
+    1024,
+    1024
+  ]
+}

@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 
-## Las dos hojas, con el tramo que va desde piso libre del local hasta adentro del
+## Las hojas interiores, con el tramo que va desde piso libre hasta adentro del
 ## cuarto. La altura y el largo están medidos:
 ##
 ## **La cápsula no nace tocando el piso.** A 0,9 m `cast_motion` devolvía 0,37 aun con las hojas
@@ -16,9 +16,13 @@ const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 const VANOS := {
 	"Estructura/puerta": [Vector3(6.744, 1.05, -5.0), Vector3(6.744, 1.05, -9.5)],
 	"Estructura/puerta2": [Vector3(6.7, 1.05, 0.736), Vector3(8.8, 1.05, 0.736)],
+	"Estructura/puerta_limpieza": [Vector3(6.7, 1.05, -13.96), Vector3(9.4, 1.05, -13.96)],
 }
 
 const BANO := "Estructura/puerta2"
+const CUARTITO := "Estructura/puerta_limpieza"
+## Las que se traban las noches que no piden limpiar.
+const SIN_LIMPIEZA: Array[String] = [BANO, CUARTITO]
 const DEPOSITO := "Estructura/puerta"
 
 const TRABADAS := {
@@ -31,7 +35,7 @@ const TRABADAS := {
 const AVISOS := [&"puerta_abierta", &"puerta_cerrada", &"puerta_trabada", &"porton_trabado"]
 
 
-func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
+func test_las_puertas_interiores_cumplen_el_contrato_de_interaccion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
@@ -199,7 +203,7 @@ func _avance(almacen: Node3D, hoja: String) -> float:
 	return espacio.cast_motion(consulta)[1]
 
 
-## Corre cuadros de física hasta que las dos hojas llegaron al tope, o se rinde.
+## Corre cuadros de física hasta que las hojas llegaron al tope, o se rinde.
 func _esperar_el_giro(almacen: Node3D) -> void:
 	for _cuadro in range(120):
 		await get_tree().physics_frame
@@ -248,50 +252,54 @@ func test_las_tres_puertas_de_afuera_estan_trabadas() -> void:  # AC-PLY-040
 		assert_bool(cuerpo.call("puerta").trabada()).override_failure_message(ruta).is_true()
 
 
-func test_el_bano_se_traba_las_noches_que_no_piden_limpiar() -> void:  # AC-PLY-040
+func test_el_bano_y_el_cuartito_se_traban_las_noches_que_no_piden_limpiar() -> void:  # AC-PLY-040
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
-	var bano: Node = almacen.get_node(BANO + "/CuerpoDeLaHoja")
-	var malla: Node3D = almacen.get_node(BANO)
-	var cerrada := malla.transform
-	var avisos := _escuchar(almacen, [BANO])
+	var cerradas := {}
+	for ruta: String in SIN_LIMPIEZA:
+		cerradas[ruta] = (almacen.get_node(ruta) as Node3D).transform
+	var avisos := _escuchar(almacen, SIN_LIMPIEZA)
 	var jornadas := _jornadas_sin_limpieza()
 	assert_array(jornadas).is_not_empty()
 	jornadas.append(_primera_que_limpia())
 	for jornada: int in jornadas:
 		almacen.call("_al_abrir_la_jornada", jornada)
 		var limpia := Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
-		var mensaje := "jornada %d" % jornada
-		assert_bool(bano.call("puerta").trabada()).override_failure_message(mensaje).is_equal(
-			not limpia
-		)
 		var deposito: Puerta = almacen.get_node(DEPOSITO + "/CuerpoDeLaHoja").call("puerta")
-		assert_bool(deposito.trabada()).override_failure_message(mensaje).is_false()
+		assert_bool(deposito.trabada()).override_failure_message(str(jornada)).is_false()
 		for ruta: String in TRABADAS:
 			var afuera: Puerta = almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta")
-			assert_bool(afuera.trabada()).override_failure_message(mensaje).is_true()
-		avisos.clear()
-		assert_object(bano.call("accionar")).is_null()
-		for _cuadro in 10:
-			await get_tree().physics_frame
-		var aviso := &"puerta_abierta" if limpia else &"puerta_trabada"
-		assert_array(avisos).override_failure_message(mensaje).is_equal([[BANO, aviso]])
-		(
-			assert_bool(malla.transform.is_equal_approx(cerrada))
-			. override_failure_message(mensaje)
-			. is_equal(not limpia)
-		)
-	# Retomar la última trabada con el baño abierto de la noche anterior.
-	assert_bool(bano.call("puerta").abierta()).is_true()
+			assert_bool(afuera.trabada()).override_failure_message(str(jornada)).is_true()
+		for ruta: String in SIN_LIMPIEZA:
+			var mensaje := "%s en la jornada %d" % [ruta, jornada]
+			var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+			assert_bool(cuerpo.call("puerta").trabada()).override_failure_message(mensaje).is_equal(
+				not limpia
+			)
+			avisos.clear()
+			assert_object(cuerpo.call("accionar")).is_null()
+			for _cuadro in 10:
+				await get_tree().physics_frame
+			var aviso := &"puerta_abierta" if limpia else &"puerta_trabada"
+			assert_array(avisos).override_failure_message(mensaje).is_equal([[ruta, aviso]])
+			var malla: Node3D = almacen.get_node(ruta)
+			(
+				assert_bool(malla.transform.is_equal_approx(cerradas[ruta]))
+				. override_failure_message(mensaje)
+				. is_equal(not limpia)
+			)
+	# Retomar la última trabada con las dos abiertas de la noche anterior.
 	avisos.clear()
 	almacen.call("_al_abrir_la_jornada", jornadas[-2])
-	assert_bool(bano.call("puerta").trabada()).is_true()
-	assert_bool(bano.call("puerta").abierta()).is_false()
-	assert_bool(malla.transform.is_equal_approx(cerrada)).is_true()
 	for _cuadro in 10:
 		await get_tree().physics_frame
-	assert_bool(malla.transform.is_equal_approx(cerrada)).is_true()
+	for ruta: String in SIN_LIMPIEZA:
+		var puerta: Puerta = almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta")
+		assert_bool(puerta.trabada()).override_failure_message(ruta).is_true()
+		assert_bool(puerta.abierta()).override_failure_message(ruta).is_false()
+		var malla: Node3D = almacen.get_node(ruta)
+		assert_bool(malla.transform.is_equal_approx(cerradas[ruta])).is_true()
 	assert_array(avisos).is_empty()
 
 

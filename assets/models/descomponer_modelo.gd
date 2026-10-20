@@ -24,7 +24,6 @@ func _descomponer() -> void:
 		"local_marco_frente",
 		"local_marco_ventanal",
 		"puerta/marco_puerta_deposito",
-		"puerta_limpieza"
 	]:
 		var malla: MeshInstance3D = modelo.get_node(nombre)
 		var inicio := Time.get_ticks_msec()

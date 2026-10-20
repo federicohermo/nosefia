@@ -58,7 +58,7 @@ func test_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha() -> void:
 			[
 				"No dejar productos tirados.",
 				"Dejar las cajas en el depósito.",
-				"Dejar los elementos de limpieza en el baño.",
+				"Dejar los elementos de limpieza en el cuartito.",
 			]
 		)
 	)

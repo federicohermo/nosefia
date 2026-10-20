@@ -121,7 +121,7 @@ identidad = "J1_Intro09"
 jornada = 3
 orden = 14
 de_quien = "Enrique Peldaño"
-texto = "Cuarto, pero no menor, [b]LIMPIAR[/b]. Vas a encontrar los [b]productos de limpieza en el baño[/b], además de algunas [b]notitas [/b]explicando cómo usarlos. No deberías tener problemas con eso."
+texto = "Cuarto, pero no menor, [b]LIMPIAR[/b]. Vas a encontrar los [b]productos de limpieza en el cuartito del depósito[/b], además de algunas [b]notitas [/b]explicando cómo usarlos. No deberías tener problemas con eso."
 
 [sub_resource type="Resource" id="Intro10"]
 script = ExtResource("mensaje")

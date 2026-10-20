@@ -142,6 +142,16 @@ func test_tacho_extrae_una_vez_con_primario() -> void:  # AC-CLN-053 AC-CLN-055
 func test_rescate_devuelve_cuerpo_libre_sin_reponer_el_tacho() -> void:  # AC-CLN-056
 	var almacen := await _abrir()
 	await _abrir_la_tapa(almacen)
+	# La cubierta delgada permite salir cerca: este caso necesita forzar el último recurso.
+	var bloqueo := StaticBody3D.new()
+	var forma := CollisionShape3D.new()
+	var volumen := BoxShape3D.new()
+	volumen.size = Vector3(8, 4, 8)
+	forma.shape = volumen
+	bloqueo.add_child(forma)
+	almacen.add_child(bloqueo)
+	bloqueo.global_position = Vector3(2.0, 5.9, -11.0)
+	await get_tree().physics_frame
 	var bolsa := BolsaEnLaMano.sacar(almacen)
 	assert_object(bolsa).is_not_null()
 	var agarre: Agarre = almacen.get("_agarre")
@@ -149,8 +159,13 @@ func test_rescate_devuelve_cuerpo_libre_sin_reponer_el_tacho() -> void:  # AC-CL
 	agarre.soltar(false)
 	bolsa.global_position = Vector3(2.0, 5.9, -11.0)
 	var red: RedDeSeguridad = almacen.get_node("Servicios/RedDeSeguridad")
+	var origen := bolsa.lugar_de_origen()
+	assert_object(red._solido_pisado(bolsa)).is_not_null()
+	assert_float(red._hundido(bolsa, origen)).is_less_equal(ReglasDeLosObjetos.ROCE)
+	assert_bool(red._apoyado(bolsa, origen)).is_true()
+	var rescates_previos := red.rescates.size()
 	red.revisar(bolsa)
-	assert_array(red.rescates).is_not_empty()
+	assert_int(red.rescates.size()).is_equal(rescates_previos + 1)
 	assert_int(red.rescates[-1]["clase"]).is_equal(Rescate.Clase.ORIGEN)
 	assert_bool(bolsa.freeze).is_false()
 	assert_int(bolsa.collision_layer).is_not_equal(0)

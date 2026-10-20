@@ -102,7 +102,17 @@ func _mirar_desde_piso_libre(objetivo: Node3D) -> void:
 	consulta.exclude = [jugador.get_rid()]
 	var encontrada := Vector3.INF
 	for distancia: float in [0.6, 0.9, 1.2, 1.5]:
-		for direccion: Vector3 in [Vector3.BACK, Vector3.LEFT, Vector3.FORWARD, Vector3.RIGHT]:
+		# Las diagonales también: contra un rincón con otros útiles, las cuatro rectas se tapan.
+		for direccion: Vector3 in [
+			Vector3.BACK,
+			Vector3.LEFT,
+			Vector3.FORWARD,
+			Vector3.RIGHT,
+			(Vector3.FORWARD + Vector3.LEFT).normalized(),
+			(Vector3.FORWARD + Vector3.RIGHT).normalized(),
+			(Vector3.BACK + Vector3.LEFT).normalized(),
+			(Vector3.BACK + Vector3.RIGHT).normalized(),
+		]:
 			var punto := objetivo.global_position + direccion * distancia
 			var rayo := PhysicsRayQueryParameters3D.create(
 				Vector3(punto.x, 3.0, punto.z), Vector3(punto.x, -1.0, punto.z), 1
@@ -163,7 +173,7 @@ func test_los_objetos_disponibles_arrancan_dentro_de_su_habitacion() -> void:  #
 		assert_bool(ReglasDelCierre.hay_objetos_afuera(estados)).is_false()
 		for estado: ReglasDelCierre.Estado in estados:
 			if estado.clase == ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA:
-				assert_int(estado.habitacion).is_equal(ReglasDelCierre.Habitacion.BANO)
+				assert_int(estado.habitacion).is_equal(ReglasDelCierre.Habitacion.CUARTITO)
 			elif estado.clase == ReglasDelCierre.Clase.CAJA:
 				assert_int(estado.habitacion).is_equal(ReglasDelCierre.Habitacion.DEPOSITO)
 

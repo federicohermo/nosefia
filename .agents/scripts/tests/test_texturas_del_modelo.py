@@ -98,6 +98,37 @@ class LoQueGodotExtrae(unittest.TestCase):
 
 
 class LoQueViajaEnElGlb(unittest.TestCase):
+    def test_el_cuartito_conserva_relieve_1k_y_el_deposito_usa_512(self) -> None:
+        glb = GLB.read_bytes()
+        largo = struct.unpack_from("<I", glb, 12)[0]
+        modelo = json.loads(glb[20 : 20 + largo])
+        imagenes = imagenes_del_glb(glb)
+        casos = (
+            ("cuartito_cuerpo-col", "cuartito_cubierta_corrugada_cc0", 1024,
+             "cuartito_chapa_normal_1k", "cuartito_chapa_rough_1k"),
+            ("deposito_techo_chapa", "deposito_cubierta_corrugada_cc0", 512,
+             "corrugated_iron_02_nor_gl_1k", "corrugated_iron_02_rough_1k"),
+        )
+        for nodo, nombre_material, lado, normal, rugosidad in casos:
+            with self.subTest(techo=nodo):
+                materiales = [i for i, m in enumerate(modelo["materials"])
+                              if m.get("name") == nombre_material]
+                self.assertEqual(len(materiales), 1, "falta el material propio del techo")
+                indice_material = materiales[0]
+                nodos = [n for n in modelo["nodes"] if n.get("name") == nodo]
+                self.assertEqual(len(nodos), 1, "falta el techo que debe recibir los mapas")
+                primitivas = modelo["meshes"][nodos[0]["mesh"]]["primitives"]
+                self.assertIn(indice_material, [p.get("material") for p in primitivas])
+                material = modelo["materials"][indice_material]
+                mapas = ((material["normalTexture"], normal),
+                         (material["pbrMetallicRoughness"]["metallicRoughnessTexture"], rugosidad))
+                for textura, origen in mapas:
+                    with self.subTest(techo=nodo, mapa=origen):
+                        fuente = modelo["textures"][textura["index"]]["source"]
+                        nombre, datos = imagenes[fuente]
+                        self.assertIn(origen, nombre)
+                        self.assertEqual(lado_de_la_imagen(datos), (lado, lado))
+
     def test_cada_mapa_de_superficie_viaja_con_el_lado_de_su_grupo(self) -> None:
         # Mira el resultado del exportador, además de su tabla: una copia sin is_dirty puede
         # dejar pasar el archivo original aunque la clasificación conteste correctamente.
