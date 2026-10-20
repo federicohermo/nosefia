@@ -459,7 +459,7 @@ func test_ocultar_el_celular_termina_el_arrastre() -> void:
 	assert_int(scroll.scroll_vertical).is_equal(quieto)
 
 
-func test_arrastrar_desde_una_foto_desplaza_y_un_clic_quieto_la_abre() -> void:
+func test_arrastrar_desde_una_foto_desplaza_y_un_clic_con_deriva_la_abre() -> void:
 	var pantalla := _pantalla()
 	var conversacion := _conversacion(24)
 	var con_foto := 22
@@ -484,16 +484,30 @@ func test_arrastrar_desde_una_foto_desplaza_y_un_clic_quieto_la_abre() -> void:
 	await get_tree().process_frame
 	assert_array(pedidas).is_equal([con_foto])
 	var antes := scroll.scroll_vertical
+	_apretar_boton(foto, centro)
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 2), Vector2(0, 2)), true)
+	get_viewport().push_input(_boton_del_mouse(centro + Vector2(0, 2), false), true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_equal(antes)
+	assert_array(pedidas).is_equal([con_foto, con_foto])
+	_apretar_boton(foto, centro)
+	get_viewport().push_input(_movimiento(centro + Vector2(20, 0), Vector2(20, 0)), true)
+	get_viewport().push_input(_boton_del_mouse(centro + Vector2(20, 0), false), true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_equal(antes)
+	assert_array(pedidas).is_equal([con_foto, con_foto, con_foto])
 	var apretar := _boton_del_mouse(foto.get_global_rect().get_center(), true)
 	_apretar_boton(foto, apretar.position)
 	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
-	get_viewport().push_input(_movimiento(apretar.position + Vector2(0, 60), Vector2(0, 60)), true)
+	get_viewport().push_input(_movimiento(apretar.position + Vector2(0, 2), Vector2(0, 2)), true)
+	get_viewport().push_input(_movimiento(apretar.position + Vector2(0, 60), Vector2(0, 58)), true)
 	await get_tree().process_frame
 	assert_int(scroll.scroll_vertical).is_less(antes)
 	get_viewport().push_input(_boton_del_mouse(apretar.position + Vector2(0, 60), false), true)
 	await get_tree().process_frame
 	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
-	assert_array(pedidas).is_equal([con_foto])
+	assert_array(pedidas).is_equal([con_foto, con_foto, con_foto])
+	assert_bool(foto.is_pressed()).is_false()
 	scroll.scroll_vertical = antes
 	await get_tree().process_frame
 	centro = foto.get_global_rect().intersection(scroll.get_global_rect()).get_center()
@@ -501,10 +515,10 @@ func test_arrastrar_desde_una_foto_desplaza_y_un_clic_quieto_la_abre() -> void:
 	_apretar_boton(foto, centro)
 	get_viewport().push_input(_boton_del_mouse(centro, false), true)
 	await get_tree().process_frame
-	assert_array(pedidas).is_equal([con_foto, con_foto])
+	assert_array(pedidas).is_equal([con_foto, con_foto, con_foto, con_foto])
 
 
-func test_arrastrar_sobre_una_conversacion_no_la_abre_y_un_clic_quieto_si() -> void:
+func test_contactos_conservan_clics_con_movimiento_y_no_se_desplazan() -> void:
 	var pantalla := _pantalla()
 	var conversacion := _conversacion()
 	var ahora: Array[int] = [0]
@@ -519,44 +533,49 @@ func test_arrastrar_sobre_una_conversacion_no_la_abre_y_un_clic_quieto_si() -> v
 		func(quien: Conversacion.Interlocutor) -> void: pedidos.append(quien)
 	)
 	var lista: VBoxContainer = pantalla.get("_mensajes")
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var alto_del_historial := scroll.size.y
+	var espaciador := Control.new()
+	espaciador.custom_minimum_size.y = alto_del_historial * 2.0
+	lista.add_child(espaciador)
+	for cuadro in 4:
+		await get_tree().process_frame
+	assert_float(lista.size.y).is_greater(alto_del_historial)
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
 	var boton := lista.get_child(0) as Button
 	var centro := boton.get_global_rect().get_center()
-	assert_bool((pantalla.get("_scroll") as Control).get_global_rect().has_point(centro)).is_true()
-	for relativo: Vector2 in [Vector2(0, 20), Vector2(20, 0)]:
+	assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
+	assert_int(scroll.scroll_vertical).is_zero()
+	for relativo: Vector2 in [Vector2(0, 2), Vector2(0, 20), Vector2(0, -20), Vector2(20, 0)]:
 		pedidos.clear()
 		assert_bool(boton.get_global_rect().has_point(centro + relativo)).is_true()
 		_apretar_boton(boton, centro)
 		get_viewport().push_input(_movimiento(centro + relativo, relativo), true)
 		get_viewport().push_input(_boton_del_mouse(centro + relativo, false), true)
 		await get_tree().process_frame
-		assert_array(pedidos).is_empty()
+		assert_int(scroll.scroll_vertical).is_zero()
+		assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+		assert_array(pedidos).is_equal([conversacion.interlocutor])
 		get_viewport().push_input(_tecla(KEY_ENTER, true), true)
 		get_viewport().push_input(_tecla(KEY_ENTER, false), true)
 		await get_tree().process_frame
-		assert_array(pedidos).is_equal([conversacion.interlocutor])
-		_apretar_boton(boton, centro)
-		get_viewport().push_input(_boton_del_mouse(centro, false), true)
-		await get_tree().process_frame
 		assert_array(pedidos).is_equal([conversacion.interlocutor, conversacion.interlocutor])
-	for perder_foco: bool in [true, false]:
-		pedidos.clear()
-		_apretar_boton(boton, centro)
-		if perder_foco:
-			pantalla.propagate_notification(NOTIFICATION_WM_WINDOW_FOCUS_OUT)
-		else:
-			(pantalla.get("_telefono") as Control).hide()
-			(pantalla.get("_telefono") as Control).show()
-		get_viewport().push_input(_movimiento(centro + Vector2(0, 2), Vector2(0, 2)), true)
-		get_viewport().push_input(_boton_del_mouse(centro + Vector2(0, 2), false), true)
-		await get_tree().process_frame
-		assert_array(pedidos).is_empty()
 		_apretar_boton(boton, centro)
 		get_viewport().push_input(_boton_del_mouse(centro, false), true)
 		await get_tree().process_frame
-		assert_array(pedidos).is_equal([conversacion.interlocutor])
+		assert_array(pedidos).is_equal(
+			[conversacion.interlocutor, conversacion.interlocutor, conversacion.interlocutor]
+		)
+	var rueda := InputEventMouseButton.new()
+	rueda.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	rueda.pressed = true
+	rueda.position = scroll.get_global_rect().get_center()
+	get_viewport().push_input(rueda, true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_zero()
 
 
-func test_arrastrar_una_foto_sin_desborde_no_la_abre() -> void:
+func test_una_foto_sin_desborde_conserva_clics_con_movimiento() -> void:
 	var pantalla := _pantalla()
 	var conversacion := _conversacion(1)
 	conversacion.mensajes[0].foto = GradientTexture2D.new()
@@ -576,7 +595,9 @@ func test_arrastrar_una_foto_sin_desborde_no_la_abre() -> void:
 	var centro := foto.get_global_rect().get_center()
 	assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
 	assert_int(scroll.scroll_vertical).is_equal(0)
-	for relativo: Vector2 in [Vector2(0, 20), Vector2(20, 0)]:
+	assert_float(scroll.get_v_scroll_bar().max_value).is_less_equal(scroll.get_v_scroll_bar().page)
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+	for relativo: Vector2 in [Vector2(0, 2), Vector2(0, 20), Vector2(20, 0)]:
 		pedidas.clear()
 		_apretar_boton(foto, centro)
 		get_viewport().push_input(_movimiento(centro + relativo, relativo), true)
@@ -584,12 +605,26 @@ func test_arrastrar_una_foto_sin_desborde_no_la_abre() -> void:
 		get_viewport().push_input(_boton_del_mouse(centro, false), true)
 		await get_tree().process_frame
 		assert_int(scroll.scroll_vertical).is_equal(0)
-		assert_array(pedidas).is_empty()
+		assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+		assert_array(pedidas).is_equal([0])
 		pedidas.clear()
 		_apretar_boton(foto, centro)
 		get_viewport().push_input(_boton_del_mouse(centro, false), true)
 		await get_tree().process_frame
 		assert_array(pedidas).is_equal([0])
+
+	var nuevos := _conversacion(24).mensajes
+	for indice in nuevos.size():
+		pantalla.recibir(nuevos[indice], indice + 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	assert_float(scroll.get_v_scroll_bar().max_value).is_greater(scroll.get_v_scroll_bar().page)
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+	assert_int(scroll.scroll_vertical).is_zero()
 
 
 func test_una_foto_sigue_abriendose_con_teclado_despues_de_arrastrar_o_cancelar() -> void:
