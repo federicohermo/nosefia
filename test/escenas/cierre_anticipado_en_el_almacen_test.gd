@@ -7,6 +7,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _cierres := 0
+var _almacen: Node3D
 
 
 func before_test() -> void:
@@ -24,6 +25,7 @@ func _abrir(jornada: int, con_compradores: bool = false) -> RelojDelTurno:
 				return nadie
 		)
 	add_child(almacen)
+	_almacen = almacen
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	reloj.set_process(false)
 	almacen.get("_jugador").set_physics_process(false)
@@ -78,7 +80,7 @@ func test_si_nadie_compra_acelera_al_vencer_el_ultimo() -> void:  # AC-SHF-032
 		reloj.completar(reponer)
 	var compradores := Compradores.de_la_jornada(jornada)
 	var vencido := [false]
-	var atenciones: Ventanilla = reloj.get_parent().get("_atenciones")
+	var atenciones: Ventanilla = _almacen.get("_atenciones")
 	atenciones.comprador_vencido.connect(
 		func(comprador: Comprador) -> void:
 			if comprador.nombre() == compradores[-1].nombre():
