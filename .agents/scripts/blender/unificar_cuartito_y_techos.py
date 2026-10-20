@@ -23,7 +23,8 @@ RETIRADOS = (*PAREDES, "cuartito_techo-convcol", "cuartito_chapa")
 DEPOSITO = "deposito_techo_chapa"
 TEXTURAS = RAIZ / "assets/source/textures/warehouse/polyhaven/corrugated-iron-02/1K"
 ESPESOR = .006
-MATERIAL_CUBIERTA = "cuartito_deposito_cubierta_corrugada_cc0"
+MATERIAL_CUBIERTA = "cuartito_cubierta_corrugada_cc0"
+MATERIAL_DEPOSITO = "deposito_cubierta_corrugada_cc0"
 
 
 def _datos(objeto):
@@ -149,8 +150,7 @@ def _limites(objeto):
     return tuple(tuple(f(p[i] for p in puntos) for i in range(3)) for f in (min, max))
 
 
-def _material():
-    nombre = MATERIAL_CUBIERTA
+def _material(nombre, metalizado, factor_rugosidad):
     assert nombre not in bpy.data.materials, "El material nuevo ya existe"
     rutas = {"Base Color": "diff_1k.jpg", "Roughness": "rough_1k.jpg",
              "Normal": "nor_gl_1k.png"}
@@ -162,7 +162,7 @@ def _material():
     nodos, enlaces = m.node_tree.nodes, m.node_tree.links
     salida = nodos.new("ShaderNodeOutputMaterial")
     pbr = nodos.new("ShaderNodeBsdfPrincipled")
-    pbr.inputs["Metallic"].default_value = .45
+    pbr.inputs["Metallic"].default_value = metalizado
     enlaces.new(pbr.outputs["BSDF"], salida.inputs["Surface"])
     for entrada, sufijo in rutas.items():
         ruta = TEXTURAS / ("corrugated_iron_02_" + sufijo)
@@ -180,7 +180,7 @@ def _material():
             rugosidad = nodos.new("ShaderNodeMath")
             rugosidad.name = "RugosidadDeLaChapa"
             rugosidad.operation = "MULTIPLY"
-            rugosidad.inputs[1].default_value = .38
+            rugosidad.inputs[1].default_value = factor_rugosidad
             enlaces.new(textura.outputs["Color"], rugosidad.inputs[0])
             enlaces.new(rugosidad.outputs[0], pbr.inputs[entrada])
         else:
@@ -232,15 +232,15 @@ def reparar_uv_cantos_existentes():
         for numero in caras:
             cara = malla.polygons[numero]
             material = malla.materials[cara.material_index].name
-            assert material in (MATERIAL_CUBIERTA, "paredes"), (
+            assert material in (MATERIAL_CUBIERTA, MATERIAL_DEPOSITO, "paredes"), (
                 "No modificar las UV interiores de bloques", nombre, numero, material)
             dominante = max(range(3), key=lambda i: abs(cara.normal[i]))
-            if material == MATERIAL_CUBIERTA:
+            if material in (MATERIAL_CUBIERTA, MATERIAL_DEPOSITO):
                 assert dominante != 2, "Una cara grande de cubierta no debe reproyectarse"
             for indice in cara.loop_indices:
                 punto = malla.vertices[malla.loops[indice].vertex_index].co
                 capa.data[indice].uv = (_uv_cubierta(cara.normal, punto)
-                                       if material == MATERIAL_CUBIERTA else
+                                       if material in (MATERIAL_CUBIERTA, MATERIAL_DEPOSITO) else
                                        _uv_exterior(cara.normal, punto))
                 esperado["uv"][capa.name][indice] = tuple(capa.data[indice].uv)
                 bucles.append(indice)
@@ -444,9 +444,9 @@ def aplicar(tope_error_matriz=0.0):
     REPORTE.parent.mkdir(parents=True, exist_ok=True)
     REPORTE.write_text(json.dumps(estado, indent=2), encoding="utf-8")
     afines = _afines_interiores()
-    metal = _material()
+    metal = _material(MATERIAL_CUBIERTA, .45, .2)
     cuerpo, medidas = _cuartito(metal, afines)
-    estado["deposito"] = _deposito(metal)
+    estado["deposito"] = _deposito(_material(MATERIAL_DEPOSITO, .2, .85))
     reparentados = []
     for o in list(bpy.data.objects):
         if o == cuerpo or o.name in RETIRADOS or o.name == "puerta_limpieza-col":
