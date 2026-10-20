@@ -595,7 +595,9 @@ def _luminaria(cuarto, coleccion):
     y0, y1 = cuarto["y"]
     notas = [_caja_mundial(bpy.data.objects[n]) for n in NOTAS]
     arriba_de_las_notas = max(c[1].z for c in notas)
-    techo = cuarto["z"][1]
+    # Lo más bajo de la chapa queda sobre la pared del fondo, que es donde va la luminaria.
+    techo = (cuarto["z"][1] - CAIDA_DE_LA_CHAPA - 2 * ALTO_DE_LA_ONDA
+             - ESPESOR_DE_LA_CHAPA - 0.001)
     padre = bpy.data.objects.new(PREFIJO + "tubo_soporte", None)
     coleccion.objects.link(padre)
     largo = 0.9
