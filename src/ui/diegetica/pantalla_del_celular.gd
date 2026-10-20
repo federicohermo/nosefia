@@ -86,6 +86,7 @@ var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
+var _arrastre_desplazo: bool = false
 
 
 func _ready() -> void:
@@ -324,6 +325,7 @@ func _al_tocar_el_historial(evento: InputEvent) -> void:
 	var clic := evento as InputEventMouseButton
 	if clic != null and clic.pressed and clic.button_index == MOUSE_BUTTON_LEFT:
 		_arrastrando = true
+		_arrastre_desplazo = false
 		_posicion_del_arrastre = _scroll.scroll_vertical
 		_pintar_cursor(Control.CURSOR_DRAG)
 		_scroll.accept_event()
@@ -333,7 +335,9 @@ func _arrastrar(evento: InputEvent) -> void:
 	if evento is InputEventMouseButton and evento.button_index == MOUSE_BUTTON_LEFT:
 		if not evento.pressed:
 			_terminar_arrastre()
-			get_viewport().set_input_as_handled()
+			# Un clic quieto sigue hasta la frase: el enlace de la pista se pide al soltar.
+			if _arrastre_desplazo:
+				get_viewport().set_input_as_handled()
 	elif evento is InputEventMouseMotion:
 		var escala := _scroll.get_global_transform_with_canvas().get_scale().y
 		var barra := _scroll.get_v_scroll_bar()
@@ -342,7 +346,9 @@ func _arrastrar(evento: InputEvent) -> void:
 			barra.min_value,
 			maxf(barra.min_value, barra.max_value - barra.page)
 		)
+		var antes := _scroll.scroll_vertical
 		_scroll.scroll_vertical = roundi(_posicion_del_arrastre)
+		_arrastre_desplazo = _arrastre_desplazo or _scroll.scroll_vertical != antes
 		get_viewport().set_input_as_handled()
 
 
