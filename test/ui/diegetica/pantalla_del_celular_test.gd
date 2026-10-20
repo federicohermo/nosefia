@@ -296,13 +296,47 @@ func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
 		_burbuja(pantalla, 5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
 	)
 	assert_str(texto.get_parsed_text()).is_equal(mensajes[5].texto)
-	assert_int(texto.mouse_filter).is_equal(Control.MOUSE_FILTER_PASS)
 	assert_array(pedidos).is_empty()
 	texto.meta_clicked.emit("fuera")
 	assert_array(pedidos).is_empty()
 	texto.meta_clicked.emit("falta_algo")
 	texto.meta_clicked.emit("falta_algo")
 	assert_array(pedidos).is_equal(["2A", "2A"])
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	for cuadro in 4:
+		await get_tree().process_frame
+	scroll.ensure_control_visible(texto)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var fuente := texto.get_theme_font("normal_font")
+	var tamano := texto.get_theme_font_size("normal_font_size")
+	var prefijo := fuente.get_string_size("y te aviso q ", HORIZONTAL_ALIGNMENT_LEFT, -1, tamano).x
+	var punto := (
+		texto.get_global_transform() * Vector2(prefijo + 8.0, fuente.get_height(tamano) / 4.0)
+	)
+	var relativo := Vector2(0, 12)
+	assert_bool(scroll.get_global_rect().has_point(punto)).is_true()
+	assert_bool(texto.get_global_rect().has_point(punto + relativo)).is_true()
+	var antes := scroll.scroll_vertical
+	pedidos.clear()
+	get_viewport().push_input(_boton_del_mouse(punto, true), true)
+	get_viewport().push_input(_movimiento(punto + relativo, relativo), true)
+	get_viewport().push_input(_boton_del_mouse(punto + relativo, false), true)
+	await get_tree().process_frame
+	assert_array(pedidos).is_equal(["2A"])
+	assert_int(scroll.scroll_vertical).is_equal(antes)
+	var rueda := InputEventMouseButton.new()
+	rueda.button_index = MOUSE_BUTTON_WHEEL_UP
+	rueda.pressed = true
+	rueda.position = punto
+	get_viewport().push_input(rueda, true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_less(antes)
+	assert_array(pedidos).is_equal(["2A"])
 
 
 func test_llegada_intercalada_conserva_indice_actual_de_la_foto() -> void:  # AC-INV-040, AC-INV-042
@@ -459,63 +493,62 @@ func test_ocultar_el_celular_termina_el_arrastre() -> void:
 	assert_int(scroll.scroll_vertical).is_equal(quieto)
 
 
-func test_arrastrar_desde_una_foto_desplaza_y_un_clic_con_deriva_la_abre() -> void:
+func test_la_foto_real_abre_con_movimiento_sin_desplazar_el_chat() -> void:
 	var pantalla := _pantalla()
-	var conversacion := _conversacion(24)
-	var con_foto := 22
-	conversacion.mensajes[con_foto].foto = GradientTexture2D.new()
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	pantalla.foto_pedida.connect(sistema.pedir_foto)
+	sistema.foto_ampliada.connect(pantalla.ampliar)
+	sistema.foto_cerrada.connect(pantalla.cerrar_foto)
+	sistema.abrir_jornada(1)
+	sistema.pedir_alternar(false)
+	sistema.pedir_chat(Conversacion.Interlocutor.JEFE)
+	var conversacion := sistema.bandeja().conversacion_de(Conversacion.Interlocutor.JEFE)
+	var mensajes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)
+	var con_foto := 1
+	assert_str(mensajes[con_foto].identidad).is_equal("J1_Foto02")
+	assert_str(mensajes[con_foto].foto.resource_path).is_equal(
+		"res://assets/ui/manada/fotos/intro-04.png"
+	)
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
 	pantalla.subir()
 	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
-	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	pantalla.mostrar_chat(conversacion, mensajes, false, 1)
 	for cuadro in 4:
 		await get_tree().process_frame
-	var pedidas: Array[int] = []
-	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidas.append(indice))
 	var scroll: ScrollContainer = pantalla.get("_scroll")
-	var fotos := _burbuja(pantalla, con_foto).find_children("*", "TextureButton", true, false)
-	assert_array(fotos).has_size(1)
-	var foto := fotos[0] as TextureButton
-	var centro := foto.get_global_rect().get_center()
-	assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
-	_apretar_boton(foto, centro)
-	get_viewport().push_input(_boton_del_mouse(centro, false), true)
-	await get_tree().process_frame
-	assert_array(pedidas).is_equal([con_foto])
+	var foto := (
+		_burbuja(pantalla, con_foto).find_children("*", "TextureButton", true, false)[0]
+		as TextureButton
+	)
+	scroll.ensure_control_visible(foto)
+	for cuadro in 4:
+		await get_tree().process_frame
+	assert_float(scroll.get_v_scroll_bar().max_value).is_greater(scroll.get_v_scroll_bar().page)
 	var antes := scroll.scroll_vertical
-	_apretar_boton(foto, centro)
-	get_viewport().push_input(_movimiento(centro + Vector2(0, 2), Vector2(0, 2)), true)
-	get_viewport().push_input(_boton_del_mouse(centro + Vector2(0, 2), false), true)
+	var centro := foto.get_global_rect().intersection(scroll.get_global_rect()).get_center()
+	for relativo: Vector2 in [Vector2(0, 12), Vector2(0, 20), Vector2(0, 60)]:
+		assert_bool(foto.get_global_rect().has_point(centro + relativo)).is_true()
+		assert_bool(scroll.get_global_rect().has_point(centro + relativo)).is_true()
+		_apretar_boton(foto, centro)
+		get_viewport().push_input(_movimiento(centro + relativo, relativo), true)
+		get_viewport().push_input(_boton_del_mouse(centro + relativo, false), true)
+		await get_tree().process_frame
+		assert_int(sistema.celular().pantalla()).is_equal(Celular.Pantalla.FOTO)
+		assert_bool((pantalla.get("_foto_ampliada") as Control).visible).is_true()
+		assert_int(scroll.scroll_vertical).is_equal(antes)
+		sistema.pedir_cerrar_foto()
+		await get_tree().process_frame
+		assert_int(sistema.celular().pantalla()).is_equal(Celular.Pantalla.CHAT)
+		assert_bool((pantalla.get("_foto_ampliada") as Control).visible).is_false()
+		assert_int(scroll.scroll_vertical).is_equal(antes)
+	var rueda := InputEventMouseButton.new()
+	rueda.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	rueda.pressed = true
+	rueda.position = centro
+	get_viewport().push_input(rueda, true)
 	await get_tree().process_frame
-	assert_int(scroll.scroll_vertical).is_equal(antes)
-	assert_array(pedidas).is_equal([con_foto, con_foto])
-	_apretar_boton(foto, centro)
-	get_viewport().push_input(_movimiento(centro + Vector2(20, 0), Vector2(20, 0)), true)
-	get_viewport().push_input(_boton_del_mouse(centro + Vector2(20, 0), false), true)
-	await get_tree().process_frame
-	assert_int(scroll.scroll_vertical).is_equal(antes)
-	assert_array(pedidas).is_equal([con_foto, con_foto, con_foto])
-	var apretar := _boton_del_mouse(foto.get_global_rect().get_center(), true)
-	_apretar_boton(foto, apretar.position)
-	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
-	get_viewport().push_input(_movimiento(apretar.position + Vector2(0, 2), Vector2(0, 2)), true)
-	get_viewport().push_input(_movimiento(apretar.position + Vector2(0, 60), Vector2(0, 58)), true)
-	await get_tree().process_frame
-	assert_int(scroll.scroll_vertical).is_less(antes)
-	get_viewport().push_input(_boton_del_mouse(apretar.position + Vector2(0, 60), false), true)
-	await get_tree().process_frame
-	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
-	assert_array(pedidas).is_equal([con_foto, con_foto, con_foto])
-	assert_bool(foto.is_pressed()).is_false()
-	scroll.scroll_vertical = antes
-	await get_tree().process_frame
-	centro = foto.get_global_rect().intersection(scroll.get_global_rect()).get_center()
-	assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
-	_apretar_boton(foto, centro)
-	get_viewport().push_input(_boton_del_mouse(centro, false), true)
-	await get_tree().process_frame
-	assert_array(pedidas).is_equal([con_foto, con_foto, con_foto, con_foto])
+	assert_int(scroll.scroll_vertical).is_greater(antes)
 
 
 func test_contactos_conservan_clics_con_movimiento_y_no_se_desplazan() -> void:
@@ -627,7 +660,7 @@ func test_una_foto_sin_desborde_conserva_clics_con_movimiento() -> void:
 	assert_int(scroll.scroll_vertical).is_zero()
 
 
-func test_una_foto_sigue_abriendose_con_teclado_despues_de_arrastrar_o_cancelar() -> void:
+func test_una_foto_conserva_foco_y_activacion_nativa_con_teclado() -> void:
 	var pantalla := _pantalla()
 	var conversacion := _conversacion(24)
 	var con_foto := 22
@@ -650,53 +683,17 @@ func test_una_foto_sigue_abriendose_con_teclado_despues_de_arrastrar_o_cancelar(
 	var scroll: ScrollContainer = pantalla.get("_scroll")
 	var antes := scroll.scroll_vertical
 	assert_int(foto.focus_mode).is_equal(Control.FOCUS_ALL)
-	var centro := foto.get_global_rect().get_center()
-	assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
+	var centro := foto.get_global_rect().intersection(scroll.get_global_rect()).get_center()
 	_apretar_boton(foto, centro)
-	get_viewport().push_input(_boton_del_mouse(centro, false), true)
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 12), Vector2(0, 12)), true)
+	get_viewport().push_input(_boton_del_mouse(centro + Vector2(0, 12), false), true)
 	await get_tree().process_frame
 	assert_bool(foto.has_focus()).is_true()
+	assert_array(pedidas).is_equal([con_foto])
+	assert_array(nativas).is_equal([1])
 	get_viewport().push_input(_tecla(KEY_ENTER, true), true)
 	get_viewport().push_input(_tecla(KEY_ENTER, false), true)
 	await get_tree().process_frame
 	assert_array(pedidas).is_equal([con_foto, con_foto])
-	for cancelacion: int in 6:
-		pedidas.clear()
-		nativas.clear()
-		scroll.scroll_vertical = antes
-		await get_tree().process_frame
-		centro = foto.get_global_rect().intersection(scroll.get_global_rect()).get_center()
-		assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
-		_apretar_boton(foto, centro)
-		if cancelacion < 4:
-			get_viewport().push_input(_movimiento(centro + Vector2(0, 20), Vector2(0, 20)), true)
-			await get_tree().process_frame
-			assert_int(scroll.scroll_vertical).is_less(antes)
-		if cancelacion == 1 or cancelacion == 4:
-			pantalla.propagate_notification(NOTIFICATION_WM_WINDOW_FOCUS_OUT)
-		elif cancelacion == 2 or cancelacion == 5:
-			(pantalla.get("_telefono") as Control).hide()
-			(pantalla.get("_telefono") as Control).show()
-		if cancelacion != 0 and cancelacion != 3:
-			get_viewport().push_input(_movimiento(centro + Vector2(0, 2), Vector2(0, 2)), true)
-		var soltar := Vector2(1, 1) if cancelacion == 3 else centro + Vector2(0, 20)
-		get_viewport().push_input(_boton_del_mouse(soltar, false), true)
-		await get_tree().process_frame
-		assert_array(pedidas).is_empty()
-		if cancelacion != 2 and cancelacion != 5:
-			assert_bool(foto.has_focus()).is_true()
-			var nativas_antes := nativas.size()
-			get_viewport().push_input(_tecla(KEY_ENTER, true), true)
-			get_viewport().push_input(_tecla(KEY_ENTER, false), true)
-			await get_tree().process_frame
-			assert_int(nativas.size()).is_equal(nativas_antes + 1)
-			assert_array(pedidas).is_equal([con_foto])
-		pedidas.clear()
-		scroll.scroll_vertical = antes
-		await get_tree().process_frame
-		centro = foto.get_global_rect().intersection(scroll.get_global_rect()).get_center()
-		assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
-		_apretar_boton(foto, centro)
-		get_viewport().push_input(_boton_del_mouse(centro, false), true)
-		await get_tree().process_frame
-		assert_array(pedidas).is_equal([con_foto])
+	assert_array(nativas).is_equal([1, 1])
+	assert_int(scroll.scroll_vertical).is_equal(antes)
