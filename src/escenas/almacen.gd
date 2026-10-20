@@ -399,6 +399,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 
 
 func _acelerar_si_se_cerro_el_ciclo() -> void:
+	# La primera apertura cumple obligatorias antes de darle su noche a la ventanilla.
+	if _atenciones.tarea() == null or _computadora.registro() == null:
+		return
 	var compras_cerradas := _atenciones.tarea().compras_cerradas()
 	var registro_al_cierre := _computadora.registro().completada(true)
 	var obligatorias := _partida.obligatorias()
