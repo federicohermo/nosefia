@@ -151,7 +151,6 @@ func _primera_que_limpia() -> int:
 	return ReglasDeLaPartida.PRIMERA_JORNADA + _jornadas_sin_limpieza().size()
 
 
-## Desde la primera, las noches seguidas que no piden limpiar.
 func _jornadas_sin_limpieza() -> Array[int]:
 	var jornadas: Array[int] = []
 	for jornada in range(

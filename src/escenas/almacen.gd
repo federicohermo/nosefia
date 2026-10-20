@@ -231,7 +231,7 @@ func _ready() -> void:
 	_jugador.examen.examen_iniciado.connect(
 		func(nodo: Node3D) -> void: _hud.mostrar_subtitulo(_jugador.texto_al_examinar_de(nodo))
 	)
-	# Las tres puertas trabadas comparten la traba: quién es cada una lo dice su ruta.
+	# La traba no distingue identidades, así que estas puertas se declaran por su ruta.
 	var trabadas := {
 		^"Estructura/puertaentrada/CuerpoDeLaHoja": SubtitulosAlExaminar.ENTRADA_PRINCIPAL,
 		^"Estructura/puertajefe/CuerpoDeLaHoja": SubtitulosAlExaminar.PUERTA_DEL_JEFE,
