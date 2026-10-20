@@ -36,7 +36,7 @@ const BUSCAR := "Buscar contacto..."
 const LILA := Color("c99cf4")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
-const AYUDA := "RUEDA DEL MOUSE / DESPLAZAR HISTORIAL"
+const AYUDA := "ARRASTRÁ O USÁ LA RUEDA / DESPLAZAR HISTORIAL"
 const DIAS: Array[String] = [
 	"HOY",
 	"AYER",
@@ -84,6 +84,10 @@ var _historial: Array[Mensaje] = []
 var _burbujas: Array[PanelContainer] = []
 var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
+var _arrastrando: bool = false
+var _posicion_del_arrastre: float = 0.0
+var _descartar_clic_del_arrastre: bool = false
+var _arrastre_desde_un_boton: bool = false
 
 
 func _ready() -> void:
@@ -108,6 +112,13 @@ func _ready() -> void:
 	_opciones.text = "..."
 	_entrada.placeholder_text = MENSAJE
 	_ayuda.text = AYUDA
+	_scroll.gui_input.connect(_al_tocar_el_historial)
+	_scroll.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_telefono.visibility_changed.connect(
+		func() -> void:
+			if not _telefono.is_visible_in_tree():
+				_terminar_arrastre(true)
+	)
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
 	_foto_ampliada.hide()
 	_recordatorio.hide()
@@ -121,6 +132,8 @@ func _ready() -> void:
 func _notification(que: int) -> void:
 	if que == NOTIFICATION_UNPAUSED:
 		_ultimo = _ahora.call()
+	elif que == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_terminar_arrastre(true)
 
 
 func _process(_delta: float) -> void:
@@ -292,6 +305,12 @@ func cubrir_recordatorio(cubierto: bool) -> void:
 
 
 func _input(evento: InputEvent) -> void:
+	if _arrastrando:
+		_arrastrar(evento)
+		return
+	# Cancelar puede preceder al soltar de un botón. El teclado comienza otra activación.
+	if evento.is_action_pressed(&"ui_accept"):
+		_descartar_clic_del_arrastre = false
 	if not _telefono.visible:
 		return
 	var clic := evento as InputEventMouseButton
@@ -303,6 +322,73 @@ func _input(evento: InputEvent) -> void:
 	elif _cierra_con_un_clic_afuera() and not _telefono.get_global_rect().has_point(clic.position):
 		get_viewport().set_input_as_handled()
 		cierre_pedido.emit()
+
+
+func _al_tocar_el_historial(evento: InputEvent) -> void:
+	if _empezar_arrastre(evento):
+		_scroll.accept_event()
+
+
+## El botón conserva el soltar nativo para terminar su pulsación, incluso después de arrastrar.
+func _al_tocar_un_boton(evento: InputEvent) -> void:
+	_arrastre_desde_un_boton = _empezar_arrastre(evento)
+
+
+func _empezar_arrastre(evento: InputEvent) -> bool:
+	var clic := evento as InputEventMouseButton
+	if clic == null or not clic.pressed or clic.button_index != MOUSE_BUTTON_LEFT:
+		return false
+	_arrastrando = true
+	_descartar_clic_del_arrastre = false
+	_arrastre_desde_un_boton = false
+	_posicion_del_arrastre = _scroll.scroll_vertical
+	_pintar_cursor(Control.CURSOR_DRAG)
+	return true
+
+
+func _arrastrar(evento: InputEvent) -> void:
+	if evento is InputEventMouseButton and evento.button_index == MOUSE_BUTTON_LEFT:
+		if not evento.pressed:
+			_terminar_arrastre()
+			# Un clic quieto conserva los enlaces. El botón necesita el soltar nativo
+			# para terminar su pulsación, aunque su activación quede vetada.
+			if _descartar_clic_del_arrastre and not _arrastre_desde_un_boton:
+				get_viewport().set_input_as_handled()
+	elif evento is InputEventMouseMotion:
+		_descartar_clic_del_arrastre = (
+			_descartar_clic_del_arrastre or evento.relative != Vector2.ZERO
+		)
+		var escala := _scroll.get_global_transform_with_canvas().get_scale().y
+		var barra := _scroll.get_v_scroll_bar()
+		_posicion_del_arrastre = clampf(
+			_posicion_del_arrastre - evento.relative.y / escala,
+			barra.min_value,
+			maxf(barra.min_value, barra.max_value - barra.page)
+		)
+		_scroll.scroll_vertical = roundi(_posicion_del_arrastre)
+		get_viewport().set_input_as_handled()
+
+
+func _terminar_arrastre(cancelado: bool = false) -> void:
+	if not _arrastrando:
+		return
+	_arrastrando = false
+	_descartar_clic_del_arrastre = _descartar_clic_del_arrastre or cancelado
+	_pintar_cursor(Control.CURSOR_POINTING_HAND)
+
+
+func _pintar_cursor(forma: Control.CursorShape) -> void:
+	_scroll.mouse_default_cursor_shape = forma
+	for hijo: Node in _mensajes.find_children("*", "Control", true, false):
+		var control := hijo as Control
+		if control.mouse_filter == Control.MOUSE_FILTER_PASS or control is BaseButton:
+			control.mouse_default_cursor_shape = forma
+
+
+func _aceptar_activacion() -> bool:
+	var descartar := _descartar_clic_del_arrastre
+	_descartar_clic_del_arrastre = false
+	return not descartar
 
 
 func _sube_antes_de_correrse() -> bool:
@@ -427,7 +513,13 @@ func _boton_de(conversacion: Conversacion, sin_leer: int, resumen: String) -> Bu
 		badge.add_child(cuenta)
 		fila.add_child(badge)
 	var quien := conversacion.interlocutor
-	boton.pressed.connect(func() -> void: chat_pedido.emit(quien))
+	boton.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
+	boton.gui_input.connect(_al_tocar_un_boton)
+	boton.pressed.connect(
+		func() -> void:
+			if _aceptar_activacion():
+				chat_pedido.emit(quien)
+	)
 	return boton
 
 
@@ -462,9 +554,11 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	panel.add_theme_stylebox_override("panel", _estilo(Color("0b363d"), 16, 16))
 	panel.mouse_filter = Control.MOUSE_FILTER_PASS
+	panel.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	var contenido := VBoxContainer.new()
 	contenido.add_theme_constant_override("separation", 12)
 	contenido.mouse_filter = Control.MOUSE_FILTER_PASS
+	contenido.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	panel.add_child(contenido)
 	if mensaje.foto != null:
 		var foto := TextureButton.new()
@@ -472,8 +566,12 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		foto.ignore_texture_size = true
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		foto.custom_minimum_size = Vector2(0, 240)
+		foto.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
+		foto.gui_input.connect(_al_tocar_un_boton)
 		foto.pressed.connect(
-			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
+			func() -> void:
+				if _aceptar_activacion():
+					foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
 		)
 		contenido.add_child(foto)
 	if not mensaje.texto.is_empty():
