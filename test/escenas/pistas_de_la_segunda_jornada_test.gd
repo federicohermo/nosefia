@@ -201,7 +201,6 @@ func test_la_colilla_esta_solo_la_noche_de_su_pista() -> void:  # AC-INV-049
 	assert_object(colilla).is_not_null()
 	if colilla == null:
 		return
-	var origen := colilla.global_transform
 	var agarre: Agarre = _almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(colilla.datos, colilla)).is_true()
 	for otra: int in [ReglasDeLaPartida.PRIMERA_JORNADA, jornada - 1, jornada + 1]:
@@ -226,12 +225,13 @@ func test_la_colilla_esta_solo_la_noche_de_su_pista() -> void:  # AC-INV-049
 	assert_bool(colilla.is_visible_in_tree()).is_false()
 	for _vez in 2:
 		_almacen.call("_al_abrir_la_jornada", jornada)
+	var origen: Transform3D = colilla.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
+	assert_bool(colilla.global_transform.is_equal_approx(origen)).is_true()
 	await _cuadros()
 	var colillas := _almacen.find_children("*", "ObjetoAgarrable", true, false).filter(
 		func(nodo: Node) -> bool: return nodo.get("datos") == colilla.datos
 	)
 	assert_array(colillas).contains_exactly([colilla])
-	assert_bool(colilla.global_transform.is_equal_approx(origen)).is_true()
 	assert_bool(await _mirar_colilla()).is_true()
 
 
