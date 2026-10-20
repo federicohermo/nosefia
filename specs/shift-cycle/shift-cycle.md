@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: draft
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526 y #527; migración de los specs 001, 007, 011, 016, 027, 031
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527 y #539; migración de los specs 001, 007, 011, 016, 027, 031
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -46,7 +46,8 @@ real de la jornada cubra el turno entero**. El ritmo vale `43 200 ÷ duración`:
 
 Una jornada sin fila DEBE usar 720 segundos: un minuto real por hora de ficción. El ritmo DEBE
 salir de la jornada que se abre. Abrir la jornada siguiente o retomar una partida guardada NO
-DEBE heredar el ritmo de otra jornada.
+DEBE heredar el ritmo de otra jornada. El único cambio de ritmo durante una noche es el de
+BR-SHF-020.
 
 ### BR-SHF-003 — El tiempo entra, no se busca
 
@@ -133,6 +134,26 @@ Una partida terminada que vuelve al menú NO DEBE anunciar una noche nueva. La p
 permanecer entera 1 segundo y desaparecer durante los siguientes 0,5 segundos. Sólo después
 DEBE subir la persiana durante 1 segundo, sin superponer ambos movimientos: la entrada completa
 DEBE durar 2,5 segundos reales.
+
+### BR-SHF-020 — La primera noche termina cuando se cierra el ciclo
+
+MIENTRAS está abierta la jornada 1, CUANDO no queda ningún comprador por atender y todas las
+obligatorias declaradas que no son cobrar en la caja están cumplidas, el sistema DEBE cambiar
+el ritmo para que el turno restante se consuma en la duración de la aceleración (OQ-SHF-007),
+la misma desde cualquier hora. No queda ningún comprador por atender cuando llegaron todos los
+compradores de la noche y cada uno completó su compra o venció. Un comprador que espera en la
+ventanilla, o que todavía no llegó, queda por atender. Si el último vence, cobrar en la caja
+queda sin cumplir y no impide acelerar. Registrar lo vendido cuenta como cumplido cuando el
+registro coincide con lo vendido, aunque nadie haya comprado: acelerar NO DEBE depender de que
+algún comprador complete su compra.
+
+SI no se cumple la condición, ENTONCES el ritmo DEBE seguir siendo el de BR-SHF-002. Una vez
+acelerado, el ritmo NO DEBE volver al de BR-SHF-002 en esa noche, aunque una obligatoria se
+descumpla después. La aceleración DEBE terminar en el mismo cierre de las 08:00: la misma
+devolución, la misma cuenta de obligatorias de ese instante y una sola entrada al cierre. La
+pausa y las retenciones de BR-SHF-003 DEBEN retener también la aceleración. Retomar la jornada 1
+desde el menú DEBE evaluar la condición de nuevo, desde la noche recién abierta. En las
+jornadas 2 a 8 el sistema NO DEBE acelerar, aunque se cumpla la condición.
 
 ## Criterios de aceptación
 
@@ -307,6 +328,45 @@ DADO el cierre de la jornada 3 CUANDO se abre la 4 y pasa 1 segundo real ENTONCE
 `60.0`. DADO una partida guardada en la jornada 4 CUANDO se retoma desde el menú y pasa 1 segundo
 real ENTONCES el turno baja `60.0`. Retomada en la 2, baja `80.0`.
 
+### AC-SHF-031 — Acelera cuando el último completa su compra *(verifica BR-SHF-020)*
+
+DADO la jornada 1 con registrar y reponer cumplidos y un solo comprador por atender en la
+ventanilla CUANDO pasa 1 segundo real ENTONCES el turno baja `120.0`. CUANDO ese comprador
+completa su compra a las 05:59 ENTONCES el ritmo cambia en ese instante. CUANDO pasa la
+duración de la aceleración ENTONCES el turno cierra una sola vez, quedan `0.0` y cobrar en la
+caja cuenta como cumplida. Un instante antes, el turno sigue abierto.
+
+### AC-SHF-032 — Lo que falta no acelera *(verifica BR-SHF-020)*
+
+DADO la jornada 1 con registrar y reponer cumplidos CUANDO todavía falta llegar un comprador, o
+uno espera en la ventanilla, ENTONCES el ritmo es el de BR-SHF-002. DADO la jornada 1 con el
+último comprador vencido y registrar sin cumplir ENTONCES tampoco acelera. CUANDO registrar se
+cumple ENTONCES acelera, y el cierre cuenta cobrar en la caja como no cumplida. DADO la jornada 1
+sin compradores en la lista y registrar y reponer cumplidos ENTONCES acelera. DADO la jornada 1
+con reponer cumplido y el registro sin anotar CUANDO el último comprador vence sin que nadie
+haya comprado ENTONCES acelera en ese instante. Con una unidad anotada de más, no acelera.
+
+### AC-SHF-033 — La duración no depende de la hora *(verifica BR-SHF-020, BR-SHF-004)*
+
+DADO la jornada 1 CUANDO la condición se cumple con `21600.0` restantes, y aparte con `60.0`
+restantes, a las 07:59, ENTONCES en los dos casos el turno llega a `0.0` cuando pasa la
+duración de la aceleración, no antes, y el cierre se dispara una sola vez. Un cuadro más largo
+que lo que falta deja `0.0`, sin pasarse.
+
+### AC-SHF-034 — Acelerar no tiene vuelta atrás *(verifica BR-SHF-020, BR-SHF-007)*
+
+DADO la jornada 1 acelerada CUANDO reponer se descumple ENTONCES el ritmo sigue acelerado y el
+cierre cuenta reponer como no cumplida. Pedir la aceleración otra vez no cambia el ritmo de la
+primera. DADO la jornada 1 acelerada CUANDO el juego está en pausa y pasan cuadros ENTONCES el
+turno no cambia; al reanudar sigue al ritmo acelerado desde ese valor.
+
+### AC-SHF-035 — Sólo la primera noche *(verifica BR-SHF-020, BR-SHF-002)*
+
+DADO las jornadas 2, 4 y 8 con la condición cumplida CUANDO pasa 1 segundo real ENTONCES el
+turno baja `80.0`, `60.0` y `60.0`. DADO una partida guardada en la jornada 1 CUANDO se retoma
+desde el menú ENTONCES el ritmo es el de BR-SHF-002 hasta que la condición se cumple en esa
+noche.
+
 ## No objetivos
 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
@@ -348,3 +408,9 @@ real ENTONCES el turno baja `60.0`. Retomada en la 2, baja `80.0`.
     diseño cerrado. La decisión de #369 deja las tres con sólo las cuatro fijas.
   - Decide: game design, en las fichas e issues de cada jornada.
   - Bloquea: agregar esas particulares; no bloquea abrir ni cerrar con las cuatro declaradas.
+- **OQ-SHF-007 — ¿Cuántos segundos reales dura la aceleración de la primera noche?**
+  - Por qué sigue abierta: #539 fija que la duración es la misma desde cualquier hora, pero no
+    su valor. Se decide jugando la jornada 1.
+  - Decide: game design.
+  - Bloquea: el valor de la aceleración; no bloquea implementar BR-SHF-020 con un valor
+    provisorio declarado una sola vez en las reglas del juego.
