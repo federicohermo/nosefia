@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const NOTAS: Array[String] = [
 	"nota baño inodoro", "nota baño inodoro 2", "nota instrucciones", "nota productos"
 ]
@@ -28,10 +29,11 @@ func test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas() -> voi
 		etiquetas.append(texturas)
 
 
-func test_las_cuatro_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
+func test_las_cuatro_notas_se_ven_en_su_cuarto_con_sus_imagenes() -> void:  # AC-PLY-071
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
+	var habitaciones: Node3D = almacen.get("_habitaciones")
 	for nombre: String in NOTAS:
 		var nota: MeshInstance3D = almacen.get_node_or_null("Estructura/" + nombre)
 		assert_object(nota).override_failure_message(nombre).is_not_null()
@@ -41,11 +43,17 @@ func test_las_cuatro_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
 		var del_inodoro := nombre.begins_with("nota baño inodoro")
 		var alto_minimo := 0.3 if del_inodoro else 1.1
 		assert_float(nota.mesh.get_aabb().size.y).is_greater(alto_minimo)
-		assert_float(nota.global_position.x).is_between(8.0, 13.5)
-		assert_float(nota.global_position.z).is_between(-0.444, 6.27832)
-		assert_float(nota.global_position.y).is_between(1.2, 1.9)
 		var centro := nota.to_global(nota.mesh.get_aabb().get_center())
-		var frente := Vector3.FORWARD if del_inodoro else Vector3.BACK
+		var cuarto := (
+			ReglasDelCierre.Habitacion.BANO if del_inodoro else ReglasDelCierre.Habitacion.CUARTITO
+		)
+		var frente := Vector3.FORWARD if del_inodoro else Vector3.LEFT
+		(
+			assert_int(habitaciones.call("de", centro + frente * 0.1))
+			. override_failure_message(nombre)
+			. is_equal(cuarto)
+		)
+		assert_float(nota.global_position.y).is_between(1.2, 1.9)
 		var rayo := PhysicsRayQueryParameters3D.create(centro + frente, centro, 1)
 		var choque := almacen.get_world_3d().direct_space_state.intersect_ray(rayo)
 		assert_bool(choque.is_empty()).is_false()

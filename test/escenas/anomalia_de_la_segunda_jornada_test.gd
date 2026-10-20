@@ -163,7 +163,7 @@ func test_los_objetos_disponibles_arrancan_dentro_de_su_habitacion() -> void:  #
 		assert_bool(ReglasDelCierre.hay_objetos_afuera(estados)).is_false()
 		for estado: ReglasDelCierre.Estado in estados:
 			if estado.clase == ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA:
-				assert_int(estado.habitacion).is_equal(ReglasDelCierre.Habitacion.BANO)
+				assert_int(estado.habitacion).is_equal(ReglasDelCierre.Habitacion.CUARTITO)
 			elif estado.clase == ReglasDelCierre.Clase.CAJA:
 				assert_int(estado.habitacion).is_equal(ReglasDelCierre.Habitacion.DEPOSITO)
 

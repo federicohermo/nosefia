@@ -5,17 +5,21 @@ const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almace
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 
-func test_clasifica_las_tres_habitaciones_con_lector_trasladado() -> void:  # AC-CLN-040
+func test_clasifica_las_cuatro_habitaciones_con_lector_trasladado() -> void:  # AC-CLN-040
 	var padre := auto_free(Node3D.new()) as Node3D
 	get_tree().root.add_child(padre)
 	var lector := _lector(padre)
 	lector.position = Vector3(12, 4, -8)
-	assert_array(_habitaciones_de_los_centros(lector)).contains_exactly(
-		[
-			ReglasDelCierre.Habitacion.LOCAL,
-			ReglasDelCierre.Habitacion.DEPOSITO,
-			ReglasDelCierre.Habitacion.BANO
-		]
+	(
+		assert_array(_habitaciones_de_los_centros(lector))
+		. contains_exactly(
+			[
+				ReglasDelCierre.Habitacion.LOCAL,
+				ReglasDelCierre.Habitacion.DEPOSITO,
+				ReglasDelCierre.Habitacion.BANO,
+				ReglasDelCierre.Habitacion.CUARTITO,
+			]
+		)
 	)
 
 
@@ -25,12 +29,16 @@ func test_la_envolvente_mundial_no_agranda_una_habitacion_rotada() -> void:  # A
 	var lector := _lector(padre)
 	lector.position = Vector3(12, 4, -8)
 	lector.rotation.y = deg_to_rad(45)
-	assert_array(_habitaciones_de_los_centros(lector)).contains_exactly(
-		[
-			ReglasDelCierre.Habitacion.LOCAL,
-			ReglasDelCierre.Habitacion.DEPOSITO,
-			ReglasDelCierre.Habitacion.BANO
-		]
+	(
+		assert_array(_habitaciones_de_los_centros(lector))
+		. contains_exactly(
+			[
+				ReglasDelCierre.Habitacion.LOCAL,
+				ReglasDelCierre.Habitacion.DEPOSITO,
+				ReglasDelCierre.Habitacion.BANO,
+				ReglasDelCierre.Habitacion.CUARTITO,
+			]
+		)
 	)
 	_afirmar_afuera_de_caja_rotada(lector)
 
@@ -44,12 +52,16 @@ func test_compone_traslacion_y_rotacion_de_un_padre_real() -> void:  # AC-CLN-04
 	lector.position = Vector3(3, 2, -4)
 	# La vuelta local y la heredada son distintas: el resultado mundial gira -45 grados.
 	lector.rotation.y = deg_to_rad(-90)
-	assert_array(_habitaciones_de_los_centros(lector)).contains_exactly(
-		[
-			ReglasDelCierre.Habitacion.LOCAL,
-			ReglasDelCierre.Habitacion.DEPOSITO,
-			ReglasDelCierre.Habitacion.BANO
-		]
+	(
+		assert_array(_habitaciones_de_los_centros(lector))
+		. contains_exactly(
+			[
+				ReglasDelCierre.Habitacion.LOCAL,
+				ReglasDelCierre.Habitacion.DEPOSITO,
+				ReglasDelCierre.Habitacion.BANO,
+				ReglasDelCierre.Habitacion.CUARTITO,
+			]
+		)
 	)
 	_afirmar_afuera_de_caja_rotada(lector)
 
@@ -101,6 +113,7 @@ func _lector(padre: Node3D) -> Habitaciones:
 	lector.local.assign([AABB(Vector3.ZERO, Vector3(1, 2, 1))])
 	lector.deposito.assign([AABB(Vector3(3, 0, 0), Vector3(1, 2, 1))])
 	lector.bano.assign([AABB(Vector3(0, 0, 3), Vector3(1, 2, 1))])
+	lector.cuartito.assign([AABB(Vector3(3, 0, 3), Vector3(1, 2, 1))])
 	padre.add_child(lector)
 	return lector
 
@@ -110,6 +123,7 @@ func _habitaciones_de_los_centros(lector: Habitaciones) -> Array[int]:
 		lector.de(lector.to_global(lector.local[0].get_center())),
 		lector.de(lector.to_global(lector.deposito[0].get_center())),
 		lector.de(lector.to_global(lector.bano[0].get_center())),
+		lector.de(lector.to_global(lector.cuartito[0].get_center())),
 	]
 
 

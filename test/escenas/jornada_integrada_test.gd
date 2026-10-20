@@ -401,7 +401,7 @@ func _usar_sobre(jugador: Node3D, objetivo: Node3D) -> void:
 	jugador.call("_unhandled_input", evento)
 
 
-## Suelta lo que se lleva y lo devuelve a su lugar del baño: tirado adelante, taparía la mancha
+## Suelta lo que se lleva y lo devuelve a su lugar del cuartito: tirado adelante, taparía la mancha
 ## que se enfoca después.
 func _soltar_lejos(agarre: Agarre) -> void:
 	var soltado := agarre.soltar(true)

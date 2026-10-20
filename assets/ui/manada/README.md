@@ -95,7 +95,7 @@ Desde PowerShell, con una pantalla disponible:
 | `intro-07.png` | Lector y caja registradora |
 | `intro-08.png` | Computadora |
 | `intro-09.png` | Estantería del depósito con cajas |
-| `intro-11.png` | Útiles de limpieza y las dos notas del baño |
+| `intro-11.png` | Útiles de limpieza y las dos notas del cuartito |
 | `intro-13.png` | Depósito con las cajas de la primera noche en el piso |
 
 Las instrucciones iniciales siguen los doce frames de Figma desde `511:302` hasta `535:1361`.

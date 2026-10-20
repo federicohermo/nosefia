@@ -23,7 +23,13 @@ const PLANOS := [
 	],
 	[8, Vector3(0.0, 1.65, 4.60), Vector3(-0.05, 1.50, 3.60), 55.0, "base compu/StaticBody3D"],
 	[9, Vector3(2.70, 1.45, -9.73), Vector3(-0.40, 1.45, -9.73), 72.0, "Caja"],
-	[11, Vector3(11.10, 1.65, 3.05), Vector3(11.10, 0.90, 0.30), 46.0, "JabonAmarillo"],
+	[
+		11,
+		Vector3(8.35, 1.50, -14.30),
+		Vector3(10.78, 1.40, -13.43),
+		62.0,
+		"nota instrucciones",
+	],
 	[13, Vector3(-0.20, 1.90, -13.15), Vector3(-2.95, 1.15, -11.50), 62.0, "Caja"],
 ]
 

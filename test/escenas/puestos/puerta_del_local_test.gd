@@ -19,6 +19,9 @@ const VANOS := {
 }
 
 const BANO := "Estructura/puerta2"
+const CUARTITO := "Estructura/puerta_limpieza"
+## Las que se traban las noches que no piden limpiar.
+const SIN_LIMPIEZA: Array[String] = [BANO, CUARTITO]
 const DEPOSITO := "Estructura/puerta"
 
 const TRABADAS := {
@@ -249,50 +252,54 @@ func test_las_tres_puertas_de_afuera_estan_trabadas() -> void:  # AC-PLY-040
 		assert_bool(cuerpo.call("puerta").trabada()).override_failure_message(ruta).is_true()
 
 
-func test_el_bano_se_traba_las_noches_que_no_piden_limpiar() -> void:  # AC-PLY-040
+func test_el_bano_y_el_cuartito_se_traban_las_noches_que_no_piden_limpiar() -> void:  # AC-PLY-040
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
-	var bano: Node = almacen.get_node(BANO + "/CuerpoDeLaHoja")
-	var malla: Node3D = almacen.get_node(BANO)
-	var cerrada := malla.transform
-	var avisos := _escuchar(almacen, [BANO])
+	var cerradas := {}
+	for ruta: String in SIN_LIMPIEZA:
+		cerradas[ruta] = (almacen.get_node(ruta) as Node3D).transform
+	var avisos := _escuchar(almacen, SIN_LIMPIEZA)
 	var jornadas := _jornadas_sin_limpieza()
 	assert_array(jornadas).is_not_empty()
 	jornadas.append(_primera_que_limpia())
 	for jornada: int in jornadas:
 		almacen.call("_al_abrir_la_jornada", jornada)
 		var limpia := Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
-		var mensaje := "jornada %d" % jornada
-		assert_bool(bano.call("puerta").trabada()).override_failure_message(mensaje).is_equal(
-			not limpia
-		)
 		var deposito: Puerta = almacen.get_node(DEPOSITO + "/CuerpoDeLaHoja").call("puerta")
-		assert_bool(deposito.trabada()).override_failure_message(mensaje).is_false()
+		assert_bool(deposito.trabada()).override_failure_message(str(jornada)).is_false()
 		for ruta: String in TRABADAS:
 			var afuera: Puerta = almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta")
-			assert_bool(afuera.trabada()).override_failure_message(mensaje).is_true()
-		avisos.clear()
-		assert_object(bano.call("accionar")).is_null()
-		for _cuadro in 10:
-			await get_tree().physics_frame
-		var aviso := &"puerta_abierta" if limpia else &"puerta_trabada"
-		assert_array(avisos).override_failure_message(mensaje).is_equal([[BANO, aviso]])
-		(
-			assert_bool(malla.transform.is_equal_approx(cerrada))
-			. override_failure_message(mensaje)
-			. is_equal(not limpia)
-		)
-	# Retomar la última trabada con el baño abierto de la noche anterior.
-	assert_bool(bano.call("puerta").abierta()).is_true()
+			assert_bool(afuera.trabada()).override_failure_message(str(jornada)).is_true()
+		for ruta: String in SIN_LIMPIEZA:
+			var mensaje := "%s en la jornada %d" % [ruta, jornada]
+			var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+			assert_bool(cuerpo.call("puerta").trabada()).override_failure_message(mensaje).is_equal(
+				not limpia
+			)
+			avisos.clear()
+			assert_object(cuerpo.call("accionar")).is_null()
+			for _cuadro in 10:
+				await get_tree().physics_frame
+			var aviso := &"puerta_abierta" if limpia else &"puerta_trabada"
+			assert_array(avisos).override_failure_message(mensaje).is_equal([[ruta, aviso]])
+			var malla: Node3D = almacen.get_node(ruta)
+			(
+				assert_bool(malla.transform.is_equal_approx(cerradas[ruta]))
+				. override_failure_message(mensaje)
+				. is_equal(not limpia)
+			)
+	# Retomar la última trabada con las dos abiertas de la noche anterior.
 	avisos.clear()
 	almacen.call("_al_abrir_la_jornada", jornadas[-2])
-	assert_bool(bano.call("puerta").trabada()).is_true()
-	assert_bool(bano.call("puerta").abierta()).is_false()
-	assert_bool(malla.transform.is_equal_approx(cerrada)).is_true()
 	for _cuadro in 10:
 		await get_tree().physics_frame
-	assert_bool(malla.transform.is_equal_approx(cerrada)).is_true()
+	for ruta: String in SIN_LIMPIEZA:
+		var puerta: Puerta = almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta")
+		assert_bool(puerta.trabada()).override_failure_message(ruta).is_true()
+		assert_bool(puerta.abierta()).override_failure_message(ruta).is_false()
+		var malla: Node3D = almacen.get_node(ruta)
+		assert_bool(malla.transform.is_equal_approx(cerradas[ruta])).is_true()
 	assert_array(avisos).is_empty()
 
 

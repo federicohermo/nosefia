@@ -1,4 +1,5 @@
-## Los útiles de limpieza en el almacén: son las mallas del modelo, arrancan cada noche en el baño,
+## Los útiles de limpieza en el almacén: son las mallas del modelo, arrancan cada noche en el
+## cuartito,
 ## y el balde y la mopa muestran lo que el piso dice que tienen.
 ##
 ## Los gestos se dan como en el juego: la mira enfoca algo y llega el clic izquierdo. La mira se
@@ -8,12 +9,13 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const INODORO := "Estructura/inodoro/StaticBody3D"
 
-## Justo adentro de la puerta del baño, del lado del cuarto: desde acá se ve todo lo que hay en él.
-const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, 0.736)
+## Justo adentro de la puerta del cuartito: desde acá se ve todo lo que hay en él.
+const ENTRADA_DEL_CUARTITO := Vector3(8.3, 1.05, -13.96)
 
 ## Cuánto puede quedar lo apoyado por encima del piso, en metros.
 const APOYADO := 0.005
@@ -123,23 +125,30 @@ func test_la_copia_fija_del_modelo_ni_se_ve_ni_choca() -> void:
 			)
 
 
-func test_los_utiles_arrancan_en_el_bano() -> void:  # AC-CLN-018
-	# Desde adentro de la puerta del baño se ve cada útil sin una pared en el medio: están en el
-	# cuarto, y no del otro lado de un tabique.
+func test_los_utiles_arrancan_en_el_cuartito() -> void:  # AC-CLN-018
+	# Desde adentro de la puerta del cuartito se ve cada útil sin una pared en el medio: están en
+	# el cuarto, y no del otro lado de un tabique.
 	var almacen: Node3D = await _almacen()
 	var espacio := almacen.get_world_3d().direct_space_state
 	var sueltos: Array[RID] = []
 	for cuerpo: PhysicsBody3D in almacen.get("_utiles_de_limpieza") + almacen.get("_bolsas"):
 		sueltos.append(cuerpo.get_rid())
+	var habitaciones: Node3D = almacen.get("_habitaciones")
+	assert_int(habitaciones.call("de", ENTRADA_DEL_CUARTITO)).is_equal(
+		ReglasDelCierre.Habitacion.CUARTITO
+	)
 	for util: Node3D in almacen.get("_utiles_de_limpieza"):
-		var rayo := PhysicsRayQueryParameters3D.create(ENTRADA_DEL_BANO, util.global_position)
+		assert_int(habitaciones.call("de", util.global_position)).is_equal(
+			ReglasDelCierre.Habitacion.CUARTITO
+		)
+		var rayo := PhysicsRayQueryParameters3D.create(ENTRADA_DEL_CUARTITO, util.global_position)
 		rayo.exclude = sueltos
 		var golpe := espacio.intersect_ray(rayo)
 		(
 			assert_bool(golpe.is_empty())
 			. override_failure_message(
 				(
-					"`%s` no se ve desde la puerta del baño: tapa %s"
+					"`%s` no se ve desde la puerta del cuartito: tapa %s"
 					% [util.name, golpe.get("collider")]
 				)
 			)
@@ -147,7 +156,7 @@ func test_los_utiles_arrancan_en_el_bano() -> void:  # AC-CLN-018
 		)
 
 
-func test_abrir_la_jornada_devuelve_los_utiles_al_bano_vacios_y_secos() -> void:  # AC-CLN-018
+func test_abrir_la_jornada_devuelve_los_utiles_al_cuartito_vacios_y_secos() -> void:  # AC-CLN-018
 	var almacen: Node3D = await _almacen()
 	var utiles: Array = almacen.get("_utiles_de_limpieza")
 	var balde := _util(almacen, "Balde")

@@ -59,7 +59,7 @@ func test_el_arranque_cabe_en_sus_habitaciones_y_no_produce_motivos() -> void:  
 	for caja: Node3D in cajas:
 		assert_int(lector.de(caja.global_position)).is_equal(CIERRE.Habitacion.DEPOSITO)
 	for util: Node3D in utiles:
-		assert_int(lector.de(util.global_position)).is_equal(CIERRE.Habitacion.BANO)
+		assert_int(lector.de(util.global_position)).is_equal(CIERRE.Habitacion.CUARTITO)
 	assert_int(lector.de(_almacen.get("_jugador").global_position)).is_equal(
 		CIERRE.Habitacion.LOCAL
 	)
@@ -74,17 +74,25 @@ func test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos() -> void:  # A
 	var caja: Node3D = _almacen.get("_cajas_de_productos")[0]
 	var util: Node3D = _almacen.get("_utiles_de_limpieza")[0]
 	var bolsa := BolsaEnLaMano.preparar(_almacen)
-	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano]:
+	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano, lector.cuartito]:
 		caja.global_position = _centro(partes)
-		util.global_position = _centro(lector.bano)
+		util.global_position = _centro(lector.cuartito)
 		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.deposito)
 		caja.global_position = _centro(lector.deposito)
 		util.global_position = _centro(partes)
-		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.bano)
-	util.global_position = _centro(lector.bano, lector.bano.size() - 1)
+		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.cuartito)
+	var umbral: AABB = lector.cuartito[-1]
+	util.global_position = _centro(lector.cuartito, lector.cuartito.size() - 1)
 	caja.global_position = _centro(lector.deposito, lector.deposito.size() - 1)
 	bolsa.global_position = _centro(lector.local)
 	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	bolsa.global_position = _centro(lector.cuartito)
+	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	var del_lado_del_deposito := umbral.get_center()
+	del_lado_del_deposito.x = umbral.position.x - 0.01
+	util.global_position = lector.to_global(del_lado_del_deposito)
+	assert_int(lector.de(util.global_position)).is_equal(CIERRE.Habitacion.DEPOSITO)
+	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
 
 
 func test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano() -> void:  # AC-CLN-043
@@ -198,7 +206,7 @@ func test_las_partes_reales_respetan_techo_y_laterales_de_los_pasos() -> void:  
 	await get_tree().physics_frame
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var espacio := _almacen.get_world_3d().direct_space_state
-	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano]:
+	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano, lector.cuartito]:
 		for parte: AABB in partes:
 			var bajo := parte.get_center()
 			bajo.y = parte.end.y - 0.005
@@ -212,8 +220,8 @@ func test_las_partes_reales_respetan_techo_y_laterales_de_los_pasos() -> void:  
 			assert_dict(techo).is_not_empty()
 			if not techo.is_empty():
 				assert_float(lector.to_local(techo.position).y).is_equal_approx(parte.end.y, 0.01)
-	# La última parte del depósito y las dos últimas del baño son pasos estrechos.
-	for paso: AABB in [lector.deposito[-1], lector.bano[-2], lector.bano[-1]]:
+	# La última parte del depósito y del cuartito y las dos últimas del baño son pasos estrechos.
+	for paso: AABB in [lector.deposito[-1], lector.bano[-2], lector.bano[-1], lector.cuartito[-1]]:
 		var lateral := paso.get_center()
 		lateral.z = paso.end.z + 0.01 if paso.size.x < paso.size.z else lateral.z
 		lateral.x = paso.end.x + 0.01 if paso.size.x >= paso.size.z else lateral.x

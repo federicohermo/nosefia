@@ -54,7 +54,7 @@ func test_cada_util_y_bolsa_conserva_su_id_y_su_subtitulo() -> void:  # AC-SUB-0
 
 func test_cada_id_fijo_elige_su_subtitulo() -> void:  # AC-SUB-013
 	var textos := _textos_fijos_por_id()
-	assert_int(textos.size()).is_equal(18)
+	assert_int(textos.size()).is_equal(19)
 	for id: StringName in textos:
 		assert_str(textos[id]).override_failure_message("%s no tiene texto" % id).is_not_empty()
 		assert_str(SubtitulosAlExaminar.de_lo_fijo(id)).is_equal(textos[id])
