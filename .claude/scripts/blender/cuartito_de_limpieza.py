@@ -62,6 +62,13 @@ ANCHO = 3.0
 ESPESOR = 0.15
 LOSA = 0.2
 CHAPA = 0.12
+# El acanalado del techo del depósito: una onda de 1,5 cm cada 30 cm, en chapa de 6 mm.
+PASO_DE_LA_ONDA = 0.297
+ALTO_DE_LA_ONDA = 0.015
+ESPESOR_DE_LA_CHAPA = 0.006
+PASOS_POR_ONDA = 6
+# Las dos notas de limpieza van juntas bajo la luminaria, con este hueco entre ellas.
+HUECO_ENTRE_LAS_NOTAS = 0.12
 # El revestimiento va apenas adentro de la cara exterior de la pared, para no pelear con ella.
 SEPARACION_DEL_REVESTIMIENTO = 0.003
 # La pared del fondo del baño queda a esta distancia detrás de las notas.
@@ -469,7 +476,49 @@ def _cuarto(pared, coleccion):
     revestimiento = bpy.data.objects.new(PREFIJO + "revestimiento", malla)
     coleccion.objects.link(revestimiento)
     piezas.append(revestimiento)
+    piezas.append(_chapa(x0, x1, y0, y1, alto, chapa, coleccion))
     return piezas, {"x": (x0, x1), "y": (y0, y1), "z": (z0, alto)}
+
+
+def _chapa(x0, x1, y0, y1, alto, material, coleccion):
+    """La chapa acanalada bajo el techo, como la del depósito pero plana."""
+    ondas = max(1, round((y1 - y0) / PASO_DE_LA_ONDA))
+    filas = ondas * PASOS_POR_ONDA + 1
+    base = alto - ALTO_DE_LA_ONDA - ESPESOR_DE_LA_CHAPA - 0.001
+    vertices = []
+    for capa in (0, 1):
+        for x in (x0, x1):
+            for j in range(filas):
+                y = y0 + (y1 - y0) * j / (filas - 1)
+                onda = ALTO_DE_LA_ONDA * math.sin(math.tau * j / PASOS_POR_ONDA)
+                vertices.append((x, y, base + onda + capa * ESPESOR_DE_LA_CHAPA))
+    superior = 2 * filas
+    caras = []
+    for j in range(filas - 1):
+        a, b = j, filas + j
+        caras.append((a, b, b + 1, a + 1))
+        caras.append((a + superior, a + superior + 1, b + superior + 1, b + superior))
+    borde = list(range(filas)) + list(range(2 * filas - 1, filas - 1, -1))
+    for j, a in enumerate(borde):
+        b = borde[(j + 1) % len(borde)]
+        caras.append((a, b, b + superior, a + superior))
+    malla = bpy.data.meshes.new(PREFIJO + "chapa")
+    malla.from_pydata(vertices, [], caras)
+    malla.materials.append(material)
+    bm = bmesh.new()
+    bm.from_mesh(malla)
+    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+    capa_uv = bm.loops.layers.uv.new("UVMap")
+    for cara in bm.faces:
+        for lazo in cara.loops:
+            lazo[capa_uv].uv = (lazo.vert.co.x, lazo.vert.co.y)
+    bm.to_mesh(malla)
+    bm.free()
+    for cara in malla.polygons:
+        cara.use_smooth = abs(cara.normal.z) > 0.5
+    objeto = bpy.data.objects.new(PREFIJO + "chapa", malla)
+    coleccion.objects.link(objeto)
+    return objeto
 
 
 # --- La mudanza y la luz ---------------------------------------------------------------------
@@ -489,6 +538,14 @@ def _mudar(cuarto):
                                    (y0 + y1) / 2 + centro_x, 0))
     for objeto in objetos:
         objeto.matrix_world = traslado @ giro @ objeto.matrix_world
+    bpy.context.view_layer.update()
+    # En el baño las notas iban en los extremos de la fila; acá se juntan en el centro.
+    notas = sorted((bpy.data.objects[n] for n in NOTAS), key=lambda o: _caja_mundial(o)[0].y)
+    centro = (y0 + y1) / 2
+    for lado, nota in zip((-1, 1), notas):
+        minimo, maximo = _caja_mundial(nota)
+        destino = centro + lado * ((maximo.y - minimo.y) + HUECO_ENTRE_LAS_NOTAS) / 2
+        nota.location.y += destino - (minimo.y + maximo.y) / 2
     bpy.context.view_layer.update()
     for objeto in objetos:
         minimo, maximo = _caja_mundial(objeto)
