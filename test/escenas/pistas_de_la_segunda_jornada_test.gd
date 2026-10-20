@@ -18,6 +18,13 @@ func before_test() -> void:
 
 func after_test() -> void:
 	get_tree().paused = false
+	await _cerrar_almacen()
+	Guardado.new().borrar()
+	Guardado.ruta_por_defecto = _ruta_anterior
+	get_window().size = _tamano_anterior
+
+
+func _cerrar_almacen() -> void:
 	if is_instance_valid(_almacen):
 		_almacen.hide()
 		for tipo: String in ["AudioStreamPlayer", "AudioStreamPlayer3D"]:
@@ -27,9 +34,6 @@ func after_test() -> void:
 		_almacen.queue_free()
 		await _cuadros(3)
 	_almacen = null
-	Guardado.new().borrar()
-	Guardado.ruta_por_defecto = _ruta_anterior
-	get_window().size = _tamano_anterior
 
 
 func _cuadros(cantidad: int = 3) -> void:
@@ -38,11 +42,16 @@ func _cuadros(cantidad: int = 3) -> void:
 
 
 func _abrir(jornada: int = Compradores.JORNADA_DE_FEDE_Y_MIA) -> void:
-	var partida := Partida.desde({"jornada": jornada, "medios": 0})
+	(
+		assert_bool(
+			Guardado.new().escribir(PartidaSerializada.sanear({"jornada": jornada, "medios": 0}))
+		)
+		. is_true()
+	)
 	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
 	_almacen = escena.instantiate()
-	_almacen.set("_partida", partida)
 	add_child(_almacen)
+	var partida: Partida = _almacen.get("_partida")
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 		_almacen.call("anunciar_la_noche")
 	(_almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
@@ -175,7 +184,6 @@ func test_frase_real_anota_una_vez_y_leer_o_prefijo_no_anotan() -> void:  # AC-I
 	assert_int(_expediente().mensajes_de_notas().size()).is_equal(2)
 
 
-## Sin afirmar nada: el caso dice si la espera.
 func _la_mira_la_encuentra(colilla: ObjetoAgarrable) -> bool:
 	var jugador := _almacen.get("_jugador") as CharacterBody3D
 	var camara: Camera3D = jugador.get("_camara")
@@ -194,6 +202,31 @@ func _la_mira_la_encuentra(colilla: ObjetoAgarrable) -> bool:
 	return golpe.get("collider") == colilla or jugador.call("enfocado") == colilla
 
 
+func test_continuar_restituye_una_colilla_solo_en_su_jornada() -> void:  # AC-INV-049
+	var jornada := CasoDeInvestigacion.de_la_partida().pista_de("2B").jornada
+	for guardada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA, jornada - 1, jornada + 1, jornada, jornada
+	]:
+		await _abrir(guardada)
+		var colilla := _colilla()
+		assert_object(colilla).is_not_null()
+		if colilla == null:
+			return
+		if guardada == jornada:
+			assert_bool(await _mirar_colilla()).is_true()
+			var colillas := _almacen.find_children("*", "ObjetoAgarrable", true, false).filter(
+				func(nodo: Node) -> bool: return nodo.get("datos") == colilla.datos
+			)
+			assert_array(colillas).contains_exactly([colilla])
+			var agarre: Agarre = _almacen.get("_agarre")
+			assert_bool(agarre.pedir_agarrar(colilla.datos, colilla)).is_true()
+			assert_object(agarre.cuerpo_sostenido()).is_same(colilla)
+		else:
+			assert_bool(colilla.is_visible_in_tree()).is_false()
+			assert_bool(await _la_mira_la_encuentra(colilla)).is_false()
+		await _cerrar_almacen()
+
+
 func test_la_colilla_esta_solo_la_noche_de_su_pista() -> void:  # AC-INV-049
 	var jornada := CasoDeInvestigacion.de_la_partida().pista_de("2B").jornada
 	await _abrir(jornada)
@@ -201,15 +234,21 @@ func test_la_colilla_esta_solo_la_noche_de_su_pista() -> void:  # AC-INV-049
 	assert_object(colilla).is_not_null()
 	if colilla == null:
 		return
+	var capa_de_origen := colilla.collision_layer
+	var mascara_de_origen := colilla.collision_mask
 	var agarre: Agarre = _almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(colilla.datos, colilla)).is_true()
 	for otra: int in [ReglasDeLaPartida.PRIMERA_JORNADA, jornada - 1, jornada + 1]:
 		_almacen.call("_al_abrir_la_jornada", otra)
+		for _cuadro: int in 2:
+			await get_tree().physics_frame
 		await _cuadros()
 		var mensaje := "jornada %d" % otra
 		assert_object(agarre.cuerpo_sostenido()).override_failure_message(mensaje).is_null()
 		assert_bool(colilla.is_visible_in_tree()).override_failure_message(mensaje).is_false()
 		assert_int(colilla.process_mode).is_equal(Node.PROCESS_MODE_DISABLED)
+		assert_int(colilla.collision_layer).is_zero()
+		assert_int(colilla.collision_mask).is_zero()
 		(
 			assert_bool(await _la_mira_la_encuentra(colilla))
 			. override_failure_message(mensaje)
@@ -217,6 +256,12 @@ func test_la_colilla_esta_solo_la_noche_de_su_pista() -> void:  # AC-INV-049
 		)
 	_almacen.call("_al_abrir_la_jornada", jornada)
 	await _cuadros()
+	assert_int(colilla.collision_layer).is_equal(capa_de_origen)
+	assert_int(colilla.collision_mask).is_equal(mascara_de_origen)
+	assert_int(colilla.collision_mask & ReglasDeLosObjetos.CAPA_DEL_CONTORNO).is_not_zero()
+	assert_bool(await _mirar_colilla()).is_true()
+	assert_bool(agarre.pedir_agarrar(colilla.datos, colilla)).is_true()
+	agarre.entregar()
 	var contenedor: Node3D = _almacen.get("_contenedor")
 	contenedor.call("recibir", colilla)
 	_almacen.call("_al_abrir_la_jornada", jornada + 1)
@@ -232,7 +277,11 @@ func test_la_colilla_esta_solo_la_noche_de_su_pista() -> void:  # AC-INV-049
 		func(nodo: Node) -> bool: return nodo.get("datos") == colilla.datos
 	)
 	assert_array(colillas).contains_exactly([colilla])
+	assert_int(colilla.collision_layer).is_equal(capa_de_origen)
+	assert_int(colilla.collision_mask).is_equal(mascara_de_origen)
+	assert_int(colilla.collision_mask & ReglasDeLosObjetos.CAPA_DEL_CONTORNO).is_not_zero()
 	assert_bool(await _mirar_colilla()).is_true()
+	assert_bool(agarre.pedir_agarrar(colilla.datos, colilla)).is_true()
 
 
 func test_colilla_real_exige_agarre_y_conserva_hallazgo_al_cerrar() -> void:  # AC-INV-049

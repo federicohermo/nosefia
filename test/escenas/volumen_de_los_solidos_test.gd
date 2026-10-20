@@ -285,7 +285,9 @@ static func _punto_adentro(caras: PackedVector3Array, punto: Vector3) -> bool:
 ## capa.
 func test_todo_lo_que_se_suelta_choca_con_la_capa_del_contorno() -> void:
 	var almacen: Node3D = await _almacen()
-	var agarrables := _agarrables(almacen.get_node("Objetos"))
+	var agarrables: Array[RigidBody3D] = _agarrables(almacen.get_node("Objetos")).filter(
+		func(cuerpo: RigidBody3D) -> bool: return cuerpo.process_mode != Node.PROCESS_MODE_DISABLED
+	)
 	assert_array(agarrables).is_not_empty()
 	for cuerpo in agarrables:
 		(
