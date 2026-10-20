@@ -231,7 +231,7 @@ func _ready() -> void:
 	_jugador.examen.examen_iniciado.connect(
 		func(nodo: Node3D) -> void: _hud.mostrar_subtitulo(_jugador.texto_al_examinar_de(nodo))
 	)
-	# Las tres puertas trabadas comparten la traba: quién es cada una lo dice su ruta.
+	# La traba no distingue identidades, así que estas puertas se declaran por su ruta.
 	var trabadas := {
 		^"Estructura/puertaentrada/CuerpoDeLaHoja": SubtitulosAlExaminar.ENTRADA_PRINCIPAL,
 		^"Estructura/puertajefe/CuerpoDeLaHoja": SubtitulosAlExaminar.PUERTA_DEL_JEFE,
@@ -386,6 +386,10 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.freeze = true
 			util.collision_layer = 0
 			util.collision_mask = 0
+	var bano: PuertaDelLocal = $Estructura/puerta2/CuerpoDeLaHoja
+	var se_limpia := Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
+	bano.traba = PuertaDelLocal.Traba.NINGUNA if se_limpia else PuertaDelLocal.Traba.PUERTA
+	bano.identidad = &"" if se_limpia else SubtitulosAlExaminar.BANO_CERRADO
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()
