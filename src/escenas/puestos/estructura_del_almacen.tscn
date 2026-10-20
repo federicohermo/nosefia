@@ -3216,6 +3216,9 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="puerta_limpieza" parent="."]
+gi_mode = 2
+
 [node name="CollisionShape3D" parent="puerta_limpieza/StaticBody3D"]
 disabled = true
 
