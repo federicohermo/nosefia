@@ -291,6 +291,11 @@ Y estas diferencias respecto de `pr-review`, que son las que lo vuelven un carri
 **No commitea el árbol rojo.** Si `verificar.py` queda rojo después del Paso 4, revertí lo que lo
 rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
 
+**Congelar el árbol durante cada verificación**, desde el lanzamiento hasta recibir el resultado, incluida la espera.
+No editar mientras corra `verificar.py` ni una suite focal sobre ese worktree.
+Si el árbol cambia durante la corrida, conservar su salida como incidente y repetir sobre el árbol definitivo.
+Esa corrida no valida el push, aunque termine verde.
+
 ## Paso 4 — El protocolo de contención
 
 **Acá el rojo casi nunca es del PR, y la falta de un motor nativo válido no se saltea: sale
