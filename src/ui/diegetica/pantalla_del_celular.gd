@@ -322,13 +322,25 @@ func _input(evento: InputEvent) -> void:
 
 ## El mismo arrastre que la planilla de la computadora: el clic sobre un botón queda en el botón.
 func _al_tocar_el_historial(evento: InputEvent) -> void:
-	var clic := evento as InputEventMouseButton
-	if clic != null and clic.pressed and clic.button_index == MOUSE_BUTTON_LEFT:
-		_arrastrando = true
-		_arrastre_desplazo = false
-		_posicion_del_arrastre = _scroll.scroll_vertical
-		_pintar_cursor(Control.CURSOR_DRAG)
+	if _empezar_arrastre(evento):
 		_scroll.accept_event()
+
+
+## La foto se queda con el clic, así que el arrastre arranca también desde ella. Si no se movió,
+## el soltar le llega y la foto se amplía.
+func _al_tocar_la_foto(evento: InputEvent) -> void:
+	_empezar_arrastre(evento)
+
+
+func _empezar_arrastre(evento: InputEvent) -> bool:
+	var clic := evento as InputEventMouseButton
+	if clic == null or not clic.pressed or clic.button_index != MOUSE_BUTTON_LEFT:
+		return false
+	_arrastrando = true
+	_arrastre_desplazo = false
+	_posicion_del_arrastre = _scroll.scroll_vertical
+	_pintar_cursor(Control.CURSOR_DRAG)
+	return true
 
 
 func _arrastrar(evento: InputEvent) -> void:
@@ -359,12 +371,12 @@ func _terminar_arrastre() -> void:
 	_pintar_cursor(Control.CURSOR_POINTING_HAND)
 
 
-## Las burbujas dejan pasar el clic al historial, así que muestran el mismo cursor que él.
+## Las burbujas y las fotos arrancan el mismo arrastre, así que muestran el mismo cursor.
 func _pintar_cursor(forma: Control.CursorShape) -> void:
 	_scroll.mouse_default_cursor_shape = forma
 	for hijo: Node in _mensajes.find_children("*", "Control", true, false):
 		var control := hijo as Control
-		if control.mouse_filter == Control.MOUSE_FILTER_PASS:
+		if control.mouse_filter == Control.MOUSE_FILTER_PASS or control is TextureButton:
 			control.mouse_default_cursor_shape = forma
 
 
@@ -537,6 +549,8 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		foto.ignore_texture_size = true
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		foto.custom_minimum_size = Vector2(0, 240)
+		foto.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
+		foto.gui_input.connect(_al_tocar_la_foto)
 		foto.pressed.connect(
 			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
 		)

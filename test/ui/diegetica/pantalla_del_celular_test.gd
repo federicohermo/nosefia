@@ -421,3 +421,42 @@ func test_ocultar_el_celular_termina_el_arrastre() -> void:
 	get_viewport().push_input(_movimiento(centro + Vector2(0, 60), Vector2(0, 60)))
 	await get_tree().process_frame
 	assert_int(scroll.scroll_vertical).is_equal(quieto)
+
+
+func test_arrastrar_desde_una_foto_desplaza_y_un_clic_quieto_la_abre() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(24)
+	var con_foto := 22
+	conversacion.mensajes[con_foto].foto = GradientTexture2D.new()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var pedidas: Array[int] = []
+	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidas.append(indice))
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var fotos := _burbuja(pantalla, con_foto).find_children("*", "TextureButton", true, false)
+	assert_array(fotos).has_size(1)
+	var foto := fotos[0] as TextureButton
+	var sobre_la_foto := foto.get_global_rect().get_center()
+	assert_bool(scroll.get_global_rect().has_point(sobre_la_foto)).is_true()
+	var antes := scroll.scroll_vertical
+	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, true))
+	await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
+	get_viewport().push_input(_movimiento(sobre_la_foto + Vector2(0, 60), Vector2(0, 60)))
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_less(antes)
+	get_viewport().push_input(_boton_del_mouse(sobre_la_foto + Vector2(0, 60), false))
+	await get_tree().process_frame
+	assert_array(pedidas).is_empty()
+	sobre_la_foto = foto.get_global_rect().get_center()
+	assert_bool(scroll.get_global_rect().has_point(sobre_la_foto)).is_true()
+	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, true))
+	await get_tree().process_frame
+	get_viewport().push_input(_boton_del_mouse(sobre_la_foto, false))
+	await get_tree().process_frame
+	assert_array(pedidas).is_equal([con_foto])
