@@ -100,7 +100,7 @@ func _inventariar() -> void:
 		"almacen",
 		"bano_cielorraso",
 		"deposito_techo_industrial/deposito_techo_chapa",
-		"cuartito_techo",
+		"cuartito_cuerpo",
 	]:
 		var malla: MeshInstance3D = modelo.get_node(nombre)
 		for punto: Vector3 in malla.mesh.get_faces():

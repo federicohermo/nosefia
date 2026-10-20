@@ -25,6 +25,7 @@ NOMBRES = {
     'gondola_deposito_central_izquierda-col', 'local_marco_frente-col',
     'local_marco_ventanal-col',
     'deposito_contenedor_grande_cuerpo-col',
+    'cuartito_cuerpo-col',
 }
 
 
@@ -119,7 +120,7 @@ def principal():
             resultado[ruta] = edificio(malla)
             objeto.to_mesh_clear()
             continue
-        if objeto.name == 'deposito_contenedor_grande_cuerpo-col':
+        if objeto.name in ('deposito_contenedor_grande_cuerpo-col', 'cuartito_cuerpo-col'):
             resultado[ruta] = recipiente(malla)
             objeto.to_mesh_clear()
             continue
