@@ -173,7 +173,7 @@ def _material(nombre, metalizado, factor_rugosidad):
     pbr.inputs["Metallic"].default_value = metalizado
     if not cuartito:
         # El tono intermedio conserva las ondas sin aclarar el techo frente a los laterales.
-        pbr.inputs["Base Color"].default_value = (.11, .12, .13, 1)
+        pbr.inputs["Base Color"].default_value = (.16, .17, .18, 1)
     enlaces.new(pbr.outputs["BSDF"], salida.inputs["Surface"])
     for entrada, ruta in rutas.items():
         imagen = bpy.data.images.load(str(ruta), check_existing=True)

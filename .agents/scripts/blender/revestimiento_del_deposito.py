@@ -29,7 +29,7 @@ MAPAS = {
     "bloques": {"color": TEXTURAS / "Bricks066_1K-JPG_Color.jpg",
                 "normal": TEXTURAS / "Bricks066_1K-JPG_NormalGL.jpg",
                 "rough": TEXTURAS / "Bricks066_1K-JPG_Roughness.jpg"},
-    "chapa": {"color": CHAPA / "corrugated_iron_02_diff_1k.jpg",
+    "chapa": {"color": RAIZ / "assets/source/textures/warehouse/final/deposito_chapa_color.png",
               "normal": CHAPA / "corrugated_iron_02_nor_gl_1k.png",
               "rough": CHAPA / "corrugated_iron_02_rough_1k.jpg",
               "metal": CHAPA / "corrugated_iron_02_metal_1k.jpg"},
@@ -117,6 +117,14 @@ def _material(tipo):
             normal.inputs["Strength"].default_value = .45 if tipo == "bloques" else .65
             material.node_tree.links.new(textura.outputs["Color"], normal.inputs["Color"])
             material.node_tree.links.new(normal.outputs[0], pbr.inputs["Normal"])
+        elif mapa == "metal":
+            # La chapa envejecida conserva más luz difusa en los laterales oscuros.
+            factor = material.node_tree.nodes.new("ShaderNodeMath")
+            factor.name = "MetalDelRevestimiento"
+            factor.operation = "MULTIPLY"
+            factor.inputs[1].default_value = .35
+            material.node_tree.links.new(textura.outputs["Color"], factor.inputs[0])
+            material.node_tree.links.new(factor.outputs[0], pbr.inputs["Metallic"])
         else:
             entrada = "Roughness" if mapa == "rough" else "Metallic"
             material.node_tree.links.new(textura.outputs["Color"], pbr.inputs[entrada])
