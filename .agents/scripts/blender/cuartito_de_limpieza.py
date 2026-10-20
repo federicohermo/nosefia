@@ -67,6 +67,8 @@ PASO_DE_LA_ONDA = 0.297
 ALTO_DE_LA_ONDA = 0.015
 ESPESOR_DE_LA_CHAPA = 0.006
 PASOS_POR_ONDA = 6
+# Una sola caída, de la puerta a la pared del fondo: unos 5° en el fondo del cuarto.
+CAIDA_DE_LA_CHAPA = 0.25
 # Las dos notas de limpieza van juntas bajo la luminaria, con este hueco entre ellas.
 HUECO_ENTRE_LAS_NOTAS = 0.12
 # El revestimiento va apenas adentro de la cara exterior de la pared, para no pelear con ella.
@@ -391,6 +393,41 @@ def _caja(nombre, minimo, maximo, materiales, por_cara, coleccion):
     return objeto
 
 
+def _piso_en_el_edificio(pared, x1, y0, y1):
+    """El piso del cuartito es una cara más del edificio, pegada al umbral.
+
+    Como pieza aparte se horneaba en otra isla del lightmap, y la puerta marcaba una raya: el
+    piso del depósito tiene texeles muy grandes. Unido al umbral, se despliega con él.
+    """
+    edificio = bpy.data.objects[EDIFICIO]
+    matriz = edificio.matrix_world
+    inversa = matriz.inverted()
+    bm = bmesh.new()
+    bm.from_mesh(edificio.data)
+    capa = bm.loops.layers.uv.active
+    x0, z = pared["x_afuera"], pared["z_piso"]
+
+    def del_umbral(y):
+        punto = Vector((x0, y, z))
+        cercano = min(bm.verts, key=lambda v: (matriz @ v.co - punto).length)
+        assert (matriz @ cercano.co - punto).length < 0.002, punto
+        return cercano
+
+    esquinas = [bm.verts.new(inversa @ Vector(p))
+                for p in ((x0, y0, z), (x1, y0, z), (x1, y1, z), (x0, y1, z))]
+    hy0, hy1 = pared["y_hueco"]
+    cara = bm.faces.new(esquinas + [del_umbral(hy1), del_umbral(hy0)])
+    cara.normal_update()
+    if (matriz.to_3x3() @ cara.normal).z < 0:
+        cara.normal_flip()
+    cara.material_index = [m.name for m in edificio.data.materials].index("deposito_concreto")
+    for lazo in cara.loops:
+        lazo[capa].uv = _uv_desde(pared["ajuste_piso"], matriz @ lazo.vert.co, (0, 1))
+    bm.to_mesh(edificio.data)
+    bm.free()
+    edificio.data.update()
+
+
 def _plana(ejes, densidad=1.0):
     return lambda punto: (punto[ejes[0]] * densidad, punto[ejes[1]] * densidad)
 
@@ -401,7 +438,7 @@ def _ejes_de(normal):
 
 def _cuarto(pared, coleccion):
     m = bpy.data.materials
-    concreto, bloques = m["deposito_concreto"], m["deposito_revestimiento_bloques"]
+    bloques = m["deposito_revestimiento_bloques"]
     afuera, chapa, techo = m["paredes"], m["deposito_techo_galvanizado"], m["techo afuera"]
     x0 = pared["x_afuera"]
     z0 = pared["z_piso"]
@@ -411,7 +448,6 @@ def _cuarto(pared, coleccion):
     y0, y1 = centro - ANCHO / 2, centro + ANCHO / 2
     x1 = x0 + FONDO
     densidad = _densidad(pared["ajuste_bloques"])
-    piso_uv = pared["ajuste_piso"]
 
     def exterior(normal):
         return 0, _plana(_ejes_de(normal))
@@ -424,11 +460,7 @@ def _cuarto(pared, coleccion):
         return por_cara
 
     piezas = []
-    piezas.append(_caja(
-        PREFIJO + "piso", Vector((x0, y0 - ESPESOR, z0 - LOSA)),
-        Vector((x1 + ESPESOR, y1 + ESPESOR, z0)), [afuera, concreto],
-        con_interior((0, 0, 1), concreto,
-                     lambda p: _uv_desde(piso_uv, p, (0, 1))), coleccion))
+    _piso_en_el_edificio(pared, x1, y0, y1)
     paredes = (
         ("pared_fondo", Vector((x1, y0 - ESPESOR, z0 - LOSA)),
          Vector((x1 + ESPESOR, y1 + ESPESOR, alto)), (-1, 0, 0)),
@@ -476,12 +508,14 @@ def _cuarto(pared, coleccion):
     revestimiento = bpy.data.objects.new(PREFIJO + "revestimiento", malla)
     coleccion.objects.link(revestimiento)
     piezas.append(revestimiento)
-    piezas.append(_chapa(x0, x1, y0, y1, alto, chapa, coleccion))
+    herramientas = _receta("lamparas_del_deposito")
+    metal = herramientas._material(PREFIJO + "chapa_metal", (.62, .64, .67), .8, .5)
+    piezas.append(_chapa(x0, x1, y0, y1, alto, metal, coleccion))
     return piezas, {"x": (x0, x1), "y": (y0, y1), "z": (z0, alto)}
 
 
 def _chapa(x0, x1, y0, y1, alto, material, coleccion):
-    """La chapa acanalada bajo el techo, como la del depósito pero plana."""
+    """La chapa acanalada bajo el techo, como la del depósito, con una caída hacia el fondo."""
     ondas = max(1, round((y1 - y0) / PASO_DE_LA_ONDA))
     filas = ondas * PASOS_POR_ONDA + 1
     base = alto - ALTO_DE_LA_ONDA - ESPESOR_DE_LA_CHAPA - 0.001
@@ -491,7 +525,8 @@ def _chapa(x0, x1, y0, y1, alto, material, coleccion):
             for j in range(filas):
                 y = y0 + (y1 - y0) * j / (filas - 1)
                 onda = ALTO_DE_LA_ONDA * math.sin(math.tau * j / PASOS_POR_ONDA)
-                vertices.append((x, y, base + onda + capa * ESPESOR_DE_LA_CHAPA))
+                caida = CAIDA_DE_LA_CHAPA * (x - x0) / (x1 - x0)
+                vertices.append((x, y, base - caida + onda + capa * ESPESOR_DE_LA_CHAPA))
     superior = 2 * filas
     caras = []
     for j in range(filas - 1):
