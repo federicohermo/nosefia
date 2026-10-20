@@ -13,6 +13,14 @@
 ## agota en uno o dos `_process`, así que el cierre se prueba en dos líneas.
 extends GdUnitTestSuite
 
+
+class RelojSinTranscurrir:
+	extends RelojDelTurno
+
+	func _ahora_usec() -> int:
+		return 1000000
+
+
 var _turno: Turno = null
 var _cierres: int = 0
 var _cumplidas_al_cerrar: int = 0
@@ -73,7 +81,10 @@ func test_acelerar_consume_lo_que_queda_en_la_duracion_pedida() -> void:  # AC-S
 	var duracion := 10.0
 	for restante: float in [Reglas.DURACION_DEL_TURNO, 60.0]:
 		_cierres = 0
-		var reloj := _reloj_arrancado(restante, _sin_obligatorias())
+		var reloj: RelojDelTurno = auto_free(RelojSinTranscurrir.new())
+		_turno = Turno.new(restante, _sin_obligatorias())
+		reloj.arrancar(_turno, _sin_obligatorias())
+		reloj.turno_cerrado.connect(_anotar_cierre)
 		reloj.acelerar_hasta_el_cierre(duracion)
 		reloj.acelerar_hasta_el_cierre(duracion * 0.5)
 		reloj.avanzar(duracion * 0.9)

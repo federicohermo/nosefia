@@ -1,4 +1,3 @@
-## Cuándo la primera noche deja de esperar: el ciclo de compradores cerrado y lo demás cumplido.
 extends GdUnitTestSuite
 
 
