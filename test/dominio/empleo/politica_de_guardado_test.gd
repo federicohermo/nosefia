@@ -31,7 +31,7 @@ func test_los_datos_llevan_la_jornada_y_los_medios_de_la_partida() -> void:
 
 
 func test_los_datos_llevan_las_cuentas_y_las_devoluciones() -> void:  # AC-SAV-024
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
 	partida.abrir_la_jornada()
 	partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
 	partida.cerrar_la_jornada(0)

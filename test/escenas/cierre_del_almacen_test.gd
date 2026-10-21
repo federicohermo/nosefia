@@ -22,8 +22,9 @@ func after_test() -> void:
 	_almacen = null
 
 
-func _abrir() -> Node3D:
+func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA) -> Node3D:
 	_almacen = ALMACEN.instantiate()
+	_almacen.set("_partida", Partida.desde({"jornada": jornada}))
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
@@ -186,7 +187,7 @@ func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:
 
 
 func test_un_producto_en_el_piso_trae_el_reto_del_desorden() -> void:
-	_abrir()
+	_abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	_almacen.get("_reposicion_manual").call("retirar", Producto.Id.ACTRONCITO)
 	var unidad: Node3D = _almacen.get("_agarre").soltar(true)
 	for cuadro in 120:
