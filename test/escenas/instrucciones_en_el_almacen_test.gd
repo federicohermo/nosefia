@@ -356,17 +356,20 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	_comprobar_una_noche(PRIMERA + 2)
 
 
-func test_retomar_la_tercera_y_la_cuarta() -> void:  # AC-EMP-076, AC-SAV-021, AC-EMP-077
+# AC-EMP-076, AC-SAV-021, AC-EMP-077, AC-STK-098
+func test_retomar_la_tercera_y_la_cuarta() -> void:
 	_guardar(PRIMERA + 2)
 	_abrir()
 	_almacen.call("retomar_la_partida")
 	_comprobar_instrucciones_de(PRIMERA + 2)
+	_comprobar_catalogo_retomado(PRIMERA + 2)
 	_leer_todo(PRIMERA + 2)
 	_comprobar_una_noche(PRIMERA + 2)
 	await _cerrar_almacen()
 	_guardar(COMPLETA)
 	_abrir()
 	_almacen.call("retomar_la_partida")
+	_comprobar_catalogo_retomado(COMPLETA)
 	assert_bool(_instrucciones().visible).is_false()
 	assert_int(_persiana().get("_jornada")).is_equal(COMPLETA)
 	assert_bool((_persiana().get("_placa") as Label).visible).is_true()
@@ -444,3 +447,24 @@ func _cuadros(ahora: Array[int], hasta: int, nodos: Array[Node]) -> void:
 		ahora[0] = mini(ahora[0] + 10000, hasta)
 		for nodo in nodos:
 			nodo.call("_process", 0.0)
+
+
+func _comprobar_catalogo_retomado(jornada: int) -> void:
+	var disponibles := Catalogo.de_la_jornada(jornada)
+	var puesto: Node3D = _almacen.get("_reposicion_manual")
+	var cupos: Dictionary = puesto.call("casilleros")
+	var cajas: Array = _almacen.get("_cajas_de_productos")
+	for producto in Catalogo.todos():
+		var presente := disponibles.any(func(p: Producto) -> bool: return p.id == producto.id)
+		assert_bool(cupos[producto.id] > 0).is_equal(presente)
+		assert_bool(cajas[producto.id].visible).is_equal(presente)
+		assert_bool(cajas[producto.id].is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_equal(
+			presente
+		)
+		var zona: MultiMeshInstance3D = puesto.get_node_or_null("HuecosDe" + producto.nombre)
+		assert_object(zona).is_not_null()
+		assert_int(zona.multimesh.instance_count).is_equal(cupos[producto.id])
+		var fila := puesto.get_node_or_null("ZonaDe" + producto.nombre)
+		assert_bool(is_instance_valid(fila)).is_equal(presente)
+		if presente:
+			assert_int(fila.get_child_count()).is_equal(cupos[producto.id])

@@ -26,6 +26,7 @@ static func abrir_heladeras(almacen: Node3D) -> void:
 
 ## La noche con esos faltantes: cada caja llena, y la góndola completa salvo lo que falta.
 static func abrir_con_faltantes(almacen: Node3D, faltantes: Dictionary[Producto.Id, int]) -> void:
+	_completar_catalogo(almacen)
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
 	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros, Catalogo.todos())
@@ -37,6 +38,7 @@ static func abrir_con_faltantes(almacen: Node3D, faltantes: Dictionary[Producto.
 ## La noche con todo el lugar que una caja puede reponer: a cada producto le faltan tantas como
 ## su caja trae, o su fila entera si es más corta. Es la capacidad que reserva este fixture.
 static func abrir_con_todo_el_lugar(almacen: Node3D) -> void:
+	_completar_catalogo(almacen)
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
 	var faltantes: Dictionary[Producto.Id, int] = {}
@@ -52,3 +54,10 @@ static func abrir_con_semilla(
 	var azar: RandomNumberGenerator = almacen.get("azar_de_la_apertura")
 	azar.seed = semilla
 	almacen.call("_al_abrir_la_jornada", jornada)
+
+
+static func _completar_catalogo(almacen: Node3D) -> void:
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var cupos: Dictionary = puesto.call("casilleros")
+	if cupos.values().has(0):
+		abrir_con_semilla(almacen)

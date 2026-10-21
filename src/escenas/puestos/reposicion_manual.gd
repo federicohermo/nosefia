@@ -11,6 +11,7 @@ const LATERALES := preload("res://src/sistemas/marco/laterales_del_foco.gdshader
 const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
 const FILA_DE_ATRAS := preload("res://src/escenas/puestos/fila_de_atras_apagada.gdshader")
 const POR_COLOCAR := preload("res://src/escenas/puestos/producto_por_colocar.gdshader")
+const DISPOSICION_DE_PRUEBA := preload("res://src/escenas/puestos/disposicion_de_prueba.tres")
 
 ## Cuánto color le queda a la fila de atrás de la góndola: con 1 se ve como la de adelante, con
 ## 0 queda en gris. Las referencias fijas usan el mismo color que la fila de atrás:
@@ -103,6 +104,9 @@ var _aristas := ShaderMaterial.new()
 var _laterales := ShaderMaterial.new()
 ## Se crea al preparar el puesto: un almacén que se instancia y no se abre no lo deja colgado.
 var _desenfoque: DesenfoqueDeReferencias
+var _disposicion_completa: DisposicionDeLaGondola
+var _disposicion_preparada: DisposicionDeLaGondola
+var _generados: Array[Node] = []
 
 
 func unidades_sueltas() -> Array[Node3D]:
@@ -134,18 +138,63 @@ func casilleros_reponibles() -> Dictionary[Producto.Id, int]:
 
 
 func preparar() -> void:
-	_desenfoque = DesenfoqueDeReferencias.new()
-	add_child(_desenfoque)
+	if _modelos.is_empty():
+		_preparar_materiales_y_modelos()
+		_conectar_los_gestos()
+	if _disposicion_preparada != disposicion:
+		_rehacer_disposicion()
+	else:
+		for id in _grupos.size():
+			_mostrar_lo_puesto(id)
+	_actualizar_zonas()
+
+
+func seleccionar_disposicion(jornada: int) -> void:
+	if _disposicion_completa == null:
+		_disposicion_completa = disposicion
+	disposicion = (
+		DISPOSICION_DE_PRUEBA
+		if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		else _disposicion_completa
+	)
+
+
+func _preparar_materiales_y_modelos() -> void:
 	_aristas.shader = CONTORNO
 	_aristas.set_shader_parameter("color", IndicacionDelFoco.COLOR)
 	_aristas.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR_DE_PRODUCTOS)
 	_laterales.shader = LATERALES
 	_laterales.set_shader_parameter("color", IndicacionDelFoco.COLOR)
 	_preparar_modelos()
+
+
+func _rehacer_disposicion() -> void:
+	_limpiar_unidades()
+	_al_perder_el_foco()
+	_cerca_de_la_mira.clear()
+	for nodo in _generados:
+		remove_child(nodo)
+		nodo.queue_free()
+	_generados.clear()
+	_bloques.clear()
+	_fijas.clear()
+	_grupos.clear()
+	_huecos.clear()
+	_sueltos.clear()
+	_casilleros.clear()
+	_centros_de_las_filas.clear()
+	_radios_de_las_filas.clear()
+	_desenfoque = DesenfoqueDeReferencias.new()
+	add_child(_desenfoque)
+	_generados.append(_desenfoque)
 	_preparar_grupos()
 	_preparar_la_guia()
-	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	_preparar_los_casilleros()
+	_disposicion_preparada = disposicion
+
+
+func _conectar_los_gestos() -> void:
+	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	jugador.uso_pedido.connect(
 		func(objetivo: Node3D) -> void: usar_la_caja(objetivo, jugador.uso_es_primario())
 	)
@@ -1107,8 +1156,9 @@ func _copia_del_casillero(id: Producto.Id, indice: int) -> Transform3D:
 ## a mano estuvo mal en los doce productos, y el síntoma es mudo —se agarra de costado o dado
 ## vuelta—.
 func _giro_del_frente(id: Producto.Id) -> float:
+	var original := _disposicion_completa if _disposicion_completa != null else disposicion
 	var frente := DisposicionDeLaGondola.frente(
-		disposicion.principales[id], disposicion.filas_de_adelante[id]
+		original.principales[id], original.filas_de_adelante[id]
 	)
 	if frente.is_zero_approx():
 		var modelo := contenido.get_child(id) as Node3D
@@ -1181,6 +1231,7 @@ func _preparar_grupos() -> void:
 		sueltos.name = "SueltosDe" + producto.nombre
 		sueltos.preparar(malla, repositor.estante().cupo(producto))
 		add_child(sueltos)
+		_generados.append(sueltos)
 		_sueltos.append(sueltos)
 
 
@@ -1237,6 +1288,7 @@ func _preparar_los_casilleros() -> void:
 		var fila := Node3D.new()
 		fila.name = "ZonaDe" + producto.nombre
 		add_child(fila)
+		_generados.append(fila)
 		var zonas: Array[ZonaDeReposicion] = []
 		for indice in disposicion.casilleros_de(producto.id):
 			var zona := ZonaDeReposicion.new()
@@ -1320,9 +1372,11 @@ func _armar_los_bloques() -> void:
 		casilleros.append(principal.slice(atras * flotantes, (atras + 1) * flotantes))
 	for indice in disposicion.guias.size():
 		var id := disposicion.productos_de_las_guias[indice]
-		var modelo := get_node(GUIA).get_child(indice) as MeshInstance3D
-		var base := (contenido.get_child(id) as Node3D).global_basis
-		var bloque := _rebasar(disposicion.guias[indice], modelo.global_basis, base)
+		var bloque := disposicion.guias[indice]
+		if disposicion.base_de_guias == DisposicionDeLaGondola.BaseDeGuias.MODELO_DE_GUIA:
+			var modelo := get_node(GUIA).get_child(indice) as MeshInstance3D
+			var base := (contenido.get_child(id) as Node3D).global_basis
+			bloque = _rebasar(bloque, modelo.global_basis, base)
 		var atras := DisposicionDeLaGondola.copias(bloque)
 		atras -= disposicion.filas_de_adelante_de_las_guias[indice]
 		fijas[id].append_array(bloque.slice(0, atras * flotantes))
@@ -1449,6 +1503,7 @@ func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiM
 	copias.visible_instance_count = copias.instance_count
 	grupo.multimesh = copias
 	add_child(grupo)
+	_generados.append(grupo)
 	return grupo
 
 
@@ -1545,7 +1600,7 @@ func _guardar_cuerpo(unidad: ObjetoAgarrable) -> void:
 		_disponible = unidad
 
 
-func limpiar() -> void:
+func _limpiar_unidades() -> void:
 	for grupo in _sueltos:
 		while not grupo.cuerpos.is_empty():
 			grupo.quitar(grupo.cuerpos[-1])
@@ -1554,6 +1609,10 @@ func limpiar() -> void:
 			unidad.queue_free()
 	_unidades.clear()
 	_disponible = null
+
+
+func limpiar() -> void:
+	_limpiar_unidades()
 	# **Se recorre lo que hay y no el catálogo.** La apertura de la jornada llama acá antes de
 	# que el puesto se haya preparado, y entonces todavía no hay un grupo por producto: indexar
 	# por `id` mata el primer cuadro con un `Out of bounds` que no nombra ni a la jornada ni a

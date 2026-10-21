@@ -37,6 +37,10 @@ const MARGEN_DEL_CAMPO := 0.3
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	return almacen
