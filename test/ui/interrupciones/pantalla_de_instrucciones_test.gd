@@ -65,21 +65,24 @@ func _comprobar_pantalla(
 	var pasos := InstruccionesDelJefe.pasos_de(_mensajes_de(jornada))
 	var total := pasos.size()
 	var paso: InstruccionesDelJefe.Paso = pasos[numero - 1]
+	var mensajes_con_foto := _fotos_del_paso(paso)
 	var cuerpos: Array[Node] = contenido.find_children("*", "RichTextLabel", false, false)
 	for indice in paso.textos.size():
 		var cuerpo: RichTextLabel = cuerpos[indice]
 		assert_str(cuerpo.get_parsed_text()).is_equal(_sin_formato(paso.textos[indice].texto))
-	if paso.foto == null:
+	if mensajes_con_foto.is_empty():
 		assert_int(cuerpos.size()).is_equal(paso.textos.size())
 	var fotos: Array[Node] = contenido.find_children("*", "TextureRect", false, false)
-	var con_caja := (
-		paso.foto != null and paso.foto.identidad == PantallaDeInstrucciones.FOTO_DEL_LECTOR
+	var con_caja := mensajes_con_foto.any(
+		func(mensaje: Mensaje) -> bool:
+			return mensaje.identidad == PantallaDeInstrucciones.FOTO_DEL_LECTOR
 	)
-	var cantidad := 1 + (1 if paso.foto != null else 0) + (2 if con_caja else 0)
+	var cantidad := 1 + mensajes_con_foto.size() + (2 if con_caja else 0)
 	assert_int(fotos.size()).is_equal(cantidad)
-	if paso.foto != null:
-		var foto: TextureRect = fotos[1]
-		assert_object(foto.texture).is_same(paso.foto.foto)
+	for indice in mensajes_con_foto.size():
+		if indice + 1 < fotos.size():
+			var foto: TextureRect = fotos[indice + 1]
+			assert_object(foto.texture).is_same(mensajes_con_foto[indice].foto)
 	var contador: Label = pantalla.get("_contador")
 	assert_str(contador.text).is_equal("%d/%d" % [numero, total])
 	var retrato: Control = pantalla.get("_retrato")
@@ -208,6 +211,100 @@ func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC
 	get_tree().paused = false
 	_cuadros(ahora, ahora[0] + 150000, [pantalla])
 	assert_float(marco.position.y).is_zero()
+
+
+func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:  # AC-EMP-046
+	for caso: Array in [
+		[1, 1, ["J1_FotoReloj", "J1_Foto02"]],
+		[2, 0, ["J2_FotoGondolas", "J1_Foto07"]],
+	]:
+		var pantalla := _pantalla()
+		pantalla.mostrar(_mensajes_de(caso[0]))
+		for avance in caso[1]:
+			_boton(pantalla, "_siguiente").pressed.emit()
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var contenido: Control = pantalla.get("_contenido")
+		var fotos: Array[TextureRect] = []
+		for identidad: String in caso[2]:
+			for mensaje in GUION.mensajes:
+				if mensaje.identidad == identidad:
+					for imagen: TextureRect in contenido.find_children(
+						"*", "TextureRect", true, false
+					):
+						if imagen.texture == mensaje.foto:
+							fotos.append(imagen)
+		assert_int(fotos.size()).is_equal(2)
+		if fotos.size() != 2:
+			continue
+		var textos := contenido.find_children("*", "RichTextLabel", true, false)
+		var cuerpo := textos[0] as RichTextLabel
+		var izquierda := fotos[0].get_rect()
+		var derecha := fotos[1].get_rect()
+		assert_float(izquierda.position.y).is_greater_equal(cuerpo.get_rect().end.y)
+		assert_float(izquierda.end.x).is_less(derecha.position.x)
+		assert_float(izquierda.position.y).is_equal(derecha.position.y)
+		assert_float(izquierda.size.y).is_equal(derecha.size.y)
+		assert_float(izquierda.position.x).is_greater_equal(0.0)
+		assert_float(derecha.end.x).is_less_equal(1007.0)
+		for foto in fotos:
+			assert_int(foto.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
+			var leyendas := 0
+			for texto: RichTextLabel in textos:
+				if texto.position.y >= foto.get_rect().end.y:
+					if (
+						texto.position.x >= foto.position.x - 6.0
+						and texto.position.x < foto.get_rect().end.x
+					):
+						leyendas += 1
+			assert_int(leyendas).is_greater_equal(1)
+
+
+func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  # AC-EMP-046
+	for caso: Array in [
+		["J1_Foto03", Vector2(279, 201)],
+		["J1_Foto04", Vector2(426, 258)],
+		["J1_Foto06", Vector2(373, 300)],
+		["J1_Foto09", Vector2(548, 315)],
+		["J1_Foto11", Vector2(480, 270)],
+	]:
+		var foto: Mensaje
+		for mensaje in GUION.mensajes:
+			if mensaje.identidad == caso[0]:
+				foto = mensaje
+		assert_object(foto).is_not_null()
+		if foto == null:
+			continue
+		var texto := Mensaje.new()
+		texto.texto = "Instrucción con una foto"
+		var pantalla := _pantalla()
+		pantalla.mostrar([foto, texto])
+		await get_tree().process_frame
+		var contenido: Control = pantalla.get("_contenido")
+		var imagenes := contenido.find_children("*", "TextureRect", true, false)
+		var fotografias := 0
+		var caja := 0
+		var ticket := 0
+		for imagen: TextureRect in imagenes:
+			if imagen.texture == foto.foto:
+				fotografias += 1
+				assert_vector(imagen.size).is_equal(caso[1] - Vector2(12, 12))
+				assert_int(imagen.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
+			if imagen.texture == PantallaDeInstrucciones.CAJA:
+				caja += 1
+			if imagen.texture == PantallaDeInstrucciones.TICKET:
+				ticket += 1
+		assert_int(fotografias).is_equal(1)
+		assert_int(caja).is_equal(1 if caso[0] == "J1_Foto04" else 0)
+		assert_int(ticket).is_equal(caja)
+
+
+func _fotos_del_paso(paso: InstruccionesDelJefe.Paso) -> Array[Mensaje]:
+	var fotos: Variant = paso.get("fotos")
+	assert_bool(fotos is Array).is_true()
+	if not fotos is Array:
+		return []
+	return fotos
 
 
 ## Avanza el reloj hasta `hasta` en cuadros de 10 ms, como un juego que corre parejo.
