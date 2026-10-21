@@ -472,7 +472,7 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
 		_jugador.suspender()
 		await _pantalla_del_celular.celular_bajado
-		await _preparar_los_utiles()
+		await _preparar_lo_postergado()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
 	var acciones: Dictionary[DevolucionDelJefe.Opcion, Callable] = {
 		DevolucionDelJefe.Opcion.CONTINUAR: _seguir,
@@ -483,12 +483,14 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 
 ## Entre noches no hay carga: lo que la siguiente necesita y la carga no preparó se calienta acá,
 ## con la persiana baja tapando la cámara del calentamiento.
-func _preparar_los_utiles() -> void:
+func _preparar_lo_postergado() -> void:
 	var siguiente := _partida.jornada()
 	var pendientes: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if PreparacionDeLosUtiles.por_preparar(util.datos.id, _jornada_preparada, siguiente):
 			pendientes.append(util)
+	if PreparacionDelDeposito.por_preparar(_jornada_preparada, siguiente):
+		pendientes.append_array(_cajas_de_productos)
 	if not pendientes.is_empty():
 		var calentamiento := CalentamientoDeShaders.new()
 		add_child(calentamiento)
@@ -507,12 +509,14 @@ func _seguir() -> void:
 
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
 ## entregar otra vez la devolución; si no, entra a la jornada guardada.
-## Los útiles que esta carga no prepara: sus variantes las compila otra noche.
+## Los útiles y las cajas que esta carga no prepara: sus variantes las compila otra noche.
 func cuerpos_sin_copias() -> Array[Node3D]:
 	var sin_copias: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if not PreparacionDeLosUtiles.se_prepara(util.datos.id, _partida.jornada()):
 			sin_copias.append(util)
+	if not PreparacionDelDeposito.se_prepara(_partida.jornada()):
+		sin_copias.append_array(_cajas_de_productos)
 	return sin_copias
 
 
