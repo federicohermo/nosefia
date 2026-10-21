@@ -20,6 +20,7 @@ func _completo() -> Dictionary:
 		"notas": [{"texto": "Nota", "identidad": "NOTA_2B_TEXTO", "jornada": 2, "orden": 1}],
 		"cierre_pendiente": 2,
 		"elecciones": {2: "2B"},
+		"noches_de_prueba": {1: {"mal_atendidos": 1, "sin_cumplir": ["REGISTRAR"]}},
 	}
 
 

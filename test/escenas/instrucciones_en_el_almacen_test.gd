@@ -78,8 +78,10 @@ func _preparar_nueva() -> void:
 
 
 func _pasos(jornada: int) -> Array[InstruccionesDelJefe.Paso]:
+	var partida: Partida = _almacen.get("_partida")
+	var condiciones := CondicionesDelJefe.elegidas(partida.noches_de_prueba)
 	return InstruccionesDelJefe.pasos_de(
-		InstruccionesDelJefe.de_la_jornada(GUION.mensajes, jornada)
+		InstruccionesDelJefe.de_la_jornada(GUION.mensajes, jornada, condiciones)
 	)
 
 
@@ -90,15 +92,9 @@ func _leer_todo(jornada: int = PRIMERA) -> void:
 
 
 ## Sin medios: cerrar una noche vacía no despide.
-func _guardar(jornada: int, medios: int = 0) -> void:
-	(
-		assert_bool(
-			Guardado.new().escribir(
-				PartidaSerializada.sanear({"jornada": jornada, "medios": medios})
-			)
-		)
-		. is_true()
-	)
+func _guardar(jornada: int, medios: int = 0, noches: Dictionary = {}) -> void:
+	var datos := {"jornada": jornada, "medios": medios, "noches_de_prueba": noches}
+	assert_bool(Guardado.new().escribir(PartidaSerializada.sanear(datos))).is_true()
 
 
 func _cerrar_y_seguir() -> void:
@@ -136,6 +132,14 @@ func _comprobar_instrucciones_de(jornada: int) -> void:
 	_reloj().set("_ultimo_cuadro_usec", Time.get_ticks_usec() - 120000000)
 	_reloj().call("_process", 0.0)
 	assert_float(_restante()).is_equal(restante)
+
+
+## La segunda abre con el mensaje que eligió la noche 1, no con Intro 7.
+func _comprobar_mensaje_1_de_la_segunda() -> void:
+	var pasos: Array = _instrucciones().get("_pasos")
+	var primero: Mensaje = (pasos[0] as InstruccionesDelJefe.Paso).textos[0]
+	assert_bool(primero.condicion.is_empty()).is_false()
+	assert_int(pasos.size()).is_equal(_pasos(PRIMERA + 1).size())
 
 
 ## Una sola entrada a la noche de la jornada, con el turno y el control retenidos.
@@ -319,6 +323,7 @@ func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-07
 	assert_bool(_instrucciones().visible).is_false()
 	await _cerrar_y_seguir()
 	_comprobar_instrucciones_de(PRIMERA + 1)
+	_comprobar_mensaje_1_de_la_segunda()
 	_leer_todo(PRIMERA + 1)
 	_comprobar_una_noche(PRIMERA + 1)
 	_persiana().terminar()
@@ -332,10 +337,11 @@ func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-07
 
 ## Esc en la segunda pantalla de la segunda jornada conserva la lectura.
 func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-EMP-049, AC-SAV-033
-	_guardar(PRIMERA + 1)
+	_guardar(PRIMERA + 1, 0, {PRIMERA: ResultadoDeLaNoche.new(1, []).a_datos()})
 	_abrir()
 	_almacen.call("retomar_la_partida")
 	_comprobar_instrucciones_de(PRIMERA + 1)
+	_comprobar_mensaje_1_de_la_segunda()
 	_siguiente().pressed.emit()
 	_esc()
 	assert_bool(get_tree().paused).is_true()

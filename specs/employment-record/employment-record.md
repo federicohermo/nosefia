@@ -788,16 +788,18 @@ poca conciencia de lo que es el orden.».
 ### AC-EMP-075 — Las jornadas 2 y 3 abren con lo suyo *(verifica BR-EMP-022, BR-EMP-024)*
 
 DADO el cierre de la jornada 1 CUANDO se elige «continuar» ENTONCES la persiana está baja, se ve
-Intro 7 en «1/2», el control está suspendido y no hay placa. CUANDO pasan 120 segundos reales
-ENTONCES queda el mismo presupuesto de turno. CUANDO se elige «OK» en «2/2» ENTONCES aparece una
+el mensaje 1 que eligió la noche 1 (BR-EMP-040) en «1/3», el control está suspendido y no hay
+placa. CUANDO pasan 120 segundos reales ENTONCES queda el mismo presupuesto de turno. CUANDO se
+elige «OK» en «3/3» ENTONCES aparece una
 sola «NOCHE 2», con el turno y el control retenidos hasta que termine de subir la persiana.
 DADO el cierre de la jornada 2 CUANDO se elige «continuar» ENTONCES se ve Intro 9 en «1/1», y su
 «OK» anuncia una sola «NOCHE 3».
 
 ### AC-EMP-076 — Retomar repite las instrucciones de su jornada *(verifica BR-EMP-022)*
 
-DADO un guardado en la jornada 2 CUANDO se elige continuar ENTONCES salen sus instrucciones
-desde «1/2», y después de su «OK» se anuncia «NOCHE 2». DADO un guardado en la jornada 3
+DADO un guardado en la jornada 2 con la noche 1 anotada CUANDO se elige continuar ENTONCES salen
+sus instrucciones desde el mensaje 1 de esa noche, en «1/3», y después de su «OK» se anuncia
+«NOCHE 2». DADO un guardado en la jornada 3
 ENTONCES sale Intro 9 en «1/1». DADO un guardado en la jornada 4 ENTONCES se anuncia «NOCHE 4»
 sin instrucciones, y el chat de Enrique tiene Intro 10, la foto de Intro 11, Intro 11 e Intro 12
 después de la devolución 3. DADO un guardado del cierre 4 con la reflexión pendiente CUANDO se retoma y termina

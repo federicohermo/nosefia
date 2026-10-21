@@ -53,7 +53,9 @@ func test_la_apertura_cinco_contiene_foto_y_texto_siguiente() -> void:  # AC-INV
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
 	bandeja.abrir_jornada(5)
 	var mensajes := bandeja.mensajes_de(JEFE)
-	assert_array(mensajes).is_equal(Conversacion.de(JEFE).mensajes)
+	assert_array(mensajes).is_equal(
+		Conversacion.de(JEFE).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+	)
 	var foto := mensajes.size() - 2
 	assert_str(mensajes[foto].identidad).is_equal("J2_CONTENEDOR_FOTO")
 	assert_object(mensajes[foto].foto).is_not_null()
