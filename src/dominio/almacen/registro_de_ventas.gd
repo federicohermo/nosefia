@@ -8,6 +8,7 @@ var _atender: TareaDeAtender
 var _productos: Array[Producto] = []
 
 var _unidades_por_id: Dictionary = {}
+var _editable := true
 
 
 func _init(productos: Array[Producto], atender: TareaDeAtender) -> void:
@@ -21,6 +22,14 @@ func _init(productos: Array[Producto], atender: TareaDeAtender) -> void:
 
 func productos() -> Array[Producto]:
 	return _productos.duplicate()
+
+
+func bloquear() -> void:
+	_editable = false
+
+
+func editable() -> bool:
+	return _editable
 
 
 func sumar(producto: Producto) -> bool:
@@ -67,7 +76,7 @@ func completada(al_cerrar: bool = false) -> bool:
 
 
 func _mover(producto: Producto, paso: int) -> bool:
-	if producto == null or not _unidades_por_id.has(producto.id):
+	if not _editable or producto == null or not _unidades_por_id.has(producto.id):
 		return false
 	var nuevas := unidades_de(producto) + paso
 	if nuevas < 0 or nuevas > TOPE_POR_FILA:

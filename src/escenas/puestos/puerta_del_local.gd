@@ -22,6 +22,7 @@ signal puerta_abierta(puerta: Node3D)
 signal puerta_cerrada(puerta: Node3D)
 signal puerta_trabada(puerta: Node3D)
 signal porton_trabado(puerta: Node3D)
+signal salida_solicitada
 
 ## Qué aviso da una puerta que no abre.
 enum Traba { NINGUNA, PUERTA, PORTON }
@@ -47,6 +48,7 @@ enum Traba { NINGUNA, PUERTA, PORTON }
 ## Quién es esta puerta para el subtítulo. Las trabadas comparten la traba, así que la escena
 ## se la declara por su ruta; una puerta sin identidad no dice nada al examinarla.
 var identidad: StringName = &""
+var consultar_salida: Callable
 
 var _puerta := Puerta.new()
 
@@ -78,10 +80,22 @@ func _ready() -> void:
 
 
 func accionar() -> void:
+	if consultar_salida.is_valid() and consultar_salida.call():
+		salida_solicitada.emit()
+		return
 	alternar()
 
 
 func contexto_de_interaccion(_sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Contexto:
+	if consultar_salida.is_valid():
+		return ReferenciaDeControles.contexto_primario(
+			(
+				ReferenciaDeControles.Linea.INTERACTUAR_PRIMARIO
+				if consultar_salida.call()
+				else ReferenciaDeControles.Linea.NINGUNA
+			),
+			ReferenciaDeControles.Ruta.ACCIONAR
+		)
 	return ReferenciaDeControles.contexto_de_lo_fijo(_puerta.abierta())
 
 

@@ -46,6 +46,13 @@ func registro() -> RegistroDeVentas:
 	return _registro
 
 
+func bloquear_registro() -> void:
+	if _registro == null or not _registro.editable():
+		return
+	_registro.bloquear()
+	registro_actualizado.emit()
+
+
 ## Enciende la terminal de ventas.
 func pedir_abrir() -> void:
 	if not _computadora.abrir():

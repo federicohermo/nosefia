@@ -22,23 +22,11 @@ signal tarea_completada(cumplidas: int)
 signal tarea_descumplida(cumplidas: int)
 signal turno_cerrado(cumplidas: int)
 
-
-class AvanceEnCurso:
-	var restante_al_final: float
-
-	func _init(restante: float) -> void:
-		restante_al_final = restante
-
-
 var _turno: Turno = null
 var _obligatorias: Array[Tarea] = []
 var _ritmo: float = Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 var _ultimo_cuadro_usec: int = 0
 var _retenido := false
-var _acelerado := false
-var _pausado := false
-var _consumo_anterior_pendiente := 0.0
-var _avance_en_curso: AvanceEnCurso = null
 
 
 ## El navegador puede suspender los cuadros de una pestaña oculta. El reloj monotónico sigue
@@ -54,7 +42,6 @@ func _process(_delta: float) -> void:
 ## La pausa manual excluye su intervalo; perder el foco no manda estas notificaciones.
 func _notification(aviso: int) -> void:
 	if aviso == NOTIFICATION_PAUSED or aviso == NOTIFICATION_UNPAUSED:
-		_pausado = aviso == NOTIFICATION_PAUSED
 		_ultimo_cuadro_usec = _ahora_usec()
 
 
@@ -73,25 +60,24 @@ func soltar() -> void:
 
 
 ## Los segundos reales recibidos, convertidos en tiempo de turno.
-##
-## El guard es lo que hace que `turno_cerrado` se emita **una sola vez**: en cuanto el turno
-## cierra, `corriendo()` pasa a `false` y el cuadro siguiente sale por acá. Se hace con el estado
-## del dominio y no con `set_process(false)` para que el mismo código se pueda ejercer llamando
-## `avanzar()` a mano, sin árbol de escena.
 func avanzar(segundos_reales: float) -> void:
+	_consumir(maxf(0.0, Ritmo.escalar(segundos_reales, _ritmo)))
+
+
+func terminar() -> void:
+	if corriendo():
+		_consumir(_turno.tiempo_restante())
+
+
+func _consumir(segundos: float) -> void:
 	if not corriendo():
 		return
-	var segundos := _consumo_anterior_pendiente + maxf(0.0, Ritmo.escalar(segundos_reales, _ritmo))
-	_consumo_anterior_pendiente = 0.0
-	var avance_anterior := _avance_en_curso
-	_avance_en_curso = AvanceEnCurso.new(maxf(0.0, _turno.tiempo_restante() - segundos))
 	if _turno.se_agota_con(segundos):
 		cierre_iniciado.emit()
 	_turno.consumir(segundos)
 	tiempo_consumido.emit(_turno.tiempo_restante())
 	if _turno.cerrado():
 		turno_cerrado.emit(_turno.tareas_cumplidas())
-	_avance_en_curso = avance_anterior
 
 
 ## Le entrega al reloj el turno de la jornada y la lista con la que se armó.
@@ -106,28 +92,7 @@ func arrancar(
 	_turno = turno
 	_obligatorias = obligatorias
 	_ritmo = ritmo
-	_acelerado = false
-	_consumo_anterior_pendiente = 0.0
-	_avance_en_curso = null
 	_ultimo_cuadro_usec = _ahora_usec()
-
-
-## Lo que queda del turno pasa en esos segundos reales. La primera aceleración de la noche es la
-## que vale: pedirla otra vez la estiraría a cada obligatoria que se vuelve a cumplir.
-func acelerar_hasta_el_cierre(segundos_reales: float) -> void:
-	if _acelerado or not corriendo() or segundos_reales <= 0.0:
-		return
-	_acelerado = true
-	var ahora := _ahora_usec()
-	if not _retenido and not _pausado:
-		var anterior := (ahora - _ultimo_cuadro_usec) / 1000000.0
-		_consumo_anterior_pendiente += Ritmo.escalar(anterior, _ritmo)
-	_ultimo_cuadro_usec = ahora
-	# Un receptor de cierre_iniciado pregunta antes de que el avance exterior consuma el turno.
-	var restante := (
-		_turno.tiempo_restante() if _avance_en_curso == null else _avance_en_curso.restante_al_final
-	)
-	_ritmo = maxf(0.0, restante - _consumo_anterior_pendiente) / segundos_reales
 
 
 ## Si hay un turno en curso que todavía no se agotó.

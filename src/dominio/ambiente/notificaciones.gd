@@ -1,7 +1,7 @@
 class_name Notificaciones
 extends RefCounted
 
-enum Tipo { CLIENTE, LECTURA_FALLIDA, CLIENTE_CANSADO, CIERRE_PROXIMO, PISTA }
+enum Tipo { CLIENTE, LECTURA_FALLIDA, CLIENTE_CANSADO, CIERRE_PROXIMO, PISTA, TAREAS_TERMINADAS }
 
 const DURACION := 3.0
 const HORA_DEL_AVISO := 7
@@ -20,6 +20,7 @@ var _orden: Array[Tipo] = []
 var _transcurrido: Dictionary[Tipo, float] = {}
 var _esperando: Comprador = null
 var _cierre_avisado := false
+var _tareas_avisadas := false
 
 
 func actualizar_tiempo(restante: float) -> void:
@@ -62,6 +63,13 @@ func pista_anotada() -> void:
 	_avisar(Tipo.PISTA)
 
 
+func tareas_terminadas() -> void:
+	if _tareas_avisadas:
+		return
+	_tareas_avisadas = true
+	_avisar(Tipo.TAREAS_TERMINADAS)
+
+
 func avanzar(segundos: float) -> void:
 	if segundos <= 0.0:
 		return
@@ -85,6 +93,7 @@ func vaciar() -> void:
 	_salidos.clear()
 	_esperando = null
 	_cierre_avisado = false
+	_tareas_avisadas = false
 
 
 func _avisar(tipo: Tipo) -> void:

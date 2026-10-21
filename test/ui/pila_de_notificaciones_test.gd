@@ -14,6 +14,59 @@ func _pila() -> PilaDeNotificaciones:
 	return pila
 
 
+func test_tareas_terminadas_entra_completo_y_deja_pasarlo_al_clic() -> void:  # AC-NTF-027
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.avisar_pista()
+	pila.avisar_tareas_terminadas()
+	assert_str(_textos(pila)[0]).is_equal("YA TERMINASTE TUS TAREAS Y PODÉS IRTE")
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var carteles := pila.get_node("Marco/Pila").get_children()
+		var cartel: PanelContainer = carteles[0]
+		var fila: HBoxContainer = cartel.get_child(0)
+		var simbolo: TextureRect = fila.get_child(0)
+		var texto: Label = fila.get_child(1)
+		assert_int(texto.get_line_count()).is_equal(1)
+		assert_float(texto.size.x).is_greater_equal(texto.get_minimum_size().x)
+		(
+			assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(cartel.get_global_rect()))
+			. is_true()
+		)
+		assert_float(cartel.size.x).is_equal_approx(
+			fila.get_combined_minimum_size().x + pila._estilo.get_minimum_size().x, 1.0
+		)
+		assert_float(cartel.get_global_rect().end.x).is_equal_approx(
+			(carteles[1] as Control).get_global_rect().end.x, 0.1
+		)
+		assert_float(simbolo.get_global_rect().end.x).is_less(texto.get_global_rect().position.x)
+		assert_object(texto.get_theme_font("font")).is_same(pila._marco.get_theme_font("font"))
+		for control: Control in pila.find_children("*", "Control", true, false):
+			assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
+
+
+func test_tareas_terminadas_conserva_su_resto_en_pausa() -> void:  # AC-NTF-026
+	var pila := _pila()
+	pila.set_process(false)
+	pila.avisar_tareas_terminadas()
+	pila._process(2.0)
+	get_tree().paused = true
+	await get_tree().process_frame
+	assert_bool(pila.can_process()).is_false()
+	assert_array(_textos(pila)).has_size(1)
+	get_tree().paused = false
+	pila._process(0.9)
+	assert_array(_textos(pila)).has_size(1)
+	pila._process(0.1)
+	assert_array(_textos(pila)).is_empty()
+
+
 func test_la_salida_tiene_el_texto_y_simbolo_de_figma_y_respeta_pausa() -> void:  # AC-NTF-011
 	var pila := _pila()
 	pila.avisar_salida(Compradores.de_la_jornada(4)[0])

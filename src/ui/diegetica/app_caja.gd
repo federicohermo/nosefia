@@ -86,6 +86,7 @@ var _posicion_del_arrastre: float = 0.0
 ## sólo se reescriben: rehacerlas en cada gesto vaciaría el contenedor un instante y el
 ## desplazamiento volvería arriba.
 var _unidades_por_id: Dictionary = {}
+var _botones: Array[Button] = []
 
 
 func _ready() -> void:
@@ -161,6 +162,8 @@ func mostrar(registro: RegistroDeVentas) -> void:
 	for producto in registro.productos():
 		var unidades: Label = _unidades_por_id[producto.id]
 		unidades.text = TEXTO_DE_LAS_UNIDADES % registro.unidades_de(producto)
+	for boton in _botones:
+		boton.disabled = not registro.editable()
 	_total.text = TEXTO_DEL_TOTAL % registro.total()
 
 
@@ -169,6 +172,7 @@ func _armar_filas() -> void:
 		_filas.remove_child(vieja)
 		vieja.queue_free()
 	_unidades_por_id.clear()
+	_botones.clear()
 	for producto in _registro.productos():
 		_filas.add_child(_fila_de(producto))
 	_cantidad.text = TEXTO_DE_LA_CANTIDAD % _unidades_por_id.size()
@@ -235,4 +239,5 @@ func _boton(texto: String, al_apretar: Callable) -> Button:
 	boton.mouse_force_pass_scroll_events = true
 	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	boton.pressed.connect(al_apretar)
+	_botones.append(boton)
 	return boton

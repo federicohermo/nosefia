@@ -7,13 +7,16 @@ const TEXTOS := {
 	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ DE ESPERAR.",
 	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA UNA HORA DE JORNADA",
 	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
+	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA TERMINASTE TUS TAREAS Y PODÉS IRTE",
 }
+const SIMBOLO_DEL_CLIENTE := preload("res://assets/ui/manada/notificacion_cliente.svg")
 const SIMBOLOS := {
-	Notificaciones.Tipo.CLIENTE: preload("res://assets/ui/manada/notificacion_cliente.svg"),
+	Notificaciones.Tipo.CLIENTE: SIMBOLO_DEL_CLIENTE,
 	Notificaciones.Tipo.LECTURA_FALLIDA: preload("res://assets/ui/manada/notificacion_lectura.svg"),
 	Notificaciones.Tipo.CLIENTE_CANSADO: preload("res://assets/ui/manada/notificacion_salida.svg"),
 	Notificaciones.Tipo.CIERRE_PROXIMO: preload("res://assets/ui/manada/notificacion_cierre.svg"),
 	Notificaciones.Tipo.PISTA: preload("res://assets/ui/manada/notificacion_pista.svg"),
+	Notificaciones.Tipo.TAREAS_TERMINADAS: SIMBOLO_DEL_CLIENTE,
 }
 const ESCALA_DEL_CARTEL := 0.4
 
@@ -57,6 +60,11 @@ func avisar_lectura_rechazada(motivo: GeneradorDeTickets.Resultado) -> void:
 
 func avisar_pista() -> void:
 	_estado.pista_anotada()
+	_pintar()
+
+
+func avisar_tareas_terminadas() -> void:
+	_estado.tareas_terminadas()
 	_pintar()
 
 

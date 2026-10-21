@@ -111,6 +111,7 @@ var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
 var _enlace_de_guardado: EnlaceDeGuardado
+var _salida_preparada := false
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
@@ -132,6 +133,9 @@ func _ready() -> void:
 	_cablear_el_celular()
 	_cablear_la_investigacion()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
+	var entrada: PuertaDelLocal = $Estructura/puertaentrada/CuerpoDeLaHoja
+	entrada.consultar_salida = _puede_salir
+	entrada.salida_solicitada.connect(_salir_por_la_entrada)
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
@@ -169,10 +173,10 @@ func _ready() -> void:
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
 	)
-	_reloj.tarea_completada.connect(_acelerar_si_se_cerro_el_ciclo.unbind(1))
-	_atenciones.compra_realizada.connect(_acelerar_si_se_cerro_el_ciclo)
-	_atenciones.comprador_vencido.connect(_acelerar_si_se_cerro_el_ciclo.unbind(1))
-	_computadora.registro_actualizado.connect(_acelerar_si_se_cerro_el_ciclo)
+	_reloj.tarea_completada.connect(_revisar_la_salida.unbind(1))
+	_atenciones.compra_realizada.connect(_revisar_la_salida)
+	_atenciones.comprador_vencido.connect(_revisar_la_salida.unbind(1))
+	_computadora.registro_actualizado.connect(_revisar_la_salida)
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
@@ -315,6 +319,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
+	_salida_preparada = false
 	_jornada_del_celular = jornada
 	_celular.abrir_jornada(jornada)
 	_pantalla_del_celular.mostrar_recordatorio(true)
@@ -419,18 +424,29 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_audio.arrancar_el_ambiente()
 	_limpieza.reiniciar()
 	_estante.mostrar(0)
+	_salida_preparada = true
+	_revisar_la_salida()
 
 
-func _acelerar_si_se_cerro_el_ciclo() -> void:
-	# La primera apertura cumple obligatorias antes de darle su noche a la ventanilla.
-	if _atenciones.tarea() == null or _computadora.registro() == null:
+func _revisar_la_salida() -> void:
+	if not _puede_salir():
 		return
-	var compras_cerradas := _atenciones.tarea().compras_cerradas()
-	var registro_al_cierre := _computadora.registro().completada(true)
-	var obligatorias := _partida.obligatorias()
-	var jornada := _partida.jornada()
-	if CierreAnticipado.corresponde(jornada, compras_cerradas, registro_al_cierre, obligatorias):
-		_reloj.acelerar_hasta_el_cierre(CierreAnticipado.DURACION_DE_LA_ACELERACION)
+	CierreAnticipado.consolidar(_partida.jornada(), _partida.obligatorias())
+	_computadora.bloquear_registro()
+	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).avisar_tareas_terminadas()
+
+
+func _puede_salir() -> bool:
+	return (
+		_salida_preparada
+		and _reloj.corriendo()
+		and CierreAnticipado.corresponde(_partida.jornada(), _partida.obligatorias())
+	)
+
+
+func _salir_por_la_entrada() -> void:
+	if _puede_salir():
+		_reloj.terminar()
 
 
 ## Al cerrar, la persiana baja y la devolución de Enrique llega por el celular.

@@ -80,6 +80,27 @@ func _escritorio(atender: TareaDeAtender = _atender()) -> ComputadoraDeEscritori
 	return escritorio
 
 
+func test_bloquear_actualiza_la_pantalla_una_vez_y_otra_noche_es_editable() -> void:  # AC-SHF-040
+	var escritorio := _escritorio()
+	var avisos := [0]
+	escritorio.registro_actualizado.connect(func() -> void: avisos[0] += 1)
+	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
+	escritorio.pedir_sumar(producto)
+	assert_int(avisos[0]).is_equal(1)
+	escritorio.bloquear_registro()
+	escritorio.bloquear_registro()
+	assert_int(avisos[0]).is_equal(2)
+	escritorio.pedir_sumar(producto)
+	escritorio.pedir_restar(producto)
+	assert_int(escritorio.registro().unidades_de(producto)).is_equal(1)
+	assert_int(avisos[0]).is_equal(2)
+	escritorio.arrancar(RegistroDeVentas.new(Catalogo.todos(), _atender()))
+	assert_bool(escritorio.registro().editable()).is_true()
+	escritorio.pedir_sumar(producto)
+	escritorio.pedir_restar(producto)
+	assert_int(avisos[0]).is_equal(4)
+
+
 func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # AC-INV-007
 	# **Es la decisión entera del spec al revés**: usar la computadora no cuesta por usarla,
 	# cuesta porque el reloj no se detuvo. Un descuento por acción cobraría dos veces lo mismo.

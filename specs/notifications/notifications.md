@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-NTF
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573
 ---
