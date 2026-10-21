@@ -3,11 +3,11 @@
   "version_del_motor": "4.7.2-stable",
   "commit_del_motor": "ed1daf0bf001b61586d9930840f2f1394092c079",
   "fuente_zip_sha256": "098b0a71e95ad98ab44651199d55c3f085e4e02c735514e284a2d5263ac81fb2",
-  "parche": "godot-native-classdb.patch",
-  "parche_sha256": "865df808044b687b52f168d48be333d3cfeecefa56041232d1ef0c74bce3f7a1",
+  "parche": "godot-native-variantes.patch",
+  "parche_sha256": "ef20012bf6cd92673fd7b18ba0399f074b67cbcd36f46264866c5e7c285925ad",
   "upstream": "https://github.com/godotengine/godot/pull/123546",
   "scons": "4.9.1",
-  "build_name": "nosefia_classdb_1",
+  "build_name": "nosefia_classdb_1_variantes",
   "opciones_comunes": [
     "target=editor",
     "arch=x86_64",
@@ -19,6 +19,14 @@
     "core/object/class_db.cpp": {
       "original_sha256": "ab8d4ad25aa6a3d68ee5486dd67d89393752cf203fe255802afc1a607a159837",
       "modificado_sha256": "f8c800405c3be7d59c56b68b2d23694009f33f454b6806137fa05748222fabb2"
+    },
+    "drivers/gles3/rasterizer_scene_gles3.cpp": {
+      "original_sha256": "6d0719c9cd2caf685a9825028183bdf058081d7bc92d4b27ed2587f39b081221",
+      "modificado_sha256": "59601cc637b17b122ae96bf81a62360d6e0cc9780b918e660a5717f9e28974b9"
+    },
+    "drivers/gles3/shader_gles3.cpp": {
+      "original_sha256": "17c01277dc3468a1d53081f01a6f7665f5d0f82e7882a8198e1f486ee344d5d8",
+      "modificado_sha256": "a53fc428fd8ea9e73aeb5342473afd199575bfba19bebe4279e75266e33fece3"
     }
   },
   "plataformas": {
