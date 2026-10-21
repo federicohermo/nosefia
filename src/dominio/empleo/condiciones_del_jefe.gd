@@ -62,8 +62,8 @@ static func _de_la_tercera(segunda: ResultadoDeLaNoche) -> StringName:
 	]]
 
 
-## La prueba perdida no llega acá: la despide el legajo al cerrar la tercera. «Menos de la mitad»
-## es el umbral con que el legajo la pierde, y lo que la ficha no cubre son altibajos (OQ-EMP-011).
+## La prueba perdida no llega acá: la despide el legajo al cerrar la tercera. Con menos fallas
+## que ese umbral y la tercera cumplida, la ficha no tiene fila y van los altibajos (OQ-EMP-011).
 static func _de_la_cuarta(noches: Dictionary[int, ResultadoDeLaNoche]) -> StringName:
 	var fallas := 0
 	for noche: ResultadoDeLaNoche in noches.values():
