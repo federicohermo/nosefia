@@ -144,10 +144,13 @@ provisorio es «Lo que les entregues lo sacás de las góndolas. Después, repon
 las cajas del depósito. No quiero ver huecos.», con énfasis en «góndolas» y en «reponé esas
 unidades» (OQ-EMP-006).
 
-Las siete fotos DEBEN mostrar el juego y acompañar Intro 2, 3, 4, 6, 7, 9 y 11, cada una en la
-jornada de su Intro: respectivamente,
-la nota de tareas, la ventanilla, el lector y la caja registradora, la computadora, una estantería
-con cajas, los útiles y notas del cuartito y el depósito con sus cajas en el piso. La foto de la
+Las nueve fotos DEBEN mostrar el juego y acompañar Intro 2, 3, 4, 6, 7, 9 y 11, cada una en la
+jornada de su Intro. Intro 2 DEBE llevar primero el reloj y después la nota de tareas del corcho.
+Intro 7 DEBE llevar primero las góndolas y después una estantería con cajas. Las demás DEBEN
+conservar una foto cada una: la ventanilla, el lector y la caja registradora, la computadora,
+los útiles y notas del cuartito y el depósito con sus cajas en el piso. Las capturas nuevas
+DEBEN medir 960 × 540 y salir del modelo jugable de la primera jornada sin editar la imagen.
+La foto de las góndolas NO DEBE crear huecos ni cambiar la reposición jugable. La foto de la
 estantería NO DEBE cambiar la disposición jugable de las cajas de la primera noche. El encuadre
 artístico de cada tema es territorio de juicio humano; la correspondencia se verifica en
 AC-EMP-047.
@@ -173,9 +176,12 @@ botón «OK», sin el rótulo «SI A JUGAR!!». Las fotos DEBEN cubrir su marco 
 mantener visible el objeto ilustrado. La foto de Intro 11 DEBE acompañar su texto en el chat,
 aunque su frame de referencia omita esa foto.
 
-Los trece textos y siete fotos DEBEN conservarse como 20 entradas separadas en el chat de
-Enrique: 11 de la jornada 1, 3 de la 2, 3 de la 3 y 3 de la 4. Cada foto DEBE ir inmediatamente
-antes del texto de su Intro. Desde que abre su jornada, ese chat DEBE permitir releer cada
+Intro 2 e Intro 7 DEBEN mostrar sus dos fotos después del texto y en el orden declarado.
+Provisoriamente, DEBEN ir lado a lado, con igual alto y dentro del ancho del texto, de 1007 px.
+
+Los trece textos y nueve fotos DEBEN conservarse como 22 entradas separadas en el chat de
+Enrique: 12 de la jornada 1, 4 de la 2, 3 de la 3 y 3 de la 4. Cada grupo de fotos DEBE ir
+inmediatamente antes del texto de su Intro. Desde que abre su jornada, ese chat DEBE permitir releer cada
 entrada y ampliar cada foto con el texto de su propia Intro.
 
 ### BR-EMP-024 — La preparación no consume la noche
@@ -502,15 +508,18 @@ del contenido.
 
 ### AC-EMP-046 — Las entradas de cada jornada forman sus pantallas *(verifica BR-EMP-022, BR-EMP-023)*
 
-DADO los textos de la ficha revisada, la línea de reponer, sus énfasis y las siete fotos CUANDO
-se agrupan las entradas de cada jornada ENTONCES la jornada 1 tiene 11 entradas y 7 pantallas,
-la 2 tiene 3 y 2, la 3 tiene 3 y 2, y la 4 tiene 3 entradas y ninguna pantalla. Las jornadas 5 a
+DADO los textos de la ficha revisada, la línea de reponer, sus énfasis y las nueve fotos CUANDO
+se agrupan las entradas de cada jornada ENTONCES la jornada 1 tiene 12 entradas y 7 pantallas,
+la 2 tiene 4 y 2, la 3 tiene 3 y 2, y la 4 tiene 3 entradas y ninguna pantalla. Las jornadas 5 a
 8 no tienen entradas ni pantallas. En la jornada 1, las pantallas 2, 3, 4 y 6 muestran la foto de
 su Intro después del texto y la 7 es la línea de reponer sin foto. La primera pantalla de la
-jornada 2 muestra la foto de Intro 7. En la 3, la primera muestra la foto de Intro 9 y la
+jornada 2 muestra las fotos de Intro 7. Intro 2 muestra primero el reloj y después el corcho;
+Intro 7 muestra primero las góndolas y después la estantería. Cada par va después del texto,
+lado a lado, con igual alto, dentro de los 1007 px y cubriendo sus marcos sin franjas negras.
+Las pantallas de una foto conservan su presentación. En la 3, la primera muestra la foto de Intro 9 y la
 segunda es Intro 12.
 CUANDO se avanza y vuelve por todas ENTONCES sólo se muestra el contenido de la actual,
-el contador coincide y la secuencia original de 20 entradas sigue intacta. El retrato y
+el contador coincide y la secuencia original de 22 entradas sigue intacta. El retrato y
 bocadillo se mantienen visibles en todas las pantallas. La pantalla de Intro 4 incluye interfaz
 de caja y ticket y la de Intro 12 sólo su texto de instrucciones, sin el rótulo «SI A JUGAR!!»,
 conservando «OK».
@@ -518,12 +527,15 @@ Los tres mensajes de prueba previos no aparecen entre los textos de la conversac
 
 ### AC-EMP-047 — Cada foto adjunta su propia Intro *(verifica BR-EMP-022, BR-EMP-023)*
 
-DADO el chat de Enrique en la jornada 4 CUANDO se recorren sus siete fotos ENTONCES cada una
-precede inmediatamente al texto de su Intro y ampliarla muestra ese texto, nunca el siguiente
+DADO el chat de Enrique en la jornada 4 CUANDO se recorren sus nueve fotos ENTONCES cada grupo
+precede inmediatamente al texto de su Intro y ampliar cualquiera muestra ese texto, aunque la
+entrada siguiente sea otra foto, nunca el siguiente
 paso. CUANDO se valida cada captura ENTONCES existe una imagen con proporción adecuada a su
-marco y el rayo central de su encuadre alcanza el tema correspondiente: corcho con sus dos
+marco y el rayo central de su encuadre alcanza el tema correspondiente: reloj, corcho con sus dos
 notas, ventanilla, lector y caja, computadora,
-estantería con cajas, útiles y notas del cuartito, y cajas del depósito en el piso. Preparar la foto
+góndolas, estantería con cajas, útiles y notas del cuartito, y cajas del depósito en el piso.
+Las dos capturas nuevas miden 960 × 540 y no alteran el reparto ni crean huecos para encuadrar.
+Preparar la foto
 de Intro 7 y después la de Intro 11 deja restaurada la pila jugable de la jornada 1.
 
 ### AC-EMP-048 — Leer retiene y comenzar anuncia *(verifica BR-EMP-022, BR-EMP-024)*
@@ -826,9 +838,9 @@ jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): qué jornadas son de introducción.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): tras las instrucciones, anuncia la
   noche que introducen y conserva la retención hasta que termine de subir la persiana.
-- [`investigation`](../investigation/investigation.md) (alimenta): las 20 entradas de Enrique
+- [`investigation`](../investigation/investigation.md) (alimenta): las 22 entradas de Enrique
   con la jornada en que llega cada una, y la correspondencia entre cada foto y el texto
-  siguiente para releerlas en el celular.
+  siguiente al grupo para releerlas en el celular.
 - [`investigation`](../investigation/investigation.md) (alimenta): las devoluciones, que el chat
   de Enrique intercala con las aperturas por jornada cerrada y orden; el celular en modo fijo durante la devolución.
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): los llamados de la noche.
