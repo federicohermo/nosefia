@@ -48,6 +48,13 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Retirar una tarea de una jornada exige seguir también los supuestos de sus consumidores.**
+Revisar cierre, guardado, antecedentes y devolución, incluidos sus fixtures.
+Buscar los BR y AC que la usan, aunque no nombren esa jornada en la misma línea.
+Incluir cada test afectado en «Se escribe» antes de publicar.
+En #579, cinco fixtures y cuatro criterios todavía suponían reposición en J1.
+La tabla nueva exigía dos tareas, pero el ejemplo del legajo seguía castigando ese cierre completo.
+
 **Un requisito al cierre se mide contra el orden de sus señales y lectores.** Probar también
 un salto desde apertura hasta cierre en un único avance, y la repetición sin eventos nuevos.
 En #366, registrar pasó a depender de compras cerradas, pero la computadora revisaba antes

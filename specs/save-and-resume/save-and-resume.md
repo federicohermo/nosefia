@@ -341,7 +341,7 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
 
 ### AC-SAV-024 — La noche 5 cerrada vuelve igual *(verifica BR-SAV-005, BR-SAV-019)*
 
-DADO una partida con la noche 5 cerrada, reponer cumplido en las noches 1 a 3 y sin cumplir en la
+DADO una partida con la noche 5 cerrada, reponer cumplido en las noches 2 y 3 y sin cumplir en la
 4 y la 5, un llamado por papel en la noche 4 y R = 0 CUANDO se guarda, se lee el archivo y se
 retoma ENTONCES reponer tiene 2 fallas, papel 1 llamado, hubo llamados en la partida, R = 0, y
 las cinco devoluciones están en orden y letra por letra en el chat de Enrique, intercalando foto
@@ -349,7 +349,7 @@ y texto de apertura 5 entre las devoluciones 4 y 5 y cada devolución de las noc
 de los mensajes de la jornada siguiente. CUANDO la noche 6 cierra con reponer sin cumplir ENTONCES su devolución trae la fila n = 3 de Tarea 3,
 «De nuevo quedaron algunas góndolas incompletas…».
 
-DADO la noche 1 con reponer pendiente y un llamado por papel, y la 2 impecable sin llamados
+DADO la noche 2 con reponer pendiente y un llamado por papel, y la 3 impecable sin llamados
 CUANDO se guarda y retoma ENTONCES reponer conserva 1 falla, papel 1 llamado y R = 1.
 
 ### AC-SAV-025 — Un guardado sin las cuentas *(verifica BR-SAV-006, BR-SAV-019)*

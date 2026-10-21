@@ -870,10 +870,12 @@ ENTONCES el orden es Tarea 4, advertencia y Tarea 5, cada una una vez. DADO jorn
 teñidos rechazados, o un teñido aceptado en jornada 6, ENTONCES no hay advertencia. Los medios,
 la banda y el final son los mismos con y sin el hecho.
 
-### AC-EMP-072 — Tres declaradas no admiten aviso *(verifica BR-EMP-001, BR-EMP-003)*
+### AC-EMP-072 — Dos o tres declaradas no admiten aviso *(verifica BR-EMP-001, BR-EMP-003)*
 
-DADO la jornada 1 con sus tres obligatorias declaradas CUANDO cierra con las tres cumplidas
-ENTONCES la banda es NINGUNA; con dos, con una y con cero es GRAVE.
+DADO la jornada 1 con sus dos obligatorias declaradas CUANDO cierra con las dos cumplidas
+ENTONCES la banda es NINGUNA; con una y con cero es GRAVE. DADO la jornada 2 con sus tres
+obligatorias declaradas CUANDO cierra con las tres cumplidas ENTONCES la banda es NINGUNA;
+con dos, con una y con cero es GRAVE.
 
 ### AC-EMP-073 — El impecable de las noches del medio *(verifica BR-EMP-029)*
 

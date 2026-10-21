@@ -52,7 +52,7 @@ func test_la_tercera_retomada_repite_su_fila() -> void:  # AC-EMP-088
 
 func test_la_cuarta_retomada_repite_su_fila() -> void:  # AC-EMP-091
 	var jugada := CondicionesDelJefeTest.cerrar_la_prueba(
-		[[2, [Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER]], [1, []], [0, []]]
+		[[2, [Tarea.Tipo.REGISTRAR]], [2, []], [0, []]]
 	)
 	var datos: Dictionary = str_to_var(var_to_str(PoliticaDeGuardado.datos(jugada)))
 	var retomada := Partida.desde(datos)

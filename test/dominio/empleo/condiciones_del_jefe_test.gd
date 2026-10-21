@@ -189,11 +189,11 @@ func _apertura_de_la_cuarta(partida: Partida) -> Array[String]:
 
 func test_las_tres_noches_eligen_el_mensaje_1_de_la_cuarta() -> void:  # AC-EMP-089
 	var limpio := [0, []]
-	var cuatro_fallas := [2, [T.REGISTRAR, T.REPONER]]
+	var tres_fallas := [2, [T.REGISTRAR]]
 	var casos := [
 		[[limpio, limpio, limpio], "J4_Mensaje1_SinFallas"],
-		[[cuatro_fallas, [1, []], limpio], "J4_Mensaje1_Redimido"],
-		[[cuatro_fallas, limpio, limpio], "J4_Mensaje1_ConAltibajos"],
+		[[tres_fallas, [2, []], limpio], "J4_Mensaje1_Redimido"],
+		[[tres_fallas, limpio, limpio], "J4_Mensaje1_ConAltibajos"],
 		[[[1, []], limpio, [0, [T.LIMPIAR]]], "J4_Mensaje1_ConAltibajos"],
 	]
 	for caso: Array in casos:

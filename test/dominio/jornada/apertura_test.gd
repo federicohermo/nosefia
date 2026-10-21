@@ -12,7 +12,7 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
 	]
 	var tabla := {
-		1: introduccion,
+		1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR],
 		2: introduccion,
 		3: fijas,
 		4: fijas + [Tarea.Tipo.ORDENAR_LAS_CAJAS],
@@ -30,6 +30,7 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 			esperadas
 		)
 		assert_int(Apertura.cantidad_de_obligatorias(jornada)).is_equal(esperadas.size())
+		assert_bool(Apertura.pide(jornada, Tarea.Tipo.REPONER)).is_equal(jornada != 1)
 		assert_bool(Apertura.cajas_apiladas(jornada)).is_equal(jornada == 4)
 
 
@@ -224,3 +225,38 @@ func test_la_segunda_jornada_sortea_faltantes() -> void:  # AC-STK-094
 	assert_int(inventario.faltantes().size()).is_between(
 		ReglasDelEstante.TIPOS_QUE_FALTAN.x, ReglasDelEstante.TIPOS_QUE_FALTAN.y
 	)
+
+
+func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # AC-STK-094
+	var casilleros := _casilleros(3)
+	var compradores := Compradores.de_la_jornada(1)
+	var azar := RandomNumberGenerator.new()
+	azar.seed = 19
+	var primera := Apertura.inventario_de_la_jornada(1, compradores, casilleros, casilleros, azar)
+	var producto := Catalogo.de(Producto.Id.MAROLINI)
+	(
+		assert_int(
+			primera.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 3)
+		)
+		. is_equal(3)
+	)
+	assert_int(primera.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_zero()
+	var retomada := Apertura.inventario_de_la_jornada(1, compradores, casilleros, casilleros, azar)
+	assert_array(retomada.faltantes()).is_empty()
+	assert_int(retomada.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(3)
+	assert_bool(Apertura.pide(1, Tarea.Tipo.REPONER)).is_false()
+	var siguientes := Compradores.de_la_jornada(2)
+	azar.seed = 19
+	var segunda := Apertura.inventario_de_la_jornada(2, siguientes, casilleros, casilleros, azar)
+	azar.seed = 19
+	var control := Apertura.inventario_de_la_jornada(2, siguientes, casilleros, casilleros, azar)
+	assert_array(segunda.faltantes()).is_not_empty()
+	for otro in Catalogo.de_la_jornada(2):
+		assert_int(segunda.unidades(otro, Inventario.Ubicacion.GONDOLA)).is_equal(
+			control.unidades(otro, Inventario.Ubicacion.GONDOLA)
+		)
+		assert_int(segunda.unidades(otro, Inventario.Ubicacion.DEPOSITO)).is_equal(
+			ReglasDelEstante.UNIDADES_POR_CAJA
+		)
+	assert_int(primera.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_zero()
+	assert_bool(Apertura.pide(2, Tarea.Tipo.REPONER)).is_true()

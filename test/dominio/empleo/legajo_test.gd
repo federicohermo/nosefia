@@ -171,14 +171,17 @@ func test_la_octava_impecable_con_deuda_cumple_el_contrato() -> void:  # AC-EMP-
 	assert_int(partida.apercibimientos()).is_equal(3)
 
 
-func test_tres_declaradas_no_admiten_aviso() -> void:  # AC-EMP-072
-	var declaradas := Apertura.cantidad_de_obligatorias(1)
-	assert_int(declaradas).is_equal(3)
-	assert_int(Consecuencias.consecuencia_de(3, declaradas)).is_equal(Consecuencias.Banda.NINGUNA)
-	for cumplidas: int in [2, 1, 0]:
-		assert_int(Consecuencias.consecuencia_de(cumplidas, declaradas)).is_equal(
-			Consecuencias.Banda.GRAVE
+func test_las_jornadas_de_introduccion_no_admiten_aviso() -> void:  # AC-EMP-072
+	for jornada: int in [1, 2]:
+		var declaradas := Apertura.cantidad_de_obligatorias(jornada)
+		assert_int(declaradas).is_equal(2 if jornada == 1 else 3)
+		assert_int(Consecuencias.consecuencia_de(declaradas, declaradas)).is_equal(
+			Consecuencias.Banda.NINGUNA
 		)
+		for cumplidas: int in range(declaradas):
+			assert_int(Consecuencias.consecuencia_de(cumplidas, declaradas)).is_equal(
+				Consecuencias.Banda.GRAVE
+			)
 
 
 func test_cada_falla_de_la_prueba_suma_lo_mismo_sin_mirar_bandas() -> void:  # AC-EMP-078
