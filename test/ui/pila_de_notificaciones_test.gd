@@ -14,7 +14,7 @@ func _pila() -> PilaDeNotificaciones:
 	return pila
 
 
-func test_tareas_terminadas_entra_completo_y_deja_pasarlo_al_clic() -> void:  # AC-NTF-027
+func test_avisos_de_salida_entran_y_dejan_pasar_el_clic() -> void:  # AC-NTF-027, AC-NTF-030
 	var viewport: SubViewport = auto_free(SubViewport.new())
 	viewport.size = Vector2i(1920, 1080)
 	add_child(viewport)
@@ -22,8 +22,15 @@ func test_tareas_terminadas_entra_completo_y_deja_pasarlo_al_clic() -> void:  # 
 	viewport.add_child(pila)
 	pila.set_process(false)
 	pila.avisar_pista()
-	pila.avisar_tareas_terminadas()
+	pila.actualizar_salida(true)
 	assert_str(_textos(pila)[0]).is_equal("YA TERMINASTE TUS TAREAS Y PODÉS IRTE")
+	await _verificar_carteles_de_salida(viewport, pila)
+	pila.actualizar_salida(false)
+	assert_str(_textos(pila)[0]).is_equal("YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR")
+	await _verificar_carteles_de_salida(viewport, pila)
+
+
+func _verificar_carteles_de_salida(viewport: SubViewport, pila: PilaDeNotificaciones) -> void:
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		await get_tree().process_frame
@@ -47,6 +54,7 @@ func test_tareas_terminadas_entra_completo_y_deja_pasarlo_al_clic() -> void:  # 
 		)
 		assert_float(simbolo.get_global_rect().end.x).is_less(texto.get_global_rect().position.x)
 		assert_object(texto.get_theme_font("font")).is_same(pila._marco.get_theme_font("font"))
+		assert_str(simbolo.texture.resource_path).ends_with("/notificacion_cliente.svg")
 		for control: Control in pila.find_children("*", "Control", true, false):
 			assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 
@@ -54,7 +62,7 @@ func test_tareas_terminadas_entra_completo_y_deja_pasarlo_al_clic() -> void:  # 
 func test_tareas_terminadas_conserva_su_resto_en_pausa() -> void:  # AC-NTF-026
 	var pila := _pila()
 	pila.set_process(false)
-	pila.avisar_tareas_terminadas()
+	pila.actualizar_salida(true)
 	pila._process(2.0)
 	get_tree().paused = true
 	await get_tree().process_frame
@@ -64,6 +72,27 @@ func test_tareas_terminadas_conserva_su_resto_en_pausa() -> void:  # AC-NTF-026
 	pila._process(0.9)
 	assert_array(_textos(pila)).has_size(1)
 	pila._process(0.1)
+	assert_array(_textos(pila)).is_empty()
+
+
+func test_retrabar_conserva_el_resto_en_pausa_y_vaciar_la_retira() -> void:  # AC-NTF-031
+	var pila := _pila()
+	pila.set_process(false)
+	pila.actualizar_salida(true)
+	pila.actualizar_salida(false)
+	pila._process(2.0)
+	get_tree().paused = true
+	await get_tree().process_frame
+	assert_bool(pila.can_process()).is_false()
+	assert_array(_textos(pila)).is_equal(["YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR"])
+	get_tree().paused = false
+	pila._process(0.9)
+	assert_array(_textos(pila)).has_size(1)
+	pila._process(0.1)
+	assert_array(_textos(pila)).is_empty()
+	pila.actualizar_salida(true)
+	pila.actualizar_salida(false)
+	pila.vaciar()
 	assert_array(_textos(pila)).is_empty()
 
 
@@ -177,7 +206,7 @@ func test_ningun_control_de_la_pila_intercepta_el_mouse() -> void:  # AC-NTF-010
 		assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 
 
-func test_el_clic_sobre_el_cartel_llega_a_la_computadora() -> void:  # AC-NTF-010
+func test_el_clic_sobre_la_retraba_llega_a_la_computadora() -> void:  # AC-NTF-010, AC-NTF-030
 	var viewport: SubViewport = auto_free(SubViewport.new())
 	viewport.size = Vector2i(1920, 1080)
 	add_child(viewport)
@@ -191,7 +220,8 @@ func test_el_clic_sobre_el_cartel_llega_a_la_computadora() -> void:  # AC-NTF-01
 	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
 	viewport.add_child(pila)
 	pila.set_process(false)
-	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
+	pila.actualizar_salida(true)
+	pila.actualizar_salida(false)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		pantalla.mostrar()

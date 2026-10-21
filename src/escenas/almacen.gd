@@ -143,6 +143,7 @@ func _ready() -> void:
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
+	_reloj.cierre_iniciado.connect(_al_iniciar_el_cierre)
 	_acomodador = AcomodadorDelDeposito.new()
 	_acomodador.reloj = _reloj
 	add_child(_acomodador)
@@ -174,9 +175,7 @@ func _ready() -> void:
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
 	)
 	_reloj.tarea_completada.connect(_revisar_la_salida.unbind(1))
-	_atenciones.compra_realizada.connect(_revisar_la_salida)
-	_atenciones.comprador_vencido.connect(_revisar_la_salida.unbind(1))
-	_computadora.registro_actualizado.connect(_revisar_la_salida)
+	_reloj.tarea_descumplida.connect(_revisar_la_salida.unbind(1))
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
@@ -320,6 +319,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
 	_salida_preparada = false
+	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).vaciar()
 	_jornada_del_celular = jornada
 	_celular.abrir_jornada(jornada)
 	_pantalla_del_celular.mostrar_recordatorio(true)
@@ -429,11 +429,15 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 
 
 func _revisar_la_salida() -> void:
-	if not _puede_salir():
+	if not _salida_preparada:
 		return
-	CierreAnticipado.consolidar(_partida.jornada(), _partida.obligatorias())
-	_computadora.bloquear_registro()
-	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).avisar_tareas_terminadas()
+	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).actualizar_salida(
+		_puede_salir()
+	)
+
+
+func _al_iniciar_el_cierre() -> void:
+	_salida_preparada = false
 
 
 func _puede_salir() -> bool:

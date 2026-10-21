@@ -34,24 +34,6 @@ func _registro(pedidos: Array[Venta] = []) -> RegistroDeVentas:
 	return RegistroDeVentas.new(Catalogo.todos(), _atender_con_ventas(pedidos))
 
 
-func test_bloquear_conserva_unidades_y_total_y_otra_planilla_es_editable() -> void:  # AC-SHF-040
-	var registro := _registro()
-	var producto := _de(Producto.Id.ACTRONCITO)
-	assert_bool(registro.editable()).is_true()
-	registro.sumar(producto)
-	registro.bloquear()
-	registro.bloquear()
-	assert_bool(registro.editable()).is_false()
-	assert_bool(registro.sumar(producto)).is_false()
-	assert_bool(registro.restar(producto)).is_false()
-	assert_int(registro.unidades_de(producto)).is_equal(1)
-	assert_int(registro.total()).is_equal(producto.precio)
-	var nuevo := _registro()
-	assert_bool(nuevo.editable()).is_true()
-	assert_bool(nuevo.sumar(producto)).is_true()
-	assert_bool(nuevo.restar(producto)).is_true()
-
-
 func test_el_cero_sin_ventas_se_evalua_al_cerrar_y_no_al_arrancar() -> void:  # AC-STK-052
 	var registro := _registro()
 	assert_bool(registro.completada()).is_false()

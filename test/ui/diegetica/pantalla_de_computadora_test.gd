@@ -3,41 +3,6 @@ extends GdUnitTestSuite
 const ESCENA := preload("res://src/ui/diegetica/pantalla_de_computadora.tscn")
 
 
-func test_el_bloqueo_deshabilita_ambos_botones_y_persiste_al_reabrir() -> void:  # AC-SHF-040
-	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
-	add_child(pantalla)
-	var registro := RegistroDeVentas.new(
-		Catalogo.todos(), TareaDeAtender.new([], Inventario.new([]))
-	)
-	var app := pantalla.caja()
-	app.mostrar(registro)
-	pantalla.mostrar()
-	var fila := (app.get("_filas") as Container).get_child(0).get_child(0)
-	var sumar: Button = fila.get_child(5)
-	var restar: Button = fila.get_child(3)
-	assert_bool(sumar.disabled).is_false()
-	assert_bool(restar.disabled).is_false()
-	registro.bloquear()
-	app.mostrar(registro)
-	assert_bool(sumar.disabled).is_true()
-	assert_bool(restar.disabled).is_true()
-	pantalla.ocultar()
-	pantalla.mostrar()
-	app.mostrar(registro)
-	assert_bool(sumar.disabled).is_true()
-	assert_bool(restar.disabled).is_true()
-	var scroll: ScrollContainer = app.get("_scroll")
-	await get_tree().process_frame
-	scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
-	assert_int(scroll.scroll_vertical).is_greater(0)
-	var nuevo := RegistroDeVentas.new(Catalogo.todos(), TareaDeAtender.new([], Inventario.new([])))
-	app.mostrar(nuevo)
-	for panel in (app.get("_filas") as Container).get_children():
-		assert_bool((panel.get_child(0).get_child(3) as Button).disabled).is_false()
-		assert_bool((panel.get_child(0).get_child(5) as Button).disabled).is_false()
-	await get_tree().process_frame
-
-
 func test_abrir_la_terminal_muestra_el_registro_y_cerrar_la_oculta() -> void:
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)

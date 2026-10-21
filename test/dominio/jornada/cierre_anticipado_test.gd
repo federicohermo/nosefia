@@ -25,17 +25,12 @@ func test_cada_obligatoria_es_necesaria_y_solo_salen_las_noches_de_prueba() -> v
 	assert_bool(CierreAnticipado.corresponde(0, _cumplidas_salvo(0))).is_false()
 
 
-func test_consolidar_solo_si_todas_estan_hechas_y_la_jornada_lo_permite() -> void:  # AC-SHF-037
-	for jornada: int in [1, 2, 3, 4]:
-		var todas := _cumplidas_salvo(jornada)
-		CierreAnticipado.consolidar(jornada, todas)
-		for tarea in todas:
-			assert_bool(tarea.descompletar()).is_equal(jornada == 4)
-	var pendiente := Tarea.new(Tarea.Tipo.REGISTRAR)
-	var incompletas := _cumplidas_salvo(1, pendiente)
-	CierreAnticipado.consolidar(1, incompletas)
-	for tarea in incompletas:
-		if tarea.tipo() == Tarea.Tipo.REGISTRAR:
-			assert_bool(tarea.completada()).is_false()
-		else:
+func test_perder_y_recuperar_cualquier_tarea_cambia_el_permiso() -> void:  # AC-SHF-041
+	for jornada: int in [1, 2, 3]:
+		var tareas := _cumplidas_salvo(jornada)
+		for tarea in tareas:
+			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_true()
 			assert_bool(tarea.descompletar()).is_true()
+			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_false()
+			assert_bool(tarea.completar()).is_true()
+			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_true()

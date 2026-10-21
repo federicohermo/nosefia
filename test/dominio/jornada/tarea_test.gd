@@ -38,18 +38,3 @@ func test_descompletar_una_tarea_pendiente_no_cambia_nada() -> void:
 	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
 	assert_bool(registrar.descompletar()).is_false()
 	assert_bool(registrar.completada()).is_false()
-
-
-func test_consolidar_no_completa_y_lo_cumplido_ya_no_se_desmarca() -> void:  # AC-SHF-037
-	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
-	registrar.consolidar()
-	assert_bool(registrar.completada()).is_false()
-	assert_bool(registrar.completar()).is_true()
-	registrar.consolidar()
-	registrar.consolidar()
-	assert_bool(registrar.descompletar()).is_false()
-	assert_bool(registrar.completada()).is_true()
-	assert_bool(registrar.completar()).is_false()
-	var nueva := Tarea.new(Tarea.Tipo.REGISTRAR)
-	nueva.completar()
-	assert_bool(nueva.descompletar()).is_true()

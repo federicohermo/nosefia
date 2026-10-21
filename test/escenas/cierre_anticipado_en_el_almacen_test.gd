@@ -5,6 +5,7 @@ const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 const ENTRADA := "Estructura/puertaentrada/CuerpoDeLaHoja"
 const AVISO := "YA TERMINASTE TUS TAREAS Y PODÉS IRTE"
+const RETRABA := "YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR"
 
 var _ruta_guardado: String
 
@@ -21,7 +22,7 @@ func after_test() -> void:
 	Guardado.ruta_por_defecto = _ruta_guardado
 
 
-func test_agarrar_de_la_gondola_cambia_el_estante_sin_descumplir_la_tarea() -> void:  # AC-SHF-037
+func test_retirar_y_reponer_retraba_y_rehabilita_la_entrada() -> void:  # AC-SHF-041
 	var almacen := await _abrir(1)
 	var repositor: Repositor = almacen.get("_repositor")
 	var puesto: Node3D = almacen.get("_reposicion_manual")
@@ -39,25 +40,39 @@ func test_agarrar_de_la_gondola_cambia_el_estante_sin_descumplir_la_tarea() -> v
 	assert_int(repositor.estante().unidades_en_gondola(producto)).is_equal(antes - 1)
 	assert_bool(repositor.estante().completada()).is_false()
 	assert_object(repositor.agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
+	assert_bool(repositor.reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_false()
+	assert_bool(almacen.call("_puede_salir")).is_false()
+	assert_array(_textos(almacen)).contains(RETRABA).not_contains(AVISO)
+	puesto.call("pedir_colocar", producto.id, ocupados[0])
 	assert_bool(repositor.reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_true()
 	assert_bool(almacen.call("_puede_salir")).is_true()
+	assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
 	await get_tree().process_frame
 
 
-func test_no_salir_conserva_el_ritmo_y_cierra_con_las_tareas_consolidadas() -> void:  # AC-SHF-038
-	var almacen := await _abrir(3)
-	_cumplir(almacen)
-	var reloj: RelojDelTurno = almacen.get("_reloj")
-	var cierres: Array[int] = []
-	reloj.turno_cerrado.connect(cierres.append)
-	RelojDePrueba.avanzar_turno(reloj, _restante(almacen) - 1.0)
-	assert_array(cierres).is_empty()
-	assert_float(_restante(almacen)).is_equal(1.0)
-	RelojDePrueba.avanzar_turno(reloj, 1.0)
-	assert_array(cierres).is_equal([Apertura.cantidad_de_obligatorias(3)])
-	assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
-	reloj.avanzar(10.0)
-	assert_array(cierres).has_size(1)
+func test_no_salir_conserva_el_ritmo_y_cierra_por_el_recorrido_natural() -> void:  # AC-SHF-038
+	for con_pendiente: bool in [false, true]:
+		var almacen := await _abrir(3)
+		_cumplir(almacen)
+		var reloj: RelojDelTurno = almacen.get("_reloj")
+		if con_pendiente:
+			assert_bool(reloj.descumplir(reloj.obligatoria(Tarea.Tipo.REPONER))).is_true()
+		_pila(almacen)._process(3.0)
+		assert_array(_textos(almacen)).is_empty()
+		var cierres: Array[int] = []
+		reloj.turno_cerrado.connect(cierres.append)
+		RelojDePrueba.avanzar_turno(reloj, _restante(almacen) - 1.0)
+		assert_array(cierres).is_empty()
+		assert_float(_restante(almacen)).is_equal(1.0)
+		RelojDePrueba.avanzar_turno(reloj, 1.0)
+		var esperadas := Apertura.cantidad_de_obligatorias(3) - int(con_pendiente)
+		assert_array(cierres).is_equal([esperadas])
+		assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
+		assert_array(_textos(almacen)).is_empty()
+		reloj.avanzar(10.0)
+		almacen.call("_revisar_la_salida")
+		assert_array(cierres).has_size(1)
+		assert_array(_textos(almacen)).is_empty()
 
 
 func _abrir(jornada: int, con_compradores: bool = false) -> Node3D:
@@ -114,7 +129,7 @@ func _referencia(almacen: Node3D) -> String:
 	return (almacen.get("_hud").get_node("Controles") as Label).text
 
 
-func test_la_prueba_avisa_y_consolida_sin_acelerar() -> void:  # AC-SHF-037, AC-NTF-028
+func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:  # AC-SHF-041, AC-NTF-028
 	for jornada: int in [1, 2, 3, 4]:
 		var almacen := await _abrir(jornada)
 		var antes := _restante(almacen)
@@ -123,29 +138,24 @@ func test_la_prueba_avisa_y_consolida_sin_acelerar() -> void:  # AC-SHF-037, AC-
 		assert_array(_textos(almacen)).not_contains(AVISO)
 		_cumplir(almacen)
 		assert_array(_textos(almacen)).is_equal([AVISO] if jornada < 4 else [])
-		(
-			assert_bool(
-				(almacen.get("_computadora") as ComputadoraDeEscritorio).registro().editable()
-			)
-			. is_equal(jornada == 4)
-		)
 		var pantalla: PantallaDeComputadora = almacen.get_node("Interfaz/PantallaDeComputadora")
 		var fila: Node = pantalla.caja().get("_filas").get_child(0).get_child(0)
-		assert_bool((fila.get_child(3) as Button).disabled).is_equal(jornada < 4)
-		assert_bool((fila.get_child(5) as Button).disabled).is_equal(jornada < 4)
+		assert_bool((fila.get_child(3) as Button).disabled).is_false()
+		assert_bool((fila.get_child(5) as Button).disabled).is_false()
 		computadora.pedir_cerrar()
 		assert_float(_restante(almacen)).is_equal(antes)
 		var reloj: RelojDelTurno = almacen.get("_reloj")
-		var partida: Partida = almacen.get("_partida")
-		for tarea in partida.obligatorias():
-			assert_bool(reloj.descumplir(tarea)).is_equal(jornada == 4)
+		var tarea := reloj.obligatoria(Tarea.Tipo.REPONER)
+		assert_bool(reloj.descumplir(tarea)).is_true()
+		assert_bool(almacen.call("_puede_salir")).is_false()
+		assert_array(_textos(almacen)).is_equal([RETRABA] if jornada < 4 else [])
+		assert_bool(reloj.completar(tarea)).is_true()
+		assert_bool(almacen.call("_puede_salir")).is_equal(jornada < 4)
+		assert_array(_textos(almacen)).is_empty()
 		reloj.avanzar(1.0)
 		assert_float(antes - _restante(almacen)).is_equal(Ritmo.de_la_jornada(jornada))
-		_pila(almacen)._process(3.0)
-		assert_array(_textos(almacen)).not_contains(AVISO)
 		almacen.call("_revisar_la_salida")
-		assert_array(_textos(almacen)).not_contains(AVISO)
-		assert_bool(almacen.call("_puede_salir")).is_equal(jornada < 4)
+		assert_array(_textos(almacen)).is_empty()
 
 
 func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # AC-SHF-036
@@ -193,6 +203,71 @@ func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-
 		almacen.get_node(ENTRADA).call("accionar")
 		assert_array(cierres).has_size(1)
 		assert_array(_textos(almacen)).is_empty()
+
+
+func test_los_botones_retraban_y_recuperan_cada_ciclo() -> void:  # AC-SHF-042, AC-NTF-029
+	var almacen := await _abrir(1, true)
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	for tarea in (almacen.get("_partida") as Partida).obligatorias():
+		if tarea.tipo() not in [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR]:
+			reloj.completar(tarea)
+	await _vender(almacen, 1)
+	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
+	computadora.pedir_abrir()
+	computadora.pedir_cerrar()
+	computadora.pedir_abrir()
+	var pantalla: PantallaDeComputadora = almacen.get_node("Interfaz/PantallaDeComputadora")
+	var fila: Node = pantalla.caja().get("_filas").get_child(0).get_child(0)
+	var sumar: Button = fila.get_child(5)
+	var restar: Button = fila.get_child(3)
+	var producto := computadora.registro().productos()[0]
+	var correctas := computadora.registro().unidades_de(producto)
+	var antes := _restante(almacen)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_bool(almacen.call("_puede_salir")).is_true()
+	assert_array(_textos(almacen)).contains(AVISO)
+	for _ciclo in 2:
+		assert_bool(sumar.disabled).is_false()
+		assert_bool(restar.disabled).is_false()
+		sumar.pressed.emit()
+		assert_int(computadora.registro().unidades_de(producto)).is_equal(correctas + 1)
+		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+		assert_bool(almacen.call("_puede_salir")).is_false()
+		almacen.get_node(ENTRADA).call("accionar")
+		assert_bool(reloj.corriendo()).is_true()
+		assert_str(_referencia(almacen)).not_contains("[Click Izq]")
+		assert_array(_textos(almacen)).contains(RETRABA).not_contains(AVISO)
+		_pila(almacen)._process(2.9)
+		almacen.call("_revisar_la_salida")
+		_pila(almacen)._process(0.1)
+		assert_array(_textos(almacen)).not_contains(RETRABA)
+		restar.pressed.emit()
+		assert_int(computadora.registro().unidades_de(producto)).is_equal(correctas)
+		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+		assert_bool(almacen.call("_puede_salir")).is_true()
+		assert_str(_referencia(almacen)).contains("[Click Izq] Interactuar")
+		assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
+	assert_float(_restante(almacen)).is_equal(antes)
+
+
+func test_completar_solo_al_cerrar_no_avisa_que_se_puede_salir() -> void:  # AC-NTF-028, AC-NTF-031
+	var almacen := await _abrir(1)
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	for tarea in (almacen.get("_partida") as Partida).obligatorias():
+		if tarea.tipo() != Tarea.Tipo.REGISTRAR:
+			reloj.completar(tarea)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	var al_completar: Array[bool] = []
+	reloj.tarea_completada.connect(
+		func(_cuantas: int) -> void:
+			al_completar.append(true)
+			assert_array(_textos(almacen)).not_contains(AVISO).not_contains(RETRABA)
+	)
+	RelojDePrueba.avanzar_turno(reloj, _restante(almacen))
+	assert_array(al_completar).is_equal([true])
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_array(_textos(almacen)).is_empty()
+	assert_bool(almacen.call("_puede_salir")).is_false()
 
 
 func _vender(almacen: Node3D, jornada: int) -> void:
@@ -281,7 +356,7 @@ func test_la_salida_respeta_mano_y_suspension() -> void:  # AC-PLY-104, AC-PLY-1
 		assert_bool(almacen.get_node(ENTRADA).call("puerta").abierta()).is_false()
 
 
-func test_otra_apertura_reinicia_la_salida() -> void:  # AC-SHF-039, AC-SHF-040
+func test_otra_apertura_reinicia_la_salida() -> void:  # AC-SHF-039
 	var almacen := await _abrir(1)
 	_cumplir(almacen)
 	assert_bool(almacen.call("_puede_salir")).is_true()
@@ -291,13 +366,11 @@ func test_otra_apertura_reinicia_la_salida() -> void:  # AC-SHF-039, AC-SHF-040
 	assert_bool(almacen.call("_puede_salir")).is_false()
 	assert_array(_textos(almacen)).is_empty()
 	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
-	assert_bool(computadora.registro().editable()).is_true()
+	for producto in computadora.registro().productos():
+		assert_int(computadora.registro().unidades_de(producto)).is_zero()
+	assert_bool(computadora.registro().sumar(Catalogo.todos()[0])).is_true()
 	var registrar := (almacen.get("_reloj") as RelojDelTurno).obligatoria(Tarea.Tipo.REGISTRAR)
 	assert_bool(registrar.completar()).is_true()
 	assert_bool(registrar.descompletar()).is_true()
 	var retomado := await _abrir(1)
 	assert_bool(retomado.call("_puede_salir")).is_false()
-	(
-		assert_bool((retomado.get("_computadora") as ComputadoraDeEscritorio).registro().editable())
-		. is_true()
-	)

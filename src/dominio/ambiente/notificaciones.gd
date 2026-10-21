@@ -1,7 +1,16 @@
 class_name Notificaciones
 extends RefCounted
 
-enum Tipo { CLIENTE, LECTURA_FALLIDA, CLIENTE_CANSADO, CIERRE_PROXIMO, PISTA, TAREAS_TERMINADAS }
+enum Tipo {
+	CLIENTE,
+	LECTURA_FALLIDA,
+	CLIENTE_CANSADO,
+	CIERRE_PROXIMO,
+	PISTA,
+	TAREAS_TERMINADAS,
+	SALIDA_RETRABADA,
+}
+enum Salida { SIN_AVISO, HABILITADA, RETRABADA }
 
 const DURACION := 3.0
 const HORA_DEL_AVISO := 7
@@ -20,7 +29,7 @@ var _orden: Array[Tipo] = []
 var _transcurrido: Dictionary[Tipo, float] = {}
 var _esperando: Comprador = null
 var _cierre_avisado := false
-var _tareas_avisadas := false
+var _salida := Salida.SIN_AVISO
 
 
 func actualizar_tiempo(restante: float) -> void:
@@ -63,11 +72,16 @@ func pista_anotada() -> void:
 	_avisar(Tipo.PISTA)
 
 
-func tareas_terminadas() -> void:
-	if _tareas_avisadas:
-		return
-	_tareas_avisadas = true
-	_avisar(Tipo.TAREAS_TERMINADAS)
+func actualizar_salida(disponible: bool) -> void:
+	if disponible:
+		if _salida == Salida.SIN_AVISO:
+			_avisar(Tipo.TAREAS_TERMINADAS)
+		_retirar(Tipo.SALIDA_RETRABADA)
+		_salida = Salida.HABILITADA
+	elif _salida == Salida.HABILITADA:
+		_retirar(Tipo.TAREAS_TERMINADAS)
+		_avisar(Tipo.SALIDA_RETRABADA)
+		_salida = Salida.RETRABADA
 
 
 func avanzar(segundos: float) -> void:
@@ -93,7 +107,12 @@ func vaciar() -> void:
 	_salidos.clear()
 	_esperando = null
 	_cierre_avisado = false
-	_tareas_avisadas = false
+	_salida = Salida.SIN_AVISO
+
+
+func _retirar(tipo: Tipo) -> void:
+	_orden.erase(tipo)
+	_transcurrido.erase(tipo)
 
 
 func _avisar(tipo: Tipo) -> void:

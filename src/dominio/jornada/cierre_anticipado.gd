@@ -15,10 +15,3 @@ static func corresponde(jornada: int, obligatorias: Array[Tarea]) -> bool:
 		if not tarea.completada():
 			return false
 	return true
-
-
-static func consolidar(jornada: int, obligatorias: Array[Tarea]) -> void:
-	if not corresponde(jornada, obligatorias):
-		return
-	for tarea in obligatorias:
-		tarea.consolidar()

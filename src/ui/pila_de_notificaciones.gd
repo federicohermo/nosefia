@@ -8,6 +8,7 @@ const TEXTOS := {
 	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA UNA HORA DE JORNADA",
 	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
 	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA TERMINASTE TUS TAREAS Y PODÉS IRTE",
+	Notificaciones.Tipo.SALIDA_RETRABADA: "YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR",
 }
 const SIMBOLO_DEL_CLIENTE := preload("res://assets/ui/manada/notificacion_cliente.svg")
 const SIMBOLOS := {
@@ -17,6 +18,7 @@ const SIMBOLOS := {
 	Notificaciones.Tipo.CIERRE_PROXIMO: preload("res://assets/ui/manada/notificacion_cierre.svg"),
 	Notificaciones.Tipo.PISTA: preload("res://assets/ui/manada/notificacion_pista.svg"),
 	Notificaciones.Tipo.TAREAS_TERMINADAS: SIMBOLO_DEL_CLIENTE,
+	Notificaciones.Tipo.SALIDA_RETRABADA: SIMBOLO_DEL_CLIENTE,
 }
 const ESCALA_DEL_CARTEL := 0.4
 
@@ -63,8 +65,8 @@ func avisar_pista() -> void:
 	_pintar()
 
 
-func avisar_tareas_terminadas() -> void:
-	_estado.tareas_terminadas()
+func actualizar_salida(disponible: bool) -> void:
+	_estado.actualizar_salida(disponible)
 	_pintar()
 
 
