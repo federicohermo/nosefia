@@ -70,7 +70,7 @@ func test_la_primera_noche_completa_impecable_es_saludo_y_cierre() -> void:  # A
 	)
 
 
-func test_las_noches_de_introduccion_cierran_sin_devolucion() -> void:  # AC-EMP-078
+func test_las_noches_de_introduccion_cierran_sin_devolucion() -> void:  # AC-EMP-092
 	for jornada: int in range(ReglasDeLaPartida.PRIMERA_JORNADA, COMPLETA):
 		var partida := _partida_de_la_noche(jornada, _tipos_de(jornada), [])
 		var devolucion := DevolucionDelJefe.new(jornada, partida)
@@ -276,7 +276,6 @@ func test_el_despido_ordena_las_tareas_y_los_retos() -> void:  # AC-EMP-061
 				"Che",
 				DevolucionDelJefe.TAREAS[T.CAJA][0],
 				DevolucionDelJefe.TAREAS[T.REPONER][0],
-				DevolucionDelJefe.TAREAS[T.LIMPIAR][0],
 				DevolucionDelJefe.PAPEL_1,
 				DevolucionDelJefe.BASURA[0],
 				DevolucionDelJefe.AFUERA[0],

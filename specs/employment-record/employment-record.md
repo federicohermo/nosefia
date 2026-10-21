@@ -873,7 +873,7 @@ Excelente trabajo.». DADO P = 0 en J = 8 ENTONCES es «La verdad es que estoy i
 hizo falta corregirte ni una sola cosa en las cinco noches. Un trabajo excepcional. Va a ser
 un placer tenerte trabajando acá.».
 
-### AC-EMP-078 — Las jornadas de introducción cierran sin devolución *(verifica BR-EMP-009)*
+### AC-EMP-092 — Las jornadas de introducción cierran sin devolución *(verifica BR-EMP-009)*
 
 DADO la jornada 1, 2 o 3 que cierra CUANDO se arma la devolución ENTONCES no tiene ningún
 mensaje, la partida no guarda ninguno de Enrique para esa noche, y la opción ofrecida sigue
