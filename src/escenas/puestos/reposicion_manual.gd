@@ -172,9 +172,14 @@ func _rehacer_disposicion() -> void:
 	_limpiar_unidades()
 	_al_perder_el_foco()
 	_cerca_de_la_mira.clear()
-	for nodo in _generados:
-		remove_child(nodo)
-		nodo.queue_free()
+	if not _generados.is_empty():
+		var retirados := Node3D.new()
+		retirados.visible = false
+		retirados.process_mode = Node.PROCESS_MODE_DISABLED
+		add_child(retirados)
+		for nodo in _generados:
+			nodo.reparent(retirados)
+		retirados.queue_free()
 	_generados.clear()
 	_bloques.clear()
 	_fijas.clear()

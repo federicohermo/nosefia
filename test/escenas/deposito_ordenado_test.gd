@@ -344,6 +344,10 @@ func test_el_rescate_usa_el_origen_de_la_noche() -> void:  # AC-STK-080
 				):
 					id = caja.producto
 					altura = caja.global_position.y
+		var caja: Caja = local.get("_cajas_de_productos")[id]
+		assert_bool(caja.global_transform.is_equal_approx(caja.pose_de_estanteria())).is_equal(
+			en_estanteria
+		)
 		await _comprobar_rescate(local, id, en_estanteria)
 		local.queue_free()
 		await get_tree().process_frame
@@ -353,7 +357,6 @@ func test_el_rescate_usa_el_origen_de_la_noche() -> void:  # AC-STK-080
 func _comprobar_rescate(local: Node3D, id: Producto.Id, en_estanteria: bool) -> void:
 	var caja: Caja = local.get("_cajas_de_productos")[id]
 	var origen := caja.global_transform
-	assert_bool(origen.is_equal_approx(caja.pose_de_estanteria())).is_equal(en_estanteria)
 	caja.global_position += Vector3.UP * 10.0
 	caja.volver_a_su_lugar()
 	(

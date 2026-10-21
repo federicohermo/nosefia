@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := "res://src/escenas/almacen.tscn"
 const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
+const Zona := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 
 
 func _abrir(jornada: int) -> Node3D:
@@ -71,6 +72,51 @@ func test_cambiar_de_etapa_y_repetir_apertura_renueva_cupos_sin_duplicados() -> 
 		local.call("_al_abrir_la_jornada", jornada)
 		await get_tree().process_frame
 		await _comprobar_un_solo_gesto(local)
+
+
+func test_cerrar_tras_cambiar_de_etapa_libera_los_casilleros() -> void:  # AC-STK-098
+	for jornada: int in [1, 4]:
+		var local := _abrir(jornada)
+		var puesto: Node3D = local.get("_reposicion_manual")
+		var anterior: Zona = puesto.call("casillero", Producto.Id.ACTRONCITO, 0)
+		assert_object(anterior).is_not_null()
+		var instancias: Array[int] = [anterior.get_instance_id()]
+		for grupo in puesto.find_children("ProductosDe*", "MultiMeshInstance3D", false, false):
+			instancias.append(grupo.get_instance_id())
+		await get_tree().physics_frame
+		var forma: CollisionShape3D = anterior.get_child(0)
+		anterior.collision_layer = Zona.CAPA_DE_LA_MIRA
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.collision_mask = Zona.CAPA_DE_LA_MIRA
+		var espacio := local.get_world_3d().direct_space_state
+		(
+			assert_bool(
+				espacio.intersect_shape(consulta, 32).any(
+					func(golpe: Dictionary) -> bool: return golpe.collider == anterior
+				)
+			)
+			. is_true()
+		)
+		local.call("_al_abrir_la_jornada", 4 if jornada == 1 else 1)
+		(
+			assert_int(
+				puesto.find_children("ProductosDe*", "MultiMeshInstance3D", false, false).size()
+			)
+			. is_equal(Catalogo.todos().size())
+		)
+		(
+			assert_bool(
+				espacio.intersect_shape(consulta, 32).any(
+					func(golpe: Dictionary) -> bool: return golpe.collider == anterior
+				)
+			)
+			. is_false()
+		)
+		local.free()
+		for instancia in instancias:
+			assert_bool(is_instance_id_valid(instancia)).is_false()
 
 
 func _comprobar_un_solo_gesto(local: Node3D) -> void:
