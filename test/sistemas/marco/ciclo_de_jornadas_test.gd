@@ -209,7 +209,9 @@ func test_el_cierre_conserva_los_clientes_mal_atendidos_de_la_ventanilla() -> vo
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var ciclo: CicloDeJornadas = auto_free(CicloDeJornadas.new())
 	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
-	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	var tarea := TareaDeAtender.new(
+		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	)
 	ciclo.arrancar(partida, reloj, tarea.mal_atendidos)
 	assert_int(tarea.mal_atendidos()).is_zero()
 	tarea.avanzar(compradores[1].horario.y + 1.0)

@@ -540,6 +540,7 @@ func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
 		assert_bool(estado.abierta()).is_false()
 		assert_float(estado.angulo()).is_equal(0.0)
 		assert_bool(puerta.get_parent().transform.is_equal_approx(cerradas[indice])).is_true()
+	await get_tree().process_frame
 	return antes
 
 
@@ -589,7 +590,7 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  
 	assert_object(agarre.manos().sostenido()).is_null()
 	puesto.call("usar_la_caja", cajas[Producto.Id.MALBARDO])
 	assert_object(agarre.manos().sostenido() as UnidadDeProducto).is_not_null()
-	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	assert_object(agarre.manos().sostenido()).is_null()
 	var estante := repositor.estante()
 	for producto in Catalogo.todos():

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444, hoy jornada 5; ocho jornadas de #526
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444, hoy jornada 5; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -64,7 +64,7 @@ una tarea.
 
 ### BR-STK-004 — La noche arranca con cada caja llena y la góndola completa salvo lo que falta
 
-CUANDO se abre una jornada, el sistema DEBE poner **8 unidades de cada producto en el depósito**,
+CUANDO se abre una jornada, el sistema DEBE poner **8 unidades de cada producto presente esa jornada en el depósito** (BR-STK-046),
 una caja llena, y DEBE dejar **completa la fila de adelante de cada producto exhibido, salvo los faltantes
 de esa jornada**. La mercadería expuesta se cuenta: son las unidades en la góndola. Ningún
 faltante DEBE pasar de las unidades de una caja ni de los casilleros de su fila de adelante: con
@@ -194,6 +194,8 @@ de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la alt
 agarra y se repone. Los demás estantes —el de arriba y el zócalo, tanto de una cara de lado
 como de una cabecera— DEBEN llevar sólo tandas fijas, que repiten un producto del local.
 En una heladera, cualquier bandeja puede llevar la tanda reponible o una tanda fija.
+En las jornadas de prueba, BR-STK-047 permite repetir una tanda fija en el otro nivel de
+reposición, conservando una sola principal por producto y todos los frontales interactuables.
 
 ### BR-STK-025 — Las filas corresponden a cada tanda aprobada
 
@@ -254,7 +256,7 @@ de la misma caja: con más, vender y reponer no se pueden cumplir en la misma no
 El sistema DEBE contar el contenido de la caja de cada producto como su depósito menos las
 unidades que salieron de ella y todavía no se colocaron. La caja y el depósito NO DEBEN contar
 distinto: una venta le resta una unidad a la caja, y colocar una unidad no le cambia nada, porque
-ya había salido. CUANDO se abre una jornada, cada caja DEBE arrancar llena, con las unidades de
+ya había salido. CUANDO se abre una jornada, cada caja presente DEBE arrancar llena, con las unidades de
 una caja (BR-STK-004), sin importar cómo terminó la anterior.
 
 ### BR-STK-029 — Sacar es secundario y devolver es primario
@@ -362,15 +364,18 @@ Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir 
 
 ### BR-STK-038 — Las cajas empiezan según la particular de la noche
 
-CUANDO se abre una jornada que declara ordenar las cajas, el sistema DEBE dejar todas las cajas
-del depósito apiladas en el fondo, frente al portón, sin ninguna sobre las estanterías. Las demás
-jornadas DEBEN empezar con cada caja en su lugar de las tres estanterías. La pila DEBE conservar
+CUANDO se abre la primera jornada completa que declara ordenar las cajas, el sistema DEBE
+apilar exclusivamente las cajas de los productos ausentes en las jornadas de prueba
+(BR-STK-046), en el fondo frente al portón. Las cajas de los productos ya presentes DEBEN
+empezar en sus lugares de las tres estanterías. Las demás jornadas DEBEN empezar con cada
+caja presente en su lugar de estantería. La pila DEBE conservar
 las cajas dentro del depósito, sin superposición de cuerpos y con cada caja enfocable desde un
 punto libre del piso dentro del alcance vigente. Sin intervención del jugador, ninguna caja
 DEBE desplazarse más de 1 cm en los primeros 120 cuadros de física.
 
-El lugar de origen de cada caja DEBE ser el de esa apertura: rescatarla en la jornada 4
-DEBE devolverla a la pila, sin ordenarla automáticamente. La ubicación «frente al portón» es
+El lugar de origen de cada caja DEBE ser el de esa apertura: rescatar una de las cajas recién llegadas en la jornada 4
+DEBE devolverla a la pila, sin ordenarla automáticamente. Una caja que empezó en estantería
+DEBE volver a su lugar de estantería. La ubicación «frente al portón» es
 territorio de juicio humano; las restantes condiciones se verifican en AC-STK-077 y AC-STK-080.
 
 ### BR-STK-039 — Ordenar sigue el apoyo de todas las cajas
@@ -387,7 +392,8 @@ DEBE cambiar la cuenta que se cerró. Una jornada que no declara ordenar NO DEBE
 
 ### BR-STK-043 — La exhibición se agrupa por sector
 
-El sistema DEBE organizar la exhibición según estos sectores, conservando las identidades
+DESDE la primera jornada completa, el sistema DEBE organizar la exhibición según estos
+sectores, conservando las identidades
 del catálogo, precios y gestos. La tabla cruza el nombre del catálogo vigente con el diseño;
 no implica renombrar productos.
 
@@ -424,7 +430,8 @@ El reparto DEBE conservar alturas —salvo la bandeja del medio de cada cabecera
 entren dos filas en la de abajo—, tamaño de muebles, niveles reponibles a altura de la mano,
 separación de filas, orientaciones de envases y alcance vigentes (BR-STK-024, BR-STK-025,
 BR-STK-035). Los cupos DEBEN salir de la geometría de ese reparto, sin copiar los anteriores.
-El mismo reparto DEBE conservarse al abrir otra jornada y en escritorio o web.
+Este reparto completo DEBE conservarse al abrir otra jornada completa y en escritorio o web.
+Las jornadas de prueba DEBEN usar el reparto de BR-STK-047.
 
 La medición del modelo del 2026-10-15 confirma cuatro chapas físicas y cuatro niveles con
 exhibición en cada cabecera: niveles 0 y 3 fijos, niveles 1 y 2 reponibles. El antiguo detector
@@ -433,7 +440,7 @@ clasificación conserva ese patrón original, sin agregar niveles ni modificar a
 
 ### BR-STK-044 — Duronga conserva su exhibición provisional
 
-El sistema DEBE exhibir la tanda principal de Duronga en la mitad inferior derecha de la
+DESDE la primera jornada completa, el sistema DEBE exhibir la tanda principal de Duronga en la mitad inferior derecha de la
 estantería de no comestibles, junto a la principal de Poético en la mitad inferior izquierda;
 las principales de Actroncito y Durextra ocupan la mitad superior. Esa ubicación provisional
 DEBE conservarse hasta reemplazar el producto
@@ -494,6 +501,47 @@ bidón azul de limpieza; entregar el bidón NO DEBE satisfacerla. Usar previamen
 teñir el balde durante jornada 5 NO DEBE impedir su venta ni descontarla dos veces. Atención y
 reposición DEBEN consumir los mismos pedidos fijos de la única lista construida al abrir jornada 5.
 
+### BR-STK-046 — El catálogo presente depende de la etapa
+
+HASTA la jornada anterior a la primera completa, el sistema DEBE tener únicamente los
+dieciséis productos del mapa de prueba. Sus identidades son Actroncito, Durextra, Arvecor,
+Marolini, Zucarachas, Malbardo, Progres, Jorgillo, Pepito, Pura-Cola, Don Saturados, Petisas,
+Mayonchis, Poético, Terminator y Fernet God, con sus nombres de catálogo vigentes.
+
+Los otros productos NO DEBEN tener unidades en góndola o depósito, cajas visibles, cuerpos
+físicos ni objetivos de interacción. Los faltantes y pedidos de compradores DEBEN limitarse
+a productos presentes. Los cupos DEBEN medirse en el reparto de esa etapa.
+
+DESDE la primera jornada completa, el sistema DEBE recuperar los treinta y dos productos
+y su reparto completo, también al retomar desde el menú. Cambiar de etapa dentro del mismo
+local NO DEBE conservar cupos, dibujos, objetivos ni unidades sueltas de la etapa anterior.
+
+### BR-STK-047 — Las jornadas de prueba ocupan los cuatro niveles
+
+EN las jornadas de prueba, el sistema DEBE ocupar los cuatro niveles de cada cara con
+los mismos productos del mapa de prueba. Cada lado largo DEBE conservar dos mitades
+longitudinales, repetidas en cada nivel, sin estantes vacíos:
+
+| Destino del mapa de prueba | Productos |
+|---|---|
+| Lado de almacén de la primera isla | Arvecor y Marolini |
+| Lado opuesto de esa isla | Terminator y Zucarachas |
+| Cabecera de bebidas de esa isla | Fernet God |
+| Cabecera opuesta de esa isla | Malbardo |
+| Lado de dulces de la segunda isla | Pepito y Petisas |
+| Lado de salados de la segunda isla | Progres y Don Saturados |
+| Cabecera que conserva Jorgillo en el mapa completo | Jorgillo |
+| Cabecera opuesta de la segunda isla | Poético |
+| Estantería de no comestibles | Actroncito y Durextra |
+| Primera heladera funcional | Pura-Cola |
+| Segunda heladera funcional | Mayonchis |
+
+Cada producto DEBE conservar una sola tanda principal a altura de reposición. Las
+repeticiones de los demás niveles, incluido el otro nivel central, DEBEN ser tandas fijas
+con frontales que se agarran y reponen. Las filas posteriores, orientaciones, apoyos,
+separación de unidades y tamaño de muebles DEBEN conservar las reglas vigentes. El cambio
+a la etapa completa DEBE restituir los sectores de BR-STK-043 y BR-STK-044.
+
 ## Criterios de aceptación
 
 ### AC-STK-001 — La identidad manda *(verifica BR-STK-001)*
@@ -514,7 +562,7 @@ DADO 5 unidades en depósito CUANDO se consulta la góndola ENTONCES hay 0.
 
 DADO un producto de 8 casilleros CUANDO se abre una jornada que le hace faltar 0, 5 u 8 ENTONCES
 el depósito arranca con 8 y la góndola con 8, 3 o 0; con 0 faltantes no es faltante. DADO una
-jornada que se abre ENTONCES cada producto del catálogo tiene 8 en el depósito.
+jornada que se abre ENTONCES cada producto presente esa jornada tiene 8 en el depósito.
 
 ### AC-STK-005 — Ingresar negativo no hace nada *(verifica BR-STK-005)*
 
@@ -637,7 +685,8 @@ solo estante y con sus unidades juntas, y la fila de adelante de cada tanda fija
 de casilleros: el cupo del producto los suma a todos. DADO una cara de lado ENTONCES sus tandas con casilleros están en los
 estantes que no son ni el de arriba ni el zócalo, y esos estantes no llevan ninguna tanda fija; el
 de arriba y el zócalo llevan sólo tandas fijas. DADO una cabecera ENTONCES los niveles 0 y 3
-llevan sólo tandas fijas y los niveles 1 y 2 sólo tandas reponibles, como en el modelo original.
+llevan sólo tandas fijas y los niveles 1 y 2 sólo tandas reponibles, como en el modelo original
+del reparto completo. Las jornadas de prueba conservan la excepción de BR-STK-047.
 
 ### AC-STK-029 — El casillero está al alcance *(verifica BR-STK-024)*
 
@@ -721,7 +770,7 @@ cajas como de casilleros ocupados: también se reponen los casilleros vaciados p
 
 ### AC-STK-036 — La caja arranca en 8 y cuenta lo que sale *(verifica BR-STK-028)*
 
-DADO una jornada que se abre ENTONCES la caja de cada producto del catálogo tiene 8. DADO una
+DADO una jornada que se abre ENTONCES la caja de cada producto presente esa jornada tiene 8. DADO una
 caja en 8 CUANDO se saca una unidad ENTONCES tiene 7; CUANDO esa unidad se coloca ENTONCES sigue
 en 7; CUANDO se cobra una unidad de su producto ENTONCES tiene 6, igual que su depósito.
 
@@ -837,8 +886,9 @@ las 3 ENTONCES la caja tiene 3.
 DADO cada producto exhibido, Arvejas y Coracola incluidas, con una unidad colocada en su
 fila de adelante y las manos vacías CUANDO el jugador se para en el pasillo frente a su tanda
 ENTONCES la mira enfoca esa unidad y el clic se la pone en la mano. DADO cualquier unidad que se
-ve en un estante de reposición ENTONCES es de la fila de adelante de una tanda reponible, o
-de su fila de atrás: ninguna es de una tanda fija.
+ve en un estante de reposición del reparto completo ENTONCES es de la fila de adelante de
+una tanda reponible, o de su fila de atrás: ninguna es de una tanda fija. En las jornadas
+de prueba, los frontales de las repeticiones permitidas por BR-STK-047 se agarran y reponen igual.
 
 ### AC-STK-051 — Mitad y mitad, o el estante entero *(verifica BR-STK-035)*
 
@@ -903,9 +953,10 @@ atención sigue pendiente. Con una unidad anotada de cualquier producto no cuent
 
 ### AC-STK-077 — La pila es completa, alcanzable y estable *(verifica BR-STK-038)*
 
-DADO la jornada 4 abierta CUANDO se recorre el conjunto de cajas del catálogo
-vigente ENTONCES todas están dentro del depósito, ninguna se apoya en una estantería y ningún
-cuerpo se superpone con otro. Para cada caja existe un punto libre del piso desde el cual la
+DADO la jornada 4 abierta CUANDO se recorren las cajas de los productos ausentes en J1 a J3
+ENTONCES son exactamente dieciséis, están apiladas dentro del depósito y ninguna se apoya en
+una estantería. Las otras dieciséis están en sus lugares de estantería. Ningún cuerpo se
+superpone con otro. Para cada caja de la pila existe un punto libre del piso desde el cual la
 mira la enfoca dentro del alcance vigente. CUANDO pasan 120 cuadros de física sin tocar la pila
 ENTONCES ninguna caja se desplazó más de 0,01 m desde su pose inicial. DADO la jornada 5 abierta
 después ENTONCES cada caja vuelve a su lugar apoyado en un pallet de estantería.
@@ -941,13 +992,16 @@ en estanterías ENTONCES no se suma una obligatoria ajena.
 
 ### AC-STK-080 — Rescatar vuelve al origen de esa noche *(verifica BR-STK-038, BR-STK-039)*
 
-DADO una caja rescatada en la jornada 4 CUANDO vuelve a su origen ENTONCES queda en la pose de la
-pila de esa apertura y no cumple ordenar por aparecer en una estantería. DADO la apertura de una
-jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
+DADO una caja recién incorporada y rescatada en la jornada 4 CUANDO vuelve a su origen
+ENTONCES queda en la pose de la pila de esa apertura, sin ordenarse automáticamente.
+DADO una caja que ya estaba presente en las jornadas de prueba CUANDO se rescata en J4
+ENTONCES vuelve a su lugar de estantería. DADO la apertura de una jornada posterior
+ENTONCES el origen de todas las cajas vuelve a ser su lugar de estantería.
 
 ### AC-STK-086 — Cada sector contiene exactamente sus productos *(verifica BR-STK-043, BR-STK-044)*
 
-DADO el local armado CUANDO se recorre cada destino de la tabla de BR-STK-043 ENTONCES sus
+DADO el local armado desde la primera jornada completa CUANDO se recorre cada destino
+de la tabla de BR-STK-043 ENTONCES sus
 productos coinciden con la fila, sin ajenos, y los destinos de exhibición reúnen 32 productos
 distintos. La principal de Duronga comparte la mitad inferior de la estantería con Poético,
 a su derecha; las de Actroncito y Durextra están arriba. Las referencias fijas están en su mismo
@@ -955,7 +1009,8 @@ sector. Abrir jornada 5 en escritorio y web conserva el mapa.
 
 ### AC-STK-087 — Dos heladeras separan los fríos de las bebidas sin refrigerar *(verifica BR-STK-043)*
 
-DADO ambas heladeras funcionales CUANDO se recorren sus mitades verticales ENTONCES la primera
+DADO ambas heladeras funcionales desde la primera jornada completa CUANDO se recorren
+sus mitades verticales ENTONCES la primera
 exhibe Coracola arriba y Oaaaa abajo; la segunda, Cindolor arriba y Mayonchis abajo.
 Fernet God y Terminator están en su cabecera de bebidas sin refrigerar, y no en ninguna heladera;
 Cindolor no aparece además en un estante exterior. La heladera fuera de servicio tiene cero
@@ -1063,6 +1118,44 @@ su casillero ENTONCES se cumple otra vez, sin venta. DADO la jornada 1 sin venta
 vencen y cierra la noche ENTONCES reponer sigue cumplida, registrar cuenta cumplida con la
 planilla en cero y atención no. DADO la jornada 2 CUANDO abre ENTONCES sortea faltantes según los
 intervalos de BR-STK-026.
+
+### AC-STK-095 — La prueba tiene exactamente su catálogo *(verifica BR-STK-046, BR-STK-004, BR-STK-026)*
+
+DADO cada jornada 1, 2 y 3 CUANDO abre con cualquier semilla de 0 a 199 ENTONCES sólo
+registra los dieciséis productos de BR-STK-046, en orden de catálogo. Cada caja presente
+abre llena; cada producto ausente tiene cero unidades y cero cupo. Los faltantes sólo
+incluyen presentes. DADO jornadas 4 y 8 ENTONCES están las treinta y dos identidades.
+
+### AC-STK-096 — Cada nivel de prueba coincide con el mapa *(verifica BR-STK-047, BR-STK-024, BR-STK-025, BR-STK-035)*
+
+DADO una apertura de prueba CUANDO se recorren las cuatro alturas de cada destino de
+BR-STK-047 ENTONCES sus productos coinciden con la tabla, sin ajenos ni niveles vacíos.
+Cada producto tiene una sola principal y los cupos suman todos sus frontales. Cada unidad
+se apoya sobre su estante, sin intersecciones, y conserva la orientación y filas de su envase.
+CUANDO se agarra y repone una unidad del frontal repetido en el otro nivel central ENTONCES
+sólo cambia ese casillero y la cuenta de reponer responde a ambos gestos.
+
+### AC-STK-097 — Las cajas ausentes tampoco se pueden tocar *(verifica BR-STK-046)*
+
+DADO cada jornada 1, 2 y 3 CUANDO se recorren las cajas del depósito ENTONCES únicamente
+las dieciséis presentes se dibujan y participan en física e interacción. Un rayo o volumen
+que antes encontraba una caja ausente ya no la encuentra. CUANDO se abre la jornada 4
+ENTONCES vuelven las treinta y dos cajas y las recién llegadas satisfacen AC-STK-077.
+
+### AC-STK-098 — Cambiar de etapa renueva el local *(verifica BR-STK-046, BR-STK-047, BR-STK-043, BR-STK-044)*
+
+DADO el mismo local con jornada 3 abierta CUANDO se abre la jornada 4 ENTONCES recupera
+las treinta y dos identidades y el reparto completo, con sus cupos y zonas correspondientes.
+Repetir la apertura NO duplica objetivos ni respuestas a un gesto. DADO una nueva partida
+de prueba después de una completa ENTONCES reaparece únicamente el reparto de dieciséis.
+Retomar desde el menú en cualquiera de las dos etapas conserva el reparto de esa etapa.
+Una unidad sostenida al cerrar NO sobrevive al cambio de etapa.
+
+### AC-STK-099 — Los compradores de prueba piden productos presentes *(verifica BR-STK-046, BR-STK-027)*
+
+DADO cada jornada 1, 2 y 3 CUANDO se recorren todos los pedidos construidos para ella
+ENTONCES cada identidad pedida pertenece a los dieciséis presentes. Completar esas compras
+y reponer sus faltantes respeta la disponibilidad de una caja por producto.
 
 ## No objetivos
 

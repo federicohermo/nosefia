@@ -6,6 +6,10 @@ const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 func test_sacar_y_colocar_no_interpola_las_otras_copias_entre_casilleros() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var faltantes: Dictionary[Producto.Id, int] = {}
@@ -30,6 +34,10 @@ func test_sacar_y_colocar_no_interpola_las_otras_copias_entre_casilleros() -> vo
 
 func test_pasarse_por_los_productos_no_reemplaza_ni_reordena_sus_superficies() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var faltantes: Dictionary[Producto.Id, int] = {}
@@ -57,6 +65,10 @@ func test_pasarse_por_los_productos_no_reemplaza_ni_reordena_sus_superficies() -
 
 func test_la_mira_no_atrae_un_producto_fuera_de_su_tolerancia() -> void:  # AC-PLY-004
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -91,6 +103,10 @@ func test_la_mira_no_atrae_un_producto_fuera_de_su_tolerancia() -> void:  # AC-P
 
 func test_el_producto_suelto_se_enfoca_con_las_aristas_de_los_casilleros() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var faltantes: Dictionary[Producto.Id, int] = {}
