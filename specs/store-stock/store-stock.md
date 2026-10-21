@@ -216,9 +216,11 @@ El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mi
 
 CUANDO se abre una jornada de la 2 a la 8, el sistema DEBE sortear sus faltantes. CUANDO se abre
 la jornada 1, el sistema NO DEBE sortear: la góndola DEBE abrir completa y cada caja llena, sin
-ningún faltante. Reponer DEBE arrancar cumplida en la jornada 1 (BR-STK-013), y descumplirse al
-agarrar una unidad de la góndola (BR-STK-033). Retomar la jornada 1 desde el menú DEBE abrirla
-completa otra vez.
+ningún faltante. La jornada 1 NO DEBE declarar reponer, ni siquiera por las unidades vendidas
+desde la góndola. Agarrar, colocar o vender esas unidades NO DEBE modificar su cuenta de tareas.
+Retomar la jornada 1 desde el menú DEBE abrirla completa otra vez, sin declarar reponer.
+La jornada 2 DEBE abrir con su inventario nuevo y sus faltantes sorteados.
+Los huecos dejados por ventas en la jornada 1 NO DEBEN pasar a la siguiente.
 DEBE elegir entre 4 y 7 productos distintos y, de cada uno, entre 1 unidad y su máximo
 reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 [ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
@@ -1057,12 +1059,16 @@ de una fija queda vacío; los vacíos suman lo que faltó.
 ### AC-STK-094 — La primera jornada abre completa *(verifica BR-STK-026, BR-STK-013, BR-STK-033)*
 
 DADO la jornada 1 recién abierta, con cualquier semilla, CUANDO se consultan los faltantes
-ENTONCES no hay ninguno, cada caja del depósito está llena y reponer está cumplida. CUANDO se
-agarra una unidad de la góndola ENTONCES reponer se descumple; CUANDO se la vuelve a colocar en
-su casillero ENTONCES se cumple otra vez, sin venta. DADO la jornada 1 sin ventas CUANDO Tin y Tia
-vencen y cierra la noche ENTONCES reponer sigue cumplida, registrar cuenta cumplida con la
-planilla en cero y atención no. DADO la jornada 2 CUANDO abre ENTONCES sortea faltantes según los
-intervalos de BR-STK-026.
+ENTONCES no hay ninguno, cada caja del depósito está llena y reponer no está declarada.
+CUANDO se agarra una unidad de la góndola y se vuelve a colocar ENTONCES la cuenta de tareas no cambia.
+DADO una venta de una o tres unidades desde góndola CUANDO se completa sin reponer
+ENTONCES sus casilleros siguen vacíos, sin descontar tareas.
+Con todas las declaradas cumplidas, el cierre no suma apercibimientos ni antecedentes o reproches de reposición.
+DADO la jornada 1 sin ventas CUANDO Tin y Tia vencen y cierra la noche
+ENTONCES registrar cuenta cumplida con la planilla en cero y atención no, sin tarea de reposición.
+CUANDO se retoma la jornada 1 ENTONCES vuelve a abrir completa y sin reponer declarada.
+DADO la jornada 2 CUANDO abre ENTONCES declara reponer y sortea faltantes según BR-STK-026,
+sin heredar los huecos de ventas de la primera.
 
 ## No objetivos
 

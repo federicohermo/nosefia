@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SHF
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527 y #539; migración de los specs 001, 007, 011, 016, 027, 031
 ---
@@ -74,7 +74,8 @@ son de introducción: las tareas entran de a poco.
 
 | Jornada | Obligatorias |
 |---|---|
-| 1 y 2 | cobrar en la caja, registrar y reponer |
+| 1 | cobrar en la caja y registrar |
+| 2 | cobrar en la caja, registrar y reponer |
 | 3 | las cuatro fijas |
 | 4 | las cuatro fijas y ordenar las cajas del depósito |
 | 5 | las cuatro fijas y tirar la basura |
@@ -83,6 +84,10 @@ son de introducción: las tareas entran de a poco.
 Mientras sigue abierta OQ-SHF-006, una jornada sin fila propia DEBE declarar sólo las cuatro
 fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir. La cantidad que muestra el HUD DEBE
 salir de esa misma lista.
+
+La jornada 1 NO DEBE declarar reposición, tampoco por los casilleros vaciados al vender.
+Esos huecos NO DEBEN descontar tareas, sumar apercibimientos ni generar reproches de reposición.
+La nota de tareas DEBE listar sólo las obligatorias declaradas para esa noche.
 
 ### BR-SHF-007 — Una obligatoria cuenta mientras su condición vale, y antes del cierre
 
@@ -146,6 +151,8 @@ ventanilla, o que todavía no llegó, queda por atender. Si el último vence, co
 queda sin cumplir y no impide acelerar. Registrar lo vendido cuenta como cumplido cuando el
 registro coincide con lo vendido, aunque nadie haya comprado: acelerar NO DEBE depender de que
 algún comprador complete su compra.
+La jornada 1 sólo exige registrar además del ciclo de compradores cerrado.
+Los huecos que dejan las ventas en la góndola NO DEBEN impedir la aceleración.
 
 SI no se cumple la condición, ENTONCES el ritmo DEBE seguir siendo el de BR-SHF-002. Una vez
 acelerado, el ritmo NO DEBE volver al de BR-SHF-002 en esa noche, aunque una obligatoria se
@@ -180,8 +187,9 @@ está cerrado.
 
 ### AC-SHF-005 — Fijas y particular, con instancias nuevas *(verifica BR-SHF-005)*
 
-DADO las jornadas 1 a 8 CUANDO cada una pide sus obligatorias ENTONCES la 1 y la 2 reciben 3:
-cobrar, registrar y reponer, sin limpiar ni particular; la 3 recibe las 4 fijas; la 4 recibe 5,
+DADO las jornadas 1 a 8 CUANDO cada una pide sus obligatorias ENTONCES la 1 recibe 2:
+cobrar y registrar, sin reponer, limpiar ni particular; la 2 recibe 3: cobrar, registrar y
+reponer, sin limpiar ni particular; la 3 recibe las 4 fijas; la 4 recibe 5,
 con ordenar las cajas y sin basura; la 5 recibe 5, con basura y sin ordenar; la 6, la 7 y la 8
 reciben las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
 comparte y todas las de la segunda están sin cumplir.
@@ -302,7 +310,9 @@ su orden de dibujo ENTONCES la entrada está sobre los tres primeros y debajo de
 
 ### AC-SHF-027 — El denominador sigue las declaradas *(verifica BR-SHF-005, BR-SHF-008)*
 
-DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `0/3`. DADO la jornada 4
+DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `0/2`.
+La nota de tareas lista atención y registro, sin reposición.
+DADO la jornada 4
 recién abierta ENTONCES dice `0/5`. DADO la jornada 6 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una
 tarea ajena a esa lista no aumenta la cuenta.
 
@@ -330,20 +340,21 @@ real ENTONCES el turno baja `60.0`. Retomada en la 2, baja `80.0`.
 
 ### AC-SHF-031 — Acelera cuando el último completa su compra *(verifica BR-SHF-020)*
 
-DADO la jornada 1 con registrar y reponer cumplidos y un solo comprador por atender en la
+DADO la jornada 1 con registrar cumplido y un solo comprador por atender en la
 ventanilla CUANDO pasa 1 segundo real ENTONCES el turno baja `120.0`. CUANDO ese comprador
 completa su compra a las 05:59 ENTONCES el ritmo cambia en ese instante. CUANDO pasa la
 duración de la aceleración ENTONCES el turno cierra una sola vez, quedan `0.0` y cobrar en la
 caja cuenta como cumplida. Un instante antes, el turno sigue abierto.
+Los casilleros vacíos por las ventas NO impiden acelerar ni cerrar con las dos tareas cumplidas.
 
 ### AC-SHF-032 — Lo que falta no acelera *(verifica BR-SHF-020)*
 
-DADO la jornada 1 con registrar y reponer cumplidos CUANDO todavía falta llegar un comprador, o
+DADO la jornada 1 con registrar cumplido CUANDO todavía falta llegar un comprador, o
 uno espera en la ventanilla, ENTONCES el ritmo es el de BR-SHF-002. DADO la jornada 1 con el
 último comprador vencido y registrar sin cumplir ENTONCES tampoco acelera. CUANDO registrar se
 cumple ENTONCES acelera, y el cierre cuenta cobrar en la caja como no cumplida. DADO la jornada 1
-sin compradores en la lista y registrar y reponer cumplidos ENTONCES acelera. DADO la jornada 1
-con reponer cumplido y el registro sin anotar CUANDO el último comprador vence sin que nadie
+sin compradores en la lista y registrar cumplido ENTONCES acelera. DADO la jornada 1
+con el registro sin anotar CUANDO el último comprador vence sin que nadie
 haya comprado ENTONCES acelera en ese instante. Con una unidad anotada de más, no acelera.
 
 ### AC-SHF-033 — La duración no depende de la hora *(verifica BR-SHF-020, BR-SHF-004)*
@@ -355,8 +366,9 @@ que lo que falta deja `0.0`, sin pasarse.
 
 ### AC-SHF-034 — Acelerar no tiene vuelta atrás *(verifica BR-SHF-020, BR-SHF-007)*
 
-DADO la jornada 1 acelerada CUANDO reponer se descumple ENTONCES el ritmo sigue acelerado y el
-cierre cuenta reponer como no cumplida. Pedir la aceleración otra vez no cambia el ritmo de la
+DADO la jornada 1 acelerada CUANDO registrar se descumple por una unidad anotada de más
+ENTONCES el ritmo sigue acelerado y el cierre cuenta registrar como no cumplida.
+Pedir la aceleración otra vez no cambia el ritmo de la
 primera. DADO la jornada 1 acelerada CUANDO el juego está en pausa y pasan cuadros ENTONCES el
 turno no cambia; al reanudar sigue al ritmo acelerado desde ese valor.
 

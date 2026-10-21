@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-EMP
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541
 ---
@@ -558,12 +558,14 @@ de la letra. Excelente. Seguí así y vas a tener el puesto asegurado.», sin es
 
 ### AC-EMP-052 — La segunda falla de reponer *(verifica BR-EMP-025, BR-EMP-027)*
 
-DADO la noche 1 con reponer sin cumplir CUANDO se arma la devolución ENTONCES trae la fila
-n = 1 de Tarea 3, «Faltó reponer algunas unidades…». DADO la noche 2 con reponer otra vez sin
-cumplir CUANDO se arma la devolución ENTONCES trae la fila n = 2, «No podés dejarle a tu
-compañera…», y ninguna otra Tarea si las otras obligatorias se cumplieron. DADO la noche 3 con
-reponer cumplido ENTONCES Tarea 3 no aparece. DADO la tercera falla de registrar ENTONCES el
-texto dice «está mal otra vez».
+DADO reponer sin cumplir por primera vez en noche 2 CUANDO se arma la devolución ENTONCES trae
+la fila n = 1. Es Tarea 3, «Faltó reponer algunas unidades…».
+DADO reponer otra vez sin cumplir en noche 3 CUANDO se arma la devolución ENTONCES trae la fila
+n = 2. Es Tarea 3, «No podés dejarle a tu compañera…».
+Si las otras obligatorias se cumplieron, no trae ninguna otra Tarea.
+DADO reponer cumplido en noche 4 CUANDO se arma la devolución ENTONCES Tarea 3 no aparece.
+DADO la tercera falla de registrar CUANDO se arma la devolución ENTONCES el texto dice
+«está mal otra vez».
 
 ### AC-EMP-053 — El Reto 2 de la jornada 5 cuenta para después *(verifica BR-EMP-025, BR-EMP-027, BR-EMP-028)*
 
@@ -635,10 +637,10 @@ espacio final ni las palabras «punto», «medio» o «apercibimiento».
 
 ### AC-EMP-061 — El despido en la primera noche *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
 
-DADO la noche 1 con sólo registrar cumplido y los cuatro llamados CUANDO cierra ENTONCES P = 4 y
-la devolución es, en orden: «Che», la fila n = 1 de Tarea 1 y de Tarea 3, la fila n = 1 de Reto 1,
-Reto 2, Reto 3 y Reto 4, y el Cierre del despido: ocho mensajes, sin Tarea 4 ni Tarea 5, y la
-única opción es volver al menú.
+DADO la noche 1 con sólo registrar cumplido y los cuatro llamados CUANDO cierra ENTONCES P = 4.
+La devolución trae siete mensajes, en el orden Saludo, Tarea 1, Reto 1, Reto 2, Reto 3, Reto 4
+y Cierre. El Saludo es «Che», Tarea 1 y los Retos usan sus filas n = 1, y el Cierre es el del
+despido. No trae Tarea 2, Tarea 3, Tarea 4 ni Tarea 5. La única opción es volver al menú.
 
 ### AC-EMP-062 — Un mensaje más por segundo *(verifica BR-EMP-011, BR-EMP-030)*
 
@@ -730,12 +732,16 @@ ENTONCES el orden es Tarea 4, advertencia y Tarea 5, cada una una vez. DADO jorn
 teñidos rechazados, o un teñido aceptado en jornada 6, ENTONCES no hay advertencia. Los medios,
 la banda y el final son los mismos con y sin el hecho.
 
-### AC-EMP-072 — Tres declaradas no admiten aviso *(verifica BR-EMP-001, BR-EMP-003)*
+### AC-EMP-072 — Dos o tres declaradas no admiten aviso *(verifica BR-EMP-001, BR-EMP-003)*
 
-DADO la jornada 1 con sus tres obligatorias declaradas CUANDO cierra con las tres cumplidas
-ENTONCES la banda es NINGUNA; con dos, con una y con cero es GRAVE. DADO un legajo limpio CUANDO
-las jornadas 1 y 2 cierran con dos de tres cumplidas y sin llamados ENTONCES la partida termina
-despedida al cerrar la 2, y no se abre la 3.
+DADO la jornada 1 con sus dos obligatorias declaradas CUANDO cierra con las dos cumplidas
+ENTONCES la banda es NINGUNA. Con una o con cero es GRAVE.
+DADO la jornada 2 con sus tres obligatorias declaradas CUANDO cierra con las tres cumplidas
+ENTONCES la banda es NINGUNA. Con dos, con una o con cero es GRAVE.
+DADO un legajo limpio CUANDO la jornada 1 cierra con una de dos cumplidas ENTONCES sigue en
+curso con banda GRAVE.
+DADO ese legajo CUANDO la jornada 2 cierra con dos de tres cumplidas ENTONCES termina despedido
+con banda GRAVE. Ambas noches cierran sin llamados. No se abre la jornada 3.
 
 ### AC-EMP-073 — El impecable de las noches del medio *(verifica BR-EMP-029)*
 
