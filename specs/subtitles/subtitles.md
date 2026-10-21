@@ -463,6 +463,12 @@ pensamiento pendiente CUANDO cierra la jornada ENTONCES se descarta y la partida
 
 ## Preguntas abiertas
 
+- **OQ-SUB-002 — ¿Qué piensa el personaje ante la puerta del depósito trabada?**
+  - Por qué sigue abierta: la ficha «Mapa del local» la traba en la primera jornada y ninguna
+    ficha le da texto. Mientras tanto, la regla no le inventa uno: suena trabada y calla.
+  - Decide: el diseño, en la ficha «Subtítulos».
+  - Bloquea: nada hoy; agregaría una fila a la tabla de BR-SUB-010 y un criterio.
+
 - **OQ-SUB-001 — ¿Qué muestra el examen de un levantable sin texto al examinar?**
   - Por qué sigue abierta: la ficha da texto a cada levantable que el juego pone en el local
     —productos, útiles, bolsas, tickets y cajas—, pero no dice qué pasa si aparece uno sin

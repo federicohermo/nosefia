@@ -405,14 +405,17 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.freeze = true
 			util.collision_layer = 0
 			util.collision_mask = 0
-	var se_limpia := Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
-	var cerradas_sin_limpieza := {
-		$Estructura/puerta2/CuerpoDeLaHoja: SubtitulosAlExaminar.BANO_CERRADO,
-		$Estructura/puerta_limpieza/CuerpoDeLaHoja: SubtitulosAlExaminar.CUARTITO_CERRADO,
+	var cerradas := {
+		$Estructura/puerta/CuerpoDeLaHoja: [PuertasTrabadas.Puerta.DEPOSITO, &""],
+		$Estructura/puerta2/CuerpoDeLaHoja:
+		[PuertasTrabadas.Puerta.BANO, SubtitulosAlExaminar.BANO_CERRADO],
+		$Estructura/puerta_limpieza/CuerpoDeLaHoja:
+		[PuertasTrabadas.Puerta.CUARTITO, SubtitulosAlExaminar.CUARTITO_CERRADO],
 	}
-	for puerta: PuertaDelLocal in cerradas_sin_limpieza:
-		puerta.traba = PuertaDelLocal.Traba.NINGUNA if se_limpia else PuertaDelLocal.Traba.PUERTA
-		puerta.identidad = &"" if se_limpia else cerradas_sin_limpieza[puerta]
+	for puerta: PuertaDelLocal in cerradas:
+		var trabada := PuertasTrabadas.trabada(cerradas[puerta][0], jornada)
+		puerta.traba = PuertaDelLocal.Traba.PUERTA if trabada else PuertaDelLocal.Traba.NINGUNA
+		puerta.identidad = cerradas[puerta][1] if trabada else &""
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()
