@@ -62,9 +62,12 @@ func test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima() -> void:
 
 func test_sobre_una_partida_que_termino_no_se_abre_nada_ni_se_emite_nada() -> void:
 	# El despido corta la partida a la segunda noche grave, y desde ahí el ciclo es una puerta
-	# cerrada: sin esto, la pantalla de cierre reabriría la jornada 3 de una partida terminada.
+	# cerrada: sin esto, la pantalla de cierre reabriría la jornada siguiente de una partida
+	# terminada.
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
-	var ciclo := _ciclo_arrancado(Partida.nueva(), reloj)
+	var ciclo := _ciclo_arrancado(
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}), reloj
+	)
 	_agotar_la_noche(reloj)
 	ciclo.abrir_la_jornada()
 	_agotar_la_noche(reloj)
@@ -114,13 +117,13 @@ func test_el_ciclo_no_decide_como_pesa_una_jornada() -> void:
 
 
 func test_agotar_avisa_una_vez_antes_del_registro_y_del_cierre() -> void:  # AC-CLN-046
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var ciclo: CicloDeJornadas = auto_free(CicloDeJornadas.new())
 	var orden: Array[String] = []
 	ciclo.turno_agotado.connect(
 		func(jornada: int) -> void:
-			assert_int(jornada).is_equal(1)
+			assert_int(jornada).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 			assert_int(partida.medios()).is_zero()
 			partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
 			orden.append("foto")
@@ -188,3 +191,33 @@ func test_el_ritmo_no_se_hereda() -> void:  # AC-SHF-030
 		restantes.clear()
 		reloj.avanzar(1.0)
 		assert_float(restantes.back()).is_equal(Reglas.DURACION_DEL_TURNO - casos[desde])
+
+
+func test_el_cierre_le_entrega_a_la_partida_los_clientes_mal_atendidos() -> void:  # AC-EMP-078
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	var partida := Partida.nueva()
+	var ciclo: CicloDeJornadas = auto_free(CicloDeJornadas.new())
+	ciclo.arrancar(partida, reloj, func() -> int: return 3)
+	_jugar_la_noche_impecable(reloj)
+	assert_int(partida.apercibimientos()).is_equal(
+		3 * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA
+	)
+
+
+func test_el_cierre_conserva_los_clientes_mal_atendidos_de_la_ventanilla() -> void:  # AC-EMP-086
+	var partida := Partida.nueva()
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	var ciclo: CicloDeJornadas = auto_free(CicloDeJornadas.new())
+	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	ciclo.arrancar(partida, reloj, tarea.mal_atendidos)
+	assert_int(tarea.mal_atendidos()).is_zero()
+	tarea.avanzar(compradores[1].horario.y + 1.0)
+	assert_int(tarea.mal_atendidos()).is_equal(2)
+	_agotar_la_noche(reloj)
+	assert_int(partida.noches_de_prueba[ReglasDeLaPartida.PRIMERA_JORNADA].mal_atendidos).is_equal(
+		2
+	)
+	assert_array(CondicionesDelJefe.elegidas(partida.noches_de_prueba)).is_equal(
+		[CondicionesDelJefe.J2_NINGUNO_ANOTADO]
+	)

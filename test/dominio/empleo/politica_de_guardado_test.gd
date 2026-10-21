@@ -13,7 +13,7 @@ func test_las_acciones_son_escribir_y_borrar_y_ninguna_mas() -> void:  # AC-SAV-
 	assert_array(PoliticaDeGuardado.Accion.keys()).is_equal(["ESCRIBIR", "BORRAR"])
 	var en_curso := Partida.nueva()
 	assert_int(PoliticaDeGuardado.accion(en_curso)).is_equal(PoliticaDeGuardado.Accion.ESCRIBIR)
-	var despedido := Partida.nueva()
+	var despedido := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
 	_cerrar_grave(despedido)
 	_cerrar_grave(despedido)
 	assert_bool(despedido.terminada()).is_true()

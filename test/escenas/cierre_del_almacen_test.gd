@@ -22,9 +22,10 @@ func after_test() -> void:
 	_almacen = null
 
 
-func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA) -> Node3D:
+func _abrir(jornada: int = 0) -> Node3D:
 	_almacen = ALMACEN.instantiate()
-	_almacen.set("_partida", Partida.desde({"jornada": jornada}))
+	if jornada > 0:
+		_almacen.set("_partida", Partida.desde({"jornada": jornada}))
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
@@ -164,7 +165,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 
 
 func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:  # AC-CLN-046
-	_abrir()
+	_abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var partida: Partida = _almacen.get("_partida")
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
