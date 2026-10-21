@@ -454,8 +454,10 @@ mensaje 1. Las demás jornadas NO DEBEN cambiar sus mensajes por esta regla.
 
 CUANDO la noche 2 cierra y abre la jornada 3, el sistema DEBE mostrar como primer mensaje de sus
 instrucciones y de su chat uno solo de estos ocho, elegido por la noche 2 que anotó BR-EMP-041.
-La atención está bien con cero clientes mal atendidos. El registro y la reposición están bien si
-registrar y reponer quedaron cumplidas. Los textos DEBEN ser los de la ficha «Chat con el jefe»
+La ficha no precisa cómo cuentan los clientes que esperan al cerrar ni cómo evaluar la reposición.
+Como decisión provisoria, la atención está bien con cero clientes mal atendidos según BR-EMP-041.
+El registro y la reposición están bien si registrar y reponer quedaron cumplidas.
+Los textos DEBEN ser los de la ficha «Chat con el jefe»
 revisada el 2026-10-20:
 
 | Atención | Registro | Reposición | Texto |
@@ -608,7 +610,7 @@ dato antiguo, el entero 7 de medios sigue prevaleciendo.
 DADO la octava jornada con 7 medios CUANDO cierra impecable sin motivos ENTONCES conserva 7
 y termina con contrato cumplido. DADO un motivo adicional ENTONCES llega a 8 y termina despedido.
 
-### AC-EMP-045 — Siete pantallas, una pantalla, atrás y OK *(verifica BR-EMP-023)*
+### AC-EMP-045 — Seis pantallas, una pantalla, atrás y OK *(verifica BR-EMP-023)*
 
 DADO las instrucciones de la jornada 1 recién abiertas CUANDO se consulta su estado ENTONCES se
 muestra sólo la primera pantalla, el contador dice «1/6» y «Volver» está visible y

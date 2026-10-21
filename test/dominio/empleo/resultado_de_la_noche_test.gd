@@ -1,4 +1,3 @@
-## Lo que la partida recuerda de cada noche de prueba, y cómo vuelve del disco.
 extends GdUnitTestSuite
 
 const CondicionesDelJefeTest := preload("res://test/dominio/empleo/condiciones_del_jefe_test.gd")
@@ -115,4 +114,32 @@ func test_el_que_espera_al_cerrar_no_es_mal_atendido() -> void:  # AC-EMP-086
 	assert_object(tarea.en_ventanilla()).is_same(compradores[0])
 	assert_int(tarea.mal_atendidos()).is_zero()
 	tarea.avanzar(compradores[0].horario.y + 1.0)
+	assert_int(tarea.mal_atendidos()).is_equal(1)
+
+
+func test_una_venta_no_cuenta_como_cliente_mal_atendido() -> void:  # AC-EMP-086
+	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+	var tarea := TareaDeAtender.new(compradores, inventario)
+	tarea.avanzar(compradores[0].horario.x)
+	var atencion := tarea.atencion()
+	atencion.interactuar(null)
+	while not atencion.puede_abandonar():
+		atencion.interactuar(null)
+	var lineas: Array[Producto] = []
+	for producto in compradores[0].pedido().productos():
+		for _unidad in compradores[0].pedido().unidades_de(producto):
+			var unidad := Estante.new(inventario, Catalogo.todos()).retirar(producto)
+			atencion.interactuar(unidad)
+			lineas.append(producto)
+	assert_int(atencion.interactuar(Ticket.new(lineas))).is_equal(
+		RecepcionDeCompra.Resultado.COMPLETA
+	)
+	assert_bool(atencion.vendida()).is_true()
+	while not atencion.puede_abandonar():
+		atencion.interactuar(null)
+	assert_bool(atencion.despachada()).is_true()
+	tarea.avanzar(compradores[0].horario.y + 1.0)
+	assert_int(tarea.mal_atendidos()).is_zero()
+	tarea.avanzar(compradores[1].horario.y + 1.0)
 	assert_int(tarea.mal_atendidos()).is_equal(1)

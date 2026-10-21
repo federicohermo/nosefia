@@ -202,3 +202,22 @@ func test_el_cierre_le_entrega_a_la_partida_los_clientes_mal_atendidos() -> void
 	assert_int(partida.apercibimientos()).is_equal(
 		3 * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA
 	)
+
+
+func test_el_cierre_conserva_los_clientes_mal_atendidos_de_la_ventanilla() -> void:  # AC-EMP-086
+	var partida := Partida.nueva()
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	var ciclo: CicloDeJornadas = auto_free(CicloDeJornadas.new())
+	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	ciclo.arrancar(partida, reloj, tarea.mal_atendidos)
+	assert_int(tarea.mal_atendidos()).is_zero()
+	tarea.avanzar(compradores[1].horario.y + 1.0)
+	assert_int(tarea.mal_atendidos()).is_equal(2)
+	_agotar_la_noche(reloj)
+	assert_int(partida.noches_de_prueba[ReglasDeLaPartida.PRIMERA_JORNADA].mal_atendidos).is_equal(
+		2
+	)
+	assert_array(CondicionesDelJefe.elegidas(partida.noches_de_prueba)).is_equal(
+		[CondicionesDelJefe.J2_NINGUNO_ANOTADO]
+	)
