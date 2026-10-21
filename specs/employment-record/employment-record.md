@@ -480,7 +480,33 @@ recordar cuántos clientes quedaron mal atendidos y qué obligatorias fijas qued
 al cerrar. Un cliente mal atendido es el que llegó a la ventanilla, no recibió su venta y se fue.
 El que todavía espera al cerrar, o el que nunca llegó, NO DEBE contar. Las noches desde la
 primera jornada completa NO DEBEN anotarse acá. Ese dato DEBE cruzar la sesión (BR-SAV-019): al
-retomar, el mensaje de BR-EMP-040 y el de BR-EMP-042 DEBEN ser los mismos. Un cierre ignorado NO DEBE anotar nada.
+retomar, los mensajes de BR-EMP-040, BR-EMP-042 y BR-EMP-043 DEBEN ser los mismos. Un cierre
+ignorado NO DEBE anotar nada.
+
+### BR-EMP-043 — El mensaje 1 de la jornada 4 sale de las tres noches de prueba
+
+CUANDO la noche 3 cierra, que es la misma transición que abre la jornada 4, Enrique DEBE decir
+uno solo de estos cuatro mensajes, elegido por las tres noches que anotó BR-EMP-041. Las fallas
+de una noche son sus clientes mal atendidos más sus obligatorias de registrar, reponer o limpiar
+sin cumplir, como cuenta BR-EMP-035, sin los llamados. La prueba cumplió «menos de la mitad de
+las tareas» con **5 fallas o más** entre las tres noches, el mismo umbral de BR-EMP-037. La
+jornada 3 está «cumplida» si su noche no tiene fallas. Los textos DEBEN ser los de la ficha «Chat
+con el jefe» revisada el 2026-10-20:
+
+| Prueba | Texto |
+|---|---|
+| despedida por BR-EMP-037 | No, no, no. Flaco, no te puedo tomar como empleado si trabajás a medias. Un par de errores los puedo dejar pasar, pero si se repite todos los días... / Hasta acá llegó mi paciencia. Suerte consiguiendo otro trabajo. |
+| sin fallas en las tres noches | Muy bien, pibe. Me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que no bajes el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
+| 5 fallas o más y la jornada 3 cumplida | Mirá, flaco, en tus primeras dos jornadas estuviste mal, pero ayer lograste redimirte. Contra mis instintos, te voy a tomar como capacitado para el trabajo completo. Pero no me hagas arrepentirme, ¿ok? Te voy a seguir supervisando para que subas el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
+| cualquier otra | Bueno, pibe. Concluidos tus tres días de prueba, debo decir que tuviste algunos altibajos. De todas formas, me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que subas el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
+
+La barra marca dónde la ficha parte el texto en dos párrafos, y el texto DEBE partir ahí. El
+despido lo decide el legajo (BR-EMP-037), no esta tabla: con la prueba perdida, su texto DEBE
+ser el único mensaje de la devolución de esa noche, que ofrece volver al menú, y NO DEBE seguir
+ningún otro mensaje ni abrirse la jornada 4. En las otras tres filas, el texto DEBE ser el
+primer mensaje de la jornada 4 en el chat de Enrique, antes de su mensaje 2. Sin la noche 3
+anotada, la jornada 4 NO DEBE mostrar ningún mensaje 1. Las filas que la ficha no cubre son
+provisorias (OQ-EMP-011).
 
 ## Criterios de aceptación
 
@@ -956,6 +982,26 @@ CUANDO se guarda y se retoma ENTONCES la jornada 3 abre con la misma fila, en «
 de Enrique en la jornada 4 de esa partida ENTONCES tiene, de la jornada 3, esa fila antes de la
 foto de Intro 9 y ningún otro mensaje 1 de la jornada 3.
 
+### AC-EMP-089 — Las tres noches eligen el mensaje 1 de la jornada 4 *(verifica BR-EMP-043)*
+
+DADO las tres noches sin fallas CUANDO abre la jornada 4 ENTONCES su chat la empieza con la fila
+«sin fallas» y sigue con su mensaje 2. DADO 4 fallas en la noche 1 y una en la 2, con la 3 sin
+fallas, ENTONCES es la fila de la jornada 3 cumplida. DADO 4 fallas en la noche 1 y la 3 sin
+fallas ENTONCES es «cualquier otra». DADO una falla en la noche 1 y limpiar sin cumplir en la 3
+ENTONCES es «cualquier otra». Ninguna combinación muestra dos mensajes 1. DADO una partida sin
+la noche 3 anotada ENTONCES la jornada 4 abre con su mensaje 2.
+
+### AC-EMP-090 — La prueba perdida termina con el mensaje del despido *(verifica BR-EMP-043, BR-EMP-037)*
+
+DADO la noche 3 que cierra con la prueba perdida CUANDO llega la devolución ENTONCES su único
+mensaje es la fila del despido, ofrece sólo volver al menú y la partida no abre la jornada 4.
+DADO la noche 3 que cierra sin perder la prueba ENTONCES la devolución no trae ese mensaje.
+
+### AC-EMP-091 — La jornada 4 retomada repite su mensaje 1 *(verifica BR-EMP-041, BR-EMP-043)*
+
+DADO la noche 3 cerrada con 5 fallas en la prueba y la 3 sin fallas CUANDO se guarda y se retoma
+ENTONCES la jornada 4 abre con la misma fila.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -1031,6 +1077,16 @@ foto de Intro 9 y ningún otro mensaje 1 de la jornada 3.
   - Decide: una persona de game design.
   - Bloquea: nada. Mientras tanto, BR-EMP-040 usa la fila de un cliente mal atendido, porque la
     ficha llama a la atención «LO MÁS IMPORTANTE».
+
+- **OQ-EMP-011 — ¿Cómo se cuentan «la mitad de las tareas» de la prueba y las filas que la ficha no
+  cubre?**
+  - Por qué sigue abierta: la ficha «Chat con el jefe» del 2026-10-20 dice «más de la mitad» y
+    «menos de la mitad», pero no cuenta las tareas, no dice qué pasa con la mitad exacta y no
+    tiene fila para más de la mitad con la jornada 3 cumplida y fallas en la 1 o la 2.
+  - Decide: una persona de game design.
+  - Bloquea: nada. Mientras tanto, BR-EMP-043 cuenta fallas como la prueba (BR-EMP-035), toma
+    el umbral de BR-EMP-037 como la mitad, pone la mitad exacta con «menos de la mitad» y manda
+    a «cualquier otra» lo que la ficha no cubre.
 
 - **OQ-EMP-009 — ¿Qué dice la devolución cuando la prueba pasa de 4 apercibimientos sin despedir?**
   - Por qué sigue abierta: la devolución elige Saludo y Cierre por P, y P ≥ 4 es hoy el despido
