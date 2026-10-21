@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: draft
+status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -100,6 +100,7 @@ examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega 
 CUANDO se acciona —clic izquierdo— una puerta que no está trabada, el sistema DEBE alternar
 entre abierta y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
 Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
+La salida por la entrada principal usa BR-PLY-041 y no alterna su hoja.
 
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
@@ -182,8 +183,9 @@ su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas 
 ### BR-PLY-020 — Las trabadas no abren, y cada gesto sobre una puerta avisa
 
 SI una puerta está trabada, ENTONCES el primario NO DEBE abrirla ni girar la hoja, y
-DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. La entrada al local, el portón del depósito y
-la oficina del jefe están trabadas en todas las jornadas. La puerta que lleva del local al depósito
+DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. El portón del depósito y
+la oficina del jefe están trabadas en todas las jornadas. La entrada permanece trabada salvo
+la salida habilitada de BR-PLY-041. La puerta que lleva del local al depósito
 DEBE estar trabada en la primera jornada, y abrir desde la segunda. La puerta del cuartito de
 limpieza DEBE estar trabada en las jornadas que no piden limpiar, y abrir en las que sí. La puerta
 del baño y la de «Solo empleados» no están trabadas en ninguna. La traba de la jornada DEBE decidirse
@@ -240,7 +242,7 @@ CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
 
 CUANDO se hace el primario sobre una puerta interior, de heladera o trabada, la computadora,
 la caja registradora o una nota pegada, el sistema DEBE resolver esa interacción
-con las manos vacías o con cualquier cosa en la mano. Las puertas habilitadas DEBEN alternar;
+con las manos vacías o con cualquier cosa en la mano. Las puertas habilitadas DEBEN alternar, salvo la salida de BR-PLY-041;
 las trabadas DEBEN avisar una vez por pulsación sin girar; los paneles DEBEN abrirse y las notas
 DEBEN mostrar su lectura. Lo que se lleva DEBE seguir en la mano sin soltarse ni usarse.
 La atención DEBE iniciarse sobre la persona según BR-PLY-034, sin abrir el hueco.
@@ -373,7 +375,7 @@ primero el examen, después la acción primaria y por último el secundario disp
 | Examinar | examinar | mano vacía y un interactuable enfocado |
 | Agarrar | primario | mano vacía y un levantable enfocado |
 | Dejar | primario | mano ocupada sin interacción primaria declarada sobre el objetivo |
-| Abrir | primario | puerta cerrada o trabada, computadora o caja registradora |
+| Abrir | primario | puerta cerrada o trabada salvo la entrada principal de BR-PLY-041, computadora o caja registradora |
 | Cerrar | primario | puerta abierta |
 | Mirar | primario | nota pegada |
 | Hablar | primario | comprador con inicial pendiente, aun con objeto en mano, o inicial terminada con mano vacía, cuando atención habilita el gesto |
@@ -407,7 +409,8 @@ o vacío, la mopa seca o el jabón sea incorrecto: mirar una mancha NO DEBE reve
 El lector presente con una unidad, el inodoro con un ticket y el cuerpo del contenedor con
 un objeto DEBEN declarar interacción primaria, aunque el resultado pueda rechazarse.
 Un tacho sólo DEBE ofrecer extracción con bolsa y mano vacía; una puerta trabada DEBE
-ofrecer Abrir. La tapa DEBE ofrecer sólo su alternancia, sin tirar además lo sostenido.
+ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer sólo su
+alternancia, sin tirar además lo sostenido.
 El secundario sobre todos esos objetivos NO DEBE ofrecer los usos trasladados al primario;
 Sacar producto conserva el secundario, y las acciones ajenas conservan su contrato.
 
@@ -455,6 +458,18 @@ quedó apoyada de forma estable sobre ese metal.
 Los apoyos válidos de piso, mostrador, pallet del depósito y otra caja DEBEN conservarse,
 incluida la caída en cascada al retirar el apoyo inferior. La regla general para decidir
 otros apoyos parciales depende de OQ-PLY-004.
+
+### BR-PLY-041 — La entrada cierra la noche cuando se puede salir
+
+MIENTRAS está habilitada la salida de BR-SHF-021, el primario sobre la puerta de entrada
+DEBE terminar la jornada por el cierre habitual, sin alternar la hoja. La referencia DEBE
+ofrecer Interactuar con el control vigente del primario sólo en ese estado. Antes de habilitarse,
+al volver a trabarse por una tarea pendiente, o desde la primera jornada completa, NO DEBE
+ofrecer esa acción y el primario DEBE conservar el sonido de puerta trabada sin girar la hoja.
+La entrada NO DEBE permitir soltar o usar lo
+sostenido por ninguno de estos intentos. El secundario NO DEBE cerrar la noche ni sonar trabada.
+Con control suspendido, pausa o jornada cerrada, ningún gesto DEBE volver a cerrar la noche.
+Las demás puertas DEBEN conservar su referencia y comportamiento.
 
 ## Criterios de aceptación
 
@@ -1015,7 +1030,8 @@ balde vacío sobre inodoro, jabón sobre balde vacío o teñido y mopa sobre bal
 se consulta ENTONCES ofrece por primario Limpiar, Llenar, Vaciar, Vertir y Mojar respectivamente,
 sin Dejar ni mutación. DADO mopa sobre inodoro ENTONCES ofrece Mojar. DADO lector lleno y
 unidad sostenida ENTONCES conserva Interactuar por primario, no por secundario. DADO una
-puerta cerrada o trabada ENTONCES ofrece Abrir; abierta, Cerrar; nota, Mirar. Mano vacía ante
+puerta cerrada o trabada ENTONCES ofrece Abrir, salvo la entrada principal de BR-PLY-041;
+abierta, Cerrar; nota, Mirar. Mano vacía ante
 lector, inodoro, lavatorio o balde no ofrece esos usos; el lector ausente tampoco.
 
 ### AC-PLY-085 — Consultar el tacho no le saca la bolsa *(verifica BR-PLY-036, BR-PLY-035)*
@@ -1143,6 +1159,24 @@ terminada y entrega habilitada con objeto sostenido ENTONCES dice «Entregar», 
 simultáneo. Los dos verbos usan el control vigente del primario; declararlos no inicia diálogo
 ni entrega por consultar, ni habilita atención directa si el puesto no la ofrece.
 
+### AC-PLY-103 — La entrada ofrece sólo la salida disponible *(verifica BR-PLY-041, BR-PLY-037, BR-PLY-038)*
+
+DADO una jornada de prueba antes del aviso CUANDO se enfoca la entrada ENTONCES no ofrece
+acción primaria; el primario suena trabada y no gira la hoja. DADO su salida habilitada
+ENTONCES ofrece Interactuar con el control primario vigente. Tras vencer el aviso conserva
+esa referencia mientras todas las tareas sigan cumplidas. CUANDO una tarea se descumple
+ENTONCES se retira Interactuar y el primario vuelve a sonar trabada sin cerrar la noche.
+Recuperar todas las tareas vuelve a ofrecer Interactuar. DADO la primera jornada completa
+con todas las tareas hechas ENTONCES no ofrece salida y sigue sonando trabada.
+Las otras puertas conservan Abrir y Cerrar.
+
+### AC-PLY-104 — Un primario cierra y conserva la mano *(verifica BR-PLY-041, BR-PLY-026)*
+
+DADO la entrada habilitada y, por separado, mano vacía y un objeto sostenido CUANDO se hace
+primario ENTONCES cierra una sola vez sin abrir la hoja, soltar ni usar el objeto. CUANDO se
+hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
+abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los gestos no lo repiten.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -1182,7 +1216,7 @@ ni entrega por consultar, ni habilita atención directa si el puesto no la ofrec
   La vigencia de la persona y el estado de atención deciden hablar o entregar; terminar el
   diálogo devuelve automáticamente la vista y el movimiento, salvo el control tomado por el cierre.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): las obligatorias declaradas que
-  enumera la nota de tareas.
+  enumera la nota de tareas y el permiso actual para salir por la entrada durante la prueba.
 
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta y consume): qué se lleva en la
   mano decide si se puede limpiar; si un tacho conserva su bolsa decide si el primario ofrece

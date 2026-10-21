@@ -127,6 +127,7 @@ var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
 var _enlace_de_guardado: EnlaceDeGuardado
+var _salida_preparada := false
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
@@ -148,6 +149,9 @@ func _ready() -> void:
 	_cablear_el_celular()
 	_cablear_la_investigacion()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
+	var entrada: PuertaDelLocal = $Estructura/puertaentrada/CuerpoDeLaHoja
+	entrada.consultar_salida = _puede_salir
+	entrada.salida_solicitada.connect(_salir_por_la_entrada)
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
@@ -155,6 +159,7 @@ func _ready() -> void:
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
+	_reloj.cierre_iniciado.connect(_al_iniciar_el_cierre)
 	_acomodador = AcomodadorDelDeposito.new()
 	_acomodador.reloj = _reloj
 	add_child(_acomodador)
@@ -185,10 +190,8 @@ func _ready() -> void:
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
 	)
-	_reloj.tarea_completada.connect(_acelerar_si_se_cerro_el_ciclo.unbind(1))
-	_atenciones.compra_realizada.connect(_acelerar_si_se_cerro_el_ciclo)
-	_atenciones.comprador_vencido.connect(_acelerar_si_se_cerro_el_ciclo.unbind(1))
-	_computadora.registro_actualizado.connect(_acelerar_si_se_cerro_el_ciclo)
+	_reloj.tarea_completada.connect(_revisar_la_salida.unbind(1))
+	_reloj.tarea_descumplida.connect(_revisar_la_salida.unbind(1))
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
@@ -331,6 +334,8 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
+	_salida_preparada = false
+	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).vaciar()
 	_jornada_del_celular = jornada
 	_celular.abrir_jornada(jornada, _condiciones_del_jefe())
 	_pantalla_del_celular.mostrar_recordatorio(true)
@@ -447,6 +452,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_audio.arrancar_el_ambiente()
 	_limpieza.reiniciar()
 	_estante.mostrar(0)
+	_salida_preparada = true
+	_revisar_la_salida()
 
 
 func _mostrar_caja(caja: CajaDeProductosDelDeposito, presente: bool) -> void:
@@ -465,16 +472,29 @@ func _clientes_mal_atendidos() -> int:
 	return 0 if atender == null else atender.mal_atendidos()
 
 
-func _acelerar_si_se_cerro_el_ciclo() -> void:
-	# La primera apertura cumple obligatorias antes de darle su noche a la ventanilla.
-	if _atenciones.tarea() == null or _computadora.registro() == null:
+func _revisar_la_salida() -> void:
+	if not _salida_preparada:
 		return
-	var compras_cerradas := _atenciones.tarea().compras_cerradas()
-	var registro_al_cierre := _computadora.registro().completada(true)
-	var obligatorias := _partida.obligatorias()
-	var jornada := _partida.jornada()
-	if CierreAnticipado.corresponde(jornada, compras_cerradas, registro_al_cierre, obligatorias):
-		_reloj.acelerar_hasta_el_cierre(CierreAnticipado.DURACION_DE_LA_ACELERACION)
+	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).actualizar_salida(
+		_puede_salir()
+	)
+
+
+func _al_iniciar_el_cierre() -> void:
+	_salida_preparada = false
+
+
+func _puede_salir() -> bool:
+	return (
+		_salida_preparada
+		and _reloj.corriendo()
+		and CierreAnticipado.corresponde(_partida.jornada(), _partida.obligatorias())
+	)
+
+
+func _salir_por_la_entrada() -> void:
+	if _puede_salir():
+		_reloj.terminar()
 
 
 ## Al cerrar, la persiana baja y la devolución de Enrique llega por el celular.

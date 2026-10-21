@@ -1,131 +1,44 @@
 extends GdUnitTestSuite
 
 
-func _cumplidas_salvo(jornada: int, pendientes: Array[Tarea.Tipo]) -> Array[Tarea]:
+func _cumplidas_salvo(jornada: int, pendiente: Tarea = null) -> Array[Tarea]:
 	var obligatorias := Apertura.obligatorias(jornada)
 	for tarea in obligatorias:
-		if tarea.tipo() not in pendientes:
+		if pendiente == null or tarea.tipo() != pendiente.tipo():
 			tarea.completar()
 	return obligatorias
 
 
-func test_cerradas_las_compras_con_lo_demas_cumplido_corresponde() -> void:  # AC-SHF-031
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
-	var sin_cobrar := _cumplidas_salvo(jornada, [Tarea.Tipo.CAJA])
-	assert_bool(CierreAnticipado.corresponde(jornada, false, false, sin_cobrar)).is_false()
-	assert_bool(CierreAnticipado.corresponde(jornada, true, false, sin_cobrar)).is_true()
-	(
-		assert_bool(
-			CierreAnticipado.corresponde(jornada, true, false, _cumplidas_salvo(jornada, []))
+func test_cada_obligatoria_es_necesaria_y_solo_salen_las_noches_de_prueba() -> void:  # AC-SHF-036
+	for jornada: int in range(1, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
+		var de_prueba := jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		assert_bool(CierreAnticipado.corresponde(jornada, _cumplidas_salvo(jornada))).is_equal(
+			de_prueba
 		)
-		. is_true()
-	)
+		for pendiente in Apertura.obligatorias(jornada):
+			(
+				assert_bool(
+					CierreAnticipado.corresponde(jornada, _cumplidas_salvo(jornada, pendiente))
+				)
+				. is_false()
+			)
+	assert_bool(CierreAnticipado.corresponde(0, _cumplidas_salvo(0))).is_false()
 
 
-func test_el_que_espera_o_no_llego_no_deja_acelerar() -> void:  # AC-SHF-032
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
-	var compradores := Compradores.de_la_jornada(jornada)
-	assert_array(compradores).is_not_empty()
-	var tarea := TareaDeAtender.new(
-		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
-	)
-	var cumplidas := _cumplidas_salvo(jornada, [Tarea.Tipo.CAJA])
-	(
-		assert_bool(
-			CierreAnticipado.corresponde(jornada, tarea.compras_cerradas(), false, cumplidas)
-		)
-		. is_false()
-	)
-	tarea.avanzar(compradores[-1].horario.x)
-	assert_object(tarea.en_ventanilla()).is_same(compradores[-1])
-	(
-		assert_bool(
-			CierreAnticipado.corresponde(jornada, tarea.compras_cerradas(), false, cumplidas)
-		)
-		. is_false()
-	)
-	tarea.avanzar(compradores[-1].horario.y)
-	assert_bool(tarea.compras_cerradas()).is_true()
-	assert_bool(tarea.completada()).is_false()
-	(
-		assert_bool(
-			CierreAnticipado.corresponde(jornada, tarea.compras_cerradas(), false, cumplidas)
-		)
-		. is_true()
-	)
-
-
-func test_una_obligatoria_pendiente_que_no_es_cobrar_no_deja_acelerar() -> void:  # AC-SHF-032
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
-	var probadas := 0
-	for tarea in Apertura.obligatorias(jornada):
-		if tarea.tipo() == Tarea.Tipo.CAJA:
-			continue
-		var pendientes: Array[Tarea.Tipo] = [tarea.tipo()]
-		var obligatorias := _cumplidas_salvo(jornada, pendientes)
-		(
-			assert_bool(CierreAnticipado.corresponde(jornada, true, false, obligatorias))
-			. override_failure_message(str(tarea.tipo()))
-			. is_false()
-		)
-		probadas += 1
-	assert_int(probadas).is_greater(0)
-
-
-func test_sin_compradores_las_compras_estan_cerradas() -> void:  # AC-SHF-032
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
-	var nadie := TareaDeAtender.new([], Inventario.new([]))
-	var cumplidas := _cumplidas_salvo(jornada, [Tarea.Tipo.CAJA])
-	(
-		assert_bool(
-			CierreAnticipado.corresponde(jornada, nadie.compras_cerradas(), false, cumplidas)
-		)
-		. is_true()
-	)
-
-
-func test_solo_la_primera_noche_acelera() -> void:  # AC-SHF-035
-	for jornada in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
+func test_perder_y_recuperar_cualquier_tarea_cambia_el_permiso() -> void:  # AC-SHF-041
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 	):
-		var todas := _cumplidas_salvo(jornada, [])
-		(
-			assert_bool(CierreAnticipado.corresponde(jornada, true, false, todas))
-			. override_failure_message("jornada %d" % jornada)
-			. is_equal(jornada == ReglasDeLaPartida.PRIMERA_JORNADA)
-		)
+		var tareas := _cumplidas_salvo(jornada)
+		for tarea in tareas:
+			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_true()
+			assert_bool(tarea.descompletar()).is_true()
+			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_false()
+			assert_bool(tarea.completar()).is_true()
+			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_true()
 
 
-func test_sin_ventas_el_registro_que_coincide_deja_acelerar() -> void:  # AC-SHF-032
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
-	var compradores := Compradores.de_la_jornada(jornada)
-	var tarea := TareaDeAtender.new(
-		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
-	)
-	tarea.avanzar(compradores[-1].horario.y)
-	assert_bool(tarea.compras_cerradas()).is_true()
-	var registro := RegistroDeVentas.new(Catalogo.todos(), tarea)
-	assert_bool(tarea.completada()).is_false()
-	assert_bool(registro.completada()).is_false()
-	var obligatorias := _cumplidas_salvo(jornada, [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR])
-	(
-		assert_bool(
-			CierreAnticipado.corresponde(jornada, true, registro.completada(true), obligatorias)
-		)
-		. is_true()
-	)
-	registro.sumar(Catalogo.todos()[0])
-	(
-		assert_bool(
-			CierreAnticipado.corresponde(jornada, true, registro.completada(true), obligatorias)
-		)
-		. is_false()
-	)
-	assert_bool(Apertura.pide(jornada, Tarea.Tipo.REPONER)).is_false()
-	assert_bool(CierreAnticipado.corresponde(jornada, true, true, obligatorias)).is_true()
-
-
-func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-031
+func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-036
 	for cantidad: int in [1, 3]:
 		var producto := Catalogo.de(Producto.Id.MAROLINI)
 		var pedido := Venta.new()
@@ -178,14 +91,7 @@ func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-0
 				turno.completar(tarea)
 		assert_bool(turno.todas_cumplidas()).is_true()
 		assert_int(turno.tareas_cumplidas()).is_equal(2)
-		(
-			assert_bool(
-				CierreAnticipado.corresponde(
-					1, atender.compras_cerradas(), registro.completada(), partida.obligatorias()
-				)
-			)
-			. is_true()
-		)
+		assert_bool(CierreAnticipado.corresponde(1, partida.obligatorias())).is_true()
 		partida.cerrar_la_jornada(turno.tareas_cumplidas())
 		assert_int(partida.medios()).is_zero()
 		assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_zero()
