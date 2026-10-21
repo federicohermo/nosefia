@@ -90,17 +90,33 @@ func test_los_cuatro_lugares_de_hoy_siguen_en_la_primera_jornada() -> void:  # A
 		PisoDelLocal.Lugar.DEPOSITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
 		PisoDelLocal.Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
 	}
-	var numero := 0
 	for lugar: PisoDelLocal.Lugar in esperados:
-		assert_int(lugar).is_equal(numero)
 		assert_int(piso.mancha_de(lugar).tipo()).is_equal(esperados[lugar])
-		numero += 1
+	var anteriores: Array[String] = [
+		"ENTRADA",
+		"GONDOLAS",
+		"DEPOSITO",
+		"BANO",
+		"RINCON_OPUESTO_AL_MOSTRADOR",
+		"ARRIBA_DEL_TABLERO",
+		"PARED_DEL_OTRO_INODORO",
+		"DETRAS_DEL_MOSTRADOR",
+		"CERCA_DE_LAS_HELADERAS",
+		"PUERTA_DEL_BANO_EN_EL_LOCAL",
+		"ESQUINA_ALTA_DEL_DEPOSITO",
+		"AL_LADO_DEL_CONTENEDOR",
+		"PUERTA_DEL_BANO_EN_EL_BANO",
+		"TECHO_DEL_BANO",
+		"BAJO_LA_PUERTA_DEL_CUBICULO",
+	]
+	for numero in anteriores.size():
+		assert_int(PisoDelLocal.Lugar[anteriores[numero]]).is_equal(numero)
 
 
 func test_cada_jornada_arranca_sucia_aunque_la_anterior_quedo_limpia() -> void:  # AC-CLN-016
 	# Instancias nuevas y no las mismas: con un piso compartido, lo limpiado anoche llegaría
 	# limpio esta noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
-	for jornada: int in [4, 5]:
+	for jornada: int in [3, 4, 5]:
 		var anoche := PisoDelLocal.de_la_jornada(jornada)
 		_borrar_todas(anoche)
 		assert_bool(anoche.esta_limpio()).is_true()

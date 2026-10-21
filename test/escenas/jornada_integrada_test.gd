@@ -118,6 +118,24 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
 	await _limpiar(almacen)
 
 
+func test_la_tercera_jornada_se_limpia_con_su_cuarta_y_ultima_mancha() -> void:  # AC-CLN-060
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 3}))
+	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen, 3)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_int(_piso(almacen).jornada()).is_equal(3)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
+	assert_int(_piso(almacen).lugares().size()).is_equal(4)
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var avisos: Array[int] = []
+	reloj.tarea_completada.connect(func(cantidad: int) -> void: avisos.append(cantidad))
+	await _limpiar(almacen)
+	assert_int(_cumplidas(reloj)).is_equal(1)
+	assert_array(avisos).contains_exactly([1])
+
+
 func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

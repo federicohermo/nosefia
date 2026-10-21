@@ -323,11 +323,27 @@ Lo que más se rompe:
   los ayudantes compartidos de `test/` y las suites que siguen de noche, no sólo las que nombran
   el flujo. En el #527, la jornada 2 pasó a abrir con instrucciones, y `tickets_del_cierre_test.gd`
   y `avance_de_devolucion.gd` seguían de J1 a J2 sin estar en los límites.
+- **Un criterio que cuenta por unidad lleva a «Se escribe» cada archivo por donde viaja el
+  dato, hasta el dominio.** Se sigue quién conoce la cuenta y cómo llega al cierre. En el #572,
+  «un punto por cada cliente mal atendido» pedía un número que sólo conoce la ventanilla, y el
+  cierre entrega cuántas tareas se cumplieron. Faltaban `tarea_de_atender.gd`,
+  `ciclo_de_jornadas.gd`, `almacen.gd` y `politica_de_guardado.gd`, que guarda lo nuevo.
+- **Un criterio que dice cuándo se puede perder lleva a «Se escribe» las suites que despiden
+  en las noches que dejan de despedir.** El `rg` busca `DESPEDIDO`, `despedido()` y los
+  cierres graves en J1–J3, también en `test/escenas/` y `test/sistemas/`. En el #572 eran
+  doce archivos de test, y los fixtures que cierran jornadas con un entero sin completar las tareas
+  sumaban puntos de más.
 - **Cada suite de «Se escribe» se cuenta contra el tope de 20 métodos públicos de `gdlint`**, con
   `rg -c '^func [a-z]'`: cuentan también `before_test` y cualquier ayudante sin `_`. En el #277,
   `repositor_test.gd` tenía 19 casos y 20 métodos, y el issue le pedía uno más. Si una ya está
   en el tope, el issue dice adónde van los casos nuevos. En el #176, `reposicion_manual_test.gd`
   estaba en 20 y `caja_que_se_lleva_test.gd` en 19, y la suite nueva no estaba en los límites.
+  Vale también para una clase de `src/`: `gdlint` cuenta sus métodos no estáticos. En el #548,
+  `Partida` estaba en el tope, y el dato nuevo entró como propiedad de sólo lectura.
+- **Un mensaje del guion que pasa a depender de la partida se filtra en todos los que leen el
+  guion.** Se buscan los lectores con `rg "\.mensajes"` sobre `src/`: las instrucciones y
+  también el chat del celular, con quien lo abre en cada jornada. En el #548, los límites
+  nombraban sólo las instrucciones, y el chat mostraba las cinco variantes juntas.
 - **Un issue que suma cuerpos al grupo `interactuable` mide lo que cuesta la mira.** Se mide
   `_leer_la_mira` en el pasillo más cargado, con la mano vacía y con algo en la mano. En el
   #265, pasar de una zona por producto a una por casillero multiplicó por 60 lo enfocable, y la

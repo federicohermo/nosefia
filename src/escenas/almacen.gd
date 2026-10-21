@@ -280,7 +280,7 @@ func _ready() -> void:
 	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
 	_jugador.muebles_con_reserva = _muebles_con_contorno
 	_ciclo.jornada_abierta.connect(_reposicion_manual.preparar.unbind(1), CONNECT_ONE_SHOT)
-	_ciclo.arrancar(_partida, _reloj)
+	_ciclo.arrancar(_partida, _reloj, _clientes_mal_atendidos)
 
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
@@ -316,7 +316,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
 	_jornada_del_celular = jornada
-	_celular.abrir_jornada(jornada)
+	_celular.abrir_jornada(jornada, _condiciones_del_jefe())
 	_pantalla_del_celular.mostrar_recordatorio(true)
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
@@ -405,20 +405,27 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.freeze = true
 			util.collision_layer = 0
 			util.collision_mask = 0
-	var se_limpia := Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
-	var cerradas_sin_limpieza := {
-		$Estructura/puerta2/CuerpoDeLaHoja: SubtitulosAlExaminar.BANO_CERRADO,
-		$Estructura/puerta_limpieza/CuerpoDeLaHoja: SubtitulosAlExaminar.CUARTITO_CERRADO,
+	var cerradas := {
+		$Estructura/puerta/CuerpoDeLaHoja:
+		[PuertasTrabadas.Cuarto.DEPOSITO, SubtitulosAlExaminar.DEPOSITO_CERRADO],
+		$Estructura/puerta_limpieza/CuerpoDeLaHoja:
+		[PuertasTrabadas.Cuarto.CUARTITO, SubtitulosAlExaminar.CUARTITO_CERRADO],
 	}
-	for puerta: PuertaDelLocal in cerradas_sin_limpieza:
-		puerta.traba = PuertaDelLocal.Traba.NINGUNA if se_limpia else PuertaDelLocal.Traba.PUERTA
-		puerta.identidad = &"" if se_limpia else cerradas_sin_limpieza[puerta]
+	for puerta: PuertaDelLocal in cerradas:
+		var trabada := PuertasTrabadas.trabada(cerradas[puerta][0], jornada)
+		puerta.traba = PuertaDelLocal.Traba.PUERTA if trabada else PuertaDelLocal.Traba.NINGUNA
+		puerta.identidad = cerradas[puerta][1] if trabada else &""
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()
 	_audio.arrancar_el_ambiente()
 	_limpieza.reiniciar()
 	_estante.mostrar(0)
+
+
+func _clientes_mal_atendidos() -> int:
+	var atender := _atenciones.tarea()
+	return 0 if atender == null else atender.mal_atendidos()
 
 
 func _acelerar_si_se_cerro_el_ciclo() -> void:
@@ -469,7 +476,7 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
 		_jugador.suspender()
 		await _pantalla_del_celular.celular_bajado
-		await _preparar_los_utiles()
+		await _preparar_lo_postergado()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
 	var acciones: Dictionary[DevolucionDelJefe.Opcion, Callable] = {
 		DevolucionDelJefe.Opcion.CONTINUAR: _seguir,
@@ -480,12 +487,14 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 
 ## Entre noches no hay carga: lo que la siguiente necesita y la carga no preparó se calienta acá,
 ## con la persiana baja tapando la cámara del calentamiento.
-func _preparar_los_utiles() -> void:
+func _preparar_lo_postergado() -> void:
 	var siguiente := _partida.jornada()
 	var pendientes: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if PreparacionDeLosUtiles.por_preparar(util.datos.id, _jornada_preparada, siguiente):
 			pendientes.append(util)
+	if PreparacionDelDeposito.por_preparar(_jornada_preparada, siguiente):
+		pendientes.append_array(_cajas_de_productos)
 	if not pendientes.is_empty():
 		var calentamiento := CalentamientoDeShaders.new()
 		add_child(calentamiento)
@@ -504,12 +513,14 @@ func _seguir() -> void:
 
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
 ## entregar otra vez la devolución; si no, entra a la jornada guardada.
-## Los útiles que esta carga no prepara: sus variantes las compila otra noche.
+## Los útiles y las cajas que esta carga no prepara: sus variantes las compila otra noche.
 func cuerpos_sin_copias() -> Array[Node3D]:
 	var sin_copias: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if not PreparacionDeLosUtiles.se_prepara(util.datos.id, _partida.jornada()):
 			sin_copias.append(util)
+	if not PreparacionDelDeposito.se_prepara(_partida.jornada()):
+		sin_copias.append_array(_cajas_de_productos)
 	return sin_copias
 
 
@@ -521,7 +532,7 @@ func retomar_la_partida() -> void:
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
 	_jornada_del_celular = _partida.reflexion.jornada()
-	_celular.bandeja().abrir_jornada(_jornada_del_celular)
+	_celular.bandeja().abrir_jornada(_jornada_del_celular, _condiciones_del_jefe())
 	_pantalla.visible = true
 	_empezar_la_reflexion()
 
@@ -577,10 +588,14 @@ func empezar_partida_nueva() -> void:
 	_entrar_a_la_jornada()
 
 
+func _condiciones_del_jefe() -> Array[StringName]:
+	return CondicionesDelJefe.elegidas(_partida.noches_de_prueba)
+
+
 ## Las instrucciones conservan el presupuesto completo, y su «OK» usa la misma entrada que seguir.
 func _entrar_a_la_jornada() -> void:
 	var instrucciones := InstruccionesDelJefe.de_la_jornada(
-		GUION_DEL_JEFE.mensajes, _partida.jornada()
+		GUION_DEL_JEFE.mensajes, _partida.jornada(), _condiciones_del_jefe()
 	)
 	if instrucciones.is_empty():
 		anunciar_la_noche()

@@ -80,12 +80,16 @@ con su tipo, su habitación y su superficie:
 
 | Jornada | Tipo | Habitación | Superficie | Lugar |
 |---|---|---|---|---|
+| 3 | polvo | local | piso | frente al mostrador |
+| 3 | polvo | local | pared | sobre la pared con la puerta del baño |
+| 3 | moho | depósito | pared | al lado de la puerta del cuartito de limpieza |
+| 3 | caca | baño | piso | al lado de un inodoro |
 | 4 | polvo | local | piso | frente a la puerta de entrada |
 | 4 | polvo | local | piso | entre dos góndolas |
 | 4 | polvo | local | piso | en el rincón opuesto al mostrador |
 | 4 | moho | depósito | pared | cerca de la puerta al local |
 | 4 | moho | depósito | pared | arriba de la caja eléctrica |
-| 4 | caca | baño | piso | al lado de un inodoro |
+| 4 | caca | baño | piso | al lado del inodoro donde no estuvo la caca de piso de la jornada 3 |
 | 4 | caca | baño | pared | al lado del otro inodoro |
 | 5 | polvo | local | piso | detrás del mostrador |
 | 5 | polvo | local | piso | cerca de las heladeras |
@@ -96,10 +100,12 @@ con su tipo, su habitación y su superficie:
 | 5 | moho | baño | techo | en una esquina que no es la de la puerta |
 | 5 | caca | baño | piso | bajo la puerta de un cubículo |
 
-La jornada 4 suma 7 —3 de polvo, 2 de moho y 2 de caca— y la 5 suma 8 —4 de polvo, 3 de moho y 1
-de caca—. Las jornadas 1 y 2 DEBEN arrancar sin manchas. La 3 DEBE arrancar con las de la 4. Las
-jornadas 6, 7 y 8 DEBEN arrancar con las de la 4 (`OQ-CLN-002`). Cada jornada DEBE arrancar con
-todas sus manchas sucias, aunque la anterior las haya borrado.
+La jornada 3 suma 4, con 2 de polvo, 1 de moho y 1 de caca. La 4 suma 7, con 3 de polvo,
+2 de moho y 2 de caca. La 5 suma 8, con 4 de polvo, 3 de moho y 1 de caca. Las jornadas 1 y 2
+DEBEN arrancar sin manchas. La caca de piso de la jornada 4 DEBE estar al lado del inodoro donde
+no estuvo la de la jornada 3. Las jornadas 6, 7 y 8 DEBEN arrancar con las de la 4
+(`OQ-CLN-002`). Cada jornada DEBE arrancar con todas sus manchas sucias, aunque la anterior las
+haya borrado.
 
 Una mancha que la jornada no declara NO DEBE verse, ni detener la mira, ni reservar el sector de
 un charco temporal, ni contar para limpiar. Una mancha de pared o de techo DEBE borrarse con la
@@ -379,21 +385,23 @@ con el dibujo de polvo de la guía y transparencia entre los trazos que deja ver
 
 ### AC-CLN-016 — Las manchas de cada jornada *(verifica BR-CLN-013)*
 
-DADO la jornada 1 y la 2 ENTONCES no tienen manchas. DADO la 4 ENTONCES tiene 7 manchas: 3 de
-polvo, 2 de moho y 2 de caca. DADO la 5 ENTONCES tiene 8: 4 de polvo, 3 de moho y 1 de caca. DADO
-la 3, la 6, la 7 y la 8 ENTONCES tiene las mismas 7 de la 4. En cada una, cada mancha lleva el
-tipo, la habitación y la superficie que declara su lugar, y ninguna arranca borrada. DADO la 3
-con sus 7 borradas CUANDO abre la 4 ENTONCES sus 7 están sucias; DADO la 4 con sus 7 borradas
-CUANDO abre la 5 ENTONCES sus 8 están sucias; DADO la 5 con sus 8 borradas CUANDO abre la 6
-ENTONCES sus 7 están sucias.
+DADO la jornada 1 y la 2 ENTONCES no tienen manchas. DADO la 3 ENTONCES tiene 4 manchas,
+2 de polvo, 1 de moho y 1 de caca. DADO la 4 ENTONCES tiene 7, con 3 de polvo, 2 de moho y
+2 de caca. DADO la 5 ENTONCES tiene 8, con 4 de polvo, 3 de moho y 1 de caca. DADO la 6, la 7
+y la 8 ENTONCES tienen las mismas 7 de la 4. En cada una, cada mancha lleva el tipo, la
+habitación, la superficie y el lugar declarados, y ninguna arranca borrada. DADO la caca de
+piso de la jornada 3 CUANDO abre la 4 ENTONCES la caca de piso está junto al otro inodoro.
+DADO la 3 con sus 4 borradas CUANDO abre la 4 ENTONCES sus 7 están sucias. DADO la 4 con sus
+7 borradas CUANDO abre la 5 ENTONCES sus 8 están sucias. DADO la 5 con sus 8 borradas CUANDO
+abre la 6 ENTONCES sus 7 están sucias.
 
 ### AC-CLN-017 — Cada mancha en su habitación y su superficie *(verifica BR-CLN-013, BR-CLN-027)*
 
-DADO la jornada 4 y después la 5 ENTONCES cada mancha de la noche está en la habitación que
+DADO las jornadas 3, 4 y 5, por turno, ENTONCES cada mancha de la noche está en la habitación que
 declara su lugar, según la pertenencia de `BR-CLN-027`, y sobre la superficie que declara: mira
 hacia arriba en el piso, en horizontal en la pared y hacia abajo en el techo. Ninguna queda debajo
-de un mueble ni tapada, y la mira enfoca cada una desde un punto libre del piso. Las manchas de
-otra noche no se ven y la mira no las enfoca.
+de un mueble ni tapada, y la mira enfoca cada una desde un punto libre del piso dentro del
+alcance vigente. Las manchas de otra noche no se ven y la mira no las enfoca.
 
 ### AC-CLN-018 — Los útiles disponibles vuelven al cuartito *(verifica BR-CLN-014)*
 
@@ -708,9 +716,11 @@ del piso reserva su sector.
 
 ### AC-CLN-060 — Limpiar se cumple con la última mancha de la noche *(verifica BR-CLN-011, BR-CLN-013, BR-CLN-019)*
 
-DADO la jornada 3 CUANDO se borran 6 de sus 7 manchas ENTONCES limpiar no está cumplida; CUANDO
-se borra la séptima ENTONCES se cumple, una sola vez. DADO la jornada 5 CUANDO se borran 7 de sus
-8 ENTONCES no está cumplida; CUANDO se borra la octava ENTONCES se cumple, una sola vez. Cada
+DADO la jornada 3 CUANDO se borran 3 de sus 4 manchas ENTONCES limpiar no está cumplida.
+CUANDO se borra la cuarta ENTONCES se cumple, una sola vez. DADO la jornada 4 CUANDO se borran
+6 de sus 7 manchas ENTONCES no está cumplida. CUANDO se borra la séptima ENTONCES se cumple,
+una sola vez. DADO la jornada 5 CUANDO se borran 7 de sus 8 ENTONCES no está cumplida. CUANDO
+se borra la octava ENTONCES se cumple, una sola vez. Cada
 mancha, también las de pared y la de techo, se borra pasándole la mopa mojada del jabón que pide,
 apuntándola con la mira desde un punto libre del piso. Las manchas del mismo tipo en la misma
 habitación se borran por separado y cuenta cada una.

@@ -157,13 +157,18 @@ func test_dos_graves_con_una_impecable_en_el_medio_despiden() -> void:  # AC-EMP
 
 
 func test_la_octava_impecable_con_deuda_cumple_el_contrato() -> void:  # AC-EMP-008
-	var legajo := Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)
-	var partida := Partida.new(legajo)
-	for _jornada in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
+	var partida := Partida.desde(
+		{
+			"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
+			"medios": 3 * Reglas.MEDIOS_POR_APERCIBIMIENTO
+		}
+	)
+	var ultima := ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	for _jornada in ultima - ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 		partida.abrir_la_jornada()
 		partida.cerrar_la_jornada(Apertura.cantidad_de_obligatorias(4))
 	assert_int(partida.final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
-	assert_int(legajo.apercibimientos()).is_equal(3)
+	assert_int(partida.apercibimientos()).is_equal(3)
 
 
 func test_las_jornadas_de_introduccion_no_admiten_aviso() -> void:  # AC-EMP-072
@@ -177,10 +182,47 @@ func test_las_jornadas_de_introduccion_no_admiten_aviso() -> void:  # AC-EMP-072
 			assert_int(Consecuencias.consecuencia_de(cumplidas, declaradas)).is_equal(
 				Consecuencias.Banda.GRAVE
 			)
-	var partida := Partida.nueva()
-	for cumplidas: int in [1, 2]:
-		partida.abrir_la_jornada()
-		partida.cerrar_la_jornada(cumplidas)
-	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
-	assert_int(partida.jornada()).is_equal(2)
-	assert_object(partida.abrir_la_jornada()).is_null()
+
+
+func test_cada_falla_de_la_prueba_suma_lo_mismo_sin_mirar_bandas() -> void:  # AC-EMP-078
+	var legajo := Legajo.new()
+	legajo.registrar_prueba(3)
+	assert_int(legajo.apercibimientos()).is_equal(3 * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA)
+
+
+func test_la_prueba_se_pierde_en_el_umbral_sin_completar_la_ultima() -> void:  # AC-EMP-080
+	for completa: bool in [true, false]:
+		var legajo := Legajo.con_medios(
+			Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+		)
+		legajo.cerrar_la_prueba(completa)
+		assert_bool(legajo.perdio_la_prueba()).is_equal(not completa)
+		assert_int(legajo.apercibimientos_de_la_prueba()).is_equal(
+			Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+		)
+		assert_bool(legajo.ultima_de_la_prueba_completa()).is_equal(completa)
+	var debajo := Legajo.con_medios(
+		(Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA - 1) * Reglas.MEDIOS_POR_APERCIBIMIENTO
+	)
+	debajo.cerrar_la_prueba(false)
+	assert_bool(debajo.perdio_la_prueba()).is_false()
+
+
+func test_empezar_las_jornadas_completas_deja_cero_o_uno_segun_el_umbral() -> void:  # AC-EMP-081
+	var debajo := Legajo.con_medios(
+		(Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA - 1) * Reglas.MEDIOS_POR_APERCIBIMIENTO
+	)
+	debajo.cerrar_la_prueba(false)
+	debajo.empezar_las_jornadas_completas()
+	assert_int(debajo.medios()).is_zero()
+	var en_el_umbral := Legajo.con_medios(
+		Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+	)
+	en_el_umbral.cerrar_la_prueba(true)
+	en_el_umbral.empezar_las_jornadas_completas()
+	assert_int(en_el_umbral.medios()).is_equal(
+		Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+	)
+	assert_int(en_el_umbral.apercibimientos_de_la_prueba()).is_equal(
+		Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+	)
