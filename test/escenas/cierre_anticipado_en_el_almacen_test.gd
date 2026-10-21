@@ -220,6 +220,12 @@ func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-
 		if nodo.get("id") == NotaPegada.Id.TAREAS_A_REALIZAR:
 			tareas.append(nodo.call("dato") as NotaPegada)
 	assert_array(tareas).has_size(1)
-	assert_array(tareas[0].renglones()).contains_exactly(
-		["Atención al cliente", "Registro de productos vendidos"]
+	(
+		assert_array(tareas[0].renglones())
+		. contains_exactly(
+			[
+				NotaPegada.NOMBRES_DE_LAS_TAREAS[Tarea.Tipo.CAJA],
+				NotaPegada.NOMBRES_DE_LAS_TAREAS[Tarea.Tipo.REGISTRAR],
+			]
+		)
 	)
