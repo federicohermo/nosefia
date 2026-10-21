@@ -220,7 +220,7 @@ func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:
 	]:
 		var pantalla := _pantalla()
 		pantalla.mostrar(_mensajes_de(caso[0]))
-		for avance in caso[1]:
+		for avance: int in caso[1]:
 			_boton(pantalla, "_siguiente").pressed.emit()
 		await get_tree().process_frame
 		await get_tree().process_frame
