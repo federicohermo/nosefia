@@ -49,7 +49,7 @@ func test_una_segunda_noche_retomada_carga_las_cajas_con_copias() -> void:
 	var cajas: Array[Node3D] = []
 	cajas.assign(almacen.get("_cajas_de_productos"))
 	assert_array(cajas).is_not_empty()
-	assert_array(almacen.call("cuerpos_sin_copias")).contains_none(cajas)
+	assert_array(almacen.call("cuerpos_sin_copias")).not_contains(cajas)
 
 
 func test_la_transicion_a_la_segunda_noche_calienta_las_cajas_con_la_persiana_baja() -> void:
@@ -71,4 +71,4 @@ func test_la_transicion_a_la_segunda_noche_calienta_las_cajas_con_la_persiana_ba
 	assert_bool(await _cerrar_y_continuar(almacen)).is_true()
 	assert_array(calentadas[0]).contains(cajas)
 	assert_bool(con_persiana[0]).is_true()
-	assert_array(almacen.call("cuerpos_sin_copias")).contains_none(cajas)
+	assert_array(almacen.call("cuerpos_sin_copias")).not_contains(cajas)
