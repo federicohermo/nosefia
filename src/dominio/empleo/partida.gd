@@ -302,8 +302,6 @@ func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())
 
 
-## En la prueba, el contador cruza el umbral sin despedir: las dos primeras noches no se pueden
-## perder, y la última sólo si el contador llegó al umbral sin haberla cumplido entera.
 func _despedido_al_cerrar(cerrada: int) -> bool:
 	if cerrada < _ULTIMA_DE_LA_PRUEBA:
 		return false

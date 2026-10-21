@@ -1,4 +1,3 @@
-## La prueba, las tres primeras jornadas: cada descuido suma uno y la tercera decide.
 extends GdUnitTestSuite
 
 const M := Reglas.MEDIOS_POR_APERCIBIMIENTO
@@ -9,12 +8,10 @@ const CUARTA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 const CAMPO := PartidaSerializada.Campo
 
 
-## La partida a punto de abrir esa jornada, con los apercibimientos que trae de las anteriores.
 func _con(jornada: int, apercibimientos: int) -> Partida:
 	return Partida.desde({"jornada": jornada, "medios": apercibimientos * M})
 
 
-## Abre la jornada y la cierra con las obligatorias que se digan sin cumplir.
 func _noche(
 	partida: Partida,
 	sin_cumplir: Array[Tarea.Tipo],
@@ -80,11 +77,12 @@ func test_las_dos_primeras_no_despiden_con_lo_que_sea() -> void:  # AC-EMP-079
 
 
 func test_la_tercera_con_el_umbral_y_alguna_tarea_sin_cumplir_despide() -> void:  # AC-EMP-080
-	var partida := _con(TERCERA, UMBRAL - 1)
-	_noche(partida, [T.LIMPIAR])
-	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
-	assert_int(partida.jornada()).is_equal(TERCERA)
-	assert_object(partida.abrir_la_jornada()).is_null()
+	for total: int in [UMBRAL, UMBRAL + 1]:
+		var partida := _con(TERCERA, total - 1)
+		_noche(partida, [T.LIMPIAR])
+		assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
+		assert_int(partida.jornada()).is_equal(TERCERA)
+		assert_object(partida.abrir_la_jornada()).is_null()
 
 
 func test_la_tercera_un_apercibimiento_antes_del_umbral_sigue() -> void:  # AC-EMP-080
@@ -95,11 +93,13 @@ func test_la_tercera_un_apercibimiento_antes_del_umbral_sigue() -> void:  # AC-E
 	assert_object(partida.abrir_la_jornada()).is_not_null()
 
 
-func test_la_tercera_completa_sigue_aunque_pase_el_umbral() -> void:  # AC-EMP-080
-	var partida := _con(TERCERA, UMBRAL)
-	_noche(partida, [])
-	assert_bool(partida.terminada()).is_false()
-	assert_int(partida.jornada()).is_equal(CUARTA)
+func test_la_tercera_completa_sigue_debajo_en_y_sobre_el_umbral() -> void:  # AC-EMP-080
+	for total: int in [UMBRAL - 1, UMBRAL, UMBRAL + 1]:
+		var partida := _con(TERCERA, total)
+		_noche(partida, [])
+		assert_bool(partida.terminada()).is_false()
+		assert_int(partida.jornada()).is_equal(CUARTA)
+		assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(total)
 
 
 func test_la_cuarta_arranca_en_cero_si_la_prueba_no_llego_al_umbral() -> void:  # AC-EMP-081
@@ -146,7 +146,7 @@ func test_los_apercibimientos_de_la_prueba_cruzan_el_guardado() -> void:  # AC-E
 	var retomada := Partida.desde(PoliticaDeGuardado.datos(partida))
 	assert_int(retomada.jornada()).is_equal(TERCERA)
 	assert_int(retomada.apercibimientos()).is_equal(partida.apercibimientos())
-	assert_int(retomada.apercibimientos()).is_greater(0)
+	assert_int(retomada.apercibimientos()).is_equal(3)
 
 
 func test_el_resultado_de_la_prueba_cruza_el_guardado() -> void:  # AC-EMP-083
