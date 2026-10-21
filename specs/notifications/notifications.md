@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-NTF
 status: draft
 owner: por definir
-provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526
+provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573
 ---
 
 # Capacidad: los avisos durante la noche
@@ -11,7 +11,8 @@ provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e 
 ## Propósito
 
 Hacer visibles la llegada y salida por cansancio de un comprador y el rechazo del lector lleno.
-Avisar también una pista nueva y la proximidad del cierre mientras el jugador reparte su atención entre las tareas.
+Avisar también una pista nueva, la salida habilitada de las jornadas de prueba y la proximidad
+del cierre mientras el jugador reparte su atención entre las tareas.
 Los avisos acompañan esos sucesos sin cambiar su resultado.
 
 ## Lenguaje de la capacidad
@@ -135,6 +136,16 @@ encima de las interfaces de jornada y debajo del menú de pausa. NO DEBE añadir
 permanente al HUD ni cambiar la duración del turno.
 DEBE convivir con los demás tipos conservando orden, deduplicación y duración propia de
 cada uno; un aviso persistente NO DEBE adquirir un temporizador por la llegada de éste.
+
+### BR-NTF-014 — Las tareas terminadas avisan una vez por jornada de prueba
+
+CUANDO la jornada habilita la salida por todas sus tareas cumplidas según BR-SHF-021,
+el sistema DEBE mostrar «Ya terminaste tus tareas y podés irte» una sola vez en esa jornada.
+El aviso DEBE seguir la duración, pausa, orden y presentación comunes. Entradas repetidas
+del mismo cumplimiento NO DEBEN renovarlo, ni recrearlo después de vencer.
+Descumplir después del aviso conserva las tareas según BR-SHF-022 y NO DEBE retirar el permiso.
+Cerrar DEBE retirar el aviso y olvidar su disparo. Una jornada nueva de prueba puede avisar
+otra vez. Desde la primera jornada completa NO DEBE aparecer este aviso.
 
 ## Criterios de aceptación
 
@@ -305,6 +316,28 @@ según la secuencia de recepción. CUANDO vencen los temporizados ENTONCES la ll
 persistente permanece hasta su gesto de retiro; cierre próximo no la temporiza ni se repite.
 DADO los cuatro tipos todavía visibles CUANDO cierra el turno ENTONCES retira los cuatro.
 
+### AC-NTF-026 — Un disparo, duración y nueva noche *(verifica BR-NTF-014, BR-NTF-003, BR-NTF-005, BR-NTF-006)*
+
+DADO salida habilitada CUANDO se recibe su confirmación repetidas veces ENTONCES hay un
+solo aviso de tareas terminadas, primero entre los otros tipos. A los 2,9 segundos sigue;
+al completar 3,0 se retira. Una entrada repetida no renueva su resto ni lo recrea al vencer.
+Cerrar retira todos los tipos y permite avisar una vez en la siguiente jornada de prueba.
+Pausar conserva el tiempo restante del aviso.
+
+### AC-NTF-027 — Texto completo con la presentación común *(verifica BR-NTF-014, BR-NTF-007)*
+
+DADO el aviso a 1920×1080 y 1280×720 CUANDO se dibuja ENTONCES muestra en mayúsculas
+«Ya terminaste tus tareas y podés irte» completo en una línea, con fondo claro, símbolo a la
+izquierda y fuente principal. Su cartel ajusta el ancho al contenido, comparte el borde
+derecho de la pila, queda dentro de pantalla y deja pasar clics.
+
+### AC-NTF-028 — Sólo al completar las tareas de prueba *(verifica BR-NTF-014)*
+
+DADO por separado las jornadas 1, 2, 3 y la primera jornada completa CUANDO falta una tarea
+ENTONCES no hay aviso. CUANDO se completa la última ENTONCES las tres primeras muestran
+exactamente uno y la primera completa ninguno. DADO el aviso vencido y un intento de
+descumplir una tarea consolidada ENTONCES no reaparece y la salida sigue habilitada.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuándo llegan o se despachan compradores ni acepta lecturas.
@@ -315,14 +348,16 @@ DADO los cuatro tipos todavía visibles CUANDO cierra el turno ENTONCES retira l
 ## Contratos
 
 - **Entrada:** identidad de quien llega o vence, motivo de lectura, confirmación de pista nueva
-  anotada por investigación, tiempo en ejecución, tiempo restante de ficción del turno abierto y cierre.
+  anotada por investigación, tiempo en ejecución, tiempo restante de ficción del turno abierto,
+  salida habilitada y cierre.
 - **Salida:** tipos visibles ordenados, texto y símbolo correspondientes.
 - **Falla:** identidad nula, motivo que no es lector lleno y tiempo no positivo no cambian nada.
   Una pista repetida o desconocida y una revelación sin pista no crean ni renuevan avisos.
 
 ## Señales
 
-- Escucha llegada, vencimiento, rechazo, pista nueva anotada, tiempo restante y cierre.
+- Escucha llegada, vencimiento, rechazo, pista nueva anotada, tiempo restante, salida habilitada
+  y cierre.
   No emite decisiones a las capacidades que los publican.
 
 ## Dependencias

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: draft
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527 y #539; migración de los specs 001, 007, 011, 016, 027, 031
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527 y #573; migración de los specs 001, 007, 011, 016, 027, 031
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -46,8 +46,7 @@ real de la jornada cubra el turno entero**. El ritmo vale `43 200 ÷ duración`:
 
 Una jornada sin fila DEBE usar 720 segundos: un minuto real por hora de ficción. El ritmo DEBE
 salir de la jornada que se abre. Abrir la jornada siguiente o retomar una partida guardada NO
-DEBE heredar el ritmo de otra jornada. El único cambio de ritmo durante una noche es el de
-BR-SHF-020.
+DEBE heredar el ritmo de otra jornada. Cumplir las tareas NO DEBE cambiar ese ritmo.
 
 ### BR-SHF-003 — El tiempo entra, no se busca
 
@@ -87,7 +86,8 @@ salir de esa misma lista.
 ### BR-SHF-007 — Una obligatoria cuenta mientras su condición vale, y antes del cierre
 
 MIENTRAS queda turno, el sistema DEBE contar la obligatoria que se cumple, sin importar cuánto
-turno quede, y DEBE dejar de contarla si su condición deja de valer. SI la tarea ya está
+turno quede, y DEBE dejar de contarla si su condición deja de valer, salvo el
+cumplimiento consolidado de BR-SHF-022. SI la tarea ya está
 cumplida, ENTONCES cumplirla otra vez NO DEBE contarla dos veces. SI la tarea no está cumplida,
 ENTONCES descumplirla NO DEBE descontar nada. SI el turno está cerrado, ENTONCES el sistema DEBE
 rechazar cumplir y descumplir: el cierre cuenta el estado de ese instante.
@@ -135,25 +135,39 @@ permanecer entera 1 segundo y desaparecer durante los siguientes 0,5 segundos. S
 DEBE subir la persiana durante 1 segundo, sin superponer ambos movimientos: la entrada completa
 DEBE durar 2,5 segundos reales.
 
-### BR-SHF-020 — La primera noche termina cuando se cierra el ciclo
+### BR-SHF-021 — Las jornadas de prueba permiten irse al completar todas las tareas
 
-MIENTRAS está abierta la jornada 1, CUANDO no queda ningún comprador por atender y todas las
-obligatorias declaradas que no son cobrar en la caja están cumplidas, el sistema DEBE cambiar
-el ritmo para que el turno restante se consuma en la duración de la aceleración (OQ-SHF-007),
-la misma desde cualquier hora. No queda ningún comprador por atender cuando llegaron todos los
-compradores de la noche y cada uno completó su compra o venció. Un comprador que espera en la
-ventanilla, o que todavía no llegó, queda por atender. Si el último vence, cobrar en la caja
-queda sin cumplir y no impide acelerar. Registrar lo vendido cuenta como cumplido cuando el
-registro coincide con lo vendido, aunque nadie haya comprado: acelerar NO DEBE depender de que
-algún comprador complete su compra.
+MIENTRAS está abierta una jornada anterior a la primera jornada completa, CUANDO todas sus
+obligatorias declaradas están cumplidas, el sistema DEBE habilitar la salida por la entrada
+principal y producir el aviso de BR-NTF-014. Cobrar y registrar DEBEN estar cumplidas igual que
+las demás. Un comprador pendiente o vencido sin completar su compra NO DEBE sustituir el
+cumplimiento de atención. Un registro que sólo quedaría cumplido al cierre NO DEBE sustituir
+su cumplimiento durante la noche.
 
-SI no se cumple la condición, ENTONCES el ritmo DEBE seguir siendo el de BR-SHF-002. Una vez
-acelerado, el ritmo NO DEBE volver al de BR-SHF-002 en esa noche, aunque una obligatoria se
-descumpla después. La aceleración DEBE terminar en el mismo cierre de las 08:00: la misma
-devolución, la misma cuenta de obligatorias de ese instante y una sola entrada al cierre. La
-pausa y las retenciones de BR-SHF-003 DEBEN retener también la aceleración. Retomar la jornada 1
-desde el menú DEBE evaluar la condición de nuevo, desde la noche recién abierta. En las
-jornadas 2 a 8 el sistema NO DEBE acelerar, aunque se cumpla la condición.
+Cumplir las tareas NO DEBE acelerar el reloj ni cerrar la jornada automáticamente. Si el
+jugador no sale, el turno DEBE continuar a su ritmo normal hasta el cierre habitual.
+Desde la primera jornada completa, el sistema NO DEBE ofrecer esta salida ni producir su aviso.
+
+### BR-SHF-022 — El aviso consolida las tareas de esa noche
+
+CUANDO se habilita la salida y se produce el aviso, el sistema DEBE consolidar el cumplimiento
+de todas las obligatorias de esa noche. Desde ese instante, ninguna acción posterior DEBE
+descumplirlas ni volver a trabar la salida. La consolidación NO DEBE completar una tarea
+pendiente ni aplicarse antes de cumplir todas, ni en jornadas sin salida anticipada.
+Al cerrar, las tareas DEBEN conservar ese cumplimiento, tanto por la puerta como por tiempo.
+Las demás consecuencias del cierre conservan sus reglas.
+
+Abrir o retomar una jornada DEBE crear tareas sin consolidación heredada. El sistema DEBE
+evaluar de nuevo el cumplimiento real de las tareas de esa jornada.
+
+### BR-SHF-023 — El registro consolidado queda para consulta
+
+CUANDO se consolida el cumplimiento de BR-SHF-022, el sistema DEBE conservar el registro de
+ventas de esa noche sin permitir sumar ni restar unidades. Los botones de ambas operaciones
+DEBEN quedar deshabilitados, incluso si la computadora está abierta al consolidar o si se
+reabre después. La consulta, el desplazamiento y la salida de la computadora DEBEN seguir
+disponibles. Abrir otra jornada DEBE entregar su registro nuevo editable.
+Desde la primera jornada completa, completar todas las tareas NO DEBE bloquear el registro.
 
 ## Criterios de aceptación
 
@@ -328,44 +342,45 @@ DADO el cierre de la jornada 3 CUANDO se abre la 4 y pasa 1 segundo real ENTONCE
 `60.0`. DADO una partida guardada en la jornada 4 CUANDO se retoma desde el menú y pasa 1 segundo
 real ENTONCES el turno baja `60.0`. Retomada en la 2, baja `80.0`.
 
-### AC-SHF-031 — Acelera cuando el último completa su compra *(verifica BR-SHF-020)*
+### AC-SHF-036 — Todas las tareas, incluidas atención y registro *(verifica BR-SHF-021)*
 
-DADO la jornada 1 con registrar y reponer cumplidos y un solo comprador por atender en la
-ventanilla CUANDO pasa 1 segundo real ENTONCES el turno baja `120.0`. CUANDO ese comprador
-completa su compra a las 05:59 ENTONCES el ritmo cambia en ese instante. CUANDO pasa la
-duración de la aceleración ENTONCES el turno cierra una sola vez, quedan `0.0` y cobrar en la
-caja cuenta como cumplida. Un instante antes, el turno sigue abierto.
+DADO cada jornada de prueba CUANDO todas sus obligatorias están cumplidas ENTONCES permite
+salir. DADO por separado cada obligatoria pendiente, incluidas atención y registro, ENTONCES
+no permite salir. DADO atención sin cumplir por un comprador que no llegó, espera o venció
+sin comprar ENTONCES no permite salir, aunque lo demás esté hecho y el registro coincida.
+DADO la primera jornada completa y la última CUANDO todas están cumplidas ENTONCES no permite salir.
 
-### AC-SHF-032 — Lo que falta no acelera *(verifica BR-SHF-020)*
+### AC-SHF-037 — El aviso fija el cumplimiento sin adelantar el reloj *(verifica BR-SHF-021, BR-SHF-022, BR-SHF-003)*
 
-DADO la jornada 1 con registrar y reponer cumplidos CUANDO todavía falta llegar un comprador, o
-uno espera en la ventanilla, ENTONCES el ritmo es el de BR-SHF-002. DADO la jornada 1 con el
-último comprador vencido y registrar sin cumplir ENTONCES tampoco acelera. CUANDO registrar se
-cumple ENTONCES acelera, y el cierre cuenta cobrar en la caja como no cumplida. DADO la jornada 1
-sin compradores en la lista y registrar y reponer cumplidos ENTONCES acelera. DADO la jornada 1
-con reponer cumplido y el registro sin anotar CUANDO el último comprador vence sin que nadie
-haya comprado ENTONCES acelera en ese instante. Con una unidad anotada de más, no acelera.
+DADO cada jornada de prueba abierta CUANDO se cumple su última obligatoria ENTONCES aparece
+el aviso sin consumir turno ni cambiar el ritmo. CUANDO después se intenta descumplir cada
+obligatoria, por ejemplo retirando mercadería repuesta, ENTONCES todas siguen cumplidas y
+la puerta sigue habilitada. Un segundo real sigue descontando el ritmo propio de esa jornada.
+DADO una tarea pendiente ENTONCES no puede consolidarse como cumplida.
+DADO la primera jornada completa CUANDO se descumple una tarea ENTONCES deja de contar.
 
-### AC-SHF-033 — La duración no depende de la hora *(verifica BR-SHF-020, BR-SHF-004)*
+### AC-SHF-038 — La puerta conserva el cierre habitual y su unicidad *(verifica BR-SHF-021, BR-SHF-022, BR-SHF-004)*
 
-DADO la jornada 1 CUANDO la condición se cumple con `21600.0` restantes, y aparte con `60.0`
-restantes, a las 07:59, ENTONCES en los dos casos el turno llega a `0.0` cuando pasa la
-duración de la aceleración, no antes, y el cierre se dispara una sola vez. Un cuadro más largo
-que lo que falta deja `0.0`, sin pasarse.
+DADO cada jornada de prueba con el aviso producido CUANDO se acciona la entrada con el
+primario ENTONCES el turno llega a cero, baja la persiana, aparece la devolución por el chat
+y se guarda el avance por el mismo recorrido del cierre habitual. Repetir la acción NO
+DEBE cerrar dos veces ni avanzar otra noche. DADO que el jugador no sale CUANDO agota el
+tiempo normal ENTONCES cierra una sola vez con las tareas consolidadas cumplidas.
 
-### AC-SHF-034 — Acelerar no tiene vuelta atrás *(verifica BR-SHF-020, BR-SHF-007)*
+### AC-SHF-039 — La noche nueva no conserva la autorización *(verifica BR-SHF-021, BR-SHF-022)*
 
-DADO la jornada 1 acelerada CUANDO reponer se descumple ENTONCES el ritmo sigue acelerado y el
-cierre cuenta reponer como no cumplida. Pedir la aceleración otra vez no cambia el ritmo de la
-primera. DADO la jornada 1 acelerada CUANDO el juego está en pausa y pasan cuadros ENTONCES el
-turno no cambia; al reanudar sigue al ritmo acelerado desde ese valor.
+DADO una jornada de prueba que permitió salir CUANDO se abre la siguiente, o se retoma
+desde el inicio, ENTONCES la entrada no ofrece salida por el permiso anterior y sus tareas
+pueden volver a cumplirse y descumplirse. Al completar las de una nueva jornada de prueba
+puede producir su propio aviso. La primera jornada completa no lo produce.
 
-### AC-SHF-035 — Sólo la primera noche *(verifica BR-SHF-020, BR-SHF-002)*
+### AC-SHF-040 — Los dos botones y el dominio conservan el registro *(verifica BR-SHF-023)*
 
-DADO las jornadas 2, 4 y 8 con la condición cumplida CUANDO pasa 1 segundo real ENTONCES el
-turno baja `80.0`, `60.0` y `60.0`. DADO una partida guardada en la jornada 1 CUANDO se retoma
-desde el menú ENTONCES el ritmo es el de BR-SHF-002 hasta que la condición se cumple en esa
-noche.
+DADO la computadora abierta al cumplirse la última tarea CUANDO se consolida la noche
+ENTONCES ambos botones quedan deshabilitados y sumar o restar directamente tampoco cambia
+unidades ni total. Reabrir conserva el bloqueo y permite consultar y desplazarse. DADO la
+noche siguiente ENTONCES el registro nuevo permite ambas operaciones. DADO la primera
+jornada completa con todas las tareas cumplidas ENTONCES su registro sigue editable.
 
 ## No objetivos
 
@@ -408,9 +423,3 @@ noche.
     diseño cerrado. La decisión de #369 deja las tres con sólo las cuatro fijas.
   - Decide: game design, en las fichas e issues de cada jornada.
   - Bloquea: agregar esas particulares; no bloquea abrir ni cerrar con las cuatro declaradas.
-- **OQ-SHF-007 — ¿Cuántos segundos reales dura la aceleración de la primera noche?**
-  - Por qué sigue abierta: #539 fija que la duración es la misma desde cualquier hora, pero no
-    su valor. Se decide jugando la jornada 1.
-  - Decide: game design.
-  - Bloquea: el valor de la aceleración; no bloquea implementar BR-SHF-020 con un valor
-    provisorio declarado una sola vez en las reglas del juego.
