@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 const CondicionesDelJefeTest := preload("res://test/dominio/empleo/condiciones_del_jefe_test.gd")
 
 const SEGUNDA := ReglasDeLaPartida.PRIMERA_JORNADA + 1
+const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA + 2
 
 
 func test_la_noche_vuelve_igual_de_sus_datos() -> void:  # AC-EMP-086
@@ -34,6 +35,19 @@ func test_la_fila_cruza_la_sesion() -> void:  # AC-EMP-086
 		CondicionesDelJefe.elegidas(jugada.noches_de_prueba)
 	)
 	assert_array(CondicionesDelJefe.elegidas(retomada.noches_de_prueba)).is_not_empty()
+
+
+func test_la_tercera_retomada_repite_su_fila() -> void:  # AC-EMP-088
+	var jugada := CondicionesDelJefeTest.cerrar_la_segunda(1, true, false)
+	var datos: Dictionary = str_to_var(var_to_str(PoliticaDeGuardado.datos(jugada)))
+	var retomada := Partida.desde(datos)
+	assert_int(retomada.jornada()).is_equal(TERCERA)
+	var guion: Conversacion = load(CondicionesDelJefeTest.GUION)
+	var propios := InstruccionesDelJefe.de_la_jornada(
+		guion.mensajes, TERCERA, CondicionesDelJefe.elegidas(retomada.noches_de_prueba)
+	)
+	assert_str(propios[0].identidad).is_equal("J3_Mensaje1_AtencionYReposicionMal")
+	assert_int(InstruccionesDelJefe.pasos_de(propios).size()).is_equal(2)
 
 
 func test_un_guardado_sin_noches_o_roto_abre_sin_mensaje_1() -> void:  # AC-EMP-086

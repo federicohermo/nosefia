@@ -134,7 +134,7 @@ revisada el 2026-10-20, repartidos así:
 |---|---|---|
 | 1 | Intro 1 a 6 | — |
 | 2 | El mensaje 1 que elige BR-EMP-040, Intro 7 e Intro 8 | — |
-| 3 | Intro 9 | — |
+| 3 | El mensaje 1 que elige BR-EMP-042 e Intro 9 | — |
 | 4 | — | Intro 10, Intro 11 e Intro 12, al abrir la jornada |
 
 Cada mensaje DEBE decir el texto de la ficha, conservar su orden y los énfasis en amarillo, sin
@@ -171,9 +171,9 @@ interfaz de caja y el ticket. Las fotos DEBEN cubrir su marco sin franjas negras
 mantener visible el objeto ilustrado. La foto de Intro 11 DEBE acompañar su texto en el chat,
 aunque su frame de referencia omita esa foto.
 
-Los textos y las siete fotos DEBEN conservarse como 20 entradas separadas en el chat de
-Enrique: 10 de la jornada 1, 4 de la 2, 2 de la 3 y 4 de la 4. De la jornada 2, el chat DEBE
-tener sólo el mensaje 1 que eligió BR-EMP-040. Cada foto DEBE ir inmediatamente
+Los textos y las siete fotos DEBEN conservarse como 21 entradas separadas en el chat de
+Enrique: 10 de la jornada 1, 4 de la 2, 3 de la 3 y 4 de la 4. De las jornadas 2 y 3, el chat
+DEBE tener sólo el mensaje 1 que eligieron BR-EMP-040 y BR-EMP-042. Cada foto DEBE ir inmediatamente
 antes del texto de su Intro. Desde que abre su jornada, ese chat DEBE permitir releer cada
 entrada y ampliar cada foto con el texto de su propia Intro.
 
@@ -410,6 +410,31 @@ la ficha. La ficha no tiene fila para un cliente mal atendido con registrar sin 
 siga OQ-EMP-010, manda la atención. Sin la noche 1 anotada, la jornada 2 NO DEBE mostrar ningún
 mensaje 1. Las demás jornadas NO DEBEN cambiar sus mensajes por esta regla.
 
+### BR-EMP-042 — El mensaje 1 de la jornada 3 sale de cómo cerró la 2
+
+CUANDO la noche 2 cierra y abre la jornada 3, el sistema DEBE mostrar como primer mensaje de sus
+instrucciones y de su chat uno solo de estos ocho, elegido por la noche 2 que anotó BR-EMP-041.
+La ficha no precisa cómo cuentan los clientes que esperan al cerrar ni cómo evaluar la reposición.
+Como decisión provisoria, la atención está bien con cero clientes mal atendidos según BR-EMP-041.
+El registro y la reposición están bien si registrar y reponer quedaron cumplidas.
+Los textos DEBEN ser los de la ficha «Chat con el jefe»
+revisada el 2026-10-20:
+
+| Atención | Registro | Reposición | Texto |
+|---|---|---|---|
+| bien | bien | bien | Excelente. Puedo ver que no tuviste problemas para completar los quehaceres de la jornada. Venís muy bien, pibe. |
+| bien | bien | mal | Mmmmmm. Me parece que la reposición anduvo medio floja. / Tampoco es que hay tantos estantes, ¿no? ¿Qué tal si hoy te pegás una vueltita extra a ver si esta vez conseguís ver los espacios vacíos? |
+| bien | mal | bien | Mmmmmm. Me parece que el registro de ventas está mal hecho. / Tampoco es que se venden taaaantos productos ¿no? ¿Qué tal si hoy anotás bien en el cuadrito lo que vendés y nos quedamos todos contentos? |
+| bien | mal | mal | Mmmmmm. Me parece que la reposición anduvo medio floja. Tampoco es que hay tantos estantes, ¿no? ¿Qué tal si hoy te pegás una vueltita extra a ver si esta vez conseguís ver los espacios vacíos? / Y además, el registro de ventas está mal. Te voy a dar una última oportunidad. Espero que me sorprendas. |
+| mal | bien | bien | Che, estuvo floja la atención al cliente. No te olvides de que eso es LO MÁS IMPORTANTE. / Te voy a dar una última oportunidad. Espero que me sorprendas. |
+| mal | mal | bien | Che, estuvo floja la atención al cliente. No te olvides de que eso es LO MÁS IMPORTANTE. Además, quedó mal el registro de ventas. / Te voy a dar una última oportunidad. Espero que me sorprendas. |
+| mal | bien | mal | Che, estuvo floja la atención al cliente. No te olvides de que eso es LO MÁS IMPORTANTE. Además, no repusiste todos los productos en góndolas. / Te voy a dar una última oportunidad. Espero que me sorprendas. |
+| mal | mal | mal | Che, no hiciste ni una cosa bien. ¿Sos o te hacés? / Te voy a dar una última oportunidad. Más te vale que me sorprendas. |
+
+La barra marca dónde la ficha parte el texto en dos párrafos, y el texto DEBE partir ahí. Sin la
+noche 2 anotada, la jornada 3 NO DEBE mostrar ningún mensaje 1. El mensaje 2 de la jornada 3 y
+las demás jornadas NO DEBEN cambiar por esta regla.
+
 ### BR-EMP-041 — La partida recuerda cada noche de prueba
 
 CUANDO se anota una noche anterior a la primera jornada completa (BR-EMP-025), el sistema DEBE
@@ -417,7 +442,7 @@ recordar cuántos clientes quedaron mal atendidos y qué obligatorias fijas qued
 al cerrar. Un cliente mal atendido es el que llegó a la ventanilla, no recibió su venta y se fue.
 El que todavía espera al cerrar, o el que nunca llegó, NO DEBE contar. Las noches desde la
 primera jornada completa NO DEBEN anotarse acá. Ese dato DEBE cruzar la sesión (BR-SAV-019): al
-retomar, el mensaje de BR-EMP-040 DEBE ser el mismo. Un cierre ignorado NO DEBE anotar nada.
+retomar, el mensaje de BR-EMP-040 y el de BR-EMP-042 DEBEN ser los mismos. Un cierre ignorado NO DEBE anotar nada.
 
 ## Criterios de aceptación
 
@@ -792,14 +817,14 @@ el mensaje 1 que eligió la noche 1 (BR-EMP-040) en «1/3», el control está su
 placa. CUANDO pasan 120 segundos reales ENTONCES queda el mismo presupuesto de turno. CUANDO se
 elige «OK» en «3/3» ENTONCES aparece una
 sola «NOCHE 2», con el turno y el control retenidos hasta que termine de subir la persiana.
-DADO el cierre de la jornada 2 CUANDO se elige «continuar» ENTONCES se ve Intro 9 en «1/1», y su
-«OK» anuncia una sola «NOCHE 3».
+DADO el cierre de la jornada 2 CUANDO se elige «continuar» ENTONCES se ve el mensaje 1 que eligió
+la noche 2 (BR-EMP-042) en «1/2», y el «OK» en «2/2» anuncia una sola «NOCHE 3».
 
 ### AC-EMP-076 — Retomar repite las instrucciones de su jornada *(verifica BR-EMP-022)*
 
 DADO un guardado en la jornada 2 con la noche 1 anotada CUANDO se elige continuar ENTONCES salen
 sus instrucciones desde el mensaje 1 de esa noche, en «1/3», y después de su «OK» se anuncia
-«NOCHE 2». DADO un guardado en la jornada 3
+«NOCHE 2». DADO un guardado en la jornada 3 sin la noche 2 anotada
 ENTONCES sale Intro 9 en «1/1». DADO un guardado en la jornada 4 ENTONCES se anuncia «NOCHE 4»
 sin instrucciones, y el chat de Enrique tiene Intro 10, la foto de Intro 11, Intro 11 e Intro 12
 después de la devolución 3. DADO un guardado del cierre 4 con la reflexión pendiente CUANDO se retoma y termina
@@ -822,10 +847,10 @@ una partida sin la noche 1 anotada ENTONCES la jornada 2 abre con Intro 7.
 
 ### AC-EMP-085 — El chat guarda sólo el mensaje 1 elegido *(verifica BR-EMP-023, BR-EMP-040)*
 
-DADO cada fila de BR-EMP-040 CUANDO el chat de Enrique abre la jornada 4 ENTONCES tiene 20
-entradas y, de la jornada 2, el mensaje 1 elegido antes de la foto de Intro 7. Las entradas de
-las jornadas 1, 3 y 4 son las mismas en todas las filas. DADO la jornada 1 ENTONCES ningún
-mensaje 1 de la jornada 2 está a la vista.
+DADO cada fila de BR-EMP-040 y una noche 2 cerrada CUANDO el chat de Enrique abre la jornada 4
+ENTONCES tiene 21 entradas y, de la jornada 2, el mensaje 1 elegido antes de la foto de Intro 7.
+Las entradas de las jornadas 1, 3 y 4 son las mismas en todas las filas. DADO la jornada 1
+ENTONCES ningún mensaje 1 de la jornada 2 está a la vista.
 
 ### AC-EMP-086 — Las noches de prueba cruzan la sesión *(verifica BR-EMP-041)*
 
@@ -834,6 +859,21 @@ se retoma ENTONCES la jornada 2 abre con la misma fila. DADO un guardado sin ese
 valor de otro tipo, ENTONCES la jornada 2 abre con Intro 7 y lo demás se restaura. DADO una
 noche cerrada desde la primera jornada completa ENTONCES no se anota. DADO un cliente todavía en
 la ventanilla al cerrar ENTONCES no cuenta como mal atendido.
+
+### AC-EMP-087 — La noche 2 elige el mensaje 1 de la jornada 3 *(verifica BR-EMP-042)*
+
+DADO la noche 2 cerrada con 0 y con 1 cliente mal atendido, cada uno con las cuatro
+combinaciones de registrar y reponer cumplidas o sin cumplir, CUANDO abre la jornada 3 ENTONCES
+su primera pantalla es la fila de BR-EMP-042 que le corresponde, y el resto es Intro 9. Ninguna
+de las ocho combinaciones muestra dos mensajes 1, y cada fila sale de una sola. DADO una partida
+sin la noche 2 anotada ENTONCES la jornada 3 abre con Intro 9.
+
+### AC-EMP-088 — La jornada 3 retomada repite su mensaje 1 *(verifica BR-EMP-041, BR-EMP-042)*
+
+DADO la noche 2 cerrada con 1 cliente mal atendido, registrar cumplida y reponer sin cumplir
+CUANDO se guarda y se retoma ENTONCES la jornada 3 abre con la misma fila, en «1/2». DADO el chat
+de Enrique en la jornada 4 de esa partida ENTONCES tiene, de la jornada 3, esa fila antes de la
+foto de Intro 9 y ningún otro mensaje 1 de la jornada 3.
 
 ## No objetivos
 
