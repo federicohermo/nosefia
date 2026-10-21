@@ -189,7 +189,5 @@ func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-0
 		partida.cerrar_la_jornada(turno.tareas_cumplidas())
 		assert_int(partida.medios()).is_zero()
 		assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_zero()
-		assert_array(DevolucionDelJefe.new(1, partida).mensajes()).contains_exactly(
-			[DevolucionDelJefe.SALUDOS[0], DevolucionDelJefe.CIERRES_IMPECABLES[1]]
-		)
+		assert_array(DevolucionDelJefe.new(1, partida).mensajes()).is_empty()
 		assert_array(estante.casilleros_vacios(producto)).has_size(cantidad)

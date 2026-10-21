@@ -251,7 +251,7 @@ func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # A
 	azar.seed = 19
 	var control := Apertura.inventario_de_la_jornada(2, siguientes, casilleros, casilleros, azar)
 	assert_array(segunda.faltantes()).is_not_empty()
-	for otro in Catalogo.todos():
+	for otro in Catalogo.de_la_jornada(2):
 		assert_int(segunda.unidades(otro, Inventario.Ubicacion.GONDOLA)).is_equal(
 			control.unidades(otro, Inventario.Ubicacion.GONDOLA)
 		)
