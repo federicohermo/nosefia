@@ -1,5 +1,3 @@
-## Qué mensaje 1 abre cada jornada de prueba según la noche anterior, jugada sobre una partida y
-## leído del guion real.
 extends GdUnitTestSuite
 
 const GUION := "res://src/dominio/investigacion/conversacion_con_el_jefe.tres"
@@ -27,6 +25,45 @@ const FILAS_DE_LA_TERCERA := [
 	[1, true, false, "J3_Mensaje1_AtencionYReposicionMal"],
 	[1, false, false, "J3_Mensaje1_TodoMal"],
 ]
+
+const TEXTOS: Dictionary[String, String] = {
+	"J2_Mensaje1_SinFallas":
+	"Muy bien. Veo que pudiste cumplir con tus tareas correctamente, así que te voy a sumar una más.",
+	"J2_Mensaje1_RegistroMal":
+	(
+		"Bueno, por lo visto, pudiste atender bien a todos los clientes, "
+		+ "pero el registro de ventas no cuadra.\n\n"
+		+ "Vas a tener que prestar más atención, especialmente ahora que te voy a sumar una tarea más."
+	),
+	"J2_Mensaje1_UnClienteMal":
+	(
+		"Bueno, por lo visto, el registro de ventas cuadra bien, "
+		+ "pero me enteré de que un cliente se fue insatisfecho ayer.\n\n"
+		+ "Voy a ser considerado con vos porque fue tu primer día, "
+		+ "pero vas a tener que ponerte las pilas, "
+		+ "especialmente ahora que te voy a sumar una tarea más."
+	),
+	"J2_Mensaje1_NingunoEnCero":
+	(
+		"Che, me enteré de que ayer pasaron dos clientes "
+		+ "y no atendiste correctamente a ninguno de los dos. "
+		+ "O sea, por culpa tuya no tuvimos ingresos en el turno nocturno.\n\n"
+		+ "Voy a ser considerado con vos porque fue tu primer día, "
+		+ "pero vamos a tener problemas si no te ponés las pilas, "
+		+ "especialmente ahora que te voy a sumar una tarea más."
+	),
+	"J2_Mensaje1_NingunoAnotado":
+	(
+		"Che, me enteré de que ayer pasaron dos clientes "
+		+ "y no atendiste correctamente a ninguno de los dos. "
+		+ "O sea, por culpa tuya no tuvimos ingresos en el turno nocturno. "
+		+ "Y encima anotaste en el registro productos que no se vendieron "
+		+ "¿me estás tomando el pelo?\n\n"
+		+ "Voy a ser considerado con vos porque fue tu primer día, "
+		+ "pero vamos a tener problemas si no te ponés las pilas, "
+		+ "especialmente ahora que te voy a sumar una tarea más."
+	),
+}
 
 
 static func cerrar_la_primera(mal_atendidos: int, registrar: bool) -> Partida:
@@ -79,6 +116,7 @@ func test_cada_noche_1_elige_una_sola_fila() -> void:  # AC-EMP-084
 		assert_array(_identidades(propios)).is_equal(
 			[fila[2], "J1_Foto07", "J1_Intro07", "J1_Intro08"]
 		)
+		assert_str(propios[0].texto).is_equal(TEXTOS[fila[2]])
 
 
 func test_sin_la_noche_1_la_jornada_2_abre_con_intro_7() -> void:  # AC-EMP-084
