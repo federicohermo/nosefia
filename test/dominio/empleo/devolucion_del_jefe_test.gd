@@ -258,8 +258,19 @@ func test_la_prueba_perdida_termina_con_el_mensaje_del_despido() -> void:  # AC-
 	assert_int(perdida.final()).is_equal(Partida.Final.DESPEDIDO)
 	assert_int(perdida.jornada()).is_equal(tercera)
 	var devolucion := DevolucionDelJefe.new(tercera, perdida)
-	assert_array(devolucion.mensajes()).is_equal([DevolucionDelJefe.DESPIDO_DE_LA_PRUEBA])
+	var despido := (
+		"No, no, no. Flaco, no te puedo tomar como empleado si trabajás a medias. Un par de "
+		+ "errores los puedo dejar pasar, pero si se repite todos los días...\n\nHasta acá "
+		+ "llegó mi paciencia. Suerte consiguiendo otro trabajo."
+	)
+	assert_array(devolucion.mensajes()).is_equal([despido])
 	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
+	assert_object(perdida.abrir_la_jornada()).is_null()
+	var textos_de_la_tercera: Array[String] = []
+	for mensaje: Mensaje in perdida.devoluciones_del_jefe():
+		if mensaje.jornada == tercera:
+			textos_de_la_tercera.append(mensaje.texto)
+	assert_array(textos_de_la_tercera).is_equal([despido])
 	var redimida := CondicionesDelJefeTest.cerrar_la_prueba([[2, todo], [2, todo], [0, []]])
 	assert_bool(redimida.terminada()).is_false()
 	assert_array(DevolucionDelJefe.new(tercera, redimida).mensajes()).not_contains(
