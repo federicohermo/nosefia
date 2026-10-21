@@ -390,9 +390,11 @@ ni llamados, ni cambiar la banda, el final o el Cierre.
 
 ### BR-EMP-040 — El mensaje 1 de la jornada 2 sale de cómo cerró la 1
 
-CUANDO abre la jornada 2, el sistema DEBE mostrar como primer mensaje de sus instrucciones y de
-su chat uno solo de estos cinco, elegido por la noche 1 que anotó BR-EMP-041. Los textos DEBEN
-ser los de la ficha «Chat con el jefe» revisada el 2026-10-20:
+CUANDO la noche 1 cierra y abre la jornada 2, que son una sola transición, el sistema DEBE
+mostrar como primer mensaje de sus instrucciones y de su chat uno solo de estos cinco, elegido
+por la noche 1 que anotó BR-EMP-041. La noche 1 no tiene devolución de cierre: este mensaje es lo
+que Enrique dice de ella. Los textos DEBEN ser los de la ficha «Chat con el jefe» revisada el
+2026-10-20:
 
 | Clientes mal atendidos | Registrar | Texto |
 |---|---|---|
