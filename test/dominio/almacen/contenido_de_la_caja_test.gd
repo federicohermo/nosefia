@@ -46,13 +46,16 @@ func _caja(producto: Producto, estante: Estante) -> ContenidoDeLaCaja:
 
 
 func test_la_jornada_abre_con_cada_caja_llena() -> void:  # AC-STK-036
-	# Todas las jornadas abren con la caja llena, y la que hace
-	# faltar algo también, porque lo que falta está en la góndola y no en la caja.
+	# Los faltantes de cada jornada están en la góndola, no en las cajas presentes.
 	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
 		casilleros[producto.id] = CASILLEROS
 	for vez in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
 		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + vez
+		var productos := Catalogo.de_la_jornada(jornada)
+		var ids_de_la_jornada: Array[Producto.Id] = []
+		for producto in productos:
+			ids_de_la_jornada.append(producto.id)
 		var inventario := Apertura.inventario_de_la_jornada(
 			jornada,
 			Compradores.de_la_jornada(jornada),
@@ -60,14 +63,20 @@ func test_la_jornada_abre_con_cada_caja_llena() -> void:  # AC-STK-036
 			casilleros,
 			RandomNumberGenerator.new()
 		)
-		var estante := Estante.new(inventario, Catalogo.todos())
+		var estante := Estante.new(inventario, productos)
 		for producto in Catalogo.todos():
+			var unidades_esperadas := (
+				ReglasDelEstante.UNIDADES_POR_CAJA if producto.id in ids_de_la_jornada else 0
+			)
 			(
 				assert_int(_caja(producto, estante).unidades())
 				. override_failure_message(
-					"jornada %d: la caja de %s no abre llena" % [jornada, producto.nombre]
+					(
+						"jornada %d: la caja de %s no abre con %d unidades"
+						% [jornada, producto.nombre, unidades_esperadas]
+					)
 				)
-				. is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
+				. is_equal(unidades_esperadas)
 			)
 
 

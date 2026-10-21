@@ -45,6 +45,21 @@ const GUION_DEL_JEFE := preload("res://src/dominio/investigacion/conversacion_co
 
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 
+
+class PresenciaDeCaja:
+	extends RefCounted
+	var capa: int
+	var mascara: int
+	var visible: bool
+	var interactuable: bool
+
+	func _init(caja: RigidBody3D) -> void:
+		capa = caja.collision_layer
+		mascara = caja.collision_mask
+		visible = caja.visible
+		interactuable = caja.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+
+
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
@@ -101,6 +116,7 @@ var _jornada_preparada := 0
 var _arranque: Transform3D
 var _acomodador: AcomodadorDelDeposito
 var _pallets_de_entrega: Node3D
+var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
 
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
 ## cambiar de escena: se llevaría puesto al runner.
@@ -265,6 +281,7 @@ func _ready() -> void:
 			util.malla.set("observador", _jugador)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		_presencias_de_las_cajas[caja] = PresenciaDeCaja.new(caja)
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
 		caja.sleeping_state_changed.connect(_pedir_revision_del_deposito)
 		caja.empujada.connect(_pedir_revision_del_deposito.unbind(1))
@@ -282,8 +299,7 @@ func _ready() -> void:
 	add_child(_enlace_de_guardado)
 	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
 	_jugador.muebles_con_reserva = _muebles_con_contorno
-	_ciclo.jornada_abierta.connect(_reposicion_manual.preparar.unbind(1), CONNECT_ONE_SHOT)
-	_ciclo.arrancar(_partida, _reloj)
+	_ciclo.arrancar(_partida, _reloj, _clientes_mal_atendidos)
 
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
@@ -321,7 +337,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_salida_preparada = false
 	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).vaciar()
 	_jornada_del_celular = jornada
-	_celular.abrir_jornada(jornada)
+	_celular.abrir_jornada(jornada, _condiciones_del_jefe())
 	_pantalla_del_celular.mostrar_recordatorio(true)
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
@@ -352,6 +368,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
+	_reposicion_manual.limpiar()
+	_reposicion_manual.seleccionar_disposicion(jornada)
 	var inventario := Apertura.inventario_de_la_jornada(
 		jornada,
 		compradores,
@@ -359,8 +377,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		_reposicion_manual.casilleros_reponibles(),
 		azar_de_la_apertura
 	)
-	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
-	_reposicion_manual.limpiar()
+	_repositor.arrancar(Estante.new(inventario, Catalogo.de_la_jornada(jornada)))
+	_reposicion_manual.preparar()
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
@@ -382,7 +400,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	if is_instance_valid(_pallets_de_entrega):
 		_pallets_de_entrega.queue_free()
 		_pallets_de_entrega = null
-	if Apertura.cajas_apiladas(jornada):
+	var llegadas := Apertura.productos_con_cajas_apiladas(jornada)
+	if not llegadas.is_empty():
 		var madera: MeshInstance3D = $Estructura/deposito_pallet_piso
 		_pallets_de_entrega = PALLETS_DE_ENTREGA.instantiate()
 		add_child(_pallets_de_entrega)
@@ -395,10 +414,17 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			centro += pallet.global_position / pallets.size()
 		var frente := centro - ($Estructura/porton as Node3D).global_position
 		frente.y = 0.0
-		poses = PilaDelDeposito.poses(_cajas_de_productos, pallets, frente)
+		var cajas_nuevas: Array[Node3D] = []
+		for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+			if caja.producto in llegadas:
+				cajas_nuevas.append(caja)
+		poses = PilaDelDeposito.poses(cajas_nuevas, pallets, frente)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
 		caja.volver_a_su_lugar()
+		_mostrar_caja(
+			caja, inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
+		)
 	_pedir_revision_del_deposito()
 	# Los útiles de limpieza van por lo mismo que las cajas: se trasladan, y la noche siguiente
 	# arrancaría con la mopa y el balde donde los dejó la anterior. Vacío y seca los deja el piso
@@ -410,14 +436,16 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.freeze = true
 			util.collision_layer = 0
 			util.collision_mask = 0
-	var se_limpia := Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
-	var cerradas_sin_limpieza := {
-		$Estructura/puerta2/CuerpoDeLaHoja: SubtitulosAlExaminar.BANO_CERRADO,
-		$Estructura/puerta_limpieza/CuerpoDeLaHoja: SubtitulosAlExaminar.CUARTITO_CERRADO,
+	var cerradas := {
+		$Estructura/puerta/CuerpoDeLaHoja:
+		[PuertasTrabadas.Cuarto.DEPOSITO, SubtitulosAlExaminar.DEPOSITO_CERRADO],
+		$Estructura/puerta_limpieza/CuerpoDeLaHoja:
+		[PuertasTrabadas.Cuarto.CUARTITO, SubtitulosAlExaminar.CUARTITO_CERRADO],
 	}
-	for puerta: PuertaDelLocal in cerradas_sin_limpieza:
-		puerta.traba = PuertaDelLocal.Traba.NINGUNA if se_limpia else PuertaDelLocal.Traba.PUERTA
-		puerta.identidad = &"" if se_limpia else cerradas_sin_limpieza[puerta]
+	for puerta: PuertaDelLocal in cerradas:
+		var trabada := PuertasTrabadas.trabada(cerradas[puerta][0], jornada)
+		puerta.traba = PuertaDelLocal.Traba.PUERTA if trabada else PuertaDelLocal.Traba.NINGUNA
+		puerta.identidad = cerradas[puerta][1] if trabada else &""
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()
@@ -426,6 +454,22 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_estante.mostrar(0)
 	_salida_preparada = true
 	_revisar_la_salida()
+
+
+func _mostrar_caja(caja: CajaDeProductosDelDeposito, presente: bool) -> void:
+	var original := _presencias_de_las_cajas[caja]
+	caja.visible = presente and original.visible
+	caja.collision_layer = original.capa if presente else 0
+	caja.collision_mask = original.mascara if presente else 0
+	if presente and original.interactuable:
+		caja.add_to_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+	else:
+		caja.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+
+
+func _clientes_mal_atendidos() -> int:
+	var atender := _atenciones.tarea()
+	return 0 if atender == null else atender.mal_atendidos()
 
 
 func _revisar_la_salida() -> void:
@@ -489,7 +533,7 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
 		_jugador.suspender()
 		await _pantalla_del_celular.celular_bajado
-		await _preparar_los_utiles()
+		await _preparar_lo_postergado()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
 	var acciones: Dictionary[DevolucionDelJefe.Opcion, Callable] = {
 		DevolucionDelJefe.Opcion.CONTINUAR: _seguir,
@@ -500,12 +544,14 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 
 ## Entre noches no hay carga: lo que la siguiente necesita y la carga no preparó se calienta acá,
 ## con la persiana baja tapando la cámara del calentamiento.
-func _preparar_los_utiles() -> void:
+func _preparar_lo_postergado() -> void:
 	var siguiente := _partida.jornada()
 	var pendientes: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if PreparacionDeLosUtiles.por_preparar(util.datos.id, _jornada_preparada, siguiente):
 			pendientes.append(util)
+	if PreparacionDelDeposito.por_preparar(_jornada_preparada, siguiente):
+		pendientes.append_array(_cajas_de_productos)
 	if not pendientes.is_empty():
 		var calentamiento := CalentamientoDeShaders.new()
 		add_child(calentamiento)
@@ -524,12 +570,14 @@ func _seguir() -> void:
 
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
 ## entregar otra vez la devolución; si no, entra a la jornada guardada.
-## Los útiles que esta carga no prepara: sus variantes las compila otra noche.
+## Los útiles y las cajas que esta carga no prepara: sus variantes las compila otra noche.
 func cuerpos_sin_copias() -> Array[Node3D]:
 	var sin_copias: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if not PreparacionDeLosUtiles.se_prepara(util.datos.id, _partida.jornada()):
 			sin_copias.append(util)
+	if not PreparacionDelDeposito.se_prepara(_partida.jornada()):
+		sin_copias.append_array(_cajas_de_productos)
 	return sin_copias
 
 
@@ -541,7 +589,7 @@ func retomar_la_partida() -> void:
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
 	_jornada_del_celular = _partida.reflexion.jornada()
-	_celular.bandeja().abrir_jornada(_jornada_del_celular)
+	_celular.bandeja().abrir_jornada(_jornada_del_celular, _condiciones_del_jefe())
 	_pantalla.visible = true
 	_empezar_la_reflexion()
 
@@ -597,10 +645,14 @@ func empezar_partida_nueva() -> void:
 	_entrar_a_la_jornada()
 
 
+func _condiciones_del_jefe() -> Array[StringName]:
+	return CondicionesDelJefe.elegidas(_partida.noches_de_prueba)
+
+
 ## Las instrucciones conservan el presupuesto completo, y su «OK» usa la misma entrada que seguir.
 func _entrar_a_la_jornada() -> void:
 	var instrucciones := InstruccionesDelJefe.de_la_jornada(
-		GUION_DEL_JEFE.mensajes, _partida.jornada()
+		GUION_DEL_JEFE.mensajes, _partida.jornada(), _condiciones_del_jefe()
 	)
 	if instrucciones.is_empty():
 		anunciar_la_noche()

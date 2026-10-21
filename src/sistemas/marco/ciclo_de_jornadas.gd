@@ -18,15 +18,19 @@ signal jornada_cerrada(jornada: int, cumplidas: int)
 
 var _partida: Partida = null
 var _reloj: RelojDelTurno = null
+var _clientes_mal_atendidos := Callable()
 
 
 ## Le entrega al ciclo la partida y el reloj con el que va a correr, y abre la primera noche.
 ##
 ## El reloj entra por parámetro en vez de buscarse en el árbol: es lo que permite ejercer el
 ## ciclo entero sin levantar una escena, que es la única forma de correr una partida en un test.
-func arrancar(partida: Partida, reloj: RelojDelTurno) -> void:
+func arrancar(
+	partida: Partida, reloj: RelojDelTurno, clientes_mal_atendidos: Callable = Callable()
+) -> void:
 	_partida = partida
 	_reloj = reloj
+	_clientes_mal_atendidos = clientes_mal_atendidos
 	_reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	if _partida.reflexion == null or not _partida.reflexion.pendiente():
 		abrir_la_jornada()
@@ -56,5 +60,9 @@ func abrir_la_jornada() -> bool:
 func _al_cerrar_el_turno(cumplidas: int) -> void:
 	var jornada := _partida.jornada()
 	turno_agotado.emit(jornada)
-	_partida.cerrar_la_jornada(cumplidas)
+	_partida.cerrar_la_jornada(cumplidas, _mal_atendidos())
 	jornada_cerrada.emit(jornada, cumplidas)
+
+
+func _mal_atendidos() -> int:
+	return _clientes_mal_atendidos.call() if _clientes_mal_atendidos.is_valid() else 0

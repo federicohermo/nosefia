@@ -20,8 +20,7 @@ const PATRONES_DE_DECISION := "(?m)^\\s*(if|elif|match)\\b|var\\s+_(limpia|tipo|
 ## Lo más claro que puede ser un marrón.
 const LO_MAS_CLARO_DEL_MARRON := 0.5
 
-## Las dos noches que la ficha decide.
-const JORNADAS: Array[int] = [4, 5]
+const JORNADAS: Array[int] = [3, 4, 5]
 
 ## Dónde quedan los pies del jugador parado en el piso del almacén.
 const ALTURA_DEL_JUGADOR := 0.112
@@ -413,3 +412,39 @@ func test_las_reglas_de_limpieza_tienen_sus_espejos() -> void:
 			. override_failure_message("falta el espejo `%s`" % espejo)
 			. is_true()
 		)
+
+
+func _inodoro_mas_cercano(almacen: Node3D, mancha: Node3D) -> Node3D:
+	var primero := almacen.get_node("Estructura/inodoro") as Node3D
+	var segundo := almacen.get_node("Estructura/bano_inodoro_2") as Node3D
+	var punto := Vector2(mancha.global_position.x, mancha.global_position.z)
+	var uno := Vector2(primero.global_position.x, primero.global_position.z)
+	var dos := Vector2(segundo.global_position.x, segundo.global_position.z)
+	return primero if punto.distance_squared_to(uno) < punto.distance_squared_to(dos) else segundo
+
+
+func test_las_cacas_alternan_inodoro_y_pared() -> void:  # AC-CLN-016, AC-CLN-017
+	var almacen: Node3D = await _almacen()
+	var inodoros_del_piso: Array[Node3D] = []
+	for jornada: int in [3, 4]:
+		await _abrir(almacen, jornada)
+		var del_piso: Array[ManchaQueSeVe] = []
+		var de_pared: Array[ManchaQueSeVe] = []
+		for mancha: ManchaQueSeVe in _manchas(almacen):
+			var lugar := mancha.lugar_de_la_mancha()
+			if _piso(almacen).mancha_de(lugar).tipo() != ReglasDeLaLimpieza.TipoDeMancha.CACA:
+				continue
+			if PisoDelLocal.superficie_de(lugar) == PisoDelLocal.Superficie.PISO:
+				del_piso.append(mancha)
+			else:
+				de_pared.append(mancha)
+		assert_array(del_piso).has_size(1)
+		assert_array(de_pared).has_size(0 if jornada == 3 else 1)
+		if del_piso.size() != 1:
+			return
+		var inodoro := _inodoro_mas_cercano(almacen, del_piso[0])
+		inodoros_del_piso.append(inodoro)
+		if jornada == 4 and de_pared.size() == 1:
+			assert_object(_inodoro_mas_cercano(almacen, de_pared[0])).is_not_same(inodoro)
+	assert_array(inodoros_del_piso).has_size(2)
+	assert_object(inodoros_del_piso[1]).is_not_same(inodoros_del_piso[0])

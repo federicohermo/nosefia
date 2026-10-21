@@ -73,7 +73,8 @@ son de introducción: las tareas entran de a poco.
 
 | Jornada | Obligatorias |
 |---|---|
-| 1 y 2 | cobrar en la caja, registrar y reponer |
+| 1 | cobrar en la caja y registrar |
+| 2 | cobrar en la caja, registrar y reponer |
 | 3 | las cuatro fijas |
 | 4 | las cuatro fijas y ordenar las cajas del depósito |
 | 5 | las cuatro fijas y tirar la basura |
@@ -82,6 +83,10 @@ son de introducción: las tareas entran de a poco.
 Mientras sigue abierta OQ-SHF-006, una jornada sin fila propia DEBE declarar sólo las cuatro
 fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir. La cantidad que muestra el HUD DEBE
 salir de esa misma lista.
+
+La jornada 1 NO DEBE declarar reposición, tampoco por los casilleros vaciados al vender.
+Esos huecos NO DEBEN descontar tareas, sumar apercibimientos ni generar reproches de reposición.
+La nota de tareas DEBE listar sólo las obligatorias declaradas para esa noche.
 
 ### BR-SHF-007 — Una obligatoria cuenta mientras su condición vale, y antes del cierre
 
@@ -185,8 +190,9 @@ está cerrado.
 
 ### AC-SHF-005 — Fijas y particular, con instancias nuevas *(verifica BR-SHF-005)*
 
-DADO las jornadas 1 a 8 CUANDO cada una pide sus obligatorias ENTONCES la 1 y la 2 reciben 3:
-cobrar, registrar y reponer, sin limpiar ni particular; la 3 recibe las 4 fijas; la 4 recibe 5,
+DADO las jornadas 1 a 8 CUANDO cada una pide sus obligatorias ENTONCES la 1 recibe 2:
+cobrar y registrar, sin reponer, limpiar ni particular; la 2 recibe 3: cobrar, registrar y
+reponer, sin limpiar ni particular; la 3 recibe las 4 fijas; la 4 recibe 5,
 con ordenar las cajas y sin basura; la 5 recibe 5, con basura y sin ordenar; la 6, la 7 y la 8
 reciben las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
 comparte y todas las de la segunda están sin cumplir.
@@ -307,7 +313,9 @@ su orden de dibujo ENTONCES la entrada está sobre los tres primeros y debajo de
 
 ### AC-SHF-027 — El denominador sigue las declaradas *(verifica BR-SHF-005, BR-SHF-008)*
 
-DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `0/3`. DADO la jornada 4
+DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `0/2`.
+La nota de tareas lista atención y registro, sin reposición.
+DADO la jornada 4
 recién abierta ENTONCES dice `0/5`. DADO la jornada 6 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una
 tarea ajena a esa lista no aumenta la cuenta.
 

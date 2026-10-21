@@ -1,11 +1,28 @@
-## Captura las siete fotos del chat desde el modelo jugable y valida cada tema antes de guardar.
+## Captura las nueve fotos del chat desde el modelo jugable y valida cada tema antes de guardar.
 ## Desde PowerShell con una pantalla disponible:
 ## & $env:GODOT_BIN --path . --rendering-driver opengl3 `
 ##   --script assets/models/generar_fotos_del_jefe.gd -- assets/ui/manada/fotos
 extends SceneTree
 
 const TAMANO := Vector2i(960, 540)
+const PLANO_DEL_RELOJ := [
+	2,
+	Vector3(1.0115, 2.28, 5.1),
+	Vector3(1.0115, 2.28, 6.2445),
+	25.0,
+	"reloj/StaticBody3D",
+	"intro-reloj.png"
+]
+const PLANO_DE_LAS_GONDOLAS := [
+	10,
+	Vector3(5.5, 2.6, 0.7),
+	Vector3(2.75, 1.0, -2.4),
+	65.0,
+	"gondolanueva2/StaticBody3D",
+	"intro-gondolas.png"
+]
 const PLANOS := [
+	PLANO_DEL_RELOJ,
 	[
 		4,
 		Vector3(-2.05, 1.682598, 4.050001),
@@ -22,6 +39,7 @@ const PLANOS := [
 		"cajaregistradora/StaticBody3D"
 	],
 	[8, Vector3(0.0, 1.65, 4.60), Vector3(-0.05, 1.50, 3.60), 55.0, "base compu/StaticBody3D"],
+	PLANO_DE_LAS_GONDOLAS,
 	[9, Vector3(2.70, 1.45, -9.73), Vector3(-0.40, 1.45, -9.73), 72.0, "Caja"],
 	[
 		11,
@@ -116,7 +134,7 @@ func _generar() -> void:
 	_local = null
 	for _cuadro: int in 4:
 		await process_frame
-	print("FOTOS374_FINAL 7/7")
+	print("FOTOS374_FINAL %d/%d" % [PLANOS.size(), PLANOS.size()])
 	quit(0)
 
 
@@ -139,13 +157,12 @@ func _fotografiar(plano: Array) -> bool:
 			caja.global_transform = caja.call("pose_de_estanteria")
 			caja.reset_physics_interpolation()
 	if numero == 13:
-		for indice: int in _cajas.size():
-			_cajas[indice].global_transform = _poses[indice]
-			_cajas[indice].reset_physics_interpolation()
-		for indice: int in _cajas.size():
-			if not _cajas[indice].global_transform.is_equal_approx(_poses[indice]):
-				_fallar("no se restauró la pila antes de Intro13")
-				return false
+		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		_local.set("_partida", Partida.desde({"jornada": jornada}))
+		_local.call("_al_abrir_la_jornada", jornada)
+		for caja in _cajas:
+			(caja as RigidBody3D).freeze = true
+			caja.reset_physics_interpolation()
 	_camara.fov = plano[3]
 	_camara.look_at_from_position(plano[1], plano[2])
 	_camara.reset_physics_interpolation()
@@ -157,6 +174,8 @@ func _fotografiar(plano: Array) -> bool:
 		await physics_frame
 	for _cuadro: int in 8:
 		await process_frame
+	if numero == 2:
+		_local.get("_reloj_de_mesa").mostrar_tiempo(Reglas.DURACION_DEL_TURNO)
 	await RenderingServer.frame_post_draw
 	if not _camara.get_global_transform_interpolated().is_equal_approx(preparada):
 		_fallar("cambió la pose dibujada de Intro%d" % numero)
@@ -170,6 +189,15 @@ func _fotografiar(plano: Array) -> bool:
 	var ruta := "sin cuerpo"
 	if not golpe.is_empty():
 		ruta = str(_local.get_path_to(golpe.collider as Node))
+	if numero == 6:
+		var acceso: CollisionShape3D = _local.get_node("Estructura/Ventanilla/AccesoAlCobro")
+		var forma := acceso.shape as BoxShape3D
+		var hueco := AABB(-forma.size / 2.0, forma.size)
+		if (
+			golpe.is_empty()
+			and hueco.intersects_segment(acceso.to_local(desde), acceso.to_local(hacia)) != null
+		):
+			ruta = "Estructura/Ventanilla/AccesoAlCobro (hueco libre)"
 	if not ruta.to_lower().contains((plano[4] as String).to_lower()):
 		_fallar("Intro%d esperaba %s; encontró %s" % [numero, plano[4], ruta])
 		return false
@@ -177,7 +205,8 @@ func _fotografiar(plano: Array) -> bool:
 	if imagen.is_empty() or imagen.get_size() != tamano:
 		_fallar("imagen vacía o tamaño incorrecto de Intro%d" % numero)
 		return false
-	var archivo := _salida.path_join("intro-%02d.png" % numero)
+	var nombre: String = plano[5] if plano.size() > 5 else "intro-%02d.png" % numero
+	var archivo := _salida.path_join(nombre)
 	if imagen.save_png(archivo) != OK:
 		_fallar("no se pudo guardar " + archivo)
 		return false
@@ -192,6 +221,16 @@ func _fotografiar(plano: Array) -> bool:
 	print("FOTO374 ", numero, " ", ruta, " ", archivo)
 	if numeros != null:
 		numeros.queue_free()
+	return _restaurar_la_primera_jornada() if numero == 13 else true
+
+
+func _restaurar_la_primera_jornada() -> bool:
+	_local.set("_partida", Partida.nueva())
+	_local.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA)
+	for indice: int in _cajas.size():
+		if not _cajas[indice].global_transform.is_equal_approx(_poses[indice]):
+			_fallar("no se restauraron las cajas de la primera jornada")
+			return false
 	return true
 
 

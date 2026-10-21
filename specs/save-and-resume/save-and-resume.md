@@ -148,10 +148,11 @@ final NO DEBE reaparecer.
 
 CUANDO se guarda, el sistema DEBE escribir, además de la jornada y el legajo, las fallas de cada
 obligatoria fija, los llamados de cada motivo, R, los textos de las devoluciones recibidas con identidad, jornada cerrada y orden
-(BR-EMP-025, BR-EMP-031, BR-SAV-020), y si la mopa ya se secó una vez (BR-SUB-014). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
+(BR-EMP-025, BR-EMP-031, BR-SAV-020), las noches de prueba anotadas (BR-EMP-041) y si la mopa ya
+se secó una vez (BR-SUB-014). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
 siguiente cuenta desde ellos, y el chat de Enrique intercala instrucciones, aperturas y
 devoluciones según BR-INV-030. SI falta alguno o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) con cero
-fallas, cero llamados, R = 0, ninguna devolución y la mopa sin secarse. Dentro de las cuentas, una obligatoria o un
+fallas, cero llamados, R = 0, ninguna devolución, ninguna noche de prueba y la mopa sin secarse. Dentro de las cuentas, una obligatoria o un
 motivo desconocido, o un valor de otro tipo, DEBE ignorarse sin descartar los demás.
 
 ### BR-SAV-020 — Los mensajes nuevos conservan fecha y los antiguos no la inventan
@@ -340,7 +341,7 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
 
 ### AC-SAV-024 — La noche 5 cerrada vuelve igual *(verifica BR-SAV-005, BR-SAV-019)*
 
-DADO una partida con la noche 5 cerrada, reponer cumplido en las noches 1 a 3 y sin cumplir en la
+DADO una partida con la noche 5 cerrada, reponer cumplido en las noches 2 y 3 y sin cumplir en la
 4 y la 5, un llamado por papel en la noche 4 y R = 0 CUANDO se guarda, se lee el archivo y se
 retoma ENTONCES reponer tiene 2 fallas, papel 1 llamado, hubo llamados en la partida, R = 0, y
 las cinco devoluciones están en orden y letra por letra en el chat de Enrique, intercalando foto
@@ -348,14 +349,14 @@ y texto de apertura 5 entre las devoluciones 4 y 5 y cada devolución de las noc
 de los mensajes de la jornada siguiente. CUANDO la noche 6 cierra con reponer sin cumplir ENTONCES su devolución trae la fila n = 3 de Tarea 3,
 «De nuevo quedaron algunas góndolas incompletas…».
 
-DADO la noche 1 con reponer pendiente y un llamado por papel, y la 2 impecable sin llamados
+DADO la noche 2 con reponer pendiente y un llamado por papel, y la 3 impecable sin llamados
 CUANDO se guarda y retoma ENTONCES reponer conserva 1 falla, papel 1 llamado y R = 1.
 
 ### AC-SAV-025 — Un guardado sin las cuentas *(verifica BR-SAV-006, BR-SAV-019)*
 
 DADO un guardado de la jornada 6 sin fallas, llamados, R ni devoluciones CUANDO se retoma
 ENTONCES sigue en la jornada 6 con su legajo, cero fallas, cero llamados, R = 0, sin llamados en
-la partida, y el chat de Enrique tiene las 20 entradas de las jornadas 1 a 4 y los mensajes
+la partida, y el chat de Enrique tiene las 19 entradas de las jornadas 1 a 4 y los mensajes
 de apertura 5 reconstruidos, sin devoluciones inventadas. DADO las
 fallas con un valor que no es un diccionario, o las devoluciones con un número ENTONCES vuelven
 con su defecto. DADO las fallas con una obligatoria desconocida y reponer en 1 ENTONCES reponer

@@ -22,6 +22,10 @@ const HOLGURA_DEL_CONTORNO := 0.05
 
 func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -53,6 +57,10 @@ func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> vo
 ## y el jugador lo atraviesa.
 func test_el_contorno_envuelve_la_malla_sin_que_le_sobre() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	for ruta: String in GONDOLAS:
 		var gondola := almacen.get_node(ruta) as MeshInstance3D
@@ -83,6 +91,10 @@ func test_el_contorno_envuelve_la_malla_sin_que_le_sobre() -> void:
 
 func test_la_malla_de_la_gondola_sigue_siendo_la_colision_de_los_productos() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	for ruta: String in GONDOLAS:
 		var malla := almacen.get_node(ruta + "/StaticBody3D") as StaticBody3D
@@ -94,6 +106,10 @@ func test_la_malla_de_la_gondola_sigue_siendo_la_colision_de_los_productos() -> 
 func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> void:
 	# El punto de soltado debe caer en el hueco real, desde ambos pasillos y la cabecera.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
@@ -151,6 +167,10 @@ func test_una_caja_chica_soltada_hacia_la_gondola_no_atraviesa_sus_solidos() -> 
 	# Los huecos entre bandejas pertenecen al AABB del mueble, pero no son metal. El resultado
 	# se contrasta contra las formas actuales y sigue siendo recogible desde el pasillo.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")

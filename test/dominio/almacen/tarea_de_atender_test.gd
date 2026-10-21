@@ -12,7 +12,9 @@ const VENDIBLES := 9
 
 func test_la_primera_noche_llega_por_horario_y_no_por_abrir() -> void:  # AC-CTR-035
 	var compradores := Compradores.de_la_jornada(4)
-	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	var tarea := TareaDeAtender.new(
+		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	)
 	assert_bool(tarea.fisica()).is_true()
 	assert_object(tarea.atender()).is_null()
 	assert_array(tarea.avanzar(7200)).has_size(1)
@@ -31,7 +33,7 @@ func test_ambas_compras_y_no_los_despachos_cumplen_tin_y_tia() -> void:  # AC-CT
 
 
 func _cumplir_tin_y_tia(jornada: int) -> TareaDeAtender:
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var compradores := Compradores.de_la_jornada(jornada)
 	var tarea := TareaDeAtender.new(compradores, inventario)
 	for comprador: Comprador in compradores:
@@ -70,7 +72,7 @@ func _cumplir_tin_y_tia(jornada: int) -> TareaDeAtender:
 
 
 func test_perder_a_tin_y_vender_a_tia_no_cumple_atencion() -> void:  # AC-CTR-040
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(4), inventario)
 	tarea.avanzar(14400.0)
 	tarea.avanzar(28800.0)
@@ -282,7 +284,7 @@ func test_un_producto_que_nadie_compro_contesta_cero() -> void:  # AC-CTR-020
 
 func test_compras_cerradas_incluye_despedidas_vencidas_y_vacia() -> void:  # AC-STK-056
 	assert_bool(TareaDeAtender.new([], Inventario.new([])).compras_cerradas()).is_true()
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var compradores := Compradores.de_la_jornada(4)
 	var tarea := TareaDeAtender.new(compradores, inventario)
 	assert_bool(tarea.compras_cerradas()).is_false()
@@ -316,7 +318,7 @@ func test_un_salto_vence_dos_entregas_una_vez_sin_retirarlas() -> void:  # AC-CT
 	var compradores := Compradores.de_la_jornada(4)
 	compradores[0].horario = Vector2(10, 30)
 	compradores[1].horario = Vector2(20, 40)
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var tarea := TareaDeAtender.new(compradores, inventario)
 	var recepciones: Array[RecepcionDeCompra] = []
 	var entregadas: Array[UnidadDeProducto] = []

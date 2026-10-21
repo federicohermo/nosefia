@@ -206,7 +206,7 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
-	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", true, false)
+	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", false, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
 	# Al abrir se ven la guía y lo que la góndola tiene puesto: la fila menos lo que falta.
 	var al_abrir: Estante = almacen.get("_repositor").estante()

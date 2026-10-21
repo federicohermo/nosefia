@@ -43,6 +43,10 @@ const GROSOR_DEL_HUECO := 0.5
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2, "medios": 0})
+	)
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame

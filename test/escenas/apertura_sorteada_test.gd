@@ -1,20 +1,28 @@
 extends GdUnitTestSuite
 
 
-func _disposicion() -> DisposicionDeLaGondola:
+func _disposicion(
+	jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+) -> DisposicionDeLaGondola:
+	if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		return load("res://src/escenas/puestos/disposicion_de_prueba.tres")
 	return load("res://src/escenas/puestos/disposicion_de_la_gondola.tres")
 
 
-func _casilleros_medidos() -> Dictionary[Producto.Id, int]:
-	var disposicion := _disposicion()
+func _casilleros_medidos(
+	jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+) -> Dictionary[Producto.Id, int]:
+	var disposicion := _disposicion(jornada)
 	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
 		casilleros[producto.id] = disposicion.casilleros_de(producto.id)
 	return casilleros
 
 
-func _casilleros_reponibles() -> Dictionary[Producto.Id, int]:
-	var disposicion := _disposicion()
+func _casilleros_reponibles(
+	jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+) -> Dictionary[Producto.Id, int]:
+	var disposicion := _disposicion(jornada)
 	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
 		casilleros[producto.id] = disposicion.filas_de_adelante[producto.id]
@@ -67,11 +75,11 @@ func _completar_compra_fisica(atencion: Atencion, estante: Estante, desde_gondol
 	return vaciados
 
 
-func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-035
-	var casilleros := _casilleros_medidos()
-	var reponibles := _casilleros_reponibles()
+func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-035, AC-STK-099
 	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
 	for jornada in range(primera + 1, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
+		var casilleros := _casilleros_medidos(jornada)
+		var reponibles := _casilleros_reponibles(jornada)
 		for semilla in 200:
 			# La primera noche completa se recorre dos veces: cajas y casilleros ocupados.
 			for desde_gondola: bool in (
@@ -81,7 +89,7 @@ func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-
 				var inventario := Apertura.inventario_de_la_jornada(
 					jornada, compradores, casilleros, reponibles, _azar(semilla)
 				)
-				var estante := Estante.new(inventario, Catalogo.todos())
+				var estante := Estante.new(inventario, Catalogo.de_la_jornada(jornada))
 				_comprobar_guias_llenas(estante, casilleros, reponibles)
 				assert_bool(estante.completada()).is_false()
 				var tarea := TareaDeAtender.new(compradores, inventario)
@@ -103,7 +111,7 @@ func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-
 				assert_bool(tarea.completada()).is_true()
 				if desde_gondola:
 					assert_int(huecos_por_ventas).is_greater(0)
-				for producto in Catalogo.todos():
+				for producto in Catalogo.de_la_jornada(jornada):
 					for casillero in estante.casilleros_vacios(producto):
 						var unidad := estante.retirar(producto)
 						assert_object(unidad).is_not_null()
@@ -129,6 +137,7 @@ func _faltantes_de(almacen: Node3D) -> Dictionary[Producto.Id, int]:
 func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC-STK-034
 	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
 	var almacen: Node3D = auto_free(escena.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var puesto: Node3D = almacen.get("_reposicion_manual")

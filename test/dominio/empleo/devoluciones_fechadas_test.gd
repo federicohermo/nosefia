@@ -53,7 +53,7 @@ func test_legado_conserva_repetidos_sin_fabricar_fecha() -> void:  # AC-SAV-028
 
 
 func test_dos_cierres_guardan_bloques_en_su_orden() -> void:  # AC-EMP-066, AC-EMP-070
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
 	_cerrar_impecable(partida)
 	_cerrar_impecable(partida)
 	var mensajes: Array = PoliticaDeGuardado.datos(partida).devoluciones
@@ -61,10 +61,11 @@ func test_dos_cierres_guardan_bloques_en_su_orden() -> void:  # AC-EMP-066, AC-E
 	assert_bool(mensajes[0] is Dictionary).is_true()
 	if not mensajes[0] is Dictionary:
 		return
-	assert_int(mensajes[0].jornada).is_equal(1)
-	assert_int(mensajes[1].jornada).is_equal(1)
-	assert_int(mensajes[2].jornada).is_equal(2)
-	assert_int(mensajes[3].jornada).is_equal(2)
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	assert_int(mensajes[0].jornada).is_equal(primera)
+	assert_int(mensajes[1].jornada).is_equal(primera)
+	assert_int(mensajes[2].jornada).is_equal(primera + 1)
+	assert_int(mensajes[3].jornada).is_equal(primera + 1)
 	assert_str(mensajes[0].texto).is_equal(mensajes[2].texto)
 	assert_str(mensajes[0].identidad).is_not_equal(mensajes[2].identidad)
 	(
@@ -91,7 +92,9 @@ func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC
 		assert_bool(bandeja.recibir(JEFE, mensaje)).is_true()
 	var historial := bandeja.mensajes_de(JEFE)
 	var guion := Conversacion.de(JEFE).mensajes
-	var previos := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada < 5)
+	var previos := guion.filter(
+		func(mensaje: Mensaje) -> bool: return mensaje.jornada < 5 and mensaje.condicion.is_empty()
+	)
 	var apertura := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)
 	var cuarta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 4)
 	var quinta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)

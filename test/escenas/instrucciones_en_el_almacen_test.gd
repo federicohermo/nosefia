@@ -78,8 +78,10 @@ func _preparar_nueva() -> void:
 
 
 func _pasos(jornada: int) -> Array[InstruccionesDelJefe.Paso]:
+	var partida: Partida = _almacen.get("_partida")
+	var condiciones := CondicionesDelJefe.elegidas(partida.noches_de_prueba)
 	return InstruccionesDelJefe.pasos_de(
-		InstruccionesDelJefe.de_la_jornada(GUION.mensajes, jornada)
+		InstruccionesDelJefe.de_la_jornada(GUION.mensajes, jornada, condiciones)
 	)
 
 
@@ -90,15 +92,9 @@ func _leer_todo(jornada: int = PRIMERA) -> void:
 
 
 ## Sin medios: cerrar una noche vacía no despide.
-func _guardar(jornada: int, medios: int = 0) -> void:
-	(
-		assert_bool(
-			Guardado.new().escribir(
-				PartidaSerializada.sanear({"jornada": jornada, "medios": medios})
-			)
-		)
-		. is_true()
-	)
+func _guardar(jornada: int, medios: int = 0, noches: Dictionary = {}) -> void:
+	var datos := {"jornada": jornada, "medios": medios, "noches_de_prueba": noches}
+	assert_bool(Guardado.new().escribir(PartidaSerializada.sanear(datos))).is_true()
 
 
 func _cerrar_y_seguir() -> void:
@@ -136,6 +132,13 @@ func _comprobar_instrucciones_de(jornada: int) -> void:
 	_reloj().set("_ultimo_cuadro_usec", Time.get_ticks_usec() - 120000000)
 	_reloj().call("_process", 0.0)
 	assert_float(_restante()).is_equal(restante)
+
+
+func _comprobar_mensaje_1_de(jornada: int) -> void:
+	var pasos: Array = _instrucciones().get("_pasos")
+	var primero: Mensaje = (pasos[0] as InstruccionesDelJefe.Paso).textos[0]
+	assert_bool(primero.condicion.is_empty()).is_false()
+	assert_int(pasos.size()).is_equal(_pasos(jornada).size())
 
 
 ## Una sola entrada a la noche de la jornada, con el turno y el control retenidos.
@@ -319,6 +322,7 @@ func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-07
 	assert_bool(_instrucciones().visible).is_false()
 	await _cerrar_y_seguir()
 	_comprobar_instrucciones_de(PRIMERA + 1)
+	_comprobar_mensaje_1_de(PRIMERA + 1)
 	_leer_todo(PRIMERA + 1)
 	_comprobar_una_noche(PRIMERA + 1)
 	_persiana().terminar()
@@ -332,10 +336,11 @@ func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-07
 
 ## Esc en la segunda pantalla de la segunda jornada conserva la lectura.
 func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-EMP-049, AC-SAV-033
-	_guardar(PRIMERA + 1)
+	_guardar(PRIMERA + 1, 0, {PRIMERA: ResultadoDeLaNoche.new(1, []).a_datos()})
 	_abrir()
 	_almacen.call("retomar_la_partida")
 	_comprobar_instrucciones_de(PRIMERA + 1)
+	_comprobar_mensaje_1_de(PRIMERA + 1)
 	_siguiente().pressed.emit()
 	_esc()
 	assert_bool(get_tree().paused).is_true()
@@ -351,22 +356,28 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	_comprobar_una_noche(PRIMERA + 1)
 	await _cerrar_y_seguir()
 	_comprobar_instrucciones_de(PRIMERA + 2)
-	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_SIGUIENTE)
-	_leer_todo(PRIMERA + 2)
+	_comprobar_mensaje_1_de(PRIMERA + 2)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/2")
+	_siguiente().pressed.emit()
+	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
+	_siguiente().pressed.emit()
 	_comprobar_una_noche(PRIMERA + 2)
 
 
-func test_retomar_la_tercera_y_la_cuarta() -> void:  # AC-EMP-076, AC-SAV-021, AC-EMP-077
+# AC-EMP-076, AC-SAV-021, AC-EMP-077, AC-STK-098
+func test_retomar_la_tercera_y_la_cuarta() -> void:
 	_guardar(PRIMERA + 2)
 	_abrir()
 	_almacen.call("retomar_la_partida")
 	_comprobar_instrucciones_de(PRIMERA + 2)
+	_comprobar_catalogo_retomado(PRIMERA + 2)
 	_leer_todo(PRIMERA + 2)
 	_comprobar_una_noche(PRIMERA + 2)
 	await _cerrar_almacen()
 	_guardar(COMPLETA)
 	_abrir()
 	_almacen.call("retomar_la_partida")
+	_comprobar_catalogo_retomado(COMPLETA)
 	assert_bool(_instrucciones().visible).is_false()
 	assert_int(_persiana().get("_jornada")).is_equal(COMPLETA)
 	assert_bool((_persiana().get("_placa") as Label).visible).is_true()
@@ -374,7 +385,7 @@ func test_retomar_la_tercera_y_la_cuarta() -> void:  # AC-EMP-076, AC-SAV-021, A
 	var chat := celular.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)
 	var de_la_cuarta: Array[String] = []
 	for mensaje: Mensaje in GUION.mensajes:
-		if mensaje.jornada == COMPLETA:
+		if mensaje.jornada == COMPLETA and mensaje.condicion.is_empty():
 			de_la_cuarta.append(mensaje.identidad)
 	var ultimos: Array[String] = []
 	for mensaje: Mensaje in chat.slice(chat.size() - de_la_cuarta.size()):
@@ -444,3 +455,24 @@ func _cuadros(ahora: Array[int], hasta: int, nodos: Array[Node]) -> void:
 		ahora[0] = mini(ahora[0] + 10000, hasta)
 		for nodo in nodos:
 			nodo.call("_process", 0.0)
+
+
+func _comprobar_catalogo_retomado(jornada: int) -> void:
+	var disponibles := Catalogo.de_la_jornada(jornada)
+	var puesto: Node3D = _almacen.get("_reposicion_manual")
+	var cupos: Dictionary = puesto.call("casilleros")
+	var cajas: Array = _almacen.get("_cajas_de_productos")
+	for producto in Catalogo.todos():
+		var presente := disponibles.any(func(p: Producto) -> bool: return p.id == producto.id)
+		assert_bool(cupos[producto.id] > 0).is_equal(presente)
+		assert_bool(cajas[producto.id].visible).is_equal(presente)
+		assert_bool(cajas[producto.id].is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_equal(
+			presente
+		)
+		var zona: MultiMeshInstance3D = puesto.get_node_or_null("HuecosDe" + producto.nombre)
+		assert_object(zona).is_not_null()
+		assert_int(zona.multimesh.instance_count).is_equal(cupos[producto.id])
+		var fila := puesto.get_node_or_null("ZonaDe" + producto.nombre)
+		assert_bool(is_instance_valid(fila)).is_equal(presente)
+		if presente:
+			assert_int(fila.get_child_count()).is_equal(cupos[producto.id])
