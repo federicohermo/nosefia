@@ -17,11 +17,10 @@ const ENTRADAS := {
 		"J1_Intro05",
 		"J1_Foto06",
 		"J1_Intro06",
-		"J1_Reponer",
 	],
 	PRIMERA + 1: ["J1_Foto07", "J1_Intro07", "J1_Intro08"],
-	PRIMERA + 2: ["J1_Foto09", "J1_Intro09", "J1_Intro12"],
-	COMPLETA: ["J1_Intro10", "J1_Foto11", "J1_Intro11"],
+	PRIMERA + 2: ["J1_Foto09", "J1_Intro09"],
+	COMPLETA: ["J1_Intro10", "J1_Foto11", "J1_Intro11", "J1_Intro12"],
 }
 
 
@@ -119,13 +118,12 @@ func test_las_pantallas_de_cada_jornada() -> void:  # AC-EMP-045, AC-EMP-046
 		if paso.foto != null:
 			con_foto.append(paso.textos[0].identidad)
 	assert_array(con_foto).is_equal(["J1_Intro02", "J1_Intro03", "J1_Intro04", "J1_Intro06"])
-	assert_str(primera[-1].textos[0].identidad).is_equal("J1_Reponer")
-	assert_object(primera[-1].foto).is_null()
+	assert_int(primera.size()).is_equal(6)
+	assert_str(primera[-1].textos[0].identidad).is_equal("J1_Intro06")
 	var tercera := InstruccionesDelJefe.pasos_de(
 		InstruccionesDelJefe.de_la_jornada(mensajes, PRIMERA + 2)
 	)
-	assert_str(tercera[-1].textos[0].identidad).is_equal("J1_Intro12")
-	assert_object(tercera[-1].foto).is_null()
+	assert_int(tercera.size()).is_equal(1)
 	for jornada_y_intro: Array in [[PRIMERA + 1, "J1_Intro07"], [PRIMERA + 2, "J1_Intro09"]]:
 		var pasos := InstruccionesDelJefe.pasos_de(
 			InstruccionesDelJefe.de_la_jornada(mensajes, jornada_y_intro[0])

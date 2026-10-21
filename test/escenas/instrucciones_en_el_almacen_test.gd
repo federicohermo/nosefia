@@ -351,7 +351,7 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	_comprobar_una_noche(PRIMERA + 1)
 	await _cerrar_y_seguir()
 	_comprobar_instrucciones_de(PRIMERA + 2)
-	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_SIGUIENTE)
+	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
 	_leer_todo(PRIMERA + 2)
 	_comprobar_una_noche(PRIMERA + 2)
 
