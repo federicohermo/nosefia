@@ -12,6 +12,17 @@ const J2_REGISTRO_MAL := &"J2_REGISTRO_MAL"
 const J2_UN_CLIENTE_MAL := &"J2_UN_CLIENTE_MAL"
 const J2_NINGUNO_EN_CERO := &"J2_NINGUNO_EN_CERO"
 const J2_NINGUNO_ANOTADO := &"J2_NINGUNO_ANOTADO"
+## Por atención, registro y reposición, si cada una salió bien.
+const J3_POR_RESULTADO := {
+	[true, true, true]: &"J3_SIN_FALLAS",
+	[true, true, false]: &"J3_REPOSICION_MAL",
+	[true, false, true]: &"J3_REGISTRO_MAL",
+	[true, false, false]: &"J3_REGISTRO_Y_REPOSICION_MAL",
+	[false, true, true]: &"J3_ATENCION_MAL",
+	[false, false, true]: &"J3_ATENCION_Y_REGISTRO_MAL",
+	[false, true, false]: &"J3_ATENCION_Y_REPOSICION_MAL",
+	[false, false, false]: &"J3_TODO_MAL",
+}
 
 
 ## Una condición por noche anotada que decide la apertura siguiente.
@@ -19,6 +30,8 @@ static func elegidas(noches: Dictionary[int, ResultadoDeLaNoche]) -> Array[Strin
 	var condiciones: Array[StringName] = []
 	if noches.has(ReglasDeLaPartida.PRIMERA_JORNADA):
 		condiciones.append(_de_la_segunda(noches[ReglasDeLaPartida.PRIMERA_JORNADA]))
+	if noches.has(ReglasDeLaPartida.PRIMERA_JORNADA + 1):
+		condiciones.append(_de_la_tercera(noches[ReglasDeLaPartida.PRIMERA_JORNADA + 1]))
 	return condiciones
 
 
@@ -32,3 +45,11 @@ static func _de_la_segunda(primera: ResultadoDeLaNoche) -> StringName:
 	if primera.mal_atendidos == 1:
 		return J2_UN_CLIENTE_MAL
 	return J2_NINGUNO_EN_CERO if registro else J2_NINGUNO_ANOTADO
+
+
+static func _de_la_tercera(segunda: ResultadoDeLaNoche) -> StringName:
+	return J3_POR_RESULTADO[[
+		segunda.mal_atendidos == 0,
+		segunda.cumplio(Tarea.Tipo.REGISTRAR),
+		segunda.cumplio(Tarea.Tipo.REPONER),
+	]]
