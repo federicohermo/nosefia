@@ -227,7 +227,12 @@ func test_continuar_dos_veces_abre_una_sola_noche_siguiente() -> void:  # AC-EMP
 
 func test_despedido_vuelve_al_menu_una_sola_vez() -> void:  # AC-EMP-064, AC-EMP-065, AC-EMP-016
 	var almacen: Node3D = await _almacen(
-		Partida.new(Legajo.con_medios(3 * Reglas.MEDIOS_POR_APERCIBIMIENTO))
+		Partida.desde(
+			{
+				"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
+				"medios": 3 * Reglas.MEDIOS_POR_APERCIBIMIENTO
+			}
+		)
 	)
 	var menus := [0]
 	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)

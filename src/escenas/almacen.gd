@@ -280,7 +280,7 @@ func _ready() -> void:
 	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
 	_jugador.muebles_con_reserva = _muebles_con_contorno
 	_ciclo.jornada_abierta.connect(_reposicion_manual.preparar.unbind(1), CONNECT_ONE_SHOT)
-	_ciclo.arrancar(_partida, _reloj)
+	_ciclo.arrancar(_partida, _reloj, _clientes_mal_atendidos)
 
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
@@ -419,6 +419,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_audio.arrancar_el_ambiente()
 	_limpieza.reiniciar()
 	_estante.mostrar(0)
+
+
+func _clientes_mal_atendidos() -> int:
+	var atender := _atenciones.tarea()
+	return 0 if atender == null else atender.mal_atendidos()
 
 
 func _acelerar_si_se_cerro_el_ciclo() -> void:

@@ -16,6 +16,8 @@ enum Campo {
 	NOTAS,
 	CIERRE_PENDIENTE,
 	ELECCIONES,
+	APERCIBIMIENTOS_DE_LA_PRUEBA,
+	ULTIMA_DE_LA_PRUEBA_COMPLETA,
 }
 
 const VERSION: int = 2
@@ -36,6 +38,8 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.NOTAS: [],
 	Campo.CIERRE_PENDIENTE: 0,
 	Campo.ELECCIONES: {},
+	Campo.APERCIBIMIENTOS_DE_LA_PRUEBA: 0,
+	Campo.ULTIMA_DE_LA_PRUEBA_COMPLETA: false,
 }
 
 

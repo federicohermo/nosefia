@@ -33,7 +33,11 @@ func _cierre(jornada: int, medios: int, noches: int, hubo: bool = false) -> Stri
 
 
 func _partida_de_la_noche_1(cumplidas: Array[T], llamados: Array[L]) -> Partida:
-	var partida := Partida.nueva()
+	return _partida_de_la_noche(1, cumplidas, llamados)
+
+
+func _partida_de_la_noche(jornada: int, cumplidas: Array[T], llamados: Array[L]) -> Partida:
+	var partida := Partida.desde({"jornada": jornada})
 	partida.abrir_la_jornada()
 	for tarea: Tarea in partida.obligatorias():
 		if cumplidas.has(tarea.tipo()):
@@ -216,15 +220,17 @@ func test_ningun_numero_y_siempre_saludo_y_cierre() -> void:  # AC-EMP-060
 				assert_int(sin_nada.size()).is_equal(2)
 
 
-func test_el_despido_en_la_primera_noche() -> void:  # AC-EMP-061
+func test_el_despido_en_la_primera_jornada_completa() -> void:  # AC-EMP-061
 	var todos: Array[L] = [
 		L.LOCAL_DESORDENADO, L.OBJETO_AFUERA, L.PAPEL_EN_EL_INODORO, L.OBJETO_TIRADO
 	]
-	var partida := _partida_de_la_noche_1([T.REGISTRAR], todos)
+	var partida := _partida_de_la_noche(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, [T.REGISTRAR, T.ORDENAR_LAS_CAJAS], todos
+	)
 	assert_int(partida.medios()).is_equal(4 * M)
 	var devolucion := DevolucionDelJefe.new(1, partida)
 	var mensajes := devolucion.mensajes()
-	assert_int(mensajes.size()).is_equal(8)
+	assert_int(mensajes.size()).is_equal(9)
 	(
 		assert_array(mensajes)
 		. is_equal(
@@ -232,6 +238,7 @@ func test_el_despido_en_la_primera_noche() -> void:  # AC-EMP-061
 				"Che",
 				DevolucionDelJefe.TAREAS[T.CAJA][0],
 				DevolucionDelJefe.TAREAS[T.REPONER][0],
+				DevolucionDelJefe.TAREAS[T.LIMPIAR][0],
 				DevolucionDelJefe.PAPEL_1,
 				DevolucionDelJefe.BASURA[0],
 				DevolucionDelJefe.AFUERA[0],

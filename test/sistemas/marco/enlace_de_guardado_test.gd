@@ -63,14 +63,14 @@ func _jugar_la_noche_impecable() -> void:
 
 func test_el_cierre_de_una_jornada_intermedia_guarda_una_vez() -> void:  # AC-SAV-001
 	var guardado := _guardado()
-	var partida := _en_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	var partida := _en_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	_arrancar(partida, guardado)
 	_agotar_la_noche()
 	assert_bool(partida.terminada()).is_false()
 	assert_int(guardado.escrituras).is_equal(1)
 	assert_int(guardado.llamadas()).is_equal(1)
 	var retomada := Partida.desde(guardado.cargar())
-	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 3)
+	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	assert_int(retomada.jornada()).is_equal(partida.jornada())
 	assert_int(retomada.apercibimientos()).is_equal(partida.apercibimientos())
 	assert_int(retomada.apercibimientos()).is_greater(0)
@@ -92,7 +92,7 @@ func test_el_ultimo_cierre_borra_con_una_sola_llamada() -> void:  # AC-SAV-002
 
 func test_dos_noches_graves_seguidas_borran_el_guardado() -> void:  # AC-SAV-003
 	var guardado := _guardado()
-	var partida := Partida.nueva()
+	var partida := _en_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	_arrancar(partida, guardado)
 	_agotar_la_noche()
 	assert_bool(FileAccess.file_exists(guardado.ruta)).is_true()
@@ -125,7 +125,9 @@ func test_el_enlace_no_decide() -> void:
 
 func test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre() -> void:  # AC-EMP-020, AC-CLN-046
 	var guardado := _guardado()
-	var partida := Partida.new(Legajo.con_medios(6))
+	var partida := Partida.desde(
+		{"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, "medios": 6}
+	)
 	_arrancar(partida, guardado)
 	_ciclo.turno_agotado.connect(
 		func(_jornada: int) -> void: partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)

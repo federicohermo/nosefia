@@ -515,7 +515,15 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	# Tres apercibimientos y una noche sin tareas: salta de 3 a 5 sin pisar el 4.
-	almacen.set("_partida", Partida.new(Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)))
+	almacen.set(
+		"_partida",
+		Partida.desde(
+			{
+				"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
+				"medios": 3 * Reglas.MEDIOS_POR_APERCIBIMIENTO
+			}
+		)
+	)
 	add_child(almacen)
 	await get_tree().process_frame
 	var menus := [0]

@@ -11,6 +11,7 @@ extends GdUnitTestSuite
 const PATRONES_IMPUROS := ["get_tree(", "get_node(", "_process(", "await", "Input.", "randi("]
 
 const PARTIDA := "res://src/dominio/empleo/partida.gd"
+const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 
 
 func test_una_partida_nueva_arranca_en_la_primera_jornada() -> void:
@@ -65,9 +66,9 @@ func test_un_diccionario_vacio_da_una_partida_nueva() -> void:
 
 
 func test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo() -> void:
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": COMPLETA})
 	_jugar(partida, 0)
-	assert_int(partida.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	assert_int(partida.jornada()).is_equal(COMPLETA + 1)
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE)
 
 
@@ -75,10 +76,10 @@ func test_dos_cierres_sin_abrir_en_el_medio_no_avanzan_dos_veces() -> void:  # A
 	# El reloj emite `turno_cerrado` una sola vez, pero la puerta es pública y el 017 la va a
 	# tocar desde una pantalla. Sin el guard, un segundo cierre anota una jornada que nadie
 	# jugó — y una banda grave de regalo.
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": COMPLETA})
 	_jugar(partida, 0)
 	partida.cerrar_la_jornada(0)
-	assert_int(partida.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	assert_int(partida.jornada()).is_equal(COMPLETA + 1)
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE)
 
 
@@ -123,7 +124,7 @@ func test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas() -> void:
 func test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada() -> void:  # AC-EMP-010
 	# El ciclo ya guarda esto antes de llamar, pero la puerta es pública y el 017 la toca desde
 	# una pantalla. Sin el guard, una noche de regalo avanzaría una partida ya terminada.
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": COMPLETA})
 	_jugar(partida, 0)
 	_jugar(partida, 0)
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
@@ -151,7 +152,7 @@ func test_todas_las_jornadas_impecables_terminan_la_partida_sin_despido() -> voi
 func test_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido() -> void:  # AC-EMP-004
 	# **La regla más cara del juego, ejercida de punta a punta por primera vez.** Hasta este
 	# spec el legajo moría con la escena y `despedido()` no podía devolver `true` jugando.
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": COMPLETA})
 	_jugar(partida, 0)
 	_jugar(partida, 0)
 	assert_bool(partida.terminada()).is_true()
@@ -200,6 +201,8 @@ func test_la_partida_es_pura_y_no_pide_una_escena() -> void:
 ## Una jornada jugada entera: se abre y se cierra con las tareas que se le declaren cumplidas.
 func _jugar(partida: Partida, cumplidas: int) -> void:
 	partida.abrir_la_jornada()
+	for tarea: Tarea in partida.obligatorias().slice(0, cumplidas):
+		tarea.completar()
 	partida.cerrar_la_jornada(cumplidas)
 
 
@@ -212,19 +215,13 @@ func test_jornada_tres_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC
 	turno.consumir(Reglas.DURACION_DEL_TURNO)
 	partida.cerrar_la_jornada(turno.tareas_cumplidas())
 	assert_int(partida.medios()).is_zero()
+	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_zero()
+	assert_bool(partida.legajo().ultima_de_la_prueba_completa()).is_true()
 	assert_int(Consecuencias.consecuencia_de(4, 4)).is_equal(Consecuencias.Banda.NINGUNA)
 
 	for caso: Dictionary in [
-		{
-			"cumplidas": 3,
-			"banda": Consecuencias.Banda.AVISO,
-			"medios": Reglas.APERCIBIMIENTOS_POR_AVISO * Reglas.MEDIOS_POR_APERCIBIMIENTO
-		},
-		{
-			"cumplidas": 2,
-			"banda": Consecuencias.Banda.GRAVE,
-			"medios": Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE * Reglas.MEDIOS_POR_APERCIBIMIENTO
-		}
+		{"cumplidas": 3, "banda": Consecuencias.Banda.AVISO, "descuidos": 1},
+		{"cumplidas": 2, "banda": Consecuencias.Banda.GRAVE, "descuidos": 2}
 	]:
 		var otra := Partida.desde({"jornada": 3, "medios": 0})
 		assert_int(otra.jornada()).is_equal(3)
@@ -240,8 +237,12 @@ func test_jornada_tres_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC
 		)
 		assert_int(banda).is_equal(caso["banda"])
 		otra.cerrar_la_jornada(otro_turno.tareas_cumplidas())
-		assert_int(otra.medios()).is_equal(caso["medios"])
-		assert_int(otra.legajo().medios()).is_equal(caso["medios"])
+		var descuidos: int = caso["descuidos"]
+		assert_int(otra.legajo().apercibimientos_de_la_prueba()).is_equal(
+			descuidos * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA
+		)
+		assert_bool(otra.legajo().ultima_de_la_prueba_completa()).is_false()
+		assert_int(otra.medios()).is_zero()
 
 
 func _cerrar_con(partida: Partida, sin_cumplir: Array[Tarea.Tipo], llamados: Array) -> void:
