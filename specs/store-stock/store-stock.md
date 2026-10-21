@@ -992,9 +992,11 @@ en estanterías ENTONCES no se suma una obligatoria ajena.
 
 ### AC-STK-080 — Rescatar vuelve al origen de esa noche *(verifica BR-STK-038, BR-STK-039)*
 
-DADO una caja rescatada en la jornada 4 CUANDO vuelve a su origen ENTONCES queda en la pose de la
-pila de esa apertura y no cumple ordenar por aparecer en una estantería. DADO la apertura de una
-jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
+DADO una caja recién incorporada y rescatada en la jornada 4 CUANDO vuelve a su origen
+ENTONCES queda en la pose de la pila de esa apertura, sin ordenarse automáticamente.
+DADO una caja que ya estaba presente en las jornadas de prueba CUANDO se rescata en J4
+ENTONCES vuelve a su lugar de estantería. DADO la apertura de una jornada posterior
+ENTONCES el origen de todas las cajas vuelve a ser su lugar de estantería.
 
 ### AC-STK-086 — Cada sector contiene exactamente sus productos *(verifica BR-STK-043, BR-STK-044)*
 
