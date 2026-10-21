@@ -13,8 +13,9 @@ const LAVATORIO := SubtitulosAlExaminar.LAVATORIO
 const TEXTO_DE_PRUEBA := "abcdefghijklmnopqrst"
 
 
-func _almacen_con_jugador_quieto() -> Node3D:
+func _almacen_con_jugador_quieto(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": jornada}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
@@ -169,7 +170,9 @@ func test_la_puerta_del_cuartito_habla_solo_las_noches_que_esta_trabada() -> voi
 
 
 func test_cada_unidad_puesta_en_la_gondola_dice_su_texto() -> void:  # AC-SUB-002, AC-SUB-011
-	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var almacen: Node3D = await _almacen_con_jugador_quieto(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	)
 	var puesto: Node = almacen.get("_reposicion_manual")
 	puesto.call("_actualizar_zonas")
 	var probados := {}
