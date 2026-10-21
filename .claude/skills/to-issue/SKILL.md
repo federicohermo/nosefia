@@ -321,6 +321,12 @@ Lo que más se rompe:
   `repositor_test.gd` tenía 19 casos y 20 métodos, y el issue le pedía uno más. Si una ya está
   en el tope, el issue dice adónde van los casos nuevos. En el #176, `reposicion_manual_test.gd`
   estaba en 20 y `caja_que_se_lleva_test.gd` en 19, y la suite nueva no estaba en los límites.
+  Vale también para una clase de `src/`: `gdlint` cuenta sus métodos no estáticos. En el #548,
+  `Partida` estaba en el tope, y el dato nuevo entró como propiedad de sólo lectura.
+- **Un mensaje del guion que pasa a depender de la partida se filtra en todos los que leen el
+  guion.** Se buscan los lectores con `rg "\.mensajes"` sobre `src/`: las instrucciones y
+  también el chat del celular, con quien lo abre en cada jornada. En el #548, los límites
+  nombraban sólo las instrucciones, y el chat mostraba las cinco variantes juntas.
 - **Un issue que suma cuerpos al grupo `interactuable` mide lo que cuesta la mira.** Se mide
   `_leer_la_mira` en el pasillo más cargado, con la mano vacía y con algo en la mano. En el
   #265, pasar de una zona por producto a una por casillero multiplicó por 60 lo enfocable, y la
