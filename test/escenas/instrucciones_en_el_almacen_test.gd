@@ -110,7 +110,7 @@ func _cerrar_y_seguir() -> void:
 	pantalla.elegir()
 	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	await get_tree().process_frame
+	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(_almacen)).is_true()
 	assert_bool(pantalla.visible).is_false()
 
 

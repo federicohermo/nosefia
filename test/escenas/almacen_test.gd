@@ -423,7 +423,7 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 	pantalla.elegir()
 	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	await get_tree().process_frame
+	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(almacen)).is_true()
 	assert_bool(pantalla.visible).is_false()
 	(
 		assert_int(ciclo.partida().jornada())
@@ -477,19 +477,39 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	pantalla.elegir()
 	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	var celular: PantallaDelCelular = almacen.get_node("Interfaz/PantallaDelCelular")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	# La noche abre después del calentamiento de la transición: el estado se lee al abrir, antes
+	# de que la física de los cuadros siguientes lo mueva.
+	var al_abrir := {}
+	(almacen.get_node("Servicios/CicloDeJornadas") as CicloDeJornadas).jornada_abierta.connect(
+		func(_jornada: int) -> void:
+			(
+				al_abrir
+				. merge(
+					{
+						"posicion": jugador.global_position,
+						"velocidad": jugador.velocity,
+						"yaw": control.yaw(),
+						"pitch": control.pitch(),
+						"camara": camara.rotation.x,
+						"frente": jugador.call("frente"),
+					}
+				)
+			),
+		CONNECT_ONE_SHOT
+	)
 	var ahora := [Time.get_ticks_usec()]
 	celular.set("_ahora", func() -> int: return ahora[0])
 	AvanceDeDevolucion.animar_celular(
 		celular, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
 	)
-	assert_vector(jugador.global_position).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
-	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
-	assert_float(control.yaw()).is_equal_approx(arranque.basis.get_euler().y, 1e-4)
-	assert_float(control.pitch()).is_equal(0.0)
-	var camara: Camera3D = jugador.get_node("Giro/Camara")
-	assert_float(camara.rotation.x).is_equal(0.0)
-	var frente: Vector3 = jugador.call("frente")
-	assert_vector(frente).is_equal_approx(-arranque.basis.z, Vector3.ONE * 1e-4)
+	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(almacen)).is_true()
+	assert_vector(al_abrir["posicion"]).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
+	assert_vector(al_abrir["velocidad"]).is_equal(Vector3.ZERO)
+	assert_float(al_abrir["yaw"]).is_equal_approx(arranque.basis.get_euler().y, 1e-4)
+	assert_float(al_abrir["pitch"]).is_equal(0.0)
+	assert_float(al_abrir["camara"]).is_equal(0.0)
+	assert_vector(al_abrir["frente"]).is_equal_approx(-arranque.basis.z, Vector3.ONE * 1e-4)
 
 
 func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016

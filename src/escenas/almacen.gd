@@ -91,6 +91,9 @@ var compradores_de_la_apertura: Callable = Compradores.de_la_jornada
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
 var _partida := Partida.desde(Guardado.new().cargar())
+## La jornada para la que están preparados los útiles: la de la carga, y después la de cada
+## transición que los preparó.
+var _jornada_preparada := 0
 
 ## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
 ## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
@@ -120,6 +123,8 @@ var _enlace_de_guardado: EnlaceDeGuardado
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
 ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
+	# Acá y no al declararla: quien arma la escena puede reemplazar la partida antes de entrar.
+	_jornada_preparada = _partida.jornada()
 	azar_de_la_apertura.randomize()
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
@@ -464,12 +469,31 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
 		_jugador.suspender()
 		await _pantalla_del_celular.celular_bajado
+		await _preparar_los_utiles()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
 	var acciones: Dictionary[DevolucionDelJefe.Opcion, Callable] = {
 		DevolucionDelJefe.Opcion.CONTINUAR: _seguir,
 		DevolucionDelJefe.Opcion.VOLVER_AL_MENU: _ir_al_menu,
 	}
 	acciones[opcion].call()
+
+
+## Entre noches no hay carga: lo que la siguiente necesita y la carga no preparó se calienta acá,
+## con la persiana baja tapando la cámara del calentamiento.
+func _preparar_los_utiles() -> void:
+	var siguiente := _partida.jornada()
+	var pendientes: Array[Node3D] = []
+	for util: ObjetoAgarrable in _utiles_de_limpieza:
+		if PreparacionDeLosUtiles.por_preparar(util.datos.id, _jornada_preparada, siguiente):
+			pendientes.append(util)
+	if not pendientes.is_empty():
+		var calentamiento := CalentamientoDeShaders.new()
+		add_child(calentamiento)
+		calentamiento.calentar_copias(self, pendientes)
+		await calentamiento.terminado
+		calentamiento.queue_free()
+	# Recién al terminar: un calentamiento cortado no deja la jornada como preparada.
+	_jornada_preparada = siguiente
 
 
 ## La jornada abre detrás de la entrada; el control vuelve cuando la persiana termina de subir.
@@ -480,6 +504,15 @@ func _seguir() -> void:
 
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
 ## entregar otra vez la devolución; si no, entra a la jornada guardada.
+## Los útiles que esta carga no prepara: sus variantes las compila otra noche.
+func cuerpos_sin_copias() -> Array[Node3D]:
+	var sin_copias: Array[Node3D] = []
+	for util: ObjetoAgarrable in _utiles_de_limpieza:
+		if not PreparacionDeLosUtiles.se_prepara(util.datos.id, _partida.jornada()):
+			sin_copias.append(util)
+	return sin_copias
+
+
 func retomar_la_partida() -> void:
 	if _partida.reflexion == null:
 		_entrar_a_la_jornada()
