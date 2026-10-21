@@ -46,7 +46,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro03"
 orden = 4
 de_quien = "Enrique Peldaño"
-texto = "Hoy es fundamental que aprendas lo más importante: [b]ATENDER A LOS CLIENTES[/b]. Durante el turno nocturno, la entrada principal queda cerrada, así que vas a tener que [b]hablarles y entregarles los productos por la ventanilla[/b]. ¡Y no te olvides de [b]darles un ticket [/b]de recibo!"
+texto = "Hoy es fundamental que aprendas lo más importante: [b]ATENDER A LOS CLIENTES[/b]. Durante el turno nocturno, la entrada principal queda cerrada, así que vas a tener que [b]hablarles y entregarles los productos por la ventanilla[/b].\n\n¡Y no te olvides de [b]darles un ticket [/b]de recibo!"
 
 [sub_resource type="Resource" id="Foto04"]
 script = ExtResource("mensaje")
