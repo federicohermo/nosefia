@@ -86,8 +86,7 @@ salir de esa misma lista.
 ### BR-SHF-007 — Una obligatoria cuenta mientras su condición vale, y antes del cierre
 
 MIENTRAS queda turno, el sistema DEBE contar la obligatoria que se cumple, sin importar cuánto
-turno quede, y DEBE dejar de contarla si su condición deja de valer, salvo el
-cumplimiento consolidado de BR-SHF-022. SI la tarea ya está
+turno quede, y DEBE dejar de contarla si su condición deja de valer. SI la tarea ya está
 cumplida, ENTONCES cumplirla otra vez NO DEBE contarla dos veces. SI la tarea no está cumplida,
 ENTONCES descumplirla NO DEBE descontar nada. SI el turno está cerrado, ENTONCES el sistema DEBE
 rechazar cumplir y descumplir: el cierre cuenta el estado de ese instante.
@@ -148,26 +147,18 @@ Cumplir las tareas NO DEBE acelerar el reloj ni cerrar la jornada automáticamen
 jugador no sale, el turno DEBE continuar a su ritmo normal hasta el cierre habitual.
 Desde la primera jornada completa, el sistema NO DEBE ofrecer esta salida ni producir su aviso.
 
-### BR-SHF-022 — El aviso consolida las tareas de esa noche
+### BR-SHF-024 — La salida sigue el cumplimiento actual
 
-CUANDO se habilita la salida y se produce el aviso, el sistema DEBE consolidar el cumplimiento
-de todas las obligatorias de esa noche. Desde ese instante, ninguna acción posterior DEBE
-descumplirlas ni volver a trabar la salida. La consolidación NO DEBE completar una tarea
-pendiente ni aplicarse antes de cumplir todas, ni en jornadas sin salida anticipada.
-Al cerrar, las tareas DEBEN conservar ese cumplimiento, tanto por la puerta como por tiempo.
-Las demás consecuencias del cierre conservan sus reglas.
+MIENTRAS sigue abierta una jornada de prueba, SI alguna obligatoria deja de estar cumplida
+después de habilitar la salida, ENTONCES el sistema DEBE volver a trabar la entrada y producir
+el aviso de BR-NTF-015. Cuando todas vuelven a estar cumplidas, el sistema DEBE habilitar la
+salida otra vez. Cada nueva transición de habilitada a trabada DEBE producir ese aviso; una
+confirmación repetida del mismo estado NO DEBE producir otra transición.
 
-Abrir o retomar una jornada DEBE crear tareas sin consolidación heredada. El sistema DEBE
-evaluar de nuevo el cumplimiento real de las tareas de esa jornada.
-
-### BR-SHF-023 — El registro consolidado queda para consulta
-
-CUANDO se consolida el cumplimiento de BR-SHF-022, el sistema DEBE conservar el registro de
-ventas de esa noche sin permitir sumar ni restar unidades. Los botones de ambas operaciones
-DEBEN quedar deshabilitados, incluso si la computadora está abierta al consolidar o si se
-reabre después. La consulta, el desplazamiento y la salida de la computadora DEBEN seguir
-disponibles. Abrir otra jornada DEBE entregar su registro nuevo editable.
-Desde la primera jornada completa, completar todas las tareas NO DEBE bloquear el registro.
+El aviso de salida NO DEBE fijar el cumplimiento de las tareas ni impedir los gestos que las
+modifican. La planilla DEBE conservar sus operaciones de sumar y restar según BR-STK-020.
+El cierre, por la puerta o por tiempo, DEBE contar el cumplimiento vigente de BR-SHF-007.
+Abrir o retomar una jornada DEBE evaluar sus tareas propias sin heredar el permiso anterior.
 
 ## Criterios de aceptación
 
@@ -350,37 +341,39 @@ no permite salir. DADO atención sin cumplir por un comprador que no llegó, esp
 sin comprar ENTONCES no permite salir, aunque lo demás esté hecho y el registro coincida.
 DADO la primera jornada completa y la última CUANDO todas están cumplidas ENTONCES no permite salir.
 
-### AC-SHF-037 — El aviso fija el cumplimiento sin adelantar el reloj *(verifica BR-SHF-021, BR-SHF-022, BR-SHF-003)*
+### AC-SHF-038 — La puerta conserva el cierre habitual y su unicidad *(verifica BR-SHF-021, BR-SHF-024, BR-SHF-004)*
 
-DADO cada jornada de prueba abierta CUANDO se cumple su última obligatoria ENTONCES aparece
-el aviso sin consumir turno ni cambiar el ritmo. CUANDO después se intenta descumplir cada
-obligatoria, por ejemplo retirando mercadería repuesta, ENTONCES todas siguen cumplidas y
-la puerta sigue habilitada. Un segundo real sigue descontando el ritmo propio de esa jornada.
-DADO una tarea pendiente ENTONCES no puede consolidarse como cumplida.
-DADO la primera jornada completa CUANDO se descumple una tarea ENTONCES deja de contar.
-
-### AC-SHF-038 — La puerta conserva el cierre habitual y su unicidad *(verifica BR-SHF-021, BR-SHF-022, BR-SHF-004)*
-
-DADO cada jornada de prueba con el aviso producido CUANDO se acciona la entrada con el
+DADO cada jornada de prueba con la salida habilitada CUANDO se acciona la entrada con el
 primario ENTONCES el turno llega a cero, baja la persiana, aparece la devolución por el chat
 y se guarda el avance por el mismo recorrido del cierre habitual. Repetir la acción NO
 DEBE cerrar dos veces ni avanzar otra noche. DADO que el jugador no sale CUANDO agota el
-tiempo normal ENTONCES cierra una sola vez con las tareas consolidadas cumplidas.
+tiempo normal ENTONCES cierra una sola vez contando el estado actual de sus tareas, también
+si alguna se descumplió después del aviso.
 
-### AC-SHF-039 — La noche nueva no conserva la autorización *(verifica BR-SHF-021, BR-SHF-022)*
+### AC-SHF-039 — La noche nueva no conserva la autorización *(verifica BR-SHF-021, BR-SHF-024)*
 
 DADO una jornada de prueba que permitió salir CUANDO se abre la siguiente, o se retoma
 desde el inicio, ENTONCES la entrada no ofrece salida por el permiso anterior y sus tareas
 pueden volver a cumplirse y descumplirse. Al completar las de una nueva jornada de prueba
 puede producir su propio aviso. La primera jornada completa no lo produce.
 
-### AC-SHF-040 — Los dos botones y el dominio conservan el registro *(verifica BR-SHF-023)*
+### AC-SHF-041 — Descumplir vuelve a trabar y recuperar habilita *(verifica BR-SHF-021, BR-SHF-024, BR-SHF-007, BR-SHF-003)*
 
-DADO la computadora abierta al cumplirse la última tarea CUANDO se consolida la noche
-ENTONCES ambos botones quedan deshabilitados y sumar o restar directamente tampoco cambia
-unidades ni total. Reabrir conserva el bloqueo y permite consultar y desplazarse. DADO la
-noche siguiente ENTONCES el registro nuevo permite ambas operaciones. DADO la primera
-jornada completa con todas las tareas cumplidas ENTONCES su registro sigue editable.
+DADO cada jornada de prueba abierta CUANDO se cumple su última obligatoria ENTONCES habilita
+la salida sin consumir turno ni cambiar el ritmo. CUANDO se descumple por separado cada una
+de sus obligatorias ENTONCES deja de contar y la entrada vuelve a trabarse. Recuperar todas
+habilita de nuevo sin adelantar el reloj. Un segundo real sigue descontando el ritmo propio
+de esa jornada. DADO la góndola completa después del aviso CUANDO se retira una unidad
+ENTONCES reponer queda pendiente y no se permite salir; reponerla habilita otra vez.
+
+### AC-SHF-042 — La planilla permite equivocarse y corregir después del aviso *(verifica BR-SHF-024)*
+
+DADO una jornada de prueba con todas sus tareas cumplidas y la computadora abierta CUANDO
+se pulsa «+» en una fila que admite sumar ENTONCES cambia su cantidad, registrar se descumple
+y la entrada vuelve a trabarse. CUANDO se pulsa «−» en esa fila ENTONCES se recupera la
+cantidad correcta, registrar se cumple y la salida se habilita. Cerrar y reabrir la computadora
+conserva ambas operaciones disponibles. Abrir la jornada siguiente entrega su planilla nueva
+con las operaciones habituales.
 
 ## No objetivos
 
@@ -395,9 +388,10 @@ jornada completa con todas las tareas cumplidas ENTONCES su registro sigue edita
 ## Contratos
 
 - **Entrada:** los segundos reales que pasaron, la lista de obligatorias de la noche, y qué
-  jornada es; el pedido de anunciarla y el avance real de su entrada.
+  jornada es; el pedido de anunciarla y el avance real de su entrada; la solicitud de salir.
 - **Salida:** cuánto queda, si el turno cerró, cuántas obligatorias van cumplidas, y la lectura
-  del reloj de mesa: la hora, o vacío; texto, opacidad, apertura y finalización de la entrada.
+  del reloj de mesa: la hora, o vacío; texto, opacidad, apertura y finalización de la entrada;
+  si se permite salir y cuándo se habilita o vuelve a trabarse la salida.
 - **Falla:** cumplir una obligatoria ya cumplida, o con el turno cerrado, se rechaza. Descumplir
   una sin cumplir, o con el turno cerrado, también. Un tiempo negativo se ignora en silencio.
 
@@ -413,8 +407,10 @@ jornada completa con todas las tareas cumplidas ENTONCES su registro sigue edita
   obligatorias se cumplieron al cerrar.
 - [`investigation`](../investigation/investigation.md) (consume): si el cierre tiene una
   reflexión pendiente, y cuándo termina.
-- Las capacidades de tarea (alimentan): cada una avisa cuándo su obligatoria quedó hecha.
-  Registrar y ordenar las cajas avisan también cuándo dejaron de estarlo.
+- Las capacidades de tarea (alimentan): cada una avisa cuándo su obligatoria quedó hecha
+  y cuándo deja de estarlo; ese cumplimiento actual decide el permiso de salida de la prueba.
+- [`notifications`](../notifications/notifications.md) (alimenta): la primera habilitación
+  y cada nueva traba de la salida durante la noche.
 
 ## Preguntas abiertas
 

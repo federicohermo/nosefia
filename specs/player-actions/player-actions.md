@@ -373,7 +373,7 @@ primero el examen, después la acción primaria y por último el secundario disp
 | Examinar | examinar | mano vacía y un interactuable enfocado |
 | Agarrar | primario | mano vacía y un levantable enfocado |
 | Dejar | primario | mano ocupada sin interacción primaria declarada sobre el objetivo |
-| Abrir | primario | puerta cerrada o trabada, computadora o caja registradora |
+| Abrir | primario | puerta cerrada o trabada salvo la entrada principal de BR-PLY-041, computadora o caja registradora |
 | Cerrar | primario | puerta abierta |
 | Mirar | primario | nota pegada |
 | Hablar | primario | comprador con inicial pendiente, aun con objeto en mano, o inicial terminada con mano vacía, cuando atención habilita el gesto |
@@ -407,7 +407,8 @@ o vacío, la mopa seca o el jabón sea incorrecto: mirar una mancha NO DEBE reve
 El lector presente con una unidad, el inodoro con un ticket y el cuerpo del contenedor con
 un objeto DEBEN declarar interacción primaria, aunque el resultado pueda rechazarse.
 Un tacho sólo DEBE ofrecer extracción con bolsa y mano vacía; una puerta trabada DEBE
-ofrecer Abrir. La tapa DEBE ofrecer sólo su alternancia, sin tirar además lo sostenido.
+ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer sólo su
+alternancia, sin tirar además lo sostenido.
 El secundario sobre todos esos objetivos NO DEBE ofrecer los usos trasladados al primario;
 Sacar producto conserva el secundario, y las acciones ajenas conservan su contrato.
 
@@ -461,8 +462,9 @@ otros apoyos parciales depende de OQ-PLY-004.
 MIENTRAS está habilitada la salida de BR-SHF-021, el primario sobre la puerta de entrada
 DEBE terminar la jornada por el cierre habitual, sin alternar la hoja. La referencia DEBE
 ofrecer Interactuar con el control vigente del primario sólo en ese estado. Antes de habilitarse,
-o desde la primera jornada completa, NO DEBE ofrecer esa acción y el primario DEBE conservar
-el sonido de puerta trabada sin girar la hoja. La entrada NO DEBE permitir soltar o usar lo
+al volver a trabarse por una tarea pendiente, o desde la primera jornada completa, NO DEBE
+ofrecer esa acción y el primario DEBE conservar el sonido de puerta trabada sin girar la hoja.
+La entrada NO DEBE permitir soltar o usar lo
 sostenido por ninguno de estos intentos. El secundario NO DEBE cerrar la noche ni sonar trabada.
 Con control suspendido, pausa o jornada cerrada, ningún gesto DEBE volver a cerrar la noche.
 Las demás puertas DEBEN conservar su referencia y comportamiento.
@@ -1151,8 +1153,11 @@ ni entrega por consultar, ni habilita atención directa si el puesto no la ofrec
 DADO una jornada de prueba antes del aviso CUANDO se enfoca la entrada ENTONCES no ofrece
 acción primaria; el primario suena trabada y no gira la hoja. DADO su salida habilitada
 ENTONCES ofrece Interactuar con el control primario vigente. Tras vencer el aviso conserva
-esa referencia. DADO la primera jornada completa con todas las tareas hechas ENTONCES no
-ofrece salida y sigue sonando trabada. Las otras puertas conservan Abrir y Cerrar.
+esa referencia mientras todas las tareas sigan cumplidas. CUANDO una tarea se descumple
+ENTONCES se retira Interactuar y el primario vuelve a sonar trabada sin cerrar la noche.
+Recuperar todas las tareas vuelve a ofrecer Interactuar. DADO la primera jornada completa
+con todas las tareas hechas ENTONCES no ofrece salida y sigue sonando trabada.
+Las otras puertas conservan Abrir y Cerrar.
 
 ### AC-PLY-104 — Un primario cierra y conserva la mano *(verifica BR-PLY-041, BR-PLY-026)*
 
@@ -1200,7 +1205,7 @@ abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los ge
   La vigencia de la persona y el estado de atención deciden hablar o entregar; terminar el
   diálogo devuelve automáticamente la vista y el movimiento, salvo el control tomado por el cierre.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): las obligatorias declaradas que
-  enumera la nota de tareas.
+  enumera la nota de tareas y el permiso actual para salir por la entrada durante la prueba.
 
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta y consume): qué se lleva en la
   mano decide si se puede limpiar; si un tacho conserva su bolsa decide si el primario ofrece

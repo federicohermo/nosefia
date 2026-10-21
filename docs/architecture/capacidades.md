@@ -37,11 +37,10 @@ flowchart TD
 
   CTR -- "obligatoria cumplida" --> SHF
   STK -- "obligatorias cumplidas y descumplidas" --> SHF
-  SHF -- "cumplimiento consolidado de la prueba" --> STK
   CLN -- "obligatorias cumplidas" --> SHF
   CLN -- "motivos únicos de la noche" --> EMP
   STK -- "unidades sueltas" --> CLN
-  SHF -- "obligatorias declaradas" --> PLY
+  SHF -- "obligatorias declaradas y permiso de salida" --> PLY
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
   STK -- "unidades en góndola" --> CTR
@@ -78,7 +77,8 @@ flowchart TD
 
 La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
 El contrato de `notifications` incluye llegada, vencimiento, rechazo del lector, pista nueva
-anotada, salida habilitada, tiempo restante y cierre del turno. Ninguna contesta a quien publica el suceso.
+anotada, salida habilitada o trabada de nuevo, tiempo restante y cierre del turno.
+Ninguna contesta a quien publica el suceso.
 Por eso la tabla de sonidos es un archivo y no un `match`:
 agregar un sonido no toca a quien lo emite.
 
@@ -117,10 +117,13 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
 
   Atención exige completar las dos compras.
 - **`shift-cycle`, `store-stock` y `player-actions`.** Las jornadas de prueba permiten salir por
-  la entrada al cumplir todas sus tareas. Ese aviso consolida su cumplimiento hasta el cierre
-  y deja el registro de ventas de consulta. Retirar mercadería después no descumple reponer.
-  La puerta termina la noche por el mismo recorrido que el tiempo agotado. Abrir otra jornada
-  crea tareas sin consolidar y registro editable. El reloj conserva el ritmo de esa jornada.
+  la entrada mientras todas sus tareas estén cumplidas. Descumplir una vuelve a trabar la
+  salida; recuperar todas la habilita de nuevo. La planilla conserva sus gestos de sumar y
+  restar, y retirar mercadería vuelve a dejar reposición pendiente. La primera habilitación
+  avisa una vez por noche y cada nueva traba produce su propio aviso; recuperar retira el aviso
+  de traba sin repetir el inicial. La puerta termina la noche por el mismo recorrido que el
+  tiempo agotado, contando el cumplimiento actual. Abrir otra jornada vuelve a evaluar sus
+  tareas y permiso propios. El reloj conserva el ritmo de esa jornada.
 - **`player-actions` y `counter-service`.** Atención decide si corresponde hablar, recibir o
   terminar una conversación. El cuerpo traduce la consulta en referencia y gesto, y consume
   el clic de salida antes de volver al mundo. En atención física el foco sigue el alfa de la
