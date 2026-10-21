@@ -31,7 +31,9 @@ const FILAS_DE_LA_TERCERA := [
 
 static func cerrar_la_primera(mal_atendidos: int, registrar: bool) -> Partida:
 	var partida := Partida.nueva()
-	var sin_cumplir: Array[Tarea.Tipo] = [] if registrar else [Tarea.Tipo.REGISTRAR]
+	var sin_cumplir: Array[Tarea.Tipo] = []
+	if not registrar:
+		sin_cumplir.append(Tarea.Tipo.REGISTRAR)
 	cerrar_la_noche(partida, mal_atendidos, sin_cumplir)
 	return partida
 
