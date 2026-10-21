@@ -4,8 +4,8 @@ const RUTA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 const ENTRADA := "Estructura/puertaentrada/CuerpoDeLaHoja"
-const AVISO := "YA TERMINASTE TUS TAREAS Y PODÉS IRTE"
-const RETRABA := "YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR"
+const AVISO: String = PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]
+const RETRABA: String = PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.SALIDA_RETRABADA]
 
 var _ruta_guardado: String
 
@@ -57,7 +57,7 @@ func test_no_salir_conserva_el_ritmo_y_cierra_por_el_recorrido_natural() -> void
 		var reloj: RelojDelTurno = almacen.get("_reloj")
 		if con_pendiente:
 			assert_bool(reloj.descumplir(reloj.obligatoria(Tarea.Tipo.REPONER))).is_true()
-		_pila(almacen)._process(3.0)
+		_pila(almacen)._process(Notificaciones.DURACION)
 		assert_array(_textos(almacen)).is_empty()
 		var cierres: Array[int] = []
 		reloj.turno_cerrado.connect(cierres.append)
@@ -130,14 +130,18 @@ func _referencia(almacen: Node3D) -> String:
 
 
 func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:  # AC-SHF-041, AC-NTF-028
-	for jornada: int in [1, 2, 3, 4]:
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	):
 		var almacen := await _abrir(jornada)
 		var antes := _restante(almacen)
 		var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
 		computadora.pedir_abrir()
 		assert_array(_textos(almacen)).not_contains(AVISO)
 		_cumplir(almacen)
-		assert_array(_textos(almacen)).is_equal([AVISO] if jornada < 4 else [])
+		assert_array(_textos(almacen)).is_equal(
+			[AVISO] if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA else []
+		)
 		var pantalla: PantallaDeComputadora = almacen.get_node("Interfaz/PantallaDeComputadora")
 		var fila: Node = pantalla.caja().get("_filas").get_child(0).get_child(0)
 		assert_bool((fila.get_child(3) as Button).disabled).is_false()
@@ -148,9 +152,13 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:  # AC-S
 		var tarea := reloj.obligatoria(Tarea.Tipo.REPONER)
 		assert_bool(reloj.descumplir(tarea)).is_true()
 		assert_bool(almacen.call("_puede_salir")).is_false()
-		assert_array(_textos(almacen)).is_equal([RETRABA] if jornada < 4 else [])
+		assert_array(_textos(almacen)).is_equal(
+			[RETRABA] if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA else []
+		)
 		assert_bool(reloj.completar(tarea)).is_true()
-		assert_bool(almacen.call("_puede_salir")).is_equal(jornada < 4)
+		assert_bool(almacen.call("_puede_salir")).is_equal(
+			jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		)
 		assert_array(_textos(almacen)).is_empty()
 		reloj.avanzar(1.0)
 		assert_float(antes - _restante(almacen)).is_equal(Ritmo.de_la_jornada(jornada))
@@ -159,7 +167,9 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:  # AC-S
 
 
 func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # AC-SHF-036
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
 		var almacen := await _abrir(jornada, true)
 		var reloj: RelojDelTurno = almacen.get("_reloj")
 		var partida: Partida = almacen.get("_partida")
@@ -176,7 +186,9 @@ func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # A
 
 
 func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-038
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
 		var almacen := await _abrir(jornada, true)
 		var reloj: RelojDelTurno = almacen.get("_reloj")
 		var partida: Partida = almacen.get("_partida")
@@ -237,7 +249,7 @@ func test_los_botones_retraban_y_recuperan_cada_ciclo() -> void:  # AC-SHF-042, 
 		assert_bool(reloj.corriendo()).is_true()
 		assert_str(_referencia(almacen)).not_contains("[Click Izq]")
 		assert_array(_textos(almacen)).contains(RETRABA).not_contains(AVISO)
-		_pila(almacen)._process(2.9)
+		_pila(almacen)._process(Notificaciones.DURACION - 0.1)
 		almacen.call("_revisar_la_salida")
 		_pila(almacen)._process(0.1)
 		assert_array(_textos(almacen)).not_contains(RETRABA)
@@ -308,12 +320,14 @@ func _vender(almacen: Node3D, jornada: int) -> void:
 
 
 func test_entrada_sin_permiso_suena_trabada() -> void:  # AC-PLY-103, AC-PLY-040
-	for jornada: int in [1, 4]:
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	]:
 		var almacen := await _abrir(jornada)
 		var entrada: Node3D = almacen.get_node(ENTRADA)
 		var trabadas: Array[Node3D] = []
 		entrada.connect("puerta_trabada", trabadas.append)
-		if jornada == 4:
+		if jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 			_cumplir(almacen)
 		assert_str(_referencia(almacen)).not_contains("[Click Izq]")
 		_gesto(almacen, true)
@@ -336,7 +350,7 @@ func test_la_salida_respeta_mano_y_suspension() -> void:  # AC-PLY-104, AC-PLY-1
 			assert_bool(agarre.pedir_agarrar(objeto.get("datos"), objeto)).is_true()
 		var sostenido := agarre.manos().sostenido()
 		var padre := objeto.get_parent()
-		_pila(almacen)._process(3.0)
+		_pila(almacen)._process(Notificaciones.DURACION)
 		assert_str(_referencia(almacen)).contains("[Click Izq] Interactuar")
 		_gesto(almacen, false)
 		jugador.call("suspender")

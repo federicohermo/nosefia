@@ -8,7 +8,7 @@ func test_el_aviso_no_se_renueva_y_el_cierre_permite_otro() -> void:  # AC-NTF-0
 	assert_array(estado.visibles()).is_equal(
 		[Notificaciones.Tipo.TAREAS_TERMINADAS, Notificaciones.Tipo.PISTA]
 	)
-	estado.avanzar(2.9)
+	estado.avanzar(Notificaciones.DURACION - 0.1)
 	estado.actualizar_salida(true)
 	assert_array(estado.visibles()).has_size(2)
 	estado.avanzar(0.1)
@@ -24,7 +24,7 @@ func test_cambiar_la_salida_conserva_el_orden_y_resto_de_otros_avisos() -> void:
 	var estado := Notificaciones.new()
 	estado.pista_anotada()
 	estado.lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
-	estado.avanzar(2.0)
+	estado.avanzar(Notificaciones.DURACION - 1.0)
 	estado.actualizar_salida(true)
 	estado.actualizar_salida(false)
 	(
@@ -61,7 +61,7 @@ func test_cada_perdida_de_permiso_avisa_sin_repetir_mientras_sigue_trabada() -> 
 	for _ciclo in 2:
 		estado.actualizar_salida(false)
 		assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.SALIDA_RETRABADA])
-		estado.avanzar(2.9)
+		estado.avanzar(Notificaciones.DURACION - 0.1)
 		estado.actualizar_salida(false)
 		estado.avanzar(0.1)
 		assert_array(estado.visibles()).is_empty()

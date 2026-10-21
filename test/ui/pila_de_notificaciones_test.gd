@@ -23,10 +23,14 @@ func test_avisos_de_salida_entran_y_dejan_pasar_el_clic() -> void:  # AC-NTF-027
 	pila.set_process(false)
 	pila.avisar_pista()
 	pila.actualizar_salida(true)
-	assert_str(_textos(pila)[0]).is_equal("YA TERMINASTE TUS TAREAS Y PODÉS IRTE")
+	assert_str(_textos(pila)[0]).is_equal(
+		PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]
+	)
 	await _verificar_carteles_de_salida(viewport, pila)
 	pila.actualizar_salida(false)
-	assert_str(_textos(pila)[0]).is_equal("YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR")
+	assert_str(_textos(pila)[0]).is_equal(
+		PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.SALIDA_RETRABADA]
+	)
 	await _verificar_carteles_de_salida(viewport, pila)
 
 
@@ -63,7 +67,7 @@ func test_tareas_terminadas_conserva_su_resto_en_pausa() -> void:  # AC-NTF-026
 	var pila := _pila()
 	pila.set_process(false)
 	pila.actualizar_salida(true)
-	pila._process(2.0)
+	pila._process(Notificaciones.DURACION - 1.0)
 	get_tree().paused = true
 	await get_tree().process_frame
 	assert_bool(pila.can_process()).is_false()
@@ -80,11 +84,13 @@ func test_retrabar_conserva_el_resto_en_pausa_y_vaciar_la_retira() -> void:  # A
 	pila.set_process(false)
 	pila.actualizar_salida(true)
 	pila.actualizar_salida(false)
-	pila._process(2.0)
+	pila._process(Notificaciones.DURACION - 1.0)
 	get_tree().paused = true
 	await get_tree().process_frame
 	assert_bool(pila.can_process()).is_false()
-	assert_array(_textos(pila)).is_equal(["YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR"])
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.SALIDA_RETRABADA]]
+	)
 	get_tree().paused = false
 	pila._process(0.9)
 	assert_array(_textos(pila)).has_size(1)

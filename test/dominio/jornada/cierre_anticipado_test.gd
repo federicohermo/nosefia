@@ -26,7 +26,9 @@ func test_cada_obligatoria_es_necesaria_y_solo_salen_las_noches_de_prueba() -> v
 
 
 func test_perder_y_recuperar_cualquier_tarea_cambia_el_permiso() -> void:  # AC-SHF-041
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
 		var tareas := _cumplidas_salvo(jornada)
 		for tarea in tareas:
 			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_true()
