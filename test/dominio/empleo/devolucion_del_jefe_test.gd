@@ -76,6 +76,12 @@ func test_las_noches_de_introduccion_cierran_sin_devolucion() -> void:  # AC-EMP
 		assert_array(devolucion.mensajes()).is_empty()
 		assert_array(partida.mensajes_del_jefe()).is_empty()
 		assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.CONTINUAR])
+		var fallida := _partida_de_la_noche(jornada, [], [L.PAPEL_EN_EL_INODORO])
+		var sin_mensajes := DevolucionDelJefe.new(jornada, fallida)
+		assert_array(sin_mensajes.mensajes()).is_empty()
+		assert_array(sin_mensajes.mensajes_fechados()).is_empty()
+		assert_array(fallida.mensajes_del_jefe()).is_empty()
+		assert_array(PoliticaDeGuardado.datos(fallida).devoluciones).is_empty()
 	var completa := _partida_de_la_noche(COMPLETA, _tipos_de(COMPLETA), [])
 	assert_array(completa.mensajes_del_jefe()).is_not_empty()
 
@@ -375,8 +381,14 @@ func test_el_impecable_de_las_noches_del_medio() -> void:  # AC-EMP-073
 	assert_array(DevolucionDelJefe.CIERRES_IMPECABLES.keys()).contains_exactly(
 		range(COMPLETA, COMPLETA + fichas.size())
 	)
-	assert_str(_cierre(DevolucionDelJefe.ULTIMA_JORNADA, 0, 0)).is_equal(
-		DevolucionDelJefe.CIERRES_DE_LA_ULTIMA[0][1]
+	(
+		assert_str(_cierre(DevolucionDelJefe.ULTIMA_JORNADA, 0, 0))
+		. is_equal(
+			(
+				"La verdad es que estoy impresionado. No hizo falta corregirte ni una sola cosa "
+				+ "en las cinco noches. Un trabajo excepcional. Va a ser un placer tenerte trabajando acá."
+			)
+		)
 	)
 
 

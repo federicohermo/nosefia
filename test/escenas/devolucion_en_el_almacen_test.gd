@@ -25,7 +25,6 @@ func after_test() -> void:
 	Guardado.ruta_por_defecto = _ruta_guardado
 
 
-## Sin partida, la primera noche que cierra con devolución.
 func _almacen(partida: Partida = null) -> Node3D:
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	almacen.set("_partida", partida if partida != null else Partida.desde({"jornada": COMPLETA}))

@@ -165,7 +165,7 @@ const CIERRES_DE_LA_ULTIMA: Array[Array] = [
 		0,
 		(
 			"La verdad es que estoy impresionado. No hizo falta corregirte ni una "
-			+ "sola cosa en las ocho noches. Un trabajo excepcional. Va a ser un "
+			+ "sola cosa en las cinco noches. Un trabajo excepcional. Va a ser un "
 			+ "placer tenerte trabajando acá."
 		)
 	],
@@ -263,7 +263,6 @@ var _opciones: Array[Opcion] = []
 ## son los de la noche cerrada. Las jornadas de introducción cierran sin mensajes.
 func _init(jornada: int, partida: Partida) -> void:
 	_jornada = jornada
-	# Con la partida en curso, sólo continuar: salir al menú pasa por la pausa.
 	_opciones.append(Opcion.VOLVER_AL_MENU if partida.terminada() else Opcion.CONTINUAR)
 	if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 		return

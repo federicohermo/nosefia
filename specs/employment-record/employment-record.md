@@ -98,7 +98,8 @@ ni la pantalla de cierre ni el historial de Enrique reciben un mensaje suyo.
 Las condiciones DEBEN leerse **después** de anotar la noche (BR-EMP-025). Los textos DEBEN ser los
 de la ficha «Chat con el jefe», sección «Devolución de final de jornada», letra por letra, con
 sólo tres correcciones de erratas de la ficha: a la tercera falla de Tarea 2 le falta la «v» de
-«otra vez», el Cierre de P = 1,5 repite «tus» antes de «responsabilidades», y los dos de P = 2
+«otra vez», el Cierre de P = 1,5 repite «tus» antes de «responsabilidades», y el Cierre de P = 0
+en la jornada 4 y los dos de P = 2
 traen un espacio final que sobra. Ningún mensaje DEBE mostrar P, medios, apercibimientos, la
 banda ni un contador.
 
@@ -298,7 +299,7 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 | Condición | Texto |
 |---|---|
 | P ≥ 4 | Es absurdo que tenga que estar persiguiéndote con estas cosas tan básicas. No puedo dejar que un desastre como vos siga perjudicando la reputación de mi local. Que ni se te ocurra volver a aparecer por acá, entendiste? |
-| J = 8 y P = 0 | La verdad es que estoy impresionado. No hizo falta corregirte ni una sola cosa en las ocho noches. Un trabajo excepcional. Va a ser un placer tenerte trabajando acá. |
+| J = 8 y P = 0 | La verdad es que estoy impresionado. No hizo falta corregirte ni una sola cosa en las cinco noches. Un trabajo excepcional. Va a ser un placer tenerte trabajando acá. |
 | J = 8 y 0 < P ≤ 1 | Bueno, más allá de alguna que otra cosita que te mencioné, no tengo nada para corregirte. Un trabajo bien hecho. Felicitaciones, el puesto es tuyo. |
 | J = 8 y 1 < P ≤ 2 | Mirá, hubo un par de veces que la pifiaste, pero como soy generoso, te voy a dar el puesto igual. No aflojes. Desde ahora, espero que des lo mejor de vos. |
 | J = 8 y 2 < P ≤ 3 | Honestamente, solo puedo concluir que no sos el empleado ideal, pero tampoco sos un inútil. Decidí darte el puesto. No me hagas cambiar de opinión, ok? |
@@ -320,8 +321,7 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 | P = 3 y R = 0 | En serio, mi paciencia tiene un límite... |
 | P = 3,5 y R = 0 | Hay un límite en lo que te puedo dejar pasar. Un error más y te podés ir despidiendo de tu puesto. |
 
-Las filas salen de la ficha, salvo J = 8 y P = 0, que dice «ocho noches» porque la partida tiene
-ocho. P avanza de a medio, así que las filas de R = 0 cubren todo 0 < P < 4.
+Las filas salen de la ficha. P avanza de a medio, así que las filas de R = 0 cubren todo 0 < P < 4.
 
 ### BR-EMP-030 — La devolución llega por el chat, mensaje a mensaje
 
@@ -746,7 +746,9 @@ DADO P = 0 CUANDO se arma la devolución de J = 4, 5, 6 y 7 ENTONCES el Cierre e
 jornada, sin espacio final: en J = 4, «Seguiste todas mis instrucciones al pie de la letra.
 Excelente. Seguí así.»; en J = 5, «Nuevamente, todo en orden. Seguí así!»; en J = 6, «Sin comentarios
 por mi parte. Dale para adelante.»; en J = 7, «La jornada cerró cuadrada, como de costumbre.
-Excelente trabajo.». DADO P = 0 en J = 8 ENTONCES es «La verdad es que estoy impresionado…».
+Excelente trabajo.». DADO P = 0 en J = 8 ENTONCES es «La verdad es que estoy impresionado. No
+hizo falta corregirte ni una sola cosa en las cinco noches. Un trabajo excepcional. Va a ser
+un placer tenerte trabajando acá.».
 
 ### AC-EMP-078 — Las jornadas de introducción cierran sin devolución *(verifica BR-EMP-009)*
 
