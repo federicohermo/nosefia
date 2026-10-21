@@ -276,7 +276,8 @@ func _init(jornada: int, partida: Partida) -> void:
 	for tarea: Tarea in partida.obligatorias():
 		if not tarea.completada():
 			sin_cumplir.append(tarea.tipo())
-	if partida.terminada() and jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+	# El despido de la prueba no abre la jornada siguiente: la partida sigue en la prueba.
+	if partida.terminada() and partida.jornada() < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 		_mensajes = [DESPIDO_DE_LA_PRUEBA]
 	else:
 		_mensajes = DevolucionDelJefe.armar(
