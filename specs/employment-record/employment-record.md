@@ -827,7 +827,7 @@ entradas y, de la jornada 2, el mensaje 1 elegido antes de la foto de Intro 7. L
 las jornadas 1, 3 y 4 son las mismas en todas las filas. DADO la jornada 1 ENTONCES ningún
 mensaje 1 de la jornada 2 está a la vista.
 
-### AC-EMP-086 — Las noches de prueba cruzan la sesión *(verifica BR-EMP-041, BR-SAV-019)*
+### AC-EMP-086 — Las noches de prueba cruzan la sesión *(verifica BR-EMP-041)*
 
 DADO la noche 1 cerrada con 2 clientes mal atendidos y registrar sin cumplir CUANDO se guarda y
 se retoma ENTONCES la jornada 2 abre con la misma fila. DADO un guardado sin ese dato, o con un
