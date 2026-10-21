@@ -304,6 +304,8 @@ Lo que más se rompe:
   enum corre sobre `src/`, `test/` y `assets/`. En el #262, las 23 cajas del depósito vivían en
   `objetos_del_almacen.tscn` y la planilla pedía una miniatura por producto: ninguna de las dos
   estaba en los límites.
+  Para avisos nuevos, seguir también el método que los presenta y sus tablas de texto y símbolo,
+  con sus tests. En #573, el plan agregaba el tipo pero omitía la pila que debía dibujarlo.
 - **Un criterio que cambia cómo arranca una obligatoria lleva a «Se escribe» al sistema que la
   evalúa.** El dominio arma el estado y el sistema decide cuándo mirarlo. En el #526, J1 abría
   sin faltantes desde `Apertura`, pero el repositor revisaba reponer sólo después de un gesto:

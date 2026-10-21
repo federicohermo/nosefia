@@ -109,6 +109,10 @@ depende de cuánta mercadería trajo la noche. Ningún rechazo mueve nada.
 CUANDO ningún producto aceptado por el estante es faltante, el sistema DEBE dar la obligatoria de
 reponer por cumplida. La pregunta se la hace al inventario y no la recalcula.
 
+El cumplimiento consolidado por BR-SHF-022 de
+[`shift-cycle`](../shift-cycle/shift-cycle.md) DEBE conservarse aunque después aparezcan
+faltantes. La consolidación NO DEBE alterar casilleros ni unidades del inventario.
+
 ### BR-STK-016 — A la caja apoyada y con contenido se le saca una unidad
 
 CUANDO el jugador le pide una unidad a una caja del depósito que **no lleva en la mano** y que
@@ -141,9 +145,11 @@ pasa a la siguiente.
 
 ### BR-STK-020 — «+» y «−» mueven una unidad de una fila
 
-CUANDO el jugador aprieta «+» o «−» en una fila, el sistema DEBE sumar o restar una unidad a
-esa fila y a ninguna otra. Una fila DEBE quedar entre 0 y 99: SI el gesto la saca de ese rango,
-ENTONCES el sistema NO DEBE cambiar nada.
+MIENTRAS la planilla sea editable, CUANDO el jugador aprieta «+» o «−» en una fila, el sistema
+DEBE sumar o restar una unidad a esa fila y a ninguna otra. Una fila DEBE quedar entre 0 y 99:
+SI el gesto la saca de ese rango, ENTONCES el sistema NO DEBE cambiar nada.
+El registro consolidado DEBE quedar sólo para consulta según BR-SHF-023 de
+[`shift-cycle`](../shift-cycle/shift-cycle.md), sin sumar ni restar unidades.
 
 ### BR-STK-021 — El total informa, no decide
 
@@ -155,8 +161,10 @@ cumplida: dos planillas distintas pueden sumar lo mismo.
 
 MIENTRAS esa noche haya al menos una venta y, para cada producto, lo anotado sea igual a lo
 vendido, el sistema DEBE dar registrar por cumplida. CUANDO no coincidan, el sistema DEBE
-descumplirla. La jornada DEBE abrir con registrar sin cumplir. El sistema DEBE revisarla con
-cada «+» o «−» que cambia una fila, con cada venta cobrada y con cada vencimiento de compra.
+descumplirla, salvo el cumplimiento consolidado de BR-SHF-022 de
+[`shift-cycle`](../shift-cycle/shift-cycle.md). La jornada DEBE abrir con registrar sin cumplir.
+El sistema DEBE revisarla con cada «+» o «−» que cambia una fila, con cada venta cobrada y con
+cada vencimiento de compra.
 El cierre DEBE contar el estado de ese instante (BR-SHF-007 de
 [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
 ventas con la planilla en cero cuenta como cumplida recién ahí.
@@ -217,8 +225,8 @@ El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mi
 CUANDO se abre una jornada de la 2 a la 8, el sistema DEBE sortear sus faltantes. CUANDO se abre
 la jornada 1, el sistema NO DEBE sortear: la góndola DEBE abrir completa y cada caja llena, sin
 ningún faltante. Reponer DEBE arrancar cumplida en la jornada 1 (BR-STK-013), y descumplirse al
-agarrar una unidad de la góndola (BR-STK-033). Retomar la jornada 1 desde el menú DEBE abrirla
-completa otra vez.
+agarrar una unidad de la góndola mientras no esté consolidada (BR-STK-033). Retomar la jornada 1
+desde el menú DEBE abrirla completa otra vez.
 DEBE elegir entre 4 y 7 productos distintos y, de cada uno, entre 1 unidad y su máximo
 reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 [ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
@@ -321,8 +329,8 @@ ENTONCES el sistema NO DEBE darle nada. La fila de atrás no se agarra (BR-STK-0
 
 Con esa unidad en la mano vale todo lo que vale para una que salió de su caja: se coloca en
 cualquier casillero vacío de su producto, se suelta, o se devuelve a su caja (BR-STK-030). SI
-reponer estaba cumplida, ENTONCES el sistema DEBE descumplirla al agarrar la unidad, porque
-vuelve a faltar algo (BR-STK-013).
+reponer estaba cumplida y no consolidada, ENTONCES el sistema DEBE descumplirla al agarrar la
+unidad, porque vuelve a faltar algo (BR-STK-013).
 
 ### BR-STK-034 — La unidad agarrada de la góndola se cuenta una sola vez
 
@@ -545,8 +553,8 @@ y sin depósito, sin unidades en depósito.
 
 ### AC-STK-013 — Reponer cumplido *(verifica BR-STK-013)*
 
-DADO un estante con la fila de adelante de todos sus productos completa ENTONCES la obligatoria
-está cumplida; con un solo casillero vacío, no.
+DADO reponer sin consolidar y un estante con la fila de adelante de todos sus productos
+completa ENTONCES la obligatoria está cumplida; con un solo casillero vacío, no.
 
 ### AC-STK-016 — Se saca de la caja apoyada y con contenido, nunca de la llevada *(verifica BR-STK-016)*
 
@@ -616,9 +624,9 @@ En las jornadas 1 a 4 se exige además que ambas compras hayan terminado, vendid
 
 ### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
-DADO registrar cumplida CUANDO se cobra una venta nueva ENTONCES se descumple, y anotar esa
-venta la vuelve a cumplir. DADO registrar cumplida CUANDO se aprieta «+» en cualquier fila
-ENTONCES se descumple, y un «−» en esa fila la vuelve a cumplir.
+DADO registrar cumplida sin consolidar CUANDO se cobra una venta nueva ENTONCES se descumple,
+y anotar esa venta la vuelve a cumplir. DADO registrar cumplida sin consolidar CUANDO se
+aprieta «+» en cualquier fila ENTONCES se descumple, y un «−» en esa fila la vuelve a cumplir.
 
 ### AC-STK-026 — Lo anotado no pasa a la noche siguiente *(verifica BR-STK-019, BR-STK-022)*
 
@@ -821,9 +829,9 @@ vacío.
 
 ### AC-STK-048 — Agarrar de la góndola descumple reponer *(verifica BR-STK-033)*
 
-DADO reponer cumplida CUANDO se agarra una unidad de la góndola ENTONCES reponer deja de estar
-cumplida y las cumplidas bajan en 1. CUANDO se la vuelve a colocar ENTONCES reponer se cumple
-otra vez.
+DADO reponer cumplida sin consolidar CUANDO se agarra una unidad de la góndola ENTONCES reponer
+deja de estar cumplida y las cumplidas bajan en 1. CUANDO se la vuelve a colocar ENTONCES reponer
+se cumple otra vez.
 
 ### AC-STK-049 — La venta no se lleva lo que está afuera *(verifica BR-STK-018, BR-STK-030)*
 
@@ -858,10 +866,11 @@ y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 
 ### AC-STK-053 — Tirar conserva caja y góndola *(verifica BR-STK-036)*
 
-DADO una caja de Actroncito en 8 y una unidad suya agarrada de un casillero CUANDO se tira
-ENTONCES la caja sigue en 8, el depósito tiene una menos, el casillero sigue vacío, reponer no
-se cumple y la unidad ya no está afuera ni se puede colocar o devolver. DADO una unidad
-sacada de su caja CUANDO se tira ENTONCES la caja conserva su contenido anterior al tiro.
+DADO reponer sin consolidar, una caja de Actroncito en 8 y una unidad suya agarrada de un
+casillero CUANDO se tira ENTONCES la caja sigue en 8, el depósito tiene una menos, el casillero
+sigue vacío, reponer no se cumple y la unidad ya no está afuera ni se puede colocar o devolver.
+DADO una unidad sacada de su caja CUANDO se tira ENTONCES la caja conserva su contenido anterior
+al tiro.
 DADO una unidad no registrada afuera CUANDO se intenta desechar ENTONCES devuelve false y
 no cambia el inventario.
 
@@ -884,9 +893,9 @@ hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas par
 
 ### AC-STK-056 — Registro espera al cierre de ambas compras *(verifica BR-STK-022)*
 
-DADO cada jornada de la 1 a la 4 CUANDO se registra la venta completa de Tin pero Tia aún no
-compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados anticipadamente
-ENTONCES registrar sigue pendiente mientras alguna compra siga abierta.
+DADO cada jornada de la 1 a la 4 con reponer pendiente CUANDO se registra la venta completa de
+Tin pero Tia aún no compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados
+anticipadamente ENTONCES registrar sigue pendiente mientras alguna compra siga abierta.
 CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES registrar
 se cumple. Una unidad de más o de menos la descumple.
 
@@ -1058,11 +1067,11 @@ de una fija queda vacío; los vacíos suman lo que faltó.
 
 DADO la jornada 1 recién abierta, con cualquier semilla, CUANDO se consultan los faltantes
 ENTONCES no hay ninguno, cada caja del depósito está llena y reponer está cumplida. CUANDO se
-agarra una unidad de la góndola ENTONCES reponer se descumple; CUANDO se la vuelve a colocar en
-su casillero ENTONCES se cumple otra vez, sin venta. DADO la jornada 1 sin ventas CUANDO Tin y Tia
-vencen y cierra la noche ENTONCES reponer sigue cumplida, registrar cuenta cumplida con la
-planilla en cero y atención no. DADO la jornada 2 CUANDO abre ENTONCES sortea faltantes según los
-intervalos de BR-STK-026.
+agarra una unidad de la góndola antes de consolidar las tareas ENTONCES reponer se descumple.
+CUANDO se la vuelve a colocar en su casillero ENTONCES se cumple otra vez, sin venta. DADO la
+jornada 1 sin ventas CUANDO Tin y Tia vencen y cierra la noche ENTONCES reponer sigue cumplida,
+registrar cuenta cumplida con la planilla en cero y atención no. DADO la jornada 2 CUANDO abre
+ENTONCES sortea faltantes según los intervalos de BR-STK-026.
 
 ## No objetivos
 
