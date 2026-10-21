@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576
 ---
 
 # Capacidad: el legajo del empleado
@@ -80,8 +80,8 @@ no DEBE sustituir el dato de medios ni migrarse.
 
 ### BR-EMP-009 — La devolución de Enrique
 
-CUANDO cierra la jornada, el sistema DEBE armar la devolución de esa noche: un mensaje por
-parte, en este orden: Saludo, Tarea 1, Tarea 2, Tarea 3, Tarea 4, la advertencia por Poético,
+CUANDO cierra una jornada que no es de introducción (BR-SHF-005), el sistema DEBE armar la
+devolución de esa noche: un mensaje por parte, en este orden: Saludo, Tarea 1, Tarea 2, Tarea 3, Tarea 4, la advertencia por Poético,
 Tarea 5, Reto 1, Reto 2, Reto 3, Reto 4 y Cierre. Saludo y Cierre DEBEN ir siempre. La
 advertencia DEBE ir sólo según BR-EMP-034.
 
@@ -92,12 +92,15 @@ advertencia DEBE ir sólo según BR-EMP-034.
   Reto 3 por objetos afuera y Reto 4 por local desordenado. Un Reto DEBE ir sólo si esa noche se
   anotó su llamado (BR-EMP-012).
 
+CUANDO cierra una jornada de introducción, jornadas 1 a 3, el sistema NO DEBE armar devolución:
+ni la pantalla de cierre ni el historial de Enrique reciben un mensaje suyo.
+
 Las condiciones DEBEN leerse **después** de anotar la noche (BR-EMP-025). Los textos DEBEN ser los
 de la ficha «Chat con el jefe», sección «Devolución de final de jornada», letra por letra, con
 sólo tres correcciones de erratas de la ficha: a la tercera falla de Tarea 2 le falta la «v» de
-«otra vez», el Cierre de P = 1,5 repite «tus» antes de «responsabilidades», y el Cierre de P = 0
-en la jornada 1 y los dos de P = 2 traen un espacio final que sobra. La excepción es el texto provisorio de
-BR-EMP-029. Ningún mensaje DEBE mostrar P, medios, apercibimientos, la banda ni un contador.
+«otra vez», el Cierre de P = 1,5 repite «tus» antes de «responsabilidades», y los dos de P = 2
+traen un espacio final que sobra. Ningún mensaje DEBE mostrar P, medios, apercibimientos, la
+banda ni un contador.
 
 ### BR-EMP-011 — Lo que ofrece la devolución depende del final
 
@@ -286,8 +289,7 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 1. **P ≥ 4**, en cualquier jornada: el despido. En J = 8 gana sobre el contrato cumplido
    (BR-EMP-005).
 2. **J = 8**: la fila final por P. Las filas de R no se usan en J = 8.
-3. **P = 0**: la fila de esa jornada. La ficha escribe hasta J = 4: de J = 4 a J = 7 rige la
-   misma fila.
+3. **P = 0**: la fila de esa jornada, de J = 4 a J = 7.
 4. **0 < P < 4 y R ≥ 1**: con R = 1, la fila «terminó la jornada sin sumar puntos»; con R ≥ 2, la
    fila «lleva más de una jornada sin sumar puntos». Cada una distingue P < 2 de P ≥ 2. Reconocen
    la mejora sin mostrar P, y les ganan a las filas por P.
@@ -298,13 +300,13 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 | P ≥ 4 | Es absurdo que tenga que estar persiguiéndote con estas cosas tan básicas. No puedo dejar que un desastre como vos siga perjudicando la reputación de mi local. Que ni se te ocurra volver a aparecer por acá, entendiste? |
 | J = 8 y P = 0 | La verdad es que estoy impresionado. No hizo falta corregirte ni una sola cosa en las cinco noches. Un trabajo excepcional. Va a ser un placer tenerte trabajando acá. |
 | J = 8 y 0 < P ≤ 1 | Bueno, más allá de alguna que otra cosita que te mencioné, no tengo nada para corregirte. Un trabajo bien hecho. Felicitaciones, el puesto es tuyo. |
-| J = 8 y 1 < P ≤ 2 | Tuviste algunos tropiezos, pero cumpliste con lo necesario. Te voy a dar el puesto. Espero que de acá en adelante no tenga que estar atrás tuyo por las mismas cosas, estamos? |
+| J = 8 y 1 < P ≤ 2 | Mirá, hubo un par de veces que la pifiaste, pero como soy generoso, te voy a dar el puesto igual. No aflojes. Desde ahora, espero que des lo mejor de vos. |
 | J = 8 y 2 < P ≤ 3 | Honestamente, solo puedo concluir que no sos el empleado ideal, pero tampoco sos un inútil. Decidí darte el puesto. No me hagas cambiar de opinión, ok? |
 | J = 8 y 3 < P < 4 | Me parece que quedan muchas cosas para pulir, pero ya te vas a curtir con el tiempo. No voy a negar que conocí peores empleados, así que te voy a dar una oportunidad. El puesto es tuyo, pero te voy a tener cortito para sacarte bien, está claro? |
-| P = 0 y J = 1 | Seguiste todas mis instrucciones al pie de la letra. Excelente. Seguí así y vas a tener el puesto asegurado. |
-| P = 0 y J = 2 | Nuevamente, todo en orden. Seguí así! |
-| P = 0 y J = 3 | Sin comentarios por mi parte. Dale para adelante. |
-| P = 0 y J de 4 a 7 | La jornada cerró cuadrada, como de costumbre. Excelente trabajo. |
+| P = 0 y J = 4 | Seguiste todas mis instrucciones al pie de la letra. Excelente. Seguí así. |
+| P = 0 y J = 5 | Nuevamente, todo en orden. Seguí así! |
+| P = 0 y J = 6 | Sin comentarios por mi parte. Dale para adelante. |
+| P = 0 y J = 7 | La jornada cerró cuadrada, como de costumbre. Excelente trabajo. |
 | 0 < P < 2 y R = 1 | Ahora sí le vas agarrando la mano! Muy bien. Seguí así. |
 | 0 < P < 2 y R ≥ 2 | Sin nada para comentar. Adelante con eso. |
 | 2 ≤ P < 4 y R = 1 | Esta vez sí cumpliste con todo. Bien. Continuá por este camino. |
@@ -319,9 +321,8 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 | P = 3,5 y R = 0 | Hay un límite en lo que te puedo dejar pasar. Un error más y te podés ir despidiendo de tu puesto. |
 
 El texto de J = 8 y P = 0 conserva «las cinco noches» de la ficha hasta que diseño lo corrija.
-El texto de J = 8 y 1 < P ≤ 2 es **provisorio**: la ficha lo deja «A DEFINIR», y el usuario
-autorizó esta frase el 2026-10-10 hasta que diseño decida la definitiva (OQ-EMP-005). Las demás
-filas salen de la ficha. P avanza de a medio, así que las filas de R = 0 cubren todo 0 < P < 4.
+Todas las filas salen de la ficha. P avanza de a medio, así que las filas de R = 0 cubren todo
+0 < P < 4.
 
 ### BR-EMP-030 — La devolución llega por el chat, mensaje a mensaje
 
@@ -550,18 +551,18 @@ DADO la jornada 3 con sus cuatro obligatorias declaradas CUANDO cierra con las c
 ENTONCES la banda es NINGUNA; con tres es AVISO y con dos es GRAVE. El corte conserva las reglas
 de las bandas y no inventa una quinta tarea para decidir el cierre.
 
-### AC-EMP-051 — La noche 1 impecable *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-029)*
+### AC-EMP-051 — La noche 4 impecable *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-029)*
 
-DADO la noche 1 con todas las obligatorias cumplidas y sin llamados CUANDO se arma la devolución
+DADO la noche 4 con todas las obligatorias cumplidas y sin llamados CUANDO se arma la devolución
 ENTONCES tiene exactamente dos mensajes: «Buen día!» y «Seguiste todas mis instrucciones al pie
-de la letra. Excelente. Seguí así y vas a tener el puesto asegurado.», sin espacio final.
+de la letra. Excelente. Seguí así.», sin espacio final.
 
 ### AC-EMP-052 — La segunda falla de reponer *(verifica BR-EMP-025, BR-EMP-027)*
 
-DADO la noche 1 con reponer sin cumplir CUANDO se arma la devolución ENTONCES trae la fila
-n = 1 de Tarea 3, «Faltó reponer algunas unidades…». DADO la noche 2 con reponer otra vez sin
+DADO la noche 4 con reponer sin cumplir CUANDO se arma la devolución ENTONCES trae la fila
+n = 1 de Tarea 3, «Faltó reponer algunas unidades…». DADO la noche 5 con reponer otra vez sin
 cumplir CUANDO se arma la devolución ENTONCES trae la fila n = 2, «No podés dejarle a tu
-compañera…», y ninguna otra Tarea si las otras obligatorias se cumplieron. DADO la noche 3 con
+compañera…», y ninguna otra Tarea si las otras obligatorias se cumplieron. DADO la noche 6 con
 reponer cumplido ENTONCES Tarea 3 no aparece. DADO la tercera falla de registrar ENTONCES el
 texto dice «está mal otra vez».
 
@@ -570,7 +571,7 @@ texto dice «está mal otra vez».
 DADO la jornada 5 con el llamado por objetos importantes en la basura CUANDO se arma la
 devolución ENTONCES trae la fila J = 5 de Reto 2, «Por si no lo sabías, la "basura"…». DADO
 después la jornada 7 con el mismo llamado ENTONCES trae la fila n = 2, «El contenedor de basura
-es para BASURA solamente.». DADO la jornada 1 con el primer llamado de ese motivo ENTONCES trae
+es para BASURA solamente.». DADO la jornada 4 con el primer llamado de ese motivo ENTONCES trae
 «Puede ser que hayas estado tirando cosas a la basura?». DADO la jornada 5 con la basura sin
 sacar ENTONCES Tarea 5 es «De verdad era tan difícil tirar tres bolsas de basura?».
 
@@ -590,30 +591,30 @@ es un Cierre de J = 8. Con P = 3,5 en la jornada 8 el Saludo es «Buenos días..
 
 ### AC-EMP-056 — P = 2 con y sin llamados en la partida *(verifica BR-EMP-025, BR-EMP-029)*
 
-DADO J = 2, P = 2 y R = 0 sin ningún llamado en la partida CUANDO se arma la devolución ENTONCES
+DADO J = 5, P = 2 y R = 0 sin ningún llamado en la partida CUANDO se arma la devolución ENTONCES
 el Cierre es «Acordate de chequear que todas las tareas estén cerradas antes de irte, dale?».
-DADO J = 2, P = 2 y R = 0 con llamados en la jornada 1 y ninguno en la 2 ENTONCES el Cierre es
+DADO J = 5, P = 2 y R = 0 con llamados en la jornada 4 y ninguno en la 5 ENTONCES el Cierre es
 «Acordate de hacer bien tu trabajo y respetar las normas básicas de convivencia, dale?». Ninguno
 de los dos termina en espacio.
 
 ### AC-EMP-057 — La mejora gana sobre la advertencia *(verifica BR-EMP-029)*
 
-DADO J = 2, P = 1 y R = 1 CUANDO se arma la devolución ENTONCES el Cierre es «Ahora sí le vas
-agarrando la mano! Muy bien. Seguí así.». DADO J = 3, P = 1 y R = 2 ENTONCES es «Sin nada para
-comentar. Adelante con eso.». DADO J = 2, P = 0,5 y R = 1 ENTONCES es «Ahora sí le vas
+DADO J = 5, P = 1 y R = 1 CUANDO se arma la devolución ENTONCES el Cierre es «Ahora sí le vas
+agarrando la mano! Muy bien. Seguí así.». DADO J = 6, P = 1 y R = 2 ENTONCES es «Sin nada para
+comentar. Adelante con eso.». DADO J = 5, P = 0,5 y R = 1 ENTONCES es «Ahora sí le vas
 agarrando la mano!…». DADO P = 2 y R = 1 ENTONCES es «Esta vez sí cumpliste con todo. Bien.
-Continuá por este camino.»; con R = 2, «Sin comentarios.». DADO J = 1 y P = 1 con R = 0 ENTONCES
-es «Que no se repita, ok?»; con J = 2, P = 1,5 y R = 0, «No duermas con tus responsabilidades…», con
+Continuá por este camino.»; con R = 2, «Sin comentarios.». DADO J = 4 y P = 1 con R = 0 ENTONCES
+es «Que no se repita, ok?»; con J = 5, P = 1,5 y R = 0, «No duermas con tus responsabilidades…», con
 un solo «tus».
 
 ### AC-EMP-058 — Los cuatro bordes de la octava *(verifica BR-EMP-029)*
 
 DADO la jornada 8 terminada con contrato cumplido CUANDO se arma la devolución ENTONCES con
 P = 1 el Cierre es «Bueno, más allá de alguna que otra cosita…»; con P = 1,5 y con P = 2 es
-«Tuviste algunos tropiezos, pero cumpliste con lo necesario. Te voy a dar el puesto. Espero que
-de acá en adelante no tenga que estar atrás tuyo por las mismas cosas, estamos?»; con P = 2,5 es
-«Honestamente, solo puedo concluir…». Con R = 1 en la jornada 8 y P = 2, el Cierre sigue siendo
-el provisorio y no «Esta vez sí cumpliste…». Hay un solo Cierre por devolución.
+«Mirá, hubo un par de veces que la pifiaste, pero como soy generoso, te voy a dar el puesto
+igual. No aflojes. Desde ahora, espero que des lo mejor de vos.»; con P = 2,5 es «Honestamente,
+solo puedo concluir…». Con R = 1 en la jornada 8 y P = 2, el Cierre sigue siendo el de P = 2 y
+no «Esta vez sí cumpliste…». Hay un solo Cierre por devolución.
 
 ### AC-EMP-059 — Las cuentas *(verifica BR-EMP-006, BR-EMP-007, BR-EMP-025)*
 
@@ -627,17 +628,20 @@ ENTONCES suma una falla. DADO un segundo cierre de la misma noche ENTONCES nada 
 
 ### AC-EMP-060 — Ningún número, y siempre Saludo y Cierre *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
 
-DADO cada J de 1 a 8, cada P de 0 a 4 de a medio, cada R de 0 a 7, con y sin llamados en la
+DADO cada J de 4 a 8, cada P de 0 a 4 de a medio, cada R de 0 a 7, con y sin llamados en la
 partida, y cada combinación de fallas con n de 1 a 4 y llamados con n de 1 a 8 CUANDO se arma
 la devolución ENTONCES el primer mensaje es un Saludo y el último un Cierre, hay uno de cada uno,
 las Tareas y los Retos van en el orden de BR-EMP-009, y ningún mensaje contiene un dígito, un
 espacio final ni las palabras «punto», «medio» o «apercibimiento».
 
-### AC-EMP-061 — El despido en la primera noche *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
+### AC-EMP-061 — El despido en la primera noche completa *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
 
-DADO la noche 1 con sólo registrar cumplido y los cuatro llamados CUANDO cierra ENTONCES P = 4 y
-la devolución es, en orden: «Che», la fila n = 1 de Tarea 1 y de Tarea 3, la fila n = 1 de Reto 1,
-Reto 2, Reto 3 y Reto 4, y el Cierre del despido: ocho mensajes, sin Tarea 4 ni Tarea 5, y la
+DADO la noche 4 con P = 3,5 y todas las obligatorias cumplidas CUANDO cierra con el llamado por
+papel ENTONCES P = 4 y la devolución es, en orden: «Che», la fila n = 1 de Reto 1 y el Cierre del
+despido. DADO P = 4 con atender y reponer sin cumplir y los cuatro llamados, cada uno por primera
+vez, ENTONCES la devolución es, en orden: «Che», la fila n = 1 de Tarea 1 y de Tarea 3, la fila
+n = 1 de Reto 1, Reto 2, Reto 3 y Reto 4, y el Cierre del despido: ocho mensajes, sin Tarea 2 ni
+Tarea 4 ni Tarea 5, y la
 única opción es volver al menú.
 
 ### AC-EMP-062 — Un mensaje más por segundo *(verifica BR-EMP-011, BR-EMP-030)*
@@ -739,10 +743,17 @@ despedida al cerrar la 2, y no se abre la 3.
 
 ### AC-EMP-073 — El impecable de las noches del medio *(verifica BR-EMP-029)*
 
-DADO P = 0 CUANDO se arma la devolución de J = 1, 2, 3 y 4 ENTONCES el Cierre es la fila de esa
-jornada, sin espacio final. DADO P = 0 en J = 5, 6 y 7 ENTONCES el Cierre es «La jornada cerró
-cuadrada, como de costumbre. Excelente trabajo.». DADO P = 0 en J = 8 ENTONCES es «La verdad es
-que estoy impresionado…».
+DADO P = 0 CUANDO se arma la devolución de J = 4, 5, 6 y 7 ENTONCES el Cierre es la fila de esa
+jornada, sin espacio final: en J = 4, «Seguiste todas mis instrucciones al pie de la letra.
+Excelente. Seguí así.»; en J = 5, «Nuevamente, todo en orden. Seguí así!»; en J = 6, «Sin comentarios
+por mi parte. Dale para adelante.»; en J = 7, «La jornada cerró cuadrada, como de costumbre.
+Excelente trabajo.». DADO P = 0 en J = 8 ENTONCES es «La verdad es que estoy impresionado…».
+
+### AC-EMP-078 — Las jornadas de introducción cierran sin devolución *(verifica BR-EMP-009)*
+
+DADO la jornada 1, 2 o 3 que cierra CUANDO se arma la devolución ENTONCES no tiene ningún
+mensaje, la partida no guarda ninguno de Enrique para esa noche, y la opción ofrecida sigue
+siendo la de BR-EMP-011. DADO la jornada 4 que cierra ENTONCES sí tiene mensajes.
 
 ### AC-EMP-074 — Los Retos más allá de la ficha *(verifica BR-EMP-028)*
 
@@ -841,12 +852,6 @@ jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
   mensajes de pistas de la partida, conservados entre aperturas sin duplicar su titularidad.
 
 ## Preguntas abiertas
-
-- **OQ-EMP-005 — ¿Cuál es el Cierre definitivo de J = 8 con 1 < P ≤ 2?**
-  - Por qué sigue abierta: la ficha lo deja «A DEFINIR» y no aparece en Figma. El usuario
-    autorizó la frase provisoria de BR-EMP-029, y la ficha no se reescribe.
-  - Decide: una persona de game design.
-  - Bloquea: nada. Mientras tanto, la salida es la frase provisoria.
 
 - **OQ-EMP-006 — ¿Cuál es el texto definitivo de la línea de reponer?**
   - Por qué sigue abierta: #527 reparte las instrucciones sin ficha ni frame. La línea de la
