@@ -293,6 +293,13 @@ func test_las_interiores_se_traban_segun_la_jornada() -> void:  # AC-PLY-040
 		almacen.call("_al_abrir_la_jornada", limpia)
 		for ruta: String in POR_JORNADA:
 			almacen.get_node(ruta + "/CuerpoDeLaHoja").call("accionar")
+		for _cuadro in 10:
+			await get_tree().physics_frame
+		for ruta: String in POR_JORNADA:
+			var puerta: Puerta = almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta")
+			assert_bool(puerta.abierta()).override_failure_message(ruta).is_true()
+			var malla: Node3D = almacen.get_node(ruta)
+			assert_bool(malla.transform.is_equal_approx(cerradas[ruta])).is_false()
 		avisos.clear()
 		almacen.call("_al_abrir_la_jornada", jornada)
 		for _cuadro in 10:

@@ -52,8 +52,11 @@ func test_una_segunda_noche_retomada_carga_las_cajas_con_copias() -> void:
 	assert_array(almacen.call("cuerpos_sin_copias")).not_contains(cajas)
 
 
+# AC-PLY-040
 func test_la_transicion_a_la_segunda_noche_calienta_las_cajas_con_la_persiana_baja() -> void:
 	var almacen := await _abrir(ReglasDeLaPartida.PRIMERA_JORNADA)
+	var cuerpo: Node = almacen.get_node("Estructura/puerta/CuerpoDeLaHoja")
+	assert_bool(cuerpo.call("puerta").trabada()).is_true()
 	var cajas: Array[Node3D] = []
 	cajas.assign(almacen.get("_cajas_de_productos"))
 	var persiana: PersianaDeLaNoche = almacen.get_node("Interfaz/PersianaDeLaNoche")
@@ -72,3 +75,10 @@ func test_la_transicion_a_la_segunda_noche_calienta_las_cajas_con_la_persiana_ba
 	assert_array(calentadas[0]).contains(cajas)
 	assert_bool(con_persiana[0]).is_true()
 	assert_array(almacen.call("cuerpos_sin_copias")).not_contains(cajas)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(
+		ReglasDeLaPartida.PRIMERA_JORNADA + 1
+	)
+	assert_bool(cuerpo.call("puerta").trabada()).is_false()
+	assert_bool(cuerpo.call("puerta").abierta()).is_false()
+	cuerpo.call("accionar")
+	assert_bool(cuerpo.call("puerta").abierta()).is_true()
