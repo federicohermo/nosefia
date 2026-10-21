@@ -194,33 +194,30 @@ func test_cada_falla_de_la_prueba_suma_lo_mismo_sin_mirar_bandas() -> void:  # A
 	)
 
 
-func test_la_prueba_se_pierde_en_el_umbral_sin_completar_la_ultima() -> void:  # AC-EMP-080
+func test_cerrar_la_prueba_anota_cuanto_sumo_y_si_la_ultima_cerro_completa() -> void:  # AC-EMP-081
 	for completa: bool in [true, false]:
 		var legajo := Legajo.con_medios(
-			Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+			Reglas.APERCIBIMIENTOS_QUE_EXCEDEN_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
 		)
 		legajo.cerrar_la_prueba(completa)
-		assert_bool(legajo.perdio_la_prueba()).is_equal(not completa)
 		assert_int(legajo.apercibimientos_de_la_prueba()).is_equal(
-			Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+			Reglas.APERCIBIMIENTOS_QUE_EXCEDEN_LA_PRUEBA
 		)
 		assert_bool(legajo.ultima_de_la_prueba_completa()).is_equal(completa)
-	var debajo := Legajo.con_medios(
-		(Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA - 1) * Reglas.MEDIOS_POR_APERCIBIMIENTO
-	)
-	debajo.cerrar_la_prueba(false)
-	assert_bool(debajo.perdio_la_prueba()).is_false()
+		assert_bool(legajo.despedido()).is_equal(
+			Reglas.APERCIBIMIENTOS_QUE_EXCEDEN_LA_PRUEBA >= Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO
+		)
 
 
 func test_empezar_las_jornadas_completas_deja_cero_o_uno_segun_el_umbral() -> void:  # AC-EMP-081
 	var debajo := Legajo.con_medios(
-		(Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA - 1) * Reglas.MEDIOS_POR_APERCIBIMIENTO
+		(Reglas.APERCIBIMIENTOS_QUE_EXCEDEN_LA_PRUEBA - 1) * Reglas.MEDIOS_POR_APERCIBIMIENTO
 	)
 	debajo.cerrar_la_prueba(false)
 	debajo.empezar_las_jornadas_completas()
 	assert_int(debajo.medios()).is_zero()
 	var en_el_umbral := Legajo.con_medios(
-		Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+		Reglas.APERCIBIMIENTOS_QUE_EXCEDEN_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
 	)
 	en_el_umbral.cerrar_la_prueba(true)
 	en_el_umbral.empezar_las_jornadas_completas()
@@ -228,5 +225,5 @@ func test_empezar_las_jornadas_completas_deja_cero_o_uno_segun_el_umbral() -> vo
 		Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA * Reglas.MEDIOS_POR_APERCIBIMIENTO
 	)
 	assert_int(en_el_umbral.apercibimientos_de_la_prueba()).is_equal(
-		Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+		Reglas.APERCIBIMIENTOS_QUE_EXCEDEN_LA_PRUEBA
 	)

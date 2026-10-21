@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 const M := Reglas.MEDIOS_POR_APERCIBIMIENTO
 const T := Tarea.Tipo
-const UMBRAL := Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+const UMBRAL := Reglas.APERCIBIMIENTOS_QUE_EXCEDEN_LA_PRUEBA
 const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 const CUARTA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 const CAMPO := PartidaSerializada.Campo
@@ -68,37 +68,22 @@ func test_en_la_prueba_los_llamados_suman_y_las_bandas_no_pesan() -> void:  # AC
 	)
 
 
-func test_las_dos_primeras_no_despiden_con_lo_que_sea() -> void:  # AC-EMP-079
+func test_ninguna_noche_de_la_prueba_despide_con_lo_que_sea() -> void:  # AC-EMP-079
 	var partida := Partida.nueva()
-	for _noche_de_prueba in TERCERA - 1:
-		_noche(partida, [T.CAJA, T.REGISTRAR, T.REPONER], 2)
-	assert_bool(partida.terminada()).is_false()
-	assert_int(partida.jornada()).is_equal(TERCERA)
-	assert_int(partida.apercibimientos()).is_greater(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO)
+	for _noche_de_prueba in TERCERA:
+		_noche(partida, [T.CAJA, T.REGISTRAR, T.REPONER, T.LIMPIAR], 2)
+		assert_bool(partida.terminada()).is_false()
+	assert_int(partida.jornada()).is_equal(CUARTA)
 	assert_object(partida.abrir_la_jornada()).is_not_null()
 
 
-func test_la_tercera_con_el_umbral_y_alguna_tarea_sin_cumplir_despide() -> void:  # AC-EMP-080
+func test_la_tercera_incompleta_con_el_umbral_sigue_y_arranca_con_uno() -> void:  # AC-EMP-079
 	var partida := _con(TERCERA, UMBRAL - 1)
 	_noche(partida, [T.LIMPIAR])
-	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
-	assert_int(partida.jornada()).is_equal(TERCERA)
-	assert_object(partida.abrir_la_jornada()).is_null()
-
-
-func test_la_tercera_un_apercibimiento_antes_del_umbral_sigue() -> void:  # AC-EMP-080
-	var partida := _con(TERCERA, UMBRAL - 2)
-	_noche(partida, [T.LIMPIAR])
 	assert_bool(partida.terminada()).is_false()
 	assert_int(partida.jornada()).is_equal(CUARTA)
-	assert_object(partida.abrir_la_jornada()).is_not_null()
-
-
-func test_la_tercera_completa_sigue_aunque_pase_el_umbral() -> void:  # AC-EMP-080
-	var partida := _con(TERCERA, UMBRAL)
-	_noche(partida, [])
-	assert_bool(partida.terminada()).is_false()
-	assert_int(partida.jornada()).is_equal(CUARTA)
+	assert_int(partida.medios()).is_equal(Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA * M)
+	assert_bool(partida.legajo().ultima_de_la_prueba_completa()).is_false()
 
 
 func test_la_cuarta_arranca_en_cero_si_la_prueba_no_llego_al_umbral() -> void:  # AC-EMP-081
@@ -115,14 +100,6 @@ func test_la_cuarta_arranca_con_uno_si_la_prueba_llego_al_umbral() -> void:  # A
 	assert_int(partida.medios()).is_equal(Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA * M)
 	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(UMBRAL)
 	assert_bool(partida.legajo().ultima_de_la_prueba_completa()).is_true()
-
-
-func test_la_despedida_en_la_tercera_recuerda_su_resultado_sin_reiniciar() -> void:  # AC-EMP-081
-	var partida := _con(TERCERA, UMBRAL - 1)
-	_noche(partida, [T.LIMPIAR])
-	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(UMBRAL)
-	assert_bool(partida.legajo().ultima_de_la_prueba_completa()).is_false()
-	assert_int(partida.apercibimientos()).is_equal(UMBRAL)
 
 
 func test_desde_la_cuarta_suman_las_bandas_y_los_llamados() -> void:  # AC-EMP-082
