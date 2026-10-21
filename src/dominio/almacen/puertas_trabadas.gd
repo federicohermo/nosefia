@@ -5,10 +5,10 @@
 class_name PuertasTrabadas
 extends RefCounted
 
-enum Puerta { DEPOSITO, BANO, CUARTITO }
+enum Cuarto { DEPOSITO, BANO, CUARTITO }
 
 
-static func trabada(puerta: Puerta, jornada: int) -> bool:
-	if puerta == Puerta.DEPOSITO:
+static func trabada(cuarto: Cuarto, jornada: int) -> bool:
+	if cuarto == Cuarto.DEPOSITO:
 		return jornada <= ReglasDeLaPartida.PRIMERA_JORNADA
 	return not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)

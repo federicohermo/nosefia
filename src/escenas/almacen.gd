@@ -406,11 +406,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.collision_layer = 0
 			util.collision_mask = 0
 	var cerradas := {
-		$Estructura/puerta/CuerpoDeLaHoja: [PuertasTrabadas.Puerta.DEPOSITO, &""],
+		$Estructura/puerta/CuerpoDeLaHoja: [PuertasTrabadas.Cuarto.DEPOSITO, &""],
 		$Estructura/puerta2/CuerpoDeLaHoja:
-		[PuertasTrabadas.Puerta.BANO, SubtitulosAlExaminar.BANO_CERRADO],
+		[PuertasTrabadas.Cuarto.BANO, SubtitulosAlExaminar.BANO_CERRADO],
 		$Estructura/puerta_limpieza/CuerpoDeLaHoja:
-		[PuertasTrabadas.Puerta.CUARTITO, SubtitulosAlExaminar.CUARTITO_CERRADO],
+		[PuertasTrabadas.Cuarto.CUARTITO, SubtitulosAlExaminar.CUARTITO_CERRADO],
 	}
 	for puerta: PuertaDelLocal in cerradas:
 		var trabada := PuertasTrabadas.trabada(cerradas[puerta][0], jornada)
