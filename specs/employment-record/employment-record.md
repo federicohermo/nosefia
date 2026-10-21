@@ -486,12 +486,13 @@ ignorado NO DEBE anotar nada.
 ### BR-EMP-043 — El mensaje 1 de la jornada 4 sale de las tres noches de prueba
 
 CUANDO la noche 3 cierra, que es la misma transición que abre la jornada 4, Enrique DEBE decir
-uno solo de estos cuatro mensajes, elegido por las tres noches que anotó BR-EMP-041. Las fallas
-de una noche son sus clientes mal atendidos más sus obligatorias de registrar, reponer o limpiar
-sin cumplir, como cuenta BR-EMP-035, sin los llamados. La prueba cumplió «menos de la mitad de
-las tareas» con **5 fallas o más** entre las tres noches, el mismo umbral de BR-EMP-037. La
-jornada 3 está «cumplida» si su noche no tiene fallas. Los textos DEBEN ser los de la ficha «Chat
-con el jefe» revisada el 2026-10-20:
+uno solo de estos cuatro mensajes, elegido por las tres noches que anotó BR-EMP-041. La cuenta y
+el umbral son los de la ficha «Ciclo de jornadas y sistema de puntos». Cada noche suma una falla
+por cada cliente mal atendido, por registrar y por reponer sin cumplir, y por limpiar sin cumplir
+en la jornada 3. Los llamados NO DEBEN sumar. «Menos de la mitad de las tareas» de la ficha «Chat
+con el jefe» son **5 fallas o más** entre las tres noches. La jornada 3 está «cumplida» si su
+noche no tiene fallas. Los textos DEBEN ser los de la ficha «Chat con el jefe» revisada el
+2026-10-20:
 
 | Prueba | Texto |
 |---|---|
@@ -505,8 +506,9 @@ despido lo decide el legajo (BR-EMP-037), no esta tabla: con la prueba perdida, 
 ser el único mensaje de la devolución de esa noche, que ofrece volver al menú, y NO DEBE seguir
 ningún otro mensaje ni abrirse la jornada 4. En las otras tres filas, el texto DEBE ser el
 primer mensaje de la jornada 4 en el chat de Enrique, antes de su mensaje 2. Sin la noche 3
-anotada, la jornada 4 NO DEBE mostrar ningún mensaje 1. Las filas que la ficha no cubre son
-provisorias (OQ-EMP-011).
+anotada, la jornada 4 NO DEBE mostrar ningún mensaje 1. Con menos de 5 fallas, la jornada 3
+cumplida y fallas en la 1 o la 2, la ficha no tiene fila: la de «cualquier otra» es provisoria
+(OQ-EMP-011).
 
 ## Criterios de aceptación
 
@@ -1078,15 +1080,13 @@ ENTONCES la jornada 4 abre con la misma fila.
   - Bloquea: nada. Mientras tanto, BR-EMP-040 usa la fila de un cliente mal atendido, porque la
     ficha llama a la atención «LO MÁS IMPORTANTE».
 
-- **OQ-EMP-011 — ¿Cómo se cuentan «la mitad de las tareas» de la prueba y las filas que la ficha no
-  cubre?**
-  - Por qué sigue abierta: la ficha «Chat con el jefe» del 2026-10-20 dice «más de la mitad» y
-    «menos de la mitad», pero no cuenta las tareas, no dice qué pasa con la mitad exacta y no
-    tiene fila para más de la mitad con la jornada 3 cumplida y fallas en la 1 o la 2.
+- **OQ-EMP-011 — ¿Qué dice el mensaje 1 de la jornada 4 con menos de 5 fallas, la jornada 3
+  cumplida y fallas en la 1 o la 2?**
+  - Por qué sigue abierta: la ficha «Chat con el jefe» del 2026-10-20 pide todas las tareas
+    cumplidas para la primera fila y la jornada 3 sin cumplir para la segunda. Ninguna fila
+    cubre este caso.
   - Decide: una persona de game design.
-  - Bloquea: nada. Mientras tanto, BR-EMP-043 cuenta fallas como la prueba (BR-EMP-035), toma
-    el umbral de BR-EMP-037 como la mitad, pone la mitad exacta con «menos de la mitad» y manda
-    a «cualquier otra» lo que la ficha no cubre.
+  - Bloquea: nada. Mientras tanto, BR-EMP-043 usa la fila de «altibajos».
 
 - **OQ-EMP-009 — ¿Qué dice la devolución cuando la prueba pasa de 4 apercibimientos sin despedir?**
   - Por qué sigue abierta: la devolución elige Saludo y Cierre por P, y P ≥ 4 es hoy el despido
