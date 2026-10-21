@@ -37,6 +37,8 @@ const PRODUCTO_DE_LA_CAJA := Producto.Id.CHISITOS
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	# La primera noche traba esta puerta y estos casos miden la hoja, no la traba.
+	almacen.get_node(HOJA + "/CuerpoDeLaHoja").set("traba", 0)
 	# Estos casos sacan unidades para usarlas de objeto. Abren con lugar para reponer, que es la
 	# noche contra la que se midieron: sacar no lo pide (BR-STK-017).
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)

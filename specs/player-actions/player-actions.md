@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: draft
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; baño trabado sin limpieza de #538; cuartito de limpieza de #541
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -183,10 +183,12 @@ su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas 
 
 SI una puerta está trabada, ENTONCES el primario NO DEBE abrirla ni girar la hoja, y
 DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. La entrada al local, el portón del depósito y
-la oficina del jefe están trabadas en todas las jornadas. La puerta del baño y la del cuartito de
-limpieza DEBEN estar trabadas en las jornadas que no piden limpiar, y abrir en las que sí. La
-puerta de «Solo empleados» no está trabada en ninguna. La traba de la jornada DEBE decidirse al abrirla, desde las obligatorias que
-declara, antes de cerrar las puertas de BR-PLY-019.
+la oficina del jefe están trabadas en todas las jornadas. La puerta que lleva del local al depósito
+DEBE estar trabada en la primera jornada, y abrir desde la segunda. La puerta del cuartito de
+limpieza DEBE estar trabada en las jornadas que no piden limpiar, y abrir en las que sí. La puerta
+del baño y la de «Solo empleados» no están trabadas en ninguna. La traba de la jornada DEBE decidirse
+al abrirla, desde el número de la jornada y las obligatorias que declara, antes de cerrar las
+puertas de BR-PLY-019. La primera jornada DEBE poder cumplirse entera sin entrar al depósito.
 
 CUANDO se acciona una puerta que abre, el sistema DEBE avisar una vez si se abrió o se cerró.
 CUANDO se acciona una trabada con el primario, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las demás. Cerrar las
@@ -673,12 +675,21 @@ está trabada y queda abierta.
 ### AC-PLY-040 — Qué puertas están trabadas *(verifica BR-PLY-020)*
 
 DADO el almacén armado en cualquier jornada ENTONCES la entrada, el portón del depósito y la
-oficina del jefe están trabadas y contestan al primario. DADO la jornada 1 o la 2 abierta
-ENTONCES la puerta del baño y la del cuartito están trabadas, contestan al primario y la hoja no
-gira. DADO la jornada 3 abierta ENTONCES no están trabadas y alternan. DADO el cierre de la 2
-CUANDO se sigue a la 3 ENTONCES se destraban; DADO una partida guardada en la 2 con las dos
-puertas abiertas la noche anterior CUANDO se retoma ENTONCES abren cerradas y trabadas, sin
-girar ni avisar. La puerta de «Solo empleados» no está trabada en ninguna jornada.
+oficina del jefe están trabadas y contestan al primario. DADO la jornada 1 abierta ENTONCES la
+puerta que lleva al depósito está trabada, contesta al primario y la hoja no gira. DADO la
+jornada 2 abierta ENTONCES esa puerta abre y alterna. DADO el cierre de la 1 CUANDO se sigue a la 2
+ENTONCES se destraba; DADO una partida guardada en la 1 con la puerta abierta la noche anterior
+CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. DADO la jornada 1 o la 2
+abierta ENTONCES la puerta del cuartito está trabada, contesta al primario y la hoja no gira. DADO
+la jornada 3 abierta ENTONCES no está trabada y alterna. DADO el cierre de la 2 CUANDO se sigue a la
+3 ENTONCES se destraba; DADO una partida guardada en la 2 con la puerta abierta la noche anterior
+CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. La puerta del baño y la de
+«Solo empleados» no están trabadas en ninguna jornada: abren y alternan también en la 1 y la 2.
+
+### AC-PLY-102 — La primera jornada se cumple sin entrar al depósito *(verifica BR-PLY-020)*
+
+DADO la jornada 1 abierta, con la puerta del depósito trabada, CUANDO se cumplen todas sus
+obligatorias sin accionar esa puerta ENTONCES todas quedan cumplidas y la puerta sigue trabada.
 
 ### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
 

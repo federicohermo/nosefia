@@ -12,6 +12,8 @@ const RUTAS: Array[NodePath] = [
 static func abrir(almacen: Node3D) -> void:
 	var partida: Partida = almacen.get("_partida")
 	while partida.jornada() < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
+		for tarea: Tarea in partida.obligatorias():
+			tarea.completar()
 		partida.cerrar_la_jornada(partida.obligatorias().size())
 		FinDeLaReflexion.terminar(partida)
 		almacen.get("_ciclo").abrir_la_jornada()

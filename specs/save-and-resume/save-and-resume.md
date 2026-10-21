@@ -148,10 +148,11 @@ final NO DEBE reaparecer.
 
 CUANDO se guarda, el sistema DEBE escribir, además de la jornada y el legajo, las fallas de cada
 obligatoria fija, los llamados de cada motivo, R, los textos de las devoluciones recibidas con identidad, jornada cerrada y orden
-(BR-EMP-025, BR-EMP-031, BR-SAV-020), y si la mopa ya se secó una vez (BR-SUB-014). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
+(BR-EMP-025, BR-EMP-031, BR-SAV-020), las noches de prueba anotadas (BR-EMP-041) y si la mopa ya
+se secó una vez (BR-SUB-014). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
 siguiente cuenta desde ellos, y el chat de Enrique intercala instrucciones, aperturas y
 devoluciones según BR-INV-030. SI falta alguno o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) con cero
-fallas, cero llamados, R = 0, ninguna devolución y la mopa sin secarse. Dentro de las cuentas, una obligatoria o un
+fallas, cero llamados, R = 0, ninguna devolución, ninguna noche de prueba y la mopa sin secarse. Dentro de las cuentas, una obligatoria o un
 motivo desconocido, o un valor de otro tipo, DEBE ignorarse sin descartar los demás.
 
 ### BR-SAV-020 — Los mensajes nuevos conservan fecha y los antiguos no la inventan
@@ -355,7 +356,7 @@ CUANDO se guarda y retoma ENTONCES reponer conserva 1 falla, papel 1 llamado y R
 
 DADO un guardado de la jornada 6 sin fallas, llamados, R ni devoluciones CUANDO se retoma
 ENTONCES sigue en la jornada 6 con su legajo, cero fallas, cero llamados, R = 0, sin llamados en
-la partida, y el chat de Enrique tiene las 20 entradas de las jornadas 1 a 4 y los mensajes
+la partida, y el chat de Enrique tiene las 19 entradas de las jornadas 1 a 4 y los mensajes
 de apertura 5 reconstruidos, sin devoluciones inventadas. DADO las
 fallas con un valor que no es un diccionario, o las devoluciones con un número ENTONCES vuelven
 con su defecto. DADO las fallas con una obligatoria desconocida y reponer en 1 ENTONCES reponer

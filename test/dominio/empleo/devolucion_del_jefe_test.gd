@@ -2,6 +2,7 @@
 ## fila de la tabla gana.
 extends GdUnitTestSuite
 
+const CondicionesDelJefeTest := preload("res://test/dominio/empleo/condiciones_del_jefe_test.gd")
 const T := Tarea.Tipo
 const L := Partida.Llamado
 
@@ -33,7 +34,11 @@ func _cierre(jornada: int, medios: int, noches: int, hubo: bool = false) -> Stri
 
 
 func _partida_de_la_noche_1(cumplidas: Array[T], llamados: Array[L]) -> Partida:
-	var partida := Partida.nueva()
+	return _partida_de_la_noche(1, cumplidas, llamados)
+
+
+func _partida_de_la_noche(jornada: int, cumplidas: Array[T], llamados: Array[L]) -> Partida:
+	var partida := Partida.desde({"jornada": jornada})
 	partida.abrir_la_jornada()
 	for tarea: Tarea in partida.obligatorias():
 		if cumplidas.has(tarea.tipo()):
@@ -216,15 +221,17 @@ func test_ningun_numero_y_siempre_saludo_y_cierre() -> void:  # AC-EMP-060
 				assert_int(sin_nada.size()).is_equal(2)
 
 
-func test_el_despido_en_la_primera_noche() -> void:  # AC-EMP-061
+func test_el_despido_en_la_primera_jornada_completa() -> void:  # AC-EMP-061
 	var todos: Array[L] = [
 		L.LOCAL_DESORDENADO, L.OBJETO_AFUERA, L.PAPEL_EN_EL_INODORO, L.OBJETO_TIRADO
 	]
-	var partida := _partida_de_la_noche_1([T.REGISTRAR], todos)
+	var partida := _partida_de_la_noche(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, [T.REGISTRAR, T.ORDENAR_LAS_CAJAS], todos
+	)
 	assert_int(partida.medios()).is_equal(4 * M)
 	var devolucion := DevolucionDelJefe.new(1, partida)
 	var mensajes := devolucion.mensajes()
-	assert_int(mensajes.size()).is_equal(8)
+	assert_int(mensajes.size()).is_equal(9)
 	(
 		assert_array(mensajes)
 		. is_equal(
@@ -232,6 +239,7 @@ func test_el_despido_en_la_primera_noche() -> void:  # AC-EMP-061
 				"Che",
 				DevolucionDelJefe.TAREAS[T.CAJA][0],
 				DevolucionDelJefe.TAREAS[T.REPONER][0],
+				DevolucionDelJefe.TAREAS[T.LIMPIAR][0],
 				DevolucionDelJefe.PAPEL_1,
 				DevolucionDelJefe.BASURA[0],
 				DevolucionDelJefe.AFUERA[0],
@@ -241,6 +249,33 @@ func test_el_despido_en_la_primera_noche() -> void:  # AC-EMP-061
 		)
 	)
 	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
+
+
+func test_la_prueba_perdida_termina_con_el_mensaje_del_despido() -> void:  # AC-EMP-090
+	var todo: Array[T] = [T.REGISTRAR, T.REPONER]
+	var tercera := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
+	var perdida := CondicionesDelJefeTest.cerrar_la_prueba([[2, todo], [2, todo], [0, [T.LIMPIAR]]])
+	assert_int(perdida.final()).is_equal(Partida.Final.DESPEDIDO)
+	assert_int(perdida.jornada()).is_equal(tercera)
+	var devolucion := DevolucionDelJefe.new(tercera, perdida)
+	var despido := (
+		"No, no, no. Flaco, no te puedo tomar como empleado si trabajás a medias. Un par de "
+		+ "errores los puedo dejar pasar, pero si se repite todos los días...\n\nHasta acá "
+		+ "llegó mi paciencia. Suerte consiguiendo otro trabajo."
+	)
+	assert_array(devolucion.mensajes()).is_equal([despido])
+	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
+	assert_object(perdida.abrir_la_jornada()).is_null()
+	var textos_de_la_tercera: Array[String] = []
+	for mensaje: Mensaje in perdida.devoluciones_del_jefe():
+		if mensaje.jornada == tercera:
+			textos_de_la_tercera.append(mensaje.texto)
+	assert_array(textos_de_la_tercera).is_equal([despido])
+	var redimida := CondicionesDelJefeTest.cerrar_la_prueba([[2, todo], [2, todo], [0, []]])
+	assert_bool(redimida.terminada()).is_false()
+	assert_array(DevolucionDelJefe.new(tercera, redimida).mensajes()).not_contains(
+		[DevolucionDelJefe.DESPIDO_DE_LA_PRUEBA]
+	)
 
 
 func test_la_partida_en_curso_ofrece_solo_continuar() -> void:  # AC-EMP-016

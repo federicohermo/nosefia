@@ -19,7 +19,7 @@ const CAJA_REGISTRADORA := &"caja_registradora"
 const LECTOR := &"lector"
 const ENTRADA_PRINCIPAL := &"entrada_principal"
 const PUERTA_DEL_JEFE := &"puerta_del_jefe"
-const BANO_CERRADO := &"bano_cerrado"
+const DEPOSITO_CERRADO := &"deposito_cerrado"
 const CUARTITO_CERRADO := &"cuartito_cerrado"
 const PORTON := &"porton"
 const CONTENEDOR := &"contenedor"
@@ -91,7 +91,7 @@ const DE_LO_DEMAS := {
 	"La entrada principal al local. Queda cerrada con llave durante el turno nocturno.",
 	PUERTA_DEL_JEFE:
 	"Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada.",
-	BANO_CERRADO: "Ese es el baño. Parece que Yasmín lo cerró con llave hoy.",
+	DEPOSITO_CERRADO: "Por acá se va al depósito. Hoy está cerrado con llave.",
 	CUARTITO_CERRADO: "Acá guardan las cosas de limpieza. Está cerrado con llave.",
 	PORTON: "Un portón que da a la calle.",
 	CONTENEDOR: "Un contenedor de basura.",

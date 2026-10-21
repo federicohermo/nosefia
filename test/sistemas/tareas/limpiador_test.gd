@@ -31,8 +31,8 @@ const ARCHIVOS_DEL_SPEC := [
 ## balde y la mopa, y el `Turno` ya sabe que la segunda vez no cuenta.
 const PATRONES_DE_ESTADO_PROPIO := "var\\s+_(manchas|limpias|cumplida|balde|mopa|agua)\\b"
 
-## Las dos noches que la ficha decide: siete manchas la primera y ocho la segunda.
-const JORNADAS: Array[int] = [4, 5]
+const JORNADAS: Array[int] = [3, 4, 5]
+const MANCHAS_POR_JORNADA: Dictionary[int, int] = {3: 4, 4: 7, 5: 8}
 
 var _turno: Turno = null
 var _avisos_de_tarea: int = 0
@@ -52,7 +52,7 @@ func _limpiador(
 	presupuesto: float = Reglas.DURACION_DEL_TURNO,
 	jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 ) -> Limpiador:
-	var obligatorias := Apertura.obligatorias(4)
+	var obligatorias := Apertura.obligatorias(jornada)
 	_turno = Turno.new(presupuesto, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
@@ -185,7 +185,7 @@ func test_con_una_mancha_de_menos_la_obligatoria_no_se_cuenta() -> void:
 		before_test()
 		var limpiador := _limpiador(Reglas.DURACION_DEL_TURNO, jornada)
 		var total := limpiador.piso().lugares().size()
-		assert_int(total).is_equal(7 if jornada == 4 else 8)
+		assert_int(total).is_equal(MANCHAS_POR_JORNADA[jornada])
 		assert_int(_borrar_menos(limpiador, 1)).is_equal(total - 1)
 		assert_bool(limpiador.piso().esta_limpio()).is_false()
 		assert_int(_avisos_de_tarea).is_equal(0)
@@ -197,6 +197,7 @@ func test_la_ultima_mancha_cuenta_la_obligatoria_una_sola_vez() -> void:
 	for jornada in JORNADAS:
 		before_test()
 		var limpiador := _limpiador(Reglas.DURACION_DEL_TURNO, jornada)
+		assert_int(limpiador.piso().lugares().size()).is_equal(MANCHAS_POR_JORNADA[jornada])
 		var ultima: PisoDelLocal.Lugar = limpiador.piso().lugares().back()
 		_borrar_menos(limpiador, 1)
 		assert_int(_avisos_de_tarea).is_equal(0)
