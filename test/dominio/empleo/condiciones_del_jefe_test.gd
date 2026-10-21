@@ -38,7 +38,6 @@ static func cerrar_la_primera(mal_atendidos: int, registrar: bool) -> Partida:
 	return partida
 
 
-## La noche 1 sin fallas y la 2 como dice la fila.
 static func cerrar_la_segunda(mal_atendidos: int, registrar: bool, reponer: bool) -> Partida:
 	var partida := cerrar_la_primera(0, true)
 	var sin_cumplir: Array[Tarea.Tipo] = []
