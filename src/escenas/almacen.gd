@@ -45,6 +45,21 @@ const GUION_DEL_JEFE := preload("res://src/dominio/investigacion/conversacion_co
 
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 
+
+class PresenciaDeCaja:
+	extends RefCounted
+	var capa: int
+	var mascara: int
+	var visible: bool
+	var interactuable: bool
+
+	func _init(caja: RigidBody3D) -> void:
+		capa = caja.collision_layer
+		mascara = caja.collision_mask
+		visible = caja.visible
+		interactuable = caja.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+
+
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
@@ -101,6 +116,7 @@ var _jornada_preparada := 0
 var _arranque: Transform3D
 var _acomodador: AcomodadorDelDeposito
 var _pallets_de_entrega: Node3D
+var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
 
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
 ## cambiar de escena: se llevaría puesto al runner.
@@ -262,6 +278,7 @@ func _ready() -> void:
 			util.malla.set("observador", _jugador)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		_presencias_de_las_cajas[caja] = PresenciaDeCaja.new(caja)
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
 		caja.sleeping_state_changed.connect(_pedir_revision_del_deposito)
 		caja.empujada.connect(_pedir_revision_del_deposito.unbind(1))
@@ -279,7 +296,6 @@ func _ready() -> void:
 	add_child(_enlace_de_guardado)
 	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
 	_jugador.muebles_con_reserva = _muebles_con_contorno
-	_ciclo.jornada_abierta.connect(_reposicion_manual.preparar.unbind(1), CONNECT_ONE_SHOT)
 	_ciclo.arrancar(_partida, _reloj, _clientes_mal_atendidos)
 
 
@@ -347,6 +363,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
+	_reposicion_manual.limpiar()
+	_reposicion_manual.seleccionar_disposicion(jornada)
 	var inventario := Apertura.inventario_de_la_jornada(
 		jornada,
 		compradores,
@@ -354,8 +372,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		_reposicion_manual.casilleros_reponibles(),
 		azar_de_la_apertura
 	)
-	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
-	_reposicion_manual.limpiar()
+	_repositor.arrancar(Estante.new(inventario, Catalogo.de_la_jornada(jornada)))
+	_reposicion_manual.preparar()
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
@@ -377,7 +395,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	if is_instance_valid(_pallets_de_entrega):
 		_pallets_de_entrega.queue_free()
 		_pallets_de_entrega = null
-	if Apertura.cajas_apiladas(jornada):
+	var llegadas := Apertura.productos_con_cajas_apiladas(jornada)
+	if not llegadas.is_empty():
 		var madera: MeshInstance3D = $Estructura/deposito_pallet_piso
 		_pallets_de_entrega = PALLETS_DE_ENTREGA.instantiate()
 		add_child(_pallets_de_entrega)
@@ -390,10 +409,17 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			centro += pallet.global_position / pallets.size()
 		var frente := centro - ($Estructura/porton as Node3D).global_position
 		frente.y = 0.0
-		poses = PilaDelDeposito.poses(_cajas_de_productos, pallets, frente)
+		var cajas_nuevas: Array[Node3D] = []
+		for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+			if caja.producto in llegadas:
+				cajas_nuevas.append(caja)
+		poses = PilaDelDeposito.poses(cajas_nuevas, pallets, frente)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
 		caja.volver_a_su_lugar()
+		_mostrar_caja(
+			caja, inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
+		)
 	_pedir_revision_del_deposito()
 	# Los útiles de limpieza van por lo mismo que las cajas: se trasladan, y la noche siguiente
 	# arrancaría con la mopa y el balde donde los dejó la anterior. Vacío y seca los deja el piso
@@ -421,6 +447,17 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_audio.arrancar_el_ambiente()
 	_limpieza.reiniciar()
 	_estante.mostrar(0)
+
+
+func _mostrar_caja(caja: CajaDeProductosDelDeposito, presente: bool) -> void:
+	var original := _presencias_de_las_cajas[caja]
+	caja.visible = presente and original.visible
+	caja.collision_layer = original.capa if presente else 0
+	caja.collision_mask = original.mascara if presente else 0
+	if presente and original.interactuable:
+		caja.add_to_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+	else:
+		caja.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 
 
 func _clientes_mal_atendidos() -> int:

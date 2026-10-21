@@ -3,6 +3,8 @@
 [ext_resource type="Script" path="res://src/dominio/investigacion/mensaje.gd" id="mensaje"]
 [ext_resource type="Script" path="res://src/dominio/investigacion/conversacion.gd" id="conversacion"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/enrique.png" id="enrique"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-reloj.png" id="reloj"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-gondolas.png" id="gondolas"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-04.png" id="foto04"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-06.png" id="foto06"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-07.png" id="foto07"]
@@ -19,6 +21,13 @@ identidad = "J1_Intro01"
 orden = 0
 de_quien = "Enrique Peldaño"
 texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo ocho jornadas. Y encima voy a dejar que te vayas temprano los primeros días si terminás el laburo rápido. ¿Quién pudiera, no?\n\nDe todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
+
+[sub_resource type="Resource" id="FotoReloj"]
+script = ExtResource("mensaje")
+identidad = "J1_FotoReloj"
+orden = 1
+de_quien = "Enrique Peldaño"
+foto = ExtResource("reloj")
 
 [sub_resource type="Resource" id="Foto02"]
 script = ExtResource("mensaje")
@@ -135,6 +144,14 @@ condicion = &"J2_NINGUNO_ANOTADO"
 texto = "Che, me enteré de que ayer pasaron dos clientes y no atendiste correctamente a ninguno de los dos. O sea, por culpa tuya no tuvimos ingresos en el turno nocturno. Y encima anotaste en el registro productos que no se vendieron ¿me estás tomando el pelo?
 
 Voy a ser considerado con vos porque fue tu primer día, pero vamos a tener problemas si no te ponés las pilas, especialmente ahora que te voy a sumar una tarea más."
+
+[sub_resource type="Resource" id="FotoGondolas"]
+script = ExtResource("mensaje")
+identidad = "J2_FotoGondolas"
+jornada = 2
+orden = 10
+de_quien = "Enrique Peldaño"
+foto = ExtResource("gondolas")
 
 [sub_resource type="Resource" id="Foto07"]
 script = ExtResource("mensaje")
@@ -342,4 +359,4 @@ script = ExtResource("conversacion")
 nombre = "Enrique Peldaño"
 rol = "Jefe"
 imagen = ExtResource("enrique")
-mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("J2_Mensaje1_SinFallas"), SubResource("J2_Mensaje1_RegistroMal"), SubResource("J2_Mensaje1_UnClienteMal"), SubResource("J2_Mensaje1_NingunoEnCero"), SubResource("J2_Mensaje1_NingunoAnotado"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("J3_Mensaje1_SinFallas"), SubResource("J3_Mensaje1_ReposicionMal"), SubResource("J3_Mensaje1_RegistroMal"), SubResource("J3_Mensaje1_RegistroYReposicionMal"), SubResource("J3_Mensaje1_AtencionMal"), SubResource("J3_Mensaje1_AtencionYRegistroMal"), SubResource("J3_Mensaje1_AtencionYReposicionMal"), SubResource("J3_Mensaje1_TodoMal"), SubResource("Foto09"), SubResource("Intro09"), SubResource("J4_Mensaje1_SinFallas"), SubResource("J4_Mensaje1_ConAltibajos"), SubResource("J4_Mensaje1_Redimido"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("Intro12"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])
+mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("FotoReloj"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("J2_Mensaje1_SinFallas"), SubResource("J2_Mensaje1_RegistroMal"), SubResource("J2_Mensaje1_UnClienteMal"), SubResource("J2_Mensaje1_NingunoEnCero"), SubResource("J2_Mensaje1_NingunoAnotado"), SubResource("FotoGondolas"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("J3_Mensaje1_SinFallas"), SubResource("J3_Mensaje1_ReposicionMal"), SubResource("J3_Mensaje1_RegistroMal"), SubResource("J3_Mensaje1_RegistroYReposicionMal"), SubResource("J3_Mensaje1_AtencionMal"), SubResource("J3_Mensaje1_AtencionYRegistroMal"), SubResource("J3_Mensaje1_AtencionYReposicionMal"), SubResource("J3_Mensaje1_TodoMal"), SubResource("Foto09"), SubResource("Intro09"), SubResource("J4_Mensaje1_SinFallas"), SubResource("J4_Mensaje1_ConAltibajos"), SubResource("J4_Mensaje1_Redimido"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("Intro12"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])

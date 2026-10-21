@@ -101,7 +101,7 @@ func test_cada_caja_del_deposito_arranca_con_ocho_en_todas_las_jornadas() -> voi
 			_casilleros(),
 			RandomNumberGenerator.new()
 		)
-		for producto in Catalogo.todos():
+		for producto in Catalogo.de_la_jornada(jornada):
 			(
 				assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO))
 				. override_failure_message(
@@ -123,7 +123,7 @@ func test_la_gondola_arranca_con_su_fila_menos_lo_que_falta() -> void:  # AC-STK
 		var faltantes: Dictionary[Producto.Id, int] = {}
 		if fila[0] > 0:
 			faltantes[Producto.Id.BURBALOO] = fila[0]
-		var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros)
+		var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros, Catalogo.todos())
 		var mensaje := "faltan %d" % fila[0]
 		(
 			assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.GONDOLA))
@@ -151,7 +151,7 @@ func test_un_faltante_de_una_caja_entera_se_repone_con_esa_caja() -> void:  # AC
 		Producto.Id.BURBALOO: ReglasDelEstante.UNIDADES_POR_CAJA
 	}
 	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.BURBALOO: 12}
-	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros)
+	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros, Catalogo.todos())
 	var aceptados: Array[Producto] = [burbaloo]
 	var estante := Estante.new(inventario, aceptados)
 	for unidad in ReglasDelEstante.UNIDADES_POR_CAJA:
@@ -168,7 +168,7 @@ func test_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero() -> void:
 	var burbaloo := Catalogo.de(Producto.Id.BURBALOO)
 	var faltantes: Dictionary[Producto.Id, int] = {Producto.Id.BURBALOO: 5}
 	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.BURBALOO: 3}
-	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros)
+	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros, Catalogo.todos())
 	assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.GONDOLA)).is_zero()
 	assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.DEPOSITO)).is_equal(
 		ReglasDelEstante.UNIDADES_POR_CAJA
@@ -179,7 +179,7 @@ func test_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero() -> void:
 ## En esta apertura fija no falta nada. Vaciar un casillero vuelve a hacer faltar su producto.
 func test_un_casillero_que_se_vacia_vuelve_a_faltar() -> void:  # AC-STK-007
 	var malbardo := Catalogo.de(Producto.Id.MALBARDO)
-	var inventario := Apertura.inventario_con_faltantes({}, _casilleros())
+	var inventario := Apertura.inventario_con_faltantes({}, _casilleros(), Catalogo.todos())
 	assert_bool(_falta(inventario, malbardo)).is_false()
 	inventario.mover(malbardo, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 1)
 	assert_bool(_falta(inventario, malbardo)).is_true()
@@ -210,7 +210,7 @@ func test_la_primera_jornada_abre_sin_faltantes_con_cualquier_semilla() -> void:
 			1, Compradores.de_la_jornada(1), _casilleros(), _casilleros(), azar
 		)
 		assert_array(inventario.faltantes()).is_empty()
-		for producto in Catalogo.todos():
+		for producto in Catalogo.de_la_jornada(1):
 			assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
 				ReglasDelEstante.UNIDADES_POR_CAJA
 			)

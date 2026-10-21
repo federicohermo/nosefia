@@ -119,8 +119,16 @@ func adjunto_de(quien: Conversacion.Interlocutor, indice: int) -> Mensaje:
 	var mensajes := mensajes_de(quien)
 	if indice < 0 or indice >= mensajes.size() - 1 or mensajes[indice].foto == null:
 		return null
-	var siguiente := mensajes[indice + 1]
-	return siguiente if siguiente.foto == null and siguiente.dice_algo() else null
+	var origen := mensajes[indice]
+	for posicion in range(indice + 1, mensajes.size()):
+		var siguiente := mensajes[posicion]
+		if siguiente.jornada != origen.jornada or siguiente.momento != origen.momento:
+			return null
+		if origen.texto.is_empty():
+			if siguiente.foto != null and siguiente.texto.is_empty():
+				continue
+		return siguiente if siguiente.foto == null and siguiente.dice_algo() else null
+	return null
 
 
 func pista_de(quien: Conversacion.Interlocutor, identidad: String, tramo: String) -> String:

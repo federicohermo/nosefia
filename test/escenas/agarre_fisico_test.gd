@@ -18,6 +18,10 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 	]
 	for ojo: Vector3 in ojos:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
+		almacen.set(
+			"_partida",
+			Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+		)
 		add_child(almacen)
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		var jugador: CharacterBody3D = almacen.get_node("Jugador")
@@ -75,6 +79,10 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 
 func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
 	var bolsa := BolsaEnLaMano.preparar(almacen)
@@ -99,6 +107,10 @@ func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:
 
 func test_el_izquierdo_en_el_contenedor_entrega_la_bolsa_al_recolector() -> void:  # AC-CLN-036
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
 	jugador.set_physics_process(false)

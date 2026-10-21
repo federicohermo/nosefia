@@ -26,7 +26,9 @@ func test_el_que_espera_o_no_llego_no_deja_acelerar() -> void:  # AC-SHF-032
 	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
 	var compradores := Compradores.de_la_jornada(jornada)
 	assert_array(compradores).is_not_empty()
-	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	var tarea := TareaDeAtender.new(
+		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	)
 	var cumplidas := _cumplidas_salvo(jornada, [Tarea.Tipo.CAJA])
 	(
 		assert_bool(
@@ -97,7 +99,9 @@ func test_solo_la_primera_noche_acelera() -> void:  # AC-SHF-035
 func test_sin_ventas_el_registro_que_coincide_deja_acelerar() -> void:  # AC-SHF-032
 	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
 	var compradores := Compradores.de_la_jornada(jornada)
-	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	var tarea := TareaDeAtender.new(
+		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	)
 	tarea.avanzar(compradores[-1].horario.y)
 	assert_bool(tarea.compras_cerradas()).is_true()
 	var registro := RegistroDeVentas.new(Catalogo.todos(), tarea)

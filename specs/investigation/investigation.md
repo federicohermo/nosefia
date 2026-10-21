@@ -161,8 +161,10 @@ entregar una copia de la lista, sin permitir vaciar la bandeja al modificarla.
 
 CUANDO se pulsa una foto de un chat, el sistema DEBE ampliarla para que entre completa en la
 pantalla del celular, con su texto adjunto sobre ella. El adjunto DEBE ser exclusivamente el
-mensaje siguiente si es texto sin foto. Sin siguiente o con otra foto después, DEBE ampliarse
-sin adjunto. Pedir ampliar un mensaje sin foto NO DEBE cambiar nada. Cualquier clic izquierdo
+primer mensaje siguiente con texto sin foto, salteando sólo fotos sin texto de la misma jornada
+y momento. Una foto con texto, otra jornada u otro momento DEBEN cortar esa búsqueda.
+Sin texto siguiente en ese grupo, DEBE ampliarse sin adjunto.
+Pedir ampliar un mensaje sin foto NO DEBE cambiar nada. Cualquier clic izquierdo
 en la pantalla DEBE cerrar la ampliación y volver al mismo chat y posición de desplazamiento.
 
 ### BR-INV-026 — El modo fijo retiene un chat
@@ -595,7 +597,10 @@ conversación ENTONCES no cambian mensajes ni no leídos y se emiten cero avisos
 DADO, por turno, una foto seguida de texto sin foto, una foto final, dos fotos consecutivas y un
 mensaje sólo de texto CUANDO se pide ampliar el primero ENTONCES: la primera muestra su foto y
 exactamente el texto siguiente; la segunda se amplía sin texto; la tercera amplía sólo la primera
-sin texto; la cuarta conserva la pantalla. DADO una foto ampliada CUANDO se hace clic izquierdo
+sin texto si el grupo termina ahí; la cuarta conserva la pantalla. DADO dos fotos sin texto
+seguidas por texto sin foto en la misma jornada y momento ENTONCES ambas amplían con ese texto.
+Una foto con texto, otra jornada u otro momento intermedios impiden tomar un texto posterior.
+DADO una foto ampliada CUANDO se hace clic izquierdo
 en cualquier lugar ENTONCES vuelve al chat conservando su desplazamiento anterior.
 
 ### AC-INV-032 — El fijo sólo se suelta explícitamente *(verifica BR-INV-026)*

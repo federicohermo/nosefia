@@ -10,7 +10,7 @@ class UnidadFisica:
 
 func test_la_primera_jornada_no_cuenta_reponer_al_agarrar_y_colocar() -> void:  # AC-STK-094
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
-	var inventario := Apertura.inventario_con_faltantes({}, {actroncito.id: CUPO})
+	var inventario := Apertura.inventario_con_faltantes({}, {actroncito.id: CUPO}, Catalogo.todos())
 	var obligatorias := Apertura.obligatorias(1)
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
@@ -35,7 +35,9 @@ func test_la_primera_jornada_no_cuenta_reponer_al_agarrar_y_colocar() -> void:  
 
 func test_la_segunda_noche_exige_reponer_sus_faltantes() -> void:  # AC-STK-094, AC-STK-035
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
-	var inventario := Apertura.inventario_con_faltantes({actroncito.id: 1}, {actroncito.id: CUPO})
+	var inventario := Apertura.inventario_con_faltantes(
+		{actroncito.id: 1}, {actroncito.id: CUPO}, Catalogo.todos()
+	)
 	var obligatorias := Apertura.obligatorias(2)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias), obligatorias)

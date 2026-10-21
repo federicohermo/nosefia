@@ -126,7 +126,7 @@ func test_cada_noche_1_elige_una_sola_fila() -> void:  # AC-EMP-084
 			guion.mensajes, SEGUNDA, CondicionesDelJefe.elegidas(partida.noches_de_prueba)
 		)
 		assert_array(_identidades(propios)).is_equal(
-			[fila[2], "J1_Foto07", "J1_Intro07", "J1_Intro08"]
+			[fila[2], "J2_FotoGondolas", "J1_Foto07", "J1_Intro07", "J1_Intro08"]
 		)
 		assert_str(propios[0].texto).is_equal(TEXTOS[fila[2]])
 
@@ -138,7 +138,9 @@ func test_sin_la_noche_1_la_jornada_2_abre_con_intro_7() -> void:  # AC-EMP-084
 	var propios := InstruccionesDelJefe.de_la_jornada(
 		guion.mensajes, SEGUNDA, CondicionesDelJefe.elegidas(partida.noches_de_prueba)
 	)
-	assert_array(_identidades(propios)).is_equal(["J1_Foto07", "J1_Intro07", "J1_Intro08"])
+	assert_array(_identidades(propios)).is_equal(
+		["J2_FotoGondolas", "J1_Foto07", "J1_Intro07", "J1_Intro08"]
+	)
 
 
 func test_cada_noche_2_elige_una_sola_fila() -> void:  # AC-EMP-087
