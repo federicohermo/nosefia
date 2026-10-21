@@ -333,6 +333,10 @@ Lo que más se rompe:
 - **Una lista que reparte un conjunto suma el total.** Si el issue divide los productos en dos
   grupos, los dos grupos se cuentan contra el catálogo. En el #264, las cajas con textura y sin
   textura eran 19 y 11 de 31: Malbardo no estaba en ninguna.
+- **Un catálogo por etapa se sigue hasta sus dibujos, objetivos y cuerpos.** Medir también
+  quién prepara los cupos y cuándo renueva sus cachés. Probar el cambio de etapa dentro de la
+  misma escena y la reapertura desde el menú. En #575, filtrar el inventario dejaba las cajas
+  ausentes activas y conservaba la disposición anterior; sus lectores entran en «Se escribe».
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
   comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
   mintiendo, y el implementador no lo puede tocar.
@@ -421,6 +425,9 @@ Lo que más se rompe:
 - **Si el issue cambia un recurso generado, lo que lo genera está en el repo o entra en «Se
   escribe».** Un recurso sin su generador sólo se edita a mano. En el #262, la disposición de la
   góndola salía de un acomodador que vivió en el scratch de una sesión y nunca se commiteó.
+  Ejecutar su lectura geométrica sobre la fuente vigente antes de cerrar los límites. Revisar
+  también las otras salidas que escribe el comando. En #575, el generador completo guardaba
+  arte y reescribía una escena prohibida; la variante necesitaba una salida independiente.
 - **Un dato nuevo en una clase base entra con sus herederas.** Si cada una lo declara, cada una
   va en «Se escribe». En el #197 faltó `unidad_de_producto.gd`, que hereda de
   `ObjetoDelAlmacen`.
