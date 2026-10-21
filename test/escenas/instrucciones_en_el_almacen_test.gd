@@ -134,7 +134,6 @@ func _comprobar_instrucciones_de(jornada: int) -> void:
 	assert_float(_restante()).is_equal(restante)
 
 
-## La segunda abre con el mensaje que eligió la noche 1, no con Intro 7.
 func _comprobar_mensaje_1_de_la_segunda() -> void:
 	var pasos: Array = _instrucciones().get("_pasos")
 	var primero: Mensaje = (pasos[0] as InstruccionesDelJefe.Paso).textos[0]
