@@ -279,7 +279,7 @@ func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 	if _es_de_prueba(cerrada):
 		var noche := ResultadoDeLaNoche.new(clientes_mal_atendidos, sin_cumplir)
 		_noches_de_prueba[cerrada] = noche
-		_legajo.registrar_prueba(noche.fallas(), _llamados.size())
+		_legajo.registrar_prueba(noche.fallas())
 	else:
 		_legajo.registrar(cumplidas, _obligatorias.size(), _llamados.size())
 	_antecedentes.anotar_noche(sin_cumplir, _llamados, _legajo.medios() - medios_antes)
