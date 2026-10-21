@@ -19,8 +19,10 @@ const SEPARACION_DEL_SECTOR := 64.0
 const TAMANO_DE_LA_CAJA := Vector2(136, 316)
 const TAMANO_DEL_TICKET := Vector2(109, 186)
 const FOTO_DEL_LECTOR := "J1_Foto04"
+const ALTO_DE_LAS_FOTOS_EN_PAR := 233.0
 ## Cada foto lleva su leyenda; la pantalla en que cae depende de la jornada.
 const FOTOS := {
+	"J1_FotoReloj": {"tamano": Vector2(405, 233), "titulo": "Reloj", "sector": "Sector de ventas"},
 	"J1_Foto02":
 	{
 		"tamano": Vector2(324, 233),
@@ -41,6 +43,8 @@ const FOTOS := {
 	},
 	"J1_Foto06":
 	{"tamano": Vector2(373, 300), "titulo": "Computadora", "sector": "Sector de ventas"},
+	"J2_FotoGondolas":
+	{"tamano": Vector2(405, 233), "titulo": "Góndolas", "sector": "Sector de ventas"},
 	"J1_Foto07":
 	{
 		"tamano": Vector2(373, 365),
@@ -145,12 +149,15 @@ func _pintar() -> void:
 	var ancho_de_la_leyenda := 350.0
 	var x_del_ticket := ANCHO_DEL_TEXTO - TAMANO_DEL_TICKET.x
 	var x_de_la_caja := x_del_ticket - SEPARACION_HORIZONTAL - TAMANO_DE_LA_CAJA.x
-	var con_caja := paso.foto != null and paso.foto.identidad == FOTO_DEL_LECTOR
+	var foto: Mensaje = paso.fotos[0] if paso.fotos.size() == 1 else null
+	var con_caja := foto != null and foto.identidad == FOTO_DEL_LECTOR
 	if con_caja:
 		var tamano_de_la_foto: Vector2 = FOTOS[FOTO_DEL_LECTOR]["tamano"]
 		ancho_de_la_leyenda = x_de_la_caja - tamano_de_la_foto.x - 2.0 * SEPARACION_HORIZONTAL
-	if paso.foto != null:
-		_foto(paso.foto.foto, FOTOS[paso.foto.identidad], altura_de_la_foto, ancho_de_la_leyenda)
+	if paso.fotos.size() > 1:
+		_fotos_en_fila(paso.fotos, altura_de_la_foto)
+	elif foto != null:
+		_foto(foto.foto, FOTOS[foto.identidad], altura_de_la_foto, ancho_de_la_leyenda)
 	if con_caja:
 		_imagen(CAJA, Rect2(Vector2(x_de_la_caja, altura_de_la_foto), TAMANO_DE_LA_CAJA))
 		var titulo := _texto(
@@ -214,6 +221,45 @@ func _imagen(textura: Texture2D, rectangulo: Rect2) -> TextureRect:
 
 func _foto(textura: Texture2D, ficha: Dictionary, altura: float, ancho_de_leyenda: float) -> void:
 	var rectangulo := Rect2(Vector2(0, altura), ficha["tamano"])
+	_marco_de_foto(textura, rectangulo)
+	var posicion := Vector2(rectangulo.size.x + SEPARACION_HORIZONTAL, altura)
+	var titulo := _texto(ficha["titulo"], posicion, ancho_de_leyenda, 30, COLOR_DE_RESALTE)
+	_texto(
+		"-" + ficha["sector"],
+		posicion + Vector2(0, titulo.get_content_height() + SEPARACION_DEL_SECTOR),
+		ancho_de_leyenda,
+		30,
+		COLOR_DE_SECTOR
+	)
+
+
+func _fotos_en_fila(fotos: Array[Mensaje], altura: float) -> void:
+	var x := 0.0
+	for mensaje in fotos:
+		var ancho := (
+			12.0
+			+ (
+				(ALTO_DE_LAS_FOTOS_EN_PAR - 12.0)
+				* mensaje.foto.get_width()
+				/ mensaje.foto.get_height()
+			)
+		)
+		var rectangulo := Rect2(x, altura, ancho, ALTO_DE_LAS_FOTOS_EN_PAR)
+		_marco_de_foto(mensaje.foto, rectangulo)
+		var ficha: Dictionary = FOTOS[mensaje.identidad]
+		var posicion := Vector2(x, rectangulo.end.y + 12.0)
+		var titulo := _texto(ficha["titulo"], posicion, ancho, 30, COLOR_DE_RESALTE)
+		_texto(
+			"-" + ficha["sector"],
+			posicion + Vector2(0, titulo.get_content_height() + 12.0),
+			ancho,
+			30,
+			COLOR_DE_SECTOR
+		)
+		x += ancho + SEPARACION_HORIZONTAL
+
+
+func _marco_de_foto(textura: Texture2D, rectangulo: Rect2) -> void:
 	var borde := Panel.new()
 	var estilo := StyleBoxFlat.new()
 	estilo.bg_color = Color("1f1e1e")
@@ -228,15 +274,6 @@ func _foto(textura: Texture2D, ficha: Dictionary, altura: float, ancho_de_leyend
 		textura, Rect2(rectangulo.position + Vector2(6, 6), rectangulo.size - Vector2(12, 12))
 	)
 	foto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	var posicion := Vector2(rectangulo.size.x + SEPARACION_HORIZONTAL, altura)
-	var titulo := _texto(ficha["titulo"], posicion, ancho_de_leyenda, 30, COLOR_DE_RESALTE)
-	_texto(
-		"-" + ficha["sector"],
-		posicion + Vector2(0, titulo.get_content_height() + SEPARACION_DEL_SECTOR),
-		ancho_de_leyenda,
-		30,
-		COLOR_DE_SECTOR
-	)
 
 
 func _ajustar() -> void:

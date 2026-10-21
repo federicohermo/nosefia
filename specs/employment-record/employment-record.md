@@ -535,8 +535,8 @@ marco y el rayo central de su encuadre alcanza el tema correspondiente: reloj, c
 notas, ventanilla, lector y caja, computadora,
 góndolas, estantería con cajas, útiles y notas del cuartito, y cajas del depósito en el piso.
 Las dos capturas nuevas miden 960 × 540 y no alteran el reparto ni crean huecos para encuadrar.
-Preparar la foto
-de Intro 7 y después la de Intro 11 deja restaurada la pila jugable de la jornada 1.
+Preparar la foto de Intro 7 y después la de Intro 11 deja restaurada la disposición jugable
+de la jornada 1. Las cajas en el piso de Intro 11 corresponden a la jornada 4.
 
 ### AC-EMP-048 — Leer retiene y comenzar anuncia *(verifica BR-EMP-022, BR-EMP-024)*
 

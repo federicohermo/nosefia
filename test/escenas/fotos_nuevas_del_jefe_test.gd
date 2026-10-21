@@ -34,9 +34,16 @@ func test_reloj_y_gondolas_tienen_encuadres_desde_la_primera_jornada() -> void: 
 		await get_tree().physics_frame
 	var nuevos := 0
 	for plano: Array in planos:
-		if plano[0] not in [2, 10]:
+		if plano[0] not in [2, 6, 10, 13]:
 			continue
-		nuevos += 1
+		if plano[0] == 13:
+			var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+			almacen.set("_partida", Partida.desde({"jornada": jornada}))
+			almacen.call("_al_abrir_la_jornada", jornada)
+			for cuerpo: RigidBody3D in almacen.find_children("*", "RigidBody3D", true, false):
+				cuerpo.freeze = true
+			for cuadro: int in 4:
+				await get_tree().physics_frame
 		camara.fov = plano[3]
 		camara.look_at_from_position(plano[1], plano[2])
 		var rayo := PhysicsRayQueryParameters3D.create(
@@ -44,14 +51,37 @@ func test_reloj_y_gondolas_tienen_encuadres_desde_la_primera_jornada() -> void: 
 		)
 		rayo.exclude = [jugador.get_rid()]
 		var golpe := camara.get_world_3d().direct_space_state.intersect_ray(rayo)
+		if plano[0] == 6:
+			var acceso: CollisionShape3D = almacen.get_node("Estructura/Ventanilla/AccesoAlCobro")
+			var forma := acceso.shape as BoxShape3D
+			var hueco := AABB(-forma.size / 2.0, forma.size)
+			assert_dict(golpe).is_empty()
+			assert_bool(acceso.disabled).is_true()
+			(
+				assert_bool(
+					(
+						hueco.intersects_segment(
+							acceso.to_local(rayo.from), acceso.to_local(rayo.to)
+						)
+						!= null
+					)
+				)
+				. is_true()
+			)
+			continue
 		assert_dict(golpe).is_not_empty()
 		if golpe.is_empty():
 			continue
 		var ruta := str(almacen.get_path_to(golpe.collider as Node))
 		assert_str(ruta.to_lower()).contains((plano[4] as String).to_lower())
+		if plano[0] == 13:
+			continue
+		nuevos += 1
 		assert_int(plano.size()).is_equal(6)
 		assert_str(plano[5]).is_equal("intro-reloj.png" if plano[0] == 2 else "intro-gondolas.png")
 	assert_int(nuevos).is_equal(2)
+	almacen.set("_partida", Partida.nueva())
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA)
 	assert_bool(repositor.estante().completada()).is_true()
 	for indice: int in cajas.size():
 		(

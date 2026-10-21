@@ -3,6 +3,8 @@
 [ext_resource type="Script" path="res://src/dominio/investigacion/mensaje.gd" id="mensaje"]
 [ext_resource type="Script" path="res://src/dominio/investigacion/conversacion.gd" id="conversacion"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/enrique.png" id="enrique"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-reloj.png" id="reloj"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-gondolas.png" id="gondolas"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-04.png" id="foto04"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-06.png" id="foto06"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/fotos/intro-07.png" id="foto07"]
@@ -19,6 +21,13 @@ identidad = "J1_Intro01"
 orden = 0
 de_quien = "Enrique Peldaño"
 texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo ocho jornadas. ¿Quién pudiera, no?\n\nDe todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
+
+[sub_resource type="Resource" id="FotoReloj"]
+script = ExtResource("mensaje")
+identidad = "J1_FotoReloj"
+orden = 1
+de_quien = "Enrique Peldaño"
+foto = ExtResource("reloj")
 
 [sub_resource type="Resource" id="Foto02"]
 script = ExtResource("mensaje")
@@ -82,6 +91,14 @@ identidad = "J1_Intro06"
 orden = 9
 de_quien = "Enrique Peldaño"
 texto = "En segundo lugar, [b]ANOTAR LOS PRODUCTOS VENDIDOS [/b]durante la noche en la [b]computadora[/b]. Bastante simple."
+
+[sub_resource type="Resource" id="FotoGondolas"]
+script = ExtResource("mensaje")
+identidad = "J2_FotoGondolas"
+jornada = 2
+orden = 10
+de_quien = "Enrique Peldaño"
+foto = ExtResource("gondolas")
 
 [sub_resource type="Resource" id="Foto07"]
 script = ExtResource("mensaje")
@@ -183,4 +200,4 @@ script = ExtResource("conversacion")
 nombre = "Enrique Peldaño"
 rol = "Jefe"
 imagen = ExtResource("enrique")
-mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("Reponer"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("Foto09"), SubResource("Intro09"), SubResource("Intro12"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])
+mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("FotoReloj"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("Reponer"), SubResource("FotoGondolas"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("Foto09"), SubResource("Intro09"), SubResource("Intro12"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])

@@ -164,6 +164,8 @@ func test_otra_jornada_u_otro_momento_interrumpen_el_adjunto() -> void:  # AC-IN
 			var bandeja := Bandeja.new([conversacion])
 			bandeja.abrir_jornada(2)
 			assert_object(bandeja.adjunto_de(JEFE, 0)).is_null()
+			primera.texto = "Foto con leyenda propia"
+			assert_object(bandeja.adjunto_de(JEFE, 0)).is_null()
 
 
 func test_una_foto_con_texto_intermedia_impide_buscar_mas_adelante() -> void:  # AC-INV-031
