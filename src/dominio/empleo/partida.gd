@@ -33,6 +33,13 @@ var reflexion: ReflexionDeCierre:
 	set(_nueva):
 		push_error("La reflexión la abre el cierre de la jornada y no se sustituye")
 
+## Las noches de prueba ya cerradas, por jornada (BR-EMP-041).
+var noches_de_prueba: Dictionary[int, ResultadoDeLaNoche]:
+	get:
+		return _noches_de_prueba.duplicate()
+	set(_nuevas):
+		push_error("Las noches de prueba las anota el cierre de la jornada y no se sustituyen")
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -45,6 +52,7 @@ var _devoluciones: Array[Mensaje] = []
 var _mopa_secada := false
 var _poetico_usado_en: Array[int] = []
 var _reflexion: ReflexionDeCierre = null
+var _noches_de_prueba: Dictionary[int, ResultadoDeLaNoche] = {}
 
 
 func anotar_uso_de_poetico(
@@ -102,6 +110,13 @@ static func desde(datos: Dictionary) -> Partida:
 		if mensaje != null:
 			partida._devoluciones.append(mensaje)
 	partida._mopa_secada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA)]
+	var noches: Dictionary = saneado[PartidaSerializada.clave(
+		PartidaSerializada.Campo.NOCHES_DE_PRUEBA
+	)]
+	for jornada: Variant in noches:
+		var noche := ResultadoDeLaNoche.desde_datos(noches[jornada])
+		if jornada is int and _es_de_prueba(jornada) and noche != null:
+			partida._noches_de_prueba[jornada] = noche
 	partida._restaurar_la_investigacion(saneado)
 	return partida
 
@@ -153,6 +168,13 @@ func legajo() -> Legajo:
 ## quienes lo leen necesitan el número, no la pieza que lo lleva.
 func apercibimientos() -> int:
 	return _legajo.apercibimientos()
+
+
+static func _es_de_prueba(jornada: int) -> bool:
+	return (
+		jornada >= ReglasDeLaPartida.PRIMERA_JORNADA
+		and jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	)
 
 
 ## Las cuentas que la devolución lee entre noches, con la última noche cerrada ya anotada.
@@ -233,7 +255,10 @@ func abrir_la_jornada() -> Turno:
 ## **El despido se pregunta antes que el contrato cumplido**, y no es un detalle de orden: la
 ## última noche puede cerrar mal justo cuando el legajo llega al tope, y ahí felicitar a alguien
 ## recién echado sería la lectura equivocada de las dos condiciones a la vez.
-func cerrar_la_jornada(cumplidas: int) -> void:
+##
+## Los clientes mal atendidos los cuenta la ventanilla y entran por parámetro: la partida no
+## sabe cuántos vinieron.
+func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 	if not _jornada_abierta:
 		return
 	_jornada_abierta = false
@@ -245,6 +270,8 @@ func cerrar_la_jornada(cumplidas: int) -> void:
 		if not tarea.completada():
 			sin_cumplir.append(tarea.tipo())
 	_antecedentes.anotar_noche(sin_cumplir, _llamados, _legajo.medios() - medios_antes)
+	if _es_de_prueba(cerrada):
+		_noches_de_prueba[cerrada] = ResultadoDeLaNoche.new(clientes_mal_atendidos, sin_cumplir)
 	if _legajo.despedido():
 		_final = Final.DESPEDIDO
 	elif es_la_ultima_jornada():

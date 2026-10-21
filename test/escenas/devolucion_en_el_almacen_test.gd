@@ -276,7 +276,7 @@ func test_retomar_trae_las_devoluciones() -> void:  # AC-INV-037, AC-SAV-024, AC
 	var bandeja := _celular(almacen).bandeja()
 	var guion := 0
 	for mensaje: Mensaje in Conversacion.de(JEFE).mensajes:
-		if mensaje.jornada <= jornada:
+		if mensaje.jornada <= jornada and mensaje.vale_para([]):
 			guion += 1
 	assert_int(bandeja.mensajes_de(JEFE).size()).is_equal(guion + devoluciones.size())
 	assert_array(_ultimos_del_chat(almacen, devoluciones.size())).is_equal(

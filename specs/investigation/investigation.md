@@ -135,7 +135,8 @@ sin error; un chat de un solo mensaje NO DEBE exigir desplazamiento para verlo.
 ### BR-INV-023 — La jornada decide los mensajes disponibles
 
 CUANDO se abre la jornada N, el sistema DEBE mostrar sólo los mensajes del guión cuya jornada
-de llegada es menor o igual que N, en su orden y con el más reciente abajo. El menú DEBE listar
+de llegada es menor o igual que N, en su orden y con el más reciente abajo. Un mensaje que
+sale de cómo cerró una noche anterior DEBE mostrarse sólo si la partida lo eligió (BR-EMP-040). El menú DEBE listar
 un botón por conversación con al menos un mensaje visible, en el orden declarado de
 interlocutores, salvo el chat de notas cuyo permiso de menú lo fija BR-INV-040.
 Cada botón DEBE mostrar nombre, imagen y cantidad de no leídos cuando es mayor
