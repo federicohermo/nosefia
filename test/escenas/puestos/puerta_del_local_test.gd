@@ -22,8 +22,8 @@ const VANOS := {
 const BANO := "Estructura/puerta2"
 const CUARTITO := "Estructura/puerta_limpieza"
 const DEPOSITO := "Estructura/puerta"
-## Las que se traban según la jornada.
-const CON_TRABA_POR_JORNADA: Array[String] = [DEPOSITO, BANO, CUARTITO]
+## Las interiores que se prueban jornada por jornada: el baño, para ver que nunca se traba.
+const POR_JORNADA: Array[String] = [DEPOSITO, BANO, CUARTITO]
 
 const TRABADAS := {
 	"Estructura/puertaentrada": &"puerta_trabada",
@@ -252,14 +252,14 @@ func test_las_tres_puertas_de_afuera_estan_trabadas() -> void:  # AC-PLY-040
 		assert_bool(cuerpo.call("puerta").trabada()).override_failure_message(ruta).is_true()
 
 
-func test_el_deposito_el_bano_y_el_cuartito_se_traban_segun_la_jornada() -> void:  # AC-PLY-040
+func test_las_interiores_se_traban_segun_la_jornada() -> void:  # AC-PLY-040
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
 	var cerradas := {}
-	for ruta: String in CON_TRABA_POR_JORNADA:
+	for ruta: String in POR_JORNADA:
 		cerradas[ruta] = (almacen.get_node(ruta) as Node3D).transform
-	var avisos := _escuchar(almacen, CON_TRABA_POR_JORNADA)
+	var avisos := _escuchar(almacen, POR_JORNADA)
 	var jornadas := _jornadas_sin_limpieza()
 	assert_array(jornadas).is_not_empty()
 	jornadas.append(_primera_que_limpia())
@@ -268,7 +268,7 @@ func test_el_deposito_el_bano_y_el_cuartito_se_traban_segun_la_jornada() -> void
 		for ruta: String in TRABADAS:
 			var afuera: Puerta = almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta")
 			assert_bool(afuera.trabada()).override_failure_message(str(jornada)).is_true()
-		for ruta: String in CON_TRABA_POR_JORNADA:
+		for ruta: String in POR_JORNADA:
 			var trabada := _trabada_en(ruta, jornada)
 			var mensaje := "%s en la jornada %d" % [ruta, jornada]
 			var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
@@ -291,13 +291,13 @@ func test_el_deposito_el_bano_y_el_cuartito_se_traban_segun_la_jornada() -> void
 	var limpia: int = jornadas.pop_back()
 	for jornada: int in jornadas:
 		almacen.call("_al_abrir_la_jornada", limpia)
-		for ruta: String in CON_TRABA_POR_JORNADA:
+		for ruta: String in POR_JORNADA:
 			almacen.get_node(ruta + "/CuerpoDeLaHoja").call("accionar")
 		avisos.clear()
 		almacen.call("_al_abrir_la_jornada", jornada)
 		for _cuadro in 10:
 			await get_tree().physics_frame
-		for ruta: String in CON_TRABA_POR_JORNADA:
+		for ruta: String in POR_JORNADA:
 			var mensaje := "%s en la jornada %d" % [ruta, jornada]
 			var puerta: Puerta = almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta")
 			assert_bool(puerta.trabada()).override_failure_message(mensaje).is_equal(
@@ -309,10 +309,13 @@ func test_el_deposito_el_bano_y_el_cuartito_se_traban_segun_la_jornada() -> void
 		assert_array(avisos).is_empty()
 
 
-## La ficha traba el depósito la primera noche, y el baño y el cuartito mientras no se limpia.
+## La ficha traba el depósito la primera noche y el cuartito mientras no se limpia. El baño abre
+## siempre.
 func _trabada_en(ruta: String, jornada: int) -> bool:
 	if ruta == DEPOSITO:
 		return jornada == ReglasDeLaPartida.PRIMERA_JORNADA
+	if ruta == BANO:
+		return false
 	return not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
 
 

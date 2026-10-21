@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; baño trabado sin limpieza de #538; cuartito de limpieza de #541
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574
 ---
 
 # Capacidad: los subtítulos
@@ -151,7 +151,7 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Lector | El lector de código de barras. Si le paso un producto, lo va a anotar en el programa generador de tickets de la caja. |
 | Entrada principal | La entrada principal al local. Queda cerrada con llave durante el turno nocturno. |
 | Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada. |
-| Puerta del baño, trabada | Ese es el baño. Parece que Yasmín lo cerró con llave hoy. |
+| Puerta del depósito, trabada (provisorio) | Por acá se va al depósito. Hoy está cerrado con llave. |
 | Puerta del cuartito, trabada | Acá guardan las cosas de limpieza. Está cerrado con llave. |
 | Portón del depósito | Un portón que da a la calle. |
 | Contenedor de basura | Un contenedor de basura. |
@@ -160,10 +160,11 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Tacho del baño | El tacho de basura del baño. Mejor ni mirar lo que tiene adentro. |
 
 Las puertas interiores, las puertas de las heladeras, la ventanilla, el comprador, la góndola y
-las manchas NO DEBEN tener texto al examinar. La excepción son la puerta del baño y la del
+las manchas NO DEBEN tener texto al examinar. La excepción son la puerta del depósito y la del
 cuartito mientras están trabadas (BR-PLY-020 de
 [`player-actions`](../player-actions/player-actions.md)): cada una DEBE decir su texto en las
-jornadas que no piden limpiar, y callar en las que sí.
+jornadas que la traban, y callar en las demás. El texto del depósito es provisorio: no sale de la
+ficha «Subtítulos», y lo reemplaza el que dé el diseño.
 
 Un tacho DEBE decir su texto con bolsa o sin bolsa. Examinarlo NO DEBE retirar ni cambiar su
 bolsa.
@@ -345,18 +346,17 @@ de heladera, la ventanilla, el comprador, la góndola y una mancha ENTONCES no t
 un tacho con bolsa y otro sin bolsa CUANDO se pide examinar con las manos vacías ENTONCES los
 dos muestran su texto y el primero sigue con su bolsa.
 
-### AC-SUB-021 — La puerta del baño habla sólo trabada *(verifica BR-SUB-010)*
+### AC-SUB-023 — La puerta del depósito habla sólo trabada *(verifica BR-SUB-010)*
 
-DADO la jornada 1 o la 2 abierta CUANDO se pide examinar la puerta del baño con las manos
-vacías ENTONCES piensa el subtítulo asociado a la puerta del baño trabada. DADO la jornada 3
-abierta ENTONCES examinarla no muestra texto y la línea no cambia. DADO el cierre de la 2
-CUANDO se sigue a la 3 ENTONCES deja de tener texto.
+DADO la jornada 1 abierta CUANDO se pide examinar la puerta del depósito con las manos vacías
+ENTONCES piensa el subtítulo asociado a la puerta del depósito trabada. DADO el cierre de la 1
+CUANDO se sigue a la 2 ENTONCES examinarla no muestra texto y la línea no cambia.
 
 ### AC-SUB-022 — La puerta del cuartito habla sólo trabada *(verifica BR-SUB-010)*
 
 DADO la jornada 1 o la 2 abierta CUANDO se pide examinar la puerta del cuartito con las manos
 vacías ENTONCES piensa el subtítulo asociado a la puerta del cuartito trabada, distinto del de
-la puerta del baño. DADO la jornada 3 abierta ENTONCES examinarla no muestra texto y la línea no
+la puerta del depósito. DADO la jornada 3 abierta ENTONCES examinarla no muestra texto y la línea no
 cambia. DADO una partida guardada en la 2 CUANDO se retoma ENTONCES vuelve a tener texto.
 
 ### AC-SUB-014 — El texto del ticket *(verifica BR-SUB-011)*
@@ -462,12 +462,6 @@ pensamiento pendiente CUANDO cierra la jornada ENTONCES se descarta y la partida
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): la jornada que se abre y la pausa.
 
 ## Preguntas abiertas
-
-- **OQ-SUB-002 — ¿Qué piensa el personaje ante la puerta del depósito trabada?**
-  - Por qué sigue abierta: la ficha «Mapa del local» la traba en la primera jornada y ninguna
-    ficha le da texto. Mientras tanto, la regla no le inventa uno: suena trabada y calla.
-  - Decide: el diseño, en la ficha «Subtítulos».
-  - Bloquea: nada hoy; agregaría una fila a la tabla de BR-SUB-010 y un criterio.
 
 - **OQ-SUB-001 — ¿Qué muestra el examen de un levantable sin texto al examinar?**
   - Por qué sigue abierta: la ficha da texto a cada levantable que el juego pone en el local

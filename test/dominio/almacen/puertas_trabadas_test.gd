@@ -20,20 +20,16 @@ func test_el_deposito_esta_trabado_solo_en_la_primera_jornada() -> void:  # AC-P
 		)
 
 
-func test_el_cuartito_y_el_bano_siguen_a_la_limpieza() -> void:  # AC-PLY-040
+func test_el_cuartito_sigue_a_la_limpieza() -> void:  # AC-PLY-040
 	for jornada: int in range(1, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
-		var cerradas := not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)
-		for cuarto: PuertasTrabadas.Cuarto in [
-			PuertasTrabadas.Cuarto.CUARTITO, PuertasTrabadas.Cuarto.BANO
-		]:
-			(
-				assert_bool(PuertasTrabadas.trabada(cuarto, jornada))
-				. override_failure_message("%s en la jornada %d" % [cuarto, jornada])
-				. is_equal(cerradas)
-			)
+		(
+			assert_bool(PuertasTrabadas.trabada(PuertasTrabadas.Cuarto.CUARTITO, jornada))
+			. override_failure_message("jornada %d" % jornada)
+			. is_equal(not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR))
+		)
 
 
-func test_la_primera_jornada_traba_las_tres_y_la_primera_que_limpia_ninguna() -> void:  # AC-PLY-040
+func test_la_primera_jornada_traba_todas_y_la_primera_que_limpia_ninguna() -> void:  # AC-PLY-040
 	assert_array(_trabadas(ReglasDeLaPartida.PRIMERA_JORNADA)).has_size(
 		PuertasTrabadas.Cuarto.size()
 	)
