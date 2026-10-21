@@ -165,6 +165,8 @@ func test_el_chat_guarda_solo_el_mensaje_1_elegido() -> void:  # AC-EMP-085
 	var guion := _guion()
 	var otras: Array[String] = []
 	for jornada: int in ENTRADAS:
+		if jornada == PRIMERA + 2:
+			otras.append("J3_Mensaje1_SinFallas")
 		if jornada != PRIMERA + 1:
 			otras.append_array(ENTRADAS[jornada])
 	for fila: Array in CondicionesDelJefeTest.FILAS:
@@ -173,12 +175,27 @@ func test_el_chat_guarda_solo_el_mensaje_1_elegido() -> void:  # AC-EMP-085
 		bandeja.abrir_jornada(PRIMERA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
 		for mensaje in bandeja.mensajes_de(guion.interlocutor):
 			assert_int(mensaje.jornada).is_equal(PRIMERA)
+		CondicionesDelJefeTest.cerrar_la_noche(partida, 0, [])
 		bandeja.abrir_jornada(COMPLETA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
 		var chat := _identidades(bandeja.mensajes_de(guion.interlocutor))
-		assert_int(chat.size()).is_equal(20)
+		assert_int(chat.size()).is_equal(21)
 		var desde := ENTRADAS[PRIMERA].size()
 		assert_array(chat.slice(desde, desde + 4)).is_equal(
 			[fila[2], "J1_Foto07", "J1_Intro07", "J1_Intro08"]
 		)
 		var sin_la_segunda := chat.slice(0, desde) + chat.slice(desde + 4)
 		assert_array(sin_la_segunda).is_equal(otras)
+
+
+func test_el_chat_guarda_solo_el_mensaje_1_elegido_de_la_tercera() -> void:  # AC-EMP-088
+	var guion := _guion()
+	var partida := CondicionesDelJefeTest.cerrar_la_segunda(1, true, false)
+	var bandeja := Bandeja.new([guion])
+	bandeja.abrir_jornada(COMPLETA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
+	var de_la_tercera: Array[String] = []
+	for mensaje in bandeja.mensajes_de(guion.interlocutor):
+		if mensaje.jornada == PRIMERA + 2:
+			de_la_tercera.append(mensaje.identidad)
+	assert_array(de_la_tercera).is_equal(
+		["J3_Mensaje1_AtencionYReposicionMal", "J1_Foto09", "J1_Intro09"]
+	)

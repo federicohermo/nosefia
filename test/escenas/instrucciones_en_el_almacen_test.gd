@@ -134,12 +134,12 @@ func _comprobar_instrucciones_de(jornada: int) -> void:
 	assert_float(_restante()).is_equal(restante)
 
 
-## La segunda abre con el mensaje que eligió la noche 1, no con Intro 7.
-func _comprobar_mensaje_1_de_la_segunda() -> void:
+## La segunda y la tercera abren con el mensaje que eligió la noche anterior, no con su Intro.
+func _comprobar_mensaje_1_de(jornada: int) -> void:
 	var pasos: Array = _instrucciones().get("_pasos")
 	var primero: Mensaje = (pasos[0] as InstruccionesDelJefe.Paso).textos[0]
 	assert_bool(primero.condicion.is_empty()).is_false()
-	assert_int(pasos.size()).is_equal(_pasos(PRIMERA + 1).size())
+	assert_int(pasos.size()).is_equal(_pasos(jornada).size())
 
 
 ## Una sola entrada a la noche de la jornada, con el turno y el control retenidos.
@@ -323,7 +323,7 @@ func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-07
 	assert_bool(_instrucciones().visible).is_false()
 	await _cerrar_y_seguir()
 	_comprobar_instrucciones_de(PRIMERA + 1)
-	_comprobar_mensaje_1_de_la_segunda()
+	_comprobar_mensaje_1_de(PRIMERA + 1)
 	_leer_todo(PRIMERA + 1)
 	_comprobar_una_noche(PRIMERA + 1)
 	_persiana().terminar()
@@ -341,7 +341,7 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	_abrir()
 	_almacen.call("retomar_la_partida")
 	_comprobar_instrucciones_de(PRIMERA + 1)
-	_comprobar_mensaje_1_de_la_segunda()
+	_comprobar_mensaje_1_de(PRIMERA + 1)
 	_siguiente().pressed.emit()
 	_esc()
 	assert_bool(get_tree().paused).is_true()
@@ -357,8 +357,11 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	_comprobar_una_noche(PRIMERA + 1)
 	await _cerrar_y_seguir()
 	_comprobar_instrucciones_de(PRIMERA + 2)
+	_comprobar_mensaje_1_de(PRIMERA + 2)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/2")
+	_siguiente().pressed.emit()
 	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
-	_leer_todo(PRIMERA + 2)
+	_siguiente().pressed.emit()
 	_comprobar_una_noche(PRIMERA + 2)
 
 
