@@ -10,7 +10,7 @@ const FIJAS: Array[Tarea.Tipo] = [
 ]
 ## Las noches de introducción que todavía no piden todas las fijas.
 const INTRODUCCION := {
-	1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER],
+	1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR],
 	2: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER],
 }
 const PARTICULARES := {
