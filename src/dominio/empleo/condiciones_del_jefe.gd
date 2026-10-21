@@ -23,6 +23,11 @@ const J3_POR_RESULTADO := {
 	[false, true, false]: &"J3_ATENCION_Y_REPOSICION_MAL",
 	[false, false, false]: &"J3_TODO_MAL",
 }
+const J4_SIN_FALLAS := &"J4_SIN_FALLAS"
+const J4_REDIMIDO := &"J4_REDIMIDO"
+const J4_CON_ALTIBAJOS := &"J4_CON_ALTIBAJOS"
+
+const _TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA + 2
 
 
 ## Una condición por noche anotada que decide la apertura siguiente.
@@ -32,6 +37,8 @@ static func elegidas(noches: Dictionary[int, ResultadoDeLaNoche]) -> Array[Strin
 		condiciones.append(_de_la_segunda(noches[ReglasDeLaPartida.PRIMERA_JORNADA]))
 	if noches.has(ReglasDeLaPartida.PRIMERA_JORNADA + 1):
 		condiciones.append(_de_la_tercera(noches[ReglasDeLaPartida.PRIMERA_JORNADA + 1]))
+	if noches.has(_TERCERA):
+		condiciones.append(_de_la_cuarta(noches))
 	return condiciones
 
 
@@ -53,3 +60,16 @@ static func _de_la_tercera(segunda: ResultadoDeLaNoche) -> StringName:
 		segunda.cumplio(Tarea.Tipo.REGISTRAR),
 		segunda.cumplio(Tarea.Tipo.REPONER),
 	]]
+
+
+## La prueba perdida no llega acá: la despide el legajo al cerrar la tercera. «Menos de la mitad»
+## es el umbral con que el legajo la pierde, y lo que la ficha no cubre son altibajos (OQ-EMP-011).
+static func _de_la_cuarta(noches: Dictionary[int, ResultadoDeLaNoche]) -> StringName:
+	var fallas := 0
+	for noche: ResultadoDeLaNoche in noches.values():
+		fallas += noche.fallas()
+	if fallas == 0:
+		return J4_SIN_FALLAS
+	if fallas >= Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA and noches[_TERCERA].fallas() == 0:
+		return J4_REDIMIDO
+	return J4_CON_ALTIBAJOS

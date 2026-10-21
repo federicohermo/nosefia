@@ -84,6 +84,13 @@ const PARTICULARES: Dictionary[int, String] = {
 	"De verdad era tan difícil tirar tres bolsas de basura?",
 }
 
+## La fila de la ficha que termina la prueba: Enrique no dice nada más (BR-EMP-043).
+const DESPIDO_DE_LA_PRUEBA := (
+	"No, no, no. Flaco, no te puedo tomar como empleado si trabajás a medias. Un par de "
+	+ "errores los puedo dejar pasar, pero si se repite todos los días...\n\nHasta acá "
+	+ "llegó mi paciencia. Suerte consiguiendo otro trabajo."
+)
+
 const POETICO := (
 	"Che, si usás un producto del local para la limpieza, me tenés que avisar. No podés "
 	+ "hacer esas cosas sin consultarme. Espero que quede claro."
@@ -269,14 +276,17 @@ func _init(jornada: int, partida: Partida) -> void:
 	for tarea: Tarea in partida.obligatorias():
 		if not tarea.completada():
 			sin_cumplir.append(tarea.tipo())
-	_mensajes = DevolucionDelJefe.armar(
-		jornada,
-		partida.medios(),
-		partida.antecedentes(),
-		sin_cumplir,
-		partida.llamados(),
-		partida.uso_de_poetico_en(jornada)
-	)
+	if partida.terminada() and jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		_mensajes = [DESPIDO_DE_LA_PRUEBA]
+	else:
+		_mensajes = DevolucionDelJefe.armar(
+			jornada,
+			partida.medios(),
+			partida.antecedentes(),
+			sin_cumplir,
+			partida.llamados(),
+			partida.uso_de_poetico_en(jornada)
+		)
 	# Con la partida en curso, sólo continuar: salir al menú pasa por la pausa.
 	_opciones.append(Opcion.VOLVER_AL_MENU if partida.terminada() else Opcion.CONTINUAR)
 

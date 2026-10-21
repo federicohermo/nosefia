@@ -276,15 +276,13 @@ func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 	for tarea: Tarea in _obligatorias:
 		if not tarea.completada():
 			sin_cumplir.append(tarea.tipo())
-	if cerrada <= _ULTIMA_DE_LA_PRUEBA:
-		_legajo.registrar_prueba(
-			_fallas_de_la_prueba(sin_cumplir, clientes_mal_atendidos), _llamados.size()
-		)
+	if _es_de_prueba(cerrada):
+		var noche := ResultadoDeLaNoche.new(clientes_mal_atendidos, sin_cumplir)
+		_noches_de_prueba[cerrada] = noche
+		_legajo.registrar_prueba(noche.fallas(), _llamados.size())
 	else:
 		_legajo.registrar(cumplidas, _obligatorias.size(), _llamados.size())
 	_antecedentes.anotar_noche(sin_cumplir, _llamados, _legajo.medios() - medios_antes)
-	if _es_de_prueba(cerrada):
-		_noches_de_prueba[cerrada] = ResultadoDeLaNoche.new(clientes_mal_atendidos, sin_cumplir)
 	var completa := (
 		Consecuencias.consecuencia_de(cumplidas, _obligatorias.size())
 		== Consecuencias.Banda.NINGUNA
@@ -302,15 +300,6 @@ func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 	_reflexion = null if terminada() else ReflexionDeCierre.para(cerrada, _expediente)
 	# Después de anotar la noche: la devolución lee las cuentas que ya la incluyen.
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())
-
-
-## Atender suma por cada cliente y no por la tarea, así que la tarea de atender no cuenta dos veces.
-func _fallas_de_la_prueba(sin_cumplir: Array[Tarea.Tipo], clientes_mal_atendidos: int) -> int:
-	var fallas := clientes_mal_atendidos
-	for tipo: Tarea.Tipo in sin_cumplir:
-		if tipo != Tarea.Tipo.CAJA:
-			fallas += 1
-	return fallas
 
 
 ## En la prueba, el contador cruza el umbral sin despedir: las dos primeras noches no se pueden
