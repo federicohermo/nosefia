@@ -267,7 +267,7 @@ func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 	)
 	if cerrada == _ULTIMA_DE_LA_PRUEBA:
 		_legajo.cerrar_la_prueba(completa)
-	if cerrada > _ULTIMA_DE_LA_PRUEBA and _legajo.despedido():
+	if _despedido_al_cerrar(cerrada):
 		_final = Final.DESPEDIDO
 	elif es_la_ultima_jornada():
 		_final = Final.CONTRATO_CUMPLIDO
@@ -287,3 +287,13 @@ func _fallas_de_la_prueba(sin_cumplir: Array[Tarea.Tipo], clientes_mal_atendidos
 		if tipo != Tarea.Tipo.CAJA:
 			fallas += 1
 	return fallas
+
+
+## En la prueba, el contador cruza el umbral sin despedir: las dos primeras noches no se pueden
+## perder, y la última sólo si el contador llegó al umbral sin haberla cumplido entera.
+func _despedido_al_cerrar(cerrada: int) -> bool:
+	if cerrada < _ULTIMA_DE_LA_PRUEBA:
+		return false
+	if cerrada == _ULTIMA_DE_LA_PRUEBA:
+		return _legajo.perdio_la_prueba()
+	return _legajo.despedido()

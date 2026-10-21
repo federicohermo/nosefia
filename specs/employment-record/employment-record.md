@@ -52,7 +52,7 @@ apercibimientos que había. La prueba no suma por banda (BR-EMP-035).
 
 SI, desde la jornada 4, el legajo llega a **8 medios o más**, equivalentes a 4 apercibimientos,
 ENTONCES el sistema DEBE declararlo despedido. Con 7 medios todavía no está despedido. En la
-prueba el legajo puede pasar de 8 medios sin despedir.
+prueba el legajo puede pasar de 8 medios sin despedir: se pierde por BR-EMP-037.
 
 ### BR-EMP-004 — El contrato dura ocho noches
 
@@ -403,14 +403,20 @@ dos veces. Limpiar cuenta sólo en la jornada que la declara (BR-SHF-005). El si
 además un medio por cada motivo de llamado (BR-EMP-012), y NO DEBE traducir esa noche a una
 banda. Los apercibimientos se acumulan a lo largo de las tres jornadas.
 
-### BR-EMP-036 — La prueba no despide
+### BR-EMP-036 — Las dos primeras jornadas no se pierden
 
-CUANDO cierra una jornada de la prueba, el sistema NO DEBE declarar despedido, cualquiera sea lo
+CUANDO cierra la jornada 1 o la 2, el sistema NO DEBE declarar despedido, cualquiera sea lo
 acumulado, y DEBE seguir con la jornada siguiente.
+
+### BR-EMP-037 — La prueba se pierde al cerrar la tercera
+
+CUANDO cierra la jornada 3, SI el legajo suma **5 apercibimientos o más** y alguna obligatoria de
+esa jornada quedó sin cumplir, ENTONCES el sistema DEBE declarar despedido al cerrarla y no abrir
+la jornada 4. Con 4 o menos, o con todas cumplidas, DEBE seguir.
 
 ### BR-EMP-038 — Las jornadas completas arrancan de nuevo
 
-CUANDO cierra la jornada 3, el sistema DEBE reiniciar el legajo antes de abrir
+CUANDO cierra la jornada 3 y la partida sigue, el sistema DEBE reiniciar el legajo antes de abrir
 la jornada 4: en **0**, o en **1** apercibimiento —2 medios— si la prueba sumó 5 o más. El
 sistema DEBE conservar cuántos apercibimientos sumó la prueba y si la jornada 3 cerró con todas
 sus obligatorias cumplidas. Desde la jornada 4 DEBE sumar por bandas y llamados y despedir con
@@ -821,18 +827,26 @@ cliente mal atendido ENTONCES suma 1 y no 2. DADO un cliente que todavía espera
 ENTONCES no cuenta. DADO una noche de la prueba con todas cumplidas y los cuatro llamados
 anotados ENTONCES suma 4 medios y no hay banda que pese.
 
-### AC-EMP-079 — La prueba no despide *(verifica BR-EMP-036)*
+### AC-EMP-079 — Las dos primeras no despiden *(verifica BR-EMP-036)*
 
-DADO un legajo limpio CUANDO las jornadas 1, 2 y 3 cierran con todo sin cumplir y dos clientes mal
-atendidos ENTONCES la partida sigue en curso y se abre la jornada 4. DADO 5 apercibimientos al
-cerrar la jornada 3 con una obligatoria sin cumplir ENTONCES sigue y se abre la jornada 4.
+DADO un legajo limpio CUANDO las jornadas 1 y 2 cierran con todo sin cumplir y dos clientes mal
+atendidos ENTONCES la partida sigue en curso, el legajo lleva más de 4 apercibimientos y se abre la
+jornada 3.
+
+### AC-EMP-080 — El cierre de la tercera *(verifica BR-EMP-037)*
+
+DADO 5 apercibimientos al cerrar la jornada 3 con una obligatoria sin cumplir ENTONCES la partida
+termina despedida y no se abre la jornada 4. DADO 4 apercibimientos con la jornada 3 incompleta
+ENTONCES sigue y se abre la jornada 4. DADO 5 apercibimientos con la jornada 3 completa ENTONCES
+sigue y se abre la jornada 4.
 
 ### AC-EMP-081 — La jornada 4 arranca de nuevo *(verifica BR-EMP-038)*
 
 DADO la jornada 3 que cierra con 4 apercibimientos ENTONCES al abrir la jornada 4 el legajo está en
 0 y la partida recuerda 4 y la jornada 3 incompleta. DADO la jornada 3 que cierra completa con 5
 apercibimientos ENTONCES al abrir la jornada 4 el legajo está en 1 apercibimiento, 2 medios, y la
-partida recuerda 5 y la jornada 3 completa.
+partida recuerda 5 y la jornada 3 completa. DADO una partida despedida al cerrar la jornada 3
+ENTONCES recuerda su resultado y no reinicia el legajo.
 
 ### AC-EMP-082 — Desde la jornada 4 suman las bandas *(verifica BR-EMP-038, BR-EMP-002, BR-EMP-003, BR-EMP-012)*
 
@@ -923,3 +937,10 @@ ENTONCES la partida recuerda 0 y no completa y conserva su jornada.
     todavía no la incluye.
   - Decide: una persona de game design.
   - Bloquea: nada. Mientras tanto, va el texto provisorio de BR-EMP-022.
+
+- **OQ-EMP-009 — ¿Qué dice la devolución cuando la prueba pasa de 4 apercibimientos sin despedir?**
+  - Por qué sigue abierta: la devolución elige Saludo y Cierre por P, y P ≥ 4 es hoy el despido
+    (BR-EMP-026, BR-EMP-029). En la prueba P llega a 4 o más sin despedir, y al cerrar la jornada 3
+    el legajo ya arrancó de nuevo.
+  - Decide: una persona de game design.
+  - Bloquea: nada. Mientras tanto la devolución lee P como siempre.
