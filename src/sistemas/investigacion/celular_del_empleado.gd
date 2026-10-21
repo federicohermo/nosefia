@@ -23,9 +23,9 @@ func bandeja() -> Bandeja:
 	return _bandeja
 
 
-func abrir_jornada(jornada: int) -> void:
+func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	cerrar_jornada()
-	_bandeja.abrir_jornada(jornada)
+	_bandeja.abrir_jornada(jornada, condiciones)
 	_celular.habilitar(true)
 	no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
 

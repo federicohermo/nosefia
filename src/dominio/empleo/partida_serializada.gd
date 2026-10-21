@@ -16,6 +16,7 @@ enum Campo {
 	NOTAS,
 	CIERRE_PENDIENTE,
 	ELECCIONES,
+	NOCHES_DE_PRUEBA,
 }
 
 const VERSION: int = 2
@@ -36,6 +37,8 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.NOTAS: [],
 	Campo.CIERRE_PENDIENTE: 0,
 	Campo.ELECCIONES: {},
+	## Por jornada cerrada, lo que anota `ResultadoDeLaNoche` (BR-EMP-041).
+	Campo.NOCHES_DE_PRUEBA: {},
 }
 
 

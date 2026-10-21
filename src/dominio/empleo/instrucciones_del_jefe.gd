@@ -18,7 +18,9 @@ func _init(cantidad: int) -> void:
 
 
 ## Sólo una jornada de introducción abre con instrucciones; en las demás, la noche sale directa.
-static func de_la_jornada(mensajes: Array[Mensaje], jornada: int) -> Array[Mensaje]:
+static func de_la_jornada(
+	mensajes: Array[Mensaje], jornada: int, condiciones: Array[StringName] = []
+) -> Array[Mensaje]:
 	var propios: Array[Mensaje] = []
 	if (
 		jornada < ReglasDeLaPartida.PRIMERA_JORNADA
@@ -26,7 +28,11 @@ static func de_la_jornada(mensajes: Array[Mensaje], jornada: int) -> Array[Mensa
 	):
 		return propios
 	for mensaje in mensajes:
-		if mensaje.jornada == jornada and mensaje.momento == Mensaje.Momento.APERTURA:
+		if (
+			mensaje.jornada == jornada
+			and mensaje.momento == Mensaje.Momento.APERTURA
+			and mensaje.vale_para(condiciones)
+		):
 			propios.append(mensaje)
 	return propios
 

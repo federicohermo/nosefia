@@ -280,7 +280,7 @@ func _ready() -> void:
 	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
 	_jugador.muebles_con_reserva = _muebles_con_contorno
 	_ciclo.jornada_abierta.connect(_reposicion_manual.preparar.unbind(1), CONNECT_ONE_SHOT)
-	_ciclo.arrancar(_partida, _reloj)
+	_ciclo.arrancar(_partida, _reloj, _clientes_mal_atendidos)
 
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
@@ -316,7 +316,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
 	_jornada_del_celular = jornada
-	_celular.abrir_jornada(jornada)
+	_celular.abrir_jornada(jornada, _condiciones_del_jefe())
 	_pantalla_del_celular.mostrar_recordatorio(true)
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
@@ -421,6 +421,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_estante.mostrar(0)
 
 
+func _clientes_mal_atendidos() -> int:
+	var atender := _atenciones.tarea()
+	return 0 if atender == null else atender.mal_atendidos()
+
+
 func _acelerar_si_se_cerro_el_ciclo() -> void:
 	# La primera apertura cumple obligatorias antes de darle su noche a la ventanilla.
 	if _atenciones.tarea() == null or _computadora.registro() == null:
@@ -521,7 +526,7 @@ func retomar_la_partida() -> void:
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
 	_jornada_del_celular = _partida.reflexion.jornada()
-	_celular.bandeja().abrir_jornada(_jornada_del_celular)
+	_celular.bandeja().abrir_jornada(_jornada_del_celular, _condiciones_del_jefe())
 	_pantalla.visible = true
 	_empezar_la_reflexion()
 
@@ -577,10 +582,14 @@ func empezar_partida_nueva() -> void:
 	_entrar_a_la_jornada()
 
 
+func _condiciones_del_jefe() -> Array[StringName]:
+	return CondicionesDelJefe.elegidas(_partida.noches_de_prueba)
+
+
 ## Las instrucciones conservan el presupuesto completo, y su «OK» usa la misma entrada que seguir.
 func _entrar_a_la_jornada() -> void:
 	var instrucciones := InstruccionesDelJefe.de_la_jornada(
-		GUION_DEL_JEFE.mensajes, _partida.jornada()
+		GUION_DEL_JEFE.mensajes, _partida.jornada(), _condiciones_del_jefe()
 	)
 	if instrucciones.is_empty():
 		anunciar_la_noche()
