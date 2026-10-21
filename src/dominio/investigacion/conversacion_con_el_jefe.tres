@@ -18,7 +18,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro01"
 orden = 0
 de_quien = "Enrique Peldaño"
-texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo ocho jornadas. ¿Quién pudiera, no?\n\nDe todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
+texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo ocho jornadas. Y encima voy a dejar que te vayas temprano los primeros días si terminás el laburo rápido. ¿Quién pudiera, no?\n\nDe todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
 
 [sub_resource type="Resource" id="Foto02"]
 script = ExtResource("mensaje")
@@ -32,7 +32,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro02"
 orden = 2
 de_quien = "Enrique Peldaño"
-texto = "Bueno, como ya te comenté, [b]la jornada es de 20:00 a 08:00. [/b]Debería sobrarte el tiempo para cumplir con las [b]tareas [/b]que te voy a dejar.\n\nCualquier cosa, siempre van a quedar [b]anotadas en el corcho[/b], atrás del mostrador. Te las resumo:"
+texto = "Bueno, como ya te comenté en la entrevista, [b]la jornada es de 20 a 08. [/b]Debería sobrarte el tiempo para cumplir con las [b]tareas [/b]que te voy a dejar.\n\nCualquier cosa, siempre van a quedar [b]anotadas en el corcho[/b], atrás del mostrador."
 
 [sub_resource type="Resource" id="Foto03"]
 script = ExtResource("mensaje")
@@ -46,7 +46,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro03"
 orden = 4
 de_quien = "Enrique Peldaño"
-texto = "Primero, y lo más importante: [b]ATENDER A LOS CLIENTES[/b]. A esa hora, la entrada principal queda cerrada, así que vas a tener que [b]hablarles y entregarles los productos por la ventanilla[/b]. ¡Y no te olvides de [b]darles un ticket [/b]de recibo!"
+texto = "Hoy es fundamental que aprendas lo más importante: [b]ATENDER A LOS CLIENTES[/b]. Durante el turno nocturno, la entrada principal queda cerrada, así que vas a tener que [b]hablarles y entregarles los productos por la ventanilla[/b].\n\n¡Y no te olvides de [b]darles un ticket [/b]de recibo!"
 
 [sub_resource type="Resource" id="Foto04"]
 script = ExtResource("mensaje")
@@ -81,7 +81,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro06"
 orden = 9
 de_quien = "Enrique Peldaño"
-texto = "En segundo lugar, [b]ANOTAR LOS PRODUCTOS VENDIDOS [/b]durante la noche en la [b]computadora[/b]. Bastante simple."
+texto = "Además de cumplir con la atención al cliente, tenés que [b]ANOTAR LOS PRODUCTOS VENDIDOS [/b]durante la noche en la [b]computadora[/b]. Bastante simple. El programa se explica solo.\n\nA ver cómo te manejás con eso."
 
 [sub_resource type="Resource" id="Foto07"]
 script = ExtResource("mensaje")
@@ -97,7 +97,7 @@ identidad = "J1_Intro07"
 jornada = 2
 orden = 11
 de_quien = "Enrique Peldaño"
-texto = "Hoy te voy a pedir que hagas la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndolas [/b]y reponé los ítems que falten con los de las [b]cajas del depósito[/b]."
+texto = "Además de atender y hacer el registro de ventas, ahora te corresponde también hacer la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndolas [/b]y reponé los ítems que falten con los que hay en las [b]cajas del depósito[/b].\n\nObviamente, también tenés que reponer los productos que saques de las góndolas para venderlos a los compradores."
 
 [sub_resource type="Resource" id="Intro08"]
 script = ExtResource("mensaje")
@@ -105,7 +105,7 @@ identidad = "J1_Intro08"
 jornada = 2
 orden = 12
 de_quien = "Enrique Peldaño"
-texto = "No quiero ver ni un solo hueco vacío.\n\nUn único producto ausente en la mañana puede hacer la diferencia entre un local de excelencia y uno mediocre. No podemos dar la impresión de que estamos cortos de stock."
+texto = "No quiero ver ni un solo hueco vacío. ¿Entendido?\n\nUn único producto ausente en la mañana puede hacer la diferencia entre un local de excelencia y uno mediocre. No podemos dar la impresión de que estamos cortos de stock."
 
 [sub_resource type="Resource" id="Foto09"]
 script = ExtResource("mensaje")
@@ -121,7 +121,7 @@ identidad = "J1_Intro09"
 jornada = 3
 orden = 14
 de_quien = "Enrique Peldaño"
-texto = "Cuarto, pero no menor, [b]LIMPIAR[/b]. Vas a encontrar los [b]productos de limpieza en el cuartito del depósito[/b], además de algunas [b]notitas [/b]explicando cómo usarlos. No deberías tener problemas con eso."
+texto = "Hoy te voy a sumar tu última tarea rutinaria: [b]LIMPIAR[/b]. Vas a encontrar los [b]elementos necesarios en el cuartito de limpieza [/b]adyacente al depósito, además de algunas [b]notitas [/b]explicando cómo usarlos. No deberías tener problemas con eso."
 
 [sub_resource type="Resource" id="Intro10"]
 script = ExtResource("mensaje")
@@ -129,7 +129,7 @@ identidad = "J1_Intro10"
 jornada = 4
 orden = 15
 de_quien = "Enrique Peldaño"
-texto = "Además de los quehaceres rutinarios, siempre queda alguna cosita por hacer. Por eso, no te sorprendas si ves una quinta tarea diferente cada noche. Tranqui, que te voy a dejar instrucciones por mensaje."
+texto = "Además de los quehaceres rutinarios, siempre queda alguna cosita extra. Por eso, no te sorprendas si ves una [b]quinta tarea diferente cada noche[/b]. Tranqui, que te voy a dejar [b]instrucciones por mensaje[/b]."
 
 [sub_resource type="Resource" id="Foto11"]
 script = ExtResource("mensaje")
@@ -147,20 +147,13 @@ orden = 17
 de_quien = "Enrique Peldaño"
 texto = "Para esta noche, te pido [b]ORGANIZAR LAS CAJAS[/b] que dejó el proveedor. Acomodalas [b]en los estantes del depósito[/b] y que no quede ni una en el piso, ¿ok?"
 
-[sub_resource type="Resource" id="Reponer"]
-script = ExtResource("mensaje")
-identidad = "J1_Reponer"
-orden = 10
-de_quien = "Enrique Peldaño"
-texto = "Lo que les entregues lo sacás de las [b]góndolas[/b]. Después, [b]reponé esas unidades[/b] con las cajas del depósito. No quiero ver huecos."
-
 [sub_resource type="Resource" id="Intro12"]
 script = ExtResource("mensaje")
 identidad = "J1_Intro12"
-jornada = 3
-orden = 15
+jornada = 4
+orden = 18
 de_quien = "Enrique Peldaño"
-texto = "Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.\n\nMe parece que con eso cubrimos todo. No te olvides de dejar el local correctamente ordenado antes de irte. ¿Estamos?"
+texto = "Y no te olvides de [b]dejar el local correctamente ordenado[/b] antes de irte. Desde hoy te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.\n\nMe parece que con eso cubrimos todo. Desde ahora, nuestra comunicación va a ser exclusivamente por chat. ¿Estamos?"
 
 [sub_resource type="Resource" id="J2_FOTO"]
 script = ExtResource("mensaje")
@@ -183,4 +176,4 @@ script = ExtResource("conversacion")
 nombre = "Enrique Peldaño"
 rol = "Jefe"
 imagen = ExtResource("enrique")
-mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("Reponer"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("Foto09"), SubResource("Intro09"), SubResource("Intro12"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])
+mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("Foto09"), SubResource("Intro09"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("Intro12"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])
