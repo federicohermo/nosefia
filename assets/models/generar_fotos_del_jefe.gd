@@ -5,15 +5,24 @@
 extends SceneTree
 
 const TAMANO := Vector2i(960, 540)
+const PLANO_DEL_RELOJ := [
+	2,
+	Vector3(1.0115, 2.28, 5.1),
+	Vector3(1.0115, 2.28, 6.2445),
+	25.0,
+	"reloj/StaticBody3D",
+	"intro-reloj.png"
+]
+const PLANO_DE_LAS_GONDOLAS := [
+	10,
+	Vector3(5.5, 2.6, 0.7),
+	Vector3(2.75, 1.0, -2.4),
+	65.0,
+	"gondolanueva2/StaticBody3D",
+	"intro-gondolas.png"
+]
 const PLANOS := [
-	[
-		2,
-		Vector3(1.0115, 2.28, 5.1),
-		Vector3(1.0115, 2.28, 6.2445),
-		25.0,
-		"reloj/StaticBody3D",
-		"intro-reloj.png"
-	],
+	PLANO_DEL_RELOJ,
 	[
 		4,
 		Vector3(-2.05, 1.682598, 4.050001),
@@ -30,14 +39,7 @@ const PLANOS := [
 		"cajaregistradora/StaticBody3D"
 	],
 	[8, Vector3(0.0, 1.65, 4.60), Vector3(-0.05, 1.50, 3.60), 55.0, "base compu/StaticBody3D"],
-	[
-		10,
-		Vector3(5.5, 2.6, 0.7),
-		Vector3(2.75, 1.0, -2.4),
-		65.0,
-		"gondolanueva2/StaticBody3D",
-		"intro-gondolas.png"
-	],
+	PLANO_DE_LAS_GONDOLAS,
 	[9, Vector3(2.70, 1.45, -9.73), Vector3(-0.40, 1.45, -9.73), 72.0, "Caja"],
 	[
 		11,

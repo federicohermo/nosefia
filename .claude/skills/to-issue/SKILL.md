@@ -158,11 +158,6 @@ fixtures pueden esperar sólo la primera jornada aunque el recurso pase a conten
 Declarar la vista que consume cada uno y conservar su inmutabilidad; en #430, dos suites de
 instrucciones necesitaban filtrar J1, mientras otro lector del primer mensaje seguía válido.
 
-**Los conteos de un guion salen de la base efectiva, sin anticipar PR abiertos.** Contar textos
-y fotos por jornada antes de fijar el total. Si otra rama retira una entrada, declarar ambos
-totales y la dependencia. Al agregar fotos consecutivas, cruzar también el contrato de sus adjuntos.
-Una regla de ampliación puede pertenecer a otra capacidad y necesitar su propio delta.
-
 **Un guion con símbolos nuevos se prueba con la tipografía del paquete real.** Revisar
 los glifos en cada camino que presenta el texto, incluidos vista previa y burbuja, a las
 resoluciones pedidas. En #430, el contenido literal y los tests de texto pasaban, pero el

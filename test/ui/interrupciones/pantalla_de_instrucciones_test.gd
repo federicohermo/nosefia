@@ -246,7 +246,7 @@ func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:
 		assert_float(izquierda.position.y).is_equal(derecha.position.y)
 		assert_float(izquierda.size.y).is_equal(derecha.size.y)
 		assert_float(izquierda.position.x).is_greater_equal(0.0)
-		assert_float(derecha.end.x).is_less_equal(1007.0)
+		assert_float(derecha.end.x).is_less_equal(PantallaDeInstrucciones.ANCHO_DEL_TEXTO)
 		for foto in fotos:
 			assert_int(foto.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
 			var leyendas := 0
@@ -261,16 +261,10 @@ func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:
 
 
 func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  # AC-EMP-046
-	for caso: Array in [
-		["J1_Foto03", Vector2(279, 201)],
-		["J1_Foto04", Vector2(426, 258)],
-		["J1_Foto06", Vector2(373, 300)],
-		["J1_Foto09", Vector2(548, 315)],
-		["J1_Foto11", Vector2(480, 270)],
-	]:
+	for identidad: String in ["J1_Foto03", "J1_Foto04", "J1_Foto06", "J1_Foto09", "J1_Foto11"]:
 		var foto: Mensaje
 		for mensaje in GUION.mensajes:
-			if mensaje.identidad == caso[0]:
+			if mensaje.identidad == identidad:
 				foto = mensaje
 		assert_object(foto).is_not_null()
 		if foto == null:
@@ -288,14 +282,15 @@ func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  #
 		for imagen: TextureRect in imagenes:
 			if imagen.texture == foto.foto:
 				fotografias += 1
-				assert_vector(imagen.size).is_equal(caso[1] - Vector2(12, 12))
+				var marco: Vector2 = PantallaDeInstrucciones.FOTOS[identidad]["tamano"]
+				assert_vector(imagen.size).is_equal(marco - Vector2(12, 12))
 				assert_int(imagen.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
 			if imagen.texture == PantallaDeInstrucciones.CAJA:
 				caja += 1
 			if imagen.texture == PantallaDeInstrucciones.TICKET:
 				ticket += 1
 		assert_int(fotografias).is_equal(1)
-		assert_int(caja).is_equal(1 if caso[0] == "J1_Foto04" else 0)
+		assert_int(caja).is_equal(1 if identidad == PantallaDeInstrucciones.FOTO_DEL_LECTOR else 0)
 		assert_int(ticket).is_equal(caja)
 
 

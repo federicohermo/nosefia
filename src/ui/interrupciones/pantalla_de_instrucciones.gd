@@ -22,13 +22,8 @@ const FOTO_DEL_LECTOR := "J1_Foto04"
 const ALTO_DE_LAS_FOTOS_EN_PAR := 233.0
 ## Cada foto lleva su leyenda; la pantalla en que cae depende de la jornada.
 const FOTOS := {
-	"J1_FotoReloj": {"tamano": Vector2(405, 233), "titulo": "Reloj", "sector": "Sector de ventas"},
-	"J1_Foto02":
-	{
-		"tamano": Vector2(324, 233),
-		"titulo": "Listas de tareas a realizar",
-		"sector": "Sector de ventas"
-	},
+	"J1_FotoReloj": {"titulo": "Reloj", "sector": "Sector de ventas"},
+	"J1_Foto02": {"titulo": "Listas de tareas a realizar", "sector": "Sector de ventas"},
 	"J1_Foto03":
 	{
 		"tamano": Vector2(279, 201),
@@ -43,14 +38,8 @@ const FOTOS := {
 	},
 	"J1_Foto06":
 	{"tamano": Vector2(373, 300), "titulo": "Computadora", "sector": "Sector de ventas"},
-	"J2_FotoGondolas":
-	{"tamano": Vector2(405, 233), "titulo": "Góndolas", "sector": "Sector de ventas"},
-	"J1_Foto07":
-	{
-		"tamano": Vector2(373, 365),
-		"titulo": "Estantería con cajas contenedoras",
-		"sector": "Sector de depósito"
-	},
+	"J2_FotoGondolas": {"titulo": "Góndolas", "sector": "Sector de ventas"},
+	"J1_Foto07": {"titulo": "Estantería con cajas contenedoras", "sector": "Sector de depósito"},
 	"J1_Foto09":
 	{
 		"tamano": Vector2(548, 315),

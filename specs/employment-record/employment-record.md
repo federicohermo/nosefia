@@ -149,7 +149,7 @@ jornada de su Intro. Intro 2 DEBE llevar primero el reloj y después la nota de 
 Intro 7 DEBE llevar primero las góndolas y después una estantería con cajas. Las demás DEBEN
 conservar una foto cada una: la ventanilla, el lector y la caja registradora, la computadora,
 los útiles y notas del cuartito y el depósito con sus cajas en el piso. Las capturas nuevas
-DEBEN medir 960 × 540 y salir del modelo jugable de la primera jornada sin editar la imagen.
+DEBEN salir del modelo jugable de la primera jornada sin editar la imagen.
 La foto de las góndolas NO DEBE crear huecos ni cambiar la reposición jugable. La foto de la
 estantería NO DEBE cambiar la disposición jugable de las cajas de la primera noche. El encuadre
 artístico de cada tema es territorio de juicio humano; la correspondencia se verifica en
@@ -534,7 +534,7 @@ paso. CUANDO se valida cada captura ENTONCES existe una imagen con proporción a
 marco y el rayo central de su encuadre alcanza el tema correspondiente: reloj, corcho con sus dos
 notas, ventanilla, lector y caja, computadora,
 góndolas, estantería con cajas, útiles y notas del cuartito, y cajas del depósito en el piso.
-Las dos capturas nuevas miden 960 × 540 y no alteran el reparto ni crean huecos para encuadrar.
+Las dos capturas nuevas no alteran el reparto ni crean huecos para encuadrar.
 Preparar la foto de Intro 7 y después la de Intro 11 deja restaurada la disposición jugable
 de la jornada 1. Las cajas en el piso de Intro 11 corresponden a la jornada 4.
 

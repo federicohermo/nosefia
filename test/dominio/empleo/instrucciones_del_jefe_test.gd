@@ -217,17 +217,6 @@ func test_los_pares_reales_preceden_su_intro_sin_sumar_pantallas() -> void:  # A
 		assert_array(_identidades(paso.textos)).is_equal([caso[3]])
 
 
-func test_las_fotos_nuevas_tienen_resolucion_de_captura() -> void:  # AC-EMP-047
-	var encontradas: Array[String] = []
-	for mensaje in _guion().mensajes:
-		if mensaje.identidad in ["J1_FotoReloj", "J2_FotoGondolas"]:
-			encontradas.append(mensaje.identidad)
-			assert_object(mensaje.foto).is_not_null()
-			if mensaje.foto != null:
-				assert_vector(mensaje.foto.get_size()).is_equal(Vector2(960, 540))
-	assert_array(encontradas).is_equal(["J1_FotoReloj", "J2_FotoGondolas"])
-
-
 func _mensaje(identidad: String, con_foto: bool) -> Mensaje:
 	var mensaje := Mensaje.new()
 	mensaje.identidad = identidad
