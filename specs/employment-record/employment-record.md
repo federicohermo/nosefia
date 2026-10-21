@@ -119,8 +119,9 @@ noches ni pedir dos veces el menú.
 ### BR-EMP-012 — Los llamados suman medios por motivo
 
 MIENTRAS la jornada está abierta, el sistema DEBE registrar cada motivo de llamado una sola vez.
-CUANDO cierra, DEBE sumar un medio por motivo distinto, además del peso de la
-banda —o de los descuidos de la prueba (BR-EMP-035)—, incluso con NINGUNA. Abrir otra jornada DEBE vaciar los motivos pendientes. Antes de abrir, después de
+CUANDO cierra, DEBE sumar un medio por motivo distinto, además del peso de la banda, incluso
+con NINGUNA. En la prueba los llamados NO DEBEN sumar medios (BR-EMP-035). Abrir otra jornada
+DEBE vaciar los motivos pendientes. Antes de abrir, después de
 cerrar y con la partida terminada, anotar un llamado NO DEBE modificar el legajo ni una noche
 futura. Los motivos pendientes no DEBEN persistirse ni mostrar un contador nuevo.
 
@@ -399,9 +400,8 @@ ni llamados, ni cambiar la banda, el final o el Cierre.
 CUANDO cierra una jornada de la prueba, el sistema DEBE sumar **1** apercibimiento por cada
 cliente mal atendido y por cada obligatoria de registrar, reponer o limpiar que quedó sin cumplir
 al cerrar. Un cliente suma una sola vez. Atender suma por sus clientes y no por la tarea: no suma
-dos veces. Limpiar cuenta sólo en la jornada que la declara (BR-SHF-005). El sistema DEBE sumar
-además un medio por cada motivo de llamado (BR-EMP-012), y NO DEBE traducir esa noche a una
-banda. Los apercibimientos se acumulan a lo largo de las tres jornadas.
+dos veces. Limpiar cuenta sólo en la jornada que la declara (BR-SHF-005). Los llamados NO DEBEN
+sumar medios (BR-EMP-012), y el sistema NO DEBE traducir esa noche a una banda. Los apercibimientos se acumulan a lo largo de las tres jornadas.
 
 ### BR-EMP-036 — Las dos primeras jornadas no se pierden
 
@@ -825,7 +825,7 @@ cumplir y dos clientes mal atendidos ENTONCES el legajo lleva 4 apercibimientos.
 con sólo limpiar sin cumplir ENTONCES suma 1. DADO la jornada 2 con atender sin cumplir por un
 cliente mal atendido ENTONCES suma 1 y no 2. DADO un cliente que todavía espera o que nunca llegó
 ENTONCES no cuenta. DADO una noche de la prueba con todas cumplidas y los cuatro llamados
-anotados ENTONCES suma 4 medios y no hay banda que pese.
+anotados ENTONCES el legajo no suma ningún medio y no hay banda que pese.
 
 ### AC-EMP-079 — Las dos primeras no despiden *(verifica BR-EMP-036)*
 
