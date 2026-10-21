@@ -2,6 +2,7 @@
 ## fila de la tabla gana.
 extends GdUnitTestSuite
 
+const CondicionesDelJefeTest := preload("res://test/dominio/empleo/condiciones_del_jefe_test.gd")
 const T := Tarea.Tipo
 const L := Partida.Llamado
 
@@ -248,6 +249,22 @@ func test_el_despido_en_la_primera_jornada_completa() -> void:  # AC-EMP-061
 		)
 	)
 	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
+
+
+func test_la_prueba_perdida_termina_con_el_mensaje_del_despido() -> void:  # AC-EMP-090
+	var todo: Array[T] = [T.REGISTRAR, T.REPONER]
+	var tercera := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
+	var perdida := CondicionesDelJefeTest.cerrar_la_prueba([[2, todo], [2, todo], [0, [T.LIMPIAR]]])
+	assert_int(perdida.final()).is_equal(Partida.Final.DESPEDIDO)
+	assert_int(perdida.jornada()).is_equal(tercera)
+	var devolucion := DevolucionDelJefe.new(tercera, perdida)
+	assert_array(devolucion.mensajes()).is_equal([DevolucionDelJefe.DESPIDO_DE_LA_PRUEBA])
+	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
+	var redimida := CondicionesDelJefeTest.cerrar_la_prueba([[2, todo], [2, todo], [0, []]])
+	assert_bool(redimida.terminada()).is_false()
+	assert_array(DevolucionDelJefe.new(tercera, redimida).mensajes()).not_contains(
+		[DevolucionDelJefe.DESPIDO_DE_LA_PRUEBA]
+	)
 
 
 func test_la_partida_en_curso_ofrece_solo_continuar() -> void:  # AC-EMP-016
