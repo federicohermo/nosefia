@@ -22,6 +22,13 @@ const TECHO := PisoDelLocal.Superficie.TECHO
 ## La tabla de la ficha, fila por fila: `[tipo, habitación, superficie]` de cada mancha. Es la del
 ## contrato, escrita sin lugares: el caso compara qué hay, no cómo se llama cada sitio.
 const FICHA := {
+	3:
+	[
+		[POLVO, LOCAL, PISO],
+		[POLVO, LOCAL, PARED],
+		[MOHO, DEPOSITO, PARED],
+		[CACA, BANO, PISO],
+	],
 	4:
 	[
 		[POLVO, LOCAL, PISO],
@@ -96,7 +103,7 @@ func test_cada_jornada_trae_las_manchas_de_su_fila_en_la_ficha() -> void:  # AC-
 
 func test_las_jornadas_sin_fila_traen_las_de_la_primera_completa() -> void:  # AC-CLN-016
 	var primera := PisoDelLocal.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
-	for jornada: int in [3, 6, 7, 8]:
+	for jornada: int in [6, 7, 8]:
 		var piso := PisoDelLocal.de_la_jornada(jornada)
 		assert_array(piso.lugares()).contains_exactly_in_any_order(primera.lugares())
 		assert_array(_filas(piso)).contains_exactly_in_any_order(FICHA[4])
@@ -144,17 +151,19 @@ func test_las_del_mismo_tipo_y_habitacion_se_borran_por_separado() -> void:  # A
 		for lugar: PisoDelLocal.Lugar in piso.lugares():
 			if piso.mancha_de(lugar).tipo() == POLVO and PisoDelLocal.habitacion_de(lugar) == LOCAL:
 				del_local.append(lugar)
-		assert_int(del_local.size()).is_equal(3)
+		assert_int(del_local.size()).is_equal(2 if jornada == 3 else 3)
 		assert_int(_borrar(piso, del_local[0])).is_equal(
 			ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
 		)
 		assert_bool(piso.mancha_de(del_local[1]).esta_limpia()).is_false()
-		assert_bool(piso.mancha_de(del_local[2]).esta_limpia()).is_false()
+		if del_local.size() == 3:
+			assert_bool(piso.mancha_de(del_local[2]).esta_limpia()).is_false()
 		# La misma mopa amarilla sigue sirviendo, pero cada pasada borra sólo la suya.
 		assert_int(piso.pasar(MOPA, del_local[1])).is_equal(
 			ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
 		)
-		assert_bool(piso.mancha_de(del_local[2]).esta_limpia()).is_false()
+		if del_local.size() == 3:
+			assert_bool(piso.mancha_de(del_local[2]).esta_limpia()).is_false()
 		assert_int(piso.pasar(MOPA, del_local[0])).is_equal(
 			ReglasDeLaLimpieza.Resultado.YA_ESTABA_LIMPIA
 		)
