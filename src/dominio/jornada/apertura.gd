@@ -54,10 +54,16 @@ static func inventario_de_la_jornada(
 	casilleros_reponibles: Dictionary[Producto.Id, int],
 	azar: RandomNumberGenerator
 ) -> Inventario:
+	var productos := Catalogo.de_la_jornada(jornada)
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
-		return inventario_con_faltantes({}, casilleros_totales)
+		return inventario_con_faltantes({}, casilleros_totales, productos)
+	var reponibles_presentes: Dictionary[Producto.Id, int] = {}
+	for producto in productos:
+		reponibles_presentes[producto.id] = casilleros_reponibles.get(producto.id, 0)
 	return inventario_con_faltantes(
-		faltantes_al_azar(pedidos_de(compradores), casilleros_reponibles, azar), casilleros_totales
+		faltantes_al_azar(pedidos_de(compradores), reponibles_presentes, azar),
+		casilleros_totales,
+		productos
 	)
 
 
@@ -69,9 +75,10 @@ static func inventario_de_la_jornada(
 ## las jornadas, no este código. Uno más grande que su fila deja la góndola en cero, que es lo
 ## que `Inventario.ingresar()` hace con una cantidad que no es positiva.
 static func inventario_con_faltantes(
-	faltantes: Dictionary[Producto.Id, int], casilleros: Dictionary[Producto.Id, int]
+	faltantes: Dictionary[Producto.Id, int],
+	casilleros: Dictionary[Producto.Id, int],
+	productos: Array[Producto]
 ) -> Inventario:
-	var productos := Catalogo.todos()
 	var inventario := Inventario.new(productos, casilleros)
 	for producto in productos:
 		inventario.ingresar(
@@ -86,6 +93,15 @@ static func inventario_con_faltantes(
 
 static func cajas_apiladas(jornada: int) -> bool:
 	return Tarea.Tipo.ORDENAR_LAS_CAJAS in PARTICULARES.get(jornada, [])
+
+
+static func productos_con_cajas_apiladas(jornada: int) -> Array[Producto.Id]:
+	var identidades: Array[Producto.Id] = []
+	if cajas_apiladas(jornada):
+		for producto in Catalogo.todos():
+			if producto.id not in Catalogo.PRODUCTOS_DE_PRUEBA:
+				identidades.append(producto.id)
+	return identidades
 
 
 ## Muestreo sin reemplazo: cada índice restante tiene la misma probabilidad.

@@ -28,7 +28,7 @@ static func abrir_heladeras(almacen: Node3D) -> void:
 static func abrir_con_faltantes(almacen: Node3D, faltantes: Dictionary[Producto.Id, int]) -> void:
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
-	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros)
+	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros, Catalogo.todos())
 	var repositor: Repositor = almacen.get("_repositor")
 	repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	puesto.call("limpiar")

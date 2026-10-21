@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 # AC-CTR-036, AC-CTR-039
 func test_atencion_habla_antes_de_recibir_y_solo_vende_el_pedido_completo() -> void:
 	var comprador := Compradores.de_la_jornada(4)[1]
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var estante := Estante.new(inventario, Catalogo.todos())
 	var atencion := Atencion.new(comprador, inventario)
 	var unidad := estante.retirar(Catalogo.de(Producto.Id.ZUCARACHAS))
@@ -79,7 +79,7 @@ func test_vencer_conserva_y_permite_recuperar_la_entrega() -> void:  # AC-CTR-04
 
 
 func test_un_clic_termina_el_recordatorio_y_otro_entrega() -> void:  # AC-CTR-036
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var atencion := Atencion.new(Compradores.de_la_jornada(4)[1], inventario)
 	atencion.interactuar(null)
 	atencion.interactuar(null)
@@ -93,7 +93,7 @@ func test_un_clic_termina_el_recordatorio_y_otro_entrega() -> void:  # AC-CTR-03
 
 
 func test_el_rechazo_se_cierra_con_el_objeto_en_mano_y_deja_salir() -> void:  # AC-CTR-037
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var atencion := Atencion.new(Compradores.de_la_jornada(4)[1], inventario)
 	atencion.interactuar(null)
 	atencion.interactuar(null)
@@ -149,7 +149,7 @@ func test_recibe_identidades_distintas_y_rechaza_sobrantes() -> void:  # AC-CTR-
 
 
 func test_tia_rechaza_otra_zucarachas_y_conserva_el_pedido_entero() -> void:  # AC-CTR-037
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var atencion := Atencion.new(Compradores.de_la_jornada(4)[1], inventario)
 	atencion.interactuar(null)
 	atencion.interactuar(null)

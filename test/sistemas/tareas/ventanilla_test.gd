@@ -77,7 +77,7 @@ func test_el_reloj_publica_llegada_y_vencimiento_con_la_ventana_cerrada() -> voi
 
 func test_publica_compra_solo_al_recibir_el_ultimo_elemento() -> void:  # AC-CTR-039, AC-CTR-041
 	var ventanilla := _ventanilla(0)
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var estante := Estante.new(inventario, Catalogo.todos())
 	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(4), inventario))
 	var compras: Array[bool] = []
