@@ -22,6 +22,15 @@ func cumplio(tipo: Tarea.Tipo) -> bool:
 	return not _sin_cumplir.has(tipo)
 
 
+## Atender suma por cada cliente y no por la tarea, así que la tarea de atender no cuenta dos veces.
+func fallas() -> int:
+	var cuantas := mal_atendidos
+	for tipo: Tarea.Tipo in _sin_cumplir:
+		if tipo != Tarea.Tipo.CAJA:
+			cuantas += 1
+	return cuantas
+
+
 ## Las obligatorias van por nombre, como en `Antecedentes`: reordenar el `enum` no cambia qué
 ## se lee.
 func a_datos() -> Dictionary:

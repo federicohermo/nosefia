@@ -50,6 +50,35 @@ func test_la_tercera_retomada_repite_su_fila() -> void:  # AC-EMP-088
 	assert_int(InstruccionesDelJefe.pasos_de(propios).size()).is_equal(2)
 
 
+func test_la_cuarta_retomada_repite_su_fila() -> void:  # AC-EMP-091
+	var jugada := CondicionesDelJefeTest.cerrar_la_prueba(
+		[[2, [Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER]], [1, []], [0, []]]
+	)
+	var datos: Dictionary = str_to_var(var_to_str(PoliticaDeGuardado.datos(jugada)))
+	var retomada := Partida.desde(datos)
+	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	var cuarta := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	var guion: Conversacion = load(CondicionesDelJefeTest.GUION)
+	var condiciones := CondicionesDelJefe.elegidas(retomada.noches_de_prueba)
+	var propios := InstruccionesDelJefe.de_la_jornada(guion.mensajes, cuarta, condiciones)
+	assert_array(propios).is_empty()
+	var bandeja := Bandeja.new([guion])
+	bandeja.abrir_jornada(cuarta, condiciones)
+	var de_la_cuarta: Array[String] = []
+	for mensaje: Mensaje in bandeja.mensajes_de(guion.interlocutor):
+		if mensaje.jornada == cuarta:
+			de_la_cuarta.append(mensaje.identidad)
+	assert_array(de_la_cuarta).is_equal(
+		["J4_Mensaje1_Redimido", "J1_Intro10", "J1_Foto11", "J1_Intro11", "J1_Intro12"]
+	)
+
+
+func test_las_fallas_de_una_noche_son_como_las_cuenta_la_prueba() -> void:  # AC-EMP-089
+	var sin_cumplir: Array[Tarea.Tipo] = [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR]
+	assert_int(ResultadoDeLaNoche.new(2, sin_cumplir).fallas()).is_equal(4)
+	assert_int(ResultadoDeLaNoche.new(0, []).fallas()).is_equal(0)
+
+
 func test_un_guardado_sin_noches_o_roto_abre_sin_mensaje_1() -> void:  # AC-EMP-086
 	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.NOCHES_DE_PRUEBA)
 	for roto: Variant in [

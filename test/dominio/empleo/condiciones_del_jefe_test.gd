@@ -3,6 +3,8 @@ extends GdUnitTestSuite
 const GUION := "res://src/dominio/investigacion/conversacion_con_el_jefe.tres"
 const SEGUNDA := ReglasDeLaPartida.PRIMERA_JORNADA + 1
 const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA + 2
+const CUARTA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+const T := Tarea.Tipo
 
 ## Clientes mal atendidos, si registrar quedó cumplida y la entrada que abre la jornada 2.
 const FILAS := [
@@ -86,6 +88,16 @@ static func cerrar_la_segunda(mal_atendidos: int, registrar: bool, reponer: bool
 	return partida
 
 
+## Las tres noches de prueba, cada una con sus clientes mal atendidos y lo que dejó sin cumplir.
+static func cerrar_la_prueba(noches: Array) -> Partida:
+	var partida := Partida.nueva()
+	for noche: Array in noches:
+		var sin_cumplir: Array[Tarea.Tipo] = []
+		sin_cumplir.assign(noche[1])
+		cerrar_la_noche(partida, noche[0], sin_cumplir)
+	return partida
+
+
 static func cerrar_la_noche(
 	partida: Partida, mal_atendidos: int, sin_cumplir: Array[Tarea.Tipo]
 ) -> void:
@@ -161,7 +173,39 @@ func test_sin_la_noche_2_la_jornada_3_abre_con_intro_9() -> void:  # AC-EMP-087
 	assert_array(_identidades(propios)).is_equal(["J1_Foto09", "J1_Intro09"])
 
 
-func test_cada_fila_del_guion_tiene_su_condicion() -> void:  # AC-EMP-084, AC-EMP-087
+## Lo primero que Enrique dice en la jornada 4, hasta su mensaje 2.
+func _apertura_de_la_cuarta(partida: Partida) -> Array[String]:
+	var guion: Conversacion = load(GUION)
+	var bandeja := Bandeja.new([guion])
+	bandeja.abrir_jornada(CUARTA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
+	var propios: Array[String] = []
+	for mensaje in bandeja.mensajes_de(guion.interlocutor):
+		if mensaje.jornada == CUARTA:
+			propios.append(mensaje.identidad)
+	return propios.slice(0, propios.find("J1_Intro10") + 1)
+
+
+func test_las_tres_noches_eligen_el_mensaje_1_de_la_cuarta() -> void:  # AC-EMP-089
+	var limpio := [0, []]
+	var cuatro_fallas := [2, [T.REGISTRAR, T.REPONER]]
+	var casos := [
+		[[limpio, limpio, limpio], "J4_Mensaje1_SinFallas"],
+		[[cuatro_fallas, [1, []], limpio], "J4_Mensaje1_Redimido"],
+		[[cuatro_fallas, limpio, limpio], "J4_Mensaje1_ConAltibajos"],
+		[[[1, []], limpio, [0, [T.LIMPIAR]]], "J4_Mensaje1_ConAltibajos"],
+	]
+	for caso: Array in casos:
+		var partida := cerrar_la_prueba(caso[0])
+		assert_int(partida.jornada()).is_equal(CUARTA)
+		assert_array(_apertura_de_la_cuarta(partida)).is_equal([caso[1], "J1_Intro10"])
+
+
+func test_sin_la_noche_3_la_cuarta_abre_con_su_mensaje_2() -> void:  # AC-EMP-089
+	var partida := cerrar_la_segunda(0, true, true)
+	assert_array(_apertura_de_la_cuarta(partida)).is_equal(["J1_Intro10"])
+
+
+func test_cada_fila_del_guion_tiene_su_condicion() -> void:  # AC-EMP-084, AC-EMP-087, AC-EMP-089
 	var guion: Conversacion = load(GUION)
 	var elegibles: Array[StringName] = []
 	for fila: Array in FILAS:
@@ -174,9 +218,17 @@ func test_cada_fila_del_guion_tiene_su_condicion() -> void:  # AC-EMP-084, AC-EM
 				cerrar_la_segunda(fila[0], fila[1], fila[2]).noches_de_prueba
 			)
 		)
+	for noches: Array in [
+		[[0, []], [0, []], [0, []]],
+		[[5, []], [0, []], [0, []]],
+		[[1, []], [0, []], [0, []]],
+	]:
+		elegibles.append_array(
+			CondicionesDelJefe.elegidas(cerrar_la_prueba(noches).noches_de_prueba)
+		)
 	for mensaje: Mensaje in guion.mensajes:
 		if mensaje.condicion.is_empty():
 			continue
-		assert_array([SEGUNDA, TERCERA]).contains([mensaje.jornada])
+		assert_array([SEGUNDA, TERCERA, CUARTA]).contains([mensaje.jornada])
 		assert_bool(elegibles.has(mensaje.condicion)).is_true()
 		assert_bool(mensaje.dice_algo()).is_true()

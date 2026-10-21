@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572
 ---
 
 # Capacidad: el legajo del empleado
@@ -28,6 +28,9 @@ noche impecable suma cero y conserva la deuda acumulada.
 | **Devolución** | los mensajes que Enrique manda por el chat al cerrar cada noche: Saludo, las Tareas y los Retos que correspondan, y Cierre | placa del cierre, parte, reporte |
 | **P** | la deuda exacta en apercibimientos, con su medio: los medios del legajo divididos por 2, después de anotar la noche. Elige textos y nunca se muestra | puntaje, puntos visibles |
 | **J** | la jornada que acaba de cerrar | noche actual |
+| **Prueba** | las tres jornadas de introducción (BR-SHF-005), anteriores a la primera completa | tutorial |
+| **Descuido** | lo que suma un apercibimiento en la prueba: un cliente mal atendido, o registrar, reponer o limpiar sin cumplir al cerrar | falla, error |
+| **Cliente mal atendido** | uno que llegó a la ventanilla, no se le vendió y se cansó de esperar | cliente perdido |
 | **Falla** | una noche que cerró con una obligatoria fija sin cumplir. Se cuenta por obligatoria | error, strike |
 | **R** | cuántas noches seguidas terminaron sin sumar medios, contando la que acaba de cerrar | racha |
 
@@ -41,13 +44,15 @@ de 3** es `GRAVE`. El corte es en tareas y no en porcentaje: no se reescala con 
 
 ### BR-EMP-002 — Las bandas pesan distinto
 
-CUANDO se anota una banda, el sistema DEBE sumar **1** apercibimiento por `AVISO`, **2** por
-`GRAVE`, y DEBE sumar **0** con `NINGUNA`, conservando los apercibimientos que había.
+CUANDO se anota una banda de una jornada completa —desde la jornada 4—, el sistema DEBE sumar **1**
+apercibimiento por `AVISO`, **2** por `GRAVE`, y DEBE sumar **0** con `NINGUNA`, conservando los
+apercibimientos que había. La prueba no suma por banda (BR-EMP-035).
 
 ### BR-EMP-003 — A los cuatro lo echan
 
-SI el legajo llega a **8 medios o más**, equivalentes a 4 apercibimientos, ENTONCES el sistema
-DEBE declararlo despedido. Con 7 medios todavía no está despedido.
+SI, desde la jornada 4, el legajo llega a **8 medios o más**, equivalentes a 4 apercibimientos,
+ENTONCES el sistema DEBE declararlo despedido. Con 7 medios todavía no está despedido. En la
+prueba el legajo puede pasar de 8 medios sin despedir: se pierde por BR-EMP-037.
 
 ### BR-EMP-004 — El contrato dura ocho noches
 
@@ -115,7 +120,8 @@ noches ni pedir dos veces el menú.
 
 MIENTRAS la jornada está abierta, el sistema DEBE registrar cada motivo de llamado una sola vez.
 CUANDO cierra, DEBE sumar un medio por motivo distinto, además del peso de la banda, incluso
-con NINGUNA. Abrir otra jornada DEBE vaciar los motivos pendientes. Antes de abrir, después de
+con NINGUNA. En la prueba los llamados NO DEBEN sumar medios (BR-EMP-035). Abrir otra jornada
+DEBE vaciar los motivos pendientes. Antes de abrir, después de
 cerrar y con la partida terminada, anotar un llamado NO DEBE modificar el legajo ni una noche
 futura. Los motivos pendientes no DEBEN persistirse ni mostrar un contador nuevo.
 
@@ -388,6 +394,40 @@ anotar la noche (BR-EMP-025):
 Sin el hecho, o en otra jornada, NO DEBE haber advertencia. La advertencia NO DEBE sumar medios
 ni llamados, ni cambiar la banda, el final o el Cierre.
 
+### BR-EMP-035 — La prueba suma un apercibimiento por cada descuido
+
+CUANDO cierra una jornada de la prueba, el sistema DEBE sumar **1** apercibimiento por cada
+cliente mal atendido y por cada obligatoria de registrar, reponer o limpiar que quedó sin cumplir
+al cerrar. Un cliente suma una sola vez. Atender suma por sus clientes y no por la tarea: no suma
+dos veces. Limpiar cuenta sólo en la jornada que la declara (BR-SHF-005). Los llamados NO DEBEN
+sumar medios (BR-EMP-012), y el sistema NO DEBE traducir esa noche a una banda. Los apercibimientos se acumulan a lo largo de las tres jornadas.
+
+### BR-EMP-036 — Las dos primeras jornadas no se pierden
+
+CUANDO cierra la jornada 1 o la 2, el sistema NO DEBE declarar despedido, cualquiera sea lo
+acumulado, y DEBE seguir con la jornada siguiente.
+
+### BR-EMP-037 — La prueba se pierde al cerrar la tercera
+
+CUANDO cierra la jornada 3, SI el legajo suma **5 apercibimientos o más** y alguna obligatoria de
+esa jornada quedó sin cumplir, ENTONCES el sistema DEBE declarar despedido al cerrarla y no abrir
+la jornada 4. Con 4 o menos, o con todas cumplidas, DEBE seguir.
+
+### BR-EMP-038 — Las jornadas completas arrancan de nuevo
+
+CUANDO cierra la jornada 3 y la partida sigue, el sistema DEBE reiniciar el legajo antes de abrir
+la jornada 4: en **0**, o en **1** apercibimiento —2 medios— si la prueba sumó 5 o más. El
+sistema DEBE conservar cuántos apercibimientos sumó la prueba y si la jornada 3 cerró con todas
+sus obligatorias cumplidas. Desde la jornada 4 DEBE sumar por bandas y llamados y despedir con
+4 apercibimientos (BR-EMP-002, BR-EMP-003, BR-EMP-012).
+
+### BR-EMP-039 — La prueba cruza la sesión
+
+Los apercibimientos de la prueba son medios del legajo y DEBEN conservarse como BR-EMP-008. El
+sistema DEBE conservar también el resultado de BR-EMP-038: los apercibimientos que sumó la
+prueba y si la jornada 3 cerró completa. Sin esos datos, o con otro tipo, DEBE restaurar cero y
+no completa sin perder una jornada válida.
+
 ### BR-EMP-040 — El mensaje 1 de la jornada 2 sale de cómo cerró la 1
 
 CUANDO la noche 1 cierra y abre la jornada 2, que son una sola transición, el sistema DEBE
@@ -442,7 +482,35 @@ recordar cuántos clientes quedaron mal atendidos y qué obligatorias fijas qued
 al cerrar. Un cliente mal atendido es el que llegó a la ventanilla, no recibió su venta y se fue.
 El que todavía espera al cerrar, o el que nunca llegó, NO DEBE contar. Las noches desde la
 primera jornada completa NO DEBEN anotarse acá. Ese dato DEBE cruzar la sesión (BR-SAV-019): al
-retomar, el mensaje de BR-EMP-040 y el de BR-EMP-042 DEBEN ser los mismos. Un cierre ignorado NO DEBE anotar nada.
+retomar, los mensajes de BR-EMP-040, BR-EMP-042 y BR-EMP-043 DEBEN ser los mismos. Un cierre
+ignorado NO DEBE anotar nada.
+
+### BR-EMP-043 — El mensaje 1 de la jornada 4 sale de las tres noches de prueba
+
+CUANDO la noche 3 cierra, que es la misma transición que abre la jornada 4, Enrique DEBE decir
+uno solo de estos cuatro mensajes, elegido por las tres noches que anotó BR-EMP-041. La cuenta y
+el umbral son los de la ficha «Ciclo de jornadas y sistema de puntos». Cada noche suma una falla
+por cada cliente mal atendido, por registrar y por reponer sin cumplir, y por limpiar sin cumplir
+en la jornada 3. Los llamados NO DEBEN sumar. «Menos de la mitad de las tareas» de la ficha «Chat
+con el jefe» son **5 fallas o más** entre las tres noches. La jornada 3 está «cumplida» si su
+noche no tiene fallas. Los textos DEBEN ser los de la ficha «Chat con el jefe» revisada el
+2026-10-20:
+
+| Prueba | Texto |
+|---|---|
+| despedida por BR-EMP-037 | No, no, no. Flaco, no te puedo tomar como empleado si trabajás a medias. Un par de errores los puedo dejar pasar, pero si se repite todos los días... / Hasta acá llegó mi paciencia. Suerte consiguiendo otro trabajo. |
+| sin fallas en las tres noches | Muy bien, pibe. Me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que no bajes el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
+| 5 fallas o más y la jornada 3 cumplida | Mirá, flaco, en tus primeras dos jornadas estuviste mal, pero ayer lograste redimirte. Contra mis instintos, te voy a tomar como capacitado para el trabajo completo. Pero no me hagas arrepentirme, ¿ok? Te voy a seguir supervisando para que subas el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
+| cualquier otra | Bueno, pibe. Concluidos tus tres días de prueba, debo decir que tuviste algunos altibajos. De todas formas, me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que subas el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
+
+La barra marca dónde la ficha parte el texto en dos párrafos, y el texto DEBE partir ahí. El
+despido lo decide el legajo (BR-EMP-037), no esta tabla: con la prueba perdida, su texto DEBE
+ser el único mensaje de la devolución de esa noche, que ofrece volver al menú, y NO DEBE seguir
+ningún otro mensaje ni abrirse la jornada 4. En las otras tres filas, el texto DEBE ser el
+primer mensaje de la jornada 4 en el chat de Enrique, antes de su mensaje 2. Sin la noche 3
+anotada, la jornada 4 NO DEBE mostrar ningún mensaje 1. Con menos de 5 fallas, la jornada 3
+cumplida y fallas en la 1 o la 2, la ficha no tiene fila: la de «cualquier otra» es provisoria
+(OQ-EMP-011).
 
 ## Criterios de aceptación
 
@@ -457,28 +525,29 @@ DADO 6 obligatorias CUANDO se cumplieron 3 ENTONCES la banda sigue siendo `AVISO
 
 ### AC-EMP-003 — Los dos pesos *(verifica BR-EMP-002)*
 
-DADO un legajo limpio CUANDO cierra una noche de `AVISO` ENTONCES lleva 1 apercibimiento; DADO
-un legajo limpio CUANDO cierra una de `GRAVE` ENTONCES lleva 2.
+DADO un legajo limpio en la jornada 4 CUANDO cierra una noche de `AVISO` ENTONCES lleva 1
+apercibimiento; DADO un legajo limpio en la jornada 4 CUANDO cierra una de `GRAVE` ENTONCES lleva 2.
 
 ### AC-EMP-004 — Dos noches graves despiden *(verifica BR-EMP-002, BR-EMP-003)*
 
-DADO un legajo limpio CUANDO cierran dos noches de `GRAVE` seguidas ENTONCES está despedido.
+DADO un legajo limpio en la jornada 4 CUANDO cierran dos noches de `GRAVE` seguidas ENTONCES está
+despedido.
 
 ### AC-EMP-005 — Una noche impecable conserva la deuda *(verifica BR-EMP-002, BR-EMP-003)*
 
-DADO un legajo con 3 apercibimientos CUANDO cierra una noche con todas cumplidas ENTONCES el
-legajo sigue con 3 y no está despedido. CUANDO cierra después una noche de `AVISO` ENTONCES
+DADO un legajo con 3 apercibimientos en la jornada 4 CUANDO cierra una noche con todas cumplidas
+ENTONCES el legajo sigue con 3 y no está despedido. CUANDO cierra después una noche de `AVISO` ENTONCES
 lleva 4 y está despedido.
 
 ### AC-EMP-006 — El umbral se pasa sin pisarlo *(verifica BR-EMP-003)*
 
-DADO un legajo con 3 apercibimientos CUANDO cierra una noche de `GRAVE` ENTONCES lleva 5 y está
-despedido.
+DADO un legajo con 3 apercibimientos en la jornada 4 CUANDO cierra una noche de `GRAVE` ENTONCES
+lleva 5 y está despedido.
 
 ### AC-EMP-007 — Los tres caminos al despido *(verifica BR-EMP-002, BR-EMP-003)*
 
-DADO un legajo limpio ENTONCES despiden dos noches graves, una grave más dos avisos, y cuatro
-avisos; y ninguna combinación más corta.
+DADO un legajo limpio en la jornada 4 ENTONCES despiden dos noches graves, una grave más dos
+avisos, y cuatro avisos; y ninguna combinación más corta.
 
 ### AC-EMP-008 — La octava cierra el contrato *(verifica BR-EMP-004)*
 
@@ -503,8 +572,8 @@ mueven y la jornada no avanza.
 
 ### AC-EMP-012 — El legajo restaurado despide *(verifica BR-EMP-008)*
 
-DADO una partida que arranca con un legajo de 3 apercibimientos CUANDO cierra una noche de
-`AVISO` ENTONCES está despedida.
+DADO una partida que arranca la jornada 4 con un legajo de 3 apercibimientos CUANDO cierra una
+noche de `AVISO` ENTONCES está despedida.
 
 ### AC-EMP-016 — La partida terminada no ofrece continuar *(verifica BR-EMP-011)*
 
@@ -515,7 +584,7 @@ ofrece volver al menú.
 
 ### AC-EMP-017 — La banda y los motivos se suman *(verifica BR-EMP-002, BR-EMP-012)*
 
-DADO un legajo limpio CUANDO cierra impecable con un motivo ENTONCES lleva 1 medio; con dos
+DADO un legajo limpio en la jornada 4 CUANDO cierra impecable con un motivo ENTONCES lleva 1 medio; con dos
 motivos distintos, 2; con GRAVE y dos motivos, 6. Repetir el mismo motivo conserva una sola suma.
 
 ### AC-EMP-018 — Los motivos pertenecen sólo a la noche abierta *(verifica BR-EMP-006, BR-EMP-007, BR-EMP-012)*
@@ -526,8 +595,8 @@ CUANDO se abre la siguiente y cierra sin motivos ENTONCES conserva sólo la deud
 
 ### AC-EMP-019 — Siete y ocho medios *(verifica BR-EMP-003, BR-EMP-012)*
 
-DADO 6 medios CUANDO cierra impecable con un motivo ENTONCES lleva 7 y no está despedido.
-DADO 7 medios CUANDO cierra impecable con un motivo ENTONCES lleva 8 y está despedido.
+DADO 6 medios en la jornada 4 CUANDO cierra impecable con un motivo ENTONCES lleva 7 y no está
+despedido. DADO 7 medios en la jornada 4 CUANDO cierra impecable con un motivo ENTONCES lleva 8 y está despedido.
 
 ### AC-EMP-020 — El guardado conserva el medio *(verifica BR-EMP-008)*
 
@@ -689,12 +758,12 @@ la devolución ENTONCES el primer mensaje es un Saludo y el último un Cierre, h
 las Tareas y los Retos van en el orden de BR-EMP-009, y ningún mensaje contiene un dígito, un
 espacio final ni las palabras «punto», «medio» o «apercibimiento».
 
-### AC-EMP-061 — El despido en la primera noche *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
+### AC-EMP-061 — El despido en la primera jornada completa *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
 
-DADO la noche 1 con sólo registrar cumplido y los cuatro llamados CUANDO cierra ENTONCES P = 4 y
-la devolución es, en orden: «Che», la fila n = 1 de Tarea 1 y de Tarea 3, la fila n = 1 de Reto 1,
-Reto 2, Reto 3 y Reto 4, y el Cierre del despido: ocho mensajes, sin Tarea 4 ni Tarea 5, y la
-única opción es volver al menú.
+DADO la jornada 4 con sólo registrar y la particular cumplidos y los cuatro llamados CUANDO cierra
+ENTONCES P = 4 y la devolución es, en orden: «Che», la fila n = 1 de Tarea 1, de Tarea 3 y de
+Tarea 4, la fila n = 1 de Reto 1, Reto 2, Reto 3 y Reto 4, y el Cierre del despido: nueve
+mensajes, sin Tarea 5, y la única opción es volver al menú.
 
 ### AC-EMP-062 — Un mensaje más por segundo *(verifica BR-EMP-011, BR-EMP-030)*
 
@@ -789,9 +858,7 @@ la banda y el final son los mismos con y sin el hecho.
 ### AC-EMP-072 — Tres declaradas no admiten aviso *(verifica BR-EMP-001, BR-EMP-003)*
 
 DADO la jornada 1 con sus tres obligatorias declaradas CUANDO cierra con las tres cumplidas
-ENTONCES la banda es NINGUNA; con dos, con una y con cero es GRAVE. DADO un legajo limpio CUANDO
-las jornadas 1 y 2 cierran con dos de tres cumplidas y sin llamados ENTONCES la partida termina
-despedida al cerrar la 2, y no se abre la 3.
+ENTONCES la banda es NINGUNA; con dos, con una y con cero es GRAVE.
 
 ### AC-EMP-073 — El impecable de las noches del medio *(verifica BR-EMP-029)*
 
@@ -837,6 +904,50 @@ se anuncia sin instrucciones en pantalla. DADO un guion sin mensajes de la jorna
 la jornada 2 ENTONCES se anuncia «NOCHE 2» directamente, sin instrucciones y sin error. DADO la
 jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
 
+### AC-EMP-078 — Cada descuido suma uno *(verifica BR-EMP-035)*
+
+DADO la jornada 1 con sus tres obligatorias declaradas CUANDO cierra con registrar y reponer sin
+cumplir y dos clientes mal atendidos ENTONCES el legajo lleva 4 apercibimientos. DADO la jornada 3
+con sólo limpiar sin cumplir ENTONCES suma 1. DADO la jornada 2 con atender sin cumplir por un
+cliente mal atendido ENTONCES suma 1 y no 2. DADO un cliente que todavía espera o que nunca llegó
+ENTONCES no cuenta. DADO una noche de la prueba con todas cumplidas y los cuatro llamados
+anotados ENTONCES el legajo no suma ningún medio y no hay banda que pese.
+
+### AC-EMP-079 — Las dos primeras no despiden *(verifica BR-EMP-036)*
+
+DADO un legajo limpio CUANDO las jornadas 1 y 2 cierran con todo sin cumplir y dos clientes mal
+atendidos ENTONCES la partida sigue en curso, el legajo lleva más de 4 apercibimientos y se abre la
+jornada 3.
+
+### AC-EMP-080 — El cierre de la tercera *(verifica BR-EMP-037)*
+
+DADO 5 apercibimientos al cerrar la jornada 3 con una obligatoria sin cumplir ENTONCES la partida
+termina despedida y no se abre la jornada 4. DADO 4 apercibimientos con la jornada 3 incompleta
+ENTONCES sigue y se abre la jornada 4. DADO 5 apercibimientos con la jornada 3 completa ENTONCES
+sigue y se abre la jornada 4.
+
+### AC-EMP-081 — La jornada 4 arranca de nuevo *(verifica BR-EMP-038)*
+
+DADO la jornada 3 que cierra con 4 apercibimientos ENTONCES al abrir la jornada 4 el legajo está en
+0 y la partida recuerda 4 y la jornada 3 incompleta. DADO la jornada 3 que cierra completa con 5
+apercibimientos ENTONCES al abrir la jornada 4 el legajo está en 1 apercibimiento, 2 medios, y la
+partida recuerda 5 y la jornada 3 completa. DADO una partida despedida al cerrar la jornada 3
+ENTONCES recuerda su resultado y no reinicia el legajo.
+
+### AC-EMP-082 — Desde la jornada 4 suman las bandas *(verifica BR-EMP-038, BR-EMP-002, BR-EMP-003, BR-EMP-012)*
+
+DADO la jornada 4 abierta tras una prueba con 4 apercibimientos CUANDO cierra `GRAVE` con un motivo
+ENTONCES el legajo lleva 5 medios. CUANDO la jornada 5 cierra `GRAVE` ENTONCES lleva 9 medios y la
+partida termina despedida.
+
+### AC-EMP-083 — La prueba sobrevive al guardado *(verifica BR-EMP-039)*
+
+DADO la jornada 2 cerrada con 3 apercibimientos CUANDO se guarda y se retoma ENTONCES la partida
+sigue en la jornada 3 con 3 apercibimientos. DADO la jornada 3 cerrada completa con 5
+apercibimientos CUANDO se guarda y se retoma ENTONCES la partida está en la jornada 4 con 1
+apercibimiento y recuerda 5 y completa. DADO un guardado sin esos dos datos, o con otros tipos,
+ENTONCES la partida recuerda 0 y no completa y conserva su jornada.
+
 ### AC-EMP-084 — La noche 1 elige el mensaje 1 de la jornada 2 *(verifica BR-EMP-040)*
 
 DADO la noche 1 cerrada con 0, 1 y 2 clientes mal atendidos, cada uno con registrar cumplida y
@@ -875,6 +986,26 @@ CUANDO se guarda y se retoma ENTONCES la jornada 3 abre con la misma fila, en «
 de Enrique en la jornada 4 de esa partida ENTONCES tiene, de la jornada 3, esa fila antes de la
 foto de Intro 9 y ningún otro mensaje 1 de la jornada 3.
 
+### AC-EMP-089 — Las tres noches eligen el mensaje 1 de la jornada 4 *(verifica BR-EMP-043)*
+
+DADO las tres noches sin fallas CUANDO abre la jornada 4 ENTONCES su chat la empieza con la fila
+«sin fallas» y sigue con su mensaje 2. DADO 4 fallas en la noche 1 y una en la 2, con la 3 sin
+fallas, ENTONCES es la fila de la jornada 3 cumplida. DADO 4 fallas en la noche 1 y la 3 sin
+fallas ENTONCES es «cualquier otra». DADO una falla en la noche 1 y limpiar sin cumplir en la 3
+ENTONCES es «cualquier otra». Ninguna combinación muestra dos mensajes 1. DADO una partida sin
+la noche 3 anotada ENTONCES la jornada 4 abre con su mensaje 2.
+
+### AC-EMP-090 — La prueba perdida termina con el mensaje del despido *(verifica BR-EMP-043, BR-EMP-037)*
+
+DADO la noche 3 que cierra con la prueba perdida CUANDO llega la devolución ENTONCES su único
+mensaje es la fila del despido, ofrece sólo volver al menú y la partida no abre la jornada 4.
+DADO la noche 3 que cierra sin perder la prueba ENTONCES la devolución no trae ese mensaje.
+
+### AC-EMP-091 — La jornada 4 retomada repite su mensaje 1 *(verifica BR-EMP-041, BR-EMP-043)*
+
+DADO la noche 3 cerrada con 5 fallas en la prueba y la 3 sin fallas CUANDO se guarda y se retoma
+ENTONCES la jornada 4 abre con la misma fila.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -893,12 +1024,12 @@ foto de Intro 9 y ningún otro mensaje 1 de la jornada 3.
 ## Contratos
 
 - **Entrada:** cuántas obligatorias se cumplieron y cuántas se habían declarado, y cuáles
-  quedaron sin cumplir; un legajo, las cuentas y las devoluciones, que pueden venir de un
+  quedaron sin cumplir; cuántos clientes quedaron mal atendidos; un legajo, las cuentas y las devoluciones, que pueden venir de un
   guardado; motivos de la jornada abierta; el tiempo que pasa con la devolución en pantalla;
   mensajes introductorios con su jornada, la jornada que abre y pedidos de avanzar, volver y
   comenzar; el teñido aceptado con
   identidad y el expediente y mensajes de investigación de esta partida.
-- **Salida:** la banda, los medios exactos y los apercibimientos enteros, si está despedido, qué jornada va, el final,
+- **Salida:** la banda, los apercibimientos que sumó la prueba y si su última jornada cerró completa, los medios exactos y los apercibimientos enteros, si está despedido, qué jornada va, el final,
   las fallas por obligatoria fija, los llamados por motivo, R, si hubo llamados en la partida,
   la devolución con lo que el jugador puede elegir, cuántos de sus mensajes están a la vista, y
   las devoluciones recibidas con identidad, jornada cerrada y orden; pantallas introductorias, índice actual,
@@ -950,3 +1081,18 @@ foto de Intro 9 y ningún otro mensaje 1 de la jornada 3.
   - Decide: una persona de game design.
   - Bloquea: nada. Mientras tanto, BR-EMP-040 usa la fila de un cliente mal atendido, porque la
     ficha llama a la atención «LO MÁS IMPORTANTE».
+
+- **OQ-EMP-011 — ¿Qué dice el mensaje 1 de la jornada 4 con menos de 5 fallas, la jornada 3
+  cumplida y fallas en la 1 o la 2?**
+  - Por qué sigue abierta: la ficha «Chat con el jefe» del 2026-10-20 pide todas las tareas
+    cumplidas para la primera fila y la jornada 3 sin cumplir para la segunda. Ninguna fila
+    cubre este caso.
+  - Decide: una persona de game design.
+  - Bloquea: nada. Mientras tanto, BR-EMP-043 usa la fila de «altibajos».
+
+- **OQ-EMP-009 — ¿Qué dice la devolución cuando la prueba pasa de 4 apercibimientos sin despedir?**
+  - Por qué sigue abierta: la devolución elige Saludo y Cierre por P, y P ≥ 4 es hoy el despido
+    (BR-EMP-026, BR-EMP-029). En la prueba P llega a 4 o más sin despedir, y al cerrar la jornada 3
+    el legajo ya arrancó de nuevo.
+  - Decide: una persona de game design.
+  - Bloquea: nada. Mientras tanto la devolución lee P como siempre.
