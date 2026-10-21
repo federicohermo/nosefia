@@ -79,7 +79,7 @@ func _seguir() -> void:
 	pantalla.elegir()
 	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	await get_tree().process_frame
+	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(_almacen)).is_true()
 	AvanceDeDevolucion.leer_las_instrucciones(_almacen)
 	_almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 

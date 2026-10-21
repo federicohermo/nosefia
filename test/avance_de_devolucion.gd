@@ -61,3 +61,14 @@ static func leer_las_instrucciones(almacen: Node) -> void:
 	var siguiente: Button = instrucciones.get("_siguiente")
 	while instrucciones.visible:
 		siguiente.pressed.emit()
+
+
+## La noche siguiente abre cuando termina la transición, que puede calentar útiles durante varios
+## cuadros. Se espera la apertura, con un límite, en lugar de un cuadro.
+static func esperar_la_noche_siguiente(almacen: Node, cuadros: int = 1200) -> bool:
+	var partida: Partida = almacen.get("_partida")
+	for _cuadro: int in cuadros:
+		if partida.get("_jornada_abierta"):
+			return true
+		await almacen.get_tree().process_frame
+	return partida.get("_jornada_abierta")
