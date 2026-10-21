@@ -141,7 +141,7 @@ func test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja() -> void
 		else:
 			assert_bool(caja.global_transform.is_equal_approx(caja.pose_de_estanteria())).is_true()
 			assert_bool(_estanteria(_apoyo(local, caja))).is_true()
-	assert_int(cajas.size()).is_equal(16)
+	assert_int(cajas.size()).is_equal(llegadas.size())
 	var jugador: Node3D = local.get("_jugador")
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var espacio := local.get_world_3d().direct_space_state

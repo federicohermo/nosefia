@@ -57,7 +57,9 @@ func test_jornadas_completas_recuperan_todas_las_cajas_y_cupos() -> void:  # AC-
 		)
 		for producto in Catalogo.todos():
 			assert_int(inventario.casilleros(producto)).is_equal(8)
-			assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(8)
+			assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
+				ReglasDelEstante.UNIDADES_POR_CAJA
+			)
 
 
 func _casilleros() -> Dictionary[Producto.Id, int]:

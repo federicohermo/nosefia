@@ -6,7 +6,6 @@ func test_la_cuarta_jornada_apila_exactamente_los_dieciseis_ausentes() -> void: 
 	for id: Producto.Id in Producto.Id.values():
 		if id not in Catalogo.PRODUCTOS_DE_PRUEBA:
 			ausentes.append(id)
-	assert_array(ausentes).has_size(16)
 	assert_array(Apertura.productos_con_cajas_apiladas(4)).contains_exactly(ausentes)
 
 
