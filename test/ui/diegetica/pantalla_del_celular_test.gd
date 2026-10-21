@@ -493,7 +493,7 @@ func test_ocultar_el_celular_termina_el_arrastre() -> void:
 	assert_int(scroll.scroll_vertical).is_equal(quieto)
 
 
-func test_la_foto_real_abre_con_movimiento_sin_desplazar_el_chat() -> void:
+func test_la_foto_real_abre_con_movimiento_sin_desplazar_el_chat() -> void:  # AC-EMP-047
 	var pantalla := _pantalla()
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
 	pantalla.foto_pedida.connect(sistema.pedir_foto)
@@ -505,10 +505,15 @@ func test_la_foto_real_abre_con_movimiento_sin_desplazar_el_chat() -> void:
 	var conversacion := sistema.bandeja().conversacion_de(Conversacion.Interlocutor.JEFE)
 	var mensajes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)
 	var con_foto := 1
-	assert_str(mensajes[con_foto].identidad).is_equal("J1_Foto02")
+	assert_str(mensajes[con_foto].identidad).is_equal("J1_FotoReloj")
 	assert_str(mensajes[con_foto].foto.resource_path).is_equal(
-		"res://assets/ui/manada/fotos/intro-04.png"
+		"res://assets/ui/manada/fotos/intro-reloj.png"
 	)
+	var intro: Mensaje
+	for mensaje in mensajes:
+		if mensaje.identidad == "J1_Intro02":
+			intro = mensaje
+	assert_object(intro).is_not_null()
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
 	pantalla.subir()
@@ -536,6 +541,7 @@ func test_la_foto_real_abre_con_movimiento_sin_desplazar_el_chat() -> void:
 		await get_tree().process_frame
 		assert_int(sistema.celular().pantalla()).is_equal(Celular.Pantalla.FOTO)
 		assert_bool((pantalla.get("_foto_ampliada") as Control).visible).is_true()
+		assert_str((pantalla.get("_adjunto") as RichTextLabel).text).is_equal(intro.texto)
 		assert_int(scroll.scroll_vertical).is_equal(antes)
 		sistema.pedir_cerrar_foto()
 		await get_tree().process_frame

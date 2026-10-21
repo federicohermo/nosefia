@@ -9,7 +9,7 @@ var _terminadas: bool = false
 class Paso:
 	extends RefCounted
 
-	var foto: Mensaje
+	var fotos: Array[Mensaje] = []
 	var textos: Array[Mensaje] = []
 
 
@@ -44,8 +44,13 @@ static func pasos_de(mensajes: Array[Mensaje]) -> Array[Paso]:
 		var paso := Paso.new()
 		var mensaje := mensajes[indice]
 		if mensaje.foto != null and mensaje.texto.is_empty():
-			paso.foto = mensaje
-			indice += 1
+			while (
+				indice < mensajes.size()
+				and mensajes[indice].foto != null
+				and mensajes[indice].texto.is_empty()
+			):
+				paso.fotos.append(mensajes[indice])
+				indice += 1
 			if indice < mensajes.size():
 				paso.textos.append(mensajes[indice])
 		else:

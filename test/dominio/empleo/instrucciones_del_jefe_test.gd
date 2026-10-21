@@ -10,6 +10,7 @@ const ENTRADAS := {
 	PRIMERA:
 	[
 		"J1_Intro01",
+		"J1_FotoReloj",
 		"J1_Foto02",
 		"J1_Intro02",
 		"J1_Foto03",
@@ -20,7 +21,7 @@ const ENTRADAS := {
 		"J1_Foto06",
 		"J1_Intro06",
 	],
-	PRIMERA + 1: ["J1_Foto07", "J1_Intro07", "J1_Intro08"],
+	PRIMERA + 1: ["J2_FotoGondolas", "J1_Foto07", "J1_Intro07", "J1_Intro08"],
 	PRIMERA + 2: ["J1_Foto09", "J1_Intro09"],
 	COMPLETA: ["J1_Intro10", "J1_Foto11", "J1_Intro11", "J1_Intro12"],
 }
@@ -99,13 +100,28 @@ func test_cada_jornada_de_introduccion_recibe_lo_suyo() -> void:  # AC-EMP-046, 
 	for jornada: int in ENTRADAS:
 		esperado.append_array(ENTRADAS[jornada])
 	assert_array(_identidades(chat)).is_equal(esperado)
+	var intro_por_foto := {
+		"J1_FotoReloj": "J1_Intro02",
+		"J1_Foto02": "J1_Intro02",
+		"J1_Foto03": "J1_Intro03",
+		"J1_Foto04": "J1_Intro04",
+		"J1_Foto06": "J1_Intro06",
+		"J2_FotoGondolas": "J1_Intro07",
+		"J1_Foto07": "J1_Intro07",
+		"J1_Foto09": "J1_Intro09",
+		"J1_Foto11": "J1_Intro11",
+	}
+	assert_int(chat.size()).is_equal(21)
+	var fotos := 0
 	for indice in chat.size():
 		if chat[indice].foto != null:
+			fotos += 1
 			assert_str(chat[indice].texto).is_empty()
-			assert_str(chat[indice + 1].identidad).is_equal(
-				chat[indice].identidad.replace("Foto", "Intro")
-			)
-			assert_object(bandeja.adjunto_de(guion.interlocutor, indice)).is_same(chat[indice + 1])
+			var adjunto := bandeja.adjunto_de(guion.interlocutor, indice)
+			assert_object(adjunto).is_not_null()
+			if adjunto != null:
+				assert_str(adjunto.identidad).is_equal(intro_por_foto[chat[indice].identidad])
+	assert_int(fotos).is_equal(9)
 	assert_array(guion.mensajes).is_equal(originales)
 
 
@@ -117,7 +133,7 @@ func test_las_pantallas_de_cada_jornada() -> void:  # AC-EMP-045, AC-EMP-046
 	var con_foto: Array[String] = []
 	for paso in primera:
 		assert_int(paso.textos.size()).is_equal(1)
-		if paso.foto != null:
+		if not _fotos(paso).is_empty():
 			con_foto.append(paso.textos[0].identidad)
 	assert_array(con_foto).is_equal(["J1_Intro02", "J1_Intro03", "J1_Intro04", "J1_Intro06"])
 	assert_int(primera.size()).is_equal(6)
@@ -131,7 +147,7 @@ func test_las_pantallas_de_cada_jornada() -> void:  # AC-EMP-045, AC-EMP-046
 			InstruccionesDelJefe.de_la_jornada(mensajes, jornada_y_intro[0])
 		)
 		assert_str(pasos[0].textos[0].identidad).is_equal(jornada_y_intro[1])
-		assert_object(pasos[0].foto).is_not_null()
+		assert_array(_fotos(pasos[0])).is_not_empty()
 	for jornada in range(PRIMERA, COMPLETA):
 		var propios := InstruccionesDelJefe.de_la_jornada(mensajes, jornada)
 		var textos := propios.filter(func(mensaje: Mensaje) -> bool: return mensaje.foto == null)
@@ -161,6 +177,62 @@ func test_sin_mensajes_no_inventa_pantallas() -> void:  # AC-EMP-046
 	assert_array(InstruccionesDelJefe.pasos_de([])).is_empty()
 
 
+func test_dos_fotos_se_agrupan_con_el_texto_y_conservan_su_orden() -> void:  # AC-EMP-046
+	var primera := _mensaje("primera", true)
+	var segunda := _mensaje("segunda", true)
+	var texto := _mensaje("texto", false)
+	texto.texto = "La instrucción de las dos fotos"
+	var pasos := InstruccionesDelJefe.pasos_de([primera, segunda, texto])
+	assert_int(pasos.size()).is_equal(1)
+	if pasos.size() != 1:
+		return
+	assert_array(_fotos(pasos[0])).is_equal([primera, segunda])
+	assert_array(pasos[0].textos).is_equal([texto])
+
+
+func test_el_grupo_sin_texto_conserva_sus_fotos_huerfanas() -> void:  # AC-EMP-046
+	var primera := _mensaje("primera", true)
+	var segunda := _mensaje("segunda", true)
+	for cantidad: int in [1, 2]:
+		var mensajes: Array[Mensaje] = [primera]
+		if cantidad == 2:
+			mensajes.append(segunda)
+		var pasos := InstruccionesDelJefe.pasos_de(mensajes)
+		assert_int(pasos.size()).is_equal(1)
+		assert_array(_fotos(pasos[0])).is_equal(mensajes)
+		assert_array(pasos[0].textos).is_empty()
+
+
+func test_los_pares_reales_preceden_su_intro_sin_sumar_pantallas() -> void:  # AC-EMP-046
+	for caso: Array in [
+		[PRIMERA, 1, ["J1_FotoReloj", "J1_Foto02"], "J1_Intro02", 6],
+		[PRIMERA + 1, 0, ["J2_FotoGondolas", "J1_Foto07"], "J1_Intro07", 2],
+	]:
+		var pasos := InstruccionesDelJefe.pasos_de(
+			InstruccionesDelJefe.de_la_jornada(_guion().mensajes, caso[0])
+		)
+		assert_int(pasos.size()).is_equal(caso[4])
+		var paso: InstruccionesDelJefe.Paso = pasos[caso[1]]
+		assert_array(_identidades(_fotos(paso))).is_equal(caso[2])
+		assert_array(_identidades(paso.textos)).is_equal([caso[3]])
+
+
+func _mensaje(identidad: String, con_foto: bool) -> Mensaje:
+	var mensaje := Mensaje.new()
+	mensaje.identidad = identidad
+	if con_foto:
+		mensaje.foto = GradientTexture2D.new()
+	return mensaje
+
+
+func _fotos(paso: InstruccionesDelJefe.Paso) -> Array[Mensaje]:
+	var fotos: Variant = paso.get("fotos")
+	assert_bool(fotos is Array).is_true()
+	if not fotos is Array:
+		return []
+	return fotos
+
+
 func test_el_chat_guarda_solo_el_mensaje_1_elegido() -> void:  # AC-EMP-085
 	var guion := _guion()
 	var otras: Array[String] = []
@@ -178,12 +250,12 @@ func test_el_chat_guarda_solo_el_mensaje_1_elegido() -> void:  # AC-EMP-085
 		CondicionesDelJefeTest.cerrar_la_noche(partida, 0, [])
 		bandeja.abrir_jornada(COMPLETA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
 		var chat := _identidades(bandeja.mensajes_de(guion.interlocutor))
-		assert_int(chat.size()).is_equal(21)
+		assert_int(chat.size()).is_equal(23)
 		var desde := ENTRADAS[PRIMERA].size()
-		assert_array(chat.slice(desde, desde + 4)).is_equal(
-			[fila[2], "J1_Foto07", "J1_Intro07", "J1_Intro08"]
+		assert_array(chat.slice(desde, desde + 5)).is_equal(
+			[fila[2], "J2_FotoGondolas", "J1_Foto07", "J1_Intro07", "J1_Intro08"]
 		)
-		var sin_la_segunda := chat.slice(0, desde) + chat.slice(desde + 4)
+		var sin_la_segunda := chat.slice(0, desde) + chat.slice(desde + 5)
 		assert_array(sin_la_segunda).is_equal(otras)
 
 
