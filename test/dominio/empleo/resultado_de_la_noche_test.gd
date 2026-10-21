@@ -93,6 +93,9 @@ func test_una_venta_no_cuenta_como_cliente_mal_atendido() -> void:  # AC-EMP-086
 		RecepcionDeCompra.Resultado.COMPLETA
 	)
 	assert_bool(atencion.vendida()).is_true()
+	while not atencion.puede_abandonar():
+		atencion.interactuar(null)
+	assert_bool(atencion.despachada()).is_true()
 	tarea.avanzar(compradores[0].horario.y + 1.0)
 	assert_int(tarea.mal_atendidos()).is_zero()
 	tarea.avanzar(compradores[1].horario.y + 1.0)
