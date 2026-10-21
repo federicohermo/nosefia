@@ -44,7 +44,9 @@ func test_cada_cliente_y_cada_registro_o_reposicion_mal_hechos_suman_uno() -> vo
 func test_la_limpieza_mal_hecha_suma_uno_en_la_tercera() -> void:  # AC-EMP-078
 	var partida := _con(TERCERA, 0)
 	_noche(partida, [T.LIMPIAR])
-	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA)
+	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(
+		Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA
+	)
 
 
 func test_atender_suma_por_cliente_y_no_por_la_tarea() -> void:  # AC-EMP-078
