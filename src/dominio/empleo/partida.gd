@@ -255,7 +255,9 @@ func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 		if not tarea.completada():
 			sin_cumplir.append(tarea.tipo())
 	if cerrada <= _ULTIMA_DE_LA_PRUEBA:
-		_legajo.registrar_prueba(_fallas_de_la_prueba(sin_cumplir, clientes_mal_atendidos))
+		_legajo.registrar_prueba(
+			_fallas_de_la_prueba(sin_cumplir, clientes_mal_atendidos), _llamados.size()
+		)
 	else:
 		_legajo.registrar(cumplidas, _obligatorias.size(), _llamados.size())
 	_antecedentes.anotar_noche(sin_cumplir, _llamados, _legajo.medios() - medios_antes)

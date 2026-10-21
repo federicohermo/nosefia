@@ -185,6 +185,13 @@ func test_cada_falla_de_la_prueba_suma_lo_mismo_sin_mirar_bandas() -> void:  # A
 	var legajo := Legajo.new()
 	legajo.registrar_prueba(3)
 	assert_int(legajo.apercibimientos()).is_equal(3 * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA)
+	legajo.registrar_prueba(0, 1)
+	assert_int(legajo.medios()).is_equal(
+		(
+			3 * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+			+ Reglas.MEDIOS_POR_LLAMADO
+		)
+	)
 
 
 func test_la_prueba_se_pierde_en_el_umbral_sin_completar_la_ultima() -> void:  # AC-EMP-080

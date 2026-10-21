@@ -53,12 +53,12 @@ func test_atender_suma_por_cliente_y_no_por_la_tarea() -> void:  # AC-EMP-078
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA)
 
 
-func test_en_la_prueba_ni_las_bandas_ni_los_llamados_pesan() -> void:  # AC-EMP-078
+func test_en_la_prueba_los_llamados_suman_y_las_bandas_no_pesan() -> void:  # AC-EMP-078
 	var todos: Array[Partida.Llamado] = []
 	todos.assign(Partida.Llamado.values())
 	var partida := Partida.nueva()
 	_noche(partida, [], 0, todos)
-	assert_int(partida.medios()).is_zero()
+	assert_int(partida.medios()).is_equal(todos.size() * Reglas.MEDIOS_POR_LLAMADO)
 	var sin_tareas := Partida.nueva()
 	_noche(sin_tareas, [T.CAJA, T.REGISTRAR, T.REPONER])
 	assert_int(sin_tareas.apercibimientos()).is_equal(

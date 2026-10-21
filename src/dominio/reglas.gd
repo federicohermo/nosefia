@@ -49,8 +49,7 @@ const JORNADA_EN_QUE_FALLA_EL_RELOJ := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLET
 ## sobre el despido: a la banda grave le alcanza con una jornada menos.
 const APERCIBIMIENTOS_POR_BANDA_GRAVE := 2
 
-## En las primeras jornadas, la prueba, cada falla suma un apercibimiento entero y no hay bandas
-## ni llamados. Con cinco o más al cerrar la última noche de la prueba, y sin haberla cumplido
+## En las primeras jornadas, la prueba, cada falla suma un apercibimiento entero y no hay bandas. Con cinco o más al cerrar la última noche de la prueba, y sin haberla cumplido
 ## entera, se pierde. Con cinco o más y la noche completa se sigue, y la primera jornada
 ## completa arranca con un apercibimiento.
 const APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA := 1

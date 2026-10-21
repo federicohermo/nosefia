@@ -30,6 +30,7 @@ noche impecable suma cero y conserva la deuda acumulada.
 | **J** | la jornada que acaba de cerrar | noche actual |
 | **Prueba** | las tres jornadas de introducción (BR-SHF-005), anteriores a la primera completa | tutorial |
 | **Descuido** | lo que suma un apercibimiento en la prueba: un cliente mal atendido, o registrar, reponer o limpiar sin cumplir al cerrar | falla, error |
+| **Cliente mal atendido** | uno que llegó a la ventanilla, no se le vendió y se cansó de esperar | cliente perdido |
 | **Falla** | una noche que cerró con una obligatoria fija sin cumplir. Se cuenta por obligatoria | error, strike |
 | **R** | cuántas noches seguidas terminaron sin sumar medios, contando la que acaba de cerrar | racha |
 
@@ -118,9 +119,8 @@ noches ni pedir dos veces el menú.
 ### BR-EMP-012 — Los llamados suman medios por motivo
 
 MIENTRAS la jornada está abierta, el sistema DEBE registrar cada motivo de llamado una sola vez.
-CUANDO cierra una jornada completa, DEBE sumar un medio por motivo distinto, además del peso de la
-banda, incluso con NINGUNA. La prueba NO suma medios por llamados (OQ-EMP-008), aunque los
-registre para la devolución. Abrir otra jornada DEBE vaciar los motivos pendientes. Antes de abrir, después de
+CUANDO cierra, DEBE sumar un medio por motivo distinto, además del peso de la
+banda —o de los descuidos de la prueba (BR-EMP-035)—, incluso con NINGUNA. Abrir otra jornada DEBE vaciar los motivos pendientes. Antes de abrir, después de
 cerrar y con la partida terminada, anotar un llamado NO DEBE modificar el legajo ni una noche
 futura. Los motivos pendientes no DEBEN persistirse ni mostrar un contador nuevo.
 
@@ -399,8 +399,9 @@ ni llamados, ni cambiar la banda, el final o el Cierre.
 CUANDO cierra una jornada de la prueba, el sistema DEBE sumar **1** apercibimiento por cada
 cliente mal atendido y por cada obligatoria de registrar, reponer o limpiar que quedó sin cumplir
 al cerrar. Un cliente suma una sola vez. Atender suma por sus clientes y no por la tarea: no suma
-dos veces (OQ-EMP-007). Limpiar cuenta sólo en la jornada que la declara (BR-SHF-005). El sistema
-NO DEBE traducir esa noche a una banda ni sumar medios por llamados.
+dos veces. Limpiar cuenta sólo en la jornada que la declara (BR-SHF-005). El sistema DEBE sumar
+además un medio por cada motivo de llamado (BR-EMP-012), y NO DEBE traducir esa noche a una
+banda. Los apercibimientos se acumulan a lo largo de las tres jornadas.
 
 ### BR-EMP-036 — Las dos primeras jornadas no se pierden
 
@@ -822,8 +823,9 @@ jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
 DADO la jornada 1 con sus tres obligatorias declaradas CUANDO cierra con registrar y reponer sin
 cumplir y dos clientes mal atendidos ENTONCES el legajo lleva 4 apercibimientos. DADO la jornada 3
 con sólo limpiar sin cumplir ENTONCES suma 1. DADO la jornada 2 con atender sin cumplir por un
-cliente mal atendido ENTONCES suma 1 y no 2. DADO una noche de la prueba con todas cumplidas y
-los cuatro llamados anotados ENTONCES suma 0 y no hay banda que pese.
+cliente mal atendido ENTONCES suma 1 y no 2. DADO un cliente que todavía espera o que nunca llegó
+ENTONCES no cuenta. DADO una noche de la prueba con todas cumplidas y los cuatro llamados
+anotados ENTONCES suma 4 medios y no hay banda que pese.
 
 ### AC-EMP-079 — Las dos primeras no despiden *(verifica BR-EMP-036)*
 
@@ -935,19 +937,6 @@ ENTONCES la partida recuerda 0 y no completa y conserva su jornada.
     todavía no la incluye.
   - Decide: una persona de game design.
   - Bloquea: nada. Mientras tanto, va el texto provisorio de BR-EMP-022.
-
-- **OQ-EMP-007 — ¿Qué es un cliente «mal atendido» y suma la tarea de cobrar aparte?**
-  - Por qué sigue abierta: la ficha dice «cliente mal atendido» y no distingue al que se fue sin
-    atender del que recibió la entrega equivocada. La ventanilla rechaza la entrega equivocada,
-    así que los dos terminan sin vender.
-  - Decide: una persona de game design.
-  - Bloquea: nada. Mientras tanto suma 1 cada cliente que no quedó vendido al cerrar, y la tarea
-    de cobrar no suma aparte (BR-EMP-035).
-
-- **OQ-EMP-008 — ¿Los llamados de atención suman en la prueba?**
-  - Por qué sigue abierta: la ficha enumera las fuentes de la prueba y no los nombra.
-  - Decide: una persona de game design.
-  - Bloquea: nada. Mientras tanto no suman (BR-EMP-012, BR-EMP-035).
 
 - **OQ-EMP-009 — ¿Qué dice la devolución cuando la prueba pasa de 4 apercibimientos sin despedir?**
   - Por qué sigue abierta: la devolución elige Saludo y Cierre por P, y P ≥ 4 es hoy el despido

@@ -1,4 +1,4 @@
-## Cuántos clientes quedaron sin vender al cerrar: lo que la prueba cuenta uno por uno.
+## Cuántos clientes llegaron, no se les vendió y se fueron: lo que la prueba cuenta uno por uno.
 extends GdUnitTestSuite
 
 
@@ -18,19 +18,22 @@ func _compradores(cuantos: int) -> Array[Comprador]:
 	return lista
 
 
-func test_mal_atendido_es_todo_cliente_que_no_se_vendio_haya_llegado_o_no() -> void:  # AC-EMP-078
+func test_mal_atendido_es_el_que_llego_no_se_vendio_y_se_fue() -> void:  # AC-EMP-078
 	var tarea := TareaDeAtender.new(_compradores(3), _inventario())
-	assert_int(tarea.mal_atendidos()).is_equal(3)
+	assert_int(tarea.mal_atendidos()).is_zero()
 	tarea.atender()
 	assert_int(tarea.atencion().cobrar()).is_equal(Atencion.Resultado.COBRADA)
-	assert_int(tarea.mal_atendidos()).is_equal(2)
+	assert_int(tarea.mal_atendidos()).is_zero()
 	tarea.atender()
+	assert_int(tarea.mal_atendidos()).is_zero()
 	assert_bool(tarea.atencion().despachar_sin_vender()).is_true()
-	assert_int(tarea.mal_atendidos()).is_equal(2)
-	tarea.atender()
-	tarea.atencion().cobrar()
 	assert_int(tarea.mal_atendidos()).is_equal(1)
 
 
-func test_sin_clientes_nadie_quedo_mal_atendido() -> void:  # AC-EMP-078
-	assert_int(TareaDeAtender.new(_compradores(0), _inventario()).mal_atendidos()).is_zero()
+func test_el_que_se_cansa_de_esperar_cuenta_y_el_que_no_llego_no() -> void:  # AC-EMP-078
+	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	tarea.avanzar(compradores[0].horario.x)
+	assert_int(tarea.mal_atendidos()).is_zero()
+	tarea.avanzar(compradores[0].horario.y + 1.0)
+	assert_int(tarea.mal_atendidos()).is_equal(1)

@@ -63,10 +63,12 @@ func registrar(cumplidas: int, obligatorias: int, llamados: int = 0) -> void:
 	_medios += puntos * Reglas.MEDIOS_POR_APERCIBIMIENTO + llamados * Reglas.MEDIOS_POR_LLAMADO
 
 
-## Anota una noche de la prueba: cada falla suma lo mismo, sin bandas y sin llamados.
-func registrar_prueba(fallas: int) -> void:
+## Anota una noche de la prueba: cada falla suma lo mismo y no hay bandas. Los llamados pesan
+## como siempre.
+func registrar_prueba(fallas: int, llamados: int = 0) -> void:
 	_medios += (
 		fallas * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+		+ llamados * Reglas.MEDIOS_POR_LLAMADO
 	)
 
 
