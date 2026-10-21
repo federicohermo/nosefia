@@ -65,14 +65,14 @@ func test_la_noche_1_impecable_es_saludo_y_cierre() -> void:  # AC-EMP-051
 
 
 func test_reponer_dice_la_falla_que_es() -> void:  # AC-EMP-052
-	var primera := DevolucionDelJefe.armar(1, 2, _antecedentes({T.REPONER: 1}), [T.REPONER], [])
+	var primera := DevolucionDelJefe.armar(2, 2, _antecedentes({T.REPONER: 1}), [T.REPONER], [])
 	assert_bool(primera[1].begins_with("Faltó reponer algunas unidades")).is_true()
 	var segunda := DevolucionDelJefe.armar(
-		2, 4, _antecedentes({T.REPONER: 2}, {}, 0), [T.REPONER], []
+		3, 4, _antecedentes({T.REPONER: 2}, {}, 0), [T.REPONER], []
 	)
 	assert_int(segunda.size()).is_equal(3)
 	assert_bool(segunda[1].begins_with("No podés dejarle a tu compañera")).is_true()
-	var cumplida := DevolucionDelJefe.armar(3, 4, _antecedentes({T.REPONER: 2}, {}, 1), [], [])
+	var cumplida := DevolucionDelJefe.armar(4, 4, _antecedentes({T.REPONER: 2}, {}, 1), [], [])
 	assert_int(cumplida.size()).is_equal(2)
 	var registrar := DevolucionDelJefe.armar(
 		3, 6, _antecedentes({T.REGISTRAR: 3}), [T.REGISTRAR], []
@@ -224,14 +224,13 @@ func test_el_despido_en_la_primera_noche() -> void:  # AC-EMP-061
 	assert_int(partida.medios()).is_equal(4 * M)
 	var devolucion := DevolucionDelJefe.new(1, partida)
 	var mensajes := devolucion.mensajes()
-	assert_int(mensajes.size()).is_equal(8)
+	assert_int(mensajes.size()).is_equal(7)
 	(
 		assert_array(mensajes)
 		. is_equal(
 			[
 				"Che",
 				DevolucionDelJefe.TAREAS[T.CAJA][0],
-				DevolucionDelJefe.TAREAS[T.REPONER][0],
 				DevolucionDelJefe.PAPEL_1,
 				DevolucionDelJefe.BASURA[0],
 				DevolucionDelJefe.AFUERA[0],

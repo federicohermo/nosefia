@@ -78,9 +78,7 @@ func test_cumplir_lo_ultimo_acelera_hasta_el_cierre() -> void:  # AC-SHF-031, AC
 func test_si_nadie_compra_acelera_al_vencer_el_ultimo() -> void:  # AC-SHF-032
 	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
 	var reloj := await _abrir(jornada, true)
-	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
-	if not reponer.completada():
-		reloj.completar(reponer)
+	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_null()
 	var compradores := Compradores.de_la_jornada(jornada)
 	var vencido := [false]
 	var atenciones: Ventanilla = _almacen.get("_atenciones")
@@ -103,21 +101,28 @@ func test_si_nadie_compra_acelera_al_vencer_el_ultimo() -> void:  # AC-SHF-032
 	reloj.avanzar(duracion)
 	assert_int(_cierres).is_equal(1)
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
+	var partida: Partida = _almacen.get("_partida")
+	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_zero()
 
 
 func test_descumplir_despues_de_acelerar_no_frena() -> void:  # AC-SHF-034
 	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
 	var reloj := await _abrir(jornada)
 	_cumplir_lo_que_no_es_cobrar(reloj, jornada)
-	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
-	assert_bool(reloj.descumplir(reponer)).is_true()
+	var registrar := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
+	var computadora: ComputadoraDeEscritorio = _almacen.get("_computadora")
+	computadora.pedir_sumar(Catalogo.de(Producto.Id.MAROLINI))
+	assert_bool(computadora.registro().coincide()).is_false()
+	assert_bool(registrar.completada()).is_false()
 	reloj.avanzar(0.0)
 	var duracion := CierreAnticipado.DURACION_DE_LA_ACELERACION
 	var restante := _restante(reloj)
 	assert_float(_baja_en(reloj, 1.0)).is_equal_approx(restante / duracion, 0.001)
 	reloj.avanzar(duracion)
 	assert_int(_cierres).is_equal(1)
-	assert_bool(reponer.completada()).is_false()
+	assert_bool(computadora.registro().coincide()).is_false()
+	assert_bool(registrar.completada()).is_false()
 
 
 func test_las_otras_noches_no_aceleran() -> void:  # AC-SHF-035
@@ -152,10 +157,7 @@ func test_la_ultima_compra_fisica_acelera_antes_de_la_despedida() -> void:  # AC
 	var compradores := Compradores.de_la_jornada(jornada)
 	var compras: Array[bool] = []
 	atenciones.compra_realizada.connect(func() -> void: compras.append(true))
-	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
-	if not reponer.completada():
-		reloj.completar(reponer)
-	assert_bool(reponer.completada()).is_true()
+	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_null()
 	for comprador in compradores:
 		var hora := Vector2i(5, 59) if comprador == compradores[-1] else Vector2i(22, 0)
 		RelojDePrueba.avanzar_hasta(reloj, hora)
@@ -174,7 +176,9 @@ func test_la_ultima_compra_fisica_acelera_antes_de_la_despedida() -> void:  # AC
 		for producto in comprador.pedido().productos():
 			for _unidad in comprador.pedido().unidades_de(producto):
 				computadora.pedir_sumar(producto)
-				var unidad := estante.retirar(producto)
+				var ocupados := estante.casilleros_ocupados(producto)
+				assert_array(ocupados).is_not_empty()
+				var unidad := estante.agarrar(producto, ocupados[0])
 				assert_object(unidad).is_not_null()
 				assert_int(atenciones.pedir_interaccion(unidad)).is_equal(
 					RecepcionDeCompra.Resultado.ACEPTADA
@@ -189,6 +193,8 @@ func test_la_ultima_compra_fisica_acelera_antes_de_la_despedida() -> void:  # AC
 		)
 		assert_bool(atendida.vendida()).is_true()
 	assert_array(compras).has_size(compradores.size())
+	var repositor: Repositor = _almacen.get("_repositor")
+	assert_bool(repositor.estante().completada()).is_false()
 	assert_bool(atenciones.atencion().despachada()).is_false()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
@@ -201,3 +207,19 @@ func test_la_ultima_compra_fisica_acelera_antes_de_la_despedida() -> void:  # AC
 	reloj.avanzar(0.002)
 	assert_float(_restante(reloj)).is_zero()
 	assert_int(_cierres).is_equal(1)
+
+
+func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-094
+	var reloj := await _abrir(1, true)
+	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_null()
+	var hud: Hud = _almacen.get("_hud")
+	assert_str((hud.get("_tareas") as Label).text).is_equal("Tareas 0/2")
+	var notas: Array = _almacen.get_node("Estructura/NotasDelAlmacen").get("notas")
+	var tareas: Array[NotaPegada] = []
+	for nodo: Node in notas:
+		if nodo.get("id") == NotaPegada.Id.TAREAS_A_REALIZAR:
+			tareas.append(nodo.call("dato") as NotaPegada)
+	assert_array(tareas).has_size(1)
+	assert_array(tareas[0].renglones()).contains_exactly(
+		["Atención al cliente", "Registro de productos vendidos"]
+	)

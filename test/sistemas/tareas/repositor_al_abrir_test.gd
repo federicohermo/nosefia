@@ -1,4 +1,3 @@
-## Reponer al abrir la noche: una góndola que abre completa arranca con la obligatoria cumplida.
 extends GdUnitTestSuite
 
 const CUPO := 2
@@ -9,7 +8,7 @@ class UnidadFisica:
 	var datos: ObjetoDelAlmacen
 
 
-func test_la_primera_jornada_abre_con_reponer_cumplida() -> void:  # AC-STK-094
+func test_la_primera_jornada_no_cuenta_reponer_al_agarrar_y_colocar() -> void:  # AC-STK-094
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var inventario := Apertura.inventario_con_faltantes({}, {actroncito.id: CUPO})
 	var obligatorias := Apertura.obligatorias(1)
@@ -22,16 +21,19 @@ func test_la_primera_jornada_abre_con_reponer_cumplida() -> void:  # AC-STK-094
 	repositor.agarre = auto_free(Agarre.new())
 	repositor.agarre.punto_de_carga = auto_free(Node3D.new())
 	repositor.arrancar(Estante.new(inventario, [actroncito]))
-	assert_bool(reponer.completada()).is_true()
+	assert_object(reponer).is_null()
+	assert_int(turno.tareas_cumplidas()).is_zero()
 	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
 	assert_bool(repositor.pedir_agarrar_de_la_gondola(actroncito.id, 0, nodo)).is_true()
-	assert_bool(reponer.completada()).is_false()
+	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_null()
+	assert_int(turno.tareas_cumplidas()).is_zero()
 	repositor.pedir_colocar_de_la_mano(actroncito, 0)
-	assert_bool(reponer.completada()).is_true()
+	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_null()
+	assert_int(turno.tareas_cumplidas()).is_zero()
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(CUPO)
 
 
-func test_una_noche_con_faltantes_no_arranca_cumplida() -> void:  # AC-STK-094
+func test_la_segunda_noche_exige_reponer_sus_faltantes() -> void:  # AC-STK-094, AC-STK-035
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var inventario := Apertura.inventario_con_faltantes({actroncito.id: 1}, {actroncito.id: CUPO})
 	var obligatorias := Apertura.obligatorias(2)
@@ -39,5 +41,13 @@ func test_una_noche_con_faltantes_no_arranca_cumplida() -> void:  # AC-STK-094
 	reloj.arrancar(Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias), obligatorias)
 	var repositor: Repositor = auto_free(Repositor.new())
 	repositor.reloj = reloj
+	repositor.agarre = auto_free(Agarre.new())
+	repositor.agarre.punto_de_carga = auto_free(Node3D.new())
 	repositor.arrancar(Estante.new(inventario, [actroncito]))
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_false()
+
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(actroncito.id, nodo)).is_true()
+	repositor.pedir_colocar_de_la_mano(actroncito)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_true()
+	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(CUPO)

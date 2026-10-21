@@ -35,7 +35,9 @@ func test_arrancar_deja_el_reloj_corriendo_con_las_tareas_alcanzables() -> void:
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	_ciclo_arrancado(Partida.nueva(), reloj)
 	assert_bool(reloj.corriendo()).is_true()
-	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_not_null()
+	assert_object(reloj.obligatoria(Tarea.Tipo.CAJA)).is_not_null()
+	assert_object(reloj.obligatoria(Tarea.Tipo.REGISTRAR)).is_not_null()
+	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_null()
 	assert_int(_aperturas).is_equal(1)
 
 
