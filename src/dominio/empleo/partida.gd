@@ -287,8 +287,6 @@ func _fallas_de_la_prueba(sin_cumplir: Array[Tarea.Tipo], clientes_mal_atendidos
 	return fallas
 
 
-## En la prueba, el contador cruza el umbral sin despedir: las dos primeras noches no se pueden
-## perder, y la última sólo si el contador llegó al umbral sin haberla cumplido entera.
 func _despedido_al_cerrar(cerrada: int) -> bool:
 	if cerrada < _ULTIMA_DE_LA_PRUEBA:
 		return false

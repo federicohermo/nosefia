@@ -1,4 +1,3 @@
-## Cuántos clientes llegaron, no se les vendió y se fueron: lo que la prueba cuenta uno por uno.
 extends GdUnitTestSuite
 
 
