@@ -23,10 +23,11 @@ func after_test() -> void:
 
 
 func test_retirar_y_reponer_retraba_y_rehabilita_la_entrada() -> void:  # AC-SHF-041
-	var almacen := await _abrir(1)
+	var segunda := ReglasDeLaPartida.PRIMERA_JORNADA + 1
+	var almacen := await _abrir(segunda)
 	var repositor: Repositor = almacen.get("_repositor")
 	var puesto: Node3D = almacen.get("_reposicion_manual")
-	for producto in Catalogo.todos():
+	for producto in Catalogo.de_la_jornada(segunda):
 		for indice in repositor.estante().casilleros_vacios(producto):
 			puesto.call("retirar", producto.id)
 			puesto.call("pedir_colocar", producto.id, indice)
@@ -149,7 +150,7 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:  # AC-S
 		computadora.pedir_cerrar()
 		assert_float(_restante(almacen)).is_equal(antes)
 		var reloj: RelojDelTurno = almacen.get("_reloj")
-		var tarea := reloj.obligatoria(Tarea.Tipo.REPONER)
+		var tarea := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
 		assert_bool(reloj.descumplir(tarea)).is_true()
 		assert_bool(almacen.call("_puede_salir")).is_false()
 		assert_array(_textos(almacen)).is_equal(
