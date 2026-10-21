@@ -2,16 +2,16 @@
   "formato": 1,
   "plataformas": {
     "windows-x86_64": {
-      "receta_sha256": "53ecfcafaa37f40e935b2a41b69406318150182f91adc4b2109ad2ce068a66d1",
-      "archivo_sha256": "7e43251ea593cc4a80d9f4c17e4dcba0b9273d0b69277115f94b0017a30ea3e1",
-      "manifiesto_sha256": "5bd4a42ce9c44c6bb97137b804c50c5cc65b6eae305c606a25a5316729fd702a",
-      "url": "https://github.com/federicohermo/nosefia/releases/download/godot-native-classdb-1/windows-x86_64.zip"
+      "receta_sha256": "8d82484468449656d42e48283615a834248045fa20cdf3a85eef99cfed4f2a8a",
+      "archivo_sha256": "9024b41052ada5dbff54ea71ee48ca0d9588009e483b6ab1af608b506e1fcebb",
+      "manifiesto_sha256": "5618370d8d0a73c2f7faaff229fb39897c6f0499c3fe0b3712bb29465945dee5",
+      "url": "https://github.com/federicohermo/nosefia/releases/download/godot-native-classdb-1-variantes/windows-x86_64.zip"
     },
     "linux-x86_64": {
-      "receta_sha256": "f728a5267db7fb7f56ed17bb3169ee9bd7a5725e8e6bed9f2a2a387a3c53c34b",
-      "archivo_sha256": "e362415082b6fffc089e2bc5c8cd53f15495a435607ab49918ea072392feae7a",
-      "manifiesto_sha256": "278a7af0af7adf3520918075b0fb5ba324bf5278491626e309f4c2193d20ad27",
-      "url": "https://github.com/federicohermo/nosefia/releases/download/godot-native-classdb-1/linux-x86_64.zip"
+      "receta_sha256": "26159b2745fdfa56f39989db38d3479fea9911a8136f892f9a2dae3cbcf3261a",
+      "archivo_sha256": "dcff743712e96abebd8fab8e0b25f9e6478a1754f11c765dec0f3ce0447cc486",
+      "manifiesto_sha256": "19d85875971203dfc73a6ece9ecd2afdede8acfd879ebeace6e68428e8375494",
+      "url": "https://github.com/federicohermo/nosefia/releases/download/godot-native-classdb-1-variantes/linux-x86_64.zip"
     }
   }
 }
