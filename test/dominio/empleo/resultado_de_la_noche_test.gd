@@ -109,7 +109,9 @@ func test_un_cierre_ignorado_no_anota() -> void:  # AC-EMP-086
 
 func test_el_que_espera_al_cerrar_no_es_mal_atendido() -> void:  # AC-EMP-086
 	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
-	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	var tarea := TareaDeAtender.new(
+		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	)
 	tarea.avanzar(compradores[0].horario.x)
 	assert_object(tarea.en_ventanilla()).is_same(compradores[0])
 	assert_int(tarea.mal_atendidos()).is_zero()
@@ -118,7 +120,7 @@ func test_el_que_espera_al_cerrar_no_es_mal_atendido() -> void:  # AC-EMP-086
 
 
 func test_una_venta_no_cuenta_como_cliente_mal_atendido() -> void:  # AC-EMP-086
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 	var tarea := TareaDeAtender.new(compradores, inventario)
 	tarea.avanzar(compradores[0].horario.x)
