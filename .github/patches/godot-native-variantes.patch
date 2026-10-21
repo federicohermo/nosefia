@@ -1,0 +1,85 @@
+diff --git a/core/object/class_db.cpp b/core/object/class_db.cpp
+--- a/core/object/class_db.cpp
++++ b/core/object/class_db.cpp
+@@ -2170,6 +2170,8 @@
+ HashSet<StringName> ClassDB::default_values_cached;
+ 
+ Variant ClassDB::class_get_default_property_value(const StringName &p_class, const StringName &p_property, bool *r_valid) {
++	Locker::Lock lock(Locker::STATE_WRITE);
++
+ 	if (!default_values_cached.has(p_class)) {
+ 		if (!default_values.has(p_class)) {
+ 			default_values[p_class] = HashMap<StringName, Variant>();
+diff --git a/drivers/gles3/rasterizer_scene_gles3.cpp b/drivers/gles3/rasterizer_scene_gles3.cpp
+index bf41012..00b3d37 100644
+--- a/drivers/gles3/rasterizer_scene_gles3.cpp
++++ b/drivers/gles3/rasterizer_scene_gles3.cpp
+@@ -3564,6 +3564,9 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
+ 						if (inst->area_light_gl_cache.is_empty()) {
+ 							spec_constants |= SceneShaderGLES3::DISABLE_LIGHT_AREA;
+ 						}
++						// The light counts are uploaded for every draw: an empty omni or spot loop draws the
++						// same as a disabled one, at half the variants.
++						spec_constants &= ~(SceneShaderGLES3::DISABLE_LIGHT_OMNI | SceneShaderGLES3::DISABLE_LIGHT_SPOT);
+ 
+ 						if (p_render_data->directional_light_count == p_render_data->directional_shadow_count) {
+ 							spec_constants |= SceneShaderGLES3::DISABLE_LIGHT_DIRECTIONAL;
+@@ -3600,6 +3603,15 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
+ 							spec_constants |= SceneShaderGLES3::USE_SUN_SCATTER;
+ 						}
+ 					}
++					// A probe whose box holds nothing adds nothing: the two-probe variant draws the same
++					// as one probe or none, and every material links it once instead of three times.
++					spec_constants &= ~SceneShaderGLES3::DISABLE_REFLECTION_PROBE;
++					spec_constants |= SceneShaderGLES3::SECOND_REFLECTION_PROBE;
++					if (shader->unshaded) {
++						// Unshaded code skips lights and lightmaps, so their variants all draw the same.
++						spec_constants &= ~(SceneShaderGLES3::USE_LIGHTMAP | SceneShaderGLES3::USE_SH_LIGHTMAP | SceneShaderGLES3::LIGHTMAP_BICUBIC_FILTER | SceneShaderGLES3::USE_LIGHTMAP_CAPTURE);
++						spec_constants |= SceneShaderGLES3::DISABLE_LIGHT_OMNI | SceneShaderGLES3::DISABLE_LIGHT_SPOT | SceneShaderGLES3::DISABLE_LIGHT_AREA | SceneShaderGLES3::DISABLE_LIGHT_DIRECTIONAL | SceneShaderGLES3::DISABLE_LIGHTMAP;
++					}
+ 				} else {
+ 					// Only base pass uses the radiance map.
+ 					spec_constants &= ~SceneShaderGLES3::USE_RADIANCE_MAP;
+@@ -3875,6 +3887,20 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
+ 						spec_constants |= SceneShaderGLES3::SECOND_REFLECTION_PROBE;
+ 					}
+ 				}
++				if (pass == 0 && inst->reflection_probe_rid_cache.size() < 2) {
++					GLES3::Config *config = GLES3::Config::get_singleton();
++					GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
++					GLuint black = texture_storage->get_texture(texture_storage->texture_gl_get_default(GLES3::DEFAULT_GL_TEXTURE_CUBEMAP_BLACK))->tex_id;
++					// A negative extent puts every fragment outside the box.
++					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::REFPROBE2_BOX_EXTENTS, Vector3(-1.0, -1.0, -1.0), shader->version, instance_variant, spec_constants);
++					glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 9);
++					glBindTexture(GL_TEXTURE_CUBE_MAP, black);
++					if (inst->reflection_probe_rid_cache.is_empty()) {
++						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::REFPROBE1_BOX_EXTENTS, Vector3(-1.0, -1.0, -1.0), shader->version, instance_variant, spec_constants);
++						glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 8);
++						glBindTexture(GL_TEXTURE_CUBE_MAP, black);
++					}
++				}
+ 			}
+ 
+ 			if constexpr (p_pass_mode == PASS_MODE_MOTION_VECTORS) {
+diff --git a/drivers/gles3/shader_gles3.cpp b/drivers/gles3/shader_gles3.cpp
+index 4fe333e..35dedd0 100644
+--- a/drivers/gles3/shader_gles3.cpp
++++ b/drivers/gles3/shader_gles3.cpp
+@@ -706,15 +706,11 @@ void ShaderGLES3::_initialize_version(Version *p_version) {
+ 	if (use_cache && _load_from_cache(p_version)) {
+ 		return;
+ 	}
++	// Compile only what a bind requests: the bind compiles a missing specialization and saves the
++	// cache. The default specialization of every variant was compiled here and never drawn.
+ 	p_version->variants.reserve(variant_count);
+ 	for (int i = 0; i < variant_count; i++) {
+ 		p_version->variants.push_back(AHashMap<uint64_t, Version::Specialization>());
+-		Version::Specialization spec;
+-		_compile_specialization(spec, i, p_version, specialization_default_mask);
+-		p_version->variants[i].insert(specialization_default_mask, spec);
+-	}
+-	if (use_cache) {
+-		_save_to_cache(p_version);
+ 	}
+ }
+ 
