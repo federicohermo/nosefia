@@ -1,6 +1,8 @@
 ## Los motivos de una sola noche se suman a la banda y conservan medios exactos.
 extends GdUnitTestSuite
 
+const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+
 
 func test_las_bandas_suman_medios_y_no_sustituyen_llamados() -> void:  # AC-EMP-017
 	for cumplidas: int in [0, 3, 5]:
@@ -11,7 +13,7 @@ func test_las_bandas_suman_medios_y_no_sustituyen_llamados() -> void:  # AC-EMP-
 
 
 func test_motivos_repetidos_y_distintos_se_cuentan_por_noche() -> void:  # AC-EMP-017
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": COMPLETA})
 	partida.abrir_la_jornada()
 	partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
 	partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
@@ -25,7 +27,7 @@ func test_motivos_repetidos_y_distintos_se_cuentan_por_noche() -> void:  # AC-EM
 
 
 func test_fuera_de_la_jornada_abierta_no_guarda_motivos() -> void:  # AC-EMP-018
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": COMPLETA})
 	partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
 	partida.abrir_la_jornada()
 	partida.cerrar_la_jornada(5)
@@ -70,10 +72,13 @@ func test_la_lectura_entera_del_comentario_descarta_solo_el_medio() -> void:  # 
 
 func test_la_ultima_con_siete_cumple_y_con_un_motivo_despide() -> void:  # AC-EMP-022
 	for llamado: bool in [false, true]:
-		var partida := Partida.new(Legajo.con_medios(7))
-		for noche: int in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
+		var partida := Partida.desde({"jornada": COMPLETA, "medios": 7})
+		var restantes := (
+			ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - COMPLETA
+		)
+		for noche: int in restantes:
 			partida.abrir_la_jornada()
-			if noche == ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1 and llamado:
+			if noche == restantes - 1 and llamado:
 				partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
 			partida.cerrar_la_jornada(partida.obligatorias().size())
 		var final := Partida.Final.DESPEDIDO if llamado else Partida.Final.CONTRATO_CUMPLIDO

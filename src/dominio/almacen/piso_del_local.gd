@@ -32,6 +32,10 @@ enum Lugar {
 	PUERTA_DEL_BANO_EN_EL_BANO,
 	TECHO_DEL_BANO,
 	BAJO_LA_PUERTA_DEL_CUBICULO,
+	FRENTE_AL_MOSTRADOR,
+	PARED_DE_LA_PUERTA_DEL_BANO,
+	AL_LADO_DE_LA_PUERTA_DEL_CUARTITO,
+	PISO_DEL_OTRO_INODORO,
 }
 
 ## Sobre qué está la mancha. El paso del jugador toca sólo las del piso.
@@ -57,14 +61,25 @@ const LUGARES: Dictionary[Lugar, Array] = {
 	Lugar.PUERTA_DEL_BANO_EN_EL_BANO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
 	Lugar.TECHO_DEL_BANO: [ReglasDelCierre.Habitacion.BANO, Superficie.TECHO],
 	Lugar.BAJO_LA_PUERTA_DEL_CUBICULO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
+	Lugar.FRENTE_AL_MOSTRADOR: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.PARED_DE_LA_PUERTA_DEL_BANO: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PARED],
+	Lugar.AL_LADO_DE_LA_PUERTA_DEL_CUARTITO:
+	[ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PARED],
+	Lugar.PISO_DEL_OTRO_INODORO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
 }
 
 ## Qué mancha pone cada jornada en cada lugar, según la ficha: `jornada → {Lugar: TipoDeMancha}`.
 ##
-## Una jornada que pide limpiar y no tiene fila usa la primera: las filas siguientes de la ficha
-## dependen de un cuartito de limpieza que el almacén no tiene y de techos que hoy quedan fuera
-## del alcance de la mira.
+## Las jornadas 6 a 8 conservan la fila de la primera jornada completa hasta incorporar sus
+## repartos de la ficha, que incluyen techos hoy fuera del alcance de la mira.
 const MANCHAS_POR_JORNADA: Dictionary[int, Dictionary] = {
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1:
+	{
+		Lugar.FRENTE_AL_MOSTRADOR: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.PARED_DE_LA_PUERTA_DEL_BANO: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.AL_LADO_DE_LA_PUERTA_DEL_CUARTITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.PISO_DEL_OTRO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	},
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 	{
 		Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,

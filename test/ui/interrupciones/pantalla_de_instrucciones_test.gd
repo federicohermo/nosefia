@@ -138,14 +138,23 @@ func test_la_segunda_y_la_tercera_cuentan_sus_pantallas() -> void:  # AC-EMP-045
 	await get_tree().process_frame
 	_comprobar_pantalla(tercera, 1, primera + 2)
 	var comienzos: Array[int] = [0]
-	tercera.comenzar_pedido.connect(func() -> void: comienzos[0] += 1)
-	_boton(tercera, "_siguiente").pressed.emit()
+	segunda.comenzar_pedido.connect(func() -> void: comienzos[0] += 1)
+	_boton(segunda, "_siguiente").pressed.emit()
 	await get_tree().process_frame
-	_comprobar_pantalla(tercera, 2, primera + 2)
+	_comprobar_pantalla(segunda, 2, primera + 1)
 	assert_int(comienzos[0]).is_zero()
-	_boton(tercera, "_siguiente").pressed.emit()
-	_boton(tercera, "_siguiente").pressed.emit()
+	_boton(segunda, "_siguiente").pressed.emit()
+	_boton(segunda, "_siguiente").pressed.emit()
 	assert_int(comienzos[0]).is_equal(1)
+	assert_bool(segunda.visible).is_false()
+	var comienzos_de_la_tercera: Array[int] = [0]
+	tercera.comenzar_pedido.connect(func() -> void: comienzos_de_la_tercera[0] += 1)
+	assert_str(_boton(tercera, "_siguiente").text).is_equal(
+		PantallaDeInstrucciones.TEXTO_DE_COMENZAR
+	)
+	_boton(tercera, "_siguiente").pressed.emit()
+	_boton(tercera, "_siguiente").pressed.emit()
+	assert_int(comienzos_de_la_tercera[0]).is_equal(1)
 	assert_bool(tercera.visible).is_false()
 
 

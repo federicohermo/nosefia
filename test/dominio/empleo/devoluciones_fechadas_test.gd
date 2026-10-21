@@ -91,7 +91,9 @@ func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC
 		assert_bool(bandeja.recibir(JEFE, mensaje)).is_true()
 	var historial := bandeja.mensajes_de(JEFE)
 	var guion := Conversacion.de(JEFE).mensajes
-	var previos := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada < 5)
+	var previos := guion.filter(
+		func(mensaje: Mensaje) -> bool: return mensaje.jornada < 5 and mensaje.condicion.is_empty()
+	)
 	var apertura := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)
 	var cuarta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 4)
 	var quinta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)

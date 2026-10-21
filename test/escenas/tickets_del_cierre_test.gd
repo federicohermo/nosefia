@@ -24,6 +24,7 @@ func after_test() -> void:
 
 func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
+	_almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(_almacen)
 	# Conserva los cinco cierres del caso y aísla el ticket del reparto físico de compradores.
 	_almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA + 1)

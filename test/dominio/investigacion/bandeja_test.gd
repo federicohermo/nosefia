@@ -19,7 +19,8 @@ func test_las_instrucciones_llegan_con_su_jornada() -> void:  # AC-INV-065, AC-E
 	for jornada in range(PRIMERA, COMPLETA + 1):
 		bandeja.abrir_jornada(jornada)
 		var propios := guion.mensajes.filter(
-			func(mensaje: Mensaje) -> bool: return mensaje.jornada == jornada
+			func(mensaje: Mensaje) -> bool:
+				return mensaje.jornada == jornada and mensaje.vale_para([])
 		)
 		assert_array(propios).is_not_empty()
 		esperado.append_array(propios)
@@ -64,7 +65,9 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	# Los bloques documentados siguen disponibles; no aparecen contactos sin guion.
 	restaurada.abrir_jornada(5)
 	assert_int(restaurada.conversaciones().size()).is_equal(2)
-	assert_array(restaurada.mensajes_de(quien)).is_equal(Conversacion.de(quien).mensajes)
+	assert_array(restaurada.mensajes_de(quien)).is_equal(
+		Conversacion.de(quien).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+	)
 
 
 func test_el_corte_de_jornada_filtra_y_ordena_el_menu() -> void:  # AC-INV-028, AC-INV-037

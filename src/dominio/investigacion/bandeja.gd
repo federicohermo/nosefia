@@ -6,6 +6,7 @@ var _conversaciones: Array[Conversacion] = []
 var _leidos: Dictionary[Conversacion.Interlocutor, int] = {}
 var _recibidos: Dictionary[Conversacion.Interlocutor, Array] = {}
 var _jornada: int = 1
+var _condiciones: Array[StringName] = []
 
 
 func _init(conversaciones: Array[Conversacion]) -> void:
@@ -20,8 +21,9 @@ func _init(conversaciones: Array[Conversacion]) -> void:
 	)
 
 
-func abrir_jornada(jornada: int) -> void:
+func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	_jornada = jornada
+	_condiciones = condiciones.duplicate()
 
 
 func conversaciones() -> Array[Conversacion]:
@@ -48,7 +50,7 @@ func mensajes_de(quien: Conversacion.Interlocutor) -> Array[Mensaje]:
 	if conversacion == null:
 		return visibles
 	for mensaje in conversacion.mensajes:
-		if mensaje != null and mensaje.jornada <= _jornada:
+		if mensaje != null and mensaje.jornada <= _jornada and mensaje.vale_para(_condiciones):
 			visibles.append(mensaje)
 	var fechados: Array[Dictionary] = []
 	var sin_fecha: Array[Mensaje] = []

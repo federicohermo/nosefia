@@ -20,7 +20,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro01"
 orden = 0
 de_quien = "Enrique Peldaño"
-texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo ocho jornadas. ¿Quién pudiera, no?\n\nDe todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
+texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo ocho jornadas. Y encima voy a dejar que te vayas temprano los primeros días si terminás el laburo rápido. ¿Quién pudiera, no?\n\nDe todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación. ;)"
 
 [sub_resource type="Resource" id="FotoReloj"]
 script = ExtResource("mensaje")
@@ -41,7 +41,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro02"
 orden = 2
 de_quien = "Enrique Peldaño"
-texto = "Bueno, como ya te comenté, [b]la jornada es de 20:00 a 08:00. [/b]Debería sobrarte el tiempo para cumplir con las [b]tareas [/b]que te voy a dejar.\n\nCualquier cosa, siempre van a quedar [b]anotadas en el corcho[/b], atrás del mostrador. Te las resumo:"
+texto = "Bueno, como ya te comenté en la entrevista, [b]la jornada es de 20 a 08. [/b]Debería sobrarte el tiempo para cumplir con las [b]tareas [/b]que te voy a dejar.\n\nCualquier cosa, siempre van a quedar [b]anotadas en el corcho[/b], atrás del mostrador."
 
 [sub_resource type="Resource" id="Foto03"]
 script = ExtResource("mensaje")
@@ -55,7 +55,7 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro03"
 orden = 4
 de_quien = "Enrique Peldaño"
-texto = "Primero, y lo más importante: [b]ATENDER A LOS CLIENTES[/b]. A esa hora, la entrada principal queda cerrada, así que vas a tener que [b]hablarles y entregarles los productos por la ventanilla[/b]. ¡Y no te olvides de [b]darles un ticket [/b]de recibo!"
+texto = "Hoy es fundamental que aprendas lo más importante: [b]ATENDER A LOS CLIENTES[/b]. Durante el turno nocturno, la entrada principal queda cerrada, así que vas a tener que [b]hablarles y entregarles los productos por la ventanilla[/b].\n\n¡Y no te olvides de [b]darles un ticket [/b]de recibo!"
 
 [sub_resource type="Resource" id="Foto04"]
 script = ExtResource("mensaje")
@@ -90,7 +90,60 @@ script = ExtResource("mensaje")
 identidad = "J1_Intro06"
 orden = 9
 de_quien = "Enrique Peldaño"
-texto = "En segundo lugar, [b]ANOTAR LOS PRODUCTOS VENDIDOS [/b]durante la noche en la [b]computadora[/b]. Bastante simple."
+texto = "Además de cumplir con la atención al cliente, tenés que [b]ANOTAR LOS PRODUCTOS VENDIDOS [/b]durante la noche en la [b]computadora[/b]. Bastante simple. El programa se explica solo.\n\nA ver cómo te manejás con eso."
+
+[sub_resource type="Resource" id="J2_Mensaje1_SinFallas"]
+script = ExtResource("mensaje")
+identidad = "J2_Mensaje1_SinFallas"
+jornada = 2
+orden = 9
+de_quien = "Enrique Peldaño"
+condicion = &"J2_SIN_FALLAS"
+texto = "Muy bien. Veo que pudiste cumplir con tus tareas correctamente, así que te voy a sumar una más."
+
+[sub_resource type="Resource" id="J2_Mensaje1_RegistroMal"]
+script = ExtResource("mensaje")
+identidad = "J2_Mensaje1_RegistroMal"
+jornada = 2
+orden = 9
+de_quien = "Enrique Peldaño"
+condicion = &"J2_REGISTRO_MAL"
+texto = "Bueno, por lo visto, pudiste atender bien a todos los clientes, pero el registro de ventas no cuadra.
+
+Vas a tener que prestar más atención, especialmente ahora que te voy a sumar una tarea más."
+
+[sub_resource type="Resource" id="J2_Mensaje1_UnClienteMal"]
+script = ExtResource("mensaje")
+identidad = "J2_Mensaje1_UnClienteMal"
+jornada = 2
+orden = 9
+de_quien = "Enrique Peldaño"
+condicion = &"J2_UN_CLIENTE_MAL"
+texto = "Bueno, por lo visto, el registro de ventas cuadra bien, pero me enteré de que un cliente se fue insatisfecho ayer.
+
+Voy a ser considerado con vos porque fue tu primer día, pero vas a tener que ponerte las pilas, especialmente ahora que te voy a sumar una tarea más."
+
+[sub_resource type="Resource" id="J2_Mensaje1_NingunoEnCero"]
+script = ExtResource("mensaje")
+identidad = "J2_Mensaje1_NingunoEnCero"
+jornada = 2
+orden = 9
+de_quien = "Enrique Peldaño"
+condicion = &"J2_NINGUNO_EN_CERO"
+texto = "Che, me enteré de que ayer pasaron dos clientes y no atendiste correctamente a ninguno de los dos. O sea, por culpa tuya no tuvimos ingresos en el turno nocturno.
+
+Voy a ser considerado con vos porque fue tu primer día, pero vamos a tener problemas si no te ponés las pilas, especialmente ahora que te voy a sumar una tarea más."
+
+[sub_resource type="Resource" id="J2_Mensaje1_NingunoAnotado"]
+script = ExtResource("mensaje")
+identidad = "J2_Mensaje1_NingunoAnotado"
+jornada = 2
+orden = 9
+de_quien = "Enrique Peldaño"
+condicion = &"J2_NINGUNO_ANOTADO"
+texto = "Che, me enteré de que ayer pasaron dos clientes y no atendiste correctamente a ninguno de los dos. O sea, por culpa tuya no tuvimos ingresos en el turno nocturno. Y encima anotaste en el registro productos que no se vendieron ¿me estás tomando el pelo?
+
+Voy a ser considerado con vos porque fue tu primer día, pero vamos a tener problemas si no te ponés las pilas, especialmente ahora que te voy a sumar una tarea más."
 
 [sub_resource type="Resource" id="FotoGondolas"]
 script = ExtResource("mensaje")
@@ -114,7 +167,7 @@ identidad = "J1_Intro07"
 jornada = 2
 orden = 11
 de_quien = "Enrique Peldaño"
-texto = "Hoy te voy a pedir que hagas la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndolas [/b]y reponé los ítems que falten con los de las [b]cajas del depósito[/b]."
+texto = "Además de atender y hacer el registro de ventas, ahora te corresponde también hacer la [b]REPOSICIÓN[/b]. Revisá bien todas las [b]góndolas [/b]y reponé los ítems que falten con los que hay en las [b]cajas del depósito[/b].\n\nObviamente, también tenés que reponer los productos que saques de las góndolas para venderlos a los compradores."
 
 [sub_resource type="Resource" id="Intro08"]
 script = ExtResource("mensaje")
@@ -122,7 +175,93 @@ identidad = "J1_Intro08"
 jornada = 2
 orden = 12
 de_quien = "Enrique Peldaño"
-texto = "No quiero ver ni un solo hueco vacío.\n\nUn único producto ausente en la mañana puede hacer la diferencia entre un local de excelencia y uno mediocre. No podemos dar la impresión de que estamos cortos de stock."
+texto = "No quiero ver ni un solo hueco vacío. ¿Entendido?\n\nUn único producto ausente en la mañana puede hacer la diferencia entre un local de excelencia y uno mediocre. No podemos dar la impresión de que estamos cortos de stock."
+
+[sub_resource type="Resource" id="J3_Mensaje1_SinFallas"]
+script = ExtResource("mensaje")
+identidad = "J3_Mensaje1_SinFallas"
+jornada = 3
+orden = 12
+de_quien = "Enrique Peldaño"
+condicion = &"J3_SIN_FALLAS"
+texto = "Excelente. Puedo ver que no tuviste problemas para completar los quehaceres de la jornada. Venís muy bien, pibe."
+
+[sub_resource type="Resource" id="J3_Mensaje1_ReposicionMal"]
+script = ExtResource("mensaje")
+identidad = "J3_Mensaje1_ReposicionMal"
+jornada = 3
+orden = 12
+de_quien = "Enrique Peldaño"
+condicion = &"J3_REPOSICION_MAL"
+texto = "Mmmmmm. Me parece que la reposición anduvo medio floja.
+
+Tampoco es que hay tantos estantes, ¿no? ¿Qué tal si hoy te pegás una vueltita extra a ver si esta vez conseguís ver los espacios vacíos?"
+
+[sub_resource type="Resource" id="J3_Mensaje1_RegistroMal"]
+script = ExtResource("mensaje")
+identidad = "J3_Mensaje1_RegistroMal"
+jornada = 3
+orden = 12
+de_quien = "Enrique Peldaño"
+condicion = &"J3_REGISTRO_MAL"
+texto = "Mmmmmm. Me parece que el registro de ventas está mal hecho.
+
+Tampoco es que se venden taaaantos productos ¿no? ¿Qué tal si hoy anotás bien en el cuadrito lo que vendés y nos quedamos todos contentos?"
+
+[sub_resource type="Resource" id="J3_Mensaje1_RegistroYReposicionMal"]
+script = ExtResource("mensaje")
+identidad = "J3_Mensaje1_RegistroYReposicionMal"
+jornada = 3
+orden = 12
+de_quien = "Enrique Peldaño"
+condicion = &"J3_REGISTRO_Y_REPOSICION_MAL"
+texto = "Mmmmmm. Me parece que la reposición anduvo medio floja. Tampoco es que hay tantos estantes, ¿no? ¿Qué tal si hoy te pegás una vueltita extra a ver si esta vez conseguís ver los espacios vacíos?
+
+Y además, el registro de ventas está mal. Te voy a dar una última oportunidad. Espero que me sorprendas."
+
+[sub_resource type="Resource" id="J3_Mensaje1_AtencionMal"]
+script = ExtResource("mensaje")
+identidad = "J3_Mensaje1_AtencionMal"
+jornada = 3
+orden = 12
+de_quien = "Enrique Peldaño"
+condicion = &"J3_ATENCION_MAL"
+texto = "Che, estuvo floja la atención al cliente. No te olvides de que eso es LO MÁS IMPORTANTE.
+
+Te voy a dar una última oportunidad. Espero que me sorprendas."
+
+[sub_resource type="Resource" id="J3_Mensaje1_AtencionYRegistroMal"]
+script = ExtResource("mensaje")
+identidad = "J3_Mensaje1_AtencionYRegistroMal"
+jornada = 3
+orden = 12
+de_quien = "Enrique Peldaño"
+condicion = &"J3_ATENCION_Y_REGISTRO_MAL"
+texto = "Che, estuvo floja la atención al cliente. No te olvides de que eso es LO MÁS IMPORTANTE. Además, quedó mal el registro de ventas.
+
+Te voy a dar una última oportunidad. Espero que me sorprendas."
+
+[sub_resource type="Resource" id="J3_Mensaje1_AtencionYReposicionMal"]
+script = ExtResource("mensaje")
+identidad = "J3_Mensaje1_AtencionYReposicionMal"
+jornada = 3
+orden = 12
+de_quien = "Enrique Peldaño"
+condicion = &"J3_ATENCION_Y_REPOSICION_MAL"
+texto = "Che, estuvo floja la atención al cliente. No te olvides de que eso es LO MÁS IMPORTANTE. Además, no repusiste todos los productos en góndolas.
+
+Te voy a dar una última oportunidad. Espero que me sorprendas."
+
+[sub_resource type="Resource" id="J3_Mensaje1_TodoMal"]
+script = ExtResource("mensaje")
+identidad = "J3_Mensaje1_TodoMal"
+jornada = 3
+orden = 12
+de_quien = "Enrique Peldaño"
+condicion = &"J3_TODO_MAL"
+texto = "Che, no hiciste ni una cosa bien. ¿Sos o te hacés?
+
+Te voy a dar una última oportunidad. Más te vale que me sorprendas."
 
 [sub_resource type="Resource" id="Foto09"]
 script = ExtResource("mensaje")
@@ -138,7 +277,34 @@ identidad = "J1_Intro09"
 jornada = 3
 orden = 14
 de_quien = "Enrique Peldaño"
-texto = "Cuarto, pero no menor, [b]LIMPIAR[/b]. Vas a encontrar los [b]productos de limpieza en el cuartito del depósito[/b], además de algunas [b]notitas [/b]explicando cómo usarlos. No deberías tener problemas con eso."
+texto = "Hoy te voy a sumar tu última tarea rutinaria: [b]LIMPIAR[/b]. Vas a encontrar los [b]elementos necesarios en el cuartito de limpieza [/b]adyacente al depósito, además de algunas [b]notitas [/b]explicando cómo usarlos. No deberías tener problemas con eso."
+
+[sub_resource type="Resource" id="J4_Mensaje1_SinFallas"]
+script = ExtResource("mensaje")
+identidad = "J4_Mensaje1_SinFallas"
+jornada = 4
+orden = 14
+de_quien = "Enrique Peldaño"
+condicion = &"J4_SIN_FALLAS"
+texto = "Muy bien, pibe. Me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que no bajes el nivel.\n\nA partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí."
+
+[sub_resource type="Resource" id="J4_Mensaje1_ConAltibajos"]
+script = ExtResource("mensaje")
+identidad = "J4_Mensaje1_ConAltibajos"
+jornada = 4
+orden = 14
+de_quien = "Enrique Peldaño"
+condicion = &"J4_CON_ALTIBAJOS"
+texto = "Bueno, pibe. Concluidos tus tres días de prueba, debo decir que tuviste algunos altibajos. De todas formas, me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que subas el nivel.\n\nA partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí."
+
+[sub_resource type="Resource" id="J4_Mensaje1_Redimido"]
+script = ExtResource("mensaje")
+identidad = "J4_Mensaje1_Redimido"
+jornada = 4
+orden = 14
+de_quien = "Enrique Peldaño"
+condicion = &"J4_REDIMIDO"
+texto = "Mirá, flaco, en tus primeras dos jornadas estuviste mal, pero ayer lograste redimirte. Contra mis instintos, te voy a tomar como capacitado para el trabajo completo. Pero no me hagas arrepentirme, ¿ok? Te voy a seguir supervisando para que subas el nivel.\n\nA partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí."
 
 [sub_resource type="Resource" id="Intro10"]
 script = ExtResource("mensaje")
@@ -146,7 +312,7 @@ identidad = "J1_Intro10"
 jornada = 4
 orden = 15
 de_quien = "Enrique Peldaño"
-texto = "Además de los quehaceres rutinarios, siempre queda alguna cosita por hacer. Por eso, no te sorprendas si ves una quinta tarea diferente cada noche. Tranqui, que te voy a dejar instrucciones por mensaje."
+texto = "Además de los quehaceres rutinarios, siempre queda alguna cosita extra. Por eso, no te sorprendas si ves una [b]quinta tarea diferente cada noche[/b]. Tranqui, que te voy a dejar [b]instrucciones por mensaje[/b]."
 
 [sub_resource type="Resource" id="Foto11"]
 script = ExtResource("mensaje")
@@ -164,20 +330,13 @@ orden = 17
 de_quien = "Enrique Peldaño"
 texto = "Para esta noche, te pido [b]ORGANIZAR LAS CAJAS[/b] que dejó el proveedor. Acomodalas [b]en los estantes del depósito[/b] y que no quede ni una en el piso, ¿ok?"
 
-[sub_resource type="Resource" id="Reponer"]
-script = ExtResource("mensaje")
-identidad = "J1_Reponer"
-orden = 10
-de_quien = "Enrique Peldaño"
-texto = "Lo que les entregues lo sacás de las [b]góndolas[/b]. Después, [b]reponé esas unidades[/b] con las cajas del depósito. No quiero ver huecos."
-
 [sub_resource type="Resource" id="Intro12"]
 script = ExtResource("mensaje")
 identidad = "J1_Intro12"
-jornada = 3
-orden = 15
+jornada = 4
+orden = 18
 de_quien = "Enrique Peldaño"
-texto = "Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.\n\nMe parece que con eso cubrimos todo. No te olvides de dejar el local correctamente ordenado antes de irte. ¿Estamos?"
+texto = "Y no te olvides de [b]dejar el local correctamente ordenado[/b] antes de irte. Desde hoy te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.\n\nMe parece que con eso cubrimos todo. Desde ahora, nuestra comunicación va a ser exclusivamente por chat. ¿Estamos?"
 
 [sub_resource type="Resource" id="J2_FOTO"]
 script = ExtResource("mensaje")
@@ -200,4 +359,4 @@ script = ExtResource("conversacion")
 nombre = "Enrique Peldaño"
 rol = "Jefe"
 imagen = ExtResource("enrique")
-mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("FotoReloj"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("Reponer"), SubResource("FotoGondolas"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("Foto09"), SubResource("Intro09"), SubResource("Intro12"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])
+mensajes = Array[ExtResource("mensaje")]([SubResource("Intro01"), SubResource("FotoReloj"), SubResource("Foto02"), SubResource("Intro02"), SubResource("Foto03"), SubResource("Intro03"), SubResource("Foto04"), SubResource("Intro04"), SubResource("Intro05"), SubResource("Foto06"), SubResource("Intro06"), SubResource("J2_Mensaje1_SinFallas"), SubResource("J2_Mensaje1_RegistroMal"), SubResource("J2_Mensaje1_UnClienteMal"), SubResource("J2_Mensaje1_NingunoEnCero"), SubResource("J2_Mensaje1_NingunoAnotado"), SubResource("FotoGondolas"), SubResource("Foto07"), SubResource("Intro07"), SubResource("Intro08"), SubResource("J3_Mensaje1_SinFallas"), SubResource("J3_Mensaje1_ReposicionMal"), SubResource("J3_Mensaje1_RegistroMal"), SubResource("J3_Mensaje1_RegistroYReposicionMal"), SubResource("J3_Mensaje1_AtencionMal"), SubResource("J3_Mensaje1_AtencionYRegistroMal"), SubResource("J3_Mensaje1_AtencionYReposicionMal"), SubResource("J3_Mensaje1_TodoMal"), SubResource("Foto09"), SubResource("Intro09"), SubResource("J4_Mensaje1_SinFallas"), SubResource("J4_Mensaje1_ConAltibajos"), SubResource("J4_Mensaje1_Redimido"), SubResource("Intro10"), SubResource("Foto11"), SubResource("Intro11"), SubResource("Intro12"), SubResource("J2_FOTO"), SubResource("J2_TEXTO")])
