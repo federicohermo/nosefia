@@ -133,7 +133,7 @@ revisada el 2026-10-20, repartidos así:
 | Jornada | En pantalla | Sólo en el chat |
 |---|---|---|
 | 1 | Intro 1 a 6 | — |
-| 2 | Intro 7 y 8 | — |
+| 2 | El mensaje 1 que elige BR-EMP-040, Intro 7 e Intro 8 | — |
 | 3 | Intro 9 | — |
 | 4 | — | Intro 10, Intro 11 e Intro 12, al abrir la jornada |
 
@@ -171,8 +171,9 @@ interfaz de caja y el ticket. Las fotos DEBEN cubrir su marco sin franjas negras
 mantener visible el objeto ilustrado. La foto de Intro 11 DEBE acompañar su texto en el chat,
 aunque su frame de referencia omita esa foto.
 
-Los doce textos y siete fotos DEBEN conservarse como 19 entradas separadas en el chat de
-Enrique: 10 de la jornada 1, 3 de la 2, 2 de la 3 y 4 de la 4. Cada foto DEBE ir inmediatamente
+Los textos y las siete fotos DEBEN conservarse como 20 entradas separadas en el chat de
+Enrique: 10 de la jornada 1, 4 de la 2, 2 de la 3 y 4 de la 4. De la jornada 2, el chat DEBE
+tener sólo el mensaje 1 que eligió BR-EMP-040. Cada foto DEBE ir inmediatamente
 antes del texto de su Intro. Desde que abre su jornada, ese chat DEBE permitir releer cada
 entrada y ampliar cada foto con el texto de su propia Intro.
 
@@ -386,6 +387,35 @@ anotar la noche (BR-EMP-025):
 
 Sin el hecho, o en otra jornada, NO DEBE haber advertencia. La advertencia NO DEBE sumar medios
 ni llamados, ni cambiar la banda, el final o el Cierre.
+
+### BR-EMP-040 — El mensaje 1 de la jornada 2 sale de cómo cerró la 1
+
+CUANDO abre la jornada 2, el sistema DEBE mostrar como primer mensaje de sus instrucciones y de
+su chat uno solo de estos cinco, elegido por la noche 1 que anotó BR-EMP-041. Los textos DEBEN
+ser los de la ficha «Chat con el jefe» revisada el 2026-10-20:
+
+| Clientes mal atendidos | Registrar | Texto |
+|---|---|---|
+| 0 | cumplida | Muy bien. Veo que pudiste cumplir con tus tareas correctamente, así que te voy a sumar una más. |
+| 0 | sin cumplir | Bueno, por lo visto, pudiste atender bien a todos los clientes, pero el registro de ventas no cuadra. Vas a tener que prestar más atención, especialmente ahora que te voy a sumar una tarea más. |
+| 1 | cualquiera | Bueno, por lo visto, el registro de ventas cuadra bien, pero me enteré de que un cliente se fue insatisfecho ayer. Voy a ser considerado con vos porque fue tu primer día, pero vas a tener que ponerte las pilas, especialmente ahora que te voy a sumar una tarea más. |
+| 2 o más | cumplida | Che, me enteré de que ayer pasaron dos clientes y no atendiste correctamente a ninguno de los dos. O sea, por culpa tuya no tuvimos ingresos en el turno nocturno. Voy a ser considerado con vos porque fue tu primer día, pero vamos a tener problemas si no te ponés las pilas, especialmente ahora que te voy a sumar una tarea más. |
+| 2 o más | sin cumplir | El anterior, con «Y encima anotaste en el registro productos que no se vendieron ¿me estás tomando el pelo?» después de «turno nocturno.» |
+
+Cada texto DEBE partir en dos párrafos donde la ficha los parte. Con dos clientes sin venta, la
+planilla cuadra sólo con todo en 0: por eso «registrar cumplida» es la fila «dejó todo en 0» de
+la ficha. La ficha no tiene fila para un cliente mal atendido con registrar sin cumplir; mientras
+siga OQ-EMP-010, manda la atención. Sin la noche 1 anotada, la jornada 2 NO DEBE mostrar ningún
+mensaje 1. Las demás jornadas NO DEBEN cambiar sus mensajes por esta regla.
+
+### BR-EMP-041 — La partida recuerda cada noche de prueba
+
+CUANDO se anota una noche anterior a la primera jornada completa (BR-EMP-025), el sistema DEBE
+recordar cuántos clientes quedaron mal atendidos y qué obligatorias fijas quedaron sin cumplir
+al cerrar. Un cliente mal atendido es el que llegó a la ventanilla, no recibió su venta y se fue.
+El que todavía espera al cerrar, o el que nunca llegó, NO DEBE contar. Las noches desde la
+primera jornada completa NO DEBEN anotarse acá. Ese dato DEBE cruzar la sesión (BR-SAV-019): al
+retomar, el mensaje de BR-EMP-040 DEBE ser el mismo. Un cierre ignorado NO DEBE anotar nada.
 
 ## Criterios de aceptación
 
@@ -778,6 +808,29 @@ se anuncia sin instrucciones en pantalla. DADO un guion sin mensajes de la jorna
 la jornada 2 ENTONCES se anuncia «NOCHE 2» directamente, sin instrucciones y sin error. DADO la
 jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
 
+### AC-EMP-084 — La noche 1 elige el mensaje 1 de la jornada 2 *(verifica BR-EMP-040)*
+
+DADO la noche 1 cerrada con 0, 1 y 2 clientes mal atendidos, cada uno con registrar cumplida y
+sin cumplir, CUANDO abre la jornada 2 ENTONCES su primera pantalla es la fila de BR-EMP-040 que
+le corresponde, y el resto son Intro 7 e Intro 8. Con 1 mal atendido sale la misma fila con
+registrar cumplida y sin cumplir. Ninguna de las seis combinaciones muestra dos mensajes 1. DADO
+una partida sin la noche 1 anotada ENTONCES la jornada 2 abre con Intro 7.
+
+### AC-EMP-085 — El chat guarda sólo el mensaje 1 elegido *(verifica BR-EMP-023, BR-EMP-040)*
+
+DADO cada fila de BR-EMP-040 CUANDO el chat de Enrique abre la jornada 4 ENTONCES tiene 20
+entradas y, de la jornada 2, el mensaje 1 elegido antes de la foto de Intro 7. Las entradas de
+las jornadas 1, 3 y 4 son las mismas en todas las filas. DADO la jornada 1 ENTONCES ningún
+mensaje 1 de la jornada 2 está a la vista.
+
+### AC-EMP-086 — Las noches de prueba cruzan la sesión *(verifica BR-EMP-041, BR-SAV-019)*
+
+DADO la noche 1 cerrada con 2 clientes mal atendidos y registrar sin cumplir CUANDO se guarda y
+se retoma ENTONCES la jornada 2 abre con la misma fila. DADO un guardado sin ese dato, o con un
+valor de otro tipo, ENTONCES la jornada 2 abre con Intro 7 y lo demás se restaura. DADO una
+noche cerrada desde la primera jornada completa ENTONCES no se anota. DADO un cliente todavía en
+la ventanilla al cerrar ENTONCES no cuenta como mal atendido.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -846,3 +899,10 @@ jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
     autorizó la frase provisoria de BR-EMP-029, y la ficha no se reescribe.
   - Decide: una persona de game design.
   - Bloquea: nada. Mientras tanto, la salida es la frase provisoria.
+- **OQ-EMP-010 — ¿Qué dice el mensaje 1 de la jornada 2 con un cliente mal atendido y el
+  registro mal hecho?**
+  - Por qué sigue abierta: la ficha «Chat con el jefe» del 2026-10-20 tiene cinco filas y
+    ninguna cubre esa combinación.
+  - Decide: una persona de game design.
+  - Bloquea: nada. Mientras tanto, BR-EMP-040 usa la fila de un cliente mal atendido, porque la
+    ficha llama a la atención «LO MÁS IMPORTANTE».
