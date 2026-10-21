@@ -165,7 +165,7 @@ const CIERRES_DE_LA_ULTIMA: Array[Array] = [
 		0,
 		(
 			"La verdad es que estoy impresionado. No hizo falta corregirte ni una "
-			+ "sola cosa en las cinco noches. Un trabajo excepcional. Va a ser un "
+			+ "sola cosa en las ocho noches. Un trabajo excepcional. Va a ser un "
 			+ "placer tenerte trabajando acá."
 		)
 	],

@@ -298,7 +298,7 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 | Condición | Texto |
 |---|---|
 | P ≥ 4 | Es absurdo que tenga que estar persiguiéndote con estas cosas tan básicas. No puedo dejar que un desastre como vos siga perjudicando la reputación de mi local. Que ni se te ocurra volver a aparecer por acá, entendiste? |
-| J = 8 y P = 0 | La verdad es que estoy impresionado. No hizo falta corregirte ni una sola cosa en las cinco noches. Un trabajo excepcional. Va a ser un placer tenerte trabajando acá. |
+| J = 8 y P = 0 | La verdad es que estoy impresionado. No hizo falta corregirte ni una sola cosa en las ocho noches. Un trabajo excepcional. Va a ser un placer tenerte trabajando acá. |
 | J = 8 y 0 < P ≤ 1 | Bueno, más allá de alguna que otra cosita que te mencioné, no tengo nada para corregirte. Un trabajo bien hecho. Felicitaciones, el puesto es tuyo. |
 | J = 8 y 1 < P ≤ 2 | Mirá, hubo un par de veces que la pifiaste, pero como soy generoso, te voy a dar el puesto igual. No aflojes. Desde ahora, espero que des lo mejor de vos. |
 | J = 8 y 2 < P ≤ 3 | Honestamente, solo puedo concluir que no sos el empleado ideal, pero tampoco sos un inútil. Decidí darte el puesto. No me hagas cambiar de opinión, ok? |
@@ -320,9 +320,8 @@ El sistema DEBE elegir el Cierre con la primera de estas condiciones que se cump
 | P = 3 y R = 0 | En serio, mi paciencia tiene un límite... |
 | P = 3,5 y R = 0 | Hay un límite en lo que te puedo dejar pasar. Un error más y te podés ir despidiendo de tu puesto. |
 
-El texto de J = 8 y P = 0 conserva «las cinco noches» de la ficha hasta que diseño lo corrija.
-Todas las filas salen de la ficha. P avanza de a medio, así que las filas de R = 0 cubren todo
-0 < P < 4.
+Las filas salen de la ficha, salvo J = 8 y P = 0, que dice «ocho noches» porque la partida tiene
+ocho. P avanza de a medio, así que las filas de R = 0 cubren todo 0 < P < 4.
 
 ### BR-EMP-030 — La devolución llega por el chat, mensaje a mensaje
 
