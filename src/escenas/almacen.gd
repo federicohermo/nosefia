@@ -513,9 +513,6 @@ func _salir_por_la_entrada() -> void:
 		_salida.iniciar(Vector2(desde.y, desde.x), Vector2(hacia.y, hacia.x))
 
 
-## Al cerrar, la persiana baja y la devolución de Enrique llega por el celular. Las noches de
-## prueba cierran sin él: al terminar de bajar la persiana sigue la pantalla de inicio de la noche
-## siguiente.
 ##
 ## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
@@ -541,7 +538,6 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_pantalla.devolucion_despachada.connect(_al_despachar_la_devolucion, CONNECT_ONE_SHOT)
 
 
-## Con la prueba perdida la pantalla de inicio es la del despido, y su «OK» vuelve al menú.
 func _seguir_sin_celular(devolucion: DevolucionDelJefe) -> void:
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 	await persiana.persiana_bajada

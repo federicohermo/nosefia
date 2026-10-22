@@ -1,5 +1,3 @@
-## Las noches de prueba cierran sin el celular de Enrique: la persiana baja y sigue sola la pantalla
-## de inicio de la noche siguiente. Con la prueba perdida, esa pantalla lleva el despido.
 extends GdUnitTestSuite
 
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
@@ -72,8 +70,6 @@ func _sin_celular(almacen: Node3D) -> void:
 	assert_bool(_celular(almacen).celular().abierto()).is_false()
 
 
-## El cierre de la noche `jornada`, sin perder la prueba, hasta que sigue la noche siguiente.
-## Devuelve la jornada que quedó guardada.
 func _cerrar_sin_celular(jornada: int) -> int:
 	var almacen: Node3D = await _almacen(jornada)
 	_cerrar_el_turno(almacen)
@@ -110,6 +106,33 @@ func _cerrar_sin_celular(jornada: int) -> int:
 	AvanceDeDevolucion.leer_las_instrucciones(almacen)
 	assert_int(_persiana(almacen).get("_jornada")).is_equal(jornada + 1)
 	assert_bool((_persiana(almacen).get("_placa") as Label).visible).is_true()
+	for tipo: String in ["AudioStreamPlayer", "AudioStreamPlayer3D"]:
+		for audio: Node in almacen.find_children("*", tipo, true, false):
+			audio.call("stop")
+			audio.set("stream", null)
+	almacen.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var retomado: Node3D = load(ESCENA_DEL_ALMACEN).instantiate()
+	_abierto = retomado
+	add_child(retomado)
+	retomado.call("retomar_la_partida")
+	var partida_retomada: Partida = retomado.get("_partida")
+	assert_int(partida_retomada.jornada()).is_equal(jornada + 1)
+	assert_bool(_instrucciones(retomado).visible).is_true()
+	assert_str((_instrucciones(retomado).get("_contador") as Label).text).is_equal(
+		"1/%d" % pasos.size()
+	)
+	var pasos_retomados: Array = _instrucciones(retomado).get("_pasos")
+	assert_str((pasos_retomados[0] as InstruccionesDelJefe.Paso).textos[0].identidad).is_equal(
+		pasos[0].textos[0].identidad
+	)
+	assert_bool((retomado.get("_jugador") as Node).call("suspendido")).is_true()
+	var reloj: RelojDelTurno = retomado.get("_reloj")
+	assert_float((reloj.get("_turno") as Turno).tiempo_restante()).is_equal(
+		Reglas.DURACION_DEL_TURNO
+	)
+	_sin_celular(retomado)
 	return guardada
 
 
@@ -129,9 +152,16 @@ func test_pausar_con_la_persiana_bajando_no_sube_el_celular() -> void:  # AC-EMP
 	var almacen: Node3D = await _almacen(PRIMERA)
 	_cerrar_el_turno(almacen)
 	var persiana := _persiana(almacen)
+	var lectura: Callable = persiana.get("_ahora")
+	var ahora := [int(persiana.get("_ultimo"))]
+	persiana.set("_ahora", func() -> int: return ahora[0])
+	ahora[0] += 250000
+	persiana.call("_process", 0.0)
 	var antes: float = persiana.get("_avance_de_la_bajada")
+	assert_float(antes).is_greater(0.0)
 	_esc(almacen)
 	assert_bool(get_tree().paused).is_true()
+	ahora[0] += 3000000
 	for _cuadro in 4:
 		await get_tree().process_frame
 	assert_float(persiana.get("_avance_de_la_bajada")).is_equal(antes)
@@ -139,6 +169,14 @@ func test_pausar_con_la_persiana_bajando_no_sube_el_celular() -> void:  # AC-EMP
 	_sin_celular(almacen)
 	_esc(almacen)
 	assert_bool(get_tree().paused).is_false()
+	persiana.call("_process", 0.0)
+	assert_float(persiana.get("_avance_de_la_bajada")).is_equal(antes)
+	ahora[0] += 250000
+	persiana.call("_process", 0.0)
+	var reanudada: float = persiana.get("_avance_de_la_bajada")
+	assert_float(reanudada).is_greater(antes).is_less(1.0)
+	assert_bool(_instrucciones(almacen).visible).is_false()
+	persiana.set("_ahora", lectura)
 	AvanceDeDevolucion.terminar_la_bajada(persiana)
 	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(almacen)).is_true()
 	assert_bool(_instrucciones(almacen).visible).is_true()

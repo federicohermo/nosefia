@@ -466,7 +466,6 @@ func _completar_la_salida(almacen: Node3D) -> void:
 	_comprobar_el_cierre_sin_celular(almacen)
 
 
-## Las noches de prueba cierran con la persiana baja y sin el celular de Enrique.
 func _comprobar_el_cierre_sin_celular(almacen: Node3D) -> void:
 	(
 		assert_bool((almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).visible)
