@@ -93,6 +93,48 @@ func test_el_contador_sigue_la_noche_vendiendo_de_la_gondola_y_anotando_cada_ven
 	)
 
 
+# AC-SHF-008
+func test_el_contador_de_la_cuarta_sigue_la_noche_despues_de_salir_de_la_prueba() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	var ultima_de_la_prueba := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
+	almacen.set("_partida", Partida.desde({"jornada": ultima_de_la_prueba}))
+	add_child(almacen)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var partida: Partida = almacen.get("_partida")
+	for tarea in partida.obligatorias():
+		reloj.completar(tarea)
+	almacen.call("_salir_por_la_entrada")
+	assert_bool(reloj.corriendo()).is_false()
+	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
+	await get_tree().process_frame
+	AvanceDeDevolucion.entregar(pantalla)
+	pantalla.elegir()
+	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	await get_tree().process_frame
+	almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
+	for _cuadro in 4:
+		await get_tree().physics_frame
+	assert_int(partida.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	assert_bool(reloj.corriendo()).is_true()
+	_comprobar_ninguna_cumplida_al_abrir(almacen)
+	await _reponer(almacen)
+	_comprobar_contador(almacen)
+	await _atender(almacen)
+	_comprobar_contador(almacen)
+	await _registrar(almacen)
+	_comprobar_contador(almacen)
+	await _limpiar(almacen)
+	_comprobar_contador(almacen)
+	await _ordenar_las_cajas(almacen)
+	_comprobar_contador(almacen)
+	assert_int(_cumplidas(reloj)).is_equal(
+		Apertura.cantidad_de_obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	)
+
+
 ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
 ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
 func _completos_al_abrir(almacen: Node3D, jornada: int, azar: RandomNumberGenerator) -> int:
