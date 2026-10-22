@@ -34,10 +34,15 @@ const HORARIOS_DE_TIN_Y_TIA: Dictionary[int, Array] = {
 ## el día que un producto cambie de valor.
 const FILAS := [
 	["Marta", [[Producto.Id.ACTRONCITO, 2], [Producto.Id.ZUCARACHAS, 1]], 0],
-	["Rubén", [[Producto.Id.JORGILLO, 1], [Producto.Id.DURONGA, 2]], -500],
+	["Rubén", [[Producto.Id.BURBALOO, 1], [Producto.Id.DUREXTRA, 2]], -500],
 	["Nélida", [[Producto.Id.MALBARDO, 1], [Producto.Id.LAYSNNT, 1]], 300],
 	["El pibe del kiosco", [[Producto.Id.BURBALOO, 3]], 0],
 ]
+
+const FILAS_POR_JORNADA := {
+	ReglasDeLaPartida.PRIMERA_JORNADA + 2:
+	[FILAS[0], ["Rubén", [[Producto.Id.JORGILLO, 1], [Producto.Id.DURONGA, 2]], -500]],
+}
 
 
 ## El padrón entero, con instancias nuevas en cada llamada.
@@ -62,10 +67,11 @@ static func de_la_jornada(jornada: int) -> Array[Comprador]:
 			comprador.dialogos = DIALOGOS_SEGUNDA
 		return segunda
 	var lista: Array[Comprador] = []
-	for comprador in padron():
+	var filas: Array = FILAS_POR_JORNADA.get(jornada, FILAS)
+	for fila: Array in filas:
 		if lista.size() >= ReglasDeLaVentanilla.COMPRADORES_POR_JORNADA:
 			break
-		lista.append(comprador)
+		lista.append(_comprador_de(fila))
 	return lista
 
 

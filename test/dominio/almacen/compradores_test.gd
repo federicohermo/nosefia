@@ -97,3 +97,27 @@ func test_las_jornadas_sin_agenda_propia_usan_el_padron() -> void:  # AC-CTR-001
 		assert_str(compradores[0].nombre()).is_equal("Marta")
 		for comprador in compradores:
 			assert_bool(comprador.tiene_horario()).is_false()
+
+
+func test_el_padron_y_las_jornadas_completas_conservan_el_pedido_de_ruben() -> void:  # AC-CTR-041
+	var listas: Array[Array] = [Compradores.padron()]
+	for jornada in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
+	):
+		listas.append(Compradores.de_la_jornada(jornada))
+	for lista in listas:
+		var ruben: Comprador = lista[1]
+		assert_str(ruben.nombre()).is_equal("Rubén")
+		assert_int(ruben.pedido().productos().size()).is_equal(2)
+		assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.BURBALOO))).is_equal(1)
+		assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.DUREXTRA))).is_equal(2)
+		assert_int(ruben.paga() - ruben.pedido().total()).is_equal(-500)
+
+
+func test_el_pedido_provisorio_de_ruben_solo_usa_productos_de_prueba() -> void:  # AC-STK-099
+	var ruben := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA + 2)[1]
+	assert_str(ruben.nombre()).is_equal("Rubén")
+	assert_int(ruben.pedido().productos().size()).is_equal(2)
+	assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.JORGILLO))).is_equal(1)
+	assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.DURONGA))).is_equal(2)
+	assert_int(ruben.paga() - ruben.pedido().total()).is_equal(-500)

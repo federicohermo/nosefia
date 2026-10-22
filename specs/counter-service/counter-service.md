@@ -210,8 +210,10 @@ incluye y el límite se excluye. Tia cruza la medianoche.
 Tin DEBE pedir un Marolini, una Coracola y un Malbardo. Tia DEBE pedir una Zucarachas
 y un Pepito, con sus diálogos y su recepción física. Estos horarios DEBEN derivarse del reloj
 del turno, cuya apertura es a las 20:00. La segunda jornada DEBE usar el padrón definido en
-BR-CTR-037, sin copiar estos personajes. Quiénes atienden las jornadas 3 a 5 lo decide
-OQ-CTR-004. Las jornadas 6 a 8 DEBEN conservar su recorrido anterior.
+BR-CTR-037, sin copiar estos personajes. Las jornadas 3 a 5 usan provisionalmente el padrón
+de BR-CTR-001, pendiente de la integración indicada en OQ-CTR-004. En la jornada 3, Rubén
+DEBE pedir un Jorgillo y dos Duronga, presentes en el catálogo de prueba.
+El padrón general y las jornadas 4 a 8 DEBEN conservar sus pedidos anteriores.
 
 ### BR-CTR-027 — Llegada y vencimiento independientes de la interfaz
 
@@ -962,10 +964,10 @@ en la construcción del comprador y emite el diagnóstico, sin publicar una comp
     deja ventas que se rechazan.
   - Decide: game design.
   - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón. La jornada 2 está decidida en BR-CTR-037.
-- **OQ-CTR-004 — ¿Quiénes atienden las jornadas 3 a 5, y a qué hora?**
-  - Por qué sigue abierta: la ficha «Atención al cliente» del 22 de octubre de 2026 da compradores,
-    horarios y pedidos al azar para esas noches, y #459 los lleva al juego. Mientras tanto no
-    tienen compradores propios y usan el padrón de BR-CTR-001. Las reglas de esta capacidad que dicen «jornadas 1 a 4»
-    describen el recorrido físico de la jornada 1 y de la 2 hasta que #459 las reescriba.
-  - Decide: game design.
+- **OQ-CTR-004 — Integración pendiente de los compradores de las jornadas 3 a 5**
+  - Por qué sigue abierta: la ficha «Atención al cliente» ya define compradores, horarios y
+    pedidos al azar para esas noches. Falta integrar ese diseño en lugar del padrón provisional.
+    También falta actualizar las reglas del recorrido físico que todavía dicen «jornadas 1 a 4».
+  - Decide: el diseño ya está definido en Notion. El padrón genérico es una decisión provisoria
+    de implementación, no una ausencia de diseño.
   - Bloquea: nada de lo escrito para las jornadas 1 y 2.
