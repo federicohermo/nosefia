@@ -82,7 +82,9 @@ func test_cada_noche_gira_abre_y_produce_una_devolucion_y_un_guardado() -> void:
 		)
 		var vista: Transform3D = jugador.call("mira")
 		var hoja: MeshInstance3D = entrada.get("hoja")
-		var centro := hoja.global_transform * hoja.get_aabb().get_center()
+		var hojas := _hojas_de_entrada(almacen)
+		var otra: Node3D = hojas.back()
+		var centro := (_canto_exterior(hojas.front(), false) + _canto_exterior(otra, true)) * 0.5
 		var direccion := (centro - vista.origin).normalized()
 		_primario_sobre_la_entrada(almacen)
 		assert_bool((jugador.call("mira") as Transform3D).is_equal_approx(vista)).is_true()
@@ -109,6 +111,11 @@ func test_cada_noche_gira_abre_y_produce_una_devolucion_y_un_guardado() -> void:
 		entrada.call("_physics_process", 10.0)
 		entrada.call("_physics_process", 0.1)
 		assert_float(puerta.angulo()).is_equal(Puerta.ANGULO_ABIERTA)
+		assert_bool(persiana.visible).is_false()
+		assert_int(guardado.escrituras).is_zero()
+		otra.call("_physics_process", 10.0)
+		otra.call("_physics_process", 0.1)
+		assert_float(otra.call("puerta").angulo()).is_equal(Puerta.ANGULO_ABIERTA)
 		assert_bool(persiana.visible).is_true()
 		assert_bool(pantalla.visible).is_true()
 		assert_array(devoluciones).is_equal([jornada])
@@ -182,8 +189,9 @@ func test_pausar_cada_etapa_conserva_la_secuencia_y_la_mano() -> void:  # AC-SHF
 		assert_bool((jugador.call("mira") as Transform3D).is_equal_approx(vista)).is_true()
 		if not abriendo:
 			salida._process(SalidaVoluntaria.DURACION_DEL_GIRO * 0.5)
-		entrada.call("_physics_process", 10.0)
-		entrada.call("_physics_process", 0.1)
+		for hoja: Node3D in _hojas_de_entrada(almacen):
+			hoja.call("_physics_process", 10.0)
+			hoja.call("_physics_process", 0.1)
 		assert_bool(pantalla.visible).is_true()
 
 
@@ -198,6 +206,89 @@ func test_el_tiempo_cierra_sin_giro_ni_apertura_de_la_entrada() -> void:  # AC-S
 	assert_bool(almacen.get_node(ENTRADA).call("puerta").abierta()).is_false()
 
 
+func test_la_entrada_se_cierra_al_pasar_de_la_tercera_a_la_cuarta() -> void:  # AC-SHF-046
+	var almacen := await _abrir(3)
+	var entrada: Node3D = almacen.get_node(ENTRADA)
+	var cerrada: Transform3D = entrada.get("hoja").global_transform
+	_primario_sobre_la_entrada(almacen)
+	almacen.get("_salida").call("_process", SalidaVoluntaria.DURACION_DEL_GIRO)
+	for hoja: Node3D in _hojas_de_entrada(almacen):
+		hoja.call("_physics_process", Puerta.ANGULO_ABIERTA / Puerta.VELOCIDAD_DEL_GIRO)
+		hoja.call("_physics_process", 0.0)
+	assert_bool(entrada.call("puerta").abierta()).is_true()
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(4)
+	await almacen.call("_preparar_lo_postergado")
+	almacen.get("_ciclo").call("abrir_la_jornada")
+	assert_bool(entrada.call("puerta").abierta()).is_false()
+	assert_float(entrada.call("puerta").angulo()).is_zero()
+	(
+		assert_bool((entrada.get("hoja").global_transform as Transform3D).is_equal_approx(cerrada))
+		. is_true()
+	)
+	assert_bool(almacen.call("_puede_salir")).is_false()
+
+
+func test_las_hojas_giran_sobre_sus_cantos_exteriores_hacia_el_mismo_lado() -> void:  # AC-SHF-043
+	var almacen := await _abrir(1)
+	var hojas := _hojas_de_entrada(almacen)
+	for derecha: bool in [false, true]:
+		var cuerpo: Node3D = hojas.back() if derecha else hojas.front()
+		var hoja: MeshInstance3D = cuerpo.get("hoja")
+		var bisagra := _canto_exterior(cuerpo, derecha)
+		var canto_local := hoja.to_local(bisagra)
+		var centro_local := hoja.get_aabb().get_center()
+		var centro_cerrado := hoja.to_global(centro_local)
+		cuerpo.call("abrir_para_salida")
+		for _paso in 8:
+			cuerpo.call("_physics_process", Puerta.ANGULO_ABIERTA / Puerta.VELOCIDAD_DEL_GIRO / 8.0)
+			assert_vector(hoja.to_global(canto_local)).is_equal_approx(
+				bisagra, Vector3.ONE * 0.0001
+			)
+			assert_float(hoja.to_global(centro_local).z).is_greater(centro_cerrado.z)
+			assert_float(hoja.to_global(centro_local).y).is_equal_approx(centro_cerrado.y, 0.0001)
+		assert_float(cuerpo.call("puerta").angulo()).is_equal(Puerta.ANGULO_ABIERTA)
+		cuerpo.call("cerrar_de_golpe")
+
+
+func test_retoma_y_reintenta_la_cuarta_con_ambas_hojas_cerradas() -> void:  # AC-SHF-046, AC-PLY-103
+	for _intento in 2:
+		var almacen := await _abrir(4)
+		for entrada: Node3D in _hojas_de_entrada(almacen):
+			assert_bool(entrada.call("puerta").abierta()).is_false()
+			assert_float(entrada.call("puerta").angulo()).is_zero()
+			entrada.call("accionar")
+			entrada.call("_physics_process", Puerta.ANGULO_ABIERTA / Puerta.VELOCIDAD_DEL_GIRO)
+			assert_float(entrada.call("puerta").angulo()).is_zero()
+		assert_bool(almacen.call("_puede_salir")).is_false()
+		assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_false()
+
+
+func _hojas_de_entrada(almacen: Node3D) -> Array[Node3D]:
+	var hojas: Array[Node3D] = []
+	for cuerpo: Node in almacen.find_children("*", "AnimatableBody3D", true, false):
+		if (
+			cuerpo.get("consultar_salida") is Callable
+			and (cuerpo.get("consultar_salida") as Callable).is_valid()
+		):
+			hojas.append(cuerpo)
+	return hojas
+
+
+func _canto_exterior(cuerpo: Node3D, derecha: bool) -> Vector3:
+	var hoja: MeshInstance3D = cuerpo.get("hoja")
+	var caja := hoja.get_aabb()
+	var extremo := caja.end.x if derecha else caja.position.x
+	var frente := -INF
+	for superficie: int in hoja.mesh.get_surface_count():
+		var vertices: PackedVector3Array = hoja.mesh.surface_get_arrays(superficie)[
+			Mesh.ARRAY_VERTEX
+		]
+		for vertice: Vector3 in vertices:
+			if is_equal_approx(vertice.x, extremo):
+				frente = maxf(frente, vertice.z)
+	return hoja.to_global(Vector3(extremo, caja.get_center().y, frente))
+
+
 func _abrir(jornada: int) -> Node3D:
 	var almacen: Node3D = auto_free(load(RUTA_DEL_ALMACEN).instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada}))
@@ -208,7 +299,8 @@ func _abrir(jornada: int) -> Node3D:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	almacen.get("_salida").set_process(false)
-	almacen.get_node(ENTRADA).set_physics_process(false)
+	for entrada: Node3D in _hojas_de_entrada(almacen):
+		entrada.set_physics_process(false)
 	await get_tree().process_frame
 	jugador.call("reanudar")
 	for tarea in (almacen.get("_partida") as Partida).obligatorias():
