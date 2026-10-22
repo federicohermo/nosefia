@@ -70,9 +70,17 @@ func test_con_pendientes_la_entrada_piensa_y_sigue_trabada() -> void:  # AC-SUB-
 		assert_array(trabadas).is_equal([entrada])
 		assert_bool(entrada.call("puerta").abierta()).is_false()
 		assert_bool((almacen.get("_reloj") as RelojDelTurno).corriendo()).is_true()
-		assert_str(entrada.call("texto_al_examinar")).is_equal(
+		var jugador: Node3D = almacen.get("_jugador")
+		var examen := InputEventAction.new()
+		examen.action = ReglasDeLosObjetos.ACCION_EXAMINAR
+		examen.pressed = true
+		jugador.call("_unhandled_input", examen)
+		assert_str(_linea(almacen)).is_equal(
 			SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.ENTRADA_PRINCIPAL)
 		)
+		assert_bool(jugador.get("examen").esta_examinando()).is_false()
+		assert_bool(jugador.call("suspendido")).is_false()
+		assert_bool(entrada.call("puerta").abierta()).is_false()
 
 
 func test_usarla_dos_veces_deja_una_sola_linea_que_empieza_de_nuevo() -> void:  # AC-SUB-024
