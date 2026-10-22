@@ -59,8 +59,24 @@ static func leer_las_instrucciones(almacen: Node) -> void:
 		"Interfaz/PantallaDeInstrucciones"
 	)
 	var siguiente: Button = instrucciones.get("_siguiente")
-	while instrucciones.visible:
+	if not instrucciones.visible:
+		return
+	while not (instrucciones.get("_instrucciones") as InstruccionesDelJefe).terminadas():
 		siguiente.pressed.emit()
+	terminar_instrucciones(instrucciones)
+
+
+static func terminar_instrucciones(pantalla: PantallaDeInstrucciones) -> void:
+	var lectura: Callable = pantalla.get("_ahora")
+	var reloj: Array[int] = [int(lectura.call())]
+	pantalla.set("_ahora", func() -> int: return reloj[0])
+	for _cuadro in 30:
+		if not pantalla.is_processing():
+			break
+		reloj[0] += 10000
+		pantalla._process(0.0)
+	pantalla.set("_ahora", lectura)
+	pantalla.set("_ultimo", int(lectura.call()))
 
 
 ## La noche siguiente abre cuando termina la transición, que puede calentar útiles durante varios

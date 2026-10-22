@@ -3,7 +3,9 @@ extends CanvasLayer
 
 signal comenzar_pedido
 
-const DURACION_DE_LA_SUBIDA := 0.3
+enum Etapa { OCULTA, ENTRANDO, LEYENDO, SALIENDO }
+
+const DURACION_DEL_MOVIMIENTO := 0.3
 const TEXTO_DE_SIGUIENTE := "Siguiente"
 const TEXTO_DE_VOLVER := "Volver"
 const TEXTO_DE_COMENZAR := "OK"
@@ -60,12 +62,14 @@ const FOTOS := {
 @export var _retrato: Control
 @export var _fondo: TextureRect
 
+var _etapa: Etapa = Etapa.OCULTA
+var _avance_al_salir: float = 1.0
 var _pasos: Array[InstruccionesDelJefe.Paso] = []
 var _instrucciones: InstruccionesDelJefe
 var _ahora: Callable = Time.get_ticks_usec
 var _ultimo: int = 0
 ## En microsegundos. Cada cuadro suma a lo sumo el paso máximo de la cabecera: el cuadro que abre
-## la partida tarda, y con el tiempo entero la subida se iba de un salto.
+## la partida tarda, y con el tiempo entero la entrada se iba de un salto.
 var _transcurrido: int = 0
 var _avance: float = 0.0
 
@@ -86,22 +90,32 @@ func _notification(que: int) -> void:
 
 
 func _process(_delta: float) -> void:
+	if _etapa not in [Etapa.ENTRANDO, Etapa.SALIENDO]:
+		return
 	var ahora: int = _ahora.call()
 	_transcurrido += clampi(ahora - _ultimo, 0, roundi(CabeceraConSolapa.PASO_MAXIMO * 1000000.0))
 	_ultimo = ahora
-	_avance = minf(1.0, _transcurrido / (DURACION_DE_LA_SUBIDA * 1000000.0))
+	_avance = minf(1.0, _transcurrido / (DURACION_DEL_MOVIMIENTO * 1000000.0))
 	_ajustar()
 	if _avance == 1.0:
 		set_process(false)
+		if _etapa == Etapa.SALIENDO:
+			_etapa = Etapa.OCULTA
+			visible = false
+			comenzar_pedido.emit()
+		else:
+			_etapa = Etapa.LEYENDO
 
 
 func mostrar(mensajes: Array[Mensaje]) -> void:
 	_pasos = InstruccionesDelJefe.pasos_de(mensajes)
 	_instrucciones = InstruccionesDelJefe.new(_pasos.size())
+	_etapa = Etapa.ENTRANDO
 	_avance = 0.0
 	_transcurrido = 0
 	_ultimo = _ahora.call()
 	visible = true
+	_siguiente.disabled = false
 	set_process(true)
 	_pintar()
 	_ajustar()
@@ -112,9 +126,14 @@ func _al_avanzar() -> void:
 		return
 	_instrucciones.avanzar()
 	if _instrucciones.terminadas():
-		visible = false
-		set_process(false)
-		comenzar_pedido.emit()
+		_avance_al_salir = _avance if _etapa == Etapa.ENTRANDO else 1.0
+		_etapa = Etapa.SALIENDO
+		_avance = 0.0
+		_transcurrido = 0
+		_ultimo = _ahora.call()
+		_volver.disabled = true
+		_siguiente.disabled = true
+		set_process(true)
 		return
 	_pintar()
 
@@ -273,7 +292,16 @@ func _marco_de_foto(textura: Texture2D, rectangulo: Rect2) -> void:
 
 
 func _ajustar() -> void:
-	_fondo.size = get_viewport().get_visible_rect().size
-	_fondo.modulate.a = _avance
-	LienzoDeManada.ajustar(_marco, get_viewport().get_visible_rect().size)
-	_marco.position.y += 1080.0 * _marco.scale.y * (1.0 - _avance)
+	var disponible := get_viewport().get_visible_rect().size
+	_fondo.size = disponible
+	_fondo.modulate.a = _avance if _etapa == Etapa.ENTRANDO else 1.0
+	if _etapa == Etapa.SALIENDO:
+		_fondo.modulate.a = minf(1.0, _avance_al_salir + _avance)
+	LienzoDeManada.ajustar(_marco, disponible)
+	var derecha := disponible.x - _marco.position.x
+	if _etapa == Etapa.ENTRANDO:
+		_marco.position.x += derecha * pow(1.0 - _avance, 2.0)
+	elif _etapa == Etapa.SALIENDO:
+		var izquierda := -_marco.position.x - _marco.size.x * _marco.scale.x
+		var inicio := derecha * pow(1.0 - _avance_al_salir, 2.0)
+		_marco.position.x += lerpf(inicio, izquierda, _avance * _avance)

@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 const ESCENA := preload("res://src/ui/interrupciones/pantalla_de_instrucciones.tscn")
 const GUION := preload("res://src/dominio/investigacion/conversacion_con_el_jefe.tres")
+const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
 
 func after_test() -> void:
@@ -24,25 +25,25 @@ func _boton(pantalla: PantallaDeInstrucciones, nombre: String) -> Button:
 	return pantalla.get(nombre)
 
 
-func test_subida_llega_en_trescientos_milisegundos_reales() -> void:  # AC-EMP-049
+func test_entrada_llega_en_trescientos_milisegundos_reales() -> void:  # AC-EMP-049
 	var pantalla := _pantalla()
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
 	pantalla.mostrar(_mensajes_de_la_primera_jornada())
 	var marco: Control = pantalla.get("_marco")
-	assert_float(marco.position.y).is_equal(1080.0)
+	assert_float(marco.position.x).is_equal(1920.0)
 	_cuadros(ahora, 150000, [pantalla])
-	assert_float(marco.position.y).is_equal_approx(540.0, 0.01)
+	assert_float(marco.position.x).is_equal_approx(480.0, 0.01)
 	_cuadros(ahora, 299999, [pantalla])
-	assert_float(marco.position.y).is_greater(0.0)
+	assert_float(marco.position.x).is_greater(0.0)
 	assert_bool(pantalla.is_processing()).is_true()
 	_cuadros(ahora, 300000, [pantalla])
-	assert_float(marco.position.y).is_zero()
+	assert_float(marco.position.x).is_zero()
 	assert_bool(pantalla.is_processing()).is_false()
 
 
 ## El cuadro que abre la pantalla tarda: con el tiempo entero, se comía la subida de un salto.
-func test_un_cuadro_largo_adelanta_la_subida_un_paso_maximo() -> void:  # AC-EMP-049
+func test_un_cuadro_largo_adelanta_la_entrada_un_paso_maximo() -> void:  # AC-EMP-049
 	var pantalla := _pantalla()
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
@@ -50,8 +51,8 @@ func test_un_cuadro_largo_adelanta_la_subida_un_paso_maximo() -> void:  # AC-EMP
 	ahora[0] = 150000
 	pantalla._process(0.0)
 	var marco: Control = pantalla.get("_marco")
-	var avance := CabeceraConSolapa.PASO_MAXIMO / PantallaDeInstrucciones.DURACION_DE_LA_SUBIDA
-	assert_float(marco.position.y).is_equal_approx(1080.0 * (1.0 - avance), 0.01)
+	var avance := CabeceraConSolapa.PASO_MAXIMO / PantallaDeInstrucciones.DURACION_DEL_MOVIMIENTO
+	assert_float(marco.position.x).is_equal_approx(1920.0 * pow(1.0 - avance, 2.0), 0.01)
 
 
 func _sin_formato(texto: String) -> String:
@@ -123,6 +124,8 @@ func test_pantallas_de_la_primera_y_ok_idempotente() -> void:  # AC-EMP-045, AC-
 	siguiente.pressed.emit()
 	siguiente.pressed.emit()
 	siguiente.pressed.emit()
+	assert_int(comienzos[0]).is_zero()
+	AvanceDeDevolucion.terminar_instrucciones(pantalla)
 	assert_int(comienzos[0]).is_equal(1)
 	assert_bool(pantalla.visible).is_false()
 
@@ -145,6 +148,7 @@ func test_la_segunda_y_la_tercera_cuentan_sus_pantallas() -> void:  # AC-EMP-045
 	assert_int(comienzos[0]).is_zero()
 	_boton(segunda, "_siguiente").pressed.emit()
 	_boton(segunda, "_siguiente").pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(segunda)
 	assert_int(comienzos[0]).is_equal(1)
 	assert_bool(segunda.visible).is_false()
 	var comienzos_de_la_tercera: Array[int] = [0]
@@ -154,6 +158,7 @@ func test_la_segunda_y_la_tercera_cuentan_sus_pantallas() -> void:  # AC-EMP-045
 	)
 	_boton(tercera, "_siguiente").pressed.emit()
 	_boton(tercera, "_siguiente").pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(tercera)
 	assert_int(comienzos_de_la_tercera[0]).is_equal(1)
 	assert_bool(tercera.visible).is_false()
 
@@ -177,9 +182,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 		var viewport: SubViewport = pantalla.get_viewport()
 		viewport.size = resolucion
 		pantalla.mostrar(_mensajes_de_la_primera_jornada())
-		pantalla.set("_avance", 1.0)
-		pantalla.set("_transcurrido", roundi(PantallaDeInstrucciones.DURACION_DE_LA_SUBIDA * 1e6))
-		pantalla.call("_ajustar")
+		AvanceDeDevolucion.terminar_instrucciones(pantalla)
 		var total := InstruccionesDelJefe.pasos_de(_mensajes_de_la_primera_jornada()).size()
 		for numero in range(1, total + 1):
 			await get_tree().process_frame
@@ -204,7 +207,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 				_boton(pantalla, "_siguiente").pressed.emit()
 
 
-func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC-EMP-049
+func test_pausa_conserva_la_entrada_y_no_cobra_el_tiempo_pausado() -> void:  # AC-EMP-049
 	var pantalla := _pantalla()
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
@@ -219,7 +222,7 @@ func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC
 	assert_vector(marco.position).is_equal(posicion)
 	get_tree().paused = false
 	_cuadros(ahora, ahora[0] + 150000, [pantalla])
-	assert_float(marco.position.y).is_zero()
+	assert_float(marco.position.x).is_zero()
 
 
 func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:  # AC-EMP-046

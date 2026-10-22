@@ -138,6 +138,7 @@ func test_el_menu_anuncia_la_jornada_nueva_y_la_guardada() -> void:  # AC-SHF-02
 			var siguiente: Button = instrucciones.get("_siguiente")
 			for _paso in 14:
 				siguiente.pressed.emit()
+			AvanceDeDevolucion.terminar_instrucciones(instrucciones)
 			assert_bool(instrucciones.visible).is_false()
 		assert_object(get_tree().current_scene).is_same(_almacen)
 		assert_bool(_persiana().en_pantalla()).is_true()
