@@ -618,3 +618,27 @@ func test_las_copias_de_la_transicion_llevan_el_contorno_del_foco() -> void:
 	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
 	assert_bool(con_contorno[0]).is_true()
 	assert_object(util.material_overlay).is_null()
+
+
+## Una caja ausente en la jornada que termina está oculta y fuera del grupo del foco. La siguiente
+## la muestra, y su contorno tiene que estar listo igual.
+func test_lo_pedido_oculto_y_fuera_del_foco_se_copia_con_el_contorno() -> void:
+	var escena := _escena()
+	var pedida := BoxMesh.new()
+	pedida.size = Vector3.ONE * 0.2
+	var util := _movible(escena, pedida, Vector3(0, 0.1, 0))
+	var cuerpo := util.get_parent() as Node3D
+	cuerpo.hide()
+	var calentamiento := _calentamiento()
+	var con_contorno := [false]
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			for muestra: MeshInstance3D in _muestras_visibles(calentamiento, pedida):
+				var encima := muestra.material_overlay as ShaderMaterial
+				con_contorno[0] = con_contorno[0] or (encima != null and encima.shader == CONTORNO)
+	)
+	calentamiento.calentar_copias(escena, [cuerpo])
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_bool(con_contorno[0]).is_true()
+	assert_object(util.material_overlay).is_null()
+	assert_bool(cuerpo.visible).is_false()

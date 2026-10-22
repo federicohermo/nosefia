@@ -324,7 +324,13 @@ func _preparar_contornos() -> void:
 				_guardar_pases(material as Material)
 		# El protocolo lo declara el objeto; el sistema no conoce su clase ni su escena.
 		objeto.call("mostrar_contorno", indicacion)
-	for objetivo: Node in get_tree().get_nodes_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE):
+	var objetivos: Array[Node] = get_tree().get_nodes_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+	# Lo pedido entra aunque esté fuera del grupo: una caja ausente en la jornada que termina
+	# vuelve a la siguiente, y su contorno se prepara acá.
+	for pedido: Node3D in _solo_de:
+		if not objetivos.has(pedido):
+			objetivos.append(pedido)
+	for objetivo: Node in objetivos:
 		if objetivo is Node3D and _escena.is_ancestor_of(objetivo) and _es_pedido(objetivo):
 			var marco := MarcoDelObjetivo.new()
 			add_child(marco)

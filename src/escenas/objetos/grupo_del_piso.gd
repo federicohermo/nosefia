@@ -19,8 +19,12 @@ func preparar(malla: Mesh, capacidad: int) -> void:
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.mesh = malla
 	multimesh.instance_count = capacidad
-	multimesh.visible_instance_count = 0
 	_caja_de_una = malla.get_aabb()
+	# Vacío y oculto con una instancia: el calentamiento destapa lo oculto y compila el producto
+	# en el piso antes de jugar. Sin instancias visibles no lo dibujaba.
+	multimesh.visible_instance_count = 1
+	custom_aabb = _caja_de_una
+	hide()
 
 
 func agregar(cuerpo: RigidBody3D) -> void:
@@ -30,6 +34,7 @@ func agregar(cuerpo: RigidBody3D) -> void:
 	_matrices.append(Transform3D.IDENTITY)
 	_reposos.append(false)
 	vista.hide()
+	show()
 	if cuerpos.size() > multimesh.instance_count:
 		# Una caja puede traer más unidades que la fila del mueble. Redimensionar borra el buffer.
 		multimesh.instance_count = maxi(cuerpos.size(), multimesh.instance_count * 2)
@@ -55,6 +60,7 @@ func quitar(cuerpo: RigidBody3D) -> void:
 	_matrices.resize(ultimo)
 	_reposos.resize(ultimo)
 	multimesh.visible_instance_count = ultimo
+	visible = ultimo > 0
 	if indice < ultimo:
 		_actualizar(indice, true)
 	_encuadrar()
