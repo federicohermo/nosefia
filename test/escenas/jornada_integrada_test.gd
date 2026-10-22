@@ -34,11 +34,16 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 		almacen, _completos_al_abrir(almacen, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, control)
 	)
 	await _reponer(almacen)
+	_comprobar_contador(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
 	await _atender(almacen)
+	_comprobar_contador(almacen)
 	await _registrar(almacen)
+	_comprobar_contador(almacen)
 	await _limpiar(almacen)
+	_comprobar_contador(almacen)
 	await _ordenar_las_cajas(almacen)
+	_comprobar_contador(almacen)
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		assert_bool(tarea.completada()).is_true()
 	assert_bool(reloj.corriendo()).is_true()
@@ -312,6 +317,20 @@ func _atender(almacen: Node3D) -> void:
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
 	ventanilla.call("cerrar")
+
+
+## El contador del HUD dice las obligatorias que la noche ya tiene cumplidas.
+func _comprobar_contador(almacen: Node3D) -> void:
+	var contador: Label = almacen.get("_hud").get("_tareas")
+	var jornada := (almacen.get("_partida") as Partida).jornada()
+	assert_str(contador.text).is_equal(
+		(
+			Hud.TEXTO_DE_LAS_TAREAS
+			% Marcador.tareas(
+				_cumplidas(almacen.get("_reloj")), Apertura.cantidad_de_obligatorias(jornada)
+			)
+		)
+	)
 
 
 func _cumplidas(reloj: RelojDelTurno) -> int:
