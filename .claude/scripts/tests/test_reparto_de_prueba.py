@@ -4,6 +4,7 @@ from collections import Counter
 
 from lib.repo import RAIZ
 from lib.reparto import ESTANTES, PRODUCTOS, Tanda
+from lib import reparto_de_prueba
 from lib.reparto_de_prueba import (
     ESTANTES_DE_PRUEBA, bandas_del_nivel, bases_del_contenido,
     validar_identidades_de_prueba,
@@ -12,6 +13,15 @@ from lib.reparto_de_prueba import (
 
 
 class RepartoDePrueba(unittest.TestCase):
+    def test_solo_los_16_laterales_retroceden_cuatro_centimetros_por_extremo(self):
+        retiros = reparto_de_prueba.RETIROS_POR_ESTANTE_DE_PRUEBA
+        esperados = {f"{letra}.{cara}.{nivel}" for letra in ("A", "B")
+                     for cara in ("este", "oeste") for nivel in range(4)}
+        self.assertEqual(set(retiros), esperados)
+        self.assertEqual(set(retiros.values()), {0.04})
+        self.assertTrue(esperados.issubset(ESTANTES_DE_PRUEBA))
+        self.assertEqual(sum(len(ts) for ts in ESTANTES_DE_PRUEBA.values()), 64)
+
     def test_cada_uno_de_los_cuatro_niveles_repite_el_mapa(self):  # AC-STK-096
         caras = {
             "A.oeste": ("ARVECOR", "MAROLINI"),
