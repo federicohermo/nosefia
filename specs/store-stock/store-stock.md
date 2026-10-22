@@ -550,7 +550,7 @@ EN las jornadas de prueba, el sistema DEBE conservar el margen de los productos 
 el borde de cada estante de la etapa completa y la separación uniforme de referencia de
 cada envase. SI las columnas calculadas inicialmente no entran con ese ritmo, los márgenes
 y el aire entre caras, ENTONCES DEBE quitar columnas hasta obtener la mayor cantidad que
-entre en la mitad asignada, o en el estante entero cuando lo ocupe un solo producto.
+entre en la cara, conservando las dos regiones longitudinales cuando haya dos productos.
 NO DEBE comprimir ni estirar las separaciones para conservar un cupo anterior. El sobrante
 DEBE repartirse a ambos lados de cada tanda, sin pegarla a la división longitudinal.
 Los cupos principales y totales DEBEN medirse del reparto resultante. Se conservan las filas,
@@ -563,9 +563,11 @@ entre unidades vecinas, el mínimo de aire entre caras contiguas y el mínimo de
 las dos tandas de un lateral. En cada encuentro de cabezal y lateral, el aire DEBE ser al
 menos la mayor separación de referencia de los productos contiguos y nunca menor que el
 mínimo entre caras del dominio. La división longitudinal NO DEBE convertirse en un borde
-contra el que se amontonen ambas tandas. Cada tanda DEBE permanecer centrada en su mitad
-útil y mantener el ritmo de su producto en la etapa completa. El sobrante DEBE repartirse
-en los márgenes de su mitad, después de reservar el aire de ambos encuentros.
+contra el que se amontonen ambas tandas. Los centros de ambas tandas DEBEN permanecer en mitades
+opuestas, con el ritmo de su producto en la etapa completa. Un bloque puede aprovechar la
+holgura del otro, como en la etapa completa, antes de quitar otra columna. El sobrante
+DEBE repartirse entre los bordes y la unión, sin concentrarlo contra la mitad ni agrandar
+innecesariamente el encuentro entre caras.
 
 Las cabeceras DEBEN conservar el margen lateral de exhibición a ambos costados de la chapa,
 además del retiro frontal de referencia de BR-STK-048. Sus filas DEBEN conservar el aire de
@@ -1205,7 +1207,8 @@ comestibles CUANDO se compara su exhibición de prueba con la etapa completa ENT
 conserva el margen de referencia contra el borde, las filas y la separación uniforme de
 referencia, sin unidades fuera de la chapa ni intersecciones. DADO un cupo inicial que
 no entra con esos márgenes y ese ritmo ENTONCES quita columnas y conserva la mayor cantidad
-que entra en la región asignada. Agregar una columna excedería esa región. Una tanda que
+que entra en la cara con los dos centros en mitades opuestas. Agregar una columna excedería
+el espacio disponible. Una tanda que
 ya entra conserva sus columnas. El sobrante queda libre a ambos lados, sin estirar huecos.
 Las dos mitades longitudinales y la principal a altura de reposición se conservan.
 
@@ -1214,8 +1217,8 @@ Las dos mitades longitudinales y la principal a altura de reposición se conserv
 DADOS los cuatro niveles de ambos laterales de cada isla de prueba CUANDO se mide su
 exhibición completa ENTONCES cada fila conserva la separación uniforme de referencia,
 no menor que el mínimo entre unidades de exhibición, y las dos tandas conservan el mínimo
-de aire entre tandas. Cada una queda centrada en su mitad útil, sin acumular sus unidades
-contra la división, aunque para ello haya que quitar columnas.
+de aire entre tandas. Sus centros quedan en mitades opuestas, sin acumular sus unidades contra la división,
+y se aprovecha la holgura conjunta antes de quitar otra columna.
 
 ### AC-STK-102 — Las cabeceras conservan aire y margen a sus costados *(verifica BR-STK-049, BR-STK-048)*
 
