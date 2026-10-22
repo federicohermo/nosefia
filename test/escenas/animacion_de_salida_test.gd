@@ -110,7 +110,7 @@ func test_cada_noche_gira_abre_y_produce_una_devolucion_y_un_guardado() -> void:
 		entrada.call("_physics_process", 0.1)
 		assert_float(puerta.angulo()).is_equal(Puerta.ANGULO_ABIERTA)
 		assert_bool(persiana.visible).is_true()
-		assert_bool(pantalla.visible).is_true()
+		assert_bool(pantalla.visible).is_false()
 		assert_array(devoluciones).is_equal([jornada])
 		assert_int(guardado.escrituras).is_equal(1)
 		assert_int(guardado.cargar().get("jornada", -1)).is_equal(jornada + 1)
@@ -184,7 +184,13 @@ func test_pausar_cada_etapa_conserva_la_secuencia_y_la_mano() -> void:  # AC-SHF
 			salida._process(SalidaVoluntaria.DURACION_DEL_GIRO * 0.5)
 		entrada.call("_physics_process", 10.0)
 		entrada.call("_physics_process", 0.1)
-		assert_bool(pantalla.visible).is_true()
+		(
+			assert_bool(
+				(almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).visible
+			)
+			. is_true()
+		)
+		assert_bool(pantalla.visible).is_false()
 
 
 func test_el_tiempo_cierra_sin_giro_ni_apertura_de_la_entrada() -> void:  # AC-SHF-046
@@ -193,7 +199,11 @@ func test_el_tiempo_cierra_sin_giro_ni_apertura_de_la_entrada() -> void:  # AC-S
 	var antes: Transform3D = jugador.call("mira")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	reloj.terminar()
-	assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
+	(
+		assert_bool((almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).visible)
+		. is_true()
+	)
+	assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_false()
 	assert_bool((jugador.call("mira") as Transform3D).is_equal_approx(antes)).is_true()
 	assert_bool(almacen.get_node(ENTRADA).call("puerta").abierta()).is_false()
 

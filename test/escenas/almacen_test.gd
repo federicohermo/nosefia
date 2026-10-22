@@ -400,8 +400,9 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 	# **El segundo caso de la suite que entra `almacen.tscn` entera al árbol.** El lazo que este
 	# spec cierra —la noche termina, la placa aparece, el jugador la despacha y la siguiente
 	# abre— vive entero en señales conectadas: leído como texto no dice si funciona, y es lo
-	# único que vuelve alcanzable la jornada 2 jugando.
+	# único que vuelve alcanzable la noche siguiente jugando.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
@@ -428,7 +429,7 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 	(
 		assert_int(ciclo.partida().jornada())
 		. override_failure_message("despachada la placa, la partida no pasó a la noche siguiente")
-		. is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+		. is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	)
 	(
 		assert_str(tareas.text)
@@ -589,6 +590,7 @@ func test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu() -> void:
 
 func test_con_la_devolucion_en_pantalla_esc_pausa_encima() -> void:  # AC-SAV-018
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
