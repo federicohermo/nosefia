@@ -52,6 +52,16 @@ func test_cada_noche_gira_abre_y_produce_una_devolucion_y_un_guardado() -> void:
 		var almacen := await _abrir(jornada)
 		var jugador: Node3D = almacen.get("_jugador")
 		var control: ControlDelJugador = jugador.get("_control")
+		var cuadro := 1.0 / 144.0
+		var tiempo := 0.0
+		var proximo := 0.0
+		for _indice in 300:
+			while proximo <= tiempo:
+				control.girar(Vector2(0.1, 0.0))
+				proximo += 1.0 / 125.0
+			control.avanzar_el_dibujo(cuadro)
+			tiempo += cuadro
+		control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
 		control.girar(Vector2(500.0, 100.0))
 		jugador.call("_aplicar_la_rotacion")
 		assert_bool(control.giro_atrasado()).is_true()
