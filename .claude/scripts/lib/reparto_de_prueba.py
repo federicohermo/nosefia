@@ -27,6 +27,13 @@ ESTANTES_DE_PRUEBA = {
     for nivel in range(4)
 }
 
+RETIROS_POR_ESTANTE_DE_PRUEBA = {
+    f"{letra}.{cara}.{nivel}": 0.04
+    for letra in ("A", "B")
+    for cara in ("este", "oeste")
+    for nivel in range(4)
+}
+
 
 def validar_reparto_de_prueba(estantes: dict[str, tuple[Tanda, ...]]) -> None:
     if estantes.keys() != ESTANTES_DE_PRUEBA.keys():

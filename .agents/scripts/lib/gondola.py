@@ -171,10 +171,13 @@ def centros(largo: float, envases: Sequence[Envase], cuentas: Sequence[int]) -> 
     Todos los huecos del estante miden lo mismo, también el que separa dos tandas: lo que sobra
     se reparte entre ellos, y ningún borde queda vacío. Una unidad sola va al medio.
     """
+    libre = sobrante(largo, envases, cuentas)
+    if libre < -1e-9:
+        raise ValueError("las columnas no entran conservando el hueco mínimo")
     unidades = sum(cuentas)
     if unidades == 1:
         return [[largo / 2] if cuenta else [] for cuenta in cuentas]
-    hueco = HUECO_MINIMO + sobrante(largo, envases, cuentas) / (unidades - 1)
+    hueco = HUECO_MINIMO + libre / (unidades - 1)
     inicio = 0.0
     salida = []
     for envase, cuenta in zip(envases, cuentas):
