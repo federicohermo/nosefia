@@ -75,6 +75,9 @@ const BIDON_A_UN_COSTADO := Vector3(0.086, -0.008, -0.18)
 var muebles_con_reserva: Array[PhysicsBody3D] = []
 
 var _unidades: Array[Node3D] = []
+## Una unidad por producto, oculta y quieta. En la mano el producto es una malla suelta, y compila
+## otra variante que en el lote de la góndola: el calentamiento la prepara con estas.
+var _unidades_de_muestra: Array[Node3D] = []
 ## Los casilleros de cada producto, en el orden de `Producto.Id` y, adentro, en el de su fila.
 var _casilleros: Array[Array] = []
 ## Lo que la mira enfoca, según el jugador. Sólo el casillero enfocado muestra la vista previa.
@@ -166,6 +169,21 @@ func _preparar_materiales_y_modelos() -> void:
 	_laterales.shader = LATERALES
 	_laterales.set_shader_parameter("color", IndicacionDelFoco.COLOR)
 	_preparar_modelos()
+	for producto in Catalogo.todos():
+		var unidad: ObjetoAgarrable = OBJETO.instantiate()
+		unidad.freeze = true
+		unidad.collision_layer = 0
+		unidad.collision_mask = 0
+		unidad.material_de_foco = _aristas
+		add_child(unidad)
+		unidad.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+		_vestir(unidad, producto.id)
+		unidad.hide()
+		_unidades_de_muestra.append(unidad)
+
+
+func unidades_de_muestra() -> Array[Node3D]:
+	return _unidades_de_muestra
 
 
 func _rehacer_disposicion() -> void:

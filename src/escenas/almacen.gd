@@ -566,6 +566,7 @@ func _preparar_lo_postergado() -> void:
 			pendientes.append(util)
 	if PreparacionDelDeposito.por_preparar(_jornada_preparada, siguiente):
 		pendientes.append_array(_cajas_de_productos)
+		pendientes.append_array(_reposicion_manual.unidades_de_muestra())
 	if not pendientes.is_empty():
 		var capa := CanvasLayer.new()
 		var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
@@ -606,6 +607,7 @@ func cuerpos_sin_copias() -> Array[Node3D]:
 			sin_copias.append(util)
 	if not PreparacionDelDeposito.se_prepara(_partida.jornada()):
 		sin_copias.append_array(_cajas_de_productos)
+		sin_copias.append_array(_reposicion_manual.unidades_de_muestra())
 	return sin_copias
 
 
