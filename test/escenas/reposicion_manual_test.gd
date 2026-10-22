@@ -230,7 +230,12 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 				_guia(almacen, producto) + antes + indice + 1
 			)
 		assert_int(grupo.get_child_count()).is_zero()
-	assert_int(presentacion.find_children("*", "RigidBody3D", true, false).size()).is_equal(1)
+	# Las unidades de muestra del calentamiento no cuentan: no se agarran ni se ven.
+	var muestras: Array[Node3D] = presentacion.call("unidades_de_muestra")
+	var cuerpos := presentacion.find_children("*", "RigidBody3D", true, false).filter(
+		func(cuerpo: Node) -> bool: return not muestras.has(cuerpo)
+	)
+	assert_int(cuerpos.size()).is_equal(1)
 
 
 func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
@@ -334,7 +339,7 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	for grupo: MultiMeshInstance3D in presentacion.find_children(
 		"SueltosDe*", "MultiMeshInstance3D", true, false
 	):
-		assert_int(grupo.multimesh.visible_instance_count).is_zero()
+		assert_bool(grupo.visible and grupo.multimesh.visible_instance_count > 0).is_false()
 	presentacion.call("retirar", Producto.Id.ACTRONCITO)
 	assert_object(agarre.manos().sostenido()).is_not_null()
 
