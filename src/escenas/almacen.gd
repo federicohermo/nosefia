@@ -160,6 +160,14 @@ func _ready() -> void:
 	entrada.hoja_quieta.connect(_salida.confirmar_apertura.unbind(1))
 	entrada.consultar_salida = _puede_salir
 	entrada.salida_solicitada.connect(_salir_por_la_entrada)
+	entrada.salida_rechazada.connect(
+		func() -> void:
+			_pensar_gesto(
+				SubtitulosDeLosGestos.al_usar_la_entrada(
+					_partida.jornada(), _partida.obligatorias()
+				)
+			)
+	)
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
