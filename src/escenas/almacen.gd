@@ -128,6 +128,7 @@ var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
 var _enlace_de_guardado: EnlaceDeGuardado
 var _salida_preparada := false
+var _salida: SalidaDelAlmacen
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
@@ -150,6 +151,12 @@ func _ready() -> void:
 	_cablear_la_investigacion()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	var entrada: PuertaDelLocal = $Estructura/puertaentrada/CuerpoDeLaHoja
+	_salida = SalidaDelAlmacen.new()
+	_salida.configurar(_reloj, entrada.puerta())
+	add_child(_salida)
+	_salida.vista_cambiada.connect(_jugador.orientar_la_salida)
+	_salida.apertura_pedida.connect(entrada.abrir_para_salida)
+	entrada.hoja_quieta.connect(_salida.confirmar_apertura.unbind(1))
 	entrada.consultar_salida = _puede_salir
 	entrada.salida_solicitada.connect(_salir_por_la_entrada)
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
@@ -336,6 +343,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
+	_salida.reiniciar()
 	_salida_preparada = false
 	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).vaciar()
 	_jornada_del_celular = jornada
@@ -496,7 +504,12 @@ func _puede_salir() -> bool:
 
 func _salir_por_la_entrada() -> void:
 	if _puede_salir():
-		_reloj.terminar()
+		var entrada: PuertaDelLocal = $Estructura/puertaentrada/CuerpoDeLaHoja
+		var vista := _jugador.mira()
+		var desde := vista.basis.get_euler()
+		var centro := entrada.hoja.global_transform * entrada.hoja.get_aabb().get_center()
+		var hacia := Basis.looking_at(centro - vista.origin).get_euler()
+		_salida.iniciar(Vector2(desde.y, desde.x), Vector2(hacia.y, hacia.x))
 
 
 ## Al cerrar, la persiana baja y la devolución de Enrique llega por el celular.

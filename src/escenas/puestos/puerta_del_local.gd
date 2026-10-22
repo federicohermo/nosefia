@@ -109,6 +109,11 @@ func alternar() -> void:
 		puerta_cerrada.emit(self)
 
 
+func abrir_para_salida() -> void:
+	if _puerta.abrir_para_salida():
+		puerta_abierta.emit(self)
+
+
 ## En qué estado está.
 func puerta() -> Puerta:
 	return _puerta

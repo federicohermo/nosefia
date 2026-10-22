@@ -1,0 +1,55 @@
+extends GdUnitTestSuite
+
+
+# AC-SHF-043
+func test_pide_apertura_despues_del_giro_y_cierra_solo_con_hoja_completa() -> void:
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	var tarea := Tarea.new(Tarea.Tipo.CAJA)
+	reloj.arrancar(Turno.new(100.0, [tarea]), [tarea])
+	reloj.completar(tarea)
+	var puerta := Puerta.new(true)
+	var salida: SalidaDelAlmacen = auto_free(SalidaDelAlmacen.new())
+	salida.configurar(reloj, puerta)
+	var aperturas: Array[bool] = []
+	var cierres: Array[int] = []
+	salida.apertura_pedida.connect(func() -> void: aperturas.append(true))
+	reloj.turno_cerrado.connect(cierres.append)
+	assert_bool(salida.iniciar(Vector2.ONE, Vector2.ZERO)).is_true()
+	assert_bool(salida.iniciar(Vector2.ZERO, Vector2.ONE)).is_false()
+	salida.confirmar_apertura()
+	assert_array(aperturas).is_empty()
+	assert_array(cierres).is_empty()
+	salida._process(SalidaVoluntaria.DURACION_DEL_GIRO)
+	assert_array(aperturas).is_equal([true])
+	salida._process(10.0)
+	assert_array(aperturas).has_size(1)
+	puerta.abrir_para_salida()
+	puerta.avanzar(0.1)
+	salida.confirmar_apertura()
+	assert_array(cierres).is_empty()
+	reloj.terminar()
+	reloj.avanzar(1000.0)
+	assert_bool(reloj.descumplir(tarea)).is_false()
+	assert_array(cierres).is_empty()
+	puerta.avanzar(10.0)
+	salida.confirmar_apertura()
+	salida.confirmar_apertura()
+	reloj.terminar()
+	assert_array(cierres).is_equal([1])
+
+
+func test_reiniciar_descarta_la_apertura_de_la_noche_anterior() -> void:  # AC-SHF-046
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	reloj.arrancar(Turno.new(100.0, []), [])
+	var puerta := Puerta.new(true)
+	var salida: SalidaDelAlmacen = auto_free(SalidaDelAlmacen.new())
+	salida.configurar(reloj, puerta)
+	salida.iniciar(Vector2.ONE, Vector2.ZERO)
+	salida._process(10.0)
+	salida.reiniciar()
+	reloj.arrancar(Turno.new(100.0, []), [])
+	puerta.abrir_para_salida()
+	puerta.avanzar(10.0)
+	salida.confirmar_apertura()
+	assert_bool(reloj.corriendo()).is_true()
+	assert_bool(salida.iniciar(Vector2.ZERO, Vector2.ONE)).is_true()

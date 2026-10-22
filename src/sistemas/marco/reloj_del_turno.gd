@@ -27,6 +27,7 @@ var _obligatorias: Array[Tarea] = []
 var _ritmo: float = Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 var _ultimo_cuadro_usec: int = 0
 var _retenido := false
+var _cierre_reservado := false
 
 
 ## El navegador puede suspender los cuadros de una pestaña oculta. El reloj monotónico sigue
@@ -61,12 +62,28 @@ func soltar() -> void:
 
 ## Los segundos reales recibidos, convertidos en tiempo de turno.
 func avanzar(segundos_reales: float) -> void:
+	if _cierre_reservado:
+		return
 	_consumir(maxf(0.0, Ritmo.escalar(segundos_reales, _ritmo)))
 
 
 func terminar() -> void:
-	if corriendo():
+	if corriendo() and not _cierre_reservado:
 		_consumir(_turno.tiempo_restante())
+
+
+func reservar_cierre() -> bool:
+	if not corriendo() or _cierre_reservado:
+		return false
+	_cierre_reservado = true
+	return true
+
+
+func terminar_cierre_reservado() -> void:
+	if not _cierre_reservado:
+		return
+	_consumir(_turno.tiempo_restante())
+	_cierre_reservado = false
 
 
 func _consumir(segundos: float) -> void:
@@ -90,6 +107,7 @@ func arrancar(
 	ritmo: float = Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 ) -> void:
 	_turno = turno
+	_cierre_reservado = false
 	_obligatorias = obligatorias
 	_ritmo = ritmo
 	_ultimo_cuadro_usec = _ahora_usec()
@@ -113,7 +131,7 @@ func corriendo() -> bool:
 ## jornada no pidió ese tipo, así que devolverlo derecho acá es la llamada natural. Que
 ## el turno esté cerrado, en cambio, **no** se guarda: el dominio ya contesta `false`.
 func completar(tarea: Tarea) -> bool:
-	if _turno == null or tarea == null:
+	if _turno == null or tarea == null or _cierre_reservado:
 		return false
 	if not _turno.completar(tarea):
 		return false
@@ -124,7 +142,7 @@ func completar(tarea: Tarea) -> bool:
 ## Deshace una tarea, con el mismo guard que `completar()`. La señal es aparte de
 ## `tarea_completada` para que la tabla de sonidos no suene al descumplir.
 func descumplir(tarea: Tarea) -> bool:
-	if _turno == null or tarea == null:
+	if _turno == null or tarea == null or _cierre_reservado:
 		return false
 	if not _turno.descumplir(tarea):
 		return false

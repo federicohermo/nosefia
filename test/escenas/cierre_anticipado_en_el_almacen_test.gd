@@ -208,6 +208,7 @@ func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-
 		var cierres: Array[int] = []
 		reloj.turno_cerrado.connect(cierres.append)
 		_gesto(almacen, true)
+		await _completar_la_salida(almacen)
 		assert_array(cierres).is_equal([partida.obligatorias().size()])
 		assert_float(_restante(almacen)).is_zero()
 		assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
@@ -412,10 +413,14 @@ func test_la_salida_respeta_mano_y_suspension() -> void:  # AC-PLY-104, AC-PLY-1
 		get_tree().paused = false
 		jugador.set("_en_pausa", false)
 		_gesto(almacen, true)
+		assert_bool(jugador.call("suspendido")).is_true()
+		assert_object(agarre.manos().sostenido()).is_same(sostenido)
+		assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_false()
+		await _completar_la_salida(almacen)
 		assert_bool(almacen.get("_reloj").corriendo()).is_false()
 		assert_object(agarre.manos().sostenido()).is_same(sostenido)
 		assert_object(objeto.get_parent()).is_same(padre)
-		assert_bool(almacen.get_node(ENTRADA).call("puerta").abierta()).is_false()
+		assert_bool(almacen.get_node(ENTRADA).call("puerta").abierta()).is_true()
 
 
 func test_otra_apertura_reinicia_la_salida() -> void:  # AC-SHF-039
@@ -459,3 +464,8 @@ func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-
 			]
 		)
 	)
+
+
+func _completar_la_salida(almacen: Node3D) -> void:
+	await assert_signal(almacen.get_node(ENTRADA)).wait_until(5000).is_emitted("hoja_quieta")
+	assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
