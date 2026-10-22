@@ -13,6 +13,8 @@ const COMPILANDO := "Compilando sombreadores: quedan %d"
 const ENTRANDO := "Entrando al local"
 ## El lado de cada punto, en proporción a la letra.
 const LADO_DEL_PUNTO := 0.2
+const DURACION_DEL_LATIDO := 0.9
+const DESFASE_DEL_PUNTO := 0.15
 
 @export var presentacion: Presentacion = Presentacion.INICIAL
 @export var _marco: Control
@@ -24,6 +26,8 @@ const LADO_DEL_PUNTO := 0.2
 
 var _en_la_web := OS.has_feature("web")
 var _ubicacion_de_los_puntos := ""
+var _puntos: Array[ColorRect] = []
+var _tiempo_del_latido := 0.0
 
 
 func _notification(que: int) -> void:
@@ -40,13 +44,23 @@ func _ready() -> void:
 		for adorno: Control in _adornos:
 			adorno.hide()
 		_detalle.hide()
+		if not _en_la_web:
+			_texto.visible_characters = TEXTO_EN_LA_WEB.length()
+			var relleno: StyleBoxFlat = _barra.get_theme_stylebox("fill")
+			for indice: int in range(3):
+				var punto := ColorRect.new()
+				punto.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				punto.color = relleno.bg_color
+				_texto.add_child(punto)
+				_puntos.append(punto)
 	set_process(false)
 
 
 func mostrar() -> void:
 	visible = true
+	_tiempo_del_latido = 0.0
 	_latir(true)
-	set_process(_en_la_web)
+	set_process(_en_la_web or not _puntos.is_empty())
 
 
 func ocultar() -> void:
@@ -90,13 +104,29 @@ func _latir(prendido: bool) -> void:
 
 ## Los puntos van donde termina la palabra. El navegador los ubica en píxeles de la página, y el
 ## lienzo puede medir otra cosa: la proporción la saca la página.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var letra := _texto.get_theme_font_size("font_size")
 	var fuente := _texto.get_theme_font("font")
 	var ancho := fuente.get_string_size(_texto.text, 0, -1, letra).x
 	var lado_propio := letra * LADO_DEL_PUNTO
 	var renglon := (_texto.size.y - fuente.get_height(letra)) / 2.0
 	var base := renglon + fuente.get_ascent(letra) - lado_propio
+	if not _en_la_web:
+		var palabra := fuente.get_string_size(TEXTO_EN_LA_WEB, 0, -1, letra).x
+		var inicio := Vector2(
+			(_texto.size.x - ancho) / 2.0 + palabra + lado_propio * 0.6, base - lado_propio / 2.0
+		)
+		_tiempo_del_latido += delta
+		for indice: int in _puntos.size():
+			var punto := _puntos[indice]
+			punto.size = Vector2.ONE * lado_propio
+			punto.pivot_offset = punto.size / 2.0
+			punto.position = inicio + Vector2.RIGHT * indice * lado_propio * 1.6
+			var tiempo := maxf(0.0, _tiempo_del_latido - indice * DESFASE_DEL_PUNTO)
+			var pulso := (1.0 - cos(TAU * tiempo / DURACION_DEL_LATIDO)) / 2.0
+			punto.scale = Vector2.ONE * lerpf(0.5, 1.0, pulso)
+			punto.modulate.a = lerpf(0.3, 1.0, pulso)
+		return
 	var lienzo := _texto.get_global_transform_with_canvas()
 	var final := lienzo * Vector2((_texto.size.x + ancho) / 2.0 + lado_propio * 0.6, base)
 	var lado := lado_propio * lienzo.get_scale().y
