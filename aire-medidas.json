@@ -1,0 +1,96 @@
+{
+  "reparto-antes": {
+    "ritmos_mm": {
+      "Arvecor": 10.899782180777779,
+      "Marolini": 24.620056152339977,
+      "Terminator": 3.4902095794711876,
+      "Zucarachas": 24.62983131408003,
+      "Progres": 5.119800567617128,
+      "Don Saturados": 8.039951324457062,
+      "Pepito": 25.470018386836045,
+      "Petisas": 8.04018974303583
+    },
+    "union_mm": {
+      "A-oeste": -0.00023841858176609776,
+      "A-este": -0.00023841857998974092,
+      "B-oeste": 0.00023841858709516828,
+      "B-este": 5.773159728050814e-12
+    },
+    "cabeceras": {
+      "A-norte": {
+        "margen_exterior_mm": 8.016271102905037,
+        "encuentro_mm": 39.72029685973616,
+        "ritmo_mm": 20.72796970605878
+      },
+      "A-sur": {
+        "margen_exterior_mm": 7.982006942749087,
+        "encuentro_mm": 13.193011283876038,
+        "ritmo_mm": 29.599908739328203
+      },
+      "B-norte": {
+        "margen_exterior_mm": 52.64892912291997,
+        "encuentro_mm": 20.009994506835064,
+        "ritmo_mm": 28.35011482238814
+      },
+      "B-sur": {
+        "margen_exterior_mm": 79.35896253967023,
+        "encuentro_mm": 40.14694690704507,
+        "ritmo_mm": 25.08974075316908
+      }
+    }
+  },
+  "reparto-despues": {
+    "ritmos_mm": {
+      "Arvecor": 13.31973075865775,
+      "Marolini": 29.969930648799938,
+      "Terminator": 8.459806442262046,
+      "Zucarachas": 15.459775924689945,
+      "Progres": 6.529808044437091,
+      "Don Saturados": 6.699919700626944,
+      "Pepito": 25.879979133606067,
+      "Petisas": 16.930341720576227
+    },
+    "union_mm": {
+      "A-oeste": 19.999742507928353,
+      "A-este": 19.999742507930574,
+      "B-oeste": 20.00021934509677,
+      "B-este": 20.000219345086112
+    },
+    "cabeceras": {
+      "A-norte": {
+        "margen_exterior_mm": 23.200294649124096,
+        "encuentro_mm": 10.000228881836215,
+        "ritmo_mm": 15.666574239730945
+      },
+      "A-sur": {
+        "margen_exterior_mm": 23.20700017166105,
+        "encuentro_mm": 9.953022003175022,
+        "ritmo_mm": 24.524707347154408
+      },
+      "B-norte": {
+        "margen_exterior_mm": 52.64892912291997,
+        "encuentro_mm": 10.010004043575119,
+        "ritmo_mm": 28.35011482238814
+      },
+      "B-sur": {
+        "margen_exterior_mm": 79.35896253967023,
+        "encuentro_mm": 21.24702930450395,
+        "ritmo_mm": 25.08974075316908
+      }
+    }
+  },
+  "reparto-32": {
+    "ritmos_mm": {
+      "Arvecor": 14.999747276308012,
+      "Marolini": 34.99984741211004,
+      "Terminator": 14.60900902748205,
+      "Zucarachas": 34.99984741211004,
+      "Progres": 22.99988269805703,
+      "Don Saturados": 24.999976158136928,
+      "Pepito": 39.99996185302568,
+      "Petisas": 25.000095367425924
+    },
+    "union_mm": {},
+    "cabeceras": {}
+  }
+}
