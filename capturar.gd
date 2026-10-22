@@ -21,7 +21,9 @@ func _capturar() -> void:
 		(load("res://src/escenas/puestos/contenido_del_estante.tscn") as PackedScene).instantiate()
 		as Node3D
 	)
-	var disposicion: Resource = load("res://src/escenas/puestos/disposicion_de_prueba.tres")
+	var disposicion: Resource = load(
+		args[2] if args.size() > 2 else "res://src/escenas/puestos/disposicion_de_prueba.tres"
+	)
 	for nodo: Node in modelo.find_children("*", "MeshInstance3D", true, false):
 		var malla := nodo as MeshInstance3D
 		if malla.name.begins_with("gondolanueva"):
@@ -58,6 +60,12 @@ func _capturar() -> void:
 		camara.fov = 30
 		camara.position = Vector3(1.8, 1.27, -0.65)
 		camara.look_at(Vector3(0.11, 1.27, -1.0))
+	if args.size() > 1 and args[1] == "B":
+		camara.position = Vector3(4.72, 1.25, 0.15)
+		camara.look_at(Vector3(3.03, 1.12, -1.13))
+	if args.size() > 1 and args[1] == "norte":
+		camara.position = Vector3(4.72, 1.25, -4.65)
+		camara.look_at(Vector3(3.03, 1.12, -3.85))
 	camara.current = true
 	for i: int in range(8):
 		await process_frame
