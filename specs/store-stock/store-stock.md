@@ -544,7 +544,29 @@ con frontales que se agarran y reponen. Las filas posteriores, orientaciones, ap
 separación de unidades y tamaño de muebles DEBEN conservar las reglas vigentes. El cambio
 a la etapa completa DEBE restituir los sectores de BR-STK-043 y BR-STK-044.
 
+### BR-STK-048 — La prueba conserva los márgenes de la etapa completa
+
+EN las jornadas de prueba, el sistema DEBE conservar el margen de los productos contra
+el borde de cada estante de la etapa completa. Cada tanda DEBE conservar una separación
+uniforme entre sus unidades, igual a la de su envase en la etapa completa cuando entre.
+SI esa separación no permite conservar los cupos de prueba sobre la chapa disponible,
+ENTONCES el sistema DEBE reducirla uniformemente sólo lo necesario, sin superponer unidades
+ni reducir el margen de referencia. El espacio sobrante NO DEBE estirar las separaciones.
+El reparto DEBE conservar los cupos, las dos mitades longitudinales, las filas,
+orientaciones, apoyos y la tanda principal a altura de reposición de BR-STK-047.
+
 ## Criterios de aceptación
+
+### AC-STK-100 — La prueba conserva el margen y adapta sólo la separación necesaria *(verifica BR-STK-048, BR-STK-047)*
+
+DADO cada tipo de cara de las islas, las heladeras funcionales y la estantería de no
+comestibles CUANDO se compara su exhibición de prueba con la etapa completa ENTONCES
+conserva el margen de referencia contra el borde, los cupos y las filas de prueba,
+sin unidades fuera de la chapa ni intersecciones. DADO una tanda cuya separación de
+referencia entra ENTONCES la conserva y deja el sobrante libre. DADO una tanda que no
+entra con esa separación ENTONCES conserva sus cupos y el margen y usa la mayor separación
+uniforme que entra sin superar la referencia. La reducción no afecta otras tandas que sí
+entran. Las dos mitades longitudinales y la principal a altura de reposición se conservan.
 
 ### AC-STK-001 — La identidad manda *(verifica BR-STK-001)*
 
