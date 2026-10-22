@@ -46,10 +46,13 @@ func medir() -> void:
 		for i in grupo.multimesh.instance_count:
 			var t := grupo.global_transform * grupo.multimesh.get_instance_transform(i)
 			var aabb := t * grupo.multimesh.mesh.get_aabb()
-			unidades.append({"centro": var_to_str(aabb.get_center()), "limites": var_to_str(aabb), "base": var_to_str(t.basis)})
+			unidades.append({"limites": [aabb.position.x, aabb.position.y, aabb.position.z, aabb.size.x, aabb.size.y, aabb.size.z], "base": var_to_str(t.basis)})
 		mediciones.append({"producto": producto.nombre, "cupo": disposicion.casilleros_de(producto.id), "principal": disposicion.filas_de_adelante[producto.id], "unidades": unidades})
 	DirAccess.make_dir_recursive_absolute(salida)
 	FileAccess.open(salida.path_join("mediciones.json"), FileAccess.WRITE).store_string(JSON.stringify(mediciones, "\t"))
+	if argumentos.size() > 2 and argumentos[2] == "solo-datos":
+		quit()
+		return
 	for vista in vistas:
 		var mueble: MeshInstance3D = local.get_node("Estructura/" + vista.mueble)
 		var caja := mueble.global_transform * mueble.mesh.get_aabb()
