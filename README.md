@@ -52,6 +52,9 @@ El script `capturar.gd` conserva la cámara y el montaje de inspección.
 | --- | --- |
 | ![Detalle antes](antes-detalle.png) | ![Detalle después](despues-detalle.png) |
 | ![General antes](antes.png) | ![General después](despues.png) |
+| ![Góndola B antes](antes-B.png) | ![Góndola B después](despues-B.png) |
+
+[Extremo norte después](despues-norte.png).
 
 ## Conservación y límites
 
@@ -65,4 +68,5 @@ Es un defecto preexistente en el blend idéntico. Este cambio no modifica esa to
 No se declara una auditoría topológica completamente verde.
 
 Pasaron 70 pruebas focales del pipeline. No se ejecutó `verificar.py` local.
-El estado final de CI se consulta en el PR #595.
+La CI del PR #595 pasó las seis particiones y el check final `verify`.
+El seguimiento `gh pr checks 595 --repo federicohermo/nosefia --watch` terminó con código cero.
