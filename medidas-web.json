@@ -1,0 +1,230 @@
+[
+  {
+    "ancho": 1280,
+    "alto": 720,
+    "presentacion": 0,
+    "medida": {
+      "puntos": [
+        {
+          "desfase": 0,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 150,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 300,
+          "duracion": 900,
+          "estado": "running"
+        }
+      ],
+      "size": [
+        1280,
+        720
+      ],
+      "ubicacion": {
+        "bottom": 406.66874384880066,
+        "height": 3.987499952316284,
+        "left": 681.4625244140625,
+        "right": 698.2000255584717,
+        "top": 402.6812438964844,
+        "width": 16.73750114440918,
+        "x": 681.4625244140625,
+        "y": 402.6812438964844
+      }
+    }
+  },
+  {
+    "ancho": 1280,
+    "alto": 720,
+    "presentacion": 1,
+    "medida": {
+      "puntos": [
+        {
+          "desfase": 0,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 150,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 300,
+          "duracion": 900,
+          "estado": "running"
+        }
+      ],
+      "size": [
+        1280,
+        720
+      ],
+      "ubicacion": {
+        "bottom": 406.66874384880066,
+        "height": 3.987499952316284,
+        "left": 681.4625244140625,
+        "right": 698.2000255584717,
+        "top": 402.6812438964844,
+        "width": 16.73750114440918,
+        "x": 681.4625244140625,
+        "y": 402.6812438964844
+      }
+    }
+  },
+  {
+    "ancho": 960,
+    "alto": 720,
+    "presentacion": 0,
+    "medida": {
+      "puntos": [
+        {
+          "desfase": 0,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 150,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 300,
+          "duracion": 900,
+          "estado": "running"
+        }
+      ],
+      "size": [
+        960,
+        720
+      ],
+      "ubicacion": {
+        "bottom": 394.0812499523163,
+        "height": 2.987499952316284,
+        "left": 510.4624938964844,
+        "right": 522.9999942779541,
+        "top": 391.09375,
+        "width": 12.537500381469727,
+        "x": 510.4624938964844,
+        "y": 391.09375
+      }
+    }
+  },
+  {
+    "ancho": 960,
+    "alto": 720,
+    "presentacion": 1,
+    "medida": {
+      "puntos": [
+        {
+          "desfase": 0,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 150,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 300,
+          "duracion": 900,
+          "estado": "running"
+        }
+      ],
+      "size": [
+        960,
+        720
+      ],
+      "ubicacion": {
+        "bottom": 394.0812499523163,
+        "height": 2.987499952316284,
+        "left": 510.4624938964844,
+        "right": 522.9999942779541,
+        "top": 391.09375,
+        "width": 12.537500381469727,
+        "x": 510.4624938964844,
+        "y": 391.09375
+      }
+    }
+  },
+  {
+    "ancho": 1440,
+    "alto": 640,
+    "presentacion": 0,
+    "medida": {
+      "puntos": [
+        {
+          "desfase": 0,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 150,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 300,
+          "duracion": 900,
+          "estado": "running"
+        }
+      ],
+      "size": [
+        1440,
+        640
+      ],
+      "ubicacion": {
+        "bottom": 361.7437560558319,
+        "height": 3.987499952316284,
+        "left": 756.4625244140625,
+        "right": 773.2000255584717,
+        "top": 357.7562561035156,
+        "width": 16.73750114440918,
+        "x": 756.4625244140625,
+        "y": 357.7562561035156
+      }
+    }
+  },
+  {
+    "ancho": 1440,
+    "alto": 640,
+    "presentacion": 1,
+    "medida": {
+      "puntos": [
+        {
+          "desfase": 0,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 150,
+          "duracion": 900,
+          "estado": "running"
+        },
+        {
+          "desfase": 300,
+          "duracion": 900,
+          "estado": "running"
+        }
+      ],
+      "size": [
+        1440,
+        640
+      ],
+      "ubicacion": {
+        "bottom": 361.7437560558319,
+        "height": 3.987499952316284,
+        "left": 756.4625244140625,
+        "right": 773.2000255584717,
+        "top": 357.7562561035156,
+        "width": 16.73750114440918,
+        "x": 756.4625244140625,
+        "y": 357.7562561035156
+      }
+    }
+  }
+]
