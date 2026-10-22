@@ -35,4 +35,5 @@ const AIRE_MINIMO_ENTRE_CARAS := 0.01
 const AIRE_MINIMO_ENTRE_TANDAS := 0.02
 const MARGEN_LATERAL_DE_EXHIBICION := 0.02
 const AIRE_MINIMO_ENTRE_FILAS := 0.02
-const TOLERANCIA_DE_EXHIBICION := 0.00001
+## La serialización del recurso redondea a seis cifras significativas.
+const TOLERANCIA_DE_EXHIBICION := 0.0001

@@ -72,6 +72,19 @@ class RepartoDePrueba(unittest.TestCase):
         with self.assertRaises(ValueError):
             _distribuir(exacto - MINIMO, [envase], [cuenta], [MINIMO])
 
+    def test_el_minimo_exacto_incluye_el_aire_de_caras_y_de_la_union(self):  # AC-STK-104
+        envases = [Envase(20 * MINIMO, MARGEN, MARGEN)] * 2
+        cuentas = [3, 2]
+        longitud = sum(c * e.ancho + (c - 1) * MINIMO for c, e in zip(cuentas, envases))
+        longitud += 2 * AIRE_ENTRE_CARAS + AIRE_CENTRAL
+        filas = _distribuir(longitud, envases, cuentas, [MINIMO] * 2, (AIRE_ENTRE_CARAS,) * 2)
+        self.assertEqual([len(f) for f in filas], cuentas)
+        union = filas[1][0] - filas[0][-1] - envases[0].ancho / 2 - envases[1].ancho / 2
+        self.assertAlmostEqual(union, AIRE_CENTRAL)
+        self.assertAlmostEqual(filas[0][0] - envases[0].ancho / 2, AIRE_ENTRE_CARAS)
+        with self.assertRaises(ValueError):
+            _distribuir(longitud - MINIMO, envases, cuentas, [MINIMO] * 2, (AIRE_ENTRE_CARAS,) * 2)
+
     def test_el_aire_extra_de_las_puntas_no_roba_el_ritmo_y_deja_la_mitad_abierta(self):  # AC-STK-101
         envases = [Envase(10 * HUECO_MINIMO, MARGEN, MARGEN)] * 2
         cuentas = [4, 2]
@@ -107,7 +120,7 @@ class RepartoDePrueba(unittest.TestCase):
             self.assertLessEqual(derecha, (indice + 1) * mitad)
             self.assertAlmostEqual(izquierda - indice * mitad, (indice + 1) * mitad - derecha)
 
-    def test_comprime_uniformemente_solo_la_tanda_que_no_cabe_sin_quitar_cupos(self):  # AC-STK-100
+    def test_el_sobrante_de_una_mitad_evita_comprimir_el_ritmo_de_la_otra(self):  # AC-STK-100
         envases = [Envase(0.2, 0.1, 0.3), Envase(0.1, 0.1, 0.2)]
         cuentas = [3, 2]
         huecos = [4 * HUECO_MINIMO, 2 * HUECO_MINIMO]
@@ -117,8 +130,8 @@ class RepartoDePrueba(unittest.TestCase):
             self.assertEqual(len(fila), cuenta)
             for a, b in zip(fila, fila[1:]):
                 self.assertGreaterEqual(b - a - envase.ancho, 0)
-        self.assertAlmostEqual(filas[0][1] - filas[0][0] - envases[0].ancho, HUECO_MINIMO)
-        self.assertAlmostEqual(filas[0][2] - filas[0][1] - envases[0].ancho, HUECO_MINIMO)
+        self.assertAlmostEqual(filas[0][1] - filas[0][0] - envases[0].ancho, huecos[0])
+        self.assertAlmostEqual(filas[0][2] - filas[0][1] - envases[0].ancho, huecos[0])
         self.assertAlmostEqual(filas[1][1] - filas[1][0] - envases[1].ancho, huecos[1])
 
     def test_rechaza_un_cupo_que_no_cabe_aun_sin_separacion(self):  # AC-STK-100

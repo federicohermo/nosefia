@@ -29,12 +29,15 @@ func test_la_prueba_conserva_el_retiro_frontal_del_mapa_completo() -> void:  # A
 		)
 
 
-func test_las_cabeceras_conservan_el_aire_entre_filas_del_mapa_completo() -> void:  # AC-STK-100
+func test_el_aire_entre_filas_de_cabeceras_conserva_la_referencia() -> void:  # AC-STK-102
 	var local := _abrir()
 	var puesto: Node3D = local.get("_reposicion_manual")
 	var aires: Dictionary[Producto.Id, float] = {}
 	for id: Producto.Id in [Producto.Id.FERNET_GOD, Producto.Id.MALBARDO, Producto.Id.JORGILLO]:
 		aires[id] = _aire_entre_filas(puesto, id)
+		assert_float(aires[id] + ReglasDelEstante.TOLERANCIA_DE_EXHIBICION).is_greater_equal(
+			ReglasDelEstante.AIRE_MINIMO_ENTRE_FILAS
+		)
 	local.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	for id: Producto.Id in aires:
 		assert_float(aires[id]).override_failure_message(Catalogo.de(id).nombre).is_greater_equal(
@@ -204,41 +207,6 @@ func _distancia_al_apoyo(chapas: Array[PackedVector3Array], pie: Vector3) -> flo
 	return menor
 
 
-func test_los_laterales_tienen_ritmo_y_aire_en_la_union_de_las_mitades() -> void:  # AC-STK-101
-	var filas := _filas_de_exhibicion(_abrir())
-	var tandas: Dictionary[String, Array] = {}
-	for fila in filas:
-		var frente: Vector3 = fila.frente
-		if absf(frente.x) <= absf(frente.z):
-			continue
-		_comprobar_ritmo(fila)
-		var clave := "%s/%s/%s" % [fila.mueble.name, frente, fila.nivel]
-		if not tandas.has(clave):
-			tandas[clave] = []
-		var caja := _envolvente(fila.cajas)
-		var encontrada := false
-		for tanda: Dictionary in tandas[clave]:
-			if tanda.producto == fila.producto:
-				tanda.caja = (tanda.caja as AABB).merge(caja)
-				encontrada = true
-		if not encontrada:
-			tandas[clave].append({"producto": fila.producto, "caja": caja})
-	assert_bool(tandas.is_empty()).is_false()
-	for clave: String in tandas:
-		var par: Array = tandas[clave]
-		assert_int(par.size()).override_failure_message(clave).is_equal(2)
-		if par.size() != 2:
-			return
-		var a: AABB = par[0].caja
-		var b: AABB = par[1].caja
-		var aire := maxf(a.position.z - b.end.z, b.position.z - a.end.z)
-		(
-			assert_float(aire + ReglasDelEstante.TOLERANCIA_DE_EXHIBICION)
-			. override_failure_message(clave)
-			. is_greater_equal(ReglasDelEstante.AIRE_MINIMO_ENTRE_TANDAS)
-		)
-
-
 func test_las_cabeceras_tienen_aire_y_margen_en_ambos_costados() -> void:  # AC-STK-102
 	var filas := _filas_de_exhibicion(_abrir())
 	var cabeceras := 0
@@ -280,6 +248,41 @@ func test_las_cabeceras_tienen_aire_y_margen_en_ambos_costados() -> void:  # AC-
 						. is_greater_equal(ReglasDelEstante.AIRE_MINIMO_ENTRE_CARAS)
 					)
 	assert_int(cabeceras).is_greater(0)
+
+
+func test_los_laterales_tienen_ritmo_y_aire_en_la_union_de_las_mitades() -> void:  # AC-STK-101
+	var filas := _filas_de_exhibicion(_abrir())
+	var tandas: Dictionary[String, Array] = {}
+	for fila in filas:
+		var frente: Vector3 = fila.frente
+		if absf(frente.x) <= absf(frente.z):
+			continue
+		_comprobar_ritmo(fila)
+		var clave := "%s/%s/%s" % [fila.mueble.name, frente, fila.nivel]
+		if not tandas.has(clave):
+			tandas[clave] = []
+		var caja := _envolvente(fila.cajas)
+		var encontrada := false
+		for tanda: Dictionary in tandas[clave]:
+			if tanda.producto == fila.producto:
+				tanda.caja = (tanda.caja as AABB).merge(caja)
+				encontrada = true
+		if not encontrada:
+			tandas[clave].append({"producto": fila.producto, "caja": caja})
+	assert_bool(tandas.is_empty()).is_false()
+	for clave: String in tandas:
+		var par: Array = tandas[clave]
+		assert_int(par.size()).override_failure_message(clave).is_equal(2)
+		if par.size() != 2:
+			return
+		var a: AABB = par[0].caja
+		var b: AABB = par[1].caja
+		var aire := maxf(a.position.z - b.end.z, b.position.z - a.end.z)
+		(
+			assert_float(aire + ReglasDelEstante.TOLERANCIA_DE_EXHIBICION)
+			. override_failure_message(clave)
+			. is_greater_equal(ReglasDelEstante.AIRE_MINIMO_ENTRE_TANDAS)
+		)
 
 
 func test_el_reparto_con_aire_no_superpone_unidades() -> void:  # AC-STK-103
