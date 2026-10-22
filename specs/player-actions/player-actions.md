@@ -100,7 +100,7 @@ examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega 
 CUANDO se acciona —clic izquierdo— una puerta que no está trabada, el sistema DEBE alternar
 entre abierta y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
 Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
-La salida por la entrada principal usa BR-PLY-041 y no alterna su hoja.
+La salida por la entrada principal usa la secuencia de BR-PLY-041.
 
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
@@ -462,7 +462,8 @@ otros apoyos parciales depende de OQ-PLY-004.
 ### BR-PLY-041 — La entrada cierra la noche cuando se puede salir
 
 MIENTRAS está habilitada la salida de BR-SHF-021, el primario sobre la puerta de entrada
-DEBE terminar la jornada por el cierre habitual, sin alternar la hoja. La referencia DEBE
+DEBE iniciar la salida de BR-SHF-025 y terminar la jornada por el cierre habitual. El gesto
+NO DEBE alternar libremente la hoja ni cerrar antes de completar esa secuencia. La referencia DEBE
 ofrecer Interactuar con el control vigente del primario sólo en ese estado. Antes de habilitarse,
 al volver a trabarse por una tarea pendiente, o desde la primera jornada completa, NO DEBE
 ofrecer esa acción y el primario DEBE conservar el sonido de puerta trabada sin girar la hoja.
@@ -1173,7 +1174,9 @@ Las otras puertas conservan Abrir y Cerrar.
 ### AC-PLY-104 — Un primario cierra y conserva la mano *(verifica BR-PLY-041, BR-PLY-026)*
 
 DADO la entrada habilitada y, por separado, mano vacía y un objeto sostenido CUANDO se hace
-primario ENTONCES cierra una sola vez sin abrir la hoja, soltar ni usar el objeto. CUANDO se
+primario ENTONCES inicia una sola salida de BR-SHF-025, sin soltar ni usar el objeto. Durante
+el giro y la apertura no se puede caminar, controlar la mirada, examinar, agarrar, soltar ni
+usar; la referencia permanece vacía y se conserva el objeto. CUANDO se
 hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
 abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los gestos no lo repiten.
 
