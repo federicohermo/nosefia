@@ -148,20 +148,46 @@ func test_las_pantallas_de_cada_jornada() -> void:  # AC-EMP-045, AC-EMP-046
 		)
 		assert_str(pasos[0].textos[0].identidad).is_equal(jornada_y_intro[1])
 		assert_array(_fotos(pasos[0])).is_not_empty()
-	for jornada in range(PRIMERA, COMPLETA):
+	var cuarta := InstruccionesDelJefe.pasos_de(
+		InstruccionesDelJefe.de_la_jornada(mensajes, COMPLETA)
+	)
+	var textos_de_la_cuarta: Array[String] = []
+	for paso in cuarta:
+		textos_de_la_cuarta.append_array(_identidades(paso.textos))
+	assert_array(textos_de_la_cuarta).is_equal(["J1_Intro10", "J1_Intro11", "J1_Intro12"])
+	assert_array(_identidades(_fotos(cuarta[1]))).is_equal(["J1_Foto11"])
+	for jornada in range(PRIMERA, COMPLETA + 1):
 		var propios := InstruccionesDelJefe.de_la_jornada(mensajes, jornada)
 		var textos := propios.filter(func(mensaje: Mensaje) -> bool: return mensaje.foto == null)
 		assert_array(_identidades(propios)).is_equal(ENTRADAS[jornada])
 		assert_int(InstruccionesDelJefe.pasos_de(propios).size()).is_equal(textos.size())
 
 
-func test_fuera_de_la_introduccion_no_hay_instrucciones() -> void:  # AC-EMP-046, AC-EMP-077
+func test_despues_de_la_primera_completa_no_hay_instrucciones() -> void:  # AC-EMP-046, AC-EMP-077
 	var mensajes := _guion().mensajes
 	var ultima := PRIMERA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
 	for jornada: int in [PRIMERA - 1, ultima + 1]:
 		assert_array(InstruccionesDelJefe.de_la_jornada(mensajes, jornada)).is_empty()
-	for jornada in range(COMPLETA, ultima + 1):
+	for jornada in range(COMPLETA + 1, ultima + 1):
 		assert_array(InstruccionesDelJefe.de_la_jornada(mensajes, jornada)).is_empty()
+
+
+func test_la_cuarta_suma_la_pantalla_de_su_mensaje_1() -> void:  # AC-EMP-045
+	var limpia := [[0, []], [0, []], [0, []]]
+	for caso: Array in [
+		[CondicionesDelJefeTest.cerrar_la_segunda(0, true, true), 3],
+		[CondicionesDelJefeTest.cerrar_la_prueba(limpia), 4],
+	]:
+		var condiciones := CondicionesDelJefe.elegidas((caso[0] as Partida).noches_de_prueba)
+		var pasos := InstruccionesDelJefe.pasos_de(
+			InstruccionesDelJefe.de_la_jornada(_guion().mensajes, COMPLETA, condiciones)
+		)
+		assert_int(pasos.size()).is_equal(caso[1])
+		var instrucciones := InstruccionesDelJefe.new(pasos.size())
+		for _paso in pasos.size() - 1:
+			instrucciones.avanzar()
+		assert_int(instrucciones.paso_actual()).is_equal(caso[1])
+		assert_bool(instrucciones.en_el_ultimo()).is_true()
 
 
 func test_una_jornada_sin_mensajes_propios_no_tiene_instrucciones() -> void:  # AC-EMP-077
