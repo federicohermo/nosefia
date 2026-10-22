@@ -70,9 +70,10 @@ func mirar(transparente: bool = false, lado: float = 0.0) -> Dictionary:
 	var textura := sprite.sprite_frames.get_frame_texture(&"idle", sprite.frame)
 	var imagen := textura.get_image()
 	var pixel := Vector2i(-1, -1)
-	for y in range(imagen.get_height() / 4, imagen.get_height() / 2, 4):
-		for x in range(imagen.get_width() / 8, imagen.get_width() * 7 / 8, 4):
-			if (imagen.get_pixel(x, y).a == 0.0) == transparente:
+	for y in range(imagen.get_height() / 2, imagen.get_height() / 4, -4):
+		for x in range(imagen.get_width() / 2, imagen.get_width() / 8, -4):
+			var alfa := imagen.get_pixel(x, y).a
+			if (transparente and alfa == 0.0) or (not transparente and alfa >= 0.5):
 				pixel = Vector2i(x, y)
 				break
 		if pixel.x >= 0:
