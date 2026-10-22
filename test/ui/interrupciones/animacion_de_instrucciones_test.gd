@@ -155,3 +155,17 @@ func test_comenzar_durante_entrada_sale_desde_el_punto_actual() -> void:  # AC-E
 	_avanzar(290000)
 	assert_float(_marco.get_global_rect().end.x).is_less_equal(0.0)
 	assert_int(_comienzos).is_equal(1)
+
+
+func test_un_cuadro_largo_adelanta_la_salida_un_paso_maximo() -> void:  # AC-EMP-049
+	_avanzar(300000)
+	_comenzar()
+	var inicio := _marco.position.x
+	var ancho := _marco.size.x * _marco.scale.x
+	_ahora[0] += 150000
+	_pantalla._process(0.0)
+	var avance := CabeceraConSolapa.PASO_MAXIMO / PantallaDeInstrucciones.DURACION_DEL_MOVIMIENTO
+	assert_float(_marco.position.x).is_equal_approx(
+		inicio + (-inicio - ancho) * avance * avance, 0.01
+	)
+	assert_int(_comienzos).is_zero()

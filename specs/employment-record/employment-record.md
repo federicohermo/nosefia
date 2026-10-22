@@ -198,17 +198,17 @@ entrada y ampliar cada foto con el texto de su propia Intro.
 
 MIENTRAS se leen las instrucciones, el sistema DEBE conservar la persiana baja, suspender al
 jugador y retener todo el presupuesto del turno, aunque la lectura dure minutos. La interfaz
-DEBE emerger desde el margen derecho con ease out, encima de la persiana y debajo de avisos y pausa. Esc
-DEBE pausarla y reanudarla conservando la pantalla actual. «OK» DEBE retirar las
+DEBE emerger desde el margen derecho con ease out, encima de la persiana y debajo de avisos y
+pausa. Esc DEBE pausarla y reanudarla conservando la pantalla actual. «OK» DEBE retirar las
 instrucciones por el margen izquierdo con ease in y, sólo al terminar la salida, dar paso a la
-placa y subida de persiana. Repetir «OK» durante la salida NO DEBE anunciar otra noche.
-El control y el reloj DEBEN liberarse
-sólo cuando termine esa entrada. El fade in de la persiana baja DEBE durar 0,3 segundos reales
-y la entrada de las instrucciones DEBE durar 0,3 segundos reales. La persiana de fondo NO DEBE
-desplazarse con las instrucciones. Pausar durante la entrada o la salida DEBE congelar el
-movimiento y reanudarlo desde el mismo punto, sin cobrar el tiempo pausado. Retomar desde el
-menú una jornada con instrucciones DEBE repetir la entrada desde la derecha.
-Un cuadro largo NO DEBE adelantar las animaciones más de 1/30 de segundo: el cuadro que abre la partida tarda.
+placa y subida de persiana. Repetir «OK» durante la salida NO DEBE anunciar otra noche. El control
+y el reloj DEBEN liberarse sólo cuando termine la entrada a la noche. El fade in de la persiana
+baja DEBE durar 0,3 segundos reales y la entrada de las instrucciones DEBE durar 0,3 segundos
+reales. La persiana de fondo NO DEBE desplazarse con las instrucciones. Pausar durante la entrada
+o la salida DEBE congelar el movimiento y reanudarlo desde el mismo punto, sin cobrar el tiempo
+pausado. Retomar desde el menú una jornada con instrucciones DEBE repetir la entrada desde la
+derecha. Un cuadro largo NO DEBE adelantar las animaciones más de 1/30 de segundo: el cuadro que
+abre la partida tarda.
 
 ### BR-EMP-025 — Lo que la partida cuenta entre noches
 
@@ -682,8 +682,8 @@ de la jornada 1. Las cajas en el piso de Intro 11 corresponden a la jornada 4.
 DADO una partida nueva preparada CUANDO empiezan las instrucciones ENTONCES la persiana está
 baja, se ve Intro 1, «Volver» está deshabilitado y el control está suspendido. CUANDO pasan 120 segundos
 reales leyendo ENTONCES queda el mismo presupuesto de turno. CUANDO se llega a 6 y se elige
-«OK» ENTONCES las instrucciones salen por la izquierda y, al terminar, aparece «NOCHE 1» sobre la persiana, con
-el turno y el control todavía retenidos hasta que termine de subir.
+«OK» ENTONCES las instrucciones salen por la izquierda y, al terminar, aparece «NOCHE 1» sobre
+la persiana, con el turno y el control todavía retenidos hasta que termine de subir.
 
 ### AC-EMP-049 — Pausar conserva la lectura *(verifica BR-EMP-024)*
 
