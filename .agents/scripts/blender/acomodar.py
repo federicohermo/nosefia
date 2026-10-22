@@ -472,7 +472,7 @@ def medir_encaje(estante, bm, arbol, hojas, posiciones):
 
 def acomodar_mueble(
     letra, envases, resumen, estantes_declarados=ESTANTES, medidor=medir,
-    retiros_por_estante=None,
+    retiros_por_estante=None, colocador=None,
 ):
     retiros = {} if retiros_por_estante is None else retiros_por_estante
     if any(not math.isfinite(retiro) or retiro < 0 for retiro in retiros.values()):
@@ -511,15 +511,26 @@ def acomodar_mueble(
         retiro = retiros.get(clave, 0.0)
         izquierda += retiro
         largo -= 2 * retiro
+        aires = [None] * len(reparto)
+        if colocador is None:
+            centros_por_tanda = centros(largo, de_estas, cuentas)
+        else:
+            centros_por_tanda, desde_v, aires = colocador(
+                estante, izquierda, largo, de_estas, cuentas, desde_v
+            )
+        cuentas = [len(fila) for fila in centros_por_tanda]
         for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
             if cuenta < pedido:
                 resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
-        centros_por_tanda = centros(largo, de_estas, cuentas)
         posiciones = []
         for indice, (t, envase, us) in enumerate(zip(reparto, de_estas, centros_por_tanda)):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            for lugar in tanda(envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v):
+            lugares = tanda(
+                envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v,
+                aires[indice],
+            )
+            for lugar in lugares:
                 posiciones.append(
                     (unidad, matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v))
                 )
@@ -536,7 +547,10 @@ def acomodar_mueble(
         ):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            lugares = tanda(envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v)
+            lugares = tanda(
+                envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v,
+                aires[indice],
+            )
             resumen["tandas"] += 1
             for orden, lugar in enumerate(lugares):
                 matriz = matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v)

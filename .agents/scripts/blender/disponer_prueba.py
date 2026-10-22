@@ -4,8 +4,9 @@ import argparse
 import re
 import sys
 from collections import Counter
-from pathlib import Path
 from itertools import combinations
+from pathlib import Path
+from statistics import mean
 
 import bmesh
 import bpy
@@ -20,17 +21,109 @@ import disponer
 from lib.consola import configurar
 from lib.apoyos_del_modelo import mallas_del_glb
 from lib.gondola import (
-    escribir_disposicion, fondo_del_estante, nombre_en_godot, punto_en_godot, separar_filas,
+    AIRE, MARGEN, escribir_disposicion, fondo_del_estante, nombre_en_godot, punto_en_godot,
+    separar_filas,
 )
 from lib.reparto import PRODUCTOS, partes
 from lib.reparto_de_prueba import (
     ESTANTES_DE_PRUEBA, RETIROS_POR_ESTANTE_DE_PRUEBA, bandas_del_nivel, bases_del_contenido,
     validar_identidades_de_prueba,
     validar_reparto_de_prueba,
+    centros_con_referencia, tramo_con_referencia,
 )
 
 RAIZ = Path(__file__).resolve().parents[3]
 DESTINO = RAIZ / "src/escenas/puestos/disposicion_de_prueba.tres"
+
+
+def referencias_del_mapa_completo(envases):
+    huecos, retiros, aires = {}, {}, {}
+    tandas = disponer.tandas_del_blend()
+    for letra in sorted({partes(clave)[0] for clave in ESTANTES_DE_PRUEBA}):
+        _, bm, estantes = medir(letra, envases)
+        for clave, copias in tandas.items():
+            estante, _ = clave.split("/")
+            if estante not in estantes:
+                continue
+            marco = estantes[estante]
+            por_fila = {}
+            for copia in copias:
+                puntos = [copia.matrix_world @ v.co for v in copia.data.vertices]
+                vs = [(p - marco.origen).dot(marco.v) for p in puntos]
+                por_fila.setdefault(copia["fila"], []).extend(vs)
+            if "atras" in por_fila:
+                aire = min(por_fila["atras"]) - max(por_fila["adelante"])
+                aires.setdefault(str(copias[0]["producto"]), []).append(aire)
+            frontales = [c for c in copias if c["fila"] == "adelante"]
+            limites = []
+            for copia in frontales:
+                puntos = [copia.matrix_world @ v.co for v in copia.data.vertices]
+                us = [(p - marco.origen).dot(marco.u) for p in puntos]
+                vs = [(p - marco.origen).dot(marco.v) for p in puntos]
+                limites.append((min(us), max(us), min(vs)))
+            limites.sort()
+            retiro = min(l[2] for l in limites)
+            retiros[estante] = min(retiros.get(estante, retiro), retiro)
+            if len(limites) > 1 and not copias[0]["fija"]:
+                huecos[str(copias[0]["producto"])] = mean(
+                    b[0] - a[1] for a, b in zip(limites, limites[1:])
+                )
+        bm.free()
+    return huecos, retiros, {p: mean(v) for p, v in aires.items()}
+
+
+def colocador_de_prueba(huecos, retiros, aires, reglas):
+    """Reserva márgenes y aire antes de calcular las columnas de cada región."""
+    aires = {p: max(a, reglas["AIRE_MINIMO_ENTRE_FILAS"]) for p, a in aires.items()}
+
+    def colocar(estante, izquierda, largo, envases, cuentas, desde):
+        productos = ESTANTES_DE_PRUEBA[estante.clave]
+        referencia = retiros[estante.clave]
+        inicio, fin = izquierda, izquierda + largo
+        letra, cara, nivel = partes(estante.clave)
+        aire_de_filas = [None] * len(productos)
+        entre_caras = None
+        if letra in ("A", "B"):
+            extremos, huecos_extremos = (0.0, 0.0), (0.0, 0.0)
+            if cara in ("norte", "sur"):
+                aire_de_filas = [aires.get(t.producto, AIRE) for t in productos]
+                extra = max((a - AIRE for t, a in zip(productos, aire_de_filas)
+                             if t.cantidad_de_filas > 1), default=0.0)
+                estante.fondo += max(0, referencia - MARGEN) + extra
+                inicio = max(inicio, reglas["MARGEN_LATERAL_DE_EXHIBICION"])
+                fin = min(fin, estante.largo - reglas["MARGEN_LATERAL_DE_EXHIBICION"])
+            else:
+                primera, ultima = ("norte", "sur") if cara == "oeste" else ("sur", "norte")
+                claves = [f"{letra}.{c}.{nivel}" for c in (primera, ultima)]
+                extremos = tuple(retiros[c] for c in claves)
+                huecos_extremos = tuple(
+                    max(
+                        (aires.get(t.producto, AIRE) - AIRE) * (t.cantidad_de_filas - 1)
+                        for t in ESTANTES_DE_PRUEBA[c]
+                    ) for c in claves
+                )
+                entre_caras = tuple(
+                    max(reglas["AIRE_MINIMO_ENTRE_CARAS"],
+                        max(huecos[t.producto] for t in ESTANTES_DE_PRUEBA[c]),
+                        max(huecos[t.producto] for t in productos))
+                    for c in claves
+                )
+            inicio, fin = tramo_con_referencia(
+                estante.largo, inicio, fin - inicio, referencia, extremos, huecos_extremos,
+                cabecera=cara in ("norte", "sur"),
+            )
+        try:
+            columnas = centros_con_referencia(
+                fin - inicio, envases, cuentas, [huecos[t.producto] for t in productos], entre_caras,
+                minimo=reglas["SEPARACION_MINIMA_DE_EXHIBICION"],
+                aire_central=reglas["AIRE_MINIMO_ENTRE_TANDAS"] if entre_caras else 0.0,
+            )
+        except ValueError as error:
+            raise ValueError(f"{estante.clave}: {error}") from error
+        desde = max(desde, referencia - MARGEN)
+        return [[inicio - izquierda + u for u in fila] for fila in columnas], desde, aire_de_filas
+
+    return colocar
 
 
 def malla_evaluada(objeto):
@@ -149,6 +242,13 @@ def generar():
     ).group(1)
     validar_identidades_de_prueba(re.findall(r"Producto\.Id\.(\w+)", declaracion))
     validar_reparto_de_prueba(ESTANTES_DE_PRUEBA)
+    texto_reglas = (RAIZ / "src/dominio/almacen/reglas_del_estante.gd").read_text(encoding="utf-8")
+    reglas = {nombre: float(valor) for nombre, valor in re.findall(
+        r"^const (\w+) := ([0-9.]+)$", texto_reglas, re.M
+    )}
+    huecos, retiros, aires = referencias_del_mapa_completo({
+        p.clave: acomodar.envase_de(p, bpy.data.objects[p.objeto]) for p in PRODUCTOS
+    })
     fuentes = {p.clave: disponer.en_godot(bpy.data.objects[p.objeto])[0] for p in PRODUCTOS}
     bases = bases_del_contenido(disponer.CONTENIDO.read_text(encoding="utf-8"))
     for producto, base in bases.items():
@@ -173,6 +273,7 @@ def generar():
         acomodar.acomodar_mueble(
             letra, envases, resumen, ESTANTES_DE_PRUEBA, lambda letra: medir(letra, envases),
             retiros_por_estante=RETIROS_POR_ESTANTE_DE_PRUEBA,
+            colocador=colocador_de_prueba(huecos, retiros, aires, reglas),
         )
     if resumen["choques"]:
         raise ValueError(f"No se publica un reparto con choques: {resumen['choques']}")

@@ -1,10 +1,82 @@
 from collections import Counter
 from collections.abc import Iterable
 from dataclasses import dataclass
+from itertools import product
 import math
 import re
 
+from lib.gondola import Envase, MARGEN
 from lib.reparto import PRODUCTOS, Tanda
+
+
+def tramo_con_referencia(
+    largo_del_estante: float, izquierda: float, largo: float, retiro: float,
+    extremos: tuple[float, float] = (0.0, 0.0),
+    separaciones: tuple[float, float] = (0.0, 0.0),
+    cabecera: bool = False,
+) -> tuple[float, float]:
+    """El retiro frontal no recorta el ancho transversal de una cabecera.
+
+    En los laterales, la banda medida ya reserva dos márgenes de la tanda de la punta;
+    se agrega sólo el retiro y el aire que todavía faltan detrás de ella.
+    """
+    if cabecera:
+        return izquierda, izquierda + largo
+    inicio = max(izquierda, retiro, extremos[0] - 2 * MARGEN + separaciones[0])
+    fin = min(
+        izquierda + largo,
+        largo_del_estante - max(retiro, extremos[1] - 2 * MARGEN + separaciones[1]),
+    )
+    return inicio, fin
+
+
+def centros_con_referencia(
+    largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float],
+    extremos: tuple[float, float] | None = None,
+    *, minimo: float, aire_central: float = 0.0,
+) -> list[list[float]]:
+    """El cupo sale de las columnas que caben con el ritmo de referencia y sus márgenes."""
+    if not envases or len(envases) != len(cuentas) or len(cuentas) != len(huecos):
+        raise ValueError("el reparto requiere un envase y una separación por tanda")
+    if extremos is not None and len(envases) != 2:
+        raise ValueError("los extremos requieren las dos mitades longitudinales")
+    if len(envases) > 2:
+        raise ValueError("el mapa admite una tanda o las dos mitades longitudinales")
+    if any(n < 1 or h < minimo for n, h in zip(cuentas, huecos)):
+        raise ValueError("el reparto no conserva el mínimo de aire entre unidades")
+    central = aire_central if len(envases) == 2 else 0.0
+    bordes = extremos or (central / 2,) * 2
+    if len(envases) == 1:
+        bordes = (0.0, 0.0)
+    disponible = largo - sum(bordes) - central
+    candidatas = []
+    for candidata in product(*(range(1, limite + 1) for limite in cuentas)):
+        bloques = [n * e.ancho + (n - 1) * h
+                   for n, e, h in zip(candidata, envases, huecos)]
+        if sum(bloques) <= disponible + 1e-9:
+            candidatas.append((sum(candidata), -abs(bloques[0] - bloques[-1]),
+                               candidata, bloques))
+    if not candidatas:
+        raise ValueError("ni una columna cabe conservando los márgenes y el aire")
+    _, _, cuentas, bloques = max(candidatas)
+    if len(envases) == 1:
+        franjas = [(0.0, largo)]
+    else:
+        medio = largo / 2
+        franjas = [(bordes[0], medio - central / 2),
+                   (medio + central / 2, largo - bordes[1])]
+        if any(ancho > fin - inicio + 1e-9
+               for ancho, (inicio, fin) in zip(bloques, franjas)):
+            sobrante = max(0.0, disponible - sum(bloques))
+            primero = bordes[0] + sobrante / 4
+            segundo = primero + bloques[0] + central + sobrante / 2
+            franjas = [(primero, primero + bloques[0]), (segundo, segundo + bloques[1])]
+    salida = []
+    for envase, cuenta, hueco, (inicio, fin) in zip(envases, cuentas, huecos, franjas):
+        ancho = cuenta * envase.ancho + (cuenta - 1) * hueco
+        centro = inicio + (fin - inicio - ancho) / 2 + envase.ancho / 2
+        salida.append([centro + columna * (envase.ancho + hueco) for columna in range(cuenta)])
+    return salida
 
 
 CARAS = {
