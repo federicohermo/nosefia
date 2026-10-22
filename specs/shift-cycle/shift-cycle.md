@@ -169,10 +169,13 @@ Abrir o retomar una jornada DEBE evaluar sus tareas propias sin heredar el permi
 ### BR-SHF-025 — La salida voluntaria mira y abre antes de bajar la persiana
 
 CUANDO el jugador sale por la entrada habilitada de BR-SHF-021 en las jornadas 1 a 3,
-el sistema DEBE tomar el control de la vista y girarla suavemente desde su orientación
-visible hasta mirar al centro del vano de entrada, entre sus dos hojas, sin saltos y por un
-recorrido angular de como máximo 180 grados. La entrada DEBE tener dos hojas, cada una con
-su bisagra en el canto exterior del vano. Sólo después de terminar ese giro DEBE abrir ambas
+el sistema DEBE tomar el control de la vista y llevar la cámara suavemente desde su pose
+visible hasta una pose frontal al vano de entrada, sin saltos y con un giro de como máximo
+180 grados. La pose frontal DEBE estar centrada entre las dos hojas, sobre la perpendicular
+al vano del lado del interior, con la mirada horizontal y perpendicular al vano, y a una
+distancia desde la que se ven las dos hojas, el marco y la calle. La entrada DEBE tener dos
+hojas, cada una con su bisagra en el canto exterior del vano. Sólo después de terminar ese
+recorrido DEBE abrir ambas
 hojas hacia el mismo lado del vano, cada una sobre su bisagra, con la animación y el sonido
 habituales. Ninguna hoja DEBE desprenderse de su marco ni cruzar el vidrio fijo. Sólo después
 de que ambas hojas alcancen su apertura completa DEBE bajar la persiana y continuar la
@@ -443,6 +446,18 @@ DADO una salida completada en la jornada 3 CUANDO comienza la jornada 4 ENTONCES
 hojas están cerradas. DADO la jornada 4, tanto al retomar desde el menú como al reintentar
 la noche, ENTONCES ambas hojas comienzan cerradas. DADO cualquier jornada desde la 4 CUANDO
 se intenta salir por cualquiera de las hojas ENTONCES ninguna se abre ni termina la noche.
+
+### AC-SHF-047 — La salida termina de frente al vano *(verifica BR-SHF-025)*
+
+DADO cada jornada 1, 2 y 3 con la salida habilitada y el jugador en cualquier lugar del
+interior, de frente, de costado o de espaldas al vano CUANDO termina el recorrido de la salida
+ENTONCES la cámara está sobre la perpendicular al vano que pasa por el punto medio entre las
+dos bisagras, del lado del interior, con una tolerancia de 1 cm lateral y de 0,1 grados de
+yaw respecto de esa perpendicular. La mirada es horizontal. La distancia al vano es la misma
+desde cualquier punto de partida y encuadra ambas hojas completas. DADO el recorrido en curso
+ENTONCES la posición y la orientación avanzan sin saltos, y una pausa las conserva y la
+reanudación continúa desde ese punto. DADO un jugador que ya empieza sobre la pose frontal
+ENTONCES el recorrido no lo mueve.
 
 ## No objetivos
 
