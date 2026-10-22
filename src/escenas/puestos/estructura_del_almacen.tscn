@@ -1551,7 +1551,11 @@ points = PackedVector3Array(0.714788735, 1.339233041, 0.033250920, 0.714788735, 
 
 [sub_resource type="ConvexPolygonShape3D" id="modelo_hoja_puertaentrada"]
 margin = 0.002
-points = PackedVector3Array(1.659999847, 1.391999960, -0.010007810, 0.109843135, 0.135984302, 0.090000108, 1.659999847, -1.391999960, -0.010007810, 1.659999847, 1.391999960, -0.090000041, -1.660000324, 1.391999960, -0.010007810, 0.109843135, -0.374161363, 0.090000108, -0.230086207, 0.135984302, 0.090000108, 1.659999847, -1.391999960, -0.090000041, -1.660000324, -1.391999960, -0.010007810, -1.660000324, 1.391999960, -0.090000041, -0.230086207, -0.374161363, 0.090000108, -1.660000324, -1.391999960, -0.090000041)
+points = PackedVector3Array(0, -1.392, -0.0800004, 1.5939999, -1.392, -0.0800004, 0, -1.392, -8.098781e-06, 0, 1.392, -0.0800004, 1.5939999, -1.392, -8.098781e-06, 1.5939999, 1.392, -0.0800004, 1.4298565, -0.37416136, 0.099999905, 0, 1.392, -8.098781e-06, 1.4699562, -0.37416136, 0.099999905, 1.5939999, 1.392, -8.098781e-06, 1.4298565, 0.1359843, 0.099999905, 1.4699562, 0.1359843, 0.099999905)
+
+[sub_resource type="ConvexPolygonShape3D" id="modelo_hoja_puertaentrada_derecha"]
+margin = 0.002
+points = PackedVector3Array(-1.7140002, -1.392, -0.0800004, 0, -1.392, -0.0800004, -1.7140002, -1.392, -8.098781e-06, -1.7140002, 1.392, -0.0800004, 0, -1.392, -8.098781e-06, 0, 1.392, -0.0800004, -1.5900137, -0.37416136, 0.099999905, -1.7140002, 1.392, -8.098781e-06, -1.550083, -0.37416136, 0.099999905, 0, 1.392, -8.098781e-06, -1.5900137, 0.1359843, 0.099999905, -1.550083, 0.1359843, 0.099999905)
 
 [sub_resource type="ConvexPolygonShape3D" id="actual_almacen_25"]
 margin = 0.002
@@ -2672,18 +2676,43 @@ transform = Transform3D(1.4673082, 0, -2.842171e-14, 0, 0.56027013, 0, 1.1368684
 [node name="Volumen" type="CollisionShape3D" parent="puertajefe/CuerpoDeLaHoja"]
 shape = SubResource("modelo_hoja_puertajefe")
 
+[node name="puertaentrada" parent="."]
+gi_mode = 2
+
 [node name="CollisionShape3D" parent="puertaentrada/StaticBody3D"]
 disabled = true
 
-[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puertaentrada" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+[node name="Bisagra" type="Marker3D" parent="puertaentrada"]
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puertaentrada" node_paths=PackedStringArray("hoja", "eje_de_la_bisagra", "mallas") groups=["interactuable"]]
 script = ExtResource("puerta")
 hoja = NodePath("..")
+eje_de_la_bisagra = NodePath("../Bisagra")
+sentido_del_giro = -1
 mallas = [NodePath("..")]
 traba = 1
-transform = Transform3D(1.1599263, 0, 0, 0, 1, 0, 0, 0, 8.61199, -0.9279399, 0.3917625, 0.4305992)
 
 [node name="Volumen" type="CollisionShape3D" parent="puertaentrada/CuerpoDeLaHoja"]
 shape = SubResource("modelo_hoja_puertaentrada")
+
+[node name="puertaentrada_derecha" parent="."]
+gi_mode = 2
+
+[node name="CollisionShape3D" parent="puertaentrada_derecha/StaticBody3D"]
+disabled = true
+
+[node name="Bisagra" type="Marker3D" parent="puertaentrada_derecha"]
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puertaentrada_derecha" node_paths=PackedStringArray("hoja", "eje_de_la_bisagra", "mallas") groups=["interactuable"]]
+script = ExtResource("puerta")
+hoja = NodePath("..")
+eje_de_la_bisagra = NodePath("../Bisagra")
+sentido_del_giro = 1
+mallas = [NodePath("..")]
+traba = 1
+
+[node name="Volumen" type="CollisionShape3D" parent="puertaentrada_derecha/CuerpoDeLaHoja"]
+shape = SubResource("modelo_hoja_puertaentrada_derecha")
 
 [node name="Volumen" type="CollisionShape3D" parent="reloj/StaticBody3D"]
 shape = SubResource("modelo_reloj")

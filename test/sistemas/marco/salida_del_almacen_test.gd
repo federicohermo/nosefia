@@ -2,14 +2,15 @@ extends GdUnitTestSuite
 
 
 # AC-SHF-043
-func test_pide_apertura_despues_del_giro_y_cierra_solo_con_hoja_completa() -> void:
+func test_pide_apertura_despues_del_giro_y_espera_a_las_dos_hojas() -> void:
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var tarea := Tarea.new(Tarea.Tipo.CAJA)
 	reloj.arrancar(Turno.new(100.0, [tarea]), [tarea])
 	reloj.completar(tarea)
 	var puerta := Puerta.new(true)
+	var otra := Puerta.new(true)
 	var salida: SalidaDelAlmacen = auto_free(SalidaDelAlmacen.new())
-	salida.configurar(reloj, puerta)
+	salida.configurar(reloj, [puerta, otra])
 	var aperturas: Array[bool] = []
 	var cierres: Array[int] = []
 	salida.apertura_pedida.connect(func() -> void: aperturas.append(true))
@@ -33,6 +34,13 @@ func test_pide_apertura_despues_del_giro_y_cierra_solo_con_hoja_completa() -> vo
 	assert_array(cierres).is_empty()
 	puerta.avanzar(10.0)
 	salida.confirmar_apertura()
+	assert_array(cierres).is_empty()
+	otra.abrir_para_salida()
+	otra.avanzar(Puerta.ANGULO_ABIERTA / Puerta.VELOCIDAD_DEL_GIRO * 0.5)
+	salida.confirmar_apertura()
+	assert_array(cierres).is_empty()
+	otra.avanzar(Puerta.ANGULO_ABIERTA / Puerta.VELOCIDAD_DEL_GIRO)
+	salida.confirmar_apertura()
 	salida.confirmar_apertura()
 	reloj.terminar()
 	assert_array(cierres).is_equal([1])
@@ -43,7 +51,7 @@ func test_reiniciar_descarta_la_apertura_de_la_noche_anterior() -> void:  # AC-S
 	reloj.arrancar(Turno.new(100.0, []), [])
 	var puerta := Puerta.new(true)
 	var salida: SalidaDelAlmacen = auto_free(SalidaDelAlmacen.new())
-	salida.configurar(reloj, puerta)
+	salida.configurar(reloj, [puerta, Puerta.new(true)])
 	salida.iniciar(Vector2.ONE, Vector2.ZERO)
 	salida._process(10.0)
 	salida.reiniciar()
