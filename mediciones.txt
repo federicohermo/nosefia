@@ -1,0 +1,13 @@
+# Mediciones: posicion de la camara y yaw respecto de la normal del vano
+antes_natural inicio pos=(5.71, 1.807576, 5.3) lateral=0.800 m hondo=1.020 m yaw_vs_normal=180.00 deg inclinacion=-0.00 deg
+antes_natural fin_del_giro pos=(5.71, 1.807576, 5.3) lateral=0.800 m hondo=1.020 m yaw_vs_normal=40.11 deg inclinacion=-13.60 deg
+antes_izquierda inicio pos=(2.91, 1.807576, 4.72) lateral=-2.000 m hondo=1.600 m yaw_vs_normal=28.65 deg inclinacion=-0.00 deg
+antes_izquierda fin_del_giro pos=(2.91, 1.807576, 4.72) lateral=-2.000 m hondo=1.600 m yaw_vs_normal=51.68 deg inclinacion=-6.98 deg
+antes_derecha inicio pos=(6.71, 1.807576, 3.32) lateral=1.800 m hondo=3.000 m yaw_vs_normal=53.95 deg inclinacion=-0.00 deg
+antes_derecha fin_del_giro pos=(6.71, 1.807576, 3.32) lateral=1.800 m hondo=3.000 m yaw_vs_normal=31.34 deg inclinacion=-5.12 deg
+despues_natural inicio pos=(5.71, 1.807576, 5.3) lateral=0.800 m hondo=1.020 m yaw_vs_normal=180.00 deg inclinacion=-0.00 deg
+despues_natural fin_del_giro pos=(4.91, 1.807576, 3.763837) lateral=0.000 m hondo=2.556 m yaw_vs_normal=0.00 deg inclinacion=-0.00 deg
+despues_izquierda inicio pos=(2.91, 1.807576, 4.72) lateral=-2.000 m hondo=1.600 m yaw_vs_normal=28.65 deg inclinacion=-0.00 deg
+despues_izquierda fin_del_giro pos=(4.91, 1.807576, 3.763837) lateral=0.000 m hondo=2.556 m yaw_vs_normal=0.00 deg inclinacion=-0.00 deg
+despues_derecha inicio pos=(6.71, 1.807576, 3.32) lateral=1.800 m hondo=3.000 m yaw_vs_normal=53.95 deg inclinacion=-0.00 deg
+despues_derecha fin_del_giro pos=(4.91, 1.807576, 3.763837) lateral=0.000 m hondo=2.556 m yaw_vs_normal=0.00 deg inclinacion=-0.00 deg
