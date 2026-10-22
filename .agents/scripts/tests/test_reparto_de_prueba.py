@@ -61,29 +61,53 @@ class RepartoDePrueba(unittest.TestCase):
         self.assertGreaterEqual(inicio - (retiros[0] - 2 * MARGEN), separaciones[0])
         self.assertGreaterEqual(largo - fin - (retiros[1] - 2 * MARGEN), separaciones[1])
 
-    def test_rechaza_el_tramo_que_solo_cabe_borrando_el_aire(self):  # AC-STK-104
+    def test_quita_columnas_antes_de_comprimir_el_ritmo(self):  # AC-STK-100
         envase = Envase(20 * MINIMO, MARGEN, MARGEN)
-        cuenta = 4
-        exacto = cuenta * envase.ancho + (cuenta - 1) * MINIMO
-        fila = _distribuir(exacto, [envase], [cuenta], [MINIMO])[0]
-        self.assertEqual(len(fila), cuenta)
-        for a, b in zip(fila, fila[1:]):
-            self.assertAlmostEqual(b - a - envase.ancho, MINIMO)
-        with self.assertRaises(ValueError):
-            _distribuir(exacto - MINIMO, [envase], [cuenta], [MINIMO])
+        hueco = 4 * MINIMO
+        largo = 3 * envase.ancho + 2 * hueco - MINIMO
+        fila = _distribuir(largo, [envase], [3], [hueco])[0]
+        self.assertEqual(len(fila), 2)
+        self.assertAlmostEqual(fila[1] - fila[0] - envase.ancho, hueco)
+        self.assertAlmostEqual(fila[0] - envase.ancho / 2,
+                               largo - fila[-1] - envase.ancho / 2)
+        self.assertGreater(3 * envase.ancho + 2 * hueco, largo)
 
-    def test_el_minimo_exacto_incluye_el_aire_de_caras_y_de_la_union(self):  # AC-STK-104
+    def test_aprovecha_la_cara_antes_de_quitar_otra_columna(self):  # AC-STK-101
         envases = [Envase(20 * MINIMO, MARGEN, MARGEN)] * 2
-        cuentas = [3, 2]
-        longitud = sum(c * e.ancho + (c - 1) * MINIMO for c, e in zip(cuentas, envases))
-        longitud += 2 * AIRE_ENTRE_CARAS + AIRE_CENTRAL
-        filas = _distribuir(longitud, envases, cuentas, [MINIMO] * 2, (AIRE_ENTRE_CARAS,) * 2)
-        self.assertEqual([len(f) for f in filas], cuentas)
+        hueco = 4 * MINIMO
+        extremos = (2 * AIRE_ENTRE_CARAS,) * 2
+        mitad_util = 3 * envases[0].ancho + 2 * hueco - MINIMO
+        largo = 2 * mitad_util + sum(extremos) + AIRE_CENTRAL
+        filas = _distribuir(largo, envases, [3, 3], [hueco] * 2, extremos)
+        self.assertEqual(sum(len(f) for f in filas), 5)
+        self.assertLess(sum(filas[0]) / len(filas[0]), largo / 2)
+        self.assertGreater(sum(filas[1]) / len(filas[1]), largo / 2)
+        for fila in filas:
+            for a, b in zip(fila, fila[1:]):
+                self.assertAlmostEqual(b - a - envases[0].ancho, hueco)
+        self.assertGreaterEqual(filas[0][0] - envases[0].ancho / 2, extremos[0])
+        self.assertLessEqual(filas[1][-1] + envases[1].ancho / 2, largo - extremos[1])
+        union = filas[1][0] - filas[0][-1] - envases[0].ancho
+        self.assertGreaterEqual(union, AIRE_CENTRAL)
+
+    def test_rechaza_un_tramo_que_no_admite_ni_una_columna(self):  # AC-STK-104
+        envase = Envase(20 * MINIMO, MARGEN, MARGEN)
+        fila = _distribuir(envase.ancho, [envase], [4], [MINIMO])[0]
+        self.assertEqual(len(fila), 1)
+        with self.assertRaises(ValueError):
+            _distribuir(envase.ancho - MINIMO, [envase], [4], [MINIMO])
+
+    def test_una_columna_por_mitad_reserva_caras_y_union(self):  # AC-STK-104
+        envases = [Envase(20 * MINIMO, MARGEN, MARGEN)] * 2
+        longitud = sum(e.ancho for e in envases) + 2 * AIRE_ENTRE_CARAS + AIRE_CENTRAL
+        filas = _distribuir(longitud, envases, [3, 2], [MINIMO] * 2,
+                            (AIRE_ENTRE_CARAS,) * 2)
+        self.assertEqual([len(f) for f in filas], [1, 1])
         union = filas[1][0] - filas[0][-1] - envases[0].ancho / 2 - envases[1].ancho / 2
         self.assertAlmostEqual(union, AIRE_CENTRAL)
-        self.assertAlmostEqual(filas[0][0] - envases[0].ancho / 2, AIRE_ENTRE_CARAS)
         with self.assertRaises(ValueError):
-            _distribuir(longitud - MINIMO, envases, cuentas, [MINIMO] * 2, (AIRE_ENTRE_CARAS,) * 2)
+            _distribuir(longitud - MINIMO, envases, [3, 2], [MINIMO] * 2,
+                        (AIRE_ENTRE_CARAS,) * 2)
 
     def test_el_aire_extra_de_las_puntas_no_roba_el_ritmo_y_deja_la_mitad_abierta(self):  # AC-STK-101
         envases = [Envase(10 * HUECO_MINIMO, MARGEN, MARGEN)] * 2
@@ -119,27 +143,6 @@ class RepartoDePrueba(unittest.TestCase):
             self.assertGreaterEqual(izquierda, indice * mitad)
             self.assertLessEqual(derecha, (indice + 1) * mitad)
             self.assertAlmostEqual(izquierda - indice * mitad, (indice + 1) * mitad - derecha)
-
-    def test_el_sobrante_de_una_mitad_evita_comprimir_el_ritmo_de_la_otra(self):  # AC-STK-100
-        envases = [Envase(0.2, 0.1, 0.3), Envase(0.1, 0.1, 0.2)]
-        cuentas = [3, 2]
-        huecos = [4 * HUECO_MINIMO, 2 * HUECO_MINIMO]
-        parte = 3 * envases[0].ancho + 2 * HUECO_MINIMO + AIRE_CENTRAL
-        filas = _distribuir(2 * parte, envases, cuentas, huecos)
-        for fila, envase, cuenta in zip(filas, envases, cuentas):
-            self.assertEqual(len(fila), cuenta)
-            for a, b in zip(fila, fila[1:]):
-                self.assertGreaterEqual(b - a - envase.ancho, 0)
-        self.assertAlmostEqual(filas[0][1] - filas[0][0] - envases[0].ancho, huecos[0])
-        self.assertAlmostEqual(filas[0][2] - filas[0][1] - envases[0].ancho, huecos[0])
-        self.assertAlmostEqual(filas[1][1] - filas[1][0] - envases[1].ancho, huecos[1])
-
-    def test_rechaza_un_cupo_que_no_cabe_aun_sin_separacion(self):  # AC-STK-100
-        envase = Envase(0.2, 0.1, 0.3)
-        with self.assertRaises(ValueError):
-            _distribuir(
-                3 * envase.ancho - MARGEN, [envase], [3], [HUECO_MINIMO]
-            )
 
     def test_retroceden_todos_los_laterales_de_las_islas_y_ninguna_cabecera(self):
         retiros = reparto_de_prueba.RETIROS_POR_ESTANTE_DE_PRUEBA

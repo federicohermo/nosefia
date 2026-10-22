@@ -208,14 +208,16 @@ func _distancia_al_apoyo(chapas: Array[PackedVector3Array], pie: Vector3) -> flo
 
 
 func test_las_cabeceras_tienen_aire_y_margen_en_ambos_costados() -> void:  # AC-STK-102
-	var filas := _filas_de_exhibicion(_abrir())
+	var local := _abrir()
+	var referencias := _referencias_de_separacion(local)
+	var filas := _filas_de_exhibicion(local)
 	var cabeceras := 0
 	for fila in filas:
 		var frente: Vector3 = fila.frente
 		if absf(frente.z) <= absf(frente.x):
 			continue
 		cabeceras += 1
-		_comprobar_ritmo(fila)
+		_comprobar_ritmo(fila, referencias[fila.producto])
 		var mueble: MeshInstance3D = fila.mueble
 		var soporte := mueble.global_transform * mueble.mesh.get_aabb()
 		var caja := _envolvente(fila.cajas)
@@ -245,19 +247,26 @@ func test_las_cabeceras_tienen_aire_y_margen_en_ambos_costados() -> void:  # AC-
 						. override_failure_message(
 							"%s contra %s" % [fila.producto, lateral.producto]
 						)
-						. is_greater_equal(ReglasDelEstante.AIRE_MINIMO_ENTRE_CARAS)
+						. is_greater_equal(
+							maxf(
+								ReglasDelEstante.AIRE_MINIMO_ENTRE_CARAS,
+								maxf(referencias[fila.producto], referencias[lateral.producto])
+							)
+						)
 					)
 	assert_int(cabeceras).is_greater(0)
 
 
 func test_los_laterales_tienen_ritmo_y_aire_en_la_union_de_las_mitades() -> void:  # AC-STK-101
-	var filas := _filas_de_exhibicion(_abrir())
+	var local := _abrir()
+	var referencias := _referencias_de_separacion(local)
+	var filas := _filas_de_exhibicion(local)
 	var tandas: Dictionary[String, Array] = {}
 	for fila in filas:
 		var frente: Vector3 = fila.frente
 		if absf(frente.x) <= absf(frente.z):
 			continue
-		_comprobar_ritmo(fila)
+		_comprobar_ritmo(fila, referencias[fila.producto])
 		var clave := "%s/%s/%s" % [fila.mueble.name, frente, fila.nivel]
 		if not tandas.has(clave):
 			tandas[clave] = []
@@ -302,7 +311,40 @@ func test_el_reparto_con_aire_no_superpone_unidades() -> void:  # AC-STK-103
 			)
 
 
-func _comprobar_ritmo(fila: Dictionary) -> void:
+func _referencias_de_separacion(local: Node3D) -> Dictionary[String, float]:
+	local.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	var puesto: Node3D = local.get("_reposicion_manual")
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var resultado: Dictionary[String, float] = {}
+	for producto in Catalogo.de_la_jornada(1):
+		var grupo: MultiMeshInstance3D = puesto.get_node("ProductosDe" + producto.nombre)
+		var buffer: PackedFloat32Array = disposicion.principales[producto.id]
+		var frontales: int = disposicion.filas_de_adelante[producto.id]
+		var frente := DisposicionDeLaGondola.frente(buffer, frontales).round()
+		var eje := frente.cross(Vector3.UP).abs()
+		var cajas: Array[AABB] = []
+		for i in range(
+			DisposicionDeLaGondola.copias(buffer) - frontales, DisposicionDeLaGondola.copias(buffer)
+		):
+			var copia := DisposicionDeLaGondola.copia(buffer, i)
+			var vertices := grupo.multimesh.mesh.get_faces()
+			var caja := AABB(copia * vertices[0], Vector3.ZERO)
+			for vertice in vertices:
+				caja = caja.expand(copia * vertice)
+			cajas.append(caja)
+		cajas.sort_custom(
+			func(a: AABB, b: AABB) -> bool: return a.get_center().dot(eje) < b.get_center().dot(eje)
+		)
+		assert_int(cajas.size()).is_greater(1)
+		var aire := 0.0
+		for i in range(1, cajas.size()):
+			aire += cajas[i].position.dot(eje) - cajas[i - 1].end.dot(eje)
+		resultado[producto.nombre] = aire / (cajas.size() - 1)
+	local.call("_al_abrir_la_jornada", 1)
+	return resultado
+
+
+func _comprobar_ritmo(fila: Dictionary, referencia: float) -> void:
 	var cajas: Array = fila.cajas
 	var frente: Vector3 = fila.frente
 	var eje := frente.cross(Vector3.UP).abs()
@@ -318,6 +360,11 @@ func _comprobar_ritmo(fila: Dictionary) -> void:
 			assert_float(hueco + ReglasDelEstante.TOLERANCIA_DE_EXHIBICION)
 			. override_failure_message(fila.producto)
 			. is_greater_equal(ReglasDelEstante.SEPARACION_MINIMA_DE_EXHIBICION)
+		)
+		(
+			assert_float(absf(hueco - referencia))
+			. override_failure_message(fila.producto)
+			. is_less_equal(ReposicionManual.TOLERANCIA_DEL_APOYO)
 		)
 		if anterior != -INF:
 			(
