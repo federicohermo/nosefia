@@ -24,6 +24,9 @@ signal puerta_trabada(puerta: Node3D)
 signal porton_trabado(puerta: Node3D)
 signal salida_solicitada
 
+## La entrada preguntó si se puede salir y la respuesta fue no. Se suma a `puerta_trabada`.
+signal salida_rechazada
+
 ## Qué aviso da una puerta que no abre.
 enum Traba { NINGUNA, PUERTA, PORTON }
 
@@ -80,9 +83,11 @@ func _ready() -> void:
 
 
 func accionar() -> void:
-	if consultar_salida.is_valid() and consultar_salida.call():
-		salida_solicitada.emit()
-		return
+	if consultar_salida.is_valid():
+		if consultar_salida.call():
+			salida_solicitada.emit()
+			return
+		salida_rechazada.emit()
 	alternar()
 
 

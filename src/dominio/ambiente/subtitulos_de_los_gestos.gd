@@ -17,6 +17,7 @@ enum Id {
 	MOPA_YA_SECA,
 	MOPA_BERRETA,
 	PARED_DEL_OTRO_INODORO,
+	PUERTA_CON_TAREAS_PENDIENTES,
 }
 
 ## No declara `class_name`: se preloadea para preguntarle qué se tira sin llamado.
@@ -35,6 +36,7 @@ const TEXTOS: Dictionary[Id, String] = {
 	Id.MOPA_YA_SECA: "Ya se secó la mopa…",
 	Id.MOPA_BERRETA: "Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.",
 	Id.PARED_DEL_OTRO_INODORO: "Se ve que alguien no tuvo tiempo de apuntar bien…",
+	Id.PUERTA_CON_TAREAS_PENDIENTES: "No debería irme. Todavía me quedan tareas por completar.",
 }
 const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, Id] = {
 	PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: Id.PARED_DEL_OTRO_INODORO,
@@ -76,6 +78,18 @@ static func al_pasar_la_mopa(resultado: ReglasDeLaLimpieza.Resultado, se_mojo: b
 
 static func al_borrar(lugar: PisoDelLocal.Lugar) -> Id:
 	return DE_LAS_MANCHAS.get(lugar, Id.NINGUNO)
+
+
+## En una jornada de prueba, la entrada que no deja salir es porque queda una obligatoria. Que el
+## aviso de salida espere a la computadora (BR-NTF-014) no cambia eso: se mira el cumplimiento y no
+## el permiso.
+static func al_usar_la_entrada(jornada: int, obligatorias: Array[Tarea]) -> Id:
+	if (
+		jornada in CierreAnticipado.JORNADAS
+		and not CierreAnticipado.corresponde(jornada, obligatorias)
+	):
+		return Id.PUERTA_CON_TAREAS_PENDIENTES
+	return Id.NINGUNO
 
 
 static func texto(id: Id) -> String:

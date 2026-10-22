@@ -104,3 +104,42 @@ func test_cada_id_tiene_texto_salvo_ninguno() -> void:  # AC-SUB-018
 	for id: S in S.values():
 		if id != S.NINGUNO:
 			assert_str(SubtitulosDeLosGestos.texto(id)).is_not_empty()
+
+
+func _cumplidas_salvo(jornada: int, pendiente: Tarea = null) -> Array[Tarea]:
+	var obligatorias := Apertura.obligatorias(jornada)
+	for tarea in obligatorias:
+		if pendiente == null or tarea.tipo() != pendiente.tipo():
+			tarea.completar()
+	return obligatorias
+
+
+func test_la_entrada_con_alguna_pendiente_piensa_en_las_noches_de_prueba() -> void:  # AC-SUB-024
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
+		(
+			assert_int(
+				SubtitulosDeLosGestos.al_usar_la_entrada(jornada, Apertura.obligatorias(jornada))
+			)
+			. is_equal(S.PUERTA_CON_TAREAS_PENDIENTES)
+		)
+		for pendiente in Apertura.obligatorias(jornada):
+			var tareas := _cumplidas_salvo(jornada, pendiente)
+			assert_int(SubtitulosDeLosGestos.al_usar_la_entrada(jornada, tareas)).is_equal(
+				S.PUERTA_CON_TAREAS_PENDIENTES
+			)
+		var hechas := _cumplidas_salvo(jornada)
+		assert_int(SubtitulosDeLosGestos.al_usar_la_entrada(jornada, hechas)).is_equal(S.NINGUNO)
+		assert_bool(hechas[0].descompletar()).is_true()
+		assert_int(SubtitulosDeLosGestos.al_usar_la_entrada(jornada, hechas)).is_equal(
+			S.PUERTA_CON_TAREAS_PENDIENTES
+		)
+
+
+func test_la_entrada_no_piensa_desde_la_primera_jornada_completa() -> void:  # AC-SUB-024
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	for obligatorias: Array[Tarea] in [Apertura.obligatorias(jornada), _cumplidas_salvo(jornada)]:
+		assert_int(SubtitulosDeLosGestos.al_usar_la_entrada(jornada, obligatorias)).is_equal(
+			S.NINGUNO
+		)
