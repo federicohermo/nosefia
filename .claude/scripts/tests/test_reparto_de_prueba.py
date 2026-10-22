@@ -14,9 +14,10 @@ from lib.reparto_de_prueba import (
 
 
 class RepartoDePrueba(unittest.TestCase):
-    def test_cada_tanda_conserva_el_ritmo_de_su_envase_y_el_sobrante_queda_en_los_bordes(self):
-        envases = [Envase(0.15, 0.15, 0.2), Envase(0.268, 0.076, 0.405)]
-        cuentas = [9, 5]
+    def test_cada_tanda_conserva_el_ritmo_de_su_envase_y_el_sobrante_queda_en_los_bordes(self):  # AC-STK-100
+        envases = [Envase(20 * HUECO_MINIMO, 4 * MARGEN, 10 * MARGEN),
+                   Envase(30 * HUECO_MINIMO, 4 * MARGEN, 10 * MARGEN)]
+        cuentas = [3, 2]
         huecos = [HUECO_MINIMO * 1.5, HUECO_MINIMO * 3.5]
         largo = sum(e.ancho * c + h * (c - 1)
                     for e, c, h in zip(envases, cuentas, huecos)) + 8 * MARGEN
@@ -34,11 +35,25 @@ class RepartoDePrueba(unittest.TestCase):
             self.assertLessEqual(derecha, (indice + 1) * mitad)
             self.assertAlmostEqual(izquierda - indice * mitad, (indice + 1) * mitad - derecha)
 
-    def test_no_comprime_el_ritmo_ni_quita_cupos_si_la_tanda_no_cabe(self):
+    def test_comprime_uniformemente_solo_la_tanda_que_no_cabe_sin_quitar_cupos(self):  # AC-STK-100
+        envases = [Envase(0.2, 0.1, 0.3), Envase(0.1, 0.1, 0.2)]
+        cuentas = [3, 2]
+        huecos = [4 * HUECO_MINIMO, 2 * HUECO_MINIMO]
+        parte = 3 * envases[0].ancho + 2 * HUECO_MINIMO
+        filas = reparto_de_prueba.centros_con_referencia(2 * parte, envases, cuentas, huecos)
+        for fila, envase, cuenta in zip(filas, envases, cuentas):
+            self.assertEqual(len(fila), cuenta)
+            for a, b in zip(fila, fila[1:]):
+                self.assertGreaterEqual(b - a - envase.ancho, 0)
+        self.assertAlmostEqual(filas[0][1] - filas[0][0] - envases[0].ancho, HUECO_MINIMO)
+        self.assertAlmostEqual(filas[0][2] - filas[0][1] - envases[0].ancho, HUECO_MINIMO)
+        self.assertAlmostEqual(filas[1][1] - filas[1][0] - envases[1].ancho, huecos[1])
+
+    def test_rechaza_un_cupo_que_no_cabe_aun_sin_separacion(self):  # AC-STK-100
         envase = Envase(0.2, 0.1, 0.3)
         with self.assertRaises(ValueError):
             reparto_de_prueba.centros_con_referencia(
-                3 * envase.ancho + HUECO_MINIMO, [envase], [3], [HUECO_MINIMO]
+                3 * envase.ancho - MARGEN, [envase], [3], [HUECO_MINIMO]
             )
 
     def test_retroceden_todos_los_laterales_de_las_islas_y_ninguna_cabecera(self):

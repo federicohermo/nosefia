@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := "res://src/escenas/almacen.tscn"
+const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 
 
 func _abrir() -> Node3D:
@@ -11,6 +12,56 @@ func _abrir() -> Node3D:
 	local.get("_jugador").set_physics_process(false)
 	local.get("_reloj").set_process(false)
 	return local
+
+
+func test_la_prueba_conserva_el_retiro_frontal_del_mapa_completo() -> void:  # AC-STK-100
+	var local := _abrir()
+	var prueba := _frentes_de_las_tandas(local, 1)
+	local.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	var completa := _frentes_de_las_tandas(local, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	assert_bool(prueba.is_empty()).is_false()
+	for clave: String in prueba:
+		assert_bool(completa.has(clave)).override_failure_message(clave).is_true()
+		if not completa.has(clave):
+			return
+		assert_float(prueba[clave]).override_failure_message(clave).is_greater_equal(
+			completa[clave] - ReposicionManual.TOLERANCIA_DEL_APOYO
+		)
+
+
+func _frentes_de_las_tandas(local: Node3D, jornada: int) -> Dictionary[String, float]:
+	var puesto: Node3D = local.get("_reposicion_manual")
+	var contenido: Node3D = puesto.get("contenido")
+	var muebles: Array[MeshInstance3D] = []
+	for nombre: String in [
+		"gondolanueva", "gondolanueva2", "gondolanueva_001", "heladeranueva", "heladeranueva_001"
+	]:
+		muebles.append(local.get_node("Estructura/" + nombre))
+	var frentes: Dictionary[String, float] = {}
+	for producto in Catalogo.de_la_jornada(jornada):
+		var grupo: MultiMeshInstance3D = puesto.get_node("ProductosDe" + producto.nombre)
+		var modelo := contenido.get_child(producto.id) as MeshInstance3D
+		var frente_local: Vector3 = modelo.get_meta("frente_del_modelo")
+		for indice in grupo.multimesh.instance_count:
+			var copia := (
+				grupo.global_transform
+				* DisposicionDeLaGondola.copia(grupo.multimesh.buffer, indice)
+			)
+			var limites := copia * grupo.multimesh.mesh.get_aabb()
+			var frente := copia.basis * modelo.global_basis * frente_local
+			frente.y = 0.0
+			frente = frente.normalized().round()
+			for mueble in muebles:
+				var caja := mueble.global_transform * mueble.mesh.get_aabb()
+				if not caja.has_point(limites.get_center()):
+					continue
+				var nivel := roundi(limites.position.y / ReposicionManual.TOLERANCIA_DEL_APOYO)
+				var clave := "%s/%s/%d" % [mueble.name, frente, nivel]
+				var borde := INF
+				for esquina in 8:
+					borde = minf(borde, limites.get_endpoint(esquina).dot(-frente))
+				frentes[clave] = minf(frentes.get(clave, borde), borde)
+	return frentes
 
 
 func test_las_tandas_dibujadas_conservan_el_frente_real_de_las_mallas() -> void:  # AC-STK-096
