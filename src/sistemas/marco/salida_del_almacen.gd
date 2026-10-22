@@ -6,12 +6,12 @@ signal apertura_pedida
 
 var _salida := SalidaVoluntaria.new()
 var _reloj: RelojDelTurno
-var _puerta: Puerta
+var _puertas: Array[Puerta]
 
 
-func configurar(reloj: RelojDelTurno, puerta: Puerta) -> void:
+func configurar(reloj: RelojDelTurno, puertas: Array[Puerta]) -> void:
 	_reloj = reloj
-	_puerta = puerta
+	_puertas = puertas
 
 
 func iniciar(desde: Vector2, hacia: Vector2) -> bool:
@@ -32,8 +32,9 @@ func _process(delta: float) -> void:
 
 
 func confirmar_apertura() -> void:
-	if not _puerta.abierta() or not is_equal_approx(_puerta.angulo(), Puerta.ANGULO_ABIERTA):
-		return
+	for puerta: Puerta in _puertas:
+		if not puerta.abierta() or not is_equal_approx(puerta.angulo(), Puerta.ANGULO_ABIERTA):
+			return
 	if _salida.confirmar_apertura():
 		_reloj.terminar_cierre_reservado()
 

@@ -89,6 +89,7 @@ func _pasos(jornada: int) -> Array[InstruccionesDelJefe.Paso]:
 func _leer_todo(jornada: int = PRIMERA) -> void:
 	for _paso in _pasos(jornada).size():
 		_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
 
 
 ## Sin medios: cerrar una noche vacía no despide.
@@ -182,6 +183,10 @@ func test_leer_dos_minutos_no_cobra_y_comenzar_anuncia_una_sola_noche() -> void:
 		_siguiente().pressed.emit()
 	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
 	_siguiente().pressed.emit()
+	assert_bool((_persiana().get("_placa") as Label).visible).is_false()
+	assert_bool(_instrucciones().visible).is_true()
+	_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
 	var entrada: EntradaALaNoche = _persiana().get("_entrada")
 	assert_object(entrada).is_not_null()
 	_siguiente().pressed.emit()
@@ -197,7 +202,7 @@ func test_leer_dos_minutos_no_cobra_y_comenzar_anuncia_una_sola_noche() -> void:
 	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
-func test_fade_y_subida_usan_trescientos_milisegundos_reales() -> void:  # AC-EMP-049
+func test_fade_y_entrada_usan_trescientos_milisegundos_reales() -> void:  # AC-EMP-049
 	_abrir()
 	var ahora: Array[int] = [0]
 	_instrucciones().set("_ahora", func() -> int: return ahora[0])
@@ -205,19 +210,20 @@ func test_fade_y_subida_usan_trescientos_milisegundos_reales() -> void:  # AC-EM
 	_almacen.call("empezar_partida_nueva")
 	var negro: ColorRect = _persiana().get("_negro")
 	var marco: Control = _instrucciones().get("_marco")
-	var altura := marco.size.y * marco.scale.y
-	var destino := marco.position.y - altura
+	var ancho := get_viewport().get_visible_rect().size.x
+	var destino := (ancho - marco.size.x * marco.scale.x) / 2.0
+	var recorrido := ancho - destino
 	assert_float(negro.modulate.a).is_equal(1.0)
 	var animadas: Array[Node] = [_instrucciones(), _persiana()]
 	_cuadros(ahora, 150000, animadas)
 	assert_float(negro.modulate.a).is_equal_approx(0.5, 0.001)
-	assert_float(marco.position.y).is_equal_approx(destino + altura / 2, 0.01)
+	assert_float(marco.position.x).is_equal_approx(destino + recorrido / 4, 0.01)
 	_cuadros(ahora, 299999, animadas)
 	assert_bool(negro.visible).is_true()
 	assert_bool(_instrucciones().is_processing()).is_true()
 	_cuadros(ahora, 300000, animadas)
 	assert_bool(negro.visible).is_false()
-	assert_float(marco.position.y).is_equal_approx(destino, 0.01)
+	assert_float(marco.position.x).is_equal_approx(destino, 0.01)
 	assert_bool(_instrucciones().is_processing()).is_false()
 	assert_bool(_persiana().visible).is_true()
 	assert_bool((_persiana().get("_placa") as Label).visible).is_false()
@@ -358,6 +364,7 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	_siguiente().pressed.emit()
 	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
 	_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
 	_comprobar_una_noche(PRIMERA + 2)
 
 
@@ -421,6 +428,7 @@ func test_seguir_desde_la_tercera_abre_las_de_la_cuarta() -> void:  # AC-EMP-075
 	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("4/4")
 	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
 	_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
 	_comprobar_una_noche(COMPLETA)
 
 
