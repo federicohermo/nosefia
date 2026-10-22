@@ -57,7 +57,7 @@ func test_en_la_prueba_los_llamados_no_suman_y_las_bandas_no_pesan() -> void:  #
 	todos.assign(Partida.Llamado.values())
 	var partida := Partida.nueva()
 	_noche(partida, [], 0, todos)
-	assert_bool(partida.antecedentes().hubo_llamados()).is_true()
+	assert_bool(partida.antecedentes().hubo_llamados()).is_false()
 	assert_int(partida.medios()).is_zero()
 	var sin_tareas := _con(ReglasDeLaPartida.PRIMERA_JORNADA + 1, 0)
 	_noche(sin_tareas, [T.CAJA, T.REGISTRAR, T.REPONER])

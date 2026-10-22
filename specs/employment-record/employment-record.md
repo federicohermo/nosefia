@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22
 ---
 
 # Capacidad: el legajo del empleado
@@ -207,14 +207,17 @@ adelantar ninguna de las dos más de 1/30 de segundo: el cuadro que abre la part
 
 ### BR-EMP-025 — Lo que la partida cuenta entre noches
 
-CUANDO se anota una noche, el sistema DEBE sumar una falla a cada obligatoria fija —atender,
+CUANDO se anota una noche desde la primera jornada completa, el sistema DEBE sumar una falla a
+cada obligatoria fija —atender,
 registrar, reponer y limpiar— que quedó sin cumplir al cerrar, y un llamado a cada motivo anotado
 esa noche, una sola vez por noche (BR-EMP-012). Vale el estado al cerrar: una obligatoria que se
 cumplió y se descumplió antes del cierre suma una falla (BR-SHF-007). La particular NO DEBE sumar
 fallas. El sistema DEBE llevar R: una noche que no sumó medios lo sube en uno, y una que sumó lo
 vuelve a 0. DEBE recordar si hubo algún llamado en la partida, contando esta noche. Un cierre
 ignorado (BR-EMP-006, BR-EMP-007) NO DEBE contar. Una partida nueva DEBE empezar con cero fallas,
-cero llamados, R = 0 y sin llamados en la partida.
+cero llamados, R = 0 y sin llamados en la partida. Las noches de la prueba NO DEBEN cambiar
+ninguna de estas cuentas: la devolución las lee desde la jornada 4, y la primera falla que
+cuenta es la primera desde ahí (OQ-EMP-012).
 
 ### BR-EMP-026 — El Saludo sale de P
 
@@ -766,7 +769,13 @@ llamado por papel anotado dos veces CUANDO cierra ENTONCES reponer y limpiar tie
 atender y registrar 0, papel 1 llamado, hubo llamados y R = 0. CUANDO la noche 5 cierra
 impecable sin llamados ENTONCES R = 1 y las fallas no cambian; la noche 6 igual, R = 2; la noche
 7 con un llamado, R = 0. DADO una obligatoria cumplida y después descumplida antes del cierre
-ENTONCES suma una falla. DADO un segundo cierre de la misma noche ENTONCES nada cambia.
+ENTONCES suma una falla. DADO un segundo cierre de la misma noche ENTONCES nada cambia. DADO la
+noche 1 con un cliente mal atendido y registrar sin cumplir, la 2 sólo con reponer sin cumplir y
+la 3 sólo con limpiar sin cumplir, con los cuatro llamados anotados cada noche, CUANDO abre la
+jornada 4 ENTONCES la prueba acumuló 4 apercibimientos y las cuentas de la devolución siguen en
+cero fallas, cero llamados, R = 0 y ningún llamado en la partida. La primera falla de atender
+en la jornada 4 trae la fila n = 1 de Tarea 1. DADO los mismos llamados de la prueba CUANDO se
+repiten en la jornada 4 ENTONCES cada motivo cuenta una vez y trae la primera fila de su Reto.
 
 ### AC-EMP-060 — Ningún número, y siempre Saludo y Cierre *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
 
@@ -941,12 +950,13 @@ jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
 
 ### AC-EMP-078 — Cada descuido suma uno *(verifica BR-EMP-035)*
 
-DADO la jornada 1 con sus tres obligatorias declaradas CUANDO cierra con registrar y reponer sin
+DADO la jornada 2 con sus tres obligatorias declaradas CUANDO cierra con registrar y reponer sin
 cumplir y dos clientes mal atendidos ENTONCES el legajo lleva 4 apercibimientos. DADO la jornada 3
 con sólo limpiar sin cumplir ENTONCES suma 1. DADO la jornada 2 con atender sin cumplir por un
 cliente mal atendido ENTONCES suma 1 y no 2. DADO un cliente que todavía espera o que nunca llegó
 ENTONCES no cuenta. DADO una noche de la prueba con todas cumplidas y los cuatro llamados
-anotados ENTONCES el legajo no suma ningún medio y no hay banda que pese.
+anotados ENTONCES el legajo no suma ningún medio, no hay banda que pese y no queda ningún
+llamado en la partida.
 
 ### AC-EMP-079 — Las dos primeras no despiden *(verifica BR-EMP-036)*
 
@@ -1119,6 +1129,15 @@ ENTONCES la jornada 4 abre con la misma fila.
     cubre este caso.
   - Decide: una persona de game design.
   - Bloquea: nada. Mientras tanto, BR-EMP-043 usa la fila de «altibajos».
+
+- **OQ-EMP-012 — ¿Las fallas y los llamados de la prueba cuentan para la n de las Tareas y los
+  Retos desde la jornada 4?**
+  - Por qué sigue abierta: la ficha «Chat con el jefe» numera «1º vez que falla la tarea» sin
+    decir desde qué noche. Su devolución rige «desde la jornada 4», el mensaje 4 de esa jornada
+    dice «Desde hoy te voy a tener cortito», y la ficha de puntos reinicia los puntos ahí.
+  - Decide: una persona de game design.
+  - Bloquea: nada. Mientras tanto, BR-EMP-025 cuenta desde la jornada 4: con la prueba
+    contada, la primera falla de la jornada 4 podía traer el texto de la cuarta sin despedir.
 
 - **OQ-EMP-009 — ¿Qué dice la devolución cuando la prueba pasa de 4 apercibimientos sin despedir?**
   - Por qué sigue abierta: la devolución elige Saludo y Cierre por P, y P ≥ 4 es hoy el despido
