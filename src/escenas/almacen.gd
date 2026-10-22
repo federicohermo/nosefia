@@ -521,18 +521,17 @@ func _salir_por_la_entrada() -> void:
 	if _puede_salir():
 		var vista := _jugador.mira()
 		var desde := vista.basis.get_euler()
-		var centro := (
-			(
-				_hojas_de_entrada[0].eje_de_la_bisagra.global_position
-				+ _hojas_de_entrada[1].eje_de_la_bisagra.global_position
-			)
-			* 0.5
+		var malla := _hojas_de_entrada[0].hoja
+		var pantalla := get_viewport().get_visible_rect().size
+		var hacia := PoseDeLaVista.frontal_al_vano(
+			_hojas_de_entrada[0].eje_de_la_bisagra.global_position,
+			_hojas_de_entrada[1].eje_de_la_bisagra.global_position,
+			vista.origin,
+			malla.get_aabb().size.y * malla.global_basis.get_scale().y,
+			get_viewport().get_camera_3d().fov,
+			pantalla.x / pantalla.y
 		)
-		var hacia := Basis.looking_at(centro - vista.origin).get_euler()
-		_salida.iniciar(
-			PoseDeLaVista.new(_jugador.global_position, Vector2(desde.y, desde.x)),
-			PoseDeLaVista.new(_jugador.global_position, Vector2(hacia.y, hacia.x))
-		)
+		_salida.iniciar(PoseDeLaVista.new(vista.origin, Vector2(desde.y, desde.x)), hacia)
 
 
 ##

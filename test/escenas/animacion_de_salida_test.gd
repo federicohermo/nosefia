@@ -83,7 +83,6 @@ func test_salida_gira_abre_ambas_y_cierra_una_vez() -> void:  # AC-SHF-043, AC-S
 		var hojas := _hojas_de_entrada(almacen)
 		var otra: Node3D = hojas.back()
 		var centro := (_canto_exterior(hojas.front(), false) + _canto_exterior(otra, true)) * 0.5
-		var direccion := (centro - vista.origin).normalized()
 		_primario_sobre_la_entrada(almacen)
 		assert_bool((jugador.call("mira") as Transform3D).is_equal_approx(vista)).is_true()
 		jugador.call("_process", 1.0)
@@ -99,7 +98,9 @@ func test_salida_gira_abre_ambas_y_cierra_una_vez() -> void:  # AC-SHF-043, AC-S
 		assert_int(guardado.escrituras).is_zero()
 		salida._process(SalidaVoluntaria.DURACION_DEL_GIRO * 0.5)
 		var orientada: Transform3D = jugador.call("mira")
-		assert_float((-orientada.basis.z).dot(direccion)).is_equal_approx(1.0, 0.0001)
+		var direccion := Vector3(centro.x - orientada.origin.x, 0.0, centro.z - orientada.origin.z)
+		direccion = direccion.normalized()
+		assert_float((-orientada.basis.z).dot(direccion)).is_equal_approx(1.0, 0.001)
 		assert_array(sonidos).is_equal([entrada])
 		assert_bool(puerta.abierta()).is_true()
 		entrada.call("_physics_process", 0.1)

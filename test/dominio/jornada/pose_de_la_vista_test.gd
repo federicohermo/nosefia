@@ -4,7 +4,7 @@ const ANCHO_DEL_VANO := 3.0
 const ALTO_DEL_VANO := 2.8
 const ALTURA_DEL_CENTRO := 1.5
 const ALTURA_DE_LOS_OJOS := 1.8
-const FOV_VERTICAL := deg_to_rad(75.0)
+const FOV_VERTICAL := 75.0
 const ASPECTO := 16.0 / 9.0
 
 
@@ -64,7 +64,7 @@ func test_la_pose_no_depende_de_donde_se_empieza_y_encuadra_el_vano_entero() -> 
 	var poses: Array[PoseDeLaVista] = []
 	for lateral: float in [-4.0, 0.0, 3.0]:
 		poses.append(_frontal(vano, _ojos(vano, lateral, 2.0 + absf(lateral))))
-	var mitad_vertical := tan(FOV_VERTICAL * 0.5)
+	var mitad_vertical := tan(deg_to_rad(FOV_VERTICAL) * 0.5)
 	for pose: PoseDeLaVista in poses:
 		assert_vector(pose.posicion).is_equal_approx(poses[0].posicion, Vector3.ONE * 0.0001)
 		var distancia := (pose.posicion - vano.centro as Vector3).dot(vano.normal)
@@ -77,8 +77,8 @@ func test_la_pose_no_depende_de_donde_se_empieza_y_encuadra_el_vano_entero() -> 
 func test_un_campo_de_vision_mas_angosto_aleja_la_camara() -> void:  # AC-SHF-047
 	var vano := _vano(0.0, false)
 	var desde := _ojos(vano, 0.0, 2.0)
-	var ancho := _frontal(vano, desde, deg_to_rad(100.0))
-	var angosto := _frontal(vano, desde, deg_to_rad(50.0))
+	var ancho := _frontal(vano, desde, 100.0)
+	var angosto := _frontal(vano, desde, 50.0)
 	assert_float(angosto.posicion.distance_to(vano.centro)).is_greater(
 		ancho.posicion.distance_to(vano.centro)
 	)

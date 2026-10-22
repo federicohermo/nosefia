@@ -16,7 +16,7 @@ func _init(lugar: Vector3 = Vector3.ZERO, giro: Vector2 = Vector2.ZERO) -> void:
 
 ## De frente al vano: sobre la perpendicular que pasa por el punto medio de las dos bisagras, del
 ## lado de `desde`, mirando horizontal hacia él. Los ojos conservan su altura, y la distancia es
-## la menor desde la que entran el ancho y el alto del vano con ese campo de visión.
+## la menor desde la que entran el ancho y el alto del vano con ese campo de visión, en grados.
 static func frontal_al_vano(
 	bisagra_a: Vector3,
 	bisagra_b: Vector3,
@@ -30,7 +30,7 @@ static func frontal_al_vano(
 	var normal := eje.normalized().cross(Vector3.UP)
 	if (desde - centro).dot(normal) < 0.0:
 		normal = -normal
-	var mitad_vertical := tan(fov_vertical * 0.5)
+	var mitad_vertical := tan(deg_to_rad(fov_vertical) * 0.5)
 	var por_el_ancho := eje.length() * 0.5 / (mitad_vertical * aspecto)
 	var piso := absf(desde.y - (centro.y - alto * 0.5))
 	var techo := absf(centro.y + alto * 0.5 - desde.y)

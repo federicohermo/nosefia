@@ -541,7 +541,7 @@ func orientar_la_salida(pose: PoseDeLaVista) -> void:
 	_vista_de_salida = true
 	velocity = Vector3.ZERO
 	suspender()
-	global_position = pose.posicion
+	global_position += pose.posicion - _camara.global_position
 	_giro.global_basis = Basis(Vector3.UP, pose.orientacion.x)
 	_camara.rotation.x = pose.orientacion.y
 
