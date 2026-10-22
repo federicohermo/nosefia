@@ -467,5 +467,6 @@ func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-
 
 
 func _completar_la_salida(almacen: Node3D) -> void:
-	await assert_signal(almacen.get_node(ENTRADA)).wait_until(5000).is_emitted("hoja_quieta")
+	var entrada: Node3D = almacen.get_node(ENTRADA)
+	await assert_signal(entrada).wait_until(5000).is_emitted("hoja_quieta", entrada)
 	assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
