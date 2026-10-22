@@ -32,6 +32,7 @@ def tramo_con_referencia(
 def centros_con_referencia(
     largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float],
     extremos: tuple[float, float] | None = None,
+    *, minimo: float = 0.0, aire_central: float = 0.0,
 ) -> list[list[float]]:
     """Conserva el ritmo; en cada mitad comprime juntos sus huecos y el encuentro con la punta.
 

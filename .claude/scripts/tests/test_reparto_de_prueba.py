@@ -13,6 +13,24 @@ from lib.reparto_de_prueba import (
 )
 
 
+_REGLAS = (RAIZ / "src/dominio/almacen/reglas_del_estante.gd").read_text(encoding="utf-8")
+
+
+def _regla(nombre):
+    return float(re.search(rf"^const {nombre} := ([0-9.]+)$", _REGLAS, re.M)[1])
+
+
+MINIMO = _regla("SEPARACION_MINIMA_DE_EXHIBICION")
+AIRE_CENTRAL = _regla("AIRE_MINIMO_ENTRE_TANDAS")
+AIRE_ENTRE_CARAS = _regla("AIRE_MINIMO_ENTRE_CARAS")
+
+
+def _distribuir(largo, envases, cuentas, huecos, extremos=None):
+    return reparto_de_prueba.centros_con_referencia(
+        largo, envases, cuentas, huecos, extremos, minimo=MINIMO, aire_central=AIRE_CENTRAL
+    )
+
+
 class RepartoDePrueba(unittest.TestCase):
     def test_el_retiro_frontal_no_comprime_el_ancho_transversal_de_la_cabecera(self):  # AC-STK-100
         envase = Envase(10 * HUECO_MINIMO, 10 * MARGEN, 20 * MARGEN)
@@ -22,7 +40,7 @@ class RepartoDePrueba(unittest.TestCase):
         inicio, fin = reparto_de_prueba.tramo_con_referencia(
             largo, MARGEN, ancho, 10 * MARGEN, cabecera=True
         )
-        fila = reparto_de_prueba.centros_con_referencia(
+        fila = _distribuir(
             fin - inicio, [envase], [cuenta], [hueco]
         )[0]
         self.assertEqual(len(fila), cuenta)
@@ -43,23 +61,30 @@ class RepartoDePrueba(unittest.TestCase):
         self.assertGreaterEqual(inicio - (retiros[0] - 2 * MARGEN), separaciones[0])
         self.assertGreaterEqual(largo - fin - (retiros[1] - 2 * MARGEN), separaciones[1])
 
-    def test_comprime_juntos_los_huecos_del_lateral_y_su_encuentro_solo_si_no_caben(self):
+    def test_rechaza_el_tramo_que_solo_cabe_borrando_el_aire(self):  # AC-STK-104
+        envase = Envase(20 * MINIMO, MARGEN, MARGEN)
+        cuenta = 4
+        exacto = cuenta * envase.ancho + (cuenta - 1) * MINIMO
+        fila = _distribuir(exacto, [envase], [cuenta], [MINIMO])[0]
+        self.assertEqual(len(fila), cuenta)
+        for a, b in zip(fila, fila[1:]):
+            self.assertAlmostEqual(b - a - envase.ancho, MINIMO)
+        with self.assertRaises(ValueError):
+            _distribuir(exacto - MINIMO, [envase], [cuenta], [MINIMO])
+
+    def test_el_aire_extra_de_las_puntas_no_roba_el_ritmo_y_deja_la_mitad_abierta(self):  # AC-STK-101
         envases = [Envase(10 * HUECO_MINIMO, MARGEN, MARGEN)] * 2
         cuentas = [4, 2]
         huecos = [2 * HUECO_MINIMO] * 2
-        extremos = (4 * HUECO_MINIMO, 4 * HUECO_MINIMO)
-        mitad = 4 * envases[0].ancho + 5 * HUECO_MINIMO
-        filas = reparto_de_prueba.centros_con_referencia(
-            2 * mitad, envases, cuentas, huecos, extremos
-        )
-        aire = filas[0][0] - envases[0].ancho / 2
-        hueco = filas[0][1] - filas[0][0] - envases[0].ancho
-        self.assertGreater(aire, 0)
-        self.assertLess(aire, extremos[0])
-        self.assertAlmostEqual(aire / extremos[0], hueco / huecos[0])
-        self.assertAlmostEqual(filas[1][1] - filas[1][0] - envases[1].ancho, huecos[1])
-        self.assertGreaterEqual(2 * mitad - filas[1][-1] - envases[1].ancho / 2, extremos[1])
-        self.assertEqual([len(f) for f in filas], cuentas)
+        extremos = (AIRE_ENTRE_CARAS, AIRE_ENTRE_CARAS)
+        mitad = 4 * envases[0].ancho + 3 * huecos[0] + sum(extremos)
+        filas = _distribuir(2 * mitad, envases, cuentas, huecos, extremos)
+        for e, c, h, fila in zip(envases, cuentas, huecos, filas):
+            self.assertEqual(len(fila), c)
+            for a, b in zip(fila, fila[1:]):
+                self.assertAlmostEqual(b - a - e.ancho, h)
+        union = filas[1][0] - envases[1].ancho / 2 - filas[0][-1] - envases[0].ancho / 2
+        self.assertGreaterEqual(union, AIRE_CENTRAL - 1e-9)
 
     def test_cada_tanda_conserva_el_ritmo_de_su_envase_y_el_sobrante_queda_en_los_bordes(self):  # AC-STK-100
         envases = [Envase(20 * HUECO_MINIMO, 4 * MARGEN, 10 * MARGEN),
@@ -67,8 +92,8 @@ class RepartoDePrueba(unittest.TestCase):
         cuentas = [3, 2]
         huecos = [HUECO_MINIMO * 1.5, HUECO_MINIMO * 3.5]
         largo = sum(e.ancho * c + h * (c - 1)
-                    for e, c, h in zip(envases, cuentas, huecos)) + 8 * MARGEN
-        filas = reparto_de_prueba.centros_con_referencia(largo, envases, cuentas, huecos)
+                    for e, c, h in zip(envases, cuentas, huecos)) + 8 * MARGEN + 2 * AIRE_CENTRAL
+        filas = _distribuir(largo, envases, cuentas, huecos)
         mitad = largo / len(envases)
         for indice, (envase, cuenta, hueco, fila) in enumerate(
             zip(envases, cuentas, huecos, filas)
@@ -86,8 +111,8 @@ class RepartoDePrueba(unittest.TestCase):
         envases = [Envase(0.2, 0.1, 0.3), Envase(0.1, 0.1, 0.2)]
         cuentas = [3, 2]
         huecos = [4 * HUECO_MINIMO, 2 * HUECO_MINIMO]
-        parte = 3 * envases[0].ancho + 2 * HUECO_MINIMO
-        filas = reparto_de_prueba.centros_con_referencia(2 * parte, envases, cuentas, huecos)
+        parte = 3 * envases[0].ancho + 2 * HUECO_MINIMO + AIRE_CENTRAL
+        filas = _distribuir(2 * parte, envases, cuentas, huecos)
         for fila, envase, cuenta in zip(filas, envases, cuentas):
             self.assertEqual(len(fila), cuenta)
             for a, b in zip(fila, fila[1:]):
@@ -99,7 +124,7 @@ class RepartoDePrueba(unittest.TestCase):
     def test_rechaza_un_cupo_que_no_cabe_aun_sin_separacion(self):  # AC-STK-100
         envase = Envase(0.2, 0.1, 0.3)
         with self.assertRaises(ValueError):
-            reparto_de_prueba.centros_con_referencia(
+            _distribuir(
                 3 * envase.ancho - MARGEN, [envase], [3], [HUECO_MINIMO]
             )
 
