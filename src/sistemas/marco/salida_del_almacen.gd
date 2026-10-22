@@ -1,7 +1,7 @@
 class_name SalidaDelAlmacen
 extends Node
 
-signal vista_cambiada(orientacion: Vector2)
+signal vista_cambiada(pose: PoseDeLaVista)
 signal apertura_pedida
 
 var _salida := SalidaVoluntaria.new()
@@ -14,11 +14,11 @@ func configurar(reloj: RelojDelTurno, puertas: Array[Puerta]) -> void:
 	_puertas = puertas
 
 
-func iniciar(desde: Vector2, hacia: Vector2) -> bool:
+func iniciar(desde: PoseDeLaVista, hacia: PoseDeLaVista) -> bool:
 	if _salida.etapa() != SalidaVoluntaria.Etapa.INACTIVA or not _reloj.reservar_cierre():
 		return false
 	_salida.iniciar(desde, hacia)
-	vista_cambiada.emit(desde)
+	vista_cambiada.emit(_salida.pose())
 	return true
 
 
@@ -26,7 +26,7 @@ func _process(delta: float) -> void:
 	if _salida.etapa() != SalidaVoluntaria.Etapa.GIRANDO:
 		return
 	_salida.avanzar(delta)
-	vista_cambiada.emit(_salida.orientacion())
+	vista_cambiada.emit(_salida.pose())
 	if _salida.etapa() == SalidaVoluntaria.Etapa.ABRIENDO:
 		apertura_pedida.emit()
 

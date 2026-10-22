@@ -1,6 +1,10 @@
 extends GdUnitTestSuite
 
 
+func _pose(orientacion: Vector2, lugar: Vector3 = Vector3.ZERO) -> PoseDeLaVista:
+	return PoseDeLaVista.new(lugar, orientacion)
+
+
 # AC-SHF-043
 func test_pide_apertura_despues_del_giro_y_espera_a_las_dos_hojas() -> void:
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
@@ -15,8 +19,8 @@ func test_pide_apertura_despues_del_giro_y_espera_a_las_dos_hojas() -> void:
 	var cierres: Array[int] = []
 	salida.apertura_pedida.connect(func() -> void: aperturas.append(true))
 	reloj.turno_cerrado.connect(cierres.append)
-	assert_bool(salida.iniciar(Vector2.ONE, Vector2.ZERO)).is_true()
-	assert_bool(salida.iniciar(Vector2.ZERO, Vector2.ONE)).is_false()
+	assert_bool(salida.iniciar(_pose(Vector2.ONE), _pose(Vector2.ZERO))).is_true()
+	assert_bool(salida.iniciar(_pose(Vector2.ZERO), _pose(Vector2.ONE))).is_false()
 	salida.confirmar_apertura()
 	assert_array(aperturas).is_empty()
 	assert_array(cierres).is_empty()
@@ -52,7 +56,7 @@ func test_reiniciar_descarta_la_apertura_de_la_noche_anterior() -> void:  # AC-S
 	var puerta := Puerta.new(true)
 	var salida: SalidaDelAlmacen = auto_free(SalidaDelAlmacen.new())
 	salida.configurar(reloj, [puerta, Puerta.new(true)])
-	salida.iniciar(Vector2.ONE, Vector2.ZERO)
+	salida.iniciar(_pose(Vector2.ONE), _pose(Vector2.ZERO))
 	salida._process(10.0)
 	salida.reiniciar()
 	reloj.arrancar(Turno.new(100.0, []), [])
@@ -60,4 +64,21 @@ func test_reiniciar_descarta_la_apertura_de_la_noche_anterior() -> void:  # AC-S
 	puerta.avanzar(10.0)
 	salida.confirmar_apertura()
 	assert_bool(reloj.corriendo()).is_true()
-	assert_bool(salida.iniciar(Vector2.ZERO, Vector2.ONE)).is_true()
+	assert_bool(salida.iniciar(_pose(Vector2.ZERO), _pose(Vector2.ONE))).is_true()
+
+
+func test_publica_la_pose_en_cada_cuadro_hasta_la_pedida() -> void:  # AC-SHF-047
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	reloj.arrancar(Turno.new(100.0, []), [])
+	var salida: SalidaDelAlmacen = auto_free(SalidaDelAlmacen.new())
+	salida.configurar(reloj, [Puerta.new(true), Puerta.new(true)])
+	var vistas: Array[PoseDeLaVista] = []
+	salida.vista_cambiada.connect(vistas.append)
+	var desde := Vector3(1.0, 0.0, 2.0)
+	var hacia := Vector3(-4.0, 0.0, 6.0)
+	salida.iniciar(_pose(Vector2.ZERO, desde), _pose(Vector2(1.0, 0.0), hacia))
+	assert_vector(vistas[0].posicion).is_equal(desde)
+	salida._process(SalidaVoluntaria.DURACION_DEL_GIRO * 0.5)
+	assert_vector(vistas[-1].posicion).is_equal_approx((desde + hacia) * 0.5, Vector3.ONE * 0.0001)
+	salida._process(SalidaVoluntaria.DURACION_DEL_GIRO * 0.5)
+	assert_vector(vistas[-1].posicion).is_equal_approx(hacia, Vector3.ONE * 0.0001)

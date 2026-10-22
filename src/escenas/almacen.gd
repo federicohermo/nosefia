@@ -529,7 +529,10 @@ func _salir_por_la_entrada() -> void:
 			* 0.5
 		)
 		var hacia := Basis.looking_at(centro - vista.origin).get_euler()
-		_salida.iniciar(Vector2(desde.y, desde.x), Vector2(hacia.y, hacia.x))
+		_salida.iniciar(
+			PoseDeLaVista.new(_jugador.global_position, Vector2(desde.y, desde.x)),
+			PoseDeLaVista.new(_jugador.global_position, Vector2(hacia.y, hacia.x))
+		)
 
 
 ##

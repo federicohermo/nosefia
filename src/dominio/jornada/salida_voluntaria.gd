@@ -6,18 +6,18 @@ enum Etapa { INACTIVA, GIRANDO, ABRIENDO, TERMINADA }
 const DURACION_DEL_GIRO := 0.8
 
 var _etapa := Etapa.INACTIVA
-var _desde := Vector2.ZERO
-var _recorrido := Vector2.ZERO
-var _orientacion := Vector2.ZERO
+var _desde: PoseDeLaVista
+var _hacia: PoseDeLaVista
+var _pose := PoseDeLaVista.new()
 var _transcurrido := 0.0
 
 
-func iniciar(desde: Vector2, hacia: Vector2) -> bool:
+func iniciar(desde: PoseDeLaVista, hacia: PoseDeLaVista) -> bool:
 	if _etapa != Etapa.INACTIVA:
 		return false
 	_desde = desde
-	_orientacion = desde
-	_recorrido = Vector2(wrapf(hacia.x - desde.x, -PI, PI), hacia.y - desde.y)
+	_hacia = hacia
+	_pose = desde
 	_etapa = Etapa.GIRANDO
 	return true
 
@@ -28,7 +28,7 @@ func avanzar(segundos: float) -> void:
 	_transcurrido = minf(_transcurrido + segundos, DURACION_DEL_GIRO)
 	var proporcion := _transcurrido / DURACION_DEL_GIRO
 	var suavizado := proporcion * proporcion * (3.0 - 2.0 * proporcion)
-	_orientacion = _desde + _recorrido * suavizado
+	_pose = _desde.mezclada_con(_hacia, suavizado)
 	if _transcurrido == DURACION_DEL_GIRO:
 		_etapa = Etapa.ABRIENDO
 
@@ -44,5 +44,5 @@ func etapa() -> Etapa:
 	return _etapa
 
 
-func orientacion() -> Vector2:
-	return _orientacion
+func pose() -> PoseDeLaVista:
+	return _pose

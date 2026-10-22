@@ -537,12 +537,13 @@ func reanudar() -> void:
 		_control.reanudar()
 
 
-func orientar_la_salida(orientacion: Vector2) -> void:
+func orientar_la_salida(pose: PoseDeLaVista) -> void:
 	_vista_de_salida = true
 	velocity = Vector3.ZERO
 	suspender()
-	_giro.global_basis = Basis(Vector3.UP, orientacion.x)
-	_camara.rotation.x = orientacion.y
+	global_position = pose.posicion
+	_giro.global_basis = Basis(Vector3.UP, pose.orientacion.x)
+	_camara.rotation.x = pose.orientacion.y
 
 
 ## Recibe objetivo y mano, y contesta el contexto puro compartido por despacho y referencia.

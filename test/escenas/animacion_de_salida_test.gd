@@ -306,6 +306,45 @@ func test_cualquiera_de_las_hojas_inicia_la_salida_de_ambas() -> void:  # AC-PLY
 			assert_float(hoja.call("puerta").angulo()).is_zero()
 
 
+func test_la_salida_termina_de_frente_al_vano_desde_cualquier_lugar() -> void:  # AC-SHF-047
+	var finales: Array[Vector3] = []
+	var partidas := [[-2.0, 1.2, 0.0], [0.0, 2.5, PI], [1.5, 1.0, 2.0], [0.4, 3.0, -1.3]]
+	for partida: Array in partidas:
+		var almacen := await _abrir(1)
+		var jugador: Node3D = almacen.get("_jugador")
+		var camara: Camera3D = jugador.get_node("Giro/Camara")
+		var hojas := _hojas_de_entrada(almacen)
+		var bisagra_a: Vector3 = hojas.front().get("eje_de_la_bisagra").global_position
+		var bisagra_b: Vector3 = hojas.back().get("eje_de_la_bisagra").global_position
+		var centro := (bisagra_a + bisagra_b) * 0.5
+		var alto: float = hojas.front().get("hoja").get_aabb().size.y
+		var eje := Vector3(bisagra_b.x - bisagra_a.x, 0.0, bisagra_b.z - bisagra_a.z).normalized()
+		var normal := eje.cross(Vector3.UP)
+		if (jugador.global_position - centro).dot(normal) < 0.0:
+			normal = -normal
+		var lateral: float = partida[0]
+		var hondo: float = partida[1]
+		var yaw: float = partida[2]
+		var lugar := centro + eje * lateral + normal * hondo
+		lugar.y = jugador.global_position.y
+		jugador.call("ubicar", Transform3D(Basis(Vector3.UP, yaw), lugar))
+		_primario_sobre_la_entrada(almacen)
+		(almacen.get("_salida") as SalidaDelAlmacen)._process(SalidaVoluntaria.DURACION_DEL_GIRO)
+		var vista: Transform3D = jugador.call("mira")
+		var adelante := -vista.basis.z
+		assert_float((vista.origin - centro).dot(eje)).is_equal_approx(0.0, 0.01)
+		assert_float((vista.origin - centro).dot(normal)).is_greater(0.0)
+		assert_float(adelante.angle_to(-normal)).is_less(deg_to_rad(0.1))
+		assert_float(adelante.y).is_equal_approx(0.0, 0.0001)
+		for punta: Vector3 in [bisagra_a, bisagra_b]:
+			for lado: float in [-0.5, 0.5]:
+				var esquina: Vector3 = punta + Vector3.UP * alto * lado
+				assert_bool(camara.is_position_in_frustum(esquina)).is_true()
+		finales.append(vista.origin)
+	for final: Vector3 in finales:
+		assert_vector(final).is_equal_approx(finales[0], Vector3.ONE * 0.001)
+
+
 func _hojas_de_entrada(almacen: Node3D) -> Array[Node3D]:
 	var hojas: Array[Node3D] = []
 	for cuerpo: Node in almacen.find_children("*", "AnimatableBody3D", true, false):
