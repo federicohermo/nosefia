@@ -199,7 +199,10 @@ func test_pausar_con_la_persiana_baja_no_repite_las_instrucciones() -> void:  # 
 
 
 func test_con_la_prueba_perdida_el_despido_es_el_unico_mensaje_de_la_cuarta() -> void:  # AC-EMP-090
-	var almacen: Node3D = await _almacen(COMPLETA - 1, 2 * Reglas.MEDIOS_POR_APERCIBIMIENTO)
+	var medios := Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+	var almacen: Node3D = await _almacen(COMPLETA - 1, medios)
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	var menus := [0]
 	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
 	var aperturas := [0]
