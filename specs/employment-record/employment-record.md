@@ -198,12 +198,17 @@ entrada y ampliar cada foto con el texto de su propia Intro.
 
 MIENTRAS se leen las instrucciones, el sistema DEBE conservar la persiana baja, suspender al
 jugador y retener todo el presupuesto del turno, aunque la lectura dure minutos. La interfaz
-DEBE emerger desde el borde inferior, encima de la persiana y debajo de avisos y pausa. Esc
+DEBE emerger desde el margen derecho con ease out, encima de la persiana y debajo de avisos y pausa. Esc
 DEBE pausarla y reanudarla conservando la pantalla actual. «OK» DEBE retirar las
-instrucciones y dar paso a la placa y subida de persiana; el control y el reloj DEBEN liberarse
+instrucciones por el margen izquierdo con ease in y, sólo al terminar la salida, dar paso a la
+placa y subida de persiana. Repetir «OK» durante la salida NO DEBE anunciar otra noche.
+El control y el reloj DEBEN liberarse
 sólo cuando termine esa entrada. El fade in de la persiana baja DEBE durar 0,3 segundos reales
-y la subida de las instrucciones DEBE durar 0,3 segundos reales. Un cuadro largo NO DEBE
-adelantar ninguna de las dos más de 1/30 de segundo: el cuadro que abre la partida tarda.
+y la entrada de las instrucciones DEBE durar 0,3 segundos reales. La persiana de fondo NO DEBE
+desplazarse con las instrucciones. Pausar durante la entrada o la salida DEBE congelar el
+movimiento y reanudarlo desde el mismo punto, sin cobrar el tiempo pausado. Retomar desde el
+menú una jornada con instrucciones DEBE repetir la entrada desde la derecha.
+Un cuadro largo NO DEBE adelantar las animaciones más de 1/30 de segundo: el cuadro que abre la partida tarda.
 
 ### BR-EMP-025 — Lo que la partida cuenta entre noches
 
@@ -677,7 +682,7 @@ de la jornada 1. Las cajas en el piso de Intro 11 corresponden a la jornada 4.
 DADO una partida nueva preparada CUANDO empiezan las instrucciones ENTONCES la persiana está
 baja, se ve Intro 1, «Volver» está deshabilitado y el control está suspendido. CUANDO pasan 120 segundos
 reales leyendo ENTONCES queda el mismo presupuesto de turno. CUANDO se llega a 6 y se elige
-«OK» ENTONCES desaparecen las instrucciones y aparece «NOCHE 1» sobre la persiana, con
+«OK» ENTONCES las instrucciones salen por la izquierda y, al terminar, aparece «NOCHE 1» sobre la persiana, con
 el turno y el control todavía retenidos hasta que termine de subir.
 
 ### AC-EMP-049 — Pausar conserva la lectura *(verifica BR-EMP-024)*
@@ -685,10 +690,18 @@ el turno y el control todavía retenidos hasta que termine de subir.
 DADO las instrucciones en la pantalla 4 CUANDO se pulsa Esc, pasan cuadros y se reanuda
 ENTONCES sigue la pantalla 4 y el mismo presupuesto de turno. DADO las instrucciones
 en pantalla ENTONCES su orden de dibujo está sobre la persiana y debajo de avisos y pausa;
-la interfaz empieza fuera del margen inferior y termina dentro del encuadre en 0,3 segundos
-reales. El fade in de la persiana baja pasa de negro a visible en 0,3 segundos reales. Un cuadro
-de 150 ms adelanta cada una sólo 1/30 de segundo. DADO las instrucciones de la jornada 2 en su
-pantalla 2 CUANDO se pulsa Esc y se reanuda ENTONCES sigue la pantalla 2.
+la interfaz empieza completamente fuera del margen derecho y termina en su lugar en 0,3 segundos
+reales con ease out: en intervalos iguales recorre cada vez menos distancia. CUANDO se elige
+«OK» ENTONCES sale completamente por el margen izquierdo con ease in: en intervalos iguales
+recorre cada vez más distancia. Hasta completar la salida NO aparecen la placa «NOCHE N» ni
+la subida de persiana. Repetir «OK» durante la salida anuncia una sola noche.
+El fondo de persiana conserva su posición y su fade in de negro a visible en 0,3 segundos reales.
+Un cuadro de 150 ms adelanta cada animación sólo 1/30 de segundo.
+DADO la entrada o la salida a mitad de recorrido CUANDO se pausa durante 120 segundos y se
+reanuda ENTONCES el marco conserva su posición durante la pausa y continúa sin saltar al final.
+DADO las instrucciones de la jornada 2 en su pantalla 2 CUANDO se pulsa Esc y se reanuda
+ENTONCES sigue la pantalla 2. DADO una jornada 1 a 4 retomada desde el menú CUANDO se muestran
+sus instrucciones ENTONCES repiten la entrada desde la derecha y conservan el mismo layout.
 
 ### AC-EMP-050 — Todas depende de lo declarado *(verifica BR-EMP-001)*
 
