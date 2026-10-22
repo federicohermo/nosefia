@@ -45,7 +45,7 @@ lugar = 5
 escala_visual = 0.833
 
 [node name="ManchaEnLaParedDelOtroInodoro" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 10.9, 1.7, 6.276)
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 10.9, 1.7, 6.267)
 editor_description = "Jornada 4. Caca, en la pared del fondo del primer cubículo, junto al otro inodoro. El disco va vertical: su arriba mira al cubículo."
 lugar = 6
 escala_visual = 0.5
