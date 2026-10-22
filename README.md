@@ -1,3 +1,5 @@
+> **Versión vigente:** [columnas y aire medidos](COLUMNAS.md). Los reportes siguientes son históricos.
+
 > **Versión vigente:** [aire protegido de laterales y cabeceras](AIRE.md), con las capturas de las dos regresiones. Los reportes de abajo son históricos.
 
 > **Corrección posterior de cabeceras:** [mediciones y capturas antes/después](CABECERAS.md). La galería de abajo conserva la primera versión del arreglo.

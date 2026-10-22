@@ -1,0 +1,370 @@
+{
+  "columnas-antes": {
+    "ritmos_mm": {
+      "Arvecor": 13.31973075865775,
+      "Marolini": 29.969930648799938,
+      "Terminator": 8.459806442262046,
+      "Zucarachas": 15.459775924689945,
+      "Progres": 6.529808044437091,
+      "Don Saturados": 6.699919700626944,
+      "Pepito": 25.879979133606067,
+      "Petisas": 16.930341720576227,
+      "Fernet God": 15.666574239730945,
+      "Malbardo": 24.524707347154408,
+      "Jorgillo": 28.35011482238814,
+      "Poético": 25.08974075316908
+    },
+    "union_mm": {
+      "A-oeste": 19.999742507928353,
+      "A-este": 19.999742507930574,
+      "B-oeste": 20.00021934509677,
+      "B-este": 20.000219345086112
+    },
+    "cabeceras": {
+      "A-norte": {
+        "margen_exterior_mm": 23.200294649124096,
+        "encuentro_mm": 10.000228881836215,
+        "ritmo_mm": 15.666574239730945
+      },
+      "A-sur": {
+        "margen_exterior_mm": 23.20700017166105,
+        "encuentro_mm": 9.953022003175022,
+        "ritmo_mm": 24.524707347154408
+      },
+      "B-norte": {
+        "margen_exterior_mm": 52.64892912291997,
+        "encuentro_mm": 10.010004043575119,
+        "ritmo_mm": 28.35011482238814
+      },
+      "B-sur": {
+        "margen_exterior_mm": 79.35896253967023,
+        "encuentro_mm": 21.24702930450395,
+        "ritmo_mm": 25.08974075316908
+      }
+    },
+    "cupos": {
+      "Actroncito": {
+        "principal": 5,
+        "total": 20
+      },
+      "Zucarachas": {
+        "principal": 5,
+        "total": 20
+      },
+      "Malbardo": {
+        "principal": 7,
+        "total": 28
+      },
+      "Progres": {
+        "principal": 12,
+        "total": 48
+      },
+      "Jorgillo": {
+        "principal": 3,
+        "total": 12
+      },
+      "Arvecor": {
+        "principal": 9,
+        "total": 36
+      },
+      "Pepito": {
+        "principal": 5,
+        "total": 20
+      },
+      "Pura-Cola": {
+        "principal": 5,
+        "total": 20
+      },
+      "Marolini": {
+        "principal": 5,
+        "total": 20
+      },
+      "Don Saturados": {
+        "principal": 6,
+        "total": 24
+      },
+      "Petisas": {
+        "principal": 6,
+        "total": 24
+      },
+      "Duronga": {
+        "principal": 7,
+        "total": 28
+      },
+      "Fernet God": {
+        "principal": 7,
+        "total": 28
+      },
+      "Mayonchis": {
+        "principal": 3,
+        "total": 12
+      },
+      "Terminator": {
+        "principal": 11,
+        "total": 44
+      },
+      "Poético": {
+        "principal": 4,
+        "total": 16
+      }
+    }
+  },
+  "columnas-despues": {
+    "ritmos_mm": {
+      "Arvecor": 14.999866485588237,
+      "Marolini": 34.999847412109816,
+      "Terminator": 14.91975784301222,
+      "Zucarachas": 34.99984741211004,
+      "Progres": 22.99976348876681,
+      "Don Saturados": 24.999976158146143,
+      "Pepito": 39.99996185302568,
+      "Petisas": 25.00009536743614,
+      "Fernet God": 20.728066563606983,
+      "Malbardo": 29.59990501403835,
+      "Jorgillo": 28.35011482238814,
+      "Poético": 25.08974075316908
+    },
+    "union_mm": {
+      "A-oeste": 60.739755630487835,
+      "A-este": 75.12998580933017,
+      "B-oeste": 70.6400871276771,
+      "B-este": 74.12004470825595
+    },
+    "cabeceras": {
+      "A-norte": {
+        "margen_exterior_mm": 78.38026951599097,
+        "encuentro_mm": 55.37033081054582,
+        "ritmo_mm": 20.728066563606983
+      },
+      "A-sur": {
+        "margen_exterior_mm": 78.98200181674908,
+        "encuentro_mm": 55.31799793243408,
+        "ritmo_mm": 29.59990501403835
+      },
+      "B-norte": {
+        "margen_exterior_mm": 52.64892912291997,
+        "encuentro_mm": 53.770065307615425,
+        "ritmo_mm": 28.35011482238814
+      },
+      "B-sur": {
+        "margen_exterior_mm": 79.35896253967023,
+        "encuentro_mm": 61.66696548461498,
+        "ritmo_mm": 25.08974075316908
+      }
+    },
+    "cupos": {
+      "Actroncito": {
+        "principal": 5,
+        "total": 20
+      },
+      "Zucarachas": {
+        "principal": 4,
+        "total": 16
+      },
+      "Malbardo": {
+        "principal": 6,
+        "total": 24
+      },
+      "Progres": {
+        "principal": 11,
+        "total": 44
+      },
+      "Jorgillo": {
+        "principal": 3,
+        "total": 12
+      },
+      "Arvecor": {
+        "principal": 8,
+        "total": 32
+      },
+      "Pepito": {
+        "principal": 5,
+        "total": 20
+      },
+      "Pura-Cola": {
+        "principal": 5,
+        "total": 20
+      },
+      "Marolini": {
+        "principal": 5,
+        "total": 20
+      },
+      "Don Saturados": {
+        "principal": 5,
+        "total": 20
+      },
+      "Petisas": {
+        "principal": 5,
+        "total": 20
+      },
+      "Duronga": {
+        "principal": 7,
+        "total": 28
+      },
+      "Fernet God": {
+        "principal": 6,
+        "total": 24
+      },
+      "Mayonchis": {
+        "principal": 3,
+        "total": 12
+      },
+      "Terminator": {
+        "principal": 11,
+        "total": 44
+      },
+      "Poético": {
+        "principal": 4,
+        "total": 16
+      }
+    }
+  },
+  "columnas-32": {
+    "ritmos_mm": {
+      "Arvecor": 14.999747276308012,
+      "Marolini": 34.99984741211004,
+      "Terminator": 14.60900902748205,
+      "Zucarachas": 34.99984741211004,
+      "Progres": 22.99988269805703,
+      "Don Saturados": 24.999976158136928,
+      "Pepito": 39.99996185302568,
+      "Petisas": 25.000095367425924,
+      "Fernet God": 19.96397972106903,
+      "Malbardo": 29.599994421005984,
+      "Jorgillo": 28.170108795168236,
+      "Poético": 25.089740753168638
+    },
+    "union_mm": {},
+    "cabeceras": {},
+    "cupos": {
+      "Actroncito": {
+        "principal": 5,
+        "total": 10
+      },
+      "Durextra": {
+        "principal": 7,
+        "total": 14
+      },
+      "Burbaloo": {
+        "principal": 4,
+        "total": 8
+      },
+      "Zucarachas": {
+        "principal": 5,
+        "total": 10
+      },
+      "Laysnnt": {
+        "principal": 5,
+        "total": 10
+      },
+      "Malbardo": {
+        "principal": 6,
+        "total": 12
+      },
+      "Progres": {
+        "principal": 10,
+        "total": 20
+      },
+      "Jorgillo": {
+        "principal": 3,
+        "total": 6
+      },
+      "Arvecor": {
+        "principal": 9,
+        "total": 18
+      },
+      "Chisitos": {
+        "principal": 5,
+        "total": 10
+      },
+      "Oremos": {
+        "principal": 4,
+        "total": 8
+      },
+      "Pepito": {
+        "principal": 5,
+        "total": 10
+      },
+      "Saladick": {
+        "principal": 7,
+        "total": 14
+      },
+      "Uakalas": {
+        "principal": 4,
+        "total": 8
+      },
+      "Pura-Cola": {
+        "principal": 5,
+        "total": 10
+      },
+      "Frot Lups": {
+        "principal": 4,
+        "total": 8
+      },
+      "Marolini": {
+        "principal": 5,
+        "total": 10
+      },
+      "Amargadito": {
+        "principal": 4,
+        "total": 8
+      },
+      "Cindolor": {
+        "principal": 4,
+        "total": 8
+      },
+      "Flim Pof": {
+        "principal": 4,
+        "total": 8
+      },
+      "Don Saturados": {
+        "principal": 5,
+        "total": 10
+      },
+      "Petisas": {
+        "principal": 6,
+        "total": 12
+      },
+      "Macumbas": {
+        "principal": 5,
+        "total": 10
+      },
+      "Cosa de Maní": {
+        "principal": 3,
+        "total": 6
+      },
+      "Duronga": {
+        "principal": 7,
+        "total": 14
+      },
+      "Fernet God": {
+        "principal": 6,
+        "total": 12
+      },
+      "Mayonchis": {
+        "principal": 3,
+        "total": 6
+      },
+      "Oaaaa": {
+        "principal": 6,
+        "total": 12
+      },
+      "Terminator": {
+        "principal": 6,
+        "total": 12
+      },
+      "Marranos": {
+        "principal": 5,
+        "total": 10
+      },
+      "Feel Ricky Fort": {
+        "principal": 5,
+        "total": 10
+      },
+      "Poético": {
+        "principal": 7,
+        "total": 14
+      }
+    }
+  }
+}
