@@ -24,7 +24,7 @@ from lib.gondola import (
 )
 from lib.reparto import PRODUCTOS, partes
 from lib.reparto_de_prueba import (
-    ESTANTES_DE_PRUEBA, bandas_del_nivel, bases_del_contenido,
+    ESTANTES_DE_PRUEBA, RETIROS_POR_ESTANTE_DE_PRUEBA, bandas_del_nivel, bases_del_contenido,
     validar_identidades_de_prueba,
     validar_reparto_de_prueba,
 )
@@ -171,7 +171,8 @@ def generar():
     resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
     for letra in sorted({partes(clave)[0] for clave in ESTANTES_DE_PRUEBA}):
         acomodar.acomodar_mueble(
-            letra, envases, resumen, ESTANTES_DE_PRUEBA, lambda letra: medir(letra, envases)
+            letra, envases, resumen, ESTANTES_DE_PRUEBA, lambda letra: medir(letra, envases),
+            retiros_por_estante=RETIROS_POR_ESTANTE_DE_PRUEBA,
         )
     if resumen["choques"]:
         raise ValueError(f"No se publica un reparto con choques: {resumen['choques']}")

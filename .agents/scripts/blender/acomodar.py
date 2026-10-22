@@ -470,7 +470,13 @@ def medir_encaje(estante, bm, arbol, hojas, posiciones):
     return desplazamiento_que_entra(desde, hasta, PASO_DEL_TANTEO, entra)
 
 
-def acomodar_mueble(letra, envases, resumen, estantes_declarados=ESTANTES, medidor=medir):
+def acomodar_mueble(
+    letra, envases, resumen, estantes_declarados=ESTANTES, medidor=medir,
+    retiros_por_estante=None,
+):
+    retiros = {} if retiros_por_estante is None else retiros_por_estante
+    if any(not math.isfinite(retiro) or retiro < 0 for retiro in retiros.values()):
+        raise ValueError("el retiro por estante debe ser finito y no negativo")
     objeto, bm, estantes = medidor(letra)
     propios = {c: e for c, e in estantes.items() if c in estantes_declarados}
     faltan = sorted(c for c in estantes_declarados if partes(c)[0] == letra and c not in estantes)
@@ -502,6 +508,9 @@ def acomodar_mueble(letra, envases, resumen, estantes_declarados=ESTANTES, medid
         largo = derecha - MARGEN - izquierda
         pedidos = [1 if t.fija else FILA_DE_ADELANTE_PEDIDA for t in reparto]
         cuentas = repartir(largo, de_estas)
+        retiro = retiros.get(clave, 0.0)
+        izquierda += retiro
+        largo -= 2 * retiro
         for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
             if cuenta < pedido:
                 resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
