@@ -555,7 +555,8 @@ func _preparar_lo_postergado() -> void:
 		pendientes.append_array(_cajas_de_productos)
 	if not pendientes.is_empty():
 		var capa := CanvasLayer.new()
-		capa.layer = 5
+		var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
+		capa.layer = persiana.layer + 1
 		var pantalla: PantallaDeCarga = PANTALLA_DE_CARGA.instantiate()
 		pantalla.presentacion = PantallaDeCarga.Presentacion.ENTRE_NOCHES
 		capa.add_child(pantalla)
