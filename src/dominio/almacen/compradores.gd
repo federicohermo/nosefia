@@ -18,15 +18,12 @@ extends RefCounted
 const DIALOGOS := preload("res://assets/dialogos/compradores_jornada_1.tres")
 const DIALOGOS_SEGUNDA := preload("res://assets/dialogos/compradores_jornada_2.tres")
 
-const JORNADA_DE_FEDE_Y_MIA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+const JORNADA_DE_FEDE_Y_MIA := ReglasDeLaPartida.PRIMERA_JORNADA + 1
 ## Las jornadas de Tin y Tia: `jornada → [llegada de Tin, límite de Tin, llegada de Tia, límite
 ## de Tia]`, cada hora como `Vector2i(hora, minuto)`.
 const HORARIOS_DE_TIN_Y_TIA: Dictionary[int, Array] = {
-	1: [Vector2i(21, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(6, 0)],
-	2: [Vector2i(21, 30), Vector2i(0, 10), Vector2i(3, 30), Vector2i(6, 10)],
-	3: [Vector2i(22, 30), Vector2i(1, 0), Vector2i(4, 30), Vector2i(7, 0)],
-	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
-	[Vector2i(22, 0), Vector2i(0, 0), Vector2i(4, 0), Vector2i(6, 0)],
+	ReglasDeLaPartida.PRIMERA_JORNADA:
+	[Vector2i(20, 30), Vector2i(23, 0), Vector2i(23, 30), Vector2i(2, 0)],
 }
 
 ## Cada fila es `[nombre, líneas del pedido, cuánto paga de más]`, y una línea es
@@ -37,7 +34,7 @@ const HORARIOS_DE_TIN_Y_TIA: Dictionary[int, Array] = {
 ## el día que un producto cambie de valor.
 const FILAS := [
 	["Marta", [[Producto.Id.ACTRONCITO, 2], [Producto.Id.ZUCARACHAS, 1]], 0],
-	["Rubén", [[Producto.Id.BURBALOO, 1], [Producto.Id.DUREXTRA, 2]], -500],
+	["Rubén", [[Producto.Id.JORGILLO, 1], [Producto.Id.DURONGA, 2]], -500],
 	["Nélida", [[Producto.Id.MALBARDO, 1], [Producto.Id.LAYSNNT, 1]], 300],
 	["El pibe del kiosco", [[Producto.Id.BURBALOO, 3]], 0],
 ]
@@ -103,8 +100,8 @@ static func segunda_jornada_definida() -> Array[Comprador]:
 	)
 	fede.personaje = DialogosDeCompradores.Personaje.FEDE
 	mia.personaje = DialogosDeCompradores.Personaje.MIA
-	fede.horario = Vector2(_desde_apertura(Vector2i(20, 30)), _desde_apertura(Vector2i(23, 30)))
-	mia.horario = Vector2(_desde_apertura(Vector2i(5, 0)), _desde_apertura(Vector2i(8, 0)))
+	fede.horario = Vector2(_desde_apertura(Vector2i(21, 15)), _desde_apertura(Vector2i(23, 45)))
+	mia.horario = Vector2(_desde_apertura(Vector2i(1, 0)), _desde_apertura(Vector2i(3, 30)))
 	return [fede, mia]
 
 

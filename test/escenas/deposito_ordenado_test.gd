@@ -435,7 +435,10 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		]
 	)
 	var partida: Partida = local.get("_partida")
-	for jornada in range(Compradores.JORNADA_DE_FEDE_Y_MIA, Compradores.JORNADA_DE_FEDE_Y_MIA + 2):
+	for jornada in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1,
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
+	):
 		for tarea in partida.obligatorias():
 			local.get("_reloj").completar(tarea)
 		RelojDePrueba.avanzar_turno(local.get("_reloj"), Reglas.DURACION_DEL_TURNO)
@@ -450,7 +453,7 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		for _cuadro in 4:
 			await get_tree().physics_frame
 		var esperada := NotaPegada.tareas_a_realizar(Apertura.obligatorias(jornada))
-		if jornada == Compradores.JORNADA_DE_FEDE_Y_MIA:
+		if jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 			assert_str(hoja.call("dato").renglones()[4]).is_equal("Tirar la basura")
 		assert_array(hoja.call("dato").renglones()).contains_exactly(esperada.renglones())
 		assert_str(hoja.get("renglones_del_papel").text).is_equal(

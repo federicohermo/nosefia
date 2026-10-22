@@ -26,7 +26,8 @@ func crear(padre: Node) -> Node3D:
 	_padre = padre
 	local = load("res://src/escenas/almacen.tscn").instantiate()
 	local.set(
-		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
 	local.set("compradores_de_la_apertura", _compradores)
 	padre.add_child(local)
@@ -56,7 +57,7 @@ func atenciones() -> Ventanilla:
 
 
 func llegar(mia: bool = false) -> void:
-	RelojDePrueba.avanzar_hasta(local.get("_reloj"), Vector2i(5, 0) if mia else Vector2i(20, 30))
+	RelojDePrueba.avanzar_hasta(local.get("_reloj"), Vector2i(1, 0) if mia else Vector2i(21, 15))
 	figura().stop()
 	await cuadros()
 	var entrada: Tween = puesto().get("_entrada")

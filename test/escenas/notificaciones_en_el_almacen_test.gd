@@ -8,7 +8,7 @@ func after_test() -> void:
 	get_tree().paused = false
 
 
-func _local(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> Node3D:
+func _local(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA) -> Node3D:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
 	local.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(local)
@@ -116,7 +116,7 @@ func test_todas_las_noches_y_reloj_apagado() -> void:  # AC-NTF-020, AC-NTF-023
 
 
 func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
-	var jornada := Compradores.JORNADA_DE_FEDE_Y_MIA
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 	var local := _local(jornada)
 	var reloj: RelojDelTurno = local.get("_reloj")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3660.0)
@@ -135,7 +135,7 @@ func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
 
 
 func test_saltar_directamente_hasta_cerrar_no_deja_cartel() -> void:  # AC-NTF-021, AC-NTF-022
-	var local := _local(Compradores.JORNADA_DE_FEDE_Y_MIA)
+	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	var reloj: RelojDelTurno = local.get("_reloj")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3660.0)
 	assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
@@ -144,7 +144,7 @@ func test_saltar_directamente_hasta_cerrar_no_deja_cartel() -> void:  # AC-NTF-0
 
 
 func test_pausar_antes_del_umbral_no_consume_ni_dispara() -> void:  # AC-NTF-023
-	var local := _local(Compradores.JORNADA_DE_FEDE_Y_MIA)
+	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	var reloj: RelojDelTurno = local.get("_reloj")
 	var restantes: Array[float] = []
 	reloj.tiempo_consumido.connect(func(restante: float) -> void: restantes.append(restante))
@@ -162,7 +162,7 @@ func test_pausar_antes_del_umbral_no_consume_ni_dispara() -> void:  # AC-NTF-023
 
 
 func test_solo_la_pista_anotada_avisa_sin_renovar_por_otros_resultados() -> void:  # AC-NTF-014
-	var jornada := Compradores.JORNADA_DE_FEDE_Y_MIA
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 	var local := _local(jornada)
 	var investigador: Investigador = local.get("_investigador")
 	var balde: ObjetoAgarrable = local.get_node("Objetos/Balde")
@@ -197,7 +197,7 @@ func test_solo_la_pista_anotada_avisa_sin_renovar_por_otros_resultados() -> void
 
 
 func test_cerrar_retira_la_pista_y_reabrir_no_la_recupera() -> void:  # AC-NTF-016
-	var jornada := Compradores.JORNADA_DE_FEDE_Y_MIA
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 	var local := _local(jornada)
 	var investigador: Investigador = local.get("_investigador")
 	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(

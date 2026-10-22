@@ -87,3 +87,13 @@ func test_todo_lo_que_se_pide_existe_en_el_catalogo() -> void:
 		)
 		for producto in pedido.productos():
 			assert_object(Catalogo.de(producto.id)).is_not_null()
+
+
+func test_las_jornadas_sin_agenda_propia_usan_el_padron() -> void:  # AC-CTR-001
+	for jornada in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA + 2, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
+	):
+		var compradores := Compradores.de_la_jornada(jornada)
+		assert_str(compradores[0].nombre()).is_equal("Marta")
+		for comprador in compradores:
+			assert_bool(comprador.tiene_horario()).is_false()

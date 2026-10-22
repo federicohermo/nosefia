@@ -174,7 +174,7 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:
 
 func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # AC-SHF-036
 	for jornada: int in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		ReglasDeLaPartida.PRIMERA_JORNADA, Compradores.JORNADA_DE_FEDE_Y_MIA + 1
 	):
 		var almacen := await _abrir(jornada, true)
 		var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -193,7 +193,7 @@ func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # A
 
 func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-038
 	for jornada: int in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		ReglasDeLaPartida.PRIMERA_JORNADA, Compradores.JORNADA_DE_FEDE_Y_MIA + 1
 	):
 		var almacen := await _abrir(jornada, true)
 		var reloj: RelojDelTurno = almacen.get("_reloj")

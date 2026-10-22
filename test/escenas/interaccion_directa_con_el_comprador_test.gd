@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const OBJETO := "res://src/escenas/objetos/objeto_agarrable.tscn"
+const TinYTia := preload("res://test/escenas/tin_y_tia.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacenes: Array[Node3D] = []
@@ -19,6 +20,7 @@ func after_test() -> void:
 func _abrir() -> Node3D:
 	var almacen: Node3D = load("res://src/escenas/almacen.tscn").instantiate()
 	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
+	almacen.set("compradores_de_la_apertura", TinYTia.en_cualquier_jornada)
 	_almacenes.append(almacen)
 	add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)
@@ -44,7 +46,7 @@ func test_el_primer_clic_muestra_la_primera_entrada_sin_saltarla() -> void:
 	var almacen := await _abrir()
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var atenciones: Ventanilla = almacen.get("_atenciones")
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(20, 30))
 	await _apuntar(almacen)
 	var jugador: Node3D = almacen.get_node("Jugador")
 	jugador.call("_leer_la_mira")
@@ -146,7 +148,7 @@ func test_la_recepcion_real_conserva_pedido_y_rechazo_y_vende_una_vez() -> void:
 
 func _una_entrada(almacen: Node3D) -> Atencion:
 	var atenciones: Ventanilla = almacen.get("_atenciones")
-	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(22, 0))
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(20, 30))
 	var comprador := atenciones.atencion().comprador()
 	var guion := DialogosDeCompradores.new()
 	guion.tin = PackedStringArray(["Inicial"])
@@ -230,13 +232,13 @@ func test_vencimiento_y_cierre_quitan_objetivo_y_atencion() -> void:
 	var objetivo: Node3D = puesto.get_node("Comprador/Objetivo")
 	_pulsar(almacen)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(0, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 0))
 	assert_bool(atendida.despachada()).is_true()
 	assert_bool(puesto.get("_abierta")).is_false()
 	objetivo.call("accionar")
 	assert_object(atendida.dialogo()).is_null()
 	assert_bool(puesto.get("_abierta")).is_false()
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(4, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	_pulsar(almacen)
 	assert_bool(puesto.get("_abierta")).is_true()
 	RelojDePrueba.avanzar_hasta(reloj, Vector2i(8, 0))
@@ -455,7 +457,7 @@ func test_la_retirada_no_conserva_objetivo_ni_contorno_y_cambia_la_figura() -> v
 	assert_object(contorno).is_not_null()
 	assert_int(objetivo.get("collision_layer")).is_equal(2)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(0, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 0))
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	jugador.call("_leer_la_mira")
@@ -468,7 +470,7 @@ func test_la_retirada_no_conserva_objetivo_ni_contorno_y_cambia_la_figura() -> v
 	for retirada: AnimatedSprite3D in retiradas:
 		assert_object(retirada.material_overlay).is_null()
 		assert_array(retirada.find_children("*", "CollisionObject3D", true, false)).is_empty()
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(4, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	await _apuntar(almacen)
 	jugador.call("_leer_la_mira")
 	assert_object(jugador.call("enfocado")).is_same(objetivo)
@@ -481,7 +483,8 @@ func test_la_retirada_no_conserva_objetivo_ni_contorno_y_cambia_la_figura() -> v
 # AC-PLY-092, AC-PLY-055, AC-PLY-056
 func test_la_consulta_generica_no_es_una_barrera_y_se_apaga_en_fisico() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA + 1)
+	almacen.set("compradores_de_la_apertura", Compradores.de_la_jornada)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
@@ -515,6 +518,7 @@ func test_la_consulta_generica_no_es_una_barrera_y_se_apaga_en_fisico() -> void:
 	assert_bool(puesto.get("panel").visible).is_true()
 	assert_bool(jugador.suspendido()).is_true()
 	puesto.call("cerrar")
+	almacen.set("compradores_de_la_apertura", TinYTia.en_cualquier_jornada)
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	for _cuadro in 3:
 		await get_tree().physics_frame

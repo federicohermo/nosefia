@@ -30,7 +30,7 @@ func test_mal_atendido_es_el_que_llego_no_se_vendio_y_se_fue() -> void:  # AC-EM
 
 
 func test_el_que_se_cansa_de_esperar_cuenta_y_el_que_no_llego_no() -> void:  # AC-EMP-078
-	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 	var tarea := TareaDeAtender.new(
 		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	)

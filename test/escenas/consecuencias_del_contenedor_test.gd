@@ -30,7 +30,8 @@ func after_test() -> void:
 func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set(
-		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")

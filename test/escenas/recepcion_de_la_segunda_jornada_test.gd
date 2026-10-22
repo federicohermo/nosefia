@@ -153,7 +153,7 @@ func test_ambos_ordenes_con_recepcion_real_y_registro_de_ambas_compras() -> void
 		var registro: RegistroDeVentas = almacen.get("_computadora").call("registro")
 		var compras: Array[bool] = []
 		almacen.get("_atenciones").compra_realizada.connect(func() -> void: compras.append(true))
-		var fede := _presentar(almacen, Vector2i(20, 30))
+		var fede := _presentar(almacen, Vector2i(21, 15))
 		var duronga := Catalogo.de(Producto.Id.DURONGA)
 		var manual: Node3D = almacen.get("_reposicion_manual")
 		var inventario: Inventario = fede.get("_inventario")
@@ -164,7 +164,7 @@ func test_ambos_ordenes_con_recepcion_real_y_registro_de_ambas_compras() -> void
 			registro.sumar(producto)
 		assert_bool(registro.completada()).is_false()
 		assert_bool(atender.completada()).is_false()
-		var mia := _presentar(almacen, Vector2i(5, 0))
+		var mia := _presentar(almacen, Vector2i(1, 0))
 		assert_bool(registro.completada()).is_false()
 		_vender(almacen, mia, ticket_primero, false)
 		assert_bool(atender.completada()).is_true()
@@ -181,7 +181,7 @@ func test_ambos_ordenes_con_recepcion_real_y_registro_de_ambas_compras() -> void
 
 func test_rechazo_conserva_cuerpo_y_pedido_en_la_mano() -> void:  # AC-CTR-055, AC-STK-084
 	var almacen := await _abrir()
-	var atendida := _presentar(almacen, Vector2i(20, 30))
+	var atendida := _presentar(almacen, Vector2i(21, 15))
 	var pedido := atendida.comprador().pedido()
 	var agarre: Agarre = almacen.get("_agarre")
 	var papel := _ticket(almacen, [])
@@ -198,24 +198,26 @@ func test_registrar_espera_mia_y_cero_solo_cuenta_al_cierre() -> void:  # AC-STK
 	var atender: TareaDeAtender = almacen.get("_atenciones").call("tarea")
 	var registro: RegistroDeVentas = almacen.get("_computadora").call("registro")
 	assert_bool(registro.completada()).is_false()
-	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(5, 0))
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(1, 0))
 	assert_bool(registro.completada()).is_false()
 	registro.sumar(Catalogo.de(Producto.Id.POETICO))
 	assert_bool(registro.completada()).is_false()
 	registro.restar(Catalogo.de(Producto.Id.POETICO))
-	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(8, 0))
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(3, 30))
 	assert_bool(atender.compras_cerradas()).is_true()
 	assert_bool(atender.completada()).is_false()
 	assert_bool(registro.completada()).is_false()
 	assert_bool(registro.completada(true)).is_true()
 	var registrar: Tarea = almacen.get("_reloj").call("obligatoria", Tarea.Tipo.REGISTRAR)
+	assert_bool(registrar.completada()).is_false()
+	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 	assert_bool(registrar.completada()).is_true()
 
 
 # AC-STK-083
 func test_fede_vendido_y_mia_abierta_o_vencida_exigen_solo_sus_ventas_cerradas() -> void:
 	var almacen := await _abrir()
-	var fede := _presentar(almacen, Vector2i(20, 30))
+	var fede := _presentar(almacen, Vector2i(21, 15))
 	_vender(almacen, fede, false, false)
 	var registro: RegistroDeVentas = almacen.get("_computadora").call("registro")
 	for producto in fede.comprador().pedido().productos():
@@ -229,12 +231,12 @@ func test_fede_vendido_y_mia_abierta_o_vencida_exigen_solo_sus_ventas_cerradas()
 	assert_bool(registro.completada()).is_false()
 	for producto in futura.pedido().productos():
 		registro.restar(producto)
-	var mia := _presentar(almacen, Vector2i(5, 0))
+	var mia := _presentar(almacen, Vector2i(1, 0))
 	assert_bool(registro.completada()).is_false()
 	for producto in mia.comprador().pedido().productos():
 		registro.sumar(producto)
 	assert_bool(registro.completada()).is_false()
-	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(8, 0))
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(3, 30))
 	assert_bool(registro.completada(true)).is_false()
 	for producto in mia.comprador().pedido().productos():
 		registro.restar(producto)
@@ -242,10 +244,10 @@ func test_fede_vendido_y_mia_abierta_o_vencida_exigen_solo_sus_ventas_cerradas()
 	assert_bool(registro.completada()).is_true()
 
 
-func test_compra_a_075959_conserva_venta_y_despedida_al_cierre() -> void:  # AC-CTR-054
+func test_compra_a_032959_conserva_venta_y_despedida_al_vencer_el_limite() -> void:  # AC-CTR-062
 	var almacen := await _abrir()
-	var mia := _presentar(almacen, Vector2i(5, 0))
-	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(7, 59))
+	var mia := _presentar(almacen, Vector2i(1, 0))
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(3, 29))
 	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), 59.0)
 	var agarre: Agarre = almacen.get("_agarre")
 	var productos := mia.comprador().pedido().productos()
@@ -260,13 +262,12 @@ func test_compra_a_075959_conserva_venta_y_despedida_al_cierre() -> void:  # AC-
 	assert_bool(mia.vendida()).is_true()
 	assert_object(mia.dialogo()).is_same(despedida)
 	assert_object(agarre.cuerpo_sostenido()).is_null()
-	var pantalla: CanvasLayer = almacen.get("_pantalla")
-	assert_bool(pantalla.visible).is_true()
+	assert_bool(mia.despachada()).is_false()
 
 
 func test_la_compra_parcial_vencida_conserva_unidades_reales_y_sus_destinos() -> void:  # AC-STK-082
 	var almacen := await _abrir()
-	var atendida := _presentar(almacen, Vector2i(20, 30))
+	var atendida := _presentar(almacen, Vector2i(21, 15))
 	var inventario: Inventario = atendida.get("_inventario")
 	var agarre: Agarre = almacen.get("_agarre")
 	var manual: Node3D = almacen.get("_reposicion_manual")
@@ -283,7 +284,7 @@ func test_la_compra_parcial_vencida_conserva_unidades_reales_y_sus_destinos() ->
 		cantidades.append(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO))
 		_pulsar(almacen)
 		assert_bool(cuerpo.visible).is_false()
-	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(23, 30))
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(23, 45))
 	for _cuadro in 90:
 		await get_tree().physics_frame
 	assert_bool(is_instance_valid(ticket)).is_false()

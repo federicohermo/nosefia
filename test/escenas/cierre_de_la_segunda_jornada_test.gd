@@ -64,7 +64,7 @@ func _q() -> InputEventAction:
 
 
 func _segunda_con(pistas: Array[String]) -> Partida:
-	var partida := Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA})
+	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1})
 	partida.abrir_la_jornada()
 	for pista: String in pistas:
 		partida.expediente.registrar(pista)

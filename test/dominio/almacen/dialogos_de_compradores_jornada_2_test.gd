@@ -118,13 +118,13 @@ func test_cada_atencion_tiene_cursor_independiente_del_recurso_compartido() -> v
 
 # AC-CTR-001 AC-CTR-057 AC-CTR-041
 func test_la_seleccion_productiva_de_jornada_dos_usa_su_fabrica_y_guion() -> void:
-	var compradores := Compradores.de_la_jornada(5)
+	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_int(compradores.size()).is_equal(2)
 	assert_str(compradores[0].nombre()).is_equal("Fede")
 	assert_str(compradores[1].nombre()).is_equal("Mía")
 	var guion := _guion()
 	for comprador: Comprador in compradores:
 		assert_object(comprador.dialogos).is_same(guion)
-	var nuevos := Compradores.de_la_jornada(5)
+	var nuevos := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_object(nuevos[0]).is_not_same(compradores[0])
 	assert_object(nuevos[0].pedido()).is_not_same(compradores[0].pedido())
