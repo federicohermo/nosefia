@@ -224,8 +224,23 @@ func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC
 
 func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:  # AC-EMP-046
 	for caso: Array in [
-		[1, 1, ["J1_FotoReloj", "J1_Foto02"]],
-		[2, 0, ["J2_FotoGondolas", "J1_Foto07"]],
+		[
+			1,
+			1,
+			["J1_FotoReloj", "J1_Foto02"],
+			["Reloj", "-Sector de ventas", "Listas de tareas a realizar", "-Sector de ventas"]
+		],
+		[
+			2,
+			0,
+			["J2_FotoGondolas", "J1_Foto07"],
+			[
+				"Góndolas",
+				"-Sector de ventas",
+				"Estantería con cajas contenedoras",
+				"-Sector de depósito"
+			]
+		],
 	]:
 		var pantalla := _pantalla()
 		pantalla.mostrar(_mensajes_de(caso[0]))
@@ -258,15 +273,21 @@ func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:
 		assert_float(derecha.end.x).is_less_equal(PantallaDeInstrucciones.ANCHO_DEL_TEXTO)
 		for foto in fotos:
 			assert_int(foto.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
-			var leyendas := 0
-			for texto: RichTextLabel in textos:
-				if texto.position.y >= foto.get_rect().end.y:
-					if (
-						texto.position.x >= foto.position.x - 6.0
-						and texto.position.x < foto.get_rect().end.x
-					):
-						leyendas += 1
-			assert_int(leyendas).is_greater_equal(1)
+		var leyendas: Array[String] = []
+		var rectangulos: Array[Rect2] = []
+		var limites := Rect2(Vector2.ZERO, contenido.size)
+		for texto: RichTextLabel in textos:
+			if texto == cuerpo:
+				continue
+			leyendas.append(texto.get_parsed_text())
+			var rectangulo := texto.get_rect()
+			assert_bool(limites.encloses(rectangulo)).is_true()
+			for foto in fotos:
+				assert_bool(rectangulo.intersects(foto.get_rect())).is_false()
+			for anterior in rectangulos:
+				assert_bool(rectangulo.intersects(anterior)).is_false()
+			rectangulos.append(rectangulo)
+		assert_array(leyendas).contains_exactly_in_any_order(caso[3])
 
 
 func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  # AC-EMP-046
