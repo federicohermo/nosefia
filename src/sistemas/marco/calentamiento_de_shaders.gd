@@ -43,6 +43,10 @@ var _objetos: Array[GeometryInstance3D] = []
 ## Lo que estaba oculto también se dibuja, porque aparece después en medio del juego. Al terminar
 ## vuelve a quedar oculto.
 var _ocultos: Array[GeometryInstance3D] = []
+## Un sprite sin cuadros no dibuja nada, y el comprador recibe los suyos al llegar. Su material
+## no depende de la textura: con unos prestados compila el mismo programa. Al terminar se los
+## devuelve vacíos.
+var _sin_cuadros: Array[AnimatedSprite3D] = []
 var _vistos: Dictionary = {}
 var _total := 0
 ## Con cola, el progreso es tiempo sobre tiempo estimado: destapar y enlazar no duran lo mismo,
@@ -117,6 +121,9 @@ func calentar(escena: Node3D) -> void:
 		# producción. Dibujarlo acá compilaría variantes que nunca aparecen en la partida.
 		if objeto.is_in_group(&"geometria_de_referencia"):
 			continue
+		if objeto is AnimatedSprite3D and (objeto as AnimatedSprite3D).sprite_frames == null:
+			(objeto as AnimatedSprite3D).sprite_frames = _cuadros_prestados()
+			_sin_cuadros.append(objeto)
 		var suya := _caja_en_mundo(objeto)
 		caja = suya if _pendientes.is_empty() else caja.merge(suya)
 		if not objeto.visible:
@@ -166,6 +173,14 @@ func calentar_copias(escena: Node3D, cuerpos: Array[Node3D]) -> void:
 	_camara.make_current()
 	_preparar_contornos()
 	set_process(true)
+
+
+static func _cuadros_prestados() -> SpriteFrames:
+	var imagen := Image.create(1, 1, false, Image.FORMAT_RGBA8)
+	imagen.fill(Color.WHITE)
+	var cuadros := SpriteFrames.new()
+	cuadros.add_frame(&"default", ImageTexture.create_from_image(imagen))
+	return cuadros
 
 
 func _tomar_luces_y_sondas(escena: Node3D) -> void:
@@ -315,6 +330,12 @@ func _preparar_contornos() -> void:
 			add_child(marco)
 			marco.enfocar(objetivo as Node3D)
 			_marcos.append(marco)
+	# El comprador entra al grupo recién al llegar: su silueta se prepara por su dibujo.
+	for sprite: AnimatedSprite3D in _sin_cuadros:
+		var marco := MarcoDelObjetivo.new()
+		add_child(marco)
+		marco.enfocar(sprite)
+		_marcos.append(marco)
 	_agregar_muestras()
 	_contornos_listos = true
 
@@ -904,6 +925,10 @@ func _restaurar_escena() -> void:
 	for objeto: GeometryInstance3D in _objetos:
 		if is_instance_valid(objeto):
 			objeto.visible = not _ocultos.has(objeto)
+	for sprite: AnimatedSprite3D in _sin_cuadros:
+		if is_instance_valid(sprite):
+			sprite.sprite_frames = null
+	_sin_cuadros.clear()
 	for muestra: GeometryInstance3D in _muestras:
 		muestra.hide()
 		muestra.queue_free()

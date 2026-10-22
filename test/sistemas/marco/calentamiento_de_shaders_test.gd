@@ -149,6 +149,53 @@ func test_lo_oculto_se_dibuja_y_vuelve_a_quedar_oculto() -> void:
 	assert_int(_visibles(escena)).is_equal(CUANTOS - 1)
 
 
+## Un comprador recibe sus cuadros al llegar. Sin ellos, el calentamiento no dibujaba nada y el
+## primero de la noche compilaba su material y su silueta en medio del juego.
+func _sprite_sin_cuadros(escena: Node3D) -> AnimatedSprite3D:
+	var sprite := AnimatedSprite3D.new()
+	sprite.visible = false
+	escena.add_child(sprite)
+	return sprite
+
+
+func test_un_sprite_sin_cuadros_se_dibuja_y_vuelve_a_quedar_sin_ellos() -> void:
+	var escena := _escena()
+	var sprite := _sprite_sin_cuadros(escena)
+	var calentamiento := _calentamiento()
+	var se_dibujo := [false]
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			se_dibujo[0] = (
+				se_dibujo[0]
+				or (
+					sprite.visible
+					and sprite.sprite_frames != null
+					and sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+				)
+			)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_bool(se_dibujo[0]).is_true()
+	assert_object(sprite.sprite_frames).is_null()
+	assert_bool(sprite.visible).is_false()
+
+
+func test_la_silueta_de_un_sprite_se_dibuja_antes_de_jugar_y_se_retira_al_terminar() -> void:
+	var escena := _escena()
+	var sprite := _sprite_sin_cuadros(escena)
+	var calentamiento := _calentamiento()
+	var con_silueta := [false]
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			con_silueta[0] = con_silueta[0] or (sprite.visible and sprite.material_overlay != null)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_bool(con_silueta[0]).is_true()
+	assert_object(sprite.material_overlay).is_null()
+
+
 func test_el_modelo_reemplazado_no_se_destapa_durante_el_calentamiento() -> void:
 	var escena := _escena()
 	var referencia := escena.get_child(0) as MeshInstance3D
