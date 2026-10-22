@@ -1,3 +1,5 @@
+> **Corrección posterior de cabeceras:** [mediciones y capturas antes/después](CABECERAS.md). La galería de abajo conserva la primera versión del arreglo.
+
 # Márgenes de las jornadas de prueba
 
 Capturas del juego real en Godot 4.7.2 `nosefia_classdb_1`, renderizador Compatibility.

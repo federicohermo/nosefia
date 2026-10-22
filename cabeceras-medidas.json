@@ -1,0 +1,348 @@
+{
+  "cabeceras-antes": {
+    "Fernet God": {
+      "niveles": [
+        {
+          "altura": 0.32,
+          "columnas": 7,
+          "entre_columnas_mm": 5.485266447067982,
+          "contra_otra_cara_mm": 19.610166549676233,
+          "borde_frontal": -4.16120004653931
+        },
+        {
+          "altura": 0.793,
+          "columnas": 7,
+          "entre_columnas_mm": 5.485266447067982,
+          "contra_otra_cara_mm": 19.610166549676233,
+          "borde_frontal": -4.16120004653931
+        },
+        {
+          "altura": 1.266,
+          "columnas": 7,
+          "entre_columnas_mm": 5.485467612743989,
+          "contra_otra_cara_mm": 20.0603008270262,
+          "borde_frontal": -4.16120004653931
+        },
+        {
+          "altura": 1.739,
+          "columnas": 7,
+          "entre_columnas_mm": 5.485467612743989,
+          "contra_otra_cara_mm": 20.0603008270262,
+          "borde_frontal": -4.16120004653931
+        }
+      ],
+      "entre_filas_mm": 20.000457763678092
+    },
+    "Malbardo": {
+      "niveles": [
+        {
+          "altura": 0.32,
+          "columnas": 7,
+          "entre_columnas_mm": 14.879900962114181,
+          "contra_otra_cara_mm": 7.952988147733015,
+          "borde_frontal": -0.7666720151901244
+        },
+        {
+          "altura": 0.793,
+          "columnas": 7,
+          "entre_columnas_mm": 14.879900962114181,
+          "contra_otra_cara_mm": 7.952988147733015,
+          "borde_frontal": -0.7666720151901244
+        },
+        {
+          "altura": 1.266,
+          "columnas": 7,
+          "entre_columnas_mm": 15.486985445021986,
+          "contra_otra_cara_mm": 7.9529881477371225,
+          "borde_frontal": -0.7648510336875914
+        },
+        {
+          "altura": 1.739,
+          "columnas": 7,
+          "entre_columnas_mm": 15.486985445021986,
+          "contra_otra_cara_mm": 7.9529881477371225,
+          "borde_frontal": -0.7648510336875914
+        }
+      ],
+      "entre_filas_mm": 19.943058490753394
+    },
+    "Jorgillo": {
+      "niveles": [
+        {
+          "altura": 0.32,
+          "columnas": 3,
+          "entre_columnas_mm": 27.300119400018197,
+          "contra_otra_cara_mm": 8.02016258239481,
+          "borde_frontal": -4.11970996856689
+        },
+        {
+          "altura": 0.793,
+          "columnas": 3,
+          "entre_columnas_mm": 27.300119400018197,
+          "contra_otra_cara_mm": 8.02016258239481,
+          "borde_frontal": -4.11970996856689
+        },
+        {
+          "altura": 1.266,
+          "columnas": 3,
+          "entre_columnas_mm": 24.120092391968218,
+          "contra_otra_cara_mm": 8.01992416381482,
+          "borde_frontal": -4.11652994155884
+        },
+        {
+          "altura": 1.739,
+          "columnas": 3,
+          "entre_columnas_mm": 24.120092391968218,
+          "contra_otra_cara_mm": 8.01992416381482,
+          "borde_frontal": -4.11652994155884
+        }
+      ],
+      "entre_filas_mm": 20.030498504633343
+    },
+    "Poético": {
+      "niveles": [
+        {
+          "altura": 0.32,
+          "columnas": 4,
+          "entre_columnas_mm": 25.08974075316908,
+          "contra_otra_cara_mm": 11.24703884124495,
+          "borde_frontal": -0.7200130224227901
+        },
+        {
+          "altura": 0.793,
+          "columnas": 4,
+          "entre_columnas_mm": 25.08974075316908,
+          "contra_otra_cara_mm": 11.24703884124495,
+          "borde_frontal": -0.7200130224227901
+        },
+        {
+          "altura": 1.266,
+          "columnas": 4,
+          "entre_columnas_mm": 25.08974075316908,
+          "contra_otra_cara_mm": 11.24703884124495,
+          "borde_frontal": -0.7200130224227901
+        },
+        {
+          "altura": 1.739,
+          "columnas": 4,
+          "entre_columnas_mm": 25.08974075316908,
+          "contra_otra_cara_mm": 11.24703884124495,
+          "borde_frontal": -0.7200130224227901
+        }
+      ],
+      "entre_filas_mm": null
+    }
+  },
+  "cabeceras-despues": {
+    "Fernet God": {
+      "niveles": [
+        {
+          "altura": 0.32,
+          "columnas": 7,
+          "entre_columnas_mm": 20.72796970605878,
+          "contra_otra_cara_mm": 39.72029685973616,
+          "borde_frontal": -4.16120004653931
+        },
+        {
+          "altura": 0.793,
+          "columnas": 7,
+          "entre_columnas_mm": 20.72796970605878,
+          "contra_otra_cara_mm": 39.72029685973616,
+          "borde_frontal": -4.16120004653931
+        },
+        {
+          "altura": 1.266,
+          "columnas": 7,
+          "entre_columnas_mm": 20.72796970605878,
+          "contra_otra_cara_mm": 36.15021705627603,
+          "borde_frontal": -4.16120004653931
+        },
+        {
+          "altura": 1.739,
+          "columnas": 7,
+          "entre_columnas_mm": 20.72796970605878,
+          "contra_otra_cara_mm": 36.15021705627603,
+          "borde_frontal": -4.16120004653931
+        }
+      ],
+      "entre_filas_mm": 50.00042915344815
+    },
+    "Malbardo": {
+      "niveles": [
+        {
+          "altura": 0.32,
+          "columnas": 7,
+          "entre_columnas_mm": 29.599908739328203,
+          "contra_otra_cara_mm": 13.193011283876038,
+          "borde_frontal": -0.7666720151901244
+        },
+        {
+          "altura": 0.793,
+          "columnas": 7,
+          "entre_columnas_mm": 29.599908739328203,
+          "contra_otra_cara_mm": 13.193011283876038,
+          "borde_frontal": -0.7666720151901244
+        },
+        {
+          "altura": 1.266,
+          "columnas": 7,
+          "entre_columnas_mm": 29.599908739328203,
+          "contra_otra_cara_mm": 12.131035327908018,
+          "borde_frontal": -0.7648510336875914
+        },
+        {
+          "altura": 1.739,
+          "columnas": 7,
+          "entre_columnas_mm": 29.599908739328203,
+          "contra_otra_cara_mm": 12.131035327908018,
+          "borde_frontal": -0.7648510336875914
+        }
+      ],
+      "entre_filas_mm": 55.90003728866544
+    },
+    "Jorgillo": {
+      "niveles": [
+        {
+          "altura": 0.32,
+          "columnas": 3,
+          "entre_columnas_mm": 28.35011482238814,
+          "contra_otra_cara_mm": 20.009994506835064,
+          "borde_frontal": -4.11970996856689
+        },
+        {
+          "altura": 0.793,
+          "columnas": 3,
+          "entre_columnas_mm": 28.35011482238814,
+          "contra_otra_cara_mm": 20.009994506835064,
+          "borde_frontal": -4.11970996856689
+        },
+        {
+          "altura": 1.266,
+          "columnas": 3,
+          "entre_columnas_mm": 28.35011482238814,
+          "contra_otra_cara_mm": 10.529994964605397,
+          "borde_frontal": -4.11652994155884
+        },
+        {
+          "altura": 1.739,
+          "columnas": 3,
+          "entre_columnas_mm": 28.35011482238814,
+          "contra_otra_cara_mm": 10.529994964605397,
+          "borde_frontal": -4.11652994155884
+        }
+      ],
+      "entre_filas_mm": 56.40029907226385
+    },
+    "Poético": {
+      "niveles": [
+        {
+          "altura": 0.32,
+          "columnas": 4,
+          "entre_columnas_mm": 25.08974075316908,
+          "contra_otra_cara_mm": 40.14694690704507,
+          "borde_frontal": -0.7200130224227901
+        },
+        {
+          "altura": 0.793,
+          "columnas": 4,
+          "entre_columnas_mm": 25.08974075316908,
+          "contra_otra_cara_mm": 40.14694690704507,
+          "borde_frontal": -0.7200130224227901
+        },
+        {
+          "altura": 1.266,
+          "columnas": 4,
+          "entre_columnas_mm": 25.08974075316908,
+          "contra_otra_cara_mm": 28.056979179385046,
+          "borde_frontal": -0.7200130224227901
+        },
+        {
+          "altura": 1.739,
+          "columnas": 4,
+          "entre_columnas_mm": 25.08974075316908,
+          "contra_otra_cara_mm": 28.056979179385046,
+          "borde_frontal": -0.7200130224227901
+        }
+      ],
+      "entre_filas_mm": null
+    }
+  },
+  "cabeceras-32": {
+    "Fernet God": {
+      "niveles": [
+        {
+          "altura": 0.321,
+          "columnas": 6,
+          "entre_columnas_mm": 19.96397972106903,
+          "contra_otra_cara_mm": 56.44011497497783,
+          "borde_frontal": -4.16120004653931
+        },
+        {
+          "altura": 0.793,
+          "columnas": 6,
+          "entre_columnas_mm": 19.96397972106903,
+          "contra_otra_cara_mm": 56.44011497497783,
+          "borde_frontal": -4.16120004653931
+        }
+      ],
+      "entre_filas_mm": 50.00019073486817
+    },
+    "Malbardo": {
+      "niveles": [
+        {
+          "altura": 1.266,
+          "columnas": 6,
+          "entre_columnas_mm": 29.599994421005984,
+          "contra_otra_cara_mm": 49.09896850585799,
+          "borde_frontal": -0.7648510336875914
+        },
+        {
+          "altura": 1.739,
+          "columnas": 6,
+          "entre_columnas_mm": 29.600009322166223,
+          "contra_otra_cara_mm": 49.09896850585799,
+          "borde_frontal": -0.7648510336875914
+        }
+      ],
+      "entre_filas_mm": 55.900037288666326
+    },
+    "Jorgillo": {
+      "niveles": [
+        {
+          "altura": 1.268,
+          "columnas": 3,
+          "entre_columnas_mm": 28.170108795168236,
+          "contra_otra_cara_mm": 41.46003723144533,
+          "borde_frontal": -4.11652994155884
+        },
+        {
+          "altura": 1.74,
+          "columnas": 3,
+          "entre_columnas_mm": 28.170108795168236,
+          "contra_otra_cara_mm": 41.46003723144533,
+          "borde_frontal": -4.11652994155884
+        }
+      ],
+      "entre_filas_mm": 56.40029907226341
+    },
+    "Poético": {
+      "niveles": [
+        {
+          "altura": 0.328,
+          "columnas": 7,
+          "entre_columnas_mm": 25.089740753168638,
+          "contra_otra_cara_mm": 36.5200042724593,
+          "borde_frontal": -7.212950229644776
+        },
+        {
+          "altura": 0.801,
+          "columnas": 7,
+          "entre_columnas_mm": 25.089740753168638,
+          "contra_otra_cara_mm": 36.5200042724593,
+          "borde_frontal": -7.212950229644776
+        }
+      ],
+      "entre_filas_mm": null
+    }
+  }
+}
