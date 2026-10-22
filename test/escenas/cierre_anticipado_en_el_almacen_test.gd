@@ -307,6 +307,7 @@ func test_el_cierre_real_descarta_la_espera_y_la_noche_siguiente_avisa() -> void
 		assert_array(_textos(almacen)).is_empty()
 		computadora.pedir_cerrar()
 		assert_array(_textos(almacen)).is_equal([AVISO])
+		await get_tree().process_frame
 
 
 func test_completar_solo_al_cerrar_no_avisa_que_se_puede_salir() -> void:  # AC-NTF-028, AC-NTF-031
