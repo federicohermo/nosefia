@@ -71,6 +71,28 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	_comprobar_planilla_en_cero(almacen)
 
 
+# AC-SHF-008
+func test_el_contador_sigue_la_noche_vendiendo_de_la_gondola_y_anotando_cada_venta() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
+	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await _atender(almacen, true)
+	await _reponer(almacen)
+	_comprobar_contador(almacen)
+	await _limpiar(almacen)
+	_comprobar_contador(almacen)
+	await _ordenar_las_cajas(almacen)
+	_comprobar_contador(almacen)
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	assert_bool(reloj.corriendo()).is_true()
+	assert_int(_cumplidas(reloj)).is_equal(
+		Apertura.cantidad_de_obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	)
+
+
 ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
 ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
 func _completos_al_abrir(almacen: Node3D, jornada: int, azar: RandomNumberGenerator) -> int:
@@ -261,6 +283,21 @@ func _registrar(almacen: Node3D) -> void:
 	escritorio.call("cerrar")
 
 
+## Anota en la planilla lo que se le vendió a ese comprador, con los botones de la computadora.
+func _anotar(almacen: Node3D, comprador: Comprador) -> void:
+	var escritorio: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
+	escritorio.call(ReglasDeLosObjetos.METODO_ACCIONAR)
+	await get_tree().process_frame
+	var pantalla: PantallaDeComputadora = escritorio.get("pantalla")
+	var filas: Container = pantalla.caja().get("_filas")
+	var productos: Array[Producto] = almacen.get("_computadora").registro().productos()
+	for indice in productos.size():
+		for unidad in comprador.pedido().unidades_de(productos[indice]):
+			_boton_de_la_fila(filas, indice, 5).pressed.emit()
+	_comprobar_contador(almacen)
+	escritorio.call("cerrar")
+
+
 ## Los botones de una fila de la planilla: «−» en la columna 3 y «+» en la 5.
 func _boton_de_la_fila(filas: Node, indice: int, columna: int) -> Button:
 	return filas.get_child(indice).get_child(0).get_child(columna)
@@ -276,7 +313,8 @@ func _pulsar_ventanilla(ventanilla: Node3D) -> void:
 		ventanilla.get_node("Comprador/Objetivo").call("accionar")
 
 
-func _atender(almacen: Node3D) -> void:
+## Con `de_la_gondola`, cada unidad sale de un casillero y cada venta se anota apenas se cobra.
+func _atender(almacen: Node3D, de_la_gondola: bool = false) -> void:
 	var ventanilla: Node3D = almacen.get_node("Estructura/Ventanilla")
 	var panel: PanelDeLaVentanilla = ventanilla.get("panel")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -298,7 +336,16 @@ func _atender(almacen: Node3D) -> void:
 		caja.pedir_borrar()
 		for producto in atendida.comprador().pedido().productos():
 			for _unidad in atendida.comprador().pedido().unidades_de(producto):
-				almacen.get("_reposicion_manual").retirar(producto.id)
+				var puesto: Node3D = almacen.get("_reposicion_manual")
+				var estante: Estante = almacen.get("_repositor").estante()
+				if de_la_gondola:
+					puesto.call(
+						"agarrar_de_la_gondola",
+						producto.id,
+						estante.casilleros_ocupados(producto)[0]
+					)
+				else:
+					puesto.retirar(producto.id)
 				caja.pedir_anotar(agarre.manos().sostenido())
 				_pulsar_ventanilla(ventanilla)
 		caja.pedir_imprimir()
@@ -313,6 +360,9 @@ func _atender(almacen: Node3D) -> void:
 			if atenciones.puede_abandonar():
 				break
 		ventanilla.call("cerrar")
+		_comprobar_contador(almacen)
+		if de_la_gondola:
+			await _anotar(almacen, atendida.comprador())
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
