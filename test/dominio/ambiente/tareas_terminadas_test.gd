@@ -103,11 +103,20 @@ func test_la_computadora_demora_el_aviso_hasta_salir() -> void:  # AC-NTF-032
 	)
 	estado.avanzar(Notificaciones.DURACION - 1.0)
 	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.TAREAS_TERMINADAS])
+	estado.avanzar(0.9)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.TAREAS_TERMINADAS])
+	estado.avanzar(0.1)
+	assert_array(estado.visibles()).is_empty()
 	estado.actualizar_computadora(true)
 	estado.actualizar_salida(false)
 	assert_array(estado.visibles()).is_empty()
 	estado.actualizar_computadora(false)
 	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.SALIDA_RETRABADA])
+	estado.avanzar(Notificaciones.DURACION - 0.1)
+	estado.actualizar_computadora(false)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.SALIDA_RETRABADA])
+	estado.avanzar(0.1)
+	assert_array(estado.visibles()).is_empty()
 	estado.actualizar_computadora(true)
 	estado.actualizar_salida(true)
 	assert_array(estado.visibles()).is_empty()
@@ -132,6 +141,30 @@ func test_salir_en_el_mismo_permiso_no_avisa() -> void:  # AC-NTF-032
 	assert_array(estado.visibles()).is_empty()
 	estado.actualizar_salida(false)
 	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.SALIDA_RETRABADA])
+
+
+func test_reabrir_con_un_aviso_vigente_no_lo_renueva() -> void:  # AC-NTF-032
+	for retrabada: bool in [false, true]:
+		var estado := Notificaciones.new()
+		estado.actualizar_salida(true)
+		if retrabada:
+			estado.actualizar_salida(false)
+		var tipo := (
+			Notificaciones.Tipo.SALIDA_RETRABADA
+			if retrabada
+			else Notificaciones.Tipo.TAREAS_TERMINADAS
+		)
+		estado.avanzar(Notificaciones.DURACION - 1.0)
+		estado.actualizar_computadora(true)
+		assert_array(estado.visibles()).is_equal([tipo])
+		estado.avanzar(0.9)
+		estado.actualizar_computadora(false)
+		assert_array(estado.visibles()).is_equal([tipo])
+		estado.avanzar(0.1)
+		assert_array(estado.visibles()).is_empty()
+		estado.actualizar_computadora(true)
+		estado.actualizar_computadora(false)
+		assert_array(estado.visibles()).is_empty()
 
 
 func test_el_cierre_descarta_el_aviso_pendiente() -> void:  # AC-NTF-032

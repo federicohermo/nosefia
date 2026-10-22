@@ -283,6 +283,32 @@ func _boton(almacen: Node3D, indice: int) -> Button:
 	return pantalla.caja().get("_filas").get_child(0).get_child(0).get_child(indice)
 
 
+func test_el_cierre_real_descarta_la_espera_y_la_noche_siguiente_avisa() -> void:  # AC-NTF-032
+	for retrabada: bool in [false, true]:
+		var almacen := await _abrir(1)
+		var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
+		var reloj: RelojDelTurno = almacen.get("_reloj")
+		if retrabada:
+			_cumplir(almacen)
+		computadora.pedir_abrir()
+		if retrabada:
+			reloj.descumplir(reloj.obligatoria(Tarea.Tipo.REGISTRAR))
+		else:
+			_cumplir(almacen)
+		assert_array(_textos(almacen)).not_contains(AVISO).not_contains(RETRABA)
+		RelojDePrueba.avanzar_turno(reloj, _restante(almacen))
+		assert_bool(reloj.corriendo()).is_false()
+		assert_bool(computadora.computadora().abierta()).is_false()
+		assert_array(_textos(almacen)).is_empty()
+		(almacen.get("_ciclo") as CicloDeJornadas).abrir_la_jornada()
+		computadora.pedir_abrir()
+		_cumplir(almacen)
+		assert_bool(almacen.call("_puede_salir")).is_true()
+		assert_array(_textos(almacen)).is_empty()
+		computadora.pedir_cerrar()
+		assert_array(_textos(almacen)).is_equal([AVISO])
+
+
 func test_completar_solo_al_cerrar_no_avisa_que_se_puede_salir() -> void:  # AC-NTF-028, AC-NTF-031
 	var almacen := await _abrir(1)
 	var reloj: RelojDelTurno = almacen.get("_reloj")

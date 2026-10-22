@@ -150,10 +150,11 @@ que ya no vale. Recuperar la salida NO DEBE repetir el aviso inicial.
 Cerrar DEBE retirar el aviso y olvidar su disparo. Una jornada nueva de prueba puede avisar
 otra vez. Desde la primera jornada completa NO DEBE aparecer este aviso.
 
-MIENTRAS la computadora está abierta, el sistema NO DEBE mostrar este aviso ni el de
-BR-NTF-015. CUANDO el jugador sale de la computadora, el sistema DEBE mostrar el aviso que
+MIENTRAS la computadora está abierta, los cambios de permiso NO DEBEN disparar este aviso ni
+el de BR-NTF-015. Un aviso previo que sigue vigente conserva su duración al abrirla.
+CUANDO el jugador sale de la computadora, el sistema DEBE mostrar el aviso que
 corresponde al estado vigente de la salida, como si el cambio ocurriera en ese instante.
-SI sale con el mismo permiso con que entró, ENTONCES NO DEBE aparecer ningún aviso de salida.
+SI sale con el mismo permiso con que entró, ENTONCES NO DEBE dispararse un nuevo aviso de salida.
 Una habilitación que se pierde antes de salir NO cuenta como avisada. El retiro del aviso
 opuesto que ya no vale NO DEBE esperar. SI el turno cierra con la computadora abierta,
 ENTONCES salir de ella NO DEBE mostrar un aviso pendiente.
@@ -407,6 +408,8 @@ DADO una jornada sin salida habilitada CUANDO se cumple y se descumple antes de 
 ENTONCES al salir no hay aviso, y completar después afuera avisa tareas terminadas una vez.
 DADO un cambio pendiente CUANDO cierra el turno antes de salir ENTONCES salir no muestra
 aviso. Los otros tipos conservan su orden y su tiempo restante durante la espera.
+DADO un aviso de salida visible CUANDO se abre y se cierra la computadora sin cambiar el
+permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrearse al vencer.
 
 ## No objetivos
 
