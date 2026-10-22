@@ -547,31 +547,33 @@ a la etapa completa DEBE restituir los sectores de BR-STK-043 y BR-STK-044.
 ### BR-STK-048 — La prueba conserva los márgenes de la etapa completa
 
 EN las jornadas de prueba, el sistema DEBE conservar el margen de los productos contra
-el borde de cada estante de la etapa completa. Cada tanda DEBE conservar una separación
-uniforme entre sus unidades, igual a la de su envase en la etapa completa cuando entre.
-SI esa separación no permite conservar los cupos de prueba sobre la chapa disponible,
-ENTONCES el sistema DEBE reducirla uniformemente sólo lo necesario, sin superponer unidades
-ni reducir el margen de referencia. El espacio sobrante NO DEBE estirar las separaciones.
-El reparto DEBE conservar los cupos, las dos mitades longitudinales, las filas,
-orientaciones, apoyos y la tanda principal a altura de reposición de BR-STK-047.
+el borde de cada estante de la etapa completa y la separación uniforme de referencia de
+cada envase. SI las columnas calculadas inicialmente no entran con ese ritmo, los márgenes
+y el aire entre caras, ENTONCES DEBE quitar columnas hasta obtener la mayor cantidad que
+entre en la mitad asignada, o en el estante entero cuando lo ocupe un solo producto.
+NO DEBE comprimir ni estirar las separaciones para conservar un cupo anterior. El sobrante
+DEBE repartirse a ambos lados de cada tanda, sin pegarla a la división longitudinal.
+Los cupos principales y totales DEBEN medirse del reparto resultante. Se conservan las filas,
+orientaciones, apoyos, destinos y la principal a altura de reposición de BR-STK-047.
 
 ### BR-STK-049 — El aire protege las unidades, las caras y la división longitudinal
 
 EN las jornadas de prueba, el sistema DEBE reservar el mínimo de separación de exhibición
 entre unidades vecinas, el mínimo de aire entre caras contiguas y el mínimo de aire entre
-las dos tandas de un lateral. La división longitudinal NO DEBE convertirse en un borde
-contra el que se amontonen ambas tandas. Cada tanda DEBE permanecer en su mitad y mantener
-un ritmo uniforme, tan próximo al de su producto en la etapa completa como permita la chapa.
-El sobrante DEBE repartirse en los márgenes de su mitad; NO DEBE consumirse reservando aire
-extra en las cabeceras a costa del ritmo de los laterales.
+las dos tandas de un lateral. En cada encuentro de cabezal y lateral, el aire DEBE ser al
+menos la mayor separación de referencia de los productos contiguos y nunca menor que el
+mínimo entre caras del dominio. La división longitudinal NO DEBE convertirse en un borde
+contra el que se amontonen ambas tandas. Cada tanda DEBE permanecer centrada en su mitad
+útil y mantener el ritmo de su producto en la etapa completa. El sobrante DEBE repartirse
+en los márgenes de su mitad, después de reservar el aire de ambos encuentros.
 
 Las cabeceras DEBEN conservar el margen lateral de exhibición a ambos costados de la chapa,
 además del retiro frontal de referencia de BR-STK-048. Sus filas DEBEN conservar el aire de
 referencia cuando quepa y nunca bajar del mínimo de aire entre filas de exhibición.
 Los mínimos de exhibición son valores del dominio. Ninguna adaptación DEBE poner unidades
-fuera del apoyo, superponerlas ni reducir cupos, cambiar filas, orientaciones, destinos o
-la altura de reposición. SI un reparto no satisface simultáneamente esos mínimos, ENTONCES
-el sistema DEBE rechazarlo como un reparto imposible, en vez de publicarlo comprimido.
+fuera del apoyo, superponerlas ni cambiar filas, orientaciones, destinos o la altura de
+reposición. SI ni una columna satisface simultáneamente esos mínimos en su región,
+ENTONCES el sistema DEBE rechazar el reparto, en vez de publicarlo comprimido.
 
 ## Criterios de aceptación
 
@@ -1196,46 +1198,49 @@ DADO cada jornada 1, 2 y 3 CUANDO se recorren todos los pedidos construidos para
 ENTONCES cada identidad pedida pertenece a los dieciséis presentes. Completar esas compras
 y reponer sus faltantes respeta la disponibilidad de una caja por producto.
 
-### AC-STK-100 — La prueba conserva el margen y adapta sólo la separación necesaria *(verifica BR-STK-048, BR-STK-047)*
+### AC-STK-100 — La prueba quita columnas antes de comprimir la referencia *(verifica BR-STK-048, BR-STK-047)*
 
 DADO cada tipo de cara de las islas, las heladeras funcionales y la estantería de no
 comestibles CUANDO se compara su exhibición de prueba con la etapa completa ENTONCES
-conserva el margen de referencia contra el borde, los cupos y las filas de prueba,
-sin unidades fuera de la chapa ni intersecciones. DADO una tanda cuya separación de
-referencia entra ENTONCES la conserva y deja el sobrante libre. DADO una tanda que no
-entra con esa separación ENTONCES conserva sus cupos y el margen y usa la mayor separación
-uniforme que entra sin superar la referencia. La reducción no afecta otras tandas que sí
-entran. Las dos mitades longitudinales y la principal a altura de reposición se conservan.
+conserva el margen de referencia contra el borde, las filas y la separación uniforme de
+referencia, sin unidades fuera de la chapa ni intersecciones. DADO un cupo inicial que
+no entra con esos márgenes y ese ritmo ENTONCES quita columnas y conserva la mayor cantidad
+que entra en la región asignada. Agregar una columna excedería esa región. Una tanda que
+ya entra conserva sus columnas. El sobrante queda libre a ambos lados, sin estirar huecos.
+Las dos mitades longitudinales y la principal a altura de reposición se conservan.
 
 ### AC-STK-101 — Los laterales conservan aire entre unidades y a ambos lados de la mitad *(verifica BR-STK-049, BR-STK-047)*
 
 DADOS los cuatro niveles de ambos laterales de cada isla de prueba CUANDO se mide su
-exhibición completa ENTONCES cada fila conserva separación uniforme no menor que el mínimo
-entre unidades de exhibición y las dos tandas conservan el mínimo de aire entre tandas.
-Cada una ocupa su mitad longitudinal, sin acumular sus unidades contra la división;
-una tanda cuya separación de referencia cabe después de reservar esos mínimos la conserva.
+exhibición completa ENTONCES cada fila conserva la separación uniforme de referencia,
+no menor que el mínimo entre unidades de exhibición, y las dos tandas conservan el mínimo
+de aire entre tandas. Cada una queda centrada en su mitad útil, sin acumular sus unidades
+contra la división, aunque para ello haya que quitar columnas.
 
 ### AC-STK-102 — Las cabeceras conservan aire y margen a sus costados *(verifica BR-STK-049, BR-STK-048)*
 
 DADOS los cuatro niveles de las cuatro cabeceras de prueba CUANDO se miden sus unidades y
-sus encuentros con los laterales ENTONCES cada fila conserva separación uniforme no menor
-que el mínimo entre unidades de exhibición, cada costado conserva el margen lateral de
-exhibición y cada encuentro conserva el mínimo de aire entre caras. Las cabeceras con dos
-filas conservan el aire de referencia cuando entra y nunca bajan del mínimo entre filas.
+sus encuentros con los laterales ENTONCES cada fila conserva la separación uniforme de
+referencia y cada costado conserva el margen lateral de exhibición. Cada encuentro deja
+como mínimo la mayor separación de referencia de sus productos contiguos y el mínimo de
+aire entre caras. Las cabeceras con dos filas conservan el aire de referencia cuando entra
+y nunca bajan del mínimo entre filas. Se quitan columnas antes de sacrificar esos márgenes.
 
 ### AC-STK-103 — El reparto con aire conserva el margen frontal y los apoyos *(verifica BR-STK-049, BR-STK-048)*
 
 DADO el reparto de prueba completo CUANDO se compara con la etapa completa ENTONCES conserva
 el retiro frontal de referencia en cada cara, todas las unidades quedan apoyadas dentro
-de su chapa y ninguna unidad se superpone con otra ni con el mueble. Los cupos principales
-y totales, las filas, las orientaciones y los destinos permanecen iguales.
+de su chapa y ninguna unidad se superpone con otra ni con el mueble. Las filas, las
+orientaciones y los destinos permanecen iguales. Los cupos principales y totales coinciden
+con las columnas realmente exhibidas después de adaptar su cantidad.
 
 ### AC-STK-104 — Un reparto imposible no se publica pegado *(verifica BR-STK-049)*
 
-DADO un tramo que alcanza exactamente para los envases, los márgenes y todos los mínimos
-de aire de exhibición CUANDO se distribuye ENTONCES conserva los cupos y satisface cada mínimo.
-DADO ese mismo tramo reducido por debajo del mínimo necesario CUANDO se distribuye ENTONCES
-rechaza el reparto; no quita unidades ni elimina el aire entre ellas, entre caras o en la mitad.
+DADO un tramo que alcanza exactamente para una columna por producto, sus márgenes y todos
+los mínimos de aire CUANDO se distribuye ENTONCES conserva una columna y satisface cada
+mínimo. DADO ese mismo tramo reducido por debajo del mínimo necesario CUANDO se distribuye
+ENTONCES rechaza el reparto; no elimina un producto, su margen ni el aire entre caras o
+en la mitad para hacerlo entrar.
 
 ## No objetivos
 
