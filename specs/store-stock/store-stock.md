@@ -560,7 +560,7 @@ orientaciones, apoyos, destinos y la principal a altura de reposición de BR-STK
 
 EN las jornadas de prueba, el sistema DEBE reservar el mínimo de separación de exhibición
 entre unidades vecinas, el mínimo de aire entre caras contiguas y el mínimo de aire entre
-las dos tandas de un lateral. En cada encuentro de cabezal y lateral, el aire DEBE ser al
+las dos tandas de un lateral. En cada encuentro de cabecera y lateral, el aire DEBE ser al
 menos la mayor separación de referencia de los productos contiguos y nunca menor que el
 mínimo entre caras del dominio. La división longitudinal NO DEBE convertirse en un borde
 contra el que se amontonen ambas tandas. Los centros de ambas tandas DEBEN permanecer en mitades
@@ -1208,8 +1208,7 @@ conserva el margen de referencia contra el borde, las filas y la separación uni
 referencia, sin unidades fuera de la chapa ni intersecciones. DADO un cupo inicial que
 no entra con esos márgenes y ese ritmo ENTONCES quita columnas y conserva la mayor cantidad
 que entra en la cara con los dos centros en mitades opuestas. Agregar una columna excedería
-el espacio disponible. Una tanda que
-ya entra conserva sus columnas. El sobrante queda libre a ambos lados, sin estirar huecos.
+el espacio disponible. Una tanda que ya entra conserva sus columnas. El sobrante queda libre a ambos lados, sin estirar huecos.
 Las dos mitades longitudinales y la principal a altura de reposición se conservan.
 
 ### AC-STK-101 — Los laterales conservan aire entre unidades y a ambos lados de la mitad *(verifica BR-STK-049, BR-STK-047)*
