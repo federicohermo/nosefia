@@ -14,6 +14,35 @@ from lib.reparto_de_prueba import (
 
 
 class RepartoDePrueba(unittest.TestCase):
+    def test_el_retiro_frontal_no_comprime_el_ancho_transversal_de_la_cabecera(self):  # AC-STK-100
+        envase = Envase(10 * HUECO_MINIMO, 10 * MARGEN, 20 * MARGEN)
+        cuenta, hueco = 7, 2 * HUECO_MINIMO
+        ancho = cuenta * envase.ancho + (cuenta - 1) * hueco
+        largo = ancho + 2 * MARGEN
+        inicio, fin = reparto_de_prueba.tramo_con_referencia(
+            largo, MARGEN, ancho, 10 * MARGEN, cabecera=True
+        )
+        fila = reparto_de_prueba.centros_con_referencia(
+            fin - inicio, [envase], [cuenta], [hueco]
+        )[0]
+        self.assertEqual(len(fila), cuenta)
+        self.assertGreaterEqual(inicio + fila[0] - envase.ancho / 2, MARGEN)
+        self.assertLessEqual(inicio + fila[-1] + envase.ancho / 2, largo - MARGEN)
+        for a, b in zip(fila, fila[1:]):
+            self.assertAlmostEqual(b - a - envase.ancho, hueco)
+
+    def test_el_lateral_reserva_aire_detras_de_ambas_cabeceras(self):  # AC-STK-100
+        largo = 200 * HUECO_MINIMO
+        retiros = (10 * MARGEN, 12 * MARGEN)
+        separaciones = (3 * HUECO_MINIMO, 4 * HUECO_MINIMO)
+        inicio, fin = reparto_de_prueba.tramo_con_referencia(
+            largo, MARGEN, largo - 2 * MARGEN, 8 * MARGEN,
+            retiros, separaciones,
+        )
+        # La banda original ya incluye un margen delante y otro detrás de la tanda.
+        self.assertGreaterEqual(inicio - (retiros[0] - 2 * MARGEN), separaciones[0])
+        self.assertGreaterEqual(largo - fin - (retiros[1] - 2 * MARGEN), separaciones[1])
+
     def test_cada_tanda_conserva_el_ritmo_de_su_envase_y_el_sobrante_queda_en_los_bordes(self):  # AC-STK-100
         envases = [Envase(20 * HUECO_MINIMO, 4 * MARGEN, 10 * MARGEN),
                    Envase(30 * HUECO_MINIMO, 4 * MARGEN, 10 * MARGEN)]
