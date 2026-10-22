@@ -70,6 +70,11 @@ func actualizar_salida(disponible: bool) -> void:
 	_pintar()
 
 
+func actualizar_computadora(abierta: bool) -> void:
+	_estado.actualizar_computadora(abierta)
+	_pintar()
+
+
 func actualizar_tiempo(restante: float) -> void:
 	_estado.actualizar_tiempo(restante)
 	_pintar()
