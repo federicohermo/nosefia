@@ -472,7 +472,7 @@ def medir_encaje(estante, bm, arbol, hojas, posiciones):
 
 def acomodar_mueble(
     letra, envases, resumen, estantes_declarados=ESTANTES, medidor=medir,
-    retiros_por_estante=None,
+    retiros_por_estante=None, colocador=None,
 ):
     retiros = {} if retiros_por_estante is None else retiros_por_estante
     if any(not math.isfinite(retiro) or retiro < 0 for retiro in retiros.values()):
@@ -514,7 +514,12 @@ def acomodar_mueble(
         for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
             if cuenta < pedido:
                 resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
-        centros_por_tanda = centros(largo, de_estas, cuentas)
+        if colocador is None:
+            centros_por_tanda = centros(largo, de_estas, cuentas)
+        else:
+            centros_por_tanda, desde_v = colocador(
+                estante, izquierda, largo, de_estas, cuentas, desde_v
+            )
         posiciones = []
         for indice, (t, envase, us) in enumerate(zip(reparto, de_estas, centros_por_tanda)):
             p = producto(t.producto)

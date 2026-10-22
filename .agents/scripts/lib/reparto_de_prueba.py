@@ -5,13 +5,23 @@ import math
 import re
 
 from lib.reparto import PRODUCTOS, Tanda
-from lib.gondola import Envase, centros
+from lib.gondola import Envase
 
 
 def centros_con_referencia(
     largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float]
 ) -> list[list[float]]:
-    return centros(largo, envases, cuentas)
+    parte = largo / len(envases)
+    salida = []
+    for indice, (envase, cuenta, hueco) in enumerate(zip(envases, cuentas, huecos)):
+        if cuenta * envase.ancho > parte + 1e-6 or hueco < 0:
+            raise ValueError("la tanda no entra aun sin separación entre sus unidades")
+        if cuenta > 1:
+            hueco = min(hueco, max(0.0, (parte - cuenta * envase.ancho) / (cuenta - 1)))
+        ancho = cuenta * envase.ancho + (cuenta - 1) * hueco
+        inicio = indice * parte + (parte - ancho) / 2 + envase.ancho / 2
+        salida.append([inicio + columna * (envase.ancho + hueco) for columna in range(cuenta)])
+    return salida
 
 
 CARAS = {
