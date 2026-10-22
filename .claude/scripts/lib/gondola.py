@@ -51,8 +51,8 @@ AIRE = 0.02
 #: de atrás queda en la sombra del panel y se lee como un hueco.
 AIRE_MAXIMO = 0.05
 
-#: El hueco mínimo del reparto completo, en metros. Decide cuántas columnas entran.
-#: La prueba conserva esos cupos y puede comprimir la separación para mantener los márgenes.
+#: El hueco mínimo entre dos unidades vecinas a lo largo del estante, en metros. Decide cuántas
+#: columnas entran; lo que sobra se reparte entre todos los huecos del estante.
 HUECO_MINIMO = 0.01
 
 #: Lo que queda libre detrás del labio y delante del panel del fondo, en metros. Es lo que evita

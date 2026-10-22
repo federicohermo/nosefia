@@ -557,17 +557,6 @@ orientaciones, apoyos y la tanda principal a altura de reposición de BR-STK-047
 
 ## Criterios de aceptación
 
-### AC-STK-100 — La prueba conserva el margen y adapta sólo la separación necesaria *(verifica BR-STK-048, BR-STK-047)*
-
-DADO cada tipo de cara de las islas, las heladeras funcionales y la estantería de no
-comestibles CUANDO se compara su exhibición de prueba con la etapa completa ENTONCES
-conserva el margen de referencia contra el borde, los cupos y las filas de prueba,
-sin unidades fuera de la chapa ni intersecciones. DADO una tanda cuya separación de
-referencia entra ENTONCES la conserva y deja el sobrante libre. DADO una tanda que no
-entra con esa separación ENTONCES conserva sus cupos y el margen y usa la mayor separación
-uniforme que entra sin superar la referencia. La reducción no afecta otras tandas que sí
-entran. Las dos mitades longitudinales y la principal a altura de reposición se conservan.
-
 ### AC-STK-001 — La identidad manda *(verifica BR-STK-001)*
 
 DADO dos objetos distintos del mismo producto CUANDO se ingresa con uno y se consulta con el otro
@@ -1188,6 +1177,17 @@ Una unidad sostenida al cerrar NO sobrevive al cambio de etapa.
 DADO cada jornada 1, 2 y 3 CUANDO se recorren todos los pedidos construidos para ella
 ENTONCES cada identidad pedida pertenece a los dieciséis presentes. Completar esas compras
 y reponer sus faltantes respeta la disponibilidad de una caja por producto.
+
+### AC-STK-100 — La prueba conserva el margen y adapta sólo la separación necesaria *(verifica BR-STK-048, BR-STK-047)*
+
+DADO cada tipo de cara de las islas, las heladeras funcionales y la estantería de no
+comestibles CUANDO se compara su exhibición de prueba con la etapa completa ENTONCES
+conserva el margen de referencia contra el borde, los cupos y las filas de prueba,
+sin unidades fuera de la chapa ni intersecciones. DADO una tanda cuya separación de
+referencia entra ENTONCES la conserva y deja el sobrante libre. DADO una tanda que no
+entra con esa separación ENTONCES conserva sus cupos y el margen y usa la mayor separación
+uniforme que entra sin superar la referencia. La reducción no afecta otras tandas que sí
+entran. Las dos mitades longitudinales y la principal a altura de reposición se conservan.
 
 ## No objetivos
 
