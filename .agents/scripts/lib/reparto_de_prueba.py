@@ -8,6 +8,17 @@ from lib.gondola import Envase
 from lib.reparto import PRODUCTOS, Tanda
 
 
+def tramo_con_referencia(
+    largo_del_estante: float, izquierda: float, largo: float, retiro: float,
+    extremos: tuple[float, float] = (0.0, 0.0),
+    separaciones: tuple[float, float] = (0.0, 0.0),
+    cabecera: bool = False,
+) -> tuple[float, float]:
+    inicio = max(izquierda, retiro, extremos[0], separaciones[0])
+    fin = min(izquierda + largo, largo_del_estante - max(retiro, extremos[1], separaciones[1]))
+    return inicio, fin
+
+
 def centros_con_referencia(
     largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float]
 ) -> list[list[float]]:

@@ -29,7 +29,7 @@ from lib.reparto_de_prueba import (
     ESTANTES_DE_PRUEBA, RETIROS_POR_ESTANTE_DE_PRUEBA, bandas_del_nivel, bases_del_contenido,
     validar_identidades_de_prueba,
     validar_reparto_de_prueba,
-    centros_con_referencia,
+    centros_con_referencia, tramo_con_referencia,
 )
 
 RAIZ = Path(__file__).resolve().parents[3]
@@ -72,14 +72,16 @@ def colocador_de_prueba(huecos, retiros):
         inicio, fin = izquierda, izquierda + largo
         letra, cara, nivel = partes(estante.clave)
         if letra in ("A", "B"):
-            inicio = max(inicio, referencia)
-            fin = min(fin, estante.largo - referencia)
+            extremos = (0.0, 0.0)
             if cara in ("norte", "sur"):
                 estante.fondo += max(0, referencia - MARGEN)
             else:
                 primera, ultima = ("norte", "sur") if cara == "oeste" else ("sur", "norte")
-                inicio = max(inicio, retiros[f"{letra}.{primera}.{nivel}"])
-                fin = min(fin, estante.largo - retiros[f"{letra}.{ultima}.{nivel}"])
+                extremos = tuple(retiros[f"{letra}.{c}.{nivel}"] for c in (primera, ultima))
+            inicio, fin = tramo_con_referencia(
+                estante.largo, izquierda, largo, referencia, extremos,
+                cabecera=cara in ("norte", "sur"),
+            )
         columnas = centros_con_referencia(
             fin - inicio, envases, cuentas, [huecos[t.producto] for t in productos]
         )
