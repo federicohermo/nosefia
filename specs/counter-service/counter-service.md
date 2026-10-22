@@ -268,15 +268,15 @@ Antes de terminar la conversación inicial NO DEBE haber recepción ni rechazo.
 
 SÓLO al recibir todos los productos y el ticket, el sistema DEBE registrar la compra una vez
 y comenzar su despedida. Los botones de cobro y despacho NO DEBEN ofrecerse en las jornadas 1 a
-4.
+5.
 Las entregas parciales NO DEBEN contar como ventas. La recepción DEBE usar las unidades físicas,
 sin ejecutar además el descuento automático del pedido. Completar la compra antes del límite
 DEBE conservar el resultado aunque la despedida continúe. Al terminarla, la atención DEBE
 quedar despachada; la imagen del comprador DEBE retirarse según BR-CTR-033.
 
-### BR-CTR-031 — Las jornadas 1 a 4 exigen ambas compras
+### BR-CTR-031 — Las jornadas 1 a 5 exigen ambas compras
 
-EN las jornadas 1 a 4, atención DEBE cumplirse sólo al completar ambas compras.
+EN las jornadas 1 a 5, atención DEBE cumplirse sólo al completar ambas compras.
 Una compra perdida DEBE dejar la tarea sin cumplir aunque se complete la otra.
 La finalización DEBE contarse una sola vez y conservarse al reabrir.
 Una nueva jornada DEBE empezar sin agenda, conversación, entregas, cuerpos ni ventas heredados.
@@ -295,12 +295,12 @@ siempre el corte inferior del dibujo desde las posiciones accesibles del local.
 Abrir o cerrar la interfaz NO DEBE
 reiniciar ni detener su animación. El diálogo conserva el diseño de Figma en pantalla.
 
-La llegada de las jornadas 1 a 4 usa la entrada de BR-CTR-034; la posición fija corresponde
+La llegada de las jornadas 1 a 5 usa la entrada de BR-CTR-034; la posición fija corresponde
 a la espera posterior a esa entrada.
 
 ### BR-CTR-033 — Salida visible de los compradores
 
-EN las jornadas 1 a 4, CUANDO termina una despedida después de vender o una compra incompleta
+EN las jornadas 1 a 5, CUANDO termina una despedida después de vender o una compra incompleta
 vence, el comprador DEBE deslizarse hacia la derecha, vista desde el interior frente a la
 ventanilla, hasta quedar detrás de la pared. DEBE permanecer animado mientras sale del hueco
 y retirarse definitivamente después de quedar oculto; volver a mirar NO DEBE hacerlo reaparecer.
@@ -311,7 +311,7 @@ Cerrar o reiniciar la jornada DEBE retirar también las imágenes pendientes de 
 
 ### BR-CTR-034 — Entrada desde la izquierda
 
-EN las jornadas 1 a 4, CUANDO llega cada comprador, su imagen DEBE deslizarse desde detrás de
+EN las jornadas 1 a 5, CUANDO llega cada comprador, su imagen DEBE deslizarse desde detrás de
 la pared izquierda, vista desde el interior frente a la ventanilla, hasta su sitio de espera.
 DEBE conservar el idle, altura, profundidad y orientación durante la entrada y detenerse
 en ese sitio. Abrir, cerrar o repintar la interfaz NO DEBE repetir la entrada.
@@ -728,7 +728,7 @@ Cerrar o reiniciar la jornada retira cualquier imagen pendiente, también la de 
 
 ### AC-CTR-045 — Ambos entran desde la izquierda *(verifica BR-CTR-034, BR-CTR-032)*
 
-DADO cada comprador de las jornadas 1 a 4 CUANDO llega con la interfaz cerrada ENTONCES aparece
+DADO cada comprador de las jornadas 1 a 5 CUANDO llega con la interfaz cerrada ENTONCES aparece
 deslizándose desde la izquierda hasta el sitio de espera, conservando altura, profundidad,
 orientación y animación. Después permanece quieto. Abrir, cerrar y repintar no reinician el
 movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el turno lo retira.
@@ -966,8 +966,8 @@ en la construcción del comprador y emite el diagnóstico, sin publicar una comp
   - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón. La jornada 2 está decidida en BR-CTR-037.
 - **OQ-CTR-004 — Integración pendiente de los compradores de las jornadas 3 a 5**
   - Por qué sigue abierta: la ficha «Atención al cliente» ya define compradores, horarios y
-    pedidos al azar para esas noches. Falta integrar ese diseño en lugar del padrón provisional.
-    También falta actualizar las reglas del recorrido físico que todavía dicen «jornadas 1 a 4».
+    pedidos al azar para esas noches. Falta integrar ese diseño en lugar del padrón provisional,
+    con el recorrido físico de las jornadas 1 a 5.
   - Decide: el diseño ya está definido en Notion. El padrón genérico es una decisión provisoria
     de implementación, no una ausencia de diseño.
   - Bloquea: nada de lo escrito para las jornadas 1 y 2.

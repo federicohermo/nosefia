@@ -899,8 +899,10 @@ hasta cerrar la primera.
 
 DADO una nota abierta, CUANDO pasan cuadros ENTONCES el tiempo del turno disminuye. CUANDO se
 pausa ENTONCES la pausa visible se dibuja por encima de la nota; al reanudar, la nota sigue
-abierta y el control suspendido. CUANDO termina el turno ENTONCES queda sólo la
-devolución y el control suspendido.
+abierta y el control suspendido. CUANDO termina el turno ENTONCES la nota se cierra y el
+control queda suspendido. En las jornadas 1 a 3 baja la persiana y, al terminar de bajar, siguen
+las instrucciones de la jornada siguiente, sin celular ni devolución. Desde la jornada 4 queda
+sólo la devolución.
 
 ### AC-PLY-068 — Ordenado comparte el texto exacto *(verifica BR-PLY-030)*
 
@@ -951,7 +953,9 @@ ni abre el programa. En modo manual, el hueco del lector no recibe lecturas.
 
 DADO el programa abierto, CUANDO pasan cuadros ENTONCES el tiempo disminuye; al pausar,
 la pausa visible tiene una capa superior al programa. Al reanudar sigue abierto y el control
-suspendido. Al terminar el turno queda sólo la devolución y el control suspendido.
+suspendido. Al terminar el turno el programa se cierra y el control queda suspendido. En las
+jornadas 1 a 3 baja la persiana y, al terminar de bajar, siguen las instrucciones de la jornada
+siguiente, sin celular ni devolución. Desde la jornada 4 queda sólo la devolución.
 
 ### AC-PLY-075 — El papel se lleva y examina *(verifica BR-PLY-033)*
 
