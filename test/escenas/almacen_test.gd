@@ -449,8 +449,12 @@ func test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro() -> void:
 	var almacen := _almacen()
 	add_child(almacen)
 	var arranque: Transform3D = almacen.get("_arranque")
-	var entrada: Node3D = almacen.get_node("Estructura/puertaentrada")
-	var hacia_la_puerta := entrada.global_position - arranque.origin
+	var izquierda: Node3D = almacen.get_node("Estructura/puertaentrada/Bisagra")
+	var derecha: Node3D = almacen.get_node("Estructura/puertaentrada_derecha/Bisagra")
+	var vano := Geometry3D.get_closest_point_to_segment(
+		arranque.origin, izquierda.global_position, derecha.global_position
+	)
+	var hacia_la_puerta := vano - arranque.origin
 	hacia_la_puerta.y = 0.0
 	assert_float(hacia_la_puerta.length()).is_less(1.5)
 	# Mira al local: la puerta le queda a la espalda.

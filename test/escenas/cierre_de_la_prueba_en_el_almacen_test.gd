@@ -228,6 +228,8 @@ func test_con_la_prueba_perdida_el_despido_es_el_unico_mensaje_de_la_cuarta() ->
 	var comenzar: Button = _instrucciones(almacen).get("_siguiente")
 	comenzar.pressed.emit()
 	comenzar.pressed.emit()
+	assert_int(menus[0]).is_zero()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones(almacen))
 	assert_int(menus[0]).is_equal(1)
 	assert_int(aperturas[0]).is_zero()
 	assert_int(partida.jornada()).is_equal(COMPLETA - 1)

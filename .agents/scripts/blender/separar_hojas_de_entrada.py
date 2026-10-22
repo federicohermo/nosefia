@@ -1,9 +1,14 @@
 """Dos hojas independientes para la entrada; se aplica también al exportar el modelo."""
 
 import sys
+from pathlib import Path
 
 import bpy
 from mathutils import Matrix, Vector
+
+RAIZ = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(RAIZ / '.claude/scripts'))
+from lib.consola import configurar
 
 
 FRENTE = -6.28
@@ -95,4 +100,5 @@ def editar():
 
 
 if __name__ == '__main__':
+    configurar()
     editar()
