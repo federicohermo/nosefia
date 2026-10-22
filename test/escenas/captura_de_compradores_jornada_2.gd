@@ -73,7 +73,14 @@ func mirar(transparente: bool = false, lado: float = 0.0) -> Dictionary:
 	for y in range(imagen.get_height() / 2, imagen.get_height() / 4, -4):
 		for x in range(imagen.get_width() / 2, imagen.get_width() / 8, -4):
 			var alfa := imagen.get_pixel(x, y).a
-			if (transparente and alfa == 0.0) or (not transparente and alfa >= 0.5):
+			if (
+				(
+					transparente
+					and alfa == 0.0
+					and imagen.get_region(Rect2i(x - 2, y - 2, 5, 5)).is_invisible()
+				)
+				or (not transparente and alfa >= 0.5)
+			):
 				pixel = Vector2i(x, y)
 				break
 		if pixel.x >= 0:
