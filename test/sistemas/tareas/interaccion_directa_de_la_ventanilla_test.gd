@@ -7,7 +7,7 @@ func test_el_fin_se_publica_solo_en_la_pulsacion_que_termina() -> void:  # AC-CT
 	reloj.arrancar(Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias), obligatorias)
 	var ventanilla: Ventanilla = auto_free(Ventanilla.new())
 	ventanilla.reloj = reloj
-	var compradores := Compradores.de_la_jornada(4)
+	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 	var dialogos := DialogosDeCompradores.new()
 	dialogos.tin = PackedStringArray(["Una sola entrada"])
 	compradores[0].dialogos = dialogos

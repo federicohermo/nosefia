@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444, hoy jornada 5; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -465,16 +465,16 @@ de esta exhibición: en ese caso sus listas pueden estar vacías y su cupo ser c
 índices negativos ni elegibilidad por tener sólo una guía. Duronga NO DEBE usar ese estado
 mientras conserve su exhibición provisional.
 
-### BR-STK-040 — La quinta apertura comparte los pedidos construidos
+### BR-STK-040 — La segunda apertura comparte los pedidos construidos
 
-CUANDO se calculan faltantes de reposición para el padrón definido de jornada 5, el sistema
+CUANDO se calculan faltantes de reposición para el padrón definido de jornada 2, el sistema
 DEBE recibir los mismos pedidos ya construidos que recibe atención (BR-CTR-038). Consultar
 faltantes, en cualquier orden con atención, NO DEBE reconstruir la lista ni crear otro pedido. El
 conjunto DEBE pertenecer a esa apertura y no heredar pedidos mutables de otra jornada.
 
-### BR-STK-041 — Las compras físicas de la quinta noche conservan identidades
+### BR-STK-041 — Las compras físicas de la segunda noche conservan identidades
 
-CUANDO se completa una compra de jornada 5 con productos y ticket exactos, el sistema DEBE
+CUANDO se completa una compra de jornada 2 con productos y ticket exactos, el sistema DEBE
 retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas,
 sin descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence
 sin completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar
@@ -483,9 +483,9 @@ conservarse como antes del vencimiento. El ticket aceptado DEBE descartarse. Esa
 DEBEN poder colocarse, devolverse o recogerse como cualquier unidad suelta. Vender una unidad
 retirada de góndola NO DEBE rellenar su casillero ni cumplir reposición.
 
-### BR-STK-042 — Registrar la quinta noche espera al cierre de ambas compras
+### BR-STK-042 — Registrar la segunda noche espera al cierre de ambas compras
 
-EN jornada 5 con el padrón definido, MIENTRAS quede un comprador sin llegar o una compra en
+EN jornada 2 con el padrón definido, MIENTRAS quede un comprador sin llegar o una compra en
 curso, el sistema DEBE mantener registrar pendiente aunque la planilla coincida con lo vendido
 o anticipe todos los pedidos. CUANDO ambas compras terminan, vendidas o vencidas, el sistema
 DEBE cumplir registrar si para cada producto lo anotado coincide exactamente con las ventas
@@ -496,17 +496,17 @@ DEBEN contar registrar cumplida; una unidad de más o de menos DEBE dejarla pend
 ### BR-STK-045 — El pedido fijo admite el depósito y distingue Poético
 
 CUANDO se prepara la compra de Fede, el sistema DEBE permitir obtener y entregar Duronga desde
-el depósito, con la exhibición y cupo positivo de BR-STK-044, sin exigir colocarla antes en la
-góndola. Progres DEBE usar la identidad del producto existente que su subtítulo denomina así,
+el depósito, con la exhibición y cupo positivo de la etapa (BR-STK-047 hasta la última jornada de
+prueba), sin exigir colocarla antes en la góndola. Progres DEBE usar la identidad del producto existente que su subtítulo denomina así,
 sin crear otra fila de catálogo. Poético DEBE ser la unidad vendible del pedido, distinta del
 bidón azul de limpieza; entregar el bidón NO DEBE satisfacerla. Usar previamente esa unidad para
-teñir el balde durante jornada 5 NO DEBE impedir su venta ni descontarla dos veces. Atención y
-reposición DEBEN consumir los mismos pedidos fijos de la única lista construida al abrir jornada 5.
+teñir un balde NO DEBE impedir su venta ni descontarla dos veces. Atención y
+reposición DEBEN consumir los mismos pedidos fijos de la única lista construida al abrir jornada 2.
 
 ### BR-STK-046 — El catálogo presente depende de la etapa
 
 HASTA la jornada anterior a la primera completa, el sistema DEBE tener únicamente los
-dieciséis productos del mapa de prueba. Sus identidades son Actroncito, Durextra, Arvecor,
+dieciséis productos del mapa de prueba. Sus identidades son Actroncito, Duronga, Arvecor,
 Marolini, Zucarachas, Malbardo, Progres, Jorgillo, Pepito, Pura-Cola, Don Saturados, Petisas,
 Mayonchis, Poético, Terminator y Fernet God, con sus nombres de catálogo vigentes.
 
@@ -534,7 +534,7 @@ longitudinales, repetidas en cada nivel, sin estantes vacíos:
 | Lado de salados de la segunda isla | Progres y Don Saturados |
 | Cabecera que conserva Jorgillo en el mapa completo | Jorgillo |
 | Cabecera opuesta de la segunda isla | Poético |
-| Estantería de no comestibles | Actroncito y Durextra |
+| Estantería de no comestibles | Actroncito en la mitad izquierda y Duronga en la derecha |
 | Primera heladera funcional | Pura-Cola |
 | Segunda heladera funcional | Mayonchis |
 
@@ -1050,14 +1050,14 @@ desconocida sin sector, hacen rechazar el reparto en lugar de asignar un destino
 
 ### AC-STK-081 — Reposición y atención comparten los pedidos fijos *(verifica BR-STK-040)*
 
-DADO una apertura de jornada 5 con los pedidos de Fede y Mía construidos CUANDO se consultan
+DADO una apertura de jornada 2 con los pedidos de Fede y Mía construidos CUANDO se consultan
 faltantes antes y después de construir atención, y se repiten ambas consultas ENTONCES se usan
 las mismas instancias de compradores y pedidos, con los seis productos fijos de BR-CTR-038,
 sin reconstrucción ni azar. Otra apertura crea estados propios sin heredar entregas.
 
 ### AC-STK-082 — Vencer devuelve productos al piso interior sin venta *(verifica BR-STK-041)*
 
-DADO jornada 5 y una compra parcial con dos unidades recibidas, una de caja y otra de góndola,
+DADO jornada 2 y una compra parcial con dos unidades recibidas, una de caja y otra de góndola,
 CUANDO vence ENTONCES ambas identidades siguen afuera, los cuerpos quedan visibles y recogibles
 en el piso interior frente a ventanilla, sin superponerse con sólidos ni entre sí, y no suman
 venta ni descuento. El ticket aceptado desaparece. Repetir vencimiento no duplica cuerpos.
@@ -1074,7 +1074,7 @@ incluso al cierre; sumar una unidad de Mía la descumple y restarla la vuelve a 
 ambas compras vencidas y planilla cero CUANDO cierra ENTONCES registrar cuenta cumplida aunque
 atención no. Si ambas se venden, sólo su suma exacta cumple registrar.
 
-### AC-STK-084 — La venta de jornada 5 no descuenta dos veces *(verifica BR-STK-041)*
+### AC-STK-084 — La venta de jornada 2 no descuenta dos veces *(verifica BR-STK-041)*
 
 DADO Fede con su inicial terminada y cajas con el contenido inicial declarado CUANDO se retiran
 una unidad de Poético, una de Progres y una de Duronga y se entregan con ticket exacto ENTONCES
@@ -1085,7 +1085,7 @@ reposición pendiente hasta rellenarlo.
 
 ### AC-STK-090 — Duronga del depósito completa el pedido fijo *(verifica BR-STK-045, BR-STK-041, BR-STK-027, BR-STK-044)*
 
-DADO jornada 5, Duronga con la exhibición y cupo positivo de BR-STK-044, contenido inicial en
+DADO jornada 2, Duronga con la exhibición y cupo positivo de BR-STK-047, contenido inicial en
 depósito y faltantes que respetan BR-STK-027 CUANDO se saca una unidad de su caja y se entrega a
 Fede junto con Poético, Progres y ticket exacto ENTONCES la compra se completa y lo vendido de
 Duronga es una unidad, sin exigir colocarla antes en góndola. El cupo y la reserva de reposición
@@ -1094,7 +1094,7 @@ subtítulo, sin una fila adicional de catálogo.
 
 ### AC-STK-091 — Poético vendible conserva su identidad después de limpiar *(verifica BR-STK-045, BR-STK-041)*
 
-DADO una unidad vendible de Poético retirada de caja en jornada 5 CUANDO tiñe un balde y después
+DADO una unidad vendible de Poético retirada de caja CUANDO tiñe un balde y después
 se entrega a Fede con los demás productos y ticket ENTONCES se vende esa misma identidad una
 sola vez; el teñido no agrega descuento de inventario y la venta no vuelve a retirar el pedido
 entero. DADO un intento de recepción que identifica el bidón azul en lugar de Poético CUANDO
@@ -1128,14 +1128,17 @@ sin heredar los huecos de ventas de la primera.
 ### AC-STK-095 — La prueba tiene exactamente su catálogo *(verifica BR-STK-046, BR-STK-004, BR-STK-026)*
 
 DADO cada jornada 1, 2 y 3 CUANDO abre con cualquier semilla de 0 a 199 ENTONCES sólo
-registra los dieciséis productos de BR-STK-046, en orden de catálogo. Cada caja presente
-abre llena; cada producto ausente tiene cero unidades y cero cupo. Los faltantes sólo
+registra los dieciséis productos de BR-STK-046, en orden de catálogo, con Duronga presente y
+Durextra ausente. Cada caja presente abre llena; cada producto ausente tiene cero unidades y
+cero cupo. Los faltantes sólo
 incluyen presentes. DADO jornadas 4 y 8 ENTONCES están las treinta y dos identidades.
 
 ### AC-STK-096 — Cada nivel de prueba coincide con el mapa *(verifica BR-STK-047, BR-STK-024, BR-STK-025, BR-STK-035)*
 
 DADO una apertura de prueba CUANDO se recorren las cuatro alturas de cada destino de
-BR-STK-047 ENTONCES sus productos coinciden con la tabla, sin ajenos ni niveles vacíos.
+BR-STK-047 ENTONCES sus productos coinciden con la tabla, sin ajenos ni niveles vacíos; en
+la estantería de no comestibles, Duronga ocupa la mitad derecha de los cuatro niveles junto
+a Actroncito.
 Cada producto tiene una sola principal y los cupos suman todos sus frontales. Cada unidad
 se apoya sobre su estante, sin intersecciones, y conserva la orientación y filas de su envase.
 CUANDO se agarra y repone una unidad del frontal repetido en el otro nivel central ENTONCES
@@ -1144,9 +1147,10 @@ sólo cambia ese casillero y la cuenta de reponer responde a ambos gestos.
 ### AC-STK-097 — Las cajas ausentes tampoco se pueden tocar *(verifica BR-STK-046)*
 
 DADO cada jornada 1, 2 y 3 CUANDO se recorren las cajas del depósito ENTONCES únicamente
-las dieciséis presentes se dibujan y participan en física e interacción. Un rayo o volumen
-que antes encontraba una caja ausente ya no la encuentra. CUANDO se abre la jornada 4
-ENTONCES vuelven las treinta y dos cajas y las recién llegadas satisfacen AC-STK-077.
+las dieciséis presentes se dibujan y participan en física e interacción; la de Duronga está
+en el depósito y la de Durextra no. Un rayo o volumen que antes encontraba una caja ausente
+ya no la encuentra. CUANDO se abre la jornada 4 ENTONCES vuelven las treinta y dos cajas,
+Durextra entre ellas, y las recién llegadas satisfacen AC-STK-077.
 
 ### AC-STK-098 — Cambiar de etapa renueva el local *(verifica BR-STK-046, BR-STK-047, BR-STK-043, BR-STK-044)*
 
@@ -1177,7 +1181,7 @@ La apertura de escena selecciona compradores una vez mediante
 `Compradores.de_la_jornada`. Pasa la misma `Array[Comprador]` a
 `Apertura.inventario_de_la_jornada(compradores, totales, reponibles, azar)` y a
 `TareaDeAtender`; las consultas `Apertura.pedidos_de(compradores)` leen las mismas `Venta`.
-La fuente inyectable no activa por sí sola el padrón de la jornada 5 ni sustituye el inventario de uno
+La fuente inyectable no activa por sí sola el padrón de la jornada 2 ni sustituye el inventario de uno
 solo de sus consumidores.
 
 - **Entrada:** el sector y destino declarado de cada producto y si admite exhibición;
@@ -1221,7 +1225,7 @@ solo de sus consumidores.
   compara la planilla, y cada cobro o vencimiento vuelve a compararla; en las jornadas 1 a 4,
   cerrar todas las compras habilita evaluar registrar, independientemente de atención.
   Los mismos pedidos construidos para esa apertura acotan los faltantes, sin otra selección
-  de compradores o productos (BR-STK-026, BR-STK-027). En jornada 5, el padrón fijo conserva
+  de compradores o productos (BR-STK-026, BR-STK-027). En jornada 2, el padrón fijo conserva
   sus identidades, recepción y revisión de registrar por venta o vencimiento (BR-STK-040,
   BR-STK-041, BR-STK-042, BR-STK-045).
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja

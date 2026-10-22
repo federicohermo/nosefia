@@ -157,7 +157,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	)
 	var terminados := [0]
 	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
-	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	assert_int(terminados[0]).is_zero()
 	# Lo que se llevaba queda a los pies, y no en la cara ni donde se mira.
 	assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
@@ -165,7 +165,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.look_at(jugador.global_position + jugador.frente() * 1.2)
 	var pies := agarre.punto_de_respaldo.global_position
-	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_bool(control.esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_null()
@@ -276,42 +276,19 @@ func _atender(almacen: Node3D) -> void:
 	var panel: PanelDeLaVentanilla = ventanilla.get("panel")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var atenciones: Ventanilla = almacen.get("_atenciones")
-	var agarre: Agarre = almacen.get("_agarre")
-	var caja: CajaRegistradora = almacen.get("_caja")
-	var destino: Node3D = almacen.get("_puesto_de_la_caja").get("destino_de_los_tickets")
-	for hora: Vector2i in [Vector2i(22, 0), Vector2i(4, 0)]:
-		RelojDePrueba.avanzar_hasta(reloj, hora)
-		_pulsar_ventanilla(ventanilla)
+	assert_bool(atenciones.tarea().fisica()).is_false()
+	for _comprador in ReglasDeLaVentanilla.COMPRADORES_POR_JORNADA:
+		ventanilla.call("abrir")
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)
 		var atendida := atenciones.atencion()
 		assert_object(atendida).is_not_null()
-		for _entrada in 4:
-			_pulsar_ventanilla(ventanilla)
-			if atenciones.puede_abandonar():
-				break
-		caja.pedir_borrar()
-		for producto in atendida.comprador().pedido().productos():
-			for _unidad in atendida.comprador().pedido().unidades_de(producto):
-				almacen.get("_reposicion_manual").retirar(producto.id)
-				caja.pedir_anotar(agarre.manos().sostenido())
-				_pulsar_ventanilla(ventanilla)
-		caja.pedir_imprimir()
-		for nodo in destino.get_children():
-			var papel := nodo as ObjetoAgarrable
-			if papel != null and papel.datos is Ticket and papel.visible:
-				agarre.pedir_agarrar(papel.datos, papel)
-				_pulsar_ventanilla(ventanilla)
+		atenciones.pedir_cobrar()
 		assert_bool(atendida.vendida()).is_true()
-		for _entrada in 4:
-			_pulsar_ventanilla(ventanilla)
-			if atenciones.puede_abandonar():
-				break
 		ventanilla.call("cerrar")
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
-	ventanilla.call("cerrar")
 
 
 func _cumplidas(reloj: RelojDelTurno) -> int:

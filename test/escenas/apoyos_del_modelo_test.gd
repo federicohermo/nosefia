@@ -47,7 +47,7 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_su_alcance() -> void:
 
 
 func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
-	var almacen := await _abrir(Compradores.JORNADA_DE_FEDE_Y_MIA)
+	var almacen := await _abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	var objetos: Array[Node] = almacen.get_node("Objetos").get_children()
 	var manchas: Array = almacen.get("_limpieza").manchas()
 	objetos.append_array(manchas)

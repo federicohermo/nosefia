@@ -56,8 +56,8 @@ func test_cada_frontera_exacta_emite_una_vez_la_instancia_original() -> void:  #
 	assert_bool(_ventanilla.tarea().completada()).is_false()
 
 
-# AC-CTR-050, AC-CTR-054
-func test_saltar_al_cierre_procesa_mia_antes_de_publicar_el_resultado() -> void:
+# AC-CTR-050
+func test_saltar_al_cierre_entrega_las_cuatro_fronteras_antes_del_resultado() -> void:
 	var compradores := Compradores.segunda_jornada_definida()
 	_abrir(compradores)
 	var eventos: Array[String] = []

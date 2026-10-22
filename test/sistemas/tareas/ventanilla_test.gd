@@ -35,12 +35,16 @@ var _cumplidas_avisadas: int = 0
 
 func test_solo_el_primer_clic_publica_el_inicio_de_la_conversacion() -> void:  # AC-NTF-012
 	var ventanilla := _ventanilla(0)
-	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(4), _inventario()))
+	ventanilla.arrancar(
+		TareaDeAtender.new(
+			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), _inventario()
+		)
+	)
 	var avisados: Array[Comprador] = []
 	ventanilla.conversacion_iniciada.connect(
 		func(comprador: Comprador) -> void: avisados.append(comprador)
 	)
-	ventanilla.reloj.avanzar(120.0)
+	ventanilla.reloj.avanzar(30.0)
 	ventanilla.pedir_abrir()
 	assert_array(avisados).is_empty()
 	assert_bool(ventanilla.atencion().conversacion_iniciada()).is_false()
@@ -54,22 +58,26 @@ func test_solo_el_primer_clic_publica_el_inicio_de_la_conversacion() -> void:  #
 
 func test_el_reloj_publica_llegada_y_vencimiento_con_la_ventana_cerrada() -> void:  # AC-CTR-035
 	var ventanilla := _ventanilla(0)
-	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(4), _inventario()))
+	ventanilla.arrancar(
+		TareaDeAtender.new(
+			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), _inventario()
+		)
+	)
 	var salidas: Array[Comprador] = []
 	ventanilla.comprador_vencido.connect(
 		func(comprador: Comprador) -> void: salidas.append(comprador)
 	)
 	ventanilla.pedir_abrir()
 	assert_int(_llegados).is_zero()
-	ventanilla.reloj.avanzar(120.0)
+	ventanilla.reloj.avanzar(30.0)
 	assert_int(_llegados).is_equal(1)
 	ventanilla.pedir_abrir()
 	ventanilla.pedir_abrir()
 	assert_int(_llegados).is_equal(1)
-	ventanilla.reloj.avanzar(120.0)
+	ventanilla.reloj.avanzar(150.0)
 	assert_array(salidas).has_size(1)
 	assert_bool(ventanilla.tarea().completada()).is_false()
-	ventanilla.reloj.avanzar(360.0)
+	ventanilla.reloj.avanzar(180.0)
 	assert_int(_llegados).is_equal(2)
 	assert_array(salidas).has_size(2)
 	assert_object(ventanilla.tarea().en_ventanilla()).is_null()
@@ -79,10 +87,12 @@ func test_publica_compra_solo_al_recibir_el_ultimo_elemento() -> void:  # AC-CTR
 	var ventanilla := _ventanilla(0)
 	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var estante := Estante.new(inventario, Catalogo.todos())
-	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(4), inventario))
+	ventanilla.arrancar(
+		TareaDeAtender.new(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), inventario)
+	)
 	var compras: Array[bool] = []
 	ventanilla.compra_realizada.connect(func() -> void: compras.append(true))
-	for intervalo: float in [120.0, 360.0]:
+	for intervalo: float in [30.0, 180.0]:
 		ventanilla.reloj.avanzar(intervalo)
 		ventanilla.pedir_interaccion(null)
 		while not ventanilla.puede_abandonar():
@@ -379,7 +389,9 @@ func _anotar_rechazo(_faltantes: Array[Producto]) -> void:
 
 func test_el_lector_del_cierre_ve_ambas_compras_vencidas_una_sola_vez() -> void:  # AC-STK-056
 	var ventanilla := _ventanilla(0)
-	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(4), _inventario())
+	var tarea := TareaDeAtender.new(
+		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), _inventario()
+	)
 	ventanilla.arrancar(tarea)
 	# Repreparar no duplica conexiones; el lector se conecta después, como la computadora.
 	ventanilla.arrancar(tarea)

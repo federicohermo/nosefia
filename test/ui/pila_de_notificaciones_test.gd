@@ -104,7 +104,7 @@ func test_retrabar_conserva_el_resto_en_pausa_y_vaciar_la_retira() -> void:  # A
 
 func test_la_salida_tiene_el_texto_y_simbolo_de_figma_y_respeta_pausa() -> void:  # AC-NTF-011
 	var pila := _pila()
-	pila.avisar_salida(Compradores.de_la_jornada(4)[0])
+	pila.avisar_salida(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0])
 	assert_array(_textos(pila)).is_equal(["EL CLIENTE SE CANSÓ DE ESPERAR."])
 	var simbolo := pila.find_children("*", "TextureRect", true, false)[0] as TextureRect
 	assert_str(simbolo.texture.resource_path).ends_with("/notificacion_salida.svg")

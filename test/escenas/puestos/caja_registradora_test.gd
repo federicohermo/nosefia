@@ -318,7 +318,7 @@ func test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa()
 	_accion(jugador, papeles[1], ReglasDeLosObjetos.ACCION_AGARRAR)
 	_accion(jugador, papeles[1], ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_true()
-	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	assert_array(_papeles(almacen)).is_empty()
@@ -689,7 +689,7 @@ func test_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado() -> voi
 	assert_bool(is_instance_valid(segundo)).is_true()
 	assert_int(avisos.size()).is_equal(1)
 	assert_int((_puesto(almacen).get("_tickets") as Array).size()).is_equal(1)
-	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	assert_bool(is_instance_valid(segundo)).is_false()

@@ -65,11 +65,18 @@ static func jugar(partida: Partida, como: Juego) -> Noche:
 	noche.registro = RegistroDeVentas.new(Catalogo.todos(), noche.atender)
 	for indice in compradores.size():
 		var comprador := compradores[indice]
-		noche.atender.avanzar(comprador.horario.x)
-		if como.atiende[indice]:
-			_vender(noche)
+		if comprador.tiene_horario():
+			noche.atender.avanzar(comprador.horario.x)
+			if como.atiende[indice]:
+				_vender(noche)
+			else:
+				noche.atender.avanzar(comprador.horario.y)
 		else:
-			noche.atender.avanzar(comprador.horario.y)
+			noche.atender.atender()
+			if como.atiende[indice]:
+				noche.atender.atencion().cobrar()
+			else:
+				noche.atender.atencion().despachar_sin_vender()
 		if (
 			(como.anota and como.atiende[indice])
 			or (como.anota_de_mas and not como.atiende[indice])

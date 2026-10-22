@@ -10,7 +10,7 @@ const CONTENEDOR := (
 )
 
 
-func _abrir(jornada: int = Compradores.JORNADA_DE_FEDE_Y_MIA) -> Node3D:
+func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)
@@ -59,7 +59,9 @@ func test_solo_la_segunda_noche_muestra_bolsas_en_los_tachos() -> void:  # AC-CL
 		var bolsas: Array[Node3D] = almacen.get("_bolsas")
 		for numero in bolsas.size():
 			var bolsa := bolsas[numero] as ObjetoAgarrable
-			assert_bool(bolsa.visible).is_equal(jornada == Compradores.JORNADA_DE_FEDE_Y_MIA)
+			assert_bool(bolsa.visible).is_equal(
+				jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+			)
 			assert_bool(bolsa.freeze).is_true()
 			assert_bool(bolsa.get_node("Forma").disabled).is_true()
 			var tacho := almacen.get_node(BolsaEnLaMano.RUTAS[numero]) as StaticBody3D

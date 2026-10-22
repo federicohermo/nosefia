@@ -7,7 +7,8 @@ const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(load(ALMACEN).instantiate())
 	almacen.set(
-		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
 	add_child(almacen)
 	almacen.get("_reloj").set_process(false)
@@ -232,7 +233,7 @@ func test_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida() -> vo
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	assert_int(disposicion.filas_de_adelante[Producto.Id.DURONGA]).is_greater(0)
 	var pedidos := Venta.new()
-	for comprador in Compradores.de_la_jornada(Compradores.JORNADA_DE_FEDE_Y_MIA):
+	for comprador in Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1):
 		for producto in comprador.pedido().productos():
 			pedidos.agregar(producto, comprador.pedido().unidades_de(producto))
 	assert_bool(inventario.cobrar(pedidos)).is_true()

@@ -1,6 +1,7 @@
 ## El lector conserva las unidades físicas agrupadas y el examen de la que está en mano.
 extends GdUnitTestSuite
 
+const TinYTia := preload("res://test/escenas/tin_y_tia.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const CIERRE := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
@@ -25,6 +26,7 @@ func after_test() -> void:
 func _abrir(con_lugar: bool = true) -> void:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
+	_almacen.set("compradores_de_la_apertura", TinYTia.en_cualquier_jornada)
 	add_child(_almacen)
 	AperturaConLugar.abrir_con_semilla(_almacen)
 	if con_lugar:
@@ -202,8 +204,8 @@ func _entregar_a_tin(
 	assert_bool(_desorden()).is_false()
 	var atenciones: Ventanilla = _almacen.get("_atenciones")
 	if solapados:
-		var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
-		compradores[1].horario = Vector2(10800, 18000)
+		var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+		compradores[1].horario = Vector2(7200, 14400)
 		var inventario: Inventario = (_almacen.get("_repositor") as Repositor).estante().get(
 			"_inventario"
 		)
@@ -212,7 +214,7 @@ func _entregar_a_tin(
 		(_almacen.get("_computadora") as ComputadoraDeEscritorio).arrancar(
 			RegistroDeVentas.new(Catalogo.todos(), tarea)
 		)
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(20, 30))
 	ventana.call("abrir")
 	_pulsar_comprador()
 	while not atenciones.puede_abandonar():
@@ -241,7 +243,7 @@ func _entregar_a_tin(
 
 func _abandonar_tin(todas: bool = true, desde_gondola: bool = false) -> Array[ObjetoAgarrable]:
 	var cuerpos := await _entregar_a_tin(todas, desde_gondola)
-	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(0, 0))
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 0))
 	for _cuadro in 60:
 		await get_tree().physics_frame
 	for cuerpo in cuerpos:
@@ -281,7 +283,7 @@ func test_tres_abandonadas_quedan_adentro_sin_solidos_y_pausan_la_caida() -> voi
 	var identidades: Array[ObjetoDelAlmacen] = []
 	for cuerpo in cuerpos:
 		identidades.append(cuerpo.datos)
-	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(0, 0))
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 0))
 	var sueltas: Array[Node3D] = _almacen.get("_reposicion_manual").call("unidades_sueltas")
 	assert_array(sueltas).contains_exactly_in_any_order(cuerpos)
 	var posiciones: Array[Vector3] = []
@@ -445,9 +447,9 @@ func test_cero_y_solo_ticket_no_dejan_unidades() -> void:  # AC-CTR-040, AC-STK-
 	var ventana: Node3D = _almacen.get_node("Estructura/Ventanilla")
 	var atenciones: Ventanilla = _almacen.get("_atenciones")
 	var agarre: Agarre = _almacen.get("_agarre")
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(0, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 0))
 	assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas")).is_empty()
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(4, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	ventana.call("abrir")
 	_pulsar_comprador()
 	_pulsar_comprador()
@@ -465,7 +467,7 @@ func test_cero_y_solo_ticket_no_dejan_unidades() -> void:  # AC-CTR-040, AC-STK-
 	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
 	_pulsar_comprador()
 	assert_object(agarre.manos().sostenido()).is_null()
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(6, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(2, 0))
 	RelojDePrueba.avanzar_turno(reloj, 0.0)
 	for _cuadro in 3:
 		await get_tree().physics_frame
@@ -540,7 +542,7 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 		"entregas_abandonadas",
 		func(entregas: Array[Node3D]) -> void: emisiones.append(entregas.duplicate())
 	)
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
 	_pulsar_comprador()
 	_pulsar_comprador()
 	for producto in atenciones.atencion().comprador().pedido().productos():
@@ -550,7 +552,7 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 		cuerpos.append(cuerpo)
 		_pulsar_comprador()
 		assert_object(agarre.cuerpo_sostenido()).is_null()
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(1, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(0, 0))
 	assert_array(emisiones).has_size(2)
 	assert_array(emisiones[0]).has_size(3)
 	assert_array(emisiones[1]).has_size(2)
@@ -603,7 +605,7 @@ func test_el_sector_proximo_ocupado_busca_otro_apoyo_interior() -> void:  # AC-C
 	prueba.exclude = [bloque.get_rid(), suelo.get_rid()]
 	prueba.margin = 0.0
 	assert_array(jugador.get_world_3d().direct_space_state.intersect_shape(prueba)).is_empty()
-	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(0, 0))
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 0))
 	for _cuadro in 90:
 		await get_tree().physics_frame
 	(

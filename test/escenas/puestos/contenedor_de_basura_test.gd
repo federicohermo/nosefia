@@ -78,7 +78,8 @@ func test_una_bolsa_soltada_por_la_boca_se_recoge_y_se_tira_despues() -> void:  
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set(
-		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -188,7 +189,7 @@ func test_reiniciar_restaura_tapa_abierta() -> void:  # AC-CLN-034
 	var abierta := tapa.bisagra.global_transform
 	tapa.accionar()
 	await _terminar_el_giro(tapa)
-	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	var contenedor: StaticBody3D = almacen.get_node(

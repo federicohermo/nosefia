@@ -16,7 +16,7 @@ CARAS = {
     "B.oeste": ("PROGRES", "DON_SATURADOS"),
     "B.norte": ("JORGILLO",),
     "B.sur": ("POETICO",),
-    "N.sur": ("ACTRONCITO", "DUREXTRA"),
+    "N.sur": ("ACTRONCITO", "DURONGA"),
     "H1.sur": ("PURA_COLA",),
     "H2.sur": ("MAYONCHIS",),
 }
