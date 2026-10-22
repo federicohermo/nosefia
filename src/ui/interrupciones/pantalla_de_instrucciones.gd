@@ -19,7 +19,8 @@ const SEPARACION_DEL_SECTOR := 64.0
 const TAMANO_DE_LA_CAJA := Vector2(136, 316)
 const TAMANO_DEL_TICKET := Vector2(109, 186)
 const FOTO_DEL_LECTOR := "J1_Foto04"
-const ALTO_DE_LAS_FOTOS_EN_PAR := 233.0
+const ALTO_DEL_BLOQUE_EN_PAR := 233.0
+const ANCHO_DE_LA_LEYENDA := 350.0
 ## Cada foto lleva su leyenda; la pantalla en que cae depende de la jornada.
 const FOTOS := {
 	"J1_FotoReloj": {"titulo": "Reloj", "sector": "Sector de ventas"},
@@ -135,7 +136,7 @@ func _pintar() -> void:
 		altura += cuerpo.get_content_height() + SEPARACION_VERTICAL
 	_imagen(SEPARADOR, Rect2(0, altura, 510, 2))
 	var altura_de_la_foto := altura + 2.0 + SEPARACION_VERTICAL
-	var ancho_de_la_leyenda := 350.0
+	var ancho_de_la_leyenda := ANCHO_DE_LA_LEYENDA
 	var x_del_ticket := ANCHO_DEL_TEXTO - TAMANO_DEL_TICKET.x
 	var x_de_la_caja := x_del_ticket - SEPARACION_HORIZONTAL - TAMANO_DE_LA_CAJA.x
 	var foto: Mensaje = paso.fotos[0] if paso.fotos.size() == 1 else null
@@ -223,29 +224,35 @@ func _foto(textura: Texture2D, ficha: Dictionary, altura: float, ancho_de_leyend
 
 
 func _fotos_en_fila(fotos: Array[Mensaje], altura: float) -> void:
-	var x := 0.0
+	var bloque := Rect2(
+		0, altura, ANCHO_DEL_TEXTO, minf(ALTO_DEL_BLOQUE_EN_PAR, _contenido.size.y - altura)
+	)
+	var proporcion_total := 0.0
 	for mensaje in fotos:
-		var ancho := (
-			12.0
-			+ (
-				(ALTO_DE_LAS_FOTOS_EN_PAR - 12.0)
-				* mensaje.foto.get_width()
-				/ mensaje.foto.get_height()
-			)
+		proporcion_total += float(mensaje.foto.get_width()) / mensaje.foto.get_height()
+	var ancho_de_fotos := bloque.size.x - ANCHO_DE_LA_LEYENDA - SEPARACION_HORIZONTAL * fotos.size()
+	var alto_de_foto := minf(
+		bloque.size.y, 12.0 + (ancho_de_fotos - 12.0 * fotos.size()) / proporcion_total
+	)
+	var posicion_de_foto := bloque.position
+	var posicion_de_leyenda := Vector2(bloque.end.x - ANCHO_DE_LA_LEYENDA, bloque.position.y)
+	for mensaje in fotos:
+		var textura: Texture2D = mensaje.foto
+		var ancho_de_foto := (
+			12.0 + (alto_de_foto - 12.0) * textura.get_width() / textura.get_height()
 		)
-		var rectangulo := Rect2(x, altura, ancho, ALTO_DE_LAS_FOTOS_EN_PAR)
-		_marco_de_foto(mensaje.foto, rectangulo)
+		var rectangulo := Rect2(posicion_de_foto, Vector2(ancho_de_foto, alto_de_foto))
+		_marco_de_foto(textura, rectangulo)
+		posicion_de_foto.x = rectangulo.end.x + SEPARACION_HORIZONTAL
 		var ficha: Dictionary = FOTOS[mensaje.identidad]
-		var posicion := Vector2(x, rectangulo.end.y + 12.0)
-		var titulo := _texto(ficha["titulo"], posicion, ancho, 30, COLOR_DE_RESALTE)
-		_texto(
-			"-" + ficha["sector"],
-			posicion + Vector2(0, titulo.get_content_height() + 12.0),
-			ancho,
-			30,
-			COLOR_DE_SECTOR
+		var titulo := _texto(
+			ficha["titulo"], posicion_de_leyenda, ANCHO_DE_LA_LEYENDA, 30, COLOR_DE_RESALTE
 		)
-		x += ancho + SEPARACION_HORIZONTAL
+		posicion_de_leyenda.y += titulo.get_content_height() + 12.0
+		var sector := _texto(
+			"-" + ficha["sector"], posicion_de_leyenda, ANCHO_DE_LA_LEYENDA, 30, COLOR_DE_SECTOR
+		)
+		posicion_de_leyenda.y += sector.get_content_height() + 12.0
 
 
 func _marco_de_foto(textura: Texture2D, rectangulo: Rect2) -> void:
