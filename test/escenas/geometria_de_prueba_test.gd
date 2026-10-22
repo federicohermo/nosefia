@@ -29,6 +29,42 @@ func test_la_prueba_conserva_el_retiro_frontal_del_mapa_completo() -> void:  # A
 		)
 
 
+func test_las_cabeceras_conservan_el_aire_entre_filas_del_mapa_completo() -> void:  # AC-STK-100
+	var local := _abrir()
+	var puesto: Node3D = local.get("_reposicion_manual")
+	var aires: Dictionary[Producto.Id, float] = {}
+	for id: Producto.Id in [Producto.Id.FERNET_GOD, Producto.Id.MALBARDO, Producto.Id.JORGILLO]:
+		aires[id] = _aire_entre_filas(puesto, id)
+	local.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	for id: Producto.Id in aires:
+		assert_float(aires[id]).override_failure_message(Catalogo.de(id).nombre).is_greater_equal(
+			_aire_entre_filas(puesto, id) - ReposicionManual.TOLERANCIA_DEL_APOYO
+		)
+
+
+func _aire_entre_filas(puesto: Node3D, id: Producto.Id) -> float:
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var producto := Catalogo.de(id)
+	var grupo: MultiMeshInstance3D = puesto.get_node("ProductosDe" + producto.nombre)
+	var vertices := grupo.multimesh.mesh.get_faces()
+	var buffer: PackedFloat32Array = disposicion.principales[id]
+	var frontales: int = disposicion.filas_de_adelante[id]
+	var frente := DisposicionDeLaGondola.frente(buffer, frontales)
+	frente.y = 0.0
+	frente = frente.normalized()
+	var fin_del_frente := -INF
+	var inicio_del_fondo := INF
+	for indice in DisposicionDeLaGondola.copias(buffer):
+		var copia := DisposicionDeLaGondola.copia(buffer, indice)
+		for vertice in vertices:
+			var v: float = (copia * vertice).dot(-frente)
+			if indice < DisposicionDeLaGondola.copias(buffer) - frontales:
+				inicio_del_fondo = minf(inicio_del_fondo, v)
+			else:
+				fin_del_frente = maxf(fin_del_frente, v)
+	return inicio_del_fondo - fin_del_frente
+
+
 func _frentes_de_las_tandas(local: Node3D, jornada: int) -> Dictionary[String, float]:
 	var puesto: Node3D = local.get("_reposicion_manual")
 	var contenido: Node3D = puesto.get("contenido")
