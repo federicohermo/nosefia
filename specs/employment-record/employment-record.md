@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21
 ---
 
 # Capacidad: el legajo del empleado
@@ -131,21 +131,21 @@ futura. Los motivos pendientes no DEBEN persistirse ni mostrar un contador nuevo
 
 ### BR-EMP-022 — Enrique introduce cada jornada de introducción
 
-CUANDO abre una jornada de introducción (BR-SHF-005), por partida nueva, al seguir desde el
-cierre anterior o retomada desde el menú, el sistema DEBE presentar las instrucciones de Enrique
-Peldaño propias de esa jornada antes de su comienzo jugable, sobre la persiana baja. CUANDO abre
-otra jornada, o una de introducción sin instrucciones propias, el sistema NO DEBE mostrar
-instrucciones y DEBE anunciar la noche directamente (BR-SHF-019).
+CUANDO abre una jornada de introducción (BR-SHF-005) o la primera jornada completa, por partida
+nueva, al seguir desde el cierre anterior o retomada desde el menú, el sistema DEBE presentar las
+instrucciones de Enrique Peldaño propias de esa jornada antes de su comienzo jugable, sobre la
+persiana baja. CUANDO abre otra jornada, o una de ésas sin instrucciones propias, el sistema NO
+DEBE mostrar instrucciones y DEBE anunciar la noche directamente (BR-SHF-019).
 
 Las instrucciones DEBEN ser los doce mensajes introductorios de la ficha «Chat con el jefe»
-revisada el 2026-10-20, repartidos así:
+revisada el 2026-10-21, repartidos así:
 
 | Jornada | En pantalla | Sólo en el chat |
 |---|---|---|
 | 1 | Intro 1 a 6 | — |
 | 2 | El mensaje 1 que elige BR-EMP-040, Intro 7 e Intro 8 | — |
 | 3 | El mensaje 1 que elige BR-EMP-042 e Intro 9 | — |
-| 4 | — | Intro 10, Intro 11 e Intro 12, al abrir la jornada |
+| 4 | El mensaje 1 que elige BR-EMP-043, Intro 10, Intro 11 e Intro 12 | — |
 
 Cada mensaje DEBE decir el texto de la ficha, conservar su orden y los énfasis en amarillo, sin
 negrita. DEBE corregir «vas a tener» en Intro 3 e «instrucciones» en Intro 10, mostrar el horario
@@ -181,15 +181,16 @@ Cada pantalla DEBE mostrar sus textos antes de las fotos y conservar el separado
 del diseño. El retrato de Enrique y su bocadillo DEBEN permanecer visibles en todas las
 pantallas, por aclaración explícita del usuario. La de Intro 4 DEBE acompañar el lector con la
 interfaz de caja y el ticket. Las fotos DEBEN cubrir su marco sin franjas negras y
-mantener visible el objeto ilustrado. La foto de Intro 11 DEBE acompañar su texto en el chat,
-aunque su frame de referencia omita esa foto.
+mantener visible el objeto ilustrado. La foto de Intro 11 DEBE acompañar su texto en pantalla
+y en el chat, aunque su frame de referencia omita esa foto.
 
 Intro 2 e Intro 7 DEBEN mostrar sus dos fotos después del texto y en el orden declarado.
 Provisoriamente, DEBEN ir lado a lado, con igual alto y dentro del ancho del texto, de 1007 px.
 
 Los textos y las nueve fotos DEBEN conservarse como 23 entradas separadas en el chat de
-Enrique: 11 de la jornada 1, 5 de la 2, 3 de la 3 y 4 de la 4. De las jornadas 2 y 3, el chat
-DEBE tener sólo el mensaje 1 que eligieron BR-EMP-040 y BR-EMP-042. Cada grupo de fotos DEBE ir inmediatamente
+Enrique: 11 de la jornada 1, 5 de la 2, 3 de la 3 y 4 de la 4, más el mensaje 1 de la jornada 4
+cuando BR-EMP-043 elige uno. De las jornadas 2, 3 y 4, el chat DEBE tener sólo el mensaje 1 que
+eligieron BR-EMP-040, BR-EMP-042 y BR-EMP-043. Cada grupo de fotos DEBE ir inmediatamente
 antes del texto de su Intro. Desde que abre su jornada, ese chat DEBE permitir releer cada
 entrada y ampliar cada foto con el texto de su propia Intro.
 
@@ -494,26 +495,28 @@ ignorado NO DEBE anotar nada.
 ### BR-EMP-043 — El mensaje 1 de la jornada 4 sale de las tres noches de prueba
 
 CUANDO la noche 3 cierra, que es la misma transición que abre la jornada 4, Enrique DEBE decir
-uno solo de estos cuatro mensajes, elegido por las tres noches que anotó BR-EMP-041. La cuenta y
+uno solo de estos cuatro mensajes, elegido por las tres noches que anotó BR-EMP-041, como primer mensaje de las instrucciones de la jornada 4 y de su
+chat. La cuenta y
 el umbral son los de la ficha «Ciclo de jornadas y sistema de puntos». Cada noche suma una falla
 por cada cliente mal atendido, por registrar y por reponer sin cumplir, y por limpiar sin cumplir
 en la jornada 3. Los llamados NO DEBEN sumar. «Menos de la mitad de las tareas» de la ficha «Chat
 con el jefe» son **5 fallas o más** entre las tres noches. La jornada 3 está «cumplida» si su
 noche no tiene fallas. Los textos DEBEN ser los de la ficha «Chat con el jefe» revisada el
-2026-10-20:
+2026-10-21:
 
 | Prueba | Texto |
 |---|---|
 | despedida por BR-EMP-037 | No, no, no. Flaco, no te puedo tomar como empleado si trabajás a medias. Un par de errores los puedo dejar pasar, pero si se repite todos los días... / Hasta acá llegó mi paciencia. Suerte consiguiendo otro trabajo. |
 | sin fallas en las tres noches | Muy bien, pibe. Me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que no bajes el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
 | 5 fallas o más y la jornada 3 cumplida | Mirá, flaco, en tus primeras dos jornadas estuviste mal, pero ayer lograste redimirte. Contra mis instintos, te voy a tomar como capacitado para el trabajo completo. Pero no me hagas arrepentirme, ¿ok? Te voy a seguir supervisando para que subas el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
-| cualquier otra | Bueno, pibe. Concluidos tus tres días de prueba, debo decir que tuviste algunos altibajos. De todas formas, me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que subas el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
+| cualquier otra | Bueno, pibe. Concluidos tus tres primeros días de prueba, debo decir que tuviste algunos altibajos. De todas formas, me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que subas el nivel. / A partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí. |
 
 La barra marca dónde la ficha parte el texto en dos párrafos, y el texto DEBE partir ahí. El
 despido lo decide el legajo (BR-EMP-037), no esta tabla: con la prueba perdida, su texto DEBE
 ser el único mensaje de la devolución de esa noche, que ofrece volver al menú, y NO DEBE seguir
-ningún otro mensaje ni abrirse la jornada 4. En las otras tres filas, el texto DEBE ser el
-primer mensaje de la jornada 4 en el chat de Enrique, antes de su mensaje 2. Sin la noche 3
+ningún otro mensaje ni abrirse la jornada 4. En las otras tres filas, el texto DEBE ser la
+primera pantalla de las instrucciones de la jornada 4 y el primer mensaje de la jornada 4 en el
+chat de Enrique, antes de su mensaje 2. Sin la noche 3
 anotada, la jornada 4 NO DEBE mostrar ningún mensaje 1. Con menos de 5 fallas, la jornada 3
 cumplida y fallas en la 1 o la 2, la ficha no tiene fila: la de «cualquier otra» es provisoria
 (OQ-EMP-011).
@@ -627,7 +630,10 @@ se pide una sola entrada a la noche 1. Avanzar 3 y volver 3 desde el inicio recu
 primera pantalla. DADO las de la jornada 2 ENTONCES el contador dice «1/2». CUANDO en la 2 se
 llega a 2/2 y se elige «OK» dos veces ENTONCES se pide una sola entrada a la noche 2. DADO las de
 la jornada 3 ENTONCES el contador dice «1/1», «Volver» está deshabilitado y el botón dice «OK».
-CUANDO se elige «OK» dos veces ENTONCES se pide una sola entrada a la noche 3. DADO instrucciones
+CUANDO se elige «OK» dos veces ENTONCES se pide una sola entrada a la noche 3. DADO las de la
+jornada 4 con la noche 3 anotada ENTONCES el contador dice «1/4»; sin ella dice «1/3». CUANDO en
+la 4 se llega a 4/4 y se elige «OK» dos veces ENTONCES se pide una sola entrada a la noche 4.
+DADO instrucciones
 de una sola pantalla ENTONCES la primera es la última: «Volver» está deshabilitado y el botón
 dice «OK». Los controles no se mueven al cambiar de pantalla y no existe desplazamiento
 del contenido.
@@ -636,10 +642,10 @@ del contenido.
 
 DADO los textos de la ficha revisada, sus énfasis y las nueve fotos CUANDO se agrupan las
 entradas de cada jornada ENTONCES la jornada 1 tiene 11 entradas y 6 pantallas, la 2 tiene 4 y
-2, la 3 tiene 2 y 1, y la 4 tiene 4 entradas y ninguna pantalla. Las jornadas 5 a 8 no tienen
-entradas ni pantallas. En la jornada 1, las pantallas 2, 3, 4 y 6 muestran la foto de su Intro
+2, la 3 tiene 2 y 1, y la 4 tiene 4 y 3. Las jornadas 5 a 8 no tienen entradas ni pantallas. En la jornada 1, las pantallas 2, 3, 4 y 6 muestran la foto de su Intro
 después del texto y la 5 es Intro 5 sin foto. La primera pantalla de la jornada 2 muestra las
-fotos de Intro 7, y la de la 3 la de Intro 9. Intro 2 muestra primero el reloj y después el
+fotos de Intro 7, la de la 3 la de Intro 9, y la segunda de la 4 muestra la foto del depósito
+después del texto de Intro 11. Intro 2 muestra primero el reloj y después el
 corcho; Intro 7 muestra primero las góndolas y después la estantería. Cada par va después del
 texto, lado a lado, con igual alto, dentro de los 1007 px y cubriendo sus marcos sin franjas
 negras. Las pantallas de una foto conservan su presentación. El chat de la jornada 4 recibe
@@ -903,7 +909,7 @@ altura del partido, ya estoy considerando tirarte a VOS por la ventanilla.». DA
 por desorden con P < 4 ENTONCES Reto 4 es «Realmente me sorprende cómo alguien puede tener tan
 poca conciencia de lo que es el orden.».
 
-### AC-EMP-075 — Las jornadas 2 y 3 abren con lo suyo *(verifica BR-EMP-022, BR-EMP-024)*
+### AC-EMP-075 — Las jornadas 2, 3 y 4 abren con lo suyo *(verifica BR-EMP-022, BR-EMP-024)*
 
 DADO el cierre de la jornada 1 CUANDO se elige «continuar» ENTONCES la persiana está baja, se ve
 el mensaje 1 que eligió la noche 1 (BR-EMP-040) en «1/3», el control está suspendido y no hay
@@ -911,21 +917,24 @@ placa. CUANDO pasan 120 segundos reales ENTONCES queda el mismo presupuesto de t
 elige «OK» en «3/3» ENTONCES aparece una
 sola «NOCHE 2», con el turno y el control retenidos hasta que termine de subir la persiana.
 DADO el cierre de la jornada 2 CUANDO se elige «continuar» ENTONCES se ve el mensaje 1 que eligió
-la noche 2 (BR-EMP-042) en «1/2», y el «OK» en «2/2» anuncia una sola «NOCHE 3».
+la noche 2 (BR-EMP-042) en «1/2», y el «OK» en «2/2» anuncia una sola «NOCHE 3». DADO el cierre
+de la jornada 3 sin perder la prueba CUANDO se elige «continuar» ENTONCES se ve el mensaje 1 que
+eligieron las tres noches (BR-EMP-043) en «1/4», y el «OK» en «4/4» anuncia una sola «NOCHE 4».
 
 ### AC-EMP-076 — Retomar repite las instrucciones de su jornada *(verifica BR-EMP-022)*
 
 DADO un guardado en la jornada 2 con la noche 1 anotada CUANDO se elige continuar ENTONCES salen
 sus instrucciones desde el mensaje 1 de esa noche, en «1/3», y después de su «OK» se anuncia
 «NOCHE 2». DADO un guardado en la jornada 3 sin la noche 2 anotada
-ENTONCES sale Intro 9 en «1/1». DADO un guardado en la jornada 4 ENTONCES se anuncia «NOCHE 4»
-sin instrucciones, y el chat de Enrique tiene Intro 10, la foto de Intro 11, Intro 11 e Intro 12
-después de la devolución 3. DADO un guardado del cierre 4 con la reflexión pendiente CUANDO se retoma y termina
+ENTONCES sale Intro 9 en «1/1». DADO un guardado en la jornada 4 con la noche 3 anotada ENTONCES
+salen sus instrucciones desde el mensaje 1 de esa prueba, en «1/4», y después de su «OK» se
+anuncia «NOCHE 4». El chat de Enrique tiene ese mensaje 1, Intro 10, la foto de Intro 11,
+Intro 11 e Intro 12 después de la devolución 3. DADO un guardado del cierre 4 con la reflexión pendiente CUANDO se retoma y termina
 la reflexión ENTONCES se anuncia «NOCHE 5» sin instrucciones.
 
 ### AC-EMP-077 — Sin instrucciones propias, la noche directa *(verifica BR-EMP-022)*
 
-DADO el cierre de cada jornada de la 3 a la 7 CUANDO se elige seguir ENTONCES la noche siguiente
+DADO el cierre de cada jornada de la 4 a la 7 CUANDO se elige seguir ENTONCES la noche siguiente
 se anuncia sin instrucciones en pantalla. DADO un guion sin mensajes de la jornada 2 CUANDO abre
 la jornada 2 ENTONCES se anuncia «NOCHE 2» directamente, sin instrucciones y sin error. DADO la
 jornada 0 o la 9 CUANDO se piden sus instrucciones ENTONCES no hay ninguna.
@@ -1014,8 +1023,8 @@ foto de Intro 9 y ningún otro mensaje 1 de la jornada 3.
 
 ### AC-EMP-089 — Las tres noches eligen el mensaje 1 de la jornada 4 *(verifica BR-EMP-043)*
 
-DADO las tres noches sin fallas CUANDO abre la jornada 4 ENTONCES su chat la empieza con la fila
-«sin fallas» y sigue con su mensaje 2. DADO 4 fallas en la noche 1 y una en la 2, con la 3 sin
+DADO las tres noches sin fallas CUANDO abre la jornada 4 ENTONCES su primera pantalla y su chat
+la empiezan con la fila «sin fallas» y siguen con su mensaje 2. DADO 4 fallas en la noche 1 y una en la 2, con la 3 sin
 fallas, ENTONCES es la fila de la jornada 3 cumplida. DADO 4 fallas en la noche 1 y la 3 sin
 fallas ENTONCES es «cualquier otra». DADO una falla en la noche 1 y limpiar sin cumplir en la 3
 ENTONCES es «cualquier otra». Ninguna combinación muestra dos mensajes 1. DADO una partida sin

@@ -60,17 +60,20 @@ func test_la_cuarta_retomada_repite_su_fila() -> void:  # AC-EMP-091
 	var cuarta := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 	var guion: Conversacion = load(CondicionesDelJefeTest.GUION)
 	var condiciones := CondicionesDelJefe.elegidas(retomada.noches_de_prueba)
-	var propios := InstruccionesDelJefe.de_la_jornada(guion.mensajes, cuarta, condiciones)
-	assert_array(propios).is_empty()
+	var esperado: Array[String] = [
+		"J4_Mensaje1_Redimido", "J1_Intro10", "J1_Foto11", "J1_Intro11", "J1_Intro12"
+	]
+	var en_pantalla: Array[String] = []
+	for mensaje in InstruccionesDelJefe.de_la_jornada(guion.mensajes, cuarta, condiciones):
+		en_pantalla.append(mensaje.identidad)
+	assert_array(en_pantalla).is_equal(esperado)
 	var bandeja := Bandeja.new([guion])
 	bandeja.abrir_jornada(cuarta, condiciones)
 	var de_la_cuarta: Array[String] = []
 	for mensaje: Mensaje in bandeja.mensajes_de(guion.interlocutor):
 		if mensaje.jornada == cuarta:
 			de_la_cuarta.append(mensaje.identidad)
-	assert_array(de_la_cuarta).is_equal(
-		["J4_Mensaje1_Redimido", "J1_Intro10", "J1_Foto11", "J1_Intro11", "J1_Intro12"]
-	)
+	assert_array(de_la_cuarta).is_equal(esperado)
 
 
 func test_las_fallas_de_una_noche_son_como_las_cuenta_la_prueba() -> void:  # AC-EMP-089

@@ -364,7 +364,7 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	_comprobar_una_noche(PRIMERA + 2)
 
 
-# AC-EMP-076, AC-SAV-021, AC-EMP-077, AC-STK-098
+# AC-EMP-076, AC-SAV-021, AC-EMP-045, AC-EMP-089, AC-STK-098
 func test_retomar_la_tercera_y_la_cuarta() -> void:
 	_guardar(PRIMERA + 2)
 	_abrir()
@@ -377,13 +377,23 @@ func test_retomar_la_tercera_y_la_cuarta() -> void:
 	_guardar(COMPLETA)
 	_abrir()
 	_almacen.call("retomar_la_partida")
+	_comprobar_instrucciones_de(COMPLETA)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/3")
+	var pasos: Array = _instrucciones().get("_pasos")
+	assert_str((pasos[0] as InstruccionesDelJefe.Paso).textos[0].identidad).is_equal("J1_Intro10")
+	_leer_todo(COMPLETA)
+	_comprobar_una_noche(COMPLETA)
+	await _cerrar_almacen()
+	_guardar(COMPLETA, 0, _prueba_sin_fallas())
+	_abrir()
+	_almacen.call("retomar_la_partida")
 	_comprobar_catalogo_retomado(COMPLETA)
-	assert_bool(_instrucciones().visible).is_false()
-	assert_int(_persiana().get("_jornada")).is_equal(COMPLETA)
-	assert_bool((_persiana().get("_placa") as Label).visible).is_true()
+	_comprobar_instrucciones_de(COMPLETA)
+	_comprobar_mensaje_1_de(COMPLETA)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/4")
 	var celular: CelularDelEmpleado = _almacen.get("_celular")
 	var chat := celular.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)
-	var de_la_cuarta: Array[String] = []
+	var de_la_cuarta: Array[String] = ["J4_Mensaje1_SinFallas"]
 	for mensaje: Mensaje in GUION.mensajes:
 		if mensaje.jornada == COMPLETA and mensaje.condicion.is_empty():
 			de_la_cuarta.append(mensaje.identidad)
@@ -391,6 +401,37 @@ func test_retomar_la_tercera_y_la_cuarta() -> void:
 	for mensaje: Mensaje in chat.slice(chat.size() - de_la_cuarta.size()):
 		ultimos.append(mensaje.identidad)
 	assert_array(ultimos).is_equal(de_la_cuarta)
+	_leer_todo(COMPLETA)
+	_comprobar_una_noche(COMPLETA)
+
+
+func test_seguir_desde_la_tercera_abre_las_de_la_cuarta() -> void:  # AC-EMP-075, AC-EMP-045
+	var noches := _prueba_sin_fallas()
+	noches.erase(PRIMERA + 2)
+	_guardar(PRIMERA + 2, 0, noches)
+	_abrir()
+	_almacen.call("retomar_la_partida")
+	_leer_todo(PRIMERA + 2)
+	_comprobar_una_noche(PRIMERA + 2)
+	for tarea: Tarea in (_almacen.get("_partida") as Partida).obligatorias():
+		tarea.completar()
+	await _cerrar_y_seguir()
+	_comprobar_instrucciones_de(COMPLETA)
+	_comprobar_mensaje_1_de(COMPLETA)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/4")
+	for _paso in 3:
+		_siguiente().pressed.emit()
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("4/4")
+	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
+	_siguiente().pressed.emit()
+	_comprobar_una_noche(COMPLETA)
+
+
+func _prueba_sin_fallas() -> Dictionary:
+	var noches := {}
+	for jornada in range(PRIMERA, COMPLETA):
+		noches[jornada] = ResultadoDeLaNoche.new(0, []).a_datos()
+	return noches
 
 
 func test_abandonar_preparacion_no_escribe_y_preserva_checkpoint_anterior() -> void:  # AC-SAV-023

@@ -175,15 +175,17 @@ func test_sin_la_noche_2_la_jornada_3_abre_con_intro_9() -> void:  # AC-EMP-087
 	assert_array(_identidades(propios)).is_equal(["J1_Foto09", "J1_Intro09"])
 
 
-## Lo primero que Enrique dice en la jornada 4, hasta su mensaje 2.
 func _apertura_de_la_cuarta(partida: Partida) -> Array[String]:
 	var guion: Conversacion = load(GUION)
+	var condiciones := CondicionesDelJefe.elegidas(partida.noches_de_prueba)
 	var bandeja := Bandeja.new([guion])
-	bandeja.abrir_jornada(CUARTA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
+	bandeja.abrir_jornada(CUARTA, condiciones)
 	var propios: Array[String] = []
 	for mensaje in bandeja.mensajes_de(guion.interlocutor):
 		if mensaje.jornada == CUARTA:
 			propios.append(mensaje.identidad)
+	var instrucciones := InstruccionesDelJefe.de_la_jornada(guion.mensajes, CUARTA, condiciones)
+	assert_array(_identidades(instrucciones)).is_equal(propios)
 	return propios.slice(0, propios.find("J1_Intro10") + 1)
 
 
