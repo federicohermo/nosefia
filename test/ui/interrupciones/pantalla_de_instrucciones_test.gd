@@ -258,15 +258,26 @@ func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:
 		assert_float(derecha.end.x).is_less_equal(PantallaDeInstrucciones.ANCHO_DEL_TEXTO)
 		for foto in fotos:
 			assert_int(foto.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
-			var leyendas := 0
-			for texto: RichTextLabel in textos:
-				if texto.position.y >= foto.get_rect().end.y:
-					if (
-						texto.position.x >= foto.position.x - 6.0
-						and texto.position.x < foto.get_rect().end.x
-					):
-						leyendas += 1
-			assert_int(leyendas).is_greater_equal(1)
+		var leyendas: Array[String] = []
+		var rectangulos: Array[Rect2] = []
+		var limites := Rect2(Vector2.ZERO, contenido.size)
+		for texto: RichTextLabel in textos:
+			if texto == cuerpo:
+				continue
+			leyendas.append(texto.get_parsed_text())
+			var rectangulo := texto.get_rect()
+			assert_bool(limites.encloses(rectangulo)).is_true()
+			for foto in fotos:
+				assert_bool(rectangulo.intersects(foto.get_rect())).is_false()
+			for anterior in rectangulos:
+				assert_bool(rectangulo.intersects(anterior)).is_false()
+			rectangulos.append(rectangulo)
+		var esperadas: Array[String] = []
+		for identidad: String in caso[2]:
+			var ficha: Dictionary = PantallaDeInstrucciones.FOTOS[identidad]
+			esperadas.append(ficha["titulo"])
+			esperadas.append("-" + ficha["sector"])
+		assert_array(leyendas).contains_exactly_in_any_order(esperadas)
 
 
 func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  # AC-EMP-046
