@@ -1,0 +1,424 @@
+{
+  "blender_version": "5.2.1 LTS",
+  "source": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\art-cabeceras-separadas\\assets\\models\\SEPT_JUEGOS_PROTOTIPO.blend",
+  "requirements": {
+    "closed": false,
+    "uv": false
+  },
+  "objects": {
+    "gondolanueva-col": {
+      "modifiers": [
+        {
+          "name": "Gondola - canto suave",
+          "type": "BEVEL",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "source": {
+        "vertices": 240,
+        "faces": 86,
+        "triangles": 172,
+        "world_bounds": {
+          "min": [
+            -0.6567634344100952,
+            0.7145476341247559,
+            0.10223698616027832
+          ],
+          "max": [
+            0.32363662123680115,
+            4.214947700500488,
+            2.0114946365356445
+          ]
+        },
+        "minimum_world_face_area": 0.000580192543566227,
+        "small_face_threshold": 1.6859249669312533e-11,
+        "topology": {
+          "boundary_edges": 192,
+          "wire_edges": 0,
+          "edges_with_more_than_two_faces": 0,
+          "inconsistent_winding_edges": 0,
+          "loose_vertices": 0,
+          "non_finite_vertices": 0,
+          "zero_area_faces": 0,
+          "very_small_faces": 0
+        },
+        "uv_layers": {
+          "UVMap": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 10,
+            "sha256": "b97d3a1427ce04e07e76acca157ac78645c0f942a37430264efcddf8bee99383"
+          },
+          "Gondola_Metric_UV": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 2,
+            "sha256": "8986027ec95a3752e3f580b0be6e2a53264043481667db1236787ebea3b263b0"
+          }
+        },
+        "active_uv": "Gondola_Metric_UV",
+        "has_custom_normals": false,
+        "fingerprints": {
+          "local_geometry": "76513b6ede7214705f305dc1df69b5996f9fcaf104938af41d26dd8bab3b8ca0",
+          "material_assignment": "b4b4c893cd235e0264c37677efcd6cb9fb20c9a9ef3388003e29befd0b5a4970",
+          "transform": "79485cd25f819b276b35ea687a500a45789b010392e45fa643890318d9c49e89"
+        },
+        "failures": []
+      },
+      "evaluated": {
+        "vertices": 496,
+        "faces": 342,
+        "triangles": 684,
+        "world_bounds": {
+          "min": [
+            -0.6567634344100952,
+            0.7145476341247559,
+            0.10223698616027832
+          ],
+          "max": [
+            0.32363662123680115,
+            4.214947700500488,
+            2.0114946365356445
+          ]
+        },
+        "minimum_world_face_area": 4.136757979722461e-06,
+        "small_face_threshold": 1.6859249669312533e-11,
+        "topology": {
+          "boundary_edges": 192,
+          "wire_edges": 0,
+          "edges_with_more_than_two_faces": 0,
+          "inconsistent_winding_edges": 0,
+          "loose_vertices": 0,
+          "non_finite_vertices": 0,
+          "zero_area_faces": 0,
+          "very_small_faces": 0
+        },
+        "uv_layers": {
+          "UVMap": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 66,
+            "sha256": "1680857af5d560c68846d88c070f5893c2c9ea605a248274f229896097c25e87"
+          },
+          "Gondola_Metric_UV": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 1,
+            "sha256": "0753f5ac0642ab61e5690d6dde18487b9b1dc8a44804005f4c72349c2506a448"
+          }
+        },
+        "active_uv": "Gondola_Metric_UV",
+        "has_custom_normals": false,
+        "fingerprints": {
+          "local_geometry": "9b0c891bc7fd8e2b10935568d304f463b5fe3d28320fb963adffd48dc1b41112",
+          "material_assignment": "b4bced0ce50b7499e421c9ee975adad6ef29fe9a75ee51fe8cb745a7da1124db",
+          "transform": "79485cd25f819b276b35ea687a500a45789b010392e45fa643890318d9c49e89"
+        },
+        "failures": []
+      }
+    },
+    "gondolanueva2-col": {
+      "modifiers": [
+        {
+          "name": "Gondola - canto suave",
+          "type": "BEVEL",
+          "viewport": true,
+          "render": true
+        }
+      ],
+      "source": {
+        "vertices": 240,
+        "faces": 86,
+        "triangles": 172,
+        "world_bounds": {
+          "min": [
+            2.258920907974243,
+            0.6730737686157227,
+            0.10307002067565918
+          ],
+          "max": [
+            3.239320993423462,
+            4.173473834991455,
+            2.0123276710510254
+          ]
+        },
+        "minimum_world_face_area": 0.000580192543566227,
+        "small_face_threshold": 1.685924972774893e-11,
+        "topology": {
+          "boundary_edges": 192,
+          "wire_edges": 0,
+          "edges_with_more_than_two_faces": 0,
+          "inconsistent_winding_edges": 0,
+          "loose_vertices": 0,
+          "non_finite_vertices": 0,
+          "zero_area_faces": 0,
+          "very_small_faces": 0
+        },
+        "uv_layers": {
+          "UVMap": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 10,
+            "sha256": "b97d3a1427ce04e07e76acca157ac78645c0f942a37430264efcddf8bee99383"
+          },
+          "Gondola_Metric_UV": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 2,
+            "sha256": "8986027ec95a3752e3f580b0be6e2a53264043481667db1236787ebea3b263b0"
+          }
+        },
+        "active_uv": "Gondola_Metric_UV",
+        "has_custom_normals": false,
+        "fingerprints": {
+          "local_geometry": "d08e527a492716deb7911a5d591cd47b3397886f3439fd0b0fea49521c013750",
+          "material_assignment": "b4b4c893cd235e0264c37677efcd6cb9fb20c9a9ef3388003e29befd0b5a4970",
+          "transform": "09711c32e90306d4f60d2505825c6074ac1efbeced9a6785f5663af5168b5794"
+        },
+        "failures": []
+      },
+      "evaluated": {
+        "vertices": 496,
+        "faces": 342,
+        "triangles": 684,
+        "world_bounds": {
+          "min": [
+            2.258920907974243,
+            0.6730737686157227,
+            0.10307002067565918
+          ],
+          "max": [
+            3.239320993423462,
+            4.173473834991455,
+            2.0123276710510254
+          ]
+        },
+        "minimum_world_face_area": 4.1367011363036e-06,
+        "small_face_threshold": 1.685924972774893e-11,
+        "topology": {
+          "boundary_edges": 192,
+          "wire_edges": 0,
+          "edges_with_more_than_two_faces": 0,
+          "inconsistent_winding_edges": 0,
+          "loose_vertices": 0,
+          "non_finite_vertices": 0,
+          "zero_area_faces": 0,
+          "very_small_faces": 0
+        },
+        "uv_layers": {
+          "UVMap": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 66,
+            "sha256": "1680857af5d560c68846d88c070f5893c2c9ea605a248274f229896097c25e87"
+          },
+          "Gondola_Metric_UV": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 1,
+            "sha256": "0753f5ac0642ab61e5690d6dde18487b9b1dc8a44804005f4c72349c2506a448"
+          }
+        },
+        "active_uv": "Gondola_Metric_UV",
+        "has_custom_normals": false,
+        "fingerprints": {
+          "local_geometry": "cb50dc7c0155e8c8907c498cbf6921ceb4cf35ced82839f7bc6dab0eb6116a5a",
+          "material_assignment": "b4bced0ce50b7499e421c9ee975adad6ef29fe9a75ee51fe8cb745a7da1124db",
+          "transform": "09711c32e90306d4f60d2505825c6074ac1efbeced9a6785f5663af5168b5794"
+        },
+        "failures": []
+      }
+    },
+    "malbardocig-convcol": {
+      "modifiers": [],
+      "source": {
+        "vertices": 28,
+        "faces": 25,
+        "triangles": 48,
+        "world_bounds": {
+          "min": [
+            -0.5639722347259521,
+            0.8668615221977234,
+            1.2658661603927612
+          ],
+          "max": [
+            -0.4515225887298584,
+            0.912903904914856,
+            1.442952275276184
+          ]
+        },
+        "minimum_world_face_area": 0.00020716572180390358,
+        "small_face_threshold": 4.612431597542255e-14,
+        "topology": {
+          "boundary_edges": 4,
+          "wire_edges": 0,
+          "edges_with_more_than_two_faces": 4,
+          "inconsistent_winding_edges": 0,
+          "loose_vertices": 0,
+          "non_finite_vertices": 0,
+          "zero_area_faces": 0,
+          "very_small_faces": 0
+        },
+        "uv_layers": {
+          "UVMap": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 8,
+            "sha256": "9931b934f04fc487e4929482ebf64aeded9ae1318f25ae46db09bd49ea9be535"
+          }
+        },
+        "active_uv": "UVMap",
+        "has_custom_normals": false,
+        "fingerprints": {
+          "local_geometry": "c22a0cee1ffb4ae3ef791fb09cc196d15fec68c31f97eec7fc486d1193987dc2",
+          "material_assignment": "4eab80ccc10286d6e5a4558a7eaf27b4a96fb7011ad453311822483f15a93bbe",
+          "transform": "1d79f56f825bcddb800ca19f6b1cd86d0b101dbcc4f7b9c6a870aaa065476a9e"
+        },
+        "failures": [
+          "edges_with_more_than_two_faces"
+        ]
+      },
+      "evaluated": {
+        "vertices": 28,
+        "faces": 25,
+        "triangles": 48,
+        "world_bounds": {
+          "min": [
+            -0.5639722347259521,
+            0.8668615221977234,
+            1.2658661603927612
+          ],
+          "max": [
+            -0.4515225887298584,
+            0.912903904914856,
+            1.442952275276184
+          ]
+        },
+        "minimum_world_face_area": 0.00020716572180390358,
+        "small_face_threshold": 4.612431597542255e-14,
+        "topology": {
+          "boundary_edges": 4,
+          "wire_edges": 0,
+          "edges_with_more_than_two_faces": 4,
+          "inconsistent_winding_edges": 0,
+          "loose_vertices": 0,
+          "non_finite_vertices": 0,
+          "zero_area_faces": 0,
+          "very_small_faces": 0
+        },
+        "uv_layers": {
+          "UVMap": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 8,
+            "sha256": "9931b934f04fc487e4929482ebf64aeded9ae1318f25ae46db09bd49ea9be535"
+          }
+        },
+        "active_uv": "UVMap",
+        "has_custom_normals": false,
+        "fingerprints": {
+          "local_geometry": "c22a0cee1ffb4ae3ef791fb09cc196d15fec68c31f97eec7fc486d1193987dc2",
+          "material_assignment": "4eab80ccc10286d6e5a4558a7eaf27b4a96fb7011ad453311822483f15a93bbe",
+          "transform": "1d79f56f825bcddb800ca19f6b1cd86d0b101dbcc4f7b9c6a870aaa065476a9e"
+        },
+        "failures": [
+          "edges_with_more_than_two_faces"
+        ]
+      }
+    },
+    "terminator-col": {
+      "modifiers": [],
+      "source": {
+        "vertices": 8,
+        "faces": 6,
+        "triangles": 12,
+        "world_bounds": {
+          "min": [
+            0.13181358575820923,
+            3.9312031269073486,
+            1.2670115232467651
+          ],
+          "max": [
+            0.26181358098983765,
+            4.02120304107666,
+            1.527011513710022
+          ]
+        },
+        "minimum_world_face_area": 0.011700034141540527,
+        "small_face_threshold": 9.25999783516005e-14,
+        "topology": {
+          "boundary_edges": 0,
+          "wire_edges": 0,
+          "edges_with_more_than_two_faces": 0,
+          "inconsistent_winding_edges": 0,
+          "loose_vertices": 0,
+          "non_finite_vertices": 0,
+          "zero_area_faces": 0,
+          "very_small_faces": 0
+        },
+        "uv_layers": {
+          "UVMap": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 0,
+            "sha256": "43a5d8eba07834a2ed2f777905a83422165d3f64960cb9edf9547462d9232c83"
+          }
+        },
+        "active_uv": "UVMap",
+        "has_custom_normals": false,
+        "fingerprints": {
+          "local_geometry": "612637afda5bd210b343a0f7e0b24f8a19b1547094c035c7bbe4f3946488532d",
+          "material_assignment": "1b11ddb295dcffa786f12d57525ba298e502f8fd3e6dd1f882b669125bccf0fc",
+          "transform": "42932f1e4c3f303935f0fcb06303078792ed89a30c44edf4949846cc77554b28"
+        },
+        "failures": []
+      },
+      "evaluated": {
+        "vertices": 8,
+        "faces": 6,
+        "triangles": 12,
+        "world_bounds": {
+          "min": [
+            0.13181358575820923,
+            3.9312031269073486,
+            1.2670115232467651
+          ],
+          "max": [
+            0.26181358098983765,
+            4.02120304107666,
+            1.527011513710022
+          ]
+        },
+        "minimum_world_face_area": 0.011700034141540527,
+        "small_face_threshold": 9.25999783516005e-14,
+        "topology": {
+          "boundary_edges": 0,
+          "wire_edges": 0,
+          "edges_with_more_than_two_faces": 0,
+          "inconsistent_winding_edges": 0,
+          "loose_vertices": 0,
+          "non_finite_vertices": 0,
+          "zero_area_faces": 0,
+          "very_small_faces": 0
+        },
+        "uv_layers": {
+          "UVMap": {
+            "non_finite_loops": 0,
+            "collapsed_triangles": 0,
+            "sha256": "43a5d8eba07834a2ed2f777905a83422165d3f64960cb9edf9547462d9232c83"
+          }
+        },
+        "active_uv": "UVMap",
+        "has_custom_normals": false,
+        "fingerprints": {
+          "local_geometry": "612637afda5bd210b343a0f7e0b24f8a19b1547094c035c7bbe4f3946488532d",
+          "material_assignment": "1b11ddb295dcffa786f12d57525ba298e502f8fd3e6dd1f882b669125bccf0fc",
+          "transform": "42932f1e4c3f303935f0fcb06303078792ed89a30c44edf4949846cc77554b28"
+        },
+        "failures": []
+      }
+    }
+  },
+  "failures": [
+    "malbardocig-convcol/source: edges_with_more_than_two_faces",
+    "malbardocig-convcol/evaluated: edges_with_more_than_two_faces"
+  ],
+  "limitations": [
+    "self_intersections",
+    "uv_overlaps",
+    "texture_appearance",
+    "lightmaps",
+    "visual_similarity",
+    "runtime_collisions"
+  ]
+}
