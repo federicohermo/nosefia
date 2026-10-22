@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import math
 import re
 
-from lib.gondola import Envase
+from lib.gondola import Envase, MARGEN
 from lib.reparto import PRODUCTOS, Tanda
 
 
@@ -14,23 +14,51 @@ def tramo_con_referencia(
     separaciones: tuple[float, float] = (0.0, 0.0),
     cabecera: bool = False,
 ) -> tuple[float, float]:
-    inicio = max(izquierda, retiro, extremos[0], separaciones[0])
-    fin = min(izquierda + largo, largo_del_estante - max(retiro, extremos[1], separaciones[1]))
+    """El retiro frontal no recorta el ancho transversal de una cabecera.
+
+    En los laterales, la banda medida ya reserva dos márgenes de la tanda de la punta;
+    se agrega sólo el retiro y el aire que todavía faltan detrás de ella.
+    """
+    if cabecera:
+        return izquierda, izquierda + largo
+    inicio = max(izquierda, retiro, extremos[0] - 2 * MARGEN + separaciones[0])
+    fin = min(
+        izquierda + largo,
+        largo_del_estante - max(retiro, extremos[1] - 2 * MARGEN + separaciones[1]),
+    )
     return inicio, fin
 
 
 def centros_con_referencia(
-    largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float]
+    largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float],
+    extremos: tuple[float, float] | None = None,
 ) -> list[list[float]]:
+    """Conserva el ritmo; en cada mitad comprime juntos sus huecos y el encuentro con la punta.
+
+    Reservar primero todo el aire de la cabecera puede dejar las columnas laterales pegadas.
+    Cada mitad adapta sólo sus propios huecos cuando su cupo no cabe con la referencia.
+    """
     parte = largo / len(envases)
     salida = []
     for indice, (envase, cuenta, hueco) in enumerate(zip(envases, cuentas, huecos)):
         if cuenta * envase.ancho > parte + 1e-6 or hueco < 0:
             raise ValueError("la tanda no entra aun sin separación entre sus unidades")
-        if cuenta > 1:
+        borde = 0.0
+        if extremos is not None:
+            if len(envases) != 2:
+                raise ValueError("los extremos requieren las dos mitades longitudinales")
+            deseado = extremos[indice] + (cuenta - 1) * hueco
+            factor = min(1.0, (parte - cuenta * envase.ancho) / deseado) if deseado else 1.0
+            if factor <= 0:
+                raise ValueError("no queda aire entre el lateral y su cabecera")
+            borde = extremos[indice] * factor
+            hueco *= factor
+        elif cuenta > 1:
             hueco = min(hueco, max(0.0, (parte - cuenta * envase.ancho) / (cuenta - 1)))
         ancho = cuenta * envase.ancho + (cuenta - 1) * hueco
-        inicio = indice * parte + (parte - ancho) / 2 + envase.ancho / 2
+        inicio = indice * parte + (parte - borde - ancho) / 2 + envase.ancho / 2
+        if extremos is not None and indice == 0:
+            inicio += borde
         salida.append([inicio + columna * (envase.ancho + hueco) for columna in range(cuenta)])
     return salida
 

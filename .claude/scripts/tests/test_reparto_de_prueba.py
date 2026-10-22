@@ -27,7 +27,7 @@ class RepartoDePrueba(unittest.TestCase):
         )[0]
         self.assertEqual(len(fila), cuenta)
         self.assertGreaterEqual(inicio + fila[0] - envase.ancho / 2, MARGEN)
-        self.assertLessEqual(inicio + fila[-1] + envase.ancho / 2, largo - MARGEN)
+        self.assertLessEqual(inicio + fila[-1] + envase.ancho / 2, largo - MARGEN + 1e-9)
         for a, b in zip(fila, fila[1:]):
             self.assertAlmostEqual(b - a - envase.ancho, hueco)
 
@@ -42,6 +42,24 @@ class RepartoDePrueba(unittest.TestCase):
         # La banda original ya incluye un margen delante y otro detrás de la tanda.
         self.assertGreaterEqual(inicio - (retiros[0] - 2 * MARGEN), separaciones[0])
         self.assertGreaterEqual(largo - fin - (retiros[1] - 2 * MARGEN), separaciones[1])
+
+    def test_comprime_juntos_los_huecos_del_lateral_y_su_encuentro_solo_si_no_caben(self):
+        envases = [Envase(10 * HUECO_MINIMO, MARGEN, MARGEN)] * 2
+        cuentas = [4, 2]
+        huecos = [2 * HUECO_MINIMO] * 2
+        extremos = (4 * HUECO_MINIMO, 4 * HUECO_MINIMO)
+        mitad = 4 * envases[0].ancho + 5 * HUECO_MINIMO
+        filas = reparto_de_prueba.centros_con_referencia(
+            2 * mitad, envases, cuentas, huecos, extremos
+        )
+        aire = filas[0][0] - envases[0].ancho / 2
+        hueco = filas[0][1] - filas[0][0] - envases[0].ancho
+        self.assertGreater(aire, 0)
+        self.assertLess(aire, extremos[0])
+        self.assertAlmostEqual(aire / extremos[0], hueco / huecos[0])
+        self.assertAlmostEqual(filas[1][1] - filas[1][0] - envases[1].ancho, huecos[1])
+        self.assertGreaterEqual(2 * mitad - filas[1][-1] - envases[1].ancho / 2, extremos[1])
+        self.assertEqual([len(f) for f in filas], cuentas)
 
     def test_cada_tanda_conserva_el_ritmo_de_su_envase_y_el_sobrante_queda_en_los_bordes(self):  # AC-STK-100
         envases = [Envase(20 * HUECO_MINIMO, 4 * MARGEN, 10 * MARGEN),

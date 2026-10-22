@@ -514,17 +514,22 @@ def acomodar_mueble(
         for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
             if cuenta < pedido:
                 resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
+        aires = [None] * len(reparto)
         if colocador is None:
             centros_por_tanda = centros(largo, de_estas, cuentas)
         else:
-            centros_por_tanda, desde_v = colocador(
+            centros_por_tanda, desde_v, aires = colocador(
                 estante, izquierda, largo, de_estas, cuentas, desde_v
             )
         posiciones = []
         for indice, (t, envase, us) in enumerate(zip(reparto, de_estas, centros_por_tanda)):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            for lugar in tanda(envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v):
+            lugares = tanda(
+                envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v,
+                aires[indice],
+            )
+            for lugar in lugares:
                 posiciones.append(
                     (unidad, matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v))
                 )
@@ -541,7 +546,10 @@ def acomodar_mueble(
         ):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            lugares = tanda(envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v)
+            lugares = tanda(
+                envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v,
+                aires[indice],
+            )
             resumen["tandas"] += 1
             for orden, lugar in enumerate(lugares):
                 matriz = matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v)
