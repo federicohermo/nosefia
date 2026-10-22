@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="3_cabecera"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/puntos_de_carga.svg" id="4_puntos"]
 
-[node name="PantallaDeCarga" type="Control" node_paths=PackedStringArray("_marco", "_barra", "_texto", "_detalle", "_fondo", "_adornos", "_centro", "_borde")]
+[node name="PantallaDeCarga" type="Control" node_paths=PackedStringArray("_marco", "_barra", "_texto", "_detalle", "_fondo", "_adornos")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,8 +20,6 @@ _texto = NodePath("Marco/Centro/Texto")
 _detalle = NodePath("Marco/Centro/Detalle")
 _fondo = NodePath("Fondo")
 _adornos = [NodePath("Marco/BarraSuperior"), NodePath("Marco/BarraInferior"), NodePath("Marco/Puntos")]
-_centro = NodePath("Marco/Centro")
-_borde = NodePath("Marco/Centro/Borde")
 
 [node name="Fondo" type="ColorRect" parent="."]
 layout_mode = 1

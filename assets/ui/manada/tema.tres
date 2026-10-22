@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=26 format=3]
+[gd_resource type="Theme" load_steps=24 format=3]
 
 [ext_resource type="FontFile" path="res://assets/ui/manada/unscii-16.ttf" id="1"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/barra_marco.png" id="barra_marco"]
@@ -192,20 +192,6 @@ bg_color = Color(0.85098, 0.85098, 0.85098, 1)
 [sub_resource type="StyleBoxFlat" id="barra_relleno"]
 bg_color = Color(0.847059, 0.705882, 0.407843, 1)
 
-[sub_resource type="StyleBoxFlat" id="marco_entre_noches"]
-bg_color = Color(0, 0, 0, 0)
-border_color = Color(0.847059, 0.705882, 0.407843, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-content_margin_left = 8.0
-content_margin_top = 5.0
-content_margin_right = 8.0
-content_margin_bottom = 5.0
-
-[sub_resource type="StyleBoxEmpty" id="barra_entre_noches_fondo"]
-
 [sub_resource type="StyleBoxTexture" id="barra_vacia"]
 content_margin_top = 15.0
 content_margin_bottom = 15.0
@@ -363,13 +349,6 @@ MarcoDeLaBarra/styles/panel = SubResource("marco_de_la_barra")
 BarraDeCarga/base_type = &"ProgressBar"
 BarraDeCarga/styles/background = SubResource("barra_fondo")
 BarraDeCarga/styles/fill = SubResource("barra_relleno")
-PlacaEntreNoches/base_type = &"VBoxContainer"
-PlacaEntreNoches/constants/separation = 21
-MarcoDeLaBarraEntreNoches/base_type = &"PanelContainer"
-MarcoDeLaBarraEntreNoches/styles/panel = SubResource("marco_entre_noches")
-BarraDeCargaEntreNoches/base_type = &"ProgressBar"
-BarraDeCargaEntreNoches/styles/background = SubResource("barra_entre_noches_fondo")
-BarraDeCargaEntreNoches/styles/fill = SubResource("barra_relleno")
 TextoDeCarga/base_type = &"Label"
 TextoDeCarga/font_sizes/font_size = 36
 DetalleDeCarga/base_type = &"Label"

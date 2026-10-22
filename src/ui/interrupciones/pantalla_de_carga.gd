@@ -21,8 +21,6 @@ const LADO_DEL_PUNTO := 0.2
 @export var _detalle: Label
 @export var _fondo: Control
 @export var _adornos: Array[Control]
-@export var _centro: VBoxContainer
-@export var _borde: PanelContainer
 
 var _en_la_web := OS.has_feature("web")
 var _ubicacion_de_los_puntos := ""
@@ -42,12 +40,6 @@ func _ready() -> void:
 		for adorno: Control in _adornos:
 			adorno.hide()
 		_detalle.hide()
-		_centro.theme_type_variation = &"PlacaEntreNoches"
-		_borde.theme_type_variation = &"MarcoDeLaBarraEntreNoches"
-		_barra.custom_minimum_size = Vector2(441, 10)
-		_barra.theme_type_variation = &"BarraDeCargaEntreNoches"
-		_centro.position = Vector2(731, 587)
-		_centro.size = Vector2(457, 77)
 	set_process(false)
 
 
