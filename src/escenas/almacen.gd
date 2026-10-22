@@ -44,6 +44,7 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 const GUION_DEL_JEFE := preload("res://src/dominio/investigacion/conversacion_con_el_jefe.tres")
 
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
+const PANTALLA_DE_CARGA := preload("res://src/ui/interrupciones/pantalla_de_carga.tscn")
 
 
 class PresenciaDeCaja:
@@ -544,8 +545,6 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 	acciones[opcion].call()
 
 
-## Entre noches no hay carga: lo que la siguiente necesita y la carga no preparó se calienta acá,
-## con la persiana baja tapando la cámara del calentamiento.
 func _preparar_lo_postergado() -> void:
 	var siguiente := _partida.jornada()
 	var pendientes: Array[Node3D] = []
@@ -555,10 +554,23 @@ func _preparar_lo_postergado() -> void:
 	if PreparacionDelDeposito.por_preparar(_jornada_preparada, siguiente):
 		pendientes.append_array(_cajas_de_productos)
 	if not pendientes.is_empty():
+		var capa := CanvasLayer.new()
+		capa.layer = 5
+		var pantalla: PantallaDeCarga = PANTALLA_DE_CARGA.instantiate()
+		pantalla.presentacion = PantallaDeCarga.Presentacion.ENTRE_NOCHES
+		capa.add_child(pantalla)
+		add_child(capa)
+		pantalla.mostrar()
+		pantalla.pintar(0.0)
+		await get_tree().process_frame
+		await get_tree().process_frame
 		var calentamiento := CalentamientoDeShaders.new()
 		add_child(calentamiento)
+		calentamiento.avanzo.connect(pantalla.pintar)
 		calentamiento.calentar_copias(self, pendientes)
 		await calentamiento.terminado
+		pantalla.ocultar()
+		capa.queue_free()
 		calentamiento.queue_free()
 	# Recién al terminar: un calentamiento cortado no deja la jornada como preparada.
 	_jornada_preparada = siguiente

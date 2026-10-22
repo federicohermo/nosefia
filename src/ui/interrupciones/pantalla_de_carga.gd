@@ -2,6 +2,8 @@
 class_name PantallaDeCarga
 extends Control
 
+enum Presentacion { INICIAL, ENTRE_NOCHES }
+
 ## En la web los puntos los dibuja `html/head_include`, pegados a la palabra.
 const TEXTO_EN_LA_WEB := "CARGANDO"
 const TEXTO := "CARGANDO..."
@@ -12,10 +14,15 @@ const ENTRANDO := "Entrando al local"
 ## El lado de cada punto, en proporción a la letra.
 const LADO_DEL_PUNTO := 0.2
 
+@export var presentacion: Presentacion = Presentacion.INICIAL
 @export var _marco: Control
 @export var _barra: ProgressBar
 @export var _texto: Label
 @export var _detalle: Label
+@export var _fondo: Control
+@export var _adornos: Array[Control]
+@export var _centro: VBoxContainer
+@export var _borde: PanelContainer
 
 var _en_la_web := OS.has_feature("web")
 var _ubicacion_de_los_puntos := ""
@@ -30,6 +37,17 @@ func _ready() -> void:
 	visible = false
 	_texto.text = TEXTO_EN_LA_WEB if _en_la_web else TEXTO
 	_detalle.text = ""
+	if presentacion == Presentacion.ENTRE_NOCHES:
+		_fondo.hide()
+		for adorno: Control in _adornos:
+			adorno.hide()
+		_detalle.hide()
+		_centro.theme_type_variation = &"PlacaEntreNoches"
+		_borde.theme_type_variation = &"MarcoDeLaBarraEntreNoches"
+		_barra.custom_minimum_size = Vector2(441, 10)
+		_barra.theme_type_variation = &"BarraDeCargaEntreNoches"
+		_centro.position = Vector2(731, 587)
+		_centro.size = Vector2(457, 77)
 	set_process(false)
 
 
