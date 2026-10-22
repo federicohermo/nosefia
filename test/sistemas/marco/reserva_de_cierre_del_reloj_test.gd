@@ -35,6 +35,6 @@ func test_arrancar_descarta_la_reserva_anterior_sin_cambiar_retener() -> void:
 	reloj.arrancar(nuevo, [])
 	reloj.retener()
 	reloj.avanzar(1.0)
-	assert_float(nuevo.tiempo_restante()).is_equal(140.0)
+	assert_float(nuevo.tiempo_restante()).is_equal(200.0 - Ritmo.escalar(1.0))
 	reloj.terminar()
 	assert_bool(nuevo.cerrado()).is_true()
