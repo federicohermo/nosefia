@@ -5,6 +5,13 @@ import math
 import re
 
 from lib.reparto import PRODUCTOS, Tanda
+from lib.gondola import Envase, centros
+
+
+def centros_con_referencia(
+    largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float]
+) -> list[list[float]]:
+    return centros(largo, envases, cuentas)
 
 
 CARAS = {

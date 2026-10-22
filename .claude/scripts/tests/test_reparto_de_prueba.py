@@ -5,6 +5,7 @@ from collections import Counter
 from lib.repo import RAIZ
 from lib.reparto import ESTANTES, PRODUCTOS, Tanda
 from lib import reparto_de_prueba
+from lib.gondola import Envase, HUECO_MINIMO, MARGEN
 from lib.reparto_de_prueba import (
     ESTANTES_DE_PRUEBA, bandas_del_nivel, bases_del_contenido,
     validar_identidades_de_prueba,
@@ -13,6 +14,33 @@ from lib.reparto_de_prueba import (
 
 
 class RepartoDePrueba(unittest.TestCase):
+    def test_cada_tanda_conserva_el_ritmo_de_su_envase_y_el_sobrante_queda_en_los_bordes(self):
+        envases = [Envase(0.15, 0.15, 0.2), Envase(0.268, 0.076, 0.405)]
+        cuentas = [9, 5]
+        huecos = [HUECO_MINIMO * 1.5, HUECO_MINIMO * 3.5]
+        largo = sum(e.ancho * c + h * (c - 1)
+                    for e, c, h in zip(envases, cuentas, huecos)) + 8 * MARGEN
+        filas = reparto_de_prueba.centros_con_referencia(largo, envases, cuentas, huecos)
+        mitad = largo / len(envases)
+        for indice, (envase, cuenta, hueco, fila) in enumerate(
+            zip(envases, cuentas, huecos, filas)
+        ):
+            self.assertEqual(len(fila), cuenta)
+            for a, b in zip(fila, fila[1:]):
+                self.assertAlmostEqual(b - a - envase.ancho, hueco)
+            izquierda = fila[0] - envase.ancho / 2
+            derecha = fila[-1] + envase.ancho / 2
+            self.assertGreaterEqual(izquierda, indice * mitad)
+            self.assertLessEqual(derecha, (indice + 1) * mitad)
+            self.assertAlmostEqual(izquierda - indice * mitad, (indice + 1) * mitad - derecha)
+
+    def test_no_comprime_el_ritmo_ni_quita_cupos_si_la_tanda_no_cabe(self):
+        envase = Envase(0.2, 0.1, 0.3)
+        with self.assertRaises(ValueError):
+            reparto_de_prueba.centros_con_referencia(
+                3 * envase.ancho + HUECO_MINIMO, [envase], [3], [HUECO_MINIMO]
+            )
+
     def test_retroceden_todos_los_laterales_de_las_islas_y_ninguna_cabecera(self):
         retiros = reparto_de_prueba.RETIROS_POR_ESTANTE_DE_PRUEBA
         laterales = {clave for clave in ESTANTES_DE_PRUEBA
