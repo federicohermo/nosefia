@@ -295,7 +295,7 @@ jornada = 4
 orden = 14
 de_quien = "Enrique Peldaño"
 condicion = &"J4_CON_ALTIBAJOS"
-texto = "Bueno, pibe. Concluidos tus tres días de prueba, debo decir que tuviste algunos altibajos. De todas formas, me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que subas el nivel.\n\nA partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí."
+texto = "Bueno, pibe. Concluidos tus tres primeros días de prueba, debo decir que tuviste algunos altibajos. De todas formas, me parece que ya estás capacitado para el trabajo completo. Pero no relajes, ¿eh? Te voy a seguir supervisando para que subas el nivel.\n\nA partir de ahora, nada de irse temprano. Te quedás hasta las 8 sí o sí."
 
 [sub_resource type="Resource" id="J4_Mensaje1_Redimido"]
 script = ExtResource("mensaje")

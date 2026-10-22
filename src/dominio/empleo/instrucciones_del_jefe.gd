@@ -17,14 +17,15 @@ func _init(cantidad: int) -> void:
 	_cantidad = cantidad
 
 
-## Sólo una jornada de introducción abre con instrucciones; en las demás, la noche sale directa.
+## Las jornadas de introducción y la primera completa abren con instrucciones; en las demás, la
+## noche sale directa.
 static func de_la_jornada(
 	mensajes: Array[Mensaje], jornada: int, condiciones: Array[StringName] = []
 ) -> Array[Mensaje]:
 	var propios: Array[Mensaje] = []
 	if (
 		jornada < ReglasDeLaPartida.PRIMERA_JORNADA
-		or jornada >= ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		or jornada > ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 	):
 		return propios
 	for mensaje in mensajes:
