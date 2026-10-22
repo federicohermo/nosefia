@@ -1,6 +1,6 @@
 # Salida voluntaria del PR 601
 
-Las tres grabaciones salen del juego nativo Godot 4.7.2 del proyecto, con el código de producción de `1987dd76`. El commit posterior `6fac6d19` sólo prepara el suavizado del mouse en un test.
+Las tres grabaciones salen del juego nativo Godot 4.7.2 del proyecto, con el código de producción de `1987dd76`. Los commits posteriores sólo preparan el suavizado del mouse y corrigen la espera de una señal en los tests.
 
 Cada toma usa el foco real de la entrada y envía al viewport una pulsación primaria con coordenadas en el centro de la ventana y su liberación. El registrador no llama a los métodos de salida ni adelanta la cámara o la puerta. Captura cuadros del viewport y el audio del bus Master. Los MP4 conservan los intervalos observados entre capturas. El GIF no lleva audio.
 
@@ -28,6 +28,8 @@ Model the Domain llevó el orden a una etapa enumerada. Sequence Work into Verif
 Se comparó una máquina de estados con una operación asíncrona sobre el ciclo existente. Se eligió la primera para descartar confirmaciones fuera de orden y pedidos repetidos sin dejar esperas suspendidas entre jornadas. La escena sólo conecta los actores. No se modificó ningún `.tscn`.
 
 La regresión previa falló en el run `39713457599`, partición 2, con seis aserciones de persiana y devolución prematuras. La primera implementación pasó las otras aserciones pero falló al suponer que una sola entrada del mouse activaba el suavizado adaptativo. El test ahora prepara la cadencia de mouse lento que ya usan las pruebas de control y conserva la aserción de giro pendiente.
+
+Las cuatro pruebas de animación pasaron en el run `39715438595`. Esa corrida detectó además que el helper anterior esperaba `hoja_quieta()` sin argumentos. La señal entrega el cuerpo de la puerta. La corrección conserva la espera del hito real y añade su argumento, sin modificar el producto ni aumentar el timeout.
 
 Se descartó la primera toma porque el clic sintético no tenía coordenadas válidas. Una segunda toma confirmó la secuencia. Se repitió con reloj monotónico para sincronizar los cuadros y el audio de los MP4 publicados.
 
