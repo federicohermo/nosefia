@@ -170,16 +170,22 @@ Abrir o retomar una jornada DEBE evaluar sus tareas propias sin heredar el permi
 
 CUANDO el jugador sale por la entrada habilitada de BR-SHF-021 en las jornadas 1 a 3,
 el sistema DEBE tomar el control de la vista y girarla suavemente desde su orientación
-visible hasta quedar frente a la puerta de entrada, sin saltos y por un recorrido angular
-de como máximo 180 grados. Sólo después de terminar ese giro DEBE abrir la puerta con su
-animación y su sonido habituales. Sólo después de que la hoja alcance su apertura completa
-DEBE bajar la persiana y continuar la devolución y el guardado del cierre habitual.
+visible hasta mirar al centro del vano de entrada, entre sus dos hojas, sin saltos y por un
+recorrido angular de como máximo 180 grados. La entrada DEBE tener dos hojas, cada una con
+su bisagra en el canto exterior del vano. Sólo después de terminar ese giro DEBE abrir ambas
+hojas hacia el mismo lado del vano, cada una sobre su bisagra, con la animación y el sonido
+habituales. Ninguna hoja DEBE desprenderse de su marco ni cruzar el vidrio fijo. Sólo después
+de que ambas hojas alcancen su apertura completa DEBE bajar la persiana y continuar la
+devolución y el guardado del cierre habitual.
 
 MIENTRAS transcurre la salida, el jugador NO DEBE caminar, controlar la mirada ni interactuar,
 y DEBE conservar lo sostenido. La pausa DEBE congelar la secuencia y reanudarla desde el
 mismo punto, sin devolver el control al jugador. Pedidos repetidos de salida o de cierre
 NO DEBEN repetir la secuencia, la devolución ni el guardado. El cierre por tiempo sin salir
 por la puerta DEBE conservar su recorrido habitual sin girar la vista ni abrir la entrada.
+Al comenzar cada jornada, incluidas la jornada 4 y las posteriores, ambas hojas DEBEN estar
+cerradas, tanto al continuar desde la anterior como al retomar desde el menú o reintentar la
+noche. Desde la jornada 4 la entrada NO DEBE permitir salir.
 
 ## Criterios de aceptación
 
@@ -402,10 +408,13 @@ con las operaciones habituales.
 ### AC-SHF-043 — Girar, abrir y después bajar *(verifica BR-SHF-025)*
 
 DADO cada jornada 1, 2 y 3 con la salida habilitada y la entrada cerrada CUANDO se solicita
-salir ENTONCES la vista empieza en su orientación visible y la puerta y la persiana no se
-mueven durante el giro. CUANDO termina el giro ENTONCES la vista apunta a la entrada y la
-puerta comienza su apertura con un solo sonido habitual. Mientras la hoja está a medio abrir,
-la persiana sigue arriba. Sólo al alcanzar la apertura completa empieza a bajar la persiana.
+salir ENTONCES la vista empieza en su orientación visible y ambas hojas y la persiana no se
+mueven durante el giro. CUANDO termina el giro ENTONCES la vista apunta al centro del vano,
+entre las dos hojas, y ambas comienzan su apertura con un solo sonido habitual. Cada hoja
+gira sobre la bisagra de su canto exterior hacia el mismo lado del vano, conserva ese canto
+en el marco y no cruza el vidrio fijo durante todo el recorrido. Mientras cualquiera de las
+dos hojas no haya alcanzado la apertura completa, la persiana sigue arriba. Sólo al terminar
+ambas empieza a bajar la persiana.
 
 ### AC-SHF-044 — La vista toma el camino corto con suavizado *(verifica BR-SHF-025)*
 
@@ -413,12 +422,14 @@ DADO una vista a 179 grados y un destino a -179 grados CUANDO avanza el giro ENT
 2 grados, sin completar una vuelta. DADO el sentido inverso ENTONCES también recorre 2 grados.
 DADO un destino opuesto ENTONCES recorre como máximo 180 grados. Al muestrear el movimiento
 desde una inclinación vertical distinta, ambos ángulos progresan sin sobrepasar su destino,
-con suavizado al iniciar y terminar. Un avance nulo o negativo no mueve la vista.
+con suavizado al iniciar y terminar. Un avance nulo o negativo no mueve la vista. DADO un
+jugador desplazado respecto del centro del vano CUANDO termina el giro ENTONCES mira al
+punto medio entre las dos hojas cerradas, sin apuntar al centro de una sola hoja.
 
 ### AC-SHF-045 — La pausa conserva cada etapa de salida *(verifica BR-SHF-025)*
 
-DADO la salida, por separado durante el giro y durante la apertura de la puerta, CUANDO se
-pausa y pasan cuadros ENTONCES la vista, la hoja y la persiana conservan su posición y no
+DADO la salida, por separado durante el giro y durante la apertura de las dos hojas, CUANDO se
+pausa y pasan cuadros ENTONCES la vista, ambas hojas y la persiana conservan su posición y no
 comienza la devolución. CUANDO se reanuda ENTONCES continúa desde ese punto, sin movimiento
 ni interacción del jugador, y completa un solo cierre.
 
@@ -427,7 +438,11 @@ ni interacción del jugador, y completa un solo cierre.
 DADO una salida en curso CUANDO se repite el primario o llega otro pedido de cierre ENTONCES
 no se reinicia la secuencia y se produce una sola devolución y un solo guardado, con el
 cumplimiento vigente al solicitar salir. DADO una jornada que agota el tiempo sin usar la
-entrada ENTONCES comienza el cierre habitual, sin giro de vista ni apertura de la puerta.
+entrada ENTONCES comienza el cierre habitual, sin giro de vista ni apertura de las hojas.
+DADO una salida completada en la jornada 3 CUANDO comienza la jornada 4 ENTONCES las dos
+hojas están cerradas. DADO la jornada 4, tanto al retomar desde el menú como al reintentar
+la noche, ENTONCES ambas hojas comienzan cerradas. DADO cualquier jornada desde la 4 CUANDO
+se intenta salir por cualquiera de las hojas ENTONCES ninguna se abre ni termina la noche.
 
 ## No objetivos
 

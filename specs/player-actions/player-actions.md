@@ -461,12 +461,12 @@ otros apoyos parciales depende de OQ-PLY-004.
 
 ### BR-PLY-041 — La entrada cierra la noche cuando se puede salir
 
-MIENTRAS está habilitada la salida de BR-SHF-021, el primario sobre la puerta de entrada
+MIENTRAS está habilitada la salida de BR-SHF-021, el primario sobre cualquiera de las dos hojas de entrada
 DEBE iniciar la salida de BR-SHF-025 y terminar la jornada por el cierre habitual. El gesto
-NO DEBE alternar libremente la hoja ni cerrar antes de completar esa secuencia. La referencia DEBE
+NO DEBE alternar libremente las hojas ni cerrar antes de completar esa secuencia. La referencia DEBE
 ofrecer Interactuar con el control vigente del primario sólo en ese estado. Antes de habilitarse,
 al volver a trabarse por una tarea pendiente, o desde la primera jornada completa, NO DEBE
-ofrecer esa acción y el primario DEBE conservar el sonido de puerta trabada sin girar la hoja.
+ofrecer esa acción y el primario DEBE conservar el sonido de puerta trabada sin girar ninguna hoja.
 La entrada NO DEBE permitir soltar o usar lo
 sostenido por ninguno de estos intentos. El secundario NO DEBE cerrar la noche ni sonar trabada.
 Con control suspendido, pausa o jornada cerrada, ningún gesto DEBE volver a cerrar la noche.
@@ -1162,8 +1162,8 @@ ni entrega por consultar, ni habilita atención directa si el puesto no la ofrec
 
 ### AC-PLY-103 — La entrada ofrece sólo la salida disponible *(verifica BR-PLY-041, BR-PLY-037, BR-PLY-038)*
 
-DADO una jornada de prueba antes del aviso CUANDO se enfoca la entrada ENTONCES no ofrece
-acción primaria; el primario suena trabada y no gira la hoja. DADO su salida habilitada
+DADO una jornada de prueba antes del aviso CUANDO se enfoca cualquiera de las dos hojas de entrada ENTONCES no ofrece
+acción primaria; el primario suena trabada y no gira ninguna hoja. DADO su salida habilitada
 ENTONCES ofrece Interactuar con el control primario vigente. Tras vencer el aviso conserva
 esa referencia mientras todas las tareas sigan cumplidas. CUANDO una tarea se descumple
 ENTONCES se retira Interactuar y el primario vuelve a sonar trabada sin cerrar la noche.
@@ -1174,7 +1174,8 @@ Las otras puertas conservan Abrir y Cerrar.
 ### AC-PLY-104 — Un primario cierra y conserva la mano *(verifica BR-PLY-041, BR-PLY-026)*
 
 DADO la entrada habilitada y, por separado, mano vacía y un objeto sostenido CUANDO se hace
-primario ENTONCES inicia una sola salida de BR-SHF-025, sin soltar ni usar el objeto. Durante
+primario sobre cualquiera de sus dos hojas ENTONCES inicia una sola salida de BR-SHF-025,
+abre ambas hojas sin soltar ni usar el objeto. Durante
 el giro y la apertura no se puede caminar, controlar la mirada, examinar, agarrar, soltar ni
 usar; la referencia permanece vacía y se conserva el objeto. CUANDO se
 hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
