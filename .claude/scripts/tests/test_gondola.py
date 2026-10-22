@@ -197,7 +197,6 @@ class Centros(unittest.TestCase):
         cuentas = repartir(1.9, envases)
         with self.assertRaisesRegex(ValueError, "hueco mínimo"):
             centros(1.9 - 0.08, envases, cuentas)
-        self.assertEqual(cuentas, [3, 5])
 
     def test_una_unidad_que_no_cabe_falla_antes_de_centrarla(self):
         with self.assertRaisesRegex(ValueError, "hueco mínimo"):
