@@ -73,7 +73,8 @@ func _sin_celular(almacen: Node3D) -> void:
 
 
 ## El cierre de la noche `jornada`, sin perder la prueba, hasta que sigue la noche siguiente.
-func _comprobar_el_cierre_sin_celular(jornada: int) -> void:
+## Devuelve la jornada que quedó guardada.
+func _cerrar_sin_celular(jornada: int) -> int:
 	var almacen: Node3D = await _almacen(jornada)
 	_cerrar_el_turno(almacen)
 	assert_bool(_persiana(almacen).en_pantalla()).is_true()
@@ -105,22 +106,23 @@ func _comprobar_el_cierre_sin_celular(jornada: int) -> void:
 		)
 		. is_equal(pasos[0].textos[0].identidad)
 	)
-	assert_int(Partida.desde(Guardado.new().cargar()).jornada()).is_equal(jornada + 1)
+	var guardada := Partida.desde(Guardado.new().cargar()).jornada()
 	AvanceDeDevolucion.leer_las_instrucciones(almacen)
 	assert_int(_persiana(almacen).get("_jornada")).is_equal(jornada + 1)
 	assert_bool((_persiana(almacen).get("_placa") as Label).visible).is_true()
+	return guardada
 
 
 func test_la_primera_noche_cierra_sin_celular_y_sigue_la_segunda() -> void:  # AC-EMP-093
-	await _comprobar_el_cierre_sin_celular(PRIMERA)
+	assert_int(await _cerrar_sin_celular(PRIMERA)).is_equal(PRIMERA + 1)
 
 
 func test_la_segunda_noche_cierra_sin_celular_y_sigue_la_tercera() -> void:  # AC-EMP-093
-	await _comprobar_el_cierre_sin_celular(PRIMERA + 1)
+	assert_int(await _cerrar_sin_celular(PRIMERA + 1)).is_equal(PRIMERA + 2)
 
 
 func test_la_tercera_noche_cierra_sin_celular_y_sigue_la_cuarta() -> void:  # AC-EMP-093
-	await _comprobar_el_cierre_sin_celular(COMPLETA - 1)
+	assert_int(await _cerrar_sin_celular(COMPLETA - 1)).is_equal(COMPLETA)
 
 
 func test_pausar_con_la_persiana_bajando_no_sube_el_celular() -> void:  # AC-EMP-094
