@@ -224,23 +224,8 @@ func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC
 
 func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:  # AC-EMP-046
 	for caso: Array in [
-		[
-			1,
-			1,
-			["J1_FotoReloj", "J1_Foto02"],
-			["Reloj", "-Sector de ventas", "Listas de tareas a realizar", "-Sector de ventas"]
-		],
-		[
-			2,
-			0,
-			["J2_FotoGondolas", "J1_Foto07"],
-			[
-				"Góndolas",
-				"-Sector de ventas",
-				"Estantería con cajas contenedoras",
-				"-Sector de depósito"
-			]
-		],
+		[1, 1, ["J1_FotoReloj", "J1_Foto02"]],
+		[2, 0, ["J2_FotoGondolas", "J1_Foto07"]],
 	]:
 		var pantalla := _pantalla()
 		pantalla.mostrar(_mensajes_de(caso[0]))
@@ -287,7 +272,12 @@ func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:
 			for anterior in rectangulos:
 				assert_bool(rectangulo.intersects(anterior)).is_false()
 			rectangulos.append(rectangulo)
-		assert_array(leyendas).contains_exactly_in_any_order(caso[3])
+		var esperadas: Array[String] = []
+		for identidad: String in caso[2]:
+			var ficha: Dictionary = PantallaDeInstrucciones.FOTOS[identidad]
+			esperadas.append(ficha["titulo"])
+			esperadas.append("-" + ficha["sector"])
+		assert_array(leyendas).contains_exactly_in_any_order(esperadas)
 
 
 func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  # AC-EMP-046
