@@ -29,7 +29,7 @@ class RepartoDePrueba(unittest.TestCase):
             "B.este": ("PEPITO", "PETISAS"),
             "B.oeste": ("PROGRES", "DON_SATURADOS"),
             "B.norte": ("JORGILLO",), "B.sur": ("POETICO",),
-            "N.sur": ("ACTRONCITO", "DUREXTRA"),
+            "N.sur": ("ACTRONCITO", "DURONGA"),
             "H1.sur": ("PURA_COLA",), "H2.sur": ("MAYONCHIS",),
         }
         self.assertEqual(len(ESTANTES_DE_PRUEBA), 44)

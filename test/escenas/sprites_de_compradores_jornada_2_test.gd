@@ -136,7 +136,7 @@ func test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes() -> void:
 		return
 	var local: Node3D = _fixture.get("local")
 	var reloj: RelojDelTurno = local.get("_reloj")
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(20, 30))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(21, 15))
 	await _fixture.call("cuadros")
 	var posicion := _figura().position
 	var cuadro := _figura().frame
@@ -145,7 +145,7 @@ func test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes() -> void:
 	assert_vector(_figura().position).is_equal(posicion)
 	assert_int(_figura().frame).is_equal(cuadro)
 	get_tree().paused = false
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 45))
 	var puesto: Node3D = _fixture.call("puesto")
 	var retiradas: Array = puesto.get("_retiradas")
 	assert_array(retiradas).has_size(1)

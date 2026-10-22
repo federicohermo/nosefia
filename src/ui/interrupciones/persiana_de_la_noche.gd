@@ -2,6 +2,7 @@ class_name PersianaDeLaNoche
 extends CanvasLayer
 
 signal persiana_subida(jornada: int)
+signal persiana_bajada
 signal sonido_pedido
 signal silencio_pedido
 
@@ -55,6 +56,7 @@ func _process(_delta: float) -> void:
 			_bajando = false
 			_callar()
 			set_process(false)
+			persiana_bajada.emit()
 	elif _entrada == null:
 		_fade_transcurrido += paso
 		var avance := minf(1.0, _fade_transcurrido / (FADE_DE_LA_PERSIANA_BAJA * 1000000.0))

@@ -151,10 +151,7 @@ func test_cerrar_el_turno_quita_la_nota_y_deja_la_placa() -> void:  # AC-PLY-067
 	assert_bool(_vista(almacen).visible).is_true()
 	(almacen.get("_reloj") as RelojDelTurno).turno_cerrado.emit(0)
 	assert_bool(_vista(almacen).visible).is_false()
-	(
-		assert_bool((almacen.get_node("Interfaz/PantallaDeDevolucion") as CanvasLayer).visible)
-		. is_true()
-	)
+	assert_bool((almacen.get_node("Interfaz/PersianaDeLaNoche") as CanvasLayer).visible).is_true()
 	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
 
 

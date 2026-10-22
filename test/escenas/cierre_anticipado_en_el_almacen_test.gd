@@ -2,7 +2,6 @@ extends GdUnitTestSuite
 
 const RUTA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
-const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 const ENTRADA := "Estructura/puertaentrada/CuerpoDeLaHoja"
 const AVISO: String = PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]
 const RETRABA: String = PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.SALIDA_RETRABADA]
@@ -68,7 +67,7 @@ func test_no_salir_conserva_el_ritmo_y_cierra_por_el_recorrido_natural() -> void
 		RelojDePrueba.avanzar_turno(reloj, 1.0)
 		var esperadas := Apertura.cantidad_de_obligatorias(3) - int(con_pendiente)
 		assert_array(cierres).is_equal([esperadas])
-		assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
+		_comprobar_el_cierre_sin_celular(almacen)
 		assert_array(_textos(almacen)).is_empty()
 		reloj.avanzar(10.0)
 		almacen.call("_revisar_la_salida")
@@ -174,7 +173,7 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:
 
 func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # AC-SHF-036
 	for jornada: int in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		ReglasDeLaPartida.PRIMERA_JORNADA, Compradores.JORNADA_DE_FEDE_Y_MIA + 1
 	):
 		var almacen := await _abrir(jornada, true)
 		var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -193,7 +192,7 @@ func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # A
 
 func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-038
 	for jornada: int in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		ReglasDeLaPartida.PRIMERA_JORNADA, Compradores.JORNADA_DE_FEDE_Y_MIA + 1
 	):
 		var almacen := await _abrir(jornada, true)
 		var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -211,12 +210,7 @@ func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-
 		await _completar_la_salida(almacen)
 		assert_array(cierres).is_equal([partida.obligatorias().size()])
 		assert_float(_restante(almacen)).is_zero()
-		assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
-		var persiana: PersianaDeLaNoche = almacen.get_node("Interfaz/PersianaDeLaNoche")
-		assert_bool(persiana.visible).is_true()
-		AvanceDeDevolucion.entregar(almacen.get("_pantalla"))
-		var celular: CelularDelEmpleado = almacen.get("_celular")
-		assert_array(celular.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)).is_not_empty()
+		_comprobar_el_cierre_sin_celular(almacen)
 		assert_int(Guardado.new().cargar().get("jornada", -1)).is_equal(jornada + 1)
 		_gesto(almacen, true)
 		almacen.get_node(ENTRADA).call("accionar")
@@ -469,4 +463,12 @@ func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-
 func _completar_la_salida(almacen: Node3D) -> void:
 	var entrada: Node3D = almacen.get_node(ENTRADA)
 	await assert_signal(entrada).wait_until(5000).is_emitted("hoja_quieta", entrada)
-	assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
+	_comprobar_el_cierre_sin_celular(almacen)
+
+
+func _comprobar_el_cierre_sin_celular(almacen: Node3D) -> void:
+	(
+		assert_bool((almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).visible)
+		. is_true()
+	)
+	assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_false()

@@ -41,7 +41,7 @@ func _cuadros(cantidad: int = 3) -> void:
 		await get_tree().process_frame
 
 
-func _abrir(jornada: int = Compradores.JORNADA_DE_FEDE_Y_MIA) -> void:
+func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1) -> void:
 	(
 		assert_bool(
 			Guardado.new().escribir(PartidaSerializada.sanear({"jornada": jornada, "medios": 0}))
@@ -337,7 +337,7 @@ func test_rechazo_y_pausa_no_registran_colilla() -> void:  # AC-INV-049
 
 
 func test_canales_fuera_de_j2_no_anotan_y_revelaciones_siguen_aparte() -> void:  # AC-INV-054
-	await _abrir(Compradores.JORNADA_DE_FEDE_Y_MIA + 1)
+	await _abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
 	var colilla := _colilla()
 	assert_object(colilla).is_not_null()
 	if colilla == null:
@@ -402,7 +402,7 @@ func test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll() -> void:  # AC-INV
 			assert_int(scroll.scroll_vertical).is_equal(posicion)
 		await _tecla(Celular.ACCION)
 		assert_bool(_celular().celular().abierto()).is_true()
-	_celular().abrir_jornada(Compradores.JORNADA_DE_FEDE_Y_MIA + 1)
+	_celular().abrir_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
 	var visibles: Array[Conversacion.Interlocutor] = []
 	for conversacion: Conversacion in _celular().bandeja().conversaciones():
 		visibles.append(conversacion.interlocutor)
@@ -439,7 +439,7 @@ func test_recibido_futuro_no_aparece_en_el_chat_abierto() -> void:  # AC-INV-028
 	assert_int(anteriores.size()).is_equal(15)
 	var futuro := Mensaje.new()
 	futuro.identidad = "FUTURO_DE_PRUEBA"
-	futuro.jornada = Compradores.JORNADA_DE_FEDE_Y_MIA + 1
+	futuro.jornada = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 	futuro.momento = Mensaje.Momento.APERTURA
 	futuro.texto = "Este mensaje todavía no llegó."
 	_celular().recibir(Conversacion.Interlocutor.YASMIN, futuro)

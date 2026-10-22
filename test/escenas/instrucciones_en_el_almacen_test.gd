@@ -102,11 +102,8 @@ func _cerrar_y_seguir() -> void:
 	_persiana().terminar()
 	_reloj().avanzar(_restante())
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
-	assert_bool(pantalla.visible).is_true()
-	AvanceDeDevolucion.entregar(pantalla)
-	pantalla.elegir()
-	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
-	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	assert_bool(pantalla.visible).is_false()
+	AvanceDeDevolucion.terminar_la_bajada(_persiana())
 	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(_almacen)).is_true()
 	assert_bool(pantalla.visible).is_false()
 
@@ -321,7 +318,7 @@ func test_continuar_una_completa_no_muestra_instrucciones() -> void:  # AC-SAV-0
 	assert_bool(_jugador().suspendido()).is_false()
 
 
-func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-075, AC-EMP-064
+func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-075, AC-EMP-093
 	Guardado.new().borrar()
 	_preparar_nueva()
 	_leer_todo()

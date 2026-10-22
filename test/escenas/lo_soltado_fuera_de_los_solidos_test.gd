@@ -961,7 +961,7 @@ func _soltar_la_caja_sobre(almacen: Node3D, caja: Node3D, cara: String, tapa: Ve
 ## **La tabla de abajo del estante del fondo arranca llena**: se corre al piso la caja del medio
 ## para dejarle lugar a la que se suelta.
 func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-PLY-021
-	var almacen: Node3D = await _almacen(Compradores.JORNADA_DE_FEDE_Y_MIA)
+	var almacen: Node3D = await _almacen(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	var caja := _caja_grande(almacen)
 	var tabla: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.UAKALAS]
 	var lugar := tabla.global_position

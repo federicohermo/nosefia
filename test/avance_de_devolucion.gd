@@ -53,6 +53,16 @@ static func pasar_la_reflexion(pantalla: PantallaDeDevolucion) -> void:
 		almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
 
 
+## La persiana del cierre baja con su propio reloj: uno simulado la termina sin esperar.
+static func terminar_la_bajada(persiana: PersianaDeLaNoche) -> void:
+	var lectura: Callable = persiana.get("_ahora")
+	var ahora := [int(persiana.get("_ultimo"))]
+	persiana.set("_ahora", func() -> int: return ahora[0])
+	ahora[0] += int(EntradaALaNoche.SUBIDA_DE_LA_PERSIANA * 1000000.0) + 1000
+	persiana.call("_process", 0.0)
+	persiana.set("_ahora", lectura)
+
+
 ## Una jornada con instrucciones abre con ellas: se leen hasta su «OK», que anuncia la noche.
 static func leer_las_instrucciones(almacen: Node) -> void:
 	var instrucciones: PantallaDeInstrucciones = almacen.get_node(

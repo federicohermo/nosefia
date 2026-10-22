@@ -2,7 +2,6 @@ extends GdUnitTestSuite
 
 const PRESENTES: Array[Producto.Id] = [
 	Producto.Id.ACTRONCITO,
-	Producto.Id.DUREXTRA,
 	Producto.Id.ZUCARACHAS,
 	Producto.Id.MALBARDO,
 	Producto.Id.PROGRES,
@@ -13,6 +12,7 @@ const PRESENTES: Array[Producto.Id] = [
 	Producto.Id.MAROLINI,
 	Producto.Id.DON_SATURADOS,
 	Producto.Id.PETISAS,
+	Producto.Id.DURONGA,
 	Producto.Id.FERNET_GOD,
 	Producto.Id.MAYONCHIS,
 	Producto.Id.TERMINATOR,

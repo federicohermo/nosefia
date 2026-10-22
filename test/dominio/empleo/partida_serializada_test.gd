@@ -124,7 +124,7 @@ func test_un_guardado_de_cinco_jornadas_no_se_migra() -> void:  # AC-SAV-033
 	var nombres: Array[String] = []
 	for comprador: Comprador in Compradores.de_la_jornada(retomada.jornada()):
 		nombres.append(comprador.nombre())
-	assert_array(nombres).contains_exactly(["Tin", "Tia"])
+	assert_array(nombres).contains_exactly(["Fede", "Mía"])
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
 	bandeja.abrir_jornada(retomada.jornada())
 	assert_int(bandeja.conversaciones().size()).is_equal(1)

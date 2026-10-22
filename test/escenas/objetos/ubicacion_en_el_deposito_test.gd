@@ -28,7 +28,8 @@ func _media_caja(caja: Node3D) -> float:
 func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set(
-		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -77,7 +78,8 @@ func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set(
-		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -136,7 +138,8 @@ func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 func test_las_bolsas_arrancan_en_tachos_lejos_del_contenedor() -> void:  # AC-CLN-007 AC-CLN-008
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set(
-		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -203,7 +206,8 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 	# local da verde sobre el caso que más importa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set(
-		"_partida", Partida.desde({"jornada": Compradores.JORNADA_DE_FEDE_Y_MIA, "medios": 0})
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
 	add_child(almacen)
 	await get_tree().physics_frame

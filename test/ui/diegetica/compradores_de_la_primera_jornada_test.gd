@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const TinYTia := preload("res://test/escenas/tin_y_tia.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
@@ -20,6 +21,7 @@ func _panel() -> PanelDeLaVentanilla:
 	# La animación se ejerce sobre la interfaz cableada del juego y su modo real de pausa.
 	var almacen: Node3D = ALMACEN.instantiate()
 	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
+	almacen.set("compradores_de_la_apertura", TinYTia.en_cualquier_jornada)
 	_almacenes.append(almacen)
 	add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)
@@ -52,7 +54,7 @@ func test_muestra_ambos_compradores_dialogo_y_clic_izquierdo_sin_botones() -> vo
 	var clicks: Array[bool] = []
 	var atenciones: Ventanilla = _almacenes.back().get("_atenciones")
 	atenciones.presentacion_cambiada.connect(func() -> void: clicks.append(true))
-	for hora: Vector2i in [Vector2i(22, 0), Vector2i(4, 0)]:
+	for hora: Vector2i in [Vector2i(20, 30), Vector2i(23, 30)]:
 		var almacen: Node3D = _almacenes.back()
 		RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), hora)
 		var atencion: Atencion = almacen.get("_atenciones").atencion()
@@ -89,7 +91,7 @@ func test_animan_los_dos_y_la_pausa_conserva_el_cuadro() -> void:  # AC-CTR-042
 	assert_object(sprite).is_not_null()
 	if sprite == null:
 		return
-	for hora: Vector2i in [Vector2i(22, 0), Vector2i(4, 0)]:
+	for hora: Vector2i in [Vector2i(20, 30), Vector2i(23, 30)]:
 		var almacen: Node3D = _almacenes.back()
 		RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), hora)
 		panel.mostrar(almacen.get("_atenciones").atencion())
@@ -118,7 +120,7 @@ func test_esperan_en_el_mundo_con_la_interfaz_cerrada() -> void:  # AC-CTR-042
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(sprite.visible).is_false()
 	for llegada_y_salida: Array in [
-		[Vector2i(22, 0), Vector2i(0, 0)], [Vector2i(4, 0), Vector2i(6, 0)]
+		[Vector2i(20, 30), Vector2i(23, 0)], [Vector2i(23, 30), Vector2i(2, 0)]
 	]:
 		RelojDePrueba.avanzar_hasta(reloj, llegada_y_salida[0])
 		assert_bool(panel.visible).is_false()

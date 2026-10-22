@@ -124,7 +124,9 @@ func test_desde_la_cuarta_seguir_anuncia_sin_instrucciones() -> void:  # AC-EMP-
 
 
 func test_el_menu_anuncia_la_jornada_nueva_y_la_guardada() -> void:  # AC-SHF-025
-	for jornada: int in [ReglasDeLaPartida.PRIMERA_JORNADA, Compradores.JORNADA_DE_FEDE_Y_MIA]:
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	]:
 		_abrir(jornada)
 		var menu := MenuSinCarga.new()
 		get_tree().root.add_child(menu)

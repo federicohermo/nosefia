@@ -110,8 +110,15 @@ banda ni un contador.
 
 ### BR-EMP-011 — Lo que ofrece la devolución depende del final
 
-CUANDO se arma la devolución, el sistema DEBE decir qué puede elegir el jugador. Con la partida
-en curso, ofrece **sólo continuar**. En las jornadas 4 y 5, continuar pasa a la reflexión de
+CUANDO cierra una jornada de introducción, jornadas 1 a 3, el sistema NO DEBE subir el celular
+ni ofrecer nada: la persiana baja y, al terminar de bajar, sigue sin intervención del jugador la
+pantalla de inicio de la noche siguiente (BR-EMP-022). Con la prueba perdida (BR-EMP-037), esa
+pantalla es la de la jornada 4 y lleva el despido (BR-EMP-043): su «OK» vuelve al menú y no abre
+la noche. Pausar durante la bajada de la persiana la detiene, sin subir el celular, y al reanudar
+sigue desde ahí. El guardado de la noche cerrada NO DEBE cambiar.
+
+CUANDO se arma la devolución, desde la jornada 4, el sistema DEBE decir qué puede elegir el
+jugador. Con la partida en curso, ofrece **sólo continuar**. En las jornadas 4 y 5, continuar pasa a la reflexión de
 cierre (BR-INV-042) y la entrada de la noche siguiente empieza cuando ésta termina. En las
 demás, el celular baja por el margen inferior y después empieza la entrada de la noche
 siguiente (BR-SHF-019). Salir al menú pasa por la pausa, como en cualquier
@@ -345,8 +352,8 @@ Las filas salen de la ficha. P avanza de a medio, así que las filas de R = 0 cu
 
 ### BR-EMP-030 — La devolución llega por el chat, mensaje a mensaje
 
-CUANDO cierra la jornada, el sistema DEBE bajar la persiana sobre la pantalla y, sobre ella,
-subir el celular al centro del encuadre (BR-INV-027), abierto en el chat de Enrique en modo fijo
+CUANDO cierra una jornada desde la cuarta, el sistema DEBE bajar la persiana sobre la pantalla y,
+sobre ella, subir el celular al centro del encuadre (BR-INV-027), abierto en el chat de Enrique en modo fijo
 (BR-INV-026). MIENTRAS la devolución está en pantalla, Q NO DEBE cerrar el celular; el jugador
 DEBE poder desplazar el chat y ampliar sus fotos, y el turno DEBE seguir cerrado, con el control
 suspendido.
@@ -521,8 +528,8 @@ noche no tiene fallas. Los textos DEBEN ser los de la ficha «Chat con el jefe»
 
 La barra marca dónde la ficha parte el texto en dos párrafos, y el texto DEBE partir ahí. El
 despido lo decide el legajo (BR-EMP-037), no esta tabla: con la prueba perdida, su texto DEBE
-ser el único mensaje de la devolución de esa noche, que ofrece volver al menú, y NO DEBE seguir
-ningún otro mensaje ni abrirse la jornada 4. En las otras tres filas, el texto DEBE ser la
+ser el único mensaje de la interfaz de Enrique al iniciar la jornada 4, y NO DEBE seguir ningún
+otro mensaje ni abrirse la noche (BR-EMP-011). En las otras tres filas, el texto DEBE ser la
 primera pantalla de las instrucciones de la jornada 4 y el primer mensaje de la jornada 4 en el
 chat de Enrique, antes de su mensaje 2. Sin la noche 3
 anotada, la jornada 4 NO DEBE mostrar ningún mensaje 1. Con menos de 5 fallas, la jornada 3
@@ -835,11 +842,27 @@ el último mensaje a la vista y se elige «continuar» ENTONCES el celular pasa 
 bajar; tras los tres «Continuar» de la reflexión, baja y la persiana muestra «NOCHE 5».
 CUANDO la noche 5 está abierta y se abre el celular con Q ENTONCES el chat de
 Enrique tiene los mensajes de las jornadas 1 a 4 intercalados con las devoluciones 1 a 4, y
-después la foto y el texto de apertura 5 definidos por `investigation`. DADO el almacén en la
-noche 1 CUANDO cierra el turno y se elige «continuar» ENTONCES el celular baja sin pasar por las
-notas, salen las instrucciones de la jornada 2 sobre la persiana y, tras su «OK», la persiana
-muestra «NOCHE 2». DADO una partida despedida
-CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se anuncia otra noche.
+después la foto y el texto de apertura 5 definidos por `investigation`. DADO una partida despedida
+desde la jornada 4 CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se
+anuncia otra noche.
+
+### AC-EMP-093 — Las noches de prueba cierran sin celular *(verifica BR-EMP-011, BR-EMP-030, BR-EMP-022)*
+
+DADO el almacén en la noche 1, 2 o 3 sin perder la prueba CUANDO cierra el turno ENTONCES la
+persiana baja, el celular no sube, ninguna devolución queda en pantalla y el turno sigue
+cerrado. CUANDO la persiana termina de bajar ENTONCES salen solas, sobre ella, las instrucciones
+de la jornada siguiente en «1/N» y sin placa: las de la 2, las de la 3 o las de la 4 con su mensaje
+1. CUANDO se llega a su «OK» ENTONCES la persiana muestra «NOCHE 2», «NOCHE 3» o «NOCHE 4», una
+sola vez. DADO ese cierre CUANDO se retoma el guardado ENTONCES la partida abre la jornada
+siguiente con sus instrucciones, como antes de este criterio.
+
+### AC-EMP-094 — Pausar con la persiana bajando en una noche de prueba *(verifica BR-EMP-011)*
+
+DADO la persiana bajando al cerrar la noche 1 CUANDO se pausa y pasan 3 segundos ENTONCES la
+persiana no avanza, el celular no sube y no salen las instrucciones. CUANDO se reanuda ENTONCES
+la persiana termina de bajar desde donde estaba, el celular sigue sin subir y salen las
+instrucciones de la jornada 2. DADO la persiana ya baja CUANDO se pausa y se reanuda ENTONCES
+siguen las instrucciones una sola vez.
 
 ### AC-EMP-065 — Elegir dos veces *(verifica BR-EMP-011)*
 
@@ -918,8 +941,8 @@ un placer tenerte trabajando acá.».
 ### AC-EMP-092 — Las jornadas de introducción cierran sin devolución *(verifica BR-EMP-009)*
 
 DADO la jornada 1, 2 o 3 que cierra CUANDO se arma la devolución ENTONCES no tiene ningún
-mensaje, la partida no guarda ninguno de Enrique para esa noche, y la opción ofrecida sigue
-siendo la de BR-EMP-011. DADO la jornada 4 que cierra ENTONCES sí tiene mensajes.
+mensaje, la partida no guarda ninguno de Enrique para esa noche. DADO la jornada 4 que cierra
+ENTONCES sí tiene mensajes.
 
 ### AC-EMP-074 — Los Retos más allá de la ficha *(verifica BR-EMP-028)*
 
@@ -933,15 +956,15 @@ poca conciencia de lo que es el orden.».
 
 ### AC-EMP-075 — Las jornadas 2, 3 y 4 abren con lo suyo *(verifica BR-EMP-022, BR-EMP-024)*
 
-DADO el cierre de la jornada 1 CUANDO se elige «continuar» ENTONCES la persiana está baja, se ve
-el mensaje 1 que eligió la noche 1 (BR-EMP-040) en «1/3», el control está suspendido y no hay
-placa. CUANDO pasan 120 segundos reales ENTONCES queda el mismo presupuesto de turno. CUANDO se
+DADO el cierre de la jornada 1 CUANDO termina de bajar la persiana ENTONCES la persiana está baja,
+se ve el mensaje 1 que eligió la noche 1 (BR-EMP-040) en «1/3», el control está suspendido y no
+hay placa. CUANDO pasan 120 segundos reales ENTONCES queda el mismo presupuesto de turno. CUANDO se
 elige «OK» en «3/3» ENTONCES aparece una
 sola «NOCHE 2», con el turno y el control retenidos hasta que termine de subir la persiana.
-DADO el cierre de la jornada 2 CUANDO se elige «continuar» ENTONCES se ve el mensaje 1 que eligió
-la noche 2 (BR-EMP-042) en «1/2», y el «OK» en «2/2» anuncia una sola «NOCHE 3». DADO el cierre
-de la jornada 3 sin perder la prueba CUANDO se elige «continuar» ENTONCES se ve el mensaje 1 que
-eligieron las tres noches (BR-EMP-043) en «1/4», y el «OK» en «4/4» anuncia una sola «NOCHE 4».
+DADO el cierre de la jornada 2 CUANDO termina de bajar la persiana ENTONCES se ve el mensaje 1 que
+eligió la noche 2 (BR-EMP-042) en «1/2», y el «OK» en «2/2» anuncia una sola «NOCHE 3». DADO el
+cierre de la jornada 3 sin perder la prueba CUANDO termina de bajar la persiana ENTONCES se ve el
+mensaje 1 que eligieron las tres noches (BR-EMP-043) en «1/4», y el «OK» en «4/4» anuncia una sola «NOCHE 4».
 
 ### AC-EMP-076 — Retomar repite las instrucciones de su jornada *(verifica BR-EMP-022)*
 
@@ -1055,9 +1078,11 @@ la noche 3 anotada ENTONCES la jornada 4 abre con su mensaje 2.
 
 ### AC-EMP-090 — La prueba perdida termina con el mensaje del despido *(verifica BR-EMP-043, BR-EMP-037)*
 
-DADO la noche 3 que cierra con la prueba perdida CUANDO llega la devolución ENTONCES su único
-mensaje es la fila del despido, ofrece sólo volver al menú y la partida no abre la jornada 4.
-DADO la noche 3 que cierra sin perder la prueba ENTONCES la devolución no trae ese mensaje.
+DADO la noche 3 que cierra con la prueba perdida ENTONCES la persiana baja sin celular y, al
+terminar de bajar, la pantalla de inicio de la jornada 4 tiene como único mensaje la fila del
+despido, en «1/1», sin los demás mensajes de la jornada 4. CUANDO se elige su «OK» ENTONCES se
+pide el menú una vez, no se anuncia ninguna noche y la partida no abre la jornada 4. DADO la
+noche 3 que cierra sin perder la prueba ENTONCES la pantalla de inicio no trae ese mensaje.
 
 ### AC-EMP-091 — La jornada 4 retomada repite su mensaje 1 *(verifica BR-EMP-041, BR-EMP-043)*
 
@@ -1151,6 +1176,14 @@ ENTONCES la jornada 4 abre con la misma fila.
   - Decide: una persona de game design.
   - Bloquea: nada. Mientras tanto, BR-EMP-025 cuenta desde la jornada 4: con la prueba
     contada, la primera falla de la jornada 4 podía traer el texto de la cuarta sin despedir.
+
+- **OQ-EMP-013 — ¿Qué pantalla y qué botón tiene el game over del despido de la prueba?**
+  - Por qué sigue abierta: la ficha «Pantalla entre jornadas» (comentario del 2026-10-22) lo
+    pregunta y no tiene respuesta. La ficha «Chat con el jefe» sólo dice que no se muestran los
+    mensajes siguientes y que hay un game over.
+  - Decide: una persona de game design.
+  - Bloquea: nada. Mientras tanto, BR-EMP-011 y BR-EMP-043 usan la pantalla de inicio de la
+    jornada 4 con el despido como único mensaje, y su «OK» vuelve al menú.
 
 - **OQ-EMP-009 — ¿Qué dice la devolución cuando la prueba pasa de 4 apercibimientos sin despedir?**
   - Por qué sigue abierta: la devolución elige Saludo y Cierre por P, y P ≥ 4 es hoy el despido

@@ -1,11 +1,13 @@
 extends GdUnitTestSuite
 
+const TinYTia := preload("res://test/escenas/tin_y_tia.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.MouseMode]:
 	var local: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
 	local.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
+	local.set("compradores_de_la_apertura", TinYTia.en_cualquier_jornada)
 	add_child(local)
 	local.get_node("Interfaz/PersianaDeLaNoche").terminar()
 	(local.get("_reloj") as Node).set_process(false)
@@ -25,7 +27,7 @@ func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.Mo
 	if nombre.ends_with("NotasDelAlmacen"):
 		puesto.call("_abrir", puesto.get("notas")[0])
 	elif nombre.ends_with("Ventanilla"):
-		RelojDePrueba.avanzar_hasta(local.get("_reloj"), Vector2i(4, 0))
+		RelojDePrueba.avanzar_hasta(local.get("_reloj"), Vector2i(23, 30))
 		puesto.get_node("Comprador/Objetivo").call("accionar")
 	else:
 		puesto.call("abrir")

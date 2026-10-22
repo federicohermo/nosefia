@@ -81,9 +81,9 @@ func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-
 		var casilleros := _casilleros_medidos(jornada)
 		var reponibles := _casilleros_reponibles(jornada)
 		for semilla in 200:
-			# La primera noche completa se recorre dos veces: cajas y casilleros ocupados.
+			# La noche de compras físicas se recorre dos veces: cajas y casilleros ocupados.
 			for desde_gondola: bool in (
-				[false, true] if jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA else [false]
+				[false, true] if jornada == Compradores.JORNADA_DE_FEDE_Y_MIA else [false]
 			):
 				var compradores := Compradores.de_la_jornada(jornada)
 				var inventario := Apertura.inventario_de_la_jornada(

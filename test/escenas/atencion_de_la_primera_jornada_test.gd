@@ -89,7 +89,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	puesto.abrir()
 	assert_object(atenciones.atencion()).is_null()
 	puesto.cerrar()
-	for hora: Vector2i in [Vector2i(22, 0), Vector2i(4, 0)]:
+	for hora: Vector2i in [Vector2i(22, 0), Vector2i(23, 30)]:
 		RelojDePrueba.avanzar_hasta(reloj, hora)
 		assert_bool(_panel(almacen).visible).is_false()
 		puesto.abrir()
@@ -132,7 +132,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		assert_object(agarre.manos().sostenido()).is_null()
 		assert_bool(atendida.vendida()).is_true()
 		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_equal(
-			hora == Vector2i(4, 0)
+			hora == Vector2i(23, 30)
 		)
 		assert_bool(atendida.despachada()).is_false()
 		var despedida := atendida.dialogo()
@@ -204,7 +204,7 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	_conversar(almacen)
 	puesto.cerrar()
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(4, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	puesto.abrir()
 	_conversar(almacen)
 	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
@@ -236,7 +236,7 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	puesto._input(derecho)
 	assert_bool(_panel(almacen).visible).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(6, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(2, 0))
 	assert_bool(atenciones.puede_abandonar()).is_true()
 	assert_object(atenciones.tarea().en_ventanilla()).is_null()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
@@ -265,7 +265,7 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 # AC-CTR-041
 func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA + 1)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
 	var camara := Camera3D.new()
 	puesto.add_child(camara)
@@ -288,7 +288,7 @@ func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_lo_que_falta()
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	var agarre: Agarre = almacen.get("_agarre")
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
-	RelojDePrueba.avanzar_hasta(reloj, Vector2i(4, 0))
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	puesto.abrir()
 	_conversar(almacen)
 	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)

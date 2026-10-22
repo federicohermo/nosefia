@@ -152,7 +152,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 			- 1
 		)
 	)
-	_almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
+	_almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	assert_array(contenedor.call("tirados")).is_empty()
 	assert_array(_foto()).has_size(
 		(

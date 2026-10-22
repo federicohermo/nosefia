@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 # AC-CTR-036, AC-CTR-039
 func test_atencion_habla_antes_de_recibir_y_solo_vende_el_pedido_completo() -> void:
-	var comprador := Compradores.de_la_jornada(4)[1]
+	var comprador := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1]
 	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var estante := Estante.new(inventario, Catalogo.todos())
 	var atencion := Atencion.new(comprador, inventario)
@@ -32,7 +32,9 @@ func test_atencion_habla_antes_de_recibir_y_solo_vende_el_pedido_completo() -> v
 
 
 func test_vencer_cierra_incluso_la_conversacion_inicial() -> void:  # AC-CTR-040
-	var atencion := Atencion.new(Compradores.de_la_jornada(4)[0], Inventario.new([]))
+	var atencion := Atencion.new(
+		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0], Inventario.new([])
+	)
 	atencion.interactuar(null)
 	assert_bool(atencion.puede_abandonar()).is_false()
 	atencion.vencer()
@@ -48,7 +50,9 @@ func test_vencer_conserva_y_permite_recuperar_la_entrega() -> void:  # AC-CTR-04
 		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
 		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 3)
 		var estante := Estante.new(inventario, Catalogo.todos())
-		var atencion := Atencion.new(Compradores.de_la_jornada(4)[0], inventario)
+		var atencion := Atencion.new(
+			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0], inventario
+		)
 		while not atencion.conversacion_iniciada() or not atencion.puede_abandonar():
 			atencion.interactuar(null)
 		var unidad := estante.agarrar(producto, 1) if desde_gondola else estante.retirar(producto)
@@ -80,7 +84,9 @@ func test_vencer_conserva_y_permite_recuperar_la_entrega() -> void:  # AC-CTR-04
 
 func test_un_clic_termina_el_recordatorio_y_otro_entrega() -> void:  # AC-CTR-036
 	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
-	var atencion := Atencion.new(Compradores.de_la_jornada(4)[1], inventario)
+	var atencion := Atencion.new(
+		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1], inventario
+	)
 	atencion.interactuar(null)
 	atencion.interactuar(null)
 	atencion.interactuar(null)
@@ -94,7 +100,9 @@ func test_un_clic_termina_el_recordatorio_y_otro_entrega() -> void:  # AC-CTR-03
 
 func test_el_rechazo_se_cierra_con_el_objeto_en_mano_y_deja_salir() -> void:  # AC-CTR-037
 	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
-	var atencion := Atencion.new(Compradores.de_la_jornada(4)[1], inventario)
+	var atencion := Atencion.new(
+		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1], inventario
+	)
 	atencion.interactuar(null)
 	atencion.interactuar(null)
 	var incorrecto := ObjetoDelAlmacen.new()
@@ -150,7 +158,9 @@ func test_recibe_identidades_distintas_y_rechaza_sobrantes() -> void:  # AC-CTR-
 
 func test_tia_rechaza_otra_zucarachas_y_conserva_el_pedido_entero() -> void:  # AC-CTR-037
 	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
-	var atencion := Atencion.new(Compradores.de_la_jornada(4)[1], inventario)
+	var atencion := Atencion.new(
+		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1], inventario
+	)
 	atencion.interactuar(null)
 	atencion.interactuar(null)
 	var estante := Estante.new(inventario, Catalogo.todos())
@@ -176,7 +186,7 @@ func test_tia_rechaza_otra_zucarachas_y_conserva_el_pedido_entero() -> void:  # 
 
 
 func test_el_ticket_compara_cantidades_sin_orden() -> void:  # AC-CTR-038
-	var pedido := Compradores.de_la_jornada(4)[1].pedido()
+	var pedido := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1].pedido()
 	for ids: Array in [
 		[Producto.Id.ZUCARACHAS, Producto.Id.PEPITO],
 		[Producto.Id.PEPITO, Producto.Id.ZUCARACHAS],
