@@ -24,6 +24,9 @@ signal puerta_trabada(puerta: Node3D)
 signal porton_trabado(puerta: Node3D)
 signal salida_solicitada
 
+## La entrada preguntó si se puede salir y la respuesta fue no. Se suma a `puerta_trabada`.
+signal salida_rechazada
+
 ## Qué aviso da una puerta que no abre.
 enum Traba { NINGUNA, PUERTA, PORTON }
 
@@ -34,6 +37,7 @@ enum Traba { NINGUNA, PUERTA, PORTON }
 ## Un herraje puede sobresalir del canto de la hoja. El eje explícito evita que ese detalle
 ## cambie el punto de giro; las puertas sin anclaje conservan el borde de su malla.
 @export var eje_de_la_bisagra: Marker3D
+@export_enum("Antihorario:-1", "Horario:1") var sentido_del_giro: int = 1
 
 ## Las mallas que el marco del objetivo pinta al enfocar. Sin esto iría a buscar
 ## `MeshInstance3D` hijos de este cuerpo, que no tiene ninguno: la puerta se vería sin contorno.
@@ -80,9 +84,11 @@ func _ready() -> void:
 
 
 func accionar() -> void:
-	if consultar_salida.is_valid() and consultar_salida.call():
-		salida_solicitada.emit()
-		return
+	if consultar_salida.is_valid():
+		if consultar_salida.call():
+			salida_solicitada.emit()
+			return
+		salida_rechazada.emit()
 	alternar()
 
 
@@ -138,7 +144,7 @@ func cerrar_de_golpe() -> void:
 ## El giro va por cuadro de física y no de dibujo: lo que se mueve es un cuerpo de colisión, y
 ## adelantarlo en el cuadro equivocado lo deja medio paso atrás del jugador que lo está cruzando.
 func _physics_process(delta: float) -> void:
-	var giro := Basis(Vector3.UP, _puerta.avanzar(delta))
+	var giro := Basis(Vector3.UP, _puerta.avanzar(delta) * sentido_del_giro)
 	hoja.transform = Transform3D(giro, _bisagra - giro * _bisagra) * _cerrada
 	global_transform = hoja.global_transform * _desde_la_hoja
 	if not _puerta.quieta():

@@ -130,6 +130,7 @@ var _jornada_del_celular: int = 0
 var _enlace_de_guardado: EnlaceDeGuardado
 var _salida_preparada := false
 var _salida: SalidaDelAlmacen
+var _hojas_de_entrada: Array[PuertaDelLocal] = []
 
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
@@ -152,14 +153,26 @@ func _ready() -> void:
 	_cablear_la_investigacion()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	var entrada: PuertaDelLocal = $Estructura/puertaentrada/CuerpoDeLaHoja
+	_hojas_de_entrada = [entrada, $Estructura/puertaentrada_derecha/CuerpoDeLaHoja]
+	_hojas_de_entrada[1].puerta_trabada.connect(entrada.puerta_trabada.emit)
+	_puertas.append_array(_hojas_de_entrada)
 	_salida = SalidaDelAlmacen.new()
-	_salida.configurar(_reloj, entrada.puerta())
+	_salida.configurar(_reloj, [entrada.puerta(), _hojas_de_entrada[1].puerta()])
 	add_child(_salida)
 	_salida.vista_cambiada.connect(_jugador.orientar_la_salida)
-	_salida.apertura_pedida.connect(entrada.abrir_para_salida)
-	entrada.hoja_quieta.connect(_salida.confirmar_apertura.unbind(1))
-	entrada.consultar_salida = _puede_salir
-	entrada.salida_solicitada.connect(_salir_por_la_entrada)
+	for hoja: PuertaDelLocal in _hojas_de_entrada:
+		_salida.apertura_pedida.connect(hoja.abrir_para_salida)
+		hoja.hoja_quieta.connect(_salida.confirmar_apertura.unbind(1))
+		hoja.consultar_salida = _puede_salir
+		hoja.salida_solicitada.connect(_salir_por_la_entrada)
+		hoja.salida_rechazada.connect(
+			func() -> void:
+				_pensar_gesto(
+					SubtitulosDeLosGestos.al_usar_la_entrada(
+						_partida.jornada(), _partida.obligatorias()
+					)
+				)
+		)
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
@@ -275,6 +288,7 @@ func _ready() -> void:
 	# La traba no distingue identidades, así que estas puertas se declaran por su ruta.
 	var trabadas := {
 		^"Estructura/puertaentrada/CuerpoDeLaHoja": SubtitulosAlExaminar.ENTRADA_PRINCIPAL,
+		^"Estructura/puertaentrada_derecha/CuerpoDeLaHoja": SubtitulosAlExaminar.ENTRADA_PRINCIPAL,
 		^"Estructura/puertajefe/CuerpoDeLaHoja": SubtitulosAlExaminar.PUERTA_DEL_JEFE,
 		^"Estructura/porton/CuerpoDeLaHoja": SubtitulosAlExaminar.PORTON,
 	}
@@ -505,10 +519,15 @@ func _puede_salir() -> bool:
 
 func _salir_por_la_entrada() -> void:
 	if _puede_salir():
-		var entrada: PuertaDelLocal = $Estructura/puertaentrada/CuerpoDeLaHoja
 		var vista := _jugador.mira()
 		var desde := vista.basis.get_euler()
-		var centro := entrada.hoja.global_transform * entrada.hoja.get_aabb().get_center()
+		var centro := (
+			(
+				_hojas_de_entrada[0].eje_de_la_bisagra.global_position
+				+ _hojas_de_entrada[1].eje_de_la_bisagra.global_position
+			)
+			* 0.5
+		)
 		var hacia := Basis.looking_at(centro - vista.origin).get_euler()
 		_salida.iniciar(Vector2(desde.y, desde.x), Vector2(hacia.y, hacia.x))
 
