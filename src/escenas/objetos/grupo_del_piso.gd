@@ -22,6 +22,8 @@ func preparar(malla: Mesh, capacidad: int) -> void:
 	_caja_de_una = malla.get_aabb()
 	# Vacío y oculto con una instancia: el calentamiento destapa lo oculto y compila el producto
 	# en el piso antes de jugar. Sin instancias visibles no lo dibujaba.
+	if capacidad == 0:
+		multimesh.instance_count = 1
 	multimesh.visible_instance_count = 1
 	custom_aabb = _caja_de_una
 	hide()

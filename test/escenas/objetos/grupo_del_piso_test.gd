@@ -335,11 +335,13 @@ func test_la_caja_del_grupo_cubre_las_copias_que_escribe() -> void:
 ## producto en el piso se compile antes de jugar, y no deja nada a la vista mientras está vacío.
 func test_vacio_queda_oculto_con_una_instancia_y_se_muestra_con_cuerpos() -> void:
 	var mundo := _mundo()
-	var grupo := _grupo(mundo, 4)
-	assert_bool(grupo.visible).is_false()
-	assert_int(grupo.multimesh.visible_instance_count).is_equal(1)
-	var cuerpo := _cuerpo(mundo, Vector3.ZERO, false)
-	grupo.call("agregar", cuerpo)
-	assert_bool(grupo.visible).is_true()
-	grupo.call("quitar", cuerpo)
-	assert_bool(grupo.visible).is_false()
+	for capacidad: int in [0, 4]:
+		var grupo := _grupo(mundo, capacidad)
+		assert_bool(grupo.visible).is_false()
+		assert_int(grupo.multimesh.instance_count).is_greater_equal(1)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(1)
+		var cuerpo := _cuerpo(mundo, Vector3.ZERO, false)
+		grupo.call("agregar", cuerpo)
+		assert_bool(grupo.visible).is_true()
+		grupo.call("quitar", cuerpo)
+		assert_bool(grupo.visible).is_false()
