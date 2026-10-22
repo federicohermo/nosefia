@@ -166,6 +166,21 @@ modifican. La planilla DEBE conservar sus operaciones de sumar y restar según B
 El cierre, por la puerta o por tiempo, DEBE contar el cumplimiento vigente de BR-SHF-007.
 Abrir o retomar una jornada DEBE evaluar sus tareas propias sin heredar el permiso anterior.
 
+### BR-SHF-025 — La salida voluntaria mira y abre antes de bajar la persiana
+
+CUANDO el jugador sale por la entrada habilitada de BR-SHF-021 en las jornadas 1 a 3,
+el sistema DEBE tomar el control de la vista y girarla suavemente desde su orientación
+visible hasta quedar frente a la puerta de entrada, sin saltos y por un recorrido angular
+de como máximo 180 grados. Sólo después de terminar ese giro DEBE abrir la puerta con su
+animación y su sonido habituales. Sólo después de que la hoja alcance su apertura completa
+DEBE bajar la persiana y continuar la devolución y el guardado del cierre habitual.
+
+MIENTRAS transcurre la salida, el jugador NO DEBE caminar, controlar la mirada ni interactuar,
+y DEBE conservar lo sostenido. La pausa DEBE congelar la secuencia y reanudarla desde el
+mismo punto, sin devolver el control al jugador. Pedidos repetidos de salida o de cierre
+NO DEBEN repetir la secuencia, la devolución ni el guardado. El cierre por tiempo sin salir
+por la puerta DEBE conservar su recorrido habitual sin girar la vista ni abrir la entrada.
+
 ## Criterios de aceptación
 
 ### AC-SHF-001 — El turno de la noche *(verifica BR-SHF-001)*
@@ -383,6 +398,36 @@ y la entrada vuelve a trabarse. CUANDO se pulsa «−» en esa fila ENTONCES se 
 cantidad correcta, registrar se cumple y la salida se habilita. Cerrar y reabrir la computadora
 conserva ambas operaciones disponibles. Abrir la jornada siguiente entrega su planilla nueva
 con las operaciones habituales.
+
+### AC-SHF-043 — Girar, abrir y después bajar *(verifica BR-SHF-025)*
+
+DADO cada jornada 1, 2 y 3 con la salida habilitada y la entrada cerrada CUANDO se solicita
+salir ENTONCES la vista empieza en su orientación visible y la puerta y la persiana no se
+mueven durante el giro. CUANDO termina el giro ENTONCES la vista apunta a la entrada y la
+puerta comienza su apertura con un solo sonido habitual. Mientras la hoja está a medio abrir,
+la persiana sigue arriba. Sólo al alcanzar la apertura completa empieza a bajar la persiana.
+
+### AC-SHF-044 — La vista toma el camino corto con suavizado *(verifica BR-SHF-025)*
+
+DADO una vista a 179 grados y un destino a -179 grados CUANDO avanza el giro ENTONCES recorre
+2 grados, sin completar una vuelta. DADO el sentido inverso ENTONCES también recorre 2 grados.
+DADO un destino opuesto ENTONCES recorre como máximo 180 grados. Al muestrear el movimiento
+desde una inclinación vertical distinta, ambos ángulos progresan sin sobrepasar su destino,
+con suavizado al iniciar y terminar. Un avance nulo o negativo no mueve la vista.
+
+### AC-SHF-045 — La pausa conserva cada etapa de salida *(verifica BR-SHF-025)*
+
+DADO la salida, por separado durante el giro y durante la apertura de la puerta, CUANDO se
+pausa y pasan cuadros ENTONCES la vista, la hoja y la persiana conservan su posición y no
+comienza la devolución. CUANDO se reanuda ENTONCES continúa desde ese punto, sin movimiento
+ni interacción del jugador, y completa un solo cierre.
+
+### AC-SHF-046 — La salida cierra una vez y el tiempo conserva su recorrido *(verifica BR-SHF-025, BR-SHF-024)*
+
+DADO una salida en curso CUANDO se repite el primario o llega otro pedido de cierre ENTONCES
+no se reinicia la secuencia y se produce una sola devolución y un solo guardado, con el
+cumplimiento vigente al solicitar salir. DADO una jornada que agota el tiempo sin usar la
+entrada ENTONCES comienza el cierre habitual, sin giro de vista ni apertura de la puerta.
 
 ## No objetivos
 
