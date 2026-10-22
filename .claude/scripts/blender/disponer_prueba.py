@@ -73,7 +73,7 @@ def referencias_del_mapa_completo(envases):
 
 
 def colocador_de_prueba(huecos, retiros, aires, reglas):
-    """Conserva los cupos medidos y reserva el retiro dentro de la chapa de cada punta."""
+    """Reserva márgenes y aire antes de calcular las columnas de cada región."""
     aires = {p: max(a, reglas["AIRE_MINIMO_ENTRE_FILAS"]) for p, a in aires.items()}
 
     def colocar(estante, izquierda, largo, envases, cuentas, desde):
@@ -102,7 +102,12 @@ def colocador_de_prueba(huecos, retiros, aires, reglas):
                         for t in ESTANTES_DE_PRUEBA[c]
                     ) for c in claves
                 )
-                entre_caras = (reglas["AIRE_MINIMO_ENTRE_CARAS"],) * 2
+                entre_caras = tuple(
+                    max(reglas["AIRE_MINIMO_ENTRE_CARAS"],
+                        max(huecos[t.producto] for t in ESTANTES_DE_PRUEBA[c]),
+                        max(huecos[t.producto] for t in productos))
+                    for c in claves
+                )
             inicio, fin = tramo_con_referencia(
                 estante.largo, inicio, fin - inicio, referencia, extremos, huecos_extremos,
                 cabecera=cara in ("norte", "sur"),

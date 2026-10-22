@@ -1,9 +1,9 @@
 from collections import Counter
 from collections.abc import Iterable
 from dataclasses import dataclass
+from itertools import product
 import math
 import re
-from statistics import mean
 
 from lib.gondola import Envase, MARGEN
 from lib.reparto import PRODUCTOS, Tanda
@@ -35,56 +35,47 @@ def centros_con_referencia(
     extremos: tuple[float, float] | None = None,
     *, minimo: float, aire_central: float = 0.0,
 ) -> list[list[float]]:
-    """Reserva primero aire a ambos lados de cada mitad, y después conserva el ritmo.
-
-    La holgura deseada en una cabecera no compite con los huecos entre unidades.
-    Cada tanda se centra en su propio tramo, con la división longitudinal siempre abierta.
-    """
+    """El cupo sale de las columnas que caben con el ritmo de referencia y sus márgenes."""
     if not envases or len(envases) != len(cuentas) or len(cuentas) != len(huecos):
         raise ValueError("el reparto requiere un envase y una separación por tanda")
     if extremos is not None and len(envases) != 2:
         raise ValueError("los extremos requieren las dos mitades longitudinales")
     if len(envases) > 2:
         raise ValueError("el mapa admite una tanda o las dos mitades longitudinales")
+    if any(n < 1 or h < minimo for n, h in zip(cuentas, huecos)):
+        raise ValueError("el reparto no conserva el mínimo de aire entre unidades")
     central = aire_central if len(envases) == 2 else 0.0
-    bordes = extremos or ((central / 2,) * 2)
+    bordes = extremos or (central / 2,) * 2
     if len(envases) == 1:
         bordes = (0.0, 0.0)
     disponible = largo - sum(bordes) - central
-    anchos = [n * e.ancho for e, n in zip(envases, cuentas)]
-    espacios = [max(0, n - 1) * h for n, h in zip(cuentas, huecos)]
-    if any(n < 1 or (n > 1 and h < minimo) for n, h in zip(cuentas, huecos)):
-        raise ValueError("el reparto no conserva el mínimo de aire entre unidades")
-    faltante = max(0.0, sum(anchos) + sum(espacios) - disponible)
-    activas = [a + h > disponible / len(envases) for a, h in zip(anchos, espacios)]
-    reducible = sum((n - 1) * (h - minimo)
-                    for n, h, activa in zip(cuentas, huecos, activas) if activa)
-    if faltante > reducible + 1e-9:
-        raise ValueError("el cupo no cabe conservando los mínimos de aire de exhibición")
-    factor = 1 - faltante / reducible if reducible else 1.0
-    pasos = [minimo + max(0.0, factor) * (h - minimo) if activa else h
-             for h, activa in zip(huecos, activas)]
-    bloques = [a + (n - 1) * h for a, n, h in zip(anchos, cuentas, pasos)]
-    medio = largo / 2
-    franjas = [(bordes[0], medio - central / 2), (medio + central / 2, largo - bordes[1])]
+    candidatas = []
+    for candidata in product(*(range(1, limite + 1) for limite in cuentas)):
+        bloques = [n * e.ancho + (n - 1) * h
+                   for n, e, h in zip(candidata, envases, huecos)]
+        if sum(bloques) <= disponible + 1e-9:
+            candidatas.append((sum(candidata), -abs(bloques[0] - bloques[-1]),
+                               candidata, bloques))
+    if not candidatas:
+        raise ValueError("ni una columna cabe conservando los márgenes y el aire")
+    _, _, cuentas, bloques = max(candidatas)
     if len(envases) == 1:
         franjas = [(0.0, largo)]
-    # Como en el reparto completo, un bloque puede requerir una fracción más de ancho que
-    # el otro. La frontera entre ambos queda abierta; no se comprime un bloque contra ella.
-    if any(ancho > fin - inicio + 1e-9
-           for ancho, (inicio, fin) in zip(bloques, franjas)):
-        sobrante = max(0.0, disponible - sum(bloques))
-        primero = bordes[0] + sobrante / 4
-        segundo = primero + bloques[0] + central + sobrante / 2
-        franjas = [(primero, primero + bloques[0]), (segundo, segundo + bloques[1])]
+    else:
+        medio = largo / 2
+        franjas = [(bordes[0], medio - central / 2),
+                   (medio + central / 2, largo - bordes[1])]
+        if any(ancho > fin - inicio + 1e-9
+               for ancho, (inicio, fin) in zip(bloques, franjas)):
+            sobrante = max(0.0, disponible - sum(bloques))
+            primero = bordes[0] + sobrante / 4
+            segundo = primero + bloques[0] + central + sobrante / 2
+            franjas = [(primero, primero + bloques[0]), (segundo, segundo + bloques[1])]
     salida = []
-    for envase, cuenta, paso, ancho, (inicio, fin) in zip(
-        envases, cuentas, pasos, bloques, franjas
-    ):
+    for envase, cuenta, hueco, (inicio, fin) in zip(envases, cuentas, huecos, franjas):
+        ancho = cuenta * envase.ancho + (cuenta - 1) * hueco
         centro = inicio + (fin - inicio - ancho) / 2 + envase.ancho / 2
-        salida.append([centro + columna * (envase.ancho + paso) for columna in range(cuenta)])
-    if len(salida) == 2 and not mean(salida[0]) < medio < mean(salida[1]):
-        raise ValueError("el reparto pierde las dos mitades longitudinales")
+        salida.append([centro + columna * (envase.ancho + hueco) for columna in range(cuenta)])
     return salida
 
 

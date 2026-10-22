@@ -511,9 +511,6 @@ def acomodar_mueble(
         retiro = retiros.get(clave, 0.0)
         izquierda += retiro
         largo -= 2 * retiro
-        for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
-            if cuenta < pedido:
-                resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
         aires = [None] * len(reparto)
         if colocador is None:
             centros_por_tanda = centros(largo, de_estas, cuentas)
@@ -521,6 +518,10 @@ def acomodar_mueble(
             centros_por_tanda, desde_v, aires = colocador(
                 estante, izquierda, largo, de_estas, cuentas, desde_v
             )
+        cuentas = [len(fila) for fila in centros_por_tanda]
+        for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
+            if cuenta < pedido:
+                resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
         posiciones = []
         for indice, (t, envase, us) in enumerate(zip(reparto, de_estas, centros_por_tanda)):
             p = producto(t.producto)
