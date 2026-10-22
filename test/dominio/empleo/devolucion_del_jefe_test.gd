@@ -76,7 +76,6 @@ func test_las_noches_de_introduccion_cierran_sin_devolucion() -> void:  # AC-EMP
 		var devolucion := DevolucionDelJefe.new(jornada, partida)
 		assert_array(devolucion.mensajes()).is_empty()
 		assert_array(partida.mensajes_del_jefe()).is_empty()
-		assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.CONTINUAR])
 		var fallida := _partida_de_la_noche(jornada, [], [L.PAPEL_EN_EL_INODORO])
 		var sin_mensajes := DevolucionDelJefe.new(jornada, fallida)
 		assert_array(sin_mensajes.mensajes()).is_empty()
@@ -85,6 +84,14 @@ func test_las_noches_de_introduccion_cierran_sin_devolucion() -> void:  # AC-EMP
 		assert_array(PoliticaDeGuardado.datos(fallida).devoluciones).is_empty()
 	var completa := _partida_de_la_noche(COMPLETA, _tipos_de(COMPLETA), [])
 	assert_array(completa.mensajes_del_jefe()).is_not_empty()
+
+
+func test_el_celular_sube_desde_la_primera_noche_completa() -> void:  # AC-EMP-093, AC-EMP-064
+	for jornada: int in range(ReglasDeLaPartida.PRIMERA_JORNADA, COMPLETA):
+		var prueba := _partida_de_la_noche(jornada, _tipos_de(jornada), [])
+		assert_bool(DevolucionDelJefe.new(jornada, prueba).por_el_celular()).is_false()
+	var completa := _partida_de_la_noche(COMPLETA, _tipos_de(COMPLETA), [])
+	assert_bool(DevolucionDelJefe.new(COMPLETA, completa).por_el_celular()).is_true()
 
 
 func test_reponer_dice_la_falla_que_es() -> void:  # AC-EMP-052

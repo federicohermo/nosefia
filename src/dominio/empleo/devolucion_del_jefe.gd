@@ -275,7 +275,7 @@ func _init(jornada: int, partida: Partida) -> void:
 	if partida.terminada() and partida.jornada() < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 		_mensajes = [DESPIDO_DE_LA_PRUEBA]
 		return
-	if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+	if not por_el_celular():
 		return
 	var sin_cumplir: Array[Tarea.Tipo] = []
 	for tarea: Tarea in partida.obligatorias():
@@ -289,6 +289,11 @@ func _init(jornada: int, partida: Partida) -> void:
 		partida.llamados(),
 		partida.uso_de_poetico_en(jornada)
 	)
+
+
+## Las noches de prueba cierran sin celular: sigue la pantalla de inicio de la noche siguiente.
+func por_el_celular() -> bool:
+	return _jornada >= ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 
 
 func mensajes() -> Array[String]:

@@ -147,7 +147,7 @@ func _ready() -> void:
 	azar_de_la_apertura.randomize()
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
-	_instrucciones.comenzar_pedido.connect(anunciar_la_noche)
+	_instrucciones.comenzar_pedido.connect(_al_comenzar_las_instrucciones)
 	_cablear_el_celular()
 	_cablear_la_investigacion()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
@@ -521,7 +521,6 @@ func _salir_por_la_entrada() -> void:
 		_salida.iniciar(Vector2(desde.y, desde.x), Vector2(hacia.y, hacia.x))
 
 
-## Al cerrar, la persiana baja y la devolución de Enrique llega por el celular.
 ##
 ## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
@@ -533,13 +532,36 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
-	_pantalla.mostrar(DevolucionDelJefe.new(jornada, _partida))
+	var devolucion := DevolucionDelJefe.new(jornada, _partida)
+	if devolucion.por_el_celular():
+		_pantalla.mostrar(devolucion)
 	# Sin esto el celular es inalcanzable jugando: el jugador clava el puntero en el centro cada
 	# cuadro. La suspensión suelta el cursor sola.
 	_jugador.suspender()
+	if not devolucion.por_el_celular():
+		await _seguir_sin_celular(devolucion)
+		return
 	# Una conexión por devolución: un segundo despacho no encuentra a nadie, y no abre dos noches
 	# ni carga el menú dos veces.
 	_pantalla.devolucion_despachada.connect(_al_despachar_la_devolucion, CONNECT_ONE_SHOT)
+
+
+func _seguir_sin_celular(devolucion: DevolucionDelJefe) -> void:
+	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
+	await persiana.persiana_bajada
+	if _partida.terminada():
+		_mostrar_las_instrucciones(devolucion.mensajes_fechados())
+		return
+	await _preparar_lo_postergado()
+	persiana.terminar()
+	_seguir()
+
+
+func _al_comenzar_las_instrucciones() -> void:
+	if _partida.terminada():
+		_ir_al_menu.call()
+	else:
+		anunciar_la_noche()
 
 
 ## Qué hace cada opción de la devolución. Cuáles se ofrecen lo decidió ella; acá sólo se busca
@@ -695,11 +717,15 @@ func _entrar_a_la_jornada() -> void:
 	if instrucciones.is_empty():
 		anunciar_la_noche()
 		return
+	_mostrar_las_instrucciones(instrucciones)
+
+
+func _mostrar_las_instrucciones(mensajes: Array[Mensaje]) -> void:
 	_reloj.retener()
 	_jugador.suspender()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
-	_instrucciones.mostrar(instrucciones)
+	_instrucciones.mostrar(mensajes)
 
 
 func anunciar_la_noche() -> void:
