@@ -150,6 +150,15 @@ que ya no vale. Recuperar la salida NO DEBE repetir el aviso inicial.
 Cerrar DEBE retirar el aviso y olvidar su disparo. Una jornada nueva de prueba puede avisar
 otra vez. Desde la primera jornada completa NO DEBE aparecer este aviso.
 
+MIENTRAS la computadora está abierta, los cambios de permiso NO DEBEN disparar este aviso ni
+el de BR-NTF-015. Un aviso previo que sigue vigente conserva su duración al abrirla.
+CUANDO el jugador sale de la computadora, el sistema DEBE mostrar el aviso que
+corresponde al estado vigente de la salida, como si el cambio ocurriera en ese instante.
+SI sale con el mismo permiso con que entró, ENTONCES NO DEBE dispararse un nuevo aviso de salida.
+Una habilitación que se pierde antes de salir NO cuenta como avisada. El retiro del aviso
+opuesto que ya no vale NO DEBE esperar. SI el turno cierra con la computadora abierta,
+ENTONCES salir de ella NO DEBE mostrar un aviso pendiente.
+
 ### BR-NTF-015 — Cada nueva traba de salida avisa
 
 CUANDO la salida de prueba pasa de habilitada a trabada porque una obligatoria dejó de
@@ -162,7 +171,8 @@ Antes de habilitar la salida por primera vez NO DEBE aparecer este aviso.
 Cuando se recupera la salida, el sistema DEBE retirar el aviso de traba para no anunciar una
 restricción que ya no vale, sin repetir el aviso inicial. Ninguno de estos cambios DEBE
 retirar ni renovar otros tipos. Cerrar DEBE vaciar ambos avisos y olvidar las transiciones.
-Desde la primera jornada completa NO DEBE aparecer este aviso.
+Desde la primera jornada completa NO DEBE aparecer este aviso. Con la computadora abierta,
+este aviso espera a que el jugador salga según BR-NTF-014.
 
 ## Criterios de aceptación
 
@@ -384,6 +394,23 @@ Cerrar vacía el aviso. Abrir otra jornada de prueba no hereda la traba avisada 
 un nuevo aviso inicial y posteriores trabas. La primera jornada completa no produce ninguno
 de los dos avisos, aunque se cumpla y descumpla una tarea.
 
+### AC-NTF-032 — Los avisos de salida esperan a que se cierre la computadora *(verifica BR-NTF-014, BR-NTF-015)*
+
+DADO una jornada de prueba sin salida habilitada y la computadora abierta CUANDO se completa
+la última tarea ENTONCES la salida queda habilitada y no hay aviso; CUANDO el jugador sale de
+la computadora ENTONCES aparece el de tareas terminadas con sus tres segundos completos.
+DADO ese aviso visible y la computadora abierta CUANDO una tarea se descumple ENTONCES la
+salida se traba y el aviso se retira en el instante, sin aviso de traba; al salir aparece el
+de traba. DADO la salida trabada y la computadora abierta CUANDO se recupera ENTONCES el aviso
+de traba se retira en el instante y al salir no aparece ninguno. DADO la computadora abierta
+CUANDO se descumple y se recupera una tarea antes de salir ENTONCES al salir no hay aviso.
+DADO una jornada sin salida habilitada CUANDO se cumple y se descumple antes de salir
+ENTONCES al salir no hay aviso, y completar después afuera avisa tareas terminadas una vez.
+DADO un cambio pendiente CUANDO cierra el turno antes de salir ENTONCES salir no muestra
+aviso. Los otros tipos conservan su orden y su tiempo restante durante la espera.
+DADO un aviso de salida visible CUANDO se abre y se cierra la computadora sin cambiar el
+permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrearse al vencer.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuándo llegan o se despachan compradores ni acepta lecturas.
@@ -395,7 +422,7 @@ de los dos avisos, aunque se cumpla y descumpla una tarea.
 
 - **Entrada:** identidad de quien llega o vence, motivo de lectura, confirmación de pista nueva
   anotada por investigación, tiempo en ejecución, tiempo restante de ficción del turno abierto,
-  salida habilitada o vuelta a trabar y cierre.
+  salida habilitada o vuelta a trabar, computadora abierta o cerrada y cierre.
 - **Salida:** tipos visibles ordenados, texto y símbolo correspondientes.
 - **Falla:** identidad nula, motivo que no es lector lleno y tiempo no positivo no cambian nada.
   Una pista repetida o desconocida y una revelación sin pista no crean ni renuevan avisos.

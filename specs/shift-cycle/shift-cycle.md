@@ -143,7 +143,8 @@ DEBE durar 2,5 segundos reales.
 
 MIENTRAS está abierta una jornada anterior a la primera jornada completa, CUANDO todas sus
 obligatorias declaradas están cumplidas, el sistema DEBE habilitar la salida por la entrada
-principal y producir el aviso de BR-NTF-014. Cobrar y registrar DEBEN estar cumplidas igual que
+principal en ese instante y producir el aviso de BR-NTF-014, que espera a que el jugador
+salga de la computadora si está abierta. Cobrar y registrar DEBEN estar cumplidas igual que
 las demás. Un comprador pendiente o vencido sin completar su compra NO DEBE sustituir el
 cumplimiento de atención. Un registro que sólo quedaría cumplido al cierre NO DEBE sustituir
 su cumplimiento durante la noche.
@@ -155,8 +156,8 @@ Desde la primera jornada completa, el sistema NO DEBE ofrecer esta salida ni pro
 ### BR-SHF-024 — La salida sigue el cumplimiento actual
 
 MIENTRAS sigue abierta una jornada de prueba, SI alguna obligatoria deja de estar cumplida
-después de habilitar la salida, ENTONCES el sistema DEBE volver a trabar la entrada y producir
-el aviso de BR-NTF-015. Cuando todas vuelven a estar cumplidas, el sistema DEBE habilitar la
+después de habilitar la salida, ENTONCES el sistema DEBE volver a trabar la entrada en ese
+instante y producir el aviso de BR-NTF-015, con la misma espera de BR-NTF-014. Cuando todas vuelven a estar cumplidas, el sistema DEBE habilitar la
 salida otra vez. Cada nueva transición de habilitada a trabada DEBE producir ese aviso; una
 confirmación repetida del mismo estado NO DEBE producir otra transición.
 

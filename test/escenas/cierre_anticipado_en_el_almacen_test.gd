@@ -130,7 +130,8 @@ func _referencia(almacen: Node3D) -> String:
 	return (almacen.get("_hud").get_node("Controles") as Label).text
 
 
-func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:  # AC-SHF-041, AC-NTF-028
+# AC-SHF-041, AC-NTF-028, AC-NTF-032
+func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:
 	for jornada: int in range(
 		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 	):
@@ -140,14 +141,18 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:  # AC-S
 		computadora.pedir_abrir()
 		assert_array(_textos(almacen)).not_contains(AVISO)
 		_cumplir(almacen)
-		assert_array(_textos(almacen)).is_equal(
-			[AVISO] if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA else []
+		assert_bool(almacen.call("_puede_salir")).is_equal(
+			jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 		)
+		assert_array(_textos(almacen)).is_empty()
 		var pantalla: PantallaDeComputadora = almacen.get_node("Interfaz/PantallaDeComputadora")
 		var fila: Node = pantalla.caja().get("_filas").get_child(0).get_child(0)
 		assert_bool((fila.get_child(3) as Button).disabled).is_false()
 		assert_bool((fila.get_child(5) as Button).disabled).is_false()
 		computadora.pedir_cerrar()
+		assert_array(_textos(almacen)).is_equal(
+			[AVISO] if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA else []
+		)
 		assert_float(_restante(almacen)).is_equal(antes)
 		var reloj: RelojDelTurno = almacen.get("_reloj")
 		var tarea := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
@@ -218,7 +223,8 @@ func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-
 		assert_array(_textos(almacen)).is_empty()
 
 
-func test_los_botones_retraban_y_recuperan_cada_ciclo() -> void:  # AC-SHF-042, AC-NTF-029
+# AC-SHF-042, AC-NTF-029, AC-NTF-032
+func test_los_botones_retraban_y_recuperan_cada_ciclo() -> void:
 	var almacen := await _abrir(1, true)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	for tarea in (almacen.get("_partida") as Partida).obligatorias():
@@ -228,11 +234,6 @@ func test_los_botones_retraban_y_recuperan_cada_ciclo() -> void:  # AC-SHF-042, 
 	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
 	computadora.pedir_abrir()
 	computadora.pedir_cerrar()
-	computadora.pedir_abrir()
-	var pantalla: PantallaDeComputadora = almacen.get_node("Interfaz/PantallaDeComputadora")
-	var fila: Node = pantalla.caja().get("_filas").get_child(0).get_child(0)
-	var sumar: Button = fila.get_child(5)
-	var restar: Button = fila.get_child(3)
 	var producto := computadora.registro().productos()[0]
 	var correctas := computadora.registro().unidades_de(producto)
 	var antes := _restante(almacen)
@@ -240,6 +241,9 @@ func test_los_botones_retraban_y_recuperan_cada_ciclo() -> void:  # AC-SHF-042, 
 	assert_bool(almacen.call("_puede_salir")).is_true()
 	assert_array(_textos(almacen)).contains(AVISO)
 	for _ciclo in 2:
+		computadora.pedir_abrir()
+		var sumar := _boton(almacen, 5)
+		var restar := _boton(almacen, 3)
 		assert_bool(sumar.disabled).is_false()
 		assert_bool(restar.disabled).is_false()
 		sumar.pressed.emit()
@@ -249,18 +253,61 @@ func test_los_botones_retraban_y_recuperan_cada_ciclo() -> void:  # AC-SHF-042, 
 		almacen.get_node(ENTRADA).call("accionar")
 		assert_bool(reloj.corriendo()).is_true()
 		assert_str(_referencia(almacen)).not_contains("[Click Izq]")
+		assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
+		computadora.pedir_cerrar()
 		assert_array(_textos(almacen)).contains(RETRABA).not_contains(AVISO)
 		_pila(almacen)._process(Notificaciones.DURACION - 0.1)
 		almacen.call("_revisar_la_salida")
 		_pila(almacen)._process(0.1)
 		assert_array(_textos(almacen)).not_contains(RETRABA)
-		restar.pressed.emit()
+		computadora.pedir_abrir()
+		_boton(almacen, 3).pressed.emit()
 		assert_int(computadora.registro().unidades_de(producto)).is_equal(correctas)
 		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 		assert_bool(almacen.call("_puede_salir")).is_true()
 		assert_str(_referencia(almacen)).contains("[Click Izq] Interactuar")
+		computadora.pedir_cerrar()
 		assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
+	computadora.pedir_abrir()
+	_boton(almacen, 5).pressed.emit()
+	assert_bool(almacen.call("_puede_salir")).is_false()
+	_boton(almacen, 3).pressed.emit()
+	assert_bool(almacen.call("_puede_salir")).is_true()
+	computadora.pedir_cerrar()
+	assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
 	assert_float(_restante(almacen)).is_equal(antes)
+
+
+func _boton(almacen: Node3D, indice: int) -> Button:
+	var pantalla: PantallaDeComputadora = almacen.get_node("Interfaz/PantallaDeComputadora")
+	return pantalla.caja().get("_filas").get_child(0).get_child(0).get_child(indice)
+
+
+func test_el_cierre_real_descarta_la_espera_y_la_noche_siguiente_avisa() -> void:  # AC-NTF-032
+	for retrabada: bool in [false, true]:
+		var almacen := await _abrir(1)
+		var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
+		var reloj: RelojDelTurno = almacen.get("_reloj")
+		if retrabada:
+			_cumplir(almacen)
+		computadora.pedir_abrir()
+		if retrabada:
+			reloj.descumplir(reloj.obligatoria(Tarea.Tipo.REGISTRAR))
+		else:
+			_cumplir(almacen)
+		assert_array(_textos(almacen)).not_contains(AVISO).not_contains(RETRABA)
+		RelojDePrueba.avanzar_turno(reloj, _restante(almacen))
+		assert_bool(reloj.corriendo()).is_false()
+		assert_bool(computadora.computadora().abierta()).is_false()
+		assert_array(_textos(almacen)).is_empty()
+		(almacen.get("_ciclo") as CicloDeJornadas).abrir_la_jornada()
+		computadora.pedir_abrir()
+		_cumplir(almacen)
+		assert_bool(almacen.call("_puede_salir")).is_true()
+		assert_array(_textos(almacen)).is_empty()
+		computadora.pedir_cerrar()
+		assert_array(_textos(almacen)).is_equal([AVISO])
+		await get_tree().process_frame
 
 
 func test_completar_solo_al_cerrar_no_avisa_que_se_puede_salir() -> void:  # AC-NTF-028, AC-NTF-031

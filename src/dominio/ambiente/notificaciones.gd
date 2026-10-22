@@ -30,6 +30,8 @@ var _transcurrido: Dictionary[Tipo, float] = {}
 var _esperando: Comprador = null
 var _cierre_avisado := false
 var _salida := Salida.SIN_AVISO
+var _permiso := false
+var _en_la_computadora := false
 
 
 func actualizar_tiempo(restante: float) -> void:
@@ -73,15 +75,17 @@ func pista_anotada() -> void:
 
 
 func actualizar_salida(disponible: bool) -> void:
-	if disponible:
-		if _salida == Salida.SIN_AVISO:
-			_avisar(Tipo.TAREAS_TERMINADAS)
-		_retirar(Tipo.SALIDA_RETRABADA)
-		_salida = Salida.HABILITADA
-	elif _salida == Salida.HABILITADA:
-		_retirar(Tipo.TAREAS_TERMINADAS)
-		_avisar(Tipo.SALIDA_RETRABADA)
-		_salida = Salida.RETRABADA
+	_permiso = disponible
+	if _en_la_computadora:
+		_retirar(Tipo.SALIDA_RETRABADA if disponible else Tipo.TAREAS_TERMINADAS)
+	else:
+		_avisar_salida(disponible)
+
+
+func actualizar_computadora(abierta: bool) -> void:
+	_en_la_computadora = abierta
+	if not abierta:
+		_avisar_salida(_permiso)
 
 
 func avanzar(segundos: float) -> void:
@@ -108,6 +112,7 @@ func vaciar() -> void:
 	_esperando = null
 	_cierre_avisado = false
 	_salida = Salida.SIN_AVISO
+	_permiso = false
 
 
 func _retirar(tipo: Tipo) -> void:
@@ -119,3 +124,15 @@ func _avisar(tipo: Tipo) -> void:
 	_orden.erase(tipo)
 	_orden.push_front(tipo)
 	_transcurrido[tipo] = 0.0
+
+
+func _avisar_salida(disponible: bool) -> void:
+	if disponible:
+		if _salida == Salida.SIN_AVISO:
+			_avisar(Tipo.TAREAS_TERMINADAS)
+		_retirar(Tipo.SALIDA_RETRABADA)
+		_salida = Salida.HABILITADA
+	elif _salida == Salida.HABILITADA:
+		_retirar(Tipo.TAREAS_TERMINADAS)
+		_avisar(Tipo.SALIDA_RETRABADA)
+		_salida = Salida.RETRABADA

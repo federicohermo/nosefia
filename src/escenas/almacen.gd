@@ -157,6 +157,8 @@ func _ready() -> void:
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
+	_computadora.computadora_abierta.connect(avisos.actualizar_computadora.bind(true))
+	_computadora.computadora_cerrada.connect(avisos.actualizar_computadora.bind(false))
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
 	_reloj.cierre_iniciado.connect(_al_iniciar_el_cierre)
