@@ -169,24 +169,24 @@ func test_la_jornada_1_no_pide_reponer_lo_vendido() -> void:  # AC-EMP-078
 
 
 func test_la_noche_2_elige_cada_mensaje_1_de_la_jornada_3() -> void:  # AC-EMP-087, AC-EMP-078
-	for atencion: bool in [true, false]:
-		for registro: bool in [true, false]:
-			for reposicion: bool in [true, false]:
-				var partida := Partida.nueva()
-				jugar(partida, juego())
-				var como := juego(
-					{
-						"atiende": atiende(true, atencion),
-						"anota": registro,
-						"repone": reposicion,
-					}
-				)
-				jugar(partida, como)
-				assert_str(_condicion(partida, TERCERA)).is_equal(
-					CondicionesDelJefe.J3_POR_RESULTADO[[atencion, registro, reposicion]]
-				)
-				var descuidos := [atencion, registro, reposicion].count(false)
-				assert_int(partida.apercibimientos()).is_equal(descuidos)
+	var casos := [
+		[true, true, true, &"J3_SIN_FALLAS"],
+		[true, true, false, &"J3_REPOSICION_MAL"],
+		[true, false, true, &"J3_REGISTRO_MAL"],
+		[true, false, false, &"J3_REGISTRO_Y_REPOSICION_MAL"],
+		[false, true, true, &"J3_ATENCION_MAL"],
+		[false, false, true, &"J3_ATENCION_Y_REGISTRO_MAL"],
+		[false, true, false, &"J3_ATENCION_Y_REPOSICION_MAL"],
+		[false, false, false, &"J3_TODO_MAL"],
+	]
+	for caso: Array in casos:
+		var partida := Partida.nueva()
+		jugar(partida, juego())
+		jugar(
+			partida, juego({"atiende": atiende(true, caso[0]), "anota": caso[1], "repone": caso[2]})
+		)
+		assert_str(_condicion(partida, TERCERA)).is_equal(caso[3])
+		assert_int(partida.apercibimientos()).is_equal(caso.slice(0, 3).count(false))
 
 
 func test_irse_por_la_puerta_antes_de_las_8_no_suma() -> void:  # AC-SHF-036, AC-EMP-078
@@ -203,13 +203,34 @@ func test_con_un_comprador_que_no_llego_la_puerta_no_deja_salir() -> void:  # AC
 	var partida := Partida.nueva()
 	partida.abrir_la_jornada()
 	var compradores := Compradores.de_la_jornada(PRIMERA)
-	var atender := TareaDeAtender.new(
-		compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	var productos := Catalogo.de_la_jornada(PRIMERA)
+	var casilleros: Dictionary[Producto.Id, int] = {}
+	for producto in productos:
+		casilleros[producto.id] = CASILLEROS_POR_PRODUCTO
+	var inventario := Apertura.inventario_de_la_jornada(
+		PRIMERA, compradores, casilleros, casilleros, RandomNumberGenerator.new()
 	)
-	atender.avanzar(compradores[0].horario.x)
-	assert_int(atender.mal_atendidos()).is_zero()
-	assert_bool(atender.completada()).is_false()
-	assert_bool(CierreAnticipado.corresponde(PRIMERA, partida.obligatorias())).is_false()
+	var noche := Noche.new()
+	noche.estante = Estante.new(inventario, productos)
+	noche.atender = TareaDeAtender.new(compradores, inventario)
+	noche.registro = RegistroDeVentas.new(Catalogo.todos(), noche.atender)
+	for indice in compradores.size():
+		var comprador := compradores[indice]
+		noche.atender.avanzar(comprador.horario.x)
+		_vender(noche)
+		for producto in comprador.pedido().productos():
+			for _unidad in comprador.pedido().unidades_de(producto):
+				noche.registro.sumar(producto)
+		var todos_llegaron := indice == compradores.size() - 1
+		assert_bool(noche.atender.atencion().vendida()).is_true()
+		assert_int(noche.atender.mal_atendidos()).is_zero()
+		assert_bool(noche.registro.coincide()).is_true()
+		assert_bool(noche.registro.completada()).is_equal(todos_llegaron)
+		assert_bool(noche.atender.completada()).is_equal(todos_llegaron)
+		_marcar(partida, noche, true, false)
+		assert_bool(CierreAnticipado.corresponde(PRIMERA, partida.obligatorias())).is_equal(
+			todos_llegaron
+		)
 
 
 func test_las_tres_noches_eligen_el_mensaje_1_de_la_jornada_4() -> void:  # AC-EMP-089, AC-EMP-080
@@ -269,14 +290,41 @@ func test_los_llamados_de_la_prueba_no_cuentan() -> void:  # AC-EMP-078, AC-EMP-
 	assert_bool(partida.antecedentes().hubo_llamados()).is_false()
 	for motivo: Partida.Llamado in todos:
 		assert_int(partida.antecedentes().llamados(motivo)).is_zero()
+	partida.abrir_la_jornada()
+	for tarea: Tarea in partida.obligatorias():
+		tarea.completar()
+	for motivo: Partida.Llamado in todos:
+		partida.anotar_llamado(motivo)
+	partida.cerrar_la_jornada(partida.obligatorias().size())
+	assert_bool(partida.antecedentes().hubo_llamados()).is_true()
+	for motivo: Partida.Llamado in todos:
+		assert_int(partida.antecedentes().llamados(motivo)).is_equal(1)
+	(
+		assert_array(DevolucionDelJefe.new(CUARTA, partida).mensajes())
+		. contains(
+			[
+				DevolucionDelJefe.PAPEL_1,
+				DevolucionDelJefe.BASURA[0],
+				DevolucionDelJefe.AFUERA[0],
+				DevolucionDelJefe.DESORDEN[0],
+			]
+		)
+	)
 
 
 func test_la_cuarta_cuenta_su_primera_falla() -> void:  # AC-EMP-059
 	var todos: Array[Partida.Llamado] = []
 	todos.assign(Partida.Llamado.values())
-	var floja := juego({"atiende": atiende(false, true), "llamados": todos})
-	var partida := jugar_la_prueba([floja, floja, floja])
+	var partida := jugar_la_prueba(
+		[
+			juego({"atiende": atiende(false, true), "anota": false, "llamados": todos}),
+			juego({"repone": false, "llamados": todos}),
+			juego({"limpia": false, "llamados": todos}),
+		]
+	)
 	assert_bool(partida.terminada()).is_false()
+	assert_int(partida.jornada()).is_equal(CUARTA)
+	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(4)
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
 		assert_int(partida.antecedentes().fallas(tipo)).is_zero()
 	assert_int(partida.antecedentes().noches_sin_sumar()).is_zero()

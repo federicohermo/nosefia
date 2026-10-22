@@ -769,11 +769,13 @@ llamado por papel anotado dos veces CUANDO cierra ENTONCES reponer y limpiar tie
 atender y registrar 0, papel 1 llamado, hubo llamados y R = 0. CUANDO la noche 5 cierra
 impecable sin llamados ENTONCES R = 1 y las fallas no cambian; la noche 6 igual, R = 2; la noche
 7 con un llamado, R = 0. DADO una obligatoria cumplida y después descumplida antes del cierre
-ENTONCES suma una falla. DADO un segundo cierre de la misma noche ENTONCES nada cambia. DADO las
-tres noches de la prueba con atender, registrar, reponer y limpiar sin cumplir y los cuatro
-llamados anotados CUANDO abre la jornada 4 ENTONCES las cuentas siguen en cero fallas, cero
-llamados, R = 0 y ningún llamado en la partida; y la primera falla de atender en la jornada 4
-trae la fila n = 1 de Tarea 1.
+ENTONCES suma una falla. DADO un segundo cierre de la misma noche ENTONCES nada cambia. DADO la
+noche 1 con un cliente mal atendido y registrar sin cumplir, la 2 sólo con reponer sin cumplir y
+la 3 sólo con limpiar sin cumplir, con los cuatro llamados anotados cada noche, CUANDO abre la
+jornada 4 ENTONCES la prueba acumuló 4 apercibimientos y las cuentas de la devolución siguen en
+cero fallas, cero llamados, R = 0 y ningún llamado en la partida. La primera falla de atender
+en la jornada 4 trae la fila n = 1 de Tarea 1. DADO los mismos llamados de la prueba CUANDO se
+repiten en la jornada 4 ENTONCES cada motivo cuenta una vez y trae la primera fila de su Reto.
 
 ### AC-EMP-060 — Ningún número, y siempre Saludo y Cierre *(verifica BR-EMP-009, BR-EMP-026, BR-EMP-027, BR-EMP-028, BR-EMP-029)*
 
