@@ -82,10 +82,9 @@ func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-
 		var reponibles := _casilleros_reponibles(jornada)
 		for semilla in 200:
 			# La noche de compras físicas se recorre dos veces: cajas y casilleros ocupados.
-			for desde_gondola: bool in (
-				[false, true] if jornada == Compradores.JORNADA_DE_FEDE_Y_MIA else [false]
-			):
-				var compradores := Compradores.de_la_jornada(jornada)
+			var fisica := Compradores.de_la_jornada(jornada, semilla)[0].tiene_horario()
+			for desde_gondola: bool in [false, true] if fisica else [false]:
+				var compradores := Compradores.de_la_jornada(jornada, semilla)
 				var inventario := Apertura.inventario_de_la_jornada(
 					jornada, compradores, casilleros, reponibles, _azar(semilla)
 				)
@@ -124,6 +123,15 @@ func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-
 				assert_bool(estante.completada()).is_true()
 
 
+func _almacen_de(partida: Partida) -> Node3D:
+	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
+	var almacen: Node3D = auto_free(escena.instantiate())
+	almacen.set("_partida", partida)
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	return almacen
+
+
 func _faltantes_de(almacen: Node3D) -> Dictionary[Producto.Id, int]:
 	var estante: Estante = almacen.get("_repositor").estante()
 	var faltantes: Dictionary[Producto.Id, int] = {}
@@ -135,11 +143,9 @@ func _faltantes_de(almacen: Node3D) -> Dictionary[Producto.Id, int]:
 
 
 func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC-STK-034
-	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
-	var almacen: Node3D = auto_free(escena.instantiate())
-	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
-	add_child(almacen)
-	almacen.get("_jugador").set_physics_process(false)
+	var almacen := _almacen_de(
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
+	)
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	assert_dict(puesto.call("casilleros")).is_equal(_casilleros_medidos())
 	assert_dict(puesto.call("casilleros_reponibles")).is_equal(_casilleros_reponibles())
@@ -169,3 +175,22 @@ func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC
 	azar.seed = 17
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	assert_dict(_faltantes_de(almacen)).is_equal(primera)
+
+
+func _productos_de(compradores: Array[Comprador]) -> Array:
+	var ids: Array = []
+	for comprador in compradores:
+		for producto in comprador.pedido().productos():
+			ids.append(producto.id)
+	return ids
+
+
+func test_la_escena_sortea_con_la_semilla_de_la_partida() -> void:  # AC-CTR-072, AC-CTR-073
+	var tercera := ReglasDeLaPartida.PRIMERA_JORNADA + 2
+	var partida := Partida.desde({"jornada": tercera})
+	var almacen := _almacen_de(partida)
+	var esperados := _productos_de(Compradores.de_la_jornada(tercera, partida.semilla))
+	for _apertura in 2:
+		almacen.call("_al_abrir_la_jornada", tercera)
+		var compradores: Array[Comprador] = almacen.get("_atenciones").tarea().get("_compradores")
+		assert_array(_productos_de(compradores)).is_equal(esperados)

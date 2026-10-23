@@ -102,7 +102,7 @@ class PresenciaDeCaja:
 ## Una fuente por sesión; los tests pueden sembrarla antes de cada apertura.
 var azar_de_la_apertura := RandomNumberGenerator.new()
 ## La apertura selecciona una vez; faltantes y atención reciben esa misma lista.
-var compradores_de_la_apertura: Callable = Compradores.de_la_jornada
+var compradores_de_la_apertura: Callable = _compradores_de_la_partida
 
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
@@ -138,6 +138,10 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _hipotesis: PantallaDeHipotesis = $Interfaz/PantallaDeHipotesis
 @onready var _investigador: Investigador = $Servicios/Investigador
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
+
+
+func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
+	return Compradores.de_la_jornada(jornada, _partida.semilla)
 
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:

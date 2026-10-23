@@ -5,8 +5,8 @@
 ## sembrar una semilla — o sea, que la tarea de atender dejara de ser medible.
 extends GdUnitTestSuite
 
-const COMPRADORES := "res://src/dominio/almacen/compradores.gd"
 const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
+const PRIMERA_DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + 5
 
 
 func test_la_jornada_trae_los_compradores_que_pide_el_balance() -> void:  # AC-CTR-001
@@ -27,17 +27,6 @@ func test_el_padron_no_se_sortea() -> void:  # AC-CTR-001
 	for comprador in otra:
 		nombres_de_otra.append(comprador.nombre())
 	assert_array(nombres_de_una).is_equal(nombres_de_otra)
-
-
-func test_el_padron_no_llama_al_azar() -> void:
-	var texto := FileAccess.get_file_as_string(COMPRADORES)
-	assert_str(texto).is_not_empty()
-	for patron: String in ["randi", "randf", "shuffle", "pick_random"]:
-		(
-			assert_bool(texto.contains(patron))
-			. override_failure_message("`compradores.gd` nombra `%s`: el azar no entra" % patron)
-			. is_false()
-		)
 
 
 func test_cada_jornada_recibe_compradores_propios() -> void:  # AC-CTR-001
@@ -90,20 +79,16 @@ func test_todo_lo_que_se_pide_existe_en_el_catalogo() -> void:
 
 
 func test_las_jornadas_sin_agenda_propia_usan_el_padron() -> void:  # AC-CTR-001
-	for jornada in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA + 2, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
-	):
+	for jornada in range(PRIMERA_DEL_PADRON, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
 		var compradores := Compradores.de_la_jornada(jornada)
 		assert_str(compradores[0].nombre()).is_equal("Marta")
 		for comprador in compradores:
 			assert_bool(comprador.tiene_horario()).is_false()
 
 
-func test_el_padron_y_las_jornadas_completas_conservan_el_pedido_de_ruben() -> void:  # AC-CTR-041
+func test_el_padron_y_las_jornadas_6_a_8_conservan_el_pedido_de_ruben() -> void:  # AC-CTR-041
 	var listas: Array[Array] = [Compradores.padron()]
-	for jornada in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
-	):
+	for jornada in range(PRIMERA_DEL_PADRON, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
 		listas.append(Compradores.de_la_jornada(jornada))
 	for lista in listas:
 		var ruben: Comprador = lista[1]
@@ -112,12 +97,3 @@ func test_el_padron_y_las_jornadas_completas_conservan_el_pedido_de_ruben() -> v
 		assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.BURBALOO))).is_equal(1)
 		assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.DUREXTRA))).is_equal(2)
 		assert_int(ruben.paga() - ruben.pedido().total()).is_equal(-500)
-
-
-func test_el_pedido_provisorio_de_ruben_solo_usa_productos_de_prueba() -> void:  # AC-STK-099
-	var ruben := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA + 2)[1]
-	assert_str(ruben.nombre()).is_equal("Rubén")
-	assert_int(ruben.pedido().productos().size()).is_equal(2)
-	assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.JORGILLO))).is_equal(1)
-	assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.DURONGA))).is_equal(2)
-	assert_int(ruben.paga() - ruben.pedido().total()).is_equal(-500)

@@ -8,6 +8,8 @@ const FALTA := "Gracias. Falta que me des "
 const YA_ENTREGADO := "Gracias, pero ya me habías dado esto."
 const PIDE_EL_RECIBO := "Gracias. Me das el recibo, ¿por favor?"
 const RECHAZO := "Yo no pedí esto. "
+const SALUDO := "Buenas noches. "
+const DESPEDIDA := "Muchas gracias."
 
 @export var tin := PackedStringArray()
 @export var tia := PackedStringArray()
@@ -71,6 +73,15 @@ static func recordatorio(
 static func agradecimiento(pedido: Venta, recepcion: RecepcionDeCompra) -> Dialogo:
 	var faltan := _enumeracion(pedido, recepcion.pendientes)
 	return una(PIDE_EL_RECIBO if faltan.is_empty() else FALTA + faltan + ".")
+
+
+## Lo que dice al atenderlo quien no trae guion propio: saluda y nombra su pedido entero.
+static func apertura_predeterminada(pedido: Venta) -> Dialogo:
+	return una(SALUDO + "Quiero " + _enumeracion(pedido, pedido.unidades_de) + ".")
+
+
+static func despedida_predeterminada() -> Dialogo:
+	return una(DESPEDIDA)
 
 
 static func una(texto: String) -> Dialogo:

@@ -43,6 +43,14 @@ var noches_de_prueba: Dictionary[int, ResultadoDeLaNoche]:
 	set(_nuevas):
 		push_error("Las noches de prueba las anota el cierre de la jornada y no se sustituyen")
 
+## Con qué sortea la partida lo que no se decide al diseñar: los pedidos de las jornadas 3 a 5.
+## Se fija al empezar y cruza el guardado, así que reintentar o continuar sortea lo mismo.
+var semilla: int:
+	get:
+		return _semilla
+	set(_nueva):
+		push_error("La semilla se fija al empezar la partida y no se sustituye")
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -56,6 +64,7 @@ var _mopa_secada := false
 var _poetico_usado_en: Array[int] = []
 var _reflexion: ReflexionDeCierre = null
 var _noches_de_prueba: Dictionary[int, ResultadoDeLaNoche] = {}
+var _semilla: int = 0
 
 
 func anotar_uso_de_poetico(
@@ -118,6 +127,9 @@ static func desde(datos: Dictionary) -> Partida:
 		if mensaje != null:
 			partida._devoluciones.append(mensaje)
 	partida._mopa_secada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA)]
+	var guardada: int = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.SEMILLA)]
+	if guardada > 0:
+		partida._semilla = guardada
 	var noches: Dictionary = saneado[PartidaSerializada.clave(
 		PartidaSerializada.Campo.NOCHES_DE_PRUEBA
 	)]
@@ -162,6 +174,10 @@ func anotar_mopa_secada() -> void:
 func _init(legajo: Legajo) -> void:
 	_legajo = legajo
 	_expediente = Expediente.new(CasoDeInvestigacion.de_la_partida())
+	var azar := RandomNumberGenerator.new()
+	azar.randomize()
+	# Cero es lo que trae un guardado sin semilla, y por eso no sirve de semilla.
+	_semilla = maxi(absi(azar.seed), 1)
 
 
 ## El legajo que la partida recibió, **la misma instancia** y no una copia. Con una copia, un

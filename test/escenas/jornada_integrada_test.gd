@@ -14,11 +14,17 @@ const ALTURA_DEL_JUGADOR := 0.112
 const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
+const DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + 5
+
 
 # AC-CLN-060
 func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
+	almacen.set(
+		"compradores_de_la_apertura",
+		func(_jornada: int) -> Array[Comprador]: return Compradores.de_la_jornada(DEL_PADRON)
+	)
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	var control := RandomNumberGenerator.new()
@@ -30,9 +36,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
-	_comprobar_huecos(
-		almacen, _completos_al_abrir(almacen, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, control)
-	)
+	_comprobar_huecos(almacen, _completos_al_abrir(almacen, control))
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
 	await _atender(almacen)
@@ -59,20 +63,17 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
-	_comprobar_huecos(
-		almacen,
-		_completos_al_abrir(almacen, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, control)
-	)
+	_comprobar_huecos(almacen, _completos_al_abrir(almacen, control))
 	_comprobar_planilla_en_cero(almacen)
 
 
 ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
 ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
-func _completos_al_abrir(almacen: Node3D, jornada: int, azar: RandomNumberGenerator) -> int:
+func _completos_al_abrir(almacen: Node3D, azar: RandomNumberGenerator) -> int:
 	var casilleros: Dictionary[Producto.Id, int] = (
 		almacen.get("_reposicion_manual").casilleros_reponibles()
 	)
-	var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(jornada))
+	var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(DEL_PADRON))
 	return Catalogo.todos().size() - Apertura.faltantes_al_azar(pedidos, casilleros, azar).size()
 
 

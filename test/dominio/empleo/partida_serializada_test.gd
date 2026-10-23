@@ -23,6 +23,7 @@ func _completo() -> Dictionary:
 		"noches_de_prueba": {1: {"mal_atendidos": 1, "sin_cumplir": ["REGISTRAR"]}},
 		"apercibimientos_de_la_prueba": 3,
 		"ultima_de_la_prueba_completa": true,
+		"semilla": 1234,
 	}
 
 

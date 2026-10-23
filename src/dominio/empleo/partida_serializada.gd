@@ -19,6 +19,7 @@ enum Campo {
 	NOCHES_DE_PRUEBA,
 	APERCIBIMIENTOS_DE_LA_PRUEBA,
 	ULTIMA_DE_LA_PRUEBA_COMPLETA,
+	SEMILLA,
 }
 
 const VERSION: int = 2
@@ -43,6 +44,7 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.NOCHES_DE_PRUEBA: {},
 	Campo.APERCIBIMIENTOS_DE_LA_PRUEBA: 0,
 	Campo.ULTIMA_DE_LA_PRUEBA_COMPLETA: false,
+	Campo.SEMILLA: 0,
 }
 
 
