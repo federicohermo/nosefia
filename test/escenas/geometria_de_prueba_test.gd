@@ -357,12 +357,21 @@ func test_el_encuentro_de_dos_productos_deja_el_paso_de_sus_unidades() -> void: 
 
 
 func test_terminator_toma_el_paso_de_zucarachas() -> void:  # AC-STK-106
+	var local := _abrir()
+	var producto := Catalogo.de(Producto.Id.TERMINATOR)
+	var repositor: Repositor = local.get("_repositor")
+	assert_int(repositor.estante().cupo(producto)).is_equal(40)
 	var terminator := Catalogo.de(Producto.Id.TERMINATOR).nombre
 	var zucarachas := Catalogo.de(Producto.Id.ZUCARACHAS).nombre
 	var pasos: Dictionary[String, Array] = {terminator: [], zucarachas: []}
-	for fila in _filas_de_exhibicion(_abrir()):
+	var filas_de_terminator := 0
+	for fila in _filas_de_exhibicion(local):
+		if fila.producto == terminator:
+			filas_de_terminator += 1
+			assert_int(fila.cajas.size()).is_equal(10)
 		if pasos.has(fila.producto):
 			pasos[fila.producto].append_array(_huecos_de(fila))
+	assert_int(filas_de_terminator).is_equal(8)
 	for nombre: String in pasos:
 		assert_array(pasos[nombre]).override_failure_message(nombre).is_not_empty()
 	assert_float(absf(_promedio(pasos[terminator]) - _promedio(pasos[zucarachas]))).is_less_equal(

@@ -567,9 +567,9 @@ contra el que se amontonen ambas tandas. Los centros de ambas tandas DEBEN perma
 opuestas, con el ritmo de su producto en la etapa completa. Un bloque puede aprovechar la
 holgura del otro, como en la etapa completa, antes de quitar otra columna.
 
-En un estante con dos productos, el paso entre dos unidades vecinas DEBE ser el mismo
-dentro de cada producto y en el encuentro entre ambos: el encuentro deja la mayor separación
-de referencia de sus dos productos, nunca menor que el mínimo de aire entre las dos tandas.
+En un estante de prueba con dos productos, cada producto DEBE conservar su separación
+interna de referencia. El encuentro DEBE dejar la mayor separación de referencia de sus
+dos productos, nunca menor que el mínimo de aire entre las dos tandas.
 El sobrante DEBE repartirse a partes iguales entre los dos bordes del estante, sin agrandar
 el encuentro entre los productos ni el encuentro entre caras. Terminator DEBE tomar la
 separación de Zucarachas, el otro producto de su estante, en lugar de la suya de referencia,
