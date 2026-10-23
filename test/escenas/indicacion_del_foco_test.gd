@@ -53,6 +53,7 @@ func test_el_campo_real_resalta_la_computadora() -> void:
 ## La vista previa aparece sólo en el hueco enfocado, sin ocultar ni reordenar sus referencias.
 func test_la_vista_previa_aparece_solo_en_el_hueco_enfocado() -> void:  # AC-PLY-047
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)

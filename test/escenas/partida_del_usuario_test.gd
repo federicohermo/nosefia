@@ -5,9 +5,7 @@
 extends GdUnitTestSuite
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
-const SEGUNDOS_REALES_DE_UN_TURNO := (
-	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-)
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 func _huella_del_usuario() -> String:
@@ -24,9 +22,12 @@ func test_cerrar_una_noche_no_toca_la_partida_del_usuario() -> void:
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	await get_tree().process_frame
-	assert_bool((almacen.get("_pantalla") as PantallaDeDevolucion).visible).is_true()
+	(
+		assert_bool((almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).visible)
+		. is_true()
+	)
 	assert_str(_huella_del_usuario()).is_equal(antes)
 	assert_bool(FileAccess.file_exists(Guardado.ruta_por_defecto)).is_true()
 

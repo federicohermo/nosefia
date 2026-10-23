@@ -36,8 +36,18 @@ const BUSCAR := "Buscar contacto..."
 const LILA := Color("c99cf4")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
-const AYUDA := "RUEDA DEL MOUSE / DESPLAZAR HISTORIAL"
-const DIAS: Array[String] = ["HOY", "AYER", "HACE DOS DÍAS", "HACE TRES DÍAS", "HACE CUATRO DÍAS"]
+const AYUDA := "ARRASTRÁ EL FONDO O USÁ LA RUEDA"
+const UMBRAL_DEL_ARRASTRE := 6.0
+const DIAS: Array[String] = [
+	"HOY",
+	"AYER",
+	"HACE DOS DÍAS",
+	"HACE TRES DÍAS",
+	"HACE CUATRO DÍAS",
+	"HACE CINCO DÍAS",
+	"HACE SEIS DÍAS",
+	"HACE SIETE DÍAS",
+]
 
 @export var _velo: Control
 @export var _lienzo: Control
@@ -75,6 +85,10 @@ var _historial: Array[Mensaje] = []
 var _burbujas: Array[PanelContainer] = []
 var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
+var _arrastrando: bool = false
+var _posicion_del_arrastre: float = 0.0
+var _desplazamiento_del_arrastre: float = 0.0
+var _umbral_de_arrastre_superado: bool = false
 
 
 func _ready() -> void:
@@ -99,6 +113,13 @@ func _ready() -> void:
 	_opciones.text = "..."
 	_entrada.placeholder_text = MENSAJE
 	_ayuda.text = AYUDA
+	_scroll.gui_input.connect(_al_tocar_el_historial)
+	_scroll.get_v_scroll_bar().changed.connect(_actualizar_desplazamiento)
+	_telefono.visibility_changed.connect(
+		func() -> void:
+			if not _telefono.is_visible_in_tree():
+				_terminar_arrastre()
+	)
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
 	_foto_ampliada.hide()
 	_recordatorio.hide()
@@ -112,6 +133,8 @@ func _ready() -> void:
 func _notification(que: int) -> void:
 	if que == NOTIFICATION_UNPAUSED:
 		_ultimo = _ahora.call()
+	elif que == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_terminar_arrastre()
 
 
 func _process(_delta: float) -> void:
@@ -236,6 +259,7 @@ func quitar_opcion() -> void:
 	if is_instance_valid(_opcion):
 		_opcion.queue_free()
 	_opcion = null
+	_actualizar_desplazamiento.call_deferred()
 
 
 ## El botón de la opción, si hay una a la vista.
@@ -250,8 +274,10 @@ func _agregar_la_opcion() -> void:
 	_opcion.text = _texto_de_la_opcion
 	_opcion.theme_type_variation = &"BotonContinuar"
 	_opcion.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_opcion.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_opcion.pressed.connect(func() -> void: opcion_elegida.emit())
 	_mensajes.add_child(_opcion)
+	_actualizar_desplazamiento.call_deferred()
 	if not _foto_ampliada.visible:
 		_opcion.grab_focus()
 
@@ -266,10 +292,12 @@ func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:
 	_adjunto.text = adjunto.texto if adjunto != null else ""
 	_adjunto.visible = adjunto != null
 	_foto_ampliada.show()
+	_actualizar_desplazamiento()
 
 
 func cerrar_foto() -> void:
 	_foto_ampliada.hide()
+	_actualizar_desplazamiento()
 
 
 func mostrar_recordatorio(se_ve: bool) -> void:
@@ -283,6 +311,9 @@ func cubrir_recordatorio(cubierto: bool) -> void:
 
 
 func _input(evento: InputEvent) -> void:
+	if _arrastrando:
+		_arrastrar(evento)
+		return
 	if not _telefono.visible:
 		return
 	var clic := evento as InputEventMouseButton
@@ -294,6 +325,90 @@ func _input(evento: InputEvent) -> void:
 	elif _cierra_con_un_clic_afuera() and not _telefono.get_global_rect().has_point(clic.position):
 		get_viewport().set_input_as_handled()
 		cierre_pedido.emit()
+
+
+func _al_tocar_el_historial(evento: InputEvent) -> void:
+	if _empezar_arrastre(evento):
+		_scroll.accept_event()
+
+
+func _empezar_arrastre(evento: InputEvent) -> bool:
+	var clic := evento as InputEventMouseButton
+	if clic == null or not clic.pressed or clic.button_index != MOUSE_BUTTON_LEFT:
+		return false
+	if (
+		not _telefono.is_visible_in_tree()
+		or _foto_ampliada.visible
+		or not _hay_historial_desplazable()
+	):
+		return false
+	_arrastrando = true
+	_umbral_de_arrastre_superado = false
+	_posicion_del_arrastre = _scroll.scroll_vertical
+	_desplazamiento_del_arrastre = 0.0
+	_pintar_cursor(Control.CURSOR_DRAG)
+	return true
+
+
+func _arrastrar(evento: InputEvent) -> void:
+	if evento is InputEventMouseButton and evento.button_index == MOUSE_BUTTON_LEFT:
+		if not evento.pressed:
+			if _umbral_de_arrastre_superado:
+				get_viewport().set_input_as_handled()
+			_terminar_arrastre()
+	elif evento is InputEventMouseMotion:
+		var escala := _scroll.get_global_transform_with_canvas().get_scale().y
+		var desplazamiento: float = evento.relative.y / escala
+		if not _umbral_de_arrastre_superado:
+			_desplazamiento_del_arrastre += desplazamiento
+			if absf(_desplazamiento_del_arrastre) < UMBRAL_DEL_ARRASTRE:
+				return
+			desplazamiento = _desplazamiento_del_arrastre
+			_umbral_de_arrastre_superado = true
+		var barra := _scroll.get_v_scroll_bar()
+		_posicion_del_arrastre = clampf(
+			_posicion_del_arrastre - desplazamiento,
+			barra.min_value,
+			maxf(barra.min_value, barra.max_value - barra.page)
+		)
+		_scroll.scroll_vertical = roundi(_posicion_del_arrastre)
+		get_viewport().set_input_as_handled()
+
+
+func _terminar_arrastre() -> void:
+	if not _arrastrando:
+		return
+	_arrastrando = false
+	_umbral_de_arrastre_superado = false
+	_desplazamiento_del_arrastre = 0.0
+	_actualizar_desplazamiento()
+
+
+func _hay_historial_desplazable() -> bool:
+	var barra := _scroll.get_v_scroll_bar()
+	return _pie.visible and barra.max_value - barra.page > barra.min_value
+
+
+func _actualizar_desplazamiento() -> void:
+	var desplazable := _hay_historial_desplazable() and not _foto_ampliada.visible
+	if _arrastrando and (not desplazable or not _telefono.is_visible_in_tree()):
+		_terminar_arrastre()
+		return
+	_ayuda.modulate.a = 1.0 if desplazable else 0.0
+	var forma: Control.CursorShape = (
+		Control.CURSOR_POINTING_HAND if desplazable else Control.CURSOR_ARROW
+	)
+	if _arrastrando:
+		forma = Control.CURSOR_DRAG
+	_pintar_cursor(forma)
+
+
+func _pintar_cursor(forma: Control.CursorShape) -> void:
+	_scroll.mouse_default_cursor_shape = forma
+	for hijo: Node in _mensajes.find_children("*", "Control", true, false):
+		var control := hijo as Control
+		if control.mouse_filter == Control.MOUSE_FILTER_PASS:
+			control.mouse_default_cursor_shape = forma
 
 
 func _sube_antes_de_correrse() -> bool:
@@ -331,6 +446,9 @@ func _pintar_posicion() -> void:
 
 
 func _componer(menu: bool, notas: bool = false) -> void:
+	_scroll.vertical_scroll_mode = (
+		ScrollContainer.SCROLL_MODE_DISABLED if menu else ScrollContainer.SCROLL_MODE_AUTO
+	)
 	var marco := _estilo(PAPEL if menu else Color("c8c8c8"), 35 if menu else 26, 12)
 	if menu:
 		marco.set_border_width_all(8)
@@ -354,6 +472,7 @@ func _componer(menu: bool, notas: bool = false) -> void:
 	barra.add_theme_stylebox_override("scroll", _estilo(PAPEL, 0, 5))
 	for estado: String in ["grabber", "grabber_highlight", "grabber_pressed"]:
 		barra.add_theme_stylebox_override(estado, _estilo(Color("7d8280"), 9, 5))
+	_actualizar_desplazamiento.call_deferred()
 
 
 func _filtrar(busqueda: String) -> void:
@@ -418,6 +537,7 @@ func _boton_de(conversacion: Conversacion, sin_leer: int, resumen: String) -> Bu
 		badge.add_child(cuenta)
 		fila.add_child(badge)
 	var quien := conversacion.interlocutor
+	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	boton.pressed.connect(func() -> void: chat_pedido.emit(quien))
 	return boton
 
@@ -453,9 +573,11 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	panel.add_theme_stylebox_override("panel", _estilo(Color("0b363d"), 16, 16))
 	panel.mouse_filter = Control.MOUSE_FILTER_PASS
+	panel.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	var contenido := VBoxContainer.new()
 	contenido.add_theme_constant_override("separation", 12)
 	contenido.mouse_filter = Control.MOUSE_FILTER_PASS
+	contenido.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	panel.add_child(contenido)
 	if mensaje.foto != null:
 		var foto := TextureButton.new()
@@ -463,6 +585,7 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		foto.ignore_texture_size = true
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		foto.custom_minimum_size = Vector2(0, 240)
+		foto.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		foto.pressed.connect(
 			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
 		)
@@ -482,7 +605,7 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 			texto.pop()
 			texto.add_text(mensaje.texto.substr(inicio + mensaje.texto_del_tramo.length()))
 			texto.meta_underlined = false
-			texto.mouse_filter = Control.MOUSE_FILTER_PASS
+			texto.mouse_filter = Control.MOUSE_FILTER_STOP
 			texto.meta_clicked.connect(
 				func(tramo: Variant) -> void: tramo_pedido.emit(mensaje.identidad, str(tramo))
 			)
@@ -514,6 +637,7 @@ func _ordenar_el_historial() -> void:
 		_mensajes.move_child(burbuja, posicion)
 		posicion += 1
 		anterior = jornada
+	_actualizar_desplazamiento.call_deferred()
 
 
 func _ir_al_ultimo() -> void:
@@ -523,6 +647,7 @@ func _ir_al_ultimo() -> void:
 
 
 func _limpiar() -> void:
+	_terminar_arrastre()
 	_historial.clear()
 	_burbujas.clear()
 	# Lo viejo espera su liberación dentro del árbol, en un nodo oculto: sacado del árbol y

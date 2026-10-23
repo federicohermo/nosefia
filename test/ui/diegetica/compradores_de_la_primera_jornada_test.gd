@@ -1,6 +1,8 @@
 extends GdUnitTestSuite
 
+const TinYTia := preload("res://test/escenas/tin_y_tia.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacenes: Array[Node3D] = []
 
@@ -18,7 +20,8 @@ func after_test() -> void:
 func _panel() -> PanelDeLaVentanilla:
 	# La animación se ejerce sobre la interfaz cableada del juego y su modo real de pausa.
 	var almacen: Node3D = ALMACEN.instantiate()
-	almacen.set("_partida", Partida.nueva())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
+	almacen.set("compradores_de_la_apertura", TinYTia.en_cualquier_jornada)
 	_almacenes.append(almacen)
 	add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)
@@ -51,9 +54,9 @@ func test_muestra_ambos_compradores_dialogo_y_clic_izquierdo_sin_botones() -> vo
 	var clicks: Array[bool] = []
 	var atenciones: Ventanilla = _almacenes.back().get("_atenciones")
 	atenciones.presentacion_cambiada.connect(func() -> void: clicks.append(true))
-	for intervalo: float in [120.0, 360.0]:
+	for hora: Vector2i in [Vector2i(20, 30), Vector2i(23, 30)]:
 		var almacen: Node3D = _almacenes.back()
-		(almacen.get("_reloj") as RelojDelTurno).avanzar(intervalo)
+		RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), hora)
 		var atencion: Atencion = almacen.get("_atenciones").atencion()
 		var comprador := atencion.comprador()
 		var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
@@ -88,9 +91,9 @@ func test_animan_los_dos_y_la_pausa_conserva_el_cuadro() -> void:  # AC-CTR-042
 	assert_object(sprite).is_not_null()
 	if sprite == null:
 		return
-	for intervalo: float in [120.0, 360.0]:
+	for hora: Vector2i in [Vector2i(20, 30), Vector2i(23, 30)]:
 		var almacen: Node3D = _almacenes.back()
-		(almacen.get("_reloj") as RelojDelTurno).avanzar(intervalo)
+		RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), hora)
 		panel.mostrar(almacen.get("_atenciones").atencion())
 		sprite.set_frame_and_progress(0, 0.99)
 		await get_tree().create_timer(0.1).timeout
@@ -116,8 +119,10 @@ func test_esperan_en_el_mundo_con_la_interfaz_cerrada() -> void:  # AC-CTR-042
 		return
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(sprite.visible).is_false()
-	for intervalo: float in [120.0, 240.0]:
-		reloj.avanzar(intervalo)
+	for llegada_y_salida: Array in [
+		[Vector2i(20, 30), Vector2i(23, 0)], [Vector2i(23, 30), Vector2i(2, 0)]
+	]:
+		RelojDePrueba.avanzar_hasta(reloj, llegada_y_salida[0])
 		assert_bool(panel.visible).is_false()
 		assert_bool(sprite.is_visible_in_tree()).is_true()
 		assert_int(sprite.billboard).is_equal(BaseMaterial3D.BILLBOARD_DISABLED)
@@ -126,5 +131,5 @@ func test_esperan_en_el_mundo_con_la_interfaz_cerrada() -> void:  # AC-CTR-042
 		sprite.set_frame_and_progress(0, 0.99)
 		await get_tree().create_timer(0.1).timeout
 		assert_int(sprite.frame).is_not_equal(0)
-		reloj.avanzar(120.0)
+		RelojDePrueba.avanzar_hasta(reloj, llegada_y_salida[1])
 		assert_bool(sprite.visible).is_false()

@@ -104,6 +104,16 @@ func completada() -> bool:
 	return despachados() == _compradores.size()
 
 
+## Cuántos clientes llegaron, no se les vendió y se fueron. El que todavía espera o el que nunca
+## llegó no cuenta.
+func mal_atendidos() -> int:
+	var cuantos := 0
+	for atendida in _atenciones:
+		if atendida.despachada() and not atendida.vendida():
+			cuantos += 1
+	return cuantos
+
+
 ## Cuánto se desvió la caja en la noche, sumando **sólo las cobradas** y con signo.
 ##
 ## Al que se despachó sin vender no se le cobró nada, así que su diferencia no es plata que falte:

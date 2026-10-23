@@ -5,7 +5,10 @@ const ALMACEN := "res://src/escenas/almacen.tscn"
 
 func _local() -> Node3D:
 	var local: Node3D = auto_free(load(ALMACEN).instantiate())
-	local.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
+	local.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(local)
 	(local.get("_reloj") as Node).set_process(false)
 	(local.get("_jugador") as Node).set_physics_process(false)

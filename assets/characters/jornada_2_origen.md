@@ -3,15 +3,18 @@
 Los dieciséis PNG proceden de la revisión fijada
 [`62390898635a04fbb1b6a29558355a5e1984684f`](https://github.com/federicohermo/nosefia/tree/62390898635a04fbb1b6a29558355a5e1984684f/assets/personajes)
 de los originales indicados por el usuario en `modelossupermercado` para #437.
-La copia conserva exactamente los bytes de cada blob de esa revisión. Las imágenes
-no se recortan, reescalan ni recomprimen, y no se modifica su alfa. Los archivos de Cami
+La copia inicial conservó exactamente los bytes de cada blob de esa revisión. Las imágenes
+no se recortaron, reescalaron ni recomprimieron, y no se modificó su alfa. Los archivos de Cami
 permanecen fuera de esta entrega.
+
+Los PNG de uso reciben después la [limpieza reproducible del alfa](README.md#limpieza-del-alfa).
+Los hashes de la tabla identifican los originales anteriores a esa limpieza.
 
 Cada PNG tiene 1086 × 1448 píxeles, profundidad de 8 bits y tipo de color PNG 6 (RGBA).
 Se verificaron la firma, el encabezado y los CRC de todos sus chunks, además de SHA-256
 y la igualdad binaria contra el blob Git original.
 
-| Ruta original en la revisión fijada | Ruta de uso en el juego | Blob Git original | SHA-256 del PNG original y copiado |
+| Ruta original en la revisión fijada | Ruta de uso en el juego | Blob Git original | SHA-256 del PNG original |
 |---|---|---|---|
 | `assets/personajes/Fede/Fede 01.png` | `assets/characters/fede/01.png` | `aa376a28e75570905b8478807dcb30dd235c1f8b` | `e2f3b77484e9eadf18c208a4280c64388e69a164b5cb856743f773b561524d06` |
 | `assets/personajes/Fede/Fede 02.png` | `assets/characters/fede/02.png` | `cc6b1d41c0a2e97dde7565bfd8c360a981cc17db` | `65edcdc00a3be9e2898957c8a9cf1a32a5e1d4ef253759b82f3d0ee40add16d5` |

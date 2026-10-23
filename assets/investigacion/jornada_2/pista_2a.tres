@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("pista")
 identidad = "2A"
-jornada = 2
+jornada = 5
 canal = 2
 origen = &"2A"
 foto = ExtResource("foto")

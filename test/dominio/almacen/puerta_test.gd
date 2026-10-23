@@ -109,3 +109,14 @@ func test_la_que_no_esta_trabada_alterna_y_lo_contesta() -> void:  # AC-PLY-039
 	assert_bool(puerta.trabada()).is_false()
 	assert_bool(puerta.alternar()).is_true()
 	assert_bool(puerta.abierta()).is_true()
+
+
+func test_la_salida_abre_una_trabada_sin_habilitar_su_alternancia() -> void:  # AC-SHF-043
+	var puerta := Puerta.new(true)
+	assert_bool(puerta.abrir_para_salida()).is_true()
+	assert_float(puerta.angulo()).is_zero()
+	assert_bool(puerta.abrir_para_salida()).is_false()
+	assert_bool(puerta.alternar()).is_false()
+	assert_float(puerta.avanzar(0.1)).is_between(0.0, Puerta.ANGULO_ABIERTA)
+	assert_float(puerta.avanzar(10.0)).is_equal(Puerta.ANGULO_ABIERTA)
+	assert_bool(puerta.trabada()).is_true()

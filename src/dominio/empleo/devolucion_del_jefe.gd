@@ -73,15 +73,23 @@ const TAREAS: Dictionary[Tarea.Tipo, Array] = {
 
 ## La Tarea 5 sale de la jornada: sólo las que declaran una particular tienen texto.
 const PARTICULARES: Dictionary[int, String] = {
-	1:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 	(
 		"Cuando te pedí que ordenaras las cajas en las estanterías del depósito, "
 		+ "lo que quería decir es que pongas TODAS y cada una de las CAJAS de "
 		+ "cartón con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se "
 		+ "entendió?"
 	),
-	2: "De verdad era tan difícil tirar tres bolsas de basura?",
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
+	"De verdad era tan difícil tirar tres bolsas de basura?",
 }
+
+## La fila de la ficha que termina la prueba: Enrique no dice nada más (BR-EMP-043).
+const DESPIDO_DE_LA_PRUEBA := (
+	"No, no, no. Flaco, no te puedo tomar como empleado si trabajás a medias. Un par de "
+	+ "errores los puedo dejar pasar, pero si se repite todos los días...\n\nHasta acá "
+	+ "llegó mi paciencia. Suerte consiguiendo otro trabajo."
+)
 
 const POETICO := (
 	"Che, si usás un producto del local para la limpieza, me tenés que avisar. No podés "
@@ -108,12 +116,12 @@ const PAPEL_MAS_DESPEDIDO := (
 	+ "al gastroenterólogo, una de dos."
 )
 const BASURA_POR_JORNADA: Dictionary[int, String] = {
-	2:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	(
 		'Por si no lo sabías, la "basura" que te pedí que tiraras no incluye '
 		+ "productos ni elementos del local. Estamos de acuerdo?"
 	),
-	3:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2:
 	(
 		"Cuando te pedí que tiraras algunos productos, no me refería a objetos "
 		+ "útiles y en buen estado!"
@@ -158,8 +166,8 @@ const CIERRE_DEL_DESPIDO := (
 	+ "reputación de mi local. Que ni se te ocurra volver a aparecer por acá, "
 	+ "entendiste?"
 )
-## Por medios máximos, en la quinta: la primera fila cuyo tope alcanza a los medios gana.
-const CIERRES_DE_LA_QUINTA: Array[Array] = [
+## Por medios máximos, en la última: la primera fila cuyo tope alcanza a los medios gana.
+const CIERRES_DE_LA_ULTIMA: Array[Array] = [
 	[
 		0,
 		(
@@ -176,13 +184,12 @@ const CIERRES_DE_LA_QUINTA: Array[Array] = [
 			+ "es tuyo."
 		)
 	],
-	# Provisorio: la ficha dice «A DEFINIR» y el usuario autorizó esta frase (OQ-EMP-005).
 	[
 		4,
 		(
-			"Tuviste algunos tropiezos, pero cumpliste con lo necesario. Te voy a "
-			+ "dar el puesto. Espero que de acá en adelante no tenga que estar atrás "
-			+ "tuyo por las mismas cosas, estamos?"
+			"Mirá, hubo un par de veces que la pifiaste, pero como soy generoso, te "
+			+ "voy a dar el puesto igual. No aflojes. Desde ahora, espero que des lo "
+			+ "mejor de vos."
 		)
 	],
 	[
@@ -203,15 +210,15 @@ const CIERRES_DE_LA_QUINTA: Array[Array] = [
 		)
 	],
 ]
+## Una fila por jornada, de la primera completa a la anterior a la última.
 const CIERRES_IMPECABLES: Dictionary[int, String] = {
-	1:
-	(
-		"Seguiste todas mis instrucciones al pie de la letra. Excelente. Seguí "
-		+ "así y vas a tener el puesto asegurado."
-	),
-	2: "Nuevamente, todo en orden. Seguí así!",
-	3: "Sin comentarios por mi parte. Dale para adelante.",
-	4: "La jornada cerró cuadrada, como de costumbre. Excelente trabajo.",
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+	"Seguiste todas mis instrucciones al pie de la letra. Excelente. Seguí así.",
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1: "Nuevamente, todo en orden. Seguí así!",
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2:
+	"Sin comentarios por mi parte. Dale para adelante.",
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3:
+	"La jornada cerró cuadrada, como de costumbre. Excelente trabajo.",
 }
 const MEJORA_BAJA := "Ahora sí le vas agarrando la mano! Muy bien. Seguí así."
 const MEJORA_BAJA_SOSTENIDA := "Sin nada para comentar. Adelante con eso."
@@ -260,9 +267,16 @@ var _opciones: Array[Opcion] = []
 
 
 ## La partida ya cerró esa noche: sus cuentas incluyen la noche, y sus obligatorias y llamados
-## son los de la noche cerrada.
+## son los de la noche cerrada. Las jornadas de introducción cierran sin mensajes.
 func _init(jornada: int, partida: Partida) -> void:
 	_jornada = jornada
+	_opciones.append(Opcion.VOLVER_AL_MENU if partida.terminada() else Opcion.CONTINUAR)
+	# El despido de la prueba no abre la jornada siguiente: la partida sigue en la prueba.
+	if partida.terminada() and partida.jornada() < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		_mensajes = [DESPIDO_DE_LA_PRUEBA]
+		return
+	if not por_el_celular():
+		return
 	var sin_cumplir: Array[Tarea.Tipo] = []
 	for tarea: Tarea in partida.obligatorias():
 		if not tarea.completada():
@@ -275,8 +289,11 @@ func _init(jornada: int, partida: Partida) -> void:
 		partida.llamados(),
 		partida.uso_de_poetico_en(jornada)
 	)
-	# Con la partida en curso, sólo continuar: salir al menú pasa por la pausa.
-	_opciones.append(Opcion.VOLVER_AL_MENU if partida.terminada() else Opcion.CONTINUAR)
+
+
+## Las noches de prueba cierran sin celular: sigue la pantalla de inicio de la noche siguiente.
+func por_el_celular() -> bool:
+	return _jornada >= ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 
 
 func mensajes() -> Array[String]:
@@ -385,7 +402,7 @@ static func _cierre(jornada: int, medios: int, antecedentes: Antecedentes) -> St
 	if medios >= MEDIOS_DEL_DESPIDO:
 		return CIERRE_DEL_DESPIDO
 	if jornada == ULTIMA_JORNADA:
-		for fila: Array in CIERRES_DE_LA_QUINTA:
+		for fila: Array in CIERRES_DE_LA_ULTIMA:
 			if medios <= fila[0]:
 				return fila[1]
 	if medios == 0:

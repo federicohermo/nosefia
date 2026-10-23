@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("hipotesis")
 identidad = "2B"
-jornada = 2
+jornada = 5
 titulo = "CIGARRILLO EN EL DEPÓSITO"
 texto = "¿Puede ser que alguien se esté metiendo sin que nos demos cuenta? Debería examinar bien las formas de ingreso al local…"
 exigencias = PackedStringArray("2B")

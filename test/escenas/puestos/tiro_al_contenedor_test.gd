@@ -28,7 +28,9 @@ func after_test() -> void:
 
 func _abrir() -> Node3D:
 	_almacen = ALMACEN.instantiate()
-	_almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
+	_almacen.set(
+		"_partida", Partida.desde({"jornada": AnomaliasDeLaJornada.JORNADA_SIN_AZUL, "medios": 0})
+	)
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
@@ -106,7 +108,7 @@ func test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta() -> void:  # AC-
 	assert_int(recolector.tarea().depositadas()).is_equal(1)
 	assert_array(contenedor.call("tirados")).has_size(objetos.size() - 1)
 	# El azul se ejerce disponible; J2 conserva la bolsa y el resto de la matriz.
-	almacen.call("_al_abrir_la_jornada", 1)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	var azul: ObjetoAgarrable = almacen.get_node("Objetos/JabonAzul")
 	assert_bool(azul.visible).is_true()
 	_agarrar(almacen, azul)
@@ -175,7 +177,7 @@ func test_el_lector_es_copia_y_la_noche_lo_vacia_sin_leer_papel_liberado() -> vo
 	assert_array(copia).contains_exactly([papel])
 	copia.clear()
 	assert_array(contenedor.call("tirados")).has_size(1)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(is_instance_id_valid(instancia)).is_false()
@@ -206,7 +208,7 @@ func test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez() -> void:  
 	for objeto in objetos:
 		_agarrar(almacen, objeto)
 		_clic(almacen.get("_jugador"), contenedor, MOUSE_BUTTON_LEFT)
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL + 1)
 	for indice in objetos.size():
 		var objeto := objetos[indice]
 		assert_object(objeto.get_parent()).is_same(padres[indice])

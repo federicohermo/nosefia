@@ -14,7 +14,7 @@ func before_test() -> void:
 
 
 func _recolector(
-	presupuesto: float = Reglas.DURACION_DEL_TURNO, jornada: int = 2
+	presupuesto: float = Reglas.DURACION_DEL_TURNO, jornada: int = 5
 ) -> RecolectorDeBasura:
 	var obligatorias := Apertura.obligatorias(jornada)
 	_turno = Turno.new(presupuesto, obligatorias)

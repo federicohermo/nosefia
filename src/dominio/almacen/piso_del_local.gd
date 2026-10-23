@@ -32,6 +32,10 @@ enum Lugar {
 	PUERTA_DEL_BANO_EN_EL_BANO,
 	TECHO_DEL_BANO,
 	BAJO_LA_PUERTA_DEL_CUBICULO,
+	FRENTE_AL_MOSTRADOR,
+	PARED_DE_LA_PUERTA_DEL_BANO,
+	AL_LADO_DE_LA_PUERTA_DEL_CUARTITO,
+	PISO_DEL_OTRO_INODORO,
 }
 
 ## Sobre qué está la mancha. El paso del jugador toca sólo las del piso.
@@ -57,14 +61,26 @@ const LUGARES: Dictionary[Lugar, Array] = {
 	Lugar.PUERTA_DEL_BANO_EN_EL_BANO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
 	Lugar.TECHO_DEL_BANO: [ReglasDelCierre.Habitacion.BANO, Superficie.TECHO],
 	Lugar.BAJO_LA_PUERTA_DEL_CUBICULO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
+	Lugar.FRENTE_AL_MOSTRADOR: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.PARED_DE_LA_PUERTA_DEL_BANO: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PARED],
+	Lugar.AL_LADO_DE_LA_PUERTA_DEL_CUARTITO:
+	[ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PARED],
+	Lugar.PISO_DEL_OTRO_INODORO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
 }
 
 ## Qué mancha pone cada jornada en cada lugar, según la ficha: `jornada → {Lugar: TipoDeMancha}`.
 ##
-## Una jornada sin fila arranca como la primera: las filas de la 3 a la 5 dependen de un cuartito
-## de limpieza que el almacén no tiene y de techos que hoy quedan fuera del alcance de la mira.
+## Las jornadas 6 a 8 conservan la fila de la primera jornada completa hasta incorporar sus
+## repartos de la ficha, que incluyen techos hoy fuera del alcance de la mira.
 const MANCHAS_POR_JORNADA: Dictionary[int, Dictionary] = {
-	1:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1:
+	{
+		Lugar.FRENTE_AL_MOSTRADOR: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.PARED_DE_LA_PUERTA_DEL_BANO: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.AL_LADO_DE_LA_PUERTA_DEL_CUARTITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.PISO_DEL_OTRO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	},
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 	{
 		Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
 		Lugar.GONDOLAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
@@ -74,7 +90,7 @@ const MANCHAS_POR_JORNADA: Dictionary[int, Dictionary] = {
 		Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
 		Lugar.PARED_DEL_OTRO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
 	},
-	2:
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	{
 		Lugar.DETRAS_DEL_MOSTRADOR: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
 		Lugar.CERCA_DE_LAS_HELADERAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
@@ -105,15 +121,17 @@ func _init(
 
 
 ## El piso de esa noche: las manchas que declara su fila, todas sucias, el balde vacío y la mopa
-## seca. Una jornada sin fila arranca con las de la primera.
+## seca. Una jornada que no pide limpiar abre sin manchas.
 ##
 ## Se construye entero cada vez: con un piso compartido, lo borrado anoche llegaría borrado esta
 ## noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
 static func de_la_jornada(jornada: int) -> PisoDelLocal:
 	var fila: Dictionary = MANCHAS_POR_JORNADA.get(
-		jornada, MANCHAS_POR_JORNADA[ReglasDeLaPartida.PRIMERA_JORNADA]
+		jornada, MANCHAS_POR_JORNADA[ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA]
 	)
 	var manchas: Dictionary[Lugar, Mancha] = {}
+	if not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR):
+		return PisoDelLocal.new(manchas, jornada)
 	for lugar: Lugar in fila:
 		manchas[lugar] = Mancha.new(fila[lugar])
 	return PisoDelLocal.new(manchas, jornada)

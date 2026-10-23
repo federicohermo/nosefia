@@ -40,6 +40,10 @@ const SEGUNDOS_DE_LA_CAIDA := 2
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	# Estos casos sacan unidades para usarlas de objeto. Abren con lugar para reponer, que es la
 	# noche contra la que se midieron: sacar no lo pide (BR-STK-017).

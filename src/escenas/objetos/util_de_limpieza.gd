@@ -1,7 +1,7 @@
 ## Un útil de limpieza —la mopa, el balde o un jabón—: se levanta como cualquier objeto del
 ## almacén, y se dibuja con la malla del modelo que lo trae.
 ##
-## La geometría se toma, por su nombre, del nodo del `.glb` que la dibujaba fija en el baño.
+## La geometría se toma, por su nombre, del nodo del `.glb` que la dibujaba fija en el cuartito.
 ## La mopa y el balde añaden anclajes de fibras y datos del asa a copias temporales; no hay un
 ## asset duplicado que pueda quedar viejo al cambiar el modelo. El `transform` sí está escrito
 ## en la escena, y un caso afirma que coincide con el del modelo.

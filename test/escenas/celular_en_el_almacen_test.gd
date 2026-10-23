@@ -22,7 +22,14 @@ func _desmontar_almacen() -> void:
 	_almacen = null
 
 
-func _abrir(jornada: int = 1) -> void:
+## Lo que llega durante la noche es de la jornada abierta.
+func _llegada() -> Mensaje:
+	var mensaje := Mensaje.new()
+	mensaje.jornada = (_almacen.get("_partida") as Partida).jornada()
+	return mensaje
+
+
+func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> void:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set("_partida", Partida.desde(PartidaSerializada.sanear({"jornada": jornada})))
 	get_tree().root.add_child(_almacen)
@@ -141,7 +148,7 @@ func test_celular_bloquea_entrada_y_conserva_la_unidad_y_la_pose() -> void:  # A
 
 func test_esc_cubre_la_foto_q_no_cambia_y_reanudar_conserva_la_pantalla() -> void:  # AC-INV-036
 	_abrir()
-	var mensaje := Mensaje.new()
+	var mensaje := _llegada()
 	mensaje.foto = GradientTexture2D.new()
 	var quien := _celular().bandeja().conversaciones()[0].interlocutor
 	_celular().recibir(quien, mensaje)
@@ -196,7 +203,7 @@ func test_celular_no_cobra_acciones_y_el_reloj_sigue_corriendo() -> void:  # AC-
 	var turno: Turno = reloj.get("_turno")
 	var antes := turno.tiempo_restante()
 	var quien := _celular().bandeja().conversaciones()[0].interlocutor
-	var foto := Mensaje.new()
+	var foto := _llegada()
 	foto.foto = GradientTexture2D.new()
 	_celular().recibir(quien, foto)
 	_celular().pedir_alternar(false)
@@ -261,7 +268,7 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 		await get_tree().process_frame
 	var quien := conversaciones[0].interlocutor
 	(lista.get_child(0) as Button).pressed.emit()
-	var recibido := Mensaje.new()
+	var recibido := _llegada()
 	recibido.texto = "Llegó este mensaje [b]completo[/b]."
 	_celular().recibir(quien, recibido)
 	assert_int(_celular().bandeja().no_leidos(quien)).is_equal(1)
@@ -321,7 +328,7 @@ func test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos() -> void:  # AC-INV
 
 
 func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-INV-037
-	_abrir(3)
+	_abrir(6)
 	(_almacen.get("_reloj") as RelojDelTurno).set_process(false)
 	var anterior := _celular().bandeja()
 	var esperados: Dictionary = {}
@@ -338,14 +345,14 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 		assert_int(anterior.mensajes_de(quien).size()).is_equal(esperados[quien].size() + 1)
 		_celular().pedir_volver()
 	var guardado := Guardado.new()
-	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 1}))).is_true()
+	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 1}))).is_true()
 	assert_bool(guardado.hay_guardado()).is_true()
 	await _desmontar_almacen()
 	# La escena reconstruye Partida desde el archivo real; no se inyecta _partida.
 	_almacen = ALMACEN.instantiate()
 	get_tree().root.add_child(_almacen)
 	_almacen.call("anunciar_la_noche")
-	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(3)
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(6)
 	assert_int((_almacen.get("_partida") as Partida).medios()).is_equal(1)
 	var nueva := _celular().bandeja()
 	assert_object(nueva).is_not_same(anterior)
@@ -361,7 +368,7 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 		assert_int(nueva.no_leidos(quien)).is_equal(mensajes.size())
 		assert_bool(mensajes.has(recibido)).is_false()
 		for mensaje in mensajes:
-			assert_int(mensaje.jornada).is_less_equal(3)
+			assert_int(mensaje.jornada).is_less_equal(6)
 	assert_array(quienes).is_equal(esperados.keys())
 	guardado.borrar()
 

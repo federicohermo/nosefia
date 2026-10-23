@@ -20,11 +20,12 @@ RAIZ = Path(__file__).resolve().parents[3]
 NOMBRES = {
     'almacen-col', 'EscritorioComputadora-col', 'heladeranueva-col',
     'heladeranueva-col.001', 'heladera_fuera_de_servicio-col',
-    'marco_puerta_deposito-col', 'puerta_limpieza-col',
+    'marco_puerta_deposito-col',
     'gondola_deposito03-col', 'gondola_deposito03-col.001',
     'gondola_deposito_central_izquierda-col', 'local_marco_frente-col',
     'local_marco_ventanal-col',
     'deposito_contenedor_grande_cuerpo-col',
+    'cuartito_cuerpo-col',
 }
 
 
@@ -119,7 +120,7 @@ def principal():
             resultado[ruta] = edificio(malla)
             objeto.to_mesh_clear()
             continue
-        if objeto.name == 'deposito_contenedor_grande_cuerpo-col':
+        if objeto.name in ('deposito_contenedor_grande_cuerpo-col', 'cuartito_cuerpo-col'):
             resultado[ruta] = recipiente(malla)
             objeto.to_mesh_clear()
             continue

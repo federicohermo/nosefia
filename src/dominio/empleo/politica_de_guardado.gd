@@ -41,6 +41,20 @@ static func datos(partida: Partida) -> Dictionary:
 				reflexion.jornada() if reflexion != null and reflexion.pendiente() else 0,
 				PartidaSerializada.clave(PartidaSerializada.Campo.ELECCIONES):
 				partida.expediente.elecciones(),
+				PartidaSerializada.clave(PartidaSerializada.Campo.NOCHES_DE_PRUEBA):
+				_datos_de(partida.noches_de_prueba),
+				PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS_DE_LA_PRUEBA):
+				partida.legajo().apercibimientos_de_la_prueba(),
+				PartidaSerializada.clave(PartidaSerializada.Campo.ULTIMA_DE_LA_PRUEBA_COMPLETA):
+				partida.legajo().ultima_de_la_prueba_completa(),
+				PartidaSerializada.clave(PartidaSerializada.Campo.SEMILLA): partida.semilla,
 			}
 		)
 	)
+
+
+static func _datos_de(noches: Dictionary[int, ResultadoDeLaNoche]) -> Dictionary:
+	var datos := {}
+	for jornada: int in noches:
+		datos[jornada] = noches[jornada].a_datos()
+	return datos

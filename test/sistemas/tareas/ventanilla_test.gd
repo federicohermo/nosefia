@@ -22,6 +22,7 @@ const ARCHIVOS_DEL_SPEC := [
 const SEGUNDOS_REALES_ABIERTA := 30.0
 
 const EN_GONDOLA := 9
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _turno: Turno = null
 var _llegados: int = 0
@@ -34,12 +35,16 @@ var _cumplidas_avisadas: int = 0
 
 func test_solo_el_primer_clic_publica_el_inicio_de_la_conversacion() -> void:  # AC-NTF-012
 	var ventanilla := _ventanilla(0)
-	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(1), _inventario()))
+	ventanilla.arrancar(
+		TareaDeAtender.new(
+			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), _inventario()
+		)
+	)
 	var avisados: Array[Comprador] = []
 	ventanilla.conversacion_iniciada.connect(
 		func(comprador: Comprador) -> void: avisados.append(comprador)
 	)
-	ventanilla.reloj.avanzar(120.0)
+	ventanilla.reloj.avanzar(30.0)
 	ventanilla.pedir_abrir()
 	assert_array(avisados).is_empty()
 	assert_bool(ventanilla.atencion().conversacion_iniciada()).is_false()
@@ -53,22 +58,26 @@ func test_solo_el_primer_clic_publica_el_inicio_de_la_conversacion() -> void:  #
 
 func test_el_reloj_publica_llegada_y_vencimiento_con_la_ventana_cerrada() -> void:  # AC-CTR-035
 	var ventanilla := _ventanilla(0)
-	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(1), _inventario()))
+	ventanilla.arrancar(
+		TareaDeAtender.new(
+			Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), _inventario()
+		)
+	)
 	var salidas: Array[Comprador] = []
 	ventanilla.comprador_vencido.connect(
 		func(comprador: Comprador) -> void: salidas.append(comprador)
 	)
 	ventanilla.pedir_abrir()
 	assert_int(_llegados).is_zero()
-	ventanilla.reloj.avanzar(120.0)
+	ventanilla.reloj.avanzar(30.0)
 	assert_int(_llegados).is_equal(1)
 	ventanilla.pedir_abrir()
 	ventanilla.pedir_abrir()
 	assert_int(_llegados).is_equal(1)
-	ventanilla.reloj.avanzar(120.0)
+	ventanilla.reloj.avanzar(150.0)
 	assert_array(salidas).has_size(1)
 	assert_bool(ventanilla.tarea().completada()).is_false()
-	ventanilla.reloj.avanzar(360.0)
+	ventanilla.reloj.avanzar(180.0)
 	assert_int(_llegados).is_equal(2)
 	assert_array(salidas).has_size(2)
 	assert_object(ventanilla.tarea().en_ventanilla()).is_null()
@@ -76,12 +85,14 @@ func test_el_reloj_publica_llegada_y_vencimiento_con_la_ventana_cerrada() -> voi
 
 func test_publica_compra_solo_al_recibir_el_ultimo_elemento() -> void:  # AC-CTR-039, AC-CTR-041
 	var ventanilla := _ventanilla(0)
-	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var estante := Estante.new(inventario, Catalogo.todos())
-	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(1), inventario))
+	ventanilla.arrancar(
+		TareaDeAtender.new(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), inventario)
+	)
 	var compras: Array[bool] = []
 	ventanilla.compra_realizada.connect(func() -> void: compras.append(true))
-	for intervalo: float in [120.0, 360.0]:
+	for intervalo: float in [30.0, 180.0]:
 		ventanilla.reloj.avanzar(intervalo)
 		ventanilla.pedir_interaccion(null)
 		while not ventanilla.puede_abandonar():
@@ -139,7 +150,7 @@ func _compradores(cuantos: int) -> Array[Comprador]:
 
 ## Una ventanilla cableada a mano, con su reloj arrancado sobre un turno entero.
 func _ventanilla(cuantos: int, presupuesto: float = Reglas.DURACION_DEL_TURNO) -> Ventanilla:
-	var obligatorias := Apertura.obligatorias(1)
+	var obligatorias := Apertura.obligatorias(4)
 	_turno = Turno.new(presupuesto, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
@@ -184,7 +195,7 @@ func test_despachar_al_ultimo_cuenta_la_caja_sin_mover_el_turno() -> void:
 func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:
 	# `RelojDelTurno.obligatoria()` es la única forma de conseguir la instancia que el turno
 	# está contando: una copia devuelve `true` y deja el contador clavado en 0, sin un error.
-	var obligatorias := Apertura.obligatorias(1)
+	var obligatorias := Apertura.obligatorias(4)
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	assert_bool(turno.completar(Tarea.new(Tarea.Tipo.CAJA))).is_true()
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
@@ -350,7 +361,7 @@ func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:
 
 
 func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:
-	var obligatorias := Apertura.obligatorias(1)
+	var obligatorias := Apertura.obligatorias(4)
 	_turno = Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
@@ -378,7 +389,9 @@ func _anotar_rechazo(_faltantes: Array[Producto]) -> void:
 
 func test_el_lector_del_cierre_ve_ambas_compras_vencidas_una_sola_vez() -> void:  # AC-STK-056
 	var ventanilla := _ventanilla(0)
-	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(1), _inventario())
+	var tarea := TareaDeAtender.new(
+		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), _inventario()
+	)
 	ventanilla.arrancar(tarea)
 	# Repreparar no duplica conexiones; el lector se conecta después, como la computadora.
 	ventanilla.arrancar(tarea)
@@ -394,7 +407,7 @@ func test_el_lector_del_cierre_ve_ambas_compras_vencidas_una_sola_vez() -> void:
 		func() -> void: cerradas_al_leer.append(tarea.compras_cerradas())
 	)
 	assert_bool(tarea.compras_cerradas()).is_false()
-	ventanilla.reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(ventanilla.reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(cerradas_al_leer).contains_exactly([true])
 	assert_array(eventos).contains_exactly(["llega Tin", "vence Tin", "llega Tia", "vence Tia"])
 	assert_bool(tarea.compras_cerradas()).is_true()

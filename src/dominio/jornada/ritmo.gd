@@ -13,13 +13,20 @@
 class_name Ritmo
 extends RefCounted
 
-## De dónde sale: un minuto real por cada hora de ficción, o sea `60 · 60` segundos de turno en
-## `60` reales. La sesión dura entonces tantos minutos reales como horas tiene
-## `Reglas.DURACION_DEL_TURNO`. Cambiar uno de los dos sin recalcular el otro deja la noche
-## terminando antes o después de que se acabe la sesión, y eso lo caza `ritmo_test.gd`.
+## Cambiarlo sin recalcular `Reglas.DURACION_DEL_TURNO` deja la noche terminando antes o después
+## de que se acabe la sesión, y eso lo caza `ritmo_test.gd`.
 const SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL := 60.0
+
+## Las noches de introducción son más cortas: la ficción dura lo mismo y corre más rápido.
+const POR_JORNADA: Dictionary[int, float] = {1: 120.0, 2: 80.0, 3: 72.0}
+
+
+static func de_la_jornada(jornada: int) -> float:
+	return POR_JORNADA.get(jornada, SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 
 
 ## Cuántos segundos de turno consumieron estos segundos reales.
-static func escalar(segundos_reales: float) -> float:
-	return segundos_reales * SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
+static func escalar(
+	segundos_reales: float, ritmo: float = SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
+) -> float:
+	return segundos_reales * ritmo

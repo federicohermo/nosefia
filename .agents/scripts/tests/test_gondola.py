@@ -180,6 +180,36 @@ class Centros(unittest.TestCase):
     def test_una_unidad_sola_va_al_medio(self):
         self.assertEqual(centros(0.5, [CAJA], [1]), [[0.25]])
 
+    def test_el_retiro_de_los_extremos_conserva_columnas_y_huecos_minimos(self):
+        largo, retiro = 3.512, 0.04
+        envases = [CAJA, LATA]
+        cuentas = repartir(largo, envases)
+        originales = centros(largo, envases, cuentas)
+        nuevas = centros(largo - 2 * retiro, envases, cuentas)
+        self.assertEqual([len(fila) for fila in nuevas], cuentas)
+        self.assertAlmostEqual(nuevas[0][0] + retiro - originales[0][0], retiro)
+        self.assertAlmostEqual(originales[-1][-1] - nuevas[-1][-1] - retiro, retiro)
+        _, huecos = self._huecos(largo - 2 * retiro, envases, cuentas)
+        self.assertTrue(all(h >= HUECO_MINIMO - 1e-9 for h in huecos))
+
+    def test_el_retiro_insuficiente_falla_sin_quitar_columnas(self):
+        envases = [CAJA, LATA]
+        cuentas = repartir(1.9, envases)
+        with self.assertRaisesRegex(ValueError, "hueco mínimo"):
+            centros(1.9 - 0.08, envases, cuentas)
+
+    def test_una_unidad_que_no_cabe_falla_antes_de_centrarla(self):
+        with self.assertRaisesRegex(ValueError, "hueco mínimo"):
+            centros(CAJA.ancho - 0.001, [CAJA], [1])
+
+    def test_el_limite_conserva_un_centimetro_y_solo_admite_ruido_numerico(self):
+        largo = 2 * CAJA.ancho + HUECO_MINIMO
+        _, huecos = self._huecos(largo, [CAJA], [2])
+        self.assertAlmostEqual(huecos[0], HUECO_MINIMO)
+        centros(largo - 5e-10, [CAJA], [2])
+        with self.assertRaises(ValueError):
+            centros(largo - 1e-6, [CAJA], [2])
+
 
 class LaTanda(unittest.TestCase):
     def test_primero_la_fila_de_atras_y_al_final_la_de_adelante(self):

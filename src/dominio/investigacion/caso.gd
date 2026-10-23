@@ -32,6 +32,16 @@ func pista_de(identidad: String) -> Pista:
 	return null
 
 
+## Lo que se levanta para dar una pista está en el local sólo la noche de esa pista.
+func esta_en_el_local(origen: StringName, jornada: int) -> bool:
+	if origen.is_empty():
+		return true
+	for pista: Pista in pistas:
+		if pista != null and pista.canal == Pista.Canal.LEVANTAR and pista.origen == origen:
+			return pista.jornada == jornada
+	return true
+
+
 func hipotesis_para(jornada: int, descubiertas: PackedStringArray) -> Array[Hipotesis]:
 	for opciones: HipotesisDeLaJornada in hipotesis:
 		if opciones != null and opciones.jornada == jornada:

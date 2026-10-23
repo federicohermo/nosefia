@@ -16,8 +16,9 @@ const EPSILON := 0.001
 const CLAVE_DE_EXENCION := &"sin_volumen"
 
 
-func _almacen() -> Node3D:
+func _almacen(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": jornada}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -284,9 +285,14 @@ static func _punto_adentro(caras: PackedVector3Array, punto: Vector3) -> bool:
 ## Todo lo que se suelta choca con el contorno de los muebles y con las paredes, que están en su
 ## capa.
 func test_todo_lo_que_se_suelta_choca_con_la_capa_del_contorno() -> void:
-	var almacen: Node3D = await _almacen()
-	var agarrables := _agarrables(almacen.get_node("Objetos"))
+	var almacen: Node3D = await _almacen(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	var agarrables: Array[RigidBody3D] = _agarrables(almacen.get_node("Objetos")).filter(
+		func(cuerpo: RigidBody3D) -> bool: return cuerpo.process_mode != Node.PROCESS_MODE_DISABLED
+	)
 	assert_array(agarrables).is_not_empty()
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	assert_int(cajas.size()).is_equal(Producto.Id.size())
+	assert_array(agarrables).contains(cajas)
 	for cuerpo in agarrables:
 		(
 			assert_int(cuerpo.collision_mask & ReglasDeLosObjetos.CAPA_DEL_CONTORNO)

@@ -34,10 +34,10 @@ func test_atencion_y_faltantes_comparten_compradores_y_ventas_en_ambos_ordenes()
 		var pedidos: Dictionary[Producto.Id, int]
 		if consultar_primero:
 			pedidos = Apertura.pedidos_de(compradores)
-			inventario = Apertura.inventario_de_la_jornada(compradores, _cupos(), _cupos(), azar)
+			inventario = Apertura.inventario_de_la_jornada(5, compradores, _cupos(), _cupos(), azar)
 			atender = TareaDeAtender.new(compradores, inventario)
 		else:
-			inventario = Apertura.inventario_de_la_jornada(compradores, _cupos(), _cupos(), azar)
+			inventario = Apertura.inventario_de_la_jornada(5, compradores, _cupos(), _cupos(), azar)
 			atender = TareaDeAtender.new(compradores, inventario)
 			pedidos = Apertura.pedidos_de(compradores)
 		for _lectura in 3:
@@ -57,7 +57,7 @@ func test_atencion_y_faltantes_comparten_compradores_y_ventas_en_ambos_ordenes()
 func test_la_venta_desde_deposito_descuenta_una_vez_y_la_apertura_nueva_no_hereda() -> void:
 	var compradores := _compradores()
 	_guiones(compradores)
-	var inventario := Apertura.inventario_con_faltantes({}, _cupos())
+	var inventario := Apertura.inventario_con_faltantes({}, _cupos(), Catalogo.todos())
 	var atender := TareaDeAtender.new(compradores, inventario)
 	atender.avanzar(compradores[0].horario.x)
 	var atencion := atender.atencion()
@@ -76,7 +76,7 @@ func test_la_venta_desde_deposito_descuenta_una_vez_y_la_apertura_nueva_no_hered
 	atencion.interactuar(null)
 	assert_int(atencion.interactuar(ticket)).is_equal(RecepcionDeCompra.Resultado.BLOQUEADA)
 	var nuevos := _compradores()
-	var nuevo := Apertura.inventario_con_faltantes({}, _cupos())
+	var nuevo := Apertura.inventario_con_faltantes({}, _cupos(), Catalogo.todos())
 	for indice in productos.size():
 		var producto := productos[indice]
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(

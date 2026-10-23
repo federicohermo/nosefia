@@ -3,11 +3,11 @@ extends GdUnitTestSuite
 
 func test_la_llegada_fisica_espera_a_que_se_inicie_su_conversacion() -> void:  # AC-NTF-012
 	var estado := Notificaciones.new()
-	var comprador := Compradores.de_la_jornada(1)[0]
+	var comprador := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0]
 	estado.llego(comprador)
 	estado.avanzar(30.0)
 	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.CLIENTE])
-	estado.atendido(Compradores.de_la_jornada(1)[1])
+	estado.atendido(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1])
 	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.CLIENTE])
 	estado.atendido(comprador)
 	assert_array(estado.visibles()).is_empty()
@@ -234,7 +234,7 @@ func test_vencer_no_habilita_otro_aviso_y_otra_noche_si() -> void:  # AC-NTF-022
 
 func test_cierre_proximo_no_temporiza_ni_renueva_otros_avisos() -> void:  # AC-NTF-025
 	var estado := Notificaciones.new()
-	var esperando := Compradores.de_la_jornada(1)[0]
+	var esperando := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0]
 	estado.llego(esperando)
 	estado.se_fue(_comprador())
 	estado.lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)

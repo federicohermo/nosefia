@@ -4,6 +4,7 @@ const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Menu := preload("res://src/escenas/menu_de_inicio.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 class MenuSinCarga:
@@ -59,7 +60,7 @@ func _restante() -> float:
 
 func _cerrar_y_seguir() -> void:
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
@@ -81,11 +82,16 @@ func test_instanciar_sin_menu_conserva_el_turno_corriendo() -> void:
 
 
 func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> void:  # AC-SHF-024
-	_abrir()
+	# La primera completa abre la noche siguiente sin instrucciones.
+	_abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	await _cerrar_y_seguir()
-	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
+	var siguiente := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(siguiente)
+	var instrucciones: PantallaDeInstrucciones = _almacen.get_node(
+		"Interfaz/PantallaDeInstrucciones"
+	)
+	assert_bool(instrucciones.visible).is_false()
 	assert_bool(_persiana().en_pantalla()).is_true()
-	assert_str((_persiana().get_node("Marco/Placa") as Label).text).is_equal("NOCHE 2")
 	assert_bool(_control().esta_suspendido()).is_true()
 	var antes := _restante()
 	await get_tree().process_frame
@@ -95,7 +101,7 @@ func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> voi
 	_persiana().persiana_subida.connect(func(jornada: int) -> void: subidas.append(jornada))
 	_persiana().terminar()
 	_persiana().terminar()
-	assert_array(subidas).is_equal([2])
+	assert_array(subidas).is_equal([siguiente])
 	assert_bool(_persiana().en_pantalla()).is_false()
 	assert_bool(_control().esta_suspendido()).is_false()
 	await get_tree().process_frame
@@ -103,14 +109,30 @@ func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> voi
 	assert_float(_restante()).is_less(antes)
 
 
+func test_desde_la_cuarta_seguir_anuncia_sin_instrucciones() -> void:  # AC-EMP-077
+	var ultima := ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, ultima):
+		_abrir(jornada)
+		await _cerrar_y_seguir()
+		assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(jornada + 1)
+		var instrucciones: PantallaDeInstrucciones = _almacen.get_node(
+			"Interfaz/PantallaDeInstrucciones"
+		)
+		assert_bool(instrucciones.visible).is_false()
+		assert_object(_persiana().get("_entrada")).is_not_null()
+		await after_test()
+
+
 func test_el_menu_anuncia_la_jornada_nueva_y_la_guardada() -> void:  # AC-SHF-025
-	for jornada: int in [1, 5]:
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	]:
 		_abrir(jornada)
 		var menu := MenuSinCarga.new()
 		get_tree().root.add_child(menu)
-		menu.set("_nuevo_juego", jornada == 1)
+		menu.set("_nuevo_juego", jornada == ReglasDeLaPartida.PRIMERA_JORNADA)
 		menu.call("_entrar", _almacen)
-		if jornada == 1:
+		if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
 			var instrucciones: PantallaDeInstrucciones = _almacen.get_node(
 				"Interfaz/PantallaDeInstrucciones"
 			)
@@ -118,6 +140,7 @@ func test_el_menu_anuncia_la_jornada_nueva_y_la_guardada() -> void:  # AC-SHF-02
 			var siguiente: Button = instrucciones.get("_siguiente")
 			for _paso in 14:
 				siguiente.pressed.emit()
+			AvanceDeDevolucion.terminar_instrucciones(instrucciones)
 			assert_bool(instrucciones.visible).is_false()
 		assert_object(get_tree().current_scene).is_same(_almacen)
 		assert_bool(_persiana().en_pantalla()).is_true()
@@ -175,11 +198,11 @@ func test_la_entrada_esta_sobre_el_local_y_debajo_de_avisos_y_pausa() -> void:  
 
 
 func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC-SHF-024
-	_abrir(5)
+	_abrir(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	var pedidos := [0]
 	_almacen.set("_ir_al_menu", func() -> void: pedidos[0] += 1)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)

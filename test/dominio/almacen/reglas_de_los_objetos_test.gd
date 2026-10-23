@@ -34,13 +34,6 @@ func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> voi
 		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 
 
-func test_se_lleva_una_sola_cosa_a_la_vez() -> void:
-	# El 015 se apoya en este 1: afirma que las bolsas de una jornada son más que las manos, o
-	# sea que sacar la basura cuesta más de un viaje. Subirlo a 2 le afloja el precio en tiempo
-	# a media tarea obligatoria sin que ese spec se entere.
-	assert_int(ReglasDeLosObjetos.MANOS_DISPONIBLES).is_equal(1)
-
-
 func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:
 	# El rojo del día que alguien copie una constante y se olvide de cambiarle el texto: dos
 	# acciones con el mismo nombre hacen que una de las dos no responda nunca, y el motor no

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574
 ---
 
 # Capacidad: los subtítulos
@@ -151,6 +151,8 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Lector | El lector de código de barras. Si le paso un producto, lo va a anotar en el programa generador de tickets de la caja. |
 | Entrada principal | La entrada principal al local. Queda cerrada con llave durante el turno nocturno. |
 | Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada. |
+| Puerta del depósito, trabada (provisorio) | Por acá se va al depósito. Hoy está cerrado con llave. |
+| Puerta del cuartito, trabada | Acá guardan las cosas de limpieza. Está cerrado con llave. |
 | Portón del depósito | Un portón que da a la calle. |
 | Contenedor de basura | Un contenedor de basura. |
 | Tacho del local | Un tacho de basura para los compradores diurnos. |
@@ -158,7 +160,11 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Tacho del baño | El tacho de basura del baño. Mejor ni mirar lo que tiene adentro. |
 
 Las puertas interiores, las puertas de las heladeras, la ventanilla, el comprador, la góndola y
-las manchas NO DEBEN tener texto al examinar.
+las manchas NO DEBEN tener texto al examinar. La excepción son la puerta del depósito y la del
+cuartito mientras están trabadas (BR-PLY-020 de
+[`player-actions`](../player-actions/player-actions.md)): cada una DEBE decir su texto en las
+jornadas que la traban, y callar en las demás. El texto del depósito es provisorio: no sale de la
+ficha «Subtítulos», y lo reemplaza el que dé el diseño.
 
 Un tacho DEBE decir su texto con bolsa o sin bolsa. Examinarlo NO DEBE retirar ni cambiar su
 bolsa.
@@ -206,10 +212,18 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
+| Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
 
 Tirar una bolsa o un ticket, borrar cualquier otra mancha, o pasar la mopa por una mancha ya
 limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
 el texto del jabón, no el de la caca.
+
+`PUERTA_CON_TAREAS_PENDIENTES` DEBE decidirse por el cumplimiento de las obligatorias en el
+instante de usar la puerta (BR-SHF-024), y no por si el aviso de salida ya se mostró o sigue
+esperando (BR-NTF-014): SI todas están cumplidas, ENTONCES NO DEBE pensar nada, aunque el aviso
+espere. Una obligatoria que se descumple después de habilitada la salida DEBE devolver el
+pensamiento. Desde la primera jornada completa NO DEBE pensarlo. La puerta conserva su sonido de
+trabada, y examinarla con E conserva su texto (BR-SUB-010).
 
 Los pensamientos de la mopa de esta tabla DEBEN aparecer sólo al intentar limpiar una mancha.
 Mojarla, transportarla o dejar marcas de agua NO DEBE dispararlos. SI se secó después de mojarla
@@ -335,10 +349,23 @@ examinar ENTONCES cada uno conserva su identidad y devuelve el subtítulo no vac
 DADO los dos inodoros, los dos lavatorios, las cinco notas, la computadora, la caja
 registradora, el lector, la entrada principal, la puerta del jefe, el portón del depósito, los
 tres tachos y el cuerpo y la tapa del contenedor CUANDO se pide su texto al examinar ENTONCES
-cada uno devuelve el subtítulo asociado a su identidad. DADO una puerta interior, una puerta
+cada uno devuelve el subtítulo asociado a su identidad. DADO una puerta interior sin traba, una puerta
 de heladera, la ventanilla, el comprador, la góndola y una mancha ENTONCES no tienen texto. DADO
 un tacho con bolsa y otro sin bolsa CUANDO se pide examinar con las manos vacías ENTONCES los
 dos muestran su texto y el primero sigue con su bolsa.
+
+### AC-SUB-023 — La puerta del depósito habla sólo trabada *(verifica BR-SUB-010)*
+
+DADO la jornada 1 abierta CUANDO se pide examinar la puerta del depósito con las manos vacías
+ENTONCES piensa el subtítulo asociado a la puerta del depósito trabada. DADO el cierre de la 1
+CUANDO se sigue a la 2 ENTONCES examinarla no muestra texto y la línea no cambia.
+
+### AC-SUB-022 — La puerta del cuartito habla sólo trabada *(verifica BR-SUB-010)*
+
+DADO la jornada 1 o la 2 abierta CUANDO se pide examinar la puerta del cuartito con las manos
+vacías ENTONCES piensa el subtítulo asociado a la puerta del cuartito trabada, distinto del de
+la puerta del depósito. DADO la jornada 3 abierta ENTONCES examinarla no muestra texto y la línea no
+cambia. DADO una partida guardada en la 2 CUANDO se retoma ENTONCES vuelve a tener texto.
 
 ### AC-SUB-014 — El texto del ticket *(verifica BR-SUB-011)*
 
@@ -403,6 +430,19 @@ queda marcada; CUANDO se seca otra vez ENTONCES no. DADO un examen en curso CUAN
 seca ENTONCES no se muestra; CUANDO se seca de nuevo ENTONCES sigue habiendo uno solo pendiente;
 CUANDO termina el examen ENTONCES se muestra y recién ahí la partida queda marcada. DADO el
 pensamiento pendiente CUANDO cierra la jornada ENTONCES se descarta y la partida sigue sin marca.
+
+### AC-SUB-024 — La puerta de entrada con tareas pendientes *(verifica BR-SUB-013, BR-SUB-001)*
+
+DADA cada una de las tres jornadas de prueba con alguna obligatoria pendiente CUANDO se usa la
+puerta de entrada ENTONCES el pensamiento es `PUERTA_CON_TAREAS_PENDIENTES` y la puerta no se
+abre. DADO ese pensamiento visible CUANDO se usa la puerta otra vez ENTONCES la línea sigue
+mostrando sólo ese texto, una vez, y empieza de nuevo.
+DADAS todas las obligatorias cumplidas, y el aviso de salida demorado por la computadora abierta,
+CUANDO se usa la puerta ENTONCES no hay pensamiento y la noche termina. DADAS todas cumplidas y
+después una descumplida CUANDO se usa la puerta ENTONCES el pensamiento vuelve. DADA la primera
+jornada completa con obligatorias pendientes CUANDO se usa la puerta ENTONCES no hay pensamiento.
+DADA la puerta de entrada en una jornada de prueba con una pendiente CUANDO se la examina con E
+ENTONCES dice su texto fijo (BR-SUB-010).
 
 ## No objetivos
 

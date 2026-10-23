@@ -13,6 +13,25 @@ extends RefCounted
 ## Los dos tamaños de caja que guarda el depósito.
 enum TamanoDeCaja { CHICA, GRANDE }
 
+const PRODUCTOS_DE_PRUEBA: Array[Producto.Id] = [
+	Producto.Id.ACTRONCITO,
+	Producto.Id.ZUCARACHAS,
+	Producto.Id.MALBARDO,
+	Producto.Id.PROGRES,
+	Producto.Id.JORGILLO,
+	Producto.Id.ARVECOR,
+	Producto.Id.PEPITO,
+	Producto.Id.PURA_COLA,
+	Producto.Id.MAROLINI,
+	Producto.Id.DON_SATURADOS,
+	Producto.Id.PETISAS,
+	Producto.Id.DURONGA,
+	Producto.Id.FERNET_GOD,
+	Producto.Id.MAYONCHIS,
+	Producto.Id.TERMINATOR,
+	Producto.Id.POETICO,
+]
+
 ## Cada `Producto.Id` con su nombre y su precio en pesos enteros.
 ##
 ## **Los nombres son los del modelo 3D**, y no una etiqueta genérica: cada fila tiene detrás
@@ -184,4 +203,13 @@ static func todos() -> Array[Producto]:
 		if producto == null:
 			continue
 		productos.append(producto)
+	return productos
+
+
+static func de_la_jornada(jornada: int) -> Array[Producto]:
+	if jornada >= ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		return todos()
+	var productos: Array[Producto] = []
+	for id in PRODUCTOS_DE_PRUEBA:
+		productos.append(de(id))
 	return productos

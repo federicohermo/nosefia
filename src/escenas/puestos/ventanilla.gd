@@ -29,6 +29,7 @@ const ANIMACIONES := {
 	DialogosDeCompradores.Personaje.TIA: preload("res://assets/characters/tiago/idle.tres"),
 	DialogosDeCompradores.Personaje.FEDE: preload("res://assets/characters/fede/idle.tres"),
 	DialogosDeCompradores.Personaje.MIA: preload("res://assets/characters/mia/idle.tres"),
+	DialogosDeCompradores.Personaje.CAMI: preload("res://assets/characters/cami/idle.tres"),
 }
 
 @export var jugador: JugadorDelLocal
@@ -55,6 +56,7 @@ var _posicion_de_espera: Vector3
 func _ready() -> void:
 	_posicion_de_espera = comprador_visible.position
 	objetivo.atenciones = atenciones
+	objetivo.precargar(ANIMACIONES.values())
 	objetivo.interaccion_pedida.connect(_al_pulsar)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	panel.cobro_pedido.connect(atenciones.pedir_cobrar)

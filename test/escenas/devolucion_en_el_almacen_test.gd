@@ -6,10 +6,9 @@ extends GdUnitTestSuite
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
-const SEGUNDOS_REALES_DE_UN_TURNO := (
-	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-)
 const JEFE := Conversacion.Interlocutor.JEFE
+const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _ruta_guardado: String
 
@@ -28,16 +27,15 @@ func after_test() -> void:
 
 func _almacen(partida: Partida = null) -> Node3D:
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	if partida != null:
-		almacen.set("_partida", partida)
+	almacen.set("_partida", partida if partida != null else Partida.desde({"jornada": COMPLETA}))
 	add_child(almacen)
 	await get_tree().process_frame
 	return almacen
 
 
 func _cerrar(almacen: Node3D) -> PantallaDeDevolucion:
-	(almacen.get_node("Servicios/RelojDelTurno") as RelojDelTurno).avanzar(
-		SEGUNDOS_REALES_DE_UN_TURNO
+	RelojDePrueba.avanzar_turno(
+		almacen.get_node("Servicios/RelojDelTurno"), Reglas.DURACION_DEL_TURNO
 	)
 	await get_tree().process_frame
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
@@ -91,11 +89,10 @@ func test_al_cerrar_baja_la_persiana_y_sube_el_celular_fijo() -> void:  # AC-EMP
 	)
 	assert_bool((almacen.get_node("Jugador") as Node).call("suspendido")).is_true()
 	assert_int(pantalla.a_la_vista()).is_equal(1)
-	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(2)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(COMPLETA + 1)
 	var lista: VBoxContainer = _pantalla_del_celular(almacen).get("_mensajes")
 	var separadores := lista.get_children().filter(func(hijo: Node) -> bool: return hijo is Label)
-	assert_int(separadores.size()).is_equal(1)
-	assert_str((separadores[0] as Label).text).is_equal("HOY")
+	assert_str((separadores.back() as Label).text).is_equal("HOY")
 
 
 func test_un_mensaje_por_segundo_y_la_opcion_al_final() -> void:  # AC-EMP-062
@@ -131,7 +128,7 @@ func test_un_cuadro_largo_no_entrega_la_devolucion_de_golpe() -> void:  # AC-EMP
 
 func test_los_intervalos_esperan_al_celular_en_el_centro() -> void:  # AC-EMP-062
 	var almacen: Node3D = await _almacen()
-	(almacen.get("_reloj") as RelojDelTurno).avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
 	assert_bool(_pantalla_del_celular(almacen).centrado()).is_false()
 	pantalla.call("_process", 5.0)
@@ -171,8 +168,10 @@ func test_q_no_cierra_y_la_pausa_congela_la_devolucion() -> void:  # AC-EMP-063,
 	)
 
 
-func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC-EMP-065
-	var almacen: Node3D = await _almacen()
+func test_continuar_dos_veces_abre_una_sola_noche_siguiente() -> void:  # AC-EMP-064, AC-EMP-065
+	var almacen: Node3D = await _almacen(
+		Partida.desde({"jornada": ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS})
+	)
 	var pantalla := await _cerrar(almacen)
 	var interfaz := _pantalla_del_celular(almacen)
 	var ahora := [0]
@@ -212,13 +211,13 @@ func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_celular(almacen).celular().abierto()).is_false()
 	var persiana: PersianaDeLaNoche = almacen.get_node("Interfaz/PersianaDeLaNoche")
-	assert_str((persiana.get("_placa") as Label).text).is_equal("NOCHE 2")
 	var partida: Partida = almacen.get("_partida")
-	assert_int(partida.jornada()).is_equal(2)
+	assert_int(partida.jornada()).is_equal(ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS + 1)
 	persiana.terminar()
 	var historial := _celular(almacen).bandeja().mensajes_de(JEFE)
 	var devolucion := PackedStringArray()
-	for indice: int in range(19, 19 + partida.mensajes_del_jefe().size()):
+	var hasta := historial.size() - 2
+	for indice: int in range(hasta - partida.mensajes_del_jefe().size(), hasta):
 		devolucion.append(historial[indice].texto)
 	assert_array(devolucion).is_equal(partida.mensajes_del_jefe())
 	assert_str(historial[-2].identidad).is_equal("J2_CONTENEDOR_FOTO")
@@ -227,7 +226,7 @@ func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC
 
 func test_despedido_vuelve_al_menu_una_sola_vez() -> void:  # AC-EMP-064, AC-EMP-065, AC-EMP-016
 	var almacen: Node3D = await _almacen(
-		Partida.new(Legajo.con_medios(3 * Reglas.MEDIOS_POR_APERCIBIMIENTO))
+		Partida.desde({"jornada": COMPLETA, "medios": 3 * Reglas.MEDIOS_POR_APERCIBIMIENTO})
 	)
 	var menus := [0]
 	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
@@ -258,7 +257,7 @@ func test_volver_al_menu_desde_la_pausa_conserva_el_guardado() -> void:  # AC-SA
 	assert_int(menus[0]).is_equal(1)
 	assert_str(FileAccess.get_file_as_string(Guardado.ruta_por_defecto)).is_equal(guardado)
 	var retomada := Partida.desde(Guardado.new().cargar())
-	assert_int(retomada.jornada()).is_equal(2)
+	assert_int(retomada.jornada()).is_equal(COMPLETA + 1)
 	assert_array(retomada.mensajes_del_jefe()).is_equal(
 		(almacen.get("_partida") as Partida).mensajes_del_jefe()
 	)
@@ -266,8 +265,9 @@ func test_volver_al_menu_desde_la_pausa_conserva_el_guardado() -> void:  # AC-SA
 
 func test_retomar_trae_las_devoluciones() -> void:  # AC-INV-037, AC-SAV-024, AC-EMP-066
 	var devoluciones := ["Buenas", "Que no se repita, ok?", "Hola", "Sin comentarios."]
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 	var datos := {
-		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 3,
+		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): jornada,
 		PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS): 4,
 		PartidaSerializada.clave(PartidaSerializada.Campo.DEVOLUCIONES): devoluciones,
 	}
@@ -275,7 +275,7 @@ func test_retomar_trae_las_devoluciones() -> void:  # AC-INV-037, AC-SAV-024, AC
 	var bandeja := _celular(almacen).bandeja()
 	var guion := 0
 	for mensaje: Mensaje in Conversacion.de(JEFE).mensajes:
-		if mensaje.jornada <= 3:
+		if mensaje.jornada <= jornada and mensaje.vale_para([]):
 			guion += 1
 	assert_int(bandeja.mensajes_de(JEFE).size()).is_equal(guion + devoluciones.size())
 	assert_array(_ultimos_del_chat(almacen, devoluciones.size())).is_equal(

@@ -171,10 +171,13 @@ def centros(largo: float, envases: Sequence[Envase], cuentas: Sequence[int]) -> 
     Todos los huecos del estante miden lo mismo, también el que separa dos tandas: lo que sobra
     se reparte entre ellos, y ningún borde queda vacío. Una unidad sola va al medio.
     """
+    libre = sobrante(largo, envases, cuentas)
+    if libre < -1e-9:
+        raise ValueError("las columnas no entran conservando el hueco mínimo")
     unidades = sum(cuentas)
     if unidades == 1:
         return [[largo / 2] if cuenta else [] for cuenta in cuentas]
-    hueco = HUECO_MINIMO + sobrante(largo, envases, cuentas) / (unidades - 1)
+    hueco = HUECO_MINIMO + libre / (unidades - 1)
     inicio = 0.0
     salida = []
     for envase, cuenta in zip(envases, cuentas):
@@ -184,20 +187,23 @@ def centros(largo: float, envases: Sequence[Envase], cuentas: Sequence[int]) -> 
 
 
 def tanda(
-    envase: Envase, centros_u: Sequence[float], filas: int = 2, fondo: float = 0.0
+    envase: Envase, centros_u: Sequence[float], filas: int = 2, fondo: float = 0.0,
+    aire: float | None = None,
 ) -> list[Lugar]:
     """Las unidades de una tanda: la fila de atrás entera y después la de adelante, cada una de
     izquierda a derecha. Una tanda de una sola fila es toda de adelante.
 
     `fondo` es la profundidad libre del estante: lo que sobra detrás de las dos filas separa la
-    de atrás, entre `AIRE` y `AIRE_MAXIMO`.
+    de atrás, entre `AIRE` y `AIRE_MAXIMO`. Un `aire` medido explícito conserva la separación
+    del mapa completo, incluida su proyección sobre las cabeceras inclinadas.
 
     **El orden es el del dibujo.** El juego corta las copias de un bloque por el final para
     mostrar sólo lo repuesto, así que lo que va último es lo que el jugador llena: la fila de
     adelante, empezando por su izquierda.
     """
     adelante = MARGEN + envase.fondo / 2
-    aire = min(max(fondo - 2 * MARGEN - 2 * envase.fondo, AIRE), AIRE_MAXIMO)
+    if aire is None:
+        aire = min(max(fondo - 2 * MARGEN - 2 * envase.fondo, AIRE), AIRE_MAXIMO)
     atras = adelante + envase.fondo + aire
     lugares = [Lugar("atras", j, u, atras) for j, u in enumerate(centros_u)] if filas == 2 else []
     lugares += [Lugar("adelante", j, u, adelante) for j, u in enumerate(centros_u)]

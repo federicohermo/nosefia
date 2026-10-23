@@ -23,6 +23,9 @@ enum Momento { APERTURA, CIERRE, SIN_FECHA }
 
 @export var de_quien: String = ""
 
+## Vacía en un mensaje fijo. Con valor, el mensaje sale sólo si la partida eligió esa condición.
+@export var condicion: StringName = &""
+
 ## El cuerpo va como texto multilínea porque un chat del GDD es un párrafo, no un renglón.
 @export_multiline var texto: String = ""
 
@@ -34,6 +37,10 @@ enum Momento { APERTURA, CIERRE, SIN_FECHA }
 ## turno y no le devuelve nada.
 func dice_algo() -> bool:
 	return foto != null or not texto.strip_edges().is_empty()
+
+
+func vale_para(condiciones: Array[StringName]) -> bool:
+	return condicion.is_empty() or condiciones.has(condicion)
 
 
 func pista_del_tramo(tramo: String) -> String:

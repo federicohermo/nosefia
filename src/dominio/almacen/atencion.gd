@@ -64,7 +64,7 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 		return RecepcionDeCompra.Resultado.DIALOGO
 	if not _presentado:
 		_presentado = true
-		_dialogo = _comprador.dialogos.inicial(_comprador.personaje)
+		_dialogo = _inicial()
 		_inicial_terminada = _dialogo.terminado()
 		return RecepcionDeCompra.Resultado.DIALOGO
 	_acuse = false
@@ -87,9 +87,21 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 		_dialogo = DialogosDeCompradores.agradecimiento(_comprador.pedido(), _recepcion)
 	elif resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		_vendida = _inventario.vender_unidades(_recepcion.unidades())
-		_dialogo = _comprador.dialogos.despedida(_comprador.personaje)
+		_dialogo = _despedida()
 		_despachada = _vendida and _dialogo.terminado()
 	return resultado
+
+
+func _inicial() -> Dialogo:
+	if _comprador.dialogos == null:
+		return DialogosDeCompradores.apertura_predeterminada(_comprador.pedido())
+	return _comprador.dialogos.inicial(_comprador.personaje)
+
+
+func _despedida() -> Dialogo:
+	if _comprador.dialogos == null:
+		return DialogosDeCompradores.despedida_predeterminada()
+	return _comprador.dialogos.despedida(_comprador.personaje)
 
 
 func _recordatorio(rechazo: bool = false) -> Dialogo:

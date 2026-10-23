@@ -48,6 +48,8 @@ func arrancar(un_estante: Estante) -> void:
 	if agarre != null and agarre.manos().sostenido() is UnidadDeProducto:
 		agarre.entregar()
 	_estante = un_estante
+	if reloj != null:
+		_revisar_reponer()
 
 
 ## El estante que se está reponiendo, para que quien dibuje pregunte en vez de copiar el estado.

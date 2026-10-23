@@ -5,7 +5,7 @@ extends RefCounted
 enum Resultado { ANOTADO, NO_ES_PRODUCTO, LLENO, SIN_LECTOR }
 
 const RENGLONES := 3
-const JORNADA_SIN_LECTOR := 3
+const JORNADA_SIN_LECTOR := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 
 var _renglones: Array[Producto] = []
 var _manual := false

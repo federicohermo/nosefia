@@ -13,6 +13,14 @@
 ## agota en uno o dos `_process`, así que el cierre se prueba en dos líneas.
 extends GdUnitTestSuite
 
+
+class RelojSinTranscurrir:
+	extends RelojDelTurno
+
+	func _ahora_usec() -> int:
+		return 1000000
+
+
 var _turno: Turno = null
 var _cierres: int = 0
 var _cumplidas_al_cerrar: int = 0
@@ -67,6 +75,31 @@ func test_con_el_arbol_en_pausa_el_turno_no_descuenta() -> void:  # AC-SHF-020
 		await get_tree().process_frame
 	assert_float(_turno.tiempo_restante()).is_less(al_pausar)
 	remove_child(reloj)
+
+
+func test_terminar_publica_el_cierre_y_su_consumo_una_sola_vez() -> void:  # AC-SHF-038
+	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
+	var reloj := _reloj_arrancado(100.0, [registrar])
+	var inicios := [0]
+	reloj.cierre_iniciado.connect(
+		func() -> void:
+			inicios[0] += 1
+			reloj.completar(registrar)
+	)
+	reloj.terminar()
+	assert_int(inicios[0]).is_equal(1)
+	assert_int(_cierres).is_equal(1)
+	assert_int(_consumos).is_equal(1)
+	assert_float(_restante_publicado).is_zero()
+	assert_float(_turno.tiempo_restante()).is_zero()
+	assert_int(_cumplidas_al_cerrar).is_equal(1)
+	reloj.terminar()
+	reloj.avanzar(1.0)
+	assert_int(inicios[0]).is_equal(1)
+	assert_int(_cierres).is_equal(1)
+	var sin_turno: RelojDelTurno = auto_free(RelojDelTurno.new())
+	sin_turno.terminar()
+	assert_bool(sin_turno.corriendo()).is_false()
 
 
 func _sin_obligatorias() -> Array[Tarea]:
@@ -165,7 +198,7 @@ func test_completar_dos_veces_la_misma_tarea_no_vuelve_a_avisar() -> void:
 func test_el_reloj_entrega_la_misma_instancia_de_tarea_que_recibio_el_turno() -> void:
 	# Es la razón de existir de `obligatoria()`: el `Turno` no expone su lista, y completar una
 	# copia devuelve `true` sin que `tareas_cumplidas()` suba — sin error y sin rojo.
-	var obligatorias := Apertura.obligatorias(1)
+	var obligatorias := Apertura.obligatorias(4)
 	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
 	assert_object(reponer).is_same(_de_la_lista(obligatorias, Tarea.Tipo.REPONER))
@@ -232,3 +265,26 @@ func _de_la_lista(obligatorias: Array[Tarea], tipo: Tarea.Tipo) -> Tarea:
 		if tarea.tipo() == tipo:
 			return tarea
 	return null
+
+
+func test_el_borde_de_la_noche_corta() -> void:  # AC-SHF-029
+	var ritmo := Ritmo.de_la_jornada(1)
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
+	reloj.arrancar(_turno, _sin_obligatorias(), ritmo)
+	reloj.avanzar(330.0)
+	assert_float(_turno.tiempo_restante()).is_equal(3600.0)
+	reloj.avanzar(29.0)
+	assert_bool(_turno.cerrado()).is_false()
+	assert_float(_turno.tiempo_restante()).is_equal(120.0)
+	reloj.avanzar(1.0)
+	reloj.avanzar(1.0)
+	assert_int(_cierres).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(0.0)
+	before_test()
+	var corto := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
+	corto.arrancar(_turno, _sin_obligatorias(), ritmo)
+	corto.avanzar(359.0)
+	corto.avanzar(5.0)
+	corto.avanzar(5.0)
+	assert_int(_cierres).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(0.0)

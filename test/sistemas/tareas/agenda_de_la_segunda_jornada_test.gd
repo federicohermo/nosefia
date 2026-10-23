@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+
 var _reloj: RelojDelTurno
 var _ventanilla: Ventanilla
 
@@ -20,7 +22,7 @@ func _abrir(compradores: Array[Comprador]) -> void:
 	add_child(_reloj)
 	add_child(_ventanilla)
 	_reloj.set_process(false)
-	var obligatorias := Apertura.obligatorias(2)
+	var obligatorias := Apertura.obligatorias(Compradores.JORNADA_DE_FEDE_Y_MIA)
 	_reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
 	_ventanilla.arrancar(TareaDeAtender.new(compradores, Inventario.new(Catalogo.todos())))
 
@@ -40,22 +42,22 @@ func test_cada_frontera_exacta_emite_una_vez_la_instancia_original() -> void:  #
 		for extremo in 2:
 			var instante: float = compradores[indice].horario[extremo]
 			var cantidad := indice * 2 + extremo
-			_reloj.avanzar((instante - 1.0 - antes) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+			RelojDePrueba.avanzar_turno(_reloj, instante - 1.0 - antes)
 			assert_array(eventos).has_size(cantidad)
-			_reloj.avanzar(1.0 / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+			RelojDePrueba.avanzar_turno(_reloj, 1.0)
 			assert_array(eventos).has_size(cantidad + 1)
 			assert_int(eventos[-1][0]).is_equal(extremo)
 			assert_object(eventos[-1][1]).is_same(compradores[indice])
 			_reloj.avanzar(0.0)
 			assert_array(eventos).has_size(cantidad + 1)
-			_reloj.avanzar(1.0 / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+			RelojDePrueba.avanzar_turno(_reloj, 1.0)
 			assert_array(eventos).has_size(cantidad + 1)
 			antes = instante + 1.0
 	assert_bool(_ventanilla.tarea().completada()).is_false()
 
 
-# AC-CTR-050, AC-CTR-054
-func test_saltar_al_cierre_procesa_mia_antes_de_publicar_el_resultado() -> void:
+# AC-CTR-050
+func test_saltar_al_cierre_entrega_las_cuatro_fronteras_antes_del_resultado() -> void:
 	var compradores := Compradores.segunda_jornada_definida()
 	_abrir(compradores)
 	var eventos: Array[String] = []
@@ -69,7 +71,7 @@ func test_saltar_al_cierre_procesa_mia_antes_de_publicar_el_resultado() -> void:
 		eventos.append("cierra")
 		assert_bool(_ventanilla.tarea().compras_cerradas()).is_true()
 	_reloj.turno_cerrado.connect(al_cerrar)
-	_reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(_reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(eventos).contains_exactly(
 		["llega Fede", "vence Fede", "llega Mía", "vence Mía", "cierra"]
 	)

@@ -1,5 +1,5 @@
-## El paso que sigue a la devolución de las jornadas 1 y 2, con el celular en las notas: tres
-## textos para leer en la primera, una hipótesis para elegir en la segunda.
+## El paso que sigue a la devolución de algunas jornadas, con el celular en las notas: tres
+## textos para leer o una hipótesis para elegir.
 ##
 ## Cuánto se avanzó no se guarda acá: se lee del expediente, que recibe cada nota aceptada. Así
 ## una reflexión retomada desde el guardado sigue donde quedó sin un segundo estado que sanear.
@@ -11,11 +11,11 @@ extends RefCounted
 enum Etapa { POR_EMPEZAR, TEXTOS, ELEGIR, ESPERA, TERMINADA }
 enum Eleccion { ACEPTADA, REPETIDA, NO_DISPONIBLE, FUERA_DE_ETAPA }
 
-const JORNADA_DE_LOS_TEXTOS := 1
+const JORNADA_DE_LOS_TEXTOS := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 ## La errata «faltabo» es de la fuente y se conserva hasta que diseño la corrija.
 const ENCABEZADOS: Dictionary[int, String] = {
-	1: "Primera jornada terminada…",
-	2:
+	JORNADA_DE_LOS_TEXTOS: "Primera jornada terminada…",
+	JORNADA_DE_LOS_TEXTOS + 1:
 	(
 		"Hoy faltabo uno de los jabones para la limpieza del local. No me quiero empezar a "
 		+ "perseguir, pero…"
@@ -53,7 +53,7 @@ static func para(jornada: int, expediente: Expediente) -> ReflexionDeCierre:
 	return null if reflexion._completa() else reflexion
 
 
-## Los textos de la primera jornada que el guardado dice recibidos, en el orden de la reflexión.
+## Los textos que el guardado dice recibidos, en el orden de la reflexión.
 ## El texto sale de acá y no del disco: el guardado no puede inventar una reflexión.
 static func restaurar_notas(expediente: Expediente, identidades: PackedStringArray) -> void:
 	for indice: int in TEXTOS_DE_LA_PRIMERA.size():

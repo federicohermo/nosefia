@@ -51,3 +51,50 @@ static func pasar_la_reflexion(pantalla: PantallaDeDevolucion) -> void:
 			recuadro.botones().back().pressed.emit()
 	if reflexion.etapa() == ReflexionDeCierre.Etapa.ESPERA:
 		almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
+
+
+## La persiana del cierre baja con su propio reloj: uno simulado la termina sin esperar.
+static func terminar_la_bajada(persiana: PersianaDeLaNoche) -> void:
+	var lectura: Callable = persiana.get("_ahora")
+	var ahora := [int(persiana.get("_ultimo"))]
+	persiana.set("_ahora", func() -> int: return ahora[0])
+	ahora[0] += int(EntradaALaNoche.SUBIDA_DE_LA_PERSIANA * 1000000.0) + 1000
+	persiana.call("_process", 0.0)
+	persiana.set("_ahora", lectura)
+
+
+## Una jornada con instrucciones abre con ellas: se leen hasta su «OK», que anuncia la noche.
+static func leer_las_instrucciones(almacen: Node) -> void:
+	var instrucciones: PantallaDeInstrucciones = almacen.get_node(
+		"Interfaz/PantallaDeInstrucciones"
+	)
+	var siguiente: Button = instrucciones.get("_siguiente")
+	if not instrucciones.visible:
+		return
+	while not (instrucciones.get("_instrucciones") as InstruccionesDelJefe).terminadas():
+		siguiente.pressed.emit()
+	terminar_instrucciones(instrucciones)
+
+
+static func terminar_instrucciones(pantalla: PantallaDeInstrucciones) -> void:
+	var lectura: Callable = pantalla.get("_ahora")
+	var reloj: Array[int] = [int(lectura.call())]
+	pantalla.set("_ahora", func() -> int: return reloj[0])
+	for _cuadro in 30:
+		if not pantalla.is_processing():
+			break
+		reloj[0] += 10000
+		pantalla._process(0.0)
+	pantalla.set("_ahora", lectura)
+	pantalla.set("_ultimo", int(lectura.call()))
+
+
+## La noche siguiente abre cuando termina la transición, que puede calentar útiles durante varios
+## cuadros. Se espera la apertura, con un límite, en lugar de un cuadro.
+static func esperar_la_noche_siguiente(almacen: Node, cuadros: int = 1200) -> bool:
+	var partida: Partida = almacen.get("_partida")
+	for _cuadro: int in cuadros:
+		if partida.get("_jornada_abierta"):
+			return true
+		await almacen.get_tree().process_frame
+	return partida.get("_jornada_abierta")

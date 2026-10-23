@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: draft
+status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429)
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -33,11 +33,11 @@ una tarea son los metros, no la torpeza del control.
 
 Las reglas de interacción directa sobre la figura, foco de silueta y retorno automático del diálogo
 se aplican al recorrido de atención física con comprador representado en el mundo.
-Las jornadas 3 a 5 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
+Las jornadas 6 a 8 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
 panel de cobro. Sólo en ese recorrido genérico se admite una consulta de acceso en el hueco:
 NO DEBE bloquear al jugador ni los objetos sostenidos, ni permanecer activa al usar atención física.
 La barrera de vidrio NO DEBE existir en ningún recorrido. Esta excepción NO DEBE convertir el hueco,
-marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 3 a 5.
+marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 6 a 8.
 
 ### BR-PLY-001 — La diagonal no camina más rápido
 
@@ -100,6 +100,7 @@ examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega 
 CUANDO se acciona —clic izquierdo— una puerta que no está trabada, el sistema DEBE alternar
 entre abierta y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
 Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
+La salida por la entrada principal usa la secuencia de BR-PLY-041.
 
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
@@ -179,14 +180,20 @@ mano.
 CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
 su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas o a medio giro.
 
-### BR-PLY-020 — Tres puertas no abren, y cada gesto sobre una puerta avisa
+### BR-PLY-020 — Las trabadas no abren, y cada gesto sobre una puerta avisa
 
 SI una puerta está trabada, ENTONCES el primario NO DEBE abrirla ni girar la hoja, y
-DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. La entrada al local, el portón del depósito y
-la oficina del jefe están trabadas; las dos puertas interiores no.
+DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. El portón del depósito y
+la oficina del jefe están trabadas en todas las jornadas. La entrada permanece trabada salvo
+la salida habilitada de BR-PLY-041. La puerta que lleva del local al depósito
+DEBE estar trabada en la primera jornada, y abrir desde la segunda. La puerta del cuartito de
+limpieza DEBE estar trabada en las jornadas que no piden limpiar, y abrir en las que sí. La puerta
+del baño y la de «Solo empleados» no están trabadas en ninguna. La traba de la jornada DEBE decidirse
+al abrirla, desde el número de la jornada y las obligatorias que declara, antes de cerrar las
+puertas de BR-PLY-019. La primera jornada DEBE poder cumplirse entera sin entrar al depósito.
 
 CUANDO se acciona una puerta que abre, el sistema DEBE avisar una vez si se abrió o se cerró.
-CUANDO se acciona una trabada con el primario, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
+CUANDO se acciona una trabada con el primario, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las demás. Cerrar las
 puertas al abrir la jornada NO DEBE avisar: no es un gesto del jugador.
 
 ### BR-PLY-021 — Cada noche arranca en la entrada
@@ -235,7 +242,7 @@ CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
 
 CUANDO se hace el primario sobre una puerta interior, de heladera o trabada, la computadora,
 la caja registradora o una nota pegada, el sistema DEBE resolver esa interacción
-con las manos vacías o con cualquier cosa en la mano. Las puertas habilitadas DEBEN alternar;
+con las manos vacías o con cualquier cosa en la mano. Las puertas habilitadas DEBEN alternar, salvo la salida de BR-PLY-041;
 las trabadas DEBEN avisar una vez por pulsación sin girar; los paneles DEBEN abrirse y las notas
 DEBEN mostrar su lectura. Lo que se lleva DEBE seguir en la mano sin soltarse ni usarse.
 La atención DEBE iniciarse sobre la persona según BR-PLY-034, sin abrir el hueco.
@@ -289,12 +296,13 @@ encima de la nota; al reanudar, la nota DEBE continuar abierta y el control susp
 
 El sistema DEBE permitir leer las notas de tareas a realizar, mantener el local ordenado,
 jabones y manchas, instrucciones de limpieza y no tirar papel. La hoja y la lectura DEBEN
-compartir su contenido: texto para las dos del corcho, imagen original completa para las cuatro
-del baño. Hay una hoja de no tirar papel arriba de cada uno de los dos inodoros, y las dos
-comparten la misma imagen. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a
+compartir su contenido: texto para las dos del corcho, imagen original completa para las dos de
+limpieza y las dos de no tirar papel. Las de jabones y manchas y de instrucciones de limpieza
+están pegadas en una pared del cuartito. Hay una hoja de no tirar papel arriba de cada uno de
+los dos inodoros del baño, y las dos comparten la misma imagen. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a
 A4, con el contenido visible en el mundo; NO DEBEN presentarse como post its ni como una hoja
 por tarea.
-Las hojas del baño DEBEN conservar sus imágenes artísticas.
+Las hojas del cuartito y del baño DEBEN conservar sus imágenes artísticas.
 
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
 atención al cliente, registro de productos vendidos, limpieza, reposición y, al final, la
@@ -367,7 +375,7 @@ primero el examen, después la acción primaria y por último el secundario disp
 | Examinar | examinar | mano vacía y un interactuable enfocado |
 | Agarrar | primario | mano vacía y un levantable enfocado |
 | Dejar | primario | mano ocupada sin interacción primaria declarada sobre el objetivo |
-| Abrir | primario | puerta cerrada o trabada, computadora o caja registradora |
+| Abrir | primario | puerta cerrada o trabada salvo la entrada principal de BR-PLY-041, computadora o caja registradora |
 | Cerrar | primario | puerta abierta |
 | Mirar | primario | nota pegada |
 | Hablar | primario | comprador con inicial pendiente, aun con objeto en mano, o inicial terminada con mano vacía, cuando atención habilita el gesto |
@@ -401,7 +409,8 @@ o vacío, la mopa seca o el jabón sea incorrecto: mirar una mancha NO DEBE reve
 El lector presente con una unidad, el inodoro con un ticket y el cuerpo del contenedor con
 un objeto DEBEN declarar interacción primaria, aunque el resultado pueda rechazarse.
 Un tacho sólo DEBE ofrecer extracción con bolsa y mano vacía; una puerta trabada DEBE
-ofrecer Abrir. La tapa DEBE ofrecer sólo su alternancia, sin tirar además lo sostenido.
+ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer sólo su
+alternancia, sin tirar además lo sostenido.
 El secundario sobre todos esos objetivos NO DEBE ofrecer los usos trasladados al primario;
 Sacar producto conserva el secundario, y las acciones ajenas conservan su contrato.
 
@@ -449,6 +458,19 @@ quedó apoyada de forma estable sobre ese metal.
 Los apoyos válidos de piso, mostrador, pallet del depósito y otra caja DEBEN conservarse,
 incluida la caída en cascada al retirar el apoyo inferior. La regla general para decidir
 otros apoyos parciales depende de OQ-PLY-004.
+
+### BR-PLY-041 — La entrada cierra la noche cuando se puede salir
+
+MIENTRAS está habilitada la salida de BR-SHF-021, el primario sobre cualquiera de las dos hojas de entrada
+DEBE iniciar la salida de BR-SHF-025 y terminar la jornada por el cierre habitual. El gesto
+NO DEBE alternar libremente las hojas ni cerrar antes de completar esa secuencia. La referencia DEBE
+ofrecer Interactuar con el control vigente del primario sólo en ese estado. Antes de habilitarse,
+al volver a trabarse por una tarea pendiente, o desde la primera jornada completa, NO DEBE
+ofrecer esa acción y el primario DEBE conservar el sonido de puerta trabada sin girar ninguna hoja.
+La entrada NO DEBE permitir soltar o usar lo
+sostenido por ninguno de estos intentos. El secundario NO DEBE cerrar la noche ni sonar trabada.
+Con control suspendido, pausa o jornada cerrada, ningún gesto DEBE volver a cerrar la noche.
+Las demás puertas DEBEN conservar su referencia y comportamiento.
 
 ## Criterios de aceptación
 
@@ -668,8 +690,22 @@ está trabada y queda abierta.
 
 ### AC-PLY-040 — Qué puertas están trabadas *(verifica BR-PLY-020)*
 
-DADO el almacén armado ENTONCES la entrada, el portón del depósito y la oficina del jefe están
-trabadas y contestan al primario, y las dos puertas interiores no están trabadas.
+DADO el almacén armado en cualquier jornada ENTONCES la entrada, el portón del depósito y la
+oficina del jefe están trabadas y contestan al primario. DADO la jornada 1 abierta ENTONCES la
+puerta que lleva al depósito está trabada, contesta al primario y la hoja no gira. DADO la
+jornada 2 abierta ENTONCES esa puerta abre y alterna. DADO el cierre de la 1 CUANDO se sigue a la 2
+ENTONCES se destraba; DADO una partida guardada en la 1 con la puerta abierta la noche anterior
+CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. DADO la jornada 1 o la 2
+abierta ENTONCES la puerta del cuartito está trabada, contesta al primario y la hoja no gira. DADO
+la jornada 3 abierta ENTONCES no está trabada y alterna. DADO el cierre de la 2 CUANDO se sigue a la
+3 ENTONCES se destraba; DADO una partida guardada en la 2 con la puerta abierta la noche anterior
+CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. La puerta del baño y la de
+«Solo empleados» no están trabadas en ninguna jornada: abren y alternan también en la 1 y la 2.
+
+### AC-PLY-102 — La primera jornada se cumple sin entrar al depósito *(verifica BR-PLY-020)*
+
+DADO la jornada 1 abierta, con la puerta del depósito trabada, CUANDO se cumplen todas sus
+obligatorias sin accionar esa puerta ENTONCES todas quedan cumplidas y la puerta sigue trabada.
 
 ### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
 
@@ -863,14 +899,16 @@ hasta cerrar la primera.
 
 DADO una nota abierta, CUANDO pasan cuadros ENTONCES el tiempo del turno disminuye. CUANDO se
 pausa ENTONCES la pausa visible se dibuja por encima de la nota; al reanudar, la nota sigue
-abierta y el control suspendido. CUANDO termina el turno ENTONCES queda sólo la
-devolución y el control suspendido.
+abierta y el control suspendido. CUANDO termina el turno ENTONCES la nota se cierra y el
+control queda suspendido. En las jornadas 1 a 3 baja la persiana y, al terminar de bajar, siguen
+las instrucciones de la jornada siguiente, sin celular ni devolución. Desde la jornada 4 queda
+sólo la devolución.
 
 ### AC-PLY-068 — Ordenado comparte el texto exacto *(verifica BR-PLY-030)*
 
 DADO la nota de ordenado, ENTONCES su hoja y su lectura comparten «MANTENER EL LOCAL ORDENADO»
 y las viñetas «No dejar productos tirados.», «Dejar las cajas en el depósito.» y
-«Dejar los elementos de limpieza en el baño.», exactamente.
+«Dejar los elementos de limpieza en el cuartito.», exactamente.
 
 ### AC-PLY-069 — Las obligatorias dan los renglones de tareas *(verifica BR-PLY-030)*
 
@@ -879,18 +917,18 @@ regla. DADO limpieza y tirar la basura, ENTONCES da «1. Limpieza» y «2. Tirar
 DADO cero, ENTONCES conserva el título y cero renglones. Cada tipo declarado tiene nombre,
 y los títulos y renglones son iguales en la hoja y su lectura.
 
-### AC-PLY-070 — El baño comparte la imagen artística completa *(verifica BR-PLY-030)*
+### AC-PLY-070 — El cuartito y el baño comparten la imagen artística completa *(verifica BR-PLY-030)*
 
-DADO cada hoja del baño —jabones y manchas, instrucciones de limpieza y las dos de no tirar
-papel—, ENTONCES su lectura amplía la misma imagen frontal original completa y no agrega
-renglones. Las dos de no tirar papel abren la misma imagen.
+DADO cada hoja de imagen —jabones y manchas e instrucciones de limpieza, en el cuartito, y las
+dos de no tirar papel, en el baño—, ENTONCES su lectura amplía la misma imagen frontal
+original completa y no agrega renglones. Las dos de no tirar papel abren la misma imagen.
 
-### AC-PLY-071 — Las notas del corcho y del baño se pueden leer *(verifica BR-PLY-030, BR-PLY-004)*
+### AC-PLY-071 — Las notas del corcho, del cuartito y del baño se pueden leer *(verifica BR-PLY-030, BR-PLY-004)*
 
 DADO cada una de las seis notas funcionales, ENTONCES tiene foco y contorno sobre su propia
-hoja desde un lugar transitable al alcance. Hay una hoja de no tirar papel arriba de cada
-inodoro. El corcho presenta dos hojas: tareas a realizar y mantener el local ordenado. No
-aparecen papeles vacíos ni una hoja por tarea. Las imágenes originales del baño se conservan
+hoja desde un lugar transitable al alcance. Las dos de limpieza están en una pared del
+cuartito y se leen desde adentro. Hay una hoja de no tirar papel arriba de cada inodoro. El corcho presenta dos hojas: tareas a realizar y mantener el local ordenado. No
+aparecen papeles vacíos ni una hoja por tarea. Las imágenes originales del cuartito y del baño se conservan
 al agregar lectura.
 
 ### AC-PLY-072 — La caja abre con cada mano y la conserva *(verifica BR-PLY-031, BR-PLY-026, BR-PLY-006, BR-PLY-028)*
@@ -915,7 +953,9 @@ ni abre el programa. En modo manual, el hueco del lector no recibe lecturas.
 
 DADO el programa abierto, CUANDO pasan cuadros ENTONCES el tiempo disminuye; al pausar,
 la pausa visible tiene una capa superior al programa. Al reanudar sigue abierto y el control
-suspendido. Al terminar el turno queda sólo la devolución y el control suspendido.
+suspendido. Al terminar el turno el programa se cierra y el control queda suspendido. En las
+jornadas 1 a 3 baja la persiana y, al terminar de bajar, siguen las instrucciones de la jornada
+siguiente, sin celular ni devolución. Desde la jornada 4 queda sólo la devolución.
 
 ### AC-PLY-075 — El papel se lleva y examina *(verifica BR-PLY-033)*
 
@@ -958,10 +998,10 @@ CUANDO vence ENTONCES se cierra el diálogo y se devuelve automáticamente la vi
 
 ### AC-PLY-080 — La nota cambia con la particular *(verifica BR-PLY-030)*
 
-DADO la jornada 1 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
+DADO la jornada 4 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
 cliente», «Registro de productos vendidos», «Limpieza», «Reposición» y «Ordenar cajas en el
-depósito». CUANDO se sigue a la jornada 2 sin recargar el local ENTONCES el quinto renglón dice
-«Tirar la basura». DADO la jornada 3 ENTONCES sólo están los cuatro primeros. En los tres casos,
+depósito». CUANDO se sigue a la jornada 5 sin recargar el local ENTONCES el quinto renglón dice
+«Tirar la basura». DADO la jornada 6 ENTONCES sólo están los cuatro primeros. En los tres casos,
 la hoja visible y su lectura tienen los mismos renglones.
 
 ### AC-PLY-081 — El celular conserva la mano y suspende el cuerpo *(verifica BR-PLY-006)*
@@ -995,12 +1035,13 @@ balde vacío sobre inodoro, jabón sobre balde vacío o teñido y mopa sobre bal
 se consulta ENTONCES ofrece por primario Limpiar, Llenar, Vaciar, Vertir y Mojar respectivamente,
 sin Dejar ni mutación. DADO mopa sobre inodoro ENTONCES ofrece Mojar. DADO lector lleno y
 unidad sostenida ENTONCES conserva Interactuar por primario, no por secundario. DADO una
-puerta cerrada o trabada ENTONCES ofrece Abrir; abierta, Cerrar; nota, Mirar. Mano vacía ante
+puerta cerrada o trabada ENTONCES ofrece Abrir, salvo la entrada principal de BR-PLY-041;
+abierta, Cerrar; nota, Mirar. Mano vacía ante
 lector, inodoro, lavatorio o balde no ofrece esos usos; el lector ausente tampoco.
 
 ### AC-PLY-085 — Consultar el tacho no le saca la bolsa *(verifica BR-PLY-036, BR-PLY-035)*
 
-DADO jornada 2, mano vacía y tacho con bolsa CUANDO se consulta ENTONCES ofrece
+DADO jornada 5, mano vacía y tacho con bolsa CUANDO se consulta ENTONCES ofrece
 «[E] Examinar» y «[Click Izq] Interactuar», sin línea secundaria ni cambio de bolsa o mano.
 DADO tacho sin bolsa u objeto sostenido ENTONCES no ofrece extracción.
 
@@ -1123,6 +1164,27 @@ terminada y entrega habilitada con objeto sostenido ENTONCES dice «Entregar», 
 simultáneo. Los dos verbos usan el control vigente del primario; declararlos no inicia diálogo
 ni entrega por consultar, ni habilita atención directa si el puesto no la ofrece.
 
+### AC-PLY-103 — La entrada ofrece sólo la salida disponible *(verifica BR-PLY-041, BR-PLY-037, BR-PLY-038)*
+
+DADO una jornada de prueba antes del aviso CUANDO se enfoca cualquiera de las dos hojas de entrada ENTONCES no ofrece
+acción primaria; el primario suena trabada y no gira ninguna hoja. DADO su salida habilitada
+ENTONCES ofrece Interactuar con el control primario vigente. Tras vencer el aviso conserva
+esa referencia mientras todas las tareas sigan cumplidas. CUANDO una tarea se descumple
+ENTONCES se retira Interactuar y el primario vuelve a sonar trabada sin cerrar la noche.
+Recuperar todas las tareas vuelve a ofrecer Interactuar. DADO la primera jornada completa
+con todas las tareas hechas ENTONCES no ofrece salida y sigue sonando trabada.
+Las otras puertas conservan Abrir y Cerrar.
+
+### AC-PLY-104 — Un primario cierra y conserva la mano *(verifica BR-PLY-041, BR-PLY-026)*
+
+DADO la entrada habilitada y, por separado, mano vacía y un objeto sostenido CUANDO se hace
+primario sobre cualquiera de sus dos hojas ENTONCES inicia una sola salida de BR-SHF-025,
+abre ambas hojas sin soltar ni usar el objeto. Durante
+el giro y la apertura no se puede caminar, controlar la mirada, examinar, agarrar, soltar ni
+usar; la referencia permanece vacía y se conserva el objeto. CUANDO se
+hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
+abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los gestos no lo repiten.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -1162,7 +1224,7 @@ ni entrega por consultar, ni habilita atención directa si el puesto no la ofrec
   La vigencia de la persona y el estado de atención deciden hablar o entregar; terminar el
   diálogo devuelve automáticamente la vista y el movimiento, salvo el control tomado por el cierre.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): las obligatorias declaradas que
-  enumera la nota de tareas.
+  enumera la nota de tareas y el permiso actual para salir por la entrada durante la prueba.
 
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta y consume): qué se lleva en la
   mano decide si se puede limpiar; si un tacho conserva su bolsa decide si el primario ofrece

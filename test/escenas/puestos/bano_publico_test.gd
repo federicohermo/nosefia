@@ -224,8 +224,10 @@ func test_la_entrada_conserva_la_escala_de_las_otras_puertas_y_un_marco_continuo
 		)
 
 
-func _almacen() -> Node3D:
+func _almacen(partida: Partida = null) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	if partida != null:
+		almacen.set("_partida", partida)
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -314,11 +316,15 @@ func test_el_sector_antes_cerrado_es_accesible_desde_el_bano() -> void:
 
 
 func test_la_puerta_del_bano_abierta_no_corta_el_recorrido_hacia_las_cabinas() -> void:
-	var almacen: Node3D = await _almacen()
+	var almacen: Node3D = await _almacen(
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
+	)
 	var hoja: MeshInstance3D = almacen.get_node("Estructura/puerta2")
 	var vano := hoja.global_transform * hoja.get_aabb()
 	var cruce := vano.get_center().z + vano.size.z * 0.15
-	almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("alternar")
+	var puerta: Node = almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja")
+	puerta.call("alternar")
+	assert_bool(puerta.call("puerta").abierta()).is_true()
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var jugador := almacen.get("_jugador") as CharacterBody3D

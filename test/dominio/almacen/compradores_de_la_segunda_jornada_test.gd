@@ -20,7 +20,7 @@ func test_identidades_horarios_y_seis_productos_en_orden() -> void:  # AC-CTR-05
 	for indice in 2:
 		assert_str(compradores[indice].nombre()).is_equal(["Fede", "Mía"][indice])
 		assert_that(compradores[indice].horario).is_equal(
-			[Vector2(1800, 12600), Vector2(32400, 43200)][indice]
+			[Vector2(4500, 13500), Vector2(18000, 27000)][indice]
 		)
 		assert_int(compradores[indice].personaje).is_equal(indice + 3)
 		assert_int(compradores[indice].pedido().productos().size()).is_equal(3)
@@ -48,7 +48,7 @@ func test_cada_llamada_y_cada_apertura_tienen_estado_propio() -> void:  # AC-CTR
 	var nueva := TareaDeAtender.new(segunda, Inventario.new(Catalogo.todos()))
 	assert_object(nueva.atencion()).is_null()
 	assert_bool(nueva.compras_cerradas()).is_false()
-	for jornada in range(3, 6):
+	for jornada in range(6, 9):
 		assert_str(Compradores.de_la_jornada(jornada)[0].nombre()).is_equal("Marta")
 
 
@@ -69,7 +69,7 @@ func _comun(lineas: Array) -> Atencion:
 		pedido.agregar(Catalogo.de(linea[0]), linea[1])
 	var comprador := Comprador.new("Fixture Fede", pedido, pedido.total())
 	comprador.personaje = 3
-	comprador.horario = Vector2(1800, 12600)
+	comprador.horario = Vector2(4500, 13500)
 	comprador.dialogos = DialogosDeCompradores.new()
 	# Antes de la implementación el legado permite llegar al recordatorio; ese texto debe fallar.
 	comprador.dialogos.tin = PackedStringArray(["Inicial"])

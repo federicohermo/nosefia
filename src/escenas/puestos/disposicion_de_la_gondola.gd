@@ -27,6 +27,8 @@
 class_name DisposicionDeLaGondola
 extends Resource
 
+enum BaseDeGuias { MODELO_DE_GUIA, MODELO_DEL_PRODUCTO }
+
 ## Cuántos flotantes ocupa una copia en el `buffer` de un `MultiMesh` en `TRANSFORM_3D`: tres
 ## filas de cuatro.
 const FLOTANTES_POR_COPIA := 12
@@ -34,8 +36,11 @@ const FLOTANTES_POR_COPIA := 12
 ## El bloque que el jugador repone, uno por producto y en el orden de `Producto.Id`.
 @export var principales: Array[PackedFloat32Array] = []
 
-## Las exhibiciones que no cambian, en el orden de los hijos de `guia_del_estante.tscn`.
+## Las tandas fijas, paralelas a sus productos y frontales. En MODELO_DE_GUIA siguen
+## el orden de los hijos de `guia_del_estante.tscn`; en MODELO_DEL_PRODUCTO usan su base original.
 @export var guias: Array[PackedFloat32Array] = []
+
+@export var base_de_guias: BaseDeGuias = BaseDeGuias.MODELO_DE_GUIA
 
 ## Cuántas copias del final de cada bloque principal forman su fila de adelante, en el orden
 ## de `Producto.Id`. Si tiene fila de atrás, son las primeras del bloque y tienen igual largo.

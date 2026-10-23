@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Puesto := preload("res://src/escenas/puestos/ventanilla.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacenes: Array[Node3D] = []
 
@@ -73,7 +74,7 @@ func _ticket(almacen: Node3D, pedido: Venta) -> ObjetoAgarrable:
 	return null
 
 
-# AC-CTR-039, AC-CTR-041, AC-STK-054, AC-STK-056
+# AC-CTR-039, AC-CTR-041, AC-STK-054, AC-STK-056, AC-PLY-102
 func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -> void:
 	var almacen := await _abrir()
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
@@ -81,13 +82,15 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	var agarre: Agarre = almacen.get("_agarre")
 	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
+	var deposito: Puerta = almacen.get_node("Estructura/puerta/CuerpoDeLaHoja").call("puerta")
+	assert_bool(deposito.trabada()).is_true()
 	var compras: Array[bool] = []
 	atenciones.compra_realizada.connect(func() -> void: compras.append(true))
 	puesto.abrir()
 	assert_object(atenciones.atencion()).is_null()
 	puesto.cerrar()
-	for intervalo: float in [120.0, 360.0]:
-		reloj.avanzar(intervalo)
+	for hora: Vector2i in [Vector2i(22, 0), Vector2i(23, 30)]:
+		RelojDePrueba.avanzar_hasta(reloj, hora)
 		assert_bool(_panel(almacen).visible).is_false()
 		puesto.abrir()
 		var atendida := atenciones.atencion()
@@ -129,7 +132,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		assert_object(agarre.manos().sostenido()).is_null()
 		assert_bool(atendida.vendida()).is_true()
 		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_equal(
-			intervalo == 360.0
+			hora == Vector2i(23, 30)
 		)
 		assert_bool(atendida.despachada()).is_false()
 		var despedida := atendida.dialogo()
@@ -162,6 +165,10 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		assert_int(atenciones.tarea().vendidas_de(producto)).is_equal(fila[1])
 	assert_bool(registro.coincide()).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
+		assert_bool(tarea.completada()).override_failure_message(str(tarea.tipo())).is_true()
+	assert_bool(deposito.trabada()).is_true()
+	assert_bool(deposito.abierta()).is_false()
 
 
 func _vender_y_anotar_actual(almacen: Node3D) -> void:
@@ -190,14 +197,14 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	var agarre: Agarre = almacen.get("_agarre")
 	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
-	reloj.avanzar(120.0)
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
 	puesto.abrir()
 	_conversar(almacen)
 	_vender_y_anotar_actual(almacen)
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	_conversar(almacen)
 	puesto.cerrar()
-	reloj.avanzar(360.0)
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	puesto.abrir()
 	_conversar(almacen)
 	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
@@ -229,7 +236,7 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	puesto._input(derecho)
 	assert_bool(_panel(almacen).visible).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
-	reloj.avanzar(120.0)
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(2, 0))
 	assert_bool(atenciones.puede_abandonar()).is_true()
 	assert_object(atenciones.tarea().en_ventanilla()).is_null()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
@@ -250,7 +257,7 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	computadora.pedir_restar(producto)
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_bool(reloj.corriendo()).is_false()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
@@ -258,7 +265,7 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 # AC-CTR-041
 func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
 	var camara := Camera3D.new()
 	puesto.add_child(camara)
@@ -269,7 +276,7 @@ func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -
 	assert_bool(atenciones.atencion().fisica()).is_false()
 	var renglones: VBoxContainer = _panel(almacen).get("_renglones")
 	var primero := renglones.get_child(0)
-	(almacen.get("_reloj") as RelojDelTurno).avanzar(1.0)
+	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), 1.0)
 	assert_object(renglones.get_child(0)).is_same(primero)
 	assert_bool((_panel(almacen).get("_cobrar") as Button).visible).is_true()
 
@@ -281,7 +288,7 @@ func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_lo_que_falta()
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	var agarre: Agarre = almacen.get("_agarre")
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
-	reloj.avanzar(480.0)
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	puesto.abrir()
 	_conversar(almacen)
 	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)

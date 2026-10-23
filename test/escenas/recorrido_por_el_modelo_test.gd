@@ -53,15 +53,19 @@ func test_la_gravedad_asienta_al_jugador_a_la_misma_altura_en_los_tres_cuartos()
 		assert_int(probados).override_failure_message(nombre).is_greater(0)
 
 
-func test_abrir_el_bano_no_barre_los_utiles_de_limpieza() -> void:
+func test_abrir_el_cuartito_no_barre_los_utiles_de_limpieza() -> void:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
+	local.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(local)
+	var cuartito: Node = local.get_node("Estructura/puerta_limpieza/CuerpoDeLaHoja")
+	assert_bool(cuartito.call("puerta").trabada()).is_false()
 	local.get("_jugador").set_physics_process(false)
 	var utiles: Array = local.get("_utiles_de_limpieza")
 	var origenes: Array[Vector3] = []
 	for util: Node3D in utiles:
 		origenes.append(util.global_position)
-	local.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("alternar")
+	cuartito.call("alternar")
+	assert_bool(cuartito.call("puerta").abierta()).is_true()
 	for cuadro in 90:
 		await get_tree().physics_frame
 	for indice in utiles.size():

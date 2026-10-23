@@ -5,6 +5,10 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 func test_la_gondola_y_la_unidad_de_la_mano_conservan_todas_las_partes_del_producto() -> void:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
+	local.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(local)
 	var puesto: Node3D = local.get("_reposicion_manual")
 	var contenido: Node3D = puesto.get("contenido")
@@ -29,6 +33,10 @@ func test_la_gondola_y_la_unidad_de_la_mano_conservan_todas_las_partes_del_produ
 
 func test_la_fila_apagada_conserva_la_textura_de_cada_parte_del_producto() -> void:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
+	local.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(local)
 	var puesto: Node3D = local.get("_reposicion_manual")
 	var contenido: Node3D = puesto.get("contenido")

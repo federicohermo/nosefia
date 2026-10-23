@@ -73,6 +73,11 @@ está en su encabezado. Un escenario con runner propio usa ese runner.
 - **Playwright se instala en el checkout principal, no en un worktree.** Node lo encuentra
   subiendo. Con `node_modules/` adentro de un árbol sin caché de importación, Godot se cayó al
   importar.
+- **Correr `python .github/scripts/preparar_plantilla_web.py --comprobar` antes de medir en la
+  web.** Una `web_release.zip` copiada de otro worktree puede ser de una receta anterior. La del 7
+  de octubre no unifica las luces ni las sondas. Con ella, la carga de J1 a J2 enlazaba más del
+  doble de programas. Además dejaba variantes tardías al jugar. Un informe de rendimiento web dice
+  con qué plantilla se exportó.
 
 ## Medición en la web, con la CPU frenada
 

@@ -49,6 +49,13 @@ func alternar() -> bool:
 	return true
 
 
+func abrir_para_salida() -> bool:
+	if _abierta:
+		return false
+	_abierta = true
+	return true
+
+
 func cerrar_de_golpe() -> void:
 	_abierta = false
 	_angulo = 0.0

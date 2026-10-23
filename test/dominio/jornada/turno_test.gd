@@ -140,7 +140,7 @@ func test_un_turno_sin_obligatorias_esta_completo_por_vacuidad() -> void:
 
 
 func _las_obligatorias_declaradas() -> Array[Tarea]:
-	return Apertura.obligatorias(1)
+	return Apertura.obligatorias(4)
 
 
 func test_con_tres_de_cinco_cumplidas_el_turno_no_esta_completo() -> void:

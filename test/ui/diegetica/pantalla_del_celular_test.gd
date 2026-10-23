@@ -3,8 +3,17 @@ extends GdUnitTestSuite
 const ESCENA := preload("res://src/ui/diegetica/pantalla_del_celular.tscn")
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
+var _tamano_de_ventana: Vector2i
+
+
+func before_test() -> void:
+	_tamano_de_ventana = get_window().size
+	get_window().size = Vector2i(1920, 1080)
+	await get_tree().process_frame
+
 
 func after_test() -> void:
+	get_window().size = _tamano_de_ventana
 	await get_tree().process_frame
 	await get_tree().process_frame
 
@@ -12,6 +21,7 @@ func after_test() -> void:
 func _pantalla() -> PantallaDelCelular:
 	var pantalla: PantallaDelCelular = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
+	assert_vector(pantalla.get_viewport().get_visible_rect().size).is_equal(Vector2(1920, 1080))
 	return pantalla
 
 
@@ -148,7 +158,7 @@ func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	rueda.button_index = MOUSE_BUTTON_WHEEL_UP
 	rueda.pressed = true
 	rueda.position = scroll.get_global_rect().get_center()
-	get_viewport().push_input(rueda)
+	get_viewport().push_input(rueda, true)
 	await get_tree().process_frame
 	assert_int(scroll.scroll_vertical).is_less(ultimo)
 	var antes := scroll.scroll_vertical
@@ -273,12 +283,12 @@ func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
 		func(identidad: String) -> void: pedidos.append(identidad)
 	)
 	pantalla.tramo_pedido.connect(sistema.pedir_tramo)
-	sistema.abrir_jornada(2)
+	sistema.abrir_jornada(5)
 	sistema.pedir_alternar(false)
 	sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
 	var conversacion := sistema.bandeja().conversacion_de(Conversacion.Interlocutor.YASMIN)
 	var mensajes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN)
-	pantalla.mostrar_chat(conversacion, mensajes, false, 2)
+	pantalla.mostrar_chat(conversacion, mensajes, false, 5)
 	assert_str((pantalla.get("_subtitulo") as Label).text).is_equal("Compañera de trabajo")
 	assert_bool((pantalla.get("_subtitulo") as Label).visible).is_true()
 	assert_object((pantalla.get("_avatar_del_chat") as TextureRect).texture).is_not_null()
@@ -286,13 +296,47 @@ func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
 		_burbuja(pantalla, 5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
 	)
 	assert_str(texto.get_parsed_text()).is_equal(mensajes[5].texto)
-	assert_int(texto.mouse_filter).is_equal(Control.MOUSE_FILTER_PASS)
 	assert_array(pedidos).is_empty()
 	texto.meta_clicked.emit("fuera")
 	assert_array(pedidos).is_empty()
 	texto.meta_clicked.emit("falta_algo")
 	texto.meta_clicked.emit("falta_algo")
 	assert_array(pedidos).is_equal(["2A", "2A"])
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	for cuadro in 4:
+		await get_tree().process_frame
+	scroll.ensure_control_visible(texto)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var fuente := texto.get_theme_font("normal_font")
+	var tamano := texto.get_theme_font_size("normal_font_size")
+	var prefijo := fuente.get_string_size("y te aviso q ", HORIZONTAL_ALIGNMENT_LEFT, -1, tamano).x
+	var punto := (
+		texto.get_global_transform() * Vector2(prefijo + 8.0, fuente.get_height(tamano) / 4.0)
+	)
+	var relativo := Vector2(0, 12)
+	assert_bool(scroll.get_global_rect().has_point(punto)).is_true()
+	assert_bool(texto.get_global_rect().has_point(punto + relativo)).is_true()
+	var antes := scroll.scroll_vertical
+	pedidos.clear()
+	get_viewport().push_input(_boton_del_mouse(punto, true), true)
+	get_viewport().push_input(_movimiento(punto + relativo, relativo), true)
+	get_viewport().push_input(_boton_del_mouse(punto + relativo, false), true)
+	await get_tree().process_frame
+	assert_array(pedidos).is_equal(["2A"])
+	assert_int(scroll.scroll_vertical).is_equal(antes)
+	var rueda := InputEventMouseButton.new()
+	rueda.button_index = MOUSE_BUTTON_WHEEL_UP
+	rueda.pressed = true
+	rueda.position = punto
+	get_viewport().push_input(rueda, true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_less(antes)
+	assert_array(pedidos).is_equal(["2A"])
 
 
 func test_llegada_intercalada_conserva_indice_actual_de_la_foto() -> void:  # AC-INV-040, AC-INV-042
@@ -326,7 +370,7 @@ func test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema() -> v
 	var caracteres := primaria.get_supported_chars()
 	var pantalla := _pantalla()
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(2)
+	bandeja.abrir_jornada(5)
 	pantalla.mostrar_menu(bandeja)
 	var lista: VBoxContainer = pantalla.get("_mensajes")
 	var resumen := lista.get_child(1).find_child("VistaPrevia", true, false) as Label
@@ -334,7 +378,7 @@ func test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema() -> v
 	for codigo: int in [0x2728, 0x1f4aa]:
 		assert_bool(fuente.get_supported_chars().contains(String.chr(codigo))).is_true()
 	var conversacion := bandeja.conversacion_de(Conversacion.Interlocutor.YASMIN)
-	pantalla.mostrar_chat(conversacion, bandeja.mensajes_de(conversacion.interlocutor), false, 2)
+	pantalla.mostrar_chat(conversacion, bandeja.mensajes_de(conversacion.interlocutor), false, 5)
 	for caso: Vector2i in [Vector2i(0, 0x2728), Vector2i(14, 0x1f4aa)]:
 		var texto := (
 			_burbuja(pantalla, caso.x).find_children("*", "RichTextLabel", true, false)[0]
@@ -346,3 +390,316 @@ func test_el_guion_incluye_sus_glifos_sin_depender_de_fuentes_del_sistema() -> v
 	assert_array(primaria.fallbacks).is_equal(respaldos)
 	assert_str(primaria.get_supported_chars()).is_equal(caracteres)
 	assert_object((fuente as FontVariation).base_font).is_same(primaria)
+
+
+func _boton_del_mouse(posicion: Vector2, apretado: bool) -> InputEventMouseButton:
+	var boton := InputEventMouseButton.new()
+	boton.button_index = MOUSE_BUTTON_LEFT
+	boton.button_mask = MOUSE_BUTTON_MASK_LEFT if apretado else 0
+	boton.pressed = apretado
+	boton.position = posicion
+	boton.global_position = posicion
+	return boton
+
+
+func _movimiento(posicion: Vector2, relativo: Vector2) -> InputEventMouseMotion:
+	var movimiento := InputEventMouseMotion.new()
+	movimiento.button_mask = MOUSE_BUTTON_MASK_LEFT
+	movimiento.position = posicion
+	movimiento.global_position = posicion
+	movimiento.relative = relativo
+	return movimiento
+
+
+func _tecla(codigo: Key, apretada: bool) -> InputEventKey:
+	var tecla := InputEventKey.new()
+	tecla.keycode = codigo
+	tecla.physical_keycode = codigo
+	tecla.pressed = apretada
+	return tecla
+
+
+func _apretar_boton(boton: BaseButton, posicion: Vector2) -> void:
+	assert_bool(boton.get_global_rect().has_point(posicion)).is_true()
+	boton.get_viewport().push_input(_boton_del_mouse(posicion, true), true)
+	assert_bool(boton.is_hovered()).is_true()
+	assert_bool(boton.is_pressed()).is_true()
+
+
+func test_arrastrar_el_historial_lo_desplaza_y_soltar_termina() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(24)
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var centro := scroll.get_global_rect().get_center()
+	var abajo := scroll.scroll_vertical
+	assert_int(abajo).is_greater(0)
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	get_viewport().push_input(_boton_del_mouse(centro, true), true)
+	await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 60), Vector2(0, 60)), true)
+	await get_tree().process_frame
+	var arrastrado := scroll.scroll_vertical
+	assert_int(arrastrado).is_less(abajo)
+	get_viewport().push_input(_movimiento(centro, Vector2(0, -100000)), true)
+	await get_tree().process_frame
+	var barra := scroll.get_v_scroll_bar()
+	assert_int(scroll.scroll_vertical).is_equal(int(barra.max_value - barra.page))
+	get_viewport().push_input(_boton_del_mouse(Vector2(1, 1), false), true)
+	await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	assert_bool((pantalla.get("_telefono") as Control).visible).is_true()
+	var soltado := scroll.scroll_vertical
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 60), Vector2(0, 60)), true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_equal(soltado)
+	var rueda := InputEventMouseButton.new()
+	rueda.button_index = MOUSE_BUTTON_WHEEL_UP
+	rueda.pressed = true
+	rueda.position = centro
+	get_viewport().push_input(rueda, true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_less(soltado)
+
+
+func test_ocultar_el_celular_termina_el_arrastre() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(24)
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var centro := scroll.get_global_rect().get_center()
+	get_viewport().push_input(_boton_del_mouse(centro, true), true)
+	await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
+	(pantalla.get("_telefono") as Control).hide()
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	(pantalla.get("_telefono") as Control).show()
+	var quieto := scroll.scroll_vertical
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 60), Vector2(0, 60)), true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_equal(quieto)
+
+
+func test_la_foto_real_abre_con_movimiento_sin_desplazar_el_chat() -> void:  # AC-EMP-047
+	var pantalla := _pantalla()
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	pantalla.foto_pedida.connect(sistema.pedir_foto)
+	sistema.foto_ampliada.connect(pantalla.ampliar)
+	sistema.foto_cerrada.connect(pantalla.cerrar_foto)
+	sistema.abrir_jornada(1)
+	sistema.pedir_alternar(false)
+	sistema.pedir_chat(Conversacion.Interlocutor.JEFE)
+	var conversacion := sistema.bandeja().conversacion_de(Conversacion.Interlocutor.JEFE)
+	var mensajes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)
+	var con_foto := 1
+	assert_str(mensajes[con_foto].identidad).is_equal("J1_FotoReloj")
+	assert_str(mensajes[con_foto].foto.resource_path).is_equal(
+		"res://assets/ui/manada/fotos/intro-reloj.png"
+	)
+	var intro: Mensaje
+	for mensaje in mensajes:
+		if mensaje.identidad == "J1_Intro02":
+			intro = mensaje
+	assert_object(intro).is_not_null()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_chat(conversacion, mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var foto := (
+		_burbuja(pantalla, con_foto).find_children("*", "TextureButton", true, false)[0]
+		as TextureButton
+	)
+	scroll.ensure_control_visible(foto)
+	for cuadro in 4:
+		await get_tree().process_frame
+	assert_float(scroll.get_v_scroll_bar().max_value).is_greater(scroll.get_v_scroll_bar().page)
+	var antes := scroll.scroll_vertical
+	var centro := foto.get_global_rect().intersection(scroll.get_global_rect()).get_center()
+	for relativo: Vector2 in [Vector2(0, 12), Vector2(0, 20), Vector2(0, 60)]:
+		assert_bool(foto.get_global_rect().has_point(centro + relativo)).is_true()
+		assert_bool(scroll.get_global_rect().has_point(centro + relativo)).is_true()
+		_apretar_boton(foto, centro)
+		get_viewport().push_input(_movimiento(centro + relativo, relativo), true)
+		get_viewport().push_input(_boton_del_mouse(centro + relativo, false), true)
+		await get_tree().process_frame
+		assert_int(sistema.celular().pantalla()).is_equal(Celular.Pantalla.FOTO)
+		assert_bool((pantalla.get("_foto_ampliada") as Control).visible).is_true()
+		assert_str((pantalla.get("_adjunto") as RichTextLabel).text).is_equal(intro.texto)
+		assert_int(scroll.scroll_vertical).is_equal(antes)
+		sistema.pedir_cerrar_foto()
+		await get_tree().process_frame
+		assert_int(sistema.celular().pantalla()).is_equal(Celular.Pantalla.CHAT)
+		assert_bool((pantalla.get("_foto_ampliada") as Control).visible).is_false()
+		assert_int(scroll.scroll_vertical).is_equal(antes)
+	var rueda := InputEventMouseButton.new()
+	rueda.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	rueda.pressed = true
+	rueda.position = centro
+	get_viewport().push_input(rueda, true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_greater(antes)
+
+
+func test_contactos_conservan_clics_con_movimiento_y_no_se_desplazan() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_menu(Bandeja.new([conversacion]))
+	for cuadro in 4:
+		await get_tree().process_frame
+	var pedidos: Array[Conversacion.Interlocutor] = []
+	pantalla.chat_pedido.connect(
+		func(quien: Conversacion.Interlocutor) -> void: pedidos.append(quien)
+	)
+	var lista: VBoxContainer = pantalla.get("_mensajes")
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var alto_del_historial := scroll.size.y
+	var espaciador := Control.new()
+	espaciador.custom_minimum_size.y = alto_del_historial * 2.0
+	lista.add_child(espaciador)
+	for cuadro in 4:
+		await get_tree().process_frame
+	assert_float(lista.size.y).is_greater(alto_del_historial)
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+	var boton := lista.get_child(0) as Button
+	var centro := boton.get_global_rect().get_center()
+	assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
+	assert_int(scroll.scroll_vertical).is_zero()
+	for relativo: Vector2 in [Vector2(0, 2), Vector2(0, 20), Vector2(0, -20), Vector2(20, 0)]:
+		pedidos.clear()
+		assert_bool(boton.get_global_rect().has_point(centro + relativo)).is_true()
+		_apretar_boton(boton, centro)
+		get_viewport().push_input(_movimiento(centro + relativo, relativo), true)
+		get_viewport().push_input(_boton_del_mouse(centro + relativo, false), true)
+		await get_tree().process_frame
+		assert_int(scroll.scroll_vertical).is_zero()
+		assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+		assert_array(pedidos).is_equal([conversacion.interlocutor])
+		get_viewport().push_input(_tecla(KEY_ENTER, true), true)
+		get_viewport().push_input(_tecla(KEY_ENTER, false), true)
+		await get_tree().process_frame
+		assert_array(pedidos).is_equal([conversacion.interlocutor, conversacion.interlocutor])
+		_apretar_boton(boton, centro)
+		get_viewport().push_input(_boton_del_mouse(centro, false), true)
+		await get_tree().process_frame
+		assert_array(pedidos).is_equal(
+			[conversacion.interlocutor, conversacion.interlocutor, conversacion.interlocutor]
+		)
+	var rueda := InputEventMouseButton.new()
+	rueda.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	rueda.pressed = true
+	rueda.position = scroll.get_global_rect().get_center()
+	get_viewport().push_input(rueda, true)
+	await get_tree().process_frame
+	assert_int(scroll.scroll_vertical).is_zero()
+
+
+func test_una_foto_sin_desborde_conserva_clics_con_movimiento() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(1)
+	conversacion.mensajes[0].foto = GradientTexture2D.new()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var pedidas: Array[int] = []
+	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidas.append(indice))
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var foto := (
+		_burbuja(pantalla, 0).find_children("*", "TextureButton", true, false)[0] as BaseButton
+	)
+	var centro := foto.get_global_rect().get_center()
+	assert_bool(scroll.get_global_rect().has_point(centro)).is_true()
+	assert_int(scroll.scroll_vertical).is_equal(0)
+	assert_float(scroll.get_v_scroll_bar().max_value).is_less_equal(scroll.get_v_scroll_bar().page)
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+	for relativo: Vector2 in [Vector2(0, 2), Vector2(0, 20), Vector2(20, 0)]:
+		pedidas.clear()
+		_apretar_boton(foto, centro)
+		get_viewport().push_input(_movimiento(centro + relativo, relativo), true)
+		get_viewport().push_input(_movimiento(centro, -relativo), true)
+		get_viewport().push_input(_boton_del_mouse(centro, false), true)
+		await get_tree().process_frame
+		assert_int(scroll.scroll_vertical).is_equal(0)
+		assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+		assert_array(pedidas).is_equal([0])
+		pedidas.clear()
+		_apretar_boton(foto, centro)
+		get_viewport().push_input(_boton_del_mouse(centro, false), true)
+		await get_tree().process_frame
+		assert_array(pedidas).is_equal([0])
+
+	var nuevos := _conversacion(24).mensajes
+	for indice in nuevos.size():
+		pantalla.recibir(nuevos[indice], indice + 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	assert_float(scroll.get_v_scroll_bar().max_value).is_greater(scroll.get_v_scroll_bar().page)
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	assert_int(scroll.mouse_default_cursor_shape).is_equal(Control.CURSOR_ARROW)
+	assert_int(scroll.scroll_vertical).is_zero()
+
+
+func test_una_foto_conserva_foco_y_activacion_nativa_con_teclado() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion(24)
+	var con_foto := 22
+	conversacion.mensajes[con_foto].foto = GradientTexture2D.new()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(pantalla, ahora, 250000)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1)
+	for cuadro in 4:
+		await get_tree().process_frame
+	var foto := (
+		_burbuja(pantalla, con_foto).find_children("*", "TextureButton", true, false)[0]
+		as BaseButton
+	)
+	var pedidas: Array[int] = []
+	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidas.append(indice))
+	var nativas: Array[int] = []
+	foto.pressed.connect(func() -> void: nativas.append(1))
+	var scroll: ScrollContainer = pantalla.get("_scroll")
+	var antes := scroll.scroll_vertical
+	assert_int(foto.focus_mode).is_equal(Control.FOCUS_ALL)
+	var centro := foto.get_global_rect().intersection(scroll.get_global_rect()).get_center()
+	_apretar_boton(foto, centro)
+	get_viewport().push_input(_movimiento(centro + Vector2(0, 12), Vector2(0, 12)), true)
+	get_viewport().push_input(_boton_del_mouse(centro + Vector2(0, 12), false), true)
+	await get_tree().process_frame
+	assert_bool(foto.has_focus()).is_true()
+	assert_array(pedidas).is_equal([con_foto])
+	assert_array(nativas).is_equal([1])
+	get_viewport().push_input(_tecla(KEY_ENTER, true), true)
+	get_viewport().push_input(_tecla(KEY_ENTER, false), true)
+	await get_tree().process_frame
+	assert_array(pedidas).is_equal([con_foto, con_foto])
+	assert_array(nativas).is_equal([1, 1])
+	assert_int(scroll.scroll_vertical).is_equal(antes)

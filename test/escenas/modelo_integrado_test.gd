@@ -11,12 +11,14 @@ func test_solo_las_mallas_reemplazadas_son_geometria_de_referencia() -> void:
 	add_child(almacen)
 	var estructura := almacen.get_node("Estructura")
 	var puesto: Node3D = almacen.get("_reposicion_manual")
-	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var disposicion_original: DisposicionDeLaGondola = load(
+		"res://src/escenas/puestos/disposicion_de_la_gondola.tres"
+	)
 	var lugares := PackedVector3Array()
 	var contenido: Node3D = puesto.get("contenido")
 	for fuente: Node3D in contenido.get_children():
 		lugares.append(fuente.global_position)
-	for bloque: PackedFloat32Array in disposicion.principales + disposicion.guias:
+	for bloque: PackedFloat32Array in disposicion_original.principales + disposicion_original.guias:
 		for indice: int in DisposicionDeLaGondola.copias(bloque):
 			lugares.append(
 				puesto.global_transform * DisposicionDeLaGondola.copia(bloque, indice).origin

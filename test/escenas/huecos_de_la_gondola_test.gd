@@ -6,6 +6,10 @@ const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 func test_los_huecos_dibujados_son_exactamente_los_casilleros_vacios() -> void:
 	var almacen: Node3D = auto_free((load(ALMACEN) as PackedScene).instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var puesto: Node3D = almacen.get("_reposicion_manual")
@@ -18,6 +22,10 @@ func test_los_huecos_dibujados_son_exactamente_los_casilleros_vacios() -> void:
 
 func test_agarrar_y_reponer_cambia_el_hueco_sin_cambiar_el_foco() -> void:
 	var almacen: Node3D = auto_free((load(ALMACEN) as PackedScene).instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var completos: Dictionary[Producto.Id, int] = {}
@@ -52,6 +60,10 @@ func test_agarrar_y_reponer_cambia_el_hueco_sin_cambiar_el_foco() -> void:
 
 func test_abrir_otra_jornada_reconstruye_los_huecos() -> void:
 	var almacen: Node3D = auto_free((load(ALMACEN) as PackedScene).instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var producto := Catalogo.de(Producto.Id.ACTRONCITO)

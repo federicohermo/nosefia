@@ -9,12 +9,33 @@ var _terminadas: bool = false
 class Paso:
 	extends RefCounted
 
-	var foto: Mensaje
+	var fotos: Array[Mensaje] = []
 	var textos: Array[Mensaje] = []
 
 
 func _init(cantidad: int) -> void:
 	_cantidad = cantidad
+
+
+## Las jornadas de introducción y la primera completa abren con instrucciones; en las demás, la
+## noche sale directa.
+static func de_la_jornada(
+	mensajes: Array[Mensaje], jornada: int, condiciones: Array[StringName] = []
+) -> Array[Mensaje]:
+	var propios: Array[Mensaje] = []
+	if (
+		jornada < ReglasDeLaPartida.PRIMERA_JORNADA
+		or jornada > ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
+		return propios
+	for mensaje in mensajes:
+		if (
+			mensaje.jornada == jornada
+			and mensaje.momento == Mensaje.Momento.APERTURA
+			and mensaje.vale_para(condiciones)
+		):
+			propios.append(mensaje)
+	return propios
 
 
 static func pasos_de(mensajes: Array[Mensaje]) -> Array[Paso]:
@@ -24,8 +45,13 @@ static func pasos_de(mensajes: Array[Mensaje]) -> Array[Paso]:
 		var paso := Paso.new()
 		var mensaje := mensajes[indice]
 		if mensaje.foto != null and mensaje.texto.is_empty():
-			paso.foto = mensaje
-			indice += 1
+			while (
+				indice < mensajes.size()
+				and mensajes[indice].foto != null
+				and mensajes[indice].texto.is_empty()
+			):
+				paso.fotos.append(mensajes[indice])
+				indice += 1
 			if indice < mensajes.size():
 				paso.textos.append(mensajes[indice])
 		else:

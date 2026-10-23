@@ -7,6 +7,7 @@ const Fibras := preload("res://src/escenas/objetos/fibras_de_la_mopa.gd")
 
 func test_la_mopa_horizontal_mojada_no_deja_un_volumen_rigido_detras_de_la_cabeza() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -72,6 +73,7 @@ func test_la_mopa_horizontal_mojada_no_deja_un_volumen_rigido_detras_de_la_cabez
 
 func test_mojar_y_secar_las_fibras_conserva_el_anclaje_para_mojar_y_gotear() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame

@@ -1,0 +1,9 @@
+{
+  "source": "../polyhaven/corrugated-iron-02/source.json",
+  "license": "CC0",
+  "purpose": "Copias sin modificar para exportar el cuartito a 1024, conservando los mapas del deposito a 512.",
+  "files": {
+    "cuartito_chapa_normal_1k.png": "../polyhaven/corrugated-iron-02/1K/corrugated_iron_02_nor_gl_1k.png",
+    "cuartito_chapa_rough_1k.jpg": "../polyhaven/corrugated-iron-02/1K/corrugated_iron_02_rough_1k.jpg"
+  }
+}
