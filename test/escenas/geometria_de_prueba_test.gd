@@ -217,7 +217,7 @@ func test_las_cabeceras_tienen_aire_y_margen_en_ambos_costados() -> void:  # AC-
 		if absf(frente.z) <= absf(frente.x):
 			continue
 		cabeceras += 1
-		_comprobar_ritmo(fila, referencias[fila.producto])
+		_comprobar_ritmo(fila, _referencia_de_exhibicion(referencias, fila.producto))
 		var mueble: MeshInstance3D = fila.mueble
 		var soporte := mueble.global_transform * mueble.mesh.get_aabb()
 		var caja := _envolvente(fila.cajas)
@@ -266,7 +266,7 @@ func test_los_laterales_tienen_ritmo_y_aire_en_la_union_de_las_mitades() -> void
 		var frente: Vector3 = fila.frente
 		if absf(frente.x) <= absf(frente.z):
 			continue
-		_comprobar_ritmo(fila, referencias[fila.producto])
+		_comprobar_ritmo(fila, _referencia_de_exhibicion(referencias, fila.producto))
 		var clave := "%s/%s/%s" % [fila.mueble.name, frente, fila.nivel]
 		if not tandas.has(clave):
 			tandas[clave] = []
@@ -309,6 +309,94 @@ func test_el_reparto_con_aire_no_superpone_unidades() -> void:  # AC-STK-103
 				)
 				. is_false()
 			)
+
+
+func test_el_encuentro_de_dos_productos_deja_el_paso_de_sus_unidades() -> void:  # AC-STK-105
+	var estantes: Dictionary[String, Dictionary] = {}
+	for fila in _filas_de_exhibicion(_abrir()):
+		var clave := "%s/%s/%s" % [fila.mueble.name, fila.frente, fila.nivel]
+		if not estantes.has(clave):
+			estantes[clave] = {
+				"eje": (fila.frente as Vector3).cross(Vector3.UP).abs(), "productos": {}
+			}
+		var productos: Dictionary = estantes[clave].productos
+		if not productos.has(fila.producto):
+			productos[fila.producto] = {"cajas": [], "pasos": []}
+		productos[fila.producto].cajas.append_array(fila.cajas)
+		productos[fila.producto].pasos.append_array(_huecos_de(fila))
+	var con_dos := 0
+	for clave: String in estantes:
+		var eje: Vector3 = estantes[clave].eje
+		var productos: Array = estantes[clave].productos.values()
+		if productos.size() != 2:
+			continue
+		con_dos += 1
+		productos.sort_custom(
+			func(a: Dictionary, b: Dictionary) -> bool:
+				return (
+					_envolvente(a.cajas).get_center().dot(eje)
+					< _envolvente(b.cajas).get_center().dot(eje)
+				)
+		)
+		var encuentro := (
+			_envolvente(productos[1].cajas).position.dot(eje)
+			- _envolvente(productos[0].cajas).end.dot(eje)
+		)
+		var esperado := maxf(
+			ReglasDelEstante.AIRE_MINIMO_ENTRE_TANDAS,
+			maxf(_promedio(productos[0].pasos), _promedio(productos[1].pasos))
+		)
+		(
+			assert_float(absf(encuentro - esperado))
+			. override_failure_message(
+				"%s: encuentro %f, esperado %f" % [clave, encuentro, esperado]
+			)
+			. is_less_equal(ReglasDelEstante.TOLERANCIA_DE_EXHIBICION)
+		)
+	assert_int(con_dos).is_greater(0)
+
+
+func test_terminator_toma_el_paso_de_zucarachas() -> void:  # AC-STK-106
+	var terminator := Catalogo.de(Producto.Id.TERMINATOR).nombre
+	var zucarachas := Catalogo.de(Producto.Id.ZUCARACHAS).nombre
+	var pasos: Dictionary[String, Array] = {terminator: [], zucarachas: []}
+	for fila in _filas_de_exhibicion(_abrir()):
+		if pasos.has(fila.producto):
+			pasos[fila.producto].append_array(_huecos_de(fila))
+	for nombre: String in pasos:
+		assert_array(pasos[nombre]).override_failure_message(nombre).is_not_empty()
+	assert_float(absf(_promedio(pasos[terminator]) - _promedio(pasos[zucarachas]))).is_less_equal(
+		ReglasDelEstante.TOLERANCIA_DE_EXHIBICION
+	)
+	for hueco: float in pasos[terminator]:
+		assert_float(absf(hueco - _promedio(pasos[zucarachas]))).is_less_equal(
+			ReglasDelEstante.TOLERANCIA_DE_EXHIBICION
+		)
+
+
+func _referencia_de_exhibicion(referencias: Dictionary[String, float], nombre: String) -> float:
+	if nombre == Catalogo.de(Producto.Id.TERMINATOR).nombre:
+		return referencias[Catalogo.de(Producto.Id.ZUCARACHAS).nombre]
+	return referencias[nombre]
+
+
+func _huecos_de(fila: Dictionary) -> Array[float]:
+	var eje := (fila.frente as Vector3).cross(Vector3.UP).abs()
+	var cajas: Array = (fila.cajas as Array).duplicate()
+	cajas.sort_custom(
+		func(a: AABB, b: AABB) -> bool: return a.get_center().dot(eje) < b.get_center().dot(eje)
+	)
+	var huecos: Array[float] = []
+	for i in range(1, cajas.size()):
+		huecos.append((cajas[i] as AABB).position.dot(eje) - (cajas[i - 1] as AABB).end.dot(eje))
+	return huecos
+
+
+func _promedio(valores: Array) -> float:
+	var suma := 0.0
+	for valor: float in valores:
+		suma += valor
+	return suma / maxf(valores.size(), 1.0)
 
 
 func _referencias_de_separacion(local: Node3D) -> Dictionary[String, float]:
@@ -386,7 +474,9 @@ func _filas_de_exhibicion(local: Node3D) -> Array[Dictionary]:
 	var puesto: Node3D = local.get("_reposicion_manual")
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	var muebles: Array[MeshInstance3D] = [
-		local.get_node("Estructura/gondolanueva"), local.get_node("Estructura/gondolanueva2")
+		local.get_node("Estructura/gondolanueva"),
+		local.get_node("Estructura/gondolanueva2"),
+		local.get_node("Estructura/gondolanueva_001")
 	]
 	var filas: Dictionary[String, Dictionary] = {}
 	for producto in Catalogo.de_la_jornada(1):

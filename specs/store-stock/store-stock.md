@@ -1264,7 +1264,7 @@ tandas siguen en mitades opuestas.
 
 DADOS los cuatro niveles del lado de Terminator y Zucarachas CUANDO se mide la separación
 entre unidades vecinas ENTONCES las de Terminator miden lo mismo que las de Zucarachas, con
-la tolerancia de apoyo, y el encuentro entre ambos también. Con la separación de referencia
+la tolerancia de exhibición, y el encuentro entre ambos también. Con la separación de referencia
 propia de Terminator entraría una columna más, y no la hay: agregarla excedería el espacio
 disponible a este paso.
 
