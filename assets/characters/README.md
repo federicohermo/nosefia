@@ -25,6 +25,7 @@ Una segunda aplicación no vuelve a guardar los PNG limpios.
 
 La primera llamada sólo informa. La segunda guarda la limpieza.
 Los originales de Fede y Mía están identificados en [su procedencia](jornada_2_origen.md).
+Los ocho originales de Cami están identificados en [su procedencia](cami_origen.md).
 
 Los textos salen de [Manada — UI](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI?node-id=510-240).
 Las capas de Martín están superpuestas al marco como hermanas en la página: texto inicial

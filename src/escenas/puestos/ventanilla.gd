@@ -29,6 +29,7 @@ const ANIMACIONES := {
 	DialogosDeCompradores.Personaje.TIA: preload("res://assets/characters/tiago/idle.tres"),
 	DialogosDeCompradores.Personaje.FEDE: preload("res://assets/characters/fede/idle.tres"),
 	DialogosDeCompradores.Personaje.MIA: preload("res://assets/characters/mia/idle.tres"),
+	DialogosDeCompradores.Personaje.CAMI: preload("res://assets/characters/cami/idle.tres"),
 }
 
 @export var jugador: JugadorDelLocal

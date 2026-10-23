@@ -57,19 +57,19 @@ func test_los_recursos_conservan_orden_duracion_y_ritmo_idle() -> void:
 			)
 
 
-func test_la_tabla_resuelve_cuatro_identidades_con_recursos_propios() -> void:
+func test_la_tabla_resuelve_cada_personaje_con_un_recurso_propio() -> void:
 	var tabla: Dictionary = _fixture.call("tabla")
-	for fila: Array in [
-		[DialogosDeCompradores.Personaje.TIN, "martin"],
-		[DialogosDeCompradores.Personaje.TIA, "tiago"],
-		[DialogosDeCompradores.Personaje.FEDE, "fede"],
-		[DialogosDeCompradores.Personaje.MIA, "mia"],
-	]:
-		assert_bool(tabla.has(fila[0])).is_true()
-		if tabla.has(fila[0]):
-			assert_str((tabla[fila[0]] as SpriteFrames).resource_path).is_equal(
-				"res://assets/characters/%s/idle.tres" % fila[1]
-			)
+	var recursos: Array[SpriteFrames] = []
+	for personaje: int in DialogosDeCompradores.Personaje.values():
+		if personaje == DialogosDeCompradores.Personaje.NINGUNO:
+			continue
+		assert_bool(tabla.has(personaje)).is_true()
+		if not tabla.has(personaje):
+			continue
+		var recurso := tabla[personaje] as SpriteFrames
+		assert_object(recurso).is_not_null()
+		assert_array(recursos).not_contains_same(recurso)
+		recursos.append(recurso)
 
 
 func test_cada_figura_permanece_visible_al_hablar_y_volver_al_mundo() -> void:

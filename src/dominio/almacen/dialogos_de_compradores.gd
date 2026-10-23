@@ -2,7 +2,7 @@
 class_name DialogosDeCompradores
 extends Resource
 
-enum Personaje { NINGUNO, TIN, TIA, FEDE, MIA }
+enum Personaje { NINGUNO, TIN, TIA, FEDE, MIA, CAMI }
 
 const FALTA := "Gracias. Falta que me des "
 const YA_ENTREGADO := "Gracias, pero ya me habías dado esto."
