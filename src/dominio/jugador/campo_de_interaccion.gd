@@ -22,8 +22,11 @@ class Candidato:
 		visible = es_visible
 
 
-static func elegir(candidatos: Array[Candidato], excluido: int = Foco.SIN_OBJETIVO) -> int:
+static func elegir(
+	candidatos: Array[Candidato], excluido: int = Foco.SIN_OBJETIVO, actual: int = Foco.SIN_OBJETIVO
+) -> int:
 	var elegido: Candidato = null
+	var desvio_elegido := INF
 	for candidato in candidatos:
 		if not candidato.interactuable or not candidato.visible or candidato.id == excluido:
 			continue
@@ -34,12 +37,16 @@ static func elegir(candidatos: Array[Candidato], excluido: int = Foco.SIN_OBJETI
 			if candidato.es_producto
 			else ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA
 		)
-		if candidato.desvio > desvio_maximo:
+		var desvio := candidato.desvio
+		if candidato.id == actual:
+			desvio *= ReglasDelJugador.PERMANENCIA_DEL_FOCO
+		if desvio > desvio_maximo:
 			continue
 		if (
 			elegido == null
-			or candidato.desvio < elegido.desvio
-			or (candidato.desvio == elegido.desvio and candidato.distancia < elegido.distancia)
+			or desvio < desvio_elegido
+			or (desvio == desvio_elegido and candidato.distancia < elegido.distancia)
 		):
 			elegido = candidato
+			desvio_elegido = desvio
 	return Foco.SIN_OBJETIVO if elegido == null else elegido.id

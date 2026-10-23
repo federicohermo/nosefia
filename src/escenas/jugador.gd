@@ -682,7 +682,7 @@ func _leer_la_mira() -> void:
 	var excluido := Foco.SIN_OBJETIVO
 	for nodo in agarre.punto_de_carga.get_children() + examen.punto_de_examen.get_children():
 		excluido = nodo.get_instance_id()
-	var id := CampoDeInteraccion.elegir(candidatos, excluido)
+	var id := CampoDeInteraccion.elegir(candidatos, excluido, _control.objetivo())
 	_enfocado = cuerpos.get(id)
 	var distancia: float = distancias.get(id, 0.0)
 	if not _control.observar(id, distancia, _enfocado != null):
@@ -715,6 +715,7 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 		]:
 			puntos.append(centro + direccion * limites.size / 2)
 	var espacio := get_world_3d().direct_space_state
+	var mejor: CampoDeInteraccion.Candidato = null
 	for punto in puntos:
 		var consulta := PhysicsRayQueryParameters3D.create(
 			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
@@ -743,7 +744,15 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 			true
 		)
 		candidato.es_producto = "casillero" in cuerpo or _datos_de(cuerpo) is UnidadDeProducto
-		return candidato
+		# El rayo de la mira va primero: si pega, no hay desvío menor. Si no, gana el punto más
+		# cercano a la mira y no el primero que pegue, que saltaba de un punto a otro al mover el
+		# cursor y hacía titilar el foco en el borde.
+		if mejor == null or candidato.desvio < mejor.desvio:
+			mejor = candidato
+		if mejor.desvio < 0.001:
+			break
+	if mejor != null:
+		return mejor
 	return CampoDeInteraccion.Candidato.new(cuerpo.get_instance_id(), INF, INF, true, false)
 
 
