@@ -457,7 +457,7 @@ productos y su ticket como BR-CTR-037. Atención DEBE cumplirse sólo con ambas 
 
 CUANDO se abre la jornada 4, por transición o desde una partida retomada, el sistema DEBE activar
 exactamente Tia y Fede, con su figura propia, en estas ventanas. La llegada se incluye y el
-límite se excluye. Tia y Fede cruzan la medianoche.
+límite se excluye. Tia cruza la medianoche.
 
 | Comprador | Llega | Se va | Desde apertura hasta llegada | Desde apertura hasta límite |
 |---|---|---|---|---|

@@ -8,7 +8,6 @@ const CASILLEROS := 8
 const JORNADAS: Array[int] = [TERCERA, CUARTA, QUINTA]
 
 
-## Una noche armada como la apertura: la mercadería completa y los compradores de la jornada.
 class Noche:
 	extends RefCounted
 	var compradores: Array[Comprador]
@@ -32,7 +31,6 @@ func _noche(jornada: int) -> Noche:
 	return noche
 
 
-## Llega el comprador `indice` y se termina su apertura, que es lo que habilita recibir.
 func _llegar(noche: Noche, indice: int) -> Atencion:
 	noche.tarea.avanzar(noche.compradores[indice].horario.x)
 	var atencion := noche.tarea.atencion()
@@ -63,7 +61,6 @@ func _vender(noche: Noche, indice: int) -> Atencion:
 	return atencion
 
 
-## Las unidades de un producto que hay entre la caja y la góndola: lo que una venta resta una vez.
 func _en_el_local(noche: Noche, producto: Producto) -> int:
 	return (
 		noche.inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)
@@ -104,7 +101,6 @@ func test_una_unidad_de_mas_o_un_ticket_inexacto_se_rechazan() -> void:  # AC-CT
 		assert_int(atencion.interactuar(_unidad(noche, primero, false))).is_equal(
 			RecepcionDeCompra.Resultado.RECHAZADA
 		)
-		# El rechazo retiene el clic siguiente: se lo cierra antes de ofrecer otra cosa.
 		atencion.interactuar(null)
 		assert_int(atencion.interactuar(Ticket.new([primero]))).is_equal(
 			RecepcionDeCompra.Resultado.RECHAZADA

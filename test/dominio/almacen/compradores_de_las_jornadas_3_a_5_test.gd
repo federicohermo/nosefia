@@ -6,7 +6,6 @@ const QUINTA := ReglasDeLaPartida.PRIMERA_JORNADA + 4
 const PERSONAJE := DialogosDeCompradores.Personaje
 const SEMILLAS := 40
 
-## `jornada → [[nombre, personaje, llega, se va]]`, cada hora como `Vector2i(hora, minuto)`.
 const AGENDAS := {
 	TERCERA:
 	[

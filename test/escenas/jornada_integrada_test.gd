@@ -14,8 +14,6 @@ const ALTURA_DEL_JUGADOR := 0.112
 const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
-## Esta noche se atiende por el panel genérico: las jornadas 3 a 5 tienen compradores horarios,
-## que tienen sus propios casos.
 const DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + 5
 
 

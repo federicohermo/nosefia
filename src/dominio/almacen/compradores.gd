@@ -98,9 +98,6 @@ static func de_la_jornada(jornada: int, semilla: int = 0) -> Array[Comprador]:
 	return lista
 
 
-## Cada comprador pide `TIPOS_POR_PEDIDO` productos distintos de los que se venden esa jornada, y
-## paga lo que marca la caja. El sorteo nace de la semilla y la jornada, y no de cuántos sorteos
-## hubo antes: reintentar una noche da lo mismo que abrirla.
 static func _al_azar(jornada: int, semilla: int) -> Array[Comprador]:
 	var azar := RandomNumberGenerator.new()
 	azar.seed = hash([semilla, jornada])

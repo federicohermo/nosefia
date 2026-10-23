@@ -6,7 +6,6 @@
 extends GdUnitTestSuite
 
 const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
-## Las jornadas 6 a 8 son las del padrón: las tres anteriores traen su agenda.
 const PRIMERA_DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + 5
 
 

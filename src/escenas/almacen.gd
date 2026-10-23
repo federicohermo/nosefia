@@ -140,8 +140,6 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
 
 
-## Los pedidos al azar salen de la semilla de la partida y no de la sesión: abrir de nuevo la
-## misma noche, o retomarla, trae los mismos productos.
 func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
 	return Compradores.de_la_jornada(jornada, _partida.semilla)
 

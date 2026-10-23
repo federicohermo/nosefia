@@ -9,6 +9,18 @@ const CASOS: Array[Array] = [
 	[Producto.Id.POETICO, Producto.Id.PROGRES],
 	[Producto.Id.POETICO, Producto.Id.PROGRES, Producto.Id.DURONGA],
 ]
+const TEXTOS: Array[String] = [
+	"Buenas noches. Quiero [color=#e4f850]una botella de Poético[/color].",
+	(
+		"Buenas noches. Quiero [color=#e4f850]una botella de Poético[/color]"
+		+ " y [color=#e4f850]un tubo de papitas Progres[/color]."
+	),
+	(
+		"Buenas noches. Quiero [color=#e4f850]una botella de Poético[/color], "
+		+ "[color=#e4f850]un tubo de papitas Progres[/color]"
+		+ " y [color=#e4f850]una caja de preservativos Duronga[/color]."
+	),
+]
 
 
 func _pedido(ids: Array) -> Venta:
@@ -22,7 +34,6 @@ func _inventario() -> Inventario:
 	return Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 
 
-## Un comprador horario sin guion propio, como los entregan las jornadas 3 a 5.
 func _atencion(pedido: Venta, inventario: Inventario) -> Atencion:
 	var comprador := Comprador.new("Fixture", pedido, pedido.total())
 	comprador.personaje = DialogosDeCompradores.Personaje.CAMI
@@ -37,15 +48,13 @@ func _terminar_la_apertura(atencion: Atencion) -> void:
 
 
 func test_la_apertura_nombra_uno_dos_o_tres_productos() -> void:  # AC-CTR-074
-	for ids: Array in CASOS:
+	for indice in CASOS.size():
+		var ids: Array = CASOS[indice]
 		var pedido := _pedido(ids)
 		var atencion := _atencion(pedido, _inventario())
 		atencion.interactuar(null)
 		var texto := atencion.dialogo().entrada_actual()
-		var recordatorio := DialogosDeCompradores.recordatorio(
-			pedido, RecepcionDeCompra.new(pedido)
-		)
-		assert_str(texto).is_equal("Buenas noches. " + recordatorio.entrada_actual())
+		assert_str(texto).is_equal(TEXTOS[indice])
 		assert_int(texto.count(AMARILLO)).is_equal(ids.size())
 		assert_str(texto).not_contains("[b]")
 		assert_str(texto).not_contains(PISTA)
