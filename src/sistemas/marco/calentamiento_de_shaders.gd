@@ -296,8 +296,11 @@ func _process(_delta: float) -> void:
 			# suyo. Contarla por cada combinación dejaba una sola copia por cuadro.
 			if material is String and _firmas.has(objeto) and _superficies_con_material(objeto):
 				continue
-			# Un mismo material compila otra variante en cada combinación de luces y sondas.
-			var clave: Variant = [material, _firmas[objeto]] if _firmas.has(objeto) else material
+			# Un mismo material compila otra variante en cada combinación de luces y sondas, y dos
+			# materiales con la misma huella compilan la misma.
+			var clave: Variant = (
+				[_huella(material), _firmas[objeto]] if _firmas.has(objeto) else material
+			)
 			# Sin luz no hay combinación: unificadas, sólo la clase de objeto cambia el programa.
 			if _firmas.has(objeto) and _unificadas and _sin_luz(material):
 				clave = [_huella(material), objeto.get_class()]
@@ -384,12 +387,20 @@ func _agregar_muestras() -> void:
 	)
 	var por_radio: Dictionary[Vector3, Array] = {}
 	var conocidas: Dictionary[Vector2, Dictionary] = {}
+	var emitidas: Dictionary = {}
 	var caja := _camara_actual()
 	for objeto: GeometryInstance3D in fuentes.values():
 		var radio := ceilf(_caja_en_mundo(objeto).size.length() / 2.0 / PASO_DEL_RADIO)
 		radio = maxf(radio, 1.0) * PASO_DEL_RADIO
 		# La capa decide qué luces y qué sondas lo alcanzan.
 		var clave := Vector3(radio, objeto.layers, alturas[objeto].y)
+		# Las fuentes con otra malla pero el mismo programa, del mismo tamaño y en el mismo lugar,
+		# no suman copias: las de la primera ya compilaron todo lo que compilarían las suyas.
+		var programa: Array = [objeto.get_class(), _formato_de(_malla_de(objeto)), clave]
+		programa.append_array(_materiales_de(objeto).map(_huella))
+		if emitidas.has(programa):
+			continue
+		emitidas[programa] = true
 		if not por_radio.has(clave):
 			# Debajo del techo más bajo, las fuentes del mismo radio y capa comparten las firmas.
 			var mismas := Vector2(radio, objeto.layers)
@@ -413,6 +424,18 @@ func _agregar_muestras() -> void:
 			_total += 1
 			caja = caja.merge(_caja_en_mundo(muestra))
 	_encuadrar(caja)
+
+
+## Cómo guarda sus datos cada superficie de una malla. Con el mismo formato y los mismos materiales,
+## dos mallas distintas dibujan con el mismo programa.
+static func _formato_de(malla: Mesh) -> Array:
+	var formato: Array = [] if malla == null else [malla.get_class()]
+	var armada := malla as ArrayMesh
+	if armada != null:
+		for superficie: int in armada.get_surface_count():
+			formato.append(armada.surface_get_format(superficie))
+			formato.append(armada.surface_get_primitive_type(superficie))
+	return formato
 
 
 static func _huella(material: Variant) -> Variant:
