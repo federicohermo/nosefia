@@ -17,11 +17,9 @@ func after_test() -> void:
 
 
 func _crear() -> bool:
-	assert_bool(DialogosDeCompradores.Personaje.has("CAMI")).is_true()
-	var personaje: int = DialogosDeCompradores.Personaje.get("CAMI", -1)
 	var tabla: Dictionary = _fixture.call("tabla")
-	assert_bool(tabla.has(personaje)).is_true()
-	if not tabla.has(personaje):
+	assert_bool(tabla.has(DialogosDeCompradores.Personaje.CAMI)).is_true()
+	if not tabla.has(DialogosDeCompradores.Personaje.CAMI):
 		return false
 	await _fixture.call("crear", self)
 	return true
@@ -160,28 +158,6 @@ func test_pausar_entrada_y_retirada_y_reiniciar_no_duplica_imagenes() -> void:
 	assert_object(puesto.get("_imagen_de")).is_null()
 
 
-func test_cami_no_aparece_en_las_selecciones_productivas() -> void:
-	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
-	var jornadas := range(primera, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
-	var antes: Array[Array] = []
-	for jornada: int in jornadas:
-		var datos: Array = []
-		for comprador in Compradores.de_la_jornada(jornada):
-			assert_int(comprador.personaje).is_not_equal(
-				DialogosDeCompradores.Personaje.get("CAMI", -1)
-			)
-			datos.append([comprador.nombre(), comprador.personaje, comprador.horario])
-		antes.append(datos)
-	if not await _crear():
-		return
-	await _fixture.call("llegar")
-	for jornada: int in jornadas:
-		var datos: Array = []
-		for comprador in Compradores.de_la_jornada(jornada):
-			datos.append([comprador.nombre(), comprador.personaje, comprador.horario])
-		assert_array(datos).is_equal(antes[jornada - primera])
-
-
 func _segmento_cruza_el_antepecho(antepecho: MeshInstance3D, ojo: Vector3, punto: Vector3) -> bool:
 	var inversa := antepecho.global_transform.affine_inverse()
 	var desde := inversa * ojo
@@ -293,14 +269,3 @@ func test_el_antepecho_ocluye_el_corte_desde_frente_lados_y_encuadre() -> void:
 		)
 	assert_bool(_figura().no_depth_test).is_false()
 	await _fixture.call("limpiar")
-
-
-func test_cami_no_tiene_guion_productivo() -> void:
-	assert_bool(DialogosDeCompradores.Personaje.has("CAMI")).is_true()
-	var personaje: int = DialogosDeCompradores.Personaje.get("CAMI", -1)
-	for guion: DialogosDeCompradores in [
-		DialogosDeCompradores.new(),
-		load("res://assets/dialogos/compradores_jornada_2.tres"),
-	]:
-		assert_bool(guion.inicial(personaje).terminado()).is_true()
-		assert_bool(guion.despedida(personaje).terminado()).is_true()

@@ -5,7 +5,7 @@ class GuionDeCaptura:
 	extends DialogosDeCompradores
 
 	func inicial(personaje: int) -> Dialogo:
-		if personaje == Personaje.get("CAMI", -1):
+		if personaje == Personaje.CAMI:
 			return _crear_dialogo(PackedStringArray(["Atención de prueba: Cami."]))
 		return super.inicial(personaje)
 
@@ -22,9 +22,7 @@ func _compradores(jornada: int) -> Array[Comprador]:
 		)
 		figura.horario = comprador.horario
 		figura.personaje = (
-			DialogosDeCompradores.Personaje.get("CAMI", -1)
-			if cami
-			else DialogosDeCompradores.Personaje.FEDE
+			DialogosDeCompradores.Personaje.CAMI if cami else DialogosDeCompradores.Personaje.FEDE
 		)
 		figura.dialogos = guion
 		resultado.append(figura)
