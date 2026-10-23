@@ -8,7 +8,7 @@ const enFirefox = process.argv.includes('--firefox');
 
 const [url, salida] = process.argv.slice(2);
 const sinParalelo = process.argv.includes('--sin-paralelo');
-const ESPERA = 600_000;
+const ESPERA = Number(process.env.ESPERA_MS || 600000);
 
 function sonda(sinParalelo) {
   const t0 = () => performance.now();
@@ -40,6 +40,11 @@ function sonda(sinParalelo) {
       e.defs = fr.split('\n').filter((l) => l.startsWith('#define')).join(' ');
       e.unif = fr.split('\n').filter((l) => /^uniform .*(sampler|vec|float)/.test(l)).slice(-25).join(' | ');
       e.len = fr.length;
+      const bloque = fr.match(/MaterialUniforms\s*\{[^}]*\}/);
+      e.mat = bloque ? bloque[0].replace(/\s+/g, ' ').slice(0, 600) : '';
+      const vs = this.getAttachedShaders(p).filter((s) => this.getShaderParameter(s, this.SHADER_TYPE) === this.VERTEX_SHADER).map((s) => this.getShaderSource(s))[0] || '';
+      e.vlen = vs.length;
+      e.clave = ['grosor', 'onda', 'fibra', 'gota', 'manija', 'espuma', 'charco', 'mancha', 'cabeza', 'agua', 'liquid', 'carga', 'mojad', 'giro', 'deform'].filter((k) => fr.toLowerCase().includes(k) || vs.toLowerCase().includes(k)).join(',');
     }
     d.links.push(e);
     return r;

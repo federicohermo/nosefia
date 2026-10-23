@@ -6,7 +6,7 @@ extends Node
 const VENTANA_DESPUES_DEL_CONTROL := 4.0
 const CAJAS_A_PROBAR := 3
 const PASO_DE_LA_CAMINATA := 0.25
-const RADIOS := [1.2, 1.5, 1.8, 2.1]
+const RADIOS := [1.2, 0.9, 1.5, 1.8, 2.1, 2.5]
 
 var _web := OS.has_feature("web")
 var _estado := "menu"
@@ -14,6 +14,7 @@ var _desde := 0
 var _grabando := false
 var _caja_grabada: Node3D = null
 var _con_repro := true
+var _hasta := 2
 
 
 func _ready() -> void:
@@ -22,6 +23,9 @@ func _ready() -> void:
 		_con_repro = (
 			str(JavaScriptBridge.eval("new URLSearchParams(location.search).get('repro') || '1'"))
 			!= "0"
+		)
+		_hasta = int(
+			str(JavaScriptBridge.eval("new URLSearchParams(location.search).get('hasta') || '2'"))
 		)
 
 
@@ -90,6 +94,9 @@ func _process(_delta: float) -> void:
 		"j2_instrucciones":
 			if _saltear_instrucciones(escena):
 				_estado = "j2_esperando_control"
+		"j3_instrucciones":
+			if _saltear_instrucciones(escena):
+				_estado = "j3_esperando_control"
 
 
 func _saltear_instrucciones(escena: Node) -> bool:
@@ -109,14 +116,25 @@ func _saltear_instrucciones(escena: Node) -> bool:
 func control_devuelto(escena: Node, jornada: int) -> void:
 	if jornada == 1:
 		_terminar_j1.call_deferred(escena)
-	else:
+	elif jornada == 2 and _hasta >= 3:
+		_terminar_j2.call_deferred(escena)
+	elif jornada == 2:
 		_repro_j2.call_deferred(escena)
+	else:
+		_limpiar_j3.call_deferred(escena)
 
 
 func _terminar_j1(escena: Node) -> void:
 	await get_tree().create_timer(2.0).timeout
 	_estado = "j2_instrucciones"
 	marcar("fin_j1_forzado")
+	escena.get("_reloj").call("avanzar", 3600.0)
+
+
+func _terminar_j2(escena: Node) -> void:
+	await get_tree().create_timer(VENTANA_DESPUES_DEL_CONTROL).timeout
+	_estado = "j3_instrucciones"
+	marcar("fin_j2_forzado")
 	escena.get("_reloj").call("avanzar", 3600.0)
 
 
@@ -155,14 +173,16 @@ func _piso(jugador: Node3D, p: Vector3, excluidos: Array[RID]) -> Variant:
 	return golpe["position"]
 
 
-func _lugar_para_mirar(escena: Node3D, jugador: CharacterBody3D, caja: Node3D) -> Variant:
+func _lugar_para_mirar(
+	escena: Node3D, jugador: CharacterBody3D, caja: Node3D, subir: float = 0.2
+) -> Variant:
 	var puerta: Node3D = escena.get_node("Estructura/puerta")
 	var base := puerta.global_position - caja.global_position
 	base.y = 0.0
 	base = base.normalized()
 	var espacio := jugador.get_world_3d().direct_space_state
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
-	var centro := caja.global_position + Vector3.UP * 0.2
+	var centro := caja.global_position + Vector3.UP * subir
 	var excluidos: Array[RID] = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
 	for radio: float in RADIOS:
 		for k: int in 16:
@@ -180,7 +200,9 @@ func _lugar_para_mirar(escena: Node3D, jugador: CharacterBody3D, caja: Node3D) -
 			if not espacio.intersect_shape(forma, 1).is_empty():
 				continue
 			var ojo := (suelo as Vector3) + Vector3.UP * 1.7
-			var consulta := PhysicsRayQueryParameters3D.create(ojo, centro, 0xFFFFFFFF)
+			var consulta := PhysicsRayQueryParameters3D.create(
+					ojo, ojo + (centro - ojo) * 1.3, 0xFFFFFFFF
+				)
 			consulta.exclude = [jugador.get_rid()]
 			var golpe := espacio.intersect_ray(consulta)
 			if not golpe.is_empty() and golpe["collider"] == caja:
@@ -298,6 +320,123 @@ func _repro_j2(escena: Node3D) -> void:
 		if await _probar_caja(escena, jugador, caja):
 			hechas += 1
 	marcar("repro_fin", hechas)
+	await get_tree().create_timer(1.0).timeout
+	_volcar()
+
+
+func _mirar(escena: Node3D, jugador: CharacterBody3D, objetivo: Node3D, subir: float) -> bool:
+	var hallado: Variant = null
+	for alto: float in [subir, 0.3, 0.6, 0.9, 1.2, 0.05, 1.5]:
+		hallado = _lugar_para_mirar(escena, jugador, objetivo, alto)
+		if hallado != null:
+			subir = alto
+			break
+	if hallado == null:
+		marcar("sin_lugar", "%s %s" % [objetivo.name, str(objetivo.global_position)])
+		return false
+	var spot: Vector3 = hallado
+	jugador.call("ubicar", Transform3D(Basis.IDENTITY, spot))
+	var centro := objetivo.global_position + Vector3.UP * subir
+	for _i: int in 12:
+		_apuntar(jugador, centro)
+		await _cuadros(1)
+	var enfocado: Variant = jugador.call("enfocado")
+	marcar("enfocado", enfocado.name if enfocado is Node else "nada")
+	return enfocado == objetivo
+
+
+func _util(escena: Node3D, identidad: StringName) -> Node3D:
+	for util: Node3D in escena.get("_utiles_de_limpieza"):
+		if util.get("datos").id == identidad:
+			return util
+	return null
+
+
+func _agarrar_util(escena: Node3D, jugador: CharacterBody3D, identidad: StringName) -> bool:
+	var util := _util(escena, identidad)
+	if util == null:
+		marcar("sin_util", identidad)
+		return false
+	var malla := util.get("malla") as MeshInstance3D
+	var centro := (malla.global_transform * malla.get_aabb()).get_center()
+	if not await _mirar(escena, jugador, util, centro.y - util.global_position.y):
+		return false
+	_pulsar(&"agarrar")
+	await _cuadros(30)
+	var sostenida: Variant = escena.get("_agarre").call("cuerpo_sostenido")
+	marcar("util_en_la_mano", "%s %s" % [identidad, sostenida == util])
+	return sostenida == util
+
+
+func _usar_sobre(escena: Node3D, jugador: CharacterBody3D, objetivo: Node3D, subir: float) -> void:
+	if not await _mirar(escena, jugador, objetivo, subir):
+		return
+	_pulsar(&"agarrar")
+	await _cuadros(60)
+	marcar("uso_dado", objetivo.name)
+
+
+## Lo suelta en el centro del local, en un lugar para cada uno: dos cuerpos soltados encima se
+## expulsan entre sí.
+func _soltar(escena: Node3D, jugador: CharacterBody3D, lugar: int) -> void:
+	var arranque: Transform3D = escena.get("_arranque")
+	var p := arranque.origin + Vector3(-2.0 + 1.0 * lugar, 0.0, 1.5)
+	var suelo: Variant = _piso(jugador, p, [jugador.get_rid()])
+	if suelo != null:
+		p = suelo
+	jugador.call("ubicar", Transform3D(Basis.IDENTITY, p))
+	_apuntar(jugador, p + Vector3(0.0, 1.0, 3.0))
+	await _cuadros(5)
+	escena.get("_agarre").call("soltar", true)
+	await _cuadros(90)
+
+
+func _limpiar_j3(escena: Node3D) -> void:
+	await get_tree().create_timer(VENTANA_DESPUES_DEL_CONTROL).timeout
+	if not _con_repro:
+		marcar("sonda_sin_repro")
+		_volcar()
+		return
+	marcar("limpieza_inicio")
+	var jugador: CharacterBody3D = escena.get("_jugador")
+	var limpiador: Object = escena.get("_limpiador")
+	var piso: Object = limpiador.call("piso")
+	var mancha: Node3D = null
+	for candidata: Node3D in escena.get("_limpieza").call("manchas"):
+		if (
+			PisoDelLocal.superficie_de(candidata.call("lugar_de_la_mancha"))
+			== PisoDelLocal.Superficie.PISO
+		):
+			mancha = candidata
+			break
+	marcar("mancha", mancha.name if mancha != null else "ninguna")
+	var jabon: StringName = &"jabon_azul"
+	if mancha != null:
+		var estado: Object = piso.call("mancha_de", mancha.call("lugar_de_la_mancha"))
+		var agua: int = ReglasDeLaLimpieza.AGUA_QUE_BORRA[estado.call("tipo")]
+		for id: StringName in ReglasDeLaLimpieza.JABONES:
+			if ReglasDeLaLimpieza.JABONES[id] == agua:
+				jabon = id
+	var lugar := 3
+	for id: StringName in ReglasDeLaLimpieza.JABONES:
+		if id != jabon and await _agarrar_util(escena, jugador, id):
+			await _soltar(escena, jugador, lugar)
+			lugar += 1
+	var lavatorio: Node3D = escena.get_node("Estructura/vanitory/StaticBody3D")
+	var balde := _util(escena, &"balde")
+	if await _agarrar_util(escena, jugador, &"balde"):
+		await _usar_sobre(escena, jugador, lavatorio, 0.0)
+		await _soltar(escena, jugador, 0)
+	if await _agarrar_util(escena, jugador, jabon):
+		await _usar_sobre(escena, jugador, balde, 0.1)
+		await _soltar(escena, jugador, 1)
+	if await _agarrar_util(escena, jugador, &"mopa"):
+		await _usar_sobre(escena, jugador, balde, 0.1)
+		if mancha != null:
+			await _usar_sobre(escena, jugador, mancha, 0.0)
+			await _usar_sobre(escena, jugador, mancha, 0.0)
+		await _soltar(escena, jugador, 2)
+	marcar("limpieza_fin")
 	await get_tree().create_timer(1.0).timeout
 	_volcar()
 
