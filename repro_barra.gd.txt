@@ -1,0 +1,33 @@
+extends Node
+
+const Avance := preload("res://src/repro_avance.gd")
+
+func _enter_tree() -> void:
+	Guardado.ruta_por_defecto = "user://repro_barra.guardado"
+	Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 2}))
+
+func _ready() -> void:
+	await get_tree().process_frame
+	var menu: Node = get_tree().current_scene
+	menu.call("entrar_al_almacen")
+	while get_tree().current_scene == menu:
+		await get_tree().process_frame
+	var almacen: Node = get_tree().current_scene
+	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
+	reloj.set_process(false)
+	Avance.leer_las_instrucciones(almacen)
+	await get_tree().create_timer(2.0).timeout
+	JavaScriptBridge.eval("window.__listoJ2 = true")
+	print("[repro] J2 lista")
+	while not JavaScriptBridge.eval("window.__cerrarJ2 === true"):
+		await get_tree().process_frame
+	var partida: Partida = almacen.get("_partida")
+	print("[repro] cerrar J", partida.jornada())
+	for tarea: Tarea in partida.obligatorias():
+		tarea.completar()
+	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
+	ciclo.jornada_abierta.connect(func(jornada: int) -> void:
+		print("[repro] abierta J", jornada)
+		JavaScriptBridge.eval("window.__abierta = %d" % jornada)
+	)
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / float(reloj.get("_ritmo")))
