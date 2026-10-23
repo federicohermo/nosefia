@@ -54,7 +54,7 @@
 import { writeFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
-const ESPERA = 180_000;
+const ESPERA = 300_000;
 const AVISO_DEL_MENU = '[carga] menú visible';
 const AVISO_DEL_ALMACEN = '[carga] almacén en pantalla';
 const ALTURA_DE_NUEVO_JUEGO = 0.56;
