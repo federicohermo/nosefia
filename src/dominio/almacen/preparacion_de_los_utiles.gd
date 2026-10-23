@@ -1,10 +1,11 @@
 ## En qué carga se preparan los útiles de limpieza, antes de la primera noche que los pide.
 ##
 ## Cada útil compila decenas de variantes, una por cada combinación de luces que cruza en la mano.
-## El driver guarda lo que ya compiló: preparadas antes de la noche que limpia, esa noche entra sin
-## espera extra. Hasta entonces el cuartito está trabado y nada sale de ahí, así que ni la carga de
-## «Nuevo juego» ni las transiciones previas las llevan: la web le pone un tope de programas a
-## la primera, y a las otras les suma una espera que esas noches no cobran.
+## El driver guarda lo que ya compiló: preparadas antes de la noche que limpia, esa noche reutiliza
+## esas variantes. No cubre todas las que pide la mano. Hasta entonces el cuartito está trabado y
+## nada sale de ahí, así que ni la carga de «Nuevo juego» ni las transiciones previas las llevan:
+## la web le pone un tope de programas a la primera, y a las otras les suma una espera que esas
+## noches no cobran.
 ## Quien juega de corrido no vuelve a cargar: los prepara la transición hacia esa noche.
 class_name PreparacionDeLosUtiles
 extends RefCounted
