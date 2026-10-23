@@ -107,8 +107,14 @@ static func _vender(noche: Noche) -> void:
 	var pedido := atencion.comprador().pedido()
 	for producto in pedido.productos():
 		for _unidad in pedido.unidades_de(producto):
-			var casillero: int = noche.estante.casilleros_ocupados(producto)[0]
-			atencion.interactuar(noche.estante.agarrar(producto, casillero))
+			var ocupados := noche.estante.casilleros_ocupados(producto)
+			atencion.interactuar(
+				(
+					noche.estante.agarrar(producto, ocupados[0])
+					if not ocupados.is_empty()
+					else noche.estante.retirar(producto)
+				)
+			)
 			renglones.append(producto)
 	atencion.interactuar(Ticket.new(renglones))
 
