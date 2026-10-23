@@ -1,0 +1,116 @@
+diff --git a/project.godot b/project.godot
+index a9c7605e..78439b63 100644
+--- a/project.godot
++++ b/project.godot
+@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
+ 
+ [autoload]
+ 
++MedicionCarga="*res://medicion_carga.gd"
+ MCPScreenshot="*res://addons/godot_mcp/mcp_screenshot_service.gd"
+ MCPInputService="*res://addons/godot_mcp/mcp_input_service.gd"
+ MCPGameInspector="*res://addons/godot_mcp/mcp_game_inspector_service.gd"
+diff --git a/src/escenas/almacen.gd b/src/escenas/almacen.gd
+index 79f015d4..12c08d3a 100644
+--- a/src/escenas/almacen.gd
++++ b/src/escenas/almacen.gd
+@@ -538,6 +538,7 @@ func _salir_por_la_entrada() -> void:
+ ## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
+ ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
+ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
++	MedicionCarga.marcar("cierre")
+ 	_jornada_del_celular = jornada
+ 	_gestos.descartar()
+ 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
+@@ -562,6 +563,7 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+ func _seguir_sin_celular(devolucion: DevolucionDelJefe) -> void:
+ 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
+ 	await persiana.persiana_bajada
++	MedicionCarga.marcar("persiana_bajada")
+ 	if _partida.terminada():
+ 		_mostrar_las_instrucciones(devolucion.mensajes_fechados())
+ 		return
+@@ -620,13 +622,17 @@ func _preparar_lo_postergado() -> void:
+ 		add_child(capa)
+ 		pantalla.mostrar()
+ 		pantalla.pintar(0.0)
++		MedicionCarga.marcar("cargando_visible", pendientes.size())
+ 		await get_tree().process_frame
+ 		await get_tree().process_frame
++		MedicionCarga.marcar("calentar_inicio")
+ 		var calentamiento := CalentamientoDeShaders.new()
+ 		add_child(calentamiento)
+ 		calentamiento.avanzo.connect(pantalla.pintar)
+ 		calentamiento.calentar_copias(self, pendientes)
++		MedicionCarga.marcar("calentar_sync_fin", calentamiento.objetos_a_preparar())
+ 		await calentamiento.terminado
++		MedicionCarga.marcar("calentar_fin")
+ 		pantalla.ocultar()
+ 		capa.queue_free()
+ 		calentamiento.queue_free()
+@@ -636,7 +642,9 @@ func _preparar_lo_postergado() -> void:
+ 
+ ## La jornada abre detrás de la entrada; el control vuelve cuando la persiana termina de subir.
+ func _seguir() -> void:
++	MedicionCarga.marcar("seguir")
+ 	_ciclo.abrir_la_jornada()
++	MedicionCarga.marcar("jornada_abierta")
+ 	_entrar_a_la_jornada()
+ 
+ 
+@@ -739,9 +747,11 @@ func _mostrar_las_instrucciones(mensajes: Array[Mensaje]) -> void:
+ 	_pantalla_del_celular.mostrar_recordatorio(false)
+ 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
+ 	_instrucciones.mostrar(mensajes)
++	MedicionCarga.marcar("instrucciones_mostradas")
+ 
+ 
+ func anunciar_la_noche() -> void:
++	MedicionCarga.marcar("anunciar")
+ 	_pantalla_del_celular.mostrar_recordatorio(true)
+ 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
+ 	_reloj.retener()
+@@ -753,6 +763,8 @@ func anunciar_la_noche() -> void:
+ func _al_subir_la_persiana(_jornada: int) -> void:
+ 	_reloj.soltar()
+ 	_jugador.reanudar()
++	MedicionCarga.marcar("control", _jornada)
++	MedicionCarga.control_devuelto(self, _jornada)
+ 
+ 
+ ## Deja la partida y carga el menú de inicio. No abre ninguna jornada.
+diff --git a/src/sistemas/marco/calentamiento_de_shaders.gd b/src/sistemas/marco/calentamiento_de_shaders.gd
+index e772ae95..9267b773 100644
+--- a/src/sistemas/marco/calentamiento_de_shaders.gd
++++ b/src/sistemas/marco/calentamiento_de_shaders.gd
+@@ -276,12 +276,14 @@ func _process(_delta: float) -> void:
+ 				return
+ 			if _fin_del_destape < 0:
+ 				_fin_del_destape = ahora.call()
++				MedicionCarga.marcar("destape_fin", cola)
+ 				_cola_al_destapar = cola
+ 			if cola > 0:
+ 				avanzo.emit(progreso())
+ 				return
+ 			_terminar()
+ 			return
++		MedicionCarga.marcar("muestras_inicio", _por_muestrear.size())
+ 		_pendientes.assign(_por_muestrear)
+ 		_por_muestrear.clear()
+ 		_vistos.clear()
+@@ -342,6 +344,7 @@ func _preparar_contornos() -> void:
+ 		add_child(marco)
+ 		marco.enfocar(sprite)
+ 		_marcos.append(marco)
++	MedicionCarga.marcar("contornos_y_marcos", _marcos.size())
+ 	_agregar_muestras()
+ 	_contornos_listos = true
+ 
+@@ -382,6 +385,7 @@ func _agregar_muestras() -> void:
+ 	var puntos := _puntos_a_recorrer(
+ 		fuentes.values(), Vector2(suelo, techo), volumen if con_volumen else AABB()
+ 	)
++	MedicionCarga.marcar("puntos_a_recorrer", [fuentes.size(), puntos.size()])
+ 	var por_radio: Dictionary[Vector3, Array] = {}
+ 	var conocidas: Dictionary[Vector2, Dictionary] = {}
+ 	var caja := _camara_actual()
