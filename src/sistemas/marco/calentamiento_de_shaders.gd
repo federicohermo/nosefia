@@ -394,13 +394,7 @@ func _agregar_muestras() -> void:
 		radio = maxf(radio, 1.0) * PASO_DEL_RADIO
 		# La capa decide qué luces y qué sondas lo alcanzan.
 		var clave := Vector3(radio, objeto.layers, alturas[objeto].y)
-		# Las fuentes con otra malla pero el mismo programa, del mismo tamaño y en el mismo lugar,
-		# no suman copias: las de la primera ya compilaron todo lo que compilarían las suyas.
-		var programa: Array = [objeto.get_class(), _formato_de(_malla_de(objeto)), clave]
-		programa.append_array(_materiales_de(objeto).map(_huella))
-		if emitidas.has(programa):
-			continue
-		emitidas[programa] = true
+		var programa := _programa_de(objeto)
 		if not por_radio.has(clave):
 			# Debajo del techo más bajo, las fuentes del mismo radio y capa comparten las firmas.
 			var mismas := Vector2(radio, objeto.layers)
@@ -416,6 +410,11 @@ func _agregar_muestras() -> void:
 				conocidas[mismas]
 			)
 		for lugar: Vector4 in por_radio[clave]:
+			# Una copia por programa y combinación de luces alcanza, sea de la fuente que sea.
+			var combinacion: Array = [programa, int(lugar.w)]
+			if emitidas.has(combinacion):
+				continue
+			emitidas[combinacion] = true
 			var muestra := _copiar_muestra(objeto, Vector3(lugar.x, lugar.y, lugar.z), radio)
 			if muestra == null:
 				break
@@ -424,6 +423,19 @@ func _agregar_muestras() -> void:
 			_total += 1
 			caja = caja.merge(_caja_en_mundo(muestra))
 	_encuadrar(caja)
+
+
+## Lo que decide con qué programa se dibuja una fuente, sin tener en cuenta dónde: con las mismas
+## luces, dos fuentes con el mismo programa compilan lo mismo aunque cambien de tamaño o de malla.
+func _programa_de(objeto: GeometryInstance3D) -> Array:
+	var programa: Array = [
+		objeto.get_class(), objeto.gi_mode, objeto.cast_shadow, _formato_de(_malla_de(objeto))
+	]
+	var lote := objeto as MultiMeshInstance3D
+	if lote != null and lote.multimesh != null:
+		programa.append([lote.multimesh.use_colors, lote.multimesh.use_custom_data])
+	programa.append_array(_materiales_de(objeto).map(_huella))
+	return programa
 
 
 ## Cómo guarda sus datos cada superficie de una malla. Con el mismo formato y los mismos materiales,
