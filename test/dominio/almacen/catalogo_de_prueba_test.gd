@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const SEMILLAS := 20
+
 const PRESENTES: Array[Producto.Id] = [
 	Producto.Id.ACTRONCITO,
 	Producto.Id.ZUCARACHAS,
@@ -36,11 +38,12 @@ func test_desde_la_cuarta_jornada_se_recupera_el_catalogo_completo() -> void:  #
 
 func test_los_pedidos_de_cada_jornada_de_prueba_solo_incluyen_presentes() -> void:  # AC-STK-099
 	for jornada: int in [1, 2, 3]:
-		var compradores := Compradores.de_la_jornada(jornada)
-		assert_array(compradores).is_not_empty()
-		for comprador in compradores:
-			for producto in comprador.pedido().productos():
-				assert_array(PRESENTES).contains([producto.id])
+		for semilla in range(1, SEMILLAS + 1):
+			var compradores := Compradores.de_la_jornada(jornada, semilla)
+			assert_array(compradores).is_not_empty()
+			for comprador in compradores:
+				for producto in comprador.pedido().productos():
+					assert_array(PRESENTES).contains([producto.id])
 
 
 func _ids(productos: Array[Producto]) -> Array[Producto.Id]:
