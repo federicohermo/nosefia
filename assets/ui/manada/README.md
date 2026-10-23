@@ -76,10 +76,11 @@ La ventanilla muestra el marco 3D real del local. Al abrir, la cámara encuadra 
 visibles del dintel y del antepecho a sus profundidades reales; al salir recupera su reposo.
 El velo, los textos y los controles siguen delante de esa vista. No carga una imagen del local.
 
-Las siete fotos del jefe se generan con `assets/models/generar_fotos_del_jefe.gd` desde
+Las nueve fotos del jefe se generan con `assets/models/generar_fotos_del_jefe.gd` desde
 `almacen.tscn` en la jornada 1. El generador valida el rayo central de cada encuadre antes de
-guardar; usa una estantería preparada sólo para Intro 9 y restaura las 31 poses originales
-antes de Intro 13. No cambia el reparto jugable. Los PNG se conservan tal como los escribe Godot.
+guardar. Intro 13 prepara las cajas en el piso de la jornada 4 y después restaura las 31 poses
+originales de la jornada 1. No cambia el reparto jugable. Los PNG se conservan tal como los escribe Godot.
+En la ventanilla, el rayo central atraviesa su hueco libre, sin activar el collider de cobro.
 
 Desde PowerShell, con una pantalla disponible:
 
@@ -90,12 +91,14 @@ Desde PowerShell, con una pantalla disponible:
 
 | Foto | Tema |
 |---|---|
+| `intro-reloj.png` | Reloj de mesa con la hora de apertura, primera foto de Intro 2 |
 | `intro-04.png` | Nota de tareas del corcho |
 | `intro-06.png` | Ventanilla |
 | `intro-07.png` | Lector y caja registradora |
 | `intro-08.png` | Computadora |
+| `intro-gondolas.png` | Góndolas llenas de la primera jornada, primera foto de Intro 7 |
 | `intro-09.png` | Estantería del depósito con cajas |
-| `intro-11.png` | Útiles de limpieza y las dos notas del baño |
+| `intro-11.png` | Útiles de limpieza y las dos notas del cuartito |
 | `intro-13.png` | Depósito con las cajas de la primera noche en el piso |
 
 Las instrucciones iniciales siguen los doce frames de Figma desde `511:302` hasta `535:1361`.
@@ -107,11 +110,16 @@ contienen transiciones ni keyframes configurados; se conserva la subida autoriza
 
 Los recursos originales de Figma en `instrucciones/`, descargados sin editar el 2026-10-10, son:
 `bocadillo.svg` (`559:1353`), `separador.svg` (`561:361`), `caja.png` (`526:1066`) y `ticket.png`
-(`556:1287`). Caja y ticket son las ilustraciones auxiliares de la pantalla 5. Las siete fotos
+(`556:1287`). Caja y ticket son las ilustraciones auxiliares de la pantalla 5. Las nueve fotos
 continúan siendo capturas del juego, como pide Notion, en sus espacios correspondientes; se
 conserva la foto de Intro 13 aunque el frame de Figma no la incluya. Las fotos cubren su marco
 sin franjas negras y conservan su proporción; el encuadre de cada captura debe mantener visible
 el objeto que ilustra. Por aclaración del usuario, la última pantalla omite «SI A JUGAR!!».
+
+Intro 2 muestra reloj y corcho, en ese orden. Intro 7 muestra góndolas y estantería con cajas.
+Cada par va después del texto, lado a lado, con igual alto y leyendas debajo, dentro de 1007 px.
+La disposición es provisoria: Figma no tiene un frame para dos fotos.
+Las dos capturas nuevas miden 960 × 540 y conservan el reparto jugable de la primera jornada.
 
 El fondo usa directamente `assets/models/SEPT_JUEGOS_PROTOTIPO_textura portón.png`, sin editar
 esa textura ni el modelo. El usuario aprobó el preview «Aplicar este fondo» el 2026-10-10:

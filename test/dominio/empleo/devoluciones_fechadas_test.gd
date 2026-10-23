@@ -11,7 +11,7 @@ func _cerrar_impecable(partida: Partida) -> void:
 
 
 func test_checkpoint_fechado_con_orden() -> void:  # AC-EMP-070, AC-SAV-027
-	var partida := Partida.desde({"jornada": 2})
+	var partida := Partida.desde({"jornada": 5})
 	assert_array(partida.mensajes_del_jefe()).is_empty()
 	partida.abrir_la_jornada()
 	for tarea: Tarea in partida.obligatorias():
@@ -26,12 +26,12 @@ func test_checkpoint_fechado_con_orden() -> void:  # AC-EMP-070, AC-SAV-027
 		return
 	for indice: int in mensajes.size():
 		var registro: Dictionary = mensajes[indice]
-		assert_int(registro.jornada).is_equal(2)
+		assert_int(registro.jornada).is_equal(5)
 		assert_int(registro.orden).is_equal(indice)
 		assert_str(registro.texto).is_equal(partida.mensajes_del_jefe()[indice])
 		assert_str(registro.identidad).is_not_empty()
 	assert_str(mensajes[0].identidad).is_not_equal(mensajes[1].identidad)
-	assert_int(partida.jornada()).is_equal(3)
+	assert_int(partida.jornada()).is_equal(6)
 	var retomada := Partida.desde(datos)
 	assert_array(PoliticaDeGuardado.datos(retomada).devoluciones).is_equal(mensajes)
 	partida.cerrar_la_jornada(0)
@@ -53,7 +53,7 @@ func test_legado_conserva_repetidos_sin_fabricar_fecha() -> void:  # AC-SAV-028
 
 
 func test_dos_cierres_guardan_bloques_en_su_orden() -> void:  # AC-EMP-066, AC-EMP-070
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
 	_cerrar_impecable(partida)
 	_cerrar_impecable(partida)
 	var mensajes: Array = PoliticaDeGuardado.datos(partida).devoluciones
@@ -61,10 +61,11 @@ func test_dos_cierres_guardan_bloques_en_su_orden() -> void:  # AC-EMP-066, AC-E
 	assert_bool(mensajes[0] is Dictionary).is_true()
 	if not mensajes[0] is Dictionary:
 		return
-	assert_int(mensajes[0].jornada).is_equal(1)
-	assert_int(mensajes[1].jornada).is_equal(1)
-	assert_int(mensajes[2].jornada).is_equal(2)
-	assert_int(mensajes[3].jornada).is_equal(2)
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	assert_int(mensajes[0].jornada).is_equal(primera)
+	assert_int(mensajes[1].jornada).is_equal(primera)
+	assert_int(mensajes[2].jornada).is_equal(primera + 1)
+	assert_int(mensajes[3].jornada).is_equal(primera + 1)
 	assert_str(mensajes[0].texto).is_equal(mensajes[2].texto)
 	assert_str(mensajes[0].identidad).is_not_equal(mensajes[2].identidad)
 	(
@@ -76,7 +77,7 @@ func test_dos_cierres_guardan_bloques_en_su_orden() -> void:  # AC-EMP-066, AC-E
 
 
 func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC-SAV-027
-	var partida := Partida.nueva()
+	var partida := Partida.desde({"jornada": 4})
 	_cerrar_impecable(partida)
 	_cerrar_impecable(partida)
 	var datos := PoliticaDeGuardado.datos(partida)
@@ -85,22 +86,28 @@ func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC
 		return
 	var retomada := Partida.desde(datos)
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(3)
+	bandeja.abrir_jornada(6)
 	var devoluciones: Array = retomada.call("devoluciones_del_jefe")
 	for mensaje: Mensaje in devoluciones:
 		assert_bool(bandeja.recibir(JEFE, mensaje)).is_true()
 	var historial := bandeja.mensajes_de(JEFE)
-	assert_int(historial.size()).is_equal(25)
-	assert_str(historial[19].texto).is_equal("Buen día!")
-	assert_str(historial[19].get("identidad")).is_not_equal(historial[23].get("identidad"))
-	assert_str(historial[21].get("identidad")).is_equal("J2_CONTENEDOR_FOTO")
-	assert_str(historial[22].get("identidad")).is_equal("J2_CONTENEDOR_TEXTO")
-	assert_str(historial[23].texto).is_equal("Buen día!")
-	assert_int(historial[23].jornada).is_equal(2)
+	var guion := Conversacion.de(JEFE).mensajes
+	var previos := guion.filter(
+		func(mensaje: Mensaje) -> bool: return mensaje.jornada < 5 and mensaje.condicion.is_empty()
+	)
+	var apertura := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)
+	var cuarta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 4)
+	var quinta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)
+	assert_array(cuarta).is_not_empty()
+	assert_array(quinta).is_not_empty()
+	var esperado: Array = previos + cuarta + apertura + quinta
+	assert_array(historial).is_equal(esperado)
+	assert_str(cuarta[0].identidad).is_not_equal(quinta[0].identidad)
+	var cantidad := guion.size()
 	assert_int(bandeja.conversaciones().size()).is_equal(2)
 	if bandeja.conversaciones().size() != 2:
 		return
 	assert_int(bandeja.no_leidos(bandeja.conversaciones()[1].interlocutor)).is_equal(15)
 	historial.clear()
-	assert_int(bandeja.mensajes_de(JEFE).size()).is_equal(25)
-	assert_int(Conversacion.de(JEFE).mensajes.size()).is_equal(21)
+	assert_int(bandeja.mensajes_de(JEFE).size()).is_equal(esperado.size())
+	assert_int(Conversacion.de(JEFE).mensajes.size()).is_equal(cantidad)

@@ -6,6 +6,8 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const MENU := preload("res://src/escenas/menu_de_inicio.tscn")
 const GUION := preload("res://src/dominio/investigacion/conversacion_con_el_jefe.tres")
 const Jugador := preload("res://src/escenas/jugador.gd")
+const PRIMERA := ReglasDeLaPartida.PRIMERA_JORNADA
+const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 
 var _almacen: Node3D
 var _ruta_anterior: String
@@ -75,6 +77,84 @@ func _preparar_nueva() -> void:
 	_almacen.call("empezar_partida_nueva")
 
 
+func _pasos(jornada: int) -> Array[InstruccionesDelJefe.Paso]:
+	var partida: Partida = _almacen.get("_partida")
+	var condiciones := CondicionesDelJefe.elegidas(partida.noches_de_prueba)
+	return InstruccionesDelJefe.pasos_de(
+		InstruccionesDelJefe.de_la_jornada(GUION.mensajes, jornada, condiciones)
+	)
+
+
+## Avanza hasta el «OK» y lo elige.
+func _leer_todo(jornada: int = PRIMERA) -> void:
+	for _paso in _pasos(jornada).size():
+		_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
+
+
+## Sin medios: cerrar una noche vacía no despide.
+func _guardar(jornada: int, medios: int = 0, noches: Dictionary = {}) -> void:
+	var datos := {"jornada": jornada, "medios": medios, "noches_de_prueba": noches}
+	assert_bool(Guardado.new().escribir(PartidaSerializada.sanear(datos))).is_true()
+
+
+func _cerrar_y_seguir() -> void:
+	_persiana().terminar()
+	_reloj().avanzar(_restante())
+	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
+	assert_bool(pantalla.visible).is_false()
+	AvanceDeDevolucion.terminar_la_bajada(_persiana())
+	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(_almacen)).is_true()
+	assert_bool(pantalla.visible).is_false()
+
+
+## Las de la jornada desde su primera pantalla, sobre la persiana baja y sin cobrar la lectura.
+func _comprobar_instrucciones_de(jornada: int) -> void:
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(jornada)
+	assert_bool(_instrucciones().visible).is_true()
+	assert_bool(_persiana().visible).is_true()
+	assert_bool((_persiana().get("_placa") as Label).visible).is_false()
+	assert_bool(_jugador().suspendido()).is_true()
+	var pasos: Array = _instrucciones().get("_pasos")
+	assert_str((pasos[0] as InstruccionesDelJefe.Paso).textos[0].identidad).is_equal(
+		_pasos(jornada)[0].textos[0].identidad
+	)
+	(
+		assert_int((_instrucciones().get("_instrucciones") as InstruccionesDelJefe).paso_actual())
+		. is_equal(1)
+	)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal(
+		"1/%d" % _pasos(jornada).size()
+	)
+	var restante := _restante()
+	_reloj().set("_ultimo_cuadro_usec", Time.get_ticks_usec() - 120000000)
+	_reloj().call("_process", 0.0)
+	assert_float(_restante()).is_equal(restante)
+
+
+func _comprobar_mensaje_1_de(jornada: int) -> void:
+	var pasos: Array = _instrucciones().get("_pasos")
+	var primero: Mensaje = (pasos[0] as InstruccionesDelJefe.Paso).textos[0]
+	assert_bool(primero.condicion.is_empty()).is_false()
+	assert_int(pasos.size()).is_equal(_pasos(jornada).size())
+
+
+## Una sola entrada a la noche de la jornada, con el turno y el control retenidos.
+func _comprobar_una_noche(jornada: int) -> void:
+	var entrada: EntradaALaNoche = _persiana().get("_entrada")
+	assert_object(entrada).is_not_null()
+	_siguiente().pressed.emit()
+	assert_object(_persiana().get("_entrada")).is_same(entrada)
+	assert_bool(_instrucciones().visible).is_false()
+	assert_int(_persiana().get("_jornada")).is_equal(jornada)
+	assert_bool((_persiana().get("_placa") as Label).visible).is_true()
+	assert_bool(_jugador().suspendido()).is_true()
+	var restante := _restante()
+	_reloj().set("_ultimo_cuadro_usec", Time.get_ticks_usec() - 120000000)
+	_reloj().call("_process", 0.0)
+	assert_float(_restante()).is_equal(restante)
+
+
 func test_sin_menu_no_muestra_instrucciones_ni_detiene_el_control() -> void:  # AC-EMP-048
 	_abrir()
 	assert_bool(_instrucciones().visible).is_false()
@@ -99,17 +179,20 @@ func test_leer_dos_minutos_no_cobra_y_comenzar_anuncia_una_sola_noche() -> void:
 		await get_tree().process_frame
 	assert_float(_restante()).is_equal(restante)
 	assert_bool(Guardado.new().hay_guardado()).is_false()
-	for _paso in 11:
+	for _paso in _pasos(PRIMERA).size() - 1:
 		_siguiente().pressed.emit()
-	assert_str(_siguiente().text).is_equal("OK")
+	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
 	_siguiente().pressed.emit()
+	assert_bool((_persiana().get("_placa") as Label).visible).is_false()
+	assert_bool(_instrucciones().visible).is_true()
+	_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
 	var entrada: EntradaALaNoche = _persiana().get("_entrada")
 	assert_object(entrada).is_not_null()
 	_siguiente().pressed.emit()
 	assert_object(_persiana().get("_entrada")).is_same(entrada)
 	assert_bool(_instrucciones().visible).is_false()
 	assert_bool((_persiana().get("_placa") as Label).visible).is_true()
-	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 1")
 	assert_bool(_jugador().suspendido()).is_true()
 	assert_float(_restante()).is_equal(restante)
 	_persiana().terminar()
@@ -119,7 +202,7 @@ func test_leer_dos_minutos_no_cobra_y_comenzar_anuncia_una_sola_noche() -> void:
 	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
-func test_fade_y_subida_usan_trescientos_milisegundos_reales() -> void:  # AC-EMP-049
+func test_fade_y_entrada_usan_trescientos_milisegundos_reales() -> void:  # AC-EMP-049
 	_abrir()
 	var ahora: Array[int] = [0]
 	_instrucciones().set("_ahora", func() -> int: return ahora[0])
@@ -127,25 +210,25 @@ func test_fade_y_subida_usan_trescientos_milisegundos_reales() -> void:  # AC-EM
 	_almacen.call("empezar_partida_nueva")
 	var negro: ColorRect = _persiana().get("_negro")
 	var marco: Control = _instrucciones().get("_marco")
-	var altura := marco.size.y * marco.scale.y
-	var destino := marco.position.y - altura
+	var ancho := get_viewport().get_visible_rect().size.x
+	var destino := (ancho - marco.size.x * marco.scale.x) / 2.0
+	var recorrido := ancho - destino
 	assert_float(negro.modulate.a).is_equal(1.0)
 	var animadas: Array[Node] = [_instrucciones(), _persiana()]
 	_cuadros(ahora, 150000, animadas)
 	assert_float(negro.modulate.a).is_equal_approx(0.5, 0.001)
-	assert_float(marco.position.y).is_equal_approx(destino + altura / 2, 0.01)
+	assert_float(marco.position.x).is_equal_approx(destino + recorrido / 4, 0.01)
 	_cuadros(ahora, 299999, animadas)
 	assert_bool(negro.visible).is_true()
 	assert_bool(_instrucciones().is_processing()).is_true()
 	_cuadros(ahora, 300000, animadas)
 	assert_bool(negro.visible).is_false()
-	assert_float(marco.position.y).is_equal_approx(destino, 0.01)
+	assert_float(marco.position.x).is_equal_approx(destino, 0.01)
 	assert_bool(_instrucciones().is_processing()).is_false()
 	assert_bool(_persiana().visible).is_true()
 	assert_bool((_persiana().get("_placa") as Label).visible).is_false()
 	# La entrada posterior conserva 1 s quieta, 0,5 s de fade y 1 s de subida.
-	for _paso in 12:
-		_siguiente().pressed.emit()
+	_leer_todo()
 	ahora[0] += 1000000
 	_persiana().call("_process", 99.0)
 	assert_float((_persiana().get("_placa") as Label).modulate.a).is_equal(1.0)
@@ -218,18 +301,14 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	assert_float(_restante()).is_equal(restante)
 
 
-func test_continuar_carga_tres_y_siete_medios_sin_instrucciones() -> void:  # AC-SAV-021
-	(
-		assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 7})))
-		. is_true()
-	)
+func test_continuar_una_completa_no_muestra_instrucciones() -> void:  # AC-SAV-021, AC-EMP-077
+	_guardar(COMPLETA + 1, 7)
 	_abrir()
-	_almacen.call("anunciar_la_noche")
+	_almacen.call("retomar_la_partida")
 	var partida: Partida = _almacen.get("_partida")
-	assert_int(partida.jornada()).is_equal(3)
+	assert_int(partida.jornada()).is_equal(COMPLETA + 1)
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(_instrucciones().visible).is_false()
-	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 3")
 	assert_bool(_jugador().suspendido()).is_true()
 	var restante := _restante()
 	_reloj().set("_ultimo_cuadro_usec", Time.get_ticks_usec() - 120000000)
@@ -239,25 +318,16 @@ func test_continuar_carga_tres_y_siete_medios_sin_instrucciones() -> void:  # AC
 	assert_bool(_jugador().suspendido()).is_false()
 
 
-func test_seguir_despues_de_la_primera_noche_no_repite_la_intro() -> void:
+func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-075, AC-EMP-093
 	Guardado.new().borrar()
 	_preparar_nueva()
-	for _paso in 12:
-		_siguiente().pressed.emit()
+	_leer_todo()
 	assert_bool(_instrucciones().visible).is_false()
-	_persiana().terminar()
-	_reloj().avanzar(_restante())
-	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
-	assert_bool(pantalla.visible).is_true()
-	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
-	AvanceDeDevolucion.entregar(pantalla)
-	pantalla.elegir()
-	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
-	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	await get_tree().process_frame
-	assert_bool(pantalla.visible).is_false()
-	assert_bool(_instrucciones().visible).is_false()
-	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 2")
+	await _cerrar_y_seguir()
+	_comprobar_instrucciones_de(PRIMERA + 1)
+	_comprobar_mensaje_1_de(PRIMERA + 1)
+	_leer_todo(PRIMERA + 1)
+	_comprobar_una_noche(PRIMERA + 1)
 	_persiana().terminar()
 	for _cuadro in 4:
 		await get_tree().process_frame
@@ -267,11 +337,113 @@ func test_seguir_despues_de_la_primera_noche_no_repite_la_intro() -> void:
 	assert_bool(_reloj().corriendo()).is_true()
 
 
+## Esc en la segunda pantalla de la segunda jornada conserva la lectura.
+func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-EMP-049, AC-SAV-033
+	_guardar(PRIMERA + 1, 0, {PRIMERA: ResultadoDeLaNoche.new(1, []).a_datos()})
+	_abrir()
+	_almacen.call("retomar_la_partida")
+	_comprobar_instrucciones_de(PRIMERA + 1)
+	_comprobar_mensaje_1_de(PRIMERA + 1)
+	_siguiente().pressed.emit()
+	_esc()
+	assert_bool(get_tree().paused).is_true()
+	for _cuadro in 4:
+		await get_tree().process_frame
+	_esc()
+	assert_bool(get_tree().paused).is_false()
+	(
+		assert_int((_instrucciones().get("_instrucciones") as InstruccionesDelJefe).paso_actual())
+		. is_equal(2)
+	)
+	_leer_todo(PRIMERA + 1)
+	_comprobar_una_noche(PRIMERA + 1)
+	await _cerrar_y_seguir()
+	_comprobar_instrucciones_de(PRIMERA + 2)
+	_comprobar_mensaje_1_de(PRIMERA + 2)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/2")
+	_siguiente().pressed.emit()
+	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
+	_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
+	_comprobar_una_noche(PRIMERA + 2)
+
+
+# AC-EMP-076, AC-SAV-021, AC-EMP-045, AC-EMP-089, AC-STK-098
+func test_retomar_la_tercera_y_la_cuarta() -> void:
+	_guardar(PRIMERA + 2)
+	_abrir()
+	_almacen.call("retomar_la_partida")
+	_comprobar_instrucciones_de(PRIMERA + 2)
+	_comprobar_catalogo_retomado(PRIMERA + 2)
+	_leer_todo(PRIMERA + 2)
+	_comprobar_una_noche(PRIMERA + 2)
+	await _cerrar_almacen()
+	_guardar(COMPLETA)
+	_abrir()
+	_almacen.call("retomar_la_partida")
+	_comprobar_instrucciones_de(COMPLETA)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/3")
+	var pasos: Array = _instrucciones().get("_pasos")
+	assert_str((pasos[0] as InstruccionesDelJefe.Paso).textos[0].identidad).is_equal("J1_Intro10")
+	_leer_todo(COMPLETA)
+	_comprobar_una_noche(COMPLETA)
+	await _cerrar_almacen()
+	_guardar(COMPLETA, 0, _prueba_sin_fallas())
+	_abrir()
+	_almacen.call("retomar_la_partida")
+	_comprobar_catalogo_retomado(COMPLETA)
+	_comprobar_instrucciones_de(COMPLETA)
+	_comprobar_mensaje_1_de(COMPLETA)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/4")
+	var celular: CelularDelEmpleado = _almacen.get("_celular")
+	var chat := celular.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)
+	var de_la_cuarta: Array[String] = ["J4_Mensaje1_SinFallas"]
+	for mensaje: Mensaje in GUION.mensajes:
+		if mensaje.jornada == COMPLETA and mensaje.condicion.is_empty():
+			de_la_cuarta.append(mensaje.identidad)
+	var ultimos: Array[String] = []
+	for mensaje: Mensaje in chat.slice(chat.size() - de_la_cuarta.size()):
+		ultimos.append(mensaje.identidad)
+	assert_array(ultimos).is_equal(de_la_cuarta)
+	_leer_todo(COMPLETA)
+	_comprobar_una_noche(COMPLETA)
+
+
+func test_seguir_desde_la_tercera_abre_las_de_la_cuarta() -> void:  # AC-EMP-075, AC-EMP-045
+	var noches := _prueba_sin_fallas()
+	noches.erase(PRIMERA + 2)
+	_guardar(PRIMERA + 2, 0, noches)
+	_abrir()
+	_almacen.call("retomar_la_partida")
+	_leer_todo(PRIMERA + 2)
+	_comprobar_una_noche(PRIMERA + 2)
+	for tarea: Tarea in (_almacen.get("_partida") as Partida).obligatorias():
+		tarea.completar()
+	await _cerrar_y_seguir()
+	_comprobar_instrucciones_de(COMPLETA)
+	_comprobar_mensaje_1_de(COMPLETA)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/4")
+	for _paso in 3:
+		_siguiente().pressed.emit()
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("4/4")
+	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
+	_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
+	_comprobar_una_noche(COMPLETA)
+
+
+func _prueba_sin_fallas() -> Dictionary:
+	var noches := {}
+	for jornada in range(PRIMERA, COMPLETA):
+		noches[jornada] = ResultadoDeLaNoche.new(0, []).a_datos()
+	return noches
+
+
 func test_abandonar_preparacion_no_escribe_y_preserva_checkpoint_anterior() -> void:  # AC-SAV-023
 	var guardado := Guardado.new()
 	for preparacion: String in ["instrucciones", "entrada_nueva", "entrada_guardada"]:
 		(
-			assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 7})))
+			assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 6, "medios": 7})))
 			. is_true()
 		)
 		var anterior := FileAccess.get_file_as_string(guardado.ruta)
@@ -286,8 +458,7 @@ func test_abandonar_preparacion_no_escribe_y_preserva_checkpoint_anterior() -> v
 			assert_bool(guardado.hay_guardado()).is_false()
 			assert_bool(_instrucciones().visible).is_true()
 			if preparacion == "entrada_nueva":
-				for _paso in 12:
-					_siguiente().pressed.emit()
+				_leer_todo()
 				assert_bool(_persiana().visible).is_true()
 		var salidas: Array[int] = [0]
 		_almacen.set("_ir_al_menu", func() -> void: salidas[0] += 1)
@@ -330,3 +501,24 @@ func _cuadros(ahora: Array[int], hasta: int, nodos: Array[Node]) -> void:
 		ahora[0] = mini(ahora[0] + 10000, hasta)
 		for nodo in nodos:
 			nodo.call("_process", 0.0)
+
+
+func _comprobar_catalogo_retomado(jornada: int) -> void:
+	var disponibles := Catalogo.de_la_jornada(jornada)
+	var puesto: Node3D = _almacen.get("_reposicion_manual")
+	var cupos: Dictionary = puesto.call("casilleros")
+	var cajas: Array = _almacen.get("_cajas_de_productos")
+	for producto in Catalogo.todos():
+		var presente := disponibles.any(func(p: Producto) -> bool: return p.id == producto.id)
+		assert_bool(cupos[producto.id] > 0).is_equal(presente)
+		assert_bool(cajas[producto.id].visible).is_equal(presente)
+		assert_bool(cajas[producto.id].is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_equal(
+			presente
+		)
+		var zona: MultiMeshInstance3D = puesto.get_node_or_null("HuecosDe" + producto.nombre)
+		assert_object(zona).is_not_null()
+		assert_int(zona.multimesh.instance_count).is_equal(cupos[producto.id])
+		var fila := puesto.get_node_or_null("ZonaDe" + producto.nombre)
+		assert_bool(is_instance_valid(fila)).is_equal(presente)
+		if presente:
+			assert_int(fila.get_child_count()).is_equal(cupos[producto.id])

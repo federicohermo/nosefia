@@ -3,7 +3,7 @@
 ## **Es la pieza que hace jugable la regla del despido.** Hasta acá el legajo vivía adentro del
 ## script de la escena y moría con ella, así que `despedido()` no podía devolver `true` jugando:
 ## la regla estaba en verde en los tests y muerta en la build. Con la partida el mismo legajo
-## cruza las cinco jornadas y el despido se alcanza.
+## cruza todas las jornadas y el despido se alcanza.
 ##
 ## **Va en `dominio/` y no en un autoload**, y está medido por qué: el gate de tests no mira
 ## `escenas/`, así que «qué jornada va» escrito ahí nace sin test; y un autoload es peor, porque
@@ -20,6 +20,9 @@ enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
 enum Llamado { LOCAL_DESORDENADO, OBJETO_AFUERA, PAPEL_EN_EL_INODORO, OBJETO_TIRADO }
 enum RegistroDePoetico { RECHAZADO, ANOTADO, REPETIDO }
 
+## La última noche de la prueba: de ahí sale el resultado que la primera jornada completa hereda.
+const _ULTIMA_DE_LA_PRUEBA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
+
 var expediente: Expediente:
 	get:
 		return _expediente
@@ -33,6 +36,21 @@ var reflexion: ReflexionDeCierre:
 	set(_nueva):
 		push_error("La reflexión la abre el cierre de la jornada y no se sustituye")
 
+## Las noches de prueba ya cerradas, por jornada (BR-EMP-041).
+var noches_de_prueba: Dictionary[int, ResultadoDeLaNoche]:
+	get:
+		return _noches_de_prueba.duplicate()
+	set(_nuevas):
+		push_error("Las noches de prueba las anota el cierre de la jornada y no se sustituyen")
+
+## Con qué sortea la partida lo que no se decide al diseñar: los pedidos de las jornadas 3 a 5.
+## Se fija al empezar y cruza el guardado, así que reintentar o continuar sortea lo mismo.
+var semilla: int:
+	get:
+		return _semilla
+	set(_nueva):
+		push_error("La semilla se fija al empezar la partida y no se sustituye")
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -45,6 +63,8 @@ var _devoluciones: Array[Mensaje] = []
 var _mopa_secada := false
 var _poetico_usado_en: Array[int] = []
 var _reflexion: ReflexionDeCierre = null
+var _noches_de_prueba: Dictionary[int, ResultadoDeLaNoche] = {}
+var _semilla: int = 0
 
 
 func anotar_uso_de_poetico(
@@ -94,7 +114,12 @@ static func nueva() -> Partida:
 static func desde(datos: Dictionary) -> Partida:
 	var saneado := PartidaSerializada.sanear(datos)
 	var medios: int = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS)]
-	var partida := Partida.new(Legajo.con_medios(medios))
+	var legajo := Legajo.con_medios(medios)
+	legajo.restaurar_la_prueba(
+		saneado[PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS_DE_LA_PRUEBA)],
+		saneado[PartidaSerializada.clave(PartidaSerializada.Campo.ULTIMA_DE_LA_PRUEBA_COMPLETA)]
+	)
+	var partida := Partida.new(legajo)
 	partida._jornada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA)]
 	partida._antecedentes = Antecedentes.desde(saneado)
 	for dato: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.DEVOLUCIONES)]:
@@ -102,6 +127,16 @@ static func desde(datos: Dictionary) -> Partida:
 		if mensaje != null:
 			partida._devoluciones.append(mensaje)
 	partida._mopa_secada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA)]
+	var guardada: int = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.SEMILLA)]
+	if guardada > 0:
+		partida._semilla = guardada
+	var noches: Dictionary = saneado[PartidaSerializada.clave(
+		PartidaSerializada.Campo.NOCHES_DE_PRUEBA
+	)]
+	for jornada: Variant in noches:
+		var noche := ResultadoDeLaNoche.desde_datos(noches[jornada])
+		if jornada is int and _es_de_prueba(jornada) and noche != null:
+			partida._noches_de_prueba[jornada] = noche
 	partida._restaurar_la_investigacion(saneado)
 	return partida
 
@@ -139,6 +174,10 @@ func anotar_mopa_secada() -> void:
 func _init(legajo: Legajo) -> void:
 	_legajo = legajo
 	_expediente = Expediente.new(CasoDeInvestigacion.de_la_partida())
+	var azar := RandomNumberGenerator.new()
+	azar.randomize()
+	# Cero es lo que trae un guardado sin semilla, y por eso no sirve de semilla.
+	_semilla = maxi(absi(azar.seed), 1)
 
 
 ## El legajo que la partida recibió, **la misma instancia** y no una copia. Con una copia, un
@@ -153,6 +192,13 @@ func legajo() -> Legajo:
 ## quienes lo leen necesitan el número, no la pieza que lo lleva.
 func apercibimientos() -> int:
 	return _legajo.apercibimientos()
+
+
+static func _es_de_prueba(jornada: int) -> bool:
+	return (
+		jornada >= ReglasDeLaPartida.PRIMERA_JORNADA
+		and jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	)
 
 
 ## Las cuentas que la devolución lee entre noches, con la última noche cerrada ya anotada.
@@ -233,24 +279,48 @@ func abrir_la_jornada() -> Turno:
 ## **El despido se pregunta antes que el contrato cumplido**, y no es un detalle de orden: la
 ## última noche puede cerrar mal justo cuando el legajo llega al tope, y ahí felicitar a alguien
 ## recién echado sería la lectura equivocada de las dos condiciones a la vez.
-func cerrar_la_jornada(cumplidas: int) -> void:
+##
+## Los clientes mal atendidos los cuenta la ventanilla y entran por parámetro: la partida no
+## sabe cuántos vinieron. Sólo pesan en la prueba, donde cada uno suma como una falla.
+func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 	if not _jornada_abierta:
 		return
 	_jornada_abierta = false
 	var cerrada := _jornada
 	var medios_antes := _legajo.medios()
-	_legajo.registrar(cumplidas, _obligatorias.size(), _llamados.size())
 	var sin_cumplir: Array[Tarea.Tipo] = []
 	for tarea: Tarea in _obligatorias:
 		if not tarea.completada():
 			sin_cumplir.append(tarea.tipo())
-	_antecedentes.anotar_noche(sin_cumplir, _llamados, _legajo.medios() - medios_antes)
-	if _legajo.despedido():
+	if _es_de_prueba(cerrada):
+		var noche := ResultadoDeLaNoche.new(clientes_mal_atendidos, sin_cumplir)
+		_noches_de_prueba[cerrada] = noche
+		_legajo.registrar_prueba(noche.fallas())
+	else:
+		_legajo.registrar(cumplidas, _obligatorias.size(), _llamados.size())
+		_antecedentes.anotar_noche(sin_cumplir, _llamados, _legajo.medios() - medios_antes)
+	var completa := (
+		Consecuencias.consecuencia_de(cumplidas, _obligatorias.size())
+		== Consecuencias.Banda.NINGUNA
+	)
+	if cerrada == _ULTIMA_DE_LA_PRUEBA:
+		_legajo.cerrar_la_prueba(completa)
+	if _despedido_al_cerrar(cerrada):
 		_final = Final.DESPEDIDO
 	elif es_la_ultima_jornada():
 		_final = Final.CONTRATO_CUMPLIDO
 	else:
+		if cerrada == _ULTIMA_DE_LA_PRUEBA:
+			_legajo.empezar_las_jornadas_completas()
 		_jornada += 1
 	_reflexion = null if terminada() else ReflexionDeCierre.para(cerrada, _expediente)
 	# Después de anotar la noche: la devolución lee las cuentas que ya la incluyen.
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())
+
+
+func _despedido_al_cerrar(cerrada: int) -> bool:
+	if cerrada < _ULTIMA_DE_LA_PRUEBA:
+		return false
+	if cerrada == _ULTIMA_DE_LA_PRUEBA:
+		return _legajo.perdio_la_prueba()
+	return _legajo.despedido()

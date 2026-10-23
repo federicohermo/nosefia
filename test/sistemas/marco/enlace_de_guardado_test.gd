@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ENLACE := "res://src/sistemas/marco/enlace_de_guardado.gd"
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 ## Un guardado de verdad que además cuenta cuántas veces lo llamaron.
@@ -51,7 +52,7 @@ func _en_la_jornada(jornada: int) -> Partida:
 
 
 func _agotar_la_noche() -> void:
-	_reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(_reloj, Reglas.DURACION_DEL_TURNO)
 
 
 func _jugar_la_noche_impecable() -> void:
@@ -62,14 +63,14 @@ func _jugar_la_noche_impecable() -> void:
 
 func test_el_cierre_de_una_jornada_intermedia_guarda_una_vez() -> void:  # AC-SAV-001
 	var guardado := _guardado()
-	var partida := _en_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	var partida := _en_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	_arrancar(partida, guardado)
 	_agotar_la_noche()
 	assert_bool(partida.terminada()).is_false()
 	assert_int(guardado.escrituras).is_equal(1)
 	assert_int(guardado.llamadas()).is_equal(1)
 	var retomada := Partida.desde(guardado.cargar())
-	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 3)
+	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	assert_int(retomada.jornada()).is_equal(partida.jornada())
 	assert_int(retomada.apercibimientos()).is_equal(partida.apercibimientos())
 	assert_int(retomada.apercibimientos()).is_greater(0)
@@ -91,7 +92,7 @@ func test_el_ultimo_cierre_borra_con_una_sola_llamada() -> void:  # AC-SAV-002
 
 func test_dos_noches_graves_seguidas_borran_el_guardado() -> void:  # AC-SAV-003
 	var guardado := _guardado()
-	var partida := Partida.nueva()
+	var partida := _en_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	_arrancar(partida, guardado)
 	_agotar_la_noche()
 	assert_bool(FileAccess.file_exists(guardado.ruta)).is_true()
@@ -124,7 +125,9 @@ func test_el_enlace_no_decide() -> void:
 
 func test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre() -> void:  # AC-EMP-020, AC-CLN-046
 	var guardado := _guardado()
-	var partida := Partida.new(Legajo.con_medios(6))
+	var partida := Partida.desde(
+		{"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, "medios": 6}
+	)
 	_arrancar(partida, guardado)
 	_ciclo.turno_agotado.connect(
 		func(_jornada: int) -> void: partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
@@ -139,7 +142,7 @@ func test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre() -> void:  # AC
 
 func test_elegir_escribe_la_eleccion_antes_de_la_noche() -> void:  # AC-SAV-029, AC-SAV-030
 	var guardado := _guardado()
-	var partida := _en_la_jornada(2)
+	var partida := _en_la_jornada(5)
 	_arrancar(partida, guardado)
 	partida.expediente.registrar("2A")
 	_jugar_la_noche_impecable()
@@ -153,6 +156,6 @@ func test_elegir_escribe_la_eleccion_antes_de_la_noche() -> void:  # AC-SAV-029,
 	assert_int(guardado.escrituras).is_equal(2)
 	var retomada := Partida.desde(guardado.cargar())
 	assert_object(retomada.reflexion).is_null()
-	assert_str(retomada.expediente.eleccion(2)).is_equal("2A")
+	assert_str(retomada.expediente.eleccion(5)).is_equal("2A")
 	assert_int(retomada.expediente.mensajes_de_notas().size()).is_equal(3)
-	assert_int(retomada.jornada()).is_equal(3)
+	assert_int(retomada.jornada()).is_equal(6)

@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 
 func test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha() -> void:  # AC-PLY-069
-	var nota := NotaPegada.tareas_a_realizar(Apertura.obligatorias(1))
+	var nota := NotaPegada.tareas_a_realizar(Apertura.obligatorias(4))
 	assert_str(nota.titulo()).is_equal("TAREAS A REALIZAR")
 	assert_bool(nota.numerada()).is_true()
 	(
@@ -58,7 +58,7 @@ func test_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha() -> void:
 			[
 				"No dejar productos tirados.",
 				"Dejar las cajas en el depósito.",
-				"Dejar los elementos de limpieza en el baño.",
+				"Dejar los elementos de limpieza en el cuartito.",
 			]
 		)
 	)
@@ -84,7 +84,7 @@ func test_cambiar_la_lectura_no_cambia_el_dato_compartido() -> void:  # AC-PLY-0
 
 
 func test_la_jornada_sin_particular_enumera_solo_las_fijas() -> void:  # AC-PLY-080
-	var filas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(3)).renglones()
+	var filas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(6)).renglones()
 	assert_array(filas).contains_exactly(
 		["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición"]
 	)

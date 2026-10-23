@@ -21,7 +21,7 @@ const METIDA_EN_LA_PARED := 0.05
 const PISO_LIBRE := Vector3(4.49, 0.0, -10.0)
 
 
-func _almacen(jornada: int = 1) -> Node3D:
+func _almacen(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)
@@ -149,7 +149,7 @@ func test_encima_de_la_caja_que_ocupa_el_origen() -> void:  # AC-PLY-027
 
 
 func test_el_origen_es_el_ultimo_recurso() -> void:  # AC-PLY-028
-	var almacen: Node3D = await _almacen(2)
+	var almacen: Node3D = await _almacen(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	var caja := _caja(almacen, Producto.Id.ARVECOR)
 	var origen: Transform3D = caja.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 	caja.global_position = ENTRETECHO
@@ -202,7 +202,7 @@ func test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia() -> void:  # AC
 
 ## La bolsa tirada queda fuera del rescate; la pendiente se recupera sin contar la tarea.
 func test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta() -> void:  # AC-PLY-043
-	var almacen: Node3D = await _almacen(2)
+	var almacen: Node3D = await _almacen(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	var contada := BolsaEnLaMano.preparar(almacen, 0)
 	var sin_contar := BolsaEnLaMano.preparar(almacen, 1)

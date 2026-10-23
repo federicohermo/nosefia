@@ -21,6 +21,10 @@ func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:
 	# Un hueco es la fila de adelante de un producto, con un casillero por cada lugar: cuántos
 	# lugares tiene cada fila lo mide el modelo.
 	var almacen: Node3D = auto_free(load(ESCENA).instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var huecos: Array = puesto.get_children().filter(

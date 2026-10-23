@@ -20,6 +20,10 @@ func _completo() -> Dictionary:
 		"notas": [{"texto": "Nota", "identidad": "NOTA_2B_TEXTO", "jornada": 2, "orden": 1}],
 		"cierre_pendiente": 2,
 		"elecciones": {2: "2B"},
+		"noches_de_prueba": {1: {"mal_atendidos": 1, "sin_cumplir": ["REGISTRAR"]}},
+		"apercibimientos_de_la_prueba": 3,
+		"ultima_de_la_prueba_completa": true,
+		"semilla": 1234,
 	}
 
 
@@ -101,3 +105,29 @@ func test_un_guardado_sin_cuentas_retoma_limpio() -> void:  # AC-SAV-025
 	datos[PartidaSerializada.clave(PartidaSerializada.Campo.FALLAS)] = {"VOLAR": 2, "REPONER": 1}
 	partida = Partida.desde(datos)
 	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(1)
+
+
+func test_un_guardado_de_cinco_jornadas_no_se_migra() -> void:  # AC-SAV-033
+	var anterior := _completo()
+	anterior[JORNADA] = 2
+	anterior.erase("cierre_pendiente")
+	var retomada := Partida.desde(PartidaSerializada.sanear(anterior))
+	assert_int(retomada.jornada()).is_equal(2)
+	assert_int(retomada.medios()).is_equal(anterior[MEDIOS])
+	assert_object(retomada.reflexion).is_null()
+	retomada.abrir_la_jornada()
+	var tipos: Array[Tarea.Tipo] = []
+	for tarea: Tarea in retomada.obligatorias():
+		tipos.append(tarea.tipo())
+	assert_array(tipos).contains_exactly(
+		[Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER]
+	)
+	var nombres: Array[String] = []
+	for comprador: Comprador in Compradores.de_la_jornada(retomada.jornada()):
+		nombres.append(comprador.nombre())
+	assert_array(nombres).contains_exactly(["Fede", "Mía"])
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(retomada.jornada())
+	assert_int(bandeja.conversaciones().size()).is_equal(1)
+	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
+		assert_bool(AnomaliasDeLaJornada.util_disponible(jabon, retomada.jornada())).is_true()

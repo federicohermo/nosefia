@@ -12,7 +12,8 @@ const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const TACHO := "Estructura/tachitobasura/StaticBody3D"
 const PORTON := "Estructura/porton/CuerpoDeLaHoja"
-const PUERTA_INTERIOR := "Estructura/puerta2/CuerpoDeLaHoja"
+## La del depósito: la del baño se traba en las noches que no piden limpiar.
+const PUERTA_INTERIOR := "Estructura/puerta/CuerpoDeLaHoja"
 const LECTOR := "Estructura/Lector"
 
 
@@ -196,6 +197,7 @@ func test_sin_nada_que_hacer_la_referencia_esta_vacia() -> void:  # AC-PLY-087
 
 func test_lo_fijo_nombra_abrir_cerrar_y_mirar() -> void:  # AC-PLY-084
 	var almacen := await _abrir()
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	var puerta: Node3D = almacen.get_node(PUERTA_INTERIOR)
 	assert_array(_referencia(almacen, puerta)).contains_exactly(
 		["[E] Examinar", "[Click Izq] Abrir"]

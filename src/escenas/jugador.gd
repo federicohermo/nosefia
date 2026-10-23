@@ -104,6 +104,7 @@ var _camara_en_reposo := Transform3D.IDENTITY
 
 ## Al volver no se dibuja de nuevo el giro atrasado: sólo se espera que alcance al efectivo.
 var _retomando_la_vista := false
+var _vista_de_salida := false
 
 ## El yaw va acá y no al cuerpo, que es la receta de Godot para mirar con el mouse: el cuerpo se
 ## dibuja interpolado entre dos pasos de física, y este nodo no. Así la caminata sale pareja y el
@@ -286,6 +287,8 @@ func _physics_process(delta: float) -> void:
 	# El dominio decide el modo. La física libera en ambos motores; en web la captura espera
 	# un callback de entrada activo. Nativo escribe sólo si el modo cambió.
 	_aplicar_el_modo_del_cursor()
+	if _vista_de_salida:
+		return
 
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -312,6 +315,8 @@ func _contar_el_paso(recorrido: Vector3) -> void:
 
 
 func _process(delta: float) -> void:
+	if _vista_de_salida:
+		return
 	# Lo examinado cuelga de la cámara, que no se interpola: girarlo en el paso de física lo
 	# dibujaría a saltos.
 	examen.girar(_entrada(), delta)
@@ -528,7 +533,17 @@ func suspender() -> void:
 
 
 func reanudar() -> void:
-	_control.reanudar()
+	if not _vista_de_salida:
+		_control.reanudar()
+
+
+func orientar_la_salida(pose: PoseDeLaVista) -> void:
+	_vista_de_salida = true
+	velocity = Vector3.ZERO
+	suspender()
+	global_position += pose.posicion - _camara.global_position
+	_giro.global_basis = Basis(Vector3.UP, pose.orientacion.x)
+	_camara.rotation.x = pose.orientacion.y
 
 
 ## Recibe objetivo y mano, y contesta el contexto puro compartido por despacho y referencia.
@@ -598,6 +613,7 @@ func _contexto_sobre(cuerpo: Node3D, sostenido: ObjetoDelAlmacen) -> ReferenciaD
 
 ## Pone al jugador en `lugar`, quieto y con la vista horizontal hacia donde mira `lugar`.
 func ubicar(lugar: Transform3D) -> void:
+	_vista_de_salida = false
 	global_position = lugar.origin
 	velocity = Vector3.ZERO
 	_control.orientar(lugar.basis.get_euler().y)

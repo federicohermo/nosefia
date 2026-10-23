@@ -17,6 +17,7 @@ extends RefCounted
 
 var horario := Vector2(-1.0, -1.0)
 var personaje: int = DialogosDeCompradores.Personaje.NINGUNO
+## Sin guion propio es `null`, y la atención usa la apertura y la despedida predeterminadas.
 var dialogos: DialogosDeCompradores = null
 
 var _nombre: String

@@ -336,6 +336,10 @@ func _abrir() -> Node3D:
 	# Cargar dentro del caso evita retener el grafo del almacén durante el descubrimiento.
 	var escena: PackedScene = load("res://src/escenas/almacen.tscn")
 	var almacen: Node3D = auto_free(escena.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 	almacen.get("_reloj").set_process(false)

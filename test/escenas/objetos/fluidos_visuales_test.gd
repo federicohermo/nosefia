@@ -189,6 +189,7 @@ func test_las_gotas_se_extinguen_al_tocar_un_solido() -> void:
 
 func test_un_paso_sobre_el_charco_lo_agita_sin_cambiar_la_limpieza() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -248,6 +249,7 @@ func test_el_balde_no_inventa_anillos_sin_ondas_del_movimiento() -> void:
 
 func test_la_mopa_encoge_el_charco_antes_de_ocultarlo() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	var limpiador: Limpiador = almacen.get("_limpiador")

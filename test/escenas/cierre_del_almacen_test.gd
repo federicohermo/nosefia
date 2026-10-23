@@ -5,6 +5,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const CIERRE := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacen: Node3D
 
@@ -21,8 +22,10 @@ func after_test() -> void:
 	_almacen = null
 
 
-func _abrir() -> Node3D:
+func _abrir(jornada: int = 0) -> Node3D:
 	_almacen = ALMACEN.instantiate()
+	if jornada > 0:
+		_almacen.set("_partida", Partida.desde({"jornada": jornada}))
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
@@ -58,7 +61,7 @@ func test_el_arranque_cabe_en_sus_habitaciones_y_no_produce_motivos() -> void:  
 	for caja: Node3D in cajas:
 		assert_int(lector.de(caja.global_position)).is_equal(CIERRE.Habitacion.DEPOSITO)
 	for util: Node3D in utiles:
-		assert_int(lector.de(util.global_position)).is_equal(CIERRE.Habitacion.BANO)
+		assert_int(lector.de(util.global_position)).is_equal(CIERRE.Habitacion.CUARTITO)
 	assert_int(lector.de(_almacen.get("_jugador").global_position)).is_equal(
 		CIERRE.Habitacion.LOCAL
 	)
@@ -73,17 +76,25 @@ func test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos() -> void:  # A
 	var caja: Node3D = _almacen.get("_cajas_de_productos")[0]
 	var util: Node3D = _almacen.get("_utiles_de_limpieza")[0]
 	var bolsa := BolsaEnLaMano.preparar(_almacen)
-	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano]:
+	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano, lector.cuartito]:
 		caja.global_position = _centro(partes)
-		util.global_position = _centro(lector.bano)
+		util.global_position = _centro(lector.cuartito)
 		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.deposito)
 		caja.global_position = _centro(lector.deposito)
 		util.global_position = _centro(partes)
-		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.bano)
-	util.global_position = _centro(lector.bano, lector.bano.size() - 1)
+		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.cuartito)
+	var umbral: AABB = lector.cuartito[-1]
+	util.global_position = _centro(lector.cuartito, lector.cuartito.size() - 1)
 	caja.global_position = _centro(lector.deposito, lector.deposito.size() - 1)
 	bolsa.global_position = _centro(lector.local)
 	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	bolsa.global_position = _centro(lector.cuartito)
+	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	var del_lado_del_deposito := umbral.get_center()
+	del_lado_del_deposito.x = umbral.position.x - 0.01
+	util.global_position = lector.to_global(del_lado_del_deposito)
+	assert_int(lector.de(util.global_position)).is_equal(CIERRE.Habitacion.DEPOSITO)
+	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
 
 
 func test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano() -> void:  # AC-CLN-043
@@ -141,7 +152,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 			- 1
 		)
 	)
-	_almacen.call("_al_abrir_la_jornada", 2)
+	_almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	assert_array(contenedor.call("tirados")).is_empty()
 	assert_array(_foto()).has_size(
 		(
@@ -154,7 +165,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 
 
 func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:  # AC-CLN-046
-	_abrir()
+	_abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var partida: Partida = _almacen.get("_partida")
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
@@ -170,14 +181,14 @@ func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:
 		func(_jornada: int, _cumplidas: int) -> void: observado.append(partida.medios())
 	)
 	# Sin ventas, registrar se cumple al cierre: las otras cuatro dejan la banda GRAVE.
-	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_int(partida.medios()).is_equal(6)
 	assert_array(observado).contains_exactly([6])
 	assert_int(Partida.desde(Guardado.new().cargar()).medios()).is_equal(6)
 
 
 func test_un_producto_en_el_piso_trae_el_reto_del_desorden() -> void:
-	_abrir()
+	_abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	_almacen.get("_reposicion_manual").call("retirar", Producto.Id.ACTRONCITO)
 	var unidad: Node3D = _almacen.get("_agarre").soltar(true)
 	for cuadro in 120:
@@ -185,7 +196,7 @@ func test_un_producto_en_el_piso_trae_el_reto_del_desorden() -> void:
 	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
 	assert_object(unidad).is_not_null()
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var partida: Partida = _almacen.get("_partida")
 	assert_int(partida.medios()).is_equal(5)
 	assert_array(partida.mensajes_del_jefe()).contains([DevolucionDelJefe.DESORDEN[0]])
@@ -197,7 +208,7 @@ func test_las_partes_reales_respetan_techo_y_laterales_de_los_pasos() -> void:  
 	await get_tree().physics_frame
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var espacio := _almacen.get_world_3d().direct_space_state
-	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano]:
+	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano, lector.cuartito]:
 		for parte: AABB in partes:
 			var bajo := parte.get_center()
 			bajo.y = parte.end.y - 0.005
@@ -211,8 +222,8 @@ func test_las_partes_reales_respetan_techo_y_laterales_de_los_pasos() -> void:  
 			assert_dict(techo).is_not_empty()
 			if not techo.is_empty():
 				assert_float(lector.to_local(techo.position).y).is_equal_approx(parte.end.y, 0.01)
-	# La última parte del depósito y las dos últimas del baño son pasos estrechos.
-	for paso: AABB in [lector.deposito[-1], lector.bano[-2], lector.bano[-1]]:
+	# La última parte del depósito y del cuartito y las dos últimas del baño son pasos estrechos.
+	for paso: AABB in [lector.deposito[-1], lector.bano[-2], lector.bano[-1], lector.cuartito[-1]]:
 		var lateral := paso.get_center()
 		lateral.z = paso.end.z + 0.01 if paso.size.x < paso.size.z else lateral.z
 		lateral.x = paso.end.x + 0.01 if paso.size.x >= paso.size.z else lateral.x

@@ -15,18 +15,21 @@ func _casilleros(cantidad: int = 8) -> Dictionary[Producto.Id, int]:
 
 
 func test_doscientas_semillas_por_jornada_respetan_limites_y_varian() -> void:  # AC-STK-034
-	for jornada in range(1, 6):
+	for jornada in range(2, 9):
 		var compradores := Compradores.de_la_jornada(jornada)
 		var pedidos := Apertura.pedidos_de(compradores)
+		var casilleros: Dictionary[Producto.Id, int] = {}
+		for producto in Catalogo.de_la_jornada(jornada):
+			casilleros[producto.id] = 8
 		var cantidades: Dictionary[int, bool] = {}
 		var conjuntos: Dictionary[String, bool] = {}
 		for semilla in 200:
-			var faltantes := Apertura.faltantes_al_azar(pedidos, _casilleros(), _azar(semilla))
+			var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, _azar(semilla))
 			assert_int(faltantes.size()).is_between(4, 7)
 			var inventario := Apertura.inventario_de_la_jornada(
-				compradores, _casilleros(), _casilleros(), _azar(semilla)
+				jornada, compradores, _casilleros(), _casilleros(), _azar(semilla)
 			)
-			for producto in Catalogo.todos():
+			for producto in Catalogo.de_la_jornada(jornada):
 				assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
 					8 - faltantes.get(producto.id, 0)
 				)

@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 
 
 func test_la_inicial_vacia_no_bloquea_la_recepcion() -> void:  # AC-CTR-014, AC-CTR-048
-	var comprador := Compradores.de_la_jornada(1)[0]
+	var comprador := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0]
 	comprador.dialogos = DialogosDeCompradores.new()
 	var inventario := Inventario.new(Catalogo.todos())
 	for producto in Catalogo.todos():
@@ -16,7 +16,7 @@ func test_la_inicial_vacia_no_bloquea_la_recepcion() -> void:  # AC-CTR-014, AC-
 
 
 func test_consultar_no_termina_la_inicial_ni_recibe_el_ticket() -> void:  # AC-PLY-094
-	var comprador := Compradores.de_la_jornada(1)[0]
+	var comprador := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0]
 	var atencion := Atencion.new(comprador, Inventario.new(Catalogo.todos()))
 	var ticket := Ticket.new([])
 	assert_int(atencion.contexto_de_interaccion(ticket).primario).is_equal(
@@ -39,7 +39,7 @@ func test_consultar_no_termina_la_inicial_ni_recibe_el_ticket() -> void:  # AC-P
 
 
 func test_recibir_agradece_sin_retener_y_lo_repetido_ya_estaba() -> void:  # AC-CTR-067
-	var comprador := Compradores.de_la_jornada(1)[1]
+	var comprador := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1]
 	var inventario := Inventario.new(Catalogo.todos())
 	for producto in Catalogo.todos():
 		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)

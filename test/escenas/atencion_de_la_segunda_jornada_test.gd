@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 const GUIONES := "res://assets/dialogos/compradores_jornada_2.tres"
 const FEDE := "res://assets/characters/fede/idle.tres"
 const MIA := "res://assets/characters/mia/idle.tres"
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacenes: Array[Node3D] = []
 var _listas: Array[Array] = []
@@ -41,7 +42,9 @@ func _fabrica(jornada: int) -> Array[Comprador]:
 	return compradores
 
 
-func _abrir(jornada: int = 2, checkpoint: bool = false, medir: bool = false) -> Node3D:
+func _abrir(
+	jornada: int = Compradores.JORNADA_DE_FEDE_Y_MIA, checkpoint: bool = false, medir: bool = false
+) -> Node3D:
 	assert_str(Guardado.ruta_por_defecto).is_not_equal(Guardado.RUTA_DEL_USUARIO)
 	if checkpoint:
 		(
@@ -91,10 +94,10 @@ func _inventario(almacen: Node3D) -> Inventario:
 func _ir_a(almacen: Node3D, hora: int, minuto: int = 0, segundo: int = 0) -> void:
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var turno: Turno = reloj.get("_turno")
-	var destino := float(posmod(hora - Reglas.HORA_DE_APERTURA, 24) * 3600 + minuto * 60 + segundo)
+	var destino := RelojDePrueba.desde_la_apertura(Vector2i(hora, minuto)) + segundo
 	var consumido := Reglas.DURACION_DEL_TURNO - turno.tiempo_restante()
 	assert_float(destino).is_greater_equal(consumido)
-	reloj.avanzar(maxf(0.0, destino - consumido) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_turno(reloj, maxf(0.0, destino - consumido))
 
 
 func _entrada_actual(almacen: Node3D) -> String:
@@ -282,13 +285,14 @@ func _figura(almacen: Node3D, ruta: String) -> void:
 # AC-CTR-057
 func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() -> void:
 	for checkpoint: bool in [false, true]:
-		var almacen := await _abrir(2 if checkpoint else 1, checkpoint, true)
+		var segunda := Compradores.JORNADA_DE_FEDE_Y_MIA
+		var almacen := await _abrir(segunda if checkpoint else segunda - 1, checkpoint, true)
 		if not checkpoint:
 			var reloj: RelojDelTurno = almacen.get("_reloj")
 			for tarea: Tarea in almacen.get("_partida").obligatorias():
 				reloj.completar(tarea)
-			reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
-			assert_int(almacen.get("_partida").jornada()).is_equal(2)
+			RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
+			assert_int(almacen.get("_partida").jornada()).is_equal(segunda)
 			assert_bool(almacen.get("_ciclo").abrir_la_jornada()).is_true()
 		var lista: Array = _listas.back()
 		var tarea := _atenciones(almacen).tarea()
@@ -301,14 +305,14 @@ func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() ->
 		assert_object(tarea.get("_inventario")).is_same(_inventario(almacen))
 		assert_int(_listas.size()).is_equal(1 if checkpoint else 2)
 		assert_object(_atenciones(almacen).atencion()).is_null()
-		_ir_a(almacen, 20, 30)
+		_ir_a(almacen, 21, 15)
 		assert_int(_atenciones(almacen).atencion().comprador().personaje).is_equal(
 			DialogosDeCompradores.Personaje.FEDE
 		)
 		_figura(almacen, FEDE)
-		_ir_a(almacen, 23, 30)
+		_ir_a(almacen, 23, 45)
 		assert_object(tarea.en_ventanilla()).is_null()
-		_ir_a(almacen, 5)
+		_ir_a(almacen, 1)
 		assert_int(_atenciones(almacen).atencion().comprador().personaje).is_equal(
 			DialogosDeCompradores.Personaje.MIA
 		)
@@ -318,8 +322,15 @@ func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() ->
 
 
 # AC-CTR-001 AC-CTR-041 AC-CTR-063
-func test_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido() -> void:
-	for jornada: int in [1, 3, 4, 5]:
+func test_jornada_uno_y_genericas_seis_a_ocho_conservan_su_recorrido() -> void:
+	var jornadas: Array = [ReglasDeLaPartida.PRIMERA_JORNADA]
+	jornadas.append_array(
+		range(
+			ReglasDeLaPartida.PRIMERA_JORNADA + 5,
+			ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+		)
+	)
+	for jornada: int in jornadas:
 		var almacen := await _abrir(jornada)
 		var compradores: Array = _atenciones(almacen).tarea().get("_compradores")
 		assert_array(compradores).has_size(2)
@@ -327,13 +338,15 @@ func test_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido() -> void:
 		for indice in 2:
 			assert_object(compradores[indice]).is_not_same(nuevos[indice])
 			assert_str(compradores[indice].nombre()).is_equal(nuevos[indice].nombre())
-			assert_bool(nuevos[indice].tiene_horario()).is_equal(jornada == 1)
-		if jornada == 1:
-			_ir_a(almacen, 22)
+			assert_bool(nuevos[indice].tiene_horario()).is_equal(
+				jornada == ReglasDeLaPartida.PRIMERA_JORNADA
+			)
+		if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
+			_ir_a(almacen, 20, 30)
 			assert_int(_atenciones(almacen).atencion().comprador().personaje).is_equal(
 				DialogosDeCompradores.Personaje.TIN
 			)
-			_ir_a(almacen, 4)
+			_ir_a(almacen, 23, 30)
 			assert_int(_atenciones(almacen).atencion().comprador().personaje).is_equal(
 				DialogosDeCompradores.Personaje.TIA
 			)
@@ -351,7 +364,7 @@ func test_jornada_uno_y_genericas_tres_a_cinco_conservan_su_recorrido() -> void:
 func test_el_primer_clic_y_las_iniciales_productivas_no_entregan() -> void:
 	for mia: bool in [false, true]:
 		var almacen := await _abrir()
-		_ir_a(almacen, 5 if mia else 20, 0 if mia else 30)
+		_ir_a(almacen, 1 if mia else 21, 0 if mia else 15)
 		var atendida := _atenciones(almacen).atencion()
 		var cuerpo := _retirar(almacen, atendida.comprador().pedido().productos()[0])
 		var identidad := cuerpo.datos
@@ -403,7 +416,7 @@ func test_los_tickets_y_despedidas_productivos_completan_una_venta() -> void:
 	for ticket_primero: bool in [false, true]:
 		for mia: bool in [false, true]:
 			var almacen := await _abrir()
-			_ir_a(almacen, 5 if mia else 20, 0 if mia else 30)
+			_ir_a(almacen, 1 if mia else 21, 0 if mia else 15)
 			var compras: Array[bool] = []
 			_atenciones(almacen).compra_realizada.connect(func() -> void: compras.append(true))
 			await _inicial(almacen, 1 if mia else 3)
@@ -425,9 +438,9 @@ func test_los_tickets_y_despedidas_productivos_completan_una_venta() -> void:
 
 
 # AC-CTR-062
-func test_fede_parcial_vence_a_las_2330_sin_despedida_y_devuelve_la_unidad() -> void:
+func test_fede_parcial_vence_a_las_2345_sin_despedida_y_devuelve_la_unidad() -> void:
 	var almacen := await _abrir()
-	_ir_a(almacen, 20, 30)
+	_ir_a(almacen, 21, 15)
 	await _inicial(almacen, 3)
 	var atendida := _atenciones(almacen).atencion()
 	var producto := atendida.comprador().pedido().productos()[0]
@@ -440,7 +453,7 @@ func test_fede_parcial_vence_a_las_2330_sin_despedida_y_devuelve_la_unidad() -> 
 	await _pulsar(almacen)
 	await _pulsar(almacen)
 	assert_bool(_puesto(almacen).get("_abierta")).is_true()
-	_ir_a(almacen, 23, 30)
+	_ir_a(almacen, 23, 45)
 	assert_bool(atendida.despachada()).is_true()
 	assert_bool(atendida.vendida()).is_false()
 	assert_object(atendida.dialogo()).is_null()
@@ -460,9 +473,9 @@ func test_fede_parcial_vence_a_las_2330_sin_despedida_y_devuelve_la_unidad() -> 
 
 
 # AC-CTR-062
-func test_mia_incompleta_vence_antes_del_cierre_aun_con_dialogo_abierto() -> void:
+func test_mia_incompleta_vence_aun_con_dialogo_abierto() -> void:
 	var almacen := await _abrir()
-	_ir_a(almacen, 5)
+	_ir_a(almacen, 1)
 	await _pulsar(almacen)
 	var atendida := _atenciones(almacen).atencion()
 	var entrada := _entrada_actual(almacen)
@@ -474,42 +487,32 @@ func test_mia_incompleta_vence_antes_del_cierre_aun_con_dialogo_abierto() -> voi
 	assert_float(turno.tiempo_restante()).is_equal(pausado)
 	assert_str(_entrada_actual(almacen)).is_equal(entrada)
 	await _esc_real()
-	var resultados: Array[bool] = []
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	reloj.turno_cerrado.connect(
-		func(_cumplidas: int) -> void:
-			resultados.append(
-				(
-					atendida.despachada()
-					and not atendida.vendida()
-					and not _atenciones(almacen).tarea().completada()
-				)
-			)
-	)
-	_ir_a(almacen, 8)
-	assert_array(resultados).contains_exactly([true])
+	_ir_a(almacen, 3, 30)
+	assert_bool(atendida.despachada()).is_true()
+	assert_bool(atendida.vendida()).is_false()
+	assert_bool(_atenciones(almacen).tarea().completada()).is_false()
 	assert_object(atendida.dialogo()).is_null()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
-	assert_bool(reloj.corriendo()).is_false()
 	assert_bool(_puesto(almacen).get("_abierta")).is_false()
 
 
 # AC-CTR-062 AC-CTR-041
-func test_la_venta_de_las_075959_cuenta_aunque_siga_la_despedida() -> void:
+func test_la_venta_de_las_032959_cuenta_aunque_siga_la_despedida() -> void:
 	var almacen := await _abrir()
-	_ir_a(almacen, 20, 30)
+	_ir_a(almacen, 21, 15)
 	await _inicial(almacen, 3)
 	await _comprar(almacen)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
 	await _despedida(almacen, 2)
-	_ir_a(almacen, 5)
+	_ir_a(almacen, 1)
 	await _inicial(almacen, 1)
 	var atendida := _atenciones(almacen).atencion()
 	for producto in atendida.comprador().pedido().productos():
 		_retirar(almacen, producto)
 		await _pulsar(almacen)
-	_ir_a(almacen, 7, 59, 59)
+	_ir_a(almacen, 3, 29, 59)
 	await _entregar_ticket(almacen, atendida.comprador().pedido())
 	assert_bool(atendida.vendida()).is_true()
 	assert_bool(atendida.despachada()).is_false()
@@ -518,7 +521,7 @@ func test_la_venta_de_las_075959_cuenta_aunque_siga_la_despedida() -> void:
 	_atenciones(almacen).comprador_vencido.connect(
 		func(comprador: Comprador) -> void: vencidas.append(comprador)
 	)
-	_ir_a(almacen, 8)
+	_ir_a(almacen, 3, 30)
 	assert_bool(atendida.vendida()).is_true()
 	assert_array(vencidas).not_contains(atendida.comprador())
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
@@ -528,8 +531,8 @@ func test_la_venta_de_las_075959_cuenta_aunque_siga_la_despedida() -> void:
 func test_dos_atenciones_del_mismo_recurso_tienen_cursores_independientes() -> void:
 	var primero := await _abrir()
 	var segundo := await _abrir()
-	_ir_a(primero, 20, 30)
-	_ir_a(segundo, 20, 30)
+	_ir_a(primero, 21, 15)
+	_ir_a(segundo, 21, 15)
 	var una := _atenciones(primero).atencion()
 	var otra := _atenciones(segundo).atencion()
 	assert_object(una.comprador().dialogos).is_same(otra.comprador().dialogos)
@@ -550,7 +553,7 @@ func test_dos_atenciones_del_mismo_recurso_tienen_cursores_independientes() -> v
 func test_reabrir_la_jornada_limpia_introduccion_y_venta_sin_imagenes_heredadas() -> void:
 	for vendida: bool in [false, true]:
 		var almacen := await _abrir()
-		_ir_a(almacen, 20, 30)
+		_ir_a(almacen, 21, 15)
 		var anterior := _atenciones(almacen).atencion()
 		if vendida:
 			await _inicial(almacen, 3)
@@ -567,7 +570,7 @@ func test_reabrir_la_jornada_limpia_introduccion_y_venta_sin_imagenes_heredadas(
 		assert_object(_puesto(almacen).get("_imagen_de")).is_null()
 		assert_bool(_sprite(almacen).visible).is_false()
 		assert_bool(_atenciones(almacen).tarea().completada()).is_false()
-		_ir_a(almacen, 20, 30)
+		_ir_a(almacen, 21, 15)
 		assert_object(_atenciones(almacen).atencion()).is_not_same(anterior)
 		assert_bool(_atenciones(almacen).atencion().conversacion_iniciada()).is_false()
 		assert_bool(_atenciones(almacen).atencion().vendida()).is_false()
@@ -595,7 +598,7 @@ func test_duronga_del_deposito_se_vende_sin_consumir_reserva_ni_reponer() -> voi
 	# Elegir una apertura real reproducible que ejerza reserva positiva, sin sustituir stock.
 	for semilla in range(1, 257):
 		almacen.get("azar_de_la_apertura").seed = semilla
-		almacen.call("_al_abrir_la_jornada", 2)
+		almacen.call("_al_abrir_la_jornada", Compradores.JORNADA_DE_FEDE_Y_MIA)
 		if not repositor.estante().casilleros_vacios(producto).is_empty():
 			break
 	var inventario := _inventario(almacen)
@@ -606,7 +609,7 @@ func test_duronga_del_deposito_se_vende_sin_consumir_reserva_ni_reponer() -> voi
 	var cantidades := _cantidades(almacen, producto)
 	assert_int(inventario.vendibles(producto)).is_greater_equal(1)
 	assert_int(cantidades[0] - vacios.size()).is_greater_equal(1)
-	_ir_a(almacen, 20, 30)
+	_ir_a(almacen, 21, 15)
 	await _inicial(almacen, 3)
 	var lista: Array = _atenciones(almacen).tarea().get("_compradores")
 	assert_object(_atenciones(almacen).tarea().get("_inventario")).is_same(inventario)
@@ -636,7 +639,17 @@ func _mirar_balde(almacen: Node3D) -> void:
 	consulta.exclude = [jugador.get_rid()]
 	var encontrada := Vector3.INF
 	for distancia: float in [0.6, 0.9, 1.2, 1.5]:
-		for direccion: Vector3 in [Vector3.BACK, Vector3.LEFT, Vector3.FORWARD, Vector3.RIGHT]:
+		# Las diagonales también: contra un rincón con otros útiles, las cuatro rectas se tapan.
+		for direccion: Vector3 in [
+			Vector3.BACK,
+			Vector3.LEFT,
+			Vector3.FORWARD,
+			Vector3.RIGHT,
+			(Vector3.FORWARD + Vector3.LEFT).normalized(),
+			(Vector3.FORWARD + Vector3.RIGHT).normalized(),
+			(Vector3.BACK + Vector3.LEFT).normalized(),
+			(Vector3.BACK + Vector3.RIGHT).normalized(),
+		]:
 			var punto := objetivo.global_position + direccion * distancia
 			var rayo := PhysicsRayQueryParameters3D.create(
 				Vector3(punto.x, 3.0, punto.z), Vector3(punto.x, -1.0, punto.z), 1
@@ -666,10 +679,23 @@ func _mirar_balde(almacen: Node3D) -> void:
 	assert_object(jugador.call("enfocado")).is_same(objetivo)
 
 
+# La quinta noche tiene el teñido con Poético y la falta del azul: Fede se inyecta en ella.
+func _quinta_con_fede() -> Node3D:
+	var quinta := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	var almacen := await _abrir(quinta)
+	almacen.set(
+		"compradores_de_la_apertura",
+		func(_jornada: int) -> Array[Comprador]:
+			return Compradores.de_la_jornada(Compradores.JORNADA_DE_FEDE_Y_MIA)
+	)
+	almacen.call("_al_abrir_la_jornada", quinta)
+	return almacen
+
+
 # AC-STK-091
 func test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez() -> void:
-	var almacen := await _abrir()
-	_ir_a(almacen, 20, 30)
+	var almacen := await _quinta_con_fede()
+	_ir_a(almacen, 21, 15)
 	await _inicial(almacen, 3)
 	var poetico := Catalogo.de(Producto.Id.POETICO)
 	var cantidades := _cantidades(almacen, poetico)
@@ -681,7 +707,7 @@ func test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez() -> void:
 	await _mirar_balde(almacen)
 	await _pulsar_real()
 	assert_int(piso.balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
-	assert_bool(almacen.get("_partida").uso_de_poetico_en(2)).is_true()
+	assert_bool(almacen.get("_partida").uso_de_poetico_en(5)).is_true()
 	assert_object(almacen.get("_agarre").cuerpo_sostenido()).is_same(cuerpo)
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_same(identidad)
 	assert_array(_cantidades(almacen, poetico)).is_equal(retirado)
@@ -706,8 +732,8 @@ func test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez() -> void:
 
 # AC-STK-091 AC-CTR-062
 func test_el_bidon_azul_no_satisface_poetico_ni_cambia_cantidades() -> void:
-	var almacen := await _abrir()
-	_ir_a(almacen, 20, 30)
+	var almacen := await _quinta_con_fede()
+	_ir_a(almacen, 21, 15)
 	await _inicial(almacen, 3)
 	var atendida := _atenciones(almacen).atencion()
 	var azul: ObjetoAgarrable = almacen.get_node("Objetos/JabonAzul")
@@ -787,7 +813,7 @@ func _pixel_opaco_detras_del_antepecho(
 func test_las_figuras_propias_ocultan_el_corte_inferior_y_conservan_orientacion() -> void:
 	for mia: bool in [false, true]:
 		var almacen := await _abrir()
-		_ir_a(almacen, 5 if mia else 20, 0 if mia else 30)
+		_ir_a(almacen, 1 if mia else 21, 0 if mia else 15)
 		await _apuntar(almacen)
 		var sprite := _sprite(almacen)
 		var orientacion := sprite.global_basis
@@ -833,7 +859,7 @@ func test_los_recursos_productivos_cargan_y_ejercen_la_atencion_de_jornada_2() -
 		return
 	for mia: bool in [false, true]:
 		var almacen := await _abrir()
-		_ir_a(almacen, 5 if mia else 20, 0 if mia else 30)
+		_ir_a(almacen, 1 if mia else 21, 0 if mia else 15)
 		_figura(almacen, MIA if mia else FEDE)
 		var atendida := _atenciones(almacen).atencion()
 		assert_object(atendida.comprador().dialogos).is_same(guiones)

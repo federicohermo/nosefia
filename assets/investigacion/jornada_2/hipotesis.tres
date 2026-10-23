@@ -8,6 +8,6 @@
 
 [resource]
 script = ExtResource("jornada")
-jornada = 2
+jornada = 5
 opciones = Array[ExtResource("hipotesis")]([ExtResource("a"), ExtResource("b")])
 predeterminada = ExtResource("predeterminada")

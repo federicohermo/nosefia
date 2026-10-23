@@ -5,19 +5,33 @@
 class_name Apertura
 extends RefCounted
 
-const PARTICULARES := {1: [Tarea.Tipo.ORDENAR_LAS_CAJAS], 2: [Tarea.Tipo.SACAR_LA_BASURA]}
+const FIJAS: Array[Tarea.Tipo] = [
+	Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
+]
+## Las noches de introducción que todavía no piden todas las fijas.
+const INTRODUCCION := {
+	1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR],
+	2: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER],
+}
+const PARTICULARES := {
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA: [Tarea.Tipo.ORDENAR_LAS_CAJAS],
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1: [Tarea.Tipo.SACAR_LA_BASURA],
+}
 
 
-## Las cuatro fijas y la particular declarada, siempre con instancias nuevas.
+## Las fijas de la jornada y su particular declarada, siempre con instancias nuevas.
 static func obligatorias(jornada: int) -> Array[Tarea]:
-	var tipos: Array[Tarea.Tipo] = [
-		Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
-	]
+	var tipos: Array[Tarea.Tipo] = []
+	tipos.assign(INTRODUCCION.get(jornada, FIJAS))
 	tipos.append_array(PARTICULARES.get(jornada, []))
 	var lista: Array[Tarea] = []
 	for tipo in tipos:
 		lista.append(Tarea.new(tipo))
 	return lista
+
+
+static func pide(jornada: int, tipo: Tarea.Tipo) -> bool:
+	return tipo in INTRODUCCION.get(jornada, FIJAS) or tipo in PARTICULARES.get(jornada, [])
 
 
 static func cantidad_de_obligatorias(jornada: int) -> int:
@@ -34,13 +48,22 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 
 ## Recibe los mismos compradores de Atención y la fuente de azar de esta sesión.
 static func inventario_de_la_jornada(
+	jornada: int,
 	compradores: Array[Comprador],
 	casilleros_totales: Dictionary[Producto.Id, int],
 	casilleros_reponibles: Dictionary[Producto.Id, int],
 	azar: RandomNumberGenerator
 ) -> Inventario:
+	var productos := Catalogo.de_la_jornada(jornada)
+	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
+		return inventario_con_faltantes({}, casilleros_totales, productos)
+	var reponibles_presentes: Dictionary[Producto.Id, int] = {}
+	for producto in productos:
+		reponibles_presentes[producto.id] = casilleros_reponibles.get(producto.id, 0)
 	return inventario_con_faltantes(
-		faltantes_al_azar(pedidos_de(compradores), casilleros_reponibles, azar), casilleros_totales
+		faltantes_al_azar(pedidos_de(compradores), reponibles_presentes, azar),
+		casilleros_totales,
+		productos
 	)
 
 
@@ -52,9 +75,10 @@ static func inventario_de_la_jornada(
 ## las jornadas, no este código. Uno más grande que su fila deja la góndola en cero, que es lo
 ## que `Inventario.ingresar()` hace con una cantidad que no es positiva.
 static func inventario_con_faltantes(
-	faltantes: Dictionary[Producto.Id, int], casilleros: Dictionary[Producto.Id, int]
+	faltantes: Dictionary[Producto.Id, int],
+	casilleros: Dictionary[Producto.Id, int],
+	productos: Array[Producto]
 ) -> Inventario:
-	var productos := Catalogo.todos()
 	var inventario := Inventario.new(productos, casilleros)
 	for producto in productos:
 		inventario.ingresar(
@@ -69,6 +93,15 @@ static func inventario_con_faltantes(
 
 static func cajas_apiladas(jornada: int) -> bool:
 	return Tarea.Tipo.ORDENAR_LAS_CAJAS in PARTICULARES.get(jornada, [])
+
+
+static func productos_con_cajas_apiladas(jornada: int) -> Array[Producto.Id]:
+	var identidades: Array[Producto.Id] = []
+	if cajas_apiladas(jornada):
+		for producto in Catalogo.todos():
+			if producto.id not in Catalogo.PRODUCTOS_DE_PRUEBA:
+				identidades.append(producto.id)
+	return identidades
 
 
 ## Muestreo sin reemplazo: cada índice restante tiene la misma probabilidad.

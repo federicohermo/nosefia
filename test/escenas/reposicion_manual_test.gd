@@ -12,7 +12,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	# El cobro automático continúa desde la tercera jornada.
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR)
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var repositor: Repositor = almacen.get("_repositor")
@@ -95,7 +95,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	assert_object(agarre.punto_de_producto.get_child(0)).is_same(cuerpos[1])
 	agarre.soltar(true)
 	assert_int(grupo.multimesh.visible_instance_count).is_equal(2)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	await get_tree().process_frame
 	assert_int(grupo.multimesh.visible_instance_count).is_zero()
 	for cuerpo in cuerpos:
@@ -206,7 +206,7 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
-	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", true, false)
+	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", false, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
 	# Al abrir se ven la guía y lo que la góndola tiene puesto: la fila menos lo que falta.
 	var al_abrir: Estante = almacen.get("_repositor").estante()
@@ -230,7 +230,12 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 				_guia(almacen, producto) + antes + indice + 1
 			)
 		assert_int(grupo.get_child_count()).is_zero()
-	assert_int(presentacion.find_children("*", "RigidBody3D", true, false).size()).is_equal(1)
+	# Las unidades de muestra del calentamiento no cuentan: no se agarran ni se ven.
+	var muestras: Array[Node3D] = presentacion.call("unidades_de_muestra")
+	var cuerpos := presentacion.find_children("*", "RigidBody3D", true, false).filter(
+		func(cuerpo: Node) -> bool: return not muestras.has(cuerpo)
+	)
+	assert_int(cuerpos.size()).is_equal(1)
 
 
 func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
@@ -318,7 +323,7 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	var suelta := agarre.soltar(true)
 	presentacion.call("retirar", Producto.Id.JORGILLO)
 	var sostenida := agarre.punto_de_producto.get_child(0)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	await get_tree().process_frame
 	assert_bool(is_instance_valid(suelta)).is_false()
 	assert_bool(is_instance_valid(sostenida)).is_false()
@@ -334,7 +339,7 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	for grupo: MultiMeshInstance3D in presentacion.find_children(
 		"SueltosDe*", "MultiMeshInstance3D", true, false
 	):
-		assert_int(grupo.multimesh.visible_instance_count).is_zero()
+		assert_bool(grupo.visible and grupo.multimesh.visible_instance_count > 0).is_false()
 	presentacion.call("retirar", Producto.Id.ACTRONCITO)
 	assert_object(agarre.manos().sostenido()).is_not_null()
 
@@ -394,7 +399,7 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 	AperturaConLugar.abrir_con_semilla(almacen)
 	# La segunda jornada restaura las cajas en sus estantes. La primera ahora entrega sobre
 	# pallets, y este caso ejerce el alcance de las dos alturas del rack, no la descarga.
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)

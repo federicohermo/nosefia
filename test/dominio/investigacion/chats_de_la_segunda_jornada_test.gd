@@ -18,17 +18,13 @@ const TEXTOS: Array[String] = [
 	"quedamos en contacto p cualquier cosa",
 	"exitos con eso!  💪",
 ]
-const APERTURA := (
-	"Buen día, pibe. Hoy te pido que tires la basura de todos los tachos del local "
-	+ "en el contenedor. Saludos"
-)
 
 
-func test_solo_enrique_en_uno_y_dos_contactos_desde_dos() -> void:  # AC-INV-039
+func test_solo_enrique_hasta_la_cuarta_y_dos_contactos_desde_la_quinta() -> void:  # AC-INV-039
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(1)
+	bandeja.abrir_jornada(4)
 	assert_int(bandeja.conversaciones().size()).is_equal(1)
-	bandeja.abrir_jornada(2)
+	bandeja.abrir_jornada(5)
 	assert_int(bandeja.conversaciones().size()).is_equal(2)
 	if bandeja.conversaciones().size() != 2:
 		return
@@ -39,32 +35,39 @@ func test_solo_enrique_en_uno_y_dos_contactos_desde_dos() -> void:  # AC-INV-039
 	for indice: int in mensajes.size():
 		assert_str(mensajes[indice].texto).is_equal(TEXTOS[indice])
 		assert_that(mensajes[indice].get("identidad")).is_equal("J2_%d" % (indice + 1))
-		assert_int(mensajes[indice].jornada).is_equal(2)
+		assert_int(mensajes[indice].jornada).is_equal(5)
 	assert_that(yasmin.get("rol")).is_equal("Compañera de trabajo")
 	var del_jefe := bandeja.no_leidos(JEFE)
 	bandeja.marcar_leida(yasmin.interlocutor)
 	assert_int(bandeja.no_leidos(yasmin.interlocutor)).is_zero()
 	assert_int(bandeja.no_leidos(JEFE)).is_equal(del_jefe)
-	assert_int(Bandeja.new(Conversacion.desde_disco()).no_leidos(JEFE)).is_equal(19)
+	var de_la_primera := Conversacion.de(JEFE).mensajes.filter(
+		func(mensaje: Mensaje) -> bool: return mensaje.jornada == ReglasDeLaPartida.PRIMERA_JORNADA
+	)
+	assert_int(Bandeja.new(Conversacion.desde_disco()).no_leidos(JEFE)).is_equal(
+		de_la_primera.size()
+	)
 
 
-func test_la_apertura_dos_contiene_foto_y_texto_siguiente() -> void:  # AC-INV-042
+func test_la_apertura_cinco_contiene_foto_y_texto_siguiente() -> void:  # AC-INV-042
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(2)
+	bandeja.abrir_jornada(5)
 	var mensajes := bandeja.mensajes_de(JEFE)
-	assert_int(mensajes.size()).is_equal(21)
-	if mensajes.size() != 21:
-		return
-	assert_object(mensajes[19].foto).is_not_null()
-	assert_str(mensajes[20].texto).is_equal(APERTURA)
-	assert_object(bandeja.adjunto_de(JEFE, 19)).is_same(mensajes[20])
+	assert_array(mensajes).is_equal(
+		Conversacion.de(JEFE).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+	)
+	var foto := mensajes.size() - 2
+	assert_str(mensajes[foto].identidad).is_equal("J2_CONTENEDOR_FOTO")
+	assert_object(mensajes[foto].foto).is_not_null()
+	assert_str(mensajes[foto + 1].identidad).is_equal("J2_CONTENEDOR_TEXTO")
+	assert_object(bandeja.adjunto_de(JEFE, foto)).is_same(mensajes[foto + 1])
 
 
 func test_repetir_apertura_no_duplica_guion() -> void:  # AC-INV-040
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(2)
+	bandeja.abrir_jornada(5)
 	var antes := bandeja.mensajes_de(JEFE)
-	bandeja.abrir_jornada(2)
+	bandeja.abrir_jornada(5)
 	assert_array(bandeja.mensajes_de(JEFE)).is_equal(antes)
 	assert_int(bandeja.conversaciones().size()).is_equal(2)
 

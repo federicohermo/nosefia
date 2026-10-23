@@ -24,6 +24,16 @@ extends RefCounted
 ## atender, así que bajar este número aprieta las dos cosas a la vez.
 const UNIDADES_POR_CAJA := 8
 
-## Intervalos inclusivos de la ficha de reposición, iguales en las cinco noches.
+## Intervalos inclusivos de la ficha de reposición.
 const TIPOS_QUE_FALTAN := Vector2i(4, 7)
 const MENOS_QUE_FALTA := 1
+
+## El reparto de prueba adapta el ritmo de los 32 sin convertir los huecos en contactos.
+## Son mínimos físicos de exhibición; no modifican los cupos de reposición.
+const SEPARACION_MINIMA_DE_EXHIBICION := 0.005
+const AIRE_MINIMO_ENTRE_CARAS := 0.01
+const AIRE_MINIMO_ENTRE_TANDAS := 0.02
+const MARGEN_LATERAL_DE_EXHIBICION := 0.02
+const AIRE_MINIMO_ENTRE_FILAS := 0.02
+## La serialización del recurso redondea a seis cifras significativas.
+const TOLERANCIA_DE_EXHIBICION := 0.0001

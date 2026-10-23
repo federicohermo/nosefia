@@ -4,6 +4,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const UNIDAD := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacenes: Array[Node3D] = []
 
@@ -133,7 +134,7 @@ func test_derecho_y_examen_vacios_no_abren_y_otras_pantallas_bloquean() -> void:
 	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var pantalla: Node3D = almacen.get_node(ruta)
 		if ruta.ends_with("Ventanilla"):
-			(almacen.get("_reloj") as RelojDelTurno).avanzar(120.0)
+			RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(22, 0))
 			pantalla.get_node("Comprador/Objetivo").call("accionar")
 		else:
 			pantalla.call("abrir")
@@ -184,10 +185,7 @@ func test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra() -> void:  #
 	assert_bool(_vista(almacen).visible).is_true()
 	reloj.turno_cerrado.emit(0)
 	assert_bool(_vista(almacen).visible).is_false()
-	(
-		assert_bool((almacen.get_node("Interfaz/PantallaDeDevolucion") as CanvasLayer).visible)
-		. is_true()
-	)
+	assert_bool((almacen.get_node("Interfaz/PersianaDeLaNoche") as CanvasLayer).visible).is_true()
 	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
 
 
@@ -317,7 +315,7 @@ func test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa()
 	_accion(jugador, papeles[1], ReglasDeLosObjetos.ACCION_AGARRAR)
 	_accion(jugador, papeles[1], ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_true()
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	assert_array(_papeles(almacen)).is_empty()
@@ -451,7 +449,7 @@ func test_caja_lee_imprime_y_entrega_el_ticket_desde_el_mismo_puesto() -> void:
 # AC-PLY-072, AC-CTR-026
 func test_la_caja_manual_abre_sin_escanear_la_unidad_sostenida() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", 3)
+	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR)
 	var unidad := _unidad(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
@@ -688,7 +686,7 @@ func test_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado() -> voi
 	assert_bool(is_instance_valid(segundo)).is_true()
 	assert_int(avisos.size()).is_equal(1)
 	assert_int((_puesto(almacen).get("_tickets") as Array).size()).is_equal(1)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	assert_bool(is_instance_valid(segundo)).is_false()

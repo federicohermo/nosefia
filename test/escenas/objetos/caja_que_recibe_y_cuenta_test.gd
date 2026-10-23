@@ -118,7 +118,7 @@ func test_con_la_caja_llena_la_unidad_sigue_en_la_mano() -> void:  # AC-STK-040
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
-	var inventario := Apertura.inventario_con_faltantes({}, casilleros)
+	var inventario := Apertura.inventario_con_faltantes({}, casilleros, Catalogo.todos())
 	var coracola := Catalogo.de(Producto.Id.PURA_COLA)
 	inventario.ingresar(coracola, Inventario.Ubicacion.DEPOSITO, 1)
 	var repositor: Repositor = almacen.get("_repositor")

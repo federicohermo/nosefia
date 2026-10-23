@@ -249,6 +249,10 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 	# empujando y girando en el rincón del depósito.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.add_child(RitmoDePantalla.new())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	add_child(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")

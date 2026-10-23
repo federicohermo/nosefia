@@ -60,13 +60,11 @@ const BAJO_EL_ANTEPECHO := 0.3
 ## las dos constantes y no de un número escrito: el turno se mide en segundos de ficción y el
 ## reloj recibe los del jugador, así que rebalancear cualquiera de los dos no deja este caso
 ## cerrando la noche a medias.
-const SEGUNDOS_REALES_DE_UN_TURNO := (
-	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-)
 
 ## Cuadros de física antes de mirar al jugador. Arranca en el aire y cae; 30 a 60 Hz son medio
 ## segundo, de sobra para medio metro.
 const CUADROS_DE_FISICA := 30
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
 ## Los labels de la escena que pintan la hora: los que llevan el script del reloj de mesa.
@@ -402,8 +400,9 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 	# **El segundo caso de la suite que entra `almacen.tscn` entera al árbol.** El lazo que este
 	# spec cierra —la noche termina, la placa aparece, el jugador la despacha y la siguiente
 	# abre— vive entero en señales conectadas: leído como texto no dice si funciona, y es lo
-	# único que vuelve alcanzable la jornada 2 jugando.
+	# único que vuelve alcanzable la noche siguiente jugando.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
@@ -414,7 +413,7 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 
 	# Una obligatoria adicional distingue el marcador del cierre del de la apertura siguiente.
 	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	(
 		assert_bool(pantalla.visible)
 		. override_failure_message("la noche cerró y la devolución no apareció")
@@ -425,12 +424,12 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 	pantalla.elegir()
 	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	await get_tree().process_frame
+	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(almacen)).is_true()
 	assert_bool(pantalla.visible).is_false()
 	(
 		assert_int(ciclo.partida().jornada())
 		. override_failure_message("despachada la placa, la partida no pasó a la noche siguiente")
-		. is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+		. is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	)
 	(
 		assert_str(tareas.text)
@@ -450,8 +449,12 @@ func test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro() -> void:
 	var almacen := _almacen()
 	add_child(almacen)
 	var arranque: Transform3D = almacen.get("_arranque")
-	var entrada: Node3D = almacen.get_node("Estructura/puertaentrada")
-	var hacia_la_puerta := entrada.global_position - arranque.origin
+	var izquierda: Node3D = almacen.get_node("Estructura/puertaentrada/Bisagra")
+	var derecha: Node3D = almacen.get_node("Estructura/puertaentrada_derecha/Bisagra")
+	var vano := Geometry3D.get_closest_point_to_segment(
+		arranque.origin, izquierda.global_position, derecha.global_position
+	)
+	var hacia_la_puerta := vano - arranque.origin
 	hacia_la_puerta.y = 0.0
 	assert_float(hacia_la_puerta.length()).is_less(1.5)
 	# Mira al local: la puerta le queda a la espalda.
@@ -474,30 +477,58 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	jugador.global_position = Vector3(5.0, 0.2, -3.0)
 	jugador.velocity = Vector3(2.0, 0.0, 1.0)
 	control.girar(Vector2(170.0, -90.0))
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 	var celular: PantallaDelCelular = almacen.get_node("Interfaz/PantallaDelCelular")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	# La noche abre después del calentamiento de la transición: el estado se lee al abrir, antes
+	# de que la física de los cuadros siguientes lo mueva.
+	var al_abrir := {}
+	(almacen.get_node("Servicios/CicloDeJornadas") as CicloDeJornadas).jornada_abierta.connect(
+		func(_jornada: int) -> void:
+			(
+				al_abrir
+				. merge(
+					{
+						"posicion": jugador.global_position,
+						"velocidad": jugador.velocity,
+						"yaw": control.yaw(),
+						"pitch": control.pitch(),
+						"camara": camara.rotation.x,
+						"frente": jugador.call("frente"),
+					}
+				)
+			),
+		CONNECT_ONE_SHOT
+	)
 	var ahora := [Time.get_ticks_usec()]
 	celular.set("_ahora", func() -> int: return ahora[0])
 	AvanceDeDevolucion.animar_celular(
 		celular, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
 	)
-	assert_vector(jugador.global_position).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
-	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
-	assert_float(control.yaw()).is_equal_approx(arranque.basis.get_euler().y, 1e-4)
-	assert_float(control.pitch()).is_equal(0.0)
-	var camara: Camera3D = jugador.get_node("Giro/Camara")
-	assert_float(camara.rotation.x).is_equal(0.0)
-	var frente: Vector3 = jugador.call("frente")
-	assert_vector(frente).is_equal_approx(-arranque.basis.z, Vector3.ONE * 1e-4)
+	assert_bool(await AvanceDeDevolucion.esperar_la_noche_siguiente(almacen)).is_true()
+	assert_vector(al_abrir["posicion"]).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
+	assert_vector(al_abrir["velocidad"]).is_equal(Vector3.ZERO)
+	assert_float(al_abrir["yaw"]).is_equal_approx(arranque.basis.get_euler().y, 1e-4)
+	assert_float(al_abrir["pitch"]).is_equal(0.0)
+	assert_float(al_abrir["camara"]).is_equal(0.0)
+	assert_vector(al_abrir["frente"]).is_equal_approx(-arranque.basis.z, Vector3.ONE * 1e-4)
 
 
 func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	# Tres apercibimientos y una noche sin tareas: salta de 3 a 5 sin pisar el 4.
-	almacen.set("_partida", Partida.new(Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)))
+	almacen.set(
+		"_partida",
+		Partida.desde(
+			{
+				"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
+				"medios": 3 * Reglas.MEDIOS_POR_APERCIBIMIENTO
+			}
+		)
+	)
 	add_child(almacen)
 	await get_tree().process_frame
 	var menus := [0]
@@ -507,7 +538,7 @@ func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> 
 	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	var aperturas := [0]
 	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
@@ -531,7 +562,7 @@ func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() ->
 	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
 	var menu: MenuDePausa = almacen.get_node("Interfaz/MenuDePausa")
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_bool(ciclo.partida().terminada()).is_false()
 	AvanceDeDevolucion.entregar(pantalla)
 	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
@@ -563,10 +594,11 @@ func test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu() -> void:
 
 func test_con_la_devolucion_en_pantalla_esc_pausa_encima() -> void:  # AC-SAV-018
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
-	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var esc := InputEventAction.new()
 	esc.action = &"ui_cancel"
 	esc.pressed = true

@@ -7,69 +7,6 @@ const ESPERA_MS := 5000
 const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
 
 
-func test_el_util_se_calienta_con_reflejos_sin_mover_el_objeto_real() -> void:
-	var escena := _escena(1)
-	var reflejos := ReflectionProbe.new()
-	reflejos.position = Vector3(100, 2, 0)
-	reflejos.size = Vector3(2, 2, 2)
-	escena.add_child(reflejos)
-	var foco := SpotLight3D.new()
-	foco.position = Vector3(0, 10, 0)
-	foco.rotation.x = -PI / 2.0
-	foco.spot_range = 4.0
-	escena.add_child(foco)
-	var area := AreaLight3D.new()
-	area.position = foco.position
-	area.area_range = 4.0
-	escena.add_child(area)
-	var util := MeshInstance3D.new()
-	util.mesh = BoxMesh.new()
-	util.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
-	var pintura := ShaderMaterial.new()
-	pintura.shader = CONTORNO
-	util.set_surface_override_material(0, pintura)
-	escena.add_child(util)
-	var original := util.global_transform
-	var muestras: Array[MeshInstance3D] = []
-	var con_ambas_luces := [false]
-	var calentamiento := _calentamiento()
-	calentamiento.avanzo.connect(
-		func(_progreso: float) -> void:
-			for muestra: MeshInstance3D in calentamiento.find_children(
-				"*", "MeshInstance3D", true, false
-			):
-				if not muestra.visible or muestra.mesh != util.mesh:
-					continue
-				var centro := muestra.global_transform * muestra.get_aabb().get_center()
-				if centro.distance_to(reflejos.global_position) < 0.01:
-					var camara := get_viewport().get_camera_3d()
-					if not camara.is_position_in_frustum(centro):
-						continue
-					var desde_foco := centro - foco.global_position
-					if (
-						foco.visible
-						and desde_foco.length() < foco.spot_range
-						and rad_to_deg(desde_foco.angle_to(-foco.global_basis.z)) < foco.spot_angle
-						and centro.distance_to(area.global_position) < area.area_range
-					):
-						con_ambas_luces[0] = true
-					assert_object(muestra.get_active_material(0)).is_same(pintura)
-					muestras.append(muestra)
-	)
-	calentamiento.calentar(escena)
-	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
-	assert_array(muestras).is_not_empty()
-	assert_bool(con_ambas_luces[0]).is_true()
-	assert_float(foco.spot_range).is_equal(4.0)
-	assert_float(foco.spot_angle).is_equal(45.0)
-	assert_int(reflejos.cull_mask).is_equal(1048575)
-	assert_int(reflejos.update_mode).is_equal(ReflectionProbe.UPDATE_ONCE)
-	assert_that(util.global_transform).is_equal(original)
-	await get_tree().process_frame
-	for muestra: MeshInstance3D in muestras:
-		assert_bool(is_instance_valid(muestra)).is_false()
-
-
 class MallaConContorno:
 	extends MeshInstance3D
 
@@ -212,6 +149,53 @@ func test_lo_oculto_se_dibuja_y_vuelve_a_quedar_oculto() -> void:
 	assert_int(_visibles(escena)).is_equal(CUANTOS - 1)
 
 
+## Un comprador recibe sus cuadros al llegar. Sin ellos, el calentamiento no dibujaba nada y el
+## primero de la noche compilaba su material y su silueta en medio del juego.
+func _sprite_sin_cuadros(escena: Node3D) -> AnimatedSprite3D:
+	var sprite := AnimatedSprite3D.new()
+	sprite.visible = false
+	escena.add_child(sprite)
+	return sprite
+
+
+func test_un_sprite_sin_cuadros_se_dibuja_y_vuelve_a_quedar_sin_ellos() -> void:
+	var escena := _escena()
+	var sprite := _sprite_sin_cuadros(escena)
+	var calentamiento := _calentamiento()
+	var se_dibujo := [false]
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			se_dibujo[0] = (
+				se_dibujo[0]
+				or (
+					sprite.visible
+					and sprite.sprite_frames != null
+					and sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+				)
+			)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_bool(se_dibujo[0]).is_true()
+	assert_object(sprite.sprite_frames).is_null()
+	assert_bool(sprite.visible).is_false()
+
+
+func test_la_silueta_de_un_sprite_se_dibuja_antes_de_jugar_y_se_retira_al_terminar() -> void:
+	var escena := _escena()
+	var sprite := _sprite_sin_cuadros(escena)
+	var calentamiento := _calentamiento()
+	var con_silueta := [false]
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			con_silueta[0] = con_silueta[0] or (sprite.visible and sprite.material_overlay != null)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_bool(con_silueta[0]).is_true()
+	assert_object(sprite.material_overlay).is_null()
+
+
 func test_el_modelo_reemplazado_no_se_destapa_durante_el_calentamiento() -> void:
 	var escena := _escena()
 	var referencia := escena.get_child(0) as MeshInstance3D
@@ -241,44 +225,6 @@ func test_antes_de_calentar_no_hace_nada() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(calentamiento.is_processing()).is_false()
-
-
-func test_los_objetos_movibles_se_dibujan_tambien_sin_los_focos_del_cuarto() -> void:
-	var escena := _escena()
-	var movible := escena.get_child(0) as MeshInstance3D
-	movible.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
-	var foco := SpotLight3D.new()
-	escena.add_child(foco)
-	var apagado := SpotLight3D.new()
-	apagado.visible = false
-	escena.add_child(apagado)
-	var area := AreaLight3D.new()
-	area.area_range = 2.0
-	escena.add_child(area)
-	var calentamiento := _calentamiento()
-	var sin_focos := [false]
-	var con_ambas_luces := [false]
-	var camara := Camera3D.new()
-	camara.position = Vector3(1.0, 2.0, 2.0)
-	escena.add_child(camara)
-	camara.make_current()
-	var original := movible.global_transform
-	calentamiento.avanzo.connect(
-		func(_progreso: float) -> void:
-			sin_focos[0] = sin_focos[0] or (movible.visible and not foco.visible)
-			con_ambas_luces[0] = (
-				con_ambas_luces[0] or (movible.visible and foco.visible and area.area_range > 2.0)
-			)
-	)
-	calentamiento.calentar(escena)
-	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
-	assert_bool(sin_focos[0]).is_true()
-	assert_bool(con_ambas_luces[0]).is_true()
-	assert_float(area.area_range).is_equal(2.0)
-	assert_that(movible.global_transform).is_equal(original)
-	assert_bool(foco.visible).is_true()
-	assert_bool(apagado.visible).is_false()
-	assert_int(_visibles(escena)).is_equal(CUANTOS)
 
 
 func test_el_contorno_se_dibuja_antes_de_jugar_y_se_retira_al_terminar() -> void:
@@ -329,7 +275,11 @@ func _escena_con_gotas() -> Node3D:
 	gotas.custom_aabb = AABB(Vector3(-1, 0, -1), Vector3(2, 2, 2))
 	gotas.material_override = ShaderMaterial.new()
 	gotas.visible = false
-	escena.add_child(gotas)
+	var balde := RigidBody3D.new()
+	balde.name = "Balde"
+	balde.freeze = true
+	escena.add_child(balde)
+	balde.add_child(gotas)
 	var omni := OmniLight3D.new()
 	omni.name = "Omni"
 	omni.position = Vector3(10, 2, 0)
@@ -349,7 +299,7 @@ func _escena_con_gotas() -> Node3D:
 
 func test_las_gotas_se_calientan_con_omni_y_area_sin_mover_el_lote_real() -> void:
 	var escena := _escena_con_gotas()
-	var gotas := escena.get_node("Gotas") as MultiMeshInstance3D
+	var gotas := escena.get_node("Balde/Gotas") as MultiMeshInstance3D
 	var omni := escena.get_node("Omni") as OmniLight3D
 	var foco := escena.get_node("Foco") as SpotLight3D
 	var area := escena.get_node("Area") as AreaLight3D
@@ -366,7 +316,7 @@ func test_las_gotas_se_calientan_con_omni_y_area_sin_mover_el_lote_real() -> voi
 			for objeto: MultiMeshInstance3D in calentamiento.find_children(
 				"*", "MultiMeshInstance3D", true, false
 			):
-				if not objeto.visible or foco.visible:
+				if not objeto.visible:
 					continue
 				var punto := objeto.global_transform * objeto.get_aabb().get_center()
 				if (
@@ -399,7 +349,7 @@ func test_las_gotas_se_calientan_con_omni_y_area_sin_mover_el_lote_real() -> voi
 
 func test_cancelar_el_calentamiento_restaura_luces_y_gotas_y_libera_muestras() -> void:
 	var escena := _escena_con_gotas()
-	var gotas := escena.get_node("Gotas") as MultiMeshInstance3D
+	var gotas := escena.get_node("Balde/Gotas") as MultiMeshInstance3D
 	var area := escena.get_node("Area") as AreaLight3D
 	var foco := escena.get_node("Foco") as SpotLight3D
 	var camara := Camera3D.new()
@@ -407,11 +357,18 @@ func test_cancelar_el_calentamiento_restaura_luces_y_gotas_y_libera_muestras() -
 	camara.make_current()
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
-	while foco.visible:
-		await calentamiento.avanzo
-	var muestras := calentamiento.find_children("*", "MultiMeshInstance3D", true, false)
-	assert_array(muestras).is_not_empty()
-	assert_float(area.area_range).is_greater(2.0)
+	var muestras: Array[Node] = []
+	for _cuadro: int in 300:
+		muestras = calentamiento.find_children("*", "MultiMeshInstance3D", true, false)
+		if muestras.any(func(muestra: MultiMeshInstance3D) -> bool: return muestra.visible):
+			break
+		await get_tree().process_frame
+	(
+		assert_bool(
+			muestras.any(func(muestra: MultiMeshInstance3D) -> bool: return muestra.visible)
+		)
+		. is_true()
+	)
 	calentamiento.queue_free()
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -465,11 +422,14 @@ func test_no_termina_mientras_quedan_programas_en_cola() -> void:
 	assert_float(calentamiento.progreso()).is_equal(1.0)
 
 
-func test_las_pasadas_no_esperan_la_cola_y_el_final_espera_la_de_la_ultima() -> void:
+func test_las_muestras_no_esperan_la_cola_y_el_final_espera_la_suya() -> void:
 	var escena := _escena()
-	(escena.get_child(0) as MeshInstance3D).gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
-	var foco := SpotLight3D.new()
-	escena.add_child(foco)
+	var cuerpo := RigidBody3D.new()
+	cuerpo.freeze = true
+	escena.add_child(cuerpo)
+	var movible := MeshInstance3D.new()
+	movible.mesh = BoxMesh.new()
+	cuerpo.add_child(movible)
 	var cola: Array[int] = [1]
 	var calentamiento := _calentamiento_con_cola(cola)
 	var termino := [false]
@@ -477,12 +437,17 @@ func test_las_pasadas_no_esperan_la_cola_y_el_final_espera_la_de_la_ultima() -> 
 	calentamiento.calentar(escena)
 	for _cuadro: int in 10:
 		await get_tree().process_frame
-	# La pasada sin focos es la última: llegó con la cola de la primera todavía ocupada.
-	assert_bool(foco.visible).is_false()
+	var muestras := calentamiento.find_children("*", "MeshInstance3D", true, false)
+	(
+		assert_bool(muestras.any(func(muestra: MeshInstance3D) -> bool: return muestra.visible))
+		. is_true()
+	)
 	assert_bool(termino[0]).is_false()
 	cola[0] = 0
 	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
-	assert_bool(foco.visible).is_true()
+	await get_tree().process_frame
+	for muestra: Node in muestras:
+		assert_bool(is_instance_valid(muestra)).is_false()
 
 
 ## La barra es el tiempo que pasó sobre el que se estima en total: la compilación, que sigue al

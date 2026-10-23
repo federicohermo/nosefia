@@ -12,7 +12,7 @@ var _imagenes: Dictionary[Texture2D, Image] = {}
 
 
 func _ready() -> void:
-	figura_de_foco.sprite_frames_changed.connect(_al_cambiar_los_cuadros)
+	figura_de_foco.sprite_frames_changed.connect(_ajustar_forma)
 	figura_de_foco.animation_changed.connect(_ajustar_forma)
 	figura_de_foco.frame_changed.connect(_ajustar_forma)
 	figura_de_foco.visibility_changed.connect(_actualizar_disponibilidad)
@@ -20,9 +20,15 @@ func _ready() -> void:
 	_actualizar_disponibilidad()
 
 
-func _al_cambiar_los_cuadros() -> void:
-	_imagenes.clear()
-	_ajustar_forma()
+## En la web, leer el alfa de una textura espera a la GPU: unos 7 ms por cuadro de la animación.
+## Se lee todo detrás de la carga, y no al apuntarle a cada comprador nuevo.
+func precargar(animaciones: Array) -> void:
+	for cuadros: SpriteFrames in animaciones:
+		for animacion: StringName in cuadros.get_animation_names():
+			for indice: int in cuadros.get_frame_count(animacion):
+				var textura := cuadros.get_frame_texture(animacion, indice)
+				if not _imagenes.has(textura):
+					_imagenes[textura] = textura.get_image()
 
 
 func _actualizar_disponibilidad() -> void:

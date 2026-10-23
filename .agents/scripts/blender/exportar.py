@@ -59,6 +59,7 @@ from lib.blender import (  # noqa: E402
     es_un_array,
     grupo_de,
 )
+from blender.separar_hojas_de_entrada import editar as separar_hojas_de_entrada  # noqa: E402
 
 
 def apagar_los_array() -> list[tuple[str, str]]:
@@ -189,6 +190,7 @@ def main() -> None:
         raise SystemExit("falta el destino: ... --python exportar.py -- <destino>.glb")
     destino = sys.argv[sys.argv.index("--") + 1]
 
+    separar_hojas_de_entrada()
     apagados = apagar_los_array()
     print(f"modificadores `{MODIFICADOR}` apagados: {len(apagados)}")
     guia_apagada = apagar_la_guia()

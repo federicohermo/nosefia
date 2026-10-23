@@ -37,15 +37,22 @@ const MEDIOS_POR_LLAMADO: int = 1
 ## En qué noche falla el reloj de mesa del local: desde la mitad de ese turno hasta su cierre, y
 ## la noche siguiente vuelve a andar.
 ##
-## El GDD dice que deja de funcionar «a mitad de una de las jornadas» y no cuál: la tercera de
-## cinco es una decisión de balance, la del medio de la partida. Cae adentro a propósito: una
-## jornada posterior a la última dejaría la regla escrita y muerta, y eso lo caza
-## `reglas_test.gd`.
+## El GDD dice que deja de funcionar «a mitad de una de las jornadas» y no cuál: es una decisión
+## de balance. Cae adentro a propósito: una jornada posterior a la última dejaría la regla escrita
+## y muerta, y eso lo caza `reglas_test.gd`.
 ##
 ## Vive acá y no en `reglas_de_la_partida.gd` porque no es cuánto dura la partida sino un número
 ## de balance más, del mismo tipo que los apercibimientos: `Reglas` ya cruza jornadas.
-const JORNADA_EN_QUE_FALLA_EL_RELOJ := 3
+const JORNADA_EN_QUE_FALLA_EL_RELOJ := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 
 ## Vale el doble que un aviso, y eso es lo que hace que las tres bandas pesen distinto también
 ## sobre el despido: a la banda grave le alcanza con una jornada menos.
 const APERCIBIMIENTOS_POR_BANDA_GRAVE := 2
+
+## En las primeras jornadas, la prueba, cada falla suma un apercibimiento entero y no hay
+## bandas. Con cinco o más al cerrar la última noche de la prueba, y sin haberla cumplido
+## entera, se pierde. Con cinco o más y la noche completa se sigue, y la primera jornada
+## completa arranca con un apercibimiento.
+const APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA := 1
+const APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA := 5
+const APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA := 1

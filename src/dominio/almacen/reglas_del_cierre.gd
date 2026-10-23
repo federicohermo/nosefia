@@ -1,7 +1,7 @@
 ## La foto del cierre: pertenencia física y motivos, sin consultar cuerpos del motor.
 extends RefCounted
 
-enum Habitacion { LOCAL, DEPOSITO, BANO, AFUERA }
+enum Habitacion { LOCAL, DEPOSITO, BANO, AFUERA, CUARTITO }
 enum Clase { UNIDAD_SUELTA, CAJA, UTIL_DE_LIMPIEZA, OTRO }
 
 
@@ -19,7 +19,11 @@ class Estado:
 
 
 static func habitacion_de(
-	punto: Vector3, local: Array[AABB], deposito: Array[AABB], bano: Array[AABB]
+	punto: Vector3,
+	local: Array[AABB],
+	deposito: Array[AABB],
+	bano: Array[AABB],
+	cuartito: Array[AABB],
 ) -> Habitacion:
 	for parte: AABB in local:
 		if parte.has_point(punto):
@@ -30,6 +34,9 @@ static func habitacion_de(
 	for parte: AABB in bano:
 		if parte.has_point(punto):
 			return Habitacion.BANO
+	for parte: AABB in cuartito:
+		if parte.has_point(punto):
+			return Habitacion.CUARTITO
 	return Habitacion.AFUERA
 
 
@@ -44,7 +51,7 @@ static func hay_desorden(estados: Array[Estado]) -> bool:
 				if estado.habitacion != Habitacion.DEPOSITO:
 					return true
 			Clase.UTIL_DE_LIMPIEZA:
-				if estado.habitacion != Habitacion.BANO:
+				if estado.habitacion != Habitacion.CUARTITO:
 					return true
 	return false
 

@@ -1,9 +1,10 @@
 ## El padrón de compradores del almacén: quiénes pueden aparecer y qué pide cada uno.
 ##
-## **La lista es fija y no se sortea.** No es prolijidad: un sorteo acá haría que el mismo balance
+## **El padrón es fijo y no se sortea.** No es prolijidad: un sorteo acá haría que el mismo balance
 ## diera noches distintas, y ningún test de la ventanilla se podría escribir sin sembrar una
 ## semilla. El azar en un prototipo cuya tensión es aritmética esconde justo lo que hay que
-## mirar — si el tiempo alcanza.
+## mirar — si el tiempo alcanza. Las jornadas 3 a 5 son la excepción, y la semilla es la de la
+## partida: sortean qué piden, no cuándo vienen ni cuántos.
 ##
 ## **Que alguien pague distinto de lo que marca la caja está en el padrón, no librado al azar.**
 ## Es la única forma que tiene el juego de mentir en vivo, y un padrón donde todos pagan justo
@@ -18,6 +19,14 @@ extends RefCounted
 const DIALOGOS := preload("res://assets/dialogos/compradores_jornada_1.tres")
 const DIALOGOS_SEGUNDA := preload("res://assets/dialogos/compradores_jornada_2.tres")
 
+const JORNADA_DE_FEDE_Y_MIA := ReglasDeLaPartida.PRIMERA_JORNADA + 1
+## Las jornadas de Tin y Tia: `jornada → [llegada de Tin, límite de Tin, llegada de Tia, límite
+## de Tia]`, cada hora como `Vector2i(hora, minuto)`.
+const HORARIOS_DE_TIN_Y_TIA: Dictionary[int, Array] = {
+	ReglasDeLaPartida.PRIMERA_JORNADA:
+	[Vector2i(20, 30), Vector2i(23, 0), Vector2i(23, 30), Vector2i(2, 0)],
+}
+
 ## Cada fila es `[nombre, líneas del pedido, cuánto paga de más]`, y una línea es
 ## `[Producto.Id, unidades]`.
 ##
@@ -30,6 +39,29 @@ const FILAS := [
 	["Nélida", [[Producto.Id.MALBARDO, 1], [Producto.Id.LAYSNNT, 1]], 300],
 	["El pibe del kiosco", [[Producto.Id.BURBALOO, 3]], 0],
 ]
+
+## Cuántos tipos distintos, de una unidad cada uno, pide un comprador de las jornadas al azar.
+const TIPOS_POR_PEDIDO := 3
+
+## Las jornadas 3 a 5: `jornada → [nombre, personaje, llegada, límite]` de cada comprador, con
+## cada hora como `Vector2i(hora, minuto)`. El pedido no está acá: sale del sorteo de la apertura.
+const AGENDAS_AL_AZAR: Dictionary[int, Array] = {
+	ReglasDeLaPartida.PRIMERA_JORNADA + 2:
+	[
+		["Cami", DialogosDeCompradores.Personaje.CAMI, Vector2i(20, 3), Vector2i(22, 33)],
+		["Tin", DialogosDeCompradores.Personaje.TIN, Vector2i(1, 30), Vector2i(4, 0)],
+	],
+	ReglasDeLaPartida.PRIMERA_JORNADA + 3:
+	[
+		["Tia", DialogosDeCompradores.Personaje.TIA, Vector2i(22, 0), Vector2i(1, 0)],
+		["Fede", DialogosDeCompradores.Personaje.FEDE, Vector2i(4, 0), Vector2i(7, 0)],
+	],
+	ReglasDeLaPartida.PRIMERA_JORNADA + 4:
+	[
+		["Cami", DialogosDeCompradores.Personaje.CAMI, Vector2i(20, 30), Vector2i(23, 30)],
+		["Mía", DialogosDeCompradores.Personaje.MIA, Vector2i(5, 0), Vector2i(8, 0)],
+	],
+}
 
 
 ## El padrón entero, con instancias nuevas en cada llamada.
@@ -44,24 +76,48 @@ static func padron() -> Array[Comprador]:
 	return lista
 
 
-## Las dos primeras noches tienen contenido propio; las demás usan el padrón vigente.
-static func de_la_jornada(jornada: int) -> Array[Comprador]:
-	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
-		return _primera_noche()
-	if jornada == 2:
+## Las jornadas con contenido propio lo traen; las demás usan el padrón vigente.
+##
+## La semilla es la de la partida: sólo las jornadas al azar la leen, y con la misma semilla y
+## la misma jornada sortean los mismos productos.
+static func de_la_jornada(jornada: int, semilla: int = 0) -> Array[Comprador]:
+	if AGENDAS_AL_AZAR.has(jornada):
+		return _al_azar(jornada, semilla)
+	if HORARIOS_DE_TIN_Y_TIA.has(jornada):
+		return _tin_y_tia(HORARIOS_DE_TIN_Y_TIA[jornada])
+	if jornada == JORNADA_DE_FEDE_Y_MIA:
 		var segunda := segunda_jornada_definida()
 		for comprador: Comprador in segunda:
 			comprador.dialogos = DIALOGOS_SEGUNDA
 		return segunda
 	var lista: Array[Comprador] = []
-	for comprador in padron():
+	for fila: Array in FILAS:
 		if lista.size() >= ReglasDeLaVentanilla.COMPRADORES_POR_JORNADA:
 			break
+		lista.append(_comprador_de(fila))
+	return lista
+
+
+static func _al_azar(jornada: int, semilla: int) -> Array[Comprador]:
+	var azar := RandomNumberGenerator.new()
+	azar.seed = hash([semilla, jornada])
+	var vendibles: Array[Producto.Id] = []
+	for producto in Catalogo.de_la_jornada(jornada):
+		vendibles.append(producto.id)
+	var lista: Array[Comprador] = []
+	for fila: Array in AGENDAS_AL_AZAR[jornada]:
+		var lineas: Array = []
+		var restantes := vendibles.duplicate()
+		for _tipo in TIPOS_POR_PEDIDO:
+			lineas.append([restantes.pop_at(azar.randi_range(0, restantes.size() - 1)), 1])
+		var comprador := _comprador_de([fila[0], lineas, 0])
+		comprador.personaje = fila[1]
+		comprador.horario = Vector2(_desde_apertura(fila[2]), _desde_apertura(fila[3]))
 		lista.append(comprador)
 	return lista
 
 
-static func _primera_noche() -> Array[Comprador]:
+static func _tin_y_tia(horario: Array) -> Array[Comprador]:
 	var tin := _comprador_de(
 		[
 			"Tin",
@@ -72,14 +128,13 @@ static func _primera_noche() -> Array[Comprador]:
 	var tia := _comprador_de(["Tia", [[Producto.Id.ZUCARACHAS, 1], [Producto.Id.PEPITO, 1]], 0])
 	tin.personaje = DialogosDeCompradores.Personaje.TIN
 	tia.personaje = DialogosDeCompradores.Personaje.TIA
-	tin.horario = Vector2(_desde_apertura(22), _desde_apertura(0))
-	tia.horario = Vector2(_desde_apertura(4), _desde_apertura(6))
+	tin.horario = Vector2(_desde_apertura(horario[0]), _desde_apertura(horario[1]))
+	tia.horario = Vector2(_desde_apertura(horario[2]), _desde_apertura(horario[3]))
 	tin.dialogos = DIALOGOS
 	tia.dialogos = DIALOGOS
 	return [tin, tia]
 
 
-## Declaración preparada para J2; su entrega de contenido activa la selección productiva.
 static func segunda_jornada_definida() -> Array[Comprador]:
 	var fede := _comprador_de(
 		["Fede", [[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1], [Producto.Id.DURONGA, 1]], 0]
@@ -93,20 +148,20 @@ static func segunda_jornada_definida() -> Array[Comprador]:
 	)
 	fede.personaje = DialogosDeCompradores.Personaje.FEDE
 	mia.personaje = DialogosDeCompradores.Personaje.MIA
-	fede.horario = Vector2(_desde_apertura(20, 30), _desde_apertura(23, 30))
-	mia.horario = Vector2(_desde_apertura(5), _desde_apertura(8))
+	fede.horario = Vector2(_desde_apertura(Vector2i(21, 15)), _desde_apertura(Vector2i(23, 45)))
+	mia.horario = Vector2(_desde_apertura(Vector2i(1, 0)), _desde_apertura(Vector2i(3, 30)))
 	return [fede, mia]
 
 
-static func _desde_apertura(hora: int, minuto: int = 0) -> float:
+static func _desde_apertura(hora: Vector2i) -> float:
 	return float(
 		(
 			(
 				(
-					posmod(hora - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
+					posmod(hora.x - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
 					* Marcador.MINUTOS_POR_HORA
 				)
-				+ minuto
+				+ hora.y
 			)
 			* Marcador.SEGUNDOS_POR_MINUTO
 		)

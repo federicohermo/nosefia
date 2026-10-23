@@ -45,6 +45,11 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
 
 ## Cómo se hornea
 
+El exportador aplica `blender/separar_hojas_de_entrada.py` antes de generar el modelo. Ese paso
+reconstruye las dos hojas de entrada con el vidrio como hijo y el origen en cada bisagra.
+Para actualizar también la fuente visible en Blender, se ejecuta ese script sobre el `.blend`
+con `-- --aplicar`. Editar las hojas a mano se pierde al exportar.
+
 ```bash
 python .claude/scripts/hornear.py
 ```

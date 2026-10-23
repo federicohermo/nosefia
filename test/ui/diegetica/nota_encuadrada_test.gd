@@ -16,7 +16,7 @@ func test_el_corcho_muestra_su_dato_y_cambia_de_hoja() -> void:  # AC-PLY-068, A
 	assert_str((vista.get("_renglones") as Label).text).is_equal(
 		(
 			"• No dejar productos tirados.\n• Dejar las cajas en el depósito.\n"
-			+ "• Dejar los elementos de limpieza en el baño."
+			+ "• Dejar los elementos de limpieza en el cuartito."
 		)
 	)
 	var tareas := NotaPegada.tareas_a_realizar(

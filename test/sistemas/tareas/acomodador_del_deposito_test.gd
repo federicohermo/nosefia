@@ -5,7 +5,7 @@ func test_cumple_descumple_y_congela_el_cierre() -> void:  # AC-STK-079, AC-SHF-
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var acomodador: AcomodadorDelDeposito = auto_free(AcomodadorDelDeposito.new())
 	acomodador.reloj = reloj
-	var tareas := Apertura.obligatorias(1)
+	var tareas := Apertura.obligatorias(4)
 	reloj.arrancar(Turno.new(1.0, tareas), tareas)
 	var estado := OrdenDelDeposito.Estado.new(Producto.Id.ACTRONCITO)
 	var cambios: Array[int] = []
@@ -38,7 +38,7 @@ func test_cumple_descumple_y_congela_el_cierre() -> void:  # AC-STK-079, AC-SHF-
 
 func test_sin_particular_no_completa_otra_tarea() -> void:  # AC-STK-079
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
-	var tareas := Apertura.obligatorias(3)
+	var tareas := Apertura.obligatorias(6)
 	var turno := Turno.new(1.0, tareas)
 	reloj.arrancar(turno, tareas)
 	var acomodador: AcomodadorDelDeposito = auto_free(AcomodadorDelDeposito.new())

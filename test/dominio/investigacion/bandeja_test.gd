@@ -5,6 +5,42 @@
 ## recurso dejaría al test siguiente —y a la partida siguiente— empezando leído.
 extends GdUnitTestSuite
 
+const JEFE := Conversacion.Interlocutor.JEFE
+const PRIMERA := ReglasDeLaPartida.PRIMERA_JORNADA
+const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+
+
+## Cada devolución queda después de los mensajes de su jornada y antes de los de la siguiente.
+func test_las_instrucciones_llegan_con_su_jornada() -> void:  # AC-INV-065, AC-EMP-066
+	var guion := Conversacion.de(JEFE)
+	var bandeja := Bandeja.new([guion])
+	var esperado: Array[Mensaje] = []
+	var devoluciones: Array[Mensaje] = []
+	for jornada in range(PRIMERA, COMPLETA + 1):
+		bandeja.abrir_jornada(jornada)
+		var propios := guion.mensajes.filter(
+			func(mensaje: Mensaje) -> bool:
+				return mensaje.jornada == jornada and mensaje.vale_para([])
+		)
+		assert_array(propios).is_not_empty()
+		esperado.append_array(propios)
+		assert_array(bandeja.mensajes_de(JEFE)).is_equal(esperado)
+		if jornada == COMPLETA:
+			break
+		var devolucion := Mensaje.new()
+		devolucion.identidad = "devolucion_%d" % jornada
+		devolucion.jornada = jornada
+		devolucion.momento = Mensaje.Momento.CIERRE
+		devolucion.texto = devolucion.identidad
+		assert_bool(bandeja.recibir(JEFE, devolucion)).is_true()
+		devoluciones.append(devolucion)
+		esperado.append(devolucion)
+	var retomada := Bandeja.new([guion])
+	retomada.abrir_jornada(COMPLETA)
+	for devolucion in devoluciones:
+		retomada.recibir(JEFE, devolucion)
+	assert_array(retomada.mensajes_de(JEFE)).is_equal(esperado)
+
 
 func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void:  # AC-INV-028
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
@@ -16,28 +52,22 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	assert_array(mensajes).is_equal(
 		Conversacion.de(quien).mensajes.filter(func(m: Mensaje) -> bool: return m.jornada == 1)
 	)
-	assert_int(mensajes.size()).is_equal(19)
-	var textos := 0
-	var fotos := 0
+	assert_array(mensajes).is_not_empty()
 	for mensaje in mensajes:
 		assert_int(mensaje.jornada).is_equal(1)
 		assert_str(mensaje.de_quien).is_equal("Enrique Peldaño")
-		if mensaje.foto != null:
-			fotos += 1
-		else:
-			textos += 1
-	assert_int(textos).is_equal(12)
-	assert_int(fotos).is_equal(7)
-	assert_int(bandeja.no_leidos_totales()).is_equal(19)
+	assert_int(bandeja.no_leidos_totales()).is_equal(mensajes.size())
 	# La reconstrucción desde un guardado no depende de una bandeja previamente filtrada.
 	var restaurada := Bandeja.new(Conversacion.desde_disco())
 	restaurada.abrir_jornada(1)
 	assert_array(restaurada.conversaciones()).is_equal(bandeja.conversaciones())
-	assert_int(restaurada.no_leidos_totales()).is_equal(19)
+	assert_int(restaurada.no_leidos_totales()).is_equal(mensajes.size())
 	# Los bloques documentados siguen disponibles; no aparecen contactos sin guion.
 	restaurada.abrir_jornada(5)
 	assert_int(restaurada.conversaciones().size()).is_equal(2)
-	assert_array(restaurada.mensajes_de(quien)).is_equal(Conversacion.de(quien).mensajes)
+	assert_array(restaurada.mensajes_de(quien)).is_equal(
+		Conversacion.de(quien).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+	)
 
 
 func test_el_corte_de_jornada_filtra_y_ordena_el_menu() -> void:  # AC-INV-028, AC-INV-037
@@ -83,7 +113,7 @@ func test_recepciones_invalidas_no_cambian_la_bandeja() -> void:  # AC-INV-030
 	assert_int(bandeja.no_leidos_totales()).is_equal(1)
 
 
-func test_el_adjunto_exige_foto_y_texto_inmediatamente_despues() -> void:  # AC-INV-031
+func test_una_foto_final_y_otra_foto_cortan_el_adjunto() -> void:  # AC-INV-031
 	var conversacion := _conversacion(Conversacion.Interlocutor.JEFE, 4)
 	conversacion.mensajes[0].foto = GradientTexture2D.new()
 	conversacion.mensajes[2].foto = GradientTexture2D.new()
@@ -94,6 +124,63 @@ func test_el_adjunto_exige_foto_y_texto_inmediatamente_despues() -> void:  # AC-
 	)
 	for indice: int in [-1, 1, 2, 3, 4]:
 		assert_object(bandeja.adjunto_de(conversacion.interlocutor, indice)).is_null()
+
+
+func test_cada_foto_sin_texto_del_grupo_adjunta_la_misma_intro() -> void:  # AC-INV-031
+	var conversacion := _conversacion(JEFE, 4)
+	for indice in 3:
+		conversacion.mensajes[indice].foto = GradientTexture2D.new()
+		conversacion.mensajes[indice].texto = ""
+	var bandeja := Bandeja.new([conversacion])
+	for indice in 3:
+		assert_object(bandeja.adjunto_de(JEFE, indice)).is_same(conversacion.mensajes[3])
+	assert_object(bandeja.adjunto_de(JEFE, 3)).is_null()
+
+
+func test_fotos_huerfanas_no_toman_texto_inexistente() -> void:  # AC-INV-031
+	var conversacion := _conversacion(JEFE, 2)
+	for mensaje in conversacion.mensajes:
+		mensaje.foto = GradientTexture2D.new()
+		mensaje.texto = ""
+	var bandeja := Bandeja.new([conversacion])
+	assert_object(bandeja.adjunto_de(JEFE, 0)).is_null()
+	assert_object(bandeja.adjunto_de(JEFE, 1)).is_null()
+
+
+func test_otra_jornada_u_otro_momento_interrumpen_el_adjunto() -> void:  # AC-INV-031
+	for cambio: String in ["jornada", "momento"]:
+		for intermedio: bool in [false, true]:
+			var conversacion := _conversacion(JEFE, 3 if intermedio else 2)
+			var primera := conversacion.mensajes[0]
+			primera.texto = ""
+			primera.foto = GradientTexture2D.new()
+			var corte := conversacion.mensajes[1]
+			if cambio == "jornada":
+				corte.jornada += 1
+			else:
+				corte.momento = Mensaje.Momento.CIERRE
+			if intermedio:
+				corte.texto = ""
+				corte.foto = GradientTexture2D.new()
+				conversacion.mensajes[2].jornada = corte.jornada
+				conversacion.mensajes[2].momento = corte.momento
+			var bandeja := Bandeja.new([conversacion])
+			bandeja.abrir_jornada(2)
+			assert_object(bandeja.adjunto_de(JEFE, 0)).is_null()
+			primera.texto = "Foto con leyenda propia"
+			assert_object(bandeja.adjunto_de(JEFE, 0)).is_null()
+
+
+func test_una_foto_con_texto_intermedia_impide_buscar_mas_adelante() -> void:  # AC-INV-031
+	var conversacion := _conversacion(JEFE, 4)
+	for indice in 3:
+		conversacion.mensajes[indice].foto = GradientTexture2D.new()
+	conversacion.mensajes[0].texto = ""
+	conversacion.mensajes[1].texto = ""
+	var bandeja := Bandeja.new([conversacion])
+	assert_object(bandeja.adjunto_de(JEFE, 0)).is_null()
+	assert_object(bandeja.adjunto_de(JEFE, 1)).is_null()
+	assert_object(bandeja.adjunto_de(JEFE, 2)).is_same(conversacion.mensajes[3])
 
 
 func _conversacion(quien: Conversacion.Interlocutor, cuantos: int) -> Conversacion:
@@ -183,7 +270,7 @@ func test_la_bandeja_no_se_arma_con_las_conversaciones_del_disco_en_cada_llamada
 	assert_bool(bandeja.esta_leida(Conversacion.Interlocutor.DESCONOCIDO)).is_true()
 
 
-func test_notas_recibidas_j2_no_dan_boton_hasta_j3() -> void:  # AC-INV-028, AC-INV-052
+func test_notas_recibidas_antes_de_la_sexta_no_dan_boton() -> void:  # AC-INV-028, AC-INV-052
 	var normal := Conversacion.new()
 	normal.interlocutor = Conversacion.Interlocutor.JEFE
 	var notas := Conversacion.de(Conversacion.Interlocutor.NOTAS)
@@ -207,7 +294,7 @@ func test_notas_recibidas_j2_no_dan_boton_hasta_j3() -> void:  # AC-INV-028, AC-
 	bandeja.abrir_jornada(2)
 	assert_array(bandeja.conversaciones()).is_equal([normal])
 	assert_array(bandeja.mensajes_de(Conversacion.Interlocutor.NOTAS)).is_equal([nota])
-	bandeja.abrir_jornada(3)
+	bandeja.abrir_jornada(notas.jornada_de_menu)
 	assert_array(bandeja.conversaciones()).is_equal([normal, notas])
 	assert_array(notas.mensajes).is_empty()
 	assert_array(bandeja.mensajes_de(Conversacion.Interlocutor.NOTAS)).is_equal([nota])

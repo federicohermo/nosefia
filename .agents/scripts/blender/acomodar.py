@@ -470,10 +470,16 @@ def medir_encaje(estante, bm, arbol, hojas, posiciones):
     return desplazamiento_que_entra(desde, hasta, PASO_DEL_TANTEO, entra)
 
 
-def acomodar_mueble(letra, envases, resumen):
-    objeto, bm, estantes = medir(letra)
-    propios = {c: e for c, e in estantes.items() if c in ESTANTES}
-    faltan = sorted(c for c in ESTANTES if partes(c)[0] == letra and c not in estantes)
+def acomodar_mueble(
+    letra, envases, resumen, estantes_declarados=ESTANTES, medidor=medir,
+    retiros_por_estante=None, colocador=None,
+):
+    retiros = {} if retiros_por_estante is None else retiros_por_estante
+    if any(not math.isfinite(retiro) or retiro < 0 for retiro in retiros.values()):
+        raise ValueError("el retiro por estante debe ser finito y no negativo")
+    objeto, bm, estantes = medidor(letra)
+    propios = {c: e for c, e in estantes.items() if c in estantes_declarados}
+    faltan = sorted(c for c in estantes_declarados if partes(c)[0] == letra and c not in estantes)
     if faltan:
         raise SystemExit(f"el reparto nombra estantes que el mueble no tiene: {faltan}")
     # El mapa cambia productos, no muebles: se reparte sobre la chapa existente.
@@ -481,7 +487,7 @@ def acomodar_mueble(letra, envases, resumen):
     hojas = obstaculos_del_mueble(objeto)
     franjas = {}
     for clave, estante in propios.items():
-        alto = max(envases[t.producto].alto for t in ESTANTES[clave]) - ROCE_DE_ARRIBA
+        alto = max(envases[t.producto].alto for t in estantes_declarados[clave]) - ROCE_DE_ARRIBA
         franjas[clave] = franja_del_estante(estante, arbol, alto)
     if letra in HELADERAS:
         # Las bandejas de una heladera no llegan todas igual de adelante: la de abajo sobresale.
@@ -491,7 +497,7 @@ def acomodar_mueble(letra, envases, resumen):
             desde_v, hasta_v = franjas[clave]
             franjas[clave] = (linea + RETIRO_EN_LA_HELADERA - estante.origen.dot(estante.v), hasta_v)
     for clave, estante in sorted(propios.items()):
-        reparto = ESTANTES[clave]
+        reparto = estantes_declarados[clave]
         de_estas = [envases[t.producto] for t in reparto]
         alto = max(e.alto for e in de_estas) - ROCE_DE_ARRIBA
         desde_v, hasta_v = franjas[clave]
@@ -502,15 +508,29 @@ def acomodar_mueble(letra, envases, resumen):
         largo = derecha - MARGEN - izquierda
         pedidos = [1 if t.fija else FILA_DE_ADELANTE_PEDIDA for t in reparto]
         cuentas = repartir(largo, de_estas)
+        retiro = retiros.get(clave, 0.0)
+        izquierda += retiro
+        largo -= 2 * retiro
+        aires = [None] * len(reparto)
+        if colocador is None:
+            centros_por_tanda = centros(largo, de_estas, cuentas)
+        else:
+            centros_por_tanda, desde_v, aires = colocador(
+                estante, izquierda, largo, de_estas, cuentas, desde_v
+            )
+        cuentas = [len(fila) for fila in centros_por_tanda]
         for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
             if cuenta < pedido:
                 resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
-        centros_por_tanda = centros(largo, de_estas, cuentas)
         posiciones = []
         for indice, (t, envase, us) in enumerate(zip(reparto, de_estas, centros_por_tanda)):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            for lugar in tanda(envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v):
+            lugares = tanda(
+                envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v,
+                aires[indice],
+            )
+            for lugar in lugares:
                 posiciones.append(
                     (unidad, matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v))
                 )
@@ -527,7 +547,10 @@ def acomodar_mueble(letra, envases, resumen):
         ):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            lugares = tanda(envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v)
+            lugares = tanda(
+                envase, [izquierda + u for u in us], filas[indice], hasta_v - desde_v,
+                aires[indice],
+            )
             resumen["tandas"] += 1
             for orden, lugar in enumerate(lugares):
                 matriz = matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v)

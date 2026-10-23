@@ -13,8 +13,9 @@ const LAVATORIO := SubtitulosAlExaminar.LAVATORIO
 const TEXTO_DE_PRUEBA := "abcdefghijklmnopqrst"
 
 
-func _almacen_con_jugador_quieto() -> Node3D:
+func _almacen_con_jugador_quieto(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": jornada}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
@@ -110,8 +111,63 @@ func test_los_tres_tachos_dicen_su_texto_con_bolsa_o_sin_ella() -> void:  # AC-S
 		assert_bool(recolector.tarea().tiene_bolsa(cual)).is_equal(antes[cual])
 
 
+func test_la_puerta_del_deposito_habla_solo_la_noche_que_esta_trabada() -> void:  # AC-SUB-023
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": primera}))
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var puerta: Node3D = almacen.get_node("Estructura/puerta/CuerpoDeLaHoja")
+	var cerrado := SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.DEPOSITO_CERRADO)
+	assert_str(cerrado).is_not_empty()
+	_piensa(almacen, puerta, cerrado)
+	almacen.call("_al_abrir_la_jornada", primera + 1)
+	assert_str(String(puerta.get("identidad"))).is_empty()
+	_examinar(jugador, puerta)
+	assert_str(_linea(almacen).text).is_empty()
+	_examinar(jugador, almacen.get_node("Estructura/inodoro/StaticBody3D"))
+	_examinar(jugador, puerta)
+	assert_str(_linea(almacen).text).is_equal(SubtitulosAlExaminar.de_lo_fijo(INODORO))
+
+
+func test_la_puerta_del_cuartito_habla_solo_las_noches_que_esta_trabada() -> void:  # AC-SUB-022
+	var abierta := ReglasDeLaPartida.PRIMERA_JORNADA
+	while (
+		abierta < ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+		and not Apertura.pide(abierta, Tarea.Tipo.LIMPIAR)
+	):
+		abierta += 1
+	assert_int(abierta).is_greater(ReglasDeLaPartida.PRIMERA_JORNADA)
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": abierta - 1}))
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var puerta: Node3D = almacen.get_node("Estructura/puerta_limpieza/CuerpoDeLaHoja")
+	var cerrado := SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.CUARTITO_CERRADO)
+	assert_str(cerrado).is_not_equal(
+		SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.DEPOSITO_CERRADO)
+	)
+	_piensa(almacen, puerta, cerrado)
+	almacen.call("_al_abrir_la_jornada", abierta)
+	_examinar(jugador, puerta)
+	assert_str(_linea(almacen).text).is_empty()
+	_examinar(jugador, almacen.get_node("Estructura/inodoro/StaticBody3D"))
+	_examinar(jugador, puerta)
+	assert_str(_linea(almacen).text).is_equal(SubtitulosAlExaminar.de_lo_fijo(INODORO))
+	almacen.call("_al_abrir_la_jornada", abierta - 1)
+	assert_str(String(puerta.get("identidad"))).is_equal(
+		String(SubtitulosAlExaminar.CUARTITO_CERRADO)
+	)
+
+
 func test_cada_unidad_puesta_en_la_gondola_dice_su_texto() -> void:  # AC-SUB-002, AC-SUB-011
-	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var almacen: Node3D = await _almacen_con_jugador_quieto(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	)
 	var puesto: Node = almacen.get("_reposicion_manual")
 	puesto.call("_actualizar_zonas")
 	var probados := {}
@@ -129,7 +185,7 @@ func test_lo_que_no_tiene_texto_no_cambia_la_linea() -> void:  # AC-SUB-003, AC-
 	var callados: Array[Node3D] = [
 		null,
 		almacen.get_node("Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja"),
-		almacen.get_node("Estructura/puerta/CuerpoDeLaHoja"),
+		almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja"),
 		almacen.get_node("Estructura/Ventanilla"),
 		almacen.get_node("Estructura/gondolanueva/StaticBody3D"),
 	]

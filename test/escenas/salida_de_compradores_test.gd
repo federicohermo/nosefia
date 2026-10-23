@@ -1,6 +1,8 @@
 extends GdUnitTestSuite
 
+const TinYTia := preload("res://test/escenas/tin_y_tia.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacen: Node3D
 var _camara: Camera3D
@@ -17,7 +19,8 @@ func after_test() -> void:
 
 func _abrir(recibir: bool = true) -> Node3D:
 	_almacen = ALMACEN.instantiate()
-	_almacen.set("_partida", Partida.nueva())
+	_almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
+	_almacen.set("compradores_de_la_apertura", TinYTia.en_cualquier_jornada)
 	add_child(_almacen)
 	_almacen.get_node("Jugador").set_physics_process(false)
 	_almacen.get("_reloj").set_process(false)
@@ -28,7 +31,7 @@ func _abrir(recibir: bool = true) -> Node3D:
 	_camara.look_at(puesto.get_node("Comprador").global_position)
 	_camara.make_current()
 	if recibir:
-		_almacen.get("_reloj").avanzar(120.0)
+		RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(20, 30))
 		assert_array(_visibles(puesto)).has_size(1)
 	return puesto
 
@@ -120,7 +123,7 @@ func test_el_cansancio_desliza_a_la_derecha_y_la_pausa_lo_detiene() -> void:  # 
 	var original: AnimatedSprite3D = puesto.get_node("Comprador")
 	var posicion := original.global_position
 	var orientacion := original.global_basis
-	_almacen.get("_reloj").avanzar(120.0)
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 0))
 	assert_array(_visibles(puesto)).has_size(1)
 	if _visibles(puesto).is_empty():
 		return
@@ -155,15 +158,15 @@ func test_reiniciar_retira_las_imagenes_de_ventas_y_de_cansancio() -> void:  # A
 	var puesto := _abrir()
 	_vender(puesto)
 	assert_array(_visibles(puesto)).has_size(1)
-	_almacen.call("_al_abrir_la_jornada", 1)
+	_almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	assert_array(_visibles(puesto)).is_empty()
 
 	var obligatorias: Array[Tarea] = (_almacen.get("_partida") as Partida).obligatorias()
 	(_almacen.get("_reloj") as RelojDelTurno).arrancar(
 		Apertura.turno_de_la_jornada(obligatorias), obligatorias
 	)
-	_almacen.get("_reloj").avanzar(120.0)
-	_almacen.get("_reloj").avanzar(120.0)
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(20, 30))
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 0))
 	assert_array(_visibles(puesto)).has_size(1)
 	(_almacen.get("_reloj") as RelojDelTurno).turno_cerrado.emit(0)
 	assert_array(_visibles(puesto)).is_empty()
@@ -174,8 +177,10 @@ func test_ambos_entran_por_la_izquierda_y_la_pausa_conserva_su_entrada() -> void
 	var sprite: AnimatedSprite3D = puesto.get_node("Comprador")
 	var espera := sprite.global_transform
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	for intervalo: float in [120.0, 240.0]:
-		reloj.avanzar(intervalo)
+	for llegada_y_salida: Array in [
+		[Vector2i(20, 30), Vector2i(23, 0)], [Vector2i(23, 30), Vector2i(2, 0)]
+	]:
+		RelojDePrueba.avanzar_hasta(reloj, llegada_y_salida[0])
 		assert_bool(sprite.visible).is_true()
 		var comienzo := sprite.global_position
 		assert_float((comienzo - espera.origin).dot(_camara.global_basis.x)).is_less(0.0)
@@ -199,15 +204,15 @@ func test_ambos_entran_por_la_izquierda_y_la_pausa_conserva_su_entrada() -> void
 		get_tree().paused = false
 		await get_tree().create_timer(1.5).timeout
 		assert_bool(sprite.global_position.is_equal_approx(espera.origin)).is_true()
-		reloj.avanzar(120.0)
+		RelojDePrueba.avanzar_hasta(reloj, llegada_y_salida[1])
 	for cerrar_turno: bool in [false, true]:
 		assert_bool((_almacen.get("_ciclo") as CicloDeJornadas).abrir_la_jornada()).is_true()
-		reloj.avanzar(120.0)
+		RelojDePrueba.avanzar_hasta(reloj, Vector2i(20, 30))
 		assert_bool(sprite.visible).is_true()
 		if cerrar_turno:
 			reloj.turno_cerrado.emit(0)
 		else:
-			_almacen.call("_al_abrir_la_jornada", 1)
+			_almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 		await get_tree().create_timer(0.1).timeout
 		assert_array(_visibles(puesto)).is_empty()
 		assert_bool(sprite.global_position.is_equal_approx(espera.origin)).is_true()

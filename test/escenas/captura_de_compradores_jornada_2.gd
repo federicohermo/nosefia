@@ -1,6 +1,8 @@
 ## Fixture de arte: no activa la agenda productiva ni publica guiones de reemplazo.
 extends RefCounted
 
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+
 var local: Node3D
 var _padre: Node
 
@@ -23,7 +25,10 @@ func tabla() -> Dictionary:
 func crear(padre: Node) -> Node3D:
 	_padre = padre
 	local = load("res://src/escenas/almacen.tscn").instantiate()
-	local.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
+	local.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
 	local.set("compradores_de_la_apertura", _compradores)
 	padre.add_child(local)
 	local.get("_reloj").set_process(false)
@@ -52,11 +57,7 @@ func atenciones() -> Ventanilla:
 
 
 func llegar(mia: bool = false) -> void:
-	var reloj: RelojDelTurno = local.get("_reloj")
-	var turno: Turno = reloj.get("_turno")
-	var consumido := Reglas.DURACION_DEL_TURNO - turno.tiempo_restante()
-	var destino := 32400.0 if mia else 1800.0
-	reloj.avanzar((destino - consumido) / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	RelojDePrueba.avanzar_hasta(local.get("_reloj"), Vector2i(1, 0) if mia else Vector2i(21, 15))
 	figura().stop()
 	await cuadros()
 	var entrada: Tween = puesto().get("_entrada")
@@ -70,9 +71,17 @@ func mirar(transparente: bool = false, lado: float = 0.0) -> Dictionary:
 	var textura := sprite.sprite_frames.get_frame_texture(&"idle", sprite.frame)
 	var imagen := textura.get_image()
 	var pixel := Vector2i(-1, -1)
-	for y in range(imagen.get_height() / 4, imagen.get_height() / 2, 4):
-		for x in range(imagen.get_width() / 8, imagen.get_width() * 7 / 8, 4):
-			if (imagen.get_pixel(x, y).a == 0.0) == transparente:
+	for y in range(imagen.get_height() / 2, imagen.get_height() / 4, -4):
+		for x in range(imagen.get_width() / 2, imagen.get_width() / 8, -4):
+			var alfa := imagen.get_pixel(x, y).a
+			if (
+				(
+					transparente
+					and alfa == 0.0
+					and imagen.get_region(Rect2i(x - 2, y - 2, 5, 5)).is_invisible()
+				)
+				or (not transparente and alfa >= 0.5)
+			):
 				pixel = Vector2i(x, y)
 				break
 		if pixel.x >= 0:

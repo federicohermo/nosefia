@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 
 
 func test_registra_solo_un_tenido_aceptado_y_no_escribe_deuda_ni_mensajes() -> void:  # AC-EMP-067
-	var partida := Partida.desde({"jornada": 2})
+	var partida := Partida.desde({"jornada": 5})
 	var id := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO)).id
 	partida.abrir_la_jornada()
 	for rechazo: ReglasDeLaLimpieza.Resultado in [
@@ -11,7 +11,7 @@ func test_registra_solo_un_tenido_aceptado_y_no_escribe_deuda_ni_mensajes() -> v
 		assert_int(partida.anotar_uso_de_poetico(id, rechazo, true)).is_equal(
 			Partida.RegistroDePoetico.RECHAZADO
 		)
-		assert_bool(partida.uso_de_poetico_en(2)).is_false()
+		assert_bool(partida.uso_de_poetico_en(5)).is_false()
 	(
 		assert_int(
 			partida.anotar_uso_de_poetico(id, ReglasDeLaLimpieza.Resultado.BALDE_TENIDO, true)
@@ -24,14 +24,14 @@ func test_registra_solo_un_tenido_aceptado_y_no_escribe_deuda_ni_mensajes() -> v
 		)
 		. is_equal(Partida.RegistroDePoetico.REPETIDO)
 	)
-	assert_bool(partida.uso_de_poetico_en(2)).is_true()
+	assert_bool(partida.uso_de_poetico_en(5)).is_true()
 	assert_int(partida.medios()).is_zero()
 	assert_array(partida.devoluciones_del_jefe()).is_empty()
 
 
 func test_el_hecho_pertenece_a_la_jornada_abierta_y_se_consulta_tras_cerrar() -> void:  # AC-EMP-068
 	var id := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO)).id
-	for jornada in range(1, 6):
+	for jornada in range(1, 9):
 		var partida := Partida.desde({"jornada": jornada})
 		(
 			assert_int(
@@ -57,15 +57,15 @@ func test_el_hecho_pertenece_a_la_jornada_abierta_y_se_consulta_tras_cerrar() ->
 		)
 		partida.anotar_uso_de_poetico(id, ReglasDeLaLimpieza.Resultado.BALDE_TENIDO, true)
 		partida.cerrar_la_jornada(partida.obligatorias().size())
-		assert_bool(partida.uso_de_poetico_en(jornada)).is_equal(jornada == 2)
+		assert_bool(partida.uso_de_poetico_en(jornada)).is_equal(jornada == 5)
 		(
 			assert_int(
 				partida.anotar_uso_de_poetico(id, ReglasDeLaLimpieza.Resultado.BALDE_TENIDO, true)
 			)
 			. is_equal(Partida.RegistroDePoetico.RECHAZADO)
 		)
-		if jornada == 2:
+		if jornada == 5:
 			partida.abrir_la_jornada()
-			assert_bool(partida.uso_de_poetico_en(2)).is_true()
-			assert_bool(partida.uso_de_poetico_en(3)).is_false()
-			assert_bool(Partida.nueva().uso_de_poetico_en(2)).is_false()
+			assert_bool(partida.uso_de_poetico_en(5)).is_true()
+			assert_bool(partida.uso_de_poetico_en(6)).is_false()
+			assert_bool(Partida.nueva().uso_de_poetico_en(5)).is_false()
