@@ -57,6 +57,7 @@ func _ready() -> void:
 
 
 func mostrar() -> void:
+	_barra.value = _barra.min_value
 	visible = true
 	_tiempo_del_latido = 0.0
 	_latir(true)
@@ -74,7 +75,11 @@ func _exit_tree() -> void:
 
 
 func pintar(progreso: float) -> void:
-	_barra.value = progreso
+	_barra.value = maxf(_barra.value, progreso)
+
+
+func progreso() -> float:
+	return _barra.value
 
 
 func contar_lectura(progreso: float) -> void:
