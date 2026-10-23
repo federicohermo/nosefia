@@ -410,6 +410,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_reposicion_manual.preparar()
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
+	(get_node("Estructura/Ventanilla") as PuestoDeVentanilla).cargar_la_noche(jornada)
 	_atenciones.arrancar(atender)
 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una

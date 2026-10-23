@@ -22,13 +22,20 @@ func _ready() -> void:
 
 ## En la web, leer el alfa de una textura espera a la GPU: unos 7 ms por cuadro de la animación.
 ## Se lee todo detrás de la carga, y no al apuntarle a cada comprador nuevo.
+##
+## Recibe sólo los cuadros de la noche. Lo leído que no está entre ellos se suelta, y lo que ya
+## estaba leído no se vuelve a pedir a la GPU.
 func precargar(animaciones: Array) -> void:
+	var vigentes: Dictionary[Texture2D, Image] = {}
 	for cuadros: SpriteFrames in animaciones:
 		for animacion: StringName in cuadros.get_animation_names():
 			for indice: int in cuadros.get_frame_count(animacion):
 				var textura := cuadros.get_frame_texture(animacion, indice)
-				if not _imagenes.has(textura):
-					_imagenes[textura] = textura.get_image()
+				if not vigentes.has(textura):
+					vigentes[textura] = _imagenes.get(textura) as Image
+					if vigentes[textura] == null:
+						vigentes[textura] = textura.get_image()
+	_imagenes = vigentes
 
 
 func _actualizar_disponibilidad() -> void:

@@ -97,3 +97,38 @@ func test_el_padron_y_las_jornadas_6_a_8_conservan_el_pedido_de_ruben() -> void:
 		assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.BURBALOO))).is_equal(1)
 		assert_int(ruben.pedido().unidades_de(Catalogo.de(Producto.Id.DUREXTRA))).is_equal(2)
 		assert_int(ruben.paga() - ruben.pedido().total()).is_equal(-500)
+
+
+func test_los_personajes_de_cada_noche_salen_en_el_orden_en_que_llegan() -> void:
+	var noches: Dictionary[int, Array] = {
+		ReglasDeLaPartida.PRIMERA_JORNADA:
+		[DialogosDeCompradores.Personaje.TIN, DialogosDeCompradores.Personaje.TIA],
+		ReglasDeLaPartida.PRIMERA_JORNADA + 1:
+		[DialogosDeCompradores.Personaje.FEDE, DialogosDeCompradores.Personaje.MIA],
+		ReglasDeLaPartida.PRIMERA_JORNADA + 2:
+		[DialogosDeCompradores.Personaje.CAMI, DialogosDeCompradores.Personaje.TIN],
+		ReglasDeLaPartida.PRIMERA_JORNADA + 3:
+		[DialogosDeCompradores.Personaje.TIA, DialogosDeCompradores.Personaje.FEDE],
+		ReglasDeLaPartida.PRIMERA_JORNADA + 4:
+		[DialogosDeCompradores.Personaje.CAMI, DialogosDeCompradores.Personaje.MIA],
+	}
+	for jornada: int in noches:
+		assert_array(Compradores.personajes_de(jornada)).is_equal(noches[jornada])
+
+
+func test_las_noches_sin_comprador_con_sprite_no_traen_personajes() -> void:
+	for jornada in range(PRIMERA_DEL_PADRON, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
+		assert_array(Compradores.personajes_de(jornada)).is_empty()
+
+
+func test_los_personajes_de_la_noche_son_los_de_quienes_atienden() -> void:
+	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA, PRIMERA_DEL_PADRON):
+		var atienden: Array[int] = []
+		for comprador in Compradores.de_la_jornada(jornada):
+			atienden.append(comprador.personaje)
+		var personajes: Array[int] = []
+		for personaje in Compradores.personajes_de(jornada):
+			personajes.append(personaje)
+		personajes.sort()
+		atienden.sort()
+		assert_array(personajes).is_equal(atienden)

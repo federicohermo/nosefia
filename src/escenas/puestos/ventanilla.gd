@@ -24,12 +24,14 @@ signal entregas_abandonadas(cuerpos: Array[Node3D])
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const CompradorEnRetirada := preload("res://src/escenas/objetos/comprador_en_retirada.gd")
 const CompradorInteractuable := preload("res://src/escenas/objetos/comprador_interactuable.gd")
-const ANIMACIONES := {
-	DialogosDeCompradores.Personaje.TIN: preload("res://assets/characters/martin/idle.tres"),
-	DialogosDeCompradores.Personaje.TIA: preload("res://assets/characters/tiago/idle.tres"),
-	DialogosDeCompradores.Personaje.FEDE: preload("res://assets/characters/fede/idle.tres"),
-	DialogosDeCompradores.Personaje.MIA: preload("res://assets/characters/mia/idle.tres"),
-	DialogosDeCompradores.Personaje.CAMI: preload("res://assets/characters/cami/idle.tres"),
+## Rutas y no `preload`: cada personaje trae 8 cuadros de 6 MB, y los de quien no atiende la noche
+## no se cargan.
+const ANIMACIONES: Dictionary[int, String] = {
+	DialogosDeCompradores.Personaje.TIN: "res://assets/characters/martin/idle.tres",
+	DialogosDeCompradores.Personaje.TIA: "res://assets/characters/tiago/idle.tres",
+	DialogosDeCompradores.Personaje.FEDE: "res://assets/characters/fede/idle.tres",
+	DialogosDeCompradores.Personaje.MIA: "res://assets/characters/mia/idle.tres",
+	DialogosDeCompradores.Personaje.CAMI: "res://assets/characters/cami/idle.tres",
 }
 
 @export var jugador: JugadorDelLocal
@@ -51,12 +53,12 @@ var _imagen_de: Atencion = null
 var _retiradas: Array[CompradorEnRetirada] = []
 var _entrada: Tween
 var _posicion_de_espera: Vector3
+var _cargados: Dictionary[int, SpriteFrames] = {}
 
 
 func _ready() -> void:
 	_posicion_de_espera = comprador_visible.position
 	objetivo.atenciones = atenciones
-	objetivo.precargar(ANIMACIONES.values())
 	objetivo.interaccion_pedida.connect(_al_pulsar)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	panel.cobro_pedido.connect(atenciones.pedir_cobrar)
@@ -69,6 +71,28 @@ func _ready() -> void:
 	atenciones.comprador_vencido.connect(_al_vencer)
 	atenciones.jornada_preparada.connect(_al_preparar)
 	atenciones.conversacion_terminada.connect(cerrar)
+
+
+## Carga y lee el alfa de los cuadros de quienes atienden la noche, y suelta los de la anterior.
+##
+## Corre al abrirla, antes de que corra el reloj: en la web leer una textura espera a la GPU, y
+## ese costo no puede caer al apuntarle a un comprador. Un personaje fuera de la noche no se
+## precarga: se pide bajo demanda cuando llega.
+func cargar_la_noche(jornada: int) -> void:
+	var de_la_noche := Compradores.personajes_de(jornada)
+	comprador_visible.sprite_frames = null
+	for personaje: int in _cargados.keys():
+		if personaje not in de_la_noche:
+			_cargados.erase(personaje)
+	for personaje: int in de_la_noche:
+		_cuadros_de(personaje)
+	objetivo.precargar(_cargados.values())
+
+
+func _cuadros_de(personaje: int) -> SpriteFrames:
+	if not _cargados.has(personaje):
+		_cargados[personaje] = ResourceLoader.load(ANIMACIONES[personaje]) as SpriteFrames
+	return _cargados[personaje]
 
 
 func _al_preparar() -> void:
@@ -142,7 +166,7 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 		comprador_visible.hide()
 		comprador_visible.stop()
 		return
-	var cuadros: SpriteFrames = ANIMACIONES[atendida.comprador().personaje]
+	var cuadros := _cuadros_de(atendida.comprador().personaje)
 	if comprador_visible.sprite_frames != cuadros:
 		comprador_visible.sprite_frames = cuadros
 		comprador_visible.set_frame_and_progress(0, 0.0)

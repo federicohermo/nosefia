@@ -98,6 +98,22 @@ static func de_la_jornada(jornada: int, semilla: int = 0) -> Array[Comprador]:
 	return lista
 
 
+## Los personajes con sprite que atienden esa noche, sin repetir y en el orden en que llegan.
+##
+## Vacío si ninguno tiene figura. No depende de la semilla: ella sortea qué piden, no quién viene.
+static func personajes_de(jornada: int) -> Array[DialogosDeCompradores.Personaje]:
+	var compradores := de_la_jornada(jornada)
+	compradores.sort_custom(
+		func(a: Comprador, b: Comprador) -> bool: return a.horario.x < b.horario.x
+	)
+	var personajes: Array[DialogosDeCompradores.Personaje] = []
+	for comprador in compradores:
+		var personaje := comprador.personaje as DialogosDeCompradores.Personaje
+		if personaje != DialogosDeCompradores.Personaje.NINGUNO and personaje not in personajes:
+			personajes.append(personaje)
+	return personajes
+
+
 static func _al_azar(jornada: int, semilla: int) -> Array[Comprador]:
 	var azar := RandomNumberGenerator.new()
 	azar.seed = hash([semilla, jornada])

@@ -66,7 +66,7 @@ func test_la_tabla_resuelve_cada_personaje_con_un_recurso_propio() -> void:
 		assert_bool(tabla.has(personaje)).is_true()
 		if not tabla.has(personaje):
 			continue
-		var recurso := tabla[personaje] as SpriteFrames
+		var recurso := load(tabla[personaje]) as SpriteFrames
 		assert_object(recurso).is_not_null()
 		assert_array(recursos).not_contains_same(recurso)
 		recursos.append(recurso)
