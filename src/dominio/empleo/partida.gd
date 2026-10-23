@@ -23,9 +23,6 @@ enum RegistroDePoetico { RECHAZADO, ANOTADO, REPETIDO }
 ## La última noche de la prueba: de ahí sale el resultado que la primera jornada completa hereda.
 const _ULTIMA_DE_LA_PRUEBA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 
-## Cero no es una semilla: es lo que un guardado sin ella trae, y ahí la partida estrena una.
-const _SEMILLA_MAXIMA := 2147483647
-
 var expediente: Expediente:
 	get:
 		return _expediente
@@ -179,7 +176,8 @@ func _init(legajo: Legajo) -> void:
 	_expediente = Expediente.new(CasoDeInvestigacion.de_la_partida())
 	var azar := RandomNumberGenerator.new()
 	azar.randomize()
-	_semilla = azar.randi_range(1, _SEMILLA_MAXIMA)
+	# Cero es lo que trae un guardado sin semilla, y por eso no sirve de semilla.
+	_semilla = maxi(absi(azar.seed), 1)
 
 
 ## El legajo que la partida recibió, **la misma instancia** y no una copia. Con una copia, un
