@@ -1,5 +1,6 @@
 const { chromium } = require('playwright');
-const { writeFileSync } = require('node:fs');
+const { writeFileSync, readFileSync } = require('node:fs');
+const { createHash } = require('node:crypto');
 
 async function main() {
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
@@ -40,7 +41,8 @@ async function main() {
       });
       if (errors.length) throw new Error(JSON.stringify(errors));
       if (/swiftshader|llvmpipe|software/i.test(data.renderer)) throw new Error(data.renderer);
-      results.push({ side, loadMs, ...data, errors });
+      const pck = createHash('sha256').update(readFileSync(`export/${side}/index.pck`)).digest('hex');
+      results.push({ side, pck, loadMs, ...data, errors });
       console.log(JSON.stringify(results.at(-1)));
       writeFileSync('reports/cami-631/precarga-web.json', JSON.stringify(results, null, 2));
       await context.close();

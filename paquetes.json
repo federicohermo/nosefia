@@ -1363,7 +1363,7 @@
   },
   "cami": {
     "bytes": 98169268,
-    "sha256": "0e6ef01c6f4996693b11712744431026a3a8f9715269d5d6ca2b68018e848ac5",
+    "sha256": "f64c1fccc26bfefdddec1272a7f96f0103ec0eb47b4764b27d25ec1e89211e31",
     "files": {
       ".godot/exported/133200997/export-00ecd0d0e3eb9daac60d9cfc343ec727-panel_de_la_ventanilla.scn": 7184,
       ".godot/exported/133200997/export-0727d10855e794257040301699395780-balde.res": 868,

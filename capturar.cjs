@@ -1,5 +1,6 @@
 const { chromium, firefox } = require('playwright');
-const { mkdirSync, writeFileSync } = require('node:fs');
+const { mkdirSync, writeFileSync, readFileSync } = require('node:fs');
+const { createHash } = require('node:crypto');
 const assert = require('node:assert/strict');
 
 async function main() {
@@ -60,7 +61,9 @@ async function main() {
       await page.screenshot({ path: `${folder}/${command}.png` });
     }
     assert.equal(errors.length, 0, JSON.stringify(errors));
-    writeFileSync(`${folder}/resultado.json`, JSON.stringify({ browser: browser.version(), gpu, states, errors }, null, 2));
+    const pck = createHash('sha256').update(readFileSync('export/cami/index.pck')).digest('hex');
+    const fixturePck = createHash('sha256').update(readFileSync('export/captura/index.pck')).digest('hex');
+    writeFileSync(`${folder}/resultado.json`, JSON.stringify({ browser: browser.version(), gpu, pck, fixturePck, states, errors }, null, 2));
     console.log(`${kind}: ${states.length} states passed; ${gpu}`);
   } finally {
     await browser.close();

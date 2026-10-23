@@ -1,6 +1,8 @@
 {
   "browser": "155.0.8059.86",
   "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pck": "f64c1fccc26bfefdddec1272a7f96f0103ec0eb47b4764b27d25ec1e89211e31",
+  "fixturePck": "9aaaaa5c4caaa8f26695384868850b38f6adc810907771c93d6a6a0409ebf327",
   "states": [
     {
       "cached_images": 40,

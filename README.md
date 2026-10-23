@@ -50,11 +50,11 @@ y el recorrido de `precargar` sobre sus valores.
 
 | Medida | Mediana | Rango |
 |---|---:|---:|
-| Ocho lecturas de Cami | 77,8 ms | 38,0 a 79,0 ms |
-| Todas las lecturas de la base | 305,6 ms | 151,5 a 316,9 ms |
-| Todas las lecturas con Cami | 388,2 ms | 375,0 a 404,8 ms |
-| Clic a almacén, base | 5.851 ms | 5.381 a 17.397 ms |
-| Clic a almacén, con Cami | 6.436 ms | 5.870 a 9.423 ms |
+| Ocho lecturas de Cami | 76,6 ms | 34,2 a 82,0 ms |
+| Todas las lecturas de la base | 309,3 ms | 206,5 a 313,6 ms |
+| Todas las lecturas con Cami | 376,8 ms | 190,1 a 389,2 ms |
+| Clic a almacén, base | 5.231 ms | 5.223 a 7.307 ms |
+| Clic a almacén, con Cami | 5.534 ms | 5.321 a 5.681 ms |
 
 Las lecturas son sincrónicas con la GPU y ocurren dentro de la precarga de alfa.
 El costo medido de esas ocho llamadas no incluye toda la descompresión ni la carga del almacén.
@@ -91,6 +91,12 @@ node reports/cami-631/capturar.cjs firefox
 
 El servidor queda en otra terminal. Se requiere Playwright y sus navegadores.
 No se ejecutan ambos navegadores a la vez.
+Antes de exportar, las carpetas locales `reports/`, `build/` y `export/` llevan `.gdignore`.
+Playwright se instala en una carpeta propia. Un enlace temporal a otro worktree dejó de
+resolver cuando su destino desapareció y bloqueó la enumeración del exportador.
+Retirarlo permitió terminar el export final en ocho segundos.
+Se repitieron las diez mediciones y las capturas sobre ese paquete final.
+Cada resultado registra su SHA-256.
 
 ## Arte y pruebas
 
@@ -108,7 +114,10 @@ sin errores, fallos, salteos ni huérfanos.
 La corrida final cubre los ocho cuadros y el cambio Cami a Fede y de vuelta a Cami.
 Pasaron gdformat y gdlint de los cinco scripts afectados.
 No se corrió verificar.py ni el árbol completo local.
+La [CI del commit final](https://github.com/federicohermo/nosefia/actions/runs/39965642279)
+pasó las seis particiones y `verify`.
 
 Model the Domain mantuvo la identidad en el enum y el recurso en la tabla existente.
 Test Behavior, Not Implementation llevó las aserciones al flujo de atención, foco y pausa.
 Prove It Works llevó la comprobación al PCK y a capturas del juego en ambos navegadores.
+La revisión fue del mismo agente, sin subagentes por instrucción del usuario.

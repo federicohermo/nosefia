@@ -3,33 +3,33 @@ OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - 
 Build configuration: Emscripten 4.0.11, multi-threaded, no GDExtension support.
 [carga] menú visible
 The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
 [cami] {"cached_images":40,"command":"front","frame":0,"frames":[{"height":1448,"path":"res://assets/characters/cami/01.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/02.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/03.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/04.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/05.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/06.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/07.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/08.png","width":1086}],"outline":true,"panel":false,"pose":{"angulo":0.00117573351599276,"capsula":true,"objetivo":true,"piso":true,"pixel":"(543, 724)"},"resource":"res://assets/characters/cami/idle.tres","retreats":0,"visible":true}
 [cami] ready
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
 [cami] {"cached_images":40,"command":"front","frame":0,"frames":[{"height":1448,"path":"res://assets/characters/cami/01.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/02.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/03.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/04.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/05.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/06.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/07.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/08.png","width":1086}],"outline":true,"panel":false,"pose":{"angulo":0.00117573351599276,"capsula":true,"objetivo":true,"piso":true,"pixel":"(543, 724)"},"resource":"res://assets/characters/cami/idle.tres","retreats":0,"visible":true}
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
-[.WebGL-0x75ac033dca00] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
+[.WebGL-0x191401505000] GL_INVALID_OPERATION: glBlitFramebuffer: Depth/stencil buffer format combination not allowed for blit.
 [cami] {"cached_images":40,"command":"left","frame":0,"frames":[{"height":1448,"path":"res://assets/characters/cami/01.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/02.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/03.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/04.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/05.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/06.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/07.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/08.png","width":1086}],"outline":true,"panel":false,"pose":{"angulo":0.00113689538557082,"capsula":true,"objetivo":true,"piso":true,"pixel":"(543, 724)"},"resource":"res://assets/characters/cami/idle.tres","retreats":0,"visible":true}
 [cami] {"cached_images":40,"command":"right","frame":0,"frames":[{"height":1448,"path":"res://assets/characters/cami/01.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/02.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/03.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/04.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/05.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/06.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/07.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/08.png","width":1086}],"outline":true,"panel":false,"pose":{"angulo":0.00113706197589636,"capsula":true,"objetivo":true,"piso":true,"pixel":"(543, 724)"},"resource":"res://assets/characters/cami/idle.tres","retreats":0,"visible":true}
 [cami] {"cached_images":40,"command":"frame0","frame":0,"frames":[{"height":1448,"path":"res://assets/characters/cami/01.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/02.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/03.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/04.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/05.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/06.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/07.png","width":1086},{"height":1448,"path":"res://assets/characters/cami/08.png","width":1086}],"outline":true,"panel":false,"pose":{"angulo":0.00117573351599276,"capsula":true,"objetivo":true,"piso":true,"pixel":"(543, 724)"},"resource":"res://assets/characters/cami/idle.tres","retreats":0,"visible":true}

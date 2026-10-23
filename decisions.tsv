@@ -1,0 +1,8 @@
+﻿ts	phase	decision	why	evidence	result
+2026-10-23T00:00:00-03:00	preparación	Conservar enum y tabla existentes	El contrato limita el cambio a presentación	issue-631	Contrato leído
+2026-10-23T11:07:30.550445-03:00	registro	Corregir la hora del primer registro	La hora inicial era un marcador manual; los eventos se validan por sus logs	rojo2.log	Sustituye la hora del primer registro
+2026-10-23T11:07:30.551368-03:00	TDD	Recorrer todo el enum y probar a Cami con fixture propio	Cubrir identidad y comportamiento sin tocar agenda ni escenas	rojo-tabla.log	22 casos verdes y 8 finales verdes
+2026-10-23T11:07:30.551377-03:00	web	Usar el export productivo y una copia con autoload de captura	Cami no aparece en la agenda actual	evidencia/README.md	Chrome y Firefox pasan 17 estados
+2026-10-23T11:07:30.551385-03:00	export	Eliminar el enlace temporal a otro worktree	El destino desaparecio y el export quedaba al inicio del empaquetado	export-final.log	Export final sale cero en 8 segundos
+2026-10-23T11:07:30.551390-03:00	medicion	Repetir contra el hash del paquete final	Regenerar UIDs locales cambia el hash del PCK	paquetes.json	Medicion final en curso
+2026-10-23T11:10:28.023722-03:00	cierre	Paquete final y evidencia con hashes coincidentes	Que las mediciones se puedan atribuir al artefacto revisado	evidencia/paquetes.json	10 corridas y 34 estados web verdes; CI verde

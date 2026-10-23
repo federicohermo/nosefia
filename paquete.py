@@ -84,8 +84,9 @@ def main():
     target.mkdir(exist_ok=True)
     (target / 'index.pck').write_bytes(output)
     read_pack(target / 'index.pck')
+    allowed = {p.name for p in Path('export/base').iterdir() if p.is_file()}
     for source in Path('export/cami').iterdir():
-        if source.name == 'index.pck':
+        if source.name == 'index.pck' or source.name not in allowed:
             continue
         content = source.read_bytes()
         if source.name == 'index.html':
