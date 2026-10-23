@@ -22,11 +22,10 @@ func _escena_con_dos_luces() -> Node3D:
 	return escena
 
 
-## Cada fuente trae su malla y su material: iguales entre sí, pero no la misma instancia.
 func _agregar_fuente(
 	escena: Node3D,
 	capa: int,
-	material: StandardMaterial3D,
+	material: Material,
 	sombra: GeometryInstance3D.ShadowCastingSetting = GeometryInstance3D.SHADOW_CASTING_SETTING_ON,
 	lado: float = 0.1
 ) -> void:
@@ -45,9 +44,8 @@ func _agregar_fuente(
 	cuerpo.add_child(instancia)
 
 
-## Cuántas copias distintas se dibujaron, y en cuántos cuadros apareció alguna nueva.
 func _calentar(
-	materiales: Array[StandardMaterial3D],
+	materiales: Array[Material],
 	capas: Array[int],
 	sombras: Array[GeometryInstance3D.ShadowCastingSetting] = [],
 	lados: Array[float] = []
@@ -146,3 +144,32 @@ func test_las_fuentes_de_otro_tamano_con_el_mismo_programa_no_duplican_cada_comb
 		[StandardMaterial3D.new(), StandardMaterial3D.new()], [CAPA_A, CAPA_A], [], [0.1, 0.8]
 	)
 	assert_int(juntas["copias"]).is_less(chica["copias"] + grande["copias"])
+
+
+func test_el_mismo_shader_con_otro_pase_conserva_sus_copias() -> void:
+	var shader := Shader.new()
+	shader.code = "shader_type spatial; void fragment() { ALBEDO = vec3(1.0); }"
+	var primero := ShaderMaterial.new()
+	primero.shader = shader
+	var segundo := ShaderMaterial.new()
+	segundo.shader = shader
+	segundo.next_pass = StandardMaterial3D.new()
+	var sola: Dictionary = await _calentar([primero], [CAPA_A])
+	var dos: Dictionary = await _calentar([primero, segundo], [CAPA_A, CAPA_A])
+	assert_int(sola["copias"]).is_greater(1)
+	assert_int(dos["copias"]).is_greater(sola["copias"])
+
+
+func test_el_mismo_shader_y_pase_comparten_las_copias() -> void:
+	var shader := Shader.new()
+	shader.code = "shader_type spatial; void fragment() { ALBEDO = vec3(1.0); }"
+	var primero := ShaderMaterial.new()
+	primero.shader = shader
+	primero.next_pass = StandardMaterial3D.new()
+	var segundo := ShaderMaterial.new()
+	segundo.shader = shader
+	segundo.next_pass = primero.next_pass
+	var sola: Dictionary = await _calentar([primero], [CAPA_A])
+	var dos: Dictionary = await _calentar([primero, segundo], [CAPA_A, CAPA_A])
+	assert_int(sola["copias"]).is_greater(1)
+	assert_int(dos["copias"]).is_equal(sola["copias"])

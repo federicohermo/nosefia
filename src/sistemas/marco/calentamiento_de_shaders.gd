@@ -434,7 +434,11 @@ func _programa_de(objeto: GeometryInstance3D) -> Array:
 	var lote := objeto as MultiMeshInstance3D
 	if lote != null and lote.multimesh != null:
 		programa.append([lote.multimesh.use_colors, lote.multimesh.use_custom_data])
-	programa.append_array(_materiales_de(objeto).map(_huella))
+	for material: Variant in _materiales_de(objeto):
+		var huella: Variant = _huella(material)
+		if material is ShaderMaterial:
+			huella = [huella, (material as ShaderMaterial).next_pass]
+		programa.append(huella)
 	return programa
 
 
