@@ -1,5 +1,6 @@
 ## Una partida seguida no vuelve a cargar entre noches: los útiles que la carga de «Nuevo juego»
-## no preparó se calientan en la transición, con la persiana baja y el turno detenido.
+## no preparó se calientan en la transición hacia la primera noche que limpia, con la persiana
+## baja y el turno detenido. Las anteriores no los tocan: el cuartito sigue trabado.
 extends GdUnitTestSuite
 
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
@@ -13,6 +14,13 @@ func before_test() -> void:
 
 func after_test() -> void:
 	Guardado.new().borrar()
+
+
+func _primera_que_limpia() -> int:
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
+	while not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR):
+		jornada += 1
+	return jornada
 
 
 func _cerrar_y_continuar(almacen: Node3D) -> bool:
@@ -29,7 +37,7 @@ func _cerrar_y_continuar(almacen: Node3D) -> bool:
 	return await AvanceDeDevolucion.esperar_la_noche_siguiente(almacen)
 
 
-func test_la_transicion_prepara_los_utiles_una_vez_con_la_persiana_baja() -> void:
+func test_la_transicion_a_la_primera_que_limpia_prepara_los_utiles_con_la_persiana_baja() -> void:
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	await get_tree().process_frame
@@ -38,32 +46,37 @@ func test_la_transicion_prepara_los_utiles_una_vez_con_la_persiana_baja() -> voi
 	var jugador: Node = almacen.get_node("Jugador")
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var persiana: PersianaDeLaNoche = almacen.get_node("Interfaz/PersianaDeLaNoche")
-	var calentamientos := [0]
+	var transiciones := _primera_que_limpia() - ReglasDeLaPartida.PRIMERA_JORNADA
+	var transicion := [0]
+	var calentadas: Array[Array] = []
+	calentadas.resize(transiciones)
+	calentadas.fill([])
 	var durante: Array[Array] = []
 	almacen.child_entered_tree.connect(
 		func(nodo: Node) -> void:
 			if nodo is CalentamientoDeShaders:
-				calentamientos[0] += 1
 				(nodo as CalentamientoDeShaders).avanzo.connect(
 					func(_progreso: float) -> void:
+						calentadas[transicion[0]] = (nodo as CalentamientoDeShaders).get("_solo_de")
 						durante.append(
 							[jugador.call("suspendido"), reloj.corriendo(), persiana.en_pantalla()]
 						)
 				)
 	)
-	var siguientes: Array[int] = []
-	for _noche: int in 2:
+	for indice: int in transiciones:
+		transicion[0] = indice
 		assert_bool(await _cerrar_y_continuar(almacen)).is_true()
-		siguientes.append(partida.jornada())
 		assert_int(almacen.get("_jornada_preparada")).is_equal(partida.jornada())
 		AvanceDeDevolucion.leer_las_instrucciones(almacen)
 		persiana.terminar()
 		await get_tree().process_frame
-	assert_array(siguientes).is_equal(
-		[ReglasDeLaPartida.PRIMERA_JORNADA + 1, ReglasDeLaPartida.PRIMERA_JORNADA + 2]
-	)
-	# Una sola vez: la segunda transición ya no encuentra útiles por preparar.
-	assert_int(calentamientos[0]).is_equal(1)
+	assert_int(partida.jornada()).is_equal(_primera_que_limpia())
+	var utiles: Array[Node3D] = []
+	utiles.assign(almacen.get("_utiles_de_limpieza"))
+	assert_array(utiles).is_not_empty()
+	for anterior: int in transiciones - 1:
+		assert_array(calentadas[anterior]).not_contains(utiles)
+	assert_array(calentadas[transiciones - 1]).contains(utiles)
 	assert_array(durante).is_not_empty()
 	for estado: Array in durante:
 		assert_array(estado).is_equal([true, false, true])
