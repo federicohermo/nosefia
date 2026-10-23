@@ -30,12 +30,30 @@ def tramo_con_referencia(
     return inicio, fin
 
 
+def pasos_del_estante(productos: tuple[str, ...], referencias: dict[str, float]) -> list[float]:
+    """La separación de cada producto del estante: la de referencia, salvo Terminator.
+
+    Terminator toma la de su vecino porque con la suya de referencia las cajas quedan casi
+    solapadas junto al resto del estante.
+    """
+    pasos = [referencias[producto] for producto in productos]
+    if len(productos) == 2:
+        for indice, producto in enumerate(productos):
+            if producto in CON_EL_PASO_DEL_VECINO:
+                pasos[indice] = referencias[productos[1 - indice]]
+    return pasos
+
+
 def centros_con_referencia(
     largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float],
     extremos: tuple[float, float] | None = None,
     *, minimo: float, aire_central: float = 0.0,
 ) -> list[list[float]]:
-    """El cupo sale de las columnas que caben con el ritmo de referencia y sus márgenes."""
+    """El cupo sale de las columnas que caben con el ritmo de referencia y sus márgenes.
+
+    El encuentro de dos tandas deja la mayor separación de las dos y el sobrante va a los
+    bordes: así el paso es el mismo entre las unidades vecinas, sean o no del mismo producto.
+    """
     if not envases or len(envases) != len(cuentas) or len(cuentas) != len(huecos):
         raise ValueError("el reparto requiere un envase y una separación por tanda")
     if extremos is not None and len(envases) != 2:
@@ -44,39 +62,31 @@ def centros_con_referencia(
         raise ValueError("el mapa admite una tanda o las dos mitades longitudinales")
     if any(n < 1 or h < minimo for n, h in zip(cuentas, huecos)):
         raise ValueError("el reparto no conserva el mínimo de aire entre unidades")
-    central = aire_central if len(envases) == 2 else 0.0
-    bordes = extremos or (central / 2,) * 2
-    if len(envases) == 1:
-        bordes = (0.0, 0.0)
-    disponible = largo - sum(bordes) - central
+    dos = len(envases) == 2
+    union = max(aire_central, *huecos) if dos else 0.0
+    bordes = extremos or ((aire_central / 2,) * 2 if dos else (0.0, 0.0))
+    disponible = largo - sum(bordes) - union
     candidatas = []
     for candidata in product(*(range(1, limite + 1) for limite in cuentas)):
         bloques = [n * e.ancho + (n - 1) * h
                    for n, e, h in zip(candidata, envases, huecos)]
-        if sum(bloques) <= disponible + 1e-9:
-            candidatas.append((sum(candidata), -abs(bloques[0] - bloques[-1]),
-                               candidata, bloques))
+        sobrante = disponible - sum(bloques)
+        if sobrante < -1e-9:
+            continue
+        if dos:
+            inicio = bordes[0] + sobrante / 2
+            if not inicio + bloques[0] / 2 < largo / 2 < inicio + bloques[0] + union + bloques[1] / 2:
+                continue
+        candidatas.append((sum(candidata), -abs(bloques[0] - bloques[-1]), candidata, bloques))
     if not candidatas:
         raise ValueError("ni una columna cabe conservando los márgenes y el aire")
     _, _, cuentas, bloques = max(candidatas)
-    if len(envases) == 1:
-        franjas = [(0.0, largo)]
-    else:
-        medio = largo / 2
-        franjas = [(bordes[0], medio - central / 2),
-                   (medio + central / 2, largo - bordes[1])]
-        if any(ancho > fin - inicio + 1e-9
-               for ancho, (inicio, fin) in zip(bloques, franjas)):
-            sobrante = max(0.0, disponible - sum(bloques))
-            primero = bordes[0] + sobrante / 4
-            segundo = primero + bloques[0] + central + sobrante / 2
-            franjas = [(primero, primero + bloques[0]), (segundo, segundo + bloques[1])]
-    salida = []
-    for envase, cuenta, hueco, (inicio, fin) in zip(envases, cuentas, huecos, franjas):
-        ancho = cuenta * envase.ancho + (cuenta - 1) * hueco
-        centro = inicio + (fin - inicio - ancho) / 2 + envase.ancho / 2
-        salida.append([centro + columna * (envase.ancho + hueco) for columna in range(cuenta)])
-    return salida
+    inicio = bordes[0] + (disponible - sum(bloques)) / 2
+    inicios = [inicio, inicio + bloques[0] + union][:len(envases)]
+    return [
+        [desde + envase.ancho / 2 + columna * (envase.ancho + hueco) for columna in range(cuenta)]
+        for envase, cuenta, hueco, desde in zip(envases, cuentas, huecos, inicios)
+    ]
 
 
 CARAS = {
@@ -98,6 +108,8 @@ ESTANTES_DE_PRUEBA = {
     for cara, productos in CARAS.items()
     for nivel in range(4)
 }
+
+CON_EL_PASO_DEL_VECINO = frozenset({"TERMINATOR"})
 
 RETIROS_POR_ESTANTE_DE_PRUEBA = {
     f"{letra}.{cara}.{nivel}": 0.04

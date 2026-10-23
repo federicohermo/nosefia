@@ -123,26 +123,61 @@ class RepartoDePrueba(unittest.TestCase):
         union = filas[1][0] - envases[1].ancho / 2 - filas[0][-1] - envases[0].ancho / 2
         self.assertGreaterEqual(union, AIRE_CENTRAL - 1e-9)
 
-    def test_cada_tanda_conserva_el_ritmo_de_su_envase_y_el_sobrante_queda_en_los_bordes(self):  # AC-STK-100
+    def test_el_encuentro_de_dos_tandas_deja_el_paso_de_la_mayor_separacion(self):  # AC-STK-105
         envases = [Envase(20 * HUECO_MINIMO, 4 * MARGEN, 10 * MARGEN),
                    Envase(30 * HUECO_MINIMO, 4 * MARGEN, 10 * MARGEN)]
         cuentas = [3, 2]
         huecos = [HUECO_MINIMO * 1.5, HUECO_MINIMO * 3.5]
         largo = sum(e.ancho * c + h * (c - 1)
                     for e, c, h in zip(envases, cuentas, huecos)) + 8 * MARGEN + 2 * AIRE_CENTRAL
-        filas = _distribuir(largo, envases, cuentas, huecos)
-        mitad = largo / len(envases)
-        for indice, (envase, cuenta, hueco, fila) in enumerate(
-            zip(envases, cuentas, huecos, filas)
-        ):
-            self.assertEqual(len(fila), cuenta)
-            for a, b in zip(fila, fila[1:]):
-                self.assertAlmostEqual(b - a - envase.ancho, hueco)
-            izquierda = fila[0] - envase.ancho / 2
-            derecha = fila[-1] + envase.ancho / 2
-            self.assertGreaterEqual(izquierda, indice * mitad)
-            self.assertLessEqual(derecha, (indice + 1) * mitad)
-            self.assertAlmostEqual(izquierda - indice * mitad, (indice + 1) * mitad - derecha)
+        for extremos in (None, (AIRE_ENTRE_CARAS,) * 2):
+            with self.subTest(extremos=extremos):
+                filas = _distribuir(largo, envases, cuentas, huecos, extremos)
+                for envase, cuenta, hueco, fila in zip(envases, cuentas, huecos, filas):
+                    self.assertEqual(len(fila), cuenta)
+                    for a, b in zip(fila, fila[1:]):
+                        self.assertAlmostEqual(b - a - envase.ancho, hueco)
+                union = filas[1][0] - filas[0][-1] - sum(e.ancho for e in envases) / 2
+                self.assertAlmostEqual(union, max(huecos))
+                izquierda = filas[0][0] - envases[0].ancho / 2
+                derecha = largo - filas[1][-1] - envases[1].ancho / 2
+                self.assertAlmostEqual(izquierda, derecha)
+                self.assertLess(sum(filas[0]) / cuentas[0], largo / 2)
+                self.assertGreater(sum(filas[1]) / cuentas[1], largo / 2)
+
+    def test_el_encuentro_nunca_baja_del_aire_entre_tandas(self):  # AC-STK-105
+        envases = [Envase(20 * HUECO_MINIMO, MARGEN, MARGEN)] * 2
+        huecos = [MINIMO, 2 * MINIMO]
+        largo = 2 * (3 * envases[0].ancho + 2 * huecos[1]) + 2 * AIRE_ENTRE_CARAS + AIRE_CENTRAL
+        filas = _distribuir(largo, envases, [3, 3], huecos, (AIRE_ENTRE_CARAS,) * 2)
+        union = filas[1][0] - filas[0][-1] - envases[0].ancho
+        self.assertAlmostEqual(union, max(AIRE_CENTRAL, *huecos))
+
+    def test_terminator_toma_el_paso_de_zucarachas_y_pierde_una_columna(self):  # AC-STK-106
+        terminator = Envase(20 * HUECO_MINIMO, MARGEN, MARGEN)
+        zucarachas = Envase(40 * HUECO_MINIMO, MARGEN, MARGEN)
+        referencias = {"TERMINATOR": MINIMO * 3, "ZUCARACHAS": MINIMO * 7}
+        propios = [referencias[p] for p in ("TERMINATOR", "ZUCARACHAS")]
+        tomados = reparto_de_prueba.pasos_del_estante(("TERMINATOR", "ZUCARACHAS"), referencias)
+        self.assertEqual(tomados, [referencias["ZUCARACHAS"]] * 2)
+        largo = (6 * terminator.ancho + 5 * propios[0] + 3 * zucarachas.ancho
+                 + 2 * propios[1] + max(AIRE_CENTRAL, *propios) + AIRE_CENTRAL)
+        envases = [terminator, zucarachas]
+        con_propios = _distribuir(largo, envases, [6, 3], propios)
+        con_el_vecino = _distribuir(largo, envases, [6, 3], tomados)
+        self.assertEqual([len(f) for f in con_propios], [6, 3])
+        self.assertEqual([len(f) for f in con_el_vecino], [5, 3])
+
+    def test_los_demas_productos_conservan_su_separacion_de_referencia(self):  # AC-STK-106
+        referencias = {"ARVECOR": MINIMO * 3, "MAROLINI": MINIMO * 7, "MALBARDO": MINIMO * 5}
+        self.assertEqual(
+            reparto_de_prueba.pasos_del_estante(("ARVECOR", "MAROLINI"), referencias),
+            [referencias["ARVECOR"], referencias["MAROLINI"]],
+        )
+        self.assertEqual(
+            reparto_de_prueba.pasos_del_estante(("MALBARDO",), referencias),
+            [referencias["MALBARDO"]],
+        )
 
     def test_retroceden_todos_los_laterales_de_las_islas_y_ninguna_cabecera(self):
         retiros = reparto_de_prueba.RETIROS_POR_ESTANTE_DE_PRUEBA

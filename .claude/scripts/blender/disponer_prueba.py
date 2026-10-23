@@ -29,7 +29,7 @@ from lib.reparto_de_prueba import (
     ESTANTES_DE_PRUEBA, RETIROS_POR_ESTANTE_DE_PRUEBA, bandas_del_nivel, bases_del_contenido,
     validar_identidades_de_prueba,
     validar_reparto_de_prueba,
-    centros_con_referencia, tramo_con_referencia,
+    centros_con_referencia, pasos_del_estante, tramo_con_referencia,
 )
 
 RAIZ = Path(__file__).resolve().parents[3]
@@ -78,6 +78,7 @@ def colocador_de_prueba(huecos, retiros, aires, reglas):
 
     def colocar(estante, izquierda, largo, envases, cuentas, desde):
         productos = ESTANTES_DE_PRUEBA[estante.clave]
+        pasos = pasos_del_estante(tuple(t.producto for t in productos), huecos)
         referencia = retiros[estante.clave]
         inicio, fin = izquierda, izquierda + largo
         letra, cara, nivel = partes(estante.clave)
@@ -105,7 +106,7 @@ def colocador_de_prueba(huecos, retiros, aires, reglas):
                 entre_caras = tuple(
                     max(reglas["AIRE_MINIMO_ENTRE_CARAS"],
                         max(huecos[t.producto] for t in ESTANTES_DE_PRUEBA[c]),
-                        max(huecos[t.producto] for t in productos))
+                        max(pasos))
                     for c in claves
                 )
             inicio, fin = tramo_con_referencia(
@@ -114,7 +115,7 @@ def colocador_de_prueba(huecos, retiros, aires, reglas):
             )
         try:
             columnas = centros_con_referencia(
-                fin - inicio, envases, cuentas, [huecos[t.producto] for t in productos], entre_caras,
+                fin - inicio, envases, cuentas, pasos, entre_caras,
                 minimo=reglas["SEPARACION_MINIMA_DE_EXHIBICION"],
                 aire_central=reglas["AIRE_MINIMO_ENTRE_TANDAS"] if entre_caras else 0.0,
             )
