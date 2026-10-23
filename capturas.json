@@ -1,0 +1,98 @@
+[
+  {
+    "apertura": "Buenas noches. Quiero [color=#e4f850]una lata de Pura-Cola[/color], [color=#e4f850]un alfajor Jorgillo[/color] y [color=#e4f850]un paquete de galletitas Petisas[/color].",
+    "comprador": "Cami",
+    "figura": "res://assets/characters/cami/idle.tres",
+    "foco": true,
+    "jornada": 3,
+    "llega_s": 180.0,
+    "pedido": [
+      "Pura-Cola",
+      "Jorgillo",
+      "Petisas"
+    ],
+    "personaje": 5,
+    "se_va_s": 9180.0,
+    "semilla_de_la_partida": 1353274670
+  },
+  {
+    "apertura": "Buenas noches. Quiero [color=#e4f850]una botella de Poético[/color], [color=#e4f850]una lata de Pura-Cola[/color] y [color=#e4f850]una caja de preservativos Duronga[/color].",
+    "comprador": "Tin",
+    "figura": "res://assets/characters/martin/idle.tres",
+    "foco": true,
+    "jornada": 3,
+    "llega_s": 19800.0,
+    "pedido": [
+      "Poético",
+      "Pura-Cola",
+      "Duronga"
+    ],
+    "personaje": 1,
+    "se_va_s": 28800.0,
+    "semilla_de_la_partida": 1353274670
+  },
+  {
+    "apertura": "Buenas noches. Quiero [color=#e4f850]una caja de preservativos Durextra[/color], [color=#e4f850]una caja de vino Terminator[/color] y [color=#e4f850]una caja de medicamentos Actroncito[/color].",
+    "comprador": "Tia",
+    "figura": "res://assets/characters/tiago/idle.tres",
+    "foco": true,
+    "jornada": 4,
+    "llega_s": 7200.0,
+    "pedido": [
+      "Durextra",
+      "Terminator",
+      "Actroncito"
+    ],
+    "personaje": 2,
+    "se_va_s": 18000.0,
+    "semilla_de_la_partida": 268389269
+  },
+  {
+    "apertura": "Buenas noches. Quiero [color=#e4f850]una lata de atún Marranos[/color], [color=#e4f850]un paquete de galletitas Petisas[/color] y [color=#e4f850]un paquete de Chisitos[/color].",
+    "comprador": "Fede",
+    "figura": "res://assets/characters/fede/idle.tres",
+    "foco": true,
+    "jornada": 4,
+    "llega_s": 28800.0,
+    "pedido": [
+      "Marranos",
+      "Petisas",
+      "Chisitos"
+    ],
+    "personaje": 3,
+    "se_va_s": 39600.0,
+    "semilla_de_la_partida": 268389269
+  },
+  {
+    "apertura": "Buenas noches. Quiero [color=#e4f850]un tubo de papitas Progres[/color], [color=#e4f850]una caja de galletitas Pepito[/color] y [color=#e4f850]una botella de Fernet God[/color].",
+    "comprador": "Cami",
+    "figura": "res://assets/characters/cami/idle.tres",
+    "foco": true,
+    "jornada": 5,
+    "llega_s": 1800.0,
+    "pedido": [
+      "Progres",
+      "Pepito",
+      "Fernet God"
+    ],
+    "personaje": 5,
+    "se_va_s": 12600.0,
+    "semilla_de_la_partida": 1295480203
+  },
+  {
+    "apertura": "Buenas noches. Quiero [color=#e4f850]una caja de chocolatada Cindolor[/color], [color=#e4f850]una caja de galletitas Oremos[/color] y [color=#e4f850]una caja de fideos Uakalas[/color].",
+    "comprador": "Mía",
+    "figura": "res://assets/characters/mia/idle.tres",
+    "foco": true,
+    "jornada": 5,
+    "llega_s": 32400.0,
+    "pedido": [
+      "Cindolor",
+      "Oremos",
+      "Uakalas"
+    ],
+    "personaje": 4,
+    "se_va_s": 43200.0,
+    "semilla_de_la_partida": 1295480203
+  }
+]
