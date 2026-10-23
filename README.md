@@ -21,7 +21,7 @@ Se usó Playwright con Chrome instalado, sin ventana y con ANGLE D3D11, y Firefo
 
 ## Reproducción
 
-El controlador temporal `repro_barra.gd.txt` se cargó como autoload desde `src/repro_barra.gd`. `repro_avance.gd.txt` es la copia del helper de tests que termina las instrucciones iniciales. No se modific? ningún `.tscn`. El controlador escribe un guardado separado de J2, usa la entrada real del menú, completa las tareas y adelanta el reloj al cierre. La transición, sus útiles, la persiana y la compilación usan el código real del juego.
+El controlador temporal `repro_barra.gd.txt` se cargó como autoload desde `src/repro_barra.gd`. `repro_avance.gd.txt` es la copia del helper de tests que termina las instrucciones iniciales. No se modificó ningún `.tscn`. El controlador escribe un guardado separado de J2, usa la entrada real del menú, completa las tareas y adelanta el reloj al cierre. La transición, sus útiles, la persiana y la compilación usan el código real del juego.
 
 La única instrumentación en `PantallaDeCarga.pintar`, después de asignar la barra, fue:
 
