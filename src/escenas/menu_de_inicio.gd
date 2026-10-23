@@ -61,8 +61,6 @@ var _musica: AudioStreamPlayer
 var _inicio_del_fundido: int = 0
 var _lectura_inicial := 0.0
 var _parte_de_la_lectura := PARTE_DE_LA_LECTURA
-## Lo que ya mostró la barra: el calentamiento vuelve a cero en cada pasada, y la barra no.
-var _mostrado := 0.0
 var _ahora: Callable = Time.get_ticks_usec
 
 
@@ -144,11 +142,11 @@ func _process(delta: float) -> void:
 		return
 	if _lectura_inicial < 1.0:
 		var leido := (_carga.progreso() - _lectura_inicial) / (1.0 - _lectura_inicial)
-		_pintar(_parte_de_la_lectura * clampf(leido, 0.0, 1.0))
+		_pantalla.pintar(_parte_de_la_lectura * clampf(leido, 0.0, 1.0))
 		_pantalla.contar_lectura(_carga.progreso())
 	_espera.avanzar(delta)
 	if _calentamiento_en_el_menu == null and _copia != null and _sirve_la_copia():
-		_pintar(_espera.avance() * (1.0 - _parte_de_la_lectura) + _parte_de_la_lectura)
+		_pantalla.pintar(_espera.avance() * (1.0 - _parte_de_la_lectura) + _parte_de_la_lectura)
 	if _espera.puede_entrar() and _calentamiento_en_el_menu == null:
 		_espera = null
 		if _copia != null and _sirve_la_copia():
@@ -195,10 +193,8 @@ func _pintar_el_fundido() -> void:
 
 func _preparar_la_entrada() -> void:
 	_espera = EsperaDeLaCarga.new()
-	_mostrado = 0.0
 	_lectura_inicial = 1.0 if _almacen != null else _carga.progreso()
 	_parte_de_la_lectura = PARTE_DE_LA_LECTURA * (1.0 - _lectura_inicial)
-	_pantalla.pintar(0.0)
 	_pantalla.contar_lectura(1.0 if _almacen != null else _carga.progreso())
 	if _almacen != null:
 		_espera.terminar_carga()
@@ -224,7 +220,7 @@ func _calentar_el_almacen() -> void:
 func _pintar_el_calentamiento(progreso: float, calentamiento: CalentamientoDeShaders) -> void:
 	if not _pantalla.visible:
 		return
-	_pintar(_parte_de_la_lectura + progreso * (1.0 - _parte_de_la_lectura))
+	_pantalla.pintar(_parte_de_la_lectura + progreso * (1.0 - _parte_de_la_lectura))
 	var total := calentamiento.objetos_a_preparar()
 	var faltan := calentamiento.objetos_por_preparar()
 	var cola: int = calentamiento.programas_en_cola.call()
@@ -234,22 +230,17 @@ func _pintar_el_calentamiento(progreso: float, calentamiento: CalentamientoDeSha
 		_pantalla.contar_preparacion(total - faltan, total)
 
 
-func _pintar(valor: float) -> void:
-	_mostrado = maxf(_mostrado, valor)
-	_pantalla.pintar(_mostrado)
-
-
 func _llenar_y_entrar(almacen: Node) -> void:
 	_pantalla.contar_entrada()
-	var desde := _mostrado
+	var desde := _pantalla.progreso()
 	var inicio: int = _ahora.call()
 	var cuadros := 0
-	while _mostrado < 1.0:
+	while _pantalla.progreso() < 1.0:
 		await get_tree().process_frame
 		cuadros += 1
 		var transcurrido: float = (_ahora.call() - inicio) / 1000000.0
 		var avance := minf(transcurrido / LLENADO_FINAL, float(cuadros) / CUADROS_DEL_LLENADO)
-		_pintar(lerpf(desde, 1.0, minf(1.0, avance)))
+		_pantalla.pintar(lerpf(desde, 1.0, minf(1.0, avance)))
 	await get_tree().create_timer(BARRA_LLENA).timeout
 	_entrar(almacen)
 

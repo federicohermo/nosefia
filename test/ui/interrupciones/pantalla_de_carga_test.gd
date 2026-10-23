@@ -38,6 +38,30 @@ func test_entre_noches_conserva_la_barra_y_la_tipografia_de_la_inicial() -> void
 	)
 
 
+func test_ninguna_presentacion_retrocede_si_la_estimacion_baja() -> void:
+	for presentacion: PantallaDeCarga.Presentacion in PantallaDeCarga.Presentacion.values():
+		var pantalla := _pantalla(presentacion)
+		var barra: ProgressBar = pantalla.find_children("*", "ProgressBar", true, false)[0]
+		var anterior := barra.value
+		for progreso: float in [0.7, 0.3, 0.8, 0.6, 0.9, 0.0, 1.0]:
+			pantalla.pintar(progreso)
+			assert_float(barra.value).is_greater_equal(anterior)
+			anterior = barra.value
+		assert_float(barra.value).is_equal(barra.max_value)
+
+
+func test_cada_carga_comienza_de_cero_aunque_la_anterior_haya_terminado() -> void:
+	for presentacion: PantallaDeCarga.Presentacion in PantallaDeCarga.Presentacion.values():
+		var pantalla := _pantalla(presentacion)
+		var barra: ProgressBar = pantalla.find_children("*", "ProgressBar", true, false)[0]
+		pantalla.pintar(1.0)
+		pantalla.ocultar()
+		pantalla.mostrar()
+		assert_float(barra.value).is_equal(barra.min_value)
+		pantalla.pintar(0.3)
+		assert_float(barra.value).is_greater(barra.min_value).is_less(barra.max_value)
+
+
 func test_en_escritorio_los_tres_puntos_laten_y_se_ocultan_con_la_pantalla() -> void:
 	var pantalla := _pantalla(PantallaDeCarga.Presentacion.ENTRE_NOCHES)
 	await await_idle_frame()
