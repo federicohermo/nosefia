@@ -81,6 +81,7 @@ func _ready() -> void:
 func cargar_la_noche(jornada: int) -> void:
 	var de_la_noche := Compradores.personajes_de(jornada)
 	comprador_visible.sprite_frames = null
+	_limpiar_retiradas()
 	for personaje: int in _cargados.keys():
 		if personaje not in de_la_noche:
 			_cargados.erase(personaje)
@@ -90,6 +91,8 @@ func cargar_la_noche(jornada: int) -> void:
 
 
 func _cuadros_de(personaje: int) -> SpriteFrames:
+	if not ANIMACIONES.has(personaje):
+		return null
 	if not _cargados.has(personaje):
 		_cargados[personaje] = ResourceLoader.load(ANIMACIONES[personaje]) as SpriteFrames
 	return _cargados[personaje]
@@ -157,7 +160,12 @@ func _repintar() -> void:
 
 
 func _mostrar_personaje(atendida: Atencion) -> void:
-	if atendida == null or not atendida.fisica() or atendida.despachada():
+	var cuadros: SpriteFrames = (
+		_cuadros_de(atendida.comprador().personaje)
+		if atendida != null and atendida.fisica() and not atendida.despachada()
+		else null
+	)
+	if cuadros == null:
 		if atendida != null and atendida == _imagen_de and comprador_visible.visible:
 			_conservar_imagen()
 		_imagen_de = null
@@ -166,7 +174,6 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 		comprador_visible.hide()
 		comprador_visible.stop()
 		return
-	var cuadros := _cuadros_de(atendida.comprador().personaje)
 	if comprador_visible.sprite_frames != cuadros:
 		comprador_visible.sprite_frames = cuadros
 		comprador_visible.set_frame_and_progress(0, 0.0)
@@ -220,6 +227,7 @@ func _conservar_imagen() -> void:
 func _limpiar_retiradas() -> void:
 	for retirada in _retiradas:
 		if is_instance_valid(retirada):
+			retirada.sprite_frames = null
 			retirada.hide()
 			retirada.queue_free()
 	_retiradas.clear()

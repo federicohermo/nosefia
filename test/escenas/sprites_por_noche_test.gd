@@ -95,9 +95,27 @@ func _cambiar_de_noche(almacen: Node3D) -> void:
 	await _cuadros()
 
 
+func _descartar(almacen: Node3D) -> void:
+	for tipo: String in ["AudioStreamPlayer", "AudioStreamPlayer3D"]:
+		for audio: Node in almacen.find_children("*", tipo, true, false):
+			audio.call("stop")
+			audio.set("stream", null)
+	_almacenes.erase(almacen)
+	almacen.queue_free()
+	for cuadro in 4:
+		await get_tree().process_frame
+
+
 func _con_fede(_jornada: int) -> Array[Comprador]:
 	var compradores := Compradores.segunda_jornada_definida()
 	compradores.resize(1)
+	return compradores
+
+
+func _sin_personaje(_jornada: int) -> Array[Comprador]:
+	var compradores := Compradores.segunda_jornada_definida()
+	compradores.resize(1)
+	compradores[0].personaje = PERSONAJE.NINGUNO
 	return compradores
 
 
@@ -110,9 +128,24 @@ func test_la_primera_noche_lee_los_cuadros_de_tin_y_tia_y_ningun_otro() -> void:
 
 
 func test_cada_noche_lee_los_cuadros_de_los_personajes_que_dice_el_dominio() -> void:
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + 2
-	var almacen := await _abrir(jornada)
-	assert_array(_leidas(almacen)).is_equal(_cuadros_de(Compradores.personajes_de(jornada)))
+	var tercera := ReglasDeLaPartida.PRIMERA_JORNADA + 2
+	var almacen_tercera := await _abrir(tercera)
+	assert_array(_leidas(almacen_tercera)).is_equal(_cuadros_de(Compradores.personajes_de(tercera)))
+	assert_bool(_en_la_memoria(PERSONAJE.TIA)).is_false()
+	await _descartar(almacen_tercera)
+	var cuarta := ReglasDeLaPartida.PRIMERA_JORNADA + 3
+	var almacen_cuarta := await _abrir(cuarta)
+	assert_array(_leidas(almacen_cuarta)).is_equal(_cuadros_de(Compradores.personajes_de(cuarta)))
+	assert_bool(_en_la_memoria(PERSONAJE.TIN)).is_false()
+
+
+func test_nuevo_juego_tras_copia_calentada_con_otro_guardado_abre_con_la_primera_noche() -> void:
+	var calentado := await _abrir(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	assert_bool(_en_la_memoria(PERSONAJE.CAMI)).is_true()
+	await _descartar(calentado)
+	var nuevo := await _abrir(ReglasDeLaPartida.PRIMERA_JORNADA)
+	assert_array(_leidas(nuevo)).is_equal(_cuadros_de([PERSONAJE.TIN, PERSONAJE.TIA]))
+	assert_bool(_en_la_memoria(PERSONAJE.CAMI)).is_false()
 
 
 func test_una_noche_sin_comprador_con_sprite_no_lee_ni_carga_ningun_cuadro() -> void:
@@ -146,14 +179,53 @@ func test_reintentar_la_noche_conserva_las_imagenes_que_ya_se_leyeron() -> void:
 		assert_object(despues.get(textura)).is_same(antes[textura])
 
 
+func _centro_visible(figura: AnimatedSprite3D) -> Vector3:
+	return figura.to_global(Vector3(figura.offset.x, -figura.offset.y, 0.0) * figura.pixel_size)
+
+
+func test_apuntar_y_cambiar_de_comprador_no_lee_imagenes_nuevas_en_la_noche() -> void:
+	var almacen := await _abrir(ReglasDeLaPartida.PRIMERA_JORNADA)
+	var puesto := _puesto(almacen)
+	var objetivo: Node = puesto.get("objetivo")
+	var figura: AnimatedSprite3D = puesto.get("comprador_visible")
+	var antes: Dictionary = objetivo.get("_imagenes").duplicate()
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(20, 30))
+	await _cuadros()
+	var punto := _centro_visible(figura)
+	assert_bool(objetivo.call("admite_foco_en", punto, punto)).is_true()
+	puesto.get("atenciones").pedir_despachar_sin_vender()
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(23, 30))
+	await _cuadros()
+	punto = _centro_visible(figura)
+	assert_bool(objetivo.call("admite_foco_en", punto, punto)).is_true()
+	var despues: Dictionary = objetivo.get("_imagenes")
+	assert_int(despues.size()).is_equal(antes.size())
+	for textura: Texture2D in antes:
+		assert_object(despues.get(textura)).is_same(antes[textura])
+
+
 func test_un_personaje_fuera_de_la_noche_se_muestra_y_se_suelta_a_la_noche_siguiente() -> void:
 	var almacen := await _abrir(ReglasDeLaPartida.PRIMERA_JORNADA, _con_fede)
 	assert_bool(_en_la_memoria(PERSONAJE.FEDE)).is_false()
 	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(21, 15))
 	await _cuadros()
-	var figura: AnimatedSprite3D = _puesto(almacen).get("comprador_visible")
+	var puesto := _puesto(almacen)
+	var figura: AnimatedSprite3D = puesto.get("comprador_visible")
 	assert_bool(figura.visible).is_true()
 	assert_str(figura.sprite_frames.resource_path).is_equal(_tabla()[PERSONAJE.FEDE])
+	var punto := _centro_visible(figura)
+	assert_bool(puesto.get("objetivo").call("admite_foco_en", punto, punto)).is_true()
 	assert_bool(almacen.get("_ciclo").abrir_la_jornada()).is_true()
 	await _cuadros()
 	assert_bool(_en_la_memoria(PERSONAJE.FEDE)).is_false()
+
+
+func test_personaje_ninguno_no_resuelve_a_recurso_ni_rompe_la_atencion() -> void:
+	var almacen := await _abrir(ReglasDeLaPartida.PRIMERA_JORNADA, _sin_personaje)
+	var puesto := _puesto(almacen)
+	assert_object(puesto.call("_cuadros_de", PERSONAJE.NINGUNO)).is_null()
+	RelojDePrueba.avanzar_hasta(almacen.get("_reloj"), Vector2i(21, 15))
+	await _cuadros()
+	var figura: AnimatedSprite3D = puesto.get("comprador_visible")
+	assert_bool(figura.visible).is_false()
+	assert_object(puesto.get("atenciones").tarea().en_ventanilla()).is_not_null()
