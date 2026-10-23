@@ -47,6 +47,7 @@ static func datos(partida: Partida) -> Dictionary:
 				partida.legajo().apercibimientos_de_la_prueba(),
 				PartidaSerializada.clave(PartidaSerializada.Campo.ULTIMA_DE_LA_PRUEBA_COMPLETA):
 				partida.legajo().ultima_de_la_prueba_completa(),
+				PartidaSerializada.clave(PartidaSerializada.Campo.SEMILLA): partida.semilla,
 			}
 		)
 	)
