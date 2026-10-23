@@ -33,6 +33,9 @@ const ALCANCE_DE_LA_MIRA := 2.5
 const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(15.0)
 ## Los productos y sus huecos requieren apuntar cerca de su superficie.
 const DESVIO_MAXIMO_DE_PRODUCTOS := deg_to_rad(3.0)
+## Lo ya enfocado cuenta su desvío con este factor: se toma a 3° y se suelta a 5°. Sin esa banda,
+## el foco titila en el borde de un producto.
+const PERMANENCIA_DEL_FOCO := 0.6
 
 ## El contrato de «se puede interactuar con esto» ES este grupo de Godot, y vive acá por lo que
 ## permite: `dominio/` declara un `String` y no conoce a nadie, y un nodo de `escenas/` cumple
