@@ -1,10 +1,11 @@
 import json, statistics, sys, glob
 from analiza3 import analizar
+PREFIJO = sys.argv[1] if len(sys.argv) > 1 else "J3"
 filas = {}
 for nav in ("chrome", "ff"):
     for ver in ("old", "new"):
         rs = []
-        for f in sorted(glob.glob(f"J3_{ver}_{nav}[0-9].json")):
+        for f in sorted(glob.glob(f"{PREFIJO}_{ver}_{nav}[0-9].json")):
             d = json.load(open(f))
             if not d["completa"]: print("INCOMPLETA", f); continue
             rs.append(analizar(d)[0])

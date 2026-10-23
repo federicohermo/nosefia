@@ -25,3 +25,8 @@ Cómo repetir: aplicar `instrumentacion.diff`, copiar `medicion_carga.gd` a la r
   `cola5.sh` es la cola con la que se corrieron.
 - Los enlaces tardíos de J3 salen de `linkProgram` después del fin del calentamiento de la
   transición. En Chrome son 6 con `old` y con `new`; en Firefox, 0.
+- `J3F_*`: la misma medición sobre la cabeza final de la rama (con `9bd116a7`, que distingue
+  `next_pass`). Son las que cita el PR. `J3_*` son las de antes de ese commit.
+- `J3P_pre_pr_chrome0.json`: una corrida de Chrome con el código previo al PR (`15b322be`, sin
+  ninguna deduplicación). También tiene 6 enlaces tardíos al limpiar en J3: no los causa el PR.
+- `python resumen3.py J3F` imprime las medianas.
