@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621
 ---
 
 # Capacidad: la mercadería del almacén
@@ -565,9 +565,15 @@ menos la mayor separación de referencia de los productos contiguos y nunca meno
 mínimo entre caras del dominio. La división longitudinal NO DEBE convertirse en un borde
 contra el que se amontonen ambas tandas. Los centros de ambas tandas DEBEN permanecer en mitades
 opuestas, con el ritmo de su producto en la etapa completa. Un bloque puede aprovechar la
-holgura del otro, como en la etapa completa, antes de quitar otra columna. El sobrante
-DEBE repartirse entre los bordes y la unión, sin concentrarlo contra la mitad ni agrandar
-innecesariamente el encuentro entre caras.
+holgura del otro, como en la etapa completa, antes de quitar otra columna.
+
+En un estante con dos productos, el paso entre dos unidades vecinas DEBE ser el mismo
+dentro de cada producto y en el encuentro entre ambos: el encuentro deja la mayor separación
+de referencia de sus dos productos, nunca menor que el mínimo de aire entre las dos tandas.
+El sobrante DEBE repartirse a partes iguales entre los dos bordes del estante, sin agrandar
+el encuentro entre los productos ni el encuentro entre caras. Terminator DEBE tomar la
+separación de Zucarachas, el otro producto de su estante, en lugar de la suya de referencia,
+y con ese paso expone una columna menos que con la propia.
 
 Las cabeceras DEBEN conservar el margen lateral de exhibición a ambos costados de la chapa,
 además del retiro frontal de referencia de BR-STK-048. Sus filas DEBEN conservar el aire de
@@ -1214,9 +1220,9 @@ Las dos mitades longitudinales y la principal a altura de reposición se conserv
 ### AC-STK-101 — Los laterales conservan aire entre unidades y a ambos lados de la mitad *(verifica BR-STK-049, BR-STK-047)*
 
 DADOS los cuatro niveles de ambos laterales de cada isla de prueba CUANDO se mide su
-exhibición completa ENTONCES cada fila conserva la separación uniforme de referencia,
-no menor que el mínimo entre unidades de exhibición, y las dos tandas conservan el mínimo
-de aire entre tandas. Sus centros quedan en mitades opuestas, sin acumular sus unidades contra la división,
+exhibición completa ENTONCES cada fila conserva la separación uniforme de referencia
+de su producto (AC-STK-106 fija la de Terminator), no menor que el mínimo entre unidades
+de exhibición, y las dos tandas conservan el mínimo de aire entre tandas. Sus centros quedan en mitades opuestas, sin acumular sus unidades contra la división,
 y se aprovecha la holgura conjunta antes de quitar otra columna.
 
 ### AC-STK-102 — Las cabeceras conservan aire y margen a sus costados *(verifica BR-STK-049, BR-STK-048)*
@@ -1243,6 +1249,24 @@ los mínimos de aire CUANDO se distribuye ENTONCES conserva una columna y satisf
 mínimo. DADO ese mismo tramo reducido por debajo del mínimo necesario CUANDO se distribuye
 ENTONCES rechaza el reparto; no elimina un producto, su margen ni el aire entre caras o
 en la mitad para hacerlo entrar.
+
+### AC-STK-105 — Entre dos productos de un estante el paso es el de sus unidades *(verifica BR-STK-049, BR-STK-047)*
+
+DADOS los cuatro niveles de cada estante de prueba con dos productos —los dos laterales de
+cada isla y la estantería de no comestibles— CUANDO se mide la separación entre unidades
+vecinas ENTONCES el encuentro de los dos productos separa lo mismo que la mayor separación
+de sus dos productos, nunca menos que el mínimo de aire entre tandas ni más que esa
+separación más la tolerancia de exhibición. Un hueco mayor en el cambio de producto, como el
+que dejaba repartir el sobrante en la unión, hace fallar el criterio. Los centros de ambas
+tandas siguen en mitades opuestas.
+
+### AC-STK-106 — Terminator toma el paso de Zucarachas *(verifica BR-STK-049, BR-STK-048)*
+
+DADOS los cuatro niveles del lado de Terminator y Zucarachas CUANDO se mide la separación
+entre unidades vecinas ENTONCES las de Terminator miden lo mismo que las de Zucarachas, con
+la tolerancia de apoyo, y el encuentro entre ambos también. Con la separación de referencia
+propia de Terminator entraría una columna más, y no la hay: agregarla excedería el espacio
+disponible a este paso.
 
 ## No objetivos
 
