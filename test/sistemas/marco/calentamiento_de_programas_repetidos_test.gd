@@ -23,15 +23,22 @@ func _escena_con_dos_luces() -> Node3D:
 
 
 ## Cada fuente trae su malla y su material: iguales entre sí, pero no la misma instancia.
-func _agregar_fuente(escena: Node3D, capa: int, material: StandardMaterial3D) -> void:
+func _agregar_fuente(
+	escena: Node3D,
+	capa: int,
+	material: StandardMaterial3D,
+	sombra: GeometryInstance3D.ShadowCastingSetting = GeometryInstance3D.SHADOW_CASTING_SETTING_ON,
+	lado: float = 0.1
+) -> void:
 	var cuerpo := RigidBody3D.new()
 	cuerpo.freeze = true
 	cuerpo.position = Vector3(0, 1, 6)
 	escena.add_child(cuerpo)
 	var instancia := MeshInstance3D.new()
 	var caja := BoxMesh.new()
-	caja.size = Vector3.ONE * 0.1
+	caja.size = Vector3.ONE * lado
 	instancia.mesh = caja
+	instancia.cast_shadow = sombra
 	instancia.material_override = material
 	instancia.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	instancia.layers = capa
@@ -39,10 +46,25 @@ func _agregar_fuente(escena: Node3D, capa: int, material: StandardMaterial3D) ->
 
 
 ## Cuántas copias distintas se dibujaron, y en cuántos cuadros apareció alguna nueva.
-func _calentar(materiales: Array[StandardMaterial3D], capas: Array[int]) -> Dictionary:
+func _calentar(
+	materiales: Array[StandardMaterial3D],
+	capas: Array[int],
+	sombras: Array[GeometryInstance3D.ShadowCastingSetting] = [],
+	lados: Array[float] = []
+) -> Dictionary:
 	var escena := _escena_con_dos_luces()
 	for indice: int in materiales.size():
-		_agregar_fuente(escena, capas[indice], materiales[indice])
+		_agregar_fuente(
+			escena,
+			capas[indice],
+			materiales[indice],
+			(
+				sombras[indice]
+				if indice < sombras.size()
+				else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+			),
+			lados[indice] if indice < lados.size() else 0.1
+		)
 	var calentamiento: CalentamientoDeShaders = auto_free(CalentamientoDeShaders.new())
 	calentamiento.unifica_variantes = func() -> bool: return false
 	add_child(calentamiento)
@@ -100,3 +122,27 @@ func test_los_que_repiten_programa_y_luces_no_suman_cuadros_de_compilacion() -> 
 	# sumaba un cuadro por fuente. El cuadro de más es el que destapa lo ya compilado.
 	assert_int(sola["copias"]).is_greater(2)
 	assert_int(tres["cuadros"]).is_less_equal(sola["cuadros"] + 1)
+
+
+func test_una_fuente_que_no_proyecta_sombra_conserva_sus_copias() -> void:
+	var sola: Dictionary = await _calentar([StandardMaterial3D.new()], [CAPA_A])
+	var dos: Dictionary = await _calentar(
+		[StandardMaterial3D.new(), StandardMaterial3D.new()],
+		[CAPA_A, CAPA_A],
+		[
+			GeometryInstance3D.SHADOW_CASTING_SETTING_ON,
+			GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		]
+	)
+	assert_int(dos["copias"]).is_greater(sola["copias"])
+
+
+## El programa depende del material y de las luces que alcanzan, no del tamaño: una copia por cada
+## combinación alcanza para todas las fuentes que comparten el material.
+func test_las_fuentes_de_otro_tamano_con_el_mismo_programa_no_duplican_cada_combinacion() -> void:
+	var chica: Dictionary = await _calentar([StandardMaterial3D.new()], [CAPA_A], [], [0.1])
+	var grande: Dictionary = await _calentar([StandardMaterial3D.new()], [CAPA_A], [], [0.8])
+	var juntas: Dictionary = await _calentar(
+		[StandardMaterial3D.new(), StandardMaterial3D.new()], [CAPA_A, CAPA_A], [], [0.1, 0.8]
+	)
+	assert_int(juntas["copias"]).is_less(chica["copias"] + grande["copias"])
