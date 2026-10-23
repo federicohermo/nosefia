@@ -14,12 +14,35 @@ func _primera_que_limpia() -> int:
 	return jornada
 
 
-func test_cada_util_ya_se_preparo_en_una_carga_anterior_a_la_primera_que_limpia() -> void:
+## Hasta esa noche el cuartito está trabado. Preparar un útil antes suma una espera a una noche
+## que todavía no lo usa.
+func test_ninguna_noche_anterior_a_la_primera_que_limpia_prepara_un_util() -> void:
 	for util: StringName in _utiles():
-		var antes := false
 		for jornada: int in range(ReglasDeLaPartida.PRIMERA_JORNADA, _primera_que_limpia()):
-			antes = antes or PreparacionDeLosUtiles.se_prepara(util, jornada)
-		assert_bool(antes).is_true()
+			assert_bool(PreparacionDeLosUtiles.se_prepara(util, jornada)).is_false()
+			if jornada > ReglasDeLaPartida.PRIMERA_JORNADA:
+				(
+					assert_bool(PreparacionDeLosUtiles.por_preparar(util, jornada - 1, jornada))
+					. is_false()
+				)
+
+
+func test_la_transicion_a_la_primera_que_limpia_prepara_cada_util() -> void:
+	for util: StringName in _utiles():
+		(
+			assert_bool(
+				PreparacionDeLosUtiles.por_preparar(
+					util, _primera_que_limpia() - 1, _primera_que_limpia()
+				)
+			)
+			. is_true()
+		)
+
+
+## Quien retoma una partida guardada en esa noche no pasa por la transición: la carga los prepara.
+func test_retomar_en_la_primera_que_limpia_prepara_cada_util_en_la_carga() -> void:
+	for util: StringName in _utiles():
+		assert_bool(PreparacionDeLosUtiles.se_prepara(util, _primera_que_limpia())).is_true()
 
 
 ## La carga de «Nuevo juego» es la que espera un jugador que recién llega, y la web le pone un tope
