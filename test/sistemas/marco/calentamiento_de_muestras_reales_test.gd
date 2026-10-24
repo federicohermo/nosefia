@@ -409,6 +409,78 @@ func test_lo_estatico_fuera_de_las_sondas_se_mira_sin_ninguna_luz_en_cuadro() ->
 	assert_bool(sin_luces[0]).is_true()
 
 
+func _planos_de(camara: Camera3D) -> Array[Plane]:
+	var proyeccion := camara.get_camera_projection()
+	var planos: Array[Plane] = []
+	for indice: int in 6:
+		planos.append(camara.global_transform * proyeccion.get_projection_plane(indice))
+	return planos
+
+
+## Cuántas poses distintas de la cámara miran alguna vereda sin la luz en cuadro. Cada vereda
+## queda lejos de la otra, y una misma pose no puede ver las dos.
+func _poses_sin_la_luz(materiales: Array[Material]) -> int:
+	var escena := _escena()
+	var sonda := ReflectionProbe.new()
+	sonda.position = Vector3(0, 1.5, 0)
+	sonda.size = Vector3(4, 3, 4)
+	escena.add_child(sonda)
+	var omni := OmniLight3D.new()
+	omni.position = Vector3(0, 1.5, 0)
+	omni.omni_range = 3.0
+	escena.add_child(omni)
+	var veredas: Array[MeshInstance3D] = []
+	for indice: int in materiales.size():
+		var malla := BoxMesh.new()
+		malla.size = Vector3.ONE * (1.0 + indice)
+		var vereda := MeshInstance3D.new()
+		vereda.mesh = malla
+		vereda.material_override = materiales[indice]
+		vereda.position = Vector3(8.0 if indice == 0 else -8.0, 0.5, 0)
+		vereda.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+		escena.add_child(vereda)
+		veredas.append(vereda)
+	var del_jugador := Camera3D.new()
+	escena.add_child(del_jugador)
+	del_jugador.make_current()
+	var calentamiento := _calentamiento()
+	var poses: Dictionary[Transform3D, bool] = {}
+	var termino := [false]
+	calentamiento.terminado.connect(func() -> void: termino[0] = true)
+	calentamiento.calentar(escena)
+	for _cuadro: int in 600:
+		if termino[0]:
+			break
+		var camara := get_viewport().get_camera_3d()
+		if camara != del_jugador and camara.projection == Camera3D.PROJECTION_PERSPECTIVE:
+			var planos := _planos_de(camara)
+			if not _frustum_corta_esfera(planos, omni.global_position, omni.omni_range):
+				for vereda: MeshInstance3D in veredas:
+					var caja := _caja(vereda)
+					if (
+						vereda.visible
+						and _frustum_corta_esfera(
+							planos, caja.get_center(), caja.size.length() / 2.0
+						)
+					):
+						poses[camara.global_transform] = true
+		await get_tree().process_frame
+	assert_bool(termino[0]).is_true()
+	return poses.size()
+
+
+func test_dos_objetos_con_el_mismo_programa_se_miran_una_sola_vez_sin_luces() -> void:
+	var materiales: Array[Material] = [StandardMaterial3D.new(), StandardMaterial3D.new()]
+	assert_int(await _poses_sin_la_luz(materiales)).is_equal(1)
+
+
+func test_dos_objetos_con_otro_programa_se_miran_cada_uno_sin_luces() -> void:
+	var transparente := StandardMaterial3D.new()
+	transparente.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	var materiales: Array[Material] = [StandardMaterial3D.new(), transparente]
+	assert_int(await _poses_sin_la_luz(materiales)).is_equal(2)
+
+
 func test_lo_que_se_mueve_no_se_dibuja_mas_alto_de_donde_lo_suelta_la_mano() -> void:
 	var escena := _escena()
 	var caja := BoxMesh.new()
