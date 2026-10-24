@@ -830,6 +830,8 @@ func _caja_en_mundo(objeto: GeometryInstance3D) -> AABB:
 	return objeto.global_transform * caja
 
 
+## Una vista por programa: sin luces, dos objetos con el mismo programa compilan lo mismo aunque
+## cambie su malla, y cada vista cuesta un cuadro entero de la carga.
 func _agregar_vistas_sin_luces() -> void:
 	var sondas: Array[AABB] = []
 	for reflejo: ReflectionProbe in _reflejos:
@@ -841,8 +843,7 @@ func _agregar_vistas_sin_luces() -> void:
 		var caja := _caja_en_mundo(objeto)
 		if sondas.any(func(sonda: AABB) -> bool: return sonda.intersects(caja)):
 			continue
-		var clave: Array = [objeto.get_class(), _malla_de(objeto)]
-		clave.append_array(_materiales_de(objeto).map(_huella))
+		var clave := _programa_de(objeto)
 		if vistos.has(clave):
 			continue
 		vistos[clave] = true
