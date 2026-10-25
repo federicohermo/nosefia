@@ -1107,7 +1107,8 @@ ENTONCES la jornada 4 abre con la misma fila.
 DADO el cierre de la noche 4 CUANDO la persiana todavía baja
 ENTONCES el celular no está en pantalla. CUANDO la persiana termina de bajar y pasan 1,99 s
 ENTONCES la persiana está baja y sigue sin celular. CUANDO pasan 2 s ENTONCES el celular sube con
-el chat de Enrique, y el primer mensaje aparece cuando llega al centro. DADO el cierre de la noche
+el chat de Enrique, con el primer mensaje ya en el chat (BR-EMP-030), y los intervalos de los
+siguientes empiezan cuando el celular llega al centro. DADO el cierre de la noche
 4 con la partida despedida, o el de la última noche con el contrato cumplido, CUANDO termina de
 bajar la persiana ENTONCES el celular también sube a los 2 s y no antes.
 
