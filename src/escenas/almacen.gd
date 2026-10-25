@@ -401,18 +401,22 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
-	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
+	# de adelante de cada tanda lo mide el puesto sobre el modelo; cuáles abren vacíos, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
-	var inventario := Apertura.inventario_de_la_jornada(
+	var productos := Catalogo.de_la_jornada(jornada)
+	var vacios := Apertura.vacios_de_la_jornada(
 		jornada,
 		compradores,
-		_reposicion_manual.casilleros(),
-		_reposicion_manual.casilleros_reponibles(),
+		_reposicion_manual.tandas(),
+		_reposicion_manual.productos_de_una_fila(),
 		azar_de_la_apertura
 	)
-	_repositor.arrancar(Estante.new(inventario, Catalogo.de_la_jornada(jornada)))
+	var inventario := Apertura.inventario_con_faltantes(
+		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos
+	)
+	_repositor.arrancar(Estante.new(inventario, productos, vacios))
 	_reposicion_manual.preparar()
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)

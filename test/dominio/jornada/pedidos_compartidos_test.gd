@@ -36,15 +36,16 @@ func test_el_inventario_usa_los_mismos_pedidos_y_el_mismo_azar_que_atencion() ->
 	var control := RandomNumberGenerator.new()
 	azar.seed = 17
 	control.seed = 17
-	var esperado := Apertura.faltantes_al_azar({producto.id: 5}, casilleros, control)
+	var tandas: Dictionary[Producto.Id, Array] = {producto.id: [PackedInt32Array(range(6))]}
+	var esperado := Apertura.vacios_de_la_jornada(2, compradores, tandas, {}, control)
 	var inventario := Apertura.inventario_de_la_jornada(
 		2, compradores, casilleros, casilleros, azar
 	)
 	assert_int(azar.state).is_equal(control.state)
 	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
-		6 - esperado[producto.id]
+		6 - esperado[producto.id].size()
 	)
-	assert_int(esperado[producto.id]).is_between(1, 3)
+	assert_int(esperado[producto.id].size()).is_between(1, 3)
 	var atenciones := TareaDeAtender.new(compradores, inventario)
 	for comprador in compradores:
 		assert_object(atenciones.atender()).is_same(comprador)
@@ -53,7 +54,7 @@ func test_el_inventario_usa_los_mismos_pedidos_y_el_mismo_azar_que_atencion() ->
 	assert_bool(atenciones.completada()).is_true()
 
 
-func test_la_apertura_conserva_guias_y_limita_huecos_a_la_principal() -> void:  # AC-STK-033
+func test_la_apertura_puede_vaciar_cualquier_tanda_y_conserva_el_cupo_total() -> void:  # AC-STK-033
 	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
 	var totales: Dictionary[Producto.Id, int] = {producto.id: 8}
 	var principales: Dictionary[Producto.Id, int] = {producto.id: 4}
@@ -63,12 +64,13 @@ func test_la_apertura_conserva_guias_y_limita_huecos_a_la_principal() -> void:  
 		var inventario := Apertura.inventario_de_la_jornada(2, [], totales, principales, azar)
 		var estante := Estante.new(inventario, Catalogo.todos())
 		assert_int(estante.cupo(producto)).is_equal(8)
-		assert_int(estante.casilleros_vacios(producto).size()).is_between(1, 4)
-		for guia in 4:
-			assert_bool(estante.casilleros_ocupados(producto).has(guia)).is_true()
+		assert_int(estante.casilleros_vacios(producto).size()).is_between(1, 7)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
+			ReglasDelEstante.UNIDADES_POR_CAJA
+		)
 
 
-func test_sin_fila_principal_no_falta_aunque_tenga_guias() -> void:  # AC-STK-033
+func test_un_producto_con_casilleros_solo_en_una_fija_falta() -> void:  # AC-STK-030
 	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
 	var totales: Dictionary[Producto.Id, int] = {producto.id: 8}
 	var principales: Dictionary[Producto.Id, int] = {producto.id: 0}
@@ -77,5 +79,15 @@ func test_sin_fila_principal_no_falta_aunque_tenga_guias() -> void:  # AC-STK-03
 		azar.seed = semilla
 		var inventario := Apertura.inventario_de_la_jornada(2, [], totales, principales, azar)
 		assert_int(inventario.casilleros(producto)).is_equal(8)
-		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(8)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_less(8)
+
+
+func test_un_producto_sin_casilleros_en_ninguna_tanda_no_falta() -> void:  # AC-STK-030
+	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
+	var totales: Dictionary[Producto.Id, int] = {producto.id: 0}
+	var principales: Dictionary[Producto.Id, int] = {producto.id: 0}
+	for semilla in 200:
+		var azar := RandomNumberGenerator.new()
+		azar.seed = semilla
+		var inventario := Apertura.inventario_de_la_jornada(2, [], totales, principales, azar)
 		assert_array(inventario.faltantes()).is_empty()
