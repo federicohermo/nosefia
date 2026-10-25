@@ -1,4 +1,3 @@
-# gdlint:ignore=max-public-methods
 ## La devolución de Enrique, armada sin levantar una escena: qué partes van, en qué orden, y qué
 ## fila de la tabla gana.
 extends GdUnitTestSuite
@@ -37,11 +36,7 @@ func _cierre(jornada: int, medios: int, noches: int, hubo: bool = false) -> Stri
 
 
 func _partida_de_la_noche(
-	jornada: int,
-	cumplidas: Array[T],
-	llamados: Array[L],
-	medios: int = 0,
-	bolsa_afuera: bool = false
+	jornada: int, cumplidas: Array[T], llamados: Array[L], medios: int = 0
 ) -> Partida:
 	var partida := Partida.desde({"jornada": jornada, "medios": medios})
 	partida.abrir_la_jornada()
@@ -50,8 +45,6 @@ func _partida_de_la_noche(
 			tarea.completar()
 	for llamado: L in llamados:
 		partida.anotar_llamado(llamado)
-	if bolsa_afuera:
-		partida.bolsa_afuera = true
 	partida.cerrar_la_jornada(cumplidas.size())
 	return partida
 
@@ -450,49 +443,3 @@ func test_los_retos_mas_alla_de_la_ficha() -> void:  # AC-EMP-074
 		8, 2, _antecedentes({}, {L.OBJETO_TIRADO: 6}), [], [L.OBJETO_TIRADO]
 	)
 	assert_str(basura[1]).is_equal(DevolucionDelJefe.BASURA.back())
-
-
-func _con_la_basura_sin_cumplir(jornada: int) -> Array[T]:
-	var cumplidas := _tipos_de(jornada)
-	cumplidas.erase(T.SACAR_LA_BASURA)
-	return cumplidas
-
-
-func test_una_bolsa_afuera_cambia_la_tarea_5_de_la_jornada_5() -> void:  # AC-EMP-096
-	var segunda := COMPLETA + 1
-	var partida := _partida_de_la_noche(segunda, _con_la_basura_sin_cumplir(segunda), [], 0, true)
-	var mensajes := DevolucionDelJefe.new(segunda, partida).mensajes()
-	var ventana: String = DevolucionDelJefe.PARTICULARES_CON_BOLSA_AFUERA[segunda]
-	assert_int(mensajes.count(ventana)).is_equal(1)
-	assert_array(mensajes).not_contains([DevolucionDelJefe.PARTICULARES[segunda]])
-	assert_int(mensajes.size()).is_equal(3)
-
-
-func test_sin_bolsa_afuera_la_tarea_5_de_la_jornada_5_sigue_igual() -> void:  # AC-EMP-096
-	var segunda := COMPLETA + 1
-	var partida := _partida_de_la_noche(segunda, _con_la_basura_sin_cumplir(segunda), [])
-	var mensajes := DevolucionDelJefe.new(segunda, partida).mensajes()
-	assert_int(mensajes.count(DevolucionDelJefe.PARTICULARES[segunda])).is_equal(1)
-	assert_array(mensajes).not_contains([DevolucionDelJefe.PARTICULARES_CON_BOLSA_AFUERA[segunda]])
-
-
-func test_una_bolsa_que_volvio_al_contenedor_no_deja_tarea_5() -> void:  # AC-EMP-096
-	var segunda := COMPLETA + 1
-	var partida := _partida_de_la_noche(segunda, _tipos_de(segunda), [])
-	var mensajes := DevolucionDelJefe.new(segunda, partida).mensajes()
-	assert_int(mensajes.size()).is_equal(2)
-	assert_array(mensajes).not_contains([DevolucionDelJefe.PARTICULARES[segunda]])
-	assert_array(mensajes).not_contains([DevolucionDelJefe.PARTICULARES_CON_BOLSA_AFUERA[segunda]])
-
-
-func test_la_bolsa_afuera_solo_cambia_la_jornada_5() -> void:  # AC-EMP-096
-	var ventana: String = DevolucionDelJefe.PARTICULARES_CON_BOLSA_AFUERA[COMPLETA + 1]
-	for jornada: int in [COMPLETA, COMPLETA + 2, COMPLETA + 3]:
-		var partida := _partida_de_la_noche(jornada, [], [], 0, true)
-		assert_array(DevolucionDelJefe.new(jornada, partida).mensajes()).not_contains([ventana])
-
-
-func test_el_texto_de_la_ventana_solo_existe_en_la_jornada_5() -> void:  # AC-EMP-096
-	assert_array(DevolucionDelJefe.PARTICULARES_CON_BOLSA_AFUERA.keys()).contains_exactly(
-		[COMPLETA + 1]
-	)

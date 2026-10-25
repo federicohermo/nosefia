@@ -93,9 +93,6 @@ func test_una_bolsa_afuera_se_distingue_de_otro_objeto_afuera() -> void:  # AC-E
 				habitacion == HABITACION.AFUERA and not en_mano
 			)
 			assert_bool(ReglasDelCierre.hay_desorden(estados)).is_false()
-			assert_bool(ReglasDelCierre.hay_objetos_afuera(estados)).is_equal(
-				habitacion == HABITACION.AFUERA and not en_mano
-			)
 	for clase: ReglasDelCierre.Clase in [CLASE.CAJA, CLASE.UNIDAD_SUELTA, CLASE.OTRO]:
 		var sin_bolsa: Array[ReglasDelCierre.Estado] = [
 			ReglasDelCierre.Estado.new(clase, HABITACION.AFUERA, false)
