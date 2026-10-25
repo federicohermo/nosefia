@@ -233,7 +233,8 @@ reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
 caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casilleros de la fila de
 adelante de todas sus tandas, reponible y fijas (BR-STK-024), menos uno por cada tanda que no
-puede abrir vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
+puede abrir vacía entera: la reponible de un producto con tandas fijas, y cada tanda de un
+producto de una sola fila (BR-STK-024). El inventario DEBE conservar el cupo
 total de todas las tandas (BR-STK-008). Cada casillero faltante DEBE sortearse con la misma
 probabilidad entre todos esos casilleros, sin repetir, y los vacíos NO DEBEN concentrarse en un
 estante. Sólo los productos con máximo reponible mayor o igual a 1

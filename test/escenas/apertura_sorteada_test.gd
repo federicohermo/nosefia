@@ -158,12 +158,13 @@ func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC
 		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
 		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 	]:
+		almacen.call("_al_abrir_la_jornada", jornada)
+		var compradores: Array[Comprador] = almacen.get("_atenciones").tarea().get("_compradores")
 		var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
 		var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
 		var esperado := Apertura.vacios_de_la_jornada(
-			jornada, Compradores.de_la_jornada(jornada), tandas, de_una_fila, control
+			jornada, compradores, tandas, de_una_fila, control
 		)
-		almacen.call("_al_abrir_la_jornada", jornada)
 		var estante: Estante = almacen.get("_repositor").estante()
 		for producto in Catalogo.todos():
 			assert_array(estante.casilleros_vacios(producto)).is_equal(

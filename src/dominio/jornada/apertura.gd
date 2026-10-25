@@ -76,8 +76,9 @@ static func inventario_de_la_jornada(
 ## `de_una_fila` dice qué productos tienen tandas de una sola fila (BR-STK-025).
 ##
 ## **Cada casillero tiene la misma probabilidad, en cualquier tanda.** Lo único que se descarta es
-## un reparto que deja vacía entera una tanda que no puede abrir así: la reponible, y todas si el
-## producto es de una fila. Se sortea de nuevo en vez de mover un vacío, que dejaría de ser parejo.
+## un reparto que deja vacía entera una tanda que no puede abrir así: la reponible de un producto
+## con tandas fijas, y todas si el producto es de una fila. Se sortea de nuevo en vez de mover un
+## vacío, que dejaría de ser parejo.
 static func vacios_de_la_jornada(
 	jornada: int,
 	compradores: Array[Comprador],
@@ -185,11 +186,17 @@ static func faltantes_al_azar(
 	return faltantes
 
 
-## Las tandas que no pueden abrir con todos sus casilleros vacíos: la reponible, y todas si el
-## producto es de una sola fila. Una tanda sin casilleros no se cuenta.
+## Las tandas que no pueden abrir con todos sus casilleros vacíos: todas las que tienen casilleros
+## si el producto es de una sola fila, y si no, la reponible cuando hay una fija que reciba lo que
+## sobra (BR-STK-024).
 static func _a_salvo(tandas: Array, de_una_fila: bool) -> Array:
-	var a_salvo: Array = tandas if de_una_fila else tandas.slice(0, 1)
-	return a_salvo.filter(func(tanda: PackedInt32Array) -> bool: return not tanda.is_empty())
+	var con_casilleros := tandas.filter(
+		func(tanda: PackedInt32Array) -> bool: return not tanda.is_empty()
+	)
+	if de_una_fila:
+		return con_casilleros
+	var hay_una_fija := con_casilleros.size() > 1
+	return tandas.slice(0, 1) if hay_una_fija and not tandas[0].is_empty() else []
 
 
 static func _sortear_vacios(
