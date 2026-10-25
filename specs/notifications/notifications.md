@@ -141,9 +141,9 @@ cada uno; un aviso persistente NO DEBE adquirir un temporizador por la llegada d
 
 ### BR-NTF-014 — Las tareas terminadas avisan una vez por jornada de prueba
 
-CUANDO la jornada habilita por primera vez la salida por todas sus tareas cumplidas según
-BR-SHF-021, el sistema DEBE mostrar «Ya terminaste tus tareas y podés irte» una sola vez en
-esa jornada. El aviso DEBE seguir la duración, pausa, orden y presentación comunes.
+CUANDO la jornada habilita por primera vez la salida según BR-SHF-021, el sistema DEBE mostrar
+«Ya terminaste tus tareas y podés irte» una sola vez en esa
+jornada. El aviso DEBE seguir la duración, pausa, orden y presentación comunes.
 Entradas repetidas del mismo cumplimiento NO DEBEN renovarlo, ni recrearlo después de vencer.
 Si la salida vuelve a trabarse, el sistema DEBE retirar este aviso para no anunciar un permiso
 que ya no vale. Recuperar la salida NO DEBE repetir el aviso inicial.

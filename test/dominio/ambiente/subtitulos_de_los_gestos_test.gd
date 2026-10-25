@@ -137,6 +137,49 @@ func test_la_entrada_con_alguna_pendiente_piensa_en_las_noches_de_prueba() -> vo
 		)
 
 
+func test_la_entrada_no_piensa_si_solo_falta_atencion_cerrada() -> void:  # AC-SHF-048
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
+		var compradores := Compradores.de_la_jornada(jornada)
+		var atender := TareaDeAtender.new(
+			compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+		)
+		var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
+		var sin_atencion := _cumplidas_salvo(jornada, Tarea.new(Tarea.Tipo.CAJA))
+		(
+			assert_int(
+				SubtitulosDeLosGestos.al_usar_la_entrada(jornada, sin_atencion, atender, registro)
+			)
+			. is_equal(S.PUERTA_CON_TAREAS_PENDIENTES)
+		)
+		atender.avanzar(compradores[-1].horario.y)
+		(
+			assert_int(
+				SubtitulosDeLosGestos.al_usar_la_entrada(jornada, sin_atencion, atender, registro)
+			)
+			. is_equal(S.NINGUNO)
+		)
+		for pendiente in Apertura.obligatorias(jornada):
+			if pendiente.tipo() in [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR]:
+				continue
+			var tareas := _cumplidas_salvo(jornada, pendiente)
+			(
+				assert_int(
+					SubtitulosDeLosGestos.al_usar_la_entrada(jornada, tareas, atender, registro)
+				)
+				. is_equal(S.PUERTA_CON_TAREAS_PENDIENTES)
+			)
+		var sin_registrar := _cumplidas_salvo(jornada, Tarea.new(Tarea.Tipo.REGISTRAR))
+		assert_bool(registro.sumar(Catalogo.todos()[0])).is_true()
+		(
+			assert_int(
+				SubtitulosDeLosGestos.al_usar_la_entrada(jornada, sin_registrar, atender, registro)
+			)
+			. is_equal(S.PUERTA_CON_TAREAS_PENDIENTES)
+		)
+
+
 func test_la_entrada_no_piensa_desde_la_primera_jornada_completa() -> void:  # AC-SUB-024
 	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 	for obligatorias: Array[Tarea] in [Apertura.obligatorias(jornada), _cumplidas_salvo(jornada)]:

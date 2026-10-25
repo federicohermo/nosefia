@@ -173,7 +173,10 @@ func _ready() -> void:
 			func() -> void:
 				_pensar_gesto(
 					SubtitulosDeLosGestos.al_usar_la_entrada(
-						_partida.jornada(), _partida.obligatorias()
+						_partida.jornada(),
+						_partida.obligatorias(),
+						_atenciones.tarea(),
+						_computadora.registro()
 					)
 				)
 		)
@@ -213,6 +216,9 @@ func _ready() -> void:
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
 	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
+	_atenciones.compra_realizada.connect(_revisar_la_salida)
+	_atenciones.comprador_vencido.connect(_revisar_la_salida.unbind(1))
+	_computadora.registro_actualizado.connect(_revisar_la_salida)
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
@@ -517,7 +523,12 @@ func _puede_salir() -> bool:
 	return (
 		_salida_preparada
 		and _reloj.corriendo()
-		and CierreAnticipado.corresponde(_partida.jornada(), _partida.obligatorias())
+		and CierreAnticipado.corresponde(
+			_partida.jornada(),
+			_partida.obligatorias(),
+			_atenciones.tarea(),
+			_computadora.registro()
+		)
 	)
 
 
