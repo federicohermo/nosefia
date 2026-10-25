@@ -43,9 +43,13 @@ static func habitacion_de(
 
 
 static func hay_desorden(estados: Array[Estado]) -> bool:
-	var cajas_en_el_local := 0
+	var cajas_que_ocupan_la_tolerancia := 0
 	for estado: Estado in estados:
-		if estado.en_mano or estado.habitacion == Habitacion.AFUERA:
+		if estado.en_mano:
+			if estado.clase == Clase.CAJA:
+				cajas_que_ocupan_la_tolerancia += 1
+			continue
+		if estado.habitacion == Habitacion.AFUERA:
 			continue
 		match estado.clase:
 			Clase.UNIDAD_SUELTA:
@@ -53,7 +57,7 @@ static func hay_desorden(estados: Array[Estado]) -> bool:
 			Clase.CAJA:
 				match estado.habitacion:
 					Habitacion.LOCAL:
-						cajas_en_el_local += 1
+						cajas_que_ocupan_la_tolerancia += 1
 					Habitacion.DEPOSITO:
 						pass
 					_:
@@ -61,7 +65,7 @@ static func hay_desorden(estados: Array[Estado]) -> bool:
 			Clase.UTIL_DE_LIMPIEZA:
 				if estado.habitacion != Habitacion.CUARTITO:
 					return true
-	return cajas_en_el_local > CAJAS_TOLERADAS_EN_EL_LOCAL
+	return cajas_que_ocupan_la_tolerancia > CAJAS_TOLERADAS_EN_EL_LOCAL
 
 
 static func hay_objetos_afuera(estados: Array[Estado]) -> bool:
