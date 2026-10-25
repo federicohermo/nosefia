@@ -52,6 +52,18 @@ func test_la_planilla_tiene_una_fila_por_producto_en_orden_y_en_cero() -> void: 
 		assert_int(registro.unidades_de(catalogo[indice])).is_equal(0)
 
 
+func test_el_registro_de_la_prueba_anota_todo_lo_que_piden_los_compradores() -> void:  # AC-STK-110
+	for jornada: int in [1, 2, 3]:
+		for semilla in range(1, 21):
+			var registro := RegistroDeVentas.new(
+				Catalogo.de_la_jornada(jornada), _atender_con_ventas([])
+			)
+			assert_int(registro.productos().size()).is_equal(Catalogo.PRODUCTOS_DE_PRUEBA.size())
+			for comprador in Compradores.de_la_jornada(jornada, semilla):
+				for producto in comprador.pedido().productos():
+					assert_bool(registro.sumar(producto)).is_true()
+
+
 func test_un_producto_nulo_o_repetido_no_suma_una_fila() -> void:
 	var actroncito := _de(Producto.Id.ACTRONCITO)
 	var productos: Array[Producto] = [actroncito, null, _de(Producto.Id.ACTRONCITO)]

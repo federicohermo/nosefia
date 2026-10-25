@@ -411,7 +411,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
-	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
+	_computadora.arrancar(RegistroDeVentas.new(Catalogo.de_la_jornada(jornada), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada(jornada))

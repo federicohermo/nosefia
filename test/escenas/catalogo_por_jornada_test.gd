@@ -74,6 +74,21 @@ func test_cambiar_de_etapa_y_repetir_apertura_renueva_cupos_sin_duplicados() -> 
 		await _comprobar_un_solo_gesto(local)
 
 
+func test_el_registro_de_cada_noche_lista_el_catalogo_de_esa_noche() -> void:  # AC-STK-110
+	var local := _abrir(1)
+	for jornada: int in [1, 2, 3, 4, 8, 3]:
+		local.call("_al_abrir_la_jornada", jornada)
+		await get_tree().process_frame
+		var computadora: ComputadoraDeEscritorio = local.get("_computadora")
+		var filas: Array[Producto.Id] = []
+		for producto in computadora.registro().productos():
+			filas.append(producto.id)
+		var esperadas: Array[Producto.Id] = []
+		for producto in Catalogo.de_la_jornada(jornada):
+			esperadas.append(producto.id)
+		assert_array(filas).contains_exactly(esperadas)
+
+
 func test_cerrar_tras_cambiar_de_etapa_libera_los_casilleros() -> void:  # AC-STK-098
 	for jornada: int in [1, 4]:
 		var local := _abrir(jornada)
