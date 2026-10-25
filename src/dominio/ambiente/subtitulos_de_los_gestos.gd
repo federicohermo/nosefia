@@ -84,11 +84,14 @@ static func al_borrar(lugar: PisoDelLocal.Lugar) -> Id:
 ## aviso de salida espere a la computadora (BR-NTF-014) no cambia eso: se mira el cumplimiento y no
 ## el permiso.
 static func al_usar_la_entrada(
-	jornada: int, obligatorias: Array[Tarea], atender: TareaDeAtender = null
+	jornada: int,
+	obligatorias: Array[Tarea],
+	atender: TareaDeAtender = null,
+	registro: RegistroDeVentas = null
 ) -> Id:
 	if (
 		jornada in CierreAnticipado.JORNADAS
-		and not CierreAnticipado.corresponde(jornada, obligatorias, atender)
+		and not CierreAnticipado.corresponde(jornada, obligatorias, atender, registro)
 	):
 		return Id.PUERTA_CON_TAREAS_PENDIENTES
 	return Id.NINGUNO

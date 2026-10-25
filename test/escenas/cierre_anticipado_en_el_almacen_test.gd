@@ -179,7 +179,7 @@ func test_la_puerta_espera_al_ultimo_comprador_aun_mal_atendido() -> void:  # AC
 		var reloj: RelojDelTurno = almacen.get("_reloj")
 		var partida: Partida = almacen.get("_partida")
 		for tarea in partida.obligatorias():
-			if tarea.tipo() != Tarea.Tipo.CAJA:
+			if tarea.tipo() not in [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR]:
 				reloj.completar(tarea)
 		var compradores := Compradores.de_la_jornada(jornada)
 		var ultimo := compradores[-1].horario.y
@@ -196,6 +196,7 @@ func test_la_puerta_espera_al_ultimo_comprador_aun_mal_atendido() -> void:  # AC
 		assert_bool(almacen.call("_puede_salir")).is_true()
 		assert_array(_textos(almacen)).contains(AVISO)
 		assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
+		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 
 
 func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-038

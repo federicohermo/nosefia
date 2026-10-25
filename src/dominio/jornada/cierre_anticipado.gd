@@ -10,18 +10,33 @@ const JORNADAS: Array[int] = [
 
 ## Si la noche de prueba deja salir por la puerta.
 ##
-## La atención se da por cumplida cuando ya no queda comprador por atender, se lo haya atendido
-## bien o no: la tarea sigue incompleta para la devolución y el puntaje, y esto sólo decide el
-## permiso. Sin `atender` se mira la marca de la tarea, como las demás.
+## Cuando ya no queda comprador por atender, la atención se da por cumplida se lo haya atendido
+## bien o no, y el registro con la planilla en cero también: sin ventas, su cero sólo cuenta al
+## cierre, y esperarlo trabaría la puerta a quien se quedó sin nadie a quien vender. Las marcas de
+## las tareas no cambian: la devolución y el puntaje siguen contando lo que pasó. Sin `atender` ni
+## `registro` se mira la marca de cada tarea.
 static func corresponde(
-	jornada: int, obligatorias: Array[Tarea], atender: TareaDeAtender = null
+	jornada: int,
+	obligatorias: Array[Tarea],
+	atender: TareaDeAtender = null,
+	registro: RegistroDeVentas = null
 ) -> bool:
 	if jornada not in JORNADAS:
 		return false
 	for tarea in obligatorias:
-		if tarea.completada():
-			continue
-		var sin_nadie_por_atender := atender != null and atender.compras_cerradas()
-		if tarea.tipo() != Tarea.Tipo.CAJA or not sin_nadie_por_atender:
+		if not tarea.completada() and not _sin_nadie_por_atender(tarea, atender, registro):
 			return false
 	return true
+
+
+static func _sin_nadie_por_atender(
+	tarea: Tarea, atender: TareaDeAtender, registro: RegistroDeVentas
+) -> bool:
+	if atender == null or not atender.fisica() or not atender.compras_cerradas():
+		return false
+	match tarea.tipo():
+		Tarea.Tipo.CAJA:
+			return true
+		Tarea.Tipo.REGISTRAR:
+			return registro != null and registro.completada(true)
+	return false

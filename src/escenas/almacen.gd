@@ -173,7 +173,10 @@ func _ready() -> void:
 			func() -> void:
 				_pensar_gesto(
 					SubtitulosDeLosGestos.al_usar_la_entrada(
-						_partida.jornada(), _partida.obligatorias(), _atenciones.tarea()
+						_partida.jornada(),
+						_partida.obligatorias(),
+						_atenciones.tarea(),
+						_computadora.registro()
 					)
 				)
 		)
@@ -520,7 +523,10 @@ func _puede_salir() -> bool:
 		_salida_preparada
 		and _reloj.corriendo()
 		and CierreAnticipado.corresponde(
-			_partida.jornada(), _partida.obligatorias(), _atenciones.tarea()
+			_partida.jornada(),
+			_partida.obligatorias(),
+			_atenciones.tarea(),
+			_computadora.registro()
 		)
 	)
 

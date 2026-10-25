@@ -146,12 +146,14 @@ obligatorias declaradas están cumplidas, el sistema DEBE habilitar la salida po
 principal en ese instante y producir el aviso de BR-NTF-014, que espera a que el jugador
 salga de la computadora si está abierta. Registrar DEBE estar cumplido igual que las demás.
 Un registro que sólo quedaría cumplido al cierre NO DEBE sustituir su cumplimiento durante
-la noche.
+la noche, salvo en el caso de abajo.
 
 La atención al cliente cuenta para esta salida cuando ya no queda comprador por atender: todos
 llegaron y cada uno quedó vendido o se fue. Atender a alguno mal NO DEBE trabar la salida. Un
-comprador que no llegó o que está en la ventanilla SÍ DEBE trabarla. Esa tarea sigue
-incumplida para la devolución y el puntaje de la noche: esta regla sólo decide el permiso.
+comprador que no llegó o que está en la ventanilla SÍ DEBE trabarla. En ese mismo momento,
+registrar también cuenta si su planilla coincide con lo vendido, aunque sin ventas ese cero
+sólo se cumpla al cierre. Esas dos tareas siguen incumplidas para la devolución y el puntaje de
+la noche: esta regla sólo decide el permiso.
 
 Cumplir las tareas NO DEBE acelerar el reloj ni cerrar la jornada automáticamente. Si el
 jugador no sale, el turno DEBE continuar a su ritmo normal hasta el cierre habitual.
@@ -467,11 +469,12 @@ ENTONCES el recorrido no lo mueve.
 
 DADO cada jornada de prueba con las demás obligatorias cumplidas CUANDO se va el último
 comprador y alguno, o todos, se fueron sin comprar ENTONCES permite salir y produce el aviso,
-y la atención sigue incumplida para el puntaje. DADO que el último comprador compra y el
-anterior se fue mal atendido ENTONCES permite salir al vender. DADO un comprador que no llegó
-o que está en la ventanilla ENTONCES no permite salir. DADO que falta cualquier otra
-obligatoria ENTONCES no permite salir. DADO la primera jornada completa ENTONCES no permite
-salir aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma regla.
+y la atención sigue incumplida para el puntaje, aunque la planilla en cero no sea todavía una
+tarea cumplida. DADO que el último comprador compra y el anterior se fue mal atendido ENTONCES
+permite salir al vender. DADO un comprador que no llegó o que está en la ventanilla ENTONCES no
+permite salir. DADO que falta cualquier otra obligatoria, o que la planilla no coincide con lo
+vendido, ENTONCES no permite salir. DADO la primera jornada completa ENTONCES no permite salir
+aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma regla.
 
 ## No objetivos
 
