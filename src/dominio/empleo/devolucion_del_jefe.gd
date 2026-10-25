@@ -13,6 +13,9 @@ enum Opcion { CONTINUAR, VOLVER_AL_MENU }
 ## La ficha fija un segundo entre cada mensaje.
 const SEGUNDOS_ENTRE_MENSAJES := 1.0
 
+## Con la persiana ya baja y antes de que el celular suba.
+const SEGUNDOS_DE_ESPERA_DEL_CELULAR := 2.0
+
 ## Cuántos medios hay en un punto de la tabla.
 const MEDIOS_POR_PUNTO := Reglas.MEDIOS_POR_APERCIBIMIENTO
 
@@ -338,6 +341,11 @@ func mensajes_fechados() -> Array[Mensaje]:
 ## Cuántos mensajes están a la vista después de `transcurrido` segundos: el primero en cero.
 static func a_la_vista(transcurrido: float, total: int) -> int:
 	return mini(total, 1 + floori(maxf(0.0, transcurrido) / SEGUNDOS_ENTRE_MENSAJES))
+
+
+## Si el celular ya puede subir, `espera` segundos después de que la persiana terminó de bajar.
+static func celular_a_la_vista(espera: float) -> bool:
+	return espera >= SEGUNDOS_DE_ESPERA_DEL_CELULAR
 
 
 ## La tabla entera, con los hechos ya contados: la noche cerrada, los medios después de anotarla,

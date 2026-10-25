@@ -538,10 +538,10 @@ cumplida y fallas en la 1 o la 2, la ficha no tiene fila: la de «cualquier otra
 
 ### BR-EMP-044 — El celular sube dos segundos después de que la persiana termina de bajar
 
-CUANDO cierra una jornada desde la cuarta, por la puerta o por tiempo, y la persiana termina de
-bajar, el sistema DEBE esperar 2 segundos con la persiana baja y sin celular en pantalla. Pasados
-los 2 segundos, el celular DEBE subir con el chat de Enrique (BR-EMP-030). Los mensajes de la
-devolución cuentan su ritmo desde el celular centrado, como siempre.
+CUANDO cierra una jornada desde la cuarta, que sólo cierra por tiempo (BR-SHF-025), y la persiana
+termina de bajar, el sistema DEBE esperar 2 segundos con la persiana baja y sin celular en
+pantalla. Pasados los 2 segundos, el celular DEBE subir con el chat de Enrique (BR-EMP-030). Los
+mensajes de la devolución cuentan su ritmo desde el celular centrado, como siempre.
 
 MIENTRAS dura la espera, el turno DEBE seguir cerrado y el control suspendido. MIENTRAS la pausa
 está en pantalla, la espera NO DEBE correr, y el celular NO DEBE subir debajo ni encima del menú:
@@ -1104,7 +1104,7 @@ ENTONCES la jornada 4 abre con la misma fila.
 
 ### AC-EMP-095 — El celular espera dos segundos a la persiana *(verifica BR-EMP-044, BR-EMP-030)*
 
-DADO el cierre de la noche 4, por la puerta o por tiempo, CUANDO la persiana todavía baja
+DADO el cierre de la noche 4 CUANDO la persiana todavía baja
 ENTONCES el celular no está en pantalla. CUANDO la persiana termina de bajar y pasan 1,99 s
 ENTONCES la persiana está baja y sigue sin celular. CUANDO pasan 2 s ENTONCES el celular sube con
 el chat de Enrique, y el primer mensaje aparece cuando llega al centro. DADO el cierre de la noche

@@ -141,6 +141,10 @@ Lo que más se rompe:
   deben poder coexistir. Un ejemplo no es alcanzable sólo porque cada dato sea válido por separado.
   Los umbrales exactos se escriben como fórmula o fracción; un decimal truncado cambia el borde.
   Reservá aproximaciones y tolerancias para las mediciones que las declaran.
+- **Los caminos de un gesto se contrastan con las reglas que lo acotan.** El spec de #628 dijo
+  «por la puerta o por tiempo» desde la jornada 4, con la puerta ya vedada desde esa jornada por
+  BR-SHF-025: el criterio nació con un caso inalcanzable. Antes de enumerar los caminos de un
+  cierre, una entrada o una salida, buscá las demás reglas sobre ese gesto en todos los specs.
 - **Retirar es borrar.** Una regla o un criterio que sale del juego se borra entero: el
   encabezado, el texto, la pregunta abierta que lo cerró y el test que sólo lo citaba. No queda
   un «*Retirada*», ni una nota, ni un test que afirme que no está. El número queda como hueco:

@@ -130,6 +130,7 @@ func test_los_intervalos_esperan_al_celular_en_el_centro() -> void:  # AC-EMP-06
 	var almacen: Node3D = await _almacen()
 	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
+	AvanceDeDevolucion.esperar_el_celular(pantalla)
 	assert_bool(_pantalla_del_celular(almacen).centrado()).is_false()
 	pantalla.call("_process", 5.0)
 	assert_int(pantalla.a_la_vista()).is_equal(1)

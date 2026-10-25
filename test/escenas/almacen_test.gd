@@ -540,6 +540,7 @@ func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> 
 	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
+	AvanceDeDevolucion.esperar_el_celular(pantalla)
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
