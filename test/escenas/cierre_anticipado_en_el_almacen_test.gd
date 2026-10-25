@@ -171,7 +171,7 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:
 		assert_array(_textos(almacen)).is_empty()
 
 
-func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # AC-SHF-036
+func test_la_puerta_espera_al_ultimo_comprador_aun_mal_atendido() -> void:  # AC-SHF-036, AC-SHF-048
 	for jornada: int in range(
 		ReglasDeLaPartida.PRIMERA_JORNADA, Compradores.JORNADA_DE_FEDE_Y_MIA + 1
 	):
@@ -182,11 +182,19 @@ func test_compradores_pendientes_o_vencidos_no_reemplazan_cobrar() -> void:  # A
 			if tarea.tipo() != Tarea.Tipo.CAJA:
 				reloj.completar(tarea)
 		var compradores := Compradores.de_la_jornada(jornada)
-		for transcurrido: float in [0.0, compradores[0].horario.x, compradores[-1].horario.y]:
+		var ultimo := compradores[-1].horario.y
+		for transcurrido: float in [
+			0.0, compradores[0].horario.x, compradores[0].horario.y, compradores[-1].horario.x
+		]:
 			var actual := Reglas.DURACION_DEL_TURNO - _restante(almacen)
 			RelojDePrueba.avanzar_turno(reloj, transcurrido - actual)
+			assert_bool(transcurrido < ultimo).is_true()
 			assert_bool(almacen.call("_puede_salir")).is_false()
 			assert_array(_textos(almacen)).not_contains(AVISO)
+		var corrido := Reglas.DURACION_DEL_TURNO - _restante(almacen)
+		RelojDePrueba.avanzar_turno(reloj, ultimo - corrido)
+		assert_bool(almacen.call("_puede_salir")).is_true()
+		assert_array(_textos(almacen)).contains(AVISO)
 		assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
 
 

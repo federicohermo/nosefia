@@ -144,10 +144,14 @@ DEBE durar 2,5 segundos reales.
 MIENTRAS está abierta una jornada anterior a la primera jornada completa, CUANDO todas sus
 obligatorias declaradas están cumplidas, el sistema DEBE habilitar la salida por la entrada
 principal en ese instante y producir el aviso de BR-NTF-014, que espera a que el jugador
-salga de la computadora si está abierta. Cobrar y registrar DEBEN estar cumplidas igual que
-las demás. Un comprador pendiente o vencido sin completar su compra NO DEBE sustituir el
-cumplimiento de atención. Un registro que sólo quedaría cumplido al cierre NO DEBE sustituir
-su cumplimiento durante la noche.
+salga de la computadora si está abierta. Registrar DEBE estar cumplido igual que las demás.
+Un registro que sólo quedaría cumplido al cierre NO DEBE sustituir su cumplimiento durante
+la noche.
+
+La atención al cliente cuenta para esta salida cuando ya no queda comprador por atender: todos
+llegaron y cada uno quedó vendido o se fue. Atender a alguno mal NO DEBE trabar la salida. Un
+comprador que no llegó o que está en la ventanilla SÍ DEBE trabarla. Esa tarea sigue
+incumplida para la devolución y el puntaje de la noche: esta regla sólo decide el permiso.
 
 Cumplir las tareas NO DEBE acelerar el reloj ni cerrar la jornada automáticamente. Si el
 jugador no sale, el turno DEBE continuar a su ritmo normal hasta el cierre habitual.
@@ -370,8 +374,8 @@ real ENTONCES el turno baja `60.0`. Retomada en la 2, baja `80.0`.
 
 DADO cada jornada de prueba CUANDO todas sus obligatorias están cumplidas ENTONCES permite
 salir. DADO por separado cada obligatoria pendiente, incluidas atención y registro, ENTONCES
-no permite salir. DADO atención sin cumplir por un comprador que no llegó, espera o venció
-sin comprar ENTONCES no permite salir, aunque lo demás esté hecho y el registro coincida.
+no permite salir. DADO atención sin cumplir por un comprador que no llegó o que espera ENTONCES
+no permite salir, aunque lo demás esté hecho y el registro coincida.
 DADO la primera jornada completa y la última CUANDO todas están cumplidas ENTONCES no permite salir.
 
 ### AC-SHF-038 — La puerta conserva el cierre habitual y su unicidad *(verifica BR-SHF-021, BR-SHF-024, BR-SHF-004)*
@@ -458,6 +462,16 @@ desde cualquier punto de partida y encuadra ambas hojas completas. DADO el recor
 ENTONCES la posición y la orientación avanzan sin saltos, y una pausa las conserva y la
 reanudación continúa desde ese punto. DADO un jugador que ya empieza sobre la pose frontal
 ENTONCES el recorrido no lo mueve.
+
+### AC-SHF-048 — Un comprador mal atendido no traba la salida *(verifica BR-SHF-021)*
+
+DADO cada jornada de prueba con las demás obligatorias cumplidas CUANDO se va el último
+comprador y alguno, o todos, se fueron sin comprar ENTONCES permite salir y produce el aviso,
+y la atención sigue incumplida para el puntaje. DADO que el último comprador compra y el
+anterior se fue mal atendido ENTONCES permite salir al vender. DADO un comprador que no llegó
+o que está en la ventanilla ENTONCES no permite salir. DADO que falta cualquier otra
+obligatoria ENTONCES no permite salir. DADO la primera jornada completa ENTONCES no permite
+salir aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma regla.
 
 ## No objetivos
 

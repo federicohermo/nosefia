@@ -97,3 +97,104 @@ func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-0
 		assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_zero()
 		assert_array(DevolucionDelJefe.new(1, partida).mensajes()).is_empty()
 		assert_array(estante.casilleros_vacios(producto)).has_size(cantidad)
+
+
+func _atender_de(jornada: int) -> TareaDeAtender:
+	return TareaDeAtender.new(
+		Compradores.de_la_jornada(jornada),
+		Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	)
+
+
+func _salvo_atender(jornada: int) -> Array[Tarea]:
+	return _cumplidas_salvo(jornada, Tarea.new(Tarea.Tipo.CAJA))
+
+
+func test_la_puerta_deja_salir_cuando_se_fue_el_ultimo_mal_atendido() -> void:  # AC-SHF-048
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
+		var compradores := Compradores.de_la_jornada(jornada)
+		assert_bool(compradores[0].horario.y < compradores[1].horario.x).is_true()
+		var atender := _atender_de(jornada)
+		var obligatorias := _salvo_atender(jornada)
+		assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_false()
+		atender.avanzar(compradores[0].horario.x)
+		assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_false()
+		atender.avanzar(compradores[0].horario.y)
+		assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_false()
+		atender.avanzar(compradores[1].horario.x)
+		assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_false()
+		atender.avanzar(compradores[1].horario.y)
+		assert_int(atender.mal_atendidos()).is_equal(compradores.size())
+		assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_true()
+		assert_bool(atender.completada()).is_false()
+
+
+func test_con_las_compras_cerradas_las_demas_obligatorias_siguen_trabando() -> void:  # AC-SHF-048
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
+		var atender := _atender_de(jornada)
+		atender.avanzar(Compradores.de_la_jornada(jornada)[-1].horario.y)
+		assert_bool(atender.compras_cerradas()).is_true()
+		for pendiente in Apertura.obligatorias(jornada):
+			var obligatorias := _cumplidas_salvo(jornada, pendiente)
+			assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_equal(
+				pendiente.tipo() == Tarea.Tipo.CAJA
+			)
+
+
+func test_vender_al_ultimo_con_el_anterior_mal_atendido_deja_salir() -> void:  # AC-SHF-048
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	var compradores := Compradores.de_la_jornada(jornada)
+	var atender := TareaDeAtender.new(compradores, inventario)
+	var obligatorias := _salvo_atender(jornada)
+	atender.avanzar(compradores[0].horario.y)
+	atender.avanzar(compradores[1].horario.x)
+	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_false()
+	var atencion := atender.atencion()
+	atencion.interactuar(null)
+	atencion.interactuar(null)
+	var productos: Array[Producto] = []
+	for producto in compradores[1].pedido().productos():
+		atencion.interactuar(Estante.new(inventario, Catalogo.todos()).retirar(producto))
+		productos.append(producto)
+	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_false()
+	assert_int(atencion.interactuar(Ticket.new(productos))).is_equal(
+		RecepcionDeCompra.Resultado.COMPLETA
+	)
+	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender)).is_true()
+	assert_int(atender.mal_atendidos()).is_equal(1)
+	assert_bool(atender.completada()).is_false()
+
+
+func test_sin_compradores_fisicos_la_atencion_se_cumple_como_antes() -> void:  # AC-SHF-048
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	var obligatorias := _salvo_atender(jornada)
+	var sin_nadie := TareaDeAtender.new([], inventario)
+	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, sin_nadie)).is_true()
+	var virtuales: Array[Comprador] = []
+	virtuales.assign(Compradores.padron().slice(0, 2))
+	var virtual := TareaDeAtender.new(virtuales, inventario)
+	assert_bool(virtual.fisica()).is_false()
+	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, virtual)).is_false()
+	var tareas := _cumplidas_salvo(jornada)
+	assert_bool(CierreAnticipado.corresponde(jornada, tareas, virtual)).is_true()
+
+
+func test_la_primera_jornada_completa_no_sale_con_las_compras_cerradas() -> void:  # AC-SHF-048
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	var atender := _atender_de(jornada)
+	atender.avanzar(Compradores.de_la_jornada(jornada)[-1].horario.y)
+	assert_bool(atender.compras_cerradas()).is_true()
+	(
+		assert_bool(
+			CierreAnticipado.corresponde(
+				jornada, _cumplidas_salvo(jornada, Tarea.new(Tarea.Tipo.CAJA)), atender
+			)
+		)
+		. is_false()
+	)

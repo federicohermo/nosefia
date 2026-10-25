@@ -83,10 +83,12 @@ static func al_borrar(lugar: PisoDelLocal.Lugar) -> Id:
 ## En una jornada de prueba, la entrada que no deja salir es porque queda una obligatoria. Que el
 ## aviso de salida espere a la computadora (BR-NTF-014) no cambia eso: se mira el cumplimiento y no
 ## el permiso.
-static func al_usar_la_entrada(jornada: int, obligatorias: Array[Tarea]) -> Id:
+static func al_usar_la_entrada(
+	jornada: int, obligatorias: Array[Tarea], atender: TareaDeAtender = null
+) -> Id:
 	if (
 		jornada in CierreAnticipado.JORNADAS
-		and not CierreAnticipado.corresponde(jornada, obligatorias)
+		and not CierreAnticipado.corresponde(jornada, obligatorias, atender)
 	):
 		return Id.PUERTA_CON_TAREAS_PENDIENTES
 	return Id.NINGUNO
