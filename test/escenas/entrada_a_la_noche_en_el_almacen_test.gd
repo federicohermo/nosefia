@@ -62,6 +62,7 @@ func _cerrar_y_seguir() -> void:
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
+	AvanceDeDevolucion.esperar_el_celular(pantalla)
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()

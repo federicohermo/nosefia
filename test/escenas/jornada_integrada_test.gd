@@ -50,6 +50,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	await get_tree().process_frame
+	AvanceDeDevolucion.esperar_el_celular(pantalla)
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()

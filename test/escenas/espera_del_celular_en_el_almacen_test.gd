@@ -106,6 +106,7 @@ func test_el_contrato_cumplido_sube_el_celular_a_los_dos_segundos() -> void:  # 
 	var almacen := await _cerrada(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	AvanceDeDevolucion.terminar_la_bajada(_persiana(almacen))
 	_comprobar_que_sube_a_los_dos_segundos(almacen)
+	assert_int(_celular(almacen).celular().chat()).is_equal(Conversacion.Interlocutor.JEFE)
 
 
 func test_la_pausa_congela_la_espera_y_al_reanudar_sigue() -> void:  # AC-EMP-095
