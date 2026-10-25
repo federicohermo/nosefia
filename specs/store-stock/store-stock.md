@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -135,7 +135,8 @@ no conoce tiene cero vendibles.
 
 ### BR-STK-019 — La planilla tiene una fila por producto, y arranca en cero
 
-El sistema DEBE dar a la planilla una fila por producto del catálogo, en el orden del catálogo.
+El sistema DEBE dar a la planilla una fila por producto del catálogo presente esa noche
+(BR-STK-046), en el orden del catálogo.
 CUANDO se abre una jornada, cada fila DEBE arrancar en 0 unidades: lo anotado en una noche no
 pasa a la siguiente.
 
@@ -697,7 +698,7 @@ Y un producto que el inventario no conoce contesta 0.
 ### AC-STK-020 — Una fila por producto, en cero *(verifica BR-STK-019)*
 
 DADO una jornada que se abre CUANDO se mira la planilla ENTONCES tiene una fila por producto del
-catálogo, en su orden, y cada una en 0.
+catálogo presente esa noche, en su orden, y cada una en 0.
 
 ### AC-STK-021 — Un gesto, una fila *(verifica BR-STK-020)*
 
@@ -1315,6 +1316,13 @@ vez y cuentan como vendidas sin descontar además el pedido; repetir la entrega 
 DADO una compra con dos productos recibidos CUANDO vence ENTONCES las dos unidades siguen
 registradas afuera y recogibles en el piso interior, sin venta, y depósito, caja y góndola quedan
 como antes del vencimiento.
+
+### AC-STK-110 — El registro de la prueba no lista productos ausentes *(verifica BR-STK-019, BR-STK-046)*
+
+DADO cada jornada 1, 2 y 3 CUANDO abre ENTONCES la planilla tiene exactamente las dieciséis filas
+de BR-STK-046, ninguna de un producto que no está en las góndolas esa noche, y cada producto que
+piden sus compradores tiene fila. DADO la jornada 4 o posterior ENTONCES tiene los treinta y dos.
+CUANDO se abre otra jornada en el mismo local ENTONCES la planilla es la de la nueva etapa.
 
 ## No objetivos
 
