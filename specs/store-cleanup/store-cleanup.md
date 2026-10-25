@@ -249,8 +249,10 @@ sus interiores ni cambiar la pertenencia de un punto que conserva su posición r
 ### BR-CLN-028 — El desorden cuenta una vez al cierre
 
 CUANDO termina la jornada, el sistema DEBE anotar un llamado por desorden si queda alguna
-unidad suelta dentro de cualquier habitación, una caja dentro y fuera del depósito o un útil
-dentro y fuera del cuartito. El cuerpo sostenido DEBE excluirse por identidad, salvo mientras se
+unidad suelta dentro de cualquier habitación, una caja fuera del depósito o un útil
+fuera del cuartito. Una única caja en el local NO DEBE producir desorden; dos o más cajas en el
+local sí, y una caja en el baño o en el cuartito también, aunque sea la única. El cuerpo
+sostenido DEBE excluirse por identidad, salvo mientras se
 examina: entonces cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
@@ -579,7 +581,7 @@ ENTONCES no lo produce. El cuerpo de repuesto no cuenta como unidad suelta.
 
 ### AC-CLN-042 — Cada clase tiene su habitación *(verifica BR-CLN-027, BR-CLN-028)*
 
-DADO una caja en local o cuartito CUANDO cierra ENTONCES hay desorden; en depósito o su paso, no.
+DADO una caja en cuartito CUANDO cierra ENTONCES hay desorden; en depósito o su paso, no.
 DADO un útil en local, depósito o baño ENTONCES hay desorden; en cuartito o su paso, no. DADO un
 útil en el umbral de la puerta del cuartito ENTONCES del lado del cuartito no produce desorden y
 del lado del depósito sí. DADO una bolsa adentro, también en el cuartito, ENTONCES no produce
@@ -791,6 +793,15 @@ un descarte, desaparece el papel y se anota un motivo único de papel. Repetir c
 un ticket ajeno o ya retirado no agrega descartes ni motivos. DADO ticket sostenido CUANDO
 se pulsa secundario ENTONCES no se descarta ni suelta; balde y mopa conservan sus usos sin
 anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CLN-030.
+
+### AC-CLN-070 — Una sola caja en el local no desordena *(verifica BR-CLN-028)*
+
+DADO exactamente una caja en el local, ninguna en baño ni cuartito y el resto en depósito CUANDO
+cierra ENTONCES no hay desorden por cajas. DADO dos cajas en el local ENTONCES hay desorden. DADO
+una caja en el baño, aunque sea la única, ENTONCES hay desorden. DADO una caja en el local y otra
+en el baño ENTONCES hay desorden. DADO dos cajas en el local y una tercera sostenida ENTONCES hay desorden: la sostenida no cuenta como
+la permitida. DADO una caja en el local y otra sostenida ENTONCES no hay desorden. DADO una caja en el local sin otras cajas y una unidad suelta
+ENTONCES hay desorden por la unidad, y el motivo sigue siendo único.
 
 ## No objetivos
 
