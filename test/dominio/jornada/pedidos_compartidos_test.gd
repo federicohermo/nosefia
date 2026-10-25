@@ -91,3 +91,21 @@ func test_un_producto_sin_casilleros_en_ninguna_tanda_no_falta() -> void:  # AC-
 		azar.seed = semilla
 		var inventario := Apertura.inventario_de_la_jornada(2, [], totales, principales, azar)
 		assert_array(inventario.faltantes()).is_empty()
+
+
+func test_un_producto_de_una_fila_no_abre_vacia_ninguna_de_sus_dos_tandas() -> void:  # AC-STK-033
+	var producto := Catalogo.de(Producto.Id.FLIM_POF)
+	var totales: Dictionary[Producto.Id, int] = {producto.id: 6}
+	var reponibles: Dictionary[Producto.Id, int] = {producto.id: 3}
+	var de_una_fila: Dictionary[Producto.Id, bool] = {producto.id: true}
+	var faltantes: Dictionary[int, bool] = {}
+	for semilla in 200:
+		var azar := RandomNumberGenerator.new()
+		azar.seed = semilla
+		var inventario := Apertura.inventario_de_la_jornada(
+			8, [], totales, reponibles, azar, de_una_fila
+		)
+		var falta := 6 - inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)
+		faltantes[falta] = true
+		assert_int(falta).is_between(1, 4)
+	assert_bool(faltantes.has(4)).is_true()

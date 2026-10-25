@@ -48,13 +48,14 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 
 ## La mercadería de una noche en la que sólo importa cuántas unidades faltan, no en qué
 ## casilleros: el sorteo de `vacios_de_la_jornada()` con la reponible de adelante y las fijas como
-## dos tandas.
+## dos tandas. `de_una_fila` dice qué productos no pueden abrir vacía ninguna de las dos.
 static func inventario_de_la_jornada(
 	jornada: int,
 	compradores: Array[Comprador],
 	casilleros_totales: Dictionary[Producto.Id, int],
 	casilleros_reponibles: Dictionary[Producto.Id, int],
-	azar: RandomNumberGenerator
+	azar: RandomNumberGenerator,
+	de_una_fila: Dictionary[Producto.Id, bool] = {}
 ) -> Inventario:
 	var tandas: Dictionary[Producto.Id, Array] = {}
 	for producto in Catalogo.todos():
@@ -63,7 +64,7 @@ static func inventario_de_la_jornada(
 		tandas[producto.id] = [
 			PackedInt32Array(range(reponibles)), PackedInt32Array(range(reponibles, totales))
 		]
-	var vacios := vacios_de_la_jornada(jornada, compradores, tandas, {}, azar)
+	var vacios := vacios_de_la_jornada(jornada, compradores, tandas, de_una_fila, azar)
 	return inventario_con_faltantes(
 		faltantes_de(vacios), casilleros_totales, Catalogo.de_la_jornada(jornada)
 	)
