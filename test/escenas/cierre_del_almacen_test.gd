@@ -172,7 +172,7 @@ func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:
 	var partida: Partida = _almacen.get("_partida")
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	var caja: Node3D = _almacen.get("_cajas_de_productos")[0]
-	caja.global_position = _centro(lector.local)
+	caja.global_position = _centro(lector.bano)
 	_almacen.get("_reposicion_manual").call("retirar", Producto.Id.ACTRONCITO)
 	var unidad: Node3D = _almacen.get("_agarre").soltar(true)
 	unidad.global_position = _centro(lector.local) + Vector3.UP * lector.local[0].size.y
