@@ -51,6 +51,12 @@ var semilla: int:
 	set(_nueva):
 		push_error("La semilla se fija al empezar la partida y no se sustituye")
 
+## Si al cerrar la noche quedó una bolsa afuera: cambia la Tarea 5 de la devolución. Como los
+## llamados, sólo se anota con la jornada abierta.
+var bolsa_afuera := false:
+	set(valor):
+		bolsa_afuera = valor and _jornada_abierta and not terminada()
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -265,6 +271,7 @@ func abrir_la_jornada() -> Turno:
 	if terminada():
 		return null
 	_llamados.clear()
+	bolsa_afuera = false
 	_obligatorias = Apertura.obligatorias(_jornada)
 	_jornada_abierta = true
 	return Apertura.turno_de_la_jornada(_obligatorias)
