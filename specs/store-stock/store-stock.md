@@ -799,10 +799,10 @@ DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 2 a 
 medidos en el local CUANDO se abren las jornadas ENTONCES ningún faltante pasa de las unidades
 de una caja menos lo pedido —8 menos lo pedido en el balance vigente— ni de los casilleros de la
 fila de adelante de todas las tandas de su producto. El inventario conserva el cupo total de
-todas las tandas. DADO productos de cuatro tandas de tres casilleros, como en las jornadas 2 y 3,
-o de dos tandas de cuatro, como desde la 4, CUANDO se sortean sus vacíos con las 200 semillas
-ENTONCES hay vacíos en cada tanda de al menos un producto. DADO un producto de una sola fila ENTONCES ninguna de sus tandas abre con
-su fila de adelante entera vacía.
+todas las tandas. DADO productos de cuatro tandas de tres casilleros, o de dos tandas de cuatro,
+CUANDO se sortean sus vacíos con las 200 semillas ENTONCES hay vacíos en cada tanda de al menos
+un producto. DADO un producto de una sola fila ENTONCES ninguna de sus tandas abre con su fila de
+adelante entera vacía.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
