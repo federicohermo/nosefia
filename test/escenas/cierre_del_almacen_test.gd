@@ -116,7 +116,7 @@ func test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano() -> 
 	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_true()
 
 
-func test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_excluirlo() -> void:  # AC-CLN-043
+func test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_ser_sostenido() -> void:  # AC-CLN-043
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var agarre: Agarre = _almacen.get("_agarre")

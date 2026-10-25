@@ -251,9 +251,9 @@ sus interiores ni cambiar la pertenencia de un punto que conserva su posición r
 CUANDO termina la jornada, el sistema DEBE anotar un llamado por desorden si queda alguna
 unidad suelta dentro de cualquier habitación, una caja fuera del depósito o un útil
 fuera del cuartito. Una única caja en el local NO DEBE producir desorden; dos o más cajas en el
-local sí, y una caja en el baño o en el cuartito también, aunque sea la única. La caja sostenida
-cuenta como la única permitida: con una caja en la mano, otra caja en el local produce desorden.
-Los demás cuerpos sostenidos DEBEN excluirse por identidad. Mientras se examina, cualquier
+local sí, y una caja apoyada en el baño o en el cuartito también, aunque sea la única. La caja
+sostenida cuenta como la única permitida, también en el baño: con una caja en la mano, otra caja
+en el local produce desorden. Los demás cuerpos sostenidos DEBEN excluirse por identidad. Mientras se examina, cualquier
 cuerpo sostenido cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
@@ -799,9 +799,10 @@ anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CL
 
 DADO exactamente una caja en el local, ninguna en baño ni cuartito y el resto en depósito CUANDO
 cierra ENTONCES no hay desorden por cajas. DADO dos cajas en el local ENTONCES hay desorden. DADO
-una caja en el baño, aunque sea la única, ENTONCES hay desorden. DADO una caja en el local y otra
-en el baño ENTONCES hay desorden. DADO una caja sostenida y las demás en el depósito ENTONCES no
-hay desorden. DADO una caja sostenida y otra en el local ENTONCES hay desorden: la sostenida es la
+una caja apoyada en el baño, aunque sea la única, ENTONCES hay desorden. DADO una caja en el local
+y otra apoyada en el baño ENTONCES hay desorden. DADO una caja sostenida y las demás en el depósito
+ENTONCES no hay desorden. DADO una caja sostenida dentro del baño y ninguna otra ENTONCES no hay
+desorden. DADO una caja sostenida y otra en el local ENTONCES hay desorden: la sostenida es la
 única permitida. DADO un útil sostenido y una caja en el local ENTONCES no hay desorden. DADO una
 caja en el local sin otras cajas y una unidad suelta ENTONCES hay desorden por la unidad, y el
 motivo sigue siendo único.

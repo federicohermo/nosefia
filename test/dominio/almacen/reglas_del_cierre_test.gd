@@ -210,6 +210,8 @@ func test_la_caja_sostenida_ocupa_la_unica_permitida() -> void:  # AC-CLN-070
 		_caja(HABITACION.DEPOSITO), _caja(HABITACION.LOCAL, true)
 	]
 	assert_bool(ReglasDelCierre.hay_desorden(con_una_en_el_deposito)).is_false()
+	var en_el_bano: Array[ReglasDelCierre.Estado] = [_caja(HABITACION.BANO, true)]
+	assert_bool(ReglasDelCierre.hay_desorden(en_el_bano)).is_false()
 	var con_una_en_el_local: Array[ReglasDelCierre.Estado] = [
 		_caja(HABITACION.LOCAL), _caja(HABITACION.LOCAL, true)
 	]
