@@ -79,7 +79,9 @@ func test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos() -> void:  # A
 	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano, lector.cuartito]:
 		caja.global_position = _centro(partes)
 		util.global_position = _centro(lector.cuartito)
-		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.deposito)
+		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(
+			partes != lector.deposito and partes != lector.local
+		)
 		caja.global_position = _centro(lector.deposito)
 		util.global_position = _centro(partes)
 		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.cuartito)
@@ -107,7 +109,7 @@ func test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano() -> 
 	assert_object(otra.get("datos")).is_same(una.get("datos"))
 	assert_bool(agarre.pedir_agarrar(una.get("datos"), una)).is_true()
 	assert_object(agarre.cuerpo_sostenido()).is_same(una)
-	otra.global_position = _centro(lector.local)
+	otra.global_position = _centro(lector.bano)
 	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
 	otra.global_position = _centro(lector.local) + Vector3.UP * lector.local[0].size.y
 	assert_int(lector.de(otra.global_position)).is_equal(CIERRE.Habitacion.AFUERA)
@@ -123,7 +125,7 @@ func test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_excluirlo() -> void: 
 	assert_bool(agarre.pedir_agarrar(caja.get("datos"), caja)).is_true()
 	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
 	assert_bool(examen.iniciar()).is_true()
-	caja.global_position = _centro(lector.local)
+	caja.global_position = _centro(lector.bano)
 	assert_object(agarre.cuerpo_sostenido()).is_same(caja)
 	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
 	examen.terminar()
