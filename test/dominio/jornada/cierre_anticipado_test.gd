@@ -182,6 +182,8 @@ func test_vender_al_ultimo_con_el_anterior_mal_atendido_deja_salir() -> void:  #
 	var atender := TareaDeAtender.new(compradores, inventario)
 	var registro := _registro_de(atender)
 	var obligatorias := _cumplidas_salvo(jornada, Tarea.new(Tarea.Tipo.CAJA))
+	var pendientes: Array[Tarea.Tipo] = [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR]
+	var sin_anotar := _cumplidas_salvo_tipos(jornada, pendientes)
 	atender.avanzar(compradores[0].horario.y)
 	atender.avanzar(compradores[1].horario.x)
 	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender, registro)).is_false()
@@ -196,6 +198,7 @@ func test_vender_al_ultimo_con_el_anterior_mal_atendido_deja_salir() -> void:  #
 	assert_int(atencion.interactuar(Ticket.new(productos))).is_equal(
 		RecepcionDeCompra.Resultado.COMPLETA
 	)
+	assert_bool(CierreAnticipado.corresponde(jornada, sin_anotar, atender, registro)).is_false()
 	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender, registro)).is_true()
 	assert_int(atender.mal_atendidos()).is_equal(1)
 	assert_bool(atender.completada()).is_false()

@@ -197,6 +197,19 @@ func test_la_puerta_espera_al_ultimo_comprador_aun_mal_atendido() -> void:  # AC
 		assert_array(_textos(almacen)).contains(AVISO)
 		assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
 		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+		var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
+		var producto := computadora.registro().productos()[0]
+		computadora.pedir_abrir()
+		computadora.pedir_sumar(producto)
+		assert_bool(almacen.call("_puede_salir")).is_false()
+		assert_array(_textos(almacen)).not_contains(AVISO).not_contains(RETRABA)
+		computadora.pedir_cerrar()
+		assert_array(_textos(almacen)).contains(RETRABA).not_contains(AVISO)
+		computadora.pedir_abrir()
+		computadora.pedir_restar(producto)
+		assert_bool(almacen.call("_puede_salir")).is_true()
+		computadora.pedir_cerrar()
+		assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
 
 
 func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-038

@@ -218,6 +218,7 @@ func _ready() -> void:
 	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
 	_atenciones.compra_realizada.connect(_revisar_la_salida)
 	_atenciones.comprador_vencido.connect(_revisar_la_salida.unbind(1))
+	_computadora.registro_actualizado.connect(_revisar_la_salida)
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
