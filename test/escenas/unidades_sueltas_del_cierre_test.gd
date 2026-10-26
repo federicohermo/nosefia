@@ -108,7 +108,7 @@ func test_apoyada_sobre_una_caja_del_deposito_sigue_siendo_suelta() -> void:  # 
 	assert_bool(_desorden()).is_true()
 
 
-func test_la_unidad_en_examen_sigue_excluida_sin_reingresar_al_grupo() -> void:  # AC-CLN-041, AC-CLN-043
+func test_la_unidad_en_examen_sigue_excluida_sin_reingresar() -> void:  # AC-CLN-041, AC-CLN-043
 	_abrir()
 	var unidad := _unidad()
 	var examen: Examen = _almacen.get("_jugador").examen
