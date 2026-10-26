@@ -94,7 +94,7 @@ func _seguir() -> void:
 func _otros_motivos() -> void:
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var caja: Node3D = _almacen.get("_cajas_de_productos")[0]
-	caja.global_position = lector.to_global(lector.local[0].get_center())
+	caja.global_position = lector.to_global(lector.bano[0].get_center())
 	var unidad := _unidad()
 	assert_object(unidad).is_not_null()
 	unidad = _almacen.get("_agarre").soltar(true)
