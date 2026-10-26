@@ -36,14 +36,13 @@ func _vaciados_de(tanda: PackedInt32Array, vacios: Array) -> int:
 	return vaciados
 
 
-func _vaciar_cada_estante(jornada: int, id: Producto.Id) -> void:
+func _vaciar_cada_estante(jornada: int, id: Producto.Id) -> int:
 	var puesto := _puesto_de(jornada)
 	var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
 	assert_bool(de_una_fila[id]).is_true()
 	var tandas: Array = puesto.call("tandas")[id]
 	var alturas: PackedFloat32Array = puesto.call("alturas_de_las_tandas")[id]
 	var orden := _de_abajo_hacia_arriba(alturas)
-	assert_int(orden.size()).is_greater(1)
 	for lugar in orden.size():
 		var casilleros: Array[int] = []
 		for casillero: int in tandas[orden[lugar]]:
@@ -53,11 +52,14 @@ func _vaciar_cada_estante(jornada: int, id: Producto.Id) -> void:
 		assert_int(vacios.size()).is_equal(casilleros.size())
 		assert_int(_vaciados_de(tandas[orden[lugar]], vacios)).is_equal(casilleros.size() - 1)
 		assert_int(_vaciados_de(tandas[vecina], vacios)).is_equal(1)
+	return orden.size()
 
 
 func test_cada_estante_de_poetico_que_se_vaciaria_pasa_el_que_sobra() -> void:  # AC-STK-093
-	_vaciar_cada_estante(ReglasDeLaPartida.PRIMERA_JORNADA + 1, Producto.Id.POETICO)
-	_vaciar_cada_estante(ReglasDeLaPartida.PRIMERA_JORNADA + 2, Producto.Id.POETICO)
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA + 1, ReglasDeLaPartida.PRIMERA_JORNADA + 2
+	]:
+		assert_int(_vaciar_cada_estante(jornada, Producto.Id.POETICO)).is_greater(1)
 
 
 func test_en_flin_puf_el_estante_de_arriba_pasa_el_que_sobra_al_de_abajo() -> void:  # AC-STK-093
@@ -66,7 +68,7 @@ func test_en_flin_puf_el_estante_de_arriba_pasa_el_que_sobra_al_de_abajo() -> vo
 		Producto.Id.FLIM_POF
 	]
 	assert_int(_de_abajo_hacia_arriba(alturas).back()).is_equal(0)
-	_vaciar_cada_estante(jornada, Producto.Id.FLIM_POF)
+	assert_int(_vaciar_cada_estante(jornada, Producto.Id.FLIM_POF)).is_greater(1)
 
 
 func test_ningun_producto_de_una_fila_abre_un_estante_vacio_entero() -> void:  # AC-STK-093
