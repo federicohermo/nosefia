@@ -153,6 +153,43 @@ func test_la_caja_en_examen_ocupa_la_unica_permitida_en_el_local() -> void:  # A
 	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
 
 
+func test_el_util_en_la_mano_o_en_examen_cuenta_guardado_donde_este() -> void:  # AC-CLN-076
+	_abrir()
+	var lector: Habitaciones = _almacen.get("_habitaciones")
+	var agarre: Agarre = _almacen.get("_agarre")
+	var examen: Examen = _almacen.get("_jugador").examen
+	var util: ObjetoAgarrable = null
+	for candidato: ObjetoAgarrable in _almacen.get("_utiles_de_limpieza"):
+		if AnomaliasDeLaJornada.util_disponible(candidato.datos.id, _jornada()):
+			util = candidato
+			break
+	var lugares: Array[Vector3] = [
+		_centro(lector.local),
+		_centro(lector.deposito),
+		_centro(lector.bano),
+		_centro(lector.local) + Vector3.UP * lector.local[0].size.y,
+	]
+	for lugar: Vector3 in lugares:
+		util.global_position = lugar
+		(
+			assert_bool(
+				CIERRE.hay_desorden(_foto(), _jornada()) or CIERRE.hay_objetos_afuera(_foto())
+			)
+			. is_true()
+		)
+	assert_bool(agarre.pedir_agarrar(util.datos, util)).is_true()
+	for en_examen: bool in [false, true]:
+		if en_examen:
+			assert_bool(examen.iniciar()).is_true()
+		for lugar: Vector3 in lugares:
+			util.global_position = lugar
+			assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
+			assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
+	examen.terminar()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
+	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
+
+
 func test_unidad_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-044, AC-CLN-046
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")

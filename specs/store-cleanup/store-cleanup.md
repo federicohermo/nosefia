@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26; útil en la mano al cierre cuenta como guardado de #386, decisión del 2026-10-26
 ---
 
 # Capacidad: dejar el local en orden
@@ -254,7 +254,9 @@ fuera del cuartito. Una única caja en el local NO DEBE producir desorden; dos o
 local sí, y una caja apoyada en el baño o en el cuartito también, aunque sea la única. La caja
 sostenida cuenta como la única permitida, también en el baño y también mientras se examina: con una
 caja en la mano o en examen, otra caja en el local produce desorden. Las unidades de Poético quedan exentas sólo en lo que fija BR-CLN-037. Los demás cuerpos sostenidos DEBEN excluirse por identidad,
-también mientras se examinan. Lo ya tirado al contenedor DEBE excluirse.
+también mientras se examinan. Un útil de limpieza sostenido, con o sin examen, cuenta como guardado en
+el cuartito: no suma desorden ni objeto afuera, y ninguna tarea queda sin cumplir por su posición.
+Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
 
@@ -640,6 +642,13 @@ fuera del cuartito ENTONCES son esas dos y no las cajas. DADO el local en orden,
 sostenido, lo tirado al contenedor o una bolsa adentro ENTONCES no hay ninguna clase y no hay
 desorden. DADO la jornada en que Poético sustituye al jabón azul y una unidad de Poético suelta ENTONCES no
 hay unidades sueltas entre las clases. DADO cualquier combinación ENTONCES hay desorden si y sólo si hay al menos una clase.
+
+### AC-CLN-076 — El útil en la mano al cierre cuenta como guardado *(verifica BR-CLN-028, BR-CLN-029)*
+
+DADO un útil de limpieza en la mano, con o sin examen, en local, depósito, baño o afuera CUANDO
+cierra ENTONCES no hay desorden ni motivo de afuera por él, y al terminar el examen sigue igual.
+DADO el mismo útil soltado en esos lugares ENTONCES conserva su motivo. DADO un útil en la mano y
+otro útil fuera del cuartito ENTONCES hay desorden por el otro.
 
 ### AC-CLN-074 — Una heladera abierta al cierre es un llamado *(verifica BR-CLN-039)*
 

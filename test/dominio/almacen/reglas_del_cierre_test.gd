@@ -255,6 +255,29 @@ func test_otro_cuerpo_sostenido_no_ocupa_la_permitida() -> void:  # AC-CLN-070
 	assert_bool(ReglasDelCierre.hay_desorden(estados, JORNADA_COMUN)).is_false()
 
 
+func test_el_util_en_la_mano_cuenta_guardado_en_cualquier_habitacion() -> void:  # AC-CLN-076
+	for habitacion: ReglasDelCierre.Habitacion in HABITACION.values():
+		var en_la_mano: Array[ReglasDelCierre.Estado] = [_util(habitacion, true)]
+		assert_array(ReglasDelCierre.clases_de_desorden(en_la_mano, JORNADA_COMUN)).is_empty()
+		assert_bool(ReglasDelCierre.hay_objetos_afuera(en_la_mano)).is_false()
+	var suelto_afuera: Array[ReglasDelCierre.Estado] = [_util(HABITACION.AFUERA, false)]
+	assert_bool(ReglasDelCierre.hay_objetos_afuera(suelto_afuera)).is_true()
+	var suelto_en_el_bano: Array[ReglasDelCierre.Estado] = [_util(HABITACION.BANO, false)]
+	(
+		assert_array(ReglasDelCierre.clases_de_desorden(suelto_en_el_bano, JORNADA_COMUN))
+		. contains_exactly([CLASE.UTIL_DE_LIMPIEZA])
+	)
+	var con_otro_afuera_del_cuartito: Array[ReglasDelCierre.Estado] = [
+		_util(HABITACION.LOCAL, true), _util(HABITACION.BANO, false)
+	]
+	(
+		assert_array(
+			ReglasDelCierre.clases_de_desorden(con_otro_afuera_del_cuartito, JORNADA_COMUN)
+		)
+		. contains_exactly([CLASE.UTIL_DE_LIMPIEZA])
+	)
+
+
 func test_una_caja_tolerada_no_tapa_una_unidad_suelta() -> void:  # AC-CLN-070
 	var estados: Array[ReglasDelCierre.Estado] = [
 		_caja(HABITACION.LOCAL),
@@ -263,6 +286,10 @@ func test_una_caja_tolerada_no_tapa_una_unidad_suelta() -> void:  # AC-CLN-070
 	assert_bool(ReglasDelCierre.hay_desorden(estados, JORNADA_COMUN)).is_true()
 	estados.reverse()
 	assert_bool(ReglasDelCierre.hay_desorden(estados, JORNADA_COMUN)).is_true()
+
+
+func _util(habitacion: ReglasDelCierre.Habitacion, en_mano: bool) -> ReglasDelCierre.Estado:
+	return ReglasDelCierre.Estado.new(CLASE.UTIL_DE_LIMPIEZA, habitacion, en_mano)
 
 
 func _caja(habitacion: ReglasDelCierre.Habitacion, en_mano: bool = false) -> ReglasDelCierre.Estado:
