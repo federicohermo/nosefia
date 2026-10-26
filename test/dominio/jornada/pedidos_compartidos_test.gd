@@ -58,21 +58,16 @@ func test_la_apertura_puede_vaciar_cualquier_tanda_y_conserva_el_cupo_total() ->
 	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
 	var totales: Dictionary[Producto.Id, int] = {producto.id: 8}
 	var principales: Dictionary[Producto.Id, int] = {producto.id: 4}
-	var tope := mini(totales[producto.id], ReglasDelEstante.UNIDADES_POR_CAJA)
-	var mas_vacios := 0
 	for semilla in 200:
 		var azar := RandomNumberGenerator.new()
 		azar.seed = semilla
 		var inventario := Apertura.inventario_de_la_jornada(2, [], totales, principales, azar)
 		var estante := Estante.new(inventario, Catalogo.todos())
-		assert_int(estante.cupo(producto)).is_equal(totales[producto.id])
-		var vacios := estante.casilleros_vacios(producto).size()
-		assert_int(vacios).is_between(1, tope)
-		mas_vacios = maxi(mas_vacios, vacios)
+		assert_int(estante.cupo(producto)).is_equal(8)
+		assert_int(estante.casilleros_vacios(producto).size()).is_between(1, totales[producto.id])
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
 			ReglasDelEstante.UNIDADES_POR_CAJA
 		)
-	assert_int(mas_vacios).is_equal(tope)
 
 
 func test_un_producto_con_casilleros_solo_en_una_fija_falta() -> void:  # AC-STK-030

@@ -152,28 +152,27 @@ func tandas() -> Dictionary[Producto.Id, Array]:
 	return por_producto
 
 
-## La altura de la fila de adelante de cada tanda de cada producto, en el orden de `tandas()`.
+## Dónde está cada casillero de cada tanda, en el mismo orden que `tandas()`.
 ##
-## Es lo que le dice a `Apertura` qué estante queda justo arriba de cuál. Una tanda sin
-## casilleros no tiene altura.
-func alturas_de_las_tandas() -> Dictionary[Producto.Id, PackedFloat32Array]:
-	var por_producto: Dictionary[Producto.Id, PackedFloat32Array] = {}
+## Son las posiciones del modelo. Qué estante queda contiguo y qué columnas se alinean lo decide
+## `Apertura`.
+func posiciones() -> Dictionary[Producto.Id, Array]:
+	var por_producto: Dictionary[Producto.Id, Array] = {}
 	for producto in Catalogo.todos():
-		var alturas := PackedFloat32Array()
-		alturas.append(
-			_altura_de_la_fila(
+		var lugares: Array = [
+			_lugares_de_adelante(
 				disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
 			)
-		)
+		]
 		for indice in disposicion.productos_de_las_guias.size():
 			if disposicion.productos_de_las_guias[indice] == producto.id:
-				alturas.append(
-					_altura_de_la_fila(
+				lugares.append(
+					_lugares_de_adelante(
 						disposicion.guias[indice],
 						disposicion.filas_de_adelante_de_las_guias[indice]
 					)
 				)
-		por_producto[producto.id] = alturas
+		por_producto[producto.id] = lugares
 	return por_producto
 
 
@@ -1423,6 +1422,15 @@ func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
 	_radios_de_las_filas.append(radio)
 
 
+## El origen de las últimas `adelante` copias de un bloque, que son su fila de adelante.
+func _lugares_de_adelante(bloque: PackedFloat32Array, adelante: int) -> PackedVector3Array:
+	var lugares := PackedVector3Array()
+	var total := DisposicionDeLaGondola.copias(bloque)
+	for indice in range(total - adelante, total):
+		lugares.append(DisposicionDeLaGondola.copia(bloque, indice).origin)
+	return lugares
+
+
 ## El dibujo de cada producto: primero sus copias fijas —las filas de atrás de todas sus tandas—
 ## y después sus casilleros —la fila de adelante de cada tanda fija suya, y al final la de su
 ## tanda reponible—. Un estante al que la apertura no le declara vacíos vacía los últimos, que así
@@ -1498,14 +1506,6 @@ func _rebasar(bloque: PackedFloat32Array, desde: Basis, hacia: Basis) -> PackedF
 			[b.x.x, b.y.x, b.z.x, o.x, b.x.y, b.y.y, b.z.y, o.y, b.x.z, b.y.z, b.z.z, o.z]
 		)
 	return salida
-
-
-## La altura de la primera copia de la fila de adelante de un bloque.
-func _altura_de_la_fila(bloque: PackedFloat32Array, fila_de_adelante: int) -> float:
-	if fila_de_adelante <= 0:
-		return 0.0
-	var primera := DisposicionDeLaGondola.copias(bloque) - fila_de_adelante
-	return DisposicionDeLaGondola.copia(bloque, primera).origin.y
 
 
 ## Desde qué copia del dibujo arrancan los casilleros: las de antes son fijas.

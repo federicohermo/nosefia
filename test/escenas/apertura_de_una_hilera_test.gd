@@ -1,6 +1,6 @@
-## La apertura de los productos de una sola fila, contra las tandas y las alturas que mide el puesto
+## La apertura de los productos de una sola fila, contra las tandas y los lugares que mide el puesto
 ## sobre las disposiciones de las jornadas: ninguno abre un estante vacío entero, y el vacío que
-## sobra pasa al estante vecino.
+## sobra cae en el estante de justo arriba.
 ##
 ## **Ningún caso escribe una altura**: salen de la disposición, y «justo arriba» se lee de ellas.
 extends GdUnitTestSuite
@@ -22,11 +22,11 @@ func _azar(semilla: int) -> RandomNumberGenerator:
 	return azar
 
 
-func _de_abajo_hacia_arriba(alturas: PackedFloat32Array) -> Array[int]:
-	var orden: Array[int] = []
-	orden.assign(range(alturas.size()))
-	orden.sort_custom(func(a: int, b: int) -> bool: return alturas[a] < alturas[b])
-	return orden
+func _altura_de(lugares: PackedVector3Array) -> float:
+	var suma := 0.0
+	for lugar in lugares:
+		suma += lugar.y
+	return suma / maxi(lugares.size(), 1)
 
 
 func _vaciados_de(tanda: PackedInt32Array, vacios: Array) -> int:
@@ -36,39 +36,69 @@ func _vaciados_de(tanda: PackedInt32Array, vacios: Array) -> int:
 	return vaciados
 
 
-func _vaciar_cada_estante(jornada: int, id: Producto.Id) -> int:
+## Los índices de las tandas con más de un casillero, de la de arriba de todo hacia abajo.
+func _de_arriba_a_abajo(tandas: Array, lugares: Array) -> Array[int]:
+	var estantes: Array[int] = []
+	for indice in tandas.size():
+		if tandas[indice].size() > 1:
+			estantes.append(indice)
+	estantes.sort_custom(
+		func(a: int, b: int) -> bool: return _altura_de(lugares[a]) > _altura_de(lugares[b])
+	)
+	return estantes
+
+
+func _sorteo(jornada: int, puesto: Node3D, semilla: int) -> Dictionary[Producto.Id, Array]:
+	return Apertura.vacios_de_la_jornada(
+		jornada,
+		[],
+		puesto.call("tandas"),
+		puesto.call("productos_de_una_fila"),
+		_azar(semilla),
+		puesto.call("posiciones")
+	)
+
+
+## Los vacíos de un producto con una tanda de cada estante: seguidos, y la parcial arriba de las
+## llenas, o abajo sólo si las llenas llegan al estante de arriba de todo.
+func _comprobar_el_vacio_que_sobra(jornada: int, id: Producto.Id) -> void:
 	var puesto := _puesto_de(jornada)
-	var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
-	assert_bool(de_una_fila[id]).is_true()
 	var tandas: Array = puesto.call("tandas")[id]
-	var alturas: PackedFloat32Array = puesto.call("alturas_de_las_tandas")[id]
-	var orden := _de_abajo_hacia_arriba(alturas)
-	for lugar in orden.size():
-		var casilleros: Array[int] = []
-		for casillero: int in tandas[orden[lugar]]:
-			casilleros.append(casillero)
-		var vecina := orden[lugar + 1] if lugar + 1 < orden.size() else orden[lugar - 1]
-		var vacios := Apertura.sin_tandas_vacias(casilleros, tandas, alturas, _azar(lugar))
-		assert_int(vacios.size()).is_equal(casilleros.size())
-		assert_int(_vaciados_de(tandas[orden[lugar]], vacios)).is_equal(casilleros.size() - 1)
-		assert_int(_vaciados_de(tandas[vecina], vacios)).is_equal(1)
-	return orden.size()
+	var lugares: Array = puesto.call("posiciones")[id]
+	var partidos := 0
+	for semilla in 200:
+		var sorteo := _sorteo(jornada, puesto, semilla)
+		if not sorteo.has(id):
+			continue
+		var estantes := _de_arriba_a_abajo(tandas, lugares)
+		var con_vacios: Array[int] = []
+		var parciales: Array[int] = []
+		for lugar in estantes.size():
+			var tanda: PackedInt32Array = tandas[estantes[lugar]]
+			var vaciados := _vaciados_de(tanda, sorteo[id])
+			if vaciados > 0:
+				con_vacios.append(lugar)
+			if vaciados > 0 and vaciados < tanda.size() - 1:
+				parciales.append(lugar)
+		if con_vacios.size() < 2:
+			continue
+		partidos += 1
+		assert_int(con_vacios.back() - con_vacios.front() + 1).is_equal(con_vacios.size())
+		assert_int(parciales.size()).is_less_equal(1)
+		if not parciales.is_empty() and con_vacios.front() > 0:
+			assert_int(parciales[0]).is_equal(con_vacios.front())
+	assert_int(partidos).is_greater(0)
 
 
-func test_cada_estante_de_poetico_que_se_vaciaria_pasa_el_que_sobra() -> void:  # AC-STK-093
+func test_el_vacio_que_sobra_de_poetico_cae_en_el_estante_de_justo_arriba() -> void:  # AC-STK-093
 	for jornada: int in [
 		ReglasDeLaPartida.PRIMERA_JORNADA + 1, ReglasDeLaPartida.PRIMERA_JORNADA + 2
 	]:
-		assert_int(_vaciar_cada_estante(jornada, Producto.Id.POETICO)).is_greater(1)
+		_comprobar_el_vacio_que_sobra(jornada, Producto.Id.POETICO)
 
 
-func test_en_flin_puf_el_estante_de_arriba_pasa_el_que_sobra_al_de_abajo() -> void:  # AC-STK-093
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
-	var alturas: PackedFloat32Array = _puesto_de(jornada).call("alturas_de_las_tandas")[
-		Producto.Id.FLIM_POF
-	]
-	assert_int(_de_abajo_hacia_arriba(alturas).back()).is_equal(0)
-	assert_int(_vaciar_cada_estante(jornada, Producto.Id.FLIM_POF)).is_greater(1)
+func test_el_vacio_que_sobra_de_flin_puf_cae_en_el_estante_de_justo_arriba() -> void:  # AC-STK-093
+	_comprobar_el_vacio_que_sobra(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, Producto.Id.FLIM_POF)
 
 
 func test_ningun_producto_de_una_fila_abre_un_estante_vacio_entero() -> void:  # AC-STK-093
@@ -76,14 +106,15 @@ func test_ningun_producto_de_una_fila_abre_un_estante_vacio_entero() -> void:  #
 	for jornada in range(primera + 1, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		var puesto := _puesto_de(jornada)
 		var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
-		var alturas: Dictionary[Producto.Id, PackedFloat32Array] = puesto.call(
-			"alturas_de_las_tandas"
-		)
 		var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
-		var compradores := Compradores.de_la_jornada(jornada)
 		for semilla in 100:
 			var vacios := Apertura.vacios_de_la_jornada(
-				jornada, compradores, tandas, de_una_fila, _azar(semilla), alturas
+				jornada,
+				Compradores.de_la_jornada(jornada),
+				tandas,
+				de_una_fila,
+				_azar(semilla),
+				puesto.call("posiciones")
 			)
 			for id: Producto.Id in vacios:
 				if not de_una_fila[id]:
@@ -92,21 +123,17 @@ func test_ningun_producto_de_una_fila_abre_un_estante_vacio_entero() -> void:  #
 					assert_int(_vaciados_de(tanda, vacios[id])).is_less(tanda.size())
 
 
-func test_un_producto_de_dos_filas_abre_un_estante_vacio_entero() -> void:  # AC-STK-093
+func test_un_producto_de_dos_filas_abre_un_estante_vacio_entero() -> void:  # AC-STK-033
 	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 	var puesto := _puesto_de(jornada)
 	var id := Producto.Id.ACTRONCITO
-	var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
-	assert_bool(de_una_fila[id]).is_false()
-	var tandas: Dictionary[Producto.Id, Array] = {id: puesto.call("tandas")[id]}
-	var alturas: Dictionary[Producto.Id, PackedFloat32Array] = {
-		id: puesto.call("alturas_de_las_tandas")[id]
-	}
+	assert_bool(puesto.call("productos_de_una_fila")[id]).is_false()
+	var tandas: Array = puesto.call("tandas")[id]
 	var abrio_vacio := false
 	for semilla in 200:
-		var vacios := Apertura.vacios_de_la_jornada(
-			jornada, [], tandas, de_una_fila, _azar(semilla), alturas
-		)
-		for tanda: PackedInt32Array in tandas[id]:
-			abrio_vacio = abrio_vacio or _vaciados_de(tanda, vacios[id]) == tanda.size()
+		var sorteo := _sorteo(jornada, puesto, semilla)
+		for tanda: PackedInt32Array in tandas:
+			abrio_vacio = (
+				abrio_vacio or (sorteo.has(id) and _vaciados_de(tanda, sorteo[id]) == tanda.size())
+			)
 	assert_bool(abrio_vacio).is_true()

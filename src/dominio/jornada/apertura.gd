@@ -13,6 +13,9 @@ const INTRODUCCION := {
 	1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR],
 	2: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER],
 }
+## Cuánto pueden diferir dos distancias para contar como iguales, en metros: lo que mide el modelo
+## de un casillero a otro de la misma columna, con lugar de sobra para el redondeo.
+const HOLGURA_DE_COLUMNA := 0.01
 const PARTICULARES := {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA: [Tarea.Tipo.ORDENAR_LAS_CAJAS],
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1: [Tarea.Tipo.SACAR_LA_BASURA],
@@ -48,16 +51,14 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 
 ## La mercadería de una noche en la que sólo importa cuántas unidades faltan, no en qué
 ## casilleros: el sorteo de `vacios_de_la_jornada()` con la reponible de adelante y las fijas como
-## dos tandas. `de_una_fila` dice qué productos no pueden abrir vacía ninguna de las dos, y
-## `alturas`, qué estante queda justo arriba de cuál.
+## dos tandas. `de_una_fila` dice qué productos no pueden abrir vacía ninguna de las dos.
 static func inventario_de_la_jornada(
 	jornada: int,
 	compradores: Array[Comprador],
 	casilleros_totales: Dictionary[Producto.Id, int],
 	casilleros_reponibles: Dictionary[Producto.Id, int],
 	azar: RandomNumberGenerator,
-	de_una_fila: Dictionary[Producto.Id, bool] = {},
-	alturas: Dictionary[Producto.Id, PackedFloat32Array] = {}
+	de_una_fila: Dictionary[Producto.Id, bool] = {}
 ) -> Inventario:
 	var tandas: Dictionary[Producto.Id, Array] = {}
 	for producto in Catalogo.todos():
@@ -66,7 +67,7 @@ static func inventario_de_la_jornada(
 		tandas[producto.id] = [
 			PackedInt32Array(range(reponibles)), PackedInt32Array(range(reponibles, totales))
 		]
-	var vacios := vacios_de_la_jornada(jornada, compradores, tandas, de_una_fila, azar, alturas)
+	var vacios := vacios_de_la_jornada(jornada, compradores, tandas, de_una_fila, azar)
 	return inventario_con_faltantes(
 		faltantes_de(vacios), casilleros_totales, Catalogo.de_la_jornada(jornada)
 	)
@@ -76,19 +77,19 @@ static func inventario_de_la_jornada(
 ##
 ## Recibe los mismos compradores de Atención y la fuente de azar de esta sesión. `tandas` trae,
 ## de cada producto, los casilleros de la fila de adelante de cada tanda, la reponible primero.
-## `de_una_fila` dice qué productos tienen tandas de una sola fila (BR-STK-025). `alturas` trae, de
-## cada producto, la altura de cada tanda en el mismo orden que `tandas`.
+## `de_una_fila` dice qué productos tienen tandas de una sola fila (BR-STK-025). `posiciones` trae
+## el lugar de cada casillero, tanda por tanda, y sólo decide dónde sigue un faltante que se parte.
 ##
 ## **Los vacíos de un producto van juntos**: un bloque de casilleros seguidos de una tanda al azar
-## entre las que lo reciben entero, y sólo si ninguna lo recibe se parte en otra. Un producto de
-## una fila no abre vacía entera ninguna tanda (`sin_tandas_vacias()`); uno de dos filas sí puede.
+## entre las que lo reciben entero, y sólo si ninguna lo recibe se parte en tandas vacías enteras
+## y contiguas. Una tanda de un producto de una fila cede un casillero menos: no abre vacía entera.
 static func vacios_de_la_jornada(
 	jornada: int,
 	compradores: Array[Comprador],
 	tandas: Dictionary[Producto.Id, Array],
 	de_una_fila: Dictionary[Producto.Id, bool],
 	azar: RandomNumberGenerator,
-	alturas: Dictionary[Producto.Id, PackedFloat32Array] = {}
+	posiciones: Dictionary[Producto.Id, Array] = {}
 ) -> Dictionary[Producto.Id, Array]:
 	var vacios: Dictionary[Producto.Id, Array] = {}
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
@@ -99,12 +100,9 @@ static func vacios_de_la_jornada(
 		presentes[producto.id] = vaciables.get(producto.id, 0)
 	var faltantes := faltantes_al_azar(pedidos_de(compradores), presentes, azar)
 	for id: Producto.Id in faltantes:
-		var sorteados := _sortear_vacios(tandas[id], faltantes[id], azar)
-		if de_una_fila.get(id, false):
-			sorteados = sin_tandas_vacias(
-				sorteados, tandas[id], alturas.get(id, PackedFloat32Array()), azar
-			)
-		vacios[id] = sorteados
+		vacios[id] = _sortear_vacios(
+			tandas[id], de_una_fila.get(id, false), faltantes[id], azar, posiciones.get(id, [])
+		)
 	return vacios
 
 
@@ -116,11 +114,9 @@ static func casilleros_vaciables(
 	var vaciables: Dictionary[Producto.Id, int] = {}
 	for id: Producto.Id in tandas:
 		var cuantos := 0
-		var con_casilleros := 0
 		for tanda: PackedInt32Array in tandas[id]:
-			cuantos += tanda.size()
-			con_casilleros += 0 if tanda.is_empty() else 1
-		vaciables[id] = cuantos - (con_casilleros if de_una_fila.get(id, false) else 0)
+			cuantos += _cupo_de(tanda, de_una_fila.get(id, false))
+		vaciables[id] = cuantos
 	return vaciables
 
 
@@ -197,111 +193,120 @@ static func faltantes_al_azar(
 	return faltantes
 
 
+## Cuántos casilleros de una tanda pueden abrir vacíos. La tanda de un producto de una fila no
+## abre vacía entera; en uno de dos filas, la de atrás dice qué va ahí (BR-STK-024).
+static func _cupo_de(tanda: PackedInt32Array, de_una_fila: bool) -> int:
+	return tanda.size() - (1 if de_una_fila and not tanda.is_empty() else 0)
+
+
 ## Un bloque de casilleros seguidos en una tanda al azar entre las que lo reciben entero. Sólo si
-## no entra en ninguna se parte: la tanda elegida se llena y lo que sobra sigue como bloque en otra.
-static func _sortear_vacios(tandas: Array, cuantos: int, azar: RandomNumberGenerator) -> Array:
+## no entra en ninguna se parte: las tandas se vacían enteras, una junto a la otra, y la última
+## recibe lo que sobra.
+##
+## **Las tandas se recorren por altura**, de arriba abajo, desde una al azar: el bloque de tandas
+## vacías es contiguo y la parcial queda debajo. Sólo si el bloque llega al estante de más abajo,
+## sigue por arriba. En un producto de una fila el sentido es el contrario: lo que sobra cae en el
+## estante de justo arriba, y abajo sólo si no hay uno arriba. `posiciones` trae el lugar de cada
+## casillero de cada tanda, en el orden de `tandas`; sin él todas tienen la misma altura y se
+## recorren en el orden de `tandas`. Cada bloque que sigue a otro cae en los casilleros que quedan
+## en las mismas columnas.
+static func _sortear_vacios(
+	tandas: Array,
+	de_una_fila: bool,
+	cuantos: int,
+	azar: RandomNumberGenerator,
+	posiciones: Array = []
+) -> Array:
+	var lugares: Array[PackedVector3Array] = []
+	var cupos: Array[int] = []
 	var con_lugar: Array[int] = []
 	for indice in tandas.size():
-		if not tandas[indice].is_empty():
+		var tanda: PackedInt32Array = tandas[indice]
+		lugares.append(_lugares_de(posiciones, indice, tanda.size()))
+		cupos.append(_cupo_de(tanda, de_una_fila))
+		if cupos[indice] > 0:
 			con_lugar.append(indice)
+	con_lugar.sort_custom(
+		func(uno: int, otro: int) -> bool:
+			var alto := _altura_de(lugares[uno])
+			var otro_alto := _altura_de(lugares[otro])
+			return alto > otro_alto or (alto == otro_alto and uno < otro)
+	)
+	if de_una_fila:
+		con_lugar.reverse()
+	var entran: Array[int] = con_lugar.filter(
+		func(indice: int) -> bool: return cupos[indice] >= cuantos
+	)
+	var opciones: Array[int] = con_lugar if entran.is_empty() else entran
+	var inicio := con_lugar.find(opciones[azar.randi_range(0, opciones.size() - 1)])
+	var recorrido: Array[int] = con_lugar.slice(inicio)
+	var del_otro_lado := con_lugar.slice(0, inicio)
+	del_otro_lado.reverse()
+	recorrido.append_array(del_otro_lado)
 	var vacios: Array[int] = []
+	var anterior := PackedVector3Array()
 	var faltan := cuantos
-	while faltan > 0:
-		var entran: Array[int] = con_lugar.filter(
-			func(indice: int) -> bool: return tandas[indice].size() >= faltan
+	for indice in recorrido:
+		if faltan == 0:
+			break
+		var tanda: PackedInt32Array = tandas[indice]
+		var largo := mini(faltan, cupos[indice])
+		var desde := _el_menor_al_azar(
+			_distancias_de_columna(lugares[indice], largo, anterior), azar
 		)
-		var opciones: Array[int] = con_lugar if entran.is_empty() else entran
-		var elegida := opciones[azar.randi_range(0, opciones.size() - 1)]
-		con_lugar.erase(elegida)
-		var tanda: PackedInt32Array = tandas[elegida]
-		var largo := mini(faltan, tanda.size())
-		var desde := azar.randi_range(0, tanda.size() - largo)
 		for casillero in tanda.slice(desde, desde + largo):
 			vacios.append(casillero)
+		anterior = lugares[indice].slice(desde, desde + largo)
 		faltan -= largo
 	vacios.sort()
 	return vacios
 
 
-## Ninguna tanda de un producto de una fila abre vacía entera (BR-STK-024).
-##
-## De abajo hacia arriba, la tanda que los vacíos dejarían sin una unidad conserva la primera, y
-## el vacío que sobra pasa al estante de justo arriba, o al de justo abajo si no hay uno arriba.
-## Si ese estante no puede ceder uno sin quedar vacío entero, sigue al siguiente en el mismo
-## sentido. `casilleros_vaciables()` garantiza que alguno puede; si en ese sentido no queda
-## ninguno, se busca en el contrario (OQ-STK-010). `alturas` va en el orden de `tandas`; sin ellas,
-## ese orden es el de abajo hacia arriba. El vacío que llega queda pegado a los que ya tiene.
-static func sin_tandas_vacias(
-	vacios: Array, tandas: Array, alturas: PackedFloat32Array, azar: RandomNumberGenerator
-) -> Array[int]:
-	var resultado: Array[int] = []
-	resultado.assign(vacios)
-	var orden := _de_abajo_hacia_arriba(tandas, alturas)
-	for lugar in orden.size():
-		var tanda: PackedInt32Array = tandas[orden[lugar]]
-		if _vaciados_de(tanda, resultado) < tanda.size():
-			continue
-		resultado.erase(tanda[0])
-		var receptora := _receptora(tandas, orden, lugar, resultado)
-		assert(receptora >= 0, "ninguna tanda del producto puede ceder un casillero más")
-		resultado.append(_pegado_a_los_vacios(tandas[receptora], resultado, azar))
-	resultado.sort()
-	return resultado
+## Los lugares de una tanda, o ceros si no se declararon: así no hay cercanía que decida nada.
+static func _lugares_de(posiciones: Array, indice: int, tamano: int) -> PackedVector3Array:
+	if indice < posiciones.size():
+		var declarados: PackedVector3Array = posiciones[indice]
+		if declarados.size() == tamano:
+			return declarados
+	var ceros := PackedVector3Array()
+	ceros.resize(tamano)
+	return ceros
 
 
-## Los índices de las tandas con casilleros, de la más baja a la más alta.
-static func _de_abajo_hacia_arriba(tandas: Array, alturas: PackedFloat32Array) -> Array[int]:
-	var orden: Array[int] = []
-	for indice in tandas.size():
-		if not tandas[indice].is_empty():
-			orden.append(indice)
-	var altura := func(indice: int) -> float:
-		return alturas[indice] if indice < alturas.size() else float(indice)
-	orden.sort_custom(
-		func(a: int, b: int) -> bool:
-			return altura.call(a) < altura.call(b) or (altura.call(a) == altura.call(b) and a < b)
-	)
-	return orden
+static func _altura_de(lugares: PackedVector3Array) -> float:
+	var suma := 0.0
+	for lugar in lugares:
+		suma += lugar.y
+	return suma / maxi(lugares.size(), 1)
 
 
-## La tanda que recibe el vacío que sobra de `orden[lugar]`: la primera que puede ceder uno, hacia
-## arriba, o hacia abajo si es la más alta. Con -1 si ninguna puede.
-static func _receptora(tandas: Array, orden: Array[int], lugar: int, vacios: Array[int]) -> int:
-	var sentido := 1 if lugar < orden.size() - 1 else -1
-	for paso: int in [sentido, -sentido]:
-		var vecina: int = lugar + paso
-		while vecina >= 0 and vecina < orden.size():
-			var tanda: PackedInt32Array = tandas[orden[vecina]]
-			if tanda.size() - _vaciados_de(tanda, vacios) > 1:
-				return orden[vecina]
-			vecina += paso
-	return -1
+## Cuánto se aparta de las columnas del bloque anterior cada bloque de `largo` casilleros seguidos
+## de la tanda: la suma de lo que cada casillero queda lejos, en el plano, de su columna más cerca.
+static func _distancias_de_columna(
+	lugares: PackedVector3Array, largo: int, anterior: PackedVector3Array
+) -> Array[float]:
+	var distancias: Array[float] = []
+	for desde in lugares.size() - largo + 1:
+		var distancia := 0.0
+		for lugar in lugares.slice(desde, desde + largo):
+			var mas_cerca := INF
+			for columna in anterior:
+				mas_cerca = minf(
+					mas_cerca, Vector2(lugar.x, lugar.z).distance_to(Vector2(columna.x, columna.z))
+				)
+			distancia += 0.0 if anterior.is_empty() else mas_cerca
+		distancias.append(distancia)
+	return distancias
 
 
-## Un casillero ocupado de la tanda, pegado a su bloque de vacíos, o cualquiera si no tiene.
-static func _pegado_a_los_vacios(
-	tanda: PackedInt32Array, vacios: Array[int], azar: RandomNumberGenerator
-) -> int:
-	var lugares: Array[int] = []
-	for lugar in tanda.size():
-		if vacios.has(tanda[lugar]):
-			lugares.append(lugar)
-	var candidatos: Array[int] = []
-	if lugares.is_empty():
-		candidatos.assign(range(tanda.size()))
-	else:
-		if lugares.front() > 0:
-			candidatos.append(lugares.front() - 1)
-		if lugares.back() < tanda.size() - 1:
-			candidatos.append(lugares.back() + 1)
-	return tanda[candidatos[azar.randi_range(0, candidatos.size() - 1)]]
-
-
-static func _vaciados_de(tanda: PackedInt32Array, vacios: Array[int]) -> int:
-	var vaciados := 0
-	for casillero in tanda:
-		vaciados += 1 if vacios.has(casillero) else 0
-	return vaciados
+## El índice de la distancia más chica; si varias se igualan, una al azar.
+static func _el_menor_al_azar(distancias: Array[float], azar: RandomNumberGenerator) -> int:
+	var menor: float = distancias.min()
+	var empatadas: Array[int] = []
+	for indice in distancias.size():
+		if distancias[indice] <= menor + HOLGURA_DE_COLUMNA:
+			empatadas.append(indice)
+	return empatadas[azar.randi_range(0, empatadas.size() - 1)]
 
 
 ## Sólo lee los pedidos ya construidos; sus objetos siguen siendo los de Atención.

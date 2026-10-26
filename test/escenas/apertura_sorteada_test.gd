@@ -47,6 +47,7 @@ func _comprobar_tandas(
 	puesto: Node3D, totales: Dictionary[Producto.Id, int], reponibles: Dictionary[Producto.Id, int]
 ) -> void:
 	var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
+	var posiciones: Dictionary[Producto.Id, Array] = puesto.call("posiciones")
 	for producto in Catalogo.todos():
 		var numerados: Array[int] = []
 		for tanda: PackedInt32Array in tandas[producto.id]:
@@ -54,6 +55,10 @@ func _comprobar_tandas(
 		numerados.sort()
 		assert_array(numerados).is_equal(range(totales[producto.id]))
 		assert_int(tandas[producto.id][0].size()).is_equal(reponibles[producto.id])
+		var lugares: Array = posiciones[producto.id]
+		assert_int(lugares.size()).is_equal(tandas[producto.id].size())
+		for indice in lugares.size():
+			assert_int(lugares[indice].size()).is_equal(tandas[producto.id][indice].size())
 
 
 func _azar(semilla: int) -> RandomNumberGenerator:
@@ -175,11 +180,9 @@ func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC
 		var compradores: Array[Comprador] = almacen.get("_atenciones").tarea().get("_compradores")
 		var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
 		var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
-		var alturas: Dictionary[Producto.Id, PackedFloat32Array] = puesto.call(
-			"alturas_de_las_tandas"
-		)
+		var posiciones: Dictionary[Producto.Id, Array] = puesto.call("posiciones")
 		var esperado := Apertura.vacios_de_la_jornada(
-			jornada, compradores, tandas, de_una_fila, control, alturas
+			jornada, compradores, tandas, de_una_fila, control, posiciones
 		)
 		var estante: Estante = almacen.get("_repositor").estante()
 		for producto in Catalogo.todos():
