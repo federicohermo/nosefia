@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
@@ -44,6 +45,14 @@ func _imprimir() -> ObjetoAgarrable:
 			if papel.datos is Ticket:
 				return papel
 	return null
+
+
+func _tickets_de_la_foto() -> Array[ReglasDelCierre.Estado]:
+	var tickets: Array[ReglasDelCierre.Estado] = []
+	for estado: ReglasDelCierre.Estado in _almacen.call("_estados_del_cierre"):
+		if estado.producto == Ticket.ID:
+			tickets.append(estado)
+	return tickets
 
 
 func _centro(partes: Array[AABB]) -> Vector3:
@@ -110,7 +119,7 @@ func test_balde_y_mopa_en_el_inodoro_no_anotan_papel() -> void:  # AC-CLN-047
 	assert_int((_almacen.get("_partida") as Partida).medios()).is_zero()
 
 
-func test_tickets_adentro_afuera_y_recuperados_al_cerrar() -> void:  # AC-CLN-048
+func test_tickets_adentro_afuera_y_recuperados_no_suman_motivo_de_afuera() -> void:  # AC-CLN-048
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var partida: Partida = _almacen.get("_partida")
@@ -127,18 +136,23 @@ func test_tickets_adentro_afuera_y_recuperados_al_cerrar() -> void:  # AC-CLN-04
 	assert_object(otro).is_not_null()
 	uno.global_position = _afuera()
 	otro.global_position = _afuera() + Vector3.RIGHT * 0.1
+	var afuera := _tickets_de_la_foto().filter(
+		func(estado: ReglasDelCierre.Estado) -> bool:
+			return estado.habitacion == ReglasDelCierre.Habitacion.AFUERA
+	)
+	assert_array(afuera).has_size(2)
 	_cerrar(true)
-	assert_int(partida.medios()).is_equal(1)
+	assert_int(partida.medios()).is_zero()
 	await _seguir()
 	var recuperado := _imprimir()
 	assert_object(recuperado).is_not_null()
 	recuperado.global_position = _afuera()
 	recuperado.global_position = _centro(lector.local)
 	_cerrar(true)
-	assert_int(partida.medios()).is_equal(1)
+	assert_int(partida.medios()).is_zero()
 
 
-func test_sostener_y_examinar_tickets_cambia_el_llamado_al_cerrar() -> void:  # AC-CLN-048
+func test_sostener_y_examinar_tickets_conserva_la_mano_y_no_anota_afuera() -> void:  # AC-CLN-048
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var agarre: Agarre = _almacen.get("_agarre")
@@ -158,8 +172,12 @@ func test_sostener_y_examinar_tickets_cambia_el_llamado_al_cerrar() -> void:  # 
 			uno.global_position = _afuera()
 			if escenario == 3:
 				examen.terminar()
+		var en_mano := _tickets_de_la_foto().filter(
+			func(estado: ReglasDelCierre.Estado) -> bool: return estado.en_mano
+		)
+		assert_array(en_mano).has_size([1, 1, 0, 1][escenario])
 		_cerrar(true)
-		assert_int(partida.medios()).is_equal([0, 1, 2, 2][escenario])
+		assert_int(partida.medios()).is_zero()
 		if escenario < 3:
 			await _seguir()
 
