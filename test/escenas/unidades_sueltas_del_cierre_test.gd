@@ -41,7 +41,9 @@ func _unidad() -> ObjetoAgarrable:
 
 
 func _desorden() -> bool:
-	return CIERRE.hay_desorden(_almacen.call("_estados_del_cierre"))
+	return CIERRE.hay_desorden(
+		_almacen.call("_estados_del_cierre"), _almacen.get("_partida").jornada()
+	)
 
 
 func test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla() -> void:  # AC-CLN-041

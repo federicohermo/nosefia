@@ -862,8 +862,14 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 		elif nodo.get("datos") is UnidadDeProducto:
 			clase = ReglasDelCierre.Clase.UNIDAD_SUELTA
 		var en_mano := nodo == sostenido and not _jugador.examen.esta_examinando()
+		var datos := nodo.get("datos") as ObjetoDelAlmacen
 		estados.append(
-			ReglasDelCierre.Estado.new(clase, _habitaciones.de(nodo.global_position), en_mano)
+			ReglasDelCierre.Estado.new(
+				clase,
+				_habitaciones.de(nodo.global_position),
+				en_mano,
+				datos.id if datos != null else ObjetoDelAlmacen.SIN_ID
+			)
 		)
 	return estados
 
@@ -970,7 +976,7 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 func _al_agotar_el_turno(_jornada: int) -> void:
 	_partida.poses_de_las_cajas = _poses_de_las_cajas()
 	var estados := _estados_del_cierre()
-	if ReglasDelCierre.hay_desorden(estados):
+	if ReglasDelCierre.hay_desorden(estados, _partida.jornada()):
 		_partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
 	if ReglasDelCierre.hay_objetos_afuera(estados):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)

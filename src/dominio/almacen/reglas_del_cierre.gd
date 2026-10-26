@@ -13,11 +13,18 @@ class Estado:
 	var clase: Clase
 	var habitacion: Habitacion
 	var en_mano: bool
+	var producto: StringName
 
-	func _init(tipo: Clase, lugar: Habitacion, sostenido: bool) -> void:
+	func _init(
+		tipo: Clase,
+		lugar: Habitacion,
+		sostenido: bool,
+		identidad: StringName = ObjetoDelAlmacen.SIN_ID
+	) -> void:
 		clase = tipo
 		habitacion = lugar
 		en_mano = sostenido
+		producto = identidad
 
 
 static func habitacion_de(
@@ -42,7 +49,7 @@ static func habitacion_de(
 	return Habitacion.AFUERA
 
 
-static func hay_desorden(estados: Array[Estado]) -> bool:
+static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
 	var cajas_que_ocupan_la_tolerancia := 0
 	for estado: Estado in estados:
 		if estado.en_mano:
@@ -53,7 +60,8 @@ static func hay_desorden(estados: Array[Estado]) -> bool:
 			continue
 		match estado.clase:
 			Clase.UNIDAD_SUELTA:
-				return true
+				if not AnomaliasDeLaJornada.sustituye_azul(estado.producto, jornada):
+					return true
 			Clase.CAJA:
 				match estado.habitacion:
 					Habitacion.LOCAL:
