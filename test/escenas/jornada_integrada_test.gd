@@ -71,11 +71,17 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
 ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
 func _completos_al_abrir(almacen: Node3D, azar: RandomNumberGenerator) -> int:
-	var casilleros: Dictionary[Producto.Id, int] = (
-		almacen.get("_reposicion_manual").casilleros_reponibles()
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
+	var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
+	var vacios := Apertura.vacios_de_la_jornada(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
+		Compradores.de_la_jornada(DEL_PADRON),
+		tandas,
+		de_una_fila,
+		azar
 	)
-	var pedidos := Apertura.pedidos_de(Compradores.de_la_jornada(DEL_PADRON))
-	return Catalogo.todos().size() - Apertura.faltantes_al_azar(pedidos, casilleros, azar).size()
+	return Catalogo.todos().size() - vacios.size()
 
 
 # AC-STK-026

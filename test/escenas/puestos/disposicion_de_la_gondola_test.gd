@@ -76,12 +76,12 @@ func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
 		)
 
 
-## Los faltantes caben en la fila principal medida en el recurso vigente.
-func test_doscientas_semillas_entran_en_fila_y_caja() -> void:  # AC-STK-033
+## Los faltantes caben en los casilleros de todas las tandas medidas en el recurso vigente.
+func test_doscientas_semillas_entran_en_casilleros_y_caja() -> void:  # AC-STK-033
 	var disposicion := _disposicion()
 	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
-		casilleros[producto.id] = disposicion.filas_de_adelante[producto.id]
+		casilleros[producto.id] = disposicion.casilleros_de(producto.id)
 	for jornada in range(
 		ReglasDeLaPartida.PRIMERA_JORNADA,
 		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA

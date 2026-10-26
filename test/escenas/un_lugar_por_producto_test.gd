@@ -443,10 +443,11 @@ func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
 			presentacion.retirar(producto.id)
 			presentacion.pedir_colocar(producto.id)
 		assert_int(copias.visible_instance_count - guias).is_equal(principales)
+		var atras := (copias.instance_count - disposicion.casilleros_de(producto.id)) * 12
 		(
-			assert_array(Array(copias.buffer.slice(0, (guias + principales - fila) * 12)))
+			assert_array(Array(copias.buffer.slice(0, atras)))
 			. override_failure_message("%s: reponer movió la fila de atrás" % nombre)
-			. is_equal(Array(antes.slice(0, (guias + principales - fila) * 12)))
+			. is_equal(Array(antes.slice(0, atras)))
 		)
 
 
