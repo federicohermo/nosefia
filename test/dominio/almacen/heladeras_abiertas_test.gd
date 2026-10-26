@@ -21,10 +21,9 @@ func test_con_las_dos_funcionales_cerradas_no_hay_llamado() -> void:  # AC-CLN-0
 
 
 func test_una_funcional_abierta_alcanza_y_las_dos_valen_lo_mismo() -> void:  # AC-CLN-074
-	for abiertas: Array[ReglasDelCierre.Heladera] in [
-		[H.PRIMERA], [H.SEGUNDA], [H.PRIMERA, H.SEGUNDA]
-	]:
-		assert_bool(ReglasDelCierre.hay_heladera_abierta(_puertas(abiertas))).is_true()
+	assert_bool(ReglasDelCierre.hay_heladera_abierta(_puertas([H.PRIMERA]))).is_true()
+	assert_bool(ReglasDelCierre.hay_heladera_abierta(_puertas([H.SEGUNDA]))).is_true()
+	assert_bool(ReglasDelCierre.hay_heladera_abierta(_puertas([H.PRIMERA, H.SEGUNDA]))).is_true()
 
 
 func test_la_fuera_de_servicio_no_cuenta_ni_sola_ni_junto_a_una_funcional() -> void:  # AC-CLN-074
