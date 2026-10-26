@@ -658,13 +658,13 @@ el cierre suma un medio. Vaciar el balde o enjuagar la mopa no lo suma. DADO un 
 de abrir, después del cierre o con partida terminada ENTONCES no cambia la deuda ni contamina
 la siguiente noche. Abrir otra noche permite anotar de nuevo el mismo motivo.
 
-### AC-CLN-048 — Tickets activos, mano, examen y destinos *(verifica BR-CLN-027, BR-CLN-028, BR-CLN-029, BR-CLN-030)*
+### AC-CLN-048 — Tickets activos, mano, examen y destinos *(verifica BR-CLN-027, BR-CLN-028, BR-CLN-029, BR-CLN-030, BR-CLN-038)*
 
 DADO tickets propios activos ENTONCES la consulta entrega una copia independiente y omite
 cuerpos liberados o pendientes de liberar; conserva los válidos de ranura, mundo, mano, examen
 y contenedor. DADO tickets dentro de local, depósito, baño o cuartito CUANDO cierra ENTONCES no producen
-desorden ni afuera; uno o varios afuera producen un único motivo de afuera. Recuperarlos al
-interior o sostenerlos sin examen elimina ese motivo. DADO dos cuerpos con los mismos datos
+desorden ni afuera; uno o varios afuera no producen motivo de afuera, porque BR-CLN-038 los
+exime. DADO dos cuerpos con los mismos datos
 ENTONCES sólo se excluye el sostenido; un examen real lo hace contar por su posición física
 y terminarlo vuelve a excluirlo. Un ticket aceptado por el inodoro se libera sin volver a
 consultarlo al cerrar; uno tirado al contenedor sigue vivo y queda excluido por ese destino,
