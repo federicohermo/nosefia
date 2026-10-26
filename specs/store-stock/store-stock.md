@@ -185,12 +185,14 @@ El sistema DEBE exhibir cada producto con exhibición declarada (BR-STK-043, BR-
 en una sola tanda reponible, al alcance de
 un jugador parado en el pasillo. La fila de adelante de cada tanda del local, reponible o fija y
 en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
-casilleros vacíos con que abre una jornada PUEDEN quedar en la fila de adelante de cualquier
-tanda del producto, reponible o fija y en cualquier estante. La apertura NO DEBE vaciar entera
-la tanda reponible: si los faltantes de un producto igualan los casilleros de su tanda
-reponible, uno DEBE quedar ocupado y el último faltante DEBE salir de la fila de adelante de una
-tanda fija del mismo producto. En un producto de una sola fila (BR-STK-025), la apertura NO DEBE
-vaciar entera la fila de adelante de ninguna tanda.
+casilleros vacíos con que abre una jornada DEBEN quedar juntos: un bloque de casilleros seguidos
+en la fila de adelante de una tanda del producto elegida al azar, reponible o fija y en cualquier
+estante. SI el faltante no entra en esa tanda, ENTONCES DEBE seguir como otro bloque de casilleros
+seguidos en otra tanda del mismo producto, elegida al azar. En una tanda, los vacíos NO DEBEN
+quedar separados por casilleros ocupados. La apertura NO DEBE vaciar entera la tanda reponible: si los faltantes de un producto igualan los casilleros de
+su tanda reponible, uno DEBE quedar ocupado y el último faltante DEBE salir de la fila de
+adelante de una tanda fija del mismo producto. En un producto de una sola fila (BR-STK-025), la
+apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda.
 
 En un mueble de estantes, la tanda reponible DEBE ir en un estante de reposición. Un estante
 de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la altura de la mano se
@@ -235,9 +237,8 @@ caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casil
 adelante de todas sus tandas, reponible y fijas (BR-STK-024), menos uno por cada tanda que no
 puede abrir vacía entera: la reponible de un producto con tandas fijas, y cada tanda de un
 producto de una sola fila (BR-STK-024). El inventario DEBE conservar el cupo
-total de todas las tandas (BR-STK-008). Cada casillero faltante DEBE sortearse con la misma
-probabilidad entre todos esos casilleros, sin repetir, y los vacíos NO DEBEN concentrarse en un
-estante. Sólo los productos con máximo reponible mayor o igual a 1
+total de todas las tandas (BR-STK-008). Los casilleros vacíos de un producto DEBEN quedar juntos
+(BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 1
 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
 incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
 compradores ni pedidos.
@@ -802,7 +803,9 @@ fila de adelante de todas las tandas de su producto. El inventario conserva el c
 todas las tandas. DADO productos de cuatro tandas de tres casilleros, o de dos tandas de cuatro,
 CUANDO se sortean sus vacíos con las 200 semillas ENTONCES hay vacíos en cada tanda de al menos
 un producto. DADO un producto de una sola fila ENTONCES ninguna de sus tandas abre con su fila de
-adelante entera vacía.
+adelante entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos con las 200 semillas
+ENTONCES en cada tanda los casilleros vacíos son seguidos, sin un casillero ocupado entre dos
+vacíos, y si el faltante entra en una tanda sin vaciar la que se protege, todos caen en una sola.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 

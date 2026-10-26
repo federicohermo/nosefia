@@ -76,10 +76,10 @@ static func inventario_de_la_jornada(
 ## de cada producto, los casilleros de la fila de adelante de cada tanda, la reponible primero.
 ## `de_una_fila` dice qué productos tienen tandas de una sola fila (BR-STK-025).
 ##
-## **Cada casillero tiene la misma probabilidad, en cualquier tanda.** Lo único que se descarta es
-## un reparto que deja vacía entera una tanda que no puede abrir así: la reponible de un producto
-## con tandas fijas, y todas si el producto es de una fila. Se sortea de nuevo en vez de mover un
-## vacío, que dejaría de ser parejo.
+## **Los vacíos de un producto van juntos**: un bloque de casilleros seguidos de una tanda al azar,
+## y lo que no entra sigue como bloque en otra. Una tanda que no puede abrir vacía entera (la
+## reponible de un producto con tandas fijas, y todas si el producto es de una fila) cede un
+## casillero menos.
 static func vacios_de_la_jornada(
 	jornada: int,
 	compradores: Array[Comprador],
@@ -200,41 +200,31 @@ static func _a_salvo(tandas: Array, de_una_fila: bool) -> Array:
 	return tandas.slice(0, 1) if hay_una_fija and not tandas[0].is_empty() else []
 
 
+## Un bloque de casilleros seguidos en una tanda al azar, y lo que no entra, otro bloque en otra
+## tanda. Una tanda a salvo cede un casillero menos, y por eso nunca queda vacía entera.
 static func _sortear_vacios(
 	tandas: Array, de_una_fila: bool, cuantos: int, azar: RandomNumberGenerator
 ) -> Array:
-	var todos: Array[int] = []
-	for tanda: PackedInt32Array in tandas:
-		for casillero in tanda:
-			todos.append(casillero)
 	var a_salvo := _a_salvo(tandas, de_una_fila)
-	var vacios := _sacar_al_azar(todos, cuantos, azar)
-	while not _deja_uno_en_cada(a_salvo, vacios):
-		vacios = _sacar_al_azar(todos, cuantos, azar)
+	var cupos: Array[int] = []
+	var con_lugar: Array[int] = []
+	for indice in tandas.size():
+		var tanda: PackedInt32Array = tandas[indice]
+		cupos.append(tanda.size() - (1 if tanda in a_salvo else 0))
+		if cupos[indice] > 0:
+			con_lugar.append(indice)
+	var vacios: Array[int] = []
+	var faltan := cuantos
+	while faltan > 0:
+		var elegida: int = con_lugar.pop_at(azar.randi_range(0, con_lugar.size() - 1))
+		var tanda: PackedInt32Array = tandas[elegida]
+		var largo := mini(faltan, cupos[elegida])
+		var desde := azar.randi_range(0, tanda.size() - largo)
+		for casillero in tanda.slice(desde, desde + largo):
+			vacios.append(casillero)
+		faltan -= largo
 	vacios.sort()
 	return vacios
-
-
-## Muestreo sin reemplazo de `cuantos` casilleros: cada uno de los restantes tiene la misma
-## probabilidad.
-static func _sacar_al_azar(
-	casilleros: Array[int], cuantos: int, azar: RandomNumberGenerator
-) -> Array[int]:
-	var restantes: Array[int] = casilleros.duplicate()
-	var sacados: Array[int] = []
-	for _vez in cuantos:
-		sacados.append(restantes.pop_at(azar.randi_range(0, restantes.size() - 1)))
-	return sacados
-
-
-static func _deja_uno_en_cada(a_salvo: Array, vacios: Array[int]) -> bool:
-	for tanda: PackedInt32Array in a_salvo:
-		var ocupado := false
-		for casillero in tanda:
-			ocupado = ocupado or casillero not in vacios
-		if not ocupado:
-			return false
-	return true
 
 
 ## Sólo lee los pedidos ya construidos; sus objetos siguen siendo los de Atención.

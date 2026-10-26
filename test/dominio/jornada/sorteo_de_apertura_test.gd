@@ -203,6 +203,46 @@ func test_con_las_dos_tandas_del_local_los_vacios_caen_en_las_dos() -> void:  # 
 		assert_array(tandas_con_vacios.keys()).contains_exactly_in_any_order([0, 1])
 
 
+func test_los_vacios_de_cada_tanda_son_casilleros_seguidos() -> void:  # AC-STK-033
+	for forma: Array in [
+		[[3, 3, 3, 3], false], [[4, 4], false], [[2, 5, 3], false], [[4, 4], true]
+	]:
+		var tamanos: Array[int] = []
+		tamanos.assign(forma[0])
+		var tandas := _tandas_de_todos(tamanos)
+		for jornada in range(2, 9):
+			var compradores := Compradores.de_la_jornada(jornada)
+			for semilla in 200:
+				var vacios := _vacios(jornada, compradores, tandas, forma[1], semilla)
+				for id: Producto.Id in vacios:
+					for tanda: PackedInt32Array in tandas[id]:
+						var lugares: Array[int] = []
+						for lugar in tanda.size():
+							if vacios[id].has(tanda[lugar]):
+								lugares.append(lugar)
+						if not lugares.is_empty():
+							assert_int(lugares.back() - lugares.front() + 1).is_equal(
+								lugares.size()
+							)
+
+
+func test_si_el_faltante_entra_en_una_tanda_cae_entero_en_ella() -> void:  # AC-STK-033
+	var producto := Producto.Id.ACTRONCITO
+	var tamanos: Array[int] = [4, 4]
+	var tandas: Dictionary[Producto.Id, Array] = {producto: _tandas(tamanos)}
+	var tandas_usadas: Dictionary[int, bool] = {}
+	for semilla in 200:
+		var vacios := _vacios(8, [], tandas, false, semilla)
+		var casilleros: Array = vacios[producto]
+		var en_tandas: Dictionary[int, bool] = {}
+		for casillero: int in casilleros:
+			en_tandas[_tanda_de(casillero, tamanos)] = true
+		tandas_usadas.merge(en_tandas)
+		if casilleros.size() <= 3:
+			assert_int(en_tandas.size()).is_equal(1)
+	assert_array(tandas_usadas.keys()).contains_exactly_in_any_order([0, 1])
+
+
 func test_la_misma_semilla_deja_vacios_los_mismos_casilleros() -> void:  # AC-STK-034
 	var tandas := _tandas_de_todos([4, 4])
 	var compradores := Compradores.de_la_jornada(3)
