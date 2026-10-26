@@ -134,10 +134,11 @@ func test_utiles_rechazados_sin_motivo_y_vuelven_al_cuartito() -> void:  # AC-CL
 		assert_object(agarre.manos().sostenido()).is_same(util.datos)
 		assert_bool(util.visible).is_true()
 		agarre.soltar(false)
+		util.volver_a_su_lugar()
 	assert_array(_almacen.get("_contenedor").tirados()).is_empty()
 	_cerrar(true)
 	assert_int((_almacen.get("_partida") as Partida).medios()).is_zero()
-	_almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL + 1)
+	await _seguir()
 	var utiles := 0
 	for estado: ReglasDelCierre.Estado in _almacen.call("_estados_del_cierre"):
 		if estado.clase == ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA:

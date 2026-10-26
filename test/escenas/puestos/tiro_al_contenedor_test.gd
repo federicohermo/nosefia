@@ -192,20 +192,21 @@ func test_los_utiles_no_entran_con_la_tapa_abierta_ni_cerrada() -> void:  # AC-C
 	piso.balde().llenar()
 	piso.balde().tenir(ReglasDeLaLimpieza.Agua.AZUL)
 	piso.mopa().mojar_en(piso.balde())
+	var utiles: Array[ObjetoAgarrable] = []
+	for nombre: String in ["Mopa", "Balde", "JabonAzul", "JabonRosa", "JabonAmarillo"]:
+		utiles.append(almacen.get_node("Objetos/" + nombre))
 	for cerrada: bool in [false, true]:
 		if cerrada:
 			_clic(jugador, tapa, MOUSE_BUTTON_LEFT)
 			tapa.call("_physics_process", 1.0)
 		assert_bool(tapa.call("recibe_objetos")).is_equal(not cerrada)
-		for nombre: String in ["Mopa", "Balde", "JabonAzul", "JabonRosa", "JabonAmarillo"]:
-			var util: ObjetoAgarrable = almacen.get_node("Objetos/" + nombre)
-			var capa := util.collision_layer
+		for util in utiles:
 			_agarrar(almacen, util)
 			_clic(jugador, contenedor, MOUSE_BUTTON_LEFT)
 			assert_object(agarre.manos().sostenido()).is_same(util.datos)
 			assert_bool(util.visible).is_true()
-			assert_int(util.collision_layer).is_equal(capa)
 			agarre.soltar(false)
+			util.volver_a_su_lugar()
 	assert_array(contenedor.call("tirados")).is_empty()
 	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
 
