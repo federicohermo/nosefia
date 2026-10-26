@@ -49,6 +49,8 @@ func arrancar(un_estante: Estante) -> void:
 		agarre.entregar()
 	_estante = un_estante
 	if reloj != null:
+		if not reloj.cierre_iniciado.is_connected(_al_iniciar_el_cierre):
+			reloj.cierre_iniciado.connect(_al_iniciar_el_cierre)
 		_revisar_reponer()
 
 
@@ -140,3 +142,10 @@ func _revisar_reponer() -> void:
 		reloj.completar(reponer)
 	else:
 		reloj.descumplir(reponer)
+
+
+## Al cerrar, la unidad de la mano cuenta como puesta (BR-STK-033). Sólo cumple: lo que ya estaba
+## cumplido no se toca.
+func _al_iniciar_el_cierre() -> void:
+	if _estante.completada(agarre.manos().sostenido()):
+		reloj.completar(reloj.obligatoria(Tarea.Tipo.REPONER))

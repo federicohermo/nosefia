@@ -282,11 +282,25 @@ func colocar_unidad(
 ##
 ## Un estante que no acepta nada está completo por vacuidad, que es lo que corresponde: no quedó
 ## nada sin reponer.
-func completada() -> bool:
+##
+## **`en_la_mano` es sólo para el cierre de la noche** (BR-STK-033): una unidad que salió y sigue
+## afuera cuenta como puesta en el único casillero vacío de su producto. Durante la noche se
+## pregunta sin ella, y el casillero sigue vacío.
+func completada(en_la_mano: ObjetoDelAlmacen = null) -> bool:
 	for producto in _inventario.faltantes():
-		if acepta(producto):
+		if acepta(producto) and not _completa_la_mano(producto, en_la_mano):
 			return false
 	return true
+
+
+func _completa_la_mano(producto: Producto, en_la_mano: ObjetoDelAlmacen) -> bool:
+	var unidad := en_la_mano as UnidadDeProducto
+	return (
+		unidad != null
+		and unidad.producto.id == producto.id
+		and _inventario.esta_afuera(unidad)
+		and casilleros_vacios(producto).size() == 1
+	)
 
 
 ## Los tres primeros rechazos de colocar, en su orden: el producto —también un casillero que no es
