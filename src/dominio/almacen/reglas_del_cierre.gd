@@ -4,6 +4,8 @@ extends RefCounted
 enum Habitacion { LOCAL, DEPOSITO, BANO, AFUERA, CUARTITO }
 enum Clase { UNIDAD_SUELTA, CAJA, UTIL_DE_LIMPIEZA, OTRO, BOLSA }
 
+const CAJAS_TOLERADAS_EN_EL_LOCAL := 1
+
 
 class Estado:
 	extends RefCounted
@@ -41,19 +43,29 @@ static func habitacion_de(
 
 
 static func hay_desorden(estados: Array[Estado]) -> bool:
+	var cajas_que_ocupan_la_tolerancia := 0
 	for estado: Estado in estados:
-		if estado.en_mano or estado.habitacion == Habitacion.AFUERA:
+		if estado.en_mano:
+			if estado.clase == Clase.CAJA:
+				cajas_que_ocupan_la_tolerancia += 1
+			continue
+		if estado.habitacion == Habitacion.AFUERA:
 			continue
 		match estado.clase:
 			Clase.UNIDAD_SUELTA:
 				return true
 			Clase.CAJA:
-				if estado.habitacion != Habitacion.DEPOSITO:
-					return true
+				match estado.habitacion:
+					Habitacion.LOCAL:
+						cajas_que_ocupan_la_tolerancia += 1
+					Habitacion.DEPOSITO:
+						pass
+					_:
+						return true
 			Clase.UTIL_DE_LIMPIEZA:
 				if estado.habitacion != Habitacion.CUARTITO:
 					return true
-	return false
+	return cajas_que_ocupan_la_tolerancia > CAJAS_TOLERADAS_EN_EL_LOCAL
 
 
 static func hay_objetos_afuera(estados: Array[Estado]) -> bool:

@@ -26,8 +26,8 @@ func test_una_unidad_suelta_desordena_cualquier_habitacion() -> void:  # AC-CLN-
 			)
 
 
-func test_una_caja_solo_queda_ordenada_en_el_deposito() -> void:  # AC-CLN-042
-	var desorden: Array[bool] = [true, false, true, false, true]
+func test_una_caja_sola_queda_ordenada_en_el_deposito_y_en_el_local() -> void:  # AC-CLN-042
+	var desorden: Array[bool] = [false, false, true, false, true]
 	for habitacion: ReglasDelCierre.Habitacion in HABITACION.values():
 		for en_mano: bool in [false, true]:
 			var estados: Array[ReglasDelCierre.Estado] = [
@@ -73,7 +73,7 @@ func test_los_otros_objetos_adentro_no_producen_desorden() -> void:  # AC-CLN-04
 
 func test_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera() -> void:  # AC-CLN-046
 	var estados: Array[ReglasDelCierre.Estado] = [
-		ReglasDelCierre.Estado.new(CLASE.CAJA, HABITACION.LOCAL, false),
+		ReglasDelCierre.Estado.new(CLASE.CAJA, HABITACION.BANO, false),
 		ReglasDelCierre.Estado.new(CLASE.UNIDAD_SUELTA, HABITACION.AFUERA, false),
 	]
 	assert_bool(ReglasDelCierre.hay_desorden(estados)).is_true()
@@ -206,3 +206,63 @@ func test_unidad_utiles_y_datos_ausentes_no_son_exentos() -> void:  # AC-CLN-050
 		var util := ObjetoDelAlmacen.new()
 		util.id = id
 		assert_bool(ReglasDelCierre.se_tira_sin_llamado(util)).is_false()
+
+
+func test_las_cajas_toleradas_en_el_local_no_desordenan_y_una_mas_si() -> void:  # AC-CLN-070
+	var toleradas := ReglasDelCierre.CAJAS_TOLERADAS_EN_EL_LOCAL
+	var estados: Array[ReglasDelCierre.Estado] = [_caja(HABITACION.DEPOSITO)]
+	for _caja_en_el_local in toleradas:
+		estados.append(_caja(HABITACION.LOCAL))
+	assert_bool(ReglasDelCierre.hay_desorden(estados)).is_false()
+	estados.append(_caja(HABITACION.LOCAL))
+	assert_bool(ReglasDelCierre.hay_desorden(estados)).is_true()
+
+
+func test_una_caja_en_el_bano_desordena_sola_o_con_otra_en_el_local() -> void:  # AC-CLN-070
+	var sola: Array[ReglasDelCierre.Estado] = [_caja(HABITACION.BANO)]
+	assert_bool(ReglasDelCierre.hay_desorden(sola)).is_true()
+	var con_una_en_el_local: Array[ReglasDelCierre.Estado] = [
+		_caja(HABITACION.LOCAL), _caja(HABITACION.BANO)
+	]
+	assert_bool(ReglasDelCierre.hay_desorden(con_una_en_el_local)).is_true()
+	con_una_en_el_local.reverse()
+	assert_bool(ReglasDelCierre.hay_desorden(con_una_en_el_local)).is_true()
+
+
+func test_la_caja_sostenida_ocupa_la_unica_permitida() -> void:  # AC-CLN-070
+	var sola: Array[ReglasDelCierre.Estado] = [_caja(HABITACION.LOCAL, true)]
+	assert_bool(ReglasDelCierre.hay_desorden(sola)).is_false()
+	var con_una_en_el_deposito: Array[ReglasDelCierre.Estado] = [
+		_caja(HABITACION.DEPOSITO), _caja(HABITACION.LOCAL, true)
+	]
+	assert_bool(ReglasDelCierre.hay_desorden(con_una_en_el_deposito)).is_false()
+	var en_el_bano: Array[ReglasDelCierre.Estado] = [_caja(HABITACION.BANO, true)]
+	assert_bool(ReglasDelCierre.hay_desorden(en_el_bano)).is_false()
+	var con_una_en_el_local: Array[ReglasDelCierre.Estado] = [
+		_caja(HABITACION.LOCAL), _caja(HABITACION.LOCAL, true)
+	]
+	assert_bool(ReglasDelCierre.hay_desorden(con_una_en_el_local)).is_true()
+	con_una_en_el_local.reverse()
+	assert_bool(ReglasDelCierre.hay_desorden(con_una_en_el_local)).is_true()
+
+
+func test_otro_cuerpo_sostenido_no_ocupa_la_permitida() -> void:  # AC-CLN-070
+	var estados: Array[ReglasDelCierre.Estado] = [
+		_caja(HABITACION.LOCAL),
+		ReglasDelCierre.Estado.new(CLASE.UTIL_DE_LIMPIEZA, HABITACION.LOCAL, true),
+	]
+	assert_bool(ReglasDelCierre.hay_desorden(estados)).is_false()
+
+
+func test_una_caja_tolerada_no_tapa_una_unidad_suelta() -> void:  # AC-CLN-070
+	var estados: Array[ReglasDelCierre.Estado] = [
+		_caja(HABITACION.LOCAL),
+		ReglasDelCierre.Estado.new(CLASE.UNIDAD_SUELTA, HABITACION.DEPOSITO, false)
+	]
+	assert_bool(ReglasDelCierre.hay_desorden(estados)).is_true()
+	estados.reverse()
+	assert_bool(ReglasDelCierre.hay_desorden(estados)).is_true()
+
+
+func _caja(habitacion: ReglasDelCierre.Habitacion, en_mano: bool = false) -> ReglasDelCierre.Estado:
+	return ReglasDelCierre.Estado.new(CLASE.CAJA, habitacion, en_mano)

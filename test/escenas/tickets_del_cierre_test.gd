@@ -190,7 +190,7 @@ func test_tres_motivos_con_grave_son_siete_y_la_noche_nueva_conserva_deuda() -> 
 	_inodoro(papel)
 	await get_tree().process_frame
 	var caja: Node3D = _almacen.get("_cajas_de_productos")[0]
-	caja.global_position = _centro(lector.local)
+	caja.global_position = _centro(lector.bano)
 	_almacen.get("_reposicion_manual").call("retirar", Producto.Id.ACTRONCITO)
 	var unidad: Node3D = _almacen.get("_agarre").soltar(true)
 	assert_object(unidad).is_not_null()
