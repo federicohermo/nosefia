@@ -79,7 +79,7 @@ func test_el_vacio_que_pasa_al_vecino_queda_pegado_a_los_que_ya_tiene() -> void:
 		entrada.append(tandas[1][3])
 		var vacios := Apertura.sin_tandas_vacias(entrada, tandas, alturas, _azar(semilla))
 		var lugares: Array[int] = []
-		for lugar in tandas[1].size():
+		for lugar: int in tandas[1].size():
 			if vacios.has(tandas[1][lugar]):
 				lugares.append(lugar)
 		assert_int(lugares.size()).is_equal(3)
