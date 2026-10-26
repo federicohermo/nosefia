@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -346,6 +346,12 @@ Con esa unidad en la mano vale todo lo que vale para una que salió de su caja: 
 cualquier casillero vacío de su producto, se suelta, o se devuelve a su caja (BR-STK-030). SI
 reponer estaba cumplida, ENTONCES el sistema DEBE descumplirla al agarrar la unidad, porque
 vuelve a faltar algo (BR-STK-013).
+
+Al cerrar la noche, una unidad de producto que el jugador lleva en la mano, la esté examinando o
+no, cuenta como puesta en su casillero vacío para decidir si reponer está cumplida. Es la misma
+excepción que la saca del desorden: lo que se lleva en la mano no se castiga ni como desorden ni
+como faltante. Vale sólo para ese chequeo: durante la noche el casillero sigue vacío mientras la
+unidad está en la mano. Decisión del usuario del 26/10/2026 (#386).
 
 ### BR-STK-034 — La unidad agarrada de la góndola se cuenta una sola vez
 
@@ -1420,6 +1426,15 @@ CUANDO se retoma y abre la jornada ENTONCES esa caja abre en su lugar de fábric
 abren donde se guardaron. DADO la jornada 4 abierta con la pila de cajas llegadas, cerrada sin
 ordenarlas CUANDO abre la 5 ENTONCES esas cajas abren cada una en una estantería (BR-STK-051)
 y ninguna abre apilada en el fondo del depósito.
+
+### AC-STK-117 — Lo que se lleva en la mano al cerrar cuenta como puesto *(verifica BR-STK-033)*
+
+DADO un producto con un solo casillero vacío y el resto de la góndola completa CUANDO el jugador
+cierra la noche con una unidad de ese producto en la mano, examinándola o no, ENTONCES reponer
+cuenta cumplida. DADO el mismo caso durante la noche ENTONCES reponer sigue sin cumplir y su
+casillero vacío. DADO dos casilleros vacíos de ese producto, o uno vacío de otro producto
+además del suyo, CUANDO se cierra con esa unidad en la mano ENTONCES reponer no cuenta cumplida. DADO la
+unidad en la mano que se suelta antes del cierre ENTONCES reponer no cuenta cumplida.
 
 ## No objetivos
 

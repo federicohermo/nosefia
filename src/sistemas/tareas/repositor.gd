@@ -49,6 +49,8 @@ func arrancar(un_estante: Estante) -> void:
 		agarre.entregar()
 	_estante = un_estante
 	if reloj != null:
+		if not reloj.cierre_iniciado.is_connected(_al_iniciar_el_cierre):
+			reloj.cierre_iniciado.connect(_al_iniciar_el_cierre)
 		_revisar_reponer()
 
 
@@ -133,10 +135,16 @@ func pedir_agarrar_de_la_gondola(id: Producto.Id, casillero: int, nodo: Node3D) 
 
 
 ## Cumple reponer si la góndola quedó llena, y la descumple si no: una unidad agarrada de un
-## estante completo lo deja con un casillero vacío (BR-STK-033).
-func _revisar_reponer() -> void:
+## estante completo lo deja con un casillero vacío (BR-STK-033). Al cerrar, la unidad de la mano
+## cuenta como puesta.
+func _revisar_reponer(al_cerrar: bool = false) -> void:
 	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
-	if _estante.completada():
+	var en_la_mano := agarre.manos().sostenido() if al_cerrar else null
+	if _estante.completada(en_la_mano):
 		reloj.completar(reponer)
 	else:
 		reloj.descumplir(reponer)
+
+
+func _al_iniciar_el_cierre() -> void:
+	_revisar_reponer(true)
