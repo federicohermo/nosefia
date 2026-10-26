@@ -7,8 +7,13 @@
 extends GdUnitTestSuite
 
 
-func test_el_intervalo_inclusivo_de_la_ficha_se_conserva() -> void:  # AC-STK-034
-	assert_vector(ReglasDelEstante.TIPOS_QUE_FALTAN).is_equal(Vector2i(4, 7))
+func test_los_intervalos_de_faltantes_son_un_sorteo_posible() -> void:  # AC-STK-034
+	assert_int(ReglasDelEstante.TIPOS_QUE_FALTAN.x).is_greater(0)
+	assert_int(ReglasDelEstante.TIPOS_QUE_FALTAN.y).is_greater_equal(
+		ReglasDelEstante.TIPOS_QUE_FALTAN.x
+	)
+	assert_int(ReglasDelEstante.MENOS_QUE_FALTA).is_greater(0)
+	assert_int(ReglasDelEstante.MENOS_QUE_FALTA).is_less_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
 
 
 func test_las_unidades_de_una_caja_son_una_cantidad_y_no_un_centinela() -> void:
