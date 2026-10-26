@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»
 ---
 
 # Capacidad: el legajo del empleado
@@ -271,7 +271,7 @@ contando esta noche (BR-EMP-025). No hay quinta: cada falla suma por lo menos un
 | Tarea 4 | 4 | De casualidad limpiás tu casa vos? Sabés cómo se usa una mopa? |
 
 Tarea 5 DEBE elegirse por J, no por una cuenta, y sólo existe en las jornadas que declaran una
-particular (BR-SHF-005):
+particular (BR-SHF-005). La jornada 5 tiene además la variante de BR-EMP-045:
 
 | J | Texto |
 |---|---|
@@ -309,6 +309,19 @@ siguientes. La fila de J = 6 se conserva aunque esa noche no declare una particu
 
 Un llamado se anota una vez por noche y la partida dura ocho, así que n no pasa de 8. La ficha
 escribe hasta n = 5: la última fila de cada Reto cubre también las n mayores.
+
+### BR-EMP-045 — Una bolsa tirada por la ventana cambia la Tarea 5 de la jornada 5
+
+CUANDO cierra la jornada 5 con su particular sin cumplir y al menos una bolsa de basura quedó
+afuera del local al cerrar, el sistema DEBE elegir para Tarea 5 el texto de la bolsa por la
+ventana, letra por letra de la ficha «Chat con el jefe»: «La basura se supone que la tirás en
+el contenedor, no por la ventana… Te imaginás ir a comprar y tener BASURA A TUS PIES?». Ese
+texto DEBE reemplazar al de BR-EMP-027, también cuando queden bolsas en el local: Tarea 5 es un
+solo mensaje y la ficha no trae uno combinado para esta jornada. SI la particular quedó sin
+cumplir y ninguna bolsa quedó afuera, ENTONCES Tarea 5 DEBE ser el de BR-EMP-027. Qué bolsa está
+afuera se decide con la noción de BR-CLN-029, sobre el estado del cierre ya calculado. Una bolsa
+afuera que se recuperó y se depositó antes del cierre NO DEBE contar. Las demás jornadas NO
+DEBEN traer este texto.
 
 ### BR-EMP-029 — El Cierre, y qué fila gana
 
@@ -536,6 +549,19 @@ anotada, la jornada 4 NO DEBE mostrar ningún mensaje 1. Con menos de 5 fallas, 
 cumplida y fallas en la 1 o la 2, la ficha no tiene fila: la de «cualquier otra» es provisoria
 (OQ-EMP-011).
 
+### BR-EMP-044 — El celular sube medio segundo después de que la persiana termina de bajar
+
+CUANDO cierra una jornada desde la cuarta, que sólo cierra por tiempo (BR-SHF-025), y la persiana
+termina de bajar, el sistema DEBE esperar 0,5 segundos con la persiana baja y sin celular en
+pantalla. Pasados los 0,5 segundos, el celular DEBE subir con el chat de Enrique (BR-EMP-030). Los
+mensajes de la devolución cuentan su ritmo desde el celular centrado, como siempre.
+
+MIENTRAS dura la espera, el turno DEBE seguir cerrado y el control suspendido. MIENTRAS la pausa
+está en pantalla, la espera NO DEBE correr, y el celular NO DEBE subir debajo ni encima del menú:
+al reanudar, la espera sigue desde donde estaba. La devolución del despido y la del contrato
+cumplido siguen la misma secuencia. Las jornadas de introducción no cambian (BR-EMP-011).
+Esta espera NO DEBE cambiar el guardado de la noche cerrada.
+
 ## Criterios de aceptación
 
 ### AC-EMP-001 — Los tres cortes *(verifica BR-EMP-001)*
@@ -746,6 +772,18 @@ DADO la jornada 6 con el llamado por objetos importantes en la basura, sin una p
 declarada CUANDO se arma la devolución ENTONCES trae «Cuando te pedí que tiraras algunos
 productos, no me refería a objetos útiles y en buen estado!», sea el primer llamado o el
 segundo, y no trae Tarea 5.
+
+### AC-EMP-096 — Una bolsa por la ventana cambia la Tarea 5 de la jornada 5 *(verifica BR-EMP-045, BR-EMP-027, BR-EMP-009)*
+
+DADO la jornada 5 con la particular sin cumplir, una bolsa afuera y las otras dos depositadas
+CUANDO se arma la devolución ENTONCES Tarea 5 es «La basura se supone que la tirás en el
+contenedor, no por la ventana… Te imaginás ir a comprar y tener BASURA A TUS PIES?», y «De verdad
+era tan difícil tirar tres bolsas de basura?» no aparece. DADO una bolsa afuera y otra sin
+depositar en el local ENTONCES sale sólo el texto de la ventana, en un único mensaje de Tarea 5.
+DADO las tres bolsas sin depositar y ninguna afuera ENTONCES Tarea 5 es «De verdad era tan
+difícil tirar tres bolsas de basura?». DADO una bolsa que salió y se depositó antes del cierre,
+con las tres depositadas ENTONCES no hay Tarea 5. DADO una bolsa afuera en la jornada 4, 6 o 7
+ENTONCES la devolución no trae el texto de la ventana.
 
 ### AC-EMP-055 — P = 4 en la octava despide *(verifica BR-EMP-005, BR-EMP-026, BR-EMP-029)*
 
@@ -1088,6 +1126,22 @@ noche 3 que cierra sin perder la prueba ENTONCES la pantalla de inicio no trae e
 
 DADO la noche 3 cerrada con 5 fallas en la prueba y la 3 sin fallas CUANDO se guarda y se retoma
 ENTONCES la jornada 4 abre con la misma fila.
+
+### AC-EMP-095 — El celular espera medio segundo a la persiana *(verifica BR-EMP-044, BR-EMP-030)*
+
+DADO el cierre de la noche 4 CUANDO la persiana todavía baja
+ENTONCES el celular no está en pantalla. CUANDO la persiana termina de bajar y pasan 0,49 s
+ENTONCES la persiana está baja y sigue sin celular. CUANDO pasan 0,5 s ENTONCES el celular sube con
+el chat de Enrique, con el primer mensaje ya en el chat (BR-EMP-030), y los intervalos de los
+siguientes empiezan cuando el celular llega al centro. DADO el cierre de la noche
+4 con la partida despedida, o el de la última noche con el contrato cumplido, CUANDO termina de
+bajar la persiana ENTONCES el celular también sube a los 0,5 s y no antes.
+
+DADO la persiana ya baja y 0,25 s de espera CUANDO se pausa, pasan 5 s y se reanuda ENTONCES el
+celular no subió durante la pausa y sube 0,25 s después de reanudar. DADO el cierre de la noche 4
+CUANDO se pausa mientras la persiana baja, y se reanuda ENTONCES la espera empieza recién cuando
+la persiana termina de bajar. DADO el cierre de la noche 3 sin perder la prueba CUANDO pasan 10 s
+desde que la persiana terminó de bajar ENTONCES el celular no subió (AC-EMP-093).
 
 ## No objetivos
 

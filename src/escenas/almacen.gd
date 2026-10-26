@@ -127,6 +127,8 @@ var _gestos := SubtitulosDeLosGestos.new()
 var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
+var _devolucion_en_espera: DevolucionDelJefe
+var _espera_del_celular := 0.0
 var _enlace_de_guardado: EnlaceDeGuardado
 var _salida_preparada := false
 var _salida: SalidaDelAlmacen
@@ -560,14 +562,13 @@ func _salir_por_la_entrada() -> void:
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_jornada_del_celular = jornada
 	_gestos.descartar()
-	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
+	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
+	persiana.bajar()
 	_celular.cerrar_jornada()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
 	var devolucion := DevolucionDelJefe.new(jornada, _partida)
-	if devolucion.por_el_celular():
-		_pantalla.mostrar(devolucion)
 	# Sin esto el celular es inalcanzable jugando: el jugador clava el puntero en el centro cada
 	# cuadro. La suspensión suelta el cursor sola.
 	_jugador.suspender()
@@ -577,6 +578,14 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	# Una conexión por devolución: un segundo despacho no encuentra a nadie, y no abre dos noches
 	# ni carga el menú dos veces.
 	_pantalla.devolucion_despachada.connect(_al_despachar_la_devolucion, CONNECT_ONE_SHOT)
+	persiana.persiana_bajada.connect(
+		_esperar_para_subir_el_celular.bind(devolucion), CONNECT_ONE_SHOT
+	)
+
+
+func _esperar_para_subir_el_celular(devolucion: DevolucionDelJefe) -> void:
+	_devolucion_en_espera = devolucion
+	_espera_del_celular = 0.0
 
 
 func _seguir_sin_celular(devolucion: DevolucionDelJefe) -> void:
@@ -804,7 +813,9 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 		if nodo.has_meta(&"recibido_por_comprador"):
 			continue
 		var clase := ReglasDelCierre.Clase.OTRO
-		if nodo is CajaDeProductosDelDeposito:
+		if _bolsas.has(nodo):
+			clase = ReglasDelCierre.Clase.BOLSA
+		elif nodo is CajaDeProductosDelDeposito:
 			clase = ReglasDelCierre.Clase.CAJA
 		elif nodo is UtilDeLimpieza:
 			clase = ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA
@@ -877,6 +888,12 @@ func _pensar_en(texto: String, lugar: Vector3) -> void:
 func _process(delta: float) -> void:
 	if _partida.reflexion != null and _partida.reflexion.avanzar(delta):
 		_terminar_la_reflexion()
+	if _devolucion_en_espera != null and not get_tree().paused:
+		_espera_del_celular += delta
+		if DevolucionDelJefe.celular_a_la_vista(_espera_del_celular):
+			var devolucion := _devolucion_en_espera
+			_devolucion_en_espera = null
+			_pantalla.mostrar(devolucion)
 	if _lugar_del_pensamiento.is_finite():
 		var distancia := _jugador.global_position.distance_to(_lugar_del_pensamiento)
 		_hud.alejarse(distancia - _distancia_al_pensar)
@@ -916,6 +933,8 @@ func _al_agotar_el_turno(_jornada: int) -> void:
 		_partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
 	if ReglasDelCierre.hay_objetos_afuera(estados):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
+	if ReglasDelCierre.hay_bolsa_afuera(estados):
+		_partida.bolsa_afuera = true
 
 
 func _al_desechar_un_ticket() -> void:

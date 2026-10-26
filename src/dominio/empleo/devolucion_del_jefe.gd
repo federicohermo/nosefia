@@ -13,6 +13,9 @@ enum Opcion { CONTINUAR, VOLVER_AL_MENU }
 ## La ficha fija un segundo entre cada mensaje.
 const SEGUNDOS_ENTRE_MENSAJES := 1.0
 
+## Con la persiana ya baja y antes de que el celular suba.
+const SEGUNDOS_DE_ESPERA_DEL_CELULAR := 0.5
+
 ## Cuántos medios hay en un punto de la tabla.
 const MEDIOS_POR_PUNTO := Reglas.MEDIOS_POR_APERCIBIMIENTO
 
@@ -82,6 +85,15 @@ const PARTICULARES: Dictionary[int, String] = {
 	),
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	"De verdad era tan difícil tirar tres bolsas de basura?",
+}
+
+## La variante de la Tarea 5 cuando una bolsa quedó afuera: reemplaza a la de `PARTICULARES`.
+const PARTICULARES_CON_BOLSA_AFUERA: Dictionary[int, String] = {
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
+	(
+		"La basura se supone que la tirás en el contenedor, no por la ventana… "
+		+ "Te imaginás ir a comprar y tener BASURA A TUS PIES?"
+	),
 }
 
 ## La fila de la ficha que termina la prueba: Enrique no dice nada más (BR-EMP-043).
@@ -287,7 +299,8 @@ func _init(jornada: int, partida: Partida) -> void:
 		partida.antecedentes(),
 		sin_cumplir,
 		partida.llamados(),
-		partida.uso_de_poetico_en(jornada)
+		partida.uso_de_poetico_en(jornada),
+		partida.bolsa_afuera
 	)
 
 
@@ -340,6 +353,11 @@ static func a_la_vista(transcurrido: float, total: int) -> int:
 	return mini(total, 1 + floori(maxf(0.0, transcurrido) / SEGUNDOS_ENTRE_MENSAJES))
 
 
+## Si el celular ya puede subir, `espera` segundos después de que la persiana terminó de bajar.
+static func celular_a_la_vista(espera: float) -> bool:
+	return espera >= SEGUNDOS_DE_ESPERA_DEL_CELULAR
+
+
 ## La tabla entera, con los hechos ya contados: la noche cerrada, los medios después de anotarla,
 ## las cuentas que la incluyen, lo que quedó sin cumplir y los llamados de esa noche.
 static func armar(
@@ -348,7 +366,8 @@ static func armar(
 	antecedentes: Antecedentes,
 	sin_cumplir: Array[Tarea.Tipo],
 	llamados: Array[Partida.Llamado],
-	uso_de_poetico: bool = false
+	uso_de_poetico: bool = false,
+	bolsa_afuera: bool = false
 ) -> Array[String]:
 	var mensajes: Array[String] = [_saludo(medios)]
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
@@ -358,7 +377,7 @@ static func armar(
 	if uso_de_poetico:
 		mensajes.append(POETICO_EN_EL_DESPIDO if medios >= MEDIOS_DEL_DESPIDO else POETICO)
 	if PARTICULARES.has(jornada) and _alguna_particular(sin_cumplir):
-		mensajes.append(PARTICULARES[jornada])
+		mensajes.append(_particular(jornada, bolsa_afuera))
 	for motivo: Partida.Llamado in retos():
 		if llamados.has(motivo):
 			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios))
@@ -369,6 +388,12 @@ static func armar(
 @warning_ignore("integer_division")
 static func _saludo(medios: int) -> String:
 	return SALUDOS[mini(medios / MEDIOS_POR_PUNTO, SALUDOS.size() - 1)]
+
+
+static func _particular(jornada: int, bolsa_afuera: bool) -> String:
+	if bolsa_afuera and PARTICULARES_CON_BOLSA_AFUERA.has(jornada):
+		return PARTICULARES_CON_BOLSA_AFUERA[jornada]
+	return PARTICULARES[jornada]
 
 
 static func _alguna_particular(sin_cumplir: Array[Tarea.Tipo]) -> bool:
