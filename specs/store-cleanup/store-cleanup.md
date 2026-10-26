@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26; útiles fuera del contenedor de #552, ficha «Contenedor de basura» revisada el 2026-10-20
 ---
 
 # Capacidad: dejar el local en orden
@@ -227,13 +227,15 @@ cerrar corta ese permiso desde el inicio del giro y abrir lo recupera al alcanza
 
 CUANDO se hace el primario sobre el cuerpo del contenedor completamente abierto con un objeto que
 entra, el sistema DEBE retirarlo de la mano y de la jornada: oculto, sin colisión ni foco.
-Una caja del depósito NO DEBE entrar. Con mano vacía, caja o tapa cerrada o girando, el primario sobre el cuerpo
+Una caja del depósito y un útil —la mopa, el balde o cualquiera de los tres jabones— NO DEBEN
+entrar, esté la tapa abierta, cerrada o girando: el rechazo por no entrar gana al de la tapa. El
+útil NO DEBE entrar tampoco con el balde lleno o teñido ni con la mopa mojada. Poético, aun en la
+jornada en que sustituye al jabón azul (BR-CLN-033), es un producto y NO DEBE tratarse como útil:
+entra como cualquier unidad. Con mano vacía, caja, útil o tapa cerrada o girando, el primario sobre el cuerpo
 DEBE conservar manos y tarea sin soltar genéricamente. Abrir NO DEBE tirar automáticamente.
 Con el jugador suspendido por examen, pausa o cierre, ambos clics NO DEBEN tirar ni alternar.
 El secundario NO DEBE desechar. Accionar la tapa NO DEBE desechar además lo sostenido.
-Al abrir otra noche, los objetos de arranque tirados y disponibles en esa jornada DEBEN volver
-a sus padres y poses de arranque, visibles, físicos y recogibles, con mopa seca y balde vacío.
-El bidón azul DEBE permanecer ausente durante jornada 5, según BR-CLN-014. Las bolsas DEBEN seguir
+Al abrir otra noche, las bolsas DEBEN seguir
 la declaración de la jornada nueva: fuera del mundo si no declara basura, o en su tacho y sin
 depositar si la declara, nunca sueltas por haber sido tiradas en la noche anterior.
 Las unidades y tickets tirados DEBEN retirarse con los demás creados en la noche anterior.
@@ -299,8 +301,9 @@ partida terminada NO DEBE sumar ni quedar pendiente para otra noche.
 CUANDO se acepta tirar al contenedor un objeto que BR-CLN-038 no exime durante una jornada
 abierta, el sistema DEBE anotar un único llamado por objeto importante tirado. Varios objetos
 importantes tirados DEBEN producir un solo motivo en esa noche. Lo eximido por BR-CLN-038
-DEBE conservar su descarte normal sin este motivo. Una unidad ordinaria, la mopa, el balde
-y los jabones NO DEBEN considerarse exentos. El motivo DEBE sumar un medio al cierre, además
+DEBE conservar su descarte normal sin este motivo. Una unidad ordinaria NO DEBE
+considerarse exenta. Los útiles no entran al contenedor (BR-CLN-026) y por eso nunca producen
+este motivo. El motivo DEBE sumar un medio al cierre, además
 de la banda y los demás motivos, y reiniciarse al abrir otra noche sin borrar la deuda.
 Un gesto rechazado o fuera de jornada abierta NO DEBE anotar este motivo.
 
@@ -578,7 +581,7 @@ comienza a cerrar, conserva la bolsa y corta el permiso desde el inicio.
 
 ### AC-CLN-036 — Cada objeto aceptado sale de la jornada *(verifica BR-CLN-026, BR-CLN-009)*
 
-DADO por turno bolsa, mopa, balde, cada jabón, unidad y ticket sostenidos CUANDO se pulsa
+DADO por turno bolsa, unidad y ticket sostenidos CUANDO se pulsa
 izquierdo sobre el contenedor completamente abierto ENTONCES queda mano vacía y el mismo
 cuerpo oculto, sin colisión ni foco. Sólo la bolsa aumenta lo depositado.
 
@@ -591,13 +594,10 @@ ENTONCES no se tira ni se suelta, no cuenta y la tapa conserva su estado.
 
 ### AC-CLN-038 — Los tirados vuelven con la noche nueva *(verifica BR-CLN-026, BR-CLN-014)*
 
-DADO mopa mojada y balde teñido tirados CUANDO abre otra noche ENTONCES vuelven a sus
-padres y lugares originales, visibles, físicos y recogibles; mopa seca y balde vacío.
 DADO una bolsa tirada en la jornada 5 CUANDO abre otra noche ENTONCES no está en el mundo.
 DADO un ticket y una unidad tirados ENTONCES se retiran junto con los demás
 creados en la noche anterior, sin dejar entradas inválidas en la lista de tirados.
-La vuelta conserva el estado físico original: un útil móvil elevado 0,5 m vuelve a caer
-y apoyarse. Consultar los descartados entrega una copia independiente y la noche nueva
+Consultar los descartados entrega una copia independiente y la noche nueva
 vacía ese registro, sin leer cuerpos ya liberados.
 
 ### AC-CLN-039 — La suspensión bloquea ambos destinos *(verifica BR-CLN-026, BR-CLN-025)*
@@ -658,6 +658,20 @@ jornada ENTONCES el legajo lleva 1 medio antes de armar la devolución y escribi
 la devolución trae el Reto 5. DADO el mismo cierre con la puerta cerrada ENTONCES el legajo no
 suma y no hay Reto 5. DADO una noche de la prueba con una heladera abierta ENTONCES no suma medios
 (BR-EMP-035).
+
+### AC-CLN-076 — Los útiles no entran al contenedor *(verifica BR-CLN-026, BR-CLN-031, BR-CLN-014)*
+
+DADO, por turno, el balde —vacío, con agua y teñido—, la mopa —seca y mojada— y cada uno de los
+tres jabones sostenidos CUANDO se hace el primario sobre el cuerpo del contenedor, con la tapa
+completamente abierta y, por separado, cerrada ENTONCES el tiro se rechaza por no entrar: el
+útil sigue en la mano, visible, físico y recogible, no figura entre lo tirado, la tarea de la
+basura no cambia y el cierre de esa noche impecable no suma el motivo de objeto importante ni
+ningún otro. DADO el mismo útil CUANDO el rechazo ya ocurrió y se abre otra noche ENTONCES la
+jornada nueva lo deja en su lugar del cuartito (BR-CLN-014), sin copia ni entrada en lo tirado.
+DADO una unidad real de Poético sostenida en la jornada en que sustituye al jabón azul
+(BR-CLN-033) CUANDO se hace el primario sobre el cuerpo completamente abierto ENTONCES entra como
+cualquier unidad ordinaria: sale de la mano y de la jornada y el cierre suma el motivo de objeto
+importante una vez.
 
 ### AC-CLN-043 — La mano excluye sólo su cuerpo *(verifica BR-CLN-028, BR-CLN-029)*
 
@@ -727,15 +741,15 @@ cierre no suma otra vez.
 
 DADO, por separado, una bolsa, un ticket, una pista o una unidad vencida CUANDO se acepta
 tirarlo al contenedor ENTONCES no agrega el motivo de objeto importante y la bolsa sigue
-contando para su obligatoria. DADO una unidad ordinaria, la mopa, el balde o cualquiera de los
-tres jabones ENTONCES no está exento, aunque se tire junto a uno eximido.
+contando para su obligatoria. DADO una unidad ordinaria ENTONCES no está exenta, aunque se tire
+junto a uno eximido.
 La ausencia de objeto no constituye una excepción válida ni un descarte aceptado.
 
 ### AC-CLN-051 — El descarte importante cuenta una vez por noche *(verifica BR-CLN-026, BR-CLN-031)*
 
-DADO una noche impecable CUANDO se tira una unidad o una mopa al contenedor abierto ENTONCES
-el cierre suma un medio y el objeto tirado no produce desorden ni afuera. DADO dos importantes
-tirados en la misma noche ENTONCES suman un solo medio. CUANDO abre otra noche, tirar otro
+DADO una noche impecable CUANDO se tira una unidad al contenedor abierto ENTONCES
+el cierre suma un medio y el objeto tirado no produce desorden ni afuera. DADO dos unidades
+tiradas en la misma noche ENTONCES suman un solo medio. CUANDO abre otra noche, tirar otro
 importante permite anotar de nuevo el motivo; una noche impecable sin motivos conserva la deuda.
 
 ### AC-CLN-052 — Tres motivos permiten continuar y cuatro despiden *(verifica BR-CLN-028, BR-CLN-029, BR-CLN-030, BR-CLN-031)*
@@ -837,12 +851,11 @@ cantidades de caja, depósito, góndola y unidades afuera no cambian por los te�
 ni envase vacío nuevo. Devolver o vender esa unidad conserva el recorrido normal de mercadería.
 El bidón azul sigue siendo marca «2», con identidad y envase distintos de Poético.
 
-### AC-CLN-065 — Volver de la ausencia restaura el azul *(verifica BR-CLN-014, BR-CLN-026)*
+### AC-CLN-065 — Volver de la ausencia restaura el azul *(verifica BR-CLN-014)*
 
-DADO el azul tirado al contenedor en jornada 4 CUANDO se abre la 5 dos veces ENTONCES sigue
+DADO el azul en la jornada 4 CUANDO se abre la 5 dos veces ENTONCES sigue
 oculto, sin foco ni colisión. CUANDO abre la 6 ENTONCES vuelve a padre, pose, visibilidad y
-colisiones originales y puede recogerse; mopa seca y balde vacío. No se restaura Poético como
-si fuera un bidón de limpieza.
+colisiones originales y puede recogerse. No se restaura Poético como si fuera un bidón de limpieza.
 
 ### AC-CLN-066 — Sólo un uso aceptado publica su identidad *(verifica BR-CLN-035)*
 
