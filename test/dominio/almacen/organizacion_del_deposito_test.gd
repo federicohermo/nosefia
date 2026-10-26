@@ -52,16 +52,10 @@ func _de_fabrica(
 	return poses
 
 
-func _afirmar_pose(
+func _dice(
 	poses: Dictionary[Producto.Id, Transform3D], id: Producto.Id, esperada: Transform3D
-) -> void:
-	(
-		assert_bool(poses[id].is_equal_approx(esperada))
-		. override_failure_message(
-			"%s: abrió en %s y se esperaba %s" % [Producto.Id.keys()[id], poses[id], esperada]
-		)
-		. is_true()
-	)
+) -> String:
+	return "%s: abrió en %s y se esperaba %s" % [Producto.Id.keys()[id], poses[id], esperada]
 
 
 func _limites(pose: Transform3D, media: float) -> AABB:
@@ -121,7 +115,11 @@ func test_la_caja_que_cerro_en_estanteria_abre_donde_quedo() -> void:  # AC-STK-
 	guardadas[D] = _en_estante(CHICA, 0.25)
 	var poses := OrganizacionDelDeposito.abrir(cajas, guardadas, _repisas())
 	for id in guardadas:
-		_afirmar_pose(poses, id, guardadas[id])
+		(
+			assert_bool(poses[id].is_equal_approx(guardadas[id]))
+			. override_failure_message(_dice(poses, id, guardadas[id]))
+			. is_true()
+		)
 
 
 func test_la_caja_sobre_otra_que_esta_en_estanteria_abre_igual() -> void:  # AC-STK-111
@@ -129,8 +127,16 @@ func test_la_caja_sobre_otra_que_esta_en_estanteria_abre_igual() -> void:  # AC-
 	var guardadas: Dictionary[Producto.Id, Transform3D] = _de_fabrica(cajas)
 	guardadas[B] = Transform3D(Basis.IDENTITY, Vector3(1.75, ESTANTE + CHICA * 3.0, 0.0))
 	var poses := OrganizacionDelDeposito.abrir(cajas, guardadas, _repisas())
-	_afirmar_pose(poses, B, guardadas[B])
-	_afirmar_pose(poses, Z, guardadas[Z])
+	(
+		assert_bool(poses[B].is_equal_approx(guardadas[B]))
+		. override_failure_message(_dice(poses, B, guardadas[B]))
+		. is_true()
+	)
+	(
+		assert_bool(poses[Z].is_equal_approx(guardadas[Z]))
+		. override_failure_message(_dice(poses, Z, guardadas[Z]))
+		. is_true()
+	)
 
 
 func test_sin_poses_guardadas_cada_caja_abre_en_su_lugar() -> void:  # AC-STK-111 AC-STK-113
@@ -138,7 +144,11 @@ func test_sin_poses_guardadas_cada_caja_abre_en_su_lugar() -> void:  # AC-STK-11
 	var vacias: Dictionary[Producto.Id, Transform3D] = {}
 	var poses := OrganizacionDelDeposito.abrir(cajas, vacias, _repisas())
 	for caja in cajas:
-		_afirmar_pose(poses, caja.producto, caja.fabrica)
+		(
+			assert_bool(poses[caja.producto].is_equal_approx(caja.fabrica))
+			. override_failure_message(_dice(poses, caja.producto, caja.fabrica))
+			. is_true()
+		)
 
 
 func test_la_caja_ausente_abre_en_su_lugar_de_fabrica() -> void:  # AC-STK-113
@@ -147,7 +157,11 @@ func test_la_caja_ausente_abre_en_su_lugar_de_fabrica() -> void:  # AC-STK-113
 	cajas[5] = ausente
 	var guardadas: Dictionary[Producto.Id, Transform3D] = {M: _en_el_piso(GRANDE, 0.0)}
 	var poses := OrganizacionDelDeposito.abrir(cajas, guardadas, _repisas())
-	_afirmar_pose(poses, M, ausente.fabrica)
+	(
+		assert_bool(poses[M].is_equal_approx(ausente.fabrica))
+		. override_failure_message(_dice(poses, M, ausente.fabrica))
+		. is_true()
+	)
 
 
 func test_las_cajas_que_cerraron_afuera_abren_cada_una_en_un_hueco_libre() -> void:  # AC-STK-112
@@ -173,9 +187,17 @@ func test_una_sola_caja_afuera_abre_en_un_hueco_y_las_demas_no_se_mueven() -> vo
 	var guardadas: Dictionary[Producto.Id, Transform3D] = _de_fabrica(cajas)
 	guardadas[A] = _en_el_piso(CHICA, 0.0)
 	var poses := OrganizacionDelDeposito.abrir(cajas, guardadas, _repisas())
-	_afirmar_pose(poses, A, _en_estante(CHICA, 0.25))
+	(
+		assert_bool(poses[A].is_equal_approx(_en_estante(CHICA, 0.25)))
+		. override_failure_message(_dice(poses, A, _en_estante(CHICA, 0.25)))
+		. is_true()
+	)
 	for id: Producto.Id in [D, B, Z, L, M]:
-		_afirmar_pose(poses, id, _de_fabrica(cajas)[id])
+		(
+			assert_bool(poses[id].is_equal_approx(_de_fabrica(cajas)[id]))
+			. override_failure_message(_dice(poses, id, _de_fabrica(cajas)[id]))
+			. is_true()
+		)
 
 
 func test_la_caja_grande_sin_hueco_abre_encima_de_otra() -> void:  # AC-STK-112
@@ -197,8 +219,16 @@ func test_con_un_solo_hueco_una_abre_en_el_y_la_otra_encima() -> void:  # AC-STK
 	guardadas[D] = _en_el_piso(CHICA, 1.0)
 	guardadas[B] = _en_estante(CHICA, 0.5)
 	var poses := OrganizacionDelDeposito.abrir(cajas, guardadas, _repisas())
-	_afirmar_pose(poses, B, guardadas[B])
-	_afirmar_pose(poses, A, _en_estante(CHICA, 1.25))
+	(
+		assert_bool(poses[B].is_equal_approx(guardadas[B]))
+		. override_failure_message(_dice(poses, B, guardadas[B]))
+		. is_true()
+	)
+	(
+		assert_bool(poses[A].is_equal_approx(_en_estante(CHICA, 1.25)))
+		. override_failure_message(_dice(poses, A, _en_estante(CHICA, 1.25)))
+		. is_true()
+	)
 	assert_float(poses[D].origin.y).is_greater(ESTANTE + CHICA * 2.0 - 0.001)
 	assert_bool(_esta_encima_de_otra(D, poses, cajas)).is_true()
 	_sin_superposicion(poses, cajas)
@@ -209,8 +239,16 @@ func test_dos_cajas_en_el_mismo_lugar_no_se_superponen() -> void:  # AC-STK-112
 	var guardadas: Dictionary[Producto.Id, Transform3D] = _de_fabrica(cajas)
 	guardadas[D] = guardadas[A]
 	var poses := OrganizacionDelDeposito.abrir(cajas, guardadas, _repisas())
-	_afirmar_pose(poses, A, guardadas[A])
-	_afirmar_pose(poses, D, _en_estante(CHICA, 0.75))
+	(
+		assert_bool(poses[A].is_equal_approx(guardadas[A]))
+		. override_failure_message(_dice(poses, A, guardadas[A]))
+		. is_true()
+	)
+	(
+		assert_bool(poses[D].is_equal_approx(_en_estante(CHICA, 0.75)))
+		. override_failure_message(_dice(poses, D, _en_estante(CHICA, 0.75)))
+		. is_true()
+	)
 	_sin_superposicion(poses, cajas)
 
 
@@ -232,6 +270,14 @@ func test_las_cajas_fijas_conservan_su_pose_y_nadie_las_pisa() -> void:  # AC-ST
 	guardadas[D] = _en_el_piso(CHICA, 0.0)
 	var fijas: Dictionary[Producto.Id, Transform3D] = {A: _en_estante(CHICA, 0.75)}
 	var poses := OrganizacionDelDeposito.abrir(cajas, guardadas, _repisas(), fijas)
-	_afirmar_pose(poses, A, fijas[A])
-	_afirmar_pose(poses, D, _en_estante(CHICA, 0.25))
+	(
+		assert_bool(poses[A].is_equal_approx(fijas[A]))
+		. override_failure_message(_dice(poses, A, fijas[A]))
+		. is_true()
+	)
+	(
+		assert_bool(poses[D].is_equal_approx(_en_estante(CHICA, 0.25)))
+		. override_failure_message(_dice(poses, D, _en_estante(CHICA, 0.25)))
+		. is_true()
+	)
 	_sin_superposicion(poses, cajas)
