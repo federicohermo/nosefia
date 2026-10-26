@@ -11,6 +11,7 @@ enum Id {
 	NINGUNO,
 	MALA_IDEA,
 	CAJA_EN_EL_CONTENEDOR,
+	UTIL_EN_EL_CONTENEDOR,
 	POR_LA_VENTANA,
 	JABON_EQUIVOCADO,
 	MOPA_SIN_MOJAR,
@@ -30,6 +31,7 @@ const TEXTOS: Dictionary[Id, String] = {
 		"La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no"
 		+ " tire las cajas de productos, ni siquiera las vacías."
 	),
+	Id.UTIL_EN_EL_CONTENEDOR: "Meee parece que no debería tirar los elementos de limpieza.",
 	Id.POR_LA_VENTANA: "Si Enrique se entera de que estoy tirando cosas por la ventana, me mata.",
 	Id.JABON_EQUIVOCADO: "Esto no está funcionando… Creo que no estoy usando el jabón correcto.",
 	Id.MOPA_SIN_MOJAR: "Necesitaría mojar la mopa en agua con jabón.",
@@ -57,8 +59,16 @@ static func al_tirar(
 			var eximido := ReglasDelCierre.esta_eximido(sostenido, levanta_una_pista)
 			return Id.NINGUNO if eximido else Id.MALA_IDEA
 		ReglasDeLaBasura.Tiro.NO_ENTRA:
-			return Id.CAJA_EN_EL_CONTENEDOR
+			return Id.UTIL_EN_EL_CONTENEDOR if _es_un_util(sostenido) else Id.CAJA_EN_EL_CONTENEDOR
 	return Id.NINGUNO
+
+
+static func _es_un_util(objeto: ObjetoDelAlmacen) -> bool:
+	return (
+		objeto.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA
+		or objeto.id == ReglasDeLaLimpieza.ID_DEL_BALDE
+		or ReglasDeLaLimpieza.JABONES.has(objeto.id)
+	)
 
 
 static func al_quedar_afuera(objeto: ObjetoDelAlmacen) -> Id:

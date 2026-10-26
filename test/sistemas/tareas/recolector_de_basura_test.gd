@@ -101,12 +101,13 @@ func test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno() -> void:  # AC-C
 	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 
 
-func test_el_util_tirado_no_cuenta_como_bolsa() -> void:  # AC-CLN-036
+func test_el_util_no_entra_ni_cuenta_como_bolsa() -> void:  # AC-CLN-076
 	var recolector := _recolector()
 	var mopa: ObjetoDelAlmacen = load("res://src/dominio/almacen/mopa.tres")
 	_sostener(recolector, mopa)
-	assert_int(recolector.pedir_tirar(true)).is_equal(ReglasDeLaBasura.Tiro.TIRADO)
-	assert_int(_tirados.size()).is_equal(1)
+	assert_int(recolector.pedir_tirar(true)).is_equal(ReglasDeLaBasura.Tiro.NO_ENTRA)
+	assert_object(recolector.agarre.manos().sostenido()).is_same(mopa)
+	assert_array(_tirados).is_empty()
 	assert_int(_depositos).is_zero()
 	assert_int(recolector.tarea().depositadas()).is_zero()
 	assert_int(_avisos).is_zero()
