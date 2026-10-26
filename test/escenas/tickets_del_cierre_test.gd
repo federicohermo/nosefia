@@ -175,7 +175,7 @@ func test_sostener_y_examinar_tickets_conserva_la_mano_y_no_anota_afuera() -> vo
 		var en_mano := _tickets_de_la_foto().filter(
 			func(estado: ReglasDelCierre.Estado) -> bool: return estado.en_mano
 		)
-		assert_array(en_mano).has_size([1, 1, 0, 1][escenario])
+		assert_array(en_mano).has_size(1)
 		_cerrar(true)
 		assert_int(partida.medios()).is_zero()
 		if escenario < 3:

@@ -861,7 +861,7 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 			clase = ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA
 		elif nodo.get("datos") is UnidadDeProducto:
 			clase = ReglasDelCierre.Clase.UNIDAD_SUELTA
-		var en_mano := nodo == sostenido and not _jugador.examen.esta_examinando()
+		var en_mano := nodo == sostenido
 		var datos := nodo.get("datos") as ObjetoDelAlmacen
 		estados.append(
 			ReglasDelCierre.Estado.new(

@@ -120,7 +120,7 @@ func test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano() -> 
 	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_true()
 
 
-func test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_ser_sostenido() -> void:  # AC-CLN-043
+func test_examen_real_mantiene_excluido_el_cuerpo_y_terminar_tambien() -> void:  # AC-CLN-043
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var agarre: Agarre = _almacen.get("_agarre")
@@ -131,9 +131,26 @@ func test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_ser_sostenido() -> vo
 	assert_bool(examen.iniciar()).is_true()
 	caja.global_position = _centro(lector.bano)
 	assert_object(agarre.cuerpo_sostenido()).is_same(caja)
-	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
+	caja.global_position = _centro(lector.local) + Vector3.UP * lector.local[0].size.y
+	assert_int(lector.de(caja.global_position)).is_equal(CIERRE.Habitacion.AFUERA)
+	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
 	examen.terminar()
 	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
+	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
+
+
+func test_la_caja_en_examen_ocupa_la_unica_permitida_en_el_local() -> void:  # AC-CLN-070
+	_abrir()
+	var lector: Habitaciones = _almacen.get("_habitaciones")
+	var agarre: Agarre = _almacen.get("_agarre")
+	var cajas: Array[Node3D] = _almacen.get("_cajas_de_productos")
+	var examen: Examen = _almacen.get("_jugador").examen
+	assert_bool(agarre.pedir_agarrar(cajas[0].get("datos"), cajas[0])).is_true()
+	assert_bool(examen.iniciar()).is_true()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
+	cajas[1].global_position = _centro(lector.local)
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
 
 
 func test_unidad_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-044, AC-CLN-046
