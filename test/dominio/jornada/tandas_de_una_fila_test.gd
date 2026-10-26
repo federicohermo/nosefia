@@ -90,7 +90,7 @@ func test_si_la_vecina_ya_abre_vacia_entera_el_que_sobra_sigue_al_siguiente() ->
 	var tandas := _tandas([4, 4, 4, 4])
 	var alturas := PackedFloat32Array([0.0, 1.0, 2.0, 3.0])
 	var entrada := _vaciar(tandas[0])
-	for casillero in tandas[1]:
+	for casillero: int in tandas[1]:
 		entrada.append(casillero)
 	for semilla in 50:
 		var vacios := Apertura.sin_tandas_vacias(entrada, tandas, alturas, _azar(semilla))

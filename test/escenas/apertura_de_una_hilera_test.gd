@@ -46,7 +46,7 @@ func _vaciar_cada_estante(jornada: int, id: Producto.Id) -> void:
 	assert_int(orden.size()).is_greater(1)
 	for lugar in orden.size():
 		var casilleros: Array[int] = []
-		for casillero in tandas[orden[lugar]]:
+		for casillero: int in tandas[orden[lugar]]:
 			casilleros.append(casillero)
 		var vecina := orden[lugar + 1] if lugar + 1 < orden.size() else orden[lugar - 1]
 		var vacios := Apertura.sin_tandas_vacias(casilleros, tandas, alturas, _azar(lugar))

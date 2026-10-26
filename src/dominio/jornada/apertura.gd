@@ -268,7 +268,7 @@ static func _de_abajo_hacia_arriba(tandas: Array, alturas: PackedFloat32Array) -
 ## arriba, o hacia abajo si es la más alta. Con -1 si ninguna puede.
 static func _receptora(tandas: Array, orden: Array[int], lugar: int, vacios: Array[int]) -> int:
 	var sentido := 1 if lugar < orden.size() - 1 else -1
-	for paso in [sentido, -sentido]:
+	for paso: int in [sentido, -sentido]:
 		var vecina: int = lugar + paso
 		while vecina >= 0 and vecina < orden.size():
 			var tanda: PackedInt32Array = tandas[orden[vecina]]
