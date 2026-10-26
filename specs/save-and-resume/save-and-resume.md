@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555
 ---
 
 # Capacidad: guardar y retomar
@@ -194,6 +194,19 @@ dentro de una lista DEBE ignorarse sin descartar las válidas (BR-INV-036). Una 
 está entre las opciones del expediente restaurado DEBE descartarse; si falta elegir, la elección
 DEBE volver a ofrecerse. Sanear NO DEBE crear pistas, reflexiones ni elección, ni alterar la
 jornada, el legajo, las cuentas o las devoluciones.
+
+### BR-SAV-022 — La pose de las cajas cruza la sesión
+
+CUANDO se guarda, el sistema DEBE escribir, además de BR-SAV-019, la pose de cada caja del
+depósito por identidad de caja, tal como estaba al cerrar la jornada (BR-STK-051). CUANDO se
+retoma, DEBE restaurarlas exactas: la jornada siguiente abre cada caja según BR-STK-051, igual
+que si la sesión no se hubiera cerrado.
+
+SI falta ese campo o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) sin ninguna pose, y
+cada caja abre en su lugar de fábrica. Dentro del campo, una caja desconocida, o una pose que
+no es una pose, DEBE ignorarse sin descartar las demás ni la jornada, el legajo o las cuentas.
+Una partida nueva NO DEBE traer poses. Un final que borra el guardado (BR-SAV-002) borra
+también las poses.
 
 ## Criterios de aceptación
 
@@ -428,6 +441,18 @@ ENTONCES se muestran las instrucciones de la jornada 2, después de su «OK» se
 Tia, sin Yasmín, sin Fede ni Mía y con los tres bidones. Los medios y las cuentas son los
 guardados.
 
+### AC-SAV-034 — La organización del depósito sobrevive al guardado *(verifica BR-SAV-022, BR-SAV-005, BR-SAV-006)*
+
+DADO la jornada 2 cerrada con la caja de Marolini en una pose distinta de su lugar de fábrica,
+apoyada en estantería, y la de Uakalas en el piso CUANDO se guarda, se lee el archivo y se
+retoma ENTONCES el guardado devuelve las dos poses con los mismos valores y tipos, la de Marolini
+abre la jornada 3 en la pose guardada y la de Uakalas abre en una estantería (BR-STK-051). DADO
+un guardado de jornada 3 sin el campo, o con un número en él, ENTONCES se retoma en la jornada 3
+con todas las cajas en su lugar de fábrica, y la jornada, el legajo y las cuentas son los
+guardados. DADO el campo con una caja desconocida, una pose que es un texto y la pose válida de
+la caja de Marolini ENTONCES sólo la de Marolini conserva su pose y las demás cajas abren en su
+lugar de fábrica. DADO un despido o un contrato cumplido ENTONCES no queda guardado ni poses.
+
 ## No objetivos
 
 - Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
@@ -466,10 +491,13 @@ guardados.
   reflexión pendiente y elección, que se escriben en cada paso aceptado del cierre.
 - [`settings`](../settings/settings.md) (alimenta): los dos menús abren Configuraciones, y Esc
   la cierra.
+- [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): la pose de cada caja al
+  cierre, y la que la apertura de la jornada siguiente le pide al retomar (BR-STK-051).
 
 ## Preguntas abiertas
 
 - **OQ-SAV-001 — ¿Qué más cruza la jornada además del legajo?**
-  - Por qué sigue abierta: el inventario y los objetos movidos no declararon si su estado cruza.
+  - Por qué sigue abierta: el inventario y los objetos movidos, salvo las cajas del depósito
+    (BR-SAV-022), no declararon si su estado cruza.
   - Decide: el dueño del repo.
   - Bloquea: nada. Agrega campos a `BR-SAV-005`.

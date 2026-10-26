@@ -55,13 +55,22 @@ var _inventario: Inventario
 ## instancia, porque `Catalogo.de()` construye un producto nuevo en cada llamada.
 var _aceptados: Array[Producto] = []
 
-## `id` → los casilleros de su fila, con los ocupados primero. Arranca en el orden de la fila, así
-## que la góndola que llenó la apertura ocupa los primeros y lo que falta queda al final.
+## `id` → los casilleros de su fila, con los ocupados primero. Arranca con los vacíos que declaró
+## la apertura al final, o en el orden de la fila si no declaró ninguno.
 var _orden: Dictionary[Producto.Id, PackedInt32Array] = {}
 
+## `id` → los casilleros con que abrió la noche vacíos, si la apertura los eligió. Sin ellos, los
+## vacíos son los últimos de la fila.
+var _vacios_de_apertura: Dictionary[Producto.Id, Array] = {}
 
-func _init(inventario: Inventario, aceptados: Array[Producto]) -> void:
+
+func _init(
+	inventario: Inventario,
+	aceptados: Array[Producto],
+	vacios_de_apertura: Dictionary[Producto.Id, Array] = {}
+) -> void:
 	_inventario = inventario
+	_vacios_de_apertura = vacios_de_apertura
 	for producto in aceptados:
 		if producto == null or _aceptado_con_el_id_de(producto) != null:
 			continue
@@ -327,8 +336,22 @@ func _orden_de(producto: Producto) -> PackedInt32Array:
 	var largo := cupo(aceptado)
 	var orden: PackedInt32Array = _orden.get(aceptado.id, PackedInt32Array())
 	if orden.size() != largo:
-		orden = PackedInt32Array(range(largo))
+		orden = _orden_de_apertura(aceptado, largo)
 		_orden[aceptado.id] = orden
+	return orden
+
+
+## Los ocupados primero y los vacíos al final. Los vacíos son los que declaró la apertura, si
+## suman lo que la góndola dice que falta; si no, los últimos casilleros de la fila.
+func _orden_de_apertura(producto: Producto, largo: int) -> PackedInt32Array:
+	var vacios: Array = _vacios_de_apertura.get(producto.id, [])
+	if vacios.size() != largo - _ocupados_en_la_fila(producto):
+		return PackedInt32Array(range(largo))
+	var orden := PackedInt32Array()
+	for casillero in largo:
+		if casillero not in vacios:
+			orden.append(casillero)
+	orden.append_array(PackedInt32Array(vacios))
 	return orden
 
 

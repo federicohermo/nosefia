@@ -20,6 +20,7 @@ enum Campo {
 	APERCIBIMIENTOS_DE_LA_PRUEBA,
 	ULTIMA_DE_LA_PRUEBA_COMPLETA,
 	SEMILLA,
+	POSES_DE_LAS_CAJAS,
 }
 
 const VERSION: int = 2
@@ -45,6 +46,9 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.APERCIBIMIENTOS_DE_LA_PRUEBA: 0,
 	Campo.ULTIMA_DE_LA_PRUEBA_COMPLETA: false,
 	Campo.SEMILLA: 0,
+	## La pose de cada caja del depósito al cierre, por identidad de caja (BR-SAV-022). Quien lo
+	## lee descarta lo que no es una caja con su pose.
+	Campo.POSES_DE_LAS_CAJAS: {},
 }
 
 

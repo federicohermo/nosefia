@@ -24,6 +24,8 @@ func _completo() -> Dictionary:
 		"apercibimientos_de_la_prueba": 3,
 		"ultima_de_la_prueba_completa": true,
 		"semilla": 1234,
+		"poses_de_las_cajas":
+		{Producto.Id.MAROLINI: Transform3D(Basis.IDENTITY, Vector3(1.5, 2.0, 3.25))},
 	}
 
 
@@ -131,3 +133,36 @@ func test_un_guardado_de_cinco_jornadas_no_se_migra() -> void:  # AC-SAV-033
 	assert_int(bandeja.conversaciones().size()).is_equal(1)
 	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
 		assert_bool(AnomaliasDeLaJornada.util_disponible(jabon, retomada.jornada())).is_true()
+
+
+func test_las_poses_se_restauran_y_lo_que_no_es_una_pose_se_ignora() -> void:  # AC-SAV-034
+	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS)
+	var pose := Transform3D(Basis(Vector3.UP, 0.5), Vector3(1.0, 2.0, 3.0))
+	var partida := (
+		Partida
+		. desde(
+			{
+				JORNADA: 3,
+				clave:
+				{
+					Producto.Id.MAROLINI: pose,
+					Producto.Id.UAKALAS: "texto",
+					9999: pose,
+					"MAROLINI": pose,
+				},
+			}
+		)
+	)
+	assert_int(partida.jornada()).is_equal(3)
+	assert_array(partida.poses_de_las_cajas.keys()).contains_exactly([Producto.Id.MAROLINI])
+	assert_bool(partida.poses_de_las_cajas[Producto.Id.MAROLINI].is_equal_approx(pose)).is_true()
+
+
+func test_sin_el_campo_o_con_otro_tipo_ninguna_caja_trae_pose() -> void:  # AC-SAV-034
+	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS)
+	assert_dict(PartidaSerializada.sanear({})[clave]).is_empty()
+	for crudo: Variant in [7, "poses", [Transform3D.IDENTITY]]:
+		var partida := Partida.desde({JORNADA: 3, clave: crudo})
+		assert_int(partida.jornada()).is_equal(3)
+		assert_dict(partida.poses_de_las_cajas).is_empty()
+	assert_dict(Partida.nueva().poses_de_las_cajas).is_empty()
