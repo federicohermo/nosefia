@@ -10,6 +10,8 @@ extends RefCounted
 
 enum Opcion { CONTINUAR, VOLVER_AL_MENU }
 
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+
 ## La ficha fija un segundo entre cada mensaje.
 const SEGUNDOS_ENTRE_MENSAJES := 1.0
 
@@ -172,6 +174,48 @@ const DESORDEN_SIN_REMEDIO := (
 	+ "lo que es el orden."
 )
 
+## Las filas del Reto 5 con menos de cuatro puntos: n = 1, n = 2 y n >= 3.
+const HELADERAS: Array[String] = [
+	(
+		"Las heladeras tienen que quedar cerradas para que los productos no pierdan la "
+		+ "cadena de frío ¿no tenés una en tu casa?"
+	),
+	"Cerrame todas las puertitas de las heladeras antes de irte ¿querés?",
+	(
+		"Dejate de joder con las heladeras. Siempre las dejás abiertas. No es un detalle menor. "
+		+ "Es algo básico…"
+	),
+]
+const HELADERAS_Y_PARA_COLMO := "Y para colmo me dejás abiertas las heladeras."
+
+## Lo que cierra el Reto 4, por las clases de desorden de la noche: una máscara con un bit por
+## clase, en el orden de la ficha.
+const _SUELTAS := 1 << ReglasDelCierre.Clase.UNIDAD_SUELTA
+const _CAJAS := 1 << ReglasDelCierre.Clase.CAJA
+const _UTILES := 1 << ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA
+const DESORDEN_POR_CLASES: Dictionary[int, String] = {
+	_SUELTAS: "No pueden quedar productos tirados por ahí.",
+	_CAJAS: "Las cajas tienen que quedar en el depósito.",
+	_UTILES: "Los productos de limpieza van en el cuartito que les corresponde.",
+	_SUELTAS | _CAJAS:
+	"No pueden quedar productos tirados por ahí y las cajas tienen que quedar en el depósito.",
+	_SUELTAS | _UTILES:
+	(
+		"No pueden quedar productos tirados por ahí y los productos de limpieza van en el "
+		+ "cuartito que les corresponde."
+	),
+	_CAJAS | _UTILES:
+	(
+		"Las cajas tienen que quedar en el depósito y los productos de limpieza van en el "
+		+ "cuartito que les corresponde."
+	),
+	_SUELTAS | _CAJAS | _UTILES:
+	(
+		"No pueden quedar productos tirados por ahí, las cajas tienen que quedar en el "
+		+ "depósito y los productos de limpieza van en el cuartito que les corresponde."
+	),
+}
+
 const CIERRE_DEL_DESPIDO := (
 	"Es absurdo que tenga que estar persiguiéndote con estas cosas tan "
 	+ "básicas. No puedo dejar que un desastre como vos siga perjudicando la "
@@ -300,7 +344,8 @@ func _init(jornada: int, partida: Partida) -> void:
 		sin_cumplir,
 		partida.llamados(),
 		partida.uso_de_poetico_en(jornada),
-		partida.bolsa_afuera
+		partida.bolsa_afuera,
+		partida.clases_de_desorden
 	)
 
 
@@ -325,6 +370,7 @@ static func retos() -> Array[Partida.Llamado]:
 		Partida.Llamado.OBJETO_TIRADO,
 		Partida.Llamado.OBJETO_AFUERA,
 		Partida.Llamado.LOCAL_DESORDENADO,
+		Partida.Llamado.HELADERAS_ABIERTAS,
 	]
 
 
@@ -367,7 +413,8 @@ static func armar(
 	sin_cumplir: Array[Tarea.Tipo],
 	llamados: Array[Partida.Llamado],
 	uso_de_poetico: bool = false,
-	bolsa_afuera: bool = false
+	bolsa_afuera: bool = false,
+	desorden: Array[ReglasDelCierre.Clase] = []
 ) -> Array[String]:
 	var mensajes: Array[String] = [_saludo(medios)]
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
@@ -380,7 +427,7 @@ static func armar(
 		mensajes.append(_particular(jornada, bolsa_afuera))
 	for motivo: Partida.Llamado in retos():
 		if llamados.has(motivo):
-			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios))
+			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios, desorden))
 	mensajes.append(_cierre(jornada, medios, antecedentes))
 	return mensajes
 
@@ -403,7 +450,13 @@ static func _alguna_particular(sin_cumplir: Array[Tarea.Tipo]) -> bool:
 	return false
 
 
-static func _reto(motivo: Partida.Llamado, n: int, jornada: int, medios: int) -> String:
+static func _reto(
+	motivo: Partida.Llamado,
+	n: int,
+	jornada: int,
+	medios: int,
+	desorden: Array[ReglasDelCierre.Clase]
+) -> String:
 	var despedido := medios >= MEDIOS_DEL_DESPIDO
 	match motivo:
 		Partida.Llamado.PAPEL_EN_EL_INODORO:
@@ -416,11 +469,21 @@ static func _reto(motivo: Partida.Llamado, n: int, jornada: int, medios: int) ->
 			return BASURA[clampi(n, 1, BASURA.size()) - 1]
 		Partida.Llamado.OBJETO_AFUERA:
 			return AFUERA[clampi(n, 1, AFUERA.size()) - 1]
-	if n <= 1:
-		return DESORDEN[0]
-	if n >= 5 or despedido:
-		return DESORDEN_SIN_REMEDIO
-	return DESORDEN[n - 1]
+		Partida.Llamado.HELADERAS_ABIERTAS:
+			if despedido:
+				return HELADERAS_Y_PARA_COLMO
+			return HELADERAS[clampi(n, 1, HELADERAS.size()) - 1]
+	var texto := DESORDEN[0]
+	if n >= 5 or (n >= 2 and despedido):
+		texto = DESORDEN_SIN_REMEDIO
+	elif n >= 2:
+		texto = DESORDEN[n - 1]
+	var clases := 0
+	for clase: ReglasDelCierre.Clase in desorden:
+		clases |= 1 << clase
+	if clases == 0:
+		return texto
+	return texto + " " + DESORDEN_POR_CLASES[clases]
 
 
 static func _cierre(jornada: int, medios: int, antecedentes: Antecedentes) -> String:

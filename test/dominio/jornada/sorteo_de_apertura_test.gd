@@ -25,7 +25,9 @@ func test_doscientas_semillas_por_jornada_respetan_limites_y_varian() -> void:  
 		var conjuntos: Dictionary[String, bool] = {}
 		for semilla in 200:
 			var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, _azar(semilla))
-			assert_int(faltantes.size()).is_between(4, 7)
+			assert_int(faltantes.size()).is_between(
+				ReglasDelEstante.TIPOS_QUE_FALTAN.x, ReglasDelEstante.TIPOS_QUE_FALTAN.y
+			)
 			var inventario := Apertura.inventario_de_la_jornada(
 				jornada, compradores, _casilleros(), _casilleros(), _azar(semilla)
 			)
@@ -39,7 +41,9 @@ func test_doscientas_semillas_por_jornada_respetan_limites_y_varian() -> void:  
 			ids.sort()
 			conjuntos[str(ids)] = true
 			for id: Producto.Id in faltantes:
-				assert_int(faltantes[id]).is_between(1, mini(8 - pedidos.get(id, 0), 8))
+				assert_int(faltantes[id]).is_between(
+					ReglasDelEstante.MENOS_QUE_FALTA, mini(8 - pedidos.get(id, 0), 8)
+				)
 		assert_int(cantidades.size()).is_greater_equal(2)
 		assert_int(conjuntos.size()).is_greater_equal(2)
 
@@ -55,6 +59,7 @@ func test_misma_semilla_reproduce_y_no_muta_las_entradas() -> void:  # AC-STK-03
 
 
 func test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila() -> void:  # AC-STK-034
+	var minimo := ReglasDelEstante.MENOS_QUE_FALTA
 	assert_dict(Apertura.faltantes_al_azar({}, {}, _azar(0))).is_empty()
 	var casilleros: Dictionary[Producto.Id, int] = {
 		Producto.Id.ACTRONCITO: 6,
@@ -62,11 +67,13 @@ func test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila() -> void:  #
 		Producto.Id.MAROLINI: 8,
 		Producto.Id.PROGRES: 8,
 		Producto.Id.LAYSNNT: 0,
+		Producto.Id.MALBARDO: 8,
 	}
 	var pedidos: Dictionary[Producto.Id, int] = {
 		Producto.Id.ACTRONCITO: 3,
 		Producto.Id.PURA_COLA: 1,
 		Producto.Id.PROGRES: 8,
+		Producto.Id.MALBARDO: ReglasDelEstante.UNIDADES_POR_CAJA - (minimo - 1),
 	}
 	for semilla in 200:
 		var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, _azar(semilla))
@@ -80,42 +87,51 @@ func test_cero_uno_y_tres_elegibles_y_los_maximos_de_pedido_y_fila() -> void:  #
 				]
 			)
 		)
-		assert_int(faltantes[Producto.Id.ACTRONCITO]).is_between(1, 5)
-		assert_int(faltantes[Producto.Id.PURA_COLA]).is_between(1, 4)
-		assert_int(faltantes[Producto.Id.MAROLINI]).is_between(1, 8)
-	var unico: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: 1}
+		assert_int(faltantes[Producto.Id.ACTRONCITO]).is_between(minimo, 5)
+		assert_int(faltantes[Producto.Id.PURA_COLA]).is_between(minimo, 4)
+		assert_int(faltantes[Producto.Id.MAROLINI]).is_between(minimo, 8)
+	var unico: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: minimo}
 	assert_dict(Apertura.faltantes_al_azar({}, unico, _azar(0))).is_equal(unico)
+	var corto: Dictionary[Producto.Id, int] = {Producto.Id.ACTRONCITO: minimo - 1}
+	assert_dict(Apertura.faltantes_al_azar({}, corto, _azar(0))).is_empty()
 
 
 ## Las semillas se midieron una vez sobre los intervalos inclusivos del motor.
 ## Los tests no buscan una semilla: afirman el extremo de la fuente y el del sorteo.
 func test_extremos_de_cantidad_con_fuentes_controladas() -> void:  # AC-STK-034
-	for caso: Array in [[4, 3], [7, 0]]:
+	var tipos := ReglasDelEstante.TIPOS_QUE_FALTAN
+	var minimo := ReglasDelEstante.MENOS_QUE_FALTA
+	for caso: Array in [[tipos.x, 3], [tipos.y, 5]]:
 		var control := _azar(caso[1])
-		assert_int(control.randi_range(4, 7)).is_equal(caso[0])
-		var faltantes := Apertura.faltantes_al_azar({}, _casilleros(1), _azar(caso[1]))
+		assert_int(control.randi_range(tipos.x, tipos.y)).is_equal(caso[0])
+		var faltantes := Apertura.faltantes_al_azar({}, _casilleros(minimo), _azar(caso[1]))
 		assert_int(faltantes.size()).is_equal(caso[0])
 		for cantidad: int in faltantes.values():
-			assert_int(cantidad).is_equal(1)
+			assert_int(cantidad).is_equal(minimo)
 		var tres: Dictionary[Producto.Id, int] = {
-			Producto.Id.ACTRONCITO: 1,
-			Producto.Id.PURA_COLA: 1,
-			Producto.Id.MAROLINI: 1,
+			Producto.Id.ACTRONCITO: minimo,
+			Producto.Id.PURA_COLA: minimo,
+			Producto.Id.MAROLINI: minimo,
 		}
 		assert_dict(Apertura.faltantes_al_azar({}, tres, _azar(caso[1]))).is_equal(tres)
 
 
 func test_extremos_de_unidades_con_fuentes_controladas() -> void:  # AC-STK-034
-	# Fila, pedido, máximo, semilla para 1, semilla para el máximo.
-	for caso: Array in [[6, 3, 5, 19, 4], [4, 1, 4, 1, 0], [6, 5, 3, 0, 6], [8, 0, 8, 1, 29]]:
+	var tipos := ReglasDelEstante.TIPOS_QUE_FALTAN
+	var minimo := ReglasDelEstante.MENOS_QUE_FALTA
+	var caja := ReglasDelEstante.UNIDADES_POR_CAJA
+	# Fila, pedido, máximo, semilla para el mínimo, semilla para el máximo.
+	for caso: Array in [
+		[6, 3, 5, 0, 6], [4, 1, 4, 1, 0], [6, caja - minimo, minimo, 0, 0], [8, 0, 8, 1, 9]
+	]:
 		var id := Producto.Id.ACTRONCITO
 		var casilleros: Dictionary[Producto.Id, int] = {id: caso[0]}
 		var pedidos: Dictionary[Producto.Id, int] = {id: caso[1]}
-		for extremo: Array in [[1, caso[3]], [caso[2], caso[4]]]:
+		for extremo: Array in [[minimo, caso[3]], [caso[2], caso[4]]]:
 			var control := _azar(extremo[1])
-			control.randi_range(4, 7)
+			control.randi_range(tipos.x, tipos.y)
 			control.randi_range(0, 0)
-			assert_int(control.randi_range(1, caso[2])).is_equal(extremo[0])
+			assert_int(control.randi_range(minimo, caso[2])).is_equal(extremo[0])
 			(
 				assert_dict(Apertura.faltantes_al_azar(pedidos, casilleros, _azar(extremo[1])))
 				. is_equal({id: extremo[0]})
@@ -191,7 +207,8 @@ func test_los_vacios_caen_en_cualquier_tanda_del_producto_sin_repetirse() -> voi
 			for id: Producto.Id in vacios:
 				var casilleros: Array = vacios[id]
 				assert_int(casilleros.size()).is_between(
-					1, mini(ReglasDelEstante.UNIDADES_POR_CAJA - pedidos.get(id, 0), 12)
+					ReglasDelEstante.MENOS_QUE_FALTA,
+					mini(ReglasDelEstante.UNIDADES_POR_CAJA - pedidos.get(id, 0), 12)
 				)
 				var vistos: Dictionary[int, bool] = {}
 				for casillero: int in casilleros:
@@ -219,7 +236,11 @@ func test_con_las_dos_tandas_del_local_los_vacios_caen_en_las_dos() -> void:  # 
 
 func test_los_vacios_de_cada_tanda_son_casilleros_seguidos() -> void:  # AC-STK-033
 	for forma: Array in [
-		[[3, 3, 3, 3], false], [[4, 4], false], [[2, 5, 3], false], [[4, 4], true]
+		[[3, 3, 3, 3], false],
+		[[4, 4], false],
+		[[2, 5, 3], false],
+		[[4, 4], true],
+		[[3, 3, 3, 3], true]
 	]:
 		var tamanos: Array[int] = []
 		tamanos.assign(forma[0])
@@ -353,7 +374,9 @@ func test_un_producto_de_dos_filas_puede_abrir_con_la_reponible_vacia() -> void:
 		var casilleros: Array = vacios[producto]
 		cantidades[casilleros.size()] = true
 		reponible_vacia = reponible_vacia or (casilleros.has(0) and casilleros.has(1))
-	assert_array(cantidades.keys()).contains_exactly_in_any_order([1, 2, 3, 4])
+	assert_array(cantidades.keys()).contains_exactly_in_any_order(
+		range(ReglasDelEstante.MENOS_QUE_FALTA, 5)
+	)
 	assert_bool(reponible_vacia).is_true()
 
 

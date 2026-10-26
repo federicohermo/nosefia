@@ -25,8 +25,8 @@ extends RefCounted
 const UNIDADES_POR_CAJA := 8
 
 ## Intervalos inclusivos de la ficha de reposición.
-const TIPOS_QUE_FALTAN := Vector2i(4, 7)
-const MENOS_QUE_FALTA := 1
+const TIPOS_QUE_FALTAN := Vector2i(4, 6)
+const MENOS_QUE_FALTA := 3
 
 ## El reparto de prueba adapta el ritmo de los 32 sin convertir los huecos en contactos.
 ## Son mínimos físicos de exhibición; no modifican los cupos de reposición.

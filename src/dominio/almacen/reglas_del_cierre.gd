@@ -4,7 +4,12 @@ extends RefCounted
 enum Habitacion { LOCAL, DEPOSITO, BANO, AFUERA, CUARTITO }
 enum Clase { UNIDAD_SUELTA, CAJA, UTIL_DE_LIMPIEZA, OTRO, BOLSA }
 
+enum Heladera { PRIMERA, SEGUNDA, FUERA_DE_SERVICIO }
+
 const CAJAS_TOLERADAS_EN_EL_LOCAL := 1
+
+## La fuera de servicio no enfría nada: dejarla abierta no es un descuido.
+const _FUNCIONALES: Array[Heladera] = [Heladera.PRIMERA, Heladera.SEGUNDA]
 
 
 class Estado:
@@ -50,6 +55,15 @@ static func habitacion_de(
 
 
 static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
+	return not clases_de_desorden(estados, jornada).is_empty()
+
+
+## Cuáles de las tres clases de desorden hubo, en el orden de la ficha: unidades sueltas, cajas y
+## útiles.
+static func clases_de_desorden(estados: Array[Estado], jornada: int) -> Array[Clase]:
+	var hay_unidad_suelta := false
+	var hay_caja_fuera_del_deposito := false
+	var hay_util_fuera_del_cuartito := false
 	var cajas_que_ocupan_la_tolerancia := 0
 	for estado: Estado in estados:
 		if estado.en_mano:
@@ -61,7 +75,7 @@ static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
 		match estado.clase:
 			Clase.UNIDAD_SUELTA:
 				if not AnomaliasDeLaJornada.sustituye_azul(estado.producto, jornada):
-					return true
+					hay_unidad_suelta = true
 			Clase.CAJA:
 				match estado.habitacion:
 					Habitacion.LOCAL:
@@ -69,11 +83,18 @@ static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
 					Habitacion.DEPOSITO:
 						pass
 					_:
-						return true
+						hay_caja_fuera_del_deposito = true
 			Clase.UTIL_DE_LIMPIEZA:
 				if estado.habitacion != Habitacion.CUARTITO:
-					return true
-	return cajas_que_ocupan_la_tolerancia > CAJAS_TOLERADAS_EN_EL_LOCAL
+					hay_util_fuera_del_cuartito = true
+	var clases: Array[Clase] = []
+	if hay_unidad_suelta:
+		clases.append(Clase.UNIDAD_SUELTA)
+	if hay_caja_fuera_del_deposito or cajas_que_ocupan_la_tolerancia > CAJAS_TOLERADAS_EN_EL_LOCAL:
+		clases.append(Clase.CAJA)
+	if hay_util_fuera_del_cuartito:
+		clases.append(Clase.UTIL_DE_LIMPIEZA)
+	return clases
 
 
 static func hay_objetos_afuera(estados: Array[Estado]) -> bool:
@@ -90,6 +111,14 @@ static func hay_bolsa_afuera(estados: Array[Estado]) -> bool:
 			and not estado.en_mano
 			and estado.habitacion == Habitacion.AFUERA
 		):
+			return true
+	return false
+
+
+## Cuenta la puerta pedida abierta, aunque la hoja todavía no haya girado.
+static func hay_heladera_abierta(puertas: Dictionary[Heladera, Puerta]) -> bool:
+	for heladera: Heladera in _FUNCIONALES:
+		if puertas.has(heladera) and puertas[heladera].abierta():
 			return true
 	return false
 

@@ -45,7 +45,7 @@ func test_el_inventario_usa_los_mismos_pedidos_y_el_mismo_azar_que_atencion() ->
 	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
 		6 - esperado[producto.id].size()
 	)
-	assert_int(esperado[producto.id].size()).is_between(1, 3)
+	assert_int(esperado[producto.id].size()).is_between(ReglasDelEstante.MENOS_QUE_FALTA, 3)
 	var atenciones := TareaDeAtender.new(compradores, inventario)
 	for comprador in compradores:
 		assert_object(atenciones.atender()).is_same(comprador)
@@ -64,7 +64,9 @@ func test_la_apertura_puede_vaciar_cualquier_tanda_y_conserva_el_cupo_total() ->
 		var inventario := Apertura.inventario_de_la_jornada(2, [], totales, principales, azar)
 		var estante := Estante.new(inventario, Catalogo.todos())
 		assert_int(estante.cupo(producto)).is_equal(8)
-		assert_int(estante.casilleros_vacios(producto).size()).is_between(1, totales[producto.id])
+		assert_int(estante.casilleros_vacios(producto).size()).is_between(
+			ReglasDelEstante.MENOS_QUE_FALTA, totales[producto.id]
+		)
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
 			ReglasDelEstante.UNIDADES_POR_CAJA
 		)
@@ -107,5 +109,5 @@ func test_un_producto_de_una_fila_no_abre_vacia_ninguna_de_sus_dos_tandas() -> v
 		)
 		var falta := 6 - inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)
 		faltantes[falta] = true
-		assert_int(falta).is_between(1, 4)
+		assert_int(falta).is_between(ReglasDelEstante.MENOS_QUE_FALTA, 4)
 	assert_bool(faltantes.has(4)).is_true()

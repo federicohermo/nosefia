@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; heladeras abiertas al cierre de #550, decisión del 2026-10-26
 ---
 
 # Capacidad: dejar el local en orden
@@ -258,6 +258,12 @@ cuerpo sostenido cuenta en su posición física. Lo ya tirado al contenedor DEBE
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
 
+CUANDO termina la jornada, el sistema DEBE informar además cuáles de tres clases de desorden hubo:
+unidades sueltas, cajas fuera del depósito y útiles fuera del cuartito. Cada clase DEBE contar con
+las mismas condiciones de arriba, y lo excluido o exento de una clase NO DEBE sumarla. Hay desorden
+si y sólo si hay al menos una clase. La devolución DEBE recibir ese dato junto con el llamado, y la
+escena NO DEBE deducirlo.
+
 ### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
 
 CUANDO termina la jornada, el sistema DEBE anotar un llamado si queda al menos un cuerpo
@@ -267,6 +273,16 @@ DEBE eliminar ese motivo; una unidad recuperada y suelta adentro puede producir 
 Las superficies existentes de pavimento exterior DEBEN sostener los cuerpos soltados por el
 hueco real de ventanilla, conservándolos recogibles dentro del alcance vigente, sin extender
 soporte sobre huecos que el pavimento no ocupa ni duplicar su dibujo.
+
+### BR-CLN-039 — Las heladeras abiertas cuentan una vez al cierre
+
+CUANDO termina la jornada, el sistema DEBE anotar un llamado si al menos una heladera funcional
+tiene su puerta abierta. Cuenta la puerta pedida abierta, aunque la hoja todavía no haya terminado
+de girar. La puerta de la heladera fuera de servicio, esté abierta o cerrada, NO DEBE sumar. Varias
+puertas abiertas DEBEN producir un único motivo, independiente del desorden y de lo que quedó
+afuera. Cerrar la puerta antes del cierre DEBE eliminar ese motivo. La foto DEBE tomarse antes de
+registrar el legajo, armar la devolución y guardar. La regla DEBE decidirse sin la escena: ésta
+sólo informa el estado de cada puerta.
 
 ### BR-CLN-030 — Papel en el inodoro
 
@@ -602,6 +618,35 @@ DADO un útil en local, depósito o baño ENTONCES hay desorden; en cuartito o s
 del lado del depósito sí. DADO una bolsa adentro, también en el cuartito, ENTONCES no produce
 desorden. DADO la lista vacía ENTONCES no hay ninguno de los motivos.
 
+### AC-CLN-072 — El cierre dice qué clases de desorden hubo *(verifica BR-CLN-028)*
+
+DADO sólo una unidad suelta CUANDO cierra ENTONCES las clases son unidades sueltas. DADO sólo dos
+cajas en el local ENTONCES son cajas fuera del depósito; con una sola caja en el local, ninguna.
+DADO sólo un útil en el depósito ENTONCES son útiles fuera del cuartito. DADO una unidad suelta,
+dos cajas en el local y un útil en el baño ENTONCES son las tres. DADO una unidad suelta y un útil
+fuera del cuartito ENTONCES son esas dos y no las cajas. DADO el local en orden, o sólo con lo
+sostenido, lo tirado al contenedor o una bolsa adentro ENTONCES no hay ninguna clase y no hay
+desorden. DADO la jornada en que Poético sustituye al jabón azul y una unidad de Poético suelta ENTONCES no
+hay unidades sueltas entre las clases. DADO cualquier combinación ENTONCES hay desorden si y sólo si hay al menos una clase.
+
+### AC-CLN-074 — Una heladera abierta al cierre es un llamado *(verifica BR-CLN-039)*
+
+DADO las dos heladeras funcionales cerradas CUANDO termina la jornada ENTONCES no hay llamado por
+heladeras. DADO sólo la primera abierta, y después sólo la segunda, ENTONCES hay uno. DADO las dos
+abiertas ENTONCES hay uno solo. DADO una puerta recién alternada, con la hoja todavía en su ángulo
+cero, ENTONCES cuenta como abierta. DADO sólo la puerta de la heladera fuera de servicio abierta
+ENTONCES no hay llamado, y con ella abierta y una funcional abierta hay uno. DADO una puerta abierta
+y después cerrada antes del cierre ENTONCES no hay llamado. DADO una heladera abierta y el local
+desordenado y un objeto afuera ENTONCES son tres motivos distintos, cada uno una sola vez.
+
+### AC-CLN-075 — Las heladeras abiertas pesan medio antes de la devolución *(verifica BR-CLN-039)*
+
+DADO la noche 4 con todas las obligatorias cumplidas y una heladera abierta CUANDO agota la
+jornada ENTONCES el legajo lleva 1 medio antes de armar la devolución y escribir el checkpoint, y
+la devolución trae el Reto 5. DADO el mismo cierre con la puerta cerrada ENTONCES el legajo no
+suma y no hay Reto 5. DADO una noche de la prueba con una heladera abierta ENTONCES no suma medios
+(BR-EMP-035).
+
 ### AC-CLN-043 — La mano excluye sólo su cuerpo *(verifica BR-CLN-028, BR-CLN-029)*
 
 DADO dos cajas distintas con los mismos datos y una sostenida CUANDO la otra queda desordenada
@@ -878,6 +923,10 @@ ENTONCES hay desorden.
   sustituirlo en la jornada.
 - [`employment-record`](../employment-record/employment-record.md) (alimenta): el teñido
   aceptado con identidad permite conservar el hecho de uso de Poético para la devolución.
+- [`employment-record`](../employment-record/employment-record.md) (alimenta): el llamado por
+  heladeras abiertas, junto a los de desorden y objetos afuera.
+- [`player-actions`](../player-actions/player-actions.md) (consume): qué puertas de heladera
+  están abiertas.
 
 ## Preguntas abiertas
 
