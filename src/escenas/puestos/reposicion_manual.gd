@@ -132,11 +132,63 @@ func casilleros() -> Dictionary[Producto.Id, int]:
 	return por_producto
 
 
-## Sólo la fila principal: las guías conservan sus casilleros y abren completas.
-func casilleros_reponibles() -> Dictionary[Producto.Id, int]:
-	var por_producto: Dictionary[Producto.Id, int] = {}
+## Los casilleros de cada tanda de cada producto, la reponible primero y después cada fija, con
+## la numeración de `_armar_los_bloques()`.
+##
+## Son los hechos del modelo. Cuáles tandas pueden abrir vacías enteras lo decide `Apertura`.
+func tandas() -> Dictionary[Producto.Id, Array]:
+	var por_producto: Dictionary[Producto.Id, Array] = {}
 	for producto in Catalogo.todos():
-		por_producto[producto.id] = disposicion.filas_de_adelante[producto.id]
+		var filas_de_las_fijas: Array[int] = []
+		for indice in disposicion.productos_de_las_guias.size():
+			if disposicion.productos_de_las_guias[indice] == producto.id:
+				filas_de_las_fijas.append(disposicion.filas_de_adelante_de_las_guias[indice])
+		var reponibles := disposicion.filas_de_adelante[producto.id]
+		var fijas: Array = []
+		# La primera de la reponible va antes que las fijas, y el resto después de ellas.
+		var siguiente := mini(reponibles, 1)
+		for fila in filas_de_las_fijas:
+			fijas.append(PackedInt32Array(range(siguiente, siguiente + fila)))
+			siguiente += fila
+		var reponible := PackedInt32Array(range(mini(reponibles, 1)))
+		reponible.append_array(PackedInt32Array(range(siguiente, siguiente + reponibles - 1)))
+		por_producto[producto.id] = [reponible] + fijas
+	return por_producto
+
+
+## Dónde está cada casillero de cada tanda, en el mismo orden que `tandas()`.
+##
+## Son las posiciones del modelo. Qué estante queda contiguo y qué columnas se alinean lo decide
+## `Apertura`.
+func posiciones() -> Dictionary[Producto.Id, Array]:
+	var por_producto: Dictionary[Producto.Id, Array] = {}
+	for producto in Catalogo.todos():
+		var lugares: Array = [
+			_lugares_de_adelante(
+				disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
+			)
+		]
+		for indice in disposicion.productos_de_las_guias.size():
+			if disposicion.productos_de_las_guias[indice] == producto.id:
+				lugares.append(
+					_lugares_de_adelante(
+						disposicion.guias[indice],
+						disposicion.filas_de_adelante_de_las_guias[indice]
+					)
+				)
+		por_producto[producto.id] = lugares
+	return por_producto
+
+
+## Los productos cuyas tandas tienen una sola fila (BR-STK-025).
+func productos_de_una_fila() -> Dictionary[Producto.Id, bool]:
+	var por_producto: Dictionary[Producto.Id, bool] = {}
+	for producto in Catalogo.todos():
+		var adelante := disposicion.filas_de_adelante[producto.id]
+		por_producto[producto.id] = (
+			adelante > 0
+			and DisposicionDeLaGondola.copias(disposicion.principales[producto.id]) == adelante
+		)
 	return por_producto
 
 
@@ -1374,9 +1426,19 @@ func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
 	_radios_de_las_filas.append(radio)
 
 
+## El origen de las últimas `adelante` copias de un bloque, que son su fila de adelante.
+func _lugares_de_adelante(bloque: PackedFloat32Array, adelante: int) -> PackedVector3Array:
+	var lugares := PackedVector3Array()
+	var total := DisposicionDeLaGondola.copias(bloque)
+	for indice in range(total - adelante, total):
+		lugares.append(DisposicionDeLaGondola.copia(bloque, indice).origin)
+	return lugares
+
+
 ## El dibujo de cada producto: primero sus copias fijas —las filas de atrás de todas sus tandas—
-## y después sus casilleros —la fila de adelante de cada tanda fija suya, y al final la de su
-## tanda reponible—. Así los casilleros vacíos con que abre la jornada caen en la reponible.
+## y después sus casilleros: el primero de la reponible, la fila de adelante de cada tanda fija
+## suya y el resto de la reponible. Un estante al que la apertura no le declara vacíos vacía los
+## últimos, que así quedan en la reponible, a la altura de la mano.
 ##
 ## **Cada producto va en un solo dibujo.** Cada nodo que se dibuja le cuesta al motor su
 ## preparación, y en la web esa preparación es lo que más pesa del cuadro: medido el 2026-09-21,

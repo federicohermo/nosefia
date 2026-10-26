@@ -185,10 +185,17 @@ El sistema DEBE exhibir cada producto con exhibición declarada (BR-STK-043, BR-
 en una sola tanda reponible, al alcance de
 un jugador parado en el pasillo. La fila de adelante de cada tanda del local, reponible o fija y
 en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
-casilleros vacíos con que abre una jornada DEBEN quedar en la tanda reponible, pero la apertura
-NO DEBE vaciarla entera: si los faltantes de un producto igualan sus casilleros reponibles, uno
-DEBE quedar ocupado y el último faltante DEBE salir de la fila de adelante de una tanda fija del
-mismo producto.
+casilleros vacíos con que abre una jornada DEBEN quedar juntos: un bloque de casilleros seguidos
+en la fila de adelante de una tanda del producto, reponible o fija y en cualquier estante. La
+tanda DEBE elegirse al azar entre las que reciben el faltante entero.
+SI el faltante no entra entero en ninguna, ENTONCES DEBE partirse: las tandas se vacían enteras,
+una junto a la otra en estantes contiguos, y la tanda parcial queda pegada a ellas, debajo del
+bloque; arriba sólo si debajo no hay estante. Los vacíos de la tanda parcial DEBEN ir en las mismas
+columnas que los del estante anterior, hasta donde lo permita lo que la tanda protege. En una
+tanda, los vacíos NO DEBEN quedar separados por casilleros ocupados. En un producto de dos filas
+(BR-STK-025), la apertura PUEDE vaciar entera la fila de adelante de cualquier tanda, la
+reponible incluida: la fila de atrás dice qué va ahí. En un producto de una sola fila, la
+apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda.
 
 En un mueble de estantes, la tanda reponible DEBE ir en un estante de reposición. Un estante
 de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la altura de la mano se
@@ -230,9 +237,10 @@ reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 
 Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
 caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casilleros de la fila de
-adelante de su tanda reponible (BR-STK-024). El inventario DEBE conservar el cupo total de todas las
-tandas (BR-STK-008), incluidas las guías. Las guías DEBEN abrir completas: los faltantes iniciales
-DEBEN quedar sólo en la tanda reponible. Sólo los productos con máximo reponible mayor o igual a 1
+adelante de todas sus tandas, reponible y fijas, menos uno por cada tanda de un producto de una
+sola fila, que no puede abrir vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
+total de todas las tandas (BR-STK-008). Los casilleros vacíos de un producto DEBEN quedar juntos
+(BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 1
 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
 incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
 compradores ni pedidos.
@@ -243,7 +251,7 @@ SI hay menos elegibles que la cantidad sorteada, ENTONCES DEBEN faltar todos los
 y ninguno más. Con cero elegibles NO DEBE faltar nada.
 
 El sistema DEBE recibir la fuente de azar: con la misma semilla inicial, pedidos y casilleros,
-DEBE producir los mismos faltantes. En juego, la fuente DEBE inicializarse al azar.
+DEBE producir los mismos faltantes y dejar vacíos los mismos casilleros. En juego, la fuente DEBE inicializarse al azar.
 CUANDO abre la jornada siguiente o se retoma una jornada desde el menú o en otra sesión,
 el sistema DEBE sortear de nuevo, sin recuperar una semilla guardada. Dos sorteos pueden
 coincidir: sortear de nuevo NO DEBE exigir un resultado distinto del anterior. La semilla de la
@@ -767,10 +775,9 @@ DADO cada tanda principal y fija del local ENTONCES sus filas coinciden con esta
 | Actroncito, Prongles y los demás productos exhibidos | 2 | 2 |
 
 La fila de adelante es la más cercana al pasillo y cada lugar suyo es un casillero del
-producto. Los casilleros totales suman los frontales de su principal y sus fijas; los
-casilleros reponibles usados por la apertura y el sorteo suman sólo los frontales de la
-principal. Una principal con cero casilleros NO DEBE volver elegible al producto aunque
-tenga guía. Las filas delanteras fijas conservan su interacción de BR-STK-024. La fila de
+producto. Los casilleros totales y los que usan la apertura y el sorteo suman los frontales de
+su principal y sus fijas. Un producto sin casilleros en ninguna tanda NO DEBE volverse elegible.
+Las filas delanteras fijas conservan su interacción de BR-STK-024. La fila de
 atrás, cuando existe, no tiene casilleros: una copia posterior no agrega ninguno.
 
 ### AC-STK-031 — La fila de atrás de cada tanda permanece entera *(verifica BR-STK-025)*
@@ -789,14 +796,28 @@ DADO un producto de 12 casilleros al que la jornada le hace faltar 8 CUANDO se c
 unidades de su caja ENTONCES su fila de adelante queda completa, el depósito en 0 y no es
 faltante.
 
-### AC-STK-033 — Ningún faltante pasa de una caja ni de su fila *(verifica BR-STK-004, BR-STK-024)*
+### AC-STK-033 — Ningún faltante pasa de una caja ni de sus casilleros *(verifica BR-STK-004, BR-STK-024, BR-STK-026)*
 
-DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 1 a la 5 y los casilleros
+DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 2 a la 8 y los casilleros
 medidos en el local CUANDO se abren las jornadas ENTONCES ningún faltante pasa de las unidades
-de una caja —8 en el balance vigente— ni de los casilleros de la fila de adelante de la tanda
-reponible de su producto. El inventario conserva el cupo total de todas las tandas y las guías
-abren completas. DADO un producto sin casilleros principales pero con casilleros de guía
-CUANDO abre la jornada ENTONCES ese producto no falta y su guía está completa.
+de una caja menos lo pedido —8 menos lo pedido en el balance vigente— ni de los casilleros de la
+fila de adelante de todas las tandas de su producto. El inventario conserva el cupo total de
+todas las tandas. DADO productos de cuatro tandas de tres casilleros, o de dos tandas de cuatro,
+CUANDO se sortean sus vacíos con las 200 semillas ENTONCES hay vacíos en cada tanda de al menos
+un producto. DADO un producto de una sola fila ENTONCES ninguna de sus tandas abre con su fila de
+adelante entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos con las 200 semillas
+ENTONCES en cada tanda los casilleros vacíos son seguidos, sin un casillero ocupado entre dos
+vacíos. Si el faltante entra entero en alguna tanda, todos caen en una sola, aunque otra tanda no
+lo reciba entero: con dos tandas de una fila de cinco y cuatro casilleros y un faltante de cuatro,
+siempre caen en la de cinco. Sólo si no entra en ninguna se parte. DADO un producto de dos filas
+con cuatro tandas de tres casilleros en estantes contiguos CUANDO su faltante se parte con las 200
+semillas ENTONCES las tandas con vacíos son contiguas, todas quedan vacías enteras salvo una, y esa
+tanda parcial está debajo de las vacías; está arriba sólo si las vacías llegan al estante de más
+abajo. DADO un producto de tres tandas con las mismas columnas, en estantes a 0,5, 1 y 2,5 m de
+altura, CUANDO su faltante se parte con las 200 semillas ENTONCES los dos bloques quedan en estantes
+contiguos —nunca el de 0,5 con el de 2,5 m— y las columnas del bloque más corto están entre las del
+más largo. DADO un producto de dos filas CUANDO falta toda su fila de adelante ENTONCES puede abrir
+con la reponible vacía entera.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
@@ -1167,12 +1188,6 @@ se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades 
 DADO cualquier cara de un mueble ENTONCES el estante de arriba de todo lleva los mismos productos
 que el reponible de abajo, y el otro reponible los mismos que el zócalo, en el mismo orden.
 
-### AC-STK-093 — La apertura no vacía la tanda reponible *(verifica BR-STK-024)*
-
-DADO un producto con tanda fija CUANDO la apertura le hace faltar tantas unidades como casilleros
-reponibles tiene ENTONCES un casillero de la reponible queda ocupado y uno de la fila de adelante
-de una fija queda vacío; los vacíos suman lo que faltó.
-
 ### AC-STK-094 — La primera jornada abre completa *(verifica BR-STK-026, BR-STK-013, BR-STK-033)*
 
 DADO la jornada 1 recién abierta, con cualquier semilla, CUANDO se consultan los faltantes
@@ -1343,7 +1358,7 @@ solo de sus consumidores.
 
 - **Entrada:** el sector y destino declarado de cada producto y si admite exhibición;
   los productos que existen, sus casilleros totales y los de la fila de adelante
-  de su tanda reponible, la jornada que se abre, sus pedidos ya construidos y la fuente de azar,
+  de todas sus tandas, la jornada que se abre, sus pedidos ya construidos y la fuente de azar,
   lo vendido de cada producto, qué compras terminaron y cuáles siguen abiertas, lo que el jugador
   lleva en la mano, la caja que examina, el casillero que elige, y los pedidos de ingresar,
   mover, cobrar, sacar y devolver
@@ -1353,8 +1368,8 @@ solo de sus consumidores.
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
   obligatoria está cumplida, y el motivo de cada rechazo.
 - **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
-  producto y devuelve faltantes dentro del máximo de su tanda reponible. El inventario conserva
-  el cupo total y las guías abren completas. Con menos elegibles que la
+  producto y devuelve faltantes dentro del máximo de sus casilleros de adelante, y cuáles quedan
+  vacíos. El inventario conserva el cupo total. Con menos elegibles que la
   cantidad sorteada devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
 - **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
   una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
@@ -1365,7 +1380,7 @@ solo de sus consumidores.
   de otro producto o una unidad que ya volvió no cambia nada; colocar en un casillero ocupado no
   mueve nada, agarrar de un casillero vacío no da nada y desechar una unidad no registrada
   afuera no cambia nada. Un faltante de más de una caja o de más
-  que su fila es un error de los datos, que un test detecta: el juego no lo acomoda.
+  que sus casilleros de adelante es un error de los datos, que un test detecta: el juego no lo acomoda.
 
 ## Señales
 

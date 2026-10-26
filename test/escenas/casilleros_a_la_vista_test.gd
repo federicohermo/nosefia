@@ -410,7 +410,7 @@ func test_la_fila_de_atras_no_tiene_casilleros() -> void:  # AC-PLY-049
 			assert_bool(_contiene(atras, lugar)).is_false()
 
 
-func test_vaciar_la_reponible_entera_deja_una_puesta_y_saca_una_guia() -> void:  # AC-STK-093
+func test_vaciar_la_reponible_entera_deja_una_puesta_y_saca_una_guia() -> void:  # AC-STK-033
 	var almacen := _almacen()
 	var flinpuf := Catalogo.de(Producto.Id.FLIM_POF)
 	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
