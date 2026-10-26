@@ -2,7 +2,7 @@
 extends RefCounted
 
 enum Habitacion { LOCAL, DEPOSITO, BANO, AFUERA, CUARTITO }
-enum Clase { UNIDAD_SUELTA, CAJA, UTIL_DE_LIMPIEZA, OTRO }
+enum Clase { UNIDAD_SUELTA, CAJA, UTIL_DE_LIMPIEZA, OTRO, BOLSA }
 
 
 class Estado:
@@ -59,6 +59,17 @@ static func hay_desorden(estados: Array[Estado]) -> bool:
 static func hay_objetos_afuera(estados: Array[Estado]) -> bool:
 	for estado: Estado in estados:
 		if not estado.en_mano and estado.habitacion == Habitacion.AFUERA:
+			return true
+	return false
+
+
+static func hay_bolsa_afuera(estados: Array[Estado]) -> bool:
+	for estado: Estado in estados:
+		if (
+			estado.clase == Clase.BOLSA
+			and not estado.en_mano
+			and estado.habitacion == Habitacion.AFUERA
+		):
 			return true
 	return false
 
