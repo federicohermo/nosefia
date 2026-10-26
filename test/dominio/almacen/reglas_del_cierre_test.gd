@@ -83,6 +83,32 @@ func test_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera() -> void:  # AC
 	assert_bool(ReglasDelCierre.hay_objetos_afuera(estados)).is_true()
 
 
+func test_una_bolsa_afuera_se_distingue_de_otro_objeto_afuera() -> void:  # AC-EMP-096
+	for habitacion: ReglasDelCierre.Habitacion in HABITACION.values():
+		for en_mano: bool in [false, true]:
+			var estados: Array[ReglasDelCierre.Estado] = [
+				ReglasDelCierre.Estado.new(CLASE.BOLSA, habitacion, en_mano)
+			]
+			assert_bool(ReglasDelCierre.hay_bolsa_afuera(estados)).is_equal(
+				habitacion == HABITACION.AFUERA and not en_mano
+			)
+			assert_bool(ReglasDelCierre.hay_desorden(estados)).is_false()
+	for clase: ReglasDelCierre.Clase in [CLASE.CAJA, CLASE.UNIDAD_SUELTA, CLASE.OTRO]:
+		var sin_bolsa: Array[ReglasDelCierre.Estado] = [
+			ReglasDelCierre.Estado.new(clase, HABITACION.AFUERA, false)
+		]
+		assert_bool(ReglasDelCierre.hay_bolsa_afuera(sin_bolsa)).is_false()
+
+
+func test_una_bolsa_afuera_entre_varios_cuerpos_se_encuentra() -> void:  # AC-EMP-096
+	var estados: Array[ReglasDelCierre.Estado] = [
+		ReglasDelCierre.Estado.new(CLASE.CAJA, HABITACION.AFUERA, false),
+		ReglasDelCierre.Estado.new(CLASE.BOLSA, HABITACION.LOCAL, false),
+		ReglasDelCierre.Estado.new(CLASE.BOLSA, HABITACION.AFUERA, false),
+	]
+	assert_bool(ReglasDelCierre.hay_bolsa_afuera(estados)).is_true()
+
+
 func test_la_pertenencia_sale_del_punto_y_de_las_cuatro_regiones() -> void:  # AC-CLN-040
 	var local: Array[AABB] = [AABB(Vector3.ZERO, Vector3(2, 3, 2))]
 	var deposito: Array[AABB] = [AABB(Vector3(3, 0, 0), Vector3(2, 3, 2))]
