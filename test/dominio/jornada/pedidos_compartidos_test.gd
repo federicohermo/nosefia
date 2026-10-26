@@ -64,7 +64,7 @@ func test_la_apertura_puede_vaciar_cualquier_tanda_y_conserva_el_cupo_total() ->
 		var inventario := Apertura.inventario_de_la_jornada(2, [], totales, principales, azar)
 		var estante := Estante.new(inventario, Catalogo.todos())
 		assert_int(estante.cupo(producto)).is_equal(8)
-		assert_int(estante.casilleros_vacios(producto).size()).is_between(1, 7)
+		assert_int(estante.casilleros_vacios(producto).size()).is_between(1, totales[producto.id])
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
 			ReglasDelEstante.UNIDADES_POR_CAJA
 		)
