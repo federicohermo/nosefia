@@ -209,3 +209,11 @@ func test_cerrar_retira_la_pista_y_reabrir_no_la_recupera() -> void:  # AC-NTF-0
 	assert_array(_textos(local)).is_empty()
 	assert_bool(local.get("_ciclo").abrir_la_jornada()).is_true()
 	assert_array(_textos(local)).is_empty()
+
+
+func test_cerrar_el_turno_retira_el_aviso_de_reposicion() -> void:  # AC-NTF-036
+	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
+	local.get("_avisos").actualizar_faltante(true)
+	assert_array(_textos(local)).is_not_empty()
+	RelojDePrueba.avanzar_turno(local.get("_reloj"), Reglas.DURACION_DEL_TURNO)
+	assert_array(_textos(local)).is_empty()
