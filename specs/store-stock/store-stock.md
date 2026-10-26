@@ -190,7 +190,9 @@ en la fila de adelante de una tanda del producto, reponible o fija y en cualquie
 tanda DEBE elegirse al azar entre las que reciben el faltante entero, sin vaciar la que se protege.
 SI el faltante no entra entero en ninguna, ENTONCES DEBE partirse: un bloque llena una tanda
 elegida al azar y el resto sigue como otro bloque de casilleros seguidos en otra tanda del mismo
-producto, con la misma regla. En una tanda, los vacíos NO DEBEN
+producto, con la misma regla. El bloque que sigue DEBE ir en el estante contiguo al anterior, el
+más cercano en altura entre las tandas que lo reciben, y en las mismas columnas que el anterior,
+hasta donde lo permita lo que cada tanda protege. En una tanda, los vacíos NO DEBEN
 quedar separados por casilleros ocupados. La apertura NO DEBE vaciar entera la tanda reponible: si los faltantes de un producto igualan los casilleros de
 su tanda reponible, uno DEBE quedar ocupado y el último faltante DEBE salir de la fila de
 adelante de una tanda fija del mismo producto. En un producto de una sola fila (BR-STK-025), la
@@ -809,7 +811,10 @@ adelante entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos co
 ENTONCES en cada tanda los casilleros vacíos son seguidos, sin un casillero ocupado entre dos
 vacíos. Si el faltante entra entero en alguna tanda sin vaciar la que se protege, todos caen en
 una sola, aunque otra tanda no lo reciba entero: con dos tandas de cuatro casilleros y un
-faltante de cuatro, siempre caen en la fija. Sólo si no entra en ninguna se parte.
+faltante de cuatro, siempre caen en la fija. Sólo si no entra en ninguna se parte. DADO un
+producto de tres tandas con las mismas columnas, en estantes a 0,5, 1 y 2,5 m de altura, CUANDO su
+faltante se parte con las 200 semillas ENTONCES los dos bloques quedan en estantes contiguos —nunca
+el de 0,5 con el de 2,5 m— y las columnas del bloque más corto están entre las del más largo.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 

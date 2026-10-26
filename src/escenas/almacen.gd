@@ -411,7 +411,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		compradores,
 		_reposicion_manual.tandas(),
 		_reposicion_manual.productos_de_una_fila(),
-		azar_de_la_apertura
+		azar_de_la_apertura,
+		_reposicion_manual.posiciones()
 	)
 	var inventario := Apertura.inventario_con_faltantes(
 		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos

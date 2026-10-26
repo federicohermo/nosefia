@@ -148,12 +148,26 @@ func _vacios(
 	compradores: Array[Comprador],
 	tandas: Dictionary[Producto.Id, Array],
 	una_fila: bool,
-	semilla: int
+	semilla: int,
+	posiciones: Dictionary[Producto.Id, Array] = {}
 ) -> Dictionary[Producto.Id, Array]:
 	var de_una_fila: Dictionary[Producto.Id, bool] = {}
 	for id: Producto.Id in tandas:
 		de_una_fila[id] = una_fila
-	return Apertura.vacios_de_la_jornada(jornada, compradores, tandas, de_una_fila, _azar(semilla))
+	return Apertura.vacios_de_la_jornada(
+		jornada, compradores, tandas, de_una_fila, _azar(semilla), posiciones
+	)
+
+
+## Un estante por altura, con los casilleros de todos en las mismas columnas.
+func _en_estantes(alturas: Array[float], casilleros: int) -> Array:
+	var estantes: Array = []
+	for altura in alturas:
+		var lugares := PackedVector3Array()
+		for columna in casilleros:
+			lugares.append(Vector3(columna * 0.3, altura, 0.0))
+		estantes.append(lugares)
+	return estantes
 
 
 func _tanda_de(casillero: int, tamanos: Array[int]) -> int:
@@ -248,6 +262,32 @@ func test_si_el_faltante_entra_entero_en_alguna_tanda_cae_entero_en_una() -> voi
 			assert_int(en_tandas.size()).is_equal(2)
 	assert_int(cuatro_vistos).is_greater(0)
 	assert_array(tandas_usadas.keys()).contains_exactly_in_any_order([0, 1])
+
+
+func test_el_bloque_que_sigue_va_en_el_estante_contiguo_y_alineado() -> void:  # AC-STK-033
+	var producto := Producto.Id.ACTRONCITO
+	var tamanos: Array[int] = [4, 4, 4]
+	var alturas: Array[float] = [0.5, 1.0, 2.5]
+	var tandas: Dictionary[Producto.Id, Array] = {producto: _tandas(tamanos)}
+	var posiciones: Dictionary[Producto.Id, Array] = {producto: _en_estantes(alturas, 4)}
+	var pares: Dictionary[String, bool] = {}
+	for semilla in 200:
+		var casilleros: Array = _vacios(8, [], tandas, false, semilla, posiciones)[producto]
+		var columnas_por_tanda: Dictionary[int, Array] = {}
+		for casillero: int in casilleros:
+			var tanda := _tanda_de(casillero, tamanos)
+			if not columnas_por_tanda.has(tanda):
+				columnas_por_tanda[tanda] = []
+			columnas_por_tanda[tanda].append(casillero % 4)
+		if columnas_por_tanda.size() < 2:
+			continue
+		assert_int(columnas_por_tanda.size()).is_equal(2)
+		pares[str(columnas_por_tanda.keys())] = true
+		var bloques: Array = columnas_por_tanda.values()
+		bloques.sort_custom(func(a: Array, b: Array) -> bool: return a.size() < b.size())
+		for columna: int in bloques[0]:
+			assert_bool(bloques[1].has(columna)).is_true()
+	assert_array(pares.keys()).contains_exactly_in_any_order(["[0, 1]", "[1, 2]"])
 
 
 func test_la_misma_semilla_deja_vacios_los_mismos_casilleros() -> void:  # AC-STK-034

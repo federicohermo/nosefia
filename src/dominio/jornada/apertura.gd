@@ -13,6 +13,9 @@ const INTRODUCCION := {
 	1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR],
 	2: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER],
 }
+## Cuánto pueden diferir dos distancias para contar como iguales, en metros: lo que mide el modelo
+## de un casillero a otro de la misma columna, con lugar de sobra para el redondeo.
+const HOLGURA_DE_COLUMNA := 0.01
 const PARTICULARES := {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA: [Tarea.Tipo.ORDENAR_LAS_CAJAS],
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1: [Tarea.Tipo.SACAR_LA_BASURA],
@@ -74,7 +77,8 @@ static func inventario_de_la_jornada(
 ##
 ## Recibe los mismos compradores de Atención y la fuente de azar de esta sesión. `tandas` trae,
 ## de cada producto, los casilleros de la fila de adelante de cada tanda, la reponible primero.
-## `de_una_fila` dice qué productos tienen tandas de una sola fila (BR-STK-025).
+## `de_una_fila` dice qué productos tienen tandas de una sola fila (BR-STK-025). `posiciones` trae
+## el lugar de cada casillero, tanda por tanda, y sólo decide dónde sigue un faltante que se parte.
 ##
 ## **Los vacíos de un producto van juntos**: un bloque de casilleros seguidos de una tanda al azar
 ## entre las que lo reciben entero, y sólo si ninguna lo recibe se parte en otra. Una tanda que no
@@ -85,7 +89,8 @@ static func vacios_de_la_jornada(
 	compradores: Array[Comprador],
 	tandas: Dictionary[Producto.Id, Array],
 	de_una_fila: Dictionary[Producto.Id, bool],
-	azar: RandomNumberGenerator
+	azar: RandomNumberGenerator,
+	posiciones: Dictionary[Producto.Id, Array] = {}
 ) -> Dictionary[Producto.Id, Array]:
 	var vacios: Dictionary[Producto.Id, Array] = {}
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
@@ -96,7 +101,9 @@ static func vacios_de_la_jornada(
 		presentes[producto.id] = vaciables.get(producto.id, 0)
 	var faltantes := faltantes_al_azar(pedidos_de(compradores), presentes, azar)
 	for id: Producto.Id in faltantes:
-		vacios[id] = _sortear_vacios(tandas[id], de_una_fila.get(id, false), faltantes[id], azar)
+		vacios[id] = _sortear_vacios(
+			tandas[id], de_una_fila.get(id, false), faltantes[id], azar, posiciones.get(id, [])
+		)
 	return vacios
 
 
@@ -203,34 +210,111 @@ static func _a_salvo(tandas: Array, de_una_fila: bool) -> Array:
 ## Un bloque de casilleros seguidos en una tanda al azar entre las que lo reciben entero. Sólo si
 ## no entra en ninguna se parte: la tanda elegida se llena y lo que sobra sigue como bloque en otra.
 ## Una tanda a salvo cede un casillero menos, y por eso nunca queda vacía entera.
+##
+## **Un bloque que sigue a otro va pegado a él**: en la tanda más cercana en altura, que es el
+## estante contiguo, y en los casilleros que quedan en las mismas columnas que el anterior.
+## `posiciones` trae el lugar de cada casillero de cada tanda, en el orden de `tandas`; sin él
+## no hay cercanía y la elección es pareja.
 static func _sortear_vacios(
-	tandas: Array, de_una_fila: bool, cuantos: int, azar: RandomNumberGenerator
+	tandas: Array,
+	de_una_fila: bool,
+	cuantos: int,
+	azar: RandomNumberGenerator,
+	posiciones: Array = []
 ) -> Array:
 	var a_salvo := _a_salvo(tandas, de_una_fila)
+	var lugares: Array[PackedVector3Array] = []
 	var cupos: Array[int] = []
 	var con_lugar: Array[int] = []
 	for indice in tandas.size():
 		var tanda: PackedInt32Array = tandas[indice]
+		lugares.append(_lugares_de(posiciones, indice, tanda.size()))
 		cupos.append(tanda.size() - (1 if tanda in a_salvo else 0))
 		if cupos[indice] > 0:
 			con_lugar.append(indice)
 	var vacios: Array[int] = []
+	var anterior := PackedVector3Array()
 	var faltan := cuantos
 	while faltan > 0:
 		var entran: Array[int] = con_lugar.filter(
 			func(indice: int) -> bool: return cupos[indice] >= faltan
 		)
 		var opciones: Array[int] = con_lugar if entran.is_empty() else entran
-		var elegida := opciones[azar.randi_range(0, opciones.size() - 1)]
+		var elegida := opciones[_el_menor_al_azar(
+			_distancias_de_altura(opciones, lugares, anterior), azar
+		)]
 		con_lugar.erase(elegida)
 		var tanda: PackedInt32Array = tandas[elegida]
 		var largo := mini(faltan, cupos[elegida])
-		var desde := azar.randi_range(0, tanda.size() - largo)
+		var desde := _el_menor_al_azar(
+			_distancias_de_columna(lugares[elegida], largo, anterior), azar
+		)
 		for casillero in tanda.slice(desde, desde + largo):
 			vacios.append(casillero)
+		anterior = lugares[elegida].slice(desde, desde + largo)
 		faltan -= largo
 	vacios.sort()
 	return vacios
+
+
+## Los lugares de una tanda, o ceros si no se declararon: así no hay cercanía que decida nada.
+static func _lugares_de(posiciones: Array, indice: int, tamano: int) -> PackedVector3Array:
+	if indice < posiciones.size():
+		var declarados: PackedVector3Array = posiciones[indice]
+		if declarados.size() == tamano:
+			return declarados
+	var ceros := PackedVector3Array()
+	ceros.resize(tamano)
+	return ceros
+
+
+static func _altura_de(lugares: PackedVector3Array) -> float:
+	var suma := 0.0
+	for lugar in lugares:
+		suma += lugar.y
+	return suma / maxi(lugares.size(), 1)
+
+
+## Cuánto se separa la altura de cada tanda de la del bloque anterior. Sin bloque anterior, nada.
+static func _distancias_de_altura(
+	opciones: Array[int], lugares: Array[PackedVector3Array], anterior: PackedVector3Array
+) -> Array[float]:
+	var distancias: Array[float] = []
+	for indice in opciones:
+		var distancia := 0.0
+		if not anterior.is_empty():
+			distancia = absf(_altura_de(lugares[indice]) - _altura_de(anterior))
+		distancias.append(distancia)
+	return distancias
+
+
+## Cuánto se aparta de las columnas del bloque anterior cada bloque de `largo` casilleros seguidos
+## de la tanda: la suma de lo que cada casillero queda lejos, en el plano, de su columna más cerca.
+static func _distancias_de_columna(
+	lugares: PackedVector3Array, largo: int, anterior: PackedVector3Array
+) -> Array[float]:
+	var distancias: Array[float] = []
+	for desde in lugares.size() - largo + 1:
+		var distancia := 0.0
+		for lugar in lugares.slice(desde, desde + largo):
+			var mas_cerca := INF
+			for columna in anterior:
+				mas_cerca = minf(
+					mas_cerca, Vector2(lugar.x, lugar.z).distance_to(Vector2(columna.x, columna.z))
+				)
+			distancia += 0.0 if anterior.is_empty() else mas_cerca
+		distancias.append(distancia)
+	return distancias
+
+
+## El índice de la distancia más chica; si varias se igualan, una al azar.
+static func _el_menor_al_azar(distancias: Array[float], azar: RandomNumberGenerator) -> int:
+	var menor: float = distancias.min()
+	var empatadas: Array[int] = []
+	for indice in distancias.size():
+		if distancias[indice] <= menor + HOLGURA_DE_COLUMNA:
+			empatadas.append(indice)
+	return empatadas[azar.randi_range(0, empatadas.size() - 1)]
 
 
 ## Sólo lee los pedidos ya construidos; sus objetos siguen siendo los de Atención.

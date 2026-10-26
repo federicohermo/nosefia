@@ -156,6 +156,30 @@ func tandas() -> Dictionary[Producto.Id, Array]:
 	return por_producto
 
 
+## Dónde está cada casillero de cada tanda, en el mismo orden que `tandas()`.
+##
+## Son las posiciones del modelo. Qué estante queda contiguo y qué columnas se alinean lo decide
+## `Apertura`.
+func posiciones() -> Dictionary[Producto.Id, Array]:
+	var por_producto: Dictionary[Producto.Id, Array] = {}
+	for producto in Catalogo.todos():
+		var lugares: Array = [
+			_lugares_de_adelante(
+				disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
+			)
+		]
+		for indice in disposicion.productos_de_las_guias.size():
+			if disposicion.productos_de_las_guias[indice] == producto.id:
+				lugares.append(
+					_lugares_de_adelante(
+						disposicion.guias[indice],
+						disposicion.filas_de_adelante_de_las_guias[indice]
+					)
+				)
+		por_producto[producto.id] = lugares
+	return por_producto
+
+
 ## Los productos cuyas tandas tienen una sola fila (BR-STK-025).
 func productos_de_una_fila() -> Dictionary[Producto.Id, bool]:
 	var por_producto: Dictionary[Producto.Id, bool] = {}
@@ -1400,6 +1424,15 @@ func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
 		radio = maxf(radio, centro.distance_to(zona.global_position) + zona.radio)
 	_centros_de_las_filas.append(centro)
 	_radios_de_las_filas.append(radio)
+
+
+## El origen de las últimas `adelante` copias de un bloque, que son su fila de adelante.
+func _lugares_de_adelante(bloque: PackedFloat32Array, adelante: int) -> PackedVector3Array:
+	var lugares := PackedVector3Array()
+	var total := DisposicionDeLaGondola.copias(bloque)
+	for indice in range(total - adelante, total):
+		lugares.append(DisposicionDeLaGondola.copia(bloque, indice).origin)
+	return lugares
 
 
 ## El dibujo de cada producto: primero sus copias fijas —las filas de atrás de todas sus tandas—
