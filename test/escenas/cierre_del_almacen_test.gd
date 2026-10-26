@@ -136,20 +136,38 @@ func test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_ser_sostenido() -> vo
 	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
 
 
-func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-044, AC-CLN-046
+func test_unidad_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-044, AC-CLN-046
+	_abrir()
+	var lector: Habitaciones = _almacen.get("_habitaciones")
+	var agarre: Agarre = _almacen.get("_agarre")
+	_almacen.get("_reposicion_manual").call("retirar", Producto.Id.ACTRONCITO)
+	var unidad: Node3D = agarre.soltar(true)
+	unidad.global_position = _centro(lector.local) + Vector3.UP * lector.local[0].size.y
+	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_true()
+	assert_bool(agarre.pedir_agarrar(unidad.get("datos"), unidad)).is_true()
+	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
+	var contenedor: Node3D = _almacen.get("_contenedor")
+	assert_bool(contenedor.get("tapa").recibe_objetos()).is_true()
+	contenedor.call("interactuar")
+	assert_array(contenedor.call("tirados")).contains_exactly([unidad])
+	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
+
+
+func test_bolsa_afuera_no_suma_motivo_y_recuperada_o_tirada_sale_de_afuera() -> void:  # AC-CLN-073
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var agarre: Agarre = _almacen.get("_agarre")
 	var bolsa := BolsaEnLaMano.preparar(_almacen)
 	bolsa.global_position = _centro(lector.local) + Vector3.UP * lector.local[0].size.y
-	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_true()
-	assert_bool(agarre.pedir_agarrar(bolsa.get("datos"), bolsa)).is_true()
+	assert_bool(CIERRE.hay_bolsa_afuera(_foto())).is_true()
 	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
+	assert_bool(agarre.pedir_agarrar(bolsa.get("datos"), bolsa)).is_true()
+	assert_bool(CIERRE.hay_bolsa_afuera(_foto())).is_false()
 	var contenedor: Node3D = _almacen.get("_contenedor")
 	assert_bool(contenedor.get("tapa").recibe_objetos()).is_true()
 	contenedor.call("interactuar")
 	assert_array(contenedor.call("tirados")).contains_exactly([bolsa])
-	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
+	assert_bool(CIERRE.hay_bolsa_afuera(_foto())).is_false()
 	assert_array(_foto()).has_size(
 		(
 			_almacen.get("_cajas_de_productos").size()
@@ -167,7 +185,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 			+ _almacen.get("_bolsas").size()
 		)
 	)
-	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
+	assert_bool(CIERRE.hay_bolsa_afuera(_foto())).is_false()
 
 
 func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:  # AC-CLN-046
