@@ -14,17 +14,20 @@ class Estado:
 	var habitacion: Habitacion
 	var en_mano: bool
 	var producto: StringName
+	var exento: bool
 
 	func _init(
 		tipo: Clase,
 		lugar: Habitacion,
 		sostenido: bool,
-		identidad: StringName = ObjetoDelAlmacen.SIN_ID
+		identidad: StringName = ObjetoDelAlmacen.SIN_ID,
+		eximido: bool = false
 	) -> void:
 		clase = tipo
 		habitacion = lugar
 		en_mano = sostenido
 		producto = identidad
+		exento = eximido
 
 
 static func habitacion_de(
@@ -78,7 +81,7 @@ static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
 
 static func hay_objetos_afuera(estados: Array[Estado]) -> bool:
 	for estado: Estado in estados:
-		if not estado.en_mano and estado.habitacion == Habitacion.AFUERA:
+		if not estado.en_mano and not estado.exento and estado.habitacion == Habitacion.AFUERA:
 			return true
 	return false
 
@@ -94,7 +97,13 @@ static func hay_bolsa_afuera(estados: Array[Estado]) -> bool:
 	return false
 
 
-static func se_tira_sin_llamado(objeto: ObjetoDelAlmacen) -> bool:
+## La única puerta de la exención (BR-CLN-038): lo que no suma llamado afuera ni en el contenedor.
+static func esta_eximido(objeto: ObjetoDelAlmacen, jornada: int) -> bool:
+	if objeto == null:
+		return false
 	return (
-		objeto != null and (objeto is Ticket or ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.id))
+		objeto is Ticket
+		or objeto.vencido
+		or ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.id)
+		or CasoDeInvestigacion.de_la_partida().levanta_una_pista(objeto.id, jornada)
 	)
