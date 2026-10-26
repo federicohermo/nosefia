@@ -10,6 +10,7 @@ const CUERPO := (
 	"Estructura/deposito_contenedor_grande_soporte/"
 	+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
 )
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 var _almacen: Node3D
@@ -114,11 +115,37 @@ func test_tirar_una_unidad_suma_un_medio_y_la_deuda_se_conserva() -> void:  # AC
 	assert_int(partida.medios()).is_equal(1)
 
 
-func test_tirar_la_mopa_no_agrega_desorden_ni_afuera() -> void:  # AC-CLN-051
+func test_utiles_rechazados_sin_motivo_y_vuelven_al_cuartito() -> void:  # AC-CLN-076
 	_abrir()
-	_tirar(_almacen.get_node("Objetos/Mopa"))
+	var agarre: Agarre = _almacen.get("_agarre")
+	var jugador: Node3D = _almacen.get("_jugador")
+	jugador.set("_enfocado", _almacen.get_node(CUERPO))
+	var evento := InputEventMouseButton.new()
+	evento.button_index = MOUSE_BUTTON_LEFT
+	evento.pressed = true
+	var piso: PisoDelLocal = _almacen.get("_limpiador").piso()
+	piso.balde().llenar()
+	piso.balde().tenir(ReglasDeLaLimpieza.Agua.AZUL)
+	piso.mopa().mojar_en(piso.balde())
+	for nombre: String in ["Mopa", "Balde", "JabonRosa", "JabonAmarillo"]:
+		var util: ObjetoAgarrable = _almacen.get_node("Objetos/" + nombre)
+		assert_bool(agarre.pedir_agarrar(util.datos, util)).is_true()
+		jugador.call("_unhandled_input", evento)
+		assert_object(agarre.manos().sostenido()).is_same(util.datos)
+		assert_bool(util.visible).is_true()
+		agarre.soltar(false)
+		util.volver_a_su_lugar()
+	assert_array(_almacen.get("_contenedor").tirados()).is_empty()
 	_cerrar(true)
-	assert_int((_almacen.get("_partida") as Partida).medios()).is_equal(1)
+	assert_int((_almacen.get("_partida") as Partida).medios()).is_zero()
+	await _seguir()
+	var utiles := 0
+	for estado: ReglasDelCierre.Estado in _almacen.call("_estados_del_cierre"):
+		if estado.clase == ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA:
+			utiles += 1
+			assert_int(estado.habitacion).is_equal(ReglasDelCierre.Habitacion.CUARTITO)
+	assert_int(utiles).is_equal(5)
+	assert_array(_almacen.get("_contenedor").tirados()).is_empty()
 
 
 func test_bolsas_y_ticket_se_descartan_sin_este_llamado() -> void:  # AC-CLN-050
@@ -136,12 +163,12 @@ func test_bolsas_y_ticket_se_descartan_sin_este_llamado() -> void:  # AC-CLN-050
 func test_varios_importantes_cuentan_una_vez_y_otra_noche_pueden_repetir() -> void:  # AC-CLN-051
 	_abrir()
 	var partida: Partida = _almacen.get("_partida")
-	_tirar(_almacen.get_node("Objetos/Mopa"))
-	_tirar(_almacen.get_node("Objetos/Balde"))
+	_tirar(_unidad())
+	_tirar(_unidad())
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(1)
 	await _seguir()
-	_tirar(_almacen.get_node("Objetos/Mopa"))
+	_tirar(_unidad())
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(2)
 
@@ -149,15 +176,13 @@ func test_varios_importantes_cuentan_una_vez_y_otra_noche_pueden_repetir() -> vo
 func test_tres_motivos_con_grave_guardan_siete_y_permiten_continuar() -> void:  # AC-CLN-052
 	_abrir()
 	var partida: Partida = _almacen.get("_partida")
-	_tirar(_almacen.get_node("Objetos/Mopa"))
+	_tirar(_unidad())
 	_otros_motivos()
 	_cerrar(false)
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(partida.terminada()).is_false()
 	assert_int(Partida.desde(Guardado.new().cargar()).medios()).is_equal(7)
 	await _seguir()
-	var mopa: ObjetoAgarrable = _almacen.get_node("Objetos/Mopa")
-	assert_bool((_almacen.get("_agarre") as Agarre).pedir_agarrar(mopa.datos, mopa)).is_true()
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(7)
 
@@ -170,7 +195,7 @@ func test_cuatro_motivos_con_grave_despiden_y_borran_el_guardado() -> void:  # A
 	assert_bool((_almacen.get("_agarre") as Agarre).pedir_agarrar(papel.datos, papel)).is_true()
 	_almacen.get("_jugador").uso_pedido.emit(_almacen.get_node("Estructura/inodoro/StaticBody3D"))
 	await get_tree().process_frame
-	_tirar(_almacen.get_node("Objetos/Mopa"))
+	_tirar(_unidad())
 	_otros_motivos()
 	_cerrar(false)
 	assert_int(partida.medios()).is_equal(8)

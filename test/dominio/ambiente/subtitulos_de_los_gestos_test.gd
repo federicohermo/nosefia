@@ -5,6 +5,7 @@ const R := ReglasDeLaLimpieza.Resultado
 const T := ReglasDeLaBasura.Tiro
 const S := SubtitulosDeLosGestos.Id
 const BOLSA := preload("res://src/dominio/almacen/bolsa_de_basura_1.tres")
+const CAJA := preload("res://src/dominio/almacen/caja_de_reposicion.tres")
 
 
 func _unidad() -> UnidadDeProducto:
@@ -25,9 +26,8 @@ func _objeto_de_la_pista() -> ObjetoDelAlmacen:
 
 
 func test_lo_que_se_tira_piensa_salvo_bolsa_vencido_ticket_y_pista() -> void:  # AC-SUB-016
-	var mopa := load("res://src/dominio/almacen/mopa.tres") as ObjetoDelAlmacen
-	var jabon := load("res://src/dominio/almacen/jabon_azul.tres") as ObjetoDelAlmacen
-	for tirado: ObjetoDelAlmacen in [_unidad(), jabon, mopa]:
+	var poetico := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO))
+	for tirado: ObjetoDelAlmacen in [_unidad(), poetico]:
 		assert_int(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO, false)).is_equal(S.MALA_IDEA)
 	var vencida := _unidad()
 	vencida.vencido = true
@@ -36,14 +36,33 @@ func test_lo_que_se_tira_piensa_salvo_bolsa_vencido_ticket_y_pista() -> void:  #
 		assert_int(SubtitulosDeLosGestos.al_tirar(eximido, T.TIRADO, es_la_pista)).is_equal(
 			S.NINGUNO
 		)
-	var caja := load("res://src/dominio/almacen/caja_de_reposicion.tres") as ObjetoDelAlmacen
-	assert_int(SubtitulosDeLosGestos.al_tirar(caja, T.NO_ENTRA, false)).is_equal(
+	assert_int(SubtitulosDeLosGestos.al_tirar(CAJA, T.NO_ENTRA, false)).is_equal(
 		S.CAJA_EN_EL_CONTENEDOR
 	)
 	assert_int(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA, false)).is_equal(S.NINGUNO)
 	assert_int(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA, false)).is_equal(
 		S.NINGUNO
 	)
+
+
+func test_el_util_y_la_caja_que_no_entran_piensan_cada_uno_lo_suyo() -> void:  # AC-SUB-025
+	var utiles: Array[ObjetoDelAlmacen] = []
+	for nombre: String in ["mopa", "balde", "jabon_azul", "jabon_rosa", "jabon_amarillo"]:
+		utiles.append(load("res://src/dominio/almacen/%s.tres" % nombre) as ObjetoDelAlmacen)
+	for recibe: bool in [true, false]:
+		for util: ObjetoDelAlmacen in utiles:
+			var tiro := ReglasDeLaBasura.tiro(util, recibe)
+			(
+				assert_int(SubtitulosDeLosGestos.al_tirar(util, tiro, false))
+				. override_failure_message("%s con la tapa recibe=%s" % [util.id, recibe])
+				. is_equal(S.UTIL_EN_EL_CONTENEDOR)
+			)
+		var tiro_de_la_caja := ReglasDeLaBasura.tiro(CAJA, recibe)
+		assert_int(SubtitulosDeLosGestos.al_tirar(CAJA, tiro_de_la_caja, false)).is_equal(
+			S.CAJA_EN_EL_CONTENEDOR
+		)
+		var sin_nada := ReglasDeLaBasura.tiro(null, recibe)
+		assert_int(SubtitulosDeLosGestos.al_tirar(null, sin_nada, false)).is_equal(S.NINGUNO)
 
 
 func test_lo_que_queda_afuera_piensa_salvo_el_ticket() -> void:  # AC-SUB-017

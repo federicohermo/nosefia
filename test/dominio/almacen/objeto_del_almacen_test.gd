@@ -12,13 +12,19 @@ const Revelacion := preload("res://src/dominio/investigacion/revelacion.gd")
 const CARPETA_DE_LOS_OBJETOS := "res://src/dominio/almacen"
 
 
-func test_la_caja_no_entra_y_los_otros_levantables_si() -> void:  # AC-CLN-036 AC-CLN-037
+func test_caja_y_utiles_no_entran_y_los_otros_levantables_si() -> void:  # AC-CLN-037 AC-CLN-076
 	assert_bool(ObjetoDelAlmacen.new().entra_en_el_contenedor).is_true()
+	var no_entran: Array[StringName] = [
+		&"caja_de_reposicion",
+		ReglasDeLaLimpieza.ID_DE_LA_MOPA,
+		ReglasDeLaLimpieza.ID_DEL_BALDE,
+	]
+	no_entran.append_array(ReglasDeLaLimpieza.JABONES.keys())
 	for objeto: ObjetoDelAlmacen in _objetos_del_almacen():
 		(
 			assert_bool(objeto.entra_en_el_contenedor)
 			. override_failure_message(str(objeto.id))
-			. is_equal(objeto.id != &"caja_de_reposicion")
+			. is_equal(not no_entran.has(objeto.id))
 		)
 
 

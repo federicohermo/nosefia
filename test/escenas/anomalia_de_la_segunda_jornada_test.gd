@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 const CUERPO := (
 	"Estructura/deposito_contenedor_grande_soporte/"
 	+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
@@ -193,7 +194,7 @@ func test_cualquier_destino_previo_equivale_a_la_apertura_directa() -> void:  # 
 				agarre.soltar(false)
 			"contenedor":
 				_clic(_almacen.get_node(CUERPO))
-				assert_array(_almacen.get("_contenedor").tirados()).contains_exactly([azul])
+				assert_array(_almacen.get("_contenedor").tirados()).is_empty()
 		_almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 		assert_bool(jugador.examen.esta_examinando()).is_false()
 		assert_object(agarre.cuerpo_sostenido()).is_null()
@@ -225,8 +226,6 @@ func test_la_tercera_jornada_recupera_el_mismo_bidon_y_su_estado_fisico() -> voi
 	var capa := azul.collision_layer
 	var mascara := azul.collision_mask
 	var congelado := azul.freeze
-	assert_bool(_almacen.get("_agarre").pedir_agarrar(azul.datos, azul)).is_true()
-	_clic(_almacen.get_node(CUERPO))
 	_almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 	_almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 	_azul_ausente()
@@ -275,6 +274,21 @@ func test_poetico_de_caja_y_gondola_tine_sin_descontar_y_se_devuelve() -> void:
 			_almacen.get("_reposicion_manual").call("devolver", Producto.Id.POETICO)
 		assert_object(agarre.cuerpo_sostenido()).is_null()
 		assert_int(_cantidades()[2]).is_zero()
+
+
+func test_poetico_tirado_es_un_producto_y_suma_el_motivo_una_vez() -> void:  # AC-CLN-076
+	await _abrir(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
+	var agarre: Agarre = _almacen.get("_agarre")
+	var unidad := _unidad()
+	_clic(_almacen.get_node(CUERPO))
+	assert_object(agarre.cuerpo_sostenido()).is_null()
+	assert_array(_almacen.get("_contenedor").tirados()).contains_exactly([unidad])
+	var partida: Partida = _almacen.get("_partida")
+	var reloj: RelojDelTurno = _almacen.get("_reloj")
+	for tarea: Tarea in partida.obligatorias():
+		reloj.completar(tarea)
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
+	assert_int(partida.medios()).is_equal(1)
 
 
 func test_los_rechazos_no_sueltan_ni_publican_y_la_consulta_no_actua() -> void:  # AC-CLN-062
