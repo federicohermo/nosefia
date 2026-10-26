@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»
 ---
 
 # Capacidad: el legajo del empleado
@@ -87,14 +87,14 @@ no DEBE sustituir el dato de medios ni migrarse.
 
 CUANDO cierra una jornada que no es de introducción (BR-SHF-005), el sistema DEBE armar la
 devolución de esa noche: un mensaje por parte, en este orden: Saludo, Tarea 1, Tarea 2, Tarea 3, Tarea 4, la advertencia por Poético,
-Tarea 5, Reto 1, Reto 2, Reto 3, Reto 4 y Cierre. Saludo y Cierre DEBEN ir siempre. La
+Tarea 5, Reto 1, Reto 2, Reto 3, Reto 4, Reto 5 y Cierre. Saludo y Cierre DEBEN ir siempre. La
 advertencia DEBE ir sólo según BR-EMP-034.
 
 - Tarea 1 es atender (cobrar en la caja), Tarea 2 registrar, Tarea 3 reponer, Tarea 4 limpiar,
   y Tarea 5 la particular de esa noche. Una Tarea DEBE ir sólo si su obligatoria quedó sin
   cumplir al cerrar (BR-SHF-007).
 - Reto 1 es el llamado por papel en el inodoro, Reto 2 por objetos importantes en la basura,
-  Reto 3 por objetos afuera y Reto 4 por local desordenado. Un Reto DEBE ir sólo si esa noche se
+  Reto 3 por objetos afuera, Reto 4 por local desordenado y Reto 5 por heladeras abiertas. Un Reto DEBE ir sólo si esa noche se
   anotó su llamado (BR-EMP-012).
 
 CUANDO cierra una jornada de introducción, jornadas 1 a 3, el sistema NO DEBE armar devolución:
@@ -306,6 +306,10 @@ siguientes. La fila de J = 6 se conserva aunque esa noche no declare una particu
 | Reto 4 | n = 3 y P < 4 | Me parece que no está quedando claro el temita de dejar todo ordenado. En el corcho hay una nota que seguro te va a servir. Pegale una leída, dale? + |
 | Reto 4 | n = 4 y P < 4 | Y si esta vez dejás ordenado? Sería mucho pedir? + |
 | Reto 4 | n ≥ 5, o n de 2 a 4 y P ≥ 4 | Realmente me sorprende cómo alguien puede tener tan poca conciencia de lo que es el orden. + |
+| Reto 5 | n = 1 y P < 4 | Las heladeras tienen que quedar cerradas para que los productos no pierdan la cadena de frío ¿no tenés una en tu casa? |
+| Reto 5 | n = 2 y P < 4 | Cerrame todas las puertitas de las heladeras antes de irte ¿querés? |
+| Reto 5 | n ≥ 3 y P < 4 | Dejate de joder con las heladeras. Siempre las dejás abiertas. No es un detalle menor. Es algo básico… |
+| Reto 5 | P ≥ 4, con cualquier n | Y para colmo me dejás abiertas las heladeras. |
 
 Un llamado se anota una vez por noche y la partida dura ocho, así que n no pasa de 8. La ficha
 escribe hasta n = 5: la última fila de cada Reto cubre también las n mayores.
@@ -1017,6 +1021,28 @@ en el orden unidades, cajas, útiles. DADO el segundo, el tercero y el cuarto ll
 el segundo a cuarto con P ≥ 4, y el quinto o mayor, ENTONCES cada fila de Reto 4 termina con el
 texto de las clases de esa noche. DADO el mismo llamado con una, dos o tres clases ENTONCES n y los
 medios del legajo son los mismos, y la devolución trae un solo Reto 4.
+
+### AC-EMP-098 — El Reto 5 dice que las heladeras quedaron abiertas *(verifica BR-EMP-009, BR-EMP-012, BR-EMP-028)*
+
+DADO la jornada 4 con el primer llamado por heladeras abiertas y P < 4 CUANDO se arma la
+devolución ENTONCES trae un solo Reto 5, «Las heladeras tienen que quedar cerradas para que los
+productos no pierdan la cadena de frío ¿no tenés una en tu casa?», después del Reto 4 y antes del
+Cierre. DADO el segundo llamado de ese motivo con P < 4 ENTONCES Reto 5 es «Cerrame todas las
+puertitas de las heladeras antes de irte ¿querés?». DADO el tercero, el cuarto, el quinto y el
+octavo con P < 4 ENTONCES es «Dejate de joder con las heladeras. Siempre las dejás abiertas. No es
+un detalle menor. Es algo básico…». DADO el primero, el segundo, el tercero y el octavo con P = 4 ENTONCES es «Y para
+colmo me dejás abiertas las heladeras.». DADO una noche sin ese llamado ENTONCES no trae Reto 5,
+aunque otra noche sí lo haya traído. DADO los cinco llamados en la misma noche ENTONCES trae un
+Reto 1, 2, 3, 4 y 5, en ese orden, y cada uno elige su texto por la cuenta de su propio motivo.
+
+### AC-EMP-099 — Las heladeras abiertas se cuentan y se guardan con la partida *(verifica BR-EMP-025)*
+
+DADO el llamado por heladeras abiertas en las noches 4 y 6 CUANDO se guarda, se lee el archivo y se
+retoma ENTONCES ese motivo lleva 2 llamados, hubo llamados en la partida, y el llamado de la noche
+7 trae el texto de n = 3 de Reto 5. DADO un guardado que no tiene el motivo, pero sí otros con su
+cuenta CUANDO se retoma ENTONCES las heladeras llevan cero llamados, los otros motivos conservan
+su cuenta, y el primer llamado por heladeras trae el texto de n = 1. DADO el motivo con otro tipo
+de valor ENTONCES se ignora sin descartar los demás.
 
 ### AC-EMP-075 — Las jornadas 2, 3 y 4 abren con lo suyo *(verifica BR-EMP-022, BR-EMP-024)*
 

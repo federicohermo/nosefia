@@ -981,6 +981,23 @@ func _al_agotar_el_turno(_jornada: int) -> void:
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
 	if ReglasDelCierre.hay_bolsa_afuera(estados):
 		_partida.bolsa_afuera = true
+	if ReglasDelCierre.hay_heladera_abierta(_puertas_de_las_heladeras()):
+		_partida.anotar_llamado(Partida.Llamado.HELADERAS_ABIERTAS)
+
+
+func _puertas_de_las_heladeras() -> Dictionary[ReglasDelCierre.Heladera, Puerta]:
+	var hojas := {
+		ReglasDelCierre.Heladera.PRIMERA:
+		$Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja,
+		ReglasDelCierre.Heladera.SEGUNDA:
+		$Estructura/heladeranueva_001/puerta_heladera_1/CuerpoDeLaHoja,
+		ReglasDelCierre.Heladera.FUERA_DE_SERVICIO:
+		$Estructura/heladera_fuera_de_servicio/puerta_heladera_2/CuerpoDeLaHoja,
+	}
+	var puertas: Dictionary[ReglasDelCierre.Heladera, Puerta] = {}
+	for heladera: ReglasDelCierre.Heladera in hojas:
+		puertas[heladera] = (hojas[heladera] as PuertaDelLocal).puerta()
+	return puertas
 
 
 func _al_desechar_un_ticket() -> void:
