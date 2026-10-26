@@ -60,8 +60,9 @@ func _sorteo(jornada: int, puesto: Node3D, semilla: int) -> Dictionary[Producto.
 
 
 ## Los vacíos de un producto con una tanda de cada estante: seguidos, y la parcial arriba de las
-## llenas, o abajo sólo si las llenas llegan al estante de arriba de todo.
-func _comprobar_el_vacio_que_sobra(jornada: int, id: Producto.Id) -> void:
+## llenas, o abajo sólo si las llenas llegan al estante de arriba de todo. Devuelve en cuántos
+## sorteos el producto tuvo vacíos en más de un estante.
+func _sorteos_con_vacio_que_sobra(jornada: int, id: Producto.Id) -> int:
 	var puesto := _puesto_de(jornada)
 	var tandas: Array = puesto.call("tandas")[id]
 	var lugares: Array = puesto.call("posiciones")[id]
@@ -87,18 +88,19 @@ func _comprobar_el_vacio_que_sobra(jornada: int, id: Producto.Id) -> void:
 		assert_int(parciales.size()).is_less_equal(1)
 		if not parciales.is_empty() and con_vacios.front() > 0:
 			assert_int(parciales[0]).is_equal(con_vacios.front())
-	assert_int(partidos).is_greater(0)
+	return partidos
 
 
 func test_el_vacio_que_sobra_de_poetico_cae_en_el_estante_de_justo_arriba() -> void:  # AC-STK-093
 	for jornada: int in [
 		ReglasDeLaPartida.PRIMERA_JORNADA + 1, ReglasDeLaPartida.PRIMERA_JORNADA + 2
 	]:
-		_comprobar_el_vacio_que_sobra(jornada, Producto.Id.POETICO)
+		assert_int(_sorteos_con_vacio_que_sobra(jornada, Producto.Id.POETICO)).is_greater(0)
 
 
 func test_el_vacio_que_sobra_de_flin_puf_cae_en_el_estante_de_justo_arriba() -> void:  # AC-STK-093
-	_comprobar_el_vacio_que_sobra(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, Producto.Id.FLIM_POF)
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	assert_int(_sorteos_con_vacio_que_sobra(jornada, Producto.Id.FLIM_POF)).is_greater(0)
 
 
 func test_ningun_producto_de_una_fila_abre_un_estante_vacio_entero() -> void:  # AC-STK-093
