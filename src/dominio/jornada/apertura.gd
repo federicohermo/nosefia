@@ -76,10 +76,10 @@ static func inventario_de_la_jornada(
 ## de cada producto, los casilleros de la fila de adelante de cada tanda, la reponible primero.
 ## `de_una_fila` dice qué productos tienen tandas de una sola fila (BR-STK-025).
 ##
-## **Los vacíos de un producto van juntos**: un bloque de casilleros seguidos de una tanda al azar,
-## y lo que no entra sigue como bloque en otra. Una tanda que no puede abrir vacía entera (la
-## reponible de un producto con tandas fijas, y todas si el producto es de una fila) cede un
-## casillero menos.
+## **Los vacíos de un producto van juntos**: un bloque de casilleros seguidos de una tanda al azar
+## entre las que lo reciben entero, y sólo si ninguna lo recibe se parte en otra. Una tanda que no
+## puede abrir vacía entera (la reponible de un producto con tandas fijas, y todas si el producto
+## es de una fila) cede un casillero menos.
 static func vacios_de_la_jornada(
 	jornada: int,
 	compradores: Array[Comprador],
@@ -200,8 +200,9 @@ static func _a_salvo(tandas: Array, de_una_fila: bool) -> Array:
 	return tandas.slice(0, 1) if hay_una_fija and not tandas[0].is_empty() else []
 
 
-## Un bloque de casilleros seguidos en una tanda al azar, y lo que no entra, otro bloque en otra
-## tanda. Una tanda a salvo cede un casillero menos, y por eso nunca queda vacía entera.
+## Un bloque de casilleros seguidos en una tanda al azar entre las que lo reciben entero. Sólo si
+## no entra en ninguna se parte: la tanda elegida se llena y lo que sobra sigue como bloque en otra.
+## Una tanda a salvo cede un casillero menos, y por eso nunca queda vacía entera.
 static func _sortear_vacios(
 	tandas: Array, de_una_fila: bool, cuantos: int, azar: RandomNumberGenerator
 ) -> Array:
@@ -216,7 +217,12 @@ static func _sortear_vacios(
 	var vacios: Array[int] = []
 	var faltan := cuantos
 	while faltan > 0:
-		var elegida: int = con_lugar.pop_at(azar.randi_range(0, con_lugar.size() - 1))
+		var entran: Array[int] = con_lugar.filter(
+			func(indice: int) -> bool: return cupos[indice] >= faltan
+		)
+		var opciones: Array[int] = con_lugar if entran.is_empty() else entran
+		var elegida := opciones[azar.randi_range(0, opciones.size() - 1)]
+		con_lugar.erase(elegida)
 		var tanda: PackedInt32Array = tandas[elegida]
 		var largo := mini(faltan, cupos[elegida])
 		var desde := azar.randi_range(0, tanda.size() - largo)

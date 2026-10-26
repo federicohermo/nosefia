@@ -226,11 +226,12 @@ func test_los_vacios_de_cada_tanda_son_casilleros_seguidos() -> void:  # AC-STK-
 							)
 
 
-func test_si_el_faltante_entra_en_una_tanda_cae_entero_en_ella() -> void:  # AC-STK-033
+func test_si_el_faltante_entra_entero_en_alguna_tanda_cae_entero_en_una() -> void:  # AC-STK-033
 	var producto := Producto.Id.ACTRONCITO
 	var tamanos: Array[int] = [4, 4]
 	var tandas: Dictionary[Producto.Id, Array] = {producto: _tandas(tamanos)}
 	var tandas_usadas: Dictionary[int, bool] = {}
+	var cuatro_vistos := 0
 	for semilla in 200:
 		var vacios := _vacios(8, [], tandas, false, semilla)
 		var casilleros: Array = vacios[producto]
@@ -238,8 +239,14 @@ func test_si_el_faltante_entra_en_una_tanda_cae_entero_en_ella() -> void:  # AC-
 		for casillero: int in casilleros:
 			en_tandas[_tanda_de(casillero, tamanos)] = true
 		tandas_usadas.merge(en_tandas)
-		if casilleros.size() <= 3:
+		if casilleros.size() <= 4:
 			assert_int(en_tandas.size()).is_equal(1)
+		if casilleros.size() == 4:
+			cuatro_vistos += 1
+			assert_array(en_tandas.keys()).contains_exactly([1])
+		if casilleros.size() > 4:
+			assert_int(en_tandas.size()).is_equal(2)
+	assert_int(cuatro_vistos).is_greater(0)
 	assert_array(tandas_usadas.keys()).contains_exactly_in_any_order([0, 1])
 
 

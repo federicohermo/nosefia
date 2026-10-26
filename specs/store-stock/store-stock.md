@@ -186,9 +186,11 @@ en una sola tanda reponible, al alcance de
 un jugador parado en el pasillo. La fila de adelante de cada tanda del local, reponible o fija y
 en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
 casilleros vacíos con que abre una jornada DEBEN quedar juntos: un bloque de casilleros seguidos
-en la fila de adelante de una tanda del producto elegida al azar, reponible o fija y en cualquier
-estante. SI el faltante no entra en esa tanda, ENTONCES DEBE seguir como otro bloque de casilleros
-seguidos en otra tanda del mismo producto, elegida al azar. En una tanda, los vacíos NO DEBEN
+en la fila de adelante de una tanda del producto, reponible o fija y en cualquier estante. La
+tanda DEBE elegirse al azar entre las que reciben el faltante entero, sin vaciar la que se protege.
+SI el faltante no entra entero en ninguna, ENTONCES DEBE partirse: un bloque llena una tanda
+elegida al azar y el resto sigue como otro bloque de casilleros seguidos en otra tanda del mismo
+producto, con la misma regla. En una tanda, los vacíos NO DEBEN
 quedar separados por casilleros ocupados. La apertura NO DEBE vaciar entera la tanda reponible: si los faltantes de un producto igualan los casilleros de
 su tanda reponible, uno DEBE quedar ocupado y el último faltante DEBE salir de la fila de
 adelante de una tanda fija del mismo producto. En un producto de una sola fila (BR-STK-025), la
@@ -805,7 +807,9 @@ CUANDO se sortean sus vacíos con las 200 semillas ENTONCES hay vacíos en cada 
 un producto. DADO un producto de una sola fila ENTONCES ninguna de sus tandas abre con su fila de
 adelante entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos con las 200 semillas
 ENTONCES en cada tanda los casilleros vacíos son seguidos, sin un casillero ocupado entre dos
-vacíos, y si el faltante entra en una tanda sin vaciar la que se protege, todos caen en una sola.
+vacíos. Si el faltante entra entero en alguna tanda sin vaciar la que se protege, todos caen en
+una sola, aunque otra tanda no lo reciba entero: con dos tandas de cuatro casilleros y un
+faltante de cuatro, siempre caen en la fija. Sólo si no entra en ninguna se parte.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
