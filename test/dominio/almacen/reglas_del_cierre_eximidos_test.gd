@@ -56,25 +56,21 @@ func test_un_eximido_dentro_del_local_sigue_sin_sumar_el_motivo_de_afuera() -> v
 
 func test_ticket_pista_bolsa_y_vencido_se_tiran_sin_llamado() -> void:  # AC-CLN-050
 	for eximido: ObjetoDelAlmacen in _eximidos():
-		assert_bool(ReglasDelCierre.esta_eximido(eximido, _levantar.jornada)).is_true()
+		assert_bool(ReglasDelCierre.esta_eximido(eximido, _es_la_pista(eximido))).is_true()
 
 
 func test_unidad_utiles_y_caja_no_se_eximen_ni_junto_a_un_eximido() -> void:  # AC-CLN-050
 	var caja := CAJA
 	var ordinarios: Array[ObjetoDelAlmacen] = [_unidad(), _util(), caja]
 	for ordinario: ObjetoDelAlmacen in ordinarios:
-		assert_bool(ReglasDelCierre.esta_eximido(ordinario, _levantar.jornada)).is_false()
-	assert_bool(ReglasDelCierre.esta_eximido(null, _levantar.jornada)).is_false()
+		assert_bool(ReglasDelCierre.esta_eximido(ordinario, _es_la_pista(ordinario))).is_false()
+	assert_bool(ReglasDelCierre.esta_eximido(null, false)).is_false()
 
 
-func test_el_objeto_de_una_pista_solo_se_exime_la_jornada_de_su_pista() -> void:  # AC-CLN-050
+func test_el_objeto_de_una_pista_se_exime_solo_si_se_levanta_para_ella() -> void:  # AC-CLN-050
 	var pista := _objeto_de_la_pista()
-	for jornada in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
-	):
-		assert_bool(ReglasDelCierre.esta_eximido(pista, jornada)).is_equal(
-			jornada == _levantar.jornada
-		)
+	assert_bool(ReglasDelCierre.esta_eximido(pista, true)).is_true()
+	assert_bool(ReglasDelCierre.esta_eximido(pista, false)).is_false()
 
 
 func _eximidos() -> Array[ObjetoDelAlmacen]:
@@ -90,8 +86,16 @@ func _estado(
 	clase: ReglasDelCierre.Clase = CLASE.OTRO
 ) -> ReglasDelCierre.Estado:
 	return ReglasDelCierre.Estado.new(
-		clase, habitacion, false, objeto.id, ReglasDelCierre.esta_eximido(objeto, _levantar.jornada)
+		clase,
+		habitacion,
+		false,
+		objeto.id,
+		ReglasDelCierre.esta_eximido(objeto, _es_la_pista(objeto))
 	)
+
+
+func _es_la_pista(objeto: ObjetoDelAlmacen) -> bool:
+	return objeto.id == _levantar.origen
 
 
 func _unidad() -> UnidadDeProducto:

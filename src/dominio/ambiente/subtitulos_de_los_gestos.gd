@@ -49,10 +49,13 @@ var _berreta_pendiente := false
 
 
 ## Lo tirado sin llamado no piensa: es lo que va al contenedor.
-static func al_tirar(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro, jornada: int) -> Id:
+static func al_tirar(
+	sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro, levanta_una_pista: bool
+) -> Id:
 	match tiro:
 		ReglasDeLaBasura.Tiro.TIRADO:
-			return Id.NINGUNO if ReglasDelCierre.esta_eximido(sostenido, jornada) else Id.MALA_IDEA
+			var eximido := ReglasDelCierre.esta_eximido(sostenido, levanta_una_pista)
+			return Id.NINGUNO if eximido else Id.MALA_IDEA
 		ReglasDeLaBasura.Tiro.NO_ENTRA:
 			return Id.CAJA_EN_EL_CONTENEDOR
 	return Id.NINGUNO

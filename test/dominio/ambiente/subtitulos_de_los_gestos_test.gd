@@ -5,7 +5,6 @@ const R := ReglasDeLaLimpieza.Resultado
 const T := ReglasDeLaBasura.Tiro
 const S := SubtitulosDeLosGestos.Id
 const BOLSA := preload("res://src/dominio/almacen/bolsa_de_basura_1.tres")
-const JORNADA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 
 
 func _unidad() -> UnidadDeProducto:
@@ -29,19 +28,20 @@ func test_lo_que_se_tira_piensa_salvo_bolsa_vencido_ticket_y_pista() -> void:  #
 	var mopa := load("res://src/dominio/almacen/mopa.tres") as ObjetoDelAlmacen
 	var jabon := load("res://src/dominio/almacen/jabon_azul.tres") as ObjetoDelAlmacen
 	for tirado: ObjetoDelAlmacen in [_unidad(), jabon, mopa]:
-		assert_int(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO, JORNADA)).is_equal(S.MALA_IDEA)
+		assert_int(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO, false)).is_equal(S.MALA_IDEA)
 	var vencida := _unidad()
 	vencida.vencido = true
 	for eximido: ObjetoDelAlmacen in [BOLSA, Ticket.new(), vencida, _objeto_de_la_pista()]:
-		assert_int(SubtitulosDeLosGestos.al_tirar(eximido, T.TIRADO, _pista().jornada)).is_equal(
+		var es_la_pista := eximido.id == _pista().origen
+		assert_int(SubtitulosDeLosGestos.al_tirar(eximido, T.TIRADO, es_la_pista)).is_equal(
 			S.NINGUNO
 		)
 	var caja := load("res://src/dominio/almacen/caja_de_reposicion.tres") as ObjetoDelAlmacen
-	assert_int(SubtitulosDeLosGestos.al_tirar(caja, T.NO_ENTRA, JORNADA)).is_equal(
+	assert_int(SubtitulosDeLosGestos.al_tirar(caja, T.NO_ENTRA, false)).is_equal(
 		S.CAJA_EN_EL_CONTENEDOR
 	)
-	assert_int(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA, JORNADA)).is_equal(S.NINGUNO)
-	assert_int(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA, JORNADA)).is_equal(
+	assert_int(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA, false)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA, false)).is_equal(
 		S.NINGUNO
 	)
 

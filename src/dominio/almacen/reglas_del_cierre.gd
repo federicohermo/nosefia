@@ -98,12 +98,14 @@ static func hay_bolsa_afuera(estados: Array[Estado]) -> bool:
 
 
 ## La única puerta de la exención (BR-CLN-038): lo que no suma llamado afuera ni en el contenedor.
-static func esta_eximido(objeto: ObjetoDelAlmacen, jornada: int) -> bool:
+##
+## `levanta_una_pista` lo dice la partida, que es quien conoce el caso: acá no se lo busca.
+static func esta_eximido(objeto: ObjetoDelAlmacen, levanta_una_pista: bool) -> bool:
 	if objeto == null:
 		return false
 	return (
 		objeto is Ticket
 		or objeto.vencido
 		or ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.id)
-		or CasoDeInvestigacion.de_la_partida().levanta_una_pista(objeto.id, jornada)
+		or levanta_una_pista
 	)

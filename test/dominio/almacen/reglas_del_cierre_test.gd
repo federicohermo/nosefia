@@ -192,21 +192,21 @@ func test_solo_las_bolsas_y_los_tickets_se_tiran_sin_llamado() -> void:  # AC-CL
 	for id: StringName in ReglasDeLaBasura.ids_de_las_bolsas():
 		var bolsa := ObjetoDelAlmacen.new()
 		bolsa.id = id
-		assert_bool(ReglasDelCierre.esta_eximido(bolsa, JORNADA_COMUN)).is_true()
+		assert_bool(ReglasDelCierre.esta_eximido(bolsa, false)).is_true()
 	var productos: Array[Producto] = [Catalogo.de(Producto.Id.ACTRONCITO)]
-	assert_bool(ReglasDelCierre.esta_eximido(Ticket.new(productos), JORNADA_COMUN)).is_true()
+	assert_bool(ReglasDelCierre.esta_eximido(Ticket.new(productos), false)).is_true()
 
 
 func test_unidad_utiles_y_datos_ausentes_no_son_exentos() -> void:  # AC-CLN-050
-	assert_bool(ReglasDelCierre.esta_eximido(null, JORNADA_COMUN)).is_false()
+	assert_bool(ReglasDelCierre.esta_eximido(null, false)).is_false()
 	var unidad := UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
-	assert_bool(ReglasDelCierre.esta_eximido(unidad, JORNADA_COMUN)).is_false()
+	assert_bool(ReglasDelCierre.esta_eximido(unidad, false)).is_false()
 	var ids: Array[StringName] = [ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE]
 	ids.append_array(ReglasDeLaLimpieza.JABONES.keys())
 	for id: StringName in ids:
 		var util := ObjetoDelAlmacen.new()
 		util.id = id
-		assert_bool(ReglasDelCierre.esta_eximido(util, JORNADA_COMUN)).is_false()
+		assert_bool(ReglasDelCierre.esta_eximido(util, false)).is_false()
 
 
 func test_las_cajas_toleradas_en_el_local_no_desordenan_y_una_mas_si() -> void:  # AC-CLN-070

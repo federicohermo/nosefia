@@ -224,3 +224,16 @@ func test_reconstruir_sin_b_conserva_adjuntos_de_a_y_c() -> void:  # AC-INV-047,
 	assert_object(bandeja.adjunto_de(Conversacion.Interlocutor.NOTAS, 2)).is_same(notas[3])
 	assert_str(notas[1].texto).is_equal("Nota A")
 	assert_str(notas[3].texto).is_equal("Nota C")
+
+
+func test_el_objeto_de_una_pista_solo_la_levanta_la_noche_de_esa_pista() -> void:  # AC-CLN-050
+	var levantar := _pista("L")
+	levantar.canal = Pista.Canal.LEVANTAR
+	var expediente := Expediente.new(_caso([levantar]))
+	for jornada in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
+	):
+		assert_bool(expediente.levanta_una_pista(levantar.origen, jornada)).is_equal(
+			jornada == levantar.jornada
+		)
+		assert_bool(expediente.levanta_una_pista(&"ajeno", jornada)).is_false()
