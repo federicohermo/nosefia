@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574
 ---
 
 # Capacidad: los subtítulos
@@ -204,7 +204,7 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 
 | Gesto | ID | Pensamiento |
 |---|---|---|
-| Tirar al contenedor algo que no es una bolsa de basura ni un ticket | `MALA_IDEA` | Me parece que eso fue una mala idea… |
+| Tirar al contenedor algo que no es una bolsa de basura, un producto vencido, un ticket ni una pista | `MALA_IDEA` | Me parece que eso fue una mala idea… |
 | Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
 | Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
 | Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
@@ -214,8 +214,8 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
 
-Tirar una bolsa o un ticket, borrar cualquier otra mancha, o pasar la mopa por una mancha ya
-limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
+Tirar una bolsa, un producto vencido, un ticket o una pista, borrar cualquier otra mancha, o
+pasar la mopa por una mancha ya limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
 el texto del jabón, no el de la caca.
 
 `PUERTA_CON_TAREAS_PENDIENTES` DEBE decidirse por el cumplimiento de las obligatorias en el
@@ -403,8 +403,8 @@ camina 5 metros y transcurre 1 segundo desde que apareció ENTONCES sigue con op
 ### AC-SUB-016 — Lo que se tira *(verifica BR-SUB-013)*
 
 DADO una unidad, un jabón o la mopa tirados al contenedor ENTONCES el pensamiento es `MALA_IDEA`.
-DADO una bolsa o un ticket tirados ENTONCES no hay pensamiento. DADO una caja del
-depósito que no entra ENTONCES el pensamiento es `CAJA_EN_EL_CONTENEDOR`; DADO la mano vacía o la tapa cerrada
+DADO una bolsa, un ticket, una pista o una unidad vencida tirados ENTONCES no hay pensamiento.
+DADO una caja del depósito que no entra ENTONCES el pensamiento es `CAJA_EN_EL_CONTENEDOR`; DADO la mano vacía o la tapa cerrada
 con algo que entra ENTONCES no hay texto.
 
 ### AC-SUB-017 — Lo que queda afuera *(verifica BR-SUB-013)*
