@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -194,8 +194,17 @@ bloque; arriba sólo si debajo no hay estante. Los vacíos de la tanda parcial D
 columnas que los del estante anterior, hasta donde lo permita lo que la tanda protege. En una
 tanda, los vacíos NO DEBEN quedar separados por casilleros ocupados. En un producto de dos filas
 (BR-STK-025), la apertura PUEDE vaciar entera la fila de adelante de cualquier tanda, la
-reponible incluida: la fila de atrás dice qué va ahí. En un producto de una sola fila, la
-apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda.
+reponible incluida: la fila de atrás dice qué va ahí.
+
+La apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda de un producto de una sola
+fila: en cada estante del producto DEBE quedar al menos una unidad. El faltante que no cabe en un
+estante DEBE quedar en la fila de adelante del estante de justo arriba: con cuatro casilleros por
+estante y cuatro faltantes, faltan tres de un estante y uno del de arriba. SI el de los tres es el
+de arriba de todo, ENTONCES el que sobra DEBE quedar en el de justo abajo. SI el estante vecino
+tiene una sola unidad y no puede ceder ninguna, ENTONCES el que sobra DEBE pasar al siguiente
+estante del producto con más de una unidad, en la misma dirección.
+Los vacíos DEBEN seguir sumando lo que faltó. «Justo arriba» y «justo abajo» se miden por la
+altura de las tandas del producto en esa cara.
 
 En un mueble de estantes, la tanda reponible DEBE ir en un estante de reposición. Un estante
 de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la altura de la mano se
@@ -231,7 +240,7 @@ desde la góndola. Agarrar, colocar o vender esas unidades NO DEBE modificar su 
 Retomar la jornada 1 desde el menú DEBE abrirla completa otra vez, sin declarar reponer.
 La jornada 2 DEBE abrir con su inventario nuevo y sus faltantes sorteados.
 Los huecos dejados por ventas en la jornada 1 NO DEBEN pasar a la siguiente.
-DEBE elegir entre 4 y 7 productos distintos y, de cada uno, entre 1 unidad y su máximo
+DEBE elegir entre 4 y 6 productos distintos y, de cada uno, entre 3 unidades y su máximo
 reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 [ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
 
@@ -240,7 +249,7 @@ caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casil
 adelante de todas sus tandas, reponible y fijas, menos uno por cada tanda de un producto de una
 sola fila, que no puede abrir vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
 total de todas las tandas (BR-STK-008). Los casilleros vacíos de un producto DEBEN quedar juntos
-(BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 1
+(BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 3
 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
 incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
 compradores ni pedidos.
@@ -846,19 +855,20 @@ con la reponible vacía entera.
 
 DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
 cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y
-7 productos distintos. Cada faltante está entre 1 y `mínimo(C − P, F)`, y los productos no elegidos
+6 productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no elegidos
 están completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y dos
 conjuntos de productos distintos.
 
 DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
-se pueden obtener 4 y 7 productos, y 1 y el máximo reponible de cada elegido. La elección de
-cantidad tiene cuatro alternativas equiprobables; la de unidades tiene tantas alternativas
-equiprobables como su máximo reponible.
+se pueden obtener 4 y 6 productos, y 3 y el máximo reponible de cada elegido. La elección de
+cantidad tiene tres alternativas equiprobables; la de unidades tiene tantas alternativas
+equiprobables como enteros hay entre 3 y su máximo reponible.
 
 DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
 su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
-pedidas o con cero casilleros principales, el producto nunca falta. DADO exactamente tres elegibles
-CUANDO la cantidad sorteada es 4 o 7 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+pedidas o con cero casilleros principales, el producto nunca falta; con un máximo de 2, tampoco,
+y con un máximo de 3 es elegible y le faltan exactamente 3. DADO exactamente tres elegibles
+CUANDO la cantidad sorteada es 4 o 6 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
 DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
 principales CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
 
@@ -1212,6 +1222,19 @@ se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades 
 
 DADO cualquier cara de un mueble ENTONCES el estante de arriba de todo lleva los mismos productos
 que el reponible de abajo, y el otro reponible los mismos que el zócalo, en el mismo orden.
+
+### AC-STK-093 — Un producto de una sola fila no abre con una tanda vacía entera *(verifica BR-STK-024)*
+
+DADO un producto de una sola fila con cuatro estantes de cuatro casilleros a distinta altura, y un
+faltante de cuatro CUANDO se sortean sus vacíos con las 200 semillas ENTONCES cada estante conserva
+al menos una unidad, tres vacíos caen en un estante y el otro en el de justo arriba, o en el de
+justo abajo si el de los tres es el de arriba de todo. DADO Poético en la jornada 2 o 3 y Flin Puf
+desde la jornada 4, con un faltante igual a los casilleros de un estante, ENTONCES se cumple lo
+mismo con sus estantes reales.
+
+DADO un producto de una sola fila con tres estantes de cuatro, uno y cuatro casilleros, y un
+faltante de cuatro CUANDO se sortean sus vacíos con las 200 semillas ENTONCES el del medio conserva
+su unidad y los vacíos se reparten entre los otros dos, tres en uno y uno en el otro.
 
 ### AC-STK-094 — La primera jornada abre completa *(verifica BR-STK-026, BR-STK-013, BR-STK-033)*
 
