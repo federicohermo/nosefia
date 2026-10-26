@@ -153,7 +153,7 @@ func test_la_caja_en_examen_ocupa_la_unica_permitida_en_el_local() -> void:  # A
 	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
 
 
-func test_el_util_en_la_mano_o_en_examen_cuenta_guardado_donde_este() -> void:  # AC-CLN-076
+func test_el_util_en_la_mano_o_en_examen_cuenta_guardado_donde_este() -> void:  # AC-CLN-077
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var agarre: Agarre = _almacen.get("_agarre")

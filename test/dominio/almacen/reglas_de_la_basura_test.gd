@@ -17,6 +17,20 @@ func test_el_tiro_distingue_mano_caja_y_tapa_en_orden() -> void:  # AC-CLN-037
 	assert_int(ReglasDeLaBasura.tiro(bolsa, true)).is_equal(ReglasDeLaBasura.Tiro.TIRADO)
 
 
+func test_los_utiles_no_entran_con_la_tapa_abierta_ni_cerrada() -> void:  # AC-CLN-076
+	var ids: Array[StringName] = [ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE]
+	ids.append_array(ReglasDeLaLimpieza.JABONES.keys())
+	assert_int(ids.size()).is_equal(5)
+	for id: StringName in ids:
+		var util := load("res://src/dominio/almacen/%s.tres" % id) as ObjetoDelAlmacen
+		for recibe: bool in [false, true]:
+			(
+				assert_int(ReglasDeLaBasura.tiro(util, recibe))
+				. override_failure_message("%s con la tapa recibe=%s" % [id, recibe])
+				. is_equal(ReglasDeLaBasura.Tiro.NO_ENTRA)
+			)
+
+
 func test_la_tarea_no_se_puede_resolver_en_un_solo_viaje() -> void:  # AC-CLN-007
 	(
 		assert_int(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)

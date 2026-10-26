@@ -255,7 +255,7 @@ func test_otro_cuerpo_sostenido_no_ocupa_la_permitida() -> void:  # AC-CLN-070
 	assert_bool(ReglasDelCierre.hay_desorden(estados, JORNADA_COMUN)).is_false()
 
 
-func test_el_util_en_la_mano_cuenta_guardado_en_cualquier_habitacion() -> void:  # AC-CLN-076
+func test_el_util_en_la_mano_cuenta_guardado_en_cualquier_habitacion() -> void:  # AC-CLN-077
 	for habitacion: ReglasDelCierre.Habitacion in HABITACION.values():
 		var en_la_mano: Array[ReglasDelCierre.Estado] = [_util(habitacion, true)]
 		assert_array(ReglasDelCierre.clases_de_desorden(en_la_mano, JORNADA_COMUN)).is_empty()
