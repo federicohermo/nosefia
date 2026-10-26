@@ -258,6 +258,12 @@ cuerpo sostenido cuenta en su posición física. Lo ya tirado al contenedor DEBE
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
 
+CUANDO termina la jornada, el sistema DEBE informar además cuáles de tres clases de desorden hubo:
+unidades sueltas, cajas fuera del depósito y útiles fuera del cuartito. Cada clase DEBE contar con
+las mismas condiciones de arriba, y lo excluido o exento de una clase NO DEBE sumarla. Hay desorden
+si y sólo si hay al menos una clase. La devolución DEBE recibir ese dato junto con el llamado, y la
+escena NO DEBE deducirlo.
+
 ### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
 
 CUANDO termina la jornada, el sistema DEBE anotar un llamado si queda al menos un cuerpo
@@ -587,6 +593,16 @@ DADO un útil en local, depósito o baño ENTONCES hay desorden; en cuartito o s
 útil en el umbral de la puerta del cuartito ENTONCES del lado del cuartito no produce desorden y
 del lado del depósito sí. DADO una bolsa adentro, también en el cuartito, ENTONCES no produce
 desorden. DADO la lista vacía ENTONCES no hay ninguno de los motivos.
+
+### AC-CLN-071 — El cierre dice qué clases de desorden hubo *(verifica BR-CLN-028)*
+
+DADO sólo una unidad suelta CUANDO cierra ENTONCES las clases son unidades sueltas. DADO sólo dos
+cajas en el local ENTONCES son cajas fuera del depósito; con una sola caja en el local, ninguna.
+DADO sólo un útil en el depósito ENTONCES son útiles fuera del cuartito. DADO una unidad suelta,
+dos cajas en el local y un útil en el baño ENTONCES son las tres. DADO una unidad suelta y un útil
+fuera del cuartito ENTONCES son esas dos y no las cajas. DADO el local en orden, o sólo con lo
+sostenido, lo tirado al contenedor o una bolsa adentro ENTONCES no hay ninguna clase y no hay
+desorden. DADO cualquier combinación ENTONCES hay desorden si y sólo si hay al menos una clase.
 
 ### AC-CLN-043 — La mano excluye sólo su cuerpo *(verifica BR-CLN-028, BR-CLN-029)*
 
