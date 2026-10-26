@@ -252,9 +252,9 @@ CUANDO termina la jornada, el sistema DEBE anotar un llamado por desorden si que
 unidad suelta dentro de cualquier habitación, una caja fuera del depósito o un útil
 fuera del cuartito. Una única caja en el local NO DEBE producir desorden; dos o más cajas en el
 local sí, y una caja apoyada en el baño o en el cuartito también, aunque sea la única. La caja
-sostenida cuenta como la única permitida, también en el baño: con una caja en la mano, otra caja
-en el local produce desorden. Las unidades de Poético quedan exentas sólo en lo que fija BR-CLN-037. Los demás cuerpos sostenidos DEBEN excluirse por identidad. Mientras se examina, cualquier
-cuerpo sostenido cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
+sostenida cuenta como la única permitida, también en el baño y también mientras se examina: con una
+caja en la mano o en examen, otra caja en el local produce desorden. Las unidades de Poético quedan exentas sólo en lo que fija BR-CLN-037. Los demás cuerpos sostenidos DEBEN excluirse por identidad,
+también mientras se examinan. Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
 
@@ -267,7 +267,7 @@ escena NO DEBE deducirlo.
 ### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
 
 CUANDO termina la jornada, el sistema DEBE anotar un llamado si queda al menos un cuerpo
-levantable afuera, excluyendo el sostenido sin examen, lo tirado al contenedor y lo eximido por
+levantable afuera, excluyendo el sostenido, con o sin examen, lo tirado al contenedor y lo eximido por
 BR-CLN-038. Varios cuerpos afuera DEBEN producir un único motivo, independiente del desorden.
 Recuperarlo antes del cierre DEBE eliminar ese motivo; una unidad recuperada y suelta adentro
 puede producir desorden. Una bolsa afuera NO DEBE sumar ese motivo, pero DEBE seguir contando
@@ -619,7 +619,7 @@ siguen afuera, incluso cuando caen dentro de una envolvente mayor.
 
 DADO una unidad suelta en local, depósito, baño o cuartito, incluso agrupada o apoyada en caja o góndola,
 de un producto distinto de Poético, o de Poético fuera de la jornada de BR-CLN-037,
-CUANDO cierra ENTONCES hay desorden. DADO la unidad colocada, devuelta o sostenida sin examen
+CUANDO cierra ENTONCES hay desorden. DADO la unidad colocada, devuelta o sostenida, con o sin examen
 ENTONCES no lo produce. El cuerpo de repuesto no cuenta como unidad suelta.
 
 ### AC-CLN-042 — Cada clase tiene su habitación *(verifica BR-CLN-027, BR-CLN-028)*
@@ -663,7 +663,7 @@ suma y no hay Reto 5. DADO una noche de la prueba con una heladera abierta ENTON
 
 DADO dos cajas distintas con los mismos datos y una sostenida CUANDO la otra queda desordenada
 o afuera ENTONCES conserva su motivo. DADO el cuerpo sostenido CUANDO inicia un examen real
-ENTONCES cuenta por su posición; al terminar vuelve a tratarse como sostenido. Esto también vale para una
+ENTONCES sigue excluido, y al terminar sigue excluido. Esto también vale para una
 unidad que salió del grupo de sueltas al agarrarse. Mover y devolver lo sostenido conserva su
 identidad; soltar, entregar y vaciar dejan la mano sin cuerpo.
 
@@ -710,8 +710,8 @@ cuerpos liberados o pendientes de liberar; conserva los válidos de ranura, mund
 y contenedor. DADO tickets dentro de local, depósito, baño o cuartito CUANDO cierra ENTONCES no producen
 desorden ni afuera; uno o varios afuera no producen motivo de afuera, porque BR-CLN-038 los
 exime. DADO dos cuerpos con los mismos datos
-ENTONCES sólo se excluye el sostenido; un examen real lo hace contar por su posición física
-y terminarlo vuelve a excluirlo. Un ticket aceptado por el inodoro se libera sin volver a
+ENTONCES sólo se excluye el sostenido; un examen real del ticket sostenido no lo hace contar por su
+posición física, y terminarlo tampoco. Un ticket aceptado por el inodoro se libera sin volver a
 consultarlo al cerrar; uno tirado al contenedor sigue vivo y queda excluido por ese destino,
 sin anotar papel en el inodoro. Abrir otra noche retira ambos del registro activo.
 
@@ -883,7 +883,9 @@ una caja apoyada en el baño, aunque sea la única, ENTONCES hay desorden. DADO 
 y otra apoyada en el baño ENTONCES hay desorden. DADO una caja sostenida y las demás en el depósito
 ENTONCES no hay desorden. DADO una caja sostenida dentro del baño y ninguna otra ENTONCES no hay
 desorden. DADO una caja sostenida y otra en el local ENTONCES hay desorden: la sostenida es la
-única permitida. DADO un útil sostenido y una caja en el local ENTONCES no hay desorden. DADO una
+única permitida. DADO una caja en examen y otra en el local ENTONCES hay desorden: la que está en
+examen ocupa la única permitida. DADO una caja en examen y ninguna otra fuera del depósito ENTONCES
+no hay desorden. DADO un útil sostenido y una caja en el local ENTONCES no hay desorden. DADO una
 caja en el local sin otras cajas y una unidad suelta ENTONCES hay desorden por la unidad, y el
 motivo sigue siendo único.
 
