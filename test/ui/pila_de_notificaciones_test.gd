@@ -408,3 +408,61 @@ func test_la_pista_tiene_su_simbolo_y_la_pausa_conserva_su_tiempo() -> void:
 	pila.avisar_pista()
 	pila.vaciar()
 	assert_array(_textos(pila)).is_empty()
+
+
+func test_falta_reponer_sigue_en_pausa_y_con_el_tiempo_corrido() -> void:  # AC-NTF-033
+	var pila := _pila()
+	pila.set_process(false)
+	pila.actualizar_faltante(true)
+	pila._process(Notificaciones.DURACION)
+	get_tree().paused = true
+	await get_tree().process_frame
+	assert_bool(pila.can_process()).is_false()
+	assert_array(_textos(pila)).has_size(1)
+	get_tree().paused = false
+	pila._process(600.0)
+	assert_array(_textos(pila)).has_size(1)
+	pila.actualizar_faltante(false)
+	assert_array(_textos(pila)).is_empty()
+
+
+func test_falta_reponer_entra_completo_en_una_linea_en_ambas_resoluciones() -> void:  # AC-NTF-037
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.avisar_pista()
+	pila.actualizar_faltante(true)
+	var texto_del_aviso := _textos(pila)[0]
+	assert_str(texto_del_aviso).is_not_empty()
+	assert_str(texto_del_aviso).is_equal(texto_del_aviso.to_upper())
+	assert_bool(texto_del_aviso.ends_with(".")).is_false()
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var carteles := pila.get_node("Marco/Pila").get_children()
+		assert_int(carteles.size()).is_equal(2)
+		var derecha: float = carteles[0].get_global_rect().end.x
+		for cartel: PanelContainer in carteles:
+			var fila: HBoxContainer = cartel.get_child(0)
+			var simbolo: TextureRect = fila.get_child(0)
+			var texto: Label = fila.get_child(1)
+			assert_int(texto.get_line_count()).is_equal(1)
+			assert_float(texto.size.x).is_greater_equal(texto.get_minimum_size().x)
+			assert_object(texto.get_theme_font("font")).is_same(pila._marco.get_theme_font("font"))
+			assert_float(cartel.get_global_rect().end.x).is_equal_approx(derecha, 0.1)
+			(
+				assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(cartel.get_global_rect()))
+				. is_true()
+			)
+			assert_float(cartel.size.x).is_equal_approx(
+				fila.get_combined_minimum_size().x + pila._estilo.get_minimum_size().x, 1.0
+			)
+			assert_float(simbolo.get_global_rect().end.x).is_less(
+				texto.get_global_rect().position.x
+			)
+		for control: Control in pila.find_children("*", "Control", true, false):
+			assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)

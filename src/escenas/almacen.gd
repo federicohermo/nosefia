@@ -115,6 +115,8 @@ var _jornada_preparada := 0
 ## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
 ## porque lo que la escena declara cuelga de la raíz; los servicios se crean en el cableado.
 var _arranque: Transform3D
+var _avisos: PilaDeNotificaciones
+var _zonas_de_reposicion: ZonasDeReposicion
 var _acomodador: AcomodadorDelDeposito
 var _pallets_de_entrega: Node3D
 var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
@@ -158,6 +160,7 @@ func _ready() -> void:
 	_cablear_el_celular()
 	_cablear_la_investigacion()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
+	_avisos = avisos
 	var entrada: PuertaDelLocal = $Estructura/puertaentrada/CuerpoDeLaHoja
 	_hojas_de_entrada = [entrada, $Estructura/puertaentrada_derecha/CuerpoDeLaHoja]
 	_hojas_de_entrada[1].puerta_trabada.connect(entrada.puerta_trabada.emit)
@@ -372,7 +375,8 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 func _al_abrir_la_jornada(jornada: int) -> void:
 	_salida.reiniciar()
 	_salida_preparada = false
-	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).vaciar()
+	_avisos.vaciar()
+	_avisos.abrir_turno()
 	_jornada_del_celular = jornada
 	_celular.abrir_jornada(jornada, _condiciones_del_jefe())
 	_pantalla_del_celular.mostrar_recordatorio(true)
@@ -420,6 +424,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos
 	)
 	_repositor.arrancar(Estante.new(inventario, productos, vacios))
+	_zonas_de_reposicion = ZonasDeReposicion.new(jornada)
 	_reposicion_manual.preparar()
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
@@ -602,6 +607,7 @@ func _salir_por_la_entrada() -> void:
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_jornada_del_celular = jornada
 	_gestos.descartar()
+	_avisos.vaciar()
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 	persiana.bajar()
 	_celular.cerrar_jornada()
@@ -925,6 +931,14 @@ func _pensar(texto: String) -> void:
 
 ## Un texto vacío no cambia la línea (BR-SUB-003). El lugar es contra el que se mide cuánto se
 ## aleja el jugador (BR-SUB-015); `Vector3.INF` es un pensamiento sin lugar, que dura entero.
+## Traduce dónde está el jugador a la pregunta «¿falta reponer por acá?», que contesta el dominio.
+func _avisar_si_falta_reponer() -> void:
+	if _zonas_de_reposicion == null or _repositor.estante() == null:
+		return
+	var punto := _habitaciones.to_local(_jugador.global_position)
+	_avisos.actualizar_faltante(_zonas_de_reposicion.hay_faltante_en(punto, _repositor.estante()))
+
+
 func _pensar_en(texto: String, lugar: Vector3) -> void:
 	if texto.is_empty():
 		return
@@ -935,6 +949,7 @@ func _pensar_en(texto: String, lugar: Vector3) -> void:
 
 
 func _process(delta: float) -> void:
+	_avisar_si_falta_reponer()
 	if _partida.reflexion != null and _partida.reflexion.avanzar(delta):
 		_terminar_la_reflexion()
 	if _devolucion_en_espera != null and not get_tree().paused:
