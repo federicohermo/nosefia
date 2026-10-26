@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; heladeras abiertas al cierre de #550, decisión del 2026-10-26
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26
 ---
 
 # Capacidad: dejar el local en orden
@@ -267,9 +267,11 @@ escena NO DEBE deducirlo.
 ### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
 
 CUANDO termina la jornada, el sistema DEBE anotar un llamado si queda al menos un cuerpo
-levantable afuera, excluyendo el sostenido sin examen y lo tirado al contenedor. Varios cuerpos
-afuera DEBEN producir un único motivo, independiente del desorden. Recuperarlo antes del cierre
-DEBE eliminar ese motivo; una unidad recuperada y suelta adentro puede producir desorden.
+levantable afuera, excluyendo el sostenido sin examen, lo tirado al contenedor y lo eximido por
+BR-CLN-038. Varios cuerpos afuera DEBEN producir un único motivo, independiente del desorden.
+Recuperarlo antes del cierre DEBE eliminar ese motivo; una unidad recuperada y suelta adentro
+puede producir desorden. Una bolsa afuera NO DEBE sumar ese motivo, pero DEBE seguir contando
+como bolsa afuera para el texto de BR-EMP-028.
 Las superficies existentes de pavimento exterior DEBEN sostener los cuerpos soltados por el
 hueco real de ventanilla, conservándolos recogibles dentro del alcance vigente, sin extender
 soporte sobre huecos que el pavimento no ocupa ni duplicar su dibujo.
@@ -294,13 +296,23 @@ partida terminada NO DEBE sumar ni quedar pendiente para otra noche.
 
 ### BR-CLN-031 — Tirar objetos importantes
 
-CUANDO se acepta tirar al contenedor un objeto que no sea bolsa ni ticket durante una jornada
+CUANDO se acepta tirar al contenedor un objeto que BR-CLN-038 no exime durante una jornada
 abierta, el sistema DEBE anotar un único llamado por objeto importante tirado. Varios objetos
-importantes tirados DEBEN producir un solo motivo en esa noche. Las bolsas y los tickets
-DEBEN conservar su descarte normal sin este motivo. Una unidad ordinaria, la mopa, el balde
+importantes tirados DEBEN producir un solo motivo en esa noche. Lo eximido por BR-CLN-038
+DEBE conservar su descarte normal sin este motivo. Una unidad ordinaria, la mopa, el balde
 y los jabones NO DEBEN considerarse exentos. El motivo DEBE sumar un medio al cierre, además
 de la banda y los demás motivos, y reiniciarse al abrir otra noche sin borrar la deuda.
 Un gesto rechazado o fuera de jornada abierta NO DEBE anotar este motivo.
+
+### BR-CLN-038 — Lo que no suma llamado afuera ni en el contenedor
+
+El sistema DEBE eximir de los llamados de BR-CLN-029 y BR-CLN-031 a cuatro clases de objeto: la
+bolsa de basura, el producto vencido, el ticket y la pista. Una pista es el objeto físico que
+representa una pista de la investigación de la partida en la jornada que está abierta; fuera de
+la jornada de su pista no está en el local. Un producto vencido es una unidad que el juego
+declara vencida. Cualquier otro objeto DEBE seguir sumando ambos llamados, aunque quede junto a
+uno eximido. La exención DEBE decidirse por la clase del objeto, en un único punto, y no por su
+posición ni por su nombre visible.
 
 ### BR-CLN-032 — El primario sobre un tacho entrega su única bolsa
 
@@ -657,9 +669,17 @@ identidad; soltar, entregar y vaciar dejan la mano sin cuerpo.
 
 ### AC-CLN-044 — Afuera y recuperación *(verifica BR-CLN-028, BR-CLN-029)*
 
-DADO una bolsa, caja, unidad o útil afuera CUANDO cierra ENTONCES hay un único motivo por
+DADO una caja, unidad o útil afuera CUANDO cierra ENTONCES hay un único motivo por
 afuera, aunque haya varios. CUANDO se recuperan antes del cierre y se sostienen, colocan o
 devuelven ENTONCES no hay ese motivo; una unidad recuperada y suelta adentro produce desorden.
+
+### AC-CLN-073 — Lo eximido afuera no suma llamado *(verifica BR-CLN-029, BR-CLN-038)*
+
+DADO, por separado, una bolsa, un ticket, una pista y una unidad vencida afuera al cierre
+ENTONCES no hay motivo por afuera. DADO, por separado, una unidad ordinaria, una caja y un útil
+afuera ENTONCES hay un único motivo. DADO una bolsa y una unidad ordinaria afuera ENTONCES hay
+un único motivo. DADO una bolsa afuera ENTONCES sigue contando como bolsa afuera para BR-EMP-028.
+DADO un ticket sostenido ENTONCES no está afuera, como cualquier cuerpo sostenido.
 
 ### AC-CLN-045 — El pavimento sostiene lo soltado *(verifica BR-CLN-029)*
 
@@ -683,13 +703,13 @@ el cierre suma un medio. Vaciar el balde o enjuagar la mopa no lo suma. DADO un 
 de abrir, después del cierre o con partida terminada ENTONCES no cambia la deuda ni contamina
 la siguiente noche. Abrir otra noche permite anotar de nuevo el mismo motivo.
 
-### AC-CLN-048 — Tickets activos, mano, examen y destinos *(verifica BR-CLN-027, BR-CLN-028, BR-CLN-029, BR-CLN-030)*
+### AC-CLN-048 — Tickets activos, mano, examen y destinos *(verifica BR-CLN-027, BR-CLN-028, BR-CLN-029, BR-CLN-030, BR-CLN-038)*
 
 DADO tickets propios activos ENTONCES la consulta entrega una copia independiente y omite
 cuerpos liberados o pendientes de liberar; conserva los válidos de ranura, mundo, mano, examen
 y contenedor. DADO tickets dentro de local, depósito, baño o cuartito CUANDO cierra ENTONCES no producen
-desorden ni afuera; uno o varios afuera producen un único motivo de afuera. Recuperarlos al
-interior o sostenerlos sin examen elimina ese motivo. DADO dos cuerpos con los mismos datos
+desorden ni afuera; uno o varios afuera no producen motivo de afuera, porque BR-CLN-038 los
+exime. DADO dos cuerpos con los mismos datos
 ENTONCES sólo se excluye el sostenido; un examen real lo hace contar por su posición física
 y terminarlo vuelve a excluirlo. Un ticket aceptado por el inodoro se libera sin volver a
 consultarlo al cerrar; uno tirado al contenedor sigue vivo y queda excluido por ese destino,
@@ -703,11 +723,12 @@ y del checkpoint y no despide. CUANDO la noche siguiente termina impecable y sin
 conserva siete. Un evento durante la devolución no contamina esa noche siguiente y repetir el
 cierre no suma otra vez.
 
-### AC-CLN-050 — Las excepciones son bolsas y tickets *(verifica BR-CLN-031)*
+### AC-CLN-050 — Las excepciones son bolsas, tickets, pistas y vencidos *(verifica BR-CLN-031, BR-CLN-038)*
 
-DADO una bolsa o un ticket CUANDO se acepta tirarlo al contenedor ENTONCES no agrega el
-motivo de objeto importante y la bolsa sigue contando para su obligatoria. DADO una unidad
-ordinaria, la mopa, el balde o cualquiera de los tres jabones ENTONCES no está exento.
+DADO, por separado, una bolsa, un ticket, una pista o una unidad vencida CUANDO se acepta
+tirarlo al contenedor ENTONCES no agrega el motivo de objeto importante y la bolsa sigue
+contando para su obligatoria. DADO una unidad ordinaria, la mopa, el balde o cualquiera de los
+tres jabones ENTONCES no está exento, aunque se tire junto a uno eximido.
 La ausencia de objeto no constituye una excepción válida ni un descarte aceptado.
 
 ### AC-CLN-051 — El descarte importante cuenta una vez por noche *(verifica BR-CLN-026, BR-CLN-031)*

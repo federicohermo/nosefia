@@ -868,7 +868,8 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 				clase,
 				_habitaciones.de(nodo.global_position),
 				en_mano,
-				datos.id if datos != null else ObjetoDelAlmacen.SIN_ID
+				datos.id if datos != null else ObjetoDelAlmacen.SIN_ID,
+				ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos))
 			)
 		)
 	return estados
@@ -889,7 +890,9 @@ func _al_tenir_con(identidad: StringName, _agua: ReglasDeLaLimpieza.Agua) -> voi
 func _cablear_los_gestos() -> void:
 	_recolector.tiro_pedido.connect(
 		func(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> void:
-			_pensar_gesto(SubtitulosDeLosGestos.al_tirar(sostenido, tiro))
+			_pensar_gesto(
+				SubtitulosDeLosGestos.al_tirar(sostenido, tiro, _levanta_una_pista(sostenido))
+			)
 	)
 	_limpiador.pasada_rechazada.connect(
 		func(_lugar: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado) -> void:
@@ -1004,9 +1007,13 @@ func _al_desechar_un_ticket() -> void:
 	_partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
 
 
+func _levanta_una_pista(datos: ObjetoDelAlmacen) -> bool:
+	return datos != null and _partida.expediente.levanta_una_pista(datos.id, _partida.jornada())
+
+
 func _al_tirar_un_objeto(nodo: Node3D) -> void:
 	var datos: ObjetoDelAlmacen = nodo.get("datos")
-	if not ReglasDelCierre.se_tira_sin_llamado(datos):
+	if not ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos)):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_TIRADO)
 
 

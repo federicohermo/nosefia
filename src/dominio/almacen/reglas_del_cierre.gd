@@ -19,17 +19,20 @@ class Estado:
 	var habitacion: Habitacion
 	var en_mano: bool
 	var producto: StringName
+	var exento: bool
 
 	func _init(
 		tipo: Clase,
 		lugar: Habitacion,
 		sostenido: bool,
-		identidad: StringName = ObjetoDelAlmacen.SIN_ID
+		identidad: StringName = ObjetoDelAlmacen.SIN_ID,
+		eximido: bool = false
 	) -> void:
 		clase = tipo
 		habitacion = lugar
 		en_mano = sostenido
 		producto = identidad
+		exento = eximido
 
 
 static func habitacion_de(
@@ -99,7 +102,7 @@ static func clases_de_desorden(estados: Array[Estado], jornada: int) -> Array[Cl
 
 static func hay_objetos_afuera(estados: Array[Estado]) -> bool:
 	for estado: Estado in estados:
-		if not estado.en_mano and estado.habitacion == Habitacion.AFUERA:
+		if not estado.en_mano and not estado.exento and estado.habitacion == Habitacion.AFUERA:
 			return true
 	return false
 
@@ -123,7 +126,15 @@ static func hay_heladera_abierta(puertas: Dictionary[Heladera, Puerta]) -> bool:
 	return false
 
 
-static func se_tira_sin_llamado(objeto: ObjetoDelAlmacen) -> bool:
+## La única puerta de la exención (BR-CLN-038): lo que no suma llamado afuera ni en el contenedor.
+##
+## `levanta_una_pista` lo dice la partida, que es quien conoce el caso: acá no se lo busca.
+static func esta_eximido(objeto: ObjetoDelAlmacen, levanta_una_pista: bool) -> bool:
+	if objeto == null:
+		return false
 	return (
-		objeto != null and (objeto is Ticket or ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.id))
+		objeto is Ticket
+		or objeto.vencido
+		or ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.id)
+		or levanta_una_pista
 	)
