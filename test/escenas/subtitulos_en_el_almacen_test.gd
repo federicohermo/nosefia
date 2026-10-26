@@ -176,7 +176,14 @@ func test_cada_unidad_puesta_en_la_gondola_dice_su_texto() -> void:  # AC-SUB-00
 			if zona.papel == ZonaDeReposicion.Papel.AGARRAR and not probados.has(zona.producto):
 				probados[zona.producto] = true
 				_piensa(almacen, zona, SubtitulosAlExaminar.de_producto(zona.producto))
-	assert_int(probados.size()).is_equal(Producto.Id.size())
+	# Un producto con fondo puede abrir sin ninguna unidad adelante: no hay nada que examinar.
+	var estante: Estante = (almacen.get("_repositor") as Repositor).estante()
+	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
+	var con_unidades: Array = []
+	for id: Producto.Id in casilleros:
+		if estante.casilleros_vacios(Catalogo.de(id)).size() < casilleros[id]:
+			con_unidades.append(id)
+	assert_array(probados.keys()).contains_exactly_in_any_order(con_unidades)
 
 
 func test_lo_que_no_tiene_texto_no_cambia_la_linea() -> void:  # AC-SUB-003, AC-SUB-013
