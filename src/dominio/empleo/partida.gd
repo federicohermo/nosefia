@@ -71,6 +71,14 @@ var clases_de_desorden: Array[ReglasDelCierre.Clase]:
 		if _llamados.has(Llamado.LOCAL_DESORDENADO):
 			_clases_de_desorden = clases.duplicate()
 
+## Dónde estaba cada caja del depósito al cerrar la última jornada (BR-SAV-022). Una partida
+## nueva no trae ninguna, y el cierre las anota.
+var poses_de_las_cajas: Dictionary[Producto.Id, Transform3D]:
+	get:
+		return _poses_de_las_cajas.duplicate()
+	set(nuevas):
+		_poses_de_las_cajas = nuevas.duplicate()
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -86,6 +94,7 @@ var _poetico_usado_en: Array[int] = []
 var _reflexion: ReflexionDeCierre = null
 var _noches_de_prueba: Dictionary[int, ResultadoDeLaNoche] = {}
 var _semilla: int = 0
+var _poses_de_las_cajas: Dictionary[Producto.Id, Transform3D] = {}
 
 
 func anotar_uso_de_poetico(
@@ -158,6 +167,9 @@ static func desde(datos: Dictionary) -> Partida:
 		var noche := ResultadoDeLaNoche.desde_datos(noches[jornada])
 		if jornada is int and _es_de_prueba(jornada) and noche != null:
 			partida._noches_de_prueba[jornada] = noche
+	partida._poses_de_las_cajas = _poses_validas(
+		saneado[PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS)]
+	)
 	partida._restaurar_la_investigacion(saneado)
 	return partida
 
@@ -181,6 +193,20 @@ func _restaurar_la_investigacion(saneado: Dictionary) -> void:
 	)]
 	if pendiente == _jornada - 1:
 		_reflexion = ReflexionDeCierre.para(pendiente, _expediente)
+
+
+static func _poses_validas(crudas: Dictionary) -> Dictionary[Producto.Id, Transform3D]:
+	var validas: Dictionary[Producto.Id, Transform3D] = {}
+	for id: Variant in crudas:
+		var pose: Variant = crudas[id]
+		if (
+			id is int
+			and Producto.Id.values().has(id)
+			and pose is Transform3D
+			and (pose as Transform3D).is_finite()
+		):
+			validas[id] = pose
+	return validas
 
 
 ## Si la mopa ya se secó una vez en la partida y se mostró su pensamiento (BR-SUB-014).

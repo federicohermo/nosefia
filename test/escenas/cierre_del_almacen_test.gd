@@ -37,6 +37,10 @@ func _foto() -> Array[CIERRE.Estado]:
 	return _almacen.call("_estados_del_cierre")
 
 
+func _jornada() -> int:
+	return _almacen.get("_partida").jornada()
+
+
 func _utiles_disponibles() -> int:
 	var jornada: int = _almacen.get("_limpiador").piso().jornada()
 	var cuantos := 0
@@ -66,7 +70,7 @@ func test_el_arranque_cabe_en_sus_habitaciones_y_no_produce_motivos() -> void:  
 		CIERRE.Habitacion.LOCAL
 	)
 	assert_array(_foto()).has_size(cajas.size() + utiles.size() + bolsas.size())
-	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
 	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_false()
 
 
@@ -79,24 +83,24 @@ func test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos() -> void:  # A
 	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano, lector.cuartito]:
 		caja.global_position = _centro(partes)
 		util.global_position = _centro(lector.cuartito)
-		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(
+		assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_equal(
 			partes != lector.deposito and partes != lector.local
 		)
 		caja.global_position = _centro(lector.deposito)
 		util.global_position = _centro(partes)
-		assert_bool(CIERRE.hay_desorden(_foto())).is_equal(partes != lector.cuartito)
+		assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_equal(partes != lector.cuartito)
 	var umbral: AABB = lector.cuartito[-1]
 	util.global_position = _centro(lector.cuartito, lector.cuartito.size() - 1)
 	caja.global_position = _centro(lector.deposito, lector.deposito.size() - 1)
 	bolsa.global_position = _centro(lector.local)
-	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
 	bolsa.global_position = _centro(lector.cuartito)
-	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
 	var del_lado_del_deposito := umbral.get_center()
 	del_lado_del_deposito.x = umbral.position.x - 0.01
 	util.global_position = lector.to_global(del_lado_del_deposito)
 	assert_int(lector.de(util.global_position)).is_equal(CIERRE.Habitacion.DEPOSITO)
-	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
 
 
 func test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano() -> void:  # AC-CLN-043
@@ -110,7 +114,7 @@ func test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano() -> 
 	assert_bool(agarre.pedir_agarrar(una.get("datos"), una)).is_true()
 	assert_object(agarre.cuerpo_sostenido()).is_same(una)
 	otra.global_position = _centro(lector.bano)
-	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
 	otra.global_position = _centro(lector.local) + Vector3.UP * lector.local[0].size.y
 	assert_int(lector.de(otra.global_position)).is_equal(CIERRE.Habitacion.AFUERA)
 	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_true()
@@ -123,13 +127,13 @@ func test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_ser_sostenido() -> vo
 	var caja: Node3D = _almacen.get("_cajas_de_productos")[0]
 	var examen: Examen = _almacen.get("_jugador").examen
 	assert_bool(agarre.pedir_agarrar(caja.get("datos"), caja)).is_true()
-	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
 	assert_bool(examen.iniciar()).is_true()
 	caja.global_position = _centro(lector.bano)
 	assert_object(agarre.cuerpo_sostenido()).is_same(caja)
-	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
 	examen.terminar()
-	assert_bool(CIERRE.hay_desorden(_foto())).is_false()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_false()
 
 
 func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-044, AC-CLN-046
@@ -176,7 +180,7 @@ func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:
 	_almacen.get("_reposicion_manual").call("retirar", Producto.Id.ACTRONCITO)
 	var unidad: Node3D = _almacen.get("_agarre").soltar(true)
 	unidad.global_position = _centro(lector.local) + Vector3.UP * lector.local[0].size.y
-	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
 	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_true()
 	var observado: Array[int] = []
 	_almacen.get("_ciclo").jornada_cerrada.connect(
@@ -195,7 +199,7 @@ func test_un_producto_en_el_piso_trae_el_reto_del_desorden() -> void:
 	var unidad: Node3D = _almacen.get("_agarre").soltar(true)
 	for cuadro in 120:
 		await get_tree().physics_frame
-	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
+	assert_bool(CIERRE.hay_desorden(_foto(), _jornada())).is_true()
 	assert_object(unidad).is_not_null()
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)

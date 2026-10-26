@@ -126,3 +126,28 @@ func test_archivo_real_con_medios_antiguo_y_mal_tipo() -> void:  # AC-EMP-020
 		var partida := Partida.desde(guardado.cargar())
 		assert_int(partida.jornada()).is_equal(3)
 		assert_int(partida.medios()).is_equal(7 if typeof(crudo.get("medios")) == TYPE_INT else 0)
+
+
+func test_las_poses_de_las_cajas_cruzan_el_disco_con_sus_valores_y_tipos() -> void:  # AC-SAV-034
+	var guardado := _guardado()
+	var en_estanteria := Transform3D(Basis.IDENTITY, Vector3(1.5, 2.0, 3.25))
+	var en_el_piso := Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.25, 0.5))
+	var partida := Partida.desde({JORNADA: ReglasDeLaPartida.PRIMERA_JORNADA + 1})
+	partida.abrir_la_jornada()
+	var anotadas: Dictionary[Producto.Id, Transform3D] = {
+		Producto.Id.MAROLINI: en_estanteria, Producto.Id.UAKALAS: en_el_piso
+	}
+	partida.poses_de_las_cajas = anotadas
+	partida.cerrar_la_jornada(0)
+	assert_bool(guardado.escribir(PoliticaDeGuardado.datos(partida))).is_true()
+	var retomada := Partida.desde(guardado.cargar())
+	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	var poses := retomada.poses_de_las_cajas
+	assert_array(poses.keys()).contains_exactly_in_any_order(
+		[Producto.Id.MAROLINI, Producto.Id.UAKALAS]
+	)
+	assert_bool(poses[Producto.Id.MAROLINI].is_equal_approx(en_estanteria)).is_true()
+	assert_bool(poses[Producto.Id.UAKALAS].is_equal_approx(en_el_piso)).is_true()
+	assert_int(typeof(guardado.cargar()["poses_de_las_cajas"][Producto.Id.MAROLINI])).is_equal(
+		TYPE_TRANSFORM3D
+	)

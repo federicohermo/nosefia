@@ -403,18 +403,23 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
-	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
+	# de adelante de cada tanda lo mide el puesto sobre el modelo; cuáles abren vacíos, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
-	var inventario := Apertura.inventario_de_la_jornada(
+	var productos := Catalogo.de_la_jornada(jornada)
+	var vacios := Apertura.vacios_de_la_jornada(
 		jornada,
 		compradores,
-		_reposicion_manual.casilleros(),
-		_reposicion_manual.casilleros_reponibles(),
-		azar_de_la_apertura
+		_reposicion_manual.tandas(),
+		_reposicion_manual.productos_de_una_fila(),
+		azar_de_la_apertura,
+		_reposicion_manual.posiciones()
 	)
-	_repositor.arrancar(Estante.new(inventario, Catalogo.de_la_jornada(jornada)))
+	var inventario := Apertura.inventario_con_faltantes(
+		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos
+	)
+	_repositor.arrancar(Estante.new(inventario, productos, vacios))
 	_reposicion_manual.preparar()
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
@@ -456,12 +461,16 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			if caja.producto in llegadas:
 				cajas_nuevas.append(caja)
 		poses = PilaDelDeposito.poses(cajas_nuevas, pallets, frente)
+	var fijas: Dictionary[Producto.Id, Transform3D] = {}
+	for caja: CajaDeProductosDelDeposito in poses:
+		fijas[caja.producto] = poses[caja]
+	var organizadas := OrganizacionDelDeposito.abrir(
+		_cajas_del_deposito(inventario), _partida.poses_de_las_cajas, _repisas_del_deposito(), fijas
+	)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
-		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
+		caja.declarar_origen(organizadas[caja.producto])
 		caja.volver_a_su_lugar()
-		_mostrar_caja(
-			caja, inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
-		)
+		_mostrar_caja(caja, _hay_en_el_deposito(inventario, caja))
 	_pedir_revision_del_deposito()
 	# Los útiles de limpieza van por lo mismo que las cajas: se trasladan, y la noche siguiente
 	# arrancaría con la mopa y el balde donde los dejó la anterior. Vacío y seca los deja el piso
@@ -491,6 +500,42 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_estante.mostrar(0)
 	_salida_preparada = true
 	_revisar_la_salida()
+
+
+func _hay_en_el_deposito(inventario: Inventario, caja: CajaDeProductosDelDeposito) -> bool:
+	return inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
+
+
+func _cajas_del_deposito(inventario: Inventario) -> Array[OrganizacionDelDeposito.Caja]:
+	var cajas: Array[OrganizacionDelDeposito.Caja] = []
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		cajas.append(
+			OrganizacionDelDeposito.Caja.new(
+				caja.producto,
+				caja.media(),
+				caja.pose_de_estanteria(),
+				_hay_en_el_deposito(inventario, caja)
+			)
+		)
+	return cajas
+
+
+func _repisas_del_deposito() -> Array[AABB]:
+	var repisas: Array[AABB] = []
+	var pallets := get_node("Estructura").find_children(
+		"deposito_pallet_*", "MeshInstance3D", true, false
+	)
+	for pallet: MeshInstance3D in pallets:
+		if pallet.name != &"deposito_pallet_piso":
+			repisas.append(pallet.global_transform * pallet.get_aabb())
+	return repisas
+
+
+func _poses_de_las_cajas() -> Dictionary[Producto.Id, Transform3D]:
+	var poses: Dictionary[Producto.Id, Transform3D] = {}
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		poses[caja.producto] = caja.global_transform
+	return poses
 
 
 func _mostrar_caja(caja: CajaDeProductosDelDeposito, presente: bool) -> void:
@@ -817,8 +862,14 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 		elif nodo.get("datos") is UnidadDeProducto:
 			clase = ReglasDelCierre.Clase.UNIDAD_SUELTA
 		var en_mano := nodo == sostenido and not _jugador.examen.esta_examinando()
+		var datos := nodo.get("datos") as ObjetoDelAlmacen
 		estados.append(
-			ReglasDelCierre.Estado.new(clase, _habitaciones.de(nodo.global_position), en_mano)
+			ReglasDelCierre.Estado.new(
+				clase,
+				_habitaciones.de(nodo.global_position),
+				en_mano,
+				datos.id if datos != null else ObjetoDelAlmacen.SIN_ID
+			)
 		)
 	return estados
 
@@ -923,8 +974,9 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 
 
 func _al_agotar_el_turno(_jornada: int) -> void:
+	_partida.poses_de_las_cajas = _poses_de_las_cajas()
 	var estados := _estados_del_cierre()
-	_partida.clases_de_desorden = ReglasDelCierre.clases_de_desorden(estados)
+	_partida.clases_de_desorden = ReglasDelCierre.clases_de_desorden(estados, _partida.jornada())
 	if ReglasDelCierre.hay_objetos_afuera(estados):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
 	if ReglasDelCierre.hay_bolsa_afuera(estados):

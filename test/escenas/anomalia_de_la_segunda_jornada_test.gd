@@ -169,7 +169,7 @@ func test_los_objetos_disponibles_arrancan_dentro_de_su_habitacion() -> void:  #
 	):
 		_almacen.call("_al_abrir_la_jornada", jornada)
 		var estados: Array[ReglasDelCierre.Estado] = _almacen.call("_estados_del_cierre")
-		assert_bool(ReglasDelCierre.hay_desorden(estados)).is_false()
+		assert_bool(ReglasDelCierre.hay_desorden(estados, jornada)).is_false()
 		assert_bool(ReglasDelCierre.hay_objetos_afuera(estados)).is_false()
 		for estado: ReglasDelCierre.Estado in estados:
 			if estado.clase == ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA:
