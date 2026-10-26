@@ -20,6 +20,8 @@ enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
 enum Llamado { LOCAL_DESORDENADO, OBJETO_AFUERA, PAPEL_EN_EL_INODORO, OBJETO_TIRADO }
 enum RegistroDePoetico { RECHAZADO, ANOTADO, REPETIDO }
 
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+
 ## La última noche de la prueba: de ahí sale el resultado que la primera jornada completa hereda.
 const _ULTIMA_DE_LA_PRUEBA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 
@@ -57,6 +59,18 @@ var bolsa_afuera := false:
 	set(valor):
 		bolsa_afuera = valor and _jornada_abierta and not terminada()
 
+## Las clases de desorden con que cerró la noche. Asignarlas anota el llamado por desorden; sin
+## clases no hay desorden. Como los llamados, sólo se anotan con la jornada abierta.
+var clases_de_desorden: Array[ReglasDelCierre.Clase]:
+	get:
+		return _clases_de_desorden.duplicate()
+	set(clases):
+		if clases.is_empty():
+			return
+		anotar_llamado(Llamado.LOCAL_DESORDENADO)
+		if _llamados.has(Llamado.LOCAL_DESORDENADO):
+			_clases_de_desorden = clases.duplicate()
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -64,6 +78,7 @@ var _obligatorias: Array[Tarea] = []
 var _jornada_abierta: bool = false
 var _final: Final = Final.EN_CURSO
 var _llamados: Array[Llamado] = []
+var _clases_de_desorden: Array[ReglasDelCierre.Clase] = []
 var _antecedentes := Antecedentes.new()
 var _devoluciones: Array[Mensaje] = []
 var _mopa_secada := false
@@ -271,6 +286,7 @@ func abrir_la_jornada() -> Turno:
 	if terminada():
 		return null
 	_llamados.clear()
+	_clases_de_desorden.clear()
 	bolsa_afuera = false
 	_obligatorias = Apertura.obligatorias(_jornada)
 	_jornada_abierta = true
