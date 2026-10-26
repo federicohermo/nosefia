@@ -92,7 +92,9 @@ func test_doscientas_semillas_entran_en_casilleros_y_caja() -> void:  # AC-STK-0
 			azar.seed = semilla
 			var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, azar)
 			for id: Producto.Id in faltantes:
-				assert_int(faltantes[id]).is_between(1, mini(8, casilleros[id]))
+				assert_int(faltantes[id]).is_between(
+					ReglasDelEstante.MENOS_QUE_FALTA, mini(8, casilleros[id])
+				)
 
 
 ## Una fila entera de casilleros, o dos iguales con los casilleros en la de adelante: las
