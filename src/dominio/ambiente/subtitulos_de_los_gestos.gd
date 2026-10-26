@@ -31,7 +31,7 @@ const TEXTOS: Dictionary[Id, String] = {
 		"La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no"
 		+ " tire las cajas de productos, ni siquiera las vacías."
 	),
-	Id.UTIL_EN_EL_CONTENEDOR: "Meee parece que no debería tirar los elementos de limpieza.",
+	Id.UTIL_EN_EL_CONTENEDOR: "Me parece que no debería tirar\nlos elementos de limpieza.",
 	Id.POR_LA_VENTANA: "Si Enrique se entera de que estoy tirando cosas por la ventana, me mata.",
 	Id.JABON_EQUIVOCADO: "Esto no está funcionando… Creo que no estoy usando el jabón correcto.",
 	Id.MOPA_SIN_MOJAR: "Necesitaría mojar la mopa en agua con jabón.",

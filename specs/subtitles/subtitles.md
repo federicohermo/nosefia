@@ -206,7 +206,7 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 |---|---|---|
 | Tirar al contenedor algo que no es una bolsa de basura, un producto vencido, un ticket ni una pista | `MALA_IDEA` | Me parece que eso fue una mala idea… |
 | Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
-| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Meee parece que no debería tirar los elementos de limpieza. |
+| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Me parece que no debería tirar<br>los elementos de limpieza. |
 | Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
 | Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
 | Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
@@ -214,6 +214,8 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
+
+El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
 
 `CAJA_EN_EL_CONTENEDOR` y `UTIL_EN_EL_CONTENEDOR` DEBEN decidirse por lo que se intenta tirar y no
 por la tapa: con la tapa cerrada o girando piensan lo mismo que con la tapa abierta. Poético, aun en
