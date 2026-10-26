@@ -461,12 +461,16 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			if caja.producto in llegadas:
 				cajas_nuevas.append(caja)
 		poses = PilaDelDeposito.poses(cajas_nuevas, pallets, frente)
+	var fijas: Dictionary[Producto.Id, Transform3D] = {}
+	for caja: CajaDeProductosDelDeposito in poses:
+		fijas[caja.producto] = poses[caja]
+	var organizadas := OrganizacionDelDeposito.abrir(
+		_cajas_del_deposito(inventario), _partida.poses_de_las_cajas, _repisas_del_deposito(), fijas
+	)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
-		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
+		caja.declarar_origen(organizadas[caja.producto])
 		caja.volver_a_su_lugar()
-		_mostrar_caja(
-			caja, inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
-		)
+		_mostrar_caja(caja, _hay_en_el_deposito(inventario, caja))
 	_pedir_revision_del_deposito()
 	# Los útiles de limpieza van por lo mismo que las cajas: se trasladan, y la noche siguiente
 	# arrancaría con la mopa y el balde donde los dejó la anterior. Vacío y seca los deja el piso
@@ -496,6 +500,42 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_estante.mostrar(0)
 	_salida_preparada = true
 	_revisar_la_salida()
+
+
+func _hay_en_el_deposito(inventario: Inventario, caja: CajaDeProductosDelDeposito) -> bool:
+	return inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
+
+
+func _cajas_del_deposito(inventario: Inventario) -> Array[OrganizacionDelDeposito.Caja]:
+	var cajas: Array[OrganizacionDelDeposito.Caja] = []
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		cajas.append(
+			OrganizacionDelDeposito.Caja.new(
+				caja.producto,
+				caja.media(),
+				caja.pose_de_estanteria(),
+				_hay_en_el_deposito(inventario, caja)
+			)
+		)
+	return cajas
+
+
+func _repisas_del_deposito() -> Array[AABB]:
+	var repisas: Array[AABB] = []
+	var pallets := get_node("Estructura").find_children(
+		"deposito_pallet_*", "MeshInstance3D", true, false
+	)
+	for pallet: MeshInstance3D in pallets:
+		if pallet.name != &"deposito_pallet_piso":
+			repisas.append(pallet.global_transform * pallet.get_aabb())
+	return repisas
+
+
+func _poses_de_las_cajas() -> Dictionary[Producto.Id, Transform3D]:
+	var poses: Dictionary[Producto.Id, Transform3D] = {}
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		poses[caja.producto] = caja.global_transform
+	return poses
 
 
 func _mostrar_caja(caja: CajaDeProductosDelDeposito, presente: bool) -> void:
@@ -928,6 +968,7 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 
 
 func _al_agotar_el_turno(_jornada: int) -> void:
+	_partida.poses_de_las_cajas = _poses_de_las_cajas()
 	var estados := _estados_del_cierre()
 	if ReglasDelCierre.hay_desorden(estados):
 		_partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)

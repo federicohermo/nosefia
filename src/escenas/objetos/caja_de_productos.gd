@@ -80,7 +80,7 @@ var _apoyo_que_dejo := Vector3.ZERO
 func _ready() -> void:
 	# Antes de anotar el lugar: el tamaño cambia dónde apoya, y el `.tscn` ya lo cuenta.
 	for parte: Node3D in [get_node("Cuerpo"), get_node("Malla")]:
-		parte.scale = Vector3.ONE * MEDIA_CAJA[Catalogo.caja_de(producto)]
+		parte.scale = Vector3.ONE * media()
 	_ponerse_su_etiqueta()
 	_lugar_de_origen = transform
 	_padre_de_origen = get_parent()
@@ -112,6 +112,10 @@ func _ponerse_su_etiqueta() -> void:
 	var rotulado := generico.duplicate() as BaseMaterial3D
 	rotulado.albedo_texture = ETIQUETAS.get(producto, generico.albedo_texture)
 	malla.set_surface_override_material(0, rotulado)
+
+
+func media() -> float:
+	return MEDIA_CAJA[Catalogo.caja_de(producto)]
 
 
 func interactuar() -> ObjetoDelAlmacen:
