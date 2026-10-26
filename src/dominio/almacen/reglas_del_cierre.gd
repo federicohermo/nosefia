@@ -16,7 +16,10 @@ class Estado:
 	var producto: StringName
 
 	func _init(
-		tipo: Clase, lugar: Habitacion, sostenido: bool, identidad: StringName = &""
+		tipo: Clase,
+		lugar: Habitacion,
+		sostenido: bool,
+		identidad: StringName = ObjetoDelAlmacen.SIN_ID
 	) -> void:
 		clase = tipo
 		habitacion = lugar

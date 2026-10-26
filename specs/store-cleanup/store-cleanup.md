@@ -590,6 +590,7 @@ siguen afuera, incluso cuando caen dentro de una envolvente mayor.
 ### AC-CLN-041 — Suelta no significa visible ni apoyada en el piso *(verifica BR-CLN-028)*
 
 DADO una unidad suelta en local, depósito, baño o cuartito, incluso agrupada o apoyada en caja o góndola,
+de un producto distinto de Poético, o de Poético fuera de la jornada de BR-CLN-037,
 CUANDO cierra ENTONCES hay desorden. DADO la unidad colocada, devuelta o sostenida sin examen
 ENTONCES no lo produce. El cuerpo de repuesto no cuenta como unidad suelta.
 

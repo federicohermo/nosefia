@@ -823,7 +823,7 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 				clase,
 				_habitaciones.de(nodo.global_position),
 				en_mano,
-				datos.id if datos != null else &""
+				datos.id if datos != null else ObjetoDelAlmacen.SIN_ID
 			)
 		)
 	return estados
