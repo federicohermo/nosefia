@@ -808,7 +808,9 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 		if nodo.has_meta(&"recibido_por_comprador"):
 			continue
 		var clase := ReglasDelCierre.Clase.OTRO
-		if nodo is CajaDeProductosDelDeposito:
+		if _bolsas.has(nodo):
+			clase = ReglasDelCierre.Clase.BOLSA
+		elif nodo is CajaDeProductosDelDeposito:
 			clase = ReglasDelCierre.Clase.CAJA
 		elif nodo is UtilDeLimpieza:
 			clase = ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA
@@ -926,6 +928,8 @@ func _al_agotar_el_turno(_jornada: int) -> void:
 		_partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
 	if ReglasDelCierre.hay_objetos_afuera(estados):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
+	if ReglasDelCierre.hay_bolsa_afuera(estados):
+		_partida.bolsa_afuera = true
 
 
 func _al_desechar_un_ticket() -> void:
