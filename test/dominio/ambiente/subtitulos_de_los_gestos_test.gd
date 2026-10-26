@@ -11,17 +11,39 @@ func _unidad() -> UnidadDeProducto:
 	return UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
 
 
-func test_lo_que_se_tira_piensa_salvo_la_bolsa_y_el_ticket() -> void:  # AC-SUB-016
+func _pista() -> Pista:
+	for pista: Pista in CasoDeInvestigacion.de_la_partida().pistas:
+		if pista.canal == Pista.Canal.LEVANTAR and not pista.origen.is_empty():
+			return pista
+	return null
+
+
+func _objeto_de_la_pista() -> ObjetoDelAlmacen:
+	var objeto := ObjetoDelAlmacen.new()
+	objeto.id = _pista().origen
+	return objeto
+
+
+func test_lo_que_se_tira_piensa_salvo_bolsa_vencido_ticket_y_pista() -> void:  # AC-SUB-016
 	var mopa := load("res://src/dominio/almacen/mopa.tres") as ObjetoDelAlmacen
 	var jabon := load("res://src/dominio/almacen/jabon_azul.tres") as ObjetoDelAlmacen
 	for tirado: ObjetoDelAlmacen in [_unidad(), jabon, mopa]:
-		assert_int(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO)).is_equal(S.MALA_IDEA)
-	assert_int(SubtitulosDeLosGestos.al_tirar(BOLSA, T.TIRADO)).is_equal(S.NINGUNO)
-	assert_int(SubtitulosDeLosGestos.al_tirar(Ticket.new(), T.TIRADO)).is_equal(S.NINGUNO)
+		assert_int(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO, false)).is_equal(S.MALA_IDEA)
+	var vencida := _unidad()
+	vencida.vencido = true
+	for eximido: ObjetoDelAlmacen in [BOLSA, Ticket.new(), vencida, _objeto_de_la_pista()]:
+		var es_la_pista := eximido.id == _pista().origen
+		assert_int(SubtitulosDeLosGestos.al_tirar(eximido, T.TIRADO, es_la_pista)).is_equal(
+			S.NINGUNO
+		)
 	var caja := load("res://src/dominio/almacen/caja_de_reposicion.tres") as ObjetoDelAlmacen
-	assert_int(SubtitulosDeLosGestos.al_tirar(caja, T.NO_ENTRA)).is_equal(S.CAJA_EN_EL_CONTENEDOR)
-	assert_int(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA)).is_equal(S.NINGUNO)
-	assert_int(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.al_tirar(caja, T.NO_ENTRA, false)).is_equal(
+		S.CAJA_EN_EL_CONTENEDOR
+	)
+	assert_int(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA, false)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA, false)).is_equal(
+		S.NINGUNO
+	)
 
 
 func test_lo_que_queda_afuera_piensa_salvo_el_ticket() -> void:  # AC-SUB-017

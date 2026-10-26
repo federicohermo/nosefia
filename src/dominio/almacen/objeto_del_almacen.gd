@@ -23,6 +23,9 @@ const SIN_ID := &""
 ## sueltas: el que se olvide de declararlo va a estar bien más veces de las que no.
 @export var levantable: bool = true
 
+## Si el juego lo declara vencido: no suma llamado afuera ni en el contenedor.
+@export var vencido: bool = false
+
 ## Si el objeto sostenido entra por la boca del contenedor.
 @export var entra_en_el_contenedor: bool = true
 

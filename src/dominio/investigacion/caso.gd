@@ -42,6 +42,14 @@ func esta_en_el_local(origen: StringName, jornada: int) -> bool:
 	return true
 
 
+## El objeto que se levanta para dar una pista es esa pista sólo la noche de ella.
+func levanta_una_pista(origen: StringName, jornada: int) -> bool:
+	for pista: Pista in pistas:
+		if pista != null and pista.se_dispara_con(origen, Pista.Canal.LEVANTAR, jornada):
+			return true
+	return false
+
+
 func hipotesis_para(jornada: int, descubiertas: PackedStringArray) -> Array[Hipotesis]:
 	for opciones: HipotesisDeLaJornada in hipotesis:
 		if opciones != null and opciones.jornada == jornada:
