@@ -43,6 +43,24 @@ func test_los_datos_llevan_las_cuentas_y_las_devoluciones() -> void:  # AC-SAV-0
 	assert_array(datos["devoluciones"]).is_not_empty()
 
 
+func test_los_datos_llevan_la_pose_de_cada_caja_y_el_final_las_borra() -> void:  # AC-SAV-034
+	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS)
+	var pose := Transform3D(Basis.IDENTITY, Vector3(1.5, 2.0, 3.25))
+	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
+	partida.abrir_la_jornada()
+	var anotadas: Dictionary[Producto.Id, Transform3D] = {Producto.Id.MAROLINI: pose}
+	partida.poses_de_las_cajas = anotadas
+	partida.cerrar_la_jornada(0)
+	var datos := PoliticaDeGuardado.datos(partida)
+	assert_array(datos[clave].keys()).contains_exactly([Producto.Id.MAROLINI])
+	assert_int(typeof(datos[clave][Producto.Id.MAROLINI])).is_equal(TYPE_TRANSFORM3D)
+	var retomada := Partida.desde(datos)
+	assert_bool(retomada.poses_de_las_cajas[Producto.Id.MAROLINI].is_equal_approx(pose)).is_true()
+	_cerrar_grave(partida)
+	assert_bool(partida.terminada()).is_true()
+	assert_int(PoliticaDeGuardado.accion(partida)).is_equal(PoliticaDeGuardado.Accion.BORRAR)
+
+
 func test_la_politica_es_pura() -> void:
 	var texto := FileAccess.get_file_as_string(POLITICA)
 	assert_str(texto).contains("extends RefCounted")
