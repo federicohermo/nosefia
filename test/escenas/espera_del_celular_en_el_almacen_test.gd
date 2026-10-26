@@ -60,7 +60,7 @@ func _esperar(almacen: Node3D, segundos: float) -> void:
 	almacen.call("_process", segundos)
 
 
-func _comprobar_que_sube_a_los_dos_segundos(almacen: Node3D) -> void:
+func _comprobar_que_sube_al_terminar_la_espera(almacen: Node3D) -> void:
 	_esperar(almacen, ESPERA - 0.01)
 	assert_bool(_pantalla(almacen).visible).is_false()
 	assert_bool(_celular(almacen).celular().abierto()).is_false()
@@ -69,7 +69,7 @@ func _comprobar_que_sube_a_los_dos_segundos(almacen: Node3D) -> void:
 	assert_bool(_celular(almacen).celular().abierto()).is_true()
 
 
-func test_el_celular_sube_dos_segundos_despues_de_la_persiana() -> void:  # AC-EMP-095
+func test_el_celular_sube_tras_la_espera_despues_de_la_persiana() -> void:  # AC-EMP-095
 	var almacen := await _cerrada(COMPLETA)
 	assert_bool(_persiana(almacen).en_pantalla()).is_true()
 	assert_bool(_pantalla(almacen).visible).is_false()
@@ -95,24 +95,24 @@ func test_el_celular_sube_dos_segundos_despues_de_la_persiana() -> void:  # AC-E
 	)
 
 
-func test_el_despido_sube_el_celular_a_los_dos_segundos() -> void:  # AC-EMP-095
+func test_el_despido_sube_el_celular_tras_la_espera() -> void:  # AC-EMP-095
 	var almacen := await _cerrada(COMPLETA, 3 * Reglas.MEDIOS_POR_APERCIBIMIENTO)
 	assert_int((almacen.get("_partida") as Partida).final()).is_equal(Partida.Final.DESPEDIDO)
 	AvanceDeDevolucion.terminar_la_bajada(_persiana(almacen))
-	_comprobar_que_sube_a_los_dos_segundos(almacen)
+	_comprobar_que_sube_al_terminar_la_espera(almacen)
 
 
-func test_el_contrato_cumplido_sube_el_celular_a_los_dos_segundos() -> void:  # AC-EMP-095
+func test_el_contrato_cumplido_sube_el_celular_tras_la_espera() -> void:  # AC-EMP-095
 	var almacen := await _cerrada(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	AvanceDeDevolucion.terminar_la_bajada(_persiana(almacen))
-	_comprobar_que_sube_a_los_dos_segundos(almacen)
+	_comprobar_que_sube_al_terminar_la_espera(almacen)
 	assert_int(_celular(almacen).celular().chat()).is_equal(Conversacion.Interlocutor.JEFE)
 
 
 func test_la_pausa_congela_la_espera_y_al_reanudar_sigue() -> void:  # AC-EMP-095
 	var almacen := await _cerrada(COMPLETA)
 	AvanceDeDevolucion.terminar_la_bajada(_persiana(almacen))
-	_esperar(almacen, 1.0)
+	_esperar(almacen, ESPERA / 2.0)
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
 	pausa._input(_esc())
 	assert_bool(get_tree().paused).is_true()
@@ -121,7 +121,7 @@ func test_la_pausa_congela_la_espera_y_al_reanudar_sigue() -> void:  # AC-EMP-09
 	assert_bool(_celular(almacen).celular().abierto()).is_false()
 	pausa._input(_esc())
 	assert_bool(get_tree().paused).is_false()
-	_esperar(almacen, ESPERA - 1.0 - 0.01)
+	_esperar(almacen, ESPERA / 2.0 - 0.01)
 	assert_bool(_pantalla(almacen).visible).is_false()
 	_esperar(almacen, 0.01)
 	assert_bool(_pantalla(almacen).visible).is_true()
@@ -140,7 +140,7 @@ func test_pausar_con_la_persiana_bajando_empieza_la_espera_al_terminar() -> void
 	_esperar(almacen, ESPERA)
 	assert_bool(_pantalla(almacen).visible).is_false()
 	AvanceDeDevolucion.terminar_la_bajada(_persiana(almacen))
-	_comprobar_que_sube_a_los_dos_segundos(almacen)
+	_comprobar_que_sube_al_terminar_la_espera(almacen)
 
 
 func test_la_tercera_noche_cierra_sin_celular_aunque_pase_la_espera() -> void:  # AC-EMP-095

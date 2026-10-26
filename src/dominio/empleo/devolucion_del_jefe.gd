@@ -14,7 +14,7 @@ enum Opcion { CONTINUAR, VOLVER_AL_MENU }
 const SEGUNDOS_ENTRE_MENSAJES := 1.0
 
 ## Con la persiana ya baja y antes de que el celular suba.
-const SEGUNDOS_DE_ESPERA_DEL_CELULAR := 2.0
+const SEGUNDOS_DE_ESPERA_DEL_CELULAR := 0.5
 
 ## Cuántos medios hay en un punto de la tabla.
 const MEDIOS_POR_PUNTO := Reglas.MEDIOS_POR_APERCIBIMIENTO

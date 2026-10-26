@@ -28,8 +28,8 @@ static func terminar_movimiento(pantalla: PantallaDeDevolucion) -> void:
 	celular.set("_ahora", lectura)
 
 
-## El celular sube dos segundos después de que la persiana termina de bajar: se termina la bajada,
-## si sigue en curso, y se cuentan los dos segundos. Con el celular ya arriba, no hace nada.
+## El celular sube tras la espera posterior a la bajada de la persiana: se termina la bajada,
+## si sigue en curso, y se cuenta la espera. Con el celular ya arriba, no hace nada.
 static func esperar_el_celular(pantalla: PantallaDeDevolucion) -> void:
 	if pantalla.visible:
 		return

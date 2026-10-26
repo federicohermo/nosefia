@@ -536,11 +536,11 @@ anotada, la jornada 4 NO DEBE mostrar ningún mensaje 1. Con menos de 5 fallas, 
 cumplida y fallas en la 1 o la 2, la ficha no tiene fila: la de «cualquier otra» es provisoria
 (OQ-EMP-011).
 
-### BR-EMP-044 — El celular sube dos segundos después de que la persiana termina de bajar
+### BR-EMP-044 — El celular sube medio segundo después de que la persiana termina de bajar
 
 CUANDO cierra una jornada desde la cuarta, que sólo cierra por tiempo (BR-SHF-025), y la persiana
-termina de bajar, el sistema DEBE esperar 2 segundos con la persiana baja y sin celular en
-pantalla. Pasados los 2 segundos, el celular DEBE subir con el chat de Enrique (BR-EMP-030). Los
+termina de bajar, el sistema DEBE esperar 0,5 segundos con la persiana baja y sin celular en
+pantalla. Pasados los 0,5 segundos, el celular DEBE subir con el chat de Enrique (BR-EMP-030). Los
 mensajes de la devolución cuentan su ritmo desde el celular centrado, como siempre.
 
 MIENTRAS dura la espera, el turno DEBE seguir cerrado y el control suspendido. MIENTRAS la pausa
@@ -1102,18 +1102,18 @@ noche 3 que cierra sin perder la prueba ENTONCES la pantalla de inicio no trae e
 DADO la noche 3 cerrada con 5 fallas en la prueba y la 3 sin fallas CUANDO se guarda y se retoma
 ENTONCES la jornada 4 abre con la misma fila.
 
-### AC-EMP-095 — El celular espera dos segundos a la persiana *(verifica BR-EMP-044, BR-EMP-030)*
+### AC-EMP-095 — El celular espera medio segundo a la persiana *(verifica BR-EMP-044, BR-EMP-030)*
 
 DADO el cierre de la noche 4 CUANDO la persiana todavía baja
-ENTONCES el celular no está en pantalla. CUANDO la persiana termina de bajar y pasan 1,99 s
-ENTONCES la persiana está baja y sigue sin celular. CUANDO pasan 2 s ENTONCES el celular sube con
+ENTONCES el celular no está en pantalla. CUANDO la persiana termina de bajar y pasan 0,49 s
+ENTONCES la persiana está baja y sigue sin celular. CUANDO pasan 0,5 s ENTONCES el celular sube con
 el chat de Enrique, con el primer mensaje ya en el chat (BR-EMP-030), y los intervalos de los
 siguientes empiezan cuando el celular llega al centro. DADO el cierre de la noche
 4 con la partida despedida, o el de la última noche con el contrato cumplido, CUANDO termina de
-bajar la persiana ENTONCES el celular también sube a los 2 s y no antes.
+bajar la persiana ENTONCES el celular también sube a los 0,5 s y no antes.
 
-DADO la persiana ya baja y 1 s de espera CUANDO se pausa, pasan 5 s y se reanuda ENTONCES el
-celular no subió durante la pausa y sube 1 s después de reanudar. DADO el cierre de la noche 4
+DADO la persiana ya baja y 0,25 s de espera CUANDO se pausa, pasan 5 s y se reanuda ENTONCES el
+celular no subió durante la pausa y sube 0,25 s después de reanudar. DADO el cierre de la noche 4
 CUANDO se pausa mientras la persiana baja, y se reanuda ENTONCES la espera empieza recién cuando
 la persiana termina de bajar. DADO el cierre de la noche 3 sin perder la prueba CUANDO pasan 10 s
 desde que la persiana terminó de bajar ENTONCES el celular no subió (AC-EMP-093).
