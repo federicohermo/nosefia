@@ -289,7 +289,8 @@ func test_la_compra_parcial_vencida_conserva_unidades_reales_y_sus_destinos() ->
 		await get_tree().physics_frame
 	assert_bool(is_instance_valid(ticket)).is_false()
 	assert_array(manual.call("unidades_sueltas")).contains_exactly_in_any_order(cuerpos)
-	assert_bool(CIERRE.hay_desorden(almacen.call("_estados_del_cierre"))).is_true()
+	var jornada: int = almacen.get("_partida").jornada()
+	assert_bool(CIERRE.hay_desorden(almacen.call("_estados_del_cierre"), jornada)).is_true()
 	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), 0.0)
 	assert_array(manual.call("unidades_sueltas")).contains_exactly_in_any_order(cuerpos)
 	var suelo: StaticBody3D = manual.get("suelo")

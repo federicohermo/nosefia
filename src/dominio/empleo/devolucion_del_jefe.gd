@@ -10,8 +10,13 @@ extends RefCounted
 
 enum Opcion { CONTINUAR, VOLVER_AL_MENU }
 
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+
 ## La ficha fija un segundo entre cada mensaje.
 const SEGUNDOS_ENTRE_MENSAJES := 1.0
+
+## Con la persiana ya baja y antes de que el celular suba.
+const SEGUNDOS_DE_ESPERA_DEL_CELULAR := 0.5
 
 ## Cuántos medios hay en un punto de la tabla.
 const MEDIOS_POR_PUNTO := Reglas.MEDIOS_POR_APERCIBIMIENTO
@@ -82,6 +87,15 @@ const PARTICULARES: Dictionary[int, String] = {
 	),
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	"De verdad era tan difícil tirar tres bolsas de basura?",
+}
+
+## La variante de la Tarea 5 cuando una bolsa quedó afuera: reemplaza a la de `PARTICULARES`.
+const PARTICULARES_CON_BOLSA_AFUERA: Dictionary[int, String] = {
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
+	(
+		"La basura se supone que la tirás en el contenedor, no por la ventana… "
+		+ "Te imaginás ir a comprar y tener BASURA A TUS PIES?"
+	),
 }
 
 ## La fila de la ficha que termina la prueba: Enrique no dice nada más (BR-EMP-043).
@@ -159,6 +173,34 @@ const DESORDEN_SIN_REMEDIO := (
 	"Realmente me sorprende cómo alguien puede tener tan poca conciencia de "
 	+ "lo que es el orden."
 )
+
+## Lo que cierra el Reto 4, por las clases de desorden de la noche: una máscara con un bit por
+## clase, en el orden de la ficha.
+const _SUELTAS := 1 << ReglasDelCierre.Clase.UNIDAD_SUELTA
+const _CAJAS := 1 << ReglasDelCierre.Clase.CAJA
+const _UTILES := 1 << ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA
+const DESORDEN_POR_CLASES: Dictionary[int, String] = {
+	_SUELTAS: "No pueden quedar productos tirados por ahí.",
+	_CAJAS: "Las cajas tienen que quedar en el depósito.",
+	_UTILES: "Los productos de limpieza van en el cuartito que les corresponde.",
+	_SUELTAS | _CAJAS:
+	"No pueden quedar productos tirados por ahí y las cajas tienen que quedar en el depósito.",
+	_SUELTAS | _UTILES:
+	(
+		"No pueden quedar productos tirados por ahí y los productos de limpieza van en el "
+		+ "cuartito que les corresponde."
+	),
+	_CAJAS | _UTILES:
+	(
+		"Las cajas tienen que quedar en el depósito y los productos de limpieza van en el "
+		+ "cuartito que les corresponde."
+	),
+	_SUELTAS | _CAJAS | _UTILES:
+	(
+		"No pueden quedar productos tirados por ahí, las cajas tienen que quedar en el "
+		+ "depósito y los productos de limpieza van en el cuartito que les corresponde."
+	),
+}
 
 const CIERRE_DEL_DESPIDO := (
 	"Es absurdo que tenga que estar persiguiéndote con estas cosas tan "
@@ -287,7 +329,9 @@ func _init(jornada: int, partida: Partida) -> void:
 		partida.antecedentes(),
 		sin_cumplir,
 		partida.llamados(),
-		partida.uso_de_poetico_en(jornada)
+		partida.uso_de_poetico_en(jornada),
+		partida.bolsa_afuera,
+		partida.clases_de_desorden
 	)
 
 
@@ -340,6 +384,11 @@ static func a_la_vista(transcurrido: float, total: int) -> int:
 	return mini(total, 1 + floori(maxf(0.0, transcurrido) / SEGUNDOS_ENTRE_MENSAJES))
 
 
+## Si el celular ya puede subir, `espera` segundos después de que la persiana terminó de bajar.
+static func celular_a_la_vista(espera: float) -> bool:
+	return espera >= SEGUNDOS_DE_ESPERA_DEL_CELULAR
+
+
 ## La tabla entera, con los hechos ya contados: la noche cerrada, los medios después de anotarla,
 ## las cuentas que la incluyen, lo que quedó sin cumplir y los llamados de esa noche.
 static func armar(
@@ -348,7 +397,9 @@ static func armar(
 	antecedentes: Antecedentes,
 	sin_cumplir: Array[Tarea.Tipo],
 	llamados: Array[Partida.Llamado],
-	uso_de_poetico: bool = false
+	uso_de_poetico: bool = false,
+	bolsa_afuera: bool = false,
+	desorden: Array[ReglasDelCierre.Clase] = []
 ) -> Array[String]:
 	var mensajes: Array[String] = [_saludo(medios)]
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
@@ -358,10 +409,10 @@ static func armar(
 	if uso_de_poetico:
 		mensajes.append(POETICO_EN_EL_DESPIDO if medios >= MEDIOS_DEL_DESPIDO else POETICO)
 	if PARTICULARES.has(jornada) and _alguna_particular(sin_cumplir):
-		mensajes.append(PARTICULARES[jornada])
+		mensajes.append(_particular(jornada, bolsa_afuera))
 	for motivo: Partida.Llamado in retos():
 		if llamados.has(motivo):
-			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios))
+			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios, desorden))
 	mensajes.append(_cierre(jornada, medios, antecedentes))
 	return mensajes
 
@@ -371,6 +422,12 @@ static func _saludo(medios: int) -> String:
 	return SALUDOS[mini(medios / MEDIOS_POR_PUNTO, SALUDOS.size() - 1)]
 
 
+static func _particular(jornada: int, bolsa_afuera: bool) -> String:
+	if bolsa_afuera and PARTICULARES_CON_BOLSA_AFUERA.has(jornada):
+		return PARTICULARES_CON_BOLSA_AFUERA[jornada]
+	return PARTICULARES[jornada]
+
+
 static func _alguna_particular(sin_cumplir: Array[Tarea.Tipo]) -> bool:
 	for tipo: Tarea.Tipo in sin_cumplir:
 		if not Antecedentes.FIJAS.has(tipo):
@@ -378,7 +435,13 @@ static func _alguna_particular(sin_cumplir: Array[Tarea.Tipo]) -> bool:
 	return false
 
 
-static func _reto(motivo: Partida.Llamado, n: int, jornada: int, medios: int) -> String:
+static func _reto(
+	motivo: Partida.Llamado,
+	n: int,
+	jornada: int,
+	medios: int,
+	desorden: Array[ReglasDelCierre.Clase]
+) -> String:
 	var despedido := medios >= MEDIOS_DEL_DESPIDO
 	match motivo:
 		Partida.Llamado.PAPEL_EN_EL_INODORO:
@@ -391,11 +454,17 @@ static func _reto(motivo: Partida.Llamado, n: int, jornada: int, medios: int) ->
 			return BASURA[clampi(n, 1, BASURA.size()) - 1]
 		Partida.Llamado.OBJETO_AFUERA:
 			return AFUERA[clampi(n, 1, AFUERA.size()) - 1]
-	if n <= 1:
-		return DESORDEN[0]
-	if n >= 5 or despedido:
-		return DESORDEN_SIN_REMEDIO
-	return DESORDEN[n - 1]
+	var texto := DESORDEN[0]
+	if n >= 5 or (n >= 2 and despedido):
+		texto = DESORDEN_SIN_REMEDIO
+	elif n >= 2:
+		texto = DESORDEN[n - 1]
+	var clases := 0
+	for clase: ReglasDelCierre.Clase in desorden:
+		clases |= 1 << clase
+	if clases == 0:
+		return texto
+	return texto + " " + DESORDEN_POR_CLASES[clases]
 
 
 static func _cierre(jornada: int, medios: int, antecedentes: Antecedentes) -> String:

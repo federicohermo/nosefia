@@ -2,7 +2,9 @@
 extends RefCounted
 
 enum Habitacion { LOCAL, DEPOSITO, BANO, AFUERA, CUARTITO }
-enum Clase { UNIDAD_SUELTA, CAJA, UTIL_DE_LIMPIEZA, OTRO }
+enum Clase { UNIDAD_SUELTA, CAJA, UTIL_DE_LIMPIEZA, OTRO, BOLSA }
+
+const CAJAS_TOLERADAS_EN_EL_LOCAL := 1
 
 
 class Estado:
@@ -11,11 +13,18 @@ class Estado:
 	var clase: Clase
 	var habitacion: Habitacion
 	var en_mano: bool
+	var producto: StringName
 
-	func _init(tipo: Clase, lugar: Habitacion, sostenido: bool) -> void:
+	func _init(
+		tipo: Clase,
+		lugar: Habitacion,
+		sostenido: bool,
+		identidad: StringName = ObjetoDelAlmacen.SIN_ID
+	) -> void:
 		clase = tipo
 		habitacion = lugar
 		en_mano = sostenido
+		producto = identidad
 
 
 static func habitacion_de(
@@ -40,25 +49,63 @@ static func habitacion_de(
 	return Habitacion.AFUERA
 
 
-static func hay_desorden(estados: Array[Estado]) -> bool:
+static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
+	return not clases_de_desorden(estados, jornada).is_empty()
+
+
+## Cuáles de las tres clases de desorden hubo, en el orden de la ficha: unidades sueltas, cajas y
+## útiles.
+static func clases_de_desorden(estados: Array[Estado], jornada: int) -> Array[Clase]:
+	var hay_unidad_suelta := false
+	var hay_caja_fuera_del_deposito := false
+	var hay_util_fuera_del_cuartito := false
+	var cajas_que_ocupan_la_tolerancia := 0
 	for estado: Estado in estados:
-		if estado.en_mano or estado.habitacion == Habitacion.AFUERA:
+		if estado.en_mano:
+			if estado.clase == Clase.CAJA:
+				cajas_que_ocupan_la_tolerancia += 1
+			continue
+		if estado.habitacion == Habitacion.AFUERA:
 			continue
 		match estado.clase:
 			Clase.UNIDAD_SUELTA:
-				return true
+				if not AnomaliasDeLaJornada.sustituye_azul(estado.producto, jornada):
+					hay_unidad_suelta = true
 			Clase.CAJA:
-				if estado.habitacion != Habitacion.DEPOSITO:
-					return true
+				match estado.habitacion:
+					Habitacion.LOCAL:
+						cajas_que_ocupan_la_tolerancia += 1
+					Habitacion.DEPOSITO:
+						pass
+					_:
+						hay_caja_fuera_del_deposito = true
 			Clase.UTIL_DE_LIMPIEZA:
 				if estado.habitacion != Habitacion.CUARTITO:
-					return true
-	return false
+					hay_util_fuera_del_cuartito = true
+	var clases: Array[Clase] = []
+	if hay_unidad_suelta:
+		clases.append(Clase.UNIDAD_SUELTA)
+	if hay_caja_fuera_del_deposito or cajas_que_ocupan_la_tolerancia > CAJAS_TOLERADAS_EN_EL_LOCAL:
+		clases.append(Clase.CAJA)
+	if hay_util_fuera_del_cuartito:
+		clases.append(Clase.UTIL_DE_LIMPIEZA)
+	return clases
 
 
 static func hay_objetos_afuera(estados: Array[Estado]) -> bool:
 	for estado: Estado in estados:
 		if not estado.en_mano and estado.habitacion == Habitacion.AFUERA:
+			return true
+	return false
+
+
+static func hay_bolsa_afuera(estados: Array[Estado]) -> bool:
+	for estado: Estado in estados:
+		if (
+			estado.clase == Clase.BOLSA
+			and not estado.en_mano
+			and estado.habitacion == Habitacion.AFUERA
+		):
 			return true
 	return false
 

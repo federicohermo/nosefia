@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20
 ---
 
 # Capacidad: dejar el local en orden
@@ -249,11 +249,20 @@ sus interiores ni cambiar la pertenencia de un punto que conserva su posición r
 ### BR-CLN-028 — El desorden cuenta una vez al cierre
 
 CUANDO termina la jornada, el sistema DEBE anotar un llamado por desorden si queda alguna
-unidad suelta dentro de cualquier habitación, una caja dentro y fuera del depósito o un útil
-dentro y fuera del cuartito. El cuerpo sostenido DEBE excluirse por identidad, salvo mientras se
-examina: entonces cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
+unidad suelta dentro de cualquier habitación, una caja fuera del depósito o un útil
+fuera del cuartito. Una única caja en el local NO DEBE producir desorden; dos o más cajas en el
+local sí, y una caja apoyada en el baño o en el cuartito también, aunque sea la única. La caja
+sostenida cuenta como la única permitida, también en el baño: con una caja en la mano, otra caja
+en el local produce desorden. Las unidades de Poético quedan exentas sólo en lo que fija BR-CLN-037. Los demás cuerpos sostenidos DEBEN excluirse por identidad. Mientras se examina, cualquier
+cuerpo sostenido cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
+
+CUANDO termina la jornada, el sistema DEBE informar además cuáles de tres clases de desorden hubo:
+unidades sueltas, cajas fuera del depósito y útiles fuera del cuartito. Cada clase DEBE contar con
+las mismas condiciones de arriba, y lo excluido o exento de una clase NO DEBE sumarla. Hay desorden
+si y sólo si hay al menos una clase. La devolución DEBE recibir ese dato junto con el llamado, y la
+escena NO DEBE deducirlo.
 
 ### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
 
@@ -338,6 +347,19 @@ El agua temporal sobre piso despejado DEBE conservar el secundario y BR-CLN-024.
 CUANDO se hace el primario con un ticket propio sobre el inodoro, el sistema DEBE pedir su
 descarte y, si se acepta, anotar papel según BR-CLN-030 una sola vez. El secundario NO DEBE
 desechar papel. Un objeto distinto de ticket NO DEBE descartarse por ese destino.
+
+### BR-CLN-037 — Poético suelto no desordena durante la jornada que lo usa de jabón
+
+MIENTRAS la jornada es aquella en que Poético sustituye al jabón azul (BR-CLN-033), el sistema
+NO DEBE contar para el desorden de BR-CLN-028 ninguna unidad del producto Poético, esté donde
+esté dentro de cualquier habitación y la haya usado o no el jugador. La identidad DEBE ser la
+del producto, no su nombre visible. Esa unidad NO DEBE contarse como unidad suelta ni como útil
+fuera del cuartito. Cualquier otra unidad suelta DEBE seguir produciendo desorden, y
+una unidad de Poético junto a otra unidad suelta produce desorden por la otra. En las demás
+jornadas, una unidad de Poético suelta DEBE contar como cualquier otra unidad. La exención
+alcanza sólo al desorden: una unidad de Poético afuera DEBE conservar el motivo de BR-CLN-029,
+y la caja de Poético fuera del depósito DEBE contar como cualquier otra caja. La regla DEBE resolverse con la jornada y la identidad del producto como
+datos del cierre, sin que la escena filtre cuerpos.
 
 ## Criterios de aceptación
 
@@ -574,22 +596,34 @@ siguen afuera, incluso cuando caen dentro de una envolvente mayor.
 ### AC-CLN-041 — Suelta no significa visible ni apoyada en el piso *(verifica BR-CLN-028)*
 
 DADO una unidad suelta en local, depósito, baño o cuartito, incluso agrupada o apoyada en caja o góndola,
+de un producto distinto de Poético, o de Poético fuera de la jornada de BR-CLN-037,
 CUANDO cierra ENTONCES hay desorden. DADO la unidad colocada, devuelta o sostenida sin examen
 ENTONCES no lo produce. El cuerpo de repuesto no cuenta como unidad suelta.
 
 ### AC-CLN-042 — Cada clase tiene su habitación *(verifica BR-CLN-027, BR-CLN-028)*
 
-DADO una caja en local o cuartito CUANDO cierra ENTONCES hay desorden; en depósito o su paso, no.
+DADO una caja en cuartito CUANDO cierra ENTONCES hay desorden; en depósito o su paso, no.
 DADO un útil en local, depósito o baño ENTONCES hay desorden; en cuartito o su paso, no. DADO un
 útil en el umbral de la puerta del cuartito ENTONCES del lado del cuartito no produce desorden y
 del lado del depósito sí. DADO una bolsa adentro, también en el cuartito, ENTONCES no produce
 desorden. DADO la lista vacía ENTONCES no hay ninguno de los motivos.
 
+### AC-CLN-072 — El cierre dice qué clases de desorden hubo *(verifica BR-CLN-028)*
+
+DADO sólo una unidad suelta CUANDO cierra ENTONCES las clases son unidades sueltas. DADO sólo dos
+cajas en el local ENTONCES son cajas fuera del depósito; con una sola caja en el local, ninguna.
+DADO sólo un útil en el depósito ENTONCES son útiles fuera del cuartito. DADO una unidad suelta,
+dos cajas en el local y un útil en el baño ENTONCES son las tres. DADO una unidad suelta y un útil
+fuera del cuartito ENTONCES son esas dos y no las cajas. DADO el local en orden, o sólo con lo
+sostenido, lo tirado al contenedor o una bolsa adentro ENTONCES no hay ninguna clase y no hay
+desorden. DADO la jornada en que Poético sustituye al jabón azul y una unidad de Poético suelta ENTONCES no
+hay unidades sueltas entre las clases. DADO cualquier combinación ENTONCES hay desorden si y sólo si hay al menos una clase.
+
 ### AC-CLN-043 — La mano excluye sólo su cuerpo *(verifica BR-CLN-028, BR-CLN-029)*
 
 DADO dos cajas distintas con los mismos datos y una sostenida CUANDO la otra queda desordenada
 o afuera ENTONCES conserva su motivo. DADO el cuerpo sostenido CUANDO inicia un examen real
-ENTONCES cuenta por su posición; al terminar vuelve a excluirse. Esto también vale para una
+ENTONCES cuenta por su posición; al terminar vuelve a tratarse como sostenido. Esto también vale para una
 unidad que salió del grupo de sueltas al agarrarse. Mover y devolver lo sostenido conserva su
 identidad; soltar, entregar y vaciar dejan la mano sin cuerpo.
 
@@ -791,6 +825,32 @@ un descarte, desaparece el papel y se anota un motivo único de papel. Repetir c
 un ticket ajeno o ya retirado no agrega descartes ni motivos. DADO ticket sostenido CUANDO
 se pulsa secundario ENTONCES no se descarta ni suelta; balde y mopa conservan sus usos sin
 anotar papel. La aceptación conserva el medio apercibimiento declarado en BR-CLN-030.
+
+### AC-CLN-070 — Una sola caja en el local no desordena *(verifica BR-CLN-028)*
+
+DADO exactamente una caja en el local, ninguna en baño ni cuartito y el resto en depósito CUANDO
+cierra ENTONCES no hay desorden por cajas. DADO dos cajas en el local ENTONCES hay desorden. DADO
+una caja apoyada en el baño, aunque sea la única, ENTONCES hay desorden. DADO una caja en el local
+y otra apoyada en el baño ENTONCES hay desorden. DADO una caja sostenida y las demás en el depósito
+ENTONCES no hay desorden. DADO una caja sostenida dentro del baño y ninguna otra ENTONCES no hay
+desorden. DADO una caja sostenida y otra en el local ENTONCES hay desorden: la sostenida es la
+única permitida. DADO un útil sostenido y una caja en el local ENTONCES no hay desorden. DADO una
+caja en el local sin otras cajas y una unidad suelta ENTONCES hay desorden por la unidad, y el
+motivo sigue siendo único.
+
+### AC-CLN-071 — Poético suelto no desordena sólo en su jornada *(verifica BR-CLN-037, BR-CLN-028, BR-CLN-029)*
+
+DADO la jornada en que Poético sustituye al jabón azul y una o varias unidades de Poético sueltas
+en local, depósito, baño o cuartito, sin otro cuerpo desordenado, CUANDO cierra ENTONCES no hay
+desorden. DADO esa jornada, una unidad de Poético suelta y otra unidad suelta de un producto
+distinto CUANDO cierra ENTONCES hay desorden, y el motivo es único. DADO esa jornada y una unidad
+de Poético afuera CUANDO cierra ENTONCES no hay desorden y sí el motivo de afuera. DADO esa
+jornada, una unidad de Poético suelta y dos cajas en el local ENTONCES hay desorden por las cajas.
+DADO la jornada inmediata anterior y la inmediata posterior, cada una con una unidad de Poético
+suelta como único cuerpo desordenado, CUANDO cierra ENTONCES hay desorden. DADO esa jornada y una
+unidad de Poético sostenida o devuelta a su casillero ENTONCES no hay desorden, igual que con
+cualquier unidad. DADO esa jornada y una caja de Poético apoyada en el baño, como única caja,
+ENTONCES hay desorden.
 
 ## No objetivos
 

@@ -414,6 +414,7 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 	# Una obligatoria adicional distingue el marcador del cierre del de la apertura siguiente.
 	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
+	AvanceDeDevolucion.esperar_el_celular(pantalla)
 	(
 		assert_bool(pantalla.visible)
 		. override_failure_message("la noche cerró y la devolución no apareció")
@@ -540,6 +541,7 @@ func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> 
 	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
+	AvanceDeDevolucion.esperar_el_celular(pantalla)
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
@@ -599,6 +601,7 @@ func test_con_la_devolucion_en_pantalla_esc_pausa_encima() -> void:  # AC-SAV-01
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
+	AvanceDeDevolucion.esperar_el_celular(almacen.get_node("Interfaz/PantallaDeDevolucion"))
 	var esc := InputEventAction.new()
 	esc.action = &"ui_cancel"
 	esc.pressed = true
