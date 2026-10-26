@@ -240,7 +240,7 @@ desde la góndola. Agarrar, colocar o vender esas unidades NO DEBE modificar su 
 Retomar la jornada 1 desde el menú DEBE abrirla completa otra vez, sin declarar reponer.
 La jornada 2 DEBE abrir con su inventario nuevo y sus faltantes sorteados.
 Los huecos dejados por ventas en la jornada 1 NO DEBEN pasar a la siguiente.
-DEBE elegir entre 4 y 7 productos distintos y, de cada uno, entre 1 unidad y su máximo
+DEBE elegir entre 4 y 6 productos distintos y, de cada uno, entre 3 unidades y su máximo
 reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 [ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
 
@@ -249,7 +249,7 @@ caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casil
 adelante de todas sus tandas, reponible y fijas, menos uno por cada tanda de un producto de una
 sola fila, que no puede abrir vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
 total de todas las tandas (BR-STK-008). Los casilleros vacíos de un producto DEBEN quedar juntos
-(BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 1
+(BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 3
 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
 incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
 compradores ni pedidos.
@@ -855,19 +855,20 @@ con la reponible vacía entera.
 
 DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
 cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y
-7 productos distintos. Cada faltante está entre 1 y `mínimo(C − P, F)`, y los productos no elegidos
+6 productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no elegidos
 están completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y dos
 conjuntos de productos distintos.
 
 DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
-se pueden obtener 4 y 7 productos, y 1 y el máximo reponible de cada elegido. La elección de
-cantidad tiene cuatro alternativas equiprobables; la de unidades tiene tantas alternativas
-equiprobables como su máximo reponible.
+se pueden obtener 4 y 6 productos, y 3 y el máximo reponible de cada elegido. La elección de
+cantidad tiene tres alternativas equiprobables; la de unidades tiene tantas alternativas
+equiprobables como enteros hay entre 3 y su máximo reponible.
 
 DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
 su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
-pedidas o con cero casilleros principales, el producto nunca falta. DADO exactamente tres elegibles
-CUANDO la cantidad sorteada es 4 o 7 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+pedidas o con cero casilleros principales, el producto nunca falta; con un máximo de 2, tampoco,
+y con un máximo de 3 es elegible y le faltan exactamente 3. DADO exactamente tres elegibles
+CUANDO la cantidad sorteada es 4 o 6 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
 DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
 principales CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
 
