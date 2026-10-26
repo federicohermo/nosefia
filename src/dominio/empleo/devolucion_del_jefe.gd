@@ -174,6 +174,20 @@ const DESORDEN_SIN_REMEDIO := (
 	+ "lo que es el orden."
 )
 
+## Las dos primeras filas del Reto 5 y la de n >= 3 con menos de cuatro puntos.
+const HELADERAS: Array[String] = [
+	(
+		"Las heladeras tienen que quedar cerradas para que los productos no pierdan la "
+		+ "cadena de frío ¿no tenés una en tu casa?"
+	),
+	"Cerrame todas las puertitas de las heladeras antes de irte ¿querés?",
+	(
+		"Dejate de joder con las heladeras. Siempre las dejás abiertas. No es un detalle menor. "
+		+ "Es algo básico…"
+	),
+]
+const HELADERAS_Y_PARA_COLMO := "Y para colmo me dejás abiertas las heladeras."
+
 ## Lo que cierra el Reto 4, por las clases de desorden de la noche: una máscara con un bit por
 ## clase, en el orden de la ficha.
 const _SUELTAS := 1 << ReglasDelCierre.Clase.UNIDAD_SUELTA
@@ -356,6 +370,7 @@ static func retos() -> Array[Partida.Llamado]:
 		Partida.Llamado.OBJETO_TIRADO,
 		Partida.Llamado.OBJETO_AFUERA,
 		Partida.Llamado.LOCAL_DESORDENADO,
+		Partida.Llamado.HELADERAS_ABIERTAS,
 	]
 
 
@@ -454,6 +469,11 @@ static func _reto(
 			return BASURA[clampi(n, 1, BASURA.size()) - 1]
 		Partida.Llamado.OBJETO_AFUERA:
 			return AFUERA[clampi(n, 1, AFUERA.size()) - 1]
+		Partida.Llamado.HELADERAS_ABIERTAS:
+			# Sin texto de la ficha para n < 3 con P >= 4: ahí queda el de P < 4.
+			if n >= 3 and despedido:
+				return HELADERAS_Y_PARA_COLMO
+			return HELADERAS[clampi(n, 1, HELADERAS.size()) - 1]
 	var texto := DESORDEN[0]
 	if n >= 5 or (n >= 2 and despedido):
 		texto = DESORDEN_SIN_REMEDIO
