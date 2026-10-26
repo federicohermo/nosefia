@@ -4,7 +4,12 @@ extends RefCounted
 enum Habitacion { LOCAL, DEPOSITO, BANO, AFUERA, CUARTITO }
 enum Clase { UNIDAD_SUELTA, CAJA, UTIL_DE_LIMPIEZA, OTRO, BOLSA }
 
+enum Heladera { PRIMERA, SEGUNDA, FUERA_DE_SERVICIO }
+
 const CAJAS_TOLERADAS_EN_EL_LOCAL := 1
+
+## La fuera de servicio no enfría nada: dejarla abierta no es un descuido.
+const _FUNCIONALES: Array[Heladera] = [Heladera.PRIMERA, Heladera.SEGUNDA]
 
 
 class Estado:
@@ -106,6 +111,14 @@ static func hay_bolsa_afuera(estados: Array[Estado]) -> bool:
 			and not estado.en_mano
 			and estado.habitacion == Habitacion.AFUERA
 		):
+			return true
+	return false
+
+
+## Cuenta la puerta pedida abierta, aunque la hoja todavía no haya girado.
+static func hay_heladera_abierta(puertas: Dictionary[Heladera, Puerta]) -> bool:
+	for heladera: Heladera in _FUNCIONALES:
+		if puertas.has(heladera) and puertas[heladera].abierta():
 			return true
 	return false
 
