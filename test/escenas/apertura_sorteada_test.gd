@@ -175,8 +175,11 @@ func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC
 		var compradores: Array[Comprador] = almacen.get("_atenciones").tarea().get("_compradores")
 		var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
 		var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
+		var alturas: Dictionary[Producto.Id, PackedFloat32Array] = puesto.call(
+			"alturas_de_las_tandas"
+		)
 		var esperado := Apertura.vacios_de_la_jornada(
-			jornada, compradores, tandas, de_una_fila, control
+			jornada, compradores, tandas, de_una_fila, control, alturas
 		)
 		var estante: Estante = almacen.get("_repositor").estante()
 		for producto in Catalogo.todos():

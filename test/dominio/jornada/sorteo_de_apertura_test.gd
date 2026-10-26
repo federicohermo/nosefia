@@ -205,7 +205,11 @@ func test_con_las_dos_tandas_del_local_los_vacios_caen_en_las_dos() -> void:  # 
 
 func test_los_vacios_de_cada_tanda_son_casilleros_seguidos() -> void:  # AC-STK-033
 	for forma: Array in [
-		[[3, 3, 3, 3], false], [[4, 4], false], [[2, 5, 3], false], [[4, 4], true]
+		[[3, 3, 3, 3], false],
+		[[4, 4], false],
+		[[2, 5, 3], false],
+		[[4, 4], true],
+		[[3, 3, 3, 3], true]
 	]:
 		var tamanos: Array[int] = []
 		tamanos.assign(forma[0])
@@ -231,7 +235,7 @@ func test_si_el_faltante_entra_entero_en_alguna_tanda_cae_entero_en_una() -> voi
 	var tamanos: Array[int] = [4, 4]
 	var tandas: Dictionary[Producto.Id, Array] = {producto: _tandas(tamanos)}
 	var tandas_usadas: Dictionary[int, bool] = {}
-	var cuatro_vistos := 0
+	var tandas_con_cuatro: Dictionary[int, bool] = {}
 	for semilla in 200:
 		var vacios := _vacios(8, [], tandas, false, semilla)
 		var casilleros: Array = vacios[producto]
@@ -242,11 +246,10 @@ func test_si_el_faltante_entra_entero_en_alguna_tanda_cae_entero_en_una() -> voi
 		if casilleros.size() <= 4:
 			assert_int(en_tandas.size()).is_equal(1)
 		if casilleros.size() == 4:
-			cuatro_vistos += 1
-			assert_array(en_tandas.keys()).contains_exactly([1])
+			tandas_con_cuatro.merge(en_tandas)
 		if casilleros.size() > 4:
 			assert_int(en_tandas.size()).is_equal(2)
-	assert_int(cuatro_vistos).is_greater(0)
+	assert_array(tandas_con_cuatro.keys()).contains_exactly_in_any_order([0, 1])
 	assert_array(tandas_usadas.keys()).contains_exactly_in_any_order([0, 1])
 
 
@@ -265,16 +268,17 @@ func test_la_primera_jornada_no_vacia_ningun_casillero() -> void:  # AC-STK-094
 		assert_dict(vacios).is_empty()
 
 
-func test_la_reponible_no_abre_vacia_entera_aunque_falten_todos() -> void:  # AC-STK-093
+func test_un_producto_de_dos_filas_puede_abrir_una_tanda_vacia_entera() -> void:  # AC-STK-093
 	var producto := Producto.Id.ACTRONCITO
 	var tandas: Dictionary[Producto.Id, Array] = {producto: _tandas([2, 2])}
-	var cantidades: Dictionary[int, bool] = {}
+	var tandas_vaciadas: Dictionary[int, bool] = {}
 	for semilla in 200:
-		var vacios := _vacios(8, [], tandas, false, semilla)
-		var casilleros: Array = vacios[producto]
-		cantidades[casilleros.size()] = true
-		assert_bool(casilleros.has(0) and casilleros.has(1)).is_false()
-	assert_array(cantidades.keys()).contains_exactly_in_any_order([1, 2, 3])
+		var casilleros: Array = _vacios(8, [], tandas, false, semilla)[producto]
+		for indice in tandas[producto].size():
+			var tanda: PackedInt32Array = tandas[producto][indice]
+			if casilleros.has(tanda[0]) and casilleros.has(tanda[1]):
+				tandas_vaciadas[indice] = true
+	assert_array(tandas_vaciadas.keys()).contains_exactly_in_any_order([0, 1])
 
 
 func test_una_tanda_de_una_fila_no_abre_vacia_entera() -> void:  # AC-STK-033

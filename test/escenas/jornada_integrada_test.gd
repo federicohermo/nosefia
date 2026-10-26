@@ -78,7 +78,8 @@ func _completos_al_abrir(almacen: Node3D, azar: RandomNumberGenerator) -> int:
 		Compradores.de_la_jornada(DEL_PADRON),
 		tandas,
 		de_una_fila,
-		azar
+		azar,
+		puesto.call("alturas_de_las_tandas")
 	)
 	return Catalogo.todos().size() - vacios.size()
 

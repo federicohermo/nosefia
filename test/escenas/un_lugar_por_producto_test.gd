@@ -510,9 +510,6 @@ func _casilleros_de_la_disposicion(
 			lugares.append(
 				DisposicionDeLaGondola.copia(bloques[orden], total - filas[orden] + columna)
 			)
-	# La primera de la reponible va antes que las guías: vaciarla entera deja una puesta.
-	if filas[-1] > 0:
-		lugares.push_front(lugares.pop_at(lugares.size() - filas[-1]))
 	return lugares
 
 

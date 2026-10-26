@@ -139,20 +139,41 @@ func casilleros() -> Dictionary[Producto.Id, int]:
 func tandas() -> Dictionary[Producto.Id, Array]:
 	var por_producto: Dictionary[Producto.Id, Array] = {}
 	for producto in Catalogo.todos():
-		var filas_de_las_fijas: Array[int] = []
+		var fijas: Array = []
+		var siguiente := 0
 		for indice in disposicion.productos_de_las_guias.size():
 			if disposicion.productos_de_las_guias[indice] == producto.id:
-				filas_de_las_fijas.append(disposicion.filas_de_adelante_de_las_guias[indice])
+				var fila := disposicion.filas_de_adelante_de_las_guias[indice]
+				fijas.append(PackedInt32Array(range(siguiente, siguiente + fila)))
+				siguiente += fila
 		var reponibles := disposicion.filas_de_adelante[producto.id]
-		var fijas: Array = []
-		# La primera de la reponible va antes que las fijas, y el resto después de ellas.
-		var siguiente := mini(reponibles, 1)
-		for fila in filas_de_las_fijas:
-			fijas.append(PackedInt32Array(range(siguiente, siguiente + fila)))
-			siguiente += fila
-		var reponible := PackedInt32Array(range(mini(reponibles, 1)))
-		reponible.append_array(PackedInt32Array(range(siguiente, siguiente + reponibles - 1)))
+		var reponible := PackedInt32Array(range(siguiente, siguiente + reponibles))
 		por_producto[producto.id] = [reponible] + fijas
+	return por_producto
+
+
+## La altura de la fila de adelante de cada tanda de cada producto, en el orden de `tandas()`.
+##
+## Es lo que le dice a `Apertura` qué estante queda justo arriba de cuál. Una tanda sin
+## casilleros no tiene altura.
+func alturas_de_las_tandas() -> Dictionary[Producto.Id, PackedFloat32Array]:
+	var por_producto: Dictionary[Producto.Id, PackedFloat32Array] = {}
+	for producto in Catalogo.todos():
+		var alturas := PackedFloat32Array()
+		alturas.append(
+			_altura_de_la_fila(
+				disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
+			)
+		)
+		for indice in disposicion.productos_de_las_guias.size():
+			if disposicion.productos_de_las_guias[indice] == producto.id:
+				alturas.append(
+					_altura_de_la_fila(
+						disposicion.guias[indice],
+						disposicion.filas_de_adelante_de_las_guias[indice]
+					)
+				)
+		por_producto[producto.id] = alturas
 	return por_producto
 
 
@@ -1403,9 +1424,9 @@ func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
 
 
 ## El dibujo de cada producto: primero sus copias fijas —las filas de atrás de todas sus tandas—
-## y después sus casilleros: el primero de la reponible, la fila de adelante de cada tanda fija
-## suya y el resto de la reponible. Un estante al que la apertura no le declara vacíos vacía los
-## últimos, que así quedan en la reponible, a la altura de la mano.
+## y después sus casilleros —la fila de adelante de cada tanda fija suya, y al final la de su
+## tanda reponible—. Un estante al que la apertura no le declara vacíos vacía los últimos, que así
+## quedan en la reponible, a la altura de la mano.
 ##
 ## **Cada producto va en un solo dibujo.** Cada nodo que se dibuja le cuesta al motor su
 ## preparación, y en la web esa preparación es lo que más pesa del cuadro: medido el 2026-09-21,
@@ -1419,9 +1440,7 @@ func _armar_los_bloques() -> void:
 		var atras := DisposicionDeLaGondola.copias(principal)
 		atras -= disposicion.filas_de_adelante[producto.id]
 		fijas.append(principal.slice(0, atras * flotantes))
-		# La primera de la reponible va antes que las guías: los faltantes salen del final, y
-		# si la vaciaran entera, el último sale de una guía y la reponible no queda pelada.
-		casilleros.append(principal.slice(atras * flotantes, (atras + 1) * flotantes))
+		casilleros.append(PackedFloat32Array())
 	for indice in disposicion.guias.size():
 		var id := disposicion.productos_de_las_guias[indice]
 		var bloque := disposicion.guias[indice]
@@ -1437,7 +1456,7 @@ func _armar_los_bloques() -> void:
 		var principal := disposicion.principales[producto.id]
 		var atras := DisposicionDeLaGondola.copias(principal)
 		atras -= disposicion.filas_de_adelante[producto.id]
-		casilleros[producto.id].append_array(principal.slice((atras + 1) * flotantes))
+		casilleros[producto.id].append_array(principal.slice(atras * flotantes))
 		_fijas.append(DisposicionDeLaGondola.copias(fijas[producto.id]))
 		_bloques.append(fijas[producto.id] + casilleros[producto.id])
 
@@ -1479,6 +1498,14 @@ func _rebasar(bloque: PackedFloat32Array, desde: Basis, hacia: Basis) -> PackedF
 			[b.x.x, b.y.x, b.z.x, o.x, b.x.y, b.y.y, b.z.y, o.y, b.x.z, b.y.z, b.z.z, o.z]
 		)
 	return salida
+
+
+## La altura de la primera copia de la fila de adelante de un bloque.
+func _altura_de_la_fila(bloque: PackedFloat32Array, fila_de_adelante: int) -> float:
+	if fila_de_adelante <= 0:
+		return 0.0
+	var primera := DisposicionDeLaGondola.copias(bloque) - fila_de_adelante
+	return DisposicionDeLaGondola.copia(bloque, primera).origin.y
 
 
 ## Desde qué copia del dibujo arrancan los casilleros: las de antes son fijas.
