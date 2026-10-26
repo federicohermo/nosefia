@@ -219,7 +219,11 @@ func test_con_las_dos_tandas_del_local_los_vacios_caen_en_las_dos() -> void:  # 
 
 func test_los_vacios_de_cada_tanda_son_casilleros_seguidos() -> void:  # AC-STK-033
 	for forma: Array in [
-		[[3, 3, 3, 3], false], [[4, 4], false], [[2, 5, 3], false], [[4, 4], true]
+		[[3, 3, 3, 3], false],
+		[[4, 4], false],
+		[[2, 5, 3], false],
+		[[4, 4], true],
+		[[3, 3, 3, 3], true]
 	]:
 		var tamanos: Array[int] = []
 		tamanos.assign(forma[0])
