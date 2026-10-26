@@ -205,7 +205,11 @@ func test_un_producto_en_el_piso_trae_el_reto_del_desorden() -> void:
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	var partida: Partida = _almacen.get("_partida")
 	assert_int(partida.medios()).is_equal(5)
-	assert_array(partida.mensajes_del_jefe()).contains([DevolucionDelJefe.DESORDEN[0]])
+	var retos := 0
+	for texto: String in partida.mensajes_del_jefe():
+		if texto.begins_with(DevolucionDelJefe.DESORDEN[0] + " "):
+			retos += 1
+	assert_int(retos).is_equal(1)
 
 
 func test_las_partes_reales_respetan_techo_y_laterales_de_los_pasos() -> void:  # AC-CLN-040

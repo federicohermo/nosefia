@@ -301,14 +301,30 @@ siguientes. La fila de J = 6 se conserva aunque esa noche no declare una particu
 | Reto 3 | n = 3 | En serio, si sigue apareciendo propiedad del local en la vereda, voy a tener que poner una reja en la ventanilla. |
 | Reto 3 | n = 4 | BASTA DE TIRAR COSAS POR LA VENTANILLA! |
 | Reto 3 | n ≥ 5 | A esta altura del partido, ya estoy considerando tirarte a VOS por la ventanilla. |
-| Reto 4 | n = 1 | Más allá de cumplir con los quehaceres, el orden también es importante. |
-| Reto 4 | n = 2 y P < 4 | Dejá las cosas donde corresponde. Es una estación de servicio, no un pelotero. |
-| Reto 4 | n = 3 y P < 4 | Me parece que no está quedando claro el temita de dejar todo ordenado. En el corcho hay una nota que seguro te va a servir. Pegale una leída, dale? |
-| Reto 4 | n = 4 y P < 4 | Y si esta vez dejás ordenado? Sería mucho pedir? |
-| Reto 4 | n ≥ 5, o n de 2 a 4 y P ≥ 4 | Realmente me sorprende cómo alguien puede tener tan poca conciencia de lo que es el orden. |
+| Reto 4 | n = 1 | Más allá de cumplir con los quehaceres, el orden también es importante. + |
+| Reto 4 | n = 2 y P < 4 | Dejá las cosas donde corresponde. Es una estación de servicio, no un pelotero. + |
+| Reto 4 | n = 3 y P < 4 | Me parece que no está quedando claro el temita de dejar todo ordenado. En el corcho hay una nota que seguro te va a servir. Pegale una leída, dale? + |
+| Reto 4 | n = 4 y P < 4 | Y si esta vez dejás ordenado? Sería mucho pedir? + |
+| Reto 4 | n ≥ 5, o n de 2 a 4 y P ≥ 4 | Realmente me sorprende cómo alguien puede tener tan poca conciencia de lo que es el orden. + |
 
 Un llamado se anota una vez por noche y la partida dura ocho, así que n no pasa de 8. La ficha
 escribe hasta n = 5: la última fila de cada Reto cubre también las n mayores.
+
+En Reto 4, el «+» del final de cada texto DEBE reemplazarse por el texto de la tabla siguiente
+que corresponde a las clases de desorden que informó el cierre esa noche (BR-CLN-028), unido al
+texto de la fila con un espacio. El orden de las partes es el de la tabla, nunca el orden en que se
+encontraron. Elegir la fila por n y P NO DEBE cambiar: el desorden sigue siendo un solo motivo por
+noche (BR-EMP-012), sea cual sea la cantidad de clases.
+
+| Clases de desorden | Texto |
+|---|---|
+| Unidades sueltas | No pueden quedar productos tirados por ahí. |
+| Cajas fuera del depósito | Las cajas tienen que quedar en el depósito. |
+| Útiles fuera del cuartito | Los productos de limpieza van en el cuartito que les corresponde. |
+| Unidades sueltas y cajas | No pueden quedar productos tirados por ahí y las cajas tienen que quedar en el depósito. |
+| Unidades sueltas y útiles | No pueden quedar productos tirados por ahí y los productos de limpieza van en el cuartito que les corresponde. |
+| Cajas y útiles | Las cajas tienen que quedar en el depósito y los productos de limpieza van en el cuartito que les corresponde. |
+| Las tres | No pueden quedar productos tirados por ahí, las cajas tienen que quedar en el depósito y los productos de limpieza van en el cuartito que les corresponde. |
 
 ### BR-EMP-045 — Una bolsa tirada por la ventana cambia la Tarea 5 de la jornada 5
 
@@ -989,8 +1005,18 @@ de tirar papel en el inodoro. Ya no sé cómo pedírtelo.». DADO el sexto llama
 basura en J = 8 ENTONCES Reto 2 es «Una vez más tuve que sacar cosas de la basura. Te parece
 gracioso?». DADO el sexto y el octavo llamado por objetos afuera ENTONCES Reto 3 es «A esta
 altura del partido, ya estoy considerando tirarte a VOS por la ventanilla.». DADO el sexto llamado
-por desorden con P < 4 ENTONCES Reto 4 es «Realmente me sorprende cómo alguien puede tener tan
-poca conciencia de lo que es el orden.».
+por desorden con P < 4 ENTONCES Reto 4 empieza con «Realmente me sorprende cómo alguien puede tener
+tan poca conciencia de lo que es el orden.» y sigue con el texto de BR-EMP-028 para sus clases.
+
+### AC-EMP-097 — El Reto 4 nombra qué quedó desordenado *(verifica BR-EMP-028, BR-EMP-012)*
+
+DADO el primer llamado por desorden y sólo unidades sueltas CUANDO se arma la devolución ENTONCES
+Reto 4 es el texto de n = 1 seguido de un espacio y el de unidades sueltas, sin «+». DADO cada
+una de las siete combinaciones de clases ENTONCES Reto 4 termina con el texto de esa combinación,
+en el orden unidades, cajas, útiles. DADO el segundo, el tercero y el cuarto llamado con P < 4, y
+el segundo a cuarto con P ≥ 4, y el quinto o mayor, ENTONCES cada fila de Reto 4 termina con el
+texto de las clases de esa noche. DADO el mismo llamado con una, dos o tres clases ENTONCES n y los
+medios del legajo son los mismos, y la devolución trae un solo Reto 4.
 
 ### AC-EMP-075 — Las jornadas 2, 3 y 4 abren con lo suyo *(verifica BR-EMP-022, BR-EMP-024)*
 

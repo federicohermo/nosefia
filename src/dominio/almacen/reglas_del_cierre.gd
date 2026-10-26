@@ -50,6 +50,15 @@ static func habitacion_de(
 
 
 static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
+	return not clases_de_desorden(estados, jornada).is_empty()
+
+
+## Cuáles de las tres clases de desorden hubo, en el orden de la ficha: unidades sueltas, cajas y
+## útiles.
+static func clases_de_desorden(estados: Array[Estado], jornada: int) -> Array[Clase]:
+	var hay_unidad_suelta := false
+	var hay_caja_fuera_del_deposito := false
+	var hay_util_fuera_del_cuartito := false
 	var cajas_que_ocupan_la_tolerancia := 0
 	for estado: Estado in estados:
 		if estado.en_mano:
@@ -61,7 +70,7 @@ static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
 		match estado.clase:
 			Clase.UNIDAD_SUELTA:
 				if not AnomaliasDeLaJornada.sustituye_azul(estado.producto, jornada):
-					return true
+					hay_unidad_suelta = true
 			Clase.CAJA:
 				match estado.habitacion:
 					Habitacion.LOCAL:
@@ -69,11 +78,18 @@ static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
 					Habitacion.DEPOSITO:
 						pass
 					_:
-						return true
+						hay_caja_fuera_del_deposito = true
 			Clase.UTIL_DE_LIMPIEZA:
 				if estado.habitacion != Habitacion.CUARTITO:
-					return true
-	return cajas_que_ocupan_la_tolerancia > CAJAS_TOLERADAS_EN_EL_LOCAL
+					hay_util_fuera_del_cuartito = true
+	var clases: Array[Clase] = []
+	if hay_unidad_suelta:
+		clases.append(Clase.UNIDAD_SUELTA)
+	if hay_caja_fuera_del_deposito or cajas_que_ocupan_la_tolerancia > CAJAS_TOLERADAS_EN_EL_LOCAL:
+		clases.append(Clase.CAJA)
+	if hay_util_fuera_del_cuartito:
+		clases.append(Clase.UTIL_DE_LIMPIEZA)
+	return clases
 
 
 static func hay_objetos_afuera(estados: Array[Estado]) -> bool:

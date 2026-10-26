@@ -976,8 +976,7 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 func _al_agotar_el_turno(_jornada: int) -> void:
 	_partida.poses_de_las_cajas = _poses_de_las_cajas()
 	var estados := _estados_del_cierre()
-	if ReglasDelCierre.hay_desorden(estados, _partida.jornada()):
-		_partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
+	_partida.clases_de_desorden = ReglasDelCierre.clases_de_desorden(estados, _partida.jornada())
 	if ReglasDelCierre.hay_objetos_afuera(estados):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
 	if ReglasDelCierre.hay_bolsa_afuera(estados):
