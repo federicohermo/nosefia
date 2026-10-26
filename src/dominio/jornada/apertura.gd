@@ -205,9 +205,11 @@ static func _cupo_de(tanda: PackedInt32Array, de_una_fila: bool) -> int:
 ##
 ## **Las tandas se recorren por altura**, de arriba abajo, desde una al azar: el bloque de tandas
 ## vacías es contiguo y la parcial queda debajo. Sólo si el bloque llega al estante de más abajo,
-## sigue por arriba. `posiciones` trae el lugar de cada casillero de cada tanda, en el orden de
-## `tandas`; sin él todas tienen la misma altura y se recorren en el orden de `tandas`. Cada
-## bloque que sigue a otro cae en los casilleros que quedan en las mismas columnas.
+## sigue por arriba. En un producto de una fila el sentido es el contrario: lo que sobra cae en el
+## estante de justo arriba, y abajo sólo si no hay uno arriba. `posiciones` trae el lugar de cada
+## casillero de cada tanda, en el orden de `tandas`; sin él todas tienen la misma altura y se
+## recorren en el orden de `tandas`. Cada bloque que sigue a otro cae en los casilleros que quedan
+## en las mismas columnas.
 static func _sortear_vacios(
 	tandas: Array,
 	de_una_fila: bool,
@@ -230,15 +232,17 @@ static func _sortear_vacios(
 			var otro_alto := _altura_de(lugares[otro])
 			return alto > otro_alto or (alto == otro_alto and uno < otro)
 	)
+	if de_una_fila:
+		con_lugar.reverse()
 	var entran: Array[int] = con_lugar.filter(
 		func(indice: int) -> bool: return cupos[indice] >= cuantos
 	)
 	var opciones: Array[int] = con_lugar if entran.is_empty() else entran
 	var inicio := con_lugar.find(opciones[azar.randi_range(0, opciones.size() - 1)])
 	var recorrido: Array[int] = con_lugar.slice(inicio)
-	var por_arriba := con_lugar.slice(0, inicio)
-	por_arriba.reverse()
-	recorrido.append_array(por_arriba)
+	var del_otro_lado := con_lugar.slice(0, inicio)
+	del_otro_lado.reverse()
+	recorrido.append_array(del_otro_lado)
 	var vacios: Array[int] = []
 	var anterior := PackedVector3Array()
 	var faltan := cuantos
