@@ -174,7 +174,7 @@ const DESORDEN_SIN_REMEDIO := (
 	+ "lo que es el orden."
 )
 
-## Las dos primeras filas del Reto 5 y la de n >= 3 con menos de cuatro puntos.
+## Las filas del Reto 5 con menos de cuatro puntos: n = 1, n = 2 y n >= 3.
 const HELADERAS: Array[String] = [
 	(
 		"Las heladeras tienen que quedar cerradas para que los productos no pierdan la "
@@ -470,8 +470,7 @@ static func _reto(
 		Partida.Llamado.OBJETO_AFUERA:
 			return AFUERA[clampi(n, 1, AFUERA.size()) - 1]
 		Partida.Llamado.HELADERAS_ABIERTAS:
-			# Sin texto de la ficha para n < 3 con P >= 4: ahí queda el de P < 4.
-			if n >= 3 and despedido:
+			if despedido:
 				return HELADERAS_Y_PARA_COLMO
 			return HELADERAS[clampi(n, 1, HELADERAS.size()) - 1]
 	var texto := DESORDEN[0]

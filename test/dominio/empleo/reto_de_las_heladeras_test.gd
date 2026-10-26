@@ -53,8 +53,8 @@ func test_con_menos_de_cuatro_puntos_el_texto_sale_de_n() -> void:  # AC-EMP-098
 		assert_str(_reto_5(n, SIN_DESPIDO)).is_equal(DevolucionDelJefe.HELADERAS[2])
 
 
-func test_el_tercero_y_el_octavo_con_cuatro_puntos_dicen_y_para_colmo() -> void:  # AC-EMP-098
-	for n: int in [3, 8]:
+func test_con_cuatro_puntos_dice_y_para_colmo_con_cualquier_n() -> void:  # AC-EMP-098
+	for n: int in [1, 2, 3, 8]:
 		assert_str(_reto_5(n, DevolucionDelJefe.MEDIOS_DEL_DESPIDO)).is_equal(
 			DevolucionDelJefe.HELADERAS_Y_PARA_COLMO
 		)
