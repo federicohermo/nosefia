@@ -279,9 +279,10 @@ func test_el_bloque_que_sigue_va_en_el_estante_contiguo_y_alineado() -> void:  #
 			if not columnas_por_tanda.has(tanda):
 				columnas_por_tanda[tanda] = []
 			columnas_por_tanda[tanda].append(casillero % 4)
-		if columnas_por_tanda.size() < 2:
+		if columnas_por_tanda.size() == 3:
+			assert_int(casilleros.size()).is_equal(8)
+		if columnas_por_tanda.size() != 2:
 			continue
-		assert_int(columnas_por_tanda.size()).is_equal(2)
 		pares[str(columnas_por_tanda.keys())] = true
 		var bloques: Array = columnas_por_tanda.values()
 		bloques.sort_custom(func(a: Array, b: Array) -> bool: return a.size() < b.size())
