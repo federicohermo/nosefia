@@ -9,6 +9,7 @@ enum Tipo {
 	PISTA,
 	TAREAS_TERMINADAS,
 	SALIDA_RETRABADA,
+	FALTA_REPONER,
 }
 enum Salida { SIN_AVISO, HABILITADA, RETRABADA }
 
@@ -32,6 +33,7 @@ var _cierre_avisado := false
 var _salida := Salida.SIN_AVISO
 var _permiso := false
 var _en_la_computadora := false
+var _turno_cerrado := false
 
 
 func actualizar_tiempo(restante: float) -> void:
@@ -88,11 +90,24 @@ func actualizar_computadora(abierta: bool) -> void:
 		_avisar_salida(_permiso)
 
 
+## Dura mientras el jugador siga en una zona con faltante: no tiene temporizador, y por eso no
+## vuelve a avisarse si ya está visible. Con el turno cerrado no aparece.
+func actualizar_faltante(hay: bool) -> void:
+	if not hay or _turno_cerrado:
+		_retirar(Tipo.FALTA_REPONER)
+	elif not _orden.has(Tipo.FALTA_REPONER):
+		_orden.push_front(Tipo.FALTA_REPONER)
+
+
+func abrir_turno() -> void:
+	_turno_cerrado = false
+
+
 func avanzar(segundos: float) -> void:
 	if segundos <= 0.0:
 		return
 	for tipo in visibles():
-		if tipo == Tipo.CLIENTE and _esperando != null:
+		if tipo == Tipo.FALTA_REPONER or (tipo == Tipo.CLIENTE and _esperando != null):
 			continue
 		_transcurrido[tipo] += segundos
 		if _transcurrido[tipo] >= DURACION:
@@ -113,6 +128,7 @@ func vaciar() -> void:
 	_cierre_avisado = false
 	_salida = Salida.SIN_AVISO
 	_permiso = false
+	_turno_cerrado = true
 
 
 func _retirar(tipo: Tipo) -> void:

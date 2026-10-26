@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21
 ---
 
 # Capacidad: los subtítulos
@@ -206,6 +206,7 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 |---|---|---|
 | Tirar al contenedor algo que no es una bolsa de basura, un producto vencido, un ticket ni una pista | `MALA_IDEA` | Me parece que eso fue una mala idea… |
 | Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
+| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Me parece que no debería tirar<br>los elementos de limpieza. |
 | Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
 | Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
 | Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
@@ -214,6 +215,11 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
 
+El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
+
+`CAJA_EN_EL_CONTENEDOR` y `UTIL_EN_EL_CONTENEDOR` DEBEN decidirse por lo que se intenta tirar y no
+por la tapa: con la tapa cerrada o girando piensan lo mismo que con la tapa abierta. Poético, aun en
+la jornada en que sustituye al jabón azul, es un producto y piensa `MALA_IDEA`, no el del útil.
 Tirar una bolsa, un producto vencido, un ticket o una pista, borrar cualquier otra mancha, o
 pasar la mopa por una mancha ya limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
 el texto del jabón, no el de la caca.
@@ -402,10 +408,20 @@ camina 5 metros y transcurre 1 segundo desde que apareció ENTONCES sigue con op
 
 ### AC-SUB-016 — Lo que se tira *(verifica BR-SUB-013)*
 
-DADO una unidad, un jabón o la mopa tirados al contenedor ENTONCES el pensamiento es `MALA_IDEA`.
+DADO una unidad tirada al contenedor, también una de Poético en la jornada en que sustituye al
+jabón azul, ENTONCES el pensamiento es `MALA_IDEA`.
 DADO una bolsa, un ticket, una pista o una unidad vencida tirados ENTONCES no hay pensamiento.
 DADO una caja del depósito que no entra ENTONCES el pensamiento es `CAJA_EN_EL_CONTENEDOR`; DADO la mano vacía o la tapa cerrada
 con algo que entra ENTONCES no hay texto.
+
+### AC-SUB-025 — Los útiles y las cajas que no entran *(verifica BR-SUB-013)*
+
+DADO, por turno, el balde, la mopa y cada uno de los tres jabones sostenidos CUANDO se intenta
+tirarlos con la tapa abierta y, por separado, cerrada ENTONCES el pensamiento es
+`UTIL_EN_EL_CONTENEDOR`, y nunca `MALA_IDEA` ni `CAJA_EN_EL_CONTENEDOR`. DADO una caja del
+depósito con la tapa abierta y con la tapa cerrada ENTONCES el pensamiento sigue siendo
+`CAJA_EN_EL_CONTENEDOR`. DADO el intento rechazado ENTONCES el útil sigue en la mano y no hay
+llamado. DADO la mano vacía ENTONCES no hay pensamiento.
 
 ### AC-SUB-017 — Lo que queda afuera *(verifica BR-SUB-013)*
 
