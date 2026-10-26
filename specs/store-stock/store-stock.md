@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -191,10 +191,19 @@ tanda DEBE elegirse al azar entre las que reciben el faltante entero, sin vaciar
 SI el faltante no entra entero en ninguna, ENTONCES DEBE partirse: un bloque llena una tanda
 elegida al azar y el resto sigue como otro bloque de casilleros seguidos en otra tanda del mismo
 producto, con la misma regla. En una tanda, los vacíos NO DEBEN
-quedar separados por casilleros ocupados. La apertura NO DEBE vaciar entera la tanda reponible: si los faltantes de un producto igualan los casilleros de
-su tanda reponible, uno DEBE quedar ocupado y el último faltante DEBE salir de la fila de
-adelante de una tanda fija del mismo producto. En un producto de una sola fila (BR-STK-025), la
-apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda.
+quedar separados por casilleros ocupados.
+
+La apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda de un producto de una sola
+fila (BR-STK-025). CUANDO los faltantes de ese producto vaciarían entera la fila de adelante de
+una tanda, una unidad DEBE quedar ahí y el faltante que sobra DEBE quedar vacío en la fila de
+adelante de la tanda del mismo producto en el estante de justo arriba. SI esa tanda es la de
+arriba de todo, o el producto no tiene tanda en un estante de arriba, ENTONCES el que sobra DEBE
+quedar en el estante de justo abajo. SI la fila de adelante del estante vecino ya está vacía
+entera, ENTONCES el que sobra DEBE pasar al siguiente estante del producto con unidades, en la
+misma dirección. Los vacíos DEBEN seguir sumando lo que faltó. «Justo arriba» y «justo abajo» se
+miden por la altura de las tandas del producto en esa cara. Un producto de dos filas NO tiene esta
+protección: puede abrir con la fila de adelante de una tanda entera vacía, y su fila de atrás se
+ve entera (BR-STK-025).
 
 En un mueble de estantes, la tanda reponible DEBE ir en un estante de reposición. Un estante
 de reposición NO DEBE llevar una tanda fija: todo lo que el jugador ve a la altura de la mano se
@@ -236,9 +245,8 @@ reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 
 Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
 caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casilleros de la fila de
-adelante de todas sus tandas, reponible y fijas (BR-STK-024), menos uno por cada tanda que no
-puede abrir vacía entera: la reponible de un producto con tandas fijas, y cada tanda de un
-producto de una sola fila (BR-STK-024). El inventario DEBE conservar el cupo
+adelante de todas sus tandas, reponible y fijas (BR-STK-024), menos uno por cada tanda de un
+producto de una sola fila, que no puede abrir vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
 total de todas las tandas (BR-STK-008). Los casilleros vacíos de un producto DEBEN quedar juntos
 (BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 1
 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
@@ -808,8 +816,9 @@ un producto. DADO un producto de una sola fila ENTONCES ninguna de sus tandas ab
 adelante entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos con las 200 semillas
 ENTONCES en cada tanda los casilleros vacíos son seguidos, sin un casillero ocupado entre dos
 vacíos. Si el faltante entra entero en alguna tanda sin vaciar la que se protege, todos caen en
-una sola, aunque otra tanda no lo reciba entero: con dos tandas de cuatro casilleros y un
-faltante de cuatro, siempre caen en la fija. Sólo si no entra en ninguna se parte.
+una sola. DADO un producto de dos filas con dos tandas de cuatro casilleros y un faltante de
+cuatro ENTONCES caen enteros en una de las dos, al azar, y esa tanda abre con su fila de adelante
+entera vacía. Sólo si no entra en ninguna se parte.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
@@ -1180,11 +1189,23 @@ se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades 
 DADO cualquier cara de un mueble ENTONCES el estante de arriba de todo lleva los mismos productos
 que el reponible de abajo, y el otro reponible los mismos que el zócalo, en el mismo orden.
 
-### AC-STK-093 — La apertura no vacía la tanda reponible *(verifica BR-STK-024)*
+### AC-STK-093 — Un producto de una sola fila no abre con una tanda vacía entera *(verifica BR-STK-024)*
 
-DADO un producto con tanda fija CUANDO la apertura le hace faltar tantas unidades como casilleros
-reponibles tiene ENTONCES un casillero de la reponible queda ocupado y uno de la fila de adelante
-de una fija queda vacío; los vacíos suman lo que faltó.
+DADO Poético en la jornada 2 o 3, con un faltante igual a los casilleros del estante de 0,98 m
+CUANDO la apertura lo vaciaría entero ENTONCES ese estante conserva una unidad y el vacío que
+sobra está en el estante de 1,45 m, no en el de 1,92 m. DADO el faltante igual a los casilleros
+del estante de 1,92 m, el de arriba de todo, ENTONCES conserva una unidad y el vacío que sobra
+está en el de 1,45 m. DADO Flin Puf desde la jornada 4, con un faltante igual a los casilleros
+de su estante de 0,87 m, ENTONCES ese estante conserva una unidad y el vacío que sobra está en
+el de 0,40 m. En los tres casos los vacíos suman lo que faltó.
+
+DADO un producto de una sola fila cuyo estante vecino ya tiene vacía entera la fila de adelante
+CUANDO sobra un faltante ENTONCES cae en el siguiente estante del producto con unidades, en la
+misma dirección.
+
+DADO un producto de dos filas, por ejemplo Actroncito, con un faltante igual a los casilleros de
+un estante ENTONCES ningún vacío se mueve a otro estante: ese estante abre con su fila de
+adelante entera vacía y su fila de atrás se ve entera.
 
 ### AC-STK-094 — La primera jornada abre completa *(verifica BR-STK-026, BR-STK-013, BR-STK-033)*
 
@@ -1426,3 +1447,7 @@ solo de sus consumidores.
   - Decide: el dueño del repo con game design y arte.
   - Bloquea: cambiar niveles, alturas o qué estante es reponible a partir de esa frase;
     no bloquea los sectores ni la exhibición provisional de Duronga de BR-STK-043 y BR-STK-044.
+- **OQ-STK-010 — ¿Adónde va el faltante que sobra si ningún estante del producto con unidades queda en la dirección que toca?**
+  - Por qué sigue abierta: BR-STK-024 manda buscar hacia arriba, o hacia abajo desde el de arriba de todo, el estante con unidades. El pedido del dueño de #645 no dice qué pasa si en esa dirección no queda ninguno.
+  - Decide: el dueño del repo con game design.
+  - Bloquea: nada; el caso no se ejerce hasta que se decida.
