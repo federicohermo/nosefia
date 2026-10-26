@@ -607,6 +607,7 @@ func _salir_por_la_entrada() -> void:
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_jornada_del_celular = jornada
 	_gestos.descartar()
+	_avisos.vaciar()
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 	persiana.bajar()
 	_celular.cerrar_jornada()
