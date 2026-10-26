@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20
 ---
 
 # Capacidad: dejar el local en orden
@@ -253,7 +253,7 @@ unidad suelta dentro de cualquier habitación, una caja fuera del depósito o un
 fuera del cuartito. Una única caja en el local NO DEBE producir desorden; dos o más cajas en el
 local sí, y una caja apoyada en el baño o en el cuartito también, aunque sea la única. La caja
 sostenida cuenta como la única permitida, también en el baño: con una caja en la mano, otra caja
-en el local produce desorden. Los demás cuerpos sostenidos DEBEN excluirse por identidad. Mientras se examina, cualquier
+en el local produce desorden. Las unidades de Poético quedan exentas sólo en lo que fija BR-CLN-037. Los demás cuerpos sostenidos DEBEN excluirse por identidad. Mientras se examina, cualquier
 cuerpo sostenido cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
@@ -341,6 +341,19 @@ El agua temporal sobre piso despejado DEBE conservar el secundario y BR-CLN-024.
 CUANDO se hace el primario con un ticket propio sobre el inodoro, el sistema DEBE pedir su
 descarte y, si se acepta, anotar papel según BR-CLN-030 una sola vez. El secundario NO DEBE
 desechar papel. Un objeto distinto de ticket NO DEBE descartarse por ese destino.
+
+### BR-CLN-037 — Poético suelto no desordena durante la jornada que lo usa de jabón
+
+MIENTRAS la jornada es aquella en que Poético sustituye al jabón azul (BR-CLN-033), el sistema
+NO DEBE contar para el desorden de BR-CLN-028 ninguna unidad del producto Poético, esté donde
+esté dentro de cualquier habitación y la haya usado o no el jugador. La identidad DEBE ser la
+del producto, no su nombre visible. Esa unidad NO DEBE contarse como unidad suelta ni como útil
+fuera del cuartito. Cualquier otra unidad suelta DEBE seguir produciendo desorden, y
+una unidad de Poético junto a otra unidad suelta produce desorden por la otra. En las demás
+jornadas, una unidad de Poético suelta DEBE contar como cualquier otra unidad. La exención
+alcanza sólo al desorden: una unidad de Poético afuera DEBE conservar el motivo de BR-CLN-029,
+y la caja de Poético fuera del depósito DEBE contar como cualquier otra caja. La regla DEBE resolverse con la jornada y la identidad del producto como
+datos del cierre, sin que la escena filtre cuerpos.
 
 ## Criterios de aceptación
 
@@ -806,6 +819,20 @@ desorden. DADO una caja sostenida y otra en el local ENTONCES hay desorden: la s
 única permitida. DADO un útil sostenido y una caja en el local ENTONCES no hay desorden. DADO una
 caja en el local sin otras cajas y una unidad suelta ENTONCES hay desorden por la unidad, y el
 motivo sigue siendo único.
+
+### AC-CLN-071 — Poético suelto no desordena sólo en su jornada *(verifica BR-CLN-037, BR-CLN-028, BR-CLN-029)*
+
+DADO la jornada en que Poético sustituye al jabón azul y una o varias unidades de Poético sueltas
+en local, depósito, baño o cuartito, sin otro cuerpo desordenado, CUANDO cierra ENTONCES no hay
+desorden. DADO esa jornada, una unidad de Poético suelta y otra unidad suelta de un producto
+distinto CUANDO cierra ENTONCES hay desorden, y el motivo es único. DADO esa jornada y una unidad
+de Poético afuera CUANDO cierra ENTONCES no hay desorden y sí el motivo de afuera. DADO esa
+jornada, una unidad de Poético suelta y dos cajas en el local ENTONCES hay desorden por las cajas.
+DADO la jornada inmediata anterior y la inmediata posterior, cada una con una unidad de Poético
+suelta como único cuerpo desordenado, CUANDO cierra ENTONCES hay desorden. DADO esa jornada y una
+unidad de Poético sostenida o devuelta a su casillero ENTONCES no hay desorden, igual que con
+cualquier unidad. DADO esa jornada y una caja de Poético apoyada en el baño, como única caja,
+ENTONCES hay desorden.
 
 ## No objetivos
 
