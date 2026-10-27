@@ -306,11 +306,6 @@ Lo que más se rompe:
   jugador.** En el #264, la etiqueta de cada caja caía en las caras ±X, y la fila del fondo del
   depósito le mostraba al cuarto la +Z: desde ahí no se leía ningún nombre. En el #262, los
   laterales de Actroncito caían en una zona lisa del atlas.
-- **Un cambio de geometría fija del modelo lleva a «Se escribe» lo que cuelga de esa geometría.**
-  La colisión del casco y de los vidrios la escribe `integrar_modelo.py` en
-  `estructura_del_almacen.tscn`, y las luces y los emisores de sonido viven en sus escenas. En
-  el #671, el techo bajó y el issue no nombraba ninguna de las tres: la mira chocaba con el
-  techo viejo y las lámparas quedaban arriba del cielorraso.
 - **Un valor nuevo en un enum del dominio lleva a «Se escribe» todo lo que se indexa con él.** No
   sólo el catálogo: la escena que declara uno por valor, las miniaturas, las tablas. El `rg` del
   enum corre sobre `src/`, `test/` y `assets/`. En el #262, las 23 cajas del depósito vivían en
