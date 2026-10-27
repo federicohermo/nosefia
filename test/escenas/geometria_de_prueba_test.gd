@@ -154,10 +154,17 @@ func test_los_productos_movidos_conservan_su_orientacion_en_la_mano() -> void:  
 		var unidad := agarre.cuerpo_sostenido()
 		var orientacion: Basis = unidad.get("orientacion_en_mano")
 		assert_object(agarre.manos().sostenido()).is_not_null()
-		local.call("_al_abrir_la_jornada", 8)
+		# En la última noche la caja con esa etiqueta trae otro producto: se retira de la que trae el
+		# producto de la primera lectura, que es la que debe verse igual en la mano.
+		local.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_DE_LAS_CAJAS)
 		await get_tree().process_frame
-		puesto.call("retirar", id)
+		var contenidos := AnomaliasDeLaJornada.contenidos_de_las_cajas(
+			AnomaliasDeLaJornada.JORNADA_DE_LAS_CAJAS
+		)
+		puesto.call("retirar", contenidos.find_key(id))
 		unidad = agarre.cuerpo_sostenido()
+		assert_object(agarre.manos().sostenido()).is_not_null()
+		assert_int((unidad.get("datos") as UnidadDeProducto).producto.id).is_equal(id)
 		assert_bool(orientacion.is_equal_approx(unidad.get("orientacion_en_mano"))).is_true()
 
 
