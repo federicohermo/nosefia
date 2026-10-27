@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-ANO
-status: draft
+status: ratified
 owner: game design
 provenance: ficha «11. Anomalías», «9. Tarea Limpieza», fichas Poético y bidón azul; decisiones de #432, 15 de octubre de 2026; ocho jornadas de #526; decisiones de #455
 ---

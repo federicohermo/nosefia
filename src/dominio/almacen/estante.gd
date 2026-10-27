@@ -49,6 +49,10 @@ enum Gesto { COLOCAR, AGARRAR, NADA }
 ## noche de prueba y los casos que miden aritmética. El jugador siempre elige.
 const PRIMERO_VACIO := -1
 
+## Etiqueta de una caja → el producto que trae, cuando no es el suyo. Una caja sin fila trae su
+## etiqueta. Lo lee la caja (`ContenidoDeLaCaja`).
+var contenidos: Dictionary[Producto.Id, Producto.Id] = {}
+
 var _inventario: Inventario
 
 ## En el orden en que llegaron, y sin `id` repetido: la identidad es el `id` y nunca la
@@ -67,10 +71,12 @@ var _vacios_de_apertura: Dictionary[Producto.Id, Array] = {}
 func _init(
 	inventario: Inventario,
 	aceptados: Array[Producto],
-	vacios_de_apertura: Dictionary[Producto.Id, Array] = {}
+	vacios_de_apertura: Dictionary[Producto.Id, Array] = {},
+	los_contenidos: Dictionary[Producto.Id, Producto.Id] = {}
 ) -> void:
 	_inventario = inventario
 	_vacios_de_apertura = vacios_de_apertura
+	contenidos = los_contenidos
 	for producto in aceptados:
 		if producto == null or _aceptado_con_el_id_de(producto) != null:
 			continue
