@@ -736,7 +736,7 @@ func test_cada_papel_muestra_sus_productos_y_no_cambia_con_otra_impresion() -> v
 	assert_array(_escrito_en(uno)).contains_exactly(escrito_antes)
 	assert_object(_textura_de(uno)).is_not_null()
 	assert_object(_textura_de(uno)).is_not_same(_textura_de(otro))
-	for papel in [uno, otro]:
+	for papel: ObjetoAgarrable in [uno, otro]:
 		assert_vector((papel.get_node("Malla") as Node3D).scale).is_equal_approx(
 			(papel.get_node("Forma") as Node3D).scale, Vector3.ONE * 0.0001
 		)

@@ -120,7 +120,9 @@ func test_uno_dos_y_tres_productos_dan_uno_dos_y_tres_renglones() -> void:  # AC
 func test_los_renglones_siguen_el_orden_del_programa() -> void:  # AC-PLY-105
 	var ticket := _ticket_de([Producto.Id.MALBARDO, Producto.Id.MAROLINI, Producto.Id.PURA_COLA])
 	var nombres: Array[String] = []
-	for producto in [Producto.Id.MALBARDO, Producto.Id.MAROLINI, Producto.Id.PURA_COLA]:
+	for producto: Producto.Id in [
+		Producto.Id.MALBARDO, Producto.Id.MAROLINI, Producto.Id.PURA_COLA
+	]:
 		nombres.append(Catalogo.de(producto).nombre)
 	var lineas := ticket.lineas_impresas()
 	for indice in nombres.size():
