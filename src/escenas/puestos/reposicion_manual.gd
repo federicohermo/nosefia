@@ -1469,13 +1469,10 @@ func _armar_los_bloques() -> void:
 		_bloques.append(fijas[producto.id] + casilleros[producto.id])
 
 
-## Muestra lo puesto de cada producto, con sus copias fijas en gris.
+## Muestra lo puesto de cada producto, sin sus copias fijas.
 func _preparar_la_guia() -> void:
 	for id in _grupos.size():
 		_mostrar_lo_puesto(id)
-		if _bloques[id].is_empty():
-			continue
-		_desenfoque.agregar(_grupos[id], _bloques[id], _primera_dibujada(id))
 
 
 func _malla_en_mundo(grupo: MeshInstance3D) -> ArrayMesh:
@@ -1517,9 +1514,10 @@ func _primera_dibujada(id: Producto.Id) -> int:
 ##
 ## **Cuáles se ven las dice el estante, y no este puesto**: un número propio acá dibujaría una
 ## góndola que el inventario no tiene. `visible_instance_count` corta por el final, así que el
-## dibujo se reordena: primero las guías y la fila de atrás, tal cual; después los casilleros
-## ocupados, y al final los vacíos, que quedan fuera del corte. Cada copia lleva su lugar, así que
-## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio.
+## dibujo se reordena: primero los casilleros ocupados, después los vacíos, y al final las guías y
+## la fila de atrás, que quedan fuera del corte: cada producto se ve en una sola hilera. Cada copia
+## lleva su lugar, así que reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco
+## en el medio.
 func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	if _bloques[id].is_empty():
 		return
@@ -1531,22 +1529,22 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var orden := ocupados + afuera
 	var bloque := _bloques[id]
 	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA
-	var dibujo := bloque.slice(0, primera * flotantes)
+	var dibujo := PackedFloat32Array()
 	for puesto in orden:
 		var desde := (primera + puesto) * flotantes
 		dibujo.append_array(bloque.slice(desde, desde + flotantes))
+	var reponibles := dibujo.size()
+	dibujo.append_array(bloque.slice(0, primera * flotantes))
 	var copias := _grupos[id].multimesh
 	if dibujo.size() == bloque.size():
 		copias.buffer = dibujo
-	copias.visible_instance_count = primera + ocupados.size()
-	# Las guías sumadas y la fila de atrás son referencias fijas: todo lo que va antes de la
-	# primera reponible se dibuja atenuado, aunque se llene o se vacíe un casillero.
-	_apagar_hasta(_grupos[id], primera)
+	copias.visible_instance_count = ocupados.size()
+	_apagar_hasta(_grupos[id], 0)
 	# Los mismos casilleros, en otro lote: los vacíos primero para cortarlos sin añadir nodos
 	# por envase. El estado vuelve a salir del estante en cada cambio de la góndola.
-	var corte := (primera + ocupados.size()) * flotantes
-	var por_reponer := dibujo.slice(corte)
-	por_reponer.append_array(dibujo.slice(primera * flotantes, corte))
+	var corte := ocupados.size() * flotantes
+	var por_reponer := dibujo.slice(corte, reponibles)
+	por_reponer.append_array(dibujo.slice(0, corte))
 	var huecos := _huecos[id].multimesh
 	huecos.buffer = por_reponer
 	huecos.visible_instance_count = afuera.size()
