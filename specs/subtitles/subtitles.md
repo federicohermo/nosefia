@@ -214,7 +214,7 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
 | Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 6 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
-| Borrar la caca del techo del baño, en la jornada 7 | `TECHO_DEL_BANO` | ¿¿Cómo llegó eso ahí?? |
+| Borrar la caca del techo del baño, en la jornada 7 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
 
 El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
