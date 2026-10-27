@@ -305,13 +305,14 @@ criterio por cerrado.
 y en `to-spec`, que es donde cuestan un párrafo. Una duda que aparece implementando es
 evidencia de que uno de esos dos tiene un agujero.
 
-La descarga son dos mitades, las dos en esta corrida:
+La descarga son dos mitades, las dos en esta corrida, en dos PR:
 
 1. **Corregí lo que falta** —el criterio que no se puede ver fallar, el límite de archivo mal
    medido, la regla que estaba en la capa equivocada—. Si es del contrato, se edita
    `specs/<capability>/<capability>.md` **en este mismo PR**. Si es del issue, se edita el issue
    con `gh issue edit <N>`.
-2. **Corregí el `SKILL.md` que lo permitió**, con la regla que lo habría atajado. La tabla de
+2. **Corregí el `SKILL.md` que lo permitió**, con la regla que lo habría atajado, **en su propio
+   PR `harness/`**, no en el del issue: el PR del issue queda limpio para el QA. La tabla de
    correspondencias está en [`sin-deuda.md`](sin-deuda.md), y **si no entra en ninguna fila,
    agregá la fila**.
 
