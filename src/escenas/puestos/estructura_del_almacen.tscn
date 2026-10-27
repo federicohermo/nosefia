@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/notas_del_almacen.tscn" id="notas"]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/caja_registradora.gd" id="caja_registradora"]
+[ext_resource type="Script" path="res://src/escenas/puestos/tablero_electrico.gd" id="tablero_electrico"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/lector.tscn" id="lector"]
 [ext_resource type="ArrayMesh" path="res://assets/models/caja_registradora.res" id="modelo_caja_nueva"]
 [ext_resource type="ConvexPolygonShape3D" path="res://assets/models/caja_registradora_colision.res" id="colision_caja_nueva"]
@@ -2986,6 +2987,10 @@ ranura = NodePath("../Ranura")
 destino_de_los_tickets = NodePath("../..")
 mallas = [NodePath("..")]
 ancho_del_papel = 0.0881286098957062
+
+[node name="StaticBody3D" parent="tableroluz" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("tablero_electrico")
+mallas = [NodePath("..")]
 
 [node name="Ranura" type="Marker3D" parent="cajaregistradora"]
 transform = Transform3D(5.4831953, 0.31038418, 0, -0.31038418, 5.4831953, -3.5527137e-15, 0, -4.5323517e-07, 5.4919734, 0.6655464, 0.6157274, -0.40700006)

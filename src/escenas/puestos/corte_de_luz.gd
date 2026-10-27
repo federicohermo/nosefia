@@ -1,0 +1,121 @@
+## El corte de luz de la séptima noche, aplicado al local: oscurece, devuelve la luz y avisa.
+##
+## **No decide cuándo se corta ni cuándo vuelve.** Eso es de `AnomaliasDeLaJornada`, que recibe lo
+## que queda del turno y contesta el estado. Acá queda la cáscara: qué se enciende y qué se apaga.
+##
+## **La oscuridad no es apagar el `LightmapGI`.** El local tiene un segundo horneado, el de la
+## noche sin luz, con sólo la luz de emergencia del panel. El corte le cambia los datos al mismo
+## nodo y la restauración le devuelve los de siempre: los muebles y las sondas de los productos
+## pasan de uno a otro. Las luces en tiempo real, las emisivas de las lámparas y la niebla no
+## salen del horneado, así que se apagan aparte. Cómo se hornea, en `docs/guides/iluminacion.md`.
+##
+## **Las mismas reglas de «qué se apaga» las usa el horneador** (`addons/hornear`): lo que se
+## apaga acá es exactamente lo que el segundo horneado dejó apagado.
+extends Node
+
+## La luz de la oscuridad se avisa con este cambio, también al abrir una jornada que venía
+## cortada. Quien escucha cierra las interfaces o las deja abrir.
+signal luz_cambiada(hay_luz: bool)
+
+const HORNEADO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
+
+## La única luz que sigue encendida mientras no hay luz. Va en un grupo y no por nombre para que
+## mudarla de lugar o de escena no la apague.
+const GRUPO_DE_LA_EMERGENCIA := &"luz_de_emergencia"
+
+## Los materiales emisivos del local que se apagan con las luces. Son los que el modelo declara
+## con emisión; el del tubo del tablero queda afuera porque es la emergencia.
+const MATERIALES_EMISIVOS := [
+	&"local_cielorraso", &"bano_difusor", &"cuartito_tubo_difusor", &"deposito_lampara_panel"
+]
+
+var _jornada: int = 0
+var _estado: AnomaliasDeLaJornada.Corte = AnomaliasDeLaJornada.corte_al_abrir()
+var _hay_luz := true
+var _horno: LightmapGI
+var _con_luz: LightmapGIData
+var _sin_luz: LightmapGIData
+var _entorno: Environment
+var _niebla := false
+var _luces: Array[Light3D] = []
+var _reflejos: Dictionary[ReflectionProbe, float] = {}
+var _emision: Dictionary[BaseMaterial3D, float] = {}
+
+
+## Las luces del local que el corte apaga: todas las que no son la de emergencia.
+static func luces_del_local(raiz: Node) -> Array[Light3D]:
+	var luces: Array[Light3D] = []
+	for nodo: Node in raiz.find_children("*", "Light3D", true, false):
+		if not nodo.is_in_group(GRUPO_DE_LA_EMERGENCIA):
+			luces.append(nodo as Light3D)
+	return luces
+
+
+## Los materiales emisivos del local con su emisión de hoy, para devolvérsela al restaurar.
+static func emision_del_local(raiz: Node) -> Dictionary[BaseMaterial3D, float]:
+	var emision: Dictionary[BaseMaterial3D, float] = {}
+	for nodo: Node in raiz.find_children("*", "MeshInstance3D", true, false):
+		var malla := nodo as MeshInstance3D
+		for superficie in malla.get_surface_override_material_count():
+			var material := malla.get_active_material(superficie) as BaseMaterial3D
+			if material != null and MATERIALES_EMISIVOS.has(StringName(material.resource_name)):
+				emision[material] = material.emission_energy_multiplier
+	return emision
+
+
+## Cuelga el corte del local. El horno es el `LightmapGI` que lo ilumina; el entorno, el que
+## tiene la niebla.
+func preparar(raiz: Node, horno: LightmapGI, entorno: Environment) -> void:
+	_horno = horno
+	_con_luz = horno.light_data
+	_entorno = entorno
+	_niebla = entorno.fog_enabled
+	_luces = luces_del_local(raiz)
+	_emision = emision_del_local(raiz)
+	for sonda: Node in raiz.find_children("*", "ReflectionProbe", true, false):
+		_reflejos[sonda as ReflectionProbe] = (sonda as ReflectionProbe).intensity
+
+
+## Toda jornada abre con luz. La de la noche del corte deja listo el horneado oscuro, así que su
+## carga no cae sobre el corte mismo.
+func abrir_jornada(jornada: int) -> void:
+	_jornada = jornada
+	_estado = AnomaliasDeLaJornada.corte_al_abrir()
+	if jornada == AnomaliasDeLaJornada.JORNADA_DEL_CORTE and _sin_luz == null:
+		_sin_luz = load(HORNEADO_SIN_LUZ)
+	_aplicar()
+
+
+## Lo que queda del turno, cada cuadro: es lo que le hace llegar la hora al corte.
+func avanzar(restante: float) -> void:
+	_cambiar(AnomaliasDeLaJornada.corte_tras(_estado, _jornada, restante))
+
+
+## El botón del tablero.
+func restablecer() -> void:
+	_cambiar(AnomaliasDeLaJornada.restablecer(_estado))
+
+
+func hay_luz() -> bool:
+	return _hay_luz
+
+
+func _cambiar(nuevo: AnomaliasDeLaJornada.Corte) -> void:
+	_estado = nuevo
+	_aplicar()
+
+
+func _aplicar() -> void:
+	var hay := AnomaliasDeLaJornada.hay_luz(_estado)
+	if hay == _hay_luz:
+		return
+	_hay_luz = hay
+	_horno.light_data = _con_luz if hay else _sin_luz
+	_entorno.fog_enabled = _niebla and hay
+	for luz in _luces:
+		luz.visible = hay
+	for sonda: ReflectionProbe in _reflejos:
+		sonda.intensity = _reflejos[sonda] if hay else 0.0
+	for material: BaseMaterial3D in _emision:
+		material.emission_energy_multiplier = _emision[material] if hay else 0.0
+	luz_cambiada.emit(hay)

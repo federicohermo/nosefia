@@ -5,8 +5,10 @@ import unittest
 from lib.horneado import (
     PLUGIN,
     SALIDAS,
+    SALIDAS_SIN_LUZ,
     project_con_el_plugin,
     reescritos_de_mas,
+    salidas_de,
     sesion_bloqueada,
     tope_en_segundos,
     veredicto,
@@ -48,6 +50,25 @@ class Veredicto(unittest.TestCase):
     def test_las_dos_salidas_escritas_es_un_horneado(self):
         ok, _ = veredicto(0, {"a.lmbake": True, "a.exr": True})
         self.assertTrue(ok)
+
+
+class HorneadoSinLuz(unittest.TestCase):
+    # El segundo horneado es el del corte de luz: deja sus propios archivos y no toca los del
+    # local con luz, que son los que el juego carga de siempre.
+    def test_cada_horneado_deja_sus_salidas(self):
+        self.assertEqual(salidas_de(False), SALIDAS)
+        self.assertEqual(salidas_de(True), SALIDAS_SIN_LUZ)
+        self.assertFalse(set(SALIDAS) & set(SALIDAS_SIN_LUZ))
+
+    def test_las_salidas_sin_luz_tampoco_se_devuelven(self):
+        escritos = [*SALIDAS_SIN_LUZ, *(r + ".import" for r in SALIDAS_SIN_LUZ if r.endswith(".exr"))]
+        self.assertEqual(reescritos_de_mas(escritos), [])
+
+    def test_sin_escribir_su_atlas_el_horneado_sin_luz_no_salio(self):
+        actualizados = {ruta: ruta.endswith(".lmbake") for ruta in SALIDAS_SIN_LUZ}
+        ok, motivo = veredicto(0, actualizados)
+        self.assertFalse(ok)
+        self.assertIn("almacen_sin_luz.exr", motivo)
 
 
 class SesionBloqueada(unittest.TestCase):

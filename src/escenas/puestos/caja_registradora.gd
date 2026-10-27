@@ -14,6 +14,9 @@ const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 @export var mallas: Array[MeshInstance3D]
 @export var ancho_del_papel: float = 0.074995
 
+## Sin luz la caja no abre. Lo declara el corte de luz; la caja no sabe por qué.
+var con_luz := true
+
 var _abierta := false
 var _en_ranura: ObjetoAgarrable
 var _papel: ObjetoAgarrable
@@ -37,7 +40,8 @@ func _ready() -> void:
 
 
 func accionar() -> void:
-	abrir()
+	if con_luz:
+		abrir()
 
 
 func abrir() -> void:

@@ -13,6 +13,9 @@ extends Node3D
 ## cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## `Label3D` y llamarle `declarar_jornada()` no compilaría.
 const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd")
+const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
+const EscritorioDelLocal := preload("res://src/escenas/puestos/escritorio.gd")
+const TableroElectrico := preload("res://src/escenas/puestos/tablero_electrico.gd")
 
 ## Los scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de mesa:
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
@@ -214,6 +217,7 @@ func _ready() -> void:
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
 	_reloj.tiempo_consumido.connect(avisos.actualizar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
+	_cablear_el_corte_de_luz()
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
@@ -340,6 +344,28 @@ func _ready() -> void:
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
 ## momento salvo la letra, que espera al cierre. Esc la cierra sin reanudar.
+## El corte de la séptima noche: el reloj le da lo que queda del turno, el tablero le pide
+## restablecer, y sin luz la computadora y la caja se cierran y no abren. Cuándo se corta y qué
+## quiere decir «hay luz» lo decide el dominio.
+func _cablear_el_corte_de_luz() -> void:
+	var corte: CorteDeLuz = CorteDeLuz.new()
+	add_child(corte)
+	corte.preparar(self, $LightmapGI, ($Ambiente/Entorno as WorldEnvironment).environment)
+	_reloj.tiempo_consumido.connect(corte.avanzar)
+	_ciclo.jornada_abierta.connect(corte.abrir_jornada)
+	var tablero: TableroElectrico = $Estructura/tableroluz/StaticBody3D
+	tablero.restablecimiento_pedido.connect(corte.restablecer)
+	var escritorio: EscritorioDelLocal = $"Estructura/base compu/StaticBody3D"
+	corte.luz_cambiada.connect(
+		func(hay_luz: bool) -> void:
+			escritorio.con_luz = hay_luz
+			_puesto_de_la_caja.con_luz = hay_luz
+			if not hay_luz:
+				escritorio.cerrar()
+				_puesto_de_la_caja.cerrar()
+	)
+
+
 func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 	var ajuste := AjusteDePreferencias.new()
 	add_child(ajuste)
