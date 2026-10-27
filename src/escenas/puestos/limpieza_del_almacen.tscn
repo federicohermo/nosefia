@@ -127,10 +127,10 @@ lugar = 18
 escala_visual = 0.667
 
 [node name="ManchaDeLaUltimaHeladera" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 1.55, 2.9, -7.866)
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 1.9, 3.3, -7.866)
 editor_description = "Jornada 6. Moho, en la pared norte del local, pegada a la última heladera, por encima de la góndola del fondo. El disco va vertical: su arriba mira al local."
 lugar = 19
-escala_visual = 0.833
+escala_visual = 0.667
 
 [node name="ManchaFrenteALasEstanteriasDelFondo" parent="." instance=ExtResource("2_mancha")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.9, 0.104, -6.4)
@@ -152,10 +152,10 @@ lugar = 22
 escala_visual = 0.5
 
 [node name="ManchaJuntoAlTachoDeClientes" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0.104, 4.85)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3, 0.104, 4.2)
 editor_description = "Jornada 7. Polvo, en el piso junto al tacho de basura para clientes."
 lugar = 23
-escala_visual = 1.2
+escala_visual = 1.0
 acuosa = true
 
 [node name="ManchaEnElTechoDelMedioDelLocal" parent="." instance=ExtResource("2_mancha")]
@@ -166,7 +166,7 @@ escala_visual = 1.4
 acuosa = true
 
 [node name="ManchaEnElTechoDeLaEntrada" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 5.2, 4.258, 5.9)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 5.2, 4.258, 5.3)
 editor_description = "Jornada 7. Moho, en el cielorraso pegado a la pared de la puerta de entrada. El disco mira hacia abajo."
 lugar = 25
 
@@ -185,22 +185,22 @@ escala_visual = 1.2
 acuosa = true
 
 [node name="ManchaEnElTechoDelCuartito" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 9.4, 2.985, -14.7)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 9.0, 2.985, -14.6)
 editor_description = "Jornada 7. Moho, en el techo del cuartito de limpieza, lejos de los útiles. El disco mira hacia abajo."
 lugar = 28
-escala_visual = 0.667
+escala_visual = 0.5
 
 [node name="ManchaEnOtroTechoDelCuartito" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 9.4, 2.985, -13.2)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 9.0, 2.985, -13.2)
 editor_description = "Jornada 7. Moho, en otro punto del techo del cuartito de limpieza. El disco mira hacia abajo."
 lugar = 29
-escala_visual = 0.667
+escala_visual = 0.5
 
 [node name="ManchaEnElTechoSobreUnCubiculo" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 10.5, 3.138, 5.75)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 11.0, 3.138, 5.75)
 editor_description = "Jornada 7. Caca, en el cielorraso sobre el primer cubículo. Limpiarla activa un subtítulo. El disco mira hacia abajo."
 lugar = 30
-escala_visual = 0.667
+escala_visual = 0.6
 
 [node name="ManchaAlLadoDeLaOtraGondola" parent="." instance=ExtResource("2_mancha")]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 7.866, 1.3, -3.3)
@@ -210,19 +210,19 @@ escala_visual = 0.833
 acuosa = true
 
 [node name="ManchaEnElTechoArribaDeUnCubiculo" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 11.5, 3.138, 5.75)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 11.0, 3.138, 4.9)
 editor_description = "Jornada 8. Moho, en el cielorraso sobre el primer cubículo. El disco mira hacia abajo."
 lugar = 32
-escala_visual = 0.667
+escala_visual = 0.6
 
 [node name="ManchaEnElTechoArribaDeOtroCubiculo" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 13.1, 3.138, 5.75)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 12.65, 3.138, 4.9)
 editor_description = "Jornada 8. Moho, en el cielorraso sobre el segundo cubículo. El disco mira hacia abajo."
 lugar = 33
-escala_visual = 0.667
+escala_visual = 0.6
 
 [node name="ManchaAlLadoDelMismoInodoro" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(0, 1, 0, 1, 0, 0, 0, 0, -1, 10.24, 1.3, 5.6)
-editor_description = "Jornada 8. Caca, en la mampara lateral del primer cubículo, junto al inodoro. El disco va vertical: su arriba mira al cubículo."
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 11.45, 1.5, 6.267)
+editor_description = "Jornada 8. Caca, en la pared del fondo del primer cubículo, al lado del inodoro. El disco va vertical: su arriba mira al cubículo."
 lugar = 34
 escala_visual = 0.5
