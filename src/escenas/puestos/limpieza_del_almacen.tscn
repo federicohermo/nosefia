@@ -127,7 +127,7 @@ lugar = 18
 escala_visual = 0.667
 
 [node name="ManchaDeLaUltimaHeladera" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 1.9, 3.3, -7.866)
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 1.9, 3.0, -7.866)
 editor_description = "Jornada 6. Moho, en la pared norte del local, pegada a la última heladera, por encima de la góndola del fondo. El disco va vertical: su arriba mira al local."
 lugar = 19
 escala_visual = 0.667
@@ -159,14 +159,14 @@ escala_visual = 1.0
 acuosa = true
 
 [node name="ManchaEnElTechoDelMedioDelLocal" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 2.6, 4.258, -0.9)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 2.6, 3.498, -0.9)
 editor_description = "Jornada 7. Polvo, en el cielorraso en el medio del local. El disco mira hacia abajo."
 lugar = 24
 escala_visual = 1.4
 acuosa = true
 
 [node name="ManchaEnElTechoDeLaEntrada" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 5.2, 4.258, 5.3)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 5.2, 3.498, 5.3)
 editor_description = "Jornada 7. Moho, en el cielorraso pegado a la pared de la puerta de entrada. El disco mira hacia abajo."
 lugar = 25
 
