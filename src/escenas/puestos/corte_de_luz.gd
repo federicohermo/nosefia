@@ -29,6 +29,26 @@ const MATERIALES_EMISIVOS := [
 	&"local_cielorraso", &"bano_difusor", &"cuartito_tubo_difusor", &"deposito_lampara_panel"
 ]
 
+## Las luces de afuera que entran por los ventanales en la noche sin luz: las dos lámparas de la
+## marquesina de la estación y los dos faroles. Están donde la foto del exterior las dibuja. **Sólo
+## existen en el horneado oscuro**: el horneador las suma en su copia del editor (`addons/hornear`),
+## y el juego no las crea. El horneado normal no las ve.
+const POSICIONES_DE_AFUERA: Array[Vector3] = [
+	Vector3(-8.9, 3.6, -1.5),
+	Vector3(-10.7, 3.5, 1.2),
+	Vector3(-5.5, 3.2, -6.6),
+	Vector3(-6.5, 5.3, 6.2),
+]
+const COLOR_DE_AFUERA := Color(0.8, 1.0, 0.92)
+const ENERGIA_DE_AFUERA := 5.0
+const ALCANCE_DE_AFUERA := 16.0
+
+## La luz de emergencia del horneado oscuro: alcanza para orientarse alrededor del tablero. En el
+## horneado normal conserva la energía y el alcance de su escena.
+const ENERGIA_DE_LA_EMERGENCIA_AL_HORNEAR := 4.0
+const ALCANCE_DE_LA_EMERGENCIA_AL_HORNEAR := 4.0
+const ANGULO_DE_LA_EMERGENCIA_AL_HORNEAR := 80.0
+
 var _jornada: int = 0
 var _estado: AnomaliasDeLaJornada.Corte = AnomaliasDeLaJornada.corte_al_abrir()
 var _hay_luz := true
@@ -49,6 +69,28 @@ static func luces_del_local(raiz: Node) -> Array[Light3D]:
 		if not nodo.is_in_group(GRUPO_DE_LA_EMERGENCIA):
 			luces.append(nodo as Light3D)
 	return luces
+
+
+## Las luces de afuera del horneado oscuro, sin colgar de ningún lado.
+static func luces_de_afuera() -> Array[OmniLight3D]:
+	var luces: Array[OmniLight3D] = []
+	for posicion: Vector3 in POSICIONES_DE_AFUERA:
+		var luz := OmniLight3D.new()
+		luz.position = posicion
+		luz.light_color = COLOR_DE_AFUERA
+		luz.light_energy = ENERGIA_DE_AFUERA
+		luz.omni_range = ALCANCE_DE_AFUERA
+		luz.light_bake_mode = Light3D.BAKE_STATIC
+		luces.append(luz)
+	return luces
+
+
+## Le da a la luz de emergencia, sólo para hornear, lo que hace falta para alumbrar el depósito.
+static func reforzar_la_emergencia(raiz: Node) -> void:
+	for luz: SpotLight3D in raiz.get_tree().get_nodes_in_group(GRUPO_DE_LA_EMERGENCIA):
+		luz.light_energy = ENERGIA_DE_LA_EMERGENCIA_AL_HORNEAR
+		luz.spot_range = ALCANCE_DE_LA_EMERGENCIA_AL_HORNEAR
+		luz.spot_angle = ANGULO_DE_LA_EMERGENCIA_AL_HORNEAR
 
 
 ## Los materiales emisivos del local con su emisión de hoy, para devolvérsela al restaurar.

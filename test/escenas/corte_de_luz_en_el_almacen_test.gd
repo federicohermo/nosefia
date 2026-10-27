@@ -9,6 +9,15 @@ const GRUPO_DE_LA_EMERGENCIA := &"luz_de_emergencia"
 const ESCRITORIO := "Estructura/base compu/StaticBody3D"
 const TABLERO := "Estructura/tableroluz/StaticBody3D"
 const HORNO_CON_LUZ := "res://src/escenas/almacen.lmbake"
+const LIGHTMAP_CON_LUZ := "res://src/escenas/almacen.exr"
+const LIGHTMAP_SIN_LUZ := "res://src/escenas/almacen_sin_luz.exr"
+## Lado de la primera capa del atlas, la de la luz: las otras guardan la dirección.
+const LADO_DEL_ATLAS := 2048
+const PASO_DEL_MUESTREO := 4
+const LUZ_VISIBLE := 0.01
+## Qué parte, como mínimo, del local con luz queda visible en la penumbra: el piso, las góndolas y
+## las paredes de al lado de los ventanales.
+const PENUMBRA_MINIMA := 0.1
 
 var _con_luz: LightmapGIData
 
@@ -224,3 +233,26 @@ func test_abrir_la_noche_otra_vez_parte_con_luz_y_sin_guardado() -> void:  # AC-
 	var otra := _local()
 	assert_bool(_hay_luz(otra)).is_true()
 	assert_str(_lectura_del_reloj(otra)).is_not_equal(_detenida())
+
+
+## La penumbra de la noche del corte: el horneado oscuro no es negro, pero tampoco es el del local
+## con luz. Se mide en la capa de luz del atlas, que es la que se ve en pantalla.
+func test_el_horneado_del_corte_deja_en_penumbra_mas_que_el_tablero() -> void:  # AC-AMB-028
+	var con_luz := _texeles_con_luz(LIGHTMAP_CON_LUZ)
+	var sin_luz := _texeles_con_luz(LIGHTMAP_SIN_LUZ)
+	assert_float(con_luz).is_greater(0.0)
+	assert_float(sin_luz).is_greater(con_luz * PENUMBRA_MINIMA)
+	assert_float(sin_luz).is_less(con_luz)
+
+
+func _texeles_con_luz(ruta: String) -> float:
+	var capa := Image.load_from_file(ruta).get_region(Rect2i(0, 0, LADO_DEL_ATLAS, LADO_DEL_ATLAS))
+	var con_luz := 0
+	var total := 0
+	for y: int in range(0, LADO_DEL_ATLAS, PASO_DEL_MUESTREO):
+		for x: int in range(0, LADO_DEL_ATLAS, PASO_DEL_MUESTREO):
+			var color := capa.get_pixel(x, y)
+			total += 1
+			if (color.r + color.g + color.b) / 3.0 > LUZ_VISIBLE:
+				con_luz += 1
+	return float(con_luz) / total

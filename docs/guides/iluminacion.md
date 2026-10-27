@@ -82,9 +82,16 @@ emergencia sobre el tablero eléctrico. Al cortarse, `corte_de_luz.gd` le cambia
 mismo `LightmapGI`; al restablecerse, le devuelve los de siempre. Cambian juntos los muebles y
 las sondas de los productos.
 
-- **Qué queda encendido:** la luz del grupo `luz_de_emergencia`, que es `LuzDelTablero`. Las
-  demás luces, los materiales emisivos de las lámparas, la niebla y los reflejos se apagan en
-  tiempo real: no salen del horneado.
+- **Qué queda encendido:** la luz del grupo `luz_de_emergencia`, que es `LuzDelTablero`, y la
+  luz de afuera. Las demás luces, los materiales emisivos de las lámparas, la niebla y los
+  reflejos se apagan en tiempo real: no salen del horneado.
+- **La luz de afuera entra por los ventanales.** Son cuatro `OmniLight3D` que existen sólo al
+  hornear, donde la foto del exterior dibuja las lámparas de la marquesina y los faroles
+  (`corte_de_luz.gd`). El juego no las crea. El horneador las cuelga de la raíz **con dueño**:
+  sin `owner`, el `LightmapGI` las pasa de largo y el local sale negro.
+- **La emergencia hornea con más energía, alcance y ángulo** que los de su escena, para alumbrar
+  el depósito alrededor del tablero. Los valores están en `corte_de_luz.gd` y valen sólo para
+  este horneado.
 - **Qué se apaga lo dice un solo archivo**, `corte_de_luz.gd`. Lo usa el juego al cortar y lo
   usa el horneador al hornear, así que no pueden diferir.
 - **Se hornea aparte**, con `python .claude/scripts/hornear.py --sin-luz`. Apaga el local en la
