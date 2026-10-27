@@ -4,10 +4,11 @@
 ## que queda del turno y contesta el estado. Acá queda la cáscara: qué se enciende y qué se apaga.
 ##
 ## **La oscuridad no es apagar el `LightmapGI`.** El local tiene un segundo horneado, el de la
-## noche sin luz, con sólo la luz de emergencia del panel. El corte le cambia los datos al mismo
-## nodo y la restauración le devuelve los de siempre: los muebles y las sondas de los productos
-## pasan de uno a otro. Las luces en tiempo real, las emisivas de las lámparas y la niebla no
-## salen del horneado, así que se apagan aparte. Cómo se hornea, en `docs/guides/iluminacion.md`.
+## noche sin luz, con la luz de emergencia del panel y la de afuera que entra por los ventanales. El
+## corte le cambia los datos al mismo nodo y la restauración le devuelve los de siempre: los muebles
+## y las sondas de los productos pasan de uno a otro. Las luces en tiempo real, las emisivas de las
+## lámparas y la niebla no salen del horneado, así que se apagan aparte. Cómo se hornea, en
+## `docs/guides/iluminacion.md`.
 ##
 ## **Las mismas reglas de «qué se apaga» las usa el horneador** (`addons/hornear`): lo que se
 ## apaga acá es exactamente lo que el segundo horneado dejó apagado.
@@ -30,17 +31,20 @@ const MATERIALES_EMISIVOS := [
 ]
 
 ## Las luces de afuera que entran por los ventanales en la noche sin luz: las dos lámparas de la
-## marquesina de la estación y los dos faroles. Están donde la foto del exterior las dibuja. **Sólo
-## existen en el horneado oscuro**: el horneador las suma en su copia del editor (`addons/hornear`),
-## y el juego no las crea. El horneado normal no las ve.
+## marquesina de la estación, los dos faroles y, frente a la entrada, la calle y su cartel. Están
+## donde la foto del exterior las dibuja. **Sólo existen en el horneado oscuro**: el horneador las
+## suma en su copia del editor (`addons/hornear`), y el juego no las crea. El horneado normal no
+## las ve. **Son tenues**: más fuertes, la góndola de al lado del ventanal y sus productos quedan
+## tan claros como con las luces del local.
 const POSICIONES_DE_AFUERA: Array[Vector3] = [
 	Vector3(-8.9, 3.6, -1.5),
 	Vector3(-10.7, 3.5, 1.2),
 	Vector3(-5.5, 3.2, -6.6),
 	Vector3(-6.5, 5.3, 6.2),
+	Vector3(4.9, 3.0, 8.0),
 ]
 const COLOR_DE_AFUERA := Color(0.8, 1.0, 0.92)
-const ENERGIA_DE_AFUERA := 5.0
+const ENERGIA_DE_AFUERA := 1.0
 const ALCANCE_DE_AFUERA := 16.0
 
 ## La luz de emergencia del horneado oscuro: alcanza para orientarse alrededor del tablero. En el

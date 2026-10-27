@@ -5,6 +5,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
 const GRUPO_DE_LA_EMERGENCIA := &"luz_de_emergencia"
 const ESCRITORIO := "Estructura/base compu/StaticBody3D"
 const TABLERO := "Estructura/tableroluz/StaticBody3D"
@@ -243,6 +244,34 @@ func test_el_horneado_del_corte_deja_en_penumbra_mas_que_el_tablero() -> void:  
 	assert_float(con_luz).is_greater(0.0)
 	assert_float(sin_luz).is_greater(con_luz * PENUMBRA_MINIMA)
 	assert_float(sin_luz).is_less(con_luz)
+
+
+## Por cada vidrio del local entra la luz de afuera: enfrente, del otro lado del vidrio, hay una
+## luz del horneado oscuro que lo alcanza. Sin ella, ese ventanal queda negro durante el corte.
+func test_por_cada_ventanal_entra_la_luz_de_afuera() -> void:
+	var local := _local()
+	var adentro := (local.get("_jugador") as Node3D).global_position
+	var luces: Array[OmniLight3D] = []
+	for luz: OmniLight3D in CorteDeLuz.luces_de_afuera():
+		luces.append(auto_free(luz))
+	var estructura := local.get_node("Estructura")
+	var frente := estructura.find_children("local_vidrio_frente_*", "MeshInstance3D")
+	var costado := estructura.find_children("local_vidrio_ventanal_*", "MeshInstance3D")
+	assert_array(frente).is_not_empty()
+	assert_array(costado).is_not_empty()
+	for vidrio: MeshInstance3D in frente + costado:
+		var caja := vidrio.global_transform * vidrio.get_aabb()
+		var centro := caja.get_center()
+		var eje := caja.size.min_axis_index()
+		var afuera := signf(centro[eje] - adentro[eje])
+		var enfrente := luces.any(
+			func(luz: OmniLight3D) -> bool:
+				return (
+					(luz.position[eje] - centro[eje]) * afuera > 0.0
+					and luz.position.distance_to(centro) < luz.omni_range
+				)
+		)
+		assert_bool(enfrente).override_failure_message(vidrio.name).is_true()
 
 
 func _texeles_con_luz(ruta: String) -> float:
