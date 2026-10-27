@@ -91,7 +91,7 @@ func avanzar(restante: float) -> void:
 	_cambiar(AnomaliasDeLaJornada.corte_tras(_estado, _jornada, restante))
 
 
-## El botón del tablero.
+## El clic sobre el tablero.
 func restablecer() -> void:
 	_cambiar(AnomaliasDeLaJornada.restablecer(_estado))
 
