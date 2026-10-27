@@ -90,7 +90,7 @@ func test_cortado_no_hay_luz_ni_interfaces() -> void:  # AC-ANO-017
 	assert_bool(AnomaliasDeLaJornada.hay_luz(AnomaliasDeLaJornada.Corte.RESTAURADO)).is_true()
 
 
-func test_el_boton_restablece_una_sola_vez() -> void:  # AC-ANO-018
+func test_el_clic_en_el_panel_restablece_una_sola_vez() -> void:  # AC-ANO-018
 	var cortado := AnomaliasDeLaJornada.Corte.CORTADO
 	var restaurado := AnomaliasDeLaJornada.Corte.RESTAURADO
 	var sin_corte := AnomaliasDeLaJornada.Corte.SIN_CORTE

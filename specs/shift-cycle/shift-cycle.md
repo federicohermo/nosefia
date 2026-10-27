@@ -488,7 +488,7 @@ jornada 6 lee `""` y la 8 lee `"08:00"`.
 ### AC-SHF-050 — Restablecer la luz no descongela el reloj *(verifica BR-SHF-011)*
 
 DADO la jornada 7 con el corte cortado y con el corte restaurado, a las 22:00 y a `0.0` segundos
-restantes CUANDO se lee el reloj ENTONCES lee `"20:58"` en los dos estados. Pulsar el botón del
+restantes CUANDO se lee el reloj ENTONCES lee `"20:58"` en los dos estados. Hacer clic sobre el
 panel otra vez no cambia la lectura, y el turno descuenta lo mismo que antes de la hora del corte.
 
 ## No objetivos

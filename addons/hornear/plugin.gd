@@ -19,7 +19,6 @@ const NODO := "LightmapGI"
 ## archivo, sin guardar la escena.
 const VARIABLE_DE_LA_VARIANTE := "HORNEAR_VARIANTE"
 const VARIANTE_SIN_LUZ := "sin_luz"
-const HORNEADO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 ## El texto del botón en inglés: el script lanza el editor con `-l en` para que sea este.
 const BOTON := "Bake Lightmaps"
 const PAUSA := 2.0
@@ -119,7 +118,7 @@ func _hornear() -> void:
 			_fallar("no encuentro el diálogo de guardado")
 			return
 		dialogo.hide()
-		var ruta := HORNEADO_SIN_LUZ if _sin_luz() else ESCENA.get_basename() + ".lmbake"
+		var ruta := CorteDeLuz.HORNEADO_SIN_LUZ if _sin_luz() else ESCENA.get_basename() + ".lmbake"
 		dialogo.file_selected.emit(ruta)
 	print("[hornear] horneado en %d ms" % (Time.get_ticks_msec() - desde))
 

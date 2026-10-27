@@ -149,6 +149,8 @@ func test_el_tablero_restablece_la_luz_y_las_interfaces() -> void:  # AC-ANO-018
 	local.get_node(TABLERO).accionar()
 	assert_bool(_hay_luz(local)).is_true()
 	assert_array(_luces_normales_encendidas(local)).not_contains(false)
+	local.get_node(TABLERO).accionar()
+	assert_bool(_hay_luz(local)).is_true()
 
 
 func test_pulsar_el_tablero_sin_corte_no_cambia_nada() -> void:  # AC-ANO-018

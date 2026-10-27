@@ -23,7 +23,7 @@ séptima noche corta la luz a las 20:58 y deja el reloj de mesa detenido hasta e
 | **Sustituto** | producto que recibe un permiso excepcional de uso durante esa jornada | bidón nuevo |
 | **Poético** | producto vendible de limpieza, distinto del bidón azul marca «2» | jabón azul |
 | **Corte** | estado de la séptima noche: sin corte, cortado o restaurado | apagón aleatorio |
-| **Panel eléctrico** | la caja de electricidad del depósito, con su tapa y su botón | fusible, llave |
+| **Panel eléctrico** | el tablero de electricidad del depósito, que se acciona con un clic | fusible, llave |
 | **Luz de emergencia** | la única luz que queda encendida sobre el panel durante el corte | linterna |
 
 ## Comportamiento normativo
@@ -66,12 +66,12 @@ la caja registradora DEBEN rechazar que se las abra. CUANDO se corta con una abi
 DEBE cerrarla. El turno NO DEBE detenerse: sigue descontando con su presupuesto y su ritmo
 normales (BR-SHF-001, BR-SHF-002 y BR-SHF-003).
 
-### BR-ANO-013 — Sólo el botón del panel restablece la luz
+### BR-ANO-013 — Un clic sobre el panel restablece la luz
 
-CUANDO el jugador abre el panel eléctrico y pulsa su botón con el corte cortado, el sistema DEBE
-pasarlo a restaurado: la iluminación y las interfaces vuelven a la normalidad. Abrir el panel sin
-pulsar el botón NO DEBE restablecer nada. Pulsar el botón sin corte o ya restaurado NO DEBE
-cambiar el estado, cortar de nuevo ni alterar la lectura del reloj de mesa. Un corte restaurado
+CUANDO el jugador hace clic sobre el panel eléctrico con el corte cortado, el sistema DEBE
+pasarlo a restaurado: la iluminación y las interfaces vuelven a la normalidad. Hacer clic sobre el
+panel sin corte o ya restaurado NO DEBE cambiar el estado, cortar de nuevo ni alterar la lectura
+del reloj de mesa. Un corte restaurado
 NO DEBE volver a cortar en esa noche.
 
 ### BR-ANO-014 — Los estados del corte viven sólo en la jornada en memoria
@@ -130,17 +130,16 @@ DADO el corte cortado CUANDO se intenta abrir la computadora o la caja registrad
 ninguna abre. DADO una abierta al cortar ENTONCES queda cerrada. Con el corte sin corte o
 restaurado, las dos abren normalmente.
 
-### AC-ANO-018 — Sólo el botón restablece *(verifica BR-ANO-013)*
+### AC-ANO-018 — Un clic sobre el panel restablece *(verifica BR-ANO-013)*
 
-DADO el corte cortado CUANDO se abre el panel sin pulsar el botón ENTONCES sigue cortado y las
-interfaces siguen rechazadas. CUANDO se pulsa el botón ENTONCES queda restaurado y las
-interfaces abren. Pulsarlo otra vez, o pulsarlo con el corte sin corte, no cambia el estado.
+DADO el corte cortado CUANDO se hace clic sobre el panel ENTONCES queda restaurado y las
+interfaces abren. Hacer clic otra vez, o hacerlo con el corte sin corte, no cambia el estado.
 
 ### AC-ANO-019 — El turno no se entera del corte *(verifica BR-ANO-012, BR-ANO-013)*
 
 DADO la jornada 7 CUANDO transcurren los segundos reales con el corte sin corte, cortado y
 restaurado ENTONCES cada segundo descuenta lo mismo y el turno cierra al agotarse su presupuesto.
-Cortar, restablecer y pulsar el botón de más no suman ni restan turno.
+Cortar, restablecer y hacer clic de más sobre el panel no suman ni restan turno.
 
 ### AC-ANO-020 — Los estados no se guardan *(verifica BR-ANO-014)*
 
@@ -168,8 +167,8 @@ corte.
   para el corte, su estado —sin corte, cortado o restaurado— y si las interfaces están
   accesibles.
 - **Falla:** una identidad distinta de Poético no recibe permiso; una apertura repetida
-  conserva la disponibilidad y no duplica cuerpos ni descartes. Un corte repetido o un botón
-  pulsado de más conservan el estado.
+  conserva la disponibilidad y no duplica cuerpos ni descartes. Un corte repetido o un clic
+  de más sobre el panel conservan el estado.
 
 ## Señales
 
