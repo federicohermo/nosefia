@@ -383,10 +383,5 @@ se corrige el código.
   generador sólo se puede editar a mano, y el cambio siguiente lo escribe de nuevo desde cero. La
   disposición de la góndola, sus dos escenas y sus 71 mallas salían de un acomodador que vivió en
   el scratch de una sesión: el #262 tuvo que escribirlo otra vez.
-- **Una variante de arte declara su generador y su evidencia en los límites del issue.**
-  Si otro issue integra la variante en el juego, se muestra el recurso fuera del juego y se
-  declara esa dependencia. El texto de una marca se confirma antes de dibujarlo; no se deduce
-  una fecha del calendario real. La prueba compara geometría y opciones del material con la
-  fuente actual, sin congelar el arte con hashes ni cantidades fijas.
 - Si el trabajo falsificó algo que la documentación afirma en presente, actualizá `docs/`,
   `.claude/rules/` y `CLAUDE.md`.

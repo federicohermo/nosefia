@@ -96,21 +96,21 @@ static func diferencias(base: ArrayMesh, variante: ArrayMesh) -> PackedStringArr
 				continue
 			if material.get(nombre) != copia.get(nombre):
 				errores.append("material: " + nombre)
-		if copia.albedo_texture == null or material.albedo_texture == null:
-			errores.append("textura ausente")
-		elif copia.albedo_texture.get_size() != material.albedo_texture.get_size():
-			errores.append("dimensiones de textura")
-		elif copia.albedo_texture.resource_path == material.albedo_texture.resource_path:
-			errores.append("textura sin variante")
 	return errores
 
 
 func _comprobar() -> int:
+	# Sin la caché de importación las texturas no cargan: se comparan por su archivo.
+	ResourceLoader.set_abort_on_missing_resources(false)
 	var base := load(ORIGINAL) as ArrayMesh
 	var variante := load(VARIANTE) as ArrayMesh
 	if base == null or variante == null:
 		return 1
 	var errores := diferencias(base, variante)
+	if ResourceLoader.get_dependencies(VARIANTE) != PackedStringArray([TEXTURA]):
+		errores.append("textura sin variante")
+	if _tamano(TEXTURA) != _tamano(TEXTURA_BASE):
+		errores.append("dimensiones de textura")
 	var importacion_base := ConfigFile.new()
 	var importacion_variante := ConfigFile.new()
 	if importacion_base.load(TEXTURA_BASE + ".import") != OK:
@@ -142,9 +142,9 @@ static func _testigos(base: ArrayMesh, variante: ArrayMesh) -> bool:
 	var material := variante.surface_get_material(0).duplicate() as StandardMaterial3D
 	material.shading_mode = (material.shading_mode + 1) % 3
 	rota.surface_set_material(0, material)
-	if diferencias(base, rota).is_empty():
-		return false
-	material = variante.surface_get_material(0).duplicate() as StandardMaterial3D
-	material.albedo_texture = null
-	rota.surface_set_material(0, material)
 	return not diferencias(base, rota).is_empty()
+
+
+static func _tamano(textura: String) -> Vector2i:
+	var imagen := Image.load_from_file(ProjectSettings.globalize_path(textura))
+	return imagen.get_size() if imagen != null else Vector2i.ZERO
