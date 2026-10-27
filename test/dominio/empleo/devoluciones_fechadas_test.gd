@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const JEFE := Conversacion.Interlocutor.JEFE
+const YASMIN := Conversacion.Interlocutor.YASMIN
 
 
 func _cerrar_impecable(partida: Partida) -> void:
@@ -86,7 +87,7 @@ func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC
 		return
 	var retomada := Partida.desde(datos)
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(6)
+	bandeja.abrir_jornada(retomada.jornada())
 	var devoluciones: Array = retomada.call("devoluciones_del_jefe")
 	for mensaje: Mensaje in devoluciones:
 		assert_bool(bandeja.recibir(JEFE, mensaje)).is_true()
@@ -107,7 +108,11 @@ func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC
 	assert_int(bandeja.conversaciones().size()).is_equal(2)
 	if bandeja.conversaciones().size() != 2:
 		return
-	assert_int(bandeja.no_leidos(bandeja.conversaciones()[1].interlocutor)).is_equal(15)
+	var de_yasmin := Conversacion.de(YASMIN).mensajes.filter(
+		func(mensaje: Mensaje) -> bool: return mensaje.jornada <= retomada.jornada()
+	)
+	assert_array(de_yasmin).is_not_empty()
+	assert_int(bandeja.no_leidos(YASMIN)).is_equal(de_yasmin.size())
 	historial.clear()
 	assert_int(bandeja.mensajes_de(JEFE).size()).is_equal(esperado.size())
 	assert_int(Conversacion.de(JEFE).mensajes.size()).is_equal(cantidad)
