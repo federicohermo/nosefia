@@ -31,8 +31,8 @@ environment = SubResource("Environment_almacen")
 [node name="Bloom" parent="." instance=ExtResource("2_bloom")]
 
 [node name="ReflejosDelSalon" type="ReflectionProbe" parent="."]
-position = Vector3(2.695, 2.181, -0.795)
-size = Vector3(10.55, 4.56, 14.35)
+position = Vector3(2.695, 1.801, -0.795)
+size = Vector3(10.55, 3.8, 14.35)
 origin_offset = Vector3(-3.5, 0, 0)
 intensity = 0.65
 max_distance = 80.0
@@ -78,7 +78,7 @@ blend_distance = 0.35
 reflection_mask = 4
 
 [node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=1670606995]
-transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 4.044, -4.8)
+transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 3.284, -4.8)
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_indirect_energy = 2.4
@@ -88,7 +88,7 @@ light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D3" type="AreaLight3D" parent="." unique_id=1624985064]
-transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 4.044, -1)
+transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 3.284, -1)
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_indirect_energy = 2.4
@@ -98,7 +98,7 @@ light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D7" type="AreaLight3D" parent="." unique_id=1727770897]
-transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 4.9, 4.044, -4.8)
+transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 4.9, 3.284, -4.8)
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_indirect_energy = 2.4
@@ -108,7 +108,7 @@ light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D10" type="AreaLight3D" parent="." unique_id=1041791214]
-transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 4.9, 4.044, -1)
+transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 4.9, 3.284, -1)
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_indirect_energy = 2.4
@@ -118,7 +118,7 @@ light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D8" type="AreaLight3D" parent="." unique_id=174603683]
-transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 0.2, 4.044, 3)
+transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 0.2, 3.284, 3)
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_indirect_energy = 2.4
@@ -128,7 +128,7 @@ light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D2" type="AreaLight3D" parent="." unique_id=333680017]
-transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 4.9, 4.044, 3)
+transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 4.9, 3.284, 3)
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_indirect_energy = 2.4
@@ -138,7 +138,7 @@ light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D9" type="AreaLight3D" parent="." unique_id=12441013]
-transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 2.7, 4.044, 5.1)
+transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 2.7, 3.284, 5.1)
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_indirect_energy = 2.4
