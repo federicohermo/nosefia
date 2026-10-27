@@ -37,6 +37,6 @@ func test_la_caja_recibe_una_sana() -> void:  # AC-STK-120
 	estante.retirar(_cindolor())
 	var sana := estante.agarrar(_cindolor(), 0)
 	var antes := caja.unidades()
+	assert_int(caja.gesto_posible(sana, true)).is_equal(ContenidoDeLaCaja.Gesto.METER)
 	assert_bool(caja.meter(sana)).is_true()
 	assert_int(caja.unidades()).is_equal(antes + 1)
-	assert_int(caja.gesto_posible(sana, true)).is_equal(ContenidoDeLaCaja.Gesto.METER)

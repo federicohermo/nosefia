@@ -33,7 +33,12 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	var posiciones: Array[Vector3] = []
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(grupo.multimesh.instance_count)
+		var dibujadas := grupo.multimesh.visible_instance_count
+		if producto.id == Producto.Id.CINDOLOR:
+			# Los vencidos se dibujan en su propio lote, con el mismo reparto de copias.
+			var vencidos: MultiMeshInstance3D = presentacion.get_node("VencidosDeCindolor")
+			dibujadas += vencidos.multimesh.visible_instance_count
+		assert_int(dibujadas).is_equal(grupo.multimesh.instance_count)
 		for indice in repositor.estante().cupo(producto):
 			var posicion := (
 				(

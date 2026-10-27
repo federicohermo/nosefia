@@ -1339,7 +1339,7 @@ func _preparar_los_vencidos() -> void:
 	_apagar_hasta(_vencidos_puestos, 0)
 	_vencidos_puestos.visible = false
 	_vencidos_sueltos = GrupoDelPiso.new()
-	_vencidos_sueltos.name = "SueltosDeCindolorVencido"
+	_vencidos_sueltos.name = "CindolorVencidoSuelto"
 	_vencidos_sueltos.preparar(_modelo_vencido, ReglasDelEstante.CINDOLOR_VENCIDOS)
 	add_child(_vencidos_sueltos)
 	_generados.append(_vencidos_sueltos)
