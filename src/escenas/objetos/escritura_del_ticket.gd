@@ -80,6 +80,18 @@ static func _repartida_en_frente_y_dorso(origen: Mesh) -> ArrayMesh:
 	return malla_nueva
 
 
+## Un papel sin escritura con la malla y los materiales del real, oculto. El calentamiento lo dibuja
+## para compilar el recorte por alfa antes de la primera impresión: ninguna otra malla lo usa.
+static func papel_para_calentar(origen: Mesh) -> MeshInstance3D:
+	var papel := MeshInstance3D.new()
+	papel.mesh = _repartida_en_frente_y_dorso(origen)
+	papel.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	for superficie: int in papel.mesh.get_surface_count():
+		papel.set_surface_override_material(superficie, _material_de(DORSO))
+	papel.visible = false
+	return papel
+
+
 static func _material_de(textura: Texture2D) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_texture = textura

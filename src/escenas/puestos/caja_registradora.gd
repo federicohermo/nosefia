@@ -3,6 +3,8 @@ extends StaticBody3D
 
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
+const EscrituraDelTicket := preload("res://src/escenas/objetos/escritura_del_ticket.gd")
+const MODELO_DEL_PAPEL := preload("res://assets/models/ticket_impreso.res")
 const ANCHO_DEL_MODELO := 0.074995
 
 @export var jugador: JugadorDelLocal
@@ -42,6 +44,18 @@ func _ready() -> void:
 	agarre.objeto_soltado.connect(_al_soltar)
 	jugador.uso_pedido.connect(_al_usar)
 	jugador.consultar_interaccion_con(_contexto_del_descarte)
+	_agregar_papel_para_calentar()
+
+
+## El papel real entra recién al imprimir. Este, oculto y sin colisión, deja su material a la vista
+## del calentamiento de shaders, que lo dibuja con el resto del local, detrás de la carga.
+func _agregar_papel_para_calentar() -> void:
+	var cuerpo := RigidBody3D.new()
+	cuerpo.freeze = true
+	cuerpo.collision_layer = 0
+	cuerpo.collision_mask = 0
+	cuerpo.add_child(EscrituraDelTicket.papel_para_calentar(MODELO_DEL_PAPEL))
+	add_child(cuerpo)
 
 
 func accionar() -> void:
