@@ -321,12 +321,6 @@ Lo que más se rompe:
   El `rg` sigue a cada lector del recurso, también a la interfaz. En el #527, las instrucciones
   pasaron de una lista a tres jornadas. La pantalla elegía cada foto por número de pantalla, y en
   J2 la foto caía en la pantalla 1. El issue tenía esa pantalla en «Sólo lectura».
-- **Un criterio que cambia qué entrega una caja lleva a «Se escribe» a quien arma la apertura
-  y a quien viste la unidad en la mano.** El `rg` sigue `ContenidoDeLaCaja`, `Estante.new(` y
-  `pedir_retirar`. En el #455, la permutación de cajas pedía tocar `almacen.gd`, que construye el
-  estante; `repositor.gd`, que prueba la mano con el producto de la etiqueta;
-  `reposicion_manual.gd`, que dibujaba la unidad con la malla de la etiqueta; y
-  `geometria_de_prueba_test.gd`, que retiraba por etiqueta en J8 y comparaba otro producto.
 - **Un flujo que gana un paso lleva a «Se escribe» los fixtures que lo atraviesan.** Se buscan
   los ayudantes compartidos de `test/` y las suites que siguen de noche, no sólo las que nombran
   el flujo. En el #527, la jornada 2 pasó a abrir con instrucciones, y `tickets_del_cierre_test.gd`

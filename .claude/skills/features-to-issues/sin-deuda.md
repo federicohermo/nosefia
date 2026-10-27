@@ -241,7 +241,6 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 | un contrato que **exige compartir una selección pero vuelve a fabricarla** | `to-issue` — la ampliación actualiza premisa, criterios, firmas y límites juntos; declara un único dueño y pasa la misma instancia a cada consumidor |
 | un sorteo que **confunde capacidad total con cupo habilitado y debilita un AC** | `to-issue` — medir las invariantes de la tabla fija en reglas y tests; separar los cupos en las firmas y verificar la apertura sobre la geometría real |
-| un criterio que cambia qué entrega una caja y **deja afuera a quien arma la apertura y viste la unidad en la mano** | `to-issue` — el `rg` de `ContenidoDeLaCaja`, `Estante.new(` y `pedir_retirar` no llegó a `almacen.gd`, `repositor.gd`, `reposicion_manual.gd` ni las suites que retiran por etiqueta esa noche |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
