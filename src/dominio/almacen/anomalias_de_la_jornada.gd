@@ -49,7 +49,7 @@ static func corte_tras(estado: Corte, jornada: int, restante: float) -> Corte:
 	return Corte.CORTADO
 
 
-## Lo que hace el clic sobre el panel. Sólo restablece un corte cortado: pulsarlo de más no cambia nada.
+## Lo que hace el clic sobre el panel. Sólo restablece un corte cortado: repetirlo no cambia nada.
 static func restablecer(estado: Corte) -> Corte:
 	if estado == Corte.CORTADO:
 		return Corte.RESTAURADO
