@@ -18,6 +18,8 @@ enum Id {
 	MOPA_YA_SECA,
 	MOPA_BERRETA,
 	PARED_DEL_OTRO_INODORO,
+	PISO_DE_LAS_ESTANTERIAS_DEL_FONDO,
+	TECHO_SOBRE_UN_CUBICULO,
 	PUERTA_CON_TAREAS_PENDIENTES,
 }
 
@@ -38,10 +40,14 @@ const TEXTOS: Dictionary[Id, String] = {
 	Id.MOPA_YA_SECA: "Ya se secó la mopa…",
 	Id.MOPA_BERRETA: "Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.",
 	Id.PARED_DEL_OTRO_INODORO: "Se ve que alguien no tuvo tiempo de apuntar bien…",
+	Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: "Espero que sea vómito…",
+	Id.TECHO_SOBRE_UN_CUBICULO: "¿¿Cómo llegó eso ahí??",
 	Id.PUERTA_CON_TAREAS_PENDIENTES: "No debería irme. Todavía me quedan tareas por completar.",
 }
 const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, Id] = {
 	PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: Id.PARED_DEL_OTRO_INODORO,
+	PisoDelLocal.Lugar.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO,
+	PisoDelLocal.Lugar.TECHO_SOBRE_UN_CUBICULO: Id.TECHO_SOBRE_UN_CUBICULO,
 }
 
 ## Cuánto se espera que lo soltado quede quieto antes de mirar si cayó afuera.
