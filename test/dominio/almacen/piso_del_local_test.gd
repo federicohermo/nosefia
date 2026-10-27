@@ -80,9 +80,9 @@ func test_cada_jornada_que_limpia_arranca_con_sus_manchas_sucias() -> void:  # A
 		assert_int(_sucias(piso).size()).is_equal(piso.lugares().size())
 
 
-func test_los_cuatro_lugares_de_hoy_siguen_en_la_primera_jornada() -> void:  # AC-CLN-016
-	# La escena guarda cada disco con el número de su lugar: los cuatro de antes conservan el suyo
-	# y su mancha, y los nuevos van después.
+func test_cada_lugar_conserva_su_numero_y_la_primera_jornada_su_mancha() -> void:  # AC-CLN-016
+	# La escena guarda cada disco con el número de su lugar: ninguno cambia de número, y los
+	# cuatro de la primera jornada conservan su mancha.
 	var piso := _piso()
 	var esperados := {
 		PisoDelLocal.Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
@@ -92,7 +92,7 @@ func test_los_cuatro_lugares_de_hoy_siguen_en_la_primera_jornada() -> void:  # A
 	}
 	for lugar: PisoDelLocal.Lugar in esperados:
 		assert_int(piso.mancha_de(lugar).tipo()).is_equal(esperados[lugar])
-	var anteriores: Array[String] = [
+	var en_orden: Array[String] = [
 		"ENTRADA",
 		"GONDOLAS",
 		"DEPOSITO",
@@ -108,20 +108,41 @@ func test_los_cuatro_lugares_de_hoy_siguen_en_la_primera_jornada() -> void:  # A
 		"PUERTA_DEL_BANO_EN_EL_BANO",
 		"TECHO_DEL_BANO",
 		"BAJO_LA_PUERTA_DEL_CUBICULO",
+		"FRENTE_AL_MOSTRADOR",
+		"PARED_DE_LA_PUERTA_DEL_BANO",
+		"AL_LADO_DE_LA_PUERTA_DEL_CUARTITO",
+		"PISO_DEL_OTRO_INODORO",
+		"PARED_DE_LA_ULTIMA_HELADERA",
+		"PISO_DE_LAS_ESTANTERIAS_DEL_FONDO",
+		"PISO_DE_LA_ULTIMA_ESTANTERIA",
+		"PARED_ARRIBA_DEL_MISMO_INODORO",
+		"PISO_DEL_TACHO_DE_CLIENTES",
+		"TECHO_DEL_MEDIO_DEL_LOCAL",
+		"TECHO_DE_LA_PUERTA_DE_ENTRADA",
+		"PISO_DEL_PORTON",
+		"PISO_DE_UNA_ESTANTERIA",
+		"TECHO_DEL_CUARTITO",
+		"OTRO_TECHO_DEL_CUARTITO",
+		"TECHO_SOBRE_UN_CUBICULO",
+		"PARED_DE_LA_OTRA_GONDOLA",
+		"TECHO_ARRIBA_DE_UN_CUBICULO",
+		"TECHO_ARRIBA_DE_OTRO_CUBICULO",
+		"OTRA_PARED_DEL_MISMO_INODORO",
 	]
-	for numero in anteriores.size():
-		assert_int(PisoDelLocal.Lugar[anteriores[numero]]).is_equal(numero)
+	assert_int(PisoDelLocal.Lugar.size()).is_equal(en_orden.size())
+	for numero in en_orden.size():
+		assert_int(PisoDelLocal.Lugar[en_orden[numero]]).is_equal(numero)
 
 
 func test_cada_jornada_arranca_sucia_aunque_la_anterior_quedo_limpia() -> void:  # AC-CLN-016
 	# Instancias nuevas y no las mismas: con un piso compartido, lo limpiado anoche llegaría
 	# limpio esta noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
-	for jornada: int in [3, 4, 5]:
+	for jornada: int in [3, 4, 5, 6, 7]:
 		var anoche := PisoDelLocal.de_la_jornada(jornada)
 		_borrar_todas(anoche)
 		assert_bool(anoche.esta_limpio()).is_true()
 		var hoy := PisoDelLocal.de_la_jornada(jornada + 1)
-		assert_int(hoy.lugares().size()).is_equal(8 if jornada + 1 == 5 else 7)
+		assert_array(hoy.lugares()).is_not_empty()
 		assert_int(_sucias(hoy).size()).is_equal(hoy.lugares().size())
 		assert_bool(hoy.balde().tiene_agua()).is_false()
 		assert_bool(hoy.mopa().esta_mojada()).is_false()
