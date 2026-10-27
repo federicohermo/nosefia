@@ -106,8 +106,10 @@ cumplida fuera de esa lista no cuenta.
 El sistema DEBE mostrar la hora sólo en el reloj de mesa del local, cerca del escritorio: ni en
 el HUD, ni en la computadora, ni en otro objeto del local. SI es la sexta jornada y queda la
 mitad del turno o menos, ENTONCES el reloj DEBE leer vacío hasta el cierre, sin decir que está
-roto. Las otras jornadas, incluida la que todavía no se declaró, el reloj DEBE leer la hora el
-turno entero.
+roto. SI es la séptima jornada y la hora de ficción alcanzó las 20:58, ENTONCES el reloj DEBE
+leer `20:58` hasta el cierre, también después de restablecer la electricidad, y el turno DEBE
+seguir descontando con su presupuesto y su ritmo. Las otras jornadas, incluida la que todavía no
+se declaró, y la séptima antes de las 20:58, el reloj DEBE leer la hora el turno entero.
 
 ### BR-SHF-012 — La lectura trunca y no miente
 
@@ -248,7 +250,7 @@ restante no cambió.
 ### AC-SHF-012 — El reloj falta la mitad de una noche *(verifica BR-SHF-011)*
 
 DADO la jornada 6 CUANDO quedan `21601.0` segundos ENTONCES el reloj lee `"01:59"`; con `21600.0`
-o menos, lee `""`. En las jornadas 0, 3, 5 y 7 lee la hora con `43200.0`, con `21600.0` y con
+o menos, lee `""`. En las jornadas 0, 3, 5 y 8 lee la hora con `43200.0`, con `21600.0` y con
 `1.0`.
 
 ### AC-SHF-013 — El reloj roto no dice que está roto *(verifica BR-SHF-011)*
@@ -258,12 +260,12 @@ cadena vacía, y no `"08:00"`.
 
 ### AC-SHF-014 — La lectura trunca *(verifica BR-SHF-012)*
 
-DADO `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
+DADO una jornada que no es la sexta ni la séptima con `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
 `-10.0`, `"08:00"`.
 
 ### AC-SHF-016 — La hora de la noche *(verifica BR-SHF-014)*
 
-DADO una jornada que no es la sexta CUANDO se lee el reloj ENTONCES:
+DADO una jornada que no es la sexta ni la séptima CUANDO se lee el reloj ENTONCES:
 
 | Quedan | Se lee |
 |---|---|
@@ -476,6 +478,19 @@ permite salir. DADO que falta cualquier otra obligatoria, o que la planilla no c
 vendido, ENTONCES no permite salir. DADO la primera jornada completa ENTONCES no permite salir
 aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma regla.
 
+### AC-SHF-049 — El reloj de la séptima noche se detiene en las 20:58 *(verifica BR-SHF-011)*
+
+DADO la jornada 7 CUANDO han transcurrido 58 minutos de ficción menos un segundo ENTONCES el
+reloj lee `"20:57"`; con 58 minutos exactos, `"20:58"`. Con 2 horas transcurridas y con `0.0`
+segundos restantes sigue leyendo `"20:58"`, y no `"08:00"`. Con `0.0` segundos restantes la
+jornada 6 lee `""` y la 8 lee `"08:00"`.
+
+### AC-SHF-050 — Restablecer la luz no descongela el reloj *(verifica BR-SHF-011)*
+
+DADO la jornada 7 con el corte cortado y con el corte restaurado, a las 22:00 y a `0.0` segundos
+restantes CUANDO se lee el reloj ENTONCES lee `"20:58"` en los dos estados. Pulsar el botón del
+panel otra vez no cambia la lectura, y el turno descuenta lo mismo que antes de la hora del corte.
+
 ## No objetivos
 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
@@ -512,6 +527,8 @@ aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma
   y cuándo deja de estarlo; ese cumplimiento actual decide el permiso de salida de la prueba.
 - [`notifications`](../notifications/notifications.md) (alimenta): la primera habilitación
   y cada nueva traba de la salida durante la noche.
+- [`anomalies`](../anomalies/anomalies.md) (consume): desde qué hora de ficción la séptima
+  noche tiene el reloj detenido.
 
 ## Preguntas abiertas
 
