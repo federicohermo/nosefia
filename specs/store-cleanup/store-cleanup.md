@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26; útiles fuera del contenedor de #552, ficha «Contenedor de basura» revisada el 2026-10-20; útil en la mano al cierre cuenta como guardado de #386, decisión del 2026-10-26
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26; útiles fuera del contenedor de #552, ficha «Contenedor de basura» revisada el 2026-10-20; útil en la mano al cierre cuenta como guardado de #386, decisión del 2026-10-26; manchas de las jornadas 6 a 8 de #457, ficha Limpieza revisada el 2026-10-20
 ---
 
 # Capacidad: dejar el local en orden
@@ -99,13 +99,43 @@ con su tipo, su habitación y su superficie:
 | 5 | polvo | baño | piso | frente a la puerta del baño |
 | 5 | moho | baño | techo | en una esquina que no es la de la puerta |
 | 5 | caca | baño | piso | bajo la puerta de un cubículo |
+| 6 | polvo | local | piso | frente a la puerta de entrada |
+| 6 | polvo | local | pared | sobre la pared con la puerta del baño |
+| 6 | moho | local | pared | al lado de la última heladera |
+| 6 | caca | local | piso | frente a las estanterías del fondo |
+| 6 | polvo | depósito | piso | atrás de la última estantería |
+| 6 | moho | depósito | pared | al lado de la puerta del cuartito de limpieza |
+| 6 | polvo | baño | piso | al lado del otro inodoro |
+| 6 | caca | baño | piso | al lado de un inodoro |
+| 6 | caca | baño | pared | arriba del mismo inodoro |
+| 7 | polvo | local | piso | al lado del tacho de basura para clientes |
+| 7 | polvo | local | techo | en el medio del local |
+| 7 | moho | local | techo | pegado a la pared de la puerta de entrada |
+| 7 | polvo | depósito | piso | cerca del portón de garage |
+| 7 | polvo | depósito | piso | frente a una estantería |
+| 7 | moho | cuartito | techo | dentro del cuartito de limpieza |
+| 7 | moho | cuartito | techo | dentro del cuartito de limpieza, en otro punto |
+| 7 | moho | baño | pared | arriba de un inodoro |
+| 7 | caca | baño | techo | sobre un cubículo |
+| 7 | caca | baño | piso | al lado de un inodoro |
+| 8 | polvo | local | piso | frente al mostrador |
+| 8 | polvo | local | piso | al lado de una góndola isla |
+| 8 | polvo | local | pared | al lado de la otra góndola isla |
+| 8 | polvo | depósito | pared | cerca del contenedor de basura |
+| 8 | moho | depósito | pared | en una esquina, cerca del techo |
+| 8 | moho | baño | techo | arriba de un cubículo |
+| 8 | moho | baño | techo | arriba de otro cubículo |
+| 8 | caca | baño | piso | al lado de un inodoro |
+| 8 | caca | baño | pared | al lado del mismo inodoro |
+| 8 | caca | baño | pared | al lado del mismo inodoro, en otro punto |
+| 8 | caca | baño | piso | al lado del otro inodoro |
 
 La jornada 3 suma 4, con 2 de polvo, 1 de moho y 1 de caca. La 4 suma 7, con 3 de polvo,
-2 de moho y 2 de caca. La 5 suma 8, con 4 de polvo, 3 de moho y 1 de caca. Las jornadas 1 y 2
-DEBEN arrancar sin manchas. La caca de piso de la jornada 4 DEBE estar al lado del inodoro donde
-no estuvo la de la jornada 3. Las jornadas 6, 7 y 8 DEBEN arrancar con las de la 4
-(`OQ-CLN-002`). Cada jornada DEBE arrancar con todas sus manchas sucias, aunque la anterior las
-haya borrado.
+2 de moho y 2 de caca. La 5 suma 8, con 4 de polvo, 3 de moho y 1 de caca. La 6 suma 9, con
+4 de polvo, 2 de moho y 3 de caca. La 7 suma 10, con 4 de polvo, 4 de moho y 2 de caca. La 8
+suma 11, con 4 de polvo, 3 de moho y 4 de caca. Las jornadas 1 y 2 DEBEN arrancar sin manchas.
+La caca de piso de la jornada 4 DEBE estar al lado del inodoro donde no estuvo la de la jornada 3.
+Cada jornada DEBE arrancar con todas sus manchas sucias, aunque la anterior las haya borrado.
 
 Una mancha que la jornada no declara NO DEBE verse, ni detener la mira, ni reservar el sector de
 un charco temporal, ni contar para limpiar. Una mancha de pared o de techo DEBE borrarse con la
@@ -436,17 +466,19 @@ con el dibujo de polvo de la guía y transparencia entre los trazos que deja ver
 
 DADO la jornada 1 y la 2 ENTONCES no tienen manchas. DADO la 3 ENTONCES tiene 4 manchas,
 2 de polvo, 1 de moho y 1 de caca. DADO la 4 ENTONCES tiene 7, con 3 de polvo, 2 de moho y
-2 de caca. DADO la 5 ENTONCES tiene 8, con 4 de polvo, 3 de moho y 1 de caca. DADO la 6, la 7
-y la 8 ENTONCES tienen las mismas 7 de la 4. En cada una, cada mancha lleva el tipo, la
+2 de caca. DADO la 5 ENTONCES tiene 8, con 4 de polvo, 3 de moho y 1 de caca. DADO la 6 ENTONCES tiene 9,
+con 4 de polvo, 2 de moho y 3 de caca. DADO la 7 ENTONCES tiene 10, con 4 de polvo, 4 de moho y
+2 de caca. DADO la 8 ENTONCES tiene 11, con 4 de polvo, 3 de moho y 4 de caca. En cada una, cada mancha lleva el tipo, la
 habitación, la superficie y el lugar declarados, y ninguna arranca borrada. DADO la caca de
 piso de la jornada 3 CUANDO abre la 4 ENTONCES la caca de piso está junto al otro inodoro.
 DADO la 3 con sus 4 borradas CUANDO abre la 4 ENTONCES sus 7 están sucias. DADO la 4 con sus
 7 borradas CUANDO abre la 5 ENTONCES sus 8 están sucias. DADO la 5 con sus 8 borradas CUANDO
-abre la 6 ENTONCES sus 7 están sucias.
+abre la 6 ENTONCES sus 9 están sucias. DADO la 6 con sus 9 borradas CUANDO abre la 7 ENTONCES sus
+10 están sucias. DADO la 7 con sus 10 borradas CUANDO abre la 8 ENTONCES sus 11 están sucias.
 
 ### AC-CLN-017 — Cada mancha en su habitación y su superficie *(verifica BR-CLN-013, BR-CLN-027)*
 
-DADO las jornadas 3, 4 y 5, por turno, ENTONCES cada mancha de la noche está en la habitación que
+DADO las jornadas 3 a 8, por turno, ENTONCES cada mancha de la noche está en la habitación que
 declara su lugar, según la pertenencia de `BR-CLN-027`, y sobre la superficie que declara: mira
 hacia arriba en el piso, en horizontal en la pared y hacia abajo en el techo. Ninguna queda debajo
 de un mueble ni tapada, y la mira enfoca cada una desde un punto libre del piso dentro del
@@ -807,7 +839,7 @@ la mano está vacía, los tres tachos están sin bolsa y ninguna bolsa está en 
 
 ### AC-CLN-058 — El paso toca sólo el piso *(verifica BR-CLN-013)*
 
-DADO la jornada 4 y después la 5 CUANDO el jugador da un paso al lado de cada mancha de pared, y
+DADO cada jornada de la 4 a la 8 CUANDO el jugador da un paso al lado de cada mancha de pared, y
 debajo de la de techo, ENTONCES ninguna recibe el toque del paso ni ondula. DADO una mancha del
 piso de la misma noche CUANDO el jugador da un paso a su lado ENTONCES sí lo recibe.
 
@@ -826,10 +858,22 @@ DADO la jornada 3 CUANDO se borran 3 de sus 4 manchas ENTONCES limpiar no está 
 CUANDO se borra la cuarta ENTONCES se cumple, una sola vez. DADO la jornada 4 CUANDO se borran
 6 de sus 7 manchas ENTONCES no está cumplida. CUANDO se borra la séptima ENTONCES se cumple,
 una sola vez. DADO la jornada 5 CUANDO se borran 7 de sus 8 ENTONCES no está cumplida. CUANDO
-se borra la octava ENTONCES se cumple, una sola vez. Cada
-mancha, también las de pared y la de techo, se borra pasándole la mopa mojada del jabón que pide,
+se borra la octava ENTONCES se cumple, una sola vez. DADO la jornada 6 CUANDO se borran 8 de sus 9
+ENTONCES no está cumplida, aunque la que quede sea la caca frente a las estanterías del fondo.
+CUANDO se borra la novena ENTONCES se cumple, una sola vez. DADO la jornada 7 CUANDO se borran 9 de
+sus 10 ENTONCES no está cumplida, y se cumple con la décima. DADO la jornada 8 CUANDO se borran 10
+de sus 11 ENTONCES no está cumplida, y se cumple con la undécima. Cada
+mancha, también las de pared y las de techo, se borra pasándole la mopa mojada del jabón que pide,
 apuntándola con la mira desde un punto libre del piso. Las manchas del mismo tipo en la misma
 habitación se borran por separado y cuenta cada una.
+
+### AC-CLN-078 — Las manchas de techo se enfocan y se borran *(verifica BR-CLN-013)*
+
+DADO la jornada 7 CUANDO la mira apunta a cada mancha de techo —las dos del local, las dos del
+cuartito y la del baño— desde un punto libre del piso dentro del alcance vigente ENTONCES la enfoca. CUANDO
+se la pasa con la mopa mojada del jabón que pide ENTONCES se borra. DADO la jornada 8 ENTONCES vale
+lo mismo para las dos del techo del baño. Ninguna mancha de techo ondula cuando el jugador camina
+debajo.
 
 ### AC-CLN-061 — Sustitución limitada por jornada e identidad *(verifica BR-CLN-033)*
 
@@ -977,11 +1021,5 @@ ENTONCES hay desorden.
 
 - **OQ-CLN-001 — ¿Las manchas aparecen durante la noche o están todas desde el principio?**
   - Por qué sigue abierta: hoy están todas desde la apertura. El GDD no lo dice.
-  - Decide: el dueño del repo.
-  - Bloquea: nada. Cambiaría `BR-CLN-013`.
-- **OQ-CLN-002 — ¿Qué manchas hay en las jornadas 6 a 8?**
-  - Por qué sigue abierta: sus filas de la ficha dependen en parte de manchas en el cuartito de
-    limpieza, que #541 dejó fuera, y de manchas en el techo del local y del depósito, que hoy quedan
-    fuera del alcance de la mira. Hasta entonces, las jornadas 6, 7 y 8 arrancan con las de la 4.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.

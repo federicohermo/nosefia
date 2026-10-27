@@ -56,6 +56,7 @@ flowchart TD
   STK -- "el texto de la caja" --> SUB
   SHF -- "jornada que abre" --> ANO
   ANO -- "útiles disponibles y sustituto permitido" --> CLN
+  ANO -- "qué producto trae cada caja" --> STK
   CLN -- "uso aceptado de Poético" --> EMP
   EMP -- "expediente y notas de cada partida" --> INV
   INV -- "pistas y notas que cruzan aperturas" --> EMP
@@ -143,6 +144,9 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   habilitado por jornada; limpieza decide el efecto y sus rechazos. La segunda noche deja
   ausente el azul y habilita Poético para preparar esa mezcla, conservando la mercadería.
   Limpieza entrega el teñido aceptado con identidad; el legajo conserva el hecho para el cierre.
+- **`anomalies` y `store-stock`.** La última noche la anomalía permuta qué producto trae cada
+  caja del depósito. La mercadería decide cuánto entra, sale y se vende, sobre ese contenido real
+  y sin crear identidades nuevas.
 - **`employment-record` e `investigation`.** Cada partida posee un único expediente y sus notas.
   Investigación recibe ese estado, registra pistas y consulta hipótesis, sin escribir disco.
   Las revelaciones por examen conservan su cuenta independiente de las pistas por jornada.
