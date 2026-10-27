@@ -274,6 +274,35 @@ func test_por_cada_ventanal_entra_la_luz_de_afuera() -> void:
 		assert_bool(enfrente).override_failure_message(vidrio.name).is_true()
 
 
+## Las luces de afuera no existen en el juego. Lo que no está horneado toma la luz de las sondas,
+## y una sonda sólo guarda luz rebotada: si los muebles se hornearan con la luz directa, los
+## productos de al lado del ventanal quedarían más oscuros que su estante.
+func test_la_luz_de_afuera_alumbra_igual_los_muebles_y_los_productos() -> void:
+	for luz: OmniLight3D in CorteDeLuz.luces_de_afuera():
+		assert_int(luz.light_bake_mode).is_equal(Light3D.BAKE_DYNAMIC)
+		luz.free()
+
+
+## Sin luz, la emergencia alumbra lo que no está horneado igual que alumbró los muebles al
+## hornear, y su sombra la frena en la pared, como al hornear. Con la luz, vuelve a ser la de
+## siempre.
+func test_durante_el_corte_la_emergencia_es_la_del_horneado() -> void:  # AC-AMB-028
+	var local := _local()
+	var emergencia := _luz_de_emergencia(local) as SpotLight3D
+	var energia := emergencia.light_energy
+	var alcance := emergencia.spot_range
+	var sombra := emergencia.shadow_enabled
+	_hasta_el_corte(local)
+	assert_float(emergencia.light_energy).is_equal(CorteDeLuz.ENERGIA_DE_LA_EMERGENCIA_SIN_LUZ)
+	assert_float(emergencia.spot_range).is_equal(CorteDeLuz.ALCANCE_DE_LA_EMERGENCIA_SIN_LUZ)
+	assert_float(emergencia.spot_angle).is_equal(CorteDeLuz.ANGULO_DE_LA_EMERGENCIA_SIN_LUZ)
+	assert_bool(emergencia.shadow_enabled).is_true()
+	local.get_node(TABLERO).accionar()
+	assert_float(emergencia.light_energy).is_equal(energia)
+	assert_float(emergencia.spot_range).is_equal(alcance)
+	assert_bool(emergencia.shadow_enabled).is_equal(sombra)
+
+
 func _texeles_con_luz(ruta: String) -> float:
 	var capa := Image.load_from_file(ruta).get_region(Rect2i(0, 0, LADO_DEL_ATLAS, LADO_DEL_ATLAS))
 	var con_luz := 0

@@ -34,8 +34,9 @@ const MATERIALES_EMISIVOS := [
 ## marquesina de la estación, los dos faroles y, frente a la entrada, la calle y su cartel. Están
 ## donde la foto del exterior las dibuja. **Sólo existen en el horneado oscuro**: el horneador las
 ## suma en su copia del editor (`addons/hornear`), y el juego no las crea. El horneado normal no
-## las ve. **Son tenues**: más fuertes, la góndola de al lado del ventanal y sus productos quedan
-## tan claros como con las luces del local.
+## las ve. **Hornean sólo su rebote** (`BAKE_DYNAMIC`): lo que no está horneado toma la luz de las
+## sondas, y una sonda guarda sólo luz rebotada. Con la directa, el estante de al lado del
+## ventanal quedaba claro y sus productos, oscuros.
 const POSICIONES_DE_AFUERA: Array[Vector3] = [
 	Vector3(-8.9, 3.6, -1.5),
 	Vector3(-10.7, 3.5, 1.2),
@@ -44,14 +45,16 @@ const POSICIONES_DE_AFUERA: Array[Vector3] = [
 	Vector3(4.9, 3.0, 8.0),
 ]
 const COLOR_DE_AFUERA := Color(0.8, 1.0, 0.92)
-const ENERGIA_DE_AFUERA := 1.0
+const ENERGIA_DE_AFUERA := 4.0
 const ALCANCE_DE_AFUERA := 16.0
 
-## La luz de emergencia del horneado oscuro: alcanza para orientarse alrededor del tablero. En el
-## horneado normal conserva la energía y el alcance de su escena.
-const ENERGIA_DE_LA_EMERGENCIA_AL_HORNEAR := 4.0
-const ALCANCE_DE_LA_EMERGENCIA_AL_HORNEAR := 4.0
-const ANGULO_DE_LA_EMERGENCIA_AL_HORNEAR := 80.0
+## La luz de emergencia de la noche sin luz: alcanza para orientarse alrededor del tablero. Vale
+## para el horneado oscuro y, mientras dura el corte, para el juego: lo que no está horneado la
+## recibe igual que los muebles. Su sombra la frena en la pared del depósito. Con luz, y en el
+## horneado normal, conserva lo de su escena.
+const ENERGIA_DE_LA_EMERGENCIA_SIN_LUZ := 4.0
+const ALCANCE_DE_LA_EMERGENCIA_SIN_LUZ := 4.0
+const ANGULO_DE_LA_EMERGENCIA_SIN_LUZ := 80.0
 
 var _jornada: int = 0
 var _estado: AnomaliasDeLaJornada.Corte = AnomaliasDeLaJornada.corte_al_abrir()
@@ -64,6 +67,7 @@ var _niebla := false
 var _luces: Array[Light3D] = []
 var _reflejos: Dictionary[ReflectionProbe, float] = {}
 var _emision: Dictionary[BaseMaterial3D, float] = {}
+var _emergencia: Dictionary[SpotLight3D, Array] = {}
 
 
 ## Las luces del local que el corte apaga: todas las que no son la de emergencia.
@@ -84,17 +88,22 @@ static func luces_de_afuera() -> Array[OmniLight3D]:
 		luz.light_color = COLOR_DE_AFUERA
 		luz.light_energy = ENERGIA_DE_AFUERA
 		luz.omni_range = ALCANCE_DE_AFUERA
-		luz.light_bake_mode = Light3D.BAKE_STATIC
+		luz.light_bake_mode = Light3D.BAKE_DYNAMIC
 		luces.append(luz)
 	return luces
 
 
-## Le da a la luz de emergencia, sólo para hornear, lo que hace falta para alumbrar el depósito.
+## Le da a la luz de emergencia lo que hace falta para alumbrar el depósito sin luz.
 static func reforzar_la_emergencia(raiz: Node) -> void:
 	for luz: SpotLight3D in raiz.get_tree().get_nodes_in_group(GRUPO_DE_LA_EMERGENCIA):
-		luz.light_energy = ENERGIA_DE_LA_EMERGENCIA_AL_HORNEAR
-		luz.spot_range = ALCANCE_DE_LA_EMERGENCIA_AL_HORNEAR
-		luz.spot_angle = ANGULO_DE_LA_EMERGENCIA_AL_HORNEAR
+		_reforzar(luz)
+
+
+static func _reforzar(luz: SpotLight3D) -> void:
+	luz.light_energy = ENERGIA_DE_LA_EMERGENCIA_SIN_LUZ
+	luz.spot_range = ALCANCE_DE_LA_EMERGENCIA_SIN_LUZ
+	luz.spot_angle = ANGULO_DE_LA_EMERGENCIA_SIN_LUZ
+	luz.shadow_enabled = true
 
 
 ## Los materiales emisivos del local con su emisión de hoy, para devolvérsela al restaurar.
@@ -120,6 +129,12 @@ func preparar(raiz: Node, horno: LightmapGI, entorno: Environment) -> void:
 	_emision = emision_del_local(raiz)
 	for sonda: Node in raiz.find_children("*", "ReflectionProbe", true, false):
 		_reflejos[sonda as ReflectionProbe] = (sonda as ReflectionProbe).intensity
+	for nodo: Node in raiz.find_children("*", "SpotLight3D", true, false):
+		var luz := nodo as SpotLight3D
+		if luz.is_in_group(GRUPO_DE_LA_EMERGENCIA):
+			_emergencia[luz] = [
+				luz.light_energy, luz.spot_range, luz.spot_angle, luz.shadow_enabled
+			]
 
 
 ## Toda jornada abre con luz. La de la noche del corte deja listo el horneado oscuro, así que su
@@ -164,4 +179,13 @@ func _aplicar() -> void:
 		sonda.intensity = _reflejos[sonda] if hay else 0.0
 	for material: BaseMaterial3D in _emision:
 		material.emission_energy_multiplier = _emision[material] if hay else 0.0
+	for luz: SpotLight3D in _emergencia:
+		if not hay:
+			_reforzar(luz)
+			continue
+		var de_siempre: Array = _emergencia[luz]
+		luz.light_energy = de_siempre[0]
+		luz.spot_range = de_siempre[1]
+		luz.spot_angle = de_siempre[2]
+		luz.shadow_enabled = de_siempre[3]
 	luz_cambiada.emit(hay)

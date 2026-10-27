@@ -87,13 +87,17 @@ las sondas de los productos.
   reflejos se apagan en tiempo real: no salen del horneado.
 - **La luz de afuera entra por los ventanales.** Son cinco `OmniLight3D` que existen sólo al
   hornear (`corte_de_luz.gd`). Están donde la foto del exterior dibuja las lámparas de la
-  marquesina y los faroles, y frente a la entrada. Son tenues. Más fuertes, la góndola de al lado
-  del ventanal queda tan clara como con luz, en sus muebles y en sus productos. El juego no las
-  crea. El horneador las cuelga de la raíz **con dueño**: sin `owner`, el
-  `LightmapGI` las pasa de largo y el local sale negro.
-- **La emergencia hornea con más energía, alcance y ángulo** que los de su escena, para alumbrar
-  el depósito alrededor del tablero. Los valores están en `corte_de_luz.gd` y valen sólo para
-  este horneado.
+  marquesina y los faroles, y frente a la entrada. El juego no las crea. El horneador las cuelga
+  de la raíz **con dueño**: sin `owner`, el `LightmapGI` las pasa de largo y el local sale negro.
+- **La luz de afuera hornea sólo su rebote**, en modo `Dynamic`. Una sonda guarda sólo la luz que
+  rebota en las superficies, nunca la directa de una luz. Lo que no está horneado recibe la
+  directa de las luces del juego, y éstas no están en el juego. Horneadas en `Static`, el estante
+  de al lado del ventanal quedaba claro y sus productos, oscuros.
+- **La emergencia tiene más energía, alcance y ángulo** que los de su escena, para alumbrar el
+  depósito alrededor del tablero. Los valores están en `corte_de_luz.gd`. Valen para este
+  horneado y, mientras dura el corte, para el juego. Así las cajas y los objetos del depósito la
+  reciben igual que los muebles. Durante el corte también da sombra, para que no atraviese la
+  pared del depósito hacia las heladeras.
 - **Qué se apaga lo dice un solo archivo**, `corte_de_luz.gd`. Lo usa el juego al cortar y lo
   usa el horneador al hornear, así que no pueden diferir.
 - **Se hornea aparte**, con `python .claude/scripts/hornear.py --sin-luz`. Apaga el local en la
