@@ -73,10 +73,11 @@ func caja(id: Producto.Id) -> ContenidoDeLaCaja:
 ## La mano se pregunta antes que la caja: con la mano llena, sacar anotaría afuera una unidad
 ## que nadie lleva.
 func pedir_retirar(id: Producto.Id, nodo: Node3D) -> bool:
-	var candidato := UnidadDeProducto.new(Catalogo.de(id))
+	var contenido := caja(id)
+	var candidato := UnidadDeProducto.new(contenido.producto)
 	if agarre.manos().motivo_de_rechazo(candidato) != Manos.Rechazo.NINGUNO:
 		return false
-	var unidad := caja(id).sacar()
+	var unidad := contenido.sacar()
 	if unidad == null:
 		return false
 	nodo.set(ReglasDeLosObjetos.PROPIEDAD_DATOS, unidad)
