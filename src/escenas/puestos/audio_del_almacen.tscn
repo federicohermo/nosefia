@@ -30,25 +30,25 @@ transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, -1.75, 2.35, -6.73)
 transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, -0.37, 2.35, -6.73)
 
 [node name="Tubo" type="Marker3D" parent="Emisores/Neon"]
-transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 0.2, 3.9, -4.8)
+transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 0.2, 3.14, -4.8)
 
 [node name="Tubo2" type="Marker3D" parent="Emisores/Neon"]
-transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 0.2, 3.9, -1)
+transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 0.2, 3.14, -1)
 
 [node name="Tubo3" type="Marker3D" parent="Emisores/Neon"]
-transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 4.9, 3.9, -4.8)
+transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 4.9, 3.14, -4.8)
 
 [node name="Tubo4" type="Marker3D" parent="Emisores/Neon"]
-transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 4.9, 3.9, -1)
+transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 4.9, 3.14, -1)
 
 [node name="Tubo5" type="Marker3D" parent="Emisores/Neon"]
-transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 0.2, 3.9, 3)
+transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 0.2, 3.14, 3)
 
 [node name="Tubo6" type="Marker3D" parent="Emisores/Neon"]
-transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 4.9, 3.9, 3)
+transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 4.9, 3.14, 3)
 
 [node name="Tubo7" type="Marker3D" parent="Emisores/Neon"]
-transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 2.7, 3.9, 5.1)
+transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 2.7, 3.14, 5.1)
 
 [node name="Ventanilla" type="Marker3D" parent="Emisores"]
 transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, -0.8, 1.4, 6.38)

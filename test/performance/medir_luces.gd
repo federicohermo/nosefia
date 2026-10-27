@@ -6,7 +6,7 @@ const CANTIDADES: Array[int] = [1, 2, 4, 8, 16]
 const SEGUNDOS := 2.0
 ## El techo del local, que es donde van las luminarias. Las luces se reparten adentro.
 const TECHO := Rect2(-5.0, -7.0, 9.0, 13.0)
-const ALTURA := 3.9
+const ALTURA := 3.284
 ## Alcanza el piso y las paredes desde el techo: es el caso caro, el de una luz que alumbra todo
 ## lo que se ve. Una luz de menos alcance cuesta menos, porque la pagan menos objetos.
 const ALCANCE := 8.0
