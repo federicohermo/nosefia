@@ -77,7 +77,7 @@ Los mandos:
 ## El horneado de la noche del corte de luz
 
 La séptima noche se corta la luz. La oscuridad **no** apaga el `LightmapGI`: el local tiene un
-segundo horneado, `almacen_sin_luz.lmbake` y `almacen_sin_luz.exr`, con la luz de emergencia
+segundo horneado, `almacen_sin_luz.lmbake` y `almacen_sin_luz.exr`. Lleva la luz de emergencia
 sobre el tablero eléctrico y la de afuera. Al cortarse, `corte_de_luz.gd` le cambia los datos al
 mismo `LightmapGI`; al restablecerse, le devuelve los de siempre. Cambian juntos los muebles y
 las sondas de los productos.
@@ -86,10 +86,10 @@ las sondas de los productos.
   luz de afuera. Las demás luces, los materiales emisivos de las lámparas, la niebla y los
   reflejos se apagan en tiempo real: no salen del horneado.
 - **La luz de afuera entra por los ventanales.** Son cinco `OmniLight3D` que existen sólo al
-  hornear, donde la foto del exterior dibuja las lámparas de la marquesina y los faroles, y
-  frente a la entrada (`corte_de_luz.gd`). Son tenues: más fuertes, la góndola de al lado del
-  ventanal queda tan clara como con luz, en sus muebles y en las sondas de sus productos. El
-  juego no las crea. El horneador las cuelga de la raíz **con dueño**: sin `owner`, el
+  hornear (`corte_de_luz.gd`). Están donde la foto del exterior dibuja las lámparas de la
+  marquesina y los faroles, y frente a la entrada. Son tenues. Más fuertes, la góndola de al lado
+  del ventanal queda tan clara como con luz, en sus muebles y en sus productos. El juego no las
+  crea. El horneador las cuelga de la raíz **con dueño**: sin `owner`, el
   `LightmapGI` las pasa de largo y el local sale negro.
 - **La emergencia hornea con más energía, alcance y ángulo** que los de su escena, para alumbrar
   el depósito alrededor del tablero. Los valores están en `corte_de_luz.gd` y valen sólo para
