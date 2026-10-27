@@ -40,6 +40,11 @@ paths:
    `.blend` que cambió sin reexportar es rojo, aunque el cambio no toque una sola malla. El
    exportador recodifica las imágenes: reapuntar una textura cambia el `.glb`.
 
+   **Si cambió la geometría fija, después va `integrar_modelo.py`.** La colisión del casco y de
+   los vidrios no sale del `.glb`: son piezas escritas en `estructura_del_almacen.tscn`. Sin
+   regenerarlas, el juego choca contra la forma vieja y ningún nodo lo ve. El script también
+   reescribe escenas que el cambio no tocó: se commitea sólo lo que corresponde a la geometría.
+
 7. **El lado con el que viaja cada textura lo decide la carpeta de `source/` de donde sale.**
    Los lados de cada grupo y la tabla de carpetas viven en `.claude/scripts/lib/blender.py`.
    Una etiqueta de producto guardada en otra carpeta viaja con el lado de un mueble, y ningún
