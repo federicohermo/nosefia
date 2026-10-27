@@ -164,11 +164,6 @@ DESTINOS = {
 DE_UNA_FILA = ("COSA_DE_MANI", "FLIM_POF", "BURBALOO", "MARRANOS", "POETICO")
 
 
-#: Cuántas columnas lleva como mucho una tanda de ese producto. Lo que sobra del estante se
-#: reparte entre todos los huecos, así que una columna menos le da más aire a todo el estante.
-COLUMNAS_MAXIMAS = {"DURONGA": 6, "DUREXTRA": 6}
-
-
 @dataclass(frozen=True)
 class Tanda:
     """Una tanda de un estante. `fija` repite un producto y abre llena; su fila de adelante
@@ -186,8 +181,12 @@ class Tanda:
 
     @property
     def cantidad_de_filas(self) -> int:
-        """Toda tanda lleva una sola fila: la de atrás ya no se dibuja."""
-        return 1
+        """Una fija puede declarar su encaje; si no, rige la excepción global de una fila."""
+        if self.filas is not None:
+            return self.filas
+        if self.producto in DE_UNA_FILA:
+            return 1
+        return 2
 
 
 def _p(clave: str) -> Tanda:
