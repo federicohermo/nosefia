@@ -20,7 +20,7 @@ const PATRONES_DE_DECISION := "(?m)^\\s*(if|elif|match)\\b|var\\s+_(limpia|tipo|
 ## Lo más claro que puede ser un marrón.
 const LO_MAS_CLARO_DEL_MARRON := 0.5
 
-const JORNADAS: Array[int] = [3, 4, 5]
+const JORNADAS: Array[int] = [3, 4, 5, 6, 7, 8]
 
 ## Dónde quedan los pies del jugador parado en el piso del almacén.
 const ALTURA_DEL_JUGADOR := 0.112
@@ -29,8 +29,9 @@ const ALTURA_DEL_JUGADOR := 0.112
 const LO_MAS_CLARO_DEL_POLVO := 0.25
 
 ## A qué distancias del piso se prueba enfocar una mancha, en horizontal: de la más cómoda a la
-## más estirada que todavía deja la mira dentro de su alcance.
-const DISTANCIAS_DE_MIRA: Array[float] = [1.0, 0.7, 1.3, 1.6]
+## más estirada que todavía deja la mira dentro de su alcance. Las dos últimas son para el techo,
+## que se mira casi desde abajo.
+const DISTANCIAS_DE_MIRA: Array[float] = [1.0, 0.7, 1.3, 1.6, 0.5, 0.35]
 
 
 func _almacen() -> Node3D:
@@ -324,6 +325,45 @@ func test_las_manchas_de_otra_noche_no_se_ven_ni_se_enfocan() -> void:  # AC-CLN
 				. is_false()
 			)
 		assert_int(ajenas).is_equal(PisoDelLocal.Lugar.size() - _piso(almacen).lugares().size())
+
+
+func test_las_manchas_de_techo_se_enfocan_y_se_borran() -> void:  # AC-CLN-078
+	var almacen: Node3D = await _almacen()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var de_techo := 0
+	for jornada: int in [7, 8]:
+		await _abrir(almacen, jornada)
+		var piso := _piso(almacen)
+		for mancha: ManchaQueSeVe in _manchas(almacen):
+			var lugar := mancha.lugar_de_la_mancha()
+			if PisoDelLocal.superficie_de(lugar) != PisoDelLocal.Superficie.TECHO:
+				continue
+			de_techo += 1
+			(
+				assert_bool(await _enfocar(almacen, mancha))
+				. override_failure_message(
+					"`%s` no se enfoca desde el piso en la jornada %d" % [mancha.name, jornada]
+				)
+				. is_true()
+			)
+			var jabon: StringName = _jabon_de(piso.mancha_de(lugar).tipo())
+			piso.usar(ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_INODORO)
+			piso.usar(ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_LAVATORIO)
+			piso.usar(jabon, ReglasDeLaLimpieza.ID_DEL_BALDE)
+			piso.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE)
+			assert_int(piso.pasar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, lugar)).is_equal(
+				ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
+			)
+	assert_int(de_techo).is_greater(0)
+
+
+## El jabón que borra ese tipo de mancha, sacado de las reglas.
+static func _jabon_de(tipo: ReglasDeLaLimpieza.TipoDeMancha) -> StringName:
+	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
+		if ReglasDeLaLimpieza.JABONES[jabon] == ReglasDeLaLimpieza.AGUA_QUE_BORRA[tipo]:
+			return jabon
+	return &""
 
 
 func test_el_paso_toca_solo_las_manchas_del_piso() -> void:  # AC-CLN-058
