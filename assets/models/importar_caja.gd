@@ -14,7 +14,8 @@ func _post_import(escena: Node) -> Object:
 			material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	var guardado := ResourceSaver.save(malla.mesh, "res://assets/models/" + nombre + ".res")
 	assert(guardado == OK, "No se pudo guardar la malla de " + nombre)
-	if nombre != "ticket_impreso":
+	# El hueco del lector choca con la caja de su escena, no con los cables.
+	if nombre not in ["ticket_impreso", "hueco_del_lector"]:
 		# Un casco convexo tiene volumen: un objeto soltado encima no queda adentro del mueble.
 		var forma := malla.mesh.create_convex_shape(true, false)
 		guardado = ResourceSaver.save(forma, "res://assets/models/" + nombre + "_colision.res")
