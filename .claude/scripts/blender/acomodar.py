@@ -48,7 +48,6 @@ from lib.gondola import (  # noqa: E402
     tanda,
 )
 from lib.reparto import (  # noqa: E402
-    COLUMNAS_MAXIMAS,
     ESTANTES,
     HELADERAS,
     MUEBLES,
@@ -186,58 +185,6 @@ def _es_panel(isla, objeto):
     return False
 
 
-def _estantes_alrededor_del_panel(letra, objeto, bm):
-    """Las cuatro caras de una isla de bandejas continuas, partidas por el panel del medio.
-
-    **Cada bandeja es un solo rectángulo que pasa por debajo del panel.** Se corta en memoria por
-    los cuatro planos del panel, y cada pedazo de arriba es del lado donde cae su centro: más allá
-    de las puntas del panel es cabecera, y a los costados es lado. Lo que queda debajo del panel
-    no es de nadie. Así un panel más ancho achica los lados sin tocar el reparto.
-    """
-    panel = next(isla for isla in _islas(bm) if _es_panel(isla, objeto))
-    puntos = [v.co for c in panel for v in c.verts]
-    minimo = Vector(tuple(min(p[eje] for p in puntos) for eje in range(3)))
-    maximo = Vector(tuple(max(p[eje] for p in puntos) for eje in range(3)))
-    for eje, valor in ((0, minimo.x), (0, maximo.x), (1, minimo.y), (1, maximo.y)):
-        normal = Vector((1.0, 0.0, 0.0)) if eje == 0 else Vector((0.0, 1.0, 0.0))
-        geometria = list(bm.verts) + list(bm.edges) + list(bm.faces)
-        bmesh.ops.bisect_plane(
-            bm, geom=geometria, plane_co=normal * valor, plane_no=normal, dist=1e-6
-        )
-    bm.faces.ensure_lookup_table()
-    bm.normal_update()
-    regiones = {}
-    alturas = set()
-    for isla in _islas(bm):
-        if _es_panel(isla, objeto) or _cara_de_arriba(isla) is None:
-            continue
-        if all("Zocalo" in objeto.material_slots[c.material_index].material.name for c in isla):
-            continue
-        for cara in isla:
-            if cara.normal.z < 0.9:
-                continue
-            medio = cara.calc_center_median()
-            if medio.y < minimo.y:
-                nombre = "sur"
-            elif medio.y > maximo.y:
-                nombre = "norte"
-            elif medio.x > maximo.x:
-                nombre = "este"
-            elif medio.x < minimo.x:
-                nombre = "oeste"
-            else:
-                continue
-            altura = round(medio.z, 3)
-            alturas.add(altura)
-            regiones.setdefault((nombre, altura), []).append(cara)
-    niveles = {altura: n for n, altura in enumerate(sorted(alturas))}
-    estantes = {}
-    for (nombre, altura), caras in regiones.items():
-        clave = f"{letra}.{nombre}.{niveles[altura]}"
-        estantes[clave] = Estante(clave, caras, max(caras, key=lambda c: c.calc_area()))
-    return estantes
-
-
 def medir(letra):
     """Los estantes de un mueble, por clave del reparto, con la malla en coordenadas del mundo.
 
@@ -249,7 +196,18 @@ def medir(letra):
     bm.transform(objeto.matrix_world)
     centro = objeto.matrix_world.translation
     if objeto.data.get('estructura_central_unica_v1'):
-        return objeto, bm, _estantes_alrededor_del_panel(letra, objeto, bm)
+        lado = bm.faces.layers.int['lado_de_estante']
+        nivel = bm.faces.layers.int['nivel_de_estante']
+        nombres = {1: 'este', 2: 'oeste', 3: 'norte', 4: 'sur'}
+        regiones = {}
+        for cara in bm.faces:
+            if cara[lado]:
+                regiones.setdefault((cara[lado], cara[nivel]), []).append(cara)
+        estantes = {}
+        for (numero, altura), caras in sorted(regiones.items()):
+            clave = f'{letra}.{nombres[numero]}.{altura}'
+            estantes[clave] = Estante(clave, caras, max(caras, key=lambda c: c.calc_area()))
+        return objeto, bm, estantes
     por_cara = {}
     for isla in _islas(bm):
         cara = _cara_de_arriba(isla)
@@ -550,7 +508,6 @@ def acomodar_mueble(
         largo = derecha - MARGEN - izquierda
         pedidos = [1 if t.fija else FILA_DE_ADELANTE_PEDIDA for t in reparto]
         cuentas = repartir(largo, de_estas)
-        cuentas = [min(c, COLUMNAS_MAXIMAS.get(t.producto, c)) for c, t in zip(cuentas, reparto)]
         retiro = retiros.get(clave, 0.0)
         izquierda += retiro
         largo -= 2 * retiro
