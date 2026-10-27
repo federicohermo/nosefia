@@ -48,9 +48,11 @@ func _ready() -> void:
 
 
 ## El papel real entra recién al imprimir. Este, oculto y sin colisión, deja su material a la vista
-## del calentamiento de shaders, que lo dibuja con el resto del local, detrás de la carga.
+## del calentamiento de shaders, que lo dibuja con el resto del local, detrás de la carga. En el
+## grupo de lo interactuable para que el calentamiento le ponga también el contorno de foco.
 func _agregar_papel_para_calentar() -> void:
 	var cuerpo := RigidBody3D.new()
+	cuerpo.add_to_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	cuerpo.freeze = true
 	cuerpo.collision_layer = 0
 	cuerpo.collision_mask = 0
