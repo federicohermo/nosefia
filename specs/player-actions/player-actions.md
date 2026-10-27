@@ -356,7 +356,7 @@ productos del ticket. El número de ticket NO DEBE repetirse en la partida, y im
 papel NO DEBE cambiar lo escrito en los que ya existen. La impresión en modo manual DEBE verse
 igual que la del lector.
 
-MIENTRAS se lo lleva en la mano, el papel DEBE verse un 20 % más grande que en el mundo, con
+MIENTRAS se lo lleva en la mano, el papel DEBE verse un 40 % más grande que en el mundo, con
 su colisión escalada igual. Al soltarlo o apoyarlo DEBE volver a su tamaño del mundo. MIENTRAS se
 lo examina, DEBE verse más grande que en la mano, de modo que los renglones y el total se lean
 con claridad en 1920 × 1080. El subtítulo del examen NO cambia (BR-SUB-011).
@@ -1027,7 +1027,7 @@ la segunda impresión. Los dos están en el mundo, sin perder su tamaño ni su c
 
 ### AC-PLY-109 — Más grande en la mano y todavía más al examinar *(verifica BR-PLY-033)*
 
-DADO un ticket en el mundo CUANDO se agarra ENTONCES su papel y su colisión miden 1,2 veces lo
+DADO un ticket en el mundo CUANDO se agarra ENTONCES su papel y su colisión miden 1,4 veces lo
 que medían, y CUANDO se lo suelta o se lo apoya ENTONCES vuelven a su tamaño del mundo. DADO el
 ticket en la mano CUANDO se lo examina ENTONCES mide más que en la mano, y en 1920 × 1080 el
 alto de cada renglón alcanza para leerlo. CUANDO se examina un ticket ENTONCES el subtítulo es
