@@ -21,7 +21,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Producto** | qué se vende: identidad, nombre y precio | ítem, SKU |
 | **Unidad** | una pieza de un producto, la que se agarra con la mano | stock, cantidad |
 | **Depósito** | el fondo, con la caja de cada producto: de ahí sale lo que se repone y lo que se vende | almacén, bodega |
-| **Caja del depósito** | la caja de un solo producto, donde está su depósito: se le saca de a una unidad y recibe de vuelta las de su producto, hasta llenarse | cajón, contenedor |
+| **Caja del depósito** | la caja de un solo producto, donde está su depósito: se le saca de a una unidad y recibe de vuelta las de su producto, hasta llenarse. Su producto es su contenido real, que en la última noche no es el de su etiqueta (BR-ANO-004) | cajón, contenedor |
 | **Contenido de la caja** | cuántas unidades tiene la caja: su depósito menos sus unidades afuera | stock, carga |
 | **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó, volvió a su caja ni se tiró: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
@@ -1510,6 +1510,9 @@ solo de sus consumidores.
   que abre decide lo que falta y la disposición inicial de las cajas.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (alimenta y consume): guarda la
   pose de cada caja al cierre y la devuelve al retomar (BR-SAV-022).
+- [`anomalies`](../anomalies/anomalies.md) (consume): qué producto es el contenido real de la
+  caja de cada etiqueta; en la última noche, las reglas de la caja valen sobre ese producto
+  (BR-ANO-004, BR-ANO-005, BR-ANO-006).
 
 ## Preguntas abiertas
 

@@ -15,6 +15,7 @@ const CACA := ReglasDeLaLimpieza.TipoDeMancha.CACA
 const LOCAL := ReglasDelCierre.Habitacion.LOCAL
 const DEPOSITO := ReglasDelCierre.Habitacion.DEPOSITO
 const BANO := ReglasDelCierre.Habitacion.BANO
+const CUARTITO := ReglasDelCierre.Habitacion.CUARTITO
 const PISO := PisoDelLocal.Superficie.PISO
 const PARED := PisoDelLocal.Superficie.PARED
 const TECHO := PisoDelLocal.Superficie.TECHO
@@ -48,6 +49,45 @@ const FICHA := {
 		[MOHO, DEPOSITO, PARED],
 		[POLVO, BANO, PISO],
 		[MOHO, BANO, TECHO],
+		[CACA, BANO, PISO],
+	],
+	6:
+	[
+		[POLVO, LOCAL, PISO],
+		[POLVO, LOCAL, PARED],
+		[MOHO, LOCAL, PARED],
+		[CACA, LOCAL, PISO],
+		[POLVO, DEPOSITO, PISO],
+		[MOHO, DEPOSITO, PARED],
+		[POLVO, BANO, PISO],
+		[CACA, BANO, PISO],
+		[CACA, BANO, PARED],
+	],
+	7:
+	[
+		[POLVO, LOCAL, PISO],
+		[POLVO, LOCAL, TECHO],
+		[MOHO, LOCAL, TECHO],
+		[POLVO, DEPOSITO, PISO],
+		[POLVO, DEPOSITO, PISO],
+		[MOHO, CUARTITO, TECHO],
+		[MOHO, CUARTITO, TECHO],
+		[MOHO, BANO, PARED],
+		[CACA, BANO, TECHO],
+		[CACA, BANO, PISO],
+	],
+	8:
+	[
+		[POLVO, LOCAL, PISO],
+		[POLVO, LOCAL, PISO],
+		[POLVO, LOCAL, PARED],
+		[POLVO, DEPOSITO, PARED],
+		[MOHO, DEPOSITO, PARED],
+		[MOHO, BANO, TECHO],
+		[MOHO, BANO, TECHO],
+		[CACA, BANO, PISO],
+		[CACA, BANO, PARED],
+		[CACA, BANO, PARED],
 		[CACA, BANO, PISO],
 	],
 }
@@ -91,6 +131,15 @@ static func _filas(piso: PisoDelLocal) -> Array:
 	return filas
 
 
+## Cuántas manchas de polvo hay en el local en la fila de esa jornada de la ficha.
+static func _polvo_del_local(jornada: int) -> int:
+	var cuenta := 0
+	for fila: Array in FICHA[jornada]:
+		if fila[0] == POLVO and fila[1] == LOCAL:
+			cuenta += 1
+	return cuenta
+
+
 func test_cada_jornada_trae_las_manchas_de_su_fila_en_la_ficha() -> void:  # AC-CLN-016
 	for jornada: int in FICHA:
 		var piso := PisoDelLocal.de_la_jornada(jornada)
@@ -101,12 +150,12 @@ func test_cada_jornada_trae_las_manchas_de_su_fila_en_la_ficha() -> void:  # AC-
 		)
 
 
-func test_las_jornadas_sin_fila_traen_las_de_la_primera_completa() -> void:  # AC-CLN-016
-	var primera := PisoDelLocal.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+func test_las_ultimas_jornadas_ya_no_traen_las_de_la_cuarta() -> void:  # AC-CLN-016
+	var cuarta := PisoDelLocal.de_la_jornada(4)
 	for jornada: int in [6, 7, 8]:
 		var piso := PisoDelLocal.de_la_jornada(jornada)
-		assert_array(piso.lugares()).contains_exactly_in_any_order(primera.lugares())
-		assert_array(_filas(piso)).contains_exactly_in_any_order(FICHA[4])
+		assert_array(_filas(piso)).has_size(FICHA[jornada].size())
+		assert_array(piso.lugares()).is_not_equal(cuarta.lugares())
 		for lugar: PisoDelLocal.Lugar in piso.lugares():
 			assert_bool(piso.mancha_de(lugar).esta_limpia()).is_false()
 
@@ -151,7 +200,7 @@ func test_las_del_mismo_tipo_y_habitacion_se_borran_por_separado() -> void:  # A
 		for lugar: PisoDelLocal.Lugar in piso.lugares():
 			if piso.mancha_de(lugar).tipo() == POLVO and PisoDelLocal.habitacion_de(lugar) == LOCAL:
 				del_local.append(lugar)
-		assert_int(del_local.size()).is_equal(2 if jornada == 3 else 3)
+		assert_int(del_local.size()).is_equal(_polvo_del_local(jornada))
 		assert_int(_borrar(piso, del_local[0])).is_equal(
 			ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
 		)

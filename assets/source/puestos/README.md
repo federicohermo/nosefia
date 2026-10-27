@@ -31,5 +31,21 @@ y la computadora comparten esa correspondencia. El papel aparece sólo al imprim
 su salida se anima hasta la posición original del ticket del artista.
 
 Clic derecho en el lector registra el producto sostenido sin abrir una pantalla. Clic derecho
-en la registradora abre el generador. Desde la tercera jornada el lector se reemplaza por
+en la registradora abre el generador. Desde la jornada 6 el lector se reemplaza por
 su hueco y el programa pasa a modo manual.
+
+## El hueco del lector
+
+Desde la jornada 6, el lector se reemplaza por `hueco_del_lector.blend`: el marco roto que dejó
+al arrancarlo, el pasacables del fondo y seis cables cortados con el cobre a la vista. No sale
+del artista: lo arma entero `.claude/scripts/blender/hueco_del_lector.py`, que también lo exporta.
+Un cambio se hace en ese script, no en el `.blend`, porque la corrida siguiente lo reemplaza.
+
+```powershell
+blender --background --factory-startup --python-exit-code 1 --python .claude/scripts/blender/hueco_del_lector.py
+```
+
+Los colores salen de una paleta de 16 px, con un color por celda. Su textura no se repite, como
+la del frente del lector: así los dos materiales comparten el programa del shader, y la jornada 6
+no compila uno nuevo en la web. El hueco es redondo, como la base del lector, y su forma de
+choque es un cilindro del mismo radio, en `lector.tscn`. `importar_caja.gd` guarda sólo la malla.

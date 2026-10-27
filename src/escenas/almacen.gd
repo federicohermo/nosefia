@@ -445,7 +445,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	var inventario := Apertura.inventario_con_faltantes(
 		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos
 	)
-	_repositor.arrancar(Estante.new(inventario, productos, vacios))
+	_repositor.arrancar(
+		Estante.new(
+			inventario, productos, vacios, AnomaliasDeLaJornada.contenidos_de_las_cajas(jornada)
+		)
+	)
 	_reposicion_manual.preparar()
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)

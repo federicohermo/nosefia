@@ -31,8 +31,8 @@ const ARCHIVOS_DEL_SPEC := [
 ## balde y la mopa, y el `Turno` ya sabe que la segunda vez no cuenta.
 const PATRONES_DE_ESTADO_PROPIO := "var\\s+_(manchas|limpias|cumplida|balde|mopa|agua)\\b"
 
-const JORNADAS: Array[int] = [3, 4, 5]
-const MANCHAS_POR_JORNADA: Dictionary[int, int] = {3: 4, 4: 7, 5: 8}
+const JORNADAS: Array[int] = [3, 4, 5, 6, 7, 8]
+const MANCHAS_POR_JORNADA: Dictionary[int, int] = {3: 4, 4: 7, 5: 8, 6: 9, 7: 10, 8: 11}
 
 var _turno: Turno = null
 var _avisos_de_tarea: int = 0

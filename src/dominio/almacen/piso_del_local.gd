@@ -36,6 +36,22 @@ enum Lugar {
 	PARED_DE_LA_PUERTA_DEL_BANO,
 	AL_LADO_DE_LA_PUERTA_DEL_CUARTITO,
 	PISO_DEL_OTRO_INODORO,
+	PARED_DE_LA_ULTIMA_HELADERA,
+	PISO_DE_LAS_ESTANTERIAS_DEL_FONDO,
+	PISO_DE_LA_ULTIMA_ESTANTERIA,
+	PARED_ARRIBA_DEL_MISMO_INODORO,
+	PISO_DEL_TACHO_DE_CLIENTES,
+	TECHO_DEL_MEDIO_DEL_LOCAL,
+	TECHO_DE_LA_PUERTA_DE_ENTRADA,
+	PISO_DEL_PORTON,
+	PISO_DE_UNA_ESTANTERIA,
+	TECHO_DEL_CUARTITO,
+	OTRO_TECHO_DEL_CUARTITO,
+	TECHO_SOBRE_UN_CUBICULO,
+	PARED_DE_LA_OTRA_GONDOLA,
+	TECHO_ARRIBA_DE_UN_CUBICULO,
+	TECHO_ARRIBA_DE_OTRO_CUBICULO,
+	OTRA_PARED_DEL_MISMO_INODORO,
 }
 
 ## Sobre qué está la mancha. El paso del jugador toca sólo las del piso.
@@ -66,12 +82,26 @@ const LUGARES: Dictionary[Lugar, Array] = {
 	Lugar.AL_LADO_DE_LA_PUERTA_DEL_CUARTITO:
 	[ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PARED],
 	Lugar.PISO_DEL_OTRO_INODORO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
+	Lugar.PARED_DE_LA_ULTIMA_HELADERA: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PARED],
+	Lugar.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.PISO_DE_LA_ULTIMA_ESTANTERIA: [ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PISO],
+	Lugar.PARED_ARRIBA_DEL_MISMO_INODORO: [ReglasDelCierre.Habitacion.BANO, Superficie.PARED],
+	Lugar.PISO_DEL_TACHO_DE_CLIENTES: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.TECHO_DEL_MEDIO_DEL_LOCAL: [ReglasDelCierre.Habitacion.LOCAL, Superficie.TECHO],
+	Lugar.TECHO_DE_LA_PUERTA_DE_ENTRADA: [ReglasDelCierre.Habitacion.LOCAL, Superficie.TECHO],
+	Lugar.PISO_DEL_PORTON: [ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PISO],
+	Lugar.PISO_DE_UNA_ESTANTERIA: [ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PISO],
+	Lugar.TECHO_DEL_CUARTITO: [ReglasDelCierre.Habitacion.CUARTITO, Superficie.TECHO],
+	Lugar.OTRO_TECHO_DEL_CUARTITO: [ReglasDelCierre.Habitacion.CUARTITO, Superficie.TECHO],
+	Lugar.TECHO_SOBRE_UN_CUBICULO: [ReglasDelCierre.Habitacion.BANO, Superficie.TECHO],
+	Lugar.PARED_DE_LA_OTRA_GONDOLA: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PARED],
+	Lugar.TECHO_ARRIBA_DE_UN_CUBICULO: [ReglasDelCierre.Habitacion.BANO, Superficie.TECHO],
+	Lugar.TECHO_ARRIBA_DE_OTRO_CUBICULO: [ReglasDelCierre.Habitacion.BANO, Superficie.TECHO],
+	Lugar.OTRA_PARED_DEL_MISMO_INODORO: [ReglasDelCierre.Habitacion.BANO, Superficie.PARED],
 }
 
 ## Qué mancha pone cada jornada en cada lugar, según la ficha: `jornada → {Lugar: TipoDeMancha}`.
 ##
-## Las jornadas 6 a 8 conservan la fila de la primera jornada completa hasta incorporar sus
-## repartos de la ficha, que incluyen techos hoy fuera del alcance de la mira.
 const MANCHAS_POR_JORNADA: Dictionary[int, Dictionary] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1:
 	{
@@ -101,6 +131,45 @@ const MANCHAS_POR_JORNADA: Dictionary[int, Dictionary] = {
 		Lugar.TECHO_DEL_BANO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
 		Lugar.BAJO_LA_PUERTA_DEL_CUBICULO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
 	},
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2:
+	{
+		Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.PARED_DE_LA_PUERTA_DEL_BANO: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.PARED_DE_LA_ULTIMA_HELADERA: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+		Lugar.PISO_DE_LA_ULTIMA_ESTANTERIA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.AL_LADO_DE_LA_PUERTA_DEL_CUARTITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.PISO_DEL_OTRO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+		Lugar.PARED_ARRIBA_DEL_MISMO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	},
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3:
+	{
+		Lugar.PISO_DEL_TACHO_DE_CLIENTES: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.TECHO_DEL_MEDIO_DEL_LOCAL: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.TECHO_DE_LA_PUERTA_DE_ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.PISO_DEL_PORTON: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.PISO_DE_UNA_ESTANTERIA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.TECHO_DEL_CUARTITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.OTRO_TECHO_DEL_CUARTITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.PARED_ARRIBA_DEL_MISMO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.TECHO_SOBRE_UN_CUBICULO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+		Lugar.PISO_DEL_OTRO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	},
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 4:
+	{
+		Lugar.FRENTE_AL_MOSTRADOR: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.GONDOLAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.PARED_DE_LA_OTRA_GONDOLA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.AL_LADO_DEL_CONTENEDOR: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.ESQUINA_ALTA_DEL_DEPOSITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.TECHO_ARRIBA_DE_UN_CUBICULO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.TECHO_ARRIBA_DE_OTRO_CUBICULO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.PISO_DEL_OTRO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+		Lugar.PARED_ARRIBA_DEL_MISMO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+		Lugar.OTRA_PARED_DEL_MISMO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+		Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	},
 }
 var _manchas: Dictionary[Lugar, Mancha] = {}
 var _balde := Balde.new()
@@ -126,9 +195,7 @@ func _init(
 ## Se construye entero cada vez: con un piso compartido, lo borrado anoche llegaría borrado esta
 ## noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
 static func de_la_jornada(jornada: int) -> PisoDelLocal:
-	var fila: Dictionary = MANCHAS_POR_JORNADA.get(
-		jornada, MANCHAS_POR_JORNADA[ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA]
-	)
+	var fila: Dictionary = MANCHAS_POR_JORNADA.get(jornada, {})
 	var manchas: Dictionary[Lugar, Mancha] = {}
 	if not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR):
 		return PisoDelLocal.new(manchas, jornada)

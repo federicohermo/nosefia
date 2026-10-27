@@ -407,6 +407,28 @@ func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # 
 			agarre.entregar()
 
 
+func test_el_hueco_choca_en_su_base_redonda_y_no_en_las_esquinas() -> void:  # AC-CTR-029
+	var almacen := await _abrir()
+	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
+	var malla: MeshInstance3D = lector.get_node("Malla")
+	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR)
+	await get_tree().physics_frame
+	var planta := malla.mesh.get_aabb()
+	var centro := planta.get_center()
+	var esquina := centro + (planta.end - centro) * Vector3(0.9, 0.0, 0.9)
+	assert_bool(_choca(lector, malla.to_global(centro))).is_true()
+	assert_bool(_choca(lector, malla.to_global(esquina))).is_false()
+
+
+func _choca(cuerpo: PhysicsBody3D, punto: Vector3) -> bool:
+	var consulta := PhysicsPointQueryParameters3D.new()
+	consulta.position = punto
+	for choque in cuerpo.get_world_3d().direct_space_state.intersect_point(consulta):
+		if choque.collider == cuerpo:
+			return true
+	return false
+
+
 func test_la_partida_retomada_en_siete_es_manual_y_una_nueva_es_automatica() -> void:
 	var datos := {
 		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):

@@ -57,15 +57,18 @@ const NOMBRES_DE_LA_UNIDAD := {
 	EntradaSonora.Sonoridad.BOTELLA_PLASTICA: ["botella", "botellas"],
 }
 
+## El producto que trae, que es el de su etiqueta salvo en la última noche (BR-ANO-004).
 var producto: Producto
 
 ## El estante de la noche: el que cuenta el depósito y lo que salió de cada caja.
 var _estante: Estante
 
 
-func _init(un_producto: Producto, un_estante: Estante) -> void:
-	producto = un_producto
+func _init(la_etiqueta: Producto, un_estante: Estante) -> void:
 	_estante = un_estante
+	producto = la_etiqueta
+	if la_etiqueta != null and _estante.contenidos.has(la_etiqueta.id):
+		producto = Catalogo.de(_estante.contenidos[la_etiqueta.id])
 
 
 ## Cuántas unidades tiene: el depósito de su producto menos las que salieron y no se colocaron.
