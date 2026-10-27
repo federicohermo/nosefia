@@ -7,7 +7,7 @@ extends SubViewport
 const FUENTE := preload("res://assets/ui/manada/unscii-16.ttf")
 const PAPEL := preload("res://assets/ui/manada/ticket_papel.png")
 const SEPARADOR := preload("res://assets/ui/manada/ticket_separador.svg")
-## Papel liso con los mismos dientes que el frente: es lo que se ve del otro lado.
+## El dorso del diseño de Figma `1578:535`: papel sin escritura y con el mismo borde dentado.
 const DORSO := preload("res://assets/ui/manada/ticket_dorso.png")
 const TINTA := Color("191b1a")
 

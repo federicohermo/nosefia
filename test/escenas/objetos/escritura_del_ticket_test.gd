@@ -3,6 +3,10 @@ extends GdUnitTestSuite
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 const DISENO := preload("res://assets/ui/manada/ticket_papel.png")
 const TOLERANCIA := 0.0001
+## Cuánto del ancho ocupa la franja negra y dentada del borde, con aire.
+const MARGEN_DEL_BORDE := 0.1
+## Por debajo de esto un píxel es tinta: el papel claro y sus arrugas quedan muy por encima.
+const LUMINANCIA_DE_LA_TINTA := 0.5
 const PASO_DE_LA_MUESTRA := 16
 
 
@@ -59,25 +63,20 @@ func test_el_dorso_no_lleva_la_escritura_del_frente() -> void:
 	assert_object(del_frente).is_not_null()
 
 
-func test_el_dorso_es_papel_liso_del_color_del_papel() -> void:
+func test_el_dorso_no_tiene_tinta_adentro_del_borde() -> void:
 	var malla := _malla_del_papel()
 	var dorso := _dorso_de(malla)
 	assert_int(dorso).is_greater_equal(0)
 	if dorso < 0:
 		return
 	var imagen := _textura_de(malla, dorso).get_image()
-	var del_papel := _color_del_papel()
-	var visibles := 0
-	for y in range(0, imagen.get_height(), 4):
-		for x in range(0, imagen.get_width(), 4):
-			var color := imagen.get_pixel(x, y)
-			if color.a < 0.5:
-				continue
-			visibles += 1
-			assert_float(color.r).is_equal_approx(del_papel.r, 0.02)
-			assert_float(color.g).is_equal_approx(del_papel.g, 0.02)
-			assert_float(color.b).is_equal_approx(del_papel.b, 0.02)
-	assert_int(visibles).is_greater(0)
+	var margen := roundi(imagen.get_width() * MARGEN_DEL_BORDE)
+	var con_tinta := 0
+	for y in range(margen, imagen.get_height() - margen):
+		for x in range(margen, imagen.get_width() - margen):
+			if imagen.get_pixel(x, y).get_luminance() <= LUMINANCIA_DE_LA_TINTA:
+				con_tinta += 1
+	assert_int(con_tinta).is_equal(0)
 
 
 func test_el_dorso_tiene_los_mismos_dientes_que_el_frente() -> void:
@@ -112,17 +111,3 @@ func _lejos_de_un_borde(imagen: Image, x: int, y: int) -> bool:
 		if (imagen.get_pixelv(vecino).a >= 0.5) != visible:
 			return false
 	return true
-
-
-## El promedio del fondo claro del diseño, sin la tinta ni los dientes.
-func _color_del_papel() -> Color:
-	var diseno := DISENO.get_image()
-	var suma := Color(0, 0, 0, 0)
-	var cuantos := 0
-	for y in range(0, diseno.get_height(), 4):
-		for x in range(0, diseno.get_width(), 4):
-			var color := diseno.get_pixel(x, y)
-			if color.a > 0.99 and color.get_luminance() > 0.7:
-				suma += color
-				cuantos += 1
-	return suma / cuantos
