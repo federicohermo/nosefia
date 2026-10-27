@@ -423,9 +423,9 @@ recibirlo NO DEBE registrar una pista ni contar como hipótesis elegida. El enca
 ### BR-INV-044 — La quinta jornada se cierra eligiendo una hipótesis
 
 La reflexión de jornada 5 DEBE mostrar el encabezado «Hoy faltaba uno de los jabones para la
-limpieza del local. No me quiero empezar a perseguir, pero…». El recuadro DEBE mostrar una opción por vez, entre las que habilita BR-INV-039, con su
-título y su texto de hipótesis de BR-INV-041. La primera mostrada DEBE ser la primera de esa
-lista. Con una opción DEBE ofrecer sólo «Elegir». Con dos DEBE ofrecer «Anterior», «Siguiente»
+limpieza del local. No me quiero empezar a perseguir, pero…». El recuadro DEBE mostrar una
+opción por vez, entre las que habilita BR-INV-039, con su título y su texto de hipótesis de
+BR-INV-041. La primera mostrada DEBE ser la primera de esa lista. Con una opción DEBE ofrecer sólo «Elegir». Con dos DEBE ofrecer «Anterior», «Siguiente»
 y «Elegir»; «Anterior» y «Siguiente» DEBEN mostrar la otra opción. Navegar NO DEBE elegir,
 agregar notas ni modificar el expediente.
 
