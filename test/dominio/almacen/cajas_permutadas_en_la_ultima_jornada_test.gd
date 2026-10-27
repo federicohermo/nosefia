@@ -164,6 +164,7 @@ func test_antes_de_la_ultima_noche_examinar_dice_la_etiqueta() -> void:  # AC-AN
 func test_la_venta_resta_de_la_caja_que_trae_el_producto() -> void:  # AC-ANO-009
 	var vendido := Catalogo.de(Producto.Id.ACTRONCITO)
 	var inventario := _inventario()
+	inventario.ingresar(vendido, Inventario.Ubicacion.GONDOLA, 1)
 	var estante := _estante(_ultima(), inventario)
 	var etiqueta_que_lo_trae := Producto.Id.ACTRONCITO
 	for producto in Catalogo.todos():

@@ -324,8 +324,9 @@ Lo que más se rompe:
 - **Un criterio que cambia qué entrega una caja lleva a «Se escribe» a quien arma la apertura
   y a quien viste la unidad en la mano.** El `rg` sigue `ContenidoDeLaCaja`, `Estante.new(` y
   `pedir_retirar`. En el #455, la permutación de cajas pedía tocar `almacen.gd`, que construye el
-  estante; `repositor.gd`, que prueba la mano con el producto de la etiqueta; y
-  `reposicion_manual.gd`, que dibujaba la unidad con la malla de la etiqueta.
+  estante; `repositor.gd`, que prueba la mano con el producto de la etiqueta;
+  `reposicion_manual.gd`, que dibujaba la unidad con la malla de la etiqueta; y
+  `geometria_de_prueba_test.gd`, que retiraba por etiqueta en J8 y comparaba otro producto.
 - **Un flujo que gana un paso lleva a «Se escribe» los fixtures que lo atraviesan.** Se buscan
   los ayudantes compartidos de `test/` y las suites que siguen de noche, no sólo las que nombran
   el flujo. En el #527, la jornada 2 pasó a abrir con instrucciones, y `tickets_del_cierre_test.gd`
