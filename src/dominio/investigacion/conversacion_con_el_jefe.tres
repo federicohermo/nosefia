@@ -328,7 +328,7 @@ identidad = "J1_Intro11"
 jornada = 4
 orden = 17
 de_quien = "Enrique Peldaño"
-texto = "Para esta noche, te pido [b]ORGANIZAR LAS CAJAS[/b] que dejó el proveedor. Acomodalas [b]en los estantes del depósito[/b] y que no quede ni una en el piso, ¿ok?"
+texto = "Hoy por fin se dignó a contestarme el desgraciado del proveedor. Así que, para esta noche, te pido [b]ORGANIZAR LAS CAJAS[/b] que dejó. Acomodalas [b]en los estantes del depósito[/b] y que no quede ni una en el piso, ¿ok?"
 
 [sub_resource type="Resource" id="Intro12"]
 script = ExtResource("mensaje")
