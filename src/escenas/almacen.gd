@@ -393,7 +393,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		_colilla.collision_layer = 0
 		_colilla.collision_mask = 0
 		_colilla.process_mode = Node.PROCESS_MODE_DISABLED
-	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
+	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias(jornada))
