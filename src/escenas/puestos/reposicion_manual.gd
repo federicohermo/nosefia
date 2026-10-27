@@ -176,15 +176,12 @@ func posiciones() -> Dictionary[Producto.Id, Array]:
 	return por_producto
 
 
-## Los productos cuyas tandas tienen una sola fila (BR-STK-025).
+## Los productos cuyas tandas se ven en una sola fila (BR-STK-025): todos los que tienen fila de
+## adelante, porque la de atrás no se dibuja.
 func productos_de_una_fila() -> Dictionary[Producto.Id, bool]:
 	var por_producto: Dictionary[Producto.Id, bool] = {}
 	for producto in Catalogo.todos():
-		var adelante := disposicion.filas_de_adelante[producto.id]
-		por_producto[producto.id] = (
-			adelante > 0
-			and DisposicionDeLaGondola.copias(disposicion.principales[producto.id]) == adelante
-		)
+		por_producto[producto.id] = disposicion.filas_de_adelante[producto.id] > 0
 	return por_producto
 
 
