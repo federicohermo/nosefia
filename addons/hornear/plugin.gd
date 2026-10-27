@@ -82,10 +82,11 @@ func _sin_luz() -> bool:
 	return OS.get_environment(VARIABLE_DE_LA_VARIANTE) == VARIANTE_SIN_LUZ
 
 
-## Deja encendida la luz de emergencia y las de afuera, que entran por los ventanales: las otras no
-## entran al horneado y los emisivos del local no alumbran. Es lo mismo que apaga el juego al
-## cortar la luz (`corte_de_luz.gd`). Sin datos previos, el horneado pide dónde guardarse y deja un
-## archivo nuevo. **Nada de esto se guarda**: la escena queda como estaba.
+## Deja encendida la luz de emergencia y abre el local al cielo de afuera, que entra por los
+## ventanales: las otras luces no entran al horneado y los emisivos del local no alumbran. Es lo
+## mismo que apaga el juego al cortar la luz (`corte_de_luz.gd`). Sin datos previos, el horneado
+## pide dónde guardarse y deja un archivo nuevo. **Nada de esto se guarda**: la escena queda como
+## estaba.
 func _apagar_el_local(raiz: Node, horno: LightmapGI) -> void:
 	horno.light_data = null
 	var apagadas := CorteDeLuz.luces_del_local(raiz)
@@ -95,10 +96,7 @@ func _apagar_el_local(raiz: Node, horno: LightmapGI) -> void:
 	for material: BaseMaterial3D in emision:
 		material.emission_energy_multiplier = 0.0
 	CorteDeLuz.reforzar_la_emergencia(raiz)
-	for luz in CorteDeLuz.luces_de_afuera():
-		raiz.add_child(luz)
-		# El horneador pasa de largo lo que no tiene dueño: lo toma por un auxiliar del editor.
-		luz.owner = raiz
+	CorteDeLuz.abrir_al_cielo(horno)
 	print(
 		(
 			"[hornear] sin luz: %d luces y %d materiales emisivos apagados"

@@ -30,23 +30,13 @@ const MATERIALES_EMISIVOS := [
 	&"local_cielorraso", &"bano_difusor", &"cuartito_tubo_difusor", &"deposito_lampara_panel"
 ]
 
-## Las luces de afuera que entran por los ventanales en la noche sin luz: las dos lámparas de la
-## marquesina de la estación, los dos faroles y, frente a la entrada, la calle y su cartel. Están
-## donde la foto del exterior las dibuja. **Sólo existen en el horneado oscuro**: el horneador las
-## suma en su copia del editor (`addons/hornear`), y el juego no las crea. El horneado normal no
-## las ve. **Hornean sólo su rebote** (`BAKE_DYNAMIC`): lo que no está horneado toma la luz de las
-## sondas, y una sonda guarda sólo luz rebotada. Con la directa, el estante de al lado del
-## ventanal quedaba claro y sus productos, oscuros.
-const POSICIONES_DE_AFUERA: Array[Vector3] = [
-	Vector3(-8.9, 3.6, -1.5),
-	Vector3(-10.7, 3.5, 1.2),
-	Vector3(-5.5, 3.2, -6.6),
-	Vector3(-6.5, 5.3, 6.2),
-	Vector3(4.9, 3.0, 8.0),
-]
+## La luz de afuera entra por los ventanales en la noche sin luz: es el cielo del horneado oscuro.
+## **Sólo existe en ese horneado**; el horneado normal conserva el entorno de la escena. Un rayo
+## que sale por un vidrio trae este color, y las sondas lo guardan con su dirección. Así, lo que
+## mira al ventanal recibe más luz que lo que mira adentro del local. Una luz puntual afuera no
+## sirve: la sonda guarda sólo su rebote, que llega desde adentro del local.
 const COLOR_DE_AFUERA := Color(0.8, 1.0, 0.92)
-const ENERGIA_DE_AFUERA := 4.0
-const ALCANCE_DE_AFUERA := 16.0
+const ENERGIA_DE_AFUERA := 0.35
 
 ## La luz de emergencia de la noche sin luz: alcanza para orientarse alrededor del tablero. Vale
 ## para el horneado oscuro y, mientras dura el corte, para el juego: lo que no está horneado la
@@ -79,18 +69,12 @@ static func luces_del_local(raiz: Node) -> Array[Light3D]:
 	return luces
 
 
-## Las luces de afuera del horneado oscuro, sin colgar de ningún lado.
-static func luces_de_afuera() -> Array[OmniLight3D]:
-	var luces: Array[OmniLight3D] = []
-	for posicion: Vector3 in POSICIONES_DE_AFUERA:
-		var luz := OmniLight3D.new()
-		luz.position = posicion
-		luz.light_color = COLOR_DE_AFUERA
-		luz.light_energy = ENERGIA_DE_AFUERA
-		luz.omni_range = ALCANCE_DE_AFUERA
-		luz.light_bake_mode = Light3D.BAKE_DYNAMIC
-		luces.append(luz)
-	return luces
+## Le pone al horneado el cielo de la noche sin luz. El horneador no guarda la escena, así que el
+## `LightmapGI` del juego queda como estaba.
+static func abrir_al_cielo(horno: LightmapGI) -> void:
+	horno.environment_mode = LightmapGI.ENVIRONMENT_MODE_CUSTOM_COLOR
+	horno.environment_custom_color = COLOR_DE_AFUERA
+	horno.environment_custom_energy = ENERGIA_DE_AFUERA
 
 
 ## Le da a la luz de emergencia lo que hace falta para alumbrar el depósito sin luz.

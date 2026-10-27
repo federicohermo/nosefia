@@ -85,14 +85,14 @@ las sondas de los productos.
 - **Qué queda encendido:** la luz del grupo `luz_de_emergencia`, que es `LuzDelTablero`, y la
   luz de afuera. Las demás luces, los materiales emisivos de las lámparas, la niebla y los
   reflejos se apagan en tiempo real: no salen del horneado.
-- **La luz de afuera entra por los ventanales.** Son cinco `OmniLight3D` que existen sólo al
-  hornear (`corte_de_luz.gd`). Están donde la foto del exterior dibuja las lámparas de la
-  marquesina y los faroles, y frente a la entrada. El juego no las crea. El horneador las cuelga
-  de la raíz **con dueño**: sin `owner`, el `LightmapGI` las pasa de largo y el local sale negro.
-- **La luz de afuera hornea sólo su rebote**, en modo `Dynamic`. Una sonda guarda sólo la luz que
-  rebota en las superficies, nunca la directa de una luz. Lo que no está horneado recibe la
-  directa de las luces del juego, y éstas no están en el juego. Horneadas en `Static`, el estante
-  de al lado del ventanal quedaba claro y sus productos, oscuros.
+- **La luz de afuera es el cielo del horneado oscuro.** El horneador le pone al `LightmapGI` un
+  entorno de color propio (`corte_de_luz.gd`). Un rayo que sale por un vidrio trae ese color, y
+  las sondas lo guardan con su dirección. Así, un producto que mira al ventanal recibe más luz que
+  uno que mira adentro del local. El juego no lo ve: la escena no se guarda.
+- **Una luz puntual afuera no sirve para los productos.** Una sonda guarda la luz que llega de
+  las superficies, nunca la directa de una luz. El rebote de una luz de afuera llega a la sonda
+  desde el estante alumbrado, adentro del local. Con cinco luces así, la cara de la góndola que
+  miraba al ventanal quedaba más oscura que la de adentro.
 - **La emergencia tiene más energía, alcance y ángulo** que los de su escena, para alumbrar el
   depósito alrededor del tablero. Los valores están en `corte_de_luz.gd`. Valen para este
   horneado y, mientras dura el corte, para el juego. Así las cajas y los objetos del depósito la
@@ -109,4 +109,7 @@ las sondas de los productos.
 
 `test/escenas/iluminacion_horneada_test.gd`: que el `LightmapGI` tenga datos, y que ninguna
 malla con GI estático se haya quedado afuera del horneado. También que ninguna hoja que abre
-haya entrado. Las sondas no se pueden verificar en headless: el `.lmbake` se carga sin ellas.
+haya entrado. En headless el `.lmbake` se carga sin sondas. Por eso
+`test/escenas/sondas_del_horneado.gd` las lee del archivo y las muestrea como el motor. Con eso,
+`corte_de_luz_en_el_almacen_test.gd` verifica que la cara del ventanal reciba más luz que la de
+adentro.
