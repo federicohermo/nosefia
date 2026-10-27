@@ -3,8 +3,8 @@
 blender --background --factory-startup --python-exit-code 1 --python hueco_del_lector.py
 
 Arma la fuente desde cero, la guarda en assets/source/puestos/hueco_del_lector.blend y la
-exporta a assets/models/hueco_del_lector.glb. El origen es el centro de la caja de choque del
-hueco en lector.tscn, y Z de Blender es Y de Godot. Todo cae adentro de su planta.
+exporta a assets/models/hueco_del_lector.glb. El origen es el centro de la forma de choque del
+hueco en lector.tscn, y Z de Blender es Y de Godot. Todo cae adentro de la base del lector.
 """
 
 import math
@@ -20,9 +20,10 @@ FUENTE = RAIZ / "assets/source/puestos/hueco_del_lector.blend"
 SALIDA = RAIZ / "assets/models/hueco_del_lector.glb"
 NOMBRE = "hueco_del_lector"
 
-# La caja de choque mide 0,1615 de lado y 0,025 de alto; el escritorio queda 2,5 mm abajo
-# de su centro. Los cables caen hacia -Y, que en Godot es +Z: el lado del empleado.
-MITAD = 0.080
+# La base del lector es un cilindro de 0,1615 de diámetro; el escritorio queda 2,5 mm abajo
+# del centro de su forma de choque. Los cables caen hacia -Y, que en Godot es +Z: el lado del
+# empleado.
+RADIO = 0.080
 ESCRITORIO = -0.0025
 PARED = 0.012
 FONDO = ESCRITORIO + 0.0005
@@ -210,13 +211,10 @@ def _ficha_usb(pieza, punta, marco):
 
 def _marco(pieza, azar):
     """El borde que quedó del lector: roto arriba, con el plástico claro en la rotura."""
-    por_lado = 10
-    perimetro = []
-    for lado in range(4):
-        for paso in range(por_lado):
-            t = -1 + 2 * paso / por_lado
-            perimetro.append([(t, -1), (1, t), (-t, 1), (-1, -t)][lado])
-    adentro = (MITAD - PARED) / MITAD
+    lados = 40
+    perimetro = [(math.cos(2 * math.pi * i / lados), math.sin(2 * math.pi * i / lados))
+                 for i in range(lados)]
+    adentro = (RADIO - PARED) / RADIO
     alturas = []
     for indice in range(len(perimetro)):
         altura = 0.0118 - azar.uniform(0.0, 0.006)
@@ -225,9 +223,9 @@ def _marco(pieza, azar):
         alturas.append(altura)
     vertices, caras = [], []
     for (x, y), altura in zip(perimetro, alturas):
-        vertices += [(x * MITAD, y * MITAD, ESCRITORIO - 0.001), (x * MITAD, y * MITAD, altura),
-                     (x * MITAD * adentro, y * MITAD * adentro, altura - 0.001),
-                     (x * MITAD * adentro, y * MITAD * adentro, FONDO)]
+        vertices += [(x * RADIO, y * RADIO, ESCRITORIO - 0.001), (x * RADIO, y * RADIO, altura),
+                     (x * RADIO * adentro, y * RADIO * adentro, altura - 0.001),
+                     (x * RADIO * adentro, y * RADIO * adentro, FONDO)]
     total = len(perimetro)
     paredes, bordes = [], []
     for i in range(total):
@@ -236,10 +234,8 @@ def _marco(pieza, azar):
         bordes.append((a + 1, b + 1, b + 2, a + 2))
     pieza.agregar(vertices, paredes, "marco")
     pieza.agregar(vertices, bordes, "rotura")
-    interior = MITAD - PARED
-    pieza.agregar([(-interior, -interior, FONDO), (interior, -interior, FONDO),
-                   (interior, interior, FONDO), (-interior, interior, FONDO)],
-                  [(0, 1, 2, 3)], "fondo")
+    pieza.agregar([(x * (RADIO - PARED), y * (RADIO - PARED), FONDO) for x, y in perimetro],
+                  [tuple(range(lados))], "fondo")
 
 
 def _boca(pieza, centro, radio):
@@ -260,8 +256,9 @@ def _boca(pieza, centro, radio):
 
 def _tornillos(pieza, azar):
     """Los soportes del lector, cortados a distintas alturas."""
+    distancia = (RADIO - PARED - 0.008) / math.sqrt(2)
     for x, y in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
-        centro = Vector((x * (MITAD - PARED - 0.006), y * (MITAD - PARED - 0.006), FONDO))
+        centro = Vector((x * distancia, y * distancia, FONDO))
         alto = azar.uniform(0.003, 0.008)
         lados = 8
         vertices = []
@@ -289,17 +286,17 @@ def _cables(pieza, boca, azar):
         return [abajo, boca + Vector((0, 0, 0.002))] + [boca + Vector(p) for p in puntos]
 
     punta, marco = _tubo(pieza, desde((0.0, -0.004, 0.016), (-0.012, -0.02, 0.03),
-                                      (-0.034, -0.044, 0.026), (-0.05, -0.062, 0.014),
-                                      (-0.058, -0.072, 0.009)),
+                                      (-0.027, -0.035, 0.026), (-0.04, -0.05, 0.014),
+                                      (-0.046, -0.058, 0.009)),
                          0.004, "negro", tapa="goma")
     _hilos(pieza, punta, marco, 0.004, ["marron", "azul", "verde"], azar)
     punta, marco = _tubo(pieza, desde((0.006, 0.004, 0.022), (0.018, -0.006, 0.042),
-                                      (0.032, -0.026, 0.046), (0.044, -0.044, 0.034),
-                                      (0.048, -0.054, 0.024)),
+                                      (0.032, -0.026, 0.046), (0.034, -0.034, 0.034),
+                                      (0.036, -0.042, 0.024)),
                          0.003, "gris")
     _ficha_usb(pieza, punta, marco)
     punta, marco = _tubo(pieza, desde((-0.004, 0.008, 0.012), (-0.026, 0.016, 0.022),
-                                      (-0.048, 0.02, 0.016), (-0.062, 0.024, 0.01)),
+                                      (-0.042, 0.018, 0.016), (-0.052, 0.02, 0.01)),
                          0.0032, "azul", tapa="goma")
     _hilos(pieza, punta, marco, 0.0032, ["naranja", "verde", "azul", "marron"], azar)
     for color, radio, puntos in (
@@ -355,7 +352,8 @@ def exportar(objeto):
     minimo = [round(min(p[i] for p in puntos), 4) for i in range(3)]
     maximo = [round(max(p[i] for p in puntos), 4) for i in range(3)]
     print(f"{NOMBRE}: {len(objeto.data.polygons)} caras, de {minimo} a {maximo}")
-    assert all(abs(c) <= MITAD for c in minimo[:2] + maximo[:2]), "Sale de la planta del hueco"
+    alcance = round(max(math.hypot(p[0], p[1]) for p in puntos), 4)
+    assert alcance <= RADIO, f"Sale de la base del lector: {alcance:.4f} > {RADIO}"
 
 
 if __name__ == "__main__":

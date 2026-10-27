@@ -47,5 +47,5 @@ blender --background --factory-startup --python-exit-code 1 --python .claude/scr
 
 Los colores salen de una paleta de 16 px, con un color por celda. Su textura no se repite, como
 la del frente del lector: así los dos materiales comparten el programa del shader, y la jornada 6
-no compila uno nuevo en la web. La forma de choque sigue siendo la caja de `lector.tscn`, y
-`importar_caja.gd` guarda sólo la malla.
+no compila uno nuevo en la web. El hueco es redondo, como la base del lector, y su forma de
+choque es un cilindro del mismo radio, en `lector.tscn`. `importar_caja.gd` guarda sólo la malla.
