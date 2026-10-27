@@ -422,11 +422,10 @@ recibirlo NO DEBE registrar una pista ni contar como hipótesis elegida. El enca
 
 ### BR-INV-044 — La quinta jornada se cierra eligiendo una hipótesis
 
-La reflexión de jornada 5 DEBE mostrar el encabezado «Hoy faltabo uno de los jabones para la
-limpieza del local. No me quiero empezar a perseguir, pero…», con la errata «faltabo» de la
-fuente. El recuadro DEBE mostrar una opción por vez, entre las que habilita BR-INV-039, con su
-título y su texto de hipótesis de BR-INV-041. La primera mostrada DEBE ser la primera de esa
-lista. Con una opción DEBE ofrecer sólo «Elegir». Con dos DEBE ofrecer «Anterior», «Siguiente»
+La reflexión de jornada 5 DEBE mostrar el encabezado «Hoy faltaba uno de los jabones para la
+limpieza del local. No me quiero empezar a perseguir, pero…». El recuadro DEBE mostrar una
+opción por vez, entre las que habilita BR-INV-039, con su título y su texto de hipótesis de
+BR-INV-041. La primera mostrada DEBE ser la primera de esa lista. Con una opción DEBE ofrecer sólo «Elegir». Con dos DEBE ofrecer «Anterior», «Siguiente»
 y «Elegir»; «Anterior» y «Siguiente» DEBEN mostrar la otra opción. Navegar NO DEBE elegir,
 agregar notas ni modificar el expediente.
 
@@ -825,7 +824,7 @@ entrada «NOCHE 5» y otro pedido no agrega nada. El expediente sigue vacío y n
 
 ### AC-INV-060 — Cuatro combinaciones en el recuadro *(verifica BR-INV-044, BR-INV-039)*
 
-DADO el cierre de jornada 5 ENTONCES el encabezado es «Hoy faltabo uno de los jabones para la
+DADO el cierre de jornada 5 ENTONCES el encabezado es «Hoy faltaba uno de los jabones para la
 limpieza del local. No me quiero empezar a perseguir, pero…». DADO cero pistas, sólo 2A y sólo
 2B ENTONCES se muestran 2P, 2A y 2B con su título y su texto, y sólo «Elegir». DADO 2A y 2B
 ENTONCES se muestra 2A con «Anterior», «Siguiente» y «Elegir»; «Siguiente» muestra 2B,
