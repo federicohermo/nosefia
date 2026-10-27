@@ -63,33 +63,32 @@ func _automatico(productos: Array[Producto]) -> GeneradorDeTickets:
 	return generador
 
 
-func test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado() -> void:  # AC-CTR-030
-	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
-	add_child(vista)
-	vista.mostrar(GeneradorDeTickets.para_la_jornada(6))
+func test_cada_renglon_manual_ofrece_el_catalogo_ordenado_en_mayusculas() -> void:  # AC-CTR-030
+	var vista := _abrir(6)
 	assert_int(vista.selectores.size()).is_equal(GeneradorDeTickets.RENGLONES)
 	var catalogo := Catalogo.todos()
 	for selector in vista.selectores:
 		assert_bool(selector.is_visible_in_tree()).is_true()
-		assert_int(selector.item_count).is_equal(catalogo.size() + 1)
-		assert_str(selector.get_item_text(0)).is_empty()
+		var nombres := _nombres_de_la_lista(selector)
+		assert_int(nombres.size()).is_equal(catalogo.size())
 		for indice in catalogo.size():
-			assert_str(selector.get_item_text(indice + 1)).is_equal(catalogo[indice].nombre)
+			assert_str(nombres[indice]).is_equal(catalogo[indice].nombre.to_upper())
 	for fila in vista.filas:
 		assert_bool(fila.is_visible_in_tree()).is_false()
+	for flecha in vista.flechas:
+		assert_bool(flecha.is_visible_in_tree()).is_false()
 	vista.mostrar(GeneradorDeTickets.para_la_jornada(5))
 	for selector in vista.selectores:
 		assert_bool(selector.is_visible_in_tree()).is_false()
 	for fila in vista.filas:
 		assert_bool(fila.is_visible_in_tree()).is_true()
+	for flecha in vista.flechas:
+		assert_bool(flecha.is_visible_in_tree()).is_true()
 
 
 func test_solo_dos_o_tres_conserva_su_posicion_al_repintar() -> void:  # AC-CTR-028, AC-CTR-030
-	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
-	add_child(vista)
+	var vista := _abrir(6)
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	var opcion := _opcion_de(marolini)
-	assert_int(opcion).is_greater(0)
 	var elecciones: Array[int] = []
 	vista.eleccion_pedida.connect(
 		func(indice: int, _producto: Producto) -> void: elecciones.append(indice)
@@ -100,27 +99,24 @@ func test_solo_dos_o_tres_conserva_su_posicion_al_repintar() -> void:  # AC-CTR-
 		for _repintado in 2:
 			vista.mostrar(generador)
 			for indice in vista.selectores.size():
-				assert_int(vista.selectores[indice].selected).is_equal(
-					opcion if indice == elegido else 0
-				)
+				_afirmar_producto(vista.selectores[indice], marolini if indice == elegido else null)
 		assert_array(elecciones).is_empty()
 		var papel := generador.imprimir()
 		assert_object(papel).is_not_null()
 		vista.ocultar()
 		vista.mostrar(generador)
-		assert_int(vista.selectores[elegido].selected).is_equal(opcion)
+		_afirmar_producto(vista.selectores[elegido], marolini)
 		if papel != null:
 			assert_array(papel.renglones()).contains_exactly([marolini])
 		generador.borrar()
 		vista.mostrar(generador)
 		for selector in vista.selectores:
-			assert_int(selector.selected).is_equal(0)
+			_afirmar_producto(selector, null)
 		assert_array(elecciones).is_empty()
 
 
-func test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null() -> void:  # AC-CTR-030
-	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
-	add_child(vista)
+func test_elegir_de_la_lista_publica_el_producto_y_la_x_publica_vacio() -> void:  # AC-CTR-030
+	var vista := _abrir(6)
 	var generador := GeneradorDeTickets.para_la_jornada(6)
 	vista.mostrar(generador)
 	var indices: Array[int] = []
@@ -133,49 +129,122 @@ func test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null() -> voi
 			vista.mostrar(generador)
 	)
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	var opcion := _opcion_de(marolini)
-	assert_int(opcion).is_greater(0)
-	vista.selectores[2].item_selected.emit(opcion)
+	var selector := vista.selectores[2]
+	_boton(selector, "Cabecera").pressed.emit()
+	assert_bool(selector.esta_abierta()).is_true()
+	_botones_de_la_lista(selector)[_posicion_en_el_catalogo(marolini)].pressed.emit()
 	assert_array(indices).contains_exactly([2])
-	assert_int(productos.size()).is_equal(1)
-	if productos.size() == 1 and productos[0] != null:
-		assert_int(productos[0].id).is_equal(marolini.id)
+	assert_bool(selector.esta_abierta()).is_false()
 	assert_object(generador.en_el_renglon(0)).is_null()
 	assert_object(generador.en_el_renglon(1)).is_null()
 	var elegido := generador.en_el_renglon(2)
 	assert_object(elegido).is_not_null()
 	if elegido != null:
 		assert_int(elegido.id).is_equal(marolini.id)
-	vista.selectores[2].item_selected.emit(0)
+	_afirmar_producto(selector, marolini)
+	_boton(selector, "Quitar").pressed.emit()
 	assert_array(indices).contains_exactly([2, 2])
 	assert_int(productos.size()).is_equal(2)
 	if productos.size() == 2:
-		assert_object(productos[0]).is_not_null()
-		if productos[0] != null:
-			assert_int(productos[0].id).is_equal(marolini.id)
 		assert_object(productos[1]).is_null()
 	assert_object(generador.en_el_renglon(2)).is_null()
+	_afirmar_producto(selector, null)
+	_boton(selector, "Quitar").pressed.emit()
+	assert_array(indices).contains_exactly([2, 2])
 
 
-func _opcion_de(producto: Producto) -> int:
-	var catalogo := Catalogo.todos()
-	for indice in catalogo.size():
-		if catalogo[indice].id == producto.id:
-			return indice + 1
-	return -1
+func test_abrir_la_lista_de_un_renglon_cierra_la_de_otro() -> void:
+	var vista := _abrir(6)
+	_boton(vista.selectores[0], "Cabecera").pressed.emit()
+	assert_bool(vista.selectores[0].esta_abierta()).is_true()
+	_boton(vista.selectores[1], "Cabecera").pressed.emit()
+	assert_bool(vista.selectores[0].esta_abierta()).is_false()
+	assert_bool(vista.selectores[1].esta_abierta()).is_true()
+	_boton(vista.selectores[1], "Cabecera").pressed.emit()
+	assert_bool(vista.selectores[1].esta_abierta()).is_false()
 
 
-func test_el_izquierdo_no_pide_salir_ni_adentro_ni_afuera_del_panel() -> void:  # AC-PLY-072
-	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
-	add_child(vista)
-	vista.mostrar(_automatico([]))
-	var cierres: Array[int] = []
-	vista.cierre_pedido.connect(func() -> void: cierres.append(1))
-	var panel := (vista.borrar.get_parent() as Control).get_global_rect()
+func test_un_clic_izquierdo_afuera_cierra_la_lista_y_no_el_programa() -> void:  # AC-PLY-072
+	var vista := _abrir(6)
+	var selector := vista.selectores[0]
+	_boton(selector, "Cabecera").pressed.emit()
+	var lista := selector.find_child("Lista", true, false) as Control
 	var clic := InputEventMouseButton.new()
 	clic.button_index = MOUSE_BUTTON_LEFT
 	clic.pressed = true
-	for punto: Vector2 in [panel.get_center(), panel.position - Vector2(20, 0)]:
-		clic.global_position = punto
-		(vista.marco.get_parent() as Control).gui_input.emit(clic)
-	assert_array(cierres).is_empty()
+	clic.position = lista.get_global_transform_with_canvas() * Vector2(30.0, 30.0)
+	selector.call("_input", clic)
+	assert_bool(selector.esta_abierta()).is_true()
+	clic.position = Vector2(-1000.0, -1000.0)
+	selector.call("_input", clic)
+	assert_bool(selector.esta_abierta()).is_false()
+	assert_bool(vista.visible).is_true()
+	_boton(selector, "Cabecera").pressed.emit()
+	vista.ocultar()
+	assert_bool(selector.esta_abierta()).is_false()
+
+
+func test_el_nombre_mas_largo_del_catalogo_entra_antes_de_la_x() -> void:
+	var selector := _abrir(6).selectores[0]
+	var nombre := selector.find_child("Nombre", true, false) as Label
+	var equis := selector.find_child("Equis", true, false) as Control
+	for producto in Catalogo.todos():
+		selector.mostrar_producto(producto)
+		assert_float(nombre.position.x + nombre.get_minimum_size().x).is_less_equal(
+			equis.position.x
+		)
+
+
+func test_la_lista_completa_puede_recorrerse() -> void:
+	var selector := _abrir(6).selectores[0]
+	_boton(selector, "Cabecera").pressed.emit()
+	var desplazamiento := selector.find_child("Desplazamiento", true, false) as ScrollContainer
+	var items := selector.find_child("Items", true, false) as Control
+	assert_float(items.get_combined_minimum_size().y).is_greater(desplazamiento.size.y)
+	assert_int(desplazamiento.vertical_scroll_mode).is_not_equal(
+		ScrollContainer.SCROLL_MODE_DISABLED
+	)
+
+
+func _abrir(jornada: int) -> ProgramaDeTickets:
+	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
+	add_child(vista)
+	vista.mostrar(GeneradorDeTickets.para_la_jornada(jornada))
+	return vista
+
+
+func _boton(selector: SelectorDeRenglon, nombre: String) -> Button:
+	return selector.find_child(nombre, true, false) as Button
+
+
+func _botones_de_la_lista(selector: SelectorDeRenglon) -> Array[Button]:
+	var botones: Array[Button] = []
+	for hijo in selector.find_child("Items", true, false).get_children():
+		if hijo is Button:
+			botones.append(hijo as Button)
+	return botones
+
+
+func _nombres_de_la_lista(selector: SelectorDeRenglon) -> Array[String]:
+	var nombres: Array[String] = []
+	for boton in _botones_de_la_lista(selector):
+		nombres.append(boton.text)
+	return nombres
+
+
+func _posicion_en_el_catalogo(producto: Producto) -> int:
+	var catalogo := Catalogo.todos()
+	for indice in catalogo.size():
+		if catalogo[indice].id == producto.id:
+			return indice
+	return -1
+
+
+func _afirmar_producto(selector: SelectorDeRenglon, esperado: Producto) -> void:
+	var elegido := selector.elegido()
+	if esperado == null:
+		assert_object(elegido).is_null()
+		return
+	assert_object(elegido).is_not_null()
+	if elegido != null:
+		assert_int(elegido.id).is_equal(esperado.id)
