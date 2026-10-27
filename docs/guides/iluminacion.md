@@ -74,6 +74,24 @@ Los mandos:
   `estructura_del_almacen.tscn`;
 - el umbral de sonda negra, en `sondas.gd`.
 
+## El horneado de la noche del corte de luz
+
+La séptima noche se corta la luz. La oscuridad **no** apaga el `LightmapGI`: el local tiene un
+segundo horneado, `almacen_sin_luz.lmbake` y `almacen_sin_luz.exr`, con sólo la luz de
+emergencia sobre el tablero eléctrico. Al cortarse, `corte_de_luz.gd` le cambia los datos al
+mismo `LightmapGI`; al restablecerse, le devuelve los de siempre. Cambian juntos los muebles y
+las sondas de los productos.
+
+- **Qué queda encendido:** la luz del grupo `luz_de_emergencia`, que es `LuzDelTablero`. Las
+  demás luces, los materiales emisivos de las lámparas, la niebla y los reflejos se apagan en
+  tiempo real: no salen del horneado.
+- **Qué se apaga lo dice un solo archivo**, `corte_de_luz.gd`. Lo usa el juego al cortar y lo
+  usa el horneador al hornear, así que no pueden diferir.
+- **Se hornea aparte**, con `python .claude/scripts/hornear.py --sin-luz`. Apaga el local en la
+  copia del editor, no guarda la escena y deja el `.lmbake`, el `.exr` y su `.import`. Se
+  commitean. Hay que volver a correrlo cuando cambia el modelo, una luz o el `LightmapGI`, igual
+  que el horneado con luz.
+
 ## Qué lo verifica
 
 `test/escenas/iluminacion_horneada_test.gd`: que el `LightmapGI` tenga datos, y que ninguna
