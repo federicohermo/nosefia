@@ -799,7 +799,8 @@ func test_en_la_mano_y_al_examinar_la_cara_escrita_mira_al_jugador() -> void:
 	var almacen := await _abrir()
 	var papel := _imprimir_papel_de(almacen, [Producto.Id.MAROLINI])
 	var jugador: Node3D = almacen.get_node("Jugador")
-	var hacia_la_vista := -jugador.get_node("Giro/Camara").global_basis.z
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var hacia_la_vista := -camara.global_basis.z
 	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_float(_hacia_donde_mira_lo_escrito(papel).dot(hacia_la_vista)).is_less(0.0)
 	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_EXAMINAR)
