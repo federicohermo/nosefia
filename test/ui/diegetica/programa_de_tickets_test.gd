@@ -242,9 +242,80 @@ func test_la_lista_completa_puede_recorrerse() -> void:
 	)
 
 
+func test_un_clic_sobre_cada_linea_visible_elige_su_producto() -> void:
+	for desplazado: bool in [false, true]:
+		for renglon in 3:
+			var vista := _abrir_en_pantalla(6)
+			var selector := vista.selectores[renglon]
+			var elegidos: Array[Producto] = []
+			selector.producto_elegido.connect(
+				func(producto: Producto) -> void: elegidos.append(producto)
+			)
+			var lineas := await _abrir_la_lista(selector, desplazado)
+			var recorte := selector.find_child("Desplazamiento", true, false) as Control
+			var visibles := 0
+			for indice in lineas.size():
+				var punto: Variant = _punto_visible(lineas[indice], recorte)
+				if punto == null:
+					continue
+				visibles += 1
+				elegidos.clear()
+				_clic(selector, punto)
+				assert_array(elegidos).has_size(1)
+				if elegidos.size() == 1:
+					_afirmar_la_linea(lineas[indice], indice, elegidos[0])
+				assert_bool(selector.esta_abierta()).is_false()
+				_boton(selector, "Cabecera").pressed.emit()
+				await await_idle_frame()
+			assert_int(visibles).is_greater(1)
+
+
 func _abrir(jornada: int) -> ProgramaDeTickets:
 	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
 	add_child(vista)
+	vista.mostrar(GeneradorDeTickets.para_la_jornada(jornada))
+	return vista
+
+
+func _abrir_la_lista(selector: SelectorDeRenglon, desplazada: bool) -> Array[Button]:
+	_boton(selector, "Cabecera").pressed.emit()
+	await await_idle_frame()
+	var desplazamiento := selector.find_child("Desplazamiento", true, false) as ScrollContainer
+	if desplazada:
+		desplazamiento.scroll_vertical = int(desplazamiento.get_v_scroll_bar().max_value / 2.0)
+		await await_idle_frame()
+	return _botones_de_la_lista(selector)
+
+
+## Un punto del renglón que se ve de verdad, o `null` si el recorte lo esconde.
+func _punto_visible(linea: Button, recorte: Control) -> Variant:
+	var rectangulo := _rectangulo_global(linea)
+	var visible_de_la_linea := rectangulo.intersection(_rectangulo_global(recorte))
+	if visible_de_la_linea.size.y < rectangulo.size.y / 2.0:
+		return null
+	return visible_de_la_linea.get_center()
+
+
+func _rectangulo_global(control: Control) -> Rect2:
+	return control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size)
+
+
+func _afirmar_la_linea(linea: Button, indice: int, elegido: Producto) -> void:
+	if indice == 0:
+		assert_object(elegido).is_null()
+		return
+	assert_object(elegido).is_not_null()
+	if elegido != null:
+		assert_str(linea.text).is_equal(Catalogo.de(elegido.id).nombre.to_upper())
+
+
+## La ventana del test mide 64 píxeles: a esa escala el clic se redondea sobre otra línea.
+func _abrir_en_pantalla(jornada: int) -> ProgramaDeTickets:
+	var pantalla: SubViewport = auto_free(SubViewport.new())
+	pantalla.size = Vector2i(1920, 1080)
+	add_child(pantalla)
+	var vista: ProgramaDeTickets = ESCENA.instantiate()
+	pantalla.add_child(vista)
 	vista.mostrar(GeneradorDeTickets.para_la_jornada(jornada))
 	return vista
 

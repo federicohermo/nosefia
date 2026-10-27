@@ -101,6 +101,8 @@ func _alternar() -> void:
 	_abierta = true
 	_lista.visible = true
 	z_index = 1
+	# El z_index sólo ordena el dibujo: el clic lo gana el último nodo del árbol.
+	get_parent().move_child(self, -1)
 	_pintar()
 	lista_abierta.emit()
 
