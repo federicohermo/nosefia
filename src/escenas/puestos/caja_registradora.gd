@@ -117,11 +117,13 @@ func _al_imprimir(dato: Ticket) -> void:
 	papel.datos = dato
 	papel.freeze = true
 	# El modelo tiene escala: no se hereda al papel ni a su colisión. El origen se fija
-	# antes de entrar al árbol, porque lo leen _ready y la red de seguridad.
-	papel.transform = (
+	# antes de entrar al árbol, porque lo leen _ready y la red de seguridad. Gira media vuelta
+	# sobre el eje de salida: la cara escrita sale para el otro lado de la ranura.
+	var en_la_ranura := (
 		destino_de_los_tickets.global_transform.affine_inverse()
 		* ranura.global_transform.orthonormalized()
 	)
+	papel.transform = en_la_ranura.rotated_local(Vector3.UP, PI)
 	destino_de_los_tickets.add_child(papel)
 	_tickets.append(papel)
 	_en_ranura = papel

@@ -779,3 +779,29 @@ func test_el_papel_crece_en_la_mano_mas_al_examinar_y_vuelve_al_soltarlo() -> vo
 	agarre.soltar(true)
 	assert_vector(malla.scale).is_equal_approx(del_mundo, tolerancia)
 	assert_vector(forma.scale).is_equal_approx(del_mundo, tolerancia)
+
+
+## La cara escrita del papel mira hacia su +X local.
+func _hacia_donde_mira_lo_escrito(papel: ObjetoAgarrable) -> Vector3:
+	return papel.global_basis.orthonormalized() * Vector3.RIGHT
+
+
+func test_el_papel_sale_con_la_cara_escrita_al_otro_lado_de_la_ranura() -> void:
+	var almacen := await _abrir()
+	var papel := _imprimir_papel_de(almacen, [Producto.Id.MAROLINI])
+	var ranura: Marker3D = _puesto(almacen).get("ranura")
+	var base := ranura.global_basis.orthonormalized()
+	assert_float(_hacia_donde_mira_lo_escrito(papel).dot(base.x)).is_equal_approx(-1.0, 0.001)
+	assert_float(papel.global_basis.orthonormalized().y.dot(base.y)).is_equal_approx(1.0, 0.001)
+
+
+func test_en_la_mano_y_al_examinar_la_cara_escrita_mira_al_jugador() -> void:
+	var almacen := await _abrir()
+	var papel := _imprimir_papel_de(almacen, [Producto.Id.MAROLINI])
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var hacia_la_vista := -jugador.get_node("Giro/Camara").global_basis.z
+	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_float(_hacia_donde_mira_lo_escrito(papel).dot(hacia_la_vista)).is_less(0.0)
+	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_true()
+	assert_float(_hacia_donde_mira_lo_escrito(papel).dot(hacia_la_vista)).is_less(0.0)
