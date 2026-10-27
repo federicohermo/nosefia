@@ -6,10 +6,12 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
+const Sondas := preload("res://test/escenas/sondas_del_horneado.gd")
 const GRUPO_DE_LA_EMERGENCIA := &"luz_de_emergencia"
 const ESCRITORIO := "Estructura/base compu/StaticBody3D"
 const TABLERO := "Estructura/tableroluz/StaticBody3D"
 const HORNO_CON_LUZ := "res://src/escenas/almacen.lmbake"
+const HORNO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 const LIGHTMAP_CON_LUZ := "res://src/escenas/almacen.exr"
 const LIGHTMAP_SIN_LUZ := "res://src/escenas/almacen_sin_luz.exr"
 ## Lado de la primera capa del atlas, la de la luz: las otras guardan la dirección.
@@ -19,6 +21,12 @@ const LUZ_VISIBLE := 0.01
 ## Qué parte, como mínimo, del local con luz queda visible en la penumbra: el piso, las góndolas y
 ## las paredes de al lado de los ventanales.
 const PENUMBRA_MINIMA := 0.1
+## Cuánto tiene que mirar un grupo hacia el ventanal, o hacia el lado contrario, para contar como
+## una de las dos caras: el coseno del ángulo entre su frente y la normal del vidrio.
+const ALINEADO := 0.9
+## Hasta qué distancia del más cercano un grupo está en la misma cara: los centros de una cara
+## difieren por el ancho de sus envases.
+const MISMA_CARA := 0.2
 
 var _con_luz: LightmapGIData
 
@@ -246,41 +254,44 @@ func test_el_horneado_del_corte_deja_en_penumbra_mas_que_el_tablero() -> void:  
 	assert_float(sin_luz).is_less(con_luz)
 
 
-## Por cada vidrio del local entra la luz de afuera: enfrente, del otro lado del vidrio, hay una
-## luz del horneado oscuro que lo alcanza. Sin ella, ese ventanal queda negro durante el corte.
-func test_por_cada_ventanal_entra_la_luz_de_afuera() -> void:
+## La luz de afuera entra por los ventanales. Lo que no está horneado la toma de las sondas: en
+## la góndola de al lado del ventanal, los productos que lo miran reciben más luz que los de la
+## otra cara, que miran adentro del local.
+func test_sin_luz_la_cara_del_ventanal_recibe_mas_luz_que_la_de_adentro() -> void:
 	var local := _local()
-	var adentro := (local.get("_jugador") as Node3D).global_position
-	var luces: Array[OmniLight3D] = []
-	for luz: OmniLight3D in CorteDeLuz.luces_de_afuera():
-		luces.append(auto_free(luz))
-	var estructura := local.get_node("Estructura")
-	var frente := estructura.find_children("local_vidrio_frente_*", "MeshInstance3D")
-	var costado := estructura.find_children("local_vidrio_ventanal_*", "MeshInstance3D")
-	assert_array(frente).is_not_empty()
-	assert_array(costado).is_not_empty()
-	for vidrio: MeshInstance3D in frente + costado:
-		var caja := vidrio.global_transform * vidrio.get_aabb()
-		var centro := caja.get_center()
-		var eje := caja.size.min_axis_index()
-		var afuera := signf(centro[eje] - adentro[eje])
-		var enfrente := luces.any(
-			func(luz: OmniLight3D) -> bool:
-				return (
-					(luz.position[eje] - centro[eje]) * afuera > 0.0
-					and luz.position.distance_to(centro) < luz.omni_range
-				)
+	var sondas := Sondas.new(HORNO_SIN_LUZ)
+	var horno: LightmapGI = local.get_node("LightmapGI")
+	var al_horno := horno.global_transform.affine_inverse()
+	var vidrio := _vidrio_del_ventanal(local)
+	var eje := vidrio.size.min_axis_index()
+	var afuera := Vector3.ZERO
+	afuera[eje] = signf(vidrio.get_center()[eje] - (local.get("_jugador") as Node3D).position[eje])
+	var reposicion := local.get("_reposicion_manual") as Node
+	var disposicion: DisposicionDeLaGondola = reposicion.get("disposicion")
+	var caras := {1.0: [], -1.0: []}
+	for producto: Producto in Catalogo.todos():
+		var grupo := (
+			reposicion.find_child("ProductosDe" + producto.nombre, true, false)
+			as MultiMeshInstance3D
 		)
-		assert_bool(enfrente).override_failure_message(vidrio.name).is_true()
-
-
-## Las luces de afuera no existen en el juego. Lo que no está horneado toma la luz de las sondas,
-## y una sonda sólo guarda luz rebotada: si los muebles se hornearan con la luz directa, los
-## productos de al lado del ventanal quedarían más oscuros que su estante.
-func test_la_luz_de_afuera_alumbra_igual_los_muebles_y_los_productos() -> void:
-	for luz: OmniLight3D in CorteDeLuz.luces_de_afuera():
-		assert_int(luz.light_bake_mode).is_equal(Light3D.BAKE_DYNAMIC)
-		luz.free()
+		if grupo == null or grupo.multimesh.buffer.is_empty():
+			continue
+		var frente := DisposicionDeLaGondola.frente(
+			disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
+		)
+		var mira := frente.dot(afuera)
+		if absf(mira) < ALINEADO:
+			continue
+		var centro := _centro(grupo)
+		var distancia := (vidrio.get_center() - centro).dot(afuera)
+		var luz := sondas.luz_hacia(al_horno * centro, al_horno.basis * frente)
+		caras[signf(mira)].append(Vector2(distancia, luz))
+	var al_ventanal := _cara_mas_cercana(caras[1.0])
+	var adentro := _cara_mas_cercana(caras[-1.0])
+	assert_array(al_ventanal).is_not_empty()
+	assert_array(adentro).is_not_empty()
+	assert_float(_promedio(adentro)).is_greater(0.0)
+	assert_float(_promedio(al_ventanal)).is_greater(_promedio(adentro))
 
 
 ## Sin luz, la emergencia alumbra lo que no está horneado igual que alumbró los muebles al
@@ -314,3 +325,43 @@ func _texeles_con_luz(ruta: String) -> float:
 			if (color.r + color.g + color.b) / 3.0 > LUZ_VISIBLE:
 				con_luz += 1
 	return float(con_luz) / total
+
+
+func _vidrio_del_ventanal(local: Node3D) -> AABB:
+	var vidrios := local.get_node("Estructura").find_children(
+		"local_vidrio_ventanal_*", "MeshInstance3D"
+	)
+	assert_array(vidrios).is_not_empty()
+	var vidrio := vidrios[0] as MeshInstance3D
+	return vidrio.global_transform * vidrio.get_aabb()
+
+
+## El centro de la caja de todas las copias, que es donde el motor toma las sondas. Se calcula de
+## las copias porque en headless el `MultiMesh` no tiene caja.
+func _centro(grupo: MultiMeshInstance3D) -> Vector3:
+	var copias := grupo.multimesh.buffer
+	var malla := grupo.multimesh.mesh.get_aabb()
+	var caja := DisposicionDeLaGondola.copia(copias, 0) * malla
+	for indice in range(1, DisposicionDeLaGondola.copias(copias)):
+		caja = caja.merge(DisposicionDeLaGondola.copia(copias, indice) * malla)
+	return grupo.global_transform * caja.get_center()
+
+
+## La luz de los grupos de la cara más cercana al ventanal, entre los que miran hacia un mismo
+## lado. Cada grupo es su distancia al vidrio y su luz.
+func _cara_mas_cercana(grupos: Array) -> Array[float]:
+	var cara: Array[float] = []
+	var cercana := INF
+	for grupo: Vector2 in grupos:
+		cercana = minf(cercana, grupo.x)
+	for grupo: Vector2 in grupos:
+		if grupo.x < cercana + MISMA_CARA:
+			cara.append(grupo.y)
+	return cara
+
+
+func _promedio(luces: Array[float]) -> float:
+	var suma := 0.0
+	for luz in luces:
+		suma += luz
+	return suma / luces.size()
