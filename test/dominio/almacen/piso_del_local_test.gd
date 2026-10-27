@@ -80,7 +80,7 @@ func test_cada_jornada_que_limpia_arranca_con_sus_manchas_sucias() -> void:  # A
 		assert_int(_sucias(piso).size()).is_equal(piso.lugares().size())
 
 
-func test_cada_lugar_conserva_su_numero_y_los_de_la_primera_jornada_su_mancha() -> void:  # AC-CLN-016
+func test_cada_lugar_conserva_su_numero_y_la_primera_jornada_su_mancha() -> void:  # AC-CLN-016
 	# La escena guarda cada disco con el número de su lugar: ninguno cambia de número, y los
 	# cuatro de la primera jornada conservan su mancha.
 	var piso := _piso()
