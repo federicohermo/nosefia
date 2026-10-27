@@ -23,6 +23,16 @@ func _guion_esperado() -> Array[String]:
 	return identidades
 
 
+func _previos() -> int:
+	return (
+		Conversacion
+		. de(YASMIN)
+		. mensajes
+		. filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada < JORNADA_DEL_LECTOR)
+		. size()
+	)
+
+
 func _bloque(mensajes: Array[Mensaje]) -> Array[Mensaje]:
 	return mensajes.filter(
 		func(mensaje: Mensaje) -> bool: return mensaje.identidad.begins_with("J3_")
@@ -52,7 +62,11 @@ func test_un_checkpoint_en_la_jornada_del_lector_abre_todo_sin_leer() -> void:  
 	assert_int(bandeja.no_leidos(YASMIN)).is_equal(mensajes.size())
 	for indice in mensajes.size():
 		assert_int(mensajes[indice].jornada).is_equal(
-			ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1 if indice < 15 else JORNADA_DEL_LECTOR
+			(
+				ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+				if indice < _previos()
+				else JORNADA_DEL_LECTOR
+			)
 		)
 
 
@@ -63,7 +77,7 @@ func test_antes_de_la_jornada_del_lector_el_bloque_no_existe() -> void:  # AC-IN
 		for conversacion in bandeja.conversaciones():
 			assert_array(_bloque(bandeja.mensajes_de(conversacion.interlocutor))).is_empty()
 	bandeja.abrir_jornada(JORNADA_DEL_LECTOR - 1)
-	assert_int(bandeja.mensajes_de(YASMIN).size()).is_equal(15)
+	assert_int(bandeja.mensajes_de(YASMIN).size()).is_equal(_previos())
 	bandeja.abrir_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 	assert_array(bandeja.mensajes_de(YASMIN)).is_empty()
 	bandeja.abrir_jornada(JORNADA_DEL_LECTOR)
@@ -74,7 +88,7 @@ func test_el_bloque_no_concede_pistas_y_trae_sus_dos_glifos() -> void:  # AC-INV
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
 	bandeja.abrir_jornada(JORNADA_DEL_LECTOR)
 	var bloque := _bloque(bandeja.mensajes_de(YASMIN))
-	assert_array(_identidades(bloque)).is_equal(_guion_esperado().slice(15))
+	assert_array(_identidades(bloque)).is_equal(_guion_esperado().slice(_previos()))
 	for mensaje in bloque:
 		assert_str(mensaje.tramo_de_pista).is_empty()
 		assert_str(mensaje.pista).is_empty()
