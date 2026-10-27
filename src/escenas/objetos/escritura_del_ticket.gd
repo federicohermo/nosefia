@@ -29,7 +29,7 @@ const SEPARADORES: Array[Vector2] = [
 
 @export var malla: MeshInstance3D
 
-var _raiz := Control.new()
+var _raiz: Control
 
 
 ## Cambiar de padre saca al viewport del árbol: se dibuja otra vez al volver, y cuesta un cuadro.
@@ -46,6 +46,7 @@ func _ready() -> void:
 	disable_3d = true
 	gui_disable_input = true
 	canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR
+	_raiz = Control.new()
 	_raiz.scale = Vector2.ONE * ESCALA_DE_LA_TEXTURA
 	add_child(_raiz)
 	_escribir(ticket)
