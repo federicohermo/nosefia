@@ -213,6 +213,8 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
+| Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 6 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
+| Borrar la caca del techo del baño, en la jornada 7 | `TECHO_DEL_BANO` | ¿¿Cómo llegó eso ahí?? |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
 
 El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
@@ -436,8 +438,9 @@ es `MOPA_SIN_MOJAR` y la mancha permanece.
 DADO la mopa seca sin haberse mojado en la jornada ENTONCES el pensamiento es `MOPA_SIN_MOJAR`;
 DADO la mopa seca después de mojarla, incluso sólo con agua, ENTONCES es `MOPA_YA_SECA`.
 DADO una mancha ya limpia o una mancha
-borrada ENTONCES no hay texto, salvo la caca de la pared del otro inodoro, que al borrarse piensa
-el suyo.
+borrada ENTONCES no hay texto, salvo la caca de la pared del otro inodoro, la del piso frente a
+las estanterías del fondo y la del techo del baño, que al borrarse piensan cada una el suyo. Las
+demás manchas de las jornadas 6 a 8, aunque sean de caca, no piensan nada.
 
 ### AC-SUB-019 — La mopa berreta, una vez *(verifica BR-SUB-014)*
 
