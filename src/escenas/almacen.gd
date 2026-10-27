@@ -421,7 +421,13 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	)
 	_repositor.arrancar(
 		Estante.new(
-			inventario, productos, vacios, AnomaliasDeLaJornada.contenidos_de_las_cajas(jornada)
+			inventario,
+			productos,
+			vacios,
+			AnomaliasDeLaJornada.contenidos_de_las_cajas(jornada),
+			Apertura.vencidos_de_la_jornada(
+				jornada, _reposicion_manual.casilleros(), azar_de_la_apertura
+			)
 		)
 	)
 	_reposicion_manual.preparar()
@@ -432,7 +438,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada(jornada))
-	_recolector.arrancar(TareaDeLaBasura.de_la_jornada(jornada))
+	_recolector.arrancar(
+		TareaDeLaBasura.de_la_jornada(jornada), TareaDeLosVencidos.de_la_jornada(jornada)
+	)
 	# La apertura restaura los cuerpos antes de pintar sólo los tachos declarados.
 	for indice in _bolsas.size():
 		var bolsa: ObjetoAgarrable = _bolsas[indice]
@@ -873,7 +881,8 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 				_habitaciones.de(nodo.global_position),
 				en_mano,
 				datos.id if datos != null else ObjetoDelAlmacen.SIN_ID,
-				ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos))
+				ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos)),
+				datos != null and datos.vencido
 			)
 		)
 	return estados
@@ -988,6 +997,10 @@ func _al_agotar_el_turno(_jornada: int) -> void:
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
 	if ReglasDelCierre.hay_bolsa_afuera(estados):
 		_partida.bolsa_afuera = true
+	_partida.vencido_en_el_local = ReglasDelCierre.hay_vencido_en_el_local(
+		estados, _repositor.estante().vencidos.cuantos()
+	)
+	_partida.vencido_afuera = ReglasDelCierre.hay_vencido_afuera(estados)
 	if ReglasDelCierre.hay_heladera_abierta(_puertas_de_las_heladeras()):
 		_partida.anotar_llamado(Partida.Llamado.HELADERAS_ABIERTAS)
 

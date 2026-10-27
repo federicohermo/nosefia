@@ -84,7 +84,8 @@ func test_cambiar_la_lectura_no_cambia_el_dato_compartido() -> void:  # AC-PLY-0
 
 
 func test_la_jornada_sin_particular_enumera_solo_las_fijas() -> void:  # AC-PLY-080
-	var filas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(6)).renglones()
+	var sin_particular := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
+	var filas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(sin_particular)).renglones()
 	assert_array(filas).contains_exactly(
 		["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición"]
 	)

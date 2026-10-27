@@ -1053,8 +1053,8 @@ mano y la misma caja ENTONCES la caja la recibe.
 
 ### AC-STK-121 — Tirar un vencido no llena su casillero *(verifica BR-STK-052, BR-STK-036)*
 
-DADO una unidad vencida agarrada de la góndola CUANDO se tira al contenedor ENTONCES el depósito
-de Cindolor baja en uno, el casillero sigue vacío y la góndola no recupera esa unidad. DADO la
+DADO una unidad vencida agarrada de la góndola CUANDO se tira al contenedor ENTONCES la caja de
+Cindolor queda como estaba, el casillero sigue vacío y la góndola no recupera esa unidad. DADO la
 jornada siguiente ENTONCES abre sin unidades vencidas.
 
 ### AC-STK-122 — Un vencido en la góndola deja reponer sin cumplir *(verifica BR-STK-052, BR-STK-033)*

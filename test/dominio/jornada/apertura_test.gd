@@ -17,7 +17,7 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		3: fijas,
 		4: fijas + [Tarea.Tipo.ORDENAR_LAS_CAJAS],
 		5: fijas + [Tarea.Tipo.SACAR_LA_BASURA],
-		6: fijas,
+		6: fijas + [Tarea.Tipo.DESECHAR_VENCIDOS],
 		7: fijas,
 		8: fijas,
 	}
@@ -32,6 +32,9 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		assert_int(Apertura.cantidad_de_obligatorias(jornada)).is_equal(esperadas.size())
 		assert_bool(Apertura.pide(jornada, Tarea.Tipo.REPONER)).is_equal(jornada != 1)
 		assert_bool(Apertura.cajas_apiladas(jornada)).is_equal(jornada == 4)
+		assert_bool(Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS)).is_equal(
+			jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
+		)
 
 
 func test_el_turno_de_la_jornada_nace_con_el_presupuesto_entero() -> void:  # AC-SHF-001
