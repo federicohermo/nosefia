@@ -126,21 +126,25 @@ func _comprobar() -> int:
 	if not errores.is_empty():
 		push_error(str(errores))
 		return 1
+	if not _testigos(base, variante):
+		return 1
+	print("estructura y testigos: OK")
+	return 0
+
+
+static func _testigos(base: ArrayMesh, variante: ArrayMesh) -> bool:
 	# Testigos en memoria: demuestran que la comprobación rechaza pérdidas reales.
 	var rota := variante.duplicate() as ArrayMesh
 	rota.clear_surfaces()
 	if diferencias(base, rota).is_empty():
-		return 1
+		return false
 	rota = variante.duplicate() as ArrayMesh
 	var material := variante.surface_get_material(0).duplicate() as StandardMaterial3D
 	material.shading_mode = (material.shading_mode + 1) % 3
 	rota.surface_set_material(0, material)
 	if diferencias(base, rota).is_empty():
-		return 1
+		return false
 	material = variante.surface_get_material(0).duplicate() as StandardMaterial3D
 	material.albedo_texture = null
 	rota.surface_set_material(0, material)
-	if diferencias(base, rota).is_empty():
-		return 1
-	print("estructura y testigos: OK")
-	return 0
+	return not diferencias(base, rota).is_empty()
