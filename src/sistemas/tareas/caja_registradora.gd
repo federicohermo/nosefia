@@ -43,10 +43,11 @@ func pedir_borrar() -> void:
 	renglones_cambiados.emit()
 
 
-func pedir_imprimir() -> void:
+## `restante` es lo que queda del turno, y es la hora que el papel lleva escrita.
+func pedir_imprimir(restante: float = Reglas.DURACION_DEL_TURNO) -> void:
 	if _sin_cablear():
 		return
-	var ticket := _generador.imprimir()
+	var ticket := _generador.imprimir(restante)
 	if ticket != null:
 		ticket_impreso.emit(ticket)
 

@@ -190,3 +190,51 @@ func test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa() -> void:
 		]:
 			assert_int(generador.anotar(objeto)).is_equal(GeneradorDeTickets.Resultado.SIN_LECTOR)
 			assert_array(generador.renglones()).contains_exactly(antes)
+
+
+func test_el_papel_sale_con_el_numero_la_jornada_y_la_hora_de_la_impresion() -> void:  # AC-PLY-107
+	var numeros := NumerosDeTicket.new()
+	var generador := GeneradorDeTickets.para_la_jornada(4, numeros)
+	generador.anotar(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)))
+	var restante := Reglas.DURACION_DEL_TURNO - 60.0
+	var ticket := generador.imprimir(restante)
+	assert_int(ticket.jornada).is_equal(4)
+	assert_str(ticket.hora).is_equal(Marcador.hora(restante))
+	assert_int(ticket.numero).is_between(1, NumerosDeTicket.MAXIMO)
+	generador.imprimir(0.0)
+	assert_str(ticket.hora).is_equal(Marcador.hora(restante))
+
+
+func test_dos_papeles_nunca_comparten_numero_aunque_cambie_la_jornada() -> void:  # AC-PLY-107
+	var numeros := NumerosDeTicket.new()
+	var vistos: Dictionary[int, bool] = {}
+	for jornada in range(1, 5):
+		var generador := GeneradorDeTickets.para_la_jornada(jornada, numeros)
+		for _vez in 3:
+			generador.anotar(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)))
+			var numero := generador.imprimir().numero
+			assert_bool(vistos.has(numero)).is_false()
+			vistos[numero] = true
+
+
+func test_sin_contador_de_la_partida_el_papel_igual_lleva_numero() -> void:  # AC-PLY-107
+	var generador := GeneradorDeTickets.new()
+	generador.anotar(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)))
+	assert_int(generador.imprimir().numero).is_between(1, NumerosDeTicket.MAXIMO)
+
+
+func test_el_modo_manual_imprime_lo_mismo_que_el_lector() -> void:  # AC-PLY-106
+	var marolini := Catalogo.de(Producto.Id.MAROLINI)
+	var cola := Catalogo.de(Producto.Id.PURA_COLA)
+	var con_lector := GeneradorDeTickets.para_la_jornada(1)
+	con_lector.anotar(UnidadDeProducto.new(marolini))
+	con_lector.anotar(UnidadDeProducto.new(cola))
+	con_lector.anotar(UnidadDeProducto.new(marolini))
+	var manual := GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR)
+	manual.elegir(0, marolini)
+	manual.elegir(1, cola)
+	manual.elegir(2, marolini)
+	var uno := con_lector.imprimir()
+	var otro := manual.imprimir()
+	assert_array(otro.lineas_impresas()).contains_exactly(uno.lineas_impresas())
+	assert_int(otro.total()).is_equal(uno.total())

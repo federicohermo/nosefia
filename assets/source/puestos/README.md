@@ -25,7 +25,8 @@ y las colisiones estáticas que usan las escenas. El ticket recibe una colisión
 y se dibuja por ambas caras.
 
 La registradora, el lector y el ticket conservan el tamaño y la disposición del artista,
-sin ampliaciones ni giros adicionales. La correspondencia con el escritorio del juego es
+sin ampliaciones ni giros adicionales. El ticket sólo se ve más grande mientras se lo lleva o
+se lo examina, y lo escala el juego sin tocar el modelo. La correspondencia con el escritorio del juego es
 `(x, y, z) = (4.43 - x_blender, z_blender, -y_blender - 1.532)`. El escritorio, el reloj
 y la computadora comparten esa correspondencia. El papel aparece sólo al imprimir y
 su salida se anima hasta la posición original del ticket del artista.

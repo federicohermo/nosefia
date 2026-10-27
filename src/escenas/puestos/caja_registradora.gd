@@ -3,6 +3,7 @@ extends StaticBody3D
 
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
+const ANCHO_DEL_MODELO := 0.074995
 
 @export var jugador: JugadorDelLocal
 @export var agarre: Agarre
@@ -12,7 +13,7 @@ const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 @export var ranura: Marker3D
 @export var destino_de_los_tickets: Node3D
 @export var mallas: Array[MeshInstance3D]
-@export var ancho_del_papel: float = 0.074995
+@export var ancho_del_papel: float = ANCHO_DEL_MODELO
 
 var _abierta := false
 var _en_ranura: ObjetoAgarrable
@@ -20,6 +21,7 @@ var _papel: ObjetoAgarrable
 var _tickets: Array[ObjetoAgarrable] = []
 var _salida: Tween
 var _fin_de_salida := Vector3.ZERO
+var _restante := Reglas.DURACION_DEL_TURNO
 
 
 func _ready() -> void:
@@ -30,6 +32,12 @@ func _ready() -> void:
 	programa.eleccion_pedida.connect(caja.pedir_elegir)
 	programa.cierre_pedido.connect(_cerrar_desde_entrada)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
+	reloj.tiempo_consumido.connect(func(restante: float) -> void: _restante = restante)
+	caja.programa_arrancado.connect(
+		func(_manual: bool) -> void: _restante = Reglas.DURACION_DEL_TURNO
+	)
+	jugador.examen.examen_iniciado.connect(_al_examinar)
+	jugador.examen.examen_terminado.connect(_al_terminar_el_examen)
 	agarre.objeto_agarrado.connect(_al_agarrar)
 	agarre.objeto_soltado.connect(_al_soltar)
 	jugador.uso_pedido.connect(_al_usar)
@@ -66,7 +74,7 @@ func _cerrar_desde_entrada() -> void:
 
 
 func _imprimir_desde_entrada() -> void:
-	caja.pedir_imprimir()
+	caja.pedir_imprimir(_restante)
 	jugador.tomar_el_cursor_desde_entrada()
 
 
@@ -87,7 +95,7 @@ func _al_imprimir(dato: Ticket) -> void:
 		_en_ranura.freeze = false
 		_en_ranura.sleeping = false
 	var papel: ObjetoAgarrable = PAPEL.instantiate()
-	var factor := ancho_del_papel / 0.074995
+	var factor := ancho_del_papel / ANCHO_DEL_MODELO
 	(papel.get_node("Malla") as MeshInstance3D).scale *= factor
 	(papel.get_node("Forma") as CollisionShape3D).scale *= factor
 	papel.datos = dato
@@ -118,6 +126,7 @@ func _al_agarrar(objeto: Node3D) -> void:
 	var papel := objeto as ObjetoAgarrable
 	if papel != null and _tickets.has(papel):
 		_papel = papel
+		_escalar(papel, ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO)
 	if objeto == _en_ranura:
 		_detener_salida()
 		_en_ranura = null
@@ -133,8 +142,30 @@ func limpiar() -> void:
 	_en_ranura = null
 
 
-func _al_soltar(_objeto: Node3D) -> void:
+func _al_soltar(objeto: Node3D) -> void:
 	_papel = null
+	var papel := objeto as ObjetoAgarrable
+	if papel != null and _tickets.has(papel):
+		_escalar(papel, 1.0)
+
+
+func _al_examinar(objeto: Node3D) -> void:
+	var papel := objeto as ObjetoAgarrable
+	if papel != null and _tickets.has(papel):
+		_escalar(papel, ReglasDeLosObjetos.ESCALA_DEL_TICKET_AL_EXAMINAR)
+
+
+func _al_terminar_el_examen() -> void:
+	if is_instance_valid(_papel):
+		_escalar(_papel, ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO)
+
+
+## El cuerpo del papel conserva su tamaño: se escalan su malla y su colisión, como en
+## `_al_imprimir`. `1.0` es el tamaño que tiene en el mundo.
+func _escalar(papel: ObjetoAgarrable, factor: float) -> void:
+	var escala := Vector3.ONE * ancho_del_papel / ANCHO_DEL_MODELO * factor
+	(papel.get_node("Malla") as MeshInstance3D).scale = escala
+	(papel.get_node("Forma") as CollisionShape3D).scale = escala
 
 
 func _al_usar(objetivo: Node3D) -> void:

@@ -119,3 +119,10 @@ func test_las_teclas_giran_lo_examinado_a_velocidad_fija() -> void:  # AC-INV-02
 		Vector2(0.0, velocidad * 0.5), tolerancia
 	)
 	assert_vector(ReglasDeLosObjetos.giro_del_examen(Vector2.ZERO, 0.5)).is_equal(Vector2.ZERO)
+
+
+func test_el_ticket_crece_en_la_mano_y_mas_al_examinar() -> void:  # AC-PLY-109
+	assert_float(ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO).is_greater(1.0)
+	assert_float(ReglasDeLosObjetos.ESCALA_DEL_TICKET_AL_EXAMINAR).is_greater(
+		ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO
+	)

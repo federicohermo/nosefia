@@ -695,3 +695,87 @@ func test_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado() -> voi
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_array(_caja(almacen).generador().renglones()).is_empty()
 	assert_int(avisos.size()).is_equal(1)
+
+
+func _imprimir_papel_de(almacen: Node3D, ids: Array[Producto.Id]) -> ObjetoAgarrable:
+	var productos: Array[Producto] = []
+	for id in ids:
+		productos.append(Catalogo.de(id))
+	var antes := _papeles(almacen).size()
+	_caja(almacen).ticket_impreso.emit(Ticket.new(productos, 887, 4, "22:21"))
+	var papeles := _papeles(almacen)
+	assert_int(papeles.size()).is_equal(antes + 1)
+	return papeles.back() if papeles.size() == antes + 1 else null
+
+
+func _escrito_en(papel: ObjetoAgarrable) -> Array[String]:
+	var textos: Array[String] = []
+	for etiqueta: Label in papel.get_node("Escritura").find_children("*", "Label", true, false):
+		textos.append(etiqueta.text)
+	return textos
+
+
+func _textura_de(papel: ObjetoAgarrable) -> Texture2D:
+	var material := (papel.get_node("Malla") as MeshInstance3D).get_surface_override_material(0)
+	return (material as StandardMaterial3D).albedo_texture
+
+
+func test_cada_papel_muestra_sus_productos_y_no_cambia_con_otra_impresion() -> void:  # AC-PLY-108
+	var almacen := await _abrir()
+	var uno := _imprimir_papel_de(almacen, [Producto.Id.MAROLINI])
+	var escrito_antes := _escrito_en(uno)
+	var otro := _imprimir_papel_de(almacen, [Producto.Id.PURA_COLA, Producto.Id.MALBARDO])
+	var lineas_de_uno := (uno.datos as Ticket).lineas_impresas()
+	var lineas_de_otro := (otro.datos as Ticket).lineas_impresas()
+	for linea in lineas_de_uno:
+		assert_array(_escrito_en(uno)).contains([linea])
+		assert_array(_escrito_en(otro)).not_contains([linea])
+	for linea in lineas_de_otro:
+		assert_array(_escrito_en(otro)).contains([linea])
+		assert_array(_escrito_en(uno)).not_contains([linea])
+	assert_array(_escrito_en(uno)).contains_exactly(escrito_antes)
+	assert_object(_textura_de(uno)).is_not_null()
+	assert_object(_textura_de(uno)).is_not_same(_textura_de(otro))
+	for papel in [uno, otro]:
+		assert_vector((papel.get_node("Malla") as Node3D).scale).is_equal_approx(
+			(papel.get_node("Forma") as Node3D).scale, Vector3.ONE * 0.0001
+		)
+
+
+func test_el_papel_escribe_numero_jornada_total_y_renglones() -> void:  # AC-PLY-105 AC-PLY-107
+	var almacen := await _abrir()
+	var papel := _imprimir_papel_de(almacen, [Producto.Id.MAROLINI, Producto.Id.MAROLINI])
+	var ticket := papel.datos as Ticket
+	var escrito := _escrito_en(papel)
+	assert_array(escrito).contains([ticket.texto_del_numero()])
+	assert_array(escrito).contains([ticket.texto_de_la_fecha()])
+	assert_array(escrito).contains([ticket.texto_del_total()])
+	for linea in ticket.lineas_impresas():
+		assert_array(escrito).contains([linea])
+	assert_int(ticket.lineas_impresas().size()).is_equal(1)
+
+
+func test_el_papel_crece_en_la_mano_mas_al_examinar_y_vuelve_al_soltarlo() -> void:  # AC-PLY-109
+	var almacen := await _abrir()
+	var papel := _imprimir_papel_de(almacen, [Producto.Id.MAROLINI])
+	var malla: MeshInstance3D = papel.get_node("Malla")
+	var forma: CollisionShape3D = papel.get_node("Forma")
+	var del_mundo := malla.scale
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_AGARRAR)
+	var tolerancia := Vector3.ONE * 0.0001
+	var en_la_mano := del_mundo * ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO
+	assert_vector(malla.scale).is_equal_approx(en_la_mano, tolerancia)
+	assert_vector(forma.scale).is_equal_approx(en_la_mano, tolerancia)
+	assert_vector(papel.scale).is_equal_approx(Vector3.ONE, tolerancia)
+	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_true()
+	var al_examinar := del_mundo * ReglasDeLosObjetos.ESCALA_DEL_TICKET_AL_EXAMINAR
+	assert_vector(malla.scale).is_equal_approx(al_examinar, tolerancia)
+	assert_vector(forma.scale).is_equal_approx(al_examinar, tolerancia)
+	(jugador.get("examen") as Examen).terminar()
+	assert_vector(malla.scale).is_equal_approx(en_la_mano, tolerancia)
+	agarre.soltar(true)
+	assert_vector(malla.scale).is_equal_approx(del_mundo, tolerancia)
+	assert_vector(forma.scale).is_equal_approx(del_mundo, tolerancia)
