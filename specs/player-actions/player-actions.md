@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -344,6 +344,22 @@ del jugador libre y dentro del alcance. El lector DEBE apoyar sobre el mostrador
 de rescate del papel DEBE ser su pose real al imprimirse, conservando su tamaño pese a la
 escala de la caja. La apertura de otra jornada DEBE retirar todos los tickets después de
 terminar el examen y vaciar las manos.
+
+Cada ticket impreso DEBE mostrar escrito, sobre el papel del diseño, un número de ticket de
+cuatro cifras, el número de la jornada, la hora de la noche en que se imprimió, un renglón por
+producto distinto y el total. Los renglones DEBEN ir en el orden en que el programa anotó los
+productos, y cada uno DEBE decir la cantidad, el nombre y el precio de lista, con el precio
+sumado de todas sus unidades. El precio DEBE llevar punto de miles y estar alineado a la derecha
+del renglón, y el renglón DEBE caber en el ancho del papel, también el nombre más largo del
+catálogo con tres unidades. El total DEBE ser la suma de los precios de lista de todos los
+productos del ticket. El número de ticket NO DEBE repetirse en la partida, y imprimir otro
+papel NO DEBE cambiar lo escrito en los que ya existen. La impresión en modo manual DEBE verse
+igual que la del lector.
+
+MIENTRAS se lo lleva en la mano, el papel DEBE verse un 20 % más grande que en el mundo, con
+su colisión escalada igual. Al soltarlo o apoyarlo DEBE volver a su tamaño del mundo. MIENTRAS se
+lo examina, DEBE verse más grande que en la mano, de modo que los renglones y el total se lean
+con claridad en 1920 × 1080. El subtítulo del examen NO cambia (BR-SUB-011).
 
 ### BR-PLY-034 — Clic sobre el comprador
 
@@ -977,6 +993,45 @@ impresión conserva ese papel congelado en su lugar en la mano.
 
 DADO un ticket examinado en la mano y otro suelto, CUANDO abre la jornada siguiente ENTONCES
 termina el examen, las manos quedan vacías y ambos papeles dejan de existir.
+
+### AC-PLY-105 — Los renglones salen de lo que se anotó *(verifica BR-PLY-033)*
+
+DADO un ticket con un Marolini, una Pura-Cola y otro Marolini, en ese orden, CUANDO se lee lo
+escrito ENTONCES hay exactamente dos renglones: el de Marolini con cantidad 2 y el precio de
+lista sumado de sus dos unidades, y el de Pura-Cola con cantidad 1 y su precio de lista. El
+Marolini va primero. El total es la suma de los tres precios de lista. DADO un ticket con un
+solo producto ENTONCES hay un renglón y el total es su precio. DADO un ticket con tres
+productos distintos ENTONCES hay tres renglones. Todos los precios llevan punto de miles y
+terminan con «$».
+
+### AC-PLY-106 — Todo renglón cabe en el papel *(verifica BR-PLY-033)*
+
+DADO un ticket de tres Feel Ricky Fort, el nombre más largo del catálogo, CUANDO se lee lo
+escrito ENTONCES su renglón dice cantidad 3 y el precio de las tres unidades, y entra en el
+ancho del papel con el precio alineado a la derecha igual que el de un renglón corto.
+DADO un ticket impreso con el programa en modo manual ENTONCES lo escrito se ve igual que el de
+uno impreso con el lector, con los mismos productos.
+
+### AC-PLY-107 — Número, jornada y hora de cada ticket *(verifica BR-PLY-033)*
+
+DADO una partida en la que se imprimen varios tickets CUANDO se lee el número de cada uno
+ENTONCES tiene cuatro cifras y ningún par repite número. DADO un ticket impreso en la jornada
+4 con 60 segundos de la noche transcurridos ENTONCES dice la jornada 4 y la hora que el marcador
+da en ese instante, y no cambia cuando la noche avanza.
+
+### AC-PLY-108 — Dos papeles distintos se ven distintos *(verifica BR-PLY-033, BR-PLY-004)*
+
+DADO un ticket con un Marolini y, impreso después, otro con una Pura-Cola CUANDO se ven a la
+vez ENTONCES cada papel muestra sus propios productos, y el primero conserva lo suyo después de
+la segunda impresión. Los dos están en el mundo, sin perder su tamaño ni su colisión.
+
+### AC-PLY-109 — Más grande en la mano y todavía más al examinar *(verifica BR-PLY-033)*
+
+DADO un ticket en el mundo CUANDO se agarra ENTONCES su papel y su colisión miden 1,2 veces lo
+que medían, y CUANDO se lo suelta o se lo apoya ENTONCES vuelven a su tamaño del mundo. DADO el
+ticket en la mano CUANDO se lo examina ENTONCES mide más que en la mano, y en 1920 × 1080 el
+alto de cada renglón alcanza para leerlo. CUANDO se examina un ticket ENTONCES el subtítulo es
+el mismo de antes del cambio.
 
 ### AC-PLY-078 — El primario desecha sólo el ticket propio *(verifica BR-PLY-012, BR-PLY-004, BR-PLY-006, BR-PLY-010)*
 
