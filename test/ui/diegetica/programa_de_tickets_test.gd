@@ -216,11 +216,16 @@ func test_el_clic_que_cierra_la_lista_no_activa_el_boton_de_debajo() -> void:  #
 	vista.borrado_pedido.connect(func() -> void: borrados.append(true))
 	var arriba := vista.borrar.get_global_transform_with_canvas() * Vector2.ZERO
 	var abajo := vista.borrar.get_global_transform_with_canvas() * vista.borrar.size
+	_boton(selector, "Cabecera").pressed.emit()
+	await selector.animacion_terminada
 	var punto := Vector2((arriba.x + abajo.x) / 2.0, (_borde_inferior(lista) + abajo.y) / 2.0)
+	assert_float(_borde_inferior(lista)).is_between(arriba.y, abajo.y)
+	_boton(selector, "Cabecera").pressed.emit()
+	await selector.animacion_terminada
 	_clic(vista, punto)
 	assert_array(borrados).has_size(1)
 	_boton(selector, "Cabecera").pressed.emit()
-	assert_float(_borde_inferior(lista)).is_between(arriba.y, abajo.y)
+	await selector.animacion_terminada
 	_clic(selector, punto)
 	assert_bool(selector.esta_abierta()).is_false()
 	assert_array(borrados).has_size(1)
@@ -272,7 +277,7 @@ func test_un_clic_sobre_cada_linea_visible_elige_su_producto() -> void:
 					_afirmar_la_linea(lineas[indice], indice, elegidos[0])
 				assert_bool(selector.esta_abierta()).is_false()
 				_boton(selector, "Cabecera").pressed.emit()
-				await await_idle_frame()
+				await selector.animacion_terminada
 			assert_int(visibles).is_greater(1)
 
 
@@ -326,6 +331,42 @@ func test_la_lista_abierta_de_cada_renglon_entra_en_el_panel_en_cada_resolucion(
 			assert_int(visibles).override_failure_message(contexto).is_greater(1)
 
 
+func test_la_lista_se_despliega_se_repliega_y_la_flecha_gira_con_ella() -> void:
+	var selector := _abrir(6).selectores[0]
+	var lista := selector.find_child("Lista", true, false) as Control
+	var flecha := selector.find_child("Flecha", true, false) as Control
+	var rotacion_cerrada := flecha.rotation
+	var posicion_cerrada := flecha.position
+	_boton(selector, "Cabecera").pressed.emit()
+	var alto_al_empezar := lista.size.y
+	await selector.animacion_terminada
+	assert_float(alto_al_empezar).is_less(lista.size.y)
+	assert_bool(lista.visible).is_true()
+	assert_float(flecha.rotation).is_not_equal(rotacion_cerrada)
+	_boton(selector, "Cabecera").pressed.emit()
+	assert_bool(lista.visible).is_true()
+	await selector.animacion_terminada
+	assert_bool(lista.visible).is_false()
+	assert_float(flecha.rotation).is_equal_approx(rotacion_cerrada, 0.001)
+	assert_vector(flecha.position).is_equal_approx(posicion_cerrada, Vector2(0.01, 0.01))
+
+
+func test_un_clic_sobre_una_linea_mientras_la_lista_se_repliega_no_la_elige() -> void:
+	var vista := _abrir_en_pantalla(6)
+	var selector := vista.selectores[0]
+	var elegidos: Array[Producto] = []
+	selector.producto_elegido.connect(func(producto: Producto) -> void: elegidos.append(producto))
+	var lineas := await _abrir_la_lista(selector, false)
+	_boton(selector, "Cabecera").pressed.emit()
+	_clic(selector, _rectangulo_global(lineas[1]).get_center())
+	assert_array(elegidos).is_empty()
+	await selector.animacion_terminada
+	_boton(selector, "Cabecera").pressed.emit()
+	await selector.animacion_terminada
+	_clic(selector, _rectangulo_global(lineas[1]).get_center())
+	assert_array(elegidos).has_size(1)
+
+
 func _abrir(jornada: int) -> ProgramaDeTickets:
 	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
 	add_child(vista)
@@ -335,7 +376,7 @@ func _abrir(jornada: int) -> ProgramaDeTickets:
 
 func _abrir_la_lista(selector: SelectorDeRenglon, desplazada: bool) -> Array[Button]:
 	_boton(selector, "Cabecera").pressed.emit()
-	await await_idle_frame()
+	await selector.animacion_terminada
 	var desplazamiento := selector.find_child("Desplazamiento", true, false) as ScrollContainer
 	if desplazada:
 		desplazamiento.scroll_vertical = int(desplazamiento.get_v_scroll_bar().max_value / 2.0)

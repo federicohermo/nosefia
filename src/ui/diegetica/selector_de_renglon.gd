@@ -7,6 +7,7 @@ extends Control
 ## `null` es vaciar el renglón.
 signal producto_elegido(producto: Producto)
 signal lista_abierta
+signal animacion_terminada
 
 const COLOR_CLARO := Color("f0f4d1")
 const COLOR_OSCURO := Color("1a1a1a")
@@ -21,6 +22,7 @@ const MARGEN_INFERIOR := 28.0
 const MARGEN_DEL_NOMBRE := 57.0
 const MARGEN_DEL_VACIO := 27.0
 const ANCHO_DEL_BORDE := 1
+const DURACION_DE_LA_ANIMACION := 0.15
 
 const FLECHA := preload("res://assets/ui/manada/ticket_flecha.svg")
 const EQUIS := preload("res://assets/ui/manada/ticket_x.svg")
@@ -35,6 +37,10 @@ var _nombre: Label
 var _equis: TextureRect
 var _lista: Panel
 var _limite_inferior := INF
+var _alto_final := ALTO_DE_LA_LISTA
+var _progreso := 0.0
+var _animando := false
+var _tween: Tween
 
 
 func armar(catalogo: Array[Producto]) -> void:
@@ -59,6 +65,7 @@ func armar(catalogo: Array[Producto]) -> void:
 	_equis = _textura(EQUIS, "Equis", Vector2(17.04, 23.43))
 	_equis.position = Vector2(335.0, 36.0)
 	add_child(_equis)
+	_desplegar(0.0)
 	mostrar_producto(null)
 
 
@@ -82,20 +89,26 @@ func esta_abierta() -> bool:
 
 
 func cerrar() -> void:
+	if not _abierta:
+		return
 	_abierta = false
-	_lista.visible = false
-	z_index = 0
 	_pintar()
+	_animar(0.0)
 
 
 func _input(evento: InputEvent) -> void:
 	var clic := evento as InputEventMouseButton
-	if not _abierta or clic == null or not clic.pressed:
+	if not (_abierta or _animando) or clic == null or not clic.pressed:
 		return
 	if clic.button_index != MOUSE_BUTTON_LEFT:
 		return
 	var local := _lista.get_global_transform_with_canvas().affine_inverse() * clic.position
-	if not Rect2(Vector2.ZERO, _lista.size).has_point(local):
+	if Rect2(Vector2.ZERO, Vector2(ANCHO, _alto_final)).has_point(local):
+		# Una línea a medio desplegar no se elige: el clic se traga hasta que termina.
+		if _animando:
+			get_viewport().set_input_as_handled()
+		return
+	if _abierta:
 		cerrar()
 		get_viewport().set_input_as_handled()
 
@@ -111,14 +124,42 @@ func _alternar() -> void:
 	# El z_index sólo ordena el dibujo: el clic lo gana el último nodo del árbol.
 	get_parent().move_child(self, -1)
 	_pintar()
+	_animar(1.0)
 	lista_abierta.emit()
 
 
 func _ajustar_el_alto_de_la_lista() -> void:
-	var alto := minf(ALTO_DE_LA_LISTA, _limite_inferior - MARGEN_INFERIOR - position.y)
-	_lista.size.y = alto
+	_alto_final = minf(ALTO_DE_LA_LISTA, _limite_inferior - MARGEN_INFERIOR - position.y)
 	var desplazamiento := _lista.get_node("Desplazamiento") as Control
-	desplazamiento.size.y = alto - ALTO_DE_LA_CABECERA - 1.0
+	desplazamiento.size.y = _alto_final - ALTO_DE_LA_CABECERA - 1.0
+
+
+## Despliega la lista y gira la flecha: 0 es el renglón cerrado y 1 la lista abierta.
+func _desplegar(progreso: float) -> void:
+	_progreso = progreso
+	_lista.size.y = _alto_final * progreso
+	_flecha.rotation_degrees = 90.0 * progreso
+	var centro := Vector2(34.07, 47.6).lerp(Vector2(25.66, 45.6), progreso)
+	_flecha.position = centro - _flecha.size / 2.0
+
+
+func _animar(hacia: float) -> void:
+	if _tween != null:
+		_tween.kill()
+	_animando = true
+	_tween = create_tween()
+	_tween.tween_method(
+		_desplegar, _progreso, hacia, DURACION_DE_LA_ANIMACION * absf(hacia - _progreso)
+	)
+	_tween.tween_callback(_terminar_la_animacion)
+
+
+func _terminar_la_animacion() -> void:
+	_animando = false
+	if not _abierta:
+		_lista.visible = false
+		z_index = 0
+	animacion_terminada.emit()
 
 
 func _elegir(producto: Producto) -> void:
@@ -136,9 +177,6 @@ func _pintar() -> void:
 	_flecha.self_modulate = color
 	_equis.self_modulate = color
 	_equis.visible = _producto != null
-	_flecha.rotation_degrees = 90.0 if _abierta else 0.0
-	var centro := Vector2(25.66, 45.6) if _abierta else Vector2(34.07, 47.6)
-	_flecha.position = centro - _flecha.size / 2.0
 	var alto := ALTO_DE_LA_CABECERA if _abierta else ALTO_DEL_RENGLON
 	_cabecera.size = Vector2(ANCHO, alto)
 
@@ -148,6 +186,7 @@ func _armar_la_lista(catalogo: Array[Producto]) -> Panel:
 	lista.name = "Lista"
 	lista.size = Vector2(ANCHO, ALTO_DE_LA_LISTA)
 	lista.visible = false
+	lista.clip_contents = true
 	lista.add_theme_stylebox_override("panel", _estilo(COLOR_DEL_PANEL))
 	var separador := SeparadorDePixel.new()
 	separador.name = "Separador"
