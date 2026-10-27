@@ -63,16 +63,18 @@ func _automatico(productos: Array[Producto]) -> GeneradorDeTickets:
 	return generador
 
 
-func test_cada_renglon_manual_ofrece_el_catalogo_ordenado_en_mayusculas() -> void:  # AC-CTR-030
+func test_cada_renglon_ofrece_vacio_y_despues_el_catalogo_en_mayusculas() -> void:  # AC-CTR-030
 	var vista := _abrir(6)
 	assert_int(vista.selectores.size()).is_equal(GeneradorDeTickets.RENGLONES)
 	var catalogo := Catalogo.todos()
 	for selector in vista.selectores:
 		assert_bool(selector.is_visible_in_tree()).is_true()
 		var nombres := _nombres_de_la_lista(selector)
-		assert_int(nombres.size()).is_equal(catalogo.size())
+		assert_int(nombres.size()).is_equal(catalogo.size() + 1)
 		for indice in catalogo.size():
-			assert_str(nombres[indice]).is_equal(catalogo[indice].nombre.to_upper())
+			assert_str(nombres[indice + 1]).is_equal(catalogo[indice].nombre.to_upper())
+		for producto in catalogo:
+			assert_str(nombres[0]).is_not_equal(producto.nombre.to_upper())
 	for fila in vista.filas:
 		assert_bool(fila.is_visible_in_tree()).is_false()
 	for flecha in vista.flechas:
@@ -115,7 +117,7 @@ func test_solo_dos_o_tres_conserva_su_posicion_al_repintar() -> void:  # AC-CTR-
 		assert_array(elecciones).is_empty()
 
 
-func test_elegir_de_la_lista_publica_el_producto_y_la_x_publica_vacio() -> void:  # AC-CTR-030
+func test_elegir_un_producto_o_vacio_publica_la_eleccion() -> void:  # AC-CTR-030
 	var vista := _abrir(6)
 	var generador := GeneradorDeTickets.para_la_jornada(6)
 	vista.mostrar(generador)
@@ -132,7 +134,7 @@ func test_elegir_de_la_lista_publica_el_producto_y_la_x_publica_vacio() -> void:
 	var selector := vista.selectores[2]
 	_boton(selector, "Cabecera").pressed.emit()
 	assert_bool(selector.esta_abierta()).is_true()
-	_botones_de_la_lista(selector)[_posicion_en_el_catalogo(marolini)].pressed.emit()
+	_botones_de_la_lista(selector)[1 + _posicion_en_el_catalogo(marolini)].pressed.emit()
 	assert_array(indices).contains_exactly([2])
 	assert_bool(selector.esta_abierta()).is_false()
 	assert_object(generador.en_el_renglon(0)).is_null()
@@ -142,15 +144,31 @@ func test_elegir_de_la_lista_publica_el_producto_y_la_x_publica_vacio() -> void:
 	if elegido != null:
 		assert_int(elegido.id).is_equal(marolini.id)
 	_afirmar_producto(selector, marolini)
-	_boton(selector, "Quitar").pressed.emit()
+	_boton(selector, "Cabecera").pressed.emit()
+	_botones_de_la_lista(selector)[0].pressed.emit()
 	assert_array(indices).contains_exactly([2, 2])
 	assert_int(productos.size()).is_equal(2)
 	if productos.size() == 2:
 		assert_object(productos[1]).is_null()
 	assert_object(generador.en_el_renglon(2)).is_null()
+	assert_bool(selector.esta_abierta()).is_false()
 	_afirmar_producto(selector, null)
-	_boton(selector, "Quitar").pressed.emit()
-	assert_array(indices).contains_exactly([2, 2])
+
+
+func test_la_x_del_renglon_no_lo_vacia_y_abre_la_lista() -> void:
+	var vista := _abrir(6)
+	var marolini := Catalogo.de(Producto.Id.MAROLINI)
+	var selector := vista.selectores[0]
+	selector.mostrar_producto(marolini)
+	var equis := selector.find_child("Equis", true, false) as Control
+	var publicadas: Array[Producto] = []
+	vista.eleccion_pedida.connect(
+		func(_indice: int, producto: Producto) -> void: publicadas.append(producto)
+	)
+	_clic(selector, equis.get_global_transform_with_canvas() * (equis.size / 2.0))
+	assert_bool(selector.esta_abierta()).is_true()
+	assert_array(publicadas).is_empty()
+	_afirmar_producto(selector, marolini)
 
 
 func test_abrir_la_lista_de_un_renglon_cierra_la_de_otro() -> void:
@@ -182,6 +200,24 @@ func test_un_clic_izquierdo_afuera_cierra_la_lista_y_no_el_programa() -> void:  
 	_boton(selector, "Cabecera").pressed.emit()
 	vista.ocultar()
 	assert_bool(selector.esta_abierta()).is_false()
+
+
+func test_el_clic_que_cierra_la_lista_no_activa_el_boton_de_debajo() -> void:  # AC-PLY-072
+	var vista := _abrir(6)
+	var selector := vista.selectores[0]
+	var lista := selector.find_child("Lista", true, false) as Control
+	var borrados: Array[bool] = []
+	vista.borrado_pedido.connect(func() -> void: borrados.append(true))
+	var arriba := vista.borrar.get_global_transform_with_canvas() * Vector2.ZERO
+	var abajo := vista.borrar.get_global_transform_with_canvas() * vista.borrar.size
+	var punto := Vector2((arriba.x + abajo.x) / 2.0, (_borde_inferior(lista) + abajo.y) / 2.0)
+	_clic(vista, punto)
+	assert_array(borrados).has_size(1)
+	_boton(selector, "Cabecera").pressed.emit()
+	assert_float(_borde_inferior(lista)).is_between(arriba.y, abajo.y)
+	_clic(selector, punto)
+	assert_bool(selector.esta_abierta()).is_false()
+	assert_array(borrados).has_size(1)
 
 
 func test_el_nombre_mas_largo_del_catalogo_entra_antes_de_la_x() -> void:
@@ -230,6 +266,20 @@ func _nombres_de_la_lista(selector: SelectorDeRenglon) -> Array[String]:
 	for boton in _botones_de_la_lista(selector):
 		nombres.append(boton.text)
 	return nombres
+
+
+func _borde_inferior(control: Control) -> float:
+	return (control.get_global_transform_with_canvas() * control.size).y
+
+
+func _clic(nodo: Node, posicion: Vector2) -> void:
+	for presionado: bool in [true, false]:
+		var evento := InputEventMouseButton.new()
+		evento.button_index = MOUSE_BUTTON_LEFT
+		evento.position = posicion
+		evento.global_position = posicion
+		evento.pressed = presionado
+		nodo.get_viewport().push_input(evento)
 
 
 func _posicion_en_el_catalogo(producto: Producto) -> int:

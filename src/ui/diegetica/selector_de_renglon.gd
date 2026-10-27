@@ -18,6 +18,7 @@ const ALTO_DEL_RENGLON := 95.0
 const ALTO_DE_LA_CABECERA := 72.0
 const ALTO_DEL_ITEM := 60.0
 const MARGEN_DEL_NOMBRE := 57.0
+const MARGEN_DEL_VACIO := 27.0
 const ANCHO_DEL_BORDE := 1
 
 const FLECHA := preload("res://assets/ui/manada/ticket_flecha.svg")
@@ -28,7 +29,6 @@ var _producto: Producto
 var _abierta := false
 var _lleno := _estilo(COLOR_CLARO)
 var _vacio := _estilo(COLOR_DEL_PANEL)
-var _quitar_boton: Button
 var _cabecera: Button
 var _flecha: TextureRect
 var _nombre: Label
@@ -58,11 +58,6 @@ func armar(catalogo: Array[Producto]) -> void:
 	_equis = _textura(EQUIS, "Equis", Vector2(17.04, 23.43))
 	_equis.position = Vector2(335.0, 36.0)
 	add_child(_equis)
-	_quitar_boton = _boton(StyleBoxEmpty.new(), StyleBoxEmpty.new())
-	_quitar_boton.name = "Quitar"
-	_quitar_boton.position = Vector2(305.0, 0.0)
-	_quitar_boton.pressed.connect(_quitar)
-	add_child(_quitar_boton)
 	mostrar_producto(null)
 
 
@@ -96,6 +91,7 @@ func _input(evento: InputEvent) -> void:
 	var local := _lista.get_global_transform_with_canvas().affine_inverse() * clic.position
 	if not Rect2(Vector2.ZERO, _lista.size).has_point(local):
 		cerrar()
+		get_viewport().set_input_as_handled()
 
 
 func _alternar() -> void:
@@ -107,12 +103,6 @@ func _alternar() -> void:
 	z_index = 1
 	_pintar()
 	lista_abierta.emit()
-
-
-func _quitar() -> void:
-	cerrar()
-	if _producto != null:
-		producto_elegido.emit(null)
 
 
 func _elegir(producto: Producto) -> void:
@@ -129,12 +119,12 @@ func _pintar() -> void:
 	_nombre.add_theme_color_override("font_color", color)
 	_flecha.self_modulate = color
 	_equis.self_modulate = color
+	_equis.visible = _producto != null
 	_flecha.rotation_degrees = 90.0 if _abierta else 0.0
 	var centro := Vector2(25.66, 45.6) if _abierta else Vector2(34.07, 47.6)
 	_flecha.position = centro - _flecha.size / 2.0
 	var alto := ALTO_DE_LA_CABECERA if _abierta else ALTO_DEL_RENGLON
 	_cabecera.size = Vector2(ANCHO, alto)
-	_quitar_boton.size = Vector2(ANCHO - _quitar_boton.position.x, alto)
 
 
 func _armar_la_lista(catalogo: Array[Producto]) -> Panel:
@@ -161,14 +151,17 @@ func _armar_la_lista(catalogo: Array[Producto]) -> Panel:
 	margen.custom_minimum_size.y = 4.0
 	margen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	items.add_child(margen)
+	items.add_child(_item(null))
 	for producto in catalogo:
 		items.add_child(_item(producto))
 	return lista
 
 
+## Sin producto es la opción vacía de Figma: «>» y ningún nombre.
 func _item(producto: Producto) -> Button:
-	var item := _boton(_estilo(COLOR_DEL_PANEL, 56.0, false), _estilo(COLOR_CLARO, 56.0, false))
-	item.text = Catalogo.de(producto.id).nombre.to_upper()
+	var margen := 56.0 if producto != null else MARGEN_DEL_VACIO
+	var item := _boton(_estilo(COLOR_DEL_PANEL, margen, false), _estilo(COLOR_CLARO, margen, false))
+	item.text = Catalogo.de(producto.id).nombre.to_upper() if producto != null else ">"
 	item.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	item.custom_minimum_size.y = ALTO_DEL_ITEM
 	item.add_theme_color_override("font_color", COLOR_CLARO)
@@ -180,6 +173,15 @@ func _item(producto: Producto) -> Button:
 	var linea := _textura(LINEA, "Linea", Vector2(344.0, 1.0))
 	linea.position = Vector2(17.5, ALTO_DEL_ITEM - 1.0)
 	item.add_child(linea)
+	if producto == null:
+		item.name = "OpcionVacia"
+		return item
+	var equis := _textura(EQUIS, "EquisDelItem", Vector2(17.04, 23.43))
+	equis.position = Vector2(334.0, 19.0)
+	equis.self_modulate = COLOR_CLARO
+	item.add_child(equis)
+	item.mouse_entered.connect(func() -> void: equis.self_modulate = COLOR_OSCURO)
+	item.mouse_exited.connect(func() -> void: equis.self_modulate = COLOR_CLARO)
 	return item
 
 
