@@ -23,7 +23,6 @@ const ANCHO_DEL_BORDE := 1
 
 const FLECHA := preload("res://assets/ui/manada/ticket_flecha.svg")
 const EQUIS := preload("res://assets/ui/manada/ticket_x.svg")
-const LINEA := preload("res://assets/ui/manada/ticket_linea.svg")
 
 var _producto: Producto
 var _abierta := false
@@ -135,7 +134,8 @@ func _armar_la_lista(catalogo: Array[Producto]) -> Panel:
 	lista.size = Vector2(ANCHO, ALTO_DE_LA_LISTA)
 	lista.visible = false
 	lista.add_theme_stylebox_override("panel", _estilo(COLOR_DEL_PANEL))
-	var separador := _textura(LINEA, "Separador", Vector2(344.0, 1.0))
+	var separador := SeparadorDePixel.new()
+	separador.name = "Separador"
 	separador.position = Vector2(18.5, ALTO_DE_LA_CABECERA - 0.5)
 	lista.add_child(separador)
 	var desplazamiento := ScrollContainer.new()
@@ -172,7 +172,8 @@ func _item(producto: Producto) -> Button:
 	]:
 		item.add_theme_color_override(estado, COLOR_OSCURO)
 	item.pressed.connect(_elegir.bind(producto))
-	var linea := _textura(LINEA, "Linea", Vector2(344.0, 1.0))
+	var linea := SeparadorDePixel.new()
+	linea.name = "Linea"
 	linea.position = Vector2(17.5, ALTO_DEL_ITEM - 1.0)
 	item.add_child(linea)
 	if producto == null:

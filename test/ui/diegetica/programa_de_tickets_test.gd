@@ -1,6 +1,12 @@
 extends GdUnitTestSuite
 
 const ESCENA := preload("res://src/ui/diegetica/programa_de_tickets.tscn")
+const RESOLUCIONES: Array[Vector2i] = [
+	Vector2i(1920, 1080),
+	Vector2i(1600, 900),
+	Vector2i(1366, 768),
+	Vector2i(1280, 720),
+]
 
 
 func test_siempre_presenta_tres_filas_y_repinta_sin_restos() -> void:  # AC-CTR-021, AC-CTR-023
@@ -270,6 +276,38 @@ func test_un_clic_sobre_cada_linea_visible_elige_su_producto() -> void:
 			assert_int(visibles).is_greater(1)
 
 
+func test_cada_producto_visible_tiene_su_separador_en_cada_resolucion() -> void:
+	for pantalla: Vector2i in RESOLUCIONES:
+		for desplazado: bool in [false, true]:
+			var vista := _abrir_en_pantalla(6, pantalla)
+			var selector := vista.selectores[0]
+			var lineas := await _abrir_la_lista(selector, desplazado)
+			var recorte := _rectangulo_global(selector.find_child("Desplazamiento", true, false))
+			var anterior := -1.0
+			var visibles := 0
+			for linea in lineas:
+				var separador := _rectangulo_global(linea.find_child("Linea", false, false))
+				if not recorte.encloses(separador):
+					continue
+				visibles += 1
+				var contexto := "%s, desplazado: %s" % [pantalla, desplazado]
+				(
+					assert_int(_filas_de_pixeles(separador))
+					. override_failure_message(contexto)
+					. is_equal(1)
+				)
+				assert_float(separador.position.y).is_equal_approx(
+					roundf(separador.position.y), 0.01
+				)
+				assert_float(separador.position.y).is_greater(anterior)
+				assert_float(separador.position.y).is_greater_equal(
+					_rectangulo_global(linea).position.y
+				)
+				assert_float(separador.end.y).is_less_equal(_rectangulo_global(linea).end.y + 0.01)
+				anterior = separador.position.y
+			assert_int(visibles).is_greater(1)
+
+
 func _abrir(jornada: int) -> ProgramaDeTickets:
 	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
 	add_child(vista)
@@ -310,14 +348,19 @@ func _afirmar_la_linea(linea: Button, indice: int, elegido: Producto) -> void:
 
 
 ## La ventana del test mide 64 píxeles: a esa escala el clic se redondea sobre otra línea.
-func _abrir_en_pantalla(jornada: int) -> ProgramaDeTickets:
+func _abrir_en_pantalla(jornada: int, tamano: Vector2i = Vector2i(1920, 1080)) -> ProgramaDeTickets:
 	var pantalla: SubViewport = auto_free(SubViewport.new())
-	pantalla.size = Vector2i(1920, 1080)
+	pantalla.size = tamano
 	add_child(pantalla)
 	var vista: ProgramaDeTickets = ESCENA.instantiate()
 	pantalla.add_child(vista)
 	vista.mostrar(GeneradorDeTickets.para_la_jornada(jornada))
 	return vista
+
+
+## Las filas de píxeles cuyo centro cae adentro del rectángulo: las que el motor pinta.
+func _filas_de_pixeles(rectangulo: Rect2) -> int:
+	return ceili(rectangulo.end.y - 0.5) - ceili(rectangulo.position.y - 0.5)
 
 
 func _boton(selector: SelectorDeRenglon, nombre: String) -> Button:
