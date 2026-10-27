@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); zonas de reposición del mapa de esa ficha (#554); la unidad en la mano al cierre cuenta como puesta (#386)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -36,8 +36,6 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Casillero** | cada lugar de la fila de adelante, que el jugador llena colocando una unidad y vacía agarrándola. Cada uno está vacío u ocupado por separado | hueco, slot |
 | **Cupo** | cuántos casilleros suman las filas de adelante de las tandas de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
-| **Zona de reposición** | cada una de las siete regiones del piso del local del [mapa de la ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd), numeradas de 1 a 7 | sector, pasillo |
-| **Zona con faltante** | zona de reposición con algún producto faltante entre los de sus muebles | zona vacía |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
 | **Máximo reponible** | el menor entre los casilleros de la tanda reponible de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
 | **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
@@ -653,36 +651,6 @@ sin desplazarse más de 1 cm en los primeros 120 cuadros de física sin interven
 
 SI la partida no guarda la pose de una caja, o la guardada no es una pose, ENTONCES esa caja
 DEBE abrir en su lugar de fábrica. Toda caja presente DEBE abrir llena (BR-STK-004).
-
-### BR-STK-052 — Siete zonas de reposición cubren los productos de sus muebles
-
-El sistema DEBE dividir el piso del local en las siete zonas del mapa de la ficha. Cada zona
-cubre los productos cuya tanda principal está en alguno de sus muebles:
-
-| Zona | Muebles que cubre |
-|---|---|
-| 1 | las dos heladeras funcionales, la heladera fuera de servicio y la cabecera norte de la primera isla |
-| 2 | la estantería de no comestibles y la cabecera norte de la segunda isla |
-| 3 | el lado oeste de la primera isla |
-| 4 | el lado este de la primera isla y el lado oeste de la segunda |
-| 5 | el lado este de la segunda isla |
-| 6 | la cabecera sur de la primera isla |
-| 7 | la cabecera sur de la segunda isla |
-
-Cada producto presente DEBE pertenecer a exactamente una zona, en la etapa de prueba y en la
-completa. La heladera fuera de servicio no cubre ningún producto. Las tandas fijas NO DEBEN
-asignarle a una zona un producto cuya tanda principal está en otra.
-
-Una zona DEBE ser **zona con faltante** CUANDO algún producto que cubre es faltante según
-BR-STK-007, y dejar de serlo CUANDO ya no lo es, también si un casillero se vacía durante la
-noche. La zona contesta contra el estado actual del inventario, sin guardar una bandera propia.
-Una jornada que no declara reponer NO DEBE tener ninguna zona con faltante (BR-STK-026).
-
-Cada punto del piso DEBE pertenecer a una sola zona, o a ninguna. Un punto del límite entre dos
-zonas DEBE pertenecer siempre a la misma de las dos, sin cambiar de una consulta a otra. Un punto
-fuera de las siete zonas, como el depósito, NO DEBE pertenecer a ninguna. El reparto de las
-zonas y sus muebles NO DEBE cambiar el cupo, la tanda principal ni la exhibición de ningún
-producto.
 
 ## Criterios de aceptación
 
@@ -1459,32 +1427,6 @@ abren donde se guardaron. DADO la jornada 4 abierta con la pila de cajas llegada
 ordenarlas CUANDO abre la 5 ENTONCES esas cajas abren cada una en una estantería (BR-STK-051)
 y ninguna abre apilada en el fondo del depósito.
 
-### AC-STK-114 — Cada producto presente pertenece a una sola zona *(verifica BR-STK-052, BR-STK-043, BR-STK-046, BR-STK-047)*
-
-DADO el local de las jornadas de prueba, y luego el de la primera jornada completa, CUANDO se
-asigna cada producto presente a su zona ENTONCES cada uno cae en exactamente una de las siete,
-según la tabla de BR-STK-052. Duronga cae en la zona 2 con la estantería de no comestibles.
-Las heladeras funcionales cubren sus productos en la zona 1 y la fuera de servicio no cubre
-ninguno. Ningún producto ausente de la etapa pertenece a una zona. Una tanda fija de un producto
-en un mueble de otra zona no lo suma a esa zona.
-
-### AC-STK-115 — Una zona tiene faltante mientras algún producto suyo lo tiene *(verifica BR-STK-052, BR-STK-007, BR-STK-026)*
-
-DADO la jornada 2 con un solo producto faltante cuya tanda principal está en la zona 4 ENTONCES la
-zona 4 tiene faltante y las otras seis no. CUANDO se coloca la última unidad que le falta ENTONCES
-ninguna tiene. CUANDO la zona 4 tiene dos productos faltantes y se repone uno ENTONCES sigue con
-faltante. CUANDO se agarra o se vende una unidad de un producto de la zona 6 con la góndola
-completa ENTONCES la zona 6 vuelve a tener faltante. DADO la jornada 1 con unidades agarradas o
-vendidas de cualquier góndola ENTONCES ninguna zona tiene faltante.
-
-### AC-STK-116 — Un punto pertenece a una sola zona *(verifica BR-STK-052)*
-
-DADO un punto en el interior de cada una de las siete zonas CUANDO se consulta su zona ENTONCES
-contesta esa zona. DADO un punto sobre el límite entre las zonas 3 y 4, y otro entre las zonas 4 y
-5, CUANDO se consulta cada uno diez veces, desde cualquiera de los dos lados, ENTONCES siempre
-contesta una sola zona y es la misma. DADO un punto en el depósito, fuera de las siete, ENTONCES
-no contesta ninguna.
-
 ### AC-STK-117 — Lo que se lleva en la mano al cerrar cuenta como puesto *(verifica BR-STK-033)*
 
 DADO un producto con un solo casillero vacío y el resto de la góndola completa CUANDO el jugador
@@ -1512,7 +1454,7 @@ La fuente inyectable no activa por sí sola el padrón de la jornada 2 ni sustit
 solo de sus consumidores.
 
 - **Entrada:** el sector y destino declarado de cada producto y si admite exhibición;
-  la posición del jugador en el piso, los productos que existen, sus casilleros totales y los de la fila de adelante
+  los productos que existen, sus casilleros totales y los de la fila de adelante
   de todas sus tandas, la jornada que se abre, sus pedidos ya construidos y la fuente de azar,
   lo vendido de cada producto, qué compras terminaron y cuáles siguen abiertas, lo que el jugador
   lleva en la mano, la caja que examina, el casillero que elige, y los pedidos de ingresar,
@@ -1521,8 +1463,7 @@ solo de sus consumidores.
 - **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
-  obligatoria está cumplida, el motivo de cada rechazo, y la zona de reposición de un punto y si
-  tiene faltante.
+  obligatoria está cumplida, y el motivo de cada rechazo.
 - **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
   producto y devuelve faltantes dentro del máximo de sus casilleros de adelante, y cuáles quedan
   vacíos. El inventario conserva el cupo total. Con menos elegibles que la
@@ -1567,8 +1508,6 @@ solo de sus consumidores.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta y consume): avisa cuándo reponer y
   registrar y ordenar las cajas quedaron cumplidas, y cuándo dejaron de estarlo; y la jornada
   que abre decide lo que falta y la disposición inicial de las cajas.
-- [`notifications`](../notifications/notifications.md) (alimenta): la zona donde está el
-  jugador y si tiene faltante, que decide el aviso de falta reponer (BR-NTF-016).
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (alimenta y consume): guarda la
   pose de cada caja al cierre y la devuelve al retomar (BR-SAV-022).
 

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-NTF
 status: ratified
 owner: por definir
-provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573; fichas «Notificaciones» y «8. Tarea: Reposición» (#554)
+provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573
 ---
 
 # Capacidad: los avisos durante la noche
@@ -13,7 +13,6 @@ provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e 
 Hacer visibles la llegada y salida por cansancio de un comprador y el rechazo del lector lleno.
 Avisar también una pista nueva, la salida habilitada o vuelta a trabar de las jornadas de prueba
 y la proximidad del cierre mientras el jugador reparte su atención entre las tareas.
-Avisar además que falta reponer productos mientras el jugador está en una zona con faltantes.
 Los avisos acompañan esos sucesos sin cambiar su resultado.
 
 ## Lenguaje de la capacidad
@@ -21,9 +20,7 @@ Los avisos acompañan esos sucesos sin cambiar su resultado.
 | Término | Significado acá | Evitar |
 |---|---|---|
 | **Notificación** | cartel breve con texto y símbolo de un suceso | ventana, diálogo |
-| **Tipo** | llegada, salida por cansancio, lectura fallida por renglones llenos, pista nueva, cierre próximo, tareas terminadas, salida vuelta a trabar o falta reponer | prioridad |
-| **Zona de reposición** | cada una de las siete regiones del piso del local que declara [`store-stock`](../store-stock/store-stock.md) (BR-STK-052) | sector, pasillo |
-| **Zona con faltante** | zona de reposición en la que algún producto de sus muebles es faltante según BR-STK-007 | zona vacía |
+| **Tipo** | llegada, salida por cansancio, lectura fallida por renglones llenos, pista nueva, cierre próximo, tareas terminadas o salida vuelta a trabar | prioridad |
 | **Visible** | tipo cuyo tiempo todavía no se agotó | historial |
 | **Comprador avisado** | la misma identidad que ya disparó su llegada durante el turno | mismo nombre |
 | **Pista nueva** | pista cuyo registro acepta investigación por primera vez y desbloquea una hipótesis | objeto revelado, objeto examinado |
@@ -45,8 +42,7 @@ notificaciones. Con el lector ausente en el programa manual tampoco avisa.
 ### BR-NTF-003 — Tres segundos en ejecución
 
 El sistema DEBE mantener cada notificación durante tres segundos de juego en ejecución.
-La llegada de un comprador con horario usa la excepción de BR-NTF-009 y la falta reponer, la
-de BR-NTF-016.
+La llegada de un comprador con horario usa la excepción de BR-NTF-009.
 MIENTRAS el juego está en pausa, el sistema NO DEBE consumir su tiempo. CUANDO el tiempo
 alcanza la duración, el sistema DEBE retirar el tipo, también si un solo avance supera el
 límite. Un avance de cero o negativo no cambia el estado.
@@ -58,8 +54,7 @@ segundos completos, sin renovar los otros tipos. La llegada del mismo comprador 
 de BR-NTF-001 y la persistencia de BR-NTF-009. El cierre próximo sigue la unicidad
 por jornada de BR-NTF-012 y NO DEBE renovarse por entradas sucesivas de tiempo.
 Las tareas terminadas siguen la unicidad por jornada de BR-NTF-014. La salida vuelta a
-trabar sigue las transiciones de BR-NTF-015. La falta reponer sigue la persistencia de
-BR-NTF-016.
+trabar sigue las transiciones de BR-NTF-015.
 
 ### BR-NTF-005 — Los tipos conviven en orden
 
@@ -69,8 +64,7 @@ viejo. Consultar o modificar una copia de la lista de tipos no cambia lo que est
 ### BR-NTF-006 — El cierre vacía el estado
 
 CUANDO cierra el turno, el sistema DEBE retirar todas las notificaciones y olvidar las identidades
-avisadas y el disparo de cierre próximo. Con el turno cerrado la falta reponer NO DEBE
-reaparecer aunque el jugador siga dentro de una zona con faltante. La siguiente noche empieza sin avisos de la anterior
+avisadas y el disparo de cierre próximo. La siguiente noche empieza sin avisos de la anterior
 y puede volver a avisar su propio cierre próximo.
 
 ### BR-NTF-007 — El cartel comunica sin tomar el control
@@ -179,30 +173,6 @@ restricción que ya no vale, sin repetir el aviso inicial. Ninguno de estos camb
 retirar ni renovar otros tipos. Cerrar DEBE vaciar ambos avisos y olvidar las transiciones.
 Desde la primera jornada completa NO DEBE aparecer este aviso. Con la computadora abierta,
 este aviso espera a que el jugador salga según BR-NTF-014.
-
-### BR-NTF-016 — Falta reponer dura mientras el jugador está en la zona
-
-MIENTRAS el turno está abierto y el jugador está dentro de una zona con faltante según
-BR-STK-052, el sistema DEBE mostrar «Falta reponer productos por acá», según la
-[ficha «Notificaciones»](https://app.notion.com/p/3e486efecd9d808bb505c198429d316d) y la
-[ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
-El aviso NO DEBE tener temporizador: NO DEBE vencer por tiempo, también con el juego en
-ejecución, y conserva su estado con el juego en pausa.
-
-CUANDO el jugador entra en una zona con faltante, el sistema DEBE mostrarlo. CUANDO la zona deja
-de tener faltantes, el jugador sale de ella o cierra el turno, el sistema DEBE retirarlo.
-Volver a entrar en una zona con faltante, o que un casillero de la zona se vacíe con el jugador
-dentro, DEBE mostrarlo otra vez. Reponer un faltante de otra zona NO DEBE retirarlo. Pasar de una
-zona con faltante a otra zona con faltante lo conserva una sola vez, sin renovarlo. Un jugador
-fuera de las siete zonas NO DEBE verlo.
-
-SI la jornada no declara reponer, como la jornada 1, ENTONCES el sistema NO DEBE mostrarlo, aunque
-falten unidades vendidas (BR-STK-026).
-
-El aviso DEBE seguir la unicidad de BR-NTF-004, el orden de BR-NTF-005 y la presentación de
-BR-NTF-007, sin punto final. CUANDO aparece, DEBE quedar primero. Un tipo que se avisa después
-DEBE quedar delante de él sin retirarlo, y NO DEBE darle un temporizador. Los avisos temporizados
-conservan su duración mientras éste sigue visible.
 
 ## Criterios de aceptación
 
@@ -441,47 +411,6 @@ aviso. Los otros tipos conservan su orden y su tiempo restante durante la espera
 DADO un aviso de salida visible CUANDO se abre y se cierra la computadora sin cambiar el
 permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrearse al vencer.
 
-### AC-NTF-033 — Entrar, quedarse y salir *(verifica BR-NTF-016, BR-NTF-003)*
-
-DADO una jornada 2 con faltantes en la zona 4 y el jugador fuera de las siete zonas CUANDO entra
-en la zona 4 ENTONCES hay exactamente un aviso de falta reponer, primero. CUANDO pasan 3,0
-segundos y luego 600 segundos de juego en ejecución ENTONCES sigue visible. CUANDO se pausa y
-transcurren cuadros ENTONCES sigue visible. CUANDO el jugador sale a una zona sin faltantes
-ENTONCES se retira. CUANDO vuelve a entrar en la zona 4 ENTONCES hay otra vez uno solo.
-Un jugador fuera de las siete zonas con faltantes en todas ellas ve cero.
-
-### AC-NTF-034 — Sólo importa la zona donde está *(verifica BR-NTF-016)*
-
-DADO el jugador en la zona 4, con un único faltante en la zona 4 y otro en la zona 6, CUANDO se
-repone el de la zona 6 ENTONCES sigue visible. CUANDO se repone el último de la zona 4, sin que el
-jugador se mueva, ENTONCES se retira. CUANDO se vacía un casillero de la zona 4 con el jugador
-dentro ENTONCES aparece otra vez. DADO el jugador en la zona 4 con faltantes en las zonas 4 y 5
-CUANDO cruza a la zona 5 ENTONCES hay uno solo, en la misma posición de la lista.
-
-### AC-NTF-035 — La jornada 1 y las jornadas sin reponer no avisan *(verifica BR-NTF-016)*
-
-DADO la jornada 1 con unidades agarradas o vendidas desde las góndolas de la zona 4 CUANDO el
-jugador está en la zona 4 ENTONCES hay cero avisos de falta reponer, aunque haya casilleros
-vacíos. DADO una jornada que declara reponer y un jugador en una zona sin faltantes ENTONCES hay
-cero. DADO el turno cerrado y el jugador dentro de una zona con faltante ENTONCES hay cero.
-
-### AC-NTF-036 — Convive sin darle temporizador ni quitárselo a otros *(verifica BR-NTF-016, BR-NTF-003, BR-NTF-004, BR-NTF-005, BR-NTF-006)*
-
-DADO el aviso de falta reponer visible CUANDO se avisan una lectura fallida y luego un cansancio
-ENTONCES la lista es cansancio, lectura fallida, falta reponer. CUANDO se consumen 2,9 segundos
-ENTONCES siguen los tres; al completar 3,0 queda sólo falta reponer. DADO que se avisa otra lectura
-fallida con falta reponer visible ENTONCES hay un solo aviso de cada tipo. CUANDO cierra el turno
-ENTONCES hay cero, y la siguiente noche empieza sin el aviso hasta que el jugador entre en una
-zona con faltante.
-
-### AC-NTF-037 — Texto y presentación comunes *(verifica BR-NTF-016, BR-NTF-007)*
-
-DADO el aviso de falta reponer a 1920 × 1080 y 1280 × 720 CUANDO se dibuja ENTONCES muestra en
-mayúsculas «Falta reponer productos por acá» completo y sin punto final, en una sola línea, con
-símbolo a la izquierda, fondo claro y fuente principal del tema. Su cartel ajusta el ancho al
-contenido, comparte el borde derecho de la pila, queda dentro de pantalla, encima de las
-interfaces y debajo de la pausa, y deja pasar clics.
-
 ## No objetivos
 
 - Esta capacidad NO decide cuándo llegan o se despachan compradores ni acepta lecturas.
@@ -493,17 +422,15 @@ interfaces y debajo de la pausa, y deja pasar clics.
 
 - **Entrada:** identidad de quien llega o vence, motivo de lectura, confirmación de pista nueva
   anotada por investigación, tiempo en ejecución, tiempo restante de ficción del turno abierto,
-  salida habilitada o vuelta a trabar, computadora abierta o cerrada, si la zona de reposición
-  donde está el jugador tiene faltante y cierre.
+  salida habilitada o vuelta a trabar, computadora abierta o cerrada y cierre.
 - **Salida:** tipos visibles ordenados, texto y símbolo correspondientes.
 - **Falla:** identidad nula, motivo que no es lector lleno y tiempo no positivo no cambian nada.
   Una pista repetida o desconocida y una revelación sin pista no crean ni renuevan avisos.
-  Una zona inexistente, o el jugador fuera de las siete zonas, cuentan como sin faltante.
 
 ## Señales
 
 - Escucha llegada, vencimiento, rechazo, pista nueva anotada, tiempo restante, salida habilitada
-  o vuelta a trabar, zona con faltante donde está el jugador y cierre.
+  o vuelta a trabar y cierre.
   No emite decisiones a las capacidades que los publican.
 
 ## Dependencias
@@ -513,8 +440,6 @@ interfaces y debajo de la pausa, y deja pasar clics.
 - `player-actions` (consume): suspensión del procesamiento durante la pausa.
 - [`investigation`](../investigation/investigation.md) (consume): confirmación de pista nueva
   anotada que desbloquea una hipótesis; una revelación de objeto no reemplaza esa confirmación.
-- [`store-stock`](../store-stock/store-stock.md) (consume): la zona de reposición donde está el
-  jugador y si tiene faltante (BR-STK-052).
 
 ## Preguntas abiertas
 

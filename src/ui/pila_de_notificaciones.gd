@@ -9,7 +9,6 @@ const TEXTOS := {
 	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
 	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA TERMINASTE TUS TAREAS Y PODÉS IRTE",
 	Notificaciones.Tipo.SALIDA_RETRABADA: "YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR",
-	Notificaciones.Tipo.FALTA_REPONER: "FALTA REPONER PRODUCTOS POR ACÁ",
 }
 const SIMBOLO_DEL_CLIENTE := preload("res://assets/ui/manada/notificacion_cliente.svg")
 const SIMBOLOS := {
@@ -20,7 +19,6 @@ const SIMBOLOS := {
 	Notificaciones.Tipo.PISTA: preload("res://assets/ui/manada/notificacion_pista.svg"),
 	Notificaciones.Tipo.TAREAS_TERMINADAS: SIMBOLO_DEL_CLIENTE,
 	Notificaciones.Tipo.SALIDA_RETRABADA: SIMBOLO_DEL_CLIENTE,
-	Notificaciones.Tipo.FALTA_REPONER: SIMBOLO_DEL_CLIENTE,
 }
 const ESCALA_DEL_CARTEL := 0.4
 
@@ -80,15 +78,6 @@ func actualizar_computadora(abierta: bool) -> void:
 func actualizar_tiempo(restante: float) -> void:
 	_estado.actualizar_tiempo(restante)
 	_pintar()
-
-
-func actualizar_faltante(hay: bool) -> void:
-	_estado.actualizar_faltante(hay)
-	_pintar()
-
-
-func abrir_turno() -> void:
-	_estado.abrir_turno()
 
 
 func vaciar() -> void:
