@@ -27,7 +27,7 @@ lugar = 2
 
 [node name="ManchaDelBano" parent="." instance=ExtResource("2_mancha")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.555, 0.104, 5.006)
-editor_description = "Jornada 4. Caca, en el piso junto al segundo inodoro, distinto del de la jornada 3."
+editor_description = "Jornadas 4, 6 y 8. Piso junto al segundo inodoro, distinto del de la jornada 3."
 lugar = 3
 escala_visual = 0.667
 
@@ -78,7 +78,7 @@ lugar = 10
 
 [node name="ManchaAlLadoDelContenedor" parent="." instance=ExtResource("2_mancha")]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 3.95, 0.9, -15.396)
-editor_description = "Jornada 5. Moho, en la pared del fondo del depósito, a la derecha del contenedor, fuera del giro de su tapa. El disco va vertical: su arriba mira al depósito."
+editor_description = "Jornadas 5 y 8. Pared del fondo del depósito, a la derecha del contenedor, fuera del giro de su tapa. El disco va vertical: su arriba mira al depósito."
 lugar = 11
 escala_visual = 0.667
 

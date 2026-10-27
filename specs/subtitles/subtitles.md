@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20
 ---
 
 # Capacidad: los subtítulos

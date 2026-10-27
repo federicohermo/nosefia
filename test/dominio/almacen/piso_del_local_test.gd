@@ -80,9 +80,9 @@ func test_cada_jornada_que_limpia_arranca_con_sus_manchas_sucias() -> void:  # A
 		assert_int(_sucias(piso).size()).is_equal(piso.lugares().size())
 
 
-func test_los_cuatro_lugares_de_hoy_siguen_en_la_primera_jornada() -> void:  # AC-CLN-016
-	# La escena guarda cada disco con el número de su lugar: los cuatro de antes conservan el suyo
-	# y su mancha, y los nuevos van después.
+func test_cada_lugar_conserva_su_numero_y_los_de_la_primera_jornada_su_mancha() -> void:  # AC-CLN-016
+	# La escena guarda cada disco con el número de su lugar: ninguno cambia de número, y los
+	# cuatro de la primera jornada conservan su mancha.
 	var piso := _piso()
 	var esperados := {
 		PisoDelLocal.Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
@@ -92,7 +92,7 @@ func test_los_cuatro_lugares_de_hoy_siguen_en_la_primera_jornada() -> void:  # A
 	}
 	for lugar: PisoDelLocal.Lugar in esperados:
 		assert_int(piso.mancha_de(lugar).tipo()).is_equal(esperados[lugar])
-	var anteriores: Array[String] = [
+	var en_orden: Array[String] = [
 		"ENTRADA",
 		"GONDOLAS",
 		"DEPOSITO",
@@ -113,9 +113,25 @@ func test_los_cuatro_lugares_de_hoy_siguen_en_la_primera_jornada() -> void:  # A
 		"AL_LADO_DE_LA_PUERTA_DEL_CUARTITO",
 		"PISO_DEL_OTRO_INODORO",
 		"PARED_DE_LA_ULTIMA_HELADERA",
+		"PISO_DE_LAS_ESTANTERIAS_DEL_FONDO",
+		"PISO_DE_LA_ULTIMA_ESTANTERIA",
+		"PARED_ARRIBA_DEL_MISMO_INODORO",
+		"PISO_DEL_TACHO_DE_CLIENTES",
+		"TECHO_DEL_MEDIO_DEL_LOCAL",
+		"TECHO_DE_LA_PUERTA_DE_ENTRADA",
+		"PISO_DEL_PORTON",
+		"PISO_DE_UNA_ESTANTERIA",
+		"TECHO_DEL_CUARTITO",
+		"OTRO_TECHO_DEL_CUARTITO",
+		"TECHO_SOBRE_UN_CUBICULO",
+		"PARED_DE_LA_OTRA_GONDOLA",
+		"TECHO_ARRIBA_DE_UN_CUBICULO",
+		"TECHO_ARRIBA_DE_OTRO_CUBICULO",
+		"OTRA_PARED_DEL_MISMO_INODORO",
 	]
-	for numero in anteriores.size():
-		assert_int(PisoDelLocal.Lugar[anteriores[numero]]).is_equal(numero)
+	assert_int(PisoDelLocal.Lugar.size()).is_equal(en_orden.size())
+	for numero in en_orden.size():
+		assert_int(PisoDelLocal.Lugar[en_orden[numero]]).is_equal(numero)
 
 
 func test_cada_jornada_arranca_sucia_aunque_la_anterior_quedo_limpia() -> void:  # AC-CLN-016
