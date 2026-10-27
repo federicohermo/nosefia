@@ -308,6 +308,24 @@ func test_cada_producto_visible_tiene_su_separador_en_cada_resolucion() -> void:
 			assert_int(visibles).is_greater(1)
 
 
+func test_la_lista_abierta_de_cada_renglon_entra_en_el_panel_en_cada_resolucion() -> void:
+	for pantalla: Vector2i in RESOLUCIONES:
+		for renglon in 3:
+			var vista := _abrir_en_pantalla(6, pantalla)
+			var selector := vista.selectores[renglon]
+			var lineas := await _abrir_la_lista(selector, false)
+			var panel := _rectangulo_global(vista.find_child("Interior", true, false))
+			var lista := _rectangulo_global(selector.find_child("Lista", true, false))
+			var recorte := _rectangulo_global(selector.find_child("Desplazamiento", true, false))
+			var contexto := "%s, renglón %d" % [pantalla, renglon]
+			assert_bool(panel.encloses(lista)).override_failure_message(contexto).is_true()
+			var visibles := 0
+			for linea in lineas:
+				if recorte.encloses(_rectangulo_global(linea)):
+					visibles += 1
+			assert_int(visibles).override_failure_message(contexto).is_greater(1)
+
+
 func _abrir(jornada: int) -> ProgramaDeTickets:
 	var vista: ProgramaDeTickets = auto_free(ESCENA.instantiate())
 	add_child(vista)

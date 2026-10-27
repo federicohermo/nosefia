@@ -8,6 +8,7 @@ signal boton_pulsado
 signal eleccion_pedida(renglon: int, producto: Producto)
 
 @export var marco: Control
+@export var interior: Control
 @export var selectores: Array[SelectorDeRenglon]
 @export var filas: Array[Label]
 @export var flechas: Array[Label]
@@ -24,6 +25,7 @@ func _ready() -> void:
 	for indice in selectores.size():
 		var selector := selectores[indice]
 		selector.armar(_catalogo)
+		selector.limitar_hasta(interior.position.y + interior.size.y)
 		selector.hide()
 		selector.producto_elegido.connect(_al_elegir.bind(indice))
 		selector.lista_abierta.connect(_al_abrir_una_lista.bind(selector))

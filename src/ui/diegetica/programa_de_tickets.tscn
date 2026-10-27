@@ -19,10 +19,11 @@ border_color = Color(0.941176, 0.956863, 0.819608, 1)
 content_margin_left = 60.0
 content_margin_right = 12.0
 
-[node name="ProgramaDeTickets" type="CanvasLayer" node_paths=PackedStringArray("marco", "selectores", "filas", "flechas", "borrar", "imprimir", "salida")]
+[node name="ProgramaDeTickets" type="CanvasLayer" node_paths=PackedStringArray("marco", "interior", "selectores", "filas", "flechas", "borrar", "imprimir", "salida")]
 layer = 2
 script = ExtResource("script")
 marco = NodePath("Fondo/Marco")
+interior = NodePath("Fondo/Marco/Panel/Interior")
 selectores = [NodePath("Fondo/Marco/Panel/Selector1"), NodePath("Fondo/Marco/Panel/Selector2"), NodePath("Fondo/Marco/Panel/Selector3")]
 filas = [NodePath("Fondo/Marco/Panel/Renglon1"), NodePath("Fondo/Marco/Panel/Renglon2"), NodePath("Fondo/Marco/Panel/Renglon3")]
 flechas = [NodePath("Fondo/Marco/Panel/Flecha1"), NodePath("Fondo/Marco/Panel/Flecha2"), NodePath("Fondo/Marco/Panel/Flecha3")]

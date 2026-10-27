@@ -17,6 +17,7 @@ const ALTO_DE_LA_LISTA := 429.0
 const ALTO_DEL_RENGLON := 95.0
 const ALTO_DE_LA_CABECERA := 72.0
 const ALTO_DEL_ITEM := 60.0
+const MARGEN_INFERIOR := 28.0
 const MARGEN_DEL_NOMBRE := 57.0
 const MARGEN_DEL_VACIO := 27.0
 const ANCHO_DEL_BORDE := 1
@@ -33,6 +34,7 @@ var _flecha: TextureRect
 var _nombre: Label
 var _equis: TextureRect
 var _lista: Panel
+var _limite_inferior := INF
 
 
 func armar(catalogo: Array[Producto]) -> void:
@@ -64,6 +66,11 @@ func mostrar_producto(producto: Producto) -> void:
 	_producto = producto
 	_nombre.text = Catalogo.de(producto.id).nombre.to_upper() if producto != null else ""
 	_pintar()
+
+
+## El borde, en las coordenadas del padre, que la lista abierta no pasa.
+func limitar_hasta(limite: float) -> void:
+	_limite_inferior = limite
 
 
 func elegido() -> Producto:
@@ -98,12 +105,20 @@ func _alternar() -> void:
 		cerrar()
 		return
 	_abierta = true
+	_ajustar_el_alto_de_la_lista()
 	_lista.visible = true
 	z_index = 1
 	# El z_index sólo ordena el dibujo: el clic lo gana el último nodo del árbol.
 	get_parent().move_child(self, -1)
 	_pintar()
 	lista_abierta.emit()
+
+
+func _ajustar_el_alto_de_la_lista() -> void:
+	var alto := minf(ALTO_DE_LA_LISTA, _limite_inferior - MARGEN_INFERIOR - position.y)
+	_lista.size.y = alto
+	var desplazamiento := _lista.get_node("Desplazamiento") as Control
+	desplazamiento.size.y = alto - ALTO_DE_LA_CABECERA - 1.0
 
 
 func _elegir(producto: Producto) -> void:
