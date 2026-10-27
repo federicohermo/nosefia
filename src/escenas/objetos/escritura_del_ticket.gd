@@ -7,14 +7,13 @@ extends SubViewport
 const FUENTE := preload("res://assets/ui/manada/unscii-16.ttf")
 const PAPEL := preload("res://assets/ui/manada/ticket_papel.png")
 const SEPARADOR := preload("res://assets/ui/manada/ticket_separador.svg")
+## Papel liso con los mismos dientes que el frente: es lo que se ve del otro lado.
+const DORSO := preload("res://assets/ui/manada/ticket_dorso.png")
 const TINTA := Color("191b1a")
 
 ## Medio frame: a esa resolución sobra para leerlo al examinarlo, y pesa un cuarto por papel.
 const ESCALA_DE_LA_TEXTURA := 0.5
 const TAMANO_DEL_PAPEL := Vector2i(739, 1281)
-## El rectángulo de la textura que las dos caras grandes de la malla muestran. La malla queda como
-## está: el material lo estira para que se vea el frame entero, con su borde dentado.
-const VENTANA_DE_LA_MALLA := Rect2(0.072421, 0.177443, 0.855158, 0.645114)
 const TAMANO_CHICO := 51.86
 const TAMANO_GRANDE := 82.04
 const TAMANO_DE_LA_FECHA := 31.45
@@ -50,19 +49,46 @@ func _ready() -> void:
 	_raiz.scale = Vector2.ONE * ESCALA_DE_LA_TEXTURA
 	add_child(_raiz)
 	_escribir(ticket)
-	var material := malla.mesh.surface_get_material(0).duplicate() as StandardMaterial3D
-	material.albedo_texture = get_texture()
+	malla.mesh = _repartida_en_frente_y_dorso(malla.mesh)
+	malla.set_surface_override_material(0, _material_de(get_texture()))
+	malla.set_surface_override_material(1, _material_de(DORSO))
+
+
+## La textura cubre la caja de borde a borde, canto incluido: así el canto sigue los dientes del
+## frente. El dorso es una superficie aparte para que no lleve la escritura.
+static func _repartida_en_frente_y_dorso(origen: Mesh) -> ArrayMesh:
+	var caja := origen.get_aabb()
+	var arrays := origen.surface_get_arrays(0)
+	var posiciones: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normales: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	var cuadros := PackedVector2Array()
+	for posicion in posiciones:
+		cuadros.append(
+			Vector2(
+				(caja.end.z - posicion.z) / caja.size.z, (caja.end.y - posicion.y) / caja.size.y
+			)
+		)
+	arrays[Mesh.ARRAY_TEX_UV] = cuadros
+	var del_frente := PackedInt32Array()
+	var del_dorso := PackedInt32Array()
+	for indice: int in arrays[Mesh.ARRAY_INDEX]:
+		(del_dorso if normales[indice].x < 0.0 else del_frente).append(indice)
+	var malla_nueva := ArrayMesh.new()
+	for indices: PackedInt32Array in [del_frente, del_dorso]:
+		arrays[Mesh.ARRAY_INDEX] = indices
+		malla_nueva.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return malla_nueva
+
+
+static func _material_de(textura: Texture2D) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = textura
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	material.texture_repeat = false
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
-	material.uv1_scale = Vector3(
-		1.0 / VENTANA_DE_LA_MALLA.size.x, 1.0 / VENTANA_DE_LA_MALLA.size.y, 1.0
-	)
-	material.uv1_offset = Vector3(
-		-VENTANA_DE_LA_MALLA.position.x / VENTANA_DE_LA_MALLA.size.x,
-		-VENTANA_DE_LA_MALLA.position.y / VENTANA_DE_LA_MALLA.size.y,
-		0.0
-	)
-	malla.set_surface_override_material(0, material)
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.roughness = 0.5
+	return material
 
 
 func _escribir(ticket: Ticket) -> void:
