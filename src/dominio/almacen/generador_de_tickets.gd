@@ -9,6 +9,8 @@ const JORNADA_SIN_LECTOR := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 
 var _renglones: Array[Producto] = []
 var _manual := false
+var _jornada := 0
+var _numeros := NumerosDeTicket.new()
 
 
 func _init() -> void:
@@ -40,16 +42,21 @@ func borrar() -> void:
 	_renglones.fill(null)
 
 
-func imprimir() -> Ticket:
+## `restante` es lo que queda del turno al imprimir, y de ahí sale la hora escrita en el papel.
+func imprimir(restante: float = Reglas.DURACION_DEL_TURNO) -> Ticket:
 	var llenos := renglones()
 	if llenos.is_empty():
 		return null
-	return Ticket.new(llenos)
+	return Ticket.new(llenos, _numeros.sortear(), _jornada, Marcador.hora(restante))
 
 
-static func para_la_jornada(jornada: int) -> GeneradorDeTickets:
+## Los números salen de la cuenta de la partida, para que no se repitan entre jornadas.
+static func para_la_jornada(jornada: int, numeros: NumerosDeTicket = null) -> GeneradorDeTickets:
 	var generador := GeneradorDeTickets.new()
 	generador._manual = jornada >= JORNADA_SIN_LECTOR
+	generador._jornada = jornada
+	if numeros != null:
+		generador._numeros = numeros
 	return generador
 
 
