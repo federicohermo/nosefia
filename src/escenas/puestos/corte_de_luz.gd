@@ -30,13 +30,23 @@ const MATERIALES_EMISIVOS := [
 	&"local_cielorraso", &"bano_difusor", &"cuartito_tubo_difusor", &"deposito_lampara_panel"
 ]
 
-## La luz de afuera entra por los ventanales en la noche sin luz: es el cielo del horneado oscuro.
-## **Sólo existe en ese horneado**; el horneado normal conserva el entorno de la escena. Un rayo
-## que sale por un vidrio trae este color, y las sondas lo guardan con su dirección. Así, lo que
-## mira al ventanal recibe más luz que lo que mira adentro del local. Una luz puntual afuera no
-## sirve: la sonda guarda sólo su rebote, que llega desde adentro del local.
+## La luz de afuera entra por los vidrios que dan a la calle en la noche sin luz. **Sólo existe en
+## el horneado oscuro**: ahí cada vidrio emite este color hacia adentro, y las sondas lo guardan
+## con su dirección. Así, lo que mira al ventanal recibe más luz que lo que mira adentro del local.
+## No es el cielo del horneado: el cielo alumbra también abajo del piso y arriba del techo, y se
+## filtra por cada junta de las paredes. Tampoco una luz puntual afuera: la sonda guarda sólo su
+## rebote, que llega desde adentro del local.
 const COLOR_DE_AFUERA := Color(0.8, 1.0, 0.92)
 const ENERGIA_DE_AFUERA := 0.35
+## Los vidrios que dan a la calle, por el principio de su nombre en el modelo. Los de las heladeras
+## no: dan adentro.
+const VIDRIOS_A_LA_CALLE := [
+	"local_vidrio_ventanal",
+	"local_vidrio_frente",
+	"local_vidrio_sobre_entrada",
+	"local_vidrio_puerta_entrada",
+	"local_vidrio_ventanilla",
+]
 
 ## La luz de emergencia de la noche sin luz: alcanza para orientarse alrededor del tablero. Vale
 ## para el horneado oscuro y, mientras dura el corte, para el juego: lo que no está horneado la
@@ -69,12 +79,28 @@ static func luces_del_local(raiz: Node) -> Array[Light3D]:
 	return luces
 
 
-## Le pone al horneado el cielo de la noche sin luz. El horneador no guarda la escena, así que el
-## `LightmapGI` del juego queda como estaba.
-static func abrir_al_cielo(horno: LightmapGI) -> void:
-	horno.environment_mode = LightmapGI.ENVIRONMENT_MODE_CUSTOM_COLOR
-	horno.environment_custom_color = COLOR_DE_AFUERA
-	horno.environment_custom_energy = ENERGIA_DE_AFUERA
+## Hace que los vidrios a la calle emitan la luz de afuera, y le saca el cielo al horneado. Sólo
+## lo usa el horneador, que no guarda la escena: en el juego los vidrios quedan como estaban.
+static func abrir_a_la_calle(raiz: Node, horno: LightmapGI) -> void:
+	horno.environment_mode = LightmapGI.ENVIRONMENT_MODE_DISABLED
+	var afuera := StandardMaterial3D.new()
+	afuera.albedo_color = Color.BLACK
+	afuera.emission_enabled = true
+	afuera.emission = COLOR_DE_AFUERA
+	afuera.emission_energy_multiplier = ENERGIA_DE_AFUERA
+	afuera.cull_mode = BaseMaterial3D.CULL_DISABLED
+	for vidrio in vidrios_a_la_calle(raiz):
+		vidrio.gi_mode = GeometryInstance3D.GI_MODE_STATIC
+		vidrio.material_override = afuera
+
+
+static func vidrios_a_la_calle(raiz: Node) -> Array[MeshInstance3D]:
+	var vidrios: Array[MeshInstance3D] = []
+	for nodo: Node in raiz.find_children("local_vidrio_*", "MeshInstance3D", true, false):
+		for prefijo: String in VIDRIOS_A_LA_CALLE:
+			if String(nodo.name).begins_with(prefijo):
+				vidrios.append(nodo as MeshInstance3D)
+	return vidrios
 
 
 ## Le da a la luz de emergencia lo que hace falta para alumbrar el depósito sin luz.

@@ -20,6 +20,7 @@ font_size = 49
 outline_size = 0
 
 [node name="Renglones" type="Label3D" parent="."]
+shaded = true
 rotation = Vector3(-1.5707963, 0, 0)
 position = Vector3(-0.79, 0.008, -0.77)
 pixel_size = 0.004
@@ -38,6 +39,8 @@ no_depth_test = false
 [node name="Tareas" type="Node3D" parent="."]
 
 [node name="Papel" type="Sprite3D" parent="Tareas"]
+shaded = true
+gi_mode = 2
 position = Vector3(0, 0.003, 0)
 rotation = Vector3(-1.5707963, 0, 0)
 scale = Vector3(1, 1.414227, 1)
@@ -47,6 +50,8 @@ texture = ExtResource("papel_tareas")
 texture_filter = 1
 
 [node name="titulo_tareas" type="Sprite3D" parent="Tareas"]
+shaded = true
+gi_mode = 2
 position = Vector3(-0.0179040, 0.006, -1.0107400)
 rotation = Vector3(-1.5707963, 0, 0)
 pixel_size = 0.004
@@ -55,6 +60,8 @@ texture = ExtResource("titulo_tareas")
 texture_filter = 1
 
 [node name="subrayado_tareas" type="Sprite3D" parent="Tareas"]
+shaded = true
+gi_mode = 2
 position = Vector3(0.0958140, 0.006, -0.8774518)
 rotation = Vector3(-1.5707963, 0, 0)
 pixel_size = 0.004
@@ -65,6 +72,8 @@ texture_filter = 1
 [node name="Orden" type="Node3D" parent="."]
 
 [node name="Papel" type="Sprite3D" parent="Orden"]
+shaded = true
+gi_mode = 2
 position = Vector3(0, 0.003, 0)
 rotation = Vector3(-1.5707963, 0, 0)
 scale = Vector3(1, 1.414227, 1)
@@ -74,6 +83,8 @@ texture = ExtResource("papel_orden")
 texture_filter = 1
 
 [node name="titulo_mantener" type="Sprite3D" parent="Orden"]
+shaded = true
+gi_mode = 2
 position = Vector3(-0.0664180, 0.006, -1.0092400)
 rotation = Vector3(-1.5707963, 0, 0)
 pixel_size = 0.004
@@ -82,6 +93,8 @@ texture = ExtResource("titulo_mantener")
 texture_filter = 1
 
 [node name="titulo_ordenado" type="Sprite3D" parent="Orden"]
+shaded = true
+gi_mode = 2
 position = Vector3(0.3503180, 0.006, -0.8641800)
 rotation = Vector3(-1.5707963, 0, 0)
 pixel_size = 0.004
@@ -90,6 +103,8 @@ texture = ExtResource("titulo_ordenado")
 texture_filter = 1
 
 [node name="subrayado_mantener" type="Sprite3D" parent="Orden"]
+shaded = true
+gi_mode = 2
 position = Vector3(-0.4015460, 0.006, -0.9016800)
 rotation = Vector3(-1.5707963, 0, 0)
 pixel_size = 0.004
@@ -98,6 +113,8 @@ texture = ExtResource("subrayado_mantener")
 texture_filter = 1
 
 [node name="subrayado_ordenado" type="Sprite3D" parent="Orden"]
+shaded = true
+gi_mode = 2
 position = Vector3(0.3425540, 0.006, -0.7161456)
 rotation = Vector3(-1.5707963, 0, 0)
 pixel_size = 0.004
