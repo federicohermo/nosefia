@@ -33,6 +33,18 @@ const LO_MAS_CLARO_DEL_POLVO := 0.25
 ## que se mira casi desde abajo.
 const DISTANCIAS_DE_MIRA: Array[float] = [1.0, 0.7, 1.3, 1.6, 0.5, 0.35]
 
+## El material de las placas del cielorraso del local. Sus difusores son lo que emite su textura.
+const MATERIAL_DEL_CIELORRASO := "local_cielorraso"
+
+## El material de los difusores de las luminarias del baño: cada una es un disco aparte.
+const MATERIAL_DEL_DIFUSOR_DEL_BANO := "bano_difusor"
+
+## Lo que emite como mínimo un punto de la textura para ser un difusor: la placa opaca emite cero.
+const EMISION_DE_UN_DIFUSOR := 0.1
+
+## Cada cuántos metros se mira el disco de una mancha de techo.
+const PASO_DE_LA_MUESTRA := 0.05
+
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -265,6 +277,195 @@ func test_ninguna_mancha_arranca_debajo_de_un_mueble() -> void:  # AC-CLN-017
 				)
 				. is_empty()
 			)
+
+
+## La superficie del modelo con las placas del cielorraso del local, y su malla.
+func _cielorraso_del_local(almacen: Node3D) -> Dictionary:
+	for malla: MeshInstance3D in almacen.find_children("*", "MeshInstance3D", true, false):
+		if malla.mesh == null:
+			continue
+		for superficie in malla.mesh.get_surface_count():
+			var material := malla.mesh.surface_get_material(superficie)
+			if material != null and material.resource_name == MATERIAL_DEL_CIELORRASO:
+				return {"malla": malla, "superficie": superficie}
+	return {}
+
+
+## Los triángulos del cielorraso vistos desde arriba: sus puntos en el plano del piso, su UV y la
+## caja que los encierra.
+func _triangulos_del_cielorraso(cielorraso: Dictionary) -> Array[Dictionary]:
+	var malla: MeshInstance3D = cielorraso["malla"]
+	var arrays := malla.mesh.surface_get_arrays(cielorraso["superficie"])
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+	var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+	var triangulos: Array[Dictionary] = []
+	for primero in range(0, indices.size(), 3):
+		var puntos := PackedVector2Array()
+		var del_uv := PackedVector2Array()
+		for vertice in indices.slice(primero, primero + 3):
+			var mundo := malla.global_transform * vertices[vertice]
+			puntos.append(Vector2(mundo.x, mundo.z))
+			del_uv.append(uvs[vertice])
+		var caja := Rect2(puntos[0], Vector2.ZERO)
+		for punto in puntos:
+			caja = caja.expand(punto)
+		triangulos.append({"puntos": puntos, "uvs": del_uv, "caja": caja})
+	return triangulos
+
+
+## Cuánto emite el cielorraso sobre ese punto del plano, o cero si ahí no hay placa.
+static func _emision_en(triangulos: Array, emision: Image, punto: Vector2) -> float:
+	for triangulo: Dictionary in triangulos:
+		var puntos: PackedVector2Array = triangulo["puntos"]
+		var lado := puntos[1] - puntos[0]
+		var otro := puntos[2] - puntos[0]
+		var hasta := punto - puntos[0]
+		var area := lado.cross(otro)
+		if is_zero_approx(area):
+			continue
+		var peso_1 := hasta.cross(otro) / area
+		var peso_2 := lado.cross(hasta) / area
+		var peso_0 := 1.0 - peso_1 - peso_2
+		if minf(peso_0, minf(peso_1, peso_2)) < -0.0001:
+			continue
+		var uvs: PackedVector2Array = triangulo["uvs"]
+		var uv := uvs[0] * peso_0 + uvs[1] * peso_1 + uvs[2] * peso_2
+		var pixel := Vector2i(
+			clampi(int(uv.x * emision.get_width()), 0, emision.get_width() - 1),
+			clampi(int(uv.y * emision.get_height()), 0, emision.get_height() - 1)
+		)
+		var color := emision.get_pixelv(pixel)
+		return maxf(color.r, maxf(color.g, color.b))
+	return 0.0
+
+
+## La caja de cada difusor de las luminarias del baño, vista desde arriba.
+func _difusores_del_bano(almacen: Node3D) -> Array[Rect2]:
+	var difusores: Array[Rect2] = []
+	for malla: MeshInstance3D in almacen.find_children("*", "MeshInstance3D", true, false):
+		if malla.mesh == null:
+			continue
+		for superficie in malla.mesh.get_surface_count():
+			var material := malla.mesh.surface_get_material(superficie)
+			if material != null and material.resource_name == MATERIAL_DEL_DIFUSOR_DEL_BANO:
+				var caja := malla.global_transform * malla.mesh.get_aabb()
+				difusores.append(
+					Rect2(
+						Vector2(caja.position.x, caja.position.z), Vector2(caja.size.x, caja.size.z)
+					)
+				)
+				break
+	return difusores
+
+
+## Una mancha de techo no cae sobre un difusor del cielorraso del local.
+##
+## **Una lámpara tapada por una mancha deja de verse como lámpara.** Y no se ve venir: la posición
+## de la mancha la declara el `.tscn` de la limpieza, y la de los difusores sale de la textura de
+## emisión del modelo, así que mover cualquiera de los dos no toca el otro archivo. Se mide sobre
+## el disco entero de cada mancha, contra lo que emite el cielorraso debajo de cada punto.
+func test_ninguna_mancha_de_techo_pisa_un_difusor() -> void:
+	var almacen: Node3D = await _almacen()
+	var cielorraso := _cielorraso_del_local(almacen)
+	(
+		assert_bool(cielorraso.is_empty())
+		. override_failure_message("el modelo no trae el cielorraso del local")
+		. is_false()
+	)
+	if cielorraso.is_empty():
+		return
+	var malla: MeshInstance3D = cielorraso["malla"]
+	var material := malla.mesh.surface_get_material(cielorraso["superficie"]) as BaseMaterial3D
+	var emision: Image = null
+	if material.emission_texture != null:
+		emision = Image.load_from_file(material.emission_texture.resource_path)
+	(
+		assert_bool(emision == null)
+		. override_failure_message("el cielorraso del local no declara su emisión en un archivo")
+		. is_false()
+	)
+	if emision == null:
+		return
+	var triangulos := _triangulos_del_cielorraso(cielorraso)
+	# La premisa: el test ve un difusor. Si ninguna placa emitiera, todo pasaría por no mirar nada.
+	var con_luz := 0
+	for triangulo in triangulos:
+		var centro: Vector2 = (triangulo["caja"] as Rect2).get_center()
+		if _emision_en(triangulos, emision, centro) > EMISION_DE_UN_DIFUSOR:
+			con_luz += 1
+	assert_int(con_luz).is_greater(0)
+	var de_techo := 0
+	for jornada: int in [7, 8]:
+		await _abrir(almacen, jornada)
+		for mancha: ManchaQueSeVe in _manchas(almacen):
+			if (
+				PisoDelLocal.superficie_de(mancha.lugar_de_la_mancha())
+				!= PisoDelLocal.Superficie.TECHO
+			):
+				continue
+			de_techo += 1
+			var cilindro := (mancha.get_node("Cuerpo") as CollisionShape3D).shape as CylinderShape3D
+			var centro := Vector2(mancha.global_position.x, mancha.global_position.z)
+			var cerca: Array = triangulos.filter(
+				func(triangulo: Dictionary) -> bool:
+					return (triangulo["caja"] as Rect2).grow(cilindro.radius).has_point(centro)
+			)
+			var pasos := int(cilindro.radius / PASO_DE_LA_MUESTRA)
+			var sobre_un_difusor: Array[Vector2] = []
+			for fila in range(-pasos, pasos + 1):
+				for columna in range(-pasos, pasos + 1):
+					var desvio := Vector2(columna, fila) * PASO_DE_LA_MUESTRA
+					if desvio.length() > cilindro.radius:
+						continue
+					if _emision_en(cerca, emision, centro + desvio) > EMISION_DE_UN_DIFUSOR:
+						sobre_un_difusor.append(centro + desvio)
+			(
+				assert_array(sobre_un_difusor)
+				. override_failure_message(
+					(
+						"`%s` en %v pisa un difusor del cielorraso, por ejemplo en %v"
+						% [mancha.name, mancha.global_position, sobre_un_difusor.front()]
+					)
+				)
+				. is_empty()
+			)
+	assert_int(de_techo).is_greater(0)
+
+
+## Una mancha de techo no cae sobre una luminaria del baño.
+##
+## Lo mismo que con el cielorraso del local, pero los difusores del baño son discos sueltos del
+## modelo y no una textura. Se miran las manchas de todas las jornadas, porque el `.tscn` las
+## declara todas aunque la noche muestre algunas.
+func test_ninguna_mancha_de_techo_pisa_una_luminaria_del_bano() -> void:
+	var almacen: Node3D = await _almacen()
+	var difusores := _difusores_del_bano(almacen)
+	(
+		assert_array(difusores)
+		. override_failure_message("el modelo no trae las luminarias del baño")
+		. is_not_empty()
+	)
+	var de_techo := 0
+	for mancha: ManchaQueSeVe in almacen.get("_limpieza").call("_todas_las_manchas"):
+		if PisoDelLocal.superficie_de(mancha.lugar_de_la_mancha()) != PisoDelLocal.Superficie.TECHO:
+			continue
+		de_techo += 1
+		var cilindro := (mancha.get_node("Cuerpo") as CollisionShape3D).shape as CylinderShape3D
+		var centro := Vector2(mancha.global_position.x, mancha.global_position.z)
+		for difusor: Rect2 in difusores:
+			var mas_cercano := centro.clamp(difusor.position, difusor.end)
+			(
+				assert_float(centro.distance_to(mas_cercano))
+				. override_failure_message(
+					(
+						"`%s` en %v pisa una luminaria del baño, en %v"
+						% [mancha.name, mancha.global_position, difusor]
+					)
+				)
+				. is_greater_equal(cilindro.radius)
+			)
+	assert_int(de_techo).is_greater(0)
 
 
 func test_cada_mancha_esta_en_su_habitacion_y_su_superficie() -> void:  # AC-CLN-017

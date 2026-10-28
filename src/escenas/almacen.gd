@@ -323,7 +323,6 @@ func _ready() -> void:
 		caja.empujada.connect(_pedir_revision_del_deposito.unbind(1))
 	# «Volver al menú» de la pausa sale por el mismo camino que el de la placa.
 	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
-	_programa_de_tickets.pausa_pedida.connect(pausa.pausar)
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
 	pausa.pausado.connect(_jugador.declarar_la_pausa.bind(true))
@@ -393,7 +392,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		_colilla.collision_layer = 0
 		_colilla.collision_mask = 0
 		_colilla.process_mode = Node.PROCESS_MODE_DISABLED
-	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
+	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias(jornada))

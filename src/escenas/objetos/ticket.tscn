@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://src/escenas/objetos/objeto_agarrable.gd" id="objeto"]
 
 [ext_resource type="ArrayMesh" path="res://assets/models/ticket_impreso.res" id="modelo"]
+[ext_resource type="Script" path="res://src/escenas/objetos/escritura_del_ticket.gd" id="escritura"]
 
 [sub_resource type="BoxShape3D" id="forma"]
 size = Vector3(0.003, 0.121548, 0.074995)
@@ -19,3 +20,7 @@ shape = SubResource("forma")
 [node name="Malla" type="MeshInstance3D" parent="."]
 mesh = ExtResource("modelo")
 gi_mode = 2
+
+[node name="Escritura" type="SubViewport" parent="." node_paths=PackedStringArray("malla")]
+script = ExtResource("escritura")
+malla = NodePath("../Malla")

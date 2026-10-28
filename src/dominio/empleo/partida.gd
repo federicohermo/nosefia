@@ -96,6 +96,9 @@ var poses_de_las_cajas: Dictionary[Producto.Id, Transform3D]:
 	set(nuevas):
 		_poses_de_las_cajas = nuevas.duplicate()
 
+## Los números de ticket ya sorteados: ninguno se repite en la partida.
+var numeros_de_ticket := NumerosDeTicket.new()
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
