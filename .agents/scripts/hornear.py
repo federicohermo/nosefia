@@ -1,6 +1,7 @@
 """Hornear la luz del local: apretar «Bake Lightmaps» sin abrir el editor a mano.
 
-    python .claude/scripts/hornear.py
+    python .claude/scripts/hornear.py             # el local con todas sus luces
+    python .claude/scripts/hornear.py --sin-luz   # el mismo local en la noche del corte de luz
 
 ## Por qué existe
 
@@ -9,6 +10,14 @@ horneador. Este script abre el editor con el plugin `addons/hornear` prendido; e
 el botón, guarda y cierra; acá se lee el veredicto. Se corre cada vez que cambia el modelo o una
 luz, y lo que deja —el `.lmbake`, el `.exr` y su `.import`, al lado de `almacen.tscn`— se
 commitea.
+
+## El horneado sin luz
+
+`--sin-luz` hornea el mismo local con todas sus luces apagadas salvo la de emergencia del panel,
+y deja `almacen_sin_luz.lmbake` y `almacen_sin_luz.exr`. Los apaga en la copia del editor y no
+guarda la escena: `almacen.tscn` queda como estaba. El juego cambia los datos del `LightmapGI`
+por éstos al cortarse la luz de la séptima noche. Qué se apaga lo dice `corte_de_luz.gd`, y es lo
+mismo que el juego apaga al cortar.
 
 ## Cómo se prende el plugin
 
@@ -54,9 +63,11 @@ configurar()
 
 from lib.godot import como_declararlo, resolver  # noqa: E402
 from lib.horneado import (  # noqa: E402
-    SALIDAS,
+    VARIABLE_DE_LA_VARIANTE,
+    VARIANTE_SIN_LUZ,
     project_con_el_plugin,
     reescritos_de_mas,
+    salidas_de,
     sesion_bloqueada,
     tope_en_segundos,
     veredicto,
@@ -112,7 +123,8 @@ def devolver_lo_reescrito(raiz: Path, desde: float, previos: dict[str, bytes]) -
     return devueltos
 
 
-def main() -> int:
+def main(argumentos: list[str] | None = None) -> int:
+    sin_luz = "--sin-luz" in (sys.argv[1:] if argumentos is None else argumentos)
     godot, _ = resolver(dict(os.environ))
     if godot is None:
         print(como_declararlo(dict(os.environ)))
@@ -147,6 +159,7 @@ def main() -> int:
             encoding="utf-8",
             errors="replace",
             timeout=tope,
+            env={**os.environ, VARIABLE_DE_LA_VARIANTE: VARIANTE_SIN_LUZ} if sin_luz else None,
         )
     except subprocess.TimeoutExpired:
         print(f"el editor no cerró en {tope // 60} minutos")
@@ -160,7 +173,7 @@ def main() -> int:
             print(linea.strip())
     actualizados = {
         salida: (Path(RAIZ) / salida).exists() and (Path(RAIZ) / salida).stat().st_mtime >= desde
-        for salida in SALIDAS
+        for salida in salidas_de(sin_luz)
     }
     ok, motivo = veredicto(corrida.returncode, actualizados)
     print(motivo)

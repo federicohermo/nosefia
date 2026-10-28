@@ -12,9 +12,25 @@ PLUGIN = "res://addons/hornear/plugin.cfg"
 #: luz por sonda y el índice; el `.exr`, el atlas con la luz de cada malla.
 SALIDAS = ("src/escenas/almacen.lmbake", "src/escenas/almacen.exr")
 
+#: El segundo horneado, el de la noche del corte de luz: el mismo local con sólo la luz de
+#: emergencia del panel. Se hornea aparte, con `--sin-luz`, y el juego lo cambia por el de arriba
+#: al cortarse la luz.
+SALIDAS_SIN_LUZ = ("src/escenas/almacen_sin_luz.lmbake", "src/escenas/almacen_sin_luz.exr")
+
+#: Lo que el editor lee del entorno para saber qué horneado hace. Sin ella, el de siempre.
+VARIABLE_DE_LA_VARIANTE = "HORNEAR_VARIANTE"
+VARIANTE_SIN_LUZ = "sin_luz"
+
 # El atlas cambia de número de capas al variar la densidad o activar luz direccional.
 # Restaurar su .import deja una caché válida acá, pero otra máquina corta mal el EXR.
-METADATOS_DEL_ATLAS = tuple(ruta + ".import" for ruta in SALIDAS if ruta.endswith(".exr"))
+METADATOS_DEL_ATLAS = tuple(
+    ruta + ".import" for ruta in (*SALIDAS, *SALIDAS_SIN_LUZ) if ruta.endswith(".exr")
+)
+
+
+def salidas_de(sin_luz: bool) -> tuple[str, ...]:
+    """Lo que deja el horneado pedido."""
+    return SALIDAS_SIN_LUZ if sin_luz else SALIDAS
 
 _LISTA = re.compile(r"^enabled=PackedStringArray\(.*\)$", re.MULTILINE)
 
@@ -65,7 +81,8 @@ def reescritos_de_mas(escritos: list[str]) -> list[str]:
     return sorted(
         ruta
         for ruta in escritos
-        if ruta not in (*SALIDAS, *METADATOS_DEL_ATLAS) and ruta != "project.godot"
+        if ruta not in (*SALIDAS, *SALIDAS_SIN_LUZ, *METADATOS_DEL_ATLAS)
+        and ruta != "project.godot"
     )
 
 

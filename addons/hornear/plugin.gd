@@ -11,9 +11,16 @@
 extends EditorPlugin
 
 const Sondas := preload("res://addons/hornear/sondas.gd")
+const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
 
 const ESCENA := "res://src/escenas/almacen.tscn"
 const NODO := "LightmapGI"
+## El modelo del local: sus mallas cierran los ambientes que las sondas rellenan.
+const ESTRUCTURA := "Estructura"
+## `hornear.py --sin-luz` la declara: hornea el local de la noche del corte de luz, en otro
+## archivo, sin guardar la escena.
+const VARIABLE_DE_LA_VARIANTE := "HORNEAR_VARIANTE"
+const VARIANTE_SIN_LUZ := "sin_luz"
 ## El texto del botón en inglés: el script lanza el editor con `-l en` para que sea este.
 const BOTON := "Bake Lightmaps"
 const PAUSA := 2.0
@@ -23,6 +30,8 @@ var _paso := 0
 var _espera := 0.0
 var _intentos := 0
 var _operacion_en_curso: bool = false
+## Se arma antes de apagar el local: la noche sin luz cambia los vidrios, y el juego no.
+var _cascara: Sondas.Cascara
 
 
 func _process(delta: float) -> void:
@@ -65,10 +74,41 @@ func _seleccionar() -> void:
 	if horno == null:
 		_fallar("la escena no tiene un %s" % NODO)
 		return
+	_cascara = Sondas.Cascara.new(
+		raiz.get_node(ESTRUCTURA), horno.global_transform.affine_inverse()
+	)
+	if _sin_luz():
+		_apagar_el_local(raiz, horno)
 	EditorInterface.get_selection().clear()
 	EditorInterface.get_selection().add_node(horno)
 	EditorInterface.edit_node(horno)
 	_avanzar(2)
+
+
+func _sin_luz() -> bool:
+	return OS.get_environment(VARIABLE_DE_LA_VARIANTE) == VARIANTE_SIN_LUZ
+
+
+## Deja encendida la luz de emergencia y la de afuera, que emiten los vidrios a la calle: las
+## otras luces no entran al horneado y los emisivos del local no alumbran. Es lo mismo que apaga
+## el juego al cortar la luz (`corte_de_luz.gd`). Sin datos previos, el horneado pide dónde
+## guardarse y deja un archivo nuevo. **Nada de esto se guarda**: la escena queda como estaba.
+func _apagar_el_local(raiz: Node, horno: LightmapGI) -> void:
+	horno.light_data = null
+	var apagadas := CorteDeLuz.luces_del_local(raiz)
+	for luz in apagadas:
+		luz.light_bake_mode = Light3D.BAKE_DISABLED
+	var emision := CorteDeLuz.emision_del_local(raiz)
+	for material: BaseMaterial3D in emision:
+		material.emission_energy_multiplier = 0.0
+	CorteDeLuz.reforzar_la_emergencia(raiz)
+	CorteDeLuz.abrir_a_la_calle(raiz, horno)
+	print(
+		(
+			"[hornear] sin luz: %d luces y %d materiales emisivos apagados"
+			% [apagadas.size(), emision.size()]
+		)
+	)
 
 
 func _hornear() -> void:
@@ -88,7 +128,8 @@ func _hornear() -> void:
 			_fallar("no encuentro el diálogo de guardado")
 			return
 		dialogo.hide()
-		dialogo.file_selected.emit(ESCENA.get_basename() + ".lmbake")
+		var ruta := CorteDeLuz.HORNEADO_SIN_LUZ if _sin_luz() else ESCENA.get_basename() + ".lmbake"
+		dialogo.file_selected.emit(ruta)
 	print("[hornear] horneado en %d ms" % (Time.get_ticks_msec() - desde))
 
 
@@ -103,9 +144,11 @@ func _guardar() -> void:
 		_fallar("el horneado no dejó datos")
 		return
 	_avanzar(4)
-	var cuenta := Sondas.rellenar(datos)
-	print("[hornear] sondas negras rellenadas: %d de %d" % [cuenta.rellenadas, cuenta.total])
+	var cuenta := Sondas.rellenar(datos, _cascara)
+	print("[hornear] sondas de afuera rellenadas: %d de %d" % [cuenta.rellenadas, cuenta.total])
 	ResourceSaver.save(datos, datos.resource_path)
+	if _sin_luz():
+		return
 	# La primera vez la escena cambió: ahora apunta a los datos. Las siguientes no.
 	EditorInterface.save_scene()
 
