@@ -210,13 +210,13 @@ escala_visual = 0.833
 acuosa = true
 
 [node name="ManchaEnElTechoArribaDeUnCubiculo" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 11.0, 3.138, 4.9)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 11.0, 3.138, 4.65)
 editor_description = "Jornada 8. Moho, en el cielorraso sobre el primer cubículo. El disco mira hacia abajo."
 lugar = 32
 escala_visual = 0.6
 
 [node name="ManchaEnElTechoArribaDeOtroCubiculo" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 12.65, 3.138, 4.9)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 12.65, 3.138, 4.65)
 editor_description = "Jornada 8. Moho, en el cielorraso sobre el segundo cubículo. El disco mira hacia abajo."
 lugar = 33
 escala_visual = 0.6

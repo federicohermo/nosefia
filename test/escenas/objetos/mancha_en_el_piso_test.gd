@@ -36,6 +36,9 @@ const DISTANCIAS_DE_MIRA: Array[float] = [1.0, 0.7, 1.3, 1.6, 0.5, 0.35]
 ## El material de las placas del cielorraso del local. Sus difusores son lo que emite su textura.
 const MATERIAL_DEL_CIELORRASO := "local_cielorraso"
 
+## El material de los difusores de las luminarias del baño: cada una es un disco aparte.
+const MATERIAL_DEL_DIFUSOR_DEL_BANO := "bano_difusor"
+
 ## Lo que emite como mínimo un punto de la textura para ser un difusor: la placa opaca emite cero.
 const EMISION_DE_UN_DIFUSOR := 0.1
 
@@ -337,6 +340,25 @@ static func _emision_en(triangulos: Array, emision: Image, punto: Vector2) -> fl
 	return 0.0
 
 
+## La caja de cada difusor de las luminarias del baño, vista desde arriba.
+func _difusores_del_bano(almacen: Node3D) -> Array[Rect2]:
+	var difusores: Array[Rect2] = []
+	for malla: MeshInstance3D in almacen.find_children("*", "MeshInstance3D", true, false):
+		if malla.mesh == null:
+			continue
+		for superficie in malla.mesh.get_surface_count():
+			var material := malla.mesh.surface_get_material(superficie)
+			if material != null and material.resource_name == MATERIAL_DEL_DIFUSOR_DEL_BANO:
+				var caja := malla.global_transform * malla.mesh.get_aabb()
+				difusores.append(
+					Rect2(
+						Vector2(caja.position.x, caja.position.z), Vector2(caja.size.x, caja.size.z)
+					)
+				)
+				break
+	return difusores
+
+
 ## Una mancha de techo no cae sobre un difusor del cielorraso del local.
 ##
 ## **Una lámpara tapada por una mancha deja de verse como lámpara.** Y no se ve venir: la posición
@@ -407,6 +429,41 @@ func test_ninguna_mancha_de_techo_pisa_un_difusor() -> void:
 					)
 				)
 				. is_empty()
+			)
+	assert_int(de_techo).is_greater(0)
+
+
+## Una mancha de techo no cae sobre una luminaria del baño.
+##
+## Lo mismo que con el cielorraso del local, pero los difusores del baño son discos sueltos del
+## modelo y no una textura. Se miran las manchas de todas las jornadas, porque el `.tscn` las
+## declara todas aunque la noche muestre algunas.
+func test_ninguna_mancha_de_techo_pisa_una_luminaria_del_bano() -> void:
+	var almacen: Node3D = await _almacen()
+	var difusores := _difusores_del_bano(almacen)
+	(
+		assert_array(difusores)
+		. override_failure_message("el modelo no trae las luminarias del baño")
+		. is_not_empty()
+	)
+	var de_techo := 0
+	for mancha: ManchaQueSeVe in almacen.get("_limpieza").call("_todas_las_manchas"):
+		if PisoDelLocal.superficie_de(mancha.lugar_de_la_mancha()) != PisoDelLocal.Superficie.TECHO:
+			continue
+		de_techo += 1
+		var cilindro := (mancha.get_node("Cuerpo") as CollisionShape3D).shape as CylinderShape3D
+		var centro := Vector2(mancha.global_position.x, mancha.global_position.z)
+		for difusor: Rect2 in difusores:
+			var mas_cercano := centro.clamp(difusor.position, difusor.end)
+			(
+				assert_float(centro.distance_to(mas_cercano))
+				. override_failure_message(
+					(
+						"`%s` en %v pisa una luminaria del baño, en %v"
+						% [mancha.name, mancha.global_position, difusor]
+					)
+				)
+				. is_greater_equal(cilindro.radius)
 			)
 	assert_int(de_techo).is_greater(0)
 
