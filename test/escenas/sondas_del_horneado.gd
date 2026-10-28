@@ -26,6 +26,9 @@ const C2 := 0.511664
 const C3 := 0.743125
 const C4 := 0.886227
 const C5 := 0.247708
+const DIRECCIONES: Array[Vector3] = [
+	Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN, Vector3.FORWARD, Vector3.BACK
+]
 
 var puntos := PackedVector3Array()
 var tetraedros := PackedInt32Array()
@@ -68,7 +71,30 @@ func _init(ruta: String) -> void:
 
 ## La luz que recibe una superficie que mira hacia `normal`, con las sondas tomadas en `punto`.
 func luz_hacia(punto: Vector3, normal: Vector3) -> float:
-	var c := _interpolado(punto)
+	return _evaluar(_interpolado(punto), normal)
+
+
+## La luz más alta que recibe algo en `punto`, mire hacia donde mire.
+func luz_en(punto: Vector3) -> float:
+	return _mas_alta(_interpolado(punto))
+
+
+## La luz más alta que guarda una sonda, sin interpolar con sus vecinas.
+func luz_de(sonda: int) -> float:
+	var coeficientes: Array[Color] = []
+	for k in COEFICIENTES:
+		coeficientes.append(sh[sonda * COEFICIENTES + k])
+	return _mas_alta(coeficientes)
+
+
+static func _mas_alta(c: Array[Color]) -> float:
+	var mas_alta := 0.0
+	for normal: Vector3 in DIRECCIONES:
+		mas_alta = maxf(mas_alta, _evaluar(c, normal))
+	return mas_alta
+
+
+static func _evaluar(c: Array[Color], normal: Vector3) -> float:
 	var n := normal.normalized()
 	var luz: Color = (
 		c[8] * C1 * (n.x * n.x - n.y * n.y)
