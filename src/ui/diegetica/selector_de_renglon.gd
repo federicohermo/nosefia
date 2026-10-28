@@ -32,6 +32,7 @@ var _abierta := false
 var _lleno := _estilo(COLOR_CLARO)
 var _vacio := _estilo(COLOR_DEL_PANEL)
 var _cabecera: Button
+var _borde: BordeDePixel
 var _flecha: TextureRect
 var _nombre: Label
 var _equis: TextureRect
@@ -50,6 +51,8 @@ func armar(catalogo: Array[Producto]) -> void:
 	_cabecera = _boton(_vacio, _vacio)
 	_cabecera.name = "Cabecera"
 	_cabecera.pressed.connect(_alternar)
+	_borde = _borde_de_pixel()
+	_cabecera.add_child(_borde)
 	add_child(_cabecera)
 	_flecha = _textura(FLECHA, "Flecha", Vector2(16.72, 29.28))
 	_flecha.pivot_offset = _flecha.size / 2.0
@@ -177,6 +180,7 @@ func _pintar() -> void:
 	_flecha.self_modulate = color
 	_equis.self_modulate = color
 	_equis.visible = _producto != null
+	_borde.visible = not _abierta
 	var alto := ALTO_DE_LA_CABECERA if _abierta else ALTO_DEL_RENGLON
 	_cabecera.size = Vector2(ANCHO, alto)
 
@@ -210,13 +214,14 @@ func _armar_la_lista(catalogo: Array[Producto]) -> Panel:
 	items.add_child(_item(null))
 	for producto in catalogo:
 		items.add_child(_item(producto))
+	lista.add_child(_borde_de_pixel())
 	return lista
 
 
 ## Sin producto es la opción vacía de Figma: «>» y ningún nombre.
 func _item(producto: Producto) -> Button:
 	var margen := 56.0 if producto != null else MARGEN_DEL_VACIO
-	var item := _boton(_estilo(COLOR_DEL_PANEL, margen, false), _estilo(COLOR_CLARO, margen, false))
+	var item := _boton(_estilo(COLOR_DEL_PANEL, margen), _estilo(COLOR_CLARO, margen))
 	item.text = Catalogo.de(producto.id).nombre.to_upper() if producto != null else ">"
 	item.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	item.custom_minimum_size.y = ALTO_DEL_ITEM
@@ -252,6 +257,13 @@ func _boton(normal: StyleBox, resaltado: StyleBox) -> Button:
 	return boton
 
 
+func _borde_de_pixel() -> BordeDePixel:
+	var borde := BordeDePixel.new()
+	borde.name = "Borde"
+	borde.color = COLOR_CLARO
+	return borde
+
+
 func _textura(textura: Texture2D, nombre: String, tamano: Vector2) -> TextureRect:
 	var rectangulo := TextureRect.new()
 	rectangulo.name = nombre
@@ -263,10 +275,8 @@ func _textura(textura: Texture2D, nombre: String, tamano: Vector2) -> TextureRec
 	return rectangulo
 
 
-static func _estilo(relleno: Color, margen: float = 0.0, con_borde: bool = true) -> StyleBoxFlat:
+static func _estilo(relleno: Color, margen: float = 0.0) -> StyleBoxFlat:
 	var estilo := StyleBoxFlat.new()
 	estilo.bg_color = relleno
-	estilo.border_color = COLOR_CLARO
-	estilo.set_border_width_all(ANCHO_DEL_BORDE if con_borde else 0)
 	estilo.content_margin_left = margen
 	return estilo
