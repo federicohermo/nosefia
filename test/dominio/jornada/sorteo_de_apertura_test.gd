@@ -21,6 +21,9 @@ func test_doscientas_semillas_por_jornada_respetan_limites_y_varian() -> void:  
 		var casilleros: Dictionary[Producto.Id, int] = {}
 		for producto in Catalogo.de_la_jornada(jornada):
 			casilleros[producto.id] = 8
+		# La jornada de los vencidos abre la góndola de Cindolor completa.
+		if Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):
+			casilleros[Apertura.PRODUCTO_CON_VENCIDOS] = 0
 		var cantidades: Dictionary[int, bool] = {}
 		var conjuntos: Dictionary[String, bool] = {}
 		for semilla in 200:

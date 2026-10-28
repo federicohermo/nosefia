@@ -12,7 +12,8 @@ func test_los_tipos_conservan_su_identidad_al_sumar_ordenar() -> void:
 			"REGISTRAR": 2,
 			"LIMPIAR": 3,
 			"SACAR_LA_BASURA": 4,
-			"ORDENAR_LAS_CAJAS": 5
+			"ORDENAR_LAS_CAJAS": 5,
+			"DESECHAR_VENCIDOS": 6
 		}
 	)
 

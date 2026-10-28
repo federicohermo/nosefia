@@ -1,4 +1,5 @@
-## Traduce el tiro aceptado: entrega el cuerpo, descuenta la unidad y cuenta sólo las bolsas.
+## Traduce el tiro aceptado: entrega el cuerpo, descuenta la unidad y cuenta sólo las bolsas y los
+## vencidos.
 class_name RecolectorDeBasura
 extends Node
 
@@ -15,14 +16,20 @@ signal tiro_pedido(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro)
 @export var bolsas: Array[Node3D] = []
 
 var _tarea: TareaDeLaBasura
+var _vencidos: TareaDeLosVencidos
 
 
-func arrancar(una_tarea: TareaDeLaBasura) -> void:
+func arrancar(una_tarea: TareaDeLaBasura, los_vencidos: TareaDeLosVencidos = null) -> void:
 	_tarea = una_tarea
+	_vencidos = los_vencidos
 
 
 func tarea() -> TareaDeLaBasura:
 	return _tarea
+
+
+func vencidos() -> TareaDeLosVencidos:
+	return _vencidos
 
 
 func sacar_bolsa(tacho: TareaDeLaBasura.Tacho) -> bool:
@@ -56,6 +63,8 @@ func pedir_tirar(recibe: bool) -> ReglasDeLaBasura.Tiro:
 		repositor.estante().desechar(sostenido)
 	var nodo := agarre.entregar()
 	objeto_tirado.emit(nodo)
+	if _vencidos != null and _vencidos.desechar(sostenido) and _vencidos.completada():
+		reloj.completar(reloj.obligatoria(Tarea.Tipo.DESECHAR_VENCIDOS))
 	if _tarea.depositar(sostenido.id) != TareaDeLaBasura.Resultado.DEPOSITADA:
 		return resultado
 	bolsa_depositada.emit(_tarea.depositadas())

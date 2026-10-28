@@ -17,6 +17,9 @@ const ANCHO_DEL_MODELO := 0.074995
 @export var mallas: Array[MeshInstance3D]
 @export var ancho_del_papel: float = ANCHO_DEL_MODELO
 
+## Sin luz la caja no abre. Lo declara el corte de luz; la caja no sabe por qué.
+var con_luz := true
+
 var _abierta := false
 var _en_ranura: ObjetoAgarrable
 var _papel: ObjetoAgarrable
@@ -60,7 +63,8 @@ func _agregar_papel_para_calentar() -> void:
 
 
 func accionar() -> void:
-	abrir()
+	if con_luz:
+		abrir()
 
 
 func abrir() -> void:

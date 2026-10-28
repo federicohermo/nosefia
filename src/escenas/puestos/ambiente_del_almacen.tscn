@@ -197,7 +197,7 @@ editor_description = "El rebote del plafón permite leer la madera bajo los esta
 spot_attenuation = 0.45
 
 
-[node name="LuzDelTablero" type="SpotLight3D" parent="."]
+[node name="LuzDelTablero" type="SpotLight3D" parent="." groups=["luz_de_emergencia"]]
 position = Vector3(1.408411, 2.30, -8.475)
 rotation = Vector3(-1.8853, 0, 0)
 light_color = Color(1, 0.96, 0.88, 1)

@@ -27,6 +27,9 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 @export var pantalla: PantallaDeComputadora
 @export var mallas: Array[MeshInstance3D] = []
 
+## Sin luz la computadora no abre. Lo declara el corte de luz; el escritorio no sabe por qué.
+var con_luz := true
+
 
 func _ready() -> void:
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
@@ -39,7 +42,8 @@ func _ready() -> void:
 
 ## El clic izquierdo abre lo fijo sin soltar lo que se lleva.
 func accionar() -> void:
-	abrir()
+	if con_luz:
+		abrir()
 
 
 func abrir() -> void:

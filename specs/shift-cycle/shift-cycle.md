@@ -78,7 +78,8 @@ son de introducción: las tareas entran de a poco.
 | 3 | las cuatro fijas |
 | 4 | las cuatro fijas y ordenar las cajas del depósito |
 | 5 | las cuatro fijas y tirar la basura |
-| 6, 7 y 8 | las cuatro fijas |
+| 6 | las cuatro fijas y desechar los Cindolor vencidos |
+| 7 y 8 | las cuatro fijas |
 
 Mientras sigue abierta OQ-SHF-006, una jornada sin fila propia DEBE declarar sólo las cuatro
 fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir. La cantidad que muestra el HUD DEBE
@@ -101,13 +102,26 @@ rechazar cumplir y descumplir: el cierre cuenta el estado de ese instante.
 El sistema DEBE contar como cumplidas sólo las obligatorias que la jornada declaró. Una tarea
 cumplida fuera de esa lista no cuenta.
 
+### BR-SHF-026 — Desechar los vencidos cuenta cuando están los cinco en el contenedor
+
+MIENTRAS queda turno y la jornada declara desechar los Cindolor vencidos, el sistema DEBE contar
+esa obligatoria cuando los cinco Cindolor vencidos de la noche (BR-STK-052) están en el
+contenedor, y no antes. Un vencido que sigue en la góndola, que se lleva en la mano, que quedó
+suelto en el local o que se tiró por la ventana NO DEBE contar como desechado. Tirar al
+contenedor además un Cindolor sano u otro objeto NO DEBE impedir ni deshacer el cumplimiento; el
+llamado que eso suma es de [`employment-record`](../employment-record/employment-record.md).
+Reponer los casilleros que dejaron los vencidos no interviene en esta obligatoria, pero sí en
+reponer (BR-STK-052).
+
 ### BR-SHF-011 — La hora se lee en un solo lugar, y una noche falta
 
 El sistema DEBE mostrar la hora sólo en el reloj de mesa del local, cerca del escritorio: ni en
 el HUD, ni en la computadora, ni en otro objeto del local. SI es la sexta jornada y queda la
 mitad del turno o menos, ENTONCES el reloj DEBE leer vacío hasta el cierre, sin decir que está
-roto. Las otras jornadas, incluida la que todavía no se declaró, el reloj DEBE leer la hora el
-turno entero.
+roto. SI es la séptima jornada y la hora de ficción alcanzó las 20:58, ENTONCES el reloj DEBE
+leer `20:58` hasta el cierre, también después de restablecer la electricidad, y el turno DEBE
+seguir descontando con su presupuesto y su ritmo. Las otras jornadas, incluida la que todavía no
+se declaró, y la séptima antes de las 20:58, el reloj DEBE leer la hora el turno entero.
 
 ### BR-SHF-012 — La lectura trunca y no miente
 
@@ -224,9 +238,29 @@ está cerrado.
 DADO las jornadas 1 a 8 CUANDO cada una pide sus obligatorias ENTONCES la 1 recibe 2:
 cobrar y registrar, sin reponer, limpiar ni particular; la 2 recibe 3: cobrar, registrar y
 reponer, sin limpiar ni particular; la 3 recibe las 4 fijas; la 4 recibe 5,
-con ordenar las cajas y sin basura; la 5 recibe 5, con basura y sin ordenar; la 6, la 7 y la 8
-reciben las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
+con ordenar las cajas y sin basura; la 5 recibe 5, con basura y sin ordenar; la 6 recibe 5, con
+desechar los Cindolor vencidos y sin ordenar ni basura; la 7 y la 8 reciben las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
 comparte y todas las de la segunda están sin cumplir.
+
+### AC-SHF-059 — Los vencidos cuentan al llegar el quinto al contenedor *(verifica BR-SHF-026)*
+
+DADO la jornada 6 con sus cinco Cindolor vencidos CUANDO se tiran al contenedor uno por uno
+ENTONCES con uno, dos, tres y cuatro tirados la obligatoria sigue sin cumplir, y con el quinto
+queda cumplida. DADO que el quinto ya está tirado CUANDO se tira cualquier otro objeto ENTONCES
+sigue cumplida y la cuenta de cumplidas no sube dos veces.
+
+### AC-SHF-060 — Tirar de más no impide cumplir *(verifica BR-SHF-026)*
+
+DADO la jornada 6 con los cinco vencidos y un Cindolor sano tirados al contenedor ENTONCES
+desechar los vencidos está cumplida. DADO un Cindolor sano tirado y sólo cuatro vencidos ENTONCES
+sigue sin cumplir: el sano no suple al quinto.
+
+### AC-SHF-061 — Fuera del contenedor no cuenta *(verifica BR-SHF-026)*
+
+DADO la jornada 6 con cuatro vencidos en el contenedor CUANDO el quinto queda en su casillero
+de la góndola, en la mano, suelto en el local o tirado por la ventana, y cierra el turno
+ENTONCES desechar los vencidos queda sin cumplir. DADO ese quinto tirado después al contenedor
+antes del cierre ENTONCES queda cumplida.
 
 ### AC-SHF-007 — El borde del cierre *(verifica BR-SHF-007)*
 
@@ -248,7 +282,7 @@ restante no cambió.
 ### AC-SHF-012 — El reloj falta la mitad de una noche *(verifica BR-SHF-011)*
 
 DADO la jornada 6 CUANDO quedan `21601.0` segundos ENTONCES el reloj lee `"01:59"`; con `21600.0`
-o menos, lee `""`. En las jornadas 0, 3, 5 y 7 lee la hora con `43200.0`, con `21600.0` y con
+o menos, lee `""`. En las jornadas 0, 3, 5 y 8 lee la hora con `43200.0`, con `21600.0` y con
 `1.0`.
 
 ### AC-SHF-013 — El reloj roto no dice que está roto *(verifica BR-SHF-011)*
@@ -258,12 +292,12 @@ cadena vacía, y no `"08:00"`.
 
 ### AC-SHF-014 — La lectura trunca *(verifica BR-SHF-012)*
 
-DADO `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
+DADO una jornada que no es la sexta ni la séptima con `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
 `-10.0`, `"08:00"`.
 
 ### AC-SHF-016 — La hora de la noche *(verifica BR-SHF-014)*
 
-DADO una jornada que no es la sexta CUANDO se lee el reloj ENTONCES:
+DADO una jornada que no es la sexta ni la séptima CUANDO se lee el reloj ENTONCES:
 
 | Quedan | Se lee |
 |---|---|
@@ -347,7 +381,7 @@ su orden de dibujo ENTONCES la entrada está sobre los tres primeros y debajo de
 DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `0/2`.
 La nota de tareas lista atención y registro, sin reposición.
 DADO la jornada 4
-recién abierta ENTONCES dice `0/5`. DADO la jornada 6 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una
+recién abierta ENTONCES dice `0/5`. DADO la jornada 6 recién abierta ENTONCES dice `0/5`. DADO la jornada 7 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una
 tarea ajena a esa lista no aumenta la cuenta.
 
 ### AC-SHF-028 — La reflexión retiene la entrada *(verifica BR-SHF-019)*
@@ -476,6 +510,19 @@ permite salir. DADO que falta cualquier otra obligatoria, o que la planilla no c
 vendido, ENTONCES no permite salir. DADO la primera jornada completa ENTONCES no permite salir
 aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma regla.
 
+### AC-SHF-049 — El reloj de la séptima noche se detiene en las 20:58 *(verifica BR-SHF-011)*
+
+DADO la jornada 7 CUANDO han transcurrido 58 minutos de ficción menos un segundo ENTONCES el
+reloj lee `"20:57"`; con 58 minutos exactos, `"20:58"`. Con 2 horas transcurridas y con `0.0`
+segundos restantes sigue leyendo `"20:58"`, y no `"08:00"`. Con `0.0` segundos restantes la
+jornada 6 lee `""` y la 8 lee `"08:00"`.
+
+### AC-SHF-050 — Restablecer la luz no descongela el reloj *(verifica BR-SHF-011)*
+
+DADO la jornada 7 con el corte cortado y con el corte restaurado, a las 22:00 y a `0.0` segundos
+restantes CUANDO se lee el reloj ENTONCES lee `"20:58"` en los dos estados. Hacer clic sobre el
+panel otra vez no cambia la lectura, y el turno descuenta lo mismo que antes de la hora del corte.
+
 ## No objetivos
 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
@@ -512,11 +559,13 @@ aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma
   y cuándo deja de estarlo; ese cumplimiento actual decide el permiso de salida de la prueba.
 - [`notifications`](../notifications/notifications.md) (alimenta): la primera habilitación
   y cada nueva traba de la salida durante la noche.
+- [`anomalies`](../anomalies/anomalies.md) (consume): desde qué hora de ficción la séptima
+  noche tiene el reloj detenido.
 
 ## Preguntas abiertas
 
-- **OQ-SHF-006 — ¿Qué particular declaran las jornadas 6, 7 y 8?**
-  - Por qué sigue abierta: la 6 quedó fuera de esta tanda y las fichas de la 7 y la 8 no tienen
-    diseño cerrado. La decisión de #369 deja las tres con sólo las cuatro fijas.
+- **OQ-SHF-006 — ¿Qué particular declaran las jornadas 7 y 8?**
+  - Por qué sigue abierta: las fichas de la 7 y la 8 no tienen diseño cerrado. La decisión de
+    #369 deja las dos con sólo las cuatro fijas.
   - Decide: game design, en las fichas e issues de cada jornada.
   - Bloquea: agregar esas particulares; no bloquea abrir ni cerrar con las cuatro declaradas.
