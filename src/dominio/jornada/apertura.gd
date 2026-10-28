@@ -16,9 +16,12 @@ const INTRODUCCION := {
 ## Cuánto pueden diferir dos distancias para contar como iguales, en metros: lo que mide el modelo
 ## de un casillero a otro de la misma columna, con lugar de sobra para el redondeo.
 const HOLGURA_DE_COLUMNA := 0.01
+## El producto cuya góndola abre completa y con unidades vencidas en la jornada que lo pide.
+const PRODUCTO_CON_VENCIDOS := Producto.Id.CINDOLOR
 const PARTICULARES := {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA: [Tarea.Tipo.ORDENAR_LAS_CAJAS],
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1: [Tarea.Tipo.SACAR_LA_BASURA],
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2: [Tarea.Tipo.DESECHAR_VENCIDOS],
 }
 
 
@@ -98,6 +101,8 @@ static func vacios_de_la_jornada(
 	var presentes: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.de_la_jornada(jornada):
 		presentes[producto.id] = vaciables.get(producto.id, 0)
+	if pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):
+		presentes[PRODUCTO_CON_VENCIDOS] = 0
 	var faltantes := faltantes_al_azar(pedidos_de(compradores), presentes, azar)
 	for id: Producto.Id in faltantes:
 		vacios[id] = _sortear_vacios(
@@ -150,6 +155,24 @@ static func inventario_con_faltantes(
 			producto, Inventario.Ubicacion.GONDOLA, inventario.casilleros(producto) - falta
 		)
 	return inventario
+
+
+## Qué casilleros de Cindolor abren con una unidad vencida: `CINDOLOR_VENCIDOS` distintos, al azar,
+## sólo en la jornada que pide desecharlos. Una góndola con menos casilleros los marca todos.
+static func vencidos_de_la_jornada(
+	jornada: int, casilleros: Dictionary[Producto.Id, int], azar: RandomNumberGenerator
+) -> Dictionary[Producto.Id, Array]:
+	var vencidos: Dictionary[Producto.Id, Array] = {}
+	if not pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):
+		return vencidos
+	var libres: Array[int] = []
+	libres.assign(range(casilleros.get(PRODUCTO_CON_VENCIDOS, 0)))
+	var elegidos: Array[int] = []
+	while elegidos.size() < ReglasDelEstante.CINDOLOR_VENCIDOS and not libres.is_empty():
+		elegidos.append(libres.pop_at(azar.randi_range(0, libres.size() - 1)))
+	elegidos.sort()
+	vencidos[PRODUCTO_CON_VENCIDOS] = elegidos
+	return vencidos
 
 
 static func cajas_apiladas(jornada: int) -> bool:

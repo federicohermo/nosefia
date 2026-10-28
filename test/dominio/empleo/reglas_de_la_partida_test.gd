@@ -36,14 +36,18 @@ func test_lo_atado_a_un_numero_de_jornada_se_cuenta_desde_la_primera_completa() 
 	assert_int(Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ).is_equal(completa + 2)
 	assert_int(ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS).is_equal(completa)
 	assert_array(ReflexionDeCierre.ENCABEZADOS.keys()).contains_exactly([completa, completa + 1])
-	assert_array(Apertura.PARTICULARES.keys()).contains_exactly([completa, completa + 1])
+	assert_array(Apertura.PARTICULARES.keys()).contains_exactly(
+		[completa, completa + 1, completa + 2]
+	)
 	assert_array(PisoDelLocal.MANCHAS_POR_JORNADA.keys()).contains_exactly(
 		[completa - 1, completa, completa + 1, completa + 2, completa + 3, completa + 4]
 	)
 	assert_array(DevolucionDelJefe.BASURA_POR_JORNADA.keys()).contains_exactly(
 		[completa + 1, completa + 2]
 	)
-	assert_array(DevolucionDelJefe.PARTICULARES.keys()).contains_exactly([completa, completa + 1])
+	assert_array(DevolucionDelJefe.PARTICULARES.keys()).contains_exactly(
+		[completa, completa + 1, completa + 2]
+	)
 
 
 func test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance() -> void:

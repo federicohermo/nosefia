@@ -53,6 +53,9 @@ const PRIMERO_VACIO := -1
 ## etiqueta. Lo lee la caja (`ContenidoDeLaCaja`).
 var contenidos: Dictionary[Producto.Id, Producto.Id] = {}
 
+## Los casilleros con una unidad vencida. Lo leen quien dibuja la góndola y quien cierra la noche.
+var vencidos: VencidosDeLaGondola
+
 var _inventario: Inventario
 
 ## En el orden en que llegaron, y sin `id` repetido: la identidad es el `id` y nunca la
@@ -72,11 +75,13 @@ func _init(
 	inventario: Inventario,
 	aceptados: Array[Producto],
 	vacios_de_apertura: Dictionary[Producto.Id, Array] = {},
-	los_contenidos: Dictionary[Producto.Id, Producto.Id] = {}
+	los_contenidos: Dictionary[Producto.Id, Producto.Id] = {},
+	vencidos_de_apertura: Dictionary[Producto.Id, Array] = {}
 ) -> void:
 	_inventario = inventario
 	_vacios_de_apertura = vacios_de_apertura
 	contenidos = los_contenidos
+	vencidos = VencidosDeLaGondola.new(vencidos_de_apertura)
 	for producto in aceptados:
 		if producto == null or _aceptado_con_el_id_de(producto) != null:
 			continue
@@ -230,7 +235,8 @@ func agarrar(producto: Producto, casillero: int) -> UnidadDeProducto:
 	var ocupados := _ocupados_en_la_fila(producto)
 	_inventario.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 1)
 	_poner_en_el_orden(producto, casillero, ocupados - 1)
-	var unidad := UnidadDeProducto.new(producto)
+	var vencida := vencidos.desmarcar(producto, casillero)
+	var unidad := UnidadDeProducto.new(producto, vencida)
 	_inventario.anotar_afuera(unidad)
 	return unidad
 
@@ -273,7 +279,12 @@ func colocar_unidad(
 		return Rechazo.PRODUCTO_NO_ACEPTADO
 	var motivo := _motivo_del_casillero(unidad.producto, casillero)
 	if motivo == Rechazo.NINGUNO:
+		var elegido := casillero
+		if elegido == PRIMERO_VACIO:
+			elegido = casilleros_vacios(unidad.producto)[0]
 		motivo = _ocupar(unidad.producto, casillero)
+		if motivo == Rechazo.NINGUNO and unidad.vencido:
+			vencidos.marcar(unidad.producto, elegido)
 	if motivo == Rechazo.NINGUNO:
 		_inventario.quitar_de_afuera(unidad)
 	return motivo
@@ -293,6 +304,8 @@ func colocar_unidad(
 ## afuera cuenta como puesta en el único casillero vacío de su producto. Durante la noche se
 ## pregunta sin ella, y el casillero sigue vacío.
 func completada(en_la_mano: ObjetoDelAlmacen = null) -> bool:
+	if vencidos.cuantos() > 0:
+		return false
 	for producto in _inventario.faltantes():
 		if acepta(producto) and not _completa_la_mano(producto, en_la_mano):
 			return false
@@ -303,6 +316,7 @@ func _completa_la_mano(producto: Producto, en_la_mano: ObjetoDelAlmacen) -> bool
 	var unidad := en_la_mano as UnidadDeProducto
 	return (
 		unidad != null
+		and not unidad.vencido
 		and unidad.producto.id == producto.id
 		and _inventario.esta_afuera(unidad)
 		and casilleros_vacios(producto).size() == 1

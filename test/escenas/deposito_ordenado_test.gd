@@ -462,8 +462,11 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		assert_str(contador.text).is_equal(
 			"Tareas 0/%d" % Apertura.cantidad_de_obligatorias(jornada)
 		)
-	assert_str(contador.text).is_equal("Tareas 0/4")
+	var declaradas := Apertura.cantidad_de_obligatorias(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
+	)
+	assert_str(contador.text).is_equal("Tareas 0/%d" % declaradas)
 	for tarea in partida.obligatorias():
 		local.get("_reloj").completar(tarea)
 	local.get("_reloj").completar(Tarea.new(Tarea.Tipo.ORDENAR_LAS_CAJAS))
-	assert_str(contador.text).is_equal("Tareas 4/4")
+	assert_str(contador.text).is_equal("Tareas %d/%d" % [declaradas, declaradas])

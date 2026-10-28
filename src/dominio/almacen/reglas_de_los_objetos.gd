@@ -98,6 +98,12 @@ const CAPA_DEL_CONTORNO := 8
 ## puesto al ubicar la caja y el test al comprobar que no atraviesa nada: es el mismo número.
 const ROCE := 0.004
 
+## Cuánto más grande se ve el ticket que el que está en el mundo: en la mano un poco y, al
+## examinarlo, tanto como hace falta para que los renglones se lean en 1920 × 1080. Sólo se
+## escala lo que se ve y su colisión: el cuerpo del papel conserva su tamaño.
+const ESCALA_DEL_TICKET_EN_MANO := 1.4
+const ESCALA_DEL_TICKET_AL_EXAMINAR := 3.0
+
 ## Cuánto gira por segundo lo examinado con cada tecla de movimiento, en radianes. Lo justo para
 ## leer la cara de atrás sin pasarse de largo.
 const VELOCIDAD_DE_GIRO_DEL_EXAMEN := 2.5

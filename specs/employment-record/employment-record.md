@@ -271,19 +271,21 @@ contando esta noche (BR-EMP-025). No hay quinta: cada falla suma por lo menos un
 | Tarea 4 | 4 | De casualidad limpiás tu casa vos? Sabés cómo se usa una mopa? |
 
 Tarea 5 DEBE elegirse por J, no por una cuenta, y sólo existe en las jornadas que declaran una
-particular (BR-SHF-005). La jornada 5 tiene además la variante de BR-EMP-045:
+particular (BR-SHF-005). La jornada 5 tiene además la variante de BR-EMP-045, y la 6 elige
+entre tres textos según BR-EMP-046:
 
 | J | Texto |
 |---|---|
 | 4 | Cuando te pedí que ordenaras las cajas en las estanterías del depósito, lo que quería decir es que pongas TODAS y cada una de las CAJAS de cartón con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se entendió? |
 | 5 | De verdad era tan difícil tirar tres bolsas de basura? |
+| 6 | El de BR-EMP-046. |
 
 ### BR-EMP-028 — Los Retos dicen el llamado que es
 
 Para cada Reto, el sistema DEBE elegir el texto por n, la cantidad de llamados de ese motivo
 contando esta noche (BR-EMP-025), y por P cuando la fila lo pide. En Reto 2, las filas de J = 5 y
 J = 6 DEBEN ganarle a las de n, y esos llamados DEBEN contar igual para la n de las noches
-siguientes. La fila de J = 6 se conserva aunque esa noche no declare una particular de vencidos.
+siguientes.
 
 | Parte | Condición | Texto |
 |---|---|---|
@@ -342,6 +344,26 @@ cumplir y ninguna bolsa quedó afuera, ENTONCES Tarea 5 DEBE ser el de BR-EMP-02
 afuera se decide con la noción de BR-CLN-029, sobre el estado del cierre ya calculado. Una bolsa
 afuera que se recuperó y se depositó antes del cierre NO DEBE contar. Las demás jornadas NO
 DEBEN traer este texto.
+
+### BR-EMP-046 — Tarea 5 de la jornada 6 dice dónde quedó el vencido
+
+CUANDO cierra la jornada 6 con desechar los Cindolor vencidos sin cumplir, el sistema DEBE
+elegir un único texto para Tarea 5, letra por letra de la ficha «Chat con el jefe», según dónde
+quedó lo que no se desechó al cerrar:
+
+| Condición | Texto |
+|---|---|
+| Algún vencido sin desechar en el local, y ninguno afuera | Una señora me hizo un escándalo por un producto vencido que nos compró. Te das cuenta de que tu falta de atención nos afecta a todos? |
+| Ninguno sin desechar en el local, y algún vencido afuera | Se suponía que tiraras los productos vencidos al contenedor, NO POR LA VENTANA. |
+| Algún vencido sin desechar en el local, y algún vencido afuera | Una señora me hizo un escándalo por un producto vencido que nos compró. Te das cuenta de que tu falta de atención nos afecta a todos? Y se suponía que tiraras los productos vencidos al contenedor, NO POR LA VENTANA. |
+
+«Sin desechar en el local» incluye el vencido que sigue en su casillero de la góndola, el que el
+jugador lleva en la mano y el que quedó suelto en cualquier cuarto del local; el de la mano o el
+suelto da el mismo texto que el de la góndola. «Afuera» se decide con la noción de BR-CLN-029,
+sobre el estado del cierre ya calculado: un vencido tirado por la ventana y recuperado antes del
+cierre, o tirado al contenedor, NO DEBE contar como afuera. SI la particular quedó cumplida,
+ENTONCES NO DEBE haber Tarea 5. Las demás jornadas NO DEBEN traer estos textos. Tirar objetos de
+más al contenedor no cambia Tarea 5: suma el llamado de BR-EMP-028.
 
 ### BR-EMP-029 — El Cierre, y qué fila gana
 
@@ -788,10 +810,29 @@ sacar ENTONCES Tarea 5 es «De verdad era tan difícil tirar tres bolsas de basu
 
 ### AC-EMP-054 — El Reto 2 de la jornada 6 *(verifica BR-EMP-027, BR-EMP-028)*
 
-DADO la jornada 6 con el llamado por objetos importantes en la basura, sin una particular
-declarada CUANDO se arma la devolución ENTONCES trae «Cuando te pedí que tiraras algunos
-productos, no me refería a objetos útiles y en buen estado!», sea el primer llamado o el
-segundo, y no trae Tarea 5.
+DADO la jornada 6 con los cinco vencidos en el contenedor, un Cindolor sano tirado también y el
+llamado por objetos importantes en la basura CUANDO se arma la devolución ENTONCES trae «Cuando
+te pedí que tiraras algunos productos, no me refería a objetos útiles y en buen estado!», sea el
+primer llamado o el segundo, y no trae Tarea 5.
+
+### AC-EMP-100 — Tarea 5 de la jornada 6 según dónde quedó el vencido *(verifica BR-EMP-046, BR-EMP-009, BR-EMP-027)*
+
+DADO la jornada 6 con desechar los vencidos sin cumplir CUANDO se arma la devolución ENTONCES
+Tarea 5 es un único mensaje: con un vencido en la góndola y ninguno afuera, «Una señora me hizo
+un escándalo por un producto vencido que nos compró. Te das cuenta de que tu falta de atención nos
+afecta a todos?»; con un vencido en la mano y ninguno afuera, el mismo texto; con un vencido
+suelto en el local y ninguno afuera, el mismo texto; con ninguno sin desechar en el local y uno
+tirado por la ventana, «Se suponía que tiraras los productos vencidos al contenedor, NO POR LA
+VENTANA.»; con uno en la góndola y otro afuera, el texto de los dos juntos que termina en «Y se
+suponía que tiraras los productos vencidos al contenedor, NO POR LA VENTANA.». DADO un vencido
+tirado por la ventana y recuperado antes del cierre, que quedó en la góndola ENTONCES sale el
+texto de la góndola solo.
+
+### AC-EMP-101 — Con la particular cumplida no hay Tarea 5 *(verifica BR-EMP-046, BR-EMP-009)*
+
+DADO la jornada 6 con los cinco vencidos en el contenedor ENTONCES la devolución no trae Tarea
+5, y tampoco ninguno de los tres textos de BR-EMP-046. DADO la jornada 7 con una unidad de
+Cindolor afuera ENTONCES la devolución no trae ninguno de esos textos.
 
 ### AC-EMP-096 — Una bolsa por la ventana cambia la Tarea 5 de la jornada 5 *(verifica BR-EMP-045, BR-EMP-027, BR-EMP-009)*
 
@@ -1204,8 +1245,8 @@ desde que la persiana terminó de bajar ENTONCES el celular no subió (AC-EMP-09
   el celular es de [`investigation`](../investigation/investigation.md).
 - Esta capacidad NO muestra la reflexión de cierre que sigue a «continuar» en las jornadas 4 y
   5: es de [`investigation`](../investigation/investigation.md).
-- Esta capacidad NO trae la Tarea 5 de las jornadas 1 a 3 ni de las 6 a 8: esas noches no
-  declaran particular (BR-SHF-005). Los textos de las 6 a 8 esperan en la ficha mientras siga
+- Esta capacidad NO trae la Tarea 5 de las jornadas 1 a 3 ni de la 7 y la 8: esas noches no
+  declaran particular (BR-SHF-005). Los textos de la 7 y la 8 esperan en la ficha mientras siga
   abierta OQ-SHF-006.
 - Esta capacidad NO redacta mensajes de apertura: `investigation` consume el guion de cada
   contacto, incluida la apertura de la jornada 5. Entrega a ese historial las devoluciones fechadas.

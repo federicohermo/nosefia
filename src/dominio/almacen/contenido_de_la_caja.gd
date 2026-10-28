@@ -94,7 +94,7 @@ func sacar() -> UnidadDeProducto:
 ## El tope es el de las reglas del estante y no otro: la caja no pasa nunca de lo que trae al
 ## abrir la noche. Lo que no entra no cambia nada, y la unidad sigue donde estaba.
 func meter(unidad: UnidadDeProducto) -> bool:
-	if not _es_de_su_producto(unidad) or unidades() >= ReglasDelEstante.UNIDADES_POR_CAJA:
+	if not _puede_volver(unidad) or unidades() >= ReglasDelEstante.UNIDADES_POR_CAJA:
 		return false
 	return _estante.devolver(unidad)
 
@@ -106,7 +106,7 @@ func meter(unidad: UnidadDeProducto) -> bool:
 func uso(sostenido: ObjetoDelAlmacen, primario: bool) -> Gesto:
 	if not primario and sostenido == null:
 		return Gesto.SACAR
-	if primario and _es_de_su_producto(sostenido as UnidadDeProducto):
+	if primario and _puede_volver(sostenido as UnidadDeProducto):
 		return Gesto.METER
 	return Gesto.NADA
 
@@ -142,6 +142,12 @@ func texto_del_examen() -> String:
 	elif datos.entran > 1:
 		texto += TEXTO_DE_VARIAS_MAS % datos.entran
 	return texto
+
+
+## Si la caja la recibiría: es de su producto y no está vencida, porque una vencida que vuelve a
+## la caja saldría después como sana (BR-STK-052).
+func _puede_volver(unidad: UnidadDeProducto) -> bool:
+	return _es_de_su_producto(unidad) and not unidad.vencido
 
 
 ## Si la unidad es de su producto. Compara por `id` y no por instancia: el catálogo arma un

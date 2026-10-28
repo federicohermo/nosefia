@@ -378,6 +378,30 @@ afuera y descontar una del depósito. La caja y la góndola DEBEN seguir como es
 unidad ya no se devuelve ni se coloca. Una unidad no registrada afuera NO DEBE cambiar el
 inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-STK-026).
 
+### BR-STK-052 — La jornada de los vencidos trae cinco Cindolor vencidos
+
+CUANDO se abre una jornada que declara desechar los Cindolor vencidos (BR-SHF-005), el sistema
+DEBE abrir la góndola de Cindolor con todos los casilleros de su fila de adelante ocupados, sin
+faltante de ese producto esa noche (BR-STK-007), y DEBE marcar como vencidas exactamente cinco
+de esas unidades, en casilleros distintos elegidos al azar. Las demás jornadas NO DEBEN traer
+ninguna unidad vencida. Una unidad vencida es un Cindolor con una fecha de vencimiento en rojo
+en la parte trasera del envase: el jugador sólo la distingue de una sana al agarrarla y
+examinarla, y que esa fecha se vea es territorio de juicio humano.
+
+La marca viaja con la unidad. CUANDO el jugador agarra una unidad vencida de su casillero
+(BR-STK-033), el sistema DEBE dársela vencida y dejar el casillero vacío y sin marca; CUANDO la
+coloca en un casillero vacío de Cindolor, ese casillero DEBE quedar con una unidad vencida.
+Una unidad que sale de la caja NO DEBE ser vencida, y la caja NO DEBE recibir una unidad
+vencida: SI se intenta, ENTONCES la unidad sigue en la mano. CUANDO se tira al contenedor una
+unidad vencida, el sistema DEBE retirarla del inventario como cualquier otra (BR-STK-036); no
+vuelve en ninguna jornada siguiente.
+
+MIENTRAS haya una unidad vencida en un casillero de la góndola, el sistema NO DEBE contar
+reponer como cumplida, aunque todos los casilleros estén ocupados. Una unidad vencida que el
+jugador lleva en la mano al cerrar NO DEBE contar como puesta en su casillero vacío
+(BR-STK-033). Reponer los casilleros que dejan los vencidos tirados es parte de reponer, y
+no de desechar los vencidos (BR-SHF-026).
+
 ### BR-STK-037 — La venta física retira identidades una sola vez
 
 CUANDO se completa una compra física, el sistema DEBE retirar definitivamente sus unidades
@@ -1004,6 +1028,45 @@ DADO un producto de 8 casilleros con la fila de adelante completa, su caja en 8 
 sacadas de ella CUANDO se cobra una venta de 6 ENTONCES se rechaza, y ni el depósito ni la caja
 cambian. CUANDO se cobra una de 5 ENTONCES se cobra y la caja queda en 0. CUANDO se devuelven
 las 3 ENTONCES la caja tiene 3.
+
+### AC-STK-118 — La jornada de los vencidos abre con cinco *(verifica BR-STK-052, BR-STK-007)*
+
+DADO la jornada 6 abierta con cualquier azar CUANDO se consulta la góndola de Cindolor ENTONCES
+no le falta ningún casillero de la fila de adelante, y exactamente cinco casilleros distintos
+tienen una unidad vencida. DADO cada una de las demás jornadas, de la 1 a la 5, la 7 y la 8
+ENTONCES ningún casillero de ningún producto tiene una unidad vencida.
+
+### AC-STK-119 — La marca viaja con la unidad *(verifica BR-STK-052, BR-STK-033)*
+
+DADO un casillero de Cindolor con una unidad vencida CUANDO el jugador la agarra ENTONCES la
+unidad de la mano es vencida, el casillero queda vacío y sin marca, y los otros cuatro vencidos
+siguen en los suyos. DADO esa unidad en la mano CUANDO la coloca en otro casillero vacío de
+Cindolor ENTONCES ese casillero tiene una unidad vencida. DADO un casillero con una unidad sana
+CUANDO el jugador la agarra ENTONCES la unidad de la mano no es vencida. DADO una unidad que
+sale de la caja de Cindolor ENTONCES no es vencida.
+
+### AC-STK-120 — La caja no recibe un vencido *(verifica BR-STK-052, BR-STK-030)*
+
+DADO una unidad vencida en la mano y la caja de Cindolor con lugar CUANDO se intenta devolverla
+ENTONCES la caja no cambia y la unidad sigue en la mano. DADO una unidad sana de Cindolor en la
+mano y la misma caja ENTONCES la caja la recibe.
+
+### AC-STK-121 — Tirar un vencido no llena su casillero *(verifica BR-STK-052, BR-STK-036)*
+
+DADO una unidad vencida agarrada de la góndola CUANDO se tira al contenedor ENTONCES la caja de
+Cindolor queda como estaba, el casillero sigue vacío y la góndola no recupera esa unidad. DADO la
+jornada siguiente ENTONCES abre sin unidades vencidas.
+
+### AC-STK-122 — Un vencido en la góndola deja reponer sin cumplir *(verifica BR-STK-052, BR-STK-033)*
+
+DADO la jornada 6 abierta, con todos los casilleros de la góndola ocupados y cinco vencidos
+entre los de Cindolor ENTONCES reponer no está cumplida. DADO los cinco vencidos tirados al
+contenedor y sus cinco casilleros todavía vacíos ENTONCES reponer sigue sin cumplir; CUANDO se
+colocan cinco unidades sanas de la caja ENTONCES queda cumplida. DADO cuatro vencidos tirados
+y uno en su casillero, con los cuatro casilleros repuestos ENTONCES reponer sigue sin cumplir.
+DADO el cierre con el último casillero vacío y una unidad sana de Cindolor en la mano ENTONCES
+reponer cuenta como cumplida; DADO el mismo cierre con una unidad vencida en la mano ENTONCES
+no.
 
 ### AC-STK-050 — Lo que está a la altura de la mano se agarra *(verifica BR-STK-024, BR-STK-033)*
 
