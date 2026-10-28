@@ -76,6 +76,20 @@ const TAREAS: Dictionary[Tarea.Tipo, Array] = {
 	],
 }
 
+## Los tres textos de la Tarea 5 de los vencidos, según dónde quedó lo que no se desechó.
+const VENCIDO_EN_EL_LOCAL := (
+	"Una señora me hizo un escándalo por un producto vencido que nos compró. "
+	+ "Te das cuenta de que tu falta de atención nos afecta a todos?"
+)
+const VENCIDO_POR_LA_VENTANA := (
+	"Se suponía que tiraras los productos vencidos " + "al contenedor, NO POR LA VENTANA."
+)
+const VENCIDO_EN_EL_LOCAL_Y_POR_LA_VENTANA := (
+	VENCIDO_EN_EL_LOCAL
+	+ " Y se suponía que tiraras los productos vencidos "
+	+ "al contenedor, NO POR LA VENTANA."
+)
+
 ## La Tarea 5 sale de la jornada: sólo las que declaran una particular tienen texto.
 const PARTICULARES: Dictionary[int, String] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
@@ -87,6 +101,7 @@ const PARTICULARES: Dictionary[int, String] = {
 	),
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	"De verdad era tan difícil tirar tres bolsas de basura?",
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2: VENCIDO_EN_EL_LOCAL,
 }
 
 ## La variante de la Tarea 5 cuando una bolsa quedó afuera: reemplaza a la de `PARTICULARES`.
@@ -345,7 +360,9 @@ func _init(jornada: int, partida: Partida) -> void:
 		partida.llamados(),
 		partida.uso_de_poetico_en(jornada),
 		partida.bolsa_afuera,
-		partida.clases_de_desorden
+		partida.clases_de_desorden,
+		partida.vencido_en_el_local,
+		partida.vencido_afuera
 	)
 
 
@@ -414,7 +431,9 @@ static func armar(
 	llamados: Array[Partida.Llamado],
 	uso_de_poetico: bool = false,
 	bolsa_afuera: bool = false,
-	desorden: Array[ReglasDelCierre.Clase] = []
+	desorden: Array[ReglasDelCierre.Clase] = [],
+	vencido_en_el_local: bool = false,
+	vencido_afuera: bool = false
 ) -> Array[String]:
 	var mensajes: Array[String] = [_saludo(medios)]
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
@@ -424,7 +443,7 @@ static func armar(
 	if uso_de_poetico:
 		mensajes.append(POETICO_EN_EL_DESPIDO if medios >= MEDIOS_DEL_DESPIDO else POETICO)
 	if PARTICULARES.has(jornada) and _alguna_particular(sin_cumplir):
-		mensajes.append(_particular(jornada, bolsa_afuera))
+		mensajes.append(_particular(jornada, bolsa_afuera, vencido_en_el_local, vencido_afuera))
 	for motivo: Partida.Llamado in retos():
 		if llamados.has(motivo):
 			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios, desorden))
@@ -437,9 +456,15 @@ static func _saludo(medios: int) -> String:
 	return SALUDOS[mini(medios / MEDIOS_POR_PUNTO, SALUDOS.size() - 1)]
 
 
-static func _particular(jornada: int, bolsa_afuera: bool) -> String:
+static func _particular(
+	jornada: int, bolsa_afuera: bool, vencido_en_el_local: bool, vencido_afuera: bool
+) -> String:
 	if bolsa_afuera and PARTICULARES_CON_BOLSA_AFUERA.has(jornada):
 		return PARTICULARES_CON_BOLSA_AFUERA[jornada]
+	if vencido_afuera and Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):
+		return (
+			VENCIDO_EN_EL_LOCAL_Y_POR_LA_VENTANA if vencido_en_el_local else VENCIDO_POR_LA_VENTANA
+		)
 	return PARTICULARES[jornada]
 
 

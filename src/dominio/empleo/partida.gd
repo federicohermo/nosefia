@@ -65,6 +65,17 @@ var bolsa_afuera := false:
 	set(valor):
 		bolsa_afuera = valor and _jornada_abierta and not terminada()
 
+## Dónde quedó un vencido sin desechar al cerrar la noche: dentro del local —en la góndola, en la
+## mano o suelto— o afuera. Cambian la Tarea 5 de la devolución. Como los llamados, sólo se anotan
+## con la jornada abierta.
+var vencido_en_el_local := false:
+	set(valor):
+		vencido_en_el_local = valor and _jornada_abierta and not terminada()
+
+var vencido_afuera := false:
+	set(valor):
+		vencido_afuera = valor and _jornada_abierta and not terminada()
+
 ## Las clases de desorden con que cerró la noche. Asignarlas anota el llamado por desorden; sin
 ## clases no hay desorden. Como los llamados, sólo se anotan con la jornada abierta.
 var clases_de_desorden: Array[ReglasDelCierre.Clase]:
@@ -323,6 +334,8 @@ func abrir_la_jornada() -> Turno:
 	_llamados.clear()
 	_clases_de_desorden.clear()
 	bolsa_afuera = false
+	vencido_en_el_local = false
+	vencido_afuera = false
 	_obligatorias = Apertura.obligatorias(_jornada)
 	_jornada_abierta = true
 	return Apertura.turno_de_la_jornada(_obligatorias)

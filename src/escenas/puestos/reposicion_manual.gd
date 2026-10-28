@@ -12,6 +12,8 @@ const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superfi
 const FILA_DE_ATRAS := preload("res://src/escenas/puestos/fila_de_atras_apagada.gdshader")
 const POR_COLOCAR := preload("res://src/escenas/puestos/producto_por_colocar.gdshader")
 const DISPOSICION_DE_PRUEBA := preload("res://src/escenas/puestos/disposicion_de_prueba.tres")
+## La variante de Cindolor con la fecha de vencimiento en rojo en el dorso.
+const MODELO_DEL_VENCIDO := preload("res://assets/models/producto_cindolor_vencido.res")
 
 ## Cuánto color le queda a la fila de atrás de la góndola: con 1 se ve como la de adelante, con
 ## 0 queda en gris. Las referencias fijas usan el mismo color que la fila de atrás:
@@ -101,6 +103,10 @@ var _fijas: Array[int] = []
 ## placa de video.
 var _bloques: Array[PackedFloat32Array] = []
 var _sueltos: Array[GrupoDelPiso] = []
+## Cindolor vencido: el modelo de la mano y el piso, y los dos dibujos de la góndola y del piso.
+var _modelo_vencido: Mesh
+var _vencidos_puestos: MultiMeshInstance3D
+var _vencidos_sueltos: GrupoDelPiso
 var _disponible: ObjetoAgarrable = null
 ## Las aristas que dibuja el foco. Piden las mallas que arma `AristasDelProducto`.
 var _aristas := ShaderMaterial.new()
@@ -116,6 +122,8 @@ func unidades_sueltas() -> Array[Node3D]:
 	var cuerpos: Array[Node3D] = []
 	for grupo: GrupoDelPiso in _sueltos:
 		cuerpos.append_array(grupo.cuerpos)
+	if _vencidos_sueltos != null:
+		cuerpos.append_array(_vencidos_sueltos.cuerpos)
 	return cuerpos
 
 
@@ -252,6 +260,8 @@ func _rehacer_disposicion() -> void:
 	_grupos.clear()
 	_huecos.clear()
 	_sueltos.clear()
+	_vencidos_puestos = null
+	_vencidos_sueltos = null
 	_casilleros.clear()
 	_centros_de_las_filas.clear()
 	_radios_de_las_filas.clear()
@@ -338,12 +348,19 @@ func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
 
 func _agrupar_suelto(nodo: Node3D) -> void:
 	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
-		_sueltos[nodo.datos.producto.id].agregar(nodo)
+		_grupo_del_piso_de(nodo.datos).agregar(nodo)
 
 
 func _retirar_del_grupo(nodo: Node3D) -> void:
 	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
-		_sueltos[nodo.datos.producto.id].quitar(nodo)
+		_grupo_del_piso_de(nodo.datos).quitar(nodo)
+
+
+## El grupo que dibuja a esa unidad en el piso: la vencida tiene su propio modelo.
+func _grupo_del_piso_de(unidad: UnidadDeProducto) -> GrupoDelPiso:
+	if unidad.vencido and _vencidos_sueltos != null:
+		return _vencidos_sueltos
+	return _sueltos[unidad.producto.id]
 
 
 ## Traduce el gesto recibido al resultado de la caja; no deriva el botón de lo que lleva la mano.
@@ -1263,6 +1280,10 @@ static func giro_hacia_la_camara(frente: Vector3) -> float:
 func _preparar_modelos() -> void:
 	for grupo: MeshInstance3D in contenido.get_children():
 		_modelos.append(AristasDelProducto.preparar(_malla_en_mundo(grupo)))
+	var cindolor := contenido.get_child(Producto.Id.CINDOLOR) as MeshInstance3D
+	_modelo_vencido = AristasDelProducto.preparar(
+		_malla_con_la_vuelta(MODELO_DEL_VENCIDO, cindolor.global_basis)
+	)
 	for modelo in _modelos:
 		# **El casco sale de `create_convex_shape` y no de `get_faces()`.** Los vértices crudos
 		# vienen repetidos —tres por cada esquina de una caja—, y con esa nube el solver arma un
@@ -1304,6 +1325,24 @@ func _preparar_grupos() -> void:
 		add_child(sueltos)
 		_generados.append(sueltos)
 		_sueltos.append(sueltos)
+	_preparar_los_vencidos()
+
+
+## Los dos dibujos de Cindolor vencido: el de los casilleros de la góndola, que arranca igual que
+## el de las sanas, y el del piso, con lugar para todos los vencidos de la noche.
+func _preparar_los_vencidos() -> void:
+	var id := Producto.Id.CINDOLOR
+	var casilleros := _bloques[id].slice(_fijas[id] * DisposicionDeLaGondola.FLOTANTES_POR_COPIA)
+	_vencidos_puestos = _dibujar(
+		"VencidosDeCindolor", _malla_con_la_fila_apagada(_modelo_vencido), casilleros
+	)
+	_apagar_hasta(_vencidos_puestos, 0)
+	_vencidos_puestos.visible = false
+	_vencidos_sueltos = GrupoDelPiso.new()
+	_vencidos_sueltos.name = "CindolorVencidoSuelto"
+	_vencidos_sueltos.preparar(_modelo_vencido, ReglasDelEstante.CINDOLOR_VENCIDOS)
+	add_child(_vencidos_sueltos)
+	_generados.append(_vencidos_sueltos)
 
 
 ## El material del grupo de un producto: el del modelo, con la fila de atrás apagada.
@@ -1479,13 +1518,15 @@ func _preparar_la_guia() -> void:
 
 
 func _malla_en_mundo(grupo: MeshInstance3D) -> ArrayMesh:
+	return _malla_con_la_vuelta(grupo.mesh, grupo.global_basis)
+
+
+func _malla_con_la_vuelta(malla: Mesh, vuelta: Basis) -> ArrayMesh:
 	var resultado := ArrayMesh.new()
-	for superficie: int in grupo.mesh.get_surface_count():
+	for superficie: int in malla.get_surface_count():
 		var herramienta := SurfaceTool.new()
-		herramienta.append_from(
-			grupo.mesh, superficie, Transform3D(grupo.global_basis, Vector3.ZERO)
-		)
-		herramienta.set_material(grupo.mesh.surface_get_material(superficie))
+		herramienta.append_from(malla, superficie, Transform3D(vuelta, Vector3.ZERO))
+		herramienta.set_material(malla.surface_get_material(superficie))
 		herramienta.commit(resultado)
 	return resultado
 
@@ -1527,8 +1568,12 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var de_la_noche := repositor.estante()
 	var primera := _primera_dibujada(id)
 	var ocupados := de_la_noche.casilleros_ocupados(producto)
+	var vencidos := de_la_noche.vencidos.casilleros(producto)
+	var sanos: Array[int] = ocupados.filter(
+		func(casillero: int) -> bool: return not vencidos.has(casillero)
+	)
 	var afuera := de_la_noche.casilleros_vacios(producto)
-	var orden := ocupados + afuera
+	var orden := sanos + vencidos + afuera
 	var bloque := _bloques[id]
 	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA
 	var dibujo := bloque.slice(0, primera * flotantes)
@@ -1538,7 +1583,7 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var copias := _grupos[id].multimesh
 	if dibujo.size() == bloque.size():
 		copias.buffer = dibujo
-	copias.visible_instance_count = primera + ocupados.size()
+	copias.visible_instance_count = primera + sanos.size()
 	# Las guías sumadas y la fila de atrás son referencias fijas: todo lo que va antes de la
 	# primera reponible se dibuja atenuado, aunque se llene o se vacíe un casillero.
 	_apagar_hasta(_grupos[id], primera)
@@ -1550,6 +1595,16 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var huecos := _huecos[id].multimesh
 	huecos.buffer = por_reponer
 	huecos.visible_instance_count = afuera.size()
+	if id == Producto.Id.CINDOLOR and _vencidos_puestos != null:
+		# Los vencidos van primero en su lote, y el resto queda fuera del corte.
+		var del_lote := dibujo.slice((primera + sanos.size()) * flotantes, corte)
+		del_lote.append_array(
+			dibujo.slice(primera * flotantes, (primera + sanos.size()) * flotantes)
+		)
+		del_lote.append_array(dibujo.slice(corte))
+		_vencidos_puestos.multimesh.buffer = del_lote
+		_vencidos_puestos.multimesh.visible_instance_count = vencidos.size()
+		_vencidos_puestos.visible = not vencidos.is_empty()
 
 
 func _apagar_hasta(grupo: MultiMeshInstance3D, primera: int) -> void:
@@ -1635,6 +1690,9 @@ func _cuerpo_para(id: Producto.Id) -> ObjetoAgarrable:
 func _vestir(unidad: ObjetoAgarrable, id: Producto.Id) -> void:
 	unidad.show()
 	var malla := _modelos[id]
+	var datos := unidad.datos
+	if datos != null and datos.vencido and id == Producto.Id.CINDOLOR:
+		malla = _modelo_vencido
 	var limites := malla.get_aabb()
 	var vista: MeshInstance3D = unidad.get_node("Malla")
 	vista.mesh = malla
@@ -1681,7 +1739,10 @@ func _guardar_cuerpo(unidad: ObjetoAgarrable) -> void:
 
 
 func _limpiar_unidades() -> void:
-	for grupo in _sueltos:
+	var grupos := _sueltos.duplicate()
+	if _vencidos_sueltos != null:
+		grupos.append(_vencidos_sueltos)
+	for grupo: GrupoDelPiso in grupos:
 		while not grupo.cuerpos.is_empty():
 			grupo.quitar(grupo.cuerpos[-1])
 	for unidad in _unidades:
