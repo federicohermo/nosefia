@@ -32,7 +32,6 @@ func _ready() -> void:
 	programa.borrado_pedido.connect(caja.pedir_borrar)
 	programa.impresion_pedida.connect(_imprimir_desde_entrada)
 	programa.eleccion_pedida.connect(caja.pedir_elegir)
-	programa.cierre_pedido.connect(_cerrar_desde_entrada)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	reloj.tiempo_consumido.connect(func(restante: float) -> void: _restante = restante)
 	caja.programa_arrancado.connect(
