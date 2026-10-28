@@ -314,6 +314,7 @@ func test_cada_producto_visible_tiene_su_separador_en_cada_resolucion() -> void:
 
 
 func test_cada_lado_del_borde_de_cada_renglon_ocupa_pixeles_enteros_en_cada_resolucion() -> void:
+	var bordes := 0
 	for pantalla: Vector2i in RESOLUCIONES:
 		var vista := _abrir_en_pantalla(6, pantalla)
 		var generador := GeneradorDeTickets.para_la_jornada(6)
@@ -322,12 +323,15 @@ func test_cada_lado_del_borde_de_cada_renglon_ocupa_pixeles_enteros_en_cada_reso
 		for renglon in 3:
 			var selector := vista.selectores[renglon]
 			var contexto := "%s, renglón %d" % [pantalla, renglon]
-			_afirmar_el_borde(_boton(selector, "Cabecera"), contexto + ", cerrado")
+			bordes += _afirmar_el_borde(_boton(selector, "Cabecera"), contexto + ", cerrado")
 			_boton(selector, "Cabecera").pressed.emit()
 			await selector.animacion_terminada
-			_afirmar_el_borde(selector.find_child("Lista", true, false), contexto + ", abierto")
+			bordes += _afirmar_el_borde(
+				selector.find_child("Lista", true, false), contexto + ", abierto"
+			)
 			_boton(selector, "Cabecera").pressed.emit()
 			await selector.animacion_terminada
+	assert_int(bordes).is_equal(RESOLUCIONES.size() * GeneradorDeTickets.RENGLONES * 2)
 
 
 func test_la_lista_abierta_de_cada_renglon_entra_en_el_panel_en_cada_resolucion() -> void:
@@ -436,11 +440,11 @@ func _abrir_en_pantalla(jornada: int, tamano: Vector2i = Vector2i(1920, 1080)) -
 
 ## Cada lado del borde del control es una fila o columna entera de píxeles, adentro del control y
 ## de punta a punta.
-func _afirmar_el_borde(control: Control, contexto: String) -> void:
+func _afirmar_el_borde(control: Control, contexto: String) -> int:
 	var borde := control.get_node_or_null("Borde") as BordeDePixel
 	assert_object(borde).override_failure_message(contexto).is_not_null()
 	if borde == null:
-		return
+		return 0
 	var control_en_pantalla := _rectangulo_global(control).grow(0.01)
 	var enteros := Vector2(0.01, 0.01)
 	var lados := borde.lados()
@@ -462,6 +466,7 @@ func _afirmar_el_borde(control: Control, contexto: String) -> void:
 		assert_float(lado.size[largo]).override_failure_message(contexto).is_greater_equal(
 			_rectangulo_global(control).size[largo] - 2.0
 		)
+	return 1
 
 
 ## Las filas de píxeles cuyo centro cae adentro del rectángulo: las que el motor pinta.
