@@ -83,11 +83,16 @@ func test_la_mopa_sobre_una_mancha() -> void:  # AC-SUB-018
 	assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(R.MOPA_SECA, true)).is_equal(S.MOPA_YA_SECA)
 	for callado: R in [R.YA_ESTABA_LIMPIA, R.MANCHA_BORRADA, R.SIN_EFECTO]:
 		assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(callado, true)).is_equal(S.NINGUNO)
-	var pared := PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO
-	assert_int(SubtitulosDeLosGestos.al_borrar(pared)).is_equal(S.PARED_DEL_OTRO_INODORO)
+	var con_subtitulo := {
+		PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: S.PARED_DEL_OTRO_INODORO,
+		PisoDelLocal.Lugar.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: S.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO,
+		PisoDelLocal.Lugar.TECHO_SOBRE_UN_CUBICULO: S.TECHO_SOBRE_UN_CUBICULO,
+	}
 	for lugar: PisoDelLocal.Lugar in PisoDelLocal.Lugar.values():
-		if lugar != pared:
-			assert_int(SubtitulosDeLosGestos.al_borrar(lugar)).is_equal(S.NINGUNO)
+		var esperado: int = con_subtitulo.get(lugar, S.NINGUNO)
+		assert_int(SubtitulosDeLosGestos.al_borrar(lugar)).is_equal(esperado)
+	for id: int in con_subtitulo.values():
+		assert_str(SubtitulosDeLosGestos.TEXTOS[id]).is_not_empty()
 
 
 func test_el_agua_sola_pide_jabon_y_al_secarse_lo_avisa() -> void:  # AC-SUB-018

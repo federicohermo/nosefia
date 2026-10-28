@@ -1582,11 +1582,12 @@ func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiM
 
 
 func retirar(id: Producto.Id) -> void:
-	var unidad := _cuerpo_para(id)
+	var contenido := repositor.caja(id).producto.id
+	var unidad := _cuerpo_para(contenido)
 	if not repositor.pedir_retirar(id, unidad):
 		_guardar_cuerpo(unidad)
 		return
-	_vestir(unidad, id)
+	_vestir(unidad, contenido)
 
 
 ## Cómo lo inclina la mano. Lo alto va echado hacia arriba. Lo que es más hondo que alto —una

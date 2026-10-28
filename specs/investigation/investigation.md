@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 6, de #458
 ---
 
 # Capacidad: la investigación
@@ -422,11 +422,10 @@ recibirlo NO DEBE registrar una pista ni contar como hipótesis elegida. El enca
 
 ### BR-INV-044 — La quinta jornada se cierra eligiendo una hipótesis
 
-La reflexión de jornada 5 DEBE mostrar el encabezado «Hoy faltabo uno de los jabones para la
-limpieza del local. No me quiero empezar a perseguir, pero…», con la errata «faltabo» de la
-fuente. El recuadro DEBE mostrar una opción por vez, entre las que habilita BR-INV-039, con su
-título y su texto de hipótesis de BR-INV-041. La primera mostrada DEBE ser la primera de esa
-lista. Con una opción DEBE ofrecer sólo «Elegir». Con dos DEBE ofrecer «Anterior», «Siguiente»
+La reflexión de jornada 5 DEBE mostrar el encabezado «Hoy faltaba uno de los jabones para la
+limpieza del local. No me quiero empezar a perseguir, pero…». El recuadro DEBE mostrar una
+opción por vez, entre las que habilita BR-INV-039, con su título y su texto de hipótesis de
+BR-INV-041. La primera mostrada DEBE ser la primera de esa lista. Con una opción DEBE ofrecer sólo «Elegir». Con dos DEBE ofrecer «Anterior», «Siguiente»
 y «Elegir»; «Anterior» y «Siguiente» DEBEN mostrar la otra opción. Navegar NO DEBE elegir,
 agregar notas ni modificar el expediente.
 
@@ -463,6 +462,36 @@ tener un fondo propio, distinto del de los demás chats. Desde jornada 6, el men
 con todo ese historial (BR-INV-040), y sus fotos DEBEN ampliarse según BR-INV-025. El historial
 de notas cruza la sesión por el guardado (BR-SAV-021); reconstruirlo NO DEBE duplicar mensajes,
 publicar pistas ni elegir una hipótesis.
+
+### BR-INV-048 — La sexta jornada suma los diez mensajes de Yasmín sobre el lector
+
+CUANDO abre la jornada 6, por transición o desde un checkpoint, el chat de Yasmín DEBE tener,
+después de los quince mensajes de BR-INV-029, exactamente los siguientes diez mensajes
+independientes, con estas identidades estables y en este orden:
+
+| Identidad | Texto literal |
+|---|---|
+| J3_1 | che que onda el lector?? wtf |
+| J3_2 | tenés idea de q pasó? |
+| J3_3 | para mi lo sacó enrique |
+| J3_4 | xq hace unas semanas mencioné q el lector a veces andaba mal |
+| J3_5 | seguro pasó por el local para tratar de arreglarlo lo empeoró y lo sacó para que no nos diéramos cuenta de que la cagó xd |
+| J3_6 | y lo peor es que no deja un aviso ni nada lpm |
+| J3_7 | tuve que usar el modo manual para hacer los tickets 💀 una paja |
+| J3_8 | igual te recomiendo hacerte el boludo y no decirle nada porque se pone re pesado si le tocás el ego |
+| J3_9 | esperemos que consiga otro rápido 😬 |
+| J3_10 | igual con lo rata que es seguro que no lo va a hacer |
+
+Los diez mensajes DEBEN estar disponibles al abrir la jornada, sin arribos programados durante
+el turno, y NO DEBEN aparecer en las jornadas 1 a 5. Desde la jornada 6 DEBEN permanecer en el
+chat. Las identidades J3_1 a J3_10 conservan su nombre: son identidades, no la jornada. 💀 y 😬
+DEBEN verse como glifos, sin caracteres ausentes. Ningún mensaje del bloque tiene tramo de pista:
+NO DEBE emitir un pedido de pista, registrar un hallazgo ni elegir una hipótesis, ni agregar al
+chat de notas. Reabrir el celular, volver al menú o repetir la apertura NO DEBE duplicar el
+bloque ni alterar el guion compartido. Los mensajes llegan sin leer según BR-INV-023; leer
+Yasmín conserva el transcurso del turno de BR-INV-006 y las marcas de BR-INV-008/009. El bloque
+cruza la sesión como el resto del guion de apertura (BR-SAV-020): un guardado de una jornada
+anterior abre la jornada 6 con el bloque una sola vez.
 
 ## Criterios de aceptación
 
@@ -825,7 +854,7 @@ entrada «NOCHE 5» y otro pedido no agrega nada. El expediente sigue vacío y n
 
 ### AC-INV-060 — Cuatro combinaciones en el recuadro *(verifica BR-INV-044, BR-INV-039)*
 
-DADO el cierre de jornada 5 ENTONCES el encabezado es «Hoy faltabo uno de los jabones para la
+DADO el cierre de jornada 5 ENTONCES el encabezado es «Hoy faltaba uno de los jabones para la
 limpieza del local. No me quiero empezar a perseguir, pero…». DADO cero pistas, sólo 2A y sólo
 2B ENTONCES se muestran 2P, 2A y 2B con su título y su texto, y sólo «Elegir». DADO 2A y 2B
 ENTONCES se muestra 2A con «Anterior», «Siguiente» y «Elegir»; «Siguiente» muestra 2B,
@@ -878,6 +907,39 @@ los mensajes de la devolución 1 y las 3 de la jornada 2, en ese orden. DADO la 
 cierre 2 ENTONCES siguen la devolución 2 y las 3 de la jornada 3. DADO la jornada 4 tras el
 cierre 3 ENTONCES siguen la devolución 3, Intro 10, la foto de Intro 11 e Intro 11. DADO un
 guardado de la jornada 4 CUANDO se retoma ENTONCES el orden es el mismo.
+
+### AC-INV-066 — La entrada exacta en jornada 6 suma los diez mensajes *(verifica BR-INV-048, BR-INV-023, BR-INV-008, BR-INV-009)*
+
+DADO la apertura de la jornada 6 por transición, tras leer el chat de Yasmín en la jornada 5,
+CUANDO se consulta Yasmín ENTONCES tiene 25 entradas: J2_1 a J2_15 con los textos de
+BR-INV-029, leídas, y después J3_1 a J3_10 con los textos de BR-INV-048, en ese orden, sin leer;
+su contador es 10. DADO la apertura de la jornada 6 desde un checkpoint ENTONCES tiene las mismas
+25 entradas, todas sin leer. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni el
+guion compartido.
+
+### AC-INV-067 — Antes de la jornada 6 el bloque no existe *(verifica BR-INV-048, BR-INV-029, BR-INV-023)*
+
+DADO cada jornada de la 1 a la 5 CUANDO se consulta el menú y el chat de Yasmín, si lo ofrece,
+ENTONCES ninguna identidad J3_1 a J3_10 está en ningún chat, y en la jornada 5 Yasmín tiene
+exactamente las quince identidades de BR-INV-029. DADO una partida nueva ENTONCES empieza en la
+jornada 1 sin Yasmín y sin ese bloque. Los mensajes de Enrique de la jornada 6 son los mismos
+con o sin el bloque de Yasmín.
+
+### AC-INV-068 — El bloque no concede pistas y muestra sus glifos *(verifica BR-INV-048, BR-INV-031)*
+
+DADO la jornada 6 abierta, sin pistas anotadas, CUANDO se miden los diez mensajes ENTONCES
+ninguno tiene tramo en lila, y abrir, leer o pulsar cualquier parte de J3_1 a J3_10 emite cero
+pedidos de pista y deja intactos el expediente y el chat de notas. DADO J3_7 y J3_9 CUANDO se
+muestran a 1920×1080 y a 1280×720, en escritorio y en paquete web, ENTONCES 💀 y 😬 se dibujan
+como glifos, sin caracteres ausentes, y los textos completos quedan dentro del celular, sin
+recortes ni errores.
+
+### AC-INV-069 — Repetir la apertura no duplica el bloque *(verifica BR-INV-048, BR-INV-030)*
+
+DADO la jornada 6 abierta CUANDO se reabre el celular, se vuelve al menú, se repite la apertura
+6 y se consulta Yasmín dos veces ENTONCES tiene 25 entradas con identidades distintas, en el
+mismo orden, y modificar una lista consultada no cambia el guion. DADO la jornada 7 abierta
+ENTONCES Yasmín conserva esas 25 entradas, sin mensajes nuevos.
 
 ## No objetivos
 

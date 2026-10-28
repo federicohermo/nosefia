@@ -407,6 +407,28 @@ func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # 
 			agarre.entregar()
 
 
+func test_el_hueco_choca_en_su_base_redonda_y_no_en_las_esquinas() -> void:  # AC-CTR-029
+	var almacen := await _abrir()
+	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
+	var malla: MeshInstance3D = lector.get_node("Malla")
+	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR)
+	await get_tree().physics_frame
+	var planta := malla.mesh.get_aabb()
+	var centro := planta.get_center()
+	var esquina := centro + (planta.end - centro) * Vector3(0.9, 0.0, 0.9)
+	assert_bool(_choca(lector, malla.to_global(centro))).is_true()
+	assert_bool(_choca(lector, malla.to_global(esquina))).is_false()
+
+
+func _choca(cuerpo: PhysicsBody3D, punto: Vector3) -> bool:
+	var consulta := PhysicsPointQueryParameters3D.new()
+	consulta.position = punto
+	for choque in cuerpo.get_world_3d().direct_space_state.intersect_point(consulta):
+		if choque.collider == cuerpo:
+			return true
+	return false
+
+
 func test_la_partida_retomada_en_siete_es_manual_y_una_nueva_es_automatica() -> void:
 	var datos := {
 		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
@@ -430,7 +452,7 @@ func test_la_partida_retomada_en_siete_es_manual_y_una_nueva_es_automatica() -> 
 	assert_bool(_caja(nueva).generador().es_manual()).is_false()
 
 
-func test_el_popup_pausa_y_reanuda_programa_y_mano() -> void:  # AC-CTR-030, AC-PLY-074
+func test_la_lista_pausa_y_reanuda_programa_y_mano() -> void:  # AC-CTR-030, AC-PLY-074
 	var almacen := await _abrir()
 	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR)
 	var jugador: Node3D = almacen.get_node("Jugador")
@@ -441,17 +463,17 @@ func test_el_popup_pausa_y_reanuda_programa_y_mano() -> void:  # AC-CTR-030, AC-
 	_caja(almacen).pedir_elegir(2, marolini)
 	_puesto(almacen).call("abrir")
 	var selector := _vista(almacen).selectores[2]
-	selector.show_popup()
-	assert_bool(selector.get_popup().visible).is_true()
+	(selector.find_child("Cabecera", true, false) as Button).pressed.emit()
+	assert_bool(selector.esta_abierta()).is_true()
 	var evento := InputEventKey.new()
 	evento.keycode = KEY_ESCAPE
 	evento.pressed = true
-	selector.get_popup().window_input.emit(evento)
+	(almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa).call("_input", evento)
 	for _cuadro in 4:
 		await get_tree().process_frame
 	assert_bool(get_tree().paused).is_true()
 	assert_bool((almacen.get_node("Interfaz/MenuDePausa") as CanvasLayer).visible).is_true()
-	assert_bool(selector.get_popup().visible).is_false()
+	assert_bool(selector.esta_abierta()).is_false()
 	assert_bool(_vista(almacen).visible).is_true()
 	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
@@ -459,24 +481,16 @@ func test_el_popup_pausa_y_reanuda_programa_y_mano() -> void:  # AC-CTR-030, AC-
 	assert_bool(get_tree().paused).is_false()
 	assert_bool(_vista(almacen).visible).is_true()
 	assert_object(_caja(almacen).generador().en_el_renglon(2)).is_same(marolini)
-	assert_int(selector.selected).is_equal(_opcion_de(marolini))
+	assert_int(selector.elegido().id).is_equal(marolini.id)
 	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
-	selector.show_popup()
+	(selector.find_child("Cabecera", true, false) as Button).pressed.emit()
 	var derecho := InputEventMouseButton.new()
 	derecho.button_index = MOUSE_BUTTON_RIGHT
 	derecho.pressed = true
-	selector.get_popup().window_input.emit(derecho)
+	_puesto(almacen).call("_input", derecho)
 	for _cuadro in 2:
 		await get_tree().process_frame
 	assert_bool(_vista(almacen).visible).is_false()
-	assert_bool(selector.get_popup().visible).is_false()
+	assert_bool(selector.esta_abierta()).is_false()
 	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
-
-
-func _opcion_de(producto: Producto) -> int:
-	var catalogo := Catalogo.todos()
-	for indice in catalogo.size():
-		if catalogo[indice].id == producto.id:
-			return indice + 1
-	return -1

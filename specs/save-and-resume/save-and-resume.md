@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458
 ---
 
 # Capacidad: guardar y retomar
@@ -452,6 +452,14 @@ con todas las cajas en su lugar de fábrica, y la jornada, el legajo y las cuent
 guardados. DADO el campo con una caja desconocida, una pose que es un texto y la pose válida de
 la caja de Marolini ENTONCES sólo la de Marolini conserva su pose y las demás cajas abren en su
 lugar de fábrica. DADO un despido o un contrato cumplido ENTONCES no queda guardado ni poses.
+
+### AC-SAV-035 — El bloque de Yasmín de la jornada 6 se reconstruye una sola vez *(verifica BR-SAV-020, BR-SAV-015)*
+
+DADO un guardado del cierre de la jornada 5, escrito antes del bloque de la jornada 6, CUANDO se
+retoma ENTONCES abre la jornada 6 y el chat de Yasmín tiene J2_1 a J2_15 y después J3_1 a J3_10,
+una sola vez, todos sin leer, y el chat de Enrique conserva sus devoluciones intactas. CUANDO se
+cierra la 6 y se repite guardar y retomar ENTONCES el guardado no contiene mensajes del guion de
+Yasmín y la jornada 7 abre con las mismas 25 identidades, sin duplicar ninguna.
 
 ## No objetivos
 
