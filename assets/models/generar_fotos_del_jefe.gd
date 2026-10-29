@@ -18,7 +18,7 @@ const PLANO_DE_LAS_GONDOLAS := [
 	Vector3(5.5, 2.6, 0.7),
 	Vector3(2.75, 1.0, -2.4),
 	65.0,
-	"gondolanueva2/StaticBody3D",
+	"gondolanueva2/",
 	"intro-gondolas.png"
 ]
 const PLANOS := [

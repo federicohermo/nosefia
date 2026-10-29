@@ -71,11 +71,7 @@ func test_la_vista_previa_aparece_solo_en_el_hueco_enfocado() -> void:  # AC-PLY
 	assert_int(huecos.multimesh.visible_instance_count).is_equal(vacios.size())
 	var uno: Node3D = puesto.call("casillero", actroncito.id, vacios[0])
 	var otro: Node3D = puesto.call("casillero", actroncito.id, vacios[1])
-	# La pantalla del desenfoque sigue a la cámara; no es parte del foco.
-	var desenfoque: Node = puesto.get("_desenfoque")
-	var mallas := almacen.find_children("*", "MeshInstance3D", true, false).filter(
-		func(malla: Node) -> bool: return not desenfoque.is_ancestor_of(malla)
-	)
+	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
 	var previos := _overlays(mallas)
 	var materiales := _overrides(mallas)
 	var dibujadas := _dibujadas(mallas)

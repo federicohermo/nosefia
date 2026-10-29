@@ -18,9 +18,11 @@ func test_doscientas_semillas_por_jornada_respetan_limites_y_varian() -> void:  
 	for jornada in range(2, 9):
 		var compradores := Compradores.de_la_jornada(jornada)
 		var pedidos := Apertura.pedidos_de(compradores)
+		# Lo que puede faltar de cada producto: su tanda de 8, menos la unidad que conserva.
+		var vaciables := Apertura.casilleros_vaciables(_tandas_de_todos([8]))
 		var casilleros: Dictionary[Producto.Id, int] = {}
 		for producto in Catalogo.de_la_jornada(jornada):
-			casilleros[producto.id] = 8
+			casilleros[producto.id] = vaciables[producto.id]
 		# La jornada de los vencidos abre la góndola de Cindolor completa.
 		if Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):
 			casilleros[Apertura.PRODUCTO_CON_VENCIDOS] = 0
