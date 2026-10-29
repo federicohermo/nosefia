@@ -2,7 +2,9 @@
 
 import unittest
 
-from lib.integracion_modelo import bloques, poner, propiedad, ruta, trasladar_sin_girar
+from lib.integracion_modelo import (
+    bloques, integrar_lector, poner, propiedad, ruta, trasladar_sin_girar,
+)
 
 
 class ComposicionDelModelo(unittest.TestCase):
@@ -31,6 +33,20 @@ class ComposicionDelModelo(unittest.TestCase):
         actualizado = propiedad(texto, 'transform', None)
         self.assertNotIn('transform =', actualizado)
         self.assertIn('script = ExtResource("puesto")', actualizado)
+
+    def test_el_hueco_del_lector_sigue_redondo_y_sin_recursos_sueltos(self):
+        escena = ('[gd_scene format=3]\n\n'
+                  '[ext_resource type="ArrayMesh" path="res://hueco.res" id="hueco"]\n\n'
+                  '[sub_resource type="CylinderShape3D" id="hueco_actual"]\nheight = 0.025\n'
+                  'radius = 0.05\n\n'
+                  '[node name="Lector" type="StaticBody3D"]\n'
+                  'malla_del_hueco = ExtResource("hueco")\n')
+        texto = integrar_lector(escena, [0, 0, 0, .2, .1, .16], [0, 0, 0], 'lector')
+        for _ in range(2):
+            texto = integrar_lector(texto, [0, 0, 0, .2, .1, .16], [0, 0, 0], 'lector')
+        self.assertEqual(texto.count('[sub_resource'), 1)
+        self.assertIn('radius = 0.080000', texto)
+        self.assertIn('malla_del_hueco = ExtResource("hueco")', texto)
 
     def test_las_rutas_de_nodos_no_confunden_una_raiz_con_sus_hijos(self):
         self.assertEqual(ruta('[node name="Cuerpo" parent="Mueble"]'), 'Mueble/Cuerpo')

@@ -4,7 +4,7 @@ import json
 import math
 import re
 import struct
-from collections import Counter, defaultdict
+from collections import defaultdict
 
 from lib.gondola import nombre_en_godot
 from lib.integracion_modelo import bloques, nodo, recurso, ruta
@@ -195,20 +195,6 @@ def norma(a):
     return math.sqrt(producto(a, a))
 
 
-def recortar(poligono, normal, constante, mayor=False):
-    salida = []
-    for i, p in enumerate(poligono):
-        q = poligono[(i + 1) % len(poligono)]
-        dp, dq = producto(normal, p) + constante, producto(normal, q) + constante
-        pin, qin = (dp >= 0, dq >= 0) if mayor else (dp <= 0, dq <= 0)
-        if pin:
-            salida.append(p)
-        if pin != qin:
-            t = dp / (dp - dq)
-            salida.append(tuple(p[d] + (q[d] - p[d]) * t for d in range(3)))
-    return salida
-
-
 def componentes(triangulos):
     aristas = defaultdict(list)
     for i, tri in enumerate(triangulos):
@@ -245,221 +231,34 @@ def _plana(puntos, normal, origen):
     return all(abs(producto(normal, resta(p, origen))) <= EPS * largo for p in puntos)
 
 
-def _convexa(tris):
-    """El redondeo float32 también afecta la normal de las caras del bisel.
-
-    Cada resta de posiciones tiene un error de hasta un ULP por coordenada.
-    Expandir el producto triple acota sus términos lineales, cuadráticos y cúbicos,
-    sin desplazar puntos ni ampliar los cascos de colisión.
-    """
-    puntos = puntos_unicos(tris)
-    magnitud = max(abs(c) for p in puntos for c in p)
-    precision = max(EPS, math.ldexp(1.0, math.frexp(magnitud)[1] - 23))
-    error_de_resta = precision / 2
-    for tri in tris:
-        u, v = resta(tri[1], tri[0]), resta(tri[2], tri[0])
-        normal = cruz(u, v)
-        if norma(normal) <= 1e-12:
-            raise ValueError("Triángulo degenerado en la fuente.")
-        for p in puntos:
-            w = resta(p, tri[0])
-            determinante = producto(normal, w)
-            if determinante <= precision * norma(normal):
-                continue
-            lineal = sum(abs(c) for n in (normal, cruz(v, w), cruz(w, u)) for c in n)
-            cuadratico = 2 * sum(abs(c) for direccion in (u, v, w) for c in direccion)
-            error = (error_de_resta * lineal + error_de_resta ** 2 * cuadratico
-                     + 6 * error_de_resta ** 3)
-            if determinante > error:
-                return False
-    return True
-
-
-def _area2(poligono):
-    return sum(norma(cruz(resta(poligono[i], poligono[0]),
-                          resta(poligono[i + 1], poligono[0])))
-               for i in range(1, len(poligono) - 1))
-
-
-def _region(poligonos, cortes):
-    salida = []
-    for poligono in poligonos:
-        for eje, valor, mayor in cortes:
-            normal = tuple(1 if d == eje else 0 for d in range(3))
-            poligono = recortar(poligono, normal, -valor, mayor)
-        if len(poligono) < 3:
-            continue
-        if any(max(abs(p[eje] - valor) for p in poligono) < EPS for eje, valor, _ in cortes):
-            continue
-        if _area2(poligono) > 1e-12:
-            salida.append(poligono)
-    return salida
-
-
-def _pata(poligonos, hacia_norte):
-    pisos = []
-    for poligono in poligonos:
-        n = cruz(resta(poligono[1], poligono[0]), resta(poligono[2], poligono[0]))
-        if norma(n) > EPS and n[1] / norma(n) < -.999999:
-            pisos.append(poligono)
-    if not pisos:
-        raise ValueError("La pata no conserva su piso plano original.")
-    piso = max(pisos, key=_area2)
-    altura = sum(p[1] for p in piso) / len(piso)
-    inferiores = []
-    for poligono in poligonos:
-        if min(p[1] for p in poligono) < altura - 1e-6:
-            inferiores.extend(recortar(poligono, (0, 1, 0), -altura))
-    if not inferiores:
-        raise ValueError("La pata no conserva el cambio de piso junto al panel.")
-    limite = max(p[2] for p in inferiores) if hacia_norte else min(p[2] for p in inferiores)
-    return [puntos_unicos(_region(poligonos, [(2, limite, mayor)])) for mayor in (False, True)]
-
-
-def _armazon(tris):
-    planos = defaultdict(list)
-    for tri in tris:
-        if max(p[2] for p in tri) - min(p[2] for p in tri) < 1e-6:
-            planos[round(sum(p[2] for p in tri) / 3, 6)].append(tri)
-    if len(planos) != 4:
-        raise ValueError("El armazón no conserva sus cuatro planos transversales.")
-    cortes = sorted(sum(p[2] for tri in caras for p in tri) / (3 * len(caras))
-                    for caras in planos.values())
-    z0, z1, z2, z3 = cortes
-    puntos = puntos_unicos(tris)
-    xcentro = (min(p[0] for p in puntos) + max(p[0] for p in puntos)) / 2
-    regiones = [
-        [(2, z1, True), (2, z2, False)],
-        [(2, z0, True), (2, z1, False)],
-        [(2, z2, True), (2, z3, False)],
-    ]
-    if min(p[2] for p in puntos) < z0 - EPS or max(p[2] for p in puntos) > z3 + EPS:
-        regiones.extend([
-            [(2, z0, False), (0, xcentro, False)],
-            [(2, z0, False), (0, xcentro, True)],
-            [(2, z3, True), (0, xcentro, False)],
-            [(2, z3, True), (0, xcentro, True)],
-        ])
-    salida = []
-    for i, region in enumerate(regiones):
-        # Sólo tocar el corte no da volumen: incluir esas caras extendería el panel
-        # por la espina o haría una cuña entre las patas.
-        poligonos = _region(tris, region)
-        if i < 3:
-            salida.append(puntos_unicos(poligonos))
-        else:
-            salida.extend(_pata(poligonos, i >= 5))
-    return salida
-
-
-def _chapa(tris, eje_fondo):
-    # Mayor área proyectada horizontal orientada hacia arriba: ignora caras laterales
-    # verticales y conserva exactamente la inclinación de la chapa original.
-    cara = max(tris, key=lambda tri: cruz(resta(tri[1], tri[0]), resta(tri[2], tri[0]))[1])
-    normal = cruz(resta(cara[1], cara[0]), resta(cara[2], cara[0]))
-    largo = norma(normal)
-    if normal[1] <= 0 or largo <= 0:
-        raise ValueError("La chapa no conserva una superficie de apoyo orientada hacia arriba.")
-    normal = tuple(v / largo for v in normal)
-    constante = -producto(normal, cara[0])
-    centro = sum(p[eje_fondo] for p in cara) / 3
-    chapa, sobresalen = [], {-1: [], 1: []}
-    for tri in tris:
-        chapa.append(recortar(tri, normal, constante))
-        if max(producto(normal, p) + constante for p in tri) <= 1e-6:
-            continue
-        poligono = recortar(tri, normal, constante, True)
-        lado = -1 if sum(p[eje_fondo] for p in poligono) / len(poligono) < centro else 1
-        sobresalen[lado].extend(poligono)
-    puntos = puntos_unicos(tris)
-    alto = max(p[1] for p in puntos) - min(p[1] for p in puntos)
-    fondo = max(p[2] for p in puntos) - min(p[2] for p in puntos)
-    if eje_fondo == 2 and alto < fondo * .5:
-        # Las seis cabeceras delgadas doblan atrás hacia un tramo horizontal.
-        # Unir ese tramo con la rampa en un casco rellenaba hasta 11,75 mm de aire.
-        horizontales = defaultdict(list)
-        for tri in tris:
-            n = cruz(resta(tri[1], tri[0]), resta(tri[2], tri[0]))
-            if n[1] / norma(n) > .999999:
-                horizontales[round(sum(p[1] for p in tri) / 3, 6)].append(tri)
-        if not horizontales:
-            raise ValueError("La cabecera perdió su pestaña posterior horizontal.")
-        secundaria = max(horizontales.values(), key=lambda caras: sum(_area2(t) for t in caras))
-        altura = sum(p[1] for tri in secundaria for p in tri) / (3 * len(secundaria))
-        if abs(normal[2]) < EPS:
-            raise ValueError("La rampa de cabecera no conserva inclinación longitudinal.")
-        corte_z = -(normal[1] * altura + constante) / normal[2]
-        salida = [puntos_unicos([recortar(poligono, (0, 0, 1), -corte_z, mayor)
-                                for poligono in chapa]) for mayor in (False, True)]
-    else:
-        salida = [puntos_unicos(chapa)]
-    for lado, vertices in sobresalen.items():
-        if not vertices:
-            continue
-        limite = (min(p[eje_fondo] for p in vertices) if lado > 0
-                  else max(p[eje_fondo] for p in vertices))
-        n = tuple(1 if d == eje_fondo else 0 for d in range(3))
-        salida.append(puntos_unicos([recortar(tri, n, -limite, lado > 0) for tri in tris]))
-    return salida
+#: Lo más chico que entra al contorno, en metros: los tornillos y topes no sostienen nada.
+PIEZA_MINIMA = 0.05
 
 
 def grupos_convexos(triangulos):
-    """Conserva cada sólido convexo y corta el armazón por sus planos originales.
+    """Un volumen por pieza de la góndola. Las etiquetas planas quedan fuera de la colisión.
 
-    Admite las bandejas rectangulares actuales y las chapas plegadas originales.
-    Las etiquetas planas quedan fuera de la colisión; una topología desconocida falla.
+    Cada pieza entra por su casco. Casi todas son sólidos convexos, y la tabla del exhibidor es
+    una chapa fina sin tapas.
     """
     triangulos = [tuple(tuple(float(v) for v in p) for p in tri) for tri in triangulos]
     if not triangulos or any(len(tri) != 3 or any(len(p) != 3 for p in tri) for tri in triangulos):
         raise ValueError("Se necesitan triángulos de tres puntos 3D.")
-    cerrados, etiquetas = [], 0
+    salida = []
     for indices in componentes(triangulos):
         tris = [triangulos[i] for i in indices]
         puntos = puntos_unicos(tris)
         normal = cruz(resta(tris[0][1], tris[0][0]), resta(tris[0][2], tris[0][0]))
         if norma(normal) <= 1e-12:
             raise ValueError("Triángulo degenerado en la fuente.")
-        incidencias = Counter(tuple(sorted((tri[i], tri[(i + 1) % 3])))
-                              for tri in tris for i in range(3))
         if _plana(puntos, normal, tris[0][0]):
-            if len(tris) != 2 or len(puntos) != 4:
-                raise ValueError("Superficie abierta no reconocida: no se omite.")
-            etiquetas += 1
             continue
-        if set(incidencias.values()) != {2}:
-            raise ValueError("Componente no cerrada: no se fabrica volumen.")
-        cerrados.append(tris)
-    if not cerrados:
+        medidas = [max(p[d] for p in puntos) - min(p[d] for p in puntos) for d in range(3)]
+        if max(medidas) < PIEZA_MINIMA:
+            continue
+        salida.append(puntos)
+    if not salida:
         raise ValueError("La fuente no conserva sus sólidos cerrados.")
-    if (len(cerrados), etiquetas) == (5, 48):
-        if not all(_convexa(tris) for tris in cerrados):
-            raise ValueError("El centro y las cuatro repisas deben conservar sus sólidos convexos.")
-        return [puntos_unicos(tris) for tris in cerrados]
-    armazon = cerrados[0]
-    salida = _armazon(armazon)
-    cantidades = {(33, 48, 11): 65, (37, 48, 11): 47, (37, 48, 3): 39}
-    cantidad = cantidades.get((len(cerrados), etiquetas, len(salida)))
-    if cantidad is None:
-        raise ValueError(
-            f"Topología fuente inesperada: {len(cerrados)} sólidos y {etiquetas} etiquetas.")
-    limites = [max(p[d] for tri in armazon for p in tri)
-               - min(p[d] for tri in armazon for p in tri) for d in range(3)]
-    for tris in cerrados[1:]:
-        puntos = puntos_unicos(tris)
-        ancho = max(p[0] for p in puntos) - min(p[0] for p in puntos)
-        largo = max(p[2] for p in puntos) - min(p[2] for p in puntos)
-        if _convexa(tris):
-            salida.append(puntos)
-        elif cantidad in (39, 47):
-            raise ValueError("Las bandejas rectangulares no conservan sus sólidos convexos.")
-        elif largo > limites[2] * .6:
-            salida.extend(_chapa(tris, 0))
-        elif ancho > limites[0] * .8:
-            salida.extend(_chapa(tris, 2))
-        else:
-            salida.append(puntos)
-    if len(salida) != cantidad or any(len(puntos) < 4 for puntos in salida):
-        raise ValueError(f"La partición no conserva sus {cantidad} volúmenes.")
     return salida
 
 

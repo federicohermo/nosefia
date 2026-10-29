@@ -92,6 +92,21 @@ def apagar_la_guia() -> bool:
     return True
 
 
+def apagar_los_noimp() -> list[str]:
+    """Oculta los objetos `-noimp` y devuelve cuáles, para mostrarlos de nuevo.
+
+    Godot los descarta al importar, así que en el `.glb` sólo ocupan lugar. Las caras de las
+    góndolas son `-noimp`: viajaban dos veces, solas y adentro de la unión que las junta. La
+    unión las sigue leyendo aunque estén ocultas.
+    """
+    ocultos = []
+    for objeto in bpy.context.view_layer.objects:
+        if objeto.name.endswith("-noimp") and objeto.visible_get():
+            objeto.hide_set(True)
+            ocultos.append(objeto.name)
+    return ocultos
+
+
 def ruta_en_fuentes(imagen: "bpy.types.Image") -> str | None:
     """La ruta del archivo de una imagen adentro de `assets/source/`, o `None` si no sale de ahí.
 
@@ -194,6 +209,8 @@ def main() -> None:
     apagados = apagar_los_array()
     print(f"modificadores `{MODIFICADOR}` apagados: {len(apagados)}")
     guia_apagada = apagar_la_guia()
+    noimp = apagar_los_noimp()
+    print(f"objetos `-noimp` ocultos: {len(noimp)}")
     print(f"colección `{COLECCION_DE_GUIA}` excluida: {guia_apagada}")
     achicadas: list[tuple[bpy.types.Image, bpy.types.Image]] = []
     try:
@@ -203,6 +220,8 @@ def main() -> None:
     finally:
         restaurar_las_imagenes(achicadas)
         restaurar(apagados)
+        for nombre in noimp:
+            bpy.data.objects[nombre].hide_set(False)
         if guia_apagada:
             bpy.context.view_layer.layer_collection.children[COLECCION_DE_GUIA].exclude = False
     print(f"exportado: {destino}")
