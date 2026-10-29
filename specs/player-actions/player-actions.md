@@ -57,10 +57,12 @@ radianes**. Pasarse de ahí da vuelta la cámara, y eso no es un límite de gust
 
 ### BR-PLY-004 — Se enfoca lo que está a mano
 
-El sistema DEBE enfocar lo que está a **2,5 metros o menos** y dentro de su tolerancia angular
+El sistema DEBE enfocar lo que está a mano y dentro de su tolerancia angular
 respecto del centro de la vista: **3 grados o menos** para productos y huecos de reposición,
-**15 grados o menos** para los otros objetos. El desvío se mide respecto de la superficie
-visible. Entre varios candidatos gana el de menor desvío, y con el mismo desvío el más cercano.
+**8 grados o menos** para los otros objetos. A mano es **1,6 metros o menos** para productos y
+huecos de reposición, y **2,2 metros o menos** para los otros objetos. El desvío se mide
+respecto de la superficie visible. Entre varios candidatos gana el de menor desvío, y con el
+mismo desvío el más cercano.
 
 ### BR-PLY-005 — El foco avisa sólo cuando cambió
 
@@ -507,9 +509,10 @@ DADO un giro hacia abajo enorme ENTONCES el ángulo vertical queda en `-1.4`; ha
 
 ### AC-PLY-004 — Los dos bordes de la mira *(verifica BR-PLY-004)*
 
-DADO un candidato a 2,5 metros ENTONCES se enfoca; a 2,6, no. DADO un objeto que no sea
-un producto ni un hueco de reposición a 15 grados de desvío
-ENTONCES se enfoca; a 16, no.
+DADO un objeto que no sea un producto a 2,2 metros ENTONCES se enfoca; a 2,3, no. DADO un
+producto a 1,6 metros ENTONCES se enfoca; a 1,7, no. DADO un objeto que no sea
+un producto ni un hueco de reposición a 8 grados de desvío
+ENTONCES se enfoca; a 9, no.
 
 DADO un producto o un hueco de reposición a 3 grados de desvío ENTONCES se enfoca;
 a 6 grados, no. Esta precisión NO DEBE reducir la tolerancia de los otros objetos.
