@@ -231,28 +231,37 @@ def _plana(puntos, normal, origen):
     return all(abs(producto(normal, resta(p, origen))) <= EPS * largo for p in puntos)
 
 
-#: Lo más chico que entra al contorno, en metros: los tornillos y topes no sostienen nada.
-PIEZA_MINIMA = 0.05
+#: Lo más chico que entra al contorno, en metros: los tornillos y topes no sostienen nada. Las
+#: patas de la góndola miden 4,5 cm, y adentro de ellas cabe el agarrable más chico.
+PIEZA_MINIMA = 0.04
 
 
 def grupos_convexos(triangulos):
     """Un volumen por pieza de la góndola. Las etiquetas planas quedan fuera de la colisión.
 
     Cada pieza entra por su casco. Casi todas son sólidos convexos, y la tabla del exhibidor es
-    una chapa fina sin tapas.
+    una chapa fina sin tapas. Una astilla plana que toca una pieza por un vértice suma sus
+    puntos al casco de esa pieza: suelta, quedaba como una cara sin volumen detrás.
     """
     triangulos = [tuple(tuple(float(v) for v in p) for p in tri) for tri in triangulos]
     if not triangulos or any(len(tri) != 3 or any(len(p) != 3 for p in tri) for tri in triangulos):
         raise ValueError("Se necesitan triángulos de tres puntos 3D.")
-    salida = []
+    solidas = []
+    planas = []
     for indices in componentes(triangulos):
         tris = [triangulos[i] for i in indices]
         puntos = puntos_unicos(tris)
         normal = cruz(resta(tris[0][1], tris[0][0]), resta(tris[0][2], tris[0][0]))
         if norma(normal) <= 1e-12:
             raise ValueError("Triángulo degenerado en la fuente.")
-        if _plana(puntos, normal, tris[0][0]):
-            continue
+        (planas if _plana(puntos, normal, tris[0][0]) else solidas).append(puntos)
+    for plana in planas:
+        for solida in solidas:
+            if not set(plana).isdisjoint(solida):
+                solida[:] = sorted(set(solida) | set(plana))
+                break
+    salida = []
+    for puntos in solidas:
         medidas = [max(p[d] for p in puntos) - min(p[d] for p in puntos) for d in range(3)]
         if max(medidas) < PIEZA_MINIMA:
             continue
