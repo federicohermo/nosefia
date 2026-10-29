@@ -7,7 +7,11 @@ const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.
 
 
 func test_el_techo_angular_se_expresa_en_radianes() -> void:
-	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_equal(deg_to_rad(15.0))
+	# En grados, cualquier tolerancia razonable pasaría de un cuarto de vuelta: en radianes, no.
+	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_less(PI / 4.0)
+	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_greater(
+		ReglasDelJugador.DESVIO_MAXIMO_DE_PRODUCTOS
+	)
 
 
 func test_el_pitch_encierra_al_cero_y_no_llega_a_los_noventa_grados() -> void:
@@ -31,6 +35,13 @@ func test_el_alcance_de_la_mira_supera_la_distancia_de_soltado() -> void:
 	# alcance menor deja al jugador soltando cosas que ya no puede agarrar, y ese rojo
 	# aparecería en el test de agarrar y no acá.
 	assert_float(ReglasDelJugador.ALCANCE_DE_LA_MIRA).is_greater(1.2)
+
+
+func test_los_productos_se_alcanzan_mas_cerca_pero_despues_del_soltado() -> void:
+	# Un producto soltado a 1,2 m se tiene que poder volver a agarrar, y el alcance corto de los
+	# productos no puede pasar al del resto: sería el mismo alcance con otro nombre.
+	assert_float(ReglasDelJugador.ALCANCE_DE_PRODUCTOS).is_greater(1.2)
+	assert_float(ReglasDelJugador.ALCANCE_DE_PRODUCTOS).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 
 
 func test_la_camara_esta_a_la_altura_de_una_persona() -> void:

@@ -1161,7 +1161,7 @@ func _ofrecer_a_la_mira() -> void:
 static func _podria_enfocar(ojo: Vector3, adelante: Vector3, centro: Vector3, radio: float) -> bool:
 	var hacia := centro - ojo
 	var distancia := hacia.length()
-	if distancia - radio > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+	if distancia - radio > ReglasDelJugador.ALCANCE_DE_PRODUCTOS:
 		return false
 	if distancia <= radio:
 		return true

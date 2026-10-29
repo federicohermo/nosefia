@@ -24,13 +24,17 @@ const ALTURA_DE_LA_CAMARA := 1.7
 const PITCH_MINIMO := -1.4
 const PITCH_MAXIMO := 1.4
 
-## Metros de alcance de la mira. Mayor que 1,2 porque se suelta lo que se
-## lleva a esa distancia y afirma que se lo puede volver a mirar: un alcance menor deja al
-## jugador soltando cosas que ya no puede agarrar.
-const ALCANCE_DE_LA_MIRA := 2.5
+## Metros de alcance de la mira, y también hasta dónde se apoya lo que se lleva. Que sea el
+## mismo es lo que deja volver a agarrar lo apoyado: el rayo hasta el apoyo atraviesa lo que se
+## apoya, así que su superficie queda más cerca que el apoyo. Mayor que 1,2 porque se suelta lo
+## que se lleva a esa distancia y afirma que se lo puede volver a mirar.
+const ALCANCE_DE_LA_MIRA := 2.2
+## Metros de alcance para productos y huecos de reposición: más corto que el del resto, para no
+## reponer desde lejos. Mayor que 1,2 por la misma razón.
+const ALCANCE_DE_PRODUCTOS := 1.6
 
 ## Radianes desde el centro de la vista.
-const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(15.0)
+const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(8.0)
 ## Los productos y sus huecos requieren apuntar cerca de su superficie.
 const DESVIO_MAXIMO_DE_PRODUCTOS := deg_to_rad(3.0)
 ## Lo ya enfocado cuenta su desvío con este factor: se toma a 3° y se suelta a 5°. Sin esa banda,
