@@ -73,12 +73,10 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 func _completos_al_abrir(almacen: Node3D, azar: RandomNumberGenerator) -> int:
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
-	var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
 	var vacios := Apertura.vacios_de_la_jornada(
 		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
 		Compradores.de_la_jornada(DEL_PADRON),
 		tandas,
-		de_una_fila,
 		azar
 	)
 	return Catalogo.todos().size() - vacios.size()
@@ -442,12 +440,8 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	var repositor: Repositor = almacen.get("_repositor")
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		# Las copias visibles son la guía entera más lo que la góndola tiene puesto: la guía no
-		# cambia nunca y arranca a la vista, y los casilleros son las últimas copias, tantos
-		# como el cupo del producto.
-		var guia := grupo.multimesh.instance_count - repositor.estante().cupo(producto)
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			guia + repositor.estante().unidades_en_gondola(producto)
+			repositor.estante().unidades_en_gondola(producto)
 		)
 	assert_int(repositor.estante().productos_completos()).is_equal(esperados)
 

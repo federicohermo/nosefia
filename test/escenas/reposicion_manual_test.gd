@@ -41,11 +41,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 		assert_int(dibujadas).is_equal(grupo.multimesh.instance_count)
 		for indice in repositor.estante().cupo(producto):
 			var posicion := (
-				(
-					grupo.global_transform
-					* _transformacion_de_copia(grupo.multimesh, _guia(almacen, producto) + indice)
-				)
-				. origin
+				(grupo.global_transform * _transformacion_de_copia(grupo.multimesh, indice)).origin
 			)
 			assert_array(posiciones).not_contains(posicion)
 			posiciones.append(posicion)
@@ -213,13 +209,13 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", false, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
-	# Al abrir se ven la guía y lo que la góndola tiene puesto: la fila menos lo que falta.
+	# Al abrir se ve lo que la góndola tiene puesto: la fila menos lo que falta.
 	var al_abrir: Estante = almacen.get("_repositor").estante()
 	for indice in grupos.size():
 		var grupo: MultiMeshInstance3D = grupos[indice]
 		var producto := Catalogo.todos()[indice]
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			_guia(almacen, producto) + al_abrir.unidades_en_gondola(producto)
+			al_abrir.unidades_en_gondola(producto)
 		)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var estante: Estante = almacen.get("_repositor").estante()
@@ -231,9 +227,7 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 			presentacion.call("retirar", producto.id)
 			assert_object(agarre.manos().sostenido()).is_not_null()
 			presentacion.call("pedir_colocar", producto.id)
-			assert_int(grupo.multimesh.visible_instance_count).is_equal(
-				_guia(almacen, producto) + antes + indice + 1
-			)
+			assert_int(grupo.multimesh.visible_instance_count).is_equal(antes + indice + 1)
 		assert_int(grupo.get_child_count()).is_zero()
 	# Las unidades de muestra del calentamiento no cuentan: no se agarran ni se ven.
 	var muestras: Array[Node3D] = presentacion.call("unidades_de_muestra")
@@ -339,7 +333,7 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			_guia(almacen, producto) + estante.unidades_en_gondola(producto)
+			estante.unidades_en_gondola(producto)
 		)
 	for grupo: MultiMeshInstance3D in presentacion.find_children(
 		"SueltosDe*", "MultiMeshInstance3D", true, false
@@ -469,9 +463,7 @@ func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 		var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
 			"ProductosDe" + producto.nombre
 		)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			_guia(almacen, producto) + puestas
-		)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(puestas)
 	# La identidad del catálogo conserva el orden aunque el artista nombre distinto la malla.
 	# Sin ella el inventario puede hablar de un producto y la góndola mostrar otro.
 	var contenido: Node3D = almacen.get_node("Estructura/gondolanueva/StaticBody3D/Contenido")
@@ -527,10 +519,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 			assert_bool(vista.scale.is_equal_approx(Vector3.ONE)).is_true()
 			var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
 			var transformacion := (
-				grupo.global_transform
-				* _transformacion_de_copia(
-					grupo.multimesh, _guia(almacen, producto) + antes + indice
-				)
+				grupo.global_transform * _transformacion_de_copia(grupo.multimesh, antes + indice)
 			)
 			var limites := transformacion * grupo.multimesh.mesh.get_aabb()
 			assert_float(limites.get_center().x).is_equal_approx(apoyo.x, 0.001)
@@ -598,9 +587,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
 		"ProductosDeActroncito"
 	)
-	assert_int(grupo.multimesh.visible_instance_count).is_equal(
-		_guia(almacen, Catalogo.todos()[0]) + antes + 1
-	)
+	assert_int(grupo.multimesh.visible_instance_count).is_equal(antes + 1)
 	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(antes + 1)
 
 
@@ -771,14 +758,6 @@ func _apuntar(almacen: Node3D, id: Producto.Id) -> void:
 ## **Sale de restar y no de un numero escrito.** Cuantas se reponen lo dice el cupo del estante
 ## —los casilleros de la fila de adelante, que mide el modelo—, y cuantas hay en total lo dice el
 ## dibujo: entre los dos queda el tramo fijo.
-func _guia(almacen: Node3D, producto: Producto) -> int:
-	var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
-		"ProductosDe" + producto.nombre
-	)
-	var estante: Estante = almacen.get("_repositor").estante()
-	return grupo.multimesh.instance_count - estante.cupo(producto)
-
-
 func _transformacion_de_copia(copias: MultiMesh, indice: int) -> Transform3D:
 	# El renderizador dummy no implementa get_instance_transform; sí conserva el buffer.
 	if DisplayServer.get_name() != "headless":

@@ -1,5 +1,5 @@
-## La apertura de un producto de una sola fila, con sus tandas en estantes a distinta altura: en
-## ninguno abre vacía entera la fila de adelante, y el vacío que no cabe en un estante cae en el de
+## La apertura de un producto con sus tandas en estantes a distinta altura: en ninguno abre vacía
+## entera la fila de adelante, y el vacío que no cabe en un estante cae en el de
 ## justo arriba.
 extends GdUnitTestSuite
 
@@ -39,10 +39,7 @@ func _vacios_por_estante(tamanos: Array[int], alturas: Array[float], semilla: in
 	var tandas := _tandas(tamanos)
 	var por_producto: Dictionary[Producto.Id, Array] = {PRODUCTO: tandas}
 	var posiciones: Dictionary[Producto.Id, Array] = {PRODUCTO: _en_estantes(tamanos, alturas)}
-	var de_una_fila: Dictionary[Producto.Id, bool] = {PRODUCTO: true}
-	var sorteados := Apertura.vacios_de_la_jornada(
-		8, [], por_producto, de_una_fila, _azar(semilla), posiciones
-	)
+	var sorteados := Apertura.vacios_de_la_jornada(8, [], por_producto, _azar(semilla), posiciones)
 	var vacios: Array = sorteados[PRODUCTO]
 	var de_arriba_a_abajo: Array[int] = []
 	de_arriba_a_abajo.assign(range(tamanos.size()))

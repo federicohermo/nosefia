@@ -9,16 +9,11 @@ const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const LATERALES := preload("res://src/sistemas/marco/laterales_del_foco.gdshader")
 const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
-const FILA_DE_ATRAS := preload("res://src/escenas/puestos/fila_de_atras_apagada.gdshader")
+const PRODUCTO := preload("res://src/escenas/puestos/producto_de_la_gondola.gdshader")
 const POR_COLOCAR := preload("res://src/escenas/puestos/producto_por_colocar.gdshader")
 const DISPOSICION_DE_PRUEBA := preload("res://src/escenas/puestos/disposicion_de_prueba.tres")
 ## La variante de Cindolor con la fecha de vencimiento en rojo en el dorso.
 const MODELO_DEL_VENCIDO := preload("res://assets/models/producto_cindolor_vencido.res")
-
-## Cuánto color le queda a la fila de atrás de la góndola: con 1 se ve como la de adelante, con
-## 0 queda en gris. Las referencias fijas usan el mismo color que la fila de atrás:
-## el jugador distingue los envases de referencia de las unidades que puede agarrar.
-const SATURACION_DE_LA_FILA_DE_ATRAS := 0.75
 
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
@@ -95,12 +90,8 @@ var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
 ## Un dibujo por producto para todos sus huecos, sin cuerpos ni permisos propios.
 var _huecos: Array[MultiMeshInstance3D] = []
-## Cuántas copias del dibujo de cada producto son fijas. Van primero, y después sus casilleros.
-var _fijas: Array[int] = []
-## Cuántas copias de otras exhibiciones van al principio del dibujo de cada producto.
-## El bloque entero que dibuja cada producto, guías incluidas, en el orden en que lo midió el
-## modelo. El dibujo lo reordena, y de acá sale cada vez: leerlo del dibujo obliga a bajarlo de la
-## placa de video.
+## Los casilleros que dibuja cada producto, en el orden en que los midió el modelo. El dibujo los
+## reordena, y de acá sale cada vez: leerlo del dibujo obliga a bajarlo de la placa de video.
 var _bloques: Array[PackedFloat32Array] = []
 var _sueltos: Array[GrupoDelPiso] = []
 ## Cindolor vencido: el modelo de la mano y el piso, y los dos dibujos de la góndola y del piso.
@@ -111,8 +102,6 @@ var _disponible: ObjetoAgarrable = null
 ## Las aristas que dibuja el foco. Piden las mallas que arma `AristasDelProducto`.
 var _aristas := ShaderMaterial.new()
 var _laterales := ShaderMaterial.new()
-## Se crea al preparar el puesto: un almacén que se instancia y no se abre no lo deja colgado.
-var _desenfoque: DesenfoqueDeReferencias
 var _disposicion_completa: DisposicionDeLaGondola
 var _disposicion_preparada: DisposicionDeLaGondola
 var _generados: Array[Node] = []
@@ -184,15 +173,6 @@ func posiciones() -> Dictionary[Producto.Id, Array]:
 	return por_producto
 
 
-## Los productos cuyas tandas se ven en una sola fila (BR-STK-025): todos los que tienen fila de
-## adelante, porque la de atrás no se dibuja.
-func productos_de_una_fila() -> Dictionary[Producto.Id, bool]:
-	var por_producto: Dictionary[Producto.Id, bool] = {}
-	for producto in Catalogo.todos():
-		por_producto[producto.id] = disposicion.filas_de_adelante[producto.id] > 0
-	return por_producto
-
-
 func preparar() -> void:
 	if _modelos.is_empty():
 		_preparar_materiales_y_modelos()
@@ -253,7 +233,6 @@ func _rehacer_disposicion() -> void:
 		retirados.queue_free()
 	_generados.clear()
 	_bloques.clear()
-	_fijas.clear()
 	_grupos.clear()
 	_huecos.clear()
 	_sueltos.clear()
@@ -262,11 +241,9 @@ func _rehacer_disposicion() -> void:
 	_casilleros.clear()
 	_centros_de_las_filas.clear()
 	_radios_de_las_filas.clear()
-	_desenfoque = DesenfoqueDeReferencias.new()
-	add_child(_desenfoque)
-	_generados.append(_desenfoque)
 	_preparar_grupos()
-	_preparar_la_guia()
+	for id in _grupos.size():
+		_mostrar_lo_puesto(id)
 	_preparar_los_casilleros()
 	_disposicion_preparada = disposicion
 
@@ -1231,7 +1208,7 @@ func _apoyo(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> Vector3:
 
 ## Dónde está la copia de ese casillero en el dibujo del producto, como la midió el modelo.
 func _copia_del_casillero(id: Producto.Id, indice: int) -> Transform3D:
-	return DisposicionDeLaGondola.copia(_bloques[id], _fijas[id] + indice)
+	return DisposicionDeLaGondola.copia(_bloques[id], indice)
 
 
 ## Cuánto gira el modelo de un producto para mostrarle el frente a la cámara, en grados.
@@ -1301,18 +1278,10 @@ func _preparar_grupos() -> void:
 	for producto in Catalogo.todos():
 		var malla := _modelos[producto.id]
 		var grupo := _dibujar(
-			"ProductosDe" + producto.nombre,
-			_malla_con_la_fila_apagada(malla),
-			_bloques[producto.id]
+			"ProductosDe" + producto.nombre, _malla_de_la_gondola(malla), _bloques[producto.id]
 		)
 		_grupos.append(grupo)
-		var faltantes := _dibujar(
-			"HuecosDe" + producto.nombre,
-			malla,
-			_bloques[producto.id].slice(
-				_fijas[producto.id] * DisposicionDeLaGondola.FLOTANTES_POR_COPIA
-			)
-		)
+		var faltantes := _dibujar("HuecosDe" + producto.nombre, malla, _bloques[producto.id])
 		faltantes.visible = false
 		faltantes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_huecos.append(faltantes)
@@ -1329,11 +1298,9 @@ func _preparar_grupos() -> void:
 ## el de las sanas, y el del piso, con lugar para todos los vencidos de la noche.
 func _preparar_los_vencidos() -> void:
 	var id := Producto.Id.CINDOLOR
-	var casilleros := _bloques[id].slice(_fijas[id] * DisposicionDeLaGondola.FLOTANTES_POR_COPIA)
 	_vencidos_puestos = _dibujar(
-		"VencidosDeCindolor", _malla_con_la_fila_apagada(_modelo_vencido), casilleros
+		"VencidosDeCindolor", _malla_de_la_gondola(_modelo_vencido), _bloques[id]
 	)
-	_apagar_hasta(_vencidos_puestos, 0)
 	_vencidos_puestos.visible = false
 	_vencidos_sueltos = GrupoDelPiso.new()
 	_vencidos_sueltos.name = "CindolorVencidoSuelto"
@@ -1342,31 +1309,27 @@ func _preparar_los_vencidos() -> void:
 	_generados.append(_vencidos_sueltos)
 
 
-## El material del grupo de un producto: el del modelo, con la fila de atrás apagada.
+## El dibujo de un producto en la góndola, con el material de cada parte del modelo.
 ##
 ## Cada parte conserva su material sobre el mismo dibujo: el envase y su tapa pueden tener
 ## brillos distintos. El modelo original sigue disponible para la mano y los productos sueltos.
-## El rango apagado lo pone `_mostrar_lo_puesto()`, que es quien sabe dónde empieza cada fila.
-func _malla_con_la_fila_apagada(
-	original: Mesh, saturacion: float = SATURACION_DE_LA_FILA_DE_ATRAS
-) -> ArrayMesh:
+func _malla_de_la_gondola(original: Mesh) -> ArrayMesh:
 	var malla := original.duplicate() as ArrayMesh
 	for superficie in malla.get_surface_count():
-		var material := _con_la_fila_de_atras_apagada(original.surface_get_material(superficie))
-		material.set_shader_parameter("saturacion_atras", saturacion)
-		malla.surface_set_material(superficie, material)
+		malla.surface_set_material(
+			superficie, _material_de_la_gondola(original.surface_get_material(superficie))
+		)
 	return malla
 
 
-func _con_la_fila_de_atras_apagada(original: BaseMaterial3D) -> ShaderMaterial:
+func _material_de_la_gondola(original: BaseMaterial3D) -> ShaderMaterial:
 	var material := ShaderMaterial.new()
-	material.shader = FILA_DE_ATRAS
+	material.shader = PRODUCTO
 	material.set_shader_parameter("color", original.albedo_color)
 	material.set_shader_parameter("textura", original.albedo_texture)
 	material.set_shader_parameter("rugosidad", original.roughness)
 	material.set_shader_parameter("metalico", original.metallic)
 	material.set_shader_parameter("especular", original.metallic_specular)
-	material.set_shader_parameter("saturacion_atras", SATURACION_DE_LA_FILA_DE_ATRAS)
 	return material
 
 
@@ -1389,7 +1352,7 @@ func _preparar_los_casilleros() -> void:
 		var modelo := _modelos[producto.id]
 		var fantasma := modelo.duplicate() as ArrayMesh
 		for superficie in fantasma.get_surface_count():
-			var material := _con_la_fila_de_atras_apagada(modelo.surface_get_material(superficie))
+			var material := _material_de_la_gondola(modelo.surface_get_material(superficie))
 			material.shader = POR_COLOCAR
 			fantasma.surface_set_material(superficie, material)
 		var fila := Node3D.new()
@@ -1467,23 +1430,18 @@ func _lugares_de_adelante(bloque: PackedFloat32Array, adelante: int) -> PackedVe
 	return lugares
 
 
-## El dibujo de cada producto: primero sus copias fijas —las filas de atrás de todas sus tandas—
-## y después sus casilleros —la fila de adelante de cada tanda fija suya, y al final la de su
-## tanda reponible—. Un estante al que la apertura no le declara vacíos vacía los últimos, que así
-## quedan en la reponible, a la altura de la mano.
+## El dibujo de cada producto: sus casilleros, la fila de adelante de cada tanda fija suya y al
+## final la de su tanda reponible. Un estante al que la apertura no le declara vacíos vacía los
+## últimos, que así quedan en la reponible, a la altura de la mano. Lo que el modelo pone detrás
+## de una fila no se dibuja: cada tanda se ve en una sola fila (BR-STK-025).
 ##
 ## **Cada producto va en un solo dibujo.** Cada nodo que se dibuja le cuesta al motor su
 ## preparación, y en la web esa preparación es lo que más pesa del cuadro: medido el 2026-09-21,
 ## las guías sueltas eran el 42 % del tiempo de dibujo mirando la góndola.
 func _armar_los_bloques() -> void:
 	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA
-	var fijas: Array[PackedFloat32Array] = []
 	var casilleros: Array[PackedFloat32Array] = []
 	for producto in Catalogo.todos():
-		var principal := disposicion.principales[producto.id]
-		var atras := DisposicionDeLaGondola.copias(principal)
-		atras -= disposicion.filas_de_adelante[producto.id]
-		fijas.append(principal.slice(0, atras * flotantes))
 		casilleros.append(PackedFloat32Array())
 	for indice in disposicion.guias.size():
 		var id := disposicion.productos_de_las_guias[indice]
@@ -1494,21 +1452,13 @@ func _armar_los_bloques() -> void:
 			bloque = _rebasar(bloque, modelo.global_basis, base)
 		var atras := DisposicionDeLaGondola.copias(bloque)
 		atras -= disposicion.filas_de_adelante_de_las_guias[indice]
-		fijas[id].append_array(bloque.slice(0, atras * flotantes))
 		casilleros[id].append_array(bloque.slice(atras * flotantes))
 	for producto in Catalogo.todos():
 		var principal := disposicion.principales[producto.id]
 		var atras := DisposicionDeLaGondola.copias(principal)
 		atras -= disposicion.filas_de_adelante[producto.id]
 		casilleros[producto.id].append_array(principal.slice(atras * flotantes))
-		_fijas.append(DisposicionDeLaGondola.copias(fijas[producto.id]))
-		_bloques.append(fijas[producto.id] + casilleros[producto.id])
-
-
-## Muestra lo puesto de cada producto, sin sus copias fijas.
-func _preparar_la_guia() -> void:
-	for id in _grupos.size():
-		_mostrar_lo_puesto(id)
+		_bloques.append(casilleros[producto.id])
 
 
 func _malla_en_mundo(grupo: MeshInstance3D) -> ArrayMesh:
@@ -1543,17 +1493,12 @@ func _rebasar(bloque: PackedFloat32Array, desde: Basis, hacia: Basis) -> PackedF
 	return salida
 
 
-## Desde qué copia del dibujo arrancan los casilleros: las de antes son fijas.
-func _primera_dibujada(id: Producto.Id) -> int:
-	return _fijas[id]
-
-
 ## Prende de la fila de adelante las unidades que la góndola tiene puestas, y apaga el resto.
 ##
 ## **Cuáles se ven las dice el estante, y no este puesto**: un número propio acá dibujaría una
 ## góndola que el inventario no tiene. `visible_instance_count` corta por el final, así que el
-## dibujo se reordena: primero los casilleros ocupados, después los vacíos, y al final las guías y
-## la fila de atrás, que quedan fuera del corte: cada producto se ve en una sola hilera. Cada copia
+## dibujo se reordena: primero los casilleros ocupados y después los vacíos, que quedan fuera del
+## corte. Cada copia
 ## lleva su lugar, así que reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco
 ## en el medio.
 func _mostrar_lo_puesto(id: Producto.Id) -> void:
@@ -1561,7 +1506,6 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 		return
 	var producto := Catalogo.de(id)
 	var de_la_noche := repositor.estante()
-	var primera := _primera_dibujada(id)
 	var ocupados := de_la_noche.casilleros_ocupados(producto)
 	var vencidos := de_la_noche.vencidos.casilleros(producto)
 	var sanos: Array[int] = ocupados.filter(
@@ -1573,19 +1517,16 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA
 	var dibujo := PackedFloat32Array()
 	for puesto in orden:
-		var desde := (primera + puesto) * flotantes
+		var desde := puesto * flotantes
 		dibujo.append_array(bloque.slice(desde, desde + flotantes))
-	var reponibles := dibujo.size()
-	dibujo.append_array(bloque.slice(0, primera * flotantes))
 	var copias := _grupos[id].multimesh
 	if dibujo.size() == bloque.size():
 		copias.buffer = dibujo
 	copias.visible_instance_count = sanos.size()
-	_apagar_hasta(_grupos[id], 0)
 	# Los mismos casilleros, en otro lote: los vacíos primero para cortarlos sin añadir nodos
 	# por envase. El estado vuelve a salir del estante en cada cambio de la góndola.
 	var corte := ocupados.size() * flotantes
-	var por_reponer := dibujo.slice(corte, reponibles)
+	var por_reponer := dibujo.slice(corte)
 	por_reponer.append_array(dibujo.slice(0, corte))
 	var huecos := _huecos[id].multimesh
 	huecos.buffer = por_reponer
@@ -1594,18 +1535,10 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 		# Los vencidos van primero en su lote, y el resto queda fuera del corte.
 		var del_lote := dibujo.slice(sanos.size() * flotantes, corte)
 		del_lote.append_array(dibujo.slice(0, sanos.size() * flotantes))
-		del_lote.append_array(dibujo.slice(corte, reponibles))
+		del_lote.append_array(dibujo.slice(corte))
 		_vencidos_puestos.multimesh.buffer = del_lote
 		_vencidos_puestos.multimesh.visible_instance_count = vencidos.size()
 		_vencidos_puestos.visible = not vencidos.is_empty()
-
-
-func _apagar_hasta(grupo: MultiMeshInstance3D, primera: int) -> void:
-	var malla := grupo.multimesh.mesh
-	for superficie in malla.get_surface_count():
-		var material := malla.surface_get_material(superficie) as ShaderMaterial
-		material.set_shader_parameter("desde_atras", 0)
-		material.set_shader_parameter("hasta_atras", primera)
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.

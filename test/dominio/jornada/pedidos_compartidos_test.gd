@@ -37,7 +37,7 @@ func test_el_inventario_usa_los_mismos_pedidos_y_el_mismo_azar_que_atencion() ->
 	azar.seed = 17
 	control.seed = 17
 	var tandas: Dictionary[Producto.Id, Array] = {producto.id: [PackedInt32Array(range(6))]}
-	var esperado := Apertura.vacios_de_la_jornada(2, compradores, tandas, {}, control)
+	var esperado := Apertura.vacios_de_la_jornada(2, compradores, tandas, control)
 	var inventario := Apertura.inventario_de_la_jornada(
 		2, compradores, casilleros, casilleros, azar
 	)
@@ -95,18 +95,15 @@ func test_un_producto_sin_casilleros_en_ninguna_tanda_no_falta() -> void:  # AC-
 		assert_array(inventario.faltantes()).is_empty()
 
 
-func test_un_producto_de_una_fila_no_abre_vacia_ninguna_de_sus_dos_tandas() -> void:  # AC-STK-033
+func test_un_producto_no_abre_vacia_ninguna_de_sus_dos_tandas() -> void:  # AC-STK-033
 	var producto := Catalogo.de(Producto.Id.FLIM_POF)
 	var totales: Dictionary[Producto.Id, int] = {producto.id: 6}
 	var reponibles: Dictionary[Producto.Id, int] = {producto.id: 3}
-	var de_una_fila: Dictionary[Producto.Id, bool] = {producto.id: true}
 	var faltantes: Dictionary[int, bool] = {}
 	for semilla in 200:
 		var azar := RandomNumberGenerator.new()
 		azar.seed = semilla
-		var inventario := Apertura.inventario_de_la_jornada(
-			8, [], totales, reponibles, azar, de_una_fila
-		)
+		var inventario := Apertura.inventario_de_la_jornada(8, [], totales, reponibles, azar)
 		var falta := 6 - inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)
 		faltantes[falta] = true
 		assert_int(falta).is_between(ReglasDelEstante.MENOS_QUE_FALTA, 4)
