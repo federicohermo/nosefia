@@ -100,7 +100,7 @@ size = Vector3(5.1428, 0.206508, 6.608355)
 size = Vector3(12.519912314, 0.206508000, 7.144681644)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_deposito"]
-size = Vector3(0.420795, 0.206508, 1.682868)
+size = Vector3(0.420795, 0.206508, 1.527)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_fondo"]
 size = Vector3(1.703925, 0.206508, 0.382225)
@@ -3347,7 +3347,7 @@ position = Vector3(1.665579522, 0.000500000, -11.825630999)
 shape = SubResource("suelo_fondo")
 
 [node name="PasoAlDeposito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(8.0814625, 0, 0.736)
+position = Vector3(8.0814625, 0, 1.646)
 shape = SubResource("suelo_paso_deposito")
 
 [node name="PasoAlFondo" type="CollisionShape3D" parent="SueloSolido"]

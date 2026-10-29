@@ -15,7 +15,7 @@ const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 ## el arranque está libre.
 const VANOS := {
 	"Estructura/puerta": [Vector3(6.744, 1.05, -5.0), Vector3(6.744, 1.05, -9.5)],
-	"Estructura/puerta2": [Vector3(6.7, 1.05, 0.736), Vector3(8.8, 1.05, 0.736)],
+	"Estructura/puerta2": [Vector3(6.7, 1.05, 1.646), Vector3(8.8, 1.05, 1.646)],
 	"Estructura/puerta_limpieza": [Vector3(6.7, 1.05, -13.96), Vector3(9.4, 1.05, -13.96)],
 }
 
