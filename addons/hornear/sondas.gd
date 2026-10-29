@@ -17,6 +17,10 @@ extends RefCounted
 const VECINAS := 6
 const ALCANCE := 2.5
 const COEFICIENTES := 9
+## Lo que declara el padre de un grupo de `LightmapProbe`: cuánto se multiplica su luz al hornear.
+const GANANCIA := &"ganancia_de_las_sondas"
+## Cuánto se aleja una sonda del horneado de la posición del nodo que la puso.
+const TOLERANCIA := 0.01
 
 
 ## Qué cierra los ambientes del local: las mallas del modelo, vistas desde el horneado.
@@ -140,3 +144,42 @@ static func _vecinas(puntos: PackedVector3Array, con_luz: Array[int], desde: Vec
 			cerca.append([distancia, j])
 	cerca.sort()
 	return cerca.slice(0, VECINAS)
+
+
+## Multiplica la luz de las sondas manuales cuyo padre declara una `GANANCIA`. Va después de
+## `rellenar`: la luz de más no se reparte a las sondas de afuera. Devuelve cuántas reforzó.
+##
+## Una sonda guarda el rebote, nunca la luz directa de una lámpara. Lo horneado en un mueble lleva
+## las dos, y lo que toma la luz de las sondas, no: la mercadería de una heladera, pegada a su
+## lámpara, queda más oscura que el estante donde se apoya.
+static func reforzar(datos: LightmapGIData, raiz: Node, marco: Transform3D) -> int:
+	var sondas: Dictionary = datos.get("probe_data")
+	var puntos: PackedVector3Array = sondas["points"]
+	var ganancias := {}
+	for nodo: Node in raiz.find_children("*", "LightmapProbe", true, false):
+		var ganancia: float = nodo.get_parent().get_meta(GANANCIA, 1.0)
+		var sonda := _mas_cercana(puntos, marco * (nodo as Node3D).global_position)
+		if ganancia != 1.0 and sonda >= 0:
+			ganancias[sonda] = ganancia
+	sondas["sh"] = reforzar_coeficientes(sondas["sh"], ganancias)
+	datos.set("probe_data", sondas)
+	return ganancias.size()
+
+
+static func reforzar_coeficientes(sh: PackedColorArray, ganancias: Dictionary) -> PackedColorArray:
+	var nuevo := sh.duplicate()
+	for sonda: int in ganancias:
+		for k in COEFICIENTES:
+			nuevo[sonda * COEFICIENTES + k] *= float(ganancias[sonda])
+	return nuevo
+
+
+static func _mas_cercana(puntos: PackedVector3Array, donde: Vector3) -> int:
+	var elegida := -1
+	var menor := TOLERANCIA
+	for i in puntos.size():
+		var distancia := puntos[i].distance_to(donde)
+		if distancia <= menor:
+			menor = distancia
+			elegida = i
+	return elegida

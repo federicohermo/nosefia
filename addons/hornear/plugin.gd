@@ -146,6 +146,15 @@ func _guardar() -> void:
 	_avanzar(4)
 	var cuenta := Sondas.rellenar(datos, _cascara)
 	print("[hornear] sondas de afuera rellenadas: %d de %d" % [cuenta.rellenadas, cuenta.total])
+	# La noche del corte las lámparas de las heladeras están apagadas: no hay luz que devolverle a
+	# la mercadería.
+	if not _sin_luz():
+		var reforzadas := Sondas.reforzar(
+			datos,
+			EditorInterface.get_edited_scene_root(),
+			_horno().global_transform.affine_inverse()
+		)
+		print("[hornear] sondas con ganancia: %d" % reforzadas)
 	ResourceSaver.save(datos, datos.resource_path)
 	if _sin_luz():
 		return

@@ -25,9 +25,14 @@ const HORNEADO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 const GRUPO_DE_LA_EMERGENCIA := &"luz_de_emergencia"
 
 ## Los materiales emisivos del local que se apagan con las luces. Son los que el modelo declara
-## con emisión; el del tubo del tablero queda afuera porque es la emergencia.
+## con emisión; el del tubo del tablero queda afuera porque es la emergencia. Los tubos de las
+## heladeras tienen el suyo, para apagarse sin apagar la emergencia.
 const MATERIALES_EMISIVOS := [
-	&"local_cielorraso", &"bano_difusor", &"cuartito_tubo_difusor", &"deposito_lampara_panel"
+	&"local_cielorraso",
+	&"bano_difusor",
+	&"cuartito_tubo_difusor",
+	&"deposito_lampara_panel",
+	&"heladera_tubo_difusor",
 ]
 
 ## La luz de afuera entra por los vidrios que dan a la calle en la noche sin luz. **Sólo existe en
