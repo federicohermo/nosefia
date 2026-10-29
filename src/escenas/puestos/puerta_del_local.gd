@@ -30,6 +30,9 @@ signal salida_rechazada
 ## Qué aviso da una puerta que no abre.
 enum Traba { NINGUNA, PUERTA, PORTON }
 
+## Metros que el sensor de la compuerta se adelanta a cada cara de la hoja.
+const ALCANCE_DEL_EMPUJE := 0.25
+
 ## La malla que gira, que es el padre de este cuerpo. Entra por `@export` y no con un
 ## `get_parent()` para que el `.tscn` diga qué se mueve en vez de que lo suponga el script.
 @export var hoja: MeshInstance3D
@@ -42,6 +45,11 @@ enum Traba { NINGUNA, PUERTA, PORTON }
 ## Las mallas que el marco del objetivo pinta al enfocar. Sin esto iría a buscar
 ## `MeshInstance3D` hijos de este cuerpo, que no tiene ninguno: la puerta se vería sin contorno.
 @export var mallas: Array[MeshInstance3D] = []
+
+## La compuerta del mostrador: además del clic, el cuerpo la abre al pasar. Sólo gira hacia
+## `sentido_del_giro`, el lado de sus bisagras: desde el otro lado no cede. Cerrarla es siempre
+## a mano.
+@export var se_abre_al_empujar := false
 
 ## El setter y no `_ready()`: los tests tocan la puerta sin meter la escena al árbol.
 @export var traba := Traba.NINGUNA:
@@ -81,6 +89,48 @@ func _ready() -> void:
 	_bisagra = _cerrada * punto
 	_desde_la_hoja = hoja.global_transform.affine_inverse() * global_transform
 	top_level = true
+	if se_abre_al_empujar:
+		_armar_el_empuje()
+
+
+## Un sensor del tamaño de la hoja y más grueso que ella: el cuerpo lo toca antes que a la hoja,
+## y la hoja ya está girando cuando llega.
+func _armar_el_empuje() -> void:
+	var caja := hoja.get_aabb()
+	var espesor := 0 if caja.size.x < caja.size.z else 2
+	var tamano := caja.size
+	tamano[espesor] += 2.0 * ALCANCE_DEL_EMPUJE
+	var forma := BoxShape3D.new()
+	forma.size = tamano
+	var volumen := CollisionShape3D.new()
+	volumen.shape = forma
+	volumen.position = caja.get_center()
+	var sensor := Area3D.new()
+	sensor.collision_layer = 0
+	sensor.add_child(volumen)
+	sensor.body_entered.connect(_al_tocar)
+	# Diferido: en `_ready()` la hoja todavía está armando sus hijos y rechaza uno nuevo.
+	hoja.add_child.call_deferred(sensor)
+
+
+func _al_tocar(cuerpo: Node3D) -> void:
+	if not cuerpo is CharacterBody3D:
+		return
+	# La punta libre de la hoja se aleja de quien empuja: gira hacia el lado de la hoja opuesto
+	# al cuerpo.
+	var padre := hoja.get_parent_node_3d()
+	var caja := hoja.get_aabb()
+	var espesor := Vector3.RIGHT if caja.size.x < caja.size.z else Vector3.BACK
+	var punta := _cerrada * caja.get_center() - _bisagra
+	var normal := _cerrada.basis * espesor
+	var lejos := (
+		normal
+		* signf(normal.dot(_cerrada * caja.get_center() - padre.to_local(cuerpo.global_position)))
+	)
+	var hacia := 1 if Vector3.UP.cross(punta).dot(lejos) >= 0.0 else -1
+	if hacia != sentido_del_giro or not _puerta.empujar():
+		return
+	puerta_abierta.emit(self)
 
 
 func accionar() -> void:

@@ -22,6 +22,7 @@ const VANOS := {
 const BANO := "Estructura/puerta2"
 const CUARTITO := "Estructura/puerta_limpieza"
 const DEPOSITO := "Estructura/puerta"
+const COMPUERTA := "Estructura/compuerta_mostrador"
 ## Las interiores que se prueban jornada por jornada: el baño, para ver que nunca se traba.
 const POR_JORNADA: Array[String] = [DEPOSITO, BANO, CUARTITO]
 
@@ -133,11 +134,12 @@ func test_la_hoja_abierta_entra_al_cuarto_y_no_al_local() -> void:
 	await _esperar_el_giro(almacen)
 	for hoja: String in VANOS:
 		# El tramo de `VANOS` va del local hacia adentro del cuarto: su dirección es la que la
-		# hoja abierta tiene que seguir, y la hoja mide 1,72 m.
+		# hoja abierta tiene que seguir, casi con todo su ancho.
 		var tramo: Array = VANOS[hoja]
 		var bordes := _bordes(almacen.get_node(hoja))
 		var adentro: float = (bordes[1] - bordes[0]).dot((tramo[1] - tramo[0]).normalized())
-		assert_float(adentro).override_failure_message(hoja).is_greater(1.5)
+		var ancho := bordes[0].distance_to(bordes[1])
+		assert_float(adentro).override_failure_message(hoja).is_greater(0.9 * ancho)
 
 
 ## Las noches que no piden limpiar traban el baño: los casos que lo abren arrancan en una que sí.
@@ -551,3 +553,61 @@ func test_las_puertas_suenan_desde_la_puerta_con_su_audio() -> void:
 		assert_str(entrada.stream.resource_path.get_file().get_basename()).is_equal(
 			esperado[evento][1]
 		)
+
+
+func test_la_compuerta_se_abre_con_el_clic_y_se_vuelve_a_cerrar() -> void:
+	var almacen: Node3D = await _almacen_que_limpia()
+	var cuerpo: Node3D = almacen.get_node(COMPUERTA + "/CuerpoDeLaHoja")
+	cuerpo.call("accionar")
+	assert_bool((cuerpo.call("puerta") as Puerta).abierta()).is_true()
+	cuerpo.call("accionar")
+	assert_bool((cuerpo.call("puerta") as Puerta).abierta()).is_false()
+
+
+func test_la_compuerta_se_abre_al_pasar_desde_afuera_y_se_cierra_a_mano() -> void:
+	# Desde afuera, del lado contrario a las bisagras, el cuerpo la empuja hacia adentro.
+	var almacen: Node3D = await _almacen_que_limpia()
+	var hoja: MeshInstance3D = almacen.get_node(COMPUERTA)
+	var cuerpo: Node3D = almacen.get_node(COMPUERTA + "/CuerpoDeLaHoja")
+	var puerta: Puerta = cuerpo.call("puerta")
+	var caja := hoja.get_aabb()
+	var normal := -hoja.global_basis.z.normalized()
+	var libre_antes := _bordes(hoja)[0]
+	var quien := CharacterBody3D.new()
+	var forma := CollisionShape3D.new()
+	forma.shape = CapsuleShape3D.new()
+	quien.add_child(forma)
+	almacen.add_child(quien)
+	quien.global_position = hoja.global_transform * caja.get_center() + normal * 0.5
+	for _cuadro in range(120):
+		await get_tree().physics_frame
+		if is_equal_approx(puerta.angulo(), Puerta.ANGULO_ABIERTA):
+			break
+	assert_float(puerta.angulo()).is_equal_approx(Puerta.ANGULO_ABIERTA, 0.001)
+	assert_float((_bordes(hoja)[0] - libre_antes).dot(normal)).is_less(0.0)
+	cuerpo.call("accionar")
+	assert_bool(puerta.abierta()).is_false()
+	# Los dos almacenes comparten el mundo: el cuerpo empujaría la compuerta del almacén siguiente.
+	quien.queue_free()
+	await get_tree().physics_frame
+
+
+func test_la_compuerta_no_cede_al_empujarla_desde_adentro() -> void:
+	var almacen: Node3D = await _almacen_que_limpia()
+	var hoja: MeshInstance3D = almacen.get_node(COMPUERTA)
+	var cuerpo: Node3D = almacen.get_node(COMPUERTA + "/CuerpoDeLaHoja")
+	var puerta: Puerta = cuerpo.call("puerta")
+	var quien := CharacterBody3D.new()
+	var forma := CollisionShape3D.new()
+	forma.shape = CapsuleShape3D.new()
+	quien.add_child(forma)
+	almacen.add_child(quien)
+	quien.global_position = (
+		hoja.global_transform * hoja.get_aabb().get_center()
+		+ hoja.global_basis.z.normalized() * 0.5
+	)
+	for _cuadro in range(30):
+		await get_tree().physics_frame
+	assert_bool(puerta.abierta()).is_false()
+	quien.queue_free()
+	await get_tree().physics_frame

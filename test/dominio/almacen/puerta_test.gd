@@ -120,3 +120,23 @@ func test_la_salida_abre_una_trabada_sin_habilitar_su_alternancia() -> void:  # 
 	assert_float(puerta.avanzar(0.1)).is_between(0.0, Puerta.ANGULO_ABIERTA)
 	assert_float(puerta.avanzar(10.0)).is_equal(Puerta.ANGULO_ABIERTA)
 	assert_bool(puerta.trabada()).is_true()
+
+
+func test_empujar_abre_una_puerta_cerrada() -> void:
+	var puerta := Puerta.new()
+	assert_bool(puerta.empujar()).is_true()
+	assert_bool(puerta.abierta()).is_true()
+
+
+func test_empujar_una_puerta_abierta_no_la_cierra() -> void:
+	# El cuerpo sigue contra la hoja mientras pasa: si empujar alternara, la cerraría encima.
+	var puerta := Puerta.new()
+	puerta.empujar()
+	assert_bool(puerta.empujar()).is_false()
+	assert_bool(puerta.abierta()).is_true()
+
+
+func test_empujar_una_puerta_trabada_no_la_abre() -> void:
+	var puerta := Puerta.new(true)
+	assert_bool(puerta.empujar()).is_false()
+	assert_bool(puerta.abierta()).is_false()

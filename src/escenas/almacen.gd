@@ -157,6 +157,7 @@ func _ready() -> void:
 	azar_de_la_apertura.randomize()
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
+	_puertas.append($Estructura/compuerta_mostrador/CuerpoDeLaHoja)
 	_instrucciones.comenzar_pedido.connect(_al_comenzar_las_instrucciones)
 	_cablear_el_celular()
 	_cablear_la_investigacion()
@@ -267,6 +268,7 @@ func _ready() -> void:
 				$Estructura/puertaentrada/CuerpoDeLaHoja,
 				$Estructura/porton/CuerpoDeLaHoja,
 				$Estructura/puertajefe/CuerpoDeLaHoja,
+				$Estructura/compuerta_mostrador/CuerpoDeLaHoja,
 				$Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja,
 				$Estructura/heladeranueva_001/puerta_heladera_1/CuerpoDeLaHoja,
 				$Estructura/heladera_fuera_de_servicio/puerta_heladera_2/CuerpoDeLaHoja,

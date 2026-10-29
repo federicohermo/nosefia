@@ -49,6 +49,15 @@ func alternar() -> bool:
 	return true
 
 
+## El cuerpo la empuja al pasar: la abre si estaba cerrada, y si ya estaba abierta no la cierra
+## encima de quien pasa. Devuelve si la abrió.
+func empujar() -> bool:
+	if _trabada or _abierta:
+		return false
+	_abierta = true
+	return true
+
+
 func abrir_para_salida() -> bool:
 	if _abierta:
 		return false
