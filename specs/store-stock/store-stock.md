@@ -25,14 +25,13 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Contenido de la caja** | cuántas unidades tiene la caja: su depósito menos sus unidades afuera | stock, carga |
 | **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó, volvió a su caja ni se tiró: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
-| **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas o en una | bloque, exhibición |
+| **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en una sola fila | bloque, exhibición |
 | **Tanda fija** | una tanda que repite un producto para completar un estante. Su fila de adelante tiene casilleros, como la de cualquier tanda | guía, decorado |
 | **Cara de lado** | cada uno de los dos lados largos de un mueble de estantes, el que da a un pasillo | frente, lateral |
 | **Cabecera** | cada uno de los dos extremos cortos de un mueble de estantes | punta, testero |
 | **Zócalo** | el estante de más abajo de una cara de lado | base, piso |
 | **Estante de reposición** | un estante a la altura de la mano: los niveles 1 y 2 de los cuatro existentes, tanto en laterales como en cabeceras | estante del medio, estante útil |
-| **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone. En una tanda de una sola fila, es esa fila | frente, cara |
-| **Fila de atrás** | la fila de una tanda de dos filas contra el fondo del estante: fija, entera toda la noche | guía, fondo |
+| **Fila de adelante** | la única fila de una tanda, del lado del pasillo: la que el jugador repone | frente, cara |
 | **Casillero** | cada lugar de la fila de adelante, que el jugador llena colocando una unidad y vacía agarrándola. Cada uno está vacío u ocupado por separado | hueco, slot |
 | **Cupo** | cuántos casilleros suman las filas de adelante de las tandas de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
@@ -187,17 +186,13 @@ un jugador parado en el pasillo. La fila de adelante de cada tanda del local, re
 en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
 casilleros vacíos con que abre una jornada DEBEN quedar juntos: un bloque de casilleros seguidos
 en la fila de adelante de una tanda del producto, reponible o fija y en cualquier estante. La
-tanda DEBE elegirse al azar entre las que reciben el faltante entero.
-SI el faltante no entra entero en ninguna, ENTONCES DEBE partirse: las tandas se vacían enteras,
-una junto a la otra en estantes contiguos, y la tanda parcial queda pegada a ellas, debajo del
-bloque; arriba sólo si debajo no hay estante. Los vacíos de la tanda parcial DEBEN ir en las mismas
-columnas que los del estante anterior, hasta donde lo permita lo que la tanda protege. En una
-tanda, los vacíos NO DEBEN quedar separados por casilleros ocupados. En un producto de dos filas
-(BR-STK-025), la apertura PUEDE vaciar entera la fila de adelante de cualquier tanda, la
-reponible incluida: la fila de atrás dice qué va ahí.
+tanda DEBE elegirse al azar entre las que reciben el faltante entero. En una tanda, los vacíos
+NO DEBEN quedar separados por casilleros ocupados.
 
-La apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda de un producto de una sola
-fila: en cada estante del producto DEBE quedar al menos una unidad. El faltante que no cabe en un
+La apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda: en cada estante del
+producto DEBE quedar al menos una unidad. Los vacíos que pasan a otro estante DEBEN ir en las
+mismas columnas que los del estante anterior, hasta donde lo permita la unidad que el estante
+conserva. El faltante que no cabe en un
 estante DEBE quedar en la fila de adelante del estante de justo arriba: con cuatro casilleros por
 estante y cuatro faltantes, faltan tres de un estante y uno del de arriba. SI el de los tres es el
 de arriba de todo, ENTONCES el que sobra DEBE quedar en el de justo abajo. SI el estante vecino
@@ -214,21 +209,13 @@ En una heladera, cualquier bandeja puede llevar la tanda reponible o una tanda f
 En las jornadas de prueba, BR-STK-047 permite repetir una tanda fija en el otro nivel de
 reposición, conservando una sola principal por producto y todos los frontales interactuables.
 
-### BR-STK-025 — Las filas corresponden a cada tanda aprobada
+### BR-STK-025 — Cada tanda se ve en una sola fila
 
-Cada tanda principal o fija de un producto exhibido DEBE tener dos filas, una detrás de la
-otra, salvo las excepciones siguientes. Cada lugar de la fila de adelante DEBE ser un
-casillero del producto, y ninguno de la fila de atrás. La fila de atrás DEBE verse entera
-desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la que dice qué va ahí.
-
-Todas las tandas de Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético DEBEN tener una sola
-fila. Las demás tandas DEBEN tener dos filas, incluidas las principales y fijas de Actroncito y
-Prongles, que conservan las dos hileras del arte vigente. Las dos filas de una tanda DEBEN
-verse separadas, y las unidades de un estante DEBEN repartirse de punta a punta con el mismo
-hueco entre todas.
-
-Cada lugar de una tanda de una fila DEBE ser un casillero, sea principal o fija; esa tanda
-NO DEBE tener fila posterior. La cantidad de filas se decide por tanda, no sólo por producto.
+Cada tanda principal o fija de un producto exhibido DEBE verse en una sola fila, la de
+adelante, y cada lugar suyo DEBE ser un casillero del producto. Detrás de los casilleros NO
+DEBE verse ninguna unidad: al vaciar todos los casilleros de una tanda, no queda a la vista
+ninguna unidad suya. Las unidades de un estante DEBEN repartirse de punta a punta con el
+mismo hueco entre todas.
 El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mismo.
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
@@ -246,8 +233,8 @@ reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
 
 Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
 caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casilleros de la fila de
-adelante de todas sus tandas, reponible y fijas, menos uno por cada tanda de un producto de una
-sola fila, que no puede abrir vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
+adelante de todas sus tandas, reponible y fijas, menos uno por cada tanda, que no puede abrir
+vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
 total de todas las tandas (BR-STK-008). Los casilleros vacíos de un producto DEBEN quedar juntos
 (BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 3
 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
@@ -340,7 +327,7 @@ vuelve a poner.
 CUANDO el jugador agarra una unidad colocada en un casillero de la fila de adelante, el sistema
 DEBE dársela y dejar ese casillero vacío: el producto vuelve a faltar (BR-STK-007). Da lo mismo
 que la haya colocado él o que estuviera desde que abrió la jornada. SI el casillero está vacío,
-ENTONCES el sistema NO DEBE darle nada. La fila de atrás no se agarra (BR-STK-025).
+ENTONCES el sistema NO DEBE darle nada.
 
 Con esa unidad en la mano vale todo lo que vale para una que salió de su caja: se coloca en
 cualquier casillero vacío de su producto, se suelta, o se devuelve a su caja (BR-STK-030). SI
@@ -829,28 +816,12 @@ su tanda ENTONCES la mira alcanza su casillero y el producto se coloca.
 
 ### AC-STK-030 — Filas por tanda y casilleros adelante *(verifica BR-STK-025)*
 
-DADO cada tanda principal y fija del local ENTONCES sus filas coinciden con esta tabla:
-
-| Producto | Principal | Fijas |
-|---|---|---|
-| Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético | 1 | 1 |
-| Actroncito, Prongles y los demás productos exhibidos | 2 | 2 |
-
-La fila de adelante es la más cercana al pasillo y cada lugar suyo es un casillero del
-producto. Los casilleros totales y los que usan la apertura y el sorteo suman los frontales de
+DADO cada tanda principal y fija del local ENTONCES se ve en una sola fila, la más cercana al
+pasillo, y cada lugar suyo es un casillero del producto. Los casilleros totales y los que usan la apertura y el sorteo suman los frontales de
 su principal y sus fijas. Un producto sin casilleros en ninguna tanda NO DEBE volverse elegible.
-Las filas delanteras fijas conservan su interacción de BR-STK-024. La fila de
-atrás, cuando existe, no tiene casilleros: una copia posterior no agrega ninguno.
-
-### AC-STK-031 — La fila de atrás de cada tanda permanece entera *(verifica BR-STK-025)*
-
-DADO una jornada que se abre ENTONCES cada tanda de dos filas muestra entera su fila de
-atrás y su fila delantera completa salvo los faltantes declarados. CUANDO se agarra o repone
-una unidad de delante ENTONCES sólo cambia ese casillero y la fila de atrás no cambió ni se
-puede agarrar. DADO una tanda de una fila ENTONCES no tiene unidades detrás de sus
-casilleros; al vaciar todos sus casilleros no queda ninguna unidad de esa tanda.
-
-DADO Actroncito y Prongles ENTONCES sus tandas principales y fijas conservan ambas filas.
+Las filas de las tandas fijas conservan su interacción de BR-STK-024. DADO una tanda CUANDO se
+vacían todos sus casilleros ENTONCES no queda a la vista ninguna unidad suya. CUANDO se agarra o
+repone una unidad ENTONCES sólo cambia ese casillero.
 
 ### AC-STK-032 — Una caja entera alcanza para el faltante más grande *(verifica BR-STK-004)*
 
@@ -866,20 +837,15 @@ de una caja menos lo pedido —8 menos lo pedido en el balance vigente— ni de 
 fila de adelante de todas las tandas de su producto. El inventario conserva el cupo total de
 todas las tandas. DADO productos de cuatro tandas de tres casilleros, o de dos tandas de cuatro,
 CUANDO se sortean sus vacíos con las 200 semillas ENTONCES hay vacíos en cada tanda de al menos
-un producto. DADO un producto de una sola fila ENTONCES ninguna de sus tandas abre con su fila de
-adelante entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos con las 200 semillas
+un producto. DADO cualquier producto ENTONCES ninguna de sus tandas abre con su fila de adelante
+entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos con las 200 semillas
 ENTONCES en cada tanda los casilleros vacíos son seguidos, sin un casillero ocupado entre dos
 vacíos. Si el faltante entra entero en alguna tanda, todos caen en una sola, aunque otra tanda no
-lo reciba entero: con dos tandas de una fila de cinco y cuatro casilleros y un faltante de cuatro,
-siempre caen en la de cinco. Sólo si no entra en ninguna se parte. DADO un producto de dos filas
-con cuatro tandas de tres casilleros en estantes contiguos CUANDO su faltante se parte con las 200
-semillas ENTONCES las tandas con vacíos son contiguas, todas quedan vacías enteras salvo una, y esa
-tanda parcial está debajo de las vacías; está arriba sólo si las vacías llegan al estante de más
-abajo. DADO un producto de tres tandas con las mismas columnas, en estantes a 0,5, 1 y 2,5 m de
-altura, CUANDO su faltante se parte con las 200 semillas ENTONCES los dos bloques quedan en estantes
-contiguos —nunca el de 0,5 con el de 2,5 m— y las columnas del bloque más corto están entre las del
-más largo. DADO un producto de dos filas CUANDO falta toda su fila de adelante ENTONCES puede abrir
-con la reponible vacía entera.
+lo reciba entero: con dos tandas de cinco y cuatro casilleros y un faltante de cuatro, siempre caen
+en la de cinco. Sólo si no entra en ninguna pasa a otro estante. DADO un producto de tres tandas
+con las mismas columnas, en estantes a 0,5, 1 y 2,5 m de altura, CUANDO su faltante pasa de un
+estante con las 200 semillas ENTONCES los dos bloques quedan en estantes contiguos —nunca el de
+0,5 con el de 2,5 m— y las columnas del bloque más corto están entre las del más largo.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
@@ -1074,7 +1040,7 @@ DADO cada producto exhibido, Arvejas y Coracola incluidas, con una unidad coloca
 fila de adelante y las manos vacías CUANDO el jugador se para en el pasillo frente a su tanda
 ENTONCES la mira enfoca esa unidad y el clic se la pone en la mano. DADO cualquier unidad que se
 ve en un estante de reposición del reparto completo ENTONCES es de la fila de adelante de
-una tanda reponible, o de su fila de atrás: ninguna es de una tanda fija. En las jornadas
+una tanda reponible: ninguna es de una tanda fija. En las jornadas
 de prueba, los frontales de las repeticiones permitidas por BR-STK-047 se agarran y reponen igual.
 
 ### AC-STK-051 — Mitad y mitad, o el estante entero *(verifica BR-STK-035)*
@@ -1292,16 +1258,16 @@ se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades 
 DADO cualquier cara de un mueble ENTONCES el estante de arriba de todo lleva los mismos productos
 que el reponible de abajo, y el otro reponible los mismos que el zócalo, en el mismo orden.
 
-### AC-STK-093 — Un producto de una sola fila no abre con una tanda vacía entera *(verifica BR-STK-024)*
+### AC-STK-093 — Ningún producto abre con una tanda vacía entera *(verifica BR-STK-024)*
 
-DADO un producto de una sola fila con cuatro estantes de cuatro casilleros a distinta altura, y un
+DADO un producto con cuatro estantes de cuatro casilleros a distinta altura, y un
 faltante de cuatro CUANDO se sortean sus vacíos con las 200 semillas ENTONCES cada estante conserva
 al menos una unidad, tres vacíos caen en un estante y el otro en el de justo arriba, o en el de
 justo abajo si el de los tres es el de arriba de todo. DADO Poético en la jornada 2 o 3 y Flin Puf
 desde la jornada 4, con un faltante igual a los casilleros de un estante, ENTONCES se cumple lo
 mismo con sus estantes reales.
 
-DADO un producto de una sola fila con tres estantes de cuatro, uno y cuatro casilleros, y un
+DADO un producto con tres estantes de cuatro, uno y cuatro casilleros, y un
 faltante de cuatro CUANDO se sortean sus vacíos con las 200 semillas ENTONCES el del medio conserva
 su unidad y los vacíos se reparten entre los otros dos, tres en uno y uno en el otro.
 

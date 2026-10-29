@@ -230,8 +230,8 @@ ningún otro (BR-STK-009). La mira elige entre casilleros como entre cualquier o
 MIENTRAS las manos están vacías, la mira DEBE poder enfocar cada unidad colocada en la fila de
 adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérsela en la mano
 (BR-STK-033). La unidad enfocada DEBE llevar el contorno del foco sobre su propio aspecto, y
-dibujarse una sola vez. La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada
-mientras la mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
+dibujarse una sola vez. La mira NO DEBE enfocar ninguna unidad colocada mientras la mano
+lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
 
 ### BR-PLY-025 — El balde se lleva vertical
 
@@ -780,7 +780,7 @@ clic ENTONCES esa unidad pasa a la mano, su casillero queda vacío y las de al l
 estaban. DADO las manos vacías CUANDO la mira enfoca una unidad colocada ENTONCES esa unidad lleva
 el contorno del foco sobre su propio aspecto, se dibuja una sola vez y ninguna otra cambia. DADO
 cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
-clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se enfoca.
+clic no la agarra.
 
 ### AC-PLY-050 — El balde en la mano permanece vertical *(verifica BR-PLY-025)*
 
