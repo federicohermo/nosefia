@@ -18,7 +18,7 @@ editor_description = "Polvo, en el piso del pasillo entre las dos góndolas del 
 lugar = 1
 escala_visual = 1.4
 acuosa = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.291279, 0.104, -2)
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,1.2902787500000001,0.104,-2.0)
 
 [node name="ManchaDelDeposito" parent="." instance=ExtResource("2_mancha")]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 4.7, 1.2, -8.255)
