@@ -1322,7 +1322,9 @@ sin entregarse. El ticket sólo se entrega con el clic sobre el comprador (BR-CT
 DADO un comprador en la ventanilla —también con la conversación inicial sin empezar y mientras
 todavía entra— y un jugador con un producto en la mano, CUANDO suelta con el clic apuntando a la
 abertura donde la figura no está ENTONCES el producto no sale al exterior, sigue en la mano y se
-inicia la conversación. SIN comprador, el mismo clic lo saca al exterior.
+inicia la conversación. CUANDO un producto cae adentro, desde cualquier punto y a cualquier
+distancia, y rueda o rebota hacia la abertura ENTONCES no sale al exterior: no llega a quedar sobre
+el marco ni del otro lado. SIN comprador, el mismo clic lo saca al exterior y lo que rueda sale.
 
 ### AC-CTR-133 — Sólo el nombre propio va en amarillo *(verifica BR-CTR-039)*
 
