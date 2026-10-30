@@ -175,6 +175,7 @@ func _pose_de_la_hoja(angulo: float) -> Transform3D:
 ## hoja con eso lo decide `FrenoDeLaPuerta`.
 func _freno(delta: float) -> FrenoDeLaPuerta:
 	var siguiente := _puerta.angulo_siguiente(delta)
+	var frenado := _puerta.angulo_siguiente(delta * FrenoDeLaPuerta.FACTOR_DE_LO_PESADO)
 	if is_equal_approx(siguiente, _puerta.angulo()) or not is_inside_tree():
 		return FrenoDeLaPuerta.new()
 	var padre := hoja.global_transform * hoja.transform.affine_inverse()
@@ -197,7 +198,7 @@ func _freno(delta: float) -> FrenoDeLaPuerta:
 			if objeto.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
 				obstaculo = FrenoDeLaPuerta.Obstaculo.PESADO
 				_pesados.append(objeto)
-				puede_correrse = puede_correrse and _se_corre(objeto, siguiente)
+				puede_correrse = puede_correrse and _se_corre(objeto, frenado)
 			elif obstaculo == FrenoDeLaPuerta.Obstaculo.NADA:
 				obstaculo = FrenoDeLaPuerta.Obstaculo.LIVIANO
 	var paso := Puerta.ANGULO_ABIERTA
@@ -206,7 +207,8 @@ func _freno(delta: float) -> FrenoDeLaPuerta:
 	return FrenoDeLaPuerta.decidir(obstaculo, puede_correrse, _puerta.angulo(), paso)
 
 
-## Si el objeto tiene lugar para correrse lo que la hoja avanza. Se mide sin contar la hoja, que
+## Si el objeto tiene lugar para correrse lo que la hoja avanza hasta `siguiente`, que es el paso
+## ya frenado: la hoja que se corre no gira al paso entero. Se mide sin contar la hoja, que
 ## es justamente lo que lo empuja, y sin mirar si está congelado o dormido: se pregunta al espacio
 ## y no se mueve el cuerpo, porque una caja congelada es estática para el motor y un movimiento
 ## de prueba no la hace chocar con ninguna pared.

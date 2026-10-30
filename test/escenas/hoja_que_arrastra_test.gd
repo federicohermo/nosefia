@@ -207,6 +207,7 @@ func test_el_jugador_parado_en_el_recorrido_no_queda_adentro_de_la_hoja() -> voi
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.global_position = _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * 0.01
 	await _girar(hoja)
+	assert_float(_cuerpo_de(hoja).call("puerta").angulo()).is_equal(Puerta.ANGULO_ABIERTA)
 	(
 		assert_bool(_adentro_de_la_hoja(jugador, _cuerpo_de(hoja)))
 		. override_failure_message(

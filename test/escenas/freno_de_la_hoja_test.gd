@@ -28,6 +28,9 @@ const CONTACTO_AL_ABRIR := deg_to_rad(30.0)
 const CONTACTO_AL_CERRAR := deg_to_rad(5.0)
 const BAJO_EL_PASO := deg_to_rad(25.0)
 
+## Metros. Lo menos que se corre una caja a la que la hoja le deja lugar.
+const CORRIDA_MINIMA := 0.02
+
 ## Metros. Lo que mide de grueso el muro contra el que se apoya una caja.
 const ESPESOR_DEL_MURO := 0.2
 
@@ -138,8 +141,9 @@ func _caja_en(almacen: Node3D, punto: Vector3, congelada: bool = true) -> RigidB
 	return caja
 
 
-## Pone un muro del lado al que empuja la hoja, pegado a la caja. `empuje` es un versor.
-func _contra_un_muro(caja: RigidBody3D, empuje: Vector3) -> void:
+## Pone un muro del lado al que empuja la hoja, a `holgura` metros de la caja. `empuje` es un
+## versor.
+func _contra_un_muro(caja: RigidBody3D, empuje: Vector3, holgura: float = 0.0) -> void:
 	var muro: StaticBody3D = auto_free(StaticBody3D.new())
 	muro.collision_layer = caja.collision_mask
 	var forma := CollisionShape3D.new()
@@ -152,7 +156,7 @@ func _contra_un_muro(caja: RigidBody3D, empuje: Vector3) -> void:
 		Basis.looking_at(empuje, Vector3.UP),
 		(
 			caja.global_position
-			+ empuje * (_mitad_de_la_caja_hacia(caja, empuje) + ESPESOR_DEL_MURO / 2.0)
+			+ empuje * (_mitad_de_la_caja_hacia(caja, empuje) + holgura + ESPESOR_DEL_MURO / 2.0)
 		)
 	)
 	await get_tree().physics_frame
@@ -257,6 +261,11 @@ func test_una_caja_que_se_puede_correr_frena_la_hoja_al_cerrar() -> void:  # AC-
 		0.05
 	)
 	assert_bool(barrido["adentro"]).override_failure_message("la caja quedó adentro").is_false()
+	(
+		assert_int(barrido["rescates"])
+		. override_failure_message("la red devolvió la caja %d veces" % barrido["rescates"])
+		. is_equal(1)
+	)
 
 
 ## Barre la hoja con una caja en el recorrido, a mitad del giro, y devuelve cuántos cuadros tardó
@@ -286,7 +295,41 @@ func _barrido_con_una_caja_corrible(congelada: bool, cerrando: bool) -> Dictiona
 		"cuadros": cuadros,
 		"corrida": corrida,
 		"adentro": _adentro_de_la_hoja(caja, cuerpo),
+		"rescates":
+		(almacen.get_node("Servicios/RedDeSeguridad") as RedDeSeguridad).rescates.size(),
 	}
+
+
+## Lo que avanza a lo largo del arco, a `RADIO_EN_EL_RECORRIDO`, un cuadro de la hoja con `factor`.
+func _avance_de_un_cuadro(factor: float) -> float:
+	return (
+		Puerta.VELOCIDAD_DEL_GIRO / Engine.physics_ticks_per_second * factor * RADIO_EN_EL_RECORRIDO
+	)
+
+
+## Una caja con lugar para el paso frenado pero no para el entero se corre: la hoja no se detiene
+## con aire de por medio.
+func test_una_caja_con_poco_lugar_se_corre_en_vez_de_detener_la_hoja() -> void:  # AC-PLY-142
+	var almacen: Node3D = await _almacen()
+	var hoja: MeshInstance3D = almacen.get_node(HOJA)
+	var cuerpo := _cuerpo_de(hoja)
+	var caja := _caja_en(
+		almacen, _en_el_recorrido(almacen, hoja, _angulo_de_paso(cuerpo) + CONTACTO_AL_ABRIR)
+	)
+	var holgura := (
+		(_avance_de_un_cuadro(1.0) + _avance_de_un_cuadro(FrenoDeLaPuerta.FACTOR_DE_LO_PESADO))
+		/ 2.0
+	)
+	var empuje := _sentido_del_giro(hoja, caja.global_position)
+	await _contra_un_muro(caja, empuje, holgura)
+	var partida := caja.global_position
+	cuerpo.call("alternar")
+	await _esperar(CUADROS_DETENIDA * 2)
+	(
+		assert_float((caja.global_position - partida).dot(empuje))
+		. override_failure_message("la hoja se detuvo con lugar para correr la caja")
+		. is_greater(CORRIDA_MINIMA)
+	)
 
 
 func test_una_caja_inmovil_detiene_la_hoja_al_abrir_si_conserva_el_paso() -> void:  # AC-PLY-143

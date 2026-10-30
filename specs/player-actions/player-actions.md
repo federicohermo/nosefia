@@ -496,7 +496,8 @@ duerme o está despierto.
 
 MIENTRAS la hoja de una puerta gira y lo pesado está en su recorrido, el sistema DEBE girarla
 más lenta desde el contacto, sin detenerla, si ese objeto puede correrse; la hoja DEBE llegar a
-su tope con el objeto fuera de ella. SI no puede correrse, ENTONCES el sistema DEBE detener la
+su tope con el objeto fuera de ella. Puede correrse si tiene lugar para lo que la hoja avanza en
+un cuadro ya frenada, no en uno a la velocidad de siempre. SI no puede correrse, ENTONCES el sistema DEBE detener la
 hoja donde toca, siempre que ahí conserve el paso. Lo liviano NO DEBE frenar la hoja: se
 arrastra según BR-PLY-017. Si hay varios obstáculos, manda el más pesado y los frenos no se
 acumulan.
@@ -1279,8 +1280,11 @@ ella.
 
 DADO una caja contenedora apoyada en el recorrido, con espacio para correrse, CUANDO se abre la
 puerta ENTONCES la hoja gira más lenta que la de siempre desde el contacto, llega al tope y la
-caja termina corrida, fuera de la hoja. CUANDO se cierra pasa lo mismo en el sentido inverso. Una
-caja despierta frena igual que una dormida.
+caja termina corrida, fuera de la hoja. CUANDO se cierra la hoja también gira más lenta y llega a
+su tope; en el depósito la caja queda apretada contra la pared y la red de seguridad de BR-PLY-016
+la devuelve, una vez, fuera de la hoja. Una caja despierta frena igual que una dormida. DADO una
+caja con lugar para el paso ya frenado y no para el entero ENTONCES la hoja no se detiene: la
+caja se corre.
 
 ### AC-PLY-143 — Una caja inmóvil detiene la hoja sólo si queda el paso *(verifica BR-PLY-042, BR-PLY-016)*
 
@@ -1310,8 +1314,9 @@ adentro.
 ### AC-PLY-147 — El ángulo de paso es el que cruza la cápsula *(verifica BR-PLY-042)*
 
 DADO cada vano de paso con su hoja en el ángulo de paso adoptado CUANDO el jugador lo cruza en
-ambos sentidos ENTONCES cruza. DADO la hoja un grado por debajo ENTONCES no cruza. La medida
-parte de un jugador libre, separado del piso y de otros cuerpos.
+ambos sentidos ENTONCES cruza. El motor redondea las esquinas del casco de la hoja, y por eso la
+cápsula puede cruzar hasta un grado antes del adoptado; nunca después. La medida parte de un
+jugador libre, separado del piso y de otros cuerpos.
 
 ### AC-PLY-148 — La hoja no se detiene antes del ángulo de paso *(verifica BR-PLY-042)*
 
