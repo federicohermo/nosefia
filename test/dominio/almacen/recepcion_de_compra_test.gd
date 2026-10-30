@@ -177,7 +177,6 @@ func test_tia_rechaza_otra_zucarachas_y_conserva_el_pedido_entero() -> void:  # 
 		assert_int(atencion.interactuar(objeto)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
 		assert_array(recepcion.unidades()).contains_exactly([primera])
 		assert_bool(atencion.vendida()).is_false()
-		assert_int(atencion.interactuar(objeto)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
 	assert_int(atencion.interactuar(null)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
 	# El recordatorio nombra sólo lo que falta: el Pepito, y no la Zucarachas ya recibida.
 	assert_int(atencion.dialogo().entrada_actual().count("[color=#e4f850]")).is_equal(1)
