@@ -653,7 +653,7 @@ func _le_queda_encima_al_jugador(caja: RigidBody3D) -> bool:
 ## la resuelve `_apoyo_debajo()`.
 func _apoyo_apuntado(caja: RigidBody3D) -> Dictionary:
 	var ojo := jugador.mira()
-	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+	var lejos := ReglasDelJugador.fin_de_la_mira(ojo.origin, -ojo.basis.z)
 	var golpe := _rayo(caja, ojo.origin, lejos)
 	var rozada := _caja_rozada(caja, ojo.origin, lejos, golpe)
 	if rozada == null:
@@ -1143,7 +1143,7 @@ func _ofrecer_a_la_mira() -> void:
 static func _podria_enfocar(ojo: Vector3, adelante: Vector3, centro: Vector3, radio: float) -> bool:
 	var hacia := centro - ojo
 	var distancia := hacia.length()
-	if distancia - radio > ReglasDelJugador.ALCANCE_DE_PRODUCTOS:
+	if ReglasDelJugador.proximidad(ojo, centro) - radio > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
 		return false
 	if distancia <= radio:
 		return true

@@ -77,13 +77,12 @@ func test_un_centimetro_fuera_del_alcance_se_rechaza() -> void:  # AC-PLY-004
 	assert_int(Campo.elegir([lejano, cercano])).is_equal(2)
 
 
-func test_un_producto_mas_alla_de_su_alcance_no_se_enfoca() -> void:  # AC-PLY-004
-	var distancia := ReglasDelJugador.ALCANCE_DE_PRODUCTOS + 0.01
-	var producto := Campo.Candidato.new(1, distancia, 0.0, true, true)
+func test_un_producto_tiene_el_mismo_alcance_que_lo_demas() -> void:  # AC-PLY-004
+	var producto := Campo.Candidato.new(1, ReglasDelJugador.ALCANCE_DE_LA_MIRA, 0.0, true, true)
 	producto.es_producto = true
-	var objeto := Campo.Candidato.new(2, distancia, 0.0, true, true)
+	assert_int(Campo.elegir([producto])).is_equal(1)
+	producto.distancia += 0.01
 	assert_int(Campo.elegir([producto])).is_equal(Foco.SIN_OBJETIVO)
-	assert_int(Campo.elegir([objeto])).is_equal(2)
 
 
 func test_un_producto_alejado_del_cursor_no_se_enfoca() -> void:  # AC-PLY-004

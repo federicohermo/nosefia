@@ -59,8 +59,8 @@ radianes**. Pasarse de ahí da vuelta la cámara, y eso no es un límite de gust
 
 El sistema DEBE enfocar lo que está a mano y dentro de su tolerancia angular
 respecto del centro de la vista: **3 grados o menos** para productos y huecos de reposición,
-**8 grados o menos** para los otros objetos. A mano es **1,6 metros o menos** para productos y
-huecos de reposición, y **2,2 metros o menos** para los otros objetos. El desvío se mide
+**8 grados o menos** para los otros objetos. A mano es **1,6 metros o menos** desde los ojos,
+para todo: es proximidad sobre el piso y no cuenta la altura. El desvío se mide
 respecto de la superficie visible. Entre varios candidatos gana el de menor desvío, y con el
 mismo desvío el más cercano.
 
@@ -94,7 +94,8 @@ anuncia un objeto.
 
 ### BR-PLY-010 — Lo que se suelta se puede volver a agarrar
 
-El sistema DEBE soltar los objetos **dentro del alcance de la mira**. Las tres distancias de
+El sistema DEBE soltar los objetos **dentro del alcance de la mira**, y NO DEBE apoyar nada más
+allá de ese alcance. Las tres distancias de
 examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega al alcance.
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
@@ -509,8 +510,8 @@ DADO un giro hacia abajo enorme ENTONCES el ángulo vertical queda en `-1.4`; ha
 
 ### AC-PLY-004 — Los dos bordes de la mira *(verifica BR-PLY-004)*
 
-DADO un objeto que no sea un producto a 2,2 metros ENTONCES se enfoca; a 2,3, no. DADO un
-producto a 1,6 metros ENTONCES se enfoca; a 1,7, no. DADO un objeto que no sea
+DADO un producto u otro objeto a 1,6 metros de los ojos sobre el piso, a cualquier altura, ENTONCES
+se enfoca; a 1,7, no. DADO un objeto que no sea
 un producto ni un hueco de reposición a 8 grados de desvío
 ENTONCES se enfoca; a 9, no.
 

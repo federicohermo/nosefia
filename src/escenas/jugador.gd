@@ -251,9 +251,7 @@ func _usar_la_superficie_mirada() -> void:
 		return
 	var ojo := _camara.global_position
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo,
-		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		_campo.collision_mask
+		ojo, ReglasDelJugador.fin_de_la_mira(ojo, -_camara.global_basis.z), _campo.collision_mask
 	)
 	consulta.exclude = [get_rid()]
 	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
@@ -697,7 +695,7 @@ func _leer_la_mira() -> void:
 func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	var ojo := _camara.global_position
 	var adelante := -_camara.global_basis.z
-	var puntos: Array[Vector3] = [ojo + adelante * ReglasDelJugador.ALCANCE_DE_LA_MIRA]
+	var puntos: Array[Vector3] = [ReglasDelJugador.fin_de_la_mira(ojo, adelante)]
 	var formas := cuerpo.find_children("*", "CollisionShape3D", false, false)
 	# La persona requiere la mira sobre alfa real: un rayo auxiliar no rescata transparencia.
 	if cuerpo.has_method("admite_foco_en"):
@@ -718,7 +716,7 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	var mejor: CampoDeInteraccion.Candidato = null
 	for punto in puntos:
 		var consulta := PhysicsRayQueryParameters3D.create(
-			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+			ojo, ReglasDelJugador.fin_de_la_mira(ojo, ojo.direction_to(punto))
 		)
 		var excluidos: Array[RID] = [get_rid()]
 		# Con la máscara del campo y no con todas: el contorno de un mueble lo envuelve, y un
@@ -738,7 +736,7 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 			continue
 		var candidato := CampoDeInteraccion.Candidato.new(
 			cuerpo.get_instance_id(),
-			ojo.distance_to(impacto),
+			ReglasDelJugador.proximidad(ojo, impacto),
 			adelante.angle_to(impacto - ojo),
 			true,
 			true
@@ -1103,9 +1101,7 @@ static func _formas_de(cuerpo: RigidBody3D) -> Array[CollisionShape3D]:
 func _golpe_de_la_mira(cuerpo: RigidBody3D) -> Dictionary:
 	var ojo := _camara.global_position
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo,
-		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		cuerpo.collision_mask
+		ojo, ReglasDelJugador.fin_de_la_mira(ojo, -_camara.global_basis.z), cuerpo.collision_mask
 	)
 	consulta.exclude = [get_rid(), cuerpo.get_rid()]
 	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)

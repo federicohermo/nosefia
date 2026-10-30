@@ -871,7 +871,7 @@ func _contrastar_la_mira(almacen: Node3D, caja: Node3D, donde: String) -> Array[
 func _lo_apuntado(almacen: Node3D, jugador: Node3D, caja: Node3D) -> Dictionary:
 	var ojo: Transform3D = jugador.call("mira")
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		ojo.origin, ReglasDelJugador.fin_de_la_mira(ojo.origin, -ojo.basis.z)
 	)
 	consulta.exclude = [
 		(caja as CollisionObject3D).get_rid(), (jugador as CollisionObject3D).get_rid()
@@ -974,7 +974,10 @@ func _paradas_con_vista_a_la_mancha(
 			var golpe := espacio.intersect_ray(rayo)
 			if (
 				golpe.get("collider") == mancha
-				and ojo.distance_to(golpe.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				and (
+					ReglasDelJugador.proximidad(ojo, golpe.position)
+					<= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				)
 			):
 				paradas.append(punto)
 	return paradas

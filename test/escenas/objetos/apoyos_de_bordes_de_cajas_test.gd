@@ -178,7 +178,7 @@ func _sobre_el_riel(producto: Producto.Id) -> Dictionary:
 	await _mirar_desde_el_piso(almacen, caja, objetivo, Vector3.LEFT * 0.9)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
 	var visible := _impacto_visible(
-		riel, mira.origin, mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		riel, mira.origin, ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z)
 	)
 	(
 		assert_bool(visible.is_empty())
@@ -215,7 +215,7 @@ func _en_el_estante(producto: Producto.Id, sobre_metal := true) -> Dictionary:
 	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
 	var visible := _impacto_visible(
-		gondola, mira.origin, mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		gondola, mira.origin, ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z)
 	)
 	(
 		assert_bool(visible.is_empty())
@@ -241,7 +241,7 @@ func _en_el_estante(producto: Producto.Id, sobre_metal := true) -> Dictionary:
 	var fisico := _rayo(
 		almacen,
 		mira.origin,
-		mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z),
 		[caja.get_rid(), almacen.get("_jugador").get_rid()]
 	)
 	assert_bool(fisico.is_empty()).is_false()
@@ -555,7 +555,7 @@ func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
 	var premisa := _rayo(
 		almacen,
 		mira.origin,
-		mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z),
 		[caja.get_rid(), jugador.get_rid()]
 	)
 	assert_object(premisa.get("collider")).override_failure_message(tipo).is_same(soporte)

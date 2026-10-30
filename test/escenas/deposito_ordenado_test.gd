@@ -55,11 +55,13 @@ func _puntos_de_foco(local: Node3D, caja: Caja) -> Array[Sitio]:
 	var volumen: CollisionShape3D = caja.get_node("Cuerpo")
 	var limites := volumen.global_transform * volumen.shape.get_debug_mesh().get_aabb()
 	var objetivos: Array[Vector3] = [limites.get_center()]
-	for direccion: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
+	for direccion: Vector3 in [
+		Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK, Vector3.UP
+	]:
 		objetivos.append(limites.get_center() + direccion * limites.size / 2.0)
 	for paso in 24:
 		var rumbo := Vector3(cos(TAU * paso / 24.0), 0, sin(TAU * paso / 24.0))
-		for distancia: float in [0.7, 1.1, 1.5, 1.9, 2.2]:
+		for distancia: float in [0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3]:
 			var candidato := caja.global_position + rumbo * distancia
 			var rayo := PhysicsRayQueryParameters3D.create(
 				Vector3(candidato.x, 3.0, candidato.z),
@@ -86,7 +88,10 @@ func _puntos_de_foco(local: Node3D, caja: Caja) -> Array[Sitio]:
 				var impacto := espacio.intersect_ray(vista)
 				if (
 					impacto.get("collider") == caja
-					and ojos.distance_to(impacto.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+					and (
+						ReglasDelJugador.proximidad(ojos, impacto.position)
+						<= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+					)
 				):
 					sitios.append(Sitio.new(pies, impacto.position))
 	return sitios

@@ -30,12 +30,7 @@ static func elegir(
 	for candidato in candidatos:
 		if not candidato.interactuable or not candidato.visible or candidato.id == excluido:
 			continue
-		var alcance := (
-			ReglasDelJugador.ALCANCE_DE_PRODUCTOS
-			if candidato.es_producto
-			else ReglasDelJugador.ALCANCE_DE_LA_MIRA
-		)
-		if candidato.distancia > alcance:
+		if candidato.distancia > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
 			continue
 		var desvio_maximo := (
 			ReglasDelJugador.DESVIO_MAXIMO_DE_PRODUCTOS

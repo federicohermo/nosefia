@@ -9,7 +9,7 @@ radius = 0.4
 height = 1.8
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_campo"]
-radius = 2.2
+radius = 2.5
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_caja"]
 size = Vector3(0.61, 0.61, 0.61)

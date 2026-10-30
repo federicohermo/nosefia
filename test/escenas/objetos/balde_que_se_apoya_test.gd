@@ -16,7 +16,7 @@ const MIRANDO_ABAJO := -40.0
 
 ## El piso se mira más abajo: el ojo está a 1,7 m y a 40° la mira lo toca a 2,64, fuera de su
 ## alcance.
-const MIRANDO_AL_PISO := -45.0
+const MIRANDO_AL_PISO := -55.0
 
 ## Cuánto puede quedar inclinado lo que queda derecho, en grados.
 const DERECHO := 1.0
@@ -95,16 +95,17 @@ func _parar(jugador: CharacterBody3D, pie: Vector2, hacia: Vector3, alto: float)
 ## Para al jugador donde su mira, con ese rumbo y `alto` grados hacia abajo, toca `punto`.
 func _mirar_a(jugador: CharacterBody3D, punto: Vector3, hacia: Vector3, alto: float) -> void:
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
-	var lejos := (camara.global_position.y - punto.y) / tan(deg_to_rad(-alto))
+	var bajada := camara.global_position.y - punto.y
+	var lejos := minf(bajada / tan(deg_to_rad(-alto)), ReglasDelJugador.ALCANCE_DE_LA_MIRA - 0.2)
 	var pie := punto - hacia * lejos
-	await _parar(jugador, Vector2(pie.x, pie.z), hacia, alto)
+	await _parar(jugador, Vector2(pie.x, pie.z), hacia, -rad_to_deg(atan2(bajada, lejos)))
 
 
 ## Lo que la mira toca, contra lo que el balde choca. Su máscara se pasa: en la mano vale cero.
 func _golpe_de_la_mira(jugador: Node3D, cuerpo: RigidBody3D, mascara: int) -> Dictionary:
 	var ojo: Transform3D = jugador.call("mira")
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA, mascara
+		ojo.origin, ReglasDelJugador.fin_de_la_mira(ojo.origin, -ojo.basis.z), mascara
 	)
 	consulta.exclude = [(jugador as CollisionObject3D).get_rid(), cuerpo.get_rid()]
 	return jugador.get_world_3d().direct_space_state.intersect_ray(consulta)
@@ -366,7 +367,9 @@ func test_el_balde_se_apoya_derecho_donde_se_mira() -> void:  # AC-PLY-051
 			continue
 		var toca: Vector3 = golpe["position"]
 		var ojo: Transform3D = jugador.call("mira")
-		assert_float(ojo.origin.distance_to(toca)).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+		assert_float(ReglasDelJugador.proximidad(ojo.origin, toca)).is_less(
+			ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		)
 		(
 			assert_float(toca.distance_to(punto))
 			. override_failure_message(

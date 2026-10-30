@@ -225,8 +225,10 @@ func test_la_mira_no_deja_agua_fuera_de_alcance_ni_detras_de_un_obstaculo() -> v
 			recibidos.append(cuerpo)
 	)
 	jugador.set("_enfocado", null)
-	camara.global_position = punto + Vector3.UP * (ReglasDelJugador.ALCANCE_DE_LA_MIRA + 0.2)
-	camara.look_at(punto, Vector3.FORWARD)
+	camara.global_position = (
+		punto + Vector3.UP + Vector3.BACK * (ReglasDelJugador.ALCANCE_DE_LA_MIRA + 0.2)
+	)
+	camara.look_at(punto)
 	_usar(jugador)
 	assert_array(recibidos).is_empty()
 	var obstaculo := StaticBody3D.new()
