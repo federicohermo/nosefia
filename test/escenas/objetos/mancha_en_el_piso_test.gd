@@ -567,7 +567,7 @@ static func _jabon_de(tipo: ReglasDeLaLimpieza.TipoDeMancha) -> StringName:
 	return &""
 
 
-func test_el_paso_toca_solo_las_manchas_del_piso() -> void:  # AC-CLN-058
+func test_el_paso_no_hace_ondular_ninguna_mancha() -> void:  # AC-CLN-058
 	var almacen: Node3D = await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -576,23 +576,41 @@ func test_el_paso_toca_solo_las_manchas_del_piso() -> void:  # AC-CLN-058
 		for mancha: ManchaQueSeVe in _manchas(almacen):
 			var lugar := mancha.lugar_de_la_mancha()
 			var cara := _cara(mancha)
-			# Al lado de la del piso o de la pared, y justo debajo de la del techo.
+			# Sobre la del piso, al lado de la de pared y justo debajo de la del techo.
 			var al_lado := Vector3(cara.x, 0.0, cara.z) * 0.5
 			if absf(cara.y) > 0.5:
-				al_lado = Vector3.RIGHT * 0.5 if cara.y > 0.0 else Vector3.ZERO
+				al_lado = Vector3.ZERO
 			jugador.global_position = mancha.global_position + al_lado
 			jugador.global_position.y = ALTURA_DEL_JUGADOR
 			var malla := mancha.get_node("Malla")
 			malla.set("_onda", 0.0)
+			# La premisa: una mancha del piso sí ondula con el toque directo, y el caso lo mediría.
+			if PisoDelLocal.superficie_de(lugar) == PisoDelLocal.Superficie.PISO:
+				mancha.tocar_en(jugador.global_position)
+				assert_float(malla.get("_onda")).is_greater(0.0)
+				malla.set("_onda", 0.0)
 			jugador.emit_signal("paso_dado")
-			var del_piso := PisoDelLocal.superficie_de(lugar) == PisoDelLocal.Superficie.PISO
 			(
-				assert_bool(malla.get("_onda") > 0.0)
+				assert_float(malla.get("_onda"))
 				. override_failure_message(
 					"`%s` y el paso, en la jornada %d" % [mancha.name, jornada]
 				)
-				. is_equal(del_piso)
+				. is_equal(0.0)
 			)
+
+
+func test_la_pasada_de_la_mopa_sigue_haciendo_ondular_la_mancha_del_piso() -> void:
+	var almacen: Node3D = await _almacen()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	await _abrir(almacen, JORNADAS[0])
+	for mancha: ManchaQueSeVe in _manchas(almacen):
+		if PisoDelLocal.superficie_de(mancha.lugar_de_la_mancha()) != PisoDelLocal.Superficie.PISO:
+			continue
+		var malla := mancha.get_node("Malla")
+		malla.set("_onda", 0.0)
+		almacen.get("_limpieza").call("_al_pedir_uso", mancha)
+		assert_float(malla.get("_onda")).is_greater(0.0)
 
 
 func test_cada_mancha_se_ve_del_color_de_su_tipo() -> void:  # AC-CLN-015
