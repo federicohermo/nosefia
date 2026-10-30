@@ -2,23 +2,38 @@ from collections import Counter
 from collections.abc import Iterable
 import math
 import re
+from typing import NamedTuple
 
 from lib.reparto import PRODUCTOS, Tanda
 
 
-CARAS = {
-    "A.oeste": ("ARVECOR", "MAROLINI"),
-    "A.este": ("TERMINATOR", "ZUCARACHAS"),
-    "A.norte": ("FERNET_GOD",),
-    "A.sur": ("MALBARDO",),
-    "B.este": ("PEPITO", "PETISAS"),
-    "B.oeste": ("PROGRES", "DON_SATURADOS"),
-    "B.norte": ("POETICO",),
-    "B.sur": ("JORGILLO",),
-    "N.sur": ("ACTRONCITO", "DURONGA"),
-    "H1.sur": ("PURA_COLA",),
-    "H2.sur": ("MAYONCHIS",),
+class Frente(NamedTuple):
+    """Cómo se ve un producto en cada estante de su cara: cuántas unidades, cada cuántos metros, y
+    en qué punto del largo del estante cae el medio de la tanda."""
+
+    cuantas: int
+    paso: float
+    medio: float
+
+
+#: El reparto de las jornadas de prueba. Va declarado porque es una decisión de exhibición: se ve
+#: igual en todos los estantes de una cara y no depende de qué tanda ocupa ese lugar en el mapa
+#: completo.
+FRENTES = {
+    "A.oeste": {"ARVECOR": Frente(8, 0.165, -3.1505), "MAROLINI": Frente(5, 0.303, -1.723)},
+    "A.este": {"TERMINATOR": Frente(10, 0.165, 1.787), "ZUCARACHAS": Frente(4, 0.303, 3.218)},
+    "A.norte": {"FERNET_GOD": Frente(6, 0.1407, 0.1666)},
+    "A.sur": {"MALBARDO": Frente(6, 0.142, -0.1667)},
+    "B.este": {"PEPITO": Frente(5, 0.31, 1.757), "PETISAS": Frente(5, 0.265, 3.202)},
+    "B.oeste": {"PROGRES": Frente(11, 0.1424, -3.0878), "DON_SATURADOS": Frente(5, 0.265, -1.6411)},
+    "B.norte": {"POETICO": Frente(4, 0.2117, -2.7491)},
+    "B.sur": {"JORGILLO": Frente(3, 0.3011, 2.7491)},
+    "N.sur": {"ACTRONCITO": Frente(4, 0.2535, 3.1947), "DURONGA": Frente(4, 0.2535, 2.1148)},
+    "H1.sur": {"PURA_COLA": Frente(5, 0.1641, -1.4681)},
+    "H2.sur": {"MAYONCHIS": Frente(3, 0.2918, -0.3792)},
 }
+
+CARAS = {cara: tuple(frentes) for cara, frentes in FRENTES.items()}
 
 ESTANTES_DE_PRUEBA = {
     f"{cara}.{nivel}": tuple(Tanda(p, fija=nivel != 1) for p in productos)

@@ -188,7 +188,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 18
 
 [node name="Flim Pof" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.704, 0.072608, 0.52276, 0, 0.703107, -0.053984, 0, 3.094702, 0.845336, -4.218206)
+transform = Transform3D(0, 0, -0.704, -0.001285, 0.525539, 0, 0.706845, 0.000955, 0, 3.094702, 0.831949, -4.209123)
 visible = false
 mesh = ExtResource("malla19")
 gi_mode = 2
@@ -220,7 +220,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 22
 
 [node name="Cosa de Maní" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.896, 0.062101, 0.522811, 0, 0.606895, -0.053497, 0, 2.995044, 1.169136, -4.230837)
+transform = Transform3D(0, 0, -0.896, -0.001677, 0.525539, 0, 0.610062, 0.001445, 0, 2.995044, 1.157651, -4.232787)
 visible = false
 mesh = ExtResource("malla23")
 gi_mode = 2
