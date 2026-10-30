@@ -479,6 +479,9 @@ func _retroceso_libre(cuerpo: RigidBody3D, brazo: SpringArm3D = null) -> float:
 		largo = maxf(largo, limites.size.length())
 	if _libres(consultas, Vector3.ZERO):
 		return 0.0
+	# Un objeto chico puede quedar hundido más que su propio largo: entre los envases el brazo
+	# llega a la mitad de la mercadería, y la mano puede volver hasta el hombro.
+	largo = maxf(largo, brazo.spring_length)
 	var eje := brazo.global_basis.z.normalized()
 	for paso in range(1, PASOS_DEL_UTIL_EN_LA_MANO + 1):
 		var retroceso := largo * paso / PASOS_DEL_UTIL_EN_LA_MANO
