@@ -406,7 +406,7 @@ func _parar_frente_a(almacen: Node3D, cara: String, parado: float) -> float:
 
 
 func _parado_con(objeto: Node3D) -> float:
-	if objeto.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
+	if objeto.has_signal(ReglasDeLosObjetos.SENAL_EMPUJADA):
 		return PARADO_CON_LA_CAJA
 	return PARADO_DEL_SOLIDO
 

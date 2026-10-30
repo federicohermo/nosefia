@@ -38,6 +38,11 @@ var _pintura_de_gotas: StandardMaterial3D
 var _resguardado := false
 
 
+## El jugador lo empuja al caminar contra él.
+func empujar(desplazamiento: Vector3) -> void:
+	_correrse(desplazamiento)
+
+
 ## Recupera la pose de transporte antes de comprobar si el paso vuelve a estar libre.
 func restaurar_pose_en_mano() -> void:
 	if not _resguardado:
