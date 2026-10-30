@@ -394,7 +394,7 @@ oclusión por los sólidos, incluido el corte inferior detrás del antepecho des
 accesibles. La entrada y retirada DEBEN usar el recorrido existente desde la izquierda y
 hacia la derecha, respectivamente, conservando orientación, altura y profundidad.
 La apertura DEBE construir una sola lista compartida por reposición y atención. Reiniciar
-DEBE limpiar conversaciones, entregas, ventas e imágenes anteriores. La jornada 1 y las
+DEBE limpiar conversaciones, entregas, ventas e imágenes anteriores. La jornada 1 y la
 jornada 6 DEBEN conservar sus recorridos propios.
 
 ### BR-CTR-042 — Nueve entradas propias de la segunda jornada
@@ -851,7 +851,7 @@ procesa ambas compras una sola vez, y repetir el instante no vuelve a entregar s
 DADO la jornada 1 CUANDO se completa sólo Tin ENTONCES atención sigue sin cumplir.
 Al completar Tia, cuenta una vez; lo vendido es un Marolini, una Coracola, un Malbardo,
 una Zucarachas y un Pepito. Reabrir conserva ese resultado. Reiniciar crea estados nuevos
-sin entregas ni ventas. Las jornadas 6–8 conservan el recorrido anterior; la segunda usa BR-CTR-037.
+sin entregas ni ventas. La jornada 6 conserva el recorrido anterior; la segunda usa BR-CTR-037.
 
 ### AC-CTR-042 — Dos animaciones y pausa *(verifica BR-CTR-032)*
 
