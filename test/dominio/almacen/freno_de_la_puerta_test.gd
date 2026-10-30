@@ -15,8 +15,10 @@ func _hoja_en(angulo: float) -> Puerta:
 
 
 func test_sin_obstaculo_o_con_uno_liviano_la_hoja_no_se_frena() -> void:  # AC-PLY-140 AC-PLY-141
-	for obstaculo in [FrenoDeLaPuerta.Obstaculo.NADA, FrenoDeLaPuerta.Obstaculo.LIVIANO]:
-		for puede_correrse in [true, false]:
+	for obstaculo: FrenoDeLaPuerta.Obstaculo in [
+		FrenoDeLaPuerta.Obstaculo.NADA, FrenoDeLaPuerta.Obstaculo.LIVIANO
+	]:
+		for puede_correrse: bool in [true, false]:
 			var freno := FrenoDeLaPuerta.decidir(obstaculo, puede_correrse, 0.0, 0.5)
 			assert_float(freno.factor).is_equal(1.0)
 			assert_bool(is_nan(freno.tope)).is_true()
@@ -32,14 +34,14 @@ func test_lo_pesado_que_se_puede_correr_frena_sin_detener() -> void:  # AC-PLY-1
 
 func test_lo_pesado_inmovil_detiene_la_hoja_donde_toca_si_conserva_el_paso() -> void:  # AC-PLY-143
 	var paso := 0.9
-	for angulo in [paso, paso + UN_GRADO, Puerta.ANGULO_ABIERTA]:
+	for angulo: float in [paso, paso + UN_GRADO, Puerta.ANGULO_ABIERTA]:
 		var freno := FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, false, angulo, paso)
 		assert_float(freno.tope).is_equal(angulo)
 
 
 func test_lo_pesado_inmovil_no_detiene_la_hoja_bajo_el_angulo_de_paso() -> void:  # AC-PLY-143
 	var paso := 0.9
-	for angulo in [0.0, paso - UN_GRADO]:
+	for angulo: float in [0.0, paso - UN_GRADO]:
 		var freno := FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, false, angulo, paso)
 		assert_float(freno.factor).is_equal(1.0)
 		assert_bool(is_nan(freno.tope)).is_true()

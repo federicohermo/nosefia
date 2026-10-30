@@ -65,7 +65,7 @@ func _cruza(
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var largo: float = geometria["largo"]
-	var proyeccion := largo * cos(angulo) + geometria["espesor"] * sin(angulo)
+	var proyeccion: float = largo * cos(angulo) + geometria["espesor"] * sin(angulo)
 	var centro_del_hueco: float = (proyeccion + largo) / 2.0 + desplazamiento
 	var cruce: Vector3 = geometria["bisagra"] + geometria["brazo"] * centro_del_hueco
 	var por_donde: Vector3 = geometria["canto"] * sentido
@@ -156,7 +156,7 @@ func _medir(nombre: String) -> Dictionary:
 	var almacen: Node3D = await _almacen()
 	var adoptado := roundi(rad_to_deg(_cuerpo_de(almacen, nombre).get("_angulo_de_paso")))
 	var medida := {"adoptado": adoptado, "abierta": [], "desde": []}
-	for sentido in [1.0, -1.0]:
+	for sentido: float in [1.0, -1.0]:
 		medida["abierta"].append(
 			await _cruza_en_algun_punto(almacen, nombre, Puerta.ANGULO_ABIERTA, sentido)
 		)

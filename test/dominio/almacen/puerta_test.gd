@@ -132,7 +132,7 @@ func test_un_factor_menor_a_uno_hace_el_giro_mas_lento() -> void:  # AC-PLY-142
 
 
 func test_un_factor_fuera_de_cero_a_uno_gira_como_con_uno() -> void:  # AC-PLY-148
-	for factor in [0.0, -1.0, 1.5, NAN]:
+	for factor: float in [0.0, -1.0, 1.5, NAN]:
 		var puerta := Puerta.new()
 		puerta.alternar()
 		var libre := Puerta.new()
