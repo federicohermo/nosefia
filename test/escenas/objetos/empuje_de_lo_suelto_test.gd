@@ -31,6 +31,9 @@ const ALCANCE_DE_LA_SONDA := 12.0
 ## La pared más cercana que sirve: menos que esto no deja lugar para el jugador.
 const PARED_MAS_CERCA := 3.0
 
+## Cuánto se hunde un cuerpo vivo apoyado antes de contar como adentro, según el motor.
+const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
+
 ## Los útiles de limpieza del cuartito.
 const UTILES: Array[String] = ["JabonAzul", "JabonRosa", "JabonAmarillo", "Mopa", "Balde"]
 
@@ -113,26 +116,26 @@ func _distancia_a_la_pared(almacen: Node3D, desde: Vector3, hacia: Vector3) -> f
 	return -1.0
 
 
-## Cuántos sólidos fijos pisa el cuerpo, con la forma apenas más chica para que apoyarse no cuente.
-func _solidos_que_pisa(almacen: Node3D, cuerpo: ObjetoAgarrable) -> Array[String]:
+## Los sólidos fijos que el cuerpo pisa de verdad: lo que el motor tiene que sacarlo, sin contar lo
+## que se hunde apoyado. Un cuerpo vivo se hunde un poco en lo que lo sostiene y el motor lo
+## tolera hasta su margen de penetración.
+func _solidos_que_pisa(cuerpo: ObjetoAgarrable) -> Array[String]:
+	var tolerado: float = (
+		ReglasDeLosObjetos.ROCE + ProjectSettings.get_setting(PENETRACION_TOLERADA, 0.0)
+	)
+	var prueba := PhysicsTestMotionParameters3D.new()
+	prueba.from = cuerpo.global_transform
+	prueba.max_collisions = 32
+	prueba.recovery_as_collision = true
+	var resultado := PhysicsTestMotionResult3D.new()
+	PhysicsServer3D.body_test_motion(cuerpo.get_rid(), prueba, resultado)
 	var pisados: Array[String] = []
-	var espacio := almacen.get_world_3d().direct_space_state
-	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", true, false):
-		var menor: Shape3D = forma.shape.duplicate()
-		if menor is BoxShape3D:
-			(menor as BoxShape3D).size -= Vector3.ONE * ReglasDeLosObjetos.ROCE
-		elif menor is CapsuleShape3D:
-			(menor as CapsuleShape3D).radius -= ReglasDeLosObjetos.ROCE
-		elif menor is CylinderShape3D:
-			(menor as CylinderShape3D).radius -= ReglasDeLosObjetos.ROCE
-		var consulta := PhysicsShapeQueryParameters3D.new()
-		consulta.shape = menor
-		consulta.transform = forma.global_transform
-		consulta.collision_mask = cuerpo.collision_mask
-		consulta.exclude = [cuerpo.get_rid()]
-		for choque in espacio.intersect_shape(consulta, 8):
-			if choque["collider"] is StaticBody3D:
-				pisados.append(str(almacen.get_path_to(choque["collider"])))
+	for indice in resultado.get_collision_count():
+		var sacado := resultado.get_travel().dot(resultado.get_collision_normal(indice))
+		var hondo := resultado.get_collision_depth(indice) + sacado
+		var solido := resultado.get_collider(indice) as StaticBody3D
+		if solido != null and hondo > tolerado:
+			pisados.append("%s (%.3f m)" % [solido.name, hondo])
 	return pisados
 
 
@@ -147,12 +150,12 @@ func test_un_util_suelto_se_corre_al_caminar_contra_el() -> void:  # AC-PLY-150
 		var recorrido := await _empujar_caminando(jugador, util, Vector3.FORWARD, CUADROS_EMPUJANDO)
 		(
 			assert_float(recorrido["cuerpo"])
-			. override_failure_message("%s no se corrió: %v" % [nombre, recorrido])
+			. override_failure_message("%s no se corrió: %s" % [nombre, recorrido])
 			. is_greater(SE_CORRIO)
 		)
 		(
 			assert_float(recorrido["jugador"] - recorrido["cuerpo"])
-			. override_failure_message("%s le ganó al jugador: %v" % [nombre, recorrido])
+			. override_failure_message("%s le ganó al jugador: %s" % [nombre, recorrido])
 			. is_greater(0.0)
 		)
 		_retirar(util)
@@ -167,12 +170,12 @@ func test_una_bolsa_suelta_se_corre_al_caminar_contra_ella() -> void:  # AC-PLY-
 	var recorrido := await _empujar_caminando(jugador, bolsa, Vector3.FORWARD, CUADROS_EMPUJANDO)
 	(
 		assert_float(recorrido["cuerpo"])
-		. override_failure_message("la bolsa no se corrió: %v" % [recorrido])
+		. override_failure_message("la bolsa no se corrió: %s" % [recorrido])
 		. is_greater(SE_CORRIO)
 	)
 	(
 		assert_float(recorrido["jugador"] - recorrido["cuerpo"])
-		. override_failure_message("la bolsa le ganó al jugador: %v" % [recorrido])
+		. override_failure_message("la bolsa le ganó al jugador: %s" % [recorrido])
 		. is_greater(0.0)
 	)
 
@@ -199,7 +202,7 @@ func test_lo_empujado_contra_una_pared_no_la_atraviesa() -> void:  # AC-PLY-152
 		await _parar_detras_de(jugador, cuerpo.global_position, hacia)
 		await _empujar_caminando(jugador, cuerpo, hacia, CUADROS_EMPUJANDO)
 		await get_tree().physics_frame
-		assert_array(_solidos_que_pisa(almacen, cuerpo)).is_empty()
+		assert_array(_solidos_que_pisa(cuerpo)).is_empty()
 		_retirar(cuerpo)
 
 
