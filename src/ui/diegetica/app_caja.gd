@@ -15,17 +15,27 @@ const TEXTO_DEL_OPERADOR := "CAJA 01\nOPERADOR\nTURNO NOCHE"
 const TEXTO_DEL_ATAJO_DE_SALIDA := "CLIC DERECHO"
 const TEXTO_DE_SALIDA := "< VOLVER AL LOCAL"
 const TEXTO_DE_LA_TABLA := "/ UNIDADES VENDIDAS"
-const TEXTO_DEL_NOMBRE := "NOMBRE"
+const TEXTO_DE_LA_COLUMNA_IMAGEN := "IMAGEN"
+const TEXTO_DE_LA_COLUMNA_MARCA := "MARCA"
+const TEXTO_DE_LA_COLUMNA_PRODUCTO := "PRODUCTO"
 const TEXTO_DE_LA_COLUMNA_PRECIO := "PRECIO"
-const TEXTO_DE_LA_COLUMNA_UNIDADES := "UNIDADES"
+const TEXTO_DE_LA_COLUMNA_VENDIDO := "VENDIDO"
+const TEXTO_DE_LA_COLUMNA_TOTAL := "TOTAL"
 const TEXTO_DE_LA_CANTIDAD := "%d PRODUCTOS EN EL REGISTRO"
 const TEXTO_DEL_DESPLAZAMIENTO := "ARRASTRÁ PARA DESPLAZAR  /  + − AJUSTAR UNIDADES"
 const TEXTO_DE_LA_ETIQUETA_TOTAL := "TOTAL"
-const TEXTO_DEL_PRECIO := "$%d"
-const TEXTO_DE_LAS_UNIDADES := "%02d"
-const TEXTO_DEL_TOTAL := "$%d"
 const TEXTO_DE_SUMAR := "+"
 const TEXTO_DE_RESTAR := "−"
+
+## El ancho de cada columna fija, igual en el encabezado y en las filas. La marca y el rubro
+## se reparten lo que sobra según su peso.
+const ANCHO_DE_LA_IMAGEN := 112.0
+const ANCHO_DEL_PRECIO := 168.0
+const ANCHO_DE_LO_VENDIDO := 240.0
+const ANCHO_DEL_TOTAL := 200.0
+const PESO_DE_LA_MARCA := 2.0
+const PESO_DEL_RUBRO := 3.0
+const TAMANO_DE_LETRA_DE_LA_DESCRIPCION := 28
 const IMAGENES := {
 	Producto.Id.ACTRONCITO: preload("res://assets/ui/manada/actroncito.png"),
 	Producto.Id.DUREXTRA: preload("res://assets/ui/manada/durextra.png"),
@@ -68,9 +78,12 @@ const IMAGENES := {
 @export var _salida: Label
 @export var _atajo_de_salida: Label
 @export var _titulo_de_tabla: Label
-@export var _nombre: Label
-@export var _precio: Label
-@export var _unidades: Label
+@export var _columna_imagen: Label
+@export var _columna_marca: Label
+@export var _columna_producto: Label
+@export var _columna_precio: Label
+@export var _columna_vendido: Label
+@export var _columna_total: Label
 @export var _cantidad: Label
 @export var _desplazamiento: Label
 @export var _etiqueta_del_total: Label
@@ -82,10 +95,11 @@ var _registro: RegistroDeVentas
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
 
-## Las etiquetas de unidades por `producto.id`. Las filas se arman una vez por planilla y después
-## sólo se reescriben: rehacerlas en cada gesto vaciaría el contenedor un instante y el
-## desplazamiento volvería arriba.
+## Las etiquetas de unidades y de total de cada fila, por `producto.id`. Las filas se arman una
+## vez por planilla y después sólo se reescriben: rehacerlas en cada gesto vaciaría el contenedor
+## un instante y el desplazamiento volvería arriba.
 var _unidades_por_id: Dictionary = {}
+var _totales_por_id: Dictionary = {}
 
 
 func _ready() -> void:
@@ -96,9 +110,12 @@ func _ready() -> void:
 	_salida.text = TEXTO_DE_SALIDA
 	_atajo_de_salida.text = TEXTO_DEL_ATAJO_DE_SALIDA
 	_titulo_de_tabla.text = TEXTO_DE_LA_TABLA
-	_nombre.text = TEXTO_DEL_NOMBRE
-	_precio.text = TEXTO_DE_LA_COLUMNA_PRECIO
-	_unidades.text = TEXTO_DE_LA_COLUMNA_UNIDADES
+	_encabezar(_columna_imagen, TEXTO_DE_LA_COLUMNA_IMAGEN, ANCHO_DE_LA_IMAGEN)
+	_encabezar(_columna_marca, TEXTO_DE_LA_COLUMNA_MARCA, 0.0, PESO_DE_LA_MARCA)
+	_encabezar(_columna_producto, TEXTO_DE_LA_COLUMNA_PRODUCTO, 0.0, PESO_DEL_RUBRO)
+	_encabezar(_columna_precio, TEXTO_DE_LA_COLUMNA_PRECIO, ANCHO_DEL_PRECIO)
+	_encabezar(_columna_vendido, TEXTO_DE_LA_COLUMNA_VENDIDO, ANCHO_DE_LO_VENDIDO)
+	_encabezar(_columna_total, TEXTO_DE_LA_COLUMNA_TOTAL, ANCHO_DEL_TOTAL)
 	_desplazamiento.text = TEXTO_DEL_DESPLAZAMIENTO
 	_etiqueta_del_total.text = TEXTO_DE_LA_ETIQUETA_TOTAL
 	_scroll.gui_input.connect(_al_tocar_la_lista)
@@ -160,8 +177,30 @@ func mostrar(registro: RegistroDeVentas) -> void:
 		_armar_filas()
 	for producto in registro.productos():
 		var unidades: Label = _unidades_por_id[producto.id]
-		unidades.text = TEXTO_DE_LAS_UNIDADES % registro.unidades_de(producto)
-	_total.text = TEXTO_DEL_TOTAL % registro.total()
+		unidades.text = str(registro.unidades_de(producto))
+		var total_de_la_fila: Label = _totales_por_id[producto.id]
+		total_de_la_fila.text = texto_de_pesos(registro.total_de(producto))
+	_total.text = texto_de_pesos(registro.total())
+
+
+## El monto con el signo, un espacio y el punto como separador de miles. La planilla no produce
+## montos negativos.
+static func texto_de_pesos(monto: int) -> String:
+	var cifras := str(monto)
+	var miles := ""
+	while cifras.length() > 3:
+		miles = "." + cifras.substr(cifras.length() - 3) + miles
+		cifras = cifras.substr(0, cifras.length() - 3)
+	return "$ " + cifras + miles
+
+
+func _encabezar(columna: Label, texto: String, ancho: float, peso: float = 0.0) -> void:
+	columna.text = texto
+	columna.custom_minimum_size.x = ancho
+	columna.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	if peso > 0.0:
+		columna.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		columna.size_flags_stretch_ratio = peso
 
 
 func _armar_filas() -> void:
@@ -169,6 +208,7 @@ func _armar_filas() -> void:
 		_filas.remove_child(vieja)
 		vieja.queue_free()
 	_unidades_por_id.clear()
+	_totales_por_id.clear()
 	for producto in _registro.productos():
 		_filas.add_child(_fila_de(producto))
 	_cantidad.text = TEXTO_DE_LA_CANTIDAD % _unidades_por_id.size()
@@ -188,7 +228,7 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	fila.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	panel.add_child(fila)
 	var marco := CenterContainer.new()
-	marco.custom_minimum_size = Vector2(82, 0)
+	marco.custom_minimum_size = Vector2(ANCHO_DE_LA_IMAGEN, 0)
 	marco.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fila.add_child(marco)
 	var imagen := TextureRect.new()
@@ -198,8 +238,13 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	imagen.custom_minimum_size = Vector2(72, 72)
 	imagen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	marco.add_child(imagen)
-	fila.add_child(_etiqueta(Catalogo.de(producto.id).nombre.to_upper(), 0, true))
-	fila.add_child(_etiqueta(TEXTO_DEL_PRECIO % producto.precio, 184))
+	var marca := _etiqueta(producto.nombre, 0, PESO_DE_LA_MARCA)
+	marca.add_theme_font_size_override(&"font_size", TAMANO_DE_LETRA_DE_LA_DESCRIPCION)
+	fila.add_child(marca)
+	var rubro := _etiqueta(Catalogo.rubro_de(producto.id), 0, PESO_DEL_RUBRO)
+	rubro.add_theme_font_size_override(&"font_size", TAMANO_DE_LETRA_DE_LA_DESCRIPCION)
+	fila.add_child(rubro)
+	fila.add_child(_etiqueta(texto_de_pesos(producto.precio), ANCHO_DEL_PRECIO))
 	fila.add_child(_boton(TEXTO_DE_RESTAR, func() -> void: resta_pedida.emit(producto)))
 	var unidades := _etiqueta("", 64)
 	unidades.theme_type_variation = &"CantidadDelRegistro"
@@ -209,18 +254,22 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	_unidades_por_id[producto.id] = unidades
 	fila.add_child(unidades)
 	fila.add_child(_boton(TEXTO_DE_SUMAR, func() -> void: suma_pedida.emit(producto)))
+	var total_de_la_fila := _etiqueta("", ANCHO_DEL_TOTAL)
+	_totales_por_id[producto.id] = total_de_la_fila
+	fila.add_child(total_de_la_fila)
 	return panel
 
 
-func _etiqueta(texto: String, ancho: float, expandir: bool = false) -> Label:
+func _etiqueta(texto: String, ancho: float, peso: float = 0.0) -> Label:
 	var etiqueta := Label.new()
 	etiqueta.text = texto
 	etiqueta.custom_minimum_size = Vector2(ancho, 0)
 	etiqueta.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	etiqueta.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	etiqueta.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if expandir:
+	if peso > 0.0:
 		etiqueta.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		etiqueta.size_flags_stretch_ratio = peso
 	return etiqueta
 
 
