@@ -418,6 +418,15 @@ alcanza sólo al desorden: una unidad de Poético afuera DEBE conservar el motiv
 y la caja de Poético fuera del depósito DEBE contar como cualquier otra caja. La regla DEBE resolverse con la jornada y la identidad del producto como
 datos del cierre, sin que la escena filtre cuerpos.
 
+### BR-CLN-040 — El cuerpo del contenedor no sirve de apoyo
+
+CUANDO se suelta con la mira una caja del depósito, un bidón de jabón o cualquier otra cosa que se
+apoya donde la mira toca (BR-PLY-018), y esa mira apunta al cuerpo del contenedor —su interior,
+su fondo o su borde—, el sistema NO DEBE apoyarla ahí. DEBE soltarla como si la superficie no la
+admitiera: al frente, o a los pies si adelante no hay lugar. El cuerpo del contenedor es la
+excepción a que el mundo fijo admite apoyo. El permiso para tirar con el primario (BR-CLN-026) no
+cambia, y la tapa se rige por BR-CLN-025.
+
 ## Criterios de aceptación
 
 ### AC-CLN-007 — Tres bolsas son más que las manos *(verifica BR-CLN-007)*
@@ -968,6 +977,16 @@ suelta como único cuerpo desordenado, CUANDO cierra ENTONCES hay desorden. DADO
 unidad de Poético sostenida o devuelta a su casillero ENTONCES no hay desorden, igual que con
 cualquier unidad. DADO esa jornada y una caja de Poético apoyada en el baño, como única caja,
 ENTONCES hay desorden.
+
+### AC-CLN-079 — El cuerpo del contenedor no sirve de apoyo *(verifica BR-CLN-040, BR-CLN-026)*
+
+DADO una caja del depósito sostenida y, por separado, un bidón de jabón, con la tapa
+completamente abierta, CUANDO se suelta con la mira sobre el fondo del contenedor a menos del
+alcance y, por separado, sobre su borde ENTONCES no queda apoyada en el contenedor: termina en el
+piso, fuera de su volumen, sin encimarse con nada, como soltada sin mira. DADO la mira sobre el
+piso libre junto al contenedor CUANDO se suelta lo mismo ENTONCES queda sobre el punto que la mira
+toca (BR-PLY-018). DADO una bolsa sostenida y la tapa completamente abierta CUANDO se hace el
+primario sobre el cuerpo ENTONCES se tira igual que antes (AC-CLN-036).
 
 ## No objetivos
 
