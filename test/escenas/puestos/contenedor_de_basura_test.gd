@@ -290,8 +290,15 @@ func test_lo_soltado_mirando_el_contenedor_no_se_apoya_en_su_cuerpo() -> void:  
 	camara.look_at(al_pie)
 	var toca: Vector3 = _golpe_de_la_mira(jugador, caja)["position"]
 	_soltar(almacen, caja)
-	assert_vector(Vector2(caja.global_position.x, caja.global_position.z)).is_equal_approx(
-		Vector2(toca.x, toca.z), Vector2.ONE * 0.01
+	# Lo aparta de lo que estorba en la vecindad: queda dentro de media caja del punto, no en el
+	# contenedor.
+	var forma: CollisionShape3D = caja.find_children("*", "CollisionShape3D", false, false)[0]
+	var media := LimitesDeForma.de(forma.shape).size * forma.scale * 0.5
+	(
+		assert_float(
+			Vector2(caja.global_position.x - toca.x, caja.global_position.z - toca.z).length()
+		)
+		. is_less(minf(media.x, media.z))
 	)
 	jugador.call("ubicar", Transform3D(Basis.IDENTITY, piso["position"] + Vector3.UP * 0.005))
 	var fondo := _rayo(almacen, _boca(contenedor) + Vector3.UP * 0.3, _centro_interior(contenedor))
@@ -357,21 +364,21 @@ func _afirmar_fuera_del_contenedor(
 	assert_bool(_encimado_con_algo(almacen, cuerpo, jugador)).is_false()
 
 
-## La misma pregunta que se hace el juego para saber si ahí entra: la forma encogida, porque
-## apoyarse sobre algo es tocarlo.
+## Si el cuerpo, con sus formas reales, comparte lugar con algo que no es él ni el jugador. Se lo
+## sube un roce para que el piso que lo sostiene no cuente como choque.
 func _encimado_con_algo(almacen: Node3D, cuerpo: RigidBody3D, jugador: Node3D) -> bool:
-	var forma: CollisionShape3D = cuerpo.find_children("*", "CollisionShape3D", false, false)[0]
-	var encogida := BoxShape3D.new()
-	encogida.margin = 0.0
-	encogida.size = (
-		LimitesDeForma.de(forma.shape).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
-	)
-	var consulta := PhysicsShapeQueryParameters3D.new()
-	consulta.shape = encogida
-	consulta.transform = Transform3D(cuerpo.global_basis.orthonormalized(), cuerpo.global_position)
-	consulta.collision_mask = cuerpo.collision_mask
-	consulta.exclude = [cuerpo.get_rid(), jugador.get_rid()]
-	return not almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled or forma.shape == null:
+			continue
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.transform.origin += Vector3.UP * ReglasDeLosObjetos.ROCE * 2.0
+		consulta.collision_mask = cuerpo.collision_mask
+		consulta.exclude = [cuerpo.get_rid(), jugador.get_rid()]
+		if not almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty():
+			return true
+	return false
 
 
 func _terminar_el_giro(tapa: TapaDelLocal) -> void:
