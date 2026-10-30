@@ -104,6 +104,23 @@ func completada() -> bool:
 	return despachados() == _compradores.size()
 
 
+## Si la obligatoria figura cumplida **ahora**.
+##
+## Durante la noche cuenta sólo a los que ya llegaron: con todos vendidos figura cumplida, y al
+## llegar el siguiente vuelve a pendiente. El que se fue sin comprar la deja pendiente el resto de
+## la noche. Con `al_cerrar` vale el veredicto de `completada()`, que exige a todos: el que nunca
+## llegó cuenta como no atendido. Sin horarios no hay llegadas parciales y es siempre ese veredicto.
+func cumplida(al_cerrar: bool = false) -> bool:
+	if al_cerrar or not fisica():
+		return completada()
+	if _atenciones.is_empty():
+		return false
+	for atendida in _atenciones:
+		if not atendida.vendida():
+			return false
+	return true
+
+
 ## Cuántos clientes llegaron, no se les vendió y se fueron. El que todavía espera o el que nunca
 ## llegó no cuenta.
 func mal_atendidos() -> int:
@@ -139,8 +156,11 @@ func vendidas_de(producto: Producto) -> int:
 
 ## Vender cierra la compra aunque la despedida continúe; vencer también la cierra.
 func compras_cerradas() -> bool:
-	if _atenciones.size() != _compradores.size():
-		return false
+	return _atenciones.size() == _compradores.size() and compras_cerradas_de_los_llegados()
+
+
+## Lo mismo, pero sólo de los que ya llegaron: el que todavía no vino no la deja abierta.
+func compras_cerradas_de_los_llegados() -> bool:
 	for atendida in _atenciones:
 		if not atendida.vendida() and not atendida.despachada():
 			return false

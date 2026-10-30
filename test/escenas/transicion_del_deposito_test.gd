@@ -18,6 +18,7 @@ func after_test() -> void:
 func _abrir(jornada: int) -> Node3D:
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": jornada}))
+	almacen.set("compradores_de_la_apertura", func(_n: int) -> Array[Comprador]: return [])
 	add_child(almacen)
 	await get_tree().process_frame
 	return almacen

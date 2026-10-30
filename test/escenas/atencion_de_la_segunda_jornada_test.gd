@@ -499,9 +499,10 @@ func test_la_venta_de_las_032959_cuenta_aunque_siga_la_despedida() -> void:
 	await _inicial(almacen, 3)
 	await _comprar(almacen)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
 	await _despedida(almacen, 2)
 	_ir_a(almacen, 1)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
 	await _inicial(almacen, 1)
 	var atendida := _atenciones(almacen).atencion()
 	for producto in atendida.comprador().pedido().productos():

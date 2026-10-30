@@ -24,9 +24,21 @@ static func corresponde(
 	if jornada not in JORNADAS:
 		return false
 	for tarea in obligatorias:
+		if _depende_de_las_compras(tarea, atender) and not atender.compras_cerradas():
+			return false
 		if not tarea.completada() and not _sin_nadie_por_atender(tarea, atender, registro):
 			return false
 	return true
+
+
+## Durante la noche esas dos marcas figuran cumplidas con el segundo comprador sin llegar, y la
+## puerta no puede fiarse de ellas: dejaría salir antes de que llegue el segundo.
+static func _depende_de_las_compras(tarea: Tarea, atender: TareaDeAtender) -> bool:
+	return (
+		atender != null
+		and atender.fisica()
+		and tarea.tipo() in [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR]
+	)
 
 
 static func _sin_nadie_por_atender(
