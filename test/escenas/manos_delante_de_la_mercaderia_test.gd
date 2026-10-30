@@ -10,6 +10,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
+const CUADERNO := preload("res://src/dominio/almacen/cuaderno_del_deposito.tres")
 
 ## A cuánto del contorno de la góndola se para el jugador, en metros: lo que la mano alcanza a
 ## meterse entre los envases.
@@ -64,11 +65,11 @@ func test_frente_a_un_casillero_vacio_la_mano_entra_al_hueco() -> void:
 	var puesto: Node = almacen.get("_reposicion_manual")
 	var llena: Dictionary[Producto.Id, int] = {}
 	AperturaConLugar.abrir_con_faltantes(almacen, llena)
-	var jabon := _llevar_el_jabon(almacen)
-	var con_stock := await _distancias_de_la_mano(almacen, jabon)
+	var chico := _llevar_algo_chico(almacen)
+	var con_stock := await _distancias_de_la_mano(almacen, chico)
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
 	AperturaConLugar.abrir_con_faltantes(almacen, casilleros)
-	var sin_stock := await _distancias_de_la_mano(almacen, jabon)
+	var sin_stock := await _distancias_de_la_mano(almacen, chico)
 	var entra_mas := 0
 	for indice in con_stock.size():
 		assert_float(sin_stock[indice]).is_greater_equal(con_stock[indice] - 0.01)
@@ -84,7 +85,7 @@ func test_con_las_manos_vacias_la_mercaderia_no_hace_de_pared() -> void:
 	assert_int(ocupados.size()).is_greater(0)
 	var centro := _centro_de_un_envase(almacen, Producto.Id.MALBARDO, ocupados[0])
 	assert_array(_envases_en(almacen, centro)).is_empty()
-	_llevar_el_jabon(almacen)
+	_llevar_algo_chico(almacen)
 	await get_tree().physics_frame
 	assert_array(_envases_en(almacen, centro)).is_not_empty()
 
@@ -122,12 +123,11 @@ func _abrir() -> Node3D:
 
 
 ## Un objeto de 12 cm en la mano de carga, como un ticket. **No es un jabón**: es un bidón de 70 cm
-## que no siempre entra entre la cámara y la góndola, y ninguna mano podría dejarlo delante.
+## que no siempre entra entre la cámara y la góndola, y que cuelga de su propio punto en la mano.
 func _llevar_algo_chico(almacen: Node3D) -> ObjetoAgarrable:
-	var jabon: ObjetoAgarrable = almacen.get_node("Objetos/JabonRosa")
 	var chico := ObjetoAgarrable.new()
-	chico.datos = jabon.datos
-	chico.collision_mask = jabon.collision_mask
+	chico.datos = CUADERNO
+	chico.collision_mask = 9
 	var forma := CollisionShape3D.new()
 	forma.name = "Forma"
 	var caja := BoxShape3D.new()
@@ -137,14 +137,8 @@ func _llevar_algo_chico(almacen: Node3D) -> ObjetoAgarrable:
 	almacen.add_child(chico)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(chico.datos, chico)).is_true()
+	assert_object(chico.get_parent()).is_same(agarre.punto_de_carga)
 	return chico
-
-
-func _llevar_el_jabon(almacen: Node3D) -> RigidBody3D:
-	var jabon: RigidBody3D = almacen.get_node("Objetos/JabonRosa")
-	var agarre: Agarre = almacen.get("_agarre")
-	assert_bool(agarre.pedir_agarrar(jabon.get("datos"), jabon)).is_true()
-	return jabon
 
 
 ## Cada lado de la góndola a `DISTANCIA_A_LA_GONDOLA`, mirando a su centro a cada altura. Una
@@ -188,7 +182,6 @@ func _recorrer(almacen: Node3D, formas: Array[CollisionShape3D]) -> Dictionary:
 		for forma in formas:
 			if _toca_envases(almacen, forma):
 				tocadas.append("desde %v mirando %v" % [postura[0], postura[1]])
-				tocadas.append(_diagnostico(almacen, jugador, formas[0]))
 				break
 	return {"con_mercaderia": con_mercaderia, "tocadas": tocadas}
 
@@ -202,36 +195,6 @@ func _distancias_de_la_mano(almacen: Node3D, cuerpo: Node3D) -> Array[float]:
 		await _ir_a(almacen, postura)
 		distancias.append(cuerpo.global_position.distance_to(camara.global_position))
 	return distancias
-
-
-func _diagnostico(almacen: Node3D, jugador: CharacterBody3D, forma: CollisionShape3D) -> String:
-	var camara: Camera3D = jugador.get_node("Giro/Camara")
-	var brazo: SpringArm3D = jugador.get_node("Giro/Camara/BrazoDeCarga")
-	var punto: Node3D = jugador.get_node("Giro/Camara/PuntoDeCarga")
-	var antes := (
-		"padre %s punto %v esperado %v largo %.3f brazo %.3f retroceso %.3f"
-		% [
-			forma.get_parent().get_parent().name,
-			punto.position,
-			brazo.transform * Vector3(0, 0, jugador.get("_largo_de_carga")),
-			jugador.get("_largo_de_carga"),
-			brazo.get_hit_length(),
-			jugador.call("_retroceso_libre", forma.get_parent()),
-		]
-	)
-	jugador.call("_acomodar_las_manos", 1.0 / 60.0)
-	var despues := (
-		"luego punto %v largo %.3f retroceso %.3f toca %s excluidos %d mismo_agarre %s"
-		% [
-			punto.position,
-			jugador.get("_largo_de_carga"),
-			jugador.call("_retroceso_libre", forma.get_parent()),
-			_toca_envases(almacen, forma),
-			jugador.get("_excluidos").size(),
-			jugador.get("agarre") == almacen.get("_agarre"),
-		]
-	)
-	return antes + " | " + despues
 
 
 func _hay_mercaderia_delante(almacen: Node3D, jugador: CharacterBody3D) -> bool:
