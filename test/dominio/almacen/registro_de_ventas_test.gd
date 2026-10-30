@@ -42,14 +42,17 @@ func test_el_cero_sin_ventas_se_evalua_al_cerrar_y_no_al_arrancar() -> void:  # 
 	assert_bool(registro.completada(true)).is_false()
 
 
-func test_la_planilla_tiene_una_fila_por_producto_en_orden_y_en_cero() -> void:  # AC-STK-020
+func test_la_planilla_tiene_una_fila_por_producto_y_en_cero() -> void:  # AC-STK-020
 	var registro := _registro()
 	var catalogo := Catalogo.todos()
 	var productos := registro.productos()
 	assert_int(productos.size()).is_equal(catalogo.size())
-	for indice in catalogo.size():
-		assert_int(productos[indice].id).is_equal(catalogo[indice].id)
-		assert_int(registro.unidades_de(catalogo[indice])).is_equal(0)
+	for producto in catalogo:
+		assert_int(registro.unidades_de(producto)).is_equal(0)
+		(
+			assert_bool(productos.any(func(fila: Producto) -> bool: return fila.id == producto.id))
+			. is_true()
+		)
 
 
 func test_el_registro_de_la_prueba_anota_todo_lo_que_piden_los_compradores() -> void:  # AC-STK-110

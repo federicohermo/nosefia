@@ -86,7 +86,7 @@ func test_el_registro_de_cada_noche_lista_el_catalogo_de_esa_noche() -> void:  #
 		var esperadas: Array[Producto.Id] = []
 		for producto in Catalogo.de_la_jornada(jornada):
 			esperadas.append(producto.id)
-		assert_array(filas).contains_exactly(esperadas)
+		assert_array(filas).contains_exactly_in_any_order(esperadas)
 
 
 func test_cerrar_tras_cambiar_de_etapa_libera_los_casilleros() -> void:  # AC-STK-098

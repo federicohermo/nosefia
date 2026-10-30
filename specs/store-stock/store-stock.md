@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386); planilla en orden alfabético (#567)
 ---
 
 # Capacidad: la mercadería del almacén
@@ -136,7 +136,7 @@ no conoce tiene cero vendibles.
 ### BR-STK-019 — La planilla tiene una fila por producto, y arranca en cero
 
 El sistema DEBE dar a la planilla una fila por producto del catálogo presente esa noche
-(BR-STK-046), en el orden del catálogo.
+(BR-STK-046), en orden alfabético por nombre (BR-STK-053).
 CUANDO se abre una jornada, cada fila DEBE arrancar en 0 unidades: lo anotado en una noche no
 pasa a la siguiente.
 
@@ -676,6 +676,15 @@ sin desplazarse más de 1 cm en los primeros 120 cuadros de física sin interven
 SI la partida no guarda la pose de una caja, o la guardada no es una pose, ENTONCES esa caja
 DEBE abrir en su lugar de fábrica. Toda caja presente DEBE abrir llena (BR-STK-004).
 
+### BR-STK-053 — Las filas de la planilla van en orden alfabético por nombre
+
+El sistema DEBE ordenar las filas de la planilla por el nombre que lee el jugador, sin
+distinguir mayúsculas ni tildes, con el criterio del español de Argentina. El orden DEBE
+depender sólo del nombre: no del orden en que el catálogo declara los productos ni del
+subconjunto presente esa noche (BR-STK-046). Dos nombres que sólo difieren en mayúsculas o
+tildes DEBEN conservar el orden del catálogo entre sí. Ordenar la planilla NO DEBE cambiar
+qué productos tiene, sus precios ni lo anotado en cada fila.
+
 ## Criterios de aceptación
 
 ### AC-STK-001 — La identidad manda *(verifica BR-STK-001)*
@@ -768,7 +777,7 @@ Y un producto que el inventario no conoce contesta 0.
 ### AC-STK-020 — Una fila por producto, en cero *(verifica BR-STK-019)*
 
 DADO una jornada que se abre CUANDO se mira la planilla ENTONCES tiene una fila por producto del
-catálogo presente esa noche, en su orden, y cada una en 0.
+catálogo presente esa noche, en orden alfabético, y cada una en 0.
 
 ### AC-STK-021 — Un gesto, una fila *(verifica BR-STK-020)*
 
@@ -1068,6 +1077,16 @@ DADO el cierre con el último casillero vacío y una unidad sana de Cindolor en 
 reponer cuenta como cumplida; DADO el mismo cierre con una unidad vencida en la mano ENTONCES
 no.
 
+### AC-STK-123 — La planilla va en orden alfabético *(verifica BR-STK-053, BR-STK-019)*
+
+DADO dos productos que el catálogo declara en el orden contrario al alfabético CUANDO se arma
+la planilla ENTONCES sus filas van en orden alfabético por nombre. DADO un nombre en mayúsculas
+o con tilde junto a otro sin ellas ENTONCES se ordenan por las letras, sin que la mayúscula ni
+la tilde los separen. DADO una jornada de prueba ENTONCES las filas son las de sus productos,
+en orden alfabético; DADO la primera jornada completa ENTONCES son las de todo el catálogo, en
+orden alfabético. DADO unidades anotadas en una fila CUANDO se ordena ENTONCES conserva sus
+unidades, y el total no cambia.
+
 ### AC-STK-050 — Lo que está a la altura de la mano se agarra *(verifica BR-STK-024, BR-STK-033)*
 
 DADO cada producto exhibido, Arvejas y Coracola incluidas, con una unidad colocada en su
@@ -1322,7 +1341,7 @@ sin heredar los huecos de ventas de la primera.
 ### AC-STK-095 — La prueba tiene exactamente su catálogo *(verifica BR-STK-046, BR-STK-004, BR-STK-026)*
 
 DADO cada jornada 1 y 2 CUANDO abre con cualquier semilla de 0 a 199 ENTONCES sólo
-registra los dieciséis productos de BR-STK-046, en orden de catálogo, con Duronga presente y
+registra los dieciséis productos de BR-STK-046, con Duronga presente y
 Durextra ausente. Cada caja presente abre llena; cada producto ausente tiene cero unidades y
 cero cupo. Los faltantes sólo
 incluyen presentes. DADO jornadas 3 y 7 ENTONCES están las treinta y dos identidades.
