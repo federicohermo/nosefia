@@ -228,10 +228,106 @@ func test_agarrar_una_unidad_sin_nada_encima_no_despierta_a_nadie() -> void:  # 
 	var pila := await _apilar(almacen, [Producto.Id.MAROLINI], PISO_LIBRE)
 	var lejos := await _apilar(almacen, [Producto.Id.MALBARDO], PISO_LIBRE + Vector3.RIGHT * 1.0)
 	assert_bool(lejos[0].sleeping).is_true()
+	var quieta := lejos[0].global_position
 	assert_bool(agarre.pedir_agarrar(pila[0].datos, pila[0])).is_true()
 	for cuadro in Engine.physics_ticks_per_second:
 		await get_tree().physics_frame
 	assert_bool(lejos[0].sleeping).is_true()
+	assert_vector(lejos[0].global_position).is_equal(quieta)
+
+
+func test_agarrar_una_unidad_baja_no_despierta_la_pila_mas_alta_de_al_lado() -> void:  # AC-PLY-110
+	var almacen := await _almacen()
+	var agarre: Agarre = almacen.get("_agarre")
+	var piso := _piso_en(almacen, PISO_LIBRE) + HOLGURA
+	var ids: Array[Producto.Id] = [
+		Producto.Id.MAROLINI, Producto.Id.MALBARDO, Producto.Id.ZUCARACHAS
+	]
+	var unidades: Array[ObjetoAgarrable] = []
+	for id in ids:
+		var unidad := _unidad(almacen, id)
+		_poner(unidad, PISO_LIBRE, piso)
+		unidades.append(unidad)
+	unidades.sort_custom(
+		func(a: ObjetoAgarrable, b: ObjetoAgarrable) -> bool:
+			return _limites(a).size.y < _limites(b).size.y
+	)
+	var baja := unidades[0]
+	var cima := unidades[1]
+	var alta := unidades[2]
+	# La alta queda pegada a la baja, con una pila de dos: el roce del contacto las toca.
+	_poner(baja, PISO_LIBRE, piso)
+	var centro_de_al_lado := Vector3(
+		_limites(baja).end.x + _limites(alta).size.x / 2.0 + ReglasDeLosObjetos.ROCE,
+		PISO_LIBRE.y,
+		PISO_LIBRE.z
+	)
+	_poner(alta, centro_de_al_lado, piso)
+	_poner(cima, centro_de_al_lado, _limites(alta).end.y + HOLGURA)
+	await _esperar_a_que_duerma([baja, alta, cima])
+	# La premisa: la alta sostiene a la cima, y su origen queda más arriba que el de la baja.
+	assert_bool(cima.sleeping).is_true()
+	assert_float(_limites(cima).position.y).is_greater_equal(_limites(alta).end.y - TOLERANCIA)
+	assert_float(alta.global_position.y).is_greater(
+		baja.global_position.y + ReglasDeLosObjetos.ROCE
+	)
+	var cima_quieta := cima.global_position
+	assert_bool(agarre.pedir_agarrar(baja.datos, baja)).is_true()
+	assert_bool(alta.sleeping).is_true()
+	assert_bool(cima.sleeping).is_true()
+	for cuadro in Engine.physics_ticks_per_second:
+		await get_tree().physics_frame
+	assert_vector(cima.global_position).is_equal(cima_quieta)
+
+
+func test_agarrar_una_de_dos_apoyos_deja_lo_de_arriba_sobre_la_otra() -> void:  # AC-PLY-110
+	var almacen := await _almacen()
+	var agarre: Agarre = almacen.get("_agarre")
+	var piso := _piso_en(almacen, PISO_LIBRE) + HOLGURA
+	var quitada := _unidad(almacen, Producto.Id.MAROLINI)
+	var queda := _unidad(almacen, Producto.Id.MAROLINI)
+	var puente := _unidad(almacen, Producto.Id.MALBARDO)
+	_poner(quitada, PISO_LIBRE, piso)
+	var al_lado := PISO_LIBRE + Vector3.RIGHT * (_limites(quitada).size.x + ReglasDeLosObjetos.ROCE)
+	_poner(queda, al_lado, piso)
+	_poner(puente, PISO_LIBRE, piso)
+	# A caballo, con el centro del puente sobre la que queda: al faltar la otra no vuelca.
+	var sobre_la_que_queda := Vector3(
+		_limites(queda).position.x + _limites(puente).size.x / 4.0, PISO_LIBRE.y, PISO_LIBRE.z
+	)
+	_poner(puente, sobre_la_que_queda, _limites(queda).end.y + HOLGURA)
+	await _esperar_a_que_duerma([quitada, queda, puente])
+	# La premisa: el puente descansa sobre las dos.
+	assert_bool(puente.sleeping).is_true()
+	assert_float(_limites(puente).position.y).is_greater_equal(_limites(quitada).end.y - TOLERANCIA)
+	assert_float(_limites(puente).position.x).is_less(_limites(quitada).end.x)
+	assert_bool(agarre.pedir_agarrar(quitada.datos, quitada)).is_true()
+	for cuadro in SEGUNDOS_DE_LA_CAIDA * Engine.physics_ticks_per_second:
+		await get_tree().physics_frame
+	assert_bool(_tiene_apoyo(puente)).is_true()
+	assert_float(_limites(puente).position.y).is_greater_equal(_limites(queda).end.y - TOLERANCIA)
+
+
+func test_con_lo_de_arriba_despierto_cae_igual_y_avisa_una_vez() -> void:  # AC-PLY-110
+	var almacen := await _almacen()
+	var agarre: Agarre = almacen.get("_agarre")
+	var pila := await _apilar(almacen, [Producto.Id.MAROLINI, Producto.Id.MALBARDO], PISO_LIBRE)
+	var abajo := pila[0]
+	var arriba := pila[1]
+	var antes := _limites(arriba).position.y
+	var altura_de_abajo := _limites(abajo).size.y
+	arriba.sleeping = false
+	# La premisa: la de arriba está despierta sobre la de abajo.
+	assert_bool(arriba.sleeping).is_false()
+	var avisos: Array[Node3D] = []
+	agarre.objeto_agarrado.connect(func(nodo: Node3D) -> void: avisos.append(nodo))
+	assert_bool(agarre.pedir_agarrar(abajo.datos, abajo)).is_true()
+	for cuadro in SEGUNDOS_DE_LA_CAIDA * Engine.physics_ticks_per_second:
+		await get_tree().physics_frame
+	assert_bool(_tiene_apoyo(arriba)).is_true()
+	assert_float(antes - _limites(arriba).position.y).is_greater_equal(altura_de_abajo - TOLERANCIA)
+	assert_array(avisos).has_size(1)
+	assert_object(avisos[0]).is_same(abajo)
 
 
 func test_la_caida_sigue_para_arriba_en_una_pila_de_tres() -> void:  # AC-PLY-111
