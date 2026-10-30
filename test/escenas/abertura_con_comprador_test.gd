@@ -208,7 +208,8 @@ func _barrer(
 	return afuera
 
 
-func test_con_el_comprador_esperando_ninguna_soltada_termina_afuera(timeout: int = 600000) -> void:  # AC-CTR-151
+# AC-CTR-151
+func test_con_el_comprador_esperando_ninguna_soltada_termina_afuera() -> void:
 	var almacen := await _abrir()
 	var atendida := _llegar(almacen)
 	var cuerpo := _producto_ajeno(almacen, atendida)
@@ -218,7 +219,8 @@ func test_con_el_comprador_esperando_ninguna_soltada_termina_afuera(timeout: int
 	assert_array(afuera).is_empty()
 
 
-func test_mientras_entra_el_comprador_ninguna_soltada_termina_afuera(timeout: int = 300000) -> void:  # AC-CTR-151
+# AC-CTR-151
+func test_mientras_entra_el_comprador_ninguna_soltada_termina_afuera() -> void:
 	var almacen := await _abrir()
 	var atendida := _llegar(almacen)
 	var cuerpo := _producto_ajeno(almacen, atendida)
@@ -228,7 +230,8 @@ func test_mientras_entra_el_comprador_ninguna_soltada_termina_afuera(timeout: in
 	assert_array(afuera).is_empty()
 
 
-func test_con_la_compra_por_entregar_ninguna_soltada_termina_afuera(timeout: int = 300000) -> void:  # AC-CTR-151
+# AC-CTR-151
+func test_con_la_compra_por_entregar_ninguna_soltada_termina_afuera() -> void:
 	var almacen := await _abrir()
 	var atendida := _llegar(almacen)
 	var cuerpo := _producto_ajeno(almacen, atendida)
@@ -236,7 +239,8 @@ func test_con_la_compra_por_entregar_ninguna_soltada_termina_afuera(timeout: int
 	assert_array(afuera).is_empty()
 
 
-func test_con_la_compra_a_medias_ninguna_soltada_termina_afuera(timeout: int = 300000) -> void:  # AC-CTR-151
+# AC-CTR-151
+func test_con_la_compra_a_medias_ninguna_soltada_termina_afuera() -> void:
 	var almacen := await _abrir()
 	var atendida := _llegar(almacen)
 	_por_entregar(almacen, atendida)
@@ -251,7 +255,8 @@ func test_con_la_compra_a_medias_ninguna_soltada_termina_afuera(timeout: int = 3
 
 
 ## La misma soltada sale sin comprador: sin este caso, el barrido de arriba no vería nada.
-func test_sin_comprador_la_misma_soltada_termina_afuera(timeout: int = 300000) -> void:  # AC-CTR-151
+# AC-CTR-151
+func test_sin_comprador_la_misma_soltada_termina_afuera() -> void:
 	var almacen := await _abrir()
 	var cuerpo := _producto_ajeno(almacen, null)
 	var afuera := await _barrer(almacen, cuerpo, UNA_PARADA, func() -> void: pass)
