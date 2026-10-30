@@ -340,7 +340,7 @@ func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-07
 
 
 ## Esc en la segunda pantalla de la segunda jornada conserva la lectura.
-func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-EMP-049, AC-SAV-033
+func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-EMP-049
 	_guardar(PRIMERA + 1, 0, {PRIMERA: ResultadoDeLaNoche.new(1, []).a_datos()})
 	_abrir()
 	_almacen.call("retomar_la_partida")
@@ -359,26 +359,29 @@ func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-E
 	)
 	_leer_todo(PRIMERA + 1)
 	_comprobar_una_noche(PRIMERA + 1)
+	for tarea: Tarea in (_almacen.get("_partida") as Partida).obligatorias():
+		tarea.completar()
 	await _cerrar_y_seguir()
-	_comprobar_instrucciones_de(PRIMERA + 2)
-	_comprobar_mensaje_1_de(PRIMERA + 2)
-	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/2")
-	_siguiente().pressed.emit()
+	_comprobar_instrucciones_de(COMPLETA)
+	_comprobar_mensaje_1_de(COMPLETA)
+	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/4")
+	for _paso in 3:
+		_siguiente().pressed.emit()
 	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
 	_siguiente().pressed.emit()
 	AvanceDeDevolucion.terminar_instrucciones(_instrucciones())
-	_comprobar_una_noche(PRIMERA + 2)
+	_comprobar_una_noche(COMPLETA)
 
 
 # AC-EMP-076, AC-SAV-021, AC-EMP-045, AC-EMP-089, AC-STK-098
-func test_retomar_la_tercera_y_la_cuarta() -> void:
-	_guardar(PRIMERA + 2)
+func test_retomar_la_segunda_y_la_tercera() -> void:
+	_guardar(PRIMERA + 1)
 	_abrir()
 	_almacen.call("retomar_la_partida")
-	_comprobar_instrucciones_de(PRIMERA + 2)
-	_comprobar_catalogo_retomado(PRIMERA + 2)
-	_leer_todo(PRIMERA + 2)
-	_comprobar_una_noche(PRIMERA + 2)
+	_comprobar_instrucciones_de(PRIMERA + 1)
+	_comprobar_catalogo_retomado(PRIMERA + 1)
+	_leer_todo(PRIMERA + 1)
+	_comprobar_una_noche(PRIMERA + 1)
 	await _cerrar_almacen()
 	_guardar(COMPLETA)
 	_abrir()
@@ -399,7 +402,7 @@ func test_retomar_la_tercera_y_la_cuarta() -> void:
 	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/4")
 	var celular: CelularDelEmpleado = _almacen.get("_celular")
 	var chat := celular.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE)
-	var de_la_cuarta: Array[String] = ["J4_Mensaje1_SinFallas"]
+	var de_la_cuarta: Array[String] = ["J3_Mensaje1_SinFallas"]
 	for mensaje: Mensaje in GUION.mensajes:
 		if mensaje.jornada == COMPLETA and mensaje.condicion.is_empty():
 			de_la_cuarta.append(mensaje.identidad)
@@ -411,15 +414,15 @@ func test_retomar_la_tercera_y_la_cuarta() -> void:
 	_comprobar_una_noche(COMPLETA)
 
 
-func test_seguir_desde_la_tercera_abre_las_de_la_cuarta() -> void:  # AC-EMP-075, AC-EMP-045
+func test_seguir_desde_la_segunda_abre_las_de_la_tercera() -> void:  # AC-EMP-075, AC-EMP-045
 	var noches := _prueba_sin_fallas()
-	noches.erase(PRIMERA + 2)
-	_guardar(PRIMERA + 2, 0, noches)
+	noches.erase(PRIMERA + 1)
+	_guardar(PRIMERA + 1, 0, noches)
 	_abrir()
 	_almacen.set("compradores_de_la_apertura", func(_n: int) -> Array[Comprador]: return [])
 	_almacen.call("retomar_la_partida")
-	_leer_todo(PRIMERA + 2)
-	_comprobar_una_noche(PRIMERA + 2)
+	_leer_todo(PRIMERA + 1)
+	_comprobar_una_noche(PRIMERA + 1)
 	for tarea: Tarea in (_almacen.get("_partida") as Partida).obligatorias():
 		tarea.completar()
 	await _cerrar_y_seguir()

@@ -40,6 +40,7 @@ const NotaDelLocal := preload("res://src/escenas/objetos/nota_pegada.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 const ManchaEnElPiso := preload("res://src/escenas/objetos/mancha_en_el_piso.gd")
+const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_basura.gd")
 
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
@@ -1149,6 +1150,7 @@ func _golpe_de_la_mira(cuerpo: RigidBody3D) -> Dictionary:
 	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
 	if (
 		golpe.is_empty()
+		or golpe["collider"] is ContenedorDelLocal
 		or not ReglasDeLosObjetos.admite_lo_soltado(golpe["normal"].y, _datos_de(golpe["collider"]))
 	):
 		return {}

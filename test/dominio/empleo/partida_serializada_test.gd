@@ -74,7 +74,7 @@ func test_el_tipo_equivocado_vuelve_con_su_defecto() -> void:  # AC-SAV-008
 	assert_int(typeof(saneado[MEDIOS])).is_equal(TYPE_INT)
 
 
-func test_la_actual_una_anterior_y_sin_version_son_legibles() -> void:  # AC-SAV-009
+func test_solo_la_version_actual_es_legible() -> void:  # AC-SAV-009
 	var anterior := _completo()
 	anterior[VERSION] = PartidaSerializada.VERSION - 1
 	var sin_version := _completo()
@@ -82,8 +82,8 @@ func test_la_actual_una_anterior_y_sin_version_son_legibles() -> void:  # AC-SAV
 	var posterior := _completo()
 	posterior[VERSION] = PartidaSerializada.VERSION + 1
 	assert_bool(PartidaSerializada.legible(_completo())).is_true()
-	assert_bool(PartidaSerializada.legible(anterior)).is_true()
-	assert_bool(PartidaSerializada.legible(sin_version)).is_true()
+	assert_bool(PartidaSerializada.legible(anterior)).is_false()
+	assert_bool(PartidaSerializada.legible(sin_version)).is_false()
 	assert_bool(PartidaSerializada.legible(posterior)).is_false()
 
 
@@ -107,32 +107,6 @@ func test_un_guardado_sin_cuentas_retoma_limpio() -> void:  # AC-SAV-025
 	datos[PartidaSerializada.clave(PartidaSerializada.Campo.FALLAS)] = {"VOLAR": 2, "REPONER": 1}
 	partida = Partida.desde(datos)
 	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(1)
-
-
-func test_un_guardado_de_cinco_jornadas_no_se_migra() -> void:  # AC-SAV-033
-	var anterior := _completo()
-	anterior[JORNADA] = 2
-	anterior.erase("cierre_pendiente")
-	var retomada := Partida.desde(PartidaSerializada.sanear(anterior))
-	assert_int(retomada.jornada()).is_equal(2)
-	assert_int(retomada.medios()).is_equal(anterior[MEDIOS])
-	assert_object(retomada.reflexion).is_null()
-	retomada.abrir_la_jornada()
-	var tipos: Array[Tarea.Tipo] = []
-	for tarea: Tarea in retomada.obligatorias():
-		tipos.append(tarea.tipo())
-	assert_array(tipos).contains_exactly(
-		[Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER]
-	)
-	var nombres: Array[String] = []
-	for comprador: Comprador in Compradores.de_la_jornada(retomada.jornada()):
-		nombres.append(comprador.nombre())
-	assert_array(nombres).contains_exactly(["Fede", "Mía"])
-	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(retomada.jornada())
-	assert_int(bandeja.conversaciones().size()).is_equal(1)
-	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
-		assert_bool(AnomaliasDeLaJornada.util_disponible(jabon, retomada.jornada())).is_true()
 
 
 func test_las_poses_se_restauran_y_lo_que_no_es_una_pose_se_ignora() -> void:  # AC-SAV-034

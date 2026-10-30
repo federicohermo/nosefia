@@ -213,7 +213,7 @@ func test_cualquier_destino_previo_equivale_a_la_apertura_directa() -> void:  # 
 		)
 		. is_true()
 	)
-	await _abrir(5, true)
+	await _abrir(AnomaliasDeLaJornada.JORNADA_SIN_AZUL, true)
 	_azul_ausente()
 
 
@@ -267,7 +267,7 @@ func test_poetico_de_caja_y_gondola_tine_sin_descontar_y_se_devuelve() -> void:
 			assert_object(agarre.cuerpo_sostenido()).is_same(unidad)
 			assert_object(agarre.manos().sostenido()).is_same(identidad)
 			assert_array(_cantidades()).is_equal(cantidades)
-		assert_bool(partida.uso_de_poetico_en(5)).is_true()
+		assert_bool(partida.uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)).is_true()
 		if de_gondola:
 			_almacen.get("_reposicion_manual").call("pedir_colocar", Producto.Id.POETICO)
 		else:
@@ -339,7 +339,7 @@ func test_los_rechazos_no_sueltan_ni_publican_y_la_consulta_no_actua() -> void: 
 		assert_object(_almacen.get("_agarre").cuerpo_sostenido()).is_same(unidad)
 		assert_array(_cantidades()).is_equal(cantidades)
 		assert_bool(limpiador.piso().mopa().esta_mojada()).is_false()
-		assert_bool(partida.uso_de_poetico_en(5)).is_false()
+		assert_bool(partida.uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)).is_false()
 	assert_array(rechazados).has_size(4)
 	assert_array(aceptados).is_empty()
 
@@ -360,7 +360,12 @@ func test_pausa_y_examen_bloquean_el_tenido_hasta_reanudar() -> void:  # AC-CLN-
 	assert_bool(get_tree().paused).is_true()
 	_clic(balde)
 	assert_array(aceptados).is_empty()
-	assert_bool(_almacen.get("_partida").uso_de_poetico_en(5)).is_false()
+	(
+		assert_bool(
+			_almacen.get("_partida").uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
+		)
+		. is_false()
+	)
 	pausa.reanudar()
 	assert_bool(jugador.examen.iniciar()).is_true()
 	_clic(balde)
@@ -371,7 +376,12 @@ func test_pausa_y_examen_bloquean_el_tenido_hasta_reanudar() -> void:  # AC-CLN-
 	jugador.examen.terminar()
 	_clic(balde)
 	assert_array(aceptados).contains_exactly([unidad.datos.id])
-	assert_bool(_almacen.get("_partida").uso_de_poetico_en(5)).is_true()
+	(
+		assert_bool(
+			_almacen.get("_partida").uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
+		)
+		. is_true()
+	)
 
 
 func test_el_cierre_bloquea_el_tenido_sin_anotar_un_hecho_futuro() -> void:  # AC-CLN-066 AC-EMP-068
@@ -389,7 +399,12 @@ func test_el_cierre_bloquea_el_tenido_sin_anotar_un_hecho_futuro() -> void:  # A
 	assert_array(aceptados).is_empty()
 	assert_int(limpiador.piso().balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.LIMPIA)
 	assert_object(_almacen.get("_agarre").cuerpo_sostenido()).is_same(unidad)
-	assert_bool(_almacen.get("_partida").uso_de_poetico_en(5)).is_false()
+	(
+		assert_bool(
+			_almacen.get("_partida").uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
+		)
+		. is_false()
+	)
 
 
 func test_la_mopa_azul_de_poetico_muestra_carga_y_borra_solo_moho() -> void:  # AC-CLN-063

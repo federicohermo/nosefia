@@ -5,6 +5,7 @@ const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.
 const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
+const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_basura.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const LATERALES := preload("res://src/sistemas/marco/laterales_del_foco.gdshader")
@@ -628,9 +629,21 @@ func _al_lado_del_jugador(caja: RigidBody3D) -> bool:
 	)
 	for lugar in lugares:
 		caja.global_position = _lugar_sobre(caja, lugar)
-		if _entra_entera(caja) and not _le_queda_encima_al_jugador(caja):
+		if (
+			_entra_entera(caja)
+			and not _le_queda_encima_al_jugador(caja)
+			and not _sobre_el_contenedor(caja)
+		):
 			return true
 	return false
+
+
+## Si la caja quedó parada en el contenedor. Parado junto a él, el piso de al lado del jugador
+## puede ser el fondo.
+func _sobre_el_contenedor(caja: RigidBody3D) -> bool:
+	var centro := caja.global_position
+	var debajo := _rayo(caja, centro, centro + Vector3.DOWN * _media_caja(caja).y * 2.0)
+	return debajo.get("collider") is ContenedorDelLocal
 
 
 ## Si en el lugar donde quedó la caja no hay nada más. Se encoge para preguntar, porque apoyarse
@@ -702,6 +715,10 @@ func _apoyo_apuntado(caja: RigidBody3D) -> Dictionary:
 			if golpe.is_empty():
 				golpe = _apoyo_al_pie(caja, pared)
 	if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
+		return {}
+	# El contenedor es del mundo fijo y su fondo es horizontal, pero es un vacío donde se tira: no
+	# es un lugar donde dejar una caja.
+	if golpe["collider"] is ContenedorDelLocal:
 		return {}
 	return golpe
 

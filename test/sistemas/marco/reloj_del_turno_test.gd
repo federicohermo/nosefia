@@ -268,14 +268,14 @@ func _de_la_lista(obligatorias: Array[Tarea], tipo: Tarea.Tipo) -> Tarea:
 
 
 func test_el_borde_de_la_noche_corta() -> void:  # AC-SHF-029
-	var ritmo := Ritmo.de_la_jornada(1)
+	var ritmo := Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
 	reloj.arrancar(_turno, _sin_obligatorias(), ritmo)
-	reloj.avanzar(330.0)
+	reloj.avanzar(660.0)
 	assert_float(_turno.tiempo_restante()).is_equal(3600.0)
-	reloj.avanzar(29.0)
+	reloj.avanzar(59.0)
 	assert_bool(_turno.cerrado()).is_false()
-	assert_float(_turno.tiempo_restante()).is_equal(120.0)
+	assert_float(_turno.tiempo_restante()).is_equal(60.0)
 	reloj.avanzar(1.0)
 	reloj.avanzar(1.0)
 	assert_int(_cierres).is_equal(1)
@@ -283,7 +283,7 @@ func test_el_borde_de_la_noche_corta() -> void:  # AC-SHF-029
 	before_test()
 	var corto := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
 	corto.arrancar(_turno, _sin_obligatorias(), ritmo)
-	corto.avanzar(359.0)
+	corto.avanzar(719.0)
 	corto.avanzar(5.0)
 	corto.avanzar(5.0)
 	assert_int(_cierres).is_equal(1)

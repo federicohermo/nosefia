@@ -324,9 +324,7 @@ func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() ->
 # AC-CTR-001 AC-CTR-041 AC-CTR-063
 func test_jornada_uno_y_las_genericas_conservan_su_recorrido() -> void:
 	var jornadas: Array = [ReglasDeLaPartida.PRIMERA_JORNADA]
-	jornadas.append_array(
-		range(ReglasDeLaPartida.PRIMERA_JORNADA + 5, AnomaliasDeLaJornada.JORNADA_DEL_CORTE)
-	)
+	jornadas.append(ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	for jornada: int in jornadas:
 		var almacen := await _abrir(jornada)
 		var compradores: Array = _atenciones(almacen).tarea().get("_compradores")
@@ -703,7 +701,12 @@ func test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez() -> void:
 	await _mirar_balde(almacen)
 	await _pulsar_real()
 	assert_int(piso.balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
-	assert_bool(almacen.get("_partida").uso_de_poetico_en(5)).is_true()
+	(
+		assert_bool(
+			almacen.get("_partida").uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
+		)
+		. is_true()
+	)
 	assert_object(almacen.get("_agarre").cuerpo_sostenido()).is_same(cuerpo)
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_same(identidad)
 	assert_array(_cantidades(almacen, poetico)).is_equal(retirado)

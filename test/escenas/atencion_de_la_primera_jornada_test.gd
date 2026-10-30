@@ -74,7 +74,7 @@ func _ticket(almacen: Node3D, pedido: Venta) -> ObjetoAgarrable:
 	return null
 
 
-# AC-CTR-039, AC-CTR-041, AC-STK-054, AC-STK-056, AC-PLY-102
+# AC-CTR-039, AC-CTR-041, AC-STK-054, AC-STK-056
 func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -> void:
 	var almacen := await _abrir()
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
@@ -83,7 +83,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	var agarre: Agarre = almacen.get("_agarre")
 	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
 	var deposito: Puerta = almacen.get_node("Estructura/puerta/CuerpoDeLaHoja").call("puerta")
-	assert_bool(deposito.trabada()).is_true()
+	assert_bool(deposito.trabada()).is_false()
 	var compras: Array[bool] = []
 	atenciones.compra_realizada.connect(func() -> void: compras.append(true))
 	puesto.abrir()
@@ -166,7 +166,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		assert_bool(tarea.completada()).override_failure_message(str(tarea.tipo())).is_true()
-	assert_bool(deposito.trabada()).is_true()
+	assert_bool(deposito.trabada()).is_false()
 	assert_bool(deposito.abierta()).is_false()
 
 
@@ -322,7 +322,10 @@ func test_el_primero_se_va_con_todos_los_productos_sin_ticket_y_el_segundo_compr
 # AC-CTR-041
 func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
+	almacen.call(
+		"_al_abrir_la_jornada",
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	)
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
 	var camara := Camera3D.new()
 	puesto.add_child(camara)
