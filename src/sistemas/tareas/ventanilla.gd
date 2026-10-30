@@ -13,7 +13,8 @@
 ## prosa, y hacerlo pasar comentando distinto sería trampa.
 ##
 ## **No lleva un flag de «ya la conté»**: le pide al reloj que complete `Tarea.Tipo.CAJA` cada vez
-## que la tarea queda completa, y el `Turno` ya sabe que la segunda vez no cuenta.
+## que el dominio la da por cumplida, o que la descuente si ya no, y el `Turno` ya sabe que la
+## segunda vez no cuenta.
 class_name Ventanilla
 extends Node
 
@@ -81,14 +82,19 @@ func arrancar(tarea: TareaDeAtender) -> void:
 ## El posterior tiempo_consumido recorre la misma agenda y no repite sus eventos.
 func _al_iniciar_el_cierre() -> void:
 	_al_pasar_el_tiempo(0.0)
+	if _tarea.fisica():
+		_revisar_la_obligatoria(true)
 
 
 func _al_pasar_el_tiempo(restante: float) -> void:
-	for evento in _tarea.avanzar(Reglas.DURACION_DEL_TURNO - restante):
+	var eventos := _tarea.avanzar(Reglas.DURACION_DEL_TURNO - restante)
+	for evento in eventos:
 		if evento.tipo == AgendaDeCompradores.Tipo.LLEGO:
 			comprador_llegado.emit(evento.comprador)
 		else:
 			comprador_vencido.emit(evento.comprador)
+	if not eventos.is_empty():
+		_revisar_la_obligatoria()
 
 
 func tarea() -> TareaDeAtender:
@@ -162,16 +168,24 @@ func pedir_despachar_sin_vender() -> void:
 	_al_despachar()
 
 
-## Publica el despacho y, si no quedó nadie, le pide al reloj que cuente la obligatoria.
+## Publica el despacho y revisa la obligatoria.
+func _al_despachar() -> void:
+	atencion_despachada.emit(_tarea.despachados())
+	_revisar_la_obligatoria()
+
+
+## Le pide al reloj que cuente la obligatoria si el dominio la da por cumplida, y que la descuente
+## si ya no.
 ##
 ## La `Tarea` sale de `RelojDelTurno.obligatoria()` y nunca de una construida acá: una copia
 ## devuelve `true` y deja el contador del HUD clavado — la tarea hecha
 ## y la pantalla diciendo que no, sin error y en verde.
-func _al_despachar() -> void:
-	atencion_despachada.emit(_tarea.despachados())
-	if not _tarea.completada():
-		return
-	reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))
+func _revisar_la_obligatoria(al_cerrar: bool = false) -> void:
+	var caja := reloj.obligatoria(Tarea.Tipo.CAJA)
+	if _tarea.cumplida(al_cerrar):
+		reloj.completar(caja)
+	else:
+		reloj.descumplir(caja)
 
 
 ## Si falta algo del cableado. Un `.tscn` mal armado no es un rechazo del juego, así que no sale

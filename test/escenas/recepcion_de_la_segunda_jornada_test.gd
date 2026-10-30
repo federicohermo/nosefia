@@ -162,7 +162,7 @@ func test_ambos_ordenes_con_recepcion_real_y_registro_de_ambas_compras() -> void
 		_vender(almacen, fede, ticket_primero, true)
 		for producto in fede.comprador().pedido().productos():
 			registro.sumar(producto)
-		assert_bool(registro.completada()).is_false()
+		assert_bool(registro.completada()).is_true()
 		assert_bool(atender.completada()).is_false()
 		var mia := _presentar(almacen, Vector2i(1, 0))
 		assert_bool(registro.completada()).is_false()
@@ -223,7 +223,7 @@ func test_fede_vendido_y_mia_abierta_o_vencida_exigen_solo_sus_ventas_cerradas()
 	for producto in fede.comprador().pedido().productos():
 		registro.sumar(producto)
 	assert_bool(registro.coincide()).is_true()
-	assert_bool(registro.completada()).is_false()
+	assert_bool(registro.completada()).is_true()
 	var tarea: TareaDeAtender = almacen.get("_atenciones").call("tarea")
 	var futura: Comprador = tarea.get("_compradores")[1]
 	for producto in futura.pedido().productos():
