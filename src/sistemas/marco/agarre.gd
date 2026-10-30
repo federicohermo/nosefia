@@ -23,6 +23,10 @@ signal objeto_soltado(nodo: Node3D)
 ## La mano queda libre sin soltar el cuerpo al mundo: lo recibe un destino.
 signal objeto_entregado(nodo: Node3D)
 
+## Cuánto se agranda la forma al buscar lo que toca, en metros. Es también cuánto puede quedar
+## hundida la base de lo que está encima.
+const MARGEN_DE_CONTACTO := 0.02
+
 ## Los tres puntos entran por `@export` y no como autoload ni por `get_node()` hacia arriba:
 ## está medido que `gate_de_capas.py` no ve un autoload nombrado por su nombre global, así que
 ## esa puerta cruzaría capas sin dejar rastro.
@@ -193,6 +197,7 @@ static func despertar_lo_apoyado(
 		return
 	visitados[cuerpo.get_rid()] = true
 	var espacio := cuerpo.get_world_3d().direct_space_state
+	var tapa := _limites_globales(cuerpo).end.y
 	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
 		if forma.disabled or forma.shape == null:
 			continue
@@ -200,21 +205,34 @@ static func despertar_lo_apoyado(
 		consulta.shape = forma.shape
 		consulta.transform = forma.global_transform
 		# Al congelarse, el apoyo pasa a ser estático y Jolt no despierta lo que sostenía.
-		consulta.margin = 0.02
+		consulta.margin = MARGEN_DE_CONTACTO
 		consulta.exclude = [cuerpo.get_rid()]
 		for choque: Dictionary in espacio.intersect_shape(consulta, 32):
 			var contacto := choque.collider as RigidBody3D
 			if contacto == null:
 				continue
-			var arriba := (
-				contacto.global_position.y > cuerpo.global_position.y + ReglasDeLosObjetos.ROCE
-			)
+			# Encima es que su base llega a la tapa, no que su origen quede más alto: un vecino
+			# más alto, al lado, tiene el origen más arriba sin estar apoyado en nada de éste.
+			var arriba := _limites_globales(contacto).position.y >= tapa - MARGEN_DE_CONTACTO
 			if not arriba and (contacto.freeze or not todo_contacto):
 				continue
 			contacto.freeze = false
 			contacto.sleeping = false
 			if arriba:
 				despertar_lo_apoyado(contacto, visitados)
+
+
+## La caja que envuelve las formas activas del cuerpo, en el espacio global.
+static func _limites_globales(cuerpo: PhysicsBody3D) -> AABB:
+	var limites := AABB()
+	var primera := true
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled or forma.shape == null:
+			continue
+		var de_la_forma := forma.global_transform * LimitesDeForma.de(forma.shape)
+		limites = de_la_forma if primera else limites.merge(de_la_forma)
+		primera = false
+	return limites
 
 
 ## Cuelga el nodo del ancla, en el origen del ancla y sin rotación heredada.
