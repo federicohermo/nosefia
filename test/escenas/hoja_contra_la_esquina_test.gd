@@ -28,6 +28,9 @@ const CUADROS_PARA_DORMIRSE := 120
 const CUADROS_QUIETA := 90
 const ESPESOR_DEL_MURO := 0.2
 
+## Cuánto deja el motor que un cuerpo vivo apoyado se hunda en lo que toca.
+const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
+
 ## Metros. El ancho del muro.
 const ANCHO_DEL_MURO := 1.2
 
@@ -110,13 +113,16 @@ func _muro(caja: RigidBody3D, normal: Vector3) -> void:
 	)
 
 
+## Si el cuerpo se hunde en la hoja más de lo que el motor tolera a un cuerpo vivo que empuja.
 func _adentro_de_la_hoja(cuerpo: PhysicsBody3D, hoja: PhysicsBody3D) -> bool:
 	var espacio := cuerpo.get_world_3d().direct_space_state
 	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
 		var consulta := PhysicsShapeQueryParameters3D.new()
 		consulta.shape = forma.shape
 		consulta.transform = forma.global_transform
-		consulta.margin = -ReglasDeLosObjetos.ROCE
+		consulta.margin = -(
+			ReglasDeLosObjetos.ROCE + float(ProjectSettings.get_setting(PENETRACION_TOLERADA, 0.0))
+		)
 		for golpe in espacio.intersect_shape(consulta, 32):
 			if golpe["collider"] == hoja:
 				return true
