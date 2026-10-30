@@ -217,24 +217,18 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
 	_pulsar(almacen)
 	assert_object(agarre.manos().sostenido()).is_null()
-	# El primer clic cierra el agradecimiento; el segundo abre el recordatorio, que retiene.
+	# El recordatorio sale como subtítulo: no abre la ventanilla ni retiene al jugador.
 	_pulsar(almacen)
-	_pulsar(almacen)
-	assert_bool(atenciones.puede_abandonar()).is_false()
+	assert_bool(atenciones.puede_abandonar()).is_true()
+	assert_bool(_panel(almacen).visible).is_false()
 	var escape := InputEventAction.new()
 	escape.action = "ui_cancel"
 	escape.pressed = true
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
 	pausa._input(escape)
 	assert_bool(get_tree().paused).is_true()
-	assert_bool(_panel(almacen).visible).is_true()
 	pausa._input(escape)
 	assert_bool(get_tree().paused).is_false()
-	var derecho := InputEventAction.new()
-	derecho.action = ReglasDelJugador.ACCION_USAR
-	derecho.pressed = true
-	puesto._input(derecho)
-	assert_bool(_panel(almacen).visible).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	RelojDePrueba.avanzar_hasta(reloj, Vector2i(2, 0))
 	assert_bool(atenciones.puede_abandonar()).is_true()
@@ -281,6 +275,10 @@ func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -
 	assert_bool((_panel(almacen).get("_cobrar") as Button).visible).is_true()
 
 
+func _texto_del_comprador(almacen: Node3D) -> RichTextLabel:
+	return almacen.get("_hud").get("_texto_del_comprador")
+
+
 # AC-CTR-037, AC-CTR-066, AC-CTR-067
 func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_lo_que_falta() -> void:
 	var almacen := await _abrir()
@@ -292,10 +290,9 @@ func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_lo_que_falta()
 	puesto.abrir()
 	_conversar(almacen)
 	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
-	var texto: RichTextLabel = _panel(almacen).get_node("Fisico/Dialogo/Texto")
+	var texto := _texto_del_comprador(almacen)
 	_pulsar(almacen)
 	assert_int(texto.text.count("[color=#e4f850]")).is_equal(2)
-	_pulsar(almacen)
 	almacen.get("_reposicion_manual").retirar(producto.id)
 	var primera := agarre.cuerpo_sostenido()
 	_pulsar(almacen)
@@ -304,9 +301,7 @@ func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_lo_que_falta()
 	assert_bool(texto.text.begins_with(DialogosDeCompradores.FALTA)).is_true()
 	assert_int(texto.text.count("[color=#e4f850]")).is_equal(1)
 	_pulsar(almacen)
-	_pulsar(almacen)
 	assert_int(texto.text.count("[color=#e4f850]")).is_equal(1)
-	_pulsar(almacen)
 	almacen.get("_reposicion_manual").retirar(producto.id)
 	var sobrante := agarre.cuerpo_sostenido()
 	var identidad := agarre.manos().sostenido()

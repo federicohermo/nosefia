@@ -157,7 +157,8 @@ func _una_entrada(almacen: Node3D) -> Atencion:
 	return atenciones.atencion()
 
 
-func test_cada_guion_de_una_entrada_devuelve_el_control_una_vez() -> void:  # AC-CTR-047, AC-PLY-091
+# AC-CTR-047, AC-CTR-097, AC-PLY-091
+func test_cada_guion_de_una_entrada_devuelve_el_control_una_vez() -> void:
 	var almacen := await _abrir()
 	var atendida := _una_entrada(almacen)
 	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
@@ -166,14 +167,8 @@ func test_cada_guion_de_una_entrada_devuelve_el_control_una_vez() -> void:  # AC
 	(almacen.get("_atenciones") as Ventanilla).conversacion_terminada.connect(
 		func() -> void: finales.append(true)
 	)
-	for etapa: int in [0, 1, 2, 3]:
-		if etapa == 2:
-			var agarre: Agarre = almacen.get("_agarre")
-			var objeto: ObjetoAgarrable = load(OBJETO).instantiate()
-			objeto.datos = UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
-			almacen.add_child(objeto)
-			assert_bool(agarre.pedir_agarrar(objeto.datos, objeto)).is_true()
-		elif etapa == 3:
+	for etapa: int in [0, 3]:
+		if etapa == 3:
 			var agarre: Agarre = almacen.get("_agarre")
 			agarre.soltar(true)
 			var inventario: Inventario = atendida.get("_inventario")
@@ -185,7 +180,7 @@ func test_cada_guion_de_una_entrada_devuelve_el_control_una_vez() -> void:  # AC
 				RecepcionDeCompra.Resultado.COMPLETA
 			)
 			puesto.call("_repintar")
-		if etapa < 3:
+		if etapa == 0:
 			_pulsar(almacen)
 		assert_bool(puesto.get("_abierta")).is_true()
 		assert_bool(jugador.get("_control").esta_suspendido()).is_true()
@@ -202,7 +197,7 @@ func test_cada_guion_de_una_entrada_devuelve_el_control_una_vez() -> void:  # AC
 		_pulsar(almacen)
 		assert_bool(puesto.get("_abierta")).is_false()
 		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
-		assert_array(finales).has_size(etapa + 1)
+		assert_array(finales).has_size(1 if etapa == 0 else 2)
 
 
 func test_la_referencia_distingue_inicial_pendiente_y_terminada() -> void:  # AC-PLY-094
@@ -527,3 +522,45 @@ func test_la_consulta_generica_no_es_una_barrera_y_se_apaga_en_fisico() -> void:
 	assert_object(espacio.intersect_ray(rayo).get("collider")).is_not_same(puesto)
 	puesto.call("accionar")
 	assert_bool(puesto.get("panel").visible).is_false()
+
+
+# AC-CTR-096, AC-CTR-098, AC-CTR-099
+func test_entregar_no_abre_la_ventanilla_y_se_lee_como_subtitulo_de_comprador() -> void:
+	var almacen := await _abrir()
+	var atendida := _una_entrada(almacen)
+	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var hud: Hud = almacen.get("_hud")
+	var burbuja: Control = hud.get("_comprador")
+	var texto: RichTextLabel = hud.get("_texto_del_comprador")
+	_pulsar(almacen)
+	_pulsar(almacen)
+	assert_bool(puesto.get("_abierta")).is_false()
+	# Con la mano vacía: recordatorio.
+	_pulsar(almacen)
+	assert_bool(puesto.get("_abierta")).is_false()
+	assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+	assert_bool(burbuja.visible).is_true()
+	assert_str(texto.text).is_not_empty()
+	# Con un objeto ajeno: rechazo, y la mano no cambia.
+	var incorrecto: ObjetoAgarrable = load(OBJETO).instantiate()
+	incorrecto.datos = Ticket.new([])
+	almacen.add_child(incorrecto)
+	assert_bool(agarre.pedir_agarrar(incorrecto.datos, incorrecto)).is_true()
+	for _pulsacion in 2:
+		_pulsar(almacen)
+		assert_bool(puesto.get("_abierta")).is_false()
+		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+		assert_object(agarre.cuerpo_sostenido()).is_same(incorrecto)
+		assert_str(texto.text).starts_with(DialogosDeCompradores.RECHAZO)
+	agarre.soltar(true)
+	# Con un producto del pedido: agradecimiento.
+	var producto := atendida.comprador().pedido().productos()[0]
+	almacen.get("_reposicion_manual").retirar(producto.id)
+	_pulsar(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_null()
+	assert_bool(puesto.get("_abierta")).is_false()
+	assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+	assert_bool(burbuja.visible).is_true()
+	assert_str(texto.text).is_not_empty()

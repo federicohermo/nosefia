@@ -63,7 +63,6 @@ func _ready() -> void:
 	jugador.uso_pedido.connect(_al_pedir_uso)
 	jugador.consultar_interaccion_con(_contexto_de_limpiar)
 	jugador.uso_sobre_superficie_pedido.connect(_al_usar_la_superficie)
-	jugador.paso_dado.connect(_al_dar_un_paso)
 	limpiador.balde_llenado.connect(_al_llenar_el_balde)
 	limpiador.balde_tenido.connect(_al_tenir_el_balde)
 	limpiador.balde_vaciado.connect(_al_vaciar_el_balde)
@@ -134,17 +133,6 @@ func _al_dar_pasada(lugar: PisoDelLocal.Lugar) -> void:
 	for mancha: ManchaQueSeVe in manchas():
 		if mancha.lugar_de_la_mancha() == lugar:
 			mancha.encoger()
-
-
-## El paso toca sólo las manchas del piso: una de pared o de techo no se pisa, aunque el jugador
-## pase a su lado o debajo.
-func _al_dar_un_paso() -> void:
-	for mancha: ManchaQueSeVe in manchas():
-		if PisoDelLocal.superficie_de(mancha.lugar_de_la_mancha()) != PisoDelLocal.Superficie.PISO:
-			continue
-		var distancia := mancha.global_position - jugador.global_position
-		if Vector2(distancia.x, distancia.z).length() <= 0.75:
-			mancha.tocar_en(jugador.global_position)
 
 
 ## Deja las manchas, el balde y la mopa como los ve el dominio. Lo llama el cableado al abrir la

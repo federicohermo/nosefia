@@ -293,6 +293,8 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	assert_bool(get_tree().paused).is_false()
 	_cuadros(ahora, ahora[0] + 150000, animadas)
 	assert_bool(negro.visible).is_false()
+	var deslizamiento := roundi(PantallaDeInstrucciones.DURACION_DEL_DESLIZAMIENTO * 1000000.0)
+	_cuadros(ahora, ahora[0] + deslizamiento, animadas)
 	assert_bool(_instrucciones().is_processing()).is_false()
 	(
 		assert_int((_instrucciones().get("_instrucciones") as InstruccionesDelJefe).paso_actual())
@@ -428,6 +430,7 @@ func test_seguir_desde_la_segunda_abre_las_de_la_tercera() -> void:  # AC-EMP-07
 	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/4")
 	for _paso in 3:
 		_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_el_movimiento(_instrucciones())
 	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("4/4")
 	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
 	_siguiente().pressed.emit()

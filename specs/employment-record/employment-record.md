@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»; siete jornadas, con dos de prueba, de #693
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»; deslizamiento de las placas de Enrique de #675, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-30; siete jornadas, con dos de prueba, de #693
 ---
 
 # Capacidad: el legajo del empleado
@@ -177,6 +177,17 @@ CUANDO se muestran las instrucciones de una jornada, el sistema DEBE presentar u
 independiente por cada texto de esa jornada, en orden, sin desplazamiento ni acumulación de
 contenido. Cada «Siguiente» DEBE reemplazar la pantalla actual por la siguiente y «Volver» por
 la anterior, sin bajar de uno.
+
+CUANDO se elige «Siguiente», la pantalla actual DEBE salir por la izquierda y la nueva entrar
+desde la derecha. CUANDO se elige «Volver», la actual DEBE salir por la derecha y la anterior
+entrar desde la izquierda. Las dos DEBEN moverse dentro del recuadro del contenido y quedar
+recortadas por él. El movimiento DEBE ser un resorte suave, sin rebote marcado, de 0,8 segundos
+reales. El retrato, el bocadillo, los botones y el contador NO DEBEN moverse. El contador DEBE
+mostrar el número nuevo al terminar el movimiento. Pausar DEBE congelar el movimiento y
+reanudarlo desde el mismo punto. CUANDO se elige «Siguiente» o «Volver» durante el movimiento,
+el sistema DEBE completarlo y arrancar el del gesto nuevo, sin saltear pantallas ni dejar dos
+contenidos al terminar. «OK» NO DEBE mover ninguna pantalla: DEBE iniciar de inmediato la salida
+de BR-EMP-024.
 
 La navegación y el contador DEBEN permanecer fijos abajo, separados del contenido. «Volver»
 DEBE estar visible y deshabilitado en la primera pantalla. El contador DEBE indicar la pantalla
@@ -756,6 +767,34 @@ reanuda ENTONCES el marco conserva su posición durante la pausa y continúa sin
 DADO las instrucciones de la jornada 2 en su pantalla 2 CUANDO se pulsa Esc y se reanuda
 ENTONCES sigue la pantalla 2. DADO una jornada 1 a 3 retomada desde el menú CUANDO se muestran
 sus instrucciones ENTONCES repiten la entrada desde la derecha y conservan el mismo layout.
+
+### AC-EMP-112 — «Siguiente» desliza la placa de derecha a izquierda *(verifica BR-EMP-023)*
+
+DADO las instrucciones de la jornada 1 en la pantalla 1 CUANDO se elige «Siguiente» y pasa la
+mitad del movimiento ENTONCES conviven la pantalla 1 y la 2, la 2 a la derecha de la 1, las dos
+dentro del recuadro y recortadas por él. El contador sigue diciendo «1/6». CUANDO termina el
+movimiento ENTONCES sólo queda la pantalla 2, en el lugar de reposo, y el contador dice «2/6».
+Durante todo el movimiento el retrato, el bocadillo, los botones y el contador conservan su
+posición. El movimiento dura 0,8 segundos reales y no rebota de forma marcada: la pantalla nueva
+no pasa de su lugar de reposo más de un 5 % de su ancho.
+
+### AC-EMP-113 — «Volver» invierte la dirección *(verifica BR-EMP-023)*
+
+DADO las instrucciones de la jornada 1 en la pantalla 3 CUANDO se elige «Volver» y pasa la mitad
+del movimiento ENTONCES conviven la pantalla 3 y la 2, la 2 a la izquierda de la 3, dentro del
+recuadro. CUANDO termina ENTONCES sólo queda la pantalla 2 y el contador dice «2/6». DADO la
+pantalla 1 ENTONCES «Volver» está deshabilitado y no mueve nada.
+
+### AC-EMP-114 — Un gesto durante el movimiento lo completa *(verifica BR-EMP-023, BR-EMP-024)*
+
+DADO un movimiento de la pantalla 1 a la 2 a mitad de recorrido CUANDO se elige «Siguiente»
+ENTONCES la 2 queda en reposo y arranca el movimiento de la 2 a la 3. CUANDO termina ENTONCES
+sólo queda la 3 y el contador dice «3/6»; ninguna pantalla se salteó. DADO el mismo movimiento
+CUANDO se elige «Volver» ENTONCES la 2 queda en reposo y arranca el de la 2 a la 1; al terminar
+sólo queda la 1. DADO un movimiento a mitad de recorrido CUANDO se pausa 120 segundos reales y se
+reanuda ENTONCES las pantallas conservan su posición durante la pausa y continúan sin saltar al
+final. DADO la última pantalla CUANDO se elige «OK» ENTONCES no hay movimiento de pantallas y
+arranca la salida de BR-EMP-024.
 
 ### AC-EMP-050 — Todas depende de lo declarado *(verifica BR-EMP-001)*
 
