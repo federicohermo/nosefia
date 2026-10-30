@@ -1,4 +1,4 @@
-## Lo que el jugador suelta apuntando a una heladera no baja al hueco de su fondo.
+## Lo que el jugador suelta apuntando a una heladera no queda adentro de ella.
 extends GdUnitTestSuite
 
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
@@ -24,9 +24,6 @@ const CUADROS_DE_REPOSO := 60
 
 ## Cuánto puede entrar al volumen lo que queda afuera, en metros.
 const TOLERANCIA := 0.01
-
-## Cuánto sobresale el volumen de una unidad por debajo de lo que la sostiene, en metros.
-const MARGEN_DE_LA_FORMA := 0.03
 
 
 func _almacen() -> Node3D:
@@ -226,18 +223,15 @@ func _soltar_apuntando_a(
 	return agarre.manos().sostenido() == null
 
 
-## Lo soltado queda afuera del volumen de la heladera o apoyado en el techo del bloque, que es el
-## borde de abajo de la hoja: nunca más abajo, en el hueco del fondo. Devuelve cuántas quedaron
-## sueltas y cuántas de ésas quedaron adentro del volumen, que es lo que con una pared bajaba.
-func _soltar_y_comprobar(almacen: Node3D, numero: int, abierta: bool) -> Vector2i:
+## Nada soltado queda adentro del volumen de la heladera: ni en el hueco del fondo ni apoyado en un
+## estante o en el techo del bloque. Devuelve cuántas quedaron sueltas.
+func _soltar_y_comprobar(almacen: Node3D, numero: int, abierta: bool) -> int:
 	var frente := _frente_de(almacen, numero)
-	var base: float = frente["base_de_la_hoja"]
 	var estante := _estante_mas_bajo(almacen, numero, frente)
 	var objetos := _que_se_suelta(almacen)
 	if abierta:
 		await _abrir(almacen, numero)
 	var soltados := 0
-	var adentro := 0
 	for objeto in objetos:
 		for punto in _puntos_de_mira(frente, estante, abierta):
 			for parado in PARADOS:
@@ -245,40 +239,32 @@ func _soltar_y_comprobar(almacen: Node3D, numero: int, abierta: bool) -> Vector2
 					continue
 				soltados += 1
 				var entro := _entro_al_volumen(objeto, frente)
-				if entro >= TOLERANCIA:
-					adentro += 1
-				var debajo := base - _limites_del_volumen(objeto).position.y
-				var donde := (
-					"`%s`, `%s` apuntado a %v desde %.1f m"
-					% [MUEBLES[numero], objeto.name, punto, parado]
-				)
 				(
-					assert_bool(entro < TOLERANCIA or debajo < MARGEN_DE_LA_FORMA)
+					assert_float(entro)
 					. override_failure_message(
 						(
-							"%s bajó al hueco: entró %.3f m y apoya %.3f m abajo de la hoja"
-							% [donde, entro, debajo]
+							"`%s`, `%s` apuntado a %v desde %.1f m quedó adentro: entró %.3f m"
+							% [MUEBLES[numero], objeto.name, punto, parado, entro]
 						)
 					)
-					. is_true()
+					. is_less(TOLERANCIA)
 				)
-	return Vector2i(soltados, adentro)
+	return soltados
 
 
 func test_lo_soltado_apuntando_a_la_base_con_la_puerta_cerrada_no_queda_adentro() -> void:
 	var almacen := await _almacen()
-	var soltados := Vector2i.ZERO
+	var soltados := 0
 	for numero in MUEBLES.size():
 		soltados += await _soltar_y_comprobar(almacen, numero, false)
 	# La premisa: el gesto suelta de verdad, y no sólo devuelve todo a la mano.
-	assert_int(soltados.x).is_greater(0)
+	assert_int(soltados).is_greater(0)
 
 
-func test_lo_soltado_apuntando_a_la_heladera_abierta_no_baja_del_borde_de_la_hoja() -> void:
+func test_lo_soltado_en_un_estante_de_la_heladera_abierta_no_queda_adentro() -> void:  # AC-PLY-024
 	var almacen := await _almacen()
-	var soltados := Vector2i.ZERO
+	var soltados := 0
 	# La heladera fuera de servicio tiene la puerta trabada: no abre.
 	for numero in 2:
 		soltados += await _soltar_y_comprobar(almacen, numero, true)
-	assert_int(soltados.x).is_greater(0)
-	assert_int(soltados.y).is_greater(0)
+	assert_int(soltados).is_greater(0)

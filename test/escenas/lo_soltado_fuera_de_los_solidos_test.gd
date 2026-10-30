@@ -1027,7 +1027,7 @@ func test_la_caja_se_sigue_apilando_sobre_otra() -> void:  # AC-PLY-023
 	_comprobar_sin_rescates(almacen, "lo legal")
 
 
-func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY-024
+func test_la_unidad_soltada_contra_la_heladera_no_queda_adentro() -> void:  # AC-PLY-024
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var heladera: MeshInstance3D = almacen.get_node("Estructura/heladeranueva")
@@ -1062,11 +1062,11 @@ func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY
 	(
 		assert_bool(limites.has_point(unidad.global_position))
 		. override_failure_message(
-			"la unidad no quedó adentro de la heladera: está en %v" % unidad.global_position
+			"la unidad quedó adentro de la heladera: está en %v" % unidad.global_position
 		)
-		. is_true()
+		. is_false()
 	)
-	_comprobar_libre_y_enfocable(almacen, unidad, "la unidad en la heladera")
+	_comprobar_libre_y_enfocable(almacen, unidad, "la unidad junto a la heladera")
 
 
 func test_un_objeto_dejado_arriba_del_inodoro_queda_quieto() -> void:
