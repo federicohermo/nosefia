@@ -382,8 +382,9 @@ nombrando lo que todavía falta, o pedir el ticket si ya recibió todos. Ese agr
 DEBE retener el clic siguiente con un objeto ni impedir dejar la ventanilla.
 Para una unidad, cada marcador DEBE usar el subtítulo del producto con primera letra minúscula
 y sin punto final. Para más de una DEBE usar «dos» o «tres» seguido del nombre del producto.
-Los productos DEBEN llevar el resaltado amarillo común. En jornada 2 NO DEBE inventarse una
-pista dentro de esos textos.
+En cualquier cantidad, sólo el nombre propio del producto DEBE llevar el resaltado amarillo
+común: la cantidad, el resto del subtítulo y los separadores de la enumeración NO DEBEN llevar
+color. En jornada 2 NO DEBE inventarse una pista dentro de esos textos.
 
 ### BR-CTR-041 — La segunda noche activa a Fede y Mía con su contenido propio
 
@@ -1223,6 +1224,16 @@ DADO cada una de las dos noches CUANDO se entregan a un comprador todos sus prod
 exacto ENTONCES se vende una sola vez; si vence incompleto, sus productos y su ticket quedan como en
 BR-CTR-037. DADO sólo una de las dos compras completas ENTONCES atención no se cumple, y con las dos
 completas se cumple. Un pedido con un producto sin unidades vendibles sigue siendo el pedido.
+
+### AC-CTR-133 — Sólo el nombre propio va en amarillo *(verifica BR-CTR-039)*
+
+DADO un pedido de una unidad de un producto cuyo subtítulo es «Una caja de fideos» más su nombre
+CUANDO se consulta recordatorio ENTONCES el texto es «Quiero una caja de fideos » seguido del
+nombre en amarillo y un punto final sin color; el resto del subtítulo no lleva color. Con dos
+unidades, «dos» sin color y el nombre en amarillo; con tres, lo mismo con «tres». DADO un pedido
+de tres productos distintos CUANDO se consulta recordatorio ENTONCES cada nombre queda en amarillo
+y el subtítulo restante, las comas y la «y» quedan sin color. En el rechazo y en el
+agradecimiento rige lo mismo.
 
 ## No objetivos
 
