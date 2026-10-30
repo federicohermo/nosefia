@@ -9,7 +9,7 @@ const MUEBLES: Array[String] = ["heladeranueva", "heladeranueva_001", "heladera_
 const PRODUCTO_QUE_SE_SUELTA := Producto.Id.MALBARDO
 
 ## A qué fracción del zócalo, contando desde el piso, se apunta.
-const ALTOS_DEL_ZOCALO: Array[float] = [0.15, 0.5, 0.95]
+const ALTOS_DEL_ZOCALO: Array[float] = [0.15, 0.5]
 
 ## Cuántos metros adentro del borde de adelante del estante más bajo con colisión se apunta.
 const ADENTRO_DEL_ESTANTE: Array[float] = [0.0, 0.03, 0.08, 0.2]
@@ -180,11 +180,30 @@ func _puntos_de_mira(frente: Dictionary, estante: AABB, abierta: bool) -> Array[
 	return puntos
 
 
+## Qué mueble toca la mira, con el mismo rayo con que el jugador busca dónde soltar, sin contar los
+## cuerpos sueltos: lo que quedó de un gesto anterior no es el mueble. La máscara es la que tiene el
+## objeto suelto: en la mano la tiene en cero.
+func _lo_que_toca_la_mira(almacen: Node3D, mascara: int) -> Object:
+	var jugador: Node3D = almacen.get("_jugador")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var consulta := PhysicsRayQueryParameters3D.create(
+		camara.global_position,
+		camara.global_position - camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		mascara
+	)
+	var excluidos: Array[RID] = [jugador.get_rid()]
+	for suelto: RigidBody3D in almacen.find_children("*", "RigidBody3D", true, false):
+		excluidos.append(suelto.get_rid())
+	consulta.exclude = excluidos
+	return jugador.get_world_3d().direct_space_state.intersect_ray(consulta).get("collider")
+
+
 ## Suelta `objeto` como lo hace el jugador: parado frente a la heladera, con la mira en `punto` y el
 ## mismo clic que lo agarró. Devuelve si quedó suelto: lo que no encuentra lugar vuelve a la mano, y
-## eso también es correcto.
+## eso también es correcto. Antes de soltar afirma que la mira toca el mueble: sin eso, una mira
+## desviada deja todo afuera y el caso pasa sin ejercer la heladera.
 func _soltar_apuntando_a(
-	almacen: Node3D, objeto: Node3D, frente: Dictionary, punto: Vector3, parado: float
+	almacen: Node3D, objeto: Node3D, numero: int, frente: Dictionary, punto: Vector3, parado: float
 ) -> bool:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -194,18 +213,23 @@ func _soltar_apuntando_a(
 		Vector3(sobre_el_plano.x, jugador.global_position.y, sobre_el_plano.z) + direccion * parado
 	)
 	agarre.vaciar_las_manos()
+	var mascara: int = (objeto as RigidBody3D).collision_mask
 	_accion(jugador, objeto, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await get_tree().physics_frame
 	_apuntar(jugador, punto)
+	assert_object(_lo_que_toca_la_mira(almacen, mascara)).is_same(
+		_mueble(almacen, numero).get_node("StaticBody3D")
+	)
 	_accion(jugador, objeto, ReglasDeLosObjetos.ACCION_AGARRAR)
 	for cuadro in CUADROS_DE_REPOSO:
 		await get_tree().physics_frame
 	return agarre.manos().sostenido() == null
 
 
-## Lo soltado queda afuera del volumen de la heladera o apoyado en su estante de abajo, que es el
-## borde de la hoja: nunca más abajo, en el hueco del fondo. Devuelve cuántas quedaron sueltas.
-func _soltar_y_comprobar(almacen: Node3D, numero: int, abierta: bool) -> int:
+## Lo soltado queda afuera del volumen de la heladera o apoyado en el techo del bloque, que es el
+## borde de abajo de la hoja: nunca más abajo, en el hueco del fondo. Devuelve cuántas quedaron
+## sueltas y cuántas de ésas quedaron adentro del volumen, que es lo que con una pared bajaba.
+func _soltar_y_comprobar(almacen: Node3D, numero: int, abierta: bool) -> Vector2i:
 	var frente := _frente_de(almacen, numero)
 	var base: float = frente["base_de_la_hoja"]
 	var estante := _estante_mas_bajo(almacen, numero, frente)
@@ -213,13 +237,16 @@ func _soltar_y_comprobar(almacen: Node3D, numero: int, abierta: bool) -> int:
 	if abierta:
 		await _abrir(almacen, numero)
 	var soltados := 0
+	var adentro := 0
 	for objeto in objetos:
 		for punto in _puntos_de_mira(frente, estante, abierta):
 			for parado in PARADOS:
-				if not await _soltar_apuntando_a(almacen, objeto, frente, punto, parado):
+				if not await _soltar_apuntando_a(almacen, objeto, numero, frente, punto, parado):
 					continue
 				soltados += 1
 				var entro := _entro_al_volumen(objeto, frente)
+				if entro >= TOLERANCIA:
+					adentro += 1
 				var debajo := base - _limites_del_volumen(objeto).position.y
 				var donde := (
 					"`%s`, `%s` apuntado a %v desde %.1f m"
@@ -235,22 +262,23 @@ func _soltar_y_comprobar(almacen: Node3D, numero: int, abierta: bool) -> int:
 					)
 					. is_true()
 				)
-	return soltados
+	return Vector2i(soltados, adentro)
 
 
 func test_lo_soltado_apuntando_a_la_base_con_la_puerta_cerrada_no_queda_adentro() -> void:
 	var almacen := await _almacen()
-	var soltados := 0
+	var soltados := Vector2i.ZERO
 	for numero in MUEBLES.size():
 		soltados += await _soltar_y_comprobar(almacen, numero, false)
 	# La premisa: el gesto suelta de verdad, y no sólo devuelve todo a la mano.
-	assert_int(soltados).is_greater(0)
+	assert_int(soltados.x).is_greater(0)
 
 
 func test_lo_soltado_apuntando_a_la_heladera_abierta_no_baja_del_borde_de_la_hoja() -> void:
 	var almacen := await _almacen()
-	var soltados := 0
+	var soltados := Vector2i.ZERO
 	# La heladera fuera de servicio tiene la puerta trabada: no abre.
 	for numero in 2:
 		soltados += await _soltar_y_comprobar(almacen, numero, true)
-	assert_int(soltados).is_greater(0)
+	assert_int(soltados.x).is_greater(0)
+	assert_int(soltados.y).is_greater(0)
