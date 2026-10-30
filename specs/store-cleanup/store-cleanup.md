@@ -140,8 +140,8 @@ Cada jornada DEBE arrancar con todas sus manchas sucias, aunque la anterior las 
 Una mancha que la jornada no declara NO DEBE verse, ni detener la mira, ni reservar el sector de
 un charco temporal, ni contar para limpiar. Una mancha de pared o de techo DEBE borrarse con la
 misma pasada y el mismo alcance que una del piso, apuntándola con la mira desde un punto libre del
-piso. El paso del jugador DEBE tocar sólo las manchas del piso: una de pared o de techo NO DEBE
-ondular cuando el jugador camina a su lado o debajo.
+piso. El paso del jugador NO DEBE hacer ondular ninguna mancha —de piso, de pared o de techo, sea
+acuosa o no— cuando el jugador camina sobre ella, a su lado o debajo.
 
 ### BR-CLN-014 — Los útiles disponibles arrancan en el cuartito
 
@@ -846,11 +846,10 @@ DADO la jornada 5 con dos bolsas depositadas y la tercera, por turno, en el tach
 en la mano, CUANDO cierra ENTONCES la basura queda pendiente. CUANDO abre la jornada 6 ENTONCES
 la mano está vacía, los tres tachos están sin bolsa y ninguna bolsa está en el mundo.
 
-### AC-CLN-058 — El paso toca sólo el piso *(verifica BR-CLN-013)*
+### AC-CLN-058 — El paso no hace ondular ninguna mancha *(verifica BR-CLN-013)*
 
-DADO cada jornada de la 4 a la 8 CUANDO el jugador da un paso al lado de cada mancha de pared, y
-debajo de la de techo, ENTONCES ninguna recibe el toque del paso ni ondula. DADO una mancha del
-piso de la misma noche CUANDO el jugador da un paso a su lado ENTONCES sí lo recibe.
+DADO cada jornada de la 4 a la 8 CUANDO el jugador da un paso sobre cada mancha del piso, al lado
+de cada mancha de pared y debajo de la de techo, acuosas o no, ENTONCES ninguna ondula.
 
 ### AC-CLN-059 — El charco reserva sólo las manchas de la noche *(verifica BR-CLN-024, BR-CLN-013)*
 
