@@ -21,6 +21,14 @@ const LARGO_DEL_RAYO := 1.2
 const CERCA := 0.02
 const EMPUJON := 0.3
 
+## Con qué rapidez se lanza la caja contra la base, en metros por segundo, y cuántos cuadros de
+## física se espera a que se asiente.
+const VELOCIDAD_DEL_EMPUJE := 1.5
+const CUADROS_DEL_EMPUJE := 60
+
+## Cuánto deja el motor que un cuerpo apoyado se hunda en lo que lo sostiene.
+const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
+
 ## Cuánto puede entrar lo empujado y contar igual como frenado, en metros.
 const TOLERANCIA := 0.01
 
@@ -179,10 +187,8 @@ static func _minimo_sobre(limites: AABB, eje: Vector3) -> float:
 
 
 ## Pone a `objeto` quieto, a `CERCA` del frente de la heladera, centrado a lo ancho y con la base de
-## su volumen a la altura pedida; después lo empuja hacia adentro. Devuelve cuánto avanzó.
-func _empujar_contra_la_base(
-	objeto: PhysicsBody3D, frente: Dictionary, bajo_la_hoja: bool
-) -> Array:
+## su volumen a la altura pedida.
+func _poner_contra_la_base(objeto: PhysicsBody3D, frente: Dictionary, bajo_la_hoja: bool) -> void:
 	var direccion: Vector3 = frente["direccion"]
 	var lado: Vector3 = frente["lado"]
 	var centro: Vector3 = frente["centro"]
@@ -207,43 +213,34 @@ func _empujar_contra_la_base(
 	# La premisa: quedó donde se lo puso, a `CERCA` del frente.
 	var claro := _minimo_sobre(_limites_del_volumen(objeto), direccion) - (frente["plano"] as float)
 	assert_float(claro).is_equal_approx(CERCA, 0.001)
-	var consulta := PhysicsTestMotionParameters3D.new()
-	consulta.from = objeto.global_transform
-	consulta.motion = -direccion * EMPUJON
-	var resultado := PhysicsTestMotionResult3D.new()
-	if not PhysicsServer3D.body_test_motion(objeto.get_rid(), consulta, resultado):
-		return [EMPUJON, "nada"]
-	var frenado_por := resultado.get_collider() as Node
-	var quien := (
-		"%s, forma %d, punto %v, normal %v, volumen %s"
-		% [
-			frenado_por.name if frenado_por else "?",
-			resultado.get_collider_shape(),
-			resultado.get_collision_point(),
-			resultado.get_collision_normal(),
-			_limites_del_volumen(objeto),
-		]
-	)
-	return [resultado.get_travel().length(), quien]
+
+
+## Cuánto entró al volumen de la heladera, en metros: lo que su volumen pasó del plano del frente.
+func _entro_al_volumen(objeto: PhysicsBody3D, frente: Dictionary) -> float:
+	var direccion: Vector3 = frente["direccion"]
+	return (frente["plano"] as float) - _minimo_sobre(_limites_del_volumen(objeto), direccion)
 
 
 func test_una_unidad_empujada_contra_la_base_no_entra() -> void:
 	var almacen := await _almacen()
 	for numero in MUEBLES.size():
+		var frente := _frente_de(almacen, numero)
+		var direccion: Vector3 = frente["direccion"]
 		for bajo_la_hoja: bool in [false, true]:
 			var unidad: RigidBody3D = OBJETO_SUELTO.instantiate()
 			almacen.add_child(unidad)
-			var empuje := await _empujar_contra_la_base(
-				unidad, _frente_de(almacen, numero), bajo_la_hoja
-			)
-			var avance: float = empuje[0]
+			await _poner_contra_la_base(unidad, frente, bajo_la_hoja)
+			var consulta := PhysicsTestMotionParameters3D.new()
+			consulta.from = unidad.global_transform
+			consulta.motion = -direccion * EMPUJON
+			var resultado := PhysicsTestMotionResult3D.new()
+			var avance := EMPUJON
+			if PhysicsServer3D.body_test_motion(unidad.get_rid(), consulta, resultado):
+				avance = resultado.get_travel().length()
 			(
 				assert_float(avance)
 				. override_failure_message(
-					(
-						"`%s`, la unidad entró %.3f m al volumen y la frenó %s"
-						% [MUEBLES[numero], avance - CERCA, empuje[1]]
-					)
+					"`%s`, la unidad entró %.3f m al volumen" % [MUEBLES[numero], avance - CERCA]
 				)
 				. is_less(CERCA + TOLERANCIA)
 			)
@@ -254,26 +251,36 @@ static func _lado_de(caja: Node3D) -> float:
 	return (caja.get_node("Cuerpo") as Node3D).scale.x
 
 
+## La caja grande, viva, contra la base y empujada hacia adentro: queda donde la deja la física.
 func test_una_caja_empujada_contra_la_base_no_entra_con_la_puerta_abierta() -> void:
 	var almacen := await _almacen()
-	var caja: Node3D = null
-	for propia: Node3D in almacen.get("_cajas_de_productos"):
+	var caja: RigidBody3D = null
+	for propia: RigidBody3D in almacen.get("_cajas_de_productos"):
 		if caja == null or _lado_de(propia) > _lado_de(caja):
 			caja = propia
 	assert_object(caja).is_not_null()
 	# La caja grande es más alta que el zócalo: con la hoja cerrada la frenaría ella y no la base.
 	for numero in 2:
 		var frente := _frente_de(almacen, numero)
+		var direccion: Vector3 = frente["direccion"]
 		await _abrir(almacen, numero)
-		var empuje := await _empujar_contra_la_base(caja, frente, false)
-		var avance: float = empuje[0]
+		await _poner_contra_la_base(caja, frente, false)
+		caja.call("soltarse")
+		caja.linear_velocity = -direccion * VELOCIDAD_DEL_EMPUJE
+		for cuadro in CUADROS_DEL_EMPUJE:
+			await get_tree().physics_frame
+		var entro := _entro_al_volumen(caja, frente)
+		caja.call("quedarse_quieta")
 		(
-			assert_float(avance)
+			assert_float(entro)
 			. override_failure_message(
-				(
-					"`%s`, la caja entró %.3f m al volumen y la frenó %s"
-					% [MUEBLES[numero], avance - CERCA, empuje[1]]
-				)
+				"`%s`, la caja entró %.3f m al volumen" % [MUEBLES[numero], entro]
 			)
-			. is_less(CERCA + TOLERANCIA)
+			. is_less(_hundimiento_tolerado())
 		)
+
+
+## Cuánto puede hundirse un cuerpo vivo en lo que toca sin estar adentro: el roce y el margen del
+## motor.
+func _hundimiento_tolerado() -> float:
+	return ReglasDeLosObjetos.ROCE + ProjectSettings.get_setting(PENETRACION_TOLERADA)
