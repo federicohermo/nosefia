@@ -56,6 +56,7 @@ var _posicion_de_espera: Vector3
 func _ready() -> void:
 	_posicion_de_espera = comprador_visible.position
 	objetivo.atenciones = atenciones
+	objetivo.manos = jugador.agarre.manos()
 	objetivo.precargar(ANIMACIONES.values())
 	objetivo.interaccion_pedida.connect(_al_pulsar)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)

@@ -15,3 +15,9 @@ extends RefCounted
 ## Vive acá y no en `tarea_de_atender.gd` a propósito: la tarea **recibe** la lista y no sabe
 ## cuántos son, así que un test se arma con uno o con tres sin que mover este número rompa nada.
 const COMPRADORES_POR_JORNADA := 2
+
+
+## Si soltar este objeto en el hueco, con un comprador en la ventanilla, es intentar entregárselo.
+## Sólo un producto: la bolsa, el ticket y la pista siguen saliendo por la ventana.
+static func se_entrega_al_soltar_en_el_hueco(objeto: ObjetoDelAlmacen) -> bool:
+	return objeto is UnidadDeProducto

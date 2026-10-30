@@ -567,3 +567,79 @@ func test_entregar_no_abre_la_ventanilla_y_se_lee_como_subtitulo_de_comprador() 
 	assert_bool(jugador.get("_control").esta_suspendido()).is_false()
 	assert_bool(burbuja.visible).is_true()
 	assert_str(texto.text).is_not_empty()
+
+
+## Apunta a lo transparente de la figura, que es donde un clic con un producto lo soltaría por la
+## ventana, y pulsa.
+func _soltar_en_el_hueco(almacen: Node3D) -> void:
+	await _apuntar(almacen, true)
+	almacen.get_node("Jugador").call("_leer_la_mira")
+	await _pulsar_real()
+
+
+func test_un_producto_soltado_en_el_hueco_se_entrega_como_con_el_clic() -> void:  # AC-CTR-147
+	var almacen := await _abrir()
+	var atendida := _una_entrada(almacen)
+	var agarre: Agarre = almacen.get("_agarre")
+	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
+	var producto: Producto = atendida.comprador().pedido().productos()[0]
+	almacen.get("_reposicion_manual").retirar(producto.id)
+	var cuerpo := agarre.cuerpo_sostenido()
+	assert_object(cuerpo).is_not_null()
+	var soltados: Array[Node3D] = []
+	agarre.objeto_soltado.connect(func(nodo: Node3D) -> void: soltados.append(nodo))
+	await _soltar_en_el_hueco(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
+	await _pulsar_real()
+	await _soltar_en_el_hueco(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_null()
+	assert_array(soltados).is_empty()
+	assert_bool(cuerpo.visible).is_false()
+	assert_object(cuerpo.get_parent()).is_same(puesto)
+	assert_bool(cuerpo.get_meta(&"recibido_por_comprador", false)).is_true()
+
+
+func test_el_producto_que_el_comprador_no_acepta_sigue_en_la_mano() -> void:  # AC-CTR-148
+	var almacen := await _abrir()
+	var atendida := _una_entrada(almacen)
+	var agarre: Agarre = almacen.get("_agarre")
+	var pedidos: Array[Producto] = atendida.comprador().pedido().productos()
+	var ajeno: Producto = null
+	for candidato in Catalogo.todos():
+		if not pedidos.has(candidato):
+			ajeno = candidato
+			break
+	assert_object(ajeno).is_not_null()
+	var cuerpo: ObjetoAgarrable = load(OBJETO).instantiate()
+	cuerpo.datos = UnidadDeProducto.new(ajeno)
+	almacen.add_child(cuerpo)
+	assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
+	var soltados: Array[Node3D] = []
+	agarre.objeto_soltado.connect(func(nodo: Node3D) -> void: soltados.append(nodo))
+	await _soltar_en_el_hueco(almacen)
+	assert_bool(atendida.conversacion_iniciada()).is_true()
+	assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
+	await _pulsar_real()
+	await _soltar_en_el_hueco(almacen)
+	assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
+	assert_array(soltados).is_empty()
+	assert_bool(cuerpo.has_meta(&"recibido_por_comprador")).is_false()
+	assert_bool(atendida.vendida()).is_false()
+
+
+func test_sin_comprador_o_sin_producto_el_hueco_no_atrae_el_gesto() -> void:  # AC-CTR-149
+	var almacen := await _abrir()
+	var agarre: Agarre = almacen.get("_agarre")
+	var objetivo: Node3D = almacen.get_node("Estructura/Ventanilla/Comprador/Objetivo")
+	var cuerpo: ObjetoAgarrable = load(OBJETO).instantiate()
+	cuerpo.datos = UnidadDeProducto.new(Catalogo.todos()[0])
+	almacen.add_child(cuerpo)
+	assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
+	var punto := objetivo.global_position
+	var ojo := punto + objetivo.global_basis.z
+	assert_bool(objetivo.call("admite_foco_en", punto, ojo)).is_false()
+	_una_entrada(almacen)
+	assert_object(agarre.entregar()).is_same(cuerpo)
+	await _apuntar(almacen, true)
+	almacen.get_node("Jugador").call("_leer_la_mira")
+	assert_object(almacen.get_node("Jugador").call("enfocado")).is_not_same(objetivo)
