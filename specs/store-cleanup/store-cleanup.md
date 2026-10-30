@@ -839,7 +839,7 @@ la mano está vacía, los tres tachos están sin bolsa y ninguna bolsa está en 
 
 ### AC-CLN-058 — El paso no hace ondular ninguna mancha *(verifica BR-CLN-013)*
 
-DADO cada jornada de la 3 a la 7 CUANDO el jugador da un paso sobre cada mancha del piso, al lado
+DADO cada jornada de la 2 a la 7 CUANDO el jugador da un paso sobre cada mancha del piso, al lado
 de cada mancha de pared y debajo de la de techo, acuosas o no, ENTONCES ninguna ondula.
 
 ### AC-CLN-059 — El charco reserva sólo las manchas de la noche *(verifica BR-CLN-024, BR-CLN-013)*
