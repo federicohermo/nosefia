@@ -1,4 +1,5 @@
-## Los valores fijos de atender: cuántos compradores pasan por la ventanilla en una jornada.
+## Las reglas fijas de atender: cuántos compradores pasan por la ventanilla en una jornada, y qué
+## objeto se entrega al soltarlo en el hueco.
 ##
 ## Es un archivo aparte de `reglas.gd` por el mismo criterio que separa a los otros `reglas_de_*`
 ## de esta carpeta: no es de qué trata el número, es quién lo toca y probando qué. `reglas.gd` se

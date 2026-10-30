@@ -588,15 +588,35 @@ func test_un_producto_soltado_en_el_hueco_se_entrega_como_con_el_clic() -> void:
 	assert_object(cuerpo).is_not_null()
 	var soltados: Array[Node3D] = []
 	agarre.objeto_soltado.connect(func(nodo: Node3D) -> void: soltados.append(nodo))
+	var compras: Array[bool] = []
+	(almacen.get("_atenciones") as Ventanilla).compra_realizada.connect(
+		func() -> void: compras.append(true)
+	)
 	await _soltar_en_el_hueco(almacen)
 	assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
 	await _pulsar_real()
+	assert_bool(puesto.get("_abierta")).is_false()
 	await _soltar_en_el_hueco(almacen)
 	assert_object(agarre.cuerpo_sostenido()).is_null()
 	assert_array(soltados).is_empty()
 	assert_bool(cuerpo.visible).is_false()
 	assert_object(cuerpo.get_parent()).is_same(puesto)
 	assert_bool(cuerpo.get_meta(&"recibido_por_comprador", false)).is_true()
+	var productos: Array[Producto] = atendida.comprador().pedido().productos()
+	for restante: Producto in productos.slice(1):
+		almacen.get("_reposicion_manual").retirar(restante.id)
+		await _soltar_en_el_hueco(almacen)
+		assert_object(agarre.cuerpo_sostenido()).is_null()
+	var ticket: ObjetoAgarrable = load(OBJETO).instantiate()
+	ticket.datos = Ticket.new(productos)
+	almacen.add_child(ticket)
+	assert_bool(agarre.pedir_agarrar(ticket.datos, ticket)).is_true()
+	await _interaccion_real(almacen)
+	assert_array(compras).has_size(1)
+	assert_bool(atendida.vendida()).is_true()
+	assert_array(soltados).is_empty()
+	var estados: Array[ReglasDelCierre.Estado] = almacen.call("_estados_del_cierre")
+	assert_bool(ReglasDelCierre.hay_desorden(estados, almacen.get("_partida").jornada())).is_false()
 
 
 func test_el_producto_que_el_comprador_no_acepta_sigue_en_la_mano() -> void:  # AC-CTR-148
