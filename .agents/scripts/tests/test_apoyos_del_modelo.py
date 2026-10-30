@@ -136,6 +136,16 @@ class PiezasDeLaGondola(unittest.TestCase):
         tornillo = tetraedro((2, 2, 2), .01)
         self.assertEqual(len(grupos_convexos(estante + etiqueta + tornillo)), 1)
 
+    def test_una_astilla_plana_pegada_a_una_pieza_entra_en_su_casco(self):
+        lateral = tetraedro((0, 0, 0), 1)
+        astilla = [[(0, 0, 0), (0, 0, -.2), (0, .1, -.1)]]
+        grupos = grupos_convexos(lateral + astilla)
+        self.assertEqual(len(grupos), 1)
+        self.assertIn((0.0, 0.0, -0.2), grupos[0])
+
+    def test_la_pata_de_una_gondola_tiene_volumen(self):
+        self.assertEqual(len(grupos_convexos(tetraedro((0, 0, 0), .045))), 1)
+
 
 class GeometriaVigente(unittest.TestCase):
     @classmethod

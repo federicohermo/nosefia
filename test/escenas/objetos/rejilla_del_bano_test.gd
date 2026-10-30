@@ -59,15 +59,15 @@ func _comprobar_ranura(malla: Mesh, nivel: float, x: float, y: float, entre: flo
 		assert_int(imagen.decompress()).is_equal(OK)
 	var ranura := _pixel(imagen, golpe.uv)
 	for desplazamiento: float in [-entre, entre]:
-		var entre := _golpe(malla, nivel, Vector3(x, y + desplazamiento, .2))
-		assert_bool(entre.is_empty()).is_false()
-		if entre.is_empty():
+		var chapa := _golpe(malla, nivel, Vector3(x, y + desplazamiento, .2))
+		assert_bool(chapa.is_empty()).is_false()
+		if chapa.is_empty():
 			continue
-		var otra := malla.surface_get_material(entre.superficie) as BaseMaterial3D
+		var otra := malla.surface_get_material(chapa.superficie) as BaseMaterial3D
 		assert_object(otra.albedo_texture).is_same(pintura.albedo_texture)
 		if otra.albedo_texture != pintura.albedo_texture:
 			continue
-		var blanco := _pixel(imagen, entre.uv)
+		var blanco := _pixel(imagen, chapa.uv)
 		assert_float(blanco.get_luminance() - ranura.get_luminance()).is_greater(.1)
 
 

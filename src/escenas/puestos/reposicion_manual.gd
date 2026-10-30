@@ -1366,8 +1366,7 @@ func _preparar_grupos() -> void:
 ## **Los envases son sólo dibujo**: un `MultiMeshInstance3D` no choca, y el contorno de la góndola
 ## sigue el metal. Sin cuerpo, el brazo de la mano no encontraba nada hasta el riel. Es un
 ## `CharacterBody3D` y no un `StaticBody3D` porque el sonido cuenta como pared a todo estático.
-## Las cajas de la fila de atrás nacen prendidas y las de los casilleros apagadas:
-## `_mostrar_lo_puesto()` prende las que el estante dice ocupadas.
+## Las cajas nacen apagadas: `_mostrar_lo_puesto()` prende las que el estante dice ocupadas.
 func _preparar_la_mercaderia() -> void:
 	for producto in Catalogo.todos():
 		var cuerpo := CharacterBody3D.new()
@@ -1384,11 +1383,9 @@ func _preparar_la_mercaderia() -> void:
 			var envase := CollisionShape3D.new()
 			envase.shape = forma
 			envase.transform = Transform3D(copia.basis, copia * caja.get_center())
-			var de_casillero := indice >= _fijas[producto.id]
-			envase.disabled = de_casillero
+			envase.disabled = true
 			cuerpo.add_child(envase)
-			if de_casillero:
-				formas.append(envase)
+			formas.append(envase)
 		add_child(cuerpo)
 		_generados.append(cuerpo)
 		_mercaderia.append(cuerpo)
