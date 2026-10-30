@@ -188,6 +188,7 @@ func _recorrer(almacen: Node3D, formas: Array[CollisionShape3D]) -> Dictionary:
 		for forma in formas:
 			if _toca_envases(almacen, forma):
 				tocadas.append("desde %v mirando %v" % [postura[0], postura[1]])
+				tocadas.append(_diagnostico(almacen, jugador, formas[0]))
 				break
 	return {"con_mercaderia": con_mercaderia, "tocadas": tocadas}
 
@@ -201,6 +202,30 @@ func _distancias_de_la_mano(almacen: Node3D, cuerpo: Node3D) -> Array[float]:
 		await _ir_a(almacen, postura)
 		distancias.append(cuerpo.global_position.distance_to(camara.global_position))
 	return distancias
+
+
+func _diagnostico(almacen: Node3D, jugador: CharacterBody3D, forma: CollisionShape3D) -> String:
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = forma.global_transform
+	consulta.collision_mask = JugadorDelLocal.CAPA_DE_LA_MERCADERIA
+	var choques := almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 8)
+	var nombres: Array[String] = []
+	for choque in choques:
+		nombres.append(str(choque["collider"].name))
+	var brazo: SpringArm3D = jugador.get_node("Giro/Camara/BrazoDeCarga")
+	return (
+		"forma %v camara %v largo %.3f brazo %.3f retroceso %.3f choques %s"
+		% [
+			forma.global_position,
+			camara.global_position,
+			jugador.get("_largo_de_carga"),
+			brazo.get_hit_length(),
+			jugador.call("_retroceso_libre", forma.get_parent()),
+			nombres,
+		]
+	)
 
 
 func _hay_mercaderia_delante(almacen: Node3D, jugador: CharacterBody3D) -> bool:
