@@ -79,7 +79,7 @@ func test_todo_lo_que_se_pide_existe_en_el_catalogo() -> void:
 
 
 func test_las_jornadas_sin_agenda_propia_usan_el_padron() -> void:  # AC-CTR-001
-	for jornada in [POSTERIOR]:
+	for jornada: int in [POSTERIOR]:
 		var compradores := Compradores.de_la_jornada(jornada)
 		assert_str(compradores[0].nombre()).is_equal("Marta")
 		for comprador in compradores:
@@ -88,7 +88,7 @@ func test_las_jornadas_sin_agenda_propia_usan_el_padron() -> void:  # AC-CTR-001
 
 func test_el_padron_y_las_jornadas_sin_agenda_conservan_el_pedido_de_ruben() -> void:  # AC-CTR-041
 	var listas: Array[Array] = [Compradores.padron()]
-	for jornada in [POSTERIOR]:
+	for jornada: int in [POSTERIOR]:
 		listas.append(Compradores.de_la_jornada(jornada))
 	for lista in listas:
 		var ruben: Comprador = lista[1]

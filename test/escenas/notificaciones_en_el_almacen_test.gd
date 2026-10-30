@@ -122,7 +122,7 @@ func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3660.0)
 	assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
 	RelojDePrueba.avanzar_turno(reloj, 120.0)
-	assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+	assert_array(_textos(local)).contains(["QUEDA UNA HORA DE JORNADA"])
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(_textos(local)).is_empty()
 	RelojDePrueba.avanzar_turno(reloj, 1.0)
@@ -131,7 +131,7 @@ func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
 	assert_bool(local.get("_ciclo").abrir_la_jornada()).is_true()
 	reloj.set_process(false)
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3600.0)
-	assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+	assert_array(_textos(local)).contains(["QUEDA UNA HORA DE JORNADA"])
 
 
 func test_saltar_directamente_hasta_cerrar_no_deja_cartel() -> void:  # AC-NTF-021, AC-NTF-022

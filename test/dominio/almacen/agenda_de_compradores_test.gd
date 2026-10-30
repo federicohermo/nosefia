@@ -90,7 +90,9 @@ func test_una_compra_completa_no_vence() -> void:  # AC-CTR-039
 
 
 func test_otras_jornadas_conservan_el_padron() -> void:  # AC-CTR-041
-	for jornada in [ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA]:
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	]:
 		var compradores := Compradores.de_la_jornada(jornada)
 		assert_str(compradores[0].nombre()).is_equal("Marta")
 		assert_bool(compradores[0].tiene_horario()).is_false()

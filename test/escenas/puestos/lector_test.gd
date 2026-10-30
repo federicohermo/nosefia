@@ -319,7 +319,10 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 	)
 	sonidos.clear()
 	# El aviso de cobro pertenece al recorrido anterior, conservado desde la jornada 3.
-	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR + 1)
+	almacen.call(
+		"_al_abrir_la_jornada",
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	)
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	atenciones.pedir_atender()
 	assert_object(atenciones.atencion()).is_not_null()

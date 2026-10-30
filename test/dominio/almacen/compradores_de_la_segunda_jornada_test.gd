@@ -48,7 +48,9 @@ func test_cada_llamada_y_cada_apertura_tienen_estado_propio() -> void:  # AC-CTR
 	var nueva := TareaDeAtender.new(segunda, Inventario.new(Catalogo.todos()))
 	assert_object(nueva.atencion()).is_null()
 	assert_bool(nueva.compras_cerradas()).is_false()
-	for jornada in [ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA]:
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	]:
 		assert_str(Compradores.de_la_jornada(jornada)[0].nombre()).is_equal("Marta")
 
 
