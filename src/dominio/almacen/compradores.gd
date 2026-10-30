@@ -3,8 +3,9 @@
 ## **El padrón es fijo y no se sortea.** No es prolijidad: un sorteo acá haría que el mismo balance
 ## diera noches distintas, y ningún test de la ventanilla se podría escribir sin sembrar una
 ## semilla. El azar en un prototipo cuya tensión es aritmética esconde justo lo que hay que
-## mirar — si el tiempo alcanza. Las jornadas 3 a 5 son la excepción, y la semilla es la de la
-## partida: sortean qué piden, no cuándo vienen ni cuántos.
+## mirar — si el tiempo alcanza. Las jornadas con agenda al azar son la excepción (la 3 a la 5, la
+## noche del corte de luz y la última), y la semilla es la de la partida: sortean qué piden, no
+## cuándo vienen ni cuántos.
 ##
 ## **Que alguien pague distinto de lo que marca la caja está en el padrón, no librado al azar.**
 ## Es la única forma que tiene el juego de mentir en vivo, y un padrón donde todos pagan justo
@@ -112,8 +113,11 @@ const GRUPOS: Dictionary[int, Array] = {
 	],
 }
 
-## Las jornadas 3 a 5: `jornada → [nombre, personaje, llegada, límite]` de cada comprador, con
-## cada hora como `Vector2i(hora, minuto)`. El pedido no está acá: sale del sorteo de la apertura.
+## Las noches con agenda al azar: `jornada → [nombre, personaje, llegada, límite, obligatorios]` de
+## cada comprador, con cada hora como `Vector2i(hora, minuto)`. El pedido sale del sorteo de la
+## apertura; `obligatorios`, si está, son los productos que lleva siempre, fijados antes de
+## sortear el resto. La noche del corte y la última se cuentan desde la primera jornada completa,
+## como el corte de luz.
 const AGENDAS_AL_AZAR: Dictionary[int, Array] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA + 2:
 	[
@@ -129,6 +133,22 @@ const AGENDAS_AL_AZAR: Dictionary[int, Array] = {
 	[
 		["Cami", DialogosDeCompradores.Personaje.CAMI, Vector2i(20, 30), Vector2i(23, 0)],
 		["Mía", DialogosDeCompradores.Personaje.MIA, Vector2i(5, 0), Vector2i(7, 30)],
+	],
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3:
+	[
+		["Tin", DialogosDeCompradores.Personaje.TIN, Vector2i(0, 0), Vector2i(2, 30)],
+		["Tia", DialogosDeCompradores.Personaje.TIA, Vector2i(2, 31), Vector2i(5, 1)],
+	],
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 4:
+	[
+		[
+			"Fede",
+			DialogosDeCompradores.Personaje.FEDE,
+			Vector2i(23, 0),
+			Vector2i(1, 30),
+			[Producto.Id.DURONGA, Producto.Id.DUREXTRA],
+		],
+		["Mía", DialogosDeCompradores.Personaje.MIA, Vector2i(5, 30), Vector2i(8, 0)],
 	],
 }
 
@@ -175,12 +195,15 @@ static func _al_azar(jornada: int, semilla: int) -> Array[Comprador]:
 		vendibles.append(producto.id)
 	var lista: Array[Comprador] = []
 	for fila: Array in AGENDAS_AL_AZAR[jornada]:
+		var obligatorios: Array = fila[4] if fila.size() > 4 else []
 		var lineas: Array = []
+		for id: Producto.Id in obligatorios:
+			lineas.append([id, 1])
 		var restantes := GRUPOS[fila[1]].filter(
-			func(id: Producto.Id) -> bool: return id in vendibles
+			func(id: Producto.Id) -> bool: return id in vendibles and not id in obligatorios
 		)
 		var tipos := azar.randi_range(TIPOS_MINIMOS_POR_PEDIDO, TIPOS_MAXIMOS_POR_PEDIDO)
-		for _tipo in tipos:
+		for _tipo in tipos - obligatorios.size():
 			lineas.append([restantes.pop_at(azar.randi_range(0, restantes.size() - 1)), 1])
 		var comprador := _comprador_de([fila[0], lineas, 0])
 		comprador.personaje = fila[1]
