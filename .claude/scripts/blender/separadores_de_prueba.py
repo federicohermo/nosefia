@@ -19,7 +19,8 @@ tira que pintó el artista. Si el producto no tiene bandeja propia pero sí tira
 molde es la bandeja de una unidad del producto de ancho más parecido, con la tira cambiada de
 fila. Un producto sin tira no lleva bandeja, y el script lo nombra.
 
-Las bandejas de un tramo cuyo producto no cambia se copian tal cual. Los separadores del mapa
+Las bandejas siguen a las unidades del mapa de prueba en todos los tramos, también donde el
+producto no cambia, porque ahí la columna puede llevar otra cantidad. Los separadores del mapa
 completo no se tocan.
 
 **Es idempotente.** Si las copias ya existen, se borran y se vuelven a hacer.
@@ -270,16 +271,12 @@ def armar():
     sin_tira = set()
     temporales = []
     for cara, de_la_cara in sorted(por_cara.items()):
-        columnas = disponer_prueba.columnas_de_prueba(cara, de_la_cara)
-        for clave, copias in sorted(de_la_cara.items()):
+        dispuestas = disponer_prueba.disponer_cara(cara, de_la_cara, completo)
+        for clave, (nuevo, unidades) in sorted(dispuestas.items()):
+            temporales += unidades
             debajo = [b for b in bandejas if b.unidades and any(
-                b.contiene(_caja(u)) for u in copias if u["fila"] == "adelante")]
+                b.contiene(_caja(u)) for u in de_la_cara[clave] if u["fila"] == "adelante")]
             if not debajo:
-                continue
-            nuevo = columnas[int(clave.split("/")[1])]
-            if str(copias[0]["producto"]) == nuevo:
-                for b in debajo:
-                    nuevas[b.objeto.name] += b.colocar(b, b.desde + b.ancho / 2, b.ancho)
                 continue
             if nuevo not in anchos:
                 modelo = producto(nuevo)
@@ -291,12 +288,11 @@ def armar():
             if molde is None:
                 sin_tira.add(nuevo)
                 continue
-            columna = int(clave.split("/")[1])
-            unidades = disponer_prueba.cambiar(
-                copias, disponer_prueba.molde_de(nuevo, cara, columna, completo))
-            temporales += unidades
             como = debajo[0]
-            limites = (min(b.desde for b in debajo), max(b.desde + b.ancho for b in debajo))
+            bordes = [c + s * a / 2 for c, a in _centros(unidades, como.derecha) for s in (-1, 1)]
+            limites = (min(min(b.desde for b in debajo), min(bordes) - max(molde.margen, 0.0)),
+                       max(max(b.desde + b.ancho for b in debajo),
+                           max(bordes) + max(molde.margen, 0.0)))
             nuevas[como.objeto.name] += bandejas_nuevas(como, molde, corrimiento, unidades, limites)
     for unidad in temporales:
         bpy.data.objects.remove(unidad, do_unlink=True)

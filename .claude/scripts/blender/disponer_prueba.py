@@ -3,18 +3,20 @@ de Blender y no guarda el `.blend`.
 
     blender <fuente>.blend --background --python .claude/scripts/blender/disponer_prueba.py
 
-Cada tanda del mapa completo que cae en una cara del mapa de prueba cambia de producto: la que ya
-es del producto de prueba queda como está, y las demás se llenan con el producto de prueba en el
-mismo tramo, con el mismo frente y a la misma altura. Así el mapa de prueba sigue a la góndola sin
-medirla de nuevo: lo que mide el mapa completo vale para los dos.
+Cada cara del mapa de prueba se llena de nuevo sobre los estantes del mapa completo, con el
+mismo frente y a la misma altura. Así el mapa de prueba sigue a la góndola sin medirla de nuevo:
+lo que mide el mapa completo vale para los dos.
 
 En cada cara, el producto de prueba toma la columna donde ya está en el mapa completo. Su tanda
 principal es la más baja de las que eran principales en el mapa completo: queda a la altura de la
 mano.
 
-Una tanda que cambia de producto copia una tanda real de ese producto, con su giro y su paso: así
-los estantes de una cara se ven todos iguales. El molde es la tanda de la misma columna de la cara,
-y si la cara no tiene ninguna, la de cualquier otro mueble.
+**Todos los estantes de una cara se ven iguales.** Cada columna se llena con una tanda real de su
+producto, con su giro y su paso: la de la misma columna de la cara, y si la cara no tiene
+ninguna, la de cualquier otro mueble. El tramo es el más ancho que ocupan las tandas de la cara
+en cualquier estante. Con dos productos, entre ellos queda el aire más justo que dejaba el mapa
+completo, y el reparto busca a la vez la junta más cerca de donde estaba y el menor hueco sin
+llenar.
 """
 
 import argparse
@@ -39,6 +41,9 @@ DESTINO = RAIZ / "src/escenas/puestos/disposicion_de_prueba.tres"
 
 #: Lo menos que se separan dos unidades vecinas de un producto cambiado, en metros.
 SEPARACION_MINIMA = 0.008
+
+#: Lo que puede pasarse un bloque de su tramo y seguir entrando, en metros.
+TOLERANCIA = 0.002
 
 
 class Tramo:
@@ -98,31 +103,91 @@ def molde_de(producto, cara, columna, completo):
     return completo[min(claves, key=preferencia)]
 
 
-def cambiar(copias, molde):
-    """Las unidades del molde en el tramo de una tanda, con su giro y su paso, centradas."""
-    destino, origen = Tramo(copias), Tramo(molde)
-    adelante = sorted(
-        (c for c in molde if c["fila"] == "adelante"),
-        key=lambda c: (c.matrix_world.translation - origen.origen).dot(origen.u),
-    )
-    relativa = origen.marco().inverted() @ adelante[0].matrix_world
-    ancho = origen.largo - (origen.lugares[-1] - origen.lugares[0])
-    if len(origen.lugares) > 1:
-        paso = (origen.lugares[-1] - origen.lugares[0]) / (len(origen.lugares) - 1)
-    else:
-        paso = ancho + SEPARACION_MINIMA
-    cuantas = max(1, int((destino.largo - ancho) / paso + 1e-6) + 1)
-    inicio = (destino.largo - ancho - paso * (cuantas - 1)) / 2 + ancho / 2
-    unidad = bpy.data.objects[producto(str(molde[0]["producto"])).objeto]
+class Molde:
+    """Una tanda real de un producto: el giro de sus unidades, su ancho y el paso entre ellas."""
+
+    def __init__(self, copias):
+        self.tramo = Tramo(copias)
+        adelante = sorted(
+            (c for c in copias if c["fila"] == "adelante"),
+            key=lambda c: (c.matrix_world.translation - self.tramo.origen).dot(self.tramo.u),
+        )
+        self.relativa = self.tramo.marco().inverted() @ adelante[0].matrix_world
+        lugares = self.tramo.lugares
+        self.ancho = self.tramo.largo - (lugares[-1] - lugares[0])
+        if len(lugares) > 1:
+            self.paso = (lugares[-1] - lugares[0]) / (len(lugares) - 1)
+        else:
+            self.paso = self.ancho + SEPARACION_MINIMA
+        self.unidad = bpy.data.objects[producto(str(copias[0]["producto"])).objeto]
+
+    def largo(self, cuantas):
+        return self.ancho + self.paso * (cuantas - 1)
+
+    def cuantas(self, largo):
+        return max(1, int((largo - self.ancho + TOLERANCIA) / self.paso) + 1)
+
+
+def bloques(tramos, columnas, moldes):
+    """Dónde empieza cada columna a lo largo del estante y cuántas unidades lleva."""
+    lados = {}
+    for clave, tramo in tramos.items():
+        desde = tramo.origen.dot(tramo.u)
+        lados.setdefault(columnas[clave], {})[clave.split("/")[0]] = (desde, desde + tramo.largo)
+    desde = min(d for l in lados.values() for d, _ in l.values())
+    hasta = max(h for l in lados.values() for _, h in l.values())
+    if len(lados) == 1:
+        (c,) = lados
+        n = moldes[c].cuantas(hasta - desde)
+        return {c: (desde + (hasta - desde - moldes[c].largo(n)) / 2, n)}
+    baja, alta = sorted(lados, key=lambda c: min(d for d, _ in lados[c].values()))
+    juntas = [(lados[baja][e][1], lados[alta][e][0]) for e in lados[baja].keys() & lados[alta].keys()]
+    corte = sum(h + d for h, d in juntas) / (2 * len(juntas))
+    aire = max(SEPARACION_MINIMA, min(d - h for h, d in juntas))
+    candidatas = []
+    for n in range(1, moldes[baja].cuantas(hasta - desde) + 1):
+        resto = hasta - desde - aire - moldes[baja].largo(n)
+        if resto < moldes[alta].ancho - TOLERANCIA:
+            continue
+        m = moldes[alta].cuantas(resto)
+        sobra = resto - moldes[alta].largo(m)
+        junta = desde + sobra / 3 + moldes[baja].largo(n) + aire / 2 + sobra / 6
+        candidatas.append((abs(junta - corte) + sobra, n, m, sobra))
+    _, n, m, sobra = min(candidatas)
+    inicio = desde + sobra / 3
+    return {baja: (inicio, n),
+            alta: (inicio + moldes[baja].largo(n) + aire + sobra / 3, m)}
+
+
+def llenar(copias, molde, inicio, cuantas):
+    """Las unidades del molde sobre el estante de una tanda, desde `inicio` a lo largo."""
+    destino = Tramo(copias)
+    estante = destino.marco()
+    estante.translation -= destino.u * destino.origen.dot(destino.u)
     salida = []
     for i in range(cuantas):
-        corrimiento = Matrix.Translation((inicio + paso * i - origen.lugares[0], 0.0, 0.0))
-        copia = unidad.copy()
+        corrimiento = Matrix.Translation(
+            (inicio + molde.ancho / 2 + molde.paso * i - molde.tramo.lugares[0], 0.0, 0.0))
+        copia = molde.unidad.copy()
         copia.parent = None
-        copia.matrix_world = destino.marco() @ corrimiento @ relativa
+        copia.matrix_world = estante @ corrimiento @ molde.relativa
         copia["fila"] = "adelante"
         salida.append(copia)
     return salida
+
+
+def disponer_cara(cara, de_la_cara, completo):
+    """El producto y las unidades de cada tanda de una cara del mapa de prueba."""
+    productos = columnas_de_prueba(cara, de_la_cara)
+    columnas = {clave: int(clave.split("/")[1]) for clave in de_la_cara}
+    moldes = {c: Molde(molde_de(productos[c], cara, c, completo)) for c in set(columnas.values())}
+    tramos = {clave: Tramo(copias) for clave, copias in de_la_cara.items()}
+    lugares = bloques(tramos, columnas, moldes)
+    return {
+        clave: (productos[columnas[clave]],
+                llenar(copias, moldes[columnas[clave]], *lugares[columnas[clave]]))
+        for clave, copias in de_la_cara.items()
+    }
 
 
 def generar():
@@ -140,16 +205,8 @@ def generar():
             por_cara.setdefault(f"{letra}.{cara}", {})[clave] = copias
     tandas = {}
     for cara, de_la_cara in sorted(por_cara.items()):
-        columnas = columnas_de_prueba(cara, de_la_cara)
-        for clave, copias in sorted(de_la_cara.items()):
-            nuevo = columnas[int(clave.split("/")[1])]
-            if str(copias[0]["producto"]) == nuevo:
-                lugar = list(copias)
-            else:
-                columna = int(clave.split("/")[1])
-                lugar = cambiar(copias, molde_de(nuevo, cara, columna, completo))
-            principal_antes = not bool(copias[0]["fija"])
-            tandas[clave] = (nuevo, principal_antes, lugar)
+        for clave, (nuevo, lugar) in disponer_cara(cara, de_la_cara, completo).items():
+            tandas[clave] = (nuevo, not bool(de_la_cara[clave][0]["fija"]), lugar)
     principales = {}
     for clave, (nuevo, principal_antes, _) in sorted(
         tandas.items(), key=lambda t: (partes(t[0].split("/")[0])[2], t[0])
