@@ -41,7 +41,7 @@ func test_la_tilde_sola_no_desempata_y_rige_el_catalogo() -> void:  # AC-STK-123
 
 
 func test_las_noches_de_prueba_y_las_completas_van_en_orden() -> void:  # AC-STK-123
-	for jornada in [2, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA]:
+	for jornada: int in [2, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA]:
 		var productos := Catalogo.de_la_jornada(jornada)
 		var filas := RegistroDeVentas.new(productos, _atender_sin_ventas()).productos()
 		assert_int(filas.size()).is_equal(productos.size())
