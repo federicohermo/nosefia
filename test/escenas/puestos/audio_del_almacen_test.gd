@@ -373,7 +373,9 @@ func test_el_balde_y_sus_gestos_suenan_en_el_local_sin_un_rechazo() -> void:
 	assert_array(escucha["pedidos"].filter(de_estos)).is_equal(esperados)
 	assert_array(escucha["rechazados"].filter(de_estos)).is_empty()
 	var reproductor: ReproductorDeSonidos = almacen.get_node(REPRODUCTOR)
-	assert_array(_audios(reproductor.voces_en_el_espacio())).contains(["SFX_OBJETO_Balde_Alzar"])
+	assert_array(_audios(reproductor.voces_en_el_espacio())).contains(
+		["SFX_OBJETO_Balde_AlzarVacio"]
+	)
 	(
 		assert_array(_audios(reproductor.voces()))
 		. contains(

@@ -43,8 +43,10 @@ func _objeto(ruta: String) -> ObjetoSonoro:
 ## Los audios que quedaron pedidos, sin carpeta ni extensión.
 static func _audios(reproductor: ReproductorDeSonidos) -> Array[String]:
 	var nombres: Array[String] = []
-	var voces: Array = reproductor.voces() + reproductor.voces_en_el_espacio()
-	for voz in voces:
+	for voz in reproductor.voces():
+		if voz.stream != null:
+			nombres.append(voz.stream.resource_path.get_file().get_basename())
+	for voz in reproductor.voces_en_el_espacio():
 		if voz.stream != null:
 			nombres.append(voz.stream.resource_path.get_file().get_basename())
 	return nombres

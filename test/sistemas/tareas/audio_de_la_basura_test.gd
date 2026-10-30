@@ -65,8 +65,10 @@ func before_test() -> void:
 
 func _audios() -> Array[String]:
 	var nombres: Array[String] = []
-	var voces: Array = _reproductor.voces() + _reproductor.voces_en_el_espacio()
-	for voz in voces:
+	for voz in _reproductor.voces():
+		if voz.stream != null:
+			nombres.append(voz.stream.resource_path.get_file().get_basename())
+	for voz in _reproductor.voces_en_el_espacio():
 		if voz.stream != null:
 			nombres.append(voz.stream.resource_path.get_file().get_basename())
 	return nombres
