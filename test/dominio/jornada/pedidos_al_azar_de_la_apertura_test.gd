@@ -3,7 +3,9 @@ extends GdUnitTestSuite
 const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA + 2
 const CUARTA := ReglasDeLaPartida.PRIMERA_JORNADA + 3
 const QUINTA := ReglasDeLaPartida.PRIMERA_JORNADA + 4
-const JORNADAS: Array[int] = [TERCERA, CUARTA, QUINTA]
+const CORTE := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
+const ULTIMA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 4
+const JORNADAS: Array[int] = [TERCERA, CUARTA, QUINTA, CORTE, ULTIMA]
 const SEMILLAS := 60
 const CASILLEROS := 8
 
@@ -56,7 +58,7 @@ func test_los_pedidos_de_la_tercera_son_de_productos_presentes() -> void:  # AC-
 			assert_array(ids).contains([id])
 
 
-func test_faltantes_y_atencion_en_cualquier_orden_comparten_la_lista() -> void:  # AC-STK-107
+func test_faltantes_y_atencion_comparten_la_lista() -> void:  # AC-STK-107, AC-CTR-128
 	for jornada: int in JORNADAS:
 		for consultar_primero: bool in [true, false]:
 			var compradores := Compradores.de_la_jornada(jornada, 3)

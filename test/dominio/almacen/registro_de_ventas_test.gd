@@ -56,7 +56,7 @@ func test_la_planilla_tiene_una_fila_por_producto_y_en_cero() -> void:  # AC-STK
 
 
 func test_el_registro_de_la_prueba_anota_todo_lo_que_piden_los_compradores() -> void:  # AC-STK-110
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in [1, 2]:
 		for semilla in range(1, 21):
 			var registro := RegistroDeVentas.new(
 				Catalogo.de_la_jornada(jornada), _atender_con_ventas([])
@@ -277,3 +277,45 @@ func test_anticipar_no_completa_y_vencer_cierra_el_registro_de_lo_vendido() -> v
 		registro.restar(no_vendido)
 		assert_bool(registro.completada()).is_equal(vendido >= 0)
 		assert_bool(registro.completada(true)).is_true()
+
+
+func test_el_total_de_una_fila_es_el_precio_por_las_unidades_y_sigue_a_cada_gesto() -> void:
+	var registro := _registro()
+	var fernet := _de(Producto.Id.FERNET_GOD)
+	assert_int(registro.total_de(fernet)).is_equal(0)
+	for _vez in 3:
+		registro.sumar(fernet)
+	assert_int(registro.total_de(fernet)).is_equal(fernet.precio * 3)
+	registro.restar(fernet)
+	assert_int(registro.total_de(fernet)).is_equal(fernet.precio * 2)
+
+
+func test_un_mas_rechazado_en_el_tope_no_mueve_el_total_de_la_fila() -> void:
+	var registro := _registro()
+	var fernet := _de(Producto.Id.FERNET_GOD)
+	for _vez in RegistroDeVentas.TOPE_POR_FILA:
+		registro.sumar(fernet)
+	assert_bool(registro.sumar(fernet)).is_false()
+	assert_int(registro.total_de(fernet)).is_equal(fernet.precio * RegistroDeVentas.TOPE_POR_FILA)
+	var sin_anotar := _registro()
+	assert_bool(sin_anotar.restar(fernet)).is_false()
+	assert_int(sin_anotar.total_de(fernet)).is_equal(0)
+
+
+func test_el_total_de_una_fila_ausente_o_nula_es_cero() -> void:
+	var registro := RegistroDeVentas.new([_de(Producto.Id.ACTRONCITO)], _atender_con_ventas([]))
+	registro.sumar(_de(Producto.Id.DUREXTRA))
+	assert_int(registro.total_de(_de(Producto.Id.DUREXTRA))).is_equal(0)
+	assert_int(registro.total_de(null)).is_equal(0)
+
+
+func test_el_total_de_la_noche_es_la_suma_de_los_totales_de_fila() -> void:  # AC-STK-023
+	var registro := _registro()
+	registro.sumar(_de(Producto.Id.ACTRONCITO))
+	registro.sumar(_de(Producto.Id.ACTRONCITO))
+	registro.sumar(_de(Producto.Id.DUREXTRA))
+	var suma := 0
+	for producto in registro.productos():
+		suma += registro.total_de(producto)
+	assert_int(registro.total()).is_equal(suma)
+	assert_int(suma).is_greater(0)

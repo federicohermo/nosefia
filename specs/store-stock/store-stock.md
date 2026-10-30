@@ -233,11 +233,11 @@ El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mi
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
 
-CUANDO se abre una jornada de la 2 a la 8, el sistema DEBE sortear sus faltantes. CUANDO se abre
+CUANDO se abre una jornada de la 2 a la 7, el sistema DEBE sortear sus faltantes. CUANDO se abre
 la jornada 1, el sistema NO DEBE sortear: la góndola DEBE abrir completa y cada caja llena, sin
-ningún faltante. La jornada 1 NO DEBE declarar reponer, ni siquiera por las unidades vendidas
-desde la góndola. Agarrar, colocar o vender esas unidades NO DEBE modificar su cuenta de tareas.
-Retomar la jornada 1 desde el menú DEBE abrirla completa otra vez, sin declarar reponer.
+ningún faltante. La jornada 1 DEBE declarar reponer: los casilleros que deja una venta desde la
+góndola son huecos, y reponer queda cumplida cuando están todos llenos.
+Retomar la jornada 1 desde el menú DEBE abrirla completa otra vez.
 La jornada 2 DEBE abrir con su inventario nuevo y sus faltantes sorteados.
 Los huecos dejados por ventas en la jornada 1 NO DEBEN pasar a la siguiente.
 DEBE elegir entre 4 y 6 productos distintos y, de cada uno, entre 3 unidades y su máximo
@@ -427,7 +427,7 @@ las cajas dentro del depósito, sin superposición de cuerpos y con cada caja en
 punto libre del piso dentro del alcance vigente. Sin intervención del jugador, ninguna caja
 DEBE desplazarse más de 1 cm en los primeros 120 cuadros de física.
 
-El lugar de origen de cada caja DEBE ser el de esa apertura: rescatar una de las cajas recién llegadas en la jornada 4
+El lugar de origen de cada caja DEBE ser el de esa apertura: rescatar una de las cajas recién llegadas en la jornada 3
 DEBE devolverla a la pila, sin ordenarla automáticamente. Toda otra caja DEBE volver a la pose
 con que abrió esa noche. La ubicación «frente al portón» es
 territorio de juicio humano; las restantes condiciones se verifican en AC-STK-077, AC-STK-080
@@ -869,7 +869,7 @@ faltante.
 
 ### AC-STK-033 — Ningún faltante pasa de una caja ni de sus casilleros *(verifica BR-STK-004, BR-STK-024, BR-STK-026)*
 
-DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 2 a la 8 y los casilleros
+DADO las 200 semillas enteras de 0 a 199, los pedidos de cada jornada de la 2 a la 7 y los casilleros
 medidos en el local CUANDO se abren las jornadas ENTONCES ningún faltante pasa de las unidades
 de una caja menos lo pedido —8 menos lo pedido en el balance vigente— ni de los casilleros de la
 fila de adelante de todas las tandas de su producto. El inventario conserva el cupo total de
@@ -1040,9 +1040,9 @@ las 3 ENTONCES la caja tiene 3.
 
 ### AC-STK-118 — La jornada de los vencidos abre con cinco *(verifica BR-STK-052, BR-STK-007)*
 
-DADO la jornada 6 abierta con cualquier azar CUANDO se consulta la góndola de Cindolor ENTONCES
+DADO la jornada 5 abierta con cualquier azar CUANDO se consulta la góndola de Cindolor ENTONCES
 no le falta ningún casillero de la fila de adelante, y exactamente cinco casilleros distintos
-tienen una unidad vencida. DADO cada una de las demás jornadas, de la 1 a la 5, la 7 y la 8
+tienen una unidad vencida. DADO cada una de las demás jornadas, de la 1 a la 4, la 6 y la 7
 ENTONCES ningún casillero de ningún producto tiene una unidad vencida.
 
 ### AC-STK-119 — La marca viaja con la unidad *(verifica BR-STK-052, BR-STK-033)*
@@ -1068,7 +1068,7 @@ jornada siguiente ENTONCES abre sin unidades vencidas.
 
 ### AC-STK-122 — Un vencido en la góndola deja reponer sin cumplir *(verifica BR-STK-052, BR-STK-033)*
 
-DADO la jornada 6 abierta, con todos los casilleros de la góndola ocupados y cinco vencidos
+DADO la jornada 5 abierta, con todos los casilleros de la góndola ocupados y cinco vencidos
 entre los de Cindolor ENTONCES reponer no está cumplida. DADO los cinco vencidos tirados al
 contenedor y sus cinco casilleros todavía vacíos ENTONCES reponer sigue sin cumplir; CUANDO se
 colocan cinco unidades sanas de la caja ENTONCES queda cumplida. DADO cuatro vencidos tirados
@@ -1159,15 +1159,15 @@ atención sigue pendiente. Con una unidad anotada de cualquier producto no cuent
 
 ### AC-STK-077 — La pila es completa, alcanzable y estable *(verifica BR-STK-038)*
 
-DADO la jornada 4 abierta con las cajas presentes cerradas en sus lugares de fábrica en la 3
-CUANDO se recorren las cajas de los productos ausentes en J1 a J3
+DADO la jornada 3 abierta con las cajas presentes cerradas en sus lugares de fábrica en la 2
+CUANDO se recorren las cajas de los productos ausentes en J1 y J2
 ENTONCES son exactamente dieciséis, están apiladas dentro del depósito y ninguna se apoya en
 una estantería. Las otras dieciséis están en sus lugares de estantería. Ningún cuerpo se
 superpone con otro. Para cada caja de la pila existe un punto libre del piso desde el cual la
 mira la enfoca dentro del alcance vigente. CUANDO pasan 120 cuadros de física sin tocar la pila
-ENTONCES ninguna caja se desplazó más de 0,01 m desde su pose inicial. DADO la jornada 5 abierta
+ENTONCES ninguna caja se desplazó más de 0,01 m desde su pose inicial. DADO la jornada 4 abierta
 después, con las treinta y dos cajas cerradas apoyadas en pallets de estantería ENTONCES cada
-caja abre apoyada en el mismo pallet, en la pose con que cerró la 4.
+caja abre apoyada en el mismo pallet, en la pose con que cerró la 3.
 
 ### AC-STK-078 — Los apoyos deciden ordenar *(verifica BR-STK-039)*
 
@@ -1189,7 +1189,7 @@ DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
 
 ### AC-STK-079 — La última caja cumple y puede descumplir *(verifica BR-STK-039)*
 
-DADO la jornada 4 y todas las cajas salvo una ordenadas CUANDO se apoya la última en una
+DADO la jornada 3 y todas las cajas salvo una ordenadas CUANDO se apoya la última en una
 estantería ENTONCES ordenar se cumple y el HUD sube en 1. CUANDO se baja una caja al piso y queda
 en reposo ENTONCES se descumple y el HUD baja en 1. CUANDO se la sostiene o se la examina desde
 la mano ENTONCES sigue pendiente. CUANDO se la suelta sobre una estantería ENTONCES vuelve a
@@ -1200,10 +1200,10 @@ en estanterías ENTONCES no se suma una obligatoria ajena.
 
 ### AC-STK-080 — Rescatar vuelve al origen de esa noche *(verifica BR-STK-038, BR-STK-039)*
 
-DADO una caja recién incorporada y rescatada en la jornada 4 CUANDO vuelve a su origen
+DADO una caja recién incorporada y rescatada en la jornada 3 CUANDO vuelve a su origen
 ENTONCES queda en la pose de la pila de esa apertura, sin ordenarse automáticamente.
-DADO una caja que ya estaba presente en las jornadas de prueba CUANDO se rescata en J4
-ENTONCES vuelve a la pose con que abrió la jornada 4. DADO la apertura de una jornada
+DADO una caja que ya estaba presente en las jornadas de prueba CUANDO se rescata en J3
+ENTONCES vuelve a la pose con que abrió la jornada 3. DADO la apertura de una jornada
 posterior ENTONCES el origen de cada caja es la pose con que abrió esa jornada (BR-STK-051).
 
 ### AC-STK-086 — Cada sector contiene exactamente sus productos *(verifica BR-STK-043, BR-STK-044)*
@@ -1213,7 +1213,7 @@ de la tabla de BR-STK-043 ENTONCES sus
 productos coinciden con la fila, sin ajenos, y los destinos de exhibición reúnen 32 productos
 distintos. La principal de Duronga comparte la mitad inferior de la estantería con Poético,
 a su derecha; las de Actroncito y Durextra están arriba. Las referencias fijas están en su mismo
-sector. Abrir jornada 5 en escritorio y web conserva el mapa.
+sector. Abrir jornada 4 en escritorio y web conserva el mapa.
 
 ### AC-STK-087 — Dos heladeras separan los fríos de las bebidas sin refrigerar *(verifica BR-STK-043)*
 
@@ -1316,8 +1316,8 @@ que el reponible de abajo, y el otro reponible los mismos que el zócalo, en el 
 DADO un producto de una sola fila con cuatro estantes de cuatro casilleros a distinta altura, y un
 faltante de cuatro CUANDO se sortean sus vacíos con las 200 semillas ENTONCES cada estante conserva
 al menos una unidad, tres vacíos caen en un estante y el otro en el de justo arriba, o en el de
-justo abajo si el de los tres es el de arriba de todo. DADO Poético en la jornada 2 o 3 y Flin Puf
-desde la jornada 4, con un faltante igual a los casilleros de un estante, ENTONCES se cumple lo
+justo abajo si el de los tres es el de arriba de todo. DADO Poético en la jornada 1 o 2 y Flin Puf
+desde la jornada 3, con un faltante igual a los casilleros de un estante, ENTONCES se cumple lo
 mismo con sus estantes reales.
 
 DADO un producto de una sola fila con tres estantes de cuatro, uno y cuatro casilleros, y un
@@ -1327,24 +1327,24 @@ su unidad y los vacíos se reparten entre los otros dos, tres en uno y uno en el
 ### AC-STK-094 — La primera jornada abre completa *(verifica BR-STK-026, BR-STK-013, BR-STK-033)*
 
 DADO la jornada 1 recién abierta, con cualquier semilla, CUANDO se consultan los faltantes
-ENTONCES no hay ninguno, cada caja del depósito está llena y reponer no está declarada.
-CUANDO se agarra una unidad de la góndola y se vuelve a colocar ENTONCES la cuenta de tareas no cambia.
-DADO una venta de una o tres unidades desde góndola CUANDO se completa sin reponer
-ENTONCES sus casilleros siguen vacíos, sin descontar tareas.
-Con todas las declaradas cumplidas, el cierre no suma apercibimientos ni antecedentes o reproches de reposición.
+ENTONCES no hay ninguno, cada caja del depósito está llena y reponer está declarada y cumplida.
+CUANDO se agarra una unidad de la góndola ENTONCES reponer queda pendiente, y al volver a colocarla
+queda cumplida. DADO una venta de una o tres unidades desde góndola ENTONCES sus casilleros quedan
+vacíos y reponer queda pendiente hasta llenarlos. Con todas las declaradas cumplidas, el cierre no
+suma apercibimientos ni antecedentes o reproches de reposición.
 DADO la jornada 1 sin ventas CUANDO Tin y Tia vencen y cierra la noche
-ENTONCES registrar cuenta cumplida con la planilla en cero y atención no, sin tarea de reposición.
-CUANDO se retoma la jornada 1 ENTONCES vuelve a abrir completa y sin reponer declarada.
+ENTONCES registrar cuenta cumplida con la planilla en cero y atención no, y reponer cuenta cumplida.
+CUANDO se retoma la jornada 1 ENTONCES vuelve a abrir completa.
 DADO la jornada 2 CUANDO abre ENTONCES declara reponer y sortea faltantes según BR-STK-026,
 sin heredar los huecos de ventas de la primera.
 
 ### AC-STK-095 — La prueba tiene exactamente su catálogo *(verifica BR-STK-046, BR-STK-004, BR-STK-026)*
 
-DADO cada jornada 1, 2 y 3 CUANDO abre con cualquier semilla de 0 a 199 ENTONCES sólo
+DADO cada jornada 1 y 2 CUANDO abre con cualquier semilla de 0 a 199 ENTONCES sólo
 registra los dieciséis productos de BR-STK-046, con Duronga presente y
 Durextra ausente. Cada caja presente abre llena; cada producto ausente tiene cero unidades y
 cero cupo. Los faltantes sólo
-incluyen presentes. DADO jornadas 4 y 8 ENTONCES están las treinta y dos identidades.
+incluyen presentes. DADO jornadas 3 y 7 ENTONCES están las treinta y dos identidades.
 
 ### AC-STK-096 — Cada nivel de prueba coincide con el mapa *(verifica BR-STK-047, BR-STK-024, BR-STK-025, BR-STK-035)*
 
@@ -1359,15 +1359,15 @@ sólo cambia ese casillero y la cuenta de reponer responde a ambos gestos.
 
 ### AC-STK-097 — Las cajas ausentes tampoco se pueden tocar *(verifica BR-STK-046)*
 
-DADO cada jornada 1, 2 y 3 CUANDO se recorren las cajas del depósito ENTONCES únicamente
+DADO cada jornada 1 y 2 CUANDO se recorren las cajas del depósito ENTONCES únicamente
 las dieciséis presentes se dibujan y participan en física e interacción; la de Duronga está
 en el depósito y la de Durextra no. Un rayo o volumen que antes encontraba una caja ausente
-ya no la encuentra. CUANDO se abre la jornada 4 ENTONCES vuelven las treinta y dos cajas,
+ya no la encuentra. CUANDO se abre la jornada 3 ENTONCES vuelven las treinta y dos cajas,
 Durextra entre ellas, y las recién llegadas satisfacen AC-STK-077.
 
 ### AC-STK-098 — Cambiar de etapa renueva el local *(verifica BR-STK-046, BR-STK-047, BR-STK-043, BR-STK-044)*
 
-DADO el mismo local con jornada 3 abierta CUANDO se abre la jornada 4 ENTONCES recupera
+DADO el mismo local con jornada 2 abierta CUANDO se abre la jornada 3 ENTONCES recupera
 las treinta y dos identidades y el reparto completo, con sus cupos y zonas correspondientes.
 Repetir la apertura NO duplica objetivos ni respuestas a un gesto. DADO una nueva partida
 de prueba después de una completa ENTONCES reaparece únicamente el reparto de dieciséis.
@@ -1376,7 +1376,7 @@ Una unidad sostenida al cerrar NO sobrevive al cambio de etapa.
 
 ### AC-STK-099 — Los compradores de prueba piden productos presentes *(verifica BR-STK-046, BR-STK-027)*
 
-DADO cada jornada 1, 2 y 3 CUANDO se recorren todos los pedidos construidos para ella
+DADO cada jornada 1 y 2 CUANDO se recorren todos los pedidos construidos para ella
 ENTONCES cada identidad pedida pertenece a los dieciséis presentes. Completar esas compras
 y reponer sus faltantes respeta la disponibilidad de una caja por producto.
 
@@ -1448,7 +1448,7 @@ DADO cada jornada de la 3 a la 5 con los pedidos de sus dos compradores ya const
 calculan los faltantes de reposición, con distintas semillas de partida y de apertura, ENTONCES
 cada pedido sumado a lo que le falta a su fila no pasa de las unidades de una caja, también cuando
 los dos compradores piden el mismo producto. En la jornada 3, cada producto pedido está entre los
-dieciséis presentes. Consultar faltantes antes o después de atención conserva las mismas
+treinta y dos presentes. Consultar faltantes antes o después de atención conserva las mismas
 instancias de compradores y pedidos.
 
 ### AC-STK-108 — Registrar espera a las dos compras de las jornadas 3 a 5 *(verifica BR-STK-050, BR-STK-042)*
@@ -1470,9 +1470,9 @@ como antes del vencimiento.
 
 ### AC-STK-110 — El registro de la prueba no lista productos ausentes *(verifica BR-STK-019, BR-STK-046)*
 
-DADO cada jornada 1, 2 y 3 CUANDO abre ENTONCES la planilla tiene exactamente las dieciséis filas
+DADO cada jornada 1 y 2 CUANDO abre ENTONCES la planilla tiene exactamente las dieciséis filas
 de BR-STK-046, ninguna de un producto que no está en las góndolas esa noche, y cada producto que
-piden sus compradores tiene fila. DADO la jornada 4 o posterior ENTONCES tiene los treinta y dos.
+piden sus compradores tiene fila. DADO la jornada 3 o posterior ENTONCES tiene los treinta y dos.
 CUANDO se abre otra jornada en el mismo local ENTONCES la planilla es la de la nueva etapa.
 
 ### AC-STK-111 — La caja que cerró en estantería abre igual *(verifica BR-STK-051, BR-STK-038, BR-STK-004)*
@@ -1505,8 +1505,8 @@ y la otra sobre una caja en estantería.
 
 DADO un guardado sin la pose de la caja de Actroncito, o con un número en lugar de una pose
 CUANDO se retoma y abre la jornada ENTONCES esa caja abre en su lugar de fábrica y las demás
-abren donde se guardaron. DADO la jornada 4 abierta con la pila de cajas llegadas, cerrada sin
-ordenarlas CUANDO abre la 5 ENTONCES esas cajas abren cada una en una estantería (BR-STK-051)
+abren donde se guardaron. DADO la jornada 3 abierta con la pila de cajas llegadas, cerrada sin
+ordenarlas CUANDO abre la 4 ENTONCES esas cajas abren cada una en una estantería (BR-STK-051)
 y ninguna abre apilada en el fondo del depósito.
 
 ### AC-STK-117 — Lo que se lleva en la mano al cerrar cuenta como puesto *(verifica BR-STK-033)*

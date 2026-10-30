@@ -23,14 +23,14 @@ const TECHO := PisoDelLocal.Superficie.TECHO
 ## La tabla de la ficha, fila por fila: `[tipo, habitación, superficie]` de cada mancha. Es la del
 ## contrato, escrita sin lugares: el caso compara qué hay, no cómo se llama cada sitio.
 const FICHA := {
-	3:
+	2:
 	[
 		[POLVO, LOCAL, PISO],
 		[POLVO, LOCAL, PARED],
 		[MOHO, DEPOSITO, PARED],
 		[CACA, BANO, PISO],
 	],
-	4:
+	3:
 	[
 		[POLVO, LOCAL, PISO],
 		[POLVO, LOCAL, PISO],
@@ -40,7 +40,7 @@ const FICHA := {
 		[CACA, BANO, PISO],
 		[CACA, BANO, PARED],
 	],
-	5:
+	4:
 	[
 		[POLVO, LOCAL, PISO],
 		[POLVO, LOCAL, PISO],
@@ -51,7 +51,7 @@ const FICHA := {
 		[MOHO, BANO, TECHO],
 		[CACA, BANO, PISO],
 	],
-	6:
+	5:
 	[
 		[POLVO, LOCAL, PISO],
 		[POLVO, LOCAL, PARED],
@@ -63,7 +63,7 @@ const FICHA := {
 		[CACA, BANO, PISO],
 		[CACA, BANO, PARED],
 	],
-	7:
+	6:
 	[
 		[POLVO, LOCAL, PISO],
 		[POLVO, LOCAL, TECHO],
@@ -76,7 +76,7 @@ const FICHA := {
 		[CACA, BANO, TECHO],
 		[CACA, BANO, PISO],
 	],
-	8:
+	7:
 	[
 		[POLVO, LOCAL, PISO],
 		[POLVO, LOCAL, PISO],
@@ -150,19 +150,19 @@ func test_cada_jornada_trae_las_manchas_de_su_fila_en_la_ficha() -> void:  # AC-
 		)
 
 
-func test_las_ultimas_jornadas_ya_no_traen_las_de_la_cuarta() -> void:  # AC-CLN-016
-	var cuarta := PisoDelLocal.de_la_jornada(4)
-	for jornada: int in [6, 7, 8]:
+func test_las_ultimas_jornadas_ya_no_traen_las_de_la_tercera() -> void:  # AC-CLN-016
+	var tercera := PisoDelLocal.de_la_jornada(3)
+	for jornada: int in [5, 6, 7]:
 		var piso := PisoDelLocal.de_la_jornada(jornada)
 		assert_array(_filas(piso)).has_size(FICHA[jornada].size())
-		assert_array(piso.lugares()).is_not_equal(cuarta.lugares())
+		assert_array(piso.lugares()).is_not_equal(tercera.lugares())
 		for lugar: PisoDelLocal.Lugar in piso.lugares():
 			assert_bool(piso.mancha_de(lugar).esta_limpia()).is_false()
 
 
 func test_un_lugar_que_la_noche_no_puso_no_tiene_mancha() -> void:  # AC-CLN-016
-	var primera := PisoDelLocal.de_la_jornada(4)
-	var segunda := PisoDelLocal.de_la_jornada(5)
+	var primera := PisoDelLocal.de_la_jornada(3)
+	var segunda := PisoDelLocal.de_la_jornada(4)
 	for lugar: PisoDelLocal.Lugar in segunda.lugares():
 		assert_object(primera.mancha_de(lugar)).is_null()
 		assert_int(primera.pasar(MOPA, lugar)).is_equal(ReglasDeLaLimpieza.Resultado.SIN_EFECTO)
@@ -219,7 +219,7 @@ func test_las_del_mismo_tipo_y_habitacion_se_borran_por_separado() -> void:  # A
 
 
 func test_las_noches_que_no_piden_limpiar_abren_sin_manchas() -> void:  # AC-CLN-016
-	for jornada: int in [1, 2]:
+	for jornada: int in [1]:
 		var piso := PisoDelLocal.de_la_jornada(jornada)
 		assert_array(piso.lugares()).is_empty()
 		assert_bool(piso.esta_limpio()).is_true()

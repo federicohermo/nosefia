@@ -44,7 +44,7 @@ func sacar_bolsa(tacho: TareaDeLaBasura.Tacho) -> bool:
 	var id := _tarea.sacar(tacho, agarre.manos().sostenido() == null)
 	if id == ObjetoDelAlmacen.SIN_ID:
 		return false
-	if not agarre.pedir_agarrar(datos, cuerpo):
+	if not agarre.pedir_agarrar(datos, cuerpo, true):
 		return false
 	bolsa_sacada.emit(tacho)
 	return true

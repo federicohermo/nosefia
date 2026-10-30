@@ -18,6 +18,9 @@ class_name Agarre
 extends Node
 
 signal objeto_agarrado(nodo: Node3D)
+## Lo mismo que `objeto_agarrado`, para el audio, con el contexto del gesto: si saca una bolsa del
+## tacho. Se emite aparte porque `objeto_agarrado` tiene otros lectores que esperan un solo dato.
+signal objeto_alzado(nodo: Node3D, del_tacho: bool)
 signal agarre_rechazado(motivo: Manos.Rechazo)
 signal objeto_soltado(nodo: Node3D)
 ## La mano queda libre sin soltar el cuerpo al mundo: lo recibe un destino.
@@ -50,7 +53,7 @@ func manos() -> Manos:
 
 
 ## Devuelve `true` **sólo si lo agarró ahora**, y emite el rechazo con su motivo si no.
-func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
+func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D, del_tacho: bool = false) -> bool:
 	var motivo := _manos.motivo_de_rechazo(datos)
 	if motivo != Manos.Rechazo.NINGUNO:
 		agarre_rechazado.emit(motivo)
@@ -75,6 +78,7 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 		nodo.collision_mask = 0
 	_colgar(nodo, _punto_de_carga())
 	objeto_agarrado.emit(nodo)
+	objeto_alzado.emit(nodo, del_tacho)
 	return true
 
 
