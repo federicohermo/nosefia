@@ -201,7 +201,7 @@ func _vender_fisicamente(atender: TareaDeAtender) -> void:
 	assert_bool(atencion.vendida()).is_true()
 
 
-func test_registrar_una_venta_no_cumple_con_la_otra_abierta() -> void:  # AC-STK-024, AC-STK-056
+func test_registrar_cumple_con_la_primera_venta_hasta_la_otra() -> void:  # AC-STK-024, AC-STK-056
 	var atender := _primera_noche()
 	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
 	atender.avanzar(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0].horario.x)
@@ -209,9 +209,10 @@ func test_registrar_una_venta_no_cumple_con_la_otra_abierta() -> void:  # AC-STK
 	for producto in atender.atencion().comprador().pedido().productos():
 		registro.sumar(producto)
 	assert_bool(registro.coincide()).is_true()
-	assert_bool(registro.completada()).is_false()
+	assert_bool(registro.completada()).is_true()
 	assert_bool(registro.completada(true)).is_false()
 	atender.avanzar(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1].horario.x)
+	assert_bool(registro.completada()).is_false()
 	_vender_fisicamente(atender)
 	assert_bool(registro.completada()).is_false()
 	for producto in atender.atencion().comprador().pedido().productos():

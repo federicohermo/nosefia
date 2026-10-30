@@ -41,11 +41,13 @@ var _oyente := Vector3.ZERO
 var _golpes: Dictionary = {}
 
 ## Lo que cada voz del espacio necesita para apagarse: su volumen y su bus sin obstáculos, el
-## objeto que la produjo, su nivel de apagado y su bus propio, si ya lo necesitó.
+## objeto que la produjo, su nivel de apagado, desde cuántos obstáculos no apaga más y su bus
+## propio, si ya lo necesitó.
 var _bases: Dictionary = {}
 var _salidas: Dictionary = {}
 var _origenes: Dictionary = {}
 var _niveles: Dictionary = {}
+var _maximos: Dictionary = {}
 var _buses_propios: Dictionary = {}
 
 ## El sorteo de las variantes, y la última que sonó de cada fila.
@@ -190,7 +192,7 @@ func pedir(
 		return false
 	_poner(voz, entrada, _bus_filtrado(entrada.bus, golpe.corte_hz), golpe.volumen_db)
 	if entrada.posicional:
-		_preparar_apagado(voz, lugar)
+		_preparar_apagado(voz, lugar, entrada.obstaculos_maximos)
 	sonido_pedido.emit(evento)
 	return true
 
@@ -265,7 +267,9 @@ func actualizar_apagado(oyente: Vector3, segundos: float) -> void:
 		if not is_instance_valid(_origenes[voz]):
 			_origenes[voz] = null
 		var cantidad := obstaculos_entre(oyente, voz.global_position, _origenes[voz])
-		_niveles[voz] = ApagadoPorObstaculos.acercar(_niveles[voz], cantidad, segundos)
+		_niveles[voz] = ApagadoPorObstaculos.acercar(
+			_niveles[voz], mini(cantidad, _maximos[voz]), segundos
+		)
 		_aplicar_apagado(voz)
 
 
@@ -360,7 +364,7 @@ func _sonar_en_bucle(entrada: EntradaSonora) -> bool:
 		add_child(emisor)
 		emisor.global_position = posicion
 		_poner(emisor, entrada, entrada.bus, EmisoresDelAmbiente.VOLUMEN_DB)
-		_preparar_apagado(emisor, null)
+		_preparar_apagado(emisor, null, entrada.obstaculos_maximos)
 		emisores.append(emisor)
 	_emisores_en_bucle[entrada.evento] = emisores
 	actualizar_emisores(_oyente)
@@ -370,14 +374,15 @@ func _sonar_en_bucle(entrada: EntradaSonora) -> bool:
 
 ## Anota lo que la voz necesita para apagarse, y la apaga ya: un sonido que empieza del otro
 ## lado de una pared empieza apagado, sin transición.
-func _preparar_apagado(voz: AudioStreamPlayer3D, origen: Object) -> void:
+func _preparar_apagado(voz: AudioStreamPlayer3D, origen: Object, maximo: int) -> void:
 	_bases[voz] = voz.volume_db
+	_maximos[voz] = maximo
 	_salidas[voz] = voz.bus
 	_origenes[voz] = origen
 	var camara := get_viewport().get_camera_3d()
 	var oido := camara.global_position if camara != null else _oyente
 	var cantidad := obstaculos_entre(oido, voz.global_position, origen)
-	_niveles[voz] = float(mini(cantidad, ApagadoPorObstaculos.MAXIMO))
+	_niveles[voz] = float(mini(cantidad, maximo))
 	_aplicar_apagado(voz)
 
 
@@ -416,6 +421,7 @@ func _olvidar(voz: Object) -> void:
 	_salidas.erase(voz)
 	_origenes.erase(voz)
 	_niveles.erase(voz)
+	_maximos.erase(voz)
 
 
 ## Si ese cuerpo tapa el sonido: lo fijo, salvo una puerta abierta.

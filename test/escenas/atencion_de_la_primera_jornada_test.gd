@@ -131,9 +131,8 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		_pulsar(almacen)
 		assert_object(agarre.manos().sostenido()).is_null()
 		assert_bool(atendida.vendida()).is_true()
-		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_equal(
-			hora == Vector2i(23, 30)
-		)
+		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+		assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
 		assert_bool(atendida.despachada()).is_false()
 		var despedida := atendida.dialogo()
 		var textos: Array[String] = []
@@ -201,10 +200,13 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	puesto.abrir()
 	_conversar(almacen)
 	_vender_y_anotar_actual(almacen)
-	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
 	_conversar(almacen)
 	puesto.cerrar()
 	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
 	puesto.abrir()
 	_conversar(almacen)
 	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
@@ -254,6 +256,67 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_bool(reloj.corriendo()).is_false()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+
+
+func _entregar_sin_ticket(almacen: Node3D, solo_una: bool) -> void:
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	var agarre: Agarre = almacen.get("_agarre")
+	var pedido := atenciones.atencion().comprador().pedido()
+	for producto in pedido.productos():
+		for _unidad in pedido.unidades_de(producto):
+			almacen.get("_reposicion_manual").retirar(producto.id)
+			_pulsar(almacen)
+			assert_object(agarre.manos().sostenido()).is_null()
+			if solo_una:
+				return
+
+
+## El primero se va sin ticket y el segundo compra bien y anota sólo lo suyo.
+func _perder_al_primero_y_vender_al_segundo(almacen: Node3D, solo_una: bool) -> Producto:
+	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
+	puesto.abrir()
+	_conversar(almacen)
+	var del_primero := atenciones.atencion().comprador().pedido().productos()[0]
+	_entregar_sin_ticket(almacen, solo_una)
+	puesto.cerrar()
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
+	assert_int(atenciones.tarea().mal_atendidos()).is_equal(1)
+	puesto.abrir()
+	_conversar(almacen)
+	_vender_y_anotar_actual(almacen)
+	_conversar(almacen)
+	puesto.cerrar()
+	return del_primero
+
+
+func _comprobar_que_registrar_cumple_y_atencion_no(almacen: Node3D, del_primero: Producto) -> void:
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	assert_int(atenciones.tarea().vendidas_de(del_primero)).is_zero()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
+	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
+
+
+# AC-CTR-144
+func test_el_primero_se_va_con_una_entrega_incompleta_y_el_segundo_compra_bien() -> void:
+	var almacen := await _abrir()
+	var del_primero := _perder_al_primero_y_vender_al_segundo(almacen, true)
+	_comprobar_que_registrar_cumple_y_atencion_no(almacen, del_primero)
+	assert_bool((almacen.get("_reloj") as RelojDelTurno).corriendo()).is_false()
+
+
+# AC-CTR-145
+func test_el_primero_se_va_con_todos_los_productos_sin_ticket_y_el_segundo_compra_bien() -> void:
+	var almacen := await _abrir()
+	var del_primero := _perder_al_primero_y_vender_al_segundo(almacen, false)
+	_comprobar_que_registrar_cumple_y_atencion_no(almacen, del_primero)
+	assert_bool((almacen.get("_reloj") as RelojDelTurno).corriendo()).is_false()
 
 
 # AC-CTR-041

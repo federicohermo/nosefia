@@ -245,18 +245,20 @@ func test_la_venta_se_registra_una_sola_vez_en_cada_noche() -> void:  # AC-CTR-1
 		assert_int(noche.tarea.vendidas_de(primero)).is_equal(1)
 
 
-func test_atencion_se_cumple_solo_con_las_dos_compras() -> void:  # AC-CTR-132
+func test_atencion_cierra_cumplida_solo_con_las_dos_compras() -> void:  # AC-CTR-132
 	for jornada: int in NOCHES:
 		var ambas := _noche(jornada)
 		_vender(ambas, 0)
-		assert_bool(ambas.tarea.completada()).is_false()
+		assert_bool(ambas.tarea.cumplida()).is_true()
+		assert_bool(ambas.tarea.cumplida(true)).is_false()
 		_vender(ambas, 1)
-		assert_bool(ambas.tarea.completada()).is_true()
+		assert_bool(ambas.tarea.cumplida(true)).is_true()
 		var perdida_la_primera := _noche(jornada)
 		_llegar(perdida_la_primera, 0)
 		perdida_la_primera.tarea.avanzar(perdida_la_primera.compradores[0].horario.y)
 		_vender(perdida_la_primera, 1)
-		assert_bool(perdida_la_primera.tarea.completada()).is_false()
+		assert_bool(perdida_la_primera.tarea.cumplida()).is_false()
+		assert_bool(perdida_la_primera.tarea.cumplida(true)).is_false()
 
 
 func test_una_compra_vencida_deja_las_unidades_afuera_sin_venta() -> void:  # AC-CTR-132

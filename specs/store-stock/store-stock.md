@@ -162,15 +162,17 @@ El cierre DEBE contar el estado de ese instante (BR-SHF-007 de
 [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
 ventas con la planilla en cero cuenta como cumplida recién ahí.
 
-En las jornadas 1 a 5, registrar DEBE permanecer pendiente mientras quede alguna compra
-abierta de sus compradores, porque el comprador todavía no llegó o sigue esperando completar su
-compra. CUANDO ambas compras terminaron, vendidas o vencidas, el sistema DEBE evaluar registrar
-por la coincidencia exacta con lo vendido en compras completas, sin exigir cumplir atención.
-Una compra vendida DEBE contar como terminada aunque su despedida continúe. Registrar sólo
-la primera compra o anticipar la segunda NO DEBE cumplir la tarea mientras la segunda siga
-abierta. Las unidades de compras vencidas NO DEBEN contarse como vendidas. Con ambas compras
-vencidas y la planilla en cero, registrar DEBE contar como cumplida al cierre; antes del cierre,
-sin ventas, DEBE seguir pendiente como en las demás jornadas.
+En toda jornada con compradores por horario, registrar DEBE permanecer pendiente mientras algún
+comprador que ya llegó siga esperando completar su compra. CUANDO todas las compras de los
+compradores que llegaron terminaron, vendidas o vencidas, el sistema DEBE evaluar registrar por la
+coincidencia exacta con lo vendido en compras completas, sin exigir cumplir atención. CUANDO llega
+el comprador siguiente, registrar DEBE volver a pendiente (BR-CTR-031).
+Una compra vendida DEBE contar como terminada aunque su despedida continúe. Anticipar una
+compra que todavía no terminó NO DEBE cumplir la tarea. Las unidades de compras vencidas NO DEBEN
+contarse como vendidas. Al cierre, registrar DEBE exigir terminadas ambas compras: con un
+comprador que no llegó queda pendiente. Con ambas compras vencidas y la planilla en cero,
+registrar DEBE contar como cumplida al cierre; antes del cierre, sin ventas, DEBE seguir
+pendiente como en las demás jornadas.
 
 ### BR-STK-023 — Cada producto declara su sonoridad
 
@@ -536,12 +538,12 @@ conservarse como antes del vencimiento. El ticket aceptado DEBE descartarse. Esa
 DEBEN poder colocarse, devolverse o recogerse como cualquier unidad suelta. Vender una unidad
 retirada de góndola NO DEBE rellenar su casillero ni cumplir reposición.
 
-### BR-STK-042 — Registrar la segunda noche espera al cierre de ambas compras
+### BR-STK-042 — Registrar la segunda noche espera a la compra en curso
 
-EN jornada 2 con el padrón definido, MIENTRAS quede un comprador sin llegar o una compra en
-curso, el sistema DEBE mantener registrar pendiente aunque la planilla coincida con lo vendido
-o anticipe todos los pedidos. CUANDO ambas compras terminan, vendidas o vencidas, el sistema
-DEBE cumplir registrar si para cada producto lo anotado coincide exactamente con las ventas
+EN jornada 2 con el padrón definido, MIENTRAS haya una compra en curso, el sistema DEBE mantener
+registrar pendiente aunque la planilla coincida con lo vendido o anticipe todos los pedidos.
+CUANDO todas las compras de los compradores que llegaron terminan, vendidas o vencidas, el
+sistema DEBE cumplir registrar si para cada producto lo anotado coincide exactamente con las ventas
 completas. Una compra vencida NO DEBE impedirlo. El vencimiento DEBE revisar registrar, como
 la venta y cada modificación de planilla. Al cierre, dos compras vencidas con planilla en cero
 DEBEN contar registrar cumplida; una unidad de más o de menos DEBE dejarla pendiente.
@@ -651,11 +653,11 @@ completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y q
 el piso interior del local frente a la ventanilla, con depósito, caja y góndola como antes del
 vencimiento, y el ticket aceptado DEBE descartarse (BR-STK-041).
 
-MIENTRAS quede un comprador sin llegar o una compra en curso, registrar DEBE seguir pendiente
-aunque la planilla coincida con lo vendido o anticipe los pedidos. CUANDO ambas compras terminan,
-vendidas o vencidas, DEBE cumplirse si para cada producto lo anotado coincide exactamente con las
-ventas completas. Una compra vencida NO DEBE impedirlo, y el vencimiento DEBE revisar registrar
-como la venta y cada modificación de planilla (BR-STK-042).
+MIENTRAS haya una compra en curso, registrar DEBE seguir pendiente aunque la planilla coincida
+con lo vendido o anticipe los pedidos. CUANDO todas las compras de los compradores que llegaron
+terminan, vendidas o vencidas, DEBE cumplirse si para cada producto lo anotado coincide
+exactamente con las ventas completas. Una compra vencida NO DEBE impedirlo, y el vencimiento DEBE
+revisar registrar como la venta y cada modificación de planilla (BR-STK-042).
 
 ### BR-STK-051 — Cada caja amanece donde quedó, o en un lugar libre de las estanterías
 
@@ -802,8 +804,8 @@ total es igual al de lo vendido y registrar no se cumple.
 DADO una jornada que se abre ENTONCES registrar arranca sin cumplir. DADO una noche
 que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
-En las jornadas 1 a 5 se exige además que ambas compras hayan terminado, vendidas o vencidas
-(AC-STK-056).
+En toda jornada con compradores por horario se exige además que ambas compras hayan terminado,
+vendidas o vencidas (AC-STK-056).
 
 ### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
@@ -1138,11 +1140,13 @@ la unidad en la mano y registrada afuera.
 DADO esa unidad en una compra completa ENTONCES el casillero sigue vacío y reponer incompleta
 hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas parciales.
 
-### AC-STK-056 — Registro espera al cierre de ambas compras *(verifica BR-STK-022)*
+### AC-STK-056 — Registro espera a la compra en curso *(verifica BR-STK-022)*
 
-DADO cada jornada de la 1 a la 4 CUANDO se registra la venta completa de Tin pero Tia aún no
-compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados anticipadamente
-ENTONCES registrar sigue pendiente mientras alguna compra siga abierta.
+DADO cada jornada de la 1 a la 4 CUANDO se registra la venta completa de Tin y Tia aún no llegó
+ENTONCES registrar se cumple hasta que Tia llega, y al llegar vuelve a pendiente. DADO todos los
+pedidos anotados anticipadamente ENTONCES registrar sigue pendiente mientras alguna compra
+llegada siga abierta. CUANDO la jornada cierra con Tia sin llegar ENTONCES registrar queda
+pendiente.
 CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES registrar
 se cumple. Una unidad de más o de menos la descumple.
 
@@ -1273,9 +1277,9 @@ desorden. Una apertura posterior las retira como unidades sueltas de la noche an
 
 ### AC-STK-083 — Una sola venta, anticipación y vencimiento *(verifica BR-STK-042)*
 
-DADO Fede vendido y correctamente anotado, Mía sin llegar o esperando, CUANDO se evalúa durante
-la noche ENTONCES registrar sigue pendiente. Anotar también su pedido por adelantado no la
-cumple. CUANDO Mía vence ENTONCES la planilla exacta de sólo lo vendido a Fede cumple registrar,
+DADO Fede vendido y correctamente anotado, Mía sin llegar, CUANDO se evalúa durante la noche
+ENTONCES registrar se cumple; CUANDO Mía llega y espera ENTONCES registrar sigue pendiente.
+Anotar también su pedido por adelantado no la cumple. CUANDO Mía vence ENTONCES la planilla exacta de sólo lo vendido a Fede cumple registrar,
 incluso al cierre; sumar una unidad de Mía la descumple y restarla la vuelve a cumplir. DADO
 ambas compras vencidas y planilla cero CUANDO cierra ENTONCES registrar cuenta cumplida aunque
 atención no. Si ambas se venden, sólo su suma exacta cumple registrar.
@@ -1453,8 +1457,9 @@ instancias de compradores y pedidos.
 
 ### AC-STK-108 — Registrar espera a las dos compras de las jornadas 3 a 5 *(verifica BR-STK-050, BR-STK-042)*
 
-DADO la jornada 4 con la compra de Tia vendida y anotada y Fede sin llegar o esperando CUANDO se
-evalúa durante la noche ENTONCES registrar sigue pendiente. CUANDO Fede vence ENTONCES la planilla
+DADO la jornada 4 con la compra de Tia vendida y anotada y Fede sin llegar CUANDO se evalúa
+durante la noche ENTONCES registrar se cumple; CUANDO Fede llega y espera ENTONCES registrar sigue
+pendiente. CUANDO Fede vence ENTONCES la planilla
 exacta de sólo lo vendido a Tia cumple registrar. DADO la jornada 5 con Cami y Mía vencidas y la
 planilla en cero CUANDO cierra la noche ENTONCES registrar cuenta como cumplida; una unidad de más
 o de menos la deja pendiente. La misma regla vale para Cami y Tin en la jornada 3.
@@ -1573,8 +1578,10 @@ solo de sus consumidores.
 
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
-  compara la planilla, y cada cobro o vencimiento vuelve a compararla; en las jornadas 1 a 5,
-  cerrar todas las compras habilita evaluar registrar, independientemente de atención.
+  compara la planilla, y cada cobro o vencimiento vuelve a compararla; en toda jornada con
+  compradores por horario, cerrar las compras de los compradores que llegaron habilita evaluar
+  registrar durante la noche, independientemente de atención; al cierre se exigen cerradas ambas
+  (BR-CTR-031).
   Los mismos pedidos construidos para esa apertura acotan los faltantes, sin otra selección
   de compradores o productos (BR-STK-026, BR-STK-027). En jornada 2, el padrón fijo conserva
   sus identidades, recepción y revisión de registrar por venta o vencimiento (BR-STK-040,

@@ -70,6 +70,9 @@ var _control := ControlDelJugador.new(_mirada, ReglasDelJugador.VELOCIDAD_DE_CAM
 
 var _cadencia := CadenciaDePasos.new()
 
+## Los cuerpos que ya recibieron su patada y siguen pisados: una patada por cada entrada al área.
+var _pateados: Array[Node3D] = []
+
 # Adaptadores del motor: permiten medir solicitudes sin capturar el cursor del runner.
 var _en_web := OS.has_feature("web")
 var _leer_cursor: Callable = func() -> Input.MouseMode: return Input.mouse_mode
@@ -135,6 +138,9 @@ var _vista_de_salida := false
 
 ## El cuerpo del jugador: lo soltado que queda metido en él cae al lado.
 @onready var _forma_del_cuerpo: CollisionShape3D = $Cuerpo
+
+## Lo que pisa el jugador: las unidades del piso entran acá sin chocar con él, y se patean.
+@onready var _pies: Area3D = $Pies
 
 
 func _ready() -> void:
@@ -312,6 +318,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	_contar_el_paso(global_position - antes)
 	_empujar_lo_que_estorba()
+	_patear_lo_que_pisa(horizontal)
 
 	_acomodar_las_manos(delta)
 	_acomodar_la_caja()
@@ -377,6 +384,29 @@ func _empujar_lo_que_estorba() -> void:
 		var estorbo := choque.get_collider() as Node
 		if estorbo != null and estorbo.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
 			estorbo.call(ReglasDeLosObjetos.METODO_EMPUJAR, choque.get_remainder())
+
+
+## A cada cuerpo que entra al área de los pies le pide al dominio su patada y se la da.
+##
+## Se lee el área en cada paso y no la señal de entrada: la señal sale mientras el motor vacía sus
+## consultas, y ahí no se puede cambiar un cuerpo. Qué se patea y hacia dónde lo decide el dominio;
+## el que no se patea devuelve cero y no se anota, para que lo pise de nuevo cuando camine.
+func _patear_lo_que_pisa(horizontal: Vector3) -> void:
+	var pisados: Array[Node3D] = []
+	for cuerpo in _pies.get_overlapping_bodies():
+		var unidad := cuerpo as RigidBody3D
+		if unidad == null or unidad.freeze:
+			continue
+		if unidad in _pateados:
+			pisados.append(unidad)
+			continue
+		var impulso := Patada.impulso(
+			horizontal, unidad.global_position - global_position, _datos_de(unidad)
+		)
+		if not impulso.is_zero_approx():
+			unidad.apply_central_impulse(impulso * unidad.mass)
+			pisados.append(unidad)
+	_pateados = pisados
 
 
 ## Corre las dos manos sobre el eje de su brazo, hasta donde haya lugar.
