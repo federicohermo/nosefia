@@ -55,6 +55,8 @@ const NOMBRES_DE_LA_UNIDAD := {
 	EntradaSonora.Sonoridad.LATA: ["lata", "latas"],
 	EntradaSonora.Sonoridad.CAJA: ["cartón", "cartones"],
 	EntradaSonora.Sonoridad.BOTELLA_PLASTICA: ["botella", "botellas"],
+	EntradaSonora.Sonoridad.BOTELLA_VIDRIO: ["botella", "botellas"],
+	EntradaSonora.Sonoridad.CAJA_CEREALES: ["cajita", "cajitas"],
 }
 
 ## El producto que trae, que es el de su etiqueta salvo en la última noche (BR-ANO-004).
