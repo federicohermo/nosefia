@@ -82,7 +82,7 @@ func test_vencer_conserva_y_permite_recuperar_la_entrega() -> void:  # AC-CTR-04
 		assert_bool(inventario.esta_afuera(unidad)).is_false()
 
 
-func test_un_clic_termina_el_recordatorio_y_otro_entrega() -> void:  # AC-CTR-036
+func test_el_recordatorio_no_retiene_el_clic_de_la_entrega() -> void:  # AC-CTR-098
 	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var atencion := Atencion.new(
 		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1], inventario
@@ -93,12 +93,11 @@ func test_un_clic_termina_el_recordatorio_y_otro_entrega() -> void:  # AC-CTR-03
 	var unidad := Estante.new(inventario, Catalogo.todos()).retirar(
 		Catalogo.de(Producto.Id.ZUCARACHAS)
 	)
-	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
 	assert_bool(atencion.puede_abandonar()).is_true()
 	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
 
 
-func test_el_rechazo_se_cierra_con_el_objeto_en_mano_y_deja_salir() -> void:  # AC-CTR-037
+func test_el_rechazo_no_retiene_con_el_objeto_en_mano_y_deja_salir() -> void:  # AC-CTR-037
 	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var atencion := Atencion.new(
 		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1], inventario
@@ -107,8 +106,8 @@ func test_el_rechazo_se_cierra_con_el_objeto_en_mano_y_deja_salir() -> void:  # 
 	atencion.interactuar(null)
 	var incorrecto := ObjetoDelAlmacen.new()
 	assert_int(atencion.interactuar(incorrecto)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
-	assert_bool(atencion.puede_abandonar()).is_false()
-	assert_int(atencion.interactuar(incorrecto)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
+	assert_bool(atencion.puede_abandonar()).is_true()
+	assert_int(atencion.interactuar(incorrecto)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
 	assert_bool(atencion.puede_abandonar()).is_true()
 	assert_bool(atencion.vendida()).is_false()
 

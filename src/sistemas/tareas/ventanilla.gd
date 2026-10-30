@@ -20,6 +20,8 @@ extends Node
 signal comprador_llegado(comprador: Comprador)
 signal conversacion_iniciada(comprador: Comprador)
 signal conversacion_terminada
+## Lo que dice el comprador al recibir, recordar o rechazar: no abre la ventanilla.
+signal entrega_dicha(texto: String)
 signal atencion_despachada(despachados: int)
 ## Sólo cuando se cobró: despachar sin vender también despacha, y no es una compra.
 signal compra_realizada
@@ -48,7 +50,10 @@ func pedir_interaccion(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 		compra_realizada.emit()
 		_al_despachar()
 	presentacion_cambiada.emit()
-	if resultado in [RecepcionDeCompra.Resultado.DIALOGO, RecepcionDeCompra.Resultado.COMPLETA]:
+	var aviso := en_curso.tomar_aviso()
+	if not aviso.is_empty():
+		entrega_dicha.emit(aviso)
+	elif resultado in [RecepcionDeCompra.Resultado.DIALOGO, RecepcionDeCompra.Resultado.COMPLETA]:
 		if en_curso.puede_abandonar():
 			conversacion_terminada.emit()
 	return resultado

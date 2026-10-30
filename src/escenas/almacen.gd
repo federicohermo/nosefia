@@ -188,6 +188,7 @@ func _ready() -> void:
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
+	_atenciones.entrega_dicha.connect(_decir_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_computadora.computadora_abierta.connect(avisos.actualizar_computadora.bind(true))
@@ -970,6 +971,12 @@ func _pensar_en(texto: String, lugar: Vector3) -> void:
 	_lugar_del_pensamiento = lugar
 	if lugar.is_finite():
 		_distancia_al_pensar = _jugador.global_position.distance_to(lugar)
+
+
+## El texto de una entrega no tiene lugar: dura entero aunque el jugador camine.
+func _decir_entrega(texto: String) -> void:
+	_lugar_del_pensamiento = Vector3.INF
+	_hud.decir_comprador(texto)
 
 
 func _process(delta: float) -> void:
