@@ -6,6 +6,9 @@ signal comenzar_pedido
 enum Etapa { OCULTA, ENTRANDO, LEYENDO, SALIENDO }
 
 const DURACION_DEL_MOVIMIENTO := 0.3
+const DURACION_DEL_DESLIZAMIENTO := 0.8
+## Radianes por segundo de un resorte críticamente amortiguado: suave y sin rebote.
+const FRECUENCIA_DEL_RESORTE := 10.0
 const TEXTO_DE_SIGUIENTE := "Siguiente"
 const TEXTO_DE_VOLVER := "Volver"
 const TEXTO_DE_COMENZAR := "OK"
@@ -72,11 +75,20 @@ var _ultimo: int = 0
 ## la partida tarda, y con el tiempo entero la entrada se iba de un salto.
 var _transcurrido: int = 0
 var _avance: float = 0.0
+var _recuadro: Control
+## Guarda la placa que sale mientras la nueva entra.
+var _saliente: Control
+var _deslizando: bool = false
+## 1 si la placa nueva entra por la derecha, -1 si entra por la izquierda.
+var _sentido: int = 1
+var _transcurrido_del_deslizamiento: int = 0
+var _numeracion: String = ""
 
 
 func _ready() -> void:
 	visible = false
 	set_process(false)
+	_recortar_el_contenido()
 	_volver.text = TEXTO_DE_VOLVER
 	_volver.pressed.connect(_al_volver)
 	_siguiente.pressed.connect(_al_avanzar)
@@ -90,15 +102,23 @@ func _notification(que: int) -> void:
 
 
 func _process(_delta: float) -> void:
+	var ahora: int = _ahora.call()
+	var paso := clampi(ahora - _ultimo, 0, roundi(CabeceraConSolapa.PASO_MAXIMO * 1000000.0))
+	_ultimo = ahora
+	if _deslizando:
+		_transcurrido_del_deslizamiento += paso
+		if _transcurrido_del_deslizamiento >= DURACION_DEL_DESLIZAMIENTO * 1000000.0:
+			_terminar_el_deslizamiento()
+			set_process(_etapa in [Etapa.ENTRANDO, Etapa.SALIENDO])
+		else:
+			_deslizar()
 	if _etapa not in [Etapa.ENTRANDO, Etapa.SALIENDO]:
 		return
-	var ahora: int = _ahora.call()
-	_transcurrido += clampi(ahora - _ultimo, 0, roundi(CabeceraConSolapa.PASO_MAXIMO * 1000000.0))
-	_ultimo = ahora
+	_transcurrido += paso
 	_avance = minf(1.0, _transcurrido / (DURACION_DEL_MOVIMIENTO * 1000000.0))
 	_ajustar()
 	if _avance == 1.0:
-		set_process(false)
+		set_process(_deslizando)
 		if _etapa == Etapa.SALIENDO:
 			_etapa = Etapa.OCULTA
 			visible = false
@@ -126,6 +146,7 @@ func _al_avanzar() -> void:
 		return
 	_instrucciones.avanzar()
 	if _instrucciones.terminadas():
+		_terminar_el_deslizamiento()
 		_avance_al_salir = _avance if _etapa == Etapa.ENTRANDO else 1.0
 		_etapa = Etapa.SALIENDO
 		_avance = 0.0
@@ -135,18 +156,23 @@ func _al_avanzar() -> void:
 		_siguiente.disabled = true
 		set_process(true)
 		return
-	_pintar()
+	_pintar(1)
 
 
 func _al_volver() -> void:
 	if _instrucciones != null and _instrucciones.volver():
-		_pintar()
+		_pintar(-1)
 
 
-func _pintar() -> void:
+## El sentido es hacia dónde avanza la lectura: 0 pinta sin movimiento.
+func _pintar(sentido: int = 0) -> void:
+	_terminar_el_deslizamiento()
 	for anterior in _contenido.get_children():
-		_contenido.remove_child(anterior)
-		anterior.queue_free()
+		if sentido == 0:
+			_contenido.remove_child(anterior)
+			anterior.queue_free()
+		else:
+			anterior.reparent(_saliente, false)
 	var numero := _instrucciones.paso_actual()
 	var paso: InstruccionesDelJefe.Paso = _pasos[numero - 1]
 	var altura := 0.0
@@ -189,7 +215,62 @@ func _pintar() -> void:
 	_retrato.visible = true
 	_volver.disabled = not _instrucciones.se_puede_volver()
 	_siguiente.text = (TEXTO_DE_COMENZAR if _instrucciones.en_el_ultimo() else TEXTO_DE_SIGUIENTE)
-	_contador.text = "%d/%d" % [numero, _pasos.size()]
+	_numeracion = "%d/%d" % [numero, _pasos.size()]
+	if sentido == 0:
+		_contador.text = _numeracion
+		return
+	_sentido = sentido
+	_deslizando = true
+	_transcurrido_del_deslizamiento = 0
+	if not is_processing():
+		_ultimo = _ahora.call()
+	set_process(true)
+	_deslizar()
+
+
+## El recuadro recorta las dos placas: la que sale y la que entra.
+func _recortar_el_contenido() -> void:
+	_recuadro = Control.new()
+	_recuadro.clip_contents = true
+	_recuadro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_recuadro.position = _contenido.position
+	_recuadro.size = _contenido.size
+	var padre := _contenido.get_parent()
+	padre.add_child(_recuadro)
+	padre.move_child(_recuadro, _contenido.get_index())
+	var tamano := _contenido.size
+	_contenido.reparent(_recuadro, false)
+	_contenido.position = Vector2.ZERO
+	_contenido.size = tamano
+	_saliente = Control.new()
+	_saliente.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_recuadro.add_child(_saliente)
+
+
+static func avance_del_resorte(fraccion: float) -> float:
+	if fraccion >= 1.0:
+		return 1.0
+	var x := FRECUENCIA_DEL_RESORTE * DURACION_DEL_DESLIZAMIENTO * fraccion
+	return 1.0 - (1.0 + x) * exp(-x)
+
+
+func _deslizar() -> void:
+	var avance := avance_del_resorte(
+		_transcurrido_del_deslizamiento / (DURACION_DEL_DESLIZAMIENTO * 1000000.0)
+	)
+	var ancho := _contenido.size.x
+	_contenido.position.x = _sentido * ancho * (1.0 - avance)
+	_saliente.position.x = -_sentido * ancho * avance
+
+
+func _terminar_el_deslizamiento() -> void:
+	for anterior in _saliente.get_children():
+		_saliente.remove_child(anterior)
+		anterior.queue_free()
+	_contenido.position.x = 0.0
+	_saliente.position.x = 0.0
+	_deslizando = false
+	_contador.text = _numeracion
 
 
 func _resaltar(texto: String) -> String:

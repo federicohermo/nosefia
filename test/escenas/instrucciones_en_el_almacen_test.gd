@@ -425,6 +425,7 @@ func test_seguir_desde_la_tercera_abre_las_de_la_cuarta() -> void:  # AC-EMP-075
 	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("1/4")
 	for _paso in 3:
 		_siguiente().pressed.emit()
+	AvanceDeDevolucion.terminar_el_movimiento(_instrucciones())
 	assert_str((_instrucciones().get("_contador") as Label).text).is_equal("4/4")
 	assert_str(_siguiente().text).is_equal(PantallaDeInstrucciones.TEXTO_DE_COMENZAR)
 	_siguiente().pressed.emit()
