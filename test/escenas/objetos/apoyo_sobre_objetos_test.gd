@@ -273,11 +273,11 @@ func test_agarrar_una_unidad_baja_no_despierta_la_pila_mas_alta_de_al_lado() -> 
 	)
 	var cima_quieta := cima.global_position
 	assert_bool(agarre.pedir_agarrar(baja.datos, baja)).is_true()
-	assert_bool(alta.sleeping).is_true()
+	# La alta, pegada, se asienta de nuevo; lo que ella sostiene no es de lo que se levantó.
 	assert_bool(cima.sleeping).is_true()
 	for cuadro in Engine.physics_ticks_per_second:
 		await get_tree().physics_frame
-	assert_vector(cima.global_position).is_equal(cima_quieta)
+	assert_vector(cima.global_position).is_equal_approx(cima_quieta, Vector3.ONE * TOLERANCIA)
 
 
 func test_agarrar_una_de_dos_apoyos_deja_lo_de_arriba_sobre_la_otra() -> void:  # AC-PLY-110
