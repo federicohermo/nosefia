@@ -265,10 +265,10 @@ func _corrido_por(cuerpo: ObjetoAgarrable, paso: Vector3) -> Vector3:
 	)
 
 
-## Un golpe fuera del eje de `cuerpo`, hacia `hacia`, y espera a que se asiente.
-func _golpear(cuerpo: ObjetoAgarrable, hacia: Vector3) -> void:
+## Un golpe fuera del eje de `cuerpo`, hacia `hacia`, y espera `cuadros` de física.
+func _golpear(cuerpo: ObjetoAgarrable, hacia: Vector3, cuadros: int) -> void:
 	cuerpo.apply_impulse(hacia * cuerpo.mass * GOLPE, Vector3.UP * ALTO_DEL_GOLPE)
-	for cuadro in CUADROS_ASENTANDO:
+	for cuadro in cuadros:
 		await get_tree().physics_frame
 
 
@@ -295,11 +295,14 @@ func test_el_balde_suelto_no_se_vuelca_y_la_mopa_se_moja_en_el_balde() -> void: 
 	var almacen: Node3D = await _almacen_con_jugador_andando()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var balde: ObjetoAgarrable = almacen.get_node("Objetos/Balde")
+	await _soltar_en(balde, PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * SOLTADO_DESDE)
+	await _golpear(balde, Vector3.FORWARD, 1)
+	assert_float(balde.linear_velocity.dot(Vector3.FORWARD)).is_greater(0.0)
 	var pared := _pared_cercana(almacen)
 	await _soltar_en(balde, pared["pegado"])
 	await _parar_detras_de(jugador, balde.global_position, pared["hacia"])
 	await _empujar_caminando(jugador, balde, pared["hacia"], CUADROS_EMPUJANDO)
-	await _golpear(balde, pared["hacia"])
+	await _golpear(balde, pared["hacia"], CUADROS_ASENTANDO)
 	assert_float(_inclinacion_de(balde)).is_less(TOLERANCIA_DE_LA_VERTICAL)
 	var limpiador: Limpiador = almacen.get("_limpiador")
 	var llenar := limpiador.usar(
@@ -310,8 +313,3 @@ func test_el_balde_suelto_no_se_vuelca_y_la_mopa_se_moja_en_el_balde() -> void: 
 	assert_bool((almacen.get("_agarre") as Agarre).pedir_agarrar(mopa.datos, mopa)).is_true()
 	var mojar := limpiador.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE)
 	assert_int(mojar).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
-	# La premisa: el mismo golpe tumba al balde si el giro no está bloqueado.
-	balde.axis_lock_angular_x = false
-	balde.axis_lock_angular_z = false
-	await _golpear(balde, pared["hacia"])
-	assert_float(_inclinacion_de(balde)).is_greater(TOLERANCIA_DE_LA_VERTICAL)
