@@ -48,6 +48,17 @@ const RECORRIDO_LIBRE := 2.0
 ## arranca el jugador sin salir del pasillo.
 const CUADROS_JUNTO_AL_SOLIDO := 30
 
+## Lo mismo en un pasillo angosto: el jugador arranca más cerca de la unidad, que igual lo pisa, y
+## camina menos, en metros y en cuadros. Los pies llegan a 0,55 m del jugador.
+const DETRAS_DE_LA_UNIDAD_EN_EL_PASILLO := 0.8
+const CUADROS_EN_EL_PASILLO := 20
+const RECORRIDO_EN_EL_PASILLO := 1.3
+
+## Cuántas veces se empuja la unidad contra el sólido hasta que deja de avanzar, y cuánto es dejar
+## de avanzar, en metros.
+const INTENTOS_DE_PEGAR := 8
+const YA_NO_AVANZA := 0.005
+
 ## Lo mínimo que se corre de costado la unidad pateada, en metros.
 const SE_CORRIO := 0.05
 
@@ -203,9 +214,24 @@ func _distancia_al_solido(almacen: Node3D, desde: Vector3, hacia: Vector3) -> fl
 
 ## Si el cuerpo del jugador, parado en `desde`, camina `RECORRIDO_LIBRE` metros hacia `camino` sin
 ## tocar nada. Lo mide el propio cuerpo, con su forma entera y no con un rayo a ras del piso.
-func _recorrido_libre(jugador: CharacterBody3D, desde: Vector3, camino: Vector3) -> bool:
+func _recorrido_libre(
+	jugador: CharacterBody3D, desde: Vector3, camino: Vector3, metros: float = RECORRIDO_LIBRE
+) -> bool:
 	var parado := Transform3D(Basis.IDENTITY, Vector3(desde.x, jugador.global_position.y, desde.z))
-	return not jugador.test_move(parado, camino * RECORRIDO_LIBRE)
+	return not jugador.test_move(parado, camino * metros)
+
+
+## Con qué choca el cuerpo del jugador al caminar `metros` hacia `camino` desde `desde`: para que
+## un caso sin recorrido libre diga qué lo tapa.
+func _lo_que_tapa(
+	jugador: CharacterBody3D, desde: Vector3, camino: Vector3, metros: float
+) -> String:
+	var parado := Transform3D(Basis.IDENTITY, Vector3(desde.x, jugador.global_position.y, desde.z))
+	var choque := KinematicCollision3D.new()
+	if not jugador.test_move(parado, camino * metros, choque):
+		return "nada"
+	var tapa := choque.get_collider() as Node
+	return "%s en %v" % ["?" if tapa == null else tapa.name, choque.get_position()]
 
 
 ## Los sólidos fijos que el cuerpo pisa de verdad, sin contar lo que se hunde apoyado. Un cuerpo
@@ -350,6 +376,19 @@ func test_el_jugador_quieto_sobre_la_unidad_no_la_mueve() -> void:  # AC-PLY-155
 	assert_vector(unidad.global_position).is_equal_approx(antes, Vector3.ONE * SIN_MOVERSE)
 
 
+## Empuja la unidad contra el sólido hasta que ya no avanza: el roce la frena antes de llegar.
+func _pegar_al_solido(unidad: RigidBody3D, hacia: Vector3) -> void:
+	var avanzo := INF
+	for intento in INTENTOS_DE_PEGAR:
+		var antes := unidad.global_position
+		unidad.linear_velocity = hacia * EMPUJON_CONTRA_EL_SOLIDO
+		await _asentar(30)
+		avanzo = unidad.global_position.distance_to(antes)
+		if avanzo < YA_NO_AVANZA:
+			return
+	assert_float(avanzo).override_failure_message("no quedó pegada al sólido").is_less(YA_NO_AVANZA)
+
+
 func test_una_unidad_acorralada_contra_la_pared_no_se_mueve() -> void:  # AC-PLY-156
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -383,8 +422,7 @@ func test_una_unidad_acorralada_contra_la_pared_no_se_mueve() -> void:  # AC-PLY
 	var lugar := desde + hacia_el_solido * (a_la_pared - SEPARADA_DEL_SOLIDO)
 	var unidad := await _unidad_suelta_en(almacen, lugar)
 	# Se la pega a la pared antes de pisarla: acorralada es la que ya no tiene adónde ir.
-	unidad.linear_velocity = hacia_el_solido * EMPUJON_CONTRA_EL_SOLIDO
-	await _asentar()
+	await _pegar_al_solido(unidad, hacia_el_solido)
 	var antes := unidad.global_position
 	var arranque := antes - hacia_el_solido * APARTADO_DEL_SOLIDO - camino * DETRAS_DE_LA_UNIDAD
 	var marcha := await _caminar(jugador, arranque, camino, CUADROS_JUNTO_AL_SOLIDO)
@@ -438,20 +476,38 @@ func _patear_hacia(almacen: Node3D, mueble: MeshInstance3D, donde: String) -> Ve
 	)
 	var camino := Vector3.ZERO
 	for paralelo: Vector3 in [Vector3.RIGHT, Vector3.LEFT]:
-		var salida := lugar + Vector3.BACK * APARTADO_DEL_SOLIDO - paralelo * DETRAS_DE_LA_UNIDAD
-		if camino == Vector3.ZERO and _recorrido_libre(jugador, salida, paralelo):
+		var salida := (
+			lugar
+			+ Vector3.BACK * APARTADO_DEL_SOLIDO
+			- paralelo * DETRAS_DE_LA_UNIDAD_EN_EL_PASILLO
+		)
+		if (
+			camino == Vector3.ZERO
+			and _recorrido_libre(jugador, salida, paralelo, RECORRIDO_EN_EL_PASILLO)
+		):
 			camino = paralelo
+	var tapan: Array[String] = []
+	if camino == Vector3.ZERO:
+		for paralelo: Vector3 in [Vector3.RIGHT, Vector3.LEFT]:
+			var salida := (
+				lugar
+				+ Vector3.BACK * APARTADO_DEL_SOLIDO
+				- paralelo * DETRAS_DE_LA_UNIDAD_EN_EL_PASILLO
+			)
+			tapan.append(_lo_que_tapa(jugador, salida, paralelo, RECORRIDO_EN_EL_PASILLO))
 	(
 		assert_bool(camino != Vector3.ZERO)
-		. override_failure_message("%s, sin recorrido libre" % donde)
+		. override_failure_message("%s, sin recorrido libre, lo tapa %s" % [donde, tapan])
 		. is_true()
 	)
 	if camino == Vector3.ZERO:
 		return Vector3.ZERO
 	var unidad := await _unidad_suelta_en(almacen, lugar)
 	var antes := unidad.global_position
-	var arranque := antes + Vector3.BACK * APARTADO_DEL_SOLIDO - camino * DETRAS_DE_LA_UNIDAD
-	await _caminar(jugador, arranque, camino, CUADROS_JUNTO_AL_SOLIDO)
+	var arranque := (
+		antes + Vector3.BACK * APARTADO_DEL_SOLIDO - camino * DETRAS_DE_LA_UNIDAD_EN_EL_PASILLO
+	)
+	await _caminar(jugador, arranque, camino, CUADROS_EN_EL_PASILLO)
 	await _asentar()
 	var desplazamiento := unidad.global_position - antes
 	(
