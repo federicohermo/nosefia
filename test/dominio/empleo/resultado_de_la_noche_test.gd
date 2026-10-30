@@ -3,7 +3,6 @@ extends GdUnitTestSuite
 const CondicionesDelJefeTest := preload("res://test/dominio/empleo/condiciones_del_jefe_test.gd")
 
 const SEGUNDA := ReglasDeLaPartida.PRIMERA_JORNADA + 1
-const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA + 2
 
 
 func test_la_noche_vuelve_igual_de_sus_datos() -> void:  # AC-EMP-086
@@ -27,7 +26,7 @@ func test_un_dato_de_otro_tipo_no_es_una_noche() -> void:  # AC-EMP-086
 
 
 func test_la_fila_cruza_la_sesion() -> void:  # AC-EMP-086
-	var jugada := CondicionesDelJefeTest.cerrar_la_primera(2, false)
+	var jugada := CondicionesDelJefeTest.cerrar_la_primera(2, false, true)
 	var datos: Dictionary = str_to_var(var_to_str(PoliticaDeGuardado.datos(jugada)))
 	var retomada := Partida.desde(datos)
 	assert_int(retomada.jornada()).is_equal(SEGUNDA)
@@ -37,43 +36,28 @@ func test_la_fila_cruza_la_sesion() -> void:  # AC-EMP-086
 	assert_array(CondicionesDelJefe.elegidas(retomada.noches_de_prueba)).is_not_empty()
 
 
-func test_la_tercera_retomada_repite_su_fila() -> void:  # AC-EMP-088
-	var jugada := CondicionesDelJefeTest.cerrar_la_segunda(1, true, false)
-	var datos: Dictionary = str_to_var(var_to_str(PoliticaDeGuardado.datos(jugada)))
-	var retomada := Partida.desde(datos)
-	assert_int(retomada.jornada()).is_equal(TERCERA)
-	var guion: Conversacion = load(CondicionesDelJefeTest.GUION)
-	var propios := InstruccionesDelJefe.de_la_jornada(
-		guion.mensajes, TERCERA, CondicionesDelJefe.elegidas(retomada.noches_de_prueba)
-	)
-	assert_str(propios[0].identidad).is_equal("J3_Mensaje1_AtencionYReposicionMal")
-	assert_int(InstruccionesDelJefe.pasos_de(propios).size()).is_equal(2)
-
-
-func test_la_cuarta_retomada_repite_su_fila() -> void:  # AC-EMP-091
-	var jugada := CondicionesDelJefeTest.cerrar_la_prueba(
-		[[2, [Tarea.Tipo.REGISTRAR]], [2, []], [0, []]]
-	)
+func test_la_tercera_retomada_repite_su_fila() -> void:  # AC-EMP-091
+	var jugada := CondicionesDelJefeTest.cerrar_la_prueba([[5, []], [0, []]])
 	var datos: Dictionary = str_to_var(var_to_str(PoliticaDeGuardado.datos(jugada)))
 	var retomada := Partida.desde(datos)
 	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
-	var cuarta := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	var tercera := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 	var guion: Conversacion = load(CondicionesDelJefeTest.GUION)
 	var condiciones := CondicionesDelJefe.elegidas(retomada.noches_de_prueba)
 	var esperado: Array[String] = [
-		"J4_Mensaje1_Redimido", "J1_Intro10", "J1_Foto11", "J1_Intro11", "J1_Intro12"
+		"J3_Mensaje1_Redimido", "J1_Intro10", "J1_Foto11", "J1_Intro11", "J1_Intro12"
 	]
 	var en_pantalla: Array[String] = []
-	for mensaje in InstruccionesDelJefe.de_la_jornada(guion.mensajes, cuarta, condiciones):
+	for mensaje in InstruccionesDelJefe.de_la_jornada(guion.mensajes, tercera, condiciones):
 		en_pantalla.append(mensaje.identidad)
 	assert_array(en_pantalla).is_equal(esperado)
 	var bandeja := Bandeja.new([guion])
-	bandeja.abrir_jornada(cuarta, condiciones)
-	var de_la_cuarta: Array[String] = []
+	bandeja.abrir_jornada(tercera, condiciones)
+	var de_la_tercera: Array[String] = []
 	for mensaje: Mensaje in bandeja.mensajes_de(guion.interlocutor):
-		if mensaje.jornada == cuarta:
-			de_la_cuarta.append(mensaje.identidad)
-	assert_array(de_la_cuarta).is_equal(esperado)
+		if mensaje.jornada == tercera:
+			de_la_tercera.append(mensaje.identidad)
+	assert_array(de_la_tercera).is_equal(esperado)
 
 
 func test_las_fallas_de_una_noche_son_como_las_cuenta_la_prueba() -> void:  # AC-EMP-089

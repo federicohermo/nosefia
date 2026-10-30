@@ -708,18 +708,19 @@ func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() ->
 	var filas_en_segunda := 0
 	for objeto in objetos:
 		var piso: PisoDelLocal = almacen.get("_limpiador").piso()
-		assert_int(piso.jornada()).is_equal(5)
+		assert_int(piso.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 		if objeto.name == "JabonAzul":
 			assert_int(filas_en_segunda).is_equal(3)
 			assert_bool(objeto.visible).is_false()
 			assert_int((objeto as ObjetoAgarrable).collision_layer).is_zero()
 			var partida: Partida = almacen.get("_partida")
-			assert_int(partida.jornada()).is_equal(5)
+			var basura := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+			assert_int(partida.jornada()).is_equal(basura)
 			partida.cerrar_la_jornada(partida.obligatorias().size())
 			FinDeLaReflexion.terminar(partida)
 			almacen.get("_ciclo").abrir_la_jornada()
-			assert_int(partida.jornada()).is_equal(6)
-			assert_int(almacen.get("_limpiador").piso().jornada()).is_equal(6)
+			assert_int(partida.jornada()).is_equal(basura + 1)
+			assert_int(almacen.get("_limpiador").piso().jornada()).is_equal(basura + 1)
 			assert_bool(objeto.is_visible_in_tree()).is_true()
 			assert_int((objeto as ObjetoAgarrable).collision_layer).is_not_zero()
 			assert_int((objeto as ObjetoAgarrable).collision_mask).is_not_zero()

@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 func test_ausentes_no_tienen_stock_ni_cupo_aunque_la_escena_los_declare() -> void:  # AC-STK-095
 	var casilleros := _casilleros()
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in [1, 2]:
 		for semilla in 200:
 			var azar := RandomNumberGenerator.new()
 			azar.seed = semilla
@@ -29,7 +29,7 @@ func test_ausentes_no_tienen_stock_ni_cupo_aunque_la_escena_los_declare() -> voi
 
 func test_las_compras_y_reposicion_de_prueba_caben_en_una_caja() -> void:  # AC-STK-099
 	var casilleros := _casilleros()
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in [1, 2]:
 		for semilla in 200:
 			var azar := RandomNumberGenerator.new()
 			azar.seed = semilla
@@ -47,7 +47,7 @@ func test_las_compras_y_reposicion_de_prueba_caben_en_una_caja() -> void:  # AC-
 
 
 func test_jornadas_completas_recuperan_todas_las_cajas_y_cupos() -> void:  # AC-STK-095
-	for jornada: int in [4, 8]:
+	for jornada: int in [3, 7]:
 		var inventario := Apertura.inventario_de_la_jornada(
 			jornada,
 			Compradores.de_la_jornada(jornada),

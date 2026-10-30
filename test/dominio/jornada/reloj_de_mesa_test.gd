@@ -25,18 +25,19 @@ func test_la_noche_en_que_falla_se_lee_hasta_la_mitad_y_despues_no() -> void:  #
 	# el último minuto antes de la mitad. Con la mitad justa, nada.
 	var falla := Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ
 	var mitad := Reglas.DURACION_DEL_TURNO / 2.0
-	assert_str(RelojDeMesa.lectura(falla, mitad + UN_SEGUNDO)).is_equal("01:59")
+	var detenida := Marcador.hora(AnomaliasDeLaJornada.restante_al_cortar())
+	assert_str(RelojDeMesa.lectura(falla, mitad + UN_SEGUNDO)).is_equal(detenida)
 	assert_str(RelojDeMesa.lectura(falla, mitad)).is_empty()
 	assert_str(RelojDeMesa.lectura(falla, mitad - UN_SEGUNDO)).is_empty()
 
 
 func test_las_otras_noches_leen_la_hora_el_turno_entero() -> void:  # AC-SHF-012
 	# Las anteriores, la posterior y la que todavía nadie declaró: el reloj falla **una** noche
-	# y vuelve. La séptima, que lo detiene, tiene su propio caso. Se recorren las dos con el
+	# y vuelve. La del corte, que lo detiene, tiene su propio caso. Se recorren las dos con el
 	# turno entero, con la mitad justa y con un segundo, que es el borde que la noche que falla
 	# deja vacío.
 	var falla := Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ
-	var jornadas := [RelojDeMesa.JORNADA_SIN_DECLARAR, falla + 2]
+	var jornadas := [RelojDeMesa.JORNADA_SIN_DECLARAR, falla + 1]
 	var restantes := [Reglas.DURACION_DEL_TURNO, Reglas.DURACION_DEL_TURNO / 2.0, UN_SEGUNDO]
 	for jornada: int in jornadas:
 		for restante: float in restantes:
@@ -58,7 +59,7 @@ func test_el_reloj_que_fallo_no_dice_que_fallo() -> void:  # AC-SHF-013
 	assert_str(RelojDeMesa.lectura(falla, 0.0)).is_not_equal(Marcador.hora(0.0))
 
 
-func test_la_septima_noche_se_detiene_en_la_hora_del_corte() -> void:  # AC-SHF-049, AC-SHF-050
+func test_la_noche_del_corte_se_detiene_en_la_hora_del_corte() -> void:  # AC-SHF-049, AC-SHF-050
 	var jornada := AnomaliasDeLaJornada.JORNADA_DEL_CORTE
 	var corte := AnomaliasDeLaJornada.SEGUNDOS_HASTA_EL_CORTE
 	var detenida := (
@@ -67,7 +68,7 @@ func test_la_septima_noche_se_detiene_en_la_hora_del_corte() -> void:  # AC-SHF-
 	var antes := Reglas.DURACION_DEL_TURNO - (corte - UN_SEGUNDO)
 	assert_str(RelojDeMesa.lectura(jornada, antes)).is_equal(Marcador.hora(antes))
 	assert_str(RelojDeMesa.lectura(jornada, antes)).is_not_equal(detenida)
-	for transcurrido: float in [corte, corte * 2.0, Reglas.DURACION_DEL_TURNO]:
+	for transcurrido: float in [corte, corte * 2.0]:
 		var restante := Reglas.DURACION_DEL_TURNO - transcurrido
 		assert_str(RelojDeMesa.lectura(jornada, restante)).is_equal(detenida)
 		assert_bool(RelojDeMesa.hora_visible(jornada, restante)).is_true()

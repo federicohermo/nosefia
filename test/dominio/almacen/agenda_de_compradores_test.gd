@@ -90,7 +90,9 @@ func test_una_compra_completa_no_vence() -> void:  # AC-CTR-039
 
 
 func test_otras_jornadas_conservan_el_padron() -> void:  # AC-CTR-041
-	for jornada in range(6, 9):
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	]:
 		var compradores := Compradores.de_la_jornada(jornada)
 		assert_str(compradores[0].nombre()).is_equal("Marta")
 		assert_bool(compradores[0].tiene_horario()).is_false()
@@ -148,10 +150,7 @@ func test_los_bordes_de_fede_y_mia_en_la_segunda_jornada() -> void:  # AC-CTR-05
 
 func test_tin_y_tia_no_atienden_la_segunda_ni_el_padron() -> void:  # AC-CTR-026
 	var jornadas: Array[int] = [ReglasDeLaPartida.PRIMERA_JORNADA + 1]
-	for jornada in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA + 5, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
-	):
-		jornadas.append(jornada)
+	jornadas.append(ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	for jornada in jornadas:
 		for comprador in Compradores.de_la_jornada(jornada):
 			assert_array(["Tin", "Tia"]).not_contains([comprador.nombre()])

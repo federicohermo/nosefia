@@ -479,7 +479,10 @@ func test_la_retirada_no_conserva_objetivo_ni_contorno_y_cambia_la_figura() -> v
 func test_la_consulta_generica_no_es_una_barrera_y_se_apaga_en_fisico() -> void:
 	var almacen := await _abrir()
 	almacen.set("compradores_de_la_apertura", Compradores.de_la_jornada)
-	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
+	almacen.call(
+		"_al_abrir_la_jornada",
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	)
 	for _cuadro in 3:
 		await get_tree().physics_frame
 	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
