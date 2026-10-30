@@ -29,10 +29,11 @@ const TEXTO_DE_RESTAR := "−"
 
 ## El ancho de cada columna fija, igual en el encabezado y en las filas. La marca y el rubro
 ## se reparten lo que sobra según su peso.
-const ANCHO_DE_LA_IMAGEN := 112.0
+const ALTO_DE_LA_FILA := 105.0
+const ANCHO_DE_LA_IMAGEN := 148.0
 const ANCHO_DEL_PRECIO := 168.0
 const ANCHO_DE_LO_VENDIDO := 240.0
-const ANCHO_DEL_TOTAL := 200.0
+const ANCHO_DEL_TOTAL := 164.0
 const PESO_DE_LA_MARCA := 2.0
 const PESO_DEL_RUBRO := 3.0
 const TAMANO_DE_LETRA_DE_LA_DESCRIPCION := 28
@@ -219,7 +220,7 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	panel.theme_type_variation = (
 		&"FilaAlternaDelRegistro" if _filas.get_child_count() % 2 else &"FilaDelRegistro"
 	)
-	panel.custom_minimum_size = Vector2(0, 105)
+	panel.custom_minimum_size = Vector2(0, ALTO_DE_LA_FILA)
 	panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var fila := HBoxContainer.new()
@@ -235,13 +236,13 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	imagen.texture = IMAGENES.get(producto.id)
 	imagen.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	imagen.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	imagen.custom_minimum_size = Vector2(72, 72)
+	imagen.custom_minimum_size = Vector2(ANCHO_DE_LA_IMAGEN, ALTO_DE_LA_FILA)
 	imagen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	marco.add_child(imagen)
-	var marca := _etiqueta(producto.nombre, 0, PESO_DE_LA_MARCA)
+	var marca := _etiqueta(producto.nombre.to_upper(), 0, PESO_DE_LA_MARCA)
 	marca.add_theme_font_size_override(&"font_size", TAMANO_DE_LETRA_DE_LA_DESCRIPCION)
 	fila.add_child(marca)
-	var rubro := _etiqueta(Catalogo.rubro_de(producto.id), 0, PESO_DEL_RUBRO)
+	var rubro := _etiqueta(Catalogo.rubro_de(producto.id).to_upper(), 0, PESO_DEL_RUBRO)
 	rubro.add_theme_font_size_override(&"font_size", TAMANO_DE_LETRA_DE_LA_DESCRIPCION)
 	fila.add_child(rubro)
 	fila.add_child(_etiqueta(texto_de_pesos(producto.precio), ANCHO_DEL_PRECIO))

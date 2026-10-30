@@ -67,8 +67,10 @@ func test_la_planilla_muestra_cada_producto_y_sigue_a_los_gestos() -> void:
 		assert_object(imagen.texture).is_not_null()
 	var producto: Producto = registro.productos()[0]
 	var primera := filas.get_child(0).get_child(0)
-	assert_str((primera.get_child(MARCA) as Label).text).is_equal(producto.nombre)
-	assert_str((primera.get_child(RUBRO) as Label).text).is_equal(Catalogo.rubro_de(producto.id))
+	assert_str((primera.get_child(MARCA) as Label).text).is_equal(producto.nombre.to_upper())
+	assert_str((primera.get_child(RUBRO) as Label).text).is_equal(
+		Catalogo.rubro_de(producto.id).to_upper()
+	)
 	assert_str((primera.get_child(PRECIO) as Label).text).is_equal(
 		AppCaja.texto_de_pesos(producto.precio)
 	)
@@ -173,6 +175,40 @@ func test_el_total_de_la_noche_entra_entero_y_queda_bajo_la_columna_total() -> v
 	var columna: Label = app.get("_columna_total")
 	var cabecera := columna.get_global_rect()
 	assert_float(centro).is_between(cabecera.position.x, cabecera.end.x)
+
+
+func test_el_total_de_la_fila_mas_larga_entra_entero_sin_margen_sobrante() -> void:
+	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
+	add_child(pantalla)
+	pantalla.mostrar()
+	var registro := _planilla(pantalla)
+	for producto in registro.productos():
+		for _vez in RegistroDeVentas.TOPE_POR_FILA:
+			registro.sumar(producto)
+	pantalla.caja().mostrar(registro)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var mayor := 0.0
+	for panel: Node in (pantalla.caja().get("_filas") as Container).get_children():
+		var total := panel.get_child(0).get_child(TOTAL) as Label
+		assert_float(_ancho_del_texto(total)).is_less_equal(total.size.x)
+		mayor = maxf(mayor, _ancho_del_texto(total))
+	assert_float(AppCaja.ANCHO_DEL_TOTAL).is_less_equal(mayor * 1.1)
+
+
+func test_la_imagen_ocupa_todo_el_ancho_de_su_columna_y_el_alto_de_la_fila() -> void:
+	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
+	add_child(pantalla)
+	pantalla.mostrar()
+	_planilla(pantalla)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var app := pantalla.caja()
+	var columna: Label = app.get("_columna_imagen")
+	for panel: Control in (app.get("_filas") as Container).get_children():
+		var imagen: TextureRect = panel.get_child(0).get_child(IMAGEN).get_child(0)
+		assert_float(imagen.size.x).is_equal_approx(columna.size.x, 1.0)
+		assert_float(imagen.size.y).is_equal_approx(panel.size.y, 1.0)
 
 
 func test_ninguna_fila_es_mas_ancha_que_el_desplazamiento() -> void:
