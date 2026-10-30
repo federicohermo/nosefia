@@ -697,6 +697,10 @@ points = PackedVector3Array(-0.534600437,0.353535771,-0.617926836,-0.534600437,0
 margin = 0.002
 points = PackedVector3Array(-0.534600437,-0.117580295,-0.617926836,-0.534600437,-0.096551061,-0.617926836,-0.534600139,-0.117580295,0.329090476,-0.534600139,-0.096551061,0.329090476,0.019685563,-0.153559327,-0.617926955,0.019685563,-0.096551061,-0.617926955,0.019685855,-0.153559327,0.329090416,0.019685855,-0.096551061,0.329090416)
 
+[sub_resource type="ConvexPolygonShape3D" id="actual_heladera_fuera_de_servicio_8"]
+margin = 0.002
+points = PackedVector3Array(-0.646983900,-1.068825200,-0.669418100,-0.646983900,-1.068825200,0.380581700,-0.646983900,-0.507950783,-0.669418100,-0.646983900,-0.507950783,0.380581700,0.153016230,-1.068825200,-0.669418100,0.153016230,-1.068825200,0.380581700,0.153016230,-0.507950783,-0.669418100,0.153016230,-0.507950783,0.380581700)
+
 [sub_resource type="ConvexPolygonShape3D" id="actual_local_marco_ventanal_0"]
 margin = 0.002
 points = PackedVector3Array(-2.581417561,0.443742931,1.376582861,-2.512917042,2.087600231,1.536402106,-2.512917042,2.087600231,1.467890263,-2.581417561,2.087600231,1.536402106,-2.512917042,0.443742931,1.536402106,-2.581417561,0.443742931,1.536402106,-2.512585640,0.504999995,1.375809550,-2.581417561,2.087600231,1.467890263,-2.513386011,0.454999983,1.377677321,-2.581417561,0.512290657,1.376582861)
@@ -1153,6 +1157,10 @@ points = PackedVector3Array(-0.534600496,0.353535771,-0.617926717,-0.534600496,0
 margin = 0.002
 points = PackedVector3Array(-0.534600496,-0.117580295,-0.617926717,-0.534600496,-0.096551061,-0.617926717,-0.534600258,-0.117580295,0.329090595,-0.534600258,-0.096551061,0.329090595,0.019685537,-0.153559327,-0.617926836,0.019685537,-0.096551061,-0.617926836,0.019685715,-0.153559327,0.329090536,0.019685715,-0.096551061,0.329090536)
 
+[sub_resource type="ConvexPolygonShape3D" id="actual_heladeranueva_8"]
+margin = 0.002
+points = PackedVector3Array(-0.646984000,-1.068825200,-0.669417900,-0.646984000,-1.068825200,0.380581800,-0.646984000,-0.507950783,-0.669417900,-0.646984000,-0.507950783,0.380581800,0.153016100,-1.068825200,-0.669417900,0.153016100,-1.068825200,0.380581800,0.153016100,-0.507950783,-0.669417900,0.153016100,-0.507950783,0.380581800)
+
 [sub_resource type="ConvexPolygonShape3D" id="actual_heladeranueva_001_0"]
 margin = 0.002
 points = PackedVector3Array(-0.646984100,-1.068825200,-0.669418000,-0.646984100,-1.068825200,0.380581700,-0.646984100,1.421610800,-0.669418000,-0.646984100,1.421610800,0.380581700,-0.621984100,-1.068825200,-0.669418000,-0.621984100,-1.068825200,0.380581700,-0.621984100,1.421610800,-0.669418000,-0.621984100,1.421610800,0.380581700)
@@ -1184,6 +1192,10 @@ points = PackedVector3Array(-0.534600675,0.353535771,-0.617926776,-0.534600675,0
 [sub_resource type="ConvexPolygonShape3D" id="actual_heladeranueva_001_7"]
 margin = 0.002
 points = PackedVector3Array(-0.534600675,-0.117580295,-0.617926776,-0.534600675,-0.096551061,-0.617926776,-0.534600377,-0.117580295,0.329090446,-0.534600377,-0.096551061,0.329090446,0.019685350,-0.153559327,-0.617926836,0.019685350,-0.096551061,-0.617926836,0.019685643,-0.153559327,0.329090357,0.019685643,-0.096551061,0.329090357)
+
+[sub_resource type="ConvexPolygonShape3D" id="actual_heladeranueva_001_8"]
+margin = 0.002
+points = PackedVector3Array(-0.646984100,-1.068825200,-0.669418000,-0.646984100,-1.068825200,0.380581700,-0.646984100,-0.507950783,-0.669418000,-0.646984100,-0.507950783,0.380581700,0.153016000,-1.068825200,-0.669418000,0.153016000,-1.068825200,0.380581700,0.153016000,-0.507950783,-0.669418000,0.153016000,-0.507950783,0.380581700)
 
 [sub_resource type="ConvexPolygonShape3D" id="actual_gondola_deposito03_001_0"]
 margin = 0.002
@@ -3464,6 +3476,9 @@ shape = SubResource("actual_heladera_fuera_de_servicio_6")
 [node name="Volumen8" type="CollisionShape3D" parent="heladera_fuera_de_servicio/StaticBody3D"]
 shape = SubResource("actual_heladera_fuera_de_servicio_7")
 
+[node name="Volumen9" type="CollisionShape3D" parent="heladera_fuera_de_servicio/StaticBody3D"]
+shape = SubResource("actual_heladera_fuera_de_servicio_8")
+
 [node name="CollisionShape3D" parent="local_marco_ventanal/StaticBody3D"]
 disabled = true
 
@@ -4032,6 +4047,9 @@ shape = SubResource("actual_heladeranueva_6")
 [node name="Volumen8" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
 shape = SubResource("actual_heladeranueva_7")
 
+[node name="Volumen9" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+shape = SubResource("actual_heladeranueva_8")
+
 [node name="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
 disabled = true
 
@@ -4058,6 +4076,9 @@ shape = SubResource("actual_heladeranueva_001_6")
 
 [node name="Volumen8" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
 shape = SubResource("actual_heladeranueva_001_7")
+
+[node name="Volumen9" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+shape = SubResource("actual_heladeranueva_001_8")
 
 [node name="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
 disabled = true
