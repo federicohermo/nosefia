@@ -80,17 +80,50 @@ const FILAS := {
 	Producto.Id.POETICO: ["Poético", 1800],
 }
 
+## Qué es cada producto, de la columna «Qué es» de la base «Productos y cajas contenedoras». Va
+## aparte de `FILAS` porque `Producto` no lo lleva: sólo lo lee la planilla de ventas.
+const RUBROS := {
+	Producto.Id.ACTRONCITO: "Caja de medicamentos",
+	Producto.Id.DUREXTRA: "Caja de preservativos",
+	Producto.Id.BURBALOO: "Caja de chicles",
+	Producto.Id.ZUCARACHAS: "Caja de cereal",
+	Producto.Id.LAYSNNT: "Paquete de papitas",
+	Producto.Id.MALBARDO: "Paquete de cigarrillos",
+	Producto.Id.PROGRES: "Tubo de papitas",
+	Producto.Id.JORGILLO: "Cajita de alfajor",
+	Producto.Id.ARVECOR: "Lata de arvejas",
+	Producto.Id.CHISITOS: "Paquete de snacks",
+	Producto.Id.OREMOS: "Caja de galletitas",
+	Producto.Id.PEPITO: "Caja de galletitas",
+	Producto.Id.SALADICK: "Caja de snacks",
+	Producto.Id.UAKALAS: "Caja de fideos",
+	Producto.Id.PURA_COLA: "Lata de refresco",
+	Producto.Id.FROT_LUPS: "Caja de cereal",
+	Producto.Id.MAROLINI: "Caja de fideos",
+	Producto.Id.AMARGADITO: "Caja de yerba",
+	Producto.Id.CINDOLOR: "Caja de chocolatada",
+	Producto.Id.FLIM_POF: "Caja de caramelos",
+	Producto.Id.DON_SATURADOS: "Paquete de galletitas",
+	Producto.Id.PETISAS: "Paquete de galletitas",
+	Producto.Id.MACUMBAS: "Paquete de galletitas",
+	Producto.Id.COSA_DE_MANI: "Barra de mantecol",
+	Producto.Id.DURONGA: "Caja de preservativos",
+	Producto.Id.FERNET_GOD: "Botella de Fernet",
+	Producto.Id.MAYONCHIS: "Paquete de mayonesa",
+	Producto.Id.OAAAA: "Caja de jugo",
+	Producto.Id.TERMINATOR: "Caja de vino",
+	Producto.Id.MARRANOS: "Lata de atún",
+	Producto.Id.FEEL_RICKY_FORT: "Caja de barras de cereal",
+	Producto.Id.POETICO: "Producto de limpieza",
+}
+
 ## La sonoridad de cada producto, de la columna «Familia sonora» de la ficha. Va aparte de
 ## `FILAS` porque `Producto` no la lleva: sólo la usa el audio.
-##
-## **Dos familias de la ficha no existen acá**: la botella de vidrio suena como la plástica y la
-## caja de cereal como la cajita, que son las más parecidas. Cuáles suenan de verdad es
-## OQ-STK-004.
 const SONORIDADES := {
 	Producto.Id.ACTRONCITO: EntradaSonora.Sonoridad.CAJITA,
 	Producto.Id.DUREXTRA: EntradaSonora.Sonoridad.CAJITA,
 	Producto.Id.BURBALOO: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.ZUCARACHAS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.ZUCARACHAS: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.LAYSNNT: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.MALBARDO: EntradaSonora.Sonoridad.CAJITA,
 	Producto.Id.PROGRES: EntradaSonora.Sonoridad.LATA,
@@ -98,26 +131,26 @@ const SONORIDADES := {
 	Producto.Id.ARVECOR: EntradaSonora.Sonoridad.LATA,
 	Producto.Id.CHISITOS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.OREMOS: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.PEPITO: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.PEPITO: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.SALADICK: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.UAKALAS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.UAKALAS: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.PURA_COLA: EntradaSonora.Sonoridad.LATA,
-	Producto.Id.FROT_LUPS: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.MAROLINI: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.FROT_LUPS: EntradaSonora.Sonoridad.CAJA_CEREALES,
+	Producto.Id.MAROLINI: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.AMARGADITO: EntradaSonora.Sonoridad.CAJA,
 	Producto.Id.CINDOLOR: EntradaSonora.Sonoridad.CAJA,
-	Producto.Id.FLIM_POF: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.FLIM_POF: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.DON_SATURADOS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.PETISAS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.MACUMBAS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.COSA_DE_MANI: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.DURONGA: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.FERNET_GOD: EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+	Producto.Id.FERNET_GOD: EntradaSonora.Sonoridad.BOTELLA_VIDRIO,
 	Producto.Id.MAYONCHIS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.OAAAA: EntradaSonora.Sonoridad.CAJA,
 	Producto.Id.TERMINATOR: EntradaSonora.Sonoridad.CAJA,
 	Producto.Id.MARRANOS: EntradaSonora.Sonoridad.LATA,
-	Producto.Id.FEEL_RICKY_FORT: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.FEEL_RICKY_FORT: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.POETICO: EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 }
 
@@ -219,6 +252,11 @@ static func de(id: Producto.Id) -> Producto:
 	var nombre: String = fila[0]
 	var precio: int = fila[1]
 	return Producto.new(id, nombre, precio)
+
+
+## El rubro de ese producto, o `""` si no tiene fila.
+static func rubro_de(id: Producto.Id) -> String:
+	return RUBROS.get(id, "")
 
 
 ## La sonoridad de ese producto, o `NINGUNA` si no tiene fila.
