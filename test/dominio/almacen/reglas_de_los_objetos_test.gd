@@ -34,6 +34,16 @@ func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> voi
 		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 
 
+func test_la_caja_se_corre_menos_que_lo_suelto_y_ninguno_pasa_de_largo() -> void:  # AC-PLY-153
+	# Si lo suelto se corriera igual que la caja, o más que el paso entero, el jugador no
+	# notaría la diferencia de peso, o empujaría con más velocidad de la que camina.
+	assert_float(ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA).is_greater(0.0)
+	assert_float(ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA).is_less(
+		ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO
+	)
+	assert_float(ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO).is_less(1.0)
+
+
 func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:
 	# El rojo del día que alguien copie una constante y se olvide de cambiarle el texto: dos
 	# acciones con el mismo nombre hacen que una de las dos no responda nunca, y el motor no

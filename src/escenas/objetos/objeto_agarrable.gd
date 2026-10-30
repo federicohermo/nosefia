@@ -81,5 +81,22 @@ func interactuar() -> ObjetoDelAlmacen:
 	return datos
 
 
+## Lo que hacen los que se empujan cuando el jugador camina contra ellos: no todo lo que se agarra
+## se empuja, así que quien sí lo hace declara `empujar()` y delega acá. Es un cuerpo vivo, así que
+## el motor lo frena contra lo que encuentre: se le da la velocidad de la parte del paso que le
+## toca y nada más.
+##
+## Congelado no se corre: está en la mano, en una ranura o esperando su lugar.
+func _correrse(desplazamiento: Vector3) -> void:
+	if freeze:
+		return
+	var velocidad := (
+		desplazamiento * ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO / get_physics_process_delta_time()
+	)
+	velocidad.y = linear_velocity.y
+	sleeping = false
+	linear_velocity = velocidad
+
+
 func lugar_de_origen() -> Transform3D:
 	return _origen_en_el_mundo

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -524,6 +524,15 @@ en ese momento.
 Espacio es una tecla del juego: NO DEBE aceptar ni activar el botón que tenga el foco. Enter y
 el Enter del teclado numérico lo siguen haciendo, así que Espacio sostenido al terminar la
 jornada NO DEBE saltear la placa del cierre.
+
+### BR-PLY-050 — Lo que está suelto en el piso se corre al caminar contra ello
+
+CUANDO el jugador camina contra una caja, un útil de limpieza —jabón, mopa o balde— o una bolsa de
+basura que están sueltos, el sistema DEBE correrlo en el sentido del paso, y sólo con la parte
+del paso que no se pudo dar: el jugador no lo atraviesa ni lo empuja a toda su velocidad. Cada
+uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. Lo corrido NO
+DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar
+agitándose (BR-PLY-013). Lo que se lleva en la mano no se corre.
 
 ## Criterios de aceptación
 
@@ -1355,6 +1364,32 @@ caminata de BR-PLY-002.
 ### AC-PLY-131 — La velocidad agachado es menor que la de pie y no es cero *(verifica BR-PLY-042)*
 
 DADO las dos velocidades de caminata ENTONCES la agachado es mayor que cero y menor que la de pie.
+
+### AC-PLY-150 — Un útil suelto se corre en el sentido del paso *(verifica BR-PLY-050)*
+
+DADO un jabón, la mopa o el balde sueltos en el piso, uno por vez CUANDO el jugador camina contra
+él ENTONCES se corre en el sentido del paso, y menos distancia que la que avanza el jugador.
+
+### AC-PLY-151 — Una bolsa suelta se corre en el sentido del paso *(verifica BR-PLY-050)*
+
+DADO una bolsa de basura suelta en el piso CUANDO el jugador camina contra ella
+ENTONCES se corre en el sentido del paso, y menos distancia que la que avanza el jugador.
+
+### AC-PLY-152 — Lo empujado no atraviesa nada *(verifica BR-PLY-050, BR-PLY-015)*
+
+DADO un útil de limpieza y una bolsa de basura sueltos contra una pared CUANDO el jugador camina
+contra cada uno hacia la pared, el tiempo que haga falta para llevarlo hasta ella, ENTONCES ninguno
+se superpone con la pared ni sale del local.
+
+### AC-PLY-153 — La caja se empuja con su parte de siempre *(verifica BR-PLY-050)*
+
+DADO una caja suelta en el piso CUANDO el jugador camina contra ella ENTONCES se corre con la
+parte del paso que declara el dominio para la caja, y no con la de los útiles ni la de las bolsas.
+
+### AC-PLY-154 — Lo que se lleva en la mano no se corre *(verifica BR-PLY-050)*
+
+DADO un útil de limpieza o una bolsa de basura que no están sueltos, sino sostenidos ENTONCES
+recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 
 ## No objetivos
 
