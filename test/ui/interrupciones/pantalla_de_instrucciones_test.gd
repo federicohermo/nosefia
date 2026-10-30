@@ -267,7 +267,9 @@ func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:
 			assert_int(foto.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
 		var leyendas: Array[String] = []
 		var rectangulos: Array[Rect2] = []
-		var limites := Rect2(Vector2.ZERO, contenido.size)
+		var limites := Rect2(
+			Vector2.ZERO, Vector2(PantallaDeInstrucciones.ANCHO_DEL_TEXTO, contenido.size.y)
+		)
 		for texto: RichTextLabel in textos:
 			if texto == cuerpo:
 				continue
