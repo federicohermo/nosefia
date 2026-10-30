@@ -301,7 +301,6 @@ func _physics_process(delta: float) -> void:
 	_contar_el_paso(global_position - antes)
 	_empujar_lo_que_estorba()
 
-	_acomodar_la_vista()
 	_acomodar_las_manos(delta)
 	_acomodar_la_caja()
 	_leer_la_mira()
@@ -310,9 +309,9 @@ func _physics_process(delta: float) -> void:
 
 ## Lee la acción y escribe la altura que el dominio contesta. Encuadrado en una ventanilla la
 ## cámara está en el mundo y no se toca.
-func _acomodar_la_vista() -> void:
+func _acomodar_la_vista(delta: float) -> void:
 	var altura := _control.altura_de_la_vista(
-		Input.is_action_pressed(ReglasDelJugador.ACCION_AGACHARSE)
+		Input.is_action_pressed(ReglasDelJugador.ACCION_AGACHARSE), delta
 	)
 	if not _asomado:
 		_camara.position.y = altura
@@ -331,6 +330,7 @@ func _process(delta: float) -> void:
 	# Lo examinado cuelga de la cámara, que no se interpola: girarlo en el paso de física lo
 	# dibujaría a saltos.
 	examen.girar(_entrada(), delta)
+	_acomodar_la_vista(delta)
 	_control.avanzar_el_dibujo(delta)
 	var atrasado := _control.giro_atrasado()
 	if atrasado or _girando_el_dibujo or _retomando_la_vista:

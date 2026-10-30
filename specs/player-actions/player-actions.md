@@ -491,10 +491,14 @@ Las demás puertas DEBEN conservar su referencia y comportamiento.
 ### BR-PLY-042 — Agacharse baja la vista mientras se mantiene apretado Espacio
 
 MIENTRAS se mantiene apretada la acción de agacharse —Espacio por defecto—, el sistema DEBE
-bajar la vista a la altura agachado, aproximadamente la del segundo estante desde abajo de las
-góndolas. CUANDO se la suelta, DEBE devolver la vista a la altura de pie. No es un interruptor:
-apretar y soltar NO DEBE dejar al jugador agachado. Las dos alturas salen del dominio, y la
-agachado es mayor que cero y menor que la de pie.
+bajar la vista a la altura agachado, aproximadamente el centro del hueco del segundo estante
+desde el piso de las góndolas. CUANDO se la suelta, DEBE devolver la vista a la altura de pie. No
+es un interruptor: apretar y soltar NO DEBE dejar al jugador agachado. Las dos alturas salen del
+dominio, y la agachado es mayor que cero y menor que la de pie.
+
+La vista NO DEBE saltar de una altura a la otra: DEBE recorrer el trecho entre las dos en una
+fracción de segundo, a paso parejo. CUANDO la acción cambia a mitad del recorrido, la vista DEBE
+seguir hacia la nueva altura desde la que tenga en ese momento.
 
 Agachado, el jugador DEBE caminar a la velocidad de BR-PLY-002: la postura no cambia la
 caminata, y agacharse NO DEBE quitarle su tecla a la caminata. La mira enfoca desde la altura
@@ -1262,8 +1266,8 @@ abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los ge
 
 ### AC-PLY-120 — Agachado, la vista baja *(verifica BR-PLY-042)*
 
-DADO el jugador de pie CUANDO se mantiene apretada la acción de agacharse ENTONCES la altura de
-la vista es la altura agachado, y no la de pie.
+DADO el jugador de pie CUANDO se mantiene apretada la acción de agacharse ENTONCES la vista baja
+hasta la altura agachado, y no se queda en la de pie.
 
 ### AC-PLY-121 — Soltar la acción levanta la vista y no es un interruptor *(verifica BR-PLY-042)*
 
@@ -1290,8 +1294,8 @@ ENTONCES la altura es la agachado; reanudada con la acción suelta, la de pie.
 
 ### AC-PLY-125 — La mira enfoca desde la altura agachado *(verifica BR-PLY-042, BR-PLY-004)*
 
-DADO el jugador agachado ENTONCES la cámara de la mira está a la altura agachado sobre el piso,
-y un objeto interactuable apenas debajo de la altura de pie, en línea con la mira agachado, queda
+DADO el jugador agachado, con la bajada completa, ENTONCES la cámara de la mira está a la altura
+agachado sobre el piso, y un objeto interactuable apenas debajo de la altura de pie, en línea con la mira agachado, queda
 enfocado. CUANDO se suelta la acción ENTONCES la cámara vuelve a la altura de pie.
 
 ### AC-PLY-126 — Espacio es de la acción y la acción tiene su nombre *(verifica BR-PLY-042)*
@@ -1304,6 +1308,19 @@ ENTONCES coincide con el del mapa de entradas.
 
 DADO el mapa de entradas del juego ENTONCES la acción de aceptar de la interfaz no tiene Espacio y
 sigue teniendo Enter y el Enter del teclado numérico.
+
+### AC-PLY-128 — La vista se mueve sin saltar *(verifica BR-PLY-042)*
+
+DADO el jugador de pie CUANDO se aprieta la acción ENTONCES un cuadro corto baja la vista sin
+llegar a la altura agachado. DADO el jugador agachado CUANDO se suelta ENTONCES un cuadro corto la
+sube sin llegar a la de pie. La vista llega al destino en una duración mayor que cero y menor que
+medio segundo, sin pasarse de él, y la misma duración da la misma altura con cuadros de cualquier
+largo.
+
+### AC-PLY-129 — Cambiar a mitad del recorrido parte de la altura que haya *(verifica BR-PLY-042)*
+
+DADO el jugador bajando a mitad del recorrido CUANDO se suelta la acción ENTONCES la vista sube
+desde la altura que tenía, sin volver de golpe a la de pie ni terminar antes la bajada.
 
 ## No objetivos
 

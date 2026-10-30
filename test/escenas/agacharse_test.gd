@@ -7,6 +7,8 @@ const JUGADOR := preload("res://src/escenas/jugador.tscn")
 ## Hacia delante de la mira, a una distancia que entra en el alcance.
 const DISTANCIA_AL_OBJETO := 1.5
 
+const CUADRO := 1.0 / 60.0
+
 
 func after_test() -> void:
 	Input.action_release(ReglasDelJugador.ACCION_AGACHARSE)
@@ -16,11 +18,20 @@ func test_agachado_la_camara_baja_y_al_soltar_vuelve() -> void:  # AC-PLY-125
 	var jugador := _jugador()
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	Input.action_press(ReglasDelJugador.ACCION_AGACHARSE)
-	jugador.call("_acomodar_la_vista")
+	_asentar_la_vista(jugador)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_AGACHADO, 1e-5)
 	Input.action_release(ReglasDelJugador.ACCION_AGACHARSE)
-	jugador.call("_acomodar_la_vista")
+	_asentar_la_vista(jugador)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
+
+
+func test_un_cuadro_baja_la_camara_un_tramo_y_no_de_un_salto() -> void:  # AC-PLY-128
+	var jugador := _jugador()
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	Input.action_press(ReglasDelJugador.ACCION_AGACHARSE)
+	jugador.call("_acomodar_la_vista", CUADRO)
+	assert_float(camara.position.y).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	assert_float(camara.position.y).is_greater(ReglasDelJugador.ALTURA_AGACHADO)
 
 
 func test_la_mira_enfoca_desde_la_altura_agachado() -> void:  # AC-PLY-125
@@ -30,7 +41,7 @@ func test_la_mira_enfoca_desde_la_altura_agachado() -> void:  # AC-PLY-125
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_null()
 	Input.action_press(ReglasDelJugador.ACCION_AGACHARSE)
-	jugador.call("_acomodar_la_vista")
+	_asentar_la_vista(jugador)
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(objeto)
 
@@ -40,10 +51,10 @@ func test_suspendido_apretar_la_accion_no_baja_la_camara() -> void:  # AC-PLY-12
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	jugador.suspender()
 	Input.action_press(ReglasDelJugador.ACCION_AGACHARSE)
-	jugador.call("_acomodar_la_vista")
+	_asentar_la_vista(jugador)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
 	jugador.reanudar()
-	jugador.call("_acomodar_la_vista")
+	_asentar_la_vista(jugador)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_AGACHADO, 1e-5)
 
 
@@ -99,6 +110,11 @@ func _objeto_a_la_altura(y: float) -> StaticBody3D:
 	add_child(cuerpo)
 	cuerpo.global_position = Vector3(0.0, y, -DISTANCIA_AL_OBJETO)
 	return cuerpo
+
+
+## Deja pasar más que lo que dura el agache, para medir la postura ya asentada.
+func _asentar_la_vista(jugador: CharacterBody3D) -> void:
+	jugador.call("_acomodar_la_vista", ReglasDelJugador.DURACION_DEL_AGACHE * 2.0)
 
 
 func _actualizar(jugador: CharacterBody3D) -> void:
