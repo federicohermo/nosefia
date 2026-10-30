@@ -618,6 +618,7 @@ func test_un_producto_soltado_en_el_hueco_se_entrega_como_con_el_clic() -> void:
 	assert_bool(atendida.vendida()).is_true()
 	assert_array(soltados).is_empty()
 	var estados: Array[ReglasDelCierre.Estado] = almacen.call("_estados_del_cierre")
+	assert_bool(ReglasDelCierre.hay_objetos_afuera(estados)).is_false()
 	assert_bool(ReglasDelCierre.hay_desorden(estados, almacen.get("_partida").jornada())).is_false()
 
 
@@ -668,8 +669,11 @@ func test_sin_comprador_o_sin_producto_el_hueco_no_atrae_el_gesto() -> void:  # 
 
 
 ## Apunta a la abertura donde la figura todavía no llegó y pulsa con un producto en la mano, como
-## un clic común. Devuelve el cuerpo soltado.
-func _soltar_donde_no_esta_la_figura(almacen: Node3D, producto: Producto) -> Node3D:
+## un clic común. Con `entrando`, afirma que la figura todavía está entrando. Devuelve el cuerpo
+## soltado.
+func _soltar_donde_no_esta_la_figura(
+	almacen: Node3D, producto: Producto, entrando: bool = false
+) -> Node3D:
 	almacen.get("_reposicion_manual").retirar(producto.id)
 	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
 	var acceso: CollisionShape3D = puesto.get("acceso_al_cobro")
@@ -681,6 +685,12 @@ func _soltar_donde_no_esta_la_figura(almacen: Node3D, producto: Producto) -> Nod
 	camara.look_at(punto)
 	for _cuadro in 3:
 		await get_tree().physics_frame
+	var consulta := PhysicsRayQueryParameters3D.create(camara.global_position, punto, 3)
+	consulta.exclude = [(jugador as CollisionObject3D).get_rid()]
+	var golpe := jugador.get_world_3d().direct_space_state.intersect_ray(consulta)
+	assert_object(golpe.get("collider")).is_not_same(puesto.get_node("Comprador/Objetivo"))
+	if entrando:
+		assert_bool((puesto.get("_entrada") as Tween).is_running()).is_true()
 	jugador.call("_leer_la_mira")
 	var cuerpo := (almacen.get("_agarre") as Agarre).cuerpo_sostenido()
 	await _pulsar_real()
@@ -710,7 +720,7 @@ func test_con_comprador_el_clic_donde_no_esta_la_figura_no_saca_el_producto() ->
 		if not pedidos.has(candidato):
 			ajeno = candidato
 			break
-	var cuerpo := await _soltar_donde_no_esta_la_figura(almacen, ajeno)
+	var cuerpo := await _soltar_donde_no_esta_la_figura(almacen, ajeno, true)
 	assert_object(cuerpo).is_not_null()
 	assert_bool(_esta_afuera(almacen, cuerpo)).is_false()
 	assert_object((almacen.get("_agarre") as Agarre).cuerpo_sostenido()).is_same(cuerpo)
