@@ -21,12 +21,11 @@ const CUADROS_DE_MARGEN := 2
 const PRODUCTO := Producto.Id.MALBARDO
 const PRODUCTO_DE_LA_CAJA := Producto.Id.CHISITOS
 
-## Cuánto sobre el ángulo de paso va la caja. La hoja la toca antes de llegar a su centro, por el
-## ancho de la caja y el de la hoja, y tiene que tocarla ya pasado el ángulo de paso. Y cuánto se
-## separa del ángulo de paso la que la hoja atraviesa.
-const CONTACTO_AL_ABRIR := deg_to_rad(30.0)
-const CONTACTO_AL_CERRAR := deg_to_rad(5.0)
-const BAJO_EL_PASO := deg_to_rad(25.0)
+## A qué ángulo de la hoja cerrada va el centro de la caja: cerca de la bisagra, donde la hoja
+## apenas empezó a abrir, y con el giro ya avanzado. La hoja la toca antes de llegar a su centro,
+## por el ancho de la caja y el de la hoja.
+const CAJA_AL_INICIO := deg_to_rad(30.0)
+const CAJA_AVANZADA := deg_to_rad(60.0)
 
 ## Metros. Lo menos que se corre una caja a la que la hoja le deja lugar.
 const CORRIDA_MINIMA := 0.02
@@ -82,10 +81,6 @@ func _sentido_del_giro(hoja: MeshInstance3D, punto: Vector3) -> Vector3:
 
 func _angulo_de(cuerpo: PhysicsBody3D) -> float:
 	return cuerpo.call("puerta").angulo()
-
-
-func _angulo_de_paso(cuerpo: PhysicsBody3D) -> float:
-	return cuerpo.call("angulo_de_paso")
 
 
 ## Los cuadros que tarda en hacer el giro entero una hoja sin nada adelante.
@@ -256,22 +251,16 @@ func test_una_caja_que_se_puede_correr_frena_la_hoja_al_cerrar() -> void:  # AC-
 	assert_int(barrido["cuadros"]).override_failure_message("la caja no frenó la hoja").is_greater(
 		_cuadros_sin_freno() + CUADROS_DE_MARGEN
 	)
-	assert_int(barrido["cuadros"]).is_less(CUADROS_MAXIMOS)
 	assert_float(barrido["corrida"]).override_failure_message("la caja no se corrió").is_greater(
 		0.05
 	)
 	assert_bool(barrido["adentro"]).override_failure_message("la caja quedó adentro").is_false()
-	(
-		assert_int(barrido["rescates"])
-		. override_failure_message("la red devolvió la caja %d veces" % barrido["rescates"])
-		. is_equal(1)
-	)
 
 
 ## Barre la hoja con una caja en el recorrido, a mitad del giro, y devuelve cuántos cuadros tardó
 ## la hoja en llegar a su tope, lo más que se corrió la caja en el sentido del giro y si quedó
-## adentro de la hoja. Al cerrar, la caja queda apretada contra la pared y la red de seguridad la
-## devuelve a su lugar: por eso se mide lo que se corrió y no dónde terminó.
+## adentro de la hoja. Al cerrar, la caja queda apretada contra la pared y la hoja se detiene donde
+## la toca: por eso no se espera que llegue al tope.
 func _barrido_con_una_caja_corrible(congelada: bool, cerrando: bool) -> Dictionary:
 	var almacen: Node3D = await _almacen()
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
@@ -295,8 +284,6 @@ func _barrido_con_una_caja_corrible(congelada: bool, cerrando: bool) -> Dictiona
 		"cuadros": cuadros,
 		"corrida": corrida,
 		"adentro": _adentro_de_la_hoja(caja, cuerpo),
-		"rescates":
-		(almacen.get_node("Servicios/RedDeSeguridad") as RedDeSeguridad).rescates.size(),
 	}
 
 
@@ -313,9 +300,7 @@ func test_una_caja_con_poco_lugar_se_corre_en_vez_de_detener_la_hoja() -> void: 
 	var almacen: Node3D = await _almacen()
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
 	var cuerpo := _cuerpo_de(hoja)
-	var caja := _caja_en(
-		almacen, _en_el_recorrido(almacen, hoja, _angulo_de_paso(cuerpo) + CONTACTO_AL_ABRIR)
-	)
+	var caja := _caja_en(almacen, _en_el_recorrido(almacen, hoja, CAJA_AVANZADA))
 	var holgura := (
 		(_avance_de_un_cuadro(1.0) + _avance_de_un_cuadro(FrenoDeLaPuerta.FACTOR_DE_LO_PESADO))
 		/ 2.0
@@ -332,63 +317,56 @@ func test_una_caja_con_poco_lugar_se_corre_en_vez_de_detener_la_hoja() -> void: 
 	)
 
 
-func test_una_caja_inmovil_detiene_la_hoja_al_abrir_si_conserva_el_paso() -> void:  # AC-PLY-143
+## Lo que falla de la hoja contra una caja inmóvil: que se encime en algún cuadro, que no se
+## detenga, que no avise una vez que quedó quieta, que mueva la caja o que la red la rescate.
+func _fallas_contra_la_caja(angulo: float, abriendo: bool) -> Array[String]:
 	var almacen: Node3D = await _almacen()
 	var cuerpo := _cuerpo_de(almacen.get_node(HOJA))
-	var paso := _angulo_de_paso(cuerpo)
-	var caja := await _caja_inmovil(almacen, paso + CONTACTO_AL_ABRIR, true)
+	if not abriendo:
+		await _abrir(cuerpo)
+	var caja := await _caja_inmovil(almacen, angulo, abriendo)
 	var partida := caja.global_position
 	var avisos := [0]
 	cuerpo.connect("hoja_quieta", func(_hoja: PhysicsBody3D) -> void: avisos[0] += 1)
 	cuerpo.call("alternar")
-	await _esperar(CUADROS_DETENIDA * 2)
-	assert_float(_angulo_de(cuerpo)).is_greater_equal(paso)
-	assert_float(_angulo_de(cuerpo)).is_less(Puerta.ANGULO_ABIERTA)
-	assert_bool(cuerpo.call("puerta").quieta()).is_true()
-	assert_int(avisos[0]).override_failure_message("avisó %d veces" % avisos[0]).is_equal(1)
-	assert_float(caja.global_position.distance_to(partida)).is_less(0.02)
+	var fallas: Array[String] = []
+	for cuadro in CUADROS_DETENIDA * 2:
+		await get_tree().physics_frame
+		if fallas.is_empty() and _adentro_de_la_hoja(caja, cuerpo):
+			fallas.append("la hoja se encimó en el cuadro %d" % cuadro)
+	if is_equal_approx(_angulo_de(cuerpo), Puerta.ANGULO_ABIERTA if abriendo else 0.0):
+		fallas.append("la hoja llegó a su tope")
+	if not cuerpo.call("puerta").quieta():
+		fallas.append("la hoja no quedó quieta")
+	if avisos[0] != 1:
+		fallas.append("avisó %d veces" % avisos[0])
+	if caja.global_position.distance_to(partida) >= CORRIDA_MINIMA:
+		fallas.append("la caja se movió")
+	if not (almacen.get_node("Servicios/RedDeSeguridad") as RedDeSeguridad).rescates.is_empty():
+		fallas.append("la red rescató la caja")
+	return fallas
 
 
-func test_una_caja_inmovil_detiene_la_hoja_al_cerrar_si_conserva_el_paso() -> void:  # AC-PLY-143
-	var almacen: Node3D = await _almacen()
-	var cuerpo := _cuerpo_de(almacen.get_node(HOJA))
-	await _abrir(cuerpo)
-	var paso := _angulo_de_paso(cuerpo)
-	var caja := await _caja_inmovil(almacen, paso + CONTACTO_AL_CERRAR, false)
-	var partida := caja.global_position
-	cuerpo.call("alternar")
-	await _esperar(CUADROS_DETENIDA * 2)
-	assert_float(_angulo_de(cuerpo)).is_greater_equal(paso)
-	assert_float(_angulo_de(cuerpo)).is_greater(0.0)
-	assert_bool(cuerpo.call("puerta").quieta()).is_true()
-	assert_float(caja.global_position.distance_to(partida)).is_less(0.02)
+func test_una_caja_inmovil_cerca_de_la_bisagra_detiene_la_hoja_al_abrir() -> void:  # AC-PLY-143
+	assert_array(await _fallas_contra_la_caja(CAJA_AL_INICIO, true)).is_empty()
 
 
-func test_bajo_el_angulo_de_paso_la_hoja_atraviesa_la_caja_al_abrir() -> void:  # AC-PLY-143
-	var almacen: Node3D = await _almacen()
-	var cuerpo := _cuerpo_de(almacen.get_node(HOJA))
-	var caja := await _caja_inmovil(almacen, _angulo_de_paso(cuerpo) - BAJO_EL_PASO, true)
-	var cuadros := await _cuadros_hasta_el_tope(cuerpo, Puerta.ANGULO_ABIERTA)
-	assert_int(cuadros).override_failure_message("la hoja quedó detenida").is_less(CUADROS_MAXIMOS)
-	await _esperar(CUADROS_PARA_DORMIRSE)
-	assert_bool(_adentro_de_la_hoja(caja, cuerpo)).is_false()
+func test_una_caja_inmovil_cerca_de_la_bisagra_detiene_la_hoja_al_cerrar() -> void:  # AC-PLY-143
+	assert_array(await _fallas_contra_la_caja(CAJA_AL_INICIO, false)).is_empty()
 
 
-func test_bajo_el_angulo_de_paso_la_hoja_atraviesa_la_caja_al_cerrar() -> void:  # AC-PLY-143
-	var almacen: Node3D = await _almacen()
-	var cuerpo := _cuerpo_de(almacen.get_node(HOJA))
-	await _abrir(cuerpo)
-	var caja := await _caja_inmovil(almacen, _angulo_de_paso(cuerpo) - BAJO_EL_PASO, false)
-	var cuadros := await _cuadros_hasta_el_tope(cuerpo, 0.0)
-	assert_int(cuadros).override_failure_message("la hoja quedó detenida").is_less(CUADROS_MAXIMOS)
-	await _esperar(CUADROS_PARA_DORMIRSE)
-	assert_bool(_adentro_de_la_hoja(caja, cuerpo)).is_false()
+func test_una_caja_inmovil_con_el_giro_avanzado_detiene_la_hoja_al_abrir() -> void:  # AC-PLY-143
+	assert_array(await _fallas_contra_la_caja(CAJA_AVANZADA, true)).is_empty()
+
+
+func test_una_caja_inmovil_con_el_giro_avanzado_detiene_la_hoja_al_cerrar() -> void:  # AC-PLY-143
+	assert_array(await _fallas_contra_la_caja(CAJA_AVANZADA, false)).is_empty()
 
 
 func test_al_retirar_la_caja_la_hoja_reanuda_al_abrir() -> void:  # AC-PLY-144
 	var almacen: Node3D = await _almacen()
 	var cuerpo := _cuerpo_de(almacen.get_node(HOJA))
-	var caja := await _caja_inmovil(almacen, _angulo_de_paso(cuerpo) + CONTACTO_AL_ABRIR, true)
+	var caja := await _caja_inmovil(almacen, CAJA_AL_INICIO, true)
 	var retiro := await _retirar_la_caja(cuerpo, caja)
 	assert_bool(is_equal_approx(retiro["detenida"]["angulo"], Puerta.ANGULO_ABIERTA)).is_false()
 	assert_int(retiro["detenida"]["avisos"]).is_equal(1)
@@ -400,7 +378,7 @@ func test_al_retirar_la_caja_la_hoja_reanuda_al_cerrar() -> void:  # AC-PLY-144
 	var almacen: Node3D = await _almacen()
 	var cuerpo := _cuerpo_de(almacen.get_node(HOJA))
 	await _abrir(cuerpo)
-	var caja := await _caja_inmovil(almacen, _angulo_de_paso(cuerpo) + CONTACTO_AL_CERRAR, false)
+	var caja := await _caja_inmovil(almacen, CAJA_AL_INICIO, false)
 	var retiro := await _retirar_la_caja(cuerpo, caja)
 	assert_bool(is_equal_approx(retiro["detenida"]["angulo"], 0.0)).is_false()
 	assert_int(retiro["detenida"]["avisos"]).is_equal(1)

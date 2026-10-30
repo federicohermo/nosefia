@@ -543,22 +543,21 @@ duerme o está despierto.
 MIENTRAS la hoja de una puerta gira y lo pesado está en su recorrido, el sistema DEBE girarla
 más lenta desde el contacto, sin detenerla, si ese objeto puede correrse; la hoja DEBE llegar a
 su tope con el objeto fuera de ella. Puede correrse si tiene lugar para lo que la hoja avanza en
-un cuadro ya frenada, no en uno a la velocidad de siempre. SI no puede correrse, ENTONCES el sistema DEBE detener la
-hoja donde toca, siempre que ahí conserve el paso. Lo pesado que se corre recorre lo que avanza
-la hoja donde lo toca, y no sólo lo que recorre su centro: por encima del ángulo de paso, la hoja
-NO DEBE superponerse con ello. Lo liviano NO DEBE frenar la hoja: se arrastra según BR-PLY-017. Si hay varios obstáculos, manda el más pesado y los frenos no se
-acumulan.
+un cuadro ya frenada, no en uno a la velocidad de siempre. SI no puede correrse, ENTONCES el
+sistema DEBE detener la hoja donde toca, a cualquier ángulo. Lo pesado que se corre recorre lo
+que avanza la hoja donde lo toca, y no sólo lo que recorre su centro. La hoja NO DEBE superponerse
+con lo pesado en ningún cuadro. Lo liviano NO DEBE frenar la hoja: se arrastra según BR-PLY-017.
+Si hay varios obstáculos, manda el más pesado y los frenos no se acumulan.
 
-**El paso está garantizado.** El sistema NO DEBE detener la hoja por debajo del ángulo de paso de
-su vano: el menor ángulo al que la cápsula del jugador cruza el vano. SI lo pesado e inmóvil la
-toca por debajo de ese ángulo, ENTONCES la hoja DEBE atravesarlo, completar el recorrido, y la
-red de seguridad de BR-PLY-016 DEBE rescatarlo cuando quede quieto. CUANDO se retira lo que
-detenía la hoja, ella DEBE reanudar y llegar a su tope sin un segundo gesto.
+**La hoja frena y no hace más.** Detenida contra algo pesado e inmóvil, la hoja NO DEBE
+atravesarlo ni retroceder, y la red de seguridad de BR-PLY-016 NO DEBE rescatar lo que la detiene:
+el paso puede quedar bloqueado. CUANDO se retira lo que detenía la hoja, ella DEBE reanudar y
+llegar a su tope sin un segundo gesto.
 
-Todo rige igual al abrir y al cerrar: el sentido del giro cambia de qué lado se mide, no la
-garantía del paso. Frenar y reanudar NO DEBEN sumar un sonido ni un aviso a los de abrir, cerrar
-y trabada, y la hoja quieta DEBE avisarlo una vez, no por cada cuadro detenida. El freno NO
-DEBE cambiar el conteo de las bolsas ni lo que cuenta el contenedor.
+Todo rige igual al abrir y al cerrar: el sentido del giro cambia de qué lado se mide, no el freno.
+Frenar y reanudar NO DEBEN sumar un sonido ni un aviso a los de abrir, cerrar y trabada, y la hoja
+quieta DEBE avisarlo una vez, no por cada cuadro detenida. El freno NO DEBE cambiar el conteo de
+las bolsas ni lo que cuenta el contenedor.
 
 ## Criterios de aceptación
 
@@ -1327,19 +1326,17 @@ ella.
 
 DADO una caja contenedora apoyada en el recorrido, con espacio para correrse, CUANDO se abre la
 puerta ENTONCES la hoja gira más lenta que la de siempre desde el contacto, llega al tope y la
-caja termina corrida, fuera de la hoja. CUANDO se cierra la hoja también gira más lenta y llega a
-su tope; en el depósito la caja queda apretada contra la pared y la red de seguridad de BR-PLY-016
-la devuelve, una vez, fuera de la hoja. Una caja despierta frena igual que una dormida. DADO una
-caja con lugar para el paso ya frenado y no para el entero ENTONCES la hoja no se detiene: la
-caja se corre.
+caja termina corrida, fuera de la hoja. CUANDO se cierra la hoja también gira más lenta y la caja
+se corre; si queda apretada contra la pared, la hoja se detiene donde la toca. En ningún caso la
+caja queda adentro de la hoja. Una caja despierta frena igual que una dormida. DADO una caja con
+lugar para el paso ya frenado y no para el entero ENTONCES la hoja no se detiene: la caja se
+corre.
 
-### AC-PLY-143 — Una caja inmóvil detiene la hoja sólo si queda el paso *(verifica BR-PLY-051, BR-PLY-016)*
+### AC-PLY-143 — Una caja inmóvil detiene la hoja donde la toca *(verifica BR-PLY-051, BR-PLY-016)*
 
-DADO una caja contra la pared que no puede correrse y la hoja en un ángulo igual al de paso del
-vano CUANDO la hoja la toca ENTONCES se detiene donde toca. DADO la hoja un grado por debajo del
-ángulo de paso CUANDO la toca ENTONCES no se detiene: atraviesa la caja, completa el recorrido y
-la red de seguridad la rescata cuando queda quieta. Al abrir y al cerrar rige el mismo ángulo de
-paso.
+DADO una caja que no puede correrse CUANDO la hoja la toca, cerca de la bisagra o con el giro ya
+avanzado, ENTONCES se detiene antes de tocarla: en ningún cuadro la atraviesa ni se superpone con
+ella, la caja no se mueve y la red de seguridad no interviene. Al abrir y al cerrar.
 
 ### AC-PLY-144 — Al retirar la caja, la hoja reanuda *(verifica BR-PLY-051)*
 
@@ -1358,25 +1355,17 @@ DADO una unidad de producto despierta en el recorrido de la hoja CUANDO se abre 
 se corre en el sentido del giro, igual que una dormida, y al quedar quieta la hoja no tiene nada
 adentro.
 
-### AC-PLY-147 — El ángulo de paso es el que cruza la cápsula *(verifica BR-PLY-051)*
+### AC-PLY-148 — La hoja detenida queda en su ángulo *(verifica BR-PLY-051)*
 
-DADO cada vano de paso con su hoja en el ángulo de paso adoptado CUANDO el jugador lo cruza en
-ambos sentidos ENTONCES cruza. El motor redondea las esquinas del casco de la hoja, y por eso la
-cápsula puede cruzar hasta un grado antes del adoptado; nunca después. La medida parte de un
-jugador libre, separado del piso y de otros cuerpos.
-
-### AC-PLY-148 — La hoja no se detiene antes del ángulo de paso *(verifica BR-PLY-051)*
-
-DADO una hoja contra algo pesado que no puede correrse CUANDO la hoja está en el ángulo de paso
-ENTONCES queda en ese ángulo. CUANDO está un grado por debajo ENTONCES sigue hasta su destino
-sin detenerse. DADO un factor de velocidad fuera de (0, 1] ENTONCES la hoja gira como con
-factor 1.
+DADO una hoja contra algo pesado que no puede correrse CUANDO se detiene ENTONCES queda en el
+ángulo en que está, sea cual sea, sin avanzar ni retroceder. DADO un factor de velocidad fuera de
+(0, 1] ENTONCES la hoja gira como con factor 1.
 
 ### AC-PLY-149 — La hoja no se superpone con una caja que arrastra *(verifica BR-PLY-051)*
 
 DADO una caja grande en el recorrido de la hoja, contra una pared de frente o de costado, o en un
-rincón, y tocada por encima del ángulo de paso CUANDO se abre y CUANDO se cierra la puerta ENTONCES
-en ningún cuadro la caja está adentro de la hoja. Rige con la caja dormida y despierta.
+rincón, y tocada cerca de la bisagra CUANDO se abre y CUANDO se cierra la puerta ENTONCES en
+ningún cuadro la caja está adentro de la hoja. Rige con la caja dormida y despierta.
 
 ### AC-PLY-110 — Levantar lo de abajo hace caer lo de arriba *(verifica BR-PLY-018)*
 

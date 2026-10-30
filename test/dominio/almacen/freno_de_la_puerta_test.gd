@@ -1,12 +1,7 @@
 ## Cuánto frena un obstáculo a la hoja de una puerta, y dónde la detiene.
 extends GdUnitTestSuite
 
-const LARGO := 1.7
-const ESPESOR := 0.2
-const VANO := 1.7
 const UN_GRADO := deg_to_rad(1.0)
-const HACIA_ADELANTE := 1.0
-const HACIA_ATRAS := -1.0
 
 
 func _hoja_en(angulo: float) -> Puerta:
@@ -21,97 +16,28 @@ func test_sin_obstaculo_o_con_uno_liviano_la_hoja_no_se_frena() -> void:  # AC-P
 		FrenoDeLaPuerta.Obstaculo.NADA, FrenoDeLaPuerta.Obstaculo.LIVIANO
 	]:
 		for puede_correrse: bool in [true, false]:
-			var freno := FrenoDeLaPuerta.decidir(obstaculo, puede_correrse, 0.0, 0.5)
+			var freno := FrenoDeLaPuerta.decidir(obstaculo, puede_correrse, 0.0)
 			assert_float(freno.factor).is_equal(1.0)
 			assert_bool(is_nan(freno.tope)).is_true()
 
 
 func test_lo_pesado_que_se_puede_correr_frena_sin_detener() -> void:  # AC-PLY-142
-	var freno := FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, true, 1.2, 0.5)
+	var freno := FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, true, 1.2)
 	assert_float(freno.factor).is_between(0.0, 1.0)
 	assert_float(freno.factor).is_not_equal(0.0)
 	assert_float(freno.factor).is_not_equal(1.0)
 	assert_bool(is_nan(freno.tope)).is_true()
 
 
-func test_lo_pesado_inmovil_detiene_la_hoja_donde_toca_si_conserva_el_paso() -> void:  # AC-PLY-143
-	var paso := 0.9
-	for angulo: float in [paso, paso + UN_GRADO, Puerta.ANGULO_ABIERTA]:
-		var freno := FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, false, angulo, paso)
+func test_lo_pesado_inmovil_detiene_la_hoja_donde_toca_a_cualquier_angulo() -> void:  # AC-PLY-143
+	for angulo: float in [0.0, UN_GRADO, Puerta.ANGULO_ABIERTA / 2.0, Puerta.ANGULO_ABIERTA]:
+		var freno := FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, false, angulo)
 		assert_float(freno.tope).is_equal(angulo)
 
 
-func test_lo_pesado_inmovil_no_detiene_la_hoja_bajo_el_angulo_de_paso() -> void:  # AC-PLY-143
-	var paso := 0.9
-	for angulo: float in [0.0, paso - UN_GRADO]:
-		var freno := FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, false, angulo, paso)
-		assert_float(freno.factor).is_equal(1.0)
-		assert_bool(is_nan(freno.tope)).is_true()
-
-
-func test_en_el_angulo_de_paso_la_hoja_se_detiene_y_un_grado_menos_sigue() -> void:  # AC-PLY-148
-	var paso := 0.9
-	var en_el_paso := _hoja_en(paso)
-	var freno := FrenoDeLaPuerta.decidir(
-		FrenoDeLaPuerta.Obstaculo.PESADO, false, en_el_paso.angulo(), paso
-	)
-	en_el_paso.avanzar(0.1, freno.factor, freno.tope)
-	assert_float(en_el_paso.angulo()).is_equal_approx(paso, 0.0001)
-	var debajo := _hoja_en(paso - UN_GRADO)
-	freno = FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, false, debajo.angulo(), paso)
-	debajo.avanzar(10.0, freno.factor, freno.tope)
-	assert_float(debajo.angulo()).is_equal(Puerta.ANGULO_ABIERTA)
-
-
-func test_el_angulo_de_paso_deja_pasar_y_un_grado_menos_no() -> void:  # AC-PLY-147
-	var libre := FrenoDeLaPuerta.ANCHO_DEL_JUGADOR + FrenoDeLaPuerta.MARGEN_DEL_PASO
-	var paso := FrenoDeLaPuerta.angulo_de_paso(_contorno(0.0), VANO, HACIA_ADELANTE)
-	assert_float(_hueco(paso)).is_greater_equal(libre)
-	assert_float(_hueco(paso - UN_GRADO)).is_less(libre)
-
-
-func test_el_angulo_de_paso_es_de_grados_enteros() -> void:  # AC-PLY-147
-	var paso := FrenoDeLaPuerta.angulo_de_paso(_contorno(0.0), VANO, HACIA_ADELANTE)
-	var grados := rad_to_deg(paso)
-	assert_float(grados).is_equal_approx(roundf(grados), 0.0001)
-
-
-func test_con_el_eje_en_la_cara_pasa_antes_la_hoja_que_aleja_su_espesor() -> void:  # AC-PLY-147
-	var contorno := _contorno(ESPESOR / 2.0)
-	var alejando := FrenoDeLaPuerta.angulo_de_paso(contorno, VANO, HACIA_ADELANTE)
-	var acercando := FrenoDeLaPuerta.angulo_de_paso(contorno, VANO, HACIA_ATRAS)
-	assert_float(alejando).is_less(acercando)
-
-
-func test_un_vano_que_no_deja_pasar_ni_abierta_la_hoja_no_se_detiene_nunca() -> void:  # AC-PLY-148
-	var contorno := _contorno(0.0)
-	var paso := FrenoDeLaPuerta.angulo_de_paso(
-		contorno, FrenoDeLaPuerta.ANCHO_DEL_JUGADOR, HACIA_ADELANTE
-	)
-	assert_float(paso).is_equal(Puerta.ANGULO_ABIERTA)
-
-
-func test_un_vano_de_sobra_deja_pasar_con_la_hoja_cerrada_a_medias_o_no() -> void:  # AC-PLY-147
-	(
-		assert_float(FrenoDeLaPuerta.angulo_de_paso(_contorno(0.0), LARGO + 2.0, HACIA_ADELANTE))
-		. is_zero()
-	)
-
-
-## Los vértices de la hoja cerrada: `x` desde la bisagra a lo largo del vano, `y` desde el eje
-## a lo ancho de la hoja, que queda `desvio` metros hacia un lado del centro de su espesor.
-func _contorno(desvio: float) -> PackedVector2Array:
-	var mitad := ESPESOR / 2.0
-	return PackedVector2Array(
-		[
-			Vector2(0.0, desvio - mitad),
-			Vector2(0.0, desvio + mitad),
-			Vector2(LARGO, desvio - mitad),
-			Vector2(LARGO, desvio + mitad),
-		]
-	)
-
-
-## El hueco que deja una hoja de eje centrado a lo ancho del vano, con la hoja a `angulo`.
-func _hueco(angulo: float) -> float:
-	return VANO - (LARGO * cos(angulo) + ESPESOR / 2.0 * sin(angulo))
+func test_la_hoja_detenida_queda_en_su_angulo_a_cualquier_angulo() -> void:  # AC-PLY-148
+	for fraccion: float in [0.1, 0.5, 0.9]:
+		var puerta := _hoja_en(Puerta.ANGULO_ABIERTA * fraccion)
+		var detenida := puerta.angulo()
+		var freno := FrenoDeLaPuerta.decidir(FrenoDeLaPuerta.Obstaculo.PESADO, false, detenida)
+		assert_float(puerta.avanzar(10.0, freno.factor, freno.tope)).is_equal(detenida)

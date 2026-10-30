@@ -31,10 +31,7 @@ signal salida_rechazada
 enum Traba { NINGUNA, PUERTA, PORTON }
 
 ## Metros. Lo menos que se le exige a un objeto para decir que la hoja lo puede correr.
-const CORRIMIENTO_MINIMO := 0.02
-
-## Metros. Hasta dónde se busca la pared que cierra el vano, a lo largo de la hoja.
-const ALCANCE_DEL_VANO := 4.0
+const CORRIMIENTO_MINIMO := 0.05
 
 ## La malla que gira, que es el padre de este cuerpo. Entra por `@export` y no con un
 ## `get_parent()` para que el `.tscn` diga qué se mueve en vez de que lo suponga el script.
@@ -201,10 +198,7 @@ func _freno(delta: float) -> FrenoDeLaPuerta:
 				puede_correrse = puede_correrse and _se_corre(objeto, frenado)
 			elif obstaculo == FrenoDeLaPuerta.Obstaculo.NADA:
 				obstaculo = FrenoDeLaPuerta.Obstaculo.LIVIANO
-	var paso := Puerta.ANGULO_ABIERTA
-	if obstaculo == FrenoDeLaPuerta.Obstaculo.PESADO:
-		paso = angulo_de_paso()
-	return FrenoDeLaPuerta.decidir(obstaculo, puede_correrse, _puerta.angulo(), paso)
+	return FrenoDeLaPuerta.decidir(obstaculo, puede_correrse, _puerta.angulo())
 
 
 ## Si el objeto tiene lugar para correrse lo que la hoja avanza hasta `siguiente`, que es el paso
@@ -271,72 +265,6 @@ func _llevar_lo_pesado(desde: float, hasta: float) -> void:
 				corrimiento / ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
 			)
 			objeto.remove_collision_exception_with(self)
-
-
-## Desde qué ángulo la hoja deja pasar al jugador. Se mide al pedirlo y no al cargar la escena:
-## el vano lo cierra una pared del mundo, que todavía no está cuando la hoja entra al árbol.
-##
-## La hoja cerrada se mide en el plano: `brazo` va de la bisagra al centro de la hoja y `canto`
-## es su perpendicular. El contorno es el de lo que choca con el jugador, que puede ser más
-## chico que la malla, y el vano llega hasta la pared que cierra el brazo.
-func angulo_de_paso() -> float:
-	var padre := hoja.global_transform * hoja.transform.affine_inverse()
-	var cerrada := padre * _cerrada
-	var bisagra := padre * _bisagra
-	var brazo := cerrada * hoja.get_aabb().get_center() - bisagra
-	brazo.y = 0.0
-	if brazo.is_zero_approx():
-		return Puerta.ANGULO_ABIERTA
-	brazo = brazo.normalized()
-	var canto := Vector3.UP.cross(brazo)
-	var contorno := PackedVector2Array()
-	for punto in _puntos_de_colision(cerrada):
-		var radio := punto - bisagra
-		contorno.append(Vector2(radio.dot(brazo), radio.dot(canto)))
-	return FrenoDeLaPuerta.angulo_de_paso(contorno, _vano(bisagra, brazo), sentido_del_giro)
-
-
-## Los vértices de las formas de colisión de la hoja cerrada, en el mundo.
-func _puntos_de_colision(cerrada: Transform3D) -> PackedVector3Array:
-	var puntos := PackedVector3Array()
-	for volumen: CollisionShape3D in find_children("*", "CollisionShape3D", false, false):
-		var pose := cerrada * _desde_la_hoja * volumen.transform
-		if volumen.shape is BoxShape3D:
-			var mitad := (volumen.shape as BoxShape3D).size / 2.0
-			for indice in 8:
-				puntos.append(
-					(
-						pose
-						* Vector3(
-							mitad.x if indice & 1 else -mitad.x,
-							mitad.y if indice & 2 else -mitad.y,
-							mitad.z if indice & 4 else -mitad.z
-						)
-					)
-				)
-		elif volumen.shape is ConvexPolygonShape3D:
-			for punto in (volumen.shape as ConvexPolygonShape3D).points:
-				puntos.append(pose * punto)
-	return puntos
-
-
-## La distancia de la bisagra a la primera pared a lo largo del brazo. Lo que se agarra y el
-## jugador no cierran el vano, así que el rayo los atraviesa.
-func _vano(bisagra: Vector3, brazo: Vector3) -> float:
-	var consulta := PhysicsRayQueryParameters3D.create(
-		bisagra, bisagra + brazo * ALCANCE_DEL_VANO, collision_mask
-	)
-	var excluidos: Array[RID] = [get_rid()]
-	for intento in 8:
-		consulta.exclude = excluidos
-		var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
-		if golpe.is_empty():
-			break
-		var objeto := golpe["collider"] as PhysicsBody3D
-		if not (objeto is RigidBody3D or objeto is CharacterBody3D):
-			return bisagra.distance_to(golpe["position"])
-		excluidos.append(objeto.get_rid())
-	return ALCANCE_DEL_VANO
 
 
 func texto_al_examinar() -> String:

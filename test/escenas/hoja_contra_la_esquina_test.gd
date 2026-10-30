@@ -13,9 +13,9 @@ const PRODUCTO_DE_LA_CAJA := Producto.Id.BURBALOO
 ## A qué distancia de la bisagra va la caja: pegada a la bisagra, a mitad de hoja y en el extremo.
 const RADIOS := [1.0, 1.2, 1.35]
 
-## Cuánto antes del ángulo de paso se mide, y cuánto sobre él. Los dos lados del ángulo de paso
-## son casos distintos del contrato.
-const SOBRE_EL_PASO := deg_to_rad(20.0)
+## A qué ángulo de la hoja cerrada la hoja toca la caja: cerca de la bisagra, donde la hoja
+## apenas empezó a abrir.
+const CONTACTO := deg_to_rad(40.0)
 
 ## Cuánto gira la normal del muro respecto del sentido del arrastre: de frente, y de costado.
 const INCLINACIONES := [0.0, 35.0, -35.0]
@@ -28,7 +28,7 @@ const CUADROS_PARA_DORMIRSE := 120
 const CUADROS_QUIETA := 90
 const ESPESOR_DEL_MURO := 0.2
 
-## Metros. Lo bastante angosto para no cerrar el vano que mide el ángulo de paso.
+## Metros. El ancho del muro.
 const ANCHO_DEL_MURO := 1.2
 
 
@@ -143,9 +143,9 @@ func _primer_cuadro_superpuesto(
 	return {"cuadro": -1, "angulo": rad_to_deg(_angulo_de(cuerpo))}
 
 
-## Barre cada radio y cada inclinación del muro con la caja a `sobre_el_paso` del ángulo de paso, y
-## devuelve las combinaciones donde la hoja y la caja se superpusieron en algún cuadro.
-func _superposiciones(abriendo: bool, congelada: bool, sobre_el_paso: float) -> Array[String]:
+## Barre cada radio y cada inclinación del muro con la hoja tocando la caja a `CONTACTO`, y devuelve
+## las combinaciones donde la hoja y la caja se superpusieron en algún cuadro.
+func _superposiciones(abriendo: bool, congelada: bool) -> Array[String]:
 	var fallas: Array[String] = []
 	for radio: float in RADIOS:
 		for inclinacion: float in INCLINACIONES:
@@ -155,14 +155,10 @@ func _superposiciones(abriendo: bool, congelada: bool, sobre_el_paso: float) -> 
 			if not abriendo:
 				cuerpo.call("alternar")
 				await _esperar(CUADROS_MAXIMOS / 2)
-			var paso: float = cuerpo.call("angulo_de_paso")
 			var caja := _caja_en(almacen, Vector3.ZERO, congelada)
-			# La hoja toca la caja antes de su centro, porque ésta se extiende a lo largo del arco:
-			# el contacto cae a `sobre_el_paso` del ángulo de paso.
+			# La hoja toca la caja antes de su centro, porque ésta se extiende a lo largo del arco.
 			var ancho_en_el_arco := asin(caja.call("media") * ANCHO_DE_LA_ESQUINA / radio)
-			var centro := (
-				paso + sobre_el_paso + (ancho_en_el_arco if abriendo else -ancho_en_el_arco)
-			)
+			var centro := CONTACTO + (ancho_en_el_arco if abriendo else -ancho_en_el_arco)
 			var apoyo := _punto_en_el_piso(almacen, hoja, centro, radio)
 			caja.global_position = apoyo + Vector3.UP * (float(caja.call("media")) + 0.01)
 			caja.call("quedarse_quieta")
@@ -179,8 +175,6 @@ func _superposiciones(abriendo: bool, congelada: bool, sobre_el_paso: float) -> 
 				afuera.y = 0.0
 				_muro(caja, afuera.normalized())
 			await get_tree().physics_frame
-			# La premisa: los muros no cierran el vano, y el ángulo de paso es el de la hoja sola.
-			assert_float(cuerpo.call("angulo_de_paso")).is_equal(paso)
 			var tope := Puerta.ANGULO_ABIERTA if abriendo else 0.0
 			var choque := await _primer_cuadro_superpuesto(cuerpo, caja, tope)
 			if choque["cuadro"] >= 0:
@@ -196,15 +190,15 @@ func _superposiciones(abriendo: bool, congelada: bool, sobre_el_paso: float) -> 
 
 
 func test_la_hoja_no_se_superpone_con_una_caja_grande_al_abrir() -> void:  # AC-PLY-149
-	var fallas := await _superposiciones(true, true, SOBRE_EL_PASO)
+	var fallas := await _superposiciones(true, true)
 	assert_array(fallas).is_empty()
 
 
 func test_la_hoja_no_se_superpone_con_una_caja_grande_al_cerrar() -> void:  # AC-PLY-149
-	var fallas := await _superposiciones(false, true, SOBRE_EL_PASO)
+	var fallas := await _superposiciones(false, true)
 	assert_array(fallas).is_empty()
 
 
 func test_la_hoja_no_se_superpone_con_una_caja_grande_despierta_al_abrir() -> void:  # AC-PLY-149
-	var fallas := await _superposiciones(true, false, SOBRE_EL_PASO)
+	var fallas := await _superposiciones(true, false)
 	assert_array(fallas).is_empty()
