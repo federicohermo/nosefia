@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -487,6 +487,26 @@ La entrada NO DEBE permitir soltar o usar lo
 sostenido por ninguno de estos intentos. El secundario NO DEBE cerrar la noche ni sonar trabada.
 Con control suspendido, pausa o jornada cerrada, ningún gesto DEBE volver a cerrar la noche.
 Las demás puertas DEBEN conservar su referencia y comportamiento.
+
+### BR-PLY-042 — Agacharse baja la vista mientras se mantiene apretado Espacio
+
+MIENTRAS se mantiene apretada la acción de agacharse —Espacio por defecto—, el sistema DEBE
+bajar la vista a la altura agachado, aproximadamente la del segundo estante desde abajo de las
+góndolas. CUANDO se la suelta, DEBE devolver la vista a la altura de pie. No es un interruptor:
+apretar y soltar NO DEBE dejar al jugador agachado. Las dos alturas salen del dominio, y la
+agachado es mayor que cero y menor que la de pie.
+
+Agachado, el jugador DEBE caminar a la velocidad de BR-PLY-002: la postura no cambia la
+caminata, y agacharse NO DEBE quitarle su tecla a la caminata. La mira enfoca desde la altura
+vigente de la vista (BR-PLY-004), y el cuerpo conserva su forma de colisión.
+
+MIENTRAS el control está suspendido (BR-PLY-006), la postura NO DEBE cambiar, apriete o suelte
+lo que apriete el jugador. CUANDO se reanuda, la postura DEBE seguir a la acción tal como esté
+en ese momento.
+
+Espacio es una tecla del juego: NO DEBE aceptar ni activar el botón que tenga el foco. Enter y
+el Enter del teclado numérico lo siguen haciendo, así que Espacio sostenido al terminar la
+jornada NO DEBE saltear la placa del cierre.
 
 ## Criterios de aceptación
 
@@ -1240,6 +1260,51 @@ usar; la referencia permanece vacía y se conserva el objeto. CUANDO se
 hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
 abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los gestos no lo repiten.
 
+### AC-PLY-120 — Agachado, la vista baja *(verifica BR-PLY-042)*
+
+DADO el jugador de pie CUANDO se mantiene apretada la acción de agacharse ENTONCES la altura de
+la vista es la altura agachado, y no la de pie.
+
+### AC-PLY-121 — Soltar la acción levanta la vista y no es un interruptor *(verifica BR-PLY-042)*
+
+DADO el jugador agachado CUANDO se suelta la acción ENTONCES la altura de la vista vuelve a la de
+pie. DADO el jugador de pie CUANDO se aprieta y se suelta la acción ENTONCES queda a la altura de
+pie, y apretarla de nuevo lo baja otra vez.
+
+### AC-PLY-122 — La altura agachado está entre el piso y la de pie *(verifica BR-PLY-042)*
+
+DADO las dos alturas de la vista ENTONCES la agachado es mayor que cero y menor que la de pie.
+
+### AC-PLY-123 — Agachado se camina igual de rápido *(verifica BR-PLY-042, BR-PLY-002)*
+
+DADO el jugador agachado y una entrada hacia adelante CUANDO se calcula la velocidad ENTONCES su
+módulo es la velocidad de caminata de BR-PLY-002, la misma que de pie. DADO una entrada en
+diagonal ENTONCES la normalización de BR-PLY-001 se conserva.
+
+### AC-PLY-124 — Suspendido, la postura no cambia *(verifica BR-PLY-042, BR-PLY-006)*
+
+DADO el jugador agachado y el control suspendido CUANDO se suelta la acción ENTONCES la altura
+sigue siendo la agachado. DADO el jugador de pie y el control suspendido CUANDO se aprieta la
+acción ENTONCES la altura sigue siendo la de pie. CUANDO se reanuda con la acción apretada
+ENTONCES la altura es la agachado; reanudada con la acción suelta, la de pie.
+
+### AC-PLY-125 — La mira enfoca desde la altura agachado *(verifica BR-PLY-042, BR-PLY-004)*
+
+DADO el jugador agachado ENTONCES la cámara de la mira está a la altura agachado sobre el piso,
+y un objeto interactuable apenas debajo de la altura de pie, en línea con la mira agachado, queda
+enfocado. CUANDO se suelta la acción ENTONCES la cámara vuelve a la altura de pie.
+
+### AC-PLY-126 — Espacio es de la acción y la acción tiene su nombre *(verifica BR-PLY-042)*
+
+DADO el mapa de entradas del juego ENTONCES la acción de agacharse existe, su tecla es Espacio y
+ninguna otra acción del juego que ya existía la tiene. DADO el nombre de la acción en el dominio
+ENTONCES coincide con el del mapa de entradas.
+
+### AC-PLY-127 — Espacio no acepta el botón con foco *(verifica BR-PLY-042)*
+
+DADO el mapa de entradas del juego ENTONCES la acción de aceptar de la interfaz no tiene Espacio y
+sigue teniendo Enter y el Enter del teclado numérico.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -1257,8 +1322,9 @@ abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los ge
   casilleros vacíos y ocupados de cada producto, los segundos del cuadro y el nombre del control
   asignado a cada gesto; la acción primaria o secundaria y el contexto declarado del par
   mano/objetivo, independiente del resultado del intento; la vigencia del comprador, el
-  estado de su conversación y su figura animada visible para foco, contorno e interacción directa.
-- **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
+  estado de su conversación y su figura animada visible para foco, contorno e interacción directa;
+  si la acción de agacharse está apretada.
+- **Salida:** la velocidad, los dos ángulos de la vista, su altura, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
   referencia de controles.
