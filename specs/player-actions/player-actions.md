@@ -157,10 +157,11 @@ sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo m�
 
 CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
 el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
-horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
-que admite otro encima. Admiten otro encima las cajas contenedoras y las unidades de producto de
-tapa lisa: las de caja, cajita y lata. No lo admiten las de envoltorio plástico ni las de botella,
-el balde, los bidones, la mopa, las bolsas ni el ticket.
+horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo —salvo lo
+que excluye BR-CLN-040— o un objeto que admite otro encima. Admiten otro encima las cajas
+contenedoras y las unidades de producto de tapa lisa: las de caja, cajita y lata. No lo admiten
+las de envoltorio plástico ni las de botella, el balde, los bidones, la mopa, las bolsas ni el
+ticket.
 
 CUANDO se agarra algo que admite otro encima, el sistema DEBE dejar caer lo que estaba apoyado
 sobre él, y lo que estaba apoyado sobre eso, cada cosa hasta su apoyo real siguiente. Agarrar algo
@@ -683,10 +684,11 @@ dormida.
 ### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
 
 DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
-con el corte exacto sobre el mundo fijo, sobre una caja contenedora o sobre una unidad que admite,
-sí; sobre la mopa, no. Admiten otro encima exactamente las cajas contenedoras y las unidades de
-producto de caja, cajita y lata; ningún otro objeto del almacén lo admite. La cara de una lata
-acostada cuya normal queda por debajo del corte no admite.
+con el corte exacto sobre el piso y los muebles del mundo fijo, sobre una caja contenedora o sobre
+una unidad que admite, sí; sobre el cuerpo del contenedor (BR-CLN-040) y sobre la mopa, no.
+Admiten otro encima exactamente las cajas contenedoras y las unidades de producto de caja, cajita
+y lata; ningún otro objeto del almacén lo admite. La cara de una lata acostada cuya normal queda
+por debajo del corte no admite.
 
 ### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
 
