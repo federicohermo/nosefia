@@ -377,8 +377,8 @@ publicar un pedido parcial ni sustituirlo.
 CUANDO se pide recordatorio, el sistema DEBE enumerar los productos que todavía faltan, en el
 orden del pedido, con los textos comunes de la ficha «Diálogos de compradores». Un rechazo DEBE
 anteponer su prefijo y enumerar el pedido entero. Con todos los productos recibidos y sólo el
-ticket pendiente DEBE pedir el recibo. CUANDO recibe un producto, el comprador DEBE agradecer
-nombrando lo que todavía falta, o pedir el recibo si sólo falta el ticket. Ese agradecimiento NO
+ticket pendiente DEBE pedir el ticket. CUANDO recibe un producto, el comprador DEBE agradecer
+nombrando lo que todavía falta, o pedir el ticket si ya recibió todos. Ese agradecimiento NO
 DEBE retener el clic siguiente con un objeto ni impedir dejar la ventanilla.
 Para una unidad, cada marcador DEBE usar el subtítulo del producto con primera letra minúscula
 y sin punto final. Para más de una DEBE usar «dos» o «tres» seguido del nombre del producto.
@@ -881,7 +881,7 @@ la forma de uno, dos y tres marcadores, sin marcadores sin reemplazar. A/A/A usa
 nombre A; A/A/B usa «dos» y el nombre A, y para B el subtítulo con inicial minúscula y sin punto
 final. Un rechazo antepone exactamente «Yo no pedí esto. ». Los productos llevan amarillo y
 ningún fragmento se ofrece como pista. Con los tres productos y sin ticket el texto es
-exactamente «Gracias. Me das el recibo, ¿por favor?».
+exactamente «Gracias. Me das el ticket, ¿por favor?».
 
 ### AC-CTR-055 — Recepción física y destinos de jornada 2 *(verifica BR-CTR-037, BR-CTR-038, BR-CTR-029, BR-CTR-030)*
 
@@ -964,7 +964,7 @@ izquierdo avanza exactamente una entrada. Repetir con mano vacía conserva la mi
 
 DADO un comprador que recibió uno de sus productos CUANDO se le habla con manos vacías ENTONCES
 el recordatorio nombra los que faltan y no el recibido; el rechazo sigue nombrando el pedido
-entero. Con todos los productos recibidos, pide el recibo.
+entero. Con todos los productos recibidos, pide el ticket.
 
 ### AC-CTR-067 — Recibir agradece sin retener *(verifica BR-CTR-029, BR-CTR-039)*
 
