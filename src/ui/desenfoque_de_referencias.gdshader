@@ -6,7 +6,7 @@ uniform sampler2D mascara : repeat_disable, filter_nearest;
 uniform sampler2D profundidad : hint_depth_texture, repeat_disable, filter_nearest;
 
 // Desplazamiento en píxeles (xy) y peso (z) de cada toma, de DesenfoqueDeReferencias.tomas().
-uniform vec3 tomas[49];
+uniform vec3 tomas[25];
 
 void vertex() {
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
@@ -33,10 +33,11 @@ float referencia(vec2 uv, float delante, mat4 inversa) {
 	vec4 muestra = texture(mascara, uv);
 	if (muestra.a < 0.25) { return 0.0; }
 	float distancia = distancia_de_mascara(muestra);
+	// Un primer plano nítido conserva también su borde frente a una referencia desenfocada.
+	// Va primero porque no lee la profundidad de la muestra.
+	if (delante + 0.01 < distancia) { return 0.0; }
 	// Cada muestra conserva la oclusión en su propio píxel antes de derramarse al vecino.
 	if (distancia_del_mundo(uv, inversa) + 0.01 < distancia) { return 0.0; }
-	// Un primer plano nítido conserva también su borde frente a una referencia desenfocada.
-	if (delante + 0.01 < distancia) { return 0.0; }
 	return 1.0;
 }
 
@@ -46,7 +47,7 @@ void fragment() {
 	float centro = referencia(SCREEN_UV, delante, INV_PROJECTION_MATRIX);
 	if (centro > 0.5) {
 		vec3 suave = vec3(0.0);
-		for (int i = 0; i < 49; i++) {
+		for (int i = 0; i < 25; i++) {
 			suave += texture(pantalla, SCREEN_UV + tomas[i].xy * pixel).rgb * tomas[i].z;
 		}
 		ALBEDO = suave;
@@ -55,7 +56,7 @@ void fragment() {
 	}
 	vec3 derrame = vec3(0.0);
 	float cobertura = 0.0;
-	for (int i = 0; i < 49; i++) {
+	for (int i = 0; i < 25; i++) {
 		vec2 uv = SCREEN_UV + tomas[i].xy * pixel;
 		if (referencia(uv, delante, INV_PROJECTION_MATRIX) > 0.0) {
 			derrame += texture(pantalla, uv).rgb * tomas[i].z;

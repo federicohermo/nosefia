@@ -83,7 +83,7 @@ func _peso_por_pixel(alcance: int) -> Dictionary:
 
 
 func _alcance() -> int:
-	return ceili(1.5 * DesenfoqueDeReferencias.RADIO)
+	return DesenfoqueDeReferencias.ALCANCE
 
 
 func _dispersion(pesos: Dictionary, eje: int) -> float:

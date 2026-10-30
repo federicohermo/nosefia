@@ -6,10 +6,13 @@ extends Node3D
 const MASCARA := preload("res://src/ui/mascara_de_referencias.gdshader")
 const DESENFOQUE := preload("res://src/ui/desenfoque_de_referencias.gdshader")
 ## El radio aparente, en píxeles: la dispersión del desenfoque es RADIO / raíz de 2.
-const RADIO := 4.0
+const RADIO := 3.0
 ## Tomas a cada lado de la central. Cada una cubre dos píxeles vecinos con un solo filtrado
-## lineal, así que el núcleo llega a 2 * PARES píxeles del centro sin dejar huecos.
-const PARES := 3
+## lineal, así que el núcleo llega a ALCANCE píxeles del centro sin dejar huecos.
+const PARES := 2
+## Hasta dónde llega el núcleo, en píxeles. Una sola pasada: la copia de pantalla es una por
+## cuadro y no deja encadenar una segunda, así que el costo es (2 * PARES + 1) al cuadrado.
+const ALCANCE := 2 * PARES
 var _ventana := SubViewport.new()
 var _camara := Camera3D.new()
 var _pantalla := MeshInstance3D.new()
@@ -66,7 +69,7 @@ static func tomas() -> PackedVector3Array:
 ## Un gaussiano sobre 2 * PARES píxeles por lado. Cada par de píxeles vecinos se reemplaza por
 ## una toma entre los dos, con su peso sumado: el filtrado lineal devuelve el mismo reparto.
 static func _tomas_de_una_fila() -> PackedVector2Array:
-	var mitad := 2 * PARES
+	var mitad := ALCANCE
 	var sigma := _sigma_para_la_dispersion(mitad)
 	var total := 0.0
 	for pixel in range(-mitad, mitad + 1):
