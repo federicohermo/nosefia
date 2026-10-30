@@ -34,6 +34,7 @@ func _abrir() -> void:
 		"_partida",
 		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 	)
+	_almacen.set("compradores_de_la_apertura", func(_n: int) -> Array[Comprador]: return [])
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)

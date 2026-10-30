@@ -223,6 +223,7 @@ func _ready() -> void:
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
 	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
+	_atenciones.comprador_llegado.connect(_computadora.revisar_registro.unbind(1))
 	_atenciones.compra_realizada.connect(_revisar_la_salida)
 	_atenciones.comprador_vencido.connect(_revisar_la_salida.unbind(1))
 	_computadora.registro_actualizado.connect(_revisar_la_salida)

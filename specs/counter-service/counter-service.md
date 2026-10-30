@@ -272,11 +272,23 @@ sin ejecutar además el descuento automático del pedido. Completar la compra an
 DEBE conservar el resultado aunque la despedida continúe. Al terminarla, la atención DEBE
 quedar despachada; la imagen del comprador DEBE retirarse según BR-CTR-033.
 
-### BR-CTR-031 — Las jornadas 1 a 5 exigen ambas compras
+### BR-CTR-031 — Atención y registro siguen a los compradores que ya llegaron
 
-EN las jornadas 1 a 5, atención DEBE cumplirse sólo al completar ambas compras.
-Una compra perdida DEBE dejar la tarea sin cumplir aunque se complete la otra.
-La finalización DEBE contarse una sola vez y conservarse al reabrir.
+EN toda jornada con compradores por horario, MIENTRAS llegó al menos un comprador y todos los que
+llegaron quedaron vendidos, atención DEBE figurar cumplida. CUANDO llega el comprador siguiente,
+atención DEBE volver a pendiente. Una compra perdida DEBE dejar la tarea pendiente el resto de la
+noche, aunque se complete la otra.
+MIENTRAS llegó al menos un comprador y todos los que llegaron quedaron cerrados, vendidos o
+vencidos, registrar DEBE evaluarse por la coincidencia con lo vendido (BR-STK-022). CUANDO llega
+el comprador siguiente, registrar DEBE volver a pendiente. Una compra vendida DEBE contar como
+cerrada aunque su despedida continúe.
+Al cierre de la noche, atención DEBE quedar cumplida sólo si ambas compras se completaron, y
+registrar DEBE evaluarse sólo si ambas compras quedaron cerradas. Un comprador que no llegó
+cuenta como compra no completa y no cerrada.
+Un comprador que se va antes de completar su compra DEBE contar como no atendido, tanto si
+recibió una parte de su pedido como si recibió todos sus productos sin el ticket. Los productos
+que deja en el piso NO DEBEN contar como vendidos.
+La finalización DEBE contarse una sola vez mientras siga cumplida y conservarse al reabrir.
 Una nueva jornada DEBE empezar sin agenda, conversación, entregas, cuerpos ni ventas heredados.
 
 ### BR-CTR-032 — Compradores animados
@@ -347,8 +359,7 @@ de turno declarada por el dominio. La agenda DEBE publicar una sola llegada y un
 por compra incompleta, conservar la identidad original y procesar todos los cruces en orden.
 La pausa DEBE detenerlos. Una compra completada antes de su límite NO DEBE vencer.
 Cada compra DEBE recibir unidades físicas y ticket exacto según BR-CTR-029 y vender una vez
-según BR-CTR-030, sin descuento automático adicional. Atención DEBE cumplirse sólo con ambas
-compras completas. Al vencer, los productos recibidos DEBEN quedar recogibles en el piso del
+según BR-CTR-030, sin descuento automático adicional. Atención sigue BR-CTR-031. Al vencer, los productos recibidos DEBEN quedar recogibles en el piso del
 local frente a la ventanilla, del lado de adentro, sin venta; el ticket aceptado DEBE descartarse.
 Una apertura nueva DEBE crear estados nuevos sin heredar entregas, conversaciones ni ventas.
 
@@ -451,8 +462,7 @@ compradores. La agenda DEBE publicar una sola llegada y un solo vencimiento por 
 conservar la identidad original y procesar todos los cruces en orden. La pausa DEBE detenerlos y una
 compra completada antes de su límite NO DEBE vencer. Cada compra DEBE recibir unidades físicas y
 ticket exacto según BR-CTR-029, vender una vez según BR-CTR-030 y, al vencer incompleta, dejar sus
-productos y su ticket como BR-CTR-037. Atención DEBE cumplirse sólo con ambas compras completas
-(BR-CTR-031). Tin NO DEBE repetir la conversación ni el pedido de la jornada 1.
+productos y su ticket como BR-CTR-037. Atención sigue BR-CTR-031. Tin NO DEBE repetir la conversación ni el pedido de la jornada 1.
 
 ### BR-CTR-045 — La cuarta jornada recibe a Tia y Fede por horario
 
@@ -467,7 +477,7 @@ límite se excluye. Tia cruza la medianoche.
 
 Valen las demás condiciones de BR-CTR-044: el reloj del turno, el padrón excluido, una sola
 llegada y un solo vencimiento, la pausa, la recepción física, la venta única, el destino al
-vencer y las dos compras para cumplir atención. Tia y Fede NO DEBEN repetir las conversaciones ni
+vencer y el cumplimiento de atención de BR-CTR-031. Tia y Fede NO DEBEN repetir las conversaciones ni
 los pedidos fijos de las jornadas 1 y 2.
 
 ### BR-CTR-046 — La quinta jornada recibe a Cami y Mía por horario
@@ -564,7 +574,7 @@ El horario de Tia es fijo: NO DEBE depender de cuándo se retira Tin, a diferenc
 Tia llega un minuto después del límite de Tin, así que con Tin sin atender vence primero Tin y
 llega Tia después. Valen las demás condiciones de BR-CTR-044: el reloj del turno, el padrón
 excluido, una sola llegada y un solo vencimiento, la pausa, la recepción física, la venta única, el
-destino al vencer y las dos compras para cumplir atención. Cada pedido sale de BR-CTR-047. Tin y
+destino al vencer y el cumplimiento de atención de BR-CTR-031. Cada pedido sale de BR-CTR-047. Tin y
 Tia NO DEBEN repetir las conversaciones ni los pedidos fijos de la jornada 1. El corte de luz no
 cambia estas ventanas.
 
@@ -850,8 +860,9 @@ procesa ambas compras una sola vez, y repetir el instante no vuelve a entregar s
 
 ### AC-CTR-041 — Ambas compras y reinicio *(verifica BR-CTR-026, BR-CTR-031)*
 
-DADO la jornada 1 CUANDO se completa sólo Tin ENTONCES atención sigue sin cumplir.
-Al completar Tia, cuenta una vez; lo vendido es un Marolini, una Coracola, un Malbardo,
+DADO la jornada 1 CUANDO se completa sólo Tin ENTONCES atención figura cumplida hasta que
+llega Tia (BR-CTR-031); al cierre sin Tia ENTONCES atención no se cumple.
+Al completar Tia, cuenta una vez al cierre; lo vendido es un Marolini, una Coracola, un Malbardo,
 una Zucarachas y un Pepito. Reabrir conserva ese resultado. Reiniciar crea estados nuevos
 sin entregas ni ventas. Las jornadas sin agenda conservan el recorrido anterior; la segunda usa BR-CTR-037.
 
@@ -1109,8 +1120,7 @@ DADO un comprador de la jornada 3, 4 o 5 con su apertura terminada CUANDO se le 
 exacto antes de los productos ENTONCES se acepta y aún no vende; sus productos completan una
 venta, y ofrecer una unidad de más o un ticket inexacto se rechaza sin cambiar mano ni cantidades.
 DADO una compra incompleta con ticket y dos productos CUANDO vence ENTONCES el ticket desaparece y
-ambos productos quedan dentro del local, sin venta. Atención se cumple sólo con las dos compras
-completas: una perdida la deja pendiente aunque la otra se complete, y reiniciar no hereda entregas
+ambos productos quedan dentro del local, sin venta. Atención sigue BR-CTR-031: una perdida la deja pendiente aunque la otra se complete, y reiniciar no hereda entregas
 ni ventas.
 
 ### AC-CTR-096 — Entregar no abre la ventanilla *(verifica BR-CTR-049, BR-CTR-050)*
@@ -1221,8 +1231,42 @@ orden y con estados nuevos. Consultar, recordar, rechazar o entregar no sortea d
 
 DADO cada una de las dos noches CUANDO se entregan a un comprador todos sus productos y su ticket
 exacto ENTONCES se vende una sola vez; si vence incompleto, sus productos y su ticket quedan como en
-BR-CTR-037. DADO sólo una de las dos compras completas ENTONCES atención no se cumple, y con las dos
-completas se cumple. Un pedido con un producto sin unidades vendibles sigue siendo el pedido.
+BR-CTR-037. DADO sólo una de las dos compras completas CUANDO cierra la noche ENTONCES atención no
+se cumple, y con las dos completas se cumple. Un pedido con un producto sin unidades vendibles
+sigue siendo el pedido.
+
+### AC-CTR-143 — Atención y registro figuran cumplidos hasta que llega el siguiente *(verifica BR-CTR-031)*
+
+DADO una noche con dos compradores por horario, sin nadie llegado, CUANDO todavía no
+llegó ninguno ENTONCES atención y registrar figuran pendientes. CUANDO llega el primero y se le
+vende ENTONCES atención figura cumplida; registrar sigue pendiente hasta anotar exactamente lo que
+se le vendió, y entonces figura cumplido. CUANDO llega el segundo ENTONCES las dos vuelven a
+pendiente. CUANDO se le vende al segundo y se anotan las ventas de los dos ENTONCES las dos figuran
+cumplidas, y al cierre siguen cumplidas. DADO el primero vendido y el segundo sin llegar CUANDO
+cierra la noche ENTONCES atención y registrar quedan pendientes. El primero vendido que todavía se
+despide ya cuenta como vendido y cerrado.
+
+### AC-CTR-144 — Entrega incompleta: el comprador que se va no cuenta *(verifica BR-CTR-031, BR-CTR-015)*
+
+DADO dos compradores, CUANDO al primero se le entrega una parte del pedido y se va al vencer su
+horario ENTONCES lo entregado queda en el piso, el primero no cuenta como atendido y lo vendido de
+cada producto sigue en 0. CUANDO el segundo compra bien y se anotan sólo los productos del
+segundo ENTONCES registrar figura cumplido y atención figura pendiente, también al cierre. Anotar
+una unidad de más o de menos descumple registrar.
+
+### AC-CTR-145 — Pedido completo sin ticket: el comprador que se va no cuenta *(verifica BR-CTR-031, BR-CTR-015)*
+
+DADO dos compradores, CUANDO al primero se le entregan todos los productos y no el ticket y se va
+al vencer su horario ENTONCES los productos quedan en el piso, el primero no cuenta como atendido
+y lo vendido de cada producto sigue en 0. CUANDO el segundo compra bien y se anotan sólo los
+productos del segundo ENTONCES registrar figura cumplido y atención figura pendiente, también al
+cierre.
+
+### AC-CTR-146 — Una compra vendida se despide sin vencer *(verifica BR-CTR-031, BR-CTR-030)*
+
+DADO el primer comprador con todos los productos y el ticket entregados, antes de terminar su
+despedida, CUANDO llega el límite de su horario ENTONCES no vence: sigue vendido, sus productos no
+vuelven al piso y atención y registrar lo cuentan como cerrado.
 
 ### AC-CTR-133 — Sólo el nombre propio va en amarillo *(verifica BR-CTR-039)*
 
@@ -1284,8 +1328,9 @@ trae guion propio usa los textos de BR-CTR-048.
 
 - [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): los vendibles y el cobro;
   y lo vendido de cada producto, contra lo que se compara la planilla de registrar.
-  Las compras físicas cerradas, vendidas o vencidas, habilitan esa comparación; no se exige
-  vender ambas para evaluar Registro. Los productos de compras parciales no suman ventas.
+  Las compras físicas cerradas, vendidas o vencidas, de los compradores que ya llegaron
+  habilitan esa comparación durante la noche (BR-CTR-031); al cierre se exigen cerradas ambas.
+  No se exige vender ambas para evaluar Registro. Los productos de compras parciales no suman ventas.
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): lo sostenido
   llega al lector; imprimir produce un papel levantable que se retira en otra jornada.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume y alimenta): el número de jornada
