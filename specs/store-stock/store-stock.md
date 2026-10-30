@@ -579,8 +579,8 @@ los mismos productos del mapa de prueba, sin estantes vacíos:
 
 Cada producto DEBE conservar una sola tanda principal a altura de reposición. Las
 repeticiones de los demás niveles, incluido el otro nivel central, DEBEN ser tandas fijas
-con frontales que se agarran y reponen. El cambio a la etapa completa DEBE restituir los
-sectores de BR-STK-043 y BR-STK-044.
+con frontales que se agarran y reponen. El freezer NO DEBE exhibir productos. El cambio a la
+etapa completa DEBE restituir los sectores de BR-STK-043 y BR-STK-044 y lo exhibido en el freezer.
 
 ### BR-STK-050 — Las compras de las jornadas 3 a 5 conservan recepción, venta y registro
 
@@ -1258,6 +1258,7 @@ DADO una apertura de prueba CUANDO se recorren las cuatro alturas de cada destin
 BR-STK-047 ENTONCES sus productos coinciden con la tabla, sin ajenos ni niveles vacíos; en
 la estantería de no comestibles, Duronga está en los cuatro niveles junto a Actroncito.
 Cada producto tiene una sola principal y los cupos suman todos sus frontales.
+El freezer no exhibe ningún producto.
 CUANDO se agarra y repone una unidad del frontal repetido en el otro nivel central ENTONCES
 sólo cambia ese casillero y la cuenta de reponer responde a ambos gestos.
 
@@ -1273,6 +1274,7 @@ Durextra entre ellas, y las recién llegadas satisfacen AC-STK-077.
 
 DADO el mismo local con jornada 3 abierta CUANDO se abre la jornada 4 ENTONCES recupera
 las treinta y dos identidades y el reparto completo, con sus cupos y zonas correspondientes.
+El freezer vuelve a exhibir sus productos.
 Repetir la apertura NO duplica objetivos ni respuestas a un gesto. DADO una nueva partida
 de prueba después de una completa ENTONCES reaparece únicamente el reparto de dieciséis.
 Retomar desde el menú en cualquiera de las dos etapas conserva el reparto de esa etapa.

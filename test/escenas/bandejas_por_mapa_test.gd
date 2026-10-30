@@ -42,3 +42,34 @@ func test_con_el_mapa_completo_se_ven_las_suyas() -> void:
 			. is_false()
 		)
 		assert_bool((par[1] as Node3D).visible).override_failure_message(str(par[1].name)).is_true()
+
+
+func _exhibidos_del_freezer(estructura: Node) -> Array[Node]:
+	return estructura.get_node("freezer_helados").find_children("exhibido_*", "Node3D", true, false)
+
+
+func test_con_el_mapa_de_prueba_el_freezer_no_exhibe_productos() -> void:  # AC-STK-096
+	var estructura: Node = auto_free(ESTRUCTURA.instantiate())
+	ALMACEN.mostrar_el_freezer(estructura, true)
+	var exhibidos := _exhibidos_del_freezer(estructura)
+	assert_bool(exhibidos.is_empty()).is_false()
+	for exhibido in exhibidos:
+		(
+			assert_bool((exhibido as Node3D).visible)
+			. override_failure_message(str(exhibido.name))
+			. is_false()
+		)
+
+
+func test_con_el_mapa_completo_el_freezer_vuelve_a_exhibirlos() -> void:  # AC-STK-098
+	var estructura: Node = auto_free(ESTRUCTURA.instantiate())
+	ALMACEN.mostrar_el_freezer(estructura, true)
+	ALMACEN.mostrar_el_freezer(estructura, false)
+	var exhibidos := _exhibidos_del_freezer(estructura)
+	assert_bool(exhibidos.is_empty()).is_false()
+	for exhibido in exhibidos:
+		(
+			assert_bool((exhibido as Node3D).visible)
+			. override_failure_message(str(exhibido.name))
+			. is_true()
+		)

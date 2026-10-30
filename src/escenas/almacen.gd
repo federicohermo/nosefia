@@ -437,6 +437,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
 	mostrar_las_bandejas(get_node("Estructura"), _reposicion_manual.es_de_prueba())
+	mostrar_el_freezer(get_node("Estructura"), _reposicion_manual.es_de_prueba())
 	var productos := Catalogo.de_la_jornada(jornada)
 	var vacios := Apertura.vacios_de_la_jornada(
 		jornada,
@@ -1232,6 +1233,14 @@ func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:
 ## Las bandejas de la góndola están cortadas a medida de los productos de un mapa. Las de prueba
 ## se llaman como las del mapa completo que reemplazan, con el sufijo al final, y se ve una de
 ## las dos.
+## El freezer está fuera de servicio: en las jornadas de prueba no exhibe nada.
+static func mostrar_el_freezer(estructura: Node, de_prueba: bool) -> void:
+	for exhibido: Node3D in estructura.get_node("freezer_helados").find_children(
+		"exhibido_*", "Node3D", true, false
+	):
+		exhibido.visible = not de_prueba
+
+
 static func mostrar_las_bandejas(estructura: Node, de_prueba: bool) -> void:
 	for prueba: Node3D in estructura.find_children("*" + SUFIJO_DE_PRUEBA, "Node3D", true, false):
 		prueba.visible = de_prueba
