@@ -21,6 +21,9 @@ const MARGEN_DE_LA_MIRA := 0.05
 ## Lo que se achica la caja al preguntar, porque apoyarse sobre algo es tocarlo.
 const ACHICADO := 0.02
 
+## La caja más chica: es la que más probabilidades tiene de entrar entre los estantes.
+const CAJA_QUE_SE_SUELTA := Producto.Id.ACTRONCITO
+
 
 func test_la_caja_soltada_sobre_un_estante_con_stock_no_queda_entre_los_envases() -> void:
 	var almacen := await _abrir()
@@ -76,14 +79,15 @@ func _prender_los_envases(almacen: Node3D) -> void:
 	await get_tree().physics_frame
 
 
-## El primer envase puesto al que la mira de un jugador parado en el pasillo le cae al pie. Devuelve
-## la caja que se va a soltar y el punto que la mira toca, o nada si ningún envase sirve.
+## El primer envase puesto al que la mira de un jugador parado en el pasillo le cae al pie, en un
+## lugar donde la caja entra entre los estantes: sólo los envases pueden impedirle apoyarse.
+## Devuelve la caja que se va a soltar y el punto que la mira toca, o nada si ningún envase sirve.
 func _apuntar_a_un_envase(almacen: Node3D) -> Dictionary:
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	var repositor: Repositor = almacen.get("_repositor")
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[CAJA_QUE_SE_SUELTA]
 	for producto in Catalogo.todos():
-		var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto.id]
 		var frente := DisposicionDeLaGondola.frente(
 			disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
 		)
@@ -95,7 +99,10 @@ func _apuntar_a_un_envase(almacen: Node3D) -> Dictionary:
 					pie + frente * DISTANCIA_AL_ESTANTE + frente.cross(Vector3.UP) * costado
 				)
 				var golpe := _parar_y_mirar(almacen, caja, de_pie, pie)
-				if _cae_al_pie(golpe, zona):
+				if (
+					_cae_al_pie(golpe, zona)
+					and _entra_fisicamente(almacen, caja, golpe["position"])
+				):
 					return {"caja": caja, "punto": golpe["position"]}
 	return {}
 
@@ -149,6 +156,19 @@ func _cae_al_pie(golpe: Dictionary, envase: AABB) -> bool:
 		and punto.z >= zona.position.z
 		and punto.z <= zona.end.z
 	)
+
+
+## Si una caja apoyada en ese punto no toca nada de lo que el motor sabe: metal, paneles, jugador.
+func _entra_fisicamente(almacen: Node3D, caja: RigidBody3D, punto: Vector3) -> bool:
+	var achicada := BoxShape3D.new()
+	achicada.margin = 0.0
+	achicada.size = _tamano(caja) - Vector3.ONE * ACHICADO
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = achicada
+	consulta.transform = Transform3D(Basis.IDENTITY, punto + Vector3.UP * _tamano(caja).y / 2.0)
+	consulta.collision_mask = caja.collision_mask
+	consulta.exclude = [caja.get_rid(), almacen.get("_jugador").get_rid()]
+	return almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
 
 
 func _tamano(caja: RigidBody3D) -> Vector3:
