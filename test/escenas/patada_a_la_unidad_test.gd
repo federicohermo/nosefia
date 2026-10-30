@@ -42,7 +42,11 @@ const ALCANCE_DE_LA_SONDA := 12.0
 ## Lo mínimo de pared que tiene que haber para que el caso tenga un sólido, y de recorrido libre
 ## para que el jugador camine sin chocar con nada, en metros.
 const PARED_MAS_CERCA := 1.5
-const RECORRIDO_LIBRE := 6.0
+const RECORRIDO_LIBRE := 2.0
+
+## Cuadros caminando junto a un sólido: 1,75 m a 60 Hz, lo que pide pasar la unidad desde donde
+## arranca el jugador sin salir del pasillo.
+const CUADROS_JUNTO_AL_SOLIDO := 30
 
 ## Lo mínimo que se corre de costado la unidad pateada, en metros.
 const SE_CORRIO := 0.05
@@ -197,10 +201,11 @@ func _distancia_al_solido(almacen: Node3D, desde: Vector3, hacia: Vector3) -> fl
 	return -1.0
 
 
-## Si desde `desde` se camina `RECORRIDO_LIBRE` metros en `camino` sin tocar un sólido.
-func _recorrido_libre(almacen: Node3D, desde: Vector3, camino: Vector3) -> bool:
-	var libre := _distancia_al_solido(almacen, desde, camino)
-	return libre < 0.0 or libre >= RECORRIDO_LIBRE
+## Si el cuerpo del jugador, parado en `desde`, camina `RECORRIDO_LIBRE` metros hacia `camino` sin
+## tocar nada. Lo mide el propio cuerpo, con su forma entera y no con un rayo a ras del piso.
+func _recorrido_libre(jugador: CharacterBody3D, desde: Vector3, camino: Vector3) -> bool:
+	var parado := Transform3D(Basis.IDENTITY, Vector3(desde.x, jugador.global_position.y, desde.z))
+	return not jugador.test_move(parado, camino * RECORRIDO_LIBRE)
 
 
 ## Los sólidos fijos que el cuerpo pisa de verdad, sin contar lo que se hunde apoyado. Un cuerpo
@@ -280,7 +285,7 @@ func _comprobar_corrida_de_costado(
 	antes: Vector3,
 	camino: Vector3,
 	marcha: Dictionary[String, float]
-) -> void:
+) -> Vector3:
 	var desplazamiento := unidad.global_position - antes
 	var costado := camino.cross(Vector3.UP).normalized()
 	(
@@ -317,6 +322,7 @@ func _comprobar_corrida_de_costado(
 		. override_failure_message("la unidad quedó adelante del jugador")
 		. is_less(0.0)
 	)
+	return desplazamiento
 
 
 func test_caminar_contra_una_unidad_la_corre_sin_frenar_al_jugador() -> void:  # AC-PLY-155
@@ -328,7 +334,8 @@ func test_caminar_contra_una_unidad_la_corre_sin_frenar_al_jugador() -> void:  #
 	var desde := antes - camino * DETRAS_DE_LA_UNIDAD
 	var marcha := await _caminar(jugador, desde, camino, CUADROS_CAMINANDO)
 	await _asentar()
-	_comprobar_corrida_de_costado(jugador, unidad, antes, camino, marcha)
+	var corrida := _comprobar_corrida_de_costado(jugador, unidad, antes, camino, marcha)
+	assert_float(corrida.length()).is_greater(SE_CORRIO)
 	await _comprobar_libre_y_enfocable(almacen, unidad, desde, "la unidad pateada")
 
 
@@ -362,7 +369,7 @@ func test_una_unidad_acorralada_contra_la_pared_no_se_mueve() -> void:  # AC-PLY
 				+ sentido * (distancia - SEPARADA_DEL_SOLIDO - APARTADO_DEL_SOLIDO)
 				- paralelo * DETRAS_DE_LA_UNIDAD
 			)
-			if hacia_el_solido == Vector3.ZERO and _recorrido_libre(almacen, salida, paralelo):
+			if hacia_el_solido == Vector3.ZERO and _recorrido_libre(jugador, salida, paralelo):
 				hacia_el_solido = sentido
 				camino = paralelo
 				a_la_pared = distancia
@@ -380,10 +387,12 @@ func test_una_unidad_acorralada_contra_la_pared_no_se_mueve() -> void:  # AC-PLY
 	await _asentar()
 	var antes := unidad.global_position
 	var arranque := antes - hacia_el_solido * APARTADO_DEL_SOLIDO - camino * DETRAS_DE_LA_UNIDAD
-	var marcha := await _caminar(jugador, arranque, camino, CUADROS_CAMINANDO)
+	var marcha := await _caminar(jugador, arranque, camino, CUADROS_JUNTO_AL_SOLIDO)
 	await _asentar()
-	assert_float(marcha["avance"]).is_greater(
-		_avance_esperado(CUADROS_CAMINANDO) * (1.0 - MARGEN_DEL_AVANCE)
+	(
+		assert_float(marcha["avance"])
+		. override_failure_message("el jugador no atravesó la unidad: %s" % [marcha])
+		. is_greater(_avance_esperado(CUADROS_JUNTO_AL_SOLIDO) * (1.0 - MARGEN_DEL_AVANCE))
 	)
 	assert_float((jugador.global_position - unidad.global_position).dot(camino)).is_greater(0.0)
 	(
@@ -414,11 +423,12 @@ func test_con_una_caja_en_la_mano_la_unidad_tambien_se_patea() -> void:  # AC-PL
 	var desde := antes - camino * DETRAS_DE_LA_UNIDAD
 	var marcha := await _caminar(jugador, desde, camino, CUADROS_CAMINANDO)
 	await _asentar()
-	_comprobar_corrida_de_costado(jugador, unidad, antes, camino, marcha)
+	var corrida := _comprobar_corrida_de_costado(jugador, unidad, antes, camino, marcha)
+	assert_float(corrida.length()).is_greater(SE_CORRIO)
 
 
 ## Patea la unidad hacia la cara de un mueble, caminando junto a ella por el pasillo de enfrente.
-func _patear_hacia(almacen: Node3D, mueble: MeshInstance3D, donde: String) -> void:
+func _patear_hacia(almacen: Node3D, mueble: MeshInstance3D, donde: String) -> Vector3:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var limites := mueble.global_transform * mueble.get_aabb()
 	var lugar := Vector3(
@@ -429,10 +439,7 @@ func _patear_hacia(almacen: Node3D, mueble: MeshInstance3D, donde: String) -> vo
 	var camino := Vector3.ZERO
 	for paralelo: Vector3 in [Vector3.RIGHT, Vector3.LEFT]:
 		var salida := lugar + Vector3.BACK * APARTADO_DEL_SOLIDO - paralelo * DETRAS_DE_LA_UNIDAD
-		if (
-			camino == Vector3.ZERO
-			and _recorrido_libre(almacen, salida + Vector3.UP * 0.4, paralelo)
-		):
+		if camino == Vector3.ZERO and _recorrido_libre(jugador, salida, paralelo):
 			camino = paralelo
 	(
 		assert_bool(camino != Vector3.ZERO)
@@ -440,23 +447,13 @@ func _patear_hacia(almacen: Node3D, mueble: MeshInstance3D, donde: String) -> vo
 		. is_true()
 	)
 	if camino == Vector3.ZERO:
-		return
+		return Vector3.ZERO
 	var unidad := await _unidad_suelta_en(almacen, lugar)
 	var antes := unidad.global_position
 	var arranque := antes + Vector3.BACK * APARTADO_DEL_SOLIDO - camino * DETRAS_DE_LA_UNIDAD
-	await _caminar(jugador, arranque, camino, CUADROS_CAMINANDO)
+	await _caminar(jugador, arranque, camino, CUADROS_JUNTO_AL_SOLIDO)
 	await _asentar()
 	var desplazamiento := unidad.global_position - antes
-	(
-		assert_float(desplazamiento.dot(Vector3.FORWARD))
-		. override_failure_message("%s, no se corrió hacia el mueble: %v" % [donde, desplazamiento])
-		. is_greater(0.0)
-	)
-	(
-		assert_float(absf(desplazamiento.y))
-		. override_failure_message("%s, se subió o cayó: %v" % [donde, desplazamiento])
-		. is_less(SIN_SUBIR)
-	)
 	(
 		assert_float(unidad.global_position.z)
 		. override_failure_message("%s, entró en el mueble: %v" % [donde, unidad.global_position])
@@ -465,18 +462,23 @@ func _patear_hacia(almacen: Node3D, mueble: MeshInstance3D, donde: String) -> vo
 	await _comprobar_libre_y_enfocable(
 		almacen, unidad, unidad.global_position + Vector3.BACK, donde
 	)
+	return desplazamiento
 
 
 func test_la_unidad_pateada_hacia_una_gondola_se_frena_en_el_piso() -> void:  # AC-PLY-158
 	var almacen: Node3D = await _almacen()
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondola_deposito03_001")
-	await _patear_hacia(almacen, gondola, "contra la góndola del depósito")
+	var corrida := await _patear_hacia(almacen, gondola, "contra la góndola del depósito")
+	assert_float(corrida.dot(Vector3.FORWARD)).is_greater(0.0)
+	assert_float(absf(corrida.y)).is_less(SIN_SUBIR)
 
 
 func test_la_unidad_pateada_hacia_la_heladera_se_frena_en_el_piso() -> void:  # AC-PLY-158
 	var almacen: Node3D = await _almacen()
 	var heladera: MeshInstance3D = almacen.get_node("Estructura/heladeranueva")
-	await _patear_hacia(almacen, heladera, "contra la heladera")
+	var corrida := await _patear_hacia(almacen, heladera, "contra la heladera")
+	assert_float(corrida.dot(Vector3.FORWARD)).is_greater(0.0)
+	assert_float(absf(corrida.y)).is_less(SIN_SUBIR)
 
 
 func test_patear_una_unidad_cuesta_menos_que_empujar_una_caja() -> void:  # AC-PLY-159
