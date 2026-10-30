@@ -532,9 +532,13 @@ jornada NO DEBE saltear la placa del cierre.
 CUANDO el jugador camina contra una caja, un útil de limpieza —jabón, mopa o balde— o una bolsa de
 basura que están sueltos, el sistema DEBE correrlo en el sentido del paso, y sólo con la parte
 del paso que no se pudo dar: el jugador no lo atraviesa ni lo empuja a toda su velocidad. Cada
-uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. Lo corrido NO
-DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar
-agitándose (BR-PLY-013). Lo que se lleva en la mano no se corre.
+uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. El balde se corre
+con la misma parte que la caja, y no con la de los demás útiles. Lo corrido NO DEBE superponerse
+con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar agitándose (BR-PLY-013).
+Lo que se lleva en la mano no se corre.
+
+El balde suelto NO DEBE volcarse: queda derecho al empujarlo, al chocarlo y al soltarlo, y la
+mopa sigue pudiendo mojarse en él.
 
 ## Criterios de aceptación
 
@@ -1394,6 +1398,17 @@ parte del paso que declara el dominio para la caja, y no con la de los útiles n
 
 DADO un útil de limpieza o una bolsa de basura que no están sueltos, sino sostenidos ENTONCES
 recibir el paso del jugador no les cambia ni la posición ni la velocidad.
+
+### AC-PLY-155 — El balde se empuja con la parte de la caja *(verifica BR-PLY-050)*
+
+DADO el balde suelto en el piso CUANDO el jugador camina contra él ENTONCES se corre con la parte
+del paso que declara el dominio para la caja, y no con la de los demás útiles.
+
+### AC-PLY-156 — El balde suelto no se vuelca *(verifica BR-PLY-050)*
+
+DADO el balde suelto en el piso CUANDO el jugador camina contra él hasta llevarlo contra una pared,
+y CUANDO algo lo golpea fuera de su eje ENTONCES su eje queda a menos de 1 grado de la vertical, y
+la mopa se puede mojar en él.
 
 ## No objetivos
 
