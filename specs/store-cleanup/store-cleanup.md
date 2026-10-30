@@ -368,7 +368,7 @@ declara basura DEBE permitir extraer; las demás DEBEN conservar los tachos sin 
 
 ### BR-CLN-033 — Poético prepara azul sólo durante la cuarta jornada
 
-MIENTRAS la jornada es 5, CUANDO se usa con clic izquierdo una unidad real del producto Poético
+MIENTRAS la jornada es 4, CUANDO se usa con clic izquierdo una unidad real del producto Poético
 sobre el balde, el sistema DEBE aplicar los mismos permisos, rechazos y mezcla azul del jabón
 azul (BR-CLN-016). La identidad DEBE ser la del producto, no su nombre visible. En las demás
 jornadas Poético NO DEBE actuar como jabón, y ningún otro producto DEBE adquirir ese efecto.

@@ -48,7 +48,7 @@ bidón a padre, pose, visibilidad y colisiones originales, incluso si había sid
 
 ### BR-ANO-003 — El permiso del sustituto pertenece a una sola jornada
 
-MIENTRAS la jornada es 5, el sistema DEBE habilitar exclusivamente una unidad real de Poético
+MIENTRAS la jornada es 4, el sistema DEBE habilitar exclusivamente una unidad real de Poético
 como sustituto del azul al preparar agua del balde. En las demás jornadas NO DEBE habilitarlo.
 El permiso DEBE recibirse por jornada e identidad y NO DEBE convertir al producto en un bidón
 permanente ni cambiar el inventario. La preparación, sus rechazos y sus efectos DEBEN seguir
@@ -219,7 +219,7 @@ Cortar, restablecer y hacer clic de más sobre el panel no suman ni restan turno
 
 DADO el corte cortado o restaurado CUANDO se pausa y se reanuda ENTONCES conserva el estado y el
 turno no descuenta durante la pausa. CUANDO se abandona al menú y se continúa ENTONCES la jornada
-7 abre desde las 20:00 con el corte sin corte, y no se escribió ni se cargó un guardado
+6 abre desde las 20:00 con el corte sin corte, y no se escribió ni se cargó un guardado
 intermedio. Abrir la jornada 6 desde el guardado del cierre de la jornada 5 deja el corte sin
 corte.
 
