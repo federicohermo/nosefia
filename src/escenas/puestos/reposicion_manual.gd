@@ -647,8 +647,8 @@ func _sobre_el_contenedor(caja: RigidBody3D) -> bool:
 	return debajo.get("collider") is ContenedorDelLocal
 
 
-## Si en el lugar donde quedó la caja no hay nada más. Se encoge para preguntar, porque apoyarse
-## sobre algo es tocarlo.
+## Si en el lugar donde quedó la caja no hay nada más, ni los envases de la góndola. Se encoge para
+## preguntar, porque apoyarse sobre algo es tocarlo.
 ##
 ## **El barrido solo no alcanza para saberlo.** `cast_motion` contesta que el movimiento entero
 ## es seguro cuando la forma arranca ya tocando algo, así que el tramo que baja la caja al
@@ -660,15 +660,47 @@ func _entra_entera(caja: RigidBody3D) -> bool:
 	var encogida := BoxShape3D.new()
 	# Jolt redondea las aristas con el margen, y una esquina metida unos milímetros no choca.
 	encogida.margin = 0.0
-	encogida.size = (
-		LimitesDeForma.de(forma.shape).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
-	)
+	encogida.size = _tamano_encogido(forma)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = encogida
 	consulta.transform = Transform3D(caja.global_basis.orthonormalized(), caja.global_position)
 	consulta.collision_mask = caja.collision_mask
 	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
-	return get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
+	if not get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty():
+		return false
+	return not _pisa_la_mercaderia(caja)
+
+
+## La medida de la caja en metros, achicada porque apoyarse sobre algo es tocarlo. La escala de la
+## forma lleva la medida: su caja de colisión es de 2 x 2 x 2.
+func _tamano_encogido(forma: CollisionShape3D) -> Vector3:
+	return LimitesDeForma.de(forma.shape).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
+
+
+## Si la caja se mete entre los envases que las góndolas tienen puestos.
+##
+## **Con la caja ya soltada, los envases no están en la simulación**: sólo los ven las manos
+## mientras llevan algo. Se los mide a mano. Los apagados son casilleros sin producto, y ahí la
+## caja puede apoyarse.
+func _pisa_la_mercaderia(caja: RigidBody3D) -> bool:
+	var forma: CollisionShape3D = _cuerpo_de(caja)
+	var tamano := _tamano_encogido(forma)
+	var volumen := AABB(-tamano / 2.0, tamano)
+	var pose := Transform3D(forma.global_basis.orthonormalized(), forma.global_position)
+	var del_mundo := pose * volumen
+	for cuerpo in _mercaderia:
+		for envase: CollisionShape3D in cuerpo.get_children():
+			if envase.disabled:
+				continue
+			var limites := LimitesDeForma.de(envase.shape)
+			if (
+				(envase.global_transform * limites).intersects(del_mundo)
+				and ReservaDeLaGondola.se_superponen(
+					volumen, pose, limites, envase.global_transform
+				)
+			):
+				return true
+	return false
 
 
 ## Si la caja terminó adentro del cuerpo del jugador es que ahí no hay lugar para apoyarla, y

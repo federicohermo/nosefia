@@ -173,7 +173,8 @@ que no tiene nada encima NO DEBE mover ningún otro objeto.
 
 SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
-lugar.
+lugar. Una caja contenedora que quedaría metida entre los productos puestos de una góndola cuenta
+como encimada con algo, aunque el estante la sostenga: sólo un casillero sin producto la admite.
 
 Los tres bidones de jabón se llevan como el balde: verticales, a un costado y acompañando la
 mira, para no perderlos de vista al volcarlos. Se apoyan como las cajas: al soltarlos quedan
@@ -476,9 +477,10 @@ atención. El hueco NO DEBE tener una barrera de vidrio; sus sólidos reales DEB
 CUANDO se suelta una caja sobre el borde superior gris de una división del baño, el sistema
 DEBE apoyar su base sobre ese borde visible, sin hundirla hasta la pared blanca ni atravesarlo.
 CUANDO se suelta una caja hacia el borde de góndola documentado en
-[GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), el sistema DEBE acomodarla
-sobre metal visible, conservando la selección del apoyo según la mira, la mano vacía y el
-reposo estable de BR-PLY-013. La caja DEBE quedar recogible y fuera de sólidos.
+[GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), el sistema NO DEBE apoyarla
+entre los productos puestos. SI el metal visible no tiene lugar libre de mercadería para la caja
+entera, ENTONCES DEBE dejarla en el piso al lado del jugador, estable, recogible y fuera de
+sólidos. Un casillero sin producto no cuenta como mercadería.
 En ambos encuadres, el soporte físico DEBE corresponder al borde visible; NO DEBE aparecer
 una plataforma invisible bajo la caja. El sistema NO DEBE forzar la caída de una caja que
 quedó apoyada de forma estable sobre ese metal.
@@ -1243,12 +1245,14 @@ La comprobación cruza la base dibujada y la superficie física del mismo contac
 DADO cada bidón de jabón en la mano ENTONCES cuelga del mismo punto que una caja. CUANDO se lo
 suelta mirando al piso libre ENTONCES queda derecho donde la mira tocaba y la mano queda vacía.
 
-### AC-PLY-100 — La cabecera acomoda la caja sobre metal visible *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
+### AC-PLY-100 — La cabecera no apoya la caja entre los productos *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
 
-DADO una caja chica y otra grande, por separado, y el segundo encuadre de GJ-52 CUANDO se
-suelta por el mismo gesto real y avanza la física ENTONCES la caja queda acomodada y estable
-sobre metal visible, con el contacto físico correspondiente, recogible y sin superposición.
-La mano queda vacía; ni inventario ni tareas cambian por el acomodo o por la recogida.
+DADO una caja chica y otra grande, por separado, y el segundo encuadre de GJ-52 con productos
+puestos sobre ese metal CUANDO se suelta por el mismo gesto real y avanza la física ENTONCES la
+caja queda en el piso, estable, recogible, fuera de sólidos y sin superponerse a ningún producto
+puesto. La mano queda vacía; ni inventario ni tareas cambian por el acomodo o por la recogida.
+Con ese mismo metal sin productos puestos, la caja chica queda apoyada y estable sobre la góndola,
+recogible y fuera de sólidos.
 
 ### AC-PLY-095 — Los apoyos válidos siguen estables *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-018)*
 
