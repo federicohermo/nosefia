@@ -136,6 +136,10 @@ superponerse con el material de ningún sólido fijo: un mueble, una pared, el t
 Apoyado contra una cara, o encima, no es superponerse. El caso que decide es el objeto más chico
 contra el sólido más delgado.
 
+Adentro de una heladera nada se apoya suelto: ni en el fondo, ni en un estante, ni sobre la base.
+Soltar ahí hace lo mismo que soltar contra una góndola, y lo soltado queda afuera. Colocar un
+producto en su casillero no es soltarlo.
+
 ### BR-PLY-016 — Lo que igual queda adentro vuelve a un lugar alcanzable
 
 SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
@@ -640,11 +644,11 @@ apoyada arriba del mostrador.
 DADO una caja apoyada en el piso CUANDO se suelta otra mirando su tapa ENTONCES la segunda queda
 apoyada encima de la primera.
 
-### AC-PLY-024 — La unidad se sigue dejando adentro de la heladera *(verifica BR-PLY-015)*
+### AC-PLY-024 — La unidad soltada contra una heladera no queda adentro *(verifica BR-PLY-015)*
 
-DADO una unidad de producto soltada adentro de la heladera CUANDO pasa un segundo de física
-ENTONCES sigue adentro de la heladera, no se superpone con sus paneles y la mira la puede
-enfocar.
+DADO una unidad de producto en la mano y una heladera con la puerta abierta CUANDO se la suelta
+con la mira sobre un estante de su interior y pasa un segundo de física ENTONCES la unidad queda
+afuera del volumen de la heladera, no se superpone con sus paneles y la mira la puede enfocar.
 
 ### AC-PLY-025 — El empujón que terminó adentro se deshace *(verifica BR-PLY-016)*
 

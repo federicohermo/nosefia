@@ -337,8 +337,11 @@ func _ready() -> void:
 	_arranque = _jugador.global_transform
 	_enlace_de_guardado = EnlaceDeGuardado.new(_ciclo, Guardado.new())
 	add_child(_enlace_de_guardado)
-	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
-	_jugador.muebles_con_reserva = _muebles_con_contorno
+	var reservados: Array[PhysicsBody3D] = _muebles_con_contorno.duplicate()
+	for heladera: String in ["heladeranueva", "heladeranueva_001", "heladera_fuera_de_servicio"]:
+		reservados.append(get_node("Estructura/%s/StaticBody3D" % heladera))
+	_reposicion_manual.muebles_con_reserva = reservados
+	_jugador.muebles_con_reserva = reservados
 	_ciclo.arrancar(_partida, _reloj, _clientes_mal_atendidos)
 
 
