@@ -84,8 +84,11 @@ func _frente_de(almacen: Node3D, numero: int) -> Dictionary:
 	return frente
 
 
-func _comprobar_que_el_frente_frena_los_rayos(almacen: Node3D, numero: int, estado: String) -> void:
-	var frente := _frente_de(almacen, numero)
+## Cuántos rayos frenó el frente de la heladera antes de que entraran a su volumen.
+func _rayos_frenados_por_el_frente(
+	almacen: Node3D, numero: int, frente: Dictionary, estado: String
+) -> int:
+	var frenados := 0
 	var direccion: Vector3 = frente["direccion"]
 	var lado: Vector3 = frente["lado"]
 	var centro: Vector3 = frente["centro"]
@@ -125,24 +128,36 @@ func _comprobar_que_el_frente_frena_los_rayos(almacen: Node3D, numero: int, esta
 				. override_failure_message("%s, el rayo entró %.3f m al volumen" % [donde, entro])
 				. is_less(TOLERANCIA)
 			)
+			if entro < TOLERANCIA:
+				frenados += 1
+	return frenados
 
 
 func test_el_frente_de_la_base_frena_lo_que_viene_de_afuera_con_la_puerta_cerrada() -> void:
 	var almacen := await _almacen()
 	for numero in MUEBLES.size():
-		_comprobar_que_el_frente_frena_los_rayos(almacen, numero, "con la puerta cerrada")
+		var frente := _frente_de(almacen, numero)
+		var frenados := _rayos_frenados_por_el_frente(
+			almacen, numero, frente, "con la puerta cerrada"
+		)
+		assert_int(frenados).is_equal(ALTOS_DEL_ZOCALO.size() * LADOS_DEL_FRENTE.size())
 
 
 func test_el_frente_de_la_base_frena_lo_que_viene_de_afuera_con_la_puerta_abierta() -> void:
 	var almacen := await _almacen()
 	# La heladera fuera de servicio tiene la puerta trabada: no abre.
 	for numero in 2:
+		# El frente se mide con la hoja cerrada: abierta, su centro ya no marca hacia dónde mira.
+		var frente := _frente_de(almacen, numero)
 		await _abrir(almacen, numero)
 		(
 			assert_bool(_hoja(almacen, numero).get_node("CuerpoDeLaHoja").call("puerta").abierta())
 			. is_true()
 		)
-		_comprobar_que_el_frente_frena_los_rayos(almacen, numero, "con la puerta abierta")
+		var frenados := _rayos_frenados_por_el_frente(
+			almacen, numero, frente, "con la puerta abierta"
+		)
+		assert_int(frenados).is_equal(ALTOS_DEL_ZOCALO.size() * LADOS_DEL_FRENTE.size())
 
 
 ## Las cajas del volumen de `objeto`, en coordenadas del mundo.
@@ -166,9 +181,8 @@ static func _minimo_sobre(limites: AABB, eje: Vector3) -> float:
 ## Pone a `objeto` quieto, a `CERCA` del frente de la heladera, centrado a lo ancho y con la base de
 ## su volumen a la altura pedida; después lo empuja hacia adentro. Devuelve cuánto avanzó.
 func _empujar_contra_la_base(
-	almacen: Node3D, objeto: PhysicsBody3D, numero: int, bajo_la_hoja: bool
-) -> float:
-	var frente := _frente_de(almacen, numero)
+	objeto: PhysicsBody3D, frente: Dictionary, bajo_la_hoja: bool
+) -> Array:
 	var direccion: Vector3 = frente["direccion"]
 	var lado: Vector3 = frente["lado"]
 	var centro: Vector3 = frente["centro"]
@@ -190,13 +204,17 @@ func _empujar_contra_la_base(
 		+ Vector3.UP * (fondo - limites.position.y)
 	)
 	await get_tree().physics_frame
+	# La premisa: quedó donde se lo puso, a `CERCA` del frente.
+	var claro := _minimo_sobre(_limites_del_volumen(objeto), direccion) - (frente["plano"] as float)
+	assert_float(claro).is_equal_approx(CERCA, 0.001)
 	var consulta := PhysicsTestMotionParameters3D.new()
 	consulta.from = objeto.global_transform
 	consulta.motion = -direccion * EMPUJON
 	var resultado := PhysicsTestMotionResult3D.new()
 	if not PhysicsServer3D.body_test_motion(objeto.get_rid(), consulta, resultado):
-		return EMPUJON
-	return resultado.get_travel().length()
+		return [EMPUJON, "nada"]
+	var frenado_por := resultado.get_collider() as Node
+	return [resultado.get_travel().length(), str(frenado_por.get_path()) if frenado_por else "?"]
 
 
 func test_una_unidad_empujada_contra_la_base_no_entra() -> void:
@@ -205,11 +223,17 @@ func test_una_unidad_empujada_contra_la_base_no_entra() -> void:
 		for bajo_la_hoja: bool in [false, true]:
 			var unidad: RigidBody3D = OBJETO_SUELTO.instantiate()
 			almacen.add_child(unidad)
-			var avance: float = await _empujar_contra_la_base(almacen, unidad, numero, bajo_la_hoja)
+			var empuje := await _empujar_contra_la_base(
+				unidad, _frente_de(almacen, numero), bajo_la_hoja
+			)
+			var avance: float = empuje[0]
 			(
 				assert_float(avance)
 				. override_failure_message(
-					"`%s`, la unidad entró %.3f m al volumen" % [MUEBLES[numero], avance - CERCA]
+					(
+						"`%s`, la unidad entró %.3f m al volumen y la frenó %s"
+						% [MUEBLES[numero], avance - CERCA, empuje[1]]
+					)
 				)
 				. is_less(CERCA + TOLERANCIA)
 			)
@@ -229,12 +253,17 @@ func test_una_caja_empujada_contra_la_base_no_entra_con_la_puerta_abierta() -> v
 	assert_object(caja).is_not_null()
 	# La caja grande es más alta que el zócalo: con la hoja cerrada la frenaría ella y no la base.
 	for numero in 2:
+		var frente := _frente_de(almacen, numero)
 		await _abrir(almacen, numero)
-		var avance: float = await _empujar_contra_la_base(almacen, caja, numero, false)
+		var empuje := await _empujar_contra_la_base(caja, frente, false)
+		var avance: float = empuje[0]
 		(
 			assert_float(avance)
 			. override_failure_message(
-				"`%s`, la caja entró %.3f m al volumen" % [MUEBLES[numero], avance - CERCA]
+				(
+					"`%s`, la caja entró %.3f m al volumen y la frenó %s"
+					% [MUEBLES[numero], avance - CERCA, empuje[1]]
+				)
 			)
 			. is_less(CERCA + TOLERANCIA)
 		)
