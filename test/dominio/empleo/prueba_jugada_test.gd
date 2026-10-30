@@ -166,10 +166,12 @@ func test_la_noche_1_elige_cada_mensaje_1_de_la_jornada_2() -> void:  # AC-EMP-0
 		assert_int(partida.apercibimientos()).is_equal(caso[2])
 
 
-func test_un_cliente_vencido_y_el_registro_mal_es_un_cliente_mal() -> void:  # AC-EMP-084
+func test_un_cliente_vencido_y_el_registro_mal_tienen_su_fila() -> void:  # AC-EMP-084
 	var partida := Partida.nueva()
 	jugar(partida, juego({"atiende": atiende(false, true), "anota_de_mas": true}))
-	assert_str(_condicion(partida, SEGUNDA)).is_equal(CondicionesDelJefe.J2_UN_CLIENTE_MAL)
+	assert_str(_condicion(partida, SEGUNDA)).is_equal(
+		CondicionesDelJefe.J2_UN_CLIENTE_Y_REGISTRO_MAL
+	)
 	assert_int(partida.apercibimientos()).is_equal(2)
 
 

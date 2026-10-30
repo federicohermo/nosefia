@@ -144,7 +144,7 @@ func test_saltar_directamente_hasta_cerrar_no_deja_cartel() -> void:  # AC-NTF-0
 
 
 func test_pausar_antes_del_umbral_no_consume_ni_dispara() -> void:  # AC-NTF-023
-	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
+	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3)
 	var reloj: RelojDelTurno = local.get("_reloj")
 	var restantes: Array[float] = []
 	reloj.tiempo_consumido.connect(func(restante: float) -> void: restantes.append(restante))
