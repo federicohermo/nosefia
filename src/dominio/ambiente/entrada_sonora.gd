@@ -20,7 +20,7 @@ extends Resource
 ##
 ## **Uno nuevo va al final.** Los `.tres` guardan el evento por número, y uno metido en el medio le
 ## cambiaría el significado a cada fila de abajo sin que el archivo cambie un byte.
-## Al quitar un evento se conserva el número de los siguientes: el 31 quedó libre.
+## Al quitar un evento se conserva el número de los siguientes: el 9 y el 31 quedaron libres.
 enum Evento {
 	TAREA_CUMPLIDA,
 	TURNO_CERRADO,
@@ -31,8 +31,7 @@ enum Evento {
 	AGARRE_RECHAZADO,
 	PRODUCTO_COLOCADO,
 	PASADA_DADA,
-	BOLSA_DEPOSITADA,
-	COMPUTADORA_ABIERTA,
+	COMPUTADORA_ABIERTA = 10,
 	TIMBRE_DEL_COMPRADOR,
 	AMBIENTE_DEL_LOCAL,
 	BOTON_DE_LA_COMPUTADORA,
@@ -55,6 +54,8 @@ enum Evento {
 	TICKET_DESECHADO,
 	PASADA_CON_JABON_EQUIVOCADO = 32,
 	AMBIENTE_EXTERIOR,
+	BOLSA_SACADA,
+	OBJETO_DESECHADO,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.
@@ -71,6 +72,9 @@ enum Sonoridad {
 	BOLSA,
 	MOPA,
 	BALDE,
+	BOTELLA_VIDRIO,
+	CAJA_CEREALES,
+	BALDE_VACIO,
 }
 
 ## Los eventos que tienen una fila por sonoridad. `OBJETO_SOLTADO` suena al tocar algo, no al
@@ -92,6 +96,10 @@ const BUS_DE_MUSICA := "Musica"
 
 ## El bus al que cae todo lo demás. No es uno de los cuatro: es el destino de los cuatro.
 const BUS_MAESTRO := "Master"
+
+## La propiedad con la que un objeto dice cómo suena ahora, si no es como lo declaran sus datos.
+## Es por instancia: los datos son un recurso que comparten todos los objetos de su clase.
+const PROPIEDAD_SONORIDAD_VIGENTE := &"sonoridad_vigente"
 
 const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 
@@ -119,12 +127,20 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 ## nombre de un emisor de la escena del audio. Vacío si no tiene.
 @export var emisor: StringName = &""
 
+## A cuántos metros de su emisor deja de oírse una fila en bucle del espacio.
+@export var alcance: float = EmisoresDelAmbiente.ALCANCE
+
 ## Vacío mientras el sonido no esté elegido. Que la fila exista igual es lo que permite que
 ## agregar el sonido no toque código.
 @export var stream: AudioStream = null
 
 ## Varios audios para el mismo evento, que se alternan. Si hay, mandan sobre `stream`.
 @export var variantes: Array[AudioStream] = []
+
+
+## Cómo suena el balde: con agua o vacío.
+static func sonoridad_del_balde(con_agua: bool) -> Sonoridad:
+	return Sonoridad.BALDE if con_agua else Sonoridad.BALDE_VACIO
 
 
 func tiene_sonido() -> bool:

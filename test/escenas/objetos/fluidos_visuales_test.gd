@@ -187,7 +187,7 @@ func test_las_gotas_se_extinguen_al_tocar_un_solido() -> void:
 	assert_bool((gotas.get_child(0) as MultiMeshInstance3D).visible).is_false()
 
 
-func test_un_paso_sobre_el_charco_lo_agita_sin_cambiar_la_limpieza() -> void:
+func test_un_paso_sobre_el_charco_no_lo_agita_ni_cambia_la_limpieza() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
@@ -205,7 +205,7 @@ func test_un_paso_sobre_el_charco_lo_agita_sin_cambiar_la_limpieza() -> void:
 	jugador.global_position = mancha.global_position + Vector3.UP
 	jugador.emit_signal("paso_dado")
 	_avanzar(superficie, 0.1)
-	assert_bool(antes == superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_false()
+	assert_bool(antes == superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_true()
 	var piso: PisoDelLocal = (almacen.get("_limpiador") as Limpiador).piso()
 	assert_bool(piso.mancha_de(PisoDelLocal.Lugar.ENTRADA).esta_limpia()).is_false()
 	assert_bool(piso.balde().tiene_agua()).is_false()

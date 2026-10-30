@@ -37,8 +37,11 @@ var _recepcion: RecepcionDeCompra = null
 var _dialogo: Dialogo = null
 var _presentado: bool = false
 var _inicial_terminada: bool = false
-## El agradecimiento al recibir: se lee, pero no retiene el clic siguiente ni la ventanilla.
-var _acuse: bool = false
+## Lo que dijo el comprador al recibir, recordar o rechazar: sale como subtítulo, no abre la
+## ventanilla y no retiene el clic siguiente. Sólo la inicial y la despedida son conversación.
+var _de_entrega: bool = false
+## El texto de entrega que todavía no se mostró.
+var _aviso: String = ""
 
 
 func conversacion_iniciada() -> bool:
@@ -56,7 +59,7 @@ func contexto_de_interaccion(objeto: ObjetoDelAlmacen) -> ReferenciaDeControles.
 func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	if not fisica() or _despachada:
 		return RecepcionDeCompra.Resultado.BLOQUEADA
-	if _dialogo != null and not _dialogo.terminado() and not (_acuse and objeto != null):
+	if _dialogo != null and not _dialogo.terminado() and not _de_entrega:
 		_dialogo.avanzar()
 		if _dialogo.terminado():
 			_inicial_terminada = true
@@ -64,32 +67,37 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 		return RecepcionDeCompra.Resultado.DIALOGO
 	if not _presentado:
 		_presentado = true
-		_dialogo = _inicial()
+		_decir(_inicial(), false)
 		_inicial_terminada = _dialogo.terminado()
 		return RecepcionDeCompra.Resultado.DIALOGO
-	_acuse = false
 	if objeto == null:
-		_dialogo = _recordatorio()
+		_decir(_recordatorio(), true)
 		return RecepcionDeCompra.Resultado.DIALOGO
 	var resultado := RecepcionDeCompra.Resultado.RECHAZADA
 	if not objeto is UnidadDeProducto or _inventario.esta_afuera(objeto as UnidadDeProducto):
 		resultado = _recepcion.recibir(objeto, _inicial_terminada)
 	if resultado == RecepcionDeCompra.Resultado.RECHAZADA:
-		# Retiene como cualquier rechazo: con lo repetido en la mano, cada clic lo volvería a
-		# ofrecer y la ventanilla no se podría cerrar.
-		_dialogo = (
-			DialogosDeCompradores.una(DialogosDeCompradores.YA_ENTREGADO)
-			if _ya_entregado(objeto)
-			else _recordatorio(true)
+		_decir(
+			(
+				DialogosDeCompradores.una(DialogosDeCompradores.YA_ENTREGADO)
+				if _ya_entregado(objeto)
+				else _recordatorio(true)
+			),
+			true
 		)
 	elif resultado == RecepcionDeCompra.Resultado.ACEPTADA:
-		_acuse = true
-		_dialogo = DialogosDeCompradores.agradecimiento(_comprador.pedido(), _recepcion)
+		_decir(DialogosDeCompradores.agradecimiento(_comprador.pedido(), _recepcion), true)
 	elif resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		_vendida = _inventario.vender_unidades(_recepcion.unidades())
-		_dialogo = _despedida()
+		_decir(_despedida(), false)
 		_despachada = _vendida and _dialogo.terminado()
 	return resultado
+
+
+func _decir(dialogo: Dialogo, de_entrega: bool) -> void:
+	_dialogo = dialogo
+	_de_entrega = de_entrega
+	_aviso = dialogo.entrada_actual() if de_entrega else ""
 
 
 func _inicial() -> Dialogo:
@@ -126,8 +134,20 @@ func dialogo() -> Dialogo:
 	return _dialogo
 
 
+## Si la ventanilla tiene que estar abierta: sólo mientras habla la inicial o la despedida.
+func abre_la_ventanilla() -> bool:
+	return _dialogo != null and not _de_entrega and not _dialogo.terminado()
+
+
+## El texto de entrega que falta mostrar, o vacío. Se entrega una sola vez.
+func tomar_aviso() -> String:
+	var aviso := _aviso
+	_aviso = ""
+	return aviso
+
+
 func puede_abandonar() -> bool:
-	return _dialogo == null or _acuse or _dialogo.puede_abandonar()
+	return _dialogo == null or _de_entrega or _dialogo.puede_abandonar()
 
 
 func vencer() -> void:

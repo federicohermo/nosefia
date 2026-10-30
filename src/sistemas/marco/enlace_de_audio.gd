@@ -101,7 +101,8 @@ func _aridad_de(fuente: Object, senal: StringName) -> int:
 	return 0
 
 
-## Pide el sonido con su origen. Un objeto que llega como origen pasa a ser fuente él también:
+## Pide el sonido con su origen. El detalle es la rapidez de un contacto o, en un agarre, si la
+## bolsa sale del tacho. Un objeto que llega como origen pasa a ser fuente él también:
 ## así sus contactos suenan sin que nadie lo pase en la lista, aunque se cree en juego.
 func _al_emitir(origen: Variant, detalle: Variant, evento: EntradaSonora.Evento) -> void:
 	var objeto: Object = origen if is_instance_valid(origen) else null
@@ -109,4 +110,5 @@ func _al_emitir(origen: Variant, detalle: Variant, evento: EntradaSonora.Evento)
 		for otro: EntradaSonora.Evento in EntradaSonora.Evento.values():
 			_conectar(otro, objeto)
 	var rapidez: float = detalle if detalle is float else 0.0
-	reproductor.recibir(evento, objeto, rapidez)
+	var del_tacho: bool = detalle is bool and detalle
+	reproductor.recibir(evento, objeto, rapidez, del_tacho)

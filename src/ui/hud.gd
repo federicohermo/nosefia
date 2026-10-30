@@ -17,6 +17,9 @@
 ## decide `Subtitulo`, que es donde tienen test; acá se le pasa el tiempo y se pinta. Va con el
 ## tema de Manada y sin fuente ni color propios: el contorno que lo deja leer sobre el blanco del
 ## estante es de su variación en el tema.
+##
+## **Lo que dice un comprador al recibir, recordar o rechazar usa la misma línea** y se ve con el
+## diseño del diálogo de comprador: lo nuevo reemplaza a lo que se ve, sea de quien sea.
 class_name Hud
 extends CanvasLayer
 
@@ -39,11 +42,17 @@ const NOMBRES_DE_LOS_BOTONES := {
 ## La referencia de controles, una línea por renglón, debajo del contador de tareas.
 @export var _controles: Label
 
+## El diseño del diálogo de comprador, con su texto: se muestra en lugar del `Label` del subtítulo.
+@export var _comprador: Control
+@export var _texto_del_comprador: RichTextLabel
+
 var foco_presente: bool = false
 
 var _obligatorias: int = 0
 
 var _linea := Subtitulo.new()
+
+var _es_de_un_comprador: bool = false
 
 @onready var _mira: ColorRect = $Mira
 
@@ -89,6 +98,15 @@ func mostrar_tareas(cumplidas: int) -> void:
 ## Un pensamiento: se ve un rato y se desvanece. Un texto vacío no cambia la línea.
 func pensar(texto: String) -> void:
 	_linea.pensar(texto)
+	_es_de_un_comprador = _es_de_un_comprador and texto.is_empty()
+	_pintar_el_subtitulo()
+
+
+## Lo que dice un comprador: se ve como un pensamiento, con el diseño del diálogo de comprador. Un
+## texto vacío no cambia la línea.
+func decir_comprador(texto: String) -> void:
+	_linea.pensar(texto)
+	_es_de_un_comprador = _es_de_un_comprador or not texto.is_empty()
 	_pintar_el_subtitulo()
 
 
@@ -101,6 +119,7 @@ func alejarse(metros: float) -> void:
 ## El texto del examen: queda fijo hasta `vaciar_subtitulo()`.
 func mostrar_subtitulo(texto: String) -> void:
 	_linea.fijar(texto)
+	_es_de_un_comprador = false
 	_pintar_el_subtitulo()
 
 
@@ -161,5 +180,9 @@ func vaciar_subtitulo() -> void:
 
 
 func _pintar_el_subtitulo() -> void:
-	_subtitulo.text = _linea.texto()
+	var del_comprador := _es_de_un_comprador and not _linea.texto().is_empty()
+	_subtitulo.text = "" if del_comprador else _linea.texto()
 	_subtitulo.modulate.a = _linea.opacidad()
+	_comprador.visible = del_comprador
+	_texto_del_comprador.text = _linea.texto() if del_comprador else ""
+	_comprador.modulate.a = _linea.opacidad()
