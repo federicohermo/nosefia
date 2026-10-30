@@ -216,4 +216,25 @@ func test_la_caja_recibe_la_parte_del_paso_que_declara_el_dominio() -> void:  # 
 	var paso := Vector3(0.0, 0.2, -0.1)
 	caja.call(ReglasDeLosObjetos.METODO_EMPUJAR, paso)
 	var esperado := Vector3(paso.x, 0.0, paso.z) * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
+	var de_lo_suelto := Vector3(paso.x, 0.0, paso.z) * ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO
 	assert_vector(caja.global_position - antes).is_equal_approx(esperado, Vector3.ONE * 0.001)
+	assert_vector(caja.global_position - antes).is_not_equal_approx(
+		de_lo_suelto, Vector3.ONE * 0.001
+	)
+
+
+func test_lo_sostenido_ignora_el_paso_del_jugador() -> void:  # AC-PLY-154
+	var almacen: Node3D = await _almacen_con_jugador_andando()
+	var cuerpos: Array[ObjetoAgarrable] = []
+	cuerpos.append(almacen.get_node("Objetos/Mopa"))
+	cuerpos.append((almacen.get("_bolsas") as Array)[0])
+	for cuerpo in cuerpos:
+		await _soltar_en(cuerpo, PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * SOLTADO_DESDE)
+		cuerpo.freeze = true
+		var posicion := cuerpo.global_position
+		var velocidad := cuerpo.linear_velocity
+		cuerpo.call(ReglasDeLosObjetos.METODO_EMPUJAR, Vector3.FORWARD)
+		await get_tree().physics_frame
+		assert_vector(cuerpo.global_position).is_equal(posicion)
+		assert_vector(cuerpo.linear_velocity).is_equal(velocidad)
+		_retirar(cuerpo)

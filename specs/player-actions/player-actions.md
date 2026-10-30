@@ -1252,25 +1252,28 @@ abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los ge
 ### AC-PLY-150 — Un útil suelto se corre en el sentido del paso *(verifica BR-PLY-050)*
 
 DADO un jabón, la mopa o el balde sueltos en el piso, uno por vez CUANDO el jugador camina contra
-él durante 1 segundo de física ENTONCES se corrió en el sentido del paso, y menos distancia que
-la que avanzó el jugador.
+él ENTONCES se corre en el sentido del paso, y menos distancia que la que avanza el jugador.
 
 ### AC-PLY-151 — Una bolsa suelta se corre en el sentido del paso *(verifica BR-PLY-050)*
 
-DADO una bolsa de basura suelta en el piso CUANDO el jugador camina contra ella durante 1 segundo
-de física ENTONCES se corrió en el sentido del paso, y menos distancia que la que
-avanzó el jugador.
+DADO una bolsa de basura suelta en el piso CUANDO el jugador camina contra ella
+ENTONCES se corre en el sentido del paso, y menos distancia que la que avanza el jugador.
 
 ### AC-PLY-152 — Lo empujado no atraviesa nada *(verifica BR-PLY-050, BR-PLY-015)*
 
 DADO un útil de limpieza y una bolsa de basura sueltos contra una pared CUANDO el jugador camina
-contra cada uno hacia la pared durante 3 segundos de física ENTONCES ninguno se superpone con la
-pared ni sale del local.
+contra cada uno hacia la pared, el tiempo que haga falta para llevarlo hasta ella, ENTONCES ninguno
+se superpone con la pared ni sale del local.
 
 ### AC-PLY-153 — La caja se empuja con su parte de siempre *(verifica BR-PLY-050)*
 
 DADO una caja suelta en el piso CUANDO el jugador camina contra ella ENTONCES se corre con la
 parte del paso que declara el dominio para la caja, y no con la de los útiles ni la de las bolsas.
+
+### AC-PLY-154 — Lo que se lleva en la mano no se corre *(verifica BR-PLY-050)*
+
+DADO un útil de limpieza o una bolsa de basura que no están sueltos, sino sostenidos ENTONCES
+recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 
 ## No objetivos
 
