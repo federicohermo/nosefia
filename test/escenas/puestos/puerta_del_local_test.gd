@@ -320,7 +320,7 @@ func test_las_interiores_se_traban_segun_la_jornada() -> void:  # AC-PLY-040
 ## siempre.
 func _trabada_en(ruta: String, jornada: int) -> bool:
 	if ruta == DEPOSITO:
-		return jornada == ReglasDeLaPartida.PRIMERA_JORNADA
+		return false
 	if ruta == BANO:
 		return false
 	return not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)

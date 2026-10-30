@@ -99,12 +99,12 @@ func test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior() -> void:  # AC-C
 		assert_array(generador.renglones()).is_empty()
 		for indice in GeneradorDeTickets.RENGLONES:
 			assert_object(generador.en_el_renglon(indice)).is_null()
-	var nueva := GeneradorDeTickets.para_la_jornada(4)
+	var nueva := GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR - 1)
 	assert_bool(nueva.es_manual()).is_false()
 
 
 func test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras() -> void:  # AC-CTR-027
-	var generador := GeneradorDeTickets.para_la_jornada(6)
+	var generador := GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR + 1)
 	for producto: Producto in Catalogo.todos():
 		for indice in GeneradorDeTickets.RENGLONES:
 			assert_bool(generador.elegir(indice, producto)).is_true()
@@ -124,9 +124,11 @@ func test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras() -> void:
 
 func test_un_indice_invalido_y_el_modo_automatico_rechazan_la_eleccion() -> void:  # AC-CTR-027
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	for jornada: int in [5, 6]:
+	for jornada: int in [
+		GeneradorDeTickets.JORNADA_SIN_LECTOR - 1, GeneradorDeTickets.JORNADA_SIN_LECTOR
+	]:
 		var generador := GeneradorDeTickets.para_la_jornada(jornada)
-		if jornada == 5:
+		if jornada < GeneradorDeTickets.JORNADA_SIN_LECTOR:
 			generador.anotar(UnidadDeProducto.new(marolini))
 		else:
 			generador.elegir(0, marolini)
@@ -134,7 +136,7 @@ func test_un_indice_invalido_y_el_modo_automatico_rechazan_la_eleccion() -> void
 			assert_bool(generador.elegir(indice, null)).is_false()
 			assert_object(generador.en_el_renglon(indice)).is_null()
 		assert_array(generador.renglones()).contains_exactly([marolini])
-	var automatico := GeneradorDeTickets.para_la_jornada(5)
+	var automatico := GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR - 1)
 	for indice in GeneradorDeTickets.RENGLONES:
 		assert_bool(automatico.elegir(indice, marolini)).is_false()
 	assert_array(automatico.renglones()).is_empty()

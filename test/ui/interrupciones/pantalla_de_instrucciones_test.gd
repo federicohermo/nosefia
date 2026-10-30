@@ -153,6 +153,8 @@ func test_la_segunda_y_la_tercera_cuentan_sus_pantallas() -> void:  # AC-EMP-045
 	assert_bool(segunda.visible).is_false()
 	var comienzos_de_la_tercera: Array[int] = [0]
 	tercera.comenzar_pedido.connect(func() -> void: comienzos_de_la_tercera[0] += 1)
+	for _paso in 2:
+		_boton(tercera, "_siguiente").pressed.emit()
 	assert_str(_boton(tercera, "_siguiente").text).is_equal(
 		PantallaDeInstrucciones.TEXTO_DE_COMENZAR
 	)

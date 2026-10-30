@@ -11,7 +11,7 @@ func test_registra_solo_un_tenido_aceptado_y_no_escribe_deuda_ni_mensajes() -> v
 		assert_int(partida.anotar_uso_de_poetico(id, rechazo, true)).is_equal(
 			Partida.RegistroDePoetico.RECHAZADO
 		)
-		assert_bool(partida.uso_de_poetico_en(5)).is_false()
+		assert_bool(partida.uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)).is_false()
 	(
 		assert_int(
 			partida.anotar_uso_de_poetico(id, ReglasDeLaLimpieza.Resultado.BALDE_TENIDO, true)
@@ -24,7 +24,7 @@ func test_registra_solo_un_tenido_aceptado_y_no_escribe_deuda_ni_mensajes() -> v
 		)
 		. is_equal(Partida.RegistroDePoetico.REPETIDO)
 	)
-	assert_bool(partida.uso_de_poetico_en(5)).is_true()
+	assert_bool(partida.uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)).is_true()
 	assert_int(partida.medios()).is_zero()
 	assert_array(partida.devoluciones_del_jefe()).is_empty()
 
@@ -57,7 +57,9 @@ func test_el_hecho_pertenece_a_la_jornada_abierta_y_se_consulta_tras_cerrar() ->
 		)
 		partida.anotar_uso_de_poetico(id, ReglasDeLaLimpieza.Resultado.BALDE_TENIDO, true)
 		partida.cerrar_la_jornada(partida.obligatorias().size())
-		assert_bool(partida.uso_de_poetico_en(jornada)).is_equal(jornada == 5)
+		assert_bool(partida.uso_de_poetico_en(jornada)).is_equal(
+			jornada == AnomaliasDeLaJornada.JORNADA_SIN_AZUL
+		)
 		(
 			assert_int(
 				partida.anotar_uso_de_poetico(id, ReglasDeLaLimpieza.Resultado.BALDE_TENIDO, true)
@@ -66,6 +68,14 @@ func test_el_hecho_pertenece_a_la_jornada_abierta_y_se_consulta_tras_cerrar() ->
 		)
 		if jornada == 5:
 			partida.abrir_la_jornada()
-			assert_bool(partida.uso_de_poetico_en(5)).is_true()
-			assert_bool(partida.uso_de_poetico_en(6)).is_false()
-			assert_bool(Partida.nueva().uso_de_poetico_en(5)).is_false()
+			assert_bool(partida.uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)).is_true()
+			(
+				assert_bool(partida.uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL + 1))
+				. is_false()
+			)
+			(
+				assert_bool(
+					Partida.nueva().uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
+				)
+				. is_false()
+			)

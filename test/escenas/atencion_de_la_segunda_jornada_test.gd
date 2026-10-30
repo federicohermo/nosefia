@@ -707,7 +707,12 @@ func test_la_misma_unidad_poetico_tenida_se_vende_una_sola_vez() -> void:
 	await _mirar_balde(almacen)
 	await _pulsar_real()
 	assert_int(piso.balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
-	assert_bool(almacen.get("_partida").uso_de_poetico_en(5)).is_true()
+	(
+		assert_bool(
+			almacen.get("_partida").uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
+		)
+		. is_true()
+	)
 	assert_object(almacen.get("_agarre").cuerpo_sostenido()).is_same(cuerpo)
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_same(identidad)
 	assert_array(_cantidades(almacen, poetico)).is_equal(retirado)

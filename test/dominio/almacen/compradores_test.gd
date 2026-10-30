@@ -5,7 +5,7 @@
 ## sembrar una semilla — o sea, que la tarea de atender dejara de ser medible.
 extends GdUnitTestSuite
 
-const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
+const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
 const PRIMERA_DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + 5
 
 

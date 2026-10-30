@@ -33,7 +33,7 @@ func test_cambiar_de_etapa_y_repetir_apertura_renueva_cupos_sin_duplicados() -> 
 	var puesto: Node3D = local.get("_reposicion_manual")
 	var nodos_por_etapa: Dictionary[bool, int] = {}
 	var conexiones: int = local.get("_jugador").uso_pedido.get_connections().size()
-	for jornada: int in [4, 4, 5, 8, 1, 1, 3, 4]:
+	for jornada: int in [3, 3, 4, 7, 1, 1, 2, 3]:
 		local.call("_al_abrir_la_jornada", jornada)
 		await get_tree().process_frame
 		var productos := Catalogo.de_la_jornada(jornada)
@@ -68,7 +68,7 @@ func test_cambiar_de_etapa_y_repetir_apertura_renueva_cupos_sin_duplicados() -> 
 			var fila: Node = puesto.get_node("ZonaDe" + producto.nombre)
 			assert_int(fila.get_child_count()).is_equal(repositor.estante().cupo(producto))
 
-	for jornada: int in [1, 4]:
+	for jornada: int in [1, 3]:
 		local.call("_al_abrir_la_jornada", jornada)
 		await get_tree().process_frame
 		await _comprobar_un_solo_gesto(local)
@@ -76,7 +76,7 @@ func test_cambiar_de_etapa_y_repetir_apertura_renueva_cupos_sin_duplicados() -> 
 
 func test_el_registro_de_cada_noche_lista_el_catalogo_de_esa_noche() -> void:  # AC-STK-110
 	var local := _abrir(1)
-	for jornada: int in [1, 2, 3, 4, 8, 3]:
+	for jornada: int in [1, 2, 3, 4, 7, 2]:
 		local.call("_al_abrir_la_jornada", jornada)
 		await get_tree().process_frame
 		var computadora: ComputadoraDeEscritorio = local.get("_computadora")
@@ -90,7 +90,7 @@ func test_el_registro_de_cada_noche_lista_el_catalogo_de_esa_noche() -> void:  #
 
 
 func test_cerrar_tras_cambiar_de_etapa_libera_los_casilleros() -> void:  # AC-STK-098
-	for jornada: int in [1, 4]:
+	for jornada: int in [1, 3]:
 		var local := _abrir(jornada)
 		var puesto: Node3D = local.get("_reposicion_manual")
 		var anterior: Zona = puesto.call("casillero", Producto.Id.ACTRONCITO, 0)
@@ -269,7 +269,7 @@ func test_las_cajas_ausentes_no_aparecen_en_fisica_y_se_restauran() -> void:  # 
 		await get_tree().physics_frame
 	for caja: Caja in cajas:
 		assert_bool(_volumen_encuentra(local, caja)).is_true()
-	for jornada: int in [1, 2, 3, 4, 8]:
+	for jornada: int in [1, 2, 3, 4, 7]:
 		local.call("_al_abrir_la_jornada", jornada)
 		for cuadro in 3:
 			await get_tree().physics_frame

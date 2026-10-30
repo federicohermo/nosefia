@@ -174,7 +174,7 @@ func test_la_octava_impecable_con_deuda_cumple_el_contrato() -> void:  # AC-EMP-
 func test_las_jornadas_de_introduccion_no_admiten_aviso() -> void:  # AC-EMP-072
 	for jornada: int in [1, 2]:
 		var declaradas := Apertura.cantidad_de_obligatorias(jornada)
-		assert_int(declaradas).is_equal(2 if jornada == 1 else 3)
+		assert_int(declaradas).is_equal(3 if jornada == 1 else 4)
 		assert_int(Consecuencias.consecuencia_de(declaradas, declaradas)).is_equal(
 			Consecuencias.Banda.NINGUNA
 		)

@@ -53,7 +53,7 @@ func test_la_planilla_tiene_una_fila_por_producto_en_orden_y_en_cero() -> void: 
 
 
 func test_el_registro_de_la_prueba_anota_todo_lo_que_piden_los_compradores() -> void:  # AC-STK-110
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in [1, 2]:
 		for semilla in range(1, 21):
 			var registro := RegistroDeVentas.new(
 				Catalogo.de_la_jornada(jornada), _atender_con_ventas([])

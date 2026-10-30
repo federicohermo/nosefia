@@ -40,7 +40,7 @@ const FOTOS := {
 		"sector": "Sector de ventas"
 	},
 	"J1_Foto06":
-	{"tamano": Vector2(373, 300), "titulo": "Computadora", "sector": "Sector de ventas"},
+	{"tamano": Vector2(249, 200), "titulo": "Computadora", "sector": "Sector de ventas"},
 	"J2_FotoGondolas": {"titulo": "Góndolas", "sector": "Sector de ventas"},
 	"J1_Foto07": {"titulo": "Estantería con cajas contenedoras", "sector": "Sector de depósito"},
 	"J1_Foto09":

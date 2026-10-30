@@ -51,18 +51,17 @@ func _burbujas(pantalla: PantallaDelCelular) -> Array[PanelContainer]:
 	return burbujas
 
 
-func test_cada_bloque_conocido_separa_los_ocho_dias() -> void:
+func test_cada_bloque_conocido_separa_los_siete_dias() -> void:
 	var pantalla := _pantalla()
 	var mensajes: Array[Mensaje] = []
-	for jornada: int in range(1, 9):
+	for jornada: int in range(1, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
 		mensajes.append(_mensaje(jornada))
 	var chat := _chat(mensajes)
-	pantalla.mostrar_chat(chat, mensajes, false, 8)
+	pantalla.mostrar_chat(chat, mensajes, false, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	(
 		assert_array(_rotulos(pantalla))
 		. is_equal(
 			[
-				"HACE SIETE DÍAS",
 				"HACE SEIS DÍAS",
 				"HACE CINCO DÍAS",
 				"HACE CUATRO DÍAS",
@@ -73,7 +72,7 @@ func test_cada_bloque_conocido_separa_los_ocho_dias() -> void:
 			]
 		)
 	)
-	assert_int(_burbujas(pantalla).size()).is_equal(8)
+	assert_int(_burbujas(pantalla).size()).is_equal(mensajes.size())
 	assert_array(chat.mensajes).is_equal(mensajes)
 
 
@@ -92,20 +91,20 @@ func test_vacio_huecos_repetidos_y_legacy_no_inventan_bloques() -> void:
 	assert_int(legacy.momento).is_equal(Mensaje.Momento.SIN_FECHA)
 
 
-func test_reabrir_historial_real_de_jornada_5_conserva_lecturas_y_guion() -> void:
+func test_reabrir_historial_real_de_jornada_4_conserva_lecturas_y_guion() -> void:
 	var pantalla := _pantalla()
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(5)
+	bandeja.abrir_jornada(4)
 	var chat := bandeja.conversacion_de(Conversacion.Interlocutor.JEFE)
 	var mensajes := bandeja.mensajes_de(chat.interlocutor)
 	var sin_leer := bandeja.no_leidos(chat.interlocutor)
 	var guion := chat.mensajes.duplicate()
-	pantalla.mostrar_chat(chat, mensajes, false, 5)
+	pantalla.mostrar_chat(chat, mensajes, false, 4)
 	var rotulos := _rotulos(pantalla)
 	assert_str(rotulos[0]).is_equal(PantallaDelCelular.DIAS[4])
 	assert_str(rotulos[-1]).is_equal(PantallaDelCelular.DIAS[0])
 	for _apertura: int in 2:
-		pantalla.mostrar_chat(chat, mensajes, false, 5)
+		pantalla.mostrar_chat(chat, mensajes, false, 4)
 		assert_array(_rotulos(pantalla)).is_equal(rotulos)
 		assert_int(bandeja.no_leidos(chat.interlocutor)).is_equal(sin_leer)
 		assert_array(bandeja.mensajes_de(chat.interlocutor)).is_equal(mensajes)
