@@ -602,7 +602,7 @@ igual, como un producto sin unidades vendibles en BR-CTR-047.
 
 ### BR-CTR-053 — Con un comprador, soltar un producto en el hueco es entregárselo
 
-MIENTRAS hay un comprador en la ventanilla, soltar o lanzar un producto en el hueco DEBE tratarse
+MIENTRAS hay un comprador en la ventanilla, soltar un producto en el hueco DEBE tratarse
 como el intento de entregárselo: el sistema DEBE procesar el gesto igual que el clic sobre el
 comprador (BR-CTR-035), con la misma respuesta, y el producto NO DEBE salir al exterior ni
 producir el pensamiento de haberlo dejado afuera. SI el comprador lo acepta, ENTONCES DEBE
@@ -610,6 +610,9 @@ quedar recibido por el comprador igual que con el clic (BR-CTR-029) y NO DEBE co
 afuera al cierre. SI no lo acepta, ENTONCES el producto DEBE seguir en la mano del jugador, sin
 alterar entregas ni ventas. La presencia sale de si hay un comprador en la ventanilla (BR-CTR-027),
 con el panel abierto o cerrado.
+
+Aunque la mira no esté sobre la figura del comprador, un producto soltado que quedaría del otro lado
+de la abertura NO DEBE salir: DEBE volver a la mano, y el gesto DEBE contar como ese mismo intento.
 
 ### BR-CTR-054 — Sin comprador, el hueco sigue siendo la salida
 
@@ -1313,6 +1316,13 @@ quedar afuera, y si sigue ahí al cierre cuenta como objeto afuera.
 DADO una bolsa de basura, un ticket o una pista en la mano, con o sin comprador en la ventanilla,
 CUANDO se suelta en el hueco ENTONCES sigue el comportamiento que ya tenía: sale al exterior
 sin entregarse. El ticket sólo se entrega con el clic sobre el comprador (BR-CTR-029).
+
+### AC-CTR-151 — Con comprador, ningún producto sale por la abertura *(verifica BR-CTR-053, BR-CTR-054)*
+
+DADO un comprador en la ventanilla —también con la conversación inicial sin empezar y mientras
+todavía entra— y un jugador con un producto en la mano, CUANDO suelta con el clic apuntando a la
+abertura donde la figura no está ENTONCES el producto no sale al exterior, sigue en la mano y se
+inicia la conversación. SIN comprador, el mismo clic lo saca al exterior.
 
 ### AC-CTR-133 — Sólo el nombre propio va en amarillo *(verifica BR-CTR-039)*
 

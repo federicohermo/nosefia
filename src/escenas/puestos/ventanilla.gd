@@ -59,6 +59,7 @@ func _ready() -> void:
 	objetivo.manos = jugador.agarre.manos()
 	objetivo.precargar(ANIMACIONES.values())
 	objetivo.interaccion_pedida.connect(_al_pulsar)
+	jugador.agarre.objeto_soltado.connect(_al_soltar)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	panel.cobro_pedido.connect(atenciones.pedir_cobrar)
 	panel.despacho_pedido.connect(atenciones.pedir_despachar_sin_vender)
@@ -110,6 +111,25 @@ func _al_pulsar() -> void:
 				_recibidos[comprador] = []
 			_recibidos[comprador].append(nodo)
 	_repintar()
+
+
+## Con un comprador, ningún producto sale por la abertura: lo soltado que quedó del otro lado vuelve
+## a la mano y el gesto cuenta como el intento de entrega. `objetivo` sólo cubre la figura, y la
+## figura no siempre está sobre la abertura.
+func _al_soltar(nodo: Node3D) -> void:
+	await get_tree().physics_frame
+	if not is_instance_valid(nodo):
+		return
+	var datos := nodo.get("datos") as ObjetoDelAlmacen
+	if not ReglasDeLaVentanilla.se_entrega_al_soltar_en_el_hueco(datos):
+		return
+	var atendida := atenciones.atencion()
+	if atendida == null or not atendida.fisica() or atendida.despachada():
+		return
+	if to_local(nodo.global_position).z <= 0.0 or jugador.agarre.cuerpo_sostenido() != null:
+		return
+	if jugador.agarre.pedir_agarrar(datos, nodo):
+		_al_pulsar()
 
 
 func _repintar() -> void:
