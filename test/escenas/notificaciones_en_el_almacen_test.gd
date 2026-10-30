@@ -116,7 +116,7 @@ func test_todas_las_noches_y_reloj_apagado() -> void:  # AC-NTF-020, AC-NTF-023
 
 
 func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
 	var local := _local(jornada)
 	var reloj: RelojDelTurno = local.get("_reloj")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3660.0)

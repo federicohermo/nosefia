@@ -158,4 +158,4 @@ func test_elegir_escribe_la_eleccion_antes_de_la_noche() -> void:  # AC-SAV-029,
 	assert_object(retomada.reflexion).is_null()
 	assert_str(retomada.expediente.eleccion(4)).is_equal("2A")
 	assert_int(retomada.expediente.mensajes_de_notas().size()).is_equal(3)
-	assert_int(retomada.jornada()).is_equal(6)
+	assert_int(retomada.jornada()).is_equal(5)

@@ -123,11 +123,15 @@ func test_cada_pedido_son_tres_tipos_distintos_de_lo_que_se_vende() -> void:  # 
 				assert_array(ids).has_size(3)
 
 
-func test_la_tercera_jornada_pide_solo_de_los_productos_de_prueba() -> void:  # AC-CTR-071
+func test_la_tercera_jornada_pide_del_catalogo_completo() -> void:  # AC-CTR-071
+	var vendibles: Array[Producto.Id] = []
+	for producto in Catalogo.de_la_jornada(TERCERA):
+		vendibles.append(producto.id)
+	assert_array(vendibles).contains_exactly(Producto.Id.values())
 	for semilla in range(1, SEMILLAS + 1):
 		for comprador in Compradores.de_la_jornada(TERCERA, semilla):
 			for producto in comprador.pedido().productos():
-				assert_array(Catalogo.PRODUCTOS_DE_PRUEBA).contains([producto.id])
+				assert_array(vendibles).contains([producto.id])
 
 
 func test_la_misma_semilla_repite_los_productos_con_estados_nuevos() -> void:  # AC-CTR-072

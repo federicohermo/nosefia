@@ -117,11 +117,11 @@ func test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura() -> void:  # 
 	caja.producto_leido.connect(func() -> void: sonidos.append("leido"))
 	caja.lectura_rechazada.connect(func(_motivo: int) -> void: sonidos.append("rechazo"))
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	caja.arrancar(GeneradorDeTickets.para_la_jornada(5))
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR - 1))
 	caja.pedir_elegir(1, marolini)
 	assert_int(cambios[0]).is_equal(1)
 	assert_array(caja.generador().renglones()).is_empty()
-	caja.arrancar(GeneradorDeTickets.para_la_jornada(6))
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR))
 	for indice: int in [-1, 3]:
 		caja.pedir_elegir(indice, marolini)
 	assert_int(cambios[0]).is_equal(2)

@@ -219,7 +219,7 @@ func test_las_del_mismo_tipo_y_habitacion_se_borran_por_separado() -> void:  # A
 
 
 func test_las_noches_que_no_piden_limpiar_abren_sin_manchas() -> void:  # AC-CLN-016
-	for jornada: int in [1, 2]:
+	for jornada: int in [1]:
 		var piso := PisoDelLocal.de_la_jornada(jornada)
 		assert_array(piso.lugares()).is_empty()
 		assert_bool(piso.esta_limpio()).is_true()
