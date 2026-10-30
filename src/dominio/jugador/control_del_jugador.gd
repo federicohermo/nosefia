@@ -13,6 +13,7 @@ var _mirada: Mirada
 var _foco := Foco.new()
 var _velocidad_maxima: float
 var _suspendido: bool = false
+var _agachado: bool = false
 
 ## Cuánto del giro falta dibujar, en radianes: `x` de yaw, `y` de pitch.
 var _suavizado := SuavizadoDelGiro.new(SuavizadoDelGiro.VENTANA)
@@ -64,6 +65,14 @@ func velocidad(entrada: Vector2) -> Vector3:
 	if _suspendido:
 		return Vector3.ZERO
 	return Caminata.velocidad(entrada, _mirada.yaw(), _velocidad_maxima)
+
+
+## La altura de la vista con la acción de agacharse como esté ahora. Suspendido ignora la acción y
+## contesta la postura que había: reanudar la retoma de lo que Espacio tenga en ese momento.
+func altura_de_la_vista(agachando: bool) -> float:
+	if not _suspendido:
+		_agachado = agachando
+	return ReglasDelJugador.ALTURA_AGACHADO if _agachado else ReglasDelJugador.ALTURA_DE_LA_CAMARA
 
 
 func observar(id: int, distancia: float, interactuable: bool) -> bool:

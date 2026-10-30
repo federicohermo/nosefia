@@ -175,3 +175,40 @@ func _lento() -> ControlDelJugador:
 		tiempo += cuadro
 	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
 	return control
+
+
+func test_agachado_la_vista_baja_a_la_altura_agachado() -> void:  # AC-PLY-120
+	var control := _control()
+	assert_float(control.altura_de_la_vista(false)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	assert_float(control.altura_de_la_vista(true)).is_equal(ReglasDelJugador.ALTURA_AGACHADO)
+
+
+func test_soltar_la_accion_levanta_la_vista_y_no_es_un_interruptor() -> void:  # AC-PLY-121
+	var control := _control()
+	control.altura_de_la_vista(true)
+	assert_float(control.altura_de_la_vista(false)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	assert_float(control.altura_de_la_vista(false)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	assert_float(control.altura_de_la_vista(true)).is_equal(ReglasDelJugador.ALTURA_AGACHADO)
+
+
+func test_agachado_se_camina_a_la_velocidad_de_pie() -> void:  # AC-PLY-123
+	var control := _control()
+	var de_pie := control.velocidad(Vector2(0.0, 1.0)).length()
+	control.altura_de_la_vista(true)
+	assert_float(control.velocidad(Vector2(0.0, 1.0)).length()).is_equal_approx(de_pie, 1e-5)
+	assert_float(control.velocidad(Vector2(1.0, 1.0)).length()).is_equal_approx(
+		ReglasDelJugador.VELOCIDAD_DE_CAMINATA, 1e-4
+	)
+
+
+func test_suspendido_la_postura_no_cambia_y_al_reanudar_sigue_a_la_accion() -> void:  # AC-PLY-124
+	var control := _control()
+	control.altura_de_la_vista(true)
+	control.suspender()
+	assert_float(control.altura_de_la_vista(false)).is_equal(ReglasDelJugador.ALTURA_AGACHADO)
+	control.reanudar()
+	assert_float(control.altura_de_la_vista(false)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	control.suspender()
+	assert_float(control.altura_de_la_vista(true)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	control.reanudar()
+	assert_float(control.altura_de_la_vista(true)).is_equal(ReglasDelJugador.ALTURA_AGACHADO)

@@ -301,10 +301,21 @@ func _physics_process(delta: float) -> void:
 	_contar_el_paso(global_position - antes)
 	_empujar_lo_que_estorba()
 
+	_acomodar_la_vista()
 	_acomodar_las_manos(delta)
 	_acomodar_la_caja()
 	_leer_la_mira()
 	_publicar_la_referencia()
+
+
+## Lee la acción y escribe la altura que el dominio contesta. Encuadrado en una ventanilla la
+## cámara está en el mundo y no se toca.
+func _acomodar_la_vista() -> void:
+	var altura := _control.altura_de_la_vista(
+		Input.is_action_pressed(ReglasDelJugador.ACCION_AGACHARSE)
+	)
+	if not _asomado:
+		_camara.position.y = altura
 
 
 ## Cuenta lo que el cuerpo se movió de verdad sobre el piso: contra una pared, nada. Lo vertical

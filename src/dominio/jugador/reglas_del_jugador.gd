@@ -19,6 +19,10 @@ const SENSIBILIDAD_DEL_MOUSE := 0.003
 ## Metros, medidos desde el origen del `CharacterBody3D` que está apoyado en el piso.
 const ALTURA_DE_LA_CAMARA := 1.7
 
+## Metros, con el mismo origen. Es la del segundo estante desde abajo de las góndolas, medida del
+## modelo: agachado, la vista queda a la altura de lo que hay que alcanzar o revisar ahí.
+const ALTURA_AGACHADO := 0.7
+
 ## Radianes. Los dos encierran al cero y ninguno llega a PI/2: pasarse de ahí da vuelta la
 ## cámara, y eso no es un límite de gusto sino de diseño.
 const PITCH_MINIMO := -1.4
@@ -53,3 +57,6 @@ const ACCION_IZQUIERDA := "mover_izquierda"
 const ACCION_DERECHA := "mover_derecha"
 
 const ACCION_USAR: StringName = &"usar"
+
+## Se mantiene apretada: soltarla levanta la vista.
+const ACCION_AGACHARSE: StringName = &"agacharse"
