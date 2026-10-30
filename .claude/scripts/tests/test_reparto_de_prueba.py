@@ -16,10 +16,10 @@ class RepartoDePrueba(unittest.TestCase):
         caras = {
             "A.oeste": ("ARVECOR", "MAROLINI"),
             "A.este": ("TERMINATOR", "ZUCARACHAS"),
-            "A.norte": ("FERNET_GOD",), "A.sur": ("MALBARDO",),
+            "A.norte": ("POETICO",), "A.sur": ("FERNET_GOD",),
             "B.este": ("PEPITO", "PETISAS"),
             "B.oeste": ("PROGRES", "DON_SATURADOS"),
-            "B.norte": ("POETICO",), "B.sur": ("JORGILLO",),
+            "B.norte": ("MALBARDO",), "B.sur": ("JORGILLO",),
             "N.sur": ("ACTRONCITO", "DURONGA"),
             "H1.sur": ("PURA_COLA",), "H2.sur": ("MAYONCHIS",),
         }
@@ -57,9 +57,9 @@ class RepartoDePrueba(unittest.TestCase):
         perdido = dict(ESTANTES_DE_PRUEBA)
         del perdido["B.norte.0"]
         ajeno = dict(ESTANTES_DE_PRUEBA, **{"B.norte.0": (Tanda("BURBALOO", fija=True),)})
-        duplicado = dict(ESTANTES_DE_PRUEBA, **{"B.norte.2": (Tanda("POETICO"),)})
+        duplicado = dict(ESTANTES_DE_PRUEBA, **{"B.norte.2": (Tanda("MALBARDO"),)})
         fuera_de_alcance = dict(ESTANTES_DE_PRUEBA, **{
-            "B.norte.1": (Tanda("POETICO", fija=True),), "B.norte.0": (Tanda("POETICO"),)
+            "B.norte.1": (Tanda("MALBARDO", fija=True),), "B.norte.0": (Tanda("MALBARDO"),)
         })
         for variante in (perdido, ajeno, duplicado, fuera_de_alcance):
             with self.subTest(variante=variante.keys()), self.assertRaises(ValueError):

@@ -567,12 +567,12 @@ los mismos productos del mapa de prueba, sin estantes vacíos:
 |---|---|
 | Lado de almacén de la primera isla | Arvecor y Marolini |
 | Lado opuesto de esa isla | Terminator y Zucarachas |
-| Cabecera de bebidas de esa isla | Fernet God |
-| Cabecera opuesta de esa isla | Malbardo |
+| Cabecera de bebidas de esa isla | Poético |
+| Cabecera opuesta de esa isla | Fernet God |
 | Lado de dulces de la segunda isla | Pepito y Petisas |
 | Lado de salados de la segunda isla | Progres y Don Saturados |
 | Cabecera que conserva Jorgillo en el mapa completo | Jorgillo |
-| Cabecera opuesta de la segunda isla | Poético |
+| Cabecera opuesta de la segunda isla | Malbardo |
 | Estantería de no comestibles | Actroncito y Duronga |
 | Primera heladera funcional | Pura-Cola |
 | Segunda heladera funcional | Mayonchis |
