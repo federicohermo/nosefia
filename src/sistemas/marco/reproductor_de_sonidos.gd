@@ -355,7 +355,7 @@ func _sonar_en_bucle(entrada: EntradaSonora) -> bool:
 	for posicion in posiciones:
 		var emisor := AudioStreamPlayer3D.new()
 		emisor.name = "Emisor%d_%d" % [entrada.evento, emisores.size()]
-		emisor.max_distance = EmisoresDelAmbiente.ALCANCE
+		emisor.max_distance = entrada.alcance
 		emisor.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 		add_child(emisor)
 		emisor.global_position = posicion

@@ -127,6 +127,9 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 ## nombre de un emisor de la escena del audio. Vacío si no tiene.
 @export var emisor: StringName = &""
 
+## A cuántos metros de su emisor deja de oírse una fila en bucle del espacio.
+@export var alcance: float = EmisoresDelAmbiente.ALCANCE
+
 ## Vacío mientras el sonido no esté elegido. Que la fila exista igual es lo que permite que
 ## agregar el sonido no toque código.
 @export var stream: AudioStream = null

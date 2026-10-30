@@ -320,6 +320,27 @@ func test_el_ambiente_tiene_sus_emisores_en_la_heladera_y_los_tubos() -> void:
 	assert_int(neon.get_child_count()).is_greater(EmisoresDelAmbiente.TOPE)
 
 
+func test_el_zumbido_de_la_heladera_no_llega_al_centro_del_salon() -> void:
+	var audio: Node = auto_free(load(ESCENA).instantiate())
+	var neon: Node3D = audio.get("emisores").get_node("Neon")
+	var ambiente := TablaDeSonidos.desde_disco().de(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	var tubos := Vector2.ZERO
+	var cantidad := 0
+	for punto: Node3D in neon.get_children():
+		if not String(punto.name).begins_with("Tubo"):
+			continue
+		tubos += Vector2(punto.position.x, punto.position.z)
+		cantidad += 1
+	assert_int(cantidad).is_greater(0)
+	var centro := tubos / maxf(cantidad, 1.0)
+	var heladera := Vector2(
+		neon.get_node("Heladera").position.x, neon.get_node("Heladera").position.z
+	)
+	assert_float(heladera.distance_to(centro)).is_greater(ambiente.alcance)
+	assert_float(ambiente.alcance).is_less(EmisoresDelAmbiente.ALCANCE)
+	assert_float(ambiente.volumen_db).is_less(0.0)
+
+
 func test_el_jugador_es_una_fuente_del_audio() -> void:
 	# Sin esto `paso_dado` queda sin fuente, que es un estado normal y nada lo avisa.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
