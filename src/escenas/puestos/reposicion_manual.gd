@@ -467,6 +467,8 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 		repositor.agarre.pedir_agarrar(caja.get("datos"), caja)
 		return
 	_quedar_quieta(caja)
+	# Se la ubica en vez de dejarla caer: el motor no avisa ningún choque, y el apoyo suena igual.
+	caja.emit_signal(&"contacto_recibido", caja, 0.0)
 
 
 ## Cómo queda la caja sobre lo que la sostiene. Sobre otra caja copia su giro: girada encima de
