@@ -57,10 +57,16 @@ func unidades_de(producto: Producto) -> int:
 	return unidades
 
 
+func total_de(producto: Producto) -> int:
+	if producto == null:
+		return 0
+	return producto.precio * unidades_de(producto)
+
+
 func total() -> int:
 	var suma := 0
 	for producto in _productos:
-		suma += producto.precio * unidades_de(producto)
+		suma += total_de(producto)
 	return suma
 
 

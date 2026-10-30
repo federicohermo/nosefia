@@ -248,15 +248,15 @@ func _registrar(almacen: Node3D) -> void:
 	assert_int(filas.get_child_count()).is_equal(Catalogo.todos().size())
 	for indice in productos.size():
 		for unidad in atender.vendidas_de(productos[indice]):
-			_boton_de_la_fila(filas, indice, 5).pressed.emit()
+			_boton_de_la_fila(filas, indice, 6).pressed.emit()
 	assert_bool(tarea.completada()).is_true()
 	var contador: Label = almacen.get("_hud").get("_tareas")
 	var con_registrar := contador.text
 	# Una unidad de más la descumple, y sacarla la vuelve a cumplir.
-	_boton_de_la_fila(filas, 0, 5).pressed.emit()
+	_boton_de_la_fila(filas, 0, 6).pressed.emit()
 	assert_bool(tarea.completada()).is_false()
 	assert_str(contador.text).is_not_equal(con_registrar)
-	_boton_de_la_fila(filas, 0, 3).pressed.emit()
+	_boton_de_la_fila(filas, 0, 4).pressed.emit()
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(tarea.completada()).is_true()
@@ -264,7 +264,7 @@ func _registrar(almacen: Node3D) -> void:
 	escritorio.call("cerrar")
 
 
-## Los botones de una fila de la planilla: «−» en la columna 3 y «+» en la 5.
+## Los botones de una fila de la planilla: «−» en la columna 4 y «+» en la 6.
 func _boton_de_la_fila(filas: Node, indice: int, columna: int) -> Button:
 	return filas.get_child(indice).get_child(0).get_child(columna)
 
