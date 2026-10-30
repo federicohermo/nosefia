@@ -676,6 +676,15 @@ sin desplazarse más de 1 cm en los primeros 120 cuadros de física sin interven
 SI la partida no guarda la pose de una caja, o la guardada no es una pose, ENTONCES esa caja
 DEBE abrir en su lugar de fábrica. Toda caja presente DEBE abrir llena (BR-STK-004).
 
+### BR-STK-053 — Las filas de la planilla van en orden alfabético por nombre
+
+El sistema DEBE ordenar las filas de la planilla por el nombre que lee el jugador, sin
+distinguir mayúsculas ni tildes, con el criterio del español de Argentina. El orden DEBE
+depender sólo del nombre: no del orden en que el catálogo declara los productos ni del
+subconjunto presente esa noche (BR-STK-046). Dos nombres que sólo difieren en mayúsculas o
+tildes DEBEN conservar el orden del catálogo entre sí. Ordenar la planilla NO DEBE cambiar
+qué productos tiene, sus precios ni lo anotado en cada fila.
+
 ## Criterios de aceptación
 
 ### AC-STK-001 — La identidad manda *(verifica BR-STK-001)*
@@ -1057,15 +1066,6 @@ DADO una unidad vencida agarrada de la góndola CUANDO se tira al contenedor ENT
 Cindolor queda como estaba, el casillero sigue vacío y la góndola no recupera esa unidad. DADO la
 jornada siguiente ENTONCES abre sin unidades vencidas.
 
-### BR-STK-053 — Las filas de la planilla van en orden alfabético por nombre
-
-El sistema DEBE ordenar las filas de la planilla por el nombre que lee el jugador, sin
-distinguir mayúsculas ni tildes, con el criterio del español de Argentina. El orden DEBE
-depender sólo del nombre: no del orden en que el catálogo declara los productos ni del
-subconjunto presente esa noche (BR-STK-046). Dos nombres que sólo difieren en mayúsculas o
-tildes DEBEN conservar el orden del catálogo entre sí. Ordenar la planilla NO DEBE cambiar
-qué productos tiene, sus precios ni lo anotado en cada fila.
-
 ### AC-STK-122 — Un vencido en la góndola deja reponer sin cumplir *(verifica BR-STK-052, BR-STK-033)*
 
 DADO la jornada 6 abierta, con todos los casilleros de la góndola ocupados y cinco vencidos
@@ -1341,7 +1341,7 @@ sin heredar los huecos de ventas de la primera.
 ### AC-STK-095 — La prueba tiene exactamente su catálogo *(verifica BR-STK-046, BR-STK-004, BR-STK-026)*
 
 DADO cada jornada 1, 2 y 3 CUANDO abre con cualquier semilla de 0 a 199 ENTONCES sólo
-registra los dieciséis productos de BR-STK-046, en orden de catálogo, con Duronga presente y
+registra los dieciséis productos de BR-STK-046, con Duronga presente y
 Durextra ausente. Cada caja presente abre llena; cada producto ausente tiene cero unidades y
 cero cupo. Los faltantes sólo
 incluyen presentes. DADO jornadas 4 y 8 ENTONCES están las treinta y dos identidades.
