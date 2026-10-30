@@ -137,8 +137,8 @@ func test_tia_llega_a_su_hora_aunque_tin_se_haya_ido_antes() -> void:  # AC-CTR-
 	var agenda := AgendaDeCompradores.new(compradores)
 	agenda.avanzar(tin.horario.x)
 	assert_array(agenda.avanzar(tin.horario.x + 600.0, [tin])).is_empty()
-	assert_array(agenda.avanzar(tia.horario.x - 1.0)).is_empty()
-	var llegada := agenda.avanzar(tia.horario.x)
+	assert_array(agenda.avanzar(tia.horario.x - 1.0, [tin])).is_empty()
+	var llegada := agenda.avanzar(tia.horario.x, [tin])
 	assert_array(llegada).has_size(1)
 	assert_object(llegada[0].comprador).is_same(tia)
 
