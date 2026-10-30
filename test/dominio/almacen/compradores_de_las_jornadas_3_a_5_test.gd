@@ -14,13 +14,13 @@ const AGENDAS := {
 	],
 	CUARTA:
 	[
-		["Tia", PERSONAJE.TIA, Vector2i(22, 0), Vector2i(1, 0)],
-		["Fede", PERSONAJE.FEDE, Vector2i(4, 0), Vector2i(7, 0)],
+		["Tia", PERSONAJE.TIA, Vector2i(22, 0), Vector2i(0, 30)],
+		["Fede", PERSONAJE.FEDE, Vector2i(4, 0), Vector2i(6, 30)],
 	],
 	QUINTA:
 	[
-		["Cami", PERSONAJE.CAMI, Vector2i(20, 30), Vector2i(23, 30)],
-		["Mía", PERSONAJE.MIA, Vector2i(5, 0), Vector2i(8, 0)],
+		["Cami", PERSONAJE.CAMI, Vector2i(20, 30), Vector2i(23, 0)],
+		["Mía", PERSONAJE.MIA, Vector2i(5, 0), Vector2i(7, 30)],
 	],
 }
 
@@ -94,9 +94,28 @@ func test_saltar_al_cierre_entrega_los_cruces_en_orden() -> void:  # AC-CTR-069
 			)
 
 
-func test_el_limite_de_mia_es_el_cierre_del_turno() -> void:  # AC-CTR-069
-	var mia := Compradores.de_la_jornada(QUINTA, 1)[1]
-	assert_float(mia.horario.y).is_equal(Reglas.DURACION_DEL_TURNO)
+func test_las_ventanas_de_la_cuarta_y_la_quinta_duran_dos_horas_y_media() -> void:  # AC-CTR-109
+	var casos := [
+		[CUARTA, 0, Vector2i(22, 0), Vector2i(0, 30)],
+		[CUARTA, 1, Vector2i(4, 0), Vector2i(6, 30)],
+		[QUINTA, 0, Vector2i(20, 30), Vector2i(23, 0)],
+		[QUINTA, 1, Vector2i(5, 0), Vector2i(7, 30)],
+	]
+	for caso: Array in casos:
+		var compradores := Compradores.de_la_jornada(caso[0], 1)
+		var agenda := AgendaDeCompradores.new(compradores)
+		var llegada := _segundos(caso[2])
+		var limite := _segundos(caso[3])
+		if caso[1] == 1:
+			agenda.avanzar(compradores[0].horario.y)
+		assert_array(agenda.avanzar(llegada - 1.0)).is_empty()
+		var llego := agenda.avanzar(llegada)
+		assert_array(llego).has_size(1)
+		assert_object(llego[0].comprador).is_same(compradores[caso[1]])
+		assert_array(agenda.avanzar(limite - 1.0)).is_empty()
+		var vencio := agenda.avanzar(limite)
+		assert_array(vencio).has_size(1)
+		assert_int(vencio[0].tipo).is_equal(AgendaDeCompradores.Tipo.VENCIO)
 
 
 func test_una_compra_completa_no_vence() -> void:  # AC-CTR-069
@@ -107,7 +126,7 @@ func test_una_compra_completa_no_vence() -> void:  # AC-CTR-069
 		assert_int(agenda.avanzar(compradores[0].horario.y, [compradores[0]]).size()).is_zero()
 
 
-func test_cada_pedido_son_tres_tipos_distintos_de_lo_que_se_vende() -> void:  # AC-CTR-071
+func test_cada_pedido_son_dos_o_tres_tipos_de_su_grupo_y_de_lo_que_se_vende() -> void:  # AC-CTR-071
 	for jornada: int in AGENDAS:
 		var vendibles: Array[Producto.Id] = []
 		for producto in Catalogo.de_la_jornada(jornada):
@@ -120,7 +139,51 @@ func test_cada_pedido_son_tres_tipos_distintos_de_lo_que_se_vende() -> void:  # 
 					ids.append(producto.id)
 					assert_int(pedido.unidades_de(producto)).is_equal(1)
 					assert_array(vendibles).contains([producto.id])
-				assert_array(ids).has_size(3)
+					assert_array(Compradores.GRUPOS[comprador.personaje]).contains([producto.id])
+				assert_int(ids.size()).is_between(2, 3)
+
+
+func test_la_tercera_pide_de_la_interseccion_de_su_grupo_con_la_prueba() -> void:  # AC-CTR-107
+	var candidatos := {
+		"Cami":
+		[Producto.Id.ZUCARACHAS, Producto.Id.JORGILLO, Producto.Id.PEPITO, Producto.Id.PETISAS],
+		"Tin":
+		[
+			Producto.Id.MAROLINI,
+			Producto.Id.PURA_COLA,
+			Producto.Id.MALBARDO,
+			Producto.Id.MAYONCHIS,
+			Producto.Id.ARVECOR,
+			Producto.Id.DON_SATURADOS,
+		],
+	}
+	var pedidos: Dictionary = {"Cami": {}, "Tin": {}}
+	for semilla in range(1, SEMILLAS + 1):
+		for comprador in Compradores.de_la_jornada(TERCERA, semilla):
+			for producto in comprador.pedido().productos():
+				assert_array(candidatos[comprador.nombre()]).contains([producto.id])
+				pedidos[comprador.nombre()][producto.id] = true
+	for nombre: String in candidatos:
+		assert_array(pedidos[nombre].keys()).contains_exactly_in_any_order(candidatos[nombre])
+
+
+func test_fede_nunca_pide_durextra() -> void:  # AC-CTR-107
+	for semilla in range(1, SEMILLAS + 1):
+		for comprador in Compradores.de_la_jornada(CUARTA, semilla):
+			for producto in comprador.pedido().productos():
+				assert_int(producto.id).is_not_equal(Producto.Id.DUREXTRA)
+
+
+func test_los_pedidos_son_de_dos_y_de_tres_con_frecuencias_parecidas() -> void:  # AC-CTR-108
+	var por_cantidad := {2: 0, 3: 0}
+	for jornada: int in AGENDAS:
+		for semilla in range(1, SEMILLAS + 1):
+			for comprador in Compradores.de_la_jornada(jornada, semilla):
+				por_cantidad[comprador.pedido().productos().size()] += 1
+	var total: int = por_cantidad[2] + por_cantidad[3]
+	assert_int(total).is_equal(AGENDAS.size() * 2 * SEMILLAS)
+	assert_int(por_cantidad[2]).is_greater(total / 4)
+	assert_int(por_cantidad[3]).is_greater(total / 4)
 
 
 func test_la_tercera_jornada_pide_solo_de_los_productos_de_prueba() -> void:  # AC-CTR-071

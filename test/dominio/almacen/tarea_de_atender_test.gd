@@ -319,6 +319,7 @@ func test_un_salto_vence_dos_entregas_una_vez_sin_retirarlas() -> void:  # AC-CT
 	var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 	compradores[0].horario = Vector2(10, 30)
 	compradores[1].horario = Vector2(20, 40)
+	compradores[1].llega_tras = null
 	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
 	var tarea := TareaDeAtender.new(compradores, inventario)
 	var recepciones: Array[RecepcionDeCompra] = []
