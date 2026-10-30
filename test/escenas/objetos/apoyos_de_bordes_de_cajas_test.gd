@@ -219,7 +219,9 @@ func _en_el_estante(producto: Producto.Id, sector := Sector.CON_PRODUCTOS) -> Di
 	var almacen := await _abrir()
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
-	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
+	# La segunda isla tiene estantes bajos: una caja no entra entre dos, con o sin productos.
+	var isla := "gondolanueva" if sector == Sector.SIN_PRODUCTOS else "gondolanueva2"
+	var gondola: MeshInstance3D = almacen.get_node("Estructura/" + isla)
 	var frente := Vector3.LEFT
 	var objetivo := _metal_visible_del_estante(gondola, frente)
 	assert_vector(objetivo).is_not_equal(Vector3.INF)
@@ -550,8 +552,8 @@ func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
 			limites.get_center().x + limites.size.x / 4.0, limites.end.y, brazo.get_center().z
 		)
 		soporte = mesa.get_node("StaticBody3D")
-		# Delante del brazo se exhiben el freezer y el exhibidor: se mira desde más allá.
-		desde = Vector3.FORWARD * 1.4
+		# Delante del brazo se exhiben el freezer y el exhibidor: se mira desde adentro de la L.
+		desde = Vector3(-0.4, 0.0, 1.2)
 	elif tipo == "pallet":
 		var pallet: MeshInstance3D = almacen.get_node(
 			"Estructura/gondola_deposito03/deposito_pallet_central_derecho_1_1"
