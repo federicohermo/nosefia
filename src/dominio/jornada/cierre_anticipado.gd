@@ -2,9 +2,7 @@ class_name CierreAnticipado
 extends RefCounted
 
 const JORNADAS: Array[int] = [
-	ReglasDeLaPartida.PRIMERA_JORNADA,
-	ReglasDeLaPartida.PRIMERA_JORNADA + 1,
-	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1,
+	ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 ]
 
 

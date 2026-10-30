@@ -1,4 +1,4 @@
-## El corte de luz de la séptima noche, aplicado al local: oscurece, devuelve la luz y avisa.
+## El corte de luz de la sexta noche, aplicado al local: oscurece, devuelve la luz y avisa.
 ##
 ## **No decide cuándo se corta ni cuándo vuelve.** Eso es de `AnomaliasDeLaJornada`, que recibe lo
 ## que queda del turno y contesta el estado. Acá queda la cáscara: qué se enciende y qué se apaga.

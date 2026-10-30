@@ -158,7 +158,7 @@ func test_puerta_abierta_cierra_y_cerrada_o_trabada_abre_y_nota_mira() -> void: 
 
 
 func test_tacho_solo_ofrece_extraccion_con_bolsa_y_mano_vacia_sin_sacarla() -> void:  # AC-PLY-085
-	var tarea := TareaDeLaBasura.de_la_jornada(5)
+	var tarea := TareaDeLaBasura.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	for mano: bool in [false, true]:
 		for bolsa: bool in [false, true]:
 			var contexto := R.contexto_del_tacho(bolsa, mano)

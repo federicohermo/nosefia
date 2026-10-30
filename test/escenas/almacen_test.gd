@@ -336,6 +336,7 @@ func test_el_almacen_arranca_desde_el_guardado() -> void:  # AC-SAV-017
 	assert_int(nueva.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA)
 	assert_int(nueva.apercibimientos()).is_equal(0)
 	var guardada := {
+		PartidaSerializada.CLAVE_DE_VERSION: PartidaSerializada.VERSION,
 		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
 		ReglasDeLaPartida.PRIMERA_JORNADA + 2,
 		PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS):

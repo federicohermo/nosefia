@@ -101,7 +101,7 @@ func test_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia() -> void:  
 	var cambios: Array[int] = [0]
 	caja.programa_arrancado.connect(func(manual: bool) -> void: modos.append(manual))
 	caja.renglones_cambiados.connect(func() -> void: cambios[0] += 1)
-	for jornada: int in [5, 6, 7, 8, 4]:
+	for jornada: int in [4, 5, 6, 7, 3]:
 		var generador := GeneradorDeTickets.para_la_jornada(jornada)
 		caja.arrancar(generador)
 		assert_object(caja.generador()).is_same(generador)
@@ -117,11 +117,11 @@ func test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura() -> void:  # 
 	caja.producto_leido.connect(func() -> void: sonidos.append("leido"))
 	caja.lectura_rechazada.connect(func(_motivo: int) -> void: sonidos.append("rechazo"))
 	var marolini := Catalogo.de(Producto.Id.MAROLINI)
-	caja.arrancar(GeneradorDeTickets.para_la_jornada(5))
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR - 1))
 	caja.pedir_elegir(1, marolini)
 	assert_int(cambios[0]).is_equal(1)
 	assert_array(caja.generador().renglones()).is_empty()
-	caja.arrancar(GeneradorDeTickets.para_la_jornada(6))
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR))
 	for indice: int in [-1, 3]:
 		caja.pedir_elegir(indice, marolini)
 	assert_int(cambios[0]).is_equal(2)
@@ -164,7 +164,7 @@ func test_desechar_avisa_solo_el_papel_y_conserva_el_programa() -> void:  # AC-C
 	caja.producto_leido.connect(func() -> void: eventos.append("lectura"))
 	caja.lectura_rechazada.connect(func(_motivo: int) -> void: eventos.append("rechazo"))
 	caja.renglones_cambiados.connect(func() -> void: eventos.append("cambio"))
-	for jornada: int in [4, 6, 8]:
+	for jornada: int in [3, 6, 7]:
 		var generador := GeneradorDeTickets.para_la_jornada(jornada)
 		var producto := Catalogo.de(Producto.Id.MAROLINI)
 		if generador.es_manual():

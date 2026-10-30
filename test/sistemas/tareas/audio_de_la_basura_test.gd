@@ -19,7 +19,7 @@ var _recolector: RecolectorDeBasura
 func before_test() -> void:
 	_pedidos = []
 	_rechazos = []
-	var jornada := 5
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 	var obligatorias := Apertura.obligatorias(jornada)
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
