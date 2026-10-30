@@ -1049,9 +1049,8 @@ ni ventas.
 DADO la jornada 1 con Tin sin atender CUANDO pasan 23:29:59 y 23:30:00 ENTONCES Tia está ausente y
 llega; y 01:59:59 y 02:00:00 ENTONCES espera y vence. DADO Tin completo a las 21:00 CUANDO pasan
 21:29:59 y 21:30:00 ENTONCES Tia está ausente y llega; y 23:59:59 y 00:00:00 ENTONCES espera y vence.
-DADO Tin completo en el mismo instante en que vence a las 23:00 ENTONCES Tia llega a las 23:30. En
-pausa no corre ni la espera de la llegada ni el plazo posterior, y repetir cada instante no repite
-eventos. Tin sigue llegando a las 20:30 y pidiendo lo mismo, y Tia lo mismo que antes.
+DADO Tin completo en el mismo instante en que vence a las 23:00 ENTONCES Tia llega a las 23:30. Repetir
+cada instante no repite eventos. Tin sigue llegando a las 20:30 y pidiendo lo mismo, y Tia lo mismo que antes.
 
 ### AC-CTR-107 — Cada comprador pide de su grupo *(verifica BR-CTR-047)*
 
