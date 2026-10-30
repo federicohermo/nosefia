@@ -17,6 +17,8 @@ const SENSIBILIDAD := 0.01
 
 const UN_OBJETO := 26558334344
 
+const CUADRO := 1.0 / 60.0
+
 
 func _control() -> ControlDelJugador:
 	var mirada := Mirada.new(
@@ -210,7 +212,7 @@ func test_soltar_a_mitad_de_la_bajada_sube_desde_donde_esta() -> void:  # AC-PLY
 func test_agachado_se_camina_a_la_velocidad_de_pie() -> void:  # AC-PLY-123
 	var control := _control()
 	var de_pie := control.velocidad(Vector2(0.0, 1.0)).length()
-	control.altura_de_la_vista(true)
+	_asentar(control, true)
 	assert_float(control.velocidad(Vector2(0.0, 1.0)).length()).is_equal_approx(de_pie, 1e-5)
 	assert_float(control.velocidad(Vector2(1.0, 1.0)).length()).is_equal_approx(
 		ReglasDelJugador.VELOCIDAD_DE_CAMINATA, 1e-4
