@@ -30,7 +30,7 @@ const TEXTO_DE_RESTAR := "−"
 ## El ancho de cada columna fija, igual en el encabezado y en las filas. La marca y el rubro
 ## se reparten lo que sobra según su peso.
 const ALTO_DE_LA_FILA := 105.0
-const ANCHO_DE_LA_IMAGEN := 148.0
+const ANCHO_DE_LA_IMAGEN := ALTO_DE_LA_FILA  # las imágenes son cuadradas
 const ANCHO_DEL_PRECIO := 168.0
 const ANCHO_DE_LO_VENDIDO := 240.0
 const ANCHO_DEL_TOTAL := 164.0

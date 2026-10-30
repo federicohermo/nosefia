@@ -196,7 +196,7 @@ func test_el_total_de_la_fila_mas_larga_entra_entero_sin_margen_sobrante() -> vo
 	assert_float(AppCaja.ANCHO_DEL_TOTAL).is_less_equal(mayor * 1.1)
 
 
-func test_la_imagen_ocupa_todo_el_ancho_de_su_columna_y_el_alto_de_la_fila() -> void:
+func test_la_imagen_dibujada_ocupa_todo_el_ancho_de_su_columna_y_el_alto_de_la_fila() -> void:
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
 	pantalla.mostrar()
@@ -207,8 +207,50 @@ func test_la_imagen_ocupa_todo_el_ancho_de_su_columna_y_el_alto_de_la_fila() -> 
 	var columna: Label = app.get("_columna_imagen")
 	for panel: Control in (app.get("_filas") as Container).get_children():
 		var imagen: TextureRect = panel.get_child(0).get_child(IMAGEN).get_child(0)
-		assert_float(imagen.size.x).is_equal_approx(columna.size.x, 1.0)
-		assert_float(imagen.size.y).is_equal_approx(panel.size.y, 1.0)
+		assert_int(imagen.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_CENTERED)
+		var lado := minf(
+			imagen.size.x / imagen.texture.get_width(), imagen.size.y / imagen.texture.get_height()
+		)
+		assert_float(imagen.texture.get_width() * lado).is_equal_approx(columna.size.x, 1.0)
+		assert_float(imagen.texture.get_height() * lado).is_equal_approx(panel.size.y, 1.0)
+
+
+func test_la_marca_y_el_rubro_mas_largos_entran_en_su_columna_sin_puntos_suspensivos() -> void:
+	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
+	add_child(pantalla)
+	pantalla.mostrar()
+	_planilla(pantalla)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	for panel: Node in (pantalla.caja().get("_filas") as Container).get_children():
+		for columna: int in [MARCA, RUBRO]:
+			var etiqueta := panel.get_child(0).get_child(columna) as Label
+			assert_float(_ancho_del_texto(etiqueta)).is_less_equal(etiqueta.size.x)
+
+
+func test_cada_columna_del_encabezado_arranca_en_la_misma_x_que_las_de_las_filas() -> void:
+	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
+	add_child(pantalla)
+	pantalla.mostrar()
+	_planilla(pantalla)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var app := pantalla.caja()
+	var encabezados := {
+		IMAGEN: "_columna_imagen",
+		MARCA: "_columna_marca",
+		RUBRO: "_columna_producto",
+		PRECIO: "_columna_precio",
+		RESTAR: "_columna_vendido",
+		TOTAL: "_columna_total",
+	}
+	for panel: Node in (app.get("_filas") as Container).get_children():
+		for indice: int in encabezados:
+			var celda := panel.get_child(0).get_child(indice) as Control
+			var encabezado: Label = app.get(encabezados[indice])
+			assert_float(celda.get_global_rect().position.x).is_equal_approx(
+				encabezado.get_global_rect().position.x, 1.0
+			)
 
 
 func test_ninguna_fila_es_mas_ancha_que_el_desplazamiento() -> void:
