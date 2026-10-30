@@ -393,11 +393,12 @@ func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) ->
 
 
 ## La esfera del brazo protege la mano. La forma del objeto protege su extremo y sus costados,
-## incluida la posición transitoria de la mopa al mojarla.
+## incluida la posición transitoria de la mopa al mojarla. El bidón cuelga de un punto propio
+## dentro de la mano, por eso se busca en todo el subárbol.
 func _acomodar_lo_largo() -> void:
-	for nodo in agarre.punto_de_carga.get_children():
+	for nodo: RigidBody3D in agarre.punto_de_carga.find_children("*", "RigidBody3D", true, false):
 		var datos := _datos_de(nodo)
-		if not nodo is RigidBody3D or datos == null:
+		if datos == null:
 			continue
 		if nodo.has_method("restaurar_pose_en_mano") and not datos.es_largo:
 			nodo.call("restaurar_pose_en_mano")
@@ -405,7 +406,7 @@ func _acomodar_lo_largo() -> void:
 				return
 			if nodo.call("resguardar_en_mano", _camara, _cabe_el_util):
 				return
-		var retroceso := _retroceso_libre(nodo as RigidBody3D)
+		var retroceso := _retroceso_libre(nodo)
 		if retroceso == 0.0:
 			return
 		_largo_de_carga -= retroceso
