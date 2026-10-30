@@ -85,6 +85,10 @@ const CAIDA_HASTA_EL_PISO := 3.0
 ## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
 const ARRASTRE_DE_LA_CAJA := 0.5
 
+## Lo mismo para lo suelto que pesa menos que una caja: los útiles de limpieza y las bolsas. Se
+## corren más que ella, y por eso el jugador casi no nota que los empuja.
+const ARRASTRE_DE_LO_SUELTO := 0.7
+
 ## Cuánto tiene que mirar hacia arriba una superficie para que se pueda apoyar una caja encima.
 ## Es la componente vertical de su normal: con 1 sólo valdría lo perfectamente plano, con 0
 ## valdría una pared.

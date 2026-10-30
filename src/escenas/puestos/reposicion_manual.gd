@@ -567,7 +567,7 @@ func despertar_lo_de_arriba(nodo: Node3D) -> void:
 ## **En cascada, porque una pila es una cadena.** Despertar un solo piso alcanza para dos —la de
 ## encima cae, y la siguiente se entera de refilón—, y a partir de la tercera no. Una caja
 ## congelada es estática para el motor, y un cuerpo estático que se va no despierta a nadie.
-## Lo que no es una caja sólo se despierta.
+## Lo que no es una caja se despierta y también se recorre, con el mismo criterio de visita.
 ##
 ## Despertar de más no cuesta nada, y por eso no se comprueba si lo de arriba se iba a caer: si
 ## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. Una caja despierta puede
@@ -598,6 +598,7 @@ func _despertar_sobre(
 		var caja_de_arriba := encima as CajaDelDeposito
 		if caja_de_arriba == null:
 			encima.sleeping = false
+			Agarre.despertar_lo_apoyado(encima, visitadas)
 		else:
 			if caja_de_arriba.freeze:
 				caja_de_arriba.soltarse()

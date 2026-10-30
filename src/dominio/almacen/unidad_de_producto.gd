@@ -13,6 +13,7 @@ func _init(un_producto: Producto = null, vencida: bool = false) -> void:
 		id = StringName("producto_%d" % producto.id)
 		nombre = producto.nombre
 		sonoridad = Catalogo.sonoridad_de(producto.id)
+		admite_encima = Catalogo.admite_encima(producto.id)
 
 
 ## Cada unidad dice el texto de su producto, no su nombre del catálogo.

@@ -107,6 +107,9 @@ var _asomado := false
 var _vista_asomada := Transform3D.IDENTITY
 var _camara_en_reposo := Transform3D.IDENTITY
 
+## La última altura que se escribió en la cámara. Con la vista quieta no se la vuelve a escribir.
+var _altura_escrita := ReglasDelJugador.ALTURA_DE_LA_CAMARA
+
 ## Al volver no se dibuja de nuevo el giro atrasado: sólo se espera que alcance al efectivo.
 var _retomando_la_vista := false
 var _vista_de_salida := false
@@ -316,6 +319,18 @@ func _physics_process(delta: float) -> void:
 	_publicar_la_referencia()
 
 
+## Lee la acción y escribe la altura que el dominio contesta, sólo cuando cambia: un test que
+## apunta la cámara a mano no la pierde. Encuadrado en una ventanilla la cámara está en el mundo y
+## no se toca.
+func _acomodar_la_vista(delta: float) -> void:
+	var altura := _control.altura_de_la_vista(
+		Input.is_action_pressed(ReglasDelJugador.ACCION_AGACHARSE), delta
+	)
+	if not _asomado and altura != _altura_escrita:
+		_camara.position.y = altura
+		_altura_escrita = altura
+
+
 ## Cuenta lo que el cuerpo se movió de verdad sobre el piso: contra una pared, nada. Lo vertical
 ## no es caminar.
 func _contar_el_paso(recorrido: Vector3) -> void:
@@ -329,6 +344,7 @@ func _process(delta: float) -> void:
 	# Lo examinado cuelga de la cámara, que no se interpola: girarlo en el paso de física lo
 	# dibujaría a saltos.
 	examen.girar(_entrada(), delta)
+	_acomodar_la_vista(delta)
 	_control.avanzar_el_dibujo(delta)
 	var atrasado := _control.giro_atrasado()
 	if atrasado or _girando_el_dibujo or _retomando_la_vista:
