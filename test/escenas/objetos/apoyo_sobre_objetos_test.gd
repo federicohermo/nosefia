@@ -248,7 +248,7 @@ func test_la_caida_sigue_para_arriba_en_una_pila_de_tres() -> void:  # AC-PLY-11
 	assert_bool(agarre.pedir_agarrar(pila[0].datos, pila[0])).is_true()
 	for cuadro in SEGUNDOS_DE_LA_CAIDA * Engine.physics_ticks_per_second:
 		await get_tree().physics_frame
-	for piso in [1, 2]:
+	for piso: int in [1, 2]:
 		assert_bool(_tiene_apoyo(pila[piso])).is_true()
 		assert_float(antes[piso] - _limites(pila[piso]).position.y).is_greater_equal(
 			altura_de_abajo - TOLERANCIA
