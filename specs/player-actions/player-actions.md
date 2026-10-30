@@ -157,8 +157,8 @@ sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo m�
 
 CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
 el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
-horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
-que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
+horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo —salvo lo
+que excluye BR-CLN-040— o un objeto que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
 
 SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
@@ -683,7 +683,8 @@ encimarse con nada.
 ### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
 
 DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
-con el corte exacto sobre el mundo fijo, o sobre una caja contenedora, sí; sobre la mopa, no.
+con el corte exacto sobre el piso y los muebles del mundo fijo, o sobre una caja contenedora, sí;
+sobre el cuerpo del contenedor (BR-CLN-040) y sobre la mopa, no.
 Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
 
 ### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*

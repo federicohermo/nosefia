@@ -190,3 +190,21 @@ func test_ningun_producto_queda_sin_sonoridad() -> void:  # AC-STK-027
 		)
 	for id: Producto.Id in [Producto.Id.ARVECOR, Producto.Id.PURA_COLA, Producto.Id.PROGRES]:
 		assert_int(Catalogo.sonoridad_de(id)).is_equal(EntradaSonora.Sonoridad.LATA)
+
+
+func test_ningun_producto_queda_sin_rubro() -> void:
+	for id: Producto.Id in Producto.Id.values():
+		(
+			assert_str(Catalogo.rubro_de(id))
+			. override_failure_message("%s no tiene rubro" % Producto.Id.find_key(id))
+			. is_not_empty()
+		)
+
+
+func test_los_dos_rubros_que_la_base_repite_o_escribe_mal_van_corregidos() -> void:
+	assert_str(Catalogo.rubro_de(Producto.Id.FERNET_GOD)).is_equal("Botella de Fernet")
+	assert_str(Catalogo.rubro_de(Producto.Id.SALADICK)).is_equal("Caja de snacks")
+
+
+func test_un_id_sin_fila_no_tiene_rubro_y_no_revienta() -> void:
+	assert_str(Catalogo.rubro_de(-1 as Producto.Id)).is_empty()

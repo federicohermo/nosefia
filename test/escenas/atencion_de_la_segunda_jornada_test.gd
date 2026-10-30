@@ -322,13 +322,10 @@ func test_transicion_y_checkpoint_activan_la_agenda_productiva_de_jornada_2() ->
 
 
 # AC-CTR-001 AC-CTR-041 AC-CTR-063
-func test_jornada_uno_y_genericas_seis_a_ocho_conservan_su_recorrido() -> void:
+func test_jornada_uno_y_las_genericas_conservan_su_recorrido() -> void:
 	var jornadas: Array = [ReglasDeLaPartida.PRIMERA_JORNADA]
 	jornadas.append_array(
-		range(
-			ReglasDeLaPartida.PRIMERA_JORNADA + 5,
-			ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
-		)
+		range(ReglasDeLaPartida.PRIMERA_JORNADA + 5, AnomaliasDeLaJornada.JORNADA_DEL_CORTE)
 	)
 	for jornada: int in jornadas:
 		var almacen := await _abrir(jornada)
