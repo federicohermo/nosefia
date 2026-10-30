@@ -134,7 +134,7 @@ func test_el_recordatorio_nombra_lo_que_falta_y_pide_ticket_al_completar_product
 func _entregar(atencion: Atencion, producto: Producto) -> void:
 	var inventario: Inventario = atencion.get("_inventario")
 	var unidad := Estante.new(inventario, Catalogo.todos()).retirar(producto)
-	assert_int(atencion.interactuar(unidad)).is_not_equal(RecepcionDeCompra.Resultado.RECHAZADA)
+	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
 
 
 # AC-CTR-053, AC-CTR-066
@@ -176,6 +176,18 @@ func test_el_rechazo_con_solo_el_ticket_pendiente_pide_el_ticket() -> void:
 	assert_str(atencion.dialogo().entrada_actual()).is_equal(
 		DialogosDeCompradores.RECHAZO + DialogosDeCompradores.PEDIDO_DEL_TICKET
 	)
+
+
+# AC-CTR-053
+func test_con_solo_el_ticket_pendiente_lo_ya_entregado_sigue_ya_entregado() -> void:
+	var atencion := _comun([[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1]])
+	var pedido := atencion.comprador().pedido()
+	for producto: Producto in pedido.productos():
+		_entregar(atencion, producto)
+	var inventario: Inventario = atencion.get("_inventario")
+	var otra := Estante.new(inventario, Catalogo.todos()).retirar(pedido.productos()[0])
+	assert_int(atencion.interactuar(otra)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.YA_ENTREGADO)
 
 
 func test_cada_identidad_elige_su_guion_sin_caer_en_tin() -> void:  # AC-CTR-051

@@ -903,8 +903,8 @@ final. Un rechazo antepone exactamente «Yo no pedí esto. ». Los productos lle
 ningún fragmento se ofrece como pista. Con los tres productos y sin ticket el texto es
 exactamente «Gracias. Me das el ticket, ¿por favor?».
 DADO un pedido de dos unidades de A y una de B, con una unidad de A ya entregada, CUANDO se
-ofrece un objeto ajeno ENTONCES el rechazo es el prefijo seguido de «Quiero» con B y una unidad de
-A, en el orden del pedido. Con dos y tres productos distintos faltantes el rechazo usa su forma de
+ofrece un objeto ajeno ENTONCES el rechazo es el prefijo seguido de «Quiero» con una unidad de A
+y B, en el orden del pedido. Con dos y tres productos distintos faltantes el rechazo usa su forma de
 dos y de tres. Sin entregas, el rechazo nombra el pedido completo. Con todos los productos
 entregados y sin ticket, el rechazo es el prefijo seguido de «Me das el ticket, ¿por favor?».
 
