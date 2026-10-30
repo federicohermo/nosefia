@@ -255,20 +255,40 @@ func test_lo_sostenido_ignora_el_paso_del_jugador() -> void:  # AC-PLY-154
 		_retirar(cuerpo)
 
 
-func test_el_balde_recibe_la_parte_del_paso_de_la_caja() -> void:  # AC-PLY-160
-	var almacen: Node3D = await _almacen_con_jugador_andando()
-	var balde: ObjetoAgarrable = almacen.get_node("Objetos/Balde")
-	await _soltar_en(balde, PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * SOLTADO_DESDE)
-	var paso := Vector3(0.02, 0.0, -0.01)
-	balde.call(ReglasDeLosObjetos.METODO_EMPUJAR, paso)
-	var corrido := (
-		Vector3(balde.linear_velocity.x, 0.0, balde.linear_velocity.z)
+## Cuánto se corre en un cuadro lo suelto en `PISO_LIBRE_DEL_DEPOSITO` al recibir `paso`.
+func _corrido_por(cuerpo: ObjetoAgarrable, paso: Vector3) -> Vector3:
+	await _soltar_en(cuerpo, PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * SOLTADO_DESDE)
+	cuerpo.call(ReglasDeLosObjetos.METODO_EMPUJAR, paso)
+	return (
+		Vector3(cuerpo.linear_velocity.x, 0.0, cuerpo.linear_velocity.z)
 		/ (Engine.physics_ticks_per_second)
 	)
-	var esperado := paso * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
-	var de_los_utiles := paso * ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO
-	assert_vector(corrido).is_equal_approx(esperado, Vector3.ONE * 0.0005)
-	assert_float(corrido.distance_to(de_los_utiles)).is_greater(0.0005)
+
+
+## Un golpe fuera del eje de `cuerpo`, hacia `hacia`, y espera a que se asiente.
+func _golpear(cuerpo: ObjetoAgarrable, hacia: Vector3) -> void:
+	cuerpo.apply_impulse(hacia * cuerpo.mass * GOLPE, Vector3.UP * ALTO_DEL_GOLPE)
+	for cuadro in CUADROS_ASENTANDO:
+		await get_tree().physics_frame
+
+
+## Cuánto se aparta el eje de `cuerpo` de la vertical, en grados.
+func _inclinacion_de(cuerpo: ObjetoAgarrable) -> float:
+	return rad_to_deg(cuerpo.global_basis.y.angle_to(Vector3.UP))
+
+
+func test_el_balde_recibe_la_parte_del_paso_de_la_caja() -> void:  # AC-PLY-160
+	var almacen: Node3D = await _almacen_con_jugador_andando()
+	var paso := Vector3(0.02, 0.0, -0.01)
+	var del_balde := await _corrido_por(almacen.get_node("Objetos/Balde"), paso)
+	var de_la_mopa := await _corrido_por(almacen.get_node("Objetos/Mopa"), paso)
+	var tolerancia := Vector3.ONE * 0.0005
+	assert_vector(del_balde).is_equal_approx(
+		paso * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA, tolerancia
+	)
+	assert_vector(de_la_mopa).is_equal_approx(
+		paso * ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO, tolerancia
+	)
 
 
 func test_el_balde_suelto_no_se_vuelca_y_la_mopa_se_moja_en_el_balde() -> void:  # AC-PLY-161
@@ -279,12 +299,8 @@ func test_el_balde_suelto_no_se_vuelca_y_la_mopa_se_moja_en_el_balde() -> void: 
 	await _soltar_en(balde, pared["pegado"])
 	await _parar_detras_de(jugador, balde.global_position, pared["hacia"])
 	await _empujar_caminando(jugador, balde, pared["hacia"], CUADROS_EMPUJANDO)
-	# Un golpe fuera de su eje: a un cuerpo libre lo tumba.
-	balde.apply_impulse(pared["hacia"] * balde.mass * GOLPE, Vector3.UP * ALTO_DEL_GOLPE)
-	for cuadro in CUADROS_ASENTANDO:
-		await get_tree().physics_frame
-	var inclinacion := rad_to_deg(balde.global_basis.y.angle_to(Vector3.UP))
-	assert_float(inclinacion).is_less(TOLERANCIA_DE_LA_VERTICAL)
+	await _golpear(balde, pared["hacia"])
+	assert_float(_inclinacion_de(balde)).is_less(TOLERANCIA_DE_LA_VERTICAL)
 	var limpiador: Limpiador = almacen.get("_limpiador")
 	var llenar := limpiador.usar(
 		ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_LAVATORIO
@@ -294,3 +310,8 @@ func test_el_balde_suelto_no_se_vuelca_y_la_mopa_se_moja_en_el_balde() -> void: 
 	assert_bool((almacen.get("_agarre") as Agarre).pedir_agarrar(mopa.datos, mopa)).is_true()
 	var mojar := limpiador.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE)
 	assert_int(mojar).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
+	# La premisa: el mismo golpe tumba al balde si el giro no está bloqueado.
+	balde.axis_lock_angular_x = false
+	balde.axis_lock_angular_z = false
+	await _golpear(balde, pared["hacia"])
+	assert_float(_inclinacion_de(balde)).is_greater(TOLERANCIA_DE_LA_VERTICAL)
