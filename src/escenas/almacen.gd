@@ -971,7 +971,7 @@ func _anclar_en(lugar: Vector3) -> void:
 		_distancia_al_pensar = _jugador.global_position.distance_to(lugar)
 
 
-## El texto de una entrega tiene el lugar de la figura al decirlo: no la sigue si el comprador se va.
+## El texto de una entrega tiene el lugar de la figura al decirlo, y no la sigue si se va.
 func _decir_entrega(texto: String) -> void:
 	if texto.is_empty():
 		return
