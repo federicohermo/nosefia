@@ -270,56 +270,108 @@ func test_las_paredes_contienen_la_tolerancia_de_penetracion_del_motor() -> void
 
 
 func test_lo_soltado_mirando_el_contenedor_no_se_apoya_en_su_cuerpo() -> void:  # AC-CLN-079
-	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	add_child(almacen)
-	AperturaConLugar.abrir_con_semilla(almacen)
-	await get_tree().physics_frame
+	var almacen := await _abrir_con_semilla()
 	var contenedor: StaticBody3D = almacen.get("_contenedor")
 	var jugador: Node3D = almacen.get("_jugador")
-	jugador.set_physics_process(false)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[0]
 	var bidon: RigidBody3D = almacen.get_node("Objetos/JabonAzul")
-	# El control: sobre el piso libre la misma caja queda donde la mira toca, y entonces el test
-	# sabe ver un apoyo.
-	var libre: Vector3 = jugador.global_position + jugador.frente() * 1.2
-	camara.look_at(libre)
+	var balde: RigidBody3D = almacen.get_node("Objetos/Balde")
+	var limites := _limites(contenedor)
+	var delante := Vector3(limites.get_center().x, limites.position.y, limites.end.z + 1.2)
+	var piso := _rayo(almacen, delante + Vector3.UP, delante + Vector3.DOWN)
+	assert_bool(piso.is_empty()).is_false()
+	# El control: sobre el piso libre junto al contenedor la misma caja queda donde la mira toca, y
+	# entonces el test sabe ver un apoyo.
+	var al_pie := Vector3(delante.x, piso["position"].y, limites.end.z + 0.7)
+	jugador.call(
+		"ubicar", Transform3D(Basis.IDENTITY, al_pie + Vector3.BACK * 1.2 + Vector3.UP * 0.005)
+	)
+	camara.look_at(al_pie)
 	var toca: Vector3 = _golpe_de_la_mira(jugador, caja)["position"]
 	_soltar(almacen, caja)
 	assert_vector(Vector2(caja.global_position.x, caja.global_position.z)).is_equal_approx(
 		Vector2(toca.x, toca.z), Vector2.ONE * 0.01
 	)
-	var limites := _limites(contenedor)
-	var delante := Vector3(limites.get_center().x, limites.position.y, limites.end.z + 1.2)
-	var piso := _rayo(almacen, delante + Vector3.UP, delante + Vector3.DOWN)
-	assert_bool(piso.is_empty()).is_false()
 	jugador.call("ubicar", Transform3D(Basis.IDENTITY, piso["position"] + Vector3.UP * 0.005))
 	var fondo := _rayo(almacen, _boca(contenedor) + Vector3.UP * 0.3, _centro_interior(contenedor))
 	assert_object(fondo.get("collider")).is_same(contenedor)
 	var borde := _borde_del_contenedor(almacen, contenedor)
 	assert_bool(borde.is_finite()).is_true()
-	for cuerpo: RigidBody3D in [caja, bidon]:
+	for cuerpo: RigidBody3D in [caja, bidon, balde]:
 		for apuntado: Vector3 in [fondo["position"], borde]:
 			camara.global_position = apuntado + Vector3(0.0, 0.8, 0.3)
 			camara.look_at(apuntado)
 			var golpe := _golpe_de_la_mira(jugador, cuerpo)
 			assert_object(golpe.get("collider")).is_same(contenedor)
 			_soltar(almacen, cuerpo)
-			var centro := cuerpo.global_position
-			(
-				assert_bool(
-					(
-						Rect2(
-							limites.position.x, limites.position.z, limites.size.x, limites.size.z
-						)
-						. has_point(Vector2(centro.x, centro.z))
-					)
-				)
-				. is_false()
-			)
-			var debajo := _debajo_de(almacen, cuerpo, jugador)
-			assert_object(debajo.get("collider")).is_not_null()
-			assert_object(debajo.get("collider")).is_not_same(contenedor)
+			_afirmar_fuera_del_contenedor(almacen, cuerpo, jugador, contenedor)
+
+
+func test_parado_junto_al_contenedor_lo_soltado_sin_mira_no_queda_adentro() -> void:  # AC-CLN-079
+	var almacen := await _abrir_con_semilla()
+	var contenedor: StaticBody3D = almacen.get("_contenedor")
+	var jugador: Node3D = almacen.get("_jugador")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[0]
+	var limites := _limites(contenedor)
+	var cuerpo_del_jugador: CollisionShape3D = jugador.get_node("Cuerpo")
+	var pegado: float = (cuerpo_del_jugador.shape as CapsuleShape3D).radius + 0.05
+	var probados := 0
+	for lado: Vector3 in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
+		var junto := limites.get_center() + lado * (limites.size * 0.5 + Vector3.ONE * pegado)
+		junto.y = limites.position.y
+		var piso := _rayo(almacen, junto + Vector3.UP, junto + Vector3.DOWN)
+		if piso.is_empty() or piso["collider"] == contenedor:
+			continue
+		probados += 1
+		jugador.call("ubicar", Transform3D(Basis.IDENTITY, piso["position"] + Vector3.UP * 0.005))
+		# Con la mira en el cielo no hay superficie que apoyar: la caja cae al lado del jugador.
+		camara.look_at(camara.global_position + Vector3.UP * 5.0 + jugador.frente())
+		_soltar(almacen, caja)
+		_afirmar_fuera_del_contenedor(almacen, caja, jugador, contenedor)
+	assert_int(probados).is_greater(0)
+
+
+func _abrir_con_semilla() -> Node3D:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	return almacen
+
+
+## Fuera del volumen del contenedor, sobre otra superficie y sin encimarse con nada.
+func _afirmar_fuera_del_contenedor(
+	almacen: Node3D, cuerpo: RigidBody3D, jugador: Node3D, contenedor: StaticBody3D
+) -> void:
+	var limites := _limites(contenedor)
+	var centro := cuerpo.global_position
+	var huella := Rect2(limites.position.x, limites.position.z, limites.size.x, limites.size.z)
+	assert_bool(huella.has_point(Vector2(centro.x, centro.z))).is_false()
+	var debajo := _debajo_de(almacen, cuerpo, jugador)
+	assert_object(debajo.get("collider")).is_not_null()
+	assert_object(debajo.get("collider")).is_not_same(contenedor)
+	assert_bool(_encimado_con_algo(almacen, cuerpo, jugador)).is_false()
+
+
+## La misma pregunta que se hace el juego para saber si ahí entra: la forma encogida, porque
+## apoyarse sobre algo es tocarlo.
+func _encimado_con_algo(almacen: Node3D, cuerpo: RigidBody3D, jugador: Node3D) -> bool:
+	var forma: CollisionShape3D = cuerpo.find_children("*", "CollisionShape3D", false, false)[0]
+	var encogida := BoxShape3D.new()
+	encogida.margin = 0.0
+	encogida.size = (
+		LimitesDeForma.de(forma.shape).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = encogida
+	consulta.transform = Transform3D(cuerpo.global_basis.orthonormalized(), cuerpo.global_position)
+	consulta.collision_mask = cuerpo.collision_mask
+	consulta.exclude = [cuerpo.get_rid(), jugador.get_rid()]
+	return not almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
 
 
 func _terminar_el_giro(tapa: TapaDelLocal) -> void:
