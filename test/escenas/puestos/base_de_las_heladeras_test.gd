@@ -214,7 +214,17 @@ func _empujar_contra_la_base(
 	if not PhysicsServer3D.body_test_motion(objeto.get_rid(), consulta, resultado):
 		return [EMPUJON, "nada"]
 	var frenado_por := resultado.get_collider() as Node
-	return [resultado.get_travel().length(), str(frenado_por.get_path()) if frenado_por else "?"]
+	var quien := (
+		"%s, forma %d, punto %v, normal %v, volumen %v"
+		% [
+			frenado_por.name if frenado_por else "?",
+			resultado.get_collider_shape(),
+			resultado.get_collision_point(),
+			resultado.get_collision_normal(),
+			_limites_del_volumen(objeto),
+		]
+	)
+	return [resultado.get_travel().length(), quien]
 
 
 func test_una_unidad_empujada_contra_la_base_no_entra() -> void:
