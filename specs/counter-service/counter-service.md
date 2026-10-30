@@ -199,13 +199,12 @@ lavatorio con un ticket NO DEBE desecharlo.
 
 ### BR-CTR-026 — La primera jornada recibe a Tin y Tia por horario
 
-EN la jornada 1, el sistema DEBE recibir a Tin y a Tia en estas ventanas. La llegada se
-incluye y el límite se excluye. Tia cruza la medianoche.
-
-| Comprador | Llega | Se va | Desde apertura hasta llegada | Desde apertura hasta límite |
-|---|---|---|---|---|
-| Tin | 20:30 | 23:00 | 30 minutos | 180 minutos |
-| Tia | 23:30 | 02:00 | 210 minutos | 360 minutos |
+EN la jornada 1, el sistema DEBE recibir a Tin a las 20:30 y despedirlo a las 23:00. La llegada
+se incluye y el límite se excluye. Tia DEBE llegar 30 minutos de juego después de que Tin se
+retira, ya sea porque su compra se completó o porque venció, lo que ocurra primero, y DEBE irse
+150 minutos de juego después de su llegada si su compra no se completó antes. Con Tin sin atender,
+Tia llega a las 23:30 y se va a las 02:00, cruzando la medianoche. La pausa DEBE detener los dos
+plazos.
 
 Tin DEBE pedir un Marolini, una Coracola y un Malbardo. Tia DEBE pedir una Zucarachas
 y un Pepito, con sus diálogos y su recepción física. Estos horarios DEBEN derivarse del reloj
@@ -461,8 +460,8 @@ límite se excluye. Tia cruza la medianoche.
 
 | Comprador | Llega | Se va | Desde apertura hasta llegada | Desde apertura hasta límite |
 |---|---|---|---|---|
-| Tia | 22:00 | 01:00 | 120 minutos | 300 minutos |
-| Fede | 04:00 | 07:00 | 480 minutos | 660 minutos |
+| Tia | 22:00 | 00:30 | 120 minutos | 270 minutos |
+| Fede | 04:00 | 06:30 | 480 minutos | 630 minutos |
 
 Valen las demás condiciones de BR-CTR-044: el reloj del turno, el padrón excluido, una sola
 llegada y un solo vencimiento, la pausa, la recepción física, la venta única, el destino al
@@ -477,21 +476,33 @@ límite se excluye.
 
 | Comprador | Llega | Se va | Desde apertura hasta llegada | Desde apertura hasta límite |
 |---|---|---|---|---|
-| Cami | 20:30 | 23:30 | 30 minutos | 210 minutos |
-| Mía | 05:00 | 08:00 | 540 minutos | 720 minutos |
+| Cami | 20:30 | 23:00 | 30 minutos | 180 minutos |
+| Mía | 05:00 | 07:30 | 540 minutos | 690 minutos |
 
-El límite de Mía coincide con el fin del turno: CUANDO el turno llega a su cierre con su compra
-incompleta, ella DEBE vencer en ese mismo instante. Valen las demás condiciones de BR-CTR-044.
-Mía NO DEBE repetir la conversación ni el pedido fijo de la jornada 2, y Cami conserva su
+Valen las demás condiciones de BR-CTR-044. Mía NO DEBE repetir la conversación ni el pedido fijo de la jornada 2, y Cami conserva su
 identidad entre las jornadas 3 y 5 sin heredar pedido ni estado.
 
-### BR-CTR-047 — Cada visita pide tres tipos distintos sorteados al abrir
+### BR-CTR-047 — Cada visita pide dos o tres tipos distintos de su grupo, sorteados al abrir
 
 CUANDO se abre una jornada de la 3 a la 5, el sistema DEBE sortear el pedido de cada comprador:
-tres productos de tipos distintos, una unidad de cada uno, con reparto parejo entre los productos
-que se venden esa noche (BR-STK-046). Dos compradores de la misma noche PUEDEN coincidir en un
-producto, y el orden del pedido es el del sorteo. Un producto sin unidades vendibles sigue siendo
-el pedido: su falta es de inventario o reposición.
+dos o tres productos de tipos distintos, una unidad de cada uno, con reparto parejo entre las dos
+cantidades y entre los productos candidatos. Los candidatos son los productos del grupo del
+comprador que se venden esa noche (BR-STK-046). Dos compradores de la misma noche PUEDEN coincidir
+en un producto, y el orden del pedido es el del sorteo. Un producto sin unidades vendibles sigue
+siendo el pedido: su falta es de inventario o reposición.
+
+Los grupos son estos:
+
+| Comprador | Productos que puede pedir |
+|---|---|
+| Tin | Marolini, Coracola, Malbardo, Mayonchis, Arvecor, Uakalas, Don Saturados, Amargadito |
+| Tia | Zucarachas, Pepito, Marranos, Arvecor, Mayonchis, Jorgillo, Marolini, Saladick, Don Saturados, Laysnnt, Chisitos, Malbardo |
+| Fede | Poético, Progres, Duronga, Burbaloo, Malbardo, Fernet God, Terminator |
+| Mía | Burbaloo, Fernet God, Terminator, Actroncito, Amargadito, Coracola, Uakalas, Marranos |
+| Cami | Burbaloo, Zucarachas, Frot Lups, Jorgillo, Pepito, Oremos, Petisas, Macumbas, Flim Pof, Cindolor, Cosa de Maní, Feel Ricky Fort, Oaaaa |
+
+Coracola es la Pura-Cola de la ficha, y Jorgillo la Jorgillata. El Durextra de Fede y los
+productos de almacén que pide alguna noche siguen sin noche ni lista (OQ-CTR-007), y no entran.
 
 La partida DEBE llevar una semilla propia, fijada al empezar y conservada al guardar y retomar.
 Con la misma partida, abrir de nuevo la misma jornada, retomarla o reintentarla DEBE construir los
@@ -1006,7 +1017,6 @@ está ausente, en su llegada llega, un segundo antes de su límite espera y en s
 completó; repetir cada instante no repite eventos. Saltar desde la apertura hasta el cierre entrega
 llegada y vencimiento del primero y después llegada y vencimiento del segundo, cada uno con su
 comprador original; en pausa no cruza ninguno. Una compra completada antes de su límite no vence.
-El vencimiento de Mía en la jornada 5 llega con el cierre del turno.
 
 ### AC-CTR-070 — Cada apertura activa sólo sus dos figuras *(verifica BR-CTR-044, BR-CTR-045, BR-CTR-046, BR-CTR-048)*
 
@@ -1016,13 +1026,13 @@ la figura de la tabla. No aparecen compradores del padrón ni copias. Tin de la 
 dice lo de Tin de la jornada 1; Tia y Fede de la jornada 4 y Mía de la jornada 5 no piden ni dicen
 lo de las jornadas 1 y 2. Reposición y atención reciben la misma lista de cada apertura.
 
-### AC-CTR-071 — Tres tipos distintos de lo que se vende *(verifica BR-CTR-047)*
+### AC-CTR-071 — Dos o tres tipos distintos de su grupo y de lo que se vende *(verifica BR-CTR-047)*
 
 DADO la apertura de cada jornada de la 3 a la 5, con distintas semillas de partida, CUANDO se
-construyen sus compradores ENTONCES cada pedido tiene exactamente tres productos de tipos distintos
-con una unidad cada uno, y todos pertenecen a los que se venden esa noche: los dieciséis de la
-etapa de prueba en la jornada 3 y el catálogo completo en las jornadas 4 y 5. Entre las semillas
-probadas hay pedidos distintos.
+construyen sus compradores ENTONCES cada pedido tiene dos o tres productos de tipos distintos
+con una unidad cada uno, y todos pertenecen al grupo de su comprador y a los que se venden esa
+noche: los dieciséis de la etapa de prueba en la jornada 3 y el catálogo completo en las jornadas
+4 y 5. Entre las semillas probadas hay pedidos distintos.
 
 ### AC-CTR-072 — La misma partida repite sus pedidos *(verifica BR-CTR-047)*
 
@@ -1051,7 +1061,7 @@ gracias.» y no se retira hasta terminarla; repetir la entrega no vende ni retir
 ### AC-CTR-075 — Recepción, venta y vencimiento de las jornadas 3 a 5 *(verifica BR-CTR-044, BR-CTR-045, BR-CTR-046, BR-CTR-029, BR-CTR-030, BR-CTR-031)*
 
 DADO un comprador de la jornada 3, 4 o 5 con su apertura terminada CUANDO se le entrega un ticket
-exacto antes de los productos ENTONCES se acepta y aún no vende; sus tres productos completan una
+exacto antes de los productos ENTONCES se acepta y aún no vende; sus productos completan una
 venta, y ofrecer una unidad de más o un ticket inexacto se rechaza sin cambiar mano ni cantidades.
 DADO una compra incompleta con ticket y dos productos CUANDO vence ENTONCES el ticket desaparece y
 ambos productos quedan dentro del local, sin venta. Atención se cumple sólo con las dos compras
@@ -1085,6 +1095,36 @@ recordatorio, sin gastar un clic en cerrar el agradecimiento.
 DADO un pensamiento visible CUANDO el comprador agradece una entrega ENTONCES la línea muestra sólo
 el texto del comprador, entero y con el tiempo de un pensamiento. DADO ese texto visible CUANDO
 llega un pensamiento ENTONCES la línea muestra sólo el pensamiento.
+
+### AC-CTR-106 — Tia llega después de que Tin se retira *(verifica BR-CTR-026, BR-CTR-027)*
+
+DADO la jornada 1 con Tin sin atender CUANDO pasan 23:29:59 y 23:30:00 ENTONCES Tia está ausente y
+llega; y 01:59:59 y 02:00:00 ENTONCES espera y vence. DADO Tin completo a las 21:00 CUANDO pasan
+21:29:59 y 21:30:00 ENTONCES Tia está ausente y llega; y 23:59:59 y 00:00:00 ENTONCES espera y vence.
+DADO Tin completo en el mismo instante en que vence a las 23:00 ENTONCES Tia llega a las 23:30. Repetir
+cada instante no repite eventos. Tin sigue llegando a las 20:30 y pidiendo lo mismo, y Tia lo mismo que antes.
+
+### AC-CTR-107 — Cada comprador pide de su grupo *(verifica BR-CTR-047)*
+
+DADO la apertura de cada jornada de la 3 a la 5, con muchas semillas, CUANDO se construyen sus
+compradores ENTONCES ningún pedido incluye un producto fuera del grupo de su comprador. DADO la
+jornada 3 ENTONCES los candidatos de Cami son Zucarachas, Jorgillo, Pepito y Petisas, y los de Tin son
+Marolini, Coracola, Malbardo, Mayonchis, Arvecor y Don Saturados; con las semillas probadas se
+piden todos los candidatos de cada uno. DADO un comprador de grupo Fede ENTONCES jamás pide Durextra.
+
+### AC-CTR-108 — Dos o tres, nunca uno ni cuatro *(verifica BR-CTR-047)*
+
+DADO la apertura de cada jornada de la 3 a la 5, con muchas semillas, CUANDO se construyen sus
+compradores ENTONCES cada pedido tiene dos o tres productos, aparecen las dos cantidades, ninguno
+tiene un producto repetido ni más de una unidad por producto, y las dos cantidades salen con
+frecuencias parecidas.
+
+### AC-CTR-109 — Las ventanas de dos horas y media *(verifica BR-CTR-045, BR-CTR-046)*
+
+DADO la jornada 4 CUANDO pasan 21:59:59, 22:00:00, 00:29:59 y 00:30:00 ENTONCES Tia está ausente,
+llega, espera y vence; y 03:59:59, 04:00:00, 06:29:59 y 06:30:00 ENTONCES lo mismo con Fede. DADO la
+jornada 5 CUANDO pasan 20:29:59, 20:30:00, 22:59:59 y 23:00:00 ENTONCES lo mismo con Cami; y 04:59:59,
+05:00:00, 07:29:59 y 07:30:00 con Mía. Cada una de las cuatro ventanas dura 150 minutos de juego.
 
 ## No objetivos
 
@@ -1161,3 +1201,8 @@ trae guion propio usa los textos de BR-CTR-048.
   - Decide: game design.
   - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón. La jornada 2 está decidida en BR-CTR-037
     y las jornadas 3 a 5 en BR-CTR-044 a BR-CTR-047.
+- **OQ-CTR-007 — ¿Qué noche pide Fede el Durextra, y cuándo pide productos de almacén?**
+  - Por qué sigue abierta: la ficha dice que lo pide una sola noche, siempre junto a los Duronga, y que
+    alguna noche pide productos de almacén, pero no da la noche ni la lista.
+  - Decide: game design.
+  - Bloquea: nada. Sumaría productos al grupo de Fede en BR-CTR-047.
