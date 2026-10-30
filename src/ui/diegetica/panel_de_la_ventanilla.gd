@@ -105,10 +105,9 @@ func _mostrar_comprador(atencion: Atencion) -> void:
 		mostrar_sin_nadie()
 		return
 	_blanco.hide()
-	var dialogo := atencion.dialogo()
-	_burbuja.visible = dialogo != null and not dialogo.terminado()
+	_burbuja.visible = atencion.abre_la_ventanilla()
 	if _burbuja.visible:
-		_texto.text = dialogo.entrada_actual()
+		_texto.text = atencion.dialogo().entrada_actual()
 		_acomodar_dialogo.call_deferred()
 	visible = true
 
