@@ -44,7 +44,7 @@ func test_la_advertencia_va_entre_la_tarea_4_y_la_tarea_5() -> void:  # AC-EMP-0
 		. mensajes_del_jefe()
 	)
 	var tarea_4: String = DevolucionDelJefe.TAREAS[T.LIMPIAR][0]
-	var tarea_5: String = DevolucionDelJefe.PARTICULARES[5]
+	var tarea_5: String = DevolucionDelJefe.PARTICULARES[AnomaliasDeLaJornada.JORNADA_SIN_AZUL]
 	var advertencia := mensajes.find(DevolucionDelJefe.POETICO)
 	assert_int(mensajes.find(tarea_4)).is_greater(0)
 	assert_int(advertencia).is_equal(mensajes.find(tarea_4) + 1)
