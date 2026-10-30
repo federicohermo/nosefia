@@ -544,8 +544,9 @@ MIENTRAS la hoja de una puerta gira y lo pesado está en su recorrido, el sistem
 más lenta desde el contacto, sin detenerla, si ese objeto puede correrse; la hoja DEBE llegar a
 su tope con el objeto fuera de ella. Puede correrse si tiene lugar para lo que la hoja avanza en
 un cuadro ya frenada, no en uno a la velocidad de siempre. SI no puede correrse, ENTONCES el sistema DEBE detener la
-hoja donde toca, siempre que ahí conserve el paso. Lo liviano NO DEBE frenar la hoja: se
-arrastra según BR-PLY-017. Si hay varios obstáculos, manda el más pesado y los frenos no se
+hoja donde toca, siempre que ahí conserve el paso. Lo pesado que se corre recorre lo que avanza
+la hoja donde lo toca, y no sólo lo que recorre su centro: por encima del ángulo de paso, la hoja
+NO DEBE superponerse con ello. Lo liviano NO DEBE frenar la hoja: se arrastra según BR-PLY-017. Si hay varios obstáculos, manda el más pesado y los frenos no se
 acumulan.
 
 **El paso está garantizado.** El sistema NO DEBE detener la hoja por debajo del ángulo de paso de
@@ -1370,6 +1371,12 @@ DADO una hoja contra algo pesado que no puede correrse CUANDO la hoja está en e
 ENTONCES queda en ese ángulo. CUANDO está un grado por debajo ENTONCES sigue hasta su destino
 sin detenerse. DADO un factor de velocidad fuera de (0, 1] ENTONCES la hoja gira como con
 factor 1.
+
+### AC-PLY-149 — La hoja no se superpone con una caja que arrastra *(verifica BR-PLY-051)*
+
+DADO una caja grande en el recorrido de la hoja, contra una pared de frente o de costado, o en un
+rincón, y tocada por encima del ángulo de paso CUANDO se abre y CUANDO se cierra la puerta ENTONCES
+en ningún cuadro la caja está adentro de la hoja. Rige con la caja dormida y despierta.
 
 ### AC-PLY-110 — Levantar lo de abajo hace caer lo de arriba *(verifica BR-PLY-018)*
 

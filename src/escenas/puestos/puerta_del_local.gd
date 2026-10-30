@@ -231,11 +231,30 @@ func _se_corre(objeto: RigidBody3D, siguiente: float) -> bool:
 
 
 ## Adónde llevaría la hoja a ese objeto si lo arrastrara de `desde` a `hasta`.
+##
+## La hoja toca al objeto por donde asoma más lejos de la bisagra, y ahí avanza más que en su
+## centro. Si el objeto sólo recorriera lo que recorre su centro, la hoja lo penetraría un poco
+## más por cuadro.
 func _corrimiento_de(objeto: RigidBody3D, desde: float, hasta: float) -> Vector3:
 	var padre := hoja.global_transform * hoja.transform.affine_inverse()
-	var radio := objeto.global_position - padre * _bisagra
+	var bisagra := padre * _bisagra
+	var radio := objeto.global_position - bisagra
 	radio.y = 0.0
-	return Basis(Vector3.UP, (hasta - desde) * sentido_del_giro) * radio - radio
+	if radio.is_zero_approx():
+		return Vector3.ZERO
+	var giro := Basis(Vector3.UP, (hasta - desde) * sentido_del_giro)
+	return (giro * radio - radio) * maxf(1.0, _alcance_de(objeto, bisagra) / radio.length())
+
+
+## Hasta dónde llega el objeto desde la bisagra, en el plano.
+func _alcance_de(objeto: RigidBody3D, bisagra: Vector3) -> float:
+	var alcance := 0.0
+	for volumen: CollisionShape3D in objeto.find_children("*", "CollisionShape3D", false, false):
+		var limites := LimitesDeForma.de(volumen.shape)
+		for indice in 8:
+			var punto := volumen.global_transform * limites.get_endpoint(indice)
+			alcance = maxf(alcance, Vector2(punto.x - bisagra.x, punto.z - bisagra.z).length())
+	return alcance
 
 
 ## Una caja congelada es estática para el motor y la hoja le pasaría de largo: la lleva el
