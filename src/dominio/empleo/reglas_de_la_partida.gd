@@ -9,13 +9,13 @@
 class_name ReglasDeLaPartida
 extends RefCounted
 
-## Tres noches de introducción y las cinco del GDD.
+## Dos noches de introducción y las cinco del GDD.
 ##
 ## Es también lo que vuelve alcanzable la regla más cara del juego: el camino más corto al
 ## despido encadena bandas graves, que suben de a dos, así que una partida más corta que esa
 ## cuenta dejaría al despido escrito y muerto en la build. La desigualdad se afirma contra las
 ## constantes del despido en `reglas_de_la_partida_test.gd`, nunca contra este número.
-const JORNADAS_DE_LA_PARTIDA := 8
+const JORNADAS_DE_LA_PARTIDA := 7
 
 ## La primera noche se numera desde uno y no desde cero porque es el número que el jugador lee:
 ## la pantalla de cierre lo muestra. Un índice desde cero obligaría a sumar uno en cada
@@ -24,4 +24,4 @@ const PRIMERA_JORNADA := 1
 
 ## La primera noche con todas las tareas. Lo que la ficha ata a un número de jornada se cuenta
 ## desde acá, para que alargar o acortar la introducción no obligue a renumerar cada regla.
-const PRIMERA_JORNADA_COMPLETA := 4
+const PRIMERA_JORNADA_COMPLETA := 3

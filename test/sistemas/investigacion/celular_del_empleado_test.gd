@@ -174,7 +174,7 @@ func test_el_tramo_identificado_emite_solo_en_su_chat_visible() -> void:  # AC-I
 # AC-INV-039, AC-INV-040
 func test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura() -> void:
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
-	sistema.abrir_jornada(5)
+	sistema.abrir_jornada(4)
 	sistema.pedir_alternar(false)
 	sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
 	var jefe := sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)
@@ -184,7 +184,7 @@ func test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura() -> void:
 		sistema.pedir_chat(Conversacion.Interlocutor.YASMIN)
 		sistema.pedir_alternar(false)
 		sistema.pedir_alternar(false)
-		sistema.abrir_jornada(5)
+		sistema.abrir_jornada(4)
 	assert_int(sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN).size()).is_equal(15)
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.YASMIN)).is_zero()
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(jefe)

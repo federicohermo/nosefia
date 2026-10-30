@@ -142,7 +142,7 @@ func test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre() -> void:  # AC
 
 func test_elegir_escribe_la_eleccion_antes_de_la_noche() -> void:  # AC-SAV-029, AC-SAV-030
 	var guardado := _guardado()
-	var partida := _en_la_jornada(5)
+	var partida := _en_la_jornada(4)
 	_arrancar(partida, guardado)
 	partida.expediente.registrar("2A")
 	_jugar_la_noche_impecable()
@@ -156,6 +156,6 @@ func test_elegir_escribe_la_eleccion_antes_de_la_noche() -> void:  # AC-SAV-029,
 	assert_int(guardado.escrituras).is_equal(2)
 	var retomada := Partida.desde(guardado.cargar())
 	assert_object(retomada.reflexion).is_null()
-	assert_str(retomada.expediente.eleccion(5)).is_equal("2A")
+	assert_str(retomada.expediente.eleccion(4)).is_equal("2A")
 	assert_int(retomada.expediente.mensajes_de_notas().size()).is_equal(3)
-	assert_int(retomada.jornada()).is_equal(6)
+	assert_int(retomada.jornada()).is_equal(5)

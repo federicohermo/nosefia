@@ -14,7 +14,7 @@ const ALTURA_DEL_JUGADOR := 0.112
 const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
-const DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + 5
+const DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
 
 
 # AC-CLN-060
@@ -126,15 +126,16 @@ func test_la_segunda_jornada_se_limpia_entera_apuntando_desde_el_piso() -> void:
 	await _limpiar(almacen)
 
 
-func test_la_tercera_jornada_se_limpia_con_su_cuarta_y_ultima_mancha() -> void:  # AC-CLN-060
+func test_la_primera_que_limpia_se_limpia_con_su_cuarta_y_ultima_mancha() -> void:  # AC-CLN-060
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	almacen.set("_partida", Partida.desde({"jornada": 3}))
+	almacen.set("_partida", Partida.desde({"jornada": primera}))
 	add_child(almacen)
-	AperturaConLugar.abrir_con_semilla(almacen, 3)
+	AperturaConLugar.abrir_con_semilla(almacen, primera)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	assert_int(_piso(almacen).jornada()).is_equal(3)
-	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
+	assert_int(_piso(almacen).jornada()).is_equal(primera)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(primera)
 	assert_int(_piso(almacen).lugares().size()).is_equal(4)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var avisos: Array[int] = []

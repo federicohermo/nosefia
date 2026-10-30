@@ -33,43 +33,43 @@ jugador**: es el único lugar donde el juego puede mentir en vivo.
 
 Las reglas de interacción directa sobre la figura, foco de silueta y retorno automático del diálogo
 se aplican al recorrido de atención física con comprador representado en el mundo.
-La jornada 6 DEBE conservar su recorrido genérico anterior sin figura, incluido el acceso al
+Las jornadas sin agenda propia DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
 panel de cobro. Sólo en ese recorrido genérico se admite una consulta de acceso en el hueco:
 NO DEBE bloquear al jugador ni los objetos sostenidos, ni permanecer activa al usar atención física.
 La barrera de vidrio NO DEBE existir en ningún recorrido. Esta excepción NO DEBE convertir el hueco,
-marco o antepecho en objetivos de atención física ni inventar figuras para la jornada 6.
+marco o antepecho en objetivos de atención física ni inventar figuras para ellas.
 
 ### BR-CTR-001 — Dos compradores por noche
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 El sistema DEBE hacer pasar **2 compradores por jornada**, tomados en orden de un padrón fijo. El
 padrón no se sortea: un sorteo daría noches distintas con el mismo balance.
 
 ### BR-CTR-002 — La caja no vuelve a sumar
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 El sistema DEBE tomar el total de la caja del pedido y no recalcularlo. Una segunda suma daría el
 mismo número hasta el día que cambie el catálogo, y ahí las dos ventanas dirían distinto.
 
 ### BR-CTR-003 — La diferencia lleva signo
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 El sistema DEBE calcular la diferencia como **lo que paga menos el total**. Positiva es que pagó
 de más y negativa que pagó de menos: el valor absoluto haría indistinguibles los dos casos.
 
 ### BR-CTR-004 — Alguien paga distinto
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 El padrón DEBE incluir al menos un comprador que paga de más y uno que paga de menos. Un padrón
 donde todos pagan justo deja la ventanilla sin nada que mirar.
 
 ### BR-CTR-006 — El cobro es todo o nada
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 SI alguna línea del pedido supera los vendibles de su producto, ENTONCES el sistema DEBE
 rechazar el cobro entero y **no mover una sola unidad**. Descontar lo que se pueda deja un
@@ -77,7 +77,7 @@ estado que el jugador no distingue de una venta completa.
 
 ### BR-CTR-007 — Se puede despachar sin vender
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 El sistema DEBE permitir despachar a un comprador sin cobrarle nada. Un pedido puede superar los
 vendibles de la noche, y exigir la venta dejaría a ese comprador sin forma de irse.
@@ -89,7 +89,7 @@ vez, y no cambiar nada.
 
 ### BR-CTR-009 — La obligatoria es atender, no vender
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 CUANDO todos los compradores de la noche quedaron despachados, el sistema DEBE dar la obligatoria
 por cumplida, **contando igual las dos formas**: vender y despachar sin vender.
@@ -102,14 +102,14 @@ diferencia no es plata que falte.
 
 ### BR-CTR-011 — La ventanilla dice qué falta
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 SI el pedido tiene productos que superan sus vendibles, ENTONCES el sistema DEBE nombrarlos, en
 el orden del pedido. Es la explicación de por qué el cobro va a fallar.
 
 ### BR-CTR-012 — El pedido no da la cuenta hecha
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 El sistema DEBE mostrar las líneas del pedido **sin el precio de cada una**, y mostrar aparte el
 total, lo que paga y la diferencia. Repartir el precio por renglón le daría al jugador la cuenta
@@ -123,7 +123,7 @@ abandonar desde el principio.
 
 ### BR-CTR-014 — La venta sale del depósito, y deja el estante como está
 
-En la jornada 6 se aplica el recorrido anterior:
+En las jornadas sin agenda se aplica el recorrido anterior:
 
 CUANDO se cobra un pedido, el sistema DEBE descontar cada línea **del depósito**, y sólo hasta
 los vendibles de su producto. La góndola no se toca: una venta que vacía el estante deshace lo
@@ -168,10 +168,10 @@ Consultar los renglones NO DEBE permitir cambiar el programa ni el ticket.
 CUANDO abre una jornada, el sistema DEBE iniciar el programa vacío y DEBE retirar los tickets
 de la noche anterior, estén en la mano, en la ranura o sueltos.
 
-### BR-CTR-022 — Desde la sexta noche se escribe a mano
+### BR-CTR-022 — Desde la quinta noche se escribe a mano
 
-DESDE la jornada 6 y hasta el fin de la partida, el programa DEBE ser manual. Antes DEBE ser
-automático. El modo DEBE salir del número de jornada: retomar una partida en la 7 no recupera
+DESDE la jornada 5 y hasta el fin de la partida, el programa DEBE ser manual. Antes DEBE ser
+automático. El modo DEBE salir del número de jornada: retomar una partida en la 6 no recupera
 el lector, y una partida nueva vuelve al automático.
 
 ### BR-CTR-023 — Cada elección conserva su renglón
@@ -211,7 +211,7 @@ y un Pepito, con sus diálogos y su recepción física. Estos horarios DEBEN der
 del turno, cuya apertura es a las 20:00. La segunda jornada DEBE usar el padrón definido en
 BR-CTR-037, sin copiar estos personajes. Las jornadas 3 a 5 usan las agendas de BR-CTR-044 a
 BR-CTR-046, la noche del corte de luz y la última noche las de BR-CTR-051 y BR-CTR-052, y el
-padrón de BR-CTR-001 queda para la jornada 6.
+padrón de BR-CTR-001 queda para las jornadas sin agenda.
 
 ### BR-CTR-027 — Llegada y vencimiento independientes de la interfaz
 
@@ -395,8 +395,8 @@ oclusión por los sólidos, incluido el corte inferior detrás del antepecho des
 accesibles. La entrada y retirada DEBEN usar el recorrido existente desde la izquierda y
 hacia la derecha, respectivamente, conservando orientación, altura y profundidad.
 La apertura DEBE construir una sola lista compartida por reposición y atención. Reiniciar
-DEBE limpiar conversaciones, entregas, ventas e imágenes anteriores. La jornada 1 y la
-jornada 6 DEBEN conservar sus recorridos propios.
+DEBE limpiar conversaciones, entregas, ventas e imágenes anteriores. La jornada 1 y las
+jornadas sin agenda DEBEN conservar sus recorridos propios.
 
 ### BR-CTR-042 — Nueve entradas propias de la segunda jornada
 
@@ -593,7 +593,7 @@ igual, como un producto sin unidades vendibles en BR-CTR-047.
 
 ### AC-CTR-001 — Dos por noche *(verifica BR-CTR-001)*
 
-DADO la jornada 6 CUANDO se piden sus compradores del padrón ENTONCES son 2, son los dos primeros
+DADO una jornada sin agenda CUANDO se piden sus compradores del padrón ENTONCES son 2, son los dos primeros
 del padrón, y dos llamadas seguidas devuelven instancias distintas sin despachar.
 
 ### AC-CTR-002 — El total sale del pedido *(verifica BR-CTR-002)*
@@ -724,11 +724,11 @@ ticket ni aviso de impresión, y los renglones siguen vacíos.
 DADO un ticket en la mano, otro suelto y el programa con un producto, CUANDO abre otra jornada
 ENTONCES el programa está vacío, las manos están vacías y ninguno de esos papeles existe.
 
-### AC-CTR-026 — El corte es la jornada seis *(verifica BR-CTR-022)*
+### AC-CTR-026 — El corte es la jornada cinco *(verifica BR-CTR-022)*
 
-DADO jornadas 1 a 8, CUANDO abre cada una ENTONCES de la 1 a la 5 son automáticas y
-la 6, la 7 y la 8 manuales. DADO una partida retomada en la 7 ENTONCES abre manual; CUANDO
-se abre una partida nueva ENTONCES vuelve al automático. Abrir la 6 tras escribir en la 5
+DADO jornadas 1 a 7, CUANDO abre cada una ENTONCES de la 1 a la 4 son automáticas y
+la 5, la 6 y la 7 manuales. DADO una partida retomada en la 6 ENTONCES abre manual; CUANDO
+se abre una partida nueva ENTONCES vuelve al automático. Abrir la 5 tras escribir en la 4
 deja los 3 renglones vacíos.
 
 ### AC-CTR-027 — Elegir y vaciar conserva los otros *(verifica BR-CTR-023)*
@@ -852,7 +852,7 @@ procesa ambas compras una sola vez, y repetir el instante no vuelve a entregar s
 DADO la jornada 1 CUANDO se completa sólo Tin ENTONCES atención sigue sin cumplir.
 Al completar Tia, cuenta una vez; lo vendido es un Marolini, una Coracola, un Malbardo,
 una Zucarachas y un Pepito. Reabrir conserva ese resultado. Reiniciar crea estados nuevos
-sin entregas ni ventas. La jornada 6 conserva el recorrido anterior; la segunda usa BR-CTR-037.
+sin entregas ni ventas. Las jornadas sin agenda conservan el recorrido anterior; la segunda usa BR-CTR-037.
 
 ### AC-CTR-042 — Dos animaciones y pausa *(verifica BR-CTR-032)*
 
@@ -1024,7 +1024,7 @@ otra conserva su primera entrada y el contenido compartido no cambia. DADO la jo
 introducción o despedida en curso CUANDO se reinicia ENTONCES no quedan cursores, entregas,
 ventas ni imágenes heredadas. Con la interfaz cerrada, cada figura durante su presencia conserva animación,
 orientación fija y oclusión; el antepecho oculta el corte inferior desde laterales accesibles.
-La jornada 1 y la 6 mantienen sus compradores y conversaciones anteriores.
+La jornada 1 y las jornadas sin agenda mantienen sus compradores y conversaciones anteriores.
 
 ### AC-CTR-064 — El paquete conserva conversaciones y figuras *(verifica BR-CTR-042, BR-CTR-041, BR-CTR-043)*
 
@@ -1075,8 +1075,8 @@ lo de las jornadas 1 y 2. Reposición y atención reciben la misma lista de cada
 DADO la apertura de cada jornada de la 3 a la 5, con distintas semillas de partida, CUANDO se
 construyen sus compradores ENTONCES cada pedido tiene dos o tres productos de tipos distintos
 con una unidad cada uno, y todos pertenecen al grupo de su comprador y a los que se venden esa
-noche: los dieciséis de la etapa de prueba en la jornada 3 y el catálogo completo en las jornadas
-4 y 5. Entre las semillas probadas hay pedidos distintos.
+noche: el catálogo completo, desde la primera jornada completa. Entre las semillas
+probadas hay pedidos distintos.
 
 ### AC-CTR-072 — La misma partida repite sus pedidos *(verifica BR-CTR-047)*
 
@@ -1152,9 +1152,8 @@ cada instante no repite eventos. Tin sigue llegando a las 20:30 y pidiendo lo mi
 
 DADO la apertura de cada jornada de la 3 a la 5, con muchas semillas, CUANDO se construyen sus
 compradores ENTONCES ningún pedido incluye un producto fuera del grupo de su comprador. DADO la
-jornada 3 ENTONCES los candidatos de Cami son Zucarachas, Jorgillo, Pepito y Petisas, y los de Tin son
-Marolini, Coracola, Malbardo, Mayonchis, Arvecor y Don Saturados; con las semillas probadas se
-piden todos los candidatos de cada uno. DADO Fede en la jornada 4 ENTONCES jamás pide Durextra.
+jornada 3 ENTONCES con las semillas probadas cada comprador pide todos los productos de su
+grupo. DADO Fede en la jornada 4 ENTONCES jamás pide Durextra.
 
 ### AC-CTR-108 — Dos o tres, nunca uno ni cuatro *(verifica BR-CTR-047)*
 
@@ -1293,7 +1292,7 @@ trae guion propio usa los textos de BR-CTR-048.
   - Bloquea: nada de lo escrito acá. Abriría una regla en
     [`employment-record`](../employment-record/employment-record.md).
 - **OQ-CTR-002 — ¿Cuántos compradores vienen por noche, y cuánto compra cada uno?**
-  - Por qué sigue abierta: para la jornada 6 game design dio un margen de 1 a 3 compradores, con 1 a 3 productos
+  - Por qué sigue abierta: para las jornadas sin agenda game design dio un margen de 1 a 3 compradores, con 1 a 3 productos
     cada uno, y no eligió un valor. Con pocos vendibles por producto, un padrón que pide de más
     deja ventas que se rechazan.
   - Decide: game design.

@@ -33,11 +33,11 @@ una tarea son los metros, no la torpeza del control.
 
 Las reglas de interacción directa sobre la figura, foco de silueta y retorno automático del diálogo
 se aplican al recorrido de atención física con comprador representado en el mundo.
-Las jornadas 6 a 8 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
+Las jornadas 6 y 7 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
 panel de cobro. Sólo en ese recorrido genérico se admite una consulta de acceso en el hueco:
 NO DEBE bloquear al jugador ni los objetos sostenidos, ni permanecer activa al usar atención física.
 La barrera de vidrio NO DEBE existir en ningún recorrido. Esta excepción NO DEBE convertir el hueco,
-marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 6 a 8.
+marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 6 y 7.
 
 ### BR-PLY-001 — La diagonal no camina más rápido
 
@@ -186,11 +186,11 @@ SI una puerta está trabada, ENTONCES el primario NO DEBE abrirla ni girar la ho
 DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. El portón del depósito y
 la oficina del jefe están trabadas en todas las jornadas. La entrada permanece trabada salvo
 la salida habilitada de BR-PLY-041. La puerta que lleva del local al depósito
-DEBE estar trabada en la primera jornada, y abrir desde la segunda. La puerta del cuartito de
+DEBE abrir desde la primera jornada. La puerta del cuartito de
 limpieza DEBE estar trabada en las jornadas que no piden limpiar, y abrir en las que sí. La puerta
 del baño y la de «Solo empleados» no están trabadas en ninguna. La traba de la jornada DEBE decidirse
 al abrirla, desde el número de la jornada y las obligatorias que declara, antes de cerrar las
-puertas de BR-PLY-019. La primera jornada DEBE poder cumplirse entera sin entrar al depósito.
+puertas de BR-PLY-019.
 
 CUANDO se acciona una puerta que abre, el sistema DEBE avisar una vez si se abrió o se cerró.
 CUANDO se acciona una trabada con el primario, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las demás. Cerrar las
@@ -709,20 +709,12 @@ está trabada y queda abierta.
 
 DADO el almacén armado en cualquier jornada ENTONCES la entrada, el portón del depósito y la
 oficina del jefe están trabadas y contestan al primario. DADO la jornada 1 abierta ENTONCES la
-puerta que lleva al depósito está trabada, contesta al primario y la hoja no gira. DADO la
-jornada 2 abierta ENTONCES esa puerta abre y alterna. DADO el cierre de la 1 CUANDO se sigue a la 2
+puerta que lleva al depósito no está trabada y alterna. DADO la jornada 1 abierta ENTONCES la
+puerta del cuartito está trabada, contesta al primario y la hoja no gira. DADO la jornada 2
+abierta ENTONCES no está trabada y alterna. DADO el cierre de la 1 CUANDO se sigue a la 2
 ENTONCES se destraba; DADO una partida guardada en la 1 con la puerta abierta la noche anterior
-CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. DADO la jornada 1 o la 2
-abierta ENTONCES la puerta del cuartito está trabada, contesta al primario y la hoja no gira. DADO
-la jornada 3 abierta ENTONCES no está trabada y alterna. DADO el cierre de la 2 CUANDO se sigue a la
-3 ENTONCES se destraba; DADO una partida guardada en la 2 con la puerta abierta la noche anterior
 CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. La puerta del baño y la de
 «Solo empleados» no están trabadas en ninguna jornada: abren y alternan también en la 1 y la 2.
-
-### AC-PLY-102 — La primera jornada se cumple sin entrar al depósito *(verifica BR-PLY-020)*
-
-DADO la jornada 1 abierta, con la puerta del depósito trabada, CUANDO se cumplen todas sus
-obligatorias sin accionar esa puerta ENTONCES todas quedan cumplidas y la puerta sigue trabada.
 
 ### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
 
@@ -917,8 +909,8 @@ hasta cerrar la primera.
 DADO una nota abierta, CUANDO pasan cuadros ENTONCES el tiempo del turno disminuye. CUANDO se
 pausa ENTONCES la pausa visible se dibuja por encima de la nota; al reanudar, la nota sigue
 abierta y el control suspendido. CUANDO termina el turno ENTONCES la nota se cierra y el
-control queda suspendido. En las jornadas 1 a 3 baja la persiana y, al terminar de bajar, siguen
-las instrucciones de la jornada siguiente, sin celular ni devolución. Desde la jornada 4 queda
+control queda suspendido. En las jornadas 1 y 2 baja la persiana y, al terminar de bajar, siguen
+las instrucciones de la jornada siguiente, sin celular ni devolución. Desde la jornada 3 queda
 sólo la devolución.
 
 ### AC-PLY-068 — Ordenado comparte el texto exacto *(verifica BR-PLY-030)*
@@ -971,8 +963,8 @@ ni abre el programa. En modo manual, el hueco del lector no recibe lecturas.
 DADO el programa abierto, CUANDO pasan cuadros ENTONCES el tiempo disminuye; al pausar,
 la pausa visible tiene una capa superior al programa. Al reanudar sigue abierto y el control
 suspendido. Al terminar el turno el programa se cierra y el control queda suspendido. En las
-jornadas 1 a 3 baja la persiana y, al terminar de bajar, siguen las instrucciones de la jornada
-siguiente, sin celular ni devolución. Desde la jornada 4 queda sólo la devolución.
+jornadas 1 y 2 baja la persiana y, al terminar de bajar, siguen las instrucciones de la jornada
+siguiente, sin celular ni devolución. Desde la jornada 3 queda sólo la devolución.
 
 ### AC-PLY-075 — El papel se lleva y examina *(verifica BR-PLY-033)*
 
@@ -1054,10 +1046,10 @@ CUANDO vence ENTONCES se cierra el diálogo y se devuelve automáticamente la vi
 
 ### AC-PLY-080 — La nota cambia con la particular *(verifica BR-PLY-030)*
 
-DADO la jornada 4 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
+DADO la jornada 3 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
 cliente», «Registro de productos vendidos», «Limpieza», «Reposición» y «Ordenar cajas en el
-depósito». CUANDO se sigue a la jornada 5 sin recargar el local ENTONCES el quinto renglón dice
-«Tirar la basura». DADO la jornada 6 ENTONCES sólo están los cuatro primeros. En los tres casos,
+depósito». CUANDO se sigue a la jornada 4 sin recargar el local ENTONCES el quinto renglón dice
+«Tirar la basura». DADO la jornada 5 ENTONCES sólo están los cuatro primeros. En los tres casos,
 la hoja visible y su lectura tienen los mismos renglones.
 
 ### AC-PLY-081 — El celular conserva la mano y suspende el cuerpo *(verifica BR-PLY-006)*
@@ -1097,7 +1089,7 @@ lector, inodoro, lavatorio o balde no ofrece esos usos; el lector ausente tampoc
 
 ### AC-PLY-085 — Consultar el tacho no le saca la bolsa *(verifica BR-PLY-036, BR-PLY-035)*
 
-DADO jornada 5, mano vacía y tacho con bolsa CUANDO se consulta ENTONCES ofrece
+DADO jornada 4, mano vacía y tacho con bolsa CUANDO se consulta ENTONCES ofrece
 «[E] Examinar» y «[Click Izq] Interactuar», sin línea secundaria ni cambio de bolsa o mano.
 DADO tacho sin bolsa u objeto sostenido ENTONCES no ofrece extracción.
 
