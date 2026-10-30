@@ -77,3 +77,5 @@ func test_recibir_agradece_sin_retener_y_lo_repetido_ya_estaba() -> void:  # AC-
 	assert_int(atencion.interactuar(estante.retirar(segundo))).is_equal(
 		RecepcionDeCompra.Resultado.ACEPTADA
 	)
+	# Con el último producto recibido ya no falta nada: el agradecimiento pide el ticket.
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.PIDE_EL_TICKET)
