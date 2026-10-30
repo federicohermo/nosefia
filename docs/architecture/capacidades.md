@@ -107,8 +107,9 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
   En la primera noche, la ventanilla recibe unidades físicas y la mercadería las retira una sola
   vez, al completar la venta. Si la compra vence, las unidades siguen afuera como unidades
-  sueltas. Registrar espera a que terminen ambas compras, vendidas o vencidas. Después compara
-  la planilla sólo con las ventas completas, sin depender de atención.
+  sueltas. Registrar espera a que terminen las compras de los compradores que ya llegaron,
+  vendidas o vencidas. Después compara la planilla sólo con las ventas completas, sin depender de
+  atención. Al cierre exige terminadas ambas.
 
   La apertura comparte una sola selección de compradores y pedidos entre atención y reposición.
   La segunda noche usa los pedidos fijos de Fede y Mía, sus conversaciones propias y sus figuras
@@ -116,7 +117,8 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   Sus compras vencidas también dejan las unidades recogibles en el piso interior, todavía
   registradas afuera, y descartan el ticket.
 
-  Atención exige completar las dos compras.
+  Atención figura cumplida mientras todos los que llegaron estén vendidos, y vuelve a pendiente al
+  llegar el siguiente. Al cierre exige completar las dos compras.
 - **`shift-cycle`, `store-stock` y `player-actions`.** Las jornadas de prueba permiten salir por
   la entrada mientras todas sus tareas estén cumplidas. Descumplir una vuelve a trabar la
   salida; recuperar todas la habilita de nuevo. La planilla conserva sus gestos de sumar y

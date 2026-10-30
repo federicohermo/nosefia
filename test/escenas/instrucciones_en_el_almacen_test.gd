@@ -419,6 +419,7 @@ func test_seguir_desde_la_segunda_abre_las_de_la_tercera() -> void:  # AC-EMP-07
 	noches.erase(PRIMERA + 1)
 	_guardar(PRIMERA + 1, 0, noches)
 	_abrir()
+	_almacen.set("compradores_de_la_apertura", func(_n: int) -> Array[Comprador]: return [])
 	_almacen.call("retomar_la_partida")
 	_leer_todo(PRIMERA + 1)
 	_comprobar_una_noche(PRIMERA + 1)

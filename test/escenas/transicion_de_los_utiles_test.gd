@@ -39,6 +39,7 @@ func _cerrar_y_continuar(almacen: Node3D) -> bool:
 
 func test_la_transicion_a_la_primera_que_limpia_prepara_los_utiles_con_la_persiana_baja() -> void:
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	almacen.set("compradores_de_la_apertura", func(_n: int) -> Array[Comprador]: return [])
 	add_child(almacen)
 	await get_tree().process_frame
 	var partida: Partida = almacen.get("_partida")

@@ -108,22 +108,26 @@ func test_una_unidad_de_mas_o_un_ticket_inexacto_se_rechazan() -> void:  # AC-CT
 		assert_bool(atencion.vendida()).is_false()
 
 
-func test_atencion_se_cumple_solo_con_las_dos_compras_completas() -> void:  # AC-CTR-075
+func test_atencion_cumple_por_comprador_y_al_cierre_exige_las_dos() -> void:  # AC-CTR-075
 	for jornada: int in JORNADAS:
 		var ambas := _noche(jornada)
 		_vender(ambas, 0)
+		assert_bool(ambas.tarea.cumplida()).is_true()
 		assert_bool(ambas.tarea.completada()).is_false()
 		_vender(ambas, 1)
+		assert_bool(ambas.tarea.cumplida()).is_true()
 		assert_bool(ambas.tarea.completada()).is_true()
 		var perdida_la_primera := _noche(jornada)
 		_llegar(perdida_la_primera, 0)
 		perdida_la_primera.tarea.avanzar(perdida_la_primera.compradores[0].horario.y)
 		_vender(perdida_la_primera, 1)
+		assert_bool(perdida_la_primera.tarea.cumplida()).is_false()
 		assert_bool(perdida_la_primera.tarea.completada()).is_false()
 		var perdida_la_segunda := _noche(jornada)
 		_vender(perdida_la_segunda, 0)
 		_llegar(perdida_la_segunda, 1)
 		perdida_la_segunda.tarea.avanzar(perdida_la_segunda.compradores[1].horario.y)
+		assert_bool(perdida_la_segunda.tarea.cumplida()).is_false()
 		assert_bool(perdida_la_segunda.tarea.completada()).is_false()
 
 
@@ -154,12 +158,13 @@ func test_una_compra_vencida_deja_las_unidades_afuera_sin_venta() -> void:  # AC
 		assert_int(noche.tarea.vendidas_de(productos[0])).is_zero()
 
 
-func test_registrar_espera_a_que_terminen_las_dos_compras() -> void:  # AC-STK-108
+func test_registrar_cumple_hasta_que_llega_la_segunda_compra() -> void:  # AC-STK-108
 	for jornada: int in JORNADAS:
 		var noche := _noche(jornada)
 		_vender(noche, 0)
 		_anotar_lo_vendido(noche, 0)
-		assert_bool(noche.registro.completada()).is_false()
+		assert_bool(noche.registro.completada()).is_true()
+		assert_bool(noche.registro.completada(true)).is_false()
 		noche.tarea.avanzar(noche.compradores[1].horario.x)
 		assert_bool(noche.registro.completada()).is_false()
 		noche.tarea.avanzar(noche.compradores[1].horario.y)

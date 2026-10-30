@@ -115,7 +115,7 @@ func test_una_unidad_exterior_oblicua_no_se_retrocede_por_su_aabb() -> void:  # 
 	assert_vector(unidad.global_position).is_equal(antes.origin)
 
 
-func test_la_reserva_no_se_extiende_al_interior_de_la_heladera() -> void:  # AC-PLY-024
+func test_la_reserva_se_extiende_al_interior_de_la_heladera() -> void:  # AC-PLY-024
 	var almacen := await _abrir()
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	puesto.call("retirar", Producto.Id.MALBARDO)
@@ -135,9 +135,13 @@ func test_la_reserva_no_se_extiende_al_interior_de_la_heladera() -> void:  # AC-
 		. is_true()
 	)
 	assert_bool(_libre(almacen, unidad)).is_true()
-	var antes := unidad.global_position
 	puesto.call("_desatascar_lo_soltado", unidad)
-	assert_vector(unidad.global_position).is_equal(antes)
+	var forma: CollisionShape3D = unidad.get_node("Forma")
+	var volumen := heladera.global_transform * heladera.get_aabb()
+	(
+		assert_bool(volumen.intersects(forma.global_transform * LimitesDeForma.de(forma.shape)))
+		. is_false()
+	)
 
 
 func _abrir() -> Node3D:
