@@ -232,6 +232,25 @@ func _caja_contra_el_mostrador(almacen: Node3D, caja: Node3D, metida: float) -> 
 	return frente
 
 
+## La caja apoyada contra lo primero que hay delante del mostrador, visto desde el pasillo: lo
+## que se exhibe ahí es lo que la caja toca al empujarla.
+func _caja_contra_lo_exhibido(almacen: Node3D, caja: Node3D) -> Vector3:
+	var frente := _caja_contra_el_mostrador(almacen, caja, 0.0)
+	var altura := Vector3.UP * MEDIA_CAJA
+	var rayo := PhysicsRayQueryParameters3D.create(
+		frente + altura + Vector3.FORWARD * 2.0,
+		frente + altura,
+		1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+	)
+	rayo.exclude = [(caja as CollisionObject3D).get_rid()]
+	var delante := almacen.get_world_3d().direct_space_state.intersect_ray(rayo)
+	if not delante.is_empty():
+		frente.z = (delante["position"] as Vector3).z
+		caja.global_position = frente + Vector3(0.0, MEDIA_CAJA, -MEDIA_CAJA)
+		caja.call("quedarse_quieta")
+	return frente
+
+
 func _caja_grande(almacen: Node3D) -> Node3D:
 	for caja: Node3D in almacen.get("_cajas_de_productos"):
 		if (caja.get_node("Cuerpo") as Node3D).scale.x >= MEDIA_CAJA:
@@ -348,7 +367,7 @@ func test_la_caja_soltada_pegada_no_entra_al_empujarla() -> void:  # AC-PLY-018
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja := _caja_grande(almacen)
-	var frente := _caja_contra_el_mostrador(almacen, caja, 0.0)
+	var frente := _caja_contra_lo_exhibido(almacen, caja)
 	_caminar_hacia(jugador, frente)
 	var antes := jugador.global_position.z
 	for cuadro in CUADROS_HASTA_BLOQUEARSE:
@@ -595,7 +614,9 @@ func _comprobar_libre_y_enfocable(almacen: Node3D, objeto: Node3D, donde: String
 	var lugar: Variant = _lugar_para_mirar(almacen, objeto)
 	(
 		assert_bool(lugar != null)
-		. override_failure_message("%s, no hay piso libre desde donde mirarlo" % donde)
+		. override_failure_message(
+			"%s, en %v, no hay piso libre desde donde mirarlo" % [donde, objeto.global_position]
+		)
 		. is_true()
 	)
 	if lugar == null:

@@ -523,6 +523,8 @@ func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
 			limites.get_center().x + limites.size.x / 4.0, limites.end.y, brazo.get_center().z
 		)
 		soporte = mesa.get_node("StaticBody3D")
+		# Delante del brazo se exhiben el freezer y el exhibidor: se mira desde más allá.
+		desde = Vector3.FORWARD * 1.4
 	elif tipo == "pallet":
 		var pallet: MeshInstance3D = almacen.get_node(
 			"Estructura/gondola_deposito03/deposito_pallet_central_derecho_1_1"
