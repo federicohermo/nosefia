@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 const OBJETO := "res://src/escenas/objetos/objeto_agarrable.tscn"
 const TinYTia := preload("res://test/escenas/tin_y_tia.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 var _almacenes: Array[Node3D] = []
 
