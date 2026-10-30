@@ -379,7 +379,7 @@ func test_el_balde_y_sus_gestos_suenan_en_el_local_sin_un_rechazo() -> void:
 		. contains(
 			[
 				"SFX_OBJETO_Balde_Llenar",
-				"SFX_OBJETO_Jabon_VertirEnBalde",
+				"SFX_OBJETO_Balde_VertirJabon",
 				"SFX_OBJETO_Mopa_MojarEnBalde",
 				"SFX_OBJETO_Balde_Vaciar",
 			]

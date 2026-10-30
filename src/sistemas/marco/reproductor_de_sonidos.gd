@@ -197,7 +197,15 @@ func pedir(
 
 ## Pide el sonido de un evento que trae su origen: el objeto que lo produjo, si lo hay, y la
 ## rapidez de su contacto. La sonoridad sale del objeto, y el golpe de su contador.
-func recibir(evento: EntradaSonora.Evento, origen: Object = null, rapidez: float = 0.0) -> bool:
+##
+## `del_tacho` es el contexto de un agarre que saca una bolsa del tacho: ese gesto suena con el
+## sonido de sacar y no con el de alzar. Llega con el pedido, y el contador igual se reinicia.
+func recibir(
+	evento: EntradaSonora.Evento,
+	origen: Object = null,
+	rapidez: float = 0.0,
+	del_tacho: bool = false
+) -> bool:
 	var datos := _datos_de(origen)
 	if datos == null:
 		return pedir(evento, EntradaSonora.Sonoridad.NINGUNA, null, origen as Node3D)
@@ -209,7 +217,12 @@ func recibir(evento: EntradaSonora.Evento, origen: Object = null, rapidez: float
 	)
 	if golpe == null:
 		return false
-	return pedir(evento, datos.sonoridad, golpe, origen as Node3D)
+	if del_tacho and evento == EntradaSonora.Evento.OBJETO_AGARRADO:
+		return pedir(EntradaSonora.Evento.BOLSA_SACADA)
+	var sonoridad := EntradaSonora.Sonoridad.NINGUNA
+	if EntradaSonora.EVENTOS_DE_OBJETO.has(evento):
+		sonoridad = _sonoridad_de(origen, datos)
+	return pedir(evento, sonoridad, golpe, origen as Node3D)
 
 
 ## Pausa los emisores que el tope deja afuera y suelta los que entran, según dónde está el oído.
@@ -449,6 +462,15 @@ func _datos_de(origen: Object) -> ObjetoDelAlmacen:
 	if not is_instance_valid(origen) or not ReglasDeLosObjetos.PROPIEDAD_DATOS in origen:
 		return null
 	return origen.get(ReglasDeLosObjetos.PROPIEDAD_DATOS) as ObjetoDelAlmacen
+
+
+## Cómo suena el objeto ahora: la de su propia instancia si la declara, y si no la de sus datos.
+func _sonoridad_de(origen: Object, datos: ObjetoDelAlmacen) -> EntradaSonora.Sonoridad:
+	if EntradaSonora.PROPIEDAD_SONORIDAD_VIGENTE in origen:
+		var vigente: EntradaSonora.Sonoridad = origen.get(EntradaSonora.PROPIEDAD_SONORIDAD_VIGENTE)
+		if vigente != EntradaSonora.Sonoridad.NINGUNA:
+			return vigente
+	return datos.sonoridad
 
 
 ## El bus por el que sale un sonido con ese corte pasa-altos. Sin corte es el bus de la fila.
