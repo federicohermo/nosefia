@@ -215,7 +215,7 @@ func _empujar_contra_la_base(
 		return [EMPUJON, "nada"]
 	var frenado_por := resultado.get_collider() as Node
 	var quien := (
-		"%s, forma %d, punto %v, normal %v, volumen %v"
+		"%s, forma %d, punto %v, normal %v, volumen %s"
 		% [
 			frenado_por.name if frenado_por else "?",
 			resultado.get_collider_shape(),
