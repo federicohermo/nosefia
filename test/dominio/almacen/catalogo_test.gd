@@ -192,3 +192,15 @@ func test_ningun_producto_queda_sin_sonoridad() -> void:  # AC-STK-027
 		)
 	for id: Producto.Id in [Producto.Id.ARVECOR, Producto.Id.PURA_COLA, Producto.Id.PROGRES]:
 		assert_int(Catalogo.sonoridad_de(id)).is_equal(EntradaSonora.Sonoridad.LATA)
+
+
+func test_cada_producto_declara_si_su_unidad_admite_otro_encima() -> void:  # AC-PLY-034
+	assert_int(Catalogo.ADMITEN_ENCIMA.size()).is_equal(Producto.Id.size())
+	for id: Producto.Id in Producto.Id.values():
+		assert_bool(Catalogo.ADMITEN_ENCIMA.has(id)).is_true()
+	# Un `id` sin fila no admite: la tapa lisa se declara, no se supone.
+	assert_bool(Catalogo.admite_encima(-1 as Producto.Id)).is_false()
+	for id: Producto.Id in [Producto.Id.MAROLINI, Producto.Id.TERMINATOR, Producto.Id.MARRANOS]:
+		assert_bool(Catalogo.admite_encima(id)).is_true()
+	for id: Producto.Id in [Producto.Id.CHISITOS, Producto.Id.FERNET_GOD, Producto.Id.POETICO]:
+		assert_bool(Catalogo.admite_encima(id)).is_false()

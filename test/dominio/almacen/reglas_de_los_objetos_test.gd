@@ -106,6 +106,11 @@ func test_lo_soltado_se_apoya_sobre_lo_horizontal_que_lo_admite() -> void:  # AC
 	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte, caja)).is_true()
 	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte - 0.001, caja)).is_false()
 	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(1.0, mopa)).is_false()
+	var de_tapa_lisa := UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI))
+	var blanda := UnidadDeProducto.new(Catalogo.de(Producto.Id.CHISITOS))
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte, de_tapa_lisa)).is_true()
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte - 0.001, de_tapa_lisa)).is_false()
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(1.0, blanda)).is_false()
 
 
 func test_las_teclas_giran_lo_examinado_a_velocidad_fija() -> void:  # AC-INV-022

@@ -168,12 +168,32 @@ func vaciar_las_manos() -> void:
 	soltar(false)
 
 
-## Despierta lo apoyado antes de quitar el cuerpo que lo sostiene.
+## Despierta lo apoyado antes de quitar el cuerpo que lo sostiene: lo que lo toca, y lo que éste
+## sostiene a su vez.
 static func _despertar_contactos(nodo: Node3D) -> void:
 	if not nodo is PhysicsBody3D or not nodo.is_inside_tree():
 		return
-	var espacio := nodo.get_world_3d().direct_space_state
-	for forma: CollisionShape3D in nodo.find_children("*", "CollisionShape3D", false, false):
+	despertar_lo_apoyado(nodo as PhysicsBody3D, {}, true)
+
+
+## Despierta lo que toca al cuerpo y sigue hacia arriba desde cada cosa que despierta, hasta el
+## final de la pila: quitado el de abajo, cada uno cae hasta su apoyo real.
+##
+## **Con `todo_contacto`, también lo que lo toca de costado**: al quitar el cuerpo lo que quedó
+## pegado debe asentarse de nuevo. Sin él, sólo lo que está más arriba. Un cuerpo congelado
+## —una caja quieta— no despierta a nadie, y por eso sólo se suelta el que quedó arriba de lo que
+## se va: uno de costado sigue sobre su propio apoyo.
+##
+## Cada cuerpo se visita una vez, en `visitados`. Estar despierto no corta el recorrido: puede
+## sostener algo que sigue dormido.
+static func despertar_lo_apoyado(
+	cuerpo: PhysicsBody3D, visitados: Dictionary[RID, bool], todo_contacto: bool = false
+) -> void:
+	if visitados.has(cuerpo.get_rid()):
+		return
+	visitados[cuerpo.get_rid()] = true
+	var espacio := cuerpo.get_world_3d().direct_space_state
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
 		if forma.disabled or forma.shape == null:
 			continue
 		var consulta := PhysicsShapeQueryParameters3D.new()
@@ -181,11 +201,20 @@ static func _despertar_contactos(nodo: Node3D) -> void:
 		consulta.transform = forma.global_transform
 		# Al congelarse, el apoyo pasa a ser estático y Jolt no despierta lo que sostenía.
 		consulta.margin = 0.02
-		consulta.exclude = [(nodo as PhysicsBody3D).get_rid()]
+		consulta.exclude = [cuerpo.get_rid()]
 		for choque: Dictionary in espacio.intersect_shape(consulta, 32):
 			var contacto := choque.collider as RigidBody3D
-			if contacto != null and not contacto.freeze:
-				contacto.sleeping = false
+			if contacto == null:
+				continue
+			var arriba := (
+				contacto.global_position.y > cuerpo.global_position.y + ReglasDeLosObjetos.ROCE
+			)
+			if not arriba and (contacto.freeze or not todo_contacto):
+				continue
+			contacto.freeze = false
+			contacto.sleeping = false
+			if arriba:
+				despertar_lo_apoyado(contacto, visitados)
 
 
 ## Cuelga el nodo del ancla, en el origen del ancla y sin rotación heredada.
