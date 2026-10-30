@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const BASE_DEL_CONTENEDOR := "Estructura/deposito_contenedor_grande_soporte/"
 const RUTA_DE_LA_TAPA := (
@@ -268,6 +269,59 @@ func test_las_paredes_contienen_la_tolerancia_de_penetracion_del_motor() -> void
 			assert_float(espesor).is_greater(tolerancia)
 
 
+func test_lo_soltado_mirando_el_contenedor_no_se_apoya_en_su_cuerpo() -> void:  # AC-CLN-079
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	AperturaConLugar.abrir_con_semilla(almacen)
+	await get_tree().physics_frame
+	var contenedor: StaticBody3D = almacen.get("_contenedor")
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[0]
+	var bidon: RigidBody3D = almacen.get_node("Objetos/JabonAzul")
+	# El control: sobre el piso libre la misma caja queda donde la mira toca, y entonces el test
+	# sabe ver un apoyo.
+	var libre: Vector3 = jugador.global_position + jugador.frente() * 1.2
+	camara.look_at(libre)
+	var toca: Vector3 = _golpe_de_la_mira(jugador, caja)["position"]
+	_soltar(almacen, caja)
+	assert_vector(Vector2(caja.global_position.x, caja.global_position.z)).is_equal_approx(
+		Vector2(toca.x, toca.z), Vector2.ONE * 0.01
+	)
+	var limites := _limites(contenedor)
+	var delante := Vector3(limites.get_center().x, limites.position.y, limites.end.z + 1.2)
+	var piso := _rayo(almacen, delante + Vector3.UP, delante + Vector3.DOWN)
+	assert_bool(piso.is_empty()).is_false()
+	jugador.call("ubicar", Transform3D(Basis.IDENTITY, piso["position"] + Vector3.UP * 0.005))
+	var fondo := _rayo(almacen, _boca(contenedor) + Vector3.UP * 0.3, _centro_interior(contenedor))
+	assert_object(fondo.get("collider")).is_same(contenedor)
+	var borde := _borde_del_contenedor(almacen, contenedor)
+	assert_bool(borde.is_finite()).is_true()
+	for cuerpo: RigidBody3D in [caja, bidon]:
+		for apuntado: Vector3 in [fondo["position"], borde]:
+			camara.global_position = apuntado + Vector3(0.0, 0.8, 0.3)
+			camara.look_at(apuntado)
+			var golpe := _golpe_de_la_mira(jugador, cuerpo)
+			assert_object(golpe.get("collider")).is_same(contenedor)
+			_soltar(almacen, cuerpo)
+			var centro := cuerpo.global_position
+			(
+				assert_bool(
+					(
+						Rect2(
+							limites.position.x, limites.position.z, limites.size.x, limites.size.z
+						)
+						. has_point(Vector2(centro.x, centro.z))
+					)
+				)
+				. is_false()
+			)
+			var debajo := _debajo_de(almacen, cuerpo, jugador)
+			assert_object(debajo.get("collider")).is_not_null()
+			assert_object(debajo.get("collider")).is_not_same(contenedor)
+
+
 func _terminar_el_giro(tapa: TapaDelLocal) -> void:
 	tapa.set_physics_process(false)
 	tapa.call("_physics_process", 1.0)
@@ -349,3 +403,55 @@ func _boca(contenedor: StaticBody3D) -> Vector3:
 	var centro := _centro_interior(contenedor)
 	centro.y = _limites(contenedor).end.y
 	return centro
+
+
+## El punto más alto del borde del contenedor que queda más cerca del pasillo.
+func _borde_del_contenedor(almacen: Node3D, contenedor: StaticBody3D) -> Vector3:
+	var limites := _limites(contenedor)
+	var arriba: Array[Vector3] = []
+	var x := limites.position.x
+	while x <= limites.end.x:
+		var z := limites.position.z
+		while z <= limites.end.z:
+			var golpe := _rayo(
+				almacen, Vector3(x, limites.end.y + 0.5, z), Vector3(x, limites.position.y - 0.5, z)
+			)
+			if golpe.get("collider") == contenedor and golpe["normal"].y > 0.99:
+				arriba.append(golpe["position"])
+			z += 0.02
+		x += 0.02
+	var tope := -INF
+	for punto in arriba:
+		tope = maxf(tope, punto.y)
+	var borde := Vector3.INF
+	for punto in arriba:
+		if punto.y > tope - 0.03 and (not borde.is_finite() or punto.z > borde.z):
+			borde = punto
+	return borde
+
+
+## Lo que la mira toca, contra lo que el cuerpo choca.
+func _golpe_de_la_mira(jugador: Node3D, cuerpo: RigidBody3D) -> Dictionary:
+	var ojo: Transform3D = jugador.mira()
+	var consulta := PhysicsRayQueryParameters3D.create(
+		ojo.origin,
+		ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		cuerpo.collision_mask
+	)
+	consulta.exclude = [jugador.get_rid(), cuerpo.get_rid()]
+	return jugador.get_world_3d().direct_space_state.intersect_ray(consulta)
+
+
+func _debajo_de(almacen: Node3D, cuerpo: RigidBody3D, jugador: Node3D) -> Dictionary:
+	var consulta := PhysicsRayQueryParameters3D.create(
+		cuerpo.global_position, cuerpo.global_position + Vector3.DOWN * 2.0
+	)
+	consulta.exclude = [jugador.get_rid(), cuerpo.get_rid()]
+	return almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+
+
+func _soltar(almacen: Node3D, cuerpo: RigidBody3D) -> void:
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(cuerpo.get("datos"), cuerpo)).is_true()
+	agarre.soltar(true)
+	assert_object(agarre.manos().sostenido()).is_null()

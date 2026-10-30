@@ -982,8 +982,8 @@ ENTONCES hay desorden.
 
 DADO una caja del depósito sostenida y, por separado, un bidón de jabón, con la tapa
 completamente abierta, CUANDO se suelta con la mira sobre el fondo del contenedor a menos del
-alcance y, por separado, sobre su borde ENTONCES no queda apoyada en el contenedor: termina en el
-piso, fuera de su volumen, sin encimarse con nada, como soltada sin mira. DADO la mira sobre el
+alcance y, por separado, sobre su borde ENTONCES no queda apoyada en el contenedor: termina fuera
+de su volumen, apoyada en otra superficie y sin encimarse con nada. DADO la mira sobre el
 piso libre junto al contenedor CUANDO se suelta lo mismo ENTONCES queda sobre el punto que la mira
 toca (BR-PLY-018). DADO una bolsa sostenida y la tapa completamente abierta CUANDO se hace el
 primario sobre el cuerpo ENTONCES se tira igual que antes (AC-CLN-036).
