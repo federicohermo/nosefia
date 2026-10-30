@@ -36,7 +36,9 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
-	_comprobar_huecos(almacen, _completos_al_abrir(almacen, control))
+	_comprobar_huecos(
+		almacen, _completos_al_abrir(almacen, control, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	)
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
 	await _atender(almacen)
@@ -64,20 +66,20 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
-	_comprobar_huecos(almacen, _completos_al_abrir(almacen, control))
+	_comprobar_huecos(
+		almacen,
+		_completos_al_abrir(almacen, control, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
+	)
 	_comprobar_planilla_en_cero(almacen)
 
 
 ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
 ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
-func _completos_al_abrir(almacen: Node3D, azar: RandomNumberGenerator) -> int:
+func _completos_al_abrir(almacen: Node3D, azar: RandomNumberGenerator, jornada: int) -> int:
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
 	var vacios := Apertura.vacios_de_la_jornada(
-		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
-		Compradores.de_la_jornada(DEL_PADRON),
-		tandas,
-		azar
+		jornada, Compradores.de_la_jornada(DEL_PADRON), tandas, azar, puesto.call("posiciones")
 	)
 	return Catalogo.todos().size() - vacios.size()
 

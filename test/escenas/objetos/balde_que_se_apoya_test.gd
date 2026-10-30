@@ -278,6 +278,8 @@ func test_los_bidones_se_llevan_y_se_apoyan_como_las_cajas() -> void:  # AC-PLY-
 			. override_failure_message("%s quedó a %.2f m de donde se miraba" % [nombre, lejos])
 			. is_less(MEDIO_HUECO)
 		)
+		# Queda en el lugar del siguiente, que se apartaría de él.
+		bidon.global_position += Vector3.BACK * 2.0
 
 
 ## Los cuatro apoyos: el punto que se mira, hacia dónde mira el jugador y cuánto baja la vista.

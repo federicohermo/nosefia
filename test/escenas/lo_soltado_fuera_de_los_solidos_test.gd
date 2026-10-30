@@ -74,15 +74,15 @@ const GIROS_DEL_CUERPO: Array[float] = [-20.0, 0.0, 20.0]
 ## A cuántos metros de la cara del sólido se para el jugador para soltar. Con la caja en la mano
 ## no llega tan cerca: la caja ocupa lugar delante del cuerpo.
 const PARADO_DEL_SOLIDO := 1.0
-const PARADO_CON_LA_CAJA := 1.4
+const PARADO_CON_LA_CAJA := 1.1
 
 ## Cuadros de física para que lo soltado caiga y se duerma. Cae desde la mano en menos de medio
 ## segundo; el resto es el margen del reposo.
 const CUADROS_DE_REPOSO := 90
 
 ## A qué distancias de lo soltado se busca un lugar libre para mirarlo, en metros.
-const RADIOS_DEL_LUGAR_LIBRE: Array[float] = [0.9, 1.3, 1.7, 2.1]
-const LADOS_DEL_LUGAR_LIBRE := 12
+const RADIOS_DEL_LUGAR_LIBRE: Array[float] = [0.7, 0.9, 1.1, 1.3, 1.45, 1.55]
+const LADOS_DEL_LUGAR_LIBRE := 36
 
 ## El producto que se suelta: uno cualquiera con unidades en la góndola.
 const PRODUCTO_QUE_SE_SUELTA := Producto.Id.MALBARDO
@@ -546,9 +546,6 @@ func test_la_medida_distingue_rozar_el_mouse_de_meterse_en_el() -> void:
 func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
-	var camara: Camera3D = jugador.get_node("Giro/Camara")
-	var ojo_sobre_el_pie := camara.global_position - jugador.global_position
-	var campo: Area3D = jugador.get("_campo")
 	var espacio := almacen.get_world_3d().direct_space_state
 	var pie := Vector3(
 		objeto.global_position.x, jugador.global_position.y, objeto.global_position.z
@@ -576,12 +573,12 @@ func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 			if espacio.intersect_shape(consulta, 1).is_empty():
 				# Los objetos soltados antes pueden tapar el siguiente. Un lugar libre
 				# para pararse no garantiza que desde él se vea el objeto que se mide.
-				var rayo := PhysicsRayQueryParameters3D.create(
-					lugar + ojo_sobre_el_pie, objeto.global_position
+				jugador.global_position = lugar
+				_apuntar(jugador, objeto.global_position)
+				var candidato: CampoDeInteraccion.Candidato = jugador.call(
+					"_medir_candidato", objeto
 				)
-				rayo.collision_mask = campo.collision_mask
-				rayo.exclude = [jugador.get_rid()]
-				if espacio.intersect_ray(rayo).get("collider") == objeto:
+				if candidato.visible and candidato.distancia <= ReglasDelJugador.ALCANCE_DE_LA_MIRA:
 					return lugar
 	return null
 
@@ -972,8 +969,9 @@ func _apoyo_de(almacen: Node3D, cuerpo: Node3D) -> String:
 func _soltar_la_caja_sobre(almacen: Node3D, caja: Node3D, cara: String, tapa: Vector3) -> void:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	_parar_frente_a(almacen, cara, PARADO_CON_LA_CAJA)
-	if cara == CARA_DE_AFUERA_DEL_MOSTRADOR:
-		jugador.global_position.x = tapa.x
+	if cara == CARA_DE_ADENTRO_DE_LA_L:
+		jugador.global_position.x = tapa.x - 0.4
+		jugador.global_position.z = tapa.z + 1.2
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await get_tree().physics_frame
 	_apuntar(jugador, tapa)
@@ -1012,7 +1010,7 @@ func test_la_caja_se_sigue_apoyando_arriba_del_mostrador() -> void:  # AC-PLY-02
 	var tapa := Vector3(
 		brazo.get_center().x + brazo.size.x / 4.0, limites.end.y, brazo.get_center().z
 	)
-	await _soltar_la_caja_sobre(almacen, caja, CARA_DE_AFUERA_DEL_MOSTRADOR, tapa)
+	await _soltar_la_caja_sobre(almacen, caja, CARA_DE_ADENTRO_DE_LA_L, tapa)
 	assert_str(_apoyo_de(almacen, caja)).contains("EscritorioComputadora")
 	assert_array(_solidos_pisados(caja)).is_empty()
 	_comprobar_sin_rescates(almacen, "lo legal")
