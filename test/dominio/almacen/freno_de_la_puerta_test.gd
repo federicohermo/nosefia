@@ -5,6 +5,8 @@ const LARGO := 1.7
 const ESPESOR := 0.2
 const VANO := 1.7
 const UN_GRADO := deg_to_rad(1.0)
+const HACIA_ADELANTE := 1.0
+const HACIA_ATRAS := -1.0
 
 
 func _hoja_en(angulo: float) -> Puerta:
@@ -63,25 +65,53 @@ func test_en_el_angulo_de_paso_la_hoja_se_detiene_y_un_grado_menos_sigue() -> vo
 
 func test_el_angulo_de_paso_deja_pasar_y_un_grado_menos_no() -> void:  # AC-PLY-147
 	var libre := FrenoDeLaPuerta.ANCHO_DEL_JUGADOR + FrenoDeLaPuerta.MARGEN_DEL_PASO
-	var paso := FrenoDeLaPuerta.angulo_de_paso(LARGO, ESPESOR, VANO)
+	var paso := FrenoDeLaPuerta.angulo_de_paso(_contorno(0.0), VANO, HACIA_ADELANTE)
 	assert_float(_hueco(paso)).is_greater_equal(libre)
 	assert_float(_hueco(paso - UN_GRADO)).is_less(libre)
 
 
 func test_el_angulo_de_paso_es_de_grados_enteros() -> void:  # AC-PLY-147
-	var grados := rad_to_deg(FrenoDeLaPuerta.angulo_de_paso(LARGO, ESPESOR, VANO))
+	var paso := FrenoDeLaPuerta.angulo_de_paso(_contorno(0.0), VANO, HACIA_ADELANTE)
+	var grados := rad_to_deg(paso)
 	assert_float(grados).is_equal_approx(roundf(grados), 0.0001)
 
 
+func test_con_el_eje_en_la_cara_pasa_antes_la_hoja_que_aleja_su_espesor() -> void:  # AC-PLY-147
+	var contorno := _contorno(ESPESOR / 2.0)
+	var alejando := FrenoDeLaPuerta.angulo_de_paso(contorno, VANO, HACIA_ADELANTE)
+	var acercando := FrenoDeLaPuerta.angulo_de_paso(contorno, VANO, HACIA_ATRAS)
+	assert_float(alejando).is_less(acercando)
+
+
 func test_un_vano_que_no_deja_pasar_ni_abierta_la_hoja_no_se_detiene_nunca() -> void:  # AC-PLY-148
-	var paso := FrenoDeLaPuerta.angulo_de_paso(LARGO, ESPESOR, FrenoDeLaPuerta.ANCHO_DEL_JUGADOR)
+	var contorno := _contorno(0.0)
+	var paso := FrenoDeLaPuerta.angulo_de_paso(
+		contorno, FrenoDeLaPuerta.ANCHO_DEL_JUGADOR, HACIA_ADELANTE
+	)
 	assert_float(paso).is_equal(Puerta.ANGULO_ABIERTA)
 
 
 func test_un_vano_de_sobra_deja_pasar_con_la_hoja_cerrada_a_medias_o_no() -> void:  # AC-PLY-147
-	assert_float(FrenoDeLaPuerta.angulo_de_paso(LARGO, ESPESOR, LARGO + 2.0)).is_zero()
+	(
+		assert_float(FrenoDeLaPuerta.angulo_de_paso(_contorno(0.0), LARGO + 2.0, HACIA_ADELANTE))
+		. is_zero()
+	)
 
 
-## El hueco que deja la hoja a lo ancho del vano, con la hoja a `angulo`.
+## Los vértices de la hoja cerrada: `x` desde la bisagra a lo largo del vano, `y` desde el eje
+## a lo ancho de la hoja, que queda `desvio` metros hacia un lado del centro de su espesor.
+func _contorno(desvio: float) -> PackedVector2Array:
+	var mitad := ESPESOR / 2.0
+	return PackedVector2Array(
+		[
+			Vector2(0.0, desvio - mitad),
+			Vector2(0.0, desvio + mitad),
+			Vector2(LARGO, desvio - mitad),
+			Vector2(LARGO, desvio + mitad),
+		]
+	)
+
+
+## El hueco que deja una hoja de eje centrado a lo ancho del vano, con la hoja a `angulo`.
 func _hueco(angulo: float) -> float:
-	return VANO - (LARGO * cos(angulo) + ESPESOR * sin(angulo))
+	return VANO - (LARGO * cos(angulo) + ESPESOR / 2.0 * sin(angulo))

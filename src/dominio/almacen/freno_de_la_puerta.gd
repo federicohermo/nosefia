@@ -49,13 +49,17 @@ static func decidir(
 
 ## El menor ángulo, en grados enteros, al que la hoja deja al jugador pasar por el vano.
 ##
-## La hoja gira sobre un canto del vano: a `angulo`, su proyección sobre el vano mide
-## `largo * cos + espesor * sin`, y lo que sobra del vano es el hueco. Con un vano al que la
-## hoja cerrada apenas entra, el hueco crece con el ángulo.
-static func angulo_de_paso(largo: float, espesor: float, vano: float) -> float:
+## `contorno` son los vértices de la hoja cerrada: `x` a lo largo del vano desde la bisagra, `y`
+## a lo ancho de la hoja desde su eje. La hoja gira `sentido` (1 o -1) y lo que avanza a lo largo
+## del vano es lo que le quita al hueco. Con un vano al que la hoja cerrada apenas entra, el hueco
+## crece con el ángulo.
+static func angulo_de_paso(contorno: PackedVector2Array, vano: float, sentido: float) -> float:
 	var libre := vano - ANCHO_DEL_JUGADOR - MARGEN_DEL_PASO
-	if libre >= largo:
-		return 0.0
-	var radio := Vector2(largo, espesor).length()
-	var angulo := atan2(espesor, largo) + acos(clampf(libre / radio, -1.0, 1.0))
-	return minf(deg_to_rad(ceilf(rad_to_deg(angulo))), Puerta.ANGULO_ABIERTA)
+	for grados in roundi(rad_to_deg(Puerta.ANGULO_ABIERTA)):
+		var angulo := deg_to_rad(grados)
+		var avance := -INF
+		for punto in contorno:
+			avance = maxf(avance, punto.x * cos(angulo) - punto.y * sin(angulo) * sentido)
+		if avance <= libre:
+			return angulo
+	return Puerta.ANGULO_ABIERTA

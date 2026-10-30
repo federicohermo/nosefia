@@ -21,10 +21,15 @@ const CUADROS_DE_MARGEN := 2
 const PRODUCTO := Producto.Id.MALBARDO
 const PRODUCTO_DE_LA_CAJA := Producto.Id.CHISITOS
 
-## Cuánto antes del ángulo de la caja la toca la hoja, y cuánto se separa del ángulo de paso.
-const CONTACTO_AL_ABRIR := deg_to_rad(15.0)
+## Cuánto sobre el ángulo de paso va la caja. La hoja la toca antes de llegar a su centro, por el
+## ancho de la caja y el de la hoja, y tiene que tocarla ya pasado el ángulo de paso. Y cuánto se
+## separa del ángulo de paso la que la hoja atraviesa.
+const CONTACTO_AL_ABRIR := deg_to_rad(30.0)
 const CONTACTO_AL_CERRAR := deg_to_rad(5.0)
 const BAJO_EL_PASO := deg_to_rad(25.0)
+
+## Metros. Lo que mide de grueso el muro contra el que se apoya una caja.
+const ESPESOR_DEL_MURO := 0.2
 
 
 func _almacen() -> Node3D:
@@ -44,14 +49,21 @@ func _cuerpo_de(hoja: Node3D) -> PhysicsBody3D:
 	return null
 
 
+## Dónde está la hoja cerrada, en el mundo, aunque ya haya girado.
+func _cerrada(hoja: MeshInstance3D) -> Transform3D:
+	var padre: Transform3D = hoja.global_transform * hoja.transform.affine_inverse()
+	return padre * _cuerpo_de(hoja).get("_cerrada")
+
+
 func _bisagra(hoja: MeshInstance3D) -> Vector3:
-	return hoja.global_transform * Vector3(hoja.get_aabb().position.x, 0.0, 0.0)
+	var padre: Transform3D = hoja.global_transform * hoja.transform.affine_inverse()
+	return padre * _cuerpo_de(hoja).get("_bisagra")
 
 
 ## Un punto del piso en el recorrido de la hoja, a `angulo` radianes de la hoja cerrada.
 func _en_el_recorrido(almacen: Node3D, hoja: MeshInstance3D, angulo: float) -> Vector3:
 	var bisagra := _bisagra(hoja)
-	var brazo := (hoja.global_transform.basis.x * Vector3(1.0, 0.0, 1.0)).normalized()
+	var brazo := (_cerrada(hoja).basis.x * Vector3(1.0, 0.0, 1.0)).normalized()
 	var punto := bisagra + Basis(Vector3.UP, angulo) * brazo * RADIO_EN_EL_RECORRIDO
 	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
 	punto.y = suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
@@ -70,7 +82,7 @@ func _angulo_de(cuerpo: PhysicsBody3D) -> float:
 
 
 func _angulo_de_paso(cuerpo: PhysicsBody3D) -> float:
-	return cuerpo.get("_angulo_de_paso")
+	return cuerpo.call("angulo_de_paso")
 
 
 ## Los cuadros que tarda en hacer el giro entero una hoja sin nada adelante.
@@ -126,20 +138,39 @@ func _caja_en(almacen: Node3D, punto: Vector3, congelada: bool = true) -> RigidB
 	return caja
 
 
-## Pone un muro del lado al que empuja la hoja y apoya la caja contra él.
+## Pone un muro del lado al que empuja la hoja, pegado a la caja. `empuje` es un versor.
 func _contra_un_muro(caja: RigidBody3D, empuje: Vector3) -> void:
 	var muro: StaticBody3D = auto_free(StaticBody3D.new())
+	muro.collision_layer = caja.collision_mask
 	var forma := CollisionShape3D.new()
 	var volumen := BoxShape3D.new()
-	volumen.size = Vector3(2.0, 3.0, 0.2)
+	volumen.size = Vector3(2.0, 3.0, ESPESOR_DEL_MURO)
 	forma.shape = volumen
 	muro.add_child(forma)
 	add_child(muro)
 	muro.global_transform = Transform3D(
-		Basis.looking_at(empuje, Vector3.UP), caja.global_position + empuje * 0.8
+		Basis.looking_at(empuje, Vector3.UP),
+		(
+			caja.global_position
+			+ empuje * (_mitad_de_la_caja_hacia(caja, empuje) + ESPESOR_DEL_MURO / 2.0)
+		)
 	)
 	await get_tree().physics_frame
-	caja.move_and_collide(empuje)
+
+
+## Cuánto se extiende la caja desde su centro hacia `direccion`.
+func _mitad_de_la_caja_hacia(caja: RigidBody3D, direccion: Vector3) -> float:
+	var forma: CollisionShape3D = caja.find_children("*", "CollisionShape3D", false, false)[0]
+	var tamano := (forma.shape as BoxShape3D).size
+	var base := forma.global_transform.basis
+	return (
+		(
+			absf(direccion.dot(base.x)) * tamano.x
+			+ absf(direccion.dot(base.y)) * tamano.y
+			+ absf(direccion.dot(base.z)) * tamano.z
+		)
+		/ 2.0
+	)
 
 
 ## Una caja contra un muro en el recorrido, a `angulo` de la hoja cerrada.
@@ -229,8 +260,9 @@ func test_una_caja_que_se_puede_correr_frena_la_hoja_al_cerrar() -> void:  # AC-
 
 
 ## Barre la hoja con una caja en el recorrido, a mitad del giro, y devuelve cuántos cuadros tardó
-## la hoja en llegar a su tope, cuánto se corrió la caja en el sentido del giro y si quedó
-## adentro de la hoja.
+## la hoja en llegar a su tope, lo más que se corrió la caja en el sentido del giro y si quedó
+## adentro de la hoja. Al cerrar, la caja queda apretada contra la pared y la red de seguridad la
+## devuelve a su lugar: por eso se mide lo que se corrió y no dónde terminó.
 func _barrido_con_una_caja_corrible(congelada: bool, cerrando: bool) -> Dictionary:
 	var almacen: Node3D = await _almacen()
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
@@ -240,12 +272,19 @@ func _barrido_con_una_caja_corrible(congelada: bool, cerrando: bool) -> Dictiona
 	var punto := _en_el_recorrido(almacen, hoja, Puerta.ANGULO_ABIERTA / 2.0)
 	var caja := _caja_en(almacen, punto, congelada)
 	var partida := caja.global_position
-	var cuadros := await _cuadros_hasta_el_tope(cuerpo, 0.0 if cerrando else Puerta.ANGULO_ABIERTA)
-	await _esperar(CUADROS_PARA_DORMIRSE)
 	var sentido := _sentido_del_giro(hoja, partida) * (-1.0 if cerrando else 1.0)
+	var tope := 0.0 if cerrando else Puerta.ANGULO_ABIERTA
+	var corrida := 0.0
+	var cuadros := 0
+	cuerpo.call("alternar")
+	while not is_equal_approx(_angulo_de(cuerpo), tope) and cuadros < CUADROS_MAXIMOS:
+		await get_tree().physics_frame
+		cuadros += 1
+		corrida = maxf(corrida, (caja.global_position - partida).dot(sentido))
+	await _esperar(CUADROS_PARA_DORMIRSE)
 	return {
 		"cuadros": cuadros,
-		"corrida": (caja.global_position - partida).dot(sentido),
+		"corrida": corrida,
 		"adentro": _adentro_de_la_hoja(caja, cuerpo),
 	}
 
