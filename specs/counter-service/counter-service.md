@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433 y #444; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459)
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433 y #444; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564)
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -237,9 +237,9 @@ Cerrar la ventanilla NO DEBE detener el horario; la pausa DEBE detenerlo.
 CUANDO se hace clic izquierdo sobre el comprador por primera vez, el sistema DEBE iniciar su
 conversación inicial. Cada clic siguiente DEBE avanzar una entrada. MIENTRAS habla, los objetos
 NO DEBEN recibirse ni rechazarse. Terminada esa conversación, un clic con manos vacías DEBE
-mostrar un recordatorio de una entrada. Mientras una entrada esté activa, el clic DEBE avanzar
-el diálogo, también con un objeto rechazado en la mano. Terminada la entrada, con objeto sostenido
-DEBE intentar recibirlo sin avanzar diálogo en el mismo clic. Reabrir DEBE conservar el estado.
+mostrar un recordatorio de una entrada. Mientras una entrada de la inicial o de la despedida esté
+activa, el clic DEBE avanzar el diálogo. Terminada la entrada, con objeto sostenido DEBE intentar
+recibirlo sin avanzar diálogo en el mismo clic. Reabrir DEBE conservar el estado.
 Los textos DEBEN conservar el diseño de Figma y usar las cantidades del pedido de la ficha
 «Atención al cliente»: un Marolini para Tin, Coracola en lugar de Pura-Cola y una Zucarachas
 para Tia. La tabla de pedidos DEBE prevalecer sobre cantidades distintas en los diálogos.
@@ -327,8 +327,7 @@ vencido o despachado NO DEBE recibir ni iniciar otra conversación.
 
 ### BR-CTR-036 — Cada diálogo devuelve al mundo al terminar
 
-CUANDO termina la inicial, un recordatorio, un rechazo o una despedida, el sistema DEBE avisar
-su fin y devolver automáticamente la vista y movimiento normales, sin otro clic derecho.
+CUANDO termina la inicial o una despedida, el sistema DEBE avisar su fin y devolver automáticamente la vista y movimiento normales, sin otro clic derecho.
 El clic final NO DEBE activar otra interacción. MIENTRAS habla, el izquierdo DEBE avanzar una
 entrada, el derecho NO DEBE abandonar, ningún clic DEBE entregar ni soltar y el reloj DEBE
 seguir corriendo salvo pausa. Vencimiento y cierre DEBEN terminar conversación y encuadre.
@@ -513,6 +512,26 @@ apertura. CUANDO se completa su compra, el sistema DEBE vender una sola vez y de
 entrada, «Muchas gracias.»; NO DEBE retirar al comprador hasta terminarla. Los textos de las
 jornadas 1 y 2 son de sus compradores y NO DEBEN decirse en estas jornadas. El sistema NO DEBE
 inventar guiones propios para estos compradores.
+
+### BR-CTR-049 — Sólo la inicial y la despedida abren la ventanilla
+
+CUANDO el comprador dice su conversación inicial o su despedida, el sistema DEBE abrir la
+ventanilla y suspender al jugador hasta que termine, según BR-CTR-036. CUANDO el comprador
+agradece una entrega, recuerda lo que falta, rechaza un objeto o contesta que ya recibió lo que se
+le ofrece, el sistema NO DEBE abrir la ventanilla ni suspender al jugador, ni cerrarla si estaba
+abierta por otra causa. La despedida de un comprador que vence NO EXISTE: BR-CTR-043 conserva su
+destino.
+
+### BR-CTR-050 — Los textos de entrega salen como subtítulo de comprador
+
+CUANDO el comprador agradece una entrega, recuerda lo que falta, rechaza un objeto o contesta que
+ya recibió lo que se le ofrece, el sistema DEBE mostrar su texto en la línea de subtítulo, con el
+diseño de los diálogos de compradores y los nombres de los productos resaltados como en
+BR-CTR-039. DEBE verse como un pensamiento, con la duración y el desvanecido de
+[`subtitles`](../subtitles/subtitles.md), y reemplazar al subtítulo que se vea; un pensamiento
+posterior DEBE reemplazarlo a él (BR-SUB-001). Esos textos NO DEBEN retener el clic siguiente:
+cada pulsación DEBE producir una sola interacción nueva, con el objeto sostenido o con la mano
+vacía, incluso sobre un objeto que acaba de rechazarse.
 
 ## Criterios de aceptación
 
@@ -831,7 +850,7 @@ retira las unidades que hayan quedado en el piso, sin heredarlas como nuevas ent
 
 ### AC-CTR-047 — Terminar devuelve automáticamente *(verifica BR-CTR-036, BR-CTR-013)*
 
-DADO, por turno, inicial, recordatorio, rechazo y despedida de una entrada CUANDO se avanza
+DADO, por turno, inicial y despedida de una entrada CUANDO se avanza
 ENTONCES el diálogo queda terminado y se devuelve la vista normal una vez, sin clic derecho y
 sin otra interacción. Derecho durante la entrada no la cierra; Esc pausa y al reanudar queda
 la misma entrada. Hablar sin pausa no detiene el reloj.
@@ -970,8 +989,7 @@ entero. Con todos los productos recibidos, pide el ticket.
 
 DADO un comprador listo para recibir CUANDO recibe un producto ENTONCES agradece nombrando lo que
 falta y se puede dejar la ventanilla. CUANDO después se le ofrece otra unidad de ese producto ya completo, o la misma
-unidad, ENTONCES la rechaza en ese mismo clic con el agradecimiento de lo ya entregado, que
-retiene como cualquier rechazo: el clic siguiente lo cierra aunque la unidad siga en la mano. Un
+unidad, ENTONCES la rechaza en ese mismo clic con el agradecimiento de lo ya entregado. Un
 producto ajeno se rechaza con el prefijo de rechazo.
 
 ### AC-CTR-069 — Las fronteras de las agendas de las jornadas 3 a 5 *(verifica BR-CTR-044, BR-CTR-045, BR-CTR-046)*
@@ -1033,6 +1051,34 @@ DADO una compra incompleta con ticket y dos productos CUANDO vence ENTONCES el t
 ambos productos quedan dentro del local, sin venta. Atención se cumple sólo con las dos compras
 completas: una perdida la deja pendiente aunque la otra se complete, y reiniciar no hereda entregas
 ni ventas.
+
+### AC-CTR-096 — Entregar no abre la ventanilla *(verifica BR-CTR-049, BR-CTR-050)*
+
+DADO un comprador atendido, con su inicial terminada, y el jugador libre CUANDO se le entrega una
+unidad pendiente, un producto de más, la misma unidad por segunda vez, un objeto ajeno o nada
+ENTONCES el jugador no queda suspendido en ninguna de las cinco pulsaciones y el texto de cada
+una —agradecimiento, rechazo, ya entregado, rechazo y recordatorio— se ve en la línea de
+subtítulo con el diseño de comprador, sin abrir la ventanilla.
+
+### AC-CTR-097 — La inicial y la despedida siguen abriendo *(verifica BR-CTR-049, BR-CTR-036)*
+
+DADO un comprador sin atender CUANDO se le pulsa por primera vez ENTONCES la ventanilla se abre y
+el jugador queda suspendido hasta terminar la inicial. DADO una compra completa CUANDO se entrega
+el último elemento ENTONCES se abre con su despedida y al terminarla el jugador vuelve al mundo.
+DADO un comprador que vence con la compra incompleta ENTONCES no se abre ninguna ventanilla.
+
+### AC-CTR-098 — El subtítulo de entrega no retiene el clic *(verifica BR-CTR-050)*
+
+DADO un comprador con la inicial terminada y un objeto ajeno en la mano CUANDO se pulsa dos veces
+ENTONCES cada pulsación muestra el rechazo y ninguna avanza ni cierra un diálogo. DADO que acaba
+de recibir un producto CUANDO se pulsa con la mano vacía ENTONCES esa pulsación muestra el
+recordatorio, sin gastar un clic en cerrar el agradecimiento.
+
+### AC-CTR-099 — Una sola línea *(verifica BR-CTR-050)*
+
+DADO un pensamiento visible CUANDO el comprador agradece una entrega ENTONCES la línea muestra sólo
+el texto del comprador, entero y con el tiempo de un pensamiento. DADO ese texto visible CUANDO
+llega un pensamiento ENTONCES la línea muestra sólo el pensamiento.
 
 ## No objetivos
 

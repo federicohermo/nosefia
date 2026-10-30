@@ -1,13 +1,23 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
+[ext_resource type="FontFile" path="res://assets/ui/manada/unscii-16.ttf" id="3_fuente"]
 
-[node name="Hud" type="CanvasLayer" node_paths=PackedStringArray("_tareas", "_subtitulo", "_controles")]
+[sub_resource type="StyleBoxFlat" id="Comprador"]
+bg_color = Color(0.101961, 0.101961, 0.101961, 0.47)
+content_margin_left = 36.0
+content_margin_right = 13.0
+content_margin_top = 15.0
+content_margin_bottom = 15.0
+
+[node name="Hud" type="CanvasLayer" node_paths=PackedStringArray("_tareas", "_subtitulo", "_controles", "_comprador", "_texto_del_comprador")]
 script = ExtResource("1_hud")
 _tareas = NodePath("Tareas")
 _subtitulo = NodePath("Subtitulo")
 _controles = NodePath("Controles")
+_comprador = NodePath("Comprador")
+_texto_del_comprador = NodePath("Comprador/Texto")
 
 [node name="Tareas" type="Label" parent="."]
 offset_left = 24.0
@@ -48,3 +58,30 @@ theme_type_variation = &"Subtitulo"
 horizontal_alignment = 1
 vertical_alignment = 2
 autowrap_mode = 3
+
+[node name="Comprador" type="PanelContainer" parent="."]
+visible = false
+anchor_left = 0.2
+anchor_top = 1.0
+anchor_right = 0.8
+anchor_bottom = 1.0
+offset_top = -48.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Comprador")
+
+[node name="Texto" type="RichTextLabel" parent="Comprador"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.86)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/shadow_outline_size = 3
+theme_override_fonts/normal_font = ExtResource("3_fuente")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
