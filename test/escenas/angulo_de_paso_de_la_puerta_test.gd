@@ -170,29 +170,41 @@ func _medir(nombre: String) -> Dictionary:
 	}
 
 
-func _afirmar_el_paso(nombre: String) -> void:
-	var medida := await _medir(nombre)
+func _mensaje(nombre: String, medida: Dictionary) -> String:
+	return "%s cruza desde %d° y se adoptó %d°" % [nombre, medida["desde"], medida["adoptado"]]
+
+
+func test_el_angulo_de_paso_del_deposito_es_el_que_cruza_la_capsula() -> void:  # AC-PLY-147
+	var medida := await _medir("puerta")
+	assert_bool(medida["abierta"]).is_true()
+	assert_int(medida["desde"]).override_failure_message(_mensaje("puerta", medida)).is_between(
+		medida["adoptado"] - GRADOS_DE_REDONDEO_DEL_MOTOR, medida["adoptado"]
+	)
+
+
+func test_el_angulo_de_paso_de_la_segunda_hoja_es_el_que_cruza_la_capsula() -> void:  # AC-PLY-147
+	var medida := await _medir("puerta2")
+	assert_bool(medida["abierta"]).is_true()
+	assert_int(medida["desde"]).override_failure_message(_mensaje("puerta2", medida)).is_between(
+		medida["adoptado"] - GRADOS_DE_REDONDEO_DEL_MOTOR, medida["adoptado"]
+	)
+
+
+func test_el_angulo_de_paso_de_la_primera_cabina_es_el_que_cruza_la_capsula() -> void:  # AC-PLY-147
+	var medida := await _medir("bano_puerta_1")
 	assert_bool(medida["abierta"]).is_true()
 	(
 		assert_int(medida["desde"])
-		. override_failure_message(
-			"%s cruza desde %d° y se adoptó %d°" % [nombre, medida["desde"], medida["adoptado"]]
-		)
+		. override_failure_message(_mensaje("bano_puerta_1", medida))
 		. is_between(medida["adoptado"] - GRADOS_DE_REDONDEO_DEL_MOTOR, medida["adoptado"])
 	)
 
 
-func test_el_angulo_de_paso_del_deposito_es_el_que_cruza_la_capsula() -> void:  # AC-PLY-147
-	await _afirmar_el_paso("puerta")
-
-
-func test_el_angulo_de_paso_de_la_segunda_hoja_es_el_que_cruza_la_capsula() -> void:  # AC-PLY-147
-	await _afirmar_el_paso("puerta2")
-
-
-func test_el_angulo_de_paso_de_la_primera_cabina_es_el_que_cruza_la_capsula() -> void:  # AC-PLY-147
-	await _afirmar_el_paso("bano_puerta_1")
-
-
 func test_el_angulo_de_paso_de_la_segunda_cabina_es_el_que_cruza_la_capsula() -> void:  # AC-PLY-147
-	await _afirmar_el_paso("bano_puerta_2")
+	var medida := await _medir("bano_puerta_2")
+	assert_bool(medida["abierta"]).is_true()
+	(
+		assert_int(medida["desde"])
+		. override_failure_message(_mensaje("bano_puerta_2", medida))
+		. is_between(medida["adoptado"] - GRADOS_DE_REDONDEO_DEL_MOTOR, medida["adoptado"])
+	)
