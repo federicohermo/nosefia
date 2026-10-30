@@ -290,8 +290,7 @@ func test_lo_soltado_mirando_el_contenedor_no_se_apoya_en_su_cuerpo() -> void:  
 	camara.look_at(al_pie)
 	var toca: Vector3 = _golpe_de_la_mira(jugador, caja)["position"]
 	_soltar(almacen, caja)
-	# Lo aparta de lo que estorba en la vecindad: queda dentro de media caja del punto, no en el
-	# contenedor.
+	# El juego la corre un poco de lo que estorba: queda a menos de media caja del punto.
 	var forma: CollisionShape3D = caja.find_children("*", "CollisionShape3D", false, false)[0]
 	var media := LimitesDeForma.de(forma.shape).size * forma.scale * 0.5
 	(
