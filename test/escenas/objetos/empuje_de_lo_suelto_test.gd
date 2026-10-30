@@ -255,7 +255,7 @@ func test_lo_sostenido_ignora_el_paso_del_jugador() -> void:  # AC-PLY-154
 		_retirar(cuerpo)
 
 
-func test_el_balde_recibe_la_parte_del_paso_de_la_caja() -> void:  # AC-PLY-155
+func test_el_balde_recibe_la_parte_del_paso_de_la_caja() -> void:  # AC-PLY-160
 	var almacen: Node3D = await _almacen_con_jugador_andando()
 	var balde: ObjetoAgarrable = almacen.get_node("Objetos/Balde")
 	await _soltar_en(balde, PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * SOLTADO_DESDE)
@@ -271,7 +271,7 @@ func test_el_balde_recibe_la_parte_del_paso_de_la_caja() -> void:  # AC-PLY-155
 	assert_float(corrido.distance_to(de_los_utiles)).is_greater(0.0005)
 
 
-func test_el_balde_suelto_no_se_vuelca_y_la_mopa_se_moja_en_el_balde() -> void:  # AC-PLY-156
+func test_el_balde_suelto_no_se_vuelca_y_la_mopa_se_moja_en_el_balde() -> void:  # AC-PLY-161
 	var almacen: Node3D = await _almacen_con_jugador_andando()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var balde: ObjetoAgarrable = almacen.get_node("Objetos/Balde")
