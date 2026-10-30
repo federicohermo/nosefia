@@ -6,7 +6,8 @@ enum Personaje { NINGUNO, TIN, TIA, FEDE, MIA, CAMI }
 
 const FALTA := "Gracias. Falta que me des "
 const YA_ENTREGADO := "Gracias, pero ya me habías dado esto."
-const PIDE_EL_TICKET := "Gracias. Me das el ticket, ¿por favor?"
+const PEDIDO_DEL_TICKET := "Me das el ticket, ¿por favor?"
+const PIDE_EL_TICKET := "Gracias. " + PEDIDO_DEL_TICKET
 const RECHAZO := "Yo no pedí esto. "
 const SALUDO := "Buenas noches. "
 const DESPEDIDA := "Muchas gracias."
@@ -59,13 +60,13 @@ static func _crear_dialogo(entradas: PackedStringArray) -> Dialogo:
 
 
 ## Lo que dice cualquier comprador al hablarle: lo que todavía le falta, o el ticket si sólo falta
-## él. Al rechazar, antepone el rechazo al pedido entero.
+## él. Al rechazar, antepone el rechazo a lo que todavía le falta.
 static func recordatorio(
 	pedido: Venta, recepcion: RecepcionDeCompra, rechazo: bool = false
 ) -> Dialogo:
-	if rechazo:
-		return una(RECHAZO + "Quiero " + _enumeracion(pedido, pedido.unidades_de) + ".")
 	var faltan := _enumeracion(pedido, recepcion.pendientes)
+	if rechazo:
+		return una(RECHAZO + (PEDIDO_DEL_TICKET if faltan.is_empty() else "Quiero " + faltan + "."))
 	return una(PIDE_EL_TICKET if faltan.is_empty() else "Quiero " + faltan + ".")
 
 
