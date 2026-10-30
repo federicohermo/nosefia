@@ -195,6 +195,11 @@ func seleccionar_disposicion(jornada: int) -> void:
 	)
 
 
+## Si la jornada elegida usa el mapa de prueba.
+func es_de_prueba() -> bool:
+	return disposicion == DISPOSICION_DE_PRUEBA
+
+
 func _preparar_materiales_y_modelos() -> void:
 	_aristas.shader = CONTORNO
 	_aristas.set_shader_parameter("color", IndicacionDelFoco.COLOR)

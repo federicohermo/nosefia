@@ -21,6 +21,8 @@ const TableroElectrico := preload("res://src/escenas/puestos/tablero_electrico.g
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## el del nodo y llamarles `mostrar()` no compilaría.
 const EstanteDelLocal := preload("res://src/escenas/puestos/estante.gd")
+## Lo que lleva al final del nombre la copia de una bandeja de la góndola para el mapa de prueba.
+const SUFIJO_DE_PRUEBA := "-prueba"
 const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
@@ -434,6 +436,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
+	mostrar_las_bandejas(get_node("Estructura"), _reposicion_manual.es_de_prueba())
 	var productos := Catalogo.de_la_jornada(jornada)
 	var vacios := Apertura.vacios_de_la_jornada(
 		jornada,
@@ -1224,3 +1227,13 @@ func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:
 	_tachos()[tacho].abrir(false)
 	for forma: CollisionShape3D in bolsa.find_children("*", "CollisionShape3D", true, false):
 		forma.disabled = false
+
+
+## Las bandejas de la góndola están cortadas a medida de los productos de un mapa. Las de prueba
+## se llaman como las del mapa completo que reemplazan, con el sufijo al final, y se ve una de
+## las dos.
+static func mostrar_las_bandejas(estructura: Node, de_prueba: bool) -> void:
+	for prueba: Node3D in estructura.find_children("*" + SUFIJO_DE_PRUEBA, "Node3D", true, false):
+		prueba.visible = de_prueba
+		var nombre := String(prueba.name).trim_suffix(SUFIJO_DE_PRUEBA)
+		(prueba.get_parent().get_node(nombre) as Node3D).visible = not de_prueba
