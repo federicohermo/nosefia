@@ -5,6 +5,11 @@ extends Node3D
 
 const MASCARA := preload("res://src/ui/mascara_de_referencias.gdshader")
 const DESENFOQUE := preload("res://src/ui/desenfoque_de_referencias.gdshader")
+## El radio aparente, en píxeles: la dispersión del desenfoque es RADIO / raíz de 2.
+const RADIO := 4.0
+## Tomas a cada lado de la central. Cada una cubre dos píxeles vecinos con un solo filtrado
+## lineal, así que el núcleo llega a 2 * PARES píxeles del centro sin dejar huecos.
+const PARES := 3
 var _ventana := SubViewport.new()
 var _camara := Camera3D.new()
 var _pantalla := MeshInstance3D.new()
@@ -42,8 +47,67 @@ func _ready() -> void:
 	material.shader = DESENFOQUE
 	material.render_priority = -100
 	material.set_shader_parameter("mascara", _ventana.get_texture())
+	material.set_shader_parameter("tomas", tomas())
 	_pantalla.material_override = material
 	add_child(_pantalla)
+
+
+## Las tomas del desenfoque: x e y son el desplazamiento en píxeles, y z el peso. Son el producto
+## de dos filas iguales, así que la dispersión es la misma en x y en y.
+static func tomas() -> PackedVector3Array:
+	var fila := _tomas_de_una_fila()
+	var resultado := PackedVector3Array()
+	for vertical: Vector2 in fila:
+		for horizontal: Vector2 in fila:
+			resultado.append(Vector3(horizontal.x, vertical.x, horizontal.y * vertical.y))
+	return resultado
+
+
+## Un gaussiano sobre 2 * PARES píxeles por lado. Cada par de píxeles vecinos se reemplaza por
+## una toma entre los dos, con su peso sumado: el filtrado lineal devuelve el mismo reparto.
+static func _tomas_de_una_fila() -> PackedVector2Array:
+	var mitad := 2 * PARES
+	var sigma := _sigma_para_la_dispersion(mitad)
+	var total := 0.0
+	for pixel in range(-mitad, mitad + 1):
+		total += _campana(pixel, sigma)
+	var derecha := PackedVector2Array()
+	for par in range(1, PARES + 1):
+		var cerca := _campana(2 * par - 1, sigma)
+		var lejos := _campana(2 * par, sigma)
+		var desplazamiento := ((2 * par - 1) * cerca + 2 * par * lejos) / (cerca + lejos)
+		derecha.append(Vector2(desplazamiento, (cerca + lejos) / total))
+	var fila := PackedVector2Array()
+	for indice in range(PARES - 1, -1, -1):
+		fila.append(Vector2(-derecha[indice].x, derecha[indice].y))
+	fila.append(Vector2(0.0, _campana(0, sigma) / total))
+	fila.append_array(derecha)
+	return fila
+
+
+## Cortar la campana en `mitad` píxeles le quita dispersión. Se ensancha hasta que el corte
+## dispersa RADIO / raíz de 2.
+static func _sigma_para_la_dispersion(mitad: int) -> float:
+	var objetivo := RADIO * RADIO / 2.0
+	var minimo := 0.5
+	var maximo := 4.0 * mitad
+	for _vuelta in 40:
+		var sigma := (minimo + maximo) / 2.0
+		var total := 0.0
+		var segundo := 0.0
+		for pixel in range(-mitad, mitad + 1):
+			var peso := _campana(pixel, sigma)
+			total += peso
+			segundo += peso * pixel * pixel
+		if segundo / total < objetivo:
+			minimo = sigma
+		else:
+			maximo = sigma
+	return (minimo + maximo) / 2.0
+
+
+static func _campana(pixel: int, sigma: float) -> float:
+	return exp(-float(pixel * pixel) / (2.0 * sigma * sigma))
 
 
 func agregar(grupo: MultiMeshInstance3D, bloque: PackedFloat32Array, cantidad: int) -> void:
