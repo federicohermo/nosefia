@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; patada a la unidad de #219
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -535,6 +535,24 @@ del paso que no se pudo dar: el jugador no lo atraviesa ni lo empuja a toda su v
 uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. Lo corrido NO
 DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar
 agitándose (BR-PLY-013). Lo que se lleva en la mano no se corre.
+
+### BR-PLY-052 — Una unidad suelta en el piso se patea al caminar contra ella
+
+CUANDO el jugador camina y toca una unidad de producto suelta en el piso, el sistema DEBE correrla
+sobre el piso hacia el costado del camino del jugador, y no hacia el frente de la cámara. El
+contacto NO DEBE cambiar la velocidad del jugador, y la unidad DEBE quedar detrás de él: no se la
+empuja por delante. Cuánto se corre sale del dominio como una fracción de la velocidad del
+jugador, mayor que cero y menor que uno, y es menos que el alcance de la mira (BR-PLY-004)
+(OQ-PLY-006). MIENTRAS el jugador está quieto, la unidad NO DEBE correrse.
+
+La unidad pateada NO DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015). NO
+DEBE subirse a un estante ni entrar en un mueble: SI lo toca, ENTONCES DEBE frenarse y quedar en
+el piso. SI está acorralada contra una pared, ENTONCES el jugador la atraviesa y la unidad NO DEBE
+moverse. Llevar una caja en la mano NO DEBE cambiar nada de esto.
+
+Sólo se patea la unidad de producto: la caja, la bolsa y los útiles conservan BR-PLY-050. Una
+unidad pateada NO cuenta como repuesta: reponer se cumple sólo con el gesto de colocarla en el
+estante ([`store-stock`](../store-stock/store-stock.md)).
 
 ## Criterios de aceptación
 
@@ -1395,6 +1413,35 @@ parte del paso que declara el dominio para la caja, y no con la de los útiles n
 DADO un útil de limpieza o una bolsa de basura que no están sueltos, sino sostenidos ENTONCES
 recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 
+### AC-PLY-155 — Patear una unidad no frena al jugador y la deja detrás *(verifica BR-PLY-052)*
+
+DADO una unidad suelta en el piso, en el camino del jugador que camina hacia adelante CUANDO la
+toca ENTONCES la velocidad del jugador es la misma antes y después del contacto, y la unidad se
+corre sobre el piso hacia el costado del camino, menos que el alcance de la mira, y queda detrás
+del jugador. DADO el jugador quieto sobre la unidad ENTONCES la unidad no se mueve.
+
+### AC-PLY-156 — Una unidad acorralada contra la pared no se mueve *(verifica BR-PLY-052, BR-PLY-015)*
+
+DADO una unidad suelta entre el camino del jugador y una pared, pegada a ella CUANDO el jugador
+camina junto a la unidad ENTONCES la atraviesa, y la unidad conserva su posición y no se superpone
+con la pared.
+
+### AC-PLY-157 — Con una caja en la mano también se patea *(verifica BR-PLY-052)*
+
+DADO el jugador con una caja en la mano y una unidad suelta en su camino CUANDO la toca ENTONCES
+pasa lo mismo que en AC-PLY-155.
+
+### AC-PLY-158 — Lo pateado no entra en un mueble *(verifica BR-PLY-052, BR-PLY-015)*
+
+DADO una unidad suelta en el piso, cerca del pie de una góndola, de la heladera o de otro mueble
+CUANDO el jugador la patea hacia él ENTONCES se frena al tocarlo y queda en el piso: no sube a un
+estante ni se superpone con el mueble.
+
+### AC-PLY-159 — Patear cuesta menos que empujar una caja *(verifica BR-PLY-052, BR-PLY-050)*
+
+DADO dos jugadores que caminan el mismo tiempo, uno contra una caja suelta y otro contra una
+unidad suelta ENTONCES el que empuja la caja recorre menos que el que patea la unidad.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -1417,7 +1464,8 @@ recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 - **Salida:** la velocidad, los dos ángulos de la vista, su altura, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
-  referencia de controles.
+  referencia de controles, y el impulso que recibe cada unidad de producto que el jugador toca
+  en el piso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
   declarado no tiene efecto; con algo que no es una unidad en la mano, ningún casillero vacío se
   enfoca; un gesto sin control con nombre no da línea en la referencia.
@@ -1469,3 +1517,10 @@ recibir el paso del jugador no les cambia ni la posición ni la velocidad.
   - Bloquea: introducir un umbral general de estabilidad no decidido; si corregir el caso de
     góndola requiere ese umbral, bloquea su implementación hasta resolverlo. No cambia los
     resultados concretos de BR-PLY-040 ni los apoyos válidos existentes.
+
+- **OQ-PLY-006 — ¿Cuánto se corre una unidad pateada?**
+  - Por qué sigue abierta: el diseño pide que se corra «un poco» y no fija la fracción de la
+    velocidad del jugador. Hoy es un valor provisional del dominio.
+  - Decide: el dueño del repo, jugando.
+  - Bloquea: nada; mientras se decide, la unidad se corre menos que el alcance de la mira
+    (BR-PLY-052).
