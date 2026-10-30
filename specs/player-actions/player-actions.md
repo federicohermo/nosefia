@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; hoja que se frena con lo pesado de #218
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -136,6 +136,10 @@ superponerse con el material de ningún sólido fijo: un mueble, una pared, el t
 Apoyado contra una cara, o encima, no es superponerse. El caso que decide es el objeto más chico
 contra el sólido más delgado.
 
+Adentro de una heladera nada se apoya suelto: ni en el fondo, ni en un estante, ni sobre la base.
+Soltar ahí hace lo mismo que soltar contra una góndola, y lo soltado queda afuera. Colocar un
+producto en su casillero no es soltarlo.
+
 ### BR-PLY-016 — Lo que igual queda adentro vuelve a un lugar alcanzable
 
 SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
@@ -158,7 +162,14 @@ sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo m�
 CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
 el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
 horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo —salvo lo
-que excluye BR-CLN-040— o un objeto que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
+que excluye BR-CLN-040— o un objeto que admite otro encima. Admiten otro encima las cajas
+contenedoras y las unidades de producto de tapa lisa: las de caja, cajita y lata. No lo admiten
+las de envoltorio plástico ni las de botella, el balde, los bidones, la mopa, las bolsas ni el
+ticket.
+
+CUANDO se agarra algo que admite otro encima, el sistema DEBE dejar caer lo que estaba apoyado
+sobre él, y lo que estaba apoyado sobre eso, cada cosa hasta su apoyo real siguiente. Agarrar algo
+que no tiene nada encima NO DEBE mover ningún otro objeto.
 
 SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
@@ -488,7 +499,42 @@ sostenido por ninguno de estos intentos. El secundario NO DEBE cerrar la noche n
 Con control suspendido, pausa o jornada cerrada, ningún gesto DEBE volver a cerrar la noche.
 Las demás puertas DEBEN conservar su referencia y comportamiento.
 
-### BR-PLY-042 — Lo pesado frena la hoja y lo liviano no
+### BR-PLY-042 — Agacharse baja la vista mientras se mantiene apretado Espacio
+
+MIENTRAS se mantiene apretada la acción de agacharse —Espacio por defecto—, el sistema DEBE
+bajar la vista a la altura agachado, aproximadamente el centro del hueco del segundo estante
+desde el piso de las góndolas. CUANDO se la suelta, DEBE devolver la vista a la altura de pie. No
+es un interruptor: apretar y soltar NO DEBE dejar al jugador agachado. Las dos alturas salen del
+dominio, y la agachado es mayor que cero y menor que la de pie.
+
+La vista NO DEBE saltar de una altura a la otra: DEBE recorrer el trecho entre las dos en una
+fracción de segundo, a paso parejo. CUANDO la acción cambia a mitad del recorrido, la vista DEBE
+seguir hacia la nueva altura desde la que tenga en ese momento.
+
+Agachado, el jugador DEBE caminar más lento que de pie: a una proporción de la velocidad de
+BR-PLY-002, que sale del dominio y es mayor que cero y menor que uno. El adelante y la
+normalización de la diagonal de BR-PLY-001 y BR-PLY-002 se conservan, y agacharse NO DEBE quitarle
+su tecla a la caminata. La mira enfoca desde la altura vigente de la vista (BR-PLY-004), y el
+cuerpo conserva su forma de colisión.
+
+MIENTRAS el control está suspendido (BR-PLY-006), la postura NO DEBE cambiar, apriete o suelte
+lo que apriete el jugador. CUANDO se reanuda, la postura DEBE seguir a la acción tal como esté
+en ese momento.
+
+Espacio es una tecla del juego: NO DEBE aceptar ni activar el botón que tenga el foco. Enter y
+el Enter del teclado numérico lo siguen haciendo, así que Espacio sostenido al terminar la
+jornada NO DEBE saltear la placa del cierre.
+
+### BR-PLY-050 — Lo que está suelto en el piso se corre al caminar contra ello
+
+CUANDO el jugador camina contra una caja, un útil de limpieza —jabón, mopa o balde— o una bolsa de
+basura que están sueltos, el sistema DEBE correrlo en el sentido del paso, y sólo con la parte
+del paso que no se pudo dar: el jugador no lo atraviesa ni lo empuja a toda su velocidad. Cada
+uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. Lo corrido NO
+DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar
+agitándose (BR-PLY-013). Lo que se lleva en la mano no se corre.
+
+### BR-PLY-051 — Lo pesado frena la hoja y lo liviano no
 
 Pesado es lo que el jugador empuja: hoy, la caja contenedora. Liviano es lo demás que se agarra:
 un producto, una bolsa, el balde o la mopa. La clase no depende del tamaño ni de si el objeto
@@ -639,11 +685,11 @@ apoyada arriba del mostrador.
 DADO una caja apoyada en el piso CUANDO se suelta otra mirando su tapa ENTONCES la segunda queda
 apoyada encima de la primera.
 
-### AC-PLY-024 — La unidad se sigue dejando adentro de la heladera *(verifica BR-PLY-015)*
+### AC-PLY-024 — La unidad soltada contra una heladera no queda adentro *(verifica BR-PLY-015)*
 
-DADO una unidad de producto soltada adentro de la heladera CUANDO pasa un segundo de física
-ENTONCES sigue adentro de la heladera, no se superpone con sus paneles y la mira la puede
-enfocar.
+DADO una unidad de producto en la mano y una heladera con la puerta abierta CUANDO se la suelta
+con la mira sobre un estante de su interior y pasa un segundo de física ENTONCES la unidad queda
+afuera del volumen de la heladera, no se superpone con sus paneles y la mira la puede enfocar.
 
 ### AC-PLY-025 — El empujón que terminó adentro se deshace *(verifica BR-PLY-016)*
 
@@ -692,22 +738,28 @@ ENTONCES el objeto termina fuera de ella, sin superponerse con ningún sólido f
 
 ### AC-PLY-033 — Queda donde se mira *(verifica BR-PLY-018)*
 
-DADO algo en la mano y la mira sobre el piso libre, o sobre la tapa de una caja contenedora, a
-menos del alcance CUANDO se suelta ENTONCES su base queda sobre el punto que la mira toca, sin
-encimarse con nada.
+DADO algo en la mano y la mira sobre el piso libre, sobre la tapa de una caja contenedora o sobre
+la tapa de una unidad de producto que admite otro encima, a menos del alcance CUANDO se suelta
+ENTONCES su base queda sobre el punto que la mira toca, sin encimarse con nada. DADO una unidad de
+Marolini apoyada en el piso libre del depósito y otra en la mano CUANDO se suelta mirando la tapa
+de la primera ENTONCES la segunda queda encima y, pasados 8 segundos de física, sigue encima y
+dormida.
 
 ### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
 
 DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
-con el corte exacto sobre el piso y los muebles del mundo fijo, o sobre una caja contenedora, sí;
-sobre el cuerpo del contenedor (BR-CLN-040) y sobre la mopa, no.
-Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
+con el corte exacto sobre el piso y los muebles del mundo fijo, sobre una caja contenedora o sobre
+una unidad que admite, sí; sobre el cuerpo del contenedor (BR-CLN-040) y sobre la mopa, no.
+Admiten otro encima exactamente las cajas contenedoras y las unidades de producto de caja, cajita
+y lata; ningún otro objeto del almacén lo admite. La cara de una lata acostada cuya normal queda
+por debajo del corte no admite.
 
 ### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
 
-DADO la mira sobre una pared, sobre nada al alcance, o sobre un punto donde lo soltado quedaría
-encimado con algo o adentro de un mueble CUANDO se suelta ENTONCES lo soltado sale del mismo
-punto que sin mira.
+DADO la mira sobre una pared, sobre nada al alcance, sobre un punto donde lo soltado quedaría
+encimado con algo o adentro de un mueble, o sobre la tapa de una bolsa, del balde, de un bidón,
+de la mopa o de una unidad de envoltorio plástico CUANDO se suelta ENTONCES lo soltado sale del
+mismo punto que sin mira.
 
 ### AC-PLY-036 — La puerta abierta anoche arranca cerrada *(verifica BR-PLY-019)*
 
@@ -808,7 +860,8 @@ CUANDO se lo vuelve a agarrar ENTONCES vuelve a ese mismo agarre.
 ### AC-PLY-051 — El balde se apoya derecho donde se mira *(verifica BR-PLY-018)*
 
 DADO el balde en la mano, la vista 40 grados hacia abajo y la mira sobre el piso libre, la tapa
-de una caja contenedora, un estante del depósito o el mostrador, a menos del alcance CUANDO se
+de una caja contenedora o de una unidad que admite otro encima, un estante del depósito o el
+mostrador, a menos del alcance CUANDO se
 lo suelta ENTONCES su eje queda a menos de 1 grado de la vertical, su base sobre el punto que la
 mira toca, sin encimarse con nada, y la mano vacía. CUANDO pasan dos segundos de física ENTONCES
 sigue derecho y a menos de 1 centímetro de donde quedó. DADO el balde con agua ENTONCES después
@@ -1258,18 +1311,18 @@ usar; la referencia permanece vacía y se conserva el objeto. CUANDO se
 hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
 abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los gestos no lo repiten.
 
-### AC-PLY-140 — Sin obstáculo, la hoja gira a la velocidad vigente *(verifica BR-PLY-042)*
+### AC-PLY-140 — Sin obstáculo, la hoja gira a la velocidad vigente *(verifica BR-PLY-051)*
 
 DADO una puerta sin nada en el recorrido CUANDO se abre y después se cierra ENTONCES la hoja
 llega a cada tope a la velocidad de siempre, sin frenar ni detenerse antes.
 
-### AC-PLY-141 — Una unidad de producto no frena la hoja *(verifica BR-PLY-042, BR-PLY-017)*
+### AC-PLY-141 — Una unidad de producto no frena la hoja *(verifica BR-PLY-051, BR-PLY-017)*
 
 DADO una unidad de producto en el recorrido de la hoja CUANDO se abre y se cierra la puerta
 ENTONCES la hoja gira a la velocidad de siempre, llega a cada tope y la unidad queda fuera de
 ella.
 
-### AC-PLY-142 — Una caja que se puede correr frena la hoja y se corre *(verifica BR-PLY-042)*
+### AC-PLY-142 — Una caja que se puede correr frena la hoja y se corre *(verifica BR-PLY-051)*
 
 DADO una caja contenedora apoyada en el recorrido, con espacio para correrse, CUANDO se abre la
 puerta ENTONCES la hoja gira más lenta que la de siempre desde el contacto, llega al tope y la
@@ -1279,7 +1332,7 @@ la devuelve, una vez, fuera de la hoja. Una caja despierta frena igual que una d
 caja con lugar para el paso ya frenado y no para el entero ENTONCES la hoja no se detiene: la
 caja se corre.
 
-### AC-PLY-143 — Una caja inmóvil detiene la hoja sólo si queda el paso *(verifica BR-PLY-042, BR-PLY-016)*
+### AC-PLY-143 — Una caja inmóvil detiene la hoja sólo si queda el paso *(verifica BR-PLY-051, BR-PLY-016)*
 
 DADO una caja contra la pared que no puede correrse y la hoja en un ángulo igual al de paso del
 vano CUANDO la hoja la toca ENTONCES se detiene donde toca. DADO la hoja un grado por debajo del
@@ -1287,13 +1340,13 @@ vano CUANDO la hoja la toca ENTONCES se detiene donde toca. DADO la hoja un grad
 la red de seguridad la rescata cuando queda quieta. Al abrir y al cerrar rige el mismo ángulo de
 paso.
 
-### AC-PLY-144 — Al retirar la caja, la hoja reanuda *(verifica BR-PLY-042)*
+### AC-PLY-144 — Al retirar la caja, la hoja reanuda *(verifica BR-PLY-051)*
 
 DADO una hoja detenida por una caja inmóvil CUANDO se retira la caja ENTONCES la hoja reanuda y
 llega a su tope sin un segundo gesto, y avisa que quedó quieta una vez al detenerse y otra al
 llegar. Al abrir y al cerrar.
 
-### AC-PLY-145 — El jugador en el recorrido no queda adentro de la hoja *(verifica BR-PLY-042, BR-PLY-017)*
+### AC-PLY-145 — El jugador en el recorrido no queda adentro de la hoja *(verifica BR-PLY-051, BR-PLY-017)*
 
 DADO el jugador parado en el recorrido de la hoja CUANDO la puerta se abre ENTONCES, al quedar
 quieta, la cápsula no está adentro de la hoja y la hoja llegó a su tope.
@@ -1304,19 +1357,124 @@ DADO una unidad de producto despierta en el recorrido de la hoja CUANDO se abre 
 se corre en el sentido del giro, igual que una dormida, y al quedar quieta la hoja no tiene nada
 adentro.
 
-### AC-PLY-147 — El ángulo de paso es el que cruza la cápsula *(verifica BR-PLY-042)*
+### AC-PLY-147 — El ángulo de paso es el que cruza la cápsula *(verifica BR-PLY-051)*
 
 DADO cada vano de paso con su hoja en el ángulo de paso adoptado CUANDO el jugador lo cruza en
 ambos sentidos ENTONCES cruza. El motor redondea las esquinas del casco de la hoja, y por eso la
 cápsula puede cruzar hasta un grado antes del adoptado; nunca después. La medida parte de un
 jugador libre, separado del piso y de otros cuerpos.
 
-### AC-PLY-148 — La hoja no se detiene antes del ángulo de paso *(verifica BR-PLY-042)*
+### AC-PLY-148 — La hoja no se detiene antes del ángulo de paso *(verifica BR-PLY-051)*
 
 DADO una hoja contra algo pesado que no puede correrse CUANDO la hoja está en el ángulo de paso
 ENTONCES queda en ese ángulo. CUANDO está un grado por debajo ENTONCES sigue hasta su destino
 sin detenerse. DADO un factor de velocidad fuera de (0, 1] ENTONCES la hoja gira como con
 factor 1.
+
+### AC-PLY-110 — Levantar lo de abajo hace caer lo de arriba *(verifica BR-PLY-018)*
+
+DADO una unidad de producto que admite otro encima, dormida debajo de otra unidad CUANDO se agarra
+la de abajo y pasan los mismos cuadros de caída que usa la pila de cajas ENTONCES la de arriba
+tiene algo debajo a menos de media altura suya y bajó al menos la altura de la de abajo. DADO una
+unidad sin nada encima CUANDO se la agarra ENTONCES ningún objeto a un metro se despierta ni se
+mueve. DADO una unidad apoyada a caballo entre dos CUANDO se agarra una ENTONCES queda sobre la
+otra. DADO lo de arriba ya despierto CUANDO se agarra la de abajo ENTONCES cae igual y no se
+duplica ningún aviso.
+
+### AC-PLY-111 — La caída sigue para arriba *(verifica BR-PLY-018)*
+
+DADO tres unidades que admiten otro encima, apiladas y dormidas CUANDO se agarra la de abajo y
+pasan los mismos cuadros de caída ENTONCES las otras dos caen, cada una hasta su apoyo real:
+la del medio sobre lo que tenga debajo, y la de arriba sobre la del medio.
+
+### AC-PLY-120 — Agachado, la vista baja *(verifica BR-PLY-042)*
+
+DADO el jugador de pie CUANDO se mantiene apretada la acción de agacharse ENTONCES la vista baja
+hasta la altura agachado, y no se queda en la de pie.
+
+### AC-PLY-121 — Soltar la acción levanta la vista y no es un interruptor *(verifica BR-PLY-042)*
+
+DADO el jugador agachado CUANDO se suelta la acción ENTONCES la altura de la vista vuelve a la de
+pie. DADO el jugador de pie CUANDO se aprieta y se suelta la acción ENTONCES queda a la altura de
+pie, y apretarla de nuevo lo baja otra vez.
+
+### AC-PLY-122 — La altura agachado está entre el piso y la de pie *(verifica BR-PLY-042)*
+
+DADO las dos alturas de la vista ENTONCES la agachado es mayor que cero y menor que la de pie.
+
+### AC-PLY-124 — Suspendido, la postura no cambia *(verifica BR-PLY-042, BR-PLY-006)*
+
+DADO el jugador agachado y el control suspendido CUANDO se suelta la acción ENTONCES la altura
+sigue siendo la agachado. DADO el jugador de pie y el control suspendido CUANDO se aprieta la
+acción ENTONCES la altura sigue siendo la de pie. CUANDO se reanuda con la acción apretada
+ENTONCES la altura es la agachado; reanudada con la acción suelta, la de pie.
+
+### AC-PLY-125 — La mira enfoca desde la altura agachado *(verifica BR-PLY-042, BR-PLY-004)*
+
+DADO el jugador agachado, con la bajada completa, ENTONCES la cámara de la mira está a la altura
+agachado sobre el piso, y un objeto interactuable apenas debajo de la altura de pie, en línea con la mira agachado, queda
+enfocado. CUANDO se suelta la acción ENTONCES la cámara vuelve a la altura de pie.
+
+### AC-PLY-126 — Espacio es de la acción y la acción tiene su nombre *(verifica BR-PLY-042)*
+
+DADO el mapa de entradas del juego ENTONCES la acción de agacharse existe, su tecla es Espacio y
+ninguna otra acción del juego que ya existía la tiene. DADO el nombre de la acción en el dominio
+ENTONCES coincide con el del mapa de entradas.
+
+### AC-PLY-127 — Espacio no acepta el botón con foco *(verifica BR-PLY-042)*
+
+DADO el mapa de entradas del juego ENTONCES la acción de aceptar de la interfaz no tiene Espacio y
+sigue teniendo Enter y el Enter del teclado numérico.
+
+### AC-PLY-128 — La vista se mueve sin saltar *(verifica BR-PLY-042)*
+
+DADO el jugador de pie CUANDO se aprieta la acción ENTONCES un cuadro corto baja la vista sin
+llegar a la altura agachado. DADO el jugador agachado CUANDO se suelta ENTONCES un cuadro corto la
+sube sin llegar a la de pie. La vista llega al destino en una duración mayor que cero y menor que
+medio segundo, sin pasarse de él, y la misma duración da la misma altura con cuadros de cualquier
+largo.
+
+### AC-PLY-129 — Cambiar a mitad del recorrido parte de la altura que haya *(verifica BR-PLY-042)*
+
+DADO el jugador bajando a mitad del recorrido CUANDO se suelta la acción ENTONCES la vista sube
+desde la altura que tenía, sin volver de golpe a la de pie ni terminar antes la bajada.
+
+### AC-PLY-130 — Agachado se camina a la velocidad agachado *(verifica BR-PLY-042, BR-PLY-002)*
+
+DADO el jugador agachado y una entrada hacia adelante CUANDO se calcula la velocidad ENTONCES su
+módulo es la velocidad agachado. DADO una entrada en diagonal ENTONCES su módulo es el mismo, por
+la normalización de BR-PLY-001. CUANDO se suelta la acción ENTONCES la velocidad vuelve a la de
+caminata de BR-PLY-002.
+
+### AC-PLY-131 — La velocidad agachado es menor que la de pie y no es cero *(verifica BR-PLY-042)*
+
+DADO las dos velocidades de caminata ENTONCES la agachado es mayor que cero y menor que la de pie.
+
+### AC-PLY-150 — Un útil suelto se corre en el sentido del paso *(verifica BR-PLY-050)*
+
+DADO un jabón, la mopa o el balde sueltos en el piso, uno por vez CUANDO el jugador camina contra
+él ENTONCES se corre en el sentido del paso, y menos distancia que la que avanza el jugador.
+
+### AC-PLY-151 — Una bolsa suelta se corre en el sentido del paso *(verifica BR-PLY-050)*
+
+DADO una bolsa de basura suelta en el piso CUANDO el jugador camina contra ella
+ENTONCES se corre en el sentido del paso, y menos distancia que la que avanza el jugador.
+
+### AC-PLY-152 — Lo empujado no atraviesa nada *(verifica BR-PLY-050, BR-PLY-015)*
+
+DADO un útil de limpieza y una bolsa de basura sueltos contra una pared CUANDO el jugador camina
+contra cada uno hacia la pared, el tiempo que haga falta para llevarlo hasta ella, ENTONCES ninguno
+se superpone con la pared ni sale del local.
+
+### AC-PLY-153 — La caja se empuja con su parte de siempre *(verifica BR-PLY-050)*
+
+DADO una caja suelta en el piso CUANDO el jugador camina contra ella ENTONCES se corre con la
+parte del paso que declara el dominio para la caja, y no con la de los útiles ni la de las bolsas.
+
+### AC-PLY-154 — Lo que se lleva en la mano no se corre *(verifica BR-PLY-050)*
+
+DADO un útil de limpieza o una bolsa de basura que no están sueltos, sino sostenidos ENTONCES
+recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 
 ## No objetivos
 
@@ -1335,8 +1493,9 @@ factor 1.
   casilleros vacíos y ocupados de cada producto, los segundos del cuadro y el nombre del control
   asignado a cada gesto; la acción primaria o secundaria y el contexto declarado del par
   mano/objetivo, independiente del resultado del intento; la vigencia del comprador, el
-  estado de su conversación y su figura animada visible para foco, contorno e interacción directa.
-- **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
+  estado de su conversación y su figura animada visible para foco, contorno e interacción directa;
+  si la acción de agacharse está apretada.
+- **Salida:** la velocidad, los dos ángulos de la vista, su altura, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
   referencia de controles.
