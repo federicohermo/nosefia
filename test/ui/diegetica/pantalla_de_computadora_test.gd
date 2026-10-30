@@ -168,7 +168,8 @@ func test_el_total_de_la_noche_entra_entero_y_queda_bajo_la_columna_total() -> v
 	assert_str(total.text).is_equal(AppCaja.texto_de_pesos(registro.total()))
 	assert_int(total.text.count(".")).is_equal(2)
 	assert_float(_ancho_del_texto(total)).is_less_equal(total.size.x)
-	var centro := total.get_global_rect().end.x - _ancho_del_texto(total) / 2.0
+	var escala := total.get_global_transform().get_scale().x
+	var centro := total.get_global_rect().end.x - _ancho_del_texto(total) * escala / 2.0
 	var columna: Label = app.get("_columna_total")
 	var cabecera := columna.get_global_rect()
 	assert_float(centro).is_between(cabecera.position.x, cabecera.end.x)
