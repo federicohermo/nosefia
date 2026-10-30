@@ -218,9 +218,7 @@ func test_la_caja_recibe_la_parte_del_paso_que_declara_el_dominio() -> void:  # 
 	var esperado := Vector3(paso.x, 0.0, paso.z) * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
 	var de_lo_suelto := Vector3(paso.x, 0.0, paso.z) * ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO
 	assert_vector(caja.global_position - antes).is_equal_approx(esperado, Vector3.ONE * 0.001)
-	assert_vector(caja.global_position - antes).is_not_equal_approx(
-		de_lo_suelto, Vector3.ONE * 0.001
-	)
+	assert_float((caja.global_position - antes).distance_to(de_lo_suelto)).is_greater(0.001)
 
 
 func test_lo_sostenido_ignora_el_paso_del_jugador() -> void:  # AC-PLY-154
