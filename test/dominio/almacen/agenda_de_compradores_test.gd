@@ -29,6 +29,45 @@ func test_los_bordes_de_ambas_ventanas() -> void:  # AC-CTR-034
 		assert_int(agenda.avanzar(ventana.y).size()).is_zero()
 
 
+func _segundos(hora: Vector2i) -> float:
+	var horas := posmod(hora.x - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
+	return float((horas * Marcador.MINUTOS_POR_HORA + hora.y) * Marcador.SEGUNDOS_POR_MINUTO)
+
+
+func test_tia_llega_y_se_va_segun_cuando_se_retira_tin() -> void:  # AC-CTR-106
+	var casos := [
+		# [cuándo se completa Tin (null: nunca), llegada de Tia, límite de Tia]
+		[null, Vector2i(23, 30), Vector2i(2, 0)],
+		[Vector2i(21, 0), Vector2i(21, 30), Vector2i(0, 0)],
+		[Vector2i(23, 0), Vector2i(23, 30), Vector2i(2, 0)],
+	]
+	for caso: Array in casos:
+		var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+		var tin := compradores[0]
+		var tia := compradores[1]
+		var agenda := AgendaDeCompradores.new(compradores)
+		var completas: Array[Comprador] = []
+		agenda.avanzar(tin.horario.x)
+		if caso[0] == null:
+			agenda.avanzar(tin.horario.y)
+		else:
+			completas.append(tin)
+			agenda.avanzar(_segundos(caso[0]), completas)
+		var llegada := _segundos(caso[1])
+		var limite := _segundos(caso[2])
+		assert_array(agenda.avanzar(llegada - 1.0, completas)).is_empty()
+		var llego := agenda.avanzar(llegada, completas)
+		assert_array(llego).has_size(1)
+		assert_int(llego[0].tipo).is_equal(AgendaDeCompradores.Tipo.LLEGO)
+		assert_object(llego[0].comprador).is_same(tia)
+		assert_array(agenda.avanzar(llegada, completas)).is_empty()
+		assert_array(agenda.avanzar(limite - 1.0, completas)).is_empty()
+		var vencio := agenda.avanzar(limite, completas)
+		assert_array(vencio).has_size(1)
+		assert_int(vencio[0].tipo).is_equal(AgendaDeCompradores.Tipo.VENCIO)
+		assert_array(agenda.avanzar(limite, completas)).is_empty()
+
+
 func test_un_salto_recibe_y_vence_en_orden() -> void:  # AC-CTR-035
 	var agenda := AgendaDeCompradores.new(
 		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
@@ -51,7 +90,7 @@ func test_una_compra_completa_no_vence() -> void:  # AC-CTR-039
 
 
 func test_otras_jornadas_conservan_el_padron() -> void:  # AC-CTR-041
-	for jornada in range(6, 9):
+	for jornada in range(6, AnomaliasDeLaJornada.JORNADA_DEL_CORTE):
 		var compradores := Compradores.de_la_jornada(jornada)
 		assert_str(compradores[0].nombre()).is_equal("Marta")
 		assert_bool(compradores[0].tiene_horario()).is_false()
@@ -110,7 +149,7 @@ func test_los_bordes_de_fede_y_mia_en_la_segunda_jornada() -> void:  # AC-CTR-05
 func test_tin_y_tia_no_atienden_la_segunda_ni_el_padron() -> void:  # AC-CTR-026
 	var jornadas: Array[int] = [ReglasDeLaPartida.PRIMERA_JORNADA + 1]
 	for jornada in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA + 5, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
+		ReglasDeLaPartida.PRIMERA_JORNADA + 5, AnomaliasDeLaJornada.JORNADA_DEL_CORTE
 	):
 		jornadas.append(jornada)
 	for jornada in jornadas:
