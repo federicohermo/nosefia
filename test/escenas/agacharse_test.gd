@@ -104,7 +104,7 @@ func _objeto_a_la_altura(y: float) -> StaticBody3D:
 	cuerpo.add_to_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	var forma := CollisionShape3D.new()
 	var caja := BoxShape3D.new()
-	caja.size = Vector3(0.4, 0.4, 0.4)
+	caja.size = Vector3(0.2, 0.2, 0.2)
 	forma.shape = caja
 	cuerpo.add_child(forma)
 	add_child(cuerpo)
