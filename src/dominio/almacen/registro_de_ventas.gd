@@ -4,6 +4,16 @@ extends RefCounted
 
 const TOPE_POR_FILA := 99
 
+const _SIN_TILDE := {
+	"á": "a",
+	"é": "e",
+	"í": "i",
+	"ó": "o",
+	"ú": "u",
+	"ü": "u",
+	"ñ": "n~",
+}
+
 var _atender: TareaDeAtender
 var _productos: Array[Producto] = []
 
@@ -17,6 +27,15 @@ func _init(productos: Array[Producto], atender: TareaDeAtender) -> void:
 			continue
 		_productos.append(producto)
 		_unidades_por_id[producto.id] = 0
+	var declarados := _productos.duplicate()
+	_productos.sort_custom(
+		func(a: Producto, b: Producto) -> bool:
+			var clave_a := _clave_de(a.nombre)
+			var clave_b := _clave_de(b.nombre)
+			if clave_a != clave_b:
+				return clave_a < clave_b
+			return declarados.find(a) < declarados.find(b)
+	)
 
 
 func productos() -> Array[Producto]:
@@ -38,10 +57,16 @@ func unidades_de(producto: Producto) -> int:
 	return unidades
 
 
+func total_de(producto: Producto) -> int:
+	if producto == null:
+		return 0
+	return producto.precio * unidades_de(producto)
+
+
 func total() -> int:
 	var suma := 0
 	for producto in _productos:
-		suma += producto.precio * unidades_de(producto)
+		suma += total_de(producto)
 	return suma
 
 
@@ -74,3 +99,11 @@ func _mover(producto: Producto, paso: int) -> bool:
 		return false
 	_unidades_por_id[producto.id] = nuevas
 	return true
+
+
+## La «ñ» va como una «n» más grande que cualquier letra que la siga, y queda entre la «n» y la «o».
+static func _clave_de(nombre: String) -> String:
+	var clave := nombre.to_lower()
+	for con_tilde: String in _SIN_TILDE:
+		clave = clave.replace(con_tilde, _SIN_TILDE[con_tilde])
+	return clave

@@ -74,7 +74,7 @@ func _ticket(almacen: Node3D, pedido: Venta) -> ObjetoAgarrable:
 	return null
 
 
-# AC-CTR-039, AC-CTR-041, AC-STK-054, AC-STK-056, AC-PLY-102
+# AC-CTR-039, AC-CTR-041, AC-STK-054, AC-STK-056
 func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -> void:
 	var almacen := await _abrir()
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
@@ -83,7 +83,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	var agarre: Agarre = almacen.get("_agarre")
 	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
 	var deposito: Puerta = almacen.get_node("Estructura/puerta/CuerpoDeLaHoja").call("puerta")
-	assert_bool(deposito.trabada()).is_true()
+	assert_bool(deposito.trabada()).is_false()
 	var compras: Array[bool] = []
 	atenciones.compra_realizada.connect(func() -> void: compras.append(true))
 	puesto.abrir()
@@ -167,7 +167,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		assert_bool(tarea.completada()).override_failure_message(str(tarea.tipo())).is_true()
-	assert_bool(deposito.trabada()).is_true()
+	assert_bool(deposito.trabada()).is_false()
 	assert_bool(deposito.abierta()).is_false()
 
 
@@ -217,24 +217,18 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
 	_pulsar(almacen)
 	assert_object(agarre.manos().sostenido()).is_null()
-	# El primer clic cierra el agradecimiento; el segundo abre el recordatorio, que retiene.
+	# El recordatorio sale como subtítulo: no abre la ventanilla ni retiene al jugador.
 	_pulsar(almacen)
-	_pulsar(almacen)
-	assert_bool(atenciones.puede_abandonar()).is_false()
+	assert_bool(atenciones.puede_abandonar()).is_true()
+	assert_bool(_panel(almacen).visible).is_false()
 	var escape := InputEventAction.new()
 	escape.action = "ui_cancel"
 	escape.pressed = true
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
 	pausa._input(escape)
 	assert_bool(get_tree().paused).is_true()
-	assert_bool(_panel(almacen).visible).is_true()
 	pausa._input(escape)
 	assert_bool(get_tree().paused).is_false()
-	var derecho := InputEventAction.new()
-	derecho.action = ReglasDelJugador.ACCION_USAR
-	derecho.pressed = true
-	puesto._input(derecho)
-	assert_bool(_panel(almacen).visible).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	RelojDePrueba.avanzar_hasta(reloj, Vector2i(2, 0))
 	assert_bool(atenciones.puede_abandonar()).is_true()
@@ -265,7 +259,10 @@ func test_vencer_devuelve_producto_y_descarta_ticket_sin_venderlo() -> void:
 # AC-CTR-041
 func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -> void:
 	var almacen := await _abrir()
-	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
+	almacen.call(
+		"_al_abrir_la_jornada",
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	)
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
 	var camara := Camera3D.new()
 	puesto.add_child(camara)
@@ -281,6 +278,10 @@ func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -
 	assert_bool((_panel(almacen).get("_cobrar") as Button).visible).is_true()
 
 
+func _texto_del_comprador(almacen: Node3D) -> RichTextLabel:
+	return almacen.get("_hud").get("_texto_del_comprador")
+
+
 # AC-CTR-037, AC-CTR-066, AC-CTR-067
 func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_lo_que_falta() -> void:
 	var almacen := await _abrir()
@@ -292,10 +293,9 @@ func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_lo_que_falta()
 	puesto.abrir()
 	_conversar(almacen)
 	var producto := Catalogo.de(Producto.Id.ZUCARACHAS)
-	var texto: RichTextLabel = _panel(almacen).get_node("Fisico/Dialogo/Texto")
+	var texto := _texto_del_comprador(almacen)
 	_pulsar(almacen)
 	assert_int(texto.text.count("[color=#e4f850]")).is_equal(2)
-	_pulsar(almacen)
 	almacen.get("_reposicion_manual").retirar(producto.id)
 	var primera := agarre.cuerpo_sostenido()
 	_pulsar(almacen)
@@ -304,9 +304,7 @@ func test_tia_conserva_la_mano_al_rechazar_el_sobrante_y_recuerda_lo_que_falta()
 	assert_bool(texto.text.begins_with(DialogosDeCompradores.FALTA)).is_true()
 	assert_int(texto.text.count("[color=#e4f850]")).is_equal(1)
 	_pulsar(almacen)
-	_pulsar(almacen)
 	assert_int(texto.text.count("[color=#e4f850]")).is_equal(1)
-	_pulsar(almacen)
 	almacen.get("_reposicion_manual").retirar(producto.id)
 	var sobrante := agarre.cuerpo_sostenido()
 	var identidad := agarre.manos().sostenido()

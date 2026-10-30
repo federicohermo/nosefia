@@ -3,7 +3,9 @@ extends GdUnitTestSuite
 
 
 func test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha() -> void:  # AC-PLY-069
-	var nota := NotaPegada.tareas_a_realizar(Apertura.obligatorias(4))
+	var nota := NotaPegada.tareas_a_realizar(
+		Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	)
 	assert_str(nota.titulo()).is_equal("TAREAS A REALIZAR")
 	assert_bool(nota.numerada()).is_true()
 	(

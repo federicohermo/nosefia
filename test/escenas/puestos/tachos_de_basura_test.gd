@@ -68,7 +68,7 @@ func test_solo_la_segunda_noche_muestra_bolsas_en_los_tachos() -> void:  # AC-CL
 			assert_bool(tacho.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 			assert_int(tacho.get("tacho")).is_equal(numero)
 			assert_str(bolsa.datos.id).is_equal(ReglasDeLaBasura.id_de_la_bolsa(numero + 1))
-			if jornada != 5:
+			if jornada != ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 				_accion(almacen, tacho, ReglasDeLosObjetos.ACCION_AGARRAR)
 				_accion(almacen, tacho, ReglasDelJugador.ACCION_USAR)
 				assert_object((almacen.get("_agarre") as Agarre).manos().sostenido()).is_null()
@@ -215,7 +215,9 @@ func test_la_pendiente_en_tacho_piso_o_mano_no_cruza_de_noche() -> void:  # AC-C
 		AvanceDeDevolucion.pasar_la_reflexion(pantalla)
 		AvanceDeDevolucion.terminar_movimiento(pantalla)
 		await get_tree().process_frame
-		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(6)
+		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(
+			ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
+		)
 		assert_object(agarre.manos().sostenido()).is_null()
 		for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):
 			assert_bool(bolsa.visible).is_false()

@@ -25,6 +25,10 @@ const HOLGURA_DE_LA_CAIDA := 0.01
 ## Resolución de la búsqueda del volumen libre para un útil largo junto a una pared.
 const PASOS_DEL_UTIL_EN_LA_MANO := 64
 
+## La capa 3: los envases que hay en las góndolas. Sólo las manos y la caja la miran; el cuerpo del
+## jugador y lo soltado no, porque dónde se apoya y dónde cae lo sigue decidiendo el metal.
+const CAPA_DE_LA_MERCADERIA := 4
+
 ## El método con que lo fijo dice su texto al examinarlo: no tiene `datos` que lo digan.
 const METODO_TEXTO_AL_EXAMINAR := &"texto_al_examinar"
 ## Los puestos traducen sus hechos a un contexto de gestos sin ejecutar la interacción.
@@ -36,6 +40,7 @@ const NotaDelLocal := preload("res://src/escenas/objetos/nota_pegada.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 const ManchaEnElPiso := preload("res://src/escenas/objetos/mancha_en_el_piso.gd")
+const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_basura.gd")
 
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
@@ -102,6 +107,9 @@ var _asomado := false
 var _vista_asomada := Transform3D.IDENTITY
 var _camara_en_reposo := Transform3D.IDENTITY
 
+## La última altura que se escribió en la cámara. Con la vista quieta no se la vuelve a escribir.
+var _altura_escrita := ReglasDelJugador.ALTURA_DE_LA_CAMARA
+
 ## Al volver no se dibuja de nuevo el giro atrasado: sólo se espera que alcance al efectivo.
 var _retomando_la_vista := false
 var _vista_de_salida := false
@@ -141,6 +149,10 @@ func _ready() -> void:
 	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
 		brazo.add_excluded_object(get_rid())
 		brazo.process_physics_priority = process_physics_priority - 1
+		# Lo que se lleva se acerca a la cámara en vez de quedar entre los envases. La máscara se
+		# suma acá y no en la escena: el barrido de la caja y las consultas de forma de los útiles
+		# leen la de su brazo, y así las tres manos miran lo mismo.
+		brazo.collision_mask |= CAPA_DE_LA_MERCADERIA
 	# Estirados desde el primer cuadro: arrancar en cero haría que las manos salgan del hombro
 	# a la vista del jugador cada vez que empieza una jornada.
 	_largo_de_carga = _brazo_de_carga.spring_length
@@ -307,6 +319,18 @@ func _physics_process(delta: float) -> void:
 	_publicar_la_referencia()
 
 
+## Lee la acción y escribe la altura que el dominio contesta, sólo cuando cambia: un test que
+## apunta la cámara a mano no la pierde. Encuadrado en una ventanilla la cámara está en el mundo y
+## no se toca.
+func _acomodar_la_vista(delta: float) -> void:
+	var altura := _control.altura_de_la_vista(
+		Input.is_action_pressed(ReglasDelJugador.ACCION_AGACHARSE), delta
+	)
+	if not _asomado and altura != _altura_escrita:
+		_camara.position.y = altura
+		_altura_escrita = altura
+
+
 ## Cuenta lo que el cuerpo se movió de verdad sobre el piso: contra una pared, nada. Lo vertical
 ## no es caminar.
 func _contar_el_paso(recorrido: Vector3) -> void:
@@ -320,6 +344,7 @@ func _process(delta: float) -> void:
 	# Lo examinado cuelga de la cámara, que no se interpola: girarlo en el paso de física lo
 	# dibujaría a saltos.
 	examen.girar(_entrada(), delta)
+	_acomodar_la_vista(delta)
 	_control.avanzar_el_dibujo(delta)
 	var atrasado := _control.giro_atrasado()
 	if atrasado or _girando_el_dibujo or _retomando_la_vista:
@@ -365,6 +390,7 @@ func _acomodar_las_manos(delta: float) -> void:
 	_largo_de_producto = _acomodar(
 		_brazo_de_producto, agarre.punto_de_producto, _largo_de_producto, delta
 	)
+	_acomodar_el_producto()
 
 
 ## El uso ya habilitó el contacto con su recipiente. Descarta el retroceso previo contra él.
@@ -384,11 +410,12 @@ func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) ->
 
 
 ## La esfera del brazo protege la mano. La forma del objeto protege su extremo y sus costados,
-## incluida la posición transitoria de la mopa al mojarla.
+## incluida la posición transitoria de la mopa al mojarla. El bidón cuelga de un punto propio
+## dentro de la mano, por eso se busca en todo el subárbol.
 func _acomodar_lo_largo() -> void:
-	for nodo in agarre.punto_de_carga.get_children():
+	for nodo: RigidBody3D in agarre.punto_de_carga.find_children("*", "RigidBody3D", true, false):
 		var datos := _datos_de(nodo)
-		if not nodo is RigidBody3D or datos == null:
+		if datos == null:
 			continue
 		if nodo.has_method("restaurar_pose_en_mano") and not datos.es_largo:
 			nodo.call("restaurar_pose_en_mano")
@@ -396,12 +423,31 @@ func _acomodar_lo_largo() -> void:
 				return
 			if nodo.call("resguardar_en_mano", _camara, _cabe_el_util):
 				return
-		var retroceso := _retroceso_libre(nodo as RigidBody3D)
+		var retroceso := _retroceso_libre(nodo)
 		if retroceso == 0.0:
 			return
 		_largo_de_carga -= retroceso
 		agarre.punto_de_carga.position = _brazo_de_carga.transform * Vector3(0, 0, _largo_de_carga)
 		agarre.punto_de_carga.reset_physics_interpolation()
+		return
+
+
+## La esfera del brazo no cubre un envase grande: el producto retrocede por su brazo lo que haga
+## falta para que su forma entera quede libre, contra el metal y contra la mercadería.
+func _acomodar_el_producto() -> void:
+	if agarre.punto_de_producto == null:
+		return
+	for nodo in agarre.punto_de_producto.get_children():
+		var cuerpo := nodo as RigidBody3D
+		if cuerpo == null:
+			continue
+		var retroceso := _retroceso_libre(cuerpo, _brazo_de_producto)
+		if retroceso > 0.0:
+			_largo_de_producto -= retroceso
+			agarre.punto_de_producto.position = (
+				_brazo_de_producto.transform * Vector3(0, 0, _largo_de_producto)
+			)
+			agarre.punto_de_producto.reset_physics_interpolation()
 		return
 
 
@@ -423,29 +469,38 @@ func _cabe_el_util(cuerpo: RigidBody3D) -> bool:
 	return _libres(consultas, Vector3.ZERO)
 
 
-## Cuánto tiene que retroceder el cuerpo por el brazo de carga para no atravesar un objeto. No mueve
-## nada: cero es que ya está libre, o que no hay lugar libre en todo su largo.
-func _retroceso_libre(cuerpo: RigidBody3D) -> float:
+## Cuánto tiene que retroceder el cuerpo por el eje de un brazo para no atravesar un objeto. No
+## mueve nada: cero es que ya está libre, o que no hay lugar libre en todo su largo. Sin brazo, el
+## de carga.
+func _retroceso_libre(cuerpo: RigidBody3D, brazo: SpringArm3D = null) -> float:
+	if brazo == null:
+		brazo = _brazo_de_carga
 	var espacio := get_world_3d().direct_space_state
 	var consultas: Array[PhysicsShapeQueryParameters3D] = []
 	var largo := 0.0
 	for forma in _formas_de(cuerpo):
 		var consulta := _consulta_de(forma, cuerpo)
 		consulta.margin = HOLGURA_DE_LA_CAIDA
-		consulta.collision_mask = _brazo_de_carga.collision_mask
+		consulta.collision_mask = brazo.collision_mask
+		# Sin la malla de detalle de los muebles, igual que los brazos: probar una forma contra sus
+		# cientos de triángulos en cada cuadro es el costo que ignorar el detalle evita.
+		var excluidos: Array[RID] = _excluidos.duplicate()
+		excluidos.append(cuerpo.get_rid())
 		# Sólo el recipiente de la mojada admite contacto durante ese gesto.
 		if "contacto_del_movimiento" in cuerpo:
 			var recipiente: PhysicsBody3D = cuerpo.get("contacto_del_movimiento")
 			if is_instance_valid(recipiente):
-				var excluidos: Array[RID] = consulta.exclude
 				excluidos.append(recipiente.get_rid())
-				consulta.exclude = excluidos
+		consulta.exclude = excluidos
 		consultas.append(consulta)
 		var limites := consulta.transform * LimitesDeForma.de(forma.shape)
 		largo = maxf(largo, limites.size.length())
 	if _libres(consultas, Vector3.ZERO):
 		return 0.0
-	var eje := _brazo_de_carga.global_basis.z.normalized()
+	# Un objeto chico puede quedar hundido más que su propio largo: entre los envases el brazo
+	# llega a la mitad de la mercadería, y la mano puede volver hasta el hombro.
+	largo = maxf(largo, brazo.spring_length)
+	var eje := brazo.global_basis.z.normalized()
 	for paso in range(1, PASOS_DEL_UTIL_EN_LA_MANO + 1):
 		var retroceso := largo * paso / PASOS_DEL_UTIL_EN_LA_MANO
 		if not _libres(consultas, -eje * retroceso):
@@ -1111,6 +1166,7 @@ func _golpe_de_la_mira(cuerpo: RigidBody3D) -> Dictionary:
 	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
 	if (
 		golpe.is_empty()
+		or golpe["collider"] is ContenedorDelLocal
 		or not ReglasDeLosObjetos.admite_lo_soltado(golpe["normal"].y, _datos_de(golpe["collider"]))
 	):
 		return {}

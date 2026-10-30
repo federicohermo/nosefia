@@ -31,8 +31,8 @@ const ARCHIVOS_DEL_SPEC := [
 ## balde y la mopa, y el `Turno` ya sabe que la segunda vez no cuenta.
 const PATRONES_DE_ESTADO_PROPIO := "var\\s+_(manchas|limpias|cumplida|balde|mopa|agua)\\b"
 
-const JORNADAS: Array[int] = [3, 4, 5, 6, 7, 8]
-const MANCHAS_POR_JORNADA: Dictionary[int, int] = {3: 4, 4: 7, 5: 8, 6: 9, 7: 10, 8: 11}
+const JORNADAS: Array[int] = [2, 3, 4, 5, 6, 7]
+const MANCHAS_POR_JORNADA: Dictionary[int, int] = {2: 4, 3: 7, 4: 8, 5: 9, 6: 10, 7: 11}
 
 var _turno: Turno = null
 var _avisos_de_tarea: int = 0
@@ -95,7 +95,10 @@ static func _jabon_de(limpiador: Limpiador, lugar: PisoDelLocal.Lugar) -> String
 	]
 	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
 		if ReglasDeLaLimpieza.JABONES[jabon] == pedida:
-			if limpiador.piso().jornada() == 5 and pedida == ReglasDeLaLimpieza.Agua.AZUL:
+			if (
+				limpiador.piso().jornada() == AnomaliasDeLaJornada.JORNADA_SIN_AZUL
+				and pedida == ReglasDeLaLimpieza.Agua.AZUL
+			):
 				return AnomaliasDeLaJornada.id_de_poetico()
 			return jabon
 	return &""
@@ -374,9 +377,9 @@ func test_la_mopa_avisa_que_se_seco_y_la_pasada_seca_dice_su_motivo() -> void:
 
 
 func test_el_tenido_aceptado_publica_identidad_y_conserva_la_senal_de_audio() -> void:  # AC-CLN-066
-	for jornada: int in [4, 5]:
+	for jornada: int in [3, 4]:
 		var limpiador := _limpiador(Reglas.DURACION_DEL_TURNO, jornada)
-		var identidad := &"jabon_azul" if jornada == 4 else AnomaliasDeLaJornada.id_de_poetico()
+		var identidad := &"jabon_azul" if jornada == 3 else AnomaliasDeLaJornada.id_de_poetico()
 		var aceptados: Array[Array] = []
 		limpiador.balde_tenido_con.connect(
 			func(id: StringName, agua: ReglasDeLaLimpieza.Agua) -> void:

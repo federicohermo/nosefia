@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527 y #573; migración de los specs 001, 007, 011, 016, 027, 031
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573 y #693; migración de los specs 001, 007, 011, 016, 027, 031
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -32,21 +32,12 @@ minuto investigando es un minuto que no se dedica a las tareas**.
 El sistema DEBE dar a cada jornada un turno de **43 200 segundos** de ficción, de las 20:00 a las
 08:00.
 
-### BR-SHF-002 — La sesión dura según la jornada
+### BR-SHF-002 — La sesión dura lo mismo en toda jornada
 
 El sistema DEBE convertir el tiempo real a tiempo de turno con un ritmo tal que **la duración
-real de la jornada cubra el turno entero**. El ritmo vale `43 200 ÷ duración`:
-
-| Jornada | Duración real | Ritmo |
-|---|---|---|
-| 1 | 360 s | `43 200 ÷ 360` |
-| 2 | 540 s | `43 200 ÷ 540` |
-| 3 | 600 s | `43 200 ÷ 600` |
-| 4 a 8 | 720 s | `43 200 ÷ 720` |
-
-Una jornada sin fila DEBE usar 720 segundos: un minuto real por hora de ficción. El ritmo DEBE
-salir de la jornada que se abre. Abrir la jornada siguiente o retomar una partida guardada NO
-DEBE heredar el ritmo de otra jornada. Cumplir las tareas NO DEBE cambiar ese ritmo.
+real de la jornada cubra el turno entero**: 720 segundos reales, un minuto real por hora de
+ficción, el mismo en toda jornada. El ritmo vale `43 200 ÷ 720`. Cumplir las tareas NO DEBE
+cambiar ese ritmo.
 
 ### BR-SHF-003 — El tiempo entra, no se busca
 
@@ -68,26 +59,24 @@ está cerrado.
 ### BR-SHF-005 — Las obligatorias de cada jornada
 
 CUANDO se abre una jornada, el sistema DEBE pedir las obligatorias que esa jornada declara. Las
-cuatro fijas son cobrar en la caja, registrar, limpiar y reponer. Las tres primeras jornadas
+cuatro fijas son cobrar en la caja, registrar, limpiar y reponer. Las dos primeras jornadas
 son de introducción: las tareas entran de a poco.
 
 | Jornada | Obligatorias |
 |---|---|
-| 1 | cobrar en la caja y registrar |
-| 2 | cobrar en la caja, registrar y reponer |
-| 3 | las cuatro fijas |
-| 4 | las cuatro fijas y ordenar las cajas del depósito |
-| 5 | las cuatro fijas y tirar la basura |
-| 6 | las cuatro fijas y desechar los Cindolor vencidos |
-| 7 y 8 | las cuatro fijas |
+| 1 | cobrar en la caja, registrar y reponer |
+| 2 | las cuatro fijas |
+| 3 | las cuatro fijas y ordenar las cajas del depósito |
+| 4 | las cuatro fijas y tirar la basura |
+| 5 | las cuatro fijas y desechar los Cindolor vencidos |
+| 6 y 7 | las cuatro fijas |
 
 Mientras sigue abierta OQ-SHF-006, una jornada sin fila propia DEBE declarar sólo las cuatro
 fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir. La cantidad que muestra el HUD DEBE
 salir de esa misma lista.
 
-La jornada 1 NO DEBE declarar reposición, tampoco por los casilleros vaciados al vender.
-Esos huecos NO DEBEN descontar tareas, sumar apercibimientos ni generar reproches de reposición.
-La nota de tareas DEBE listar sólo las obligatorias declaradas para esa noche.
+La jornada 1 declara reposición: los casilleros que el jugador vacía al vender son huecos que
+repone. La nota de tareas DEBE listar sólo las obligatorias declaradas para esa noche.
 
 ### BR-SHF-007 — Una obligatoria cuenta mientras su condición vale, y antes del cierre
 
@@ -116,12 +105,12 @@ reponer (BR-STK-052).
 ### BR-SHF-011 — La hora se lee en un solo lugar, y una noche falta
 
 El sistema DEBE mostrar la hora sólo en el reloj de mesa del local, cerca del escritorio: ni en
-el HUD, ni en la computadora, ni en otro objeto del local. SI es la sexta jornada y queda la
-mitad del turno o menos, ENTONCES el reloj DEBE leer vacío hasta el cierre, sin decir que está
-roto. SI es la séptima jornada y la hora de ficción alcanzó las 20:58, ENTONCES el reloj DEBE
-leer `20:58` hasta el cierre, también después de restablecer la electricidad, y el turno DEBE
-seguir descontando con su presupuesto y su ritmo. Las otras jornadas, incluida la que todavía no
-se declaró, y la séptima antes de las 20:58, el reloj DEBE leer la hora el turno entero.
+el HUD, ni en la computadora, ni en otro objeto del local. SI es la sexta jornada y la hora de
+ficción alcanzó las 20:58, ENTONCES el reloj DEBE leer `20:58`, también después de restablecer la
+electricidad, y el turno DEBE seguir descontando con su presupuesto y su ritmo. SI es la sexta
+jornada y queda la mitad del turno o menos, ENTONCES el reloj DEBE leer vacío hasta el cierre, sin
+decir que está roto. Las otras jornadas, incluida la que todavía no se declaró, y la sexta antes
+de las 20:58, el reloj DEBE leer la hora.
 
 ### BR-SHF-012 — La lectura trunca y no miente
 
@@ -188,7 +177,7 @@ Abrir o retomar una jornada DEBE evaluar sus tareas propias sin heredar el permi
 
 ### BR-SHF-025 — La salida voluntaria mira y abre antes de bajar la persiana
 
-CUANDO el jugador sale por la entrada habilitada de BR-SHF-021 en las jornadas 1 a 3,
+CUANDO el jugador sale por la entrada habilitada de BR-SHF-021 en las jornadas 1 y 2,
 el sistema DEBE tomar el control de la vista y llevar la cámara suavemente desde su pose
 visible hasta una pose frontal al vano de entrada, sin saltos y con un giro de como máximo
 180 grados. La pose frontal DEBE estar centrada entre las dos hojas, sobre la perpendicular
@@ -206,9 +195,9 @@ y DEBE conservar lo sostenido. La pausa DEBE congelar la secuencia y reanudarla 
 mismo punto, sin devolver el control al jugador. Pedidos repetidos de salida o de cierre
 NO DEBEN repetir la secuencia, la devolución ni el guardado. El cierre por tiempo sin salir
 por la puerta DEBE conservar su recorrido habitual sin girar la vista ni abrir la entrada.
-Al comenzar cada jornada, incluidas la jornada 4 y las posteriores, ambas hojas DEBEN estar
+Al comenzar cada jornada, incluidas la jornada 3 y las posteriores, ambas hojas DEBEN estar
 cerradas, tanto al continuar desde la anterior como al retomar desde el menú o reintentar la
-noche. Desde la jornada 4 la entrada NO DEBE permitir salir.
+noche. Desde la jornada 3 la entrada NO DEBE permitir salir.
 
 ## Criterios de aceptación
 
@@ -220,9 +209,8 @@ segundos.
 ### AC-SHF-002 — La duración de cada jornada *(verifica BR-SHF-002)*
 
 DADO el ritmo de cada jornada CUANDO se escala su duración real ENTONCES el resultado es
-exactamente la duración del turno: `360.0` segundos en la 1, `540.0` en la 2, `600.0` en la 3 y
-`720.0` en la 4 y en la 8. Un segundo real escala a `120.0`, `80.0`, `72.0` y `60.0`. Una
-jornada sin fila, como la 0, escala un segundo real a `60.0`.
+exactamente la duración del turno: `720.0` segundos en la 1, en la 2 y en la 7. Un segundo real
+escala a `60.0` en todas. Una jornada sin fila, como la 0, escala un segundo real a `60.0`.
 
 ### AC-SHF-003 — El tiempo negativo no mueve nada *(verifica BR-SHF-003)*
 
@@ -235,29 +223,28 @@ está cerrado.
 
 ### AC-SHF-005 — Fijas y particular, con instancias nuevas *(verifica BR-SHF-005)*
 
-DADO las jornadas 1 a 8 CUANDO cada una pide sus obligatorias ENTONCES la 1 recibe 2:
-cobrar y registrar, sin reponer, limpiar ni particular; la 2 recibe 3: cobrar, registrar y
-reponer, sin limpiar ni particular; la 3 recibe las 4 fijas; la 4 recibe 5,
-con ordenar las cajas y sin basura; la 5 recibe 5, con basura y sin ordenar; la 6 recibe 5, con
-desechar los Cindolor vencidos y sin ordenar ni basura; la 7 y la 8 reciben las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
+DADO las jornadas 1 a 7 CUANDO cada una pide sus obligatorias ENTONCES la 1 recibe 3:
+cobrar, registrar y reponer, sin limpiar ni particular; la 2 recibe las 4 fijas; la 3 recibe 5,
+con ordenar las cajas y sin basura; la 4 recibe 5, con basura y sin ordenar; la 5 recibe 5, con
+desechar los Cindolor vencidos y sin ordenar ni basura; la 6 y la 7 reciben las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
 comparte y todas las de la segunda están sin cumplir.
 
 ### AC-SHF-059 — Los vencidos cuentan al llegar el quinto al contenedor *(verifica BR-SHF-026)*
 
-DADO la jornada 6 con sus cinco Cindolor vencidos CUANDO se tiran al contenedor uno por uno
+DADO la jornada 5 con sus cinco Cindolor vencidos CUANDO se tiran al contenedor uno por uno
 ENTONCES con uno, dos, tres y cuatro tirados la obligatoria sigue sin cumplir, y con el quinto
 queda cumplida. DADO que el quinto ya está tirado CUANDO se tira cualquier otro objeto ENTONCES
 sigue cumplida y la cuenta de cumplidas no sube dos veces.
 
 ### AC-SHF-060 — Tirar de más no impide cumplir *(verifica BR-SHF-026)*
 
-DADO la jornada 6 con los cinco vencidos y un Cindolor sano tirados al contenedor ENTONCES
+DADO la jornada 5 con los cinco vencidos y un Cindolor sano tirados al contenedor ENTONCES
 desechar los vencidos está cumplida. DADO un Cindolor sano tirado y sólo cuatro vencidos ENTONCES
 sigue sin cumplir: el sano no suple al quinto.
 
 ### AC-SHF-061 — Fuera del contenedor no cuenta *(verifica BR-SHF-026)*
 
-DADO la jornada 6 con cuatro vencidos en el contenedor CUANDO el quinto queda en su casillero
+DADO la jornada 5 con cuatro vencidos en el contenedor CUANDO el quinto queda en su casillero
 de la góndola, en la mano, suelto en el local o tirado por la ventana, y cierra el turno
 ENTONCES desechar los vencidos queda sin cumplir. DADO ese quinto tirado después al contenedor
 antes del cierre ENTONCES queda cumplida.
@@ -281,8 +268,8 @@ restante no cambió.
 
 ### AC-SHF-012 — El reloj falta la mitad de una noche *(verifica BR-SHF-011)*
 
-DADO la jornada 6 CUANDO quedan `21601.0` segundos ENTONCES el reloj lee `"01:59"`; con `21600.0`
-o menos, lee `""`. En las jornadas 0, 3, 5 y 8 lee la hora con `43200.0`, con `21600.0` y con
+DADO la jornada 6 CUANDO quedan `21601.0` segundos ENTONCES el reloj lee `"20:58"`; con `21600.0`
+o menos, lee `""`. En las jornadas 0, 2, 5 y 7 lee la hora con `43200.0`, con `21600.0` y con
 `1.0`.
 
 ### AC-SHF-013 — El reloj roto no dice que está roto *(verifica BR-SHF-011)*
@@ -292,12 +279,12 @@ cadena vacía, y no `"08:00"`.
 
 ### AC-SHF-014 — La lectura trunca *(verifica BR-SHF-012)*
 
-DADO una jornada que no es la sexta ni la séptima con `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
+DADO una jornada que no es la sexta con `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
 `-10.0`, `"08:00"`.
 
 ### AC-SHF-016 — La hora de la noche *(verifica BR-SHF-014)*
 
-DADO una jornada que no es la sexta ni la séptima CUANDO se lee el reloj ENTONCES:
+DADO una jornada que no es la sexta CUANDO se lee el reloj ENTONCES:
 
 | Quedan | Se lee |
 |---|---|
@@ -357,9 +344,9 @@ sin cobrar los 10 retenidos ni descontarlos en el cuadro siguiente.
 
 ### AC-SHF-024 — Seguir anuncia la jornada siguiente una vez *(verifica BR-SHF-019, BR-SHF-003)*
 
-DADO el cierre de la jornada 4 con su reflexión terminada CUANDO se pide seguir dos veces
+DADO el cierre de la jornada 3 con su reflexión terminada CUANDO se pide seguir dos veces
 ENTONCES aparece una sola entrada
-«NOCHE 5», la persiana empieza baja, el control está suspendido y los cuadros no descuentan turno.
+«NOCHE 4», la persiana empieza baja, el control está suspendido y los cuadros no descuentan turno.
 CUANDO termina de subir ENTONCES la entrada ya no está visible, el control está activo y el turno
 descuenta desde el valor conservado. DADO una partida terminada CUANDO vuelve al menú ENTONCES
 no aparece una entrada nueva.
@@ -378,33 +365,27 @@ su orden de dibujo ENTONCES la entrada está sobre los tres primeros y debajo de
 
 ### AC-SHF-027 — El denominador sigue las declaradas *(verifica BR-SHF-005, BR-SHF-008)*
 
-DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `0/2`.
-La nota de tareas lista atención y registro, sin reposición.
-DADO la jornada 4
-recién abierta ENTONCES dice `0/5`. DADO la jornada 6 recién abierta ENTONCES dice `0/5`. DADO la jornada 7 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una
+DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `1/3`: reponer ya está cumplida con la góndola completa.
+La nota de tareas lista atención, registro y reposición, sin limpieza.
+DADO la jornada 3
+recién abierta ENTONCES dice `0/5`. DADO la jornada 5 recién abierta ENTONCES dice `0/5`. DADO la jornada 6 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una
 tarea ajena a esa lista no aumenta la cuenta.
 
 ### AC-SHF-028 — La reflexión retiene la entrada *(verifica BR-SHF-019)*
 
-DADO el cierre de la jornada 4 con la reflexión en el texto 2 CUANDO pasan 30 segundos
-ENTONCES no hay entrada y el turno de la jornada 5 conserva su valor inicial. DADO el cierre de
-la jornada 5 en la elección CUANDO pasan 30 segundos ENTONCES tampoco hay entrada. CUANDO
+DADO el cierre de la jornada 3 con la reflexión en el texto 2 CUANDO pasan 30 segundos
+ENTONCES no hay entrada y el turno de la jornada 4 conserva su valor inicial. DADO el cierre de
+la jornada 4 en la elección CUANDO pasan 30 segundos ENTONCES tampoco hay entrada. CUANDO
 termina la reflexión ENTONCES empieza una sola entrada, y el turno empieza a descontar recién al
 terminar esa entrada.
 
-### AC-SHF-029 — El borde de la noche corta *(verifica BR-SHF-002, BR-SHF-004)*
+### AC-SHF-029 — El borde de la noche *(verifica BR-SHF-002, BR-SHF-004)*
 
-DADO la jornada 1 recién abierta CUANDO pasan 359 segundos reales ENTONCES el turno sigue
-abierto y quedan `120.0`. CUANDO pasa 1 segundo real más ENTONCES el turno cierra una sola vez y
+DADO la jornada 1 recién abierta CUANDO pasan 719 segundos reales ENTONCES el turno sigue
+abierto y quedan `60.0`. CUANDO pasa 1 segundo real más ENTONCES el turno cierra una sola vez y
 quedan `0.0`. DADO la jornada 1 con 1 segundo real restante CUANDO llega un cuadro de 5 segundos
-ENTONCES el turno cierra una sola vez y quedan `0.0`. DADO la jornada 1 CUANDO pasan 330
+ENTONCES el turno cierra una sola vez y quedan `0.0`. DADO la jornada 1 CUANDO pasan 660
 segundos reales ENTONCES quedan `3600.0`: una hora de ficción, las 07:00.
-
-### AC-SHF-030 — El ritmo no se hereda *(verifica BR-SHF-002)*
-
-DADO el cierre de la jornada 3 CUANDO se abre la 4 y pasa 1 segundo real ENTONCES el turno baja
-`60.0`. DADO una partida guardada en la jornada 4 CUANDO se retoma desde el menú y pasa 1 segundo
-real ENTONCES el turno baja `60.0`. Retomada en la 2, baja `80.0`.
 
 ### AC-SHF-036 — Todas las tareas, incluidas atención y registro *(verifica BR-SHF-021)*
 
@@ -435,8 +416,7 @@ puede producir su propio aviso. La primera jornada completa no lo produce.
 DADO cada jornada de prueba abierta CUANDO se cumple su última obligatoria ENTONCES habilita
 la salida sin consumir turno ni cambiar el ritmo. CUANDO se descumple por separado cada una
 de sus obligatorias ENTONCES deja de contar y la entrada vuelve a trabarse. Recuperar todas
-habilita de nuevo sin adelantar el reloj. Un segundo real sigue descontando el ritmo propio
-de esa jornada. DADO la góndola completa después del aviso CUANDO se retira una unidad
+habilita de nuevo sin adelantar el reloj. Un segundo real sigue descontando el ritmo del turno. DADO la góndola completa después del aviso CUANDO se retira una unidad
 ENTONCES reponer queda pendiente y no se permite salir; reponerla habilita otra vez.
 
 ### AC-SHF-042 — La planilla permite equivocarse y corregir después del aviso *(verifica BR-SHF-024)*
@@ -450,7 +430,7 @@ con las operaciones habituales.
 
 ### AC-SHF-043 — Girar, abrir y después bajar *(verifica BR-SHF-025)*
 
-DADO cada jornada 1, 2 y 3 con la salida habilitada y la entrada cerrada CUANDO se solicita
+DADO cada jornada 1 y 2 con la salida habilitada y la entrada cerrada CUANDO se solicita
 salir ENTONCES la vista empieza en su orientación visible y ambas hojas y la persiana no se
 mueven durante el giro. CUANDO termina el giro ENTONCES la vista apunta al centro del vano,
 entre las dos hojas, y ambas comienzan su apertura con un solo sonido habitual. Cada hoja
@@ -482,14 +462,14 @@ DADO una salida en curso CUANDO se repite el primario o llega otro pedido de cie
 no se reinicia la secuencia y se produce una sola devolución y un solo guardado, con el
 cumplimiento vigente al solicitar salir. DADO una jornada que agota el tiempo sin usar la
 entrada ENTONCES comienza el cierre habitual, sin giro de vista ni apertura de las hojas.
-DADO una salida completada en la jornada 3 CUANDO comienza la jornada 4 ENTONCES las dos
-hojas están cerradas. DADO la jornada 4, tanto al retomar desde el menú como al reintentar
-la noche, ENTONCES ambas hojas comienzan cerradas. DADO cualquier jornada desde la 4 CUANDO
+DADO una salida completada en la jornada 2 CUANDO comienza la jornada 3 ENTONCES las dos
+hojas están cerradas. DADO la jornada 3, tanto al retomar desde el menú como al reintentar
+la noche, ENTONCES ambas hojas comienzan cerradas. DADO cualquier jornada desde la 3 CUANDO
 se intenta salir por cualquiera de las hojas ENTONCES ninguna se abre ni termina la noche.
 
 ### AC-SHF-047 — La salida termina de frente al vano *(verifica BR-SHF-025)*
 
-DADO cada jornada 1, 2 y 3 con la salida habilitada y el jugador en cualquier lugar del
+DADO cada jornada 1 y 2 con la salida habilitada y el jugador en cualquier lugar del
 interior, de frente, de costado o de espaldas al vano CUANDO termina el recorrido de la salida
 ENTONCES la cámara está sobre la perpendicular al vano que pasa por el punto medio entre las
 dos bisagras, del lado del interior, con una tolerancia de 1 cm lateral y de 0,1 grados de
@@ -510,17 +490,17 @@ permite salir. DADO que falta cualquier otra obligatoria, o que la planilla no c
 vendido, ENTONCES no permite salir. DADO la primera jornada completa ENTONCES no permite salir
 aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma regla.
 
-### AC-SHF-049 — El reloj de la séptima noche se detiene en las 20:58 *(verifica BR-SHF-011)*
+### AC-SHF-049 — El reloj de la sexta noche se detiene en las 20:58 *(verifica BR-SHF-011)*
 
-DADO la jornada 7 CUANDO han transcurrido 58 minutos de ficción menos un segundo ENTONCES el
-reloj lee `"20:57"`; con 58 minutos exactos, `"20:58"`. Con 2 horas transcurridas y con `0.0`
-segundos restantes sigue leyendo `"20:58"`, y no `"08:00"`. Con `0.0` segundos restantes la
-jornada 6 lee `""` y la 8 lee `"08:00"`.
+DADO la jornada 6 CUANDO han transcurrido 58 minutos de ficción menos un segundo ENTONCES el
+reloj lee `"20:57"`; con 58 minutos exactos, `"20:58"`. Con 2 horas transcurridas sigue leyendo
+`"20:58"`, y no `"22:00"`. Con `0.0` segundos restantes la jornada 6 lee `""` y la 7 lee
+`"08:00"`.
 
 ### AC-SHF-050 — Restablecer la luz no descongela el reloj *(verifica BR-SHF-011)*
 
-DADO la jornada 7 con el corte cortado y con el corte restaurado, a las 22:00 y a `0.0` segundos
-restantes CUANDO se lee el reloj ENTONCES lee `"20:58"` en los dos estados. Hacer clic sobre el
+DADO la jornada 6 con el corte cortado y con el corte restaurado, a las 22:00 y a las 01:00
+CUANDO se lee el reloj ENTONCES lee `"20:58"` en los dos estados. Hacer clic sobre el
 panel otra vez no cambia la lectura, y el turno descuenta lo mismo que antes de la hora del corte.
 
 ## No objetivos
@@ -559,13 +539,13 @@ panel otra vez no cambia la lectura, y el turno descuenta lo mismo que antes de 
   y cuándo deja de estarlo; ese cumplimiento actual decide el permiso de salida de la prueba.
 - [`notifications`](../notifications/notifications.md) (alimenta): la primera habilitación
   y cada nueva traba de la salida durante la noche.
-- [`anomalies`](../anomalies/anomalies.md) (consume): desde qué hora de ficción la séptima
+- [`anomalies`](../anomalies/anomalies.md) (consume): desde qué hora de ficción la sexta
   noche tiene el reloj detenido.
 
 ## Preguntas abiertas
 
-- **OQ-SHF-006 — ¿Qué particular declaran las jornadas 7 y 8?**
-  - Por qué sigue abierta: las fichas de la 7 y la 8 no tienen diseño cerrado. La decisión de
+- **OQ-SHF-006 — ¿Qué particular declaran las jornadas 6 y 7?**
+  - Por qué sigue abierta: las fichas de la 6 y la 7 no tienen diseño cerrado. La decisión de
     #369 deja las dos con sólo las cuatro fijas.
   - Decide: game design, en las fichas e issues de cada jornada.
   - Bloquea: agregar esas particulares; no bloquea abrir ni cerrar con las cuatro declaradas.

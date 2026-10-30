@@ -151,7 +151,6 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Lector | El lector de código de barras. Si le paso un producto, lo va a anotar en el programa generador de tickets de la caja. |
 | Entrada principal | La entrada principal al local. Queda cerrada con llave durante el turno nocturno. |
 | Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada. |
-| Puerta del depósito, trabada (provisorio) | Por acá se va al depósito. Hoy está cerrado con llave. |
 | Puerta del cuartito, trabada | Acá guardan las cosas de limpieza. Está cerrado con llave. |
 | Portón del depósito | Un portón que da a la calle. |
 | Contenedor de basura | Un contenedor de basura. |
@@ -160,11 +159,10 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Tacho del baño | El tacho de basura del baño. Mejor ni mirar lo que tiene adentro. |
 
 Las puertas interiores, las puertas de las heladeras, la ventanilla, el comprador, la góndola y
-las manchas NO DEBEN tener texto al examinar. La excepción son la puerta del depósito y la del
-cuartito mientras están trabadas (BR-PLY-020 de
-[`player-actions`](../player-actions/player-actions.md)): cada una DEBE decir su texto en las
-jornadas que la traban, y callar en las demás. El texto del depósito es provisorio: no sale de la
-ficha «Subtítulos», y lo reemplaza el que dé el diseño.
+las manchas NO DEBEN tener texto al examinar. La excepción es la puerta del
+cuartito mientras está trabada (BR-PLY-020 de
+[`player-actions`](../player-actions/player-actions.md)): DEBE decir su texto en las
+jornadas que la traban, y callar en las demás.
 
 Un tacho DEBE decir su texto con bolsa o sin bolsa. Examinarlo NO DEBE retirar ni cambiar su
 bolsa.
@@ -213,8 +211,8 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
-| Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 6 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
-| Borrar la caca del techo del baño, en la jornada 7 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
+| Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 5 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
+| Borrar la caca del techo del baño, en la jornada 6 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
 
 El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
@@ -362,18 +360,12 @@ de heladera, la ventanilla, el comprador, la góndola y una mancha ENTONCES no t
 un tacho con bolsa y otro sin bolsa CUANDO se pide examinar con las manos vacías ENTONCES los
 dos muestran su texto y el primero sigue con su bolsa.
 
-### AC-SUB-023 — La puerta del depósito habla sólo trabada *(verifica BR-SUB-010)*
-
-DADO la jornada 1 abierta CUANDO se pide examinar la puerta del depósito con las manos vacías
-ENTONCES piensa el subtítulo asociado a la puerta del depósito trabada. DADO el cierre de la 1
-CUANDO se sigue a la 2 ENTONCES examinarla no muestra texto y la línea no cambia.
-
 ### AC-SUB-022 — La puerta del cuartito habla sólo trabada *(verifica BR-SUB-010)*
 
-DADO la jornada 1 o la 2 abierta CUANDO se pide examinar la puerta del cuartito con las manos
-vacías ENTONCES piensa el subtítulo asociado a la puerta del cuartito trabada, distinto del de
-la puerta del depósito. DADO la jornada 3 abierta ENTONCES examinarla no muestra texto y la línea no
-cambia. DADO una partida guardada en la 2 CUANDO se retoma ENTONCES vuelve a tener texto.
+DADO la jornada 1 abierta CUANDO se pide examinar la puerta del cuartito con las manos
+vacías ENTONCES piensa el subtítulo asociado a la puerta del cuartito trabada. DADO la jornada 2
+abierta ENTONCES examinarla no muestra texto y la línea no
+cambia. DADO una partida guardada en la 1 CUANDO se retoma ENTONCES vuelve a tener texto.
 
 ### AC-SUB-014 — El texto del ticket *(verifica BR-SUB-011)*
 
@@ -440,7 +432,7 @@ DADO la mopa seca después de mojarla, incluso sólo con agua, ENTONCES es `MOPA
 DADO una mancha ya limpia o una mancha
 borrada ENTONCES no hay texto, salvo la caca de la pared del otro inodoro, la del piso frente a
 las estanterías del fondo y la del techo del baño, que al borrarse piensan cada una el suyo. Las
-demás manchas de las jornadas 6 a 8, aunque sean de caca, no piensan nada.
+demás manchas de las jornadas 5 a 7, aunque sean de caca, no piensan nada.
 
 ### AC-SUB-019 — La mopa berreta, una vez *(verifica BR-SUB-014)*
 
@@ -452,7 +444,7 @@ pensamiento pendiente CUANDO cierra la jornada ENTONCES se descarta y la partida
 
 ### AC-SUB-024 — La puerta de entrada con tareas pendientes *(verifica BR-SUB-013, BR-SUB-001)*
 
-DADA cada una de las tres jornadas de prueba con alguna obligatoria pendiente CUANDO se usa la
+DADA cada una de las dos jornadas de prueba con alguna obligatoria pendiente CUANDO se usa la
 puerta de entrada ENTONCES el pensamiento es `PUERTA_CON_TAREAS_PENDIENTES` y la puerta no se
 abre. DADO ese pensamiento visible CUANDO se usa la puerta otra vez ENTONCES la línea sigue
 mostrando sólo ese texto, una vez, y empieza de nuevo.

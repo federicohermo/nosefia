@@ -62,6 +62,7 @@ func _sin_formato(texto: String) -> String:
 func _comprobar_pantalla(
 	pantalla: PantallaDeInstrucciones, numero: int, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
 ) -> void:
+	AvanceDeDevolucion.terminar_el_movimiento(pantalla)
 	var contenido: Control = pantalla.get("_contenido")
 	var pasos := InstruccionesDelJefe.pasos_de(_mensajes_de(jornada))
 	var total := pasos.size()
@@ -153,6 +154,8 @@ func test_la_segunda_y_la_tercera_cuentan_sus_pantallas() -> void:  # AC-EMP-045
 	assert_bool(segunda.visible).is_false()
 	var comienzos_de_la_tercera: Array[int] = [0]
 	tercera.comenzar_pedido.connect(func() -> void: comienzos_de_la_tercera[0] += 1)
+	for _paso in 2:
+		_boton(tercera, "_siguiente").pressed.emit()
 	assert_str(_boton(tercera, "_siguiente").text).is_equal(
 		PantallaDeInstrucciones.TEXTO_DE_COMENZAR
 	)
@@ -187,6 +190,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 		for numero in range(1, total + 1):
 			await get_tree().process_frame
 			await get_tree().process_frame
+			AvanceDeDevolucion.terminar_el_movimiento(pantalla)
 			var botones: Control = pantalla.get("_botones")
 			var posicion := botones.global_position
 			var contenido: Control = pantalla.get("_contenido")
@@ -263,7 +267,9 @@ func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:
 			assert_int(foto.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
 		var leyendas: Array[String] = []
 		var rectangulos: Array[Rect2] = []
-		var limites := Rect2(Vector2.ZERO, contenido.size)
+		var limites := Rect2(
+			Vector2.ZERO, Vector2(PantallaDeInstrucciones.ANCHO_DEL_TEXTO, contenido.size.y)
+		)
 		for texto: RichTextLabel in textos:
 			if texto == cuerpo:
 				continue

@@ -2,7 +2,7 @@
 class_name AnomaliasDeLaJornada
 extends RefCounted
 
-## El corte de luz de la séptima noche. `SIN_CORTE` es la apertura de siempre; `CORTADO`, entre las
+## El corte de luz de la sexta noche. `SIN_CORTE` es la apertura de siempre; `CORTADO`, entre las
 ## 20:58 y el clic sobre el panel; `RESTAURADO`, desde el clic hasta el cierre. No hay vuelta
 ## atrás: una noche con la luz restaurada no se corta de nuevo.
 enum Corte { SIN_CORTE, CORTADO, RESTAURADO }
