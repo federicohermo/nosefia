@@ -3,16 +3,16 @@ schema_version: 1
 capability_id: CAP-ANO
 status: ratified
 owner: game design
-provenance: ficha «11. Anomalías», «9. Tarea Limpieza», fichas Poético y bidón azul; decisiones de #432, 15 de octubre de 2026; ocho jornadas de #526; corte de luz de #454; decisiones de #455
+provenance: ficha «11. Anomalías», «9. Tarea Limpieza», fichas Poético y bidón azul; decisiones de #432, 15 de octubre de 2026; ocho jornadas de #526; siete jornadas de #693; corte de luz de #454; decisiones de #455
 ---
 
 # Capacidad: las anomalías de la jornada
 
 ## Propósito
 
-Alterar las condiciones de una tarea rutinaria según la jornada. La quinta noche exige buscar
+Alterar las condiciones de una tarea rutinaria según la jornada. La cuarta noche exige buscar
 un sustituto vendible del jabón que falta, conservando las reglas de preparación y limpieza. La
-séptima noche corta la luz a las 20:58 y deja el reloj de mesa detenido hasta el cierre. La
+sexta noche corta la luz a las 20:58 y deja el reloj de mesa detenido hasta el cierre. La
 última noche cambia qué trae cada caja del depósito, sin cambiar qué productos existen.
 
 ## Lenguaje de la capacidad
@@ -26,24 +26,24 @@ séptima noche corta la luz a las 20:58 y deja el reloj de mesa detenido hasta e
 | **Etiqueta** | el producto que anuncia una caja del depósito | nombre de la caja |
 | **Contenido real** | el producto cuyas unidades entrega, recibe y cuenta esa caja | contenido declarado |
 | **Permutación** | la correspondencia fija entre etiquetas y contenidos reales de la última noche | sorteo |
-| **Corte** | estado de la séptima noche: sin corte, cortado o restaurado | apagón aleatorio |
+| **Corte** | estado de la sexta noche: sin corte, cortado o restaurado | apagón aleatorio |
 | **Panel eléctrico** | el tablero de electricidad del depósito, que se acciona con un clic | fusible, llave |
 | **Luz de emergencia** | la única luz que queda encendida sobre el panel durante el corte | linterna |
 
 ## Comportamiento normativo
 
-### BR-ANO-001 — Falta el azul sólo durante la quinta noche
+### BR-ANO-001 — Falta el azul sólo durante la cuarta noche
 
-CUANDO se abre jornada 5, el sistema DEBE dejar disponibles sólo los bidones rosa y amarillo.
+CUANDO se abre jornada 4, el sistema DEBE dejar disponibles sólo los bidones rosa y amarillo.
 El azul DEBE quedar oculto, sin colisión, foco, agarre ni examen y excluido de la evaluación
 física del cierre. En las demás jornadas los tres bidones DEBEN estar disponibles normalmente.
-La ausencia de la jornada 5 NO DEBE producir por sí misma desorden ni objeto afuera.
+La ausencia de la jornada 4 NO DEBE producir por sí misma desorden ni objeto afuera.
 
 ### BR-ANO-002 — La disponibilidad se aplica sobre cualquier apertura
 
-CUANDO se abre jornada 5 directamente o tras jornada 4, el sistema DEBE terminar examen y vaciar
+CUANDO se abre jornada 4 directamente o tras jornada 3, el sistema DEBE terminar examen y vaciar
 mano antes de aplicar la ausencia, cualquiera fuera el destino previo del azul. Repetir esa
-apertura NO DEBE volver a habilitarlo. CUANDO abre jornada 6, el sistema DEBE restaurar el mismo
+apertura NO DEBE volver a habilitarlo. CUANDO abre jornada 5, el sistema DEBE restaurar el mismo
 bidón a padre, pose, visibilidad y colisiones originales, incluso si había sido tirado.
 
 ### BR-ANO-003 — El permiso del sustituto pertenece a una sola jornada
@@ -83,12 +83,12 @@ de producto: la anomalía NO DEBE crear identidades nuevas ni cambiar el depósi
 de una caja ni la titularidad del inventario de cada producto. Los faltantes de reposición DEBEN
 seguir limitados por el contenido real disponible de su producto.
 
-### BR-ANO-011 — El corte llega una sola vez, a las 20:58 de la séptima noche
+### BR-ANO-011 — El corte llega una sola vez, a las 20:58 de la sexta noche
 
-CUANDO la hora de ficción de la jornada 7 alcanza las 20:58, el sistema DEBE pasar el corte de
+CUANDO la hora de ficción de la jornada 6 alcanza las 20:58, el sistema DEBE pasar el corte de
 sin corte a cortado, una sola vez. La hora de ficción es la que define BR-SHF-014, medida desde
 la apertura del turno, y no depende de lo que lea el reloj de mesa. Antes de las 20:58 la
-jornada 7 DEBE comportarse como una noche con luz y reloj normales. Las demás jornadas NO DEBEN
+jornada 6 DEBE comportarse como una noche con luz y reloj normales. Las demás jornadas NO DEBEN
 cortar la luz.
 
 ### BR-ANO-012 — Cortado: oscuridad e interfaces inaccesibles
@@ -109,9 +109,9 @@ NO DEBE volver a cortar en esa noche.
 
 ### BR-ANO-014 — Los estados del corte viven sólo en la jornada en memoria
 
-CUANDO se abre la jornada 7, por cualquier camino, el sistema DEBE dejar el corte sin corte y el
+CUANDO se abre la jornada 6, por cualquier camino, el sistema DEBE dejar el corte sin corte y el
 reloj normal desde las 20:00. Pausar y reanudar DEBE conservar el estado y NO DEBE consumir turno.
-El corte NO DEBE escribir ni cargar guardado alguno: abandonar la jornada 7 al menú y continuar
+El corte NO DEBE escribir ni cargar guardado alguno: abandonar la jornada 6 al menú y continuar
 la abre desde su apertura, según BR-SAV-015 y BR-SAV-018 de
 [`save-and-resume`](../save-and-resume/save-and-resume.md).
 
@@ -119,29 +119,29 @@ la abre desde su apertura, según BR-SAV-015 y BR-SAV-018 de
 
 ### AC-ANO-001 — Matriz de disponibilidad *(verifica BR-ANO-001)*
 
-DADO aperturas de jornadas 1 a 8 CUANDO se consultan los bidones presentes ENTONCES la 5 tiene
-rosa/amarillo y cada una de las otras siete, azul/rosa/amarillo. En la 3 están los tres aunque
-pida limpiar. En la 5 ningún recorrido de mira, agarre o examen alcanza el azul ni su cuerpo obstruye el paso.
+DADO aperturas de jornadas 1 a 7 CUANDO se consultan los bidones presentes ENTONCES la 4 tiene
+rosa/amarillo y cada una de las otras seis, azul/rosa/amarillo. En la 2 están los tres aunque
+pida limpiar. En la 4 ningún recorrido de mira, agarre o examen alcanza el azul ni su cuerpo obstruye el paso.
 Con los demás cuerpos ordenados, la ausencia no produce motivos de desorden ni afuera al cerrar.
 
 ### AC-ANO-002 — Apertura directa y transición equivalen *(verifica BR-ANO-002, BR-ANO-001)*
 
-DADO el azul antes, por turno, en mano, examen, piso y contenedor CUANDO se abre jornada 5
+DADO el azul antes, por turno, en mano, examen, piso y contenedor CUANDO se abre jornada 4
 ENTONCES mano y examen quedan vacíos, el azul queda ausente y no participa de la foto física
-del cierre. Abrir directamente desde checkpoint en 5 produce la misma disponibilidad. Repetir
+del cierre. Abrir directamente desde checkpoint en 4 produce la misma disponibilidad. Repetir
 la apertura conserva la ausencia, sin emitir un descarte de objeto importante.
 
-### AC-ANO-003 — El sexto día recupera el objeto original *(verifica BR-ANO-002)*
+### AC-ANO-003 — El quinto día recupera el objeto original *(verifica BR-ANO-002)*
 
-DADO el azul tirado en jornada 4 y ausente durante la 5 CUANDO se abre la 6 ENTONCES el mismo
+DADO el azul tirado en jornada 3 y ausente durante la 4 CUANDO se abre la 5 ENTONCES el mismo
 bidón vuelve a su padre y pose originales, visible, físico, enfocable, levantable y examinable;
 no queda una segunda copia ni una marca de tirado heredada.
 
 ### AC-ANO-004 — Matriz de sustitución *(verifica BR-ANO-003)*
 
 DADO el producto Poético real CUANDO se consulta su permiso de teñir agua limpia del balde en
-jornadas 1 a 8 ENTONCES contesta sí sólo en la 5 y no en las otras siete. Otro producto
-renombrado Poético contesta no en las ocho. Consultar no tiñe ni cambia mano o mercadería; ejecutar el permiso
+jornadas 1 a 7 ENTONCES contesta sí sólo en la 4 y no en las otras seis. Otro producto
+renombrado Poético contesta no en las siete. Consultar no tiñe ni cambia mano o mercadería; ejecutar el permiso
 válido usa el recorrido de limpieza sin consumo adicional.
 
 ### AC-ANO-005 — La permutación es completa, fija y propia de la última noche *(verifica BR-ANO-004)*
@@ -187,9 +187,9 @@ sorteado de P no pasa del contenido real de la caja que lo tiene.
 
 ### AC-ANO-015 — Matriz del corte *(verifica BR-ANO-011)*
 
-DADO la jornada 7 CUANDO han transcurrido 58 minutos de ficción menos un segundo ENTONCES el
+DADO la jornada 6 CUANDO han transcurrido 58 minutos de ficción menos un segundo ENTONCES el
 corte es sin corte; con 58 minutos exactos (las 20:58), cortado; con 2 horas y con la noche
-entera, también cortado. En cada jornada de 1 a 6 y en la 8, con 58 minutos, con 2 horas y con
+entera, también cortado. En cada jornada de 1 a 5 y en la 7, con 58 minutos, con 2 horas y con
 la noche entera, el corte es sin corte.
 
 ### AC-ANO-016 — Se corta una sola vez *(verifica BR-ANO-011, BR-ANO-013)*
@@ -211,7 +211,7 @@ interfaces abren. Hacer clic otra vez, o hacerlo con el corte sin corte, no camb
 
 ### AC-ANO-019 — El turno no se entera del corte *(verifica BR-ANO-012, BR-ANO-013)*
 
-DADO la jornada 7 CUANDO transcurren los segundos reales con el corte sin corte, cortado y
+DADO la jornada 6 CUANDO transcurren los segundos reales con el corte sin corte, cortado y
 restaurado ENTONCES cada segundo descuenta lo mismo y el turno cierra al agotarse su presupuesto.
 Cortar, restablecer y hacer clic de más sobre el panel no suman ni restan turno.
 
@@ -220,15 +220,15 @@ Cortar, restablecer y hacer clic de más sobre el panel no suman ni restan turno
 DADO el corte cortado o restaurado CUANDO se pausa y se reanuda ENTONCES conserva el estado y el
 turno no descuenta durante la pausa. CUANDO se abandona al menú y se continúa ENTONCES la jornada
 7 abre desde las 20:00 con el corte sin corte, y no se escribió ni se cargó un guardado
-intermedio. Abrir la jornada 7 desde el guardado del cierre de la jornada 6 deja el corte sin
+intermedio. Abrir la jornada 6 desde el guardado del cierre de la jornada 5 deja el corte sin
 corte.
 
 ## No objetivos
 
 - Esta capacidad NO decide mezclas, carga de la mopa, manchas, ventas ni consecuencias laborales.
-- Esta capacidad NO define las anomalías de la jornada 6. Sus contenidos pertenecen a sus
+- Esta capacidad NO define las anomalías de la jornada 5. Sus contenidos pertenecen a sus
   contratos respectivos; aquí sólo se fijan la vigencia de la excepción del jabón azul, el corte
-  de luz de la séptima noche y la permutación de cajas de la última noche.
+  de luz de la sexta noche y la permutación de cajas de la última noche.
 - Esta capacidad NO decide qué lee el reloj de mesa: eso es de
   [`shift-cycle`](../shift-cycle/shift-cycle.md). Tampoco decide cómo se ve la luz de
   emergencia: eso es de [`ambience`](../ambience/ambience.md).
@@ -251,12 +251,12 @@ corte.
 
 - La disponibilidad preparada al abrir la jornada. Consultar permisos o contenidos no publica uso
   ni hallazgo.
-- El estado del corte de la séptima noche, que el local aplica a su luz y a sus interfaces.
+- El estado del corte de la sexta noche, que el local aplica a su luz y a sus interfaces.
 
 ## Dependencias
 
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): jornada que abre y hora de ficción.
-  Su reloj de mesa consume la séptima noche detenida desde las 20:58.
+  Su reloj de mesa consume la sexta noche detenida desde las 20:58.
 - [`ambience`](../ambience/ambience.md) (alimenta): el estado del corte, que decide qué luces
   quedan encendidas.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (consume): la apertura de la jornada
@@ -269,4 +269,4 @@ corte.
 
 ## Preguntas abiertas
 
-Ninguna para las anomalías de las jornadas 5, 7 y 8.
+Ninguna para las anomalías de las jornadas 4, 6 y 7.
