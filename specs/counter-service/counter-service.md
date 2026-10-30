@@ -274,10 +274,10 @@ quedar despachada; la imagen del comprador DEBE retirarse según BR-CTR-033.
 
 ### BR-CTR-031 — Atención y registro siguen a los compradores que ya llegaron
 
-EN las jornadas 1 a 5, MIENTRAS llegó al menos un comprador y todos los que llegaron quedaron
-vendidos, atención DEBE figurar cumplida. CUANDO llega el comprador siguiente, atención DEBE
-volver a pendiente. Una compra perdida DEBE dejar la tarea pendiente el resto de la noche, aunque
-se complete la otra.
+EN toda jornada con compradores por horario, MIENTRAS llegó al menos un comprador y todos los que
+llegaron quedaron vendidos, atención DEBE figurar cumplida. CUANDO llega el comprador siguiente,
+atención DEBE volver a pendiente. Una compra perdida DEBE dejar la tarea pendiente el resto de la
+noche, aunque se complete la otra.
 MIENTRAS llegó al menos un comprador y todos los que llegaron quedaron cerrados, vendidos o
 vencidos, registrar DEBE evaluarse por la coincidencia con lo vendido (BR-STK-022). CUANDO llega
 el comprador siguiente, registrar DEBE volver a pendiente. Una compra vendida DEBE contar como
@@ -1237,7 +1237,7 @@ sigue siendo el pedido.
 
 ### AC-CTR-143 — Atención y registro figuran cumplidos hasta que llega el siguiente *(verifica BR-CTR-031)*
 
-DADO una noche de la jornada 1 a la 5 con dos compradores, sin nadie llegado, CUANDO todavía no
+DADO una noche con dos compradores por horario, sin nadie llegado, CUANDO todavía no
 llegó ninguno ENTONCES atención y registrar figuran pendientes. CUANDO llega el primero y se le
 vende ENTONCES atención figura cumplida; registrar sigue pendiente hasta anotar exactamente lo que
 se le vendió, y entonces figura cumplido. CUANDO llega el segundo ENTONCES las dos vuelven a

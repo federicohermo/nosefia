@@ -162,11 +162,11 @@ El cierre DEBE contar el estado de ese instante (BR-SHF-007 de
 [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
 ventas con la planilla en cero cuenta como cumplida recién ahí.
 
-En las jornadas 1 a 5, registrar DEBE permanecer pendiente mientras algún comprador que ya
-llegó siga esperando completar su compra. CUANDO todas las compras de los compradores que
-llegaron terminaron, vendidas o vencidas, el sistema DEBE evaluar registrar por la coincidencia
-exacta con lo vendido en compras completas, sin exigir cumplir atención. CUANDO llega el
-comprador siguiente, registrar DEBE volver a pendiente (BR-CTR-031).
+En toda jornada con compradores por horario, registrar DEBE permanecer pendiente mientras algún
+comprador que ya llegó siga esperando completar su compra. CUANDO todas las compras de los
+compradores que llegaron terminaron, vendidas o vencidas, el sistema DEBE evaluar registrar por la
+coincidencia exacta con lo vendido en compras completas, sin exigir cumplir atención. CUANDO llega
+el comprador siguiente, registrar DEBE volver a pendiente (BR-CTR-031).
 Una compra vendida DEBE contar como terminada aunque su despedida continúe. Anticipar una
 compra que todavía no terminó NO DEBE cumplir la tarea. Las unidades de compras vencidas NO DEBEN
 contarse como vendidas. Al cierre, registrar DEBE exigir terminadas ambas compras: con un
@@ -804,8 +804,8 @@ total es igual al de lo vendido y registrar no se cumple.
 DADO una jornada que se abre ENTONCES registrar arranca sin cumplir. DADO una noche
 que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
-En las jornadas 1 a 5 se exige además que ambas compras hayan terminado, vendidas o vencidas
-(AC-STK-056).
+En toda jornada con compradores por horario se exige además que ambas compras hayan terminado,
+vendidas o vencidas (AC-STK-056).
 
 ### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
@@ -1578,9 +1578,10 @@ solo de sus consumidores.
 
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
-  compara la planilla, y cada cobro o vencimiento vuelve a compararla; en las jornadas 1 a 5,
-  cerrar las compras de los compradores que llegaron habilita evaluar registrar durante la noche,
-  independientemente de atención; al cierre se exigen cerradas ambas (BR-CTR-031).
+  compara la planilla, y cada cobro o vencimiento vuelve a compararla; en toda jornada con
+  compradores por horario, cerrar las compras de los compradores que llegaron habilita evaluar
+  registrar durante la noche, independientemente de atención; al cierre se exigen cerradas ambas
+  (BR-CTR-031).
   Los mismos pedidos construidos para esa apertura acotan los faltantes, sin otra selección
   de compradores o productos (BR-STK-026, BR-STK-027). En jornada 2, el padrón fijo conserva
   sus identidades, recepción y revisión de registrar por venta o vencimiento (BR-STK-040,
