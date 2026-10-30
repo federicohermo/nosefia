@@ -65,7 +65,7 @@ escala_visual = 1.2
 acuosa = true
 
 [node name="ManchaFrenteAlBanoDesdeElLocal" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6, 0.104, 0.74)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6, 0.104, 1.646)
 editor_description = "Jornada 5. Polvo, en el piso frente a la puerta del baño, del lado del local."
 lugar = 9
 escala_visual = 1.2
@@ -83,7 +83,7 @@ lugar = 11
 escala_visual = 0.667
 
 [node name="ManchaFrenteAlBanoDesdeAdentro" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 0.104, 0.74)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 0.104, 1.646)
 editor_description = "Jornada 5. Polvo, en el piso frente a la puerta del baño, del lado del baño."
 lugar = 12
 acuosa = true
@@ -108,7 +108,7 @@ escala_visual = 1.2
 acuosa = true
 
 [node name="ManchaEnLaParedDeLaPuertaDelBano" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 7.866, 1.5, 2.5)
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 7.866, 1.5, 3.33)
 editor_description = "Jornada 3. Polvo, en la pared con la puerta del baño, del lado del local."
 lugar = 16
 escala_visual = 0.833
