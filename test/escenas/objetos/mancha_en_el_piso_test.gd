@@ -680,7 +680,7 @@ func test_las_cacas_alternan_inodoro_y_pared() -> void:  # AC-CLN-016, AC-CLN-01
 			else:
 				de_pared.append(mancha)
 		assert_array(del_piso).has_size(1)
-		assert_array(de_pared).has_size(0 if jornada == 3 else 1)
+		assert_array(de_pared).has_size(0 if jornada == 2 else 1)
 		if del_piso.size() != 1:
 			return
 		var inodoro := _inodoro_mas_cercano(almacen, del_piso[0])

@@ -376,15 +376,19 @@ func test_los_retos_eligen_la_repeticion_y_el_despido() -> void:  # AC-EMP-060
 	for motivo: L in repeticiones:
 		for indice: int in 5:
 			var cuentas := _antecedentes({}, {motivo: indice + 1})
-			var mensajes := DevolucionDelJefe.armar(4, 7, cuentas, [], [motivo])
+			var mensajes := DevolucionDelJefe.armar(COMPLETA, 7, cuentas, [], [motivo])
 			assert_bool(mensajes[1].begins_with(repeticiones[motivo][indice])).is_true()
 	var despedido := 4 * M
 	var papel := DevolucionDelJefe.armar(
-		4, despedido, _antecedentes({}, {L.PAPEL_EN_EL_INODORO: 3}), [], [L.PAPEL_EN_EL_INODORO]
+		COMPLETA,
+		despedido,
+		_antecedentes({}, {L.PAPEL_EN_EL_INODORO: 3}),
+		[],
+		[L.PAPEL_EN_EL_INODORO]
 	)
 	assert_bool(papel[1].begins_with("Una vez más tapaste el baño")).is_true()
 	var desorden := DevolucionDelJefe.armar(
-		4, despedido, _antecedentes({}, {L.LOCAL_DESORDENADO: 2}), [], [L.LOCAL_DESORDENADO]
+		COMPLETA, despedido, _antecedentes({}, {L.LOCAL_DESORDENADO: 2}), [], [L.LOCAL_DESORDENADO]
 	)
 	assert_bool(desorden[1].begins_with("Realmente me sorprende")).is_true()
 

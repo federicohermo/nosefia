@@ -243,7 +243,7 @@ func test_la_entrada_se_cierra_al_pasar_de_la_segunda_a_la_tercera() -> void:  #
 		hoja.call("_physics_process", Puerta.ANGULO_ABIERTA / Puerta.VELOCIDAD_DEL_GIRO)
 		hoja.call("_physics_process", 0.0)
 	assert_bool(entrada.call("puerta").abierta()).is_true()
-	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(2)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
 	await almacen.call("_preparar_lo_postergado")
 	almacen.get("_ciclo").call("abrir_la_jornada")
 	for hoja: Node3D in cerradas:

@@ -222,5 +222,5 @@ func test_el_cierre_conserva_los_clientes_mal_atendidos_de_la_ventanilla() -> vo
 		2
 	)
 	assert_array(CondicionesDelJefe.elegidas(partida.noches_de_prueba)).is_equal(
-		[CondicionesDelJefe.J2_NINGUNO_ANOTADO]
+		[CondicionesDelJefe.J2_NINGUNO_ANOTADO_Y_REPOSICION_MAL]
 	)

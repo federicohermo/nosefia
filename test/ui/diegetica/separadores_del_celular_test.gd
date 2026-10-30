@@ -101,7 +101,7 @@ func test_reabrir_historial_real_de_jornada_4_conserva_lecturas_y_guion() -> voi
 	var guion := chat.mensajes.duplicate()
 	pantalla.mostrar_chat(chat, mensajes, false, 4)
 	var rotulos := _rotulos(pantalla)
-	assert_str(rotulos[0]).is_equal(PantallaDelCelular.DIAS[4])
+	assert_str(rotulos[0]).is_equal(PantallaDelCelular.DIAS[3])
 	assert_str(rotulos[-1]).is_equal(PantallaDelCelular.DIAS[0])
 	for _apertura: int in 2:
 		pantalla.mostrar_chat(chat, mensajes, false, 4)

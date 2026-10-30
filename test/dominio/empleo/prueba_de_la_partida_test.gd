@@ -33,7 +33,7 @@ func test_cada_cliente_y_cada_registro_o_reposicion_mal_hechos_suman_uno() -> vo
 	var partida := _con(ReglasDeLaPartida.PRIMERA_JORNADA + 1, 0)
 	_noche(partida, [T.CAJA, T.REGISTRAR, T.REPONER], 2)
 	var descuidos := 2 + 2
-	assert_int(partida.apercibimientos()).is_equal(
+	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(
 		descuidos * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA
 	)
 
@@ -49,7 +49,9 @@ func test_la_limpieza_mal_hecha_suma_uno_en_la_segunda() -> void:  # AC-EMP-078
 func test_atender_suma_por_cliente_y_no_por_la_tarea() -> void:  # AC-EMP-078
 	var partida := _con(ReglasDeLaPartida.PRIMERA_JORNADA + 1, 0)
 	_noche(partida, [T.CAJA], 1)
-	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA)
+	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(
+		Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA
+	)
 
 
 func test_en_la_prueba_los_llamados_no_suman_y_las_bandas_no_pesan() -> void:  # AC-EMP-078
@@ -61,7 +63,7 @@ func test_en_la_prueba_los_llamados_no_suman_y_las_bandas_no_pesan() -> void:  #
 	assert_int(partida.medios()).is_zero()
 	var sin_tareas := _con(ReglasDeLaPartida.PRIMERA_JORNADA + 1, 0)
 	_noche(sin_tareas, [T.CAJA, T.REGISTRAR, T.REPONER])
-	assert_int(sin_tareas.apercibimientos()).is_equal(
+	assert_int(sin_tareas.legajo().apercibimientos_de_la_prueba()).is_equal(
 		2 * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA
 	)
 

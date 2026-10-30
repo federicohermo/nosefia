@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 
 
 func test_registra_solo_un_tenido_aceptado_y_no_escribe_deuda_ni_mensajes() -> void:  # AC-EMP-067
-	var partida := Partida.desde({"jornada": 5})
+	var partida := Partida.desde({"jornada": AnomaliasDeLaJornada.JORNADA_SIN_AZUL})
 	var id := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO)).id
 	partida.abrir_la_jornada()
 	for rechazo: ReglasDeLaLimpieza.Resultado in [
@@ -31,7 +31,7 @@ func test_registra_solo_un_tenido_aceptado_y_no_escribe_deuda_ni_mensajes() -> v
 
 func test_el_hecho_pertenece_a_la_jornada_abierta_y_se_consulta_tras_cerrar() -> void:  # AC-EMP-068
 	var id := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO)).id
-	for jornada in range(1, 9):
+	for jornada in range(1, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
 		var partida := Partida.desde({"jornada": jornada})
 		(
 			assert_int(
@@ -66,7 +66,7 @@ func test_el_hecho_pertenece_a_la_jornada_abierta_y_se_consulta_tras_cerrar() ->
 			)
 			. is_equal(Partida.RegistroDePoetico.RECHAZADO)
 		)
-		if jornada == 5:
+		if jornada == AnomaliasDeLaJornada.JORNADA_SIN_AZUL:
 			partida.abrir_la_jornada()
 			assert_bool(partida.uso_de_poetico_en(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)).is_true()
 			(

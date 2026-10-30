@@ -7,22 +7,33 @@
 class_name CondicionesDelJefe
 extends RefCounted
 
+const J2_SIN_FALLAS := &"J2_SIN_FALLAS"
+const J2_REGISTRO_MAL := &"J2_REGISTRO_MAL"
+const J2_REPOSICION_MAL := &"J2_REPOSICION_MAL"
+const J2_UN_CLIENTE_MAL := &"J2_UN_CLIENTE_MAL"
+const J2_UN_CLIENTE_Y_REPOSICION_MAL := &"J2_UN_CLIENTE_Y_REPOSICION_MAL"
+const J2_UN_CLIENTE_Y_REGISTRO_MAL := &"J2_UN_CLIENTE_Y_REGISTRO_MAL"
+const J2_UN_CLIENTE_Y_TODO_MAL := &"J2_UN_CLIENTE_Y_TODO_MAL"
+const J2_NINGUNO_EN_CERO := &"J2_NINGUNO_EN_CERO"
+const J2_NINGUNO_EN_CERO_Y_REPOSICION_MAL := &"J2_NINGUNO_EN_CERO_Y_REPOSICION_MAL"
+const J2_NINGUNO_ANOTADO := &"J2_NINGUNO_ANOTADO"
+const J2_NINGUNO_ANOTADO_Y_REPOSICION_MAL := &"J2_NINGUNO_ANOTADO_Y_REPOSICION_MAL"
 ## Por clientes mal atendidos (0, 1 o 2 o más), registro y reposición, si cada una salió bien. Con
 ## cero clientes mal atendidos, el registro y la reposición mal a la vez no tienen fila en la
 ## ficha, y manda el registro (OQ-EMP-014).
 const J2_POR_RESULTADO := {
-	[0, true, true]: &"J2_SIN_FALLAS",
-	[0, false, true]: &"J2_REGISTRO_MAL",
-	[0, false, false]: &"J2_REGISTRO_MAL",
-	[0, true, false]: &"J2_REPOSICION_MAL",
-	[1, true, true]: &"J2_UN_CLIENTE_MAL",
-	[1, true, false]: &"J2_UN_CLIENTE_Y_REPOSICION_MAL",
-	[1, false, true]: &"J2_UN_CLIENTE_Y_REGISTRO_MAL",
-	[1, false, false]: &"J2_UN_CLIENTE_Y_TODO_MAL",
-	[2, true, true]: &"J2_NINGUNO_EN_CERO",
-	[2, true, false]: &"J2_NINGUNO_EN_CERO_Y_REPOSICION_MAL",
-	[2, false, true]: &"J2_NINGUNO_ANOTADO",
-	[2, false, false]: &"J2_NINGUNO_ANOTADO_Y_REPOSICION_MAL",
+	[0, true, true]: J2_SIN_FALLAS,
+	[0, false, true]: J2_REGISTRO_MAL,
+	[0, false, false]: J2_REGISTRO_MAL,
+	[0, true, false]: J2_REPOSICION_MAL,
+	[1, true, true]: J2_UN_CLIENTE_MAL,
+	[1, true, false]: J2_UN_CLIENTE_Y_REPOSICION_MAL,
+	[1, false, true]: J2_UN_CLIENTE_Y_REGISTRO_MAL,
+	[1, false, false]: J2_UN_CLIENTE_Y_TODO_MAL,
+	[2, true, true]: J2_NINGUNO_EN_CERO,
+	[2, true, false]: J2_NINGUNO_EN_CERO_Y_REPOSICION_MAL,
+	[2, false, true]: J2_NINGUNO_ANOTADO,
+	[2, false, false]: J2_NINGUNO_ANOTADO_Y_REPOSICION_MAL,
 }
 const J3_SIN_FALLAS := &"J3_SIN_FALLAS"
 const J3_REDIMIDO := &"J3_REDIMIDO"
