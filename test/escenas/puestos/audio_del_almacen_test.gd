@@ -333,9 +333,8 @@ func test_el_zumbido_de_la_heladera_no_llega_al_centro_del_salon() -> void:
 		cantidad += 1
 	assert_int(cantidad).is_greater(0)
 	var centro := tubos / maxf(cantidad, 1.0)
-	var heladera := Vector2(
-		neon.get_node("Heladera").position.x, neon.get_node("Heladera").position.z
-	)
+	var punto_de_la_heladera: Node3D = neon.get_node("Heladera")
+	var heladera := Vector2(punto_de_la_heladera.position.x, punto_de_la_heladera.position.z)
 	assert_float(heladera.distance_to(centro)).is_greater(ambiente.alcance)
 	assert_float(ambiente.alcance).is_less(EmisoresDelAmbiente.ALCANCE)
 	assert_float(ambiente.volumen_db).is_less(0.0)

@@ -142,7 +142,7 @@ func test_cada_fila_del_ambiente_se_apaga_a_su_alcance() -> void:
 	var comun := _entrada(
 		EntradaSonora.Evento.AMBIENTE_EXTERIOR, true, EntradaSonora.BUS_DE_AMBIENTE, true
 	)
-	for entrada in [propia, comun]:
+	for entrada: EntradaSonora in [propia, comun]:
 		entrada.posicional = true
 		entrada.emisor = &"Neon"
 	var reproductor := _reproductor([propia, comun] as Array[EntradaSonora])
