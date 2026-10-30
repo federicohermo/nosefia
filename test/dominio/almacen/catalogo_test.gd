@@ -57,18 +57,16 @@ const PRECIOS_NUEVOS := {
 	"Poético": 1800,
 }
 
-## La sonoridad de los 8 que entran, de la columna «Familia sonora» de su ficha. Dos familias de
-## la ficha no existen en el juego —botella de vidrio y caja de cereal—: suenan como la más
-## parecida, y el hueco es OQ-STK-004.
+## La sonoridad de los 8 que entran, de la columna «Familia sonora» de su ficha.
 const SONORIDADES_NUEVAS := {
 	"Cosa de Maní": EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	"Duronga": EntradaSonora.Sonoridad.CAJITA,
-	"Fernet God": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+	"Fernet God": EntradaSonora.Sonoridad.BOTELLA_VIDRIO,
 	"Mayonchis": EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	"Oaaaa": EntradaSonora.Sonoridad.CAJA,
 	"Terminator": EntradaSonora.Sonoridad.CAJA,
 	"Marranos": EntradaSonora.Sonoridad.LATA,
-	"Feel Ricky Fort": EntradaSonora.Sonoridad.CAJITA,
+	"Feel Ricky Fort": EntradaSonora.Sonoridad.CAJA_CEREALES,
 	"Poético": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 }
 

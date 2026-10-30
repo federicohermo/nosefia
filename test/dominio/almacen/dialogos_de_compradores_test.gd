@@ -49,7 +49,7 @@ func test_rechazo_y_recordatorio_enumeran_el_pedido() -> void:  # AC-CTR-037
 			assert_bool(dialogo.terminado()).is_true()
 
 
-func test_el_recordatorio_nombra_lo_que_falta_y_el_rechazo_todo_el_pedido() -> void:  # AC-CTR-066
+func test_el_recordatorio_y_el_rechazo_nombran_lo_que_falta() -> void:  # AC-CTR-066
 	var tia: Comprador = Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1]
 	var recepcion := RecepcionDeCompra.new(tia.pedido())
 	var primero := tia.pedido().productos()[0]
@@ -59,12 +59,19 @@ func test_el_recordatorio_nombra_lo_que_falta_y_el_rechazo_todo_el_pedido() -> v
 	assert_str(recordatorio.entrada_actual()).not_contains(_subtitulo(primero))
 	assert_str(recordatorio.entrada_actual()).contains(_subtitulo(segundo))
 	var rechazo := DialogosDeCompradores.recordatorio(tia.pedido(), recepcion, true)
-	assert_str(rechazo.entrada_actual()).contains(_subtitulo(primero))
+	assert_str(rechazo.entrada_actual()).starts_with(DialogosDeCompradores.RECHAZO)
+	assert_str(rechazo.entrada_actual()).not_contains(_subtitulo(primero))
 	assert_str(rechazo.entrada_actual()).contains(_subtitulo(segundo))
 	recepcion.recibir(UnidadDeProducto.new(segundo), true)
 	(
 		assert_str(DialogosDeCompradores.recordatorio(tia.pedido(), recepcion).entrada_actual())
-		. is_equal(DialogosDeCompradores.PIDE_EL_RECIBO)
+		. is_equal(DialogosDeCompradores.PIDE_EL_TICKET)
+	)
+	(
+		assert_str(
+			DialogosDeCompradores.recordatorio(tia.pedido(), recepcion, true).entrada_actual()
+		)
+		. is_equal(DialogosDeCompradores.RECHAZO + DialogosDeCompradores.PEDIDO_DEL_TICKET)
 	)
 
 

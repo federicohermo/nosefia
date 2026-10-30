@@ -103,6 +103,11 @@ var _fijas: Array[int] = []
 ## placa de video.
 var _bloques: Array[PackedFloat32Array] = []
 var _sueltos: Array[GrupoDelPiso] = []
+## Los envases que hay en las góndolas, como cuerpos que sólo miran las manos y la caja: uno por
+## producto, con una forma por copia de su dibujo. Aparte van las formas de los casilleros, en el
+## orden de sus casilleros: son las únicas que se prenden y se apagan.
+var _mercaderia: Array[CharacterBody3D] = []
+var _formas_de_la_mercaderia: Array[Array] = []
 ## Cindolor vencido: el modelo de la mano y el piso, y los dos dibujos de la góndola y del piso.
 var _modelo_vencido: Mesh
 var _vencidos_puestos: MultiMeshInstance3D
@@ -260,6 +265,8 @@ func _rehacer_disposicion() -> void:
 	_grupos.clear()
 	_huecos.clear()
 	_sueltos.clear()
+	_mercaderia.clear()
+	_formas_de_la_mercaderia.clear()
 	_vencidos_puestos = null
 	_vencidos_sueltos = null
 	_casilleros.clear()
@@ -1108,6 +1115,7 @@ func _actualizar_zonas(_nodo: Node3D = null) -> void:
 	if de_la_noche == null:
 		return
 	var sostenido := repositor.agarre.manos().sostenido()
+	_mostrar_la_mercaderia_a_las_manos(sostenido != null)
 	for id in _casilleros.size():
 		var producto := Catalogo.de(id)
 		var para_colocar := de_la_noche.casilleros_para_colocar(producto, sostenido)
@@ -1326,7 +1334,65 @@ func _preparar_grupos() -> void:
 		add_child(sueltos)
 		_generados.append(sueltos)
 		_sueltos.append(sueltos)
+	_preparar_la_mercaderia()
 	_preparar_los_vencidos()
+
+
+## Un cuerpo por producto con una caja por cada envase de su dibujo, para que lo que se lleva en las
+## manos no se meta entre ellos.
+##
+## **Los envases son sólo dibujo**: un `MultiMeshInstance3D` no choca, y el contorno de la góndola
+## sigue el metal. Sin cuerpo, el brazo de la mano no encontraba nada hasta el riel. Es un
+## `CharacterBody3D` y no un `StaticBody3D` porque el sonido cuenta como pared a todo estático.
+## Las cajas de la fila de atrás nacen prendidas y las de los casilleros apagadas:
+## `_mostrar_lo_puesto()` prende las que el estante dice ocupadas.
+func _preparar_la_mercaderia() -> void:
+	for producto in Catalogo.todos():
+		var cuerpo := CharacterBody3D.new()
+		cuerpo.name = "MercaderiaDe" + producto.nombre
+		cuerpo.collision_layer = 0
+		cuerpo.collision_mask = 0
+		var caja := _modelos[producto.id].get_aabb()
+		var forma := BoxShape3D.new()
+		forma.size = caja.size
+		var bloque := _bloques[producto.id]
+		var formas: Array[CollisionShape3D] = []
+		for indice in DisposicionDeLaGondola.copias(bloque):
+			var copia := DisposicionDeLaGondola.copia(bloque, indice)
+			var envase := CollisionShape3D.new()
+			envase.shape = forma
+			envase.transform = Transform3D(copia.basis, copia * caja.get_center())
+			var de_casillero := indice >= _fijas[producto.id]
+			envase.disabled = de_casillero
+			cuerpo.add_child(envase)
+			if de_casillero:
+				formas.append(envase)
+		add_child(cuerpo)
+		_generados.append(cuerpo)
+		_mercaderia.append(cuerpo)
+		_formas_de_la_mercaderia.append(formas)
+
+
+## Prende las cajas de los casilleros que el estante tiene ocupados, y apaga el resto. Escribe sólo
+## lo que cambia: cada forma que se enciende o se apaga rearma el cuerpo en el motor.
+func _sincronizar_la_mercaderia(id: Producto.Id, ocupados: Array) -> void:
+	if id >= _formas_de_la_mercaderia.size():
+		return
+	var formas := _formas_de_la_mercaderia[id]
+	for casillero in formas.size():
+		var envase: CollisionShape3D = formas[casillero]
+		var vacio := not ocupados.has(casillero)
+		if envase.disabled != vacio:
+			envase.disabled = vacio
+
+
+## La mercadería sólo se le muestra a las manos mientras llevan algo: con las manos vacías no
+## hay qué replegar, y un cuerpo más en el espacio cuenta en cada rayo de la mira y del sonido.
+func _mostrar_la_mercaderia_a_las_manos(llevando: bool) -> void:
+	var capa := JugadorDelLocal.CAPA_DE_LA_MERCADERIA if llevando else 0
+	for cuerpo in _mercaderia:
+		if cuerpo.collision_layer != capa:
+			cuerpo.collision_layer = capa
 
 
 ## Los dos dibujos de Cindolor vencido: el de los casilleros de la góndola, que arranca igual que
@@ -1569,6 +1635,7 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var de_la_noche := repositor.estante()
 	var primera := _primera_dibujada(id)
 	var ocupados := de_la_noche.casilleros_ocupados(producto)
+	_sincronizar_la_mercaderia(id, ocupados)
 	var vencidos := de_la_noche.vencidos.casilleros(producto)
 	var sanos: Array[int] = ocupados.filter(
 		func(casillero: int) -> bool: return not vencidos.has(casillero)

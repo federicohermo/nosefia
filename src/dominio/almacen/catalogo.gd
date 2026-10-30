@@ -82,15 +82,11 @@ const FILAS := {
 
 ## La sonoridad de cada producto, de la columna «Familia sonora» de la ficha. Va aparte de
 ## `FILAS` porque `Producto` no la lleva: sólo la usa el audio.
-##
-## **Dos familias de la ficha no existen acá**: la botella de vidrio suena como la plástica y la
-## caja de cereal como la cajita, que son las más parecidas. Cuáles suenan de verdad es
-## OQ-STK-004.
 const SONORIDADES := {
 	Producto.Id.ACTRONCITO: EntradaSonora.Sonoridad.CAJITA,
 	Producto.Id.DUREXTRA: EntradaSonora.Sonoridad.CAJITA,
 	Producto.Id.BURBALOO: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.ZUCARACHAS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.ZUCARACHAS: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.LAYSNNT: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.MALBARDO: EntradaSonora.Sonoridad.CAJITA,
 	Producto.Id.PROGRES: EntradaSonora.Sonoridad.LATA,
@@ -98,26 +94,26 @@ const SONORIDADES := {
 	Producto.Id.ARVECOR: EntradaSonora.Sonoridad.LATA,
 	Producto.Id.CHISITOS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.OREMOS: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.PEPITO: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.PEPITO: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.SALADICK: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.UAKALAS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.UAKALAS: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.PURA_COLA: EntradaSonora.Sonoridad.LATA,
-	Producto.Id.FROT_LUPS: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.MAROLINI: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.FROT_LUPS: EntradaSonora.Sonoridad.CAJA_CEREALES,
+	Producto.Id.MAROLINI: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.AMARGADITO: EntradaSonora.Sonoridad.CAJA,
 	Producto.Id.CINDOLOR: EntradaSonora.Sonoridad.CAJA,
-	Producto.Id.FLIM_POF: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.FLIM_POF: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.DON_SATURADOS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.PETISAS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.MACUMBAS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.COSA_DE_MANI: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.DURONGA: EntradaSonora.Sonoridad.CAJITA,
-	Producto.Id.FERNET_GOD: EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+	Producto.Id.FERNET_GOD: EntradaSonora.Sonoridad.BOTELLA_VIDRIO,
 	Producto.Id.MAYONCHIS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.OAAAA: EntradaSonora.Sonoridad.CAJA,
 	Producto.Id.TERMINATOR: EntradaSonora.Sonoridad.CAJA,
 	Producto.Id.MARRANOS: EntradaSonora.Sonoridad.LATA,
-	Producto.Id.FEEL_RICKY_FORT: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.FEEL_RICKY_FORT: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.POETICO: EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 }
 
