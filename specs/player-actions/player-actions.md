@@ -1315,9 +1315,9 @@ parte de un jugador libre, separado del piso y de otros cuerpos.
 
 ### AC-PLY-148 — La hoja no se detiene antes del ángulo de paso *(verifica BR-PLY-042)*
 
-DADO una hoja con un tope pedido por un obstáculo CUANDO el tope es igual al ángulo de paso
-ENTONCES la hoja queda en el tope. CUANDO es un grado menor ENTONCES la hoja ignora el tope y
-sigue a su destino. DADO un factor de velocidad fuera de (0, 1] ENTONCES la hoja gira como con
+DADO una hoja contra algo pesado que no puede correrse CUANDO la hoja está en el ángulo de paso
+ENTONCES queda en ese ángulo. CUANDO está un grado por debajo ENTONCES sigue hasta su destino
+sin detenerse. DADO un factor de velocidad fuera de (0, 1] ENTONCES la hoja gira como con
 factor 1.
 
 ## No objetivos
