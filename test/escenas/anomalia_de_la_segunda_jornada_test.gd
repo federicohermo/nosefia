@@ -278,6 +278,8 @@ func test_poetico_de_caja_y_gondola_tine_sin_descontar_y_se_devuelve() -> void:
 
 func test_poetico_tirado_es_un_producto_y_suma_el_motivo_una_vez() -> void:  # AC-CLN-076
 	await _abrir(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
+	_almacen.set("compradores_de_la_apertura", func(_n: int) -> Array[Comprador]: return [])
+	_almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 	var agarre: Agarre = _almacen.get("_agarre")
 	var unidad := _unidad()
 	_clic(_almacen.get_node(CUERPO))

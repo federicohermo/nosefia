@@ -238,7 +238,8 @@ func test_con_un_comprador_que_no_llego_la_puerta_no_deja_salir() -> void:  # AC
 		assert_bool(noche.atender.atencion().vendida()).is_true()
 		assert_int(noche.atender.mal_atendidos()).is_zero()
 		assert_bool(noche.registro.coincide()).is_true()
-		assert_bool(noche.registro.completada()).is_equal(todos_llegaron)
+		assert_bool(noche.registro.completada()).is_true()
+		assert_bool(noche.atender.cumplida()).is_true()
 		assert_bool(noche.atender.completada()).is_equal(todos_llegaron)
 		_marcar(partida, noche, true, false)
 		assert_bool(CierreAnticipado.corresponde(PRIMERA, partida.obligatorias())).is_equal(

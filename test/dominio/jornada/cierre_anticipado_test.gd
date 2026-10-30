@@ -213,13 +213,15 @@ func test_el_segundo_sin_llegar_traba_la_puerta_pese_a_las_marcas() -> void:  # 
 	var obligatorias := _cumplidas_salvo(jornada)
 	atender.avanzar(compradores[0].horario.x)
 	var atencion := atender.atencion()
-	atencion.interactuar(null)
-	atencion.interactuar(null)
+	while not atencion.conversacion_iniciada() or not atencion.puede_abandonar():
+		atencion.interactuar(null)
 	var productos: Array[Producto] = []
-	for producto in compradores[0].pedido().productos():
-		atencion.interactuar(Estante.new(inventario, Catalogo.todos()).retirar(producto))
-		productos.append(producto)
-		registro.sumar(producto)
+	var pedido := compradores[0].pedido()
+	for producto in pedido.productos():
+		for _unidad in pedido.unidades_de(producto):
+			atencion.interactuar(Estante.new(inventario, Catalogo.todos()).retirar(producto))
+			productos.append(producto)
+			registro.sumar(producto)
 	assert_int(atencion.interactuar(Ticket.new(productos))).is_equal(
 		RecepcionDeCompra.Resultado.COMPLETA
 	)
