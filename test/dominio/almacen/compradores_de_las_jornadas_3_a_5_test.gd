@@ -220,7 +220,9 @@ func test_cami_no_hereda_el_pedido_entre_jornadas() -> void:  # AC-CTR-072
 
 
 func test_las_demas_jornadas_no_dependen_de_la_semilla() -> void:  # AC-CTR-001
-	var jornada := ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
-	assert_array(_firma(Compradores.de_la_jornada(jornada, 1))).is_equal(
-		_firma(Compradores.de_la_jornada(jornada, 2))
-	)
+	for jornada in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA + 5, AnomaliasDeLaJornada.JORNADA_DEL_CORTE
+	):
+		assert_array(_firma(Compradores.de_la_jornada(jornada, 1))).is_equal(
+			_firma(Compradores.de_la_jornada(jornada, 2))
+		)
