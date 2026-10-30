@@ -324,7 +324,10 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 	)
 	sonidos.clear()
 	# El aviso de cobro pertenece al recorrido anterior, conservado desde la jornada 3.
-	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR)
+	almacen.call(
+		"_al_abrir_la_jornada",
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	)
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	atenciones.pedir_atender()
 	assert_object(atenciones.atencion()).is_not_null()
@@ -445,7 +448,9 @@ func test_la_partida_retomada_en_siete_es_manual_y_una_nueva_es_automatica() -> 
 	almacen.get_node("Jugador").set_physics_process(false)
 	for _cuadro in 4:
 		await get_tree().physics_frame
-	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(7)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(
+		GeneradorDeTickets.JORNADA_SIN_LECTOR + 1
+	)
 	assert_bool(_caja(almacen).generador().es_manual()).is_true()
 	var nueva: Node3D = auto_free(ALMACEN.instantiate())
 	nueva.set("_partida", Partida.nueva())

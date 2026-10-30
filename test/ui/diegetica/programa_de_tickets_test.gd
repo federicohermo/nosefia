@@ -85,7 +85,7 @@ func test_cada_renglon_ofrece_vacio_y_despues_el_catalogo_en_mayusculas() -> voi
 		assert_bool(fila.is_visible_in_tree()).is_false()
 	for flecha in vista.flechas:
 		assert_bool(flecha.is_visible_in_tree()).is_false()
-	vista.mostrar(GeneradorDeTickets.para_la_jornada(5))
+	vista.mostrar(GeneradorDeTickets.para_la_jornada(GeneradorDeTickets.JORNADA_SIN_LECTOR - 1))
 	for selector in vista.selectores:
 		assert_bool(selector.is_visible_in_tree()).is_false()
 	for fila in vista.filas:

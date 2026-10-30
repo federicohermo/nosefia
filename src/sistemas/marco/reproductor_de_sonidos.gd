@@ -41,11 +41,13 @@ var _oyente := Vector3.ZERO
 var _golpes: Dictionary = {}
 
 ## Lo que cada voz del espacio necesita para apagarse: su volumen y su bus sin obstáculos, el
-## objeto que la produjo, su nivel de apagado y su bus propio, si ya lo necesitó.
+## objeto que la produjo, su nivel de apagado, desde cuántos obstáculos no apaga más y su bus
+## propio, si ya lo necesitó.
 var _bases: Dictionary = {}
 var _salidas: Dictionary = {}
 var _origenes: Dictionary = {}
 var _niveles: Dictionary = {}
+var _maximos: Dictionary = {}
 var _buses_propios: Dictionary = {}
 
 ## El sorteo de las variantes, y la última que sonó de cada fila.
@@ -190,14 +192,22 @@ func pedir(
 		return false
 	_poner(voz, entrada, _bus_filtrado(entrada.bus, golpe.corte_hz), golpe.volumen_db)
 	if entrada.posicional:
-		_preparar_apagado(voz, lugar)
+		_preparar_apagado(voz, lugar, entrada.obstaculos_maximos)
 	sonido_pedido.emit(evento)
 	return true
 
 
 ## Pide el sonido de un evento que trae su origen: el objeto que lo produjo, si lo hay, y la
 ## rapidez de su contacto. La sonoridad sale del objeto, y el golpe de su contador.
-func recibir(evento: EntradaSonora.Evento, origen: Object = null, rapidez: float = 0.0) -> bool:
+##
+## `del_tacho` es el contexto de un agarre que saca una bolsa del tacho: ese gesto suena con el
+## sonido de sacar y no con el de alzar. Llega con el pedido, y el contador igual se reinicia.
+func recibir(
+	evento: EntradaSonora.Evento,
+	origen: Object = null,
+	rapidez: float = 0.0,
+	del_tacho: bool = false
+) -> bool:
 	var datos := _datos_de(origen)
 	if datos == null:
 		return pedir(evento, EntradaSonora.Sonoridad.NINGUNA, null, origen as Node3D)
@@ -209,7 +219,12 @@ func recibir(evento: EntradaSonora.Evento, origen: Object = null, rapidez: float
 	)
 	if golpe == null:
 		return false
-	return pedir(evento, datos.sonoridad, golpe, origen as Node3D)
+	if del_tacho and evento == EntradaSonora.Evento.OBJETO_AGARRADO:
+		return pedir(EntradaSonora.Evento.BOLSA_SACADA)
+	var sonoridad := EntradaSonora.Sonoridad.NINGUNA
+	if EntradaSonora.EVENTOS_DE_OBJETO.has(evento):
+		sonoridad = _sonoridad_de(origen, datos)
+	return pedir(evento, sonoridad, golpe, origen as Node3D)
 
 
 ## Pausa los emisores que el tope deja afuera y suelta los que entran, según dónde está el oído.
@@ -252,7 +267,9 @@ func actualizar_apagado(oyente: Vector3, segundos: float) -> void:
 		if not is_instance_valid(_origenes[voz]):
 			_origenes[voz] = null
 		var cantidad := obstaculos_entre(oyente, voz.global_position, _origenes[voz])
-		_niveles[voz] = ApagadoPorObstaculos.acercar(_niveles[voz], cantidad, segundos)
+		_niveles[voz] = ApagadoPorObstaculos.acercar(
+			_niveles[voz], mini(cantidad, _maximos[voz]), segundos
+		)
 		_aplicar_apagado(voz)
 
 
@@ -342,12 +359,12 @@ func _sonar_en_bucle(entrada: EntradaSonora) -> bool:
 	for posicion in posiciones:
 		var emisor := AudioStreamPlayer3D.new()
 		emisor.name = "Emisor%d_%d" % [entrada.evento, emisores.size()]
-		emisor.max_distance = EmisoresDelAmbiente.ALCANCE
+		emisor.max_distance = entrada.alcance
 		emisor.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 		add_child(emisor)
 		emisor.global_position = posicion
 		_poner(emisor, entrada, entrada.bus, EmisoresDelAmbiente.VOLUMEN_DB)
-		_preparar_apagado(emisor, null)
+		_preparar_apagado(emisor, null, entrada.obstaculos_maximos)
 		emisores.append(emisor)
 	_emisores_en_bucle[entrada.evento] = emisores
 	actualizar_emisores(_oyente)
@@ -357,14 +374,15 @@ func _sonar_en_bucle(entrada: EntradaSonora) -> bool:
 
 ## Anota lo que la voz necesita para apagarse, y la apaga ya: un sonido que empieza del otro
 ## lado de una pared empieza apagado, sin transición.
-func _preparar_apagado(voz: AudioStreamPlayer3D, origen: Object) -> void:
+func _preparar_apagado(voz: AudioStreamPlayer3D, origen: Object, maximo: int) -> void:
 	_bases[voz] = voz.volume_db
+	_maximos[voz] = maximo
 	_salidas[voz] = voz.bus
 	_origenes[voz] = origen
 	var camara := get_viewport().get_camera_3d()
 	var oido := camara.global_position if camara != null else _oyente
 	var cantidad := obstaculos_entre(oido, voz.global_position, origen)
-	_niveles[voz] = float(mini(cantidad, ApagadoPorObstaculos.MAXIMO))
+	_niveles[voz] = float(mini(cantidad, maximo))
 	_aplicar_apagado(voz)
 
 
@@ -403,6 +421,7 @@ func _olvidar(voz: Object) -> void:
 	_salidas.erase(voz)
 	_origenes.erase(voz)
 	_niveles.erase(voz)
+	_maximos.erase(voz)
 
 
 ## Si ese cuerpo tapa el sonido: lo fijo, salvo una puerta abierta.
@@ -449,6 +468,15 @@ func _datos_de(origen: Object) -> ObjetoDelAlmacen:
 	if not is_instance_valid(origen) or not ReglasDeLosObjetos.PROPIEDAD_DATOS in origen:
 		return null
 	return origen.get(ReglasDeLosObjetos.PROPIEDAD_DATOS) as ObjetoDelAlmacen
+
+
+## Cómo suena el objeto ahora: la de su propia instancia si la declara, y si no la de sus datos.
+func _sonoridad_de(origen: Object, datos: ObjetoDelAlmacen) -> EntradaSonora.Sonoridad:
+	if EntradaSonora.PROPIEDAD_SONORIDAD_VIGENTE in origen:
+		var vigente: EntradaSonora.Sonoridad = origen.get(EntradaSonora.PROPIEDAD_SONORIDAD_VIGENTE)
+		if vigente != EntradaSonora.Sonoridad.NINGUNA:
+			return vigente
+	return datos.sonoridad
 
 
 ## El bus por el que sale un sonido con ese corte pasa-altos. Sin corte es el bus de la fila.

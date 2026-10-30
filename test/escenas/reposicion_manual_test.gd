@@ -11,8 +11,11 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
-	# El cobro automático continúa desde la tercera jornada.
-	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR)
+	# Sólo la noche sin agenda tiene al comprador ya presente.
+	almacen.call(
+		"_al_abrir_la_jornada",
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	)
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var repositor: Repositor = almacen.get("_repositor")

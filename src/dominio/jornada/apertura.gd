@@ -9,10 +9,7 @@ const FIJAS: Array[Tarea.Tipo] = [
 	Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
 ]
 ## Las noches de introducción que todavía no piden todas las fijas.
-const INTRODUCCION := {
-	1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR],
-	2: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER],
-}
+const INTRODUCCION := {1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER]}
 ## Cuánto pueden diferir dos distancias para contar como iguales, en metros: lo que mide el modelo
 ## de un casillero a otro de la misma columna, con lugar de sobra para el redondeo.
 const HOLGURA_DE_COLUMNA := 0.01

@@ -425,7 +425,7 @@ func _parar_frente_a(almacen: Node3D, cara: String, parado: float) -> float:
 
 
 func _parado_con(objeto: Node3D) -> float:
-	if objeto.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
+	if objeto.has_signal(ReglasDeLosObjetos.SENAL_EMPUJADA):
 		return PARADO_CON_LA_CAJA
 	return PARADO_DEL_SOLIDO
 
@@ -729,18 +729,19 @@ func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() ->
 	var filas_en_segunda := 0
 	for objeto in objetos:
 		var piso: PisoDelLocal = almacen.get("_limpiador").piso()
-		assert_int(piso.jornada()).is_equal(5)
+		assert_int(piso.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 		if objeto.name == "JabonAzul":
 			assert_int(filas_en_segunda).is_equal(3)
 			assert_bool(objeto.visible).is_false()
 			assert_int((objeto as ObjetoAgarrable).collision_layer).is_zero()
 			var partida: Partida = almacen.get("_partida")
-			assert_int(partida.jornada()).is_equal(5)
+			var basura := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+			assert_int(partida.jornada()).is_equal(basura)
 			partida.cerrar_la_jornada(partida.obligatorias().size())
 			FinDeLaReflexion.terminar(partida)
 			almacen.get("_ciclo").abrir_la_jornada()
-			assert_int(partida.jornada()).is_equal(6)
-			assert_int(almacen.get("_limpiador").piso().jornada()).is_equal(6)
+			assert_int(partida.jornada()).is_equal(basura + 1)
+			assert_int(almacen.get("_limpiador").piso().jornada()).is_equal(basura + 1)
 			assert_bool(objeto.is_visible_in_tree()).is_true()
 			assert_int((objeto as ObjetoAgarrable).collision_layer).is_not_zero()
 			assert_int((objeto as ObjetoAgarrable).collision_mask).is_not_zero()
@@ -1048,7 +1049,7 @@ func test_la_caja_se_sigue_apilando_sobre_otra() -> void:  # AC-PLY-023
 	_comprobar_sin_rescates(almacen, "lo legal")
 
 
-func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY-024
+func test_la_unidad_soltada_contra_la_heladera_no_queda_adentro() -> void:  # AC-PLY-024
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var heladera: MeshInstance3D = almacen.get_node("Estructura/heladeranueva")
@@ -1083,11 +1084,11 @@ func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY
 	(
 		assert_bool(limites.has_point(unidad.global_position))
 		. override_failure_message(
-			"la unidad no quedó adentro de la heladera: está en %v" % unidad.global_position
+			"la unidad quedó adentro de la heladera: está en %v" % unidad.global_position
 		)
-		. is_true()
+		. is_false()
 	)
-	_comprobar_libre_y_enfocable(almacen, unidad, "la unidad en la heladera")
+	_comprobar_libre_y_enfocable(almacen, unidad, "la unidad junto a la heladera")
 
 
 func test_un_objeto_dejado_arriba_del_inodoro_queda_quieto() -> void:

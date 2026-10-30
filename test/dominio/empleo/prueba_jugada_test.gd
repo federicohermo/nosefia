@@ -1,12 +1,11 @@
-## Las tres noches de prueba jugadas de punta a punta: la ventanilla, la planilla y la góndola de
+## Las dos noches de prueba jugadas de punta a punta: la ventanilla, la planilla y la góndola de
 ## cada jornada, cerradas con el mismo estado que el jugador ve al cerrar.
 extends GdUnitTestSuite
 
 const T := Tarea.Tipo
 const PRIMERA := ReglasDeLaPartida.PRIMERA_JORNADA
 const SEGUNDA := ReglasDeLaPartida.PRIMERA_JORNADA + 1
-const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
-const CUARTA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 const CASILLEROS_POR_PRODUCTO := 4
 const UMBRAL := Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
 
@@ -151,6 +150,7 @@ func test_la_noche_1_elige_cada_mensaje_1_de_la_jornada_2() -> void:  # AC-EMP-0
 	var casos := [
 		[{}, CondicionesDelJefe.J2_SIN_FALLAS, 0],
 		[{"anota": false}, CondicionesDelJefe.J2_REGISTRO_MAL, 1],
+		[{"repone": false}, CondicionesDelJefe.J2_REPOSICION_MAL, 1],
 		[{"atiende": atiende(true, false)}, CondicionesDelJefe.J2_UN_CLIENTE_MAL, 1],
 		[{"atiende": atiende(false, false)}, CondicionesDelJefe.J2_NINGUNO_EN_CERO, 2],
 		[
@@ -166,49 +166,30 @@ func test_la_noche_1_elige_cada_mensaje_1_de_la_jornada_2() -> void:  # AC-EMP-0
 		assert_int(partida.apercibimientos()).is_equal(caso[2])
 
 
-func test_un_cliente_vencido_y_el_registro_mal_es_un_cliente_mal() -> void:  # AC-EMP-084
+func test_un_cliente_vencido_y_el_registro_mal_tienen_su_fila() -> void:  # AC-EMP-084
 	var partida := Partida.nueva()
 	jugar(partida, juego({"atiende": atiende(false, true), "anota_de_mas": true}))
-	assert_str(_condicion(partida, SEGUNDA)).is_equal(CondicionesDelJefe.J2_UN_CLIENTE_MAL)
+	assert_str(_condicion(partida, SEGUNDA)).is_equal(
+		CondicionesDelJefe.J2_UN_CLIENTE_Y_REGISTRO_MAL
+	)
 	assert_int(partida.apercibimientos()).is_equal(2)
 
 
-func test_la_jornada_1_no_pide_reponer_lo_vendido() -> void:  # AC-EMP-078
+func test_la_jornada_1_pide_reponer_lo_vendido() -> void:  # AC-EMP-078
 	var partida := Partida.nueva()
 	var noche := jugar(partida, juego({"repone": false}))
 	assert_bool(noche.estante.completada()).is_false()
-	assert_int(partida.apercibimientos()).is_zero()
-	assert_str(_condicion(partida, SEGUNDA)).is_equal(CondicionesDelJefe.J2_SIN_FALLAS)
-
-
-func test_la_noche_2_elige_cada_mensaje_1_de_la_jornada_3() -> void:  # AC-EMP-087, AC-EMP-078
-	var casos := [
-		[true, true, true, &"J3_SIN_FALLAS"],
-		[true, true, false, &"J3_REPOSICION_MAL"],
-		[true, false, true, &"J3_REGISTRO_MAL"],
-		[true, false, false, &"J3_REGISTRO_Y_REPOSICION_MAL"],
-		[false, true, true, &"J3_ATENCION_MAL"],
-		[false, false, true, &"J3_ATENCION_Y_REGISTRO_MAL"],
-		[false, true, false, &"J3_ATENCION_Y_REPOSICION_MAL"],
-		[false, false, false, &"J3_TODO_MAL"],
-	]
-	for caso: Array in casos:
-		var partida := Partida.nueva()
-		jugar(partida, juego())
-		jugar(
-			partida, juego({"atiende": atiende(true, caso[0]), "anota": caso[1], "repone": caso[2]})
-		)
-		assert_str(_condicion(partida, TERCERA)).is_equal(caso[3])
-		assert_int(partida.apercibimientos()).is_equal(caso.slice(0, 3).count(false))
+	assert_int(partida.apercibimientos()).is_equal(1)
+	assert_str(_condicion(partida, SEGUNDA)).is_equal(CondicionesDelJefe.J2_REPOSICION_MAL)
 
 
 func test_irse_por_la_puerta_antes_de_las_8_no_suma() -> void:  # AC-SHF-036, AC-EMP-078
 	var partida := Partida.nueva()
-	for jornada: int in [PRIMERA, SEGUNDA, TERCERA]:
+	for jornada: int in [PRIMERA, SEGUNDA]:
 		assert_int(partida.jornada()).is_equal(jornada)
 		var noche := jugar(partida, juego())
 		assert_bool(noche.pudo_irse_antes).is_true()
-	assert_int(partida.jornada()).is_equal(CUARTA)
+	assert_int(partida.jornada()).is_equal(TERCERA)
 	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_zero()
 
 
@@ -238,68 +219,71 @@ func test_con_un_comprador_que_no_llego_la_puerta_no_deja_salir() -> void:  # AC
 		assert_bool(noche.atender.atencion().vendida()).is_true()
 		assert_int(noche.atender.mal_atendidos()).is_zero()
 		assert_bool(noche.registro.coincide()).is_true()
-		assert_bool(noche.registro.completada()).is_equal(todos_llegaron)
+		assert_bool(noche.registro.completada()).is_true()
+		assert_bool(noche.atender.cumplida()).is_true()
 		assert_bool(noche.atender.completada()).is_equal(todos_llegaron)
+		if todos_llegaron:
+			for producto in productos:
+				while noche.estante.colocar(producto) == Estante.Rechazo.NINGUNO:
+					pass
 		_marcar(partida, noche, true, false)
 		assert_bool(CierreAnticipado.corresponde(PRIMERA, partida.obligatorias())).is_equal(
 			todos_llegaron
 		)
 
 
-func test_las_tres_noches_eligen_el_mensaje_1_de_la_jornada_4() -> void:  # AC-EMP-089, AC-EMP-080
+func test_las_dos_noches_eligen_el_mensaje_1_de_la_jornada_3() -> void:  # AC-EMP-089, AC-EMP-080
 	var perfecta := juego()
 	var nada := juego({"atiende": atiende(false, false), "repone": false})
 	var sucia := juego({"limpia": false})
 	var casos := [
-		[[perfecta, perfecta, perfecta], CondicionesDelJefe.J4_SIN_FALLAS],
-		[[nada, perfecta, sucia], CondicionesDelJefe.J4_CON_ALTIBAJOS],
-		[[perfecta, nada, perfecta], CondicionesDelJefe.J4_CON_ALTIBAJOS],
-		[[nada, nada, perfecta], CondicionesDelJefe.J4_REDIMIDO],
+		[[perfecta, perfecta], CondicionesDelJefe.J3_SIN_FALLAS],
+		[[nada, sucia], CondicionesDelJefe.J3_CON_ALTIBAJOS],
+		[[perfecta, nada], CondicionesDelJefe.J3_CON_ALTIBAJOS],
 	]
 	for caso: Array in casos:
 		var noches: Array[Juego] = []
 		noches.assign(caso[0])
 		var partida := jugar_la_prueba(noches)
 		assert_bool(partida.terminada()).is_false()
-		assert_int(partida.jornada()).is_equal(CUARTA)
-		assert_str(_condicion(partida, CUARTA)).is_equal(caso[1])
+		assert_int(partida.jornada()).is_equal(TERCERA)
+		assert_str(_condicion(partida, TERCERA)).is_equal(caso[1])
 
 
-func test_se_pierde_solo_con_el_umbral_y_la_tercera_sin_cumplir() -> void:  # AC-EMP-080, AC-EMP-090
+func test_se_pierde_solo_con_el_umbral_y_la_segunda_sin_cumplir() -> void:  # AC-EMP-080, AC-EMP-090
 	var nada := juego({"atiende": atiende(false, false), "repone": false})
-	var sucia := juego({"limpia": false})
-	var perdida := jugar_la_prueba([nada, nada, sucia])
+	var peor := juego(
+		{"atiende": atiende(false, false), "anota_de_mas": true, "repone": false, "limpia": false}
+	)
+	var perdida := jugar_la_prueba([nada, peor])
 	assert_int(perdida.legajo().apercibimientos_de_la_prueba()).is_greater_equal(UMBRAL)
 	assert_int(perdida.final()).is_equal(Partida.Final.DESPEDIDO)
-	assert_array(DevolucionDelJefe.new(TERCERA, perdida).mensajes()).is_equal(
+	assert_array(DevolucionDelJefe.new(SEGUNDA, perdida).mensajes()).is_equal(
 		[DevolucionDelJefe.DESPIDO_DE_LA_PRUEBA]
 	)
 	var un_cliente := juego({"atiende": atiende(true, false)})
-	var debajo := jugar_la_prueba(
-		[un_cliente, un_cliente, juego({"atiende": atiende(false, true)})]
-	)
+	var debajo := jugar_la_prueba([un_cliente, juego({"atiende": atiende(false, true)})])
 	assert_int(debajo.legajo().apercibimientos_de_la_prueba()).is_less(UMBRAL)
 	assert_bool(debajo.terminada()).is_false()
-	assert_int(debajo.jornada()).is_equal(CUARTA)
+	assert_int(debajo.jornada()).is_equal(TERCERA)
 
 
-func test_las_dos_primeras_no_se_pierden_jugando_mal() -> void:  # AC-EMP-079
+func test_la_primera_no_se_pierde_jugando_mal() -> void:  # AC-EMP-079
 	var nada := juego({"atiende": atiende(false, false), "anota_de_mas": true, "repone": false})
 	var partida := Partida.nueva()
 	jugar(partida, nada)
-	jugar(partida, nada)
 	assert_bool(partida.terminada()).is_false()
-	assert_int(partida.jornada()).is_equal(TERCERA)
-	assert_int(partida.apercibimientos()).is_greater_equal(UMBRAL)
+	assert_int(partida.jornada()).is_equal(SEGUNDA)
+	assert_int(partida.apercibimientos()).is_greater(0)
 
 
 func test_los_llamados_de_la_prueba_no_cuentan() -> void:  # AC-EMP-078, AC-EMP-059
 	var todos: Array[Partida.Llamado] = []
 	todos.assign(Partida.Llamado.values())
 	var con_llamados := juego({"llamados": todos})
-	var partida := jugar_la_prueba([con_llamados, con_llamados, con_llamados])
+	var partida := jugar_la_prueba([con_llamados, con_llamados])
 	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_zero()
-	assert_str(_condicion(partida, CUARTA)).is_equal(CondicionesDelJefe.J4_SIN_FALLAS)
+	assert_str(_condicion(partida, TERCERA)).is_equal(CondicionesDelJefe.J3_SIN_FALLAS)
 	assert_bool(partida.antecedentes().hubo_llamados()).is_false()
 	for motivo: Partida.Llamado in todos:
 		assert_int(partida.antecedentes().llamados(motivo)).is_zero()
@@ -313,7 +297,7 @@ func test_los_llamados_de_la_prueba_no_cuentan() -> void:  # AC-EMP-078, AC-EMP-
 	for motivo: Partida.Llamado in todos:
 		assert_int(partida.antecedentes().llamados(motivo)).is_equal(1)
 	(
-		assert_array(DevolucionDelJefe.new(CUARTA, partida).mensajes())
+		assert_array(DevolucionDelJefe.new(TERCERA, partida).mensajes())
 		. contains(
 			[
 				DevolucionDelJefe.PAPEL_1,
@@ -325,18 +309,17 @@ func test_los_llamados_de_la_prueba_no_cuentan() -> void:  # AC-EMP-078, AC-EMP-
 	)
 
 
-func test_la_cuarta_cuenta_su_primera_falla() -> void:  # AC-EMP-059
+func test_la_tercera_cuenta_su_primera_falla() -> void:  # AC-EMP-059
 	var todos: Array[Partida.Llamado] = []
 	todos.assign(Partida.Llamado.values())
 	var partida := jugar_la_prueba(
 		[
 			juego({"atiende": atiende(false, true), "anota": false, "llamados": todos}),
-			juego({"repone": false, "llamados": todos}),
-			juego({"limpia": false, "llamados": todos}),
+			juego({"repone": false, "limpia": false, "llamados": todos}),
 		]
 	)
 	assert_bool(partida.terminada()).is_false()
-	assert_int(partida.jornada()).is_equal(CUARTA)
+	assert_int(partida.jornada()).is_equal(TERCERA)
 	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(4)
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
 		assert_int(partida.antecedentes().fallas(tipo)).is_zero()
@@ -348,7 +331,7 @@ func test_la_cuarta_cuenta_su_primera_falla() -> void:  # AC-EMP-059
 			tarea.completar()
 			cumplidas += 1
 	partida.cerrar_la_jornada(cumplidas)
-	var mensajes := DevolucionDelJefe.new(CUARTA, partida).mensajes()
+	var mensajes := DevolucionDelJefe.new(TERCERA, partida).mensajes()
 	var reprimendas: Array = DevolucionDelJefe.TAREAS[T.CAJA]
 	assert_array(mensajes).contains([reprimendas[0]])
 	assert_array(mensajes).not_contains(reprimendas.slice(1))

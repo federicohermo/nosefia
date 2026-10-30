@@ -20,7 +20,7 @@ const PATRONES_DE_DECISION := "(?m)^\\s*(if|elif|match)\\b|var\\s+_(limpia|tipo|
 ## Lo más claro que puede ser un marrón.
 const LO_MAS_CLARO_DEL_MARRON := 0.5
 
-const JORNADAS: Array[int] = [3, 4, 5, 6, 7, 8]
+const JORNADAS: Array[int] = [2, 3, 4, 5, 6, 7]
 
 ## Dónde quedan los pies del jugador parado en el piso del almacén.
 const ALTURA_DEL_JUGADOR := 0.112
@@ -396,7 +396,7 @@ func test_ninguna_mancha_de_techo_pisa_un_difusor() -> void:
 			con_luz += 1
 	assert_int(con_luz).is_greater(0)
 	var de_techo := 0
-	for jornada: int in [7, 8]:
+	for jornada: int in [6, 7]:
 		await _abrir(almacen, jornada)
 		for mancha: ManchaQueSeVe in _manchas(almacen):
 			if (
@@ -533,7 +533,7 @@ func test_las_manchas_de_techo_se_enfocan_y_se_borran() -> void:  # AC-CLN-078
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var de_techo := 0
-	for jornada: int in [7, 8]:
+	for jornada: int in [6, 7]:
 		await _abrir(almacen, jornada)
 		var piso := _piso(almacen)
 		for mancha: ManchaQueSeVe in _manchas(almacen):
@@ -567,7 +567,7 @@ static func _jabon_de(tipo: ReglasDeLaLimpieza.TipoDeMancha) -> StringName:
 	return &""
 
 
-func test_el_paso_toca_solo_las_manchas_del_piso() -> void:  # AC-CLN-058
+func test_el_paso_no_hace_ondular_ninguna_mancha() -> void:  # AC-CLN-058
 	var almacen: Node3D = await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
@@ -576,23 +576,41 @@ func test_el_paso_toca_solo_las_manchas_del_piso() -> void:  # AC-CLN-058
 		for mancha: ManchaQueSeVe in _manchas(almacen):
 			var lugar := mancha.lugar_de_la_mancha()
 			var cara := _cara(mancha)
-			# Al lado de la del piso o de la pared, y justo debajo de la del techo.
+			# Sobre la del piso, al lado de la de pared y justo debajo de la del techo.
 			var al_lado := Vector3(cara.x, 0.0, cara.z) * 0.5
 			if absf(cara.y) > 0.5:
-				al_lado = Vector3.RIGHT * 0.5 if cara.y > 0.0 else Vector3.ZERO
+				al_lado = Vector3.ZERO
 			jugador.global_position = mancha.global_position + al_lado
 			jugador.global_position.y = ALTURA_DEL_JUGADOR
 			var malla := mancha.get_node("Malla")
 			malla.set("_onda", 0.0)
+			# La premisa: una mancha del piso sí ondula con el toque directo, y el caso lo mediría.
+			if PisoDelLocal.superficie_de(lugar) == PisoDelLocal.Superficie.PISO:
+				mancha.tocar_en(jugador.global_position)
+				assert_float(malla.get("_onda")).is_greater(0.0)
+				malla.set("_onda", 0.0)
 			jugador.emit_signal("paso_dado")
-			var del_piso := PisoDelLocal.superficie_de(lugar) == PisoDelLocal.Superficie.PISO
 			(
-				assert_bool(malla.get("_onda") > 0.0)
+				assert_float(malla.get("_onda"))
 				. override_failure_message(
 					"`%s` y el paso, en la jornada %d" % [mancha.name, jornada]
 				)
-				. is_equal(del_piso)
+				. is_equal(0.0)
 			)
+
+
+func test_la_pasada_de_la_mopa_sigue_haciendo_ondular_la_mancha_del_piso() -> void:
+	var almacen: Node3D = await _almacen()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	await _abrir(almacen, JORNADAS[0])
+	for mancha: ManchaQueSeVe in _manchas(almacen):
+		if PisoDelLocal.superficie_de(mancha.lugar_de_la_mancha()) != PisoDelLocal.Superficie.PISO:
+			continue
+		var malla := mancha.get_node("Malla")
+		malla.set("_onda", 0.0)
+		almacen.get("_limpieza").call("_al_pedir_uso", mancha)
+		assert_float(malla.get("_onda")).is_greater(0.0)
 
 
 func test_cada_mancha_se_ve_del_color_de_su_tipo() -> void:  # AC-CLN-015
@@ -667,7 +685,7 @@ func _inodoro_mas_cercano(almacen: Node3D, mancha: Node3D) -> Node3D:
 func test_las_cacas_alternan_inodoro_y_pared() -> void:  # AC-CLN-016, AC-CLN-017
 	var almacen: Node3D = await _almacen()
 	var inodoros_del_piso: Array[Node3D] = []
-	for jornada: int in [3, 4]:
+	for jornada: int in [2, 3]:
 		await _abrir(almacen, jornada)
 		var del_piso: Array[ManchaQueSeVe] = []
 		var de_pared: Array[ManchaQueSeVe] = []
@@ -680,12 +698,12 @@ func test_las_cacas_alternan_inodoro_y_pared() -> void:  # AC-CLN-016, AC-CLN-01
 			else:
 				de_pared.append(mancha)
 		assert_array(del_piso).has_size(1)
-		assert_array(de_pared).has_size(0 if jornada == 3 else 1)
+		assert_array(de_pared).has_size(0 if jornada == 2 else 1)
 		if del_piso.size() != 1:
 			return
 		var inodoro := _inodoro_mas_cercano(almacen, del_piso[0])
 		inodoros_del_piso.append(inodoro)
-		if jornada == 4 and de_pared.size() == 1:
+		if jornada == 3 and de_pared.size() == 1:
 			assert_object(_inodoro_mas_cercano(almacen, de_pared[0])).is_not_same(inodoro)
 	assert_array(inodoros_del_piso).has_size(2)
 	assert_object(inodoros_del_piso[1]).is_not_same(inodoros_del_piso[0])

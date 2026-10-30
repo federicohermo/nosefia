@@ -38,7 +38,7 @@ func test_perder_y_recuperar_cualquier_tarea_cambia_el_permiso() -> void:  # AC-
 			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_true()
 
 
-func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-036
+func test_ventas_de_gondola_dejan_reponer_pendiente() -> void:  # AC-STK-094, AC-SHF-036
 	for cantidad: int in [1, 3]:
 		var producto := Catalogo.de(Producto.Id.MAROLINI)
 		var pedido := Venta.new()
@@ -89,14 +89,13 @@ func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-0
 				turno.completar(tarea)
 			elif tarea.tipo() == Tarea.Tipo.REGISTRAR and registro.completada():
 				turno.completar(tarea)
+		assert_bool(turno.todas_cumplidas()).is_false()
+		assert_bool(CierreAnticipado.corresponde(1, partida.obligatorias())).is_false()
+		for tarea in partida.obligatorias():
+			if tarea.tipo() == Tarea.Tipo.REPONER:
+				turno.completar(tarea)
 		assert_bool(turno.todas_cumplidas()).is_true()
-		assert_int(turno.tareas_cumplidas()).is_equal(2)
 		assert_bool(CierreAnticipado.corresponde(1, partida.obligatorias())).is_true()
-		partida.cerrar_la_jornada(turno.tareas_cumplidas())
-		assert_int(partida.medios()).is_zero()
-		assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_zero()
-		assert_array(DevolucionDelJefe.new(1, partida).mensajes()).is_empty()
-		assert_array(estante.casilleros_vacios(producto)).has_size(cantidad)
 
 
 func _atender_de(jornada: int) -> TareaDeAtender:
@@ -202,6 +201,34 @@ func test_vender_al_ultimo_con_el_anterior_mal_atendido_deja_salir() -> void:  #
 	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender, registro)).is_true()
 	assert_int(atender.mal_atendidos()).is_equal(1)
 	assert_bool(atender.completada()).is_false()
+
+
+func test_el_segundo_sin_llegar_traba_la_puerta_pese_a_las_marcas() -> void:  # AC-SHF-048
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	var compradores := Compradores.de_la_jornada(jornada)
+	var atender := TareaDeAtender.new(compradores, inventario)
+	var registro := _registro_de(atender)
+	var obligatorias := _cumplidas_salvo(jornada)
+	atender.avanzar(compradores[0].horario.x)
+	var atencion := atender.atencion()
+	while not atencion.conversacion_iniciada() or not atencion.puede_abandonar():
+		atencion.interactuar(null)
+	var productos: Array[Producto] = []
+	var pedido := compradores[0].pedido()
+	for producto in pedido.productos():
+		for _unidad in pedido.unidades_de(producto):
+			atencion.interactuar(Estante.new(inventario, Catalogo.todos()).retirar(producto))
+			productos.append(producto)
+			registro.sumar(producto)
+	assert_int(atencion.interactuar(Ticket.new(productos))).is_equal(
+		RecepcionDeCompra.Resultado.COMPLETA
+	)
+	assert_bool(atender.cumplida()).is_true()
+	assert_bool(registro.completada()).is_true()
+	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender, registro)).is_false()
+	atender.avanzar(compradores[1].horario.x)
+	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender, registro)).is_false()
 
 
 func test_sin_compradores_fisicos_la_atencion_se_cumple_como_antes() -> void:  # AC-SHF-048

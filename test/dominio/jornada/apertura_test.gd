@@ -12,14 +12,13 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
 	]
 	var tabla := {
-		1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR],
-		2: introduccion,
-		3: fijas,
-		4: fijas + [Tarea.Tipo.ORDENAR_LAS_CAJAS],
-		5: fijas + [Tarea.Tipo.SACAR_LA_BASURA],
-		6: fijas + [Tarea.Tipo.DESECHAR_VENCIDOS],
+		1: introduccion,
+		2: fijas,
+		3: fijas + [Tarea.Tipo.ORDENAR_LAS_CAJAS],
+		4: fijas + [Tarea.Tipo.SACAR_LA_BASURA],
+		5: fijas + [Tarea.Tipo.DESECHAR_VENCIDOS],
+		6: fijas,
 		7: fijas,
-		8: fijas,
 	}
 	for jornada: int in tabla:
 		var tipos: Array = []
@@ -30,8 +29,10 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 			esperadas
 		)
 		assert_int(Apertura.cantidad_de_obligatorias(jornada)).is_equal(esperadas.size())
-		assert_bool(Apertura.pide(jornada, Tarea.Tipo.REPONER)).is_equal(jornada != 1)
-		assert_bool(Apertura.cajas_apiladas(jornada)).is_equal(jornada == 4)
+		assert_bool(Apertura.pide(jornada, Tarea.Tipo.REPONER)).is_true()
+		assert_bool(Apertura.cajas_apiladas(jornada)).is_equal(
+			jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		)
 		assert_bool(Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS)).is_equal(
 			jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 		)
@@ -247,7 +248,7 @@ func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # A
 	var retomada := Apertura.inventario_de_la_jornada(1, compradores, casilleros, casilleros, azar)
 	assert_array(retomada.faltantes()).is_empty()
 	assert_int(retomada.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(4)
-	assert_bool(Apertura.pide(1, Tarea.Tipo.REPONER)).is_false()
+	assert_bool(Apertura.pide(1, Tarea.Tipo.REPONER)).is_true()
 	var siguientes := Compradores.de_la_jornada(2)
 	azar.seed = 19
 	var segunda := Apertura.inventario_de_la_jornada(2, siguientes, casilleros, casilleros, azar)

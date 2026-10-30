@@ -37,15 +37,12 @@ func test_la_tabla_cubre_todos_los_eventos() -> void:  # AC-AMB-001
 	assert_bool(tabla.cubre_todos()).is_true()
 
 
-func test_cinco_eventos_suenan_con_su_audio_y_su_bus() -> void:
+func test_cuatro_eventos_suenan_con_su_audio_y_su_bus() -> void:
 	var tabla := _tabla()
 	var esperado := {
 		EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR:
 		["SFX_EVENTO_Timbre", EntradaSonora.BUS_DE_EFECTOS],
-		EntradaSonora.Evento.BOLSA_DEPOSITADA:
-		["SFX_NOLEV_Basura_SacarBolsa", EntradaSonora.BUS_DE_EFECTOS],
-		EntradaSonora.Evento.PASADA_DADA:
-		["SFX_OBJETO_Mopa_DejarYLimpiar", EntradaSonora.BUS_DE_EFECTOS],
+		EntradaSonora.Evento.PASADA_DADA: ["SFX_OBJETO_Mopa_Limpiar", EntradaSonora.BUS_DE_EFECTOS],
 		EntradaSonora.Evento.TURNO_CERRADO:
 		["SFX_EVENTO_FinJornada", EntradaSonora.BUS_DE_INTERFAZ],
 		EntradaSonora.Evento.BOTON_DE_LA_COMPUTADORA:
@@ -167,6 +164,10 @@ func test_cada_sonoridad_con_audio_suena_su_propio_archivo() -> void:
 			if entrada == null or not entrada.tiene_sonido():
 				continue
 			var nombre := String(EntradaSonora.Sonoridad.find_key(sonoridad)).to_pascal_case()
+			if sonoridad == EntradaSonora.Sonoridad.BALDE_VACIO:
+				assert_str(entrada.stream.resource_path.get_file()).contains("_Balde_")
+				assert_str(entrada.stream.resource_path.get_file()).contains("Vacio")
+				continue
 			assert_str(entrada.stream.resource_path.get_file()).contains("_%s_" % nombre)
 
 
@@ -242,7 +243,7 @@ func test_la_compra_el_lector_y_el_celular_suenan_con_su_audio() -> void:
 		[
 			"mensaje_recibido",
 			EntradaSonora.BUS_DE_INTERFAZ,
-			["SFX_INTERFAZ_Celular_Mensaje_A", "SFX_INTERFAZ_Celular_Mensaje_B"],
+			["SFX_INTERFAZ_Celular_Mensaje_Recibido"],
 		],
 	}
 	for evento: EntradaSonora.Evento in esperado:

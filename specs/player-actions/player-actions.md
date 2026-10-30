@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -33,11 +33,11 @@ una tarea son los metros, no la torpeza del control.
 
 Las reglas de interacción directa sobre la figura, foco de silueta y retorno automático del diálogo
 se aplican al recorrido de atención física con comprador representado en el mundo.
-Las jornadas 6 a 8 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
+Las jornadas 6 y 7 DEBEN conservar su recorrido genérico anterior sin figura, incluido el acceso al
 panel de cobro. Sólo en ese recorrido genérico se admite una consulta de acceso en el hueco:
 NO DEBE bloquear al jugador ni los objetos sostenidos, ni permanecer activa al usar atención física.
 La barrera de vidrio NO DEBE existir en ningún recorrido. Esta excepción NO DEBE convertir el hueco,
-marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 6 a 8.
+marco o antepecho en objetivos de atención física ni inventar figuras para jornadas 6 y 7.
 
 ### BR-PLY-001 — La diagonal no camina más rápido
 
@@ -139,6 +139,10 @@ superponerse con el material de ningún sólido fijo: un mueble, una pared, el t
 Apoyado contra una cara, o encima, no es superponerse. El caso que decide es el objeto más chico
 contra el sólido más delgado.
 
+Adentro de una heladera nada se apoya suelto: ni en el fondo, ni en un estante, ni sobre la base.
+Soltar ahí hace lo mismo que soltar contra una góndola, y lo soltado queda afuera. Colocar un
+producto en su casillero no es soltarlo.
+
 ### BR-PLY-016 — Lo que igual queda adentro vuelve a un lugar alcanzable
 
 SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
@@ -160,12 +164,20 @@ sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo m�
 
 CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
 el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
-horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
-que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
+horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo —salvo lo
+que excluye BR-CLN-040— o un objeto que admite otro encima. Admiten otro encima las cajas
+contenedoras y las unidades de producto de tapa lisa: las de caja, cajita y lata. No lo admiten
+las de envoltorio plástico ni las de botella, el balde, los bidones, la mopa, las bolsas ni el
+ticket.
+
+CUANDO se agarra algo que admite otro encima, el sistema DEBE dejar caer lo que estaba apoyado
+sobre él, y lo que estaba apoyado sobre eso, cada cosa hasta su apoyo real siguiente. Agarrar algo
+que no tiene nada encima NO DEBE mover ningún otro objeto.
 
 SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
-lugar.
+lugar. Una caja contenedora que quedaría metida entre los productos puestos de una góndola cuenta
+como encimada con algo, aunque el estante la sostenga: sólo un casillero sin producto la admite.
 
 Los tres bidones de jabón se llevan como el balde: verticales, a un costado y acompañando la
 mira, para no perderlos de vista al volcarlos. Se apoyan como las cajas: al soltarlos quedan
@@ -189,11 +201,11 @@ SI una puerta está trabada, ENTONCES el primario NO DEBE abrirla ni girar la ho
 DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. El portón del depósito y
 la oficina del jefe están trabadas en todas las jornadas. La entrada permanece trabada salvo
 la salida habilitada de BR-PLY-041. La puerta que lleva del local al depósito
-DEBE estar trabada en la primera jornada, y abrir desde la segunda. La puerta del cuartito de
+DEBE abrir desde la primera jornada. La puerta del cuartito de
 limpieza DEBE estar trabada en las jornadas que no piden limpiar, y abrir en las que sí. La puerta
 del baño y la de «Solo empleados» no están trabadas en ninguna. La traba de la jornada DEBE decidirse
 al abrirla, desde el número de la jornada y las obligatorias que declara, antes de cerrar las
-puertas de BR-PLY-019. La primera jornada DEBE poder cumplirse entera sin entrar al depósito.
+puertas de BR-PLY-019.
 
 CUANDO se acciona una puerta que abre, el sistema DEBE avisar una vez si se abrió o se cerró.
 CUANDO se acciona una trabada con el primario, DEBE avisar una vez que está trabada. El aviso de trabada del portón es distinto del de las demás. Cerrar las
@@ -468,9 +480,10 @@ atención. El hueco NO DEBE tener una barrera de vidrio; sus sólidos reales DEB
 CUANDO se suelta una caja sobre el borde superior gris de una división del baño, el sistema
 DEBE apoyar su base sobre ese borde visible, sin hundirla hasta la pared blanca ni atravesarlo.
 CUANDO se suelta una caja hacia el borde de góndola documentado en
-[GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), el sistema DEBE acomodarla
-sobre metal visible, conservando la selección del apoyo según la mira, la mano vacía y el
-reposo estable de BR-PLY-013. La caja DEBE quedar recogible y fuera de sólidos.
+[GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), el sistema NO DEBE apoyarla
+entre los productos puestos. SI el metal visible no tiene lugar libre de mercadería para la caja
+entera, ENTONCES DEBE dejarla en el piso al lado del jugador, estable, recogible y fuera de
+sólidos. Un casillero sin producto no cuenta como mercadería.
 En ambos encuadres, el soporte físico DEBE corresponder al borde visible; NO DEBE aparecer
 una plataforma invisible bajo la caja. El sistema NO DEBE forzar la caída de una caja que
 quedó apoyada de forma estable sobre ese metal.
@@ -490,6 +503,41 @@ La entrada NO DEBE permitir soltar o usar lo
 sostenido por ninguno de estos intentos. El secundario NO DEBE cerrar la noche ni sonar trabada.
 Con control suspendido, pausa o jornada cerrada, ningún gesto DEBE volver a cerrar la noche.
 Las demás puertas DEBEN conservar su referencia y comportamiento.
+
+### BR-PLY-042 — Agacharse baja la vista mientras se mantiene apretado Espacio
+
+MIENTRAS se mantiene apretada la acción de agacharse —Espacio por defecto—, el sistema DEBE
+bajar la vista a la altura agachado, aproximadamente el centro del hueco del segundo estante
+desde el piso de las góndolas. CUANDO se la suelta, DEBE devolver la vista a la altura de pie. No
+es un interruptor: apretar y soltar NO DEBE dejar al jugador agachado. Las dos alturas salen del
+dominio, y la agachado es mayor que cero y menor que la de pie.
+
+La vista NO DEBE saltar de una altura a la otra: DEBE recorrer el trecho entre las dos en una
+fracción de segundo, a paso parejo. CUANDO la acción cambia a mitad del recorrido, la vista DEBE
+seguir hacia la nueva altura desde la que tenga en ese momento.
+
+Agachado, el jugador DEBE caminar más lento que de pie: a una proporción de la velocidad de
+BR-PLY-002, que sale del dominio y es mayor que cero y menor que uno. El adelante y la
+normalización de la diagonal de BR-PLY-001 y BR-PLY-002 se conservan, y agacharse NO DEBE quitarle
+su tecla a la caminata. La mira enfoca desde la altura vigente de la vista (BR-PLY-004), y el
+cuerpo conserva su forma de colisión.
+
+MIENTRAS el control está suspendido (BR-PLY-006), la postura NO DEBE cambiar, apriete o suelte
+lo que apriete el jugador. CUANDO se reanuda, la postura DEBE seguir a la acción tal como esté
+en ese momento.
+
+Espacio es una tecla del juego: NO DEBE aceptar ni activar el botón que tenga el foco. Enter y
+el Enter del teclado numérico lo siguen haciendo, así que Espacio sostenido al terminar la
+jornada NO DEBE saltear la placa del cierre.
+
+### BR-PLY-050 — Lo que está suelto en el piso se corre al caminar contra ello
+
+CUANDO el jugador camina contra una caja, un útil de limpieza —jabón, mopa o balde— o una bolsa de
+basura que están sueltos, el sistema DEBE correrlo en el sentido del paso, y sólo con la parte
+del paso que no se pudo dar: el jugador no lo atraviesa ni lo empuja a toda su velocidad. Cada
+uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. Lo corrido NO
+DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar
+agitándose (BR-PLY-013). Lo que se lleva en la mano no se corre.
 
 ## Criterios de aceptación
 
@@ -618,11 +666,11 @@ apoyada arriba del mostrador.
 DADO una caja apoyada en el piso CUANDO se suelta otra mirando su tapa ENTONCES la segunda queda
 apoyada encima de la primera.
 
-### AC-PLY-024 — La unidad se sigue dejando adentro de la heladera *(verifica BR-PLY-015)*
+### AC-PLY-024 — La unidad soltada contra una heladera no queda adentro *(verifica BR-PLY-015)*
 
-DADO una unidad de producto soltada adentro de la heladera CUANDO pasa un segundo de física
-ENTONCES sigue adentro de la heladera, no se superpone con sus paneles y la mira la puede
-enfocar.
+DADO una unidad de producto en la mano y una heladera con la puerta abierta CUANDO se la suelta
+con la mira sobre un estante de su interior y pasa un segundo de física ENTONCES la unidad queda
+afuera del volumen de la heladera, no se superpone con sus paneles y la mira la puede enfocar.
 
 ### AC-PLY-025 — El empujón que terminó adentro se deshace *(verifica BR-PLY-016)*
 
@@ -671,21 +719,28 @@ ENTONCES el objeto termina fuera de ella, sin superponerse con ningún sólido f
 
 ### AC-PLY-033 — Queda donde se mira *(verifica BR-PLY-018)*
 
-DADO algo en la mano y la mira sobre el piso libre, o sobre la tapa de una caja contenedora, a
-menos del alcance CUANDO se suelta ENTONCES su base queda sobre el punto que la mira toca, sin
-encimarse con nada.
+DADO algo en la mano y la mira sobre el piso libre, sobre la tapa de una caja contenedora o sobre
+la tapa de una unidad de producto que admite otro encima, a menos del alcance CUANDO se suelta
+ENTONCES su base queda sobre el punto que la mira toca, sin encimarse con nada. DADO una unidad de
+Marolini apoyada en el piso libre del depósito y otra en la mano CUANDO se suelta mirando la tapa
+de la primera ENTONCES la segunda queda encima y, pasados 8 segundos de física, sigue encima y
+dormida.
 
 ### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
 
 DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
-con el corte exacto sobre el mundo fijo, o sobre una caja contenedora, sí; sobre la mopa, no.
-Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
+con el corte exacto sobre el piso y los muebles del mundo fijo, sobre una caja contenedora o sobre
+una unidad que admite, sí; sobre el cuerpo del contenedor (BR-CLN-040) y sobre la mopa, no.
+Admiten otro encima exactamente las cajas contenedoras y las unidades de producto de caja, cajita
+y lata; ningún otro objeto del almacén lo admite. La cara de una lata acostada cuya normal queda
+por debajo del corte no admite.
 
 ### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
 
-DADO la mira sobre una pared, sobre nada al alcance, o sobre un punto donde lo soltado quedaría
-encimado con algo o adentro de un mueble CUANDO se suelta ENTONCES lo soltado sale del mismo
-punto que sin mira.
+DADO la mira sobre una pared, sobre nada al alcance, sobre un punto donde lo soltado quedaría
+encimado con algo o adentro de un mueble, o sobre la tapa de una bolsa, del balde, de un bidón,
+de la mopa o de una unidad de envoltorio plástico CUANDO se suelta ENTONCES lo soltado sale del
+mismo punto que sin mira.
 
 ### AC-PLY-036 — La puerta abierta anoche arranca cerrada *(verifica BR-PLY-019)*
 
@@ -712,20 +767,12 @@ está trabada y queda abierta.
 
 DADO el almacén armado en cualquier jornada ENTONCES la entrada, el portón del depósito y la
 oficina del jefe están trabadas y contestan al primario. DADO la jornada 1 abierta ENTONCES la
-puerta que lleva al depósito está trabada, contesta al primario y la hoja no gira. DADO la
-jornada 2 abierta ENTONCES esa puerta abre y alterna. DADO el cierre de la 1 CUANDO se sigue a la 2
+puerta que lleva al depósito no está trabada y alterna. DADO la jornada 1 abierta ENTONCES la
+puerta del cuartito está trabada, contesta al primario y la hoja no gira. DADO la jornada 2
+abierta ENTONCES no está trabada y alterna. DADO el cierre de la 1 CUANDO se sigue a la 2
 ENTONCES se destraba; DADO una partida guardada en la 1 con la puerta abierta la noche anterior
-CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. DADO la jornada 1 o la 2
-abierta ENTONCES la puerta del cuartito está trabada, contesta al primario y la hoja no gira. DADO
-la jornada 3 abierta ENTONCES no está trabada y alterna. DADO el cierre de la 2 CUANDO se sigue a la
-3 ENTONCES se destraba; DADO una partida guardada en la 2 con la puerta abierta la noche anterior
 CUANDO se retoma ENTONCES abre cerrada y trabada, sin girar ni avisar. La puerta del baño y la de
 «Solo empleados» no están trabadas en ninguna jornada: abren y alternan también en la 1 y la 2.
-
-### AC-PLY-102 — La primera jornada se cumple sin entrar al depósito *(verifica BR-PLY-020)*
-
-DADO la jornada 1 abierta, con la puerta del depósito trabada, CUANDO se cumplen todas sus
-obligatorias sin accionar esa puerta ENTONCES todas quedan cumplidas y la puerta sigue trabada.
 
 ### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
 
@@ -794,7 +841,8 @@ CUANDO se lo vuelve a agarrar ENTONCES vuelve a ese mismo agarre.
 ### AC-PLY-051 — El balde se apoya derecho donde se mira *(verifica BR-PLY-018)*
 
 DADO el balde en la mano, la vista 40 grados hacia abajo y la mira sobre el piso libre, la tapa
-de una caja contenedora, un estante del depósito o el mostrador, a menos del alcance CUANDO se
+de una caja contenedora o de una unidad que admite otro encima, un estante del depósito o el
+mostrador, a menos del alcance CUANDO se
 lo suelta ENTONCES su eje queda a menos de 1 grado de la vertical, su base sobre el punto que la
 mira toca, sin encimarse con nada, y la mano vacía. CUANDO pasan dos segundos de física ENTONCES
 sigue derecho y a menos de 1 centímetro de donde quedó. DADO el balde con agua ENTONCES después
@@ -920,8 +968,8 @@ hasta cerrar la primera.
 DADO una nota abierta, CUANDO pasan cuadros ENTONCES el tiempo del turno disminuye. CUANDO se
 pausa ENTONCES la pausa visible se dibuja por encima de la nota; al reanudar, la nota sigue
 abierta y el control suspendido. CUANDO termina el turno ENTONCES la nota se cierra y el
-control queda suspendido. En las jornadas 1 a 3 baja la persiana y, al terminar de bajar, siguen
-las instrucciones de la jornada siguiente, sin celular ni devolución. Desde la jornada 4 queda
+control queda suspendido. En las jornadas 1 y 2 baja la persiana y, al terminar de bajar, siguen
+las instrucciones de la jornada siguiente, sin celular ni devolución. Desde la jornada 3 queda
 sólo la devolución.
 
 ### AC-PLY-068 — Ordenado comparte el texto exacto *(verifica BR-PLY-030)*
@@ -974,8 +1022,8 @@ ni abre el programa. En modo manual, el hueco del lector no recibe lecturas.
 DADO el programa abierto, CUANDO pasan cuadros ENTONCES el tiempo disminuye; al pausar,
 la pausa visible tiene una capa superior al programa. Al reanudar sigue abierto y el control
 suspendido. Al terminar el turno el programa se cierra y el control queda suspendido. En las
-jornadas 1 a 3 baja la persiana y, al terminar de bajar, siguen las instrucciones de la jornada
-siguiente, sin celular ni devolución. Desde la jornada 4 queda sólo la devolución.
+jornadas 1 y 2 baja la persiana y, al terminar de bajar, siguen las instrucciones de la jornada
+siguiente, sin celular ni devolución. Desde la jornada 3 queda sólo la devolución.
 
 ### AC-PLY-075 — El papel se lleva y examina *(verifica BR-PLY-033)*
 
@@ -1057,10 +1105,10 @@ CUANDO vence ENTONCES se cierra el diálogo y se devuelve automáticamente la vi
 
 ### AC-PLY-080 — La nota cambia con la particular *(verifica BR-PLY-030)*
 
-DADO la jornada 4 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
+DADO la jornada 3 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
 cliente», «Registro de productos vendidos», «Limpieza», «Reposición» y «Ordenar cajas en el
-depósito». CUANDO se sigue a la jornada 5 sin recargar el local ENTONCES el quinto renglón dice
-«Tirar la basura». DADO la jornada 6 ENTONCES sólo están los cuatro primeros. En los tres casos,
+depósito». CUANDO se sigue a la jornada 4 sin recargar el local ENTONCES el quinto renglón dice
+«Tirar la basura». DADO la jornada 5 ENTONCES sólo están los cuatro primeros. En los tres casos,
 la hoja visible y su lectura tienen los mismos renglones.
 
 ### AC-PLY-081 — El celular conserva la mano y suspende el cuerpo *(verifica BR-PLY-006)*
@@ -1100,7 +1148,7 @@ lector, inodoro, lavatorio o balde no ofrece esos usos; el lector ausente tampoc
 
 ### AC-PLY-085 — Consultar el tacho no le saca la bolsa *(verifica BR-PLY-036, BR-PLY-035)*
 
-DADO jornada 5, mano vacía y tacho con bolsa CUANDO se consulta ENTONCES ofrece
+DADO jornada 4, mano vacía y tacho con bolsa CUANDO se consulta ENTONCES ofrece
 «[E] Examinar» y «[Click Izq] Interactuar», sin línea secundaria ni cambio de bolsa o mano.
 DADO tacho sin bolsa u objeto sostenido ENTONCES no ofrece extracción.
 
@@ -1201,12 +1249,14 @@ La comprobación cruza la base dibujada y la superficie física del mismo contac
 DADO cada bidón de jabón en la mano ENTONCES cuelga del mismo punto que una caja. CUANDO se lo
 suelta mirando al piso libre ENTONCES queda derecho donde la mira tocaba y la mano queda vacía.
 
-### AC-PLY-100 — La cabecera acomoda la caja sobre metal visible *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
+### AC-PLY-100 — La cabecera no apoya la caja entre los productos *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
 
-DADO una caja chica y otra grande, por separado, y el segundo encuadre de GJ-52 CUANDO se
-suelta por el mismo gesto real y avanza la física ENTONCES la caja queda acomodada y estable
-sobre metal visible, con el contacto físico correspondiente, recogible y sin superposición.
-La mano queda vacía; ni inventario ni tareas cambian por el acomodo o por la recogida.
+DADO una caja chica y otra grande, por separado, y el segundo encuadre de GJ-52 con productos
+puestos sobre ese metal CUANDO se suelta por el mismo gesto real y avanza la física ENTONCES la
+caja queda en el piso, estable, recogible, fuera de sólidos y sin superponerse a ningún producto
+puesto. La mano queda vacía; ni inventario ni tareas cambian por el acomodo o por la recogida.
+Con ese mismo metal sin productos puestos, la caja chica queda apoyada y estable sobre la góndola,
+recogible y fuera de sólidos.
 
 ### AC-PLY-095 — Los apoyos válidos siguen estables *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-018)*
 
@@ -1244,6 +1294,111 @@ usar; la referencia permanece vacía y se conserva el objeto. CUANDO se
 hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
 abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los gestos no lo repiten.
 
+### AC-PLY-110 — Levantar lo de abajo hace caer lo de arriba *(verifica BR-PLY-018)*
+
+DADO una unidad de producto que admite otro encima, dormida debajo de otra unidad CUANDO se agarra
+la de abajo y pasan los mismos cuadros de caída que usa la pila de cajas ENTONCES la de arriba
+tiene algo debajo a menos de media altura suya y bajó al menos la altura de la de abajo. DADO una
+unidad sin nada encima CUANDO se la agarra ENTONCES ningún objeto a un metro se despierta ni se
+mueve. DADO una unidad apoyada a caballo entre dos CUANDO se agarra una ENTONCES queda sobre la
+otra. DADO lo de arriba ya despierto CUANDO se agarra la de abajo ENTONCES cae igual y no se
+duplica ningún aviso.
+
+### AC-PLY-111 — La caída sigue para arriba *(verifica BR-PLY-018)*
+
+DADO tres unidades que admiten otro encima, apiladas y dormidas CUANDO se agarra la de abajo y
+pasan los mismos cuadros de caída ENTONCES las otras dos caen, cada una hasta su apoyo real:
+la del medio sobre lo que tenga debajo, y la de arriba sobre la del medio.
+
+### AC-PLY-120 — Agachado, la vista baja *(verifica BR-PLY-042)*
+
+DADO el jugador de pie CUANDO se mantiene apretada la acción de agacharse ENTONCES la vista baja
+hasta la altura agachado, y no se queda en la de pie.
+
+### AC-PLY-121 — Soltar la acción levanta la vista y no es un interruptor *(verifica BR-PLY-042)*
+
+DADO el jugador agachado CUANDO se suelta la acción ENTONCES la altura de la vista vuelve a la de
+pie. DADO el jugador de pie CUANDO se aprieta y se suelta la acción ENTONCES queda a la altura de
+pie, y apretarla de nuevo lo baja otra vez.
+
+### AC-PLY-122 — La altura agachado está entre el piso y la de pie *(verifica BR-PLY-042)*
+
+DADO las dos alturas de la vista ENTONCES la agachado es mayor que cero y menor que la de pie.
+
+### AC-PLY-124 — Suspendido, la postura no cambia *(verifica BR-PLY-042, BR-PLY-006)*
+
+DADO el jugador agachado y el control suspendido CUANDO se suelta la acción ENTONCES la altura
+sigue siendo la agachado. DADO el jugador de pie y el control suspendido CUANDO se aprieta la
+acción ENTONCES la altura sigue siendo la de pie. CUANDO se reanuda con la acción apretada
+ENTONCES la altura es la agachado; reanudada con la acción suelta, la de pie.
+
+### AC-PLY-125 — La mira enfoca desde la altura agachado *(verifica BR-PLY-042, BR-PLY-004)*
+
+DADO el jugador agachado, con la bajada completa, ENTONCES la cámara de la mira está a la altura
+agachado sobre el piso, y un objeto interactuable apenas debajo de la altura de pie, en línea con la mira agachado, queda
+enfocado. CUANDO se suelta la acción ENTONCES la cámara vuelve a la altura de pie.
+
+### AC-PLY-126 — Espacio es de la acción y la acción tiene su nombre *(verifica BR-PLY-042)*
+
+DADO el mapa de entradas del juego ENTONCES la acción de agacharse existe, su tecla es Espacio y
+ninguna otra acción del juego que ya existía la tiene. DADO el nombre de la acción en el dominio
+ENTONCES coincide con el del mapa de entradas.
+
+### AC-PLY-127 — Espacio no acepta el botón con foco *(verifica BR-PLY-042)*
+
+DADO el mapa de entradas del juego ENTONCES la acción de aceptar de la interfaz no tiene Espacio y
+sigue teniendo Enter y el Enter del teclado numérico.
+
+### AC-PLY-128 — La vista se mueve sin saltar *(verifica BR-PLY-042)*
+
+DADO el jugador de pie CUANDO se aprieta la acción ENTONCES un cuadro corto baja la vista sin
+llegar a la altura agachado. DADO el jugador agachado CUANDO se suelta ENTONCES un cuadro corto la
+sube sin llegar a la de pie. La vista llega al destino en una duración mayor que cero y menor que
+medio segundo, sin pasarse de él, y la misma duración da la misma altura con cuadros de cualquier
+largo.
+
+### AC-PLY-129 — Cambiar a mitad del recorrido parte de la altura que haya *(verifica BR-PLY-042)*
+
+DADO el jugador bajando a mitad del recorrido CUANDO se suelta la acción ENTONCES la vista sube
+desde la altura que tenía, sin volver de golpe a la de pie ni terminar antes la bajada.
+
+### AC-PLY-130 — Agachado se camina a la velocidad agachado *(verifica BR-PLY-042, BR-PLY-002)*
+
+DADO el jugador agachado y una entrada hacia adelante CUANDO se calcula la velocidad ENTONCES su
+módulo es la velocidad agachado. DADO una entrada en diagonal ENTONCES su módulo es el mismo, por
+la normalización de BR-PLY-001. CUANDO se suelta la acción ENTONCES la velocidad vuelve a la de
+caminata de BR-PLY-002.
+
+### AC-PLY-131 — La velocidad agachado es menor que la de pie y no es cero *(verifica BR-PLY-042)*
+
+DADO las dos velocidades de caminata ENTONCES la agachado es mayor que cero y menor que la de pie.
+
+### AC-PLY-150 — Un útil suelto se corre en el sentido del paso *(verifica BR-PLY-050)*
+
+DADO un jabón, la mopa o el balde sueltos en el piso, uno por vez CUANDO el jugador camina contra
+él ENTONCES se corre en el sentido del paso, y menos distancia que la que avanza el jugador.
+
+### AC-PLY-151 — Una bolsa suelta se corre en el sentido del paso *(verifica BR-PLY-050)*
+
+DADO una bolsa de basura suelta en el piso CUANDO el jugador camina contra ella
+ENTONCES se corre en el sentido del paso, y menos distancia que la que avanza el jugador.
+
+### AC-PLY-152 — Lo empujado no atraviesa nada *(verifica BR-PLY-050, BR-PLY-015)*
+
+DADO un útil de limpieza y una bolsa de basura sueltos contra una pared CUANDO el jugador camina
+contra cada uno hacia la pared, el tiempo que haga falta para llevarlo hasta ella, ENTONCES ninguno
+se superpone con la pared ni sale del local.
+
+### AC-PLY-153 — La caja se empuja con su parte de siempre *(verifica BR-PLY-050)*
+
+DADO una caja suelta en el piso CUANDO el jugador camina contra ella ENTONCES se corre con la
+parte del paso que declara el dominio para la caja, y no con la de los útiles ni la de las bolsas.
+
+### AC-PLY-154 — Lo que se lleva en la mano no se corre *(verifica BR-PLY-050)*
+
+DADO un útil de limpieza o una bolsa de basura que no están sueltos, sino sostenidos ENTONCES
+recibir el paso del jugador no les cambia ni la posición ni la velocidad.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -1261,8 +1416,9 @@ abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los ge
   casilleros vacíos y ocupados de cada producto, los segundos del cuadro y el nombre del control
   asignado a cada gesto; la acción primaria o secundaria y el contexto declarado del par
   mano/objetivo, independiente del resultado del intento; la vigencia del comprador, el
-  estado de su conversación y su figura animada visible para foco, contorno e interacción directa.
-- **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
+  estado de su conversación y su figura animada visible para foco, contorno e interacción directa;
+  si la acción de agacharse está apretada.
+- **Salida:** la velocidad, los dos ángulos de la vista, su altura, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
   referencia de controles.

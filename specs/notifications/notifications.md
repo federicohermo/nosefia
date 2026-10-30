@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-NTF
 status: ratified
 owner: por definir
-provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573
+provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573; siete jornadas de #693
 ---
 
 # Capacidad: los avisos durante la noche
@@ -95,7 +95,7 @@ ese comprador, sin vencer por tiempo. Abrir o cerrar la ventanilla NO DEBE retir
 El primer clic que inicia la conversación DEBE retirarlo una sola vez; reabrir o volver a
 hablar NO DEBE recrearlo. Si el comprador vence antes, su salida DEBE retirar la llegada.
 Un evento de otra identidad NO DEBE retirar el aviso del comprador que está esperando.
-Los avisos de lectura y de cansancio DEBEN conservar su duración. Las jornadas 5 a 8
+Los avisos de lectura y de cansancio DEBEN conservar su duración. Las jornadas 5 a 7
 conservan el recorrido y duración anteriores hasta que tengan diálogos diseñados.
 
 ### BR-NTF-010 — Sólo una pista anotada avisa
@@ -360,8 +360,8 @@ derecho de la pila, queda dentro de pantalla y deja pasar clics.
 
 ### AC-NTF-028 — Sólo al completar las tareas de prueba *(verifica BR-NTF-014)*
 
-DADO por separado las jornadas 1, 2, 3 y la primera jornada completa CUANDO falta una tarea
-ENTONCES no hay aviso. CUANDO se completa la última ENTONCES las tres primeras muestran
+DADO por separado las jornadas 1, 2 y la primera jornada completa CUANDO falta una tarea
+ENTONCES no hay aviso. CUANDO se completa la última ENTONCES las dos primeras muestran
 exactamente uno y la primera completa ninguno. DADO el aviso vencido CUANDO se descumple
 y se recupera una tarea ENTONCES el aviso inicial no reaparece; la salida sigue el estado
 actual de sus tareas.

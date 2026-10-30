@@ -57,18 +57,16 @@ const PRECIOS_NUEVOS := {
 	"Poético": 1800,
 }
 
-## La sonoridad de los 8 que entran, de la columna «Familia sonora» de su ficha. Dos familias de
-## la ficha no existen en el juego —botella de vidrio y caja de cereal—: suenan como la más
-## parecida, y el hueco es OQ-STK-004.
+## La sonoridad de los 8 que entran, de la columna «Familia sonora» de su ficha.
 const SONORIDADES_NUEVAS := {
 	"Cosa de Maní": EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	"Duronga": EntradaSonora.Sonoridad.CAJITA,
-	"Fernet God": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+	"Fernet God": EntradaSonora.Sonoridad.BOTELLA_VIDRIO,
 	"Mayonchis": EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	"Oaaaa": EntradaSonora.Sonoridad.CAJA,
 	"Terminator": EntradaSonora.Sonoridad.CAJA,
 	"Marranos": EntradaSonora.Sonoridad.LATA,
-	"Feel Ricky Fort": EntradaSonora.Sonoridad.CAJITA,
+	"Feel Ricky Fort": EntradaSonora.Sonoridad.CAJA_CEREALES,
 	"Poético": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 }
 
@@ -192,3 +190,33 @@ func test_ningun_producto_queda_sin_sonoridad() -> void:  # AC-STK-027
 		)
 	for id: Producto.Id in [Producto.Id.ARVECOR, Producto.Id.PURA_COLA, Producto.Id.PROGRES]:
 		assert_int(Catalogo.sonoridad_de(id)).is_equal(EntradaSonora.Sonoridad.LATA)
+
+
+func test_cada_producto_declara_si_su_unidad_admite_otro_encima() -> void:  # AC-PLY-034
+	assert_int(Catalogo.ADMITEN_ENCIMA.size()).is_equal(Producto.Id.size())
+	for id: Producto.Id in Producto.Id.values():
+		assert_bool(Catalogo.ADMITEN_ENCIMA.has(id)).is_true()
+	# Un `id` sin fila no admite: la tapa lisa se declara, no se supone.
+	assert_bool(Catalogo.admite_encima(-1 as Producto.Id)).is_false()
+	for id: Producto.Id in [Producto.Id.MAROLINI, Producto.Id.TERMINATOR, Producto.Id.MARRANOS]:
+		assert_bool(Catalogo.admite_encima(id)).is_true()
+	for id: Producto.Id in [Producto.Id.CHISITOS, Producto.Id.FERNET_GOD, Producto.Id.POETICO]:
+		assert_bool(Catalogo.admite_encima(id)).is_false()
+
+
+func test_ningun_producto_queda_sin_rubro() -> void:
+	for id: Producto.Id in Producto.Id.values():
+		(
+			assert_str(Catalogo.rubro_de(id))
+			. override_failure_message("%s no tiene rubro" % Producto.Id.find_key(id))
+			. is_not_empty()
+		)
+
+
+func test_los_dos_rubros_que_la_base_repite_o_escribe_mal_van_corregidos() -> void:
+	assert_str(Catalogo.rubro_de(Producto.Id.FERNET_GOD)).is_equal("Botella de Fernet")
+	assert_str(Catalogo.rubro_de(Producto.Id.SALADICK)).is_equal("Caja de snacks")
+
+
+func test_un_id_sin_fila_no_tiene_rubro_y_no_revienta() -> void:
+	assert_str(Catalogo.rubro_de(-1 as Producto.Id)).is_empty()

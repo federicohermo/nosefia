@@ -110,7 +110,9 @@ func test_publica_compra_solo_al_recibir_el_ultimo_elemento() -> void:  # AC-CTR
 		while not ventanilla.puede_abandonar():
 			ventanilla.pedir_interaccion(null)
 	assert_array(compras).has_size(2)
-	assert_int(_avisos_de_tarea).is_equal(1)
+	# Cuenta con cada venta: la segunda llegada la descuenta y la segunda venta la vuelve a contar.
+	assert_int(_avisos_de_tarea).is_equal(2)
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
 	ventanilla.pedir_interaccion(null)
 	assert_array(compras).has_size(2)
 

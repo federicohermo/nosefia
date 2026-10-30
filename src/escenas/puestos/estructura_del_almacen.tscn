@@ -81,6 +81,15 @@ points = PackedVector3Array(0.320000000, 1.025000000, 0.310000000, 0.320000000, 
 [sub_resource type="ConvexPolygonShape3D" id="contenedor_fondo"]
 points = PackedVector3Array(0.240000000, 0.045000000, -0.245000000, 0.205000000, 0.045000000, -0.280000000, -0.205000000, 0.045000000, -0.280000000, -0.240000000, 0.045000000, -0.245000000, -0.240000000, 0.045000000, 0.245000000, -0.205000000, 0.045000000, 0.280000000, 0.205000000, 0.045000000, 0.280000000, 0.240000000, 0.045000000, 0.245000000, 0.186500000, 0.130000000, -0.199500000, 0.159500000, 0.130000000, -0.226500000, -0.159500000, 0.130000000, -0.226500000, -0.186500000, 0.130000000, -0.199500000, -0.186500000, 0.130000000, 0.199500000, -0.159500000, 0.130000000, 0.226500000, 0.159500000, 0.130000000, 0.226500000, 0.186500000, 0.130000000, 0.199500000)
 
+[sub_resource type="StandardMaterial3D" id="fondo_del_contenedor_material"]
+albedo_color = Color(0.008, 0.008, 0.01, 1)
+roughness = 1.0
+metallic_specular = 0.0
+
+[sub_resource type="PlaneMesh" id="fondo_del_contenedor_malla"]
+material = SubResource("fondo_del_contenedor_material")
+size = Vector2(1.74, 1.04)
+
 [sub_resource type="BoxShape3D" id="volumen_tapa_contenedor"]
 size = Vector3(0.682, 0.025, 0.762)
 
@@ -698,6 +707,10 @@ points = PackedVector3Array(-0.534600437,0.353535771,-0.617926836,-0.534600437,0
 margin = 0.002
 points = PackedVector3Array(-0.534600437,-0.117580295,-0.617926836,-0.534600437,-0.096551061,-0.617926836,-0.534600139,-0.117580295,0.329090476,-0.534600139,-0.096551061,0.329090476,0.019685563,-0.153559327,-0.617926955,0.019685563,-0.096551061,-0.617926955,0.019685855,-0.153559327,0.329090416,0.019685855,-0.096551061,0.329090416)
 
+[sub_resource type="ConvexPolygonShape3D" id="actual_heladera_fuera_de_servicio_8"]
+margin = 0.002
+points = PackedVector3Array(-0.646983900,-1.068825200,-0.669418100,-0.646983900,-1.068825200,0.380581700,-0.646983900,-0.507950783,-0.669418100,-0.646983900,-0.507950783,0.380581700,0.153016230,-1.068825200,-0.669418100,0.153016230,-1.068825200,0.380581700,0.153016230,-0.507950783,-0.669418100,0.153016230,-0.507950783,0.380581700)
+
 [sub_resource type="ConvexPolygonShape3D" id="actual_local_marco_ventanal_0"]
 margin = 0.002
 points = PackedVector3Array(-2.582259655,0.188017309,-6.137259483,-2.459663391,0.163498074,-5.131971359,-2.459663391,0.089940369,-5.131971359,-2.582259655,0.163498074,-5.131971359,-2.459663391,0.089940369,-6.137259483,-2.582259655,0.089940369,-6.137259483,-2.461158514,0.186821267,-6.125000000,-2.582259655,0.089940369,-5.131971359,-2.459663391,0.188017309,-6.063653946)
@@ -1154,6 +1167,10 @@ points = PackedVector3Array(-0.534600496,0.353535771,-0.617926717,-0.534600496,0
 margin = 0.002
 points = PackedVector3Array(-0.534600496,-0.117580295,-0.617926717,-0.534600496,-0.096551061,-0.617926717,-0.534600258,-0.117580295,0.329090595,-0.534600258,-0.096551061,0.329090595,0.019685537,-0.153559327,-0.617926836,0.019685537,-0.096551061,-0.617926836,0.019685715,-0.153559327,0.329090536,0.019685715,-0.096551061,0.329090536)
 
+[sub_resource type="ConvexPolygonShape3D" id="actual_heladeranueva_8"]
+margin = 0.002
+points = PackedVector3Array(-0.646984000,-1.068825200,-0.669417900,-0.646984000,-1.068825200,0.380581800,-0.646984000,-0.507950783,-0.669417900,-0.646984000,-0.507950783,0.380581800,0.153016100,-1.068825200,-0.669417900,0.153016100,-1.068825200,0.380581800,0.153016100,-0.507950783,-0.669417900,0.153016100,-0.507950783,0.380581800)
+
 [sub_resource type="ConvexPolygonShape3D" id="actual_heladeranueva_001_0"]
 margin = 0.002
 points = PackedVector3Array(-0.646983900,-1.068825200,-0.669418100,-0.646983900,-1.068825200,0.380581700,-0.646983900,1.421610800,-0.669418100,-0.646983900,1.421610800,0.380581700,-0.621983900,-1.068825200,-0.669418100,-0.621983900,-1.068825200,0.380581700,-0.621983900,1.421610800,-0.669418100,-0.621983900,1.421610800,0.380581700)
@@ -1185,6 +1202,10 @@ points = PackedVector3Array(-0.534600437,0.353535771,-0.617926836,-0.534600437,0
 [sub_resource type="ConvexPolygonShape3D" id="actual_heladeranueva_001_7"]
 margin = 0.002
 points = PackedVector3Array(-0.534600437,-0.117580295,-0.617926836,-0.534600437,-0.096551061,-0.617926836,-0.534600139,-0.117580295,0.329090476,-0.534600139,-0.096551061,0.329090476,0.019685563,-0.153559327,-0.617926955,0.019685563,-0.096551061,-0.617926955,0.019685855,-0.153559327,0.329090416,0.019685855,-0.096551061,0.329090416)
+
+[sub_resource type="ConvexPolygonShape3D" id="actual_heladeranueva_001_8"]
+margin = 0.002
+points = PackedVector3Array(-0.646984100,-1.068825200,-0.669418000,-0.646984100,-1.068825200,0.380581700,-0.646984100,-0.507950783,-0.669418000,-0.646984100,-0.507950783,0.380581700,0.153016000,-1.068825200,-0.669418000,0.153016000,-1.068825200,0.380581700,0.153016000,-0.507950783,-0.669418000,0.153016000,-0.507950783,0.380581700)
 
 [sub_resource type="ConvexPolygonShape3D" id="actual_gondola_deposito03_001_0"]
 margin = 0.002
@@ -4490,6 +4511,12 @@ script = ExtResource("contenedor")
 tapa = NodePath("../../deposito_contenedor_bisagra_izquierda/CuerpoDeLaTapa")
 mallas = [NodePath("..")]
 
+[node name="FondoOscuro" type="MeshInstance3D" parent="deposito_contenedor_grande_soporte/deposito_contenedor_grande_cuerpo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3315, 0)
+mesh = SubResource("fondo_del_contenedor_malla")
+cast_shadow = 0
+gi_mode = 2
+
 [node name="deposito_contenedor_tapa_izquierda" parent="deposito_contenedor_grande_soporte/deposito_contenedor_bisagra_izquierda"]
 gi_mode = 2
 
@@ -4848,6 +4875,9 @@ shape = SubResource("actual_heladera_fuera_de_servicio_6")
 
 [node name="Volumen8" type="CollisionShape3D" parent="heladera_fuera_de_servicio/StaticBody3D"]
 shape = SubResource("actual_heladera_fuera_de_servicio_7")
+
+[node name="Volumen9" type="CollisionShape3D" parent="heladera_fuera_de_servicio/StaticBody3D"]
+shape = SubResource("actual_heladera_fuera_de_servicio_8")
 
 [node name="CollisionShape3D" parent="local_marco_ventanal/StaticBody3D"]
 disabled = true
@@ -5384,6 +5414,9 @@ shape = SubResource("actual_heladeranueva_6")
 [node name="Volumen8" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
 shape = SubResource("actual_heladeranueva_7")
 
+[node name="Volumen9" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+shape = SubResource("actual_heladeranueva_8")
+
 [node name="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
 disabled = true
 
@@ -5410,6 +5443,9 @@ shape = SubResource("actual_heladeranueva_001_6")
 
 [node name="Volumen8" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
 shape = SubResource("actual_heladeranueva_001_7")
+
+[node name="Volumen9" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+shape = SubResource("actual_heladeranueva_001_8")
 
 [node name="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
 disabled = true

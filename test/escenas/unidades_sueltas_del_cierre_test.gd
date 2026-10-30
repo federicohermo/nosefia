@@ -208,6 +208,7 @@ func _entregar_a_tin(
 	if solapados:
 		var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 		compradores[1].horario = Vector2(7200, 14400)
+		compradores[1].llega_tras = null
 		var inventario: Inventario = (_almacen.get("_repositor") as Repositor).estante().get(
 			"_inventario"
 		)

@@ -95,10 +95,15 @@ static func leer_las_instrucciones(almacen: Node) -> void:
 
 
 static func terminar_instrucciones(pantalla: PantallaDeInstrucciones) -> void:
+	terminar_el_movimiento(pantalla)
+
+
+## Corre la entrada, la salida y el deslizamiento de las placas hasta que la pantalla se detiene.
+static func terminar_el_movimiento(pantalla: PantallaDeInstrucciones) -> void:
 	var lectura: Callable = pantalla.get("_ahora")
 	var reloj: Array[int] = [int(lectura.call())]
 	pantalla.set("_ahora", func() -> int: return reloj[0])
-	for _cuadro in 30:
+	for _cuadro in 90:
 		if not pantalla.is_processing():
 			break
 		reloj[0] += 10000
