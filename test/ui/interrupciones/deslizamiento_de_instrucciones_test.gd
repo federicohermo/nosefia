@@ -75,7 +75,7 @@ func _textos(contenedor: Control) -> Array[String]:
 
 func _fijos() -> Array[Vector2]:
 	var posiciones: Array[Vector2] = []
-	for nombre in ["_retrato", "_botones", "_contador", "_volver", "_siguiente"]:
+	for nombre: String in ["_retrato", "_botones", "_contador", "_volver", "_siguiente"]:
 		posiciones.append(_nodo(nombre).global_position)
 	var bocadillo := _nodo("_retrato").find_child("Bocadillo", true, false) as Control
 	posiciones.append(bocadillo.global_position)

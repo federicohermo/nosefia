@@ -293,6 +293,8 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	assert_bool(get_tree().paused).is_false()
 	_cuadros(ahora, ahora[0] + 150000, animadas)
 	assert_bool(negro.visible).is_false()
+	var deslizamiento := roundi(PantallaDeInstrucciones.DURACION_DEL_DESLIZAMIENTO * 1000000.0)
+	_cuadros(ahora, ahora[0] + deslizamiento, animadas)
 	assert_bool(_instrucciones().is_processing()).is_false()
 	(
 		assert_int((_instrucciones().get("_instrucciones") as InstruccionesDelJefe).paso_actual())
