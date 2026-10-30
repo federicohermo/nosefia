@@ -276,6 +276,8 @@ func obstaculos_entre(oido: Vector3, sonido: Vector3, propio: Object) -> int:
 	# El rayo sale del sonido: lo que lo encierra no lo tapa. Y sigue desde cada choque sin
 	# excluir el cuerpo, porque un mismo sólido puede tener muchas paredes.
 	var consulta := PhysicsRayQueryParameters3D.create(sonido, oido)
+	# El hueco de la ventanilla sólo frena productos: el aire sigue abierto.
+	consulta.collision_mask &= ~ReglasDeLosObjetos.CAPA_DEL_HUECO
 	if propio is CollisionObject3D:
 		consulta.exclude = [(propio as CollisionObject3D).get_rid()]
 	var paso := (oido - sonido).normalized() * 0.01

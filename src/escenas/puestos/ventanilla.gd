@@ -32,6 +32,10 @@ const ANIMACIONES := {
 	DialogosDeCompradores.Personaje.CAMI: preload("res://assets/characters/cami/idle.tres"),
 }
 
+## El hueco de la pared desde el puesto, con los bordes metidos en la pared. Su cara de adentro cae
+## donde termina el local: lo frenado no llega a apoyarse en el marco, que ya cuenta como afuera.
+const VOLUMEN_DEL_HUECO := AABB(Vector3(-0.75, -0.05, -0.1), Vector3(1.5, 1.5, 0.1))
+
 @export var jugador: JugadorDelLocal
 @export var reloj: RelojDelTurno
 @export var atenciones: Ventanilla
@@ -51,10 +55,12 @@ var _imagen_de: Atencion = null
 var _retiradas: Array[CompradorEnRetirada] = []
 var _entrada: Tween
 var _posicion_de_espera: Vector3
+var _hueco: StaticBody3D
 
 
 func _ready() -> void:
 	_posicion_de_espera = comprador_visible.position
+	_armar_el_hueco()
 	objetivo.atenciones = atenciones
 	objetivo.manos = jugador.agarre.manos()
 	objetivo.precargar(ANIMACIONES.values())
@@ -71,6 +77,26 @@ func _ready() -> void:
 	atenciones.comprador_vencido.connect(_al_vencer)
 	atenciones.jornada_preparada.connect(_al_preparar)
 	atenciones.conversacion_terminada.connect(cerrar)
+
+
+## Con un comprador, ningún producto atraviesa la abertura: ni el soltado ni el que rueda. Lo demás
+## no mira esta capa y sigue saliendo.
+func _armar_el_hueco() -> void:
+	var caja := BoxShape3D.new()
+	caja.size = VOLUMEN_DEL_HUECO.size
+	var forma := CollisionShape3D.new()
+	forma.shape = caja
+	forma.position = VOLUMEN_DEL_HUECO.get_center()
+	_hueco = StaticBody3D.new()
+	_hueco.collision_layer = 0
+	_hueco.collision_mask = 0
+	_hueco.add_child(forma)
+	add_child(_hueco)
+	comprador_visible.visibility_changed.connect(_al_cambiar_la_presencia)
+
+
+func _al_cambiar_la_presencia() -> void:
+	_hueco.collision_layer = ReglasDeLosObjetos.CAPA_DEL_HUECO if comprador_visible.visible else 0
 
 
 func _al_preparar() -> void:
@@ -113,23 +139,32 @@ func _al_pulsar() -> void:
 	_repintar()
 
 
-## Con un comprador, ningún producto sale por la abertura: lo soltado que quedó del otro lado vuelve
-## a la mano y el gesto cuenta como el intento de entrega. `objetivo` sólo cubre la figura, y la
-## figura no siempre está sobre la abertura.
+## Soltar un producto mirando al hueco es el intento de entrega: vuelve a la mano y cuenta como el
+## clic sobre el comprador. `objetivo` sólo cubre la figura, y la figura no siempre está ahí.
 func _al_soltar(nodo: Node3D) -> void:
-	await get_tree().physics_frame
-	if not is_instance_valid(nodo):
-		return
 	var datos := nodo.get("datos") as ObjetoDelAlmacen
 	if not ReglasDeLaVentanilla.se_entrega_al_soltar_en_el_hueco(datos):
 		return
-	var atendida := atenciones.atencion()
-	if atendida == null or not atendida.fisica() or atendida.despachada():
+	if not _la_mira_llega_al_hueco(nodo):
 		return
-	if to_local(nodo.global_position).z <= 0.0 or jugador.agarre.cuerpo_sostenido() != null:
+	await get_tree().physics_frame
+	if not is_instance_valid(nodo) or jugador.agarre.cuerpo_sostenido() != null:
 		return
 	if jugador.agarre.pedir_agarrar(datos, nodo):
 		_al_pulsar()
+
+
+## Sin comprador el hueco no tiene capa, y el rayo no lo encuentra.
+func _la_mira_llega_al_hueco(soltado: Node3D) -> bool:
+	var mira := jugador.mira()
+	var consulta := PhysicsRayQueryParameters3D.create(
+		mira.origin,
+		mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		1 | ReglasDeLosObjetos.CAPA_DEL_HUECO
+	)
+	consulta.exclude = [jugador.get_rid(), (soltado as CollisionObject3D).get_rid()]
+	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
+	return golpe.get("collider") == _hueco
 
 
 func _repintar() -> void:

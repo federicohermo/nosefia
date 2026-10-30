@@ -97,6 +97,9 @@ const APOYO_HORIZONTAL := 0.7
 ## Es la número 4, y su nombre está declarado en `project.godot`.
 const CAPA_DEL_CONTORNO := 8
 
+## Es la número 5, y su nombre está declarado en `project.godot`. Sólo la miran los productos.
+const CAPA_DEL_HUECO := 16
+
 ## Cuánto se le descuenta a una forma para preguntar si entra o si atraviesa algo, en metros.
 ## Apoyarse sobre algo es tocarlo, así que la medida exacta contesta que choca. Lo preguntan el
 ## puesto al ubicar la caja y el test al comprobar que no atraviesa nada: es el mismo número.

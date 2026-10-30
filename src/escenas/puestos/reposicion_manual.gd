@@ -1767,7 +1767,9 @@ func _cuerpo_para(id: Producto.Id) -> ObjetoAgarrable:
 	unidad.collision_layer = 1
 	# Choca también con el contorno de los muebles: caída al pie de una góndola, la unidad rodaba
 	# hacia adentro del estante de abajo.
-	unidad.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+	unidad.collision_mask = (
+		1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO | ReglasDeLosObjetos.CAPA_DEL_HUECO
+	)
 	return unidad
 
 
