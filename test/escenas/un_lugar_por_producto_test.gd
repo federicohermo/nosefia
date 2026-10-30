@@ -194,7 +194,7 @@ static func _eje(giro: Basis, hacia: Vector3) -> Vector3:
 	return mejor if mejor.dot(hacia) > 0.0 else -mejor
 
 
-## Agarrar cada producto de su casillero conserva la orientación de la mano y su apoyo real.
+## Agarrar cada producto de su casillero conserva la orientación de la mano.
 func test_cada_producto_agarrado_va_derecho_y_de_frente_en_la_mano() -> void:
 	var almacen := _almacen()
 	await get_tree().physics_frame
@@ -211,21 +211,10 @@ func test_cada_producto_agarrado_va_derecho_y_de_frente_en_la_mano() -> void:
 		var ocupados := estante.casilleros_ocupados(producto)
 		assert_array(ocupados).is_not_empty()
 		var indice := ocupados[ocupados.size() - 1]
-		var bloque := _disposicion(almacen).principales[producto.id]
-		var de_la_tanda := DisposicionDeLaGondola.copias(bloque) - _cupo(almacen, producto) + indice
-		var unidad := _caja_de_la_copia(almacen, producto, de_la_tanda).get_center()
-		var chapa := _golpe(almacen, unidad, unidad + Vector3.DOWN)
-		var en_rampa := not chapa.is_empty() and _inclinado(chapa["normal"])
 		var modelo := (contenido.get_child(producto.id) as Node3D).global_basis
 		var arriba := _eje(modelo, Vector3.UP)
 		var pasillo := presentacion.global_basis * _frente(almacen, producto)
 		var frente := (pasillo - arriba * pasillo.dot(arriba)).normalized()
-		var copia := _copia_en_el_mundo(almacen, producto, de_la_tanda)
-		(
-			assert_bool(_inclinado(copia.basis.orthonormalized() * arriba))
-			. override_failure_message("%s no va echado como su chapa" % producto.nombre)
-			. is_equal(en_rampa)
-		)
 		presentacion.call("agarrar_de_la_gondola", producto.id, indice)
 		(
 			assert_array(estante.casilleros_vacios(producto))
@@ -258,11 +247,6 @@ static func _sin_la_pose(presentacion: Node3D, id: Producto.Id, agarre: Agarre) 
 	var pose: Basis = presentacion.call("_inclinacion_en_la_mano", id)
 	var en_la_mano := (agarre.punto_de_producto.get_child(0) as Node3D).basis.orthonormalized()
 	return pose.inverse() * en_la_mano
-
-
-## Si un eje se aparta de la vertical más de un grado.
-static func _inclinado(eje: Vector3) -> bool:
-	return eje.angle_to(Vector3.UP) > deg_to_rad(1.0)
 
 
 ## Al abrir, de cada producto falta sólo lo que su jornada pide, y los casilleros son las

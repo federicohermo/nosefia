@@ -25,7 +25,7 @@ NOMBRES = {
     'gondola_deposito_central_izquierda-col', 'local_marco_frente-col',
     'local_marco_ventanal-col',
     'deposito_contenedor_grande_cuerpo-col',
-    'cuartito_cuerpo-col',
+    'cuartito_cuerpo-col', 'exhibidor_golosinas-col',
 }
 
 

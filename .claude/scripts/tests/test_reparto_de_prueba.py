@@ -194,7 +194,7 @@ class RepartoDePrueba(unittest.TestCase):
             "A.norte": ("FERNET_GOD",), "A.sur": ("MALBARDO",),
             "B.este": ("PEPITO", "PETISAS"),
             "B.oeste": ("PROGRES", "DON_SATURADOS"),
-            "B.norte": ("JORGILLO",), "B.sur": ("POETICO",),
+            "B.norte": ("POETICO",), "B.sur": ("JORGILLO",),
             "N.sur": ("ACTRONCITO", "DURONGA"),
             "H1.sur": ("PURA_COLA",), "H2.sur": ("MAYONCHIS",),
         }
@@ -216,7 +216,7 @@ class RepartoDePrueba(unittest.TestCase):
 
     def test_el_mapa_no_modifica_el_perfil_completo(self):
         self.assertIsNot(ESTANTES_DE_PRUEBA, ESTANTES)
-        self.assertEqual(tuple(t.producto for t in ESTANTES["B.sur.1"]), ("FLIM_POF",))
+        self.assertEqual(tuple(t.producto for t in ESTANTES["B.norte.1"]), ("FLIM_POF",))
 
     def test_catalogo_y_mapa_tienen_las_mismas_identidades_en_orden(self):  # AC-STK-095
         texto = (RAIZ / "src/dominio/almacen/catalogo.gd").read_text(encoding="utf-8")
@@ -230,11 +230,11 @@ class RepartoDePrueba(unittest.TestCase):
     def test_rechaza_un_ausente_un_nivel_perdido_y_dos_principales(self):  # AC-STK-096
         validar_reparto_de_prueba(ESTANTES_DE_PRUEBA)
         perdido = dict(ESTANTES_DE_PRUEBA)
-        del perdido["B.sur.0"]
-        ajeno = dict(ESTANTES_DE_PRUEBA, **{"B.sur.0": (Tanda("BURBALOO", fija=True),)})
-        duplicado = dict(ESTANTES_DE_PRUEBA, **{"B.sur.2": (Tanda("POETICO"),)})
+        del perdido["B.norte.0"]
+        ajeno = dict(ESTANTES_DE_PRUEBA, **{"B.norte.0": (Tanda("BURBALOO", fija=True),)})
+        duplicado = dict(ESTANTES_DE_PRUEBA, **{"B.norte.2": (Tanda("POETICO"),)})
         fuera_de_alcance = dict(ESTANTES_DE_PRUEBA, **{
-            "B.sur.1": (Tanda("POETICO", fija=True),), "B.sur.0": (Tanda("POETICO"),)
+            "B.norte.1": (Tanda("POETICO", fija=True),), "B.norte.0": (Tanda("POETICO"),)
         })
         for variante in (perdido, ajeno, duplicado, fuera_de_alcance):
             with self.subTest(variante=variante.keys()), self.assertRaises(ValueError):

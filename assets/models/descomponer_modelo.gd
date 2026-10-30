@@ -24,7 +24,6 @@ func _descomponer() -> void:
 		"local_marco_frente",
 		"local_marco_ventanal",
 		"puerta/marco_puerta_deposito",
-		"exhibidor_golosinas",
 		"freezer_helados",
 		"salon_mesa_1",
 		"salon_mesa_2",
