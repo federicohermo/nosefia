@@ -11,6 +11,34 @@ const ObjetoDelAlmacen := preload("res://src/dominio/almacen/objeto_del_almacen.
 const Revelacion := preload("res://src/dominio/investigacion/revelacion.gd")
 const CARPETA_DE_LOS_OBJETOS := "res://src/dominio/almacen"
 
+## Las unidades que admiten otro encima, según la lista confirmada: cajitas, cajas y latas de tapa
+## plana. Los envoltorios son blandos y la botella tiene pico.
+const UNIDADES_DE_TAPA_LISA: Array[Producto.Id] = [
+	Producto.Id.ACTRONCITO,
+	Producto.Id.BURBALOO,
+	Producto.Id.DUREXTRA,
+	Producto.Id.DURONGA,
+	Producto.Id.FEEL_RICKY_FORT,
+	Producto.Id.FLIM_POF,
+	Producto.Id.FROT_LUPS,
+	Producto.Id.JORGILLO,
+	Producto.Id.MALBARDO,
+	Producto.Id.MAROLINI,
+	Producto.Id.OREMOS,
+	Producto.Id.PEPITO,
+	Producto.Id.SALADICK,
+	Producto.Id.UAKALAS,
+	Producto.Id.ZUCARACHAS,
+	Producto.Id.AMARGADITO,
+	Producto.Id.CINDOLOR,
+	Producto.Id.OAAAA,
+	Producto.Id.TERMINATOR,
+	Producto.Id.ARVECOR,
+	Producto.Id.PROGRES,
+	Producto.Id.PURA_COLA,
+	Producto.Id.MARRANOS,
+]
+
 
 func test_caja_y_utiles_no_entran_y_los_otros_levantables_si() -> void:  # AC-CLN-037 AC-CLN-076
 	assert_bool(ObjetoDelAlmacen.new().entra_en_el_contenedor).is_true()
@@ -107,13 +135,20 @@ func test_cada_objeto_del_almacen_declara_su_sonoridad() -> void:  # AC-AMB-024
 		)
 
 
-func test_solo_la_caja_del_deposito_admite_otro_objeto_encima() -> void:  # AC-PLY-034
+func test_admiten_encima_la_caja_del_deposito_y_las_unidades_de_tapa_lisa() -> void:  # AC-PLY-034
 	assert_bool(ObjetoDelAlmacen.new().admite_encima).is_false()
 	for objeto in _objetos_del_almacen():
 		(
 			assert_bool(objeto.admite_encima)
 			. override_failure_message("%s admite otro encima" % objeto.id)
 			. is_equal(objeto.id == &"caja_de_reposicion")
+		)
+	for id: Producto.Id in Producto.Id.values():
+		var unidad := UnidadDeProducto.new(Catalogo.de(id))
+		(
+			assert_bool(unidad.admite_encima)
+			. override_failure_message("%s admite otro encima" % Producto.Id.find_key(id))
+			. is_equal(UNIDADES_DE_TAPA_LISA.has(id))
 		)
 
 

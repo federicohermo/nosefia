@@ -9,3 +9,8 @@ extends ObjetoAgarrable
 func en_el_tacho(adentro: bool) -> void:
 	_desborde.visible = adentro
 	_cerrada.visible = not adentro
+
+
+## El jugador la empuja al caminar contra ella.
+func empujar(desplazamiento: Vector3) -> void:
+	_correrse(desplazamiento)
