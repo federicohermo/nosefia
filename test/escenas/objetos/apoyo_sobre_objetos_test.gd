@@ -129,13 +129,13 @@ func _golpe_de_la_mira(almacen: Node3D, cuerpo: RigidBody3D) -> Dictionary:
 	return almacen.get("_jugador").call("_golpe_de_la_mira", cuerpo)
 
 
-## Lo que la unidad tiene debajo, a menos de media altura suya: el rayo sale de su base.
+## Lo que la unidad tiene debajo, a menos de media altura suya de su base. El rayo sale de su
+## centro: una base apenas hundida en el piso quedaría adentro de él, y no lo vería.
 func _tiene_apoyo(unidad: ObjetoAgarrable) -> bool:
 	var limites := _limites(unidad)
 	var centro := limites.get_center()
 	var consulta := PhysicsRayQueryParameters3D.create(
-		Vector3(centro.x, limites.position.y + 0.005, centro.z),
-		Vector3(centro.x, limites.position.y - limites.size.y / 2.0, centro.z)
+		centro, Vector3(centro.x, limites.position.y - limites.size.y / 2.0, centro.z)
 	)
 	consulta.exclude = [unidad.get_rid()]
 	return not unidad.get_world_3d().direct_space_state.intersect_ray(consulta).is_empty()
@@ -150,8 +150,9 @@ func test_lo_soltado_se_apoya_en_la_tapa_de_una_unidad_de_tapa_lisa() -> void:  
 	_poner(mano, PISO_LIBRE + Vector3.RIGHT * 2.0, _piso_en(almacen, PISO_LIBRE) + HOLGURA)
 	_mirar_la_tapa(almacen, abajo)
 	var tapa := _limites(abajo)
-	assert_bool(agarre.pedir_agarrar(mano.datos, mano)).is_true()
+	# Se mira antes de agarrar: agarrada, la unidad no choca con nada y la mira no toca nada.
 	var golpe := _golpe_de_la_mira(almacen, mano)
+	assert_bool(agarre.pedir_agarrar(mano.datos, mano)).is_true()
 	# La premisa: la mira toca la tapa de la unidad de abajo, y no el piso.
 	assert_dict(golpe).is_not_empty()
 	assert_object(golpe["collider"]).is_same(abajo)
@@ -169,13 +170,11 @@ func test_lo_soltado_se_apoya_en_la_tapa_de_una_unidad_de_tapa_lisa() -> void:  
 
 func test_la_mira_sobre_lo_que_no_admite_otro_encima_no_apoya() -> void:  # AC-PLY-035
 	var almacen := await _almacen()
-	var agarre: Agarre = almacen.get("_agarre")
 	var blanda := _unidad(almacen, Producto.Id.CHISITOS)
 	_poner(blanda, PISO_LIBRE, _piso_en(almacen, PISO_LIBRE) + HOLGURA)
 	await _esperar_a_que_duerma([blanda])
 	var mano := _unidad(almacen, Producto.Id.MALBARDO)
 	_poner(mano, PISO_LIBRE + Vector3.RIGHT * 2.0, _piso_en(almacen, PISO_LIBRE) + HOLGURA)
-	assert_bool(agarre.pedir_agarrar(mano.datos, mano)).is_true()
 	_mirar_la_tapa(almacen, blanda)
 	# La mira toca la tapa de la unidad blanda, y esa superficie no admite lo soltado.
 	var ojo: Transform3D = almacen.get("_jugador").mira()
@@ -193,8 +192,8 @@ func test_el_balde_soltado_sobre_una_unidad_de_tapa_lisa_queda_derecho() -> void
 	var pila := await _apilar(almacen, [Producto.Id.TERMINATOR], PISO_LIBRE)
 	var balde: RigidBody3D = almacen.get_node("Objetos/Balde")
 	_mirar_la_tapa(almacen, pila[0])
-	assert_bool(agarre.pedir_agarrar(balde.get("datos"), balde)).is_true()
 	assert_dict(_golpe_de_la_mira(almacen, balde)).is_not_empty()
+	assert_bool(agarre.pedir_agarrar(balde.get("datos"), balde)).is_true()
 	agarre.soltar(true)
 	assert_float(rad_to_deg(balde.global_basis.y.angle_to(Vector3.UP))).is_less(1.0)
 	assert_bool(agarre.manos().sostenido() == null).is_true()
