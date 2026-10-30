@@ -561,8 +561,7 @@ local NO DEBE conservar cupos, dibujos, objetivos ni unidades sueltas de la etap
 ### BR-STK-047 — Las jornadas de prueba ocupan los cuatro niveles
 
 EN las jornadas de prueba, el sistema DEBE ocupar los cuatro niveles de cada cara con
-los mismos productos del mapa de prueba. Cada lado largo DEBE conservar dos mitades
-longitudinales, repetidas en cada nivel, sin estantes vacíos:
+los mismos productos del mapa de prueba, sin estantes vacíos:
 
 | Destino del mapa de prueba | Productos |
 |---|---|
@@ -574,54 +573,14 @@ longitudinales, repetidas en cada nivel, sin estantes vacíos:
 | Lado de salados de la segunda isla | Progres y Don Saturados |
 | Cabecera que conserva Jorgillo en el mapa completo | Jorgillo |
 | Cabecera opuesta de la segunda isla | Poético |
-| Estantería de no comestibles | Actroncito en la mitad izquierda y Duronga en la derecha |
+| Estantería de no comestibles | Actroncito y Duronga |
 | Primera heladera funcional | Pura-Cola |
 | Segunda heladera funcional | Mayonchis |
 
 Cada producto DEBE conservar una sola tanda principal a altura de reposición. Las
 repeticiones de los demás niveles, incluido el otro nivel central, DEBEN ser tandas fijas
-con frontales que se agarran y reponen. Las filas posteriores, orientaciones, apoyos,
-separación de unidades y tamaño de muebles DEBEN conservar las reglas vigentes. El cambio
-a la etapa completa DEBE restituir los sectores de BR-STK-043 y BR-STK-044.
-
-### BR-STK-048 — La prueba conserva los márgenes de la etapa completa
-
-EN las jornadas de prueba, el sistema DEBE conservar el margen de los productos contra
-el borde de cada estante de la etapa completa y la separación uniforme de referencia de
-cada envase. SI las columnas calculadas inicialmente no entran con ese ritmo, los márgenes
-y el aire entre caras, ENTONCES DEBE quitar columnas hasta obtener la mayor cantidad que
-entre en la cara, conservando las dos regiones longitudinales cuando haya dos productos.
-NO DEBE comprimir ni estirar las separaciones para conservar un cupo anterior. El sobrante
-DEBE repartirse a ambos lados de cada tanda, sin pegarla a la división longitudinal.
-Los cupos principales y totales DEBEN medirse del reparto resultante. Se conservan las filas,
-orientaciones, apoyos, destinos y la principal a altura de reposición de BR-STK-047.
-
-### BR-STK-049 — El aire protege las unidades, las caras y la división longitudinal
-
-EN las jornadas de prueba, el sistema DEBE reservar el mínimo de separación de exhibición
-entre unidades vecinas, el mínimo de aire entre caras contiguas y el mínimo de aire entre
-las dos tandas de un lateral. En cada encuentro de cabecera y lateral, el aire DEBE ser al
-menos la mayor separación de referencia de los productos contiguos y nunca menor que el
-mínimo entre caras del dominio. La división longitudinal NO DEBE convertirse en un borde
-contra el que se amontonen ambas tandas. Los centros de ambas tandas DEBEN permanecer en mitades
-opuestas, con el ritmo de su producto en la etapa completa. Un bloque puede aprovechar la
-holgura del otro, como en la etapa completa, antes de quitar otra columna.
-
-En un estante de prueba con dos productos, cada producto DEBE conservar su separación
-interna de referencia. El encuentro DEBE dejar la mayor separación de referencia de sus
-dos productos, nunca menor que el mínimo de aire entre las dos tandas.
-El sobrante DEBE repartirse a partes iguales entre los dos bordes del estante, sin agrandar
-el encuentro entre los productos ni el encuentro entre caras. Terminator DEBE tomar la
-separación de Zucarachas, el otro producto de su estante, en lugar de la suya de referencia,
-y con ese paso expone una columna menos que con la propia.
-
-Las cabeceras DEBEN conservar el margen lateral de exhibición a ambos costados de la chapa,
-además del retiro frontal de referencia de BR-STK-048. Sus filas DEBEN conservar el aire de
-referencia cuando quepa y nunca bajar del mínimo de aire entre filas de exhibición.
-Los mínimos de exhibición son valores del dominio. Ninguna adaptación DEBE poner unidades
-fuera del apoyo, superponerlas ni cambiar filas, orientaciones, destinos o la altura de
-reposición. SI ni una columna satisface simultáneamente esos mínimos en su región,
-ENTONCES el sistema DEBE rechazar el reparto, en vez de publicarlo comprimido.
+con frontales que se agarran y reponen. El cambio a la etapa completa DEBE restituir los
+sectores de BR-STK-043 y BR-STK-044.
 
 ### BR-STK-050 — Las compras de las jornadas 3 a 5 conservan recepción, venta y registro
 
@@ -1297,10 +1256,8 @@ incluyen presentes. DADO jornadas 4 y 8 ENTONCES están las treinta y dos identi
 
 DADO una apertura de prueba CUANDO se recorren las cuatro alturas de cada destino de
 BR-STK-047 ENTONCES sus productos coinciden con la tabla, sin ajenos ni niveles vacíos; en
-la estantería de no comestibles, Duronga ocupa la mitad derecha de los cuatro niveles junto
-a Actroncito.
-Cada producto tiene una sola principal y los cupos suman todos sus frontales. Cada unidad
-se apoya sobre su estante, sin intersecciones, y conserva la orientación y filas de su envase.
+la estantería de no comestibles, Duronga está en los cuatro niveles junto a Actroncito.
+Cada producto tiene una sola principal y los cupos suman todos sus frontales.
 CUANDO se agarra y repone una unidad del frontal repetido en el otro nivel central ENTONCES
 sólo cambia ese casillero y la cuenta de reponer responde a ambos gestos.
 
@@ -1326,68 +1283,6 @@ Una unidad sostenida al cerrar NO sobrevive al cambio de etapa.
 DADO cada jornada 1, 2 y 3 CUANDO se recorren todos los pedidos construidos para ella
 ENTONCES cada identidad pedida pertenece a los dieciséis presentes. Completar esas compras
 y reponer sus faltantes respeta la disponibilidad de una caja por producto.
-
-### AC-STK-100 — La prueba quita columnas antes de comprimir la referencia *(verifica BR-STK-048, BR-STK-047)*
-
-DADO cada tipo de cara de las islas, las heladeras funcionales y la estantería de no
-comestibles CUANDO se compara su exhibición de prueba con la etapa completa ENTONCES
-conserva el margen de referencia contra el borde, las filas y la separación uniforme de
-referencia, sin unidades fuera de la chapa ni intersecciones. DADO un cupo inicial que
-no entra con esos márgenes y ese ritmo ENTONCES quita columnas y conserva la mayor cantidad
-que entra en la cara con los dos centros en mitades opuestas. Agregar una columna excedería
-el espacio disponible. Una tanda que ya entra conserva sus columnas. El sobrante queda libre a ambos lados, sin estirar huecos.
-Las dos mitades longitudinales y la principal a altura de reposición se conservan.
-
-### AC-STK-101 — Los laterales conservan aire entre unidades y a ambos lados de la mitad *(verifica BR-STK-049, BR-STK-047)*
-
-DADOS los cuatro niveles de ambos laterales de cada isla de prueba CUANDO se mide su
-exhibición completa ENTONCES cada fila conserva la separación uniforme de referencia
-de su producto (AC-STK-106 fija la de Terminator), no menor que el mínimo entre unidades
-de exhibición, y las dos tandas conservan el mínimo de aire entre tandas. Sus centros quedan en mitades opuestas, sin acumular sus unidades contra la división,
-y se aprovecha la holgura conjunta antes de quitar otra columna.
-
-### AC-STK-102 — Las cabeceras conservan aire y margen a sus costados *(verifica BR-STK-049, BR-STK-048)*
-
-DADOS los cuatro niveles de las cuatro cabeceras de prueba CUANDO se miden sus unidades y
-sus encuentros con los laterales ENTONCES cada fila conserva la separación uniforme de
-referencia y cada costado conserva el margen lateral de exhibición. Cada encuentro deja
-como mínimo la mayor separación de referencia de sus productos contiguos y el mínimo de
-aire entre caras. Las cabeceras con dos filas conservan el aire de referencia cuando entra
-y nunca bajan del mínimo entre filas. Se quitan columnas antes de sacrificar esos márgenes.
-
-### AC-STK-103 — El reparto con aire conserva el margen frontal y los apoyos *(verifica BR-STK-049, BR-STK-048)*
-
-DADO el reparto de prueba completo CUANDO se compara con la etapa completa ENTONCES conserva
-el retiro frontal de referencia en cada cara, todas las unidades quedan apoyadas dentro
-de su chapa y ninguna unidad se superpone con otra ni con el mueble. Las filas, las
-orientaciones y los destinos permanecen iguales. Los cupos principales y totales coinciden
-con las columnas realmente exhibidas después de adaptar su cantidad.
-
-### AC-STK-104 — Un reparto imposible no se publica pegado *(verifica BR-STK-049)*
-
-DADO un tramo que alcanza exactamente para una columna por producto, sus márgenes y todos
-los mínimos de aire CUANDO se distribuye ENTONCES conserva una columna y satisface cada
-mínimo. DADO ese mismo tramo reducido por debajo del mínimo necesario CUANDO se distribuye
-ENTONCES rechaza el reparto; no elimina un producto, su margen ni el aire entre caras o
-en la mitad para hacerlo entrar.
-
-### AC-STK-105 — Entre dos productos de un estante el paso es el de sus unidades *(verifica BR-STK-049, BR-STK-047)*
-
-DADOS los cuatro niveles de cada estante de prueba con dos productos —los dos laterales de
-cada isla y la estantería de no comestibles— CUANDO se mide la separación entre unidades
-vecinas ENTONCES el encuentro de los dos productos separa lo mismo que la mayor separación
-de sus dos productos, nunca menos que el mínimo de aire entre tandas ni más que esa
-separación más la tolerancia de exhibición. Un hueco mayor en el cambio de producto, como el
-que dejaba repartir el sobrante en la unión, hace fallar el criterio. Los centros de ambas
-tandas siguen en mitades opuestas.
-
-### AC-STK-106 — Terminator toma el paso de Zucarachas *(verifica BR-STK-049, BR-STK-048)*
-
-DADOS los cuatro niveles del lado de Terminator y Zucarachas CUANDO se mide la separación
-entre unidades vecinas ENTONCES las de Terminator miden lo mismo que las de Zucarachas, con
-la tolerancia de exhibición, y el encuentro entre ambos también. Con la separación de referencia
-propia de Terminator entraría una columna más, y no la hay: agregarla excedería el espacio
-disponible a este paso.
 
 ### AC-STK-107 — Los faltantes de las jornadas 3 a 5 respetan los pedidos sorteados *(verifica BR-STK-050, BR-STK-026, BR-STK-027, BR-STK-046)*
 
