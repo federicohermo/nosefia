@@ -36,10 +36,10 @@ func test_un_producto_en_la_mano_queda_delante_de_los_envases() -> void:
 	assert_array(resultado["tocadas"]).is_empty()
 
 
-func test_un_util_en_la_mano_de_carga_queda_delante_de_los_envases() -> void:
+func test_un_objeto_chico_en_la_mano_de_carga_queda_delante_de_los_envases() -> void:
 	var almacen := await _abrir()
-	var util := _llevar_el_jabon(almacen)
-	var resultado := await _recorrer(almacen, _formas_de(util))
+	var chico := _llevar_algo_chico(almacen)
+	var resultado := await _recorrer(almacen, _formas_de(chico))
 	assert_int(resultado["con_mercaderia"]).is_greater(0)
 	assert_array(resultado["tocadas"]).is_empty()
 
@@ -119,6 +119,25 @@ func _abrir() -> Node3D:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	return almacen
+
+
+## Un objeto de 12 cm en la mano de carga, como un ticket. **No es un jabón**: es un bidón de 70 cm
+## que no siempre entra entre la cámara y la góndola, y ninguna mano podría dejarlo delante.
+func _llevar_algo_chico(almacen: Node3D) -> ObjetoAgarrable:
+	var jabon: ObjetoAgarrable = almacen.get_node("Objetos/JabonRosa")
+	var chico := ObjetoAgarrable.new()
+	chico.datos = jabon.datos
+	chico.collision_mask = jabon.collision_mask
+	var forma := CollisionShape3D.new()
+	forma.name = "Forma"
+	var caja := BoxShape3D.new()
+	caja.size = Vector3.ONE * 0.12
+	forma.shape = caja
+	chico.add_child(forma)
+	almacen.add_child(chico)
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(chico.datos, chico)).is_true()
+	return chico
 
 
 func _llevar_el_jabon(almacen: Node3D) -> RigidBody3D:
