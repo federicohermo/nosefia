@@ -48,7 +48,7 @@ func test_cada_llamada_y_cada_apertura_tienen_estado_propio() -> void:  # AC-CTR
 	var nueva := TareaDeAtender.new(segunda, Inventario.new(Catalogo.todos()))
 	assert_object(nueva.atencion()).is_null()
 	assert_bool(nueva.compras_cerradas()).is_false()
-	for jornada in range(6, 9):
+	for jornada in range(6, AnomaliasDeLaJornada.JORNADA_DEL_CORTE):
 		assert_str(Compradores.de_la_jornada(jornada)[0].nombre()).is_equal("Marta")
 
 
@@ -106,7 +106,7 @@ func test_los_comunes_reemplazan_uno_dos_y_tres_marcadores() -> void:  # AC-CTR-
 
 
 # AC-CTR-053, AC-CTR-051, AC-CTR-066
-func test_el_recordatorio_nombra_lo_que_falta_y_pide_recibo_al_completar_productos() -> void:
+func test_el_recordatorio_nombra_lo_que_falta_y_pide_ticket_al_completar_productos() -> void:
 	var atencion := _comun(
 		[[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1], [Producto.Id.DURONGA, 1]]
 	)
@@ -126,7 +126,7 @@ func test_el_recordatorio_nombra_lo_que_falta_y_pide_recibo_al_completar_product
 		)
 	atencion.interactuar(null)
 	atencion.interactuar(null)
-	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.PIDE_EL_RECIBO)
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.PIDE_EL_TICKET)
 	assert_object(atencion.comprador().pedido()).is_same(pedido)
 	assert_bool(atencion.vendida()).is_false()
 

@@ -62,6 +62,7 @@ func _sin_formato(texto: String) -> String:
 func _comprobar_pantalla(
 	pantalla: PantallaDeInstrucciones, numero: int, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
 ) -> void:
+	AvanceDeDevolucion.terminar_el_movimiento(pantalla)
 	var contenido: Control = pantalla.get("_contenido")
 	var pasos := InstruccionesDelJefe.pasos_de(_mensajes_de(jornada))
 	var total := pasos.size()
@@ -187,6 +188,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 		for numero in range(1, total + 1):
 			await get_tree().process_frame
 			await get_tree().process_frame
+			AvanceDeDevolucion.terminar_el_movimiento(pantalla)
 			var botones: Control = pantalla.get("_botones")
 			var posicion := botones.global_position
 			var contenido: Control = pantalla.get("_contenido")

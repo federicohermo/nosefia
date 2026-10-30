@@ -134,6 +134,27 @@ func test_el_ambiente_suena_en_sus_emisores_mas_cercanos() -> void:  # AC-AMB-01
 	assert_int(_voces_ocupadas(reproductor)).is_equal(0)
 
 
+func test_cada_fila_del_ambiente_se_apaga_a_su_alcance() -> void:
+	var propia := _entrada(
+		EntradaSonora.Evento.AMBIENTE_DEL_LOCAL, true, EntradaSonora.BUS_DE_AMBIENTE, true
+	)
+	propia.alcance = EmisoresDelAmbiente.ALCANCE / 2.0
+	var comun := _entrada(
+		EntradaSonora.Evento.AMBIENTE_EXTERIOR, true, EntradaSonora.BUS_DE_AMBIENTE, true
+	)
+	for entrada: EntradaSonora in [propia, comun]:
+		entrada.posicional = true
+		entrada.emisor = &"Neon"
+	var reproductor := _reproductor([propia, comun] as Array[EntradaSonora])
+	reproductor.registrar_emisores(_emisores({&"Neon": [Vector3.ZERO]}))
+	reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	reproductor.pedir(EntradaSonora.Evento.AMBIENTE_EXTERIOR)
+	var del_local := reproductor.emisores_en_bucle(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	var del_exterior := reproductor.emisores_en_bucle(EntradaSonora.Evento.AMBIENTE_EXTERIOR)
+	assert_float(del_local[0].max_distance).is_equal(propia.alcance)
+	assert_float(del_exterior[0].max_distance).is_equal(EmisoresDelAmbiente.ALCANCE)
+
+
 func test_el_ambiente_sin_emisores_no_suena_ni_falla() -> void:  # AC-AMB-017
 	var entrada := _entrada(
 		EntradaSonora.Evento.AMBIENTE_DEL_LOCAL, true, EntradaSonora.BUS_DE_AMBIENTE, true
