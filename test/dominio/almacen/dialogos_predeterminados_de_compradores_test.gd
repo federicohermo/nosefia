@@ -10,15 +10,15 @@ const CASOS: Array[Array] = [
 	[Producto.Id.POETICO, Producto.Id.PROGRES, Producto.Id.DURONGA],
 ]
 const TEXTOS: Array[String] = [
-	"Buenas noches. Quiero [color=#e4f850]una botella de Poético[/color].",
+	"Buenas noches. Quiero una botella de [color=#e4f850]Poético[/color].",
 	(
-		"Buenas noches. Quiero [color=#e4f850]una botella de Poético[/color]"
-		+ " y [color=#e4f850]un tubo de papitas Progres[/color]."
+		"Buenas noches. Quiero una botella de [color=#e4f850]Poético[/color]"
+		+ " y un tubo de papitas [color=#e4f850]Progres[/color]."
 	),
 	(
-		"Buenas noches. Quiero [color=#e4f850]una botella de Poético[/color], "
-		+ "[color=#e4f850]un tubo de papitas Progres[/color]"
-		+ " y [color=#e4f850]una caja de preservativos Duronga[/color]."
+		"Buenas noches. Quiero una botella de [color=#e4f850]Poético[/color], "
+		+ "un tubo de papitas [color=#e4f850]Progres[/color]"
+		+ " y una caja de preservativos [color=#e4f850]Duronga[/color]."
 	),
 ]
 

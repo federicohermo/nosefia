@@ -20,11 +20,11 @@ const TEXTOS: Array[String] = [
 ]
 
 
-func test_solo_enrique_hasta_la_cuarta_y_dos_contactos_desde_la_quinta() -> void:  # AC-INV-039
+func test_solo_enrique_hasta_la_tercera_y_dos_contactos_desde_la_cuarta() -> void:  # AC-INV-039
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(4)
+	bandeja.abrir_jornada(3)
 	assert_int(bandeja.conversaciones().size()).is_equal(1)
-	bandeja.abrir_jornada(5)
+	bandeja.abrir_jornada(4)
 	assert_int(bandeja.conversaciones().size()).is_equal(2)
 	if bandeja.conversaciones().size() != 2:
 		return
@@ -35,7 +35,7 @@ func test_solo_enrique_hasta_la_cuarta_y_dos_contactos_desde_la_quinta() -> void
 	for indice: int in mensajes.size():
 		assert_str(mensajes[indice].texto).is_equal(TEXTOS[indice])
 		assert_that(mensajes[indice].get("identidad")).is_equal("J2_%d" % (indice + 1))
-		assert_int(mensajes[indice].jornada).is_equal(5)
+		assert_int(mensajes[indice].jornada).is_equal(4)
 	assert_that(yasmin.get("rol")).is_equal("Compañera de trabajo")
 	var del_jefe := bandeja.no_leidos(JEFE)
 	bandeja.marcar_leida(yasmin.interlocutor)
@@ -49,9 +49,9 @@ func test_solo_enrique_hasta_la_cuarta_y_dos_contactos_desde_la_quinta() -> void
 	)
 
 
-func test_la_apertura_cinco_contiene_foto_y_texto_siguiente() -> void:  # AC-INV-042
+func test_la_apertura_cuatro_contiene_foto_y_texto_siguiente() -> void:  # AC-INV-042
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(5)
+	bandeja.abrir_jornada(4)
 	var mensajes := bandeja.mensajes_de(JEFE)
 	assert_array(mensajes).is_equal(
 		Conversacion.de(JEFE).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
@@ -65,9 +65,9 @@ func test_la_apertura_cinco_contiene_foto_y_texto_siguiente() -> void:  # AC-INV
 
 func test_repetir_apertura_no_duplica_guion() -> void:  # AC-INV-040
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(5)
+	bandeja.abrir_jornada(4)
 	var antes := bandeja.mensajes_de(JEFE)
-	bandeja.abrir_jornada(5)
+	bandeja.abrir_jornada(4)
 	assert_array(bandeja.mensajes_de(JEFE)).is_equal(antes)
 	assert_int(bandeja.conversaciones().size()).is_equal(2)
 

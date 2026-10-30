@@ -46,7 +46,6 @@ const DIAS: Array[String] = [
 	"HACE CUATRO DÍAS",
 	"HACE CINCO DÍAS",
 	"HACE SEIS DÍAS",
-	"HACE SIETE DÍAS",
 ]
 
 @export var _velo: Control

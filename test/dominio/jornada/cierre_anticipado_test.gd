@@ -38,7 +38,7 @@ func test_perder_y_recuperar_cualquier_tarea_cambia_el_permiso() -> void:  # AC-
 			assert_bool(CierreAnticipado.corresponde(jornada, tareas)).is_true()
 
 
-func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-036
+func test_ventas_de_gondola_dejan_reponer_pendiente() -> void:  # AC-STK-094, AC-SHF-036
 	for cantidad: int in [1, 3]:
 		var producto := Catalogo.de(Producto.Id.MAROLINI)
 		var pedido := Venta.new()
@@ -89,14 +89,13 @@ func test_ventas_de_gondola_no_exigen_reponer() -> void:  # AC-STK-094, AC-SHF-0
 				turno.completar(tarea)
 			elif tarea.tipo() == Tarea.Tipo.REGISTRAR and registro.completada():
 				turno.completar(tarea)
+		assert_bool(turno.todas_cumplidas()).is_false()
+		assert_bool(CierreAnticipado.corresponde(1, partida.obligatorias())).is_false()
+		for tarea in partida.obligatorias():
+			if tarea.tipo() == Tarea.Tipo.REPONER:
+				turno.completar(tarea)
 		assert_bool(turno.todas_cumplidas()).is_true()
-		assert_int(turno.tareas_cumplidas()).is_equal(2)
 		assert_bool(CierreAnticipado.corresponde(1, partida.obligatorias())).is_true()
-		partida.cerrar_la_jornada(turno.tareas_cumplidas())
-		assert_int(partida.medios()).is_zero()
-		assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_zero()
-		assert_array(DevolucionDelJefe.new(1, partida).mensajes()).is_empty()
-		assert_array(estante.casilleros_vacios(producto)).has_size(cantidad)
 
 
 func _atender_de(jornada: int) -> TareaDeAtender:

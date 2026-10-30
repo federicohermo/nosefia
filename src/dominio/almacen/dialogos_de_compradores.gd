@@ -97,11 +97,13 @@ static func _enumeracion(pedido: Venta, cantidad: Callable) -> String:
 		var cuantas: int = cantidad.call(producto)
 		if cuantas <= 0:
 			continue
+		var nombre := "[color=#e4f850]" + producto.nombre + "[/color]"
+		if cuantas > 1:
+			marcadores.append(("dos" if cuantas == 2 else "tres") + " " + nombre)
+			continue
 		var texto := SubtitulosAlExaminar.de_producto(producto.id).trim_suffix(".")
 		texto = texto.left(1).to_lower() + texto.substr(1)
-		if cuantas > 1:
-			texto = ("dos" if cuantas == 2 else "tres") + " " + producto.nombre
-		marcadores.append("[color=#e4f850]" + texto + "[/color]")
+		marcadores.append(texto.replace(producto.nombre, nombre))
 	if marcadores.size() < 2:
 		return "".join(marcadores)
 	return ", ".join(marcadores.slice(0, -1)) + " y " + marcadores[-1]

@@ -21,8 +21,8 @@ const ENTRADAS := {
 		"J1_Foto06",
 		"J1_Intro06",
 	],
-	PRIMERA + 1: ["J2_FotoGondolas", "J1_Foto07", "J1_Intro07", "J1_Intro08"],
-	PRIMERA + 2: ["J1_Foto09", "J1_Intro09"],
+	PRIMERA + 1:
+	["J2_FotoGondolas", "J1_Foto07", "J1_Intro07", "J1_Intro08", "J1_Foto09", "J1_Intro09"],
 	COMPLETA: ["J1_Intro10", "J1_Foto11", "J1_Intro11", "J1_Intro12"],
 }
 
@@ -138,24 +138,22 @@ func test_las_pantallas_de_cada_jornada() -> void:  # AC-EMP-045, AC-EMP-046
 	assert_array(con_foto).is_equal(["J1_Intro02", "J1_Intro03", "J1_Intro04", "J1_Intro06"])
 	assert_int(primera.size()).is_equal(6)
 	assert_str(primera[-1].textos[0].identidad).is_equal("J1_Intro06")
-	var tercera := InstruccionesDelJefe.pasos_de(
-		InstruccionesDelJefe.de_la_jornada(mensajes, PRIMERA + 2)
+	var segunda := InstruccionesDelJefe.pasos_de(
+		InstruccionesDelJefe.de_la_jornada(mensajes, PRIMERA + 1)
 	)
-	assert_int(tercera.size()).is_equal(1)
-	for jornada_y_intro: Array in [[PRIMERA + 1, "J1_Intro07"], [PRIMERA + 2, "J1_Intro09"]]:
-		var pasos := InstruccionesDelJefe.pasos_de(
-			InstruccionesDelJefe.de_la_jornada(mensajes, jornada_y_intro[0])
-		)
-		assert_str(pasos[0].textos[0].identidad).is_equal(jornada_y_intro[1])
-		assert_array(_fotos(pasos[0])).is_not_empty()
-	var cuarta := InstruccionesDelJefe.pasos_de(
+	assert_int(segunda.size()).is_equal(3)
+	assert_str(segunda[0].textos[0].identidad).is_equal("J1_Intro07")
+	assert_array(_fotos(segunda[0])).is_not_empty()
+	assert_str(segunda[2].textos[0].identidad).is_equal("J1_Intro09")
+	assert_array(_fotos(segunda[2])).is_not_empty()
+	var tercera := InstruccionesDelJefe.pasos_de(
 		InstruccionesDelJefe.de_la_jornada(mensajes, COMPLETA)
 	)
-	var textos_de_la_cuarta: Array[String] = []
-	for paso in cuarta:
-		textos_de_la_cuarta.append_array(_identidades(paso.textos))
-	assert_array(textos_de_la_cuarta).is_equal(["J1_Intro10", "J1_Intro11", "J1_Intro12"])
-	assert_array(_identidades(_fotos(cuarta[1]))).is_equal(["J1_Foto11"])
+	var textos_de_la_tercera: Array[String] = []
+	for paso in tercera:
+		textos_de_la_tercera.append_array(_identidades(paso.textos))
+	assert_array(textos_de_la_tercera).is_equal(["J1_Intro10", "J1_Intro11", "J1_Intro12"])
+	assert_array(_identidades(_fotos(tercera[1]))).is_equal(["J1_Foto11"])
 	for jornada in range(PRIMERA, COMPLETA + 1):
 		var propios := InstruccionesDelJefe.de_la_jornada(mensajes, jornada)
 		var textos := propios.filter(func(mensaje: Mensaje) -> bool: return mensaje.foto == null)
@@ -172,10 +170,10 @@ func test_despues_de_la_primera_completa_no_hay_instrucciones() -> void:  # AC-E
 		assert_array(InstruccionesDelJefe.de_la_jornada(mensajes, jornada)).is_empty()
 
 
-func test_la_cuarta_suma_la_pantalla_de_su_mensaje_1() -> void:  # AC-EMP-045
-	var limpia := [[0, []], [0, []], [0, []]]
+func test_la_tercera_suma_la_pantalla_de_su_mensaje_1() -> void:  # AC-EMP-045
+	var limpia := [[0, []], [0, []]]
 	for caso: Array in [
-		[CondicionesDelJefeTest.cerrar_la_segunda(0, true, true), 3],
+		[CondicionesDelJefeTest.cerrar_la_primera(0, true, true), 3],
 		[CondicionesDelJefeTest.cerrar_la_prueba(limpia), 4],
 	]:
 		var condiciones := CondicionesDelJefe.elegidas((caso[0] as Partida).noches_de_prueba)
@@ -232,7 +230,7 @@ func test_el_grupo_sin_texto_conserva_sus_fotos_huerfanas() -> void:  # AC-EMP-0
 func test_los_pares_reales_preceden_su_intro_sin_sumar_pantallas() -> void:  # AC-EMP-046
 	for caso: Array in [
 		[PRIMERA, 1, ["J1_FotoReloj", "J1_Foto02"], "J1_Intro02", 6],
-		[PRIMERA + 1, 0, ["J2_FotoGondolas", "J1_Foto07"], "J1_Intro07", 2],
+		[PRIMERA + 1, 0, ["J2_FotoGondolas", "J1_Foto07"], "J1_Intro07", 3],
 	]:
 		var pasos := InstruccionesDelJefe.pasos_de(
 			InstruccionesDelJefe.de_la_jornada(_guion().mensajes, caso[0])
@@ -261,14 +259,8 @@ func _fotos(paso: InstruccionesDelJefe.Paso) -> Array[Mensaje]:
 
 func test_el_chat_guarda_solo_el_mensaje_1_elegido() -> void:  # AC-EMP-085
 	var guion := _guion()
-	var otras: Array[String] = []
-	for jornada: int in ENTRADAS:
-		if jornada == PRIMERA + 2:
-			otras.append("J3_Mensaje1_SinFallas")
-		if jornada != PRIMERA + 1:
-			otras.append_array(ENTRADAS[jornada])
 	for fila: Array in CondicionesDelJefeTest.FILAS:
-		var partida := CondicionesDelJefeTest.cerrar_la_primera(fila[0], fila[1])
+		var partida := CondicionesDelJefeTest.cerrar_la_primera(fila[0], fila[1], fila[2])
 		var bandeja := Bandeja.new([guion])
 		bandeja.abrir_jornada(PRIMERA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
 		for mensaje in bandeja.mensajes_de(guion.interlocutor):
@@ -277,23 +269,25 @@ func test_el_chat_guarda_solo_el_mensaje_1_elegido() -> void:  # AC-EMP-085
 		bandeja.abrir_jornada(COMPLETA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
 		var chat := _identidades(bandeja.mensajes_de(guion.interlocutor))
 		assert_int(chat.size()).is_equal(23)
-		var desde := ENTRADAS[PRIMERA].size()
-		assert_array(chat.slice(desde, desde + 5)).is_equal(
-			[fila[2], "J2_FotoGondolas", "J1_Foto07", "J1_Intro07", "J1_Intro08"]
+		var desde: int = ENTRADAS[PRIMERA].size()
+		var largo: int = ENTRADAS[PRIMERA + 1].size() + 1
+		assert_array(chat.slice(desde, desde + largo)).is_equal([fila[3]] + ENTRADAS[PRIMERA + 1])
+		var sin_fallas: bool = fila[0] == 0 and fila[1] and fila[2]
+		var de_la_tercera := (
+			["J3_Mensaje1_SinFallas" if sin_fallas else "J3_Mensaje1_ConAltibajos"]
+			+ ENTRADAS[COMPLETA]
 		)
-		var sin_la_segunda := chat.slice(0, desde) + chat.slice(desde + 5)
-		assert_array(sin_la_segunda).is_equal(otras)
+		assert_array(chat.slice(desde + largo)).is_equal(de_la_tercera)
+		assert_array(chat.slice(0, desde)).is_equal(ENTRADAS[PRIMERA])
 
 
-func test_el_chat_guarda_solo_el_mensaje_1_elegido_de_la_tercera() -> void:  # AC-EMP-088
+func test_el_chat_guarda_solo_el_mensaje_1_elegido_de_la_tercera() -> void:  # AC-EMP-089
 	var guion := _guion()
-	var partida := CondicionesDelJefeTest.cerrar_la_segunda(1, true, false)
+	var partida := CondicionesDelJefeTest.cerrar_la_prueba([[0, []], [1, []]])
 	var bandeja := Bandeja.new([guion])
 	bandeja.abrir_jornada(COMPLETA, CondicionesDelJefe.elegidas(partida.noches_de_prueba))
 	var de_la_tercera: Array[String] = []
 	for mensaje in bandeja.mensajes_de(guion.interlocutor):
-		if mensaje.jornada == PRIMERA + 2:
+		if mensaje.jornada == COMPLETA:
 			de_la_tercera.append(mensaje.identidad)
-	assert_array(de_la_tercera).is_equal(
-		["J3_Mensaje1_AtencionYReposicionMal", "J1_Foto09", "J1_Intro09"]
-	)
+	assert_array(de_la_tercera).is_equal(["J3_Mensaje1_ConAltibajos"] + ENTRADAS[COMPLETA])

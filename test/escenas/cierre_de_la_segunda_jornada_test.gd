@@ -96,7 +96,7 @@ func test_la_reflexion_retiene_la_entrada_y_fija_las_notas() -> void:  # AC-SHF-
 		ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size()
 	)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	assert_array(aperturas).is_equal([5])
+	assert_array(aperturas).is_equal([4])
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_celular(almacen).celular().fijo()).is_false()
 
@@ -110,7 +110,7 @@ func test_elegir_guarda_y_la_espera_retiene_la_tercera() -> void:  # AC-INV-062,
 	recuadro.botones()[1].pressed.emit()
 	recuadro.botones().back().pressed.emit()
 	var guardado := Guardado.new().cargar()
-	assert_dict(guardado["elecciones"]).is_equal({5: "2B"})
+	assert_dict(guardado["elecciones"]).is_equal({4: "2B"})
 	assert_int(guardado["cierre_pendiente"]).is_zero()
 	var cuadro := 1.0 / 60.0
 	almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE - cuadro)
@@ -120,7 +120,7 @@ func test_elegir_guarda_y_la_espera_retiene_la_tercera() -> void:  # AC-INV-062,
 	almacen.call("_process", 10.0)
 	assert_bool(recuadro.visible).is_false()
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	assert_array(aperturas).is_equal([6])
+	assert_array(aperturas).is_equal([5])
 
 
 func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-029
@@ -147,10 +147,10 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	assert_int(recuadro.botones().size()).is_equal(1)
 	assert_array(aperturas).is_empty()
 	recuadro.botones().back().pressed.emit()
-	assert_dict(Guardado.new().cargar()["elecciones"]).is_equal({5: "2A"})
+	assert_dict(Guardado.new().cargar()["elecciones"]).is_equal({4: "2A"})
 	almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	assert_array(aperturas).is_equal([6])
+	assert_array(aperturas).is_equal([5])
 	assert_int(pantalla.a_la_vista()).is_zero()
 	var grupos := reposicion.find_children("SueltosDe*", "MultiMeshInstance3D", false, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
@@ -167,7 +167,7 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
-	assert_array(aperturas).is_equal([6, 7])
+	assert_array(aperturas).is_equal([5, 6])
 	(
 		assert_array(reposicion.find_children("SueltosDe*", "MultiMeshInstance3D", false, false))
 		. is_equal(grupos)

@@ -81,7 +81,7 @@ func test_caso_real_entrega_las_cuatro_combinaciones_sin_mutar() -> void:  # AC-
 		var expediente := Expediente.new(caso)
 		expediente.reconstruir(combinaciones[indice])
 		for _consulta: int in range(2):
-			assert_array(_identidades(expediente.hipotesis_para(5))).is_equal(esperadas[indice])
+			assert_array(_identidades(expediente.hipotesis_para(4))).is_equal(esperadas[indice])
 		assert_array(Array(expediente.identidades())).is_equal(Array(combinaciones[indice]))
 		assert_array(expediente.mensajes_de_notas()).is_empty()
 		assert_array(expediente.hipotesis_para(1)).is_empty()
@@ -130,8 +130,8 @@ func test_las_pistas_traen_su_foto_y_su_texto() -> void:  # AC-INV-053
 		"2P":
 		"Solo se acabó un jabón. No me tengo que hacer la cabeza con algo tan poco trascendental.",
 	}
-	var opciones := caso.hipotesis_para(5, PackedStringArray(["2A", "2B"]))
-	opciones.append_array(caso.hipotesis_para(5, PackedStringArray()))
+	var opciones := caso.hipotesis_para(4, PackedStringArray(["2A", "2B"]))
+	opciones.append_array(caso.hipotesis_para(4, PackedStringArray()))
 	assert_array(_identidades(opciones)).is_equal(["2A", "2B", "2P"])
 	for opcion: Hipotesis in opciones:
 		assert_str(opcion.titulo).is_equal(titulos[opcion.identidad])

@@ -40,7 +40,7 @@ func test_ida_y_vuelta_por_disco_con_los_tipos_intactos() -> void:  # AC-SAV-006
 func test_lo_que_falta_o_esta_mal_tipado_en_disco_vuelve_con_su_defecto() -> void:
 	# AC-SAV-007 y AC-SAV-008, pasando por disco.
 	var guardado := _guardado()
-	guardado.escribir({MEDIOS: "dos"})
+	guardado.escribir({VERSION: PartidaSerializada.VERSION, MEDIOS: "dos"})
 	var cargado := guardado.cargar()
 	assert_int(cargado[JORNADA]).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA)
 	assert_int(cargado[MEDIOS]).is_equal(Legajo.new().medios())
@@ -56,12 +56,18 @@ func test_una_version_futura_no_carga_y_no_se_borra() -> void:  # AC-SAV-009
 	assert_bool(FileAccess.file_exists(guardado.ruta)).is_true()
 
 
-func test_un_guardado_sin_version_carga() -> void:  # AC-SAV-009
+func test_un_guardado_de_otra_numeracion_no_carga() -> void:  # AC-SAV-009, AC-SAV-033
 	var guardado := _guardado()
 	var sin_version := _partida_en_la_tercera()
 	sin_version.erase(VERSION)
 	guardado.escribir(sin_version)
-	assert_int(guardado.cargar()[JORNADA]).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	assert_dict(guardado.cargar()).is_empty()
+	assert_bool(guardado.hay_guardado()).is_false()
+	var anterior := _partida_en_la_tercera()
+	anterior[VERSION] = PartidaSerializada.VERSION - 1
+	guardado.escribir(anterior)
+	assert_dict(guardado.cargar()).is_empty()
+	assert_bool(guardado.hay_guardado()).is_false()
 
 
 func test_sin_archivo_cargar_da_vacio() -> void:  # AC-SAV-010
@@ -115,10 +121,10 @@ func test_un_guardado_nuevo_toma_la_ruta_por_defecto() -> void:
 func test_archivo_real_con_medios_antiguo_y_mal_tipo() -> void:  # AC-EMP-020
 	var guardado := _guardado()
 	for crudo: Dictionary in [
-		{"jornada": 3, "apercibimientos": 3},
-		{"jornada": 3, "medios": 7.0},
-		{"jornada": 3, "medios": 7},
-		{"jornada": 3, "apercibimientos": 3, "medios": 7},
+		{"version": PartidaSerializada.VERSION, "jornada": 3, "apercibimientos": 3},
+		{"version": PartidaSerializada.VERSION, "jornada": 3, "medios": 7.0},
+		{"version": PartidaSerializada.VERSION, "jornada": 3, "medios": 7},
+		{"version": PartidaSerializada.VERSION, "jornada": 3, "apercibimientos": 3, "medios": 7},
 	]:
 		_escribir_crudo(guardado.ruta, var_to_str(crudo))
 		var en_disco: Variant = str_to_var(FileAccess.get_file_as_string(guardado.ruta))
