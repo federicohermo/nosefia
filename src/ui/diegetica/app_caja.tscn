@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://src/ui/diegetica/app_caja.gd" id="1"]
 
-[node name="AppCaja" type="Control" node_paths=PackedStringArray("_titulo", "_subtitulo", "_ayuda", "_operador", "_salida", "_atajo_de_salida", "_titulo_de_tabla", "_nombre", "_precio", "_unidades", "_cantidad", "_desplazamiento", "_etiqueta_del_total", "_filas", "_scroll", "_total")]
+[node name="AppCaja" type="Control" node_paths=PackedStringArray("_titulo", "_subtitulo", "_ayuda", "_operador", "_salida", "_atajo_de_salida", "_titulo_de_tabla", "_columna_imagen", "_columna_marca", "_columna_producto", "_columna_precio", "_columna_vendido", "_columna_total", "_cantidad", "_desplazamiento", "_etiqueta_del_total", "_filas", "_scroll", "_total")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,9 +17,12 @@ _operador = NodePath("Columnas/Informacion/Margenes/Contenido/Operador")
 _salida = NodePath("Columnas/Informacion/Margenes/Contenido/Salida/Volver")
 _atajo_de_salida = NodePath("Columnas/Informacion/Margenes/Contenido/Salida/Atajo")
 _titulo_de_tabla = NodePath("Columnas/Tabla/Contenido/Titulo")
-_nombre = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Nombre")
-_precio = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Precio")
-_unidades = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Unidades")
+_columna_imagen = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Imagen")
+_columna_marca = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Marca")
+_columna_producto = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Producto")
+_columna_precio = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Precio")
+_columna_vendido = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Vendido")
+_columna_total = NodePath("Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas/Total")
 _cantidad = NodePath("Columnas/Tabla/Contenido/Pie/Informacion/Cantidad")
 _desplazamiento = NodePath("Columnas/Tabla/Contenido/Pie/Informacion/Desplazamiento")
 _etiqueta_del_total = NodePath("Columnas/Tabla/Contenido/Pie/Total/Columnas/Etiqueta")
@@ -126,7 +129,6 @@ mouse_filter = 2
 
 [node name="Margenes" type="MarginContainer" parent="Columnas/Tabla/Contenido/Encabezado"]
 layout_mode = 2
-theme_override_constants/margin_left = 106
 theme_override_constants/margin_right = 42
 mouse_filter = 2
 
@@ -135,25 +137,40 @@ layout_mode = 2
 theme_override_constants/separation = 24
 mouse_filter = 2
 
-[node name="Nombre" type="Label" parent="Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas"]
+[node name="Imagen" type="Label" parent="Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 24
 mouse_filter = 2
-size_flags_horizontal = 3
+vertical_alignment = 1
+
+[node name="Marca" type="Label" parent="Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+mouse_filter = 2
+vertical_alignment = 1
+
+[node name="Producto" type="Label" parent="Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+mouse_filter = 2
 vertical_alignment = 1
 
 [node name="Precio" type="Label" parent="Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 24
 mouse_filter = 2
-custom_minimum_size = Vector2(184, 0)
 vertical_alignment = 1
 
-[node name="Unidades" type="Label" parent="Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas"]
+[node name="Vendido" type="Label" parent="Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 24
 mouse_filter = 2
-custom_minimum_size = Vector2(240, 0)
+vertical_alignment = 1
+
+[node name="Total" type="Label" parent="Columnas/Tabla/Contenido/Encabezado/Margenes/Columnas"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+mouse_filter = 2
 vertical_alignment = 1
 
 [node name="Desplazamiento" type="ScrollContainer" parent="Columnas/Tabla/Contenido"]
@@ -201,7 +218,7 @@ mouse_filter = 2
 theme_override_colors/font_color = Color(0.611765, 0.65098, 0.568627, 1)
 
 [node name="Total" type="PanelContainer" parent="Columnas/Tabla/Contenido/Pie"]
-custom_minimum_size = Vector2(456, 70)
+custom_minimum_size = Vector2(560, 70)
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"ImporteDelRegistro"
