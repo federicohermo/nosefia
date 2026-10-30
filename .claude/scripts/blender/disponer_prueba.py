@@ -11,6 +11,10 @@ medirla de nuevo: lo que mide el mapa completo vale para los dos.
 En cada cara, el producto de prueba toma la columna donde ya está en el mapa completo. Su tanda
 principal es la más baja de las que eran principales en el mapa completo: queda a la altura de la
 mano.
+
+Una tanda que cambia de producto copia una tanda real de ese producto, con su giro y su paso: así
+los estantes de una cara se ven todos iguales. El molde es la tanda de la misma columna de la cara,
+y si la cara no tiene ninguna, la de cualquier otro mueble.
 """
 
 import argparse
@@ -19,12 +23,11 @@ import sys
 from pathlib import Path
 
 import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
-from mathutils import Vector  # type: ignore[import-not-found]
+from mathutils import Matrix, Vector  # type: ignore[import-not-found]
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import acomodar  # noqa: E402
 import disponer  # noqa: E402
 from lib.consola import configurar  # noqa: E402
 from lib.gondola import escribir_disposicion, separar_filas  # noqa: E402
@@ -57,28 +60,12 @@ class Tramo:
             sum((c.matrix_world @ v.co).dot(self.u) for v in c.data.vertices) / len(c.data.vertices)
             - min(us) for c in adelante
         )
-        envase = acomodar.envase_de(modelo, bpy.data.objects[modelo.objeto])
-        if len(adelante) > 1:
-            self.separacion = max(
-                SEPARACION_MINIMA, (self.largo - len(adelante) * envase.ancho) / (len(adelante) - 1)
-            )
-        else:
-            self.separacion = SEPARACION_MINIMA
 
-    def punto(self, u, v):
-        return self.origen + self.u * u + self.v * v
-
-    def centros(self, ancho):
-        """Los mismos lugares que la tanda de antes si entran: los divisores caen entre ellos."""
-        entran = all(b - a >= ancho + SEPARACION_MINIMA
-                     for a, b in zip(self.lugares, self.lugares[1:]))
-        if len(self.lugares) > 1 and entran:
-            return self.lugares
-        cuantas = max(1, int((self.largo + self.separacion) // (ancho + self.separacion)))
-        if cuantas == 1:
-            return [self.largo / 2]
-        paso = (self.largo - ancho) / (cuantas - 1)
-        return [ancho / 2 + paso * i for i in range(cuantas)]
+    def marco(self):
+        """De los ejes del estante al mundo: u a lo largo, v hacia el fondo y la normal arriba."""
+        marco = Matrix((self.u, self.v, self.normal)).transposed().to_4x4()
+        marco.translation = self.origen
+        return marco
 
 
 def columnas_de_prueba(cara, tandas):
@@ -99,17 +86,40 @@ def columnas_de_prueba(cara, tandas):
     return salida
 
 
-def cambiar(copias, clave_de_prueba):
-    """Las unidades del producto de prueba en el tramo de una tanda, en una sola fila."""
-    tramo = Tramo(copias)
-    modelo = producto(clave_de_prueba)
-    unidad = bpy.data.objects[modelo.objeto]
-    envase = acomodar.envase_de(modelo, unidad)
+def molde_de(producto, cara, columna, completo):
+    """La tanda del producto que se copia: la de la misma columna, la de la cara o cualquiera."""
+    def preferencia(clave):
+        letra, de_la_cara, _ = partes(clave.split("/")[0])
+        return (f"{letra}.{de_la_cara}" != cara, int(clave.split("/")[1]) != columna, clave)
+
+    claves = [c for c, copias in completo.items() if str(copias[0]["producto"]) == producto]
+    if not claves:
+        raise ValueError(f"{producto}: no está en el mapa completo, no hay tanda que copiar")
+    return completo[min(claves, key=preferencia)]
+
+
+def cambiar(copias, molde):
+    """Las unidades del molde en el tramo de una tanda, con su giro y su paso, centradas."""
+    destino, origen = Tramo(copias), Tramo(molde)
+    adelante = sorted(
+        (c for c in molde if c["fila"] == "adelante"),
+        key=lambda c: (c.matrix_world.translation - origen.origen).dot(origen.u),
+    )
+    relativa = origen.marco().inverted() @ adelante[0].matrix_world
+    ancho = origen.largo - (origen.lugares[-1] - origen.lugares[0])
+    if len(origen.lugares) > 1:
+        paso = (origen.lugares[-1] - origen.lugares[0]) / (len(origen.lugares) - 1)
+    else:
+        paso = ancho + SEPARACION_MINIMA
+    cuantas = max(1, int((destino.largo - ancho) / paso + 1e-6) + 1)
+    inicio = (destino.largo - ancho - paso * (cuantas - 1)) / 2 + ancho / 2
+    unidad = bpy.data.objects[producto(str(molde[0]["producto"])).objeto]
     salida = []
-    for u in tramo.centros(envase.ancho):
+    for i in range(cuantas):
+        corrimiento = Matrix.Translation((inicio + paso * i - origen.lugares[0], 0.0, 0.0))
         copia = unidad.copy()
         copia.parent = None
-        copia.matrix_world = acomodar.matriz_de(modelo, unidad, tramo, u, envase.fondo / 2)
+        copia.matrix_world = destino.marco() @ corrimiento @ relativa
         copia["fila"] = "adelante"
         salida.append(copia)
     return salida
@@ -136,7 +146,8 @@ def generar():
             if str(copias[0]["producto"]) == nuevo:
                 lugar = list(copias)
             else:
-                lugar = cambiar(copias, nuevo)
+                columna = int(clave.split("/")[1])
+                lugar = cambiar(copias, molde_de(nuevo, cara, columna, completo))
             principal_antes = not bool(copias[0]["fija"])
             tandas[clave] = (nuevo, principal_antes, lugar)
     principales = {}

@@ -237,6 +237,7 @@ def bandejas_nuevas(como, molde, corrimiento, unidades, limites):
 
 
 def armar():
+    import acomodar
     import disponer
     import disponer_prueba
     from lib.reparto import partes, producto
@@ -259,7 +260,7 @@ def armar():
     for copias in completo.values():
         clave = str(copias[0]["producto"])
         modelo = producto(clave)
-        anchos[clave] = disponer_prueba.acomodar.envase_de(modelo, bpy.data.objects[modelo.objeto]).ancho
+        anchos[clave] = acomodar.envase_de(modelo, bpy.data.objects[modelo.objeto]).ancho
     por_cara = {}
     for clave, copias in completo.items():
         letra, cara, _ = partes(clave.split("/")[0])
@@ -282,7 +283,7 @@ def armar():
                 continue
             if nuevo not in anchos:
                 modelo = producto(nuevo)
-                anchos[nuevo] = disponer_prueba.acomodar.envase_de(
+                anchos[nuevo] = acomodar.envase_de(
                     modelo, bpy.data.objects[modelo.objeto]).ancho
             molde, corrimiento = por_producto.get(nuevo), 0.0
             if molde is None:
@@ -290,7 +291,9 @@ def armar():
             if molde is None:
                 sin_tira.add(nuevo)
                 continue
-            unidades = disponer_prueba.cambiar(copias, nuevo)
+            columna = int(clave.split("/")[1])
+            unidades = disponer_prueba.cambiar(
+                copias, disponer_prueba.molde_de(nuevo, cara, columna, completo))
             temporales += unidades
             como = debajo[0]
             limites = (min(b.desde for b in debajo), max(b.desde + b.ancho for b in debajo))
