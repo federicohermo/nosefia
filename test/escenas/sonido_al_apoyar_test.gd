@@ -37,13 +37,10 @@ func _levantar_y_apoyar(cuerpo: RigidBody3D) -> void:
 
 
 func test_apoyar_una_caja_suena_una_vez_por_apoyo() -> void:
-	var cajas: Array = _almacen.get("_cajas_de_productos")
-	_levantar_y_apoyar(cajas[0])
-	assert_int(_apoyos.size()).is_equal(1)
-	_levantar_y_apoyar(cajas[1])
-	assert_int(_apoyos.size()).is_equal(2)
-	_levantar_y_apoyar(cajas[0])
-	assert_int(_apoyos.size()).is_equal(3)
+	var caja: RigidBody3D = (_almacen.get("_cajas_de_productos") as Array)[0]
+	for vez in 3:
+		_levantar_y_apoyar(caja)
+		assert_int(_apoyos.size()).is_equal(vez + 1)
 
 
 func test_apoyar_un_bidon_suena_una_vez_por_apoyo() -> void:
