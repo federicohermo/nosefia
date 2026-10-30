@@ -500,9 +500,11 @@ La vista NO DEBE saltar de una altura a la otra: DEBE recorrer el trecho entre l
 fracción de segundo, a paso parejo. CUANDO la acción cambia a mitad del recorrido, la vista DEBE
 seguir hacia la nueva altura desde la que tenga en ese momento.
 
-Agachado, el jugador DEBE caminar a la velocidad de BR-PLY-002: la postura no cambia la
-caminata, y agacharse NO DEBE quitarle su tecla a la caminata. La mira enfoca desde la altura
-vigente de la vista (BR-PLY-004), y el cuerpo conserva su forma de colisión.
+Agachado, el jugador DEBE caminar más lento que de pie: a una proporción de la velocidad de
+BR-PLY-002, que sale del dominio y es mayor que cero y menor que uno. El adelante y la
+normalización de la diagonal de BR-PLY-001 y BR-PLY-002 se conservan, y agacharse NO DEBE quitarle
+su tecla a la caminata. La mira enfoca desde la altura vigente de la vista (BR-PLY-004), y el
+cuerpo conserva su forma de colisión.
 
 MIENTRAS el control está suspendido (BR-PLY-006), la postura NO DEBE cambiar, apriete o suelte
 lo que apriete el jugador. CUANDO se reanuda, la postura DEBE seguir a la acción tal como esté
@@ -1279,12 +1281,6 @@ pie, y apretarla de nuevo lo baja otra vez.
 
 DADO las dos alturas de la vista ENTONCES la agachado es mayor que cero y menor que la de pie.
 
-### AC-PLY-123 — Agachado se camina igual de rápido *(verifica BR-PLY-042, BR-PLY-002)*
-
-DADO el jugador agachado y una entrada hacia adelante CUANDO se calcula la velocidad ENTONCES su
-módulo es la velocidad de caminata de BR-PLY-002, la misma que de pie. DADO una entrada en
-diagonal ENTONCES la normalización de BR-PLY-001 se conserva.
-
 ### AC-PLY-124 — Suspendido, la postura no cambia *(verifica BR-PLY-042, BR-PLY-006)*
 
 DADO el jugador agachado y el control suspendido CUANDO se suelta la acción ENTONCES la altura
@@ -1321,6 +1317,17 @@ largo.
 
 DADO el jugador bajando a mitad del recorrido CUANDO se suelta la acción ENTONCES la vista sube
 desde la altura que tenía, sin volver de golpe a la de pie ni terminar antes la bajada.
+
+### AC-PLY-130 — Agachado se camina a la velocidad agachado *(verifica BR-PLY-042, BR-PLY-002)*
+
+DADO el jugador agachado y una entrada hacia adelante CUANDO se calcula la velocidad ENTONCES su
+módulo es la velocidad agachado. DADO una entrada en diagonal ENTONCES su módulo es el mismo, por
+la normalización de BR-PLY-001. CUANDO se suelta la acción ENTONCES la velocidad vuelve a la de
+caminata de BR-PLY-002.
+
+### AC-PLY-131 — La velocidad agachado es menor que la de pie y no es cero *(verifica BR-PLY-042)*
+
+DADO las dos velocidades de caminata ENTONCES la agachado es mayor que cero y menor que la de pie.
 
 ## No objetivos
 

@@ -19,10 +19,17 @@ const SENSIBILIDAD_DEL_MOUSE := 0.003
 ## Metros, medidos desde el origen del `CharacterBody3D` que está apoyado en el piso.
 const ALTURA_DE_LA_CAMARA := 1.7
 
-## Metros, con el mismo origen. Es el centro del hueco del segundo estante desde el piso de las
+## Metros, con el mismo origen. Cae dentro del hueco del segundo estante desde el piso de las
 ## góndolas, medido del modelo: la chapa queda a 0,79 m y la de arriba a 1,27 m. Agachado, la mira
 ## queda en lo que hay que alcanzar o revisar ahí.
-const ALTURA_AGACHADO := 1.0
+const ALTURA_AGACHADO := 1.1
+
+## Proporción de la velocidad de caminata con que se camina agachado. Un cuerpo agachado no
+## avanza como uno erguido.
+const PROPORCION_DE_VELOCIDAD_AGACHADO := 0.6
+
+## Metros por segundo.
+const VELOCIDAD_AGACHADO := VELOCIDAD_DE_CAMINATA * PROPORCION_DE_VELOCIDAD_AGACHADO
 
 ## Segundos que tarda la vista en recorrer todo el trecho entre las dos alturas, en un sentido o
 ## en el otro. Una duración nula es el salto de altura; una larga, un jugador que se arrastra.

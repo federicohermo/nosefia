@@ -63,3 +63,10 @@ func test_el_grupo_interactuable_tiene_nombre() -> void:
 func test_agachado_la_vista_queda_entre_el_piso_y_la_de_pie() -> void:  # AC-PLY-122
 	assert_float(ReglasDelJugador.ALTURA_AGACHADO).is_greater(0.0)
 	assert_float(ReglasDelJugador.ALTURA_AGACHADO).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+
+
+func test_agachado_se_camina_mas_lento_que_de_pie_y_no_se_queda_quieto() -> void:  # AC-PLY-131
+	assert_float(ReglasDelJugador.VELOCIDAD_AGACHADO).is_greater(0.0)
+	assert_float(ReglasDelJugador.VELOCIDAD_AGACHADO).is_less(
+		ReglasDelJugador.VELOCIDAD_DE_CAMINATA
+	)

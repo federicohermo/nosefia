@@ -65,7 +65,8 @@ func orientar(nuevo_yaw: float) -> void:
 func velocidad(entrada: Vector2) -> Vector3:
 	if _suspendido:
 		return Vector3.ZERO
-	return Caminata.velocidad(entrada, _mirada.yaw(), _velocidad_maxima)
+	var maxima := ReglasDelJugador.VELOCIDAD_AGACHADO if _agachado else _velocidad_maxima
+	return Caminata.velocidad(entrada, _mirada.yaw(), maxima)
 
 
 ## La altura de la vista tras `delta` segundos, yendo hacia la postura que pide la acción de
