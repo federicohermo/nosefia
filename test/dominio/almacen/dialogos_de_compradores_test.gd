@@ -73,7 +73,7 @@ func test_rechazo_y_recordatorio_enumeran_el_pedido() -> void:  # AC-CTR-037
 			)
 			_resaltados(dialogo.entrada_actual(), comprador.pedido().productos().size())
 			for producto in comprador.pedido().productos():
-				assert_str(dialogo.entrada_actual()).contains(_subtitulo(producto))
+				assert_str(_sin_color(dialogo.entrada_actual())).contains(_subtitulo(producto))
 			dialogo.avanzar()
 			assert_bool(dialogo.terminado()).is_true()
 
