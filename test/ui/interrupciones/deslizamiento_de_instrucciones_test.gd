@@ -168,7 +168,7 @@ func test_un_gesto_durante_el_movimiento_lo_completa_sin_saltear_placas() -> voi
 	_siguiente()
 	assert_array(_textos(_nodo("_saliente"))).is_equal([_mensajes[1].texto.replace("[b]", "")])
 	assert_array(_textos(_nodo("_contenido"))).is_equal([_mensajes[2].texto.replace("[b]", "")])
-	assert_int(_nodo("_saliente").get_child_count()).is_equal(1)
+	assert_int(_nodo("_saliente").get_child_count()).is_equal(_nodo("_contenido").get_child_count())
 	assert_str((_nodo("_contador") as Label).text).is_equal("2/%d" % PLACAS)
 	_avanzar(_duracion())
 	_terminado()
