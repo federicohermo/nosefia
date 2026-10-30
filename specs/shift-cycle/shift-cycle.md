@@ -365,7 +365,7 @@ su orden de dibujo ENTONCES la entrada está sobre los tres primeros y debajo de
 
 ### AC-SHF-027 — El denominador sigue las declaradas *(verifica BR-SHF-005, BR-SHF-008)*
 
-DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `0/3`.
+DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `1/3`: reponer ya está cumplida con la góndola completa.
 La nota de tareas lista atención, registro y reposición, sin limpieza.
 DADO la jornada 3
 recién abierta ENTONCES dice `0/5`. DADO la jornada 5 recién abierta ENTONCES dice `0/5`. DADO la jornada 6 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una

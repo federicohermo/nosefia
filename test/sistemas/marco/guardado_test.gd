@@ -56,12 +56,18 @@ func test_una_version_futura_no_carga_y_no_se_borra() -> void:  # AC-SAV-009
 	assert_bool(FileAccess.file_exists(guardado.ruta)).is_true()
 
 
-func test_un_guardado_sin_version_carga() -> void:  # AC-SAV-009
+func test_un_guardado_de_otra_numeracion_no_carga() -> void:  # AC-SAV-009, AC-SAV-033
 	var guardado := _guardado()
 	var sin_version := _partida_en_la_tercera()
 	sin_version.erase(VERSION)
 	guardado.escribir(sin_version)
-	assert_int(guardado.cargar()[JORNADA]).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	assert_dict(guardado.cargar()).is_empty()
+	assert_bool(guardado.hay_guardado()).is_false()
+	var anterior := _partida_en_la_tercera()
+	anterior[VERSION] = PartidaSerializada.VERSION - 1
+	guardado.escribir(anterior)
+	assert_dict(guardado.cargar()).is_empty()
+	assert_bool(guardado.hay_guardado()).is_false()
 
 
 func test_sin_archivo_cargar_da_vacio() -> void:  # AC-SAV-010

@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("hipotesis")
 identidad = "2A"
-jornada = 5
+jornada = 4
 titulo = "SIEMPRE FALTAN COSAS"
 texto = "No me sorprendería tener un jefe inútil. Pero también, ¿no es responsabilidad de Yasmín avisar si faltan cosas esenciales? Si esto va a ser frecuente, tengo que empezar a prestar más atención a las dinámicas internas del local."
 exigencias = PackedStringArray("2A")

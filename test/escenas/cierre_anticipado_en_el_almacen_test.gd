@@ -166,7 +166,7 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:
 		)
 		assert_array(_textos(almacen)).is_empty()
 		reloj.avanzar(1.0)
-		assert_float(antes - _restante(almacen)).is_equal(Ritmo.de_la_jornada(jornada))
+		assert_float(antes - _restante(almacen)).is_equal(Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 		almacen.call("_revisar_la_salida")
 		assert_array(_textos(almacen)).is_empty()
 
@@ -462,9 +462,9 @@ func test_otra_apertura_reinicia_la_salida() -> void:  # AC-SHF-039
 func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-094
 	var almacen := await _abrir(1, true)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_null()
+	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_not_null()
 	var hud: Hud = almacen.get("_hud")
-	assert_str((hud.get("_tareas") as Label).text).is_equal("Tareas 0/2")
+	assert_str((hud.get("_tareas") as Label).text).is_equal("Tareas 1/3")
 	var notas: Array = almacen.get_node("Estructura/NotasDelAlmacen").get("notas")
 	var tareas: Array[NotaPegada] = []
 	for nodo: Node in notas:
@@ -477,6 +477,7 @@ func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-
 			[
 				NotaPegada.NOMBRES_DE_LAS_TAREAS[Tarea.Tipo.CAJA],
 				NotaPegada.NOMBRES_DE_LAS_TAREAS[Tarea.Tipo.REGISTRAR],
+				NotaPegada.NOMBRES_DE_LAS_TAREAS[Tarea.Tipo.REPONER],
 			]
 		)
 	)

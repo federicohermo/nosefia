@@ -338,7 +338,7 @@ func test_seguir_desde_la_primera_abre_las_de_la_segunda() -> void:  # AC-EMP-07
 
 
 ## Esc en la segunda pantalla de la segunda jornada conserva la lectura.
-func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-EMP-049, AC-SAV-033
+func test_retomar_la_segunda_y_seguir() -> void:  # AC-EMP-076, AC-EMP-075, AC-EMP-049
 	_guardar(PRIMERA + 1, 0, {PRIMERA: ResultadoDeLaNoche.new(1, []).a_datos()})
 	_abrir()
 	_almacen.call("retomar_la_partida")

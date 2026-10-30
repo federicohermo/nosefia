@@ -343,7 +343,7 @@ func _ready() -> void:
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
 ## momento salvo la letra, que espera al cierre. Esc la cierra sin reanudar.
-## El corte de la séptima noche: el reloj le da lo que queda del turno, el tablero le pide
+## El corte de la sexta noche: el reloj le da lo que queda del turno, el tablero le pide
 ## restablecer, y sin luz la computadora y la caja se cierran y no abren. Cuándo se corta y qué
 ## quiere decir «hay luz» lo decide el dominio.
 func _cablear_el_corte_de_luz() -> void:
@@ -519,16 +519,12 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.freeze = true
 			util.collision_layer = 0
 			util.collision_mask = 0
-	var cerradas := {
-		$Estructura/puerta/CuerpoDeLaHoja:
-		[PuertasTrabadas.Cuarto.DEPOSITO, SubtitulosAlExaminar.DEPOSITO_CERRADO],
-		$Estructura/puerta_limpieza/CuerpoDeLaHoja:
-		[PuertasTrabadas.Cuarto.CUARTITO, SubtitulosAlExaminar.CUARTITO_CERRADO],
-	}
-	for puerta: PuertaDelLocal in cerradas:
-		var trabada := PuertasTrabadas.trabada(cerradas[puerta][0], jornada)
-		puerta.traba = PuertaDelLocal.Traba.PUERTA if trabada else PuertaDelLocal.Traba.NINGUNA
-		puerta.identidad = cerradas[puerta][1] if trabada else &""
+	var puerta_del_cuartito: PuertaDelLocal = $Estructura/puerta_limpieza/CuerpoDeLaHoja
+	var trabada := PuertasTrabadas.cuartito_trabado(jornada)
+	puerta_del_cuartito.traba = (
+		PuertaDelLocal.Traba.PUERTA if trabada else PuertaDelLocal.Traba.NINGUNA
+	)
+	puerta_del_cuartito.identidad = SubtitulosAlExaminar.CUARTITO_CERRADO if trabada else &""
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()
@@ -713,9 +709,6 @@ func _preparar_lo_postergado() -> void:
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if PreparacionDeLosUtiles.por_preparar(util.datos.id, _jornada_preparada, siguiente):
 			pendientes.append(util)
-	if PreparacionDelDeposito.por_preparar(_jornada_preparada, siguiente):
-		pendientes.append_array(_cajas_de_productos)
-		pendientes.append_array(_reposicion_manual.unidades_de_muestra())
 	if not pendientes.is_empty():
 		var capa := CanvasLayer.new()
 		var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
@@ -748,15 +741,12 @@ func _seguir() -> void:
 
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
 ## entregar otra vez la devolución; si no, entra a la jornada guardada.
-## Los útiles y las cajas que esta carga no prepara: sus variantes las compila otra noche.
+## Los útiles que esta carga no prepara: sus variantes las compila otra noche.
 func cuerpos_sin_copias() -> Array[Node3D]:
 	var sin_copias: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if not PreparacionDeLosUtiles.se_prepara(util.datos.id, _partida.jornada()):
 			sin_copias.append(util)
-	if not PreparacionDelDeposito.se_prepara(_partida.jornada()):
-		sin_copias.append_array(_cajas_de_productos)
-		sin_copias.append_array(_reposicion_manual.unidades_de_muestra())
 	return sin_copias
 
 

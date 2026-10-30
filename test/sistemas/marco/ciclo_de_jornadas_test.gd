@@ -37,7 +37,7 @@ func test_arrancar_deja_el_reloj_corriendo_con_las_tareas_alcanzables() -> void:
 	assert_bool(reloj.corriendo()).is_true()
 	assert_object(reloj.obligatoria(Tarea.Tipo.CAJA)).is_not_null()
 	assert_object(reloj.obligatoria(Tarea.Tipo.REGISTRAR)).is_not_null()
-	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_null()
+	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_not_null()
 	assert_int(_aperturas).is_equal(1)
 
 
@@ -179,20 +179,19 @@ func _anotar_cierre(jornada: int, _cumplidas: int) -> void:
 	_ultima_jornada_cerrada = jornada
 
 
-func test_el_ritmo_no_se_hereda() -> void:  # AC-SHF-030
-	var casos := {3: 60.0, 4: 60.0, 2: 80.0}
-	for desde: int in casos:
+func test_toda_jornada_descuenta_al_mismo_ritmo() -> void:  # AC-SHF-002
+	for desde: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	]:
 		var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 		var restantes: Array[float] = []
 		reloj.tiempo_consumido.connect(func(restante: float) -> void: restantes.append(restante))
-		var ciclo := _ciclo_arrancado(Partida.desde({"jornada": desde}), reloj)
-		if desde == 3:
-			_agotar_la_noche(reloj)
-			assert_bool(ciclo.abrir_la_jornada()).is_true()
-			assert_int(ciclo.partida().jornada()).is_equal(4)
+		_ciclo_arrancado(Partida.desde({"jornada": desde}), reloj)
 		restantes.clear()
 		reloj.avanzar(1.0)
-		assert_float(restantes.back()).is_equal(Reglas.DURACION_DEL_TURNO - casos[desde])
+		assert_float(restantes.back()).is_equal(
+			Reglas.DURACION_DEL_TURNO - Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
+		)
 
 
 func test_el_cierre_le_entrega_a_la_partida_los_clientes_mal_atendidos() -> void:  # AC-EMP-078

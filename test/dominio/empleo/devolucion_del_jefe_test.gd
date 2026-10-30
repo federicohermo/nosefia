@@ -10,6 +10,7 @@ const L := Partida.Llamado
 const M := Reglas.MEDIOS_POR_APERCIBIMIENTO
 
 const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+const ULTIMA := DevolucionDelJefe.ULTIMA_JORNADA
 
 
 ## Las cuentas ya con la noche anotada, como las deja la partida al cerrar.
@@ -114,27 +115,27 @@ func test_reponer_dice_la_falla_que_es() -> void:  # AC-EMP-052
 	assert_str(registrar[1]).contains("está mal otra vez")
 
 
-func test_el_reto_2_de_la_jornada_5_cuenta_para_despues() -> void:  # AC-EMP-053
+func test_el_reto_2_de_la_jornada_4_cuenta_para_despues() -> void:  # AC-EMP-053
 	var jornada_5 := DevolucionDelJefe.armar(
-		5, 2, _antecedentes({}, {L.OBJETO_TIRADO: 1}), [], [L.OBJETO_TIRADO]
+		COMPLETA + 1, 2, _antecedentes({}, {L.OBJETO_TIRADO: 1}), [], [L.OBJETO_TIRADO]
 	)
 	assert_bool(jornada_5[1].begins_with('Por si no lo sabías, la "basura"')).is_true()
 	var jornada_7 := DevolucionDelJefe.armar(
-		7, 4, _antecedentes({}, {L.OBJETO_TIRADO: 2}), [], [L.OBJETO_TIRADO]
+		COMPLETA + 3, 4, _antecedentes({}, {L.OBJETO_TIRADO: 2}), [], [L.OBJETO_TIRADO]
 	)
 	assert_str(jornada_7[1]).is_equal("El contenedor de basura es para BASURA solamente.")
 	var jornada_4 := DevolucionDelJefe.armar(
 		COMPLETA, 1, _antecedentes({}, {L.OBJETO_TIRADO: 1}), [], [L.OBJETO_TIRADO]
 	)
 	assert_str(jornada_4[1]).is_equal("Puede ser que hayas estado tirando cosas a la basura?")
-	var basura := DevolucionDelJefe.armar(5, 2, _antecedentes(), [T.SACAR_LA_BASURA], [])
+	var basura := DevolucionDelJefe.armar(COMPLETA + 1, 2, _antecedentes(), [T.SACAR_LA_BASURA], [])
 	assert_str(basura[1]).is_equal("De verdad era tan difícil tirar tres bolsas de basura?")
 
 
-func test_el_reto_2_de_la_jornada_6_no_trae_tarea_5() -> void:  # AC-EMP-054
+func test_el_reto_2_de_la_jornada_5_no_trae_tarea_5() -> void:  # AC-EMP-054
 	for n: int in [1, 2]:
 		var mensajes := DevolucionDelJefe.armar(
-			6, 2, _antecedentes({}, {L.OBJETO_TIRADO: n}), [], [L.OBJETO_TIRADO]
+			COMPLETA + 2, 2, _antecedentes({}, {L.OBJETO_TIRADO: n}), [], [L.OBJETO_TIRADO]
 		)
 		assert_int(mensajes.size()).is_equal(3)
 		assert_str(mensajes[1]).is_equal(
@@ -145,13 +146,13 @@ func test_el_reto_2_de_la_jornada_6_no_trae_tarea_5() -> void:  # AC-EMP-054
 		)
 
 
-func test_p_4_en_la_octava_despide() -> void:  # AC-EMP-055
-	var despido := DevolucionDelJefe.armar(8, 4 * M, _antecedentes(), [], [])
+func test_p_4_en_la_ultima_despide() -> void:  # AC-EMP-055
+	var despido := DevolucionDelJefe.armar(ULTIMA, 4 * M, _antecedentes(), [], [])
 	assert_str(despido[0]).is_equal("Che")
 	assert_str(despido.back()).is_equal(DevolucionDelJefe.CIERRE_DEL_DESPIDO)
 	for fila: Array in DevolucionDelJefe.CIERRES_DE_LA_ULTIMA:
 		assert_array(despido).not_contains([fila[1]])
-	var al_borde := DevolucionDelJefe.armar(8, 7, _antecedentes(), [], [])
+	var al_borde := DevolucionDelJefe.armar(ULTIMA, 7, _antecedentes(), [], [])
 	assert_str(al_borde[0]).is_equal("Buenos días...")
 	(
 		assert_bool(al_borde.back().begins_with("Me parece que quedan muchas cosas para pulir"))
@@ -188,21 +189,24 @@ func test_la_mejora_gana_sobre_la_advertencia() -> void:  # AC-EMP-057
 	assert_int(una_vez.count("tus")).is_equal(1)
 
 
-func test_los_cuatro_bordes_de_la_octava() -> void:  # AC-EMP-058
+func test_los_cuatro_bordes_de_la_ultima() -> void:  # AC-EMP-058
 	var tropiezos := (
 		"Mirá, hubo un par de veces que la pifiaste, pero como soy generoso, te voy a dar el "
 		+ "puesto igual. No aflojes. Desde ahora, espero que des lo mejor de vos."
 	)
-	assert_bool(_cierre(8, 2, 0).begins_with("Bueno, más allá de alguna que otra cosita")).is_true()
-	assert_str(_cierre(8, 3, 0)).is_equal(tropiezos)
-	assert_str(_cierre(8, 4, 0)).is_equal(tropiezos)
-	assert_bool(_cierre(8, 5, 0).begins_with("Honestamente, solo puedo concluir")).is_true()
-	assert_str(_cierre(8, 4, 1)).is_equal(tropiezos)
+	(
+		assert_bool(_cierre(ULTIMA, 2, 0).begins_with("Bueno, más allá de alguna que otra cosita"))
+		. is_true()
+	)
+	assert_str(_cierre(ULTIMA, 3, 0)).is_equal(tropiezos)
+	assert_str(_cierre(ULTIMA, 4, 0)).is_equal(tropiezos)
+	assert_bool(_cierre(ULTIMA, 5, 0).begins_with("Honestamente, solo puedo concluir")).is_true()
+	assert_str(_cierre(ULTIMA, 4, 1)).is_equal(tropiezos)
 	var cierres := 0
 	var todos: Array[String] = [DevolucionDelJefe.CIERRE_DEL_DESPIDO, DevolucionDelJefe.MEJORA_ALTA]
 	for fila: Array in DevolucionDelJefe.CIERRES_DE_LA_ULTIMA:
 		todos.append(fila[1])
-	for mensaje: String in DevolucionDelJefe.armar(8, 4, _antecedentes({}, {}, 1), [], []):
+	for mensaje: String in DevolucionDelJefe.armar(ULTIMA, 4, _antecedentes({}, {}, 1), [], []):
 		if todos.has(mensaje):
 			cierres += 1
 	assert_int(cierres).is_equal(1)
@@ -295,11 +299,11 @@ func test_el_despido_ordena_las_tareas_y_los_retos() -> void:  # AC-EMP-061
 
 func test_la_prueba_perdida_termina_con_el_mensaje_del_despido() -> void:  # AC-EMP-090
 	var todo: Array[T] = [T.REGISTRAR, T.REPONER]
-	var tercera := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
-	var perdida := CondicionesDelJefeTest.cerrar_la_prueba([[2, todo], [2, todo], [0, [T.LIMPIAR]]])
+	var segunda := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
+	var perdida := CondicionesDelJefeTest.cerrar_la_prueba([[2, todo], [2, todo]])
 	assert_int(perdida.final()).is_equal(Partida.Final.DESPEDIDO)
-	assert_int(perdida.jornada()).is_equal(tercera)
-	var devolucion := DevolucionDelJefe.new(tercera, perdida)
+	assert_int(perdida.jornada()).is_equal(segunda)
+	var devolucion := DevolucionDelJefe.new(segunda, perdida)
 	var despido := (
 		"No, no, no. Flaco, no te puedo tomar como empleado si trabajás a medias. Un par de "
 		+ "errores los puedo dejar pasar, pero si se repite todos los días...\n\nHasta acá "
@@ -308,14 +312,14 @@ func test_la_prueba_perdida_termina_con_el_mensaje_del_despido() -> void:  # AC-
 	assert_array(devolucion.mensajes()).is_equal([despido])
 	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
 	assert_object(perdida.abrir_la_jornada()).is_null()
-	var textos_de_la_tercera: Array[String] = []
+	var textos_de_la_segunda: Array[String] = []
 	for mensaje: Mensaje in perdida.devoluciones_del_jefe():
-		if mensaje.jornada == tercera:
-			textos_de_la_tercera.append(mensaje.texto)
-	assert_array(textos_de_la_tercera).is_equal([despido])
-	var redimida := CondicionesDelJefeTest.cerrar_la_prueba([[2, todo], [2, todo], [0, []]])
+		if mensaje.jornada == segunda:
+			textos_de_la_segunda.append(mensaje.texto)
+	assert_array(textos_de_la_segunda).is_equal([despido])
+	var redimida := CondicionesDelJefeTest.cerrar_la_prueba([[5, []], [0, []]])
 	assert_bool(redimida.terminada()).is_false()
-	assert_array(DevolucionDelJefe.new(tercera, redimida).mensajes()).not_contains(
+	assert_array(DevolucionDelJefe.new(segunda, redimida).mensajes()).not_contains(
 		[DevolucionDelJefe.DESPIDO_DE_LA_PRUEBA]
 	)
 
@@ -433,13 +437,13 @@ func test_los_retos_mas_alla_de_la_ficha() -> void:  # AC-EMP-074
 		L.OBJETO_AFUERA: DevolucionDelJefe.AFUERA.back(),
 		L.LOCAL_DESORDENADO: DevolucionDelJefe.DESORDEN_SIN_REMEDIO,
 	}
-	for n: int in [6, 8]:
+	for n: int in [6, 7]:
 		for motivo: L in retos:
 			var mensajes := DevolucionDelJefe.armar(
-				8, 2, _antecedentes({}, {motivo: n}), [], [motivo]
+				ULTIMA, 2, _antecedentes({}, {motivo: n}), [], [motivo]
 			)
 			assert_str(mensajes[1]).is_equal(retos[motivo])
 	var basura := DevolucionDelJefe.armar(
-		8, 2, _antecedentes({}, {L.OBJETO_TIRADO: 6}), [], [L.OBJETO_TIRADO]
+		ULTIMA, 2, _antecedentes({}, {L.OBJETO_TIRADO: 6}), [], [L.OBJETO_TIRADO]
 	)
 	assert_str(basura[1]).is_equal(DevolucionDelJefe.BASURA.back())
