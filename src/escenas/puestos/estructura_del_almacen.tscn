@@ -80,6 +80,15 @@ points = PackedVector3Array(0.320000000, 1.025000000, 0.310000000, 0.320000000, 
 [sub_resource type="ConvexPolygonShape3D" id="contenedor_fondo"]
 points = PackedVector3Array(0.240000000, 0.045000000, -0.245000000, 0.205000000, 0.045000000, -0.280000000, -0.205000000, 0.045000000, -0.280000000, -0.240000000, 0.045000000, -0.245000000, -0.240000000, 0.045000000, 0.245000000, -0.205000000, 0.045000000, 0.280000000, 0.205000000, 0.045000000, 0.280000000, 0.240000000, 0.045000000, 0.245000000, 0.186500000, 0.130000000, -0.199500000, 0.159500000, 0.130000000, -0.226500000, -0.159500000, 0.130000000, -0.226500000, -0.186500000, 0.130000000, -0.199500000, -0.186500000, 0.130000000, 0.199500000, -0.159500000, 0.130000000, 0.226500000, 0.159500000, 0.130000000, 0.226500000, 0.186500000, 0.130000000, 0.199500000)
 
+[sub_resource type="StandardMaterial3D" id="fondo_del_contenedor_material"]
+albedo_color = Color(0.008, 0.008, 0.01, 1)
+roughness = 1.0
+metallic_specular = 0.0
+
+[sub_resource type="PlaneMesh" id="fondo_del_contenedor_malla"]
+material = SubResource("fondo_del_contenedor_material")
+size = Vector2(1.74, 1.04)
+
 [sub_resource type="BoxShape3D" id="volumen_tapa_contenedor"]
 size = Vector3(0.682, 0.025, 0.762)
 
@@ -3104,6 +3113,12 @@ disabled = true
 script = ExtResource("contenedor")
 tapa = NodePath("../../deposito_contenedor_bisagra_izquierda/CuerpoDeLaTapa")
 mallas = [NodePath("..")]
+
+[node name="FondoOscuro" type="MeshInstance3D" parent="deposito_contenedor_grande_soporte/deposito_contenedor_grande_cuerpo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3315, 0)
+mesh = SubResource("fondo_del_contenedor_malla")
+cast_shadow = 0
+gi_mode = 2
 
 [node name="deposito_contenedor_tapa_izquierda" parent="deposito_contenedor_grande_soporte/deposito_contenedor_bisagra_izquierda"]
 gi_mode = 2
