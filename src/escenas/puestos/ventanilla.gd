@@ -117,8 +117,7 @@ func _repintar() -> void:
 	if atendida != null and atendida.vendida() and atendida.despachada():
 		_descartar_recibidos(atendida.comprador())
 	if atendida != null and atendida.fisica():
-		var dialogo := atendida.dialogo()
-		if dialogo != null and not dialogo.terminado() and not _abierta:
+		if atendida.abre_la_ventanilla() and not _abierta:
 			abrir()
 		elif atendida.despachada():
 			cerrar()
