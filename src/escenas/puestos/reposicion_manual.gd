@@ -21,6 +21,8 @@ const PASOS_DEL_BORDE := 12
 
 ## Cuánto puede variar la altura de un apoyo y seguir siendo el mismo, en metros.
 const TOLERANCIA_DEL_APOYO := 0.02
+## Cuánto sobre su lugar entra la caja a un estante con la tabla de arriba justa, en metros.
+const ENTRADA_A_RAS := 0.03
 
 ## En cuántos pasos se trae hacia el jugador lo que se soltó adentro de un mueble.
 const PASOS_PARA_DESATASCAR := 12
@@ -746,11 +748,12 @@ func _apoyo_apuntado(caja: RigidBody3D) -> Dictionary:
 ## Se camina la mira desde la punta hacia el jugador, y en cada paso se baja derecho. Entre dos
 ## apoyos a la misma altura queda el más lejano: en piso abierto, el que hay debajo de la punta.
 ##
-## **Media caja antes de la punta y media caja después del ojo.** El rayo que baja no puede
-## arrancar adentro de lo que la caja va a ocupar, y donde está parado el jugador no hay lugar.
+## **Desde la punta y hasta media caja después del ojo.** La punta es el borde del alcance: no
+## frenar ahí dejaba el estante afuera a la distancia normal. Donde está parado el jugador no hay
+## lugar.
 func _apoyo_sobrevolado(caja: RigidBody3D, desde: Vector3, hasta: Vector3) -> Dictionary:
 	var margen := _media_caja(caja).length()
-	var recorrido := desde.distance_to(hasta) - margen
+	var recorrido := desde.distance_to(hasta)
 	var mejor := {}
 	while recorrido > margen:
 		var punto := desde.move_toward(hasta, recorrido)
@@ -1020,17 +1023,22 @@ func _rayo(caja: RigidBody3D, desde: Vector3, hasta: Vector3) -> Dictionary:
 ## **Se prueba desde la mano y, si se traba, desde el cuerpo.** Parado contra un estante, la mano
 ## queda debajo del canto de la tabla de arriba, y la subida choca con él por un par de
 ## centímetros: la caja no llegaba a un lugar donde entraba de sobra.
+##
+## **Se entra por tres alturas.** Con la tabla de arriba justa, subirla media caja la frena contra
+## ella: entra a ras. Y un estante más bajo que la mano se alcanza sólo bajándola antes: a la
+## altura de la mano la tabla del medio corta el paso.
 func _llevar_hasta(caja: RigidBody3D, destino: Vector3) -> Vector3:
 	var mano := punto_de_la_caja.global_position
 	var cuerpo := Vector3(jugador.global_position.x, mano.y, jugador.global_position.z)
+	var encima := destino.y + _media_caja(caja).y
 	var llegada := mano
 	for salida: Vector3 in [mano, cuerpo]:
-		var alto := maxf(salida.y, destino.y + _media_caja(caja).y)
-		var arriba := _barrer(caja, salida, Vector3(salida.x, alto, salida.z))
-		var adentro := _barrer(caja, arriba, Vector3(destino.x, arriba.y, destino.z))
-		llegada = _barrer(caja, adentro, destino)
-		if llegada.distance_to(destino) < TOLERANCIA_DEL_APOYO:
-			break
+		for alto: float in [maxf(salida.y, encima), encima, destino.y + ENTRADA_A_RAS]:
+			var arriba := _barrer(caja, salida, Vector3(salida.x, alto, salida.z))
+			var adentro := _barrer(caja, arriba, Vector3(destino.x, arriba.y, destino.z))
+			llegada = _barrer(caja, adentro, destino)
+			if llegada.distance_to(destino) < TOLERANCIA_DEL_APOYO:
+				return llegada
 	return llegada
 
 
