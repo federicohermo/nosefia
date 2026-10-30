@@ -16,6 +16,10 @@ const CUADERNO := preload("res://src/dominio/almacen/cuaderno_del_deposito.tres"
 ## meterse entre los envases.
 const DISTANCIA_A_LA_GONDOLA := 0.5
 
+## A cuánto del contorno se para el jugador con el bidón: a medio metro no entra entre la cámara y
+## los envases, y ninguna mano podría dejarlo delante.
+const DISTANCIAS_CON_EL_BIDON: Array[float] = [0.7, 0.9, 1.1]
+
 ## Hacia qué altura mira el jugador en cada lado, en metros.
 const ALTURAS_DE_LA_MIRA: Array[float] = [0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
 
@@ -76,7 +80,10 @@ func test_un_bidon_colgado_de_su_punto_se_repliega_delante_de_los_envases() -> v
 	assert_bool(agarre.pedir_agarrar(jabon.get("datos"), jabon)).is_true()
 	assert_object(jabon.get_parent()).is_not_same(agarre.punto_de_carga)
 	assert_object(jabon.get_parent().get_parent()).is_same(agarre.punto_de_carga)
-	assert_int(await _posturas_donde_entra_mas_sin_stock(almacen, jabon)).is_greater(0)
+	var entra_mas := 0
+	for distancia in DISTANCIAS_CON_EL_BIDON:
+		entra_mas += await _posturas_donde_entra_mas_sin_stock(almacen, jabon, distancia)
+	assert_int(entra_mas).is_greater(0)
 
 
 func test_con_las_manos_vacias_la_mercaderia_no_hace_de_pared() -> void:
@@ -144,14 +151,16 @@ func _llevar_algo_chico(almacen: Node3D) -> ObjetoAgarrable:
 
 ## En cuántas posturas lo que se lleva queda más cerca de la cámara con la góndola con stock que con
 ## la góndola vacía. Con stock nunca queda más lejos: los envases son lo único que cambia.
-func _posturas_donde_entra_mas_sin_stock(almacen: Node3D, cuerpo: Node3D) -> int:
+func _posturas_donde_entra_mas_sin_stock(
+	almacen: Node3D, cuerpo: Node3D, distancia: float = DISTANCIA_A_LA_GONDOLA
+) -> int:
 	var puesto: Node = almacen.get("_reposicion_manual")
 	var llena: Dictionary[Producto.Id, int] = {}
 	AperturaConLugar.abrir_con_faltantes(almacen, llena)
-	var con_stock := await _distancias_de_la_mano(almacen, cuerpo)
+	var con_stock := await _distancias_de_la_mano(almacen, cuerpo, distancia)
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
 	AperturaConLugar.abrir_con_faltantes(almacen, casilleros)
-	var sin_stock := await _distancias_de_la_mano(almacen, cuerpo)
+	var sin_stock := await _distancias_de_la_mano(almacen, cuerpo, distancia)
 	var entra_mas := 0
 	for indice in con_stock.size():
 		assert_float(sin_stock[indice]).is_greater_equal(con_stock[indice] - 0.01)
@@ -160,16 +169,16 @@ func _posturas_donde_entra_mas_sin_stock(almacen: Node3D, cuerpo: Node3D) -> int
 	return entra_mas
 
 
-## Cada lado de la góndola a `DISTANCIA_A_LA_GONDOLA`, mirando a su centro a cada altura. Una
+## Cada lado de la góndola a `distancia`, mirando a su centro a cada altura. Una
 ## postura es el lugar donde se para el jugador y el punto que mira.
-func _posturas(almacen: Node3D) -> Array[Array]:
+func _posturas(almacen: Node3D, distancia: float = DISTANCIA_A_LA_GONDOLA) -> Array[Array]:
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
 	var mueble := gondola.global_transform * gondola.get_aabb()
 	var centro := mueble.get_center()
 	var posturas: Array[Array] = []
 	for hacia: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.BACK, Vector3.FORWARD]:
 		var mitad := mueble.size.dot(hacia.abs()) / 2.0
-		var donde := centro + hacia * (mitad + DISTANCIA_A_LA_GONDOLA)
+		var donde := centro + hacia * (mitad + distancia)
 		donde.y = 0.11
 		for altura: float in ALTURAS_DE_LA_MIRA:
 			posturas.append([donde, Vector3(centro.x, altura, centro.z)])
@@ -206,11 +215,13 @@ func _recorrer(almacen: Node3D, formas: Array[CollisionShape3D]) -> Dictionary:
 
 
 ## A qué distancia de la cámara queda lo que se lleva, en cada postura.
-func _distancias_de_la_mano(almacen: Node3D, cuerpo: Node3D) -> Array[float]:
+func _distancias_de_la_mano(
+	almacen: Node3D, cuerpo: Node3D, distancia: float = DISTANCIA_A_LA_GONDOLA
+) -> Array[float]:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var distancias: Array[float] = []
-	for postura in _posturas(almacen):
+	for postura in _posturas(almacen, distancia):
 		await _ir_a(almacen, postura)
 		distancias.append(cuerpo.global_position.distance_to(camara.global_position))
 	return distancias
