@@ -1224,6 +1224,8 @@ DADO una caja chica y otra grande, por separado, y el segundo encuadre de GJ-52 
 puestos sobre ese metal CUANDO se suelta por el mismo gesto real y avanza la física ENTONCES la
 caja queda en el piso, estable, recogible, fuera de sólidos y sin superponerse a ningún producto
 puesto. La mano queda vacía; ni inventario ni tareas cambian por el acomodo o por la recogida.
+Con ese mismo metal sin productos puestos, la caja chica queda apoyada y estable sobre la góndola,
+recogible y fuera de sólidos.
 
 ### AC-PLY-095 — Los apoyos válidos siguen estables *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-018)*
 

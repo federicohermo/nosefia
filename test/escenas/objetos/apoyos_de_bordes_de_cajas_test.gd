@@ -1,6 +1,10 @@
 ## Los apoyos reportados se ejercen con la mira y el gesto, conservando los sólidos del local.
 extends GdUnitTestSuite
 
+## Qué hay en el sector del estante donde se apunta: productos puestos, casilleros sin producto, o
+## productos y además ningún lugar libre para la caja entera.
+enum Sector { CON_PRODUCTOS, SIN_PRODUCTOS, SIN_LUGAR }
+
 
 func test_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void:  # AC-PLY-099
 	var medicion := await _sobre_el_riel(Producto.Id.LAYSNNT)
@@ -13,7 +17,7 @@ func test_la_caja_chica_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void
 
 
 func test_la_caja_grande_respeta_el_espacio_del_metal_visible() -> void:  # AC-PLY-100 AC-PLY-026
-	var medicion := await _en_el_estante(Producto.Id.LAYSNNT, false)
+	var medicion := await _en_el_estante(Producto.Id.LAYSNNT, Sector.SIN_LUGAR)
 	assert_vector(medicion.final).is_equal_approx(
 		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
@@ -22,6 +26,14 @@ func test_la_caja_grande_respeta_el_espacio_del_metal_visible() -> void:  # AC-P
 
 func test_la_caja_chica_no_se_apoya_entre_los_productos_de_la_cabecera() -> void:  # AC-PLY-100
 	var medicion := await _en_el_estante(Producto.Id.ACTRONCITO)
+	assert_vector(medicion.final).is_equal_approx(
+		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
+	assert_float(medicion.base).is_equal_approx(medicion.apoyo, ReglasDeLosObjetos.ROCE)
+
+
+func test_la_caja_chica_se_apoya_sobre_el_metal_de_un_sector_sin_productos() -> void:  # AC-PLY-100
+	var medicion := await _en_el_estante(Producto.Id.ACTRONCITO, Sector.SIN_PRODUCTOS)
 	assert_vector(medicion.final).is_equal_approx(
 		medicion.inicial, Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
@@ -203,7 +215,7 @@ func _sobre_el_riel(producto: Producto.Id) -> Dictionary:
 	return {"base": limites.position.y, "gris": objetivo.y}
 
 
-func _en_el_estante(producto: Producto.Id, frena_la_mercaderia := true) -> Dictionary:
+func _en_el_estante(producto: Producto.Id, sector := Sector.CON_PRODUCTOS) -> Dictionary:
 	var almacen := await _abrir()
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
@@ -223,11 +235,20 @@ func _en_el_estante(producto: Producto.Id, frena_la_mercaderia := true) -> Dicti
 	)
 	if visible.is_empty():
 		return {"final": Vector3.INF, "inicial": Vector3.ZERO, "base": -INF, "apoyo": INF}
-	if frena_la_mercaderia:
+	if sector == Sector.CON_PRODUCTOS:
 		# La chica cabe en esta bandeja: sólo los productos puestos le impiden apoyarse.
 		(
-			assert_bool(_hay_mercaderia_junto_al_metal(almacen, visible.punto))
+			assert_bool(_envases_junto_al_metal(almacen, visible.punto).is_empty())
 			. override_failure_message("Premisa: productos puestos junto al metal apuntado")
+			. is_false()
+		)
+	elif sector == Sector.SIN_PRODUCTOS:
+		# Como el juego apaga los casilleros vacíos: sin producto, la bandeja admite la caja.
+		for envase in _envases_junto_al_metal(almacen, visible.punto):
+			envase.disabled = true
+		(
+			assert_bool(_envases_junto_al_metal(almacen, visible.punto).is_empty())
+			. override_failure_message("Premisa: sin productos junto al metal apuntado")
 			. is_true()
 		)
 	else:
@@ -268,7 +289,22 @@ func _en_el_estante(producto: Producto.Id, frena_la_mercaderia := true) -> Dicti
 	assert_bool(contacto.is_empty()).is_false()
 	if contacto.is_empty():
 		return {"final": final, "inicial": inicial, "base": limites.position.y, "apoyo": INF}
-	assert_object(contacto.collider).is_same(almacen.get_node("Estructura/SueloSolido"))
+	if sector == Sector.SIN_PRODUCTOS:
+		var metal := _impacto_visible(
+			gondola, final, final + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO
+		)
+		(
+			assert_dict(metal)
+			. override_failure_message("metal bajo el centro de la caja")
+			. is_not_empty()
+		)
+		assert_bool(gondola.is_ancestor_of(contacto.collider)).is_true()
+		if not metal.is_empty():
+			assert_float((contacto.position as Vector3).y).is_equal_approx(
+				(metal.punto as Vector3).y, ReglasDeLosObjetos.ROCE
+			)
+	else:
+		assert_object(contacto.collider).is_same(almacen.get_node("Estructura/SueloSolido"))
 	assert_float(limites.position.y).is_equal_approx(
 		(contacto.position as Vector3).y, ReglasDeLosObjetos.ROCE
 	)
@@ -427,17 +463,18 @@ func _hay_volumen_libre_sobre(almacen: Node3D, caja: RigidBody3D, punto: Vector3
 	return almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
 
 
-## Si hay envases puestos a menos de media caja del punto, a la altura de ese metal.
-func _hay_mercaderia_junto_al_metal(almacen: Node3D, punto: Vector3) -> bool:
+## Los envases puestos a menos de media caja del punto, a la altura de ese metal.
+func _envases_junto_al_metal(almacen: Node3D, punto: Vector3) -> Array[CollisionShape3D]:
 	var cerca := AABB(punto - Vector3(0.5, 0.05, 0.5), Vector3(1.0, 0.5, 1.0))
+	var envases: Array[CollisionShape3D] = []
 	for cuerpo: CharacterBody3D in almacen.get("_reposicion_manual").get("_mercaderia"):
 		for envase: CollisionShape3D in cuerpo.get_children():
 			if (
 				not envase.disabled
 				and (envase.global_transform * LimitesDeForma.de(envase.shape)).intersects(cerca)
 			):
-				return true
-	return false
+				envases.append(envase)
+	return envases
 
 
 ## El apoyo sigue el metal accesible del mueble actual, aunque desaparezcan sus cabeceras.

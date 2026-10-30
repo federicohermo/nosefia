@@ -659,9 +659,7 @@ func _entra_entera(caja: RigidBody3D) -> bool:
 	var encogida := BoxShape3D.new()
 	# Jolt redondea las aristas con el margen, y una esquina metida unos milímetros no choca.
 	encogida.margin = 0.0
-	encogida.size = (
-		LimitesDeForma.de(forma.shape).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
-	)
+	encogida.size = _tamano_encogido(forma)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = encogida
 	consulta.transform = Transform3D(caja.global_basis.orthonormalized(), caja.global_position)
@@ -672,6 +670,12 @@ func _entra_entera(caja: RigidBody3D) -> bool:
 	return not _pisa_la_mercaderia(caja)
 
 
+## La medida de la caja en metros, achicada porque apoyarse sobre algo es tocarlo. La escala de la
+## forma lleva la medida: su caja de colisión es de 2 x 2 x 2.
+func _tamano_encogido(forma: CollisionShape3D) -> Vector3:
+	return LimitesDeForma.de(forma.shape).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
+
+
 ## Si la caja se mete entre los envases que las góndolas tienen puestos.
 ##
 ## **Con la caja ya soltada, los envases no están en la simulación**: sólo los ven las manos
@@ -679,8 +683,10 @@ func _entra_entera(caja: RigidBody3D) -> bool:
 ## caja puede apoyarse.
 func _pisa_la_mercaderia(caja: RigidBody3D) -> bool:
 	var forma: CollisionShape3D = _cuerpo_de(caja)
-	var volumen := LimitesDeForma.de(forma.shape).grow(-ReglasDeLosObjetos.ROCE / 2.0)
-	var del_mundo := forma.global_transform * volumen
+	var tamano := _tamano_encogido(forma)
+	var volumen := AABB(-tamano / 2.0, tamano)
+	var pose := Transform3D(forma.global_basis.orthonormalized(), forma.global_position)
+	var del_mundo := pose * volumen
 	for cuerpo in _mercaderia:
 		for envase: CollisionShape3D in cuerpo.get_children():
 			if envase.disabled:
@@ -689,7 +695,7 @@ func _pisa_la_mercaderia(caja: RigidBody3D) -> bool:
 			if (
 				(envase.global_transform * limites).intersects(del_mundo)
 				and ReservaDeLaGondola.se_superponen(
-					volumen, forma.global_transform, limites, envase.global_transform
+					volumen, pose, limites, envase.global_transform
 				)
 			):
 				return true

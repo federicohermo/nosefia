@@ -4,7 +4,7 @@
 ## mientras llevan algo. El caso apunta al pie de un envase puesto, desde el pasillo, y suelta la
 ## caja por el mismo camino que el juego. Para afirmar el resultado vuelve a prender los envases,
 ## que es lo que el juego hace con la caja en la mano. La premisa va primero: sin un envase bajo el
-## punto apuntado, un caso en verde no probaría nada.
+## punto apuntado, un caso en verde no probaría nada. Verifica AC-PLY-100.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -18,14 +18,11 @@ const COSTADOS: Array[float] = [0.0, 1.0]
 ## Cuánto puede apartarse de la fila la mira para contar como apuntada a ella, en metros.
 const MARGEN_DE_LA_MIRA := 0.05
 
-## Lo que se achica la caja al preguntar, porque apoyarse sobre algo es tocarlo.
-const ACHICADO := 0.02
-
 ## La caja más chica: es la que más probabilidades tiene de entrar entre los estantes.
 const CAJA_QUE_SE_SUELTA := Producto.Id.ACTRONCITO
 
 
-func test_la_caja_soltada_sobre_un_estante_con_stock_no_queda_entre_los_envases() -> void:
+func test_la_caja_soltada_sobre_un_estante_con_stock_no_queda_entre_envases() -> void:  # AC-PLY-100
 	var almacen := await _abrir()
 	var apuntado := _apuntar_a_un_envase(almacen)
 	assert_dict(apuntado).override_failure_message("Premisa: un envase al alcance").is_not_empty()
@@ -162,7 +159,7 @@ func _cae_al_pie(golpe: Dictionary, envase: AABB) -> bool:
 func _entra_fisicamente(almacen: Node3D, caja: RigidBody3D, punto: Vector3) -> bool:
 	var achicada := BoxShape3D.new()
 	achicada.margin = 0.0
-	achicada.size = _tamano(caja) - Vector3.ONE * ACHICADO
+	achicada.size = _tamano_encogido(caja)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = achicada
 	consulta.transform = Transform3D(Basis.IDENTITY, punto + Vector3.UP * _tamano(caja).y / 2.0)
@@ -176,11 +173,16 @@ func _tamano(caja: RigidBody3D) -> Vector3:
 	return (forma.shape as BoxShape3D).size * forma.global_basis.get_scale()
 
 
+## La medida con que el juego pregunta si la caja entra: apoyarse sobre algo es tocarlo.
+func _tamano_encogido(caja: RigidBody3D) -> Vector3:
+	return _tamano(caja) - Vector3.ONE * ReglasDeLosObjetos.ROCE
+
+
 ## Si una caja de ese tamaño, en esa pose, se superpone a algún envase puesto.
 func _toca_envases(almacen: Node3D, pose: Transform3D, caja: RigidBody3D) -> bool:
 	var achicada := BoxShape3D.new()
 	achicada.margin = 0.0
-	achicada.size = _tamano(caja) - Vector3.ONE * ACHICADO
+	achicada.size = _tamano_encogido(caja)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = achicada
 	consulta.transform = pose
