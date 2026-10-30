@@ -101,6 +101,90 @@ func test_la_mopa_ya_seca_no_acorta_el_aviso_al_caminar() -> void:  # AC-SUB-018
 	assert_float((hud.get("_subtitulo") as Label).modulate.a).is_equal(1.0)
 
 
+## El comprador dice una entrega con el jugador a `metros` de su figura. Devuelve la dirección
+## que lo aleja de ella, para medir el camino sobre la misma recta.
+func _decir_entrega_a(almacen: Node3D, metros: float) -> Vector3:
+	var figura: Node3D = almacen.get_node("Estructura/Ventanilla").comprador_visible
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.global_position = figura.global_position + Vector3.BACK * metros
+	var alejando := (jugador.global_position - figura.global_position).normalized()
+	almacen.get("_atenciones").entrega_dicha.emit("Gracias, me llevo la caja.")
+	return alejando
+
+
+func _alejar(almacen: Node3D, desde: Vector3, metros: float) -> void:
+	var figura: Node3D = almacen.get_node("Estructura/Ventanilla").comprador_visible
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.global_position = figura.global_position + desde * metros
+	almacen.call("_process", 0.0)
+
+
+func test_irse_de_la_ventanilla_desvanece_la_entrega() -> void:  # AC-SUB-026
+	var almacen := await _almacen()
+	var hud: Hud = almacen.get("_hud")
+	var subtitulo: Label = hud.get("_subtitulo")
+	var alejando := _decir_entrega_a(almacen, 1.0)
+	var figura: Node3D = almacen.get_node("Estructura/Ventanilla").comprador_visible
+	var base := (almacen.get("_jugador") as Node3D).global_position.distance_to(
+		figura.global_position
+	)
+	assert_float(base).is_equal_approx(1.0, 0.001)
+	assert_float(hud.get("_comprador").modulate.a).is_equal(1.0)
+	_alejar(almacen, alejando, base + 0.7)
+	hud.call("_process", 0.25)
+	assert_float(hud.get("_comprador").modulate.a).is_equal(1.0)
+	_alejar(almacen, alejando, base + 0.8)
+	hud.call("_process", 0.25)
+	assert_float(hud.get("_comprador").modulate.a).is_between(0.01, 0.99)
+	assert_bool(hud.get("_comprador").visible).is_true()
+	_alejar(almacen, alejando, base)
+	hud.call("_process", 0.0)
+	assert_float(hud.get("_comprador").modulate.a).is_less(1.0)
+	var opacidad: float = hud.get("_comprador").modulate.a
+	hud.call("_process", 0.0)
+	assert_float(hud.get("_comprador").modulate.a).is_less_equal(opacidad)
+	hud.call("_process", 0.25)
+	assert_bool(hud.get("_comprador").visible).is_false()
+	assert_str(subtitulo.text).is_empty()
+
+
+func test_la_entrega_dicha_desde_lejos_se_mide_desde_esa_distancia() -> void:  # AC-SUB-026
+	var almacen := await _almacen()
+	var hud: Hud = almacen.get("_hud")
+	var alejando := _decir_entrega_a(almacen, 6.0)
+	_alejar(almacen, alejando, 6.7)
+	hud.call("_process", 0.25)
+	assert_float(hud.get("_comprador").modulate.a).is_equal(1.0)
+	_alejar(almacen, alejando, 6.8)
+	hud.call("_process", 0.25)
+	assert_float(hud.get("_comprador").modulate.a).is_less(1.0)
+
+
+func test_la_entrega_conserva_su_lugar_si_el_comprador_se_va() -> void:  # AC-SUB-026
+	var almacen := await _almacen()
+	var hud: Hud = almacen.get("_hud")
+	var figura: Node3D = almacen.get_node("Estructura/Ventanilla").comprador_visible
+	var alejando := _decir_entrega_a(almacen, 1.0)
+	var lugar := figura.global_position
+	figura.global_position += Vector3.UP * 5.0
+	(almacen.get("_jugador") as Node3D).global_position = lugar + alejando * 1.8
+	almacen.call("_process", 0.0)
+	hud.call("_process", 0.25)
+	assert_float(hud.get("_comprador").modulate.a).is_less(1.0)
+
+
+func test_el_aviso_reemplaza_la_entrega_sin_heredar_su_lugar() -> void:  # AC-SUB-026, AC-SUB-018
+	var almacen := await _almacen()
+	var hud: Hud = almacen.get("_hud")
+	_decir_entrega_a(almacen, 1.0)
+	almacen.call("_pensar_gesto", S.MOPA_YA_SECA)
+	(almacen.get("_jugador") as Node3D).global_position += Vector3.RIGHT * 5.0
+	almacen.call("_process", 0.0)
+	hud.call("_process", 1.0)
+	assert_float((hud.get("_subtitulo") as Label).modulate.a).is_equal(1.0)
+	assert_str((hud.get("_subtitulo") as Label).text).is_not_empty()
+
+
 func _examen_con_aviso_esperando() -> Node3D:
 	var almacen := await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")

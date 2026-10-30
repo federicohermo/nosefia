@@ -962,15 +962,22 @@ func _pensar_en(texto: String, lugar: Vector3) -> void:
 	if texto.is_empty():
 		return
 	_hud.pensar(texto)
+	_anclar_en(lugar)
+
+
+func _anclar_en(lugar: Vector3) -> void:
 	_lugar_del_pensamiento = lugar
 	if lugar.is_finite():
 		_distancia_al_pensar = _jugador.global_position.distance_to(lugar)
 
 
-## El texto de una entrega no tiene lugar: dura entero aunque el jugador camine.
+## El texto de una entrega tiene el lugar de la figura al decirlo: no la sigue si el comprador se va.
 func _decir_entrega(texto: String) -> void:
-	_lugar_del_pensamiento = Vector3.INF
+	if texto.is_empty():
+		return
+	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
 	_hud.decir_comprador(texto)
+	_anclar_en(ventanilla.comprador_visible.global_position)
 
 
 func _process(delta: float) -> void:
