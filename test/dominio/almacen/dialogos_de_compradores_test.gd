@@ -64,7 +64,7 @@ func test_el_recordatorio_nombra_lo_que_falta_y_el_rechazo_todo_el_pedido() -> v
 	recepcion.recibir(UnidadDeProducto.new(segundo), true)
 	(
 		assert_str(DialogosDeCompradores.recordatorio(tia.pedido(), recepcion).entrada_actual())
-		. is_equal(DialogosDeCompradores.PIDE_EL_RECIBO)
+		. is_equal(DialogosDeCompradores.PIDE_EL_TICKET)
 	)
 
 
