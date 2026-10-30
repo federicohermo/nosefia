@@ -1,44 +1,30 @@
-## Lo que se suelta contra la base de una heladera, entre el piso y la hoja, no entra al volumen.
+## Lo que el jugador suelta apuntando a una heladera no queda escondido abajo del estante más bajo.
 extends GdUnitTestSuite
 
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
-const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const MUEBLES: Array[String] = ["heladeranueva", "heladeranueva_001", "heladera_fuera_de_servicio"]
 
-## A qué fracción del zócalo, contando desde el piso, se tira cada rayo. La losa del fondo ya
-## cierra lo más bajo del frente: los rayos pasan por encima de ella.
+## Qué se suelta, con el clic de verdad.
+const PRODUCTO_QUE_SE_SUELTA := Producto.Id.MALBARDO
+
+## A qué fracción del zócalo, contando desde el piso, se apunta.
 const ALTOS_DEL_ZOCALO: Array[float] = [0.15, 0.5, 0.95]
 
-## Dónde se tira cada rayo a lo ancho, como fracción de la mitad del frente.
-const LADOS_DEL_FRENTE: Array[float] = [-0.8, 0.0, 0.8]
+## Cuántos metros adentro del borde de adelante del estante más bajo se apunta.
+const ADENTRO_DEL_ESTANTE: Array[float] = [0.0, 0.03, 0.08, 0.2]
 
-## De qué lado del frente arranca cada rayo, y cuánto entra, en metros.
-const ANTES_DEL_FRENTE := 0.5
-const LARGO_DEL_RAYO := 1.2
+## A cuántos metros del frente se para el jugador.
+const PARADOS: Array[float] = [0.6, 1.0]
 
-## A cuántos metros del frente se pone lo que se empuja, y cuánto se lo empuja.
-const CERCA := 0.02
-const EMPUJON := 0.3
+## Cuánto se sube la mira sobre la tapa del estante, y cuántos cuadros de física se espera a que
+## lo soltado se asiente.
+const SOBRE_EL_ESTANTE := 0.02
+const CUADROS_DE_REPOSO := 60
 
-## Con qué rapidez se lanza la caja contra la base, en metros por segundo, y cuántos cuadros de
-## física se espera a que se asiente.
-const VELOCIDAD_DEL_EMPUJE := 1.5
-const CUADROS_DEL_EMPUJE := 60
-
-## Cuánto deja el motor que un cuerpo apoyado se hunda en lo que lo sostiene.
-const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
-
-## Cuánto puede entrar lo empujado y contar igual como frenado, en metros.
+## Cuánto puede entrar al volumen lo que queda afuera, y cuánto bajo el estante lo que se apoya
+## en él, en metros.
 const TOLERANCIA := 0.01
-
-## Cuánto queda por debajo de la hoja lo que se apoya en su borde, en metros.
-const DEBAJO_DE_LA_HOJA := 0.002
-
-## Cuánto se sube la unidad sobre el borde de abajo de la hoja al soltarla adentro, en metros.
-const SOBRE_LA_BASE := 0.01
-
-const CAPAS_TODAS := 0xFFFFFFFF
 
 
 func _almacen() -> Node3D:
@@ -58,19 +44,14 @@ func _hoja(almacen: Node3D, numero: int) -> MeshInstance3D:
 	return _mueble(almacen, numero).get_node("puerta_heladera_%d" % numero)
 
 
-func _piso(almacen: Node3D) -> float:
-	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
-	return suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
-
-
 func _abrir(almacen: Node3D, numero: int) -> void:
 	_hoja(almacen, numero).get_node("CuerpoDeLaHoja").call("alternar")
-	for cuadro in 60:
+	for cuadro in CUADROS_DE_REPOSO:
 		await get_tree().physics_frame
 
 
-## El frente de la heladera, medido en la escena: hacia dónde mira, dónde queda su plano y entre
-## qué alturas queda abierto, del piso al borde de abajo de la hoja.
+## El frente de la heladera, medido en la escena con la hoja cerrada: hacia dónde mira, dónde
+## queda su plano y entre qué alturas queda abierto, del piso al borde de abajo de la hoja.
 func _frente_de(almacen: Node3D, numero: int) -> Dictionary:
 	var mueble := _mueble(almacen, numero)
 	var cuerpo := mueble.global_transform * mueble.get_aabb()
@@ -78,15 +59,13 @@ func _frente_de(almacen: Node3D, numero: int) -> Dictionary:
 	var de_la_hoja := hoja.global_transform * hoja.get_aabb()
 	var direccion := mueble.global_basis.x.normalized()
 	var hacia_la_hoja := (de_la_hoja.get_center() - cuerpo.get_center()) * Vector3(1.0, 0.0, 1.0)
-	var lado := direccion.cross(Vector3.UP)
+	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
 	var frente := {
 		"direccion": direccion,
-		"lado": lado,
 		"plano":
 		(mueble.global_transform * Vector3(mueble.get_aabb().end.x, 0.0, 0.0)).dot(direccion),
 		"centro": cuerpo.get_center(),
-		"semiancho": absf(lado.dot(cuerpo.size)) / 2.0,
-		"piso": _piso(almacen),
+		"piso": suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0,
 		"base_de_la_hoja": de_la_hoja.position.y,
 	}
 	# La premisa: el frente que se mide es el de la hoja, y debajo de ella hay lugar.
@@ -95,80 +74,19 @@ func _frente_de(almacen: Node3D, numero: int) -> Dictionary:
 	return frente
 
 
-## Cuántos rayos frenó el frente de la heladera antes de que entraran a su volumen.
-func _rayos_frenados_por_el_frente(
-	almacen: Node3D, numero: int, frente: Dictionary, estado: String
-) -> int:
-	var frenados := 0
-	var direccion: Vector3 = frente["direccion"]
-	var lado: Vector3 = frente["lado"]
-	var centro: Vector3 = frente["centro"]
-	var plano: float = frente["plano"]
-	var piso: float = frente["piso"]
-	var base: float = frente["base_de_la_hoja"]
-	var cuerpo := _mueble(almacen, numero).get_node("StaticBody3D")
-	var espacio := almacen.get_world_3d().direct_space_state
-	for alto in ALTOS_DEL_ZOCALO:
-		for costado in LADOS_DEL_FRENTE:
-			var sobre_el_plano := (
-				Vector3(centro.x, lerpf(piso, base, alto), centro.z)
-				+ direccion * (plano - centro.dot(direccion))
-				+ lado * (frente["semiancho"] as float) * costado
-			)
-			var desde := sobre_el_plano + direccion * ANTES_DEL_FRENTE
-			var consulta := PhysicsRayQueryParameters3D.create(
-				desde, desde - direccion * LARGO_DEL_RAYO, CAPAS_TODAS
-			)
-			var golpe := espacio.intersect_ray(consulta)
-			var donde := (
-				"`%s` %s, a %.0f%% del zócalo y %.1f del ancho"
-				% [MUEBLES[numero], estado, alto * 100.0, costado]
-			)
-			(
-				assert_object(golpe.get("collider"))
-				. override_failure_message(
-					"%s, el rayo no encontró el cuerpo de la heladera" % donde
-				)
-				. is_same(cuerpo)
-			)
-			if golpe.is_empty():
-				continue
-			var entro: float = plano - (golpe["position"] as Vector3).dot(direccion)
-			(
-				assert_float(entro)
-				. override_failure_message("%s, el rayo entró %.3f m al volumen" % [donde, entro])
-				. is_less(TOLERANCIA)
-			)
-			if entro < TOLERANCIA:
-				frenados += 1
-	return frenados
-
-
-func test_el_frente_de_la_base_frena_lo_que_viene_de_afuera_con_la_puerta_cerrada() -> void:
-	var almacen := await _almacen()
-	for numero in MUEBLES.size():
-		var frente := _frente_de(almacen, numero)
-		var frenados := _rayos_frenados_por_el_frente(
-			almacen, numero, frente, "con la puerta cerrada"
-		)
-		assert_int(frenados).is_equal(ALTOS_DEL_ZOCALO.size() * LADOS_DEL_FRENTE.size())
-
-
-func test_el_frente_de_la_base_frena_lo_que_viene_de_afuera_con_la_puerta_abierta() -> void:
-	var almacen := await _almacen()
-	# La heladera fuera de servicio tiene la puerta trabada: no abre.
-	for numero in 2:
-		# El frente se mide con la hoja cerrada: abierta, su centro ya no marca hacia dónde mira.
-		var frente := _frente_de(almacen, numero)
-		await _abrir(almacen, numero)
-		(
-			assert_bool(_hoja(almacen, numero).get_node("CuerpoDeLaHoja").call("puerta").abierta())
-			. is_true()
-		)
-		var frenados := _rayos_frenados_por_el_frente(
-			almacen, numero, frente, "con la puerta abierta"
-		)
-		assert_int(frenados).is_equal(ALTOS_DEL_ZOCALO.size() * LADOS_DEL_FRENTE.size())
+## El estante más bajo, en coordenadas del mundo: el primero que queda sobre la hoja.
+func _estante_mas_bajo(almacen: Node3D, numero: int, frente: Dictionary) -> AABB:
+	var estante := AABB()
+	for forma: CollisionShape3D in _mueble(almacen, numero).get_node("StaticBody3D").get_children():
+		if forma.disabled:
+			continue
+		var caja := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		var es_estante := caja.size.y < 0.1 and caja.size.x > 0.4 and caja.size.z > 0.4
+		if es_estante and caja.position.y > (frente["base_de_la_hoja"] as float):
+			if estante.size == Vector3.ZERO or caja.position.y < estante.position.y:
+				estante = caja
+	assert_float(estante.size.x).is_greater(0.4)
+	return estante
 
 
 ## Las cajas del volumen de `objeto`, en coordenadas del mundo.
@@ -182,144 +100,150 @@ static func _limites_del_volumen(objeto: Node3D) -> AABB:
 	return limites
 
 
-static func _minimo_sobre(limites: AABB, eje: Vector3) -> float:
+## Cuánto entró al volumen de la heladera, en metros: lo que su volumen pasó del plano del frente.
+static func _entro_al_volumen(objeto: Node3D, frente: Dictionary) -> float:
+	var direccion: Vector3 = frente["direccion"]
+	var limites := _limites_del_volumen(objeto)
 	var minimo := INF
 	for esquina in 8:
-		minimo = minf(minimo, limites.get_endpoint(esquina).dot(eje))
-	return minimo
-
-
-## Pone a `objeto` quieto, a `CERCA` del frente de la heladera, centrado a lo ancho y con la base de
-## su volumen a la altura pedida.
-func _poner_contra_la_base(objeto: PhysicsBody3D, frente: Dictionary, bajo_la_hoja: bool) -> void:
-	var direccion: Vector3 = frente["direccion"]
-	var lado: Vector3 = frente["lado"]
-	var centro: Vector3 = frente["centro"]
-	objeto.global_basis = Basis.IDENTITY
-	if objeto.has_method("quedarse_quieta"):
-		objeto.call("quedarse_quieta")
-	else:
-		(objeto as RigidBody3D).freeze = true
-	var limites := _limites_del_volumen(objeto)
-	var piso: float = frente["piso"]
-	var base: float = frente["base_de_la_hoja"]
-	# Pegado a la hoja es el borde: la parte de arriba del volumen toca su canto de abajo.
-	var fondo := (
-		base - DEBAJO_DE_LA_HOJA - limites.size.y if bajo_la_hoja else lerpf(piso, base, 0.15)
-	)
-	objeto.global_position += (
-		direccion * ((frente["plano"] as float) + CERCA - _minimo_sobre(limites, direccion))
-		+ lado * (centro.dot(lado) - limites.get_center().dot(lado))
-		+ Vector3.UP * (fondo - limites.position.y)
-	)
-	await get_tree().physics_frame
-	# La premisa: quedó donde se lo puso, a `CERCA` del frente.
-	var claro := _minimo_sobre(_limites_del_volumen(objeto), direccion) - (frente["plano"] as float)
-	assert_float(claro).is_equal_approx(CERCA, 0.001)
-
-
-## Cuánto entró al volumen de la heladera, en metros: lo que su volumen pasó del plano del frente.
-func _entro_al_volumen(objeto: PhysicsBody3D, frente: Dictionary) -> float:
-	var direccion: Vector3 = frente["direccion"]
-	return (frente["plano"] as float) - _minimo_sobre(_limites_del_volumen(objeto), direccion)
-
-
-func test_una_unidad_empujada_contra_la_base_no_entra() -> void:
-	var almacen := await _almacen()
-	for numero in MUEBLES.size():
-		var frente := _frente_de(almacen, numero)
-		var direccion: Vector3 = frente["direccion"]
-		for bajo_la_hoja: bool in [false, true]:
-			var unidad: RigidBody3D = OBJETO_SUELTO.instantiate()
-			almacen.add_child(unidad)
-			await _poner_contra_la_base(unidad, frente, bajo_la_hoja)
-			var consulta := PhysicsTestMotionParameters3D.new()
-			consulta.from = unidad.global_transform
-			consulta.motion = -direccion * EMPUJON
-			var resultado := PhysicsTestMotionResult3D.new()
-			var avance := EMPUJON
-			if PhysicsServer3D.body_test_motion(unidad.get_rid(), consulta, resultado):
-				avance = resultado.get_travel().length()
-			(
-				assert_float(avance)
-				. override_failure_message(
-					"`%s`, la unidad entró %.3f m al volumen" % [MUEBLES[numero], avance - CERCA]
-				)
-				. is_less(CERCA + TOLERANCIA)
-			)
-			unidad.queue_free()
+		minimo = minf(minimo, limites.get_endpoint(esquina).dot(direccion))
+	return (frente["plano"] as float) - minimo
 
 
 static func _lado_de(caja: Node3D) -> float:
 	return (caja.get_node("Cuerpo") as Node3D).scale.x
 
 
-## La caja grande, viva, contra la base y empujada hacia adentro: queda donde la deja la física.
-func test_una_caja_empujada_contra_la_base_no_entra_con_la_puerta_abierta() -> void:
-	var almacen := await _almacen()
-	var caja: RigidBody3D = null
-	for propia: RigidBody3D in almacen.get("_cajas_de_productos"):
+## Lo que el jugador suelta: una unidad sacada de una caja, y la caja grande.
+func _que_se_suelta(almacen: Node3D) -> Array[Node3D]:
+	var caja: Node3D = null
+	for propia: Node3D in almacen.get("_cajas_de_productos"):
 		if caja == null or _lado_de(propia) > _lado_de(caja):
 			caja = propia
+	var agarre: Agarre = almacen.get("_agarre")
+	almacen.get("_reposicion_manual").call("retirar", PRODUCTO_QUE_SE_SUELTA)
+	var unidad := agarre.cuerpo_sostenido()
+	assert_object(unidad).is_not_null()
 	assert_object(caja).is_not_null()
-	# La caja grande es más alta que el zócalo: con la hoja cerrada la frenaría ella y no la base.
-	for numero in 2:
-		var frente := _frente_de(almacen, numero)
-		var direccion: Vector3 = frente["direccion"]
-		await _abrir(almacen, numero)
-		await _poner_contra_la_base(caja, frente, false)
-		caja.call("soltarse")
-		caja.linear_velocity = -direccion * VELOCIDAD_DEL_EMPUJE
-		for cuadro in CUADROS_DEL_EMPUJE:
-			await get_tree().physics_frame
-		var entro := _entro_al_volumen(caja, frente)
-		caja.call("quedarse_quieta")
-		(
-			assert_float(entro)
-			. override_failure_message(
-				"`%s`, la caja entró %.3f m al volumen" % [MUEBLES[numero], entro]
-			)
-			. is_less(_hundimiento_tolerado())
+	agarre.vaciar_las_manos()
+	return [unidad, caja]
+
+
+## Le pone el foco al objetivo y le manda la acción, que es lo que hace el clic de verdad.
+func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
+	jugador.set("_enfocado", objetivo)
+	var evento := InputEventAction.new()
+	evento.action = accion
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)
+
+
+## Gira la vista como lo haría el mouse, a un yaw y un pitch absolutos en radianes.
+func _mirar(jugador: Node3D, giro: float, alto: float) -> void:
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var evento := InputEventMouseMotion.new()
+	evento.relative = (
+		Vector2(jugador.get_node("Giro").rotation.y - giro, camara.rotation.x - alto)
+		/ ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
+	)
+	jugador.call("_unhandled_input", evento)
+	(jugador.get("_control") as ControlDelJugador).avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	jugador.call("_aplicar_la_rotacion")
+
+
+func _apuntar(jugador: Node3D, punto: Vector3) -> void:
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var hacia := punto - camara.global_position
+	_mirar(jugador, atan2(-hacia.x, -hacia.z), atan2(hacia.y, Vector2(hacia.x, hacia.z).length()))
+
+
+## Adónde apunta el jugador: la rejilla de abajo del frente y, con la puerta abierta, la tapa del
+## estante más bajo.
+func _puntos_de_mira(frente: Dictionary, estante: AABB, abierta: bool) -> Array[Vector3]:
+	var direccion: Vector3 = frente["direccion"]
+	var centro: Vector3 = frente["centro"]
+	var plano: float = frente["plano"]
+	var puntos: Array[Vector3] = []
+	for alto in ALTOS_DEL_ZOCALO:
+		var altura := lerpf(frente["piso"] as float, frente["base_de_la_hoja"] as float, alto)
+		puntos.append(
+			Vector3(centro.x, altura, centro.z) + direccion * (plano - centro.dot(direccion))
 		)
+	if abierta:
+		for adentro in ADENTRO_DEL_ESTANTE:
+			var punto := estante.get_center()
+			punto += direccion * (plano - punto.dot(direccion) - adentro)
+			punto.y = estante.end.y + SOBRE_EL_ESTANTE
+			puntos.append(punto)
+	return puntos
 
 
-## Una unidad soltada adentro, por debajo del estante más bajo, baja hasta la losa del fondo: la
-## base no es un piso invisible sobre el que se apoye.
-func test_una_unidad_soltada_en_el_fondo_de_la_heladera_baja_hasta_la_losa() -> void:
+## Suelta `objeto` como lo hace el jugador: parado frente a la heladera, con la mira en `punto` y el
+## mismo clic que lo agarró. Devuelve si quedó suelto: lo que no encuentra lugar vuelve a la mano, y
+## eso también es correcto.
+func _soltar_apuntando_a(
+	almacen: Node3D, objeto: Node3D, frente: Dictionary, punto: Vector3, parado: float
+) -> bool:
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var direccion: Vector3 = frente["direccion"]
+	var sobre_el_plano := punto + direccion * ((frente["plano"] as float) - punto.dot(direccion))
+	jugador.global_position = (
+		Vector3(sobre_el_plano.x, jugador.global_position.y, sobre_el_plano.z) + direccion * parado
+	)
+	agarre.vaciar_las_manos()
+	_accion(jugador, objeto, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await get_tree().physics_frame
+	_apuntar(jugador, punto)
+	_accion(jugador, objeto, ReglasDeLosObjetos.ACCION_AGARRAR)
+	for cuadro in CUADROS_DE_REPOSO:
+		await get_tree().physics_frame
+	return agarre.manos().sostenido() == null
+
+
+## Lo soltado queda afuera del volumen de la heladera o apoyado en un estante: nunca escondido
+## abajo del más bajo.
+func _comprobar_lo_soltado(almacen: Node3D, numero: int, abierta: bool) -> void:
+	var frente := _frente_de(almacen, numero)
+	var estante := _estante_mas_bajo(almacen, numero, frente)
+	var objetos := _que_se_suelta(almacen)
+	if abierta:
+		await _abrir(almacen, numero)
+	var soltados := 0
+	for objeto in objetos:
+		for punto in _puntos_de_mira(frente, estante, abierta):
+			for parado in PARADOS:
+				if not await _soltar_apuntando_a(almacen, objeto, frente, punto, parado):
+					continue
+				soltados += 1
+				var entro := _entro_al_volumen(objeto, frente)
+				var debajo := estante.position.y - _limites_del_volumen(objeto).position.y
+				var donde := (
+					"`%s`, `%s` apuntado a %v desde %.1f m"
+					% [MUEBLES[numero], objeto.name, punto, parado]
+				)
+				(
+					assert_bool(entro < TOLERANCIA or debajo < TOLERANCIA)
+					. override_failure_message(
+						(
+							"%s quedó escondido: entró %.3f m y apoya %.3f m abajo del estante"
+							% [donde, entro, debajo]
+						)
+					)
+					. is_true()
+				)
+	# La premisa: el gesto suelta de verdad, y no sólo devuelve todo a la mano.
+	assert_int(soltados).is_greater(0)
+
+
+func test_lo_soltado_apuntando_a_la_base_con_la_puerta_cerrada_no_queda_adentro() -> void:
 	var almacen := await _almacen()
 	for numero in MUEBLES.size():
-		var frente := _frente_de(almacen, numero)
-		var centro: Vector3 = frente["centro"]
-		var base: float = frente["base_de_la_hoja"]
-		var unidad: RigidBody3D = OBJETO_SUELTO.instantiate()
-		almacen.add_child(unidad)
-		unidad.global_basis = Basis.IDENTITY
-		unidad.freeze = true
-		var limites := _limites_del_volumen(unidad)
-		unidad.global_position += Vector3(
-			centro.x - limites.get_center().x,
-			base + SOBRE_LA_BASE - limites.position.y,
-			centro.z - limites.get_center().z
-		)
-		await get_tree().physics_frame
-		unidad.freeze = false
-		for cuadro in CUADROS_DEL_EMPUJE:
-			await get_tree().physics_frame
-		var apoyo := _limites_del_volumen(unidad).position.y
-		(
-			assert_float(apoyo)
-			. override_failure_message(
-				(
-					"`%s`, la unidad quedó %.3f m sobre el borde de abajo de la hoja"
-					% [MUEBLES[numero], apoyo - base]
-				)
-			)
-			. is_less(base - TOLERANCIA)
-		)
-		unidad.queue_free()
+		await _comprobar_lo_soltado(almacen, numero, false)
 
 
-## Cuánto puede hundirse un cuerpo vivo en lo que toca sin estar adentro: el roce y el margen del
-## motor.
-func _hundimiento_tolerado() -> float:
-	return ReglasDeLosObjetos.ROCE + ProjectSettings.get_setting(PENETRACION_TOLERADA)
+func test_lo_soltado_apuntando_a_la_heladera_abierta_no_queda_abajo_del_estante_mas_bajo() -> void:
+	var almacen := await _almacen()
+	# La heladera fuera de servicio tiene la puerta trabada: no abre.
+	for numero in 2:
+		await _comprobar_lo_soltado(almacen, numero, true)
