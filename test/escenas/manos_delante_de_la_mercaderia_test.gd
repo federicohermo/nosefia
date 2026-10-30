@@ -37,10 +37,13 @@ func test_un_producto_en_la_mano_queda_delante_de_los_envases() -> void:
 	assert_array(resultado["tocadas"]).is_empty()
 
 
-func test_un_objeto_chico_en_la_mano_de_carga_queda_delante_de_los_envases() -> void:
+func test_un_util_en_la_mano_de_carga_queda_delante_de_los_envases() -> void:
 	var almacen := await _abrir()
-	var chico := _llevar_algo_chico(almacen)
-	var resultado := await _recorrer(almacen, _formas_de(chico))
+	var balde: RigidBody3D = almacen.get_node("Objetos/Balde")
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(balde.get("datos"), balde)).is_true()
+	assert_object(balde.get_parent()).is_same(agarre.punto_de_carga)
+	var resultado := await _recorrer(almacen, _formas_de(balde))
 	assert_int(resultado["con_mercaderia"]).is_greater(0)
 	assert_array(resultado["tocadas"]).is_empty()
 
@@ -62,20 +65,18 @@ func test_la_caja_y_su_volumen_en_el_cuerpo_quedan_delante_de_los_envases() -> v
 
 func test_frente_a_un_casillero_vacio_la_mano_entra_al_hueco() -> void:
 	var almacen := await _abrir()
-	var puesto: Node = almacen.get("_reposicion_manual")
-	var llena: Dictionary[Producto.Id, int] = {}
-	AperturaConLugar.abrir_con_faltantes(almacen, llena)
 	var chico := _llevar_algo_chico(almacen)
-	var con_stock := await _distancias_de_la_mano(almacen, chico)
-	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
-	AperturaConLugar.abrir_con_faltantes(almacen, casilleros)
-	var sin_stock := await _distancias_de_la_mano(almacen, chico)
-	var entra_mas := 0
-	for indice in con_stock.size():
-		assert_float(sin_stock[indice]).is_greater_equal(con_stock[indice] - 0.01)
-		if sin_stock[indice] > con_stock[indice] + 0.03:
-			entra_mas += 1
-	assert_int(entra_mas).is_greater(0)
+	assert_int(await _posturas_donde_entra_mas_sin_stock(almacen, chico)).is_greater(0)
+
+
+func test_un_bidon_colgado_de_su_punto_se_repliega_delante_de_los_envases() -> void:
+	var almacen := await _abrir()
+	var jabon: RigidBody3D = almacen.get_node("Objetos/JabonRosa")
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(jabon.get("datos"), jabon)).is_true()
+	assert_object(jabon.get_parent()).is_not_same(agarre.punto_de_carga)
+	assert_object(jabon.get_parent().get_parent()).is_same(agarre.punto_de_carga)
+	assert_int(await _posturas_donde_entra_mas_sin_stock(almacen, jabon)).is_greater(0)
 
 
 func test_con_las_manos_vacias_la_mercaderia_no_hace_de_pared() -> void:
@@ -139,6 +140,24 @@ func _llevar_algo_chico(almacen: Node3D) -> ObjetoAgarrable:
 	assert_bool(agarre.pedir_agarrar(chico.datos, chico)).is_true()
 	assert_object(chico.get_parent()).is_same(agarre.punto_de_carga)
 	return chico
+
+
+## En cuántas posturas lo que se lleva queda más cerca de la cámara con la góndola con stock que con
+## la góndola vacía. Con stock nunca queda más lejos: los envases son lo único que cambia.
+func _posturas_donde_entra_mas_sin_stock(almacen: Node3D, cuerpo: Node3D) -> int:
+	var puesto: Node = almacen.get("_reposicion_manual")
+	var llena: Dictionary[Producto.Id, int] = {}
+	AperturaConLugar.abrir_con_faltantes(almacen, llena)
+	var con_stock := await _distancias_de_la_mano(almacen, cuerpo)
+	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
+	AperturaConLugar.abrir_con_faltantes(almacen, casilleros)
+	var sin_stock := await _distancias_de_la_mano(almacen, cuerpo)
+	var entra_mas := 0
+	for indice in con_stock.size():
+		assert_float(sin_stock[indice]).is_greater_equal(con_stock[indice] - 0.01)
+		if sin_stock[indice] > con_stock[indice] + 0.03:
+			entra_mas += 1
+	return entra_mas
 
 
 ## Cada lado de la góndola a `DISTANCIA_A_LA_GONDOLA`, mirando a su centro a cada altura. Una
