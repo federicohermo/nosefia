@@ -319,6 +319,7 @@ evento = 11
 senal = &"comprador_llegado"
 posicional = true
 emisor = &"Ventanilla"
+obstaculos_maximos = 1
 stream = ExtResource("3_timbre")
 
 [sub_resource type="Resource" id="Resource_s3myp"]

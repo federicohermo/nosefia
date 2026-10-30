@@ -126,14 +126,38 @@ func test_lo_plano_no_se_apaga() -> void:  # AC-AMB-023
 	assert_str(voz.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
 
 
-func _bloque(cuerpo: StaticBody3D) -> StaticBody3D:
+## El timbre avisa que llegó un comprador: se oye desde cualquier cuarto, aunque lo tapen tantas
+## paredes como apagan lo máximo.
+func test_el_timbre_se_oye_tapado_por_el_maximo_de_obstaculos() -> void:
+	var reproductor := ReproductorDeSonidos.new()
+	add_child(auto_free(reproductor))
+	reproductor.arrancar(TablaDeSonidos.desde_disco())
+	var lugar: Node3D = auto_free(Node3D.new())
+	add_child(lugar)
+	lugar.global_position = FUENTE
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR, lugar)).is_true()
+	var voz := reproductor.voces_en_el_espacio()[0]
+	var sin_apagar := voz.volume_db
+	for obstaculo in ApagadoPorObstaculos.MAXIMO:
+		await _bloque(StaticBody3D.new(), Vector3(0, 1, -1 - obstaculo))
+	assert_int(reproductor.obstaculos_entre(OIDO, FUENTE, null)).is_equal(
+		ApagadoPorObstaculos.MAXIMO
+	)
+	reproductor.actualizar_apagado(OIDO, 10.0)
+	var tapado_del_todo := ApagadoPorObstaculos.volumen_db(ApagadoPorObstaculos.MAXIMO)
+	assert_float(voz.volume_db).is_greater(sin_apagar + tapado_del_todo)
+	assert_float(_corte(voz)).is_greater(ApagadoPorObstaculos.corte_hz(ApagadoPorObstaculos.MAXIMO))
+	assert_float(voz.volume_db).is_less(sin_apagar)
+
+
+func _bloque(cuerpo: StaticBody3D, donde: Vector3 = PARED) -> StaticBody3D:
 	var forma := CollisionShape3D.new()
 	var caja := BoxShape3D.new()
 	caja.size = Vector3(2, 2, 0.2)
 	forma.shape = caja
 	cuerpo.add_child(forma)
 	add_child(auto_free(cuerpo))
-	cuerpo.global_position = PARED
+	cuerpo.global_position = donde
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	return cuerpo

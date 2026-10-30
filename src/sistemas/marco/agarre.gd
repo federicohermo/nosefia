@@ -76,6 +76,7 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D, del_tacho: bool = fals
 		_mascara_original = nodo.collision_mask
 		nodo.collision_layer = 0
 		nodo.collision_mask = 0
+	_olvidar_contactos(nodo)
 	_colgar(nodo, _punto_de_carga())
 	objeto_agarrado.emit(nodo)
 	objeto_alzado.emit(nodo, del_tacho)
@@ -190,6 +191,17 @@ static func _despertar_contactos(nodo: Node3D) -> void:
 			var contacto := choque.collider as RigidBody3D
 			if contacto != null and not contacto.freeze:
 				contacto.sleeping = false
+
+
+## Lo que se lleva ya no toca nada, pero el motor puede seguir creyendo que toca el piso donde
+## estaba: `body_entered` no vuelve a avisar un contacto que nunca dio por terminado, y el balde
+## sonaba sólo la primera vez sobre cada piso. Apagar y prender el monitoreo le borra la cuenta.
+static func _olvidar_contactos(nodo: Node3D) -> void:
+	var cuerpo := nodo as RigidBody3D
+	if cuerpo == null or not cuerpo.contact_monitor:
+		return
+	cuerpo.contact_monitor = false
+	cuerpo.contact_monitor = true
 
 
 ## Cuelga el nodo del ancla, en el origen del ancla y sin rotación heredada.
