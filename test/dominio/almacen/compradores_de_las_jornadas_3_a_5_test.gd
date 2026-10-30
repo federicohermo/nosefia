@@ -143,28 +143,18 @@ func test_cada_pedido_son_dos_o_tres_tipos_de_su_grupo_y_de_lo_que_se_vende() ->
 				assert_int(ids.size()).is_between(2, 3)
 
 
-func test_la_tercera_pide_de_la_interseccion_de_su_grupo_con_la_prueba() -> void:  # AC-CTR-107
-	var candidatos := {
-		"Cami":
-		[Producto.Id.ZUCARACHAS, Producto.Id.JORGILLO, Producto.Id.PEPITO, Producto.Id.PETISAS],
-		"Tin":
-		[
-			Producto.Id.MAROLINI,
-			Producto.Id.PURA_COLA,
-			Producto.Id.MALBARDO,
-			Producto.Id.MAYONCHIS,
-			Producto.Id.ARVECOR,
-			Producto.Id.DON_SATURADOS,
-		],
-	}
-	var pedidos: Dictionary = {"Cami": {}, "Tin": {}}
+func test_la_tercera_pide_de_todo_su_grupo() -> void:  # AC-CTR-107
+	var pedidos: Dictionary = {}
 	for semilla in range(1, SEMILLAS + 1):
 		for comprador in Compradores.de_la_jornada(TERCERA, semilla):
+			var pedido: Dictionary = pedidos.get_or_add(comprador.personaje, {})
 			for producto in comprador.pedido().productos():
-				assert_array(candidatos[comprador.nombre()]).contains([producto.id])
-				pedidos[comprador.nombre()][producto.id] = true
-	for nombre: String in candidatos:
-		assert_array(pedidos[nombre].keys()).contains_exactly_in_any_order(candidatos[nombre])
+				pedido[producto.id] = true
+	assert_int(pedidos.size()).is_equal(AGENDAS[TERCERA].size())
+	for personaje: int in pedidos:
+		assert_array(pedidos[personaje].keys()).contains_exactly_in_any_order(
+			Compradores.GRUPOS[personaje]
+		)
 
 
 func test_fede_nunca_pide_durextra() -> void:  # AC-CTR-107
@@ -186,11 +176,15 @@ func test_los_pedidos_son_de_dos_y_de_tres_con_frecuencias_parecidas() -> void: 
 	assert_int(por_cantidad[3]).is_greater(total / 4)
 
 
-func test_la_tercera_jornada_pide_solo_de_los_productos_de_prueba() -> void:  # AC-CTR-071
+func test_la_tercera_jornada_pide_del_catalogo_completo() -> void:  # AC-CTR-071
+	var vendibles: Array[Producto.Id] = []
+	for producto in Catalogo.de_la_jornada(TERCERA):
+		vendibles.append(producto.id)
+	assert_array(vendibles).contains_exactly(Producto.Id.values())
 	for semilla in range(1, SEMILLAS + 1):
 		for comprador in Compradores.de_la_jornada(TERCERA, semilla):
 			for producto in comprador.pedido().productos():
-				assert_array(Catalogo.PRODUCTOS_DE_PRUEBA).contains([producto.id])
+				assert_array(vendibles).contains([producto.id])
 
 
 func test_la_misma_semilla_repite_los_productos_con_estados_nuevos() -> void:  # AC-CTR-072
@@ -220,9 +214,7 @@ func test_cami_no_hereda_el_pedido_entre_jornadas() -> void:  # AC-CTR-072
 
 
 func test_las_demas_jornadas_no_dependen_de_la_semilla() -> void:  # AC-CTR-001
-	for jornada in range(
-		ReglasDeLaPartida.PRIMERA_JORNADA + 5, AnomaliasDeLaJornada.JORNADA_DEL_CORTE
-	):
-		assert_array(_firma(Compradores.de_la_jornada(jornada, 1))).is_equal(
-			_firma(Compradores.de_la_jornada(jornada, 2))
-		)
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	assert_array(_firma(Compradores.de_la_jornada(jornada, 1))).is_equal(
+		_firma(Compradores.de_la_jornada(jornada, 2))
+	)

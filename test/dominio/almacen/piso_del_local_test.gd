@@ -137,7 +137,7 @@ func test_cada_lugar_conserva_su_numero_y_la_primera_jornada_su_mancha() -> void
 func test_cada_jornada_arranca_sucia_aunque_la_anterior_quedo_limpia() -> void:  # AC-CLN-016
 	# Instancias nuevas y no las mismas: con un piso compartido, lo limpiado anoche llegaría
 	# limpio esta noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
-	for jornada: int in [3, 4, 5, 6, 7]:
+	for jornada: int in [2, 3, 4, 5, 6]:
 		var anoche := PisoDelLocal.de_la_jornada(jornada)
 		_borrar_todas(anoche)
 		assert_bool(anoche.esta_limpio()).is_true()

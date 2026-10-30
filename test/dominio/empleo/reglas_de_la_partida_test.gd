@@ -33,7 +33,7 @@ func test_lo_atado_a_un_numero_de_jornada_se_cuenta_desde_la_primera_completa() 
 	var completa := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 	assert_int(AnomaliasDeLaJornada.JORNADA_SIN_AZUL).is_equal(completa + 1)
 	assert_int(GeneradorDeTickets.JORNADA_SIN_LECTOR).is_equal(completa + 2)
-	assert_int(Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ).is_equal(completa + 2)
+	assert_int(Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ).is_equal(completa + 3)
 	assert_int(ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS).is_equal(completa)
 	assert_array(ReflexionDeCierre.ENCABEZADOS.keys()).contains_exactly([completa, completa + 1])
 	assert_array(Apertura.PARTICULARES.keys()).contains_exactly(

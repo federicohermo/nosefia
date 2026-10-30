@@ -192,7 +192,7 @@ func test_el_reloj_queda_detenido_hasta_el_cierre() -> void:  # AC-SHF-049, AC-S
 	assert_str(_lectura_del_reloj(local)).is_equal(_detenida())
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_bool(reloj.corriendo()).is_false()
-	assert_str(_lectura_del_reloj(local)).is_equal(_detenida())
+	assert_str(_lectura_del_reloj(local)).is_empty()
 
 
 func test_la_jornada_siguiente_lee_la_hora() -> void:  # AC-SHF-049

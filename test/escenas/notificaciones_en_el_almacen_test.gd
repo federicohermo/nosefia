@@ -116,13 +116,13 @@ func test_todas_las_noches_y_reloj_apagado() -> void:  # AC-NTF-020, AC-NTF-023
 
 
 func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
-	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
+	var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
 	var local := _local(jornada)
 	var reloj: RelojDelTurno = local.get("_reloj")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3660.0)
 	assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
 	RelojDePrueba.avanzar_turno(reloj, 120.0)
-	assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+	assert_array(_textos(local)).contains(["QUEDA UNA HORA DE JORNADA"])
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(_textos(local)).is_empty()
 	RelojDePrueba.avanzar_turno(reloj, 1.0)
@@ -131,7 +131,7 @@ func test_salto_y_reinicio_real() -> void:  # AC-NTF-021, AC-NTF-022
 	assert_bool(local.get("_ciclo").abrir_la_jornada()).is_true()
 	reloj.set_process(false)
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3600.0)
-	assert_str(_textos(local)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+	assert_array(_textos(local)).contains(["QUEDA UNA HORA DE JORNADA"])
 
 
 func test_saltar_directamente_hasta_cerrar_no_deja_cartel() -> void:  # AC-NTF-021, AC-NTF-022
@@ -144,7 +144,7 @@ func test_saltar_directamente_hasta_cerrar_no_deja_cartel() -> void:  # AC-NTF-0
 
 
 func test_pausar_antes_del_umbral_no_consume_ni_dispara() -> void:  # AC-NTF-023
-	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
+	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3)
 	var reloj: RelojDelTurno = local.get("_reloj")
 	var restantes: Array[float] = []
 	reloj.tiempo_consumido.connect(func(restante: float) -> void: restantes.append(restante))

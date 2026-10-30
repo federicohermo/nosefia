@@ -2,19 +2,15 @@
 extends GdUnitTestSuite
 
 
-func test_cada_jornada_dura_su_sesion_y_cubre_el_turno_entero() -> void:  # AC-SHF-002
-	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
-	for jornada: int in range(primera, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
-		var ritmo := Ritmo.de_la_jornada(jornada)
-		assert_float(ritmo).is_greater(0.0)
-		assert_float(Ritmo.escalar(1.0, ritmo)).is_equal(ritmo)
-		var sesion := Reglas.DURACION_DEL_TURNO / ritmo
-		assert_float(Ritmo.escalar(sesion, ritmo)).is_equal_approx(Reglas.DURACION_DEL_TURNO, 0.001)
+func test_toda_jornada_dura_lo_mismo_y_cubre_el_turno_entero() -> void:  # AC-SHF-002
+	var ritmo := Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
+	assert_float(ritmo).is_greater(0.0)
+	var sesion := Reglas.DURACION_DEL_TURNO / ritmo
+	assert_float(Ritmo.escalar(sesion)).is_equal_approx(Reglas.DURACION_DEL_TURNO, 0.001)
 
 
-func test_una_jornada_sin_fila_corre_a_un_minuto_por_segundo() -> void:  # AC-SHF-002
+func test_un_segundo_real_escala_igual_en_cualquier_jornada() -> void:  # AC-SHF-002
 	var minuto := Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
-	assert_float(Ritmo.escalar(1.0, Ritmo.de_la_jornada(0))).is_equal(minuto)
 	assert_float(Ritmo.escalar(1.0)).is_equal(minuto)
 
 
