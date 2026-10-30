@@ -458,7 +458,7 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	# Una parada delante del pallet izquierdo; los dos tiros laterales bajos prueban el derecho.
 	var frente := Vector3(
-		pallet_libre.position.x + pallet_libre.size.x * 0.357, 0.112, pallet_libre.end.z + 1.24
+		pallet_libre.position.x + pallet_libre.size.x * 0.357, 0.112, pallet_libre.end.z + 0.7
 	)
 	await _parar_al_jugador_en(jugador, frente)
 	var al_piso: Array[String] = []
@@ -533,7 +533,7 @@ func test_frente_a_un_rack_abierto_la_caja_queda_en_el_pallet_que_se_mira() -> v
 		Vector2(1.1, -25.0),
 		Vector2(0.7, -25.0),
 		Vector2(0.7, -20.0),
-		Vector2(1.1, -15.0),
+		Vector2(1.1, -20.0),
 	]
 	fuera.append_array(await _soltar_frente_al_rack_abierto(almacen, al_pallet, true))
 	(

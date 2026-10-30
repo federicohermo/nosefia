@@ -895,7 +895,7 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	# Uakalas cambió de mueble: se mira desde su frente real, con el jugador en piso libre.
 	# La postura anterior atravesaba el lateral y dejaba la mano dentro de la reserva.
 	var estante := apoyo - frente * 0.12
-	var candidato := estante + frente * 1.3 + frente.cross(Vector3.UP)
+	var candidato := estante + frente * 1.2 + frente.cross(Vector3.UP) * 0.5
 	var suelo := PhysicsRayQueryParameters3D.create(
 		Vector3(candidato.x, 3.0, candidato.z), Vector3(candidato.x, -1.0, candidato.z), 1
 	)

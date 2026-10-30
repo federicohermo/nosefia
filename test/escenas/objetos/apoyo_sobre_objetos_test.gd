@@ -51,6 +51,7 @@ func _piso_en(almacen: Node3D, punto: Vector3) -> float:
 	var consulta := PhysicsRayQueryParameters3D.create(
 		punto + Vector3.UP * 3.0, punto + Vector3.DOWN * 3.0
 	)
+	consulta.exclude = [almacen.get("_jugador").get_rid()]
 	var golpe := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
 	var donde: Vector3 = golpe.get("position", punto)
 	return donde.y
@@ -179,7 +180,7 @@ func test_la_mira_sobre_lo_que_no_admite_otro_encima_no_apoya() -> void:  # AC-P
 	# La mira toca la tapa de la unidad blanda, y esa superficie no admite lo soltado.
 	var ojo: Transform3D = almacen.get("_jugador").mira()
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		ojo.origin, ReglasDelJugador.fin_de_la_mira(ojo.origin, -ojo.basis.z)
 	)
 	var golpe := blanda.get_world_3d().direct_space_state.intersect_ray(consulta)
 	assert_object(golpe["collider"]).is_same(blanda)
