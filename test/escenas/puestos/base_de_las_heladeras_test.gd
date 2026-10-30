@@ -35,6 +35,9 @@ const TOLERANCIA := 0.01
 ## Cuánto queda por debajo de la hoja lo que se apoya en su borde, en metros.
 const DEBAJO_DE_LA_HOJA := 0.002
 
+## Cuánto se sube la unidad sobre el borde de abajo de la hoja al soltarla adentro, en metros.
+const SOBRE_LA_BASE := 0.01
+
 const CAPAS_TODAS := 0xFFFFFFFF
 
 
@@ -278,6 +281,42 @@ func test_una_caja_empujada_contra_la_base_no_entra_con_la_puerta_abierta() -> v
 			)
 			. is_less(_hundimiento_tolerado())
 		)
+
+
+## Una unidad soltada adentro, por debajo del estante más bajo, baja hasta la losa del fondo: la
+## base no es un piso invisible sobre el que se apoye.
+func test_una_unidad_soltada_en_el_fondo_de_la_heladera_baja_hasta_la_losa() -> void:
+	var almacen := await _almacen()
+	for numero in MUEBLES.size():
+		var frente := _frente_de(almacen, numero)
+		var centro: Vector3 = frente["centro"]
+		var base: float = frente["base_de_la_hoja"]
+		var unidad: RigidBody3D = OBJETO_SUELTO.instantiate()
+		almacen.add_child(unidad)
+		unidad.global_basis = Basis.IDENTITY
+		unidad.freeze = true
+		var limites := _limites_del_volumen(unidad)
+		unidad.global_position += Vector3(
+			centro.x - limites.get_center().x,
+			base + SOBRE_LA_BASE - limites.position.y,
+			centro.z - limites.get_center().z
+		)
+		await get_tree().physics_frame
+		unidad.freeze = false
+		for cuadro in CUADROS_DEL_EMPUJE:
+			await get_tree().physics_frame
+		var apoyo := _limites_del_volumen(unidad).position.y
+		(
+			assert_float(apoyo)
+			. override_failure_message(
+				(
+					"`%s`, la unidad quedó %.3f m sobre el borde de abajo de la hoja"
+					% [MUEBLES[numero], apoyo - base]
+				)
+			)
+			. is_less(base - TOLERANCIA)
+		)
+		unidad.queue_free()
 
 
 ## Cuánto puede hundirse un cuerpo vivo en lo que toca sin estar adentro: el roce y el margen del
