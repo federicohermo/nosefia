@@ -1,4 +1,4 @@
-## Lo que el jugador suelta apuntando a una heladera no queda escondido abajo del estante más bajo.
+## Lo que el jugador suelta apuntando a una heladera no baja al hueco de su fondo.
 extends GdUnitTestSuite
 
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
@@ -11,7 +11,7 @@ const PRODUCTO_QUE_SE_SUELTA := Producto.Id.MALBARDO
 ## A qué fracción del zócalo, contando desde el piso, se apunta.
 const ALTOS_DEL_ZOCALO: Array[float] = [0.15, 0.5, 0.95]
 
-## Cuántos metros adentro del borde de adelante del estante más bajo se apunta.
+## Cuántos metros adentro del borde de adelante del estante más bajo con colisión se apunta.
 const ADENTRO_DEL_ESTANTE: Array[float] = [0.0, 0.03, 0.08, 0.2]
 
 ## A cuántos metros del frente se para el jugador.
@@ -22,9 +22,11 @@ const PARADOS: Array[float] = [0.6, 1.0]
 const SOBRE_EL_ESTANTE := 0.02
 const CUADROS_DE_REPOSO := 60
 
-## Cuánto puede entrar al volumen lo que queda afuera, y cuánto bajo el estante lo que se apoya
-## en él, en metros.
+## Cuánto puede entrar al volumen lo que queda afuera, en metros.
 const TOLERANCIA := 0.01
+
+## Cuánto sobresale el volumen de una unidad por debajo de lo que la sostiene, en metros.
+const MARGEN_DE_LA_FORMA := 0.03
 
 
 func _almacen() -> Node3D:
@@ -74,7 +76,7 @@ func _frente_de(almacen: Node3D, numero: int) -> Dictionary:
 	return frente
 
 
-## El estante más bajo, en coordenadas del mundo: el primero que queda sobre la hoja.
+## El estante más bajo con colisión, en coordenadas del mundo: el primero que queda sobre la hoja.
 func _estante_mas_bajo(almacen: Node3D, numero: int, frente: Dictionary) -> AABB:
 	var estante := AABB()
 	for forma: CollisionShape3D in _mueble(almacen, numero).get_node("StaticBody3D").get_children():
@@ -201,10 +203,11 @@ func _soltar_apuntando_a(
 	return agarre.manos().sostenido() == null
 
 
-## Lo soltado queda afuera del volumen de la heladera o apoyado en un estante: nunca escondido
-## abajo del más bajo.
-func _comprobar_lo_soltado(almacen: Node3D, numero: int, abierta: bool) -> void:
+## Lo soltado queda afuera del volumen de la heladera o apoyado en su estante de abajo, que es el
+## borde de la hoja: nunca más abajo, en el hueco del fondo. Devuelve cuántas quedaron sueltas.
+func _soltar_y_comprobar(almacen: Node3D, numero: int, abierta: bool) -> int:
 	var frente := _frente_de(almacen, numero)
+	var base: float = frente["base_de_la_hoja"]
 	var estante := _estante_mas_bajo(almacen, numero, frente)
 	var objetos := _que_se_suelta(almacen)
 	if abierta:
@@ -217,33 +220,37 @@ func _comprobar_lo_soltado(almacen: Node3D, numero: int, abierta: bool) -> void:
 					continue
 				soltados += 1
 				var entro := _entro_al_volumen(objeto, frente)
-				var debajo := estante.position.y - _limites_del_volumen(objeto).position.y
+				var debajo := base - _limites_del_volumen(objeto).position.y
 				var donde := (
 					"`%s`, `%s` apuntado a %v desde %.1f m"
 					% [MUEBLES[numero], objeto.name, punto, parado]
 				)
 				(
-					assert_bool(entro < TOLERANCIA or debajo < TOLERANCIA)
+					assert_bool(entro < TOLERANCIA or debajo < MARGEN_DE_LA_FORMA)
 					. override_failure_message(
 						(
-							"%s quedó escondido: entró %.3f m y apoya %.3f m abajo del estante"
+							"%s bajó al hueco: entró %.3f m y apoya %.3f m abajo de la hoja"
 							% [donde, entro, debajo]
 						)
 					)
 					. is_true()
 				)
-	# La premisa: el gesto suelta de verdad, y no sólo devuelve todo a la mano.
-	assert_int(soltados).is_greater(0)
+	return soltados
 
 
 func test_lo_soltado_apuntando_a_la_base_con_la_puerta_cerrada_no_queda_adentro() -> void:
 	var almacen := await _almacen()
+	var soltados := 0
 	for numero in MUEBLES.size():
-		await _comprobar_lo_soltado(almacen, numero, false)
+		soltados += await _soltar_y_comprobar(almacen, numero, false)
+	# La premisa: el gesto suelta de verdad, y no sólo devuelve todo a la mano.
+	assert_int(soltados).is_greater(0)
 
 
-func test_lo_soltado_apuntando_a_la_heladera_abierta_no_queda_abajo_del_estante_mas_bajo() -> void:
+func test_lo_soltado_apuntando_a_la_heladera_abierta_no_baja_del_borde_de_la_hoja() -> void:
 	var almacen := await _almacen()
+	var soltados := 0
 	# La heladera fuera de servicio tiene la puerta trabada: no abre.
 	for numero in 2:
-		await _comprobar_lo_soltado(almacen, numero, true)
+		soltados += await _soltar_y_comprobar(almacen, numero, true)
+	assert_int(soltados).is_greater(0)

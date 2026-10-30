@@ -60,10 +60,13 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
         ]
         partes[nombre] = [esquinas(pos, tam) for pos, tam in cajas]
         partes[nombre].extend(piezas[nombre][3:])
-        # Abajo del estante más bajo no hay nada que ver ni que dejar: lo soltado contra la rejilla
-        # o por el borde de ese estante entraba hasta la losa del fondo y quedaba escondido.
-        estante_bajo = min(p[1] for pieza in piezas[nombre][3:] for p in pieza)
-        partes[nombre].append(esquinas((x, y, z), (ancho, estante_bajo - y, fondo)))
+        # Bajo la hoja el frente no tiene pared: sin este bloque, lo soltado contra la rejilla
+        # entraba hasta la losa del fondo. Llega hasta el borde de abajo de la hoja.
+        hoja = next(p for p in modelo
+                    if p.startswith(nombre + '/puerta_heladera_') and p.count('/') == 1)
+        base_de_la_hoja = (y + numeros(modelo[hoja]['global_aabb'])[1]
+                           - numeros(modelo[nombre]['global_aabb'])[1])
+        partes[nombre].append(esquinas((x, y, z), (ancho, base_de_la_hoja - y, fondo)))
     for path, volumenes in partes.items():
         cuerpo = path + '/StaticBody3D'
         if cuerpo not in modelo:
