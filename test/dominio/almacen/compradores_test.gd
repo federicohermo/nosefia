@@ -5,8 +5,8 @@
 ## sembrar una semilla — o sea, que la tarea de atender dejara de ser medible.
 extends GdUnitTestSuite
 
-const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
-const PRIMERA_DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + 5
+# Ninguna noche de la partida usa el padrón: la primera pasada la última lo ejerce.
+const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
 
 
 func test_la_jornada_trae_los_compradores_que_pide_el_balance() -> void:  # AC-CTR-001
@@ -79,16 +79,16 @@ func test_todo_lo_que_se_pide_existe_en_el_catalogo() -> void:
 
 
 func test_las_jornadas_sin_agenda_propia_usan_el_padron() -> void:  # AC-CTR-001
-	for jornada in range(PRIMERA_DEL_PADRON, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
+	for jornada in [POSTERIOR]:
 		var compradores := Compradores.de_la_jornada(jornada)
 		assert_str(compradores[0].nombre()).is_equal("Marta")
 		for comprador in compradores:
 			assert_bool(comprador.tiene_horario()).is_false()
 
 
-func test_el_padron_y_las_jornadas_6_a_8_conservan_el_pedido_de_ruben() -> void:  # AC-CTR-041
+func test_el_padron_y_las_jornadas_sin_agenda_conservan_el_pedido_de_ruben() -> void:  # AC-CTR-041
 	var listas: Array[Array] = [Compradores.padron()]
-	for jornada in range(PRIMERA_DEL_PADRON, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
+	for jornada in [POSTERIOR]:
 		listas.append(Compradores.de_la_jornada(jornada))
 	for lista in listas:
 		var ruben: Comprador = lista[1]

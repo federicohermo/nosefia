@@ -14,7 +14,7 @@ const ALTURA_DEL_JUGADOR := 0.112
 const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
-const DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + 5
+const DEL_PADRON := ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
 
 
 # AC-CLN-060

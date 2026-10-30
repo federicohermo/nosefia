@@ -4,7 +4,8 @@
 [ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura portón.png" id="2"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="3"]
 [ext_resource type="Material" path="res://assets/ui/manada/persiana_gris.tres" id="4"]
-[ext_resource type="AudioStream" path="res://assets/audio/SFX_NOLEV_Puerta_Garage.wav" id="5"]
+[ext_resource type="AudioStream" uid="uid://ct6j2nvtcrpts" path="res://assets/audio/SFX_INTERFAZ_PersianaSube.wav" id="5"]
+[ext_resource type="AudioStream" uid="uid://c0xjh33sth1yx" path="res://assets/audio/SFX_INTERFAZ_PersianaBaja.wav" id="6"]
 
 [node name="PersianaDeLaNoche" type="CanvasLayer" node_paths=PackedStringArray("_persiana", "_marco", "_placa", "_movimiento")]
 layer = 4
@@ -13,9 +14,10 @@ _persiana = NodePath("Persiana")
 _marco = NodePath("Marco")
 _placa = NodePath("Marco/Placa")
 _movimiento = NodePath("Movimiento")
+_audio_al_subir = ExtResource("5")
+_audio_al_bajar = ExtResource("6")
 
 [node name="Movimiento" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5")
 bus = &"Efectos"
 
 [node name="Persiana" type="TextureRect" parent="."]
