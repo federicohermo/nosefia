@@ -19,6 +19,8 @@ SEGUNDOS_ESTIMADOS: Mapping[str, float] = MappingProxyType({
     "test/escenas/reposicion_manual_test.gd": 68.623,
     "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd": 58.918,
     "test/escenas/hoja_que_arrastra_test.gd": 40.436,
+    "test/escenas/freno_de_la_hoja_test.gd": 58.0,
+    "test/escenas/hoja_contra_la_esquina_test.gd": 128.0,
     "test/escenas/giro_parejo_test.gd": 35.820,
     "test/escenas/objetos/mancha_en_el_piso_test.gd": 28.310,
     "test/escenas/objetos/balde_que_se_apoya_test.gd": 27.052,
