@@ -109,6 +109,7 @@ agacharse={
 [layer_names]
 
 3d_physics/layer_4="contorno_de_los_muebles"
+3d_physics/layer_5="hueco_de_la_ventanilla"
 
 [physics]
 

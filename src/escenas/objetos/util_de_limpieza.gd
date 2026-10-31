@@ -41,9 +41,16 @@ var _pintura_de_gotas: StandardMaterial3D
 var _resguardado := false
 
 
-## El jugador lo empuja al caminar contra él.
+## El jugador lo empuja al caminar contra él. El balde pesa lo que una caja.
 func empujar(desplazamiento: Vector3) -> void:
-	_correrse(desplazamiento)
+	_correrse(
+		desplazamiento,
+		(
+			ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
+			if datos.se_apoya_derecho
+			else ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO
+		)
+	)
 
 
 ## Recupera la pose de transporte antes de comprobar si el paso vuelve a estar libre.
@@ -97,6 +104,10 @@ func cabe_delante_de_la_camara(camara: Camera3D) -> bool:
 
 func _ready() -> void:
 	super()
+	if datos.se_apoya_derecho:
+		# Suelto no se vuelca: tumbado, el agua no se ve y la mopa no se moja en él.
+		axis_lock_angular_x = true
+		axis_lock_angular_z = true
 	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
 		sonoridad_vigente = EntradaSonora.sonoridad_del_balde(false)
 	malla.mesh = malla_del_modelo(nodo_del_modelo)

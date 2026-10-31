@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -460,9 +460,10 @@ mostrarse.
 
 ### BR-PLY-038 — Suspendido, la referencia está vacía
 
-MIENTRAS el control está suspendido —por el examen, una nota pegada, la computadora, la caja
-registradora, la ventanilla o el celular—, la pausa está abierta o la jornada cerró, la
-referencia NO DEBE mostrar ninguna línea. Al reanudar, DEBE volver a armarse con lo que la mira
+MIENTRAS el control está suspendido —por una nota pegada, la computadora, la caja registradora,
+la ventanilla o el celular—, la pausa está abierta o la jornada cerró, la referencia NO DEBE
+mostrar ninguna línea. MIENTRAS dura el examen, la referencia DEBE mostrar sólo la línea de
+volver, con el control de examinar. Al reanudar, DEBE volver a armarse con lo que la mira
 enfoca y lo que se lleva.
 
 ### BR-PLY-039 — El foco pertenece a la silueta de la persona
@@ -535,9 +536,56 @@ jornada NO DEBE saltear la placa del cierre.
 CUANDO el jugador camina contra una caja, un útil de limpieza —jabón, mopa o balde— o una bolsa de
 basura que están sueltos, el sistema DEBE correrlo en el sentido del paso, y sólo con la parte
 del paso que no se pudo dar: el jugador no lo atraviesa ni lo empuja a toda su velocidad. Cada
-uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. Lo corrido NO
-DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar
-agitándose (BR-PLY-013). Lo que se lleva en la mano no se corre.
+uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. El balde se corre
+con la misma parte que la caja, y no con la de los demás útiles. Lo corrido NO DEBE superponerse
+con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar agitándose (BR-PLY-013).
+Lo que se lleva en la mano no se corre.
+
+El balde suelto NO DEBE volcarse: queda derecho al empujarlo, al chocarlo y al soltarlo, y la
+mopa sigue pudiendo mojarse en él.
+
+### BR-PLY-051 — Lo pesado frena la hoja y lo liviano no
+
+Pesado es lo que el jugador empuja: hoy, la caja contenedora. Liviano es lo demás que se agarra:
+un producto, una bolsa, el balde o la mopa. La clase no depende del tamaño ni de si el objeto
+duerme o está despierto.
+
+MIENTRAS la hoja de una puerta gira y lo pesado está en su recorrido, el sistema DEBE girarla
+más lenta desde el contacto, sin detenerla, si ese objeto puede correrse; la hoja DEBE llegar a
+su tope con el objeto fuera de ella. Puede correrse si tiene lugar para lo que la hoja avanza en
+un cuadro ya frenada, no en uno a la velocidad de siempre. SI no puede correrse, ENTONCES el
+sistema DEBE detener la hoja donde toca, a cualquier ángulo. Lo pesado que se corre recorre lo
+que avanza la hoja donde lo toca, y no sólo lo que recorre su centro. La hoja NO DEBE superponerse
+con lo pesado en ningún cuadro. Lo liviano NO DEBE frenar la hoja: se arrastra según BR-PLY-017.
+Si hay varios obstáculos, manda el más pesado y los frenos no se acumulan.
+
+**La hoja frena y no hace más.** Detenida contra algo pesado e inmóvil, la hoja NO DEBE
+atravesarlo ni retroceder, y la red de seguridad de BR-PLY-016 NO DEBE rescatar lo que la detiene:
+el paso puede quedar bloqueado. CUANDO se retira lo que detenía la hoja, ella DEBE reanudar y
+llegar a su tope sin un segundo gesto.
+
+Todo rige igual al abrir y al cerrar: el sentido del giro cambia de qué lado se mide, no el freno.
+Frenar y reanudar NO DEBEN sumar un sonido ni un aviso a los de abrir, cerrar y trabada, y la hoja
+quieta DEBE avisarlo una vez, no por cada cuadro detenida. El freno NO DEBE cambiar el conteo de
+las bolsas ni lo que cuenta el contenedor.
+
+### BR-PLY-052 — Una unidad suelta en el piso se patea al caminar contra ella
+
+CUANDO el jugador camina y toca una unidad de producto suelta en el piso, el sistema DEBE correrla
+sobre el piso hacia el costado del camino del jugador, y no hacia el frente de la cámara. El
+contacto NO DEBE cambiar la velocidad del jugador, y la unidad DEBE quedar detrás de él: no se la
+empuja por delante. Cuánto se corre sale del dominio como una fracción de la velocidad del
+jugador, mayor que cero y menor que uno, y es menos que el alcance de la mira (BR-PLY-004)
+(OQ-PLY-006). MIENTRAS el jugador está quieto, la unidad NO DEBE correrse.
+
+La unidad pateada NO DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015). NO
+DEBE subirse a un estante ni entrar en un mueble: SI lo toca, ENTONCES DEBE frenarse y quedar en
+el piso. SI está acorralada contra una pared, ENTONCES el jugador la atraviesa y la unidad NO DEBE
+moverse. Llevar una caja en la mano NO DEBE cambiar nada de esto.
+
+Sólo se patea la unidad de producto: la caja, la bolsa y los útiles conservan BR-PLY-050. Una
+unidad pateada NO cuenta como repuesta: reponer se cumple sólo con el gesto de colocarla en el
+estante ([`store-stock`](../store-stock/store-stock.md)).
 
 ## Criterios de aceptación
 
@@ -1177,10 +1225,13 @@ omite su línea y conserva el orden de las demás.
 
 ### AC-PLY-089 — Suspendido, vacía *(verifica BR-PLY-038)*
 
-DADO un levantable en la mano y la mira sobre un lavatorio CUANDO se abre, por turno, el examen,
-una nota pegada, la computadora, la caja registradora, la ventanilla, el celular o la pausa
-ENTONCES la referencia no tiene ninguna línea; CUANDO se cierra ENTONCES vuelve a tener las
-líneas de esa mano y esa mira. CUANDO cierra la jornada ENTONCES queda vacía.
+DADO un levantable en la mano y la mira sobre un lavatorio CUANDO se abre, por turno, una nota
+pegada, la computadora, la caja registradora, la ventanilla, el celular o la pausa ENTONCES la
+referencia no tiene ninguna línea; CUANDO se cierra ENTONCES vuelve a tener las líneas de esa
+mano y esa mira. CUANDO cierra la jornada ENTONCES queda vacía. DADO el mismo levantable CUANDO se
+abre el examen ENTONCES la referencia tiene una sola línea, volver, con el control de examinar;
+CUANDO se abre la pausa sobre el examen ENTONCES queda vacía; CUANDO termina el examen ENTONCES
+vuelve a tener las líneas de esa mano y esa mira.
 
 ### AC-PLY-090 — El foco y la mano en el mismo cuadro *(verifica BR-PLY-035)*
 
@@ -1235,7 +1286,7 @@ DADO una unidad sostenida y computadora, caja o nota abiertas CUANDO se cierran 
 o nota con primario, o caja con primario fuera de sus márgenes ENTONCES se cierra la interfaz,
 se conserva la unidad y hay cero usos, agarres o soltados en el mundo por ese clic.
 DADO examen, celular, pausa o cierre CUANDO se pulsan ambos gestos ENTONCES no hay acción del
-mundo y la referencia sigue vacía.
+mundo; la referencia sigue vacía, salvo en el examen, que conserva la línea de volver.
 
 ### AC-PLY-099 — La caja descansa sobre el borde gris *(verifica BR-PLY-040, BR-PLY-015, BR-PLY-018)*
 
@@ -1293,6 +1344,62 @@ el giro y la apertura no se puede caminar, controlar la mirada, examinar, agarra
 usar; la referencia permanece vacía y se conserva el objeto. CUANDO se
 hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
 abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los gestos no lo repiten.
+
+### AC-PLY-140 — Sin obstáculo, la hoja gira a la velocidad vigente *(verifica BR-PLY-051)*
+
+DADO una puerta sin nada en el recorrido CUANDO se abre y después se cierra ENTONCES la hoja
+llega a cada tope a la velocidad de siempre, sin frenar ni detenerse antes.
+
+### AC-PLY-141 — Una unidad de producto no frena la hoja *(verifica BR-PLY-051, BR-PLY-017)*
+
+DADO una unidad de producto en el recorrido de la hoja CUANDO se abre y se cierra la puerta
+ENTONCES la hoja gira a la velocidad de siempre, llega a cada tope y la unidad queda fuera de
+ella.
+
+### AC-PLY-142 — Una caja que se puede correr frena la hoja y se corre *(verifica BR-PLY-051)*
+
+DADO una caja contenedora apoyada en el recorrido, con espacio para correrse, CUANDO se abre la
+puerta ENTONCES la hoja gira más lenta que la de siempre desde el contacto, llega al tope y la
+caja termina corrida, fuera de la hoja. CUANDO se cierra la hoja también gira más lenta y la caja
+se corre; si queda apretada contra la pared, la hoja se detiene donde la toca. En ningún caso la
+caja queda adentro de la hoja. Una caja despierta frena igual que una dormida. DADO una caja con
+lugar para el paso ya frenado y no para el entero ENTONCES la hoja no se detiene: la caja se
+corre.
+
+### AC-PLY-143 — Una caja inmóvil detiene la hoja donde la toca *(verifica BR-PLY-051, BR-PLY-016)*
+
+DADO una caja que no puede correrse CUANDO la hoja la toca, cerca de la bisagra o con el giro ya
+avanzado, ENTONCES se detiene antes de tocarla: en ningún cuadro la atraviesa ni se superpone con
+ella, la caja no se mueve y la red de seguridad no interviene. Al abrir y al cerrar.
+
+### AC-PLY-144 — Al retirar la caja, la hoja reanuda *(verifica BR-PLY-051)*
+
+DADO una hoja detenida por una caja inmóvil CUANDO se retira la caja ENTONCES la hoja reanuda y
+llega a su tope sin un segundo gesto, y avisa que quedó quieta una vez al detenerse y otra al
+llegar. Al abrir y al cerrar.
+
+### AC-PLY-145 — El jugador en el recorrido no queda adentro de la hoja *(verifica BR-PLY-051, BR-PLY-017)*
+
+DADO el jugador parado en el recorrido de la hoja CUANDO la puerta se abre ENTONCES, al quedar
+quieta, la cápsula no está adentro de la hoja y la hoja llegó a su tope.
+
+### AC-PLY-146 — Un objeto despierto se arrastra como uno dormido *(verifica BR-PLY-017)*
+
+DADO una unidad de producto despierta en el recorrido de la hoja CUANDO se abre la puerta ENTONCES
+se corre en el sentido del giro, igual que una dormida, y al quedar quieta la hoja no tiene nada
+adentro.
+
+### AC-PLY-148 — La hoja detenida queda en su ángulo *(verifica BR-PLY-051)*
+
+DADO una hoja contra algo pesado que no puede correrse CUANDO se detiene ENTONCES queda en el
+ángulo en que está, sea cual sea, sin avanzar ni retroceder. DADO un factor de velocidad fuera de
+(0, 1] ENTONCES la hoja gira como con factor 1.
+
+### AC-PLY-149 — La hoja no se superpone con una caja que arrastra *(verifica BR-PLY-051)*
+
+DADO una caja grande en el recorrido de la hoja, contra una pared de frente o de costado, o en un
+rincón, y tocada cerca de la bisagra CUANDO se abre y CUANDO se cierra la puerta ENTONCES en
+ningún cuadro la caja está adentro de la hoja. Rige con la caja dormida y despierta.
 
 ### AC-PLY-110 — Levantar lo de abajo hace caer lo de arriba *(verifica BR-PLY-018)*
 
@@ -1399,6 +1506,46 @@ parte del paso que declara el dominio para la caja, y no con la de los útiles n
 DADO un útil de limpieza o una bolsa de basura que no están sueltos, sino sostenidos ENTONCES
 recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 
+### AC-PLY-155 — Patear una unidad no frena al jugador y la deja detrás *(verifica BR-PLY-052)*
+
+DADO una unidad suelta en el piso, en el camino del jugador que camina hacia adelante CUANDO la
+toca ENTONCES la velocidad del jugador es la misma antes y después del contacto, y la unidad se
+corre sobre el piso hacia el costado del camino, menos que el alcance de la mira, y queda detrás
+del jugador. DADO el jugador quieto sobre la unidad ENTONCES la unidad no se mueve.
+
+### AC-PLY-156 — Una unidad acorralada contra la pared no se mueve *(verifica BR-PLY-052, BR-PLY-015)*
+
+DADO una unidad suelta entre el camino del jugador y una pared, pegada a ella CUANDO el jugador
+camina junto a la unidad ENTONCES la atraviesa, y la unidad conserva su posición y no se superpone
+con la pared.
+
+### AC-PLY-157 — Con una caja en la mano también se patea *(verifica BR-PLY-052)*
+
+DADO el jugador con una caja en la mano y una unidad suelta en su camino CUANDO la toca ENTONCES
+pasa lo mismo que en AC-PLY-155.
+
+### AC-PLY-158 — Lo pateado no entra en un mueble *(verifica BR-PLY-052, BR-PLY-015)*
+
+DADO una unidad suelta en el piso, cerca del pie de una góndola, de la heladera o de otro mueble
+CUANDO el jugador la patea hacia él ENTONCES se frena al tocarlo y queda en el piso: no sube a un
+estante ni se superpone con el mueble.
+
+### AC-PLY-159 — Patear cuesta menos que empujar una caja *(verifica BR-PLY-052, BR-PLY-050)*
+
+DADO dos jugadores que caminan el mismo tiempo, uno contra una caja suelta y otro contra una
+unidad suelta ENTONCES el que empuja la caja recorre menos que el que patea la unidad.
+
+### AC-PLY-160 — El balde se empuja con la parte de la caja *(verifica BR-PLY-050)*
+
+DADO el balde suelto en el piso CUANDO el jugador camina contra él ENTONCES se corre con la parte
+del paso que declara el dominio para la caja, y no con la de los demás útiles.
+
+### AC-PLY-161 — El balde suelto no se vuelca *(verifica BR-PLY-050)*
+
+DADO el balde suelto en el piso CUANDO el jugador camina contra él hasta llevarlo contra una pared,
+y CUANDO algo lo golpea fuera de su eje ENTONCES su eje queda a menos de 1 grado de la vertical, y
+la mopa se puede mojar en él.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -1421,7 +1568,8 @@ recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 - **Salida:** la velocidad, los dos ángulos de la vista, su altura, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
-  referencia de controles.
+  referencia de controles, y el impulso que recibe cada unidad de producto que el jugador toca
+  en el piso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
   declarado no tiene efecto; con algo que no es una unidad en la mano, ningún casillero vacío se
   enfoca; un gesto sin control con nombre no da línea en la referencia.
@@ -1473,3 +1621,16 @@ recibir el paso del jugador no les cambia ni la posición ni la velocidad.
   - Bloquea: introducir un umbral general de estabilidad no decidido; si corregir el caso de
     góndola requiere ese umbral, bloquea su implementación hasta resolverlo. No cambia los
     resultados concretos de BR-PLY-040 ni los apoyos válidos existentes.
+
+- **OQ-PLY-005 — ¿Cuánto frena una caja que se puede correr?**
+  - Por qué sigue abierta: el diseño pide que frene la hoja y no fija cuánto. Cualquier número
+    es balance y nadie lo decidió.
+  - Decide: el dueño del repo, jugando.
+  - Bloquea: nada. Mientras se decide rige un factor provisional entre 0 y 1, exclusivos.
+
+- **OQ-PLY-006 — ¿Cuánto se corre una unidad pateada?**
+  - Por qué sigue abierta: el diseño pide que se corra «un poco» y no fija la fracción de la
+    velocidad del jugador. Hoy es un valor provisional del dominio.
+  - Decide: el dueño del repo, jugando.
+  - Bloquea: nada; mientras se decide, la unidad se corre menos que el alcance de la mira
+    (BR-PLY-052).

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433, #444 y #694; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564); agendas de la noche del corte de luz y de la última noche de «Atención al cliente» del 30 de octubre de 2026, con las decisiones de Mía y de Durextra (#694)
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433, #444 y #694; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564); agendas de la noche del corte de luz y de la última noche de «Atención al cliente» del 30 de octubre de 2026, con las decisiones de Mía y de Durextra (#694); ficha «Llamados de atención extra», llamado 3, y GJ-70 sobre soltar un producto en el hueco con un comprador (#521)
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -555,7 +555,9 @@ ya recibió lo que se le ofrece, el sistema DEBE mostrar su texto en la línea d
 diseño de los diálogos de compradores y los nombres de los productos resaltados como en
 BR-CTR-039. DEBE verse como un pensamiento, con la duración y el desvanecido de
 [`subtitles`](../subtitles/subtitles.md), y reemplazar al subtítulo que se vea; un pensamiento
-posterior DEBE reemplazarlo a él (BR-SUB-001). Esos textos NO DEBEN retener el clic siguiente:
+posterior DEBE reemplazarlo a él (BR-SUB-001). Esos textos tienen lugar: la figura del comprador
+en la ventanilla, y se acortan al alejarse el jugador según BR-SUB-015. La inicial y la
+despedida NO DEBEN acortarse: siguen abriendo la ventanilla. Esos textos NO DEBEN retener el clic siguiente:
 cada pulsación DEBE producir una sola interacción nueva, con el objeto sostenido o con la mano
 vacía, incluso sobre un objeto que acaba de rechazarse.
 
@@ -599,6 +601,30 @@ exactamente esos dos; con tres, suma un tipo más de su grupo (BR-CTR-047), dist
 Pedir dos o tres tiene la misma probabilidad. Durextra NO DEBE salir sin Duronga, ni en el pedido
 de otro comprador, ni en otra noche. Un pedido que las cajas cambiadas no permiten reponer vale
 igual, como un producto sin unidades vendibles en BR-CTR-047.
+
+### BR-CTR-053 — Con un comprador, soltar un producto en el hueco es entregárselo
+
+MIENTRAS hay un comprador en la ventanilla, soltar un producto en el hueco DEBE tratarse
+como el intento de entregárselo: el sistema DEBE procesar el gesto igual que el clic sobre el
+comprador (BR-CTR-035), con la misma respuesta, y el producto NO DEBE salir al exterior ni
+producir el pensamiento de haberlo dejado afuera. SI el comprador lo acepta, ENTONCES DEBE
+quedar recibido por el comprador igual que con el clic (BR-CTR-029) y NO DEBE contar como objeto
+afuera al cierre. SI no lo acepta, ENTONCES el producto DEBE seguir en la mano del jugador, sin
+alterar entregas ni ventas. La presencia sale de si hay un comprador en la ventanilla (BR-CTR-027),
+con el panel abierto o cerrado.
+
+Aunque la mira no esté sobre la figura del comprador, un producto soltado que quedaría del otro lado
+de la abertura NO DEBE salir: DEBE volver a la mano, y el gesto DEBE contar como ese mismo intento.
+
+Una caja de productos tampoco DEBE salir mientras hay un comprador en la ventanilla, y soltarla no
+cuenta como intento de entrega: DEBE quedar adentro.
+
+### BR-CTR-054 — Sin comprador, el hueco sigue siendo la salida
+
+SI no hay un comprador en la ventanilla, ENTONCES soltar un producto en el hueco NO DEBE contar
+como entrega: DEBE salir al exterior y conservar sus consecuencias vigentes, según
+[`store-cleanup`](../store-cleanup/store-cleanup.md). Los objetos que no son productos —bolsa,
+ticket, pista— NO DEBEN cambiar su comportamiento al soltarse en el hueco, con o sin comprador.
 
 ## Criterios de aceptación
 
@@ -1267,6 +1293,45 @@ cierre.
 DADO el primer comprador con todos los productos y el ticket entregados, antes de terminar su
 despedida, CUANDO llega el límite de su horario ENTONCES no vence: sigue vendido, sus productos no
 vuelven al piso y atención y registrar lo cuentan como cerrado.
+
+### AC-CTR-147 — Con comprador, el producto soltado en el hueco se entrega *(verifica BR-CTR-053)*
+
+DADO un comprador en la ventanilla que pide un producto y un jugador que lo sostiene, ya terminada
+la conversación inicial, CUANDO lo suelta en el hueco ENTONCES el comprador lo recibe como con el
+clic: queda registrado como recibido por el comprador, la mano queda vacía, el producto no cae
+afuera y no hay pensamiento de haberlo tirado. CUANDO la compra se completa ENTONCES se vende una
+vez y al cierre no hay objeto afuera por ese producto. Con el panel cerrado vale lo mismo.
+
+### AC-CTR-148 — Con comprador, el producto que no acepta sigue en la mano *(verifica BR-CTR-053)*
+
+DADO un comprador que no pidió el producto sostenido, o que ya lo recibió entero, CUANDO el
+jugador lo suelta en el hueco ENTONCES responde igual que ante el clic (rechazo o agradecimiento),
+el producto sigue en la mano, no sale al exterior y las entregas y ventas quedan como estaban. DADO
+la conversación inicial sin empezar CUANDO el jugador suelta un producto en el hueco ENTONCES se
+inicia la conversación y el producto sigue en la mano, sin recibirse ni rechazarse.
+
+### AC-CTR-149 — Sin comprador, soltar en el hueco sale al exterior *(verifica BR-CTR-054)*
+
+DADO que no hay comprador en la ventanilla —no llegó, se fue o está despachado— CUANDO el jugador
+suelta un producto en el hueco ENTONCES sale al exterior como hasta ahora, con su pensamiento al
+quedar afuera, y si sigue ahí al cierre cuenta como objeto afuera.
+
+### AC-CTR-150 — Lo que no es un producto no cambia en el hueco *(verifica BR-CTR-054)*
+
+DADO una bolsa de basura, un ticket o una pista en la mano, con o sin comprador en la ventanilla,
+CUANDO se suelta en el hueco ENTONCES sigue el comportamiento que ya tenía: sale al exterior
+sin entregarse. El ticket sólo se entrega con el clic sobre el comprador (BR-CTR-029).
+
+### AC-CTR-151 — Con comprador, ningún producto sale por la abertura *(verifica BR-CTR-053, BR-CTR-054)*
+
+DADO un comprador en la ventanilla —también con la conversación inicial sin empezar y mientras
+todavía entra— y un jugador con un producto en la mano, CUANDO suelta con el clic apuntando a la
+abertura donde la figura no está ENTONCES el producto no sale al exterior, sigue en la mano y se
+inicia la conversación. CUANDO un producto cae adentro, desde cualquier punto y a cualquier
+distancia, y rueda o rebota hacia la abertura ENTONCES no sale al exterior: no llega a quedar sobre
+el marco ni del otro lado. CUANDO suelta una caja de productos apuntando a la abertura ENTONCES la
+caja termina adentro. SIN comprador, el mismo clic lo saca al exterior, lo que rueda sale y la caja
+también.
 
 ### AC-CTR-133 — Sólo el nombre propio va en amarillo *(verifica BR-CTR-039)*
 

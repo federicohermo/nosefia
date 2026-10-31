@@ -171,6 +171,42 @@ func test_alejarse_lo_desvanece_antes_y_volver_no_lo_recupera() -> void:  # AC-S
 	assert_str(otra.texto()).is_empty()
 
 
+func test_el_texto_del_comprador_aguanta_mas_lejos_que_un_pensamiento() -> void:  # AC-SUB-026
+	var margen := Subtitulo.DISTANCIA_DEL_COMPRADOR_PARA_IRSE
+	assert_float(margen).is_greater(Subtitulo.DISTANCIA_PARA_IRSE)
+	var cerca := Subtitulo.new()
+	cerca.decir_comprador(DE_20)
+	cerca.alejarse(margen - 0.1)
+	cerca.avanzar(Subtitulo.duracion(DE_20) - 0.01)
+	assert_float(cerca.opacidad()).is_equal(1.0)
+	var lejos := Subtitulo.new()
+	lejos.decir_comprador(DE_20)
+	lejos.alejarse(margen + 0.1)
+	lejos.avanzar(Subtitulo.DESVANECIDO / 2.0)
+	assert_float(lejos.opacidad()).is_between(0.01, 0.99)
+	var pensamiento := Subtitulo.new()
+	pensamiento.pensar(DE_20)
+	pensamiento.alejarse(Subtitulo.DISTANCIA_PARA_IRSE + 0.1)
+	pensamiento.avanzar(Subtitulo.DESVANECIDO / 2.0)
+	assert_float(pensamiento.opacidad()).is_between(0.01, 0.99)
+
+
+func test_un_texto_reemplazado_por_el_otro_no_arrastra_su_margen() -> void:  # AC-SUB-026
+	var pasado := Subtitulo.DISTANCIA_PARA_IRSE + 0.1
+	var del_comprador_al_pensamiento := Subtitulo.new()
+	del_comprador_al_pensamiento.decir_comprador(DE_20)
+	del_comprador_al_pensamiento.pensar(OTRO)
+	del_comprador_al_pensamiento.alejarse(pasado)
+	del_comprador_al_pensamiento.avanzar(Subtitulo.DESVANECIDO / 2.0)
+	assert_float(del_comprador_al_pensamiento.opacidad()).is_between(0.01, 0.99)
+	var del_pensamiento_al_comprador := Subtitulo.new()
+	del_pensamiento_al_comprador.pensar(DE_20)
+	del_pensamiento_al_comprador.decir_comprador(OTRO)
+	del_pensamiento_al_comprador.alejarse(pasado)
+	del_pensamiento_al_comprador.avanzar(Subtitulo.DESVANECIDO / 2.0)
+	assert_float(del_pensamiento_al_comprador.opacidad()).is_equal(1.0)
+
+
 func test_lo_fijo_no_se_acorta_por_alejarse() -> void:  # AC-SUB-020
 	var linea := Subtitulo.new()
 	linea.fijar(DE_20)

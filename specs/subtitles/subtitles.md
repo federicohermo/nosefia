@@ -184,15 +184,20 @@ fijo durante el examen (BR-SUB-005).
 
 ### BR-SUB-015 — Alejarse acorta el pensamiento
 
-Sólo un pensamiento asociado a un objeto DEBE tener un lugar: el del objeto examinado con las
-manos vacías. MIENTRAS el jugador sigue a menos de 0,75 metros
-más lejos de ese lugar que cuando apareció, el pensamiento DEBE durar lo de BR-SUB-004. Un
-aviso de una acción o del estado del jugador NO DEBE tener anclaje espacial, y DEBE durar siempre
-lo de BR-SUB-004 aunque el jugador camine. Esto incluye los gestos de BR-SUB-013 y la mopa que se
-seca de BR-SUB-014. CUANDO el pensamiento tiene un objeto y el jugador
+Sólo un pensamiento asociado a un objeto y el texto de una entrega del comprador (BR-CTR-050)
+DEBEN tener un lugar: el del objeto examinado con las manos vacías, o el de la figura del
+comprador en la ventanilla en el momento de decir el texto. MIENTRAS el jugador sigue a menos de
+0,75 metros más lejos de ese lugar que cuando apareció el pensamiento, o a menos de 3 metros si
+el texto es de una entrega del comprador (margen decidido por el usuario en el QA del
+30/10/2026), éste DEBE durar lo de BR-SUB-004. Un aviso de una acción o del estado del jugador NO
+DEBE tener anclaje espacial, y DEBE durar siempre lo de BR-SUB-004 aunque el jugador camine. Esto incluye los gestos de
+BR-SUB-013 y la mopa que se seca de BR-SUB-014. CUANDO el texto tiene un lugar y el jugador
 se aleja más que eso, DEBE empezar a desvanecerse en ese momento, en los mismos 0,5 segundos,
 salvo que ya se estuviera desvanecido. Volver a acercarse NO DEBE devolverle la opacidad. El
-texto fijo del examen NO DEBE acortarse.
+texto fijo del examen NO DEBE acortarse. Un texto nuevo DEBE medir desde su propio lugar y desde
+la distancia a la que el jugador estaba al decirlo, también si ya estaba lejos. El lugar de una
+entrega NO DEBE moverse si el comprador se va con el texto visible, y un aviso o un pensamiento
+que la reemplaza NO DEBE heredar su lugar ni su margen, y al revés.
 
 ### BR-SUB-013 — Los gestos que salen mal piensan
 
@@ -399,6 +404,19 @@ jugador se aleja 10 metros ENTONCES sigue entero.
 
 DADO el pensamiento `MOPA_YA_SECA` o `MALA_IDEA` CUANDO el jugador
 camina 5 metros y transcurre 1 segundo desde que apareció ENTONCES sigue con opacidad 1.
+
+### AC-SUB-026 — Irse de la ventanilla acorta la entrega *(verifica BR-SUB-015)*
+
+DADO el texto de una entrega del comprador y el jugador a 1 metro de su figura CUANDO el jugador se
+aleja 2,9 metros y avanzan 2,29 segundos ENTONCES se ve con opacidad 1. CUANDO se aleja 3,1
+metros ENTONCES a los 0,25 segundos la opacidad está estrictamente entre 0 y 1, y a los 0,5 la
+línea está vacía. CUANDO vuelve a acercarse durante el desvanecido ENTONCES la opacidad no sube.
+DADO el jugador a 6 metros de la figura al decir la entrega CUANDO se aleja 2,9 metros ENTONCES
+sigue entero. DADO ese texto visible CUANDO el comprador se retira y el jugador se aleja 3,1
+metros ENTONCES empieza a desvanecerse. DADO ese texto visible CUANDO lo reemplaza un pensamiento
+sobre un objeto y el jugador se aleja 0,8 metros ENTONCES el pensamiento empieza a desvanecerse; y
+a la inversa, un pensamiento reemplazado por una entrega sigue entero a 0,8 metros. DADO ese texto
+visible CUANDO llega un pensamiento de la mopa ya seca y el jugador camina 5 metros ENTONCES el pensamiento sigue con opacidad 1.
 
 ### AC-SUB-016 — Lo que se tira *(verifica BR-SUB-013)*
 

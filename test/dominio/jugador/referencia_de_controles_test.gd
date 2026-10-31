@@ -253,3 +253,12 @@ func test_hablar_y_entregar_solo_declaran_el_contexto_habilitado() -> void:  # A
 			assert_int(contexto.primario).is_equal(L.ENTREGAR if atendido and mano else L.HABLAR)
 			assert_bool(_lineas(mano, M.FIJO, contexto).has(L.DEJAR)).is_false()
 	assert_int(R.contexto_de_atencion(false, true, true).ruta_primaria).is_equal(R.Ruta.GENERICA)
+
+
+func test_examinando_ofrece_volver_por_la_accion_de_examinar() -> void:  # AC-PLY-089
+	for mano: bool in [false, true]:
+		var lineas := R.lineas(mano, M.FIJO, R.Contexto.new(), true, true)
+		assert_array(lineas).contains_exactly([L.VOLVER])
+		assert_str(R.accion(L.VOLVER)).is_equal(ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_array(R.lineas(true, M.FIJO, R.Contexto.new(), true)).is_empty()
+	assert_array(R.lineas(true, M.FIJO, R.Contexto.new(), false, false)).is_not_empty()

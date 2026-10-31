@@ -140,3 +140,52 @@ func test_empujar_una_puerta_trabada_no_la_abre() -> void:
 	var puerta := Puerta.new(true)
 	assert_bool(puerta.empujar()).is_false()
 	assert_bool(puerta.abierta()).is_false()
+
+
+func test_un_factor_menor_a_uno_hace_el_giro_mas_lento() -> void:  # AC-PLY-142
+	var libre := Puerta.new()
+	var frenada := Puerta.new()
+	libre.alternar()
+	frenada.alternar()
+	assert_float(frenada.avanzar(0.1, 0.5)).is_less(libre.avanzar(0.1))
+	assert_float(frenada.avanzar(10.0, 0.5)).is_equal(Puerta.ANGULO_ABIERTA)
+
+
+func test_un_factor_fuera_de_cero_a_uno_gira_como_con_uno() -> void:  # AC-PLY-148
+	for factor: float in [0.0, -1.0, 1.5, NAN]:
+		var puerta := Puerta.new()
+		puerta.alternar()
+		var libre := Puerta.new()
+		libre.alternar()
+		assert_float(puerta.avanzar(0.1, factor)).is_equal(libre.avanzar(0.1))
+
+
+func test_el_tope_detiene_la_hoja_al_abrir_y_al_cerrar() -> void:  # AC-PLY-143 AC-PLY-144
+	var puerta := Puerta.new()
+	puerta.alternar()
+	puerta.avanzar(0.3)
+	var detenida := puerta.angulo()
+	assert_float(puerta.avanzar(0.3, 1.0, detenida)).is_equal(detenida)
+	assert_bool(puerta.quieta()).is_true()
+	assert_float(puerta.avanzar(10.0)).is_equal(Puerta.ANGULO_ABIERTA)
+	puerta.alternar()
+	puerta.avanzar(0.3)
+	detenida = puerta.angulo()
+	assert_float(puerta.avanzar(0.3, 1.0, detenida)).is_equal(detenida)
+	assert_float(puerta.avanzar(10.0)).is_equal(0.0)
+
+
+func test_un_tope_detras_de_la_hoja_no_la_hace_retroceder() -> void:  # AC-PLY-148
+	var puerta := Puerta.new()
+	puerta.alternar()
+	puerta.avanzar(0.3)
+	var antes := puerta.angulo()
+	assert_float(puerta.avanzar(0.1, 1.0, antes - 0.5)).is_equal(antes)
+
+
+func test_el_angulo_siguiente_no_mueve_la_hoja() -> void:  # AC-PLY-140
+	var puerta := Puerta.new()
+	puerta.alternar()
+	var siguiente := puerta.angulo_siguiente(0.1)
+	assert_float(puerta.angulo()).is_zero()
+	assert_float(puerta.avanzar(0.1)).is_equal(siguiente)
