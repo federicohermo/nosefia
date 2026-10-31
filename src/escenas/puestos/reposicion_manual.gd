@@ -1767,9 +1767,7 @@ func _cuerpo_para(id: Producto.Id) -> ObjetoAgarrable:
 	unidad.collision_layer = 1
 	# Choca también con el contorno de los muebles: caída al pie de una góndola, la unidad rodaba
 	# hacia adentro del estante de abajo.
-	unidad.collision_mask = (
-		1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO | ReglasDeLosObjetos.CAPA_DEL_HUECO
-	)
+	unidad.collision_mask = ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO
 	return unidad
 
 
@@ -1882,7 +1880,7 @@ func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
 	# antes de que el servidor sincronice los nuevos cuerpos en el próximo cuadro físico.
 	for cuerpo in preparados:
 		cuerpo.collision_layer = 1
-		cuerpo.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		cuerpo.collision_mask = ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO
 		cuerpo.linear_velocity = Vector3.ZERO
 		cuerpo.angular_velocity = Vector3.ZERO
 		cuerpo.freeze = false
@@ -1899,7 +1897,7 @@ func _lugar_para_abandonada(
 	var espacio := get_world_3d().direct_space_state
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
-	consulta.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+	consulta.collision_mask = ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO
 	consulta.exclude = [cuerpo.get_rid()]
 	consulta.margin = TOLERANCIA_DEL_APOYO / 4.0
 	var pasos := ceili(ReglasDelJugador.ALCANCE_DE_LA_MIRA / paso)

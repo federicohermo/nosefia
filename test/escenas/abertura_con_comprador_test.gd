@@ -4,6 +4,8 @@
 extends GdUnitTestSuite
 
 const OBJETO := "res://src/escenas/objetos/objeto_agarrable.tscn"
+const BOLSA := "res://src/escenas/objetos/bolsa_de_basura.tscn"
+const COLILLA := "res://src/escenas/objetos/colilla.tscn"
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
@@ -290,15 +292,59 @@ func test_sin_comprador_un_producto_empujado_sale_por_la_abertura() -> void:  # 
 	assert_int(_habitacion(almacen, cuerpo)).is_equal(ReglasDelCierre.Habitacion.AFUERA)
 
 
+## El comprador vence con una compra a medias, su producto queda en el piso y llega el siguiente.
+func _abandonada_con_otro_comprador(almacen: Node3D) -> RigidBody3D:
+	var atendida := _llegar(almacen)
+	_por_entregar(almacen, atendida)
+	var pedido: Producto = atendida.comprador().pedido().productos()[0]
+	almacen.get("_reposicion_manual").retirar(pedido.id)
+	var cuerpo: RigidBody3D = (almacen.get("_agarre") as Agarre).cuerpo_sostenido()
+	_puesto(almacen).call("_al_pulsar")
+	assert_bool(cuerpo.visible).is_false()
+	atendida.vencer()
+	(almacen.get("_atenciones") as Ventanilla).comprador_vencido.emit(atendida.comprador())
+	assert_bool(cuerpo.visible).is_true()
+	assert_bool(cuerpo.freeze).is_false()
+	var siguiente: Node3D = _puesto(almacen).get("comprador_visible")
+	siguiente.show()
+	await get_tree().physics_frame
+	assert_bool(siguiente.visible).is_true()
+	return cuerpo
+
+
+func test_con_otro_comprador_el_abandonado_no_atraviesa_la_abertura() -> void:  # AC-CTR-151
+	var almacen := await _abrir()
+	var cuerpo := await _abandonada_con_otro_comprador(almacen)
+	await _empujar_por_la_abertura(_puesto(almacen), cuerpo)
+	await _aquietar(almacen, cuerpo)
+	assert_int(_habitacion(almacen, cuerpo)).is_not_equal(ReglasDelCierre.Habitacion.AFUERA)
+
+
+func test_el_abandonado_que_se_agarra_y_se_suelta_no_atraviesa_la_abertura() -> void:  # AC-CTR-151
+	var almacen := await _abrir()
+	var cuerpo := await _abandonada_con_otro_comprador(almacen)
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(cuerpo.get("datos"), cuerpo)).is_true()
+	agarre.soltar(false)
+	await _empujar_por_la_abertura(_puesto(almacen), cuerpo)
+	await _aquietar(almacen, cuerpo)
+	assert_int(_habitacion(almacen, cuerpo)).is_not_equal(ReglasDelCierre.Habitacion.AFUERA)
+
+
 func test_con_comprador_lo_que_no_es_producto_sale_por_la_abertura() -> void:  # AC-CTR-150
 	var almacen := await _abrir()
 	_llegar(almacen)
+	var bolsa: ObjetoAgarrable = load(BOLSA).instantiate()
+	almacen.add_child(bolsa)
 	var ticket: ObjetoAgarrable = load(OBJETO).instantiate()
 	ticket.datos = Ticket.new([])
 	almacen.add_child(ticket)
-	await _empujar_por_la_abertura(_puesto(almacen), ticket)
-	await _aquietar(almacen, ticket)
-	assert_int(_habitacion(almacen, ticket)).is_equal(ReglasDelCierre.Habitacion.AFUERA)
+	var pista: ObjetoAgarrable = load(COLILLA).instantiate()
+	almacen.add_child(pista)
+	for cuerpo: ObjetoAgarrable in [bolsa, ticket, pista]:
+		await _empujar_por_la_abertura(_puesto(almacen), cuerpo)
+		await _aquietar(almacen, cuerpo)
+		assert_int(_habitacion(almacen, cuerpo)).is_equal(ReglasDelCierre.Habitacion.AFUERA)
 
 
 func test_al_irse_el_comprador_el_producto_vuelve_a_salir() -> void:  # AC-CTR-149
