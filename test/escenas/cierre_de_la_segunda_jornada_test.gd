@@ -5,6 +5,8 @@ const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 const NOTAS := Conversacion.Interlocutor.NOTAS
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+## Cuántos cuadros se espera, como mucho, a que termine un calentamiento.
+const CUADROS_DEL_CALENTAMIENTO := 3000
 
 var _ruta_guardado: String
 
@@ -167,6 +169,11 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	# La noche del corte espera a que su oscuridad quede preparada.
+	for _cuadro in CUADROS_DEL_CALENTAMIENTO:
+		if aperturas.size() == 2:
+			break
+		await get_tree().process_frame
 	assert_array(aperturas).is_equal([5, 6])
 	(
 		assert_array(reposicion.find_children("SueltosDe*", "MultiMeshInstance3D", false, false))

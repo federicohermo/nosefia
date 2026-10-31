@@ -485,7 +485,8 @@ static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 		var consulta := PhysicsShapeQueryParameters3D.new()
 		consulta.shape = forma.shape
 		consulta.transform = forma.global_transform
-		consulta.collision_mask = objeto.collision_mask
+		# El hueco de la ventanilla no es un sólido: aparece con el comprador, aunque ya haya algo ahí.
+		consulta.collision_mask = objeto.collision_mask & ~ReglasDeLosObjetos.CAPA_DEL_HUECO
 		consulta.exclude = [objeto.get_rid()]
 		var golpes := espacio.intersect_shape(consulta, 16)
 		for golpe in golpes:
