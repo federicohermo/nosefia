@@ -189,7 +189,7 @@ func _sobre_el_riel(producto: Producto.Id) -> Dictionary:
 	await _mirar_desde_el_piso(almacen, caja, objetivo, Vector3.LEFT * 0.9)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
 	var visible := _impacto_visible(
-		riel, mira.origin, mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		riel, mira.origin, ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z)
 	)
 	(
 		assert_bool(visible.is_empty())
@@ -219,14 +219,16 @@ func _en_el_estante(producto: Producto.Id, sector := Sector.CON_PRODUCTOS) -> Di
 	var almacen := await _abrir()
 	var antes := _estado_del_local(almacen)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[producto]
-	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondolanueva2")
+	# La segunda isla tiene estantes bajos: una caja no entra entre dos, con o sin productos.
+	var isla := "gondolanueva" if sector == Sector.SIN_PRODUCTOS else "gondolanueva2"
+	var gondola: MeshInstance3D = almacen.get_node("Estructura/" + isla)
 	var frente := Vector3.LEFT
 	var objetivo := _metal_visible_del_estante(gondola, frente)
 	assert_vector(objetivo).is_not_equal(Vector3.INF)
 	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
 	var visible := _impacto_visible(
-		gondola, mira.origin, mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		gondola, mira.origin, ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z)
 	)
 	(
 		assert_bool(visible.is_empty())
@@ -262,7 +264,7 @@ func _en_el_estante(producto: Producto.Id, sector := Sector.CON_PRODUCTOS) -> Di
 	var fisico := _rayo(
 		almacen,
 		mira.origin,
-		mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z),
 		[caja.get_rid(), almacen.get("_jugador").get_rid()]
 	)
 	assert_bool(fisico.is_empty()).is_false()
@@ -550,6 +552,8 @@ func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
 			limites.get_center().x + limites.size.x / 4.0, limites.end.y, brazo.get_center().z
 		)
 		soporte = mesa.get_node("StaticBody3D")
+		# Delante del brazo se exhiben el freezer y el exhibidor: se mira desde adentro de la L.
+		desde = Vector3(-0.4, 0.0, 1.2)
 	elif tipo == "pallet":
 		var pallet: MeshInstance3D = almacen.get_node(
 			"Estructura/gondola_deposito03/deposito_pallet_central_derecho_1_1"
@@ -580,7 +584,7 @@ func _apoyo_valido(producto: Producto.Id, tipo: String) -> bool:
 	var premisa := _rayo(
 		almacen,
 		mira.origin,
-		mira.origin - mira.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z),
 		[caja.get_rid(), jugador.get_rid()]
 	)
 	assert_object(premisa.get("collider")).override_failure_message(tipo).is_same(soporte)

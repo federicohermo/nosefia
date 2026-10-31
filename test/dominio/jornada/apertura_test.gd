@@ -232,7 +232,7 @@ func test_la_segunda_jornada_sortea_faltantes() -> void:  # AC-STK-094
 
 
 func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # AC-STK-094
-	var casilleros := _casilleros(3)
+	var casilleros := _casilleros(4)
 	var compradores := Compradores.de_la_jornada(1)
 	var azar := RandomNumberGenerator.new()
 	azar.seed = 19
@@ -240,14 +240,14 @@ func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # A
 	var producto := Catalogo.de(Producto.Id.MAROLINI)
 	(
 		assert_int(
-			primera.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 3)
+			primera.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 4)
 		)
-		. is_equal(3)
+		. is_equal(4)
 	)
 	assert_int(primera.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_zero()
 	var retomada := Apertura.inventario_de_la_jornada(1, compradores, casilleros, casilleros, azar)
 	assert_array(retomada.faltantes()).is_empty()
-	assert_int(retomada.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(3)
+	assert_int(retomada.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(4)
 	assert_bool(Apertura.pide(1, Tarea.Tipo.REPONER)).is_true()
 	var siguientes := Compradores.de_la_jornada(2)
 	azar.seed = 19

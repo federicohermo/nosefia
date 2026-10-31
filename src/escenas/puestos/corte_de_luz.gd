@@ -25,9 +25,14 @@ const HORNEADO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 const GRUPO_DE_LA_EMERGENCIA := &"luz_de_emergencia"
 
 ## Los materiales emisivos del local que se apagan con las luces. Son los que el modelo declara
-## con emisión; el del tubo del tablero queda afuera porque es la emergencia.
+## con emisión; el del tubo del tablero queda afuera porque es la emergencia. Los tubos de las
+## heladeras tienen el suyo, para apagarse sin apagar la emergencia.
 const MATERIALES_EMISIVOS := [
-	&"local_cielorraso", &"bano_difusor", &"cuartito_tubo_difusor", &"deposito_lampara_panel"
+	&"local_cielorraso",
+	&"bano_difusor",
+	&"cuartito_tubo_difusor",
+	&"deposito_lampara_panel",
+	&"heladera_tubo_difusor",
 ]
 
 ## La luz de afuera entra por los vidrios que dan a la calle en la noche sin luz. **Sólo existe en
@@ -171,6 +176,12 @@ func hay_luz() -> bool:
 	return _hay_luz
 
 
+## Pone el local como lo deja el corte, para preparar sus programas antes de que se corte. No es
+## un corte: sigue habiendo luz, y los muebles conservan su horneado, que no cambia el programa.
+func ensayar(a_oscuras: bool) -> void:
+	_poner_el_local(not a_oscuras)
+
+
 func _cambiar(nuevo: AnomaliasDeLaJornada.Corte) -> void:
 	_estado = nuevo
 	_aplicar()
@@ -182,6 +193,11 @@ func _aplicar() -> void:
 		return
 	_hay_luz = hay
 	_horno.light_data = _con_luz if hay else _sin_luz
+	_poner_el_local(hay)
+	luz_cambiada.emit(hay)
+
+
+func _poner_el_local(hay: bool) -> void:
 	_entorno.fog_enabled = _niebla and hay
 	for luz in _luces:
 		luz.visible = hay
@@ -198,4 +214,3 @@ func _aplicar() -> void:
 		luz.spot_range = de_siempre[1]
 		luz.spot_angle = de_siempre[2]
 		luz.shadow_enabled = de_siempre[3]
-	luz_cambiada.emit(hay)

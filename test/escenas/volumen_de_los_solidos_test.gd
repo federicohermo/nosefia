@@ -146,6 +146,11 @@ static func _pieza_con_volumen(
 		var hacia_adentro := (b - a).cross(c - a)
 		if hacia_adentro.is_zero_approx():
 			continue
+		# Una astilla más fina que dos pasos de la sonda no encierra lugar, y su centro cae sobre
+		# el borde del volumen que la contiene.
+		var lado := maxf((b - a).length(), maxf((c - b).length(), (a - c).length()))
+		if hacia_adentro.length() / lado < 2.0 * EPSILON:
+			continue
 		var punto := (a + b + c) / 3.0 + hacia_adentro.normalized() * EPSILON
 		if not _con_volumen(espacio, punto):
 			return false

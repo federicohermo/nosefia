@@ -670,7 +670,8 @@ func _enfocar_abandonada(cuerpo: ObjetoAgarrable) -> bool:
 			await get_tree().physics_frame
 		jugador.call("_leer_la_mira")
 		if jugador.get("_enfocado") == cuerpo:
-			assert_float(camara.global_position.distance_to(cuerpo.global_position)).is_less(
+			var ojo := camara.global_position
+			assert_float(ReglasDelJugador.proximidad(ojo, cuerpo.global_position)).is_less(
 				ReglasDelJugador.ALCANCE_DE_LA_MIRA
 			)
 			return true

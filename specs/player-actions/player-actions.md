@@ -57,10 +57,12 @@ radianes**. Pasarse de ahí da vuelta la cámara, y eso no es un límite de gust
 
 ### BR-PLY-004 — Se enfoca lo que está a mano
 
-El sistema DEBE enfocar lo que está a **2,5 metros o menos** y dentro de su tolerancia angular
+El sistema DEBE enfocar lo que está a mano y dentro de su tolerancia angular
 respecto del centro de la vista: **3 grados o menos** para productos y huecos de reposición,
-**15 grados o menos** para los otros objetos. El desvío se mide respecto de la superficie
-visible. Entre varios candidatos gana el de menor desvío, y con el mismo desvío el más cercano.
+**8 grados o menos** para los otros objetos. A mano es **1,6 metros o menos** desde los ojos,
+para todo: es proximidad sobre el piso y no cuenta la altura. El desvío se mide
+respecto de la superficie visible. Entre varios candidatos gana el de menor desvío, y con el
+mismo desvío el más cercano.
 
 ### BR-PLY-005 — El foco avisa sólo cuando cambió
 
@@ -92,7 +94,8 @@ anuncia un objeto.
 
 ### BR-PLY-010 — Lo que se suelta se puede volver a agarrar
 
-El sistema DEBE soltar los objetos **dentro del alcance de la mira**. Las tres distancias de
+El sistema DEBE soltar los objetos **dentro del alcance de la mira**, y NO DEBE apoyar nada más
+allá de ese alcance. Las tres distancias de
 examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega al alcance.
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
@@ -240,8 +243,8 @@ ningún otro (BR-STK-009). La mira elige entre casilleros como entre cualquier o
 MIENTRAS las manos están vacías, la mira DEBE poder enfocar cada unidad colocada en la fila de
 adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérsela en la mano
 (BR-STK-033). La unidad enfocada DEBE llevar el contorno del foco sobre su propio aspecto, y
-dibujarse una sola vez. La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada
-mientras la mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
+dibujarse una sola vez. La mira NO DEBE enfocar ninguna unidad colocada mientras la mano
+lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
 
 ### BR-PLY-025 — El balde se lleva vertical
 
@@ -603,9 +606,10 @@ DADO un giro hacia abajo enorme ENTONCES el ángulo vertical queda en `-1.4`; ha
 
 ### AC-PLY-004 — Los dos bordes de la mira *(verifica BR-PLY-004)*
 
-DADO un candidato a 2,5 metros ENTONCES se enfoca; a 2,6, no. DADO un objeto que no sea
-un producto ni un hueco de reposición a 15 grados de desvío
-ENTONCES se enfoca; a 16, no.
+DADO un producto u otro objeto a 1,6 metros de los ojos sobre el piso, a cualquier altura, ENTONCES
+se enfoca; a 1,7, no. DADO un objeto que no sea
+un producto ni un hueco de reposición a 8 grados de desvío
+ENTONCES se enfoca; a 9, no.
 
 DADO un producto o un hueco de reposición a 3 grados de desvío ENTONCES se enfoca;
 a 6 grados, no. Esta precisión NO DEBE reducir la tolerancia de los otros objetos.
@@ -872,7 +876,7 @@ clic ENTONCES esa unidad pasa a la mano, su casillero queda vacío y las de al l
 estaban. DADO las manos vacías CUANDO la mira enfoca una unidad colocada ENTONCES esa unidad lleva
 el contorno del foco sobre su propio aspecto, se dibuja una sola vez y ninguna otra cambia. DADO
 cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
-clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se enfoca.
+clic no la agarra.
 
 ### AC-PLY-050 — El balde en la mano permanece vertical *(verifica BR-PLY-025)*
 

@@ -492,9 +492,7 @@ func _borde_del_contenedor(almacen: Node3D, contenedor: StaticBody3D) -> Vector3
 func _golpe_de_la_mira(jugador: Node3D, cuerpo: RigidBody3D) -> Dictionary:
 	var ojo: Transform3D = jugador.mira()
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo.origin,
-		ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		cuerpo.collision_mask
+		ojo.origin, ReglasDelJugador.fin_de_la_mira(ojo.origin, -ojo.basis.z), cuerpo.collision_mask
 	)
 	consulta.exclude = [jugador.get_rid(), cuerpo.get_rid()]
 	return jugador.get_world_3d().direct_space_state.intersect_ray(consulta)

@@ -52,8 +52,8 @@ func _destinos() -> Dictionary:
 			],
 			Vector3.LEFT:
 			[Producto.Id.SALADICK, Producto.Id.PROGRES, Producto.Id.CHISITOS, Producto.Id.LAYSNNT],
-			Vector3.BACK: [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
-			Vector3.FORWARD: [Producto.Id.JORGILLO, Producto.Id.BURBALOO],
+			Vector3.BACK: [Producto.Id.JORGILLO, Producto.Id.BURBALOO],
+			Vector3.FORWARD: [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
 		},
 		"gondolanueva_001":
 		{

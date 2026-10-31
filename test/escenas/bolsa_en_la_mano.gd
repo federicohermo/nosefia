@@ -97,7 +97,10 @@ static func sitios(almacen: Node3D, objetivo: PhysicsBody3D) -> Array[Vector3]:
 			rayo.exclude = [jugador.get_rid()]
 			var golpe := espacio.intersect_ray(rayo)
 			if golpe.get("collider") == objetivo:
-				if ojo.distance_to(golpe.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+				if (
+					ReglasDelJugador.proximidad(ojo, golpe.position)
+					<= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				):
 					salida.append(posicion)
 	return salida
 

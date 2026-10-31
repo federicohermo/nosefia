@@ -51,14 +51,13 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 
 ## La mercadería de una noche en la que sólo importa cuántas unidades faltan, no en qué
 ## casilleros: el sorteo de `vacios_de_la_jornada()` con la reponible de adelante y las fijas como
-## dos tandas. `de_una_fila` dice qué productos no pueden abrir vacía ninguna de las dos.
+## dos tandas.
 static func inventario_de_la_jornada(
 	jornada: int,
 	compradores: Array[Comprador],
 	casilleros_totales: Dictionary[Producto.Id, int],
 	casilleros_reponibles: Dictionary[Producto.Id, int],
-	azar: RandomNumberGenerator,
-	de_una_fila: Dictionary[Producto.Id, bool] = {}
+	azar: RandomNumberGenerator
 ) -> Inventario:
 	var tandas: Dictionary[Producto.Id, Array] = {}
 	for producto in Catalogo.todos():
@@ -67,7 +66,7 @@ static func inventario_de_la_jornada(
 		tandas[producto.id] = [
 			PackedInt32Array(range(reponibles)), PackedInt32Array(range(reponibles, totales))
 		]
-	var vacios := vacios_de_la_jornada(jornada, compradores, tandas, de_una_fila, azar)
+	var vacios := vacios_de_la_jornada(jornada, compradores, tandas, azar)
 	return inventario_con_faltantes(
 		faltantes_de(vacios), casilleros_totales, Catalogo.de_la_jornada(jornada)
 	)
@@ -77,24 +76,23 @@ static func inventario_de_la_jornada(
 ##
 ## Recibe los mismos compradores de Atención y la fuente de azar de esta sesión. `tandas` trae,
 ## de cada producto, los casilleros de la fila de adelante de cada tanda, la reponible primero.
-## `de_una_fila` dice qué productos tienen tandas de una sola fila (BR-STK-025). `posiciones` trae
-## el lugar de cada casillero, tanda por tanda, y sólo decide dónde sigue un faltante que se parte.
+## `posiciones` trae el lugar de cada casillero, tanda por tanda, y sólo decide dónde sigue un
+## faltante que se parte.
 ##
 ## **Los vacíos de un producto van juntos**: un bloque de casilleros seguidos de una tanda al azar
-## entre las que lo reciben entero, y sólo si ninguna lo recibe se parte en tandas vacías enteras
-## y contiguas. Una tanda de un producto de una fila cede un casillero menos: no abre vacía entera.
+## entre las que lo reciben entero, y sólo si ninguna lo recibe pasa a otras tandas. Cada tanda
+## cede un casillero menos: no abre vacía entera.
 static func vacios_de_la_jornada(
 	jornada: int,
 	compradores: Array[Comprador],
 	tandas: Dictionary[Producto.Id, Array],
-	de_una_fila: Dictionary[Producto.Id, bool],
 	azar: RandomNumberGenerator,
 	posiciones: Dictionary[Producto.Id, Array] = {}
 ) -> Dictionary[Producto.Id, Array]:
 	var vacios: Dictionary[Producto.Id, Array] = {}
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
 		return vacios
-	var vaciables := casilleros_vaciables(tandas, de_una_fila)
+	var vaciables := casilleros_vaciables(tandas)
 	var presentes: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.de_la_jornada(jornada):
 		presentes[producto.id] = vaciables.get(producto.id, 0)
@@ -102,22 +100,20 @@ static func vacios_de_la_jornada(
 		presentes[PRODUCTO_CON_VENCIDOS] = 0
 	var faltantes := faltantes_al_azar(pedidos_de(compradores), presentes, azar)
 	for id: Producto.Id in faltantes:
-		vacios[id] = _sortear_vacios(
-			tandas[id], de_una_fila.get(id, false), faltantes[id], azar, posiciones.get(id, [])
-		)
+		vacios[id] = _sortear_vacios(tandas[id], faltantes[id], azar, posiciones.get(id, []))
 	return vacios
 
 
 ## Cuántos casilleros de cada producto pueden abrir vacíos: todos los de adelante, menos uno por
-## cada tanda de un producto de una fila, que no puede abrir vacía entera.
+## cada tanda, que no puede abrir vacía entera.
 static func casilleros_vaciables(
-	tandas: Dictionary[Producto.Id, Array], de_una_fila: Dictionary[Producto.Id, bool]
+	tandas: Dictionary[Producto.Id, Array]
 ) -> Dictionary[Producto.Id, int]:
 	var vaciables: Dictionary[Producto.Id, int] = {}
 	for id: Producto.Id in tandas:
 		var cuantos := 0
 		for tanda: PackedInt32Array in tandas[id]:
-			cuantos += _cupo_de(tanda, de_una_fila.get(id, false))
+			cuantos += _cupo_de(tanda)
 		vaciables[id] = cuantos
 	return vaciables
 
@@ -213,29 +209,22 @@ static func faltantes_al_azar(
 	return faltantes
 
 
-## Cuántos casilleros de una tanda pueden abrir vacíos. La tanda de un producto de una fila no
-## abre vacía entera; en uno de dos filas, la de atrás dice qué va ahí (BR-STK-024).
-static func _cupo_de(tanda: PackedInt32Array, de_una_fila: bool) -> int:
-	return tanda.size() - (1 if de_una_fila and not tanda.is_empty() else 0)
+## Cuántos casilleros de una tanda pueden abrir vacíos: todos menos uno, porque ninguna tanda
+## abre vacía entera (BR-STK-024).
+static func _cupo_de(tanda: PackedInt32Array) -> int:
+	return maxi(tanda.size() - 1, 0)
 
 
 ## Un bloque de casilleros seguidos en una tanda al azar entre las que lo reciben entero. Sólo si
-## no entra en ninguna se parte: las tandas se vacían enteras, una junto a la otra, y la última
-## recibe lo que sobra.
+## no entra en ninguna se parte, y cada tanda conserva una unidad.
 ##
-## **Las tandas se recorren por altura**, de arriba abajo, desde una al azar: el bloque de tandas
-## vacías es contiguo y la parcial queda debajo. Sólo si el bloque llega al estante de más abajo,
-## sigue por arriba. En un producto de una fila el sentido es el contrario: lo que sobra cae en el
-## estante de justo arriba, y abajo sólo si no hay uno arriba. `posiciones` trae el lugar de cada
+## **Las tandas se recorren por altura**, de abajo arriba, desde una al azar: lo que sobra cae en
+## el estante de justo arriba, y abajo sólo si no hay uno arriba. `posiciones` trae el lugar de cada
 ## casillero de cada tanda, en el orden de `tandas`; sin él todas tienen la misma altura y se
 ## recorren en el orden de `tandas`. Cada bloque que sigue a otro cae en los casilleros que quedan
 ## en las mismas columnas.
 static func _sortear_vacios(
-	tandas: Array,
-	de_una_fila: bool,
-	cuantos: int,
-	azar: RandomNumberGenerator,
-	posiciones: Array = []
+	tandas: Array, cuantos: int, azar: RandomNumberGenerator, posiciones: Array = []
 ) -> Array:
 	var lugares: Array[PackedVector3Array] = []
 	var cupos: Array[int] = []
@@ -243,17 +232,15 @@ static func _sortear_vacios(
 	for indice in tandas.size():
 		var tanda: PackedInt32Array = tandas[indice]
 		lugares.append(_lugares_de(posiciones, indice, tanda.size()))
-		cupos.append(_cupo_de(tanda, de_una_fila))
+		cupos.append(_cupo_de(tanda))
 		if cupos[indice] > 0:
 			con_lugar.append(indice)
 	con_lugar.sort_custom(
 		func(uno: int, otro: int) -> bool:
 			var alto := _altura_de(lugares[uno])
 			var otro_alto := _altura_de(lugares[otro])
-			return alto > otro_alto or (alto == otro_alto and uno < otro)
+			return alto < otro_alto or (alto == otro_alto and uno > otro)
 	)
-	if de_una_fila:
-		con_lugar.reverse()
 	var entran: Array[int] = con_lugar.filter(
 		func(indice: int) -> bool: return cupos[indice] >= cuantos
 	)

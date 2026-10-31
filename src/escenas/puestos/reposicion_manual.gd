@@ -10,22 +10,19 @@ const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const LATERALES := preload("res://src/sistemas/marco/laterales_del_foco.gdshader")
 const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
-const FILA_DE_ATRAS := preload("res://src/escenas/puestos/fila_de_atras_apagada.gdshader")
+const PRODUCTO := preload("res://src/escenas/puestos/producto_de_la_gondola.gdshader")
 const POR_COLOCAR := preload("res://src/escenas/puestos/producto_por_colocar.gdshader")
 const DISPOSICION_DE_PRUEBA := preload("res://src/escenas/puestos/disposicion_de_prueba.tres")
 ## La variante de Cindolor con la fecha de vencimiento en rojo en el dorso.
 const MODELO_DEL_VENCIDO := preload("res://assets/models/producto_cindolor_vencido.res")
-
-## Cuánto color le queda a la fila de atrás de la góndola: con 1 se ve como la de adelante, con
-## 0 queda en gris. Las referencias fijas usan el mismo color que la fila de atrás:
-## el jugador distingue los envases de referencia de las unidades que puede agarrar.
-const SATURACION_DE_LA_FILA_DE_ATRAS := 0.75
 
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
 
 ## Cuánto puede variar la altura de un apoyo y seguir siendo el mismo, en metros.
 const TOLERANCIA_DEL_APOYO := 0.02
+## Cuánto sobre su lugar entra la caja a un estante con la tabla de arriba justa, en metros.
+const ENTRADA_A_RAS := 0.03
 
 ## En cuántos pasos se trae hacia el jugador lo que se soltó adentro de un mueble.
 const PASOS_PARA_DESATASCAR := 12
@@ -96,12 +93,8 @@ var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
 ## Un dibujo por producto para todos sus huecos, sin cuerpos ni permisos propios.
 var _huecos: Array[MultiMeshInstance3D] = []
-## Cuántas copias del dibujo de cada producto son fijas. Van primero, y después sus casilleros.
-var _fijas: Array[int] = []
-## Cuántas copias de otras exhibiciones van al principio del dibujo de cada producto.
-## El bloque entero que dibuja cada producto, guías incluidas, en el orden en que lo midió el
-## modelo. El dibujo lo reordena, y de acá sale cada vez: leerlo del dibujo obliga a bajarlo de la
-## placa de video.
+## Los casilleros que dibuja cada producto, en el orden en que los midió el modelo. El dibujo los
+## reordena, y de acá sale cada vez: leerlo del dibujo obliga a bajarlo de la placa de video.
 var _bloques: Array[PackedFloat32Array] = []
 var _sueltos: Array[GrupoDelPiso] = []
 ## Los envases que hay en las góndolas, como cuerpos que sólo miran las manos y la caja: uno por
@@ -117,8 +110,6 @@ var _disponible: ObjetoAgarrable = null
 ## Las aristas que dibuja el foco. Piden las mallas que arma `AristasDelProducto`.
 var _aristas := ShaderMaterial.new()
 var _laterales := ShaderMaterial.new()
-## Se crea al preparar el puesto: un almacén que se instancia y no se abre no lo deja colgado.
-var _desenfoque: DesenfoqueDeReferencias
 var _disposicion_completa: DisposicionDeLaGondola
 var _disposicion_preparada: DisposicionDeLaGondola
 var _generados: Array[Node] = []
@@ -190,18 +181,6 @@ func posiciones() -> Dictionary[Producto.Id, Array]:
 	return por_producto
 
 
-## Los productos cuyas tandas tienen una sola fila (BR-STK-025).
-func productos_de_una_fila() -> Dictionary[Producto.Id, bool]:
-	var por_producto: Dictionary[Producto.Id, bool] = {}
-	for producto in Catalogo.todos():
-		var adelante := disposicion.filas_de_adelante[producto.id]
-		por_producto[producto.id] = (
-			adelante > 0
-			and DisposicionDeLaGondola.copias(disposicion.principales[producto.id]) == adelante
-		)
-	return por_producto
-
-
 func preparar() -> void:
 	if _modelos.is_empty():
 		_preparar_materiales_y_modelos()
@@ -222,6 +201,11 @@ func seleccionar_disposicion(jornada: int) -> void:
 		if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 		else _disposicion_completa
 	)
+
+
+## Si la jornada elegida usa el mapa de prueba.
+func es_de_prueba() -> bool:
+	return disposicion == DISPOSICION_DE_PRUEBA
 
 
 func _preparar_materiales_y_modelos() -> void:
@@ -262,7 +246,6 @@ func _rehacer_disposicion() -> void:
 		retirados.queue_free()
 	_generados.clear()
 	_bloques.clear()
-	_fijas.clear()
 	_grupos.clear()
 	_huecos.clear()
 	_sueltos.clear()
@@ -273,11 +256,9 @@ func _rehacer_disposicion() -> void:
 	_casilleros.clear()
 	_centros_de_las_filas.clear()
 	_radios_de_las_filas.clear()
-	_desenfoque = DesenfoqueDeReferencias.new()
-	add_child(_desenfoque)
-	_generados.append(_desenfoque)
 	_preparar_grupos()
-	_preparar_la_guia()
+	for id in _grupos.size():
+		_mostrar_lo_puesto(id)
 	_preparar_los_casilleros()
 	_disposicion_preparada = disposicion
 
@@ -729,7 +710,7 @@ func _le_queda_encima_al_jugador(caja: RigidBody3D) -> bool:
 ## la resuelve `_apoyo_debajo()`.
 func _apoyo_apuntado(caja: RigidBody3D) -> Dictionary:
 	var ojo := jugador.mira()
-	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+	var lejos := ReglasDelJugador.fin_de_la_mira(ojo.origin, -ojo.basis.z)
 	var golpe := _rayo(caja, ojo.origin, lejos)
 	var rozada := _caja_rozada(caja, ojo.origin, lejos, golpe)
 	if rozada == null:
@@ -767,11 +748,12 @@ func _apoyo_apuntado(caja: RigidBody3D) -> Dictionary:
 ## Se camina la mira desde la punta hacia el jugador, y en cada paso se baja derecho. Entre dos
 ## apoyos a la misma altura queda el más lejano: en piso abierto, el que hay debajo de la punta.
 ##
-## **Media caja antes de la punta y media caja después del ojo.** El rayo que baja no puede
-## arrancar adentro de lo que la caja va a ocupar, y donde está parado el jugador no hay lugar.
+## **Desde la punta y hasta media caja después del ojo.** La punta es el borde del alcance: no
+## frenar ahí dejaba el estante afuera a la distancia normal. Donde está parado el jugador no hay
+## lugar.
 func _apoyo_sobrevolado(caja: RigidBody3D, desde: Vector3, hasta: Vector3) -> Dictionary:
 	var margen := _media_caja(caja).length()
-	var recorrido := desde.distance_to(hasta) - margen
+	var recorrido := desde.distance_to(hasta)
 	var mejor := {}
 	while recorrido > margen:
 		var punto := desde.move_toward(hasta, recorrido)
@@ -1041,17 +1023,22 @@ func _rayo(caja: RigidBody3D, desde: Vector3, hasta: Vector3) -> Dictionary:
 ## **Se prueba desde la mano y, si se traba, desde el cuerpo.** Parado contra un estante, la mano
 ## queda debajo del canto de la tabla de arriba, y la subida choca con él por un par de
 ## centímetros: la caja no llegaba a un lugar donde entraba de sobra.
+##
+## **Se entra por tres alturas.** Con la tabla de arriba justa, subirla media caja la frena contra
+## ella: entra a ras. Y un estante más bajo que la mano se alcanza sólo bajándola antes: a la
+## altura de la mano la tabla del medio corta el paso.
 func _llevar_hasta(caja: RigidBody3D, destino: Vector3) -> Vector3:
 	var mano := punto_de_la_caja.global_position
 	var cuerpo := Vector3(jugador.global_position.x, mano.y, jugador.global_position.z)
+	var encima := destino.y + _media_caja(caja).y
 	var llegada := mano
 	for salida: Vector3 in [mano, cuerpo]:
-		var alto := maxf(salida.y, destino.y + _media_caja(caja).y)
-		var arriba := _barrer(caja, salida, Vector3(salida.x, alto, salida.z))
-		var adentro := _barrer(caja, arriba, Vector3(destino.x, arriba.y, destino.z))
-		llegada = _barrer(caja, adentro, destino)
-		if llegada.distance_to(destino) < TOLERANCIA_DEL_APOYO:
-			break
+		for alto: float in [maxf(salida.y, encima), encima, destino.y + ENTRADA_A_RAS]:
+			var arriba := _barrer(caja, salida, Vector3(salida.x, alto, salida.z))
+			var adentro := _barrer(caja, arriba, Vector3(destino.x, arriba.y, destino.z))
+			llegada = _barrer(caja, adentro, destino)
+			if llegada.distance_to(destino) < TOLERANCIA_DEL_APOYO:
+				return llegada
 	return llegada
 
 
@@ -1224,7 +1211,7 @@ func _ofrecer_a_la_mira() -> void:
 static func _podria_enfocar(ojo: Vector3, adelante: Vector3, centro: Vector3, radio: float) -> bool:
 	var hacia := centro - ojo
 	var distancia := hacia.length()
-	if distancia - radio > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+	if ReglasDelJugador.proximidad(ojo, centro) - radio > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
 		return false
 	if distancia <= radio:
 		return true
@@ -1294,7 +1281,7 @@ func _apoyo(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> Vector3:
 
 ## Dónde está la copia de ese casillero en el dibujo del producto, como la midió el modelo.
 func _copia_del_casillero(id: Producto.Id, indice: int) -> Transform3D:
-	return DisposicionDeLaGondola.copia(_bloques[id], _fijas[id] + indice)
+	return DisposicionDeLaGondola.copia(_bloques[id], indice)
 
 
 ## Cuánto gira el modelo de un producto para mostrarle el frente a la cámara, en grados.
@@ -1364,18 +1351,10 @@ func _preparar_grupos() -> void:
 	for producto in Catalogo.todos():
 		var malla := _modelos[producto.id]
 		var grupo := _dibujar(
-			"ProductosDe" + producto.nombre,
-			_malla_con_la_fila_apagada(malla),
-			_bloques[producto.id]
+			"ProductosDe" + producto.nombre, _malla_de_la_gondola(malla), _bloques[producto.id]
 		)
 		_grupos.append(grupo)
-		var faltantes := _dibujar(
-			"HuecosDe" + producto.nombre,
-			malla,
-			_bloques[producto.id].slice(
-				_fijas[producto.id] * DisposicionDeLaGondola.FLOTANTES_POR_COPIA
-			)
-		)
+		var faltantes := _dibujar("HuecosDe" + producto.nombre, malla, _bloques[producto.id])
 		faltantes.visible = false
 		faltantes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_huecos.append(faltantes)
@@ -1395,8 +1374,7 @@ func _preparar_grupos() -> void:
 ## **Los envases son sólo dibujo**: un `MultiMeshInstance3D` no choca, y el contorno de la góndola
 ## sigue el metal. Sin cuerpo, el brazo de la mano no encontraba nada hasta el riel. Es un
 ## `CharacterBody3D` y no un `StaticBody3D` porque el sonido cuenta como pared a todo estático.
-## Las cajas de la fila de atrás nacen prendidas y las de los casilleros apagadas:
-## `_mostrar_lo_puesto()` prende las que el estante dice ocupadas.
+## Las cajas nacen apagadas: `_mostrar_lo_puesto()` prende las que el estante dice ocupadas.
 func _preparar_la_mercaderia() -> void:
 	for producto in Catalogo.todos():
 		var cuerpo := CharacterBody3D.new()
@@ -1413,11 +1391,9 @@ func _preparar_la_mercaderia() -> void:
 			var envase := CollisionShape3D.new()
 			envase.shape = forma
 			envase.transform = Transform3D(copia.basis, copia * caja.get_center())
-			var de_casillero := indice >= _fijas[producto.id]
-			envase.disabled = de_casillero
+			envase.disabled = true
 			cuerpo.add_child(envase)
-			if de_casillero:
-				formas.append(envase)
+			formas.append(envase)
 		add_child(cuerpo)
 		_generados.append(cuerpo)
 		_mercaderia.append(cuerpo)
@@ -1450,11 +1426,9 @@ func _mostrar_la_mercaderia_a_las_manos(llevando: bool) -> void:
 ## el de las sanas, y el del piso, con lugar para todos los vencidos de la noche.
 func _preparar_los_vencidos() -> void:
 	var id := Producto.Id.CINDOLOR
-	var casilleros := _bloques[id].slice(_fijas[id] * DisposicionDeLaGondola.FLOTANTES_POR_COPIA)
 	_vencidos_puestos = _dibujar(
-		"VencidosDeCindolor", _malla_con_la_fila_apagada(_modelo_vencido), casilleros
+		"VencidosDeCindolor", _malla_de_la_gondola(_modelo_vencido), _bloques[id]
 	)
-	_apagar_hasta(_vencidos_puestos, 0)
 	_vencidos_puestos.visible = false
 	_vencidos_sueltos = GrupoDelPiso.new()
 	_vencidos_sueltos.name = "CindolorVencidoSuelto"
@@ -1463,31 +1437,27 @@ func _preparar_los_vencidos() -> void:
 	_generados.append(_vencidos_sueltos)
 
 
-## El material del grupo de un producto: el del modelo, con la fila de atrás apagada.
+## El dibujo de un producto en la góndola, con el material de cada parte del modelo.
 ##
 ## Cada parte conserva su material sobre el mismo dibujo: el envase y su tapa pueden tener
 ## brillos distintos. El modelo original sigue disponible para la mano y los productos sueltos.
-## El rango apagado lo pone `_mostrar_lo_puesto()`, que es quien sabe dónde empieza cada fila.
-func _malla_con_la_fila_apagada(
-	original: Mesh, saturacion: float = SATURACION_DE_LA_FILA_DE_ATRAS
-) -> ArrayMesh:
+func _malla_de_la_gondola(original: Mesh) -> ArrayMesh:
 	var malla := original.duplicate() as ArrayMesh
 	for superficie in malla.get_surface_count():
-		var material := _con_la_fila_de_atras_apagada(original.surface_get_material(superficie))
-		material.set_shader_parameter("saturacion_atras", saturacion)
-		malla.surface_set_material(superficie, material)
+		malla.surface_set_material(
+			superficie, _material_de_la_gondola(original.surface_get_material(superficie))
+		)
 	return malla
 
 
-func _con_la_fila_de_atras_apagada(original: BaseMaterial3D) -> ShaderMaterial:
+func _material_de_la_gondola(original: BaseMaterial3D) -> ShaderMaterial:
 	var material := ShaderMaterial.new()
-	material.shader = FILA_DE_ATRAS
+	material.shader = PRODUCTO
 	material.set_shader_parameter("color", original.albedo_color)
 	material.set_shader_parameter("textura", original.albedo_texture)
 	material.set_shader_parameter("rugosidad", original.roughness)
 	material.set_shader_parameter("metalico", original.metallic)
 	material.set_shader_parameter("especular", original.metallic_specular)
-	material.set_shader_parameter("saturacion_atras", SATURACION_DE_LA_FILA_DE_ATRAS)
 	return material
 
 
@@ -1510,7 +1480,7 @@ func _preparar_los_casilleros() -> void:
 		var modelo := _modelos[producto.id]
 		var fantasma := modelo.duplicate() as ArrayMesh
 		for superficie in fantasma.get_surface_count():
-			var material := _con_la_fila_de_atras_apagada(modelo.surface_get_material(superficie))
+			var material := _material_de_la_gondola(modelo.surface_get_material(superficie))
 			material.shader = POR_COLOCAR
 			fantasma.surface_set_material(superficie, material)
 		var fila := Node3D.new()
@@ -1588,23 +1558,18 @@ func _lugares_de_adelante(bloque: PackedFloat32Array, adelante: int) -> PackedVe
 	return lugares
 
 
-## El dibujo de cada producto: primero sus copias fijas —las filas de atrás de todas sus tandas—
-## y después sus casilleros —la fila de adelante de cada tanda fija suya, y al final la de su
-## tanda reponible—. Un estante al que la apertura no le declara vacíos vacía los últimos, que así
-## quedan en la reponible, a la altura de la mano.
+## El dibujo de cada producto: sus casilleros, la fila de adelante de cada tanda fija suya y al
+## final la de su tanda reponible. Un estante al que la apertura no le declara vacíos vacía los
+## últimos, que así quedan en la reponible, a la altura de la mano. Lo que el modelo pone detrás
+## de una fila no se dibuja: cada tanda se ve en una sola fila (BR-STK-025).
 ##
 ## **Cada producto va en un solo dibujo.** Cada nodo que se dibuja le cuesta al motor su
 ## preparación, y en la web esa preparación es lo que más pesa del cuadro: medido el 2026-09-21,
 ## las guías sueltas eran el 42 % del tiempo de dibujo mirando la góndola.
 func _armar_los_bloques() -> void:
 	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA
-	var fijas: Array[PackedFloat32Array] = []
 	var casilleros: Array[PackedFloat32Array] = []
 	for producto in Catalogo.todos():
-		var principal := disposicion.principales[producto.id]
-		var atras := DisposicionDeLaGondola.copias(principal)
-		atras -= disposicion.filas_de_adelante[producto.id]
-		fijas.append(principal.slice(0, atras * flotantes))
 		casilleros.append(PackedFloat32Array())
 	for indice in disposicion.guias.size():
 		var id := disposicion.productos_de_las_guias[indice]
@@ -1615,24 +1580,13 @@ func _armar_los_bloques() -> void:
 			bloque = _rebasar(bloque, modelo.global_basis, base)
 		var atras := DisposicionDeLaGondola.copias(bloque)
 		atras -= disposicion.filas_de_adelante_de_las_guias[indice]
-		fijas[id].append_array(bloque.slice(0, atras * flotantes))
 		casilleros[id].append_array(bloque.slice(atras * flotantes))
 	for producto in Catalogo.todos():
 		var principal := disposicion.principales[producto.id]
 		var atras := DisposicionDeLaGondola.copias(principal)
 		atras -= disposicion.filas_de_adelante[producto.id]
 		casilleros[producto.id].append_array(principal.slice(atras * flotantes))
-		_fijas.append(DisposicionDeLaGondola.copias(fijas[producto.id]))
-		_bloques.append(fijas[producto.id] + casilleros[producto.id])
-
-
-## Muestra lo puesto de cada producto, con sus copias fijas en gris.
-func _preparar_la_guia() -> void:
-	for id in _grupos.size():
-		_mostrar_lo_puesto(id)
-		if _bloques[id].is_empty():
-			continue
-		_desenfoque.agregar(_grupos[id], _bloques[id], _primera_dibujada(id))
+		_bloques.append(casilleros[producto.id])
 
 
 func _malla_en_mundo(grupo: MeshInstance3D) -> ArrayMesh:
@@ -1667,24 +1621,19 @@ func _rebasar(bloque: PackedFloat32Array, desde: Basis, hacia: Basis) -> PackedF
 	return salida
 
 
-## Desde qué copia del dibujo arrancan los casilleros: las de antes son fijas.
-func _primera_dibujada(id: Producto.Id) -> int:
-	return _fijas[id]
-
-
 ## Prende de la fila de adelante las unidades que la góndola tiene puestas, y apaga el resto.
 ##
 ## **Cuáles se ven las dice el estante, y no este puesto**: un número propio acá dibujaría una
 ## góndola que el inventario no tiene. `visible_instance_count` corta por el final, así que el
-## dibujo se reordena: primero las guías y la fila de atrás, tal cual; después los casilleros
-## ocupados, y al final los vacíos, que quedan fuera del corte. Cada copia lleva su lugar, así que
-## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio.
+## dibujo se reordena: primero los casilleros ocupados y después los vacíos, que quedan fuera del
+## corte. Cada copia
+## lleva su lugar, así que reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco
+## en el medio.
 func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	if _bloques[id].is_empty():
 		return
 	var producto := Catalogo.de(id)
 	var de_la_noche := repositor.estante()
-	var primera := _primera_dibujada(id)
 	var ocupados := de_la_noche.casilleros_ocupados(producto)
 	_sincronizar_la_mercaderia(id, ocupados)
 	var vencidos := de_la_noche.vencidos.casilleros(producto)
@@ -1695,43 +1644,30 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var orden := sanos + vencidos + afuera
 	var bloque := _bloques[id]
 	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA
-	var dibujo := bloque.slice(0, primera * flotantes)
+	var dibujo := PackedFloat32Array()
 	for puesto in orden:
-		var desde := (primera + puesto) * flotantes
+		var desde := puesto * flotantes
 		dibujo.append_array(bloque.slice(desde, desde + flotantes))
 	var copias := _grupos[id].multimesh
 	if dibujo.size() == bloque.size():
 		copias.buffer = dibujo
-	copias.visible_instance_count = primera + sanos.size()
-	# Las guías sumadas y la fila de atrás son referencias fijas: todo lo que va antes de la
-	# primera reponible se dibuja atenuado, aunque se llene o se vacíe un casillero.
-	_apagar_hasta(_grupos[id], primera)
+	copias.visible_instance_count = sanos.size()
 	# Los mismos casilleros, en otro lote: los vacíos primero para cortarlos sin añadir nodos
 	# por envase. El estado vuelve a salir del estante en cada cambio de la góndola.
-	var corte := (primera + ocupados.size()) * flotantes
+	var corte := ocupados.size() * flotantes
 	var por_reponer := dibujo.slice(corte)
-	por_reponer.append_array(dibujo.slice(primera * flotantes, corte))
+	por_reponer.append_array(dibujo.slice(0, corte))
 	var huecos := _huecos[id].multimesh
 	huecos.buffer = por_reponer
 	huecos.visible_instance_count = afuera.size()
 	if id == Producto.Id.CINDOLOR and _vencidos_puestos != null:
 		# Los vencidos van primero en su lote, y el resto queda fuera del corte.
-		var del_lote := dibujo.slice((primera + sanos.size()) * flotantes, corte)
-		del_lote.append_array(
-			dibujo.slice(primera * flotantes, (primera + sanos.size()) * flotantes)
-		)
+		var del_lote := dibujo.slice(sanos.size() * flotantes, corte)
+		del_lote.append_array(dibujo.slice(0, sanos.size() * flotantes))
 		del_lote.append_array(dibujo.slice(corte))
 		_vencidos_puestos.multimesh.buffer = del_lote
 		_vencidos_puestos.multimesh.visible_instance_count = vencidos.size()
 		_vencidos_puestos.visible = not vencidos.is_empty()
-
-
-func _apagar_hasta(grupo: MultiMeshInstance3D, primera: int) -> void:
-	var malla := grupo.multimesh.mesh
-	for superficie in malla.get_surface_count():
-		var material := malla.surface_get_material(superficie) as ShaderMaterial
-		material.set_shader_parameter("desde_atras", 0)
-		material.set_shader_parameter("hasta_atras", primera)
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.

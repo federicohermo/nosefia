@@ -5,6 +5,8 @@ const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Menu := preload("res://src/escenas/menu_de_inicio.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+## Cuántos cuadros se espera, como mucho, a que termine un calentamiento.
+const CUADROS_DEL_CALENTAMIENTO := 3000
 
 
 class MenuSinCarga:
@@ -120,6 +122,11 @@ func test_desde_la_cuarta_seguir_anuncia_sin_instrucciones() -> void:  # AC-EMP-
 			"Interfaz/PantallaDeInstrucciones"
 		)
 		assert_bool(instrucciones.visible).is_false()
+		# La noche del corte espera a que su oscuridad quede preparada.
+		for _cuadro in CUADROS_DEL_CALENTAMIENTO:
+			if _persiana().get("_entrada") != null:
+				break
+			await get_tree().process_frame
 		assert_object(_persiana().get("_entrada")).is_not_null()
 		await after_test()
 

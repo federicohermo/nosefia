@@ -130,9 +130,7 @@ func _parar_y_mirar(
 	jugador.call("_aplicar_la_rotacion")
 	var ojo: Transform3D = jugador.call("mira")
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo.origin,
-		ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		caja.collision_mask
+		ojo.origin, ReglasDelJugador.fin_de_la_mira(ojo.origin, -ojo.basis.z), caja.collision_mask
 	)
 	consulta.exclude = [jugador.get_rid(), caja.get_rid()]
 	return espacio.intersect_ray(consulta)

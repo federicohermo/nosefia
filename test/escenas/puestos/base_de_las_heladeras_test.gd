@@ -15,7 +15,7 @@ const ALTOS_DEL_ZOCALO: Array[float] = [0.15, 0.5]
 const ADENTRO_DEL_ESTANTE: Array[float] = [0.0, 0.03, 0.08, 0.2]
 
 ## A cuántos metros del frente se para el jugador.
-const PARADOS: Array[float] = [0.6, 1.0]
+const PARADOS: Array[float] = [0.6, 0.8]
 
 ## Cuánto se sube la mira sobre la tapa del estante, y cuántos cuadros de física se espera a que
 ## lo soltado se asiente.
@@ -185,7 +185,7 @@ func _lo_que_toca_la_mira(almacen: Node3D, mascara: int) -> Object:
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var consulta := PhysicsRayQueryParameters3D.create(
 		camara.global_position,
-		camara.global_position - camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		ReglasDelJugador.fin_de_la_mira(camara.global_position, -camara.global_basis.z),
 		mascara
 	)
 	var excluidos: Array[RID] = [jugador.get_rid()]

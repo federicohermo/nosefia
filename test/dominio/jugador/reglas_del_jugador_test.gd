@@ -7,7 +7,11 @@ const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.
 
 
 func test_el_techo_angular_se_expresa_en_radianes() -> void:
-	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_equal(deg_to_rad(15.0))
+	# En grados, cualquier tolerancia razonable pasaría de un cuarto de vuelta: en radianes, no.
+	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_less(PI / 4.0)
+	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_greater(
+		ReglasDelJugador.DESVIO_MAXIMO_DE_PRODUCTOS
+	)
 
 
 func test_el_pitch_encierra_al_cero_y_no_llega_a_los_noventa_grados() -> void:
@@ -31,6 +35,27 @@ func test_el_alcance_de_la_mira_supera_la_distancia_de_soltado() -> void:
 	# alcance menor deja al jugador soltando cosas que ya no puede agarrar, y ese rojo
 	# aparecería en el test de agarrar y no acá.
 	assert_float(ReglasDelJugador.ALCANCE_DE_LA_MIRA).is_greater(1.2)
+
+
+func test_la_proximidad_no_cuenta_la_altura() -> void:  # AC-PLY-004
+	var ojo := Vector3(1.0, 1.6, 2.0)
+	var abajo := Vector3(1.0, 0.0, 2.0) + Vector3.FORWARD * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+	var arriba := Vector3(abajo.x, 3.0, abajo.z)
+	assert_float(ReglasDelJugador.proximidad(ojo, abajo)).is_equal_approx(
+		ReglasDelJugador.ALCANCE_DE_LA_MIRA, 1e-5
+	)
+	assert_float(ReglasDelJugador.proximidad(ojo, arriba)).is_equal_approx(
+		ReglasDelJugador.ALCANCE_DE_LA_MIRA, 1e-5
+	)
+
+
+func test_la_mira_termina_en_el_borde_del_alcance_por_empinada_que_sea() -> void:  # AC-PLY-004
+	var ojo := Vector3(0.0, 1.6, 0.0)
+	for direccion: Vector3 in [Vector3.FORWARD, Vector3(0.0, -1.0, -1.0), Vector3(1.0, 2.0, 0.0)]:
+		var fin := ReglasDelJugador.fin_de_la_mira(ojo, direccion)
+		assert_float(ReglasDelJugador.proximidad(ojo, fin)).is_equal_approx(
+			ReglasDelJugador.ALCANCE_DE_LA_MIRA, 1e-5
+		)
 
 
 func test_la_camara_esta_a_la_altura_de_una_persona() -> void:

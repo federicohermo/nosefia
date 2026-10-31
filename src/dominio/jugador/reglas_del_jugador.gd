@@ -40,13 +40,20 @@ const DURACION_DEL_AGACHE := 0.2
 const PITCH_MINIMO := -1.4
 const PITCH_MAXIMO := 1.4
 
-## Metros de alcance de la mira. Mayor que 1,2 porque se suelta lo que se
-## lleva a esa distancia y afirma que se lo puede volver a mirar: un alcance menor deja al
-## jugador soltando cosas que ya no puede agarrar.
-const ALCANCE_DE_LA_MIRA := 2.5
+## Metros de alcance de la mira, y también hasta dónde se apoya lo que se lleva. Es proximidad: se
+## mide desde los ojos sobre el piso, sin contar la altura. Lo de arriba de una estantería y lo
+## tirado a los pies quedan a mano igual que lo que está enfrente. Que sea el mismo para apoyar
+## es lo que deja volver a agarrar lo apoyado. Mayor que 1,2 porque se suelta lo que se lleva a
+## esa distancia y afirma que se lo puede volver a mirar.
+const ALCANCE_DE_LA_MIRA := 1.6
+## Metros del campo que junta candidatos: a la distancia del alcance, llega del piso al techo.
+const RADIO_DEL_CAMPO := 2.5
+## Lo menos que cuenta el avance sobre el piso de una mirada: mirando derecho hacia abajo no
+## avanza nada, y el rayo no puede ser infinito.
+const AVANCE_MINIMO_DE_LA_MIRA := 0.1
 
 ## Radianes desde el centro de la vista.
-const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(15.0)
+const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(8.0)
 ## Los productos y sus huecos requieren apuntar cerca de su superficie.
 const DESVIO_MAXIMO_DE_PRODUCTOS := deg_to_rad(3.0)
 ## Lo ya enfocado cuenta su desvío con este factor: se toma a 3° y se suelta a 5°. Sin esa banda,
@@ -72,3 +79,15 @@ const ACCION_USAR: StringName = &"usar"
 
 ## Se mantiene apretada: soltarla levanta la vista.
 const ACCION_AGACHARSE: StringName = &"agacharse"
+
+
+## Lo que cuenta para el alcance: la distancia sobre el piso, sin la altura.
+static func proximidad(ojo: Vector3, punto: Vector3) -> float:
+	return Vector2(punto.x - ojo.x, punto.z - ojo.z).length()
+
+
+## Dónde termina una mirada que sale de `ojo`: en el borde del alcance, por empinada que sea.
+static func fin_de_la_mira(ojo: Vector3, direccion: Vector3) -> Vector3:
+	var unitaria := direccion.normalized()
+	var avance := maxf(Vector2(unitaria.x, unitaria.z).length(), AVANCE_MINIMO_DE_LA_MIRA)
+	return ojo + unitaria * ALCANCE_DE_LA_MIRA / avance

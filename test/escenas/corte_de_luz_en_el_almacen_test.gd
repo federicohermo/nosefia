@@ -365,3 +365,16 @@ func _promedio(luces: Array[float]) -> float:
 	for luz in luces:
 		suma += luz
 	return suma / luces.size()
+
+
+func test_entre_noches_la_oscuridad_se_prepara_y_el_local_queda_con_luz() -> void:
+	var local := _local()
+	var entorno: Environment = (local.get_node("Ambiente/Entorno") as WorldEnvironment).environment
+	var niebla := entorno.fog_enabled
+	var luces := CorteDeLuz.luces_del_local(local)
+	local.set("_jornada_preparada", AnomaliasDeLaJornada.JORNADA_DEL_CORTE - 1)
+	await local.call("_preparar_lo_postergado")
+	assert_bool(entorno.fog_enabled).is_equal(niebla)
+	for luz: Light3D in luces:
+		assert_bool(luz.visible).is_true()
+	assert_object((local.get_node("LightmapGI") as LightmapGI).light_data).is_same(_con_luz)
