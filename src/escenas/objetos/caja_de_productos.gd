@@ -82,6 +82,7 @@ var _apoyo_que_dejo := Vector3.ZERO
 
 
 func _ready() -> void:
+	collision_mask = ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO
 	# Antes de anotar el lugar: el tamaño cambia dónde apoya, y el `.tscn` ya lo cuenta.
 	for parte: Node3D in [get_node("Cuerpo"), get_node("Malla")]:
 		parte.scale = Vector3.ONE * media()
