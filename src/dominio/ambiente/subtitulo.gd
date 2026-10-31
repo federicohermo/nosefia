@@ -21,10 +21,14 @@ const DESVANECIDO := 0.5
 ## Cuántos metros más lejos de su lugar que al aparecer aguanta un pensamiento antes de irse.
 const DISTANCIA_PARA_IRSE := 0.75
 
+## Lo mismo para lo que dice un comprador.
+const DISTANCIA_DEL_COMPRADOR_PARA_IRSE := 3.0
+
 var _texto: String = ""
 var _fijo: bool = false
 var _transcurrido: float = 0.0
 var _duracion: float = 0.0
+var _distancia_para_irse: float = DISTANCIA_PARA_IRSE
 
 
 ## Cuánto se ve entero un pensamiento. `length()` cuenta caracteres y no bytes: una letra con
@@ -36,12 +40,22 @@ static func duracion(texto: String) -> float:
 ## Un subtítulo temporal. Reemplaza al que haya y empieza entero, aunque sea el mismo texto: los
 ## tiempos no se suman. Un texto vacío no cambia nada.
 func pensar(texto: String) -> void:
+	_mostrar(texto, DISTANCIA_PARA_IRSE)
+
+
+## Lo que dice un comprador: como `pensar()`, pero aguanta más lejos de su lugar.
+func decir_comprador(texto: String) -> void:
+	_mostrar(texto, DISTANCIA_DEL_COMPRADOR_PARA_IRSE)
+
+
+func _mostrar(texto: String, distancia_para_irse: float) -> void:
 	if texto.is_empty():
 		return
 	_texto = texto
 	_fijo = false
 	_transcurrido = 0.0
 	_duracion = duracion(texto)
+	_distancia_para_irse = distancia_para_irse
 
 
 ## El texto del examen: queda entero hasta `soltar()`. Un texto vacío deja la línea vacía, que
@@ -70,7 +84,7 @@ func avanzar(segundos: float) -> void:
 ## Cuánto se alejó el jugador del lugar del pensamiento desde que apareció. Pasado el límite,
 ## empieza a desvanecerse ya; si ya se desvanecía, sigue igual: volver no le devuelve nada.
 func alejarse(metros: float) -> void:
-	if _fijo or _texto.is_empty() or metros <= DISTANCIA_PARA_IRSE:
+	if _fijo or _texto.is_empty() or metros <= _distancia_para_irse:
 		return
 	_transcurrido = maxf(_transcurrido, _duracion)
 

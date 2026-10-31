@@ -6,6 +6,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const S := SubtitulosDeLosGestos.Id
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+const MARGEN := Subtitulo.DISTANCIA_DEL_COMPRADOR_PARA_IRSE
 
 
 func _almacen() -> Node3D:
@@ -130,10 +131,10 @@ func test_irse_de_la_ventanilla_desvanece_la_entrega() -> void:  # AC-SUB-026
 	)
 	assert_float(base).is_equal_approx(1.0, 0.001)
 	assert_float(hud.get("_comprador").modulate.a).is_equal(1.0)
-	_alejar(almacen, alejando, base + 0.7)
+	_alejar(almacen, alejando, base + MARGEN - 0.1)
 	hud.call("_process", 0.25)
 	assert_float(hud.get("_comprador").modulate.a).is_equal(1.0)
-	_alejar(almacen, alejando, base + 0.8)
+	_alejar(almacen, alejando, base + MARGEN + 0.1)
 	hud.call("_process", 0.25)
 	assert_float(hud.get("_comprador").modulate.a).is_between(0.01, 0.99)
 	assert_bool(hud.get("_comprador").visible).is_true()
@@ -152,10 +153,10 @@ func test_la_entrega_dicha_desde_lejos_se_mide_desde_esa_distancia() -> void:  #
 	var almacen := await _almacen()
 	var hud: Hud = almacen.get("_hud")
 	var alejando := _decir_entrega_a(almacen, 6.0)
-	_alejar(almacen, alejando, 6.7)
+	_alejar(almacen, alejando, 6.0 + MARGEN - 0.1)
 	hud.call("_process", 0.25)
 	assert_float(hud.get("_comprador").modulate.a).is_equal(1.0)
-	_alejar(almacen, alejando, 6.8)
+	_alejar(almacen, alejando, 6.0 + MARGEN + 0.1)
 	hud.call("_process", 0.25)
 	assert_float(hud.get("_comprador").modulate.a).is_less(1.0)
 
@@ -167,7 +168,7 @@ func test_la_entrega_conserva_su_lugar_si_el_comprador_se_va() -> void:  # AC-SU
 	var alejando := _decir_entrega_a(almacen, 1.0)
 	var lugar := figura.global_position
 	figura.global_position += Vector3.UP * 5.0
-	(almacen.get("_jugador") as Node3D).global_position = lugar + alejando * 1.8
+	(almacen.get("_jugador") as Node3D).global_position = lugar + alejando * (1.0 + MARGEN + 0.1)
 	almacen.call("_process", 0.0)
 	hud.call("_process", 0.25)
 	assert_float(hud.get("_comprador").modulate.a).is_less(1.0)
