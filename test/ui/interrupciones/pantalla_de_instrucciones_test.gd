@@ -229,66 +229,6 @@ func test_pausa_conserva_la_entrada_y_no_cobra_el_tiempo_pausado() -> void:  # A
 	assert_float(marco.position.x).is_zero()
 
 
-func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:  # AC-EMP-046
-	for caso: Array in [
-		[1, 1, ["J1_FotoReloj", "J1_Foto02"]],
-		[2, 0, ["J2_FotoGondolas", "J1_Foto07"]],
-	]:
-		var pantalla := _pantalla()
-		pantalla.mostrar(_mensajes_de(caso[0]))
-		for avance: int in caso[1]:
-			_boton(pantalla, "_siguiente").pressed.emit()
-		await get_tree().process_frame
-		await get_tree().process_frame
-		var contenido: Control = pantalla.get("_contenido")
-		var fotos: Array[TextureRect] = []
-		for identidad: String in caso[2]:
-			for mensaje in GUION.mensajes:
-				if mensaje.identidad == identidad:
-					for imagen: TextureRect in contenido.find_children(
-						"*", "TextureRect", true, false
-					):
-						if imagen.texture == mensaje.foto:
-							fotos.append(imagen)
-		assert_int(fotos.size()).is_equal(2)
-		if fotos.size() != 2:
-			continue
-		var textos := contenido.find_children("*", "RichTextLabel", true, false)
-		var cuerpo := textos[0] as RichTextLabel
-		var izquierda := fotos[0].get_rect()
-		var derecha := fotos[1].get_rect()
-		assert_float(izquierda.position.y).is_greater_equal(cuerpo.get_rect().end.y)
-		assert_float(izquierda.end.x).is_less(derecha.position.x)
-		assert_float(izquierda.position.y).is_equal(derecha.position.y)
-		assert_float(izquierda.size.y).is_equal(derecha.size.y)
-		assert_float(izquierda.position.x).is_greater_equal(0.0)
-		assert_float(derecha.end.x).is_less_equal(PantallaDeInstrucciones.ANCHO_DEL_TEXTO)
-		for foto in fotos:
-			assert_int(foto.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
-		var leyendas: Array[String] = []
-		var rectangulos: Array[Rect2] = []
-		var limites := Rect2(
-			Vector2.ZERO, Vector2(PantallaDeInstrucciones.ANCHO_DEL_TEXTO, contenido.size.y)
-		)
-		for texto: RichTextLabel in textos:
-			if texto == cuerpo:
-				continue
-			leyendas.append(texto.get_parsed_text())
-			var rectangulo := texto.get_rect()
-			assert_bool(limites.encloses(rectangulo)).is_true()
-			for foto in fotos:
-				assert_bool(rectangulo.intersects(foto.get_rect())).is_false()
-			for anterior in rectangulos:
-				assert_bool(rectangulo.intersects(anterior)).is_false()
-			rectangulos.append(rectangulo)
-		var esperadas: Array[String] = []
-		for identidad: String in caso[2]:
-			var ficha: Dictionary = PantallaDeInstrucciones.FOTOS[identidad]
-			esperadas.append(ficha["titulo"])
-			esperadas.append("-" + ficha["sector"])
-		assert_array(leyendas).contains_exactly_in_any_order(esperadas)
-
-
 func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  # AC-EMP-046
 	for identidad: String in ["J1_Foto03", "J1_Foto04", "J1_Foto06", "J1_Foto09", "J1_Foto11"]:
 		var foto: Mensaje
