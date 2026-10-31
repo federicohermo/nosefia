@@ -82,10 +82,11 @@ const CAIDA_HASTA_EL_PISO := 3.0
 
 ## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se
 ## mueve a su velocidad y no pesa nada; con 0 no se mueve y le tapa el paso. El medio es lo que
-## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
+## hace que correr una caja cueste caminar más lento, que es el peso que se quiere. Lo usan la
+## caja y el balde (BR-PLY-050).
 const ARRASTRE_DE_LA_CAJA := 0.5
 
-## Lo mismo para lo suelto que pesa menos que una caja: los útiles de limpieza y las bolsas. Se
+## Lo mismo para lo suelto que pesa menos que una caja: los jabones, la mopa y las bolsas. Se
 ## corren más que ella, y por eso el jugador casi no nota que los empuja.
 const ARRASTRE_DE_LO_SUELTO := 0.7
 

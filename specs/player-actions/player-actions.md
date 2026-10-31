@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; patada a la unidad de #219
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -173,7 +173,8 @@ que no tiene nada encima NO DEBE mover ningún otro objeto.
 
 SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
-lugar.
+lugar. Una caja contenedora que quedaría metida entre los productos puestos de una góndola cuenta
+como encimada con algo, aunque el estante la sostenga: sólo un casillero sin producto la admite.
 
 Los tres bidones de jabón se llevan como el balde: verticales, a un costado y acompañando la
 mira, para no perderlos de vista al volcarlos. Se apoyan como las cajas: al soltarlos quedan
@@ -476,9 +477,10 @@ atención. El hueco NO DEBE tener una barrera de vidrio; sus sólidos reales DEB
 CUANDO se suelta una caja sobre el borde superior gris de una división del baño, el sistema
 DEBE apoyar su base sobre ese borde visible, sin hundirla hasta la pared blanca ni atravesarlo.
 CUANDO se suelta una caja hacia el borde de góndola documentado en
-[GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), el sistema DEBE acomodarla
-sobre metal visible, conservando la selección del apoyo según la mira, la mano vacía y el
-reposo estable de BR-PLY-013. La caja DEBE quedar recogible y fuera de sólidos.
+[GJ-52](https://app.notion.com/p/3fa86efecd9d80ebbfdbc900faa03a20), el sistema NO DEBE apoyarla
+entre los productos puestos. SI el metal visible no tiene lugar libre de mercadería para la caja
+entera, ENTONCES DEBE dejarla en el piso al lado del jugador, estable, recogible y fuera de
+sólidos. Un casillero sin producto no cuenta como mercadería.
 En ambos encuadres, el soporte físico DEBE corresponder al borde visible; NO DEBE aparecer
 una plataforma invisible bajo la caja. El sistema NO DEBE forzar la caída de una caja que
 quedó apoyada de forma estable sobre ese metal.
@@ -530,9 +532,31 @@ jornada NO DEBE saltear la placa del cierre.
 CUANDO el jugador camina contra una caja, un útil de limpieza —jabón, mopa o balde— o una bolsa de
 basura que están sueltos, el sistema DEBE correrlo en el sentido del paso, y sólo con la parte
 del paso que no se pudo dar: el jugador no lo atraviesa ni lo empuja a toda su velocidad. Cada
-uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. Lo corrido NO
-DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar
-agitándose (BR-PLY-013). Lo que se lleva en la mano no se corre.
+uno recibe la parte que le declara el dominio, y la de la caja NO DEBE cambiar. El balde se corre
+con la misma parte que la caja, y no con la de los demás útiles. Lo corrido NO DEBE superponerse
+con ningún sólido fijo ni salir del local (BR-PLY-015), y NO DEBE quedar agitándose (BR-PLY-013).
+Lo que se lleva en la mano no se corre.
+
+El balde suelto NO DEBE volcarse: queda derecho al empujarlo, al chocarlo y al soltarlo, y la
+mopa sigue pudiendo mojarse en él.
+
+### BR-PLY-052 — Una unidad suelta en el piso se patea al caminar contra ella
+
+CUANDO el jugador camina y toca una unidad de producto suelta en el piso, el sistema DEBE correrla
+sobre el piso hacia el costado del camino del jugador, y no hacia el frente de la cámara. El
+contacto NO DEBE cambiar la velocidad del jugador, y la unidad DEBE quedar detrás de él: no se la
+empuja por delante. Cuánto se corre sale del dominio como una fracción de la velocidad del
+jugador, mayor que cero y menor que uno, y es menos que el alcance de la mira (BR-PLY-004)
+(OQ-PLY-006). MIENTRAS el jugador está quieto, la unidad NO DEBE correrse.
+
+La unidad pateada NO DEBE superponerse con ningún sólido fijo ni salir del local (BR-PLY-015). NO
+DEBE subirse a un estante ni entrar en un mueble: SI lo toca, ENTONCES DEBE frenarse y quedar en
+el piso. SI está acorralada contra una pared, ENTONCES el jugador la atraviesa y la unidad NO DEBE
+moverse. Llevar una caja en la mano NO DEBE cambiar nada de esto.
+
+Sólo se patea la unidad de producto: la caja, la bolsa y los útiles conservan BR-PLY-050. Una
+unidad pateada NO cuenta como repuesta: reponer se cumple sólo con el gesto de colocarla en el
+estante ([`store-stock`](../store-stock/store-stock.md)).
 
 ## Criterios de aceptación
 
@@ -1243,12 +1267,14 @@ La comprobación cruza la base dibujada y la superficie física del mismo contac
 DADO cada bidón de jabón en la mano ENTONCES cuelga del mismo punto que una caja. CUANDO se lo
 suelta mirando al piso libre ENTONCES queda derecho donde la mira tocaba y la mano queda vacía.
 
-### AC-PLY-100 — La cabecera acomoda la caja sobre metal visible *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
+### AC-PLY-100 — La cabecera no apoya la caja entre los productos *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-015, BR-PLY-018)*
 
-DADO una caja chica y otra grande, por separado, y el segundo encuadre de GJ-52 CUANDO se
-suelta por el mismo gesto real y avanza la física ENTONCES la caja queda acomodada y estable
-sobre metal visible, con el contacto físico correspondiente, recogible y sin superposición.
-La mano queda vacía; ni inventario ni tareas cambian por el acomodo o por la recogida.
+DADO una caja chica y otra grande, por separado, y el segundo encuadre de GJ-52 con productos
+puestos sobre ese metal CUANDO se suelta por el mismo gesto real y avanza la física ENTONCES la
+caja queda en el piso, estable, recogible, fuera de sólidos y sin superponerse a ningún producto
+puesto. La mano queda vacía; ni inventario ni tareas cambian por el acomodo o por la recogida.
+Con ese mismo metal sin productos puestos, la caja chica queda apoyada y estable sobre la góndola,
+recogible y fuera de sólidos.
 
 ### AC-PLY-095 — Los apoyos válidos siguen estables *(verifica BR-PLY-040, BR-PLY-013, BR-PLY-018)*
 
@@ -1391,6 +1417,46 @@ parte del paso que declara el dominio para la caja, y no con la de los útiles n
 DADO un útil de limpieza o una bolsa de basura que no están sueltos, sino sostenidos ENTONCES
 recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 
+### AC-PLY-155 — Patear una unidad no frena al jugador y la deja detrás *(verifica BR-PLY-052)*
+
+DADO una unidad suelta en el piso, en el camino del jugador que camina hacia adelante CUANDO la
+toca ENTONCES la velocidad del jugador es la misma antes y después del contacto, y la unidad se
+corre sobre el piso hacia el costado del camino, menos que el alcance de la mira, y queda detrás
+del jugador. DADO el jugador quieto sobre la unidad ENTONCES la unidad no se mueve.
+
+### AC-PLY-156 — Una unidad acorralada contra la pared no se mueve *(verifica BR-PLY-052, BR-PLY-015)*
+
+DADO una unidad suelta entre el camino del jugador y una pared, pegada a ella CUANDO el jugador
+camina junto a la unidad ENTONCES la atraviesa, y la unidad conserva su posición y no se superpone
+con la pared.
+
+### AC-PLY-157 — Con una caja en la mano también se patea *(verifica BR-PLY-052)*
+
+DADO el jugador con una caja en la mano y una unidad suelta en su camino CUANDO la toca ENTONCES
+pasa lo mismo que en AC-PLY-155.
+
+### AC-PLY-158 — Lo pateado no entra en un mueble *(verifica BR-PLY-052, BR-PLY-015)*
+
+DADO una unidad suelta en el piso, cerca del pie de una góndola, de la heladera o de otro mueble
+CUANDO el jugador la patea hacia él ENTONCES se frena al tocarlo y queda en el piso: no sube a un
+estante ni se superpone con el mueble.
+
+### AC-PLY-159 — Patear cuesta menos que empujar una caja *(verifica BR-PLY-052, BR-PLY-050)*
+
+DADO dos jugadores que caminan el mismo tiempo, uno contra una caja suelta y otro contra una
+unidad suelta ENTONCES el que empuja la caja recorre menos que el que patea la unidad.
+
+### AC-PLY-160 — El balde se empuja con la parte de la caja *(verifica BR-PLY-050)*
+
+DADO el balde suelto en el piso CUANDO el jugador camina contra él ENTONCES se corre con la parte
+del paso que declara el dominio para la caja, y no con la de los demás útiles.
+
+### AC-PLY-161 — El balde suelto no se vuelca *(verifica BR-PLY-050)*
+
+DADO el balde suelto en el piso CUANDO el jugador camina contra él hasta llevarlo contra una pared,
+y CUANDO algo lo golpea fuera de su eje ENTONCES su eje queda a menos de 1 grado de la vertical, y
+la mopa se puede mojar en él.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -1413,7 +1479,8 @@ recibir el paso del jugador no les cambia ni la posición ni la velocidad.
 - **Salida:** la velocidad, los dos ángulos de la vista, su altura, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
-  referencia de controles.
+  referencia de controles, y el impulso que recibe cada unidad de producto que el jugador toca
+  en el piso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
   declarado no tiene efecto; con algo que no es una unidad en la mano, ningún casillero vacío se
   enfoca; un gesto sin control con nombre no da línea en la referencia.
@@ -1465,3 +1532,10 @@ recibir el paso del jugador no les cambia ni la posición ni la velocidad.
   - Bloquea: introducir un umbral general de estabilidad no decidido; si corregir el caso de
     góndola requiere ese umbral, bloquea su implementación hasta resolverlo. No cambia los
     resultados concretos de BR-PLY-040 ni los apoyos válidos existentes.
+
+- **OQ-PLY-006 — ¿Cuánto se corre una unidad pateada?**
+  - Por qué sigue abierta: el diseño pide que se corra «un poco» y no fija la fracción de la
+    velocidad del jugador. Hoy es un valor provisional del dominio.
+  - Decide: el dueño del repo, jugando.
+  - Bloquea: nada; mientras se decide, la unidad se corre menos que el alcance de la mira
+    (BR-PLY-052).

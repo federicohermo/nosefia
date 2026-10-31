@@ -34,6 +34,13 @@ const PARED_MAS_CERCA := 3.0
 ## Cuánto se hunde un cuerpo vivo apoyado antes de contar como adentro, según el motor.
 const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
 
+## Un golpe lateral al balde, en metros por segundo, a esta altura de su base, en metros.
+const GOLPE := 3.0
+const ALTO_DEL_GOLPE := 0.25
+
+## Cuánto puede apartarse el eje del balde de la vertical, en grados.
+const TOLERANCIA_DE_LA_VERTICAL := 1.0
+
 ## Los útiles de limpieza del cuartito.
 const UTILES: Array[String] = ["JabonAzul", "JabonRosa", "JabonAmarillo", "Mopa", "Balde"]
 
@@ -180,10 +187,9 @@ func test_una_bolsa_suelta_se_corre_al_caminar_contra_ella() -> void:  # AC-PLY-
 	)
 
 
-func test_lo_empujado_contra_una_pared_no_la_atraviesa() -> void:  # AC-PLY-152
-	var almacen: Node3D = await _almacen_con_jugador_andando()
-	var jugador: CharacterBody3D = almacen.get("_jugador")
-	# La pared sale de la escena: de las cuatro direcciones, la más cercana que deja lugar.
+## La pared sale de la escena: de las cuatro direcciones, la más cercana que deja lugar. Devuelve
+## hacia dónde está y un lugar a `SEPARADO_DE_LA_PARED` de ella.
+func _pared_cercana(almacen: Node3D) -> Dictionary[String, Vector3]:
 	var desde := PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * SOLTADO_DESDE
 	var hacia := Vector3.ZERO
 	var distancia := INF
@@ -193,7 +199,18 @@ func test_lo_empujado_contra_una_pared_no_la_atraviesa() -> void:  # AC-PLY-152
 			distancia = a_la_pared
 			hacia = sentido
 	assert_bool(hacia != Vector3.ZERO).override_failure_message("no hay pared a mano").is_true()
-	var pegado := desde + hacia * (distancia - SEPARADO_DE_LA_PARED)
+	var pared: Dictionary[String, Vector3] = {}
+	pared["hacia"] = hacia
+	pared["pegado"] = desde + hacia * (distancia - SEPARADO_DE_LA_PARED)
+	return pared
+
+
+func test_lo_empujado_contra_una_pared_no_la_atraviesa() -> void:  # AC-PLY-152
+	var almacen: Node3D = await _almacen_con_jugador_andando()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var pared := _pared_cercana(almacen)
+	var hacia := pared["hacia"]
+	var pegado := pared["pegado"]
 	var cuerpos: Array[ObjetoAgarrable] = []
 	cuerpos.append(almacen.get_node("Objetos/Balde"))
 	cuerpos.append((almacen.get("_bolsas") as Array)[0])
@@ -236,3 +253,63 @@ func test_lo_sostenido_ignora_el_paso_del_jugador() -> void:  # AC-PLY-154
 		assert_vector(cuerpo.global_position).is_equal(posicion)
 		assert_vector(cuerpo.linear_velocity).is_equal(velocidad)
 		_retirar(cuerpo)
+
+
+## Cuánto se corre en un cuadro lo suelto en `PISO_LIBRE_DEL_DEPOSITO` al recibir `paso`.
+func _corrido_por(cuerpo: ObjetoAgarrable, paso: Vector3) -> Vector3:
+	await _soltar_en(cuerpo, PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * SOLTADO_DESDE)
+	cuerpo.call(ReglasDeLosObjetos.METODO_EMPUJAR, paso)
+	return (
+		Vector3(cuerpo.linear_velocity.x, 0.0, cuerpo.linear_velocity.z)
+		/ (Engine.physics_ticks_per_second)
+	)
+
+
+## Un golpe fuera del eje de `cuerpo`, hacia `hacia`, y espera `cuadros` de física.
+func _golpear(cuerpo: ObjetoAgarrable, hacia: Vector3, cuadros: int) -> void:
+	cuerpo.apply_impulse(hacia * cuerpo.mass * GOLPE, Vector3.UP * ALTO_DEL_GOLPE)
+	for cuadro in cuadros:
+		await get_tree().physics_frame
+
+
+## Cuánto se aparta el eje de `cuerpo` de la vertical, en grados.
+func _inclinacion_de(cuerpo: ObjetoAgarrable) -> float:
+	return rad_to_deg(cuerpo.global_basis.y.angle_to(Vector3.UP))
+
+
+func test_el_balde_recibe_la_parte_del_paso_de_la_caja() -> void:  # AC-PLY-160
+	var almacen: Node3D = await _almacen_con_jugador_andando()
+	var paso := Vector3(0.02, 0.0, -0.01)
+	var del_balde := await _corrido_por(almacen.get_node("Objetos/Balde"), paso)
+	var de_la_mopa := await _corrido_por(almacen.get_node("Objetos/Mopa"), paso)
+	var tolerancia := Vector3.ONE * 0.0005
+	assert_vector(del_balde).is_equal_approx(
+		paso * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA, tolerancia
+	)
+	assert_vector(de_la_mopa).is_equal_approx(
+		paso * ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO, tolerancia
+	)
+
+
+func test_el_balde_suelto_no_se_vuelca_y_la_mopa_se_moja_en_el_balde() -> void:  # AC-PLY-161
+	var almacen: Node3D = await _almacen_con_jugador_andando()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var balde: ObjetoAgarrable = almacen.get_node("Objetos/Balde")
+	await _soltar_en(balde, PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * SOLTADO_DESDE)
+	await _golpear(balde, Vector3.FORWARD, 1)
+	assert_float(balde.linear_velocity.dot(Vector3.FORWARD)).is_greater(0.0)
+	var pared := _pared_cercana(almacen)
+	await _soltar_en(balde, pared["pegado"])
+	await _parar_detras_de(jugador, balde.global_position, pared["hacia"])
+	await _empujar_caminando(jugador, balde, pared["hacia"], CUADROS_EMPUJANDO)
+	await _golpear(balde, pared["hacia"], CUADROS_ASENTANDO)
+	assert_float(_inclinacion_de(balde)).is_less(TOLERANCIA_DE_LA_VERTICAL)
+	var limpiador: Limpiador = almacen.get("_limpiador")
+	var llenar := limpiador.usar(
+		ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_LAVATORIO
+	)
+	assert_int(llenar).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_LLENADO)
+	var mopa: ObjetoAgarrable = almacen.get_node("Objetos/Mopa")
+	assert_bool((almacen.get("_agarre") as Agarre).pedir_agarrar(mopa.datos, mopa)).is_true()
+	var mojar := limpiador.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE)
+	assert_int(mojar).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)

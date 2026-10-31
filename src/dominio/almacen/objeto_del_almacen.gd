@@ -32,7 +32,8 @@ const SIN_ID := &""
 ## Si sobre este objeto se puede soltar otro.
 @export var admite_encima: bool = false
 
-## Si al soltarlo queda con su eje vertical, mire adonde mire la vista.
+## Si al soltarlo queda con su eje vertical, mire adonde mire la vista. Suelto tampoco se vuelca,
+## y se empuja como una caja.
 @export var se_apoya_derecho: bool = false
 
 ## Si en la mano sobresale tanto que hay que retraerlo contra una pared, y soltarlo barre su

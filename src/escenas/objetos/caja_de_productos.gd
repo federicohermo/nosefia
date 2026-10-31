@@ -15,6 +15,10 @@ extends RigidBody3D
 ## entera: lo despierta el puesto.
 signal empujada(caja: Node3D)
 
+## La caja quedó apoyada. Apoyada no cae: el puesto la ubica congelada, así que el motor nunca
+## avisa un choque, y el audio la escucha por acá. Misma firma que `ObjetoAgarrable`.
+signal contacto_recibido(nodo: Node3D, rapidez: float)
+
 ## Media caja de cada tamaño, en metros: la escala del cubo de dos de su malla y de su cuerpo.
 ## Qué tamaño lleva cada producto lo dice el catálogo; cuánto mide cada tamaño es de la escena.
 const MEDIA_CAJA := {Catalogo.TamanoDeCaja.CHICA: 0.2, Catalogo.TamanoDeCaja.GRANDE: 0.3037077}
