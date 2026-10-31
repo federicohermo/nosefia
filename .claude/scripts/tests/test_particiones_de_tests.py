@@ -10,6 +10,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import verificar
+from lib import particiones_de_tests
 from lib.particiones_de_tests import (
     ParticionTests,
     agrupar_suites,
@@ -88,6 +89,18 @@ class SeleccionDeSuites(unittest.TestCase):
         self.assertEqual(
             seleccionar_suites(list(costos), ParticionTests(1, 2), costos), ["a.gd", "b.gd"]
         )
+
+    def test_un_par_separado_no_comparte_particion_aunque_el_reparto_lo_junte(self):
+        costos = {"a.gd": 100.0, "b.gd": 90.0, "c.gd": 300.0}
+        for pares, juntas in (((), True), ((("a.gd", "b.gd"),), False)):
+            with self.subTest(pares=pares), patch.object(
+                particiones_de_tests, "SUITES_SEPARADAS", pares
+            ):
+                particiones = [
+                    seleccionar_suites(list(costos), ParticionTests(i, 2), costos)
+                    for i in range(2)
+                ]
+                self.assertEqual(any({"a.gd", "b.gd"} <= set(p) for p in particiones), juntas)
 
     def test_desempata_por_ruta_y_por_indice_con_cualquier_total(self):
         costos = {f"{letra}.gd": 60.0 for letra in "fedcba"}

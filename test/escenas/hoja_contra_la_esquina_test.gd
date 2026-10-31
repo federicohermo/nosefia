@@ -208,3 +208,8 @@ func test_la_hoja_no_se_superpone_con_una_caja_grande_al_cerrar() -> void:  # AC
 func test_la_hoja_no_se_superpone_con_una_caja_grande_despierta_al_abrir() -> void:  # AC-PLY-149
 	var fallas := await _superposiciones(true, false)
 	assert_array(fallas).is_empty()
+
+
+func test_la_hoja_no_se_superpone_con_una_caja_grande_despierta_al_cerrar() -> void:  # AC-PLY-149
+	var fallas := await _superposiciones(false, false)
+	assert_array(fallas).is_empty()
