@@ -81,7 +81,7 @@ const PARADO_CON_LA_CAJA := 1.1
 const CUADROS_DE_REPOSO := 90
 
 ## A qué distancias de lo soltado se busca un lugar libre para mirarlo, en metros.
-const RADIOS_DEL_LUGAR_LIBRE: Array[float] = [0.7, 0.9, 1.1, 1.3, 1.45, 1.55]
+const RADIOS_DEL_LUGAR_LIBRE: Array[float] = [0.7, 0.9, 1.1, 1.3, 1.45, 1.55, 1.7, 1.85]
 const LADOS_DEL_LUGAR_LIBRE := 36
 
 ## El producto que se suelta: uno cualquiera con unidades en la góndola.
@@ -546,6 +546,11 @@ func test_la_medida_distingue_rozar_el_mouse_de_meterse_en_el() -> void:
 func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	# Quien lo soltó ya está parado en un lugar libre, y suele ser el único de un rincón.
+	_apuntar(jugador, objeto.global_position)
+	var desde_ahi: CampoDeInteraccion.Candidato = jugador.call("_medir_candidato", objeto)
+	if desde_ahi.visible and desde_ahi.distancia <= ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+		return jugador.global_position
 	var espacio := almacen.get_world_3d().direct_space_state
 	var pie := Vector3(
 		objeto.global_position.x, jugador.global_position.y, objeto.global_position.z

@@ -7,6 +7,9 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
+## Fracciones del tamaño de la caja, desde su centro, adonde se apunta la mira.
+const PARTES_DE_LA_CAJA: Array[float] = [-0.45, 0.0, 0.45]
+
 
 class Sitio:
 	extends RefCounted
@@ -54,11 +57,12 @@ func _puntos_de_foco(local: Node3D, caja: Caja) -> Array[Sitio]:
 	var sitios: Array[Sitio] = []
 	var volumen: CollisionShape3D = caja.get_node("Cuerpo")
 	var limites := volumen.global_transform * volumen.shape.get_debug_mesh().get_aabb()
-	var objetivos: Array[Vector3] = [limites.get_center()]
-	for direccion: Vector3 in [
-		Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK, Vector3.UP
-	]:
-		objetivos.append(limites.get_center() + direccion * limites.size / 2.0)
+	# La mira puede caer en cualquier parte de la caja, y el canto de arriba queda más cerca.
+	var objetivos: Array[Vector3] = []
+	for x: float in PARTES_DE_LA_CAJA:
+		for y: float in PARTES_DE_LA_CAJA:
+			for z: float in PARTES_DE_LA_CAJA:
+				objetivos.append(limites.get_center() + limites.size * Vector3(x, y, z))
 	for paso in 24:
 		var rumbo := Vector3(cos(TAU * paso / 24.0), 0, sin(TAU * paso / 24.0))
 		for distancia: float in [0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3]:
