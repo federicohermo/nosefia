@@ -256,6 +256,31 @@ func test_con_la_compra_a_medias_ninguna_soltada_termina_afuera() -> void:
 	assert_array(afuera).is_empty()
 
 
+## Lleva una caja de productos y suelta con el clic en el costado de la abertura, donde no está la
+## figura. Devuelve la caja: mide en qué habitación termina.
+func _soltar_una_caja_en_la_abertura(almacen: Node3D) -> RigidBody3D:
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[0]
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(caja.get("datos"), caja)).is_true()
+	var jugador: CharacterBody3D = almacen.get_node("Jugador")
+	var lado: float = (_puesto(almacen).get("antepecho") as MeshInstance3D).get_aabb().size.x / 2.0
+	var alto: float = (_puesto(almacen).get("borde_superior") as Marker3D).position.y
+	var punto := Vector3(-lado * 0.7, alto * 0.45, 0.0)
+	await _mirar(almacen, Vector2(punto.x, 1.3), punto, jugador.global_position.y)
+	assert_bool(_a_la_vista(almacen, punto)).is_true()
+	await _pulsar_real()
+	await _aquietar(almacen, caja)
+	assert_object(agarre.cuerpo_sostenido()).is_null()
+	return caja
+
+
+func test_con_comprador_la_caja_soltada_en_la_abertura_no_termina_afuera() -> void:  # AC-CTR-151
+	var almacen := await _abrir()
+	_por_entregar(almacen, _llegar(almacen))
+	var caja := await _soltar_una_caja_en_la_abertura(almacen)
+	assert_int(_habitacion(almacen, caja)).is_not_equal(ReglasDelCierre.Habitacion.AFUERA)
+
+
 ## La misma soltada sale sin comprador: sin este caso, el barrido de arriba no vería nada.
 # AC-CTR-151
 func test_sin_comprador_la_misma_soltada_termina_afuera() -> void:
@@ -281,6 +306,12 @@ func test_con_comprador_un_producto_empujado_no_atraviesa_la_abertura() -> void:
 	await _empujar_por_la_abertura(_puesto(almacen), cuerpo)
 	await _aquietar(almacen, cuerpo)
 	assert_int(_habitacion(almacen, cuerpo)).is_not_equal(ReglasDelCierre.Habitacion.AFUERA)
+
+
+func test_sin_comprador_la_caja_soltada_en_la_abertura_termina_afuera() -> void:  # AC-CTR-149
+	var almacen := await _abrir()
+	var caja := await _soltar_una_caja_en_la_abertura(almacen)
+	assert_int(_habitacion(almacen, caja)).is_equal(ReglasDelCierre.Habitacion.AFUERA)
 
 
 func test_sin_comprador_un_producto_empujado_sale_por_la_abertura() -> void:  # AC-CTR-149

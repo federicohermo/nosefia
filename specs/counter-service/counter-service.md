@@ -614,6 +614,9 @@ con el panel abierto o cerrado.
 Aunque la mira no esté sobre la figura del comprador, un producto soltado que quedaría del otro lado
 de la abertura NO DEBE salir: DEBE volver a la mano, y el gesto DEBE contar como ese mismo intento.
 
+Una caja de productos tampoco DEBE salir mientras hay un comprador en la ventanilla, y soltarla no
+cuenta como intento de entrega: DEBE quedar adentro.
+
 ### BR-CTR-054 — Sin comprador, el hueco sigue siendo la salida
 
 SI no hay un comprador en la ventanilla, ENTONCES soltar un producto en el hueco NO DEBE contar
@@ -1324,7 +1327,9 @@ todavía entra— y un jugador con un producto en la mano, CUANDO suelta con el 
 abertura donde la figura no está ENTONCES el producto no sale al exterior, sigue en la mano y se
 inicia la conversación. CUANDO un producto cae adentro, desde cualquier punto y a cualquier
 distancia, y rueda o rebota hacia la abertura ENTONCES no sale al exterior: no llega a quedar sobre
-el marco ni del otro lado. SIN comprador, el mismo clic lo saca al exterior y lo que rueda sale.
+el marco ni del otro lado. CUANDO suelta una caja de productos apuntando a la abertura ENTONCES la
+caja termina adentro. SIN comprador, el mismo clic lo saca al exterior, lo que rueda sale y la caja
+también.
 
 ### AC-CTR-133 — Sólo el nombre propio va en amarillo *(verifica BR-CTR-039)*
 
