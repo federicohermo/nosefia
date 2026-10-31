@@ -655,7 +655,10 @@ func _publicar_la_referencia() -> void:
 			sostenido = agarre.manos().sostenido()
 		mira = _mira_sobre(_enfocado)
 		contexto = _contexto_sobre(_enfocado, sostenido)
-	var lineas := ReferenciaDeControles.lineas(sostenido != null, mira, contexto, suspendido)
+	var examinando := examen.esta_examinando() and not _en_pausa
+	var lineas := ReferenciaDeControles.lineas(
+		sostenido != null, mira, contexto, suspendido, examinando
+	)
 	if lineas == _referencia:
 		return
 	_referencia = lineas

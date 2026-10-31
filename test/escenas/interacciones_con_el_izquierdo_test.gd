@@ -255,7 +255,10 @@ func test_salir_de_computadora_caja_y_nota_consume_el_clic() -> void:  # AC-PLY-
 		assert_array(mundo).is_empty()
 
 
-func _bloqueado(almacen: Node3D, objetivo: Node3D, unidad: ObjetoDelAlmacen) -> void:
+## El examen conserva la línea de volver; las otras suspensiones dejan la referencia vacía.
+func _bloqueado(
+	almacen: Node3D, objetivo: Node3D, unidad: ObjetoDelAlmacen, examinando: bool = false
+) -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var caja: CajaRegistradora = almacen.get("_caja")
@@ -264,7 +267,12 @@ func _bloqueado(almacen: Node3D, objetivo: Node3D, unidad: ObjetoDelAlmacen) -> 
 		jugador.call("_publicar_la_referencia")
 		assert_object(agarre.manos().sostenido()).is_same(unidad)
 		assert_array(caja.generador().renglones()).is_empty()
-		assert_str((almacen.get("_hud").get_node("Controles") as Label).text).is_empty()
+		var pintado := (almacen.get("_hud").get_node("Controles") as Label).text
+		if examinando:
+			var volver := ReferenciaDeControles.Linea.VOLVER
+			assert_str(pintado).is_equal(ReferenciaDeControles.texto(volver, "E"))
+		else:
+			assert_str(pintado).is_empty()
 
 
 func test_examen_celular_pausa_y_cierre_bloquean_ambos_gestos() -> void:  # AC-PLY-098
@@ -279,7 +287,7 @@ func test_examen_celular_pausa_y_cierre_bloquean_ambos_gestos() -> void:  # AC-P
 	jugador.uso_pedido.connect(func(nodo: Node3D) -> void: pedidos.append(nodo))
 	var examen: Examen = jugador.get("examen")
 	assert_bool(examen.iniciar(unidad, "Unidad")).is_true()
-	_bloqueado(almacen, lector, unidad)
+	_bloqueado(almacen, lector, unidad, true)
 	examen.terminar()
 	almacen.call("_al_abrir_el_celular")
 	_bloqueado(almacen, lector, unidad)

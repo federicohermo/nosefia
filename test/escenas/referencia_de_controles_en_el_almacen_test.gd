@@ -217,7 +217,7 @@ func test_suspendido_la_referencia_esta_vacia_y_vuelve() -> void:  # AC-PLY-089
 	_agarrar(almacen, almacen.get_node("Objetos/Balde"))
 	var con_el_balde: Array[String] = ["[E] Examinar (mano)", "[Click Izq] Llenar"]
 	assert_array(_referencia(almacen, lavatorio)).contains_exactly(con_el_balde)
-	# Una nota, la computadora, la caja, la ventanilla y el examen suspenden por la misma puerta.
+	# Una nota, la computadora, la caja y la ventanilla suspenden por la misma puerta.
 	jugador.call("suspender")
 	assert_array(_pintado(almacen)).is_empty()
 	jugador.call("reanudar")
@@ -233,6 +233,27 @@ func test_suspendido_la_referencia_esta_vacia_y_vuelve() -> void:  # AC-PLY-089
 	assert_array(_pintado(almacen)).is_empty()
 	pausa.reanudado.emit()
 	assert_array(_pintado(almacen)).contains_exactly(con_el_balde)
+
+
+func test_examinando_la_referencia_ofrece_volver_y_al_terminar_vuelve() -> void:  # AC-PLY-089
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get("_jugador")
+	var lavatorio: Node3D = almacen.get_node(LAVATORIO)
+	_agarrar(almacen, almacen.get_node("Objetos/Balde"))
+	var con_el_balde: Array[String] = ["[E] Examinar (mano)", "[Click Izq] Llenar"]
+	assert_array(_referencia(almacen, lavatorio)).contains_exactly(con_el_balde)
+	var examen: Examen = jugador.get("examen")
+	assert_bool(examen.iniciar()).is_true()
+	assert_array(_pintado(almacen)).contains_exactly(
+		[ReferenciaDeControles.texto(ReferenciaDeControles.Linea.VOLVER, "E")]
+	)
+	# La pausa sobre el examen sigue vacía.
+	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
+	pausa.pausado.emit()
+	assert_array(_pintado(almacen)).is_empty()
+	pausa.reanudado.emit()
+	examen.terminar()
+	assert_array(_referencia(almacen, lavatorio)).contains_exactly(con_el_balde)
 
 
 func test_el_foco_y_la_mano_cambian_en_el_mismo_cuadro() -> void:  # AC-PLY-090
