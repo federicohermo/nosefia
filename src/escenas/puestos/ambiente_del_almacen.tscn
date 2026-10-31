@@ -80,8 +80,8 @@ reflection_mask = 4
 [node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=1670606995]
 transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 3.284, -4.8)
 light_color = Color(0.58, 0.88, 0.81, 1)
-light_energy = 3.4
-light_indirect_energy = 2.4
+light_energy = 2.5
+light_indirect_energy = 1.8
 light_size = 0.399
 light_specular = 0.0
 light_bake_mode = 1
@@ -90,8 +90,8 @@ area_size = Vector2(1.2, 0.6)
 [node name="AreaLight3D3" type="AreaLight3D" parent="." unique_id=1624985064]
 transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 3.284, -1)
 light_color = Color(0.58, 0.88, 0.81, 1)
-light_energy = 3.4
-light_indirect_energy = 2.4
+light_energy = 2.5
+light_indirect_energy = 1.8
 light_size = 0.399
 light_specular = 0.0
 light_bake_mode = 1
@@ -100,8 +100,8 @@ area_size = Vector2(1.2, 0.6)
 [node name="AreaLight3D7" type="AreaLight3D" parent="." unique_id=1727770897]
 transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 4.9, 3.284, -4.8)
 light_color = Color(0.58, 0.88, 0.81, 1)
-light_energy = 3.4
-light_indirect_energy = 2.4
+light_energy = 2.5
+light_indirect_energy = 1.8
 light_size = 0.399
 light_specular = 0.0
 light_bake_mode = 1
@@ -110,8 +110,8 @@ area_size = Vector2(1.2, 0.6)
 [node name="AreaLight3D10" type="AreaLight3D" parent="." unique_id=1041791214]
 transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 4.9, 3.284, -1)
 light_color = Color(0.58, 0.88, 0.81, 1)
-light_energy = 3.4
-light_indirect_energy = 2.4
+light_energy = 2.5
+light_indirect_energy = 1.8
 light_size = 0.399
 light_specular = 0.0
 light_bake_mode = 1
@@ -120,8 +120,8 @@ area_size = Vector2(1.2, 0.6)
 [node name="AreaLight3D8" type="AreaLight3D" parent="." unique_id=174603683]
 transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 0.2, 3.284, 3)
 light_color = Color(0.58, 0.88, 0.81, 1)
-light_energy = 3.4
-light_indirect_energy = 2.4
+light_energy = 2.5
+light_indirect_energy = 1.8
 light_size = 0.399
 light_specular = 0.0
 light_bake_mode = 1
@@ -130,8 +130,8 @@ area_size = Vector2(1.2, 0.6)
 [node name="AreaLight3D2" type="AreaLight3D" parent="." unique_id=333680017]
 transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 4.9, 3.284, 3)
 light_color = Color(0.58, 0.88, 0.81, 1)
-light_energy = 3.4
-light_indirect_energy = 2.4
+light_energy = 2.5
+light_indirect_energy = 1.8
 light_size = 0.399
 light_specular = 0.0
 light_bake_mode = 1
@@ -140,8 +140,8 @@ area_size = Vector2(1.2, 0.6)
 [node name="AreaLight3D9" type="AreaLight3D" parent="." unique_id=12441013]
 transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 2.7, 3.284, 5.1)
 light_color = Color(0.58, 0.88, 0.81, 1)
-light_energy = 2.0
-light_indirect_energy = 1.4
+light_energy = 1.5
+light_indirect_energy = 1.05
 light_size = 0.399
 light_specular = 0.0
 light_bake_mode = 1
@@ -223,8 +223,8 @@ omni_attenuation = 1.0
 [node name="AreaLight3D6" type="AreaLight3D" parent="." unique_id=581634060]
 transform = Transform3D(1,  0,  0,  0,  0.023678668,  0.9997196,  0,  -0.9997196,  0.023678668, -0.2, 3.284, 5)
 light_color = Color(0.58, 0.88, 0.81, 1)
-light_energy = 2.0
-light_indirect_energy = 1.4
+light_energy = 1.5
+light_indirect_energy = 1.05
 light_size = 0.201
 light_specular = 0.0
 light_bake_mode = 1
