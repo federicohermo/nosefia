@@ -87,12 +87,12 @@ func interactuar() -> ObjetoDelAlmacen:
 ## toca y nada más.
 ##
 ## Congelado no se corre: está en la mano, en una ranura o esperando su lugar.
-func _correrse(desplazamiento: Vector3) -> void:
+func _correrse(
+	desplazamiento: Vector3, arrastre := ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO
+) -> void:
 	if freeze:
 		return
-	var velocidad := (
-		desplazamiento * ReglasDeLosObjetos.ARRASTRE_DE_LO_SUELTO / get_physics_process_delta_time()
-	)
+	var velocidad := desplazamiento * arrastre / get_physics_process_delta_time()
 	velocidad.y = linear_velocity.y
 	sleeping = false
 	linear_velocity = velocidad
