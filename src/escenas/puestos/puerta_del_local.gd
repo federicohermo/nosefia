@@ -30,6 +30,9 @@ signal salida_rechazada
 ## Qué aviso da una puerta que no abre.
 enum Traba { NINGUNA, PUERTA, PORTON }
 
+## Metros. Lo menos que se le exige a un objeto para decir que la hoja lo puede correr.
+const CORRIMIENTO_MINIMO := 0.05
+
 ## La malla que gira, que es el padre de este cuerpo. Entra por `@export` y no con un
 ## `get_parent()` para que el `.tscn` diga qué se mueve en vez de que lo suponga el script.
 @export var hoja: MeshInstance3D
@@ -65,6 +68,9 @@ var _cerrada: Transform3D
 var _bisagra: Vector3
 
 var _girando := false
+
+## Lo pesado que la hoja encontró en el último paso.
+var _pesados: Array[RigidBody3D] = []
 
 ## Dónde va este cuerpo respecto de la hoja. **El cuerpo no sigue a la hoja solo**: un cuerpo
 ## animable sincronizado con la física sólo se entera de su propia transformada, no de la del
@@ -144,14 +150,121 @@ func cerrar_de_golpe() -> void:
 ## El giro va por cuadro de física y no de dibujo: lo que se mueve es un cuerpo de colisión, y
 ## adelantarlo en el cuadro equivocado lo deja medio paso atrás del jugador que lo está cruzando.
 func _physics_process(delta: float) -> void:
-	var giro := Basis(Vector3.UP, _puerta.avanzar(delta) * sentido_del_giro)
-	hoja.transform = Transform3D(giro, _bisagra - giro * _bisagra) * _cerrada
+	var antes := _puerta.angulo()
+	var freno := _freno(delta)
+	var angulo := _puerta.avanzar(delta, freno.factor, freno.tope)
+	_llevar_lo_pesado(antes, angulo)
+	hoja.transform = _pose_de_la_hoja(angulo)
 	global_transform = hoja.global_transform * _desde_la_hoja
 	if not _puerta.quieta():
 		_girando = true
 	elif _girando:
 		_girando = false
 		hoja_quieta.emit(self)
+
+
+func _pose_de_la_hoja(angulo: float) -> Transform3D:
+	var giro := Basis(Vector3.UP, angulo * sentido_del_giro)
+	return Transform3D(giro, _bisagra - giro * _bisagra) * _cerrada
+
+
+## Qué hay en el recorrido del próximo paso. Sólo mide el contacto y la movilidad; qué hace la
+## hoja con eso lo decide `FrenoDeLaPuerta`.
+func _freno(delta: float) -> FrenoDeLaPuerta:
+	var siguiente := _puerta.angulo_siguiente(delta)
+	var frenado := _puerta.angulo_siguiente(delta * FrenoDeLaPuerta.FACTOR_DE_LO_PESADO)
+	if is_equal_approx(siguiente, _puerta.angulo()) or not is_inside_tree():
+		return FrenoDeLaPuerta.new()
+	var padre := hoja.global_transform * hoja.transform.affine_inverse()
+	var pose := padre * _pose_de_la_hoja(siguiente) * _desde_la_hoja
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.collision_mask = collision_mask
+	consulta.exclude = [get_rid()]
+	var obstaculo := FrenoDeLaPuerta.Obstaculo.NADA
+	var puede_correrse := true
+	_pesados.clear()
+	for volumen: CollisionShape3D in find_children("*", "CollisionShape3D", false, false):
+		if volumen.disabled:
+			continue
+		consulta.shape = volumen.shape
+		consulta.transform = pose * volumen.transform
+		for golpe in get_world_3d().direct_space_state.intersect_shape(consulta, 16):
+			var objeto := golpe["collider"] as RigidBody3D
+			if objeto == null:
+				continue
+			if objeto.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
+				obstaculo = FrenoDeLaPuerta.Obstaculo.PESADO
+				_pesados.append(objeto)
+				puede_correrse = puede_correrse and _se_corre(objeto, frenado)
+			elif obstaculo == FrenoDeLaPuerta.Obstaculo.NADA:
+				obstaculo = FrenoDeLaPuerta.Obstaculo.LIVIANO
+	return FrenoDeLaPuerta.decidir(obstaculo, puede_correrse, _puerta.angulo())
+
+
+## Si el objeto tiene lugar para correrse lo que la hoja avanza hasta `siguiente`, que es el paso
+## ya frenado: la hoja que se corre no gira al paso entero. Se mide sin contar la hoja, que
+## es justamente lo que lo empuja, y sin mirar si está congelado o dormido: se pregunta al espacio
+## y no se mueve el cuerpo, porque una caja congelada es estática para el motor y un movimiento
+## de prueba no la hace chocar con ninguna pared.
+func _se_corre(objeto: RigidBody3D, siguiente: float) -> bool:
+	var corrimiento := _corrimiento_de(objeto, _puerta.angulo(), siguiente)
+	if corrimiento.length() < CORRIMIENTO_MINIMO:
+		corrimiento = corrimiento.normalized() * CORRIMIENTO_MINIMO
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.collision_mask = objeto.collision_mask
+	consulta.exclude = [objeto.get_rid(), get_rid()]
+	consulta.margin = -ReglasDeLosObjetos.ROCE
+	for volumen: CollisionShape3D in objeto.find_children("*", "CollisionShape3D", false, false):
+		if volumen.disabled:
+			continue
+		consulta.shape = volumen.shape
+		consulta.transform = volumen.global_transform.translated(corrimiento)
+		if not get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty():
+			return false
+	return true
+
+
+## Adónde llevaría la hoja a ese objeto si lo arrastrara de `desde` a `hasta`.
+##
+## La hoja toca al objeto por donde asoma más lejos de la bisagra, y ahí avanza más que en su
+## centro. Si el objeto sólo recorriera lo que recorre su centro, la hoja lo penetraría un poco
+## más por cuadro.
+func _corrimiento_de(objeto: RigidBody3D, desde: float, hasta: float) -> Vector3:
+	var padre := hoja.global_transform * hoja.transform.affine_inverse()
+	var bisagra := padre * _bisagra
+	var radio := objeto.global_position - bisagra
+	radio.y = 0.0
+	if radio.is_zero_approx():
+		return Vector3.ZERO
+	var giro := Basis(Vector3.UP, (hasta - desde) * sentido_del_giro)
+	return (giro * radio - radio) * maxf(1.0, _alcance_de(objeto, bisagra) / radio.length())
+
+
+## Hasta dónde llega el objeto desde la bisagra, en el plano.
+func _alcance_de(objeto: RigidBody3D, bisagra: Vector3) -> float:
+	var alcance := 0.0
+	for volumen: CollisionShape3D in objeto.find_children("*", "CollisionShape3D", false, false):
+		var limites := LimitesDeForma.de(volumen.shape)
+		for indice in 8:
+			var punto := volumen.global_transform * limites.get_endpoint(indice)
+			alcance = maxf(alcance, Vector2(punto.x - bisagra.x, punto.z - bisagra.z).length())
+	return alcance
+
+
+## Una caja congelada es estática para el motor y la hoja le pasaría de largo: la lleva el
+## script, entera, aunque `empujar` sólo arrastre la mitad de lo que se le pide.
+func _llevar_lo_pesado(desde: float, hasta: float) -> void:
+	if is_equal_approx(desde, hasta):
+		return
+	for objeto in _pesados:
+		if objeto.freeze:
+			var corrimiento := _corrimiento_de(objeto, desde, hasta)
+			objeto.add_collision_exception_with(self)
+			objeto.call(
+				ReglasDeLosObjetos.METODO_EMPUJAR,
+				corrimiento / ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
+			)
+			objeto.remove_collision_exception_with(self)
 
 
 func texto_al_examinar() -> String:

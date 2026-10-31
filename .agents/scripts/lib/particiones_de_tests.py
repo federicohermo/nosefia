@@ -19,6 +19,8 @@ SEGUNDOS_ESTIMADOS: Mapping[str, float] = MappingProxyType({
     "test/escenas/reposicion_manual_test.gd": 68.623,
     "test/escenas/objetos/apoyos_de_bordes_de_cajas_test.gd": 58.918,
     "test/escenas/hoja_que_arrastra_test.gd": 40.436,
+    "test/escenas/freno_de_la_hoja_test.gd": 58.0,
+    "test/escenas/hoja_contra_la_esquina_test.gd": 128.0,
     "test/escenas/giro_parejo_test.gd": 35.820,
     "test/escenas/objetos/mancha_en_el_piso_test.gd": 28.310,
     "test/escenas/objetos/balde_que_se_apoya_test.gd": 27.052,
@@ -35,6 +37,16 @@ SEGUNDOS_ESTIMADOS: Mapping[str, float] = MappingProxyType({
     "test/escenas/puestos/contenedor_de_basura_test.gd": 5.599,
 })
 SEGUNDOS_POR_SUITE_NUEVA = 1.0
+# Pares que no comparten partición. `caja_que_se_lleva_test` apila cajas y mide dónde se asienta la
+# de arriba al sacar la del medio, y eso cambia con lo que corrió antes en el mismo proceso.
+# Medido el 2026-10-30 con Godot 4.7.2, en Windows y con las mismas coordenadas que la CI:
+# `test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba` sale rojo tras nueve suites de escena
+# que incluyen `freno_de_la_hoja_test` y `caja_apoyada_como_se_llevaba_test`, y verde si falta
+# cualquiera de las dos. No es una fuga de la hoja: depende de varias suites y no de una.
+# La selección respeta el par con cualquier total, así que un rebalanceo no los junta.
+SUITES_SEPARADAS = (
+    ("test/escenas/freno_de_la_hoja_test.gd", "test/escenas/objetos/caja_que_se_lleva_test.gd"),
+)
 # Los otros gates comparten la última partición. Sus imports agregaron unos 50 s
 # en esa corrida; reservar toda su duración contaría dos veces el trabajo concurrente.
 SEGUNDOS_RESERVADOS_PARA_GATES = 50.0
@@ -103,6 +115,13 @@ def _ruta_relativa(ruta: str) -> str:
     return normalizada.as_posix()
 
 
+def _comparte_con_su_par(ruta: str, asignadas: list[str]) -> bool:
+    return any(
+        ruta in par and any(otra in par for otra in asignadas if otra != ruta)
+        for par in SUITES_SEPARADAS
+    )
+
+
 def seleccionar_suites(
     suites: list[str],
     particion: ParticionTests,
@@ -134,7 +153,12 @@ def seleccionar_suites(
     ):
         indice = min(
             range(particion.total),
-            key=lambda indice: (bool(asignadas[indice]), cargas[indice], indice),
+            key=lambda indice: (
+                _comparte_con_su_par(ruta, asignadas[indice]),
+                bool(asignadas[indice]),
+                cargas[indice],
+                indice,
+            ),
         )
         asignadas[indice].append(ruta)
         cargas[indice] += costos.get(ruta, SEGUNDOS_POR_SUITE_NUEVA)

@@ -31,7 +31,6 @@ const PRODUCTO := Producto.Id.MALBARDO
 
 ## Cuánto deja el motor que un cuerpo vivo apoyado se hunda en lo que toca.
 const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
-const PRODUCTO_DE_LA_CAJA := Producto.Id.CHISITOS
 
 
 func _almacen() -> Node3D:
@@ -202,12 +201,13 @@ func test_al_quedar_quieta_no_queda_nada_adentro_de_la_hoja() -> void:  # AC-PLY
 
 
 ## M2: el jugador parado en el recorrido. Lo saca la recuperación de su propio movimiento.
-func test_el_jugador_parado_en_el_recorrido_no_queda_adentro_de_la_hoja() -> void:
+func test_el_jugador_parado_en_el_recorrido_no_queda_adentro_de_la_hoja() -> void:  # AC-PLY-145
 	var almacen: Node3D = await _almacen()
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.global_position = _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * 0.01
 	await _girar(hoja)
+	assert_float(_cuerpo_de(hoja).call("puerta").angulo()).is_equal(Puerta.ANGULO_ABIERTA)
 	(
 		assert_bool(_adentro_de_la_hoja(jugador, _cuerpo_de(hoja)))
 		. override_failure_message(
@@ -217,16 +217,23 @@ func test_el_jugador_parado_en_el_recorrido_no_queda_adentro_de_la_hoja() -> voi
 	)
 
 
-## Una caja apoyada no frena la hoja: llega a su tope igual. Es provisorio: lo cambia la regla
-## del peso.
-func test_una_caja_apoyada_en_el_recorrido_no_frena_la_hoja() -> void:
+func test_la_unidad_despierta_en_el_recorrido_se_arrastra_al_abrir() -> void:  # AC-PLY-146
 	var almacen: Node3D = await _almacen()
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
-	var caja: Node3D = almacen.get("_cajas_de_productos")[PRODUCTO_DE_LA_CAJA]
-	caja.global_position = _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * 0.31
-	caja.call("quedarse_quieta")
+	var punto := _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO)
+	var unidad := await _unidad_dormida(almacen, punto)
+	unidad.can_sleep = false
+	unidad.sleeping = false
+	var partida := unidad.global_position
 	await _girar(hoja)
-	assert_float(_cuerpo_de(hoja).call("puerta").angulo()).is_equal(Puerta.ANGULO_ABIERTA)
+	assert_bool(unidad.sleeping).override_failure_message("la unidad se durmió").is_false()
+	assert_bool(_adentro_de_la_hoja(unidad, _cuerpo_de(hoja))).is_false()
+	var corrida := (unidad.global_position - partida).dot(_sentido_del_giro(hoja, partida))
+	(
+		assert_float(corrida)
+		. override_failure_message("la hoja no arrastró la unidad: se corrió %.3f m" % corrida)
+		. is_greater(CORRIDA_MINIMA)
+	)
 
 
 ## Cerrar de golpe salta sin girar: lo apoyado contra la hoja abierta no sale despedido.

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; patada a la unidad de #219
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -539,6 +539,31 @@ Lo que se lleva en la mano no se corre.
 
 El balde suelto NO DEBE volcarse: queda derecho al empujarlo, al chocarlo y al soltarlo, y la
 mopa sigue pudiendo mojarse en él.
+
+### BR-PLY-051 — Lo pesado frena la hoja y lo liviano no
+
+Pesado es lo que el jugador empuja: hoy, la caja contenedora. Liviano es lo demás que se agarra:
+un producto, una bolsa, el balde o la mopa. La clase no depende del tamaño ni de si el objeto
+duerme o está despierto.
+
+MIENTRAS la hoja de una puerta gira y lo pesado está en su recorrido, el sistema DEBE girarla
+más lenta desde el contacto, sin detenerla, si ese objeto puede correrse; la hoja DEBE llegar a
+su tope con el objeto fuera de ella. Puede correrse si tiene lugar para lo que la hoja avanza en
+un cuadro ya frenada, no en uno a la velocidad de siempre. SI no puede correrse, ENTONCES el
+sistema DEBE detener la hoja donde toca, a cualquier ángulo. Lo pesado que se corre recorre lo
+que avanza la hoja donde lo toca, y no sólo lo que recorre su centro. La hoja NO DEBE superponerse
+con lo pesado en ningún cuadro. Lo liviano NO DEBE frenar la hoja: se arrastra según BR-PLY-017.
+Si hay varios obstáculos, manda el más pesado y los frenos no se acumulan.
+
+**La hoja frena y no hace más.** Detenida contra algo pesado e inmóvil, la hoja NO DEBE
+atravesarlo ni retroceder, y la red de seguridad de BR-PLY-016 NO DEBE rescatar lo que la detiene:
+el paso puede quedar bloqueado. CUANDO se retira lo que detenía la hoja, ella DEBE reanudar y
+llegar a su tope sin un segundo gesto.
+
+Todo rige igual al abrir y al cerrar: el sentido del giro cambia de qué lado se mide, no el freno.
+Frenar y reanudar NO DEBEN sumar un sonido ni un aviso a los de abrir, cerrar y trabada, y la hoja
+quieta DEBE avisarlo una vez, no por cada cuadro detenida. El freno NO DEBE cambiar el conteo de
+las bolsas ni lo que cuenta el contenedor.
 
 ### BR-PLY-052 — Una unidad suelta en el piso se patea al caminar contra ella
 
@@ -1312,6 +1337,62 @@ usar; la referencia permanece vacía y se conserva el objeto. CUANDO se
 hace secundario ENTONCES no cierra ni emite traba. DADO el control suspendido o la pausa
 abierta ENTONCES ambos gestos dejan la noche abierta. Después del cierre los gestos no lo repiten.
 
+### AC-PLY-140 — Sin obstáculo, la hoja gira a la velocidad vigente *(verifica BR-PLY-051)*
+
+DADO una puerta sin nada en el recorrido CUANDO se abre y después se cierra ENTONCES la hoja
+llega a cada tope a la velocidad de siempre, sin frenar ni detenerse antes.
+
+### AC-PLY-141 — Una unidad de producto no frena la hoja *(verifica BR-PLY-051, BR-PLY-017)*
+
+DADO una unidad de producto en el recorrido de la hoja CUANDO se abre y se cierra la puerta
+ENTONCES la hoja gira a la velocidad de siempre, llega a cada tope y la unidad queda fuera de
+ella.
+
+### AC-PLY-142 — Una caja que se puede correr frena la hoja y se corre *(verifica BR-PLY-051)*
+
+DADO una caja contenedora apoyada en el recorrido, con espacio para correrse, CUANDO se abre la
+puerta ENTONCES la hoja gira más lenta que la de siempre desde el contacto, llega al tope y la
+caja termina corrida, fuera de la hoja. CUANDO se cierra la hoja también gira más lenta y la caja
+se corre; si queda apretada contra la pared, la hoja se detiene donde la toca. En ningún caso la
+caja queda adentro de la hoja. Una caja despierta frena igual que una dormida. DADO una caja con
+lugar para el paso ya frenado y no para el entero ENTONCES la hoja no se detiene: la caja se
+corre.
+
+### AC-PLY-143 — Una caja inmóvil detiene la hoja donde la toca *(verifica BR-PLY-051, BR-PLY-016)*
+
+DADO una caja que no puede correrse CUANDO la hoja la toca, cerca de la bisagra o con el giro ya
+avanzado, ENTONCES se detiene antes de tocarla: en ningún cuadro la atraviesa ni se superpone con
+ella, la caja no se mueve y la red de seguridad no interviene. Al abrir y al cerrar.
+
+### AC-PLY-144 — Al retirar la caja, la hoja reanuda *(verifica BR-PLY-051)*
+
+DADO una hoja detenida por una caja inmóvil CUANDO se retira la caja ENTONCES la hoja reanuda y
+llega a su tope sin un segundo gesto, y avisa que quedó quieta una vez al detenerse y otra al
+llegar. Al abrir y al cerrar.
+
+### AC-PLY-145 — El jugador en el recorrido no queda adentro de la hoja *(verifica BR-PLY-051, BR-PLY-017)*
+
+DADO el jugador parado en el recorrido de la hoja CUANDO la puerta se abre ENTONCES, al quedar
+quieta, la cápsula no está adentro de la hoja y la hoja llegó a su tope.
+
+### AC-PLY-146 — Un objeto despierto se arrastra como uno dormido *(verifica BR-PLY-017)*
+
+DADO una unidad de producto despierta en el recorrido de la hoja CUANDO se abre la puerta ENTONCES
+se corre en el sentido del giro, igual que una dormida, y al quedar quieta la hoja no tiene nada
+adentro.
+
+### AC-PLY-148 — La hoja detenida queda en su ángulo *(verifica BR-PLY-051)*
+
+DADO una hoja contra algo pesado que no puede correrse CUANDO se detiene ENTONCES queda en el
+ángulo en que está, sea cual sea, sin avanzar ni retroceder. DADO un factor de velocidad fuera de
+(0, 1] ENTONCES la hoja gira como con factor 1.
+
+### AC-PLY-149 — La hoja no se superpone con una caja que arrastra *(verifica BR-PLY-051)*
+
+DADO una caja grande en el recorrido de la hoja, contra una pared de frente o de costado, o en un
+rincón, y tocada cerca de la bisagra CUANDO se abre y CUANDO se cierra la puerta ENTONCES en
+ningún cuadro la caja está adentro de la hoja. Rige con la caja dormida y despierta.
+
 ### AC-PLY-110 — Levantar lo de abajo hace caer lo de arriba *(verifica BR-PLY-018)*
 
 DADO una unidad de producto que admite otro encima, dormida debajo de otra unidad CUANDO se agarra
@@ -1532,6 +1613,12 @@ la mopa se puede mojar en él.
   - Bloquea: introducir un umbral general de estabilidad no decidido; si corregir el caso de
     góndola requiere ese umbral, bloquea su implementación hasta resolverlo. No cambia los
     resultados concretos de BR-PLY-040 ni los apoyos válidos existentes.
+
+- **OQ-PLY-005 — ¿Cuánto frena una caja que se puede correr?**
+  - Por qué sigue abierta: el diseño pide que frene la hoja y no fija cuánto. Cualquier número
+    es balance y nadie lo decidió.
+  - Decide: el dueño del repo, jugando.
+  - Bloquea: nada. Mientras se decide rige un factor provisional entre 0 y 1, exclusivos.
 
 - **OQ-PLY-006 — ¿Cuánto se corre una unidad pateada?**
   - Por qué sigue abierta: el diseño pide que se corra «un poco» y no fija la fracción de la
