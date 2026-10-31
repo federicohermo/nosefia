@@ -115,6 +115,7 @@ var _partida := Partida.desde(Guardado.new().cargar())
 ## La jornada para la que están preparados los útiles: la de la carga, y después la de cada
 ## transición que los preparó.
 var _jornada_preparada := 0
+var _corte: CorteDeLuz
 
 ## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
 ## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
@@ -357,6 +358,7 @@ func _ready() -> void:
 ## quiere decir «hay luz» lo decide el dominio.
 func _cablear_el_corte_de_luz() -> void:
 	var corte: CorteDeLuz = CorteDeLuz.new()
+	_corte = corte
 	add_child(corte)
 	corte.preparar(self, $LightmapGI, ($Ambiente/Entorno as WorldEnvironment).environment)
 	_reloj.tiempo_consumido.connect(corte.avanzar)
@@ -719,7 +721,10 @@ func _preparar_lo_postergado() -> void:
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if PreparacionDeLosUtiles.por_preparar(util.datos.id, _jornada_preparada, siguiente):
 			pendientes.append(util)
-	if not pendientes.is_empty():
+	var con_corte := (
+		siguiente == AnomaliasDeLaJornada.JORNADA_DEL_CORTE and _jornada_preparada != siguiente
+	)
+	if not pendientes.is_empty() or con_corte:
 		var capa := CanvasLayer.new()
 		var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 		capa.layer = persiana.layer + 1
@@ -731,16 +736,31 @@ func _preparar_lo_postergado() -> void:
 		pantalla.pintar(0.0)
 		await get_tree().process_frame
 		await get_tree().process_frame
-		var calentamiento := CalentamientoDeShaders.new()
-		add_child(calentamiento)
-		calentamiento.avanzo.connect(pantalla.pintar)
-		calentamiento.calentar_copias(self, pendientes)
-		await calentamiento.terminado
+		if not pendientes.is_empty():
+			await _calentar_entre_noches(pantalla, _calentar_copias.bind(pendientes))
+		if con_corte:
+			await _calentar_entre_noches(pantalla, _calentar_la_oscuridad)
 		pantalla.ocultar()
 		capa.queue_free()
-		calentamiento.queue_free()
 	# Recién al terminar: un calentamiento cortado no deja la jornada como preparada.
 	_jornada_preparada = siguiente
+
+
+func _calentar_entre_noches(pantalla: PantallaDeCarga, pedido: Callable) -> void:
+	var calentamiento := CalentamientoDeShaders.new()
+	add_child(calentamiento)
+	calentamiento.avanzo.connect(pantalla.pintar)
+	pedido.call(calentamiento)
+	await calentamiento.terminado
+	calentamiento.queue_free()
+
+
+func _calentar_copias(calentamiento: CalentamientoDeShaders, cuerpos: Array[Node3D]) -> void:
+	calentamiento.calentar_copias(self, cuerpos)
+
+
+func _calentar_la_oscuridad(calentamiento: CalentamientoDeShaders) -> void:
+	calentamiento.calentar_a_oscuras(self, _corte.ensayar)
 
 
 ## La jornada abre detrás de la entrada; el control vuelve cuando la persiana termina de subir.
@@ -752,6 +772,13 @@ func _seguir() -> void:
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
 ## entregar otra vez la devolución; si no, entra a la jornada guardada.
 ## Los útiles que esta carga no prepara: sus variantes las compila otra noche.
+## La noche del corte también se carga a oscuras. Protocolo con `CalentamientoDeShaders`.
+func oscuridad_por_preparar() -> Callable:
+	if _partida.jornada() != AnomaliasDeLaJornada.JORNADA_DEL_CORTE:
+		return Callable()
+	return _corte.ensayar
+
+
 func cuerpos_sin_copias() -> Array[Node3D]:
 	var sin_copias: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
