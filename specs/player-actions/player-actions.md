@@ -457,9 +457,10 @@ mostrarse.
 
 ### BR-PLY-038 — Suspendido, la referencia está vacía
 
-MIENTRAS el control está suspendido —por el examen, una nota pegada, la computadora, la caja
-registradora, la ventanilla o el celular—, la pausa está abierta o la jornada cerró, la
-referencia NO DEBE mostrar ninguna línea. Al reanudar, DEBE volver a armarse con lo que la mira
+MIENTRAS el control está suspendido —por una nota pegada, la computadora, la caja registradora,
+la ventanilla o el celular—, la pausa está abierta o la jornada cerró, la referencia NO DEBE
+mostrar ninguna línea. MIENTRAS dura el examen, la referencia DEBE mostrar sólo la línea de
+volver, con el control de examinar. Al reanudar, DEBE volver a armarse con lo que la mira
 enfoca y lo que se lleva.
 
 ### BR-PLY-039 — El foco pertenece a la silueta de la persona
@@ -1220,10 +1221,13 @@ omite su línea y conserva el orden de las demás.
 
 ### AC-PLY-089 — Suspendido, vacía *(verifica BR-PLY-038)*
 
-DADO un levantable en la mano y la mira sobre un lavatorio CUANDO se abre, por turno, el examen,
-una nota pegada, la computadora, la caja registradora, la ventanilla, el celular o la pausa
-ENTONCES la referencia no tiene ninguna línea; CUANDO se cierra ENTONCES vuelve a tener las
-líneas de esa mano y esa mira. CUANDO cierra la jornada ENTONCES queda vacía.
+DADO un levantable en la mano y la mira sobre un lavatorio CUANDO se abre, por turno, una nota
+pegada, la computadora, la caja registradora, la ventanilla, el celular o la pausa ENTONCES la
+referencia no tiene ninguna línea; CUANDO se cierra ENTONCES vuelve a tener las líneas de esa
+mano y esa mira. CUANDO cierra la jornada ENTONCES queda vacía. DADO el mismo levantable CUANDO se
+abre el examen ENTONCES la referencia tiene una sola línea, volver, con el control de examinar;
+CUANDO se abre la pausa sobre el examen ENTONCES queda vacía; CUANDO termina el examen ENTONCES
+vuelve a tener las líneas de esa mano y esa mira.
 
 ### AC-PLY-090 — El foco y la mano en el mismo cuadro *(verifica BR-PLY-035)*
 
@@ -1278,7 +1282,7 @@ DADO una unidad sostenida y computadora, caja o nota abiertas CUANDO se cierran 
 o nota con primario, o caja con primario fuera de sus márgenes ENTONCES se cierra la interfaz,
 se conserva la unidad y hay cero usos, agarres o soltados en el mundo por ese clic.
 DADO examen, celular, pausa o cierre CUANDO se pulsan ambos gestos ENTONCES no hay acción del
-mundo y la referencia sigue vacía.
+mundo; la referencia sigue vacía, salvo en el examen, que conserva la línea de volver.
 
 ### AC-PLY-099 — La caja descansa sobre el borde gris *(verifica BR-PLY-040, BR-PLY-015, BR-PLY-018)*
 
