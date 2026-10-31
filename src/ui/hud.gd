@@ -105,7 +105,7 @@ func pensar(texto: String) -> void:
 ## Lo que dice un comprador: se ve como un pensamiento, con el diseño del diálogo de comprador. Un
 ## texto vacío no cambia la línea.
 func decir_comprador(texto: String) -> void:
-	_linea.pensar(texto)
+	_linea.decir_comprador(texto)
 	_es_de_un_comprador = _es_de_un_comprador or not texto.is_empty()
 	_pintar_el_subtitulo()
 

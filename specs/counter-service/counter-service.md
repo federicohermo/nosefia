@@ -555,7 +555,9 @@ ya recibió lo que se le ofrece, el sistema DEBE mostrar su texto en la línea d
 diseño de los diálogos de compradores y los nombres de los productos resaltados como en
 BR-CTR-039. DEBE verse como un pensamiento, con la duración y el desvanecido de
 [`subtitles`](../subtitles/subtitles.md), y reemplazar al subtítulo que se vea; un pensamiento
-posterior DEBE reemplazarlo a él (BR-SUB-001). Esos textos NO DEBEN retener el clic siguiente:
+posterior DEBE reemplazarlo a él (BR-SUB-001). Esos textos tienen lugar: la figura del comprador
+en la ventanilla, y se acortan al alejarse el jugador según BR-SUB-015. La inicial y la
+despedida NO DEBEN acortarse: siguen abriendo la ventanilla. Esos textos NO DEBEN retener el clic siguiente:
 cada pulsación DEBE producir una sola interacción nueva, con el objeto sostenido o con la mano
 vacía, incluso sobre un objeto que acaba de rechazarse.
 
