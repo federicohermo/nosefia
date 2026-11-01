@@ -153,6 +153,17 @@ jobs:
           mkdir -p export/web
           "$GODOT_BIN" --headless --path . --export-release "Web" export/web/index.html || true
 
+      # Vercel rechaza un archivo de más de 100 MB y el `.pck` de este juego pesa 113.233.684
+      # bytes: publicado como lo escribe Godot, el deploy falla entero con «File size limit
+      # exceeded». Comprimido con brotli pesa 43.706.584 y entra. El `Content-Encoding` que lo
+      # declara vive en `vercel.json`, y el paso lee la codificación de ahí: separados, el juego
+      # queda en negro con el deploy en verde.
+      - name: Comprimir el pck
+        run: node .github/scripts/comprimir_pck.mjs export/web
+
+      - name: Comprimir el pck no rompe el paquete ni el total de la barra
+        run: node --test .github/scripts/tests/comprimir_pck_test.mjs
+
       - name: El veredicto del export
         run: python .claude/scripts/verificar_export.py export/web
 

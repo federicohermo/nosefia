@@ -4,7 +4,7 @@
 del despliegue vive adentro de un paso de YAML, la única forma de ejercerla es desplegar — y el
 modo de falla que importa no se puede fabricar así.
 
-## Los tres modos de falla que cierra, y por qué ninguno da rojo solo
+## Los cuatro modos de falla que cierra, y por qué ninguno da rojo solo
 
 1. **El par preset↔headers.** El `index.js` que genera Godot se apoya en `SharedArrayBuffer`,
    y aborta si el servidor no manda los dos headers de aislamiento: el deploy contesta 200, el
@@ -15,11 +15,16 @@ modo de falla que importa no se puede fabricar así.
    a mitad», así que el veredicto es la lista de archivos y su tamaño.
 3. **Publicar no es haber publicado.** Un archivo que contesta 404, o un `.wasm` sin su
    `Content-Type`, dejan la página cargando para siempre con el deploy en verde.
+4. **El par archivo↔`Content-Encoding`.** Vercel no acepta un archivo de más de 100 MB, así que
+   el `.pck` se publica comprimido. El cuerpo y el header que lo declara viven en dos archivos
+   distintos: un `.pck` comprimido servido sin el header —o al revés— deja el juego sin arrancar
+   y el deploy en verde, igual que el par de los hilos.
 
 Nada de este archivo toca el disco ni la red: recibe texto, diccionarios y —para la URL— la
 función que hace el pedido. Es lo que permite ejercer un 404 sin publicar nada.
 """
 
+import json
 import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -163,6 +168,127 @@ def desajustes_del_par(cfg: str, vercel: dict) -> list[str]:
     return problemas
 
 
+# ── La compresión del `.pck` ──────────────────────────────────────────────────
+
+#: Los archivos que se guardan comprimidos y la codificación que los declara.
+#:
+#: **Vercel no acepta un archivo de más de 100 MB.** El `.pck` de este juego pesa 113.233.684
+#: bytes: tal como lo escribe Godot no se puede publicar, y el deploy falla entero. Comprimido
+#: con brotli pesa 43.706.584 y entra.
+#:
+#: Es un diccionario y no un nombre suelto porque la codificación vive en dos lugares —el cuerpo
+#: del archivo y el header de `vercel.json`— y separarlos deja el juego en negro con el deploy en
+#: verde. El par lo ata `desajustes_de_la_compresion`, y el cuerpo lo comprime
+#: `.github/scripts/comprimir_pck.mjs`, que lee la codificación de ese mismo `vercel.json`.
+CODIFICADOS: dict[str, str] = {"index.pck": "br"}
+
+#: Los primeros bytes de un `.pck` de Godot 4. Es lo que distingue un cuerpo comprimido de uno
+#: crudo sin saber descomprimir: el comprimido no empieza así.
+MAGIA_DE_PCK = b"GDPC"
+
+
+def tamano_declarado(html: str, nombre: str) -> int | None:
+    """El tamaño que `index.html` declara para un archivo, o `None` si no lo declara.
+
+    La barra de carga del shell divide por ese número: `loaded / total`. Y `loaded` cuenta lo que
+    entrega el stream del navegador, o sea **los bytes descomprimidos**. Si alguien "arregla" el
+    HTML para que declare el tamaño comprimido, la barra salta a 100 % a mitad de la descarga.
+    """
+    encontrado = re.search(r'"fileSizes"\s*:\s*(\{[^}]*\})', html)
+    if not encontrado:
+        return None
+    try:
+        tamanos = json.loads(encontrado.group(1))
+    except json.JSONDecodeError:
+        return None
+    valor = tamanos.get(nombre)
+    return valor if isinstance(valor, int) else None
+
+
+def codificaciones_declaradas(vercel: dict) -> dict[str, str]:
+    """`{source: codificación}` de las reglas de `vercel.json` que declaran `Content-Encoding`."""
+    declaradas: dict[str, str] = {}
+    for regla in vercel.get("headers", []):
+        for header in regla.get("headers", []):
+            if str(header.get("key", "")).strip().lower() == "content-encoding":
+                fuente = str(regla.get("source", ""))
+                declaradas[fuente] = str(header.get("value", "")).strip().lower()
+    return declaradas
+
+
+def desajustes_de_la_compresion(vercel: dict) -> list[str]:
+    """Qué tiene desatado el par archivo↔header. Vacío es que está atado.
+
+    Mira las dos direcciones, igual que `desajustes_del_par`: el header que falta deja al
+    navegador leyendo bytes comprimidos como si fueran un `.pck`, y el header de más le pide
+    descomprimir un cuerpo que no lo está. Las dos cosas dejan la pantalla en negro y el deploy
+    en verde.
+    """
+    problemas: list[str] = []
+    declaradas = codificaciones_declaradas(vercel)
+    esperadas = {f"/{nombre}": codificacion for nombre, codificacion in CODIFICADOS.items()}
+    for fuente, codificacion in esperadas.items():
+        if declaradas.get(fuente) != codificacion:
+            problemas.append(
+                f"el build guarda `{fuente[1:]}` comprimido con `{codificacion}` y `vercel.json` "
+                f"no manda `Content-Encoding: {codificacion}` para `{fuente}`: el navegador "
+                "recibe los bytes comprimidos como si fueran el archivo y el juego no arranca."
+            )
+    for fuente in declaradas:
+        if fuente in FUENTES_UNIVERSALES:
+            problemas.append(
+                f"`vercel.json` manda `Content-Encoding` para todas las rutas (`{fuente}`): el "
+                "`.wasm`, el `.js` y el `.html` viajan sin comprimir y el navegador los "
+                "descomprime igual. Tiene que ir por archivo."
+            )
+        elif fuente not in esperadas:
+            problemas.append(
+                f"`vercel.json` manda `Content-Encoding` para `{fuente}`, que el build no "
+                "comprime: el navegador va a descomprimir un cuerpo que no lo está."
+            )
+    return problemas
+
+
+def desajustes_del_pck(html: str, cuerpos: dict[str, bytes]) -> list[str]:
+    """Qué tiene roto el `.pck` que se va a publicar. Vacío es que el deploy no lo va a perder.
+
+    Es el otro lado del par de `desajustes_de_la_compresion`, y el único que mira el **archivo**:
+    que no sea el `.pck` crudo que dejó Godot —el paso de compresión que faltó— y que su total
+    declarado en `index.html` sea el descomprimido, que es por donde divide la barra de carga.
+
+    **No descomprime.** Brotli no está en la stdlib de Python y el compresor vive en
+    `.github/scripts/comprimir_pck.mjs`, que sí lo tiene: ahí se comprueba la vuelta completa
+    —descomprimir y exigir `GDPC` con el total del HTML— antes de escribir el archivo. Acá se
+    cierra lo que se puede cerrar con el archivo en la mano, que es el caso real: alguien corre
+    el export y saltea el paso.
+    """
+    problemas: list[str] = []
+    for nombre in CODIFICADOS:
+        datos = cuerpos.get(nombre)
+        if datos is None:
+            problemas.append(f"el export no dejó `{nombre}` para comprobar.")
+            continue
+        if datos[:4] == MAGIA_DE_PCK:
+            problemas.append(
+                f"`{nombre}` es el paquete crudo que dejó Godot y `vercel.json` manda "
+                "`Content-Encoding`: falta `node .github/scripts/comprimir_pck.mjs` antes de "
+                "publicar. Además pesa más de los 100 MB que Vercel acepta."
+            )
+        declarado = tamano_declarado(html, nombre)
+        if declarado is None:
+            problemas.append(
+                f"`index.html` no declara el tamaño de `{nombre}` en `fileSizes`: la barra de "
+                "carga no tiene contra qué medir."
+            )
+        elif declarado <= len(datos):
+            problemas.append(
+                f"`index.html` declara {declarado:,} bytes para `{nombre}` y el archivo mide "
+                f"{len(datos):,}: o no está comprimido, o el total quedó escrito con el tamaño "
+                "comprimido y la barra de carga avanza contra un total que no es."
+            )
+    return problemas
+
+
 # ── El veredicto del export ───────────────────────────────────────────────────
 
 #: Los tres archivos sin los cuales no hay juego. Los otros seis que Godot escribe —el splash,
@@ -289,5 +415,14 @@ def problemas_de_la_publicacion(url: str, pedir: Callable[[str], Respuesta]) -> 
             problemas.append(
                 f"`{archivo}` se sirve como `{respuesta.header('content-type') or 'nada'}` y no "
                 f"como `{TIPO_DEL_WASM}`: el navegador no lo compila en streaming."
+            )
+        codificacion = CODIFICADOS.get(archivo)
+        if codificacion and codificacion not in respuesta.header("content-encoding").lower():
+            problemas.append(
+                f"`{archivo}` no viaja con `Content-Encoding: {codificacion}`. El build lo "
+                "guarda comprimido, así que sin ese header el navegador recibe el `.pck` "
+                "comprimido como si fuera un paquete y el juego no arranca. Medido el "
+                "2026-11-01: el CDN devuelve el header que declara `vercel.json`, y sin la "
+                "regla por archivo no lo devuelve."
             )
     return problemas

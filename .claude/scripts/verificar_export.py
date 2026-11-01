@@ -21,7 +21,7 @@ from lib.consola import configurar  # noqa: E402
 
 configurar()
 
-from lib.despliegue import veredicto_del_export  # noqa: E402
+from lib.despliegue import CODIFICADOS, desajustes_del_pck, veredicto_del_export  # noqa: E402
 
 
 def pesos(directorio: Path) -> dict[str, int]:
@@ -35,6 +35,24 @@ def pesos(directorio: Path) -> dict[str, int]:
         for archivo in directorio.rglob("*")
         if archivo.is_file()
     }
+
+
+def problemas_del_pck(directorio: Path) -> list[str]:
+    """El `.pck` comprimido: que sea lo que el header promete y mida lo que la barra declara.
+
+    Un `.pck` comprimido servido sin su `Content-Encoding` —o al revés— deja el juego en negro
+    con el deploy en verde. El header vive en `vercel.json`; el cuerpo, acá. Por eso el veredicto
+    del export mira el cuerpo, y su test cruza los dos archivos.
+    """
+    html = directorio / "index.html"
+    if not html.is_file():
+        return []  # Sin HTML ya lo dice `veredicto_del_export`; no se repite con otro texto.
+    cuerpos = {
+        nombre: (directorio / nombre).read_bytes()
+        for nombre in CODIFICADOS
+        if (directorio / nombre).is_file()
+    }
+    return desajustes_del_pck(html.read_text(encoding="utf-8", errors="replace"), cuerpos)
 
 
 def main() -> None:
@@ -55,7 +73,7 @@ def main() -> None:
     # Un solo barrido del disco, y no uno por rama: dos `rglob` son dos fotos distintas del
     # directorio, y la que se imprime no sería la que se juzgó.
     archivos = pesos(directorio)
-    problemas = veredicto_del_export(archivos)
+    problemas = veredicto_del_export(archivos) + problemas_del_pck(directorio)
     if not problemas:
         total = sum(archivos.values()) / (1024 * 1024)
         print(f"export completo: {len(archivos)} archivos, {total:.1f} MB en `{directorio}`.")
