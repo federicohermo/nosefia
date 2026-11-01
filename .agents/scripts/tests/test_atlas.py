@@ -10,7 +10,7 @@ import unittest
 from lib.atlas import (
     BC1,
     BC3,
-    BLOQUE,
+    ALINEACION,
     BORDE,
     TOPE,
     Entrada,
@@ -40,12 +40,14 @@ def manifiesto_de(entradas):
 
 
 class Acomodar(unittest.TestCase):
-    def test_cada_celda_empieza_en_un_multiplo_del_bloque(self):
+    def test_cada_textura_empieza_en_un_multiplo_de_la_alineacion(self):
+        # Si no, los bloques de compresión de sus mips agrupan otros píxeles que suelta.
+        self.assertEqual(BORDE % ALINEACION, 0)
         entradas = [entrada(f"{i}.png", 100 + 3 * i, 90 + i) for i in range(12)]
         for atlas in acomodar(entradas, "t"):
             for c in atlas.colocadas:
-                self.assertEqual((c.x - BORDE) % BLOQUE, 0)
-                self.assertEqual((c.y - BORDE) % BLOQUE, 0)
+                self.assertEqual(c.x % ALINEACION, 0)
+                self.assertEqual(c.y % ALINEACION, 0)
 
     def test_dos_texturas_no_se_pisan_ni_se_tocan_sus_bordes(self):
         entradas = [entrada(f"{i}.png", 200 + 7 * i, 150 + 5 * i) for i in range(10)]

@@ -34,9 +34,10 @@ Unir cambia las mallas del lightmap.
 
 - un atlas por formato, BC1 para lo opaco y BC3 para lo que tiene alfa;
 - cada textura con el tamaño con el que viaja hoy: el atlas no baja resolución;
-- un borde de 8 píxeles que repite el último píxel de cada lado, para que los mips no mezclen
+- un borde de 16 píxeles que repite el último píxel de cada lado, para que los mips no mezclen
   vecinas;
-- cada celda en un múltiplo de 4, el lado del bloque de compresión;
+- cada textura en un múltiplo de 16, en x y en y: así los bloques de compresión de sus primeros
+  mips son los mismos que cuando viajaba suelta;
 - un tope de 4096 por lado. Si no entra, arma otro atlas.
 
 Escribe los PNG, `assets/source/atlas/atlas.json` y, para las cajas, el reparto que lee el juego.

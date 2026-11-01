@@ -12,8 +12,9 @@ mallas y por eso no cambia ni un píxel de lo que se ve.
   en BC3, y un atlas es de un solo formato.
 - **Dónde cae cada una** (`acomodar`): en estantes, ordenadas de mayor a menor, con un borde de
   `BORDE` píxeles alrededor que repite el último píxel de la textura. Sin el borde, el mip chico
-  de una etiqueta toma píxeles de la vecina. Cada celda empieza en un múltiplo de 4, el lado del
-  bloque de BC1 y BC3: un bloque que cruza dos celdas mezcla sus colores.
+  de una etiqueta toma píxeles de la vecina. La textura empieza en un múltiplo de `ALINEACION`:
+  así los bloques de BC1 y BC3 de sus primeros mips cuentan desde la misma esquina que cuando
+  viajaba suelta.
 - **El tope**: ningún atlas pasa de `TOPE` por lado, que es lo que garantiza la web.
 - **A dónde van las UV** (`uv_en_el_atlas`) y **si el atlas está al día** (`desfasaje`).
 
@@ -45,12 +46,20 @@ FUENTES = ASSETS / "source"
 CARPETA = FUENTES / "atlas"
 MANIFIESTO = CARPETA / "atlas.json"
 
-#: Píxeles que repite cada textura alrededor de sí misma. Múltiplo de 4, y alcanza para que los
-#: primeros tres niveles de mip no mezclen vecinas.
-BORDE = 8
-
 #: El lado del bloque de BC1 y BC3.
 BLOQUE = 4
+
+#: Dónde puede empezar la textura de una celda: en un múltiplo de esto, en x y en y. **No es sólo
+#: el bloque.** El mip `k` de una textura se comprime en bloques de 4 que cuentan desde su propia
+#: esquina. En el atlas cuentan desde la del atlas: si la textura no empieza en un múltiplo de
+#: `4 * 2**k`, los bloques de ese mip agrupan otros píxeles y la compresión da otro ruido. Medido
+#: en la web con 4: 7,7 % de los píxeles de una vista de góndola difería en más de 8 niveles. Con
+#: 16 los mips 0, 1 y 2, que son los que se ven, comprimen igual que la textura suelta.
+ALINEACION = 16
+
+#: Píxeles que repite cada textura alrededor de sí misma. Múltiplo de `ALINEACION`, para que la
+#: textura siga alineada, y alcanza para que los primeros cuatro mips no mezclen vecinas.
+BORDE = 16
 
 #: El lado más grande de un atlas, en píxeles. El de la placa más chica que juega.
 TOPE = 4096
@@ -166,7 +175,7 @@ class Atlas:
     colocadas: tuple[Colocada, ...]
 
 
-def _arriba(valor: int, multiplo: int = BLOQUE) -> int:
+def _arriba(valor: int, multiplo: int = ALINEACION) -> int:
     return -(-valor // multiplo) * multiplo
 
 
@@ -189,7 +198,7 @@ def _una_hoja(entradas: list[Entrada], borde: int, tope: int) -> tuple[int, int,
     ordenadas = sorted(entradas, key=lambda e: (-e.alto, -e.ancho, normalizar(e.ruta)))
     ancho_minimo = max(e.ancho + 2 * borde for e in entradas)
     mejor = None
-    for ancho in range(_arriba(ancho_minimo), tope + 1, BLOQUE):
+    for ancho in range(_arriba(ancho_minimo), tope + 1, ALINEACION):
         colocadas, alto = _estantes(ordenadas, ancho, borde)
         if alto > tope:
             continue
