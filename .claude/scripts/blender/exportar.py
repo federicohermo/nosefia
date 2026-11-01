@@ -60,6 +60,7 @@ from lib.blender import (  # noqa: E402
     grupo_de,
 )
 from blender.separar_hojas_de_entrada import editar as separar_hojas_de_entrada  # noqa: E402
+from blender.unir_techo_para_exportar import unir as unir_techo, restaurar as restaurar_techo  # noqa: E402
 
 
 def apagar_los_array() -> list[tuple[str, str]]:
@@ -213,11 +214,15 @@ def main() -> None:
     print(f"objetos `-noimp` ocultos: {len(noimp)}")
     print(f"colección `{COLECCION_DE_GUIA}` excluida: {guia_apagada}")
     achicadas: list[tuple[bpy.types.Image, bpy.types.Image]] = []
+    piezas_techo: list[str] = []
+    techo_unido = ""
     try:
+        piezas_techo, techo_unido = unir_techo()
         achicadas = achicar_las_imagenes()
         print(f"texturas achicadas: {len(achicadas)}")
         exportar(destino)
     finally:
+        restaurar_techo(piezas_techo, techo_unido)
         restaurar_las_imagenes(achicadas)
         restaurar(apagados)
         for nombre in noimp:
