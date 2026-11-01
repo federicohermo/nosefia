@@ -202,6 +202,10 @@ class LaCompresionDelPck(unittest.TestCase):
             "headers": [
                 {"source": "/(.*)", "headers": cabeceras},
                 {"source": "/index.pck", "headers": [{"key": "Content-Encoding", "value": "br"}]},
+                {
+                    "source": "/mapa_del_corte.pck",
+                    "headers": [{"key": "Content-Encoding", "value": "br"}],
+                },
             ]
         }
 
@@ -212,9 +216,14 @@ class LaCompresionDelPck(unittest.TestCase):
         """Un cuerpo comprimido de mentira: no empieza como un `.pck` y pesa menos que su total."""
         return b"\x1b\x2e\x00" + b"\x11" * tamano
 
+    def cuerpos(self, tamano: int = 400, crudo: bool = False) -> dict[str, bytes]:
+        """Los dos paquetes: el principal y el del mapa de la noche del corte."""
+        cuerpo = b"GDPC" + b"\x00" * tamano if crudo else self.cuerpo(tamano)
+        return {"index.pck": cuerpo, "mapa_del_corte.pck": cuerpo}
+
     def test_el_par_sano_no_tiene_nada_que_decir(self):
         self.assertEqual(desajustes_de_la_compresion(self.vercel_sano()), [])
-        self.assertEqual(desajustes_del_pck(self.html(10_000), {"index.pck": self.cuerpo()}), [])
+        self.assertEqual(desajustes_del_pck(self.html(10_000), self.cuerpos()), [])
 
     def test_sin_la_regla_del_pck_es_rojo(self):
         # La mitad del par que vive en `vercel.json` y se puede borrar sin que nada más chille.
@@ -240,20 +249,24 @@ class LaCompresionDelPck(unittest.TestCase):
     def test_un_pck_crudo_nombra_el_paso_que_falta(self):
         # El caso real: alguien corre el export y saltea el paso de compresión. Además de no
         # arrancar, ese archivo pesa más de los 100 MB que Vercel acepta.
-        problemas = desajustes_del_pck(
-            self.html(10_000), {"index.pck": b"GDPC" + b"\x00" * 5_000}
-        )
+        problemas = desajustes_del_pck(self.html(10_000), self.cuerpos(crudo=True))
         self.assertTrue(any("comprimir_pck.mjs" in p for p in problemas), problemas)
 
     def test_un_total_que_no_es_el_descomprimido_se_nombra(self):
         # La barra de carga divide por el total declarado. Si quedó el tamaño comprimido, salta a
         # 100 % a mitad de la descarga y el jugador cree que se colgó.
         cuerpo = self.cuerpo(tamano=400)
-        problemas = desajustes_del_pck(self.html(len(cuerpo)), {"index.pck": cuerpo})
+        problemas = desajustes_del_pck(self.html(len(cuerpo)), self.cuerpos(400))
         self.assertTrue(any("barra de carga" in p for p in problemas), problemas)
 
+    def test_el_paquete_del_mapa_no_necesita_total_en_el_html(self):
+        # La barra de carga divide por lo que el shell precarga: el paquete del mapa no está ahí
+        # y su tamaño no se declara. Comprobarlo lo haría fallar por lo que no corresponde.
+        problemas = desajustes_del_pck(self.html(10_000), self.cuerpos())
+        self.assertEqual(problemas, [])
+
     def test_un_html_sin_file_sizes_se_nombra(self):
-        problemas = desajustes_del_pck("const GODOT_CONFIG = {};", {"index.pck": self.cuerpo()})
+        problemas = desajustes_del_pck("const GODOT_CONFIG = {};", self.cuerpos())
         self.assertTrue(any("fileSizes" in p for p in problemas), problemas)
 
 
@@ -267,7 +280,7 @@ class ElVeredictoDelExport(unittest.TestCase):
 
     def completo(self) -> dict[str, int]:
         return {"index.html": 5_000, "index.js": 200_000, "index.wasm": 45 * 1024 * 1024,
-                "index.pck": 3 * 1024 * 1024}
+                "index.pck": 3 * 1024 * 1024, "mapa_del_corte.pck": 2 * 1024 * 1024}
 
     def test_un_export_completo_no_tiene_nada_que_decir(self):
         self.assertEqual(veredicto_del_export(self.completo()), [])
@@ -387,7 +400,10 @@ class LaPublicacion(unittest.TestCase):
             return Respuesta(200, self.sana() | {"Content-Type": TIPO_DEL_WASM})
 
         problemas_de_la_publicacion("https://x.test", registrando)
-        self.assertEqual(set(pedidos), {"index.html", "index.js", "index.wasm", "index.pck"})
+        self.assertEqual(
+            set(pedidos),
+            {"index.html", "index.js", "index.wasm", "index.pck", "mapa_del_corte.pck"},
+        )
 
 
 class LaVersionDelMotor(unittest.TestCase):

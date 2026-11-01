@@ -13,6 +13,10 @@
     {
       "source": "/index.pck",
       "headers": [{ "key": "Content-Encoding", "value": "br" }]
+    },
+    {
+      "source": "/mapa_del_corte.pck",
+      "headers": [{ "key": "Content-Encoding", "value": "br" }]
     }
   ]
 }

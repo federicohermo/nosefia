@@ -176,11 +176,17 @@ def desajustes_del_par(cfg: str, vercel: dict) -> list[str]:
 #: bytes: tal como lo escribe Godot no se puede publicar, y el deploy falla entero. Comprimido
 #: con brotli pesa 43.706.584 y entra.
 #:
+#: El mapa de la noche del corte viaja en su propio paquete y se comprime igual: son ~17 MB que
+#: sólo usa la sexta noche.
+#:
 #: Es un diccionario y no un nombre suelto porque la codificación vive en dos lugares —el cuerpo
 #: del archivo y el header de `vercel.json`— y separarlos deja el juego en negro con el deploy en
 #: verde. El par lo ata `desajustes_de_la_compresion`, y el cuerpo lo comprime
 #: `.github/scripts/comprimir_pck.mjs`, que lee la codificación de ese mismo `vercel.json`.
-CODIFICADOS: dict[str, str] = {"index.pck": "br"}
+CODIFICADOS: dict[str, str] = {"index.pck": "br", "mapa_del_corte.pck": "br"}
+
+#: El paquete que sólo se declara en `fileSizes`, y contra cuyo total divide la barra de carga.
+DECLARADOS_EN_EL_HTML: frozenset[str] = frozenset({"index.pck"})
 
 #: Los primeros bytes de un `.pck` de Godot 4. Es lo que distingue un cuerpo comprimido de uno
 #: crudo sin saber descomprimir: el comprimido no empieza así.
@@ -275,17 +281,18 @@ def desajustes_del_pck(html: str, cuerpos: dict[str, bytes]) -> list[str]:
                 "publicar. Además pesa más de los 100 MB que Vercel acepta."
             )
         declarado = tamano_declarado(html, nombre)
-        if declarado is None:
-            problemas.append(
-                f"`index.html` no declara el tamaño de `{nombre}` en `fileSizes`: la barra de "
-                "carga no tiene contra qué medir."
-            )
-        elif declarado <= len(datos):
-            problemas.append(
-                f"`index.html` declara {declarado:,} bytes para `{nombre}` y el archivo mide "
-                f"{len(datos):,}: o no está comprimido, o el total quedó escrito con el tamaño "
-                "comprimido y la barra de carga avanza contra un total que no es."
-            )
+        if nombre in DECLARADOS_EN_EL_HTML:
+            if declarado is None:
+                problemas.append(
+                    f"`index.html` no declara el tamaño de `{nombre}` en `fileSizes`: la barra "
+                    "de carga no tiene contra qué medir."
+                )
+            elif declarado <= len(datos):
+                problemas.append(
+                    f"`index.html` declara {declarado:,} bytes para `{nombre}` y el archivo mide "
+                    f"{len(datos):,}: o no está comprimido, o el total quedó escrito con el "
+                    "tamaño comprimido y la barra de carga avanza contra un total que no es."
+                )
     return problemas
 
 
@@ -293,7 +300,9 @@ def desajustes_del_pck(html: str, cuerpos: dict[str, bytes]) -> list[str]:
 
 #: Los tres archivos sin los cuales no hay juego. Los otros seis que Godot escribe —el splash,
 #: los dos worklets de audio, los iconos— degradan la página; sin éstos no hay página.
-OBLIGATORIOS: tuple[str, ...] = ("index.html", "index.wasm", "index.pck")
+OBLIGATORIOS: tuple[str, ...] = (
+    "index.html", "index.wasm", "index.pck", "mapa_del_corte.pck"
+)
 
 #: El piso del `.wasm` y el techo del directorio, en bytes.
 #:
@@ -341,7 +350,9 @@ def veredicto_del_export(archivos: dict[str, int]) -> list[str]:
 
 #: Los archivos que se le piden a la URL publicada. Son los tres obligatorios más el `index.js`,
 #: que es el que nombra `SharedArrayBuffer` y el que aborta si los headers no están.
-PUBLICADOS: tuple[str, ...] = ("index.html", "index.js", "index.wasm", "index.pck")
+PUBLICADOS: tuple[str, ...] = (
+    "index.html", "index.js", "index.wasm", "index.pck", "mapa_del_corte.pck"
+)
 
 #: El `Content-Type` sin el cual el navegador no compila el `.wasm` en streaming. Servido como
 #: `application/octet-stream` la página carga igual y el juego no arranca nunca.

@@ -120,9 +120,9 @@ export function comprimirArchivo(directorio, nombre, codificacion, html) {
     problemas.push(`al descomprimir \`${nombre}\` no empieza con \`${MAGIA_DE_PCK}\`.`);
   }
   const declarado = tamanoDeclarado(html, nombre);
-  if (declarado === null) {
-    problemas.push(`\`index.html\` no declara el tamaño de \`${nombre}\` en \`fileSizes\`.`);
-  } else if (vuelta.length !== declarado) {
+  // Sólo el paquete principal está en `fileSizes`: la barra de carga divide por su total. Los
+  // demás paquetes no se declaran, y su tamaño se comprueba contra el cuerpo descomprimido.
+  if (declarado !== null && vuelta.length !== declarado) {
     problemas.push(
       `\`index.html\` declara ${declarado} bytes para \`${nombre}\` y al descomprimirlo mide ` +
         `${vuelta.length}: la barra de carga avanza contra un total que no es.`

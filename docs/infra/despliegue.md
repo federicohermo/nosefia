@@ -98,6 +98,31 @@ de la carpeta pesa lo mismo que declara su `index.html`, no está comprimido. En
 sin el header y lo avisa por stderr. Medir un export recién salido de Godot creyendo que se mide
 el que se publica es el otro modo de falla.
 
+## El mapa de la noche del corte viaja en su propio paquete
+
+El horneado oscuro —`almacen_sin_luz.exr` y su `.lmbake`— pesa 17,27 MB de los 113 del `.pck` y
+sólo lo usa la sexta noche. Se saca del paquete principal y viaja en `mapa_del_corte.pck`, que se
+arma con `.github/scripts/armar_paquete_del_mapa.gd`. Son tres archivos: el `.lmbake`, el
+`.exr.import` y la textura importada. **No se arma con un preset de exportación**:
+`--export-pack` empaqueta todo el proyecto y el paquete salía de 113 MB en vez de 17.
+
+**El `.exr.import` es obligatorio.** El `.lmbake` referencia la textura por su ruta fuente. Sin
+la metadata de importación el motor contesta «No loader found for resource». El local se queda
+sin su horneado oscuro.
+
+- **Cuándo se baja:** al abrir la jornada del corte, en segundo plano, por `HTTPRequest`. La
+  regla vive en `src/dominio/almacen/mapa_del_corte.gd` y el sistema que la ejecuta en
+  `src/sistemas/marco/descarga_del_mapa.gd`.
+- **Si no llega:** reintenta con espera creciente y la oscuridad no se aplica hasta que el
+  paquete está montado. El almacén tapa la espera con la pantalla de carga. Sin el horneado, el
+  local se quedaría sin luz horneada y la noche del corte se vería rota.
+- **Los gates lo miran igual que al principal.** `verificar_export.py` lo exige como
+  obligatorio. `verificar_despliegue.py` le pide el `Content-Encoding` en la URL publicada,
+  porque también se comprime con brotli.
+
+En escritorio y en los tests no hay nada que bajar: el mapa sigue dentro del juego y la regla
+arranca lista.
+
 ## Los tres veredictos, y por qué no alcanza con uno
 
 **El código de salida del export no dice nada.** `--export-release "Web"` puede terminar con

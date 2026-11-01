@@ -158,10 +158,19 @@ jobs:
       # exceeded». Comprimido con brotli pesa 43.706.584 y entra. El `Content-Encoding` que lo
       # declara vive en `vercel.json`, y el paso lee la codificación de ahí: separados, el juego
       # queda en negro con el deploy en verde.
-      - name: Comprimir el pck
+      #
+      # **Y después va el paquete del mapa de la noche del corte**, que se arma con `PCKPacker`
+      # porque `--export-pack` empaqueta todos los recursos del proyecto: 113 MB en vez de 17.
+      # Viaja aparte para que sólo lo baje quien llega a esa noche, y lo comprime el mismo paso.
+      - name: Armar el paquete del mapa del corte
+        run: |
+          set -euo pipefail
+          "$GODOT_BIN" --headless --path . --script .github/scripts/armar_paquete_del_mapa.gd
+
+      - name: Comprimir los paquetes
         run: node .github/scripts/comprimir_pck.mjs export/web
 
-      - name: Comprimir el pck no rompe el paquete ni el total de la barra
+      - name: Comprimir no rompe los paquetes ni el total de la barra
         run: node --test .github/scripts/tests/comprimir_pck_test.mjs
 
       - name: El veredicto del export

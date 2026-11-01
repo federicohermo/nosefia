@@ -18,6 +18,10 @@ extends Node
 ## cortada. Quien escucha cierra las interfaces o las deja abrir.
 signal luz_cambiada(hay_luz: bool)
 
+## El corte llegó y su horneado oscuro todavía no está: sin él el local se quedría sin luz
+## horneada, así que la oscuridad espera y quien escucha puede tapar la espera.
+signal oscuridad_esperando
+
 const HORNEADO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 
 ## La única luz que sigue encendida mientras no hay luz. Va en un grupo y no por nombre para que
@@ -73,6 +77,10 @@ var _luces: Array[Light3D] = []
 var _reflejos: Dictionary[ReflectionProbe, float] = {}
 var _emision: Dictionary[BaseMaterial3D, float] = {}
 var _emergencia: Dictionary[SpotLight3D, Array] = {}
+## El mapa oscuro puede llegar en su propio paquete: quién lo baja y lo monta.
+var _descarga: DescargaDelMapa
+## El corte llegó antes que su horneado. La oscuridad no se aplica hasta que esté.
+var _esperando_el_mapa := false
 
 
 ## Las luces del local que el corte apaga: todas las que no son la de emergencia.
@@ -153,13 +161,31 @@ func preparar(raiz: Node, horno: LightmapGI, entorno: Environment) -> void:
 
 
 ## Toda jornada abre con luz. La de la noche del corte deja listo el horneado oscuro, así que su
-## carga no cae sobre el corte mismo.
+## carga no cae sobre el corte mismo. En la web ese horneado viaja en su propio paquete: si no
+## llegó, se pide ahora y la oscuridad lo espera.
 func abrir_jornada(jornada: int) -> void:
 	_jornada = jornada
 	_estado = AnomaliasDeLaJornada.corte_al_abrir()
 	if jornada == AnomaliasDeLaJornada.JORNADA_DEL_CORTE and _sin_luz == null:
-		_sin_luz = load(HORNEADO_SIN_LUZ)
+		_preparar_el_mapa()
 	_aplicar()
+
+
+## Deja cargado el horneado oscuro. Si el paquete todavía no está, se pide y se espera: la
+## oscuridad no puede aplicarse sobre un horneado que falta.
+func _preparar_el_mapa() -> void:
+	if _descarga != null and not _descarga.preparar(_jornada):
+		_descarga.lista.connect(_al_llegar_el_mapa, CONNECT_ONE_SHOT)
+		return
+	_al_llegar_el_mapa()
+
+
+func _al_llegar_el_mapa() -> void:
+	if not FileAccess.file_exists(HORNEADO_SIN_LUZ):
+		return
+	_sin_luz = load(HORNEADO_SIN_LUZ)
+	if _esperando_el_mapa:
+		_cambiar(_estado)
 
 
 ## Lo que queda del turno, cada cuadro: es lo que le hace llegar la hora al corte.
@@ -191,10 +217,27 @@ func _aplicar() -> void:
 	var hay := AnomaliasDeLaJornada.hay_luz(_estado)
 	if hay == _hay_luz:
 		return
+	if not hay and _sin_luz == null:
+		# Sin el horneado oscuro el local se queda sin luz horneada: la noche se rompe. Se avisa
+		# y se espera; cuando el mapa llegue, esto vuelve a pasar y la oscuridad se aplica.
+		_esperando_el_mapa = true
+		oscuridad_esperando.emit()
+		return
+	_esperando_el_mapa = false
 	_hay_luz = hay
 	_horno.light_data = _con_luz if hay else _sin_luz
 	_poner_el_local(hay)
 	luz_cambiada.emit(hay)
+
+
+## Si el corte llegó y su horneado todavía no: la escena tapa la espera con la pantalla de carga.
+func esperando_el_mapa() -> bool:
+	return _esperando_el_mapa
+
+
+## Quién baja el paquete del horneado oscuro, cuando viaja aparte del juego.
+func usar_la_descarga(descarga: DescargaDelMapa) -> void:
+	_descarga = descarga
 
 
 func _poner_el_local(hay: bool) -> void:

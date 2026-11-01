@@ -113,8 +113,11 @@ test('un archivo que no es un pck frena el paso', () => {
   }
 });
 
-test('el vercel.json de este repo declara el pck comprimido, y sólo él', () => {
+test('el vercel.json de este repo declara los dos paquetes comprimidos', () => {
   const ruta = new URL('../../../vercel.json', import.meta.url);
-  assert.deepEqual([...codificados(JSON.parse(readFileSync(ruta, 'utf8')))], [['index.pck', 'br']]);
+  assert.deepEqual([...codificados(JSON.parse(readFileSync(ruta, 'utf8')))], [
+    ['index.pck', 'br'],
+    ['mapa_del_corte.pck', 'br'],
+  ]);
   assert.ok(existsSync(new URL('../comprimir_pck.mjs', import.meta.url)));
 });
