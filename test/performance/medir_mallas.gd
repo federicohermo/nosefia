@@ -1,6 +1,7 @@
 extends Node3D
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const MUESTRAS := 240
 
 
 func _ready() -> void:
@@ -29,12 +30,23 @@ func _ejecutar() -> void:
 		for cuadro: int in 60:
 			await get_tree().process_frame
 		var muestras: Array[float] = []
-		for cuadro: int in 60:
+		var cuadros: Array[float] = []
+		var previo := Time.get_ticks_usec()
+		for cuadro: int in MUESTRAS:
 			await get_tree().process_frame
+			var ahora := Time.get_ticks_usec()
+			cuadros.append((ahora - previo) / 1000.0)
+			previo = ahora
 			muestras.append(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 		muestras.sort()
+		cuadros.sort()
 		resultados[nombre] = {
-			"dibujos_p50": muestras[muestras.size() / 2], "posicion": str(camara.global_position)
+			"dibujos_p50": muestras[muestras.size() / 2],
+			"cuadro_ms_p50": cuadros[cuadros.size() / 2],
+			"cuadro_ms_p90": cuadros[cuadros.size() * 9 / 10],
+			"objetos": Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME),
+			"primitivas": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
+			"posicion": str(camara.global_position)
 		}
 		if OS.has_feature("web"):
 			var capturas := int(JavaScriptBridge.eval("window.__capturas|0"))
