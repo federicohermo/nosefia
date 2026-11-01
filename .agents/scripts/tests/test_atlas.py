@@ -94,10 +94,11 @@ class Acomodar(unittest.TestCase):
 class Cajas(unittest.TestCase):
     def test_el_atlas_de_las_cajas_vive_junto_a_las_cajas_y_el_de_etiquetas_no(self):
         self.assertEqual(carpeta_del_atlas("atlas_cajas_bc1.png").name, "boxes")
+        self.assertEqual(carpeta_del_atlas("atlas_cajas_bc1.png").parent.name, "assets")
         self.assertEqual(carpeta_del_atlas("etiquetas_bc1.png").name, "atlas")
 
     def test_el_reparto_de_cada_caja_sale_del_nombre_de_su_png(self):
-        entradas = [entrada("boxes/actroncito.png"), entrada("boxes/fernet_god.png")]
+        entradas = [entrada("source/boxes/actroncito.png"), entrada("source/boxes/fernet_god.png")]
         atlas = acomodar(entradas, "atlas_cajas_bc1")
         manifiesto = a_manifiesto({"cajas": atlas}, {})
         reparto = reparto_de_las_cajas(manifiesto)

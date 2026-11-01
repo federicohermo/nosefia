@@ -35,7 +35,7 @@ from lib.blender import FUENTES  # noqa: E402
 #: error de redondeo del exportador, no una tolerancia de diseño.
 TOLERANCIA_UV = 0.02
 
-Restauracion = tuple[list[tuple["bpy.types.Material", str, "bpy.types.Image"]], dict]
+Restauracion = tuple[list[tuple["bpy.types.Material", str, "bpy.types.Image"]], dict, list]
 
 
 def ruta_en_fuentes(imagen: "bpy.types.Image") -> str | None:
@@ -81,7 +81,7 @@ def _por_clave(manifiesto: dict) -> dict:
 def aplicar() -> Restauracion:
     if not lib_atlas.MANIFIESTO.is_file():
         print("atlas: no hay manifiesto, se exporta con las texturas sueltas")
-        return [], {}
+        return [], {}, []
     manifiesto = _manifiesto_al_dia()
     celdas = _por_clave(manifiesto)
     imagenes_atlas: dict[str, bpy.types.Image] = {}
@@ -106,8 +106,64 @@ def aplicar() -> Restauracion:
             nodo.image = imagenes_atlas[atlas["archivo"]]
             de_material[material] = (atlas, entrada)
     originales = _llevar_las_uv(de_material)
-    print(f"materiales apuntados al atlas: {len(de_material)}, mallas movidas: {len(originales)}")
-    return cambios, originales
+    unificados = _unificar(list(de_material))
+    print(
+        f"materiales apuntados al atlas: {len(de_material)}, mallas movidas: {len(originales)}, "
+        f"ranuras que pasaron a un material igual: {len(unificados)}"
+    )
+    return cambios, originales, unificados
+
+
+def _firma(material: "bpy.types.Material") -> tuple | None:
+    """Todo lo que hace distinto a un material de otro, o `None` si es más que una textura sobre
+    un Principled. Dos materiales con la misma firma se dibujan igual."""
+    nodos = material.node_tree.nodes
+    principales = [n for n in nodos if n.type == "BSDF_PRINCIPLED"]
+    if len(principales) != 1:
+        return None
+    valores = []
+    for entrada in principales[0].inputs:
+        if entrada.is_linked or not hasattr(entrada, "default_value"):
+            continue
+        valor = entrada.default_value
+        valores.append(
+            (entrada.name, tuple(round(v, 4) for v in valor) if hasattr(valor, "__len__") else
+             round(valor, 4) if isinstance(valor, float) else valor)
+        )
+    texturas = tuple(
+        sorted((n.image.name, n.interpolation, n.extension, n.projection)
+               for n in nodos if n.type == "TEX_IMAGE" and n.image)
+    )
+    enlaces = tuple(sorted(
+        (v.from_node.type, v.from_socket.name, v.to_node.type, v.to_socket.name)
+        for v in material.node_tree.links
+    ))
+    return (
+        tuple(sorted(n.type for n in nodos)), tuple(valores), texturas, enlaces,
+        material.use_backface_culling, material.surface_render_method,
+    )
+
+
+def _unificar(materiales: list) -> list:
+    """Reemplaza, en cada malla, un material por otro de firma igual. Devuelve cómo deshacerlo.
+
+    Es lo que deja a las mallas de productos con una sola textura de atlas compartir material:
+    unir mallas necesita que el material sea el mismo, y un material distinto sólo por su
+    nombre no era el mismo.
+    """
+    por_firma: dict = {}
+    for material in sorted(materiales, key=lambda m: m.name):
+        firma = _firma(material)
+        if firma is not None:
+            por_firma.setdefault(firma, []).append(material)
+    canonico = {m: grupo[0] for grupo in por_firma.values() for m in grupo[1:]}
+    cambios = []
+    for malla in bpy.data.meshes:
+        for indice, material in enumerate(malla.materials):
+            if material in canonico:
+                cambios.append((malla.name, indice, material))
+                malla.materials[indice] = canonico[material]
+    return cambios
 
 
 def _llevar_las_uv(de_material: dict) -> dict:
@@ -148,7 +204,11 @@ def _llevar_las_uv(de_material: dict) -> dict:
 
 
 def restaurar(estado: Restauracion) -> None:
-    cambios, originales = estado
+    cambios, originales, unificados = estado
+    for nombre, indice, material in unificados:
+        malla = bpy.data.meshes.get(nombre)
+        if malla is not None:
+            malla.materials[indice] = material
     for material, nombre_del_nodo, imagen in cambios:
         material.node_tree.nodes[nombre_del_nodo].image = imagen
     for nombre, uv in originales.items():

@@ -74,7 +74,7 @@ def armar(destino: Path | None, sellar: bool) -> int:
         print(proceso.stdout + proceso.stderr, file=sys.stderr)
         return proceso.returncode
     for linea in proceso.stdout.splitlines():
-        if linea.startswith(("atlas:", "manifiesto:")):
+        if linea.startswith(("atlas:", "manifiesto:", "reparto")):
             print(f"  {linea}")
     return 0
 

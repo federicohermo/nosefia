@@ -107,11 +107,13 @@ ETIQUETAS = (
 #: acá no aparece en el manifiesto, y sus texturas siguen viajando sueltas.
 ETIQUETAS_DE_PRODUCTO = "etiquetas"
 CAJAS = "cajas"
-GRUPOS_ACTIVOS = (ETIQUETAS_DE_PRODUCTO,)
+GRUPOS_ACTIVOS = (ETIQUETAS_DE_PRODUCTO, CAJAS)
 
 #: Las cajas del depósito: copias en ASCII de la etiqueta de cada producto, a 512 por lado. Entra
-#: todo PNG de la carpeta: una caja nueva es un archivo nuevo.
-CARPETA_DE_CAJAS = "boxes"
+#: todo PNG de la carpeta: una caja nueva es un archivo nuevo. Está en `source/` porque Godot no
+#: la importa: lo que importa es el atlas, que va en `DESTINO_DE_LAS_CAJAS`.
+CARPETA_DE_CAJAS = "source/boxes"
+DESTINO_DE_LAS_CAJAS = "boxes"
 LADO_DE_LAS_CAJAS = 512
 
 
@@ -122,12 +124,12 @@ def es_caja(clave: str) -> bool:
 #: El atlas de las cajas se importa en Godot, y lo lee el juego: vive junto a las cajas. El de
 #: las etiquetas viaja adentro del `.glb`: vive en `CARPETA`, que Godot no importa.
 PREFIJO_DE_LAS_CAJAS = "atlas_cajas"
-REPARTO_DE_LAS_CAJAS = ASSETS / CARPETA_DE_CAJAS / "atlas_de_cajas.json"
+REPARTO_DE_LAS_CAJAS = ASSETS / DESTINO_DE_LAS_CAJAS / "atlas_de_cajas.json"
 
 
 def carpeta_del_atlas(archivo: str) -> Path:
     if archivo.startswith(PREFIJO_DE_LAS_CAJAS):
-        return ASSETS / CARPETA_DE_CAJAS
+        return ASSETS / DESTINO_DE_LAS_CAJAS
     return CARPETA
 
 
@@ -345,11 +347,7 @@ def claves_de_las_fuentes() -> list[str]:
     claves = list(ETIQUETAS) if ETIQUETAS_DE_PRODUCTO in GRUPOS_ACTIVOS else []
     if CAJAS in GRUPOS_ACTIVOS:
         cajas = sorted((ASSETS / CARPETA_DE_CAJAS).glob("*.png"))
-        claves += [
-            f"{CARPETA_DE_CAJAS}/{p.name}"
-            for p in cajas
-            if not p.name.startswith(PREFIJO_DE_LAS_CAJAS)
-        ]
+        claves += [f"{CARPETA_DE_CAJAS}/{p.name}" for p in cajas]
     return claves
 
 

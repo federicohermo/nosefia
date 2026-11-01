@@ -209,7 +209,7 @@ def main() -> None:
     achicadas: list[tuple[bpy.types.Image, bpy.types.Image]] = []
     originales_unidas: list[str] = []
     uniones: list[str] = []
-    estado_del_atlas: tuple[list, dict] = ([], {})
+    estado_del_atlas: tuple[list, dict, list] = ([], {}, [])
     try:
         estado_del_atlas = aplicar_atlas()
         originales_unidas, uniones = unir_mallas()
