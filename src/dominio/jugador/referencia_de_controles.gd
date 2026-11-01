@@ -21,6 +21,7 @@ enum Linea {
 	MOJAR,
 	LIMPIAR,
 	INTERACTUAR_PRIMARIO,
+	VOLVER,
 	NINGUNA,
 }
 enum Mira { NADA, LEVANTABLE, FIJO, CAJA }
@@ -55,14 +56,19 @@ const TEXTOS: Dictionary[Linea, String] = {
 	Linea.MOJAR: "Mojar",
 	Linea.LIMPIAR: "Limpiar",
 	Linea.INTERACTUAR_PRIMARIO: "Interactuar",
+	Linea.VOLVER: "Volver",
 }
 
 
+## Suspendido, la referencia queda vacía; sólo el examen ofrece la salida, porque se sale con la
+## misma tecla que lo abrió y la pantalla no lo dice.
 static func lineas(
-	con_la_mano: bool, mira: Mira, contexto: Contexto, suspendido: bool
+	con_la_mano: bool, mira: Mira, contexto: Contexto, suspendido: bool, examinando: bool = false
 ) -> Array[Linea]:
 	var valen: Array[Linea] = []
 	if suspendido:
+		if examinando:
+			valen.append(Linea.VOLVER)
 		return valen
 	if con_la_mano:
 		valen.append(Linea.EXAMINAR_LA_MANO)
@@ -91,7 +97,7 @@ static func texto(linea: Linea, control: String) -> String:
 
 
 static func accion(linea: Linea) -> StringName:
-	if linea in [Linea.EXAMINAR_LA_MANO, Linea.EXAMINAR]:
+	if linea in [Linea.EXAMINAR_LA_MANO, Linea.EXAMINAR, Linea.VOLVER]:
 		return ReglasDeLosObjetos.ACCION_EXAMINAR
 	if linea in [Linea.SACAR_PRODUCTO, Linea.INTERACTUAR]:
 		return ReglasDelJugador.ACCION_USAR

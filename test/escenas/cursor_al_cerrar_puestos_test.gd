@@ -4,7 +4,7 @@ const TinYTia := preload("res://test/escenas/tin_y_tia.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 
-func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.MouseMode]:
+func _probar_cierre(nombre: String) -> Array[Input.MouseMode]:
 	var local: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
 	local.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	local.set("compradores_de_la_apertura", TinYTia.en_cualquier_jornada)
@@ -38,12 +38,7 @@ func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.Mo
 	derecho.pressed = true
 	if nombre.ends_with("Ventanilla"):
 		derecho.button_index = MOUSE_BUTTON_LEFT
-	if desde_popup:
-		var programa: ProgramaDeTickets = puesto.get("programa")
-		var selector: OptionButton = programa.selectores[0]
-		programa.call("_en_el_popup", derecho, selector.get_popup())
-	else:
-		puesto.call("_input", derecho)
+	puesto.call("_input", derecho)
 	assert_bool(jugador.call("suspendido")).is_false()
 	for cuadro: int in 3:
 		jugador.call("_aplicar_el_modo_del_cursor")
@@ -66,11 +61,5 @@ func test_salir_de_nota_recaptura_con_el_mismo_clic() -> void:  # AC-PLY-071
 
 func test_salir_de_caja_recaptura_con_el_mismo_clic() -> void:  # AC-PLY-072
 	assert_array(_probar_cierre("Estructura/cajaregistradora/StaticBody3D")).is_equal(
-		[Input.MOUSE_MODE_CAPTURED]
-	)
-
-
-func test_salir_del_popup_de_caja_recaptura_con_el_mismo_clic() -> void:  # AC-PLY-072
-	assert_array(_probar_cierre("Estructura/cajaregistradora/StaticBody3D", true)).is_equal(
 		[Input.MOUSE_MODE_CAPTURED]
 	)

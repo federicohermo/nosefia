@@ -1,14 +1,10 @@
 ## Qué puertas interiores están trabadas en una jornada.
 ##
-## El depósito se traba la primera noche: el jugador la cumple sin entrar. El cuartito sigue a la
-## limpieza, porque no hay nada que hacer adentro hasta que se pide limpiar.
+## El cuartito sigue a la limpieza, porque no hay nada que hacer adentro hasta que se pide limpiar.
+## El depósito no se traba nunca: la primera noche ya pide reponer desde sus cajas.
 class_name PuertasTrabadas
 extends RefCounted
 
-enum Cuarto { DEPOSITO, CUARTITO }
 
-
-static func trabada(cuarto: Cuarto, jornada: int) -> bool:
-	if cuarto == Cuarto.DEPOSITO:
-		return jornada <= ReglasDeLaPartida.PRIMERA_JORNADA
+static func cuartito_trabado(jornada: int) -> bool:
 	return not Apertura.pide(jornada, Tarea.Tipo.LIMPIAR)

@@ -23,13 +23,17 @@ const SIN_ID := &""
 ## sueltas: el que se olvide de declararlo va a estar bien más veces de las que no.
 @export var levantable: bool = true
 
+## Si el juego lo declara vencido: no suma llamado afuera ni en el contenedor.
+@export var vencido: bool = false
+
 ## Si el objeto sostenido entra por la boca del contenedor.
 @export var entra_en_el_contenedor: bool = true
 
 ## Si sobre este objeto se puede soltar otro.
 @export var admite_encima: bool = false
 
-## Si al soltarlo queda con su eje vertical, mire adonde mire la vista.
+## Si al soltarlo queda con su eje vertical, mire adonde mire la vista. Suelto tampoco se vuelca,
+## y se empuja como una caja.
 @export var se_apoya_derecho: bool = false
 
 ## Si en la mano sobresale tanto que hay que retraerlo contra una pared, y soltarlo barre su

@@ -24,9 +24,13 @@ extends RefCounted
 ## atender, así que bajar este número aprieta las dos cosas a la vez.
 const UNIDADES_POR_CAJA := 8
 
+## Cuántas unidades de Cindolor abren vencidas en la jornada que pide desecharlas: la ficha
+## «Particulares de cada jornada» dice cinco, entre las de su góndola.
+const CINDOLOR_VENCIDOS := 5
+
 ## Intervalos inclusivos de la ficha de reposición.
-const TIPOS_QUE_FALTAN := Vector2i(4, 7)
-const MENOS_QUE_FALTA := 1
+const TIPOS_QUE_FALTAN := Vector2i(4, 6)
+const MENOS_QUE_FALTA := 3
 
 ## El reparto de prueba adapta el ritmo de los 32 sin convertir los huecos en contactos.
 ## Son mínimos físicos de exhibición; no modifican los cupos de reposición.

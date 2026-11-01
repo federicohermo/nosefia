@@ -22,9 +22,9 @@ func _textos(expediente: Expediente) -> Array[String]:
 
 func test_tres_textos_tres_notas() -> void:  # AC-INV-059
 	var expediente := _expediente()
-	var reflexion := _empezada(4, expediente)
+	var reflexion := _empezada(3, expediente)
 	var textos := ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA
-	assert_str(reflexion.encabezado()).is_equal(ReflexionDeCierre.ENCABEZADOS[4])
+	assert_str(reflexion.encabezado()).is_equal(ReflexionDeCierre.ENCABEZADOS[3])
 	assert_str(reflexion.texto_actual()).is_equal(textos[0])
 	var primero := reflexion.identidad_del_texto()
 	assert_bool(reflexion.continuar(primero)).is_true()
@@ -41,18 +41,18 @@ func test_tres_textos_tres_notas() -> void:  # AC-INV-059
 	assert_bool(reflexion.continuar(reflexion.identidad_del_texto())).is_false()
 	assert_int(expediente.mensajes_de_notas().size()).is_equal(textos.size())
 	assert_array(Array(expediente.identidades())).is_empty()
+	assert_str(expediente.eleccion(3)).is_empty()
 	assert_str(expediente.eleccion(4)).is_empty()
-	assert_str(expediente.eleccion(5)).is_empty()
 
 
 func test_cada_texto_tiene_identidad_propia_y_va_a_su_noche() -> void:  # AC-INV-059
 	var expediente := _expediente()
-	var reflexion := _empezada(4, expediente)
+	var reflexion := _empezada(3, expediente)
 	while reflexion.etapa() == E.TEXTOS:
 		reflexion.continuar(reflexion.identidad_del_texto())
 	var identidades := PackedStringArray()
 	for mensaje: Mensaje in expediente.mensajes_de_notas():
-		assert_int(mensaje.jornada).is_equal(4)
+		assert_int(mensaje.jornada).is_equal(3)
 		assert_bool(identidades.has(mensaje.identidad)).is_false()
 		identidades.append(mensaje.identidad)
 	assert_int(identidades.size()).is_equal(ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size())
@@ -60,33 +60,33 @@ func test_cada_texto_tiene_identidad_propia_y_va_a_su_noche() -> void:  # AC-INV
 
 func test_antes_de_empezar_no_avanza_ni_elige() -> void:  # AC-INV-061
 	var expediente := _expediente()
-	var primera := ReflexionDeCierre.para(4, expediente)
+	var primera := ReflexionDeCierre.para(3, expediente)
 	assert_bool(primera.continuar(primera.identidad_del_texto())).is_false()
 	assert_int(primera.elegir("2P")).is_equal(ReflexionDeCierre.Eleccion.FUERA_DE_ETAPA)
-	var segunda := ReflexionDeCierre.para(5, expediente)
+	var segunda := ReflexionDeCierre.para(4, expediente)
 	assert_int(segunda.elegir("2P")).is_equal(ReflexionDeCierre.Eleccion.FUERA_DE_ETAPA)
 	assert_array(expediente.mensajes_de_notas()).is_empty()
-	assert_str(expediente.eleccion(5)).is_empty()
+	assert_str(expediente.eleccion(4)).is_empty()
 
 
 func test_la_reflexion_retoma_desde_lo_anotado() -> void:  # AC-INV-059
 	var expediente := _expediente()
-	var reflexion := _empezada(4, expediente)
+	var reflexion := _empezada(3, expediente)
 	reflexion.continuar(reflexion.identidad_del_texto())
 	reflexion.continuar(reflexion.identidad_del_texto())
-	var retomada := _empezada(4, expediente)
+	var retomada := _empezada(3, expediente)
 	assert_str(retomada.texto_actual()).is_equal(ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA[2])
 	retomada.continuar(retomada.identidad_del_texto())
-	assert_object(ReflexionDeCierre.para(4, expediente)).is_null()
+	assert_object(ReflexionDeCierre.para(3, expediente)).is_null()
 
 
-func test_solo_la_cuarta_y_la_quinta_reflexionan() -> void:  # AC-INV-058
-	for jornada: int in [0, 1, 2, 3, 6, 7, 8]:
+func test_solo_la_tercera_y_la_cuarta_reflexionan() -> void:  # AC-INV-058
+	for jornada: int in [0, 1, 2, 5, 6, 7]:
 		assert_object(ReflexionDeCierre.para(jornada, _expediente())).is_null()
 
 
-func test_la_espera_retiene_la_sexta_noche() -> void:  # AC-INV-062
-	var reflexion := _empezada(5, _expediente())
+func test_la_espera_retiene_la_quinta_noche() -> void:  # AC-INV-062
+	var reflexion := _empezada(4, _expediente())
 	assert_bool(reflexion.avanzar(10.0)).is_false()
 	assert_int(reflexion.elegir("2P")).is_equal(ReflexionDeCierre.Eleccion.ACEPTADA)
 	assert_int(reflexion.etapa()).is_equal(E.ESPERA)
@@ -101,7 +101,7 @@ func test_la_espera_retiene_la_sexta_noche() -> void:  # AC-INV-062
 
 
 func test_un_cuadro_largo_termina_la_espera_una_sola_vez() -> void:  # AC-INV-062
-	var reflexion := _empezada(5, _expediente())
+	var reflexion := _empezada(4, _expediente())
 	reflexion.elegir("2P")
 	assert_bool(reflexion.avanzar(10.0)).is_true()
 	assert_bool(reflexion.avanzar(10.0)).is_false()
@@ -111,7 +111,7 @@ func test_durante_la_espera_navegar_y_elegir_no_cambian_nada() -> void:  # AC-IN
 	var expediente := _expediente()
 	expediente.registrar("2A")
 	expediente.registrar("2B")
-	var reflexion := _empezada(5, expediente)
+	var reflexion := _empezada(4, expediente)
 	reflexion.elegir("2A")
 	var notas := expediente.mensajes_de_notas().size()
 	var mostrada := reflexion.mostrada()
@@ -120,13 +120,13 @@ func test_durante_la_espera_navegar_y_elegir_no_cambian_nada() -> void:  # AC-IN
 	assert_object(reflexion.mostrada()).is_same(mostrada)
 	assert_int(reflexion.elegir("2B")).is_equal(ReflexionDeCierre.Eleccion.REPETIDA)
 	assert_int(expediente.mensajes_de_notas().size()).is_equal(notas)
-	assert_str(expediente.eleccion(5)).is_equal("2A")
+	assert_str(expediente.eleccion(4)).is_equal("2A")
 
 
 func test_sin_elegir_no_hay_limite_de_tiempo() -> void:  # AC-INV-061
-	var primera := _empezada(4, _expediente())
+	var primera := _empezada(3, _expediente())
 	primera.continuar(primera.identidad_del_texto())
-	var segunda := _empezada(5, _expediente())
+	var segunda := _empezada(4, _expediente())
 	for reflexion: ReflexionDeCierre in [primera, segunda]:
 		var etapa := reflexion.etapa()
 		assert_bool(reflexion.avanzar(600.0)).is_false()

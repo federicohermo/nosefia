@@ -76,12 +76,12 @@ func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
 		)
 
 
-## Los faltantes caben en la fila principal medida en el recurso vigente.
-func test_doscientas_semillas_entran_en_fila_y_caja() -> void:  # AC-STK-033
+## Los faltantes caben en los casilleros de todas las tandas medidas en el recurso vigente.
+func test_doscientas_semillas_entran_en_casilleros_y_caja() -> void:  # AC-STK-033
 	var disposicion := _disposicion()
 	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in Catalogo.todos():
-		casilleros[producto.id] = disposicion.filas_de_adelante[producto.id]
+		casilleros[producto.id] = disposicion.casilleros_de(producto.id)
 	for jornada in range(
 		ReglasDeLaPartida.PRIMERA_JORNADA,
 		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
@@ -92,7 +92,9 @@ func test_doscientas_semillas_entran_en_fila_y_caja() -> void:  # AC-STK-033
 			azar.seed = semilla
 			var faltantes := Apertura.faltantes_al_azar(pedidos, casilleros, azar)
 			for id: Producto.Id in faltantes:
-				assert_int(faltantes[id]).is_between(1, mini(8, casilleros[id]))
+				assert_int(faltantes[id]).is_between(
+					ReglasDelEstante.MENOS_QUE_FALTA, mini(8, casilleros[id])
+				)
 
 
 ## Una fila entera de casilleros, o dos iguales con los casilleros en la de adelante: las

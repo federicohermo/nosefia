@@ -108,8 +108,7 @@ func test_recibir_un_mensaje_pide_su_audio_una_vez_y_leer_no() -> void:
 	assert_int(celular.bandeja().no_leidos(quien)).is_zero()
 	assert_int(_pedidos.count(evento)).is_equal(1)
 	assert_bool(_rechazados.has(evento)).is_false()
-	var voces := _voces_con("SFX_INTERFAZ_Celular_Mensaje_A")
-	voces.append_array(_voces_con("SFX_INTERFAZ_Celular_Mensaje_B"))
+	var voces := _voces_con("SFX_INTERFAZ_Celular_Mensaje_Recibido")
 	assert_int(voces.size()).is_equal(1)
 	if voces.size() == 1:
 		assert_str(voces[0].bus).is_equal(EntradaSonora.BUS_DE_INTERFAZ)

@@ -1,9 +1,10 @@
 ## Abre la noche del almacén con los faltantes que un caso necesita, en vez de los de la jornada.
 ##
 ## La noche abre con la góndola llena salvo lo que falta, y colocar pide un casillero vacío. Los
-## casos que colocan una unidad le hacen lugar antes, con la misma apertura que el juego: el
-## inventario de `Apertura` con los casilleros que mide el puesto, y el puesto redibujado sobre
-## él. No es un atajo por dentro del dominio: es otra noche, con otros datos.
+## casos que colocan una unidad le hacen lugar antes: el inventario de `Apertura` con los
+## casilleros que mide el puesto, y el puesto redibujado sobre él. **No declara qué casilleros
+## abren vacíos**, así que el hueco queda al final de la fila de cada producto, y no donde lo
+## sortea la apertura del juego: esa noche la abre `abrir_con_semilla()`.
 ##
 ## Sacar no pide lugar: la caja entrega con la fila completa (BR-STK-017). Los casos que sólo
 ## sacan unidades para usarlas de objeto abren igual con lugar, que es la noche contra la que se

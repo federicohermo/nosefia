@@ -13,4 +13,5 @@ id = &"jabon_azul"
 nombre = "Jabón azul"
 sonoridad = 5
 subtitulo = "Un bidón de jabón azul, marca “2”. Sirve para manchas de humedad."
+entra_en_el_contenedor = false
 revelacion = SubResource("Resource_revelacion")

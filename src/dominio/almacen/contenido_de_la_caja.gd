@@ -55,17 +55,22 @@ const NOMBRES_DE_LA_UNIDAD := {
 	EntradaSonora.Sonoridad.LATA: ["lata", "latas"],
 	EntradaSonora.Sonoridad.CAJA: ["cartón", "cartones"],
 	EntradaSonora.Sonoridad.BOTELLA_PLASTICA: ["botella", "botellas"],
+	EntradaSonora.Sonoridad.BOTELLA_VIDRIO: ["botella", "botellas"],
+	EntradaSonora.Sonoridad.CAJA_CEREALES: ["cajita", "cajitas"],
 }
 
+## El producto que trae, que es el de su etiqueta salvo en la última noche (BR-ANO-004).
 var producto: Producto
 
 ## El estante de la noche: el que cuenta el depósito y lo que salió de cada caja.
 var _estante: Estante
 
 
-func _init(un_producto: Producto, un_estante: Estante) -> void:
-	producto = un_producto
+func _init(la_etiqueta: Producto, un_estante: Estante) -> void:
 	_estante = un_estante
+	producto = la_etiqueta
+	if la_etiqueta != null and _estante.contenidos.has(la_etiqueta.id):
+		producto = Catalogo.de(_estante.contenidos[la_etiqueta.id])
 
 
 ## Cuántas unidades tiene: el depósito de su producto menos las que salieron y no se colocaron.
@@ -91,7 +96,7 @@ func sacar() -> UnidadDeProducto:
 ## El tope es el de las reglas del estante y no otro: la caja no pasa nunca de lo que trae al
 ## abrir la noche. Lo que no entra no cambia nada, y la unidad sigue donde estaba.
 func meter(unidad: UnidadDeProducto) -> bool:
-	if not _es_de_su_producto(unidad) or unidades() >= ReglasDelEstante.UNIDADES_POR_CAJA:
+	if not _puede_volver(unidad) or unidades() >= ReglasDelEstante.UNIDADES_POR_CAJA:
 		return false
 	return _estante.devolver(unidad)
 
@@ -103,7 +108,7 @@ func meter(unidad: UnidadDeProducto) -> bool:
 func uso(sostenido: ObjetoDelAlmacen, primario: bool) -> Gesto:
 	if not primario and sostenido == null:
 		return Gesto.SACAR
-	if primario and _es_de_su_producto(sostenido as UnidadDeProducto):
+	if primario and _puede_volver(sostenido as UnidadDeProducto):
 		return Gesto.METER
 	return Gesto.NADA
 
@@ -139,6 +144,12 @@ func texto_del_examen() -> String:
 	elif datos.entran > 1:
 		texto += TEXTO_DE_VARIAS_MAS % datos.entran
 	return texto
+
+
+## Si la caja la recibiría: es de su producto y no está vencida, porque una vencida que vuelve a
+## la caja saldría después como sana (BR-STK-052).
+func _puede_volver(unidad: UnidadDeProducto) -> bool:
+	return _es_de_su_producto(unidad) and not unidad.vencido
 
 
 ## Si la unidad es de su producto. Compara por `id` y no por instancia: el catálogo arma un

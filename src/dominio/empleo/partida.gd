@@ -17,8 +17,16 @@ extends RefCounted
 ## Los tres estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
 ## `enum`: un `String` suelto dejaría al `if` del menú sin entrar nunca, sin decir una palabra.
 enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
-enum Llamado { LOCAL_DESORDENADO, OBJETO_AFUERA, PAPEL_EN_EL_INODORO, OBJETO_TIRADO }
+enum Llamado {
+	LOCAL_DESORDENADO,
+	OBJETO_AFUERA,
+	PAPEL_EN_EL_INODORO,
+	OBJETO_TIRADO,
+	HELADERAS_ABIERTAS,
+}
 enum RegistroDePoetico { RECHAZADO, ANOTADO, REPETIDO }
+
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 ## La última noche de la prueba: de ahí sale el resultado que la primera jornada completa hereda.
 const _ULTIMA_DE_LA_PRUEBA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
@@ -51,6 +59,46 @@ var semilla: int:
 	set(_nueva):
 		push_error("La semilla se fija al empezar la partida y no se sustituye")
 
+## Si al cerrar la noche quedó una bolsa afuera: cambia la Tarea 5 de la devolución. Como los
+## llamados, sólo se anota con la jornada abierta.
+var bolsa_afuera := false:
+	set(valor):
+		bolsa_afuera = valor and _jornada_abierta and not terminada()
+
+## Dónde quedó un vencido sin desechar al cerrar la noche: dentro del local —en la góndola, en la
+## mano o suelto— o afuera. Cambian la Tarea 5 de la devolución. Como los llamados, sólo se anotan
+## con la jornada abierta.
+var vencido_en_el_local := false:
+	set(valor):
+		vencido_en_el_local = valor and _jornada_abierta and not terminada()
+
+var vencido_afuera := false:
+	set(valor):
+		vencido_afuera = valor and _jornada_abierta and not terminada()
+
+## Las clases de desorden con que cerró la noche. Asignarlas anota el llamado por desorden; sin
+## clases no hay desorden. Como los llamados, sólo se anotan con la jornada abierta.
+var clases_de_desorden: Array[ReglasDelCierre.Clase]:
+	get:
+		return _clases_de_desorden.duplicate()
+	set(clases):
+		if clases.is_empty():
+			return
+		anotar_llamado(Llamado.LOCAL_DESORDENADO)
+		if _llamados.has(Llamado.LOCAL_DESORDENADO):
+			_clases_de_desorden = clases.duplicate()
+
+## Dónde estaba cada caja del depósito al cerrar la última jornada (BR-SAV-022). Una partida
+## nueva no trae ninguna, y el cierre las anota.
+var poses_de_las_cajas: Dictionary[Producto.Id, Transform3D]:
+	get:
+		return _poses_de_las_cajas.duplicate()
+	set(nuevas):
+		_poses_de_las_cajas = nuevas.duplicate()
+
+## Los números de ticket ya sorteados: ninguno se repite en la partida.
+var numeros_de_ticket := NumerosDeTicket.new()
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -58,6 +106,7 @@ var _obligatorias: Array[Tarea] = []
 var _jornada_abierta: bool = false
 var _final: Final = Final.EN_CURSO
 var _llamados: Array[Llamado] = []
+var _clases_de_desorden: Array[ReglasDelCierre.Clase] = []
 var _antecedentes := Antecedentes.new()
 var _devoluciones: Array[Mensaje] = []
 var _mopa_secada := false
@@ -65,6 +114,7 @@ var _poetico_usado_en: Array[int] = []
 var _reflexion: ReflexionDeCierre = null
 var _noches_de_prueba: Dictionary[int, ResultadoDeLaNoche] = {}
 var _semilla: int = 0
+var _poses_de_las_cajas: Dictionary[Producto.Id, Transform3D] = {}
 
 
 func anotar_uso_de_poetico(
@@ -137,6 +187,9 @@ static func desde(datos: Dictionary) -> Partida:
 		var noche := ResultadoDeLaNoche.desde_datos(noches[jornada])
 		if jornada is int and _es_de_prueba(jornada) and noche != null:
 			partida._noches_de_prueba[jornada] = noche
+	partida._poses_de_las_cajas = _poses_validas(
+		saneado[PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS)]
+	)
 	partida._restaurar_la_investigacion(saneado)
 	return partida
 
@@ -160,6 +213,20 @@ func _restaurar_la_investigacion(saneado: Dictionary) -> void:
 	)]
 	if pendiente == _jornada - 1:
 		_reflexion = ReflexionDeCierre.para(pendiente, _expediente)
+
+
+static func _poses_validas(crudas: Dictionary) -> Dictionary[Producto.Id, Transform3D]:
+	var validas: Dictionary[Producto.Id, Transform3D] = {}
+	for id: Variant in crudas:
+		var pose: Variant = crudas[id]
+		if (
+			id is int
+			and Producto.Id.values().has(id)
+			and pose is Transform3D
+			and (pose as Transform3D).is_finite()
+		):
+			validas[id] = pose
+	return validas
 
 
 ## Si la mopa ya se secó una vez en la partida y se mostró su pensamiento (BR-SUB-014).
@@ -265,6 +332,10 @@ func abrir_la_jornada() -> Turno:
 	if terminada():
 		return null
 	_llamados.clear()
+	_clases_de_desorden.clear()
+	bolsa_afuera = false
+	vencido_en_el_local = false
+	vencido_afuera = false
 	_obligatorias = Apertura.obligatorias(_jornada)
 	_jornada_abierta = true
 	return Apertura.turno_de_la_jornada(_obligatorias)

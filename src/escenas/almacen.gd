@@ -13,6 +13,9 @@ extends Node3D
 ## cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## `Label3D` y llamarle `declarar_jornada()` no compilaría.
 const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd")
+const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
+const EscritorioDelLocal := preload("res://src/escenas/puestos/escritorio.gd")
+const TableroElectrico := preload("res://src/escenas/puestos/tablero_electrico.gd")
 
 ## Los scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de mesa:
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
@@ -127,6 +130,8 @@ var _gestos := SubtitulosDeLosGestos.new()
 var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
+var _devolucion_en_espera: DevolucionDelJefe
+var _espera_del_celular := 0.0
 var _enlace_de_guardado: EnlaceDeGuardado
 var _salida_preparada := false
 var _salida: SalidaDelAlmacen
@@ -173,13 +178,17 @@ func _ready() -> void:
 			func() -> void:
 				_pensar_gesto(
 					SubtitulosDeLosGestos.al_usar_la_entrada(
-						_partida.jornada(), _partida.obligatorias()
+						_partida.jornada(),
+						_partida.obligatorias(),
+						_atenciones.tarea(),
+						_computadora.registro()
 					)
 				)
 		)
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
+	_atenciones.entrega_dicha.connect(_decir_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_computadora.computadora_abierta.connect(avisos.actualizar_computadora.bind(true))
@@ -209,10 +218,15 @@ func _ready() -> void:
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
 	_reloj.tiempo_consumido.connect(avisos.actualizar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
+	_cablear_el_corte_de_luz()
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
 	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
+	_atenciones.comprador_llegado.connect(_computadora.revisar_registro.unbind(1))
+	_atenciones.compra_realizada.connect(_revisar_la_salida)
+	_atenciones.comprador_vencido.connect(_revisar_la_salida.unbind(1))
+	_computadora.registro_actualizado.connect(_revisar_la_salida)
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
@@ -315,7 +329,6 @@ func _ready() -> void:
 		caja.empujada.connect(_pedir_revision_del_deposito.unbind(1))
 	# «Volver al menú» de la pausa sale por el mismo camino que el de la placa.
 	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
-	_programa_de_tickets.pausa_pedida.connect(pausa.pausar)
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
 	pausa.pausado.connect(_jugador.declarar_la_pausa.bind(true))
@@ -325,13 +338,38 @@ func _ready() -> void:
 	_arranque = _jugador.global_transform
 	_enlace_de_guardado = EnlaceDeGuardado.new(_ciclo, Guardado.new())
 	add_child(_enlace_de_guardado)
-	_reposicion_manual.muebles_con_reserva = _muebles_con_contorno
-	_jugador.muebles_con_reserva = _muebles_con_contorno
+	var reservados: Array[PhysicsBody3D] = _muebles_con_contorno.duplicate()
+	for heladera: String in ["heladeranueva", "heladeranueva_001", "heladera_fuera_de_servicio"]:
+		reservados.append(get_node("Estructura/%s/StaticBody3D" % heladera))
+	_reposicion_manual.muebles_con_reserva = reservados
+	_jugador.muebles_con_reserva = reservados
 	_ciclo.arrancar(_partida, _reloj, _clientes_mal_atendidos)
 
 
 ## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
 ## momento salvo la letra, que espera al cierre. Esc la cierra sin reanudar.
+## El corte de la sexta noche: el reloj le da lo que queda del turno, el tablero le pide
+## restablecer, y sin luz la computadora y la caja se cierran y no abren. Cuándo se corta y qué
+## quiere decir «hay luz» lo decide el dominio.
+func _cablear_el_corte_de_luz() -> void:
+	var corte: CorteDeLuz = CorteDeLuz.new()
+	add_child(corte)
+	corte.preparar(self, $LightmapGI, ($Ambiente/Entorno as WorldEnvironment).environment)
+	_reloj.tiempo_consumido.connect(corte.avanzar)
+	_ciclo.jornada_abierta.connect(corte.abrir_jornada)
+	var tablero: TableroElectrico = $Estructura/tableroluz/StaticBody3D
+	tablero.restablecimiento_pedido.connect(corte.restablecer)
+	var escritorio: EscritorioDelLocal = $"Estructura/base compu/StaticBody3D"
+	corte.luz_cambiada.connect(
+		func(hay_luz: bool) -> void:
+			escritorio.con_luz = hay_luz
+			_puesto_de_la_caja.con_luz = hay_luz
+			if not hay_luz:
+				escritorio.cerrar()
+				_puesto_de_la_caja.cerrar()
+	)
+
+
 func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 	var ajuste := AjusteDePreferencias.new()
 	add_child(ajuste)
@@ -385,7 +423,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		_colilla.collision_layer = 0
 		_colilla.collision_mask = 0
 		_colilla.process_mode = Node.PROCESS_MODE_DISABLED
-	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
+	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias(jornada))
@@ -395,27 +433,44 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
-	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
+	# de adelante de cada tanda lo mide el puesto sobre el modelo; cuáles abren vacíos, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
-	var inventario := Apertura.inventario_de_la_jornada(
+	var productos := Catalogo.de_la_jornada(jornada)
+	var vacios := Apertura.vacios_de_la_jornada(
 		jornada,
 		compradores,
-		_reposicion_manual.casilleros(),
-		_reposicion_manual.casilleros_reponibles(),
-		azar_de_la_apertura
+		_reposicion_manual.tandas(),
+		_reposicion_manual.productos_de_una_fila(),
+		azar_de_la_apertura,
+		_reposicion_manual.posiciones()
 	)
-	_repositor.arrancar(Estante.new(inventario, Catalogo.de_la_jornada(jornada)))
+	var inventario := Apertura.inventario_con_faltantes(
+		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos
+	)
+	_repositor.arrancar(
+		Estante.new(
+			inventario,
+			productos,
+			vacios,
+			AnomaliasDeLaJornada.contenidos_de_las_cajas(jornada),
+			Apertura.vencidos_de_la_jornada(
+				jornada, _reposicion_manual.casilleros(), azar_de_la_apertura
+			)
+		)
+	)
 	_reposicion_manual.preparar()
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
-	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
+	_computadora.arrancar(RegistroDeVentas.new(Catalogo.de_la_jornada(jornada), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada(jornada))
-	_recolector.arrancar(TareaDeLaBasura.de_la_jornada(jornada))
+	_recolector.arrancar(
+		TareaDeLaBasura.de_la_jornada(jornada), TareaDeLosVencidos.de_la_jornada(jornada)
+	)
 	# La apertura restaura los cuerpos antes de pintar sólo los tachos declarados.
 	for indice in _bolsas.size():
 		var bolsa: ObjetoAgarrable = _bolsas[indice]
@@ -448,12 +503,16 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			if caja.producto in llegadas:
 				cajas_nuevas.append(caja)
 		poses = PilaDelDeposito.poses(cajas_nuevas, pallets, frente)
+	var fijas: Dictionary[Producto.Id, Transform3D] = {}
+	for caja: CajaDeProductosDelDeposito in poses:
+		fijas[caja.producto] = poses[caja]
+	var organizadas := OrganizacionDelDeposito.abrir(
+		_cajas_del_deposito(inventario), _partida.poses_de_las_cajas, _repisas_del_deposito(), fijas
+	)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
-		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
+		caja.declarar_origen(organizadas[caja.producto])
 		caja.volver_a_su_lugar()
-		_mostrar_caja(
-			caja, inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
-		)
+		_mostrar_caja(caja, _hay_en_el_deposito(inventario, caja))
 	_pedir_revision_del_deposito()
 	# Los útiles de limpieza van por lo mismo que las cajas: se trasladan, y la noche siguiente
 	# arrancaría con la mopa y el balde donde los dejó la anterior. Vacío y seca los deja el piso
@@ -465,16 +524,12 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			util.freeze = true
 			util.collision_layer = 0
 			util.collision_mask = 0
-	var cerradas := {
-		$Estructura/puerta/CuerpoDeLaHoja:
-		[PuertasTrabadas.Cuarto.DEPOSITO, SubtitulosAlExaminar.DEPOSITO_CERRADO],
-		$Estructura/puerta_limpieza/CuerpoDeLaHoja:
-		[PuertasTrabadas.Cuarto.CUARTITO, SubtitulosAlExaminar.CUARTITO_CERRADO],
-	}
-	for puerta: PuertaDelLocal in cerradas:
-		var trabada := PuertasTrabadas.trabada(cerradas[puerta][0], jornada)
-		puerta.traba = PuertaDelLocal.Traba.PUERTA if trabada else PuertaDelLocal.Traba.NINGUNA
-		puerta.identidad = cerradas[puerta][1] if trabada else &""
+	var puerta_del_cuartito: PuertaDelLocal = $Estructura/puerta_limpieza/CuerpoDeLaHoja
+	var trabada := PuertasTrabadas.cuartito_trabado(jornada)
+	puerta_del_cuartito.traba = (
+		PuertaDelLocal.Traba.PUERTA if trabada else PuertaDelLocal.Traba.NINGUNA
+	)
+	puerta_del_cuartito.identidad = SubtitulosAlExaminar.CUARTITO_CERRADO if trabada else &""
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_tapa_del_contenedor.reiniciar()
@@ -483,6 +538,42 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_estante.mostrar(0)
 	_salida_preparada = true
 	_revisar_la_salida()
+
+
+func _hay_en_el_deposito(inventario: Inventario, caja: CajaDeProductosDelDeposito) -> bool:
+	return inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
+
+
+func _cajas_del_deposito(inventario: Inventario) -> Array[OrganizacionDelDeposito.Caja]:
+	var cajas: Array[OrganizacionDelDeposito.Caja] = []
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		cajas.append(
+			OrganizacionDelDeposito.Caja.new(
+				caja.producto,
+				caja.media(),
+				caja.pose_de_estanteria(),
+				_hay_en_el_deposito(inventario, caja)
+			)
+		)
+	return cajas
+
+
+func _repisas_del_deposito() -> Array[AABB]:
+	var repisas: Array[AABB] = []
+	var pallets := get_node("Estructura").find_children(
+		"deposito_pallet_*", "MeshInstance3D", true, false
+	)
+	for pallet: MeshInstance3D in pallets:
+		if pallet.name != &"deposito_pallet_piso":
+			repisas.append(pallet.global_transform * pallet.get_aabb())
+	return repisas
+
+
+func _poses_de_las_cajas() -> Dictionary[Producto.Id, Transform3D]:
+	var poses: Dictionary[Producto.Id, Transform3D] = {}
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		poses[caja.producto] = caja.global_transform
+	return poses
 
 
 func _mostrar_caja(caja: CajaDeProductosDelDeposito, presente: bool) -> void:
@@ -517,7 +608,12 @@ func _puede_salir() -> bool:
 	return (
 		_salida_preparada
 		and _reloj.corriendo()
-		and CierreAnticipado.corresponde(_partida.jornada(), _partida.obligatorias())
+		and CierreAnticipado.corresponde(
+			_partida.jornada(),
+			_partida.obligatorias(),
+			_atenciones.tarea(),
+			_computadora.registro()
+		)
 	)
 
 
@@ -544,14 +640,13 @@ func _salir_por_la_entrada() -> void:
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_jornada_del_celular = jornada
 	_gestos.descartar()
-	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
+	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
+	persiana.bajar()
 	_celular.cerrar_jornada()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
 	var devolucion := DevolucionDelJefe.new(jornada, _partida)
-	if devolucion.por_el_celular():
-		_pantalla.mostrar(devolucion)
 	# Sin esto el celular es inalcanzable jugando: el jugador clava el puntero en el centro cada
 	# cuadro. La suspensión suelta el cursor sola.
 	_jugador.suspender()
@@ -561,6 +656,14 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	# Una conexión por devolución: un segundo despacho no encuentra a nadie, y no abre dos noches
 	# ni carga el menú dos veces.
 	_pantalla.devolucion_despachada.connect(_al_despachar_la_devolucion, CONNECT_ONE_SHOT)
+	persiana.persiana_bajada.connect(
+		_esperar_para_subir_el_celular.bind(devolucion), CONNECT_ONE_SHOT
+	)
+
+
+func _esperar_para_subir_el_celular(devolucion: DevolucionDelJefe) -> void:
+	_devolucion_en_espera = devolucion
+	_espera_del_celular = 0.0
 
 
 func _seguir_sin_celular(devolucion: DevolucionDelJefe) -> void:
@@ -611,9 +714,6 @@ func _preparar_lo_postergado() -> void:
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if PreparacionDeLosUtiles.por_preparar(util.datos.id, _jornada_preparada, siguiente):
 			pendientes.append(util)
-	if PreparacionDelDeposito.por_preparar(_jornada_preparada, siguiente):
-		pendientes.append_array(_cajas_de_productos)
-		pendientes.append_array(_reposicion_manual.unidades_de_muestra())
 	if not pendientes.is_empty():
 		var capa := CanvasLayer.new()
 		var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
@@ -646,15 +746,12 @@ func _seguir() -> void:
 
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
 ## entregar otra vez la devolución; si no, entra a la jornada guardada.
-## Los útiles y las cajas que esta carga no prepara: sus variantes las compila otra noche.
+## Los útiles que esta carga no prepara: sus variantes las compila otra noche.
 func cuerpos_sin_copias() -> Array[Node3D]:
 	var sin_copias: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if not PreparacionDeLosUtiles.se_prepara(util.datos.id, _partida.jornada()):
 			sin_copias.append(util)
-	if not PreparacionDelDeposito.se_prepara(_partida.jornada()):
-		sin_copias.append_array(_cajas_de_productos)
-		sin_copias.append_array(_reposicion_manual.unidades_de_muestra())
 	return sin_copias
 
 
@@ -788,15 +885,25 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 		if nodo.has_meta(&"recibido_por_comprador"):
 			continue
 		var clase := ReglasDelCierre.Clase.OTRO
-		if nodo is CajaDeProductosDelDeposito:
+		if _bolsas.has(nodo):
+			clase = ReglasDelCierre.Clase.BOLSA
+		elif nodo is CajaDeProductosDelDeposito:
 			clase = ReglasDelCierre.Clase.CAJA
 		elif nodo is UtilDeLimpieza:
 			clase = ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA
 		elif nodo.get("datos") is UnidadDeProducto:
 			clase = ReglasDelCierre.Clase.UNIDAD_SUELTA
-		var en_mano := nodo == sostenido and not _jugador.examen.esta_examinando()
+		var en_mano := nodo == sostenido
+		var datos := nodo.get("datos") as ObjetoDelAlmacen
 		estados.append(
-			ReglasDelCierre.Estado.new(clase, _habitaciones.de(nodo.global_position), en_mano)
+			ReglasDelCierre.Estado.new(
+				clase,
+				_habitaciones.de(nodo.global_position),
+				en_mano,
+				datos.id if datos != null else ObjetoDelAlmacen.SIN_ID,
+				ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos)),
+				datos != null and datos.vencido
+			)
 		)
 	return estados
 
@@ -816,7 +923,9 @@ func _al_tenir_con(identidad: StringName, _agua: ReglasDeLaLimpieza.Agua) -> voi
 func _cablear_los_gestos() -> void:
 	_recolector.tiro_pedido.connect(
 		func(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> void:
-			_pensar_gesto(SubtitulosDeLosGestos.al_tirar(sostenido, tiro))
+			_pensar_gesto(
+				SubtitulosDeLosGestos.al_tirar(sostenido, tiro, _levanta_una_pista(sostenido))
+			)
 	)
 	_limpiador.pasada_rechazada.connect(
 		func(_lugar: PisoDelLocal.Lugar, motivo: ReglasDeLaLimpieza.Resultado) -> void:
@@ -853,14 +962,33 @@ func _pensar_en(texto: String, lugar: Vector3) -> void:
 	if texto.is_empty():
 		return
 	_hud.pensar(texto)
+	_anclar_en(lugar)
+
+
+func _anclar_en(lugar: Vector3) -> void:
 	_lugar_del_pensamiento = lugar
 	if lugar.is_finite():
 		_distancia_al_pensar = _jugador.global_position.distance_to(lugar)
 
 
+## El texto de una entrega tiene el lugar de la figura al decirlo, y no la sigue si se va.
+func _decir_entrega(texto: String) -> void:
+	if texto.is_empty():
+		return
+	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
+	_hud.decir_comprador(texto)
+	_anclar_en(ventanilla.comprador_visible.global_position)
+
+
 func _process(delta: float) -> void:
 	if _partida.reflexion != null and _partida.reflexion.avanzar(delta):
 		_terminar_la_reflexion()
+	if _devolucion_en_espera != null and not get_tree().paused:
+		_espera_del_celular += delta
+		if DevolucionDelJefe.celular_a_la_vista(_espera_del_celular):
+			var devolucion := _devolucion_en_espera
+			_devolucion_en_espera = null
+			_pantalla.mostrar(devolucion)
 	if _lugar_del_pensamiento.is_finite():
 		var distancia := _jugador.global_position.distance_to(_lugar_del_pensamiento)
 		_hud.alejarse(distancia - _distancia_al_pensar)
@@ -895,20 +1023,47 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 
 
 func _al_agotar_el_turno(_jornada: int) -> void:
+	_partida.poses_de_las_cajas = _poses_de_las_cajas()
 	var estados := _estados_del_cierre()
-	if ReglasDelCierre.hay_desorden(estados):
-		_partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
+	_partida.clases_de_desorden = ReglasDelCierre.clases_de_desorden(estados, _partida.jornada())
 	if ReglasDelCierre.hay_objetos_afuera(estados):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
+	if ReglasDelCierre.hay_bolsa_afuera(estados):
+		_partida.bolsa_afuera = true
+	_partida.vencido_en_el_local = ReglasDelCierre.hay_vencido_en_el_local(
+		estados, _repositor.estante().vencidos.cuantos()
+	)
+	_partida.vencido_afuera = ReglasDelCierre.hay_vencido_afuera(estados)
+	if ReglasDelCierre.hay_heladera_abierta(_puertas_de_las_heladeras()):
+		_partida.anotar_llamado(Partida.Llamado.HELADERAS_ABIERTAS)
+
+
+func _puertas_de_las_heladeras() -> Dictionary[ReglasDelCierre.Heladera, Puerta]:
+	var hojas := {
+		ReglasDelCierre.Heladera.PRIMERA:
+		$Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja,
+		ReglasDelCierre.Heladera.SEGUNDA:
+		$Estructura/heladeranueva_001/puerta_heladera_1/CuerpoDeLaHoja,
+		ReglasDelCierre.Heladera.FUERA_DE_SERVICIO:
+		$Estructura/heladera_fuera_de_servicio/puerta_heladera_2/CuerpoDeLaHoja,
+	}
+	var puertas: Dictionary[ReglasDelCierre.Heladera, Puerta] = {}
+	for heladera: ReglasDelCierre.Heladera in hojas:
+		puertas[heladera] = (hojas[heladera] as PuertaDelLocal).puerta()
+	return puertas
 
 
 func _al_desechar_un_ticket() -> void:
 	_partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
 
 
+func _levanta_una_pista(datos: ObjetoDelAlmacen) -> bool:
+	return datos != null and _partida.expediente.levanta_una_pista(datos.id, _partida.jornada())
+
+
 func _al_tirar_un_objeto(nodo: Node3D) -> void:
 	var datos: ObjetoDelAlmacen = nodo.get("datos")
-	if not ReglasDelCierre.se_tira_sin_llamado(datos):
+	if not ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos)):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_TIRADO)
 
 

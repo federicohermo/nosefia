@@ -49,19 +49,39 @@ enum Gesto { COLOCAR, AGARRAR, NADA }
 ## noche de prueba y los casos que miden aritmética. El jugador siempre elige.
 const PRIMERO_VACIO := -1
 
+## Etiqueta de una caja → el producto que trae, cuando no es el suyo. Una caja sin fila trae su
+## etiqueta. Lo lee la caja (`ContenidoDeLaCaja`).
+var contenidos: Dictionary[Producto.Id, Producto.Id] = {}
+
+## Los casilleros con una unidad vencida. Lo leen quien dibuja la góndola y quien cierra la noche.
+var vencidos: VencidosDeLaGondola
+
 var _inventario: Inventario
 
 ## En el orden en que llegaron, y sin `id` repetido: la identidad es el `id` y nunca la
 ## instancia, porque `Catalogo.de()` construye un producto nuevo en cada llamada.
 var _aceptados: Array[Producto] = []
 
-## `id` → los casilleros de su fila, con los ocupados primero. Arranca en el orden de la fila, así
-## que la góndola que llenó la apertura ocupa los primeros y lo que falta queda al final.
+## `id` → los casilleros de su fila, con los ocupados primero. Arranca con los vacíos que declaró
+## la apertura al final, o en el orden de la fila si no declaró ninguno.
 var _orden: Dictionary[Producto.Id, PackedInt32Array] = {}
 
+## `id` → los casilleros con que abrió la noche vacíos, si la apertura los eligió. Sin ellos, los
+## vacíos son los últimos de la fila.
+var _vacios_de_apertura: Dictionary[Producto.Id, Array] = {}
 
-func _init(inventario: Inventario, aceptados: Array[Producto]) -> void:
+
+func _init(
+	inventario: Inventario,
+	aceptados: Array[Producto],
+	vacios_de_apertura: Dictionary[Producto.Id, Array] = {},
+	los_contenidos: Dictionary[Producto.Id, Producto.Id] = {},
+	vencidos_de_apertura: Dictionary[Producto.Id, Array] = {}
+) -> void:
 	_inventario = inventario
+	_vacios_de_apertura = vacios_de_apertura
+	contenidos = los_contenidos
+	vencidos = VencidosDeLaGondola.new(vencidos_de_apertura)
 	for producto in aceptados:
 		if producto == null or _aceptado_con_el_id_de(producto) != null:
 			continue
@@ -215,7 +235,8 @@ func agarrar(producto: Producto, casillero: int) -> UnidadDeProducto:
 	var ocupados := _ocupados_en_la_fila(producto)
 	_inventario.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 1)
 	_poner_en_el_orden(producto, casillero, ocupados - 1)
-	var unidad := UnidadDeProducto.new(producto)
+	var vencida := vencidos.desmarcar(producto, casillero)
+	var unidad := UnidadDeProducto.new(producto, vencida)
 	_inventario.anotar_afuera(unidad)
 	return unidad
 
@@ -258,7 +279,12 @@ func colocar_unidad(
 		return Rechazo.PRODUCTO_NO_ACEPTADO
 	var motivo := _motivo_del_casillero(unidad.producto, casillero)
 	if motivo == Rechazo.NINGUNO:
+		var elegido := casillero
+		if elegido == PRIMERO_VACIO:
+			elegido = casilleros_vacios(unidad.producto)[0]
 		motivo = _ocupar(unidad.producto, casillero)
+		if motivo == Rechazo.NINGUNO and unidad.vencido:
+			vencidos.marcar(unidad.producto, elegido)
 	if motivo == Rechazo.NINGUNO:
 		_inventario.quitar_de_afuera(unidad)
 	return motivo
@@ -273,11 +299,28 @@ func colocar_unidad(
 ##
 ## Un estante que no acepta nada está completo por vacuidad, que es lo que corresponde: no quedó
 ## nada sin reponer.
-func completada() -> bool:
+##
+## **`en_la_mano` es sólo para el cierre de la noche** (BR-STK-033): una unidad que salió y sigue
+## afuera cuenta como puesta en el único casillero vacío de su producto. Durante la noche se
+## pregunta sin ella, y el casillero sigue vacío.
+func completada(en_la_mano: ObjetoDelAlmacen = null) -> bool:
+	if vencidos.cuantos() > 0:
+		return false
 	for producto in _inventario.faltantes():
-		if acepta(producto):
+		if acepta(producto) and not _completa_la_mano(producto, en_la_mano):
 			return false
 	return true
+
+
+func _completa_la_mano(producto: Producto, en_la_mano: ObjetoDelAlmacen) -> bool:
+	var unidad := en_la_mano as UnidadDeProducto
+	return (
+		unidad != null
+		and not unidad.vencido
+		and unidad.producto.id == producto.id
+		and _inventario.esta_afuera(unidad)
+		and casilleros_vacios(producto).size() == 1
+	)
 
 
 ## Los tres primeros rechazos de colocar, en su orden: el producto —también un casillero que no es
@@ -327,8 +370,22 @@ func _orden_de(producto: Producto) -> PackedInt32Array:
 	var largo := cupo(aceptado)
 	var orden: PackedInt32Array = _orden.get(aceptado.id, PackedInt32Array())
 	if orden.size() != largo:
-		orden = PackedInt32Array(range(largo))
+		orden = _orden_de_apertura(aceptado, largo)
 		_orden[aceptado.id] = orden
+	return orden
+
+
+## Los ocupados primero y los vacíos al final. Los vacíos son los que declaró la apertura, si
+## suman lo que la góndola dice que falta; si no, los últimos casilleros de la fila.
+func _orden_de_apertura(producto: Producto, largo: int) -> PackedInt32Array:
+	var vacios: Array = _vacios_de_apertura.get(producto.id, [])
+	if vacios.size() != largo - _ocupados_en_la_fila(producto):
+		return PackedInt32Array(range(largo))
+	var orden := PackedInt32Array()
+	for casillero in largo:
+		if casillero not in vacios:
+			orden.append(casillero)
+	orden.append_array(PackedInt32Array(vacios))
 	return orden
 
 

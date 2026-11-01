@@ -77,6 +77,26 @@ func test_abrir_otra_jornada_reconstruye_los_huecos() -> void:
 		_afirma_huecos(almacen, producto)
 
 
+func test_los_huecos_de_la_apertura_sorteada_estan_donde_dice_el_estante() -> void:
+	var almacen: Node3D = auto_free((load(ALMACEN) as PackedScene).instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA + 1, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	]:
+		for semilla in 3:
+			AperturaConLugar.abrir_con_semilla(almacen, jornada, semilla)
+			for producto in Catalogo.todos():
+				assert_bool(puesto.has_node("HuecosDe" + producto.nombre)).is_true()
+				if puesto.has_node("HuecosDe" + producto.nombre):
+					_afirma_huecos(almacen, producto)
+
+
 func _afirma_huecos(almacen: Node3D, producto: Producto) -> void:
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var estante := (almacen.get("_repositor") as Repositor).estante()

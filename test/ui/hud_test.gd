@@ -332,3 +332,28 @@ func test_un_gesto_sin_control_con_nombre_no_da_linea() -> void:  # AC-PLY-088
 	for evento in originales:
 		InputMap.action_add_event(accion, evento)
 	assert_str(texto).is_equal("[Click Izq] Dejar\n[Click Der] Interactuar")
+
+
+func test_el_comprador_y_el_pensamiento_se_reemplazan_en_la_misma_linea() -> void:  # AC-CTR-099
+	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
+	add_child(hud)
+	var subtitulo: Label = hud.get("_subtitulo")
+	var burbuja: Control = hud.get("_comprador")
+	var texto: RichTextLabel = hud.get("_texto_del_comprador")
+	var dicho := "Quiero [color=#e4f850]algo[/color]."
+	hud.pensar("Un pensamiento")
+	assert_str(subtitulo.text).is_equal("Un pensamiento")
+	assert_bool(burbuja.visible).is_false()
+	hud.decir_comprador(dicho)
+	assert_str(subtitulo.text).is_empty()
+	assert_bool(burbuja.visible).is_true()
+	assert_str(texto.text).is_equal(dicho)
+	hud.decir_comprador("")
+	assert_str(texto.text).is_equal(dicho)
+	hud.pensar("Otro pensamiento")
+	assert_str(subtitulo.text).is_equal("Otro pensamiento")
+	assert_bool(burbuja.visible).is_false()
+	assert_str(texto.text).is_empty()
+	hud.decir_comprador(dicho)
+	hud._process(Subtitulo.duracion(dicho) + Subtitulo.DESVANECIDO)
+	assert_bool(burbuja.visible).is_false()

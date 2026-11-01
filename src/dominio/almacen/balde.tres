@@ -14,4 +14,5 @@ nombre = "Balde"
 se_apoya_derecho = true
 sonoridad = 9
 subtitulo = "Un balde para hacer las mezclas con los jabones."
+entra_en_el_contenedor = false
 revelacion = SubResource("Resource_revelacion")

@@ -20,9 +20,10 @@ enum Campo {
 	APERCIBIMIENTOS_DE_LA_PRUEBA,
 	ULTIMA_DE_LA_PRUEBA_COMPLETA,
 	SEMILLA,
+	POSES_DE_LAS_CAJAS,
 }
 
-const VERSION: int = 2
+const VERSION: int = 3
 const CLAVE_DE_VERSION := "version"
 
 ## El tipo de cada campo es el de su defecto.
@@ -45,6 +46,9 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.APERCIBIMIENTOS_DE_LA_PRUEBA: 0,
 	Campo.ULTIMA_DE_LA_PRUEBA_COMPLETA: false,
 	Campo.SEMILLA: 0,
+	## La pose de cada caja del depósito al cierre, por identidad de caja (BR-SAV-022). Quien lo
+	## lee descarta lo que no es una caja con su pose.
+	Campo.POSES_DE_LAS_CAJAS: {},
 }
 
 
@@ -66,7 +70,8 @@ static func sanear(crudo: Dictionary) -> Dictionary:
 	return saneado
 
 
-## Un guardado sin versión, o con una versión que no es un entero, se lee como el actual.
+## Sólo la versión actual se lee: una anterior, o un guardado sin versión, cuenta las jornadas con
+## otra numeración, y cargarlo ubicaría al jugador en la noche equivocada.
 static func legible(crudo: Dictionary) -> bool:
 	var version: Variant = crudo.get(CLAVE_DE_VERSION)
-	return typeof(version) != TYPE_INT or version <= VERSION
+	return typeof(version) == TYPE_INT and version == VERSION

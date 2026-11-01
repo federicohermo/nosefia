@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458
 ---
 
 # Capacidad: guardar y retomar
@@ -12,7 +12,7 @@ provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jo
 
 Que la partida sobreviva a cerrar el juego. Lo único que tiene que hacer bien es **no perder el
 legajo**: el sistema de consecuencias sólo se ve funcionar a lo largo de varias noches, y sin
-guardado hay que jugar las ocho de una sentada.
+guardado hay que jugar las siete de una sentada.
 
 ## Lenguaje de la capacidad
 
@@ -56,10 +56,12 @@ CUANDO se guarda y se carga, el sistema DEBE devolver los mismos valores con los
 SI a un guardado le falta un campo, o SI un campo tiene otro tipo, ENTONCES el sistema DEBE
 devolverlo con su valor por defecto. Es lo mismo que le pasa a un archivo editado a mano.
 
-### BR-SAV-007 — Una versión futura no se carga y no se borra
+### BR-SAV-007 — Sólo se carga la versión actual, y una futura no se borra
 
-El sistema DEBE aceptar la versión actual, las anteriores y un guardado sin versión. SI la
-versión es posterior a la actual, ENTONCES NO DEBE cargarlo **ni borrarlo**.
+El sistema DEBE cargar un guardado sólo si su versión es la actual. Una anterior, o un guardado
+sin versión, cuenta las jornadas con otra numeración (BR-EMP-004): NO DEBE cargarse ni
+interpretarse como una partida de la numeración actual. SI la versión es posterior a la actual,
+ENTONCES NO DEBE cargarlo **ni borrarlo**.
 
 ### BR-SAV-008 — Sin archivo no hay partida
 
@@ -174,13 +176,13 @@ Los campos ausentes o de tipo incorrecto DEBEN conservar el saneamiento de BR-SA
 
 CUANDO se guarda, el sistema DEBE escribir, además de BR-SAV-019, las identidades del expediente
 en orden, los mensajes del chat de notas en orden y con su identidad, el paso pendiente de la
-reflexión de cierre —cuántos textos de jornada 4 se recibieron, o si falta elegir en jornada 5— y
-la identidad elegida en jornada 5. El checkpoint del cierre DEBE conservar el paso pendiente.
-CUANDO se acepta un «Continuar» de jornada 4 o una elección de jornada 5, el sistema DEBE
+reflexión de cierre —cuántos textos de jornada 3 se recibieron, o si falta elegir en jornada 4— y
+la identidad elegida en jornada 4. El checkpoint del cierre DEBE conservar el paso pendiente.
+CUANDO se acepta un «Continuar» de jornada 3 o una elección de jornada 4, el sistema DEBE
 escribir el guardado con la nota y el paso nuevo antes de dejar el cierre.
 
 CUANDO se retoma con un paso pendiente, el sistema DEBE mostrar ese paso sobre la persiana baja,
-con el texto siguiente de jornada 4 o con las opciones que habilita el expediente restaurado.
+con el texto siguiente de jornada 3 o con las opciones que habilita el expediente restaurado.
 El celular DEBE llegar con su animación: subir desde el margen inferior al centro (BR-INV-027)
 y desplazarse a la izquierda en el chat de notas (BR-INV-042). NO DEBE volver a entregar los
 mensajes de la devolución, volver a jugar la noche cerrada ni anunciar la jornada guardada antes
@@ -194,6 +196,19 @@ dentro de una lista DEBE ignorarse sin descartar las válidas (BR-INV-036). Una 
 está entre las opciones del expediente restaurado DEBE descartarse; si falta elegir, la elección
 DEBE volver a ofrecerse. Sanear NO DEBE crear pistas, reflexiones ni elección, ni alterar la
 jornada, el legajo, las cuentas o las devoluciones.
+
+### BR-SAV-022 — La pose de las cajas cruza la sesión
+
+CUANDO se guarda, el sistema DEBE escribir, además de BR-SAV-019, la pose de cada caja del
+depósito por identidad de caja, tal como estaba al cerrar la jornada (BR-STK-051). CUANDO se
+retoma, DEBE restaurarlas exactas: la jornada siguiente abre cada caja según BR-STK-051, igual
+que si la sesión no se hubiera cerrado.
+
+SI falta ese campo o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) sin ninguna pose, y
+cada caja abre en su lugar de fábrica. Dentro del campo, una caja desconocida, o una pose que
+no es una pose, DEBE ignorarse sin descartar las demás ni la jornada, el legajo o las cuentas.
+Una partida nueva NO DEBE traer poses. Un final que borra el guardado (BR-SAV-002) borra
+también las poses.
 
 ## Criterios de aceptación
 
@@ -238,10 +253,10 @@ jornada es la primera jornada citada y no un número escrito.
 DADO un campo con un valor de otro tipo CUANDO se lo sanea ENTONCES vuelve con su defecto, no con
 el valor crudo ni con una excepción.
 
-### AC-SAV-009 — Las cuatro versiones *(verifica BR-SAV-007)*
+### AC-SAV-009 — Sólo la versión actual se carga *(verifica BR-SAV-007)*
 
-DADO la versión actual, una anterior y un guardado sin versión ENTONCES los tres son legibles;
-una posterior no lo es, y no se borra.
+DADO la versión actual ENTONCES es legible. DADO una anterior y un guardado sin versión ENTONCES
+no son legibles, y se cargan como vacío. DADO una posterior ENTONCES tampoco lo es, y no se borra.
 
 ### AC-SAV-010 — Sin archivo, vacío *(verifica BR-SAV-008)*
 
@@ -309,10 +324,10 @@ deshabilitado.
 
 DADO el juego en pausa CUANDO se elige volver al menú ENTONCES el juego sale de la pausa, el
 pedido de ir al menú se emite una sola vez y no se escribe ningún guardado. DADO la devolución de la
-jornada 5 cerrada con la partida en curso y 7 medios de apercibimiento CUANDO se abre la pausa y
-se elige volver al menú ENTONCES el guardado no se escribe ni se borra y sigue en la jornada 6 con
-7 medios; CUANDO se elige continuar desde el menú ENTONCES vuelve la elección de jornada 5, y
-después de elegir se anuncia «NOCHE 6» con 7 medios.
+jornada 4 cerrada con la partida en curso y 7 medios de apercibimiento CUANDO se abre la pausa y
+se elige volver al menú ENTONCES el guardado no se escribe ni se borra y sigue en la jornada 5 con
+7 medios; CUANDO se elige continuar desde el menú ENTONCES vuelve la elección de jornada 4, y
+después de elegir se anuncia «NOCHE 5» con 7 medios.
 DADO la devolución de una partida terminada CUANDO se sale al menú desde la pausa ENTONCES no hay
 guardado y continuar sigue deshabilitado.
 
@@ -341,23 +356,23 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
 
 ### AC-SAV-024 — La noche 5 cerrada vuelve igual *(verifica BR-SAV-005, BR-SAV-019)*
 
-DADO una partida con la noche 5 cerrada, reponer cumplido en las noches 2 y 3 y sin cumplir en la
-4 y la 5, un llamado por papel en la noche 4 y R = 0 CUANDO se guarda, se lee el archivo y se
+DADO una partida con la noche 4 cerrada, reponer cumplido en las noches 1 y 2 y sin cumplir en la
+3 y la 4, un llamado por papel en la noche 3 y R = 0 CUANDO se guarda, se lee el archivo y se
 retoma ENTONCES reponer tiene 2 fallas, papel 1 llamado, hubo llamados en la partida, R = 0, y
-las cinco devoluciones están en orden y letra por letra en el chat de Enrique, intercalando foto
-y texto de apertura 5 entre las devoluciones 4 y 5 y cada devolución de las noches 1 a 3 antes
-de los mensajes de la jornada siguiente. CUANDO la noche 6 cierra con reponer sin cumplir ENTONCES su devolución trae la fila n = 3 de Tarea 3,
+las cuatro devoluciones están en orden y letra por letra en el chat de Enrique, intercalando foto
+y texto de apertura 4 entre las devoluciones 3 y 4 y cada devolución de las noches 1 y 2 antes
+de los mensajes de la jornada siguiente. CUANDO la noche 5 cierra con reponer sin cumplir ENTONCES su devolución trae la fila n = 3 de Tarea 3,
 «De nuevo quedaron algunas góndolas incompletas…».
 
-DADO la noche 2 con reponer pendiente y un llamado por papel, y la 3 impecable sin llamados
+DADO la noche 3 con reponer pendiente y un llamado por papel, y la 4 impecable sin llamados
 CUANDO se guarda y retoma ENTONCES reponer conserva 1 falla, papel 1 llamado y R = 1.
 
 ### AC-SAV-025 — Un guardado sin las cuentas *(verifica BR-SAV-006, BR-SAV-019)*
 
-DADO un guardado de la jornada 6 sin fallas, llamados, R ni devoluciones CUANDO se retoma
-ENTONCES sigue en la jornada 6 con su legajo, cero fallas, cero llamados, R = 0, sin llamados en
-la partida, y el chat de Enrique tiene las 19 entradas de las jornadas 1 a 4 y los mensajes
-de apertura 5 reconstruidos, sin devoluciones inventadas. DADO las
+DADO un guardado de la jornada 5 sin fallas, llamados, R ni devoluciones CUANDO se retoma
+ENTONCES sigue en la jornada 5 con su legajo, cero fallas, cero llamados, R = 0, sin llamados en
+la partida, y el chat de Enrique tiene las entradas de las jornadas 1 a 3 y los mensajes
+de apertura 4 reconstruidos, sin devoluciones inventadas. DADO las
 fallas con un valor que no es un diccionario, o las devoluciones con un número ENTONCES vuelven
 con su defecto. DADO las fallas con una obligatoria desconocida y reponer en 1 ENTONCES reponer
 conserva 1 y la desconocida se ignora.
@@ -368,15 +383,15 @@ DADO una partida marcada con la mopa ya secada CUANDO se guarda y se retoma ENTO
 marcada, como booleano. DADO un guardado sin el campo, o con un número en él, ENTONCES se retoma
 sin la marca.
 
-### AC-SAV-027 — El checkpoint de jornada 5 conserva el historial fechado *(verifica BR-SAV-020, BR-SAV-019, BR-SAV-005, BR-SAV-015)*
+### AC-SAV-027 — El checkpoint de jornada 4 conserva el historial fechado *(verifica BR-SAV-020, BR-SAV-019, BR-SAV-005, BR-SAV-015)*
 
-DADO cierre 4 con las devoluciones 1 a 4 fechadas CUANDO se guarda, lee y retoma ENTONCES abre
-jornada 5, conserva identidad, texto, jornada y orden de cada mensaje de esas devoluciones, y el
-chat ordena los mensajes de las jornadas 1 a 4 intercalados con las devoluciones 1 a 4, y
-después la foto y el texto de apertura 5. El guion de Yasmín vuelve con
+DADO cierre 3 con las devoluciones 1 a 3 fechadas CUANDO se guarda, lee y retoma ENTONCES abre
+jornada 4, conserva identidad, texto, jornada y orden de cada mensaje de esas devoluciones, y el
+chat ordena los mensajes de las jornadas 1 a 3 intercalados con las devoluciones 1 a 3, y
+después la foto y el texto de apertura 4. El guion de Yasmín vuelve con
 sus quince mensajes sin leer. No se repiten las instrucciones en modo introductorio.
-CUANDO cierra la 5 y se repite guardar y retomar ENTONCES la devolución 5 vuelve detrás de
-la apertura 5, sin duplicar ni serializar de nuevo los mensajes del guion.
+CUANDO cierra la 4 y se repite guardar y retomar ENTONCES la devolución 4 vuelve detrás de
+la apertura 4, sin duplicar ni serializar de nuevo los mensajes del guion.
 
 ### AC-SAV-028 — El legado conserva textos iguales sin fechas inventadas *(verifica BR-SAV-020, BR-SAV-006)*
 
@@ -388,22 +403,22 @@ cero devoluciones, sin perder la jornada ni inventar mensajes de cierre.
 
 ### AC-SAV-029 — Salir antes de elegir y retomar *(verifica BR-SAV-021, BR-SAV-015, BR-SAV-018)*
 
-DADO el cierre de jornada 5 con 2A anotada, 7 medios y la elección en pantalla CUANDO se elige
+DADO el cierre de jornada 4 con 2A anotada, 7 medios y la elección en pantalla CUANDO se elige
 volver al menú desde la pausa ENTONCES no se escribe ni se borra el guardado. CUANDO se elige
 continuar ENTONCES la persiana está baja, el celular sube desde el margen inferior al centro y
 se desplaza a la izquierda con las notas fijas, no aparece ningún mensaje nuevo de la
-devolución, se ofrece sólo 2A, no hay entrada y la jornada 5 no vuelve a jugarse. CUANDO se elige 2A ENTONCES el guardado
-se escribe con la elección 2A y su nota antes de la entrada, y después se anuncia «NOCHE 6» con
+devolución, se ofrece sólo 2A, no hay entrada y la jornada 4 no vuelve a jugarse. CUANDO se elige 2A ENTONCES el guardado
+se escribe con la elección 2A y su nota antes de la entrada, y después se anuncia «NOCHE 5» con
 7 medios.
 
 ### AC-SAV-030 — Retomar después de elegir y a mitad de la primera reflexión *(verifica BR-SAV-021)*
 
 DADO la elección 2B aceptada y la salida al menú durante la espera CUANDO se elige continuar
-ENTONCES se anuncia «NOCHE 6» sin reflexión, las notas tienen el texto de hipótesis 2B una sola
-vez y la elección es 2B. DADO el cierre de jornada 4 con dos textos recibidos y la salida al menú
+ENTONCES se anuncia «NOCHE 5» sin reflexión, las notas tienen el texto de hipótesis 2B una sola
+vez y la elección es 2B. DADO el cierre de jornada 3 con dos textos recibidos y la salida al menú
 CUANDO se elige continuar ENTONCES el recuadro muestra el texto 3 y las notas son [texto 1,
 texto 2]; CUANDO se pulsa «Continuar» ENTONCES son [texto 1, texto 2, texto 3] y empieza
-«NOCHE 5».
+«NOCHE 4».
 
 ### AC-SAV-031 — Un guardado sin los campos del cierre o con tipos ajenos *(verifica BR-SAV-021, BR-SAV-006)*
 
@@ -420,13 +435,31 @@ DADO un despido en jornada 5 CUANDO termina la devolución ENTONCES se ofrece s�
 no aparece la reflexión y no hay guardado. CUANDO se vuelve al menú, desde la opción o desde la
 pausa, ENTONCES continuar sigue deshabilitado.
 
-### AC-SAV-033 — Un guardado de cinco jornadas no se migra *(verifica BR-SAV-015)*
+### AC-SAV-033 — Un guardado de otra numeración no se migra *(verifica BR-SAV-007)*
 
-DADO un guardado escrito antes de las ocho jornadas, en la jornada 2 CUANDO se elige continuar
-ENTONCES se muestran las instrucciones de la jornada 2, después de su «OK» se anuncia
-«NOCHE 2» y abre la jornada 2 de hoy: cobrar, registrar y reponer, con Tin y
-Tia, sin Yasmín, sin Fede ni Mía y con los tres bidones. Los medios y las cuentas son los
-guardados.
+DADO un guardado escrito con las ocho jornadas, en cualquier jornada, CUANDO se carga ENTONCES
+el resultado es vacío: no hay partida que continuar, y quien juega empieza una nueva con la
+numeración de siete jornadas. Un guardado sin versión se trata igual.
+
+### AC-SAV-034 — La organización del depósito sobrevive al guardado *(verifica BR-SAV-022, BR-SAV-005, BR-SAV-006)*
+
+DADO la jornada 2 cerrada con la caja de Marolini en una pose distinta de su lugar de fábrica,
+apoyada en estantería, y la de Uakalas en el piso CUANDO se guarda, se lee el archivo y se
+retoma ENTONCES el guardado devuelve las dos poses con los mismos valores y tipos, la de Marolini
+abre la jornada 3 en la pose guardada y la de Uakalas abre en una estantería (BR-STK-051). DADO
+un guardado de jornada 3 sin el campo, o con un número en él, ENTONCES se retoma en la jornada 3
+con todas las cajas en su lugar de fábrica, y la jornada, el legajo y las cuentas son los
+guardados. DADO el campo con una caja desconocida, una pose que es un texto y la pose válida de
+la caja de Marolini ENTONCES sólo la de Marolini conserva su pose y las demás cajas abren en su
+lugar de fábrica. DADO un despido o un contrato cumplido ENTONCES no queda guardado ni poses.
+
+### AC-SAV-035 — El bloque de Yasmín de la jornada 5 se reconstruye una sola vez *(verifica BR-SAV-020, BR-SAV-015)*
+
+DADO un guardado del cierre de la jornada 4, escrito antes del bloque de la jornada 5, CUANDO se
+retoma ENTONCES abre la jornada 5 y el chat de Yasmín tiene J2_1 a J2_15 y después J3_1 a J3_10,
+una sola vez, todos sin leer, y el chat de Enrique conserva sus devoluciones intactas. CUANDO se
+cierra la 5 y se repite guardar y retomar ENTONCES el guardado no contiene mensajes del guion de
+Yasmín y la jornada 6 abre con las mismas 25 identidades, sin duplicar ninguna.
 
 ## No objetivos
 
@@ -466,10 +499,13 @@ guardados.
   reflexión pendiente y elección, que se escriben en cada paso aceptado del cierre.
 - [`settings`](../settings/settings.md) (alimenta): los dos menús abren Configuraciones, y Esc
   la cierra.
+- [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): la pose de cada caja al
+  cierre, y la que la apertura de la jornada siguiente le pide al retomar (BR-STK-051).
 
 ## Preguntas abiertas
 
 - **OQ-SAV-001 — ¿Qué más cruza la jornada además del legajo?**
-  - Por qué sigue abierta: el inventario y los objetos movidos no declararon si su estado cruza.
+  - Por qué sigue abierta: el inventario y los objetos movidos, salvo las cajas del depósito
+    (BR-SAV-022), no declararon si su estado cruza.
   - Decide: el dueño del repo.
   - Bloquea: nada. Agrega campos a `BR-SAV-005`.

@@ -354,7 +354,7 @@ func test_el_charco_reserva_solo_las_manchas_de_la_noche() -> void:  # AC-CLN-05
 	for jornada: int in [
 		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 	]:
-		if jornada != 4:
+		if jornada != ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 			almacen.call("_al_abrir_la_jornada", jornada)
 		assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
 		var piso := limpiador.piso()

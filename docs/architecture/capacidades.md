@@ -56,6 +56,7 @@ flowchart TD
   STK -- "el texto de la caja" --> SUB
   SHF -- "jornada que abre" --> ANO
   ANO -- "útiles disponibles y sustituto permitido" --> CLN
+  ANO -- "qué producto trae cada caja" --> STK
   CLN -- "uso aceptado de Poético" --> EMP
   EMP -- "expediente y notas de cada partida" --> INV
   INV -- "pistas y notas que cruzan aperturas" --> EMP
@@ -106,8 +107,9 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
   En la primera noche, la ventanilla recibe unidades físicas y la mercadería las retira una sola
   vez, al completar la venta. Si la compra vence, las unidades siguen afuera como unidades
-  sueltas. Registrar espera a que terminen ambas compras, vendidas o vencidas. Después compara
-  la planilla sólo con las ventas completas, sin depender de atención.
+  sueltas. Registrar espera a que terminen las compras de los compradores que ya llegaron,
+  vendidas o vencidas. Después compara la planilla sólo con las ventas completas, sin depender de
+  atención. Al cierre exige terminadas ambas.
 
   La apertura comparte una sola selección de compradores y pedidos entre atención y reposición.
   La segunda noche usa los pedidos fijos de Fede y Mía, sus conversaciones propias y sus figuras
@@ -115,7 +117,8 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   Sus compras vencidas también dejan las unidades recogibles en el piso interior, todavía
   registradas afuera, y descartan el ticket.
 
-  Atención exige completar las dos compras.
+  Atención figura cumplida mientras todos los que llegaron estén vendidos, y vuelve a pendiente al
+  llegar el siguiente. Al cierre exige completar las dos compras.
 - **`shift-cycle`, `store-stock` y `player-actions`.** Las jornadas de prueba permiten salir por
   la entrada mientras todas sus tareas estén cumplidas. Descumplir una vuelve a trabar la
   salida; recuperar todas la habilita de nuevo. La planilla conserva sus gestos de sumar y
@@ -143,6 +146,9 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   habilitado por jornada; limpieza decide el efecto y sus rechazos. La segunda noche deja
   ausente el azul y habilita Poético para preparar esa mezcla, conservando la mercadería.
   Limpieza entrega el teñido aceptado con identidad; el legajo conserva el hecho para el cierre.
+- **`anomalies` y `store-stock`.** La última noche la anomalía permuta qué producto trae cada
+  caja del depósito. La mercadería decide cuánto entra, sale y se vende, sobre ese contenido real
+  y sin crear identidades nuevas.
 - **`employment-record` e `investigation`.** Cada partida posee un único expediente y sus notas.
   Investigación recibe ese estado, registra pistas y consulta hipótesis, sin escribir disco.
   Las revelaciones por examen conservan su cuenta independiente de las pistas por jornada.

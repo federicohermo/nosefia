@@ -6,7 +6,8 @@ enum Personaje { NINGUNO, TIN, TIA, FEDE, MIA, CAMI }
 
 const FALTA := "Gracias. Falta que me des "
 const YA_ENTREGADO := "Gracias, pero ya me habías dado esto."
-const PIDE_EL_RECIBO := "Gracias. Me das el recibo, ¿por favor?"
+const PEDIDO_DEL_TICKET := "Me das el ticket, ¿por favor?"
+const PIDE_EL_TICKET := "Gracias. " + PEDIDO_DEL_TICKET
 const RECHAZO := "Yo no pedí esto. "
 const SALUDO := "Buenas noches. "
 const DESPEDIDA := "Muchas gracias."
@@ -58,21 +59,21 @@ static func _crear_dialogo(entradas: PackedStringArray) -> Dialogo:
 	return Dialogo.new(resueltas)
 
 
-## Lo que dice cualquier comprador al hablarle: lo que todavía le falta, o el recibo si sólo falta
-## el ticket. Al rechazar, antepone el rechazo al pedido entero.
+## Lo que dice cualquier comprador al hablarle: lo que todavía le falta, o el ticket si sólo falta
+## él. Al rechazar, antepone el rechazo a lo que todavía le falta.
 static func recordatorio(
 	pedido: Venta, recepcion: RecepcionDeCompra, rechazo: bool = false
 ) -> Dialogo:
-	if rechazo:
-		return una(RECHAZO + "Quiero " + _enumeracion(pedido, pedido.unidades_de) + ".")
 	var faltan := _enumeracion(pedido, recepcion.pendientes)
-	return una(PIDE_EL_RECIBO if faltan.is_empty() else "Quiero " + faltan + ".")
+	if rechazo:
+		return una(RECHAZO + (PEDIDO_DEL_TICKET if faltan.is_empty() else "Quiero " + faltan + "."))
+	return una(PIDE_EL_TICKET if faltan.is_empty() else "Quiero " + faltan + ".")
 
 
-## Lo que dice al recibir un producto: agradece y nombra lo que falta, o pide el recibo.
+## Lo que dice al recibir un producto: agradece y nombra lo que falta, o pide el ticket.
 static func agradecimiento(pedido: Venta, recepcion: RecepcionDeCompra) -> Dialogo:
 	var faltan := _enumeracion(pedido, recepcion.pendientes)
-	return una(PIDE_EL_RECIBO if faltan.is_empty() else FALTA + faltan + ".")
+	return una(PIDE_EL_TICKET if faltan.is_empty() else FALTA + faltan + ".")
 
 
 ## Lo que dice al atenderlo quien no trae guion propio: saluda y nombra su pedido entero.
@@ -96,11 +97,13 @@ static func _enumeracion(pedido: Venta, cantidad: Callable) -> String:
 		var cuantas: int = cantidad.call(producto)
 		if cuantas <= 0:
 			continue
+		var nombre := "[color=#e4f850]" + producto.nombre + "[/color]"
+		if cuantas > 1:
+			marcadores.append(("dos" if cuantas == 2 else "tres") + " " + nombre)
+			continue
 		var texto := SubtitulosAlExaminar.de_producto(producto.id).trim_suffix(".")
 		texto = texto.left(1).to_lower() + texto.substr(1)
-		if cuantas > 1:
-			texto = ("dos" if cuantas == 2 else "tres") + " " + producto.nombre
-		marcadores.append("[color=#e4f850]" + texto + "[/color]")
+		marcadores.append(texto.replace(producto.nombre, nombre))
 	if marcadores.size() < 2:
 		return "".join(marcadores)
 	return ", ".join(marcadores.slice(0, -1)) + " y " + marcadores[-1]

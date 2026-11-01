@@ -11,8 +11,11 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
-	# El cobro automático continúa desde la tercera jornada.
-	almacen.call("_al_abrir_la_jornada", GeneradorDeTickets.JORNADA_SIN_LECTOR)
+	# Sólo la noche sin agenda tiene al comprador ya presente.
+	almacen.call(
+		"_al_abrir_la_jornada",
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	)
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var repositor: Repositor = almacen.get("_repositor")
@@ -33,7 +36,12 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	var posiciones: Array[Vector3] = []
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(grupo.multimesh.instance_count)
+		var dibujadas := grupo.multimesh.visible_instance_count
+		if producto.id == Producto.Id.CINDOLOR:
+			# Los vencidos se dibujan en su propio lote, con el mismo reparto de copias.
+			var vencidos: MultiMeshInstance3D = presentacion.get_node("VencidosDeCindolor")
+			dibujadas += vencidos.multimesh.visible_instance_count
+		assert_int(dibujadas).is_equal(grupo.multimesh.instance_count)
 		for indice in repositor.estante().cupo(producto):
 			var posicion := (
 				(
@@ -156,7 +164,7 @@ func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
 	cuerpo.remove_collision_exception_with(jugador)
 	assert_bool(jugador.test_move(jugador.global_transform, Vector3(1.5, 0, 0))).is_true()
 	cuerpo.add_collision_exception_with(jugador)
-	assert_int(cuerpo.collision_mask).is_equal(1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO)
+	assert_int(cuerpo.collision_mask).is_equal(ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO)
 	assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
 
 
@@ -258,7 +266,7 @@ func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
 	var suelto: RigidBody3D = agarre.soltar(true)
 	assert_bool(suelto.freeze).is_false()
 	assert_int(suelto.collision_layer).is_equal(1)
-	assert_int(suelto.collision_mask).is_equal(1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO)
+	assert_int(suelto.collision_mask).is_equal(ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO)
 
 
 func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> void:

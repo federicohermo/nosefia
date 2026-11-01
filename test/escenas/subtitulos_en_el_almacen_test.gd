@@ -111,27 +111,6 @@ func test_los_tres_tachos_dicen_su_texto_con_bolsa_o_sin_ella() -> void:  # AC-S
 		assert_bool(recolector.tarea().tiene_bolsa(cual)).is_equal(antes[cual])
 
 
-func test_la_puerta_del_deposito_habla_solo_la_noche_que_esta_trabada() -> void:  # AC-SUB-023
-	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
-	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	almacen.set("_partida", Partida.desde({"jornada": primera}))
-	add_child(almacen)
-	await get_tree().physics_frame
-	var jugador: Node3D = almacen.get("_jugador")
-	jugador.set_physics_process(false)
-	var puerta: Node3D = almacen.get_node("Estructura/puerta/CuerpoDeLaHoja")
-	var cerrado := SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.DEPOSITO_CERRADO)
-	assert_str(cerrado).is_not_empty()
-	_piensa(almacen, puerta, cerrado)
-	almacen.call("_al_abrir_la_jornada", primera + 1)
-	assert_str(String(puerta.get("identidad"))).is_empty()
-	_examinar(jugador, puerta)
-	assert_str(_linea(almacen).text).is_empty()
-	_examinar(jugador, almacen.get_node("Estructura/inodoro/StaticBody3D"))
-	_examinar(jugador, puerta)
-	assert_str(_linea(almacen).text).is_equal(SubtitulosAlExaminar.de_lo_fijo(INODORO))
-
-
 func test_la_puerta_del_cuartito_habla_solo_las_noches_que_esta_trabada() -> void:  # AC-SUB-022
 	var abierta := ReglasDeLaPartida.PRIMERA_JORNADA
 	while (
@@ -148,9 +127,7 @@ func test_la_puerta_del_cuartito_habla_solo_las_noches_que_esta_trabada() -> voi
 	jugador.set_physics_process(false)
 	var puerta: Node3D = almacen.get_node("Estructura/puerta_limpieza/CuerpoDeLaHoja")
 	var cerrado := SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.CUARTITO_CERRADO)
-	assert_str(cerrado).is_not_equal(
-		SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.DEPOSITO_CERRADO)
-	)
+	assert_str(cerrado).is_not_empty()
 	_piensa(almacen, puerta, cerrado)
 	almacen.call("_al_abrir_la_jornada", abierta)
 	_examinar(jugador, puerta)
@@ -176,7 +153,14 @@ func test_cada_unidad_puesta_en_la_gondola_dice_su_texto() -> void:  # AC-SUB-00
 			if zona.papel == ZonaDeReposicion.Papel.AGARRAR and not probados.has(zona.producto):
 				probados[zona.producto] = true
 				_piensa(almacen, zona, SubtitulosAlExaminar.de_producto(zona.producto))
-	assert_int(probados.size()).is_equal(Producto.Id.size())
+	# Un producto con fondo puede abrir sin ninguna unidad adelante: no hay nada que examinar.
+	var estante: Estante = (almacen.get("_repositor") as Repositor).estante()
+	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")
+	var con_unidades: Array = []
+	for id: Producto.Id in casilleros:
+		if estante.casilleros_vacios(Catalogo.de(id)).size() < casilleros[id]:
+			con_unidades.append(id)
+	assert_array(probados.keys()).contains_exactly_in_any_order(con_unidades)
 
 
 func test_lo_que_no_tiene_texto_no_cambia_la_linea() -> void:  # AC-SUB-003, AC-SUB-013

@@ -20,6 +20,11 @@ func _init(caso: CasoDeInvestigacion) -> void:
 	_avisados = desenlaces_alcanzados()
 
 
+## El objeto que se levanta para dar una pista es esa pista sólo la noche de ella.
+func levanta_una_pista(origen: StringName, jornada: int) -> bool:
+	return _caso != null and _caso.levanta_una_pista(origen, jornada)
+
+
 func registrar(identidad: String) -> Resultado:
 	if not _consistente:
 		return Resultado.DESCONOCIDA

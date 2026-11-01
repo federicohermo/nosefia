@@ -233,7 +233,8 @@ func test_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida() -> vo
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	assert_int(disposicion.filas_de_adelante[Producto.Id.DURONGA]).is_greater(0)
 	var pedidos := Venta.new()
-	for comprador in Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1):
+	var compradores: Array[Comprador] = atenciones.tarea().get("_compradores")
+	for comprador in compradores:
 		for producto in comprador.pedido().productos():
 			pedidos.agregar(producto, comprador.pedido().unidades_de(producto))
 	assert_bool(inventario.cobrar(pedidos)).is_true()

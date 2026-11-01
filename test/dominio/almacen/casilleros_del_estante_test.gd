@@ -275,3 +275,47 @@ func test_el_clic_sobre_un_casillero_lo_decide_la_mano() -> void:  # AC-PLY-048 
 	assert_int(estante.uso(null)).is_equal(Estante.Gesto.AGARRAR)
 	assert_int(estante.uso(UnidadDeProducto.new(actroncito))).is_equal(Estante.Gesto.COLOCAR)
 	assert_int(estante.uso(ObjetoDelAlmacen.new())).is_equal(Estante.Gesto.NADA)
+
+
+## Un estante con la góndola llena salvo esos casilleros, que la apertura declara vacíos.
+func _estante_con_vacios(producto: Producto, casilleros: int, vacios: Array[int]) -> Estante:
+	var productos: Array[Producto] = [producto]
+	var inventario := Inventario.new(productos, {producto.id: casilleros})
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, casilleros - vacios.size())
+	var declarados: Dictionary[Producto.Id, Array] = {producto.id: vacios}
+	return Estante.new(inventario, productos, declarados)
+
+
+func test_los_vacios_de_la_apertura_son_los_casilleros_declarados() -> void:  # AC-STK-034
+	var producto := _producto(Producto.Id.ACTRONCITO)
+	var estante := _estante_con_vacios(producto, 4, [0, 2])
+	assert_array(estante.casilleros_vacios(producto)).contains_exactly([0, 2])
+	assert_array(estante.casilleros_ocupados(producto)).contains_exactly([1, 3])
+
+
+func test_reponer_un_vacio_declarado_lo_ocupa_y_deja_el_otro() -> void:  # AC-STK-034
+	var producto := _producto(Producto.Id.ACTRONCITO)
+	var estante := _estante_con_vacios(producto, 4, [0, 2])
+	assert_int(estante.colocar(producto, 2)).is_equal(Estante.Rechazo.NINGUNO)
+	assert_array(estante.casilleros_vacios(producto)).contains_exactly([0])
+	assert_int(estante.colocar(producto, 1)).is_equal(Estante.Rechazo.CASILLERO_OCUPADO)
+	assert_int(estante.colocar(producto, 0)).is_equal(Estante.Rechazo.NINGUNO)
+	assert_array(estante.casilleros_vacios(producto)).is_empty()
+
+
+func test_sin_vacios_declarados_los_vacios_son_los_ultimos_casilleros() -> void:  # AC-STK-034
+	var producto := _producto(Producto.Id.ACTRONCITO)
+	var estante := _estante(producto, 4, 8, 2)
+	assert_array(estante.casilleros_vacios(producto)).contains_exactly([2, 3])
+
+
+func test_los_vacios_declarados_que_no_suman_lo_que_falta_se_ignoran() -> void:  # AC-STK-034
+	var producto := _producto(Producto.Id.ACTRONCITO)
+	var productos: Array[Producto] = [producto]
+	var inventario := Inventario.new(productos, {producto.id: 4})
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 3)
+	var declarados: Dictionary[Producto.Id, Array] = {producto.id: [0, 1]}
+	var estante := Estante.new(inventario, productos, declarados)
+	assert_array(estante.casilleros_vacios(producto)).contains_exactly([3])

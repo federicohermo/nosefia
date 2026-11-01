@@ -27,3 +27,14 @@ func test_por_la_ventanilla_no_pasan_mas_de_dos_compradores_por_jornada() -> voi
 		. override_failure_message("el GDD no admite más de dos compradores por jornada")
 		. is_less_equal(2)
 	)
+
+
+func test_soltar_en_el_hueco_entrega_un_producto_y_nada_mas() -> void:  # AC-CTR-150
+	var unidad := UnidadDeProducto.new(Catalogo.todos()[0])
+	assert_bool(ReglasDeLaVentanilla.se_entrega_al_soltar_en_el_hueco(unidad)).is_true()
+	assert_bool(ReglasDeLaVentanilla.se_entrega_al_soltar_en_el_hueco(Ticket.new([]))).is_false()
+	(
+		assert_bool(ReglasDeLaVentanilla.se_entrega_al_soltar_en_el_hueco(ObjetoDelAlmacen.new()))
+		. is_false()
+	)
+	assert_bool(ReglasDeLaVentanilla.se_entrega_al_soltar_en_el_hueco(null)).is_false()

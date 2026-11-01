@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20
 ---
 
 # Capacidad: los subtítulos
@@ -151,7 +151,6 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Lector | El lector de código de barras. Si le paso un producto, lo va a anotar en el programa generador de tickets de la caja. |
 | Entrada principal | La entrada principal al local. Queda cerrada con llave durante el turno nocturno. |
 | Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada. |
-| Puerta del depósito, trabada (provisorio) | Por acá se va al depósito. Hoy está cerrado con llave. |
 | Puerta del cuartito, trabada | Acá guardan las cosas de limpieza. Está cerrado con llave. |
 | Portón del depósito | Un portón que da a la calle. |
 | Contenedor de basura | Un contenedor de basura. |
@@ -160,11 +159,10 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Tacho del baño | El tacho de basura del baño. Mejor ni mirar lo que tiene adentro. |
 
 Las puertas interiores, las puertas de las heladeras, la ventanilla, el comprador, la góndola y
-las manchas NO DEBEN tener texto al examinar. La excepción son la puerta del depósito y la del
-cuartito mientras están trabadas (BR-PLY-020 de
-[`player-actions`](../player-actions/player-actions.md)): cada una DEBE decir su texto en las
-jornadas que la traban, y callar en las demás. El texto del depósito es provisorio: no sale de la
-ficha «Subtítulos», y lo reemplaza el que dé el diseño.
+las manchas NO DEBEN tener texto al examinar. La excepción es la puerta del
+cuartito mientras está trabada (BR-PLY-020 de
+[`player-actions`](../player-actions/player-actions.md)): DEBE decir su texto en las
+jornadas que la traban, y callar en las demás.
 
 Un tacho DEBE decir su texto con bolsa o sin bolsa. Examinarlo NO DEBE retirar ni cambiar su
 bolsa.
@@ -186,15 +184,20 @@ fijo durante el examen (BR-SUB-005).
 
 ### BR-SUB-015 — Alejarse acorta el pensamiento
 
-Sólo un pensamiento asociado a un objeto DEBE tener un lugar: el del objeto examinado con las
-manos vacías. MIENTRAS el jugador sigue a menos de 0,75 metros
-más lejos de ese lugar que cuando apareció, el pensamiento DEBE durar lo de BR-SUB-004. Un
-aviso de una acción o del estado del jugador NO DEBE tener anclaje espacial, y DEBE durar siempre
-lo de BR-SUB-004 aunque el jugador camine. Esto incluye los gestos de BR-SUB-013 y la mopa que se
-seca de BR-SUB-014. CUANDO el pensamiento tiene un objeto y el jugador
+Sólo un pensamiento asociado a un objeto y el texto de una entrega del comprador (BR-CTR-050)
+DEBEN tener un lugar: el del objeto examinado con las manos vacías, o el de la figura del
+comprador en la ventanilla en el momento de decir el texto. MIENTRAS el jugador sigue a menos de
+0,75 metros más lejos de ese lugar que cuando apareció el pensamiento, o a menos de 3 metros si
+el texto es de una entrega del comprador (margen decidido por el usuario en el QA del
+30/10/2026), éste DEBE durar lo de BR-SUB-004. Un aviso de una acción o del estado del jugador NO
+DEBE tener anclaje espacial, y DEBE durar siempre lo de BR-SUB-004 aunque el jugador camine. Esto incluye los gestos de
+BR-SUB-013 y la mopa que se seca de BR-SUB-014. CUANDO el texto tiene un lugar y el jugador
 se aleja más que eso, DEBE empezar a desvanecerse en ese momento, en los mismos 0,5 segundos,
 salvo que ya se estuviera desvanecido. Volver a acercarse NO DEBE devolverle la opacidad. El
-texto fijo del examen NO DEBE acortarse.
+texto fijo del examen NO DEBE acortarse. Un texto nuevo DEBE medir desde su propio lugar y desde
+la distancia a la que el jugador estaba al decirlo, también si ya estaba lejos. El lugar de una
+entrega NO DEBE moverse si el comprador se va con el texto visible, y un aviso o un pensamiento
+que la reemplaza NO DEBE heredar su lugar ni su margen, y al revés.
 
 ### BR-SUB-013 — Los gestos que salen mal piensan
 
@@ -204,18 +207,26 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 
 | Gesto | ID | Pensamiento |
 |---|---|---|
-| Tirar al contenedor algo que no es una bolsa de basura ni un ticket | `MALA_IDEA` | Me parece que eso fue una mala idea… |
+| Tirar al contenedor algo que no es una bolsa de basura, un producto vencido, un ticket ni una pista | `MALA_IDEA` | Me parece que eso fue una mala idea… |
 | Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
+| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Me parece que no debería tirar<br>los elementos de limpieza. |
 | Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
 | Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
 | Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
+| Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 5 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
+| Borrar la caca del techo del baño, en la jornada 6 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
 
-Tirar una bolsa o un ticket, borrar cualquier otra mancha, o pasar la mopa por una mancha ya
-limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
+El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
+
+`CAJA_EN_EL_CONTENEDOR` y `UTIL_EN_EL_CONTENEDOR` DEBEN decidirse por lo que se intenta tirar y no
+por la tapa: con la tapa cerrada o girando piensan lo mismo que con la tapa abierta. Poético, aun en
+la jornada en que sustituye al jabón azul, es un producto y piensa `MALA_IDEA`, no el del útil.
+Tirar una bolsa, un producto vencido, un ticket o una pista, borrar cualquier otra mancha, o
+pasar la mopa por una mancha ya limpia NO DEBE pensar nada. Pasar la mopa con el jabón equivocado por la caca de la pared piensa
 el texto del jabón, no el de la caca.
 
 `PUERTA_CON_TAREAS_PENDIENTES` DEBE decidirse por el cumplimiento de las obligatorias en el
@@ -354,18 +365,12 @@ de heladera, la ventanilla, el comprador, la góndola y una mancha ENTONCES no t
 un tacho con bolsa y otro sin bolsa CUANDO se pide examinar con las manos vacías ENTONCES los
 dos muestran su texto y el primero sigue con su bolsa.
 
-### AC-SUB-023 — La puerta del depósito habla sólo trabada *(verifica BR-SUB-010)*
-
-DADO la jornada 1 abierta CUANDO se pide examinar la puerta del depósito con las manos vacías
-ENTONCES piensa el subtítulo asociado a la puerta del depósito trabada. DADO el cierre de la 1
-CUANDO se sigue a la 2 ENTONCES examinarla no muestra texto y la línea no cambia.
-
 ### AC-SUB-022 — La puerta del cuartito habla sólo trabada *(verifica BR-SUB-010)*
 
-DADO la jornada 1 o la 2 abierta CUANDO se pide examinar la puerta del cuartito con las manos
-vacías ENTONCES piensa el subtítulo asociado a la puerta del cuartito trabada, distinto del de
-la puerta del depósito. DADO la jornada 3 abierta ENTONCES examinarla no muestra texto y la línea no
-cambia. DADO una partida guardada en la 2 CUANDO se retoma ENTONCES vuelve a tener texto.
+DADO la jornada 1 abierta CUANDO se pide examinar la puerta del cuartito con las manos
+vacías ENTONCES piensa el subtítulo asociado a la puerta del cuartito trabada. DADO la jornada 2
+abierta ENTONCES examinarla no muestra texto y la línea no
+cambia. DADO una partida guardada en la 1 CUANDO se retoma ENTONCES vuelve a tener texto.
 
 ### AC-SUB-014 — El texto del ticket *(verifica BR-SUB-011)*
 
@@ -400,12 +405,35 @@ jugador se aleja 10 metros ENTONCES sigue entero.
 DADO el pensamiento `MOPA_YA_SECA` o `MALA_IDEA` CUANDO el jugador
 camina 5 metros y transcurre 1 segundo desde que apareció ENTONCES sigue con opacidad 1.
 
+### AC-SUB-026 — Irse de la ventanilla acorta la entrega *(verifica BR-SUB-015)*
+
+DADO el texto de una entrega del comprador y el jugador a 1 metro de su figura CUANDO el jugador se
+aleja 2,9 metros y avanzan 2,29 segundos ENTONCES se ve con opacidad 1. CUANDO se aleja 3,1
+metros ENTONCES a los 0,25 segundos la opacidad está estrictamente entre 0 y 1, y a los 0,5 la
+línea está vacía. CUANDO vuelve a acercarse durante el desvanecido ENTONCES la opacidad no sube.
+DADO el jugador a 6 metros de la figura al decir la entrega CUANDO se aleja 2,9 metros ENTONCES
+sigue entero. DADO ese texto visible CUANDO el comprador se retira y el jugador se aleja 3,1
+metros ENTONCES empieza a desvanecerse. DADO ese texto visible CUANDO lo reemplaza un pensamiento
+sobre un objeto y el jugador se aleja 0,8 metros ENTONCES el pensamiento empieza a desvanecerse; y
+a la inversa, un pensamiento reemplazado por una entrega sigue entero a 0,8 metros. DADO ese texto
+visible CUANDO llega un pensamiento de la mopa ya seca y el jugador camina 5 metros ENTONCES el pensamiento sigue con opacidad 1.
+
 ### AC-SUB-016 — Lo que se tira *(verifica BR-SUB-013)*
 
-DADO una unidad, un jabón o la mopa tirados al contenedor ENTONCES el pensamiento es `MALA_IDEA`.
-DADO una bolsa o un ticket tirados ENTONCES no hay pensamiento. DADO una caja del
-depósito que no entra ENTONCES el pensamiento es `CAJA_EN_EL_CONTENEDOR`; DADO la mano vacía o la tapa cerrada
+DADO una unidad tirada al contenedor, también una de Poético en la jornada en que sustituye al
+jabón azul, ENTONCES el pensamiento es `MALA_IDEA`.
+DADO una bolsa, un ticket, una pista o una unidad vencida tirados ENTONCES no hay pensamiento.
+DADO una caja del depósito que no entra ENTONCES el pensamiento es `CAJA_EN_EL_CONTENEDOR`; DADO la mano vacía o la tapa cerrada
 con algo que entra ENTONCES no hay texto.
+
+### AC-SUB-025 — Los útiles y las cajas que no entran *(verifica BR-SUB-013)*
+
+DADO, por turno, el balde, la mopa y cada uno de los tres jabones sostenidos CUANDO se intenta
+tirarlos con la tapa abierta y, por separado, cerrada ENTONCES el pensamiento es
+`UTIL_EN_EL_CONTENEDOR`, y nunca `MALA_IDEA` ni `CAJA_EN_EL_CONTENEDOR`. DADO una caja del
+depósito con la tapa abierta y con la tapa cerrada ENTONCES el pensamiento sigue siendo
+`CAJA_EN_EL_CONTENEDOR`. DADO el intento rechazado ENTONCES el útil sigue en la mano y no hay
+llamado. DADO la mano vacía ENTONCES no hay pensamiento.
 
 ### AC-SUB-017 — Lo que queda afuera *(verifica BR-SUB-013)*
 
@@ -420,8 +448,9 @@ es `MOPA_SIN_MOJAR` y la mancha permanece.
 DADO la mopa seca sin haberse mojado en la jornada ENTONCES el pensamiento es `MOPA_SIN_MOJAR`;
 DADO la mopa seca después de mojarla, incluso sólo con agua, ENTONCES es `MOPA_YA_SECA`.
 DADO una mancha ya limpia o una mancha
-borrada ENTONCES no hay texto, salvo la caca de la pared del otro inodoro, que al borrarse piensa
-el suyo.
+borrada ENTONCES no hay texto, salvo la caca de la pared del otro inodoro, la del piso frente a
+las estanterías del fondo y la del techo del baño, que al borrarse piensan cada una el suyo. Las
+demás manchas de las jornadas 5 a 7, aunque sean de caca, no piensan nada.
 
 ### AC-SUB-019 — La mopa berreta, una vez *(verifica BR-SUB-014)*
 
@@ -433,7 +462,7 @@ pensamiento pendiente CUANDO cierra la jornada ENTONCES se descarta y la partida
 
 ### AC-SUB-024 — La puerta de entrada con tareas pendientes *(verifica BR-SUB-013, BR-SUB-001)*
 
-DADA cada una de las tres jornadas de prueba con alguna obligatoria pendiente CUANDO se usa la
+DADA cada una de las dos jornadas de prueba con alguna obligatoria pendiente CUANDO se usa la
 puerta de entrada ENTONCES el pensamiento es `PUERTA_CON_TAREAS_PENDIENTES` y la puerta no se
 abre. DADO ese pensamiento visible CUANDO se usa la puerta otra vez ENTONCES la línea sigue
 mostrando sólo ese texto, una vez, y empieza de nuevo.

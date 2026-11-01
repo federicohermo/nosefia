@@ -5,23 +5,64 @@ const R := ReglasDeLaLimpieza.Resultado
 const T := ReglasDeLaBasura.Tiro
 const S := SubtitulosDeLosGestos.Id
 const BOLSA := preload("res://src/dominio/almacen/bolsa_de_basura_1.tres")
+const CAJA := preload("res://src/dominio/almacen/caja_de_reposicion.tres")
 
 
 func _unidad() -> UnidadDeProducto:
 	return UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
 
 
-func test_lo_que_se_tira_piensa_salvo_la_bolsa_y_el_ticket() -> void:  # AC-SUB-016
-	var mopa := load("res://src/dominio/almacen/mopa.tres") as ObjetoDelAlmacen
-	var jabon := load("res://src/dominio/almacen/jabon_azul.tres") as ObjetoDelAlmacen
-	for tirado: ObjetoDelAlmacen in [_unidad(), jabon, mopa]:
-		assert_int(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO)).is_equal(S.MALA_IDEA)
-	assert_int(SubtitulosDeLosGestos.al_tirar(BOLSA, T.TIRADO)).is_equal(S.NINGUNO)
-	assert_int(SubtitulosDeLosGestos.al_tirar(Ticket.new(), T.TIRADO)).is_equal(S.NINGUNO)
-	var caja := load("res://src/dominio/almacen/caja_de_reposicion.tres") as ObjetoDelAlmacen
-	assert_int(SubtitulosDeLosGestos.al_tirar(caja, T.NO_ENTRA)).is_equal(S.CAJA_EN_EL_CONTENEDOR)
-	assert_int(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA)).is_equal(S.NINGUNO)
-	assert_int(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA)).is_equal(S.NINGUNO)
+func _pista() -> Pista:
+	for pista: Pista in CasoDeInvestigacion.de_la_partida().pistas:
+		if pista.canal == Pista.Canal.LEVANTAR and not pista.origen.is_empty():
+			return pista
+	return null
+
+
+func _objeto_de_la_pista() -> ObjetoDelAlmacen:
+	var objeto := ObjetoDelAlmacen.new()
+	objeto.id = _pista().origen
+	return objeto
+
+
+func test_lo_que_se_tira_piensa_salvo_bolsa_vencido_ticket_y_pista() -> void:  # AC-SUB-016
+	var poetico := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO))
+	for tirado: ObjetoDelAlmacen in [_unidad(), poetico]:
+		assert_int(SubtitulosDeLosGestos.al_tirar(tirado, T.TIRADO, false)).is_equal(S.MALA_IDEA)
+	var vencida := _unidad()
+	vencida.vencido = true
+	for eximido: ObjetoDelAlmacen in [BOLSA, Ticket.new(), vencida, _objeto_de_la_pista()]:
+		var es_la_pista := eximido.id == _pista().origen
+		assert_int(SubtitulosDeLosGestos.al_tirar(eximido, T.TIRADO, es_la_pista)).is_equal(
+			S.NINGUNO
+		)
+	assert_int(SubtitulosDeLosGestos.al_tirar(CAJA, T.NO_ENTRA, false)).is_equal(
+		S.CAJA_EN_EL_CONTENEDOR
+	)
+	assert_int(SubtitulosDeLosGestos.al_tirar(null, T.MANO_VACIA, false)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.al_tirar(_unidad(), T.TAPA_NO_ABIERTA, false)).is_equal(
+		S.NINGUNO
+	)
+
+
+func test_el_util_y_la_caja_que_no_entran_piensan_cada_uno_lo_suyo() -> void:  # AC-SUB-025
+	var utiles: Array[ObjetoDelAlmacen] = []
+	for nombre: String in ["mopa", "balde", "jabon_azul", "jabon_rosa", "jabon_amarillo"]:
+		utiles.append(load("res://src/dominio/almacen/%s.tres" % nombre) as ObjetoDelAlmacen)
+	for recibe: bool in [true, false]:
+		for util: ObjetoDelAlmacen in utiles:
+			var tiro := ReglasDeLaBasura.tiro(util, recibe)
+			(
+				assert_int(SubtitulosDeLosGestos.al_tirar(util, tiro, false))
+				. override_failure_message("%s con la tapa recibe=%s" % [util.id, recibe])
+				. is_equal(S.UTIL_EN_EL_CONTENEDOR)
+			)
+		var tiro_de_la_caja := ReglasDeLaBasura.tiro(CAJA, recibe)
+		assert_int(SubtitulosDeLosGestos.al_tirar(CAJA, tiro_de_la_caja, false)).is_equal(
+			S.CAJA_EN_EL_CONTENEDOR
+		)
+		var sin_nada := ReglasDeLaBasura.tiro(null, recibe)
+		assert_int(SubtitulosDeLosGestos.al_tirar(null, sin_nada, false)).is_equal(S.NINGUNO)
 
 
 func test_lo_que_queda_afuera_piensa_salvo_el_ticket() -> void:  # AC-SUB-017
@@ -42,11 +83,16 @@ func test_la_mopa_sobre_una_mancha() -> void:  # AC-SUB-018
 	assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(R.MOPA_SECA, true)).is_equal(S.MOPA_YA_SECA)
 	for callado: R in [R.YA_ESTABA_LIMPIA, R.MANCHA_BORRADA, R.SIN_EFECTO]:
 		assert_int(SubtitulosDeLosGestos.al_pasar_la_mopa(callado, true)).is_equal(S.NINGUNO)
-	var pared := PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO
-	assert_int(SubtitulosDeLosGestos.al_borrar(pared)).is_equal(S.PARED_DEL_OTRO_INODORO)
+	var con_subtitulo := {
+		PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: S.PARED_DEL_OTRO_INODORO,
+		PisoDelLocal.Lugar.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: S.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO,
+		PisoDelLocal.Lugar.TECHO_SOBRE_UN_CUBICULO: S.TECHO_SOBRE_UN_CUBICULO,
+	}
 	for lugar: PisoDelLocal.Lugar in PisoDelLocal.Lugar.values():
-		if lugar != pared:
-			assert_int(SubtitulosDeLosGestos.al_borrar(lugar)).is_equal(S.NINGUNO)
+		var esperado: int = con_subtitulo.get(lugar, S.NINGUNO)
+		assert_int(SubtitulosDeLosGestos.al_borrar(lugar)).is_equal(esperado)
+	for id: int in con_subtitulo.values():
+		assert_str(SubtitulosDeLosGestos.TEXTOS[id]).is_not_empty()
 
 
 func test_el_agua_sola_pide_jabon_y_al_secarse_lo_avisa() -> void:  # AC-SUB-018
@@ -134,6 +180,49 @@ func test_la_entrada_con_alguna_pendiente_piensa_en_las_noches_de_prueba() -> vo
 		assert_bool(hechas[0].descompletar()).is_true()
 		assert_int(SubtitulosDeLosGestos.al_usar_la_entrada(jornada, hechas)).is_equal(
 			S.PUERTA_CON_TAREAS_PENDIENTES
+		)
+
+
+func test_la_entrada_no_piensa_si_solo_falta_atencion_cerrada() -> void:  # AC-SHF-048
+	for jornada: int in range(
+		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	):
+		var compradores := Compradores.de_la_jornada(jornada)
+		var atender := TareaDeAtender.new(
+			compradores, Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+		)
+		var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
+		var sin_atencion := _cumplidas_salvo(jornada, Tarea.new(Tarea.Tipo.CAJA))
+		(
+			assert_int(
+				SubtitulosDeLosGestos.al_usar_la_entrada(jornada, sin_atencion, atender, registro)
+			)
+			. is_equal(S.PUERTA_CON_TAREAS_PENDIENTES)
+		)
+		atender.avanzar(compradores[-1].horario.y)
+		(
+			assert_int(
+				SubtitulosDeLosGestos.al_usar_la_entrada(jornada, sin_atencion, atender, registro)
+			)
+			. is_equal(S.NINGUNO)
+		)
+		for pendiente in Apertura.obligatorias(jornada):
+			if pendiente.tipo() in [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR]:
+				continue
+			var tareas := _cumplidas_salvo(jornada, pendiente)
+			(
+				assert_int(
+					SubtitulosDeLosGestos.al_usar_la_entrada(jornada, tareas, atender, registro)
+				)
+				. is_equal(S.PUERTA_CON_TAREAS_PENDIENTES)
+			)
+		var sin_registrar := _cumplidas_salvo(jornada, Tarea.new(Tarea.Tipo.REGISTRAR))
+		assert_bool(registro.sumar(Catalogo.todos()[0])).is_true()
+		(
+			assert_int(
+				SubtitulosDeLosGestos.al_usar_la_entrada(jornada, sin_registrar, atender, registro)
+			)
+			. is_equal(S.PUERTA_CON_TAREAS_PENDIENTES)
 		)
 
 

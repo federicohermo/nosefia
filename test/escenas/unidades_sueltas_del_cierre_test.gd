@@ -41,7 +41,9 @@ func _unidad() -> ObjetoAgarrable:
 
 
 func _desorden() -> bool:
-	return CIERRE.hay_desorden(_almacen.call("_estados_del_cierre"))
+	return CIERRE.hay_desorden(
+		_almacen.call("_estados_del_cierre"), _almacen.get("_partida").jornada()
+	)
 
 
 func test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla() -> void:  # AC-CLN-041
@@ -106,14 +108,14 @@ func test_apoyada_sobre_una_caja_del_deposito_sigue_siendo_suelta() -> void:  # 
 	assert_bool(_desorden()).is_true()
 
 
-func test_la_unidad_en_examen_vuelve_a_la_foto_sin_reingresar_al_grupo() -> void:  # AC-CLN-043
+func test_la_unidad_en_examen_sigue_excluida_sin_reingresar() -> void:  # AC-CLN-041, AC-CLN-043
 	_abrir()
 	var unidad := _unidad()
 	var examen: Examen = _almacen.get("_jugador").examen
 	assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas")).is_empty()
 	assert_bool(_desorden()).is_false()
 	assert_bool(examen.iniciar()).is_true()
-	assert_bool(_desorden()).is_true()
+	assert_bool(_desorden()).is_false()
 	assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas")).is_empty()
 	assert_object(_almacen.get("_agarre").cuerpo_sostenido()).is_same(unidad)
 	examen.terminar()
@@ -206,6 +208,7 @@ func _entregar_a_tin(
 	if solapados:
 		var compradores := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 		compradores[1].horario = Vector2(7200, 14400)
+		compradores[1].llega_tras = null
 		var inventario: Inventario = (_almacen.get("_repositor") as Repositor).estante().get(
 			"_inventario"
 		)

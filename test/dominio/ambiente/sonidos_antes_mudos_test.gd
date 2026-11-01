@@ -28,7 +28,10 @@ func test_retirar_las_notas_no_cambia_los_numeros_de_los_eventos_restantes() -> 
 	assert_array(EntradaSonora.Evento.values()).not_contains(31)
 	assert_int(EntradaSonora.Evento.PASADA_CON_JABON_EQUIVOCADO).is_equal(32)
 	assert_int(EntradaSonora.Evento.AMBIENTE_EXTERIOR).is_equal(33)
-	assert_int(EntradaSonora.Evento.size()).is_equal(33)
+	assert_array(EntradaSonora.Evento.values()).not_contains(9)
+	assert_int(EntradaSonora.Evento.BOLSA_SACADA).is_equal(34)
+	assert_int(EntradaSonora.Evento.OBJETO_DESECHADO).is_equal(35)
+	assert_int(EntradaSonora.Evento.size()).is_equal(34)
 
 
 func test_la_caja_se_alza_y_se_deja_con_su_audio() -> void:
@@ -85,7 +88,7 @@ func test_mojar_la_mopa_y_limpiar_conservan_su_audio() -> void:
 		"SFX_OBJETO_Mopa_MojarEnBalde"
 	)
 	assert_str(_audio(tabla.de(EntradaSonora.Evento.PASADA_DADA))).is_equal(
-		"SFX_OBJETO_Mopa_DejarYLimpiar"
+		"SFX_OBJETO_Mopa_Limpiar"
 	)
 
 

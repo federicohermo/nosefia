@@ -62,6 +62,7 @@ func _sin_formato(texto: String) -> String:
 func _comprobar_pantalla(
 	pantalla: PantallaDeInstrucciones, numero: int, jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
 ) -> void:
+	AvanceDeDevolucion.terminar_el_movimiento(pantalla)
 	var contenido: Control = pantalla.get("_contenido")
 	var pasos := InstruccionesDelJefe.pasos_de(_mensajes_de(jornada))
 	var total := pasos.size()
@@ -153,6 +154,8 @@ func test_la_segunda_y_la_tercera_cuentan_sus_pantallas() -> void:  # AC-EMP-045
 	assert_bool(segunda.visible).is_false()
 	var comienzos_de_la_tercera: Array[int] = [0]
 	tercera.comenzar_pedido.connect(func() -> void: comienzos_de_la_tercera[0] += 1)
+	for _paso in 2:
+		_boton(tercera, "_siguiente").pressed.emit()
 	assert_str(_boton(tercera, "_siguiente").text).is_equal(
 		PantallaDeInstrucciones.TEXTO_DE_COMENZAR
 	)
@@ -187,6 +190,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 		for numero in range(1, total + 1):
 			await get_tree().process_frame
 			await get_tree().process_frame
+			AvanceDeDevolucion.terminar_el_movimiento(pantalla)
 			var botones: Control = pantalla.get("_botones")
 			var posicion := botones.global_position
 			var contenido: Control = pantalla.get("_contenido")
@@ -223,64 +227,6 @@ func test_pausa_conserva_la_entrada_y_no_cobra_el_tiempo_pausado() -> void:  # A
 	get_tree().paused = false
 	_cuadros(ahora, ahora[0] + 150000, [pantalla])
 	assert_float(marco.position.x).is_zero()
-
-
-func test_los_pares_van_despues_del_texto_en_orden_y_dentro_del_ancho() -> void:  # AC-EMP-046
-	for caso: Array in [
-		[1, 1, ["J1_FotoReloj", "J1_Foto02"]],
-		[2, 0, ["J2_FotoGondolas", "J1_Foto07"]],
-	]:
-		var pantalla := _pantalla()
-		pantalla.mostrar(_mensajes_de(caso[0]))
-		for avance: int in caso[1]:
-			_boton(pantalla, "_siguiente").pressed.emit()
-		await get_tree().process_frame
-		await get_tree().process_frame
-		var contenido: Control = pantalla.get("_contenido")
-		var fotos: Array[TextureRect] = []
-		for identidad: String in caso[2]:
-			for mensaje in GUION.mensajes:
-				if mensaje.identidad == identidad:
-					for imagen: TextureRect in contenido.find_children(
-						"*", "TextureRect", true, false
-					):
-						if imagen.texture == mensaje.foto:
-							fotos.append(imagen)
-		assert_int(fotos.size()).is_equal(2)
-		if fotos.size() != 2:
-			continue
-		var textos := contenido.find_children("*", "RichTextLabel", true, false)
-		var cuerpo := textos[0] as RichTextLabel
-		var izquierda := fotos[0].get_rect()
-		var derecha := fotos[1].get_rect()
-		assert_float(izquierda.position.y).is_greater_equal(cuerpo.get_rect().end.y)
-		assert_float(izquierda.end.x).is_less(derecha.position.x)
-		assert_float(izquierda.position.y).is_equal(derecha.position.y)
-		assert_float(izquierda.size.y).is_equal(derecha.size.y)
-		assert_float(izquierda.position.x).is_greater_equal(0.0)
-		assert_float(derecha.end.x).is_less_equal(PantallaDeInstrucciones.ANCHO_DEL_TEXTO)
-		for foto in fotos:
-			assert_int(foto.stretch_mode).is_equal(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
-		var leyendas: Array[String] = []
-		var rectangulos: Array[Rect2] = []
-		var limites := Rect2(Vector2.ZERO, contenido.size)
-		for texto: RichTextLabel in textos:
-			if texto == cuerpo:
-				continue
-			leyendas.append(texto.get_parsed_text())
-			var rectangulo := texto.get_rect()
-			assert_bool(limites.encloses(rectangulo)).is_true()
-			for foto in fotos:
-				assert_bool(rectangulo.intersects(foto.get_rect())).is_false()
-			for anterior in rectangulos:
-				assert_bool(rectangulo.intersects(anterior)).is_false()
-			rectangulos.append(rectangulo)
-		var esperadas: Array[String] = []
-		for identidad: String in caso[2]:
-			var ficha: Dictionary = PantallaDeInstrucciones.FOTOS[identidad]
-			esperadas.append(ficha["titulo"])
-			esperadas.append("-" + ficha["sector"])
-		assert_array(leyendas).contains_exactly_in_any_order(esperadas)
 
 
 func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  # AC-EMP-046

@@ -1,4 +1,4 @@
-"""Regenera los dos glifos portables del guion; requiere fonttools==4.60.0.
+"""Regenera los glifos portables del guion; requiere fonttools==4.60.0.
 
     python -m pip install fonttools==4.60.0
     python assets/ui/manada/celular/generar_simbolos_de_chat.py
@@ -24,7 +24,7 @@ BASE = f"https://raw.githubusercontent.com/google/fonts/{REVISION}/ofl/notoemoji
 FUENTE = "NotoEmoji%5Bwght%5D.ttf"
 FUENTE_SHA = "de6c18832938afc99caf132b39d6a30a19bac7f2e812e28db2535b4608d27551"
 LICENCIA_SHA = "500bb1ccf43df7bbb522112f9133a52b16e1c35e809632f5d8609b179152de5b"
-GLIFOS = {0x2728, 0x1F4AA}
+GLIFOS = {0x2728, 0x1F4AA, 0x1F480, 0x1F62C}
 FAMILIA = "No se fia Chat Symbols"
 
 
@@ -64,7 +64,7 @@ def generar(datos: bytes, licencia: bytes) -> bytes:
     fuente["name"].setName(licencia.decode("utf-8"), 13, 3, 1, 0x409)
     fuente.recalcTimestamp = False
     if set(fuente.getBestCmap()) != GLIFOS:
-        raise ValueError("El recorte debe contener exactamente los dos caracteres del guion")
+        raise ValueError("El recorte debe contener exactamente los caracteres del guion")
     salida = BytesIO()
     fuente.save(salida)
     return salida.getvalue()

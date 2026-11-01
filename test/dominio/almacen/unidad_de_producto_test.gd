@@ -30,3 +30,9 @@ func test_la_unidad_dice_el_texto_de_su_producto_y_no_su_nombre() -> void:  # AC
 		SubtitulosAlExaminar.de_producto(Producto.Id.UAKALAS)
 	)
 	assert_str(UnidadDeProducto.new().texto_al_examinar()).is_empty()
+
+
+func test_la_unidad_admite_otro_encima_si_su_producto_tiene_tapa_lisa() -> void:  # AC-PLY-034
+	assert_bool(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)).admite_encima).is_true()
+	assert_bool(UnidadDeProducto.new(Catalogo.de(Producto.Id.CHISITOS)).admite_encima).is_false()
+	assert_bool(UnidadDeProducto.new().admite_encima).is_false()

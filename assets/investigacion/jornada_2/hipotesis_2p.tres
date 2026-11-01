@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("hipotesis")
 identidad = "2P"
-jornada = 5
+jornada = 4
 titulo = "NO PASA NADA"
 texto = "Solo se acabó un jabón. No me tengo que hacer la cabeza con algo tan poco trascendental."

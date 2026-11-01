@@ -11,12 +11,15 @@ enum Id {
 	NINGUNO,
 	MALA_IDEA,
 	CAJA_EN_EL_CONTENEDOR,
+	UTIL_EN_EL_CONTENEDOR,
 	POR_LA_VENTANA,
 	JABON_EQUIVOCADO,
 	MOPA_SIN_MOJAR,
 	MOPA_YA_SECA,
 	MOPA_BERRETA,
 	PARED_DEL_OTRO_INODORO,
+	PISO_DE_LAS_ESTANTERIAS_DEL_FONDO,
+	TECHO_SOBRE_UN_CUBICULO,
 	PUERTA_CON_TAREAS_PENDIENTES,
 }
 
@@ -30,16 +33,21 @@ const TEXTOS: Dictionary[Id, String] = {
 		"La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no"
 		+ " tire las cajas de productos, ni siquiera las vacías."
 	),
+	Id.UTIL_EN_EL_CONTENEDOR: "Me parece que no debería tirar\nlos elementos de limpieza.",
 	Id.POR_LA_VENTANA: "Si Enrique se entera de que estoy tirando cosas por la ventana, me mata.",
 	Id.JABON_EQUIVOCADO: "Esto no está funcionando… Creo que no estoy usando el jabón correcto.",
 	Id.MOPA_SIN_MOJAR: "Necesitaría mojar la mopa en agua con jabón.",
 	Id.MOPA_YA_SECA: "Ya se secó la mopa…",
 	Id.MOPA_BERRETA: "Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.",
 	Id.PARED_DEL_OTRO_INODORO: "Se ve que alguien no tuvo tiempo de apuntar bien…",
+	Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: "Espero que sea vómito…",
+	Id.TECHO_SOBRE_UN_CUBICULO: "¿¿Cómo llegó eso ahí??",
 	Id.PUERTA_CON_TAREAS_PENDIENTES: "No debería irme. Todavía me quedan tareas por completar.",
 }
 const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, Id] = {
 	PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: Id.PARED_DEL_OTRO_INODORO,
+	PisoDelLocal.Lugar.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO,
+	PisoDelLocal.Lugar.TECHO_SOBRE_UN_CUBICULO: Id.TECHO_SOBRE_UN_CUBICULO,
 }
 
 ## Cuánto se espera que lo soltado quede quieto antes de mirar si cayó afuera.
@@ -48,14 +56,25 @@ const SEGUNDOS_PARA_QUEDAR_QUIETO := 10.0
 var _berreta_pendiente := false
 
 
-## Lo tirado sin llamado —una bolsa o un ticket— no piensa: es lo que va al contenedor.
-static func al_tirar(sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro) -> Id:
+## Lo tirado sin llamado no piensa: es lo que va al contenedor.
+static func al_tirar(
+	sostenido: ObjetoDelAlmacen, tiro: ReglasDeLaBasura.Tiro, levanta_una_pista: bool
+) -> Id:
 	match tiro:
 		ReglasDeLaBasura.Tiro.TIRADO:
-			return Id.NINGUNO if ReglasDelCierre.se_tira_sin_llamado(sostenido) else Id.MALA_IDEA
+			var eximido := ReglasDelCierre.esta_eximido(sostenido, levanta_una_pista)
+			return Id.NINGUNO if eximido else Id.MALA_IDEA
 		ReglasDeLaBasura.Tiro.NO_ENTRA:
-			return Id.CAJA_EN_EL_CONTENEDOR
+			return Id.UTIL_EN_EL_CONTENEDOR if _es_un_util(sostenido) else Id.CAJA_EN_EL_CONTENEDOR
 	return Id.NINGUNO
+
+
+static func _es_un_util(objeto: ObjetoDelAlmacen) -> bool:
+	return (
+		objeto.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA
+		or objeto.id == ReglasDeLaLimpieza.ID_DEL_BALDE
+		or ReglasDeLaLimpieza.JABONES.has(objeto.id)
+	)
 
 
 static func al_quedar_afuera(objeto: ObjetoDelAlmacen) -> Id:
@@ -83,10 +102,15 @@ static func al_borrar(lugar: PisoDelLocal.Lugar) -> Id:
 ## En una jornada de prueba, la entrada que no deja salir es porque queda una obligatoria. Que el
 ## aviso de salida espere a la computadora (BR-NTF-014) no cambia eso: se mira el cumplimiento y no
 ## el permiso.
-static func al_usar_la_entrada(jornada: int, obligatorias: Array[Tarea]) -> Id:
+static func al_usar_la_entrada(
+	jornada: int,
+	obligatorias: Array[Tarea],
+	atender: TareaDeAtender = null,
+	registro: RegistroDeVentas = null
+) -> Id:
 	if (
 		jornada in CierreAnticipado.JORNADAS
-		and not CierreAnticipado.corresponde(jornada, obligatorias)
+		and not CierreAnticipado.corresponde(jornada, obligatorias, atender, registro)
 	):
 		return Id.PUERTA_CON_TAREAS_PENDIENTES
 	return Id.NINGUNO

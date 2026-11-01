@@ -85,10 +85,7 @@ func test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta() -> void:  # AC-
 	var contenedor: Node3D = almacen.get_node(CUERPO)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	var objetos: Array[ObjetoAgarrable] = []
-	for nombre: String in [
-		"BolsaDeBasura1", "Mopa", "Balde", "JabonAzul", "JabonRosa", "JabonAmarillo"
-	]:
-		objetos.append(almacen.get_node("Objetos/" + nombre))
+	objetos.append(almacen.get_node("Objetos/BolsaDeBasura1"))
 	var unidad := _unidad(almacen)
 	# Ya vino a la mano: tirarla antes de recorrer los persistentes.
 	_clic(jugador, contenedor, MOUSE_BUTTON_LEFT)
@@ -97,25 +94,12 @@ func test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta() -> void:  # AC-
 	var ticket := _ticket(almacen)
 	objetos.append(ticket)
 	for objeto in objetos:
-		if objeto.datos.id == &"jabon_azul":
-			assert_bool(objeto.visible).is_false()
-			assert_int(objeto.collision_layer).is_zero()
-			continue
 		if objeto != unidad:
 			_agarrar(almacen, objeto)
 			_clic(jugador, contenedor, MOUSE_BUTTON_LEFT)
 		_comprobar_tirado(objeto, contenedor, jugador, agarre)
 	assert_int(recolector.tarea().depositadas()).is_equal(1)
-	assert_array(contenedor.call("tirados")).has_size(objetos.size() - 1)
-	# El azul se ejerce disponible; J2 conserva la bolsa y el resto de la matriz.
-	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
-	var azul: ObjetoAgarrable = almacen.get_node("Objetos/JabonAzul")
-	assert_bool(azul.visible).is_true()
-	_agarrar(almacen, azul)
-	_clic(jugador, contenedor, MOUSE_BUTTON_LEFT)
-	_comprobar_tirado(azul, contenedor, jugador, agarre)
-	assert_array(contenedor.call("tirados")).contains_exactly([azul])
-	assert_int(recolector.tarea().depositadas()).is_zero()
+	assert_array(contenedor.call("tirados")).has_size(objetos.size())
 
 
 func _comprobar_tirado(
@@ -185,57 +169,46 @@ func test_el_lector_es_copia_y_la_noche_lo_vacia_sin_leer_papel_liberado() -> vo
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 
 
-func test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez() -> void:  # AC-CLN-038
+func test_la_bolsa_tirada_no_esta_en_el_mundo_la_noche_siguiente() -> void:  # AC-CLN-038
 	var almacen := await _abrir()
+	var bolsa: ObjetoAgarrable = almacen.get_node("Objetos/BolsaDeBasura1")
+	_agarrar(almacen, bolsa)
+	_clic(almacen.get("_jugador"), almacen.get_node(CUERPO), MOUSE_BUTTON_LEFT)
+	almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL + 1)
+	assert_bool(bolsa.visible).is_false()
+	assert_bool(bolsa.freeze).is_true()
+	assert_bool(bolsa.get_node("Forma").disabled).is_true()
+	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
+
+
+func test_los_utiles_no_entran_con_la_tapa_abierta_ni_cerrada() -> void:  # AC-CLN-076
+	var almacen := await _abrir()
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	var jugador: Node3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
 	var contenedor: Node3D = almacen.get_node(CUERPO)
-	var objetos: Array[ObjetoAgarrable] = []
-	var padres: Array[Node] = []
-	var poses: Array[Transform3D] = []
-	var capas: Array[int] = []
-	var mascaras: Array[int] = []
-	for nombre: String in ["Mopa", "Balde", "BolsaDeBasura1"]:
-		var objeto: ObjetoAgarrable = almacen.get_node("Objetos/" + nombre)
-		objetos.append(objeto)
-		padres.append(objeto.get_parent())
-		poses.append(objeto.lugar_de_origen())
-		capas.append(objeto.collision_layer)
-		mascaras.append(objeto.collision_mask)
+	var tapa: Node3D = almacen.get_node(TAPA)
 	var piso: PisoDelLocal = almacen.get("_limpiador").piso()
 	piso.balde().llenar()
 	piso.balde().tenir(ReglasDeLaLimpieza.Agua.AZUL)
 	piso.mopa().mojar_en(piso.balde())
-	assert_bool(piso.mopa().esta_mojada()).is_true()
-	for objeto in objetos:
-		_agarrar(almacen, objeto)
-		_clic(almacen.get("_jugador"), contenedor, MOUSE_BUTTON_LEFT)
-	almacen.call("_al_abrir_la_jornada", AnomaliasDeLaJornada.JORNADA_SIN_AZUL + 1)
-	for indice in objetos.size():
-		var objeto := objetos[indice]
-		assert_object(objeto.get_parent()).is_same(padres[indice])
-		assert_bool(objeto.global_transform.is_equal_approx(poses[indice])).is_true()
-		var es_bolsa := ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.datos.id)
-		assert_bool(objeto.visible).is_equal(not es_bolsa)
-		assert_bool(objeto.freeze).is_equal(es_bolsa)
-		if es_bolsa:
-			assert_bool(objeto.get_node("Forma").disabled).is_true()
-		assert_int(objeto.collision_layer).is_equal(capas[indice])
-		assert_int(objeto.collision_mask).is_equal(mascaras[indice])
-	var nuevo: PisoDelLocal = almacen.get("_limpiador").piso()
-	assert_bool(nuevo.mopa().esta_mojada()).is_false()
-	assert_bool(nuevo.balde().tiene_agua()).is_false()
+	var utiles: Array[ObjetoAgarrable] = []
+	for nombre: String in ["Mopa", "Balde", "JabonAzul", "JabonRosa", "JabonAmarillo"]:
+		utiles.append(almacen.get_node("Objetos/" + nombre))
+	for cerrada: bool in [false, true]:
+		if cerrada:
+			_clic(jugador, tapa, MOUSE_BUTTON_LEFT)
+			tapa.call("_physics_process", 1.0)
+		assert_bool(tapa.call("recibe_objetos")).is_equal(not cerrada)
+		for util in utiles:
+			_agarrar(almacen, util)
+			_clic(jugador, contenedor, MOUSE_BUTTON_LEFT)
+			assert_object(agarre.manos().sostenido()).is_same(util.datos)
+			assert_bool(util.visible).is_true()
+			agarre.soltar(false)
+			util.volver_a_su_lugar()
+	assert_array(contenedor.call("tirados")).is_empty()
 	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
-	var balde := objetos[1]
-	balde.global_position += Vector3.UP * 0.5
-	balde.sleeping = false
-	var alto := balde.global_position.y
-	for cuadro in 20:
-		await get_tree().physics_frame
-	assert_float(balde.global_position.y).is_less(alto - 0.1)
-	for cuadro in 80:
-		await get_tree().physics_frame
-	assert_float(balde.global_position.y).is_greater(poses[1].origin.y - 0.1)
-	_agarrar(almacen, balde)
-	assert_object(almacen.get("_agarre").manos().sostenido()).is_same(balde.datos)
 
 
 func test_examen_y_cierre_bloquean_ambos_clics() -> void:  # AC-CLN-039

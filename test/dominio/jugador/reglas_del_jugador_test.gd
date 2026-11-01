@@ -58,3 +58,15 @@ func test_el_grupo_interactuable_tiene_nombre() -> void:
 	# El contrato de «se puede interactuar» ES este String: un grupo de Godot vacío no lo
 	# cumple nadie, y la mira no enfocaría nunca sin que ningún otro test lo diga.
 	assert_str(ReglasDelJugador.GRUPO_INTERACTUABLE).is_not_empty()
+
+
+func test_agachado_la_vista_queda_entre_el_piso_y_la_de_pie() -> void:  # AC-PLY-122
+	assert_float(ReglasDelJugador.ALTURA_AGACHADO).is_greater(0.0)
+	assert_float(ReglasDelJugador.ALTURA_AGACHADO).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+
+
+func test_agachado_se_camina_mas_lento_que_de_pie_y_no_se_queda_quieto() -> void:  # AC-PLY-131
+	assert_float(ReglasDelJugador.VELOCIDAD_AGACHADO).is_greater(0.0)
+	assert_float(ReglasDelJugador.VELOCIDAD_AGACHADO).is_less(
+		ReglasDelJugador.VELOCIDAD_DE_CAMINATA
+	)

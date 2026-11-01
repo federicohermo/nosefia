@@ -171,6 +171,15 @@ CUANDO se hace un gesto con el balde, el sistema DEBE sonar el audio de ese gest
 y por el bus de efectos: cada vez que pasa, el jugador está al lado del balde. SI el uso no cambia
 nada, ENTONCES el sistema NO DEBE sonar.
 
+### BR-AMB-022 — Durante el corte sólo queda la luz de emergencia del panel
+
+MIENTRAS el corte de luz de la séptima noche está cortado (BR-ANO-012 de
+[`anomalies`](../anomalies/anomalies.md)), el sistema DEBE dejar encendida sólo la luz de
+emergencia sobre el panel eléctrico del depósito. El resto de las luces del local DEBEN quedar
+apagadas, y el local DEBE recibir sólo la luz exterior tenue. CUANDO el corte pasa a restaurado, o
+con el corte sin corte, el sistema DEBE devolver la iluminación normal. NO DEBE haber una luz de
+emergencia encendida fuera del corte además de la del panel.
+
 ## Criterios de aceptación
 
 ### AC-AMB-001 — Un evento, una fila *(verifica BR-AMB-001, BR-AMB-005)*
@@ -330,6 +339,13 @@ DADO una unidad devuelta CUANDO se la devuelve otra vez ENTONCES no suena. DADO 
 una unidad de su producto en la mano CUANDO se la devuelve ENTONCES no suena, y con una unidad de
 otro producto tampoco.
 
+### AC-AMB-028 — La luz sigue al corte *(verifica BR-AMB-022)*
+
+DADO el corte cortado ENTONCES la luz sobre el panel está encendida y ninguna otra luz del local
+lo está. DADO el corte sin corte ENTONCES todas las luces normales están encendidas. DADO el corte
+restaurado ENTONCES la iluminación es la misma que sin corte. Pasar de cortado a restaurado
+enciende todas las luces normales de una vez.
+
 ## No objetivos
 
 - Esta capacidad NO elige los archivos de audio ni fija su volumen de origen. Una fila sin sonido es un estado
@@ -352,6 +368,8 @@ otro producto tampoco.
 ## Dependencias
 
 - Todas las demás capacidades (consume): sus señales son las fuentes de las filas.
+- [`anomalies`](../anomalies/anomalies.md) (consume): el estado del corte decide qué luces
+  quedan encendidas.
 
 ## Preguntas abiertas
 

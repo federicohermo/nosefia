@@ -43,7 +43,7 @@ const MEDIOS_POR_LLAMADO: int = 1
 ##
 ## Vive acá y no en `reglas_de_la_partida.gd` porque no es cuánto dura la partida sino un número
 ## de balance más, del mismo tipo que los apercibimientos: `Reglas` ya cruza jornadas.
-const JORNADA_EN_QUE_FALLA_EL_RELOJ := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
+const JORNADA_EN_QUE_FALLA_EL_RELOJ := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
 
 ## Vale el doble que un aviso, y eso es lo que hace que las tres bandas pesen distinto también
 ## sobre el despido: a la banda grave le alcanza con una jornada menos.

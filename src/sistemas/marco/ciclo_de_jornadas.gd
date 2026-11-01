@@ -50,7 +50,7 @@ func abrir_la_jornada() -> bool:
 	if _partida == null or _partida.terminada():
 		return false
 	var turno := _partida.abrir_la_jornada()
-	_reloj.arrancar(turno, _partida.obligatorias(), Ritmo.de_la_jornada(_partida.jornada()))
+	_reloj.arrancar(turno, _partida.obligatorias())
 	jornada_abierta.emit(_partida.jornada())
 	return true
 

@@ -14,6 +14,9 @@ const ANGULO_ABIERTA := PI / 2.0
 ## segundo en abrirse, que es lo que hace que el gesto se vea y no cueste tiempo del turno.
 const VELOCIDAD_DEL_GIRO := 3.0
 
+## Sin límite en el giro: el `tope` que usa `avanzar()` cuando nada detiene la hoja.
+const SIN_TOPE := NAN
+
 var _abierta := false
 var _angulo := 0.0
 var _quieta := true
@@ -62,16 +65,33 @@ func cerrar_de_golpe() -> void:
 	_quieta = true
 
 
+## Dónde quedaría la hoja tras `segundos` de giro sin freno ni tope.
+func angulo_siguiente(segundos: float) -> float:
+	return move_toward(_angulo, _destino(), VELOCIDAD_DEL_GIRO * segundos)
+
+
 ## Acerca la hoja al tope que le toca y devuelve dónde quedó.
 ##
 ## Los segundos entran como parámetro y no se leen de ningún reloj: es lo que deja probar el
 ## giro entero, los dos topes incluidos, sin un solo cuadro.
-func avanzar(segundos: float) -> float:
-	var destino := ANGULO_ABIERTA if _abierta else 0.0
+##
+## `factor` es la fracción de la velocidad que el giro conserva; fuera de (0, 1] vale 1. `tope`
+## es el ángulo que la hoja no cruza en el sentido en que gira: sirve igual al abrir y al cerrar,
+## y nunca la hace retroceder.
+func avanzar(segundos: float, factor: float = 1.0, tope: float = SIN_TOPE) -> float:
 	var antes := _angulo
-	_angulo = move_toward(_angulo, destino, VELOCIDAD_DEL_GIRO * segundos)
+	var paso := VELOCIDAD_DEL_GIRO * segundos
+	if factor > 0.0 and factor <= 1.0:
+		paso *= factor
+	_angulo = move_toward(_angulo, _destino(), paso)
+	if not is_nan(tope):
+		_angulo = clampf(tope, minf(antes, _angulo), maxf(antes, _angulo))
 	_quieta = is_equal_approx(_angulo, antes)
 	return _angulo
+
+
+func _destino() -> float:
+	return ANGULO_ABIERTA if _abierta else 0.0
 
 
 ## Si la hoja no giró en el último `avanzar()`.

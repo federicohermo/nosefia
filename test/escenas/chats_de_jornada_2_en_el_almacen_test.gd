@@ -114,7 +114,14 @@ func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() ->
 	assert_int(bandeja.no_leidos(YASMIN)).is_equal(15)
 	var jefe := bandeja.mensajes_de(JEFE)
 	assert_str(jefe[-2].identidad).is_equal("J2_CONTENEDOR_FOTO")
-	assert_bool(jefe[-3].identidad.begins_with("DEVOLUCION_J4_")).is_true()
+	(
+		assert_bool(
+			jefe[-3].identidad.begins_with(
+				"DEVOLUCION_J%d_" % ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+			)
+		)
+		. is_true()
+	)
 	await _q()
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
 	assert_int(lista.get_child_count()).is_equal(2)

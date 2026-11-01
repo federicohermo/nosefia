@@ -17,6 +17,8 @@ const SENSIBILIDAD := 0.01
 
 const UN_OBJETO := 26558334344
 
+const CUADRO := 1.0 / 60.0
+
 
 func _control() -> ControlDelJugador:
 	var mirada := Mirada.new(
@@ -175,3 +177,66 @@ func _lento() -> ControlDelJugador:
 		tiempo += cuadro
 	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
 	return control
+
+
+func test_agachado_la_vista_baja_a_la_altura_agachado() -> void:  # AC-PLY-120
+	var control := _control()
+	assert_float(_asentar(control, false)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	assert_float(_asentar(control, true)).is_equal(ReglasDelJugador.ALTURA_AGACHADO)
+
+
+func test_soltar_la_accion_levanta_la_vista_y_no_es_un_interruptor() -> void:  # AC-PLY-121
+	var control := _control()
+	_asentar(control, true)
+	assert_float(_asentar(control, false)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	assert_float(_asentar(control, false)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	assert_float(_asentar(control, true)).is_equal(ReglasDelJugador.ALTURA_AGACHADO)
+
+
+func test_la_vista_baja_de_a_poco_y_no_de_un_salto() -> void:  # AC-PLY-128
+	var control := _control()
+	var altura := control.altura_de_la_vista(true, CUADRO)
+	assert_float(altura).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	assert_float(altura).is_greater(ReglasDelJugador.ALTURA_AGACHADO)
+	assert_float(control.altura_de_la_vista(true, CUADRO)).is_less(altura)
+
+
+func test_soltar_a_mitad_de_la_bajada_sube_desde_donde_esta() -> void:  # AC-PLY-129
+	var control := _control()
+	var mitad := control.altura_de_la_vista(true, ReglasDelJugador.DURACION_DEL_AGACHE / 2.0)
+	var sube := control.altura_de_la_vista(false, CUADRO)
+	assert_float(sube).is_greater(mitad)
+	assert_float(sube).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+
+
+func test_agachado_se_camina_a_la_velocidad_agachado() -> void:  # AC-PLY-130
+	var control := _control()
+	_asentar(control, true)
+	assert_float(control.velocidad(Vector2(0.0, 1.0)).length()).is_equal_approx(
+		ReglasDelJugador.VELOCIDAD_AGACHADO, 1e-4
+	)
+	assert_float(control.velocidad(Vector2(1.0, 1.0)).length()).is_equal_approx(
+		ReglasDelJugador.VELOCIDAD_AGACHADO, 1e-4
+	)
+	_asentar(control, false)
+	assert_float(control.velocidad(Vector2(0.0, 1.0)).length()).is_equal_approx(
+		ReglasDelJugador.VELOCIDAD_DE_CAMINATA, 1e-4
+	)
+
+
+func test_suspendido_la_postura_no_cambia_y_al_reanudar_sigue_a_la_accion() -> void:  # AC-PLY-124
+	var control := _control()
+	_asentar(control, true)
+	control.suspender()
+	assert_float(_asentar(control, false)).is_equal(ReglasDelJugador.ALTURA_AGACHADO)
+	control.reanudar()
+	assert_float(_asentar(control, false)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	control.suspender()
+	assert_float(_asentar(control, true)).is_equal(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+	control.reanudar()
+	assert_float(_asentar(control, true)).is_equal(ReglasDelJugador.ALTURA_AGACHADO)
+
+
+## La altura con la acción como esté, dejando pasar más que lo que dura el agache.
+func _asentar(control: ControlDelJugador, agachando: bool) -> float:
+	return control.altura_de_la_vista(agachando, ReglasDelJugador.DURACION_DEL_AGACHE * 2.0)

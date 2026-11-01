@@ -206,8 +206,8 @@ func _jugar(partida: Partida, cumplidas: int) -> void:
 	partida.cerrar_la_jornada(cumplidas)
 
 
-func test_jornada_tres_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC-EMP-050
-	var partida := Partida.desde({"jornada": 3, "medios": 0})
+func test_la_ultima_de_la_prueba_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC-EMP-050
+	var partida := Partida.desde({"jornada": 2, "medios": 0})
 	var turno := partida.abrir_la_jornada()
 	assert_int(partida.obligatorias().size()).is_equal(4)
 	for tarea in partida.obligatorias():
@@ -223,8 +223,8 @@ func test_jornada_tres_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC
 		{"cumplidas": 3, "banda": Consecuencias.Banda.AVISO, "descuidos": 1},
 		{"cumplidas": 2, "banda": Consecuencias.Banda.GRAVE, "descuidos": 2}
 	]:
-		var otra := Partida.desde({"jornada": 3, "medios": 0})
-		assert_int(otra.jornada()).is_equal(3)
+		var otra := Partida.desde({"jornada": 2, "medios": 0})
+		assert_int(otra.jornada()).is_equal(2)
 		var otro_turno := otra.abrir_la_jornada()
 		assert_int(otra.obligatorias().size()).is_equal(4)
 		var cumplidas: int = caso["cumplidas"]
@@ -296,13 +296,17 @@ func test_las_devoluciones_se_concatenan_y_vuelven_del_guardado() -> void:  # AC
 	var partida := Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
 	assert_array(partida.mensajes_del_jefe()).is_empty()
 	_cerrar_con(partida, [Tarea.Tipo.REPONER], [Partida.Llamado.PAPEL_EN_EL_INODORO])
-	var primera := DevolucionDelJefe.new(4, partida).mensajes()
+	var primera := (
+		DevolucionDelJefe.new(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA, partida).mensajes()
+	)
 	_cerrar_con(partida, [Tarea.Tipo.REPONER], [])
-	var segunda := DevolucionDelJefe.new(5, partida).mensajes()
+	var segunda := (
+		DevolucionDelJefe.new(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, partida).mensajes()
+	)
 	var esperado := PackedStringArray(primera + segunda)
 	assert_array(partida.mensajes_del_jefe()).is_equal(esperado)
 	var retomada := Partida.desde(PoliticaDeGuardado.datos(partida))
-	assert_int(retomada.jornada()).is_equal(6)
+	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2)
 	assert_array(retomada.mensajes_del_jefe()).is_equal(esperado)
 	assert_int(retomada.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(2)
 	assert_int(retomada.antecedentes().llamados(Partida.Llamado.PAPEL_EN_EL_INODORO)).is_equal(1)
@@ -313,8 +317,11 @@ func test_las_devoluciones_se_concatenan_y_vuelven_del_guardado() -> void:  # AC
 	_cerrar_con(retomada, [Tarea.Tipo.REPONER], [])
 	(
 		assert_bool(
-			DevolucionDelJefe.new(6, retomada).mensajes()[1].begins_with(
-				"De nuevo quedaron algunas"
+			(
+				DevolucionDelJefe
+				. new(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2, retomada)
+				. mensajes()[1]
+				. begins_with("De nuevo quedaron algunas")
 			)
 		)
 		. is_true()

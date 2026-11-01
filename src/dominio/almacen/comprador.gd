@@ -15,7 +15,14 @@
 class_name Comprador
 extends RefCounted
 
+## Cuándo llega y cuándo se va, en segundos desde la apertura. Con `llega_tras`, es el más tardío
+## posible: la agenda lo reemplaza por el que resulta de cuándo se retira el otro.
 var horario := Vector2(-1.0, -1.0)
+## Si no es `null`, este comprador llega `demora_de_llegada` segundos después de que el otro se
+## retira y se queda `permanencia` segundos.
+var llega_tras: Comprador = null
+var demora_de_llegada := 0.0
+var permanencia := 0.0
 var personaje: int = DialogosDeCompradores.Personaje.NINGUNO
 ## Sin guion propio es `null`, y la atención usa la apertura y la despedida predeterminadas.
 var dialogos: DialogosDeCompradores = null

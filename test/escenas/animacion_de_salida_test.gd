@@ -29,7 +29,7 @@ func after_test() -> void:
 
 
 func test_salir_toma_el_control_sin_bajar_la_persiana_ni_abrir_aun() -> void:  # AC-SHF-043
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in [1, 2]:
 		var almacen := await _abrir(jornada)
 		var jugador: Node3D = almacen.get("_jugador")
 		var entrada: Node3D = almacen.get_node(ENTRADA)
@@ -47,7 +47,7 @@ func test_salir_toma_el_control_sin_bajar_la_persiana_ni_abrir_aun() -> void:  #
 
 
 func test_salida_gira_abre_ambas_y_cierra_una_vez() -> void:  # AC-SHF-043, AC-SHF-044, AC-SHF-046
-	for jornada: int in [1, 2, 3]:
+	for jornada: int in [1, 2]:
 		var almacen := await _abrir(jornada)
 		var jugador: Node3D = almacen.get("_jugador")
 		var control: ControlDelJugador = jugador.get("_control")
@@ -217,7 +217,7 @@ func test_pausar_cada_etapa_conserva_la_secuencia_y_la_mano() -> void:  # AC-SHF
 
 
 func test_el_tiempo_cierra_sin_giro_ni_apertura_de_la_entrada() -> void:  # AC-SHF-046
-	var almacen := await _abrir(3)
+	var almacen := await _abrir(2)
 	var jugador: Node3D = almacen.get("_jugador")
 	var antes: Transform3D = jugador.call("mira")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -231,8 +231,8 @@ func test_el_tiempo_cierra_sin_giro_ni_apertura_de_la_entrada() -> void:  # AC-S
 	assert_bool(almacen.get_node(ENTRADA).call("puerta").abierta()).is_false()
 
 
-func test_la_entrada_se_cierra_al_pasar_de_la_tercera_a_la_cuarta() -> void:  # AC-SHF-046
-	var almacen := await _abrir(3)
+func test_la_entrada_se_cierra_al_pasar_de_la_segunda_a_la_tercera() -> void:  # AC-SHF-046
+	var almacen := await _abrir(2)
 	var entrada: Node3D = almacen.get_node(ENTRADA)
 	var cerradas: Dictionary[Node3D, Transform3D] = {}
 	for hoja: Node3D in _hojas_de_entrada(almacen):
@@ -243,7 +243,7 @@ func test_la_entrada_se_cierra_al_pasar_de_la_tercera_a_la_cuarta() -> void:  # 
 		hoja.call("_physics_process", Puerta.ANGULO_ABIERTA / Puerta.VELOCIDAD_DEL_GIRO)
 		hoja.call("_physics_process", 0.0)
 	assert_bool(entrada.call("puerta").abierta()).is_true()
-	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(4)
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
 	await almacen.call("_preparar_lo_postergado")
 	almacen.get("_ciclo").call("abrir_la_jornada")
 	for hoja: Node3D in cerradas:
@@ -280,11 +280,11 @@ func test_las_hojas_giran_sobre_sus_cantos_exteriores_hacia_el_mismo_lado() -> v
 		cuerpo.call("cerrar_de_golpe")
 
 
-func test_retoma_y_reintenta_la_cuarta_con_ambas_hojas_cerradas() -> void:  # AC-SHF-046, AC-PLY-103
-	assert_bool(Guardado.new().escribir({"jornada": 4})).is_true()
+func test_retoma_y_reintenta_la_tercera_con_hojas_cerradas() -> void:  # AC-SHF-046, AC-PLY-103
+	assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({"jornada": 3}))).is_true()
 	for _intento in 2:
-		var almacen := await _abrir(4, true)
-		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(4)
+		var almacen := await _abrir(3, true)
+		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
 		for entrada: Node3D in _hojas_de_entrada(almacen):
 			assert_bool(entrada.call("puerta").abierta()).is_false()
 			assert_float(entrada.call("puerta").angulo()).is_zero()

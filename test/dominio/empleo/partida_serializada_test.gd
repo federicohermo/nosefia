@@ -24,6 +24,8 @@ func _completo() -> Dictionary:
 		"apercibimientos_de_la_prueba": 3,
 		"ultima_de_la_prueba_completa": true,
 		"semilla": 1234,
+		"poses_de_las_cajas":
+		{Producto.Id.MAROLINI: Transform3D(Basis.IDENTITY, Vector3(1.5, 2.0, 3.25))},
 	}
 
 
@@ -72,7 +74,7 @@ func test_el_tipo_equivocado_vuelve_con_su_defecto() -> void:  # AC-SAV-008
 	assert_int(typeof(saneado[MEDIOS])).is_equal(TYPE_INT)
 
 
-func test_la_actual_una_anterior_y_sin_version_son_legibles() -> void:  # AC-SAV-009
+func test_solo_la_version_actual_es_legible() -> void:  # AC-SAV-009
 	var anterior := _completo()
 	anterior[VERSION] = PartidaSerializada.VERSION - 1
 	var sin_version := _completo()
@@ -80,8 +82,8 @@ func test_la_actual_una_anterior_y_sin_version_son_legibles() -> void:  # AC-SAV
 	var posterior := _completo()
 	posterior[VERSION] = PartidaSerializada.VERSION + 1
 	assert_bool(PartidaSerializada.legible(_completo())).is_true()
-	assert_bool(PartidaSerializada.legible(anterior)).is_true()
-	assert_bool(PartidaSerializada.legible(sin_version)).is_true()
+	assert_bool(PartidaSerializada.legible(anterior)).is_false()
+	assert_bool(PartidaSerializada.legible(sin_version)).is_false()
 	assert_bool(PartidaSerializada.legible(posterior)).is_false()
 
 
@@ -107,27 +109,34 @@ func test_un_guardado_sin_cuentas_retoma_limpio() -> void:  # AC-SAV-025
 	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(1)
 
 
-func test_un_guardado_de_cinco_jornadas_no_se_migra() -> void:  # AC-SAV-033
-	var anterior := _completo()
-	anterior[JORNADA] = 2
-	anterior.erase("cierre_pendiente")
-	var retomada := Partida.desde(PartidaSerializada.sanear(anterior))
-	assert_int(retomada.jornada()).is_equal(2)
-	assert_int(retomada.medios()).is_equal(anterior[MEDIOS])
-	assert_object(retomada.reflexion).is_null()
-	retomada.abrir_la_jornada()
-	var tipos: Array[Tarea.Tipo] = []
-	for tarea: Tarea in retomada.obligatorias():
-		tipos.append(tarea.tipo())
-	assert_array(tipos).contains_exactly(
-		[Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REPONER]
+func test_las_poses_se_restauran_y_lo_que_no_es_una_pose_se_ignora() -> void:  # AC-SAV-034
+	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS)
+	var pose := Transform3D(Basis(Vector3.UP, 0.5), Vector3(1.0, 2.0, 3.0))
+	var partida := (
+		Partida
+		. desde(
+			{
+				JORNADA: 3,
+				clave:
+				{
+					Producto.Id.MAROLINI: pose,
+					Producto.Id.UAKALAS: "texto",
+					9999: pose,
+					"MAROLINI": pose,
+				},
+			}
+		)
 	)
-	var nombres: Array[String] = []
-	for comprador: Comprador in Compradores.de_la_jornada(retomada.jornada()):
-		nombres.append(comprador.nombre())
-	assert_array(nombres).contains_exactly(["Fede", "Mía"])
-	var bandeja := Bandeja.new(Conversacion.desde_disco())
-	bandeja.abrir_jornada(retomada.jornada())
-	assert_int(bandeja.conversaciones().size()).is_equal(1)
-	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
-		assert_bool(AnomaliasDeLaJornada.util_disponible(jabon, retomada.jornada())).is_true()
+	assert_int(partida.jornada()).is_equal(3)
+	assert_array(partida.poses_de_las_cajas.keys()).contains_exactly([Producto.Id.MAROLINI])
+	assert_bool(partida.poses_de_las_cajas[Producto.Id.MAROLINI].is_equal_approx(pose)).is_true()
+
+
+func test_sin_el_campo_o_con_otro_tipo_ninguna_caja_trae_pose() -> void:  # AC-SAV-034
+	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS)
+	assert_dict(PartidaSerializada.sanear({})[clave]).is_empty()
+	for crudo: Variant in [7, "poses", [Transform3D.IDENTITY]]:
+		var partida := Partida.desde({JORNADA: 3, clave: crudo})
+		assert_int(partida.jornada()).is_equal(3)
+		assert_dict(partida.poses_de_las_cajas).is_empty()
+	assert_dict(Partida.nueva().poses_de_las_cajas).is_empty()

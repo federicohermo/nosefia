@@ -8,7 +8,7 @@ extends GdUnitTestSuite
 ## Cada gesto con el balde, con la señal que lo dispara y el audio que suena.
 const GESTOS := {
 	EntradaSonora.Evento.BALDE_LLENADO: [&"balde_llenado", "SFX_OBJETO_Balde_Llenar"],
-	EntradaSonora.Evento.BALDE_TENIDO: [&"balde_tenido", "SFX_OBJETO_Jabon_VertirEnBalde"],
+	EntradaSonora.Evento.BALDE_TENIDO: [&"balde_tenido", "SFX_OBJETO_Balde_VertirJabon"],
 	EntradaSonora.Evento.BALDE_VACIADO: [&"balde_vaciado", "SFX_OBJETO_Balde_Vaciar"],
 	EntradaSonora.Evento.MOPA_MOJADA: [&"mopa_mojada", "SFX_OBJETO_Mopa_MojarEnBalde"],
 }

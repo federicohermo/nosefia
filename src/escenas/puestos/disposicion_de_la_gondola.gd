@@ -12,18 +12,18 @@
 ##
 ## Hay dos listas porque el juego las trata distinto:
 ##
-## - `principales`, una por producto y **en el orden de `Producto.Id`**, es la tanda donde abre
-##   los faltantes de reposición. Un producto declarado sin exhibición puede tener bloque
+## - `principales`, una por producto y **en el orden de `Producto.Id`**, es la tanda reponible.
+##   Un producto declarado sin exhibición puede tener bloque
 ##   vacío; los exhibidos tienen una fila, o dos del mismo largo. En dos filas sus copias
 ##   van con la fila de atrás primero y la de adelante al final, de izquierda a derecha:
 ##   `visible_instance_count` corta por el final, así que los casilleros son las últimas copias
 ##   y caen todos en la fila de adelante, que es la que da al pasillo.
-## - `guias` son las tandas fijas: lo que se repite para completar un estante. Abren completas;
-##   sus filas de adelante también tienen casilleros que el jugador puede agarrar y reponer.
+## - `guias` son las tandas fijas: lo que se repite para completar un estante. Sus filas de
+##   adelante también tienen casilleros que el jugador puede agarrar y reponer.
 ##
 ## **Cuántas del final son casilleros sale de acá**: cada lugar de la fila de adelante es un
-## casillero. El cupo total suma las filas principales y las de las guías; el cupo reponible de
-## apertura usa sólo `filas_de_adelante`. El puesto conserva ambas mediciones por separado.
+## casillero. El cupo total suma las filas principales y las de las guías, y los faltantes de
+## apertura pueden caer en cualquiera de ellas.
 class_name DisposicionDeLaGondola
 extends Resource
 

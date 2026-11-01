@@ -11,6 +11,7 @@ static func entregar(pantalla: PantallaDeDevolucion) -> void:
 
 
 static func centrar_celular(pantalla: PantallaDeDevolucion) -> void:
+	esperar_el_celular(pantalla)
 	var celular: PantallaDelCelular = pantalla.get("_pantalla_del_celular")
 	if not celular.centrado():
 		terminar_movimiento(pantalla)
@@ -18,12 +19,29 @@ static func centrar_celular(pantalla: PantallaDeDevolucion) -> void:
 
 
 static func terminar_movimiento(pantalla: PantallaDeDevolucion) -> void:
+	esperar_el_celular(pantalla)
 	var celular: PantallaDelCelular = pantalla.get("_pantalla_del_celular")
 	var lectura: Callable = celular.get("_ahora")
 	var reloj := [maxi(int(lectura.call()), int(celular.get("_ultimo")))]
 	celular.set("_ahora", func() -> int: return reloj[0])
 	animar_celular(celular, reloj, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0) + 25000)
 	celular.set("_ahora", lectura)
+
+
+## El celular sube tras la espera posterior a la bajada de la persiana: se termina la bajada,
+## si sigue en curso, y se cuenta la espera. Con el celular ya arriba, no hace nada.
+static func esperar_el_celular(pantalla: PantallaDeDevolucion) -> void:
+	if pantalla.visible:
+		return
+	var almacen := pantalla.get_parent().get_parent()
+	var persiana: PersianaDeLaNoche = almacen.get_node("Interfaz/PersianaDeLaNoche")
+	var subira := pantalla.devolucion_despachada.is_connected(
+		Callable(almacen, "_al_despachar_la_devolucion")
+	)
+	if subira and persiana.get("_bajando"):
+		terminar_la_bajada(persiana)
+	if almacen.get("_devolucion_en_espera") != null:
+		almacen.call("_process", DevolucionDelJefe.SEGUNDOS_DE_ESPERA_DEL_CELULAR)
 
 
 ## El reloj simulado avanza en cuadros normales; los saltos se prueban por separado.
@@ -77,10 +95,15 @@ static func leer_las_instrucciones(almacen: Node) -> void:
 
 
 static func terminar_instrucciones(pantalla: PantallaDeInstrucciones) -> void:
+	terminar_el_movimiento(pantalla)
+
+
+## Corre la entrada, la salida y el deslizamiento de las placas hasta que la pantalla se detiene.
+static func terminar_el_movimiento(pantalla: PantallaDeInstrucciones) -> void:
 	var lectura: Callable = pantalla.get("_ahora")
 	var reloj: Array[int] = [int(lectura.call())]
 	pantalla.set("_ahora", func() -> int: return reloj[0])
-	for _cuadro in 30:
+	for _cuadro in 90:
 		if not pantalla.is_processing():
 			break
 		reloj[0] += 10000

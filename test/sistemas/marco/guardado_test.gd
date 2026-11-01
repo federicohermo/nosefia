@@ -40,7 +40,7 @@ func test_ida_y_vuelta_por_disco_con_los_tipos_intactos() -> void:  # AC-SAV-006
 func test_lo_que_falta_o_esta_mal_tipado_en_disco_vuelve_con_su_defecto() -> void:
 	# AC-SAV-007 y AC-SAV-008, pasando por disco.
 	var guardado := _guardado()
-	guardado.escribir({MEDIOS: "dos"})
+	guardado.escribir({VERSION: PartidaSerializada.VERSION, MEDIOS: "dos"})
 	var cargado := guardado.cargar()
 	assert_int(cargado[JORNADA]).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA)
 	assert_int(cargado[MEDIOS]).is_equal(Legajo.new().medios())
@@ -56,12 +56,18 @@ func test_una_version_futura_no_carga_y_no_se_borra() -> void:  # AC-SAV-009
 	assert_bool(FileAccess.file_exists(guardado.ruta)).is_true()
 
 
-func test_un_guardado_sin_version_carga() -> void:  # AC-SAV-009
+func test_un_guardado_de_otra_numeracion_no_carga() -> void:  # AC-SAV-009, AC-SAV-033
 	var guardado := _guardado()
 	var sin_version := _partida_en_la_tercera()
 	sin_version.erase(VERSION)
 	guardado.escribir(sin_version)
-	assert_int(guardado.cargar()[JORNADA]).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	assert_dict(guardado.cargar()).is_empty()
+	assert_bool(guardado.hay_guardado()).is_false()
+	var anterior := _partida_en_la_tercera()
+	anterior[VERSION] = PartidaSerializada.VERSION - 1
+	guardado.escribir(anterior)
+	assert_dict(guardado.cargar()).is_empty()
+	assert_bool(guardado.hay_guardado()).is_false()
 
 
 func test_sin_archivo_cargar_da_vacio() -> void:  # AC-SAV-010
@@ -115,10 +121,10 @@ func test_un_guardado_nuevo_toma_la_ruta_por_defecto() -> void:
 func test_archivo_real_con_medios_antiguo_y_mal_tipo() -> void:  # AC-EMP-020
 	var guardado := _guardado()
 	for crudo: Dictionary in [
-		{"jornada": 3, "apercibimientos": 3},
-		{"jornada": 3, "medios": 7.0},
-		{"jornada": 3, "medios": 7},
-		{"jornada": 3, "apercibimientos": 3, "medios": 7},
+		{"version": PartidaSerializada.VERSION, "jornada": 3, "apercibimientos": 3},
+		{"version": PartidaSerializada.VERSION, "jornada": 3, "medios": 7.0},
+		{"version": PartidaSerializada.VERSION, "jornada": 3, "medios": 7},
+		{"version": PartidaSerializada.VERSION, "jornada": 3, "apercibimientos": 3, "medios": 7},
 	]:
 		_escribir_crudo(guardado.ruta, var_to_str(crudo))
 		var en_disco: Variant = str_to_var(FileAccess.get_file_as_string(guardado.ruta))
@@ -126,3 +132,28 @@ func test_archivo_real_con_medios_antiguo_y_mal_tipo() -> void:  # AC-EMP-020
 		var partida := Partida.desde(guardado.cargar())
 		assert_int(partida.jornada()).is_equal(3)
 		assert_int(partida.medios()).is_equal(7 if typeof(crudo.get("medios")) == TYPE_INT else 0)
+
+
+func test_las_poses_de_las_cajas_cruzan_el_disco_con_sus_valores_y_tipos() -> void:  # AC-SAV-034
+	var guardado := _guardado()
+	var en_estanteria := Transform3D(Basis.IDENTITY, Vector3(1.5, 2.0, 3.25))
+	var en_el_piso := Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.25, 0.5))
+	var partida := Partida.desde({JORNADA: ReglasDeLaPartida.PRIMERA_JORNADA + 1})
+	partida.abrir_la_jornada()
+	var anotadas: Dictionary[Producto.Id, Transform3D] = {
+		Producto.Id.MAROLINI: en_estanteria, Producto.Id.UAKALAS: en_el_piso
+	}
+	partida.poses_de_las_cajas = anotadas
+	partida.cerrar_la_jornada(0)
+	assert_bool(guardado.escribir(PoliticaDeGuardado.datos(partida))).is_true()
+	var retomada := Partida.desde(guardado.cargar())
+	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	var poses := retomada.poses_de_las_cajas
+	assert_array(poses.keys()).contains_exactly_in_any_order(
+		[Producto.Id.MAROLINI, Producto.Id.UAKALAS]
+	)
+	assert_bool(poses[Producto.Id.MAROLINI].is_equal_approx(en_estanteria)).is_true()
+	assert_bool(poses[Producto.Id.UAKALAS].is_equal_approx(en_el_piso)).is_true()
+	assert_int(typeof(guardado.cargar()["poses_de_las_cajas"][Producto.Id.MAROLINI])).is_equal(
+		TYPE_TRANSFORM3D
+	)

@@ -8,22 +8,30 @@ const INODORO := ReglasDeLaLimpieza.ID_DEL_INODORO
 
 func test_poetico_y_los_pares_comparten_el_permiso_de_la_jornada() -> void:  # AC-CLN-061
 	var unidad := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO))
-	for jornada in range(1, 9):
+	for jornada in range(1, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
 		var piso := PisoDelLocal.de_la_jornada(jornada)
 		var pares := Uso.para_el_almacen(jornada)
 		assert_int(piso.usar(BALDE, LAVATORIO)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_LLENADO)
 		assert_int(pares.resolver(unidad.id, BALDE)).is_equal(
-			Uso.Efecto.TENIR if jornada == 5 else Uso.Efecto.NINGUNO
+			(
+				Uso.Efecto.TENIR
+				if jornada == AnomaliasDeLaJornada.JORNADA_SIN_AZUL
+				else Uso.Efecto.NINGUNO
+			)
 		)
 		assert_int(piso.usar(unidad.id, BALDE)).is_equal(
 			(
 				ReglasDeLaLimpieza.Resultado.BALDE_TENIDO
-				if jornada == 5
+				if jornada == AnomaliasDeLaJornada.JORNADA_SIN_AZUL
 				else ReglasDeLaLimpieza.Resultado.SIN_EFECTO
 			)
 		)
 		assert_int(piso.balde().agua()).is_equal(
-			ReglasDeLaLimpieza.Agua.AZUL if jornada == 5 else ReglasDeLaLimpieza.Agua.LIMPIA
+			(
+				ReglasDeLaLimpieza.Agua.AZUL
+				if jornada == AnomaliasDeLaJornada.JORNADA_SIN_AZUL
+				else ReglasDeLaLimpieza.Agua.LIMPIA
+			)
 		)
 
 
@@ -35,12 +43,12 @@ func test_los_rechazos_no_cambian_agua_mopa_ni_manchas() -> void:  # AC-CLN-062
 		ReglasDeLaLimpieza.Agua.ROSA,
 		ReglasDeLaLimpieza.Agua.AMARILLO
 	]:
-		var piso := PisoDelLocal.de_la_jornada(5)
+		var piso := PisoDelLocal.de_la_jornada(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 		if agua != ReglasDeLaLimpieza.Agua.NINGUNA:
 			piso.balde().llenar()
 			piso.balde().tenir(agua)
 		var cantidad := piso.lugares().size()
-		var pares := Uso.para_el_almacen(5)
+		var pares := Uso.para_el_almacen(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 		assert_int(pares.resolver(unidad.id, BALDE)).is_equal(Uso.Efecto.TENIR)
 		assert_int(piso.balde().agua()).is_equal(agua)
 		assert_int(piso.usar(unidad.id, BALDE)).is_equal(
@@ -59,7 +67,7 @@ func test_los_rechazos_no_cambian_agua_mopa_ni_manchas() -> void:  # AC-CLN-062
 
 func test_la_mezcla_sustituta_borra_solo_moho_con_la_carga_vigente() -> void:  # AC-CLN-063
 	var unidad := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO))
-	var piso := PisoDelLocal.de_la_jornada(5)
+	var piso := PisoDelLocal.de_la_jornada(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 	piso.usar(BALDE, LAVATORIO)
 	assert_int(piso.usar(unidad.id, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_TENIDO)
 	assert_int(piso.usar(MOPA, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
@@ -85,7 +93,7 @@ func test_la_mezcla_sustituta_borra_solo_moho_con_la_carga_vigente() -> void:  #
 
 func test_dos_mezclas_conservan_la_unidad_y_no_habilitan_otros_destinos() -> void:  # AC-CLN-064
 	var unidad := UnidadDeProducto.new(Catalogo.de(Producto.Id.POETICO))
-	var piso := PisoDelLocal.de_la_jornada(5)
+	var piso := PisoDelLocal.de_la_jornada(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 	for repeticion in range(2):
 		piso.usar(BALDE, LAVATORIO)
 		assert_int(piso.usar(unidad.id, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_TENIDO)
@@ -115,7 +123,7 @@ func test_la_unidad_mezclada_de_caja_o_gondola_se_vende_una_sola_vez() -> void: 
 		var deposito := inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)
 		var gondola := inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)
 		var afuera := inventario.afuera(producto)
-		var piso := PisoDelLocal.de_la_jornada(5)
+		var piso := PisoDelLocal.de_la_jornada(AnomaliasDeLaJornada.JORNADA_SIN_AZUL)
 		piso.usar(BALDE, LAVATORIO)
 		assert_int(piso.usar(unidad.id, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_TENIDO)
 		assert_object(unidad.producto).is_same(producto)

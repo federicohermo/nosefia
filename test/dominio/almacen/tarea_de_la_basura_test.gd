@@ -2,10 +2,11 @@
 extends GdUnitTestSuite
 
 const ID_AJENO := &"caja_de_fideos"
+const BASURA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
 
 
 func _tarea() -> TareaDeLaBasura:
-	return TareaDeLaBasura.de_la_jornada(5)
+	return TareaDeLaBasura.de_la_jornada(BASURA)
 
 
 func _ids() -> Array[StringName]:
@@ -70,11 +71,13 @@ func test_un_id_repetido_en_la_lista_no_agranda_la_tarea() -> void:
 
 
 func test_solo_la_jornada_que_declara_basura_tiene_tachos_llenos() -> void:  # AC-CLN-007
-	for jornada in range(1, 9):
+	for jornada in range(1, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
 		var tarea := TareaDeLaBasura.de_la_jornada(jornada)
-		assert_int(tarea.bolsas()).is_equal(3 if jornada == 5 else 0)
+		assert_int(tarea.bolsas()).is_equal(
+			ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA if jornada == BASURA else 0
+		)
 		for tacho: TareaDeLaBasura.Tacho in TareaDeLaBasura.Tacho.values():
-			assert_bool(tarea.tiene_bolsa(tacho)).is_equal(jornada == 5)
+			assert_bool(tarea.tiene_bolsa(tacho)).is_equal(jornada == BASURA)
 		assert_int(tarea.depositadas()).is_zero()
 
 
@@ -94,7 +97,9 @@ func test_mano_ocupada_y_tacho_vacio_no_cambian_nada() -> void:  # AC-CLN-053 AC
 	for tacho: TareaDeLaBasura.Tacho in TareaDeLaBasura.Tacho.values():
 		assert_str(tarea.sacar(tacho, false)).is_equal(ObjetoDelAlmacen.SIN_ID)
 		assert_bool(tarea.tiene_bolsa(tacho)).is_true()
-	for jornada: int in [1, 2, 3, 4, 6, 7, 8]:
+	for jornada: int in range(1, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1):
+		if jornada == BASURA:
+			continue
 		var vacia := TareaDeLaBasura.de_la_jornada(jornada)
 		for tacho: TareaDeLaBasura.Tacho in TareaDeLaBasura.Tacho.values():
 			assert_str(vacia.sacar(tacho, true)).is_equal(ObjetoDelAlmacen.SIN_ID)

@@ -8,6 +8,7 @@ signal interaccion_pedida
 @export var antepecho: MeshInstance3D
 
 var atenciones: Ventanilla
+var manos: Manos
 var _imagenes: Dictionary[Texture2D, Image] = {}
 
 
@@ -80,6 +81,10 @@ func admite_foco_en(punto: Vector3, ojo: Vector3) -> bool:
 		return false
 	if _tapado_por_el_antepecho(ojo, punto):
 		return false
+	# Un producto apuntado al hueco es un intento de entrega aunque la mira caiga en lo
+	# transparente de la figura: si no, el clic lo soltaría por la ventana.
+	if manos != null and ReglasDeLaVentanilla.se_entrega_al_soltar_en_el_hueco(manos.sostenido()):
+		return true
 	var textura := figura_de_foco.sprite_frames.get_frame_texture(
 		figura_de_foco.animation, figura_de_foco.frame
 	)

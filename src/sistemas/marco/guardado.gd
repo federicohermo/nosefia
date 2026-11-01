@@ -21,8 +21,8 @@ func escribir(datos: Dictionary) -> bool:
 	return archivo.store_string(var_to_str(datos))
 
 
-## Vacío sin archivo, y vacío con una versión futura, que queda en disco. Un archivo que no se
-## puede leer se borra, para que el arranque siguiente no vuelva a tropezar con él.
+## Vacío sin archivo, y vacío con una versión que no es la actual, que queda en disco. Un archivo
+## que no se puede leer se borra, para que el arranque siguiente no vuelva a tropezar con él.
 func cargar() -> Dictionary:
 	if not FileAccess.file_exists(ruta):
 		return {}

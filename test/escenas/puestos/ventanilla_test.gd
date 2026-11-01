@@ -226,6 +226,8 @@ func _afirmar_encuadre(ventanilla: VentanillaQueSeVe, camara: Camera3D) -> void:
 		minimo = minimo.min(punto)
 		maximo = maximo.max(punto)
 		var consulta := PhysicsRayQueryParameters3D.create(camara.global_position, esquina)
+		# El hueco sólo frena productos: no se ve, y no tapa nada.
+		consulta.collision_mask &= ~ReglasDeLosObjetos.CAPA_DEL_HUECO
 		var golpe := camara.get_world_3d().direct_space_state.intersect_ray(consulta)
 		# Un contacto en el propio borde no tapa el recorrido anterior de la vista.
 		if not golpe.is_empty():

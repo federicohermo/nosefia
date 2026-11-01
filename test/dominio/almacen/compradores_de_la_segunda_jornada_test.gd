@@ -48,7 +48,9 @@ func test_cada_llamada_y_cada_apertura_tienen_estado_propio() -> void:  # AC-CTR
 	var nueva := TareaDeAtender.new(segunda, Inventario.new(Catalogo.todos()))
 	assert_object(nueva.atencion()).is_null()
 	assert_bool(nueva.compras_cerradas()).is_false()
-	for jornada in range(6, 9):
+	for jornada: int in [
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA
+	]:
 		assert_str(Compradores.de_la_jornada(jornada)[0].nombre()).is_equal("Marta")
 
 
@@ -106,7 +108,7 @@ func test_los_comunes_reemplazan_uno_dos_y_tres_marcadores() -> void:  # AC-CTR-
 
 
 # AC-CTR-053, AC-CTR-051, AC-CTR-066
-func test_el_recordatorio_nombra_lo_que_falta_y_pide_recibo_al_completar_productos() -> void:
+func test_el_recordatorio_nombra_lo_que_falta_y_pide_ticket_al_completar_productos() -> void:
 	var atencion := _comun(
 		[[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1], [Producto.Id.DURONGA, 1]]
 	)
@@ -126,9 +128,68 @@ func test_el_recordatorio_nombra_lo_que_falta_y_pide_recibo_al_completar_product
 		)
 	atencion.interactuar(null)
 	atencion.interactuar(null)
-	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.PIDE_EL_RECIBO)
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.PIDE_EL_TICKET)
 	assert_object(atencion.comprador().pedido()).is_same(pedido)
 	assert_bool(atencion.vendida()).is_false()
+
+
+func _entregar(atencion: Atencion, producto: Producto) -> void:
+	var inventario: Inventario = atencion.get("_inventario")
+	var unidad := Estante.new(inventario, Catalogo.todos()).retirar(producto)
+	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
+
+
+# AC-CTR-053, AC-CTR-066
+func test_el_rechazo_tras_una_entrega_parcial_nombra_solo_lo_que_falta() -> void:
+	var atencion := _comun([[Producto.Id.POETICO, 2], [Producto.Id.PROGRES, 1]])
+	_entregar(atencion, Catalogo.de(Producto.Id.POETICO))
+	assert_int(atencion.interactuar(Ticket.new([]))).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
+	var faltante := Venta.new()
+	faltante.agregar(Catalogo.de(Producto.Id.POETICO), 1)
+	faltante.agregar(Catalogo.de(Producto.Id.PROGRES), 1)
+	var esperado := DialogosDeCompradores.recordatorio(faltante, RecepcionDeCompra.new(faltante))
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(
+		DialogosDeCompradores.RECHAZO + esperado.entrada_actual()
+	)
+
+
+# AC-CTR-053, AC-CTR-066
+func test_el_rechazo_cuenta_los_productos_distintos_que_faltan() -> void:
+	var atencion := _comun(
+		[[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1], [Producto.Id.DURONGA, 1]]
+	)
+	var pedido := atencion.comprador().pedido()
+	atencion.interactuar(Ticket.new([]))
+	assert_int(atencion.dialogo().entrada_actual().count("[color=#e4f850]")).is_equal(3)
+	_entregar(atencion, pedido.productos()[0])
+	atencion.interactuar(Ticket.new([]))
+	assert_int(atencion.dialogo().entrada_actual().count("[color=#e4f850]")).is_equal(2)
+	_entregar(atencion, pedido.productos()[1])
+	atencion.interactuar(Ticket.new([]))
+	assert_int(atencion.dialogo().entrada_actual().count("[color=#e4f850]")).is_equal(1)
+
+
+# AC-CTR-053, AC-CTR-066
+func test_el_rechazo_con_solo_el_ticket_pendiente_pide_el_ticket() -> void:
+	var atencion := _comun([[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1]])
+	for producto: Producto in atencion.comprador().pedido().productos():
+		_entregar(atencion, producto)
+	assert_int(atencion.interactuar(Ticket.new([]))).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(
+		DialogosDeCompradores.RECHAZO + DialogosDeCompradores.PEDIDO_DEL_TICKET
+	)
+
+
+# AC-CTR-053
+func test_con_solo_el_ticket_pendiente_lo_ya_entregado_sigue_ya_entregado() -> void:
+	var atencion := _comun([[Producto.Id.POETICO, 1], [Producto.Id.PROGRES, 1]])
+	var pedido := atencion.comprador().pedido()
+	for producto: Producto in pedido.productos():
+		_entregar(atencion, producto)
+	var inventario: Inventario = atencion.get("_inventario")
+	var otra := Estante.new(inventario, Catalogo.todos()).retirar(pedido.productos()[0])
+	assert_int(atencion.interactuar(otra)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(DialogosDeCompradores.YA_ENTREGADO)
 
 
 func test_cada_identidad_elige_su_guion_sin_caer_en_tin() -> void:  # AC-CTR-051

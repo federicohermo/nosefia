@@ -12,11 +12,11 @@ extends RefCounted
 
 ## Desde qué jornada se prepara cada útil.
 const DESDE: Dictionary[StringName, int] = {
-	&"balde": ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-	&"mopa": ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-	&"jabon_azul": ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-	&"jabon_rosa": ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-	&"jabon_amarillo": ReglasDeLaPartida.PRIMERA_JORNADA + 2,
+	&"balde": ReglasDeLaPartida.PRIMERA_JORNADA + 1,
+	&"mopa": ReglasDeLaPartida.PRIMERA_JORNADA + 1,
+	&"jabon_azul": ReglasDeLaPartida.PRIMERA_JORNADA + 1,
+	&"jabon_rosa": ReglasDeLaPartida.PRIMERA_JORNADA + 1,
+	&"jabon_amarillo": ReglasDeLaPartida.PRIMERA_JORNADA + 1,
 }
 
 

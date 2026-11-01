@@ -48,9 +48,19 @@ static func datos(partida: Partida) -> Dictionary:
 				PartidaSerializada.clave(PartidaSerializada.Campo.ULTIMA_DE_LA_PRUEBA_COMPLETA):
 				partida.legajo().ultima_de_la_prueba_completa(),
 				PartidaSerializada.clave(PartidaSerializada.Campo.SEMILLA): partida.semilla,
+				PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS):
+				_poses_de(partida),
 			}
 		)
 	)
+
+
+static func _poses_de(partida: Partida) -> Dictionary:
+	var poses := {}
+	var de_las_cajas := partida.poses_de_las_cajas
+	for id: Producto.Id in de_las_cajas:
+		poses[id] = de_las_cajas[id]
+	return poses
 
 
 static func _datos_de(noches: Dictionary[int, ResultadoDeLaNoche]) -> Dictionary:

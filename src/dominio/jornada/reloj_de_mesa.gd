@@ -42,8 +42,11 @@ static func hora_visible(jornada: int, restante: float) -> bool:
 ## Lo que se lee en el display: la hora de la noche, o nada.
 ##
 ## La cadena vacía y no un `"--:--"`: el reloj apagado no dice que está apagado, y darse cuenta
-## es parte de lo que la noche cobra.
+## es parte de lo que la noche cobra. La noche del corte de luz no se apaga: se queda leyendo la
+## hora a la que se cortó hasta el cierre.
 static func lectura(jornada: int, restante: float) -> String:
 	if not hora_visible(jornada, restante):
 		return ""
+	if AnomaliasDeLaJornada.reloj_detenido(jornada, restante):
+		return Marcador.hora(AnomaliasDeLaJornada.restante_al_cortar())
 	return Marcador.hora(restante)

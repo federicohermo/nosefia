@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 
 
 func test_misma_partida_conserva_el_expediente_entre_aperturas() -> void:  # AC-EMP-069
-	var partida := Partida.desde({"jornada": 4})
+	var partida := Partida.desde({"jornada": 3})
 	var expediente := partida.expediente
 	assert_object(expediente).is_not_null()
 	if expediente == null:
@@ -13,10 +13,10 @@ func test_misma_partida_conserva_el_expediente_entre_aperturas() -> void:  # AC-
 	partida.cerrar_la_jornada(partida.obligatorias().size())
 	partida.abrir_la_jornada()
 	assert_object(partida.expediente).is_same(expediente)
-	assert_int(expediente.registrar_por_canal(&"colilla", Pista.Canal.LEVANTAR, 5)).is_equal(
+	assert_int(expediente.registrar_por_canal(&"colilla", Pista.Canal.LEVANTAR, 4)).is_equal(
 		Expediente.Resultado.ANOTADA
 	)
-	assert_int(expediente.registrar_por_canal(&"2A", Pista.Canal.CHAT, 5)).is_equal(
+	assert_int(expediente.registrar_por_canal(&"2A", Pista.Canal.CHAT, 4)).is_equal(
 		Expediente.Resultado.ANOTADA
 	)
 	for tarea: Tarea in partida.obligatorias():
@@ -76,10 +76,10 @@ func test_consumidores_reciben_la_misma_identidad_sin_crear_duenos() -> void:  #
 	b.usar(partida.expediente)
 	assert_object(a.get("_expediente")).is_same(partida.expediente)
 	assert_object(b.get("_expediente")).is_same(partida.expediente)
-	assert_int(a.pedir_pista(&"2A", Pista.Canal.CHAT, 5, true)).is_equal(
+	assert_int(a.pedir_pista(&"2A", Pista.Canal.CHAT, 4, true)).is_equal(
 		Expediente.Resultado.ANOTADA
 	)
-	assert_int(b.pedir_pista(&"2A", Pista.Canal.CHAT, 5, true)).is_equal(
+	assert_int(b.pedir_pista(&"2A", Pista.Canal.CHAT, 4, true)).is_equal(
 		Expediente.Resultado.REPETIDA
 	)
 	assert_array(Array(partida.expediente.identidades())).is_equal(["2A"])

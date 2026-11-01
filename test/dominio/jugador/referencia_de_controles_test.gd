@@ -158,7 +158,7 @@ func test_puerta_abierta_cierra_y_cerrada_o_trabada_abre_y_nota_mira() -> void: 
 
 
 func test_tacho_solo_ofrece_extraccion_con_bolsa_y_mano_vacia_sin_sacarla() -> void:  # AC-PLY-085
-	var tarea := TareaDeLaBasura.de_la_jornada(5)
+	var tarea := TareaDeLaBasura.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	for mano: bool in [false, true]:
 		for bolsa: bool in [false, true]:
 			var contexto := R.contexto_del_tacho(bolsa, mano)
@@ -253,3 +253,12 @@ func test_hablar_y_entregar_solo_declaran_el_contexto_habilitado() -> void:  # A
 			assert_int(contexto.primario).is_equal(L.ENTREGAR if atendido and mano else L.HABLAR)
 			assert_bool(_lineas(mano, M.FIJO, contexto).has(L.DEJAR)).is_false()
 	assert_int(R.contexto_de_atencion(false, true, true).ruta_primaria).is_equal(R.Ruta.GENERICA)
+
+
+func test_examinando_ofrece_volver_por_la_accion_de_examinar() -> void:  # AC-PLY-089
+	for mano: bool in [false, true]:
+		var lineas := R.lineas(mano, M.FIJO, R.Contexto.new(), true, true)
+		assert_array(lineas).contains_exactly([L.VOLVER])
+		assert_str(R.accion(L.VOLVER)).is_equal(ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_array(R.lineas(true, M.FIJO, R.Contexto.new(), true)).is_empty()
+	assert_array(R.lineas(true, M.FIJO, R.Contexto.new(), false, false)).is_not_empty()

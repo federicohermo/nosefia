@@ -12,6 +12,8 @@ const FADE_DE_LA_PERSIANA_BAJA := 0.3
 @export var _marco: Control
 @export var _placa: Label
 @export var _movimiento: AudioStreamPlayer
+@export var _audio_al_subir: AudioStream
+@export var _audio_al_bajar: AudioStream
 
 var _entrada: EntradaALaNoche
 var _jornada: int
@@ -69,7 +71,7 @@ func _process(_delta: float) -> void:
 		_pintar()
 		if _entrada.apertura_de_la_persiana() > 0.0 and not _subida_sonando:
 			_subida_sonando = true
-			_sonar()
+			_sonar(_audio_al_subir)
 		if _entrada.terminada():
 			_al_terminar()
 
@@ -131,10 +133,11 @@ func bajar() -> void:
 	visible = true
 	set_process(true)
 	_pintar()
-	_sonar()
+	_sonar(_audio_al_bajar)
 
 
-func _sonar() -> void:
+func _sonar(audio: AudioStream) -> void:
+	_movimiento.stream = audio
 	_movimiento.pitch_scale = (
 		_movimiento.stream.get_length() / EntradaALaNoche.SUBIDA_DE_LA_PERSIANA
 	)
