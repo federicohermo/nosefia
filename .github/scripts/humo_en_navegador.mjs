@@ -34,7 +34,9 @@ if (!url) {
   process.exit(2);
 }
 
-const navegador = await chromium.launch();
+// El juego tiene sonido y el humo puede correr en la máquina de una persona: sin audio, por
+// las dudas. En el runner de CI no cambia nada.
+const navegador = await chromium.launch({ args: ['--mute-audio'] });
 const pagina = await navegador.newPage();
 
 const errores = [];
