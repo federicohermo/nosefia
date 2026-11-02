@@ -71,7 +71,7 @@
     },
     "misc/dist/html/full-size.html": {
       "original_sha256": "5083ca5507c3f414aeffcb70848d37b8c3eb4269c919195e94cc04e6f9e831d4",
-      "modificado_sha256": "ee0a2623c5fc2407f124724020b787b702eda538fc392a04d979fb5ced0f085a"
+      "modificado_sha256": "d59741efa871fc4346496e9b7a6ece3b546a4d673f5d22a8fdfb18384b9e38c9"
     },
     "servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp": {
       "original_sha256": "ed9a5226a2e637c473e08ebb5601d484c45dd237aebee4d27a052b09cd8e2e36",
@@ -84,6 +84,14 @@
     "servers/rendering/rendering_device.cpp": {
       "original_sha256": "f22b1a54e0c0ec769b6258c7182590948825005e9ce5525178f3df8bea1fde85",
       "modificado_sha256": "6f8cec4c63c466b51b26a33ec0dda36db4e41f833f7298e41e6109ee7fefa7d0"
+    },
+    "servers/rendering/rendering_server_default.cpp": {
+      "original_sha256": "250059aa7c0218760699b6eff320ce642b986d06cd289fa475dcfd72cbc8f4fb",
+      "modificado_sha256": "8311694ed86b37b47af1ebad547c8c8db624c181fca7eedaab52a9905ab5aa96"
+    },
+    "servers/rendering/rendering_server_default.h": {
+      "original_sha256": "243a21467138a0afb4352a509e9bbade99b8b789f3dfbd130495a6746024e253",
+      "modificado_sha256": "3d06950a35b015e9a3a06af9ca18f17889f14f8c35190a0adebf62bb31ebca7c"
     }
   }
 }

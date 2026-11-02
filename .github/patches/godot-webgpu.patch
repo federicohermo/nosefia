@@ -31,10 +31,10 @@ index 8a349efb59..a52027c7f7 100644
      git_timestamp = 0
      if os.path.exists(".git"):
 diff --git a/misc/dist/html/full-size.html b/misc/dist/html/full-size.html
-index 1864d57f5e..c60292dd62 100644
+index 1864d57f5e..8b25a35092 100644
 --- a/misc/dist/html/full-size.html
 +++ b/misc/dist/html/full-size.html
-@@ -329,11 +329,6 @@ body {
+@@ -329,11 +329,11 @@ body {
  		<script src="$GODOT_URL"></script>
  		<script>
  const GODOT_CONFIG = $GODOT_CONFIG;
@@ -43,10 +43,15 @@ index 1864d57f5e..c60292dd62 100644
 -// export preset's own canvasResizePolicy, so fitCanvasToViewport() below has
 -// a stable, known aspect ratio to scale -- see that function for the rest.
 -GODOT_CONFIG['canvasResizePolicy'] = 1;
++// The separate render thread owns an OffscreenCanvas that does not follow the window, so that build keeps a
++// fixed buffer scaled by fitCanvasToViewport() below. The others keep the preset's own sizing.
++if ((GODOT_CONFIG['args'] || []).includes('--render-thread')) {
++	GODOT_CONFIG['canvasResizePolicy'] = 1;
++}
  const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
  // Per-stage loading screen text and visibility, from the export preset's
  // "Loading Screen" section: { <stage>: { text, showText, showSpinner } }. The
-@@ -357,6 +352,10 @@ const engine = new Engine(GODOT_CONFIG);
+@@ -357,6 +357,10 @@ const engine = new Engine(GODOT_CONFIG);
  // rather than getBoundingClientRect(), since that would otherwise read back
  // this function's own previous transform and compound on every call.
  (function () {
@@ -295,3 +300,53 @@ index f6db87d479..b51b80fa3b 100644
  				/*aligned_bpr*/ pitch,
  				rows_per_image,
  				width,
+diff --git a/servers/rendering/rendering_server_default.cpp b/servers/rendering/rendering_server_default.cpp
+index 37a8204393..c805acf5db 100644
+--- a/servers/rendering/rendering_server_default.cpp
++++ b/servers/rendering/rendering_server_default.cpp
+@@ -506,12 +506,32 @@ void RenderingServerDefault::draw(bool p_present, double frame_step) {
+ 	}
+ }
+ 
++// tick() and pre_draw() update the interpolated MultiMesh buffers, which writes to the RenderingDevice. With a render thread
++// of its own that has to happen there, like every other call into the server.
+ void RenderingServerDefault::tick() {
++	if (Thread::get_caller_id() != server_thread) {
++		command_queue.push(this, &RenderingServerDefault::_tick);
++	} else {
++		command_queue.flush_if_pending();
++		_tick();
++	}
++}
++
++void RenderingServerDefault::_tick() {
+ 	RSG::canvas->tick();
+ 	RSG::scene->tick();
+ }
+ 
+ void RenderingServerDefault::pre_draw(bool p_will_draw) {
++	if (Thread::get_caller_id() != server_thread) {
++		command_queue.push(this, &RenderingServerDefault::_pre_draw, p_will_draw);
++	} else {
++		command_queue.flush_if_pending();
++		_pre_draw(p_will_draw);
++	}
++}
++
++void RenderingServerDefault::_pre_draw(bool p_will_draw) {
+ 	RSG::scene->pre_draw(p_will_draw);
+ }
+ 
+diff --git a/servers/rendering/rendering_server_default.h b/servers/rendering/rendering_server_default.h
+index 10ee7d2bb2..7b1da05f8f 100644
+--- a/servers/rendering/rendering_server_default.h
++++ b/servers/rendering/rendering_server_default.h
+@@ -107,6 +107,8 @@ class RenderingServerDefault : public RenderingServer {
+ 	void _free(RID p_rid);
+ 
+ 	void _call_on_render_thread(const Callable &p_callable);
++	void _tick();
++	void _pre_draw(bool p_will_draw);
+ 
+ public:
+ 	//if editor is redrawing when it shouldn't, enable this and put a breakpoint in _changes_changed()
