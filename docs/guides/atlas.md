@@ -89,3 +89,21 @@ python .claude/scripts/aplicar_desgaste.py ETIQUETA CAPA SALIDA [--fuerza 1.0] [
 - Una misma capa sirve a varios productos con giro, espejo o desplazamiento distintos. Dos
   productos vecinos no pueden mostrar la misma marca.
 - Después de cambiar una fuente, el atlas se regenera con los cinco pasos de arriba.
+
+## Color de una caja
+
+Una caja regenerada con una imagen generada sale más saturada y más clara que su original. El
+dibujo y el desgaste son los nuevos, el color tiene que ser el de siempre.
+
+```bash
+python .claude/scripts/igualar_color_de_caja.py NUEVA ORIGINAL SALIDA
+```
+
+- Trabaja en Lab. Lleva la media y el desvío de cada canal de la caja nueva a los del original.
+  Después ajusta la saturación y el brillo de HSV, medidos a 256 píxeles con el filtro de PIL.
+- Sólo mide el cartón. Una caja es una cruz de seis caras sobre un cuadrado. Las esquinas negras
+  de afuera pesaban 14 puntos de saturación en el original y 4 en la nueva. El negro tampoco se
+  levanta.
+- La salida es otro archivo. El script no escribe sobre la caja ni sobre el original.
+- El original de una caja que ya cambió se saca de git: `git show COMMIT:assets/source/boxes/CAJA.png`.
+- Después de cambiar una fuente, el atlas se regenera con los cinco pasos de arriba.

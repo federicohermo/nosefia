@@ -28,8 +28,11 @@ Dos productos vecinos no pueden mostrar la misma marca. Una misma capa sirve a v
 uno se la gira, se la espeja o se la desplaza distinto: `preparar_capa`. El desplazamiento da la
 vuelta por el borde, así que ninguna marca se pierde.
 
-Toda la matemática es de la biblioteca estándar. El script que lee y escribe los PNG corre
-adentro de Blender (`blender/aplicar_desgaste.py`) y le pasa listas planas de píxeles.
+Toda la matemática es de la biblioteca estándar, y es la referencia. El script que lee y escribe
+los PNG corre adentro de Blender (`blender/aplicar_desgaste.py`). Las fuentes llegan a 90
+millones de píxeles, que en listas de Python no entran en memoria, así que ese script hace lo
+mismo sobre arreglos de numpy y toma de acá las constantes, `luminancia` y `mezclar`. Un test
+compara las dos implementaciones.
 """
 
 from collections.abc import Sequence
@@ -70,6 +73,15 @@ def luminancia(rojo: float, verde: float, azul: float) -> float:
     return 255 * (0.2126 * rojo + 0.7152 * verde + 0.0722 * azul)
 
 
+def mezclar(valor: float, diferencia: float) -> float:
+    """Un canal de 0..1 con la diferencia de la capa encima, sin recortar.
+
+    Es lo único que `blender/aplicar_desgaste.py` toma de acá elemento por elemento: funciona igual
+    con un número y con un arreglo de numpy, y así las dos implementaciones comparten la fórmula.
+    """
+    return valor + diferencia * (PISO + PESO_DEL_COLOR * valor)
+
+
 def aplicar(
     pixeles: Sequence[float], capa: Sequence[float], fuerza: float = 1.0
 ) -> list[float]:
@@ -89,8 +101,7 @@ def aplicar(
             continue
         d *= fuerza
         for canal, valor in enumerate((rojo, verde, azul)):
-            nuevo = valor + d * (PISO + PESO_DEL_COLOR * valor)
-            salida[base + canal] = min(1.0, max(0.0, nuevo))
+            salida[base + canal] = min(1.0, max(0.0, mezclar(valor, d)))
     return salida
 
 
