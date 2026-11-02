@@ -58,7 +58,12 @@
     "module_webrtc_enabled=no",
     "module_websocket_enabled=no",
     "module_webxr_enabled=no",
-    "module_zip_enabled=no"
+    "module_zip_enabled=no",
+    "module_box3d_physics_enabled=no",
+    "module_metahuman_enabled=no",
+    "module_mbedtls_enabled=no",
+    "module_raycast_enabled=no",
+    "module_tilemap_enabled=no"
   ],
   "archivos": {
     "drivers/webgpu/wgsl_precompile.py": {

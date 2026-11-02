@@ -45,6 +45,9 @@ OPCIONES = [
         "jsonrpc", "ktx", "meshoptimizer", "mobile_vr", "mp3", "msdfgen", "multiplayer",
         "navigation_2d", "noise", "regex", "theora", "tga", "tinyexr", "upnp",
         "vhacd", "visual_shader", "webrtc", "websocket", "webxr", "zip",
+        # Del fork y sin uso en el juego: física Box3D (usa Jolt), raycast (sólo el editor hornea),
+        # tilemap, mbedtls (en la web HTTPRequest usa el navegador) y metahuman.
+        "box3d_physics", "metahuman", "mbedtls", "raycast", "tilemap",
     )),
 ]
 
