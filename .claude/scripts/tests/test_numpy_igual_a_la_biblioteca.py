@@ -1,8 +1,8 @@
-"""Las dos herramientas de imagen hacen en Blender lo mismo que su biblioteca de referencia.
+"""La herramienta de color hace en Blender lo mismo que su biblioteca de referencia.
 
-`lib/desgaste.py` y `lib/color_de_caja.py` son la matemática, probada con listas de Python. Las
-herramientas la repiten sobre arreglos de numpy porque las fuentes llegan a 90 millones de
-píxeles. **Sin este test, las dos copias se separan y nadie lo ve.**
+`lib/color_de_caja.py` es la matemática, probada con listas de Python. La herramienta la repite
+sobre arreglos de numpy porque las fuentes llegan a 90 millones de píxeles. **Sin este test, las
+dos copias se separan y nadie lo ve.**
 
 Necesita Blender: la CI no lo tiene, y ahí el caso se saltea **diciendo qué no miró**. Un salteo
 no es un verde: la comparación corre en la máquina que declara `BLENDER_BIN`.
@@ -18,7 +18,7 @@ import unittest
 import zlib
 from pathlib import Path
 
-from lib import color_de_caja, desgaste
+from lib import color_de_caja
 from lib.blender import resolver
 from lib.repo import RAIZ
 
@@ -103,37 +103,6 @@ def _correr(*argumentos: str) -> None:
         errors="replace", timeout=300,
     )
     assert resultado.returncode == 0, resultado.stdout + resultado.stderr
-
-
-class ElDesgaste(unittest.TestCase):
-    def test_en_blender_da_lo_mismo_que_la_biblioteca(self):
-        _blender()
-        ancho, alto, lado = 24, 16, 24
-        azar = random.Random(7)
-        etiqueta = [azar.randrange(256) for _ in range(ancho * alto * 4)]
-        for i in range(ancho * alto):
-            etiqueta[4 * i + 3] = 255 if i % 5 else 90
-        capa = [128 + azar.randrange(-60, 61) for _ in range(lado * lado)]
-        with tempfile.TemporaryDirectory() as carpeta:
-            base = Path(carpeta)
-            _escribir_png(base / "etiqueta.png", ancho, alto, 4, etiqueta)
-            _escribir_png(base / "capa.png", lado, lado, 1, capa)
-            for giro, espejo, dx, dy in ((0, False, 0.0, 0.0), (90, True, 0.25, 0.6)):
-                salida = base / f"salida_{giro}.png"
-                argumentos = [
-                    str(SCRIPTS / "aplicar_desgaste.py"), str(base / "etiqueta.png"),
-                    str(base / "capa.png"), str(salida), "--giro", str(giro),
-                    "--dx", str(dx), "--dy", str(dy),
-                ] + (["--espejo"] if espejo else [])
-                _correr(*argumentos)
-                esperado = desgaste.aplicar(
-                    [valor / 255 for valor in etiqueta],
-                    desgaste.preparar_capa(capa, lado, ancho, alto, giro, espejo, (dx, dy)),
-                )
-                _, _, canales, obtenido = _leer_png(salida)
-                self.assertEqual(canales, 4)
-                diferencia = max(abs(round(255 * e) - o) for e, o in zip(esperado, obtenido))
-                self.assertLessEqual(diferencia, 1, f"giro {giro}, espejo {espejo}")
 
 
 def _niveles(pixel) -> tuple[float, ...]:

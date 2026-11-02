@@ -6,7 +6,7 @@ El método y por qué es así están en `lib/color_de_caja.py`.
 
 ## Por qué la salida es otro archivo
 
-**La caja nueva tiene que quedar recuperable.** Igual que `aplicar_desgaste.py`, el script se
+**La caja nueva tiene que quedar recuperable.** El script se
 niega a escribir sobre la caja que lee, y sobre el original: el resultado va a otra ruta, y quien
 lo quiere en el lugar de la fuente lo mueve a mano.
 
