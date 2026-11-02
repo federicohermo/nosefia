@@ -7,13 +7,13 @@
    "ancho": 3264,
    "alto": 3088,
    "formato": "bc1",
-   "huella": "c1cf1ce0f9aa823e43ca6db59f47a38ae41303d2284d25c10652619888e8435c",
+   "huella": "fa6c107a549ea8280364c17a4c856f57625c0354a55250901be4e1ac981586f6",
    "entradas": [
     {
      "ruta": "source/textures/props/jabón liquido amarillo.png",
      "ancho": 1024,
      "alto": 1024,
-     "huella": "f9b0d3cbc9f6076c3344dc93771b934141f61c000a2f4e08c44b5fd97644a8e1",
+     "huella": "3c234478f324c38fa7ac13816f1b51a35d9029e0555f030c6a88c32b27c29593",
      "x": 16,
      "y": 16
     },
@@ -21,7 +21,7 @@
      "ruta": "source/textures/props/jabón liquido rosa.png",
      "ancho": 1024,
      "alto": 1024,
-     "huella": "84d76980944ab30f5e034d993782c3fa07a9a00a2209115f0ed0341f4b437530",
+     "huella": "cdb0686c0475330d905d44caa666c586f881d49ac6032c63885185a406744135",
      "x": 1072,
      "y": 16
     },
@@ -29,7 +29,7 @@
      "ruta": "source/textures/props/textura poético.png",
      "ancho": 1024,
      "alto": 1024,
-     "huella": "82390f346795267b4a26aae9244eab614dfcb155f004fca9bc13bf5c30fdaf53",
+     "huella": "12c958a756e44105365ed0d2ec2545182a63be814462af4360b368f26fd559ee",
      "x": 2128,
      "y": 16
     },
@@ -37,7 +37,7 @@
      "ruta": "source/products-cam/NUEVOS 22-9/Cosa de maní/cosa de mani interno.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "5315392fabcd65d750d866f6813dfec25bede4971ba6503fb830e363086f0c5d",
+     "huella": "63184497fb937cdf89b010b221a41306507368b6a19aa1f0897fe94eb6b7c0bb",
      "x": 16,
      "y": 1072
     },
@@ -45,7 +45,7 @@
      "ruta": "source/products-cam/NUEVOS 22-9/fernet-god/fernetgod textura.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "e39cf0d8aa5ea4a5a704e2d02047bd3338dbdf060b733b76d17844972ad37b05",
+     "huella": "1dd2a32dac7bcca22eec3a945706d8da88f0f4c7e58ffc54cef773d099ef05c8",
      "x": 560,
      "y": 1072
     },
@@ -53,7 +53,7 @@
      "ruta": "source/products-textured/Arvejas/arvecor.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "b910d8cfcdf9b1acfb2b22da1256aa1af344d2bed1161de4d56c5e63eee72fbb",
+     "huella": "dab809b6aa2cc0262d68228b853b4b9caa10e6fd19c71645c5d6a2f077be8737",
      "x": 1104,
      "y": 1072
     },
@@ -61,7 +61,7 @@
      "ruta": "source/products-textured/Cora cola/cora cola.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "62e7b137616a7cfb5035187a1fd6123b2516badca98885b895cb5250d93934f4",
+     "huella": "543f348ed936cdc1f7dc920e276a95fe31dd5e7665dd73444fe28220548000bf",
      "x": 1648,
      "y": 1072
     },
@@ -69,7 +69,7 @@
      "ruta": "source/products-textured/Marolini/fideos marolini.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "2c19e714e5912c013cc909832c4ee9f1202d1cb229b260975a5aba04694c6902",
+     "huella": "06e0d5499c733d3559d41872099943a81109f9c39a9ba6b654edb6d974d8e72a",
      "x": 2192,
      "y": 1072
     },
@@ -77,7 +77,7 @@
      "ruta": "source/products-textured/Wakas/wakasfideos.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "295b6217a403555ae3560c7b19dc4c1a7fab869d6ead229e5e72564a22c10655",
+     "huella": "4973754dc82834a1da13d9dd219b1b1c773c376557ae6e25f2678463d73a9e07",
      "x": 2736,
      "y": 1072
     },
@@ -85,7 +85,7 @@
      "ruta": "source/products-textured/cereales/frot lups.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "76db66bc1309fdc467ef433c795ff4cdc716562f55b383cc2523af190cbcbda5",
+     "huella": "f8ce98650d54f316d648be26186504e87c4e5ee04a54a416d1bc04b851509f9d",
      "x": 16,
      "y": 1616
     },
@@ -93,7 +93,7 @@
      "ruta": "source/products-textured/chizitos/chisito.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "814dd39c5093b542b686b22dccf9857e249a62d9e905a865b1af1a4ddb461dc3",
+     "huella": "03fc4ae1131f79e672e4c9026015999d61f60fc3accbedcc354be03fd2ab80ed",
      "x": 560,
      "y": 1616
     },
@@ -109,7 +109,7 @@
      "ruta": "source/products-textured/galletitas/saladick.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "eddd75a0f47ff490994be9a52200055786515cc6700b6402aa7ecb420f43c078",
+     "huella": "2d741418d7eaaecd58ab55db04ecf72244d69f369f404b7eb89d092f9b7f011a",
      "x": 1648,
      "y": 1616
     },
@@ -117,7 +117,7 @@
      "ruta": "source/textures/props/atun marranos.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "0aaddfeef60df3d994de29db7a539a60ece6ee1008d028adde2ce6619639e7d3",
+     "huella": "73bbbadb27e7b422cbdafd08e2a8c64c09610dcd230288fcc90b91ab766dfa8c",
      "x": 2192,
      "y": 1616
     },
@@ -125,7 +125,7 @@
      "ruta": "source/textures/props/jabón liquido.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "ab8692ed5c86784044e7f0426fe08224a0818f9967482d07fdc2ff6083eae93a",
+     "huella": "4ce0fabe814da8f53d7185e18c82b26f118ca605aab62485111e0f1587856586",
      "x": 2736,
      "y": 1616
     },
@@ -133,7 +133,7 @@
      "ruta": "source/textures/props/jorgillata.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "0a8bde3bcf9c6fa2628c24d36d029c9b06c3a96e6c9d0248afa1cce478e7ed5e",
+     "huella": "bd400246c33280e7c0b408601619faa147745809e5c9efb8d7746fc22237efb1",
      "x": 16,
      "y": 2160
     },
@@ -141,7 +141,7 @@
      "ruta": "source/products-cam/don saturados/Don Saturados costado.png",
      "ancho": 160,
      "alto": 512,
-     "huella": "f51901fca06b400e05e030f80154c0743430b37ccfe13a713135d7d84fdaa5c9",
+     "huella": "169aa733f45b926361a273b85e2403365016c7c898934bd067d2e6044e4ddb10",
      "x": 560,
      "y": 2160
     },
@@ -149,7 +149,7 @@
      "ruta": "source/products-cam/macumbas/macumbas costado.png",
      "ancho": 160,
      "alto": 512,
-     "huella": "4c77de2f474c6ac55ff93b19745a9715efefcfad96b0d26db6432fc94a034a41",
+     "huella": "34882a6975e705ec86586268a051af57f110038ec473c5460e4b8fdc203117f2",
      "x": 752,
      "y": 2160
     },
@@ -157,7 +157,7 @@
      "ruta": "source/products-cam/petisas/petisas costado.png",
      "ancho": 160,
      "alto": 512,
-     "huella": "15c335227cf9693c9f3175afba690666895c20241a9535fbc6e60432690c0a0e",
+     "huella": "b3d758109328f6f70d14e3dca9af8e07173d0a27c5b160fe31065cb5367c62cf",
      "x": 944,
      "y": 2160
     },
@@ -165,7 +165,7 @@
      "ruta": "source/textures/props/progres.png",
      "ancho": 512,
      "alto": 493,
-     "huella": "c7a948e29c742f2b0ed3320c1c891fc9f802daf58ed320bd3a8d7b49a1f428db",
+     "huella": "fde718742965e4fc4746acecb5161316d13eb5abddd089e6536a698013c8661f",
      "x": 1136,
      "y": 2160
     },
@@ -173,7 +173,7 @@
      "ruta": "source/products-cam/SEI TUQUI/sei_tuqui.png",
      "ancho": 512,
      "alto": 462,
-     "huella": "12869964d471c8f7ca4dde7b7eed60da6ba5dc9123fc2ceb7ba320d55d95de06",
+     "huella": "c1f3575bf04476804e31b3ec1533b17e668c70f2eb1cebc7f87b2acbb13a8737",
      "x": 1680,
      "y": 2160
     },
@@ -181,7 +181,7 @@
      "ruta": "source/textures/props/soap-labels/jabon_amarillo_sin_margenes.png",
      "ancho": 1024,
      "alto": 385,
-     "huella": "783926bc7f0925874840ccc275384c83a24b209efdeed407808b6d2a4e9d93d6",
+     "huella": "8658acc7098776cad4b191a0effda734ccd9312b3b39a704f76144f56d77c00d",
      "x": 2224,
      "y": 2160
     },
@@ -189,7 +189,7 @@
      "ruta": "source/textures/props/soap-labels/jabon_azul_sin_margenes.png",
      "ancho": 1024,
      "alto": 362,
-     "huella": "c37bdcceb451983f0cf8f2447bbd2d8fab416eb3b17418f7c6d7534412868e31",
+     "huella": "a0c63668de21cdcc25dced52abe693b4e7a6678a34c389203a08e368b51d44dc",
      "x": 16,
      "y": 2704
     },
@@ -197,7 +197,7 @@
      "ruta": "source/textures/props/soap-labels/jabon_rosa_sin_margenes.png",
      "ancho": 1024,
      "alto": 334,
-     "huella": "546ede3fc105759776b367cf13690765f6aeaed70d5a858239ad94b57d147399",
+     "huella": "470978a522374dfd6fdda8244af83e6f166262e1c5df705c7253d241436f4695",
      "x": 1072,
      "y": 2704
     }
@@ -208,13 +208,13 @@
    "ancho": 1088,
    "alto": 2912,
    "formato": "bc3",
-   "huella": "5ed9f35d10f1d7d090f636d933e81552bdbeca18e4ed7253c4088fe95855c04c",
+   "huella": "720218a1de2f7f2b908a7b4c712951b6550bc63491f6d4b75a1b81eb915bbd60",
    "entradas": [
     {
      "ruta": "source/products-cam/amargadito/amargadito completo.png",
      "ancho": 512,
      "alto": 493,
-     "huella": "1a3a4cf261e1972e930a3e375059f8a7da619c86da89f9de684bbdb6e5b8d795",
+     "huella": "ec2ddef52f6d5a01ea1891ba63498423fa0b8b2385a285da4d40c10e9de35748",
      "x": 16,
      "y": 16
     },
@@ -222,7 +222,7 @@
      "ruta": "source/products-cam/NUEVOS 22-9/Oaaaa/oaaaa completo.png",
      "ancho": 512,
      "alto": 475,
-     "huella": "69642cdc0eb4d290facfcc086422e311fa11a552ab06d36a9966de7099d6781d",
+     "huella": "4da9ad86cdb7542f25921a1be03028a1c6d6d21edd26e474999b560d85c83574",
      "x": 560,
      "y": 16
     },
@@ -230,7 +230,7 @@
      "ruta": "source/products-cam/NUEVOS 22-9/Terminator/Terminator completo.png",
      "ancho": 512,
      "alto": 448,
-     "huella": "1a62dce245cd614095b6ffb552234c47b373d913c45e691ba216965bcd04eedb",
+     "huella": "e731c7316da3785bac806846fb09cf5b758b43f0d7f00097aa2525e61261ec79",
      "x": 16,
      "y": 544
     },
@@ -238,7 +238,7 @@
      "ruta": "source/products-cam/cindolor/cindolor completo.png",
      "ancho": 512,
      "alto": 408,
-     "huella": "3771801020cf6a551c5e850c8643dd29488b7d050094079eb2c6d47708274796",
+     "huella": "8891687ce0190c4920f9fb03cfb5d9fe5a792c9d7a5f5dcab6f600ac22cac658",
      "x": 560,
      "y": 544
     },
@@ -246,7 +246,7 @@
      "ruta": "source/products-textured/Zucarachas/Zucarachas completo_1.png",
      "ancho": 512,
      "alto": 406,
-     "huella": "86b943273e3c50842b26f76f469a1fd0c348769a9443721bd352ca47a70eca55",
+     "huella": "201501315c2aae4068c9059060c91c8adbcfa3e157f8249052cbfec8a27eacce",
      "x": 16,
      "y": 1024
     },
@@ -254,7 +254,7 @@
      "ruta": "source/products-textured/Burbaloo/Burbaloo completo_1.png",
      "ancho": 512,
      "alto": 375,
-     "huella": "83baebc5b08704d04c457495dafa0a38c980bf3b36b9a111a8a26561698e1f14",
+     "huella": "f0797c43f53fde3ad2a31853bec035d49bb8df1bcee561dd8f7043b2a982edb4",
      "x": 560,
      "y": 1024
     },
@@ -262,7 +262,7 @@
      "ruta": "source/products-cam/flim pof/flim pof completo.png",
      "ancho": 512,
      "alto": 374,
-     "huella": "4287eb15ab1a80f2933a4deeeb1802c8521b7be6c97a5c2898c4a5ea09cbe6f0",
+     "huella": "8344eb5cef19aad98ac350d36fe51a43a4dfb141aa80ff942ffe276668326db8",
      "x": 16,
      "y": 1472
     },
@@ -270,7 +270,7 @@
      "ruta": "source/products-textured/Durextra/Durextra completo_1.png",
      "ancho": 512,
      "alto": 369,
-     "huella": "1431ab5bc3471ab415bd8b23cbdd2d18ea6a764206ca9883f1b429532f08241d",
+     "huella": "2a2e87d2405c5f076c7caa2b8fcfbca6e69e8ec6a12b9a189cad4198d6ce8db6",
      "x": 560,
      "y": 1472
     },
@@ -278,7 +278,7 @@
      "ruta": "source/products-textured/Lay´snt´t/Lay´snt´t completo_1.png",
      "ancho": 512,
      "alto": 363,
-     "huella": "883a55d762c692e6d18fd530c02bbd49298604f9570457abe683b3da8a2fe91d",
+     "huella": "54dddc2d0fd61d9a06ae8f1486211df5f55e2bf82508bce69d962c144cf4cac3",
      "x": 16,
      "y": 1888
     },
@@ -294,7 +294,7 @@
      "ruta": "source/products-cam/don saturados/Don Saturados completo.png",
      "ancho": 512,
      "alto": 302,
-     "huella": "c7f3df55381c82f3f533955a209cc6914ed52c9b6174f73e12b09a60c8ed7870",
+     "huella": "a2ef8f66166d7a9d2967913a70bd9ae447007934b5a4c8f0b73372a171dea8c9",
      "x": 16,
      "y": 2288
     },
@@ -302,7 +302,7 @@
      "ruta": "source/products-cam/petisas/petisas completo.png",
      "ancho": 512,
      "alto": 283,
-     "huella": "d46479ed7182e6d68352c2924962dc8b912bab91de1a43a2c05fee4a622a2929",
+     "huella": "7e4992b83193fb20a6aed98a9bb196f8a6022803b0195d309ba9cda373c47a12",
      "x": 560,
      "y": 2288
     },
@@ -310,7 +310,7 @@
      "ruta": "source/products-textured/Actroncito/Actroncito completo.png",
      "ancho": 512,
      "alto": 270,
-     "huella": "dfd685f91af0179f06673a49a7e55f07ea9c1064a95addc449018008de6bb5da",
+     "huella": "cfe0c353cf7409dfa387be82702488b893105d2ed1a29cb935ef4b59b76a41f2",
      "x": 16,
      "y": 2624
     },
@@ -318,7 +318,7 @@
      "ruta": "source/products-cam/macumbas/macumbas completo.png",
      "ancho": 512,
      "alto": 241,
-     "huella": "0dd7720fb0ca3a6e694c986f8f4a33c118ae48ea1a9990714a6733dcec7723db",
+     "huella": "f0e9f517c3fe6e310eaf7a4751052d54d5b1a128cc883defe52c44eeebce873f",
      "x": 560,
      "y": 2624
     }
@@ -329,13 +329,13 @@
    "ancho": 2720,
    "alto": 3808,
    "formato": "bc1",
-   "huella": "e87ba71d2bc390ba32b73677f01cacd16fb9dd9342f72257ec5f10ea0f5792a8",
+   "huella": "192fd3c352ca80297c4662bcdfa14cb1952406065beeffa4ef94fc3b5a714cd4",
    "entradas": [
     {
      "ruta": "source/boxes/actroncito.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "a74f6941dd12956293c1c10d6484365f6114d1f54ae2f85ff8a1eef01041bbdf",
+     "huella": "1d937ac1faee9f9a3bf21c73f39f2d3b09bad2bbfcd95a21070dd8984e746c5f",
      "x": 16,
      "y": 16
     },
@@ -343,7 +343,7 @@
      "ruta": "source/boxes/amargadito.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "df5d79614ab96f66cf21a89a7318d2c63414f6dca2d3b168f59ef634f2c32c3c",
+     "huella": "e8a822b6dd4109f1eefce0ac11edbe27da1c96ff720d2872a7bbb5e2c7028954",
      "x": 560,
      "y": 16
     },
@@ -351,7 +351,7 @@
      "ruta": "source/boxes/arvejas.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "72eb621dafbc60ef510b1caf8d7262d8ba0d1f9202d1d9e7ae49802132c928f3",
+     "huella": "c0d5472520eeeb6555a4eeb18980b6d33ce76113fe0082de79d1c638d03dbb48",
      "x": 1104,
      "y": 16
     },
@@ -359,7 +359,7 @@
      "ruta": "source/boxes/burbaloo.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "29cafc1aa936815a8b0d27afee0d637c6e2f12241b2674a449cbc741dd15058f",
+     "huella": "ed3706acf51c6cbfeb78484f87b7fc173344aacc4f72989aff83c0b0d1694103",
      "x": 1648,
      "y": 16
     },
@@ -367,7 +367,7 @@
      "ruta": "source/boxes/chisitos.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "d3c2ac0a828369598cdf280abe096c9b7e267f833b28052dd764bccf99528d69",
+     "huella": "fdf0088d4667b2a5087e61afc83d769efe3caeb2f4dbd46552f91dde5b1fee52",
      "x": 2192,
      "y": 16
     },
@@ -375,7 +375,7 @@
      "ruta": "source/boxes/cindolor.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "65fa4287cc9207ee76e2ac6ba06513dce51628ac45861154fbccf6637784611d",
+     "huella": "b07727eec3fabe82628d51ba0f0d5c7167f742e7f2b7fdacd7def3eb7fb99fd4",
      "x": 16,
      "y": 560
     },
@@ -383,7 +383,7 @@
      "ruta": "source/boxes/coracola.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "7732e4dae51f3686e5d0929d38deb0f1c62b39e5e3285820a1b4c059435f7046",
+     "huella": "004ff4b017d57abaeacf06847ee0b0e60c869b3284680eab70f91d1da8d0b5c5",
      "x": 560,
      "y": 560
     },
@@ -391,7 +391,7 @@
      "ruta": "source/boxes/cosa_de_mani.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "e8c44d433b5b58bea37bd81cf4cb4fefdb46cc459cb5f3e5256083bd50422ac7",
+     "huella": "cf01f014e42ccaebd9077b73c6d8ed0fa61e1fad1f67535f486534924c17ed4c",
      "x": 1104,
      "y": 560
     },
@@ -399,7 +399,7 @@
      "ruta": "source/boxes/donsaturados.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "4ac9bb06820523b32722909bd80f5e5c56eca1a617e14011885c38f4d76fcd84",
+     "huella": "894b19e4d95ce6e164c99ac3360e00713138b80662ed1d9b592806a4e231e264",
      "x": 1648,
      "y": 560
     },
@@ -407,7 +407,7 @@
      "ruta": "source/boxes/durextra.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "c6854f8f3630e0c066d5156b1d45398794495ae7ce611d78a12e072c4eadab71",
+     "huella": "d9357e8aa91260a5a76c8a89128c12e7cae3e38454783ac5cd132df4a46fe558",
      "x": 2192,
      "y": 560
     },
@@ -415,7 +415,7 @@
      "ruta": "source/boxes/duronga.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "81aacb589ddb4abfbf39240d504b9901988b904a683002557b5c62fb6842fa71",
+     "huella": "9e3c88c753fbd18f809f4d21bf8cc562f7278270957038515b354ab36a2c563e",
      "x": 16,
      "y": 1104
     },
@@ -423,7 +423,7 @@
      "ruta": "source/boxes/feel_ricky_fort.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "be07e27c14e04c4e8dbb272f0cbadffd017cb639a7ac08e082d1f5c8926ecf25",
+     "huella": "0bf88066c0eb41873ee224a296cab5030796be4b0c415cf47667b438a67c2419",
      "x": 560,
      "y": 1104
     },
@@ -431,7 +431,7 @@
      "ruta": "source/boxes/fernet_god.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "a7f6bd00755fafe7d8ee3849ace72e678bbe9c2b860812a44af1486c3120fed6",
+     "huella": "58fdac311348abc271b84a3c5e56572635ce31f0596d19dc472a597655b7606a",
      "x": 1104,
      "y": 1104
     },
@@ -439,7 +439,7 @@
      "ruta": "source/boxes/flinpuf.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "e0cfb81556ec9e9b61bbe2f304ba7db71bb4037ebbead31c3ec79781cbaa6baf",
+     "huella": "902e78f1ec1df2f4f591d24b5d1266d9ae4b57f180a86c4e60afa2aa0d04155e",
      "x": 1648,
      "y": 1104
     },
@@ -447,7 +447,7 @@
      "ruta": "source/boxes/frotlups.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "31a210dba330582a32705ce812195764d3bfebf66cb8237b0922346fe5671e20",
+     "huella": "c076e3b31773e2bb20e399798e99c33b62431e1224083fe55374050655ace1db",
      "x": 2192,
      "y": 1104
     },
@@ -455,7 +455,7 @@
      "ruta": "source/boxes/jorgillo.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "13e2b259c877a7f8064320216d7a6c12cd17b4f2d2deb0f31efae1bead74bce2",
+     "huella": "3392702aa3fe6bdc3c267c3ad530d6c4114d25cc8e3a0a3ac8fc59fbb917b8c7",
      "x": 16,
      "y": 1648
     },
@@ -463,7 +463,7 @@
      "ruta": "source/boxes/laysntt.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "19f08e2e18bb8b6c3c49f020b99db11b7f0388e5631b4bba6fde5ff33d95f2d1",
+     "huella": "1adc647381645877af7a6002e1ade1a4db23cd64502fa569d34ffdc452094c96",
      "x": 560,
      "y": 1648
     },
@@ -471,7 +471,7 @@
      "ruta": "source/boxes/macumbas.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "9aa95303d3b9287db319b007309992cd3ce52fdb521da565216d707ba679babd",
+     "huella": "d1785dccf78ec96978f1b577470b2e82d8ef202941c63867c746d5ebeb1ccc76",
      "x": 1104,
      "y": 1648
     },
@@ -479,7 +479,7 @@
      "ruta": "source/boxes/malbardo.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "3e6d2976659d4f23033397e3a3530df2fcadf0a7a06892204cbaf4248857f615",
+     "huella": "1b50e28ef8a591aab9f1f2afeb0ad3e0fc3ba118f1782825a66d47dd00337e5e",
      "x": 1648,
      "y": 1648
     },
@@ -487,7 +487,7 @@
      "ruta": "source/boxes/marolini.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "e0a92e39df046271c5653dc359ea8fa663965e989a135706dbda4ee9d053565f",
+     "huella": "566aac5e5954d409758af3a7202285da0aa956edcdef0383fa01d587afcc9d19",
      "x": 2192,
      "y": 1648
     },
@@ -495,7 +495,7 @@
      "ruta": "source/boxes/marranos.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "784843c7f5699b739e2d2fa34cc32e9f4799a7aaa76fefb0bd16f584deda112d",
+     "huella": "4292fba50a7250b16d01118f73f30072e979c2724aee07c44a8a303f84489a5b",
      "x": 16,
      "y": 2192
     },
@@ -503,7 +503,7 @@
      "ruta": "source/boxes/mayonchis.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "d708fee48d883f0c4057afb9ee542514d9f8654b4e2eb1fffe3297aabd94a973",
+     "huella": "199619802b11bfef78a1c09c860d0d7d797f1dd2dd389cbbf5f2ae3289a79647",
      "x": 560,
      "y": 2192
     },
@@ -511,7 +511,7 @@
      "ruta": "source/boxes/oaaaa.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "fb2c25da76456b37a4156a561244be5d684eec0a389bf9478657d31b0c2c6672",
+     "huella": "8add1b17934322487e9baa9e04d0b56b17cbf730f7679d6fe3b1717d7e7cdbd5",
      "x": 1104,
      "y": 2192
     },
@@ -519,7 +519,7 @@
      "ruta": "source/boxes/oremos.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "86c292602dbaca4d5afe3a6e90ac947d14323720001e6c25dd163dd22435c06c",
+     "huella": "8fb597c1da381adac97a30c67fc38ec8ebf50189df4f476cf706f4c4da60e169",
      "x": 1648,
      "y": 2192
     },
@@ -527,7 +527,7 @@
      "ruta": "source/boxes/pepitos.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "b67a224d7bdb3d10f26a64b3cfee4a5206649c524c14e4124dcda3d380f09f8b",
+     "huella": "b0e19908e5217901e739b7ae96834031aa39eb511df1c82f0ace08096f8b4170",
      "x": 2192,
      "y": 2192
     },
@@ -535,7 +535,7 @@
      "ruta": "source/boxes/petisas.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "d80d8454d6bddd520fdc3ccce64cc058aeb48d1ceef4c25e0cb3d6967c620a82",
+     "huella": "54680a3f554234619e8641f1416a82f524a1f6932d7062844ca0af6cf1fa5ced",
      "x": 16,
      "y": 2736
     },
@@ -543,7 +543,7 @@
      "ruta": "source/boxes/poetico.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "d790cfffcd9690c662c85b78ab1dfd642a72718c3aa7766b33c1fd76c1b1fbb7",
+     "huella": "738ae4626af7b4e1abdfae7bde5846ec53ecfeb531ca3a05eb492cefc176c36d",
      "x": 560,
      "y": 2736
     },
@@ -551,7 +551,7 @@
      "ruta": "source/boxes/prongles.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "f728b2d154f9c4ea598ccbbfc04685b11fce09e1d1f2c7982902963a958b97aa",
+     "huella": "db39f0fc826b206cdaa682252fb61408b1a1c5c23cef84f8582a2e6358a97f56",
      "x": 1104,
      "y": 2736
     },
@@ -559,7 +559,7 @@
      "ruta": "source/boxes/saladik.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "097dc33b024de792432aa6ffb6fab9def4a89c84a92a66e79e81cd1a23d6f93c",
+     "huella": "ddc0219b98049723a9adc9fe17512822cacdd666c5c87733ad1e4af9e664b0ac",
      "x": 1648,
      "y": 2736
     },
@@ -567,7 +567,7 @@
      "ruta": "source/boxes/terminator.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "8dc8707552de92d41f0dcc44f4c0bcdb24d8ba172c94194ba5ecb4f4046aaa96",
+     "huella": "221aff9b394c5ec7fc5dfec195c93b33b28ddd1689295cde00da375591517af8",
      "x": 2192,
      "y": 2736
     },
@@ -575,7 +575,7 @@
      "ruta": "source/boxes/uakas.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "3431fa76ad7b110e105ab762804855069b1d67c9082aa1ee1b07a880e640e277",
+     "huella": "eae042f81496b76bb966a2ec9090809c5dbbbcc0616f47aa0e6e60b2adbbdfb6",
      "x": 16,
      "y": 3280
     },
@@ -583,7 +583,7 @@
      "ruta": "source/boxes/zucarachas.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "56bd402619ae2f130379ddcbb1747e7d5e6a271febcc8427b19eb64c201cb4d9",
+     "huella": "70ab86285d182e568fd15ee3447003eafa3f43bfc413c1e8fe7b251da82b4e05",
      "x": 560,
      "y": 3280
     }
