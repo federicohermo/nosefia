@@ -169,8 +169,9 @@ software.
 
 `.github/scripts/tope_de_carga.py` compara la carga con `.github/performance/topes-de-carga.json`:
 
-- **`programas`:** 89. Son los 87 medidos por software, más 2. Entre corridas, el conteo varía
-  en 1.
+- **`programas`:** 93. Son los 91 medidos por software el 2026-11-01, más 2. Entre corridas, el
+  conteo varía en 1. El salto de 84 a 89 es de #680: el calentamiento de la carga compila a
+  propósito el recorte por alfa y el contorno de foco del papel del ticket.
 - **`wasm_bytes`:** 30 MB. El motor de #514 pesa 29,1 MB.
 
 Un PR que baja un conteo no baja el tope. Subir un tope es una decisión del PR. El PR la
