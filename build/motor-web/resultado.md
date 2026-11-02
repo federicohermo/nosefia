@@ -1,6 +1,6 @@
 # Otro motor para la web: el almacén medido en tres motores
 
-Corrida del 2026-11-02, rama `federicohermo/motor-web`. Equipo: Windows 11, RTX 4050 Laptop, Chrome 156
+Corrida del 2026-11-02, rama `improvement/motor-web`. Equipo: Windows 11, RTX 4050 Laptop, Chrome 156
 y Firefox 157 (el de Playwright). Ventana a la vista, sin sonido, 1536×760.
 
 ## La respuesta
