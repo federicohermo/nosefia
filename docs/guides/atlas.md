@@ -73,3 +73,19 @@ sale con el dibujo de otra.
 
 `--sellar` registra los PNG que ya están, para cuando otra herramienta los generó con el reparto
 del manifiesto. `--destino <carpeta>` arma en otra carpeta sin tocar el árbol.
+
+## Desgaste de una etiqueta
+
+Una etiqueta se gasta con una capa, no con una imagen regenerada. Una imagen regenerada corre los
+contornos y cambia las letras. Una capa se suma al dibujo y lo deja donde estaba.
+
+```bash
+python .claude/scripts/aplicar_desgaste.py ETIQUETA CAPA SALIDA [--fuerza 1.0] [--giro 90] [--espejo] [--dx 0.3] [--dy 0.6]
+```
+
+- Las capas viven en `assets/source/desgaste/`. Es una imagen de grises: el 128 no cambia nada.
+- La fórmula está en `lib/desgaste.py`. El negro y los colores oscuros cambian menos que los claros.
+- La salida es otro archivo. El script no escribe sobre la etiqueta, así que el original queda.
+- Una misma capa sirve a varios productos con giro, espejo o desplazamiento distintos. Dos
+  productos vecinos no pueden mostrar la misma marca.
+- Después de cambiar una fuente, el atlas se regenera con los cinco pasos de arriba.
