@@ -12,8 +12,12 @@ uniform float rugosidad : hint_range(0.0, 1.0) = 0.5;
 uniform float metalico : hint_range(0.0, 1.0) = 0.0;
 uniform float especular : hint_range(0.0, 1.0) = 0.5;
 
+// Las luces del techo bajaron de 3,4 a 2,5 para que los muebles no se vean lavados. Los productos
+// no tienen lightmap y conservan la luz de antes con esta ganancia.
+const float LUZ_DE_LOS_PRODUCTOS = 3.4 / 2.5;
+
 void fragment() {
-	ALBEDO = color.rgb * texture(textura, UV).rgb;
+	ALBEDO = color.rgb * texture(textura, UV).rgb * LUZ_DE_LOS_PRODUCTOS;
 	METALLIC = metalico;
 	ROUGHNESS = rugosidad;
 	SPECULAR = especular;
