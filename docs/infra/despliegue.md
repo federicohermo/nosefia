@@ -327,6 +327,21 @@ la consola. Para usar un editor ya compilado de otro commit, la plantilla se com
 python .github/scripts/preparar_motor_webgpu.py --herramientas <carpeta con glslangValidator y wgsl_convert_cli>
 ```
 
+### Las variantes
+
+- **Sin hilos** es la variante por defecto. No necesita los headers de aislamiento y llena la ventana.
+- **Con hilos** (`--hilos`) usa `SharedArrayBuffer`, como la web de hoy. Con `--sin-hilo-de-render`
+  el dibujo queda en el hilo principal.
+- **Con hilos y hilo de render propio** es el modo por defecto de `--hilos`. Dibuja en un trabajador
+  y no hay tirones aunque la CPU sea lenta. El canvas queda fijo en el tamaño del proyecto, escalado
+  con barras negras: no sigue a la ventana.
+
+El renderizador es Forward Mobile. Forward+ carga en el doble de tiempo y usa más memoria.
+
+**En WebGPU el juego no calienta shaders.** El motor compila cada variante en segundo plano y dibuja
+con el sombreador general mientras tanto. La compilación no desaparece: pasa de detrás del menú a los
+segundos entre el clic y el almacén. El criterio está en `calentamiento_de_shaders.gd`.
+
 ### Qué cambia el parche
 
 - **Las mallas conservan sus datos** en la web. Antes, leerlas de forma síncrona devolvía vacío
