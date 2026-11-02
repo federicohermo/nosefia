@@ -6,7 +6,7 @@
   "emscripten": "4.0.11",
   "emsdk_zip_sha256": "1e0e53bb21fd9308079991eb222efa6216ca8fdb53f742f9c98b6156c13e5ac4",
   "scons": "4.9.1",
-  "opciones": ["platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin", "module_text_server_adv_enabled=no", "module_text_server_fb_enabled=yes", "disable_physics_2d=yes", "disable_navigation_2d=yes", "disable_xr=yes", "minizip=no", "module_astcenc_enabled=no", "module_basis_universal_enabled=no", "module_bmp_enabled=no", "module_csg_enabled=no", "module_dds_enabled=no", "module_enet_enabled=no", "module_etcpak_enabled=no", "module_fbx_enabled=no", "module_gltf_enabled=no", "module_godot_physics_2d_enabled=no", "module_godot_physics_3d_enabled=no", "module_gridmap_enabled=no", "module_hdr_enabled=no", "module_interactive_music_enabled=no", "module_jpg_enabled=no", "module_jsonrpc_enabled=no", "module_ktx_enabled=no", "module_meshoptimizer_enabled=no", "module_mobile_vr_enabled=no", "module_mp3_enabled=no", "module_msdfgen_enabled=no", "module_multiplayer_enabled=no", "module_navigation_2d_enabled=no", "module_noise_enabled=no", "module_regex_enabled=no", "module_theora_enabled=no", "module_tga_enabled=no", "module_tinyexr_enabled=no", "module_upnp_enabled=no", "module_vhacd_enabled=no", "module_visual_shader_enabled=no", "module_webrtc_enabled=no", "module_websocket_enabled=no", "module_webxr_enabled=no", "module_zip_enabled=no"],
+  "opciones": ["platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=full", "module_text_server_adv_enabled=no", "module_text_server_fb_enabled=yes", "disable_physics_2d=yes", "disable_navigation_2d=yes", "disable_xr=yes", "minizip=no", "module_astcenc_enabled=no", "module_basis_universal_enabled=no", "module_bmp_enabled=no", "module_csg_enabled=no", "module_dds_enabled=no", "module_enet_enabled=no", "module_etcpak_enabled=no", "module_fbx_enabled=no", "module_gltf_enabled=no", "module_godot_physics_2d_enabled=no", "module_godot_physics_3d_enabled=no", "module_gridmap_enabled=no", "module_hdr_enabled=no", "module_interactive_music_enabled=no", "module_jpg_enabled=no", "module_jsonrpc_enabled=no", "module_ktx_enabled=no", "module_meshoptimizer_enabled=no", "module_mobile_vr_enabled=no", "module_mp3_enabled=no", "module_msdfgen_enabled=no", "module_multiplayer_enabled=no", "module_navigation_2d_enabled=no", "module_noise_enabled=no", "module_regex_enabled=no", "module_theora_enabled=no", "module_tga_enabled=no", "module_tinyexr_enabled=no", "module_upnp_enabled=no", "module_vhacd_enabled=no", "module_visual_shader_enabled=no", "module_webrtc_enabled=no", "module_websocket_enabled=no", "module_webxr_enabled=no", "module_zip_enabled=no"],
   "archivos": {
     "drivers/gles3/rasterizer_gles3.cpp": {
       "original_sha256": "7906073ee78a23816dfa0a0a21ec5879980f10f4eb5119ffa39051aba957311e",
@@ -42,10 +42,10 @@
     }
   },
   "plantilla_local": {
-    "receta_sha256": "1cf2f80a85d23feb6bfc1b62ba639d22c80167b67d91da7961dbda2a19f0d06b",
-    "zip_sha256": "7a7bb1746d2885b9f478fd3868689879c8201a572cc08ed287f531a19df0bdb7",
-    "wasm_sha256": "efa9ff1af0a2db4becb291f44a1b7ce0973eb6622afb543f56e94abd2c9bea17"
+    "receta_sha256": "53e8aa4db82a906123192ec404d52df3a01b6a3013dfddb84596e64de2469d67",
+    "zip_sha256": "962cf9d471725c886aa886a92bb7b8bf4ba4c4cf1144394840850c4578705ed1",
+    "wasm_sha256": "988639e1caad9f80deecdd33bd62c156a65bc2cde712692ebf202e6fea214091"
   },
   "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y las huellas de cada archivo, antes y después. Todo el cambio queda bajo WEB_ENABLED: conserva el camino nativo.",
-  "estado": "Plantilla release validada localmente e integrada al preset Web y al flujo de despliegue. El editor y la plantilla debug siguen usando el motor oficial."
+  "estado": "Plantilla release validada localmente e integrada al preset Web y al flujo de despliegue. `lto=full` medido el 2026-11-01: el WASM baja de 29.150.006 a 28.080.656 bytes sin costo de cuadro medible. El editor y la plantilla debug siguen usando el motor oficial."
 }

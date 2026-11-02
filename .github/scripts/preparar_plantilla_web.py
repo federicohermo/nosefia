@@ -35,7 +35,7 @@ ARCHIVOS = {
 # La navegación 3D queda: sin ella, el motor saca los monitores que nombra el addon del editor.
 # Brotli queda: la fuente por defecto del motor viene en WOFF2, y sin él el HUD sale en cuadritos.
 OPCIONES = [
-    "platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin",
+    "platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=full",
     "module_text_server_adv_enabled=no", "module_text_server_fb_enabled=yes",
     "disable_physics_2d=yes", "disable_navigation_2d=yes", "disable_xr=yes", "minizip=no",
     *(f"module_{modulo}_enabled=no" for modulo in (

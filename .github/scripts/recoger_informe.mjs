@@ -60,6 +60,8 @@ const navegador = await chromium.launch({
   headless: true,
   args: [
     '--window-size=1600,900',
+    // El juego tiene sonido y las mediciones corren en la máquina de una persona.
+    '--mute-audio',
     '--disable-backgrounding-occluded-windows',
     '--disable-renderer-backgrounding',
     '--disable-background-timer-throttling',

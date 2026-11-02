@@ -13,6 +13,7 @@ no es obvia.
 | La preparación de la plantilla web | [`.github/scripts/preparar_plantilla_web.py`](../../.github/scripts/preparar_plantilla_web.py) |
 | El parche y la receta de compilación | [`.github/patches/godot-web-compilacion.json`](../../.github/patches/godot-web-compilacion.json) |
 | El veredicto del export | `.claude/scripts/verificar_export.py` |
+| La compresión del `.pck` | `.github/scripts/comprimir_pck.mjs`, y el `Content-Encoding` en `vercel.json` |
 | El veredicto de la URL | `.claude/scripts/verificar_despliegue.py` |
 | El humo en un navegador | `.github/scripts/humo_en_navegador.mjs` |
 
@@ -48,6 +49,79 @@ Se apaga en **Project → Settings → Deployment Protection**. Si la producció
 protegida, hay que darle a la CI un `VERCEL_AUTOMATION_BYPASS_SECRET` y mandarlo en cada
 petición. Pero entonces *nadie de afuera puede jugar*. Con la protección puesta,
 `verificar_despliegue.py` nombra cada `302` y su destino.
+
+## El `.pck` viaja comprimido, y Vercel rechaza lo que pasa de 100 MB
+
+**Vercel no acepta un archivo de más de 100 MB.** Medido el 2026-11-01 con la CLI 65.2.0: subir
+el export tal como lo escribe Godot termina con `Error: File size limit exceeded (100 MB)`, y no
+queda deploy. El `.pck` de este juego pesa **113.233.684 bytes**, así que sin comprimirlo no se
+publica.
+
+`comprimir_pck.mjs` lo comprime en el lugar con brotli, a **43.706.584**. El nombre no cambia; lo
+que cambia es el cuerpo. `vercel.json` manda `Content-Encoding: br` **sólo para `/index.pck`**,
+porque el `.wasm`, el `.js` y el `.html` viajan sin comprimir y los comprime el CDN.
+
+Es un par, como el de los hilos, y las dos mitades viven en archivos distintos:
+
+- **El cuerpo**, en el archivo que deja el paso de compresión.
+- **El header**, en `vercel.json`.
+
+Separados, el navegador le entrega al motor un cuerpo comprimido como si fuera un paquete. **El
+juego queda en negro con el deploy en verde.** Por eso lo atan tres verificadores.
+`verificar_export.py` comprueba que el archivo no sea el `.pck` crudo. También que el total
+declarado en `index.html` sea el descomprimido: por ese número divide la barra de carga. `test_despliegue.py`
+cruza `vercel.json` con `CODIFICADOS` en las dos direcciones. Y `verificar_despliegue.py` mira
+el header en la URL publicada.
+
+**La codificación se lee de `vercel.json`, no se escribe dos veces.** El compresor saca de ahí
+qué archivo comprimir y con qué. Es el mismo lugar de donde sale el header: no pueden separarse
+sin tocar un archivo.
+
+**Brotli y no gzip.** Medido sobre el mismo `.pck`: brotli calidad 11 deja 43.706.584 bytes y
+gzip nivel 9, 51.416.380. Son 7,7 MB menos, un 15 %. Sobre la descarga entera, donde el `.pck`
+es el 85 %, es la diferencia entre 50,7 MB y 58,4 MB. Cuesta tres minutos de compilación por
+deploy y un decodificador que la stdlib de Python no tiene. Por eso el compresor vive en
+`.github/scripts/`, donde la stdlib de node sí lo trae. La comparación completa está en
+`build/medicion-web/resultado.md`.
+
+**El `.pck` no se vuelve a comprimir dos veces.** El paso intenta descomprimir antes de
+comprimir. Si lo que hay ya es un paquete, no lo toca. Comprimir un cuerpo ya comprimido deja un
+archivo que el navegador descomprime una vez y entrega basura. Ese error no tiene síntoma hasta
+que el juego no arranca.
+
+**Y comprime y verifica antes de escribir.** Descomprime lo que acaba de comprimir. Exige que
+empiece con `GDPC` y que mida lo que `index.html` declara. Si algo no cierra, sale distinto de
+cero sin tocar el archivo.
+
+`servir_export.py` aplica los headers de `vercel.json` **por ruta**, como Vercel. Si el `.pck`
+de la carpeta pesa lo mismo que declara su `index.html`, no está comprimido. Entonces lo sirve
+sin el header y lo avisa por stderr. Medir un export recién salido de Godot creyendo que se mide
+el que se publica es el otro modo de falla.
+
+## El mapa de la noche del corte viaja en su propio paquete
+
+El horneado oscuro —`almacen_sin_luz.exr` y su `.lmbake`— pesa 17,27 MB de los 113 del `.pck` y
+sólo lo usa la sexta noche. Se saca del paquete principal y viaja en `mapa_del_corte.pck`, que se
+arma con `.github/scripts/armar_paquete_del_mapa.gd`. Son tres archivos: el `.lmbake`, el
+`.exr.import` y la textura importada. **No se arma con un preset de exportación**:
+`--export-pack` empaqueta todo el proyecto y el paquete salía de 113 MB en vez de 17.
+
+**El `.exr.import` es obligatorio.** El `.lmbake` referencia la textura por su ruta fuente. Sin
+la metadata de importación el motor contesta «No loader found for resource». El local se queda
+sin su horneado oscuro.
+
+- **Cuándo se baja:** al abrir la jornada del corte, en segundo plano, por `HTTPRequest`. La
+  regla vive en `src/dominio/almacen/mapa_del_corte.gd` y el sistema que la ejecuta en
+  `src/sistemas/marco/descarga_del_mapa.gd`.
+- **Si no llega:** reintenta con espera creciente y la oscuridad no se aplica hasta que el
+  paquete está montado. El almacén tapa la espera con la pantalla de carga. Sin el horneado, el
+  local se quedaría sin luz horneada y la noche del corte se vería rota.
+- **Los gates lo miran igual que al principal.** `verificar_export.py` lo exige como
+  obligatorio. `verificar_despliegue.py` le pide el `Content-Encoding` en la URL publicada,
+  porque también se comprime con brotli.
+
+En escritorio y en los tests no hay nada que bajar: el mapa sigue dentro del juego y la regla
+arranca lista.
 
 ## Los tres veredictos, y por qué no alcanza con uno
 
@@ -191,6 +265,7 @@ la raíz del repo, con `GODOT_BIN` apuntando a la versión de `.godot-version`:
 python .github/scripts/preparar_plantilla_web.py
 mkdir -p export/web
 "$GODOT_BIN" --headless --path . --export-release "Web" export/web/index.html || true
+node .github/scripts/comprimir_pck.mjs export/web
 python .claude/scripts/verificar_export.py export/web   # el veredicto NO es el $? de arriba
 python .github/scripts/preparar_plantilla_web.py --verificar-export export/web
 

@@ -116,6 +116,8 @@ var _partida := Partida.desde(Guardado.new().cargar())
 ## transición que los preparó.
 var _jornada_preparada := 0
 var _corte: CorteDeLuz
+## La espera del horneado oscuro, cuando el corte llega antes que su paquete.
+var _pantalla_de_la_espera: CanvasLayer
 
 ## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
 ## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
@@ -356,13 +358,21 @@ func _ready() -> void:
 ## El corte de la sexta noche: el reloj le da lo que queda del turno, el tablero le pide
 ## restablecer, y sin luz la computadora y la caja se cierran y no abren. Cuándo se corta y qué
 ## quiere decir «hay luz» lo decide el dominio.
+##
+## El horneado oscuro viaja en su propio paquete en la web: el corte lo pide al abrir la jornada y,
+## si el corte llega antes, tapa la espera con la pantalla de carga. Sin ese horneado el local se
+## queda sin luz horneada, y la noche del corte se rompe.
 func _cablear_el_corte_de_luz() -> void:
 	var corte: CorteDeLuz = CorteDeLuz.new()
 	_corte = corte
 	add_child(corte)
+	var descarga := DescargaDelMapa.new()
+	add_child(descarga)
+	corte.usar_la_descarga(descarga)
 	corte.preparar(self, $LightmapGI, ($Ambiente/Entorno as WorldEnvironment).environment)
 	_reloj.tiempo_consumido.connect(corte.avanzar)
 	_ciclo.jornada_abierta.connect(corte.abrir_jornada)
+	corte.oscuridad_esperando.connect(_tapar_la_espera_del_mapa)
 	var tablero: TableroElectrico = $Estructura/tableroluz/StaticBody3D
 	tablero.restablecimiento_pedido.connect(corte.restablecer)
 	var escritorio: EscritorioDelLocal = $"Estructura/base compu/StaticBody3D"
@@ -373,7 +383,34 @@ func _cablear_el_corte_de_luz() -> void:
 			if not hay_luz:
 				escritorio.cerrar()
 				_puesto_de_la_caja.cerrar()
+				_destapar_la_espera_del_mapa()
 	)
+
+
+## El corte llegó antes que su horneado: se tapa con la pantalla de carga y se espera. La descarga
+## sigue sola; cuando la oscuridad se aplica, `luz_cambiada` destapa.
+func _tapar_la_espera_del_mapa() -> void:
+	if _pantalla_de_la_espera != null:
+		return
+	_jugador.suspender()
+	var capa := CanvasLayer.new()
+	capa.layer = 20
+	_pantalla_de_la_espera = capa
+	add_child(capa)
+	var pantalla: PantallaDeCarga = PANTALLA_DE_CARGA.instantiate()
+	pantalla.presentacion = PantallaDeCarga.Presentacion.ENTRE_NOCHES
+	capa.add_child(pantalla)
+	pantalla.mostrar()
+	pantalla.pintar(0.0)
+
+
+## La oscuridad se aplicó: se destapa y el turno sigue donde estaba.
+func _destapar_la_espera_del_mapa() -> void:
+	if _pantalla_de_la_espera == null:
+		return
+	_pantalla_de_la_espera.queue_free()
+	_pantalla_de_la_espera = null
+	_jugador.reanudar()
 
 
 func _cablear_las_preferencias(pausa: ControlDePausa) -> void:

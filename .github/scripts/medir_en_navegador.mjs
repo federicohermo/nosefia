@@ -3,6 +3,7 @@
 //     npm install --no-save playwright
 //     node .github/scripts/medir_en_navegador.mjs https://nosefia.vercel.app
 //     node .github/scripts/medir_en_navegador.mjs https://nosefia.vercel.app 1,4,6 salida.json
+//     node .github/scripts/medir_en_navegador.mjs http://localhost:8060 1 salida.json --escala=2
 //
 // ## Por qué existe
 //
@@ -17,6 +18,9 @@
 //   sintético; no representan un modelo de equipo ni prueban qué componente limita el juego.
 // - **La GPU no.** No se emula. Sin GPU —con el dibujo por software— el juego ni llega a
 //   dibujar. Una GPU floja se mide en una máquina que la tenga, con este mismo comando.
+// - **La densidad de pantalla sí.** `--escala=N` abre la página con `deviceScaleFactor` N, que
+//   es lo que hace el navegador en una pantalla de alta densidad: el juego multiplica sus
+//   píxeles por N. Con la ventana fija en 1536×760, el lienzo interno queda de 1536·N × 760·N.
 //
 // ## Qué mide
 //
@@ -52,6 +56,12 @@ if (!url) {
 }
 const tasas = (process.argv[3] ?? '1,4,6').split(',').map(Number);
 const salida = process.argv[4];
+const opcionDeEscala = process.argv.find((argumento) => argumento.startsWith('--escala='));
+const escala = opcionDeEscala ? Number(opcionDeEscala.split('=')[1]) : 1;
+if (!Number.isFinite(escala) || escala <= 0) {
+  console.error(`--escala necesita un número positivo: ${opcionDeEscala}`);
+  process.exit(2);
+}
 
 // El motor escucha `pointermove` sobre `window` y las teclas sobre el canvas, y sólo gira la
 // cámara con el cursor capturado. Un navegador manejado no puede capturarlo, así que se le
@@ -161,13 +171,18 @@ const navegador = await chromium.launch({
   headless: false,
   args: [
     '--window-size=1600,900',
+    // El juego tiene sonido y las mediciones corren en la máquina de una persona.
+    '--mute-audio',
     '--disable-frame-rate-limit',
     '--disable-gpu-vsync',
     '--disable-backgrounding-occluded-windows',
     '--disable-renderer-backgrounding',
   ],
 });
-const pagina = await navegador.newPage({ viewport: { width: 1536, height: 760 } });
+const pagina = await navegador.newPage({
+  viewport: { width: 1536, height: 760 },
+  deviceScaleFactor: escala,
+});
 // Se coloca antes de cargar Godot: moverlo al primer clic podía girar la cámara del juego.
 await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
 await pagina.addInitScript(GANCHOS_DE_ENTRADA);
@@ -194,6 +209,8 @@ try {
   await pagina.evaluate(
     () => new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo)))
   );
+  // El menú es la captura más útil para comparar nitidez de la UI entre densidades.
+  await foto('menu');
   const lienzo = await pagina.locator('canvas').boundingBox();
   const almacen = esperarAviso(pagina, AVISO_DEL_ALMACEN);
   await Promise.all([

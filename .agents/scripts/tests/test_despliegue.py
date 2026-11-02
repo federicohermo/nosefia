@@ -25,6 +25,7 @@ import unittest
 from lib.despliegue import (
     AISLAMIENTO,
     CACHE,
+    CODIFICADOS,
     HILOS,
     OBLIGATORIOS,
     PISO_DEL_WASM,
@@ -33,7 +34,9 @@ from lib.despliegue import (
     TECHO_DEL_DIRECTORIO,
     TIPO_DEL_WASM,
     Respuesta,
+    desajustes_de_la_compresion,
     desajustes_del_par,
+    desajustes_del_pck,
     headers_universales,
     pide_hilos,
     preset_web,
@@ -121,6 +124,12 @@ class ElParEnDisco(unittest.TestCase):
         # el archivo atrás lo pone verde. Verificado en las dos direcciones el 2026-09-06.
         self.assertEqual(desajustes_del_par(self.cfg, self.vercel), [])
 
+    def test_el_pck_comprimido_esta_atado_a_su_content_encoding(self):
+        # Vercel no acepta un archivo de más de 100 MB: el `.pck` se publica comprimido, y el
+        # cuerpo y el header que lo declara viven en archivos distintos. Sin esta línea, el
+        # deploy sale verde y el navegador descomprime lo que no está comprimido.
+        self.assertEqual(desajustes_de_la_compresion(self.vercel), [])
+
 
 class ElParDesatado(unittest.TestCase):
     """Que el gate de arriba **pueda** ponerse rojo. Un gate que nunca falla no es un gate."""
@@ -177,6 +186,90 @@ class ElParDesatado(unittest.TestCase):
         self.assertNotEqual(desajustes_del_par('[preset.0]\nplatform="Windows Desktop"\n', vercel), [])
 
 
+class LaCompresionDelPck(unittest.TestCase):
+    """El `.pck` comprimido: el header en `vercel.json` y el archivo que se publica.
+
+    **Vercel no acepta un archivo de más de 100 MB** y el `.pck` pesa 113.233.684: publicado
+    como lo escribe Godot, el deploy falla entero. Comprimido entra. Y ahí el archivo y el header
+    que lo declara quedan en dos lugares distintos, que es el modo de falla que este gate
+    persigue: el juego en negro con el deploy en verde.
+    """
+
+    def vercel_sano(self) -> dict:
+        cabeceras = [{"key": k, "value": v} for k, v in AISLAMIENTO.items()]
+        cabeceras.append({"key": CACHE, "value": f"public, max-age=0, {REVALIDACION}"})
+        return {
+            "headers": [
+                {"source": "/(.*)", "headers": cabeceras},
+                {"source": "/index.pck", "headers": [{"key": "Content-Encoding", "value": "br"}]},
+                {
+                    "source": "/mapa_del_corte.pck",
+                    "headers": [{"key": "Content-Encoding", "value": "br"}],
+                },
+            ]
+        }
+
+    def html(self, tamano: int) -> str:
+        return f'const GODOT_CONFIG = {{"fileSizes":{{"index.pck":{tamano}}}}};\n'
+
+    def cuerpo(self, tamano: int = 400) -> bytes:
+        """Un cuerpo comprimido de mentira: no empieza como un `.pck` y pesa menos que su total."""
+        return b"\x1b\x2e\x00" + b"\x11" * tamano
+
+    def cuerpos(self, tamano: int = 400, crudo: bool = False) -> dict[str, bytes]:
+        """Los dos paquetes: el principal y el del mapa de la noche del corte."""
+        cuerpo = b"GDPC" + b"\x00" * tamano if crudo else self.cuerpo(tamano)
+        return {"index.pck": cuerpo, "mapa_del_corte.pck": cuerpo}
+
+    def test_el_par_sano_no_tiene_nada_que_decir(self):
+        self.assertEqual(desajustes_de_la_compresion(self.vercel_sano()), [])
+        self.assertEqual(desajustes_del_pck(self.html(10_000), self.cuerpos()), [])
+
+    def test_sin_la_regla_del_pck_es_rojo(self):
+        # La mitad del par que vive en `vercel.json` y se puede borrar sin que nada más chille.
+        vercel = self.vercel_sano()
+        vercel["headers"] = vercel["headers"][:1]
+        problemas = desajustes_de_la_compresion(vercel)
+        self.assertTrue(any("index.pck" in p and "Content-Encoding" in p for p in problemas))
+
+    def test_una_codificacion_para_todas_las_rutas_es_rojo(self):
+        # El `.wasm`, el `.js` y el `.html` viajan sin comprimir: el header universal los rompe.
+        vercel = self.vercel_sano()
+        vercel["headers"][1]["source"] = "/(.*)"
+        problemas = desajustes_de_la_compresion(vercel)
+        self.assertTrue(any("todas las rutas" in p for p in problemas), problemas)
+
+    def test_una_codificacion_para_un_archivo_que_no_se_comprime_es_rojo(self):
+        vercel = self.vercel_sano()
+        vercel["headers"][1]["source"] = "/index.wasm"
+        problemas = desajustes_de_la_compresion(vercel)
+        self.assertTrue(any("/index.wasm" in p for p in problemas), problemas)
+        self.assertTrue(any("index.pck" in p for p in problemas), problemas)
+
+    def test_un_pck_crudo_nombra_el_paso_que_falta(self):
+        # El caso real: alguien corre el export y saltea el paso de compresión. Además de no
+        # arrancar, ese archivo pesa más de los 100 MB que Vercel acepta.
+        problemas = desajustes_del_pck(self.html(10_000), self.cuerpos(crudo=True))
+        self.assertTrue(any("comprimir_pck.mjs" in p for p in problemas), problemas)
+
+    def test_un_total_que_no_es_el_descomprimido_se_nombra(self):
+        # La barra de carga divide por el total declarado. Si quedó el tamaño comprimido, salta a
+        # 100 % a mitad de la descarga y el jugador cree que se colgó.
+        cuerpo = self.cuerpo(tamano=400)
+        problemas = desajustes_del_pck(self.html(len(cuerpo)), self.cuerpos(400))
+        self.assertTrue(any("barra de carga" in p for p in problemas), problemas)
+
+    def test_el_paquete_del_mapa_no_necesita_total_en_el_html(self):
+        # La barra de carga divide por lo que el shell precarga: el paquete del mapa no está ahí
+        # y su tamaño no se declara. Comprobarlo lo haría fallar por lo que no corresponde.
+        problemas = desajustes_del_pck(self.html(10_000), self.cuerpos())
+        self.assertEqual(problemas, [])
+
+    def test_un_html_sin_file_sizes_se_nombra(self):
+        problemas = desajustes_del_pck("const GODOT_CONFIG = {};", self.cuerpos())
+        self.assertTrue(any("fileSizes" in p for p in problemas), problemas)
+
+
 class ElVeredictoDelExport(unittest.TestCase):
     """El código de salida del export no decide nada.
 
@@ -187,7 +280,7 @@ class ElVeredictoDelExport(unittest.TestCase):
 
     def completo(self) -> dict[str, int]:
         return {"index.html": 5_000, "index.js": 200_000, "index.wasm": 45 * 1024 * 1024,
-                "index.pck": 3 * 1024 * 1024}
+                "index.pck": 3 * 1024 * 1024, "mapa_del_corte.pck": 2 * 1024 * 1024}
 
     def test_un_export_completo_no_tiene_nada_que_decir(self):
         self.assertEqual(veredicto_del_export(self.completo()), [])
@@ -216,9 +309,13 @@ class ElVeredictoDelExport(unittest.TestCase):
 class LaPublicacion(unittest.TestCase):
     """La publicación, con la respuesta inyectada: un 404 y un header caído sin publicar nada."""
 
-    def sana(self) -> dict[str, str]:
+    def sana(self, nombre: str = "") -> dict[str, str]:
         headers = {k: v for k, v in AISLAMIENTO.items()}
         headers[CACHE] = f"public, max-age=0, {REVALIDACION}"
+        if nombre.endswith(".wasm"):
+            headers["Content-Type"] = TIPO_DEL_WASM
+        if nombre in CODIFICADOS:
+            headers["Content-Encoding"] = CODIFICADOS[nombre]
         return headers
 
     def servidor(self, **rotos):
@@ -228,10 +325,7 @@ class LaPublicacion(unittest.TestCase):
             nombre = url.rsplit("/", 1)[-1]
             if nombre in rotos:
                 return rotos[nombre]
-            headers = self.sana()
-            if nombre.endswith(".wasm"):
-                headers["Content-Type"] = TIPO_DEL_WASM
-            return Respuesta(200, headers)
+            return Respuesta(200, self.sana(nombre))
 
         return pedir
 
@@ -280,11 +374,22 @@ class LaPublicacion(unittest.TestCase):
     def test_los_headers_se_leen_sin_importar_la_capitalizacion(self):
         # Un CDN puede devolver `cache-control` en minúscula y Vercel lo escribe capitalizado.
         # Comparar el string tal cual diría que falta el header que está.
-        gritado = {k.upper(): v for k, v in self.sana().items()}
-        gritado["CONTENT-TYPE"] = TIPO_DEL_WASM
-        self.assertEqual(
-            problemas_de_la_publicacion("https://x.test", lambda _u: Respuesta(200, gritado)), []
+        def pedir(url: str) -> Respuesta:
+            nombre = url.rsplit("/", 1)[-1]
+            propios = self.sana(nombre)
+            return Respuesta(200, {clave.upper(): valor for clave, valor in propios.items()})
+
+        self.assertEqual(problemas_de_la_publicacion("https://x.test", pedir), [])
+
+    def test_un_pck_sin_su_content_encoding_es_un_problema(self):
+        # El build guarda el `.pck` comprimido: sin el header, el navegador le entrega al motor
+        # un paquete que en realidad es un gzip y el juego no arranca.
+        sin_codificacion = self.sana()
+        sin_codificacion["Content-Type"] = "application/octet-stream"
+        problemas = problemas_de_la_publicacion(
+            "https://x.test", self.servidor(**{"index.pck": Respuesta(200, sin_codificacion)})
         )
+        self.assertTrue(any("Content-Encoding" in p and "index.pck" in p for p in problemas))
 
     def test_se_le_pide_al_wasm_y_al_pck_y_no_solo_al_html(self):
         # Que el HTML conteste 200 es lo que ya se ve a ojo. Lo que no se ve es el `.pck`.
@@ -295,7 +400,10 @@ class LaPublicacion(unittest.TestCase):
             return Respuesta(200, self.sana() | {"Content-Type": TIPO_DEL_WASM})
 
         problemas_de_la_publicacion("https://x.test", registrando)
-        self.assertEqual(set(pedidos), {"index.html", "index.js", "index.wasm", "index.pck"})
+        self.assertEqual(
+            set(pedidos),
+            {"index.html", "index.js", "index.wasm", "index.pck", "mapa_del_corte.pck"},
+        )
 
 
 class LaVersionDelMotor(unittest.TestCase):
@@ -382,6 +490,14 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
         self.assertLess(control, self.texto.index("vercel deploy"))
         self.assertIn("--software", self.texto)
 
+    def test_el_pck_se_comprime_entre_el_export_y_la_publicacion(self):
+        # Sin este paso el deploy falla entero: Vercel rechaza un archivo de más de 100 MB y el
+        # `.pck` pesa 113 MB. Y con el paso en otro lado —después de publicar, por ejemplo— la
+        # web sale con el `.pck` sin comprimir y el header que dice que sí.
+        compresion = self.texto.index("node .github/scripts/comprimir_pck.mjs")
+        self.assertLess(self.texto.index('--export-release "Web"'), compresion)
+        self.assertLess(compresion, self.texto.index("vercel deploy"))
+
     def test_le_pega_a_la_url_publicada(self):
         # La cita de la publicación corrida de verdad. Contra una URL viva se corre con
         #   python .claude/scripts/verificar_despliegue.py https://<proyecto>.vercel.app
@@ -409,7 +525,7 @@ class LaDocumentacion(unittest.TestCase):
     def test_hay_un_documento_de_despliegue(self):
         self.assertTrue(DOC.is_file(), "falta `docs/infra/despliegue.md`.")
         texto = _texto(DOC)
-        for tema in ("VERCEL_TOKEN", "workflow_dispatch", "a mano"):
+        for tema in ("VERCEL_TOKEN", "workflow_dispatch", "a mano", "comprimir_pck.mjs"):
             self.assertIn(tema, texto, f"el documento no dice nada de «{tema}».")
 
     def test_esta_indexado_donde_se_indexa_lo_demas(self):
