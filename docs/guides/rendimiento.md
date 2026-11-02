@@ -420,3 +420,35 @@ Si el jugador hace clic después de ese aviso, entra con la copia y no espera el
 La barra de carga reparte por tiempo estimado: el tiempo que pasó, sobre el que pasó más el que
 falta. Lo que falta del destape sale de su ritmo. Lo que falta de la cola sale del ritmo de
 enlace medido, y antes de medirlo, de `SEGUNDOS_POR_PROGRAMA`.
+
+## Medir el motor WebGPU contra la web actual
+
+El motor WebGPU se describe en [despliegue](../infra/despliegue.md). Se mide contra la entrega de
+hoy con la misma revisión del juego, la misma ventana y la misma resolución. Los números van en el
+informe de la corrida, no acá. Lo que sigue es el método y las trampas.
+
+- **Alternar los lados y repetir.** Al menos cinco corridas por lado, y cada corrida abre Chrome con
+  un perfil nuevo. Mediana y rango. En la primera ronda el orden es A B C D y en la siguiente D C B A.
+- **Con vsync, todos los lados llegan al tope del monitor** y no se distinguen. El costo real se ve
+  con Chrome sin vsync ni tope de cuadros (`--disable-gpu-vsync --disable-frame-rate-limit`).
+- **El hilo de render propio no se puede medir sin límite.** Chrome sincroniza el `requestAnimationFrame`
+  de un canvas que es de un trabajador a unos 60 Hz, sin importar los parámetros. Esa variante sólo
+  muestra si hay tirones, no cuánto cuesta el cuadro.
+- **Los bytes por la red se cuentan en el servidor.** Chrome no le informa a CDP lo que baja el
+  trabajador del motor, y faltan el `.wasm` y el `.shaders.pck`. El servidor sirve cada archivo con
+  brotli calidad 11 y ventana 24, como `comprimir_pck.mjs`, y suma lo que envía.
+- **La memoria es la de todos los procesos de ese Chrome**, separada por tipo: renderizador, GPU y
+  el resto. Se pide al sistema con el perfil temporal de la corrida. Incluye la memoria de la GPU
+  que el sistema le asigna al proceso, y no mide VRAM física.
+- **Un recorrido por todo el local detecta los tirones.** Un caso en una sola vista no ve los
+  sombreadores que nadie dibujó todavía. Recorrer las estancias y contar cuadros de más de 50 ms.
+- **Con la CPU frenada** (`Emulation.setCPUThrottlingRate`) y **con SwiftShader**
+  (`--use-webgpu-adapter=swiftshader --enable-unsafe-swiftshader --use-angle=swiftshader`) se ve
+  cómo andaría en una PC sin placa. La RTX de esta máquina sobra, y no hay placa integrada para
+  probar.
+- **Qué renderizador.** Forward Mobile carga en la mitad de tiempo que Forward+, usa un tercio
+  menos de memoria y dibuja más rápido. Su `.shaders.pck` mide 19 MB y el de Forward+ 121 MB.
+  Pesan casi lo mismo por la red porque ambos se comprimen a menos de 1 MB.
+- **Probar las dos opciones en la misma copia exige reescribir el renderizador.** El editor borra
+  `renderer/rendering_method` de `project.godot` cuando vale `forward_plus`. Se confirma en la
+  consola del navegador: la línea del motor dice «Forward Mobile» o «Forward+».
