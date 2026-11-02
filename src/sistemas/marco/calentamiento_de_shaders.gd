@@ -37,6 +37,9 @@ var unifica_variantes: Callable = func() -> bool:
 		OS.has_feature("web"), str(Engine.get_version_info().get("build", ""))
 	)
 var ahora: Callable = Time.get_ticks_usec
+## El driver de dibujo que corre. En WebGPU no hay nada que calentar: el motor compila cada variante
+## en segundo plano y dibuja con el sombreador general hasta que está lista.
+var driver_actual: Callable = RenderingServer.get_current_rendering_driver_name
 
 var _pendientes: Array[GeometryInstance3D] = []
 var _objetos: Array[GeometryInstance3D] = []
@@ -103,6 +106,9 @@ func _ready() -> void:
 
 
 func calentar(escena: Node3D) -> void:
+	if compila_sin_frenar(driver_actual.call()):
+		terminado.emit.call_deferred()
+		return
 	if escena.has_method("oscuridad_por_preparar"):
 		_oscuridad = escena.call("oscuridad_por_preparar")
 	_pasadas = 2 if _oscuridad.is_valid() else 1
@@ -111,6 +117,9 @@ func calentar(escena: Node3D) -> void:
 
 ## Entre noches, la escena ya tiene preparada la luz de siempre.
 func calentar_a_oscuras(escena: Node3D, oscuridad: Callable) -> void:
+	if compila_sin_frenar(driver_actual.call()):
+		terminado.emit.call_deferred()
+		return
 	_oscuridad = oscuridad
 	_a_oscuras = true
 	_oscuridad.call(true)
@@ -267,6 +276,10 @@ func _progreso_de_la_pasada() -> float:
 		por_programa = enlazando / (_cola_al_destapar - _cola)
 	var resta := faltan * transcurrido / hechos + maxi(_cola, 0) * por_programa
 	return transcurrido / (transcurrido + resta)
+
+
+static func compila_sin_frenar(driver: String) -> bool:
+	return driver == "webgpu"
 
 
 static func unifica_variantes_en(es_web: bool, build: String) -> bool:
