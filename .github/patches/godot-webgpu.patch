@@ -30,6 +30,33 @@ index 8a349efb59..a52027c7f7 100644
      # Get the UNIX timestamp of the build commit.
      git_timestamp = 0
      if os.path.exists(".git"):
+diff --git a/misc/dist/html/full-size.html b/misc/dist/html/full-size.html
+index 1864d57f5e..c60292dd62 100644
+--- a/misc/dist/html/full-size.html
++++ b/misc/dist/html/full-size.html
+@@ -329,11 +329,6 @@ body {
+ 		<script src="$GODOT_URL"></script>
+ 		<script>
+ const GODOT_CONFIG = $GODOT_CONFIG;
+-// Force "Project" canvas sizing (a fixed buffer at the project's configured
+-// resolution, in CSS pixels via canvas.style.width/height) instead of the
+-// export preset's own canvasResizePolicy, so fitCanvasToViewport() below has
+-// a stable, known aspect ratio to scale -- see that function for the rest.
+-GODOT_CONFIG['canvasResizePolicy'] = 1;
+ const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+ // Per-stage loading screen text and visibility, from the export preset's
+ // "Loading Screen" section: { <stage>: { text, showText, showSpinner } }. The
+@@ -357,6 +352,10 @@ const engine = new Engine(GODOT_CONFIG);
+ // rather than getBoundingClientRect(), since that would otherwise read back
+ // this function's own previous transform and compound on every call.
+ (function () {
++	// Only the preset's "Project" sizing keeps a fixed buffer to scale; "Adaptive" fills the window by itself.
++	if (GODOT_CONFIG['canvasResizePolicy'] !== 1) {
++		return;
++	}
+ 	const canvas = document.getElementById('canvas');
+ 	canvas.style.position = 'fixed';
+ 	canvas.style.left = '50%';
 diff --git a/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp b/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp
 index 27c4f1f6de..3b8f31f2a5 100644
 --- a/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp

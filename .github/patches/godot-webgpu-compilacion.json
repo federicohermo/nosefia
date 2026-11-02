@@ -69,6 +69,10 @@
       "original_sha256": "918a21ac28d8b0bf049005a98fe60dc403ab75e989438d497195b18efe824705",
       "modificado_sha256": "2362da6ed6059534add36105cad585df5c23985d328cbc185c31e336897519f0"
     },
+    "misc/dist/html/full-size.html": {
+      "original_sha256": "5083ca5507c3f414aeffcb70848d37b8c3eb4269c919195e94cc04e6f9e831d4",
+      "modificado_sha256": "ee0a2623c5fc2407f124724020b787b702eda538fc392a04d979fb5ced0f085a"
+    },
     "servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp": {
       "original_sha256": "ed9a5226a2e637c473e08ebb5601d484c45dd237aebee4d27a052b09cd8e2e36",
       "modificado_sha256": "18a4fc627e2ec6adb2ff57eb6647d15116591724a51573306bd0a3ff24e9cfb8"
