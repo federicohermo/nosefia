@@ -446,7 +446,7 @@ informe de la corrida, no acá. Lo que sigue es el método y las trampas.
   (`--use-webgpu-adapter=swiftshader --enable-unsafe-swiftshader --use-angle=swiftshader`) se ve
   cómo andaría en una PC sin placa. La RTX de esta máquina sobra, y no hay placa integrada para
   probar.
-- **Qué renderizador.** Forward Mobile carga en la mitad de tiempo que Forward+, usa un tercio
+- **Qué renderizador.** Forward Mobile carga en la mitad de tiempo que Forward+, usa un cuarto
   menos de memoria y dibuja más rápido. Su `.shaders.pck` mide 19 MB y el de Forward+ 121 MB.
   Pesan casi lo mismo por la red porque ambos se comprimen a menos de 1 MB.
 - **Probar las dos opciones en la misma copia exige reescribir el renderizador.** El editor borra
