@@ -1,0 +1,157 @@
+# Construye el motor WebGPU y exporta el juego con él. A mano, y no publica nada.
+#
+# `desplegar.yml` sigue siendo la entrega: exporta en WebGL2 con la plantilla de siempre. Este
+# workflow prueba que la receta de `.github/patches/godot-webgpu-compilacion.json` se reconstruye
+# en un runner limpio, y deja el export WebGPU como artefacto para medirlo.
+#
+# Tres trabajos, porque cada uno tarda y falla por motivos distintos:
+#
+#   - `plantilla`: la plantilla web del fork, con Emscripten. Es lo que baja el navegador.
+#   - `editor`: el editor de Linux, desde el MISMO árbol y el mismo parche. El hash de versión del
+#     motor entra en la clave de cada sombreador horneado: un editor y una plantilla de árboles
+#     distintos exportan un paquete de sombreadores que nada reconoce, y el juego los compila
+#     todos en el navegador.
+#   - `exportar`: exporta CON VENTANA. `--headless` no hornea sombreadores. Linux sin pantalla ni
+#     GPU alcanza con Xvfb y el Vulkan por software de Mesa (lavapipe).
+name: construir-webgpu
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  plantilla:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      # El build del fork convierte SPIR-V a WGSL con una herramienta nativa
+      # (`wgsl_convert_cli`, que arma `drivers/webgpu/wgsl_cli/build.sh`) y compila los GLSL con
+      # glslangValidator.
+      - name: Herramientas de compilación
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential glslang-tools
+      - name: Caché de la plantilla
+        id: plantilla
+        uses: actions/cache@v4
+        with:
+          path: build/templates
+          key: webgpu-plantilla-${{ hashFiles('.github/patches/godot-webgpu-compilacion.json', '.github/patches/godot-webgpu.patch', '.github/scripts/preparar_motor_webgpu.py') }}
+      - name: Caché de los objetos del motor
+        if: steps.plantilla.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: build/godot-webgpu/cache-de-scons
+          key: webgpu-objetos-${{ hashFiles('.github/patches/godot-webgpu-compilacion.json', '.github/patches/godot-webgpu.patch') }}
+          restore-keys: webgpu-objetos-
+      - name: Preparar y validar la plantilla WebGPU
+        run: python .github/scripts/preparar_motor_webgpu.py --jobs 4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webgpu-plantilla
+          path: build/templates/webgpu_release*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: webgpu-plantilla-log
+          path: build/godot-webgpu/compilacion.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+  editor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Herramientas de compilación
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential glslang-tools pkg-config \
+            libx11-dev libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev libwayland-dev \
+            libxkbcommon-dev libgl1-mesa-dev libglu1-mesa-dev libasound2-dev libpulse-dev libudev-dev
+      - name: Caché de los objetos del editor
+        uses: actions/cache@v4
+        with:
+          path: build/godot-webgpu/cache-de-scons-editor
+          key: webgpu-editor-${{ hashFiles('.github/patches/godot-webgpu-compilacion.json', '.github/patches/godot-webgpu.patch') }}
+          restore-keys: webgpu-editor-
+      - name: Compilar el editor WebGPU
+        run: python .github/scripts/preparar_motor_webgpu.py --editor --jobs 4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webgpu-editor
+          path: build/godot-webgpu/editor/godot.linuxbsd.editor.x86_64
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+
+  exportar:
+    needs: [plantilla, editor]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          name: webgpu-plantilla
+          path: build/templates
+      - uses: actions/download-artifact@v4
+        with:
+          name: webgpu-editor
+          path: build/godot-webgpu/editor
+      - name: Ventana virtual y Vulkan por software
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends xvfb mesa-vulkan-drivers libvulkan1 libxcursor1 libxinerama1 libxi6 libxrandr2 libgl1
+          chmod +x build/godot-webgpu/editor/godot.linuxbsd.editor.x86_64
+      - name: Exportar con el motor WebGPU
+        env:
+          GODOT_WEBGPU_BIN: ${{ github.workspace }}/build/godot-webgpu/editor/godot.linuxbsd.editor.x86_64
+          VK_ICD_FILENAMES: /usr/share/vulkan/icd.d/lvp_icd.json
+        run: >-
+          xvfb-run -a -s "-screen 0 1600x900x24"
+          python .github/scripts/exportar_webgpu.py "$RUNNER_TEMP/webgpu"
+          --plantilla build/templates/webgpu_release.zip
+      - name: Lo que pesa el export, con brotli
+        run: |
+          set -euo pipefail
+          node - <<'JS'
+          const fs = require('fs'), zlib = require('zlib'), path = require('path');
+          const dir = path.join(process.env.RUNNER_TEMP, 'webgpu', 'web');
+          for (const n of fs.readdirSync(dir)) {
+            const d = fs.readFileSync(path.join(dir, n));
+            const b = zlib.brotliCompressSync(d, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 9 } });
+            console.log(`${n}: ${d.length} -> ${b.length}`);
+          }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: webgpu-exportada
+          path: |
+            ${{ runner.temp }}/webgpu/web/
+            ${{ runner.temp }}/webgpu/*.log
+            ${{ runner.temp }}/webgpu/huellas.json
+          if-no-files-found: ignore
+          retention-days: 7

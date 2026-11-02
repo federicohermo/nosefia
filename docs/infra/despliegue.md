@@ -282,3 +282,101 @@ node .github/scripts/humo_en_navegador.mjs https://<proyecto>.vercel.app
 Las plantillas oficiales de debug se instalan desde **Editor → Manage Export Templates** o en
 `~/.local/share/godot/export_templates/<version>.stable/`. El directorio lleva punto, no guion.
 La preparación anterior produce la plantilla de release que usa este preset.
+
+## El motor WebGPU, que todavía no se entrega
+
+**La entrega sigue siendo WebGL2.** El motor WebGPU se construye y se exporta aparte, a mano, y no
+publica nada. Ni `desplegar.yml`, ni `.godot-version`, ni el renderizador de `project.godot`
+cambian por él. Cambiar la entrega es una decisión de una persona.
+
+| Qué | Dónde |
+|---|---|
+| La receta: commit del fork, SDK y opciones | [`.github/patches/godot-webgpu-compilacion.json`](../../.github/patches/godot-webgpu-compilacion.json) |
+| Los cambios nuestros sobre el fork | [`.github/patches/godot-webgpu.patch`](../../.github/patches/godot-webgpu.patch) |
+| Compilar la plantilla y el editor | [`.github/scripts/preparar_motor_webgpu.py`](../../.github/scripts/preparar_motor_webgpu.py) |
+| Exportar el juego con ese motor | [`.github/scripts/exportar_webgpu.py`](../../.github/scripts/exportar_webgpu.py) |
+| La página que elige entre WebGPU y WebGL2 | [`.github/webgpu/elegir_motor.html`](../../.github/webgpu/elegir_motor.html) |
+| El workflow manual | [`.github/workflows/construir-webgpu.yml`](../../.github/workflows/construir-webgpu.yml) |
+
+**La fuente no vive en este repositorio ni en uno nuestro.** Es el fork de Shane Gadsby
+(`Shane-Gadsby/godotwebgpu`), fijado por commit y por la huella de su ZIP. El parche se aplica
+encima. Publicar el motor en un repositorio propio lo decide el usuario. Si el parche se edita, se
+regenera desde el repositorio del motor:
+
+```bash
+python .github/scripts/preparar_motor_webgpu.py --regenerar <repo-del-motor>
+```
+
+### Cómo se reconstruye
+
+```bash
+python .github/scripts/preparar_motor_webgpu.py            # la plantilla web, en build/templates/
+python .github/scripts/preparar_motor_webgpu.py --editor   # el editor de Linux, en build/godot-webgpu/editor/
+GODOT_WEBGPU_BIN=<editor> xvfb-run -a python .github/scripts/exportar_webgpu.py <carpeta-nueva>
+```
+
+La plantilla y el editor tienen que salir **del mismo árbol**. El hash de versión del motor entra
+en la clave de cada sombreador que el export hornea. Con dos hashes distintos, el paquete de
+sombreadores no coincide con ninguno y el navegador los compila todos al cargar. El motor avisa en
+la consola. Para usar un editor ya compilado de otro commit, la plantilla se compila con
+`GODOT_VERSION_HASH_OVERRIDE=<hash del editor>`.
+
+**En Windows sin MSVC ni g++** no se compilan las herramientas nativas. Se usan las ya hechas:
+
+```bash
+python .github/scripts/preparar_motor_webgpu.py --herramientas <carpeta con glslangValidator y wgsl_convert_cli>
+```
+
+### Qué cambia el parche
+
+- **Las mallas conservan sus datos** en la web. Antes, leerlas de forma síncrona devolvía vacío
+  hasta que llegaba la lectura de la GPU, y una malla que nunca se dibuja no la recibe.
+  `Mesh.surface_get_arrays()` y `MeshDataTool` vuelven a ser síncronos.
+- **El `MultiMesh` conserva el último buffer** que recibió, por la misma razón. La interpolación
+  de física lo lee y lo vuelve a escribir.
+- **Los arreglos de texturas comprimidos** se empaquetan con el paso que el driver lee. Sin esto,
+  el atlas de lightmap (BC6H, cuatro capas) dejaba el piso y el fondo del almacén en negro.
+- **`tick()` y `pre_draw()` del servidor de render** van al hilo de render. Sin esto, con hilos, la
+  interpolación de física escribía desde el hilo equivocado y el juego no llegaba al menú.
+- **El HTML de la plantilla** respeta el tamaño de canvas del preset. El del fork lo fuerza fijo,
+  con barras negras. Sólo la variante con hilo de render propio conserva el canvas fijo, porque su
+  canvas no sigue a la ventana.
+- **El build reutiliza `wgsl_convert_cli`** si ya existe, y `GODOT_VERSION_HASH_OVERRIDE` fija el
+  hash de versión.
+
+### Lo que el exportador hace por vos
+
+- **Trabaja en una copia aislada** del último commit. El árbol del juego sigue en Godot 4.7.2 y no
+  mezcla su caché de importación con la del 4.8.
+- **Escribe el renderizador en la copia.** El editor borra de `project.godot` la línea
+  `renderer/rendering_method` cuando vale `forward_plus`, el valor por defecto. Quien alterna
+  renderizadores en una copia sin saberlo prueba siempre Forward+.
+- **Saca `addons/godot_mcp/commands`.** El preset ya lo excluye del paquete, pero el horneador lee
+  todos los scripts. Al encontrar `sdfgi_enabled` ahí, horneaba las variantes de SDFGI de
+  Forward+. El `.shaders.pck` salía con 112 MB más.
+- **Exporta con ventana.** `--headless` no hornea sombreadores. En Linux sin pantalla alcanza con
+  Xvfb y Vulkan por software.
+- **Arma el paquete del mapa del corte** con el mismo editor. Sus texturas se importan con el
+  motor 4.8, y no sirven las del 4.7.2.
+
+### Cómo se publicaría
+
+La página `elegir_motor.html` va en la raíz y manda a `webgpu/` o a `webgl2/`, con la consulta
+intacta. Decide antes de bajar nada: pide el adaptador, comprueba `texture-compression-bc` y
+crea un dispositivo. Cualquier falla manda a WebGL2. `?motor=webgl2` o `?motor=webgpu` fuerzan la
+elección.
+
+Cada carpeta lleva su `vercel.json` aparte, porque los paquetes viajan comprimidos y el
+`Content-Encoding` va por ruta. Con la raíz en dos carpetas, las rutas de `vercel.json` cambian a
+`/webgl2/index.pck`, `/webgpu/index.pck`, `/webgpu/index.shaders.pck` y los dos
+`mapa_del_corte.pck`. Los verificadores de despliegue leen la raíz. Hay que enseñarles las dos
+carpetas antes de publicar así.
+
+### Lo que no se probó en una CI real
+
+El workflow `construir-webgpu.yml` compila la plantilla y el editor y exporta con Xvfb y lavapipe.
+**No corrió en GitHub Actions**: no se puede lanzar un workflow manual que todavía no está en la
+rama por defecto. Lo que sí se corrió: el parche aplica sobre el ZIP de la receta con sus huellas,
+y la plantilla y el exportador salen de las mismas funciones que usa el workflow, en Windows.
+Lo que falta mirar en la primera corrida es el tiempo del editor de Linux y que lavapipe alcance
+para hornear.
