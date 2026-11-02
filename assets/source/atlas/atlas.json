@@ -7,7 +7,7 @@
    "ancho": 3264,
    "alto": 3088,
    "formato": "bc1",
-   "huella": "c083479fa8618b88389851e96ad74f94b975d2108676b9986f9f9505628c97aa",
+   "huella": "c1cf1ce0f9aa823e43ca6db59f47a38ae41303d2284d25c10652619888e8435c",
    "entradas": [
     {
      "ruta": "source/textures/props/jabón liquido amarillo.png",
@@ -101,7 +101,7 @@
      "ruta": "source/products-textured/galletitas/pepito.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "2fbb14e91a70fd4613be1fe1a22790a253a63e1ccb58f2f724a89a111222e631",
+     "huella": "37ab9c90e6974264125cc75970cc6daa000f6d14129c9268f3432a10bef4d554",
      "x": 1104,
      "y": 1616
     },
@@ -208,7 +208,7 @@
    "ancho": 1088,
    "alto": 2912,
    "formato": "bc3",
-   "huella": "bbe9a54c4d3f16e956db0e710f41658941ff104e939e4875783496b747e9b856",
+   "huella": "5ed9f35d10f1d7d090f636d933e81552bdbeca18e4ed7253c4088fe95855c04c",
    "entradas": [
     {
      "ruta": "source/products-cam/amargadito/amargadito completo.png",
@@ -285,8 +285,8 @@
     {
      "ruta": "source/products-cam/NUEVOS 22-9/Mayonchis/mayonchis@300x.png",
      "ancho": 512,
-     "alto": 331,
-     "huella": "4a8e17915cac5e4f292147c3fa4217c7183af2174ef008dc5301b4728e0c7115",
+     "alto": 330,
+     "huella": "c0b04ac42c21fe3c07bdda70f2745c0aa8621d46daefb56f975abbb11f1245f3",
      "x": 560,
      "y": 1888
     },
@@ -329,7 +329,7 @@
    "ancho": 2720,
    "alto": 3808,
    "formato": "bc1",
-   "huella": "f050bc3b9d1c2487dca32d561be948c7e7671f02bb055c97cb67eafa8556c14d",
+   "huella": "e87ba71d2bc390ba32b73677f01cacd16fb9dd9342f72257ec5f10ea0f5792a8",
    "entradas": [
     {
      "ruta": "source/boxes/actroncito.png",
@@ -527,7 +527,7 @@
      "ruta": "source/boxes/pepitos.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "802c85ac03acd7e4c3533b9e5283b290d5c1b596a32382429982abb75cc33c1b",
+     "huella": "b67a224d7bdb3d10f26a64b3cfee4a5206649c524c14e4124dcda3d380f09f8b",
      "x": 2192,
      "y": 2192
     },
