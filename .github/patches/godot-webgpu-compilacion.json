@@ -1,0 +1,85 @@
+{
+  "version_del_motor": "4.8.dev",
+  "fuente_zip_sha256": "df7ae7454bd8021bf5eca8ea25632fe54d2420ee69fde9d3a73253c28165d5f6",
+  "emscripten": "6.0.9",
+  "emsdk_zip_sha256": "85924fefaf327115bbc768b6181895200d571284a3dddea65ec2137066969698",
+  "scons": "4.9.1",
+  "commit_del_motor": "c4b5f43ebb1875ab6fb1881aa66c4185e0c3976f",
+  "fuente": "https://github.com/Shane-Gadsby/godotwebgpu",
+  "parches": [
+    "godot-webgpu.patch"
+  ],
+  "opciones": [
+    "platform=web",
+    "target=template_release",
+    "threads=no",
+    "dlink_enabled=no",
+    "webgpu=yes",
+    "opengl3=no",
+    "optimize=size",
+    "lto=full",
+    "module_text_server_adv_enabled=no",
+    "module_text_server_fb_enabled=yes",
+    "disable_physics_2d=yes",
+    "disable_navigation_2d=yes",
+    "disable_xr=yes",
+    "minizip=no",
+    "module_astcenc_enabled=no",
+    "module_basis_universal_enabled=no",
+    "module_bmp_enabled=no",
+    "module_csg_enabled=no",
+    "module_dds_enabled=no",
+    "module_enet_enabled=no",
+    "module_etcpak_enabled=no",
+    "module_fbx_enabled=no",
+    "module_gltf_enabled=no",
+    "module_godot_physics_2d_enabled=no",
+    "module_godot_physics_3d_enabled=no",
+    "module_gridmap_enabled=no",
+    "module_hdr_enabled=no",
+    "module_interactive_music_enabled=no",
+    "module_jpg_enabled=no",
+    "module_jsonrpc_enabled=no",
+    "module_ktx_enabled=no",
+    "module_meshoptimizer_enabled=no",
+    "module_mobile_vr_enabled=no",
+    "module_mp3_enabled=no",
+    "module_msdfgen_enabled=no",
+    "module_multiplayer_enabled=no",
+    "module_navigation_2d_enabled=no",
+    "module_noise_enabled=no",
+    "module_regex_enabled=no",
+    "module_theora_enabled=no",
+    "module_tga_enabled=no",
+    "module_tinyexr_enabled=no",
+    "module_upnp_enabled=no",
+    "module_vhacd_enabled=no",
+    "module_visual_shader_enabled=no",
+    "module_webrtc_enabled=no",
+    "module_websocket_enabled=no",
+    "module_webxr_enabled=no",
+    "module_zip_enabled=no"
+  ],
+  "archivos": {
+    "drivers/webgpu/wgsl_precompile.py": {
+      "original_sha256": "4d9120443d9140eb5a1a7840460685e40c5a65da207d1e4d629c7c898a1ef49e",
+      "modificado_sha256": "3294a18974d5c292f1f37179b7f32a5b5bbafd2e4d310ad83cbf132d72f88a2d"
+    },
+    "methods.py": {
+      "original_sha256": "918a21ac28d8b0bf049005a98fe60dc403ab75e989438d497195b18efe824705",
+      "modificado_sha256": "2362da6ed6059534add36105cad585df5c23985d328cbc185c31e336897519f0"
+    },
+    "servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp": {
+      "original_sha256": "ed9a5226a2e637c473e08ebb5601d484c45dd237aebee4d27a052b09cd8e2e36",
+      "modificado_sha256": "18a4fc627e2ec6adb2ff57eb6647d15116591724a51573306bd0a3ff24e9cfb8"
+    },
+    "servers/rendering/renderer_rd/storage_rd/mesh_storage.h": {
+      "original_sha256": "b7d2c4ae4668fcfca2d85ae1cc72a920c9f0d59a03b96e576aca6a94a7e30b14",
+      "modificado_sha256": "07c66c390df81ccd79e9bceebd94e4d4332e32216ff5d07ac483c15d250716a6"
+    },
+    "servers/rendering/rendering_device.cpp": {
+      "original_sha256": "f22b1a54e0c0ec769b6258c7182590948825005e9ce5525178f3df8bea1fde85",
+      "modificado_sha256": "6f8cec4c63c466b51b26a33ec0dda36db4e41f833f7298e41e6109ee7fefa7d0"
+    }
+  }
+}

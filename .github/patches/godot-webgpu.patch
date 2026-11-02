@@ -1,0 +1,270 @@
+diff --git a/drivers/webgpu/wgsl_precompile.py b/drivers/webgpu/wgsl_precompile.py
+index a76433affc..90ffd8ff0c 100644
+--- a/drivers/webgpu/wgsl_precompile.py
++++ b/drivers/webgpu/wgsl_precompile.py
+@@ -1295,6 +1295,12 @@ def build_wgsl_precompiled(target, source, env):
+         print("[WGSL Precompile] ERROR: wgsl_cli/build.sh not found", file=sys.stderr)
+         sys.exit(1)
+ 
++    cli = os.path.join(repo_root, "bin", "wgsl_convert_cli" + (".exe" if os.name == "nt" else ""))
++    if os.path.isfile(cli):
++        print("[WGSL Precompile] Using the existing " + cli)
++        precompile_wgsl(repo_root, output, env.get("GLSLANG", "glslangValidator"))
++        return
++
+     print("[WGSL Precompile] Building wgsl_convert_cli...")
+     result = subprocess.run(
+         ["bash", build_script],
+diff --git a/methods.py b/methods.py
+index 8a349efb59..a52027c7f7 100644
+--- a/methods.py
++++ b/methods.py
+@@ -206,6 +206,10 @@ def get_git_info():
+         else:
+             git_hash = head
+ 
++    # The baked shader cache is keyed on this hash, so an editor and a template built from different trees only
++    # agree if the hash is pinned: GODOT_VERSION_HASH_OVERRIDE replaces it.
++    git_hash = os.environ.get("GODOT_VERSION_HASH_OVERRIDE", git_hash)
++
+     # Get the UNIX timestamp of the build commit.
+     git_timestamp = 0
+     if os.path.exists(".git"):
+diff --git a/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp b/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp
+index 27c4f1f6de..3b8f31f2a5 100644
+--- a/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp
++++ b/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp
+@@ -613,6 +613,10 @@ void MeshStorage::mesh_add_surface(RID p_mesh, const RenderingServerTypes::Surfa
+ 		s->blend_shape_buffer_size = new_surface.blend_shape_data.size();
+ 	}
+ 
++#ifdef WEB_ENABLED
++	s->cpu_data = new_surface;
++#endif
++
+ 	if (use_as_storage) {
+ 		Vector<RD::Uniform> uniforms;
+ 		{
+@@ -745,6 +749,9 @@ void MeshStorage::mesh_surface_update_vertex_region(RID p_mesh, int p_surface, i
+ 	const uint8_t *r = p_data.ptr();
+ 
+ 	RD::get_singleton()->buffer_update(mesh->surfaces[p_surface]->vertex_buffer, p_offset, data_size, r);
++#ifdef WEB_ENABLED
++	_mesh_surface_update_cpu_data(mesh->surfaces[p_surface]->cpu_data.vertex_data, p_offset, p_data);
++#endif
+ }
+ 
+ void MeshStorage::mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+@@ -758,6 +765,9 @@ void MeshStorage::mesh_surface_update_attribute_region(RID p_mesh, int p_surface
+ 	const uint8_t *r = p_data.ptr();
+ 
+ 	RD::get_singleton()->buffer_update(mesh->surfaces[p_surface]->attribute_buffer, p_offset, data_size, r);
++#ifdef WEB_ENABLED
++	_mesh_surface_update_cpu_data(mesh->surfaces[p_surface]->cpu_data.attribute_data, p_offset, p_data);
++#endif
+ }
+ 
+ void MeshStorage::mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+@@ -771,6 +781,9 @@ void MeshStorage::mesh_surface_update_skin_region(RID p_mesh, int p_surface, int
+ 	const uint8_t *r = p_data.ptr();
+ 
+ 	RD::get_singleton()->buffer_update(mesh->surfaces[p_surface]->skin_buffer, p_offset, data_size, r);
++#ifdef WEB_ENABLED
++	_mesh_surface_update_cpu_data(mesh->surfaces[p_surface]->cpu_data.skin_data, p_offset, p_data);
++#endif
+ }
+ 
+ void RendererRD::MeshStorage::mesh_surface_update_index_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+@@ -784,6 +797,9 @@ void RendererRD::MeshStorage::mesh_surface_update_index_region(RID p_mesh, int p
+ 	const uint8_t *r = p_data.ptr();
+ 
+ 	RD::get_singleton()->buffer_update(mesh->surfaces[p_surface]->index_buffer, p_offset, data_size, r);
++#ifdef WEB_ENABLED
++	_mesh_surface_update_cpu_data(mesh->surfaces[p_surface]->cpu_data.index_data, p_offset, p_data);
++#endif
+ }
+ 
+ RID MeshStorage::mesh_surface_get_vertex_buffer_rd_rid(RID p_mesh, int p_surface) const {
+@@ -832,6 +848,15 @@ RID MeshStorage::mesh_surface_get_material(RID p_mesh, int p_surface) const {
+ 	return mesh->surfaces[p_surface]->material;
+ }
+ 
++#ifdef WEB_ENABLED
++void MeshStorage::_mesh_surface_update_cpu_data(Vector<uint8_t> &r_data, uint32_t p_offset, const Vector<uint8_t> &p_update) {
++	if (r_data.is_empty() || p_offset + (uint64_t)p_update.size() > (uint64_t)r_data.size()) {
++		return;
++	}
++	memcpy(r_data.ptrw() + p_offset, p_update.ptr(), p_update.size());
++}
++#endif
++
+ RenderingServerTypes::SurfaceData MeshStorage::mesh_get_surface(RID p_mesh, int p_surface) const {
+ 	Mesh *mesh = mesh_owner.get_or_null(p_mesh);
+ 	ERR_FAIL_NULL_V(mesh, RenderingServerTypes::SurfaceData());
+@@ -839,6 +864,10 @@ RenderingServerTypes::SurfaceData MeshStorage::mesh_get_surface(RID p_mesh, int
+ 
+ 	Mesh::Surface &s = *mesh->surfaces[p_surface];
+ 
++#ifdef WEB_ENABLED
++	return s.cpu_data;
++#else
++
+ 	// On the web, a first synchronous read of a GPU buffer returns an empty array until its asynchronous readback has
+ 	// arrived (work task 81). Each buffer is read back on its own, so the arrays below could come back partly filled;
+ 	// callers index them by vertex and index count, so the surface is returned with every array empty unless all of
+@@ -895,6 +924,7 @@ RenderingServerTypes::SurfaceData MeshStorage::mesh_get_surface(RID p_mesh, int
+ 	}
+ 
+ 	return sd;
++#endif
+ }
+ 
+ int MeshStorage::mesh_get_surface_count(RID p_mesh) const {
+@@ -1798,6 +1828,9 @@ void MeshStorage::_multimesh_allocate_data(RID p_multimesh, int p_instances, RSE
+ 
+ 	//print_line("allocate, elements: " + itos(p_instances) + " 2D: " + itos(p_transform_format == RSE::MULTIMESH_TRANSFORM_2D) + " colors " + itos(multimesh->uses_colors) + " data " + itos(multimesh->uses_custom_data) + " stride " + itos(multimesh->stride_cache) + " total size " + itos(multimesh->stride_cache * multimesh->instances));
+ 	multimesh->data_cache = Vector<float>();
++#ifdef WEB_ENABLED
++	multimesh->cpu_buffer = Vector<float>();
++#endif
+ 	multimesh->aabb = AABB();
+ 	multimesh->aabb_dirty = false;
+ 	multimesh->visible_instances = MIN(multimesh->visible_instances, multimesh->instances);
+@@ -1950,6 +1983,16 @@ void MeshStorage::_multimesh_make_local(MultiMesh *multimesh) const {
+ 	{
+ 		float *w = multimesh->data_cache.ptrw();
+ 
++#ifdef WEB_ENABLED
++		if (multimesh->buffer_set && !multimesh->cpu_buffer.is_empty()) {
++			const uint64_t copy_size = MIN((uint64_t)multimesh->cpu_buffer.size(), (uint64_t)buffer_size) * sizeof(float);
++			memcpy(w, multimesh->cpu_buffer.ptr(), copy_size);
++			if (copy_size < buffer_size * sizeof(float)) {
++				memset((uint8_t *)w + copy_size, 0, buffer_size * sizeof(float) - copy_size);
++			}
++			multimesh->cpu_buffer = Vector<float>();
++		} else
++#endif
+ 		if (multimesh->buffer_set) {
+ 			Vector<uint8_t> buffer = RD::get_singleton()->buffer_get_data(multimesh->buffer);
+ 			{
+@@ -2359,6 +2402,10 @@ void MeshStorage::_multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_
+ 		multimesh->buffer_set = true;
+ 	}
+ 
++#ifdef WEB_ENABLED
++	multimesh->cpu_buffer = multimesh->data_cache.size() ? Vector<float>() : p_buffer;
++#endif
++
+ 	if (multimesh->data_cache.size()) {
+ 		float *cache_data = multimesh->data_cache.ptrw();
+ 		memcpy(cache_data + (multimesh->motion_vectors_current_offset * multimesh->stride_cache), p_buffer.ptr(), p_buffer.size() * sizeof(float));
+@@ -2383,6 +2430,9 @@ RID MeshStorage::_multimesh_get_command_buffer_rd_rid(RID p_multimesh) const {
+ RID MeshStorage::_multimesh_get_buffer_rd_rid(RID p_multimesh) const {
+ 	MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
+ 	ERR_FAIL_NULL_V(multimesh, RID());
++#ifdef WEB_ENABLED
++	multimesh->cpu_buffer = Vector<float>();
++#endif
+ 	return multimesh->buffer;
+ }
+ 
+@@ -2399,7 +2449,15 @@ Vector<float> MeshStorage::_multimesh_get_buffer(RID p_multimesh) const {
+ 		if (multimesh->data_cache.size()) {
+ 			const uint8_t *r = (uint8_t *)multimesh->data_cache.ptr() + multimesh->motion_vectors_current_offset * multimesh->stride_cache * sizeof(float);
+ 			memcpy(w, r, ret.size() * sizeof(float));
+-		} else {
++		}
++#ifdef WEB_ENABLED
++		else if (multimesh->cpu_buffer.size() == ret.size()) {
++			return multimesh->cpu_buffer;
++		} else if (!multimesh->buffer_set) {
++			memset(w, 0, ret.size() * sizeof(float));
++		}
++#endif
++		else {
+ 			Vector<uint8_t> buffer = RD::get_singleton()->buffer_get_data(multimesh->buffer);
+ 			// Empty on the web until the asynchronous readback has arrived (work task 81): return an empty array too.
+ 			if ((uint64_t)buffer.size() < (uint64_t)(multimesh->motion_vectors_current_offset * multimesh->stride_cache + ret.size()) * sizeof(float)) {
+diff --git a/servers/rendering/renderer_rd/storage_rd/mesh_storage.h b/servers/rendering/renderer_rd/storage_rd/mesh_storage.h
+index 7fc3ac724d..ae10bc7c0b 100644
+--- a/servers/rendering/renderer_rd/storage_rd/mesh_storage.h
++++ b/servers/rendering/renderer_rd/storage_rd/mesh_storage.h
+@@ -151,6 +151,14 @@ private:
+ 			uint64_t particles_render_pass = 0;
+ 
+ 			RID uniform_set;
++
++#ifdef WEB_ENABLED
++			// On the web the GPU buffers can only be read back asynchronously, so a synchronous mesh_get_surface() would
++			// return nothing until the readback arrives, and never for a mesh that is not drawn. The surface keeps the data it
++			// was created with (shared with the caller's arrays, not duplicated) and mesh_get_surface() answers from it, as the
++			// native drivers do.
++			RenderingServerTypes::SurfaceData cpu_data;
++#endif
+ 		};
+ 
+ 		uint32_t blend_shape_count = 0;
+@@ -213,6 +221,9 @@ private:
+ 	RD::VertexFormatID _mesh_surface_generate_vertex_format(uint64_t p_surface_format, uint64_t p_input_mask, bool p_instanced_surface, bool p_input_motion_vectors, bool p_point_size_emulated, uint32_t &r_position_stride);
+ 	void _mesh_surface_generate_version_for_input_mask(Mesh::Surface::Version &v, Mesh::Surface *s, uint64_t p_input_mask, bool p_input_motion_vectors, bool p_point_size_emulated, MeshInstance::Surface *mis = nullptr, uint32_t p_current_buffer = 0, uint32_t p_previous_buffer = 0);
+ 	void _mesh_surface_clear(Mesh *p_mesh, int p_surface);
++#ifdef WEB_ENABLED
++	static void _mesh_surface_update_cpu_data(Vector<uint8_t> &r_data, uint32_t p_offset, const Vector<uint8_t> &p_update);
++#endif
+ 
+ 	void _mesh_instance_clear(MeshInstance *mi);
+ 	void _mesh_instance_add_surface(MeshInstance *mi, Mesh *mesh, uint32_t p_surface);
+@@ -247,6 +258,12 @@ private:
+ 		uint32_t custom_data_offset_cache = 0;
+ 
+ 		Vector<float> data_cache; //used if individual setting is used
++#ifdef WEB_ENABLED
++		// The GPU buffer can only be read back asynchronously on the web. Without a data_cache, this keeps the last
++		// buffer _multimesh_set_buffer() received (shared with the caller, not duplicated), so reading it back is
++		// synchronous. Empty when the GPU may hold something else (the buffer was handed out as an RID).
++		Vector<float> cpu_buffer;
++#endif
+ 		bool *data_cache_dirty_regions = nullptr;
+ 		uint32_t data_cache_dirty_region_count = 0;
+ 		bool *previous_data_cache_dirty_regions = nullptr;
+diff --git a/servers/rendering/rendering_device.cpp b/servers/rendering/rendering_device.cpp
+index f6db87d479..b51b80fa3b 100644
+--- a/servers/rendering/rendering_device.cpp
++++ b/servers/rendering/rendering_device.cpp
+@@ -2515,13 +2515,19 @@ Error RenderingDevice::_texture_initialize_layered(RID p_texture, const Vector<V
+ 	// is never read from. Saves N bytes of peak VRAM per upload + the
+ 	// queue serialization that came with the wasted allocation.
+ 	if (driver->api_trait_get(RDD::API_TRAIT_TEXTURE_INITIALIZE_DIRECT_WRITE)) {
+-		uint8_t *cpu_staging = (uint8_t *)memalloc(total_staging_size);
++		// The driver reads layer N at N * row pitch * rows per image. per_layer_byte_stride sizes a layer as
++		// pitch * height, which for a block-compressed format is block_h times more than its data.
++		const uint32_t rows_per_image = (block_h > 1) ? (height / block_h) : height;
++		const uint64_t direct_layer_stride = (uint64_t)pitch * rows_per_image;
++		const uint64_t direct_total_size = direct_layer_stride * (uint64_t)layer_count;
++		ERR_FAIL_COND_V(direct_total_size > UINT32_MAX, ERR_INVALID_PARAMETER);
++		uint8_t *cpu_staging = (uint8_t *)memalloc(direct_total_size);
+ 		ERR_FAIL_NULL_V(cpu_staging, ERR_OUT_OF_MEMORY);
+ 
+-		// Pack layers contiguously at per_layer_byte_stride.
++		// Pack layers contiguously at direct_layer_stride.
+ 		for (uint32_t layer_idx = 0; layer_idx < layer_count; layer_idx++) {
+ 			const uint8_t *read_ptr_layer = p_layers[layer_idx].ptr();
+-			uint8_t *write_ptr_layer = cpu_staging + (uint64_t)layer_idx * per_layer_byte_stride;
++			uint8_t *write_ptr_layer = cpu_staging + (uint64_t)layer_idx * direct_layer_stride;
+ 
+ 			if (gpu_pixel_size > 0 && block_w == 1 && block_h == 1) {
+ 				uint32_t src_pitch = width * pixel_size;
+@@ -2531,12 +2537,11 @@ Error RenderingDevice::_texture_initialize_layered(RID p_texture, const Vector<V
+ 			}
+ 		}
+ 
+-		uint32_t rows_per_image = (block_h > 1) ? (height / block_h) : height;
+ 		driver->texture_initialize_direct_layered(
+ 				texture->driver_id,
+ 				p_dst_layout,
+ 				cpu_staging,
+-				total_staging_size,
++				direct_total_size,
+ 				/*aligned_bpr*/ pitch,
+ 				rows_per_image,
+ 				width,
