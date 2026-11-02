@@ -49,6 +49,15 @@ OPCIONES = [
 ]
 
 
+# El editor que exporta con ventana y hornea los sombreadores. Sale del mismo árbol que la plantilla:
+# el hash de versión entra en la clave de cada sombreador horneado, y los dos tienen que coincidir.
+OPCIONES_DEL_EDITOR = [
+    "platform=linuxbsd", "target=editor", "arch=x86_64", "webgpu=yes", "optimize=speed",
+    "lto=none", "debug_symbols=no",
+]
+EDITOR = RAIZ / "build/godot-webgpu/editor/godot.linuxbsd.editor.x86_64"
+
+
 def _base():
     ruta = Path(__file__).with_name("preparar_plantilla_web.py")
     spec = importlib.util.spec_from_file_location("preparar_plantilla_web", ruta)
@@ -78,6 +87,15 @@ def validar_zip(ruta: Path) -> dict[str, str]:
             return {"wasm_sha256": sha256(wasm), "js_sha256": sha256(js)}
     except (OSError, zipfile.BadZipFile, RuntimeError) as error:
         raise ValueError(f"ZIP inválido: {error}") from error
+
+
+def archivos_del_parche(parches: list[Path]) -> set[str]:
+    archivos: set[str] = set()
+    for parche in parches:
+        for linea in parche.read_text(encoding="utf-8").splitlines():
+            if linea.startswith("+++ b/"):
+                archivos.add(linea.removeprefix("+++ b/"))
+    return archivos
 
 
 def regenerar(metadata: Path, repo_del_motor: Path) -> None:
@@ -112,7 +130,12 @@ def regenerar(metadata: Path, repo_del_motor: Path) -> None:
 
 def identidad(metadata: Path) -> tuple[dict, list[Path], dict]:
     datos = json.loads(metadata.read_text(encoding="utf-8"))
+    if datos["opciones"] != OPCIONES:
+        raise ValueError("opciones de compilación distintas de las del preparador")
     parches = [(metadata.parent / nombre).resolve() for nombre in datos["parches"]]
+    sin_par = sorted(archivos_del_parche(parches) ^ set(datos["archivos"]))
+    if sin_par:
+        raise ValueError(f"el parche y las huellas de la receta difieren en: {sin_par}")
     huellas = {p.name: sha256(p.read_bytes().replace(b"\r\n", b"\n")) for p in parches}
     huellas["preparador"] = sha256(Path(__file__).read_bytes().replace(b"\r\n", b"\n"))
     clave = {
@@ -175,6 +198,43 @@ def construir(datos: dict, parches: list[Path], trabajo: Path, jobs: int, herram
         return resultado
 
 
+def construir_editor(datos: dict, parches: list[Path], trabajo: Path, jobs: int, herramientas: Path | None) -> Path:
+    """Compila el editor de Linux desde la misma fuente y el mismo parche que la plantilla."""
+    trabajo.mkdir(parents=True, exist_ok=True)
+    fuente = trabajo / "fork.zip"
+    base._descargar(f"https://codeload.github.com/Shane-Gadsby/godotwebgpu/zip/{datos['commit_del_motor']}",
+                    fuente, datos["fuente_zip_sha256"])
+    with tempfile.TemporaryDirectory(prefix="editor-", dir=trabajo) as temporal:
+        motor = Path(temporal) / "motor"
+        base._extraer(fuente, motor)
+        log = trabajo / "compilacion-editor.log"
+        base._comprobar_huellas(motor, datos["archivos"], "original")
+        aplicar_parches(datos, parches, motor, log)
+        entorno = os.environ.copy()
+        if herramientas is not None:
+            entorno["PATH"] = str(herramientas) + os.pathsep + entorno["PATH"]
+            convertidor = herramientas / "wgsl_convert_cli"
+            if convertidor.is_file():
+                (motor / "bin").mkdir(exist_ok=True)
+                shutil.copyfile(convertidor, motor / "bin" / convertidor.name)
+        virtual = Path(temporal) / "venv"
+        base.venv.EnvBuilder(with_pip=True).create(virtual)
+        python = virtual / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+        base._ejecutar([str(python), "-m", "pip", "install", "--disable-pip-version-check",
+                        f"scons=={datos['scons']}"], motor, log, entorno)
+        cache = trabajo / "cache-de-scons-editor"
+        base._ejecutar([str(python), "-m", "SCons", *OPCIONES_DEL_EDITOR, f"cache_path={cache}",
+                        f"-j{jobs}"], motor, log, entorno)
+        binarios = list((motor / "bin").glob("godot.linuxbsd.editor.x86_64*"))
+        if len(binarios) != 1:
+            raise ValueError(f"la compilación no produjo un único editor: {binarios}")
+        resultado = trabajo / "editor" / binarios[0].name
+        resultado.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(binarios[0], resultado)
+        resultado.chmod(0o755)
+        return resultado
+
+
 def preparar(metadata: Path, destino: Path, comprobar: bool, jobs: int, herramientas: Path | None) -> dict:
     datos, parches, clave = identidad(metadata)
     manifiesto_ruta = destino.with_suffix(".manifiesto.json")
@@ -214,6 +274,8 @@ def main() -> int:
     parser.add_argument("--destino", type=Path, default=DESTINO)
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--comprobar", action="store_true")
+    parser.add_argument("--editor", action="store_true",
+                        help="compila el editor de Linux en vez de la plantilla")
     parser.add_argument("--regenerar", type=Path, metavar="REPO_DEL_MOTOR",
                         help="reescribe el parche y la receta desde el repositorio del motor")
     parser.add_argument("--herramientas", type=Path,
@@ -222,6 +284,14 @@ def main() -> int:
     try:
         if args.regenerar is not None:
             regenerar(args.metadata.resolve(), args.regenerar.resolve())
+            return 0
+        if args.editor:
+            datos, parches, _ = identidad(args.metadata.resolve())
+            editor = construir_editor(datos, parches, RAIZ / "build/godot-webgpu", args.jobs, args.herramientas)
+            EDITOR.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(editor, EDITOR)
+            EDITOR.chmod(0o755)
+            print(f"Editor WebGPU preparado: {EDITOR}", flush=True)
             return 0
         preparar(args.metadata.resolve(), args.destino.resolve(), args.comprobar, args.jobs,
                  args.herramientas)

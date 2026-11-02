@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No se fía</title>
+<style>
+html, body { margin: 0; height: 100%; background: #000; color: #fff; font-family: sans-serif; }
+body { display: flex; align-items: center; justify-content: center; }
+</style>
+</head>
+<body>
+<noscript><a href="webgl2/" style="color:#fff">Jugar</a></noscript>
+<script>
+// Elige el motor antes de bajar nada del juego. WebGPU sólo si el navegador puede crear un
+// dispositivo con la compresión de texturas BC, que es la que traen las texturas del paquete.
+// Cualquier otra cosa va a WebGL2, que anda en todos los navegadores que ya lo corrían.
+// `?motor=webgl2` o `?motor=webgpu` fuerzan la elección, para probar.
+const CARPETAS = { webgpu: 'webgpu/', webgl2: 'webgl2/' };
+const TEXTURAS = 'texture-compression-bc';
+
+async function puedeWebGPU() {
+	if (!('gpu' in navigator)) {
+		return false;
+	}
+	try {
+		const adaptador = await navigator.gpu.requestAdapter();
+		if (!adaptador || !adaptador.features.has(TEXTURAS)) {
+			return false;
+		}
+		const dispositivo = await adaptador.requestDevice({ requiredFeatures: [TEXTURAS] });
+		dispositivo.destroy();
+		return true;
+	} catch (error) {
+		return false;
+	}
+}
+
+async function elegir() {
+	const forzado = new URLSearchParams(location.search).get('motor');
+	if (forzado in CARPETAS) {
+		return forzado;
+	}
+	return (await puedeWebGPU()) ? 'webgpu' : 'webgl2';
+}
+
+elegir().then((motor) => {
+	console.log('[motor] ' + motor);
+	location.replace(CARPETAS[motor] + location.search + location.hash);
+});
+</script>
+</body>
+</html>
