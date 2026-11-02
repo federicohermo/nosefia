@@ -1,0 +1,134 @@
+{
+ "etiqueta": "P",
+ "url": "http://127.0.0.1:8121/pc/visor/bundle.html",
+ "sinLimite": true,
+ "esFirefox": false,
+ "cpu": 1,
+ "primera": {
+  "listo": true,
+  "hasta_listo_ms": 2182,
+  "marca": {
+   "modulo": 76,
+   "datos": 522,
+   "dispositivo": 567,
+   "geometria": 634,
+   "almacen": 2081
+  },
+  "almacen_ms": 2081,
+  "bytes": {
+   "pc/visor/bundle.html": 257,
+   "pc/dist/visor.js": 219564,
+   "datos/escena.json": 49085,
+   "datos/lightmap.json": 2074,
+   "datos/geometria.bin": 779006,
+   "datos/texturas.json": 5162,
+   "datos/texturas.bin": 19555279,
+   "datos/sondas.bin": 137165,
+   "datos/ltc.json": 192230,
+   "datos/vistas.json": 307
+  },
+  "bytes_total": 20940129
+ },
+ "vistas": {
+  "gondola": {
+   "cuadros": 5155,
+   "p50": 0.9,
+   "p95": 1.96,
+   "p99": 8.73,
+   "max": 11.7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "pasillo": {
+   "cuadros": 4913,
+   "p50": 0.91,
+   "p95": 1.83,
+   "p99": 10.45,
+   "max": 12.5,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "mostrador": {
+   "cuadros": 5218,
+   "p50": 0.56,
+   "p95": 1.99,
+   "p99": 18.25,
+   "max": 21.4,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "heladera": {
+   "cuadros": 4683,
+   "p50": 1.01,
+   "p95": 2.69,
+   "p99": 3.93,
+   "max": 36.4,
+   "mayores_33": 1,
+   "mayores_50": 0
+  },
+  "deposito": {
+   "cuadros": 9598,
+   "p50": 0.52,
+   "p95": 1.4,
+   "p99": 2.1,
+   "max": 3.9,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "bano": {
+   "cuadros": 9571,
+   "p50": 0.49,
+   "p95": 1.6,
+   "p99": 2.37,
+   "max": 4.4,
+   "mayores_33": 0,
+   "mayores_50": 0
+  }
+ },
+ "info": {
+  "backend": "webgl2",
+  "dibujos": 273,
+  "conAtlas": 188,
+  "luces": 25,
+  "materiales": 154,
+  "mallas": 293,
+  "texturas": 68,
+  "version": "2.23.3"
+ },
+ "recorrido_max_ms": 20.955000000001746,
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 130,
+  "crashpad-handler": 12,
+  "gpu-process": 236,
+  "utility": 73,
+  "renderer": 358
+ },
+ "memoria_mb": 809,
+ "segunda": {
+  "listo": true,
+  "hasta_listo_ms": 628,
+  "marca": {
+   "modulo": 107,
+   "datos": 447,
+   "dispositivo": 458,
+   "geometria": 514,
+   "almacen": 598
+  },
+  "almacen_ms": 598,
+  "bytes": {
+   "pc/visor/bundle.html (304)": 1,
+   "pc/dist/visor.js (304)": 1,
+   "datos/escena.json (304)": 1,
+   "datos/lightmap.json (304)": 1,
+   "datos/geometria.bin (304)": 1,
+   "datos/texturas.json (304)": 1,
+   "datos/texturas.bin (304)": 1,
+   "datos/sondas.bin (304)": 1,
+   "datos/ltc.json (304)": 1,
+   "datos/vistas.json (304)": 1
+  },
+  "bytes_total": 0
+ },
+ "errores": []
+}

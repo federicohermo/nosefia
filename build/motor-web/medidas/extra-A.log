@@ -1,0 +1,13 @@
+A ronda 1 primera
+{"etiqueta":"G1","menu":2174,"almacen":13047,"desde_clic":1730,"bytes_MB":45.4,"mem_MB":1654,"gondola_p50":6.94,"gondola_p95":6.98,"camina_p95":6.98,"camina_max":7.5}
+A ronda 1 segunda
+{"etiqueta":"G2","menu":1618,"almacen":11318,"desde_clic":1720,"bytes_MB":40.6,"mem_MB":1660,"gondola_p50":6.94,"gondola_p95":6.99,"camina_p95":6.98,"camina_max":7.1}
+A ronda 2 primera
+{"etiqueta":"G1","menu":2156,"almacen":12727,"desde_clic":1725,"bytes_MB":45.4,"mem_MB":1447,"gondola_p50":6.94,"gondola_p95":6.98,"camina_p95":6.98,"camina_max":7.2}
+A ronda 2 segunda
+{"etiqueta":"G2","menu":1558,"almacen":11030,"desde_clic":1733,"bytes_MB":40.6,"mem_MB":1622,"gondola_p50":6.94,"gondola_p95":6.98,"camina_p95":6.97,"camina_max":7.4}
+A ronda 3 primera
+{"etiqueta":"G1","menu":2089,"almacen":12549,"desde_clic":1729,"bytes_MB":45.4,"mem_MB":1668,"gondola_p50":6.94,"gondola_p95":6.98,"camina_p95":6.98,"camina_max":7}
+A ronda 3 segunda
+{"etiqueta":"G2","menu":1558,"almacen":10490,"desde_clic":1734,"bytes_MB":40.6,"mem_MB":1640,"gondola_p50":6.94,"gondola_p95":6.98,"camina_p95":6.98,"camina_max":7.1}
+FIN

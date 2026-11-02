@@ -1,0 +1,134 @@
+{
+ "etiqueta": "P",
+ "url": "http://127.0.0.1:8121/pc/visor/bundle.html",
+ "sinLimite": false,
+ "esFirefox": false,
+ "cpu": 1,
+ "primera": {
+  "listo": true,
+  "hasta_listo_ms": 2053,
+  "marca": {
+   "modulo": 62,
+   "datos": 465,
+   "dispositivo": 500,
+   "geometria": 569,
+   "almacen": 1950
+  },
+  "almacen_ms": 1950,
+  "bytes": {
+   "pc/visor/bundle.html": 257,
+   "pc/dist/visor.js": 219557,
+   "datos/escena.json": 49085,
+   "datos/lightmap.json": 2074,
+   "datos/geometria.bin": 779006,
+   "datos/texturas.json": 5162,
+   "datos/texturas.bin": 19555279,
+   "datos/sondas.bin": 137165,
+   "datos/ltc.json": 192230,
+   "datos/vistas.json": 307
+  },
+  "bytes_total": 20940122
+ },
+ "vistas": {
+  "gondola": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 6.98,
+   "p99": 7.01,
+   "max": 7.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "pasillo": {
+   "cuadros": 434,
+   "p50": 6.94,
+   "p95": 6.97,
+   "p99": 7,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "mostrador": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 6.99,
+   "p99": 7,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "heladera": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 6.99,
+   "p99": 7.02,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "deposito": {
+   "cuadros": 434,
+   "p50": 6.94,
+   "p95": 6.99,
+   "p99": 7.01,
+   "max": 7.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "bano": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 6.98,
+   "p99": 6.99,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  }
+ },
+ "info": {
+  "backend": "webgl2",
+  "dibujos": 273,
+  "conAtlas": 188,
+  "luces": 25,
+  "materiales": 154,
+  "mallas": 293,
+  "texturas": 68,
+  "version": "2.23.3"
+ },
+ "recorrido_max_ms": 7.039999999993597,
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 161,
+  "crashpad-handler": 12,
+  "gpu-process": 189,
+  "utility": 75,
+  "renderer": 300
+ },
+ "memoria_mb": 737,
+ "segunda": {
+  "listo": true,
+  "hasta_listo_ms": 610,
+  "marca": {
+   "modulo": 35,
+   "datos": 352,
+   "dispositivo": 363,
+   "geometria": 423,
+   "almacen": 508
+  },
+  "almacen_ms": 508,
+  "bytes": {
+   "pc/visor/bundle.html (304)": 1,
+   "pc/dist/visor.js (304)": 1,
+   "datos/escena.json (304)": 1,
+   "datos/lightmap.json (304)": 1,
+   "datos/geometria.bin (304)": 1,
+   "datos/texturas.json (304)": 1,
+   "datos/texturas.bin (304)": 1,
+   "datos/sondas.bin (304)": 1,
+   "datos/ltc.json (304)": 1,
+   "datos/vistas.json (304)": 1
+  },
+  "bytes_total": 0
+ },
+ "errores": []
+}

@@ -1,0 +1,22 @@
+{
+ "texturas_del_modelo": {
+  "archivos": 91,
+  "sin_comprimir_MiB": 45.48,
+  "brotli_MiB": 20.39
+ },
+ "lightmap": {
+  "archivos": 1,
+  "sin_comprimir_MiB": 16,
+  "brotli_MiB": 2.8
+ },
+ "escena_glb": {
+  "archivos": 1,
+  "sin_comprimir_MiB": 1.86,
+  "brotli_MiB": 1.8
+ },
+ "resto": {
+  "archivos": 1219,
+  "sin_comprimir_MiB": 31.24,
+  "brotli_MiB": null
+ }
+}

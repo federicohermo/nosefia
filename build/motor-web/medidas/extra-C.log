@@ -1,0 +1,37 @@
+C ronda 1 lado G
+{"etiqueta":"G","menu":2407,"almacen":22536,"desde_clic":1740,"bytes_MB":45.4,"mem_MB":0,"gondola_p50":6.94,"gondola_p95":6.96,"camina_p95":6.96,"camina_max":13.9}
+C ronda 1 lado T
+{"etiqueta":"T","almacen1":16201,"almacen2":8074,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 1 lado W
+{"etiqueta":"W","almacen1":27594,"almacen2":28658,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":13.9,"errores":0}
+C ronda 1 lado P
+{"etiqueta":"P","almacen1":3882,"almacen2":3495,"bytesMB":20,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 2 lado P
+{"etiqueta":"P","almacen1":3890,"almacen2":3452,"bytesMB":20,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 2 lado W
+{"etiqueta":"W","almacen1":26691,"almacen2":28851,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":13.9,"errores":0}
+C ronda 2 lado T
+{"etiqueta":"T","almacen1":15535,"almacen2":7940,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 2 lado G
+{"etiqueta":"G","menu":2127,"almacen":22602,"desde_clic":1735,"bytes_MB":45.4,"mem_MB":0,"gondola_p50":6.94,"gondola_p95":6.96,"camina_p95":6.96,"camina_max":13.9}
+C ronda 3 lado G
+{"etiqueta":"G","menu":2206,"almacen":22108,"desde_clic":1739,"bytes_MB":45.4,"mem_MB":0,"gondola_p50":6.94,"gondola_p95":6.96,"camina_p95":6.96,"camina_max":13.9}
+C ronda 3 lado T
+{"etiqueta":"T","almacen1":16045,"almacen2":7941,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 3 lado W
+{"etiqueta":"W","almacen1":27422,"almacen2":26633,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":13.9,"errores":0}
+C ronda 3 lado P
+{"etiqueta":"P","almacen1":3853,"almacen2":3409,"bytesMB":20,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 4 lado P
+{"etiqueta":"P","almacen1":3894,"almacen2":3444,"bytesMB":20,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 4 lado W
+{"etiqueta":"W","almacen1":26699,"almacen2":29053,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":13.9,"errores":0}
+C ronda 4 lado T
+{"etiqueta":"T","almacen1":15770,"almacen2":7733,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 5 lado T
+{"etiqueta":"T","almacen1":15559,"almacen2":8385,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+C ronda 5 lado W
+{"etiqueta":"W","almacen1":26632,"almacen2":26639,"bytesMB":19.8,"gondola_p50":6.94,"gondola_p95":13.9,"errores":0}
+C ronda 5 lado P
+{"etiqueta":"P","almacen1":3856,"almacen2":4173,"bytesMB":20,"gondola_p50":6.94,"gondola_p95":6.96,"errores":0}
+FIN

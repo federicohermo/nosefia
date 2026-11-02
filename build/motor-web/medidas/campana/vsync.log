@@ -1,0 +1,41 @@
+ronda 1 lado G 15:55:06
+{"etiqueta":"G","menu":2273,"almacen":13021,"desde_clic":1719,"bytes_MB":45.4,"mem_MB":1597,"gondola_p50":6.94,"gondola_p95":6.98,"camina_p95":6.99,"camina_max":7.1}
+ronda 1 lado T 15:56:17
+{"etiqueta":"T","almacen1":3614,"almacen2":3177,"bytesMB":19.8,"memMB":904,"gondola_p50":6.94,"gondola_p95":6.99,"errores":0}
+ronda 1 lado W 15:57:02
+{"etiqueta":"W","almacen1":9009,"almacen2":1959,"bytesMB":19.8,"memMB":780,"gondola_p50":6.94,"gondola_p95":6.99,"errores":0}
+ronda 1 lado P 15:57:59
+{"etiqueta":"P","almacen1":3688,"almacen2":503,"bytesMB":20,"memMB":745,"gondola_p50":6.94,"gondola_p95":6.98,"errores":0}
+ronda 2 lado P 15:58:42
+{"etiqueta":"P","almacen1":2002,"almacen2":523,"bytesMB":20,"memMB":736,"gondola_p50":6.94,"gondola_p95":6.99,"errores":0}
+ronda 2 lado W 15:59:24
+{"etiqueta":"W","almacen1":9055,"almacen2":1706,"bytesMB":19.8,"memMB":779,"gondola_p50":6.94,"gondola_p95":6.98,"errores":0}
+ronda 2 lado T 16:00:18
+{"etiqueta":"T","almacen1":3578,"almacen2":2865,"bytesMB":19.8,"memMB":909,"gondola_p50":6.94,"gondola_p95":6.99,"errores":0}
+ronda 2 lado G 16:01:04
+{"etiqueta":"G","menu":2100,"almacen":12658,"desde_clic":1729,"bytes_MB":45.4,"mem_MB":1609,"gondola_p50":6.94,"gondola_p95":6.99,"camina_p95":6.98,"camina_max":7.1}
+ronda 3 lado G 16:02:13
+{"etiqueta":"G","menu":2119,"almacen":12603,"desde_clic":1735,"bytes_MB":45.4,"mem_MB":1589,"gondola_p50":6.94,"gondola_p95":6.99,"camina_p95":6.98,"camina_max":7.1}
+ronda 3 lado T 16:03:23
+{"etiqueta":"T","almacen1":3849,"almacen2":2851,"bytesMB":19.8,"memMB":912,"gondola_p50":6.94,"gondola_p95":6.97,"errores":0}
+ronda 3 lado W 16:04:08
+{"etiqueta":"W","almacen1":8665,"almacen2":1750,"bytesMB":19.8,"memMB":776,"gondola_p50":6.94,"gondola_p95":6.98,"errores":0}
+ronda 3 lado P 16:05:03
+{"etiqueta":"P","almacen1":3796,"almacen2":507,"bytesMB":20,"memMB":731,"gondola_p50":6.94,"gondola_p95":6.98,"errores":0}
+ronda 4 lado P 16:05:46
+{"etiqueta":"P","almacen1":1996,"almacen2":534,"bytesMB":20,"memMB":734,"gondola_p50":6.94,"gondola_p95":6.99,"errores":0}
+ronda 4 lado W 16:06:28
+{"etiqueta":"W","almacen1":8625,"almacen2":1714,"bytesMB":19.8,"memMB":777,"gondola_p50":6.94,"gondola_p95":6.98,"errores":0}
+ronda 4 lado T 16:07:22
+{"etiqueta":"T","almacen1":3855,"almacen2":2915,"bytesMB":19.8,"memMB":914,"gondola_p50":6.94,"gondola_p95":6.98,"errores":0}
+ronda 4 lado G 16:08:08
+{"etiqueta":"G","menu":2100,"almacen":12593,"desde_clic":1726,"bytes_MB":45.4,"mem_MB":1601,"gondola_p50":6.94,"gondola_p95":6.98,"camina_p95":6.99,"camina_max":7.4}
+ronda 5 lado G 16:09:18
+{"etiqueta":"G","menu":2040,"almacen":12697,"desde_clic":1729,"bytes_MB":45.4,"mem_MB":1638,"gondola_p50":6.94,"gondola_p95":6.99,"camina_p95":6.98,"camina_max":7.1}
+ronda 5 lado T 16:10:27
+{"etiqueta":"T","almacen1":3766,"almacen2":2907,"bytesMB":19.8,"memMB":916,"gondola_p50":6.94,"gondola_p95":6.98,"errores":0}
+ronda 5 lado W 16:11:13
+{"etiqueta":"W","almacen1":8471,"almacen2":1708,"bytesMB":19.8,"memMB":770,"gondola_p50":6.94,"gondola_p95":7,"errores":0}
+ronda 5 lado P 16:12:08
+{"etiqueta":"P","almacen1":1950,"almacen2":508,"bytesMB":20,"memMB":737,"gondola_p50":6.94,"gondola_p95":6.98,"errores":0}
+FIN

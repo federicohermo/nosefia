@@ -1,0 +1,91 @@
+{
+ "etiqueta": "G2",
+ "url": "http://127.0.0.1:8123/index.html",
+ "sinLimite": false,
+ "cpu": 1,
+ "software": false,
+ "clicRapido": false,
+ "menu_ms": 1618,
+ "calentado_ms": 8625,
+ "clic_ms": 9598,
+ "almacen_ms": 11318,
+ "almacen_desde_clic_ms": 1720,
+ "vistas": {
+  "mostrador": {
+   "cuadros": 433,
+   "fps": 144,
+   "p50": 6.94,
+   "p95": 6.98,
+   "p99": 7,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  },
+  "gondola": {
+   "cuadros": 433,
+   "fps": 144,
+   "p50": 6.94,
+   "p95": 6.99,
+   "p99": 7.01,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  },
+  "pasillo": {
+   "cuadros": 433,
+   "fps": 144,
+   "p50": 6.94,
+   "p95": 6.98,
+   "p99": 7,
+   "max": 7.1,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  }
+ },
+ "caminando": {
+  "cuadros": 1731,
+  "p50": 6.94,
+  "p95": 6.98,
+  "p99": 7,
+  "max": 7.1,
+  "mayores_33": 0,
+  "mayores_50": 0,
+  "mayores_100": 0
+ },
+ "bytes_servidor": {
+  "index.html (304)": 1,
+  "index.png (304)": 1,
+  "index.js (304)": 9,
+  "index.pck": 42574184,
+  "index.wasm (304)": 1,
+  "index.icon.png (304)": 1,
+  "index.audio.position.worklet.js (304)": 1,
+  "index.audio.worklet.js (304)": 1
+ },
+ "bytes_red": {
+  "index.html": 323,
+  "index.png": 323,
+  "index.js": 329,
+  "index.icon.png": 323,
+  "index.wasm": 330,
+  "index.pck": 42574560,
+  "3a5777fd-9cb6-4f04-a393-35a5272fe017": 0
+ },
+ "bytes_total": 42574199,
+ "errores": [
+  "The root document of this element is not valid for pointer lock.",
+  "The root document of this element is not valid for pointer lock."
+ ],
+ "motor": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 163,
+  "gpu-process": 508,
+  "utility": 80,
+  "renderer": 909
+ },
+ "memoria_mb": 1660
+}

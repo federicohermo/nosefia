@@ -1,0 +1,91 @@
+{
+ "etiqueta": "godot",
+ "url": "http://127.0.0.1:8120/index.html?jornada=3",
+ "sinLimite": true,
+ "cpu": 1,
+ "software": false,
+ "clicRapido": false,
+ "menu_ms": 2199,
+ "calentado_ms": 18025,
+ "clic_ms": 18887,
+ "almacen_ms": 23304,
+ "almacen_desde_clic_ms": 4417,
+ "vistas": {
+  "mostrador": {
+   "cuadros": 3386,
+   "fps": 422.9,
+   "p50": 2.31,
+   "p95": 3.58,
+   "p99": 4.18,
+   "max": 5.3,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  },
+  "gondola": {
+   "cuadros": 1776,
+   "fps": 222,
+   "p50": 4.41,
+   "p95": 5.94,
+   "p99": 6.65,
+   "max": 14,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  },
+  "pasillo": {
+   "cuadros": 1672,
+   "fps": 208.8,
+   "p50": 4.7,
+   "p95": 6.47,
+   "p99": 7.67,
+   "max": 15.5,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  }
+ },
+ "caminando": {
+  "cuadros": 2586,
+  "p50": 4.58,
+  "p95": 6.26,
+  "p99": 7.04,
+  "max": 13.9,
+  "mayores_33": 0,
+  "mayores_50": 0,
+  "mayores_100": 0
+ },
+ "bytes_servidor": {
+  "index.html": 2082,
+  "index.png": 21443,
+  "index.js": 534186,
+  "index.wasm": 4919185,
+  "index.pck": 42574184,
+  "index.icon.png": 5765,
+  "index.audio.position.worklet.js": 895,
+  "index.audio.worklet.js": 1820
+ },
+ "bytes_red": {
+  "index.png": 21704,
+  "index.html": 2364,
+  "index.js": 59643,
+  "index.icon.png": 6025,
+  "index.pck": 42574485,
+  "9ed95557-7613-46f1-9495-0e85b7b538ac": 0
+ },
+ "bytes_total": 48059560,
+ "errores": [
+  "The root document of this element is not valid for pointer lock.",
+  "The root document of this element is not valid for pointer lock."
+ ],
+ "motor": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 166,
+  "crashpad-handler": 12,
+  "gpu-process": 532,
+  "utility": 80,
+  "renderer": 1159
+ },
+ "memoria_mb": 1949
+}

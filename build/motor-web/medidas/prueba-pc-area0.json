@@ -1,0 +1,109 @@
+{
+ "etiqueta": "pcarea0",
+ "url": "http://127.0.0.1:8121/pc/visor/bundle.html?area=0",
+ "sinLimite": false,
+ "esFirefox": false,
+ "cpu": 1,
+ "primera": {
+  "listo": true,
+  "hasta_listo_ms": 2089,
+  "marca": {
+   "modulo": 72,
+   "datos": 484,
+   "dispositivo": 518,
+   "geometria": 581,
+   "almacen": 1985
+  },
+  "almacen_ms": 1985,
+  "bytes": {
+   "pc/visor/bundle.html": 257,
+   "pc/dist/visor.js": 219646,
+   "datos/escena.json": 49085,
+   "datos/lightmap.json": 2074,
+   "datos/geometria.bin": 779006,
+   "datos/texturas.json": 5162,
+   "datos/texturas.bin": 19555279,
+   "datos/sondas.bin": 137165,
+   "datos/ltc.json": 192230,
+   "datos/vistas.json": 307
+  },
+  "bytes_total": 20940211
+ },
+ "vistas": {
+  "gondola": {
+   "cuadros": 289,
+   "p50": 6.94,
+   "p95": 6.98,
+   "p99": 7,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "pasillo": {
+   "cuadros": 289,
+   "p50": 6.94,
+   "p95": 6.97,
+   "p99": 6.99,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "mostrador": {
+   "cuadros": 289,
+   "p50": 6.94,
+   "p95": 6.99,
+   "p99": 7.01,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "heladera": {
+   "cuadros": 289,
+   "p50": 6.94,
+   "p95": 6.98,
+   "p99": 7.01,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "deposito": {
+   "cuadros": 289,
+   "p50": 6.94,
+   "p95": 6.97,
+   "p99": 6.99,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "bano": {
+   "cuadros": 289,
+   "p50": 6.94,
+   "p95": 6.98,
+   "p99": 6.99,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  }
+ },
+ "info": {
+  "backend": "webgl2",
+  "dibujos": 273,
+  "conAtlas": 188,
+  "luces": 16,
+  "materiales": 154,
+  "mallas": 293,
+  "texturas": 68,
+  "version": "2.23.3"
+ },
+ "recorrido_max_ms": 7.055000000000291,
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 157,
+  "crashpad-handler": 12,
+  "gpu-process": 191,
+  "utility": 74,
+  "renderer": 321
+ },
+ "memoria_mb": 755,
+ "errores": []
+}

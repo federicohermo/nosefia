@@ -252,6 +252,8 @@ function irradianciaSH(n, fila) {
 		.add(co(2).mul(2 * c2).mul(z));
 }
 
+const blanca = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1, THREE.RGBAFormat);
+blanca.needsUpdate = true;
 const materiales = new Map();
 const nodoDeNormal = (m) => {
 	// Los mapas de normales de Godot son RG (BC5): la z se reconstruye.
@@ -281,6 +283,14 @@ function crearMaterial(clave, baked) {
 
 	let mat;
 	if (baked) {
+		// Un solo grafo de nodos para todos los horneados (sólo cambian uniformes y texturas), así el
+		// motor enlaza un programa por variante de normal y no uno por material.
+		const colorU = uniform(new THREE.Color(color.r, color.g, color.b));
+		const albedoB = texture(albedoTex ?? blanca, uv()).rgb.mul(colorU);
+		const emisionTex = m.emision ? texturaBC(m.emision_textura, THREE.SRGBColorSpace) : null;
+		const emisionB = texture(emisionTex ?? blanca, uv()).rgb
+			.mul(uniform(new THREE.Color(...(m.emision ? m.emision_color.slice(0, 3) : [0, 0, 0]))))
+			.mul(m.emision ? m.emision_energia : 0);
 		// Godot: lightmap × albedo, sin luces en tiempo real.
 		mat = new THREE.MeshBasicNodeMaterial();
 		const rect = uniform(new THREE.Vector4());
@@ -298,8 +308,7 @@ function crearMaterial(clave, baked) {
 			// Las capas L1 guardan la dirección relativa a L0, en [0, 1] con el 0,5 como cero.
 			irr = l0.mul(float(0.282095).add(l1y.mul(normal.y).add(l1z.mul(normal.z)).add(l1x.mul(normal.x)).mul(0.32573)));
 		}
-		let salida = irr.max(0).mul(albedo).mul(K_LM * 1);
-		if (emision) salida = salida.add(emision);
+		const salida = irr.max(0).mul(albedoB).mul(K_LM).add(emisionB);
 		const capaDebug = ['l0', 'l1y', 'l1z', 'l1x'].indexOf(DEBUG);
 		mat.colorNode = capaDebug >= 0 ? texture(capasLM[capaDebug], uv1).rgb : DEBUG === 'lm' ? irr.max(0).mul(K_LM) : salida;
 	} else {
