@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03
 ---
 
 # Capacidad: los subtítulos
@@ -20,6 +20,7 @@ detener al jugador y sin entregar lo que el objeto esconde.
 |---|---|---|
 | **Línea de subtítulo** | la única línea de texto abajo al centro de la pantalla donde se lee lo que piensa el protagonista | leyenda, caption |
 | **Subtítulo** | el texto que muestra la línea de subtítulo en un instante | mensaje, aviso |
+| **Renglón** | cada tramo de un subtítulo entre dos saltos de línea. La línea de subtítulo puede tener varios | línea (es la del cuadro entero) |
 | **Pensamiento** | un subtítulo temporal: se ve entero un tiempo y después se desvanece | aviso, notificación |
 | **Texto al examinar** | lo que dice un objeto cuando se pide examinarlo. Sale de la ficha, no de la revelación | descripción, revelación |
 | **Examen** | el de `investigation`: lo que se lleva en la mano, delante de la cámara, hasta pulsar otra vez la tecla de examinar | observación, inspección |
@@ -208,19 +209,19 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Gesto | ID | Pensamiento |
 |---|---|---|
 | Tirar al contenedor algo que no es una bolsa de basura, un producto vencido, un ticket ni una pista | `MALA_IDEA` | Me parece que eso fue una mala idea… |
-| Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
+| Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | Enrique me pidió que no tirara las cajas<br>de productos, ni siquiera las vacías. |
 | Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Me parece que no debería tirar<br>los elementos de limpieza. |
-| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
-| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
+| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando<br>cosas por la ventana, me mata. |
+| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando…<br>Creo que no estoy usando el jabón correcto. |
 | Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
 | Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 5 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
 | Borrar la caca del techo del baño, en la jornada 6 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
-| Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
+| Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme.<br>Todavía me quedan tareas por completar. |
 
-El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
+El `<br>` de la tabla es un salto de renglón del subtítulo, tal como lo marca la ficha (BR-SUB-017).
 
 `CAJA_EN_EL_CONTENEDOR` y `UTIL_EN_EL_CONTENEDOR` DEBEN decidirse por lo que se intenta tirar y no
 por la tapa: con la tapa cerrada o girando piensan lo mismo que con la tapa abierta. Poético, aun en
@@ -270,6 +271,17 @@ cierre y mostrarse entonces. Recién al mostrarse cuenta como mostrado: si la jo
 se descarta y la partida sigue sin marca. Anotar otra pista con el pensamiento pendiente NO DEBE
 duplicarlo. SI otro subtítulo reemplaza al pensamiento ya mostrado, ENTONCES el pensamiento cuenta
 como mostrado y NO DEBE volver (BR-SUB-001). El aviso «¡NUEVA PISTA!» NO cambia.
+
+### BR-SUB-017 — Los renglones los marca la ficha
+
+El sistema DEBE cortar un subtítulo en renglones exactamente donde lo corta la ficha «Subtítulos»,
+y en ningún otro lugar. Un texto que la ficha no corta DEBE verse en un solo renglón. La línea de
+subtítulo NO DEBE tener un ancho fijo: cada renglón DEBE ocupar lo que mide, y el conjunto DEBE
+quedar centrado abajo (BR-SUB-001). SI un renglón no entra en el ancho de la ventana, ENTONCES el
+sistema DEBE cortarlo igual, para que no se salga de la pantalla. Vale para todo subtítulo,
+también el texto fijo del examen, que no tiene cortes en la ficha.
+
+El salto de renglón cuenta como un carácter para la duración (BR-SUB-004).
 
 ## Criterios de aceptación
 
@@ -502,6 +514,24 @@ otra con el celular abierto ENTONCES sigue habiendo uno solo pendiente; CUANDO s
 ENTONCES se muestra y recién ahí la partida queda marcada. DADO el pensamiento pendiente CUANDO
 cierra la jornada ENTONCES se descarta y la partida sigue sin marca. DADO el pensamiento visible
 CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
+
+### AC-SUB-028 — Los renglones de cada pensamiento *(verifica BR-SUB-017, BR-SUB-013, BR-SUB-014)*
+
+DADO cada pensamiento de la tabla de BR-SUB-013 y `MOPA_BERRETA` ENTONCES su texto tiene los
+renglones de la ficha: dos para `CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
+`POR_LA_VENTANA`, `JABON_EQUIVOCADO` y `PUERTA_CON_TAREAS_PENDIENTES`, y uno para cada uno de los
+demás. Ningún renglón queda vacío y el texto no empieza ni termina con un salto.
+
+### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
+
+DADO el HUD a 1920×1080 y a 1280×720 CUANDO se piensa cada pensamiento del AC-SUB-028 ENTONCES la
+línea muestra tantos renglones como la ficha, sin ningún corte de más, y queda centrada en el
+encuadre y en la mitad inferior.
+
+### AC-SUB-030 — Un renglón que no entra se corta *(verifica BR-SUB-017)*
+
+DADO el HUD a 1280×720 y a 1920×1080 CUANDO se piensa un texto de 300 caracteres sin saltos
+ENTONCES se ve en más de un renglón y ninguno sale de la ventana.
 
 ## No objetivos
 
