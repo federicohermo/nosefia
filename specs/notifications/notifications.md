@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-NTF
 status: ratified
 owner: por definir
-provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573; siete jornadas de #693
+provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573; siete jornadas de #693; salida con productos de #734
 ---
 
 # Capacidad: los avisos durante la noche
@@ -20,7 +20,7 @@ Los avisos acompañan esos sucesos sin cambiar su resultado.
 | Término | Significado acá | Evitar |
 |---|---|---|
 | **Notificación** | cartel breve con texto y símbolo de un suceso | ventana, diálogo |
-| **Tipo** | llegada, salida por cansancio, lectura fallida por renglones llenos, pista nueva, cierre próximo, tareas terminadas o salida vuelta a trabar | prioridad |
+| **Tipo** | llegada, salida por cansancio, salida por cansancio con productos dejados, lectura fallida por renglones llenos, pista nueva, cierre próximo, tareas terminadas o salida vuelta a trabar | prioridad |
 | **Visible** | tipo cuyo tiempo todavía no se agotó | historial |
 | **Comprador avisado** | la misma identidad que ya disparó su llegada durante el turno | mismo nombre |
 | **Pista nueva** | pista cuyo registro acepta investigación por primera vez y desbloquea una hipótesis | objeto revelado, objeto examinado |
@@ -85,7 +85,11 @@ y centrar verticalmente símbolo y texto, sin recortarlos al cambiar la resoluci
 ### BR-NTF-008 — El comprador que vence avisa su salida
 
 CUANDO una compra vence, el sistema DEBE mostrar «El cliente se cansó de esperar» una vez por
-identidad y jornada. DEBE usar la duración, pausa, orden y deduplicación de los demás avisos.
+identidad y jornada. SI el comprador ya había recibido al menos un producto, ENTONCES el
+sistema DEBE mostrar en su lugar «El cliente se cansó de esperar y dejó los productos», con el
+mismo símbolo y presentación. El ticket solo no cuenta como producto. Nunca salen los dos
+para la misma identidad y jornada.
+DEBE usar la duración, pausa, orden y deduplicación de los demás avisos.
 Una compra completa NO DEBE producirlo. El cierre DEBE olvidar las identidades de salida.
 
 ### BR-NTF-009 — La llegada espera a la conversación
@@ -248,6 +252,7 @@ DADO una compra vencida CUANDO se avisa la salida ENTONCES aparece su texto y s�
 Repetir esa identidad no renueva. A los 2,9 segundos sigue; a los 3,0 desaparece.
 La pausa conserva el resto. Otra identidad renueva el tipo sin duplicarlo ni renovar los otros.
 Cerrar y comenzar otra jornada permite avisar otra vez la misma identidad.
+Ambos textos de salida siguen estas reglas.
 
 ### AC-NTF-012 — Espera y primer clic *(verifica BR-NTF-009, BR-NTF-001, BR-NTF-006)*
 
@@ -258,10 +263,10 @@ cierre del turno la retiran. Una identidad distinta no puede ocultarla.
 
 ### AC-NTF-013 — Una línea y ancho según el contenido *(verifica BR-NTF-007)*
 
-DADO llegada, lectura fallida, cansancio y pista CUANDO se muestran a 1920 × 1080 y 1280 × 720
-ENTONCES cada texto ocupa una sola línea con la letra principal del tema, queda completo
-junto al símbolo y su cartel ajusta el ancho al contenido. Los cuatro comparten el borde
-derecho dentro de la pantalla; el mensaje más largo ocupa un cartel más ancho.
+DADO llegada, lectura fallida, cansancio, cansancio con productos y pista CUANDO se muestran a
+1920 × 1080 y 1280 × 720 ENTONCES cada texto ocupa una sola línea con la letra principal del
+tema, queda completo junto al símbolo y su cartel ajusta el ancho al contenido. Los cinco
+comparten el borde derecho dentro de la pantalla; el mensaje más largo ocupa un cartel más ancho.
 
 ### AC-NTF-014 — Registro nuevo, repetido y desconocido *(verifica BR-NTF-010)*
 
@@ -411,6 +416,18 @@ aviso. Los otros tipos conservan su orden y su tiempo restante durante la espera
 DADO un aviso de salida visible CUANDO se abre y se cierra la computadora sin cambiar el
 permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrearse al vencer.
 
+### AC-NTF-033 — Con productos dejados, el aviso largo *(verifica BR-NTF-008, BR-NTF-004)*
+
+DADO un comprador que recibió un producto CUANDO su compra vence ENTONCES aparece
+«EL CLIENTE SE CANSÓ DE ESPERAR Y DEJÓ LOS PRODUCTOS.» con el símbolo del aviso de cansancio y
+no aparece «EL CLIENTE SE CANSÓ DE ESPERAR.». DADO un comprador que no recibió nada, o sólo el
+ticket, CUANDO su compra vence ENTONCES aparece sólo el texto corto. DADO un comprador que
+recibió dos productos ENTONCES aparece un solo aviso. DADO una compra completa ENTONCES no
+aparece ninguno de los dos. DADO el aviso largo con 2,9 segundos consumidos ENTONCES sigue
+visible; al completar 3,0 desaparece. Repetir la misma identidad en la misma jornada no lo
+renueva, y cerrar permite avisar otra vez. Un comprador que dejó productos y otro que no
+dejaron nada, en la misma jornada, dejan dos avisos, uno de cada texto.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuándo llegan o se despachan compradores ni acepta lecturas.
@@ -420,7 +437,7 @@ permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrears
 
 ## Contratos
 
-- **Entrada:** identidad de quien llega o vence, motivo de lectura, confirmación de pista nueva
+- **Entrada:** identidad de quien llega o vence y si ya había recibido un producto, motivo de lectura, confirmación de pista nueva
   anotada por investigación, tiempo en ejecución, tiempo restante de ficción del turno abierto,
   salida habilitada o vuelta a trabar, computadora abierta o cerrada y cierre.
 - **Salida:** tipos visibles ordenados, texto y símbolo correspondientes.

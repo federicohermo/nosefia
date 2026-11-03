@@ -34,6 +34,8 @@ static func datos(partida: Partida) -> Dictionary:
 				partida.datos_de_devoluciones(),
 				PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA):
 				partida.mopa_secada(),
+				PartidaSerializada.clave(PartidaSerializada.Campo.PRIMERA_PISTA_PENSADA):
+				partida.primera_pista_pensada,
 				PartidaSerializada.clave(PartidaSerializada.Campo.EXPEDIENTE):
 				Array(partida.expediente.identidades()),
 				PartidaSerializada.clave(PartidaSerializada.Campo.NOTAS): notas,
