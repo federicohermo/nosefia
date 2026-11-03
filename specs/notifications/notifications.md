@@ -121,7 +121,7 @@ CUANDO el turno está abierto y el tiempo restante alcanza o atraviesa el umbral
 las 07:00 de ficción, el sistema DEBE mostrar un aviso de cierre próximo una sola vez en esa
 jornada. El umbral DEBE derivarse de la apertura y duración de BR-SHF-001: duración menos
 el intervalo desde la apertura hasta las 07:00 del día siguiente. Con el turno vigente,
-equivale a una hora de ficción restante, no a la hora del equipo ni al texto del reloj de mesa.
+equivale a una hora de ficción restante, no a la hora del equipo ni al texto del reloj de pared.
 Antes del umbral, con tiempo no positivo o con turno cerrado NO DEBE dispararse.
 
 Una primera entrada ya dentro de la última hora con turno abierto DEBE dispararlo. Un salto
@@ -130,7 +130,7 @@ Las entradas siguientes NO DEBEN repetirlo ni renovarlo, incluso después de que
 El cierre DEBE vaciarlo y suprimir un disparo si ese avance llega directamente al final del
 turno. Abrir la noche siguiente DEBE habilitar un nuevo disparo, en cualquiera de las cinco
 jornadas. Retomar desde el inicio de la jornada DEBE habilitarlo sin guardar una bandera propia.
-La falla del reloj de mesa NO DEBE impedir el aviso.
+El reloj detenido de la sexta noche NO DEBE impedir el aviso.
 
 ### BR-NTF-013 — El cierre próximo comunica una hora restante
 
@@ -322,12 +322,12 @@ de la última hora ENTONCES no reaparece. DADO un avance desde 06:59 hasta el ci
 ENTONCES la pila termina vacía y no aparece sobre la devolución. CUANDO comienza la noche
 siguiente, o se retoma esa jornada desde su inicio, ENTONCES puede avisar al alcanzar su umbral.
 
-### AC-NTF-023 — La pausa y el reloj averiado no cambian el disparador *(verifica BR-NTF-012, BR-NTF-013, BR-NTF-003)*
+### AC-NTF-023 — La pausa y el reloj detenido no cambian el disparador *(verifica BR-NTF-012, BR-NTF-013, BR-NTF-003)*
 
 DADO el turno justo antes del umbral CUANDO se pausa y pasan cuadros ENTONCES no consume
 tiempo ni dispara. DADO aviso con dos segundos consumidos CUANDO se pausa y reanuda
 ENTONCES conserva el segundo restante: 0,9 no lo retiran y completar 0,1 sí.
-DADO la jornada en que falla el reloj de mesa, con el display apagado CUANDO el turno
+DADO la jornada 6 con el reloj leyendo `20:58` CUANDO el turno
 alcanza las 07:00 ENTONCES llega exactamente un cierre próximo a la pila de avisos.
 
 ### AC-NTF-024 — Una hora legible sin tomar el clic *(verifica BR-NTF-013, BR-NTF-007)*
