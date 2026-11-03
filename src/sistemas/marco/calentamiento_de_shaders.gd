@@ -84,6 +84,13 @@ var _vistas: Array[Transform3D] = []
 ## compilaba la primera vez que aparecía: lo oculto, como el celular o la intro, y lo que va en
 ## un `SubViewport`, como el agua del baño, que no se actualiza mientras la escena está detenida.
 var _capa_2d: CanvasLayer
+## Cambia el local entre la luz de siempre y la del corte: el `bool` dice si queda a oscuras. La
+## oscuridad apaga luces y niebla, y con eso cambia el programa de casi todos los materiales. Sin
+## prepararla, los programas se enlazan al cortarse la luz y hasta entonces lo suyo no se dibuja.
+var _oscuridad := Callable()
+var _a_oscuras := false
+var _pasadas := 1
+var _pasadas_hechas := 0
 
 
 func _init() -> void:
@@ -96,6 +103,21 @@ func _ready() -> void:
 
 
 func calentar(escena: Node3D) -> void:
+	if escena.has_method("oscuridad_por_preparar"):
+		_oscuridad = escena.call("oscuridad_por_preparar")
+	_pasadas = 2 if _oscuridad.is_valid() else 1
+	_calentar_la_pasada(escena)
+
+
+## Entre noches, la escena ya tiene preparada la luz de siempre.
+func calentar_a_oscuras(escena: Node3D, oscuridad: Callable) -> void:
+	_oscuridad = oscuridad
+	_a_oscuras = true
+	_oscuridad.call(true)
+	_calentar_la_pasada(escena)
+
+
+func _calentar_la_pasada(escena: Node3D) -> void:
 	_escena = escena
 	_unificadas = unifica_variantes.call()
 	# Lo que la escena declara así se dibuja en su lugar, sin copias: sus variantes las prepara
@@ -227,6 +249,10 @@ func objetos_por_preparar() -> int:
 
 
 func progreso() -> float:
+	return (_pasadas_hechas + _progreso_de_la_pasada()) / _pasadas
+
+
+func _progreso_de_la_pasada() -> float:
 	var faltan := objetos_por_preparar()
 	var destapado := 1.0 - float(faltan) / maxi(_total, 1)
 	if not _con_cola or (faltan == 0 and _cola <= 0):
@@ -936,6 +962,7 @@ func _encuadrar(caja: AABB) -> void:
 
 
 func _terminar() -> void:
+	var escena := _escena
 	set_process(false)
 	_restaurar_escena()
 	if _solo_de.is_empty() and not _reflejos.is_empty():
@@ -950,12 +977,39 @@ func _terminar() -> void:
 		while programas_en_cola.call() > 0:
 			await get_tree().process_frame
 	_reflejos.clear()
+	if _oscuridad.is_valid() and not _a_oscuras:
+		_pasar_a_oscuras(escena)
+		return
+	_devolver_la_luz()
+	_pasadas_hechas = _pasadas - 1
 	terminado.emit()
+
+
+func _pasar_a_oscuras(escena: Node3D) -> void:
+	_pasadas_hechas = 1
+	_a_oscuras = true
+	_objetos.clear()
+	_ocultos.clear()
+	_luces.clear()
+	_vistos.clear()
+	_total = 0
+	_fin_del_destape = -1
+	_cola_al_destapar = 0
+	_contornos_listos = false
+	_oscuridad.call(true)
+	_calentar_la_pasada(escena)
+
+
+func _devolver_la_luz() -> void:
+	if _a_oscuras and _oscuridad.is_valid():
+		_oscuridad.call(false)
+	_a_oscuras = false
 
 
 func _exit_tree() -> void:
 	if _camara != null or not _reflejos.is_empty():
 		_restaurar_escena()
+	_devolver_la_luz()
 
 
 func _restaurar_escena() -> void:

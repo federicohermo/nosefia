@@ -366,7 +366,10 @@ func _sitios(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> Array
 			var impacto := espacio.intersect_ray(rayo)
 			if (
 				impacto.get("collider") == objetivo
-				and ojo.distance_to(impacto.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				and (
+					ReglasDelJugador.proximidad(ojo, impacto.position)
+					<= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				)
 			):
 				sitios.append(posicion)
 	return sitios

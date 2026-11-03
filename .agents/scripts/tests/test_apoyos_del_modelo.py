@@ -16,6 +16,12 @@ def prisma(x0, z0, x1, z1):
     return caras + [[(p[0], 0, p[2]) for p in cara] for cara in caras]
 
 
+def tetraedro(origen, lado):
+    a, b, c, d = [tuple(o + lado * e for o, e in zip(origen, eje))
+                  for eje in ((0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1))]
+    return [[a, c, b], [a, b, d], [a, d, c], [b, c, d]]
+
+
 def contiene_xz(puntos, x, z):
     a, b, c = puntos[:3]
     signos = [(q[0] - p[0]) * (z - p[2]) - (q[2] - p[2]) * (x - p[0])
@@ -123,6 +129,24 @@ class EscrituraAcotada(unittest.TestCase):
                 poner_compuesto('[gd_scene format=3]\n', 'mueble', 'Contorno', piezas, 8)
 
 
+class PiezasDeLaGondola(unittest.TestCase):
+    def test_cada_pieza_es_un_volumen_y_la_etiqueta_no_choca(self):
+        estante = tetraedro((0, 0, 0), 1)
+        etiqueta = [[(0, .5, 0), (.1, .5, 0), (.1, .6, 0)], [(0, .5, 0), (.1, .6, 0), (0, .6, 0)]]
+        tornillo = tetraedro((2, 2, 2), .01)
+        self.assertEqual(len(grupos_convexos(estante + etiqueta + tornillo)), 1)
+
+    def test_una_astilla_plana_pegada_a_una_pieza_entra_en_su_casco(self):
+        lateral = tetraedro((0, 0, 0), 1)
+        astilla = [[(0, 0, 0), (0, 0, -.2), (0, .1, -.1)]]
+        grupos = grupos_convexos(lateral + astilla)
+        self.assertEqual(len(grupos), 1)
+        self.assertIn((0.0, 0.0, -0.2), grupos[0])
+
+    def test_la_pata_de_una_gondola_tiene_volumen(self):
+        self.assertEqual(len(grupos_convexos(tetraedro((0, 0, 0), .045))), 1)
+
+
 class GeometriaVigente(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -130,14 +154,6 @@ class GeometriaVigente(unittest.TestCase):
         cls.mallas = mallas_del_glb(
             (cls.raiz / 'assets/models/SEPT_JUEGOS_PROTOTIPO.glb').read_bytes(),
             ['bano_riel_frontal', 'gondolanueva', 'gondolanueva2'])
-
-    def test_las_gondolas_iguales_generan_el_mismo_metal_volumetrico(self):
-        a = grupos_convexos(self.mallas['gondolanueva'])
-        b = grupos_convexos(self.mallas['gondolanueva2'])
-        self.assertGreater(len(a), 1, 'Un casco único volvería a rellenar el aire de la cabecera')
-        escena = '[gd_scene format=3]\n\n[node name="Estructura" type="Node3D"]\n'
-        self.assertEqual(poner_compuesto(escena, 'mueble', 'Contorno', a, 8),
-                         poner_compuesto(escena, 'mueble', 'Contorno', b, 8))
 
     def test_regenerar_el_modelo_dos_veces_conserva_la_escena_entera(self):
         escena = self.raiz / 'src/escenas/puestos/estructura_del_almacen.tscn'

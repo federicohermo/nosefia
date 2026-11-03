@@ -13,6 +13,19 @@ func _post_import(escena: Node) -> Object:
 	for malla: MeshInstance3D in escena.find_children("*", "MeshInstance3D", true, false):
 		if str(malla.name).begins_with("puerta_heladera_"):
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+		if (
+			str(malla.name).begins_with("exhibido_")
+			or str(malla.name).begins_with("salon_silla")
+			or str(malla.name).begins_with("estanteria_precios")
+		):
+			# Los productos de exhibición, el respaldo de las sillas y los portaprecios de la
+			# estantería son más finos que un texel del mapa de luz y se horneaban negros: toman
+			# la luz de las sondas, como la góndola.
+			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+		if str(malla.name).begins_with("board"):
+			# Despegado de la pared y con texeles de 20 cm, el corcho le horneaba a la pared cuñas
+			# de sombra que salían de sus esquinas.
+			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 		for i: int in malla.mesh.get_surface_count():
 			var material := malla.mesh.surface_get_material(i) as BaseMaterial3D
 			if material != null:
@@ -27,9 +40,18 @@ func _post_import(escena: Node) -> Object:
 					# El acabado negro pierde sus relieves con el tonemapeo del juego. Se calibra
 					# su respuesta al horneado conservando el atlas, sin una luz de apoyo.
 					material.albedo_color = Color(3.0, 3.0, 3.0, 1.0)
+				if material.resource_name == "TOPE | Publicidad":
+					# Un separador mide menos que un texel del mapa de luz y se horneaba negro.
+					# Toma la luz de las sondas, como los productos que tiene encima.
+					malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 				if material.resource_name == "local_ceramica":
 					# El piso satinado recoge reflejos difusos sin convertirse en un espejo.
 					material.roughness = 0.34
+				if material.resource_name == "MOSTRADOR | Mesada blanca":
+					# Las luces horneadas no dejan brillo: el de la mesada pulida sale de la sonda,
+					# que refleja los paneles del techo.
+					material.roughness = 0.1
+					material.metallic_specular = 0.8
 				if material.resource_name == "local_vidrio":
 					# Una sola cara por paño evita superponer transparencias y sombras opacas.
 					material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

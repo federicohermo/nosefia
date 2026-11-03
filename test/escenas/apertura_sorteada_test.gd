@@ -29,20 +29,6 @@ func _casilleros_reponibles(
 	return casilleros
 
 
-## Las tandas que mide el puesto numeran, una vez cada uno, todos los casilleros del producto, y
-## la primera es la reponible.
-func _de_una_fila(
-	jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
-) -> Dictionary[Producto.Id, bool]:
-	var disposicion := _disposicion(jornada)
-	var de_una_fila: Dictionary[Producto.Id, bool] = {}
-	for producto in Catalogo.todos():
-		var adelante := disposicion.filas_de_adelante[producto.id]
-		var copias := DisposicionDeLaGondola.copias(disposicion.principales[producto.id])
-		de_una_fila[producto.id] = adelante > 0 and copias == adelante
-	return de_una_fila
-
-
 func _comprobar_tandas(
 	puesto: Node3D, totales: Dictionary[Producto.Id, int], reponibles: Dictionary[Producto.Id, int]
 ) -> void:
@@ -99,14 +85,13 @@ func test_doscientas_semillas_venden_y_reponen() -> void:  # AC-STK-033, AC-STK-
 	for jornada in range(primera + 1, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		var casilleros := _casilleros_medidos(jornada)
 		var reponibles := _casilleros_reponibles(jornada)
-		var de_una_fila := _de_una_fila(jornada)
 		for semilla in 200:
 			# La noche de compras físicas se recorre dos veces: cajas y casilleros ocupados.
 			var fisica := Compradores.de_la_jornada(jornada, semilla)[0].tiene_horario()
 			for desde_gondola: bool in [false, true] if fisica else [false]:
 				var compradores := Compradores.de_la_jornada(jornada, semilla)
 				var inventario := Apertura.inventario_de_la_jornada(
-					jornada, compradores, casilleros, reponibles, _azar(semilla), de_una_fila
+					jornada, compradores, casilleros, reponibles, _azar(semilla)
 				)
 				var estante := Estante.new(inventario, Catalogo.de_la_jornada(jornada))
 				assert_bool(estante.completada()).is_false()
@@ -178,11 +163,10 @@ func test_la_escena_reproduce_y_continua_el_azar_de_la_apertura() -> void:  # AC
 	]:
 		almacen.call("_al_abrir_la_jornada", jornada)
 		var compradores: Array[Comprador] = almacen.get("_atenciones").tarea().get("_compradores")
-		var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
 		var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
 		var posiciones: Dictionary[Producto.Id, Array] = puesto.call("posiciones")
 		var esperado := Apertura.vacios_de_la_jornada(
-			jornada, compradores, tandas, de_una_fila, control, posiciones
+			jornada, compradores, tandas, control, posiciones
 		)
 		var estante: Estante = almacen.get("_repositor").estante()
 		for producto in Catalogo.todos():

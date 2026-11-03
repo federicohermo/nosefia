@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -57,10 +57,12 @@ radianes**. Pasarse de ahí da vuelta la cámara, y eso no es un límite de gust
 
 ### BR-PLY-004 — Se enfoca lo que está a mano
 
-El sistema DEBE enfocar lo que está a **2,5 metros o menos** y dentro de su tolerancia angular
+El sistema DEBE enfocar lo que está a mano y dentro de su tolerancia angular
 respecto del centro de la vista: **3 grados o menos** para productos y huecos de reposición,
-**15 grados o menos** para los otros objetos. El desvío se mide respecto de la superficie
-visible. Entre varios candidatos gana el de menor desvío, y con el mismo desvío el más cercano.
+**8 grados o menos** para los otros objetos. A mano es **1,6 metros o menos** desde los ojos,
+para todo: es proximidad sobre el piso y no cuenta la altura. El desvío se mide
+respecto de la superficie visible. Entre varios candidatos gana el de menor desvío, y con el
+mismo desvío el más cercano.
 
 ### BR-PLY-005 — El foco avisa sólo cuando cambió
 
@@ -92,7 +94,8 @@ anuncia un objeto.
 
 ### BR-PLY-010 — Lo que se suelta se puede volver a agarrar
 
-El sistema DEBE soltar los objetos **dentro del alcance de la mira**. Las tres distancias de
+El sistema DEBE soltar los objetos **dentro del alcance de la mira**, y NO DEBE apoyar nada más
+allá de ese alcance. Las tres distancias de
 examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega al alcance.
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
@@ -240,8 +243,8 @@ ningún otro (BR-STK-009). La mira elige entre casilleros como entre cualquier o
 MIENTRAS las manos están vacías, la mira DEBE poder enfocar cada unidad colocada en la fila de
 adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérsela en la mano
 (BR-STK-033). La unidad enfocada DEBE llevar el contorno del foco sobre su propio aspecto, y
-dibujarse una sola vez. La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada
-mientras la mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
+dibujarse una sola vez. La mira NO DEBE enfocar ninguna unidad colocada mientras la mano
+lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
 
 ### BR-PLY-025 — El balde se lleva vertical
 
@@ -584,6 +587,14 @@ Sólo se patea la unidad de producto: la caja, la bolsa y los útiles conservan 
 unidad pateada NO cuenta como repuesta: reponer se cumple sólo con el gesto de colocarla en el
 estante ([`store-stock`](../store-stock/store-stock.md)).
 
+### BR-PLY-053 — La compuerta del mostrador se abre al empujarla desde afuera
+
+CUANDO el jugador camina contra la compuerta del mostrador desde afuera —el lado contrario a sus
+bisagras— y la compuerta no está trabada, el sistema DEBE abrirla hacia adentro, como si se
+accionara (BR-PLY-011). Empujar una compuerta abierta NO DEBE cerrarla: el cuerpo sigue contra la
+hoja mientras pasa. Desde adentro la compuerta NO DEBE ceder al empujarla. Cerrarla sigue siendo
+accionarla.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -603,9 +614,10 @@ DADO un giro hacia abajo enorme ENTONCES el ángulo vertical queda en `-1.4`; ha
 
 ### AC-PLY-004 — Los dos bordes de la mira *(verifica BR-PLY-004)*
 
-DADO un candidato a 2,5 metros ENTONCES se enfoca; a 2,6, no. DADO un objeto que no sea
-un producto ni un hueco de reposición a 15 grados de desvío
-ENTONCES se enfoca; a 16, no.
+DADO un producto u otro objeto a 1,6 metros de los ojos sobre el piso, a cualquier altura, ENTONCES
+se enfoca; a 1,7, no. DADO un objeto que no sea
+un producto ni un hueco de reposición a 8 grados de desvío
+ENTONCES se enfoca; a 9, no.
 
 DADO un producto o un hueco de reposición a 3 grados de desvío ENTONCES se enfoca;
 a 6 grados, no. Esta precisión NO DEBE reducir la tolerancia de los otros objetos.
@@ -872,7 +884,7 @@ clic ENTONCES esa unidad pasa a la mano, su casillero queda vacío y las de al l
 estaban. DADO las manos vacías CUANDO la mira enfoca una unidad colocada ENTONCES esa unidad lleva
 el contorno del foco sobre su propio aspecto, se dibuja una sola vez y ninguna otra cambia. DADO
 cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
-clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se enfoca.
+clic no la agarra.
 
 ### AC-PLY-050 — El balde en la mano permanece vertical *(verifica BR-PLY-025)*
 
@@ -1541,6 +1553,21 @@ del paso que declara el dominio para la caja, y no con la de los demás útiles.
 DADO el balde suelto en el piso CUANDO el jugador camina contra él hasta llevarlo contra una pared,
 y CUANDO algo lo golpea fuera de su eje ENTONCES su eje queda a menos de 1 grado de la vertical, y
 la mopa se puede mojar en él.
+
+### AC-PLY-162 — Empujar desde afuera abre la compuerta *(verifica BR-PLY-053)*
+
+DADO la compuerta del mostrador cerrada CUANDO un cuerpo camina contra ella desde afuera ENTONCES
+la hoja gira hacia adentro hasta abierta, y accionarla después la cierra.
+
+### AC-PLY-163 — Empujar no cierra ni destraba *(verifica BR-PLY-053)*
+
+DADO una puerta abierta CUANDO se la empuja ENTONCES sigue abierta. DADO una puerta trabada CUANDO
+se la empuja ENTONCES sigue cerrada.
+
+### AC-PLY-164 — Desde adentro la compuerta no cede *(verifica BR-PLY-053)*
+
+DADO la compuerta del mostrador cerrada CUANDO un cuerpo camina contra ella desde adentro ENTONCES
+sigue cerrada.
 
 ## No objetivos
 

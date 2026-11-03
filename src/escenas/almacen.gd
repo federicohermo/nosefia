@@ -21,6 +21,8 @@ const TableroElectrico := preload("res://src/escenas/puestos/tablero_electrico.g
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## el del nodo y llamarles `mostrar()` no compilaría.
 const EstanteDelLocal := preload("res://src/escenas/puestos/estante.gd")
+## Lo que lleva al final del nombre la copia de una bandeja de la góndola para el mapa de prueba.
+const SUFIJO_DE_PRUEBA := "-prueba"
 const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
@@ -113,6 +115,7 @@ var _partida := Partida.desde(Guardado.new().cargar())
 ## La jornada para la que están preparados los útiles: la de la carga, y después la de cada
 ## transición que los preparó.
 var _jornada_preparada := 0
+var _corte: CorteDeLuz
 
 ## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
 ## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
@@ -157,6 +160,7 @@ func _ready() -> void:
 	azar_de_la_apertura.randomize()
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
+	_puertas.append($Estructura/compuerta_mostrador/CuerpoDeLaHoja)
 	_instrucciones.comenzar_pedido.connect(_al_comenzar_las_instrucciones)
 	_cablear_el_celular()
 	_cablear_la_investigacion()
@@ -269,6 +273,7 @@ func _ready() -> void:
 				$Estructura/puertaentrada/CuerpoDeLaHoja,
 				$Estructura/porton/CuerpoDeLaHoja,
 				$Estructura/puertajefe/CuerpoDeLaHoja,
+				$Estructura/compuerta_mostrador/CuerpoDeLaHoja,
 				$Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja,
 				$Estructura/heladeranueva_001/puerta_heladera_1/CuerpoDeLaHoja,
 				$Estructura/heladera_fuera_de_servicio/puerta_heladera_2/CuerpoDeLaHoja,
@@ -353,6 +358,7 @@ func _ready() -> void:
 ## quiere decir «hay luz» lo decide el dominio.
 func _cablear_el_corte_de_luz() -> void:
 	var corte: CorteDeLuz = CorteDeLuz.new()
+	_corte = corte
 	add_child(corte)
 	corte.preparar(self, $LightmapGI, ($Ambiente/Entorno as WorldEnvironment).environment)
 	_reloj.tiempo_consumido.connect(corte.avanzar)
@@ -437,12 +443,13 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
+	mostrar_las_bandejas(get_node("Estructura"), _reposicion_manual.es_de_prueba())
+	mostrar_el_freezer(get_node("Estructura"), _reposicion_manual.es_de_prueba())
 	var productos := Catalogo.de_la_jornada(jornada)
 	var vacios := Apertura.vacios_de_la_jornada(
 		jornada,
 		compradores,
 		_reposicion_manual.tandas(),
-		_reposicion_manual.productos_de_una_fila(),
 		azar_de_la_apertura,
 		_reposicion_manual.posiciones()
 	)
@@ -714,7 +721,10 @@ func _preparar_lo_postergado() -> void:
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if PreparacionDeLosUtiles.por_preparar(util.datos.id, _jornada_preparada, siguiente):
 			pendientes.append(util)
-	if not pendientes.is_empty():
+	var con_corte := (
+		siguiente == AnomaliasDeLaJornada.JORNADA_DEL_CORTE and _jornada_preparada != siguiente
+	)
+	if not pendientes.is_empty() or con_corte:
 		var capa := CanvasLayer.new()
 		var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 		capa.layer = persiana.layer + 1
@@ -726,16 +736,31 @@ func _preparar_lo_postergado() -> void:
 		pantalla.pintar(0.0)
 		await get_tree().process_frame
 		await get_tree().process_frame
-		var calentamiento := CalentamientoDeShaders.new()
-		add_child(calentamiento)
-		calentamiento.avanzo.connect(pantalla.pintar)
-		calentamiento.calentar_copias(self, pendientes)
-		await calentamiento.terminado
+		if not pendientes.is_empty():
+			await _calentar_entre_noches(pantalla, _calentar_copias.bind(pendientes))
+		if con_corte:
+			await _calentar_entre_noches(pantalla, _calentar_la_oscuridad)
 		pantalla.ocultar()
 		capa.queue_free()
-		calentamiento.queue_free()
 	# Recién al terminar: un calentamiento cortado no deja la jornada como preparada.
 	_jornada_preparada = siguiente
+
+
+func _calentar_entre_noches(pantalla: PantallaDeCarga, pedido: Callable) -> void:
+	var calentamiento := CalentamientoDeShaders.new()
+	add_child(calentamiento)
+	calentamiento.avanzo.connect(pantalla.pintar)
+	pedido.call(calentamiento)
+	await calentamiento.terminado
+	calentamiento.queue_free()
+
+
+func _calentar_copias(calentamiento: CalentamientoDeShaders, cuerpos: Array[Node3D]) -> void:
+	calentamiento.calentar_copias(self, cuerpos)
+
+
+func _calentar_la_oscuridad(calentamiento: CalentamientoDeShaders) -> void:
+	calentamiento.calentar_a_oscuras(self, _corte.ensayar)
 
 
 ## La jornada abre detrás de la entrada; el control vuelve cuando la persiana termina de subir.
@@ -747,6 +772,13 @@ func _seguir() -> void:
 ## Continuar desde el menú: un cierre guardado con su reflexión pendiente vuelve a ella sin
 ## entregar otra vez la devolución; si no, entra a la jornada guardada.
 ## Los útiles que esta carga no prepara: sus variantes las compila otra noche.
+## La noche del corte también se carga a oscuras. Protocolo con `CalentamientoDeShaders`.
+func oscuridad_por_preparar() -> Callable:
+	if _partida.jornada() != AnomaliasDeLaJornada.JORNADA_DEL_CORTE:
+		return Callable()
+	return _corte.ensayar
+
+
 func cuerpos_sin_copias() -> Array[Node3D]:
 	var sin_copias: Array[Node3D] = []
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
@@ -1231,3 +1263,21 @@ func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:
 	_tachos()[tacho].abrir(false)
 	for forma: CollisionShape3D in bolsa.find_children("*", "CollisionShape3D", true, false):
 		forma.disabled = false
+
+
+## Las bandejas de la góndola están cortadas a medida de los productos de un mapa. Las de prueba
+## se llaman como las del mapa completo que reemplazan, con el sufijo al final, y se ve una de
+## las dos.
+## El freezer está fuera de servicio: en las jornadas de prueba no exhibe nada.
+static func mostrar_el_freezer(estructura: Node, de_prueba: bool) -> void:
+	for exhibido: Node3D in estructura.get_node("freezer_helados").find_children(
+		"exhibido_*", "Node3D", true, false
+	):
+		exhibido.visible = not de_prueba
+
+
+static func mostrar_las_bandejas(estructura: Node, de_prueba: bool) -> void:
+	for prueba: Node3D in estructura.find_children("*" + SUFIJO_DE_PRUEBA, "Node3D", true, false):
+		prueba.visible = de_prueba
+		var nombre := String(prueba.name).trim_suffix(SUFIJO_DE_PRUEBA)
+		(prueba.get_parent().get_node(nombre) as Node3D).visible = not de_prueba

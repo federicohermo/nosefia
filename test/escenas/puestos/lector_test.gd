@@ -187,7 +187,7 @@ func _sitios(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> Array
 	var espacio := almacen.get_world_3d().direct_space_state
 	var forma: CollisionShape3D = jugador.get_node("Cuerpo")
 	var sitios: Array[Vector3] = []
-	for distancia: float in [0.6, 0.8, 1.0, 1.2, 1.5, 2.0]:
+	for distancia: float in [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0]:
 		for paso in 16:
 			var angulo := TAU * paso / 16.0
 			var punto := centro + Vector3(cos(angulo), 0, sin(angulo)) * distancia
@@ -216,12 +216,17 @@ func _sitios(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> Array
 			if not espacio.intersect_shape(volumen).is_empty():
 				continue
 			var ojo := posicion + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-			var rayo := PhysicsRayQueryParameters3D.create(ojo, centro, 3)
+			var rayo := PhysicsRayQueryParameters3D.create(
+				ojo, ReglasDelJugador.fin_de_la_mira(ojo, ojo.direction_to(centro)), 3
+			)
 			rayo.exclude = [jugador.get_rid()]
 			var impacto := espacio.intersect_ray(rayo)
 			if (
 				impacto.get("collider") == objetivo
-				and ojo.distance_to(impacto.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				and (
+					ReglasDelJugador.proximidad(ojo, impacto.position)
+					<= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				)
 			):
 				sitios.append(posicion)
 	return sitios

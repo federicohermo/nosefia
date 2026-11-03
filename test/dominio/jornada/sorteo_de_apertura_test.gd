@@ -18,9 +18,11 @@ func test_doscientas_semillas_por_jornada_respetan_limites_y_varian() -> void:  
 	for jornada in range(2, 9):
 		var compradores := Compradores.de_la_jornada(jornada)
 		var pedidos := Apertura.pedidos_de(compradores)
+		# Lo que puede faltar de cada producto: su tanda de 8, menos la unidad que conserva.
+		var vaciables := Apertura.casilleros_vaciables(_tandas_de_todos([8]))
 		var casilleros: Dictionary[Producto.Id, int] = {}
 		for producto in Catalogo.de_la_jornada(jornada):
-			casilleros[producto.id] = 8
+			casilleros[producto.id] = vaciables[producto.id]
 		# La jornada de los vencidos abre la góndola de Cindolor completa.
 		if Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):
 			casilleros[Apertura.PRODUCTO_CON_VENCIDOS] = 0
@@ -166,16 +168,10 @@ func _vacios(
 	jornada: int,
 	compradores: Array[Comprador],
 	tandas: Dictionary[Producto.Id, Array],
-	una_fila: bool,
 	semilla: int,
 	posiciones: Dictionary[Producto.Id, Array] = {}
 ) -> Dictionary[Producto.Id, Array]:
-	var de_una_fila: Dictionary[Producto.Id, bool] = {}
-	for id: Producto.Id in tandas:
-		de_una_fila[id] = una_fila
-	return Apertura.vacios_de_la_jornada(
-		jornada, compradores, tandas, de_una_fila, _azar(semilla), posiciones
-	)
+	return Apertura.vacios_de_la_jornada(jornada, compradores, tandas, _azar(semilla), posiciones)
 
 
 ## Un estante por altura, con los casilleros de todos en las mismas columnas.
@@ -206,12 +202,12 @@ func test_los_vacios_caen_en_cualquier_tanda_del_producto_sin_repetirse() -> voi
 		var pedidos := Apertura.pedidos_de(compradores)
 		var tandas_con_vacios: Dictionary[int, bool] = {}
 		for semilla in 200:
-			var vacios := _vacios(jornada, compradores, tandas, false, semilla)
+			var vacios := _vacios(jornada, compradores, tandas, semilla)
 			for id: Producto.Id in vacios:
 				var casilleros: Array = vacios[id]
 				assert_int(casilleros.size()).is_between(
 					ReglasDelEstante.MENOS_QUE_FALTA,
-					mini(ReglasDelEstante.UNIDADES_POR_CAJA - pedidos.get(id, 0), 12)
+					mini(ReglasDelEstante.UNIDADES_POR_CAJA - pedidos.get(id, 0), 8)
 				)
 				var vistos: Dictionary[int, bool] = {}
 				for casillero: int in casilleros:
@@ -228,9 +224,7 @@ func test_con_las_dos_tandas_del_local_los_vacios_caen_en_las_dos() -> void:  # 
 	for jornada in range(4, 9):
 		var tandas_con_vacios: Dictionary[int, bool] = {}
 		for semilla in 200:
-			var vacios := _vacios(
-				jornada, Compradores.de_la_jornada(jornada), tandas, false, semilla
-			)
+			var vacios := _vacios(jornada, Compradores.de_la_jornada(jornada), tandas, semilla)
 			for id: Producto.Id in vacios:
 				for casillero: int in vacios[id]:
 					tandas_con_vacios[_tanda_de(casillero, tamanos)] = true
@@ -238,20 +232,14 @@ func test_con_las_dos_tandas_del_local_los_vacios_caen_en_las_dos() -> void:  # 
 
 
 func test_los_vacios_de_cada_tanda_son_casilleros_seguidos() -> void:  # AC-STK-033
-	for forma: Array in [
-		[[3, 3, 3, 3], false],
-		[[4, 4], false],
-		[[2, 5, 3], false],
-		[[4, 4], true],
-		[[3, 3, 3, 3], true]
-	]:
+	for forma: Array in [[3, 3, 3, 3], [4, 4], [2, 5, 3]]:
 		var tamanos: Array[int] = []
-		tamanos.assign(forma[0])
+		tamanos.assign(forma)
 		var tandas := _tandas_de_todos(tamanos)
 		for jornada in range(2, 9):
 			var compradores := Compradores.de_la_jornada(jornada)
 			for semilla in 200:
-				var vacios := _vacios(jornada, compradores, tandas, forma[1], semilla)
+				var vacios := _vacios(jornada, compradores, tandas, semilla)
 				for id: Producto.Id in vacios:
 					for tanda: PackedInt32Array in tandas[id]:
 						var lugares: Array[int] = []
@@ -271,7 +259,7 @@ func test_si_el_faltante_entra_entero_en_alguna_tanda_cae_entero_en_una() -> voi
 	var tandas_usadas: Dictionary[int, bool] = {}
 	var cuatro_vistos := 0
 	for semilla in 200:
-		var vacios := _vacios(8, [], tandas, true, semilla)
+		var vacios := _vacios(8, [], tandas, semilla)
 		var casilleros: Array = vacios[producto]
 		var en_tandas: Dictionary[int, bool] = {}
 		for casillero: int in casilleros:
@@ -288,43 +276,6 @@ func test_si_el_faltante_entra_entero_en_alguna_tanda_cae_entero_en_una() -> voi
 	assert_array(tandas_usadas.keys()).contains_exactly_in_any_order([0, 1])
 
 
-func test_el_faltante_partido_vacia_tandas_juntas_y_la_parcial_va_debajo() -> void:  # AC-STK-033
-	var producto := Producto.Id.ACTRONCITO
-	var tamanos: Array[int] = [3, 3, 3, 3]
-	# De arriba a abajo: las tandas 1, 3, 0 y 2. El orden de las tandas no es el de las alturas.
-	var alturas: Array[float] = [1.0, 2.0, 0.5, 1.5]
-	var de_arriba_a_abajo: Array[int] = [1, 3, 0, 2]
-	var tandas: Dictionary[Producto.Id, Array] = {producto: _tandas(tamanos)}
-	var posiciones: Dictionary[Producto.Id, Array] = {producto: _en_estantes(alturas, 3)}
-	var partidos := 0
-	var parcial_arriba := 0
-	for semilla in 200:
-		var casilleros: Array = _vacios(8, [], tandas, false, semilla, posiciones)[producto]
-		var vacios_por_tanda: Dictionary[int, int] = {}
-		for casillero: int in casilleros:
-			var puesto := de_arriba_a_abajo.find(_tanda_de(casillero, tamanos))
-			vacios_por_tanda[puesto] = vacios_por_tanda.get(puesto, 0) + 1
-		if casilleros.size() <= 3:
-			continue
-		partidos += 1
-		var puestos := vacios_por_tanda.keys()
-		puestos.sort()
-		assert_int(puestos.back() - puestos.front() + 1).is_equal(puestos.size())
-		var parciales := puestos.filter(
-			func(puesto: int) -> bool: return vacios_por_tanda[puesto] < 3
-		)
-		assert_int(parciales.size()).is_less_equal(1)
-		if parciales.is_empty():
-			continue
-		if parciales[0] == puestos.back():
-			continue
-		parcial_arriba += 1
-		assert_int(parciales[0]).is_equal(puestos.front())
-		assert_int(puestos.back()).is_equal(tamanos.size() - 1)
-	assert_int(partidos).is_greater(0)
-	assert_int(parcial_arriba).is_greater(0)
-
-
 func test_el_bloque_que_sigue_va_en_el_estante_contiguo_y_alineado() -> void:  # AC-STK-033
 	var producto := Producto.Id.ACTRONCITO
 	var tamanos: Array[int] = [4, 4, 4]
@@ -333,7 +284,7 @@ func test_el_bloque_que_sigue_va_en_el_estante_contiguo_y_alineado() -> void:  #
 	var posiciones: Dictionary[Producto.Id, Array] = {producto: _en_estantes(alturas, 4)}
 	var pares: Dictionary[String, bool] = {}
 	for semilla in 200:
-		var casilleros: Array = _vacios(8, [], tandas, false, semilla, posiciones)[producto]
+		var casilleros: Array = _vacios(8, [], tandas, semilla, posiciones)[producto]
 		var columnas_por_tanda: Dictionary[int, Array] = {}
 		for casillero: int in casilleros:
 			var tanda := _tanda_de(casillero, tamanos)
@@ -341,7 +292,7 @@ func test_el_bloque_que_sigue_va_en_el_estante_contiguo_y_alineado() -> void:  #
 				columnas_por_tanda[tanda] = []
 			columnas_por_tanda[tanda].append(casillero % 4)
 		if columnas_por_tanda.size() == 3:
-			assert_int(casilleros.size()).is_equal(8)
+			assert_int(casilleros.size()).is_greater(6)
 		if columnas_por_tanda.size() != 2:
 			continue
 		pares[str(columnas_por_tanda.keys())] = true
@@ -356,39 +307,23 @@ func test_la_misma_semilla_deja_vacios_los_mismos_casilleros() -> void:  # AC-ST
 	var tandas := _tandas_de_todos([4, 4])
 	var compradores := Compradores.de_la_jornada(3)
 	for semilla in 20:
-		var uno := _vacios(3, compradores, tandas, false, semilla)
-		assert_dict(_vacios(3, compradores, tandas, false, semilla)).is_equal(uno)
+		var uno := _vacios(3, compradores, tandas, semilla)
+		assert_dict(_vacios(3, compradores, tandas, semilla)).is_equal(uno)
 
 
 func test_la_primera_jornada_no_vacia_ningun_casillero() -> void:  # AC-STK-094
 	var tandas := _tandas_de_todos([4, 4])
 	for semilla in 20:
-		var vacios := _vacios(ReglasDeLaPartida.PRIMERA_JORNADA, [], tandas, false, semilla)
+		var vacios := _vacios(ReglasDeLaPartida.PRIMERA_JORNADA, [], tandas, semilla)
 		assert_dict(vacios).is_empty()
 
 
-func test_un_producto_de_dos_filas_puede_abrir_con_la_reponible_vacia() -> void:  # AC-STK-033
-	var producto := Producto.Id.ACTRONCITO
-	var tandas: Dictionary[Producto.Id, Array] = {producto: _tandas([2, 2])}
-	var cantidades: Dictionary[int, bool] = {}
-	var reponible_vacia := false
-	for semilla in 200:
-		var vacios := _vacios(8, [], tandas, false, semilla)
-		var casilleros: Array = vacios[producto]
-		cantidades[casilleros.size()] = true
-		reponible_vacia = reponible_vacia or (casilleros.has(0) and casilleros.has(1))
-	assert_array(cantidades.keys()).contains_exactly_in_any_order(
-		range(ReglasDelEstante.MENOS_QUE_FALTA, 5)
-	)
-	assert_bool(reponible_vacia).is_true()
-
-
-func test_una_tanda_de_una_fila_no_abre_vacia_entera() -> void:  # AC-STK-033
+func test_una_tanda_no_abre_vacia_entera() -> void:  # AC-STK-033
 	var producto := Producto.Id.FLIM_POF
 	var tandas: Dictionary[Producto.Id, Array] = {producto: _tandas([3, 3])}
 	var cantidades: Dictionary[int, bool] = {}
 	for semilla in 200:
-		var vacios := _vacios(8, [], tandas, true, semilla)
+		var vacios := _vacios(8, [], tandas, semilla)
 		var casilleros: Array = vacios[producto]
 		cantidades[casilleros.size()] = true
 		for tanda: PackedInt32Array in tandas[producto]:
@@ -402,13 +337,13 @@ func test_una_tanda_de_una_fila_no_abre_vacia_entera() -> void:  # AC-STK-033
 func test_sin_casilleros_en_ninguna_tanda_el_producto_no_falta() -> void:  # AC-STK-030
 	var tandas: Dictionary[Producto.Id, Array] = {Producto.Id.ACTRONCITO: _tandas([0, 0])}
 	for semilla in 200:
-		assert_dict(_vacios(8, [], tandas, false, semilla)).is_empty()
+		assert_dict(_vacios(8, [], tandas, semilla)).is_empty()
 
 
 func test_con_casilleros_solo_en_una_fija_el_producto_falta() -> void:  # AC-STK-030
 	var tandas: Dictionary[Producto.Id, Array] = {Producto.Id.ACTRONCITO: _tandas([0, 4])}
 	for semilla in 200:
-		var vacios := _vacios(8, [], tandas, false, semilla)
+		var vacios := _vacios(8, [], tandas, semilla)
 		assert_array(vacios.keys()).contains_exactly([Producto.Id.ACTRONCITO])
 		for casillero: int in vacios[Producto.Id.ACTRONCITO]:
 			assert_int(casillero).is_between(0, 3)

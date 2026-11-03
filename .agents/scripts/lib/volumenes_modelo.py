@@ -121,12 +121,19 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
     puertas = [path for path, datos in modelo.items() if datos['tipo'] == 'MeshInstance3D'
                and path.rsplit('/', 1)[-1] in ('puerta', 'puerta2', 'puertajefe', 'puertaentrada',
                                              'porton', 'puerta_limpieza', 'puerta_heladera_0',
-                                             'puerta_heladera_1', 'puerta_heladera_2')]
+                                             'puerta_heladera_1', 'puerta_heladera_2',
+                                             'compuerta_mostrador')]
     for path in puertas:
         if path.rsplit('/', 1)[-1].startswith('puerta_heladera_'):
             caja = numeros(modelo[path]['aabb'])
             poner(lista, path + '/Bisagra', {
                 'position': vec((caja[0] + caja[3], caja[1] + caja[4] / 2, caja[2])),
+            })
+        if path.rsplit('/', 1)[-1] == 'compuerta_mostrador':
+            # Las bisagras están del lado del mostrador, que es el extremo +X de la hoja.
+            caja = numeros(modelo[path]['aabb'])
+            poner(lista, path + '/Bisagra', {
+                'position': vec((caja[0] + caja[3], caja[1] + caja[4] / 2, caja[2] + caja[5] / 2)),
             })
         padre = path + '/CuerpoDeLaHoja'
         poner(lista, padre, {'transform': modelo[path]['cuerpo_transform']})

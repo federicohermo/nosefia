@@ -64,15 +64,6 @@ reloj = NodePath("../../../Servicios/RelojDelTurno")
 computadora = NodePath("../../../Servicios/Computadora")
 pantalla = NodePath("../../../Interfaz/PantallaDeComputadora")
 
-[node name="LuzInterior" parent="Estructura/heladeranueva" parent_id_path=PackedInt32Array(1019345008, 5685410) index="5"]
-light_energy = 0.4
-light_bake_mode = 1
-
-[node name="LuzInterior" parent="Estructura/heladeranueva_001" parent_id_path=PackedInt32Array(1019345008, 820318222) index="5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38939667, 1.1912528, -0.18357801)
-light_energy = 0.4
-light_bake_mode = 1
-
 [node name="Ventanilla" parent="Estructura" index="36" node_paths=PackedStringArray("jugador", "reloj", "atenciones", "panel")]
 jugador = NodePath("../../Jugador")
 reloj = NodePath("../../Servicios/RelojDelTurno")

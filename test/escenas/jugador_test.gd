@@ -40,7 +40,7 @@ func test_el_campo_cuelga_del_ojo_y_respeta_el_alcance() -> void:
 	var forma: CollisionShape3D = campo.get_node("Forma")
 	assert_object(forma.shape).is_instanceof(SphereShape3D)
 	assert_vector(campo.position + forma.position).is_equal(Vector3.ZERO)
-	assert_float(forma.shape.radius).is_equal(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+	assert_float(forma.shape.radius).is_equal_approx(ReglasDelJugador.RADIO_DEL_CAMPO, 1e-6)
 	assert_vector(forma.scale).is_equal(Vector3.ONE)
 	assert_vector(campo.scale).is_equal(Vector3.ONE)
 

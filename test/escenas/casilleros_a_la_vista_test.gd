@@ -374,20 +374,17 @@ func test_con_algo_en_la_mano_no_se_enfoca_ninguna_unidad_puesta() -> void:  # A
 			assert_int(casillero.get("collision_layer")).is_zero()
 
 
-func test_la_fila_de_atras_no_tiene_casilleros() -> void:  # AC-PLY-049
-	# Cada casillero está donde va una unidad de la fila de adelante, y ninguno donde va una de
-	# la de atrás: lo que la mira no encuentra, no se agarra.
+func test_cada_casillero_esta_en_la_fila_de_adelante() -> void:  # AC-PLY-049
 	var almacen := _almacen()
 	var puesto_global: Transform3D = _puesto(almacen).global_transform
 	for producto in Catalogo.todos():
 		var tandas := _tandas(almacen, producto)
 		var adelante: Array[Vector3] = []
-		var atras: Array[Vector3] = []
 		for tanda: Array in tandas:
 			var total := DisposicionDeLaGondola.copias(tanda[0])
-			for indice in total:
+			for indice in range(total - tanda[1], total):
 				var lugar := (puesto_global * DisposicionDeLaGondola.copia(tanda[0], indice)).origin
-				(adelante if indice >= total - tanda[1] else atras).append(lugar)
+				adelante.append(lugar)
 		var casilleros := _casilleros(almacen, producto)
 		assert_int(casilleros.size()).is_equal(adelante.size())
 		for casillero: Node3D in casilleros:
@@ -397,7 +394,6 @@ func test_la_fila_de_atras_no_tiene_casilleros() -> void:  # AC-PLY-049
 				. override_failure_message("%s: %s" % [producto.nombre, casillero.name])
 				. is_equal_approx(adelante[casillero.get("casillero")], Vector3.ONE * 1e-4)
 			)
-			assert_bool(_contiene(atras, lugar)).is_false()
 
 
 func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC-STK-046 AC-STK-047

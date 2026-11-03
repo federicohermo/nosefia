@@ -194,7 +194,7 @@ static func _eje(giro: Basis, hacia: Vector3) -> Vector3:
 	return mejor if mejor.dot(hacia) > 0.0 else -mejor
 
 
-## Agarrar cada producto de su casillero conserva la orientación de la mano y su apoyo real.
+## Agarrar cada producto de su casillero conserva la orientación de la mano.
 func test_cada_producto_agarrado_va_derecho_y_de_frente_en_la_mano() -> void:
 	var almacen := _almacen()
 	await get_tree().physics_frame
@@ -211,21 +211,10 @@ func test_cada_producto_agarrado_va_derecho_y_de_frente_en_la_mano() -> void:
 		var ocupados := estante.casilleros_ocupados(producto)
 		assert_array(ocupados).is_not_empty()
 		var indice := ocupados[ocupados.size() - 1]
-		var bloque := _disposicion(almacen).principales[producto.id]
-		var de_la_tanda := DisposicionDeLaGondola.copias(bloque) - _cupo(almacen, producto) + indice
-		var unidad := _caja_de_la_copia(almacen, producto, de_la_tanda).get_center()
-		var chapa := _golpe(almacen, unidad, unidad + Vector3.DOWN)
-		var en_rampa := not chapa.is_empty() and _inclinado(chapa["normal"])
 		var modelo := (contenido.get_child(producto.id) as Node3D).global_basis
 		var arriba := _eje(modelo, Vector3.UP)
 		var pasillo := presentacion.global_basis * _frente(almacen, producto)
 		var frente := (pasillo - arriba * pasillo.dot(arriba)).normalized()
-		var copia := _copia_en_el_mundo(almacen, producto, de_la_tanda)
-		(
-			assert_bool(_inclinado(copia.basis.orthonormalized() * arriba))
-			. override_failure_message("%s no va echado como su chapa" % producto.nombre)
-			. is_equal(en_rampa)
-		)
 		presentacion.call("agarrar_de_la_gondola", producto.id, indice)
 		(
 			assert_array(estante.casilleros_vacios(producto))
@@ -258,11 +247,6 @@ static func _sin_la_pose(presentacion: Node3D, id: Producto.Id, agarre: Agarre) 
 	var pose: Basis = presentacion.call("_inclinacion_en_la_mano", id)
 	var en_la_mano := (agarre.punto_de_producto.get_child(0) as Node3D).basis.orthonormalized()
 	return pose.inverse() * en_la_mano
-
-
-## Si un eje se aparta de la vertical más de un grado.
-static func _inclinado(eje: Vector3) -> bool:
-	return eje.angle_to(Vector3.UP) > deg_to_rad(1.0)
 
 
 ## Al abrir, de cada producto falta sólo lo que su jornada pide, y los casilleros son las
@@ -356,17 +340,13 @@ func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> vo
 		(almacen.get("_agarre") as Agarre).vaciar_las_manos()
 
 
-## Las dos filas de cada tanda, una detrás de la otra y de cara al pasillo: parado frente a
-## cualquier unidad de la fila de adelante, el jugador la ve, porque nada del mueble se
-## interpone; y entre cada unidad de la fila de atrás y la de adelante que tiene delante no hay
-## nada del mueble. Una fila metida detrás del panel perforado —la chapa sigue detrás de él— es
-## una fila que el jugador no ve, y desde el pasillo el estante parece vacío.
+## La fila de cada tanda, de cara al pasillo: parado frente a cualquier unidad suya, el jugador
+## la ve, porque nada del mueble se interpone. Una fila metida detrás del panel perforado es una
+## fila que el jugador no ve, y desde el pasillo el estante parece vacío.
 ##
-## **La de adelante se mira a cuatro alturas, y alcanza con que una se vea**: el portaprecio tapa
-## el pie de una lata chata, y el borde del estante de arriba, la tapa de una caja alta. La de
-## atrás no se mira desde el pasillo: en un estante hondo, bajo otro, queda debajo de él, como
-## en cualquier góndola.
-func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
+## **Se mira a cuatro alturas, y alcanza con que una se vea**: el portaprecio tapa el pie de una
+## lata chata, y el borde del estante de arriba, la tapa de una caja alta.
+func test_la_fila_da_al_pasillo() -> void:  # AC-STK-030
 	var almacen := _almacen()
 	await AperturaConLugar.abrir_heladeras(almacen)
 	await get_tree().physics_frame
@@ -384,19 +364,7 @@ func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 			. is_equal(disposicion.casilleros_de(producto.id))
 		)
 		for columna in fila:
-			var atras := _caja_de_la_copia(almacen, producto, columna).get_center()
 			var delante := _caja_de_la_copia(almacen, producto, total - fila + columna)
-			if total > fila:
-				(
-					assert_dict(_golpe(almacen, atras, delante.get_center()))
-					. override_failure_message(
-						(
-							"%s: el mueble separa sus dos filas en la columna %d"
-							% [producto.nombre, columna]
-						)
-					)
-					. is_empty()
-				)
 			var pie := _lugar_en_el_pasillo(almacen, delante.get_center(), frente)
 			if not pie.is_finite():
 				fail("%s: no hay dónde pararse frente a su columna %d" % [producto.nombre, columna])
@@ -413,42 +381,6 @@ func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 				)
 				. is_false()
 			)
-
-
-## Al abrir la jornada la fila de atrás se ve entera, y la de adelante completa salvo lo que la
-## jornada hace faltar. Reponer lo que falta completa la de adelante y no mueve nada de la de
-## atrás.
-func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
-	var almacen := _almacen()
-	var presentacion: Node3D = almacen.get("_reposicion_manual")
-	var disposicion := _disposicion(almacen)
-	for producto in Catalogo.todos():
-		var nombre := producto.nombre
-		var falta := _faltante(almacen, producto)
-		var fila := disposicion.filas_de_adelante[producto.id]
-		var copias := (
-			(presentacion.get_node("ProductosDe" + nombre) as MultiMeshInstance3D).multimesh
-		)
-		var principales := DisposicionDeLaGondola.copias(disposicion.principales[producto.id])
-		var guias := copias.instance_count - principales
-		(
-			assert_int(copias.visible_instance_count - guias)
-			. override_failure_message(
-				"%s: al abrir no se ven su fila de atrás y su fila menos lo que falta" % nombre
-			)
-			. is_equal(principales - falta)
-		)
-		var antes := copias.buffer
-		for indice in falta:
-			presentacion.retirar(producto.id)
-			presentacion.pedir_colocar(producto.id)
-		assert_int(copias.visible_instance_count - guias).is_equal(principales)
-		var atras := (copias.instance_count - disposicion.casilleros_de(producto.id)) * 12
-		(
-			assert_array(Array(copias.buffer.slice(0, atras)))
-			. override_failure_message("%s: reponer movió la fila de atrás" % nombre)
-			. is_equal(Array(antes.slice(0, atras)))
-		)
 
 
 ## La apertura deja los huecos pedidos hasta el cupo real que tiene cada fila del modelo.
@@ -570,7 +502,7 @@ func test_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo() -> v
 		assert_object(agarre.manos().sostenido()).is_null()
 
 
-func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  # AC-STK-031
+func test_una_tanda_vaciada_no_deja_unidades_a_la_vista() -> void:  # AC-STK-030
 	var almacen := _almacen()
 	var completos: Dictionary[Producto.Id, int] = {}
 	AperturaConLugar.abrir_con_faltantes(almacen, completos)
@@ -581,12 +513,6 @@ func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  
 		if _cupo(almacen, producto) == 0:
 			continue
 		var id := producto.id
-		var disposicion := _disposicion(almacen)
-		if (
-			DisposicionDeLaGondola.copias(disposicion.principales[id])
-			!= disposicion.filas_de_adelante[id]
-		):
-			continue
 		miradas += 1
 		for indice in _cupo(almacen, producto):
 			presentacion.agarrar_de_la_gondola(id, indice)
@@ -596,7 +522,7 @@ func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  
 		(
 			assert_int(copias.visible_instance_count)
 			. override_failure_message(producto.nombre)
-			. is_equal(copias.instance_count - _cupo(almacen, producto))
+			. is_equal(0)
 		)
 	assert_int(miradas).is_greater(0)
 

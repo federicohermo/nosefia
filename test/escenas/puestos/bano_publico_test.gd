@@ -167,14 +167,14 @@ func test_la_pared_ampliada_y_el_hueco_tienen_el_acabado_del_bano() -> void:
 	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
 	for recorrido: Array in [
 		[Vector3(11, 1.5, 5.456), Vector3(8.2, 1.5, 5.456)],
-		[Vector3(8.15, 1.5, 0.736), Vector3(8.15, 1.5, -0.244)],
-		[Vector3(8.15, 1.5, 0.736), Vector3(8.15, 3.3, 0.736)],
+		[Vector3(8.15, 1.5, 1.646), Vector3(8.15, 1.5, 0.666)],
+		[Vector3(8.15, 1.5, 1.646), Vector3(8.15, 3.3, 1.646)],
 	]:
 		assert_str(_material_de_la_cara(edificio, recorrido[0], recorrido[1])).is_equal(
 			"bano_pared_clara"
 		)
 	(
-		assert_str(_material_de_la_cara(edificio, Vector3(8.15, 1, 0.736), Vector3(8.15, 0, 0.736)))
+		assert_str(_material_de_la_cara(edificio, Vector3(8.15, 1, 1.646), Vector3(8.15, 0, 1.646)))
 		. is_equal("bano_piso_gris")
 	)
 
@@ -215,9 +215,9 @@ func test_la_entrada_conserva_la_escala_de_las_otras_puertas_y_un_marco_continuo
 	var marco := almacen.get_node("Estructura/bano_marco_entrada") as MeshInstance3D
 	# Estos rayos cruzan las bandas que antes dejaban visible la pared del almacén.
 	for punto: Vector3 in [
-		Vector3(7.70, 2.86461, 0.736),
-		Vector3(7.70, 1.70, 1.58026),
-		Vector3(7.70, 1.70, -0.10818),
+		Vector3(7.70, 2.6216, 1.646),
+		Vector3(7.70, 1.70, 2.4123),
+		Vector3(7.70, 1.70, 0.8798),
 	]:
 		assert_str(_material_de_la_cara(marco, punto, punto + Vector3.RIGHT * 0.5)).is_equal(
 			"bano_entrada_blanca"
@@ -351,13 +351,13 @@ func test_la_entrada_cerrada_no_deja_ver_el_bano_por_los_bordes_de_la_hoja() -> 
 		superficies.append(almacen.get_node("Estructura/" + nombre) as MeshInstance3D)
 	# Los puntos cruzan las rendijas visibles entre hoja, marco y piso del vano real.
 	for banda: Vector3 in [
-		Vector3(7.974, 0.35, -0.0972),
-		Vector3(7.974, 1.40, -0.0972),
-		Vector3(7.974, 2.60, -0.0972),
-		Vector3(7.974, 1.40, 1.5693),
-		Vector3(7.974, 0.115, 1.356),
-		Vector3(7.974, 0.115, 0.736),
-		Vector3(7.974, 0.115, 0.156),
+		Vector3(7.974, 0.35, 0.8838),
+		Vector3(7.974, 1.40, 0.8838),
+		Vector3(7.974, 2.366, 0.8838),
+		Vector3(7.974, 1.40, 2.408),
+		Vector3(7.974, 0.115, 2.1947),
+		Vector3(7.974, 0.115, 1.646),
+		Vector3(7.974, 0.115, 1.137),
 	]:
 		for pendiente: float in [-0.15, 0.0, 0.15]:
 			for lado: float in [-1.0, 1.0]:
@@ -388,17 +388,17 @@ func test_el_acabado_del_bano_no_sobresale_delante_de_la_hoja_cerrada() -> void:
 	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
 	var hoja := almacen.get_node("Estructura/puerta2") as MeshInstance3D
 	var referencia := _material_de_la_cara(
-		edificio, Vector3(7.70, 0.25, 0.736), Vector3(7.70, 0.0, 0.736)
+		edificio, Vector3(7.70, 0.25, 1.646), Vector3(7.70, 0.0, 1.646)
 	)
 	var interior := _material_de_la_cara(
-		edificio, Vector3(8.08, 0.25, 0.736), Vector3(8.08, 0.0, 0.736)
+		edificio, Vector3(8.08, 0.25, 1.646), Vector3(8.08, 0.0, 1.646)
 	)
 	assert_str(referencia).is_not_empty()
 	assert_str(interior).is_not_empty().is_not_equal(referencia)
 	# La franja delante de la hoja era visible aun con la puerta cerrada.
 	for z: float in [-6.20, -6.82, -7.40]:
-		var desde := Vector3(7.918, 0.25, z + 7.556)
-		var hasta := Vector3(7.918, 0.0, z + 7.556)
+		var desde := Vector3(7.918, 0.25, z + 8.466)
+		var hasta := Vector3(7.918, 0.0, z + 8.466)
 		assert_array(_cruces(hoja, desde, hasta)).is_empty()
 		(
 			assert_str(_material_de_la_cara(edificio, desde, hasta))

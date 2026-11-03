@@ -86,6 +86,23 @@ def casco(modelo, lista, path, nombre, transform=None):
     return props
 
 
+def integrar_lector(texto: str, caja: list[float], posicion: list[float], lector: str) -> str:
+    """Ubica el hueco del lector sobre la caja del modelo.
+
+    El hueco es redondo, como la base del lector, y su malla vive en su propio recurso: acá sólo
+    se mide su radio y su lugar.
+    """
+    lista = bloques(texto)
+    centro = [caja[0] + caja[3] / 2 - posicion[0], caja[1] + 0.0125 - posicion[1],
+              caja[2] + caja[5] / 2 - posicion[2]]
+    recurso(lista, 'hueco_actual', 'CylinderShape3D',
+            {'height': '0.025', 'radius': f'{min(caja[3], caja[5]) / 2:.6f}'})
+    poner(lista, 'Lector', {'forma_del_hueco': 'SubResource("hueco_actual")',
+                            'posicion_del_hueco': vec(centro),
+                            'metadata/modelo_reemplazado': 'NodePath("Estructura/' + lector + '")'})
+    return ''.join(lista)
+
+
 def integrar(modelo: dict, fuentes: dict[str, str]) -> dict[str, str]:
     resultados = dict(fuentes)
     archivo = 'estructura_del_almacen.tscn'
@@ -222,13 +239,8 @@ def integrar(modelo: dict, fuentes: dict[str, str]) -> dict[str, str]:
 
     archivo = 'lector.tscn'
     texto = fuentes[archivo].replace('lector_de_productos.res', 'lector_del_almacen.res').replace('lector_de_productos_colision.res', 'lector_del_almacen_colision.res')
-    lista = bloques(texto)
-    bb = numeros(modelo[lector]['global_aabb'])
-    centro = [bb[0] + bb[3]/2-posicion[0], bb[1] + 0.0125-posicion[1], bb[2] + bb[5]/2-posicion[2]]
-    recurso(lista, 'hueco', 'BoxMesh', {'material': 'SubResource("oscuro")', 'size': vec((bb[3],0.025,bb[5]))})
-    recurso(lista, 'hueco_actual', 'BoxShape3D', {'size': vec((bb[3],0.025,bb[5]))})
-    poner(lista, 'Lector', {'forma_del_hueco': 'SubResource("hueco_actual")', 'posicion_del_hueco': vec(centro), 'metadata/modelo_reemplazado': 'NodePath("Estructura/' + lector + '")'})
-    resultados[archivo] = ''.join(lista)
+    caja = numeros(modelo[lector]['global_aabb'])
+    resultados[archivo] = integrar_lector(texto, caja, posicion, lector)
 
     archivo = 'objetos_del_almacen.tscn'
     lista = bloques(fuentes[archivo])

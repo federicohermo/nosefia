@@ -2,6 +2,14 @@ extends GdUnitTestSuite
 
 const MODELO := preload("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb")
 
+## Dónde cae cada ranura, como fracción del alto de la hoja desde su pie: la textura escala con
+## la hoja, y una altura en metros dejaría de caer en la ranura con cualquier cambio de tamaño.
+const RANURAS: Array[float] = [0.0906, 0.1126, 0.1347, 0.1567]
+## Medio paso entre dos ranuras, en la misma fracción: ahí la textura es la chapa blanca.
+const ENTRE_RANURAS := 0.011
+## Dónde se mira cada ranura, como fracción del ancho de la hoja desde su centro.
+const COLUMNAS: Array[float] = [-0.12, 0.0, 0.12]
+
 
 func test_las_cuatro_ranuras_siguen_visibles_en_cada_nivel_de_detalle() -> void:
 	var modelo: Node3D = auto_free(MODELO.instantiate())
@@ -9,7 +17,6 @@ func test_las_cuatro_ranuras_siguen_visibles_en_cada_nivel_de_detalle() -> void:
 	assert_object(puerta).is_not_null()
 	if puerta == null:
 		return
-	assert_float(puerta.position.y).is_equal_approx(1.477237, .00001)
 	var niveles: Array[float] = [0.0]
 	for superficie in puerta.mesh.get_surface_count():
 		var datos := RenderingServer.mesh_get_surface(puerta.mesh.get_rid(), superficie)
@@ -18,13 +25,20 @@ func test_las_cuatro_ranuras_siguen_visibles_en_cada_nivel_de_detalle() -> void:
 			if umbral not in niveles:
 				niveles.append(umbral)
 	niveles.sort()
+	var caja := puerta.get_aabb()
 	for nivel in niveles:
-		for altura: float in [.35, .41, .47, .53]:
-			for x: float in [-.2, 0.0, .2]:
-				_comprobar_ranura(puerta.mesh, nivel, x, altura - puerta.position.y)
+		for ranura in RANURAS:
+			for columna in COLUMNAS:
+				_comprobar_ranura(
+					puerta.mesh,
+					nivel,
+					caja.get_center().x + columna * caja.size.x,
+					caja.position.y + ranura * caja.size.y,
+					ENTRE_RANURAS * caja.size.y
+				)
 
 
-func _comprobar_ranura(malla: Mesh, nivel: float, x: float, y: float) -> void:
+func _comprobar_ranura(malla: Mesh, nivel: float, x: float, y: float, entre: float) -> void:
 	var golpe := _golpe(malla, nivel, Vector3(x, y, .2))
 	assert_bool(golpe.is_empty()).is_false()
 	if golpe.is_empty():
@@ -44,16 +58,16 @@ func _comprobar_ranura(malla: Mesh, nivel: float, x: float, y: float) -> void:
 	if imagen.is_compressed():
 		assert_int(imagen.decompress()).is_equal(OK)
 	var ranura := _pixel(imagen, golpe.uv)
-	for desplazamiento: float in [-.03, .03]:
-		var entre := _golpe(malla, nivel, Vector3(x, y + desplazamiento, .2))
-		assert_bool(entre.is_empty()).is_false()
-		if entre.is_empty():
+	for desplazamiento: float in [-entre, entre]:
+		var chapa := _golpe(malla, nivel, Vector3(x, y + desplazamiento, .2))
+		assert_bool(chapa.is_empty()).is_false()
+		if chapa.is_empty():
 			continue
-		var otra := malla.surface_get_material(entre.superficie) as BaseMaterial3D
+		var otra := malla.surface_get_material(chapa.superficie) as BaseMaterial3D
 		assert_object(otra.albedo_texture).is_same(pintura.albedo_texture)
 		if otra.albedo_texture != pintura.albedo_texture:
 			continue
-		var blanco := _pixel(imagen, entre.uv)
+		var blanco := _pixel(imagen, chapa.uv)
 		assert_float(blanco.get_luminance() - ranura.get_luminance()).is_greater(.1)
 
 

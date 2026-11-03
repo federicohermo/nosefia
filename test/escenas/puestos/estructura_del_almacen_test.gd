@@ -174,9 +174,19 @@ func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 	var anclaje: MeshInstance3D = estructura.get_node(NodePath(ANCLAJE_DE_LA_ESTANTERIA))
 	var limites := anclaje.global_transform * anclaje.get_aabb()
 	var centro := limites.get_center()
-	var golpe := estructura.get_world_3d().direct_space_state.intersect_ray(
-		PhysicsRayQueryParameters3D.create(Vector3(centro.x, limites.end.y + 1, centro.z), centro)
-	)
+	# El centro de un mueble de dos caras puede ser el hueco entre ellas: se baja también a un
+	# cuarto de cada lado, hasta poco antes del piso.
+	var golpe := {}
+	for desvio: float in [0.0, -0.25, 0.25]:
+		var x := centro.x + desvio * limites.size.x
+		golpe = estructura.get_world_3d().direct_space_state.intersect_ray(
+			PhysicsRayQueryParameters3D.create(
+				Vector3(x, limites.end.y + 1, centro.z),
+				Vector3(x, limites.position.y + 0.05, centro.z)
+			)
+		)
+		if not golpe.is_empty():
+			break
 	(
 		assert_dict(golpe)
 		. override_failure_message(
