@@ -524,10 +524,9 @@ demás. Ningún renglón queda vacío y el texto no empieza ni termina con un sa
 
 ### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
 
-DADO el HUD a 1920×1080 y a 1280×720 CUANDO se piensa cada pensamiento del AC-SUB-028 cuyos
-renglones entran en el ancho de la ventana ENTONCES la línea muestra tantos renglones como la
-ficha, sin ningún corte de más, y queda centrada en el encuadre y en la mitad inferior. A
-1920×1080 entran todos. Lo que no entra se corta por el AC-SUB-030.
+DADO el HUD a 1920×1080 y a 1280×720 CUANDO se piensa cada pensamiento del AC-SUB-028 ENTONCES la
+línea muestra tantos renglones como la ficha, sin ningún corte de más, y queda centrada en el
+encuadre y en la mitad inferior.
 
 ### AC-SUB-030 — Un renglón que no entra se corta *(verifica BR-SUB-017)*
 

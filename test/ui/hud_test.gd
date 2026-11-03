@@ -178,8 +178,9 @@ func test_el_subtitulo_se_lee_sobre_el_blanco_con_el_contorno_de_su_variacion() 
 	assert_int(subtitulo.get_theme_constant("outline_size")).is_equal(
 		tema.get_constant("outline_size", VARIACION_DEL_SUBTITULO)
 	)
-	# Contra un `Label` del mismo tema sin la variación: la misma fuente, el mismo color y el
-	# mismo tamaño, y él sin contorno.
+	# Contra un `Label` del mismo tema sin la variación: la misma fuente y el mismo color, él sin
+	# contorno. El tamaño es el de la variación, más chico que el del tema: el renglón más largo
+	# de la ficha tiene que entrar en el ancho útil de 1280×720.
 	var base: Label = auto_free(Label.new())
 	base.theme = tema
 	add_child(base)
@@ -187,9 +188,9 @@ func test_el_subtitulo_se_lee_sobre_el_blanco_con_el_contorno_de_su_variacion() 
 	assert_that(subtitulo.get_theme_color("font_color")).is_equal(
 		base.get_theme_color("font_color")
 	)
-	assert_int(subtitulo.get_theme_font_size("font_size")).is_equal(
-		base.get_theme_font_size("font_size")
-	)
+	var tamano_de_la_variacion := tema.get_font_size("font_size", VARIACION_DEL_SUBTITULO)
+	assert_int(subtitulo.get_theme_font_size("font_size")).is_equal(tamano_de_la_variacion)
+	assert_int(tamano_de_la_variacion).is_less(base.get_theme_font_size("font_size"))
 	assert_int(base.get_theme_constant("outline_size")).is_zero()
 
 
@@ -239,8 +240,6 @@ func test_el_subtitulo_va_abajo_al_centro_y_uno_por_vez() -> void:  # AC-SUB-001
 
 
 func test_el_subtitulo_muestra_los_renglones_de_su_texto() -> void:  # AC-SUB-029
-	var comprobados := 0
-	var con_texto := 0
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		var ventana: SubViewport = auto_free(SubViewport.new())
 		ventana.size = tamano
@@ -249,35 +248,19 @@ func test_el_subtitulo_muestra_los_renglones_de_su_texto() -> void:  # AC-SUB-02
 		ventana.add_child(hud)
 		var subtitulo: Label = hud.get_node("Subtitulo")
 		for id: SubtitulosDeLosGestos.Id in SubtitulosDeLosGestos.Id.values():
-			var texto := SubtitulosDeLosGestos.texto(id)
-			if texto.is_empty():
+			if id in [SubtitulosDeLosGestos.Id.NINGUNO, SubtitulosDeLosGestos.Id.PRIMERA_PISTA]:
 				continue
+			var texto := SubtitulosDeLosGestos.texto(id)
 			hud.pensar(texto)
 			await get_tree().process_frame
+			(
+				assert_int(subtitulo.get_line_count())
+				. override_failure_message("%s a %s: renglones de más" % [id, tamano])
+				. is_equal(texto.split("\n").size())
+			)
 			var caja := subtitulo.get_global_rect()
 			assert_float(caja.get_center().x).is_equal_approx(tamano.x / 2.0, 1.0)
 			assert_float(caja.get_center().y).is_greater(tamano.y / 2.0)
-			if tamano.x == 1920:
-				con_texto += 1
-			if not _entran_los_renglones(subtitulo, texto):
-				continue
-			assert_int(subtitulo.get_line_count()).is_equal(texto.split("\n").size())
-			if tamano.x == 1920:
-				comprobados += 1
-	assert_int(comprobados).is_equal(con_texto)
-
-
-## Si cada renglón del texto cabe en el ancho que tiene la línea, con su fuente.
-func _entran_los_renglones(subtitulo: Label, texto: String) -> bool:
-	var fuente := subtitulo.get_theme_font("font")
-	var tamano_de_fuente := subtitulo.get_theme_font_size("font_size")
-	for renglon in texto.split("\n"):
-		var ancho := (
-			fuente.get_string_size(renglon, HORIZONTAL_ALIGNMENT_LEFT, -1, tamano_de_fuente).x
-		)
-		if ancho > subtitulo.size.x:
-			return false
-	return true
 
 
 func test_un_renglon_que_no_entra_en_la_ventana_se_corta() -> void:  # AC-SUB-030
