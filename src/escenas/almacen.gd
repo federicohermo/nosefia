@@ -223,8 +223,6 @@ func _ready() -> void:
 	_reloj.tiempo_consumido.connect(avisos.actualizar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_cablear_el_corte_de_luz()
-	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
-	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
 	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
 	_atenciones.comprador_llegado.connect(_computadora.revisar_registro.unbind(1))
@@ -432,7 +430,6 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
-	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias(jornada))
 	(get_node("Estructura/NotasDelAlmacen") as NotasDelLocal).declarar_tareas(
 		_partida.obligatorias()
 	)
@@ -644,7 +641,7 @@ func _salir_por_la_entrada() -> void:
 ##
 ## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
-func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+func _al_cerrar_la_jornada(jornada: int, _cumplidas: int) -> void:
 	_jornada_del_celular = jornada
 	_gestos.descartar()
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
@@ -652,7 +649,6 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_celular.cerrar_jornada()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
-	_hud.mostrar_tareas(cumplidas)
 	var devolucion := DevolucionDelJefe.new(jornada, _partida)
 	# Sin esto el celular es inalcanzable jugando: el jugador clava el puntero en el centro cada
 	# cuadro. La suspensión suelta el cursor sola.

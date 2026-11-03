@@ -433,8 +433,8 @@ vigente, asociado al gesto que realmente ejecutan: lector, descarte de ticket, t
 del contenedor conservan «Interactuar» sobre el primario; la tapa usa «Abrir» o «Cerrar».
 Preparar las líneas Hablar y Entregar NO DEBE habilitar por sí mismo atención directa.
 
-El contador de tareas DEBE conservar su lugar sobre la primera línea. CUANDO cambian foco
-y mano en el mismo cuadro, la referencia DEBE usar ambos valores nuevos, sin combinación intermedia.
+CUANDO cambian foco y mano en el mismo cuadro, la referencia DEBE usar ambos valores nuevos, sin
+combinación intermedia.
 
 ### BR-PLY-036 — El contexto no adelanta el resultado
 
@@ -1186,7 +1186,6 @@ DADO los controles de fábrica, mano vacía y lavatorio enfocado CUANDO se consu
 ENTONCES muestra sólo «[E] Examinar». DADO el balde sostenido ENTONCES muestra exactamente
 «[E] Examinar (mano)» y «[Click Izq] Llenar». DADO una caja apoyada con una unidad y mano vacía
 ENTONCES muestra «[E] Examinar», «[Click Izq] Agarrar» y «[Click Der] Sacar producto».
-El contador de tareas permanece encima de la primera línea.
 
 ### AC-PLY-083 — Sacar y meter usan gestos distintos *(verifica BR-PLY-035, BR-PLY-036)*
 

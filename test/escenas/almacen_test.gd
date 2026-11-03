@@ -409,10 +409,9 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
 	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
-	var tareas: Label = almacen.get_node("Interfaz/Hud/Tareas")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 
-	# Una obligatoria adicional distingue el marcador del cierre del de la apertura siguiente.
+	# Una obligatoria cumplida distingue la noche que cierra de la apertura siguiente.
 	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	AvanceDeDevolucion.esperar_el_celular(pantalla)
@@ -432,16 +431,6 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 		assert_int(ciclo.partida().jornada())
 		. override_failure_message("despachada la placa, la partida no pasó a la noche siguiente")
 		. is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
-	)
-	(
-		assert_str(tareas.text)
-		. override_failure_message("el HUD arrastró el marcador de la noche anterior")
-		. is_equal(
-			(
-				Hud.TEXTO_DE_LAS_TAREAS
-				% Marcador.tareas(0, Apertura.cantidad_de_obligatorias(ciclo.partida().jornada()))
-			)
-		)
 	)
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		assert_bool(tarea.completada()).is_false()
@@ -689,12 +678,10 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 
 
 func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:
-	# El contador de tareas sigue conectado al reloj de la jornada.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	assert_str(texto).is_not_empty()
 	assert_str(texto).not_contains("_hud.mostrar_tiempo")
 	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)")
-	assert_str(texto).contains("tarea_completada.connect(_hud.mostrar_tareas)")
 
 
 func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:

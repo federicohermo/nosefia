@@ -72,8 +72,7 @@ son de introducción: las tareas entran de a poco.
 | 6 y 7 | las cuatro fijas |
 
 Mientras sigue abierta OQ-SHF-006, una jornada sin fila propia DEBE declarar sólo las cuatro
-fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir. La cantidad que muestra el HUD DEBE
-salir de esa misma lista.
+fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir.
 
 La jornada 1 declara reposición: los casilleros que el jugador vacía al vender son huecos que
 repone. La nota de tareas DEBE listar sólo las obligatorias declaradas para esa noche.
@@ -227,7 +226,8 @@ DADO las jornadas 1 a 7 CUANDO cada una pide sus obligatorias ENTONCES la 1 reci
 cobrar, registrar y reponer, sin limpiar ni particular; la 2 recibe las 4 fijas; la 3 recibe 5,
 con ordenar las cajas y sin basura; la 4 recibe 5, con basura y sin ordenar; la 5 recibe 5, con
 desechar los Cindolor vencidos y sin ordenar ni basura; la 6 y la 7 reciben las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
-comparte y todas las de la segunda están sin cumplir.
+comparte y todas las de la segunda están sin cumplir. DADO la jornada 1 recién abierta ENTONCES la
+nota de tareas lista atención, registro y reposición, sin limpieza.
 
 ### AC-SHF-059 — Los vencidos cuentan al llegar el quinto al contenedor *(verifica BR-SHF-026)*
 
@@ -362,14 +362,6 @@ DADO la entrada a mitad de su avance CUANDO se pulsa Esc y pasan cuadros ENTONCE
 apertura y turno conservan sus valores. CUANDO se reanuda ENTONCES la entrada sigue desde esos
 valores. DADO HUD, interfaces, cierre, entrada, avisos y pausa superpuestos CUANDO se compara
 su orden de dibujo ENTONCES la entrada está sobre los tres primeros y debajo de los dos últimos.
-
-### AC-SHF-027 — El denominador sigue las declaradas *(verifica BR-SHF-005, BR-SHF-008)*
-
-DADO la jornada 1 recién abierta CUANDO se consulta el HUD ENTONCES dice `1/3`: reponer ya está cumplida con la góndola completa.
-La nota de tareas lista atención, registro y reposición, sin limpieza.
-DADO la jornada 3
-recién abierta ENTONCES dice `0/5`. DADO la jornada 5 recién abierta ENTONCES dice `0/5`. DADO la jornada 6 recién abierta ENTONCES dice `0/4`; cumplir sus cuatro declaradas lo deja en `4/4`, y cumplir una
-tarea ajena a esa lista no aumenta la cuenta.
 
 ### AC-SHF-028 — La reflexión retiene la entrada *(verifica BR-SHF-019)*
 

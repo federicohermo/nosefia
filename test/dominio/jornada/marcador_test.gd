@@ -36,13 +36,3 @@ func test_los_segundos_se_truncan_al_minuto_y_no_se_redondean() -> void:  # AC-S
 func test_un_restante_negativo_nunca_pasa_de_la_hora_de_cierre() -> void:  # AC-SHF-014
 	# Un `08:10` en el display es un turno que siguió después de cerrar, y eso no existe.
 	assert_str(Marcador.hora(-10.0)).is_equal("08:00")
-
-
-func test_las_tareas_se_leen_como_cumplidas_sobre_declaradas() -> void:
-	assert_str(Marcador.tareas(3, 4)).is_equal("3/4")
-
-
-func test_la_cantidad_de_obligatorias_entra_por_argumento() -> void:
-	# El segundo argumento cambia y el resultado lo sigue: el marcador no sabe cuántas tareas
-	# pide el jefe, y por eso una tarea más no lo toca.
-	assert_str(Marcador.tareas(0, 5)).is_equal("0/5")
