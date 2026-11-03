@@ -12,6 +12,8 @@ Todo el cuerpo de la góndola pasa a **un solo blanco apagado**, `TONO`:
 - Los grises de la paleta (`PIXELES_GRISES`) valen `TONO`, y su rojo vale `ROJO`. El azul no se
   toca.
 - Los materiales lisos de `COLORES_LISOS` toman su tono como color base.
+- **La rejilla de alambre** (`REJILLA`) es el interior de la estantería metálica. Su textura era un
+  gris de 0,12 y su material tenía metal 0,5, que oscurece más. Pasa a `REJILLA` y a poco metal.
 - **El fondo de los exhibidores es azul marino.** Su textura ya era casi negra y el color base
   la volvía a teñir de azul: el panel del fondo salía negro. Pasa a `AZUL` y el color base a blanco.
 
@@ -28,7 +30,11 @@ from lib.repo import RAIZ
 CARPETA = RAIZ / "assets" / "source" / "textures" / "gondola"
 
 #: El blanco apagado del cuerpo de la góndola, en valores de imagen de 0 a 1.
-TONO = (0.66, 0.66, 0.68)
+TONO = (0.80, 0.80, 0.82)
+
+#: El gris claro de la rejilla de alambre: el fondo cuadriculado y las bandejas de la estantería
+#: metálica. Su textura era un gris de 0,12 y el interior salía negro.
+REJILLA = (0.70, 0.71, 0.73)
 
 #: El azul marino del fondo de los exhibidores, en valores de imagen.
 AZUL = (0.14, 0.26, 0.46)
@@ -43,7 +49,12 @@ TEXTURAS = {
     "gondola_panel_blanca_1024_basecolor_negra": TONO,
     "gondola_parante_ranura_blanca": TONO,
     "exhibidor fondo.png": AZUL,
+    "gondola_grilla_alambre": REJILLA,
 }
+
+#: Materiales con metal que oscurecen su color base: sin reflejos horneados, el metal se ve negro.
+#: Pasan a esta metalicidad.
+METALICIDAD = {"GONDOLA | Grilla de alambre": 0.1}
 
 #: Materiales cuyo color base tiñe de nuevo una textura que ya trae su color: pasan a blanco.
 SIN_TINTE = ("EXHIBIDOR | Fondo", "EXHIBIDOR | Azul")

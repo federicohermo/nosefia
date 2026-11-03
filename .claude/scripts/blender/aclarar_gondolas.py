@@ -117,6 +117,19 @@ def colores_lisos() -> list[str]:
     return informe
 
 
+def metalicidad() -> list[str]:
+    informe = []
+    for nombre, valor in gondolas.METALICIDAD.items():
+        material = bpy.data.materials.get(nombre)
+        if material is None:
+            raise SystemExit(f"el modelo no tiene el material {nombre}")
+        principal = next(n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+        antes = round(principal.inputs["Metallic"].default_value, 3)
+        principal.inputs["Metallic"].default_value = valor
+        informe.append(f"gondola: {nombre} metal {antes} -> {valor}")
+    return informe
+
+
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -131,7 +144,7 @@ def main() -> None:
         ].default_value = (1.0, 1.0, 1.0, 1.0)
         print(f"gondola: {nombre} sin tinte")
     print(paleta())
-    for linea in colores_lisos():
+    for linea in colores_lisos() + metalicidad():
         print(linea)
     if "--sin-guardar" not in sys.argv:
         bpy.ops.file.make_paths_relative()

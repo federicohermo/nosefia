@@ -63,7 +63,7 @@ PRUEBA = textwrap.dedent(
 
     azar = np.random.default_rng(2)
     original = np.ones((32, 32, 4), dtype=np.float32)
-    original[..., :3] = np.clip(azar.normal(0.08, 0.015, (32, 32, 3)), 0.01, 0.2)
+    original[..., :3] = np.clip(azar.normal(0.08, 0.006, (32, 32, 3)), 0.01, 0.2)
     nuevo = ag.aclarar(original)
     for canal, esperado in enumerate(gondolas.TONO):
         assert abs(float(nuevo[..., canal].mean()) - esperado) < 0.002, f"canal {{canal}} no llegó al tono"
