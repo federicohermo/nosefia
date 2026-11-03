@@ -22,7 +22,7 @@ La limpieza conserva dimensiones y RGB. No se recortan ni se reescalan las figur
 | `assets/personajes/Enrique Peldaño/enrique_05.png` | `assets/characters/enrique/05.png` | `13ebebfaa6fd6981a853d027f5ecb6ec957ea87b` | `af293f23ca2df3cf42d655d1e5557235b605ab80a01e6155fdb1ee99cc8b0eb7` |
 | `assets/personajes/Enrique Peldaño/enrique_06.png` | `assets/characters/enrique/06.png` | `e240251eea96bc9d76c5ff2417e78141c7687ce3` | `716aeea7c4cd43ac460b0d6291e2fce21f8a52f6b3f053df1814358453c12d91` |
 
-`enrique/idle.tres` conserva el ritmo de los compradores: seis cuadros en orden 01 a 06,
-bucle activo, velocidad 2.0 y duración relativa 1.0. El ciclo dura 3 s.
+`enrique/idle.tres`: seis cuadros en orden 01 a 06, bucle activo, duración relativa 1.0 y
+velocidad 4.0, el doble que los compradores. El ciclo dura 1,5 s. La velocidad se cambia sólo ahí.
 Godot genera los `.png.import`. Usan compresión con pérdida, modo 1 y calidad 0.7, como los compradores.
 La pantalla de instrucciones lo reproduce con `AnimatedSprite2D`, escala 455 / 1086, en el lugar de `1676:1052`.

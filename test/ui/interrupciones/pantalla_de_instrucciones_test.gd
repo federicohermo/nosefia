@@ -280,19 +280,6 @@ func test_enrique_arranca_su_reposo_desde_el_primer_cuadro_al_abrir() -> void:
 	await assert_signal(enrique).wait_until(ESPERA_MS).is_emitted("frame_changed")
 
 
-func test_enrique_respira_al_ritmo_de_los_compradores() -> void:
-	var pantalla := _pantalla()
-	var enrique: AnimatedSprite2D = pantalla.get("_enrique")
-	var comprador: SpriteFrames = load("res://assets/characters/cami/idle.tres")
-	assert_float(enrique.sprite_frames.get_animation_speed(&"idle")).is_equal(
-		comprador.get_animation_speed(&"idle")
-	)
-	for cuadro in enrique.sprite_frames.get_frame_count(&"idle"):
-		assert_float(enrique.sprite_frames.get_frame_duration(&"idle", cuadro)).is_equal(
-			comprador.get_frame_duration(&"idle", 0)
-		)
-
-
 func test_enrique_se_frena_al_cerrar_la_pantalla() -> void:
 	var pantalla := _pantalla()
 	var enrique: AnimatedSprite2D = pantalla.get("_enrique")
