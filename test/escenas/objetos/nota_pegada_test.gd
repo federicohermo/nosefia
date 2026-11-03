@@ -88,5 +88,56 @@ func test_el_tick_pegado_es_rojo_a_la_izquierda_y_del_alto_del_renglon() -> void
 	var alto := papel.font.get_height(papel.font_size) * papel.pixel_size
 	assert_float(tick.texture.get_height() * tick.pixel_size).is_equal_approx(alto, 0.0001)
 	assert_float(-tick.position.y).is_equal_approx(1.5 * alto, 0.0001)
-	assert_float(tick.position.x + tick.texture.get_width() * tick.pixel_size / 2.0).is_less(0.0)
+	var inicio_del_texto := papel.offset.x * papel.pixel_size
+	assert_float(tick.position.x + tick.texture.get_width() * tick.pixel_size / 2.0).is_less(
+		inicio_del_texto
+	)
 	assert_bool(tick.modulate == NotaEncuadrada.COLOR_DEL_TICK).is_true()
+
+
+func test_la_hoja_pegada_tacha_la_oracion_cumplida_y_no_la_pendiente() -> void:  # AC-PLY-165
+	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
+	var basura := Tarea.new(Tarea.Tipo.SACAR_LA_BASURA)
+	var obligatorias: Array[Tarea] = [limpiar, basura]
+	var cuerpo := _hoja_de_tareas(obligatorias)
+	assert_array(cuerpo.filas_tachadas()).is_empty()
+	basura.completar()
+	cuerpo.declarar(NotaPegada.tareas_a_realizar(obligatorias))
+	assert_array(cuerpo.filas_tachadas()).contains_exactly([1])
+	basura.descompletar()
+	cuerpo.declarar(NotaPegada.tareas_a_realizar(obligatorias))
+	assert_array(cuerpo.filas_tachadas()).is_empty()
+
+
+func test_el_tachado_pegado_cubre_toda_la_oracion_en_el_rojo_del_tick() -> void:  # AC-PLY-165
+	var obligatorias := Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	obligatorias[1].completar()
+	var cuerpo := _hoja_de_tareas(obligatorias)
+	var papel := cuerpo.renglones_del_papel
+	var oracion := papel.text.split("\n")[1]
+	var ancho := (
+		papel.font.get_string_size(oracion, HORIZONTAL_ALIGNMENT_LEFT, -1, papel.font_size).x
+		* papel.pixel_size
+	)
+	var tachado: Sprite3D = cuerpo.tachados_visibles()[0]
+	var cubre := tachado.texture.get_width() * tachado.pixel_size * tachado.scale.x
+	assert_float(cubre).is_equal_approx(ancho, 0.0001)
+	assert_float(tachado.position.x - cubre / 2.0).is_equal_approx(
+		papel.offset.x * papel.pixel_size, 0.0001
+	)
+	assert_bool(tachado.modulate == NotaEncuadrada.COLOR_DEL_TICK).is_true()
+
+
+func test_la_lista_pegada_se_corre_al_centro_con_su_tick() -> void:  # AC-PLY-165
+	var obligatorias := Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	obligatorias[1].completar()
+	var cuerpo := _hoja_de_tareas(obligatorias)
+	var papel := cuerpo.renglones_del_papel
+	var tick: Sprite3D = cuerpo.ticks_visibles()[0]
+	var ancho_del_tick := tick.texture.get_width() * tick.pixel_size
+	# El tick acompaña a la lista: sigue pegado a su izquierda, no al borde del papel.
+	assert_float(tick.position.x + ancho_del_tick / 2.0).is_less(papel.offset.x * papel.pixel_size)
+	assert_float(papel.offset.x).is_greater(0.0)
+	# Una hoja que no es de tareas no se corre.
+	cuerpo.declarar(NotaPegada.de(NotaPegada.Id.LOCAL_ORDENADO))
+	assert_float(papel.offset.x).is_equal(0.0)

@@ -320,10 +320,13 @@ por tarea.
 Las hojas del cuartito y del baño DEBEN conservar sus imágenes artísticas.
 
 MIENTRAS una tarea de la jornada está cumplida, su renglón en «TAREAS A REALIZAR» DEBE llevar un
-tick de verificación («✓») rojo a la izquierda del nombre, en la hoja pegada y en su lectura. El
-tick DEBE aparecer en el momento en que la tarea se cumple, también con la lectura abierta, y
-DEBE irse si la tarea vuelve a quedar sin cumplir. Las tareas sin cumplir NO DEBEN llevar tick, y
-el orden, los nombres y la numeración de los renglones NO DEBEN cambiar.
+tick de verificación («✓») rojo a la izquierda del nombre, en la hoja pegada y en su lectura, y
+DEBE llevar tachada toda la oración, número y nombre, con una línea del mismo rojo. El tick y el
+tachado DEBEN aparecer en el momento en que la tarea se cumple, también con la lectura abierta, y
+DEBEN irse si la tarea vuelve a quedar sin cumplir. Las tareas sin cumplir NO DEBEN llevar tick ni
+tachado, y el orden, los nombres y la numeración de los renglones NO DEBEN cambiar. La lista, con
+sus ticks y tachados, DEBE quedar corrida hacia el centro del papel sin que el renglón más largo
+se salga ni se corte.
 
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
 atención al cliente, registro de productos vendidos, limpieza, reposición y, al final, la
@@ -1577,11 +1580,14 @@ sigue cerrada.
 ### AC-PLY-165 — Una tarea cumplida muestra el tick rojo y lo pierde al descumplirse *(verifica BR-PLY-030)*
 
 DADO las obligatorias limpieza y tirar la basura, y ninguna cumplida, ENTONCES ningún renglón
-lleva tick. CUANDO se cumple limpieza ENTONCES «1. Limpieza» lleva el tick rojo y «2. Tirar la
-basura» no, en la hoja y en la lectura, aunque la lectura esté abierta. CUANDO limpieza vuelve a
-quedar sin cumplir ENTONCES el tick se va de las dos. DADO una jornada que abre con una tarea ya
-cumplida, ENTONCES su renglón arranca con el tick. El orden, los nombres y la numeración son los
-mismos con y sin tick.
+lleva tick ni tachado. CUANDO se cumple limpieza ENTONCES «1. Limpieza» lleva el tick rojo y una
+línea roja sobre toda la oración, y «2. Tirar la basura» no lleva ninguno de los dos, en la hoja y
+en la lectura, aunque la lectura esté abierta. CUANDO limpieza vuelve a quedar sin cumplir
+ENTONCES el tick y el tachado se van de las dos. DADO una jornada que abre con una tarea ya
+cumplida, ENTONCES su renglón arranca con el tick y el tachado. El orden, los nombres y la
+numeración son los mismos con y sin ellos. DADO todas las obligatorias de la primera jornada
+completa, ENTONCES en la lectura el renglón más largo entra entero en el papel, sin partirse, y
+el tick queda adentro del papel.
 
 ## No objetivos
 

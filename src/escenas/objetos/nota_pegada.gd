@@ -12,6 +12,7 @@ signal apertura_pedida
 
 var _nota: NotaPegada
 var _ticks: Array[Sprite3D] = []
+var _tachados: Array[Sprite3D] = []
 var _filas_con_tick: Array[int] = []
 
 
@@ -37,17 +38,37 @@ func ticks_visibles() -> Array[Sprite3D]:
 	return _ticks.duplicate()
 
 
-## Un tick por tarea cumplida, a la izquierda del número, con el alto del renglón.
+## Los renglones del papel que van tachados: los mismos que llevan tick.
+func filas_tachadas() -> Array[int]:
+	return _filas_con_tick.duplicate()
+
+
+func tachados_visibles() -> Array[Sprite3D]:
+	return _tachados.duplicate()
+
+
+## Por tarea cumplida, un tick a la izquierda del número con el alto del renglón, y una línea
+## sobre toda la oración. La lista de tareas va corrida hacia el centro del papel.
 func _pintar_ticks(nota: NotaPegada) -> void:
 	for tick in _ticks:
 		renglones_del_papel.remove_child(tick)
 		tick.queue_free()
+	for tachado in _tachados:
+		renglones_del_papel.remove_child(tachado)
+		tachado.queue_free()
 	_ticks.clear()
+	_tachados.clear()
 	_filas_con_tick.clear()
 	var papel := renglones_del_papel
 	var alto := (papel.font.get_height(papel.font_size) + papel.line_spacing) * papel.pixel_size
 	var tamano_del_pixel := alto / NotaEncuadrada.TICK.get_height()
 	var ancho := NotaEncuadrada.TICK.get_width() * tamano_del_pixel
+	var corrimiento := NotaEncuadrada.CORRIMIENTO_DE_LA_LISTA * alto if nota.numerada() else 0.0
+	papel.offset.x = corrimiento / papel.pixel_size
+	var oraciones := papel.text.split("\n")
+	var linea := Image.create(1, 1, false, Image.FORMAT_RGBA8)
+	linea.fill(Color.WHITE)
+	var textura_de_la_linea := ImageTexture.create_from_image(linea)
 	for fila in nota.renglones().size():
 		if not nota.cumplida(fila):
 			continue
@@ -59,11 +80,35 @@ func _pintar_ticks(nota: NotaPegada) -> void:
 		tick.gi_mode = papel.gi_mode
 		tick.render_priority = papel.render_priority
 		tick.position = Vector3(
-			-(ancho / 2.0 + NotaEncuadrada.SEPARACION_DEL_TICK * alto), -(fila + 0.5) * alto, 0.0
+			corrimiento - (ancho / 2.0 + NotaEncuadrada.SEPARACION_DEL_TICK * alto),
+			-(fila + 0.5) * alto,
+			0.0
 		)
 		papel.add_child(tick)
 		_ticks.append(tick)
 		_filas_con_tick.append(fila)
+		var largo := (
+			(
+				papel
+				. font
+				. get_string_size(oraciones[fila], HORIZONTAL_ALIGNMENT_LEFT, -1, papel.font_size)
+				. x
+			)
+			* papel.pixel_size
+		)
+		var tachado := Sprite3D.new()
+		tachado.texture = textura_de_la_linea
+		tachado.pixel_size = 1.0
+		tachado.scale = Vector3(largo, NotaEncuadrada.GROSOR_DEL_TACHADO * alto, 1.0)
+		tachado.modulate = NotaEncuadrada.COLOR_DEL_TICK
+		tachado.shaded = papel.shaded
+		tachado.gi_mode = papel.gi_mode
+		tachado.render_priority = papel.render_priority + 1
+		tachado.position = Vector3(
+			corrimiento + largo / 2.0, -(fila + NotaEncuadrada.ALTURA_DEL_TACHADO) * alto, 0.001
+		)
+		papel.add_child(tachado)
+		_tachados.append(tachado)
 
 
 func dato() -> NotaPegada:
