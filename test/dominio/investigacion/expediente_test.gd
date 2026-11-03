@@ -237,3 +237,47 @@ func test_el_objeto_de_una_pista_solo_la_levanta_la_noche_de_esa_pista() -> void
 			jornada == levantar.jornada
 		)
 		assert_bool(expediente.levanta_una_pista(&"ajeno", jornada)).is_false()
+
+
+func test_5b_se_registra_una_vez_con_su_foto_y_su_texto() -> void:  # AC-INV-091
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var jornada := GeneradorDeTickets.JORNADA_SIN_LECTOR
+	var expediente := Expediente.new(caso)
+	var nuevas: Array[Pista] = []
+	expediente.pista_nueva.connect(func(pista: Pista) -> void: nuevas.append(pista))
+	var ajenos: Array[Array] = [
+		[&"5B", Pista.Canal.CHAT, jornada - 1], [&"5B", Pista.Canal.LEVANTAR, jornada]
+	]
+	for ajeno: Array in ajenos:
+		assert_int(expediente.registrar_por_canal(ajeno[0], ajeno[1], ajeno[2])).is_equal(
+			Expediente.Resultado.DESCONOCIDA
+		)
+	assert_array(Array(expediente.identidades())).is_empty()
+	assert_int(expediente.registrar_por_canal(&"5B", Pista.Canal.CHAT, jornada)).is_equal(
+		Expediente.Resultado.ANOTADA
+	)
+	assert_int(expediente.registrar_por_canal(&"5B", Pista.Canal.CHAT, jornada)).is_equal(
+		Expediente.Resultado.REPETIDA
+	)
+	assert_array(Array(expediente.identidades())).is_equal(["5B"])
+	assert_int(nuevas.size()).is_equal(1)
+	var notas := expediente.mensajes_de_notas()
+	assert_int(notas.size()).is_equal(2)
+	if notas.size() == 2:
+		assert_object(notas[0].foto).is_not_null()
+		assert_str(notas[0].texto).is_empty()
+		assert_object(notas[1].foto).is_null()
+		assert_str(notas[1].texto).is_equal(caso.pista_de("5B").texto)
+		assert_int(notas[1].jornada).is_equal(jornada)
+
+
+func test_registrar_5b_con_2a_no_cambia_las_notas_de_2a() -> void:  # AC-INV-091
+	var expediente := Expediente.new(CasoDeInvestigacion.de_la_partida())
+	expediente.registrar("2A")
+	var antes := expediente.mensajes_de_notas()
+	assert_int(expediente.registrar("5B")).is_equal(Expediente.Resultado.ANOTADA)
+	assert_array(Array(expediente.identidades())).is_equal(["2A", "5B"])
+	var despues := expediente.mensajes_de_notas()
+	assert_int(despues.size()).is_equal(antes.size() + 2)
+	for indice: int in antes.size():
+		assert_str(despues[indice].identidad).is_equal(antes[indice].identidad)
