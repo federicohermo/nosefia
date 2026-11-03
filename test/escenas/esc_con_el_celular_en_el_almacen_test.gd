@@ -63,6 +63,50 @@ func _el_navegador_suelta_el_cursor() -> void:
 	_pausa().call("_mirar_el_cursor")
 
 
+func _clic_izquierdo() -> InputEventMouseButton:
+	var evento := InputEventMouseButton.new()
+	evento.button_index = MOUSE_BUTTON_LEFT
+	evento.pressed = true
+	return evento
+
+
+## Un navegador que sólo da el cursor ante un clic o una tecla distinta de Esc: `rechaza[0]` lo
+## niega, y el modo no cambia. Devuelve las escrituras que llegaron a tomar el cursor.
+func _con_un_navegador_que_rechaza(rechaza: Array[bool]) -> Array[Input.MouseMode]:
+	var jugador: Node3D = _almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	jugador.set("_en_web", true)
+	var modo: Array[Input.MouseMode] = [Input.MOUSE_MODE_VISIBLE]
+	var tomas: Array[Input.MouseMode] = []
+	jugador.set("_leer_cursor", func() -> Input.MouseMode: return modo[0])
+	jugador.set(
+		"_escribir_cursor",
+		func(pedido: Input.MouseMode) -> void:
+			if pedido == Input.MOUSE_MODE_CAPTURED:
+				tomas.append(pedido)
+			if not (rechaza[0] and pedido == Input.MOUSE_MODE_CAPTURED):
+				modo[0] = pedido
+	)
+	return tomas
+
+
+func test_el_primer_clic_tras_el_esc_toma_el_cursor_y_no_hace_nada_mas() -> void:  # AC-INV-070
+	var rechaza: Array[bool] = [false]
+	var tomas := _con_un_navegador_que_rechaza(rechaza)
+	var jugador: Node3D = _almacen.get("_jugador")
+	await _tecla(KEY_Q)
+	rechaza[0] = true
+	await _tecla(KEY_ESCAPE)
+	assert_bool(_celular().celular().abierto()).is_false()
+	tomas.clear()
+	rechaza[0] = false
+	jugador.call("_unhandled_input", _clic_izquierdo())
+	assert_array(tomas).is_equal([Input.MOUSE_MODE_CAPTURED])
+	assert_bool(jugador.call("uso_es_primario")).is_false()
+	jugador.call("_unhandled_input", _clic_izquierdo())
+	assert_bool(jugador.call("uso_es_primario")).is_true()
+
+
 func test_el_cursor_que_suelta_el_esc_del_celular_no_pausa() -> void:  # AC-INV-070
 	await _tecla(KEY_Q)
 	assert_bool(_celular().celular().abierto()).is_true()
