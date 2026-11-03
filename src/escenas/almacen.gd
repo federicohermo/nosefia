@@ -152,8 +152,6 @@ func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
 	return Compradores.de_la_jornada(jornada, _partida.semilla)
 
 
-## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
-## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
 	# Acá y no al declararla: quien arma la escena puede reemplazar la partida antes de entrar.
 	_jornada_preparada = _partida.jornada()
@@ -237,9 +235,8 @@ func _ready() -> void:
 	_reloj.tarea_descumplida.connect(_revisar_la_salida.unbind(1))
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
-	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
-	# conservar el conteo anterior arrastraría las cumplidas de ayer. La góndola se rehace por
-	# lo mismo: compartirla dejaría lo repuesto anoche y reponer se cumpliría sola desde la 2.
+	# La góndola se rehace en la apertura: compartirla dejaría lo repuesto anoche y reponer se
+	# cumpliría sola desde la 2.
 	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
 	# conectarlo dos veces es un error de Godot, no dos llamadas.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
@@ -394,9 +391,6 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 
 ## Cada noche arranca sin tareas cumplidas, cada caja del depósito llena y la góndola
 ## completa salvo lo que esa jornada hace faltar.
-##
-## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que
-## el jugador tarda lo que quiera en despachar, y el conteo de ayer no puede quedar colgado ahí.
 ##
 ## **Varios specs de la pila escribieron esta función por separado, cada uno con la parte que le
 ## importaba, y la unión las junta acá**: es la misma apertura y no una por tarea, y se conecta

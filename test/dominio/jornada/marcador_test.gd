@@ -1,4 +1,4 @@
-## Los números del turno formateados: la hora de la noche y el marcador de obligatorias.
+## Los números del turno formateados: la hora de la noche.
 ##
 ## El nodo que pinta no formatea nada: si estos casos pasan, el reloj de mesa del local dice la
 ## verdad. La hora se prueba acá y no mirando el label porque la aritmética de la apertura más lo

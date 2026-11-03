@@ -95,7 +95,6 @@ func _comprobar_planilla_en_cero(almacen: Node3D) -> void:
 
 # AC-STK-024
 func _comprobar_ninguna_cumplida_al_abrir(almacen: Node3D) -> void:
-	var reloj: RelojDelTurno = almacen.get("_reloj")
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		assert_bool(tarea.completada()).is_false()
 
