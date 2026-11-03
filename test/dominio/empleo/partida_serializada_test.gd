@@ -16,6 +16,7 @@ func _completo() -> Dictionary:
 		"noches_sin_sumar": 1,
 		"devoluciones": ["Buen día!", "Hola"],
 		"mopa_secada": true,
+		"primera_pista_pensada": true,
 		"expediente": ["2B"],
 		"notas": [{"texto": "Nota", "identidad": "NOTA_2B_TEXTO", "jornada": 2, "orden": 1}],
 		"cierre_pendiente": 2,

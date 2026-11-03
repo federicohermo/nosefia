@@ -8,7 +8,7 @@ func test_empujar_abre_una_puerta_cerrada() -> void:
 	assert_bool(puerta.abierta()).is_true()
 
 
-func test_empujar_una_puerta_abierta_no_la_cierra() -> void:
+func test_empujar_una_puerta_abierta_no_la_cierra() -> void:  # AC-PLY-163
 	# El cuerpo sigue contra la hoja mientras pasa: si empujar alternara, la cerraría encima.
 	var puerta := Puerta.new()
 	puerta.empujar()
@@ -16,7 +16,7 @@ func test_empujar_una_puerta_abierta_no_la_cierra() -> void:
 	assert_bool(puerta.abierta()).is_true()
 
 
-func test_empujar_una_puerta_trabada_no_la_abre() -> void:
+func test_empujar_una_puerta_trabada_no_la_abre() -> void:  # AC-PLY-163
 	var puerta := Puerta.new(true)
 	assert_bool(puerta.empujar()).is_false()
 	assert_bool(puerta.abierta()).is_false()

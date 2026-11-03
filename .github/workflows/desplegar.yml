@@ -195,6 +195,8 @@ jobs:
       # lo lee: en la raíz del repo lo leería un build de Vercel, y acá no hay build de Vercel.
       # Y la URL sale del stdout de la CLI en vez de escribirse a mano: escrita, verificaríamos
       # la publicación anterior cada vez que el proyecto cambie de nombre.
+      # `--archive=tgz` sube un solo archivo comprimido: sin él, el `index.pck` de más de 100 MB
+      # supera el límite por archivo de Vercel y la CLI sale con «File size limit exceeded».
       - name: Publicar en Vercel
         id: publicar
         env:
@@ -205,7 +207,7 @@ jobs:
           set -euo pipefail
           cp vercel.json export/web/
           npm install --global vercel@latest
-          url="$(vercel deploy export/web --prod --yes --token "$VERCEL_TOKEN")"
+          url="$(vercel deploy export/web --prod --yes --archive=tgz --token "$VERCEL_TOKEN")"
           # El encabezado de este archivo ya lo dice de la CLI: puede terminar sin desplegar y
           # salir 0. Sin este `-z`, el `url` vacío se propaga al paso siguiente y lo que se lee
           # es un `ValueError` de `urllib` sobre una ruta sin esquema — que falla, pero por el

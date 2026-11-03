@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -586,6 +586,14 @@ moverse. Llevar una caja en la mano NO DEBE cambiar nada de esto.
 Sólo se patea la unidad de producto: la caja, la bolsa y los útiles conservan BR-PLY-050. Una
 unidad pateada NO cuenta como repuesta: reponer se cumple sólo con el gesto de colocarla en el
 estante ([`store-stock`](../store-stock/store-stock.md)).
+
+### BR-PLY-053 — La compuerta del mostrador se abre al empujarla desde afuera
+
+CUANDO el jugador camina contra la compuerta del mostrador desde afuera —el lado contrario a sus
+bisagras— y la compuerta no está trabada, el sistema DEBE abrirla hacia adentro, como si se
+accionara (BR-PLY-011). Empujar una compuerta abierta NO DEBE cerrarla: el cuerpo sigue contra la
+hoja mientras pasa. Desde adentro la compuerta NO DEBE ceder al empujarla. Cerrarla sigue siendo
+accionarla.
 
 ## Criterios de aceptación
 
@@ -1545,6 +1553,21 @@ del paso que declara el dominio para la caja, y no con la de los demás útiles.
 DADO el balde suelto en el piso CUANDO el jugador camina contra él hasta llevarlo contra una pared,
 y CUANDO algo lo golpea fuera de su eje ENTONCES su eje queda a menos de 1 grado de la vertical, y
 la mopa se puede mojar en él.
+
+### AC-PLY-162 — Empujar desde afuera abre la compuerta *(verifica BR-PLY-053)*
+
+DADO la compuerta del mostrador cerrada CUANDO un cuerpo camina contra ella desde afuera ENTONCES
+la hoja gira hacia adentro hasta abierta, y accionarla después la cierra.
+
+### AC-PLY-163 — Empujar no cierra ni destraba *(verifica BR-PLY-053)*
+
+DADO una puerta abierta CUANDO se la empuja ENTONCES sigue abierta. DADO una puerta trabada CUANDO
+se la empuja ENTONCES sigue cerrada.
+
+### AC-PLY-164 — Desde adentro la compuerta no cede *(verifica BR-PLY-053)*
+
+DADO la compuerta del mostrador cerrada CUANDO un cuerpo camina contra ella desde adentro ENTONCES
+sigue cerrada.
 
 ## No objetivos
 
