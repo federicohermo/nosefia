@@ -632,6 +632,43 @@ const poner = (nombre) => {
 };
 poner(VISTA);
 
+// ?camina=1: recorrer el almacén con WASD y el mouse (clic para capturar el mouse, Mayús corre).
+const CAMINA = PARAMS.get('camina') === '1';
+let caminar = () => {};
+if (CAMINA) {
+	const pos = new THREE.Vector3();
+	const giro = new THREE.Euler(0, 0, 0, 'YXZ');
+	camara.matrix.decompose(pos, new THREE.Quaternion(), new THREE.Vector3());
+	giro.setFromQuaternion(new THREE.Quaternion().setFromRotationMatrix(camara.matrix), 'YXZ');
+	const teclas = new Set();
+	window.addEventListener('keydown', (e) => teclas.add(e.code));
+	window.addEventListener('keyup', (e) => teclas.delete(e.code));
+	renderer.domElement.addEventListener('click', () => renderer.domElement.requestPointerLock());
+	window.addEventListener('mousemove', (e) => {
+		if (document.pointerLockElement !== renderer.domElement) return;
+		giro.y -= e.movementX * 0.002;
+		giro.x = Math.max(-1.5, Math.min(1.5, giro.x - e.movementY * 0.002));
+	});
+	let antes = performance.now();
+	const adelante = new THREE.Vector3();
+	const lado = new THREE.Vector3();
+	caminar = () => {
+		const ahora = performance.now();
+		const dt = Math.min(0.1, (ahora - antes) / 1000);
+		antes = ahora;
+		const v = (teclas.has('ShiftLeft') ? 6 : 2.5) * dt;
+		adelante.set(-Math.sin(giro.y), 0, -Math.cos(giro.y));
+		lado.set(Math.cos(giro.y), 0, -Math.sin(giro.y));
+		if (teclas.has('KeyW')) pos.addScaledVector(adelante, v);
+		if (teclas.has('KeyS')) pos.addScaledVector(adelante, -v);
+		if (teclas.has('KeyD')) pos.addScaledVector(lado, v);
+		if (teclas.has('KeyA')) pos.addScaledVector(lado, -v);
+		camara.matrix.compose(pos, new THREE.Quaternion().setFromEuler(giro), new THREE.Vector3(1, 1, 1));
+		camara.matrixWorld.copy(camara.matrix);
+		camara.matrixWorldInverse.copy(camara.matrixWorld).invert();
+	};
+}
+
 // ---------------------------------------------------------------------------------------------
 // Postproceso: tono de Godot, ajustes y el bloom del shader del juego
 // ---------------------------------------------------------------------------------------------
@@ -759,6 +796,7 @@ function bucle(t) {
 	if (!corriendo) return;
 	marcas.push(t);
 	if (marcas.length > 60000) marcas.shift();
+	caminar();
 	const a = performance.now();
 	dibujarUnCuadro();
 	cpuCuadros.push(performance.now() - a);
