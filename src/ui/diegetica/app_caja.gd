@@ -20,7 +20,6 @@ const TEXTO_DE_LA_COLUMNA_MARCA := "MARCA"
 const TEXTO_DE_LA_COLUMNA_PRODUCTO := "PRODUCTO"
 const TEXTO_DE_LA_COLUMNA_PRECIO := "PRECIO"
 const TEXTO_DE_LA_COLUMNA_VENDIDO := "VENDIDO"
-const TEXTO_DE_LA_COLUMNA_TOTAL := "TOTAL"
 const TEXTO_DE_LA_CANTIDAD := "%d PRODUCTOS EN EL REGISTRO"
 const TEXTO_DEL_DESPLAZAMIENTO := "ARRASTRÁ PARA DESPLAZAR  /  + − AJUSTAR UNIDADES"
 const TEXTO_DE_LA_ETIQUETA_TOTAL := "TOTAL"
@@ -33,10 +32,8 @@ const ALTO_DE_LA_FILA := 105.0
 const ANCHO_DE_LA_IMAGEN := ALTO_DE_LA_FILA  # las imágenes son cuadradas
 const ANCHO_DEL_PRECIO := 168.0
 const ANCHO_DE_LO_VENDIDO := 240.0
-const ANCHO_DEL_TOTAL := 164.0
 const PESO_DE_LA_MARCA := 2.0
 const PESO_DEL_RUBRO := 3.0
-const TAMANO_DE_LETRA_DE_LA_DESCRIPCION := 28
 const IMAGENES := {
 	Producto.Id.ACTRONCITO: preload("res://assets/ui/manada/actroncito.png"),
 	Producto.Id.DUREXTRA: preload("res://assets/ui/manada/durextra.png"),
@@ -84,7 +81,6 @@ const IMAGENES := {
 @export var _columna_producto: Label
 @export var _columna_precio: Label
 @export var _columna_vendido: Label
-@export var _columna_total: Label
 @export var _cantidad: Label
 @export var _desplazamiento: Label
 @export var _etiqueta_del_total: Label
@@ -96,11 +92,10 @@ var _registro: RegistroDeVentas
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
 
-## Las etiquetas de unidades y de total de cada fila, por `producto.id`. Las filas se arman una
+## Las etiquetas de unidades de cada fila, por `producto.id`. Las filas se arman una
 ## vez por planilla y después sólo se reescriben: rehacerlas en cada gesto vaciaría el contenedor
 ## un instante y el desplazamiento volvería arriba.
 var _unidades_por_id: Dictionary = {}
-var _totales_por_id: Dictionary = {}
 
 
 func _ready() -> void:
@@ -116,7 +111,6 @@ func _ready() -> void:
 	_encabezar(_columna_producto, TEXTO_DE_LA_COLUMNA_PRODUCTO, 0.0, PESO_DEL_RUBRO)
 	_encabezar(_columna_precio, TEXTO_DE_LA_COLUMNA_PRECIO, ANCHO_DEL_PRECIO)
 	_encabezar(_columna_vendido, TEXTO_DE_LA_COLUMNA_VENDIDO, ANCHO_DE_LO_VENDIDO)
-	_encabezar(_columna_total, TEXTO_DE_LA_COLUMNA_TOTAL, ANCHO_DEL_TOTAL)
 	_desplazamiento.text = TEXTO_DEL_DESPLAZAMIENTO
 	_etiqueta_del_total.text = TEXTO_DE_LA_ETIQUETA_TOTAL
 	_scroll.gui_input.connect(_al_tocar_la_lista)
@@ -179,8 +173,6 @@ func mostrar(registro: RegistroDeVentas) -> void:
 	for producto in registro.productos():
 		var unidades: Label = _unidades_por_id[producto.id]
 		unidades.text = str(registro.unidades_de(producto))
-		var total_de_la_fila: Label = _totales_por_id[producto.id]
-		total_de_la_fila.text = texto_de_pesos(registro.total_de(producto))
 	_total.text = texto_de_pesos(registro.total())
 
 
@@ -209,7 +201,6 @@ func _armar_filas() -> void:
 		_filas.remove_child(vieja)
 		vieja.queue_free()
 	_unidades_por_id.clear()
-	_totales_por_id.clear()
 	for producto in _registro.productos():
 		_filas.add_child(_fila_de(producto))
 	_cantidad.text = TEXTO_DE_LA_CANTIDAD % _unidades_por_id.size()
@@ -240,10 +231,8 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	imagen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	marco.add_child(imagen)
 	var marca := _etiqueta(producto.nombre.to_upper(), 0, PESO_DE_LA_MARCA)
-	marca.add_theme_font_size_override(&"font_size", TAMANO_DE_LETRA_DE_LA_DESCRIPCION)
 	fila.add_child(marca)
 	var rubro := _etiqueta(Catalogo.rubro_de(producto.id).to_upper(), 0, PESO_DEL_RUBRO)
-	rubro.add_theme_font_size_override(&"font_size", TAMANO_DE_LETRA_DE_LA_DESCRIPCION)
 	fila.add_child(rubro)
 	fila.add_child(_etiqueta(texto_de_pesos(producto.precio), ANCHO_DEL_PRECIO))
 	fila.add_child(_boton(TEXTO_DE_RESTAR, func() -> void: resta_pedida.emit(producto)))
@@ -255,9 +244,6 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	_unidades_por_id[producto.id] = unidades
 	fila.add_child(unidades)
 	fila.add_child(_boton(TEXTO_DE_SUMAR, func() -> void: suma_pedida.emit(producto)))
-	var total_de_la_fila := _etiqueta("", ANCHO_DEL_TOTAL)
-	_totales_por_id[producto.id] = total_de_la_fila
-	fila.add_child(total_de_la_fila)
 	return panel
 
 
