@@ -24,6 +24,7 @@ enum Id {
 	TECHO_SOBRE_UN_CUBICULO,
 	PUERTA_CON_TAREAS_PENDIENTES,
 	PRIMERA_PISTA,
+	SIN_LUZ,
 }
 
 ## No declara `class_name`: se preloadea para preguntarle qué se tira sin llamado.
@@ -47,6 +48,7 @@ const TEXTOS: Dictionary[Id, String] = {
 	Id.TECHO_SOBRE_UN_CUBICULO: "¿¿Cómo llegó eso ahí??",
 	Id.PUERTA_CON_TAREAS_PENDIENTES: "No debería irme. Todavía me quedan tareas por completar.",
 	Id.PRIMERA_PISTA: "Encontré una pista. ¡Qué extraño! Me parece que está pasando algo.",
+	Id.SIN_LUZ: "Se cortó la luz…\nNingún aparato eléctrico funciona.",
 }
 const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, Id] = {
 	PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: Id.PARED_DEL_OTRO_INODORO,

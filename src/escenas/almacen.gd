@@ -370,6 +370,9 @@ func _cablear_el_corte_de_luz() -> void:
 	var tablero: TableroElectrico = $Estructura/tableroluz/StaticBody3D
 	tablero.restablecimiento_pedido.connect(corte.restablecer)
 	var escritorio: EscritorioDelLocal = $"Estructura/base compu/StaticBody3D"
+	var pensar_sin_luz := func() -> void: _pensar_gesto(SubtitulosDeLosGestos.Id.SIN_LUZ)
+	escritorio.apertura_rechazada_sin_luz.connect(pensar_sin_luz)
+	_puesto_de_la_caja.apertura_rechazada_sin_luz.connect(pensar_sin_luz)
 	corte.luz_cambiada.connect(
 		func(hay_luz: bool) -> void:
 			escritorio.con_luz = hay_luz
