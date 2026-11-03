@@ -168,7 +168,9 @@ func test_el_cartel_con_titulo_pone_el_titulo_sobre_el_cuerpo() -> void:  # AC-N
 			var esperado: float = (
 				letra_del_tema * par[1] / PilaDeNotificaciones.TAMANO_DEL_TEXTO_EN_FIGMA
 			)
-			assert_float(etiqueta.get_theme_font_size("font_size")).is_equal_approx(esperado, 0.5)
+			assert_float(float(etiqueta.get_theme_font_size("font_size"))).is_equal_approx(
+				esperado, 0.5
+			)
 		(
 			assert_str(
 				titulado.find_children("*", "TextureRect", true, false)[0].texture.resource_path
