@@ -238,6 +238,42 @@ func test_el_subtitulo_va_abajo_al_centro_y_uno_por_vez() -> void:  # AC-SUB-001
 		assert_str(subtitulo.text).is_equal(segundo)
 
 
+func test_el_subtitulo_muestra_los_renglones_de_su_texto() -> void:  # AC-SUB-029
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		var ventana: SubViewport = auto_free(SubViewport.new())
+		ventana.size = tamano
+		add_child(ventana)
+		var hud: Hud = load(ESCENA_DEL_HUD).instantiate()
+		ventana.add_child(hud)
+		var subtitulo: Label = hud.get_node("Subtitulo")
+		for id: SubtitulosDeLosGestos.Id in SubtitulosDeLosGestos.Id.values():
+			var texto := SubtitulosDeLosGestos.texto(id)
+			if texto.is_empty():
+				continue
+			hud.pensar(texto)
+			await get_tree().process_frame
+			assert_int(subtitulo.get_line_count()).is_equal(texto.split("\n").size())
+			var caja := subtitulo.get_global_rect()
+			assert_float(caja.get_center().x).is_equal_approx(tamano.x / 2.0, 1.0)
+			assert_float(caja.get_center().y).is_greater(tamano.y / 2.0)
+
+
+func test_un_renglon_que_no_entra_en_la_ventana_se_corta() -> void:  # AC-SUB-030
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		var ventana: SubViewport = auto_free(SubViewport.new())
+		ventana.size = tamano
+		add_child(ventana)
+		var hud: Hud = load(ESCENA_DEL_HUD).instantiate()
+		ventana.add_child(hud)
+		hud.pensar("palabra ".repeat(38))
+		await get_tree().process_frame
+		var subtitulo: Label = hud.get_node("Subtitulo")
+		assert_int(subtitulo.get_line_count()).is_greater(1)
+		var caja := subtitulo.get_global_rect()
+		assert_float(caja.position.x).is_greater_equal(0.0)
+		assert_float(caja.end.x).is_less_equal(float(tamano.x))
+
+
 func test_el_hud_no_arma_el_texto_de_la_caja() -> void:
 	# El texto lo arma la caja en `dominio/`, donde tiene test. Armado acá, cuántas le entran a
 	# una caja sería una regla del juego en una capa que el gate de tests no mira.
