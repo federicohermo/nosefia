@@ -44,6 +44,16 @@ const TEMA := "res://assets/ui/manada/tema.tres"
 ## La variación del tema que lleva el subtítulo: la del `Label`, con contorno.
 const VARIACION_DEL_SUBTITULO := "Subtitulo"
 
+## Lo levantable que dice su texto de examinar desde su recurso.
+const UTILES_DE_EXAMINAR: Array[String] = [
+	"res://src/dominio/almacen/mopa.tres",
+	"res://src/dominio/almacen/balde.tres",
+	"res://src/dominio/almacen/jabon_azul.tres",
+	"res://src/dominio/almacen/jabon_rosa.tres",
+	"res://src/dominio/almacen/jabon_amarillo.tres",
+	"res://src/dominio/investigacion/colilla.tres",
+]
+
 ## Lo que delataría el texto de la caja armado acá: sus palabras, su cuenta y quien la lleva.
 const RASTROS_DEL_TEXTO_DE_LA_CAJA := [
 	"Una caja con", "Entra", "ContenidoDeLaCaja", "UNIDADES_POR_CAJA"
@@ -178,9 +188,8 @@ func test_el_subtitulo_se_lee_sobre_el_blanco_con_el_contorno_de_su_variacion() 
 	assert_int(subtitulo.get_theme_constant("outline_size")).is_equal(
 		tema.get_constant("outline_size", VARIACION_DEL_SUBTITULO)
 	)
-	# Contra un `Label` del mismo tema sin la variación: la misma fuente y el mismo color, él sin
-	# contorno. El tamaño es el de la variación, más chico que el del tema: el renglón más largo
-	# de la ficha tiene que entrar en el ancho útil de 1280×720.
+	# Contra un `Label` del mismo tema sin la variación: la misma fuente, el mismo color y el
+	# mismo tamaño, y él sin contorno.
 	var base: Label = auto_free(Label.new())
 	base.theme = tema
 	add_child(base)
@@ -188,9 +197,9 @@ func test_el_subtitulo_se_lee_sobre_el_blanco_con_el_contorno_de_su_variacion() 
 	assert_that(subtitulo.get_theme_color("font_color")).is_equal(
 		base.get_theme_color("font_color")
 	)
-	var tamano_de_la_variacion := tema.get_font_size("font_size", VARIACION_DEL_SUBTITULO)
-	assert_int(subtitulo.get_theme_font_size("font_size")).is_equal(tamano_de_la_variacion)
-	assert_int(tamano_de_la_variacion).is_less(base.get_theme_font_size("font_size"))
+	assert_int(subtitulo.get_theme_font_size("font_size")).is_equal(
+		base.get_theme_font_size("font_size")
+	)
 	assert_int(base.get_theme_constant("outline_size")).is_zero()
 
 
@@ -239,7 +248,25 @@ func test_el_subtitulo_va_abajo_al_centro_y_uno_por_vez() -> void:  # AC-SUB-001
 		assert_str(subtitulo.text).is_equal(segundo)
 
 
+func _textos_que_se_piensan() -> Array[String]:
+	var textos: Array[String] = []
+	for id: SubtitulosDeLosGestos.Id in SubtitulosDeLosGestos.Id.values():
+		if id not in [SubtitulosDeLosGestos.Id.NINGUNO, SubtitulosDeLosGestos.Id.PRIMERA_PISTA]:
+			textos.append(SubtitulosDeLosGestos.texto(id))
+	for tabla: Dictionary in [
+		SubtitulosAlExaminar.DE_LO_DEMAS,
+		SubtitulosAlExaminar.DE_LAS_NOTAS,
+		SubtitulosAlExaminar.DE_LOS_TACHOS,
+	]:
+		for texto: String in tabla.values():
+			textos.append(texto)
+	for ruta in UTILES_DE_EXAMINAR:
+		textos.append((load(ruta) as ObjetoDelAlmacen).texto_al_examinar())
+	return textos
+
+
 func test_el_subtitulo_muestra_los_renglones_de_su_texto() -> void:  # AC-SUB-029
+	var textos := _textos_que_se_piensan()
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		var ventana: SubViewport = auto_free(SubViewport.new())
 		ventana.size = tamano
@@ -247,20 +274,34 @@ func test_el_subtitulo_muestra_los_renglones_de_su_texto() -> void:  # AC-SUB-02
 		var hud: Hud = load(ESCENA_DEL_HUD).instantiate()
 		ventana.add_child(hud)
 		var subtitulo: Label = hud.get_node("Subtitulo")
-		for id: SubtitulosDeLosGestos.Id in SubtitulosDeLosGestos.Id.values():
-			if id in [SubtitulosDeLosGestos.Id.NINGUNO, SubtitulosDeLosGestos.Id.PRIMERA_PISTA]:
-				continue
-			var texto := SubtitulosDeLosGestos.texto(id)
+		var fuente := subtitulo.get_theme_font("font")
+		var tamano_de_fuente := subtitulo.get_theme_font_size("font_size")
+		var sin_cortes := 0
+		for texto in textos:
+			# Un renglón más ancho que la ventana no entra por más que el cuadro la ocupe entera:
+			# la red de seguridad lo corta, y es la única excepción.
+			var entra := true
+			for renglon in texto.split("\n"):
+				var ancho := fuente.get_string_size(
+					renglon, HORIZONTAL_ALIGNMENT_LEFT, -1, tamano_de_fuente
+				)
+				entra = entra and ancho.x <= tamano.x
 			hud.pensar(texto)
 			await get_tree().process_frame
-			(
-				assert_int(subtitulo.get_line_count())
-				. override_failure_message("%s a %s: renglones de más" % [id, tamano])
-				. is_equal(texto.split("\n").size())
-			)
+			var renglones := texto.split("\n").size()
+			if entra:
+				sin_cortes += 1
+				(
+					assert_int(subtitulo.get_line_count())
+					. override_failure_message("%s a %s: renglones de más" % [texto, tamano])
+					. is_equal(renglones)
+				)
+			else:
+				assert_int(subtitulo.get_line_count()).is_greater(renglones)
 			var caja := subtitulo.get_global_rect()
 			assert_float(caja.get_center().x).is_equal_approx(tamano.x / 2.0, 1.0)
 			assert_float(caja.get_center().y).is_greater(tamano.y / 2.0)
+		assert_int(sin_cortes).is_greater(textos.size() - 2)
 
 
 func test_un_renglon_que_no_entra_en_la_ventana_se_corta() -> void:  # AC-SUB-030

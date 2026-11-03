@@ -136,28 +136,29 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 |---|---|
 | Mopa | Una mopa para limpiar las manchas del local. |
 | Balde | Un balde para hacer las mezclas con los jabones. |
-| Jabón azul | Un bidón de jabón azul, marca “2”. Sirve para manchas de humedad. |
-| Jabón rosa | Un bidón de jabón rosa, marca “H”. Sirve para manchas de... para manchas marrones. |
-| Jabón amarillo | Un bidón de jabón amarillo, marca “O”. Sirve para manchas de polvo. |
+| Jabón azul | Un bidón de jabón azul, marca “2”.<br>Sirve para manchas de humedad. |
+| Jabón rosa | Un bidón de jabón rosa, marca “H”.<br>Sirve para manchas de... para manchas marrones. |
+| Jabón amarillo | Un bidón de jabón amarillo, marca “O”.<br>Sirve para manchas de polvo. |
 | Cada bolsa de basura | Una bolsa de basura. |
-| Inodoro | Un inodoro. Enrique me pidió encarecidamente que no tire papel en él, porque se tapa. |
+| Colilla | Una colilla de cigarrillo. Qué raro… |
+| Inodoro | Un inodoro. Enrique me pidió encarecidamente<br>que no tire papel en él, porque se tapa. |
 | Lavatorio | Un lavatorio. Acá puedo cargar el balde. |
-| Nota de jabones y manchas | Una nota explicando qué jabón usar para cada tipo de mancha. |
-| Nota de instrucciones de limpieza | Una nota que explica cómo usar los elementos de limpieza. |
+| Nota de jabones y manchas | Una nota explicando qué jabón usar<br>para cada tipo de mancha. |
+| Nota de instrucciones de limpieza | Una nota que explica cómo usar<br>los elementos de limpieza. |
 | Nota de no tirar papel | “Por favor, no tirar papel en el inodoro” |
 | Nota de tareas a realizar | Una lista de las tareas que me dejó Enrique. |
-| Nota del local ordenado | Una nota sobre el correcto orden del local. Enrique es medio insoportable con eso… |
-| Computadora | Una computadora viejita. El único programa que tiene es el registro de productos vendidos. |
-| Caja registradora | La caja registradora. Acá puedo hacer los tickets para los compradores. |
-| Lector | El lector de código de barras. Si le paso un producto, lo va a anotar en el programa generador de tickets de la caja. |
-| Entrada principal | La entrada principal al local. Queda cerrada con llave durante el turno nocturno. |
-| Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada. |
+| Nota del local ordenado | Una nota sobre el correcto orden del local.<br>Enrique es medio insoportable con eso… |
+| Computadora | Una computadora medio vieja. El único programa<br>que tiene es el registro de productos vendidos. |
+| Caja registradora | La caja registradora. Acá puedo hacer<br>los tickets para los compradores. |
+| Lector | El lector de código de barras. Si le paso un producto,<br>lo va a anotar en el programa de la caja. |
+| Entrada principal | La entrada principal al local. Queda cerrada<br>con llave durante el turno nocturno. |
+| Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique.<br>Así le dice él. Siempre queda cerrada. |
 | Puerta del cuartito, trabada | Acá guardan las cosas de limpieza. Está cerrado con llave. |
 | Portón del depósito | Un portón que da a la calle. |
 | Contenedor de basura | Un contenedor de basura. |
 | Tacho del local | Un tacho de basura para los compradores diurnos. |
-| Tacho del escritorio | Un tachito de basura para nosotros, los empleados. |
-| Tacho del baño | El tacho de basura del baño. Mejor ni mirar lo que tiene adentro. |
+| Tacho del escritorio | Un tacho de basura para nosotros,<br>los empleados. |
+| Tacho del baño | El tacho de basura del baño.<br>Mejor ni mirar lo que tiene adentro. |
 
 Las puertas interiores, las puertas de las heladeras, la ventanilla, el comprador, la góndola y
 las manchas NO DEBEN tener texto al examinar. La excepción es la puerta del
@@ -210,7 +211,7 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 |---|---|---|
 | Tirar al contenedor algo que no es una bolsa de basura, un producto vencido, un ticket ni una pista | `MALA_IDEA` | Me parece que eso fue una mala idea… |
 | Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | Enrique me pidió que no tirara las cajas<br>de productos, ni siquiera las vacías. |
-| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Me parece que no debería tirar<br>los elementos de limpieza. |
+| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Meee parece que no debería tirar<br>los elementos de limpieza. |
 | Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando<br>cosas por la ventana, me mata. |
 | Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando…<br>Creo que no estoy usando el jabón correcto. |
 | Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
@@ -279,7 +280,8 @@ y en ningún otro lugar. Un texto que la ficha no corta DEBE verse en un solo re
 subtítulo NO DEBE tener un ancho fijo: cada renglón DEBE ocupar lo que mide, y el conjunto DEBE
 quedar centrado abajo (BR-SUB-001). SI un renglón no entra en el ancho de la ventana, ENTONCES el
 sistema DEBE cortarlo igual, para que no se salga de la pantalla. Vale para todo subtítulo,
-también el texto fijo del examen, que no tiene cortes en la ficha.
+también el texto al examinar de cada objeto, que se corta donde marca su ficha de «Otros objetos
+interactuables» o de «Productos y cajas contenedoras» (BR-SUB-009, BR-SUB-010).
 
 El salto de renglón cuenta como un carácter para la duración (BR-SUB-004).
 
@@ -524,14 +526,25 @@ demás. Ningún renglón queda vacío y el texto no empieza ni termina con un sa
 
 ### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
 
-DADO el HUD a 1920×1080 y a 1280×720 CUANDO se piensa cada pensamiento del AC-SUB-028 ENTONCES la
-línea muestra tantos renglones como la ficha, sin ningún corte de más, y queda centrada en el
-encuadre y en la mitad inferior.
+DADO el HUD a 1920×1080 y a 1280×720 CUANDO se piensa cada pensamiento del AC-SUB-028 y cada texto
+al examinar del AC-SUB-031 ENTONCES la línea muestra tantos renglones como la ficha, sin ningún
+corte de más, y queda centrada en el encuadre y en la mitad inferior. La única excepción es un
+renglón más ancho que la ventana (BR-SUB-017), que se corta por la red de seguridad: a 1280×720 le
+pasa a `MOPA_BERRETA`.
 
 ### AC-SUB-030 — Un renglón que no entra se corta *(verifica BR-SUB-017)*
 
 DADO el HUD a 1280×720 y a 1920×1080 CUANDO se piensa un texto de 300 caracteres sin saltos
 ENTONCES se ve en más de un renglón y ninguno sale de la ventana.
+
+### AC-SUB-031 — Los renglones de cada texto al examinar *(verifica BR-SUB-017, BR-SUB-009, BR-SUB-010)*
+
+DADO el texto al examinar de cada objeto de la tabla de BR-SUB-010 ENTONCES tiene los
+renglones de su ficha: dos para el inodoro, la computadora, la caja registradora, el lector, la
+entrada principal, la puerta del jefe, las notas de jabones y manchas, de instrucciones de limpieza
+y del local ordenado, los tachos del escritorio y del baño y los tres jabones, y uno para cada uno
+de los demás. Ningún renglón queda vacío. Cada producto del catálogo, que la ficha no corta, tiene
+un solo renglón.
 
 ## No objetivos
 

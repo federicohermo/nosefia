@@ -33,7 +33,7 @@ const TEXTOS: Dictionary[Id, String] = {
 	Id.MALA_IDEA: "Me parece que eso fue una mala idea…",
 	Id.CAJA_EN_EL_CONTENEDOR:
 	"Enrique me pidió que no tirara las cajas\nde productos, ni siquiera las vacías.",
-	Id.UTIL_EN_EL_CONTENEDOR: "Me parece que no debería tirar\nlos elementos de limpieza.",
+	Id.UTIL_EN_EL_CONTENEDOR: "Meee parece que no debería tirar\nlos elementos de limpieza.",
 	Id.POR_LA_VENTANA: "Si Enrique se entera de que estoy tirando\ncosas por la ventana, me mata.",
 	Id.JABON_EQUIVOCADO: "Esto no está funcionando…\nCreo que no estoy usando el jabón correcto.",
 	Id.MOPA_SIN_MOJAR: "Necesitaría mojar la mopa en agua con jabón.",

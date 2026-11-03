@@ -12,6 +12,22 @@ const UTILES: Dictionary[StringName, String] = {
 	&"bolsa_de_basura_3": "res://src/dominio/almacen/bolsa_de_basura_3.tres",
 }
 
+const COLILLA := "res://src/dominio/investigacion/colilla.tres"
+
+## Cuántos renglones tiene el texto de examinar de cada objeto en su ficha de Notion. Los que no
+## figuran se ven en un solo renglón.
+const DE_DOS_RENGLONES: Array[StringName] = [
+	SubtitulosAlExaminar.INODORO,
+	SubtitulosAlExaminar.COMPUTADORA,
+	SubtitulosAlExaminar.CAJA_REGISTRADORA,
+	SubtitulosAlExaminar.LECTOR,
+	SubtitulosAlExaminar.ENTRADA_PRINCIPAL,
+	SubtitulosAlExaminar.PUERTA_DEL_JEFE,
+	&"jabon_azul",
+	&"jabon_rosa",
+	&"jabon_amarillo",
+]
+
 
 func _textos_fijos_por_id() -> Dictionary:
 	var textos := SubtitulosAlExaminar.DE_LO_DEMAS.duplicate()
@@ -70,3 +86,38 @@ func test_el_texto_no_es_la_revelacion() -> void:  # AC-SUB-010
 	assert_bool(mopa.tiene_revelacion()).is_true()
 	assert_str(mopa.texto_al_examinar()).not_contains(mopa.revelacion.texto)
 	assert_str(mopa.texto_al_examinar()).is_equal(mopa.subtitulo)
+
+
+func _renglones_de_la_ficha(id: StringName) -> int:
+	if id in DE_DOS_RENGLONES:
+		return 2
+	var de_dos: Array[StringName] = [
+		SubtitulosAlExaminar.id_de_la_nota(NotaPegada.Id.INSTRUCCIONES_DE_LIMPIEZA),
+		SubtitulosAlExaminar.id_de_la_nota(NotaPegada.Id.JABONES_Y_MANCHAS),
+		SubtitulosAlExaminar.id_de_la_nota(NotaPegada.Id.LOCAL_ORDENADO),
+		SubtitulosAlExaminar.id_del_tacho(TareaDeLaBasura.Tacho.ESCRITORIO),
+		SubtitulosAlExaminar.id_del_tacho(TareaDeLaBasura.Tacho.BANO),
+	]
+	return 2 if id in de_dos else 1
+
+
+func _afirmar_renglones(id: StringName, texto: String) -> void:
+	var renglones := texto.split("\n")
+	(
+		assert_int(renglones.size())
+		. override_failure_message("%s: renglones distintos de los de la ficha" % id)
+		. is_equal(_renglones_de_la_ficha(id))
+	)
+	for renglon in renglones:
+		assert_str(renglon.strip_edges()).is_not_empty()
+
+
+func test_cada_texto_de_examinar_se_corta_en_los_renglones_de_la_ficha() -> void:  # AC-SUB-031
+	var textos := _textos_fijos_por_id()
+	for id: StringName in textos:
+		_afirmar_renglones(id, textos[id])
+	for id: StringName in UTILES:
+		_afirmar_renglones(id, (load(UTILES[id]) as ObjetoDelAlmacen).texto_al_examinar())
+	_afirmar_renglones(&"colilla", (load(COLILLA) as ObjetoDelAlmacen).texto_al_examinar())
+	for producto: Producto in Catalogo.todos():
+		_afirmar_renglones(producto.nombre, SubtitulosAlExaminar.de_producto(producto.id))
