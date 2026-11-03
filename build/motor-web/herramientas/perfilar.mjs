@@ -1,5 +1,6 @@
 // Perfila un visor: milisegundos de CPU por cuadro, llamadas de dibujo y dónde se va el tiempo.
-// Uso: node perfilar.mjs <url> <salida.json> [--vista=gondola] [--segundos=4] [--cpu=1]
+// Uso: node perfilar.mjs <url> <salida.json> [--vista=gondola] [--segundos=4] [--cpu=1] [--sin-perfil]
+// --sin-perfil no enciende el muestreador (que suma costo) y sólo mide la CPU por cuadro.
 // Pide un visor con `window.__listo`, `__vista`, `__cpu` y `__info`. Chrome sin vsync.
 import { chromium } from 'playwright';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
@@ -8,6 +9,7 @@ import { join } from 'node:path';
 
 const [url, salida, ...op] = process.argv.slice(2);
 const val = (n, d) => (op.find((o) => o.startsWith(`--${n}=`)) ?? `=${d}`).split('=')[1];
+const sinPerfil = op.includes('--sin-perfil');
 const vista = val('vista', 'gondola'), segundos = Number(val('segundos', 4)), cpu = Number(val('cpu', 1));
 const perfil = mkdtempSync(join(tmpdir(), 'mv-p-'));
 const ctx = await chromium.launchPersistentContext(perfil, { channel: 'chrome', headless: false, viewport: { width: 1536, height: 760 },
@@ -20,12 +22,10 @@ await pag.waitForFunction(() => window.__listo === true, null, { timeout: 300000
 await pag.waitForTimeout(1500);
 const info = await pag.evaluate(() => window.__info?.());
 await pag.evaluate(() => window.__cpu(true));
-await cdp.send('Profiler.enable');
-await cdp.send('Profiler.setSamplingInterval', { interval: 100 });
-await cdp.send('Profiler.start');
+if (!sinPerfil) { await cdp.send('Profiler.enable'); await cdp.send('Profiler.setSamplingInterval', { interval: 100 }); await cdp.send('Profiler.start'); }
 const t0 = Date.now();
 await pag.waitForTimeout(segundos * 1000);
-const { profile } = await cdp.send('Profiler.stop');
+const profile = sinPerfil ? { nodes: [], samples: [], timeDeltas: [] } : (await cdp.send('Profiler.stop')).profile;
 const cpuMs = await pag.evaluate(() => window.__cpu(true));
 const reloj = (Date.now() - t0) / 1000;
 
@@ -43,8 +43,9 @@ const total = [...propio.values()].reduce((a, b) => a + b, 0);
 const top = [...propio.entries()].sort((a, b) => b[1] - a[1]).slice(0, 40)
   .map(([k, v]) => ({ funcion: k, ms_por_s: +(v / 1000 / reloj).toFixed(1), pct: +((v / total) * 100).toFixed(1) }));
 const libre = propio.get('(idle)') ?? 0;
-const resumen = { url, vista, cpu, segundos: reloj, info, cpu_por_cuadro_ms: cpuMs, ocupado_pct: +(100 - (libre / total) * 100).toFixed(1), top };
+const entre = await pag.evaluate(() => window.__medir ? window.__medir(1500) : null);
+const resumen = { url, vista, cpu, segundos: reloj, info, cpu_por_cuadro_ms: cpuMs, entre_cuadros: entre, ocupado_pct: total ? +(100 - (libre / total) * 100).toFixed(1) : null, top };
 writeFileSync(salida, JSON.stringify(resumen, null, 1));
-console.log(JSON.stringify({ vista, cpu_por_cuadro_ms: cpuMs, ocupado_pct: resumen.ocupado_pct, llamadas: info?.render?.calls ?? info?.llamadas, top5: top.slice(0, 8) }, null, 1));
+console.log(JSON.stringify(sinPerfil ? { vista, cpu: cpuMs, entre: entre, llamadas: info?.render?.drawCalls ?? info?.llamadas } : { vista, cpu_por_cuadro_ms: cpuMs, ocupado_pct: resumen.ocupado_pct, top5: top.slice(0, 8) }));
 await ctx.close();
 try { rmSync(perfil, { recursive: true, force: true }); } catch {}

@@ -79,7 +79,10 @@ if (r.primera.listo) {
   for (const v of vistas) {
     await pag.evaluate((n) => window.__vista(n), v);
     await pag.waitForTimeout(1200);
+    await pag.evaluate(() => window.__cpu?.(true));
     r.vistas[v] = await tomar(segundos * 1000);
+    r.cpu = r.cpu ?? {};
+    r.cpu[v] = await pag.evaluate(() => window.__cpu?.(true) ?? null);
   }
   const d = await pag.evaluate(() => { window.__largo = 0; return performance.now(); });
   for (const v of vistas) { await pag.evaluate((n) => window.__vista(n), v); await pag.waitForTimeout(1500); }
@@ -99,6 +102,6 @@ if (r.primera.listo) {
 r.errores = lineas.filter((l) => /error/i.test(l.tipo) && !/Failed to load resource.*404/.test(l.texto)).slice(0, 6);
 writeFileSync(salida, JSON.stringify(r, null, 1));
 const m = (o) => o?.p50;
-console.log(JSON.stringify({ etiqueta, almacen1: r.primera.almacen_ms, almacen2: r.segunda?.almacen_ms, bytesMB: r.primera.bytes_total && +(r.primera.bytes_total / 1048576).toFixed(1), memMB: r.memoria_mb, gondola_p50: m(r.vistas?.gondola), gondola_p95: r.vistas?.gondola?.p95, errores: r.errores.length }));
+console.log(JSON.stringify({ etiqueta, almacen1: r.primera.almacen_ms, almacen2: r.segunda?.almacen_ms, bytesMB: r.primera.bytes_total && +(r.primera.bytes_total / 1048576).toFixed(1), memMB: r.memoria_mb, gondola_p50: m(r.vistas?.gondola), gondola_p95: r.vistas?.gondola?.p95, cpu_gondola: r.cpu?.gondola?.p50, errores: r.errores.length }));
 await ctx.close();
 try { rmSync(perfil, { recursive: true, force: true }); } catch {}

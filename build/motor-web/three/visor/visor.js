@@ -39,6 +39,9 @@ const SIN_FUSION = PARAMS.get('fusion') === '0';
 // 'datos': las luces puntuales y focos van a arreglos con un lazo y las de área a un lazo propio.
 // 'nativas': una luz de Three por cada luz de Godot, desenrolladas en el shader.
 const LUCES = PARAMS.get('luces') ?? 'datos';
+// Lo estático no recalcula matrices en cada cuadro. En WebGPU además se graba una vez en un bundle
+// (`bundle=0` lo apaga). Lo que se mueva en el juego tiene que quedar afuera del bundle.
+const ESTATICO = PARAMS.get('estatico') !== '0';
 
 const panel = document.getElementById('datos');
 const decir = (t) => { if (panel) panel.textContent = t; };
@@ -77,6 +80,7 @@ await renderer.init();
 anotar('renderer');
 let ltcTablas = null;
 const backend = renderer.backend?.isWebGPUBackend ? 'webgpu' : 'webgl2';
+const EN_BUNDLE = backend === 'webgpu' && PARAMS.get('bundle') !== '0';
 RectAreaLightNode_setup();
 if (LUCES === 'datos') renderer.lighting = new DynamicLighting({ maxPointLights: 4, maxSpotLights: 16, maxDirectionalLights: 1, maxHemisphereLights: 1 });
 
@@ -452,7 +456,8 @@ function rectDe(ruta) {
 }
 const comoMatriz = (t) => [t[0], t[1], t[2], 0, t[3], t[4], t[5], 0, t[6], t[7], t[8], 0, t[9], t[10], t[11], 1];
 
-const mundo = new THREE.Group();
+const mundo = EN_BUNDLE ? new THREE.BundleGroup() : new THREE.Group();
+if (EN_BUNDLE) mundo.static = true;
 escena.add(mundo);
 let dibujos = 0, conAtlas = 0;
 const dinamicos = [];
@@ -605,14 +610,19 @@ for (const l of datos.luces) {
 	if (luz === null) continue;
 	luz.position.copy(posicion);
 	luz.quaternion.copy(giro);
-	mundo.add(luz);
+	escena.add(luz);
 	if (luz.target) {
 		luz.target.position.copy(posicion).add(new THREE.Vector3(0, 0, -1).applyQuaternion(giro));
-		mundo.add(luz.target);
+		escena.add(luz.target);
 	}
 	luces.push(luz);
 }
 if (AMBIENTE > 0) escena.add(new THREE.AmbientLight(0xffffff, AMBIENTE));
+if (ESTATICO) {
+	mundo.matrixAutoUpdate = false;
+	escena.updateMatrixWorld(true);
+	escena.matrixWorldAutoUpdate = false;
+}
 
 // ---------------------------------------------------------------------------------------------
 // Cámara
