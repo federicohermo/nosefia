@@ -172,9 +172,24 @@ function contarEnlaces(avisoDelAlmacen) {
   };
 }
 
+// Si el plazo vence, lo que se midió hasta ahí es el único dato que deja la corrida. La página
+// puede estar bloqueada compilando, así que la lectura no espera más de 10 s.
+async function leerLoMedido(pagina) {
+  const lectura = pagina
+    .evaluate(() => ({
+      programas: window.__enlaces.programas,
+      fuentes_distintas: window.__enlaces.fuentes.size,
+    }))
+    .catch(() => ({}));
+  const plazo = new Promise((listo) => setTimeout(() => listo({}), 10_000).unref());
+  return Promise.race([lectura, plazo]);
+}
+
 async function corrida() {
   const contexto = await navegador.newContext({ viewport: { width: 1536, height: 760 } });
   const pagina = await contexto.newPage();
+  const parcial = {};
+  const desde = Date.now();
   await pagina.addInitScript(vigilarLaPagina, {
     avisoDelAlmacen: AVISO_DEL_ALMACEN, sinEnlaceEnParalelo,
   });
@@ -183,10 +198,10 @@ async function corrida() {
     await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
     const menu = aviso(pagina, AVISO_DEL_MENU);
     const almacen = aviso(pagina, AVISO_DEL_ALMACEN);
-    const desde = Date.now();
     await pagina.goto(url, { waitUntil: 'load', timeout: ESPERA });
     await pagina.waitForSelector('#status', { state: 'detached', timeout: ESPERA });
     const overlay = Date.now() - desde;
+    parcial.overlay = overlay;
     const { gpu, enlace_en_paralelo } = await pagina.evaluate(() => {
       const gl = document.createElement('canvas').getContext('webgl2');
       const info = gl?.getExtension('WEBGL_debug_renderer_info');
@@ -199,6 +214,7 @@ async function corrida() {
       throw new Error(`la medición sin ventana exige GPU real o --software; renderer: ${gpu}`);
     }
     const vioElMenu = (await dentroDe(menu, 'el aviso del menú')) - desde;
+    parcial.menu = vioElMenu;
     // El aviso sale antes del primer cuadro del menú: se espera ese cuadro para que el botón
     // ya esté dibujado cuando llega el clic.
     await pagina.evaluate(
@@ -214,6 +230,7 @@ async function corrida() {
       window.__enlaces.fuentes.clear();
     });
     const clic = Date.now() - desde;
+    parcial.clic = clic;
     await pagina.mouse.click(
       lienzo.x + lienzo.width / 2,
       lienzo.y + lienzo.height * ALTURA_DE_NUEVO_JUEGO
@@ -228,6 +245,9 @@ async function corrida() {
       overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic,
       cuadro_mas_largo_ms: cuadroMasLargo, gpu, enlace_en_paralelo, ...enlaces,
     };
+  } catch (error) {
+    error.parcial = { ...parcial, transcurrido: Date.now() - desde, ...(await leerLoMedido(pagina)) };
+    throw error;
   } finally {
     await contexto.close();
   }
@@ -239,6 +259,16 @@ function mediana(valores) {
 }
 
 const corridas = [];
+function guardar(medianas, extra = {}) {
+  if (!salida) return;
+  writeFileSync(salida, JSON.stringify({ url, fecha: new Date().toISOString(), ...extra, corridas, medianas,
+    condiciones: { navegador: navegador.version(), viewport: { ancho: 1536, alto: 760 },
+      sincronizacionHabitual: true, cpuLimitada: false, contextosHTTPNuevos: true,
+      sinVentana, sinEnlaceEnParalelo, software,
+      cacheDeShadersCompartida: 'posible dentro del mismo navegador' } }, null, 1));
+  console.log(`guardado en ${salida}`);
+}
+
 try {
   for (let i = 0; i < CORRIDAS; i++) {
     const medida = await corrida();
@@ -248,6 +278,11 @@ try {
         `almacén ${medida.almacen} ms`
     );
   }
+} catch (error) {
+  if (error.parcial) {
+    guardar({}, { incompleta: true, error: error.message, parcial: error.parcial });
+  }
+  throw error;
 } finally {
   await navegador.close();
 }
@@ -267,11 +302,4 @@ console.log(
   `programas y fuentes distintas: ${corridas.map((c) => `${c.programas} y ${c.fuentes_distintas}`).join('; ')}`
 );
 
-if (salida) {
-  writeFileSync(salida, JSON.stringify({ url, fecha: new Date().toISOString(), corridas, medianas,
-    condiciones: { navegador: navegador.version(), viewport: { ancho: 1536, alto: 760 },
-      sincronizacionHabitual: true, cpuLimitada: false, contextosHTTPNuevos: true,
-      sinVentana, sinEnlaceEnParalelo, software,
-      cacheDeShadersCompartida: 'posible dentro del mismo navegador' } }, null, 1));
-  console.log(`guardado en ${salida}`);
-}
+guardar(medianas);
