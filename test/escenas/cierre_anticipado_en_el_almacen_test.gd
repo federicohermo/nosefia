@@ -46,7 +46,7 @@ func test_retirar_y_reponer_retraba_y_rehabilita_la_entrada() -> void:  # AC-SHF
 	puesto.call("pedir_colocar", producto.id, ocupados[0])
 	assert_bool(repositor.reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_true()
 	assert_bool(almacen.call("_puede_salir")).is_true()
-	assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
+	assert_array(_textos(almacen)).not_contains(RETRABA).contains(AVISO)
 	await get_tree().process_frame
 
 
@@ -58,7 +58,7 @@ func test_no_salir_conserva_el_ritmo_y_cierra_por_el_recorrido_natural() -> void
 		if con_pendiente:
 			assert_bool(reloj.descumplir(reloj.obligatoria(Tarea.Tipo.REPONER))).is_true()
 		_pila(almacen)._process(Notificaciones.DURACION)
-		assert_array(_textos(almacen)).is_empty()
+		assert_array(_textos(almacen)).is_equal([] if con_pendiente else [AVISO])
 		var cierres: Array[int] = []
 		reloj.turno_cerrado.connect(cierres.append)
 		RelojDePrueba.avanzar_turno(reloj, _restante(almacen) - 1.0)
@@ -167,11 +167,12 @@ func test_la_prueba_avisa_sin_acelerar_y_permanece_reversible() -> void:
 		assert_bool(almacen.call("_puede_salir")).is_equal(
 			jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 		)
-		assert_array(_textos(almacen)).is_empty()
+		var avisado := [AVISO] if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA else []
+		assert_array(_textos(almacen)).is_equal(avisado)
 		reloj.avanzar(1.0)
 		assert_float(antes - _restante(almacen)).is_equal(Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 		almacen.call("_revisar_la_salida")
-		assert_array(_textos(almacen)).is_empty()
+		assert_array(_textos(almacen)).is_equal(avisado)
 
 
 func test_la_puerta_espera_al_ultimo_comprador_aun_mal_atendido() -> void:  # AC-SHF-036, AC-SHF-048
@@ -212,7 +213,7 @@ func test_la_puerta_espera_al_ultimo_comprador_aun_mal_atendido() -> void:  # AC
 		computadora.pedir_restar(producto)
 		assert_bool(almacen.call("_puede_salir")).is_true()
 		computadora.pedir_cerrar()
-		assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
+		assert_array(_textos(almacen)).not_contains(RETRABA).contains(AVISO)
 
 
 func test_venta_y_registro_habilitan_la_salida() -> void:  # AC-SHF-036, AC-SHF-038
@@ -287,14 +288,14 @@ func test_los_botones_retraban_y_recuperan_cada_ciclo() -> void:
 		assert_bool(almacen.call("_puede_salir")).is_true()
 		assert_str(_referencia(almacen)).contains("[Click Izq] Interactuar")
 		computadora.pedir_cerrar()
-		assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
+		assert_array(_textos(almacen)).not_contains(RETRABA).contains(AVISO)
 	computadora.pedir_abrir()
 	_boton(almacen, 6).pressed.emit()
 	assert_bool(almacen.call("_puede_salir")).is_false()
 	_boton(almacen, 4).pressed.emit()
 	assert_bool(almacen.call("_puede_salir")).is_true()
 	computadora.pedir_cerrar()
-	assert_array(_textos(almacen)).not_contains(RETRABA).not_contains(AVISO)
+	assert_array(_textos(almacen)).not_contains(RETRABA).contains(AVISO)
 	assert_float(_restante(almacen)).is_equal(antes)
 
 

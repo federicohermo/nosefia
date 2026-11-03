@@ -92,7 +92,7 @@ func avanzar(segundos: float) -> void:
 	if segundos <= 0.0:
 		return
 	for tipo in visibles():
-		if tipo == Tipo.CLIENTE and _esperando != null:
+		if _persiste(tipo):
 			continue
 		_transcurrido[tipo] += segundos
 		if _transcurrido[tipo] >= DURACION:
@@ -115,6 +115,10 @@ func vaciar() -> void:
 	_permiso = false
 
 
+func _persiste(tipo: Tipo) -> bool:
+	return tipo == Tipo.TAREAS_TERMINADAS or (tipo == Tipo.CLIENTE and _esperando != null)
+
+
 func _retirar(tipo: Tipo) -> void:
 	_orden.erase(tipo)
 	_transcurrido.erase(tipo)
@@ -128,7 +132,7 @@ func _avisar(tipo: Tipo) -> void:
 
 func _avisar_salida(disponible: bool) -> void:
 	if disponible:
-		if _salida == Salida.SIN_AVISO:
+		if not _orden.has(Tipo.TAREAS_TERMINADAS):
 			_avisar(Tipo.TAREAS_TERMINADAS)
 		_retirar(Tipo.SALIDA_RETRABADA)
 		_salida = Salida.HABILITADA

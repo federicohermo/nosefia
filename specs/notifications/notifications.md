@@ -53,7 +53,7 @@ CUANDO se avisa un tipo ya visible, el sistema DEBE dejarlo una sola vez, primer
 segundos completos, sin renovar los otros tipos. La llegada del mismo comprador sigue la excepción
 de BR-NTF-001 y la persistencia de BR-NTF-009. El cierre próximo sigue la unicidad
 por jornada de BR-NTF-012 y NO DEBE renovarse por entradas sucesivas de tiempo.
-Las tareas terminadas siguen la unicidad por jornada de BR-NTF-014. La salida vuelta a
+Las tareas terminadas siguen la persistencia de BR-NTF-014. La salida vuelta a
 trabar sigue las transiciones de BR-NTF-015.
 
 ### BR-NTF-005 — Los tipos conviven en orden
@@ -80,7 +80,7 @@ de pausa DEBE dibujarse por encima del cartel.
 
 TODOS los tipos sin título DEBEN presentar su texto en una sola línea, con el tamaño de letra
 principal del tema. Un tipo con título DEBE presentar el título en una línea de letra chica y su
-cuerpo debajo, en letra grande y en los renglones que fija su diseño. El contenedor DEBE ajustar su ancho al símbolo, la separación, el texto y sus
+cuerpo debajo, con el tamaño de letra principal del tema y en los renglones que fija su diseño. El contenedor DEBE ajustar su ancho al símbolo, la separación, el texto y sus
 márgenes, sin una franja vacía de ancho fijo. Los carteles DEBEN compartir el borde derecho
 y centrar verticalmente símbolo y texto, sin recortarlos al cambiar la resolución.
 
@@ -141,14 +141,16 @@ permanente al HUD ni cambiar la duración del turno.
 DEBE convivir con los demás tipos conservando orden, deduplicación y duración propia de
 cada uno; un aviso persistente NO DEBE adquirir un temporizador por la llegada de éste.
 
-### BR-NTF-014 — Las tareas terminadas avisan una vez por jornada de prueba
+### BR-NTF-014 — Las tareas terminadas quedan a la vista mientras la salida está habilitada
 
-CUANDO la jornada habilita por primera vez la salida según BR-SHF-021, el sistema DEBE mostrar
-el título «¡Tareas completadas!» y el cuerpo «Ya podés retirarte por la puerta principal.», en
-dos renglones, una sola vez en esa jornada. El aviso DEBE seguir la duración, pausa, orden y presentación comunes.
-Entradas repetidas del mismo cumplimiento NO DEBEN renovarlo, ni recrearlo después de vencer.
+CUANDO la jornada habilita la salida según BR-SHF-021, el sistema DEBE mostrar el título
+«¡Tareas completadas!» y el cuerpo «Ya podés retirarte por la puerta principal.», en dos
+renglones. El aviso DEBE quedar a la vista, sin la duración de BR-NTF-003 y como la llegada
+persistente de BR-NTF-009, hasta que la salida se traba o el jugador se va del local. DEBE
+seguir el orden, la pausa y la presentación comunes.
+Entradas repetidas del mismo cumplimiento NO DEBEN renovarlo ni recrearlo.
 Si la salida vuelve a trabarse, el sistema DEBE retirar este aviso para no anunciar un permiso
-que ya no vale. Recuperar la salida NO DEBE repetir el aviso inicial.
+que ya no vale. Recuperar la salida DEBE mostrarlo otra vez.
 Cerrar DEBE retirar el aviso y olvidar su disparo. Una jornada nueva de prueba puede avisar
 otra vez. Desde la primera jornada completa NO DEBE aparecer este aviso.
 
@@ -171,7 +173,7 @@ Cada nueva transición DEBE dispararlo otra vez, incluso si el aviso anterior ya
 Confirmar repetidas veces el mismo estado trabado NO DEBE renovarlo ni recrearlo.
 Antes de habilitar la salida por primera vez NO DEBE aparecer este aviso.
 Cuando se recupera la salida, el sistema DEBE retirar el aviso de traba para no anunciar una
-restricción que ya no vale, sin repetir el aviso inicial. Ninguno de estos cambios DEBE
+restricción que ya no vale, y el aviso de tareas terminadas vuelve según BR-NTF-014. Ninguno de estos cambios DEBE
 retirar ni renovar otros tipos. Cerrar DEBE vaciar ambos avisos y olvidar las transiciones.
 Desde la primera jornada completa NO DEBE aparecer este aviso. Con la computadora abierta,
 este aviso espera a que el jugador salga según BR-NTF-014.
@@ -348,10 +350,9 @@ DADO los cuatro tipos todavía visibles CUANDO cierra el turno ENTONCES retira l
 ### AC-NTF-026 — Un disparo, duración y nueva noche *(verifica BR-NTF-014, BR-NTF-003, BR-NTF-005, BR-NTF-006)*
 
 DADO salida habilitada CUANDO se recibe su confirmación repetidas veces ENTONCES hay un
-solo aviso de tareas terminadas, primero entre los otros tipos. A los 2,9 segundos sigue;
-al completar 3,0 se retira. Una entrada repetida no renueva su resto ni lo recrea al vencer.
-Cerrar retira todos los tipos y permite avisar una vez en la siguiente jornada de prueba.
-Pausar conserva el tiempo restante del aviso.
+solo aviso de tareas terminadas, primero entre los otros tipos. Los otros tipos
+siguen su duración; el de tareas terminadas no vence. Una entrada repetida no lo recrea.
+Cerrar retira todos los tipos y permite avisar de nuevo en la siguiente jornada de prueba.
 
 ### AC-NTF-027 — Texto completo con la presentación común *(verifica BR-NTF-014, BR-NTF-007)*
 
@@ -365,9 +366,9 @@ pasar clics.
 
 DADO por separado las jornadas 1, 2 y la primera jornada completa CUANDO falta una tarea
 ENTONCES no hay aviso. CUANDO se completa la última ENTONCES las dos primeras muestran
-exactamente uno y la primera completa ninguno. DADO el aviso vencido CUANDO se descumple
-y se recupera una tarea ENTONCES el aviso inicial no reaparece; la salida sigue el estado
-actual de sus tareas.
+exactamente uno y la primera completa ninguno. DADO el aviso visible CUANDO se descumple
+y se recupera una tarea ENTONCES el aviso reaparece; la salida sigue el estado actual de
+sus tareas.
 
 ### AC-NTF-029 — Cada transición avisa y los estados opuestos se retiran *(verifica BR-NTF-014, BR-NTF-015, BR-NTF-004, BR-NTF-005)*
 
@@ -375,7 +376,7 @@ DADO una jornada de prueba sin salida habilitada todavía CUANDO se confirma que
 ENTONCES no hay aviso de traba. DADO el aviso inicial visible CUANDO una tarea se descumple
 ENTONCES se retira ese aviso y aparece uno de salida vuelta a trabar. Confirmar otra vez el
 mismo estado no lo renueva. CUANDO se recuperan todas las tareas ENTONCES se retira el aviso
-de traba sin repetir el inicial. CUANDO otra tarea vuelve a descumplirse ENTONCES aparece
+de traba y vuelve el de tareas terminadas. CUANDO otra tarea vuelve a descumplirse ENTONCES aparece
 un nuevo aviso de traba con sus tres segundos completos, también si el anterior ya venció.
 Los otros tipos conservan su orden relativo y su tiempo restante durante ambos cambios.
 
@@ -405,21 +406,36 @@ la computadora ENTONCES aparece el de tareas terminadas con sus tres segundos co
 DADO ese aviso visible y la computadora abierta CUANDO una tarea se descumple ENTONCES la
 salida se traba y el aviso se retira en el instante, sin aviso de traba; al salir aparece el
 de traba. DADO la salida trabada y la computadora abierta CUANDO se recupera ENTONCES el aviso
-de traba se retira en el instante y al salir no aparece ninguno. DADO la computadora abierta
-CUANDO se descumple y se recupera una tarea antes de salir ENTONCES al salir no hay aviso.
+de traba se retira en el instante y al salir aparece el de tareas terminadas. DADO la computadora abierta
+CUANDO se descumple y se recupera una tarea antes de salir ENTONCES al salir aparece el de
+tareas terminadas.
 DADO una jornada sin salida habilitada CUANDO se cumple y se descumple antes de salir
 ENTONCES al salir no hay aviso, y completar después afuera avisa tareas terminadas una vez.
 DADO un cambio pendiente CUANDO cierra el turno antes de salir ENTONCES salir no muestra
 aviso. Los otros tipos conservan su orden y su tiempo restante durante la espera.
 DADO un aviso de salida visible CUANDO se abre y se cierra la computadora sin cambiar el
-permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrearse al vencer.
+permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrearse al vencer;
+el de tareas terminadas sigue a la vista.
 
 ### AC-NTF-043 — El cartel con título pone el título sobre el cuerpo *(verifica BR-NTF-007, BR-NTF-014)*
 
 DADO el aviso de tareas terminadas visible CUANDO se dibuja ENTONCES el título está encima del
-cuerpo, con letra más chica que la del cuerpo, y el símbolo es el de la puerta principal, no el
-del comprador. DADO cualquier otro tipo visible CUANDO se dibuja ENTONCES no tiene título y
+cuerpo, con letra más chica que la del cuerpo, y el cuerpo usa el mismo tamaño de letra que los
+demás carteles. El símbolo es el de la puerta principal, no el del comprador. DADO cualquier otro tipo visible CUANDO se dibuja ENTONCES no tiene título y
 conserva su texto en una sola línea.
+
+### AC-NTF-044 — Las tareas terminadas no vencen *(verifica BR-NTF-014, BR-NTF-003, BR-NTF-009)*
+
+DADO el aviso de tareas terminadas visible junto a otros tipos CUANDO pasa más tiempo que la
+duración de los avisos comunes ENTONCES los otros tipos se retiran y este sigue a la vista, también
+con la partida en pausa y tras repetir su confirmación. CUANDO el jugador se va del local
+ENTONCES el aviso se retira.
+
+### AC-NTF-045 — Deshacer una tarea retira las tareas terminadas y cumplirlas las devuelve *(verifica BR-NTF-014)*
+
+DADO el aviso de tareas terminadas visible CUANDO una tarea queda sin cumplir ENTONCES el aviso
+se retira. CUANDO todas se cumplen otra vez ENTONCES el aviso vuelve, tantas veces como se
+repita, también si el cambio ocurrió con la computadora abierta y el jugador salió después.
 
 ## No objetivos
 

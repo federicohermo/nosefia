@@ -66,20 +66,28 @@ func _verificar_carteles_de_salida(
 			assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 
 
-func test_tareas_terminadas_conserva_su_resto_en_pausa() -> void:  # AC-NTF-026
+# AC-NTF-044, AC-NTF-045
+func test_tareas_terminadas_sigue_a_la_vista_hasta_deshacer() -> void:
 	var pila := _pila()
 	pila.set_process(false)
+	pila.avisar_pista()
 	pila.actualizar_salida(true)
-	pila._process(Notificaciones.DURACION - 1.0)
+	pila._process(Notificaciones.DURACION * 10.0)
 	get_tree().paused = true
 	await get_tree().process_frame
 	assert_bool(pila.can_process()).is_false()
-	assert_array(_textos(pila)).has_size(1)
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]]
+	)
 	get_tree().paused = false
-	pila._process(0.9)
-	assert_array(_textos(pila)).has_size(1)
-	pila._process(0.1)
-	assert_array(_textos(pila)).is_empty()
+	pila.actualizar_salida(false)
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.SALIDA_RETRABADA]]
+	)
+	pila.actualizar_salida(true)
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]]
+	)
 
 
 func test_retrabar_conserva_el_resto_en_pausa_y_vaciar_la_retira() -> void:  # AC-NTF-031
@@ -151,26 +159,12 @@ func test_el_cartel_con_titulo_pone_el_titulo_sobre_el_cuerpo() -> void:  # AC-N
 		assert_int(titulo.get_theme_font_size("font_size")).is_less(
 			cuerpo.get_theme_font_size("font_size")
 		)
-		var letra_del_tema := float(pila._marco.get_theme_default_font_size())
-		var letra_de_otro_cartel := float(
-			(
-				(carteles[1] as Control)
-				. find_children("*", "Label", true, false)[0]
-				. get_theme_font_size("font_size")
-			)
+		var letra_de_otro_cartel: Label = (
+			(carteles[1] as Control).find_children("*", "Label", true, false)[0]
 		)
-		assert_float(letra_de_otro_cartel).is_equal(letra_del_tema)
-		for par: Array in [
-			[cuerpo, PilaDeNotificaciones.TAMANO_DEL_CUERPO_EN_FIGMA],
-			[titulo, PilaDeNotificaciones.TAMANO_DEL_TITULO_EN_FIGMA],
-		]:
-			var etiqueta: Label = par[0]
-			var esperado: float = (
-				letra_del_tema * par[1] / PilaDeNotificaciones.TAMANO_DEL_TEXTO_EN_FIGMA
-			)
-			assert_float(float(etiqueta.get_theme_font_size("font_size"))).is_equal_approx(
-				esperado, 0.5
-			)
+		var letra_del_tema := pila._marco.get_theme_default_font_size()
+		assert_int(letra_de_otro_cartel.get_theme_font_size("font_size")).is_equal(letra_del_tema)
+		assert_int(cuerpo.get_theme_font_size("font_size")).is_equal(letra_del_tema)
 		(
 			assert_str(
 				titulado.find_children("*", "TextureRect", true, false)[0].texture.resource_path
