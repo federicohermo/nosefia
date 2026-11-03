@@ -21,6 +21,28 @@ const SIMBOLOS := {
 	Notificaciones.Tipo.SALIDA_RETRABADA: SIMBOLO_DEL_CLIENTE,
 }
 const ESCALA_DEL_CARTEL := 0.4
+const DURACION_DE_ENTRADA := 0.2
+const DURACION_DE_SALIDA := 0.2
+const CURVA_DE_ENTRADA := 0.3
+const CURVA_DE_SALIDA := 3.0
+const VELOCIDAD_DE_ACOMODO := 18.0
+const UMBRAL_DE_ACOMODO := 0.5
+
+
+class AvisoEnPantalla:
+	extends RefCounted
+
+	var cartel: PanelContainer
+	var entrada := 0.0
+	var desvio_y := 0.0
+	var y_en_la_pila := NAN
+	var salida := 0.0
+	var x_de_partida := 0.0
+	var recorrido := 0.0
+
+	func _init(nodo: PanelContainer) -> void:
+		cartel = nodo
+
 
 @export var _marco: Control
 @export var _pila: VBoxContainer
@@ -28,14 +50,18 @@ const ESCALA_DEL_CARTEL := 0.4
 
 var _estado := Notificaciones.new()
 var _dibujadas: Array[Notificaciones.Tipo] = []
+var _activos: Dictionary[Notificaciones.Tipo, AvisoEnPantalla] = {}
+var _saliendo: Array[AvisoEnPantalla] = []
 
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
+	_pila.sort_children.connect(_desplazar_carteles)
 	_ajustar_al_viewport()
 
 
 func _process(delta: float) -> void:
+	_animar(delta)
 	_estado.avanzar(delta)
 	_pintar()
 
@@ -83,18 +109,80 @@ func actualizar_tiempo(restante: float) -> void:
 func vaciar() -> void:
 	_estado.vaciar()
 	_pintar()
+	for aviso in _saliendo:
+		aviso.cartel.free()
+	_saliendo.clear()
 
 
 func _pintar() -> void:
 	var actuales := _estado.visibles()
 	if actuales == _dibujadas:
 		return
-	for hijo in _pila.get_children():
-		_pila.remove_child(hijo)
-		hijo.free()
-	for tipo in actuales:
-		_pila.add_child(_cartel(tipo))
+	for tipo: Notificaciones.Tipo in _activos.keys():
+		if not actuales.has(tipo):
+			_despedir(tipo)
+	for indice in actuales.size():
+		var tipo := actuales[indice]
+		if not _activos.has(tipo):
+			var aviso := AvisoEnPantalla.new(_cartel(tipo))
+			if get_tree().paused:
+				aviso.entrada = 1.0
+			_activos[tipo] = aviso
+			_pila.add_child(aviso.cartel)
+		_pila.move_child(_activos[tipo].cartel, indice)
 	_dibujadas = actuales
+
+
+func _despedir(tipo: Notificaciones.Tipo) -> void:
+	var aviso := _activos[tipo]
+	_activos.erase(tipo)
+	var cartel := aviso.cartel
+	aviso.recorrido = _recorrido_hasta_el_borde(cartel)
+	var posicion := cartel.position + _pila.position
+	_pila.remove_child(cartel)
+	_marco.add_child(cartel)
+	cartel.position = posicion
+	aviso.x_de_partida = posicion.x
+	_saliendo.append(aviso)
+
+
+func _animar(delta: float) -> void:
+	var en_movimiento := false
+	for aviso: AvisoEnPantalla in _activos.values():
+		if aviso.entrada < 1.0:
+			aviso.entrada = minf(aviso.entrada + delta / DURACION_DE_ENTRADA, 1.0)
+			en_movimiento = true
+		if aviso.desvio_y != 0.0:
+			aviso.desvio_y = lerpf(aviso.desvio_y, 0.0, 1.0 - exp(-VELOCIDAD_DE_ACOMODO * delta))
+			if absf(aviso.desvio_y) < UMBRAL_DE_ACOMODO:
+				aviso.desvio_y = 0.0
+			en_movimiento = true
+	if en_movimiento:
+		_pila.queue_sort()
+	for aviso: AvisoEnPantalla in _saliendo.duplicate():
+		aviso.salida = minf(aviso.salida + delta / DURACION_DE_SALIDA, 1.0)
+		aviso.cartel.position.x = (
+			aviso.x_de_partida + aviso.recorrido * ease(aviso.salida, CURVA_DE_SALIDA)
+		)
+		if aviso.salida >= 1.0:
+			_saliendo.erase(aviso)
+			aviso.cartel.free()
+
+
+func _desplazar_carteles() -> void:
+	for aviso: AvisoEnPantalla in _activos.values():
+		var cartel := aviso.cartel
+		var falta_entrar := 1.0 - ease(aviso.entrada, CURVA_DE_ENTRADA)
+		cartel.position.x += _recorrido_hasta_el_borde(cartel) * falta_entrar
+		if not is_nan(aviso.y_en_la_pila):
+			aviso.desvio_y += aviso.y_en_la_pila - cartel.position.y
+		aviso.y_en_la_pila = cartel.position.y
+		cartel.position.y += aviso.desvio_y
+
+
+func _recorrido_hasta_el_borde(cartel: Control) -> float:
+	var borde := get_viewport().get_visible_rect().size.x
+	return (borde - cartel.get_global_rect().position.x) / _marco.scale.x
 
 
 func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
