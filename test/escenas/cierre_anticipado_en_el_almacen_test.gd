@@ -99,7 +99,8 @@ func _textos(almacen: Node3D) -> Array[String]:
 	for label: Label in _pila(almacen).get_node("Marco/Pila").find_children(
 		"*", "Label", true, false
 	):
-		textos.append(label.text)
+		if label.name != &"Titulo":
+			textos.append(label.text)
 	return textos
 
 

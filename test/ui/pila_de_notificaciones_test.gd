@@ -26,15 +26,17 @@ func test_avisos_de_salida_entran_y_dejan_pasar_el_clic() -> void:  # AC-NTF-027
 	assert_str(_textos(pila)[0]).is_equal(
 		PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]
 	)
-	await _verificar_carteles_de_salida(viewport, pila)
+	await _verificar_carteles_de_salida(viewport, pila, "/notificacion_tareas_completadas.svg", 2)
 	pila.actualizar_salida(false)
 	assert_str(_textos(pila)[0]).is_equal(
 		PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.SALIDA_RETRABADA]
 	)
-	await _verificar_carteles_de_salida(viewport, pila)
+	await _verificar_carteles_de_salida(viewport, pila, "/notificacion_cliente.svg", 1)
 
 
-func _verificar_carteles_de_salida(viewport: SubViewport, pila: PilaDeNotificaciones) -> void:
+func _verificar_carteles_de_salida(
+	viewport: SubViewport, pila: PilaDeNotificaciones, simbolo_esperado: String, renglones: int
+) -> void:
 	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
@@ -44,8 +46,8 @@ func _verificar_carteles_de_salida(viewport: SubViewport, pila: PilaDeNotificaci
 		var cartel: PanelContainer = carteles[0]
 		var fila: HBoxContainer = cartel.get_child(0)
 		var simbolo: TextureRect = fila.get_child(0)
-		var texto: Label = fila.get_child(1)
-		assert_int(texto.get_line_count()).is_equal(1)
+		var texto: Label = cartel.find_children("*", "Label", true, false).back()
+		assert_int(texto.get_line_count()).is_equal(renglones)
 		assert_float(texto.size.x).is_greater_equal(texto.get_minimum_size().x)
 		(
 			assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(cartel.get_global_rect()))
@@ -59,7 +61,7 @@ func _verificar_carteles_de_salida(viewport: SubViewport, pila: PilaDeNotificaci
 		)
 		assert_float(simbolo.get_global_rect().end.x).is_less(texto.get_global_rect().position.x)
 		assert_object(texto.get_theme_font("font")).is_same(pila._marco.get_theme_font("font"))
-		assert_str(simbolo.texture.resource_path).ends_with("/notificacion_cliente.svg")
+		assert_str(simbolo.texture.resource_path).ends_with(simbolo_esperado)
 		for control: Control in pila.find_children("*", "Control", true, false):
 			assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 
@@ -120,10 +122,57 @@ func test_la_salida_tiene_el_texto_y_simbolo_de_figma_y_respeta_pausa() -> void:
 	assert_array(_textos(pila)).is_empty()
 
 
+func test_el_cartel_con_titulo_pone_el_titulo_sobre_el_cuerpo() -> void:  # AC-NTF-043
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.avisar_pista()
+	pila.actualizar_salida(true)
+	pila._process(1.0)
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var carteles := pila.get_node("Marco/Pila").get_children()
+		var titulado: PanelContainer = carteles[0]
+		var titulo: Label = titulado.find_child("Titulo", true, false)
+		var cuerpo: Label = titulado.find_children("*", "Label", true, false).back()
+		assert_object(titulo).is_not_null()
+		assert_str(titulo.text).is_not_empty()
+		assert_str(cuerpo.text).is_equal(
+			PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]
+		)
+		assert_float(titulo.get_global_rect().end.y).is_less_equal(
+			cuerpo.get_global_rect().position.y
+		)
+		assert_int(titulo.get_theme_font_size("font_size")).is_less(
+			cuerpo.get_theme_font_size("font_size")
+		)
+		(
+			assert_str(
+				titulado.find_children("*", "TextureRect", true, false)[0].texture.resource_path
+			)
+			. ends_with("/notificacion_tareas_completadas.svg")
+		)
+		assert_object((carteles[1] as Control).find_child("Titulo", true, false)).is_null()
+		assert_array((carteles[1] as Control).find_children("*", "Label", true, false)).has_size(1)
+		assert_float(titulado.get_global_rect().end.x).is_equal_approx(
+			(carteles[1] as Control).get_global_rect().end.x, 0.1
+		)
+		(
+			assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(titulado.get_global_rect()))
+			. is_true()
+		)
+
+
 func _textos(pila: PilaDeNotificaciones) -> Array[String]:
 	var textos: Array[String] = []
 	for label: Label in pila.get_node("Marco/Pila").find_children("*", "Label", true, false):
-		textos.append(label.text)
+		if label.name != &"Titulo":
+			textos.append(label.text)
 	return textos
 
 
