@@ -564,7 +564,7 @@ func test_la_compuerta_se_abre_con_el_clic_y_se_vuelve_a_cerrar() -> void:
 	assert_bool((cuerpo.call("puerta") as Puerta).abierta()).is_false()
 
 
-func test_la_compuerta_se_abre_al_pasar_desde_afuera_y_se_cierra_a_mano() -> void:
+func test_la_compuerta_se_abre_al_pasar_desde_afuera_y_se_cierra_a_mano() -> void:  # AC-PLY-162
 	# Desde afuera, del lado contrario a las bisagras, el cuerpo la empuja hacia adentro.
 	var almacen: Node3D = await _almacen_que_limpia()
 	var hoja: MeshInstance3D = almacen.get_node(COMPUERTA)
@@ -592,7 +592,7 @@ func test_la_compuerta_se_abre_al_pasar_desde_afuera_y_se_cierra_a_mano() -> voi
 	await get_tree().physics_frame
 
 
-func test_la_compuerta_no_cede_al_empujarla_desde_adentro() -> void:
+func test_la_compuerta_no_cede_al_empujarla_desde_adentro() -> void:  # AC-PLY-164
 	var almacen: Node3D = await _almacen_que_limpia()
 	var hoja: MeshInstance3D = almacen.get_node(COMPUERTA)
 	var cuerpo: Node3D = almacen.get_node(COMPUERTA + "/CuerpoDeLaHoja")
