@@ -5,17 +5,19 @@ no se lee, y la luz horneada casi no rebota: las franjas rojas quedan apagadas. 
 triangulares usan una paleta de tres grises distintos, de 0,15 a 0,25, y al lado del negro se ven
 de otro color.
 
-Todo el cuerpo de la góndola pasa a **un solo gris**, `TONO`:
+Todo el cuerpo de la góndola pasa a **un solo blanco apagado**, `TONO`:
 
 - Las texturas de `TEXTURAS` se multiplican por un factor por canal hasta llegar a su tono: el
   detalle conserva su proporción y sólo cambia el nivel.
-- Los grises de la paleta (`PIXELES_GRISES`) valen `TONO`, y su rojo vale `ROJO`. El azul no se toca.
+- Los grises de la paleta (`PIXELES_GRISES`) valen `TONO`, y su rojo vale `ROJO`. El azul no se
+  toca.
 - Los materiales lisos de `COLORES_LISOS` toman su tono como color base.
 - **El fondo de los exhibidores es azul marino.** Su textura ya era casi negra y el color base
   la volvía a teñir de azul: el panel del fondo salía negro. Pasa a `AZUL` y el color base a blanco.
 
-El tono es más claro que el de la puerta (0,21) a propósito: la puerta se ve de cerca con la luz
-del jugador, y una góndola a tres metros recibe menos. La herramienta es
+El tono es mucho más claro que el de la puerta (0,21) a propósito: la puerta se ve de cerca con la
+luz del jugador, y una góndola a tres metros sólo recibe la luz horneada, que es baja. Un gris de
+0,30 se seguía viendo negro. Los nombres del modelo ya decían «blanca». La herramienta es
 `blender/aclarar_gondolas.py`. **Escribe el `.blend`.**
 """
 
@@ -25,8 +27,8 @@ from lib.repo import RAIZ
 
 CARPETA = RAIZ / "assets" / "source" / "textures" / "gondola"
 
-#: El gris del cuerpo de la góndola, en valores de imagen de 0 a 1.
-TONO = (0.30, 0.30, 0.31)
+#: El blanco apagado del cuerpo de la góndola, en valores de imagen de 0 a 1.
+TONO = (0.66, 0.66, 0.68)
 
 #: El azul marino del fondo de los exhibidores, en valores de imagen.
 AZUL = (0.14, 0.26, 0.46)
