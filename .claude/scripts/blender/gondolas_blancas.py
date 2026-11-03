@@ -1,11 +1,11 @@
-"""Devuelve las góndolas al blanco. Se aplica una sola vez.
+"""Devuelve las góndolas al blanco. Aplicarlo de nuevo no cambia nada.
 
     blender --background --python-exit-code 1 --python \
         .claude/scripts/blender/gondolas_blancas.py -- --aplicar
 
 Sin `--aplicar` sólo informa, y el `.blend` del repo queda como estaba.
 
-La chapa y el panel perforado vuelven a sus texturas blancas, que viven en
+La chapa, el panel perforado y el parante ranurado vuelven a sus texturas blancas, que viven en
 `assets/source/textures/shelf/`. Las ménsulas y los parantes lisos, que se habían oscurecido con
 ellas, vuelven a blanco y a gris claro. Los zócalos, los portaprecios y el metal negro del freezer
 no se tocan.
@@ -22,6 +22,7 @@ TEXTURAS = RAIZ / "assets/source/textures/shelf"
 IMAGENES = {
     "gondola_chapa_blanca_512_basecolor_negra": "gondola_chapa_blanca_512_basecolor.png",
     "gondola_panel_blanca_1024_basecolor_negra": "gondola_panel_blanca_1024_basecolor.png",
+    "gondola_parante_ranura_blanca": "gondola_parante_ranura_blanca.png",
 }
 COLORES = {
     "GONDOLA | Mensula blanca": (0.8, 0.8, 0.8, 1.0),
@@ -31,10 +32,8 @@ COLORES = {
 
 def principal():
     bpy.ops.wm.open_mainfile(filepath=str(FUENTE))
-    if not any(nombre in bpy.data.images for nombre in IMAGENES):
-        raise SystemExit("Las góndolas ya son blancas; no se tocó nada.")
     for nombre, archivo in IMAGENES.items():
-        imagen = bpy.data.images[nombre]
+        imagen = bpy.data.images.get(nombre) or bpy.data.images[archivo.removesuffix(".png")]
         imagen.unpack(method="REMOVE")
         imagen.filepath = str(TEXTURAS / archivo)
         imagen.reload()
