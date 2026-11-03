@@ -336,6 +336,8 @@ func _ready() -> void:
 	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
+	pausa.celular = _celular
+	pausa.esc_atendido_por_el_celular.connect(_jugador.tomar_el_cursor_desde_entrada)
 	pausa.pausado.connect(_jugador.declarar_la_pausa.bind(true))
 	pausa.reanudado.connect(_jugador.declarar_la_pausa.bind(false))
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
@@ -1125,7 +1127,6 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
 	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
-	_pantalla_del_celular.cierre_pedido.connect(_alternar_el_celular)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
 	_hipotesis.continuacion_pedida.connect(_al_continuar_la_reflexion)
 	_hipotesis.eleccion_pedida.connect(_al_elegir_la_hipotesis)

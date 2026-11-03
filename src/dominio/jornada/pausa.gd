@@ -2,19 +2,24 @@
 ##
 ## Esc pausa en cualquier momento del almacén, también con la devolución del cierre en pantalla:
 ## salir al menú con la partida en curso pasa por la pausa. El cursor que se pierde sobre la
-## devolución, en cambio, no pausa: el cierre lo suelta a propósito.
+## devolución, en cambio, no pausa: el cierre lo suelta a propósito. La excepción de Esc es el
+## celular libre abierto: lo cierra a él.
 class_name Pausa
 extends RefCounted
 
-enum Accion { NADA, PAUSAR, REANUDAR, CERRAR_CONFIGURACIONES }
+enum Accion { NADA, PAUSAR, REANUDAR, CERRAR_CONFIGURACIONES, CERRAR_CELULAR }
 
 
 ## Con configuraciones abierta desde la pausa, Esc la cierra y deja la pausa: el Esc siguiente
-## reanuda.
-static func ante_esc(en_pausa: bool, configuraciones_abierta: bool = false) -> Accion:
+## reanuda. Con el celular libre abierto, Esc lo cierra a él y no pausa.
+static func ante_esc(
+	en_pausa: bool, configuraciones_abierta: bool = false, celular_libre_abierto: bool = false
+) -> Accion:
 	if configuraciones_abierta:
 		return Accion.CERRAR_CONFIGURACIONES
-	return Accion.REANUDAR if en_pausa else Accion.PAUSAR
+	if en_pausa:
+		return Accion.REANUDAR
+	return Accion.CERRAR_CELULAR if celular_libre_abierto else Accion.PAUSAR
 
 
 ## Pausa sólo si el cursor estaba tomado y quedó suelto sin que el juego lo soltara. Quien pregunta

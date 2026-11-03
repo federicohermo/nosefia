@@ -42,3 +42,13 @@ func test_esc_con_configuraciones_abierta_la_cierra_sin_reanudar() -> void:  # A
 
 func test_esc_con_configuraciones_cerrada_sigue_reanudando() -> void:  # AC-SAV-018
 	assert_int(Pausa.ante_esc(true, false)).is_equal(Pausa.Accion.REANUDAR)
+
+
+func test_esc_con_el_celular_libre_abierto_lo_cierra_y_no_pausa() -> void:  # AC-INV-070
+	assert_int(Pausa.ante_esc(false, false, true)).is_equal(Pausa.Accion.CERRAR_CELULAR)
+	assert_int(Pausa.ante_esc(false, false, false)).is_equal(Pausa.Accion.PAUSAR)
+
+
+func test_en_pausa_o_con_configuraciones_el_celular_no_quita_su_turno() -> void:  # AC-SAV-018
+	assert_int(Pausa.ante_esc(true, false, true)).is_equal(Pausa.Accion.REANUDAR)
+	assert_int(Pausa.ante_esc(false, true, true)).is_equal(Pausa.Accion.CERRAR_CONFIGURACIONES)
