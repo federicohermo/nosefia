@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20
 ---
 
 # Capacidad: los subtítulos
@@ -191,7 +191,7 @@ comprador en la ventanilla en el momento de decir el texto. MIENTRAS el jugador 
 el texto es de una entrega del comprador (margen decidido por el usuario en el QA del
 30/10/2026), éste DEBE durar lo de BR-SUB-004. Un aviso de una acción o del estado del jugador NO
 DEBE tener anclaje espacial, y DEBE durar siempre lo de BR-SUB-004 aunque el jugador camine. Esto incluye los gestos de
-BR-SUB-013 y la mopa que se seca de BR-SUB-014. CUANDO el texto tiene un lugar y el jugador
+BR-SUB-013, la mopa que se seca de BR-SUB-014 y la primera pista de BR-SUB-016. CUANDO el texto tiene un lugar y el jugador
 se aleja más que eso, DEBE empezar a desvanecerse en ese momento, en los mismos 0,5 segundos,
 salvo que ya se estuviera desvanecido. Volver a acercarse NO DEBE devolverle la opacidad. El
 texto fijo del examen NO DEBE acortarse. Un texto nuevo DEBE medir desde su propio lugar y desde
@@ -254,6 +254,22 @@ pensamiento pendiente NO DEBE duplicarlo.
 La frase de los tres segundos expresa una queja del protagonista; NO DEBE fijar una duración
 exacta ni modificar el desgaste por tiempo y recorrido de
 [`store-cleanup`](../store-cleanup/store-cleanup.md) (BR-CLN-022).
+
+### BR-SUB-016 — La primera pista anotada
+
+CUANDO [`investigation`](../investigation/investigation.md) anota la primera pista de la partida,
+por cualquier canal, el sistema DEBE mostrar el pensamiento `PRIMERA_PISTA`, cuyo texto actual es
+«Encontré una pista. ¡Qué extraño! Me parece que está pasando algo.». Las pistas siguientes, en
+esa jornada o en otra, NO DEBEN mostrarlo. Una partida nueva lo vuelve a mostrar una vez. Un
+resultado repetido o desconocido NO DEBE mostrarlo, igual que no produce el aviso de
+[`notifications`](../notifications/notifications.md) (BR-NTF-010). Retomar una partida guardada
+que ya tiene una pista NO DEBE mostrarlo: restaurar el expediente no es anotar una pista.
+
+SI el celular está abierto al anotarse la pista, ENTONCES el pensamiento DEBE esperar a que se
+cierre y mostrarse entonces. Recién al mostrarse cuenta como mostrado: si la jornada cierra antes,
+se descarta y la partida sigue sin marca. Anotar otra pista con el pensamiento pendiente NO DEBE
+duplicarlo. SI otro subtítulo reemplaza al pensamiento ya mostrado, ENTONCES el pensamiento cuenta
+como mostrado y NO DEBE volver (BR-SUB-001). El aviso «¡NUEVA PISTA!» NO cambia.
 
 ## Criterios de aceptación
 
@@ -472,6 +488,20 @@ después una descumplida CUANDO se usa la puerta ENTONCES el pensamiento vuelve.
 jornada completa con obligatorias pendientes CUANDO se usa la puerta ENTONCES no hay pensamiento.
 DADA la puerta de entrada en una jornada de prueba con una pendiente CUANDO se la examina con E
 ENTONCES dice su texto fijo (BR-SUB-010).
+
+### AC-SUB-027 — La primera pista piensa, una vez *(verifica BR-SUB-016, BR-SUB-001)*
+
+DADA una partida sin la marca CUANDO se anota una pista, por cada canal de anotación, ENTONCES se
+muestra `PRIMERA_PISTA` con la duración que le da su largo (BR-SUB-004), y la partida queda
+marcada; CUANDO se anota la segunda pista, en esa jornada o en otra, ENTONCES no se muestra.
+DADO un resultado repetido o desconocido en una partida sin la marca ENTONCES no se muestra y la
+partida sigue sin marca. DADA una partida guardada que ya tiene una pista y la marca CUANDO se
+retoma ENTONCES no se muestra; DADA una partida nueva ENTONCES se muestra una vez más.
+DADO el celular abierto CUANDO se anota la primera pista ENTONCES no se muestra; CUANDO se anota
+otra con el celular abierto ENTONCES sigue habiendo uno solo pendiente; CUANDO se cierra el celular
+ENTONCES se muestra y recién ahí la partida queda marcada. DADO el pensamiento pendiente CUANDO
+cierra la jornada ENTONCES se descarta y la partida sigue sin marca. DADO el pensamiento visible
+CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
 
 ## No objetivos
 

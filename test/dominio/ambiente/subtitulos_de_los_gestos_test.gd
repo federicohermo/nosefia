@@ -145,6 +145,40 @@ func test_el_cierre_descarta_la_mopa_berreta_pendiente() -> void:  # AC-SUB-019
 	assert_int(gestos.al_secarse_la_mopa(partida, false)).is_equal(S.MOPA_BERRETA)
 
 
+func test_la_primera_pista_piensa_una_sola_vez_por_partida() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_anotar_una_pista(partida, false)).is_equal(S.PRIMERA_PISTA)
+	assert_bool(partida.primera_pista_pensada).is_true()
+	assert_int(gestos.al_anotar_una_pista(partida, false)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.new().al_anotar_una_pista(Partida.nueva(), false)).is_equal(
+		S.PRIMERA_PISTA
+	)
+
+
+func test_con_el_celular_abierto_la_primera_pista_espera_y_no_se_duplica() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, true)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, true)).is_equal(S.NINGUNO)
+	assert_bool(partida.primera_pista_pensada).is_false()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.PRIMERA_PISTA)
+	assert_bool(partida.primera_pista_pensada).is_true()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, false)).is_equal(S.NINGUNO)
+
+
+func test_el_cierre_descarta_la_primera_pista_pendiente() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_anotar_una_pista(partida, true)).is_equal(S.NINGUNO)
+	gestos.descartar()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_bool(partida.primera_pista_pensada).is_false()
+	assert_int(gestos.al_anotar_una_pista(partida, false)).is_equal(S.PRIMERA_PISTA)
+
+
 func test_cada_id_tiene_texto_salvo_ninguno() -> void:  # AC-SUB-018
 	assert_str(SubtitulosDeLosGestos.texto(S.NINGUNO)).is_empty()
 	for id: S in S.values():
