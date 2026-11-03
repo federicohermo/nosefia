@@ -119,10 +119,13 @@ las manos. Lo que se llevaba queda a los pies y el jugador no queda retenido.
 
 CUANDO se pulsa Q durante una jornada con el celular cerrado, el sistema DEBE abrirlo sólo si
 ninguna otra interfaz tiene el control y no hay examen en curso. Con el celular abierto en
-modo libre, Q DEBE cerrarlo, y también un clic izquierdo por fuera del celular. Con el turno cerrado, otra interfaz al control, un examen o una
+modo libre, Q o Esc DEBEN cerrarlo, y Esc NO DEBE abrir la pausa en ese caso. Un clic izquierdo
+por fuera del celular NO DEBE cerrarlo, haya o no una foto ampliada. Con una foto ampliada en
+modo libre, Esc DEBE cerrar primero la foto; el Esc siguiente cierra el celular y el
+siguiente pausa. Con el turno cerrado, otra interfaz al control, un examen o una
 pausa, Q NO DEBE abrirlo ni alterar el estado existente. Abrir o cerrar NO DEBE cambiar lo que
-se lleva en la mano. Otro Q durante la subida DEBE iniciar la bajada desde la posición actual,
-sin duplicar el celular ni dejarlo detenido a mitad de camino.
+se lleva en la mano. Otro Q o Esc durante la subida DEBE iniciar la bajada desde la posición
+actual, sin duplicar el celular ni dejarlo detenido a mitad de camino.
 
 ### BR-INV-022 — Cada apertura libre empieza en el menú
 
@@ -180,12 +183,17 @@ CUANDO se abre, el celular DEBE subir desde fuera del margen inferior hasta el c
 encuadre y conservar una proporción 9:16 al cambiar la resolución. El resto de la visión DEBE
 verse desenfocado y oscuro, y la pantalla del celular DEBE permanecer nítida e iluminada, tanto
 en escritorio como en web. Al cerrarlo, DEBE bajar fuera del margen inferior y retirar ese velo.
+Subir y bajar DEBEN seguir un resorte suave tipo «Gentle»: al subir pasa levemente de su
+posición final y se asienta en el centro; al bajar usa el mismo resorte y termina fuera del
+margen inferior (OQ-INV-006). La bajada DEBE emitir su señal de fin una sola vez, cuando el
+movimiento termina.
 MIENTRAS el turno está abierto, el sistema DEBE mostrar en la esquina inferior izquierda un
 ícono de celular con «Q», incluso con el celular arriba; con el turno cerrado NO DEBE mostrarlo.
 MIENTRAS la computadora está abierta, el sistema DEBE ocultar ese recordatorio. Al cerrarla,
 DEBE volver a mostrarlo sólo si la jornada todavía lo permite.
 El celular DEBE dibujarse sobre HUD, computadora y cierre, y debajo de avisos y pausa. La
-duración completa de subir y de bajar DEBE ser de 0,25 segundos reales por recorrido.
+duración completa de subir y de bajar, rebote incluido, DEBE ser de 0,25 segundos reales por
+recorrido (OQ-INV-006).
 Un cuadro largo NO DEBE adelantar el movimiento más de 1/30 de segundo. Si el dibujo se
 interrumpe, el recorrido DEBE conservar sus pasos visibles aunque termine más tarde.
 
@@ -647,7 +655,8 @@ sin salto de posición ni duplicado, y termina fuera del encuadre con el velo re
 mide cada recorrido completo de 0,25 segundos; una inversión conserva la posición actual. DADO el
 celular empezando a subir CUANDO un cuadro llega 2 segundos tarde ENTONCES sigue entre el
 margen inferior y el centro, y continúa moviéndose: no aparece ya centrado. DADO el
-celular arriba CUANDO se hace clic izquierdo por fuera de él ENTONCES pide cerrarse; adentro, no.
+celular arriba CUANDO se hace clic izquierdo por fuera de él ENTONCES no pide cerrarse; adentro,
+tampoco.
 
 ### AC-INV-034 — Proporción, velo y orden de dibujo *(verifica BR-INV-027)*
 
@@ -670,8 +679,8 @@ DEBE volver a mostrarlo.
 
 ### AC-INV-036 — Pausar conserva, cerrar limpia *(verifica BR-INV-028)*
 
-DADO el celular con una foto ampliada CUANDO se pulsa Esc, luego Q, y se reanuda ENTONCES vuelve
-la misma foto. DADO el celular abierto CUANDO cierra el turno ENTONCES queda cerrado y el control
+DADO el celular fijo con una foto ampliada CUANDO se pulsa Esc, luego Q, y se reanuda ENTONCES
+vuelve la misma foto. DADO el celular abierto CUANDO cierra el turno ENTONCES queda cerrado y el control
 permanece suspendido por el cierre. CUANDO abre otra jornada ENTONCES sigue cerrado y el primer
 Q permitido abre el menú.
 
@@ -940,6 +949,38 @@ DADO la jornada 5 abierta CUANDO se reabre el celular, se vuelve al menú, se re
 mismo orden, y modificar una lista consultada no cambia el guion. DADO la jornada 6 abierta
 ENTONCES Yasmín conserva esas 25 entradas, sin mensajes nuevos.
 
+### AC-INV-070 — Q o Esc cierran el celular libre *(verifica BR-INV-021)*
+
+DADO el celular abierto en modo libre y, por separado, a mitad de la subida CUANDO se pulsa Q
+ENTONCES baja desde su posición actual. CUANDO se pulsa Esc en esos mismos estados ENTONCES baja
+igual y la pausa no se abre. DADO el celular cerrado CUANDO se pulsa Esc ENTONCES se abre la
+pausa. DADO el celular abierto CUANDO se pulsa Esc dos veces seguidas, con la bajada del primero
+terminada, ENTONCES el primero lo cierra y el segundo abre la pausa.
+
+### AC-INV-071 — Un clic afuera no cierra, y la foto cede el primer Esc *(verifica BR-INV-021, BR-INV-025)*
+
+DADO el celular abierto en modo libre, con y sin foto ampliada, CUANDO se hace clic izquierdo
+por fuera del teléfono ENTONCES el celular sigue abierto y no pide cerrarse; con la foto ampliada,
+el clic la cierra y vuelve al mismo chat, como antes. DADO una foto ampliada en modo libre
+CUANDO se pulsa Esc ENTONCES se cierra la foto, el celular sigue abierto y la pausa no se abre;
+CUANDO se pulsa Esc otra vez ENTONCES el celular baja y la pausa no se abre; CUANDO se pulsa un
+tercero ENTONCES se abre la pausa.
+
+### AC-INV-072 — El modo fijo ignora Q y deja pausar con Esc *(verifica BR-INV-021, BR-INV-026)*
+
+DADO el celular fijo entre jornadas CUANDO se pulsa Q ENTONCES sigue abierto en el chat fijo.
+CUANDO se pulsa Esc ENTONCES sigue abierto y se abre la pausa por encima (BR-SAV-016); al
+reanudar sigue en el mismo chat.
+
+### AC-INV-073 — Un resorte suave al subir y al bajar *(verifica BR-INV-027)*
+
+DADO el celular cerrado CUANDO se pulsa Q ENTONCES, en algún cuadro de la subida, su posición
+vertical pasa levemente de la del centro y termina asentada en el centro a los 0,25 segundos.
+DADO el celular arriba CUANDO se pulsa Q ENTONCES baja con el mismo resorte, sin que su posición
+vuelva a subir más allá de la que tenía, y termina fuera del margen inferior a los 0,25
+segundos con la señal de fin emitida una sola vez. DADO una subida interrumpida por Q o Esc
+CUANDO empieza la bajada ENTONCES parte de la posición del cuadro anterior, sin salto.
+
 ## No objetivos
 
 - Esta capacidad NO inventa el contenido: consume los guiones decididos; la apertura de
@@ -1002,6 +1043,13 @@ ENTONCES Yasmín conserva esas 25 entradas, sin mensajes nuevos.
 
 ## Preguntas abiertas
 
+- **OQ-INV-006 — ¿Cuánto rebota, cuánto dura y dónde se ve el rebote del celular?**
+  - Por qué sigue abierta: la ficha pide un resorte «Gentle» con «leve bounce» y no da masa,
+    rigidez, amortiguación ni duración; un resorte así suele asentarse después de los 0,25
+    segundos fijados antes. Hacia abajo, el rebote del final queda fuera del encuadre, y la
+    ficha no dice si debe verse dentro de él.
+  - Decide: game design, con el prototipo de Figma si lo tiene armado.
+  - Bloquea: fijar los valores finales del rebote y la duración; no bloquea el movimiento.
 - **OQ-INV-004 — ¿Qué pistas, hipótesis y desenlaces definen las jornadas 5 a 7?**
   - Por qué sigue abierta: las fichas de ese contenido siguen «A desarrollar» y no fijan
     exigencias ni umbrales de los finales. Los ejemplos de aceptación son casos de prueba,

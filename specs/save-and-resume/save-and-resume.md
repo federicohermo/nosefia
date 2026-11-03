@@ -115,7 +115,8 @@ entrada (BR-SAV-021).
 
 CUANDO el jugador aprieta Esc en cualquier momento del juego en el almacén, con la partida en
 curso o terminada, el sistema DEBE pausarlo y mostrar el menú de pausa. Un segundo Esc DEBE
-reanudarlo, igual que «reanudar». La devolución no es una excepción: con la devolución en
+reanudarlo, igual que «reanudar». La excepción es el celular abierto en modo libre: ahí Esc
+lo cierra y NO DEBE pausar (BR-INV-021). El celular fijo no es una excepción. La devolución no es una excepción: con la devolución en
 pantalla, Esc DEBE abrir la pausa por encima de ella, y reanudar DEBE dejar la misma devolución,
 con el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa está en pantalla,
 la devolución NO DEBE responder a ningún gesto. Lo mismo vale para la reflexión de cierre y la
@@ -300,7 +301,7 @@ apercibimientos.
 
 ### AC-SAV-018 — Esc pausa y reanuda *(verifica BR-SAV-016)*
 
-DADO la jornada en curso CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
+DADO la jornada en curso, con el celular cerrado, CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
 ENTONCES se reanuda. DADO la devolución en pantalla, con la partida en curso o terminada,
 CUANDO llega Esc ENTONCES el menú de pausa se abre por encima de la devolución; mientras tanto,
 ni un clic ni Enter despachan la devolución. CUANDO llega otro Esc ENTONCES la pausa se cierra,
