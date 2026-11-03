@@ -190,7 +190,6 @@ func _ready() -> void:
 				)
 		)
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
-	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_atenciones.entrega_dicha.connect(_decir_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
@@ -236,6 +235,7 @@ func _ready() -> void:
 	_atenciones.comprador_vencido.connect(_revisar_la_salida.unbind(1))
 	_computadora.registro_actualizado.connect(_revisar_la_salida)
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
+	ventanilla.comprador_se_fue.connect(avisos.avisar_salida)
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
 	)

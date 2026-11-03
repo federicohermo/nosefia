@@ -120,6 +120,25 @@ func test_la_salida_tiene_el_texto_y_simbolo_de_figma_y_respeta_pausa() -> void:
 	assert_array(_textos(pila)).is_empty()
 
 
+func test_la_salida_con_productos_usa_el_simbolo_de_salida_y_respeta_pausa() -> void:  # AC-NTF-033
+	var pila := _pila()
+	pila.avisar_salida(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0], true)
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS]]
+	)
+	var simbolo := pila.find_children("*", "TextureRect", true, false)[0] as TextureRect
+	assert_str(simbolo.texture.resource_path).ends_with("/notificacion_salida.svg")
+	pila._process(2.9)
+	get_tree().paused = true
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_bool(pila.can_process()).is_false()
+	assert_array(_textos(pila)).has_size(1)
+	get_tree().paused = false
+	pila._process(0.1)
+	assert_array(_textos(pila)).is_empty()
+
+
 func _textos(pila: PilaDeNotificaciones) -> Array[String]:
 	var textos: Array[String] = []
 	for label: Label in pila.get_node("Marco/Pila").find_children("*", "Label", true, false):
@@ -263,13 +282,14 @@ func test_todos_los_avisos_usan_una_linea_y_el_ancho_de_su_contenido() -> void: 
 	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
 	pila.avisar_salida(Comprador.new("Otro", Venta.new(), 0))
+	pila.avisar_salida(Comprador.new("Con productos", Venta.new(), 0), true)
 	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var carteles := pila.get_node("Marco/Pila").get_children()
-		assert_int(carteles.size()).is_equal(4)
+		assert_int(carteles.size()).is_equal(5)
 		var derecha: float = carteles[0].get_global_rect().end.x
 		for cartel: PanelContainer in carteles:
 			var fila: HBoxContainer = cartel.get_child(0)
@@ -290,7 +310,7 @@ func test_todos_los_avisos_usan_una_linea_y_el_ancho_de_su_contenido() -> void: 
 			assert_float(simbolo.get_global_rect().get_center().y).is_equal_approx(
 				texto.get_global_rect().get_center().y, 1.0
 			)
-		assert_float((carteles[0] as Control).size.x).is_greater((carteles[2] as Control).size.x)
+		assert_float((carteles[0] as Control).size.x).is_greater((carteles[3] as Control).size.x)
 
 
 func test_el_aviso_de_una_hora_conserva_su_resto_en_pausa() -> void:  # AC-NTF-023
