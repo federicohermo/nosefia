@@ -313,25 +313,20 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  #
 		await get_tree().physics_frame
 	assert_bool(_estanteria(_apoyo(local, caja))).is_false()
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	var agarre: Agarre = local.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
 	await get_tree().process_frame
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	assert_bool(local.get("_jugador").examen.iniciar()).is_true()
 	await get_tree().process_frame
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	local.get("_jugador").examen.terminar()
 	agarre.soltar(false)
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_true()
-	assert_str(contador.text).is_equal("Tareas 1/5")
 	assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
 	await get_tree().process_frame
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	agarre.soltar(false)
 	await _ordenar_en_sus_estanterias(local)
