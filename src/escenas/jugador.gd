@@ -34,6 +34,23 @@ const METODO_TEXTO_AL_EXAMINAR := &"texto_al_examinar"
 ## Los puestos traducen sus hechos a un contexto de gestos sin ejecutar la interacción.
 const METODO_CONTEXTO := &"contexto_de_interaccion"
 
+## Chrome suelta el cursor con Esc y no lo devuelve sin un clic. Capturar Esc sólo se puede en
+## pantalla completa: se pide ya dentro de ella, o apenas el navegador entra.
+const CAPTURAR_ESC := """
+(function () {
+	const teclado = navigator.keyboard;
+	if (!teclado || !teclado.lock) return;
+	const capturar = () => {
+		if (document.fullscreenElement) teclado.lock(['Escape']).catch(() => {});
+	};
+	if (!window.godot_esc_capturado) {
+		window.godot_esc_capturado = true;
+		document.addEventListener('fullscreenchange', capturar);
+	}
+	capturar();
+})()
+"""
+
 ## Para leer qué enfoca la mira: una caja del depósito y un casillero de la góndola. Son cáscara
 ## y no declaran `class_name`.
 const NotaDelLocal := preload("res://src/escenas/objetos/nota_pegada.gd")
@@ -77,6 +94,7 @@ var _pateados: Array[Node3D] = []
 var _en_web := OS.has_feature("web")
 var _leer_cursor: Callable = func() -> Input.MouseMode: return Input.mouse_mode
 var _escribir_cursor: Callable = func(modo: Input.MouseMode) -> void: Input.mouse_mode = modo
+var _pedir_pantalla_completa: Callable = _pedir_pantalla_completa_al_navegador
 
 ## Quienes atienden cada objetivo declaran sus gestos sin ejecutarlos.
 var _consultas_de_interaccion: Array[Callable] = []
@@ -759,7 +777,17 @@ func _aplicar_el_modo_del_cursor(desde_entrada: bool = false) -> void:
 		return
 	if _en_web and tomado and not desde_entrada:
 		return
+	if _en_web and tomado:
+		_pedir_pantalla_completa.call()
 	_escribir_cursor.call(modo)
+
+
+## Con Esc capturado, un Esc corto llega al juego y el navegador no suelta el cursor. Sin
+## pantalla completa o sin Keyboard Lock (Firefox) no pasa nada, y el primer clic lo toma.
+func _pedir_pantalla_completa_al_navegador() -> void:
+	if DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_FULLSCREEN:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	JavaScriptBridge.eval(CAPTURAR_ESC)
 
 
 ## La identidad sigue siendo la del cuerpo; cambiar el punto visible no reemite el foco.

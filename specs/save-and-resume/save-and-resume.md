@@ -212,6 +212,18 @@ no es una pose, DEBE ignorarse sin descartar las demás ni la jornada, el legajo
 Una partida nueva NO DEBE traer poses. Un final que borra el guardado (BR-SAV-002) borra
 también las poses.
 
+### BR-SAV-023 — En la web Esc no suelta el cursor
+
+CUANDO el jugador toma el cursor en la web, ya sea al arrancar, con un clic, con una tecla o al
+salir de la pausa, el sistema DEBE pedir la pantalla completa y la captura de Esc del navegador.
+Con las dos activas, un Esc corto DEBE llegar al juego, y cerrar el celular o salir de la pausa
+con Esc NO DEBE soltar el cursor. Mantener Esc apretado DEBE salir de la pantalla completa, como
+manda el navegador.
+
+SI el navegador no ofrece la pantalla completa o la captura de Esc, o el jugador salió de la
+pantalla completa, ENTONCES, con la partida en marcha y el cursor suelto, el primer clic DEBE sólo
+tomar el cursor y volver a pedir las dos, sin agarrar, tirar ni interactuar.
+
 ## Criterios de aceptación
 
 ### AC-SAV-001 — El cierre guarda una vez *(verifica BR-SAV-001)*
@@ -462,6 +474,13 @@ retoma ENTONCES abre la jornada 5 y el chat de Yasmín tiene J2_1 a J2_15 y desp
 una sola vez, todos sin leer, y el chat de Enrique conserva sus devoluciones intactas. CUANDO se
 cierra la 5 y se repite guardar y retomar ENTONCES el guardado no contiene mensajes del guion de
 Yasmín y la jornada 6 abre con las mismas 25 identidades, sin duplicar ninguna.
+
+### AC-SAV-036 — Tomar el cursor en la web pide la pantalla completa *(verifica BR-SAV-023)*
+
+DADO el juego en la web, la partida en marcha y el cursor suelto CUANDO el jugador hace clic
+ENTONCES el cursor queda tomado, se pide la pantalla completa con la captura de Esc, y el clic no
+agarra ni interactúa. CUANDO hace clic otra vez, con el cursor tomado, ENTONCES actúa como siempre
+y no repite el pedido.
 
 ## No objetivos
 

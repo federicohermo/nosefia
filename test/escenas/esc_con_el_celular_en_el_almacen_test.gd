@@ -107,6 +107,18 @@ func test_el_primer_clic_tras_el_esc_toma_el_cursor_y_no_hace_nada_mas() -> void
 	assert_bool(jugador.call("uso_es_primario")).is_true()
 
 
+func test_tomar_el_cursor_en_la_web_pide_la_pantalla_completa() -> void:  # AC-SAV-036
+	var rechaza: Array[bool] = [false]
+	_con_un_navegador_que_rechaza(rechaza)
+	var jugador: Node3D = _almacen.get("_jugador")
+	var pedidos: Array[int] = [0]
+	jugador.set("_pedir_pantalla_completa", func() -> void: pedidos[0] += 1)
+	jugador.call("_unhandled_input", _clic_izquierdo())
+	assert_int(pedidos[0]).is_equal(1)
+	jugador.call("_unhandled_input", _clic_izquierdo())
+	assert_int(pedidos[0]).is_equal(1)
+
+
 func test_el_cursor_que_suelta_el_esc_del_celular_no_pausa() -> void:  # AC-INV-070
 	await _tecla(KEY_Q)
 	assert_bool(_celular().celular().abierto()).is_true()
