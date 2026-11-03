@@ -154,7 +154,7 @@ func _animar(delta: float) -> void:
 			en_movimiento = true
 	if en_movimiento:
 		_pila.queue_sort()
-	for aviso in _saliendo.duplicate():
+	for aviso: AvisoEnPantalla in _saliendo.duplicate():
 		aviso.salida = minf(aviso.salida + delta / DURACION_DE_SALIDA, 1.0)
 		aviso.cartel.position.x = (
 			aviso.x_de_partida + aviso.recorrido * ease(aviso.salida, CURVA_DE_SALIDA)
