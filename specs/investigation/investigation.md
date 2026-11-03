@@ -204,7 +204,7 @@ Enrique DEBE leerse «Jefe» y el de Yasmín «Compañera de trabajo», como dat
 independiente de su imagen. Sin retrato aprobado, DEBE usar el círculo liso de BR-INV-023.
 
 Enrique DEBE incorporar dos mensajes de apertura de la jornada 4: primero una foto del
-contenedor de basura del local, después el texto literal «Buen día, pibe. Hoy te pido que tires
+contenedor de basura del local, después el texto literal «Buenas tardes, pibe. Hoy te pido que tires
 la basura de todos los tachos del local en el contenedor. Saludos». La foto NO DEBE mostrar
 un tacho interior en lugar del contenedor; ampliarla DEBE usar ese texto como adjunto.
 Yasmín DEBE incorporar exactamente los siguientes quince mensajes independientes, con estas
@@ -240,7 +240,7 @@ El sistema DEBE ordenar los mensajes por jornada, momento de apertura o cierre y
 dentro del bloque, sin ordenarlos por texto ni inventar horas. En Enrique, cada devolución
 DEBE ir después de los mensajes de su jornada y antes de los de la siguiente: instrucciones de
 jornada 1, devolución 1, instrucciones de jornada 2, devolución 2, mensajes de jornada 3,
-devolución 3, foto y texto de apertura 4, devolución 4, y
+devolución 3, foto y texto de apertura 4, devolución 4, foto y texto de apertura 5, y
 los bloques posteriores cuando estén disponibles. Cada mensaje DEBE conservar
 su identidad; dos textos iguales con identidades distintas NO DEBEN fusionarse por su texto.
 
@@ -493,6 +493,17 @@ Yasmín conserva el transcurso del turno de BR-INV-006 y las marcas de BR-INV-00
 cruza la sesión como el resto del guion de apertura (BR-SAV-020): un guardado de una jornada
 anterior abre la jornada 5 con el bloque una sola vez.
 
+
+### BR-INV-100 — La quinta jornada abre con la foto de las Cindolor y el aviso del olor
+
+CUANDO abre la jornada 5, por transición o desde un checkpoint, Enrique DEBE incorporar, a
+continuación de la devolución de la jornada 4, dos mensajes de apertura con identidades
+estables: primero una foto de las Cindolor dentro de la heladera del local, después el texto
+literal «Buenas. No sé si habrás notado que hay un olor medio feo en la zona de las heladeras.
+Sospecho que algunas de las Cindolor se deben haber echado a perder.». Ampliar la foto DEBE
+usar ese texto como adjunto (BR-INV-025). La apertura de la jornada 5 NO DEBE llevar un tercer
+mensaje de Enrique. Las jornadas 1 a 4 NO DEBEN mostrar esos mensajes, y retomar una partida en
+la jornada 5 DEBE mostrarlos una sola vez, sin leer (BR-INV-023).
 ## Criterios de aceptación
 
 ### AC-INV-001 — Examinar revela *(verifica BR-INV-001)*
@@ -939,6 +950,29 @@ DADO la jornada 5 abierta CUANDO se reabre el celular, se vuelve al menú, se re
 5 y se consulta Yasmín dos veces ENTONCES tiene 25 entradas con identidades distintas, en el
 mismo orden, y modificar una lista consultada no cambia el guion. DADO la jornada 6 abierta
 ENTONCES Yasmín conserva esas 25 entradas, sin mensajes nuevos.
+
+### AC-INV-100 — La apertura de la jornada 4 saluda de tarde *(verifica BR-INV-029, BR-INV-030)*
+
+DADO la apertura de la jornada 4 por transición y, por separado, desde un checkpoint CUANDO se
+recorre Enrique ENTONCES, después de la devolución de la jornada 3, están la foto del
+contenedor y su texto «Buenas tardes, pibe. Hoy te pido que tires la basura de todos los
+tachos del local en el contenedor. Saludos», en ese orden, con las mismas identidades que
+antes del cambio. DADO una partida guardada con la foto y el texto de la jornada 4 leídos
+CUANDO se retoma ENTONCES siguen leídos.
+
+### AC-INV-101 — La apertura de la jornada 5 trae dos mensajes *(verifica BR-INV-100, BR-INV-025, BR-INV-030)*
+
+DADO la apertura de la jornada 5 por transición y, por separado, desde un checkpoint CUANDO se
+recorre Enrique ENTONCES, después de la devolución de la jornada 4, hay exactamente dos
+mensajes nuevos, sin leer: una foto de las Cindolor en la heladera y el texto de BR-INV-100,
+en ese orden, sin un tercero. CUANDO se amplía la foto ENTONCES muestra ese texto como
+adjunto. Reabrir el celular, volver al menú y repetir la apertura no duplican las identidades.
+
+### AC-INV-102 — Antes de la jornada 5 los mensajes no existen *(verifica BR-INV-100)*
+
+DADO cada jornada de la 1 a la 4 CUANDO se recorre Enrique ENTONCES ninguno de los dos
+mensajes de BR-INV-100 está en su chat. DADO una partida retomada en la jornada 5 ENTONCES los
+dos aparecen una sola vez, y el contador de Enrique cuenta sólo los que no leyó.
 
 ## No objetivos
 
