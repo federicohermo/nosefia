@@ -9,16 +9,20 @@ const TEXTOS := {
 	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
 	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA TERMINASTE TUS TAREAS Y PODÉS IRTE",
 	Notificaciones.Tipo.SALIDA_RETRABADA: "YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR",
+	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS:
+	"EL CLIENTE SE CANSÓ DE ESPERAR Y DEJÓ LOS PRODUCTOS.",
 }
 const SIMBOLO_DEL_CLIENTE := preload("res://assets/ui/manada/notificacion_cliente.svg")
+const SIMBOLO_DE_LA_SALIDA := preload("res://assets/ui/manada/notificacion_salida.svg")
 const SIMBOLOS := {
 	Notificaciones.Tipo.CLIENTE: SIMBOLO_DEL_CLIENTE,
 	Notificaciones.Tipo.LECTURA_FALLIDA: preload("res://assets/ui/manada/notificacion_lectura.svg"),
-	Notificaciones.Tipo.CLIENTE_CANSADO: preload("res://assets/ui/manada/notificacion_salida.svg"),
+	Notificaciones.Tipo.CLIENTE_CANSADO: SIMBOLO_DE_LA_SALIDA,
 	Notificaciones.Tipo.CIERRE_PROXIMO: preload("res://assets/ui/manada/notificacion_cierre.svg"),
 	Notificaciones.Tipo.PISTA: preload("res://assets/ui/manada/notificacion_pista.svg"),
 	Notificaciones.Tipo.TAREAS_TERMINADAS: SIMBOLO_DEL_CLIENTE,
 	Notificaciones.Tipo.SALIDA_RETRABADA: SIMBOLO_DEL_CLIENTE,
+	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS: SIMBOLO_DE_LA_SALIDA,
 }
 const ESCALA_DEL_CARTEL := 0.4
 const DURACION_DE_ENTRADA := 0.2
@@ -71,8 +75,8 @@ func avisar_llegada(comprador: Comprador) -> void:
 	_pintar()
 
 
-func avisar_salida(comprador: Comprador) -> void:
-	_estado.se_fue(comprador)
+func avisar_salida(comprador: Comprador, dejo_productos := false) -> void:
+	_estado.se_fue(comprador, dejo_productos)
 	_pintar()
 
 
