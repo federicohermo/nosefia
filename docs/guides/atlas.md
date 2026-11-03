@@ -91,23 +91,6 @@ python .claude/scripts/hornear_biseles.py [--solo RUTA_DE_LA_ETIQUETA] [--destin
 - Si cambia la malla de un producto o su UV, hay que hornear de nuevo. El motivo y el formato
   están en `lib/biseles.py`.
 
-## Superficies del local
-
-Un color liso, una textura que filtra por píxeles y una sola rugosidad hacen que una superficie
-se vea de dibujo. `lib/superficies.py` declara una receta por material: la heladera, el piso, la
-pared, la chapa de la góndola y el ploteo del freezer.
-
-```bash
-python .claude/scripts/mejorar_superficies.py [--solo MATERIAL] [--sin-guardar]
-```
-
-- Escribe un color nuevo y un mapa de rugosidad en `assets/source/textures/superficies/`.
-- El color conserva el tono medio y el tamaño. La rugosidad viaja a 512.
-- Los muebles con malla propia suman además oclusión, bisel y un polvo suave arriba.
-- **Escribe el `.blend`.** Si el material ya tiene la receta, se niega: hay que restaurar el
-  `.blend` con git antes de repetir.
-- Después: `exportar_modelo.py`, `extraer_mallas.gd` y `hornear.py`, con y sin `--sin-luz`.
-
 ## Color de una caja
 
 Una caja regenerada con una imagen generada sale más saturada y más clara que su original. El
