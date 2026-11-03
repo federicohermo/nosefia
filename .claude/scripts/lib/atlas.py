@@ -32,6 +32,7 @@ import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
+from lib import biseles
 from lib.blender import LADO_MAXIMO, achicada, grupo_de
 from lib.repo import RAIZ
 
@@ -264,6 +265,18 @@ def huella_de(archivo: Path) -> str:
     return hashlib.sha256(archivo.read_bytes()).hexdigest()
 
 
+def huella_de_la_fuente(clave: str) -> str:
+    """La huella de una fuente del atlas: la etiqueta y, si la tiene, su capa de biseles.
+
+    Con la capa adentro, cambiarla deja el atlas viejo, y `--comprobar` lo dice.
+    """
+    contenido = (ASSETS / clave).read_bytes()
+    capa = biseles.ruta_de_la_capa(clave)
+    if capa.is_file():
+        contenido += capa.read_bytes()
+    return hashlib.sha256(contenido).hexdigest()
+
+
 def a_manifiesto(atlas_por_grupo: dict[str, list[Atlas]], huellas_de_atlas: dict[str, str]) -> dict:
     return {
         "borde": BORDE,
@@ -383,7 +396,7 @@ def fuentes_del_disco(manifiesto: dict) -> dict[str, Entrada]:
         if medidas is None:
             raise ValueError(f"{clave} no es un PNG: el atlas sólo lee PNG")
         ancho, alto = achicada(*medidas, lado_de(clave))
-        fuentes[clave] = Entrada(clave, ancho, alto, formatos.get(clave, ""), huella_de(archivo))
+        fuentes[clave] = Entrada(clave, ancho, alto, formatos.get(clave, ""), huella_de_la_fuente(clave))
     return fuentes
 
 

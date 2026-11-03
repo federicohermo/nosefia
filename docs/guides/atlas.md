@@ -74,6 +74,23 @@ sale con el dibujo de otra.
 `--sellar` registra los PNG que ya están, para cuando otra herramienta los generó con el reparto
 del manifiesto. `--destino <carpeta>` arma en otra carpeta sin tocar el árbol.
 
+## Biseles de una etiqueta
+
+Un producto nuevo tiene aristas filosas. La capa de biseles les da lo que tiene un borde real:
+una banda oscura pegada a la arista y un brillo fino sobre ella. Sale de la malla del producto.
+
+```bash
+python .claude/scripts/hornear_biseles.py [--solo RUTA_DE_LA_ETIQUETA] [--destino CARPETA]
+```
+
+- Escribe un PNG por etiqueta en `assets/source/biseles/`, con la misma ruta que la etiqueta.
+- **El dibujo no se toca.** `armar_atlas.py` suma la capa al armar el atlas. Si la capa cambia, el
+  atlas queda viejo y `--comprobar` lo dice.
+- El ancho del bisel se mide en texeles, no en metros. Un bisel más angosto que un texel no se ve.
+- No suma ninguna textura: la etiqueta viaja con el mismo tamaño y el mismo formato.
+- Si cambia la malla de un producto o su UV, hay que hornear de nuevo. El motivo y el formato
+  están en `lib/biseles.py`.
+
 ## Color de una caja
 
 Una caja regenerada con una imagen generada sale más saturada y más clara que su original. El
