@@ -18,7 +18,7 @@ Tres pasadas de Cycles sobre la copia:
 Más una cuarta, de cobertura, para saber qué píxeles de la imagen cubre alguna cara. **Lo que no
 cubre ninguna queda sin capa**: sin esto la oclusión lo dejaría negro.
 
-## Tres cosas que muerden
+## Cuatro cosas que muerden
 
 - **Las normales suaves inventan biseles.** En una lata, el vértice del borde promedia la tapa y
   el costado, y la normal suave se inclina a lo largo de todo el alto. La copia se hornea con
@@ -26,11 +26,14 @@ cubre ninguna queda sin capa**: sin esto la oclusión lo dejaría negro.
   cuentan como arista.
 - **La escena guarda `use_selected_to_active` en verdad.** Con eso, el horneado exige un objeto
   activo distinto del seleccionado y falla con «No valid selected objects». Se apaga acá.
+- **Una forma curva no lleva bisel.** Una malla con quiebres de 20 a 85 grados, como la panza de
+  una botella, saldría con líneas que no existen. Esas etiquetas quedan con una capa neutra.
 - **La copia se hornea sola.** Con la góndola cerca, la oclusión oscurece todo el producto con la
   sombra del estante, y esa luz ya está horneada en el modelo. Se apagan para el render todos los
   objetos menos la copia, y la capa agrega sólo lo que es del producto.
 """
 
+import math
 import sys
 from pathlib import Path
 
@@ -50,7 +53,7 @@ MUESTRAS_DEL_BISEL = 12
 MARGEN = 8
 
 
-def _ranuras_por_etiqueta() -> dict[str, tuple["bpy.types.Object", int]]:
+def ranuras_por_etiqueta() -> dict[str, tuple["bpy.types.Object", int]]:
     """El primer objeto, por nombre, que usa cada etiqueta, y la ranura donde la usa."""
     claves = {lib_atlas.normalizar(c) for c in lib_atlas.ETIQUETAS}
     elegidas: dict[str, tuple[bpy.types.Object, int]] = {}
@@ -70,7 +73,7 @@ def _ranuras_por_etiqueta() -> dict[str, tuple["bpy.types.Object", int]]:
     return elegidas
 
 
-def _copiar(objeto: "bpy.types.Object") -> "bpy.types.Object":
+def copiar(objeto: "bpy.types.Object") -> "bpy.types.Object":
     """Una copia con la transformación aplicada. Conserva todas las caras: sin las tapas, una
     lata es un tubo abierto y la oclusión mira para adentro."""
     escena = bpy.context.scene
@@ -110,7 +113,7 @@ def _material(armar, imagen: "bpy.types.Image") -> "bpy.types.Material":
     return material
 
 
-def _texeles_por_metro(copia, ranura: int, ancho: int, alto: int) -> float:
+def texeles_por_metro(copia, ranura: int, ancho: int, alto: int) -> float:
     """Cuántos texeles de la capa caben en un metro de la etiqueta, medido sobre sus caras."""
     malla = copia.data
     uv = malla.uv_layers.active.data
@@ -132,7 +135,7 @@ def _texeles_por_metro(copia, ranura: int, ancho: int, alto: int) -> float:
     return (en_uv * ancho * alto / superficie) ** 0.5
 
 
-def _hornear(copia, ranura: int, ancho: int, alto: int, tipo: str, armar) -> np.ndarray:
+def hornear(copia, ranura: int, ancho: int, alto: int, tipo: str, armar) -> np.ndarray:
     """Hornea un tipo en una imagen de `ancho x alto` y devuelve un canal, de arriba a abajo.
 
     Las caras de las otras ranuras hornean en una imagen de descarte: así no pisan, con su UV,
@@ -194,18 +197,38 @@ def _sin_cambios(nodos, emision) -> None:
     return None
 
 
-def _capa_de(copia, ranura: int, ancho: int, alto: int) -> np.ndarray:
-    """La capa de una ranura de la copia: `(alto, ancho, 3)` con luz, brillo y cero, de 0 a 1."""
+def _quiebres(copia, ranura: int) -> list[float]:
+    """Los ángulos, en grados, entre las caras que comparten una arista con la ranura."""
+    trozo = bmesh.new()
+    trozo.from_mesh(copia.data)
+    angulos = [
+        math.degrees(a.link_faces[0].normal.angle(a.link_faces[1].normal))
+        for a in trozo.edges
+        if len(a.link_faces) == 2 and any(c.material_index == ranura for c in a.link_faces)
+    ]
+    trozo.free()
+    return angulos
+
+
+def capa_de(copia, ranura: int, ancho: int, alto: int) -> np.ndarray:
+    """La capa de una ranura de la copia: `(alto, ancho, 3)` con luz, brillo y cero, de 0 a 1.
+
+    Una forma curva sale sin capa: luz 1 y brillo 0 en todos lados.
+    """
+    if biseles.es_forma_curva(_quiebres(copia, ranura)):
+        sin_capa = np.zeros((alto, ancho, 3), dtype=np.float32)
+        sin_capa[..., 0] = 1.0
+        return sin_capa
     escena = bpy.context.scene
     escena.cycles.samples = MUESTRAS_DEL_BISEL
-    densidad = _texeles_por_metro(copia, ranura, ancho, alto)
+    densidad = texeles_por_metro(copia, ranura, ancho, alto)
     radio_fino = biseles.radio_en_metros(biseles.BRILLO_EN_TEXELES, densidad)
     radio_ancho = biseles.radio_en_metros(biseles.BANDA_EN_TEXELES, densidad)
-    fino = _hornear(copia, ranura, ancho, alto, "EMIT", _desvio_del_bisel(radio_fino))
-    banda = _hornear(copia, ranura, ancho, alto, "EMIT", _desvio_del_bisel(radio_ancho))
-    cobertura = _hornear(copia, ranura, ancho, alto, "EMIT", _blanco) > 0.5
+    fino = hornear(copia, ranura, ancho, alto, "EMIT", _desvio_del_bisel(radio_fino))
+    banda = hornear(copia, ranura, ancho, alto, "EMIT", _desvio_del_bisel(radio_ancho))
+    cobertura = hornear(copia, ranura, ancho, alto, "EMIT", _blanco) > 0.5
     escena.cycles.samples = MUESTRAS_DE_LA_OCLUSION
-    oclusion = _hornear(copia, ranura, ancho, alto, "AO", _sin_cambios)
+    oclusion = hornear(copia, ranura, ancho, alto, "AO", _sin_cambios)
     oclusion = np.where(cobertura, oclusion, 1.0)
     oscurecimiento = np.clip(
         biseles.PESO_DE_LA_BANDA * banda + biseles.PESO_DE_LA_OCLUSION * (1.0 - oclusion),
@@ -237,7 +260,7 @@ def _escribir(capa: np.ndarray, destino: Path) -> None:
         bpy.data.images.remove(imagen)
 
 
-def _preparar_la_escena() -> None:
+def preparar_la_escena() -> None:
     escena = bpy.context.scene
     escena.render.engine = "CYCLES"
     escena.cycles.device = "CPU"
@@ -268,8 +291,8 @@ def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     solo, destino = _argumentos()
-    _preparar_la_escena()
-    elegidas = _ranuras_por_etiqueta()
+    preparar_la_escena()
+    elegidas = ranuras_por_etiqueta()
     faltan = [clave for clave in lib_atlas.ETIQUETAS if clave not in elegidas]
     if faltan:
         raise SystemExit("ningún objeto del modelo usa estas etiquetas:\n  " + "\n  ".join(faltan))
@@ -279,8 +302,8 @@ def main() -> None:
         objeto, ranura = elegidas[clave]
         medidas = lib_atlas.ancho_alto_png((lib_atlas.ASSETS / clave).read_bytes()[:32])
         ancho, alto = achicada(*medidas, lib_atlas.lado_de(clave))
-        copia = _copiar(objeto)
-        capa = _capa_de(copia, ranura, ancho, alto)
+        copia = copiar(objeto)
+        capa = capa_de(copia, ranura, ancho, alto)
         malla = copia.data
         bpy.data.objects.remove(copia)
         bpy.data.meshes.remove(malla)

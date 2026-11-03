@@ -52,15 +52,25 @@ RADIO_MAXIMO = 0.02
 #: Hasta dónde llega la oclusión del ambiente en las partes hundidas de la malla, en metros.
 DISTANCIA_DE_OCLUSION = 0.02
 
-#: Cuánto se tiene que desviar la normal de un bisel para contar como arista. Las facetas de un
-#: cilindro de 32 lados se desvían menos que esto, y una arista de 90 grados, mucho más.
-UMBRAL_DE_ARISTA = 0.03
+#: Cuánto se tiene que desviar la normal de un bisel para contar como arista. Va de 0 a 2 y una
+#: arista de 90 grados da 0.59 en su centro. Un quiebre de 28 grados, como el del frente de una
+#: bolsa, da 0.06, y las facetas de un cilindro de 32 lados, 0.01: no son aristas, y marcarlas
+#: dibuja una línea que no existe.
+UMBRAL_DE_ARISTA = 0.15
+
+#: Los quiebres entre estos dos ángulos, en grados, delatan una forma curva hecha con pocos
+#: polígonos: la panza de una botella, el frente de una bolsa. En el juego se ve suave, y un
+#: bisel ahí dibuja una línea que no existe. Una malla con alguno de estos quiebres **no lleva
+#: bisel**: su borde ya lo da la forma. Los de menos de 20 grados son las facetas de un cilindro,
+#: y los de 85 o más, aristas de verdad.
+QUIEBRE_SUAVE_DESDE = 20.0
+QUIEBRE_DURO_DESDE = 85.0
 
 #: Cuánto pesa cada pieza en el resultado. La banda y la oclusión oscurecen hasta
 #: `OSCURECIMIENTO_MAXIMO`. El brillo sube hasta `BRILLO_MAXIMO`.
 PESO_DE_LA_BANDA = 0.8
 PESO_DE_LA_OCLUSION = 0.35
-PESO_DEL_BRILLO = 2.0
+PESO_DEL_BRILLO = 2.6
 OSCURECIMIENTO_MAXIMO = 0.35
 BRILLO_MAXIMO = 0.55
 
@@ -74,6 +84,11 @@ def ruta_de_la_capa(clave: str) -> Path:
 def radio_en_metros(texeles: float, texeles_por_metro: float) -> float:
     """El ancho en metros de un bisel de `texeles` texeles, entre los límites."""
     return min(RADIO_MAXIMO, max(RADIO_MINIMO, texeles / texeles_por_metro))
+
+
+def es_forma_curva(angulos_en_grados: list[float]) -> bool:
+    """Si alguno de los quiebres de una malla es suave: ni faceta de cilindro ni arista."""
+    return any(QUIEBRE_SUAVE_DESDE <= a < QUIEBRE_DURO_DESDE for a in angulos_en_grados)
 
 
 def componer(canal: float, luz: float, brillo: float) -> float:

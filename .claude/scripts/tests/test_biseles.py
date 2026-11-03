@@ -50,6 +50,19 @@ class ElRadioDelBisel(unittest.TestCase):
         self.assertEqual(biseles.radio_en_metros(3.0, 1.0), biseles.RADIO_MAXIMO)
 
 
+class FormasCurvas(unittest.TestCase):
+    def test_una_caja_y_un_cilindro_duro_llevan_bisel(self):
+        self.assertFalse(biseles.es_forma_curva([90.0] * 12))
+        self.assertFalse(biseles.es_forma_curva([11.2] * 32 + [90.0] * 64))
+
+    def test_un_quiebre_suave_deja_la_malla_sin_bisel(self):
+        self.assertTrue(biseles.es_forma_curva([90.0, 90.0, 28.5, 76.0]))
+        self.assertTrue(biseles.es_forma_curva([45.0]))
+
+    def test_una_malla_sin_aristas_compartidas_no_es_curva(self):
+        self.assertFalse(biseles.es_forma_curva([]))
+
+
 class DondeVive(unittest.TestCase):
     def test_la_capa_de_una_etiqueta_lleva_su_misma_ruta(self):
         ruta = biseles.ruta_de_la_capa("source/products-cam/petisas/petisas completo.png")
