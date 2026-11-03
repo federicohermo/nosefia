@@ -195,6 +195,10 @@ func _ready() -> void:
 	_atenciones.entrega_dicha.connect(_decir_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
+	_investigador.pista_nueva.connect(
+		func(_pista: Pista) -> void:
+			_pensar_gesto(_gestos.al_anotar_una_pista(_partida, _celular.celular().abierto()))
+	)
 	_computadora.computadora_abierta.connect(avisos.actualizar_computadora.bind(true))
 	_computadora.computadora_cerrada.connect(avisos.actualizar_computadora.bind(false))
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
@@ -1142,6 +1146,7 @@ func _al_abrir_el_celular() -> void:
 
 
 func _al_cerrar_el_celular() -> void:
+	_pensar_gesto(_gestos.al_cerrar_el_celular(_partida))
 	_jugador.reanudar()
 	_pantalla_del_celular.bajar()
 
