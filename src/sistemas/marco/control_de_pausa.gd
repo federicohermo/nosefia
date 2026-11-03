@@ -30,6 +30,8 @@ var celular: CelularDelEmpleado
 var _cursor_antes := false
 var _menu_pedido := false
 var _ventana_activa := true
+## Lo que falta de la gracia que deja un Esc atendido por el celular. Ver `Pausa`.
+var _gracia_tras_esc := 0.0
 
 
 func _ready() -> void:
@@ -57,7 +59,8 @@ func _input(evento: InputEvent) -> void:
 	)
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	_gracia_tras_esc = maxf(_gracia_tras_esc - delta, 0.0)
 	_cursor_antes = _cursor_tomado()
 
 
@@ -73,7 +76,12 @@ func _notification(aviso: int) -> void:
 
 func _mirar_el_cursor() -> void:
 	var accion := Pausa.ante_el_cursor(
-		get_tree().paused, _placa_en_pantalla(), _cursor_antes, _cursor_tomado(), _ventana_activa
+		get_tree().paused,
+		_placa_en_pantalla(),
+		_cursor_antes,
+		_cursor_tomado(),
+		_ventana_activa,
+		_gracia_tras_esc > 0.0
 	)
 	_hacer(accion)
 
@@ -119,6 +127,7 @@ func pedir_volver_al_menu() -> void:
 
 func _cerrar_el_celular() -> void:
 	if celular.pedir_esc():
+		_gracia_tras_esc = Pausa.GRACIA_TRAS_ESC
 		esc_atendido_por_el_celular.emit()
 
 

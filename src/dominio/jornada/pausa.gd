@@ -9,6 +9,10 @@ extends RefCounted
 
 enum Accion { NADA, PAUSAR, REANUDAR, CERRAR_CONFIGURACIONES, CERRAR_CELULAR }
 
+## Cuánto después de un Esc que cerró el celular no cuenta un cursor perdido. En la web, Esc
+## siempre suelta el cursor, y el aviso del navegador llega unos cuadros más tarde.
+const GRACIA_TRAS_ESC := 0.5
+
 
 ## Con configuraciones abierta desde la pausa, Esc la cierra y deja la pausa: el Esc siguiente
 ## reanuda. Con el celular libre abierto, Esc lo cierra a él y no pausa.
@@ -24,13 +28,15 @@ static func ante_esc(
 
 ## Pausa sólo si el cursor estaba tomado y quedó suelto sin que el juego lo soltara. Quien pregunta
 ## mide los dos estados a los dos lados de la escritura del juego, así que lo que cambia en el
-## medio lo cambió el navegador.
+## medio lo cambió el navegador. Si lo soltó el mismo Esc que cerró el celular, el celular ya
+## atendió ese Esc: es `gracia_tras_esc`, y no pausa.
 static func ante_el_cursor(
 	en_pausa: bool,
 	placa_en_pantalla: bool,
 	tomado_antes: bool,
 	tomado_ahora: bool,
-	ventana_activa: bool = true
+	ventana_activa: bool = true,
+	gracia_tras_esc: bool = false
 ) -> Accion:
-	var perdido := ventana_activa and tomado_antes and not tomado_ahora
+	var perdido := ventana_activa and tomado_antes and not tomado_ahora and not gracia_tras_esc
 	return Accion.PAUSAR if perdido and not en_pausa and not placa_en_pantalla else Accion.NADA

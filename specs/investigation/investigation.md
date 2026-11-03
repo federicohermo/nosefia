@@ -953,7 +953,8 @@ ENTONCES Yasmín conserva esas 25 entradas, sin mensajes nuevos.
 
 DADO el celular abierto en modo libre y, por separado, a mitad de la subida CUANDO se pulsa Q
 ENTONCES baja desde su posición actual. CUANDO se pulsa Esc en esos mismos estados ENTONCES baja
-igual y la pausa no se abre. DADO el celular cerrado CUANDO se pulsa Esc ENTONCES se abre la
+igual y la pausa no se abre, tampoco cuando el navegador suelta el cursor junto con ese Esc.
+DADO el celular cerrado CUANDO se pulsa Esc ENTONCES se abre la
 pausa. DADO el celular abierto CUANDO se pulsa Esc dos veces seguidas, con la bajada del primero
 terminada, ENTONCES el primero lo cierra y el segundo abre la pausa.
 

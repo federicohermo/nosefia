@@ -52,3 +52,12 @@ func test_esc_con_el_celular_libre_abierto_lo_cierra_y_no_pausa() -> void:  # AC
 func test_en_pausa_o_con_configuraciones_el_celular_no_quita_su_turno() -> void:  # AC-SAV-018
 	assert_int(Pausa.ante_esc(true, false, true)).is_equal(Pausa.Accion.REANUDAR)
 	assert_int(Pausa.ante_esc(false, true, true)).is_equal(Pausa.Accion.CERRAR_CONFIGURACIONES)
+
+
+func test_el_cursor_que_suelta_el_esc_del_celular_no_pausa() -> void:  # AC-INV-070
+	assert_int(Pausa.ante_el_cursor(false, false, true, false, true, true)).is_equal(
+		Pausa.Accion.NADA
+	)
+	assert_int(Pausa.ante_el_cursor(false, false, true, false, true, false)).is_equal(
+		Pausa.Accion.PAUSAR
+	)

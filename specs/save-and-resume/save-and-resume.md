@@ -122,7 +122,8 @@ con el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa
 la devolución NO DEBE responder a ningún gesto. Lo mismo vale para la reflexión de cierre y la
 espera posterior a elegir (BR-INV-046). SI el cursor pasa de tomado a suelto con la ventana
 activa y sin que el juego lo suelte, ENTONCES el sistema DEBE pausar: en la web el navegador
-consume Esc para soltar el cursor. Soltarlo el propio juego NO DEBE pausar, y con la
+consume Esc para soltar el cursor. El cursor que suelta el Esc que cerró el celular NO DEBE
+pausar: ese Esc ya lo atendió el celular. Soltarlo el propio juego NO DEBE pausar, y con la
 devolución o la reflexión de cierre en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 
