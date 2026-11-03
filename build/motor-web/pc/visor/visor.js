@@ -451,8 +451,19 @@ window.__medir = async (ms) => {
 	return { cuadros: e.length, p50: q(0.5), p95: q(0.95), p99: q(0.99), max: +e[e.length - 1].toFixed(1) };
 };
 window.__vista = (n) => { poner(n); return true; };
+const cpuCuadros = [];
+let cpuDesde = 0;
+app.on('frameupdate', () => { cpuDesde = performance.now(); });
+app.on('frameend', () => { cpuCuadros.push(performance.now() - cpuDesde); if (cpuCuadros.length > 60000) cpuCuadros.shift(); });
+window.__cpu = (reiniciar = true) => {
+	const e = cpuCuadros.slice().sort((a, b) => a - b);
+	if (reiniciar) cpuCuadros.length = 0;
+	if (e.length < 3) return null;
+	const q = (p) => +e[Math.floor((e.length - 1) * p)].toFixed(3);
+	return { cuadros: e.length, p50: q(0.5), p95: q(0.95), max: +e[e.length - 1].toFixed(2) };
+};
 window.__marca = marca;
 window.__pcdebug = () => ({ area: app.scene.lighting.areaLightsEnabled, luces: app.root.children.filter((e) => e.light).map((e) => ({ tipo: e.light.type, forma: e.light.shape, rango: e.light.range, int: e.light.intensity, enabled: e.light.enabled, pos: e.getPosition().toArray().map((v) => +v.toFixed(2)) })).slice(0, 30) });
-window.__info = () => ({ backend, dibujos, conAtlas, luces, materiales: horneados.size + dinamicos.size, mallas: mallas.size, texturas: texturas.size, version: pc.version });
+window.__info = () => ({ backend, dibujos, conAtlas, luces, materiales: horneados.size + dinamicos.size, mallas: mallas.size, texturas: texturas.size, version: pc.version, llamadas: app.stats?.drawCalls?.total ?? null, triangulos: app.stats?.frame?.triangles ?? null });
 window.__listo = true;
 if (panel) panel.textContent = `PlayCanvas ${pc.version}\n${backend}\n${dibujos} dibujos`;

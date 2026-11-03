@@ -13,9 +13,10 @@ import * as THREE from 'three/webgpu';
 import {
 	Fn, texture, screenUV, uv, float, vec2, vec3, vec4, uniform, normalMap, normalWorld,
 	transformDirection, cameraWorldMatrix, instanceIndex, textureLoad, ivec2, positionView,
-	smoothstep, fog, select, uniformArray, materialColor, mix,
+	smoothstep, fog, select, uniformArray, materialColor, mix, Loop, LTC_Evaluate, LTC_Uv, mat3, cameraPosition, positionWorld,
 } from 'three/tsl';
 import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
+import { DynamicLighting } from 'three/addons/lighting/DynamicLighting.js';
 
 const T0 = performance.timeOrigin;
 const marca = {};
@@ -34,6 +35,10 @@ const SIN_AREA = PARAMS.get('area') === '0';
 const SIN_L1 = PARAMS.get('l1') === '0';
 const DEBUG = PARAMS.get('debug') ?? '';
 const SALTAR_COMPILAR = PARAMS.get('compilar') === '0';
+const SIN_FUSION = PARAMS.get('fusion') === '0';
+// 'datos': las luces puntuales y focos van a arreglos con un lazo y las de área a un lazo propio.
+// 'nativas': una luz de Three por cada luz de Godot, desenrolladas en el shader.
+const LUCES = PARAMS.get('luces') ?? 'datos';
 
 const panel = document.getElementById('datos');
 const decir = (t) => { if (panel) panel.textContent = t; };
@@ -70,11 +75,14 @@ renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 document.body.appendChild(renderer.domElement);
 await renderer.init();
 anotar('renderer');
+let ltcTablas = null;
 const backend = renderer.backend?.isWebGPUBackend ? 'webgpu' : 'webgl2';
 RectAreaLightNode_setup();
+if (LUCES === 'datos') renderer.lighting = new DynamicLighting({ maxPointLights: 4, maxSpotLights: 16, maxDirectionalLights: 1, maxHemisphereLights: 1 });
 
 function RectAreaLightNode_setup() {
-	THREE.RectAreaLightNode.setLTC(RectAreaLightTexturesLib.init());
+	ltcTablas = RectAreaLightTexturesLib.init();
+	THREE.RectAreaLightNode.setLTC(ltcTablas);
 }
 
 const escena = new THREE.Scene();
@@ -224,6 +232,53 @@ function filaDeSH(x, y, z) {
 }
 
 // ---------------------------------------------------------------------------------------------
+// Luces de área en una tabla: cuatro vértices por luz, un solo lazo en el shader
+// ---------------------------------------------------------------------------------------------
+const rectas = LUCES === 'datos' && !SIN_AREA ? datos.luces.filter((l) => l.tipo === 'AreaLight3D') : [];
+const tablaRectas = (() => {
+	const n = Math.max(rectas.length, 1);
+	const centro = [], mitadAncho = [], mitadAlto = [], color = [];
+	for (let i = 0; i < n; i += 1) {
+		const l = rectas[i];
+		if (!l) { [centro, mitadAncho, mitadAlto, color].forEach((a) => a.push(new THREE.Vector3())); continue; }
+		const m = new THREE.Matrix4().fromArray([l.transform[0], l.transform[1], l.transform[2], 0, l.transform[3], l.transform[4], l.transform[5], 0, l.transform[6], l.transform[7], l.transform[8], 0, l.transform[9], l.transform[10], l.transform[11], 1]);
+		const x = new THREE.Vector3().setFromMatrixColumn(m, 0).normalize();
+		const y = new THREE.Vector3().setFromMatrixColumn(m, 1).normalize();
+		centro.push(new THREE.Vector3().setFromMatrixPosition(m));
+		mitadAncho.push(x.multiplyScalar(l.area_tamano[0] / 2));
+		mitadAlto.push(y.multiplyScalar(l.area_tamano[1] / 2));
+		color.push(new THREE.Vector3(l.color[0], l.color[1], l.color[2]).multiplyScalar(l.energia * K_LUZ));
+	}
+	// Un solo arreglo (un solo bloque de uniformes): centro, mitad de ancho, mitad de alto y color de cada luz.
+	const todo = [];
+	for (let i = 0; i < n; i += 1) todo.push(centro[i], mitadAncho[i], mitadAlto[i], color[i]);
+	return { n: rectas.length, tabla: uniformArray(todo, 'vec3') };
+})();
+// Luz de todos los rectángulos sobre el punto: difusa con la matriz identidad y especular con la
+// matriz de la tabla LTC, como `RectAreaLightNode` de Three pero en un solo lazo.
+const luzDeArea = (N, rugosidad, albedo, metalico) => Fn(() => {
+	if (tablaRectas.n === 0) return vec3(0);
+	const V = cameraPosition.sub(positionWorld).normalize();
+	const uvLtc = LTC_Uv({ N, V, roughness: rugosidad });
+	const t1 = texture(ltcTablas.LTC_FLOAT_1, uvLtc), t2 = texture(ltcTablas.LTC_FLOAT_2, uvLtc);
+	const mInv = mat3(vec3(t1.x, 0, t1.y), vec3(0, 1, 0), vec3(t1.z, 0, t1.w));
+	const f0 = mix(vec3(0.04), albedo, metalico);
+	const fresnel = f0.mul(t2.x).add(vec3(1).sub(f0).mul(t2.y));
+	const difuso = albedo.mul(float(1).sub(metalico));
+	const identidad = mat3(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	const acc = vec3(0).toVar();
+	Loop(tablaRectas.n, ({ i }) => {
+		const c = tablaRectas.tabla.element(i.mul(4)), hw = tablaRectas.tabla.element(i.mul(4).add(1)), hh = tablaRectas.tabla.element(i.mul(4).add(2));
+		const colorLuz = tablaRectas.tabla.element(i.mul(4).add(3));
+		const p0 = c.add(hw).sub(hh), p1 = c.sub(hw).sub(hh), p2 = c.sub(hw).add(hh), p3 = c.add(hw).add(hh);
+		const espec = LTC_Evaluate({ N, V, P: positionWorld, mInv, p0, p1, p2, p3 });
+		const dif = LTC_Evaluate({ N, V, P: positionWorld, mInv: identidad, p0, p1, p2, p3 });
+		acc.addAssign(DEBUG === 'area0' ? colorLuz.mul(0.01) : DEBUG === 'area1' ? dif.mul(colorLuz) : colorLuz.mul(fresnel.mul(espec).add(difuso.mul(dif))));
+	});
+	return acc;
+})();
+
+// ---------------------------------------------------------------------------------------------
 // Materiales
 // ---------------------------------------------------------------------------------------------
 const PI = Math.PI;
@@ -254,6 +309,8 @@ function irradianciaSH(n, fila) {
 
 const blanca = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1, THREE.RGBAFormat);
 blanca.needsUpdate = true;
+const planaNormal = new THREE.DataTexture(new Uint8Array([128, 128, 255, 255]), 1, 1, THREE.RGBAFormat);
+planaNormal.needsUpdate = true;
 const materiales = new Map();
 const nodoDeNormal = (m) => {
 	// Los mapas de normales de Godot son RG (BC5): la z se reconstruye.
@@ -271,15 +328,7 @@ function crearMaterial(clave, baked) {
 	const m = datos.materiales[clave];
 	const albedoTex = m.albedo_textura ? texturaBC(m.albedo_textura, THREE.SRGBColorSpace) : null;
 	const color = new THREE.Color(m.albedo[0], m.albedo[1], m.albedo[2]);
-	const albedo = albedoTex
-		? texture(albedoTex, uv()).rgb.mul(vec3(color.r, color.g, color.b))
-		: vec3(color.r, color.g, color.b);
-	const alfa = albedoTex && m.transparencia > 0 ? texture(albedoTex, uv()).a.mul(m.albedo[3]) : float(m.albedo[3]);
-	const emision = m.emision
-		? (m.emision_textura
-			? texture(texturaBC(m.emision_textura, THREE.SRGBColorSpace) ?? albedoTex, uv()).rgb
-			: vec3(1)).mul(vec3(m.emision_color[0], m.emision_color[1], m.emision_color[2])).mul(m.emision_energia)
-		: null;
+	const alfa = texture(albedoTex ?? blanca, uv()).a.mul(uniform(m.albedo[3]));
 
 	let mat;
 	if (baked) {
@@ -290,7 +339,7 @@ function crearMaterial(clave, baked) {
 		const emisionTex = m.emision ? texturaBC(m.emision_textura, THREE.SRGBColorSpace) : null;
 		const emisionB = texture(emisionTex ?? blanca, uv()).rgb
 			.mul(uniform(new THREE.Color(...(m.emision ? m.emision_color.slice(0, 3) : [0, 0, 0]))))
-			.mul(m.emision ? m.emision_energia : 0);
+			.mul(uniform(m.emision ? m.emision_energia : 0));
 		// Godot: lightmap × albedo, sin luces en tiempo real.
 		mat = new THREE.MeshBasicNodeMaterial();
 		const rect = uniform(new THREE.Vector4());
@@ -312,24 +361,35 @@ function crearMaterial(clave, baked) {
 		const capaDebug = ['l0', 'l1y', 'l1z', 'l1x'].indexOf(DEBUG);
 		mat.colorNode = capaDebug >= 0 ? texture(capasLM[capaDebug], uv1).rgb : DEBUG === 'lm' ? irr.max(0).mul(K_LM) : salida;
 	} else {
+		// Lo dinámico también comparte un solo grafo: las texturas que faltan son una blanca o una normal
+		// plana, y lo que cambia entre materiales (color, rugosidad, canales) son uniformes.
+		// Así el motor enlaza un programa por forma de transparencia y no uno por material.
 		mat = new THREE.MeshStandardNodeMaterial();
-		mat.colorNode = albedo;
-		mat.roughness = m.rugosidad;
-		mat.metalness = m.metalico;
-		if (m.orm_textura) {
-			const orm = texture(texturaBC(m.orm_textura, THREE.NoColorSpace), uv());
-			mat.roughnessNode = orm.g.mul(m.rugosidad);
-			mat.metalnessNode = orm.b.mul(m.metalico);
-		} else if (m.rugosidad_textura) {
-			mat.roughnessNode = texture(texturaBC(m.rugosidad_textura, THREE.NoColorSpace), uv()).r.mul(m.rugosidad);
-		}
-		if (m.normal && m.normal_textura) {
-			mat.normalNode = normalMap(nodoDeNormal(m), vec2(m.normal_escala));
-		}
+		const colorU = uniform(new THREE.Color(color.r, color.g, color.b));
+		const albedoD = texture(albedoTex ?? blanca, uv());
+		mat.colorNode = albedoD.rgb.mul(colorU);
+		const ormTex = m.orm_textura ? texturaBC(m.orm_textura, THREE.NoColorSpace)
+			: m.rugosidad_textura ? texturaBC(m.rugosidad_textura, THREE.NoColorSpace) : null;
+		const orm = texture(ormTex ?? blanca, uv()).rgb;
+		// rugosidad = orm · mascaraR + baseR ; metálico = orm · mascaraM + baseM (valores sólo en uniformes)
+		const mascaraR = ormTex ? (m.orm_textura ? [0, m.rugosidad, 0] : [m.rugosidad, 0, 0]) : [0, 0, 0];
+		const mascaraM = m.orm_textura ? [0, 0, m.metalico] : [0, 0, 0];
+		mat.roughnessNode = orm.dot(uniform(new THREE.Vector3(...mascaraR))).add(uniform(ormTex ? 0 : m.rugosidad));
+		mat.metalnessNode = orm.dot(uniform(new THREE.Vector3(...mascaraM))).add(uniform(m.orm_textura ? 0 : m.metalico));
+		const normalTex = m.normal && m.normal_textura ? texturaBC(m.normal_textura, THREE.NoColorSpace) : null;
+		const rgN = texture(normalTex ?? planaNormal, uv()).rg;
+		const xyN = rgN.mul(2).sub(1);
+		const mapaN = vec3(rgN, float(1).sub(xyN.dot(xyN)).max(0).sqrt().mul(0.5).add(0.5));
+		mat.normalNode = normalMap(mapaN, uniform(new THREE.Vector2(...(normalTex ? [m.normal_escala, m.normal_escala] : [0, 0]))));
+		const emTex = m.emision && m.emision_textura ? texturaBC(m.emision_textura, THREE.SRGBColorSpace) : null;
+		const emisionD = texture(emTex ?? blanca, uv()).rgb
+			.mul(uniform(new THREE.Color(...(m.emision ? m.emision_color.slice(0, 3) : [0, 0, 0]))))
+			.mul(uniform(m.emision ? m.emision_energia : 0));
 		// Sondas: la luz indirecta es `SH(normal) × albedo × (1 - metálico)`.
 		const ind = irradianciaSH(normalWorld, filaSH.add(instanceIndex)).max(0)
-			.mul(albedo).mul(float(1).sub(mat.metalnessNode ?? m.metalico)).mul(K_SH);
-		mat.emissiveNode = emision ? ind.add(emision) : ind;
+			.mul(mat.colorNode).mul(float(1).sub(mat.metalnessNode)).mul(K_SH);
+		const area = luzDeArea(normalWorld, mat.roughnessNode, mat.colorNode, mat.metalnessNode);
+		mat.emissiveNode = (DEBUG === 'area' || DEBUG === 'area0' || DEBUG === 'area1') ? area.mul(4) : ind.add(emisionD).add(area);
 	}
 	mat.side = m.cull === 2 ? THREE.DoubleSide : THREE.FrontSide;
 	if (m.transparencia === 1) {
@@ -396,6 +456,7 @@ const mundo = new THREE.Group();
 escena.add(mundo);
 let dibujos = 0, conAtlas = 0;
 const dinamicos = [];
+const horneados = new Map();
 for (const dibujo of datos.dibujos) {
 	if (!dibujo.visible) continue;
 	const rect = rectDe(dibujo.ruta);
@@ -409,9 +470,23 @@ for (const dibujo of datos.dibujos) {
 		if (!g || !clave) continue;
 		const baked = rect !== null && g.getAttribute('uv1') !== undefined;
 		const mat = crearMaterial(clave, baked);
-		const nodo = new THREE.Mesh(g, mat);
-		nodo.matrixAutoUpdate = false;
-		nodo.matrix.copy(m4);
+		if (baked && !SIN_FUSION) {
+			if (!horneados.has(mat)) horneados.set(mat, []);
+			horneados.get(mat).push({ g, m4 });
+			dibujos += 1;
+			continue;
+		}
+		// Lo dinámico va como instancia de a una: así comparte programa con los productos instanciados.
+		let nodo;
+		if (baked) {
+			nodo = new THREE.Mesh(g, mat);
+			nodo.matrixAutoUpdate = false;
+			nodo.matrix.copy(m4);
+		} else {
+			nodo = new THREE.InstancedMesh(g, mat, 1);
+			nodo.setMatrixAt(0, m4);
+			nodo.frustumCulled = false;
+		}
 		if (!baked) {
 			nodo.userData.fila = filaDeSH(m4.elements[12], m4.elements[13], m4.elements[14]);
 			dinamicos.push(nodo);
@@ -421,6 +496,51 @@ for (const dibujo of datos.dibujos) {
 		mundo.add(nodo);
 		dibujos += 1;
 	}
+}
+
+// Lo horneado no se mueve: las piezas de un mismo material se funden en una malla, con la matriz
+// del mundo aplicada a los vértices. Son menos objetos que el motor tiene que recorrer en cada cuadro.
+function fundir(partes) {
+	let nv = 0, ni = 0;
+	for (const { g } of partes) { nv += g.getAttribute('position').count; ni += g.index ? g.index.count : g.getAttribute('position').count; }
+	const pos = new Float32Array(nv * 3), nor = new Float32Array(nv * 3), uv0 = new Float32Array(nv * 2), uv1 = new Float32Array(nv * 2);
+	const idx = new Uint32Array(ni);
+	const v = new THREE.Vector3(), nm = new THREE.Matrix3();
+	let ov = 0, oi = 0;
+	for (const { g, m4 } of partes) {
+		const P = g.getAttribute('position'), N = g.getAttribute('normal'), U0 = g.getAttribute('uv'), U1 = g.getAttribute('uv1');
+		nm.getNormalMatrix(m4);
+		for (let i = 0; i < P.count; i += 1) {
+			v.fromBufferAttribute(P, i).applyMatrix4(m4).toArray(pos, (ov + i) * 3);
+			v.fromBufferAttribute(N, i).applyMatrix3(nm).normalize().toArray(nor, (ov + i) * 3);
+			if (U0) { uv0[(ov + i) * 2] = U0.getX(i); uv0[(ov + i) * 2 + 1] = U0.getY(i); }
+			uv1[(ov + i) * 2] = U1.getX(i); uv1[(ov + i) * 2 + 1] = U1.getY(i);
+		}
+		const espejo = m4.determinant() < 0;
+		const n = g.index ? g.index.count : P.count;
+		for (let i = 0; i < n; i += 3) {
+			const a = g.index ? g.index.getX(i) : i, b = g.index ? g.index.getX(i + 1) : i + 1, c = g.index ? g.index.getX(i + 2) : i + 2;
+			idx[oi + i] = ov + a;
+			idx[oi + i + 1] = ov + (espejo ? c : b);
+			idx[oi + i + 2] = ov + (espejo ? b : c);
+		}
+		ov += P.count; oi += n;
+	}
+	const salida = new THREE.BufferGeometry();
+	salida.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+	salida.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+	salida.setAttribute('uv', new THREE.BufferAttribute(uv0, 2));
+	salida.setAttribute('uv1', new THREE.BufferAttribute(uv1, 2));
+	salida.setIndex(new THREE.BufferAttribute(idx, 1));
+	salida.computeBoundingSphere();
+	return salida;
+}
+let fundidos = 0;
+for (const [mat, partes] of horneados) {
+	const malla = new THREE.Mesh(fundir(partes), mat);
+	malla.matrixAutoUpdate = false;
+	mundo.add(malla);
+	fundidos += 1;
 }
 
 // Productos: una copia por lugar, una fila de sondas por copia.
@@ -477,7 +597,7 @@ for (const l of datos.luces) {
 		luz = new THREE.SpotLight(color, l.energia * K_LUZ, l.rango, THREE.MathUtils.degToRad(l.angulo), 0.3, l.atenuacion);
 	} else if (l.tipo === 'OmniLight3D') {
 		luz = new THREE.PointLight(color, l.energia * K_LUZ, l.rango, l.atenuacion);
-	} else if (l.tipo === 'AreaLight3D' && !SIN_AREA) {
+	} else if (l.tipo === 'AreaLight3D' && !SIN_AREA && LUCES === 'nativas') {
 		// Godot normaliza la energía por el área: el brillo no cambia con el tamaño.
 		const [ancho, alto] = l.area_tamano;
 		luz = new THREE.RectAreaLight(color, l.energia * K_LUZ, ancho, alto);
@@ -629,12 +749,16 @@ anotar('almacen');
 console.log('[carga] almacén en pantalla', JSON.stringify(marca));
 
 const marcas = [];
+const cpuCuadros = [];
 let corriendo = true;
 function bucle(t) {
 	if (!corriendo) return;
 	marcas.push(t);
 	if (marcas.length > 60000) marcas.shift();
+	const a = performance.now();
 	dibujarUnCuadro();
+	cpuCuadros.push(performance.now() - a);
+	if (cpuCuadros.length > 60000) cpuCuadros.shift();
 	requestAnimationFrame(bucle);
 }
 requestAnimationFrame(bucle);
@@ -651,11 +775,19 @@ window.__medir = async (ms) => {
 	return { cuadros: entre.length, p50: q(0.5), p95: q(0.95), p99: q(0.99), max: +entre[entre.length - 1].toFixed(1) };
 };
 window.__vista = (n) => { poner(n); return true; };
+window.__cpu = (reiniciar = true) => {
+	const e = cpuCuadros.slice().sort((a, b) => a - b);
+	if (reiniciar) cpuCuadros.length = 0;
+	if (e.length < 3) return null;
+	const q = (p) => +e[Math.floor((e.length - 1) * p)].toFixed(3);
+	return { cuadros: e.length, p50: q(0.5), p95: q(0.95), max: +e[e.length - 1].toFixed(2) };
+};
 window.__marca = marca;
 window.__info = () => ({
-	backend, api: API, dibujos, conAtlas, luces: luces.length, materiales: materiales.size,
+	backend, api: API, rectas: tablaRectas.n, dibujos, fundidos, conAtlas, luces: luces.length, materiales: materiales.size,
 	geometrias: geometrias.size, texturas: texturasBC.size, filasSH: filasSH.length, memoria: renderer.info?.memory ?? null,
 	render: renderer.info?.render ?? null,
 });
+window.__renderer = renderer;
 window.__listo = true;
 decir(`${backend}\n${dibujos} dibujos`);

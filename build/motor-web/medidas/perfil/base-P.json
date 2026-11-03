@@ -1,0 +1,227 @@
+{
+ "url": "http://127.0.0.1:8121/pc/visor/bundle-dbg.html",
+ "vista": "gondola",
+ "cpu": 1,
+ "segundos": 4.135,
+ "info": {
+  "backend": "webgl2",
+  "dibujos": 273,
+  "conAtlas": 188,
+  "luces": 25,
+  "materiales": 154,
+  "mallas": 293,
+  "texturas": 68,
+  "version": "2.23.3",
+  "llamadas": 220,
+  "triangulos": null
+ },
+ "cpu_por_cuadro_ms": {
+  "cuadros": 2076,
+  "p50": 1.365,
+  "p95": 3.47,
+  "max": 16.98
+ },
+ "ocupado_pct": 93.7,
+ "top": [
+  {
+   "funcion": "(program)",
+   "ms_por_s": 146.6,
+   "pct": 14.5
+  },
+  {
+   "funcion": "renderForwardInternal visor.dbg.js:29990",
+   "ms_por_s": 90,
+   "pct": 8.9
+  },
+  {
+   "funcion": "(idle)",
+   "ms_por_s": 64.2,
+   "pct": 6.3
+  },
+  {
+   "funcion": "draw visor.dbg.js:16933",
+   "ms_por_s": 50.9,
+   "pct": 5
+  },
+  {
+   "funcion": "uniformMatrix4fv",
+   "ms_por_s": 48.9,
+   "pct": 4.8
+  },
+  {
+   "funcion": "bindBuffer",
+   "ms_por_s": 38.4,
+   "pct": 3.8
+  },
+  {
+   "funcion": "bindVertexArray",
+   "ms_por_s": 35.6,
+   "pct": 3.5
+  },
+  {
+   "funcion": "renderForwardPrepareMaterials visor.dbg.js:29948",
+   "ms_por_s": 32.1,
+   "pct": 3.2
+  },
+  {
+   "funcion": "setParameters visor.dbg.js:24696",
+   "ms_por_s": 28.2,
+   "pct": 2.8
+  },
+  {
+   "funcion": "cullMeshInstances visor.dbg.js:28679",
+   "ms_por_s": 27.3,
+   "pct": 2.7
+  },
+  {
+   "funcion": "setBuffers visor.dbg.js:16886",
+   "ms_por_s": 25.1,
+   "pct": 2.5
+  },
+  {
+   "funcion": "drawElements",
+   "ms_por_s": 19.9,
+   "pct": 2
+  },
+  {
+   "funcion": "bindTexture",
+   "ms_por_s": 17.2,
+   "pct": 1.7
+  },
+  {
+   "funcion": "uniform4fv",
+   "ms_por_s": 15.7,
+   "pct": 1.6
+  },
+  {
+   "funcion": "bindTextureOnUnit visor.dbg.js:16746",
+   "ms_por_s": 14.9,
+   "pct": 1.5
+  },
+  {
+   "funcion": "createVertexArray visor.dbg.js:16836",
+   "ms_por_s": 13.4,
+   "pct": 1.3
+  },
+  {
+   "funcion": "texSubImage2D",
+   "ms_por_s": 13.1,
+   "pct": 1.3
+  },
+  {
+   "funcion": "sortVisible visor.dbg.js:30680",
+   "ms_por_s": 12.7,
+   "pct": 1.3
+  },
+  {
+   "funcion": "_prepareUniformBuffer visor.dbg.js:24581",
+   "ms_por_s": 11.8,
+   "pct": 1.2
+  },
+  {
+   "funcion": "renderForward visor.dbg.js:30075",
+   "ms_por_s": 11.7,
+   "pct": 1.2
+  },
+  {
+   "funcion": "setMeshInstanceMatrices visor.dbg.js:29488",
+   "ms_por_s": 11.7,
+   "pct": 1.2
+  },
+  {
+   "funcion": "WebglGraphicsDevice.commitFunction.<computed> visor.dbg.js:15966",
+   "ms_por_s": 11.5,
+   "pct": 1.1
+  },
+  {
+   "funcion": "setTexture visor.dbg.js:16797",
+   "ms_por_s": 11,
+   "pct": 1.1
+  },
+  {
+   "funcion": "bindBufferBase",
+   "ms_por_s": 10.6,
+   "pct": 1
+  },
+  {
+   "funcion": "updateClusters visor.dbg.js:22784",
+   "ms_por_s": 9.5,
+   "pct": 0.9
+  },
+  {
+   "funcion": "setupCullModeAndFrontFace visor.dbg.js:29171",
+   "ms_por_s": 9.4,
+   "pct": 0.9
+  },
+  {
+   "funcion": "drawElementsInstanced",
+   "ms_por_s": 7.7,
+   "pct": 0.8
+  },
+  {
+   "funcion": "WebglGraphicsDevice.commitFunction.<computed> visor.dbg.js:15978",
+   "ms_por_s": 7.7,
+   "pct": 0.8
+  },
+  {
+   "funcion": "update visor.dbg.js:22824",
+   "ms_por_s": 7.6,
+   "pct": 0.7
+  },
+  {
+   "funcion": "setBlendState visor.dbg.js:17429",
+   "ms_por_s": 6.3,
+   "pct": 0.6
+  },
+  {
+   "funcion": "uniformMatrix3fv",
+   "ms_por_s": 5.9,
+   "pct": 0.6
+  },
+  {
+   "funcion": "equals visor.dbg.js:5182",
+   "ms_por_s": 5.2,
+   "pct": 0.5
+  },
+  {
+   "funcion": "get aabb visor.dbg.js:20797",
+   "ms_por_s": 5,
+   "pct": 0.5
+  },
+  {
+   "funcion": "sortMaterialMesh visor.dbg.js:30282",
+   "ms_por_s": 4.4,
+   "pct": 0.4
+  },
+  {
+   "funcion": "collectLights visor.dbg.js:29495",
+   "ms_por_s": 4.3,
+   "pct": 0.4
+  },
+  {
+   "funcion": "fire visor.dbg.js:301",
+   "ms_por_s": 4.2,
+   "pct": 0.4
+  },
+  {
+   "funcion": "executeMeshInstanceCull visor.dbg.js:28870",
+   "ms_por_s": 3.9,
+   "pct": 0.4
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:22742",
+   "ms_por_s": 3.8,
+   "pct": 0.4
+  },
+  {
+   "funcion": "addLightData visor.dbg.js:22497",
+   "ms_por_s": 3.8,
+   "pct": 0.4
+  },
+  {
+   "funcion": "(garbage collector)",
+   "ms_por_s": 3.8,
+   "pct": 0.4
+  }
+ ]
+}
