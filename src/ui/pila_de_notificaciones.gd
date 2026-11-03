@@ -25,8 +25,9 @@ const SIMBOLOS := {
 	Notificaciones.Tipo.SALIDA_RETRABADA: SIMBOLO_DEL_CLIENTE,
 }
 const ESCALA_DEL_CARTEL := 0.4
-const TAMANO_DEL_TITULO := 13
-const TAMANO_DEL_CUERPO_CON_TITULO := 22
+const TAMANO_DEL_TEXTO_EN_FIGMA := 66.5
+const TAMANO_DEL_TITULO_EN_FIGMA := 32.0
+const TAMANO_DEL_CUERPO_EN_FIGMA := 56.0
 const DURACION_DE_ENTRADA := 0.2
 const DURACION_DE_SALIDA := 0.2
 const CURVA_DE_ENTRADA := 0.3
@@ -211,8 +212,12 @@ func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
 	if TITULOS.has(tipo):
 		var titulo := _etiqueta(TITULOS[tipo])
 		titulo.name = &"Titulo"
-		titulo.add_theme_font_size_override("font_size", TAMANO_DEL_TITULO)
-		texto.add_theme_font_size_override("font_size", TAMANO_DEL_CUERPO_CON_TITULO)
+		titulo.add_theme_font_size_override(
+			"font_size", _tamano_de_letra(TAMANO_DEL_TITULO_EN_FIGMA)
+		)
+		texto.add_theme_font_size_override(
+			"font_size", _tamano_de_letra(TAMANO_DEL_CUERPO_EN_FIGMA)
+		)
 		var columna := VBoxContainer.new()
 		columna.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		columna.add_theme_constant_override("separation", 0)
@@ -222,6 +227,11 @@ func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
 	else:
 		fila.add_child(texto)
 	return cartel
+
+
+# La letra del tema es la de los demás carteles. Su tamaño en Figma fija la conversión.
+func _tamano_de_letra(en_figma: float) -> int:
+	return roundi(_marco.get_theme_default_font_size() * en_figma / TAMANO_DEL_TEXTO_EN_FIGMA)
 
 
 func _etiqueta(contenido: String) -> Label:

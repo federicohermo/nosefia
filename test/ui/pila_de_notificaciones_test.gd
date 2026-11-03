@@ -151,6 +151,24 @@ func test_el_cartel_con_titulo_pone_el_titulo_sobre_el_cuerpo() -> void:  # AC-N
 		assert_int(titulo.get_theme_font_size("font_size")).is_less(
 			cuerpo.get_theme_font_size("font_size")
 		)
+		var letra_del_tema := float(pila._marco.get_theme_default_font_size())
+		var letra_de_otro_cartel := float(
+			(
+				(carteles[1] as Control)
+				. find_children("*", "Label", true, false)[0]
+				. get_theme_font_size("font_size")
+			)
+		)
+		assert_float(letra_de_otro_cartel).is_equal(letra_del_tema)
+		for par: Array in [
+			[cuerpo, PilaDeNotificaciones.TAMANO_DEL_CUERPO_EN_FIGMA],
+			[titulo, PilaDeNotificaciones.TAMANO_DEL_TITULO_EN_FIGMA],
+		]:
+			var etiqueta: Label = par[0]
+			var esperado: float = (
+				letra_del_tema * par[1] / PilaDeNotificaciones.TAMANO_DEL_TEXTO_EN_FIGMA
+			)
+			assert_float(etiqueta.get_theme_font_size("font_size")).is_equal_approx(esperado, 0.5)
 		(
 			assert_str(
 				titulado.find_children("*", "TextureRect", true, false)[0].texture.resource_path
