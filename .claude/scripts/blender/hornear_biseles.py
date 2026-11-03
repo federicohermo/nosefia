@@ -18,7 +18,7 @@ Tres pasadas de Cycles sobre la copia:
 Más una cuarta, de cobertura, para saber qué píxeles de la imagen cubre alguna cara. **Lo que no
 cubre ninguna queda sin capa**: sin esto la oclusión lo dejaría negro.
 
-## Cuatro cosas que muerden
+## Cinco cosas que muerden
 
 - **Las normales suaves inventan biseles.** En una lata, el vértice del borde promedia la tapa y
   el costado, y la normal suave se inclina a lo largo de todo el alto. La copia se hornea con
@@ -28,6 +28,9 @@ cubre ninguna queda sin capa**: sin esto la oclusión lo dejaría negro.
   activo distinto del seleccionado y falla con «No valid selected objects». Se apaga acá.
 - **Una forma curva no lleva bisel.** Una malla con quiebres de 20 a 85 grados, como la panza de
   una botella, saldría con líneas que no existen. Esas etiquetas quedan con una capa neutra.
+- **Vaciar los materiales de una malla pone todas sus caras en la ranura 0.** Cada pasada
+  guarda la ranura de cada cara al copiar, y la repone después de cargar los materiales. Sin eso, la
+  primera pasada anda y las demás hornean en el descarte.
 - **La copia se hornea sola.** Con la góndola cerca, la oclusión oscurece todo el producto con la
   sombra del estante, y esa luz ya está horneada en el modelo. Se apagan para el render todos los
   objetos menos la copia, y la capa agrega sólo lo que es del producto.
@@ -92,6 +95,7 @@ def copiar(objeto: "bpy.types.Object") -> "bpy.types.Object":
         bmesh.ops.recalc_face_normals(trozo, faces=trozo.faces)
     trozo.to_mesh(malla)
     trozo.free()
+    copia["ranura_de_cada_cara"] = [cara.material_index for cara in malla.polygons]
     malla.shade_flat()
     bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
     return copia
@@ -151,6 +155,7 @@ def hornear(copia, ranura: int, ancho: int, alto: int, tipo: str, armar) -> np.n
     copia.data.materials.clear()
     for material in materiales:
         copia.data.materials.append(material)
+    copia.data.polygons.foreach_set("material_index", copia["ranura_de_cada_cara"])
     bpy.ops.object.bake(type=tipo, margin=MARGEN, margin_type="EXTEND", use_clear=True)
     datos = np.empty(ancho * alto * 4, dtype=np.float32)
     imagen.pixels.foreach_get(datos)

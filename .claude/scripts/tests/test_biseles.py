@@ -4,12 +4,18 @@ La capa la hornea Blender sobre la malla real, y eso no se prueba acá: depende 
 que se prueba es lo que decide `lib/biseles.py` y `lib/atlas.py`, sin Blender.
 """
 
+import os
+import subprocess
+import sys
 import tempfile
+import textwrap
 import unittest
 from pathlib import Path
 from unittest import mock
 
 from lib import atlas, biseles
+from lib.blender import resolver
+from lib.repo import RAIZ
 
 
 class SumarLaCapa(unittest.TestCase):
@@ -108,6 +114,55 @@ class ElAtlasSabeSiLaCapaCambio(unittest.TestCase):
                 biseles, "CARPETA", base / "capas"
             ):
                 self.assertEqual(atlas.huella_de_la_fuente(clave), atlas.huella_de(base / clave))
+
+
+PRUEBA = textwrap.dedent(
+    """
+    import sys
+    import bpy
+    sys.path.insert(0, r"{scripts}")
+    from blender import hornear_biseles as hb
+
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    bpy.ops.mesh.primitive_cube_add(size=0.2)
+    caja = bpy.context.active_object
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.uv.smart_project()
+    bpy.ops.object.mode_set(mode="OBJECT")
+    for nombre in ("a", "b"):
+        caja.data.materials.append(bpy.data.materials.new(nombre))
+    for cara in caja.data.polygons:
+        cara.material_index = 1
+    hb.preparar_la_escena()
+    copia = hb.copiar(caja)
+    for ranura in (1, 1):
+        capa = hb.capa_de(copia, ranura, 64, 64)
+        assert capa[..., 1].max() > 0.05, "la ranura 1 salió sin brillo en una pasada"
+        assert capa[..., 0].min() < 0.95, "la ranura 1 salió sin banda oscura"
+    print("LISTO")
+    """
+)
+
+
+class UnaRanuraQueNoEsLaPrimera(unittest.TestCase):
+    def test_una_caja_con_su_etiqueta_en_la_segunda_ranura_lleva_bisel(self):
+        ejecutable, _ = resolver(dict(os.environ))
+        if ejecutable is None:
+            raise unittest.SkipTest(
+                "no corre: falta Blender, así que no se horneó ninguna capa. Se declara con "
+                "BLENDER_BIN."
+            )
+        scripts = RAIZ / ".claude" / "scripts"
+        with tempfile.TemporaryDirectory() as carpeta:
+            guion = Path(carpeta) / "prueba.py"
+            guion.write_text(PRUEBA.format(scripts=str(scripts)), encoding="utf-8")
+            resultado = subprocess.run(
+                [ejecutable, "--factory-startup", "--background", "--python-exit-code", "1",
+                 "--python", str(guion)],
+                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300,
+            )
+        self.assertEqual(resultado.returncode, 0, resultado.stdout + resultado.stderr)
+        self.assertIn("LISTO", resultado.stdout)
 
 
 if __name__ == "__main__":
