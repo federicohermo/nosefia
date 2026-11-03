@@ -58,7 +58,7 @@ func test_no_salir_conserva_el_ritmo_y_cierra_por_el_recorrido_natural() -> void
 		if con_pendiente:
 			assert_bool(reloj.descumplir(reloj.obligatoria(Tarea.Tipo.REPONER))).is_true()
 		_pila(almacen)._process(Notificaciones.DURACION)
-		assert_array(_textos(almacen)).is_equal([] if con_pendiente else [AVISO])
+		assert_array(_textos(almacen)).is_empty()
 		var cierres: Array[int] = []
 		reloj.turno_cerrado.connect(cierres.append)
 		RelojDePrueba.avanzar_turno(reloj, _restante(almacen) - 1.0)

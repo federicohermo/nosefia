@@ -171,7 +171,9 @@ func test_reabrir_con_un_aviso_vigente_no_lo_renueva() -> void:  # AC-NTF-032
 		estado.actualizar_computadora(false)
 		assert_array(estado.visibles()).is_equal([tipo])
 		estado.avanzar(0.1)
-		var queda: Array[Notificaciones.Tipo] = [] if retrabada else [tipo]
+		var queda: Array[Notificaciones.Tipo] = []
+		if not retrabada:
+			queda.append(tipo)
 		assert_array(estado.visibles()).is_equal(queda)
 		estado.actualizar_computadora(true)
 		estado.actualizar_computadora(false)

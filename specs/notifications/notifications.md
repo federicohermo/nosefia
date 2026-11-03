@@ -171,8 +171,8 @@ ENTONCES salir de ella NO DEBE mostrar un aviso pendiente.
 
 CUANDO la salida de prueba pasa de habilitada a trabada porque una obligatoria dejó de
 cumplirse según BR-SHF-024, el sistema DEBE mostrar «Ya no podés irte porque una tarea quedó
-sin cumplir». El texto es provisorio y DEBE usar el mismo símbolo, estilo y mecanismo del
-aviso de tareas terminadas, con duración, pausa, orden, deduplicación y cierre comunes.
+sin cumplir». El texto es provisorio y DEBE usar la duración de BR-NTF-003 y el estilo
+común de BR-NTF-007, con pausa, orden, deduplicación y cierre comunes.
 Cada nueva transición DEBE dispararlo otra vez, incluso si el aviso anterior ya venció.
 Confirmar repetidas veces el mismo estado trabado NO DEBE renovarlo ni recrearlo.
 Antes de habilitar la salida por primera vez NO DEBE aparecer este aviso.
@@ -407,7 +407,7 @@ de los dos avisos, aunque se cumpla y descumpla una tarea.
 
 DADO una jornada de prueba sin salida habilitada y la computadora abierta CUANDO se completa
 la última tarea ENTONCES la salida queda habilitada y no hay aviso; CUANDO el jugador sale de
-la computadora ENTONCES aparece el de tareas terminadas con sus tres segundos completos.
+la computadora ENTONCES aparece el de tareas terminadas y queda a la vista.
 DADO ese aviso visible y la computadora abierta CUANDO una tarea se descumple ENTONCES la
 salida se traba y el aviso se retira en el instante, sin aviso de traba; al salir aparece el
 de traba. DADO la salida trabada y la computadora abierta CUANDO se recupera ENTONCES el aviso
