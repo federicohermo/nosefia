@@ -1,0 +1,265 @@
+{
+ "url": "http://127.0.0.1:8121/three/visor/bundle-dbg.html?api=webgpu&luces=nativas&fusion=0&estatico=0&bundle=0",
+ "vista": "gondola",
+ "cpu": 1,
+ "segundos": 4.029,
+ "info": {
+  "backend": "webgpu",
+  "api": "webgpu",
+  "rectas": 0,
+  "dibujos": 273,
+  "fundidos": 0,
+  "conAtlas": 126,
+  "luces": 25,
+  "materiales": 154,
+  "geometrias": 293,
+  "texturas": 80,
+  "filasSH": 430,
+  "memoria": {
+   "attributes": 1008,
+   "attributesSize": 2564056,
+   "geometries": 247,
+   "indexAttributes": 247,
+   "indexAttributesSize": 541248,
+   "indirectStorageAttributes": 0,
+   "indirectStorageAttributesSize": 0,
+   "programs": 26,
+   "programsSize": 591765,
+   "readbackBuffers": 0,
+   "readbackBuffersSize": 0,
+   "renderTargets": 2,
+   "storageAttributes": 0,
+   "storageAttributesSize": 0,
+   "textures": 77,
+   "texturesSize": 18957388,
+   "uniformBuffers": 294,
+   "uniformBuffersSize": 179824,
+   "total": 22834281
+  },
+  "render": {
+   "calls": 954,
+   "frameCalls": 3,
+   "drawCalls": 287,
+   "triangles": 67412,
+   "points": 0,
+   "lines": 0,
+   "timestamp": 0
+  }
+ },
+ "cpu_por_cuadro_ms": {
+  "cuadros": 770,
+  "p50": 4.815,
+  "p95": 6.135,
+  "max": 9.75
+ },
+ "entre_cuadros": {
+  "cuadros": 320,
+  "p50": 4.53,
+  "p95": 6.16,
+  "p99": 6.92,
+  "max": 11.9
+ },
+ "ocupado_pct": 99.6,
+ "top": [
+  {
+   "funcion": "_renderObjectDirect visor.dbg.js:45634",
+   "ms_por_s": 158.5,
+   "pct": 15.6
+  },
+  {
+   "funcion": "updateForRender visor.dbg.js:41590",
+   "ms_por_s": 78.8,
+   "pct": 7.7
+  },
+  {
+   "funcion": "(program)",
+   "ms_por_s": 60,
+   "pct": 5.9
+  },
+  {
+   "funcion": "_update visor.dbg.js:36385",
+   "ms_por_s": 56.1,
+   "pct": 5.5
+  },
+  {
+   "funcion": "setVertexBuffer",
+   "ms_por_s": 52.4,
+   "pct": 5.1
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:25297",
+   "ms_por_s": 48.2,
+   "pct": 4.7
+  },
+  {
+   "funcion": "get needsGeometryUpdate visor.dbg.js:34913",
+   "ms_por_s": 48,
+   "pct": 4.7
+  },
+  {
+   "funcion": "updateByType visor.dbg.js:46076",
+   "ms_por_s": 44.1,
+   "pct": 4.3
+  },
+  {
+   "funcion": "project visor.dbg.js:43370",
+   "ms_por_s": 36.3,
+   "pct": 3.6
+  },
+  {
+   "funcion": "update visor.dbg.js:46039",
+   "ms_por_s": 31.2,
+   "pct": 3.1
+  },
+  {
+   "funcion": "get visor.dbg.js:35032",
+   "ms_por_s": 28.4,
+   "pct": 2.8
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:20950",
+   "ms_por_s": 28.2,
+   "pct": 2.8
+  },
+  {
+   "funcion": "_draw visor.dbg.js:60496",
+   "ms_por_s": 28.2,
+   "pct": 2.8
+  },
+  {
+   "funcion": "updateForRender visor.dbg.js:35343",
+   "ms_por_s": 27.8,
+   "pct": 2.7
+  },
+  {
+   "funcion": "setBindGroup",
+   "ms_por_s": 25.9,
+   "pct": 2.5
+  },
+  {
+   "funcion": "draw visor.dbg.js:60601",
+   "ms_por_s": 23.2,
+   "pct": 2.3
+  },
+  {
+   "funcion": "updateMatrix3 visor.dbg.js:46199",
+   "ms_por_s": 22.2,
+   "pct": 2.2
+  },
+  {
+   "funcion": "setIndexBuffer",
+   "ms_por_s": 20.2,
+   "pct": 2
+  },
+  {
+   "funcion": "update visor.dbg.js:35224",
+   "ms_por_s": 19,
+   "pct": 1.9
+  },
+  {
+   "funcion": "updateMatrixWorld visor.dbg.js:7171",
+   "ms_por_s": 13.3,
+   "pct": 1.3
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:24774",
+   "ms_por_s": 12.9,
+   "pct": 1.3
+  },
+  {
+   "funcion": "updateAttributes visor.dbg.js:35385",
+   "ms_por_s": 11.6,
+   "pct": 1.1
+  },
+  {
+   "funcion": "needsRenderUpdate visor.dbg.js:60696",
+   "ms_por_s": 10.9,
+   "pct": 1.1
+  },
+  {
+   "funcion": "renderObject visor.dbg.js:45543",
+   "ms_por_s": 10.2,
+   "pct": 1
+  },
+  {
+   "funcion": "submit",
+   "ms_por_s": 9.8,
+   "pct": 1
+  },
+  {
+   "funcion": "multiplyMatrices visor.dbg.js:5450",
+   "ms_por_s": 8.9,
+   "pct": 0.9
+  },
+  {
+   "funcion": "update visor.dbg.js:20836",
+   "ms_por_s": 8.7,
+   "pct": 0.9
+  },
+  {
+   "funcion": "getForRender visor.dbg.js:35935",
+   "ms_por_s": 5.7,
+   "pct": 0.6
+  },
+  {
+   "funcion": "getCurrentTexture",
+   "ms_por_s": 5.4,
+   "pct": 0.5
+  },
+  {
+   "funcion": "updateMatrix4 visor.dbg.js:46226",
+   "ms_por_s": 5.3,
+   "pct": 0.5
+  },
+  {
+   "funcion": "beginRenderPass",
+   "ms_por_s": 4.6,
+   "pct": 0.4
+  },
+  {
+   "funcion": "(idle)",
+   "ms_por_s": 4.5,
+   "pct": 0.4
+  },
+  {
+   "funcion": "_renderScene visor.dbg.js:44308",
+   "ms_por_s": 4.3,
+   "pct": 0.4
+  },
+  {
+   "funcion": "updateVector2 visor.dbg.js:46112",
+   "ms_por_s": 3.9,
+   "pct": 0.4
+  },
+  {
+   "funcion": "sort visor.dbg.js:36644",
+   "ms_por_s": 3.6,
+   "pct": 0.4
+  },
+  {
+   "funcion": "cyrb53 visor.dbg.js:18374",
+   "ms_por_s": 3.1,
+   "pct": 0.3
+  },
+  {
+   "funcion": "_renderObjects visor.dbg.js:45396",
+   "ms_por_s": 2.8,
+   "pct": 0.3
+  },
+  {
+   "funcion": "applyMatrix4 visor.dbg.js:4290",
+   "ms_por_s": 2.5,
+   "pct": 0.2
+  },
+  {
+   "funcion": "getCacheKey visor.dbg.js:18992",
+   "ms_por_s": 2.5,
+   "pct": 0.2
+  },
+  {
+   "funcion": "updateReference visor.dbg.js:18897",
+   "ms_por_s": 2.4,
+   "pct": 0.2
+  }
+ ]
+}

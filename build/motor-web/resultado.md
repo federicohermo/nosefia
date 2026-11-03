@@ -3,6 +3,8 @@
 Corrida del 2026-11-02, rama `improvement/motor-web`. Equipo: Windows 11, RTX 4050 Laptop, Chrome 156
 y Firefox 157 (el de Playwright). Ventana a la vista, sin sonido, 1536×760.
 
+**Actualización del 2026-11-03.** El usuario eligió Three.js. La última sección, «Three.js, etapa 1», es la vigente. Lo de arriba queda como el estudio que llevó a la decisión.
+
 ## La respuesta
 
 **Elegí PlayCanvas, con la lógica de Godot corriendo sin dibujar.** PlayCanvas dibuja el almacén. Es el
@@ -452,3 +454,179 @@ herramientas/campana.sh 5 libre        # tiempo de cuadro sin tope
 6. **Quién prueba en Safari.** Hay que hacerlo en un Mac antes de prometer nada.
 
 FIN DEL MOTOR WEB
+
+## Three.js, etapa 1
+
+Corrida del 2026-11-02 y 2026-11-03, rama `improvement/motor-web`. Mismo equipo y mismas reglas que arriba. El usuario eligió Three.js, así que esta sección parte de esa decisión.
+
+### La respuesta
+
+**Three.js ya carga el almacén tan rápido como PlayCanvas y con WebGPU dibuja casi igual de rápido.** Con WebGL2 todavía tarda unas tres veces más por cuadro. El cambio grande fue cambiar cómo se alumbran los productos. Eso bajó la carga de 8,7 a 2,0 segundos en WebGL2. Todo salió de medir, perfilar y volver a medir. La imagen no cambió.
+
+Mediana de 5 corridas alternadas, Chrome 156, el mismo almacén (medido). «Antes» es el prototipo de Three.js de ayer.
+
+| | Godot (la web de hoy) | Three.js WebGPU | Three.js WebGL2 | PlayCanvas WebGL2 |
+|---|---:|---:|---:|---:|
+| Ver el almacén, primera visita | 15,5 s | **2,4 s** (antes 3,5) | **2,0 s** (antes 8,7) | 2,1 s |
+| Segunda visita | 11,0 s (3 corridas) | 1,3 s | 1,2 s | 0,5 s |
+| Cuadro en la góndola, sin tope | 4,6 ms | **1,7 ms** (antes 3,6) | **4,1 ms** (antes 5,0) | 1,3 ms |
+| Cuadro con la CPU 4 veces más lenta | 21,9 ms | **9,0 ms** (antes 22,3) | **22,0 ms** (antes 29,6) | 4,9 ms |
+| Primera visita con la CPU 4 veces más lenta | 81 s | 5,4 s | 6,6 s | 2,7 s |
+| Memoria de Chrome | 1.666 MB | 804 MB | 795 MB | 740 MB |
+| Bytes por la red | 45,4 MiB | 19,8 MiB | 19,8 MiB | 20,0 MiB |
+| Firefox 157, primera visita | 22,0 s | 2,6 s (antes 15,8) | 4,2 s (antes 26,7) | 3,8 s |
+
+Los rangos de cada celda están en `medidas/etapa1/` y salen con `python herramientas/resumir_etapa1.py`. La pantalla va a 144 Hz, así que con tope todos marcan 6,94 ms y sólo cuenta la prueba sin tope. En Firefox, una corrida de Three.js WebGPU falló sola y la repetí a mano. Dio 3,5 s y entra en la mediana. No investigué por qué falló.
+
+La imagen es la misma que la de ayer. Contra Godot, el error medio por píxel es de 10 a 19 sobre 255 en las seis vistas (medido). Casi todo viene de lo que el volcado no trae. Son el stock de la partida, la calle que se ve por los vidrios y los reflejos. Miré las seis vistas juntas en `comparacion-etapa1.png`.
+
+### Qué se hizo y cuánto acercó cada cosa
+
+Apagué cada palanca de a una, 3 corridas por variante, Chrome sin tope (medido). Las filas son lo que pasa **sin** esa palanca.
+
+| Si se apaga | WebGL2 carga | WebGL2 CPU por cuadro | WebGPU carga | WebGPU CPU por cuadro |
+|---|---:|---:|---:|---:|
+| nada (todo prendido) | 2,4 s | 3,5 ms | 2,3 s | 1,5 ms |
+| luces en arreglos | **5,4 s** | **5,3 ms** | **5,3 s** | **2,4 ms** |
+| piezas horneadas fundidas | 2,4 s | **4,7 ms** | 2,1 s | **2,0 ms** |
+| bundle de WebGPU | no aplica | no aplica | 2,3 s | **2,4 ms** |
+
+1. **Luces en arreglos (la palanca grande).** Antes, Three armaba una luz de código por cada luz de Godot y la repetía en cada material. Cada shader pesaba 68 KB y había 8 distintos. Ahora las luces puntuales y los focos van a arreglos con un lazo, con `DynamicLighting` de Three. Las 9 luces de área van a un lazo propio que usa `LTC_Evaluate`, la misma función que usa Three. Cada shader pesa 24 KB y quedan 6. La imagen sale igual, con un error medio de 0,00 a 0,02 sobre 255 contra las luces de Three (medido en cuatro vistas). Es lo mismo que hace PlayCanvas con sus clusters.
+2. **Un grafo por tipo de material.** Los materiales dinámicos comparten un solo grafo, con texturas blancas o planas donde falta una y valores en uniformes. Antes cada material armaba su propio shader. No lo apagué solo porque cambia todo el código. Lo inferí de comparar con el prototipo de ayer. La carga en WebGL2 sin la palanca de luces ya bajó de 8,7 a 5,6 s (inferido, sesiones distintas).
+3. **Piezas horneadas fundidas.** Las 188 piezas con lightmap se funden en 78 mallas, una por material. No se mueven, así que la matriz del mundo se aplica a los vértices. Baja de 287 a 206 dibujos y la CPU por cuadro cae 25 por ciento. El modelo entero cabe en pantalla, así que no se pierde nada de culling (inferido, el almacén tiene 56 mil triángulos).
+4. **Bundle de WebGPU.** Graba lo estático una vez y lo repite. Baja la CPU por cuadro de 2,4 a 1,5 ms. Sólo existe en WebGPU. Lo que se mueva en el juego tiene que quedar afuera del bundle.
+5. **Lo que no sirvió.** Apagar el recálculo de matrices del mundo no movió nada (3,5 contra 3,6 ms en WebGL2 y dentro del ruido en WebGPU). Lo saqué del código.
+
+No probé `ClusteredLighting` de Three. Pide cómputo de WebGPU y sólo maneja luces puntuales y focos. Las de área quedarían igual de pesadas.
+
+### Por qué PlayCanvas era 4 veces más rápido
+
+Perfilé los dos en Chrome, en la góndola, con el muestreador prendido (medido, por eso los milisegundos son más altos que en la tabla de arriba).
+
+| | Dibujos por cuadro | JS del motor por cuadro | Por dibujo |
+|---|---:|---:|---:|
+| PlayCanvas | 220 | 0,34 ms | 1,5 µs |
+| Three.js WebGL2, antes | 287 | 5,9 ms | 21 µs |
+| Three.js WebGL2, ahora | 206 | 3,3 ms | 16 µs |
+| Three.js WebGPU, antes | 287 | 4,1 ms | 14 µs |
+| Three.js WebGPU, ahora con bundle | 2 | 1,5 ms | sin dato |
+
+- **En el cuadro.** Los dos dibujan casi la misma cantidad de objetos. Lo que cambia es el papeleo de cada dibujo. Las funciones que más tiempo propio gastan en Three son `_renderObjectDirect`, `updateForRender`, `_update` y el chequeo de versión de la geometría. En PlayCanvas mandan las llamadas de GL (`uniformMatrix4fv`, `bindTexture`). PlayCanvas está cerca del piso de la API y Three no (medido).
+- **En la carga.** PlayCanvas enlaza 8 programas. Three enlazaba 31, y los de luces pesaban 68 KB cada uno. Las 9 luces de área mandaban. Sin ellas, Three en WebGL2 bajaba de 8,7 a 2,5 s. Con las luces en arreglos, el costo de las de área ya no se repite en cada material (medido).
+- **Lo que se pudo copiar.** Las luces en datos, las piezas fundidas y el bundle. Juntos acercaron a Three a 1,3 veces de PlayCanvas en WebGPU y a 3,2 veces en WebGL2, sin tope y con la CPU normal.
+- **Lo que no se pudo copiar.** El papeleo por dibujo de Three en WebGL2. Es el motor, no mi código. Con la CPU 4 veces más lenta se nota. WebGL2 de Three queda en 22 ms y PlayCanvas en 4,9 ms (medido). Si el público juega en equipos así, WebGPU es el camino de Three, y no existe en todos los navegadores.
+- **Lo que no expliqué.** La segunda visita de Three tarda 1,2 a 1,8 s y la de PlayCanvas 0,5 s. Sospecho que son los 144 grafos de materiales que Three arma en JavaScript aunque el navegador ya tenga los shaders compilados. No lo perfilé. Adivinanza.
+
+### La etapa 1, como se repite
+
+El volcado del almacén es un comando. Lee las escenas reales con Godot, el horneado y las texturas ya importadas en BC.
+
+```bash
+python .claude/scripts/volcar_almacen.py --proyecto <proyecto importado> --salida build/motor-web/datos
+build/motor-web/herramientas/empaquetar.sh three
+node build/motor-web/three/servir.mjs build/motor-web 8121
+# abrir http://127.0.0.1:8121/three/visor/bundle.html?api=webgpu&vista=gondola
+```
+
+- **Lo que verifiqué.** Corrí el comando contra la copia importada del proyecto. Los siete archivos de datos salieron byte por byte iguales a los que había armado a mano ayer. Sólo cambia el formato de `vistas.json` (medido, con md5).
+- **Qué trae.** `.claude/scripts/volcar_almacen.py` cablea el disco y Godot. `lib/volcado_almacen.py` lee el horneado y empaqueta las texturas, sin tocar disco. `web/volcar_almacen.gd` es el paso que corre adentro de Godot. Hay 19 pruebas en `tests/test_volcado_almacen.py` que no necesitan Godot. Los archivos tienen copia en `.agents/` porque un test del repo lo exige.
+- **Lo que no hace todavía.** No es un paso del despliegue. No publica la página junto a la web de Godot. No lee el stock de una partida. Los objetos que se mueven no están separados del bundle. No hay HUD, ni sonido, ni entrada.
+- **La página.** Vive en `build/motor-web/three/visor/` y se arma con `empaquetar.sh`. Acepta `?api=webgpu|webgl2`, `?vista=` y las palancas `luces=nativas`, `fusion=0` y `bundle=0` para comparar.
+- **Cómo se mide.** `campana3.sh vsync|libre|cpu4|ff`, `ablacion.sh`, `perfilar.mjs` y `programas.mjs`. Los resúmenes salen con `resumir_etapa1.py` y `resumir_ablacion.py`.
+
+### PlayCanvas, a fondo
+
+Todo sale de páginas que abrí el 2026-11-02 y 2026-11-03. Cada dato lleva su fuente. Lo que no encontré dice «faltante».
+
+**Qué es y quién lo mantiene.**
+- Motor de código abierto con licencia MIT. El repositorio tiene 17,2 mil estrellas, 2 mil bifurcaciones y 14.034 commits. Lista WebGL2 y WebGPU, física con ammo.js, sonido 3D, WebXR y carga de glTF, Draco y Basis ([repositorio](https://github.com/playcanvas/engine)). Medido.
+- Snap compró la empresa. La transferencia de acciones fue en mayo de 2017 y se supo en marzo de 2018. El precio nunca se publicó ([TechCrunch](https://techcrunch.com/2018/03/23/snap-reportedly-buys-its-own-3d-game-engine), [Game Developer](https://gamedeveloper.com/game-platforms/snapchat-acquires-cloud-based-engine-playcanvas)). No verifiqué si hoy sigue siendo de Snap. Faltante.
+- La última versión del motor que vi es la 2.23.0, del 1 de octubre ([notas](https://github.com/playcanvas/engine/releases/tag/v2.23.0)). La página institucional nombra el Editor 2.34 y 2.35 ([about](https://playcanvas.com/about)). El prototipo usa la 2.23.3 de npm.
+
+**Qué trae.**
+- **Editor en la nube.** Los manuales de lightmaps y de texturas dan por hecho que luces, modelos y compresión se configuran desde el Editor. No lo abrí. Faltante.
+- **Luces por clusters.** Omni y focos entran en una grilla 3D, y el shader mira sólo las luces de su celda. No se recompila al sumar o quitar luces. Por defecto son 255 luces visibles, y desde la 2.22 se puede subir `maxLights`. Las luces de área son opcionales y agregan código al shader ([manual](https://developer.playcanvas.com/user-manual/graphics/lighting/clustered-lighting/)). El manual no dice nada de WebGL2 contra WebGPU.
+- **Lightmapper propio.** Hornea en la GPU, en el navegador. Guarda color y una sola dirección. No hace iluminación global y no admite batching ([manual](https://developer.playcanvas.com/user-manual/graphics/lighting/runtime-lightmaps/)). El lightmap de este juego trae L0 y L1 en tres ejes, y viene de Godot. El del motor no lo reemplaza (inferido).
+- **Compresión de texturas.** El Editor comprime a Basis, que se transcodifica a ASTC, DXT, ETC2, ETC, PVR o ATC en el dispositivo. Su módulo WASM suma unos 253 KB con gzip ([manual](https://developer.playcanvas.com/user-manual/optimization/texture-compression/)). La página no nombra KTX2 ni BC. Mi prototipo sube a la GPU los BC de Godot sin pasar por Basis, y funcionó (medido).
+- **Gaussian splats.** Hay PLY, SOG, SPZ y GLB. SOG pesa de 15 a 20 veces menos que PLY. Sólo el SOG por tramos admite streaming y niveles de detalle, para escenas de decenas de millones de gaussianas ([formatos](https://developer.playcanvas.com/user-manual/gaussian-splatting/formats/)). La versión 2.19 trajo un renderizador de splats en WebGPU con cómputo ([blog](https://blog.playcanvas.com/new-in-supersplat-webgpu-and-streaming-bring-huge-performance-wins)). Las cifras de velocidad son del propio proyecto. Este juego no usa splats.
+- **WebGPU.** La 2.23 dice que casi todo su trabajo apunta a WebGPU y mejora la recuperación tras perder el dispositivo ([notas](https://github.com/playcanvas/engine/releases/tag/v2.23.0)). No probé PlayCanvas en WebGPU. Mi sombreador del almacén está sólo en GLSL. Pasarlo a WGSL sería trabajo nuevo. Adivinanza, no leí esa guía. La página de WebGPU del manual dio error 404.
+- **Física.** ammo.js, un port a WebAssembly de Bullet, con componentes de cuerpo, colisión y junta. La junta está en alfa ([manual](https://developer.playcanvas.com/user-manual/physics/)). El juego usa la física de Godot, así que esto no se aprovecha sin reescribirla.
+- **Streaming de assets generales.** No encontré nada fuera de los splats. Faltante.
+- **Comunidad.** Hay un foro donde anuncian cada versión ([foro](https://forum.playcanvas.com/t/engine-v2-20-0/42387)). No encontré cuántos miembros tiene. Faltante.
+
+**Qué permitiría que Three.js no.**
+- **Menos CPU por dibujo.** Medido arriba. Es la diferencia más grande y la única que ya pesa en este juego.
+- **Luces por clusters en WebGL2, sin escribirlas.** Three tiene `DynamicLighting` para WebGL2, pero sólo con puntuales y focos. Las de área las escribí yo (medido arriba).
+- **Un Editor con escena, assets y compresión.** Three no trae ninguno. Si arte quiere ver y ajustar el almacén sin tocar código, es una ventaja real (inferido).
+- **Splats con streaming.** Three no los trae. No busqué una librería de la comunidad. Faltante.
+
+**Qué cuesta.**
+- **Tamaño del ecosistema.** `three` tuvo 32.733.258 descargas de npm en la semana del 26 de octubre al 1 de noviembre de 2026. `playcanvas` tuvo 158.215. Son 207 veces menos ([npm three](https://api.npmjs.org/downloads/point/last-week/three), [npm playcanvas](https://api.npmjs.org/downloads/point/last-week/playcanvas)). Medido. Es el motivo que dio el usuario para elegir Three.
+- **Editor.** Gratis con 1 GB. Personal cuesta 15 dólares por mes con 10 GB. Organización cuesta 50 dólares por asiento y por mes con 50 GB. Los tres incluyen alojamiento de apps ([precios](https://playcanvas.com/pricing)). La página no deja claro si el plan gratis admite proyectos privados. Faltante. Nada de lo que medí necesita el Editor.
+- **Cambios entre versiones.** La 2.23 sacó el flujo de volcar y precompilar shaders, sacó el render inmediato de mallas y renombró varias cosas de WebGPU ([notas](https://github.com/playcanvas/engine/releases/tag/v2.23.0)). Hay que fijar la versión y leer cada nota de cambios (inferido).
+
+**Qué riesgo tiene para este juego.**
+1. Depende de una empresa que tiene otro negocio principal. La licencia MIT deja seguir con una copia propia, pero con menos manos. Adivinanza.
+2. Hay unas 200 veces menos personas que lo usan. Medido en descargas.
+3. La parte WebGPU del prototipo de PlayCanvas no existe. Faltante.
+
+### Geometría virtual en Three.js
+
+Probé `three-virtual-geometry` 0.1.3 (MIT, de la comunidad, publicada el 2026-10-10) sobre una malla armada con todas las superficies estáticas del almacén, 56.016 triángulos ([repositorio](https://github.com/elad12390/three-virtual-geometry), [npm](https://www.npmjs.com/package/three-virtual-geometry)). La prueba está en `build/motor-web/geovirtual/`.
+
+**Veredicto. Funciona, pero hoy no le sirve a este almacén.** Sirve cuando hay millones de triángulos y el almacén tiene 56 mil. Además tiene un límite que lo frena aunque sirviera.
+
+| Tiempo entre cuadros | Malla común | Geometría virtual |
+|---|---:|---:|
+| 1 copia (56 mil triángulos) | 0,30 ms | 0,30 ms |
+| 25 copias (1,4 millones) | 0,53 ms | 0,39 ms |
+| 100 copias (5,6 millones) | 1,34 ms | 0,61 ms |
+| 400 copias (22,4 millones) | 5,5 ms | 1,3 ms |
+| Triángulos dibujados con 400 copias | 22,4 millones | 4,8 millones |
+
+Mediana de 3 corridas por celda, Chrome sin tope (medido). Con una copia empatan. Desde 1,4 millones ya mejora un 26 por ciento. Desde 5 millones es dos veces más rápida o más. El almacén entero cuesta 0,3 ms, así que no hay nada que ganar.
+
+**Qué anda.**
+- Arma la malla en el navegador en 640 a 720 ms (3 corridas, medido). El archivo `.vgeo` pesa 1,34 MB para esa malla.
+- Dibuja sin errores y sin desbordar, con la luz de Three. La librería pesa 237 KB, o 73 KB con brotli, sin contar Three (medido).
+- En 1 copia dibujó 35.577 de 56.016 triángulos, el 63 por ciento (medido).
+
+**Qué no anda.**
+- **Un solo canal UV.** La librería lo dice, y los datos que arma traen sólo `uvs` (medido). El almacén horneado necesita dos, uno para la textura y otro para el lightmap. No se puede usar con las paredes y los muebles de este juego.
+- **La imagen cambia.** Contra la malla común, el error medio es de 6,2 sobre 255, y las paredes grandes muestran degradés que no están en el modelo (medido, mirando la captura). Sospecho que las normales se promedian al simplificar (adivinanza, no leí el código).
+- **Sólo WebGPU.** Pide `WebGPURenderer` (README). No hay camino en WebGL2.
+- **Sólo mallas estáticas**, sin esqueletos ni morphs (README).
+
+**Qué no probé.** Texturas, sombras, Firefox, Safari, muchas mallas distintas y el costo de memoria. Faltante.
+
+### Decisiones que tomé sin consultar
+
+1. Dejé el prototipo de PlayCanvas como comparación y no lo extendí.
+2. Fundí sólo las piezas horneadas. Las dinámicas siguen sueltas, porque en el juego pueden moverse.
+3. El bundle se prende solo en WebGPU. En WebGL2 empeoraba la CPU (5,5 contra 4,3 ms, una corrida de prueba).
+4. Las luces de área van a un lazo propio con `LTC_Evaluate`. Es más trabajo que usar `RectAreaLight`, pero baja la carga de 5,4 a 2,4 s.
+5. El comando de volcado vive en `.claude/scripts/`. La página vive en `build/motor-web/`, que es donde ya estaba.
+6. Copié los archivos nuevos a `.agents/` porque un test del repo lo exige. Borré el `AGENTS.md` de la dependencia de geometría virtual en `node_modules`, porque otro test lo toma por un archivo del repo.
+7. Repetí la campaña sin tope porque dos etiquetas de lado chocaban en un sistema de archivos que no distingue mayúsculas. Las corridas viejas se descartaron.
+8. Corrí la suite entera del harness una vez para ver que no rompía nada. Dio 7 fallas. Dos eran mías y las arreglé. Las otras cinco son de texturas del modelo y de `cindolor`. No las comparé contra la rama base, así que no sé si ya fallaban.
+
+### Lo que no se pudo medir
+
+- **Safari.** No hay un Mac.
+- **PlayCanvas en WebGPU.** Mi sombreador está sólo en GLSL.
+- **El juego real.** El visor no tiene lógica, interfaz ni audio. Los tiempos son un piso.
+- **La segunda visita de Three.** No expliqué por qué tarda más que la de PlayCanvas.
+- **Godot en la segunda visita.** Sale de la campaña de ayer, con 3 corridas.
+- **Errores de consola de Godot.** La campaña cuenta 10 en 5 corridas. No miré cuáles son.
+- **Cada palanca contra el prototipo de ayer.** Las comparé contra variantes de hoy, no contra el código de ayer. El grafo único de materiales no se pudo apagar.
+
+### Lo que sólo decide el usuario
+
+1. **Si Three.js va por WebGPU con WebGL2 como respaldo.** WebGPU rinde 1,7 ms contra 4,1 ms de WebGL2 y 9 contra 22 ms con la CPU lenta. Pero WebGL2 sigue siendo lo único que corre en todos los navegadores.
+2. **Cuándo sumar el volcado al despliegue.** Hoy es un comando manual. Sumarlo toca el flujo de la web.
+3. **Si se arma la lógica del juego sobre Three.js.** Es la etapa 2. Toca `src/`, los tests y la plantilla web de Godot.
+4. **Si importa que PlayCanvas siga en el mapa.** Quedó medido y dejé sus herramientas. Si no, se pueden borrar de `build/`.
+5. **Si la geometría virtual vale un camino aparte.** Hoy no sirve con un solo canal UV. Si el arte crece a millones de triángulos, se revisa.
+6. **Quién prueba en Safari.** Hace falta un Mac antes de prometer nada.
+
+FIN DE LA ETAPA 1

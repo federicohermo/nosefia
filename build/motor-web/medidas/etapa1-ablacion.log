@@ -1,0 +1,55 @@
+ronda 1 webgl2 todo 23:46:20
+{"etiqueta":"todo","almacen1":2424,"bytesMB":19.8,"memMB":811,"gondola_p50":4.58,"gondola_p95":6.47,"cpu_gondola":4.145,"errores":0}
+ronda 1 webgl2 luces=nativas 23:47:06
+{"etiqueta":"luces-nativas","almacen1":5923,"bytesMB":19.8,"memMB":853,"gondola_p50":5.6,"gondola_p95":7.84,"cpu_gondola":5.36,"errores":0}
+ronda 1 webgl2 fusion=0 23:47:57
+{"etiqueta":"fusion-0","almacen1":2395,"bytesMB":19.8,"memMB":807,"gondola_p50":5.09,"gondola_p95":6.14,"cpu_gondola":4.675,"errores":0}
+ronda 1 webgl2 estatico=0 23:48:43
+{"etiqueta":"estatico-0","almacen1":2368,"bytesMB":19.8,"memMB":803,"gondola_p50":4.04,"gondola_p95":5.19,"cpu_gondola":3.64,"errores":0}
+ronda 1 webgpu todo 23:49:30
+{"etiqueta":"todo","almacen1":2282,"bytesMB":19.8,"memMB":934,"gondola_p50":1.74,"gondola_p95":2.64,"cpu_gondola":1.505,"errores":0}
+ronda 1 webgpu luces=nativas 23:50:17
+{"etiqueta":"luces-nativas","almacen1":6491,"bytesMB":19.8,"memMB":960,"gondola_p50":3.27,"gondola_p95":4.25,"cpu_gondola":2.98,"errores":0}
+ronda 1 webgpu fusion=0 23:51:08
+{"etiqueta":"fusion-0","almacen1":2596,"bytesMB":19.8,"memMB":1013,"gondola_p50":2.16,"gondola_p95":2.98,"cpu_gondola":1.945,"errores":0}
+ronda 1 webgpu estatico=0 23:51:55
+{"etiqueta":"estatico-0","almacen1":2254,"bytesMB":19.8,"memMB":937,"gondola_p50":1.62,"gondola_p95":2.83,"cpu_gondola":1.405,"errores":0}
+ronda 1 webgpu bundle=0 23:52:41
+{"etiqueta":"bundle-0","almacen1":2083,"bytesMB":19.8,"memMB":939,"gondola_p50":2.58,"gondola_p95":3.41,"cpu_gondola":2.24,"errores":0}
+ronda 2 webgl2 estatico=0 23:53:27
+{"etiqueta":"estatico-0","almacen1":2349,"bytesMB":19.8,"memMB":814,"gondola_p50":3.91,"gondola_p95":4.7,"cpu_gondola":3.545,"errores":0}
+ronda 2 webgl2 fusion=0 23:54:14
+{"etiqueta":"fusion-0","almacen1":2524,"bytesMB":19.8,"memMB":797,"gondola_p50":4.74,"gondola_p95":6.22,"cpu_gondola":4.36,"errores":0}
+ronda 2 webgl2 luces=nativas 23:55:00
+{"etiqueta":"luces-nativas","almacen1":5358,"bytesMB":19.8,"memMB":735,"gondola_p50":5.68,"gondola_p95":7.83,"cpu_gondola":5.295,"errores":0}
+ronda 2 webgl2 todo 23:55:50
+{"etiqueta":"todo","almacen1":2368,"bytesMB":19.8,"memMB":821,"gondola_p50":3.78,"gondola_p95":4.69,"cpu_gondola":3.45,"errores":0}
+ronda 2 webgpu bundle=0 23:56:37
+{"etiqueta":"bundle-0","almacen1":2379,"bytesMB":19.8,"memMB":929,"gondola_p50":3.44,"gondola_p95":5.02,"cpu_gondola":3.035,"errores":0}
+ronda 2 webgpu estatico=0 23:57:24
+{"etiqueta":"estatico-0","almacen1":2353,"bytesMB":19.8,"memMB":950,"gondola_p50":1.51,"gondola_p95":2.47,"cpu_gondola":1.305,"errores":0}
+ronda 2 webgpu fusion=0 23:58:10
+{"etiqueta":"fusion-0","almacen1":2077,"bytesMB":19.8,"memMB":942,"gondola_p50":2.42,"gondola_p95":3.3,"cpu_gondola":2.145,"errores":0}
+ronda 2 webgpu luces=nativas 23:58:56
+{"etiqueta":"luces-nativas","almacen1":5148,"bytesMB":19.8,"memMB":932,"gondola_p50":2.55,"gondola_p95":3.41,"cpu_gondola":2.34,"errores":0}
+ronda 2 webgpu todo 23:59:46
+{"etiqueta":"todo","almacen1":2251,"bytesMB":19.8,"memMB":929,"gondola_p50":1.41,"gondola_p95":2.43,"cpu_gondola":1.225,"errores":0}
+ronda 3 webgl2 todo 00:00:32
+{"etiqueta":"todo","almacen1":2346,"bytesMB":19.8,"memMB":821,"gondola_p50":3.89,"gondola_p95":4.93,"cpu_gondola":3.53,"errores":0}
+ronda 3 webgl2 luces=nativas 00:01:19
+{"etiqueta":"luces-nativas","almacen1":5233,"bytesMB":19.8,"memMB":825,"gondola_p50":5.26,"gondola_p95":6.26,"cpu_gondola":4.9,"errores":0}
+ronda 3 webgl2 fusion=0 00:02:08
+{"etiqueta":"fusion-0","almacen1":2380,"bytesMB":19.8,"memMB":800,"gondola_p50":5.08,"gondola_p95":6.48,"cpu_gondola":4.7,"errores":0}
+ronda 3 webgl2 estatico=0 00:02:57
+{"etiqueta":"estatico-0","almacen1":2401,"bytesMB":19.8,"memMB":825,"gondola_p50":3.77,"gondola_p95":4.97,"cpu_gondola":3.57,"errores":0}
+ronda 3 webgpu todo 00:03:44
+{"etiqueta":"todo","almacen1":2244,"bytesMB":19.8,"memMB":938,"gondola_p50":1.79,"gondola_p95":10.55,"cpu_gondola":1.54,"errores":0}
+ronda 3 webgpu luces=nativas 00:04:30
+{"etiqueta":"luces-nativas","almacen1":5301,"bytesMB":19.8,"memMB":947,"gondola_p50":2.63,"gondola_p95":3.72,"cpu_gondola":2.405,"errores":0}
+ronda 3 webgpu fusion=0 00:05:19
+{"etiqueta":"fusion-0","almacen1":2014,"bytesMB":19.8,"memMB":943,"gondola_p50":2.11,"gondola_p95":3.17,"cpu_gondola":1.89,"errores":0}
+ronda 3 webgpu estatico=0 00:06:06
+{"etiqueta":"estatico-0","almacen1":2228,"bytesMB":19.8,"memMB":928,"gondola_p50":1.32,"gondola_p95":2.15,"cpu_gondola":1.135,"errores":0}
+ronda 3 webgpu bundle=0 00:06:52
+{"etiqueta":"bundle-0","almacen1":2259,"bytesMB":19.8,"memMB":941,"gondola_p50":2.77,"gondola_p95":3.63,"cpu_gondola":2.39,"errores":0}
+FIN

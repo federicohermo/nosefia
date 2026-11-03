@@ -78,7 +78,7 @@ if (MODO === 'vg') {
 	const datosVG = await buildVirtualMesh(fromBufferGeometry(g));
 	info.construccion_ms = Math.round(performance.now() - a);
 	info.claves = Object.keys(datosVG);
-	try { info.bytes_vgeo = encodeVirtualMesh(datosVG).byteLength; } catch (e) { info.bytes_vgeo_error = String(e).slice(0, 120); }
+	try { const cod = await encodeVirtualMesh(datosVG); info.bytes_vgeo = cod.byteLength ?? cod.size; } catch (e) { info.bytes_vgeo_error = String(e).slice(0, 120); }
 	vg = new VirtualGeometry();
 	escena.add(vg.createMesh(datosVG, material, { matrices }));
 } else {

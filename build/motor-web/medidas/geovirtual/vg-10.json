@@ -1,0 +1,1 @@
+{"medida": {"cpu_p50": 0.21, "entre_p50": 0.41, "entre_p95": 0.78, "cuadros": 9053}, "construccion_ms": 717, "bytes_vgeo": null, "compilar_ms": 360, "dibujados": 360626, "overflow": false, "errores": null}

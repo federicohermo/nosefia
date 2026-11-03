@@ -1,0 +1,41 @@
+ronda 1 lado G 21:40:36
+{"etiqueta":"G","menu":2091,"almacen":12723,"desde_clic":1727,"bytes_MB":45.4,"mem_MB":1654,"gondola_p50":6.94,"gondola_p95":7.01,"camina_p95":7.01,"camina_max":7.1}
+ronda 1 lado T 21:41:30
+{"etiqueta":"T","almacen1":2385,"almacen2":1250,"bytesMB":19.8,"memMB":848,"gondola_p50":6.94,"gondola_p95":7.01,"cpu_gondola":2.03,"errores":0}
+ronda 1 lado W 21:42:13
+{"etiqueta":"W","almacen1":1996,"almacen2":1130,"bytesMB":19.8,"memMB":796,"gondola_p50":6.94,"gondola_p95":7.03,"cpu_gondola":4.005,"errores":0}
+ronda 1 lado P 21:42:55
+{"etiqueta":"P","almacen1":2094,"almacen2":500,"bytesMB":20,"memMB":740,"gondola_p50":6.94,"gondola_p95":7.01,"cpu_gondola":1.375,"errores":0}
+ronda 2 lado P 21:43:37
+{"etiqueta":"P","almacen1":2110,"almacen2":495,"bytesMB":20,"memMB":742,"gondola_p50":6.94,"gondola_p95":7.02,"cpu_gondola":1.38,"errores":0}
+ronda 2 lado W 21:44:18
+{"etiqueta":"W","almacen1":1944,"almacen2":1141,"bytesMB":19.8,"memMB":796,"gondola_p50":6.94,"gondola_p95":6.99,"cpu_gondola":3.735,"errores":0}
+ronda 2 lado T 21:45:00
+{"etiqueta":"T","almacen1":2189,"almacen2":1217,"bytesMB":19.8,"memMB":815,"gondola_p50":6.94,"gondola_p95":7.01,"cpu_gondola":1.915,"errores":0}
+ronda 2 lado G 21:45:43
+{"etiqueta":"G","menu":2197,"almacen":15517,"desde_clic":1742,"bytes_MB":45.4,"mem_MB":1668,"gondola_p50":6.95,"gondola_p95":13.86,"camina_p95":13.89,"camina_max":20.9}
+ronda 3 lado G 21:46:42
+{"etiqueta":"G","menu":3634,"almacen":16650,"desde_clic":1735,"bytes_MB":45.4,"mem_MB":1503,"gondola_p50":6.95,"gondola_p95":13.84,"camina_p95":13.9,"camina_max":27.8}
+ronda 3 lado T 21:47:41
+{"etiqueta":"T","almacen1":3024,"almacen2":1780,"bytesMB":19.8,"memMB":800,"gondola_p50":6.94,"gondola_p95":7.07,"cpu_gondola":2.93,"errores":0}
+ronda 3 lado W 21:48:27
+{"etiqueta":"W","almacen1":3088,"almacen2":1765,"bytesMB":19.8,"memMB":784,"gondola_p50":6.94,"gondola_p95":13.84,"cpu_gondola":5.065,"errores":0}
+ronda 3 lado P 21:49:12
+{"etiqueta":"P","almacen1":2835,"almacen2":618,"bytesMB":20,"memMB":738,"gondola_p50":6.94,"gondola_p95":7.07,"cpu_gondola":1.825,"errores":0}
+ronda 4 lado P 21:49:56
+{"etiqueta":"P","almacen1":2952,"almacen2":1024,"bytesMB":20,"memMB":739,"gondola_p50":6.94,"gondola_p95":7.13,"cpu_gondola":2.185,"errores":0}
+ronda 4 lado W 21:50:40
+{"etiqueta":"W","almacen1":2657,"almacen2":1780,"bytesMB":19.8,"memMB":795,"gondola_p50":6.94,"gondola_p95":7,"cpu_gondola":5.68,"errores":0}
+ronda 4 lado T 21:51:27
+{"etiqueta":"T","almacen1":3104,"almacen2":1377,"bytesMB":19.8,"memMB":803,"gondola_p50":6.94,"gondola_p95":7.12,"cpu_gondola":3.255,"errores":0}
+ronda 4 lado G 21:52:11
+{"etiqueta":"G","menu":2192,"almacen":15618,"desde_clic":1758,"bytes_MB":45.4,"mem_MB":1666,"gondola_p50":6.94,"gondola_p95":13.85,"camina_p95":7.06,"camina_max":20.7}
+ronda 5 lado G 21:53:09
+{"etiqueta":"G","menu":2195,"almacen":13005,"desde_clic":1735,"bytes_MB":45.4,"mem_MB":1673,"gondola_p50":6.94,"gondola_p95":7.01,"camina_p95":7.01,"camina_max":7.1}
+ronda 5 lado T 21:54:03
+{"etiqueta":"T","almacen1":2195,"almacen2":1123,"bytesMB":19.8,"memMB":804,"gondola_p50":6.94,"gondola_p95":7.01,"cpu_gondola":1.935,"errores":0}
+ronda 5 lado W 21:54:46
+{"etiqueta":"W","almacen1":1820,"almacen2":1157,"bytesMB":19.8,"memMB":793,"gondola_p50":6.94,"gondola_p95":7.01,"cpu_gondola":3.84,"errores":0}
+ronda 5 lado P 21:55:28
+{"etiqueta":"P","almacen1":2067,"almacen2":503,"bytesMB":20,"memMB":741,"gondola_p50":6.94,"gondola_p95":7.01,"cpu_gondola":1.385,"errores":0}
+FIN

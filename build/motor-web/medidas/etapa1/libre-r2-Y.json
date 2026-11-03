@@ -1,0 +1,205 @@
+{
+ "etiqueta": "Y",
+ "url": "http://127.0.0.1:8121/three/visor/bundle.html?api=webgl2&luces=nativas&fusion=0&estatico=0&bundle=0",
+ "sinLimite": true,
+ "esFirefox": false,
+ "cpu": 1,
+ "primera": {
+  "listo": true,
+  "hasta_listo_ms": 5673,
+  "marca": {
+   "modulo": 78,
+   "datos": 488,
+   "renderer": 498,
+   "geometria": 539,
+   "compilado": 5599,
+   "almacen": 5629
+  },
+  "almacen_ms": 5629,
+  "bytes": {
+   "three/visor/bundle.html": 286,
+   "three/dist/visor.js": 264077,
+   "datos/escena.json": 49085,
+   "datos/lightmap.json": 2074,
+   "datos/geometria.bin": 779006,
+   "datos/texturas.json": 5162,
+   "datos/texturas.bin": 19555279,
+   "datos/sondas.bin": 137165,
+   "datos/vistas.json": 307
+  },
+  "bytes_total": 20792441
+ },
+ "vistas": {
+  "gondola": {
+   "cuadros": 905,
+   "p50": 6.5,
+   "p95": 7.73,
+   "p99": 9.09,
+   "max": 11.2,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "pasillo": {
+   "cuadros": 924,
+   "p50": 6.28,
+   "p95": 8.05,
+   "p99": 9.66,
+   "max": 11.5,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "mostrador": {
+   "cuadros": 1089,
+   "p50": 5.35,
+   "p95": 6.94,
+   "p99": 8.19,
+   "max": 10.6,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "heladera": {
+   "cuadros": 1034,
+   "p50": 5.74,
+   "p95": 6.67,
+   "p99": 7.26,
+   "max": 9.9,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "deposito": {
+   "cuadros": 1078,
+   "p50": 5.57,
+   "p95": 6.32,
+   "p99": 6.96,
+   "max": 7.4,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "bano": {
+   "cuadros": 1155,
+   "p50": 5.06,
+   "p95": 6.25,
+   "p99": 7.64,
+   "max": 10.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  }
+ },
+ "info": {
+  "backend": "webgl2",
+  "api": "webgl2",
+  "rectas": 0,
+  "dibujos": 273,
+  "fundidos": 0,
+  "conAtlas": 126,
+  "luces": 25,
+  "materiales": 154,
+  "geometrias": 293,
+  "texturas": 80,
+  "filasSH": 430,
+  "memoria": {
+   "attributes": 1008,
+   "attributesSize": 2564056,
+   "geometries": 247,
+   "indexAttributes": 247,
+   "indexAttributesSize": 541248,
+   "indirectStorageAttributes": 0,
+   "indirectStorageAttributesSize": 0,
+   "programs": 25,
+   "programsSize": 530669,
+   "readbackBuffers": 0,
+   "readbackBuffersSize": 0,
+   "renderTargets": 2,
+   "storageAttributes": 0,
+   "storageAttributesSize": 0,
+   "textures": 77,
+   "texturesSize": 18957388,
+   "uniformBuffers": 294,
+   "uniformBuffersSize": 239776,
+   "total": 22833137
+  },
+  "render": {
+   "calls": 750,
+   "frameCalls": 3,
+   "drawCalls": 287,
+   "triangles": 67412,
+   "points": 0,
+   "lines": 0,
+   "timestamp": 0
+  }
+ },
+ "cpu_cuadro": {
+  "gondola": {
+   "cuadros": 908,
+   "p50": 6.13,
+   "p95": 7.345,
+   "max": 10.75
+  },
+  "pasillo": {
+   "cuadros": 927,
+   "p50": 5.935,
+   "p95": 7.63,
+   "max": 11.09
+  },
+  "mostrador": {
+   "cuadros": 1092,
+   "p50": 5.165,
+   "p95": 6.655,
+   "max": 10.34
+  },
+  "heladera": {
+   "cuadros": 1037,
+   "p50": 5.54,
+   "p95": 6.45,
+   "max": 9.55
+  },
+  "deposito": {
+   "cuadros": 1081,
+   "p50": 5.36,
+   "p95": 6.115,
+   "max": 7.2
+  },
+  "bano": {
+   "cuadros": 1159,
+   "p50": 4.89,
+   "p95": 6.035,
+   "max": 9.86
+  }
+ },
+ "recorrido_max_ms": 11.20499999999447,
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 148,
+  "crashpad-handler": 13,
+  "gpu-process": 205,
+  "utility": 58,
+  "renderer": 411
+ },
+ "memoria_mb": 836,
+ "segunda": {
+  "listo": true,
+  "hasta_listo_ms": 3139,
+  "marca": {
+   "modulo": 43,
+   "datos": 352,
+   "renderer": 360,
+   "geometria": 389,
+   "compilado": 3098,
+   "almacen": 3131
+  },
+  "almacen_ms": 3131,
+  "bytes": {
+   "three/visor/bundle.html (304)": 1,
+   "three/dist/visor.js (304)": 1,
+   "datos/escena.json (304)": 1,
+   "datos/lightmap.json (304)": 1,
+   "datos/geometria.bin (304)": 1,
+   "datos/texturas.json (304)": 1,
+   "datos/texturas.bin (304)": 1,
+   "datos/sondas.bin (304)": 1,
+   "datos/vistas.json (304)": 1
+  },
+  "bytes_total": 0
+ },
+ "errores": []
+}

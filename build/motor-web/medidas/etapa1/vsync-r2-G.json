@@ -1,0 +1,93 @@
+{
+ "etiqueta": "G",
+ "url": "http://127.0.0.1:8123/index.html",
+ "sinLimite": false,
+ "cpu": 1,
+ "software": false,
+ "clicRapido": false,
+ "menu_ms": 2197,
+ "calentado_ms": 12782,
+ "clic_ms": 13775,
+ "almacen_ms": 15517,
+ "almacen_desde_clic_ms": 1742,
+ "vistas": {
+  "mostrador": {
+   "cuadros": 430,
+   "fps": 143,
+   "p50": 6.94,
+   "p95": 7.08,
+   "p99": 7.21,
+   "max": 27.8,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  },
+  "gondola": {
+   "cuadros": 396,
+   "fps": 131.7,
+   "p50": 6.95,
+   "p95": 13.86,
+   "p99": 13.96,
+   "max": 20.8,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  },
+  "pasillo": {
+   "cuadros": 388,
+   "fps": 128.1,
+   "p50": 6.95,
+   "p95": 13.88,
+   "p99": 14,
+   "max": 20.9,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  }
+ },
+ "caminando": {
+  "cuadros": 1551,
+  "p50": 6.95,
+  "p95": 13.89,
+  "p99": 14.1,
+  "max": 20.9,
+  "mayores_33": 0,
+  "mayores_50": 0,
+  "mayores_100": 0
+ },
+ "bytes_servidor": {
+  "index.html": 2082,
+  "index.png": 21443,
+  "index.js": 59354,
+  "index.wasm": 4919185,
+  "index.pck": 42574184,
+  "index.icon.png": 5765,
+  "index.js (304)": 8,
+  "index.audio.position.worklet.js": 895,
+  "index.audio.worklet.js": 1820
+ },
+ "bytes_red": {
+  "index.png": 21779,
+  "index.html": 2439,
+  "index.js": 59718,
+  "index.icon.png": 6100,
+  "index.wasm": 4919552,
+  "index.pck": 42574560,
+  "3b7f4c03-36e5-4924-9e68-5e4ae4c7332d": 0
+ },
+ "bytes_total": 47584736,
+ "errores": [
+  "The root document of this element is not valid for pointer lock.",
+  "The root document of this element is not valid for pointer lock."
+ ],
+ "motor": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 139,
+  "crashpad-handler": 13,
+  "gpu-process": 528,
+  "utility": 80,
+  "renderer": 908
+ },
+ "memoria_mb": 1668
+}

@@ -1,0 +1,77 @@
+{
+ "etiqueta": "G",
+ "url": "http://127.0.0.1:8123/index.html",
+ "sinLimite": false,
+ "cpu": 1,
+ "software": false,
+ "clicRapido": false,
+ "menu_ms": 2387,
+ "calentado_ms": 21560,
+ "clic_ms": 22507,
+ "almacen_ms": 24264,
+ "almacen_desde_clic_ms": 1757,
+ "vistas": {
+  "mostrador": {
+   "cuadros": 434,
+   "fps": 144,
+   "p50": 6.94,
+   "p95": 6.96,
+   "p99": 6.96,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  },
+  "gondola": {
+   "cuadros": 433,
+   "fps": 144,
+   "p50": 6.94,
+   "p95": 6.96,
+   "p99": 6.96,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  },
+  "pasillo": {
+   "cuadros": 432,
+   "fps": 143.3,
+   "p50": 6.94,
+   "p95": 6.96,
+   "p99": 6.96,
+   "max": 13.9,
+   "mayores_33": 0,
+   "mayores_50": 0,
+   "mayores_100": 0
+  }
+ },
+ "caminando": {
+  "cuadros": 1707,
+  "p50": 6.94,
+  "p95": 6.96,
+  "p99": 13.88,
+  "max": 20.8,
+  "mayores_33": 0,
+  "mayores_50": 0,
+  "mayores_100": 0
+ },
+ "bytes_servidor": {
+  "index.html": 2082,
+  "index.js": 59354,
+  "index.png": 21443,
+  "index.wasm": 4919185,
+  "index.pck": 42574184,
+  "index.js (304)": 8,
+  "index.apple-touch-icon.png": 11939,
+  "index.icon.png": 5765,
+  "index.audio.position.worklet.js": 895,
+  "index.audio.worklet.js": 1820
+ },
+ "bytes_red": {},
+ "bytes_total": 47596675,
+ "errores": [],
+ "motor": "OpenGL API OpenGL ES 3.0 (WebGL 2.0) - Compatibility - Using Device: Mozilla - ANGLE (NVIDIA, NVIDIA GeForce GTX 980 Direct3D11 vs_5_0 ps_5_0), or similar",
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0",
+ "memoria_por_proceso_mb": {},
+ "memoria_mb": 0
+}

@@ -1,0 +1,234 @@
+{
+ "url": "http://127.0.0.1:8121/pc/visor/bundle-dbg.html",
+ "vista": "gondola",
+ "cpu": 1,
+ "segundos": 4.026,
+ "info": {
+  "backend": "webgl2",
+  "dibujos": 273,
+  "conAtlas": 188,
+  "luces": 25,
+  "materiales": 154,
+  "mallas": 293,
+  "texturas": 68,
+  "version": "2.23.3",
+  "llamadas": 220,
+  "triangulos": null
+ },
+ "cpu_por_cuadro_ms": {
+  "cuadros": 3561,
+  "p50": 0.83,
+  "p95": 1.625,
+  "max": 26.46
+ },
+ "entre_cuadros": {
+  "cuadros": 1609,
+  "p50": 0.84,
+  "p95": 1.57,
+  "p99": 2.16,
+  "max": 7.1
+ },
+ "ocupado_pct": 93,
+ "top": [
+  {
+   "funcion": "(program)",
+   "ms_por_s": 148.3,
+   "pct": 14.7
+  },
+  {
+   "funcion": "uniformMatrix4fv",
+   "ms_por_s": 111.3,
+   "pct": 11
+  },
+  {
+   "funcion": "(idle)",
+   "ms_por_s": 70.8,
+   "pct": 7
+  },
+  {
+   "funcion": "renderForwardInternal visor.dbg.js:29990",
+   "ms_por_s": 54.1,
+   "pct": 5.4
+  },
+  {
+   "funcion": "bindTexture",
+   "ms_por_s": 49,
+   "pct": 4.9
+  },
+  {
+   "funcion": "drawElements",
+   "ms_por_s": 39.6,
+   "pct": 3.9
+  },
+  {
+   "funcion": "bindVertexArray",
+   "ms_por_s": 37.9,
+   "pct": 3.8
+  },
+  {
+   "funcion": "draw visor.dbg.js:16933",
+   "ms_por_s": 37,
+   "pct": 3.7
+  },
+  {
+   "funcion": "uniformMatrix3fv",
+   "ms_por_s": 34,
+   "pct": 3.4
+  },
+  {
+   "funcion": "bindBuffer",
+   "ms_por_s": 32,
+   "pct": 3.2
+  },
+  {
+   "funcion": "setBuffers visor.dbg.js:16886",
+   "ms_por_s": 21.8,
+   "pct": 2.2
+  },
+  {
+   "funcion": "texSubImage2D",
+   "ms_por_s": 20.3,
+   "pct": 2
+  },
+  {
+   "funcion": "bindBufferBase",
+   "ms_por_s": 19.4,
+   "pct": 1.9
+  },
+  {
+   "funcion": "renderForwardPrepareMaterials visor.dbg.js:29948",
+   "ms_por_s": 19.2,
+   "pct": 1.9
+  },
+  {
+   "funcion": "setParameters visor.dbg.js:24696",
+   "ms_por_s": 18.4,
+   "pct": 1.8
+  },
+  {
+   "funcion": "sortVisible visor.dbg.js:30680",
+   "ms_por_s": 17.9,
+   "pct": 1.8
+  },
+  {
+   "funcion": "uniform4fv",
+   "ms_por_s": 13,
+   "pct": 1.3
+  },
+  {
+   "funcion": "cullMeshInstances visor.dbg.js:28679",
+   "ms_por_s": 11.3,
+   "pct": 1.1
+  },
+  {
+   "funcion": "updateClusters visor.dbg.js:22784",
+   "ms_por_s": 10.2,
+   "pct": 1
+  },
+  {
+   "funcion": "bindTextureOnUnit visor.dbg.js:16746",
+   "ms_por_s": 10,
+   "pct": 1
+  },
+  {
+   "funcion": "createVertexArray visor.dbg.js:16836",
+   "ms_por_s": 9.9,
+   "pct": 1
+  },
+  {
+   "funcion": "update visor.dbg.js:22824",
+   "ms_por_s": 9.4,
+   "pct": 0.9
+  },
+  {
+   "funcion": "WebglGraphicsDevice.commitFunction.<computed> visor.dbg.js:15966",
+   "ms_por_s": 9.2,
+   "pct": 0.9
+  },
+  {
+   "funcion": "useProgram",
+   "ms_por_s": 8.2,
+   "pct": 0.8
+  },
+  {
+   "funcion": "setMeshInstanceMatrices visor.dbg.js:29488",
+   "ms_por_s": 8.1,
+   "pct": 0.8
+  },
+  {
+   "funcion": "renderForward visor.dbg.js:30075",
+   "ms_por_s": 8,
+   "pct": 0.8
+  },
+  {
+   "funcion": "WebglGraphicsDevice.commitFunction.<computed> visor.dbg.js:15978",
+   "ms_por_s": 7.5,
+   "pct": 0.7
+  },
+  {
+   "funcion": "setTexture visor.dbg.js:16797",
+   "ms_por_s": 7.2,
+   "pct": 0.7
+  },
+  {
+   "funcion": "setBlendState visor.dbg.js:17429",
+   "ms_por_s": 6.8,
+   "pct": 0.7
+  },
+  {
+   "funcion": "getBoundingSphere visor.dbg.js:31802",
+   "ms_por_s": 6,
+   "pct": 0.6
+  },
+  {
+   "funcion": "_prepareUniformBuffer visor.dbg.js:24581",
+   "ms_por_s": 5.6,
+   "pct": 0.6
+  },
+  {
+   "funcion": "evalLightCellMinMax visor.dbg.js:22724",
+   "ms_por_s": 5,
+   "pct": 0.5
+  },
+  {
+   "funcion": "addLightData visor.dbg.js:22497",
+   "ms_por_s": 4.9,
+   "pct": 0.5
+  },
+  {
+   "funcion": "drawElementsInstanced",
+   "ms_por_s": 4.3,
+   "pct": 0.4
+  },
+  {
+   "funcion": "requestAnimationFrame",
+   "ms_por_s": 4.2,
+   "pct": 0.4
+  },
+  {
+   "funcion": "fire visor.dbg.js:301",
+   "ms_por_s": 4,
+   "pct": 0.4
+  },
+  {
+   "funcion": "_isBrowserInterface visor.dbg.js:6519",
+   "ms_por_s": 3.9,
+   "pct": 0.4
+  },
+  {
+   "funcion": "uniform3fv",
+   "ms_por_s": 3.8,
+   "pct": 0.4
+  },
+  {
+   "funcion": "sortMaterialMesh visor.dbg.js:30282",
+   "ms_por_s": 3.6,
+   "pct": 0.4
+  },
+  {
+   "funcion": "uniform1f",
+   "ms_por_s": 3,
+   "pct": 0.3
+  }
+ ]
+}

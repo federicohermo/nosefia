@@ -1,0 +1,265 @@
+{
+ "url": "http://127.0.0.1:8121/three/visor/bundle-dbg.html?api=webgl2",
+ "vista": "gondola",
+ "cpu": 1,
+ "segundos": 4.025,
+ "info": {
+  "backend": "webgl2",
+  "api": "webgl2",
+  "rectas": 9,
+  "dibujos": 273,
+  "fundidos": 78,
+  "conAtlas": 126,
+  "luces": 16,
+  "materiales": 154,
+  "geometrias": 293,
+  "texturas": 80,
+  "filasSH": 430,
+  "memoria": {
+   "attributes": 684,
+   "attributesSize": 2626696,
+   "geometries": 166,
+   "indexAttributes": 166,
+   "indexAttributesSize": 552408,
+   "indirectStorageAttributes": 0,
+   "indirectStorageAttributesSize": 0,
+   "programs": 25,
+   "programsSize": 260637,
+   "readbackBuffers": 0,
+   "readbackBuffersSize": 0,
+   "renderTargets": 2,
+   "storageAttributes": 0,
+   "storageAttributesSize": 0,
+   "textures": 79,
+   "texturesSize": 18957390,
+   "uniformBuffers": 378,
+   "uniformBuffersSize": 143232,
+   "total": 22540363
+  },
+  "render": {
+   "calls": 696,
+   "frameCalls": 3,
+   "drawCalls": 206,
+   "triangles": 68342,
+   "points": 0,
+   "lines": 0,
+   "timestamp": 0
+  }
+ },
+ "cpu_por_cuadro_ms": {
+  "cuadros": 716,
+  "p50": 4.435,
+  "p95": 10.535,
+  "max": 18.69
+ },
+ "entre_cuadros": {
+  "cuadros": 407,
+  "p50": 3.58,
+  "p95": 4.44,
+  "p99": 4.92,
+  "max": 5.5
+ },
+ "ocupado_pct": 99.5,
+ "top": [
+  {
+   "funcion": "_renderObjectDirect visor.dbg.js:45634",
+   "ms_por_s": 180.1,
+   "pct": 17.3
+  },
+  {
+   "funcion": "(program)",
+   "ms_por_s": 86.8,
+   "pct": 8.3
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:25327",
+   "ms_por_s": 69.7,
+   "pct": 6.7
+  },
+  {
+   "funcion": "updateForRender visor.dbg.js:41590",
+   "ms_por_s": 60.1,
+   "pct": 5.8
+  },
+  {
+   "funcion": "_update visor.dbg.js:36385",
+   "ms_por_s": 52.6,
+   "pct": 5
+  },
+  {
+   "funcion": "get needsGeometryUpdate visor.dbg.js:34913",
+   "ms_por_s": 47.6,
+   "pct": 4.6
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:20950",
+   "ms_por_s": 46.5,
+   "pct": 4.5
+  },
+  {
+   "funcion": "draw visor.dbg.js:52104",
+   "ms_por_s": 35.5,
+   "pct": 3.4
+  },
+  {
+   "funcion": "updateNumber visor.dbg.js:46092",
+   "ms_por_s": 29.7,
+   "pct": 2.8
+  },
+  {
+   "funcion": "_bindUniforms visor.dbg.js:53035",
+   "ms_por_s": 29.2,
+   "pct": 2.8
+  },
+  {
+   "funcion": "bindBufferBase visor.dbg.js:49884",
+   "ms_por_s": 25.9,
+   "pct": 2.5
+  },
+  {
+   "funcion": "updateColor visor.dbg.js:46178",
+   "ms_por_s": 23.3,
+   "pct": 2.2
+  },
+  {
+   "funcion": "get visor.dbg.js:35032",
+   "ms_por_s": 22.6,
+   "pct": 2.2
+  },
+  {
+   "funcion": "bufferData",
+   "ms_por_s": 22.4,
+   "pct": 2.1
+  },
+  {
+   "funcion": "_needsUpdate visor.dbg.js:48961",
+   "ms_por_s": 19.7,
+   "pct": 1.9
+  },
+  {
+   "funcion": "bindBufferBase",
+   "ms_por_s": 18.2,
+   "pct": 1.8
+  },
+  {
+   "funcion": "project visor.dbg.js:43370",
+   "ms_por_s": 17.2,
+   "pct": 1.7
+  },
+  {
+   "funcion": "bindVertexArray",
+   "ms_por_s": 13.9,
+   "pct": 1.3
+  },
+  {
+   "funcion": "updateAttributes visor.dbg.js:35385",
+   "ms_por_s": 13.8,
+   "pct": 1.3
+  },
+  {
+   "funcion": "update visor.dbg.js:35224",
+   "ms_por_s": 12.2,
+   "pct": 1.2
+  },
+  {
+   "funcion": "updateVector3 visor.dbg.js:46133",
+   "ms_por_s": 11.6,
+   "pct": 1.1
+  },
+  {
+   "funcion": "bindBuffer",
+   "ms_por_s": 11.5,
+   "pct": 1.1
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:24774",
+   "ms_por_s": 11.5,
+   "pct": 1.1
+  },
+  {
+   "funcion": "getVAO visor.dbg.js:48865",
+   "ms_por_s": 10.6,
+   "pct": 1
+  },
+  {
+   "funcion": "renderObject visor.dbg.js:45543",
+   "ms_por_s": 9,
+   "pct": 0.9
+  },
+  {
+   "funcion": "bindTexture",
+   "ms_por_s": 8.2,
+   "pct": 0.8
+  },
+  {
+   "funcion": "updateMatrix4 visor.dbg.js:46226",
+   "ms_por_s": 7.2,
+   "pct": 0.7
+  },
+  {
+   "funcion": "update visor.dbg.js:20836",
+   "ms_por_s": 7,
+   "pct": 0.7
+  },
+  {
+   "funcion": "updateMatrix3 visor.dbg.js:46199",
+   "ms_por_s": 6.5,
+   "pct": 0.6
+  },
+  {
+   "funcion": "sort visor.dbg.js:36644",
+   "ms_por_s": 5.4,
+   "pct": 0.5
+  },
+  {
+   "funcion": "drawElements",
+   "ms_por_s": 5.1,
+   "pct": 0.5
+  },
+  {
+   "funcion": "(idle)",
+   "ms_por_s": 4.8,
+   "pct": 0.5
+  },
+  {
+   "funcion": "intersectsObject visor.dbg.js:13696",
+   "ms_por_s": 4.6,
+   "pct": 0.4
+  },
+  {
+   "funcion": "getDrawParameters visor.dbg.js:34769",
+   "ms_por_s": 4.6,
+   "pct": 0.4
+  },
+  {
+   "funcion": "get image visor.dbg.js:3741",
+   "ms_por_s": 4.2,
+   "pct": 0.4
+  },
+  {
+   "funcion": "painterSortStable visor.dbg.js:36463",
+   "ms_por_s": 3.8,
+   "pct": 0.4
+  },
+  {
+   "funcion": "updateBinding visor.dbg.js:52670",
+   "ms_por_s": 3.8,
+   "pct": 0.4
+  },
+  {
+   "funcion": "useProgram",
+   "ms_por_s": 3.8,
+   "pct": 0.4
+  },
+  {
+   "funcion": "getCacheKey visor.dbg.js:18992",
+   "ms_por_s": 3.7,
+   "pct": 0.4
+  },
+  {
+   "funcion": "bindTexture visor.dbg.js:49849",
+   "ms_por_s": 3.7,
+   "pct": 0.4
+  }
+ ]
+}

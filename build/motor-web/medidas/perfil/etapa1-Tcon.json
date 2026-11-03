@@ -1,0 +1,265 @@
+{
+ "url": "http://127.0.0.1:8121/three/visor/bundle-dbg.html?api=webgpu",
+ "vista": "gondola",
+ "cpu": 1,
+ "segundos": 4.022,
+ "info": {
+  "backend": "webgpu",
+  "api": "webgpu",
+  "rectas": 9,
+  "dibujos": 273,
+  "fundidos": 78,
+  "conAtlas": 126,
+  "luces": 16,
+  "materiales": 154,
+  "geometrias": 293,
+  "texturas": 80,
+  "filasSH": 430,
+  "memoria": {
+   "attributes": 756,
+   "attributesSize": 3233096,
+   "geometries": 184,
+   "indexAttributes": 184,
+   "indexAttributesSize": 685416,
+   "indirectStorageAttributes": 0,
+   "indirectStorageAttributesSize": 0,
+   "programs": 27,
+   "programsSize": 297116,
+   "readbackBuffers": 0,
+   "readbackBuffersSize": 0,
+   "renderTargets": 2,
+   "storageAttributes": 0,
+   "storageAttributesSize": 0,
+   "textures": 89,
+   "texturesSize": 18957400,
+   "uniformBuffers": 396,
+   "uniformBuffersSize": 130224,
+   "total": 23303252
+  },
+  "render": {
+   "calls": 1929,
+   "frameCalls": 3,
+   "drawCalls": 2,
+   "triangles": 4,
+   "points": 0,
+   "lines": 0,
+   "timestamp": 0
+  }
+ },
+ "cpu_por_cuadro_ms": {
+  "cuadros": 1927,
+  "p50": 1.76,
+  "p95": 2.33,
+  "max": 8.51
+ },
+ "entre_cuadros": {
+  "cuadros": 908,
+  "p50": 1.62,
+  "p95": 2.45,
+  "p99": 2.73,
+  "max": 5.5
+ },
+ "ocupado_pct": 99,
+ "top": [
+  {
+   "funcion": "_update visor.dbg.js:36385",
+   "ms_por_s": 157.6,
+   "pct": 15.3
+  },
+  {
+   "funcion": "(program)",
+   "ms_por_s": 157.1,
+   "pct": 15.2
+  },
+  {
+   "funcion": "_renderBundle visor.dbg.js:44141",
+   "ms_por_s": 120.1,
+   "pct": 11.6
+  },
+  {
+   "funcion": "update visor.dbg.js:46039",
+   "ms_por_s": 106,
+   "pct": 10.3
+  },
+  {
+   "funcion": "writeBuffer",
+   "ms_por_s": 61.3,
+   "pct": 5.9
+  },
+  {
+   "funcion": "updateAttributes visor.dbg.js:35385",
+   "ms_por_s": 51.5,
+   "pct": 5
+  },
+  {
+   "funcion": "updateForRender visor.dbg.js:41590",
+   "ms_por_s": 43.6,
+   "pct": 4.2
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:24774",
+   "ms_por_s": 37,
+   "pct": 3.6
+  },
+  {
+   "funcion": "update visor.dbg.js:35224",
+   "ms_por_s": 27.8,
+   "pct": 2.7
+  },
+  {
+   "funcion": "updateVector3 visor.dbg.js:46133",
+   "ms_por_s": 19.9,
+   "pct": 1.9
+  },
+  {
+   "funcion": "submit",
+   "ms_por_s": 16.9,
+   "pct": 1.6
+  },
+  {
+   "funcion": "needsRefresh visor.dbg.js:41603",
+   "ms_por_s": 14.7,
+   "pct": 1.4
+  },
+  {
+   "funcion": "updateMatrix3 visor.dbg.js:46199",
+   "ms_por_s": 14.6,
+   "pct": 1.4
+  },
+  {
+   "funcion": "update visor.dbg.js:20836",
+   "ms_por_s": 14.5,
+   "pct": 1.4
+  },
+  {
+   "funcion": "updateMatrix4 visor.dbg.js:46226",
+   "ms_por_s": 13,
+   "pct": 1.3
+  },
+  {
+   "funcion": "updateBinding visor.dbg.js:58107",
+   "ms_por_s": 10.3,
+   "pct": 1
+  },
+  {
+   "funcion": "(idle)",
+   "ms_por_s": 10.2,
+   "pct": 1
+  },
+  {
+   "funcion": "update visor.dbg.js:24763",
+   "ms_por_s": 10.2,
+   "pct": 1
+  },
+  {
+   "funcion": "_renderScene visor.dbg.js:44308",
+   "ms_por_s": 9.3,
+   "pct": 0.9
+  },
+  {
+   "funcion": "beginRenderPass",
+   "ms_por_s": 9.2,
+   "pct": 0.9
+  },
+  {
+   "funcion": "getCurrentTexture",
+   "ms_por_s": 8.3,
+   "pct": 0.8
+  },
+  {
+   "funcion": "updateVector2 visor.dbg.js:46112",
+   "ms_por_s": 8.2,
+   "pct": 0.8
+  },
+  {
+   "funcion": "updateBefore visor.dbg.js:41529",
+   "ms_por_s": 5.2,
+   "pct": 0.5
+  },
+  {
+   "funcion": "createCommandEncoder",
+   "ms_por_s": 5.1,
+   "pct": 0.5
+  },
+  {
+   "funcion": "getCacheKey visor.dbg.js:18992",
+   "ms_por_s": 4.7,
+   "pct": 0.5
+  },
+  {
+   "funcion": "beginRender visor.dbg.js:59803",
+   "ms_por_s": 4,
+   "pct": 0.4
+  },
+  {
+   "funcion": "_renderBundles visor.dbg.js:45354",
+   "ms_por_s": 3.8,
+   "pct": 0.4
+  },
+  {
+   "funcion": "update visor.dbg.js:61773",
+   "ms_por_s": 3.7,
+   "pct": 0.4
+  },
+  {
+   "funcion": "_draw visor.dbg.js:60496",
+   "ms_por_s": 3.2,
+   "pct": 0.3
+  },
+  {
+   "funcion": "(anónima) visor.dbg.js:62552",
+   "ms_por_s": 3.1,
+   "pct": 0.3
+  },
+  {
+   "funcion": "requestAnimationFrame",
+   "ms_por_s": 2.9,
+   "pct": 0.3
+  },
+  {
+   "funcion": "project visor.dbg.js:43370",
+   "ms_por_s": 2.8,
+   "pct": 0.3
+  },
+  {
+   "funcion": "setLights visor.dbg.js:61963",
+   "ms_por_s": 2.7,
+   "pct": 0.3
+  },
+  {
+   "funcion": "getBindings visor.dbg.js:34653",
+   "ms_por_s": 2.5,
+   "pct": 0.2
+  },
+  {
+   "funcion": "cyrb53 visor.dbg.js:18374",
+   "ms_por_s": 2.5,
+   "pct": 0.2
+  },
+  {
+   "funcion": "bucle visor.dbg.js:62708",
+   "ms_por_s": 2.5,
+   "pct": 0.2
+  },
+  {
+   "funcion": "get visor.dbg.js:36820",
+   "ms_por_s": 2.3,
+   "pct": 0.2
+  },
+  {
+   "funcion": "finish",
+   "ms_por_s": 2.2,
+   "pct": 0.2
+  },
+  {
+   "funcion": "updateRenderTarget visor.dbg.js:36898",
+   "ms_por_s": 1.9,
+   "pct": 0.2
+  },
+  {
+   "funcion": "executeBundles",
+   "ms_por_s": 1.9,
+   "pct": 0.2
+  }
+ ]
+}

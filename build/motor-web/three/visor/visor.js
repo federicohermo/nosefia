@@ -39,9 +39,8 @@ const SIN_FUSION = PARAMS.get('fusion') === '0';
 // 'datos': las luces puntuales y focos van a arreglos con un lazo y las de área a un lazo propio.
 // 'nativas': una luz de Three por cada luz de Godot, desenrolladas en el shader.
 const LUCES = PARAMS.get('luces') ?? 'datos';
-// Lo estático no recalcula matrices en cada cuadro. En WebGPU además se graba una vez en un bundle
-// (`bundle=0` lo apaga). Lo que se mueva en el juego tiene que quedar afuera del bundle.
-const ESTATICO = PARAMS.get('estatico') !== '0';
+// En WebGPU lo estático se graba una vez en un bundle (`bundle=0` lo apaga). Lo que se mueva en el
+// juego tiene que quedar afuera del bundle.
 
 const panel = document.getElementById('datos');
 const decir = (t) => { if (panel) panel.textContent = t; };
@@ -618,11 +617,6 @@ for (const l of datos.luces) {
 	luces.push(luz);
 }
 if (AMBIENTE > 0) escena.add(new THREE.AmbientLight(0xffffff, AMBIENTE));
-if (ESTATICO) {
-	mundo.matrixAutoUpdate = false;
-	escena.updateMatrixWorld(true);
-	escena.matrixWorldAutoUpdate = false;
-}
 
 // ---------------------------------------------------------------------------------------------
 // Cámara

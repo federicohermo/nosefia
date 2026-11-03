@@ -1,0 +1,205 @@
+{
+ "etiqueta": "W",
+ "url": "http://127.0.0.1:8121/three/visor/bundle.html?api=webgl2",
+ "sinLimite": false,
+ "esFirefox": false,
+ "cpu": 1,
+ "primera": {
+  "listo": true,
+  "hasta_listo_ms": 1926,
+  "marca": {
+   "modulo": 73,
+   "datos": 478,
+   "renderer": 490,
+   "geometria": 542,
+   "compilado": 1793,
+   "almacen": 1820
+  },
+  "almacen_ms": 1820,
+  "bytes": {
+   "three/visor/bundle.html": 286,
+   "three/dist/visor.js": 264077,
+   "datos/escena.json": 49085,
+   "datos/lightmap.json": 2074,
+   "datos/geometria.bin": 779006,
+   "datos/texturas.json": 5162,
+   "datos/texturas.bin": 19555279,
+   "datos/sondas.bin": 137165,
+   "datos/vistas.json": 307
+  },
+  "bytes_total": 20792441
+ },
+ "vistas": {
+  "gondola": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 7.01,
+   "p99": 7.04,
+   "max": 7.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "pasillo": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 7.01,
+   "p99": 7.03,
+   "max": 7.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "mostrador": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 7,
+   "p99": 7.02,
+   "max": 7.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "heladera": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 7,
+   "p99": 7.03,
+   "max": 7.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "deposito": {
+   "cuadros": 434,
+   "p50": 6.94,
+   "p95": 7,
+   "p99": 7.02,
+   "max": 7,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "bano": {
+   "cuadros": 433,
+   "p50": 6.94,
+   "p95": 7.01,
+   "p99": 7.04,
+   "max": 7.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  }
+ },
+ "info": {
+  "backend": "webgl2",
+  "api": "webgl2",
+  "rectas": 9,
+  "dibujos": 273,
+  "fundidos": 78,
+  "conAtlas": 126,
+  "luces": 16,
+  "materiales": 154,
+  "geometrias": 293,
+  "texturas": 80,
+  "filasSH": 430,
+  "memoria": {
+   "attributes": 684,
+   "attributesSize": 2626696,
+   "geometries": 166,
+   "indexAttributes": 166,
+   "indexAttributesSize": 552408,
+   "indirectStorageAttributes": 0,
+   "indirectStorageAttributesSize": 0,
+   "programs": 25,
+   "programsSize": 260637,
+   "readbackBuffers": 0,
+   "readbackBuffersSize": 0,
+   "renderTargets": 2,
+   "storageAttributes": 0,
+   "storageAttributesSize": 0,
+   "textures": 79,
+   "texturesSize": 18957390,
+   "uniformBuffers": 378,
+   "uniformBuffersSize": 143232,
+   "total": 22540363
+  },
+  "render": {
+   "calls": 693,
+   "frameCalls": 3,
+   "drawCalls": 206,
+   "triangles": 68342,
+   "points": 0,
+   "lines": 0,
+   "timestamp": 0
+  }
+ },
+ "cpu_cuadro": {
+  "gondola": {
+   "cuadros": 435,
+   "p50": 3.84,
+   "p95": 4.58,
+   "max": 5.14
+  },
+  "pasillo": {
+   "cuadros": 433,
+   "p50": 3.87,
+   "p95": 4.44,
+   "max": 5.99
+  },
+  "mostrador": {
+   "cuadros": 433,
+   "p50": 3.38,
+   "p95": 4.065,
+   "max": 4.72
+  },
+  "heladera": {
+   "cuadros": 433,
+   "p50": 3.655,
+   "p95": 4.235,
+   "max": 6.01
+  },
+  "deposito": {
+   "cuadros": 434,
+   "p50": 3.42,
+   "p95": 4.145,
+   "max": 5.05
+  },
+  "bano": {
+   "cuadros": 433,
+   "p50": 3.42,
+   "p95": 4.37,
+   "max": 5.43
+  }
+ },
+ "recorrido_max_ms": 7.139999999999418,
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 131,
+  "crashpad-handler": 13,
+  "gpu-process": 199,
+  "utility": 57,
+  "renderer": 394
+ },
+ "memoria_mb": 793,
+ "segunda": {
+  "listo": true,
+  "hasta_listo_ms": 1231,
+  "marca": {
+   "modulo": 36,
+   "datos": 350,
+   "renderer": 357,
+   "geometria": 394,
+   "compilado": 1129,
+   "almacen": 1157
+  },
+  "almacen_ms": 1157,
+  "bytes": {
+   "three/visor/bundle.html (304)": 1,
+   "three/dist/visor.js (304)": 1,
+   "datos/escena.json (304)": 1,
+   "datos/lightmap.json (304)": 1,
+   "datos/geometria.bin (304)": 1,
+   "datos/texturas.json (304)": 1,
+   "datos/texturas.bin (304)": 1,
+   "datos/sondas.bin (304)": 1,
+   "datos/vistas.json (304)": 1
+  },
+  "bytes_total": 0
+ },
+ "errores": []
+}

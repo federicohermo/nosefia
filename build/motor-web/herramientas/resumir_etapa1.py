@@ -14,8 +14,8 @@ NOMBRES = {
     "T": "Three.js WebGPU",
     "W": "Three.js WebGL2",
     "P": "PlayCanvas WebGL2",
-    "t": "Three.js WebGPU sin las palancas",
-    "w": "Three.js WebGL2 sin las palancas",
+    "X": "Three.js WebGPU sin las palancas",
+    "Y": "Three.js WebGL2 sin las palancas",
 }
 METRICAS = [
     ("almacen", "Almacén en pantalla, primera visita (s)"),
@@ -53,7 +53,7 @@ def sacar(lado, j):
         "mem": j.get("memoria_mb"),
         "p50": gon.get("p50"),
         "p95": gon.get("p95"),
-        "cpu": ((j.get("cpu") or {}).get("gondola") or {}).get("p50"),
+        "cpu": ((j.get("cpu_cuadro") or {}).get("gondola") or {}).get("p50"),
         "largo": j.get("recorrido_max_ms"),
         "err": len(j.get("errores") or []),
     }
@@ -77,7 +77,7 @@ def main():
             lado = Path(f).stem.split("-")[-1]
             por_lado.setdefault(lado, []).append(sacar(lado, json.load(open(f, encoding="utf-8"))))
         print(f"\n# Modo {modo}")
-        for lado in "GTWPtw":
+        for lado in "GTWPXY":
             if lado not in por_lado:
                 continue
             filas = por_lado[lado]

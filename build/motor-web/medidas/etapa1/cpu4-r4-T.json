@@ -1,0 +1,180 @@
+{
+ "etiqueta": "T",
+ "url": "http://127.0.0.1:8121/three/visor/bundle.html?api=webgpu",
+ "sinLimite": true,
+ "esFirefox": false,
+ "cpu": 4,
+ "primera": {
+  "listo": true,
+  "hasta_listo_ms": 5696,
+  "marca": {
+   "modulo": 172,
+   "datos": 802,
+   "renderer": 930,
+   "geometria": 1183,
+   "compilado": 1442,
+   "almacen": 5598
+  },
+  "almacen_ms": 5598,
+  "bytes": {
+   "three/visor/bundle.html": 286,
+   "three/dist/visor.js": 264077,
+   "datos/escena.json": 49085,
+   "datos/lightmap.json": 2074,
+   "datos/geometria.bin": 779006,
+   "datos/texturas.json": 5162,
+   "datos/texturas.bin": 19555279,
+   "datos/sondas.bin": 137165,
+   "datos/vistas.json": 307
+  },
+  "bytes_total": 20792441
+ },
+ "vistas": {
+  "gondola": {
+   "cuadros": 444,
+   "p50": 8.84,
+   "p95": 10.09,
+   "p99": 10.97,
+   "max": 27.5,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "pasillo": {
+   "cuadros": 455,
+   "p50": 8.72,
+   "p95": 9.5,
+   "p99": 9.98,
+   "max": 10.6,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "mostrador": {
+   "cuadros": 452,
+   "p50": 8.72,
+   "p95": 9.76,
+   "p99": 10.47,
+   "max": 14.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "heladera": {
+   "cuadros": 459,
+   "p50": 8.68,
+   "p95": 9.4,
+   "p99": 9.69,
+   "max": 10,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "deposito": {
+   "cuadros": 449,
+   "p50": 8.76,
+   "p95": 9.85,
+   "p99": 10.85,
+   "max": 11.5,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "bano": {
+   "cuadros": 453,
+   "p50": 8.72,
+   "p95": 9.69,
+   "p99": 10.78,
+   "max": 11.9,
+   "mayores_33": 0,
+   "mayores_50": 0
+  }
+ },
+ "info": {
+  "backend": "webgpu",
+  "api": "webgpu",
+  "rectas": 9,
+  "dibujos": 273,
+  "fundidos": 78,
+  "conAtlas": 126,
+  "luces": 16,
+  "materiales": 154,
+  "geometrias": 293,
+  "texturas": 80,
+  "filasSH": 430,
+  "memoria": {
+   "attributes": 756,
+   "attributesSize": 3233096,
+   "geometries": 184,
+   "indexAttributes": 184,
+   "indexAttributesSize": 685416,
+   "indirectStorageAttributes": 0,
+   "indirectStorageAttributesSize": 0,
+   "programs": 27,
+   "programsSize": 297116,
+   "readbackBuffers": 0,
+   "readbackBuffersSize": 0,
+   "renderTargets": 2,
+   "storageAttributes": 0,
+   "storageAttributesSize": 0,
+   "textures": 89,
+   "texturesSize": 18957400,
+   "uniformBuffers": 396,
+   "uniformBuffersSize": 130224,
+   "total": 23303252
+  },
+  "render": {
+   "calls": 465,
+   "frameCalls": 3,
+   "drawCalls": 2,
+   "triangles": 4,
+   "points": 0,
+   "lines": 0,
+   "timestamp": 0
+  }
+ },
+ "cpu_cuadro": {
+  "gondola": {
+   "cuadros": 448,
+   "p50": 7.875,
+   "p95": 8.925,
+   "max": 21.41
+  },
+  "pasillo": {
+   "cuadros": 459,
+   "p50": 7.725,
+   "p95": 8.49,
+   "max": 9.69
+  },
+  "mostrador": {
+   "cuadros": 456,
+   "p50": 7.855,
+   "p95": 8.695,
+   "max": 12
+  },
+  "heladera": {
+   "cuadros": 463,
+   "p50": 7.7,
+   "p95": 8.325,
+   "max": 9.09
+  },
+  "deposito": {
+   "cuadros": 453,
+   "p50": 7.875,
+   "p95": 8.815,
+   "max": 10.2
+  },
+  "bano": {
+   "cuadros": 457,
+   "p50": 7.72,
+   "p95": 8.65,
+   "max": 10.7
+  }
+ },
+ "recorrido_max_ms": 10.775000000001455,
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 132,
+  "crashpad-handler": 13,
+  "gpu-process": 344,
+  "utility": 59,
+  "renderer": 429
+ },
+ "memoria_mb": 976,
+ "errores": []
+}

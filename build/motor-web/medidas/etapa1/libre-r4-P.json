@@ -1,0 +1,174 @@
+{
+ "etiqueta": "P",
+ "url": "http://127.0.0.1:8121/pc/visor/bundle.html",
+ "sinLimite": true,
+ "esFirefox": false,
+ "cpu": 1,
+ "primera": {
+  "listo": true,
+  "hasta_listo_ms": 2489,
+  "marca": {
+   "modulo": 72,
+   "datos": 510,
+   "dispositivo": 550,
+   "geometria": 628,
+   "almacen": 2386
+  },
+  "almacen_ms": 2386,
+  "bytes": {
+   "pc/visor/bundle.html": 257,
+   "pc/dist/visor.js": 219994,
+   "datos/escena.json": 49085,
+   "datos/lightmap.json": 2074,
+   "datos/geometria.bin": 779006,
+   "datos/texturas.json": 5162,
+   "datos/texturas.bin": 19555279,
+   "datos/sondas.bin": 137165,
+   "datos/ltc.json": 192230,
+   "datos/vistas.json": 307
+  },
+  "bytes_total": 20940559
+ },
+ "vistas": {
+  "gondola": {
+   "cuadros": 4316,
+   "p50": 1.28,
+   "p95": 2.31,
+   "p99": 4.5,
+   "max": 9.4,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "pasillo": {
+   "cuadros": 4197,
+   "p50": 1.41,
+   "p95": 2.18,
+   "p99": 2.52,
+   "max": 13.2,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "mostrador": {
+   "cuadros": 5885,
+   "p50": 0.76,
+   "p95": 1.42,
+   "p99": 13.3,
+   "max": 19.1,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "heladera": {
+   "cuadros": 5290,
+   "p50": 1.01,
+   "p95": 2.16,
+   "p99": 3.23,
+   "max": 19.6,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "deposito": {
+   "cuadros": 10693,
+   "p50": 0.53,
+   "p95": 0.96,
+   "p99": 1.24,
+   "max": 3.3,
+   "mayores_33": 0,
+   "mayores_50": 0
+  },
+  "bano": {
+   "cuadros": 9847,
+   "p50": 0.58,
+   "p95": 1.01,
+   "p99": 1.45,
+   "max": 9.3,
+   "mayores_33": 0,
+   "mayores_50": 0
+  }
+ },
+ "info": {
+  "backend": "webgl2",
+  "dibujos": 273,
+  "conAtlas": 188,
+  "luces": 25,
+  "materiales": 154,
+  "mallas": 293,
+  "texturas": 68,
+  "version": "2.23.3",
+  "llamadas": 220,
+  "triangulos": null
+ },
+ "cpu_cuadro": {
+  "gondola": {
+   "cuadros": 4321,
+   "p50": 1.105,
+   "p95": 2.01,
+   "max": 9.05
+  },
+  "pasillo": {
+   "cuadros": 4201,
+   "p50": 1.21,
+   "p95": 1.885,
+   "max": 12.91
+  },
+  "mostrador": {
+   "cuadros": 5890,
+   "p50": 0.615,
+   "p95": 1.135,
+   "max": 24.78
+  },
+  "heladera": {
+   "cuadros": 5295,
+   "p50": 0.87,
+   "p95": 1.98,
+   "max": 20.18
+  },
+  "deposito": {
+   "cuadros": 10699,
+   "p50": 0.415,
+   "p95": 0.785,
+   "max": 1.63
+  },
+  "bano": {
+   "cuadros": 9854,
+   "p50": 0.455,
+   "p95": 0.81,
+   "max": 9
+  }
+ },
+ "recorrido_max_ms": 18.485000000000582,
+ "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+ "memoria_por_proceso_mb": {
+  "navegador": 130,
+  "crashpad-handler": 13,
+  "gpu-process": 246,
+  "utility": 75,
+  "renderer": 379
+ },
+ "memoria_mb": 843,
+ "segunda": {
+  "listo": true,
+  "hasta_listo_ms": 678,
+  "marca": {
+   "modulo": 70,
+   "datos": 424,
+   "dispositivo": 435,
+   "geometria": 492,
+   "almacen": 572
+  },
+  "almacen_ms": 572,
+  "bytes": {
+   "pc/visor/bundle.html (304)": 1,
+   "pc/dist/visor.js (304)": 1,
+   "datos/escena.json (304)": 1,
+   "datos/lightmap.json (304)": 1,
+   "datos/geometria.bin (304)": 1,
+   "datos/texturas.json (304)": 1,
+   "datos/texturas.bin": 19555279,
+   "datos/sondas.bin (304)": 1,
+   "datos/ltc.json (304)": 1,
+   "datos/vistas.json (304)": 1
+  },
+  "bytes_total": 19555279
+ },
+ "errores": []
+}
