@@ -87,14 +87,10 @@ func test_suspendido_no_pide_el_cursor_y_al_reanudar_lo_vuelve_a_pedir() -> void
 	assert_bool(control.quiere_el_cursor_tomado()).is_true()
 
 
-func test_el_clic_con_el_cursor_suelto_es_para_tomarlo_y_no_del_juego() -> void:  # AC-INV-070
+func test_con_el_cursor_suelto_el_clic_lo_toma_salvo_con_pantalla_abierta() -> void:  # AC-INV-070
 	var control := _control()
 	assert_bool(control.clic_es_para_tomar_el_cursor(false)).is_true()
 	assert_bool(control.clic_es_para_tomar_el_cursor(true)).is_false()
-
-
-func test_el_clic_de_una_pantalla_abierta_no_es_para_tomar_el_cursor() -> void:  # AC-INV-070
-	var control := _control()
 	control.suspender()
 	assert_bool(control.clic_es_para_tomar_el_cursor(false)).is_false()
 
