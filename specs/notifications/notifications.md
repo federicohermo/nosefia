@@ -71,14 +71,16 @@ y puede volver a avisar su propio cierre próximo.
 
 El sistema DEBE dibujar los carteles claros en la esquina superior derecha, con el símbolo
 del tipo a la izquierda y su texto en mayúsculas a la derecha. Llegada, lectura y pista van sin
-punto final; la salida conserva el punto final de su diseño. El comprador
+punto final; la salida conserva el punto final de su diseño. El aviso de tareas terminadas usa
+el símbolo de la puerta principal y suma un título en letra chica encima de su cuerpo. El comprador
 usa la figura con exclamación, el lector usa la cruz y la pista usa el signo de pregunta del diseño.
 MIENTRAS computadora, ventanilla u otra interfaz de la jornada están abiertas, incluyendo los diálogos, el cartel
 DEBE verse encima y DEBE dejar pasar el clic. El menú
 de pausa DEBE dibujarse por encima del cartel.
 
-TODOS los tipos DEBEN presentar su texto en una sola línea, con el tamaño de letra principal
-del tema. El contenedor DEBE ajustar su ancho al símbolo, la separación, el texto y sus
+TODOS los tipos sin título DEBEN presentar su texto en una sola línea, con el tamaño de letra
+principal del tema. Un tipo con título DEBE presentar el título en una línea de letra chica y su
+cuerpo debajo, en letra grande y en los renglones que fija su diseño. El contenedor DEBE ajustar su ancho al símbolo, la separación, el texto y sus
 márgenes, sin una franja vacía de ancho fijo. Los carteles DEBEN compartir el borde derecho
 y centrar verticalmente símbolo y texto, sin recortarlos al cambiar la resolución.
 
@@ -142,8 +144,8 @@ cada uno; un aviso persistente NO DEBE adquirir un temporizador por la llegada d
 ### BR-NTF-014 — Las tareas terminadas avisan una vez por jornada de prueba
 
 CUANDO la jornada habilita por primera vez la salida según BR-SHF-021, el sistema DEBE mostrar
-«Ya terminaste tus tareas y podés irte» una sola vez en esa
-jornada. El aviso DEBE seguir la duración, pausa, orden y presentación comunes.
+el título «¡Tareas completadas!» y el cuerpo «Ya podés retirarte por la puerta principal.», en
+dos renglones, una sola vez en esa jornada. El aviso DEBE seguir la duración, pausa, orden y presentación comunes.
 Entradas repetidas del mismo cumplimiento NO DEBEN renovarlo, ni recrearlo después de vencer.
 Si la salida vuelve a trabarse, el sistema DEBE retirar este aviso para no anunciar un permiso
 que ya no vale. Recuperar la salida NO DEBE repetir el aviso inicial.
@@ -354,9 +356,10 @@ Pausar conserva el tiempo restante del aviso.
 ### AC-NTF-027 — Texto completo con la presentación común *(verifica BR-NTF-014, BR-NTF-007)*
 
 DADO el aviso a 1920×1080 y 1280×720 CUANDO se dibuja ENTONCES muestra en mayúsculas
-«Ya terminaste tus tareas y podés irte» completo en una línea, con fondo claro, símbolo a la
-izquierda y fuente principal. Su cartel ajusta el ancho al contenido, comparte el borde
-derecho de la pila, queda dentro de pantalla y deja pasar clics.
+«¡Tareas completadas!» como título y «Ya podés retirarte por la puerta principal.» como cuerpo
+en dos renglones, con fondo claro, símbolo a la izquierda y fuente principal. Su cartel ajusta
+el ancho al contenido, comparte el borde derecho de la pila, queda dentro de pantalla y deja
+pasar clics.
 
 ### AC-NTF-028 — Sólo al completar las tareas de prueba *(verifica BR-NTF-014)*
 
@@ -410,6 +413,13 @@ DADO un cambio pendiente CUANDO cierra el turno antes de salir ENTONCES salir no
 aviso. Los otros tipos conservan su orden y su tiempo restante durante la espera.
 DADO un aviso de salida visible CUANDO se abre y se cierra la computadora sin cambiar el
 permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrearse al vencer.
+
+### AC-NTF-043 — El cartel con título pone el título sobre el cuerpo *(verifica BR-NTF-007, BR-NTF-014)*
+
+DADO el aviso de tareas terminadas visible CUANDO se dibuja ENTONCES el título está encima del
+cuerpo, con letra más chica que la del cuerpo, y el símbolo es el de la puerta principal, no el
+del comprador. DADO cualquier otro tipo visible CUANDO se dibuja ENTONCES no tiene título y
+conserva su texto en una sola línea.
 
 ## No objetivos
 
