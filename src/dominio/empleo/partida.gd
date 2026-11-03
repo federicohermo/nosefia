@@ -99,6 +99,9 @@ var poses_de_las_cajas: Dictionary[Producto.Id, Transform3D]:
 ## Los números de ticket ya sorteados: ninguno se repite en la partida.
 var numeros_de_ticket := NumerosDeTicket.new()
 
+## Si ya se mostró el pensamiento de la primera pista anotada (BR-SUB-016).
+var primera_pista_pensada := false
+
 var _expediente: Expediente
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
@@ -177,6 +180,9 @@ static func desde(datos: Dictionary) -> Partida:
 		if mensaje != null:
 			partida._devoluciones.append(mensaje)
 	partida._mopa_secada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA)]
+	partida.primera_pista_pensada = saneado[PartidaSerializada.clave(
+		PartidaSerializada.Campo.PRIMERA_PISTA_PENSADA
+	)]
 	var guardada: int = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.SEMILLA)]
 	if guardada > 0:
 		partida._semilla = guardada
