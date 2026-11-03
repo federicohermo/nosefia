@@ -263,6 +263,44 @@ func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  #
 		assert_int(ticket).is_equal(caja)
 
 
+func test_enrique_arranca_su_reposo_desde_el_primer_cuadro_al_abrir() -> void:
+	var pantalla := _pantalla()
+	var enrique: AnimatedSprite2D = pantalla.get("_enrique")
+	assert_object(enrique).is_not_null()
+	enrique.frame = enrique.sprite_frames.get_frame_count(&"idle") - 1
+	assert_bool(enrique.is_playing()).is_false()
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
+	assert_bool(enrique.is_playing()).is_true()
+	assert_str(String(enrique.animation)).is_equal("idle")
+	assert_int(enrique.frame).is_zero()
+	assert_bool(enrique.sprite_frames.get_animation_loop(&"idle")).is_true()
+
+
+func test_enrique_respira_al_ritmo_de_los_compradores() -> void:
+	var pantalla := _pantalla()
+	var enrique: AnimatedSprite2D = pantalla.get("_enrique")
+	var comprador: SpriteFrames = load("res://assets/characters/cami/idle.tres")
+	assert_float(enrique.sprite_frames.get_animation_speed(&"idle")).is_equal(
+		comprador.get_animation_speed(&"idle")
+	)
+	for cuadro in enrique.sprite_frames.get_frame_count(&"idle"):
+		assert_float(enrique.sprite_frames.get_frame_duration(&"idle", cuadro)).is_equal(
+			comprador.get_frame_duration(&"idle", 0)
+		)
+
+
+func test_enrique_se_frena_al_cerrar_la_pantalla() -> void:
+	var pantalla := _pantalla()
+	var enrique: AnimatedSprite2D = pantalla.get("_enrique")
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
+	for _paso in InstruccionesDelJefe.pasos_de(_mensajes_de_la_primera_jornada()).size():
+		_boton(pantalla, "_siguiente").pressed.emit()
+	assert_bool(enrique.is_playing()).is_true()
+	AvanceDeDevolucion.terminar_instrucciones(pantalla)
+	assert_bool(pantalla.visible).is_false()
+	assert_bool(enrique.is_playing()).is_false()
+
+
 func _fotos_del_paso(paso: InstruccionesDelJefe.Paso) -> Array[Mensaje]:
 	var fotos: Variant = paso.get("fotos")
 	assert_bool(fotos is Array).is_true()

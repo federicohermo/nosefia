@@ -24,7 +24,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 
 | Recurso | Origen | Uso |
 |---|---|---|
-| `enrique.png` | Figma, capa `511:317` del frame de instrucciones `511:302`, descargada sin editar el 2026-10-10 | Retrato de Enrique Peldaño en las instrucciones y en el celular |
+| `enrique.png` | Figma, capa `511:317` del frame de instrucciones `511:302`, descargada sin editar el 2026-10-10 | Retrato de Enrique Peldaño en el celular |
 | `fotos/intro-<NN>.png` | Renders del modelo jugable, generados sin editar el PNG: Intro 4 en 960 × 674, Intro 9 en 640 × 640 y las restantes en 960 × 540 | Fotos adjuntas a las instrucciones de Enrique |
 | `celular.svg` | Dibujo vectorial original del proyecto, creado el 2026-10-10 | Recordatorio del celular con Q |
 | `persiana_gris.tres` | Material común sobre la textura real del portón, aprobado por el usuario | Fondo de la intro y persiana de entrada de cada noche |
@@ -128,10 +128,11 @@ luminosidad 0,48. Sustituye la persiana azul del prototipo por el portón real e
 La intro y la persiana que sube comparten `persiana_gris.tres`, textura y modo de ajuste.
 La imagen azul anterior se retira para que no reaparezca en ninguna de esas vistas.
 
-El retrato local histórico
-incluía un rectángulo opaco celeste: la pantalla usa ahora `instrucciones/enrique.png`, la imagen
-fuente transparente de `511:317`, sin editar. `enrique.gdshader` aplica su exposición y el blur
-progresivo hacia los pies del diseño. El chat conserva su recurso histórico y no se modifica.
+El retrato de Enrique ya no es una imagen fija: la pantalla reproduce sus seis cuadros de reposo
+(`assets/characters/enrique/`, ver [su procedencia](../../characters/enrique_origen.md)) delante de
+su oficina y su escritorio con placa, que son nodos de Godot con las medidas y los colores del frame
+`1676:1000` de Figma (`1676:1013` y `1676:1061`). Ya no hay desenfoque ni título. El chat conserva
+su recurso histórico y no se modifica.
 
 El encuadre de Intro 4 es ortográfico, frontal al corcho completo y sus dos notas. Intro 9
 encuadra las tres alturas del estante de cajas de frente, sin objetos que lo oculten. Las
