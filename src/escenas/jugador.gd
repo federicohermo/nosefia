@@ -777,9 +777,10 @@ func _aplicar_el_modo_del_cursor(desde_entrada: bool = false) -> void:
 		return
 	if _en_web and tomado and not desde_entrada:
 		return
+	_escribir_cursor.call(modo)
+	# Después del cursor: Chrome rechaza el cursor si la pantalla completa ya está pedida.
 	if _en_web and tomado:
 		_pedir_pantalla_completa.call()
-	_escribir_cursor.call(modo)
 
 
 ## Con Esc capturado, un Esc corto llega al juego y el navegador no suelta el cursor. Sin
