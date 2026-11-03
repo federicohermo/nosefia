@@ -1074,7 +1074,8 @@ jornada se rechaza como antes.
   hipótesis disponibles con sus datos. Una exigencia pendiente no registra. Etapa de la
   reflexión, texto u opción mostrada, ACEPTADA/REPETIDA/NO_DISPONIBLE/FUERA_DE_ETAPA y la
   elección de la partida; el pedido de la entrada siguiente, una sola vez. Las pistas activas de
-  cada jornada y el sorteo de la partida, que cruza la sesión como la elección.
+  cada jornada y el sorteo de la partida, que se entrega al guardar y se recibe al reconstruir,
+  como la elección.
 - **Falla:** una revelación vacía se rechaza sin cambiar nada.
 - **Falla del celular:** Q bloqueado, chat inexistente, recepción inválida, ampliación sin foto
   y soltar sin modo fijo conservan el estado. Una conversación sin mensajes visibles se omite
