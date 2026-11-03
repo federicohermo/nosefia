@@ -184,8 +184,6 @@ func test_vaciar_retira_los_carteles_del_arbol() -> void:  # AC-NTF-006
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
 	assert_int(_textos(pila).size()).is_equal(2)
 	pila.vaciar()
-	assert_array(_textos(pila)).is_empty()
-	pila._process(PilaDeNotificaciones.DURACION_DE_SALIDA)
 	assert_array(pila.find_children("*", "Label", true, false)).is_empty()
 
 
@@ -408,6 +406,9 @@ func test_la_pista_tiene_su_simbolo_y_la_pausa_conserva_su_tiempo() -> void:
 		"res://assets/ui/manada/notificacion_pista.svg"
 	)
 	assert_object(fila.get_child(1)).is_instanceof(Label)
+	var cartel: Control = pila.get_node("Marco/Pila").get_child(0)
+	var marco: Control = pila.get_node("Marco")
+	assert_bool(marco.get_global_rect().encloses(cartel.get_global_rect())).is_true()
 	get_tree().paused = false
 	pila._process(2.9)
 	assert_array(_textos(pila)).has_size(1)

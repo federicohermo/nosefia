@@ -21,7 +21,7 @@ const SIMBOLOS := {
 	Notificaciones.Tipo.SALIDA_RETRABADA: SIMBOLO_DEL_CLIENTE,
 }
 const ESCALA_DEL_CARTEL := 0.4
-const DURACION_DE_ENTRADA := 0.25
+const DURACION_DE_ENTRADA := 0.2
 const DURACION_DE_SALIDA := 0.2
 const CURVA_DE_ENTRADA := 0.3
 const CURVA_DE_SALIDA := 3.0
@@ -109,6 +109,9 @@ func actualizar_tiempo(restante: float) -> void:
 func vaciar() -> void:
 	_estado.vaciar()
 	_pintar()
+	for aviso in _saliendo:
+		aviso.cartel.free()
+	_saliendo.clear()
 
 
 func _pintar() -> void:
@@ -122,6 +125,8 @@ func _pintar() -> void:
 		var tipo := actuales[indice]
 		if not _activos.has(tipo):
 			var aviso := AvisoEnPantalla.new(_cartel(tipo))
+			if get_tree().paused:
+				aviso.entrada = 1.0
 			_activos[tipo] = aviso
 			_pila.add_child(aviso.cartel)
 		_pila.move_child(_activos[tipo].cartel, indice)

@@ -84,14 +84,14 @@ func test_un_cartel_vencido_sale_a_la_derecha_con_ease_in_y_despues_se_libera() 
 
 func test_un_cartel_que_vence_a_mitad_de_entrada_sale_desde_donde_esta() -> void:
 	var pila := _pila()
-	pila.avisar_pista()
+	pila.actualizar_salida(true)
 	await _cuadros()
 	pila._process(PilaDeNotificaciones.DURACION_DE_ENTRADA / 4.0)
 	await _cuadros()
 	var cartel: Control = _carteles(pila)[0]
 	var antes := _izquierda(cartel)
 	assert_float(antes).is_less(float(ANCHO))
-	pila.vaciar()
+	pila.actualizar_salida(false)
 	assert_float(_izquierda(cartel)).is_equal_approx(antes, 0.5)
 	pila._process(PilaDeNotificaciones.DURACION_DE_SALIDA / 2.0)
 	assert_float(_izquierda(cartel)).is_greater(antes)
@@ -161,3 +161,15 @@ func test_con_la_pausa_abierta_la_animacion_se_congela() -> void:
 	get_tree().paused = false
 	await get_tree().create_timer(PilaDeNotificaciones.DURACION_DE_ENTRADA + 0.3).timeout
 	assert_float(_izquierda(cartel)).is_less(congelado)
+
+
+func test_vaciar_retira_los_carteles_en_el_instante_sin_animar_la_salida() -> void:  # AC-NTF-006
+	var pila := _pila()
+	pila.avisar_pista()
+	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
+	pila._process(1.0)
+	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
+	pila._process(Notificaciones.DURACION - 0.5)
+	pila.vaciar()
+	assert_array(pila.find_children("*", "Label", true, false)).is_empty()
+	assert_array(_fantasmas(pila)).is_empty()
