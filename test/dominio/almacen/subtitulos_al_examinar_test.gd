@@ -101,23 +101,24 @@ func _renglones_de_la_ficha(id: StringName) -> int:
 	return 2 if id in de_dos else 1
 
 
-func _afirmar_renglones(id: StringName, texto: String) -> void:
-	var renglones := texto.split("\n")
-	(
-		assert_int(renglones.size())
-		. override_failure_message("%s: renglones distintos de los de la ficha" % id)
-		. is_equal(_renglones_de_la_ficha(id))
-	)
-	for renglon in renglones:
-		assert_str(renglon.strip_edges()).is_not_empty()
+func _textos_de_examinar() -> Dictionary:
+	var textos := _textos_fijos_por_id()
+	for id: StringName in UTILES:
+		textos[id] = (load(UTILES[id]) as ObjetoDelAlmacen).texto_al_examinar()
+	textos[&"colilla"] = (load(COLILLA) as ObjetoDelAlmacen).texto_al_examinar()
+	for producto: Producto in Catalogo.todos():
+		textos[StringName(producto.nombre)] = SubtitulosAlExaminar.de_producto(producto.id)
+	return textos
 
 
 func test_cada_texto_de_examinar_se_corta_en_los_renglones_de_la_ficha() -> void:  # AC-SUB-031
-	var textos := _textos_fijos_por_id()
+	var textos := _textos_de_examinar()
 	for id: StringName in textos:
-		_afirmar_renglones(id, textos[id])
-	for id: StringName in UTILES:
-		_afirmar_renglones(id, (load(UTILES[id]) as ObjetoDelAlmacen).texto_al_examinar())
-	_afirmar_renglones(&"colilla", (load(COLILLA) as ObjetoDelAlmacen).texto_al_examinar())
-	for producto: Producto in Catalogo.todos():
-		_afirmar_renglones(producto.nombre, SubtitulosAlExaminar.de_producto(producto.id))
+		var renglones := (textos[id] as String).split("\n")
+		(
+			assert_int(renglones.size())
+			. override_failure_message("%s: renglones distintos de los de la ficha" % id)
+			. is_equal(_renglones_de_la_ficha(id))
+		)
+		for renglon in renglones:
+			assert_str(renglon.strip_edges()).is_not_empty()
