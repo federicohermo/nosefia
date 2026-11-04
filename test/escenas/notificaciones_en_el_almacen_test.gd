@@ -180,7 +180,7 @@ func test_solo_la_pista_anotada_avisa_sin_renovar_por_otros_resultados() -> void
 	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
 		Expediente.Resultado.ANOTADA
 	)
-	assert_array(_textos(local)).is_equal(["¡NUEVA PISTA!"])
+	assert_array(_textos(local)).is_equal(["Nueva pista desbloqueada"])
 	var pila: PilaDeNotificaciones = local.get_node("Interfaz/PilaDeNotificaciones")
 	pila._process(2.0)
 	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
@@ -191,7 +191,7 @@ func test_solo_la_pista_anotada_avisa_sin_renovar_por_otros_resultados() -> void
 		. is_equal(Expediente.Resultado.DESCONOCIDA)
 	)
 	pila._process(0.9)
-	assert_array(_textos(local)).is_equal(["¡NUEVA PISTA!"])
+	assert_array(_textos(local)).is_equal(["Nueva pista desbloqueada"])
 	pila._process(0.1)
 	assert_array(_textos(local)).is_empty()
 	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
@@ -207,7 +207,7 @@ func test_cerrar_retira_la_pista_y_reabrir_no_la_recupera() -> void:  # AC-NTF-0
 	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
 		Expediente.Resultado.ANOTADA
 	)
-	assert_array(_textos(local)).is_equal(["¡NUEVA PISTA!"])
+	assert_array(_textos(local)).is_equal(["Nueva pista desbloqueada"])
 	var reloj: RelojDelTurno = local.get("_reloj")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_array(_textos(local)).is_empty()

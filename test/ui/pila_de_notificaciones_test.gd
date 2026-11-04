@@ -233,7 +233,9 @@ func test_los_textos_se_pintan_en_el_orden_del_dominio() -> void:  # AC-NTF-009
 	pila.avisar_pista()
 	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
-	assert_array(_textos(pila)).is_equal(["NO SE PUDO LEER", "¡HAY UN CLIENTE!", "¡NUEVA PISTA!"])
+	assert_array(_textos(pila)).is_equal(
+		["NO SE PUDO LEER", "¡HAY UN CLIENTE!", "Nueva pista desbloqueada"]
+	)
 	var simbolos := pila.find_children("*", "TextureRect", true, false)
 	assert_int(simbolos.size()).is_equal(3)
 	assert_str((simbolos[0] as TextureRect).texture.resource_path).is_equal(
@@ -506,7 +508,7 @@ func test_la_pista_tiene_su_simbolo_y_la_pausa_conserva_su_tiempo() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(pila.can_process()).is_false()
-	assert_array(_textos(pila)).is_equal(["¡NUEVA PISTA!"])
+	assert_array(_textos(pila)).is_equal(["Nueva pista desbloqueada"])
 	var fila: HBoxContainer = pila.get_node("Marco/Pila").get_child(0).get_child(0)
 	assert_str((fila.get_child(0) as TextureRect).texture.resource_path).is_equal(
 		"res://assets/ui/manada/notificacion_pista.svg"
