@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="HipotesisDeLaJornada" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis_de_la_jornada.gd" id="jornada"]
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+[ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_5b.tres" id="b"]
+
+[resource]
+script = ExtResource("jornada")
+jornada = 5
+opciones = Array[ExtResource("hipotesis")]([ExtResource("b")])

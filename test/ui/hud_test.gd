@@ -76,7 +76,7 @@ func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:
 func test_el_hud_sigue_pintando_lo_que_si_es_suyo() -> void:
 	# El par del caso de arriba: sin esto, borrar el archivo entero lo dejaría en verde.
 	var texto := FileAccess.get_file_as_string(HUD)
-	assert_str(texto).contains("func mostrar_tareas")
+	assert_str(texto).contains("func mostrar_subtitulo")
 
 
 func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:
@@ -92,7 +92,7 @@ func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:
 		)
 
 
-func test_la_escena_del_hud_conserva_el_contador_de_tareas() -> void:
+func test_la_escena_del_hud_no_trae_la_hora() -> void:
 	# **El `node_paths` de la raíz pierde `"_reloj"` además del `Label`.** Si el nombre quedara
 	# declarado apuntando a un nodo que ya no está, la escena carga sin un solo error y el juego
 	# muere en el primer cuadro con un mensaje que no nombra al `.tscn`.
@@ -102,7 +102,6 @@ func test_la_escena_del_hud_conserva_el_contador_de_tareas() -> void:
 		. override_failure_message("`hud.tscn` todavía trae el `Label` de la hora")
 		. is_false()
 	)
-	assert_bool(hud.has_node("Tareas")).is_true()
 	assert_str(FileAccess.get_file_as_string(ESCENA_DEL_HUD)).not_contains("_reloj")
 
 
@@ -345,19 +344,14 @@ func _scripts_de(carpeta: String) -> Array[String]:
 	return encontrados
 
 
-func test_la_referencia_va_debajo_del_contador_una_por_renglon() -> void:  # AC-PLY-082
+func test_la_referencia_va_una_por_renglon() -> void:  # AC-PLY-082
 	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
 	add_child(hud)
-	hud.declarar_obligatorias(1)
-	var tareas: Label = hud.get_node("Tareas")
 	var controles := hud.get_node_or_null("Controles") as Label
 	assert_object(controles).is_not_null()
 	if controles == null:
 		return
 	assert_str(controles.text).is_empty()
-	assert_float(tareas.get_global_rect().end.y).is_less_equal(
-		controles.get_global_rect().position.y
-	)
 	assert_int(controles.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 	hud.mostrar_referencia(PackedStringArray(["[E] Examinar (mano)", "[Click Izq] Dejar"]))
 	assert_str(controles.text).is_equal("[E] Examinar (mano)\n[Click Izq] Dejar")

@@ -12,6 +12,8 @@ var _identidades: PackedStringArray = PackedStringArray()
 var _notas: Array[Mensaje] = []
 var _avisados: Array[Desenlace] = []
 var _elecciones: Dictionary[int, String] = {}
+## Por jornada, la hipótesis de la anterior cuyo camino se sorteó.
+var _sorteos: Dictionary[int, String] = {}
 
 
 func _init(caso: CasoDeInvestigacion) -> void:
@@ -34,6 +36,8 @@ func registrar(identidad: String, hora: String = "") -> Resultado:
 		return Resultado.DESCONOCIDA
 	if _identidades.has(identidad):
 		return Resultado.REPETIDA
+	if not pistas_activas(pista.jornada).has(identidad):
+		return Resultado.DESCONOCIDA
 	for exigida: String in pista.exigencias:
 		if not _identidades.has(exigida):
 			return Resultado.DESCONOCIDA
@@ -89,7 +93,11 @@ func reconstruir(identidades_conocidas: PackedStringArray, mensajes: Array[Mensa
 
 ## La partida guardada: las pistas vuelven con sus notas, y una elección sólo si sigue entre las
 ## opciones que esas pistas habilitan.
-func restaurar(identidades_conocidas: PackedStringArray, elecciones_guardadas: Dictionary) -> void:
+func restaurar(
+	identidades_conocidas: PackedStringArray,
+	elecciones_guardadas: Dictionary,
+	sorteos_guardados: Dictionary = {}
+) -> void:
 	if not _consistente:
 		return
 	for identidad: String in identidades_conocidas:
@@ -97,6 +105,10 @@ func restaurar(identidades_conocidas: PackedStringArray, elecciones_guardadas: D
 		if pista != null and not _identidades.has(identidad):
 			_identidades.append(identidad)
 			_agregar_notas(pista)
+	for jornada: Variant in sorteos_guardados:
+		var sorteada: Variant = sorteos_guardados[jornada]
+		if jornada is int and sorteada is String and _caso.opcion(jornada - 1, sorteada) != null:
+			_sorteos[jornada] = sorteada
 	for jornada: Variant in elecciones_guardadas:
 		var identidad: Variant = elecciones_guardadas[jornada]
 		if jornada is int and identidad is String:
@@ -150,6 +162,27 @@ func eleccion(jornada: int) -> String:
 
 func elecciones() -> Dictionary:
 	return _elecciones.duplicate()
+
+
+func sorteos() -> Dictionary:
+	return _sorteos.duplicate()
+
+
+## Las pistas de esa jornada que se pueden anotar según lo elegido y lo sorteado.
+func pistas_activas(jornada: int) -> PackedStringArray:
+	if not _consistente:
+		return PackedStringArray()
+	return _caso.pistas_activas(jornada, _elecciones, _sorteos)
+
+
+## Si la jornada anterior terminó sin pistas y sortea, fija una sola vez el camino de ésta.
+func sortear_camino(jornada: int, azar: RandomNumberGenerator) -> void:
+	if not _consistente or azar == null or _sorteos.has(jornada):
+		return
+	var candidatas := _caso.opciones_a_sortear(jornada, _identidades, _elecciones, _sorteos)
+	if candidatas.is_empty():
+		return
+	_sorteos[jornada] = candidatas[azar.randi_range(0, candidatas.size() - 1)].identidad
 
 
 func hipotesis_para(jornada: int) -> Array[Hipotesis]:

@@ -168,3 +168,55 @@ func test_la_colilla_del_caso_esta_la_noche_de_2b() -> void:  # AC-INV-049
 		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
 	):
 		assert_bool(caso.esta_en_el_local(pista.origen, jornada)).is_equal(jornada == pista.jornada)
+
+
+func test_5b_es_una_pista_de_chat_de_la_jornada_del_lector_con_su_foto() -> void:  # AC-INV-092
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var quinta := caso.pista_de("5B")
+	assert_object(quinta).is_not_null()
+	if quinta == null:
+		return
+	assert_int(quinta.jornada).is_equal(GeneradorDeTickets.JORNADA_SIN_LECTOR)
+	assert_int(quinta.canal).is_equal(Pista.Canal.CHAT)
+	assert_object(quinta.foto).is_not_null()
+	assert_bool(quinta.foto != caso.pista_de("2A").foto).is_true()
+	assert_bool(quinta.foto != caso.pista_de("2B").foto).is_true()
+	assert_str(quinta.texto).is_equal(
+		(
+			"Ya es la segunda vez que Yasmín le echa la culpa a Enrique "
+			+ "y me dice que no lo contacte…"
+		)
+	)
+
+
+func test_la_hipotesis_5b_trae_el_titulo_y_el_texto_de_su_ficha() -> void:  # AC-INV-092
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var opciones := caso.hipotesis_para(
+		GeneradorDeTickets.JORNADA_SIN_LECTOR, PackedStringArray(["5B"])
+	)
+	assert_array(_identidades(opciones)).is_equal(["5B"])
+	if opciones.is_empty():
+		return
+	assert_str(opciones[0].titulo).is_equal("INCOMPETENCIA")
+	assert_str(opciones[0].texto).is_equal(
+		(
+			"¿Será posible que Enrique tenga TAN mal gestionado su local? "
+			+ "¿O Yasmín está tratando de hacerse la inocente? "
+			+ "De lo único que puedo estar seguro es de que estas cosas raras se deben a la "
+			+ "incompetencia de alguno de ellos. "
+			+ "Necesito verificar cuál de los dos es el verdadero responsable…"
+		)
+	)
+
+
+func test_la_hipotesis_5b_depende_de_la_pista_5b() -> void:  # AC-INV-093
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var jornada := GeneradorDeTickets.JORNADA_SIN_LECTOR
+	assert_array(caso.hipotesis_para(jornada, PackedStringArray())).is_empty()
+	assert_array(caso.hipotesis_para(jornada, PackedStringArray(["2A"]))).is_empty()
+	(
+		assert_array(_identidades(caso.hipotesis_para(jornada, PackedStringArray(["2A", "5B"]))))
+		. is_equal(["5B"])
+	)
+	var de_la_cuarta := caso.hipotesis_para(jornada - 1, PackedStringArray(["2A", "5B"]))
+	assert_array(_identidades(de_la_cuarta)).is_equal(["2A"])

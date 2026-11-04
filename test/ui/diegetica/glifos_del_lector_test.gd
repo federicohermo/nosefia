@@ -25,6 +25,10 @@ func _es_del_bloque(mensaje: Mensaje) -> bool:
 	return mensaje.identidad.begins_with("J3_")
 
 
+func _es_del_bloque_sin_pista(mensaje: Mensaje) -> bool:
+	return _es_del_bloque(mensaje) and mensaje.tramo_de_pista.is_empty()
+
+
 func _burbuja(pantalla: PantallaDelCelular, indice: int) -> PanelContainer:
 	var lista: VBoxContainer = pantalla.get("_mensajes")
 	for hijo: Node in lista.get_children():
@@ -67,7 +71,7 @@ func test_la_calavera_y_la_cara_apretada_se_dibujan_sin_fuentes_del_sistema() ->
 			assert_bool(glifos.contains(String.chr(caso[0]))).is_true()
 
 
-func test_las_diez_burbujas_del_bloque_no_tienen_tramo_de_pista_activo() -> void:  # AC-INV-068
+func test_las_burbujas_del_bloque_sin_pista_no_tienen_tramo_activo() -> void:  # AC-INV-068
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
 	bandeja.abrir_jornada(JORNADA_DEL_LECTOR)
 	var mensajes := bandeja.mensajes_de(Conversacion.Interlocutor.YASMIN)
@@ -75,7 +79,7 @@ func test_las_diez_burbujas_del_bloque_no_tienen_tramo_de_pista_activo() -> void
 		var pantalla := await _pantalla_con_el_chat(bandeja, tamano)
 		var vistas := 0
 		for indice in mensajes.size():
-			if not _es_del_bloque(mensajes[indice]):
+			if not _es_del_bloque_sin_pista(mensajes[indice]):
 				continue
 			var burbuja := _burbuja(pantalla, indice)
 			assert_object(burbuja).is_not_null()
@@ -85,10 +89,10 @@ func test_las_diez_burbujas_del_bloque_no_tienen_tramo_de_pista_activo() -> void
 			var texto := _texto_de(burbuja)
 			assert_str(texto.get_parsed_text()).is_equal(mensajes[indice].texto)
 			assert_int(texto.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
-		assert_int(vistas).is_equal(mensajes.filter(_es_del_bloque).size())
+		assert_int(vistas).is_equal(mensajes.filter(_es_del_bloque_sin_pista).size())
 
 
-func test_pedir_un_tramo_en_la_jornada_del_lector_no_emite_para_el_bloque() -> void:  # AC-INV-068
+func test_pedir_un_tramo_del_bloque_sin_pista_no_emite() -> void:  # AC-INV-068
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
 	var pedidos: Array[String] = []
 	sistema.tramo_de_pista_pedido.connect(func(pista: String) -> void: pedidos.append(pista))
@@ -103,9 +107,38 @@ func test_pedir_un_tramo_en_la_jornada_del_lector_no_emite_para_el_bloque() -> v
 	if con_tramo.is_empty():
 		return
 	var control: Mensaje = con_tramo[0]
-	for mensaje: Mensaje in mensajes.filter(_es_del_bloque):
+	for mensaje: Mensaje in mensajes.filter(_es_del_bloque_sin_pista):
 		sistema.pedir_tramo(mensaje.identidad, mensaje.tramo_de_pista)
 		sistema.pedir_tramo(mensaje.identidad, control.tramo_de_pista)
 	assert_array(pedidos).is_empty()
 	sistema.pedir_tramo(control.identidad, control.tramo_de_pista)
 	assert_array(pedidos).is_equal([control.pista])
+
+
+func test_el_mensaje_de_la_pista_5b_se_marca_entero_y_pide_5b_al_pulsarlo() -> void:  # AC-INV-090
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(JORNADA_DEL_LECTOR)
+	var mensajes := bandeja.mensajes_de(Conversacion.Interlocutor.YASMIN)
+	var indice := mensajes.find_custom(
+		func(mensaje: Mensaje) -> bool:
+			return _es_del_bloque(mensaje) and not _es_del_bloque_sin_pista(mensaje)
+	)
+	assert_int(indice).is_greater_equal(0)
+	if indice < 0:
+		return
+	var pantalla := await _pantalla_con_el_chat(bandeja, TAMANOS[0])
+	var burbuja := _burbuja(pantalla, indice)
+	assert_object(burbuja).is_not_null()
+	if burbuja == null:
+		return
+	var texto := _texto_de(burbuja)
+	assert_str(texto.get_parsed_text()).is_equal(mensajes[indice].texto)
+	assert_int(texto.mouse_filter).is_equal(Control.MOUSE_FILTER_STOP)
+	var pedidos: Array[String] = []
+	pantalla.tramo_pedido.connect(
+		func(identidad: String, tramo: String) -> void: pedidos.append(identidad + "/" + tramo)
+	)
+	texto.meta_clicked.emit(mensajes[indice].tramo_de_pista)
+	assert_array(pedidos).is_equal(
+		[mensajes[indice].identidad + "/" + mensajes[indice].tramo_de_pista]
+	)

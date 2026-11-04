@@ -201,6 +201,10 @@ func test_continuar_dos_veces_abre_una_sola_noche_siguiente() -> void:  # AC-EMP
 	for _texto: int in ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size():
 		assert_int(aperturas[0]).is_zero()
 		recuadro.botones().back().pressed.emit()
+	assert_bool(recuadro.visible).is_true()
+	assert_int(aperturas[0]).is_zero()
+	var espera: float = (almacen.get("_partida") as Partida).reflexion.restante()
+	almacen.call("_process", espera)
 	assert_bool(recuadro.visible).is_false()
 	AvanceDeDevolucion.animar_celular(
 		interfaz, ahora, int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0) - 1000

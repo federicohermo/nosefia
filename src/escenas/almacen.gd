@@ -152,8 +152,6 @@ func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
 	return Compradores.de_la_jornada(jornada, _partida.semilla)
 
 
-## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
-## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
 	# Acá y no al declararla: quien arma la escena puede reemplazar la partida antes de entrar.
 	_jornada_preparada = _partida.jornada()
@@ -226,8 +224,6 @@ func _ready() -> void:
 	_reloj.tiempo_consumido.connect(avisos.actualizar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_cablear_el_corte_de_luz()
-	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
-	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
 	_atenciones.comprador_vencido.connect(_computadora.revisar_registro.unbind(1))
 	_atenciones.comprador_llegado.connect(_computadora.revisar_registro.unbind(1))
@@ -243,9 +239,8 @@ func _ready() -> void:
 	_reloj.tarea_descumplida.connect(_revisar_la_salida.unbind(1))
 	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
-	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
-	# conservar el conteo anterior arrastraría las cumplidas de ayer. La góndola se rehace por
-	# lo mismo: compartirla dejaría lo repuesto anoche y reponer se cumpliría sola desde la 2.
+	# La góndola se rehace en la apertura: compartirla dejaría lo repuesto anoche y reponer se
+	# cumpliría sola desde la 2.
 	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
 	# conectarlo dos veces es un error de Godot, no dos llamadas.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
@@ -372,6 +367,9 @@ func _cablear_el_corte_de_luz() -> void:
 	var tablero: TableroElectrico = $Estructura/tableroluz/StaticBody3D
 	tablero.restablecimiento_pedido.connect(corte.restablecer)
 	var escritorio: EscritorioDelLocal = $"Estructura/base compu/StaticBody3D"
+	var pensar_sin_luz := func() -> void: _pensar_gesto(SubtitulosDeLosGestos.Id.SIN_LUZ)
+	escritorio.apertura_rechazada_sin_luz.connect(pensar_sin_luz)
+	_puesto_de_la_caja.apertura_rechazada_sin_luz.connect(pensar_sin_luz)
 	corte.luz_cambiada.connect(
 		func(hay_luz: bool) -> void:
 			escritorio.con_luz = hay_luz
@@ -402,9 +400,6 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 
 ## Cada noche arranca sin tareas cumplidas, cada caja del depósito llena y la góndola
 ## completa salvo lo que esa jornada hace faltar.
-##
-## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que
-## el jugador tarda lo que quiera en despachar, y el conteo de ayer no puede quedar colgado ahí.
 ##
 ## **Varios specs de la pila escribieron esta función por separado, cada uno con la parte que le
 ## importaba, y la unión las junta acá**: es la misma apertura y no una por tarea, y se conecta
@@ -438,7 +433,6 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
-	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias(jornada))
 	(get_node("Estructura/NotasDelAlmacen") as NotasDelLocal).declarar_tareas(
 		_partida.obligatorias()
 	)
@@ -650,7 +644,7 @@ func _salir_por_la_entrada() -> void:
 ##
 ## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
-func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+func _al_cerrar_la_jornada(jornada: int, _cumplidas: int) -> void:
 	_jornada_del_celular = jornada
 	_gestos.descartar()
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
@@ -658,7 +652,6 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_celular.cerrar_jornada()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
-	_hud.mostrar_tareas(cumplidas)
 	var devolucion := DevolucionDelJefe.new(jornada, _partida)
 	# Sin esto el celular es inalcanzable jugando: el jugador clava el puntero en el centro cada
 	# cuadro. La suspensión suelta el cursor sola.
@@ -821,10 +814,7 @@ func _al_continuar_la_reflexion(identidad: String) -> void:
 	if reflexion == null or not reflexion.continuar(identidad):
 		return
 	_anotar_el_paso()
-	if reflexion.etapa() == ReflexionDeCierre.Etapa.TERMINADA:
-		_terminar_la_reflexion()
-	else:
-		_hipotesis.mostrar(reflexion)
+	_hipotesis.mostrar(reflexion)
 
 
 func _al_elegir_la_hipotesis(identidad: String) -> void:

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; pensamiento sin luz de #689, ficha «Subtítulos» leída el 2026-11-03; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03
 ---
 
 # Capacidad: los subtítulos
@@ -221,6 +221,7 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 5 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
 | Borrar la caca del techo del baño, en la jornada 6 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme.<br>Todavía me quedan tareas por completar. |
+| Hacer clic izquierdo sobre la computadora o la caja registradora con el corte de luz cortado | `SIN_LUZ` | Se cortó la luz…<br>Ningún aparato eléctrico funciona. |
 
 El `<br>` de la tabla es un salto de renglón del subtítulo, tal como lo marca la ficha (BR-SUB-017).
 
@@ -237,6 +238,12 @@ esperando (BR-NTF-014): SI todas están cumplidas, ENTONCES NO DEBE pensar nada,
 espere. Una obligatoria que se descumple después de habilitada la salida DEBE devolver el
 pensamiento. Desde la primera jornada completa NO DEBE pensarlo. La puerta conserva su sonido de
 trabada, y examinarla con E conserva su texto (BR-SUB-010).
+
+`SIN_LUZ` DEBE decidirse por el estado del corte (BR-ANO-012) en el instante del clic y no por la
+jornada: MIENTRAS el corte está cortado, la computadora y la caja registradora DEBEN pensarlo y
+seguir cerradas. Con el corte sin cortar o restaurado NO DEBEN pensarlo, y se abren como siempre.
+Cortarse con una abierta, que se cierra sola, NO DEBE pensarlo. Repetir el clic repite el
+pensamiento, como los demás de esta tabla.
 
 Los pensamientos de la mopa de esta tabla DEBEN aparecer sólo al intentar limpiar una mancha.
 Mojarla, transportarla o dejar marcas de agua NO DEBE dispararlos. SI se secó después de mojarla
@@ -521,7 +528,7 @@ CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
 
 DADO cada pensamiento de la tabla de BR-SUB-013 y `MOPA_BERRETA` ENTONCES su texto tiene los
 renglones de la ficha: dos para `CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
-`POR_LA_VENTANA`, `JABON_EQUIVOCADO` y `PUERTA_CON_TAREAS_PENDIENTES`, y uno para cada uno de los
+`POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `PUERTA_CON_TAREAS_PENDIENTES` y `SIN_LUZ`, y uno para cada uno de los
 demás. Ningún renglón queda vacío y el texto no empieza ni termina con un salto.
 
 ### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
@@ -545,6 +552,16 @@ entrada principal, la puerta del jefe, las notas de jabones y manchas, de instru
 y del local ordenado, los tachos del escritorio y del baño y los tres jabones, y uno para cada uno
 de los demás. Ningún renglón queda vacío. Cada producto del catálogo, que la ficha no corta, tiene
 un solo renglón.
+
+### AC-SUB-032 — Sin luz, los aparatos piensan *(verifica BR-SUB-013, BR-SUB-001)*
+
+DADO el corte cortado CUANDO se hace clic izquierdo sobre la computadora ENTONCES el pensamiento
+es `SIN_LUZ`, con sus dos renglones, y la computadora no se abre. Lo mismo sobre la caja
+registradora. DADO ese pensamiento visible CUANDO se hace clic otra vez ENTONCES la línea sigue
+mostrando sólo ese texto, una vez, y empieza de nuevo.
+DADO el corte sin cortar, o restaurado con el tablero, CUANDO se hace clic sobre cualquiera de las
+dos ENTONCES se abre y no hay pensamiento. DADA la computadora abierta CUANDO se corta la luz
+ENTONCES se cierra y no hay pensamiento.
 
 ## No objetivos
 

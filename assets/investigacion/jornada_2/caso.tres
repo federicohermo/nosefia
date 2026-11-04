@@ -5,9 +5,11 @@
 [ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis_de_la_jornada.gd" id="jornada"]
 [ext_resource type="Resource" path="res://assets/investigacion/jornada_2/pista_2a.tres" id="a"]
 [ext_resource type="Resource" path="res://assets/investigacion/jornada_2/pista_2b.tres" id="b"]
+[ext_resource type="Resource" path="res://assets/investigacion/jornada_2/pista_5b.tres" id="c"]
 [ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis.tres" id="opciones"]
+[ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_de_la_jornada_5.tres" id="opciones_5"]
 
 [resource]
 script = ExtResource("caso")
-pistas = Array[ExtResource("pista")]([ExtResource("a"), ExtResource("b")])
-hipotesis = Array[ExtResource("jornada")]([ExtResource("opciones")])
+pistas = Array[ExtResource("pista")]([ExtResource("a"), ExtResource("b"), ExtResource("c")])
+hipotesis = Array[ExtResource("jornada")]([ExtResource("opciones"), ExtResource("opciones_5")])
