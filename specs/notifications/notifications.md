@@ -69,7 +69,8 @@ y puede volver a avisar su propio cierre próximo.
 ### BR-NTF-007 — El cartel comunica sin tomar el control
 
 El sistema DEBE dibujar los carteles claros en la esquina superior derecha, con el símbolo
-del tipo a la izquierda y su texto en mayúsculas a la derecha. Llegada, lectura y pista van sin
+del tipo a la izquierda y su texto en mayúsculas a la derecha; sólo el de pista conserva la
+capitalización de la ficha, «Nueva pista desbloqueada». Llegada, lectura y pista van sin
 punto final; la salida conserva el punto final de su diseño. El aviso de tareas terminadas usa
 el símbolo de la puerta principal y el de cierre próximo usa el reloj de arena con exclamación.
 Los dos suman un título en letra chica encima de su cuerpo. El comprador
