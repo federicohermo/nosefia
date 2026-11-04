@@ -1,6 +1,8 @@
 ## Cablea el programa y coloca los papeles en la ranura a escala física real.
 extends StaticBody3D
 
+signal apertura_rechazada_sin_luz
+
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 const EscrituraDelTicket := preload("res://src/escenas/objetos/escritura_del_ticket.gd")
@@ -65,6 +67,8 @@ func _agregar_papel_para_calentar() -> void:
 func accionar() -> void:
 	if con_luz:
 		abrir()
+	else:
+		apertura_rechazada_sin_luz.emit()
 
 
 func abrir() -> void:

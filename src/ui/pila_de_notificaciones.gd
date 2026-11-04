@@ -5,12 +5,15 @@ const TEXTOS := {
 	Notificaciones.Tipo.CLIENTE: "¡HAY UN CLIENTE!",
 	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO LEER",
 	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ DE ESPERAR.",
-	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA UNA HORA DE JORNADA",
+	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA POCO TIEMPO PARA QUE\nSE TERMINE LA JORNADA.",
 	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
-	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA TERMINASTE TUS TAREAS Y PODÉS IRTE",
-	Notificaciones.Tipo.SALIDA_RETRABADA: "YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR",
+	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA PODÉS RETIRARTE\nPOR LA PUERTA PRINCIPAL.",
 	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS:
 	"EL CLIENTE SE CANSÓ DE ESPERAR Y DEJÓ LOS PRODUCTOS.",
+}
+const TITULOS := {
+	Notificaciones.Tipo.CIERRE_PROXIMO: "¡HORA DE CIERRE!",
+	Notificaciones.Tipo.TAREAS_TERMINADAS: "¡TAREAS COMPLETADAS!",
 }
 const SIMBOLO_DEL_CLIENTE := preload("res://assets/ui/manada/notificacion_cliente.svg")
 const SIMBOLO_DE_LA_SALIDA := preload("res://assets/ui/manada/notificacion_salida.svg")
@@ -20,11 +23,12 @@ const SIMBOLOS := {
 	Notificaciones.Tipo.CLIENTE_CANSADO: SIMBOLO_DE_LA_SALIDA,
 	Notificaciones.Tipo.CIERRE_PROXIMO: preload("res://assets/ui/manada/notificacion_cierre.svg"),
 	Notificaciones.Tipo.PISTA: preload("res://assets/ui/manada/notificacion_pista.svg"),
-	Notificaciones.Tipo.TAREAS_TERMINADAS: SIMBOLO_DEL_CLIENTE,
-	Notificaciones.Tipo.SALIDA_RETRABADA: SIMBOLO_DEL_CLIENTE,
+	Notificaciones.Tipo.TAREAS_TERMINADAS:
+	preload("res://assets/ui/manada/notificacion_tareas_completadas.svg"),
 	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS: SIMBOLO_DE_LA_SALIDA,
 }
 const ESCALA_DEL_CARTEL := 0.4
+const PROPORCION_DEL_TITULO := 32.0 / 56.0
 const DURACION_DE_ENTRADA := 0.2
 const DURACION_DE_SALIDA := 0.2
 const CURVA_DE_ENTRADA := 0.3
@@ -205,13 +209,31 @@ func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
 	simbolo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	simbolo.custom_minimum_size = simbolo.texture.get_size() * ESCALA_DEL_CARTEL
 	fila.add_child(simbolo)
-	var texto := Label.new()
-	texto.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	texto.text = TEXTOS[tipo]
-	texto.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	texto.add_theme_color_override("font_color", Color("04060c"))
-	fila.add_child(texto)
+	var texto := _etiqueta(TEXTOS[tipo])
+	if TITULOS.has(tipo):
+		var titulo := _etiqueta(TITULOS[tipo])
+		titulo.name = &"Titulo"
+		titulo.add_theme_font_size_override(
+			"font_size", roundi(_marco.get_theme_default_font_size() * PROPORCION_DEL_TITULO)
+		)
+		var columna := VBoxContainer.new()
+		columna.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		columna.add_theme_constant_override("separation", 0)
+		columna.add_child(titulo)
+		columna.add_child(texto)
+		fila.add_child(columna)
+	else:
+		fila.add_child(texto)
 	return cartel
+
+
+func _etiqueta(contenido: String) -> Label:
+	var etiqueta := Label.new()
+	etiqueta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	etiqueta.text = contenido
+	etiqueta.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	etiqueta.add_theme_color_override("font_color", Color("04060c"))
+	return etiqueta
 
 
 func _ajustar_al_viewport() -> void:

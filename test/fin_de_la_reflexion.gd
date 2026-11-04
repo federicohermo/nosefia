@@ -12,4 +12,4 @@ static func terminar(partida: Partida) -> void:
 		reflexion.continuar(reflexion.identidad_del_texto())
 	if reflexion.etapa() == ReflexionDeCierre.Etapa.ELEGIR:
 		reflexion.elegir(reflexion.mostrada().identidad)
-	reflexion.avanzar(ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
+	reflexion.avanzar(reflexion.restante())

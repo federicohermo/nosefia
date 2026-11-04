@@ -23,7 +23,7 @@ minuto investigando es un minuto que no se dedica a las tareas**.
 | **Obligatoria** | una de las tareas que el jefe pide esta noche | misión, objetivo |
 | **Ritmo** | cuántos segundos de turno consume un segundo real | escala, velocidad |
 | **Hora** | la hora de ficción de la noche, de la apertura al cierre | tiempo restante, cuenta regresiva |
-| **Reloj** | el reloj de mesa del local, el único lugar donde se lee la hora | reloj de pared, HUD |
+| **Reloj** | el reloj de pared del local, el único lugar donde se lee la hora | HUD |
 
 ## Comportamiento normativo
 
@@ -101,15 +101,14 @@ llamado que eso suma es de [`employment-record`](../employment-record/employment
 Reponer los casilleros que dejaron los vencidos no interviene en esta obligatoria, pero sí en
 reponer (BR-STK-052).
 
-### BR-SHF-011 — La hora se lee en un solo lugar, y una noche falta
+### BR-SHF-011 — La hora se lee en un solo lugar
 
-El sistema DEBE mostrar la hora sólo en el reloj de mesa del local, cerca del escritorio: ni en
-el HUD, ni en la computadora, ni en otro objeto del local. SI es la sexta jornada y la hora de
-ficción alcanzó las 20:58, ENTONCES el reloj DEBE leer `20:58`, también después de restablecer la
-electricidad, y el turno DEBE seguir descontando con su presupuesto y su ritmo. SI es la sexta
-jornada y queda la mitad del turno o menos, ENTONCES el reloj DEBE leer vacío hasta el cierre, sin
-decir que está roto. Las otras jornadas, incluida la que todavía no se declaró, y la sexta antes
-de las 20:58, el reloj DEBE leer la hora.
+El sistema DEBE mostrar la hora sólo en el reloj de pared del local: ni en el HUD, ni en la
+computadora, ni en otro objeto del local. SI es la sexta jornada y la hora de ficción alcanzó las
+20:58, ENTONCES el reloj DEBE leer `20:58` hasta el cierre, también después de restablecer la
+electricidad, y el turno DEBE seguir descontando con su presupuesto y su ritmo. El reloj NO DEBE
+quedar en blanco en ningún momento de ninguna noche. Las otras jornadas, incluida la que todavía
+no se declaró, y la sexta antes de las 20:58, el reloj DEBE leer la hora.
 
 ### BR-SHF-012 — La lectura trunca y no miente
 
@@ -165,9 +164,8 @@ Desde la primera jornada completa, el sistema NO DEBE ofrecer esta salida ni pro
 
 MIENTRAS sigue abierta una jornada de prueba, SI alguna obligatoria deja de estar cumplida
 después de habilitar la salida, ENTONCES el sistema DEBE volver a trabar la entrada en ese
-instante y producir el aviso de BR-NTF-015, con la misma espera de BR-NTF-014. Cuando todas vuelven a estar cumplidas, el sistema DEBE habilitar la
-salida otra vez. Cada nueva transición de habilitada a trabada DEBE producir ese aviso; una
-confirmación repetida del mismo estado NO DEBE producir otra transición.
+instante y retirar el aviso de BR-NTF-014. Cuando todas vuelven a estar cumplidas, el sistema DEBE habilitar la
+salida otra vez. Una confirmación repetida del mismo estado NO DEBE producir otra transición.
 
 El aviso de salida NO DEBE fijar el cumplimiento de las tareas ni impedir los gestos que las
 modifican. La planilla DEBE conservar sus operaciones de sumar y restar según BR-STK-020.
@@ -266,17 +264,6 @@ DADO una jornada con dos obligatorias declaradas CUANDO se cumple una tercera ta
 estaba declarada ENTONCES no cuenta, las cumplidas siguen siendo las de la lista y el turno
 restante no cambió.
 
-### AC-SHF-012 — El reloj falta la mitad de una noche *(verifica BR-SHF-011)*
-
-DADO la jornada 6 CUANDO quedan `21601.0` segundos ENTONCES el reloj lee `"20:58"`; con `21600.0`
-o menos, lee `""`. En las jornadas 0, 2, 5 y 7 lee la hora con `43200.0`, con `21600.0` y con
-`1.0`.
-
-### AC-SHF-013 — El reloj roto no dice que está roto *(verifica BR-SHF-011)*
-
-DADO la jornada 6 con `0.0` segundos restantes CUANDO se lee el reloj ENTONCES la lectura es la
-cadena vacía, y no `"08:00"`.
-
 ### AC-SHF-014 — La lectura trunca *(verifica BR-SHF-012)*
 
 DADO una jornada que no es la sexta con `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
@@ -298,7 +285,7 @@ DADO una jornada que no es la sexta CUANDO se lee el reloj ENTONCES:
 ### AC-SHF-017 — Un solo reloj *(verifica BR-SHF-011)*
 
 DADO el local armado CUANDO se recorren sus nodos ENTONCES hay exactamente una lectura de la
-hora, cuelga del reloj de mesa y no gira hacia la cámara.
+hora, cuelga del reloj de pared y no gira hacia la cámara.
 
 ### AC-SHF-018 — Cumplir no mueve el turno *(verifica BR-SHF-003)*
 
@@ -486,8 +473,13 @@ aunque no quede comprador por atender. El subtítulo de la puerta usa esta misma
 
 DADO la jornada 6 CUANDO han transcurrido 58 minutos de ficción menos un segundo ENTONCES el
 reloj lee `"20:57"`; con 58 minutos exactos, `"20:58"`. Con 2 horas transcurridas sigue leyendo
-`"20:58"`, y no `"22:00"`. Con `0.0` segundos restantes la jornada 6 lee `""` y la 7 lee
-`"08:00"`.
+`"20:58"`, y no `"22:00"`. Con `21600.0` y con `0.0` segundos restantes la jornada 6 lee `"20:58"`, nunca
+`""`, y la 7 lee `"08:00"` con `0.0`.
+
+### AC-SHF-062 — Fuera de la sexta el reloj nunca falta *(verifica BR-SHF-011)*
+
+DADO las jornadas 0, 2, 5 y 7 CUANDO quedan `43200.0`, `21600.0` y `1.0` segundos ENTONCES el
+reloj lee la hora, y no `""`.
 
 ### AC-SHF-050 — Restablecer la luz no descongela el reloj *(verifica BR-SHF-011)*
 
@@ -510,7 +502,7 @@ panel otra vez no cambia la lectura, y el turno descuenta lo mismo que antes de 
 - **Entrada:** los segundos reales que pasaron, la lista de obligatorias de la noche, y qué
   jornada es; el pedido de anunciarla y el avance real de su entrada; la solicitud de salir.
 - **Salida:** cuánto queda, si el turno cerró, cuántas obligatorias van cumplidas, y la lectura
-  del reloj de mesa: la hora, o vacío; texto, opacidad, apertura y finalización de la entrada;
+  del reloj de pared: la hora; texto, opacidad, apertura y finalización de la entrada;
   si se permite salir y cuándo se habilita o vuelve a trabarse la salida.
 - **Falla:** cumplir una obligatoria ya cumplida, o con el turno cerrado, se rechaza. Descumplir
   una sin cumplir, o con el turno cerrado, también. Un tiempo negativo se ignora en silencio.

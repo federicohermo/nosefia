@@ -16,6 +16,8 @@
 ## computadora abierta encima de la placa de cierre dejaría al jugador viendo las dos.
 extends StaticBody3D
 
+signal apertura_rechazada_sin_luz
+
 ## El script del jugador se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y
 ## no declaran `class_name`, así que sin esto el tipo estático sería `CharacterBody3D` y llamarle
 ## `suspender()` no compilaría.
@@ -44,6 +46,8 @@ func _ready() -> void:
 func accionar() -> void:
 	if con_luz:
 		abrir()
+	else:
+		apertura_rechazada_sin_luz.emit()
 
 
 func abrir() -> void:
