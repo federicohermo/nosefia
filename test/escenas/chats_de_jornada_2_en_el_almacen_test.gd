@@ -102,19 +102,6 @@ func _checkpoint() -> Partida:
 
 
 # AC-INV-039, AC-INV-056, AC-SAV-027
-func _guion_de_la_apertura() -> int:
-	return (
-		Conversacion
-		. de(YASMIN)
-		. mensajes
-		. filter(
-			func(mensaje: Mensaje) -> bool:
-				return mensaje.jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1
-		)
-		. size()
-	)
-
-
 func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() -> void:
 	assert_vector(get_viewport().get_visible_rect().size).is_equal(Vector2(1920, 1080))
 	assert_bool(Guardado.new().escribir(PoliticaDeGuardado.datos(_checkpoint()))).is_true()
@@ -209,3 +196,11 @@ func test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll() -> void:
 	assert_int(scroll.scroll_vertical).is_equal(posicion)
 	for cambio: Vector2 in cambios:
 		assert_bool(cambio.is_equal_approx(tamano_del_telefono)).is_true()
+
+
+func _guion_de_la_apertura() -> int:
+	var cuantos := 0
+	for mensaje: Mensaje in Conversacion.de(YASMIN).mensajes:
+		if mensaje.jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
+			cuantos += 1
+	return cuantos
