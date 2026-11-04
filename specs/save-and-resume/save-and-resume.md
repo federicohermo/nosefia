@@ -115,13 +115,15 @@ entrada (BR-SAV-021).
 
 CUANDO el jugador aprieta Esc en cualquier momento del juego en el almacén, con la partida en
 curso o terminada, el sistema DEBE pausarlo y mostrar el menú de pausa. Un segundo Esc DEBE
-reanudarlo, igual que «reanudar». La devolución no es una excepción: con la devolución en
+reanudarlo, igual que «reanudar». La excepción es el celular abierto en modo libre: ahí Esc
+lo cierra y NO DEBE pausar (BR-INV-021). El celular fijo no es una excepción. La devolución no es una excepción: con la devolución en
 pantalla, Esc DEBE abrir la pausa por encima de ella, y reanudar DEBE dejar la misma devolución,
 con el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa está en pantalla,
 la devolución NO DEBE responder a ningún gesto. Lo mismo vale para la reflexión de cierre y la
 espera posterior a elegir (BR-INV-046). SI el cursor pasa de tomado a suelto con la ventana
 activa y sin que el juego lo suelte, ENTONCES el sistema DEBE pausar: en la web el navegador
-consume Esc para soltar el cursor. Soltarlo el propio juego NO DEBE pausar, y con la
+consume Esc para soltar el cursor. El cursor que suelta el Esc que cerró el celular NO DEBE
+pausar: ese Esc ya lo atendió el celular. Soltarlo el propio juego NO DEBE pausar, y con la
 devolución o la reflexión de cierre en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 
@@ -150,11 +152,12 @@ final NO DEBE reaparecer.
 
 CUANDO se guarda, el sistema DEBE escribir, además de la jornada y el legajo, las fallas de cada
 obligatoria fija, los llamados de cada motivo, R, los textos de las devoluciones recibidas con identidad, jornada cerrada y orden
-(BR-EMP-025, BR-EMP-031, BR-SAV-020), las noches de prueba anotadas (BR-EMP-041) y si la mopa ya
-se secó una vez (BR-SUB-014). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
+(BR-EMP-025, BR-EMP-031, BR-SAV-020), las noches de prueba anotadas (BR-EMP-041), si la mopa ya
+se secó una vez (BR-SUB-014) y si ya se mostró el pensamiento de la primera pista
+(BR-SUB-016). CUANDO se retoma, DEBE restaurarlos exactos: la devolución
 siguiente cuenta desde ellos, y el chat de Enrique intercala instrucciones, aperturas y
 devoluciones según BR-INV-030. SI falta alguno o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) con cero
-fallas, cero llamados, R = 0, ninguna devolución, ninguna noche de prueba y la mopa sin secarse. Dentro de las cuentas, una obligatoria o un
+fallas, cero llamados, R = 0, ninguna devolución, ninguna noche de prueba, la mopa sin secarse y la primera pista sin pensar. Dentro de las cuentas, una obligatoria o un
 motivo desconocido, o un valor de otro tipo, DEBE ignorarse sin descartar los demás.
 
 ### BR-SAV-020 — Los mensajes nuevos conservan fecha y los antiguos no la inventan
@@ -300,7 +303,7 @@ apercibimientos.
 
 ### AC-SAV-018 — Esc pausa y reanuda *(verifica BR-SAV-016)*
 
-DADO la jornada en curso CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
+DADO la jornada en curso, con el celular cerrado, CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
 ENTONCES se reanuda. DADO la devolución en pantalla, con la partida en curso o terminada,
 CUANDO llega Esc ENTONCES el menú de pausa se abre por encima de la devolución; mientras tanto,
 ni un clic ni Enter despachan la devolución. CUANDO llega otro Esc ENTONCES la pausa se cierra,
@@ -380,8 +383,8 @@ conserva 1 y la desconocida se ignora.
 ### AC-SAV-026 — La mopa recuerda que se secó *(verifica BR-SAV-005, BR-SAV-019)*
 
 DADO una partida marcada con la mopa ya secada CUANDO se guarda y se retoma ENTONCES sigue
-marcada, como booleano. DADO un guardado sin el campo, o con un número en él, ENTONCES se retoma
-sin la marca.
+marcada, como booleano; lo mismo con el pensamiento de la primera pista ya mostrado. DADO un
+guardado sin el campo, o con un número en él, ENTONCES se retoma sin la marca.
 
 ### AC-SAV-027 — El checkpoint de jornada 4 conserva el historial fechado *(verifica BR-SAV-020, BR-SAV-019, BR-SAV-005, BR-SAV-015)*
 

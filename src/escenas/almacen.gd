@@ -188,11 +188,14 @@ func _ready() -> void:
 				)
 		)
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
-	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_atenciones.entrega_dicha.connect(_decir_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
+	_investigador.pista_nueva.connect(
+		func(_pista: Pista) -> void:
+			_pensar_gesto(_gestos.al_anotar_una_pista(_partida, _celular.celular().abierto()))
+	)
 	_computadora.computadora_abierta.connect(avisos.actualizar_computadora.bind(true))
 	_computadora.computadora_cerrada.connect(avisos.actualizar_computadora.bind(false))
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
@@ -228,6 +231,7 @@ func _ready() -> void:
 	_atenciones.comprador_vencido.connect(_revisar_la_salida.unbind(1))
 	_computadora.registro_actualizado.connect(_revisar_la_salida)
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
+	ventanilla.comprador_se_fue.connect(avisos.avisar_salida)
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
 	)
@@ -331,6 +335,8 @@ func _ready() -> void:
 	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
+	pausa.celular = _celular
+	pausa.esc_atendido_por_el_celular.connect(_jugador.tomar_el_cursor_desde_entrada)
 	pausa.pausado.connect(_jugador.declarar_la_pausa.bind(true))
 	pausa.reanudado.connect(_jugador.declarar_la_pausa.bind(false))
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
@@ -1115,7 +1121,6 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
 	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
-	_pantalla_del_celular.cierre_pedido.connect(_alternar_el_celular)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
 	_hipotesis.continuacion_pedida.connect(_al_continuar_la_reflexion)
 	_hipotesis.eleccion_pedida.connect(_al_elegir_la_hipotesis)
@@ -1132,6 +1137,7 @@ func _al_abrir_el_celular() -> void:
 
 
 func _al_cerrar_el_celular() -> void:
+	_pensar_gesto(_gestos.al_cerrar_el_celular(_partida))
 	_jugador.reanudar()
 	_pantalla_del_celular.bajar()
 

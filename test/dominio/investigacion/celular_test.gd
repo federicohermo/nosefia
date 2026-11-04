@@ -132,3 +132,27 @@ func test_notas_j2_amplian_con_adjunto_sin_necesitar_boton() -> void:  # AC-INV-
 	assert_bool(celular.abierto()).is_true()
 	assert_bool(celular.fijo()).is_true()
 	assert_array(bandeja.mensajes_de(Conversacion.Interlocutor.NOTAS)).is_equal([foto, texto])
+
+
+func test_esc_cierra_la_foto_y_despues_el_celular_libre() -> void:  # AC-INV-070, AC-INV-071
+	var celular := _celular()
+	assert_bool(celular.atender_esc()).is_false()
+	celular.habilitar(true)
+	assert_bool(celular.atender_esc()).is_false()
+	celular.alternar(false)
+	celular.abrir_chat(Conversacion.Interlocutor.JEFE)
+	celular.ampliar(0)
+	assert_bool(celular.atender_esc()).is_true()
+	assert_bool(celular.abierto()).is_true()
+	assert_int(celular.pantalla()).is_equal(Celular.Pantalla.CHAT)
+	assert_bool(celular.atender_esc()).is_true()
+	assert_bool(celular.abierto()).is_false()
+	assert_bool(celular.atender_esc()).is_false()
+
+
+func test_esc_no_cierra_el_celular_fijo() -> void:  # AC-INV-072
+	var celular := _celular()
+	celular.fijar_en(Conversacion.Interlocutor.JEFE)
+	assert_bool(celular.atender_esc()).is_false()
+	assert_bool(celular.abierto()).is_true()
+	assert_bool(celular.fijo()).is_true()

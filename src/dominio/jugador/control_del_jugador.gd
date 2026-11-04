@@ -125,3 +125,9 @@ func hay_interactuable() -> bool:
 ## donde se parte la traducción — acá se decide SI, en `src/escenas/jugador.gd` se traduce a QUÉ.
 func quiere_el_cursor_tomado() -> bool:
 	return not _suspendido
+
+
+## El clic que llega con el cursor suelto estando el juego en marcha es el gesto que el navegador
+## pide para devolverlo, y no una acción: el Esc que lo soltó no cuenta como gesto.
+func clic_es_para_tomar_el_cursor(cursor_tomado: bool) -> bool:
+	return quiere_el_cursor_tomado() and not cursor_tomado

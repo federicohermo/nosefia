@@ -7,6 +7,23 @@ const S := SubtitulosDeLosGestos.Id
 const BOLSA := preload("res://src/dominio/almacen/bolsa_de_basura_1.tres")
 const CAJA := preload("res://src/dominio/almacen/caja_de_reposicion.tres")
 
+## Cuántos renglones tiene cada texto en la ficha «Subtítulos». `PRIMERA_PISTA` no está: la ficha
+## la reparte en variantes por canal que el juego todavía no tiene.
+const RENGLONES_DE_LA_FICHA: Dictionary[SubtitulosDeLosGestos.Id, int] = {
+	SubtitulosDeLosGestos.Id.MALA_IDEA: 1,
+	SubtitulosDeLosGestos.Id.CAJA_EN_EL_CONTENEDOR: 2,
+	SubtitulosDeLosGestos.Id.UTIL_EN_EL_CONTENEDOR: 2,
+	SubtitulosDeLosGestos.Id.POR_LA_VENTANA: 2,
+	SubtitulosDeLosGestos.Id.JABON_EQUIVOCADO: 2,
+	SubtitulosDeLosGestos.Id.MOPA_SIN_MOJAR: 1,
+	SubtitulosDeLosGestos.Id.MOPA_YA_SECA: 1,
+	SubtitulosDeLosGestos.Id.MOPA_BERRETA: 1,
+	SubtitulosDeLosGestos.Id.PARED_DEL_OTRO_INODORO: 1,
+	SubtitulosDeLosGestos.Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: 1,
+	SubtitulosDeLosGestos.Id.TECHO_SOBRE_UN_CUBICULO: 1,
+	SubtitulosDeLosGestos.Id.PUERTA_CON_TAREAS_PENDIENTES: 2,
+}
+
 
 func _unidad() -> UnidadDeProducto:
 	return UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
@@ -145,11 +162,56 @@ func test_el_cierre_descarta_la_mopa_berreta_pendiente() -> void:  # AC-SUB-019
 	assert_int(gestos.al_secarse_la_mopa(partida, false)).is_equal(S.MOPA_BERRETA)
 
 
+func test_la_primera_pista_piensa_una_sola_vez_por_partida() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_anotar_una_pista(partida, false)).is_equal(S.PRIMERA_PISTA)
+	assert_bool(partida.primera_pista_pensada).is_true()
+	assert_int(gestos.al_anotar_una_pista(partida, false)).is_equal(S.NINGUNO)
+	assert_int(SubtitulosDeLosGestos.new().al_anotar_una_pista(Partida.nueva(), false)).is_equal(
+		S.PRIMERA_PISTA
+	)
+
+
+func test_con_el_celular_abierto_la_primera_pista_espera_y_no_se_duplica() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, true)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, true)).is_equal(S.NINGUNO)
+	assert_bool(partida.primera_pista_pensada).is_false()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.PRIMERA_PISTA)
+	assert_bool(partida.primera_pista_pensada).is_true()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, false)).is_equal(S.NINGUNO)
+
+
+func test_el_cierre_descarta_la_primera_pista_pendiente() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_anotar_una_pista(partida, true)).is_equal(S.NINGUNO)
+	gestos.descartar()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_bool(partida.primera_pista_pensada).is_false()
+	assert_int(gestos.al_anotar_una_pista(partida, false)).is_equal(S.PRIMERA_PISTA)
+
+
 func test_cada_id_tiene_texto_salvo_ninguno() -> void:  # AC-SUB-018
 	assert_str(SubtitulosDeLosGestos.texto(S.NINGUNO)).is_empty()
 	for id: S in S.values():
 		if id != S.NINGUNO:
 			assert_str(SubtitulosDeLosGestos.texto(id)).is_not_empty()
+
+
+func test_cada_texto_se_corta_en_los_renglones_de_la_ficha() -> void:  # AC-SUB-028
+	for id: S in RENGLONES_DE_LA_FICHA:
+		var renglones := SubtitulosDeLosGestos.texto(id).split("\n")
+		assert_int(renglones.size()).is_equal(RENGLONES_DE_LA_FICHA[id])
+		for renglon in renglones:
+			assert_str(renglon.strip_edges()).is_not_empty()
+	for id: S in S.values():
+		if id != S.NINGUNO and id != S.PRIMERA_PISTA:
+			assert_bool(RENGLONES_DE_LA_FICHA.has(id)).is_true()
 
 
 func _cumplidas_salvo(jornada: int, pendiente: Tarea = null) -> Array[Tarea]:

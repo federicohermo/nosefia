@@ -9,6 +9,7 @@ enum Tipo {
 	PISTA,
 	TAREAS_TERMINADAS,
 	SALIDA_RETRABADA,
+	CLIENTE_CANSADO_CON_PRODUCTOS,
 }
 enum Salida { SIN_AVISO, HABILITADA, RETRABADA }
 
@@ -49,12 +50,12 @@ func atendido(comprador: Comprador) -> void:
 	_transcurrido.erase(Tipo.CLIENTE)
 
 
-func se_fue(comprador: Comprador) -> void:
+func se_fue(comprador: Comprador, dejo_productos := false) -> void:
 	if comprador == null or _salidos.has(comprador):
 		return
 	_salidos.append(comprador)
 	atendido(comprador)
-	_avisar(Tipo.CLIENTE_CANSADO)
+	_avisar(Tipo.CLIENTE_CANSADO_CON_PRODUCTOS if dejo_productos else Tipo.CLIENTE_CANSADO)
 
 
 func llego(comprador: Comprador) -> void:

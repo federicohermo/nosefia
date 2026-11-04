@@ -96,7 +96,9 @@ func _pila(almacen: Node3D) -> PilaDeNotificaciones:
 
 func _textos(almacen: Node3D) -> Array[String]:
 	var textos: Array[String] = []
-	for label: Label in _pila(almacen).find_children("*", "Label", true, false):
+	for label: Label in _pila(almacen).get_node("Marco/Pila").find_children(
+		"*", "Label", true, false
+	):
 		textos.append(label.text)
 	return textos
 
