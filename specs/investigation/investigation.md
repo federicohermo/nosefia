@@ -410,7 +410,7 @@ En todas ellas, continuar sigue BR-EMP-011 sin pasar por las notas.
 
 ### BR-INV-043 — La tercera jornada reflexiona en tres textos
 
-La reflexión de jornada 3 DEBE mostrar el encabezado «Primera jornada terminada…» y estos
+La reflexión de jornada 3 DEBE mostrar el encabezado «Tercera jornada terminada…» y estos
 textos, de a uno por vez y en este orden, cada uno con el botón «Continuar»:
 
 1. «Bueno, no será el mejor trabajo del mundo, pero es algo. Por lo menos, con lo que tengo me
@@ -425,8 +425,7 @@ vez y reemplazar el recuadro por el texto siguiente. El recuadro NO DEBE acumula
 notas sí. CUANDO se recibe el tercero, la reflexión DEBE terminar y pedir una sola entrada a
 «NOCHE 4» (BR-SHF-019). Un pedido repetido sobre un texto ya recibido, o fuera de la reflexión,
 NO DEBE avanzar otro texto ni agregar otra nota. Cada texto DEBE tener identidad propia, y
-recibirlo NO DEBE registrar una pista ni contar como hipótesis elegida. El encabezado conserva
-«Primera» hasta que diseño lo corrija.
+recibirlo NO DEBE registrar una pista ni contar como hipótesis elegida.
 
 ### BR-INV-044 — La cuarta jornada se cierra eligiendo una hipótesis
 
@@ -854,7 +853,7 @@ cerrado, sin modo fijo, y el recuadro no está; CUANDO se pulsa Q en la noche 4 
 
 ### AC-INV-059 — Tres textos, tres notas *(verifica BR-INV-043)*
 
-DADO la reflexión de jornada 3 con notas vacías ENTONCES el recuadro dice «Primera jornada
+DADO la reflexión de jornada 3 con notas vacías ENTONCES el recuadro dice «Tercera jornada
 terminada…» y el texto 1. CUANDO se pulsa «Continuar» ENTONCES las notas son [texto 1], el
 recuadro muestra sólo el texto 2 y no hay entrada. CUANDO se repite el pedido del texto 1
 ENTONCES las notas siguen [texto 1] y el recuadro sigue en el texto 2. CUANDO se pulsa
