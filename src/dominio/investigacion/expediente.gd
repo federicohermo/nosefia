@@ -27,6 +27,12 @@ func levanta_una_pista(origen: StringName, jornada: int) -> bool:
 	return _caso != null and _caso.levanta_una_pista(origen, jornada)
 
 
+## Lo que se levanta para dar una pista está en el local sólo la noche de esa pista, y sólo si
+## el camino elegido o sorteado la activa.
+func esta_en_el_local(origen: StringName, jornada: int) -> bool:
+	return _caso == null or _caso.esta_en_el_local(origen, jornada, _elecciones, _sorteos)
+
+
 func registrar(identidad: String) -> Resultado:
 	if not _consistente:
 		return Resultado.DESCONOCIDA

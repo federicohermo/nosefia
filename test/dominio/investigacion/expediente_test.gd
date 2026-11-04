@@ -1,5 +1,8 @@
 extends GdUnitTestSuite
 
+const JORNADA_5 := GeneradorDeTickets.JORNADA_SIN_LECTOR
+const JORNADA_6 := JORNADA_5 + 1
+
 
 func _pista(identidad: String, exigencias: PackedStringArray = PackedStringArray()) -> Pista:
 	var pista := Pista.new()
@@ -306,3 +309,104 @@ func test_5b_esta_en_el_camino_de_2a_y_no_en_el_de_2b() -> void:  # AC-INV-091
 	assert_array(Array(con_2b.identidades())).is_equal(["2B"])
 	var sin_elegir := Expediente.new(caso)
 	assert_int(sin_elegir.registrar("5B")).is_equal(Expediente.Resultado.DESCONOCIDA)
+
+
+## La quinta con 5B encontrada y elegida: de ella depende el camino hacia la sexta.
+func _con_la_quinta_elegida(caso: CasoDeInvestigacion) -> Expediente:
+	var expediente := _con_la_cuarta_elegida(caso, "2A")
+	expediente.registrar("5B")
+	expediente.elegir(JORNADA_5, "5B")
+	return expediente
+
+
+func test_la_nota_esta_en_el_local_segun_las_elecciones_del_expediente() -> void:  # AC-INV-120
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var nota := caso.pista_de("6C").origen
+	var con_5b := _con_la_quinta_elegida(caso)
+	assert_bool(con_5b.esta_en_el_local(nota, JORNADA_6)).is_true()
+	assert_bool(con_5b.esta_en_el_local(nota, JORNADA_5)).is_false()
+	assert_bool(con_5b.esta_en_el_local(nota, JORNADA_6 + 1)).is_false()
+	assert_bool(con_5b.esta_en_el_local(&"balde", JORNADA_6)).is_true()
+	assert_bool(_con_la_cuarta_elegida(caso, "2B").esta_en_el_local(nota, JORNADA_6)).is_false()
+	assert_bool(Expediente.new(caso).esta_en_el_local(nota, JORNADA_6)).is_false()
+
+
+func test_restaurar_las_elecciones_guardadas_devuelve_la_nota() -> void:  # AC-INV-120
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var nota := caso.pista_de("6C").origen
+	var guardado := _con_la_quinta_elegida(caso)
+	var restaurado := Expediente.new(caso)
+	restaurado.restaurar(guardado.identidades(), guardado.elecciones(), guardado.sorteos())
+	assert_bool(restaurado.esta_en_el_local(nota, JORNADA_6)).is_true()
+	var sin_elecciones := Expediente.new(caso)
+	sin_elecciones.restaurar(guardado.identidades(), {}, {})
+	assert_bool(sin_elecciones.esta_en_el_local(nota, JORNADA_6)).is_false()
+
+
+func test_6c_se_registra_una_vez_con_su_foto_y_su_texto() -> void:  # AC-INV-122
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var nota := caso.pista_de("6C").origen
+	var expediente := _con_la_quinta_elegida(caso)
+	var antes := expediente.mensajes_de_notas().size()
+	var nuevas: Array[Pista] = []
+	expediente.pista_nueva.connect(func(pista: Pista) -> void: nuevas.append(pista))
+	var ajenos: Array[Array] = [
+		[nota, Pista.Canal.LEVANTAR, JORNADA_5],
+		[nota, Pista.Canal.LEVANTAR, JORNADA_6 + 1],
+		[nota, Pista.Canal.CHAT, JORNADA_6],
+		[nota, Pista.Canal.EXAMINAR_NO_LEVANTABLE, JORNADA_6],
+	]
+	for ajeno: Array in ajenos:
+		assert_int(expediente.registrar_por_canal(ajeno[0], ajeno[1], ajeno[2])).is_equal(
+			Expediente.Resultado.DESCONOCIDA
+		)
+	assert_array(Array(expediente.identidades())).is_equal(["2A", "5B"])
+	assert_int(expediente.registrar_por_canal(nota, Pista.Canal.LEVANTAR, JORNADA_6)).is_equal(
+		Expediente.Resultado.ANOTADA
+	)
+	assert_int(expediente.registrar_por_canal(nota, Pista.Canal.LEVANTAR, JORNADA_6)).is_equal(
+		Expediente.Resultado.REPETIDA
+	)
+	assert_array(Array(expediente.identidades())).is_equal(["2A", "5B", "6C"])
+	assert_int(nuevas.size()).is_equal(1)
+	assert_int(nuevas[0].jornada).is_equal(JORNADA_6)
+	var notas := expediente.mensajes_de_notas()
+	assert_int(notas.size()).is_equal(antes + 2)
+	if notas.size() == antes + 2:
+		assert_object(notas[antes].foto).is_not_null()
+		assert_str(notas[antes].texto).is_empty()
+		assert_object(notas[antes + 1].foto).is_null()
+		assert_str(notas[antes + 1].texto).is_equal(caso.pista_de("6C").texto)
+		assert_int(notas[antes + 1].jornada).is_equal(JORNADA_6)
+
+
+func test_6c_no_se_registra_fuera_de_su_camino() -> void:  # AC-INV-122
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var con_2b := _con_la_cuarta_elegida(caso, "2B")
+	assert_int(con_2b.registrar("6C")).is_equal(Expediente.Resultado.DESCONOCIDA)
+	assert_array(Array(con_2b.identidades())).is_equal(["2B"])
+	assert_int(Expediente.new(caso).registrar("6C")).is_equal(Expediente.Resultado.DESCONOCIDA)
+
+
+func test_sin_pistas_en_la_5_el_sorteo_cae_en_5b_y_activa_6c() -> void:  # AC-INV-125
+	var caso := CasoDeInvestigacion.de_la_partida()
+	for semilla: int in [0, 1, 7, 12345]:
+		var expediente := _con_la_cuarta_elegida(caso, "2A")
+		var azar := RandomNumberGenerator.new()
+		azar.seed = semilla
+		expediente.sortear_camino(JORNADA_6, azar)
+		assert_str(expediente.sorteos().get(JORNADA_6, "")).is_equal("5B")
+		assert_array(Array(expediente.pistas_activas(JORNADA_6))).contains(["6C"])
+		var otro := RandomNumberGenerator.new()
+		otro.seed = semilla + 1
+		expediente.sortear_camino(JORNADA_6, otro)
+		assert_str(expediente.sorteos().get(JORNADA_6, "")).is_equal("5B")
+		assert_bool(expediente.esta_en_el_local(caso.pista_de("6C").origen, JORNADA_6)).is_true()
+
+
+func test_con_5b_encontrada_no_se_sortea_y_6c_esta_activa() -> void:  # AC-INV-125
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var expediente := _con_la_quinta_elegida(caso)
+	expediente.sortear_camino(JORNADA_6, RandomNumberGenerator.new())
+	assert_dict(expediente.sorteos()).is_empty()
+	assert_array(Array(expediente.pistas_activas(JORNADA_6))).contains(["6C"])

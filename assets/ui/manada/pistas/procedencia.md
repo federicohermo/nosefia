@@ -22,3 +22,16 @@ El usuario la eligió el 30 de octubre de 2026 como foto de la pista 5B.
 | Tamaño | 1086 × 1448, RGBA |
 
 Si la tarjeta de pista recorta la imagen, el recorte se hace en la tarjeta y no en el archivo.
+
+## La nota de Yasmín (pista 6C)
+
+`nota-bajo-la-puerta.png` es la textura de la nota: el texto de la ficha de la pista 6C, con
+letra manuscrita, sobre `assets/models/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png`, el papel del
+artista. Por decisión del usuario del 3 de noviembre de 2026, la hace el implementador y no un
+issue de arte aparte. La genera `assets/props/nota/generar_nota.py` con la fuente Ink Free de
+Windows y un azar fijo. El texto es el de la nota de la ficha, con «Yasmín» donde la ficha dice
+«Jazmín».
+
+`nota-examinada.png` es la foto de la pista: una captura de la nota examinada, con la mano y la
+cámara reales del jugador, en la jornada 6 con la 5B elegida. La genera `capturar_nota.gd`, con
+la salida fuera del checkout y `NOSEFIA_CAPTURA_AISLADA=741`.
