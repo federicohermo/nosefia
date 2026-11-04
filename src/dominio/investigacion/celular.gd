@@ -61,6 +61,17 @@ func alternar(control_tomado: bool) -> bool:
 	return true
 
 
+## Esc cierra primero la foto y después el celular, y sólo si está libre. El fijo no responde:
+## ahí Esc pausa.
+func atender_esc() -> bool:
+	if not _abierto or _fijo:
+		return false
+	if _pantalla == Pantalla.FOTO:
+		return cerrar_foto()
+	_cerrar()
+	return true
+
+
 func abrir_chat(quien: Conversacion.Interlocutor) -> bool:
 	var conversacion := _bandeja.conversacion_de(quien)
 	if (

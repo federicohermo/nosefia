@@ -47,6 +47,18 @@ func pedir_alternar(control_tomado: bool) -> void:
 		celular_cerrado.emit()
 
 
+## Devuelve si el celular atendió Esc, para que no abra la pausa.
+func pedir_esc() -> bool:
+	var era_foto := _celular.pantalla() == Celular.Pantalla.FOTO
+	if not _celular.atender_esc():
+		return false
+	if era_foto:
+		foto_cerrada.emit()
+	else:
+		celular_cerrado.emit()
+	return true
+
+
 func pedir_chat(quien: Conversacion.Interlocutor) -> void:
 	if _celular.abrir_chat(quien):
 		chat_abierto.emit(quien)
