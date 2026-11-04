@@ -68,7 +68,7 @@ static func pasar_la_reflexion(pantalla: PantallaDeDevolucion) -> void:
 		if reflexion.etapa() in [ReflexionDeCierre.Etapa.TEXTOS, ReflexionDeCierre.Etapa.ELEGIR]:
 			recuadro.botones().back().pressed.emit()
 	if reflexion.etapa() == ReflexionDeCierre.Etapa.ESPERA:
-		almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
+		almacen.call("_process", reflexion.restante())
 
 
 ## La persiana del cierre baja con su propio reloj: uno simulado la termina sin esperar.

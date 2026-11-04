@@ -811,10 +811,7 @@ func _al_continuar_la_reflexion(identidad: String) -> void:
 	if reflexion == null or not reflexion.continuar(identidad):
 		return
 	_anotar_el_paso()
-	if reflexion.etapa() == ReflexionDeCierre.Etapa.TERMINADA:
-		_terminar_la_reflexion()
-	else:
-		_hipotesis.mostrar(reflexion)
+	_hipotesis.mostrar(reflexion)
 
 
 func _al_elegir_la_hipotesis(identidad: String) -> void:
