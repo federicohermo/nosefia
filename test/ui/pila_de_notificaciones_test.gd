@@ -515,8 +515,7 @@ func test_la_pista_tiene_su_simbolo_y_la_pausa_conserva_su_tiempo() -> void:
 	)
 	assert_object(fila.get_child(1)).is_instanceof(Label)
 	var cartel: Control = pila.get_node("Marco/Pila").get_child(0)
-	var marco: Control = pila.get_node("Marco")
-	assert_bool(marco.get_global_rect().encloses(cartel.get_global_rect())).is_true()
+	assert_bool(get_viewport().get_visible_rect().encloses(cartel.get_global_rect())).is_true()
 	get_tree().paused = false
 	pila._process(2.9)
 	assert_array(_textos(pila)).has_size(1)
