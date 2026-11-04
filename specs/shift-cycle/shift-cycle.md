@@ -165,9 +165,8 @@ Desde la primera jornada completa, el sistema NO DEBE ofrecer esta salida ni pro
 
 MIENTRAS sigue abierta una jornada de prueba, SI alguna obligatoria deja de estar cumplida
 después de habilitar la salida, ENTONCES el sistema DEBE volver a trabar la entrada en ese
-instante y producir el aviso de BR-NTF-015, con la misma espera de BR-NTF-014. Cuando todas vuelven a estar cumplidas, el sistema DEBE habilitar la
-salida otra vez. Cada nueva transición de habilitada a trabada DEBE producir ese aviso; una
-confirmación repetida del mismo estado NO DEBE producir otra transición.
+instante y retirar el aviso de BR-NTF-014. Cuando todas vuelven a estar cumplidas, el sistema DEBE habilitar la
+salida otra vez. Una confirmación repetida del mismo estado NO DEBE producir otra transición.
 
 El aviso de salida NO DEBE fijar el cumplimiento de las tareas ni impedir los gestos que las
 modifican. La planilla DEBE conservar sus operaciones de sumar y restar según BR-STK-020.
