@@ -83,6 +83,16 @@ func _al_imprimir() -> void:
 	impresion_pedida.emit()
 
 
+## Cierra las listas desplegadas y dice si había alguna.
+func cerrar_las_listas_abiertas() -> bool:
+	var habia := false
+	for selector in selectores:
+		if selector.esta_abierta():
+			habia = true
+	cerrar_las_listas()
+	return habia
+
+
 func cerrar_las_listas() -> void:
 	for selector in selectores:
 		selector.cerrar()

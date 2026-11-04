@@ -38,6 +38,16 @@ func cerrar() -> void:
 	jugador.reanudar()
 
 
+func esta_abierta() -> bool:
+	return _abierta
+
+
+## Lo pide el nodo de la pausa. Como el clic derecho: devuelve el cursor al juego.
+func cerrar_con_esc() -> void:
+	cerrar()
+	jugador.tomar_el_cursor_desde_entrada()
+
+
 func _input(evento: InputEvent) -> void:
 	if not _abierta:
 		return
