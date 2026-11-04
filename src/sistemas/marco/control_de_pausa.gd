@@ -33,7 +33,8 @@ var _interfaces: Array[Interfaz] = []
 var _cursor_antes := false
 var _menu_pedido := false
 var _ventana_activa := true
-## Lo que falta de la gracia que deja un Esc atendido por el celular. Ver `Pausa`.
+## Lo que falta de la gracia que deja un Esc atendido por el celular o por una interfaz del local.
+## Ver `Pausa`.
 var _gracia_tras_esc := 0.0
 
 

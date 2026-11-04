@@ -317,7 +317,7 @@ func test_la_mira_real_rechaza_transparencia_y_alcance() -> void:  # AC-PLY-092
 	assert_object(jugador.call("enfocado")).is_not_same(objetivo)
 
 
-# AC-CTR-065, AC-PLY-091, AC-PLY-079
+# AC-CTR-065, AC-PLY-091, AC-PLY-079, AC-PLY-169
 func test_el_clic_real_inicial_y_final_conserva_la_mano() -> void:
 	for clase: String in ["vacia", "unidad", "ticket", "caja", "mopa"]:
 		await _probar_clic_real(clase)
