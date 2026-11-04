@@ -52,10 +52,13 @@ func test_la_jornada_del_lector_suma_el_bloque_tras_los_quince() -> void:  # AC-
 	assert_array(_identidades(bandeja.mensajes_de(YASMIN))).is_equal(_guion_esperado())
 	var bloque := _bloque(bandeja.mensajes_de(YASMIN))
 	assert_int(bandeja.no_leidos(YASMIN)).is_equal(bloque.size())
-	assert_int(bandeja.no_leidos(JEFE)).is_equal(del_jefe)
+	var apertura_del_jefe := Conversacion.de(JEFE).mensajes.filter(
+		func(mensaje: Mensaje) -> bool: return mensaje.jornada == JORNADA_DEL_LECTOR
+	)
+	assert_int(bandeja.no_leidos(JEFE)).is_equal(del_jefe + apertura_del_jefe.size())
 	bandeja.marcar_leida(YASMIN)
 	assert_int(bandeja.no_leidos(YASMIN)).is_zero()
-	assert_int(bandeja.no_leidos(JEFE)).is_equal(del_jefe)
+	assert_int(bandeja.no_leidos(JEFE)).is_equal(del_jefe + apertura_del_jefe.size())
 
 
 func test_el_bloque_es_de_yasmin_y_sigue_a_los_quince_en_orden() -> void:  # AC-INV-066

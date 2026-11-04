@@ -1,10 +1,12 @@
-## Captura las nueve fotos del chat desde el modelo jugable y valida cada tema antes de guardar.
+## Captura las fotos del chat desde el modelo jugable y valida cada tema antes de guardar.
 ## Desde PowerShell con una pantalla disponible:
 ## & $env:GODOT_BIN --path . --rendering-driver opengl3 `
 ##   --script assets/models/generar_fotos_del_jefe.gd -- assets/ui/manada/fotos
 extends SceneTree
 
 const TAMANO := Vector2i(960, 540)
+## La jornada que pide desechar los vencidos: la de la foto de las Cindolor.
+const JORNADA_DE_LOS_VENCIDOS := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 const PLANO_DEL_RELOJ := [
 	2,
 	Vector3(1.0115, 2.28, 5.1),
@@ -49,6 +51,14 @@ const PLANOS := [
 		"JabonAmarillo",
 	],
 	[13, Vector3(-0.20, 1.90, -13.15), Vector3(-2.95, 1.15, -11.50), 62.0, "Caja"],
+	[
+		14,
+		Vector3(-0.76, 1.80, -5.00),
+		Vector3(-0.76, 1.69, -7.10),
+		40.0,
+		"heladeranueva_001",
+		"jornada-5-cindolor.png"
+	],
 ]
 
 var _local: Node3D
@@ -156,8 +166,10 @@ func _fotografiar(plano: Array) -> bool:
 		for caja: Node3D in _cajas:
 			caja.global_transform = caja.call("pose_de_estanteria")
 			caja.reset_physics_interpolation()
-	if numero == 13:
+	if numero == 13 or numero == 14:
 		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		if numero == 14:
+			jornada = JORNADA_DE_LOS_VENCIDOS
 		_local.set("_partida", Partida.desde({"jornada": jornada}))
 		_local.call("_al_abrir_la_jornada", jornada)
 		for caja in _cajas:
@@ -221,7 +233,7 @@ func _fotografiar(plano: Array) -> bool:
 	print("FOTO374 ", numero, " ", ruta, " ", archivo)
 	if numeros != null:
 		numeros.queue_free()
-	return _restaurar_la_primera_jornada() if numero == 13 else true
+	return _restaurar_la_primera_jornada() if numero == 13 or numero == 14 else true
 
 
 func _restaurar_la_primera_jornada() -> bool:
