@@ -188,3 +188,28 @@ func test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura() -> void:
 	assert_int(sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN).size()).is_equal(15)
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.YASMIN)).is_zero()
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(jefe)
+
+
+func test_esc_cierra_el_celular_libre_con_su_aviso_una_sola_vez() -> void:  # AC-INV-070
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	var cierres: Array[int] = []
+	sistema.celular_cerrado.connect(func() -> void: cierres.append(1))
+	assert_bool(sistema.pedir_esc()).is_false()
+	sistema.abrir_jornada(1)
+	sistema.pedir_alternar(false)
+	sistema.pedir_chat(Conversacion.Interlocutor.JEFE)
+	assert_bool(sistema.pedir_esc()).is_true()
+	assert_array(cierres).is_equal([1])
+	assert_bool(sistema.celular().abierto()).is_false()
+	assert_bool(sistema.pedir_esc()).is_false()
+	assert_array(cierres).is_equal([1])
+
+
+func test_esc_con_el_celular_fijo_no_emite_nada() -> void:  # AC-INV-072
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	var cierres: Array[int] = []
+	sistema.celular_cerrado.connect(func() -> void: cierres.append(1))
+	sistema.mostrar_fijo(Conversacion.Interlocutor.JEFE)
+	assert_bool(sistema.pedir_esc()).is_false()
+	assert_array(cierres).is_empty()
+	assert_bool(sistema.celular().abierto()).is_true()
