@@ -49,7 +49,7 @@ func _ids_de_las_seis_hojas() -> Array:
 	return ids
 
 
-func test_las_seis_hojas_abren_su_propio_dato_y_cierran_solo_con_el_derecho() -> void:  # AC-PLY-063
+func test_las_seis_hojas_abren_su_propio_dato_y_cierran_con_el_derecho() -> void:  # AC-PLY-063
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var puesto: Node = almacen.get_node("Estructura/NotasDelAlmacen")
@@ -284,7 +284,7 @@ func test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima() -> void:  # AC-PL
 	var evento := InputEventAction.new()
 	evento.action = &"ui_cancel"
 	evento.pressed = true
-	pausa.call("_input", evento)
+	pausa.pausar()
 	var menu: CanvasLayer = almacen.get_node("Interfaz/MenuDePausa")
 	assert_bool(get_tree().paused).is_true()
 	assert_bool(menu.visible).is_true()

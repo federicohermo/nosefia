@@ -69,7 +69,8 @@ y puede volver a avisar su propio cierre próximo.
 ### BR-NTF-007 — El cartel comunica sin tomar el control
 
 El sistema DEBE dibujar los carteles claros en la esquina superior derecha, con el símbolo
-del tipo a la izquierda y su texto en mayúsculas a la derecha. Llegada, lectura y pista van sin
+del tipo a la izquierda y su texto en mayúsculas a la derecha; sólo el de pista conserva la
+capitalización de la ficha, «Nueva pista desbloqueada». Llegada, lectura y pista van sin
 punto final; la salida conserva el punto final de su diseño. El aviso de tareas terminadas usa
 el símbolo de la puerta principal y el de cierre próximo usa el reloj de arena con exclamación.
 Los dos suman un título en letra chica encima de su cuerpo. El comprador
@@ -107,7 +108,7 @@ conservan el recorrido y duración anteriores hasta que tengan diálogos diseña
 ### BR-NTF-010 — Sólo una pista anotada avisa
 
 CUANDO investigación confirma una pista nueva anotada que desbloquea una hipótesis, el sistema
-DEBE mostrar «¡NUEVA PISTA!». El disparador es el registro aceptado, según la
+DEBE mostrar «Nueva pista desbloqueada». El disparador es el registro aceptado, según la
 [ficha «Notificaciones»](https://app.notion.com/p/3e486efecd9d808bb505c198429d316d).
 Un resultado repetido o desconocido NO DEBE crear ni renovar el aviso.
 Revelar o examinar un objeto sin registrar una pista NO DEBE producirlo.
@@ -222,7 +223,7 @@ completar el 0,1 restante sí.
 DADO llegada, lectura fallida y pista visibles CUANDO se presentan a 1920 × 1080 y 1280 × 720
 ENTONCES sus carteles quedan dentro de la esquina superior derecha, sin recorte.
 La cruz corresponde a «NO SE PUDO LEER» y
-la figura con exclamación a «¡HAY UN CLIENTE!»; el signo de pregunta corresponde a «¡NUEVA PISTA!».
+la figura con exclamación a «¡HAY UN CLIENTE!»; el signo de pregunta corresponde a «Nueva pista desbloqueada».
 Los tres símbolos están a la izquierda de su texto. Los tres carteles usan la
 fuente del tema de Manada y el fondo claro del diseño.
 
@@ -263,7 +264,7 @@ comparten el borde derecho dentro de la pantalla; el mensaje más largo ocupa un
 DADO cero avisos CUANDO se revela un objeto que no es pista, se repite una pista conocida
 o se intenta registrar una desconocida ENTONCES no aparece ningún aviso de pista.
 CUANDO investigación acepta una pista nueva ENTONCES aparece exactamente un cartel
-«¡NUEVA PISTA!» con el signo de pregunta a su izquierda.
+«Nueva pista desbloqueada» con el signo de pregunta a su izquierda.
 DADO ese aviso con dos segundos consumidos CUANDO se repite la pista o se intenta registrar
 una desconocida ENTONCES sigue uno solo y desaparece al consumir el segundo restante.
 
